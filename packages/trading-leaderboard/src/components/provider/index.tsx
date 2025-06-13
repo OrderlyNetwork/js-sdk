@@ -5,6 +5,7 @@ import {
   useMemo,
   useState,
 } from "react";
+import { parseISO } from "date-fns";
 import { sortWith, descend, prop } from "ramda";
 import { CampaignConfig, UserData } from "../campaigns/type";
 
@@ -59,6 +60,7 @@ export const TradingLeaderboardProvider = (
 
   const filteredCampaigns = useMemo(() => {
     const filtered = props.campaigns?.filter((campaign) => {
+      // return true;
       // Campaign without referral_codes is visible to all users
       if (!campaign.referral_codes) {
         return true;
@@ -67,9 +69,12 @@ export const TradingLeaderboardProvider = (
       return campaign.referral_codes?.includes(userData?.referral_code || "");
     });
 
-    // Using ramda for descending time sort
+    // Using date-fns to parse date strings and sort by end_time in descending order
     return filtered
-      ? sortWith([descend(prop("end_time"))], filtered)
+      ? sortWith(
+          [descend((campaign: CampaignConfig) => parseISO(campaign.end_time))],
+          filtered,
+        )
       : filtered;
   }, [props.campaigns, userData]);
 

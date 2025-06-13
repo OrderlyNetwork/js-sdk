@@ -55,7 +55,7 @@ export interface CampaignConfig {
   start_time: string;
   end_time: string;
   reward_distribution_time?: string;
-  volume_scope: string | string[];
+  volume_scope?: string | string[];
   referral_codes?: string[] | string;
   prize_pools?: PrizePool[];
   ticket_rules?: TicketRules;

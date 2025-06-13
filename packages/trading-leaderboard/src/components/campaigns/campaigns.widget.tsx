@@ -1,9 +1,9 @@
-import { FC } from "react";
+import { FC, useMemo } from "react";
 import { cn, useScreen } from "@orderly.network/ui";
-import { CampaignsHeaderUI } from "./campaigins.header.ui";
 import { CampaignsContentDesktopUI } from "./campaigns.content.desktop.ui";
 import { useCampaignsScript } from "./campaigns.script";
 import { CampaignsTimeDesktopUI } from "./components/time.desktop.ui";
+import { CampaignsHeaderWidget } from "./header";
 
 export type CampaignsWidgetProps = {
   className?: string;
@@ -24,26 +24,44 @@ export const CampaignsWidget: FC<CampaignsWidgetProps> = (props) => {
   //     );
   //   }
 
+  const contentClassNames = useMemo(() => {
+    if (!isMobile) return undefined;
+    return {
+      container: "oui-h-[400px] oui-gap-5",
+      time: "oui-text-sm oui-h-5",
+      title: "oui-text-[24px] oui-leading-[32px]",
+      description: "oui-text-2xs oui-leading-[15px]",
+      topContainer: "oui-gap-1 oui-w-[284px]",
+    };
+  }, [isMobile]);
+
   return (
     <div
       className={cn(["oui-overflow-hidden oui-relative oui-z-[1]"])}
       style={props.style}
     >
-      <CampaignsHeaderUI
+      <CampaignsHeaderWidget
         backgroundSrc={state.backgroundSrc}
         campaigns={state.campaigns}
         currentCampaignId={state.currentCampaignId}
         onCampaignChange={state.onCampaignChange}
       />
-      <CampaignsContentDesktopUI
-        campaign={state.currentCampaign}
-        statistics={state.statistics}
-        onLearnMore={state.onLearnMore}
-        onTradeNow={state.onTradeNow}
-        backgroundSrc={state.backgroundSrc}
-      />
       {state.currentCampaign && (
-        <CampaignsTimeDesktopUI campaign={state.currentCampaign} />
+        <CampaignsContentDesktopUI
+          campaign={state.currentCampaign}
+          statistics={state.statistics}
+          onLearnMore={state.onLearnMore}
+          onTradeNow={state.onTradeNow}
+          backgroundSrc={state.backgroundSrc}
+          classNames={contentClassNames}
+          isMobile={isMobile}
+        />
+      )}
+      {state.currentCampaign && (
+        <CampaignsTimeDesktopUI
+          campaign={state.currentCampaign}
+          isMobile={isMobile}
+        />
       )}
     </div>
   );

@@ -1,10 +1,10 @@
 import { FC, useCallback, useState, useEffect } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@orderly.network/ui";
-import { DefaultCampaign } from "./DefaultCampaign";
-import { CampaignItemUI } from "./campaign.item.ui";
-import { CampaignConfig } from "./type";
-import { getCampaignTag } from "./utils";
+import { DefaultCampaign } from "../DefaultCampaign";
+import { CampaignItemUI } from "../campaign.item.ui";
+import { CampaignConfig } from "../type";
+import { getCampaignTag } from "../utils";
 
 export const CampaignsHeaderUI: FC<{
   campaigns: CampaignConfig[];
@@ -101,6 +101,7 @@ export const CampaignsHeaderUI: FC<{
         <DefaultCampaign
           currentCampaignId={currentCampaignId}
           onCampaignChange={onCampaignChange}
+          className="oui-min-w-[322px]"
         />
       </div>
 
@@ -133,6 +134,11 @@ export const CampaignsHeaderUI: FC<{
                   tag={getCampaignTag(campaign)}
                   active={currentCampaignId == campaign.campaign_id}
                   onCampaignChange={onCampaignChange}
+                  classNames={{
+                    tag: {
+                      container: "oui-h-[23px] oui-py-1 oui-px-2",
+                    },
+                  }}
                 />
               </div>
             ))}

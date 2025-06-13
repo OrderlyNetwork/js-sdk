@@ -101,6 +101,71 @@ export const CampaignsAxis: FC<CampaignsAxisProps> = ({ points }) => {
   );
 };
 
+export const CampaignsAxisMobile: FC<CampaignsAxisProps> = ({ points }) => {
+  if (!points || points.length === 0) {
+    return null;
+  }
+
+  // Find the index of the active point
+  const activeIndex = points.findIndex((point) => point.type === "active");
+
+  // Helper function to determine line background class
+  const getLineBackgroundClass = (segmentIndex: number): string => {
+    // If there's an active point and this segment is above it, use oui-bg-base-3
+    if (activeIndex !== -1 && segmentIndex < activeIndex) {
+      return "oui-bg-base-3";
+    }
+    // Otherwise use regular color
+    return "oui-bg-base-8";
+  };
+
+  return (
+    <div className="oui-w-full oui-flex oui-flex-col oui-items-center oui-gap-10">
+      {points.map((point, index) => {
+        const isFirst = index === 0;
+        const isLast = index === points.length - 1;
+
+        return (
+          <div key={index} className={cn(["oui-relative"])}>
+            {/* Main content container */}
+            <div className="oui-flex oui-items-start oui-gap-4 oui-h-10">
+              {/* Point with connecting line */}
+              <div
+                className={cn([
+                  "oui-relative oui-flex oui-flex-col oui-items-center",
+                  isFirst && "oui-translate-y-[10px]",
+                ])}
+              >
+                <AxisPoint type={point.type} />
+
+                {/* Vertical connecting line - only show if not the last point */}
+                {!isLast && (
+                  <div
+                    className={cn([
+                      "oui-w-[6px] oui-h-[64px]",
+                      getLineBackgroundClass(index),
+                    ])}
+                  />
+                )}
+              </div>
+
+              {/* Text content */}
+              <div className="oui-flex oui-flex-col oui-justify-start">
+                <div className="oui-trading-leaderboard-title oui-text-sm oui-font-medium oui-text-base-contrast-54 oui-mb-1">
+                  {point.title}
+                </div>
+                <div className="oui-text-xs oui-text-base-contrast-36 oui-min-w-[123px]">
+                  {point.type !== "active" && point.time}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
 const AxisPoint: FC<{ type: "past" | "active" | "future" }> = ({ type }) => {
   return (
     <div

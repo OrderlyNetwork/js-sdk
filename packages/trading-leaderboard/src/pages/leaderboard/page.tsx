@@ -1,6 +1,6 @@
 import { FC, ReactNode } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { Box, cn, Flex, Text } from "@orderly.network/ui";
+import { Box, cn, Flex, Text, useScreen } from "@orderly.network/ui";
 import { Background } from "../../components/background";
 import { CampaignsWidget } from "../../components/campaigns/campaigns.widget";
 import { CampaignLeaderboardWidget } from "../../components/leaderboard/campaignLeaderboard";
@@ -50,6 +50,7 @@ type LeaderboardSectionProps = {
 
 export const LeaderboardSection: FC<LeaderboardSectionProps> = (props) => {
   const { t } = useTranslation();
+  const { isMobile } = useScreen();
   const { currentCampaignId, currentCampaign, backgroundSrc } =
     useTradingLeaderboardContext();
 
@@ -65,7 +66,10 @@ export const LeaderboardSection: FC<LeaderboardSectionProps> = (props) => {
   if (currentCampaign && currentCampaignId != "general") {
     return (
       <>
-        <LeaderboardTitle title={t("tradingLeaderboard.leaderboard")} />
+        <LeaderboardTitle
+          title={t("tradingLeaderboard.leaderboard")}
+          isMobile={isMobile}
+        />
         <CampaignLeaderboardWidget {...props} campaignId={currentCampaignId} />
       </>
     );
@@ -74,13 +78,23 @@ export const LeaderboardSection: FC<LeaderboardSectionProps> = (props) => {
   return null;
 };
 
-export const LeaderboardTitle = (props: { title: ReactNode }) => {
+export const LeaderboardTitle = (props: {
+  title: ReactNode;
+  isMobile?: boolean;
+}) => {
   return (
-    <Flex mb={6} gapY={1} justify="center" direction="column">
+    <Flex
+      mb={props.isMobile ? 3 : 6}
+      gapY={1}
+      justify="center"
+      direction="column"
+    >
       <Text
         className={cn(
-          "oui-trading-leaderboard-title",
-          "oui-text-[32px] oui-font-bold oui-leading-[44px]",
+          "oui-trading-leaderboard-title oui-font-bold",
+          props.isMobile
+            ? "oui-text-[20px] oui-leading-[24px]"
+            : "oui-text-[32px] oui-leading-[44px]",
         )}
       >
         {props.title}

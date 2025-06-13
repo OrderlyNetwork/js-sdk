@@ -24,7 +24,7 @@ function getCampaigns() {
       image: "/leaderboard/woof.png",
       href: "https://orderly.network/",
       start_time: addDays(new Date(), -7).toISOString(),
-      volume_scope: ["PERP_WIF_USDC", "PERP_APT_USDC", "PERP_ANIME_USDC"],
+      // volume_scope: null,
       end_time: addDays(new Date(), 23).toISOString(),
       reward_distribution_time: addDays(new Date(), 25).toISOString(),
       prize_pools: [

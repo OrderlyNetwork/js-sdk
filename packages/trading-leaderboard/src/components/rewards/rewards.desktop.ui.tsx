@@ -15,6 +15,7 @@ interface RewardsDesktopUIProps {
   userdata?: UserData;
   onLearnMore: () => void;
   onTradeNow: () => void;
+  isMobile?: boolean;
 }
 
 export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
@@ -22,6 +23,7 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
   userdata,
   onLearnMore,
   onTradeNow,
+  isMobile,
 }) => {
   // Use mock data for userdata if not provided
   const currentUserData = userdata;
@@ -134,14 +136,6 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
   }, [campaign]);
 
   const extraProps = useMemo(() => {
-    // return {
-    //   showExtraInfo: true,
-    //   extraInfo: {
-    //     percent: 30,
-    //     value: 999,
-    //   },
-    // }
-
     if (!userdata || !campaign?.ticket_rules) {
       return {
         showExtraInfo: false,
@@ -164,16 +158,25 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
     };
   }, [campaign, userdata]);
 
-  console.log(userdata, campaign);
-
   return (
-    <div className="oui-flex oui-flex-col oui-gap-6 oui-pb-10 oui-mb-10 oui-max-w-[992px] oui-mx-auto">
-      <div className="oui-w-full oui-flex oui-items-stretch oui-gap-3">
+    <div
+      className={cn([
+        "oui-flex oui-flex-col oui-pb-10 oui-mb-10 oui-max-w-[992px] oui-mx-auto",
+        isMobile ? "oui-gap-3" : "oui-gap-6",
+      ])}
+    >
+      <div
+        className={cn([
+          "oui-w-full oui-flex oui-items-stretch oui-gap-3",
+          isMobile ? "oui-px-3" : "",
+        ])}
+      >
         <RewardItem
           title="Estimated rewards"
           value={rewardText}
           showTooltip
           tooltip={tooltipContent}
+          isMobile={isMobile}
         />
         <RewardItem
           showTooltip={!!campaign?.ticket_rules}
@@ -181,28 +184,32 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
           value={ticketText}
           tooltip={ticketTooltipContent}
           {...extraProps}
+          isMobile={isMobile}
         />
       </div>
-      <div className="oui-flex oui-gap-3 oui-justify-center">
+      <div
+        className={cn([
+          "oui-flex oui-gap-3 oui-justify-center",
+          isMobile ? "oui-px-3" : "",
+        ])}
+      >
         <Button
-          size="lg"
+          size={isMobile ? "md" : "lg"}
           variant="outlined"
-          className=" oui-w-[140px]
-              oui-border-[rgb(var(--oui-gradient-brand-start))] 
-              oui-text-[rgb(var(--oui-gradient-brand-start))] 
-              hover:oui-bg-[rgb(var(--oui-gradient-brand-start))]/[0.08]
-              active:oui-bg-[rgb(var(--oui-gradient-brand-start))]/[0.08]
-              "
+          className={cn([
+            "oui-border-[rgb(var(--oui-gradient-brand-start))] oui-text-[rgb(var(--oui-gradient-brand-start))] hover:oui-bg-[rgb(var(--oui-gradient-brand-start))]/[0.08] active:oui-bg-[rgb(var(--oui-gradient-brand-start))]/[0.08]",
+            isMobile ? "oui-flex-1" : "oui-w-[140px]",
+          ])}
           onClick={onLearnMore}
         >
           View rules
         </Button>
         {canTrade && (
           <Button
-            size="lg"
+            size={isMobile ? "md" : "lg"}
             variant="gradient"
             color="primary"
-            className=" oui-w-[140px]"
+            className={cn([isMobile ? "oui-flex-1" : "oui-w-[140px]"])}
             onClick={onTradeNow}
           >
             Trade now
@@ -223,17 +230,30 @@ const RewardItem: FC<{
     percent: number;
     value: number;
   } | null;
+  isMobile?: boolean;
 }> = (props) => {
   return (
     <div className="oui-flex-1 oui-px-5 oui-py-4 oui-flex oui-flex-col oui-items-center oui-bg-base-9 oui-rounded-2xl oui-justify-center">
-      <div className="oui-text-base-contrast-54 oui-text-sm oui-font-semibold">
+      <div
+        className={cn([
+          "oui-text-base-contrast-54",
+          props.isMobile
+            ? "oui-text-2xs oui-leading-[15px] oui-h-[15px]"
+            : "oui-text-sm oui-font-semibold",
+        ])}
+      >
         {props.title}
       </div>
       <div className="oui-flex oui-items-center oui-gap-2">
         <Text.gradient
           weight="bold"
           color="brand"
-          className="oui-trading-leaderboard-title oui-text-[32px] oui-h-10 oui-leading-10"
+          className={cn([
+            "oui-trading-leaderboard-title",
+            props.isMobile
+              ? "oui-text-base oui-leading-[16px] oui-h-[16px]"
+              : "oui-text-[32px] oui-h-10 oui-leading-10",
+          ])}
         >
           {props.value}
         </Text.gradient>
@@ -248,7 +268,12 @@ const RewardItem: FC<{
       {props.showExtraInfo && (
         <div className="oui-flex oui-flex-col oui-items-center oui-justify-end">
           <div className="oui-text-base-contrast-36 oui-text-2xs oui-font-semibold oui-flex oui-flex-col oui-items-center oui-gap-1">
-            <div className="oui-w-[225px] oui-h-[18px] oui-p-[2px] oui-bg-base-5 oui-rounded-[100px] oui-flex oui-items-center">
+            <div
+              className={cn([
+                "oui-w-[225px] oui-h-[18px] oui-p-[2px] oui-bg-base-5 oui-rounded-[100px] oui-flex oui-items-center",
+                props.isMobile ? "oui-w-full" : "oui-w-[225px]",
+              ])}
+            >
               <div
                 className={cn([
                   "oui-h-[14px] oui-rounded-[100px]",
@@ -257,7 +282,12 @@ const RewardItem: FC<{
                 style={{ width: `${props?.extraInfo?.percent}%` }}
               />
             </div>
-            <div>
+            <div
+              className={cn([
+                "oui-text-center oui-font-semibold",
+                props.isMobile ? "oui-text-2xs oui-leading-[15px]" : "",
+              ])}
+            >
               Trade{" "}
               <span className="oui-text-base-contrast">
                 ${props?.extraInfo?.value}

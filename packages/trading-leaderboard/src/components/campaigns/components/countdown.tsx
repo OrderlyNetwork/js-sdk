@@ -1,4 +1,5 @@
 import { FC, useState, useEffect } from "react";
+import { cn } from "@orderly.network/ui";
 import { CampaignConfig } from "../type";
 
 const Circle = () => (
@@ -15,22 +16,43 @@ interface TimeLeft {
 interface TimeUnitProps {
   value: number;
   label: string;
+  isMobile?: boolean;
 }
 
-const TimeUnit: FC<TimeUnitProps> = ({ value, label }) => (
-  <div className="oui-flex oui-flex-col oui-items-center oui-gap-1 oui-w-[63px]">
-    <div className="oui-trading-leaderboard-title oui-text-base-contrast oui-font-medium oui-text-[36px] oui-leading-[44px] oui-h-[44px]">
+const TimeUnit: FC<TimeUnitProps> = ({ value, label, isMobile }) => (
+  <div
+    className={cn([
+      "oui-flex oui-flex-col oui-items-center oui-gap-1",
+      isMobile ? "oui-w-[45px]" : "oui-w-[63px]",
+    ])}
+  >
+    <div
+      className={cn([
+        "oui-trading-leaderboard-title oui-text-base-contrast oui-font-medium",
+        isMobile
+          ? "oui-text-[20px] oui-leading-[24px] oui-h-[24px]"
+          : "oui-text-[36px] oui-leading-[44px] oui-h-[44px]",
+      ])}
+    >
       {value.toString().padStart(2, "0")}
     </div>
-    <div className="oui-trading-leaderboard-title oui-text-base-contrast-80 oui-text-sm oui-font-medium">
+    <div
+      className={cn([
+        "oui-trading-leaderboard-title oui-text-base-contrast-80 oui-font-medium",
+        isMobile
+          ? "oui-text-[10px] oui-leading-[14px] oui-h-[14px]"
+          : "oui-text-sm oui-leading-[20px] oui-h-[20px]",
+      ])}
+    >
       {label}
     </div>
   </div>
 );
 
-export const CampaignsCountdown: FC<{ campaign: CampaignConfig }> = ({
-  campaign,
-}) => {
+export const CampaignsCountdown: FC<{
+  campaign: CampaignConfig;
+  isMobile?: boolean;
+}> = ({ campaign, isMobile }) => {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({
     days: 0,
     hours: 0,
@@ -90,7 +112,14 @@ export const CampaignsCountdown: FC<{ campaign: CampaignConfig }> = ({
           className="oui-max-w-[382px] oui-w-full oui-h-[1px] oui-bg-gradient-to-r oui-from-[rgba(var(--oui-gradient-brand-end)/0)]
         oui-to-[rgba(var(--oui-gradient-brand-start))]"
         />
-        <div className="oui-trading-leaderboard-title oui-flex oui-items-center oui-justify-center oui-p-5 oui-text-base-contrast-54 oui-text-[18px] oui-leading-[26px] oui-font-medium oui-whitespace-nowrap">
+        <div
+          className={cn([
+            "oui-trading-leaderboard-title oui-flex oui-items-center oui-justify-center oui-font-medium oui-text-base-contrast-54",
+            isMobile
+              ? "oui-text-[14px] oui-leading-[20px] oui-h-[20px] oui-whitespace-nowrap"
+              : "oui-p-5 oui-text-[18px] oui-leading-[26px] oui-h-[26px]",
+          ])}
+        >
           Battle has ended
         </div>
         <div
@@ -117,17 +146,41 @@ export const CampaignsCountdown: FC<{ campaign: CampaignConfig }> = ({
         className="oui-max-w-[298px] oui-w-full oui-h-[1px] oui-bg-gradient-to-r oui-from-[rgba(var(--oui-gradient-brand-end)/0)]
         oui-to-[rgba(var(--oui-gradient-brand-start))]"
       />
-      <div className="oui-flex oui-flex-col oui-items-center oui-p-5 oui-gap-2">
-        <div className="oui-trading-leaderboard-title oui-text-base-contrast-54 oui-text-[18px] oui-leading-[26px] oui-h-[26px] oui-font-medium">
+      <div
+        className={cn([
+          "oui-flex oui-flex-col oui-items-center",
+          isMobile ? "oui-p-0 oui-gap-1" : "oui-p-5 oui-gap-2",
+        ])}
+      >
+        <div
+          className={cn([
+            "oui-trading-leaderboard-title oui-font-medium oui-text-base-contrast-54",
+            isMobile
+              ? "oui-text-[14px] oui-leading-[20px] oui-h-[20px]"
+              : "oui-text-[18px] oui-leading-[26px] oui-h-[26px]",
+          ])}
+        >
           {titleText}
         </div>
-        <div className="oui-flex oui-items-center oui-gap-[10px]">
+        <div
+          className={cn([
+            "oui-flex oui-items-center",
+            isMobile ? "oui-gap-2" : "oui-gap-[10px]",
+          ])}
+        >
           {timeUnits.map((unit, index) => (
             <div
               key={unit.label}
-              className="oui-flex oui-items-center oui-gap-[10px]"
+              className={cn([
+                "oui-flex oui-items-center",
+                isMobile ? "oui-gap-2" : "oui-gap-[10px]",
+              ])}
             >
-              <TimeUnit value={unit.value} label={unit.label} />
+              <TimeUnit
+                value={unit.value}
+                label={unit.label}
+                isMobile={isMobile}
+              />
               {index < timeUnits.length - 1 && <Circle />}
             </div>
           ))}

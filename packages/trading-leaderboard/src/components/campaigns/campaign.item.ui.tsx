@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { cn, Text } from "@orderly.network/ui";
+import { cn, Text, useScreen } from "@orderly.network/ui";
 import { CampaignConfig, CampaignTagEnum } from "./type";
 
 interface CampaignItemUIProps {
@@ -9,6 +9,15 @@ interface CampaignItemUIProps {
   onCampaignChange: (campaignId: string) => void;
   campaign: CampaignConfig;
   backgroundSrc?: string;
+  classNames?: {
+    container?: string;
+    content?: string;
+    tag?: {
+      container?: string;
+      text?: string;
+    };
+    title?: string;
+  };
 }
 
 export const CampaignItemUI: FC<CampaignItemUIProps> = ({
@@ -17,6 +26,7 @@ export const CampaignItemUI: FC<CampaignItemUIProps> = ({
   onCampaignChange,
   campaign,
   backgroundSrc,
+  classNames,
 }) => {
   return (
     <div
@@ -28,45 +38,63 @@ export const CampaignItemUI: FC<CampaignItemUIProps> = ({
           ? "oui-border-[rgba(var(--oui-gradient-brand-start))]"
           : "oui-border-transparent",
         "hover:oui-border-base-contrast",
+        classNames?.container,
       ])}
       onClick={() => onCampaignChange(campaign.campaign_id.toString())}
     >
-      <CampaignTag tag={tag} active={active} />
+      <CampaignTag tag={tag} active={active} classNames={classNames?.tag} />
       <div
         className={cn([
-          "oui-flex oui-items-center oui-justify-center oui-h-full oui-w-full",
+          "oui-flex oui-flex-col oui-items-center oui-justify-center oui-gap-1 oui-h-full oui-w-full",
           "oui-bg-cover oui-bg-center oui-bg-no-repeat",
           active ? "oui-grayscale-0" : "oui-grayscale",
           "group-hover:oui-grayscale-0",
+          classNames?.content,
         ])}
         style={{ backgroundImage: `url(${campaign?.image || backgroundSrc})` }}
       >
         <Text
-          size="base"
           weight="semibold"
           className={cn([
             active ? "oui-text-base-contrast" : "oui-text-base-contrast-54",
             "group-hover:oui-text-base-contrast",
             "oui-trading-leaderboard-title",
-            "oui-text-center",
+            "oui-text-center oui-text-sm oui-w-[60%]",
+            classNames?.title,
           ])}
         >
           {campaign.title}
         </Text>
+        {campaign.referral_codes && (
+          <Text
+            className={cn([
+              "oui-text-base-contrast-54",
+              "oui-text-center oui-text-[10px]",
+            ])}
+          >
+            {Array.isArray(campaign.referral_codes)
+              ? campaign.referral_codes.join(",")
+              : campaign.referral_codes}
+          </Text>
+        )}
       </div>
     </div>
   );
 };
 
-const CampaignTag: FC<{ tag: CampaignTagEnum; active?: boolean }> = ({
-  tag,
-  active,
-}) => {
+const CampaignTag: FC<{
+  tag: CampaignTagEnum;
+  active?: boolean;
+  classNames?: {
+    container?: string;
+    text?: string;
+  };
+}> = ({ tag, active, classNames }) => {
   const tagText = tag.slice(0, 1).toUpperCase() + tag.slice(1);
   return (
     <div
       className={cn([
-        "oui-h-[23px] oui-py-1 oui-px-2 oui-rounded-br-lg oui-w-fit",
+        "oui-rounded-br-lg oui-w-fit",
         "oui-flex oui-items-center oui-absolute oui-top-0 oui-left-0 oui-z-10",
         active && tag !== CampaignTagEnum.COMING
           ? "oui-bg-[rgba(var(--oui-gradient-brand-start))]"
@@ -74,13 +102,14 @@ const CampaignTag: FC<{ tag: CampaignTagEnum; active?: boolean }> = ({
         active && tag !== CampaignTagEnum.ENDED && "group-hover:oui-bg-base-4",
         tag === CampaignTagEnum.ENDED &&
           "oui-bg-base-6 group-hover:oui-bg-base-6",
+        classNames?.container,
       ])}
     >
       {tag === CampaignTagEnum.ENDED ? (
         <Text
           size="2xs"
           weight="semibold"
-          className={cn(["oui-text-base-contrast-54"])}
+          className={cn(["oui-text-base-contrast-54", classNames?.text])}
         >
           {tagText}
         </Text>
@@ -93,6 +122,7 @@ const CampaignTag: FC<{ tag: CampaignTagEnum; active?: boolean }> = ({
             active &&
               tag !== CampaignTagEnum.COMING &&
               "oui-text-black/[0.88] group-hover:oui-text-transparent",
+            classNames?.text,
           ])}
         >
           {tagText}
