@@ -5,7 +5,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import { isEmpty, sortWith, descend, prop } from "ramda";
+import { sortWith, descend, prop } from "ramda";
 import { CampaignConfig, UserData } from "../campaigns/type";
 
 /**
@@ -21,7 +21,7 @@ export type TradingLeaderboardState = {
     trading: string;
   };
   currentCampaignId: string;
-  currentCampaign: CampaignConfig | undefined;
+  currentCampaign?: CampaignConfig;
   onCampaignChange: (campaignId: string) => void;
   /** leaderboard user data, it will be used to calculate the rewards */
   userData?: UserData;

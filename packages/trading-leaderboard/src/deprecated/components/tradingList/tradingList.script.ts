@@ -71,7 +71,7 @@ export function useTradingListScript() {
     searchParams.set("page", args.page.toString());
     searchParams.set("size", args.pageSize.toString());
 
-    searchParams.set("aggregateBy", "ACCOUNT");
+    searchParams.set("aggregateBy", "address_per_builder");
 
     if (brokerId) {
       searchParams.set("broker_id", brokerId);

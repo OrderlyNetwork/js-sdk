@@ -12,7 +12,7 @@ type LeaderboardTabsProps = {
 };
 
 export const LeaderboardTabs: FC<LeaderboardTabsProps> = (props) => {
-  const { updatedTime } = useTradingLeaderboardContext();
+  const { updatedTime, currentCampaign } = useTradingLeaderboardContext();
 
   const updateTime = useMemo(() => {
     if (updatedTime) {
@@ -20,6 +20,69 @@ export const LeaderboardTabs: FC<LeaderboardTabsProps> = (props) => {
     }
     return "";
   }, [props.isMobile, updatedTime]);
+
+  const { showVolume, showPnl } = useMemo(() => {
+    const metrics = currentCampaign?.prize_pools?.map((item) => item.metric);
+    const showVolume = metrics?.includes(LeaderboardTab.Volume);
+    const showPnl = metrics?.includes(LeaderboardTab.Pnl);
+
+    return {
+      showVolume,
+      showPnl,
+    };
+  }, [currentCampaign, props.activeTab]);
+
+  const renderTabs = () => {
+    if (showVolume && showPnl) {
+      return (
+        <Tabs
+          value={props.activeTab}
+          onValueChange={props.onTabChange as (tab: string) => void}
+          variant="contained"
+          size="lg"
+          key={currentCampaign?.campaign_id}
+        >
+          <TabPanel
+            title="Trading volume"
+            value={LeaderboardTab.Volume}
+          ></TabPanel>
+          <TabPanel title="Realized PnL" value={LeaderboardTab.Pnl}></TabPanel>
+        </Tabs>
+      );
+    }
+    // return <div></div>;
+
+    if (showVolume) {
+      return (
+        <Tabs
+          value={props.activeTab}
+          onValueChange={props.onTabChange as (tab: string) => void}
+          variant="contained"
+          size="lg"
+          key={currentCampaign?.campaign_id}
+        >
+          <TabPanel
+            title="Trading volume"
+            value={LeaderboardTab.Volume}
+          ></TabPanel>
+        </Tabs>
+      );
+    }
+
+    if (showPnl) {
+      return (
+        <Tabs
+          value={props.activeTab}
+          onValueChange={props.onTabChange as (tab: string) => void}
+          variant="contained"
+          size="lg"
+          key={currentCampaign?.campaign_id}
+        >
+          <TabPanel title="Realized PnL" value={LeaderboardTab.Pnl}></TabPanel>
+        </Tabs>
+      );
+    }
+  };
 
   return (
     <Flex
@@ -32,7 +95,8 @@ export const LeaderboardTabs: FC<LeaderboardTabsProps> = (props) => {
         props.className,
       )}
     >
-      <Tabs
+      {renderTabs()}
+      {/* <Tabs
         value={props.activeTab}
         onValueChange={props.onTabChange as (tab: string) => void}
         variant="contained"
@@ -43,7 +107,7 @@ export const LeaderboardTabs: FC<LeaderboardTabsProps> = (props) => {
           value={LeaderboardTab.Volume}
         ></TabPanel>
         <TabPanel title="Realized PnL" value={LeaderboardTab.Pnl}></TabPanel>
-      </Tabs>
+      </Tabs> */}
       {updateTime && (
         <Flex
           itemAlign="start"

@@ -161,7 +161,11 @@ export const useRankingColumns = (
             return "-";
           }
           return (
-            <Text.numeral suffix={` ${value?.currency}`} rule="price" dp={0}>
+            <Text.numeral
+              suffix={` ${value?.currency || ""}`}
+              rule="price"
+              dp={0}
+            >
               {value?.amount}
             </Text.numeral>
           );

@@ -66,7 +66,7 @@ export function useCampaignRankingScript(
   const { isMobile } = useScreen();
 
   const { page, pageSize, setPage, parsePagination } = usePagination({
-    pageSize: 20,
+    pageSize: isMobile ? 100 : 20,
   });
 
   const getUrl = (args: {
@@ -77,7 +77,11 @@ export function useCampaignRankingScript(
     const searchParams = new URLSearchParams();
 
     searchParams.set("page", args.page.toString());
-    searchParams.set("size", args.pageSize.toString());
+    searchParams.set(
+      "size",
+      // if page is 1, we need to set page size to 100 to get the top 100 data to judge user rank
+      args.page === 1 ? "100" : args.pageSize.toString(),
+    );
 
     if (campaignId) {
       searchParams.set("campaign_id", campaignId.toString());
@@ -222,14 +226,25 @@ export function useCampaignRankingScript(
   );
 
   const dataSource = useMemo(() => {
-    const list = data?.rows || [];
+    let list = data?.rows || [];
+    if (page === 1) {
+      list = list.slice(0, pageSize);
+    }
     const total = data?.meta.total || 0;
     const rankList = addRankForList(list, total);
     const _data =
       page === 1 ? (userData ? [userData, ...rankList] : rankList) : rankList;
 
     return formatData(_data, currentCampaign, sortKey);
-  }, [data, page, userData, addRankForList, currentCampaign, sortKey]);
+  }, [
+    data,
+    page,
+    pageSize,
+    userData,
+    addRankForList,
+    currentCampaign,
+    sortKey,
+  ]);
 
   const dataList = useMemo(() => {
     if (!infiniteData?.length) {
@@ -246,10 +261,14 @@ export function useCampaignRankingScript(
   }, [infiniteData, userData, addRankForList, currentCampaign, sortKey]);
 
   const sentinelRef = useRef<HTMLDivElement | null>(null);
-
   const pagination = useMemo(
-    () => parsePagination(data?.meta),
-    [parsePagination, data],
+    () =>
+      parsePagination({
+        total: data?.meta?.total || 0,
+        current_page: data?.meta?.current_page || 1,
+        records_per_page: pageSize,
+      }),
+    [data?.meta?.total, data?.meta?.current_page, pageSize],
   );
 
   useEndReached(sentinelRef, () => {
@@ -297,6 +316,7 @@ function formatData(
   const pool = currentCampaign?.prize_pools?.find(
     (item) => item.metric === metric,
   );
+
   return data.map((item) => {
     const rewards = pool ? calculateUserPoolReward(item as UserData, pool!) : 0;
 
