@@ -191,3 +191,80 @@ export function calculateUserPoolReward(
 ): number {
   return findRewardInPool(userdata, pool);
 }
+
+/**
+ * Calculate progress percentage and next tier requirements for tickets
+ * @param userdata User's current trading data
+ * @param ticketRules Ticket configuration rules
+ * @returns Object containing progress percentage and next tier requirements
+ */
+export function calculateTicketProgress(
+  userdata: UserData,
+  ticketRules: TicketRules,
+): { percent: number; value: number } | null {
+  if (!userdata || !ticketRules) return null;
+
+  const userMetricValue = getUserMetricValue(userdata, ticketRules.metric);
+
+  if (ticketRules.mode === "linear") {
+    if (!ticketRules.linear) return null;
+
+    const { every, tickets } = ticketRules.linear;
+    const currentTier = Math.floor(userMetricValue / every);
+    const nextTier = currentTier + 1;
+    const progress = ((userMetricValue % every) / every) * 100;
+    const nextTierValue = nextTier * every;
+
+    return {
+      percent: progress,
+      value: nextTierValue - userMetricValue,
+    };
+  }
+
+  if (ticketRules.mode === "tiered" && ticketRules.tiers) {
+    const sortedTiers = [...ticketRules.tiers].sort(
+      (a, b) => a.value - b.value,
+    );
+
+    // Special case: if user metric value is 0 or negative, show progress to first tier
+    if (userMetricValue <= 0) {
+      return {
+        percent: 0,
+        value: sortedTiers[0].value,
+      };
+    }
+
+    // Find current tier and next tier
+    let currentTier = sortedTiers[0];
+    let nextTier = null;
+
+    for (let i = 0; i < sortedTiers.length; i++) {
+      if (userMetricValue >= sortedTiers[i].value) {
+        currentTier = sortedTiers[i];
+        nextTier = sortedTiers[i + 1];
+      } else {
+        break;
+      }
+    }
+
+    if (!nextTier) {
+      // User is at the highest tier
+      return {
+        percent: 100,
+        value: 0,
+      };
+    }
+
+    const progress =
+      ((userMetricValue - currentTier.value) /
+        (nextTier.value - currentTier.value)) *
+      100;
+
+    return {
+      percent: progress,
+      value: nextTier.value - userMetricValue,
+    };
+  }
+
+  return null;
+}

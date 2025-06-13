@@ -96,7 +96,7 @@ export const CampaignsHeaderUI: FC<{
     : campaigns.length <= 2;
 
   return (
-    <div className="oui-flex oui-gap-2 oui-w-full oui-items-center">
+    <div className="oui-flex oui-gap-2 oui-w-full oui-items-center oui-px-6">
       <div className="oui-flex-shrink-0">
         <DefaultCampaign
           currentCampaignId={currentCampaignId}
@@ -131,7 +131,7 @@ export const CampaignsHeaderUI: FC<{
                   backgroundSrc={backgroundSrc}
                   campaign={campaign}
                   tag={getCampaignTag(campaign)}
-                  active={currentCampaignId === campaign.campaign_id}
+                  active={currentCampaignId == campaign.campaign_id}
                   onCampaignChange={onCampaignChange}
                 />
               </div>

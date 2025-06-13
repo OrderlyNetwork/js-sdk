@@ -26,7 +26,7 @@ export const CampaignsWidget: FC<CampaignsWidgetProps> = (props) => {
 
   return (
     <div
-      className={cn(["oui-overflow-hidden"], props.className)}
+      className={cn(["oui-overflow-hidden oui-relative oui-z-[1]"])}
       style={props.style}
     >
       <CampaignsHeaderUI
