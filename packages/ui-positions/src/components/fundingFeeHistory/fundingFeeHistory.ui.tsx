@@ -25,10 +25,12 @@ type FundingFeeHistory = {
   updated_time: number;
 };
 
-export const FundingFeeHistoryUI: FC<{ total: string; symbol: string }> = ({
-  total,
-  symbol,
-}) => {
+export const FundingFeeHistoryUI: FC<{
+  total: number;
+  symbol: string;
+  start_t: string;
+  end_t: string;
+}> = ({ total, symbol, start_t, end_t }) => {
   const { t } = useTranslation();
   const { isMobile } = useScreen();
 
@@ -36,17 +38,28 @@ export const FundingFeeHistoryUI: FC<{ total: string; symbol: string }> = ({
     usePrivateInfiniteQuery<FundingFeeHistory>(
       (pageIndex, previousPageData) => {
         if (previousPageData && !previousPageData.length) return null;
-        return `/v1/funding_fee/history?page=${pageIndex}&symbol=${symbol}`;
+        return `/v1/funding_fee/history?page=${pageIndex}&symbol=${symbol}&start_t=${start_t}&end_t=${end_t}`;
+      },
+      {
+        revalidateFirstPage: false,
       },
     );
 
   const loadMore = useCallback(() => {
-    setSize((prev) => prev + 1);
+    setSize((prev) => {
+      // console.log(">>>>>>>>loadMore", prev);
+      return prev + 1;
+    });
   }, [setSize]);
 
   const flattenData = useMemo(() => {
     if (!Array.isArray(data)) return [];
-    return data.flat();
+    return data.flat().map((item) => {
+      return {
+        ...item,
+        funding_fee: -item.funding_fee,
+      };
+    });
   }, [data]);
 
   const listView = useMemo(() => {
@@ -69,13 +82,14 @@ export const FundingFeeHistoryUI: FC<{ total: string; symbol: string }> = ({
   }, [isMobile, flattenData, isLoading]);
 
   return (
-    <div className="oui-h-full">
+    <div>
       <Grid
         cols={2}
         gapX={3}
         className="oui-sticky oui-top-0 oui-z-10 oui-bg-base-8 oui-py-4"
       >
-        <div className="oui-bg-base-9 oui-rounded-lg oui-p-3 oui-border oui-border-line-6">
+        <div className="oui-rounded-lg oui-border oui-border-line-6 oui-bg-base-9 oui-p-3">
+          {/* <Statistic label={"Instrument"} /> */}
           <Flex direction={"column"} gap={1} itemAlign={"start"}>
             <span className="oui-text-2xs oui-text-base-contrast-36">
               {t("common.symbol")}
@@ -89,7 +103,7 @@ export const FundingFeeHistoryUI: FC<{ total: string; symbol: string }> = ({
             </Text.formatted>
           </Flex>
         </div>
-        <div className="oui-bg-base-9 oui-rounded-lg oui-p-3 oui-border oui-border-line-6">
+        <div className="oui-rounded-lg oui-border oui-border-line-6 oui-bg-base-9 oui-p-3">
           <Statistic
             label={`${t("funding.fundingFee")} (USDC)`}
             valueProps={{
@@ -158,19 +172,18 @@ const HistoryDataListView: FC<ListProps> = ({ isLoading, data, loadMore }) => {
   }, [t]);
 
   return (
-    <EndReachedBox onEndReached={loadMore}>
-      <DataTable
-        classNames={{
-          root: cn(
-            "oui-bg-base-8 oui-text-sm",
-            "oui-h-[calc(80vh_-_102px_-_8px)]",
-          ),
-        }}
-        columns={columns}
-        dataSource={data ?? []}
-        loading={isLoading}
-      />
-    </EndReachedBox>
+    <div className="oui-h-[calc(80vh_-_132px_-_8px)] oui-overflow-y-auto">
+      <EndReachedBox onEndReached={loadMore}>
+        <DataTable
+          classNames={{
+            root: cn("oui-h-auto oui-bg-base-8 oui-text-sm"),
+          }}
+          columns={columns}
+          dataSource={data ?? []}
+          loading={isLoading}
+        />
+      </EndReachedBox>
+    </div>
   );
 };
 

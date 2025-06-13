@@ -21,7 +21,7 @@ export const EndReachedBox: FC<PropsWithChildren<EndReachedBoxProps>> = (
       {props.children}
       <div
         ref={sentinelRef}
-        className="oui-relative oui-invisible oui-h-[1px] oui-bg-red-400"
+        className="oui-relative oui-invisible oui-h-[25px] oui-bg-red-400 oui-top-[-300px]"
       />
     </>
   );

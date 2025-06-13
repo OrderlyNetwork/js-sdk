@@ -20,6 +20,7 @@ export function useEndReached(
     };
 
     const handleObserver = (entries: IntersectionObserverEntry[]) => {
+      console.log(">>>>>>>>handleObserver", entries);
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           cb.current?.();
@@ -30,6 +31,7 @@ export function useEndReached(
     observer.current = new IntersectionObserver(handleObserver, options);
 
     return () => {
+      // console.log("------->disconnect");
       observer.current?.disconnect();
     };
   }, []);
