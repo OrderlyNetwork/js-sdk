@@ -1,3 +1,3 @@
 export { FavoritesTab } from "./favoritesTabs.ui";
 export { useFavoritesTabScript } from "./favoritesTabs.script";
-export { FavoritesTabWidget } from "./widget";
+export { FavoritesTabWidget } from "./favoritesTabs.widget";

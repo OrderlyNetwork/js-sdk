@@ -1,13 +1,13 @@
 import { FC, useState } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import { Box, cn, TabPanel, Tabs, Text } from "@orderly.network/ui";
-import { MarketsDataListWidget } from "./dataList";
-import { MarketsHeaderWidget } from "./header/widget";
-import { FundingWidget } from "./funding/widget";
 import {
   MarketsProvider,
   MarketsProviderProps,
 } from "../../components/marketsProvider";
-import { useTranslation } from "@orderly.network/i18n";
+import { MarketsDataListWidget } from "./dataList";
+import { FundingWidget } from "./funding/funding.widget";
+import { MarketsHeaderWidget } from "./header/header.widget";
 
 export type MarketsHomePageProps = MarketsProviderProps & {
   className?: string;

@@ -3,7 +3,7 @@ import { MarketsType, useMarkets } from "@orderly.network/hooks";
 import { TabName } from "../../type";
 import { searchBySymbol, useSort } from "../../utils";
 import { useMarketsContext } from "../marketsProvider";
-import { type MarketsListWidgetProps } from "./widget";
+import { type MarketsListWidgetProps } from "./marketsList.widget";
 
 export type MarketsListScriptOptions = MarketsListWidgetProps;
 

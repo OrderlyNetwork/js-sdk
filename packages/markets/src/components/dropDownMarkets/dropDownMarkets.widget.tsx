@@ -1,7 +1,7 @@
 import React, { PropsWithChildren } from "react";
+import { MarketsProvider, MarketsProviderProps } from "../marketsProvider";
 import { useDropDownMarketsScript } from "./dropDownMarkets.script";
 import { DropDownMarkets, DropDownMarketsProps } from "./dropDownMarkets.ui";
-import { MarketsProvider, MarketsProviderProps } from "../marketsProvider";
 
 export type DropDownMarketsWidgetProps = MarketsProviderProps &
   Pick<DropDownMarketsProps, "contentClassName">;

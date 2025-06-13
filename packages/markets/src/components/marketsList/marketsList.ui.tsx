@@ -4,7 +4,7 @@ import { CollapseMarkets } from "../collapseMarkets";
 import { useMarketsContext } from "../marketsProvider";
 import { useSideMarketsColumns } from "../sideMarkets/column";
 import { type MarketsListScriiptReturn } from "./marketsList.script";
-import { type MarketsListWidgetProps } from "./widget";
+import { type MarketsListWidgetProps } from "./marketsList.widget";
 
 export type MarketsListProps = MarketsListScriiptReturn &
   Pick<

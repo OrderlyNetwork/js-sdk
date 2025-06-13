@@ -1,10 +1,11 @@
 import { FC, ReactNode, useMemo } from "react";
-import { HeaderReturns } from "./header.script";
+import { useTranslation } from "@orderly.network/i18n";
 import { Box, cn, Flex, Text } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { useMarketsContext } from "../../../components/marketsProvider";
 import { OrderlyIcon } from "../../../icons";
-import { useTranslation } from "@orderly.network/i18n";
+import { HeaderReturns } from "./header.script";
+
 /** -----------MarketsHeader start ------------ */
 export const MarketsHeader: FC<HeaderReturns> = (props) => {
   const {
@@ -25,7 +26,7 @@ export const MarketsHeader: FC<HeaderReturns> = (props) => {
 
   const cls = cn(
     "oui-flex-[0_0_calc((100%_-_32px)_/_3)] 3xl:oui-flex-[0_0_calc((100%_-_48px)_/_4)] oui-min-w-0",
-    enableScroll && "oui-select-none oui-cursor-pointer"
+    enableScroll && "oui-select-none oui-cursor-pointer",
   );
 
   const onSymbol = (item: any) => {
@@ -137,9 +138,7 @@ const BlockList: React.FC<BlockListProps> = (props) => {
       height={236}
       className={props.className}
     >
-      {list?.map((item, index) => (
-        <BlockItem key={index} {...item} />
-      ))}
+      {list?.map((item, index) => <BlockItem key={index} {...item} />)}
     </Flex>
   );
 };
@@ -307,7 +306,7 @@ const ScrollIndicator: React.FC<ScrollIndicatorProps> = (props) => {
                 "oui-transition-all oui-duration-300",
                 scrollIndex === item
                   ? "oui-bg-base-contrast-36 oui-w-4"
-                  : "oui-bg-base-contrast-20"
+                  : "oui-bg-base-contrast-20",
               )}
             />
           </Box>

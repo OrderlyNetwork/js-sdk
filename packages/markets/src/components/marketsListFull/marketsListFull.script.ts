@@ -3,7 +3,7 @@ import { MarketsType, useMarkets } from "@orderly.network/hooks";
 import { TableSort, usePagination } from "@orderly.network/ui";
 import { useMarketsContext } from "../../components/marketsProvider";
 import { searchBySymbol, useSort } from "../../utils";
-import { MarketsListFullWidgetProps } from "./widget";
+import { MarketsListFullWidgetProps } from "./marketsListFull.widget";
 
 export type UseMarketsListFullScriptOptions = MarketsListFullWidgetProps;
 
