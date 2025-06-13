@@ -1,5 +1,20 @@
 # @orderly.network/trading-rewards
 
+## 2.2.1-internal-20250612.8
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.2.1-internal-20250612.8
+  - @orderly.network/hooks@2.2.1-internal-20250612.8
+  - @orderly.network/i18n@2.2.1-internal-20250612.8
+  - @orderly.network/types@2.2.1-internal-20250612.8
+  - @orderly.network/ui@2.2.1-internal-20250612.8
+  - @orderly.network/ui-connector@2.2.1-internal-20250612.8
+  - @orderly.network/ui-scaffold@2.2.1-internal-20250612.8
+  - @orderly.network/utils@2.2.1-internal-20250612.8
+
 ## 2.2.1-internal-20250612.7
 
 ### Patch Changes
