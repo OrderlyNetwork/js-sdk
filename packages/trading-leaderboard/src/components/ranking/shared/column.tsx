@@ -153,7 +153,7 @@ export const useRankingColumns = (
         width: 90,
       },
       {
-        title: "Estimated rewards",
+        title: t("tradingLeaderboard.estimatedRewards"),
         dataIndex: "rewards",
         align: isMobile ? "right" : "left",
         render: (value: { amount: number; currency: string }) => {

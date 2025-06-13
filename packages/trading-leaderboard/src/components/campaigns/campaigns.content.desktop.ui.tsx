@@ -1,4 +1,5 @@
 import { FC, useMemo } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import { cn, Text, InfoCircleIcon, Button, Tooltip } from "@orderly.network/ui";
 import { CampaignConfig, CampaignStatistics } from "./type";
 import {
@@ -16,6 +17,7 @@ export const CampaignsContentDesktopUI: FC<{
   onTradeNow: () => void;
   backgroundSrc?: string;
 }> = ({ campaign, statistics, onLearnMore, onTradeNow, backgroundSrc }) => {
+  const { t } = useTranslation();
   if (!campaign) {
     return null;
   }
@@ -147,7 +149,7 @@ export const CampaignsContentDesktopUI: FC<{
                 weight="semibold"
                 className="oui-text-base-contrast-36"
               >
-                Trading volume
+                {t("tradingLeaderboard.tradingVolume")}
               </Text>
               <Text.numeral
                 dp={2}

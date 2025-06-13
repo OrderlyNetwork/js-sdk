@@ -1,4 +1,5 @@
 import { FC, ReactNode } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import { Box, cn, Flex, Text } from "@orderly.network/ui";
 import { Background } from "../../components/background";
 import { CampaignsWidget } from "../../components/campaigns/campaigns.widget";
@@ -48,6 +49,7 @@ type LeaderboardSectionProps = {
 };
 
 export const LeaderboardSection: FC<LeaderboardSectionProps> = (props) => {
+  const { t } = useTranslation();
   const { currentCampaignId, currentCampaign, backgroundSrc } =
     useTradingLeaderboardContext();
 
@@ -63,7 +65,7 @@ export const LeaderboardSection: FC<LeaderboardSectionProps> = (props) => {
   if (currentCampaign && currentCampaignId != "general") {
     return (
       <>
-        <LeaderboardTitle title="Leaderboard" />
+        <LeaderboardTitle title={t("tradingLeaderboard.leaderboard")} />
         <CampaignLeaderboardWidget {...props} campaignId={currentCampaignId} />
       </>
     );

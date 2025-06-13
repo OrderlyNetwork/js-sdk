@@ -7,7 +7,10 @@ export const tradingLeaderboard = {
   "tradingLeaderboard.learnMore": "Learn more",
   "tradingLeaderboard.tradeNow": "Trade now",
   "tradingLeaderboard.tradingVolume": "Trading volume",
+  "tradingLeaderboard.realizedPnl": "Realized PnL",
   "tradingLeaderboard.rank": "Rank",
+  "tradingLeaderboard.estimatedRewards": "Estimated rewards",
+  "tradingLeaderboard.lastUpdate": "Last update",
 };
 
 export type TradingLeaderboard = typeof tradingLeaderboard;

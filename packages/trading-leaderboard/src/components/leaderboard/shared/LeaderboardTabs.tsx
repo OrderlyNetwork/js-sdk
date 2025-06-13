@@ -1,4 +1,5 @@
 import { FC, useMemo } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import { cn, Flex, TabPanel, Tabs } from "@orderly.network/ui";
 import { LeaderboardTab } from "../../../type";
 import { formatUpdateDate } from "../../../utils";
@@ -12,6 +13,7 @@ type LeaderboardTabsProps = {
 };
 
 export const LeaderboardTabs: FC<LeaderboardTabsProps> = (props) => {
+  const { t } = useTranslation();
   const { updatedTime, currentCampaign } = useTradingLeaderboardContext();
 
   const updateTime = useMemo(() => {
@@ -46,11 +48,13 @@ export const LeaderboardTabs: FC<LeaderboardTabsProps> = (props) => {
             title="Trading volume"
             value={LeaderboardTab.Volume}
           ></TabPanel>
-          <TabPanel title="Realized PnL" value={LeaderboardTab.Pnl}></TabPanel>
+          <TabPanel
+            title={t("tradingLeaderboard.realizedPnl")}
+            value={LeaderboardTab.Pnl}
+          ></TabPanel>
         </Tabs>
       );
     }
-    // return <div></div>;
 
     if (showVolume) {
       return (
@@ -62,7 +66,7 @@ export const LeaderboardTabs: FC<LeaderboardTabsProps> = (props) => {
           key={currentCampaign?.campaign_id}
         >
           <TabPanel
-            title="Trading volume"
+            title={t("tradingLeaderboard.tradingVolume")}
             value={LeaderboardTab.Volume}
           ></TabPanel>
         </Tabs>
@@ -78,10 +82,14 @@ export const LeaderboardTabs: FC<LeaderboardTabsProps> = (props) => {
           size="lg"
           key={currentCampaign?.campaign_id}
         >
-          <TabPanel title="Realized PnL" value={LeaderboardTab.Pnl}></TabPanel>
+          <TabPanel
+            title={t("tradingLeaderboard.realizedPnl")}
+            value={LeaderboardTab.Pnl}
+          ></TabPanel>
         </Tabs>
       );
     }
+    return <div></div>;
   };
 
   return (
@@ -118,7 +126,7 @@ export const LeaderboardTabs: FC<LeaderboardTabsProps> = (props) => {
             "oui-text-base-contrast-36",
           )}
         >
-          <span>Last update:</span>
+          <span>{t("tradingLeaderboard.lastUpdate")}:</span>
           <span>{updateTime}</span>
         </Flex>
       )}
