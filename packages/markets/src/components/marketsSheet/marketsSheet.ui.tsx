@@ -3,14 +3,16 @@ import {
   Box,
   CloseCircleFillIcon,
   cn,
-  Grid,
   Input,
+  TabPanel,
+  Tabs,
   Text,
 } from "@orderly.network/ui";
-import { SearchIcon } from "../../icons";
+import { FavoritesIcon, SearchIcon } from "../../icons";
 import { MarketsTabName } from "../../type";
 import { MarketsListWidget } from "../marketsList";
 import { useMarketsContext } from "../marketsProvider";
+import { useFavoritesProps } from "../shared/hooks/useFavoritesExtraProps";
 import { getMarketsSheetColumns } from "./column";
 import { MarketsSheetScriptReturn } from "./marketsSheet.script";
 
@@ -24,6 +26,29 @@ export const MarketsSheet: React.FC<MarketsSheetProps> = (props) => {
     useMarketsContext();
 
   const { t } = useTranslation();
+
+  const { renderHeader, dataFilter } = useFavoritesProps();
+
+  const renderTab = (type: MarketsTabName) => {
+    const isFavorite = type === MarketsTabName.Favorites;
+    const extraProps = isFavorite ? { renderHeader, dataFilter } : {};
+
+    return (
+      <MarketsListWidget
+        type={type}
+        initialSort={tabSort[type]}
+        onSort={onTabSort(type)}
+        getColumns={getMarketsSheetColumns}
+        tableClassNames={{
+          root: "!oui-bg-base-8 oui-pb-[calc(env(safe-area-inset-bottom))]",
+          scroll: isFavorite
+            ? "oui-h-[calc(100%_-_70px)]"
+            : "oui-h-[calc(100%_-_40px)]",
+        }}
+        {...extraProps}
+      />
+    );
+  };
 
   const search = (
     <Input
@@ -51,39 +76,40 @@ export const MarketsSheet: React.FC<MarketsSheetProps> = (props) => {
       autoComplete="off"
     />
   );
-
   return (
-    <Grid
-      cols={1}
-      className={cn("oui-grid-rows-[auto,1fr] oui-font-semibold", className)}
-      height="100%"
-      width="100%"
-    >
-      <Box px={3} mt={3}>
+    <Box height="100%" className={cn("oui-font-semibold", className)}>
+      <Box px={3} mt={3} mb={2}>
         <Text size="base" intensity={80}>
           {t("common.markets")}
         </Text>
         {search}
       </Box>
 
-      <div className="oui-relative">
-        <Box
-          width="100%"
-          mt={2}
-          className="oui-absolute oui-inset-y-0 oui-left-0 oui-right-9"
+      <Tabs
+        variant="contained"
+        size="md"
+        value={props.activeTab}
+        onValueChange={props.onTabChange as (tab: string) => void}
+        classNames={{
+          tabsList: cn("oui-my-[6px]"),
+          tabsContent: "oui-h-full",
+          scrollIndicator: "oui-mx-3",
+        }}
+        className="oui-h-[calc(100%_-_92px)]"
+        showScrollIndicator
+      >
+        <TabPanel
+          title={t("markets.favorites")}
+          icon={<FavoritesIcon />}
+          value={MarketsTabName.Favorites}
         >
-          <MarketsListWidget
-            type={MarketsTabName.All}
-            initialSort={tabSort[MarketsTabName.All]}
-            onSort={onTabSort(MarketsTabName.All)}
-            getColumns={getMarketsSheetColumns}
-            tableClassNames={{
-              root: "!oui-bg-base-8",
-              scroll: "oui-pb-[calc(env(safe-area-inset-bottom))]",
-            }}
-          />
-        </Box>
-      </div>
-    </Grid>
+          {renderTab(MarketsTabName.Favorites)}
+        </TabPanel>
+
+        <TabPanel title={t("common.all")} value={MarketsTabName.All}>
+          {renderTab(MarketsTabName.All)}
+        </TabPanel>
+      </Tabs>
+    </Box>
   );
 };

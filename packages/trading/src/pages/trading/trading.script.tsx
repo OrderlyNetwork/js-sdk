@@ -142,7 +142,7 @@ function useMarketsCollapse(options: { collapsable: boolean }) {
 
   const [collapsed, setCollapsed] = useLocalStorage<boolean | undefined>(
     "orderly_side_markets_collapsed",
-    undefined,
+    true,
   );
 
   const onCollapse = (collapsed: boolean) => {
