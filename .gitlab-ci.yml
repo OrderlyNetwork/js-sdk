@@ -157,7 +157,7 @@ npm_patch_stable:
   environment:
     name: npm_patch_stable
   rules:
-    # run this job if branch name is "pre-release"
+    # run this job if branch name is "pre-release""
     - if: '$CI_COMMIT_BRANCH == "pre-release"'
       when: manual
     - when: never
@@ -171,7 +171,7 @@ npm_minor_alpha:
   environment:
     name: npm_minor_alpha
   rules:
-    # run this job if branch name is "pre-release"
+    # run this job if branch name is "pre-release""
     - if: '$CI_COMMIT_BRANCH == "pre-release"'
       when: manual
     - when: never
@@ -187,7 +187,7 @@ npm_minor_stable:
   environment:
     name: npm_minor_stable
   rules:
-    # run this job if branch name is "pre-release"
+    # run this job if branch name is "pre-release""
     - if: '$CI_COMMIT_BRANCH == "pre-release"'
       when: manual
     - when: never
@@ -201,12 +201,12 @@ npm_minor_stable:
 #   environment:
 #     name: npm_major_alpha
 #   rules:
-#     # run this job if branch name is "pre-release"
+#     # run this job if branch name is "pre-release"r"
 #     - if: '$CI_COMMIT_BRANCH == "pre-release"'
 #       when: manual
 #     - when: never
 
-# major stable version
+# # major stable version
 # npm_major_stable:
 #   <<: *npm_publish_template
 #   needs:
@@ -217,7 +217,7 @@ npm_minor_stable:
 #   environment:
 #     name: npm_major_stable
 #   rules:
-#     # run this job if branch name is "pre-release"
-#     - if: '$CI_COMMIT_BRANCH == "pre-release"'
+#     # run this job if branch name is "pre-release"r"
+#     - if: '$CI_COMMIT_BRANCH == "npm-publish"'
 #       when: manual
 #     - when: never

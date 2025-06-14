@@ -24,7 +24,7 @@ export const OrderBookCell: FC<OrderBookCellProps> = (props) => {
   const { cellHeight, onItemClick, depth, symbolInfo } =
     useContext(OrderBookContext);
 
-  const { quote_dp } = symbolInfo;
+  const { base_dp, quote_dp } = symbolInfo;
 
   const totalAmount = Number.isNaN(accumulated)
     ? "-"
@@ -62,7 +62,7 @@ export const OrderBookCell: FC<OrderBookCellProps> = (props) => {
           {price}
         </Text.numeral>
         <Text.numeral
-          dp={mode === "amount" ? 2 : dp}
+          dp={mode === "amount" ? 2 : base_dp}
           className="oui-text-base-contrast-80"
         >
           {qty}
