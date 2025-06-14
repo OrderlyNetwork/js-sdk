@@ -3,10 +3,12 @@ import { DataTable, cn } from "@orderly.network/ui";
 import { useFundingOverviewColumns } from "./columns";
 import { FundingOverviewReturn } from "./fundingOverview.script";
 
-export type FundingOverviewProps = FundingOverviewReturn;
+export type MobileFundingOverviewProps = FundingOverviewReturn;
 
-export const FundingOverview: FC<FundingOverviewProps> = (props) => {
-  const { dataSource, isLoading, pagination, onSort } = props;
+export const MobileFundingOverview: FC<MobileFundingOverviewProps> = (
+  props,
+) => {
+  const { dataSource, isLoading, onSort } = props;
   const [selectedPeriod, setSelectedPeriod] = useState("1dPositive");
 
   const columns = useFundingOverviewColumns(selectedPeriod, setSelectedPeriod);
@@ -16,16 +18,15 @@ export const FundingOverview: FC<FundingOverviewProps> = (props) => {
       columns={columns}
       dataSource={dataSource}
       loading={isLoading}
-      bordered
       onRow={() => {
         return {
-          className: cn("oui-h-[48px] oui-cursor-pointer"),
+          className: cn("oui-h-[34px] oui-cursor-pointer"),
         };
       }}
       classNames={{
-        header: "oui-h-12",
+        header: "oui-h-9",
+        body: "oui-text-2xs ",
       }}
-      pagination={pagination}
       onSort={onSort}
       manualSorting
       generatedRowKey={(record) => record.symbol}

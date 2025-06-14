@@ -12,7 +12,7 @@ export type TEmblaApi = {
   scrollNext: (jump?: boolean) => void;
 };
 
-export type HeaderReturns = ReturnType<typeof useMarketsHeaderScript>;
+export type MarketsHeaderReturns = ReturnType<typeof useMarketsHeaderScript>;
 
 export const useMarketsHeaderScript = () => {
   const [scrollIndex, setScrollIndex] = useState(0);

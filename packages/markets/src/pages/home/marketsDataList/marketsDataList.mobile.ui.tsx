@@ -2,36 +2,46 @@ import { useTranslation } from "@orderly.network/i18n";
 import {
   Box,
   CloseCircleFillIcon,
+  cn,
   Input,
   TabPanel,
   Tabs,
 } from "@orderly.network/ui";
-import { FavoritesListFullWidget } from "../../../components/favoritesListFull";
-import { MarketsListFullWidget } from "../../../components/marketsListFull";
+import { MarketsListWidget } from "../../../components/marketsList";
 import { useMarketsContext } from "../../../components/marketsProvider";
+import { useFavoritesProps } from "../../../components/shared/hooks/useFavoritesExtraProps";
 import {
   AllMarketsIcon,
   FavoritesIcon,
   NewListingsIcon,
   SearchIcon,
 } from "../../../icons";
-import { UseMarketsDataListScript } from "./dataList.script";
+import { MarketsTabName } from "../../../type";
+import { useMarketsDataListColumns } from "./column";
+import { UseMarketsDataListScript } from "./marketsDataList.script";
 
-export type MarketsDataListProps = UseMarketsDataListScript;
+export type MobileMarketsDataListProps = UseMarketsDataListScript;
 
-export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
-  const { activeTab, onTabChange } = props;
+export const MobileMarketsDataList: React.FC<MobileMarketsDataListProps> = (
+  props,
+) => {
+  const { activeTab, onTabChange, tabSort, onTabSort } = props;
   const { t } = useTranslation();
 
   const { searchValue, onSearchValueChange, clearSearchValue } =
     useMarketsContext();
+
+  const getColumns = useMarketsDataListColumns();
 
   const search = (
     <Input
       value={searchValue}
       onValueChange={onSearchValueChange}
       placeholder={t("markets.search.placeholder")}
-      className="oui-my-1 oui-w-[240px]"
+      className={cn(
+        "oui-mx-3 oui-mb-4 oui-mt-5",
+        activeTab !== MarketsTabName.Favorites && "oui-mb-2",
+      )}
       size="sm"
       data-testid="oui-testid-markets-searchMarket-input"
       prefix={
@@ -54,50 +64,58 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
     />
   );
 
+  const { renderHeader, dataFilter } = useFavoritesProps();
+
+  const renderTab = (type: MarketsTabName) => {
+    const extraProps =
+      type === MarketsTabName.Favorites ? { renderHeader, dataFilter } : {};
+
+    return (
+      <>
+        {search}
+        <MarketsListWidget
+          type={type}
+          initialSort={tabSort[type]}
+          onSort={onTabSort(type)}
+          getColumns={getColumns}
+          rowClassName="!oui-h-[34px]"
+          {...extraProps}
+        />
+      </>
+    );
+  };
+
   return (
-    <Box id="oui-markets-list" intensity={900} p={6} r="2xl">
+    <Box id="oui-markets-list" intensity={900} py={3} mt={2} r="2xl">
       <Tabs
         variant="contained"
-        size="xl"
+        size="lg"
         value={activeTab}
         onValueChange={onTabChange}
-        trailing={search}
+        classNames={{
+          tabsList: "oui-mx-3",
+        }}
       >
         <TabPanel
           title={t("markets.favorites")}
           icon={<FavoritesIcon />}
           value="favorites"
-          testid="oui-testid-markets-favorites-tab"
         >
-          <FavoritesListFullWidget />
+          {renderTab(MarketsTabName.Favorites)}
         </TabPanel>
         <TabPanel
           title={t("markets.allMarkets")}
           icon={<AllMarketsIcon />}
           value="all"
-          testid="oui-testid-markets-all-tab"
         >
-          <MarketsListFullWidget
-            type="all"
-            initialSort={{
-              sortKey: "24h_amount",
-              sortOrder: "desc",
-            }}
-          />
+          {renderTab(MarketsTabName.All)}
         </TabPanel>
         <TabPanel
           title={t("markets.newListings")}
           icon={<NewListingsIcon />}
           value="new"
-          testid="oui-testid-markets-newListings-tab"
         >
-          <MarketsListFullWidget
-            type="new"
-            initialSort={{
-              sortKey: "created_time",
-              sortOrder: "desc",
-            }}
-          />
+          {renderTab(MarketsTabName.NewListing)}
         </TabPanel>
       </Tabs>
     </Box>

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
 import { SIDE_MARKETS_TAB_SORT_STORAGE_KEY } from "../../constant";
-import { TabName } from "../../type";
+import { MarketsTabName } from "../../type";
 import { useTabSort } from "../shared/hooks/useTabSort";
 
 export type SideMarketsScriptOptions = {
@@ -18,7 +18,7 @@ export function useSideMarketsScript(options?: SideMarketsScriptOptions) {
   const [collapsed, setCollapsed] = useState(options?.collapsed);
   const [activeTab, setActiveTab] = useLocalStorage(
     SIDE_MARKETS_SEL_TAB_KEY,
-    TabName.All,
+    MarketsTabName.All,
   );
 
   const { tabSort } = useTabSort({
@@ -49,7 +49,7 @@ export function useSideMarketsScript(options?: SideMarketsScriptOptions) {
     collapsable,
     collapsed,
     onCollapse,
-    activeTab: activeTab as TabName,
+    activeTab: activeTab as MarketsTabName,
     onTabChange: setActiveTab,
     tabSort,
   };

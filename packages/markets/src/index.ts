@@ -1,5 +1,5 @@
-export * from "./pages/home/header";
-export * from "./pages/home/dataList";
+export * from "./pages/home/marketsHeader";
+export * from "./pages/home/marketsDataList";
 
 export * from "./components/marketsListFull";
 export * from "./components/favoritesListFull";

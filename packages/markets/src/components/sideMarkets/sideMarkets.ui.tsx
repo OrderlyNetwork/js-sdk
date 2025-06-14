@@ -2,7 +2,7 @@ import { FC } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Box, cn, Flex, Text } from "@orderly.network/ui";
 import { CollapseIcon, ExpandIcon } from "../../icons";
-import { TabName } from "../../type";
+import { MarketsTabName } from "../../type";
 import { ExpandMarketsWidget } from "../expandMarkets";
 import { MarketsListWidget } from "../marketsList";
 import { useMarketsContext } from "../marketsProvider";
@@ -44,7 +44,9 @@ export const SideMarkets: React.FC<SideMarketsProps> = (props) => {
     }
 
     const extraProps =
-      activeTab === TabName.Favorites ? { renderHeader, dataFilter } : {};
+      activeTab === MarketsTabName.Favorites
+        ? { renderHeader, dataFilter }
+        : {};
 
     return (
       <MarketsListWidget

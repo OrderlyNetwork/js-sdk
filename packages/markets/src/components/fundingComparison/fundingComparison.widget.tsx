@@ -1,8 +1,15 @@
 import type { FC } from "react";
+import { useScreen } from "@orderly.network/ui";
+import { MobileFundingComparison } from "./fundingComparison.mobile.ui";
 import { useFundingComparisonScript } from "./fundingComparison.script";
 import { FundingComparison } from "./fundingComparison.ui";
 
 export const FundingComparisonWidget: FC = () => {
   const state = useFundingComparisonScript();
-  return <FundingComparison {...state} />;
+  const { isMobile } = useScreen();
+  return isMobile ? (
+    <MobileFundingComparison {...state} />
+  ) : (
+    <FundingComparison {...state} />
+  );
 };

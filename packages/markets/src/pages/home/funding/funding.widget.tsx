@@ -1,7 +1,10 @@
+import { useScreen } from "@orderly.network/ui";
+import { MobileFunding } from "./funding.mobile.ui";
 import { useFundingScript } from "./funding.script";
-import { FundingUI } from "./funding.ui";
+import { Funding } from "./funding.ui";
 
 export const FundingWidget = () => {
   const state = useFundingScript();
-  return <FundingUI {...state} />;
+  const { isMobile } = useScreen();
+  return isMobile ? <MobileFunding {...state} /> : <Funding {...state} />;
 };

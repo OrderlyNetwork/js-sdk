@@ -4,7 +4,7 @@ import { DataTable } from "@orderly.network/ui";
 import { useFundingColumns } from "./columns";
 import { FundingComparisonReturn } from "./fundingComparison.script";
 
-export const FundingComparison: FC<FundingComparisonReturn> = (props) => {
+export const MobileFundingComparison: FC<FundingComparisonReturn> = (props) => {
   const columns = useFundingColumns();
 
   return (
@@ -14,14 +14,13 @@ export const FundingComparison: FC<FundingComparisonReturn> = (props) => {
       loading={props.isLoading}
       onRow={() => {
         return {
-          className: cn("oui-h-[48px] oui-cursor-pointer"),
+          className: cn("oui-h-[34px] oui-cursor-pointer"),
         };
       }}
       classNames={{
-        header: "oui-h-12",
+        header: "oui-h-9",
+        body: "oui-text-2xs",
       }}
-      bordered
-      pagination={props.pagination}
     />
   );
 };

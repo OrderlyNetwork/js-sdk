@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@orderly.network/ui";
 import { FavoritesIcon, SearchIcon } from "../../icons";
-import { TabName } from "../../type";
+import { MarketsTabName } from "../../type";
 import { MarketsListWidget } from "../marketsList";
 import { useMarketsContext } from "../marketsProvider";
 import { useFavoritesProps } from "../shared/hooks/useFavoritesExtraProps";
@@ -91,9 +91,9 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
 
   const { renderHeader, dataFilter } = useFavoritesProps();
 
-  const renderTab = (type: TabName) => {
+  const renderTab = (type: MarketsTabName) => {
     const extraProps =
-      type === TabName.Favorites ? { renderHeader, dataFilter } : {};
+      type === MarketsTabName.Favorites ? { renderHeader, dataFilter } : {};
 
     return (
       <div className={cls}>
@@ -135,18 +135,21 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
         <TabPanel
           title={t("markets.favorites")}
           icon={<FavoritesIcon />}
-          value={TabName.Favorites}
+          value={MarketsTabName.Favorites}
         >
-          {renderTab(TabName.Favorites)}
+          {renderTab(MarketsTabName.Favorites)}
         </TabPanel>
-        <TabPanel title={t("markets.recent")} value={TabName.Recent}>
-          {renderTab(TabName.Recent)}
+        <TabPanel title={t("markets.recent")} value={MarketsTabName.Recent}>
+          {renderTab(MarketsTabName.Recent)}
         </TabPanel>
-        <TabPanel title={t("common.all")} value={TabName.All}>
-          {renderTab(TabName.All)}
+        <TabPanel title={t("common.all")} value={MarketsTabName.All}>
+          {renderTab(MarketsTabName.All)}
         </TabPanel>
-        <TabPanel title={t("markets.newListings")} value={TabName.NewListing}>
-          {renderTab(TabName.NewListing)}
+        <TabPanel
+          title={t("markets.newListings")}
+          value={MarketsTabName.NewListing}
+        >
+          {renderTab(MarketsTabName.NewListing)}
         </TabPanel>
       </Tabs>
     </Box>

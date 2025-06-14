@@ -13,7 +13,7 @@ import { useMarketsContext } from "../../../components/marketsProvider";
 import { SearchIcon } from "../../../icons";
 import { FundingScriptReturn } from "./funding.script";
 
-export const Funding: FC<FundingScriptReturn> = (props) => {
+export const MobileFunding: FC<FundingScriptReturn> = (props) => {
   const { searchValue, onSearchValueChange, clearSearchValue } =
     useMarketsContext();
   const { t } = useTranslation();
@@ -23,7 +23,7 @@ export const Funding: FC<FundingScriptReturn> = (props) => {
       value={searchValue}
       onValueChange={onSearchValueChange}
       placeholder={t("markets.search.placeholder")}
-      className="oui-my-1 oui-w-[240px]"
+      className="oui-mb-2 oui-mt-5"
       size="sm"
       data-testid="oui-testid-markets-searchMarket-input"
       prefix={
@@ -47,27 +47,32 @@ export const Funding: FC<FundingScriptReturn> = (props) => {
   );
 
   return (
-    <Box id="oui-funding-list" intensity={900} p={6} mt={4} r="2xl">
+    <Box id="oui-funding-list" intensity={900} p={3} mt={2} mb={5} r="xl">
       <Tabs
         variant="contained"
         size="lg"
         value={props.activeTab}
         onValueChange={props.onTabChange as (value: string) => void}
-        trailing={search}
       >
         <TabPanel
           title={t("common.overview")}
           value="overview"
           testid="oui-testid-funding-overview-tab"
         >
-          <FundingOverviewWidget />
+          <>
+            {search}
+            <FundingOverviewWidget />
+          </>
         </TabPanel>
         <TabPanel
           title={t("markets.funding.comparison")}
           value="comparison"
           testid="oui-testid-funding-comparison-tab"
         >
-          <FundingComparisonWidget />
+          <>
+            {search}
+            <FundingComparisonWidget />
+          </>
         </TabPanel>
       </Tabs>
     </Box>

@@ -8,7 +8,7 @@ import {
   Text,
 } from "@orderly.network/ui";
 import { SearchIcon } from "../../icons";
-import { TabName } from "../../type";
+import { MarketsTabName } from "../../type";
 import { MarketsListWidget } from "../marketsList";
 import { useMarketsContext } from "../marketsProvider";
 import { getMarketsSheetColumns } from "./column";
@@ -73,9 +73,9 @@ export const MarketsSheet: React.FC<MarketsSheetProps> = (props) => {
           className="oui-absolute oui-inset-y-0 oui-left-0 oui-right-9"
         >
           <MarketsListWidget
-            type={TabName.All}
-            initialSort={tabSort[TabName.All]}
-            onSort={onTabSort(TabName.All)}
+            type={MarketsTabName.All}
+            initialSort={tabSort[MarketsTabName.All]}
+            onSort={onTabSort(MarketsTabName.All)}
             getColumns={getMarketsSheetColumns}
             tableClassNames={{
               root: "!oui-bg-base-8",
