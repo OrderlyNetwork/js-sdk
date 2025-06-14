@@ -1,10 +1,33 @@
-import React from "react";
 import { BaseIcon, BaseIconProps } from "./baseIcon";
 
-export const TradingActiveIcon = (props: BaseIconProps) => {
+export const MarketsActiveIcon = (props: BaseIconProps) => {
   return (
     <BaseIcon {...props}>
-      <g id="Trading">
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M11.75 8a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2zm-7 4a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2z"
+        fill="#fff"
+        fillOpacity=".16"
+      />
+      <path
+        d="M16.75 6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z"
+        fill="url(#a)"
+      />
+      <defs>
+        <linearGradient
+          id="a"
+          x1="22.75"
+          y1="12"
+          x2="16.75"
+          y2="12"
+          gradientUnits="userSpaceOnUse"
+        >
+          <stop stopColor="rgb(var(--oui-gradient-brand-end))" />
+          <stop offset="1" stopColor="rgb(var(--oui-gradient-brand-start))" />
+        </linearGradient>
+      </defs>
+      {/* <g id="Trading">
         <path
           id="Vector 646 (Stroke)"
           fillRule="evenodd"
@@ -33,7 +56,7 @@ export const TradingActiveIcon = (props: BaseIconProps) => {
           <stop stopColor="rgb(var(--oui-gradient-brand-end))" />
           <stop offset="1" stopColor="rgb(var(--oui-gradient-brand-start))" />
         </linearGradient>
-      </defs>
+      </defs> */}
     </BaseIcon>
   );
 };

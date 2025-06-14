@@ -1,4 +1,5 @@
 import { PropsWithChildren } from "react";
+import { Box } from "@orderly.network/ui";
 import { AnnouncementWidget } from "../announcement";
 import { BottomNav } from "../bottomNav/bottomNav.ui.mobile";
 import { MainNavMobile } from "../main/mainNav.ui.mobile";
@@ -8,7 +9,6 @@ import { ScaffoldScriptReturn } from "./scaffold.script";
 type MobileScaffoldProps = PropsWithChildren<ScaffoldScriptReturn>;
 
 export const MobileScaffold = (props: MobileScaffoldProps) => {
-  // console.log("MobileScaffold", props);
   return (
     <>
       <header className="oui-sticky oui-top-0 oui-z-10 oui-w-full oui-bg-base-10">
@@ -24,7 +24,12 @@ export const MobileScaffold = (props: MobileScaffoldProps) => {
         hideTips={props.restrictedInfo?.restrictedOpen}
       />
 
-      {props.children}
+      <Box
+        style={{ paddingBottom: "calc(64px + env(safe-area-inset-bottom))" }}
+        // className="oui-hide-scrollbar oui-overflow-y-auto"
+      >
+        {props.children}
+      </Box>
 
       <footer className="oui-fixed oui-bottom-0 oui-z-10 oui-w-full oui-bg-base-9 oui-pb-[calc(env(safe-area-inset-bottom))]">
         <BottomNav

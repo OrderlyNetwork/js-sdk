@@ -10,6 +10,8 @@ import {
   PortfolioInactiveIcon,
   LeaderboardActiveIcon,
   LeaderboardInactiveIcon,
+  MarketsActiveIcon,
+  MarketsInactiveIcon,
 } from "@orderly.network/ui";
 import {
   FooterProps,
@@ -99,6 +101,12 @@ export const useOrderlyConfig = () => {
         },
         bottomNavProps: {
           mainMenus: [
+            {
+              name: t("common.markets"),
+              href: "/markets",
+              activeIcon: <MarketsActiveIcon />,
+              inactiveIcon: <MarketsInactiveIcon />,
+            },
             {
               name: t("common.trading"),
               href: "/",
