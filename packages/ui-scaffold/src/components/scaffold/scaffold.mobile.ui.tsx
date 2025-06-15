@@ -1,5 +1,5 @@
 import { PropsWithChildren } from "react";
-import { Box } from "@orderly.network/ui";
+import { Box, cn } from "@orderly.network/ui";
 import { AnnouncementWidget } from "../announcement";
 import { BottomNav } from "../bottomNav/bottomNav.ui.mobile";
 import { MainNavMobile } from "../main/mainNav.ui.mobile";
@@ -13,8 +13,13 @@ type MobileScaffoldProps = PropsWithChildren<
 
 export const MobileScaffold = (props: MobileScaffoldProps) => {
   return (
-    <>
-      <header className="oui-sticky oui-top-0 oui-z-10 oui-w-full oui-bg-base-10">
+    <div className="oui-scaffold-root">
+      <header
+        className={cn(
+          "oui-scaffold-topNavbar",
+          "oui-sticky oui-top-0 oui-z-10 oui-w-full oui-bg-base-10",
+        )}
+      >
         {props.topBar ?? (
           <MainNavMobile
             {...props.mainNavProps}
@@ -22,6 +27,7 @@ export const MobileScaffold = (props: MobileScaffoldProps) => {
           />
         )}
       </header>
+
       <RestrictedInfoWidget className="oui-mx-1 oui-mb-1 oui-bg-base-6" />
 
       <AnnouncementWidget
@@ -30,13 +36,20 @@ export const MobileScaffold = (props: MobileScaffoldProps) => {
       />
 
       <Box
+        className="oui-scaffold-content"
         style={{ paddingBottom: "calc(64px + env(safe-area-inset-bottom))" }}
         // className="oui-hide-scrollbar oui-overflow-y-auto"
       >
         {props.children}
       </Box>
 
-      <footer className="oui-fixed oui-bottom-0 oui-z-10 oui-w-full oui-bg-base-9 oui-pb-[calc(env(safe-area-inset-bottom))]">
+      <footer
+        className={cn(
+          "oui-scaffold-bottomNav",
+          "oui-fixed oui-bottom-0 oui-z-10",
+          "oui-w-full oui-bg-base-9 oui-pb-[calc(env(safe-area-inset-bottom))]",
+        )}
+      >
         {props.bottomNav ?? (
           <BottomNav
             mainMenus={props?.bottomNavProps?.mainMenus}
@@ -47,6 +60,6 @@ export const MobileScaffold = (props: MobileScaffoldProps) => {
           />
         )}
       </footer>
-    </>
+    </div>
   );
 };

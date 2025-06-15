@@ -68,7 +68,8 @@ export const Announcement: React.FC<Readonly<AnnouncementProps>> = (props) => {
       key={currentTip?.announcement_id}
       style={props.style}
       className={cn(
-        "oui-font-semibold oui-rounded-xl oui-overflow-hidden",
+        "oui-announcement",
+        "oui-overflow-hidden oui-rounded-xl oui-font-semibold",
         props.className,
       )}
     >
