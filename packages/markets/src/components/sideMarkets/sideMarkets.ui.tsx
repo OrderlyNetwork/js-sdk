@@ -2,7 +2,6 @@ import { FC } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Box, cn, Flex, Text } from "@orderly.network/ui";
 import { CollapseIcon, ExpandIcon } from "../../icons";
-import { MarketsTabName } from "../../type";
 import { ExpandMarketsWidget } from "../expandMarkets";
 import { MarketsListWidget } from "../marketsList";
 import { useMarketsContext } from "../marketsProvider";
@@ -29,7 +28,7 @@ export const SideMarkets: React.FC<SideMarketsProps> = (props) => {
 
   const { symbol, onSymbolChange } = useMarketsContext();
 
-  const { renderHeader, dataFilter } = useFavoritesProps();
+  const { getFavoritesProps } = useFavoritesProps();
 
   const renderContent = () => {
     if (!collapsed) {
@@ -43,11 +42,6 @@ export const SideMarkets: React.FC<SideMarketsProps> = (props) => {
       );
     }
 
-    const extraProps =
-      activeTab === MarketsTabName.Favorites
-        ? { renderHeader, dataFilter }
-        : {};
-
     return (
       <MarketsListWidget
         type={activeTab}
@@ -55,7 +49,7 @@ export const SideMarkets: React.FC<SideMarketsProps> = (props) => {
         // collapsed list is not custom sort, so we don't need to pass onSort
         // onSort={onTabSort(activeTab)}
         collapsed={collapsed}
-        {...extraProps}
+        {...getFavoritesProps(activeTab)}
       />
     );
   };

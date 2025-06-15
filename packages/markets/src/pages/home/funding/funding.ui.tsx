@@ -1,50 +1,13 @@
 import type { FC } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import {
-  Box,
-  CloseCircleFillIcon,
-  Input,
-  TabPanel,
-  Tabs,
-} from "@orderly.network/ui";
+import { Box, TabPanel, Tabs } from "@orderly.network/ui";
 import { FundingComparisonWidget } from "../../../components/fundingComparison";
 import { FundingOverviewWidget } from "../../../components/fundingOverview";
-import { useMarketsContext } from "../../../components/marketsProvider";
-import { SearchIcon } from "../../../icons";
+import { SearchInput } from "../../../components/searchInput.tsx";
 import { FundingScriptReturn } from "./funding.script";
 
 export const Funding: FC<FundingScriptReturn> = (props) => {
-  const { searchValue, onSearchValueChange, clearSearchValue } =
-    useMarketsContext();
   const { t } = useTranslation();
-
-  const search = (
-    <Input
-      value={searchValue}
-      onValueChange={onSearchValueChange}
-      placeholder={t("markets.search.placeholder")}
-      className="oui-my-1 oui-w-[240px]"
-      size="sm"
-      data-testid="oui-testid-markets-searchMarket-input"
-      prefix={
-        <Box pl={3} pr={1}>
-          <SearchIcon className="oui-text-base-contrast-36" />
-        </Box>
-      }
-      suffix={
-        searchValue && (
-          <Box mr={2}>
-            <CloseCircleFillIcon
-              size={14}
-              className="oui-cursor-pointer oui-text-base-contrast-36"
-              onClick={clearSearchValue}
-            />
-          </Box>
-        )
-      }
-      autoComplete="off"
-    />
-  );
 
   return (
     <Box id="oui-funding-list" intensity={900} p={6} mt={4} r="2xl">
@@ -53,7 +16,9 @@ export const Funding: FC<FundingScriptReturn> = (props) => {
         size="lg"
         value={props.activeTab}
         onValueChange={props.onTabChange as (value: string) => void}
-        trailing={search}
+        trailing={
+          <SearchInput classNames={{ root: "oui-my-1 oui-w-[240px]" }} />
+        }
       >
         <TabPanel
           title={t("common.overview")}

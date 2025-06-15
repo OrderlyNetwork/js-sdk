@@ -1,16 +1,9 @@
 import { useTranslation } from "@orderly.network/i18n";
-import {
-  Box,
-  CloseCircleFillIcon,
-  cn,
-  Input,
-  TabPanel,
-  Tabs,
-} from "@orderly.network/ui";
-import { FavoritesIcon, SearchIcon } from "../../icons";
+import { Box, cn, TabPanel, Tabs } from "@orderly.network/ui";
+import { FavoritesIcon } from "../../icons";
 import { MarketsTabName } from "../../type";
 import { MarketsListWidget } from "../marketsList";
-import { useMarketsContext } from "../marketsProvider";
+import { SearchInput } from "../searchInput.tsx";
 import { useFavoritesProps } from "../shared/hooks/useFavoritesExtraProps";
 import { ExpandMarketsScriptReturn } from "./expandMarkets.script";
 
@@ -19,46 +12,13 @@ export type ExpandMarketsProps = ExpandMarketsScriptReturn;
 export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
   const { activeTab, onTabChange, tabSort, onTabSort } = props;
 
-  const { searchValue, onSearchValueChange, clearSearchValue } =
-    useMarketsContext();
-
   const { t } = useTranslation();
-
-  const search = (
-    <Input
-      value={searchValue}
-      onValueChange={onSearchValueChange}
-      placeholder={t("markets.search.placeholder")}
-      classNames={{ root: "oui-border oui-mt-[1px] oui-border-line" }}
-      size="sm"
-      prefix={
-        <Box pl={3} pr={1}>
-          <SearchIcon className="oui-text-base-contrast-36" />
-        </Box>
-      }
-      suffix={
-        searchValue && (
-          <Box mr={2}>
-            <CloseCircleFillIcon
-              size={14}
-              className="oui-cursor-pointer oui-text-base-contrast-36"
-              onClick={clearSearchValue}
-            />
-          </Box>
-        )
-      }
-      autoComplete="off"
-    />
-  );
 
   const cls = "oui-h-[calc(100%_-_36px)]";
 
-  const { renderHeader, dataFilter } = useFavoritesProps();
+  const { getFavoritesProps } = useFavoritesProps();
 
   const renderTab = (type: MarketsTabName) => {
-    const extraProps =
-      type === MarketsTabName.Favorites ? { renderHeader, dataFilter } : {};
-
     return (
       <div className={cls}>
         <MarketsListWidget
@@ -71,7 +31,7 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
               type === MarketsTabName.Favorites ? "oui-pb-9" : "oui-pb-2",
             ),
           }}
-          {...extraProps}
+          {...getFavoritesProps(type)}
         />
       </div>
     );
@@ -80,7 +40,7 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
   return (
     <Box className={cn("oui-overflow-hidden oui-font-semibold")} height="100%">
       <Box px={3} pb={2}>
-        {search}
+        <SearchInput />
       </Box>
       <Tabs
         variant="contained"

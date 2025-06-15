@@ -5,7 +5,6 @@ import {
   CloseIcon,
   cn,
   Flex,
-  Input,
   TabPanel,
   Tabs,
   DropdownMenuContent,
@@ -13,10 +12,10 @@ import {
   DropdownMenuRoot,
   DropdownMenuTrigger,
 } from "@orderly.network/ui";
-import { FavoritesIcon, SearchIcon } from "../../icons";
+import { FavoritesIcon } from "../../icons";
 import { MarketsTabName } from "../../type";
 import { MarketsListWidget } from "../marketsList";
-import { useMarketsContext } from "../marketsProvider";
+import { SearchInput } from "../searchInput.tsx";
 import { useFavoritesProps } from "../shared/hooks/useFavoritesExtraProps";
 import { useDropDownMarketsColumns } from "./column";
 import { DropDownMarketsScriptReturn } from "./dropDownMarkets.script";
@@ -55,28 +54,16 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
 ) => {
   const { activeTab, onTabChange, tabSort, onTabSort } = props;
 
-  const { searchValue, onSearchValueChange } = useMarketsContext();
-
   const { t } = useTranslation();
 
   const getColumns = useDropDownMarketsColumns();
 
   const search = (
     <Flex mx={3} gapX={3} pt={3} pb={2}>
-      <Input
-        value={searchValue}
-        onValueChange={onSearchValueChange}
-        placeholder={t("markets.search.placeholder")}
+      <SearchInput
         classNames={{
-          root: "oui-border oui-mt-[1px] oui-border-line oui-flex-1",
+          root: "oui-w-full",
         }}
-        size="sm"
-        prefix={
-          <Box pl={3} pr={1}>
-            <SearchIcon className="oui-text-base-contrast-36" />
-          </Box>
-        }
-        autoComplete="off"
       />
       <CloseIcon
         size={12}
@@ -89,12 +76,9 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
 
   const cls = "oui-h-[calc(100%_-_36px)]";
 
-  const { renderHeader, dataFilter } = useFavoritesProps();
+  const { getFavoritesProps } = useFavoritesProps();
 
   const renderTab = (type: MarketsTabName) => {
-    const extraProps =
-      type === MarketsTabName.Favorites ? { renderHeader, dataFilter } : {};
-
     return (
       <div className={cls}>
         <MarketsListWidget
@@ -107,7 +91,7 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
             scroll: "oui-pb-5 oui-px-1",
           }}
           rowClassName="!oui-h-[34px]"
-          {...extraProps}
+          {...getFavoritesProps(type)}
         />
       </div>
     );

@@ -91,8 +91,8 @@ export const MobileLayout: FC<TradingState> = (props) => {
         open={props.openMarketsSheet}
         onOpenChange={props.onOpenMarketsSheetChange}
         classNames={{
-          body: "oui-h-[100vh] oui-pb-[env(safe-area-inset-bottom)]",
-          content: "oui-w-[280px] !oui-p-0 oui-rounded-bl-[40px] oui-h-full",
+          body: "oui-h-full oui-pb-0",
+          content: "oui-w-[280px] !oui-p-0",
         }}
         contentProps={{ side: "left", closeable: false }}
       >
