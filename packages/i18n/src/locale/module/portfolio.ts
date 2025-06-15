@@ -17,11 +17,6 @@ export const portfolio = {
   "portfolio.overview.transferHistory": "Transfer history",
 
   "portfolio.overview.column.txId": "TxID",
-  "portfolio.overview.column.funding&AnnualRate": "Funding rate / Annual rate",
-  "portfolio.overview.column.paymentType": "Payment type",
-  "portfolio.overview.column.paymentType.paid": "Paid",
-  "portfolio.overview.column.paymentType.received": "Received",
-  "portfolio.overview.column.fundingFee": "Funding fee",
 
   "portfolio.overview.column.token": "Token",
   "portfolio.overview.column.qty": "Qty.",

@@ -1,8 +1,8 @@
 import { FC } from "react";
 import { Flex } from "@orderly.network/ui";
-import { useOrderBookContext } from "../../base/orderBook/orderContext";
 import { MarkPriceView } from "../../base/orderBook/markPrice";
 import { MiddlePriceView } from "../../base/orderBook/midPriceView";
+import { useOrderBookContext } from "../../base/orderBook/orderContext";
 
 interface MarkPriceProps {
   markPrice: number;

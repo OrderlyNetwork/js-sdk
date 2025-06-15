@@ -1,4 +1,6 @@
 import { FC, useMemo } from "react";
+import { WsNetworkStatus } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 import { Divider, Flex, Text } from "@orderly.network/ui";
 import {
   CommuntiyDiscordIcon,
@@ -8,9 +10,7 @@ import {
   SignalIcon,
 } from "../icons/index";
 import { FooterReturns } from "./footer.script";
-import { WsNetworkStatus } from "@orderly.network/hooks";
 import { FooterProps } from "./footer.widget";
-import { useTranslation } from "@orderly.network/i18n";
 
 export const Footer: FC<FooterReturns & FooterProps> = (props) => {
   const { t } = useTranslation();
@@ -97,7 +97,11 @@ export const Footer: FC<FooterReturns & FooterProps> = (props) => {
           )}
         </Flex>
       </Flex>
-      <Flex direction={"row"} gap={1}>
+      <Flex
+        direction={"row"}
+        gap={1}
+        className="oui-scaffold-footer-powered-by"
+      >
         <Text intensity={54} size="2xs">
           {t("scaffold.footer.poweredBy")}
         </Text>

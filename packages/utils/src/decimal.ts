@@ -67,14 +67,7 @@ export const commify = (num: number | string, fix?: number): string => {
   return result;
 };
 
-export const getPrecisionByNumber = (num: number | string): number => {
-  // if(Math.floor(num) === num) return 0;
-  num = toNonExponential(Number(num));
-  const parts = num.toString().split(".");
-  return parts[1] ? parts[1].length : 0;
-};
-
-export function toNonExponential(num: number) {
+export const toNonExponential = (num: number) => {
   const m = num.toExponential().match(/\d(?:\.(\d*))?e([+-]\d+)/);
   if (!Array.isArray(m)) {
     return num;
@@ -82,7 +75,13 @@ export function toNonExponential(num: number) {
   return num.toFixed(
     Math.max(0, (m[1] || "").length - (m[2] as unknown as number)),
   );
-}
+};
+
+export const getPrecisionByNumber = (num: number | string) => {
+  num = toNonExponential(Number(num));
+  const parts = num.toString().split(".");
+  return parts[1] ? parts[1].length : 0;
+};
 
 /**
  *

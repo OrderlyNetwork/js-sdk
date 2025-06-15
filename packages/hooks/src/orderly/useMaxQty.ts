@@ -4,7 +4,6 @@ import { type API, OrderSide, OrderStatus } from "@orderly.network/types";
 import { useAccountInfo } from "./appStore";
 import { useCollateral } from "./useCollateral";
 import { useMarkPricesStream } from "./useMarkPricesStream";
-import { useOrderStream } from "./useOrderStream/useOrderStream";
 import { usePositions } from "./usePositionStream/usePosition.store";
 import { useSymbolsInfo } from "./useSymbolsInfo";
 
@@ -38,14 +37,7 @@ export const useMaxQty = (
    * */
   reduceOnly: boolean = false,
 ) => {
-  // const positionsData = usePositionStream();
-
   const positions = usePositions();
-
-  const [orders] = useOrderStream({ status: OrderStatus.NEW, size: 500 });
-
-  // const { data: accountInfo } =
-  //   usePrivateQuery<API.AccountInfo>("/v1/client/info");
 
   const accountInfo = useAccountInfo();
 
@@ -95,38 +87,30 @@ export const useMaxQty = (
       return 0;
     }
 
-    if (!markPrices || !markPrices[symbol] || !orders || !accountInfo) return 0;
+    if (!markPrices || !markPrices[symbol] || !accountInfo || !positions)
+      return 0;
 
     const getSymbolInfo = symbolInfo[symbol];
 
-    const filterAlgoOrders = orders.filter(
-      (item) =>
-        item.algo_order_id === undefined || item.algo_type === "BRACKET",
+    // const filterAlgoOrders = orders.filter(
+    //   (item) =>
+    //     item.algo_order_id === undefined || item.algo_type === "BRACKET",
+    // );
+
+    const currentSymbolPosition = positions.find(
+      (item) => item.symbol === symbol,
     );
 
     // current symbol buy order quantity
-    const buyOrdersQty = account.getQtyFromOrdersBySide(
-      filterAlgoOrders,
-      symbol,
-      OrderSide.BUY,
-    );
+    const buyOrdersQty = currentSymbolPosition?.pending_long_qty ?? 0;
     // current symbol sell order quantity
-    const sellOrdersQty = account.getQtyFromOrdersBySide(
-      filterAlgoOrders,
-      symbol,
-      OrderSide.SELL,
-    );
+    const sellOrdersQty = currentSymbolPosition?.pending_short_qty ?? 0;
 
     const otherPositions = !Array.isArray(positions)
       ? []
       : positions.filter((item: API.Position) => item.symbol !== symbol);
 
-    const otherOrders = filterAlgoOrders.filter(
-      (item: API.Order) => item.symbol !== symbol,
-    );
-
     const otherIMs = account.otherIMs({
-      orders: otherOrders,
       positions: otherPositions,
       symbolInfo,
       markPrices,
@@ -153,7 +137,6 @@ export const useMaxQty = (
     positions,
     reduceOnly,
     markPrices,
-    orders,
     accountInfo,
     symbolInfo,
     side,

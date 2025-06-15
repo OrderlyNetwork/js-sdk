@@ -394,6 +394,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           estLeverage={props.estLeverage}
           currentLeverage={props.currentLeverage}
           slippage={slippage}
+          dp={symbolInfo.quote_dp}
           setSlippage={setSlippage}
           estSlippage={props.estSlippage}
           orderType={formattedOrder.order_type!}
@@ -955,6 +956,7 @@ function AssetInfo(props: {
   estLeverage: number | null;
   currentLeverage: number | null;
   slippage: string;
+  dp: number;
   estSlippage: number | null;
   setSlippage: (slippage: string) => void;
   orderType: OrderType;
@@ -969,6 +971,7 @@ function AssetInfo(props: {
         <Text.numeral
           unit={props.quote}
           size={"2xs"}
+          dp={props.dp}
           className={"oui-text-base-contrast-80"}
           unitClassName={"oui-ml-1 oui-text-base-contrast-36"}
         >

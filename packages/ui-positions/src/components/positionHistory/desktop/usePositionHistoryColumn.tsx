@@ -1,3 +1,6 @@
+import { ReactNode } from "react";
+import { useMemo } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
 import {
   Badge,
@@ -9,14 +12,12 @@ import {
   Text,
   Tooltip,
 } from "@orderly.network/ui";
-import { ReactNode } from "react";
-import { useMemo } from "react";
-import { PositionHistoryExt } from "../positionHistory.script";
-import { useSymbolContext } from "../../../providers/symbolProvider";
-import { commifyOptional } from "@orderly.network/utils";
-import { ShareButtonWidget } from "../../positions/desktop/shareButton";
 import { SharePnLConfig, SharePnLDialogId } from "@orderly.network/ui-share";
-import { useTranslation } from "@orderly.network/i18n";
+import { commifyOptional } from "@orderly.network/utils";
+import { useSymbolContext } from "../../../providers/symbolProvider";
+import { FundingFeeButton } from "../../fundingFeeHistory/fundingFeeButton";
+import { ShareButtonWidget } from "../../positions/desktop/shareButton";
+import { PositionHistoryExt } from "../positionHistory.script";
 
 export const usePositionHistoryColumn = (props: {
   onSymbolChange?: (symbol: API.Symbol) => void;
@@ -109,6 +110,20 @@ export const usePositionHistoryColumn = (props: {
             );
           },
         },
+        {
+          title: t("funding.fundingFee"),
+          dataIndex: "accumulated_funding_fee",
+          render: (value, record) => {
+            return (
+              <FundingFeeButton
+                fee={-value}
+                symbol={record.symbol}
+                start_t={record.open_timestamp.toString()}
+                end_t={record.close_timestamp?.toString()}
+              />
+            );
+          },
+        },
         // time opened
         {
           title: t("positions.history.column.timeOpened"),
@@ -154,7 +169,7 @@ export const usePositionHistoryColumn = (props: {
           ),
         },
       ] as Column<PositionHistoryExt>[],
-    [pnlNotionalDecimalPrecision, t]
+    [pnlNotionalDecimalPrecision, t],
   );
 
   return column;
@@ -189,7 +204,7 @@ export const SymbolInfo = (props: {
         className="oui-break-normal oui-whitespace-nowrap"
       >
         {renderStatus()}
-      </Badge>
+      </Badge>,
     );
 
     if (record.type === "adl") {
@@ -197,7 +212,7 @@ export const SymbolInfo = (props: {
         <Badge color={"danger"} size="xs">
           {/* {capitalizeFirstLetter(record.type)} */}
           {t("positions.history.type.adl")}
-        </Badge>
+        </Badge>,
       );
     } else if (record.type === "liquidated") {
       list.push(
@@ -249,7 +264,7 @@ export const SymbolInfo = (props: {
               </span>
             </Badge>
           </div>
-        </Tooltip>
+        </Tooltip>,
       );
     }
 
@@ -263,7 +278,7 @@ export const SymbolInfo = (props: {
         height={38}
         className={cn(
           "oui-rounded-[1px] oui-shrink-0",
-          record.side === "LONG" ? "oui-bg-trade-profit" : "oui-bg-trade-loss"
+          record.side === "LONG" ? "oui-bg-trade-profit" : "oui-bg-trade-loss",
         )}
       />
 
@@ -357,9 +372,7 @@ export const NetPnL = (props: {
             </Text>
           </Flex>
           <Flex justify={"between"} width={"100%"} gap={2}>
-            <Text intensity={54}>
-              {t("positions.history.netPnl.fundingFee")}
-            </Text>
+            <Text intensity={54}>{t("funding.fundingFee")}</Text>
             <Text
               color={record.accumulated_funding_fee > 0 ? "lose" : "profit"}
               className="oui-cursor-pointer"
@@ -389,5 +402,3 @@ export const NetPnL = (props: {
     </Tooltip>
   );
 };
-
-

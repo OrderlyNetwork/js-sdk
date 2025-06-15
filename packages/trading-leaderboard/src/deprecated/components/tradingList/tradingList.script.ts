@@ -12,7 +12,7 @@ import { TableSort, usePagination, useScreen } from "@orderly.network/ui";
 import { useEndReached } from "../../../hooks/useEndReached";
 import { getDateRange, formatDateRange } from "../../../utils";
 
-export type TradingListScriptOptioins = {};
+export type TradingListScriptOptions = {};
 
 export type TradingData = {
   account_id: string;

@@ -37,8 +37,8 @@ export const useMarginRatio = (): MarginRatioReturn => {
 
   const positions = usePositionStore((state) => state.positions.all);
 
-  const { rows } = positions;
-  const { notional } = positions;
+  const { rows, notional } = positions;
+
   const { state } = useAccount();
 
   const { data: markPrices } = useMarkPricesStream();
@@ -83,7 +83,9 @@ export const useMarginRatio = (): MarginRatioReturn => {
    * Returns null if user has no positions
    */
   const mmr = useMemo<number | null>(() => {
-    if (!rows || rows.length <= 0 || notional == null) return null;
+    if (!rows || rows.length <= 0 || notional == null) {
+      return null;
+    }
     let positionsMM = zero;
     // const positionsNotional = positions.totalNotional(rows);
 

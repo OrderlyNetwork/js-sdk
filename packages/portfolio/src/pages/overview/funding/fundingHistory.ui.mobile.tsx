@@ -16,10 +16,10 @@ export const FundingHistoryMobile: FC<FundingHistoryProps> = (props) => {
     switch (paymentType) {
       case "Pay":
       case "Paid":
-        return t("portfolio.overview.column.paymentType.paid");
+        return t("funding.paymentType.paid");
       case "Receive":
       case "Received":
-        return t("portfolio.overview.column.paymentType.received");
+        return t("funding.paymentType.received");
       default:
         return paymentType;
     }
@@ -33,10 +33,6 @@ export const FundingHistoryMobile: FC<FundingHistoryProps> = (props) => {
   };
 
   const renderHistoryItem = (item: any) => {
-    const fundingAndAnnualText: string =
-      t("portfolio.overview.column.funding&AnnualRate") || "";
-    const [fundingText, annualText] = fundingAndAnnualText.split("/");
-
     return (
       <Flex
         p={2}
@@ -65,7 +61,7 @@ export const FundingHistoryMobile: FC<FundingHistoryProps> = (props) => {
         <Flex direction="row" justify="between" width="100%">
           <Flex direction="column">
             <Text className="oui-text-base-contrast-36 oui-text-2xs">
-              {fundingText}
+              {t("funding.fundingRate")}
             </Text>
             <Text.numeral
               rule={"percentages"}
@@ -77,7 +73,7 @@ export const FundingHistoryMobile: FC<FundingHistoryProps> = (props) => {
           </Flex>
           <Flex direction="column">
             <Text className="oui-text-base-contrast-36 oui-text-2xs">
-              {annualText}
+              {t("funding.annualRate")}
             </Text>
             <Text.numeral
               rule={"percentages"}
@@ -89,7 +85,7 @@ export const FundingHistoryMobile: FC<FundingHistoryProps> = (props) => {
           </Flex>
           <Flex direction="column">
             <Text className="oui-text-base-contrast-36 oui-text-2xs">
-              {t("portfolio.overview.column.fundingFee")}{" "}
+              {t("funding.fundingFee")}{" "}
               <Text className="oui-text-base-contrast-20">(USDC)</Text>
             </Text>
             <Text.numeral

@@ -282,7 +282,8 @@ const ReferralCode: FC<WalletConnectContentProps> = (props) => {
       label=""
       value={props.refCode}
       onChange={(e) => {
-        props.setRefCode(e.target.value);
+        const _value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "");
+        props.setRefCode(_value);
       }}
       classNames={{
         label: "oui-text-base-contrast-54 oui-text-xs",
