@@ -24,7 +24,6 @@ export const useMarketsListFullScript = (
   const { searchValue } = useMarketsContext();
 
   const { onSort, getSortedList, sort } = useSort(options.initialSort);
-  console.log("sort", sort);
 
   const dataSource = useMemo(() => {
     const searchList = searchBySymbol(data, searchValue, "base-type");

@@ -101,6 +101,7 @@ export default defineConfig([
       "monorepo-cop": monorepoCop,
     },
     rules: {
+      "no-console": ["warn", { allow: ["warn", "error"] }],
       // "@stylistic/semi": ["error", "never"],
       "prefer-const": "warn",
       "@typescript-eslint/no-unused-expressions": "warn",
