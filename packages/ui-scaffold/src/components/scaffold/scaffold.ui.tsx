@@ -48,7 +48,7 @@ export const DesktopScaffold: FC<DesktopScaffoldProps> = (props) => {
           classNames?.container,
         )}
       >
-        <Box px={3} ref={props.announcementRef}>
+        <Box px={2} ref={props.announcementRef}>
           <RestrictedInfoWidget
             className={cn(
               "oui-scaffold-restricted-info",
