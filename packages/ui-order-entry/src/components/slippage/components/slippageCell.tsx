@@ -71,16 +71,16 @@ export const SlippageCell = (props: {
             <Text.numeral
               size="2xs"
               rule="percentages"
-              prefix={`${t("orderEntry.slippage.est")}:`}
+              prefix={`${t("orderEntry.slippage.est")}: `}
               suffix={` / ${t("common.max")}: `}
             >
               {props.estSlippage ?? 0}
             </Text.numeral>
-            <Text size="2xs" className="oui-text-base-contrast-80">
+            <Text size="2xs" className="oui-text-primary">
               {`${props.slippage || "-"}%`}
             </Text>
             <button className="oui-text-2xs" onClick={() => setOpen()}>
-              <EditIcon className="oui-text-base-contrast-54" size={12} />
+              <EditIcon className="oui-text-primary" size={12} opacity={1} />
             </button>
           </Flex>
         </AuthGuard>
