@@ -54,6 +54,7 @@ export type ScaffoldProps = {
     leftSidebar?: string;
     topNavbar?: string;
     footer?: string;
+    bottomNav?: string;
   };
 };
 

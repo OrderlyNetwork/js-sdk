@@ -18,7 +18,15 @@ export const MobileFunding: FC<FundingScriptReturn> = (props) => {
   );
 
   return (
-    <Box id="oui-funding-list" intensity={900} p={3} mt={2} mb={5} r="xl">
+    <Box
+      intensity={900}
+      p={3}
+      mt={2}
+      mb={5}
+      r="xl"
+      height="100%"
+      className="oui-markets-funding-list"
+    >
       <Tabs
         variant="contained"
         size="lg"

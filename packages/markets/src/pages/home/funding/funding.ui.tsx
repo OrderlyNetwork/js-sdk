@@ -10,7 +10,13 @@ export const Funding: FC<FundingScriptReturn> = (props) => {
   const { t } = useTranslation();
 
   return (
-    <Box id="oui-funding-list" intensity={900} p={6} mt={4} r="2xl">
+    <Box
+      intensity={900}
+      p={6}
+      mt={4}
+      r="2xl"
+      className="oui-markets-funding-list"
+    >
       <Tabs
         variant="contained"
         size="lg"

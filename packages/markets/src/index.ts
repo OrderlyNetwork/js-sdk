@@ -22,6 +22,7 @@ export * from "./components/symbolInfoBarFull";
 export * from "./deprecated/newListingList";
 export * from "./deprecated/favoritesList";
 export * from "./deprecated/recentList";
+export * from "./type";
 
 export { MarketsHomePage } from "./pages/home/page";
 export { MarketsProvider } from "./components/marketsProvider";

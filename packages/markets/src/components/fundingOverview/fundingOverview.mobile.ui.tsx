@@ -25,7 +25,7 @@ export const MobileFundingOverview: FC<MobileFundingOverviewProps> = (
       }}
       classNames={{
         header: "oui-h-9",
-        body: "oui-text-2xs ",
+        body: "oui-text-2xs",
       }}
       onSort={onSort}
       manualSorting

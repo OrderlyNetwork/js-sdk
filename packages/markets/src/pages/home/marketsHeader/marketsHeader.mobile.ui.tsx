@@ -142,7 +142,7 @@ type BlockItemProps = {
 
 const BlockItem: React.FC<BlockItemProps> = (props) => {
   return (
-    <Box px={3} width="100%" className={props.className}>
+    <Box px={2} width="100%" className={props.className}>
       <Text as="div" intensity={36} size="2xs" weight="semibold">
         {props.label}
       </Text>
@@ -150,9 +150,9 @@ const BlockItem: React.FC<BlockItemProps> = (props) => {
       <Text.numeral
         size="base"
         currency="$"
-        dp={props.dp || 0}
+        dp={props.dp || 2}
         rm={Decimal.ROUND_DOWN}
-        rule={props.rule as any}
+        rule={(props.rule as any) || "human"}
       >
         {props.value!}
       </Text.numeral>

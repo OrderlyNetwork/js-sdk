@@ -12,12 +12,25 @@ type MobileScaffoldProps = PropsWithChildren<
 >;
 
 export const MobileScaffold = (props: MobileScaffoldProps) => {
+  const { classNames } = props;
   return (
-    <div className="oui-scaffold-root">
+    <div
+      style={{
+        height: `calc(100vh - ${props.bottomNavHeight}px)`,
+      }}
+      className={cn(
+        "oui-scaffold-root oui-bg-base-10",
+        "oui-custom-scrollbar oui-overflow-auto",
+        "oui-mb-[calc(env(safe-area-inset-bottom))]",
+        classNames?.root,
+      )}
+    >
       <header
+        ref={props.topNavbarRef}
         className={cn(
           "oui-scaffold-topNavbar",
           "oui-sticky oui-top-0 oui-z-10 oui-w-full oui-bg-base-10",
+          classNames?.topNavbar,
         )}
       >
         {props.topBar ?? (
@@ -28,26 +41,36 @@ export const MobileScaffold = (props: MobileScaffoldProps) => {
         )}
       </header>
 
-      <RestrictedInfoWidget className="oui-mx-1 oui-mb-1 oui-bg-base-6" />
-
-      <AnnouncementWidget
-        className="oui-mx-1 oui-mb-1 oui-bg-base-6"
-        hideTips={props.restrictedInfo?.restrictedOpen}
-      />
-
       <Box
-        className="oui-scaffold-content"
-        style={{ paddingBottom: "calc(64px + env(safe-area-inset-bottom))" }}
-        // className="oui-hide-scrollbar oui-overflow-y-auto"
+        className={cn(
+          "oui-scaffold-container",
+          "oui-relative oui-h-full",
+          classNames?.container,
+        )}
       >
-        {props.children}
+        <RestrictedInfoWidget className="oui-mx-1 oui-mb-1 oui-bg-base-6" />
+
+        <AnnouncementWidget
+          className="oui-mx-1 oui-mb-1 oui-bg-base-6"
+          hideTips={props.restrictedInfo?.restrictedOpen}
+        />
+
+        <Box
+          height="100%"
+          width="100%"
+          className={cn("oui-scaffold-content", classNames?.content)}
+        >
+          {props.children}
+        </Box>
       </Box>
 
       <footer
+        ref={props.bottomNavRef}
         className={cn(
           "oui-scaffold-bottomNav",
           "oui-fixed oui-bottom-0 oui-z-10",
           "oui-w-full oui-bg-base-9 oui-pb-[calc(env(safe-area-inset-bottom))]",
+          classNames?.bottomNav,
         )}
       >
         {props.bottomNav ?? (
