@@ -15,13 +15,8 @@ export const MobileScaffold = (props: MobileScaffoldProps) => {
   const { classNames } = props;
   return (
     <div
-      style={{
-        height: `calc(100vh - ${props.bottomNavHeight}px)`,
-      }}
       className={cn(
-        "oui-scaffold-root oui-bg-base-10",
-        "oui-custom-scrollbar oui-overflow-auto",
-        "oui-mb-[calc(env(safe-area-inset-bottom))]",
+        "oui-scaffold-root oui-h-screen oui-overflow-hidden oui-bg-base-10",
         classNames?.root,
       )}
     >
@@ -42,9 +37,14 @@ export const MobileScaffold = (props: MobileScaffoldProps) => {
       </header>
 
       <Box
+        style={{
+          height: `calc(100vh - ${props.topNavbarHeight}px - ${props.bottomNavHeight}px)`,
+        }}
         className={cn(
           "oui-scaffold-container",
-          "oui-relative oui-h-full",
+          "oui-relative",
+          "oui-custom-scrollbar oui-overflow-y-auto",
+          // "oui-pb-[calc(env(safe-area-inset-bottom,64px))]",
           classNames?.container,
         )}
       >
@@ -69,7 +69,7 @@ export const MobileScaffold = (props: MobileScaffoldProps) => {
         className={cn(
           "oui-scaffold-bottomNav",
           "oui-fixed oui-bottom-0 oui-z-10",
-          "oui-w-full oui-bg-base-9 oui-pb-[calc(env(safe-area-inset-bottom))]",
+          "oui-w-full oui-bg-base-9",
           classNames?.bottomNav,
         )}
       >
