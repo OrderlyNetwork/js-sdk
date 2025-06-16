@@ -164,7 +164,7 @@ export const CampaignsContentDesktopUI: FC<{
               weight="semibold"
               className="oui-text-base-contrast-36"
             >
-              Participants
+              {t("tradingLeaderboard.participants")}
             </Text>
             <Text
               size="2xs"
@@ -208,7 +208,7 @@ export const CampaignsContentDesktopUI: FC<{
                   weight="semibold"
                   className="oui-text-base-contrast-54"
                 >
-                  Prize pool
+                  {t("tradingLeaderboard.prizePool")}
                 </Text>
                 <Tooltip
                   // @ts-ignore
@@ -248,7 +248,7 @@ export const CampaignsContentDesktopUI: FC<{
                     weight="semibold"
                     className="oui-text-base-contrast-54"
                   >
-                    Ticket prize pool
+                    {t("tradingLeaderboard.ticketPrizePool")}
                   </Text>
                 </div>
                 <div>
@@ -285,7 +285,7 @@ export const CampaignsContentDesktopUI: FC<{
               "
                 onClick={onLearnMore}
               >
-                View rules
+                {t("tradingLeaderboard.viewRules")}
               </Button>
             )}
             {canTrade && (
@@ -296,7 +296,7 @@ export const CampaignsContentDesktopUI: FC<{
                 className="oui-flex-1"
                 onClick={onTradeNow}
               >
-                Trade now
+                {t("tradingLeaderboard.tradeNow")}
               </Button>
             )}
           </div>

@@ -160,11 +160,11 @@ function getCampaigns() {
 
     // Coming campaign with PnL focus
     {
-      campaign_id: "105",
+      campaign_id: "107",
       title: "PNL MASTERS TOURNAMENT",
       description:
         "Think you're a trading genius? Prove it in our upcoming PnL-focused competition. Consistent profits beat volume - skill over quantity.",
-      image: "/leaderboard/woof.png",
+      image: "",
       href: "https://orderly.network/pnl-masters",
       start_time: addDays(new Date(), 14).toISOString(),
       end_time: addDays(new Date(), 44).toISOString(),
@@ -200,7 +200,7 @@ function getCampaigns() {
       end_time: addDays(new Date(), 20).toISOString(),
       reward_distribution_time: addDays(new Date(), 22).toISOString(),
       referral_codes: ["PARTNER1", "BROKER2024", "ALLIANCE"],
-      volume_scope: ["PERP_BTC_USDC", "PERP_ETH_USDC", "PERP_SOL_USDC"],
+      volume_scope: undefined,
       prize_pools: [
         {
           pool_id: "broker_volume",
@@ -242,6 +242,55 @@ function getCampaigns() {
           { value: 10000, tickets: 5 },
         ],
       },
+    } as CampaignConfig,
+    {
+      campaign_id: "105",
+      title: "DAWN OF DOMINANCE",
+      description:
+        "A new era begins. Outtrade the competition. Climb the ranks. Secure your legacy.",
+      image: "",
+      // href: 'https://orderly.network/',
+      start_time: new Date("2025-06-18T00:00:00Z").toISOString(),
+      end_time: new Date("2025-07-04T23:59:59Z").toISOString(),
+      reward_distribution_time: undefined,
+      volume_scope: undefined,
+      prize_pools: [
+        {
+          pool_id: "trading",
+          label: "Trading volume pool",
+          total_prize: 20000,
+          currency: "USDC",
+          metric: "volume",
+          tiers: [
+            { position: 1, amount: 1400 },
+            { position: 2, amount: 1200 },
+            { position: 3, amount: 1000 },
+            { position_range: [4, 5], amount: 750 },
+            { position_range: [6, 10], amount: 440 },
+            { position_range: [11, 15], amount: 340 },
+            { position_range: [16, 25], amount: 275 },
+            { position_range: [26, 50], amount: 180 },
+            { position_range: [51, 75], amount: 75 },
+            { position_range: [76, 100], amount: 50 },
+            { position_range: [101, 125], amount: 25 },
+          ],
+        },
+      ],
+      ticket_rules: {
+        total_prize: 2500,
+        currency: "USDC",
+        metric: "volume",
+        mode: "tiered",
+        tiers: [
+          { value: 5000, tickets: 1 },
+          { value: 10000, tickets: 5 },
+          { value: 50000, tickets: 30 },
+          { value: 100000, tickets: 70 },
+          { value: 250000, tickets: 200 },
+        ],
+      },
+      rule_url: "https://www.google.com",
+      trading_url: "https://pro.woofi.com/en/trade/ETH_PERP",
     } as CampaignConfig,
   ];
 }

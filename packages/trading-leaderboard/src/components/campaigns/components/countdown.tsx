@@ -1,4 +1,5 @@
 import { FC, useState, useEffect } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import { cn } from "@orderly.network/ui";
 import { CampaignConfig } from "../type";
 
@@ -53,6 +54,7 @@ export const CampaignsCountdown: FC<{
   campaign: CampaignConfig;
   isMobile?: boolean;
 }> = ({ campaign, isMobile }) => {
+  const { t } = useTranslation();
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({
     days: 0,
     hours: 0,
@@ -120,7 +122,7 @@ export const CampaignsCountdown: FC<{
               : "oui-p-5 oui-text-[18px] oui-leading-[26px] oui-h-[26px]",
           ])}
         >
-          Battle has ended
+          {t("tradingLeaderboard.batteleHasEnded")}
         </div>
         <div
           className="oui-max-w-[382px] oui-w-full oui-h-[1px] oui-bg-gradient-to-r oui-from-[rgba(var(--oui-gradient-brand-start))]
@@ -130,7 +132,9 @@ export const CampaignsCountdown: FC<{
     );
   }
 
-  const titleText = isStarted ? "Battle ends in" : "Battle starts in";
+  const titleText = isStarted
+    ? t("tradingLeaderboard.battleEndsIn")
+    : t("tradingLeaderboard.battleStartsIn");
 
   // Time units configuration
   const timeUnits = [

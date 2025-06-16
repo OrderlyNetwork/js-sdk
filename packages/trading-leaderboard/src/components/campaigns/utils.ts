@@ -1,4 +1,5 @@
 import { format } from "date-fns";
+import { i18n } from "@orderly.network/i18n";
 import { TimelinePoint } from "./components/axis";
 import { CampaignConfig, CampaignTagEnum, CampaignStatistics } from "./type";
 
@@ -259,7 +260,7 @@ export const generateCampaignTimeline = (
 
   // Battle starts point
   timeline.push({
-    title: "Battle starts",
+    title: i18n.t("tradingLeaderboard.battleStarts"),
     type: getTimelineType(startTime),
     time: formatTimeDisplay(startTime),
   });
@@ -268,7 +269,7 @@ export const generateCampaignTimeline = (
   const isOngoing = currentTime >= startTime && currentTime <= endTime;
   if (isOngoing) {
     timeline.push({
-      title: "Now",
+      title: i18n.t("chart.now"),
       type: "active",
       time: formatTimeDisplay(currentTime),
     });
@@ -276,7 +277,7 @@ export const generateCampaignTimeline = (
 
   // Battle ends point
   timeline.push({
-    title: "Battle ends",
+    title: i18n.t("tradingLeaderboard.battleEnds"),
     type: getTimelineType(endTime),
     time: formatTimeDisplay(endTime),
   });
@@ -284,7 +285,7 @@ export const generateCampaignTimeline = (
   // Reward distribution point (if provided)
   if (rewardTime) {
     timeline.push({
-      title: "Reward distribution",
+      title: i18n.t("tradingLeaderboard.rewardDistribution"),
       type: getTimelineType(rewardTime),
       time: formatTimeDisplay(rewardTime),
     });

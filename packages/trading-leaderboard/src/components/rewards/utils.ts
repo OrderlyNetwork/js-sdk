@@ -95,8 +95,11 @@ export function calculateEstimatedRewards(
   let totalEstimatedReward = 0;
   const mainCurrency = campaign.prize_pools[0].currency;
 
+  // Only sum rewards from pools with the same currency to avoid mixing different currencies
   for (const pool of campaign.prize_pools) {
-    totalEstimatedReward += findRewardInPool(userdata, pool);
+    if (pool.currency === mainCurrency) {
+      totalEstimatedReward += findRewardInPool(userdata, pool);
+    }
   }
 
   return totalEstimatedReward > 0
@@ -159,7 +162,7 @@ function calculateLinearTickets(
   metricValue: number,
   linearRule?: TicketLinearRule,
 ): number {
-  if (!linearRule) return 0;
+  if (!linearRule || linearRule.every <= 0) return 0;
 
   const multiplier = Math.floor(metricValue / linearRule.every);
   return multiplier * linearRule.tickets;
@@ -226,6 +229,11 @@ export function calculateTicketProgress(
       (a, b) => a.value - b.value,
     );
 
+    // Check if tiers array is empty
+    if (sortedTiers.length === 0) {
+      return null;
+    }
+
     // Special case: if user metric value is 0 or negative, show progress to first tier
     if (userMetricValue <= 0) {
       return {
@@ -235,23 +243,33 @@ export function calculateTicketProgress(
     }
 
     // Find current tier and next tier
-    let currentTier = sortedTiers[0];
-    let nextTier = null;
+    let currentTier = null;
+    let nextTier = sortedTiers[0]; // Default next tier is the first one
 
     for (let i = 0; i < sortedTiers.length; i++) {
       if (userMetricValue >= sortedTiers[i].value) {
         currentTier = sortedTiers[i];
-        nextTier = sortedTiers[i + 1];
+        nextTier = sortedTiers[i + 1] || null; // Next tier or null if at max
       } else {
+        // User hasn't reached this tier yet, so this is the next tier
+        nextTier = sortedTiers[i];
         break;
       }
     }
 
     if (!nextTier) {
-      // User is at the highest tier
       return {
         percent: 100,
         value: 0,
+      };
+    }
+
+    // If user hasn't reached any tier yet, calculate progress to first tier
+    if (!currentTier) {
+      const progress = (userMetricValue / nextTier.value) * 100;
+      return {
+        percent: progress,
+        value: nextTier.value - userMetricValue,
       };
     }
 

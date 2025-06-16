@@ -1,4 +1,5 @@
 import { FC, useMemo } from "react";
+import { useTranslation, Trans } from "@orderly.network/i18n";
 import { InfoCircleIcon, Tooltip, Text, Button, cn } from "@orderly.network/ui";
 import { CampaignConfig, UserData } from "../campaigns/type";
 import {
@@ -25,6 +26,7 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
   onTradeNow,
   isMobile,
 }) => {
+  const { t } = useTranslation();
   // Use mock data for userdata if not provided
   const currentUserData = userdata;
 
@@ -111,7 +113,10 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
     if (ticketRules.mode === "linear") {
       return (
         <div>
-          {`Earn ${ticketRules?.linear?.tickets} ticket every $${ticketRules?.linear?.every} trading volume.`}
+          {t("tradingLeaderboard.earnTickets", {
+            ticket: ticketRules?.linear?.tickets,
+            amount: ticketRules?.linear?.every,
+          })}
         </div>
       );
     }
@@ -172,7 +177,7 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
         ])}
       >
         <RewardItem
-          title="Estimated rewards"
+          title={t("tradingLeaderboard.estimatedRewards")}
           value={rewardText}
           showTooltip
           tooltip={tooltipContent}
@@ -180,7 +185,7 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
         />
         <RewardItem
           showTooltip={!!campaign?.ticket_rules}
-          title="Estimated tickets earned"
+          title={t("tradingLeaderboard.estimatedTicketsEarned")}
           value={ticketText}
           tooltip={ticketTooltipContent}
           {...extraProps}
@@ -202,7 +207,7 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
           ])}
           onClick={onLearnMore}
         >
-          View rules
+          {t("tradingLeaderboard.viewRules")}
         </Button>
         {canTrade && (
           <Button
@@ -212,7 +217,7 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
             className={cn([isMobile ? "oui-flex-1" : "oui-w-[140px]"])}
             onClick={onTradeNow}
           >
-            Trade now
+            {t("tradingLeaderboard.tradeNow")}
           </Button>
         )}
       </div>
@@ -232,6 +237,8 @@ const RewardItem: FC<{
   } | null;
   isMobile?: boolean;
 }> = (props) => {
+  const { t } = useTranslation();
+
   return (
     <div className="oui-flex-1 oui-px-5 oui-py-4 oui-flex oui-flex-col oui-items-center oui-bg-base-9 oui-rounded-2xl oui-justify-center">
       <div
@@ -288,11 +295,15 @@ const RewardItem: FC<{
                 props.isMobile ? "oui-text-2xs oui-leading-[15px]" : "",
               ])}
             >
-              Trade{" "}
-              <span className="oui-text-base-contrast">
-                ${props?.extraInfo?.value}
-              </span>{" "}
-              more to get next tickets
+              {/* @ts-ignore */}
+              <Trans
+                i18nKey="tradingLeaderboard.tradeForMoreTickets"
+                components={[
+                  <span key="0" className="oui-text-base-contrast">
+                    ${props?.extraInfo?.value?.toFixed(2)}
+                  </span>,
+                ]}
+              />
             </div>
           </div>
         </div>
