@@ -1,4 +1,4 @@
-import { FC, useMemo } from "react";
+import { FC, useEffect, useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { cn, Flex, TabPanel, Tabs } from "@orderly.network/ui";
 import { LeaderboardTab } from "../../../type";
@@ -33,6 +33,17 @@ export const LeaderboardTabs: FC<LeaderboardTabsProps> = (props) => {
       showPnl,
     };
   }, [currentCampaign, props.activeTab]);
+
+  useEffect(() => {
+    // set default tab
+    if (showVolume && showPnl) {
+      props.onTabChange(LeaderboardTab.Volume);
+    } else if (showVolume) {
+      props.onTabChange(LeaderboardTab.Volume);
+    } else if (showPnl) {
+      props.onTabChange(LeaderboardTab.Pnl);
+    }
+  }, [currentCampaign, showVolume, showPnl]);
 
   const renderTabs = () => {
     if (showVolume && showPnl) {
