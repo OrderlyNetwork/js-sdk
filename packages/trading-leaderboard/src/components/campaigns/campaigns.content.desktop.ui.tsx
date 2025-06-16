@@ -1,4 +1,4 @@
-import { FC, useMemo } from "react";
+import { FC, useMemo, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { cn, Text, InfoCircleIcon, Button, Tooltip } from "@orderly.network/ui";
 import { CampaignConfig, CampaignStatistics } from "./type";
@@ -40,6 +40,18 @@ export const CampaignsContentDesktopUI: FC<{
     campaign?.start_time,
     campaign?.end_time,
   );
+  // for mobile
+  const [tooltipOpen, setTooltipOpen] = useState(false);
+
+  const tooltipProps = useMemo(() => {
+    if (!isMobile) {
+      return {};
+    }
+    return {
+      open: tooltipOpen,
+      onOpenChange: setTooltipOpen,
+    };
+  }, [tooltipOpen, isMobile, setTooltipOpen]);
 
   // Get campaign data using utility functions
   const tradingVolume = getTradingVolume(statistics);
@@ -213,9 +225,13 @@ export const CampaignsContentDesktopUI: FC<{
                 <Tooltip
                   // @ts-ignore
                   content={tooltipContent}
+                  {...tooltipProps}
                   className="oui-max-w-[260px] oui-bg-base-5 oui-py-1 oui-px-2"
                 >
-                  <div className="oui-flex oui-items-center oui-justify-center oui-w-4 oui-h-4">
+                  <div
+                    className="oui-flex oui-items-center oui-justify-center oui-w-4 oui-h-4"
+                    onClick={() => setTooltipOpen(true)}
+                  >
                     <InfoCircleIcon className="oui-cursor-pointer" />
                   </div>
                 </Tooltip>

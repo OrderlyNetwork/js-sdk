@@ -124,12 +124,12 @@ export const CampaignsHeaderMobileUI: FC<{
                   active={currentCampaignId == campaign.campaign_id}
                   onCampaignChange={onCampaignChange}
                   classNames={{
-                    container: "oui-h-[42px]",
-                    title: "oui-text-[10px]",
-                    content: "oui-gap-[2px]",
+                    container: "!oui-h-[42px]",
+                    title: "!oui-text-[10px]",
+                    content: "!oui-gap-[2px]",
                     tag: {
-                      container: "oui-h-[14px] oui-px-1 oui-py-[2px]",
-                      text: "oui-text-[10px]",
+                      container: "!oui-h-[14px] !oui-px-1 !oui-py-[2px]",
+                      text: "!oui-text-[10px]",
                     },
                   }}
                 />

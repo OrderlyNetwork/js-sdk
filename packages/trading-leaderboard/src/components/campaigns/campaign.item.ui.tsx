@@ -46,12 +46,14 @@ export const CampaignItemUI: FC<CampaignItemUIProps> = ({
       <div
         className={cn([
           "oui-flex oui-flex-col oui-items-center oui-justify-center oui-gap-1 oui-h-full oui-w-full",
-          "oui-bg-cover oui-bg-center oui-bg-no-repeat",
-          active ? "oui-grayscale-0" : "oui-grayscale",
-          "group-hover:oui-grayscale-0",
+          "oui-bg-cover oui-bg-center oui-bg-no-repeat oui-bg-blend-luminosity",
+          active ? "oui-bg-transparent" : "oui-bg-[lightgray]",
+          "group-hover:oui-bg-transparent",
           classNames?.content,
         ])}
-        style={{ backgroundImage: `url(${campaign?.image || backgroundSrc})` }}
+        style={{
+          backgroundImage: `url(${campaign?.image || backgroundSrc})`,
+        }}
       >
         <Text
           weight="semibold"

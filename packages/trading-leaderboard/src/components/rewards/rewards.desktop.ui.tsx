@@ -1,4 +1,4 @@
-import { FC, useMemo } from "react";
+import { FC, useMemo, useState } from "react";
 import { useTranslation, Trans } from "@orderly.network/i18n";
 import { InfoCircleIcon, Tooltip, Text, Button, cn } from "@orderly.network/ui";
 import { CampaignConfig, UserData } from "../campaigns/type";
@@ -237,7 +237,17 @@ const RewardItem: FC<{
   } | null;
   isMobile?: boolean;
 }> = (props) => {
-  const { t } = useTranslation();
+  const [tooltipOpen, setTooltipOpen] = useState(false);
+
+  const tooltipProps = useMemo(() => {
+    if (!props.isMobile) {
+      return {};
+    }
+    return {
+      open: tooltipOpen,
+      onOpenChange: setTooltipOpen,
+    };
+  }, [tooltipOpen, props.isMobile, setTooltipOpen]);
 
   return (
     <div className="oui-flex-1 oui-px-5 oui-py-4 oui-flex oui-flex-col oui-items-center oui-bg-base-9 oui-rounded-2xl oui-justify-center">
@@ -265,8 +275,11 @@ const RewardItem: FC<{
           {props.value}
         </Text.gradient>
         {props.showTooltip && (
-          <Tooltip content={props.tooltip}>
-            <div className="oui-flex oui-items-center oui-justify-center oui-w-4 oui-h-4">
+          <Tooltip content={props.tooltip} {...tooltipProps}>
+            <div
+              className="oui-flex oui-items-center oui-justify-center oui-w-4 oui-h-4"
+              onClick={() => setTooltipOpen(true)}
+            >
               <InfoCircleIcon className="oui-cursor-pointer" />
             </div>
           </Tooltip>
