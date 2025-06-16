@@ -62,10 +62,10 @@ function getCampaigns() {
         metric: "volume" as const,
         mode: "tiered" as const,
         tiers: [
-          { value: 50000, tickets: 20 },
-          { value: 25000, tickets: 10 },
-          { value: 10000, tickets: 5 },
           { value: 5000, tickets: 1 },
+          { value: 10000, tickets: 5 },
+          { value: 25000, tickets: 10 },
+          { value: 50000, tickets: 20 },
         ],
       },
     } as CampaignConfig,
@@ -199,7 +199,7 @@ function getCampaigns() {
       start_time: addDays(new Date(), -10).toISOString(),
       end_time: addDays(new Date(), 20).toISOString(),
       reward_distribution_time: addDays(new Date(), 22).toISOString(),
-      referral_codes: ["PARTNER1", "BROKER2024", "ALLIANCE"],
+      referral_codes: ["RNN83UA5", "BROKER2024", "ALLIANCE"],
       volume_scope: undefined,
       prize_pools: [
         {
@@ -236,10 +236,10 @@ function getCampaigns() {
         metric: "volume" as const,
         mode: "tiered" as const,
         tiers: [
-          { value: 100000, tickets: 50 },
-          { value: 50000, tickets: 25 },
-          { value: 20000, tickets: 10 },
           { value: 10000, tickets: 5 },
+          { value: 20000, tickets: 10 },
+          { value: 50000, tickets: 25 },
+          { value: 100000, tickets: 50 },
         ],
       },
     } as CampaignConfig,

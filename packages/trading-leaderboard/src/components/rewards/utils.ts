@@ -97,9 +97,7 @@ export function calculateEstimatedRewards(
 
   // Only sum rewards from pools with the same currency to avoid mixing different currencies
   for (const pool of campaign.prize_pools) {
-    if (pool.currency === mainCurrency) {
-      totalEstimatedReward += findRewardInPool(userdata, pool);
-    }
+    totalEstimatedReward += findRewardInPool(userdata, pool);
   }
 
   return totalEstimatedReward > 0
@@ -119,6 +117,8 @@ export function calculateEstimatedTickets(
 ): number {
   const userMetricValue =
     ticketRules.metric === "volume" ? userdata.volume : userdata.pnl;
+
+  if (!userMetricValue) return 0;
 
   if (userMetricValue <= 0) return 0;
 
@@ -208,6 +208,21 @@ export function calculateTicketProgress(
   if (!userdata || !ticketRules) return null;
 
   const userMetricValue = getUserMetricValue(userdata, ticketRules.metric);
+
+  console.log("userMetricValue", userMetricValue, ticketRules);
+  if (!userMetricValue) {
+    if (ticketRules.mode === "linear") {
+      return {
+        percent: 0,
+        value: ticketRules.linear?.every || 0,
+      };
+    } else {
+      return {
+        percent: 0,
+        value: ticketRules.tiers?.[0]?.value || 0,
+      };
+    }
+  }
 
   if (ticketRules.mode === "linear") {
     if (!ticketRules.linear) return null;

@@ -141,7 +141,12 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
   }, [campaign]);
 
   const extraProps = useMemo(() => {
-    if (!userdata || !campaign?.ticket_rules) {
+    if (
+      !userdata ||
+      !campaign?.ticket_rules ||
+      campaign.end_time < new Date().toISOString() ||
+      campaign.start_time > new Date().toISOString()
+    ) {
       return {
         showExtraInfo: false,
         extraInfo: null,

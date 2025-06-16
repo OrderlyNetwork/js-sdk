@@ -4,9 +4,11 @@ import {
   useContext,
   useMemo,
   useState,
+  useEffect,
 } from "react";
 import { parseISO } from "date-fns";
 import { sortWith, descend, prop } from "ramda";
+import { usePrivateQuery, RefferalAPI as API } from "@orderly.network/hooks";
 import { CampaignConfig, UserData } from "../campaigns/type";
 
 /**
@@ -51,6 +53,32 @@ export const TradingLeaderboardProvider = (
   const [currentCampaignId, setCurrentCampaignId] = useState<string>("general");
   const [userData, setUserData] = useState<UserData>();
   const [updatedTime, setUpdatedTime] = useState<number>();
+
+  const { data: generateCode, mutate: generateCodeMutate } =
+    usePrivateQuery<API.AutoGenerateCode>(
+      "/v1/referral/auto_referral/progress",
+      {
+        revalidateOnFocus: true,
+        errorRetryCount: 2,
+        formatter: (data) => {
+          return {
+            code: data.auto_referral_code,
+            requireVolume: data.required_volume,
+            completedVolume: data.completed_volume,
+          };
+        },
+      },
+    );
+
+  useEffect(() => {
+    if (generateCode?.code && userData?.referral_code != generateCode.code) {
+      setUserData({
+        ...userData,
+        referral_code: generateCode.code,
+      } as UserData);
+      generateCodeMutate();
+    }
+  }, [generateCode, generateCodeMutate, userData]);
 
   const currentCampaign = useMemo(() => {
     return props.campaigns?.find(
