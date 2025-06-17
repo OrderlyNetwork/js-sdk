@@ -293,7 +293,7 @@ export function useCampaignRankingScript(
 
   useEffect(() => {
     setUpdatedTime?.(data?.updated_time || 0);
-    // when currentCampaign changed, we need to reset the snapshot time
+    // when currentCampaign changed, we need to reset the campaign ranking list updated time
   }, [data, currentCampaign]);
 
   useEffect(() => {

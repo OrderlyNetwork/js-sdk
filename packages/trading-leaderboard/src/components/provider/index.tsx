@@ -30,10 +30,10 @@ export type TradingLeaderboardState = {
   userData?: UserData;
   /** set leaderboard user data */
   setUserData?: (userdata: UserData) => void;
-  /** campaign leaderboard ranking snapshot time */
+  /** campaign ranking list updated time */
   updatedTime?: number;
   /** set snapshot time */
-  setUpdatedTime?: (updatedTime: number) => void;
+  setUpdatedTime?: (updatedTime?: number) => void;
 };
 
 /**

@@ -17,11 +17,11 @@ export const LeaderboardTabs: FC<LeaderboardTabsProps> = (props) => {
   const { updatedTime, currentCampaign } = useTradingLeaderboardContext();
 
   const updateTime = useMemo(() => {
-    if (updatedTime) {
+    if (updatedTime && currentCampaign) {
       return formatUpdateDate(updatedTime);
     }
     return "";
-  }, [props.isMobile, updatedTime]);
+  }, [props.isMobile, updatedTime, currentCampaign]);
 
   const { showVolume, showPnl } = useMemo(() => {
     const metrics = currentCampaign?.prize_pools?.map((item) => item.metric);
