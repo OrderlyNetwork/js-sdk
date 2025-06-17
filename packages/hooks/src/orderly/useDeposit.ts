@@ -16,11 +16,10 @@ import {
 import { Decimal, isTestnet } from "@orderly.network/utils";
 import { useAccount } from "../useAccount";
 import { useConfig } from "../useConfig";
-import { useEventEmitter } from "../useEventEmitter";
 import { useTrack } from "../useTrack";
 import { useChains } from "./useChains";
 
-export type useDepositOptions = {
+export type DepositOptions = {
   // from address
   address?: string;
   decimals?: number;
@@ -30,11 +29,10 @@ export type useDepositOptions = {
   quantity?: string;
 };
 
-export const useDeposit = (options?: useDepositOptions) => {
+export const useDeposit = (options: DepositOptions) => {
   const networkId = useConfig("networkId");
   const [balanceRevalidating, setBalanceRevalidating] = useState(false);
   const [allowanceRevalidating, setAllowanceRevalidating] = useState(false);
-  const ee = useEventEmitter();
   const [_, { findByChainId }] = useChains(undefined);
 
   const [quantity, setQuantity] = useState<string>("");
@@ -56,12 +54,12 @@ export const useDeposit = (options?: useDepositOptions) => {
     // Orderly testnet supported chain
     if (networkId === "testnet") {
       chain = findByChainId(
-        isTestnet(options?.srcChainId!)
-          ? options?.srcChainId!
+        isTestnet(options.srcChainId!)
+          ? options.srcChainId!
           : ARBITRUM_TESTNET_CHAINID,
       ) as API.Chain;
     } else {
-      chain = findByChainId(options?.srcChainId!);
+      chain = findByChainId(options.srcChainId!);
       // if is orderly un-supported chain
       if (!chain?.network_infos?.bridgeless) {
         // Orderly mainnet supported chain
@@ -69,7 +67,7 @@ export const useDeposit = (options?: useDepositOptions) => {
       }
     }
     return chain;
-  }, [networkId, findByChainId, options?.srcChainId]);
+  }, [networkId, findByChainId, options.srcChainId]);
 
   const dst = useMemo(() => {
     const USDC = targetChain?.token_infos.find(
@@ -86,8 +84,8 @@ export const useDeposit = (options?: useDepositOptions) => {
   }, [targetChain]);
 
   const isNativeToken = useMemo(
-    () => isNativeTokenChecker(options?.address || ""),
-    [options?.address],
+    () => isNativeTokenChecker(options.address || ""),
+    [options.address],
   );
 
   const fetchBalanceHandler = useCallback(
@@ -220,32 +218,34 @@ export const useDeposit = (options?: useDepositOptions) => {
   useEffect(() => {
     if (state.status < AccountStatusEnum.Connected) return;
     setBalanceRevalidating(true);
-    // fetchBalance(options?.address, options?.decimals).finally(() => {
+    // fetchBalance(options.address, options.decimals).finally(() => {
     //   setBalanceRevalidating(false);
     // });
 
-    queryBalance(options?.address, options?.decimals);
+    queryBalance(options.address, options.decimals);
 
     const params = {
-      address: options?.address,
-      decimals: options?.decimals,
+      address: options.address,
+      decimals: options.decimals,
     };
 
     if (account.walletAdapter?.chainNamespace === ChainNamespace.solana) {
-      setAllowance(account.walletAdapter.formatUnits(MaxUint256));
+      setAllowance(
+        account.walletAdapter.formatUnits(MaxUint256, options.decimals!),
+      );
       return;
     }
     console.log(
       "-- dst chainid",
       dst.chainId,
-      options?.srcChainId,
+      options.srcChainId,
       dst,
       options,
     );
-    if (dst.chainId !== options?.srcChainId) {
+    if (dst.chainId !== options.srcChainId) {
       queryAllowance(params);
     } else {
-      if (dst.symbol !== options?.srcToken) {
+      if (dst.symbol !== options.srcToken) {
         queryAllowance(params);
       } else {
         getAllowanceByDefaultAddress(params);
@@ -253,10 +253,10 @@ export const useDeposit = (options?: useDepositOptions) => {
     }
   }, [
     state.status,
-    options?.address,
-    options?.srcChainId,
-    options?.srcToken,
-    options?.decimals,
+    options.address,
+    options.srcChainId,
+    options.srcToken,
+    options.decimals,
     account.address,
     dst.chainId,
     dst.symbol,
@@ -269,25 +269,26 @@ export const useDeposit = (options?: useDepositOptions) => {
         .then((receipt) => {
           if (receipt.status === 1) {
             account.assetsManager
-              .getAllowance({ address: options?.address })
+              .getAllowance({ address: options.address })
               .then((allowance) => {
                 setAllowance(() => allowance);
               });
           }
         });
     },
-    [account, options?.address],
+    [account, options.address],
   );
 
   const approve = useCallback(
     async (amount?: string) => {
-      if (!options?.address) {
+      if (!options.address) {
         throw new SDKError("Address is required");
       }
       return account.assetsManager
         .approve({
           address: options.address,
           amount,
+          decimals: options.decimals!,
         })
         .then((res: any) => {
           return updateAllowanceWhenTxSuccess(res.hash);
@@ -296,15 +297,16 @@ export const useDeposit = (options?: useDepositOptions) => {
           throw e;
         });
     },
-    [account, getAllowance, options?.address, dst],
+    [account, getAllowance, options.address, options.decimals, dst],
   );
 
   const deposit = useCallback(async () => {
-    if (!options?.address) {
+    if (!options.address) {
       throw new SDKError("Address is required");
     }
     const _allowance = await account.assetsManager.getAllowance({
-      address: options?.address,
+      address: options.address,
+      decimals: options.decimals,
     });
 
     setAllowance(() => _allowance);
@@ -318,7 +320,11 @@ export const useDeposit = (options?: useDepositOptions) => {
     console.log("-- deposit fee", depositFee);
 
     return account.assetsManager
-      .deposit(quantity, depositFee)
+      .deposit({
+        amount: quantity,
+        fee: depositFee,
+        decimals: options.decimals!,
+      })
       .then((res: any) => {
         track(TrackerEventName.depositSuccess, {
           wallet: state?.connectWallet?.name,
@@ -337,7 +343,14 @@ export const useDeposit = (options?: useDepositOptions) => {
         });
         throw e;
       });
-  }, [account, fetchBalance, quantity, depositFee, options?.address]);
+  }, [
+    account,
+    fetchBalance,
+    quantity,
+    depositFee,
+    options.address,
+    options.decimals,
+  ]);
 
   const loopGetBalance = async () => {
     getBalanceListener.current && clearTimeout(getBalanceListener.current);
@@ -348,8 +361,8 @@ export const useDeposit = (options?: useDepositOptions) => {
     getBalanceListener.current = setTimeout(async () => {
       try {
         const balance = await fetchBalanceHandler(
-          options?.address!,
-          options?.decimals,
+          options.address!,
+          options.decimals,
         );
 
         setBalance(balance);
@@ -362,12 +375,13 @@ export const useDeposit = (options?: useDepositOptions) => {
 
   const getDepositFee = useCallback(
     async (quantity: string) => {
-      return account.assetsManager.getDepositFee(
-        quantity,
-        targetChain?.network_infos!,
-      );
+      return account.assetsManager.getDepositFee({
+        amount: quantity,
+        chain: targetChain?.network_infos!,
+        decimals: options.decimals!,
+      });
     },
-    [account, targetChain],
+    [account, targetChain, options.decimals],
   );
 
   const enquiryDepositFee = useCallback(() => {
@@ -404,7 +418,7 @@ export const useDeposit = (options?: useDepositOptions) => {
   }, [quantity]);
 
   useEffect(() => {
-    if (!options?.address) {
+    if (!options.address) {
       return;
     }
 
@@ -416,14 +430,14 @@ export const useDeposit = (options?: useDepositOptions) => {
 
     // account.walletClient.on(
     //   // {
-    //   //   address: options?.address,
+    //   //   address: options.address,
     //   // },
     //   "block",
     //   (log: any, event: any) => {
     //     console.log("account.walletClient.on", log, event);
     //   }
     // );
-  }, [options?.address, options?.decimals]);
+  }, [options.address, options.decimals]);
 
   return {
     /** orderly support chain dst */

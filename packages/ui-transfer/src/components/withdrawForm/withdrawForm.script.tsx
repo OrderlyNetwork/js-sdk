@@ -18,7 +18,7 @@ import { API, NetworkId } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
 import { Decimal, int2hex, praseChainIdToNumber } from "@orderly.network/utils";
 import { InputStatus } from "../../types";
-import { CurrentChain } from "../depositForm/hooks";
+import { CurrentChain, useToken } from "../depositForm/hooks";
 import { useSettlePnl } from "../unsettlePnlInfo/useSettlePnl";
 
 export type WithdrawFormScriptReturn = ReturnType<typeof useWithdrawFormScript>;
@@ -41,17 +41,18 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
   const ee = useEventEmitter();
 
   const [quantity, setQuantity] = useState<string>("");
-  const [token, setToken] = useState<API.TokenInfo>({
-    symbol: "USDC",
-    decimals: 6,
-    address: "",
-    display_name: "",
-    precision: 6,
-  });
   const [inputStatus, setInputStatus] = useState<InputStatus>("default");
   const [hintMessage, setHintMessage] = useState<string>();
   const { wrongNetwork } = useAppContext();
   const { account } = useAccount();
+
+  const [disabled, setDisabled] = useState<boolean>(true);
+
+  const [allChains, { findByChainId }] = useChains(networkId, {
+    pick: "network_infos",
+    filter: (chain: any) =>
+      chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,
+  });
 
   const [linkDeviceStorage] = useLocalStorage("orderly_link_device", {});
 
@@ -64,6 +65,42 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     setChain: switchChain,
     settingChain,
   } = useWalletConnector();
+
+  const currentChain = useMemo(() => {
+    // if (!connectedChain) return null;
+
+    const chainId = connectedChain
+      ? praseChainIdToNumber(connectedChain.id)
+      : parseInt(linkDeviceStorage?.chainId);
+
+    if (!chainId) return null;
+
+    const chain = findByChainId(chainId);
+
+    return {
+      ...connectedChain,
+      id: chainId,
+      info: chain!,
+    } as CurrentChain;
+  }, [findByChainId, connectedChain, linkDeviceStorage]);
+
+  // const [token, setToken] = useState<API.TokenInfo>({
+  //   symbol: "USDC",
+  //   decimals: 6,
+  //   address: "",
+  //   display_name: "",
+  //   precision: 6,
+  // });
+  const { token: _token } = useToken({ currentChain });
+
+  const token = useMemo(() => {
+    return {
+      ..._token,
+      // withdraw display precision is 6
+      precision: _token?.precision ?? 6,
+    } as API.TokenInfo;
+  }, [_token]);
+
   const { walletName, address } = useMemo(
     () => ({
       walletName: wallet?.label,
@@ -87,13 +124,8 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     availableBalance,
     availableWithdraw,
     unsettledPnL,
-  } = useWithdraw();
-  const [disabled, setDisabled] = useState<boolean>(true);
-
-  const [allChains, { findByChainId }] = useChains(networkId, {
-    pick: "network_infos",
-    filter: (chain: any) =>
-      chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,
+  } = useWithdraw({
+    decimals: token?.decimals,
   });
 
   const chains = useMemo(() => {
@@ -125,24 +157,6 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
       },
     },
   );
-
-  const currentChain = useMemo(() => {
-    // if (!connectedChain) return null;
-
-    const chainId = connectedChain
-      ? praseChainIdToNumber(connectedChain.id)
-      : parseInt(linkDeviceStorage?.chainId);
-
-    if (!chainId) return null;
-
-    const chain = findByChainId(chainId);
-
-    return {
-      ...connectedChain,
-      id: chainId,
-      info: chain!,
-    } as CurrentChain;
-  }, [findByChainId, connectedChain, linkDeviceStorage]);
 
   const checkIsBridgeless = useMemo(() => {
     if (wrongNetwork) {
@@ -211,6 +225,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     }
     return null;
   }, [chains, currentChain, balanceList]);
+
   const crossChainWithdraw = useMemo(() => {
     if (chainVaultBalance !== null) {
       const qtyNum = parseFloat(quantity);
@@ -300,7 +315,6 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
   }, [currentChain, tokenChainsRes, chains, crossChainWithdraw]);
 
   const showQty = useMemo(() => {
-    console.log("quanty", quantity);
     if (!quantity) {
       return "";
     }

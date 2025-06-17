@@ -14,7 +14,7 @@ import { useChains } from "./useChains";
 import { useCollateral } from "./useCollateral";
 import { useHoldingStream } from "./useHoldingStream";
 
-export type UseWithdrawOptions = { srcChainId?: number };
+export type UseWithdrawOptions = { srcChainId?: number; decimals?: number };
 
 export const useWithdraw = (options?: UseWithdrawOptions) => {
   const { account, state } = useAccount();
@@ -122,11 +122,12 @@ export const useWithdraw = (options?: UseWithdrawOptions) => {
       allowCrossChainWithdraw: boolean;
     }): Promise<any> => {
       return account.assetsManager
-        .withdraw(inputs)
+        .withdraw({ ...inputs, decimals: options?.decimals! })
         .then((res: any) => {
           if (res.success) {
             track(TrackerEventName.withdrawSuccess, {
               wallet: state?.connectWallet?.name,
+              // TODO: fix network name, befault is not pass srcChainId
               network: targetChain?.network_infos.name,
               quantity: inputs.amount,
             });
@@ -143,7 +144,7 @@ export const useWithdraw = (options?: UseWithdrawOptions) => {
           throw err;
         });
     },
-    [state, targetChain, state],
+    [state, targetChain, state, options?.decimals],
   );
 
   return {

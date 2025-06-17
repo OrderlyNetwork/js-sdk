@@ -32,18 +32,25 @@ export class Assets {
     token: string;
     amount: string | number;
     allowCrossChainWithdraw: boolean;
+    decimals: number;
   }) {
     if (!this.account.walletAdapter) {
       throw new Error("walletAdapter is undefined");
     }
-    if (!this.account.stateValue.address)
+    if (!this.account.stateValue.address) {
       throw new Error("account address is required");
+    }
 
-    const { chainId, token, allowCrossChainWithdraw } = inputs;
+    const { chainId, token, allowCrossChainWithdraw, decimals } = inputs;
     let { amount } = inputs;
     if (typeof amount === "number") {
       amount = amount.toString();
     }
+
+    if (decimals === undefined || decimals === null) {
+      throw new Error("decimals is required");
+    }
+
     const url = "/v1/withdraw_request";
     // get withdrawal nonce
     const nonce = await this.getWithdrawalNonce();
@@ -65,7 +72,7 @@ export class Assets {
       receiver: this.account.stateValue.address,
       token,
       brokerId: this.configStore.get("brokerId"),
-      amount: this.account.walletAdapter.parseUnits(amount),
+      amount: this.account.walletAdapter.parseUnits(amount, decimals),
       nonce,
       timestamp,
       // domain,
@@ -105,8 +112,6 @@ export class Assets {
     }
 
     const signature = await this.account.signer.sign(payload, getTimestamp());
-
-    //
 
     const res = await this._simpleFetch(url, {
       method: "POST",
@@ -194,7 +199,7 @@ export class Assets {
     );
 
     // return formatByUnits(result, options?.decimals);
-    return this.account.walletAdapter?.formatUnits(result, options?.decimals);
+    return this.account.walletAdapter?.formatUnits(result, options?.decimals!);
   }
 
   async getBalanceByAddress(
@@ -222,6 +227,7 @@ export class Assets {
 
   // async getAllowance(address?: string, vaultAddress?: string) {
   async getAllowance(
+    /** please use object inputs instead, string inputs will be removed in the future */
     inputs?:
       | string
       | {
@@ -229,6 +235,7 @@ export class Assets {
           vaultAddress?: string;
           decimals?: number;
         },
+    /** @deprecated use inputs.vaultAddress instead, will be removed in the future */
     _vaultAddress?: string,
   ) {
     const { address, vaultAddress, decimals } =
@@ -290,21 +297,23 @@ export class Assets {
       },
     );
 
-    return this.account.walletAdapter?.formatUnits(result, decimals);
+    return this.account.walletAdapter?.formatUnits(result, decimals!);
     // return result;
   }
 
-  // async approve(address?: string, amount?: string, vaultAddress?: string) {
   async approve(
-    inputs?:
+    /** please use object inputs instead, string inputs will be removed in the future */
+    inputs:
       | string
       | {
           address?: string;
           amount?: string;
           vaultAddress?: string;
-          decimals?: number;
+          decimals: number;
         },
+    /** @deprecated use inputs.amount instead, will be removed in the future */
     _amount?: string,
+    /** @deprecated use inputs.vaultAddress instead, will be removed in the future */
     _vaultAddress?: string,
   ) {
     const { address, amount, vaultAddress, decimals } =
@@ -324,10 +333,15 @@ export class Assets {
     if (!this.account.walletAdapter) {
       throw new Error("walletAdapter is undefined");
     }
+
+    if (decimals === undefined || decimals === null) {
+      throw new Error("decimals is required");
+    }
+
     const contractAddress = this.contractManger.getContractInfoByEnv();
     const parsedAmount =
       typeof amount !== "undefined" && amount !== ""
-        ? this.account.walletAdapter.parseUnits(amount, 18)
+        ? this.account.walletAdapter.parseUnits(amount, decimals!)
         : MaxUint256.toString();
 
     let tempVaultAddress = vaultAddress || contractAddress.vaultAddress;
@@ -366,12 +380,18 @@ export class Assets {
   async approveByAddress(inputs: {
     address: string;
     amount?: string;
-    decimals?: number;
+    decimals: number;
   }) {
     const { address, amount, decimals } = inputs;
+
     if (!this.account.walletAdapter) {
       throw new Error("walletAdapter is undefined");
     }
+
+    if (decimals === undefined || decimals === null) {
+      throw new Error("decimals is required");
+    }
+
     const parsedAmount =
       typeof amount !== "undefined" && amount !== ""
         ? this.account.walletAdapter.parseUnits(amount, decimals)
@@ -389,9 +409,34 @@ export class Assets {
     return result;
   }
 
-  async getDepositFee(amount: string, chain: API.NetworkInfos) {
-    if (!this.account.walletAdapter)
+  async getDepositFee(
+    /** please use object inputs instead, string inputs will be removed in the future */
+    inputs:
+      | string
+      | {
+          amount: string;
+          chain: API.NetworkInfos;
+          decimals: number;
+        },
+    /** @deprecated use inputs.chain instead, will be removed in the future */
+    _chain?: API.NetworkInfos,
+  ) {
+    const { amount, chain, decimals } =
+      typeof inputs === "object"
+        ? inputs
+        : {
+            amount: inputs,
+            chain: _chain!,
+            decimals: undefined,
+          };
+
+    if (!this.account.walletAdapter) {
       throw new Error("walletAdapter is undefined");
+    }
+
+    if (decimals === undefined || decimals === null) {
+      throw new Error("decimals is required");
+    }
 
     const brokerId = this.configStore.get<string>("brokerId");
 
@@ -407,7 +452,7 @@ export class Assets {
       accountId: this.account.accountIdHashStr,
       brokerHash: parseBrokerHash(brokerId!),
       tokenHash: parseTokenHash("USDC"),
-      tokenAmount: this.account.walletAdapter?.parseUnits(amount, 18),
+      tokenAmount: this.account.walletAdapter?.parseUnits(amount, decimals!),
     };
     const contractAddress = this.contractManger.getContractInfoByEnv();
     const userAddress = this.account.stateValue.address;
@@ -447,9 +492,37 @@ export class Assets {
     );
   }
 
-  async deposit(amount: string, fee: bigint = 0n) {
-    if (!this.account.walletAdapter)
+  async deposit(
+    /** please use object inputs instead */
+    inputs:
+      | string
+      | {
+          amount: string;
+          fee: bigint;
+          decimals: number;
+        },
+    /** @deprecated use inputs.fee instead, will be removed in the future */
+    _fee?: bigint,
+  ) {
+    const {
+      amount,
+      fee = 0n,
+      decimals,
+    } = typeof inputs === "object"
+      ? inputs
+      : {
+          amount: inputs,
+          fee: _fee,
+          decimals: undefined,
+        };
+
+    if (!this.account.walletAdapter) {
       throw new Error("walletAdapter is undefined");
+    }
+
+    if (decimals === undefined || decimals === null) {
+      throw new Error("decimals is required");
+    }
 
     const brokerId = this.configStore.get<string>("brokerId");
 
@@ -467,8 +540,9 @@ export class Assets {
       accountId: this.account.accountIdHashStr,
       brokerHash: parseBrokerHash(brokerId!),
       tokenHash: parseTokenHash("USDC"),
-      tokenAmount: this.account.walletAdapter?.parseUnits(amount, 18),
+      tokenAmount: this.account.walletAdapter?.parseUnits(amount, decimals),
     };
+
     let vaultAddress = contractAddress.vaultAddress;
     const userAddress = this.account.stateValue.address;
     if (this.account.walletAdapter.chainNamespace === ChainNamespace.solana) {
