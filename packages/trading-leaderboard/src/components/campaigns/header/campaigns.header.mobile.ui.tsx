@@ -86,7 +86,7 @@ export const CampaignsHeaderMobileUI: FC<{
     const slideStyle = { flexBasis: "100%", width: "100%", height: "42px" };
 
     // Hide scroll buttons when there's only one or no campaigns
-    const shouldHideScrollButtons = campaigns.length <= 1;
+    const shouldHideScrollButtons = campaigns.length < 1;
 
     return (
       <div className="oui-flex oui-gap-2 oui-w-full oui-items-center oui-px-3">
