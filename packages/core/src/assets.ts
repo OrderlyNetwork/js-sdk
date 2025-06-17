@@ -32,6 +32,7 @@ export class Assets {
     token: string;
     amount: string | number;
     allowCrossChainWithdraw: boolean;
+    /** orderly withdraw decimals */
     decimals: number;
   }) {
     if (!this.account.walletAdapter) {
