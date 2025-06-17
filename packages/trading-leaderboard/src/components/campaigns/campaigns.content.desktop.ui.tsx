@@ -121,7 +121,7 @@ export const CampaignsContentDesktopUI: FC<{
         classNames?.container,
       ])}
       style={{
-        backgroundImage: `linear-gradient(180deg, rgba(var(--oui-color-base-10) / 1) 0%, rgba(var(--oui-color-base-10) / 0.95) 5%, rgba(var(--oui-color-base-10) / 0.2) 50%, rgba(var(--oui-color-base-10) / 0.95) 95%, rgba(var(--oui-color-base-10) / 1) 100%), url(${bgSrc})`,
+        backgroundImage: `linear-gradient(180deg, rgba(var(--oui-color-base-10) / 1) 0%, rgba(var(--oui-color-base-10) / 0.8) 15%, rgba(var(--oui-color-base-10) / 0.4) 40%, rgba(var(--oui-color-base-10) / 0.4) 60%, rgba(var(--oui-color-base-10) / 0.8) 85%, rgba(var(--oui-color-base-10) / 1) 100%), url(${bgSrc})`,
       }}
     >
       <div
@@ -174,14 +174,14 @@ export const CampaignsContentDesktopUI: FC<{
             <Text
               size="2xs"
               weight="semibold"
-              className="oui-text-base-contrast-36"
+              className="oui-text-base-contrast-54"
             >
               {t("tradingLeaderboard.participants")}
             </Text>
             <Text
               size="2xs"
               weight="semibold"
-              className="oui-text-base-contrast-54"
+              className="oui-text-base-contrast-80"
             >
               {statistics?.total_participants}
             </Text>
@@ -190,7 +190,7 @@ export const CampaignsContentDesktopUI: FC<{
             <Text
               size="2xs"
               weight="semibold"
-              className="oui-text-base-contrast-36"
+              className="oui-text-base-contrast-54"
             >
               {t("tradingLeaderboard.tradingVolume")}
             </Text>
@@ -199,7 +199,7 @@ export const CampaignsContentDesktopUI: FC<{
               currency="$"
               size="2xs"
               weight="semibold"
-              className="oui-text-base-contrast-54"
+              className="oui-text-base-contrast-80"
             >
               {tradingVolume}
             </Text.numeral>
@@ -287,9 +287,13 @@ export const CampaignsContentDesktopUI: FC<{
               </div>
             )}
           </div>
-          {isMobile}
-          <div className="oui-flex oui-gap-4">
-            {!isMobile && (
+          <div
+            className={cn([
+              "oui-flex oui-gap-4",
+              campaign?.rule_url || canTrade ? "" : "oui-hidden",
+            ])}
+          >
+            {!isMobile && campaign?.rule_url && (
               <Button
                 size="md"
                 variant="outlined"

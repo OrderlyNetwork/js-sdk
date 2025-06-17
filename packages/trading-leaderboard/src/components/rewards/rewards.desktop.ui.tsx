@@ -58,14 +58,16 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
   }, [campaign]);
 
   const tooltipContent = useMemo(() => {
-    if (!campaign?.prize_pools || !currentUserData) {
-      return null;
-    }
+    // if (!campaign?.prize_pools || !currentUserData) {
+    //   return null;
+    // }
 
     return (
       <div className="oui-flex oui-flex-col oui-gap-1 oui-min-w-[240px]">
         {campaign?.prize_pools?.map((pool) => {
-          const userPoolReward = calculateUserPoolReward(currentUserData, pool);
+          const userPoolReward = currentUserData
+            ? calculateUserPoolReward(currentUserData, pool)
+            : 0;
 
           return (
             <div
@@ -203,17 +205,19 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
           isMobile ? "oui-px-3" : "",
         ])}
       >
-        <Button
-          size={isMobile ? "md" : "lg"}
-          variant="outlined"
-          className={cn([
-            "oui-border-[rgb(var(--oui-gradient-brand-start))] oui-text-[rgb(var(--oui-gradient-brand-start))] hover:oui-bg-[rgb(var(--oui-gradient-brand-start))]/[0.08] active:oui-bg-[rgb(var(--oui-gradient-brand-start))]/[0.08]",
-            isMobile ? "oui-flex-1" : "oui-w-[140px]",
-          ])}
-          onClick={onLearnMore}
-        >
-          {t("tradingLeaderboard.viewRules")}
-        </Button>
+        {campaign?.rule_url && (
+          <Button
+            size={isMobile ? "md" : "lg"}
+            variant="outlined"
+            className={cn([
+              "oui-border-[rgb(var(--oui-gradient-brand-start))] oui-text-[rgb(var(--oui-gradient-brand-start))] hover:oui-bg-[rgb(var(--oui-gradient-brand-start))]/[0.08] active:oui-bg-[rgb(var(--oui-gradient-brand-start))]/[0.08]",
+              isMobile ? "oui-flex-1" : "oui-w-[140px]",
+            ])}
+            onClick={onLearnMore}
+          >
+            {t("tradingLeaderboard.viewRules")}
+          </Button>
+        )}
         {canTrade && (
           <Button
             size={isMobile ? "md" : "lg"}
@@ -291,7 +295,12 @@ const RewardItem: FC<{
         )}
       </div>
       {props.showExtraInfo && (
-        <div className="oui-flex oui-flex-col oui-items-center oui-justify-end">
+        <div
+          className={cn([
+            "oui-flex oui-flex-col oui-items-center oui-justify-end",
+            props.isMobile ? "oui-mt-2" : "",
+          ])}
+        >
           <div className="oui-text-base-contrast-36 oui-text-2xs oui-font-semibold oui-flex oui-flex-col oui-items-center oui-gap-1">
             <div
               className={cn([

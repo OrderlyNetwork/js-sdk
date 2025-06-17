@@ -248,7 +248,7 @@ function getCampaigns() {
       title: "DAWN OF DOMINANCE",
       description:
         "A new era begins. Outtrade the competition. Climb the ranks. Secure your legacy.",
-      image: "",
+      image: "/leaderboard/woofi_leaderboard_test.jpeg",
       // href: 'https://orderly.network/',
       start_time: new Date("2025-06-18T00:00:00Z").toISOString(),
       end_time: new Date("2025-07-04T23:59:59Z").toISOString(),
@@ -289,7 +289,7 @@ function getCampaigns() {
           { value: 250000, tickets: 200 },
         ],
       },
-      rule_url: "https://www.google.com",
+      rule_url: "",
       trading_url: "https://pro.woofi.com/en/trade/ETH_PERP",
     } as CampaignConfig,
   ];
