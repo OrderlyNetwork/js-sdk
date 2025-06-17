@@ -220,7 +220,8 @@ export const CampaignsContentDesktopUI: FC<{
                   weight="semibold"
                   className="oui-text-base-contrast-54"
                 >
-                  {t("tradingLeaderboard.prizePool")}
+                  {/* {t("tradingLeaderboard.prizePool")} */}
+                  {"Total prize pool"}
                 </Text>
                 <Tooltip
                   // @ts-ignore
@@ -264,7 +265,8 @@ export const CampaignsContentDesktopUI: FC<{
                     weight="semibold"
                     className="oui-text-base-contrast-54"
                   >
-                    {t("tradingLeaderboard.ticketPrizePool")}
+                    {/* {t("tradingLeaderboard.ticketPrizePool")} */}
+                    {"Raffle prize"}
                   </Text>
                 </div>
                 <div>

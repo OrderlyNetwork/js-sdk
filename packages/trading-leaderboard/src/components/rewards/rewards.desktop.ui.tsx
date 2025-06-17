@@ -65,6 +65,9 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
     return (
       <div className="oui-flex oui-flex-col oui-gap-1 oui-min-w-[240px]">
         {campaign?.prize_pools?.map((pool) => {
+          if (pool.tiers.length == 0) {
+            return null;
+          }
           const userPoolReward = currentUserData
             ? calculateUserPoolReward(currentUserData, pool)
             : 0;
