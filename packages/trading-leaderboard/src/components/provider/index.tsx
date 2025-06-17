@@ -58,7 +58,7 @@ export const TradingLeaderboardProvider = (
     usePrivateQuery<API.AutoGenerateCode>(
       "/v1/referral/auto_referral/progress",
       {
-        revalidateOnFocus: true,
+        revalidateOnFocus: false,
         errorRetryCount: 2,
         formatter: (data) => {
           return {

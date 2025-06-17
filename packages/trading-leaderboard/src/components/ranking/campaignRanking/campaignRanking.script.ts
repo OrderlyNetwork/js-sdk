@@ -176,6 +176,10 @@ export function useCampaignRankingScript(
 
   const getAddressRank = useCallback(
     (address: string) => {
+      if (top100Data?.rows?.length === 0) {
+        return "-";
+      }
+
       const index = top100Data?.rows.findIndex((item) =>
         isSameAddress(item.address, address!),
       );
