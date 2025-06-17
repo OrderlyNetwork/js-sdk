@@ -1,14 +1,14 @@
 import React, { ReactNode, useRef } from "react";
-import { TradingviewUIPropsInterface } from "../type";
-import TopBar from "./topBar";
-import { TimeInterval } from "./timeInterval";
-import { MobileDisplayControl, DesktopDisplayControl } from "./displayControl";
-import { NoTradingview } from "./noTradingview";
-import { Box, Button, Divider, Flex } from "@orderly.network/ui";
-import { IndicatorsIcon, LineTypeIcon, SettingIcon } from "../icons";
-import LineType from "./lineType";
 import { useMediaQuery } from "@orderly.network/hooks";
 import { MEDIA_TABLET } from "@orderly.network/types";
+import { Box, Button, Divider, Flex } from "@orderly.network/ui";
+import { IndicatorsIcon, LineTypeIcon, SettingIcon } from "../icons";
+import { TradingviewUIPropsInterface } from "../type";
+import { MobileDisplayControl, DesktopDisplayControl } from "./displayControl";
+import LineType from "./lineType";
+import { NoTradingview } from "./noTradingview";
+import { TimeInterval } from "./timeInterval";
+import TopBar from "./topBar";
 
 const OperateButton = ({
   children,
@@ -41,6 +41,7 @@ export function TradingviewUi(props: TradingviewUIPropsInterface) {
     openChartIndicators,
   } = props;
   const isMobile = useMediaQuery(MEDIA_TABLET);
+  console.log("interval", interval);
 
   return (
     <div className="oui-h-full oui-w-full  oui-relative">
@@ -57,7 +58,7 @@ export function TradingviewUi(props: TradingviewUIPropsInterface) {
                 className="oui-overflow-x-scroll oui-hide-scrollbar"
               >
                 <TimeInterval
-                  interval={interval ?? "1"}
+                  interval={interval ?? "15"}
                   changeInterval={changeInterval}
                 />
 
