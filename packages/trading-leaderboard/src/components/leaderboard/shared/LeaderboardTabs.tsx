@@ -25,14 +25,19 @@ export const LeaderboardTabs: FC<LeaderboardTabsProps> = (props) => {
 
   const { showVolume, showPnl } = useMemo(() => {
     const metrics = currentCampaign?.prize_pools?.map((item) => item.metric);
-    const showVolume = metrics?.includes(LeaderboardTab.Volume);
-    const showPnl = metrics?.includes(LeaderboardTab.Pnl);
+    const isMobileGeneral = props.isMobile && !currentCampaign;
+    const showVolume = isMobileGeneral
+      ? true
+      : metrics?.includes(LeaderboardTab.Volume);
+    const showPnl = isMobileGeneral
+      ? true
+      : metrics?.includes(LeaderboardTab.Pnl);
 
     return {
       showVolume,
       showPnl,
     };
-  }, [currentCampaign, props.activeTab]);
+  }, [currentCampaign, props.activeTab, props.isMobile]);
 
   useEffect(() => {
     // set default tab
