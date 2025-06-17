@@ -21,14 +21,12 @@ export const SlippageCell = (props: {
     useBoolean(false);
 
   const { isMobile } = useScreen();
-
-  // const [slippage, setSlippage] = useLocalStorage("orderly-slippage", "");
   const slippageRef = useRef<{ getValue: () => number | undefined }>(null);
 
   const onConfirm = () => {
     const val = slippageRef.current?.getValue();
 
-    props.setSlippage(val?.toString() ?? "");
+    props.setSlippage(!val ? "1" : val.toString());
     setClose();
     return Promise.resolve(true);
   };

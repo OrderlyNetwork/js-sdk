@@ -4,7 +4,12 @@ import { parseJSON } from "./utils/json";
 
 export function useLocalStorage<T>(
   key: string,
-  initialValue: T
+  initialValue: T,
+  options: {
+    parseJSON: typeof parseJSON;
+  } = {
+    parseJSON: parseJSON,
+  },
 ): [any, (value: T) => void] {
   // Get from local storage then
   // parse stored json or return initialValue
@@ -16,7 +21,7 @@ export function useLocalStorage<T>(
 
     try {
       const item = window.localStorage.getItem(key);
-      return item ? (parseJSON(item) as T) : initialValue;
+      return item ? (options.parseJSON(item) as T) : initialValue;
     } catch (error) {
       console.warn(`Error reading localStorage key “${key}”:`, error);
       return initialValue;
@@ -34,7 +39,7 @@ export function useLocalStorage<T>(
       // Prevent build error "window is undefined" but keeps working
       if (typeof window === "undefined") {
         console.warn(
-          `Tried setting localStorage key “${key}” even though environment is not a client`
+          `Tried setting localStorage key “${key}” even though environment is not a client`,
         );
       }
 
@@ -56,7 +61,7 @@ export function useLocalStorage<T>(
         console.warn(`Error setting localStorage key “${key}”:`, error);
       }
     },
-    [storedValue]
+    [storedValue],
   );
 
   useEffect(() => {
