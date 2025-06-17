@@ -14,6 +14,7 @@ import {
   SOLANA_TESTNET_CHAINID,
   ARBITRUM_TESTNET_CHAINID,
   ABSTRACT_TESTNET_CHAINID,
+  BSC_TESTNET_CHAINID,
 } from "@orderly.network/types";
 import { nativeTokenAddress } from "@orderly.network/types";
 import { isTestnet } from "@orderly.network/utils";
@@ -26,6 +27,7 @@ const TestNetWhiteList = [
   SOLANA_TESTNET_CHAINID,
   MONAD_TESTNET_CHAINID,
   ABSTRACT_TESTNET_CHAINID,
+  BSC_TESTNET_CHAINID,
 ];
 
 export type Chain = API.Chain & {

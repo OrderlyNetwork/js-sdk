@@ -173,6 +173,7 @@ export const useDeposit = (options?: useDepositOptions) => {
       vaultAddress,
       decimals,
     });
+    console.log("aloowance", allowance);
     setAllowance(() => allowance);
     // setAllowanceRevalidating(false);
     return allowance;

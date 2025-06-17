@@ -3,6 +3,7 @@ import {
   ABSTRACT_TESTNET_CHAINID,
   API,
   ApiError,
+  BSC_TESTNET_CHAINID,
   ChainNamespace,
   MaxUint256,
   MONAD_TESTNET_CHAINID,
@@ -242,6 +243,11 @@ export class Assets {
     if (!this.account.walletAdapter) {
       return "0";
     }
+    console.log("xxx get allowance before", {
+      address,
+      vaultAddress,
+      decimals,
+    });
     let userAddress = this.account.stateValue.address;
     const contractAddress = this.contractManger.getContractInfoByEnv();
     let tempVaultAddress = vaultAddress ?? contractAddress.vaultAddress;
@@ -257,6 +263,10 @@ export class Assets {
       tempVaultAddress = contractAddress.abstractVaultAddress ?? "";
       tempUSDCAddress = contractAddress.abstractUSDCAddress ?? "";
     }
+    if (this.account.walletAdapter.chainId === BSC_TESTNET_CHAINID) {
+      tempVaultAddress = contractAddress.bscVaultAddress ?? "";
+      tempUSDCAddress = contractAddress.bscUSDCAddress ?? "";
+    }
     const agwGobalAddress = this.account.getAdditionalInfo()?.AGWAddress ?? "";
     if (
       ABSTRACT_CHAIN_ID_MAP.has(this.account.walletAdapter.chainId) &&
@@ -264,6 +274,12 @@ export class Assets {
     ) {
       userAddress = agwGobalAddress;
     }
+
+    console.log("xxx get allowance", {
+      tempUSDCAddress,
+      tempVaultAddress,
+      userAddress,
+    });
 
     const result = await this.account.walletAdapter?.call(
       tempUSDCAddress ?? "",
@@ -311,7 +327,7 @@ export class Assets {
     const contractAddress = this.contractManger.getContractInfoByEnv();
     const parsedAmount =
       typeof amount !== "undefined" && amount !== ""
-        ? this.account.walletAdapter.parseUnits(amount, decimals)
+        ? this.account.walletAdapter.parseUnits(amount, 18)
         : MaxUint256.toString();
 
     let tempVaultAddress = vaultAddress || contractAddress.vaultAddress;
@@ -326,6 +342,15 @@ export class Assets {
     if (ABSTRACT_CHAIN_ID_MAP.has(this.account.walletAdapter.chainId)) {
       tempVaultAddress = contractAddress.abstractVaultAddress ?? "";
     }
+    if (this.account.walletAdapter.chainId === BSC_TESTNET_CHAINID) {
+      tempVaultAddress = contractAddress.bscVaultAddress ?? "";
+      tempUSDCAddress = contractAddress.bscUSDCAddress ?? "";
+    }
+    console.log("xxx approve", {
+      tempVaultAddress,
+      tempUSDCAddress,
+      parsedAmount,
+    });
 
     const result = await this.account.walletAdapter?.call(
       tempUSDCAddress,
@@ -382,7 +407,7 @@ export class Assets {
       accountId: this.account.accountIdHashStr,
       brokerHash: parseBrokerHash(brokerId!),
       tokenHash: parseTokenHash("USDC"),
-      tokenAmount: this.account.walletAdapter?.parseUnits(amount),
+      tokenAmount: this.account.walletAdapter?.parseUnits(amount, 18),
     };
     const contractAddress = this.contractManger.getContractInfoByEnv();
     const userAddress = this.account.stateValue.address;
@@ -398,6 +423,9 @@ export class Assets {
     if (chain.chain_id === MONAD_TESTNET_CHAINID) {
       vaultAddress = contractAddress.monadTestnetVaultAddress ?? "";
       // depositData["USDCAddress"] = contractAddress.monadTestnetUSDCAddress ?? "";
+    }
+    if (chain.chain_id === BSC_TESTNET_CHAINID) {
+      vaultAddress = contractAddress.bscVaultAddress ?? "";
     }
     if (ABSTRACT_CHAIN_ID_MAP.has(this.account.walletAdapter.chainId)) {
       vaultAddress = contractAddress.abstractVaultAddress ?? "";
@@ -439,7 +467,7 @@ export class Assets {
       accountId: this.account.accountIdHashStr,
       brokerHash: parseBrokerHash(brokerId!),
       tokenHash: parseTokenHash("USDC"),
-      tokenAmount: this.account.walletAdapter?.parseUnits(amount),
+      tokenAmount: this.account.walletAdapter?.parseUnits(amount, 18),
     };
     let vaultAddress = contractAddress.vaultAddress;
     const userAddress = this.account.stateValue.address;
@@ -457,25 +485,30 @@ export class Assets {
     if (ABSTRACT_CHAIN_ID_MAP.has(this.account.walletAdapter.chainId)) {
       vaultAddress = contractAddress.abstractVaultAddress ?? "";
     }
+    if (this.account.walletAdapter.chainId === BSC_TESTNET_CHAINID) {
+      vaultAddress = contractAddress.bscVaultAddress ?? "";
+    }
     const agwGobalAddress = this.account.getAdditionalInfo()?.AGWAddress ?? "";
 
     let contractMethod = "deposit";
     let fromAddress = userAddress;
     let contractData: any = [depositData];
-    console.log(
-      "agw address",
-      agwGobalAddress,
-      this.account.walletAdapter.chainId,
-    );
+
     if (
       ABSTRACT_CHAIN_ID_MAP.has(this.account.walletAdapter.chainId) &&
       agwGobalAddress
     ) {
+      console.log(
+        "agw address",
+        agwGobalAddress,
+        this.account.walletAdapter.chainId,
+      );
       contractMethod = "depositTo";
       fromAddress = agwGobalAddress;
       contractData = [userAddress, depositData];
     }
     console.log("xxx deposit", {
+      vaultAddress,
       fromAddress,
       contractMethod,
       contractData,
