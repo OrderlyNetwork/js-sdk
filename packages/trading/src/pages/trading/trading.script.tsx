@@ -21,7 +21,7 @@ export type TradingState = ReturnType<typeof useTradingScript>;
 export const scrollBarWidth = 6;
 export const topBarHeight = 48;
 export const bottomBarHeight = 29;
-export const space = 12;
+export const space = 8;
 export const symbolInfoBarHeight = 54;
 
 export const orderEntryMinWidth = 280;
@@ -38,6 +38,7 @@ export const tradindviewMinHeight = 320;
 export const tradingViewMinWidth = 540;
 
 export const dataListMaxHeight = 800;
+export const dataListInitialHeight = 350;
 
 export const useTradingScript = () => {
   const [openMarketsSheet, setOpenMarketsSheet] = useState(false);
@@ -94,13 +95,13 @@ export const useTradingScript = () => {
 
   const marketsCollapseState = useMarketsCollapse({ collapsable: min3XL });
 
-  const splitSizeState = useSplitSize(layout);
-
   const observerState = useObserverOrderEntry({ max2XL });
 
   const marketsWidth = marketsCollapseState.collapsed ? 70 : 280;
   const tradindviewMaxHeight = max2XL ? 1200 : 600;
   const dataListMinHeight = canTrade ? 379 : 277;
+
+  const splitSizeState = useSplitSize({ dep: layout });
 
   const tradingViewHeightState = useExtraHeight({
     orderEntryViewRef: observerState.orderEntryViewRef,
@@ -213,15 +214,17 @@ function useOrderEntryPositions(options: {
   };
 }
 
-function useSplitSize(dep: any) {
+function useSplitSize(options: { dep: any }) {
+  const { dep } = options;
   const [mainSplitSize, setMainSplitSize] = useSplitPersistent(
     "orderly_main_split_size",
-    undefined,
+    `${orderEntryMinWidth}px`,
     dep,
   );
   const [dataListSplitSize, setDataListSplitSize] = useSplitPersistent(
     "orderly_datalist_split_size",
-    "350px",
+    `${dataListInitialHeight}px`,
+    // undefined,
   );
   const [orderBookSplitSize, setOrderbookSplitSize] = useSplitPersistent(
     "orderly_orderbook_split_size",

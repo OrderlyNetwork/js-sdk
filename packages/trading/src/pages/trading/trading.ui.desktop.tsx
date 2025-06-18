@@ -13,7 +13,11 @@ import { SplitLayout } from "../../components/desktop/layout/splitLayout";
 import { SwitchLayout } from "../../components/desktop/layout/switchLayout";
 import { OrderBookAndTradesWidget } from "../../components/desktop/orderBookAndTrades";
 import { RiskRateWidget } from "../../components/desktop/riskRate";
-import { getOffsetSizeNum, TradingState } from "./trading.script";
+import {
+  dataListInitialHeight,
+  getOffsetSizeNum,
+  TradingState,
+} from "./trading.script";
 import {
   scrollBarWidth,
   topBarHeight,
@@ -66,11 +70,9 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
   } = props;
 
   const minScreenHeight =
-    topBarHeight +
-    bottomBarHeight +
     symbolInfoBarHeight +
-    orderbookMinHeight +
-    dataListMinHeight +
+    orderbookMaxHeight +
+    dataListInitialHeight +
     space * 4;
 
   const minScreenHeightSM =
@@ -185,7 +187,12 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
       intensity={900}
       r="2xl"
       p={2}
-      style={{ height: dataListSplitSize, minHeight: dataListMinHeight }}
+      style={{
+        height: dataListSplitSize,
+        // height: `calc(100% - ${symbolInfoBarHeight}px - ${orderbookMaxHeight}px - ${space}px)`,
+        minHeight: dataListInitialHeight,
+        // minHeight: `max(${dataListMinHeight}px, calc(100vh - ${symbolInfoBarHeight}px - ${orderbookMaxHeight}px - ${space}px))`,
+      }}
       className="oui-overflow-hidden"
     >
       {dataListWidget}
@@ -311,7 +318,11 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
     >
       {symbolInfoBarView}
       <SplitLayout
-        className="oui-w-full !oui-h-[calc(100%_-_54px_-_12px)]"
+        style={{
+          // height: orderbookMaxHeight + dataListInitialHeight + space,
+          maxHeight: `calc(100% - ${symbolInfoBarHeight}px - ${space}px)`,
+        }}
+        className="oui-w-full"
         mode="vertical"
         onSizeChange={setDataListSplitSize}
       >
