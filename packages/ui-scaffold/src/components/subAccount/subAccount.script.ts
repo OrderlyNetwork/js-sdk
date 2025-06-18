@@ -1,27 +1,40 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { SubAccount, useAccount, useCollateral } from "@orderly.network/hooks";
+import {
+  SubAccount,
+  useAccount,
+  useCollateral,
+  useIndexPricesStream,
+} from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
 import { toast, useScreen } from "@orderly.network/ui";
+import { Decimal } from "@orderly.network/utils";
+import { useAccountValue } from "./useAccountValue";
 
 export type SubAccountScriptReturn = ReturnType<typeof SubAccountScript>;
 
-type MainAccount = {
+type AccountValueInfo = {
   id: string;
-  userAddress: string;
+  userAddress?: string;
+  description?: string;
   holding: API.Holding[];
+  accountValue?: number;
 };
 
 export const SubAccountScript = () => {
   const [open, setOpen] = useState(false);
+  const { data: indexPrices } = useIndexPricesStream();
   const { isMobile } = useScreen();
   const { state, subAccount, switchAccount } = useAccount();
   const { t } = useTranslation();
-  const [mainAccount, setMainAccount] = useState<MainAccount | undefined>(
+  const [mainAccount, setMainAccount] = useState<AccountValueInfo | undefined>(
     undefined,
   );
+  const mainAccountId = state.mainAccountId;
 
-  const [subAccounts, setSubAccounts] = useState<SubAccount[]>([]);
+  const { accountValue } = useAccountValue(mainAccountId);
+
+  const [subAccounts, setSubAccounts] = useState<AccountValueInfo[]>([]);
   const currentAccountId = state.accountId;
 
   const _popup = useMemo(
@@ -30,7 +43,6 @@ export const SubAccountScript = () => {
     }),
     [isMobile],
   );
-  const mainAccountId = state.mainAccountId;
 
   const doCreatSubAccount = useCallback(
     (nickName: string) => {
@@ -73,7 +85,7 @@ export const SubAccountScript = () => {
       arr = [...state.subAccounts];
     }
     setSubAccounts(arr);
-  }, [state.subAccounts, currentAccountId, open]);
+  }, [state.subAccounts, currentAccountId]);
   useEffect(() => {
     if (!mainAccountId || !state.address) return;
 
@@ -92,6 +104,35 @@ export const SubAccountScript = () => {
     });
   }, [mainAccountId, state.address, currentAccountId, open]);
 
+  useEffect(() => {
+    const mainAccountUnsettlePnl = accountValue[mainAccountId!] ?? 0;
+    if (mainAccount) {
+      setMainAccount((prev) => ({
+        ...prev!,
+        accountValue: calculateAccountValue(
+          prev?.holding || [],
+          mainAccountUnsettlePnl,
+          indexPrices || {},
+        ),
+      }));
+    }
+    if (subAccounts.length) {
+      setSubAccounts((prev) => {
+        return prev.map((subAccount) => {
+          const subAccountUnsettlePnl = accountValue[subAccount.id] ?? 0;
+          return {
+            ...subAccount,
+            accountValue: calculateAccountValue(
+              subAccount.holding || [],
+              subAccountUnsettlePnl,
+              indexPrices || {},
+            ),
+          };
+        });
+      });
+    }
+  }, [accountValue, indexPrices]);
+
   return {
     mainAccount,
     currentAccountId,
@@ -102,4 +143,26 @@ export const SubAccountScript = () => {
     subAccounts,
     onSwitch,
   };
+};
+
+const calculateAccountValue = (
+  holdings: API.Holding[],
+  unsettlePnl: number,
+  indexPrices: Record<string, number>,
+) => {
+  const holding = holdings.reduce((acc, holding) => {
+    const price = getTokenIndexPrice(holding.token, indexPrices);
+    if (!price) return acc;
+    return acc + new Decimal(holding.holding).times(price).toNumber();
+  }, 0);
+  return holding + unsettlePnl;
+};
+
+const getTokenIndexPrice = (
+  token: string,
+  indexPrices: Record<string, number>,
+) => {
+  if (token === "USDC") return 1;
+  const symbol = `SPOT_${token}_USDC`;
+  return indexPrices[symbol] ?? 0;
 };

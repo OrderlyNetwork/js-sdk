@@ -41,7 +41,6 @@ export function TradingviewUi(props: TradingviewUIPropsInterface) {
     openChartIndicators,
   } = props;
   const isMobile = useMediaQuery(MEDIA_TABLET);
-  console.log("interval", interval);
 
   return (
     <div className="oui-h-full oui-w-full  oui-relative">
