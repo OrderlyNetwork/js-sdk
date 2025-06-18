@@ -139,25 +139,6 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
   const { configStore } = useContext(OrderlyContext);
   const apiBaseUrl = configStore.get("apiBaseUrl");
 
-  const { data: tokenChainsRes } = useQuery<any[]>(
-    `${apiBaseUrl}/v1/public/token?t=withdraw`,
-    {
-      revalidateIfStale: false,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      // If false, undefined data gets cached against the key.
-      revalidateOnMount: true,
-      // dont duplicate a request w/ same key for 1hr
-      dedupingInterval: 3_600_000,
-      formatter: (data) => {
-        console.log("-- data", data);
-        if (data.rows.length === 1) {
-          return data.rows[0].chain_details;
-        }
-      },
-    },
-  );
-
   const checkIsBridgeless = useMemo(() => {
     if (wrongNetwork) {
       return false;
@@ -293,26 +274,12 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
       });
   };
 
-  const fee = useMemo(() => {
-    if (!currentChain) return 0;
-
-    const item = tokenChainsRes?.find(
-      (c: any) => parseInt(c.chain_id) === currentChain!.id,
-    );
-
-    if (!item) {
-      return 0;
-    }
-
-    if (crossChainWithdraw) {
-      return (
-        // @ts-ignore
-        (item.withdrawal_fee || 0) + (item.cross_chain_withdrawal_fee || 0)
-      );
-    }
-
-    return item.withdrawal_fee || 0;
-  }, [currentChain, tokenChainsRes, chains, crossChainWithdraw]);
+  const fee = useWithdrawFee({
+    apiBaseUrl,
+    crossChainWithdraw,
+    currentChain,
+    token: token.symbol,
+  });
 
   const showQty = useMemo(() => {
     if (!quantity) {
@@ -425,3 +392,50 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     onSettlePnl,
   };
 };
+
+export function useWithdrawFee(options: {
+  apiBaseUrl: string;
+  token: string;
+  currentChain?: CurrentChain | null;
+  crossChainWithdraw: boolean;
+}) {
+  const { apiBaseUrl, crossChainWithdraw, currentChain, token } = options;
+
+  const { data: tokenChainsRes } = useQuery<any[]>(
+    `${apiBaseUrl}/v1/public/token?t=withdraw`,
+    {
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      // If false, undefined data gets cached against the key.
+      revalidateOnMount: true,
+      // dont duplicate a request w/ same key for 1hr
+      dedupingInterval: 3_600_000,
+    },
+  );
+
+  const fee = useMemo(() => {
+    if (!currentChain) return 0;
+
+    const tokenChain = tokenChainsRes?.find((item) => item.token === token);
+
+    const item = tokenChain?.chain_details?.find(
+      (c: any) => parseInt(c.chain_id) === currentChain!.id,
+    );
+
+    if (!item) {
+      return 0;
+    }
+
+    if (crossChainWithdraw) {
+      return (
+        // @ts-ignore
+        (item.withdrawal_fee || 0) + (item.cross_chain_withdrawal_fee || 0)
+      );
+    }
+
+    return item.withdrawal_fee || 0;
+  }, [tokenChainsRes, token, currentChain, crossChainWithdraw]);
+
+  return fee;
+}
