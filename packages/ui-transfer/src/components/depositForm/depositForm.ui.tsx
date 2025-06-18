@@ -1,15 +1,16 @@
 import { FC } from "react";
-import { UseDepositFormScriptReturn } from "./depositForm.script";
+import type { API } from "@orderly.network/types";
 import { Box, Flex, textVariants } from "@orderly.network/ui";
-import { QuantityInput } from "../quantityInput";
+import { ActionButton } from "../actionButton";
+import { AvailableQuantity } from "../availableQuantity";
+import { BrokerWallet } from "../brokerWallet";
 import { ChainSelect } from "../chainSelect";
 import { ExchangeDivider } from "../exchangeDivider";
-import { Web3Wallet } from "../web3Wallet";
-import { BrokerWallet } from "../brokerWallet";
-import { AvailableQuantity } from "../availableQuantity";
-import { SwapCoin } from "../swapCoin";
 import { Fee } from "../fee";
-import { ActionButton } from "../actionButton";
+import { QuantityInput } from "../quantityInput";
+import { SwapCoin } from "../swapCoin";
+import { Web3Wallet } from "../web3Wallet";
+import { UseDepositFormScriptReturn } from "./depositForm.script";
 
 export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
   const {
@@ -43,7 +44,6 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
     <Box id="oui-deposit-form" className={textVariants({ weight: "semibold" })}>
       <Box className="oui-mb-6 lg:oui-mb-8">
         <Web3Wallet />
-
         <Box mt={3} mb={1}>
           <ChainSelect
             chains={chains}
@@ -84,7 +84,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
 
         <QuantityInput
           readOnly
-          token={dst as any}
+          token={dst as unknown as API.TokenInfo}
           value={quantity}
           classNames={{
             root: "oui-mt-3 oui-border-transparent focus-within:oui-outline-transparent",

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import { produce } from "immer";
 import {
   SubAccount,
@@ -10,7 +10,10 @@ import {
 import { useTranslation } from "@orderly.network/i18n";
 import type { API } from "@orderly.network/types";
 import { modal } from "@orderly.network/ui";
-import { TransferDialogId } from "@orderly.network/ui-transfer";
+import {
+  DepositAndWithdrawWithDialogId,
+  TransferDialogId,
+} from "@orderly.network/ui-transfer";
 import { Decimal } from "@orderly.network/utils";
 import { AccountType } from "./assets.ui";
 import { useAssetsColumns } from "./column";
@@ -165,6 +168,23 @@ export const useAssetsScript = () => {
 
   const assetsColumns = useAssetsColumns({ onClick: handleTransfer });
 
+  const openDepositAndWithdraw = useCallback(
+    (viewName: "deposit" | "withdraw") => {
+      modal.show(DepositAndWithdrawWithDialogId, {
+        activeTab: viewName,
+      });
+    },
+    [],
+  );
+
+  const onDeposit = useCallback(() => {
+    openDepositAndWithdraw("deposit");
+  }, []);
+
+  const onWithdraw = useCallback(() => {
+    openDepositAndWithdraw("withdraw");
+  }, []);
+
   return {
     columns: assetsColumns,
     dataSource: filtered,
@@ -173,7 +193,11 @@ export const useAssetsScript = () => {
     selectedAccount,
     onFilter: onAccountFilter,
     totalValue: memoizedTotalValue,
+    hasSubAccount: subAccounts.length > 0,
+    onDeposit,
+    onWithdraw,
   };
 };
 
-export type useAssetsScriptReturn = ReturnType<typeof useAssetsScript>;
+export type useAssetsScriptReturn = ReturnType<typeof useAssetsScript> &
+  ReturnType<typeof useAccount>;

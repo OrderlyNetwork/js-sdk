@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { forwardRef, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
@@ -29,7 +30,7 @@ export type QuantityInputProps = {
 } & Omit<InputProps, "onClear" | "suffix" | "onValueChange">;
 
 export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
-  (props, ref) => {
+  (props) => {
     const {
       token,
       tokens = [],
@@ -53,7 +54,7 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
     const [width, setWidth] = useState(0);
 
     const tokenOptions = useMemo(() => {
-      return tokens!.map((token) => ({
+      return tokens.map((token) => ({
         ...token,
         name: token.display_name || token.symbol!,
       }));
@@ -65,7 +66,7 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
     }, [inputRef]);
 
     const _onTokenChange = (value: string) => {
-      const find = tokens!.find((item) => item.symbol === value);
+      const find = tokens.find((item) => item.symbol === value);
       if (find) {
         onTokenChange?.(find);
       }

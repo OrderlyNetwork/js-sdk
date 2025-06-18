@@ -1,9 +1,4 @@
-import {
-  API,
-  OrderSide,
-  OrderType,
-  type WSMessage,
-} from "@orderly.network/types";
+import { API, OrderSide } from "@orderly.network/types";
 import { Decimal, zero } from "@orderly.network/utils";
 import { IMRFactorPower } from "./constants";
 
@@ -727,8 +722,79 @@ export function MMR(inputs: AccountMMRInputs): number | null {
   if (inputs.positionsNotional === 0) {
     return null;
   }
-  if (inputs.positionsMMR === 0) return null;
+  if (inputs.positionsMMR === 0) {
+    return null;
+  }
   return new Decimal(inputs.positionsMMR)
     .div(inputs.positionsNotional)
     .toNumber();
 }
+
+export const collateralRatio = (params: {
+  baseWeight: number;
+  discountFactor: number;
+  collateralQty: number;
+  indexPrice: number;
+}) => {
+  // weight_i = min(base_weight_i, K / (1 + DCF_i * abs(collateral_qty_i * index_price_i )^(4/5))
+  // DCF_i = Discount Collateral Factor
+
+  const { baseWeight, discountFactor, collateralQty, indexPrice } = params;
+
+  const K = new Decimal(1.2);
+  const DCF = new Decimal(discountFactor);
+  const qty = new Decimal(collateralQty);
+  const price = new Decimal(indexPrice);
+
+  const notionalAbs = qty.mul(price).abs();
+  const dynamicWeight = DCF.mul(notionalAbs).toPower(IMRFactorPower);
+  const result = K.div(new Decimal(1).add(dynamicWeight));
+
+  return Math.min(baseWeight, result.toNumber());
+};
+
+export const collateralContribution = (params: {
+  collateralQty: number;
+  collateralRatio: number;
+  indexPrice: number;
+}) => {
+  // Collateral contribution = collateral_qty * collateral_ratio * index_price
+
+  const { collateralQty, collateralRatio, indexPrice } = params;
+  return new Decimal(collateralQty)
+    .mul(collateralRatio)
+    .mul(indexPrice)
+    .toNumber();
+};
+
+export const LTV = (params: {
+  usdcBalance: number;
+  unpl: number;
+  collateralAssets: Array<{ qty: number; indexPrice: number; weight: number }>;
+}) => {
+  // LTV = (abs(min(USDC_balance, 0)) + abs(min(upnl, 0)) ) /
+  // [sum(max(collateral_qty_i, 0) × index_price_i × weight_i ) + max(upnl, 0)]
+
+  const { usdcBalance, unpl, collateralAssets } = params;
+
+  const usdcLoss = new Decimal(Math.min(usdcBalance, 0)).abs();
+  const unplLoss = new Decimal(Math.min(unpl, 0)).abs();
+  const numerator = usdcLoss.add(unplLoss);
+
+  const collateralSum = collateralAssets.reduce<Decimal>((acc, asset) => {
+    return acc.add(
+      new Decimal(Math.max(asset.qty, 0))
+        .mul(new Decimal(asset.indexPrice))
+        .mul(new Decimal(asset.weight)),
+    );
+  }, zero);
+
+  const denominator = collateralSum.add(new Decimal(Math.max(unpl, 0)));
+
+  // 分母如果为 0，则直接返回 0
+  if (denominator.eq(zero)) {
+    return 0;
+  }
+
+  return numerator.div(denominator).toNumber();
+};

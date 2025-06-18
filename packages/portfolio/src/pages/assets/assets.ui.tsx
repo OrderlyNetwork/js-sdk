@@ -1,8 +1,6 @@
 import React, { useMemo } from "react";
 import pick from "ramda/es/pick";
-import { useAccount } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-// import { useTranslation } from "@orderly.network/i18n";
 import {
   Text,
   Card,
@@ -15,6 +13,10 @@ import {
   DataFilter,
   Badge,
   formatAddress,
+  Tabs,
+  TabPanel,
+  ArrowDownShortIcon,
+  Button,
 } from "@orderly.network/ui";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import type { SelectOption } from "@orderly.network/ui/src/select/withOptions";
@@ -66,9 +68,50 @@ const TotalValue: React.FC<
   );
 };
 
-export const AssetsTable: React.FC<
-  Readonly<AssetsWidgetProps & ReturnType<typeof useAccount>>
+const DepositAndWithdrawButton: React.FC<
+  Readonly<
+    Pick<AssetsWidgetProps, "isMainAccount" | "onWithdraw" | "onDeposit">
+  >
 > = (props) => {
+  const { t } = useTranslation();
+  const { isMainAccount, onWithdraw, onDeposit } = props;
+  if (!isMainAccount) {
+    return null;
+  }
+  return (
+    <Flex
+      className="oui-text-2xs oui-text-base-contrast-54"
+      itemAlign="center"
+      gap={3}
+    >
+      <Button
+        fullWidth
+        color="secondary"
+        size="md"
+        onClick={onWithdraw}
+        data-testid="oui-testid-assetView-withdraw-button"
+      >
+        <ArrowDownShortIcon
+          color="white"
+          opacity={1}
+          className="oui-rotate-180"
+        />
+        <Text>{t("common.withdraw")}</Text>
+      </Button>
+      <Button
+        data-testid="oui-testid-assetView-deposit-button"
+        fullWidth
+        size="md"
+        onClick={onDeposit}
+      >
+        <ArrowDownShortIcon color="white" opacity={1} />
+        <Text>{t("common.deposit")}</Text>
+      </Button>
+    </Flex>
+  );
+};
+
+export const AssetsTable: React.FC<Readonly<AssetsWidgetProps>> = (props) => {
   const {
     state,
     isMainAccount,
@@ -107,61 +150,71 @@ export const AssetsTable: React.FC<
   }, [subAccounts]);
 
   return (
-    <Card
-      className="w-full"
-      title={
-        <Flex
-          gap={4}
-          direction={"column"}
-          itemAlign={"start"}
-          justify={"between"}
-        >
-          <Text size="lg">{t("common.assets")}</Text>
-          <TotalValue
-            {...pick(["totalValue", "visible", "onToggleVisibility"], props)}
+    <Card className="oui-w-full">
+      <Tabs
+        defaultValue="assets"
+        variant="contained"
+        classNames={{ tabsList: "" }}
+        size="lg"
+      >
+        <TabPanel value="assets" title={t("common.assets")}>
+          <Flex
+            direction={"row"}
+            itemAlign={"center"}
+            justify={"between"}
+            my={4}
+          >
+            <TotalValue
+              {...pick(["totalValue", "visible", "onToggleVisibility"], props)}
+            />
+            <DepositAndWithdrawButton
+              {...pick(["isMainAccount", "onDeposit", "onWithdraw"], props)}
+            />
+          </Flex>
+          <Divider />
+          {isMainAccount && (
+            <DataFilter
+              onFilter={onFilter}
+              items={[
+                {
+                  type: "select",
+                  name: "account",
+                  value: selectedAccount,
+                  options: memoizedOptions,
+                },
+              ]}
+            />
+          )}
+          <AuthGuardDataTable
+            bordered
+            className="oui-font-semibold"
+            classNames={{ root: "oui-bg-transparent" }}
+            columns={columns}
+            dataSource={dataSource}
+            expanded
+            getSubRows={(row) => row.children}
+            generatedRowKey={(record) => {
+              return `${record.account_id}${record.token ? `_${record.token}` : ""}`;
+            }}
+            onCell={(column, record) => {
+              const isGroup = (record.children ?? []).length > 0;
+              if (isGroup) {
+                return {
+                  children:
+                    column.id === "token" ? (
+                      <Badge color="neutral" size="xs">
+                        {record?.description || formatAddress(record?.id)}
+                      </Badge>
+                    ) : null,
+                };
+              }
+            }}
           />
-        </Flex>
-      }
-    >
-      <Divider />
-      {isMainAccount && (
-        <DataFilter
-          onFilter={onFilter}
-          items={[
-            {
-              type: "select",
-              name: "account",
-              value: selectedAccount,
-              options: memoizedOptions,
-            },
-          ]}
-        />
-      )}
-      <AuthGuardDataTable
-        bordered
-        className="oui-font-semibold"
-        classNames={{ root: "oui-bg-transparent" }}
-        columns={columns}
-        dataSource={dataSource}
-        expanded
-        getSubRows={(row) => row.children}
-        generatedRowKey={(record) => {
-          return `${record.account_id}${record.token ? `_${record.token}` : ""}`;
-        }}
-        onCell={(column, record) => {
-          const isGroup = (record.children ?? []).length > 0;
-          if (isGroup) {
-            return {
-              children:
-                column.id === "token" ? (
-                  <Badge color="neutral" size="xs">
-                    {record?.description || formatAddress(record?.id)}
-                  </Badge>
-                ) : null,
-            };
-          }
-        }}
-      />
+        </TabPanel>
+        <TabPanel value="convertHistory" title={"Convert History"}>
+          Convert History
+        </TabPanel>
+      </Tabs>
     </Card>
   );
 };
