@@ -313,7 +313,7 @@ function getCampaigns() {
           { value: 250000, tickets: 200 },
         ],
       },
-      rule_url: "",
+      rule_url: "www.google.com",
       trading_url: "https://pro.woofi.com/en/trade/ETH_PERP",
     } as CampaignConfig,
   ];
