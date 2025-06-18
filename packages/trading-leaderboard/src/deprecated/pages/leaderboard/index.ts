@@ -1,9 +1,6 @@
 export {
-  LeaderboardWidget as DeprecatedLeaderboardWidget,
-  type LeaderboardWidgetProps as DeprecatedLeaderboardWidgetProps,
+  LeaderboardWidget,
+  type LeaderboardWidgetProps,
 } from "./leaderboard.widget";
-export {
-  Leaderboard as DeprecatedLeaderboard,
-  type LeaderboardProps as DeprecatedLeaderboardProps,
-} from "./leaderboard.ui";
-export { useLeaderboardScript as useDeprecatedLeaderboardScript } from "./leaderboard.script";
+export { Leaderboard, type LeaderboardProps } from "./leaderboard.ui";
+export { useLeaderboardScript } from "./leaderboard.script";
