@@ -5,8 +5,8 @@ import React, {
   useContext,
   useState,
 } from "react";
-import { QtyMode, TotalMode } from "./types";
 import { BasicSymbolInfo } from "../../../types/types";
+import { QtyMode, TotalMode } from "./types";
 
 export interface OrderBookContextValue {
   cellHeight: number;
@@ -28,6 +28,8 @@ export const OrderBookContext = createContext({
 export const useOrderBookContext = () => useContext(OrderBookContext);
 
 export const ORDERBOOK_COIN_TYPE_KEY = "orderbook_coin_type";
+
+export const ORDERBOOK_MOBILE_COIN_TYPE_KEY = "orderbook_mobile_coin_type";
 
 interface OrderBookProviderProps {
   cellHeight: number;

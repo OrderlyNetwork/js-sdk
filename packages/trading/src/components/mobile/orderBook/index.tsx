@@ -1,7 +1,11 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
+import { useLocalStorage } from "@orderly.network/hooks";
 import { cn, Flex, Spinner } from "@orderly.network/ui";
 import { BasicSymbolInfo } from "../../../types/types";
-import { OrderBookProvider } from "../../base/orderBook/orderContext";
+import {
+  ORDERBOOK_MOBILE_COIN_TYPE_KEY,
+  OrderBookProvider,
+} from "../../base/orderBook/orderContext";
 import { FundingRateWidget } from "../fundingRate";
 import { Asks } from "./asks";
 import { Bids } from "./bids";
@@ -34,8 +38,19 @@ export interface OrderBookProps {
 
 export const OrderBook: FC<OrderBookProps> = (props) => {
   const { lastPrice, markPrice, quote, base, isLoading, onDepthChange } = props;
-  // const onModeChange = useCallback((mode: QtyMode) => {}, []);
+
   const symbol = `PERP_${props.symbolInfo.base}_${props.symbolInfo.quote}`;
+
+  const [coinType, setCoinType] = useLocalStorage(
+    ORDERBOOK_MOBILE_COIN_TYPE_KEY,
+    base,
+  );
+
+  useEffect(() => {
+    if (coinType !== quote && base) {
+      setCoinType(base);
+    }
+  }, [base, quote]);
 
   return (
     <OrderBookProvider

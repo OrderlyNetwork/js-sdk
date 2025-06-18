@@ -1,7 +1,16 @@
-import { FC, useMemo } from "react";
+import React, { FC, useMemo } from "react";
+import { useLocalStorage } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { Flex, Text } from "@orderly.network/ui";
-import { useOrderBookContext } from "../../base/orderBook/orderContext";
+import {
+  CaretDownIcon,
+  CaretUpIcon,
+  cn,
+  Flex,
+  Picker,
+  Text,
+} from "@orderly.network/ui";
+import { SelectOption } from "@orderly.network/ui/src/select/withOptions";
+import { ORDERBOOK_MOBILE_COIN_TYPE_KEY } from "../../base/orderBook/orderContext";
 
 interface Props {
   quote: string;
@@ -11,11 +20,34 @@ interface Props {
 export const Header: FC<Props> = (props) => {
   const { t } = useTranslation();
 
-  const { mode, onModeChange } = useOrderBookContext();
+  const { base, quote } = props;
 
-  const currency = useMemo(() => {
-    return mode === "amount" ? props.quote : props.base;
-  }, [mode, props.quote, props.base]);
+  const [coinType, setCoinType] = useLocalStorage(
+    ORDERBOOK_MOBILE_COIN_TYPE_KEY,
+    base,
+  );
+
+  // const { mode, onModeChange } = useOrderBookContext();
+
+  const options = useMemo<SelectOption[]>(() => {
+    return [
+      {
+        value: "qty",
+        label: `${t("common.quantity")}(${base})`,
+        data: [t("common.quantity"), base],
+      },
+      {
+        value: base,
+        label: `${t("common.total")}(${base})`,
+        data: [t("common.total"), base],
+      },
+      {
+        value: quote,
+        label: `${t("common.total")}(${quote})`,
+        data: [t("common.total"), quote],
+      },
+    ];
+  }, [t, base, quote]);
 
   return (
     <Flex
@@ -29,19 +61,29 @@ export const Header: FC<Props> = (props) => {
         id="oui-order-book-header-price"
       >
         <Text>{t("common.price")}</Text>
-        <Text>{`(${props.quote})`}</Text>
+        <Text>{`(${quote})`}</Text>
       </Flex>
-      <Flex
-        direction={"column"}
-        itemAlign={"end"}
-        className="oui-cursor-pointer"
-        onClick={() => {
-          onModeChange?.(mode === "amount" ? "quantity" : "amount");
+      <Picker
+        size="sm"
+        value={coinType}
+        onValueChange={setCoinType}
+        options={options}
+        valueRenderer={(_, { open, data }) => {
+          return (
+            <Flex justify="between" itemAlign="center" gap={1}>
+              <Flex direction={"column"} itemAlign={"end"}>
+                <Text>{data[0]}</Text>
+                <Text>({data[1]})</Text>
+              </Flex>
+              {open ? (
+                <CaretUpIcon size={14} color="inherit" />
+              ) : (
+                <CaretDownIcon size={14} color="inherit" />
+              )}
+            </Flex>
+          );
         }}
-      >
-        <Text>{t("common.total")}</Text>
-        <Text>{`(${currency})`}</Text>
-      </Flex>
+      />
     </Flex>
   );
 };
