@@ -45,7 +45,9 @@ export const TradingLeaderboardContext = createContext<TradingLeaderboardState>(
 
 export type TradingLeaderboardProviderProps = PropsWithChildren<
   Pick<TradingLeaderboardState, "campaigns" | "href" | "backgroundSrc">
->;
+> & {
+  campaignId?: string | number;
+};
 
 export const TradingLeaderboardProvider = (
   props: TradingLeaderboardProviderProps,
@@ -79,6 +81,12 @@ export const TradingLeaderboardProvider = (
       generateCodeMutate();
     }
   }, [generateCode, generateCodeMutate, userData]);
+
+  useEffect(() => {
+    if (props.campaignId) {
+      setCurrentCampaignId(props.campaignId as string);
+    }
+  }, [props.campaignId]);
 
   const currentCampaign = useMemo(() => {
     return props.campaigns?.find(

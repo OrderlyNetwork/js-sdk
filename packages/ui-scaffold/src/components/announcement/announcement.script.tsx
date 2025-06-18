@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { UTCDateMini } from "@date-fns/utc";
-import { getTimestamp } from "@orderly.network/utils";
 import { format } from "date-fns";
+import { produce } from "immer";
 import {
   MaintenanceStatus,
   useLocalStorage,
@@ -9,11 +9,11 @@ import {
   useQuery,
   useWS,
 } from "@orderly.network/hooks";
-import { AnnouncementType, API, WSMessage } from "@orderly.network/types";
 import { i18n, useTranslation } from "@orderly.network/i18n";
 import { useAppContext } from "@orderly.network/react-app";
-import { useObserverElement } from "@orderly.network/ui";
-import { produce } from "immer";
+import { AnnouncementType, API, WSMessage } from "@orderly.network/types";
+import { useObserverElement, useOrderlyTheme } from "@orderly.network/ui";
+import { getTimestamp } from "@orderly.network/utils";
 
 const oneDay = 1000 * 60 * 60 * 24;
 
@@ -51,11 +51,21 @@ export const useAnnouncementScript = (options?: AnnouncementScriptOptions) => {
 
   const { showAnnouncement, setShowAnnouncement } = useAppContext();
 
-  const { tips, maintenanceDialogInfo } = useAnnouncementData();
+  const { tips: _tips, maintenanceDialogInfo } = useAnnouncementData();
+
+  const { getComponentTheme } = useOrderlyTheme();
+
+  const tips = useMemo(() => {
+    const { dataAdapter } = getComponentTheme("announcement");
+    if (typeof dataAdapter === "function") {
+      return dataAdapter(_tips.rows || []);
+    }
+    return _tips.rows || [];
+  }, [_tips]);
 
   const [announcementStore, setStore] = useLocalStorage<AnnouncementStore>(
     ORDERLY_ANNOUNCEMENT_KEY,
-    {}
+    {},
   );
 
   const closeTips = () => {
@@ -69,28 +79,28 @@ export const useAnnouncementScript = (options?: AnnouncementScriptOptions) => {
     if (isAnimating) {
       return;
     }
-    const len = (tips.rows ?? []).length;
+    const len = tips.length;
     setIsAnimating(true);
     setCurrentIndex((prevIndex) => (prevIndex - 1 + len) % len);
     setTimeout(() => {
       setIsAnimating(false);
     }, 200);
-  }, [isAnimating, tips.rows]);
+  }, [isAnimating, tips]);
 
   const nextTips = React.useCallback(() => {
     if (isAnimating) {
       return;
     }
-    const len = (tips.rows ?? []).length;
+    const len = tips.length;
     setIsAnimating(true);
     setCurrentIndex((prevIndex) => (prevIndex + 1) % len);
     setTimeout(() => {
       setIsAnimating(false);
     }, 200);
-  }, [isAnimating, tips.rows]);
+  }, [isAnimating, tips]);
 
   useEffect(() => {
-    const len = (tips.rows ?? []).length;
+    const len = tips.length;
     if (!showAnnouncement || len <= 1) {
       return;
     }
@@ -106,9 +116,9 @@ export const useAnnouncementScript = (options?: AnnouncementScriptOptions) => {
   }, [tips, showAnnouncement, nextTips]);
 
   useEffect(() => {
-    const len = (tips.rows ?? []).length;
+    const len = tips.length;
     setShowAnnouncement(
-      Boolean(len) && announcementStore.show && !options?.hideTips
+      Boolean(len) && announcementStore.show && !options?.hideTips,
     );
   }, [tips, announcementStore, options?.hideTips, setShowAnnouncement]);
 
@@ -118,7 +128,7 @@ export const useAnnouncementScript = (options?: AnnouncementScriptOptions) => {
     maintenanceDialogInfo,
     tips,
     currentIndex,
-    currentTip: tips.rows?.[currentIndex],
+    currentTip: tips?.[currentIndex],
     closeTips,
     nextTips,
     prevTips,
@@ -133,7 +143,7 @@ function useAnnouncementData() {
 
   const [announcementStore, setStore] = useLocalStorage<AnnouncementStore>(
     ORDERLY_ANNOUNCEMENT_KEY,
-    {}
+    {},
   );
 
   const [tips, setTips] = useState<API.Announcement>({});
@@ -150,13 +160,13 @@ function useAnnouncementData() {
       revalidateOnFocus: false,
       refreshInterval: 60 * 60 * 1000, // refresh every 1 hour
       formatter: (data) => data,
-    }
+    },
   );
 
   const getMaintentTipsContent = (
     brokerName: string,
     startDate: string,
-    endDate: string
+    endDate: string,
   ) =>
     t("maintenance.tips.description", {
       brokerName,
@@ -181,7 +191,7 @@ function useAnnouncementData() {
                 draft.rows = [];
               }
               const idx = draft.rows.findIndex(
-                (tip) => tip.announcement_id === message.announcement_id
+                (tip) => tip.announcement_id === message.announcement_id,
               );
               // Filter out old tips with the same id
               if (idx !== -1) {
@@ -228,11 +238,11 @@ function useAnnouncementData() {
           if (announcements?.rows?.length) {
             // If there are announcement rows available, create a Set to store IDs of existing tips
             const existingIds = new Set<string | number>(
-              prev.rows?.map((tip) => tip.announcement_id)
+              prev.rows?.map((tip) => tip.announcement_id),
             );
             // Find the maintenance tip in previous tips (if any)
             const maintenanceTip = prev.rows?.find(
-              (tip) => tip.announcement_id === maintentanceId
+              (tip) => tip.announcement_id === maintentanceId,
             );
             // Clear the draft’s rows array to refill it
             draft.rows = [];
@@ -249,7 +259,7 @@ function useAnnouncementData() {
           } else {
             // Find the index of the maintenance tip in draft rows
             const idx = draft.rows?.findIndex(
-              (tip) => tip.announcement_id === maintentanceId
+              (tip) => tip.announcement_id === maintentanceId,
             );
             if (idx !== undefined && idx !== -1) {
               // Remove the maintenance tip from draft rows
@@ -286,17 +296,17 @@ function useAnnouncementData() {
                 message: getMaintentTipsContent(brokerName, startDate, endDate),
               },
               ...draft.rows.filter(
-                (tip) => tip.type !== AnnouncementType.Maintenance
+                (tip) => tip.type !== AnnouncementType.Maintenance,
               ),
             ];
-          })
+          }),
         );
       }
     } else {
       setTips((prev) => {
         return produce<API.Announcement>(prev, (draft) => {
           const index = draft.rows?.findIndex(
-            (tip) => tip.announcement_id === maintentanceId
+            (tip) => tip.announcement_id === maintentanceId,
           );
           if (index !== undefined && index !== -1) {
             draft.rows?.splice(index, 1);

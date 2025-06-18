@@ -348,7 +348,7 @@ export const LayoutPage: Story = {
   render: (args) => {
     return (
       <BaseLayout initialMenu="/leaderboard">
-        <LeaderboardPage {...args} className="oui-py-5" />
+        <LeaderboardPage {...args} className="oui-py-5" campaignId={116} />
       </BaseLayout>
     );
   },
