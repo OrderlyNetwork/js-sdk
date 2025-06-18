@@ -770,7 +770,7 @@ export const collateralContribution = (params: {
 export const LTV = (params: {
   usdcBalance: number;
   unpl: number;
-  collateralAssets: Array<{ qty: number; indexPrice: number; weight: number }>;
+  collateralAssets: Record<"qty" | "indexPrice" | "weight", number>[];
 }) => {
   // LTV = (abs(min(USDC_balance, 0)) + abs(min(upnl, 0)) ) /
   // [sum(max(collateral_qty_i, 0) × index_price_i × weight_i ) + max(upnl, 0)]
@@ -792,9 +792,39 @@ export const LTV = (params: {
   const denominator = collateralSum.add(new Decimal(Math.max(unpl, 0)));
 
   // 分母如果为 0，则直接返回 0
-  if (denominator.eq(zero)) {
+  if (denominator.isZero()) {
     return 0;
   }
 
   return numerator.div(denominator).toNumber();
+};
+
+export const maxWithdrawalUSDC = (inputs: {
+  USDCBalance: number;
+  freeCollateral: number;
+  upnl: number;
+}) => {
+  const { USDCBalance, freeCollateral, upnl } = inputs;
+  const value = Math.min(
+    new Decimal(USDCBalance).toNumber(),
+    new Decimal(freeCollateral).sub(Math.max(upnl, 0)).toNumber(),
+  );
+  return Math.max(0, value);
+};
+
+export const maxWithdrawalOtherCollateral = (inputs: {
+  collateralQty: number;
+  freeCollateral: number;
+  indexPrice: number;
+  weight: number;
+}) => {
+  const { collateralQty, freeCollateral, indexPrice, weight } = inputs;
+  const denominator = new Decimal(indexPrice).mul(weight);
+
+  // 分母如果为 0，则直接返回 0
+  if (denominator.isZero()) {
+    return 0;
+  }
+  const maxQtyByValue = new Decimal(freeCollateral).div(denominator).toNumber();
+  return Math.min(collateralQty, maxQtyByValue);
 };
