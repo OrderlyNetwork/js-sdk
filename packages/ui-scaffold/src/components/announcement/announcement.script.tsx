@@ -56,7 +56,7 @@ export const useAnnouncementScript = (options?: AnnouncementScriptOptions) => {
   const { getComponentTheme } = useOrderlyTheme();
 
   const tips = useMemo(() => {
-    const { dataAdapter } = getComponentTheme("announcement");
+    const { dataAdapter } = getComponentTheme("announcement") || {};
     if (typeof dataAdapter === "function") {
       return dataAdapter(_tips.rows || []);
     }
