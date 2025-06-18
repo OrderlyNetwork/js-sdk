@@ -168,7 +168,7 @@ export const usePrivateDataObserver = (options: {
     data: WSMessage.AlgoOrder[] | WSMessage.Order,
     isAlgoOrder: boolean,
   ) => {
-    let keysMap = options.getKeysMap("orders");
+    const keysMap = options.getKeysMap("orders");
 
     const filteredKeys = new Map();
     const keyStartWith = isAlgoOrder ? "algoOrders" : "orders";

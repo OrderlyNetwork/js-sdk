@@ -74,3 +74,4 @@ export * as OUITailwind from "./tailwind";
 export * from "./hooks";
 
 export * from "./locale";
+export * from "./scrollIndicator";
