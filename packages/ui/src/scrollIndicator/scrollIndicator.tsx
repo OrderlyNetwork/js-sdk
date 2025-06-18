@@ -16,15 +16,15 @@ export const ScrollIndicator: FC<ScrollIndicatorProps> = (props) => {
     <div
       className={cnBase(
         "oui-scroll-indicator",
-        "oui-relative oui-overflow-hidden oui-select-none",
-        props.className
+        "oui-relative oui-select-none oui-overflow-hidden",
+        props.className,
       )}
     >
       <div
         ref={containerRef}
         className={cnBase(
-          "oui-overflow-x-scroll oui-hide-scrollbar",
-          isDragging ? "oui-cursor-grabbing" : "oui-cursor-grab"
+          "oui-hide-scrollbar oui-overflow-x-scroll",
+          isDragging ? "oui-cursor-grabbing" : "oui-cursor-grab",
         )}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}

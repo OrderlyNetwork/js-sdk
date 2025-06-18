@@ -183,7 +183,7 @@ export const useOrderStream = (
       ?.flat();
 
     if (algoOrdersResponse.data) {
-      let algoOrders = algoOrdersResponse.data
+      const algoOrders = algoOrdersResponse.data
         ?.map((item: any) => item.rows)
         ?.flat();
 
