@@ -48,10 +48,12 @@ export function formatCampaignDate(date: Date | string): string {
   return `${monthNames[month]} ${day}, ${year} ${hours}:${minutes}`;
 }
 
-export function formatUpdateDate(timestamp: number): string {
-  const date = new Date(timestamp);
-  const { year, month, day, hours, minutes } = getUTCDateInfo(date);
-  const monthStr = month.toString().padStart(2, "0");
-  const dayStr = day.toString().padStart(2, "0");
-  return `${year}-${monthStr}-${dayStr} ${hours}:${minutes} UTC`;
+export function formatUpdateDate(timestamp: number) {
+  const time = new Date(timestamp);
+  try {
+    return format(time, "yyyy-MM-dd HH:mm 'UTC'");
+  } catch (error) {
+    console.error("Error formatting time:", error);
+    return "";
+  }
 }
