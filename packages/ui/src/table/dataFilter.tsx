@@ -55,17 +55,11 @@ type PickerFilter = {
   type: "picker";
 } & PickerProps;
 
-export type DataFilterItems = (DataFilterGeneral &
-  (
-    | SelectFilter
-    | DateFilter
-    | DateRangeFilter
-    | SymbolFilter
-    | PickerFilter
-  ))[];
+export type DataFilterItem = DataFilterGeneral &
+  (SelectFilter | DateFilter | DateRangeFilter | SymbolFilter | PickerFilter);
 
 export type DataFilterProps = {
-  items: DataFilterItems;
+  items: DataFilterItem[];
   onFilter: (filter: { name: string; value: any }) => void;
   className?: string;
   trailing?: React.ReactNode;
