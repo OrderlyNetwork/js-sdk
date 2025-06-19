@@ -3,7 +3,6 @@ import {
   getParsedEthersError,
 } from "@enzoferey/ethers-error-parser";
 import { BrowserProvider, Eip1193Provider, ethers } from "ethers";
-import { TransactionReceipt } from "ethers/src.ts/providers/provider";
 import { Web3Provider } from "@orderly.network/default-evm-adapter";
 import { API } from "@orderly.network/types";
 
