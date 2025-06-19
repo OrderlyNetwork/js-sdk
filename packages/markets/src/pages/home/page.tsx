@@ -52,7 +52,7 @@ const MarketsDesktopContent = (props: MarketsContentProps) => {
   const { t } = useTranslation();
 
   return (
-    <Box>
+    <Box p={6}>
       <Tabs
         size="xl"
         value={props.activeTab}
@@ -94,7 +94,7 @@ const MarketsMobileContent = (props: MarketsContentProps) => {
           "oui-text-2xl oui-font-bold",
           "data-[state=active]:after:oui-bg-transparent!",
         ),
-        tabsContent: "oui-px-3 oui-pb-3",
+        tabsContent: "oui-px-3",
       }}
     >
       <TabPanel
