@@ -16,6 +16,9 @@ export const useAccountValue = (mainAccountId?: string) => {
   });
 
   useEffect(() => {
+    if (isPositionLoading) {
+      return;
+    }
     if (!newPositions || newPositions.length === 0) {
       setAccountValue({});
       return;
@@ -35,7 +38,7 @@ export const useAccountValue = (mainAccountId?: string) => {
       {} as Record<string, number>,
     );
     setAccountValue(value);
-  }, [newPositions]);
+  }, [newPositions, isPositionLoading]);
   return {
     accountValue,
   };

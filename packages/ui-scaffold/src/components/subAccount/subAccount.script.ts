@@ -1,10 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import {
-  SubAccount,
-  useAccount,
-  useCollateral,
-  useIndexPricesStream,
-} from "@orderly.network/hooks";
+import { useAccount, useIndexPricesStream } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
 import { toast, useScreen } from "@orderly.network/ui";
