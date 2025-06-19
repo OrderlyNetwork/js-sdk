@@ -1,10 +1,13 @@
 import { FC } from "react";
 import type { API } from "@orderly.network/types";
 import { Box, Flex, textVariants } from "@orderly.network/ui";
+import { LtvWidget } from "../LTV";
 import { ActionButton } from "../actionButton";
 import { AvailableQuantity } from "../availableQuantity";
 import { BrokerWallet } from "../brokerWallet";
 import { ChainSelect } from "../chainSelect";
+import { CollateralContributionWidget } from "../collateralContribution";
+import { CollateralRatioWidget } from "../collateralRatio";
 import { ExchangeDivider } from "../exchangeDivider";
 import { Fee } from "../fee";
 import { QuantityInput } from "../quantityInput";
@@ -93,6 +96,9 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
 
         <Flex direction="column" mt={1} gapY={1} itemAlign="start">
           <SwapCoin token={token} dst={dst} price={1} />
+          <CollateralRatioWidget />
+          <CollateralContributionWidget />
+          <LtvWidget />
           <Fee {...fee} />
         </Flex>
       </Box>
