@@ -72,6 +72,7 @@ export const MobileScaffold = (props: MobileScaffoldProps) => {
           "oui-scaffold-bottomNav",
           "oui-fixed oui-bottom-0 oui-z-10",
           "oui-w-full oui-bg-base-9",
+          "oui-pb-[calc(env(safe-area-inset-bottom))]",
           classNames?.bottomNav,
         )}
       >
