@@ -1,6 +1,13 @@
 import { FC, useMemo, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { cn, Text, InfoCircleIcon, Button, Tooltip } from "@orderly.network/ui";
+import {
+  cn,
+  Text,
+  InfoCircleIcon,
+  Button,
+  Tooltip,
+  ChevronRightIcon,
+} from "@orderly.network/ui";
 import { CampaignConfig, CampaignStatistics } from "./type";
 import {
   formatCampaignDateRange,
@@ -75,12 +82,12 @@ export const CampaignsContentDesktopUI: FC<{
     }
 
     return (
-      <div className="oui-flex oui-flex-col oui-gap-1 oui-min-w-[240px]">
+      <div className="oui-flex oui-min-w-[240px] oui-flex-col oui-gap-1">
         {campaign?.prize_pools?.map((pool) => {
           return (
             <div
               key={pool.pool_id}
-              className="oui-flex oui-items-center oui-justify-between oui-h-[18px]"
+              className="oui-flex oui-h-[18px] oui-items-center oui-justify-between"
             >
               <Text
                 size="2xs"
@@ -116,7 +123,7 @@ export const CampaignsContentDesktopUI: FC<{
   return (
     <div
       className={cn([
-        "oui-w-full oui-h-[500px] oui-flex oui-flex-col oui-items-center oui-justify-center oui-gap-10",
+        "oui-flex oui-h-[500px] oui-w-full oui-flex-col oui-items-center oui-justify-center oui-gap-10",
         `oui-bg-cover oui-bg-center oui-bg-no-repeat`,
         classNames?.container,
       ])}
@@ -139,7 +146,7 @@ export const CampaignsContentDesktopUI: FC<{
         </Text>
         <Text
           className={cn([
-            "oui-trading-leaderboard-title oui-text-[48px] oui-leading-[56px] oui-font-bold oui-text-base-contrast oui-text-center",
+            "oui-trading-leaderboard-title oui-text-center oui-text-[48px] oui-font-bold oui-leading-[56px] oui-text-base-contrast",
             classNames?.title,
           ])}
         >
@@ -163,10 +170,10 @@ export const CampaignsContentDesktopUI: FC<{
           </Text>
         </div>
       </div>
-      <div className="oui-border oui-border-solid oui-border-base-contrast/[0.08] oui-rounded-2xl oui-overflow-hidden">
+      <div className="oui-overflow-hidden oui-rounded-2xl oui-border oui-border-solid oui-border-base-contrast/[0.08]">
         <div
           className={cn([
-            "oui-flex oui-py-3 oui-px-4 oui-items-center oui-gap-4 oui-backdrop-blur-[10px]",
+            "oui-flex oui-items-center oui-gap-4 oui-px-4 oui-py-3 oui-backdrop-blur-[10px]",
             isCampaignStarted ? "" : "oui-hidden",
           ])}
         >
@@ -207,7 +214,7 @@ export const CampaignsContentDesktopUI: FC<{
         </div>
         <div
           className={cn([
-            "oui-border oui-border-solid oui-border-base-contrast/[0.08] oui-rounded-2xl oui-p-4 oui-bg-primary/[0.08] oui-backdrop-blur-[10px]",
+            "oui-rounded-2xl oui-border oui-border-solid oui-border-base-contrast/[0.08] oui-bg-primary/[0.08] oui-p-4 oui-backdrop-blur-[10px]",
             "oui-flex oui-flex-col oui-gap-4",
             isCampaignStarted ? "" : "oui-border-transparent",
           ])}
@@ -227,10 +234,10 @@ export const CampaignsContentDesktopUI: FC<{
                   // @ts-ignore
                   content={tooltipContent}
                   {...tooltipProps}
-                  className="oui-max-w-[260px] oui-bg-base-5 oui-py-1 oui-px-2"
+                  className="oui-max-w-[260px] oui-bg-base-5 oui-px-2 oui-py-1"
                 >
                   <div
-                    className="oui-flex oui-items-center oui-justify-center oui-w-4 oui-h-4"
+                    className="oui-flex oui-size-4 oui-items-center oui-justify-center"
                     onClick={() => setTooltipOpen(true)}
                   >
                     <InfoCircleIcon className="oui-cursor-pointer" />
@@ -289,6 +296,18 @@ export const CampaignsContentDesktopUI: FC<{
               </div>
             )}
           </div>
+          {isMobile && campaign?.rule_url && (
+            <div
+              className="-oui-mb-1 -oui-mt-2 oui-flex oui-items-center oui-gap-0.5 oui-text-2xs oui-leading-[15px] oui-text-base-contrast-36"
+              onClick={onLearnMore}
+            >
+              {t("tradingLeaderboard.viewRules")}
+              <ChevronRightIcon
+                size={16}
+                className="oui-text-base-contrast-36"
+              />
+            </div>
+          )}
           <div
             className={cn([
               "oui-flex oui-gap-4",

@@ -5,9 +5,10 @@ import {
   useMemo,
   useState,
   useEffect,
+  useCallback,
 } from "react";
 import { parseISO } from "date-fns";
-import { sortWith, descend, prop } from "ramda";
+import { sortWith, descend } from "ramda";
 import { usePrivateQuery, RefferalAPI as API } from "@orderly.network/hooks";
 import { CampaignConfig, UserData } from "../campaigns/type";
 
@@ -45,7 +46,10 @@ export const TradingLeaderboardContext = createContext<TradingLeaderboardState>(
 
 export type TradingLeaderboardProviderProps = PropsWithChildren<
   Pick<TradingLeaderboardState, "campaigns" | "href" | "backgroundSrc">
->;
+> & {
+  campaignId?: string | number;
+  onCampaignChange?: (campaignId: string | number) => void;
+};
 
 export const TradingLeaderboardProvider = (
   props: TradingLeaderboardProviderProps,
@@ -80,6 +84,12 @@ export const TradingLeaderboardProvider = (
     }
   }, [generateCode, generateCodeMutate, userData]);
 
+  useEffect(() => {
+    if (props.campaignId) {
+      setCurrentCampaignId(props.campaignId as string);
+    }
+  }, [props.campaignId]);
+
   const currentCampaign = useMemo(() => {
     return props.campaigns?.find(
       (campaign) => campaign.campaign_id == currentCampaignId,
@@ -106,6 +116,14 @@ export const TradingLeaderboardProvider = (
       : filtered;
   }, [props.campaigns, userData]);
 
+  const onCampaignChange = useCallback(
+    (campaignId: string | number) => {
+      setCurrentCampaignId(campaignId as string);
+      props.onCampaignChange?.(campaignId);
+    },
+    [props.onCampaignChange],
+  );
+
   return (
     <TradingLeaderboardContext.Provider
       value={{
@@ -115,7 +133,7 @@ export const TradingLeaderboardProvider = (
         backgroundSrc: props.backgroundSrc,
         currentCampaignId,
         currentCampaign,
-        onCampaignChange: setCurrentCampaignId,
+        onCampaignChange,
         userData,
         setUserData,
         updatedTime,

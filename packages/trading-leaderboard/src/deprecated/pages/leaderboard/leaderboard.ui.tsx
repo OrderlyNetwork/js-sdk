@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { cn, Flex } from "@orderly.network/ui";
-import { DeprecatedCampaignsWidget } from "../../components/campaigns";
-import { DeprecatedTradingListWidget } from "../../components/tradingList";
+import { CampaignsWidget } from "../../components/campaigns";
+import { TradingListWidget } from "../../components/tradingList";
 import { LeaderboardScriptReturn } from "./leaderboard.script";
 
 export type LeaderboardProps = {
@@ -89,8 +89,8 @@ export const Leaderboard: FC<LeaderboardProps> = (props) => {
           "oui-max-w-[1040px] oui-px-3 oui-mx-auto ",
         )}
       >
-        {props.showCampaigns && <DeprecatedCampaignsWidget />}
-        <DeprecatedTradingListWidget
+        {props.showCampaigns && <CampaignsWidget />}
+        <TradingListWidget
           className={cn(
             props.showCampaigns
               ? "oui-h-[calc(100%_-_288px_-_20px)]"
