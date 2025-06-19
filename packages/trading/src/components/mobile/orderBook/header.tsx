@@ -4,7 +4,6 @@ import { useTranslation } from "@orderly.network/i18n";
 import {
   CaretDownIcon,
   CaretUpIcon,
-  cn,
   Flex,
   Picker,
   Text,
@@ -22,27 +21,23 @@ export const Header: FC<Props> = (props) => {
 
   const { base, quote } = props;
 
-  const [coinType, setCoinType] = useLocalStorage(
-    ORDERBOOK_MOBILE_COIN_TYPE_KEY,
-    base,
-  );
-
-  // const { mode, onModeChange } = useOrderBookContext();
+  const [coinTypeConfig, setCoinTypeConfig]: [string, React.Dispatch<string>] =
+    useLocalStorage(ORDERBOOK_MOBILE_COIN_TYPE_KEY, ["total", base].join("_"));
 
   const options = useMemo<SelectOption[]>(() => {
     return [
       {
-        value: "qty",
+        value: ["qty", base].join("_"),
         label: `${t("common.quantity")}(${base})`,
         data: [t("common.quantity"), base],
       },
       {
-        value: base,
+        value: ["total", base].join("_"),
         label: `${t("common.total")}(${base})`,
         data: [t("common.total"), base],
       },
       {
-        value: quote,
+        value: ["total", quote].join("_"),
         label: `${t("common.total")}(${quote})`,
         data: [t("common.total"), quote],
       },
@@ -65,8 +60,8 @@ export const Header: FC<Props> = (props) => {
       </Flex>
       <Picker
         size="sm"
-        value={coinType}
-        onValueChange={setCoinType}
+        value={coinTypeConfig}
+        onValueChange={setCoinTypeConfig}
         options={options}
         valueRenderer={(_, { open, data }) => {
           return (

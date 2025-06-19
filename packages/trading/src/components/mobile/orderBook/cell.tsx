@@ -32,7 +32,11 @@ export const OrderBookCell: FC<OrderBookCellProps> = (props) => {
 
   const { base_dp, quote_dp, base, quote } = symbolInfo;
 
-  const [coinType] = useLocalStorage(ORDERBOOK_MOBILE_COIN_TYPE_KEY, base);
+  const [coinTypeConfig, setCoinTypeConfig]: [string, React.Dispatch<string>] =
+    useLocalStorage(ORDERBOOK_MOBILE_COIN_TYPE_KEY, ["total", base].join("_"));
+
+  const [mode, currency] =
+    (coinTypeConfig?.split("_") as [string, string]) ?? [];
 
   const totalAmount = Number.isNaN(accumulated)
     ? "-"
@@ -62,17 +66,17 @@ export const OrderBookCell: FC<OrderBookCellProps> = (props) => {
         >
           {price}
         </Text.numeral>
-        {coinType === "qty" && (
+        {mode === "qty" && (
           <Text.numeral className="oui-text-base-contrast-80" dp={base_dp}>
             {Number.isNaN(quantity) ? "-" : quantity}
           </Text.numeral>
         )}
-        {coinType === base && (
+        {mode === "total" && currency === base && (
           <Text.numeral className="oui-text-base-contrast-80" dp={base_dp}>
             {accumulated}
           </Text.numeral>
         )}
-        {coinType === quote && (
+        {mode === "total" && currency === quote && (
           <Text.numeral className="oui-text-base-contrast-80" dp={2}>
             {totalAmount}
           </Text.numeral>

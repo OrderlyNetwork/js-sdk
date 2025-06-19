@@ -41,16 +41,15 @@ export const OrderBook: FC<OrderBookProps> = (props) => {
 
   const symbol = `PERP_${props.symbolInfo.base}_${props.symbolInfo.quote}`;
 
-  const [coinType, setCoinType] = useLocalStorage(
-    ORDERBOOK_MOBILE_COIN_TYPE_KEY,
-    base,
-  );
+  const [coinTypeConfig, setCoinTypeConfig]: [string, React.Dispatch<string>] =
+    useLocalStorage(ORDERBOOK_MOBILE_COIN_TYPE_KEY, ["total", base].join("_"));
 
   useEffect(() => {
-    if (coinType !== quote && base) {
-      setCoinType(base);
+    const [prevMode] = (coinTypeConfig?.split("_") as [string, string]) ?? [];
+    if (!coinTypeConfig.includes(quote) && base) {
+      setCoinTypeConfig([prevMode, base].join("_"));
     }
-  }, [base, quote]);
+  }, [base]);
 
   return (
     <OrderBookProvider
