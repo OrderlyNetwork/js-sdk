@@ -74,11 +74,17 @@ export const SlippageCell = (props: {
             >
               {props.estSlippage ?? 0}
             </Text.numeral>
-            <Text size="2xs" className="oui-text-primary">
-              {`${props.slippage || "-"}%`}
-            </Text>
             <button className="oui-text-2xs" onClick={() => setOpen()}>
-              <EditIcon className="oui-text-primary" size={12} opacity={1} />
+              <Flex className="oui-gap-0.5" as="span">
+                <Text size="2xs" className="oui-text-primary">
+                  {`${props.slippage || "-"}%`}
+                </Text>
+                <EditIcon
+                  className="oui-text-primary oui-hidden md:oui-block"
+                  size={12}
+                  opacity={1}
+                />
+              </Flex>
             </button>
           </Flex>
         </AuthGuard>
