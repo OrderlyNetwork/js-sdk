@@ -10,7 +10,9 @@ import { CollateralContributionWidget } from "../collateralContribution";
 import { CollateralRatioWidget } from "../collateralRatio";
 import { ExchangeDivider } from "../exchangeDivider";
 import { Fee } from "../fee";
+import { MinimumReceivedWidget } from "../minimumReceived";
 import { QuantityInput } from "../quantityInput";
+import { SlippageUI } from "../slippage/slippage.ui";
 import { SwapCoin } from "../swapCoin";
 import { Web3Wallet } from "../web3Wallet";
 import { UseDepositFormScriptReturn } from "./depositForm.script";
@@ -42,6 +44,8 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
     networkId,
     fee,
   } = props;
+
+  const flag = true;
 
   return (
     <Box id="oui-deposit-form" className={textVariants({ weight: "semibold" })}>
@@ -93,16 +97,23 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
             root: "oui-mt-3 oui-border-transparent focus-within:oui-outline-transparent",
           }}
         />
-
-        <Flex direction="column" mt={1} gapY={1} itemAlign="start">
-          <SwapCoin token={token} dst={dst} price={1} />
-          <CollateralRatioWidget />
-          <CollateralContributionWidget />
-          <LtvWidget />
+        <Flex direction="column" itemAlign="start" mt={1} gapY={1}>
+          {flag ? (
+            <>
+              <CollateralRatioWidget />
+              <CollateralContributionWidget />
+              <LtvWidget />
+            </>
+          ) : (
+            <>
+              <SwapCoin token={token} dst={dst} price={1} />
+              <SlippageUI slippage="1" />
+              <MinimumReceivedWidget />
+            </>
+          )}
           <Fee {...fee} />
         </Flex>
       </Box>
-
       <Flex justify="center">
         <ActionButton
           actionType={actionType}

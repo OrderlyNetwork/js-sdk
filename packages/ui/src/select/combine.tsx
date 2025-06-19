@@ -1,20 +1,19 @@
 import React, { KeyboardEvent, useRef, useState } from "react";
-import { SelectOption, SelectWithOptionsProps } from "./withOptions";
-
-import { Input } from "../input";
-import { CaretDownIcon } from "../icon";
 import * as SelectPrimitive from "@radix-ui/react-select";
+import { CaretDownIcon } from "../icon";
+import { Input } from "../input";
 import { PopoverRoot, PopoverAnchor, PopoverContent } from "../popover";
-import { selectVariants } from "./selectPrimitive";
 // import { SizeType } from "../helpers/sizeType";
 import { ScrollArea } from "../scrollarea";
 import { type SelectVariantProps } from "./select";
+import { selectVariants } from "./selectPrimitive";
+import { SelectOption, SelectWithOptionsProps } from "./withOptions";
 
 export type CombineSelectProps = {
   placeholder?: string;
 } & SelectWithOptionsProps;
 
-export const CombineSelect = (props: CombineSelectProps) => {
+export const CombineSelect: React.FC<CombineSelectProps> = (props) => {
   const { options, variant, valueFormatter, ...rest } = props;
   const [keyword, setKeyword] = useState<string>("");
   // const [open, setOpen] = useState<boolean>(props.defaultOpen || false);
@@ -27,7 +26,7 @@ export const CombineSelect = (props: CombineSelectProps) => {
   const [selectedIndex, setSelectedIndex] = useState(() =>
     typeof props.value === "undefined"
       ? -1
-      : options.findIndex((option) => option.value === props.value)
+      : options.findIndex((option) => option.value === props.value),
   );
 
   const [focused, setFocused] = useState<boolean>(false);
@@ -68,10 +67,10 @@ export const CombineSelect = (props: CombineSelectProps) => {
             focused
               ? keyword
               : typeof valueFormatter === "function"
-              ? (valueFormatter(value ?? "", {
-                  placeholder: props.placeholder,
-                }) as string)
-              : value
+                ? (valueFormatter(value ?? "", {
+                    placeholder: props.placeholder,
+                  }) as string)
+                : value
           }
           onValueChange={(value) => {
             setKeyword(value);
