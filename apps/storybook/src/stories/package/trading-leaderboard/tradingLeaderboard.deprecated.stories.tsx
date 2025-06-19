@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import {
-  DeprecatedLeaderboardWidget,
-  DeprecatedTradingListWidget,
+  LeaderboardWidget,
+  TradingListWidget,
   Campaign,
 } from "@orderly.network/trading-leaderboard";
 import { Box, useScreen } from "@orderly.network/ui";
@@ -37,9 +37,9 @@ function getCampaigns() {
   );
 }
 
-const meta: Meta<typeof DeprecatedLeaderboardWidget> = {
+const meta: Meta<typeof LeaderboardWidget> = {
   title: "Package/trading-leaderboard/deprecated-leaderboard",
-  component: DeprecatedLeaderboardWidget,
+  component: LeaderboardWidget,
   argTypes: {},
   args: {
     campaigns: getCampaigns(),
@@ -89,7 +89,7 @@ export const Page: Story = {
   render: (args) => {
     return (
       <Container style={{ height: "calc(100vh)" }}>
-        <DeprecatedLeaderboardWidget {...args} className="oui-py-5" />
+        <LeaderboardWidget {...args} className="oui-py-5" />
       </Container>
     );
   },
@@ -106,17 +106,25 @@ export const LayoutPage: Story = {
         }}
       >
         <Container>
-          <DeprecatedLeaderboardWidget {...args} className="oui-py-5" />
+          <LeaderboardWidget {...args} className="oui-py-5" />
         </Container>
       </BaseLayout>
     );
   },
 };
 
+// export const Campaigns: Story = {
+//   render: (args) => {
+//     return (
+//       <TradingLeaderboardProvider {...args}>
+//         <CampaignsWidget />
+//       </TradingLeaderboardProvider>
+//     );
+//   },
+// };
+
 export const TradingList: Story = {
   render: (args) => {
-    return (
-      <DeprecatedTradingListWidget style={{ height: "calc(100vh - 0px)" }} />
-    );
+    return <TradingListWidget />;
   },
 };

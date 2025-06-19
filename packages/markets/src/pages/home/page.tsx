@@ -82,37 +82,36 @@ const MarketsMobileContent = (props: MarketsContentProps) => {
   const { t } = useTranslation();
 
   return (
-    <Box px={3} pb={4}>
-      <Tabs
-        variant="text"
-        size="xl"
-        value={props.activeTab}
-        onValueChange={props.onTabChange as (value: string) => void}
-        classNames={{
-          tabsListContainer: "oui-border-0",
-          tabsList: "oui-my-[6px]",
-          trigger: cn(
-            "oui-text-2xl oui-font-bold",
-            "data-[state=active]:after:oui-bg-transparent!",
-          ),
-        }}
+    <Tabs
+      variant="text"
+      size="xl"
+      value={props.activeTab}
+      onValueChange={props.onTabChange as (value: string) => void}
+      classNames={{
+        tabsListContainer: "oui-border-0",
+        tabsList: "oui-mx-6 oui-my-2",
+        trigger: cn(
+          "oui-text-2xl oui-font-bold",
+          "data-[state=active]:after:oui-bg-transparent!",
+        ),
+        tabsContent: "oui-px-3 oui-pb-3",
+      }}
+    >
+      <TabPanel
+        title={t("common.markets")}
+        value="markets"
+        testid="oui-testid-markets-tab"
       >
-        <TabPanel
-          title={t("common.markets")}
-          value="markets"
-          testid="oui-testid-markets-tab"
-        >
-          <MarketsHeaderWidget className="oui-mt-2" />
-          <MarketsDataListWidget />
-        </TabPanel>
-        <TabPanel
-          title={t("common.funding")}
-          value="funding"
-          testid="oui-testid-funding-tab"
-        >
-          <FundingWidget />
-        </TabPanel>
-      </Tabs>
-    </Box>
+        <MarketsHeaderWidget className="oui-mt-2" />
+        <MarketsDataListWidget />
+      </TabPanel>
+      <TabPanel
+        title={t("common.funding")}
+        value="funding"
+        testid="oui-testid-funding-tab"
+      >
+        <FundingWidget />
+      </TabPanel>
+    </Tabs>
   );
 };

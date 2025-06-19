@@ -165,6 +165,20 @@ export const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
           configStore={configStore}
           appIcons={config.orderlyAppProvider.appIcons}
           restrictedInfo={config.orderlyAppProvider.restrictedInfo}
+          overrides={{
+            announcement: {
+              dataAdapter: (data) => [
+                {
+                  announcement_id: "leaderboard",
+                  message:
+                    "DAWN OF DOMINANCE: $25,000 Trading Campaign is live!",
+                  url: "https://app.orderly.network/tradingRewards",
+                  type: "Campaign",
+                },
+                ...data,
+              ],
+            },
+          }}
           // customChains={customChainsAbstarct}
           // defaultChain={{testnet: customChains.testnet[0], mainnet: customChains.mainnet[0]}}
         >

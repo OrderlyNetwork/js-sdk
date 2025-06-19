@@ -1,8 +1,8 @@
 import React from "react";
-import { cn, Flex, Spinner, Text, TokenIcon } from "@orderly.network/ui";
-import { useBalance } from "./useBalance";
 import { API } from "@orderly.network/types";
+import { cn, Flex, Spinner, Text, TokenIcon } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
+import { useBalance } from "./useBalance";
 
 interface TokenOptionProps {
   token: API.TokenInfo & {
@@ -17,7 +17,7 @@ interface TokenOptionProps {
 
 export const TokenOption: React.FC<TokenOptionProps> = (props) => {
   const { token, isActive, onTokenChange, fetchBalance } = props;
-  const { symbol, precision, decimals } = token;
+  const { symbol, precision } = token;
   const { balance, loading } = useBalance(token, fetchBalance);
 
   const showBalance = typeof fetchBalance === "function";
@@ -40,7 +40,7 @@ export const TokenOption: React.FC<TokenOptionProps> = (props) => {
         rm={Decimal.ROUND_DOWN}
         className={cn(
           "oui-text-base-contrast-80 group-hover:oui-text-base-contrast-54",
-          isActive && "oui-text-base-contrast-54"
+          isActive && "oui-text-base-contrast-54",
         )}
       >
         {balance}
@@ -60,7 +60,7 @@ export const TokenOption: React.FC<TokenOptionProps> = (props) => {
         "oui-text-2xs oui-font-semibold",
         "oui-cursor-pointer",
         isActive && "oui-bg-base-5",
-        props.index !== 0 && "oui-mt-[2px]"
+        props.index !== 0 && "oui-mt-[2px]",
       )}
       onClick={() => {
         onTokenChange?.(token);
@@ -71,7 +71,7 @@ export const TokenOption: React.FC<TokenOptionProps> = (props) => {
         <Text
           className={cn(
             "oui-text-base-contrast-54 group-hover:oui-text-base-contrast-80",
-            isActive && "oui-text-base-contrast-80"
+            isActive && "oui-text-base-contrast-80",
           )}
         >
           {symbol}
