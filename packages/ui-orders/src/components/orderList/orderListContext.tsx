@@ -77,7 +77,7 @@ export const OrderListProvider: FC<
   const onEditOrder = useCallback(
     async (order: API.Order | API.AlgoOrder, position?: API.Position) => {
       // @ts-ignore
-      let isHidden =
+      const isHidden =
         order.visible_quantity !== undefined
           ? order.visible_quantity === 0
           : (order as any).visible !== undefined
