@@ -65,8 +65,9 @@ export const MobileMarketsDataList: React.FC<MobileMarketsDataListProps> = (
         value={activeTab}
         onValueChange={onTabChange}
         classNames={{
-          tabsList: "oui-mx-3",
+          scrollIndicator: "oui-mx-3",
         }}
+        showScrollIndicator
       >
         <TabPanel
           title={t("markets.favorites")}
