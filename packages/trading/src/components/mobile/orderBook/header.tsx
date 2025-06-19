@@ -71,10 +71,12 @@ export const Header: FC<Props> = (props) => {
         valueRenderer={(_, { open, data }) => {
           return (
             <Flex justify="between" itemAlign="center" gap={1}>
-              <Flex direction={"column"} itemAlign={"end"}>
-                <Text>{data[0]}</Text>
-                <Text>({data[1]})</Text>
-              </Flex>
+              {Array.isArray(data) && (
+                <Flex direction={"column"} itemAlign={"end"}>
+                  {data[0] && <Text>{data[0]}</Text>}
+                  {data[1] && <Text>({data[1]})</Text>}
+                </Flex>
+              )}
               {open ? (
                 <CaretUpIcon size={14} color="inherit" />
               ) : (
