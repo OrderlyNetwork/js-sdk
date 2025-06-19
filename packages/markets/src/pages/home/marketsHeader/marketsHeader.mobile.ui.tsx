@@ -142,7 +142,7 @@ type BlockItemProps = {
 
 const BlockItem: React.FC<BlockItemProps> = (props) => {
   return (
-    <Box px={2} width="100%" className={props.className}>
+    <Box px={3} width="100%" className={props.className}>
       <Text as="div" intensity={36} size="2xs" weight="semibold">
         {props.label}
       </Text>
