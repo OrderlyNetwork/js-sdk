@@ -52,7 +52,7 @@ const MarketsDesktopContent = (props: MarketsContentProps) => {
   const { t } = useTranslation();
 
   return (
-    <Box p={6}>
+    <Box>
       <Tabs
         size="xl"
         value={props.activeTab}
