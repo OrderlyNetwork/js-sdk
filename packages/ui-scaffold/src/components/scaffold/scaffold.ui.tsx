@@ -53,7 +53,7 @@ export const DesktopScaffold: FC<DesktopScaffoldProps> = (props) => {
             className={cn(
               "oui-scaffold-restricted-info",
               "oui-relative oui-z-[1]",
-              "oui-mt-3",
+              "oui-mt-2",
               "oui-bg-base-9",
               // 1024px - 6px (scrollbar widt) - 12 * 2px (padding) = 994px
               "oui-min-w-[994px]",
@@ -62,7 +62,7 @@ export const DesktopScaffold: FC<DesktopScaffoldProps> = (props) => {
           <AnnouncementWidget
             className={cn(
               "oui-scaffold-maintenance-tips",
-              "oui-mt-3",
+              "oui-mt-2",
               "oui-relative oui-z-[1]",
               "oui-bg-base-9",
               // 1024px - 6px (scrollbar widt) - 12 * 2px (padding) = 994px

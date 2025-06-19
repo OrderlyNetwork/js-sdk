@@ -348,8 +348,8 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
         }}
         className={cn(
           "oui-flex oui-flex-1 ",
-          "oui-min-w-[1018px] oui-h-full oui-w-full",
-          "oui-p-3",
+          "oui-size-full oui-min-w-[1018px]",
+          "oui-px-3 oui-py-2",
           props.className,
         )}
         onSizeChange={setDataListSplitHeightSM}
