@@ -123,7 +123,7 @@ export const AccountItem = (props: AccountItemProps) => {
           </Tooltip>
         </Flex>
         <Flex className="oui-text-xs" itemAlign="end" gap={1}>
-          <Text.numeral rule="human" dp={2}>
+          <Text.numeral rule="price" dp={2}>
             {props.accountValue ?? 0}
           </Text.numeral>
           <Text>USDC</Text>

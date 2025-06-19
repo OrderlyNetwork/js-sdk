@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, useRef } from "react";
 import { useAccount, useIndexPricesStream } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
@@ -18,19 +18,41 @@ type AccountValueInfo = {
 
 export const SubAccountScript = () => {
   const [open, setOpen] = useState(false);
+  const [mainAccountHolding, setMainAccountHolding] = useState<API.Holding[]>(
+    [],
+  );
   const { data: indexPrices } = useIndexPricesStream();
   const { isMobile } = useScreen();
   const { state, subAccount, switchAccount } = useAccount();
   const { t } = useTranslation();
-  const [mainAccount, setMainAccount] = useState<AccountValueInfo | undefined>(
-    undefined,
-  );
   const mainAccountId = state.mainAccountId;
 
   const { accountValue } = useAccountValue(mainAccountId);
 
-  const [subAccounts, setSubAccounts] = useState<AccountValueInfo[]>([]);
   const currentAccountId = state.accountId;
+
+  const hasRefreshedRef = useRef(false);
+
+  const subAccounts = useMemo(() => {
+    if (!state.subAccounts || !state.subAccounts.length) {
+      return [];
+    }
+
+    const currentSubAccount = state.subAccounts.find(
+      (subAccount) => subAccount.id === currentAccountId,
+    );
+
+    if (currentSubAccount) {
+      return [
+        currentSubAccount,
+        ...state.subAccounts.filter(
+          (subAccount) => subAccount.id !== currentAccountId,
+        ),
+      ];
+    }
+
+    return [...state.subAccounts];
+  }, [state.subAccounts, currentAccountId]);
 
   const _popup = useMemo(
     () => ({
@@ -59,83 +81,70 @@ export const SubAccountScript = () => {
     [switchAccount],
   );
 
-  useEffect(() => {
-    // current sub account should be the first item
-    if (!state.subAccounts || !state.subAccounts.length) {
-      setSubAccounts([]);
-      return;
-    }
-    const currentSubAccount = state.subAccounts.find(
-      (subAccount) => subAccount.id === currentAccountId,
-    );
-    let arr = [];
-    if (currentSubAccount) {
-      arr = [
-        currentSubAccount,
-        ...state.subAccounts.filter(
-          (subAccount) => subAccount.id !== currentAccountId,
-        ),
-      ];
-    } else {
-      arr = [...state.subAccounts];
-    }
-    setSubAccounts(arr);
-  }, [state.subAccounts, currentAccountId]);
-  useEffect(() => {
-    if (!mainAccountId || !state.address) return;
-
-    const _mainAccount = {
-      id: mainAccountId!,
-      userAddress: state.address,
-      holding: mainAccount ? mainAccount.holding : [],
-    };
-    setMainAccount(_mainAccount);
-    subAccount.refresh().then((res) => {
-      // if current account is main account, update main account holding from ws hooks
-      setMainAccount({
-        ..._mainAccount,
-        holding: res[mainAccountId],
-      });
-    });
-  }, [mainAccountId, state.address, currentAccountId, open]);
-
-  useEffect(() => {
+  const accountsWithValues = useMemo(() => {
     const mainAccountUnsettlePnl = accountValue[mainAccountId!] ?? 0;
-    if (mainAccount) {
-      setMainAccount((prev) => ({
-        ...prev!,
-        accountValue: calculateAccountValue(
-          prev?.holding || [],
-          mainAccountUnsettlePnl,
-          indexPrices || {},
-        ),
-      }));
-    }
-    if (subAccounts.length) {
-      setSubAccounts((prev) => {
-        return prev.map((subAccount) => {
-          const subAccountUnsettlePnl = accountValue[subAccount.id] ?? 0;
-          return {
-            ...subAccount,
+
+    const mainAccount =
+      mainAccountId && state.address
+        ? {
+            id: mainAccountId,
+            userAddress: state.address,
+            holding: mainAccountHolding,
             accountValue: calculateAccountValue(
-              subAccount.holding || [],
-              subAccountUnsettlePnl,
+              mainAccountHolding,
+              mainAccountUnsettlePnl,
               indexPrices || {},
             ),
-          };
-        });
+          }
+        : undefined;
+
+    const updatedSubAccounts = subAccounts.map((subAccount) => {
+      const subAccountUnsettlePnl = accountValue[subAccount.id] ?? 0;
+      return {
+        ...subAccount,
+        accountValue: calculateAccountValue(
+          subAccount.holding || [],
+          subAccountUnsettlePnl,
+          indexPrices || {},
+        ),
+      };
+    });
+
+    return {
+      mainAccount,
+      subAccounts: updatedSubAccounts,
+    };
+  }, [
+    mainAccountId,
+    state.address,
+    mainAccountHolding,
+    subAccounts,
+    accountValue,
+    indexPrices,
+  ]);
+
+  useEffect(() => {
+    if (!open) {
+      hasRefreshedRef.current = false;
+      return;
+    }
+
+    if (!hasRefreshedRef.current && mainAccountId) {
+      hasRefreshedRef.current = true;
+      subAccount.refresh().then((res) => {
+        setMainAccountHolding(res[mainAccountId] || []);
       });
     }
-  }, [accountValue, indexPrices]);
+  }, [open, mainAccountId, subAccount]);
 
   return {
-    mainAccount,
+    mainAccount: accountsWithValues.mainAccount,
     currentAccountId,
     open,
     onOpenChange: setOpen,
     popup: _popup,
     createSubAccount: doCreatSubAccount,
-    subAccounts,
+    subAccounts: accountsWithValues.subAccounts,
     onSwitch,
   };
 };
