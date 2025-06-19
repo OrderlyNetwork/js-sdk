@@ -163,6 +163,6 @@ const getTokenIndexPrice = (
   indexPrices: Record<string, number>,
 ) => {
   if (token === "USDC") return 1;
-  const symbol = `SPOT_${token}_USDC`;
+  const symbol = `PERP_${token}_USDC`;
   return indexPrices[symbol] ?? 0;
 };
