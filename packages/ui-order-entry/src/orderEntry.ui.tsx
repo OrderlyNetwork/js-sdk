@@ -108,7 +108,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
 
   const [slippage, setSlippage] = useLocalStorage("orderly-slippage", "1", {
     parseJSON: ((value: string | null) => {
-      return !value || value === '""' ? "1" : value;
+      return !value || value === '""' ? "1" : JSON.parse(value);
     }) as any,
   });
 
