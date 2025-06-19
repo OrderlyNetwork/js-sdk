@@ -49,7 +49,7 @@ export const OrderBook: FC<OrderBookProps> = (props) => {
     if (!coinTypeConfig.includes(quote) && base) {
       setCoinTypeConfig([prevMode, base].join("_"));
     }
-  }, [base]);
+  }, [quote, base, coinTypeConfig]);
 
   return (
     <OrderBookProvider
