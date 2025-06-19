@@ -91,7 +91,7 @@ const DeskTopTips: React.FC<Readonly<AnnouncementScriptReturn>> = (props) => {
     isAnimating,
   } = props;
 
-  const len = (tips.rows ?? []).length;
+  const len = tips.length;
 
   const { i18n } = useTranslation();
 
@@ -160,7 +160,7 @@ const MobileTips: React.FC<Readonly<AnnouncementScriptReturn>> = (props) => {
     isAnimating,
   } = props;
 
-  const len = (tips.rows ?? []).length;
+  const len = tips.length;
 
   const { i18n } = useTranslation();
 
@@ -264,7 +264,12 @@ const RenderTipsType: React.FC<{ type?: AnnouncementType | null }> = ({
           className: "oui-bg-[rgba(232,136,0,0.15)] oui-text-warning-darken",
         },
       };
-    return map[type!] || {};
+    return (
+      map[type!] || {
+        label: type,
+        className: map[AnnouncementType.Listing].className,
+      }
+    );
   }, [type, t]);
 
   if (!label) {
