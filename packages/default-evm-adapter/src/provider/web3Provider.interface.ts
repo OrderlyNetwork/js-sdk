@@ -7,9 +7,9 @@ export type Eip1193Provider = {
 export interface Web3Provider {
   set provider(provider: Eip1193Provider);
 
-  parseUnits(amount: string, decimals?: number): string;
+  parseUnits(amount: string, decimals: number): string;
 
-  formatUnits(amount: string, decimals?: number): string;
+  formatUnits(amount: string, decimals: number): string;
 
   signTypedData(address: string, toSignatureMessage: any): Promise<string>;
 
@@ -21,7 +21,7 @@ export interface Web3Provider {
     params: any[],
     options?: {
       abi: any;
-    }
+    },
   ): Promise<any>;
 
   /**
@@ -38,7 +38,7 @@ export interface Web3Provider {
     },
     options: {
       abi: any;
-    }
+    },
   ): Promise<any>;
 
   callOnChain(
@@ -48,7 +48,7 @@ export interface Web3Provider {
     params: any[],
     options: {
       abi: any;
-    }
+    },
   ): Promise<any>;
 
   getBalance(userAddress: string): Promise<bigint>;
@@ -57,6 +57,6 @@ export interface Web3Provider {
     txHash: string,
     baseInterval?: number,
     maxInterval?: number,
-    maxRetries?: number
+    maxRetries?: number,
   ): Promise<any>;
 }

@@ -56,22 +56,22 @@ export const LeaderboardSection: FC<LeaderboardSectionProps> = (props) => {
 
   if (currentCampaignId === "general") {
     return (
-      <div className={cn("oui-mix-blend-screen")}>
+      <Box px={3} className={cn("oui-mix-blend-screen")}>
         <Background backgroundSrc={backgroundSrc} />
         <GeneralLeaderboardWidget {...props} className="oui-mt-10" />
-      </div>
+      </Box>
     );
   }
 
   if (currentCampaign && currentCampaignId != "general") {
     return (
-      <>
+      <Box px={3}>
         <LeaderboardTitle
           title={t("tradingLeaderboard.leaderboard")}
           isMobile={isMobile}
         />
         <CampaignLeaderboardWidget {...props} campaignId={currentCampaignId} />
-      </>
+      </Box>
     );
   }
 

@@ -1,12 +1,17 @@
 import { ReactNode } from "react";
 import { Favorite, FavoriteTab } from "@orderly.network/hooks";
 import { DataTableClassNames } from "@orderly.network/ui";
-import { FavoriteInstance, GetColumns, SortType, TabName } from "../../type";
+import {
+  FavoriteInstance,
+  GetColumns,
+  SortType,
+  MarketsTabName,
+} from "../../type";
 import { useMarketsListScript } from "./marketsList.script";
 import { MarketsList } from "./marketsList.ui";
 
 export type MarketsListWidgetProps = {
-  type: TabName;
+  type: MarketsTabName;
   getColumns?: GetColumns;
   collapsed?: boolean;
   tableClassNames?: DataTableClassNames;

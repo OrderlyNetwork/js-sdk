@@ -54,3 +54,15 @@ export const stagingAbstractTestnetVaultAddress =
   "0x2c65ea2eE7265df755d7258291202690c27C6d2d";
 export const abstractMainnetVaultAddress =
   "0xE80F2396A266e898FBbD251b89CFE65B3e41fD18";
+export const bscTestnetDevVaultAddress =
+  "0x27631bCB066704A4576FaB2f36D24D9ffbf80FC1";
+export const bscTestnetQaVaultAddress =
+  "0xc93fA36a46bF544537dE3BF1Dec27A1074d71099";
+export const bscTestnetStagingVaultAddress =
+  "0xaf2036D5143219fa00dDd90e7A2dbF3E36dba050";
+export const bscTestnetUSDCAddress =
+  "0x31873b5804bABE258d6ea008f55e08DD00b7d51E";
+export const bscMainnetVaultAddress =
+  "0x816f722424B49Cf1275cc86DA9840Fbd5a6167e9";
+export const bscMainnetUSDCAddress =
+  "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d";

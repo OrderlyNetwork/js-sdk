@@ -1,19 +1,23 @@
 import { FC, useMemo } from "react";
-import { Box, cn, Flex } from "@orderly.network/ui";
-import { getOffsetSizeNum, TradingState } from "./trading.script";
-import { DataListWidget } from "../../components/desktop/dataList";
-import { TradingviewWidget } from "@orderly.network/ui-tradingview";
-import { AssetViewWidget } from "../../components/desktop/assetView";
-import { RiskRateWidget } from "../../components/desktop/riskRate";
-import { OrderBookAndTradesWidget } from "../../components/desktop/orderBookAndTrades";
 import {
   SideMarketsWidget,
   SymbolInfoBarFullWidget,
 } from "@orderly.network/markets";
-import { SwitchLayout } from "../../components/desktop/layout/switchLayout";
-import { SplitLayout } from "../../components/desktop/layout/splitLayout";
-import { RemovablePanel } from "../../components/desktop/layout/removablePanel";
+import { Box, cn, Flex } from "@orderly.network/ui";
 import { OrderEntryWidget } from "@orderly.network/ui-order-entry";
+import { TradingviewWidget } from "@orderly.network/ui-tradingview";
+import { AssetViewWidget } from "../../components/desktop/assetView";
+import { DataListWidget } from "../../components/desktop/dataList";
+import { RemovablePanel } from "../../components/desktop/layout/removablePanel";
+import { SplitLayout } from "../../components/desktop/layout/splitLayout";
+import { SwitchLayout } from "../../components/desktop/layout/switchLayout";
+import { OrderBookAndTradesWidget } from "../../components/desktop/orderBookAndTrades";
+import { RiskRateWidget } from "../../components/desktop/riskRate";
+import {
+  dataListInitialHeight,
+  getOffsetSizeNum,
+  TradingState,
+} from "./trading.script";
 import {
   scrollBarWidth,
   topBarHeight,
@@ -66,11 +70,9 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
   } = props;
 
   const minScreenHeight =
-    topBarHeight +
-    bottomBarHeight +
     symbolInfoBarHeight +
-    orderbookMinHeight +
-    dataListMinHeight +
+    orderbookMaxHeight +
+    dataListInitialHeight +
     space * 4;
 
   const minScreenHeightSM =
@@ -184,8 +186,13 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
     <Box
       intensity={900}
       r="2xl"
-      p={3}
-      style={{ height: dataListSplitSize, minHeight: dataListMinHeight }}
+      p={2}
+      style={{
+        height: dataListSplitSize,
+        // height: `calc(100% - ${symbolInfoBarHeight}px - ${orderbookMaxHeight}px - ${space}px)`,
+        minHeight: dataListInitialHeight,
+        // minHeight: `max(${dataListMinHeight}px, calc(100vh - ${symbolInfoBarHeight}px - ${orderbookMaxHeight}px - ${space}px))`,
+      }}
       className="oui-overflow-hidden"
     >
       {dataListWidget}
@@ -221,12 +228,12 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
   ];
 
   const orderEntryWidget = positions.map(
-    (index) => assetsOrderEntryMargin[index]
+    (index) => assetsOrderEntryMargin[index],
   );
 
   const orderEntryView = (
     <Flex
-      gapY={3}
+      gapY={2}
       direction="column"
       height="100%"
       style={{
@@ -243,7 +250,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
     if (max4XL && layout === "right") {
       return (
         <Flex
-          gap={3}
+          gap={2}
           className="oui-flex-1 oui-overflow-hidden"
           style={{
             minWidth: marketsWidth + tradingViewMinWidth + space,
@@ -278,7 +285,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
     if (max4XL && layout === "left") {
       return (
         <Flex
-          gapX={3}
+          gapX={2}
           style={{
             minHeight: orderbookMinHeight,
             // maxHeight: orderbookMaxHeight,
@@ -302,7 +309,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
     <Flex
       direction="column"
       className="oui-flex-1 oui-overflow-hidden"
-      gap={3}
+      gap={2}
       style={{
         minWidth: max4XL
           ? marketsWidth + tradingViewMinWidth + orderbookMinWidth + space * 2
@@ -311,7 +318,11 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
     >
       {symbolInfoBarView}
       <SplitLayout
-        className="oui-w-full !oui-h-[calc(100%_-_54px_-_12px)]"
+        style={{
+          // height: orderbookMaxHeight + dataListInitialHeight + space,
+          maxHeight: `calc(100% - ${symbolInfoBarHeight}px - ${space}px)`,
+        }}
+        className="oui-w-full"
         mode="vertical"
         onSizeChange={setDataListSplitSize}
       >
@@ -337,20 +348,20 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
         }}
         className={cn(
           "oui-flex oui-flex-1 ",
-          "oui-min-w-[1018px] oui-h-full oui-w-full",
-          "oui-p-3",
-          props.className
+          "oui-size-full oui-min-w-[1018px]",
+          "oui-px-3 oui-py-2",
+          props.className,
         )}
         onSizeChange={setDataListSplitHeightSM}
         onDragging={props.onDataListSplitHeightDragging}
         mode="vertical"
       >
         <Flex
-          gapX={3}
+          gapX={2}
           itemAlign="stretch"
           className={cn(
             "oui-flex-1",
-            layout === "left" && "oui-flex-row-reverse"
+            layout === "left" && "oui-flex-row-reverse",
           )}
           style={{
             minHeight: Math.max(
@@ -358,7 +369,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
                 tradindviewMinHeight +
                 orderbookMinHeight +
                 space * 2,
-              props.orderEntryHeight
+              props.orderEntryHeight,
             ),
             maxHeight:
               symbolInfoBarHeight +
@@ -371,13 +382,13 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
             height="100%"
             className="oui-flex-1 oui-w-[calc(100%_-_280px_-_12px)]"
             direction="column"
-            gapY={3}
+            gapY={2}
           >
             {symbolInfoBarView}
             <Flex
               width="100%"
               height="100%"
-              gapX={3}
+              gapX={2}
               itemAlign="stretch"
               style={{
                 minHeight: tradindviewMinHeight + orderbookMinHeight + space,
@@ -385,7 +396,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
               }}
               className={cn(
                 "oui-flex-1",
-                layout === "left" && "oui-flex-row-reverse"
+                layout === "left" && "oui-flex-row-reverse",
               )}
             >
               <Box
@@ -461,7 +472,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
         <Box
           intensity={900}
           r="2xl"
-          p={3}
+          p={2}
           style={{
             height: dataListSplitHeightSM,
             minHeight: Math.max(dataListMinHeight, props.dataListHeight),
@@ -483,11 +494,11 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
       }}
       className={cn(
         props.className,
-        layout === "left" && "oui-flex-row-reverse"
+        layout === "left" && "oui-flex-row-reverse",
       )}
       width="100%"
-      p={3}
-      gap={3}
+      p={2}
+      gap={2}
     >
       {!max4XL && marketsView}
       <SplitLayout

@@ -23,6 +23,12 @@ import {
   AbstractQaVaultAddress,
   AbstractDevVaultAddress,
   AbstractMainnetUSDCAddress,
+  bscMainnetVaultAddress,
+  bscMainnetUSDCAddress,
+  bscTestnetQaVaultAddress,
+  bscTestnetUSDCAddress,
+  bscTestnetDevVaultAddress,
+  bscTestnetStagingVaultAddress,
 } from "./constants";
 import mainnetUSDCAbi from "./wallet/abis/mainnetUSDCAbi.json";
 import mainnetVaultAbi from "./wallet/abis/mainnetVaultAbi.json";
@@ -47,6 +53,8 @@ export type OrderlyContracts = {
   monadTestnetUSDCAddress?: string;
   abstractVaultAddress?: string;
   abstractUSDCAddress?: string;
+  bscVaultAddress?: string;
+  bscUSDCAddress?: string;
 };
 
 export interface IContract {
@@ -74,6 +82,8 @@ export class BaseContract implements IContract {
         solanaVaultAddress: solanaMainnetVaultAddress,
         abstractVaultAddress: abstractMainnetVaultAddress,
         abstractUSDCAddress: AbstractMainnetUSDCAddress,
+        bscVaultAddress: bscMainnetVaultAddress,
+        bscUSDCAddress: bscMainnetUSDCAddress,
       };
     }
 
@@ -83,14 +93,20 @@ export class BaseContract implements IContract {
     const monadTestnetUSDCAddress = MonadTestnetUSDCAddress;
     let abstractVaultAddress = stagingAbstractTestnetVaultAddress;
     const abstractUSDCAddress = AbstractTestnetUSDCAddress;
+    let bscVaultAddress = bscTestnetStagingVaultAddress;
+    let bscUSDCAddress = bscTestnetUSDCAddress;
     if (env === "qa") {
       solanaVaultAddress = solanaQaVaultAddress;
       verifyContractAddress = "0x50F59504D3623Ad99302835da367676d1f7E3D44";
       storyTestnetVaultAddress = "0xFeA61647309cA4624EfF3c86EEEeb76a6F3eaFf7";
       monadTestnetVaultAddress = qaMonadTestnetVaultAddress;
       abstractVaultAddress = AbstractQaVaultAddress;
+      bscVaultAddress = bscTestnetQaVaultAddress;
+      bscUSDCAddress = bscTestnetUSDCAddress;
     } else if (env === "dev") {
       abstractVaultAddress = AbstractDevVaultAddress;
+      bscVaultAddress = bscTestnetDevVaultAddress;
+      bscUSDCAddress = bscTestnetUSDCAddress;
       verifyContractAddress = "0x8794E7260517B1766fc7b55cAfcd56e6bf08600e";
     }
 
@@ -108,6 +124,8 @@ export class BaseContract implements IContract {
       monadTestnetUSDCAddress: monadTestnetUSDCAddress,
       abstractUSDCAddress: abstractUSDCAddress,
       abstractVaultAddress: abstractVaultAddress,
+      bscVaultAddress: bscVaultAddress,
+      bscUSDCAddress: bscUSDCAddress,
     };
   }
 }

@@ -3,7 +3,7 @@ import { MarketsType, useMarkets } from "@orderly.network/hooks";
 import { TableSort, usePagination } from "@orderly.network/ui";
 import { useMarketsContext } from "../../components/marketsProvider";
 import { searchBySymbol, useSort } from "../../utils";
-import { MarketsListFullWidgetProps } from "./widget";
+import { MarketsListFullWidgetProps } from "./marketsListFull.widget";
 
 export type UseMarketsListFullScriptOptions = MarketsListFullWidgetProps;
 
@@ -24,7 +24,6 @@ export const useMarketsListFullScript = (
   const { searchValue } = useMarketsContext();
 
   const { onSort, getSortedList, sort } = useSort(options.initialSort);
-  console.log("sort", sort);
 
   const dataSource = useMemo(() => {
     const searchList = searchBySymbol(data, searchValue, "base-type");

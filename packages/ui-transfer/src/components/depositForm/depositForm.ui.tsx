@@ -16,7 +16,7 @@ import { QuantityInput } from "../quantityInput";
 import { SlippageUI } from "../slippage/slippage.ui";
 import { SwapCoin } from "../swapCoin";
 import { Web3Wallet } from "../web3Wallet";
-import { UseDepositFormScriptReturn } from "./depositForm.script";
+import type { UseDepositFormScriptReturn } from "./depositForm.script";
 
 const flag = true;
 

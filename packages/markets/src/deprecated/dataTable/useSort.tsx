@@ -7,7 +7,7 @@ export function useSort(options: Pick<TableProps, "onSort" | "initialSort">) {
   const { initialSort } = options;
 
   const [sortKey, setSortKey] = useState<[string, SortOrder] | undefined>(
-    initialSort ? [initialSort.sortKey, initialSort.sort] : undefined
+    initialSort ? [initialSort.sortKey, initialSort.sort] : undefined,
   );
 
   const onSort = (key: string) => {

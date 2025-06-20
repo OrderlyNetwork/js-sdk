@@ -1,16 +1,15 @@
 import { useState } from "react";
+import { FundingTabName } from "../../../type";
 
-export type FundingTabName = "overview" | "comparison";
-
-export type UseFundingScript = ReturnType<typeof useFundingScript>;
+export type FundingScriptReturn = ReturnType<typeof useFundingScript>;
 
 export function useFundingScript() {
-  const [activeFundingTab, setActiveFundingTab] =
-    useState<FundingTabName>("overview");
+  const [activeTab, setActiveTab] = useState<FundingTabName>(
+    FundingTabName.Overview,
+  );
 
   return {
-    activeFundingTab,
-    onFundingTabChange: (value: string) =>
-      setActiveFundingTab(value as FundingTabName),
+    activeTab,
+    onTabChange: setActiveTab,
   };
 }

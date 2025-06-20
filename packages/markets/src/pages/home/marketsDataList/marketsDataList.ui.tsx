@@ -1,58 +1,16 @@
 import { useTranslation } from "@orderly.network/i18n";
-import {
-  Box,
-  CloseCircleFillIcon,
-  Input,
-  TabPanel,
-  Tabs,
-} from "@orderly.network/ui";
+import { Box, TabPanel, Tabs } from "@orderly.network/ui";
 import { FavoritesListFullWidget } from "../../../components/favoritesListFull";
 import { MarketsListFullWidget } from "../../../components/marketsListFull";
-import { useMarketsContext } from "../../../components/marketsProvider";
-import {
-  AllMarketsIcon,
-  FavoritesIcon,
-  NewListingsIcon,
-  SearchIcon,
-} from "../../../icons";
-import { UseMarketsDataListScript } from "./dataList.script";
+import { SearchInput } from "../../../components/searchInput.tsx";
+import { AllMarketsIcon, FavoritesIcon, NewListingsIcon } from "../../../icons";
+import { UseMarketsDataListScript } from "./marketsDataList.script";
 
 export type MarketsDataListProps = UseMarketsDataListScript;
 
 export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
   const { activeTab, onTabChange } = props;
   const { t } = useTranslation();
-
-  const { searchValue, onSearchValueChange, clearSearchValue } =
-    useMarketsContext();
-
-  const search = (
-    <Input
-      value={searchValue}
-      onValueChange={onSearchValueChange}
-      placeholder={t("markets.search.placeholder")}
-      className="oui-my-1 oui-w-[240px]"
-      size="sm"
-      data-testid="oui-testid-markets-searchMarket-input"
-      prefix={
-        <Box pl={3} pr={1}>
-          <SearchIcon className="oui-text-base-contrast-36" />
-        </Box>
-      }
-      suffix={
-        searchValue && (
-          <Box mr={2}>
-            <CloseCircleFillIcon
-              size={14}
-              className="oui-cursor-pointer oui-text-base-contrast-36"
-              onClick={clearSearchValue}
-            />
-          </Box>
-        )
-      }
-      autoComplete="off"
-    />
-  );
 
   return (
     <Box id="oui-markets-list" intensity={900} p={6} r="2xl">
@@ -61,7 +19,9 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
         size="xl"
         value={activeTab}
         onValueChange={onTabChange}
-        trailing={search}
+        trailing={
+          <SearchInput classNames={{ root: "oui-my-1 oui-w-[240px]" }} />
+        }
       >
         <TabPanel
           title={t("markets.favorites")}

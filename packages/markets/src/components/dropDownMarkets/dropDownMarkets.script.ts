@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
-import "../../constant";
-import { TabName } from "../../type";
+import { MarketsTabName } from "../../type";
 import { useMarketsContext } from "../marketsProvider";
 import { useTabSort } from "../shared/hooks/useTabSort";
 
@@ -19,7 +18,7 @@ export function useDropDownMarketsScript() {
 
   const [activeTab, setActiveTab] = useLocalStorage(
     DROPDOWN_MARKETS_SEL_TAB_KEY,
-    TabName.All,
+    MarketsTabName.All,
   );
 
   const { tabSort, onTabSort } = useTabSort({
@@ -37,8 +36,8 @@ export function useDropDownMarketsScript() {
   }, [activeTab]);
 
   return {
-    activeTab: activeTab as TabName,
-    onTabChange: (value: string) => setActiveTab(value as TabName),
+    activeTab: activeTab as MarketsTabName,
+    onTabChange: (value: string) => setActiveTab(value as MarketsTabName),
     open,
     onOpenChange: setOpen,
     hide,

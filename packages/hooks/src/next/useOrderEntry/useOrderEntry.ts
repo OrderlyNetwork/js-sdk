@@ -10,7 +10,7 @@ import {
   TrackerEventName,
   OrderSide,
 } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+import { Decimal, zero } from "@orderly.network/utils";
 import { useAccountInfo } from "../../orderly/appStore";
 import {
   useCollateral,
@@ -262,8 +262,10 @@ const useOrderEntry = (
     const { order_quantity, side } = formattedOrder;
 
     // const avgExecutionPrice = orderBook;
-    let avgExecutionPrice: number | undefined;
+    let avgExecutionPrice: Decimal | undefined;
     let book: any;
+    const filledBorders: number[][] = [];
+    let orderQuantity = new Decimal(order_quantity);
 
     if (side === OrderSide.BUY) {
       book = orderBook.asks.reverse();
@@ -273,17 +275,37 @@ const useOrderEntry = (
 
     for (let i = 0; i < book.length; i++) {
       // console.log(book[i]);
+      // const price = book[i][0];
+      // const quantity = book[i][2];
+      // if (quantity >= order_quantity) {
+      //   avgExecutionPrice = price;
+      //   break;
+      // }
       const price = book[i][0];
-      const quantity = book[i][2];
-      if (quantity >= order_quantity) {
-        avgExecutionPrice = price;
+      const quantity = book[i][1];
+      if (isNaN(price) || isNaN(quantity)) {
+        continue;
+      }
+      if (orderQuantity.gt(quantity)) {
+        orderQuantity = orderQuantity.minus(quantity);
+        filledBorders.push([price, quantity]);
+      } else {
+        filledBorders.push([price, orderQuantity.toNumber()]);
         break;
       }
     }
 
+    if (filledBorders.length > 0) {
+      const sumPrice = filledBorders.reduce((acc, curr) => {
+        return acc.plus(new Decimal(curr[0]).mul(curr[1]));
+      }, zero);
+
+      avgExecutionPrice = sumPrice.div(order_quantity);
+    }
+
     if (avgExecutionPrice) {
       const bestPrice = book[0][0];
-      const estSlippage = new Decimal(avgExecutionPrice)
+      const estSlippage = avgExecutionPrice
         .minus(bestPrice)
         .abs()
         .div(bestPrice)
