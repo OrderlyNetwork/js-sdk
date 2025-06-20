@@ -240,7 +240,10 @@ async function getRepoPath() {
  * if not provide token, if will use ~/.npmrc file config
  * */
 async function authNPM() {
-  const registry = npm.registry!.replace("http://", "").replace("https://", "");
+  // if not provide registry, use npmjs.org
+  const registry = (npm.registry || "https://registry.npmjs.org")
+    .replace("http://", "")
+    .replace("https://", "");
   const content = `\n//${registry}/:_authToken="${npm.token}"`;
   await $`echo ${content} >> .npmrc`;
 }
