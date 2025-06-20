@@ -72,7 +72,7 @@ export async function addOrderlyKeyMessage(
   const message = {
     brokerId,
     orderlyKey: publicKey,
-    scope: scope || "read,trading",
+    scope: scope || "read,trading,asset",
     chainId,
     timestamp,
     // chainType,

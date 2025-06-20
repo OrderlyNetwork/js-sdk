@@ -22,11 +22,11 @@ export const HistoryDataGroupMobile = (props: {
         tabsList: "oui-px-3 oui-py-2",
       }}
     >
-      <TabPanel
-        title={t("portfolio.overview.deposits&Withdrawals")}
-        value={"deposit"}
-      >
-        <AssetHistoryWidget />
+      <TabPanel title={t("common.deposits")} value={"deposit"}>
+        <AssetHistoryWidget side="deposit" />
+      </TabPanel>
+      <TabPanel title={t("common.withdrawals")} value={"withdraw"}>
+        <AssetHistoryWidget side="withdraw" />
       </TabPanel>
       <TabPanel title={t("common.funding")} value={"funding"}>
         <FundingHistoryWidget />

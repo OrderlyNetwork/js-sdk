@@ -41,6 +41,7 @@ export const useTransferHistoryHook = () => {
     side: side,
     size: pageSize,
     page: page,
+    main_sub_only: true,
   });
 
   const filteredData = React.useMemo(() => {

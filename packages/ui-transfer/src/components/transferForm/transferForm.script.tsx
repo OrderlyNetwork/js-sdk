@@ -11,6 +11,7 @@ import { API, NetworkId } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { InputStatus } from "../../types";
+import { getTransferErrorMessage } from "../../utils";
 import { useSettlePnl } from "../unsettlePnlInfo/useSettlePnl";
 
 export type TransferFormScriptReturn = ReturnType<typeof useTransferFormScript>;
@@ -123,15 +124,8 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
       })
       .catch((err) => {
         console.log("transfer error: ", err);
-        if (err.code === 34) {
-          toast.error(t("transfer.internalTransfer.failed.transferInProgress"));
-        } else if (err.code === 17) {
-          toast.error(
-            t("transfer.internalTransfer.failed.withdrawalInProgress"),
-          );
-        } else {
-          toast.error(t("transfer.internalTransfer.failed"));
-        }
+        const errorMsg = getTransferErrorMessage(err.code);
+        toast.error(errorMsg);
       });
   }, [t, token, quantity, submitting, transfer, toAccount]);
 

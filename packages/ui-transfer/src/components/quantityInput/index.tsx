@@ -12,6 +12,7 @@ import {
   Flex,
   inputFormatter,
   Spinner,
+  InputFormatter,
 } from "@orderly.network/ui";
 import { InputStatus } from "../../types";
 import { TokenOption } from "./tokenOption";
@@ -27,6 +28,7 @@ export type QuantityInputProps = {
   fetchBalance?: (token: string, decimals: number) => Promise<any>;
   loading?: boolean;
   testId?: string;
+  formatters?: InputFormatter[];
 } & Omit<InputProps, "onClear" | "suffix" | "onValueChange">;
 
 export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
@@ -44,6 +46,7 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
       onTokenChange,
       loading,
       placeholder,
+      formatters,
       ...rest
     } = props;
 
@@ -173,11 +176,13 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
           onValueChange={(value) => {
             onValueChange?.(value);
           }}
-          formatters={[
-            inputFormatter.numberFormatter,
-            inputFormatter.dpFormatter(token?.precision ?? 2),
-            inputFormatter.currencyFormatter,
-          ]}
+          formatters={
+            formatters || [
+              inputFormatter.numberFormatter,
+              inputFormatter.dpFormatter(token?.precision ?? 2),
+              inputFormatter.currencyFormatter,
+            ]
+          }
           {...rest}
           classNames={{
             ...classNames,

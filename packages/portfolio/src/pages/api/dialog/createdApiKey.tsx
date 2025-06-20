@@ -51,7 +51,7 @@ export const CreatedAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
       }}
     >
       <Flex direction={"column"} gap={4} itemAlign={"start"}>
-        <Statistic label={t("portfolio.apiKey.accountId")}>
+        <Statistic label={t("common.accountId")}>
           <Text.formatted
             size="sm"
             intensity={80}

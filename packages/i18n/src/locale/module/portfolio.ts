@@ -12,7 +12,6 @@ export const portfolio = {
   "portfolio.overview.performance.dailyPnl": "Daily PnL",
   "portfolio.overview.performance.cumulativePnl": "Cumulative PnL",
 
-  "portfolio.overview.deposits&Withdrawals": "Deposits & Withdrawals",
   "portfolio.overview.distribution": "Distribution",
   "portfolio.overview.transferHistory": "Transfer history",
 
@@ -42,8 +41,6 @@ export const portfolio = {
   "portfolio.feeTier.column.30dVolume.above": "Above {{volume}}",
   "portfolio.feeTier.column.maker": "Maker",
   "portfolio.feeTier.column.taker": "Taker",
-
-  "portfolio.apiKey.accountId": "Account ID",
   "portfolio.apiKey.accountId.copied": "Account id copied",
   "portfolio.apiKey.uid": "UID",
   "portfolio.apiKey.secretKey": "Secret key",

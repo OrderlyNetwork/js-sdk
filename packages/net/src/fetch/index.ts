@@ -28,9 +28,10 @@ async function request(url: string, options: RequestInit) {
       if (response.status === 400) {
         throw new ApiError(
           errorMsg.message || errorMsg.code || response.statusText,
-          errorMsg.code
+          errorMsg.code,
         );
       }
+      // TODO: throw error code
       throw new Error(errorMsg.message || errorMsg.code || response.statusText);
     } catch (e) {
       throw e;
@@ -42,7 +43,7 @@ async function request(url: string, options: RequestInit) {
 
 function _createHeaders(
   headers: HeadersInit = {},
-  method?: string
+  method?: string,
 ): HeadersInit {
   //
   const _headers = new Headers(headers);
@@ -62,7 +63,7 @@ function _createHeaders(
 async function get<R>(
   url: string,
   options?: RequestInit,
-  formatter?: (data: any) => R
+  formatter?: (data: any) => R,
 ): Promise<R> {
   const res = await request(url, {
     method: "GET",
@@ -84,7 +85,7 @@ async function get<R>(
 async function post(
   url: string,
   data: any,
-  options?: Omit<RequestInit, "method">
+  options?: Omit<RequestInit, "method">,
 ): Promise<any> {
   const res = await request(url, {
     method: "POST",
@@ -98,7 +99,7 @@ async function post(
 async function put(
   url: string,
   data: any,
-  options?: Omit<RequestInit, "method">
+  options?: Omit<RequestInit, "method">,
 ): Promise<any> {
   const res = await request(url, {
     method: "PUT",
@@ -111,7 +112,7 @@ async function put(
 
 async function del(
   url: string,
-  options?: Omit<RequestInit, "method">
+  options?: Omit<RequestInit, "method">,
 ): Promise<any> {
   const res = await request(url, {
     method: "DELETE",
