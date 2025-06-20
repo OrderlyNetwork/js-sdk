@@ -4,8 +4,11 @@ export const connector = {
 
   "connector.disconnect": "Disconnect",
   "connector.connectWallet": "Connect wallet",
-  "connector.signIn": "Sign in",
-  "connector.signIn.description": "Confirm you are the owner of this wallet",
+  // "connector.signIn": "Sign in",
+  // "connector.signIn.description": "Confirm you are the owner of this wallet",
+  "connector.createAccount": "Create account",
+  "connector.createAccount.description":
+    "Confirm wallet ownership to create an account",
   "connector.enableTrading": "Enable trading",
   "connector.enableTrading.description":
     "Enable secure access to our API for lightning fast trading",
@@ -36,13 +39,17 @@ export const connector = {
 
   "connector.trade.connectWallet.tooltip":
     "Please connect wallet before starting to trade",
-  "connector.trade.signIn.tooltip": "Please sign in before starting to trade",
+  // "connector.trade.signIn.tooltip": "Please sign in before starting to trade",
+  "connector.trade.createAccount.tooltip":
+    "Please create account before starting to trade",
   "connector.trade.enableTrading.tooltip":
     "Please enable trading before starting to trade",
 
   "connector.setUp.connectWallet.tooltip":
     "Please connect wallet before set up",
-  "connector.setUp.signIn.tooltip": "Please sign in before set up",
+  // "connector.setUp.signIn.tooltip": "Please sign in before set up",
+  "connector.setUp.createAccount.tooltip":
+    "Please create account before set up",
   "connector.setUp.enableTrading.tooltip":
     "Please enable trading before set up",
 

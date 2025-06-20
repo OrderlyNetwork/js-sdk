@@ -69,8 +69,10 @@ export const portfolio = {
 
   "portfolio.apiKey.create.connectWallet.tooltip":
     "Please connect wallet before create API key",
-  "portfolio.apiKey.create.signIn.tooltip":
-    "Please sign in before create API key",
+  // "portfolio.apiKey.create.signIn.tooltip":
+  //   "Please sign in before create API key",
+  "portfolio.apiKey.create.createAccount.tooltip":
+    "Please create account before create API key",
   "portfolio.apiKey.create.enableTrading.tooltip":
     "Please enable trading before create API key",
   "portfolio.apiKey.create.wrongNetwork.tooltip":
