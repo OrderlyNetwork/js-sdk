@@ -1,5 +1,12 @@
 # eslint-config-custom
 
+## 1.3.0
+
+### Minor Changes
+
+- publish
+- 4e5f109: publish
+
 ## 1.3.0-alpha.0
 
 ### Minor Changes

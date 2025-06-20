@@ -1,5 +1,23 @@
 # @orderly.network/ui-tpsl
 
+## 2.3.0
+
+### Minor Changes
+
+- publish
+- 4e5f109: publish
+
+### Patch Changes
+
+- Updated dependencies
+- Updated dependencies [4e5f109]
+  - @orderly.network/react-app@2.3.0
+  - @orderly.network/hooks@2.3.0
+  - @orderly.network/i18n@2.3.0
+  - @orderly.network/types@2.3.0
+  - @orderly.network/ui@2.3.0
+  - @orderly.network/utils@2.3.0
+
 ## 2.3.0-alpha.0
 
 ### Minor Changes
