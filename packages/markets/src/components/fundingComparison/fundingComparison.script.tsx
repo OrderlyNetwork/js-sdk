@@ -13,7 +13,7 @@ function getOpenInterest(open_interest?: number, index_price?: number) {
   return new Decimal(open_interest || 0).mul(index_price || 0).toNumber();
 }
 
-const baseEX = "WOOFi Pro";
+export const baseEX = "WOOFi Pro";
 
 export const exchanges = [
   baseEX,
