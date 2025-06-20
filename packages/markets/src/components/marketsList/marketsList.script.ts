@@ -1,19 +1,19 @@
 import { useEffect, useMemo, useState } from "react";
 import { MarketsType, useMarkets } from "@orderly.network/hooks";
-import { TabName } from "../../type";
+import { MarketsTabName } from "../../type";
 import { searchBySymbol, useSort } from "../../utils";
 import { useMarketsContext } from "../marketsProvider";
-import { type MarketsListWidgetProps } from "./widget";
+import { type MarketsListWidgetProps } from "./marketsList.widget";
 
 export type MarketsListScriptOptions = MarketsListWidgetProps;
 
 export type MarketsListScriiptReturn = ReturnType<typeof useMarketsListScript>;
 
 const MarketsTypeMap = {
-  [TabName.All]: MarketsType.ALL,
-  [TabName.Favorites]: MarketsType.FAVORITES,
-  [TabName.Recent]: MarketsType.RECENT,
-  [TabName.NewListing]: MarketsType.NEW_LISTING,
+  [MarketsTabName.All]: MarketsType.ALL,
+  [MarketsTabName.Favorites]: MarketsType.FAVORITES,
+  [MarketsTabName.Recent]: MarketsType.RECENT,
+  [MarketsTabName.NewListing]: MarketsType.NEW_LISTING,
 };
 
 export const useMarketsListScript = (options: MarketsListScriptOptions) => {
@@ -52,7 +52,7 @@ export const useMarketsListScript = (options: MarketsListScriptOptions) => {
     setLoading(false);
   }, [data]);
 
-  const isFavoritesList = options.type === TabName.Favorites;
+  const isFavoritesList = options.type === MarketsTabName.Favorites;
 
   return {
     loading,

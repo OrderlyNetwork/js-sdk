@@ -1,28 +1,44 @@
 import { useMemo } from "react";
 import { account } from "@orderly.network/perp";
-import { useMarkPricesStream } from "./useMarkPricesStream";
-import { useCollateral } from "./useCollateral";
-import { zero } from "@orderly.network/utils";
-import { usePositionStore } from "./usePositionStream/usePosition.store";
-import { useAccount } from "../useAccount";
 import { AccountStatusEnum } from "@orderly.network/types";
+import { zero } from "@orderly.network/utils";
+import { useAccount } from "../useAccount";
+import { useCollateral } from "./useCollateral";
+import { useMarkPricesStream } from "./useMarkPricesStream";
+import { usePositionStore } from "./usePositionStream/usePosition.store";
 
+/**
+ * The return type of useMarginRatio hook
+ */
 export type MarginRatioReturn = {
-  // Margin Ratio
-  marginRatio: number;
-  // Current Leverage
+  /**
+   * Current leverage of the account, null if trading is not enabled
+   */
   currentLeverage: number | null;
-  // account margin ratio, if user has no position, return null
+  /**
+   * Current margin ratio of the account
+   */
+  marginRatio: number;
+  /**
+   * Maintenance margin ratio (MMR) of the account, null if user has no positions
+   */
   mmr: number | null;
 };
 
+/**
+ * Hook to calculate and monitor account's margin ratio, leverage, and maintenance margin ratio (MMR)
+ * @example
+ * ```typescript
+ * const { marginRatio, currentLeverage, mmr } = useMarginRatio();
+ * ```
+ */
 export const useMarginRatio = (): MarginRatioReturn => {
   // const [{ rows, aggregated }] = usePositionStream();
 
   const positions = usePositionStore((state) => state.positions.all);
 
-  const { rows } = positions;
-  const { notional } = positions;
+  const { rows, notional } = positions;
+
   const { state } = useAccount();
 
   const { data: markPrices } = useMarkPricesStream();
@@ -31,6 +47,10 @@ export const useMarginRatio = (): MarginRatioReturn => {
   //
 
   const { totalCollateral } = useCollateral();
+
+  /**
+   * Calculate the total margin ratio based on collateral, mark prices and positions
+   */
   const marginRatio = useMemo(() => {
     if (!rows || !markPrices || !totalCollateral || rows.length === 0) {
       return 0;
@@ -43,6 +63,10 @@ export const useMarginRatio = (): MarginRatioReturn => {
     });
   }, [rows, markPrices, totalCollateral]);
 
+  /**
+   * Calculate current leverage based on margin ratio
+   * Returns null if trading is not enabled
+   */
   const currentLeverage = useMemo(() => {
     if (
       state.status >= AccountStatusEnum.EnableTrading ||
@@ -54,9 +78,14 @@ export const useMarginRatio = (): MarginRatioReturn => {
     return null;
   }, [marginRatio, state.status]);
 
-  // MMR
+  /**
+   * Calculate maintenance margin ratio (MMR) based on positions
+   * Returns null if user has no positions
+   */
   const mmr = useMemo<number | null>(() => {
-    if (!rows || rows.length <= 0 || notional == null) return null;
+    if (!rows || rows.length <= 0 || notional == null) {
+      return null;
+    }
     let positionsMM = zero;
     // const positionsNotional = positions.totalNotional(rows);
 

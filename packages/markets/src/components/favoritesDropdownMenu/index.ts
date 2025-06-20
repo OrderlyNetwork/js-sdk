@@ -1,3 +1,3 @@
 export { FavoritesDropdownMenu } from "./favoritesDropdownMenu.ui";
 export { useFavoritesDropdownMenuScript } from "./favoritesDropdownMenu.script";
-export { FavoritesDropdownMenuWidget } from "./widget";
+export { FavoritesDropdownMenuWidget } from "./favoritesDropdownMenu.widget";

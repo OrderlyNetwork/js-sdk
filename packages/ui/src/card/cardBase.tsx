@@ -1,8 +1,8 @@
 import React from "react";
-import type { ComponentPropsWithout } from "../helpers/component-props";
 import { cnBase, type VariantProps } from "tailwind-variants";
-import { tv } from "../utils/tv";
+import type { ComponentPropsWithout } from "../helpers/component-props";
 import { decorationVariants } from "../layout/decoration";
+import { tv } from "../utils/tv";
 
 const cardVariants = tv({
   base: [
@@ -22,82 +22,97 @@ const cardVariants = tv({
   },
 });
 
-export type BaseCardProps = ComponentPropsWithout<"div", "color"> &
+export type BaseCardProps = ComponentPropsWithout<"div", "color" | "title"> &
   VariantProps<typeof cardVariants>;
 
 const CardBase = React.forwardRef<HTMLDivElement, BaseCardProps>(
-  ({ className, intensity, ...props }, ref) => {
+  ({ className, intensity, children, ...props }, ref) => {
     return (
       <div
         ref={ref}
         className={cardVariants({ intensity, className })}
         {...props}
-      />
+      >
+        {children}
+      </div>
     );
-  }
+  },
 );
+
 CardBase.displayName = "CardBase";
 
 const CardHeader = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
+>(({ className, children, ...props }, ref) => (
   <div
     ref={ref}
     className={cnBase(
       "oui-card-header oui-flex oui-flex-col oui-space-y-1.5",
-      className
+      className,
     )}
     {...props}
-  />
+  >
+    {children}
+  </div>
 ));
 CardHeader.displayName = "CardHeader";
 
 const CardTitle = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLHeadingElement>
->(({ className, ...props }, ref) => (
+>(({ className, children, ...props }, ref) => (
   <h3
     ref={ref}
     className={cnBase(
-      "oui-card-header-title oui-font-semibold oui-leading-none oui-tracking-tight oui-text-lg",
-      className
+      "oui-card-header-title oui-text-lg oui-font-semibold oui-leading-none oui-tracking-tight",
+      className,
     )}
     {...props}
-  />
+  >
+    {children}
+  </h3>
 ));
+
 CardTitle.displayName = "CardTitle";
 
 const CardDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
->(({ className, ...props }, ref) => (
+>(({ className, children, ...props }, ref) => (
   <p
     ref={ref}
-    className={cnBase("oui-text-sm oui-text-muted-foreground", className)}
+    className={cnBase("oui-text-muted-foreground oui-text-sm", className)}
     {...props}
-  />
+  >
+    {children}
+  </p>
 ));
-CardDescription.displayName = "CardDescription";
 
 const CardContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
+>(({ className, children, ...props }, ref) => (
   <div
     ref={ref}
     className={cnBase("oui-card-content oui-pt-4", className)}
     {...props}
-  />
+  >
+    {children}
+  </div>
 ));
+
 CardContent.displayName = "CardContent";
 
 const CardFooter = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div ref={ref} className={className} {...props} />
+>(({ className, children, ...props }, ref) => (
+  <div ref={ref} className={className} {...props}>
+    {children}
+  </div>
 ));
+
 CardFooter.displayName = "CardFooter";
 
 export {

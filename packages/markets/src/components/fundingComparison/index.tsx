@@ -1,3 +1,3 @@
 export { FundingComparison } from "./fundingComparison.ui";
 export { useFundingComparisonScript } from "./fundingComparison.script";
-export { FundingComparisonWidget } from "./widget";
+export { FundingComparisonWidget } from "./fundingComparison.widget";

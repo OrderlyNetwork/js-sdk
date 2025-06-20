@@ -1,4 +1,5 @@
 import { FC, ReactNode, useCallback, useEffect, useState } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import {
   Box,
   Flex,
@@ -10,7 +11,6 @@ import {
 } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { useFeeTierScriptReturn } from "./feeTier.script";
-import { useTranslation } from "@orderly.network/i18n";
 
 export type FeeTierProps = useFeeTierScriptReturn;
 
@@ -19,7 +19,6 @@ export const FeeTier: React.FC<FeeTierProps> = (props) => {
   const { t } = useTranslation();
   return (
     <Card
-      // @ts-ignore
       title={
         <Flex justify={"between"}>
           <Text size="lg">{t("portfolio.feeTier")}</Text>
@@ -130,7 +129,7 @@ export const FeeTierHeaderItem: React.FC<FeeTierHeaderItemProps> = (props) => {
       <Text
         size="base"
         intensity={80}
-        className="oui-leading-[24px] oui-mt-[2px]"
+        className="oui-mt-[2px] oui-leading-[24px]"
       >
         {props.value}
       </Text>
@@ -147,7 +146,7 @@ type FeeTierTableProps = {
   tier?: number | null;
   onRow?: (
     record: any,
-    index: number
+    index: number,
   ) => {
     normal: any;
     active: any;
@@ -197,19 +196,19 @@ export const FeeTierTable: FC<FeeTierTableProps> = (props) => {
         ...config.normal,
       };
     },
-    [props.tier, props.onRow]
+    [props.tier, props.onRow],
   );
 
   return (
     <Box
       id="oui-fee-tier-content"
-      className="oui-border-b oui-border-line-4 oui-relative"
+      className="oui-relative oui-border-b oui-border-line-4"
     >
       {top && (
         <Box
           angle={90}
           gradient="brand"
-          className="oui-rounded-md oui-absolute oui-w-full"
+          className="oui-absolute oui-w-full oui-rounded-md"
           style={{
             top: `${top}px`,
             height: "48px",

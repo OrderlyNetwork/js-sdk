@@ -1,6 +1,8 @@
 import { FC } from "react";
 import { cn, Divider, Flex, Grid } from "@orderly.network/ui";
-import { PositionCellState } from "./positionCell.script";
+import { LimitCloseBtnWidget } from "../limitCloseBtn";
+import { MarketCloseBtnWidget } from "../marketCloseBtn";
+import { TpSLBtnWidget } from "../tpSLBtn";
 import {
   UnrealPnL,
   SymbolToken,
@@ -11,10 +13,9 @@ import {
   MarkPrice,
   LiqPrice,
   TPSLPrice,
+  FundingFee,
 } from "./items";
-import { LimitCloseBtnWidget } from "../limitCloseBtn";
-import { MarketCloseBtnWidget } from "../marketCloseBtn";
-import { TpSLBtnWidget } from "../tpSLBtn";
+import { PositionCellState } from "./positionCell.script";
 
 export const PositionCell: FC<
   PositionCellState & {
@@ -36,6 +37,7 @@ export const PositionCell: FC<
       <Divider intensity={6} className="oui-w-full" />
       <Body {...rest} />
       <TPSLPrice {...rest} />
+      <FundingFee {...rest} />
       <Buttons {...rest} />
     </Flex>
   );

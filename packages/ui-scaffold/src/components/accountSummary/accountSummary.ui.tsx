@@ -1,4 +1,5 @@
 import React, { FC, PropsWithChildren, useEffect } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import {
   Box,
   EyeCloseIcon,
@@ -7,12 +8,11 @@ import {
   Popover,
   Text,
 } from "@orderly.network/ui";
-import { useTranslation } from "@orderly.network/i18n";
 
 type AccountSummaryUi = {
   totalValue: number | null;
   freeCollateral: number | null;
-  maxLeverage: number | null;
+  maxLeverage?: number | null;
   currentLeverage: number | null;
   unrealized_pnl_ROI: number | null;
   unrealPnL: number | null;
@@ -172,7 +172,7 @@ const CurrentLeverage: FC<{
 
 //----------------- MaxLeverage -----------------
 const MaxLeverage: FC<{
-  maxLeverage: number | null;
+  maxLeverage?: number | null;
 }> = (props) => {
   const { t } = useTranslation();
 
@@ -255,7 +255,7 @@ const UnrealPnL: FC<{
 const AccountInfoPopover = (props: {
   totalValue: number | null;
   freeCollateral: number | null;
-  maxLeverage: number | null;
+  maxLeverage?: number | null;
   currentLeverage: number | null;
   unrealPnL: number | null;
   unrealized_pnl_ROI: number | null;
@@ -496,16 +496,18 @@ export const AccountSummary = (props: AccountSummaryUi) => {
     const resizeObserver = new ResizeObserver((entries) => {
       if (Array.isArray(entries) && entries.length > 0) {
         const width = entries[0].contentRect.width;
-        if (width > 1440) {
+        if (width > 1556) {
           sizeRef.current = 5;
-        } else if (width > 1366) {
+        } else if (width > 1480) {
           sizeRef.current = 4;
-        } else if (width > 1280) {
+        } else if (width > 1366) {
           sizeRef.current = 3;
-        } else if (width > 1140) {
+        } else if (width > 1280) {
           sizeRef.current = 2;
-        } else {
+        } else if (width > 1180) {
           sizeRef.current = 1;
+        } else {
+          sizeRef.current = 0;
         }
       }
     });
@@ -517,7 +519,7 @@ export const AccountSummary = (props: AccountSummaryUi) => {
     };
   }, []);
 
-  let elements = keys.slice(0, sizeRef.current).map((key, index) => {
+  const elements = keys.slice(0, sizeRef.current).map((key, index) => {
     switch (key) {
       case "freeCollateral": {
         return (

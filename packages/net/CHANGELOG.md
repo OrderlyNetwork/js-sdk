@@ -1,5 +1,18 @@
 # @orderly.network/net
 
+## 2.3.0
+
+### Minor Changes
+
+- publish
+- 4e5f109: publish
+
+## 2.3.0-alpha.0
+
+### Minor Changes
+
+- publish
+
 ## 2.2.0
 
 ### Minor Changes

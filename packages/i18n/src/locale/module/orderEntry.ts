@@ -66,6 +66,15 @@ export const orderEntry = {
 
   "orderEntry.total.error.min":
     "The order value should be greater or equal to {{value}} USDC",
+
+  "orderEntry.slippage": "Slippage",
+  "orderEntry.slippage.est": "Est",
+  "orderEntry.slippage.tips":
+    "Your transaction will revert if the price changs unfavorably by more than this percentage.",
+  "orderEntry.slippage.error.exceed":
+    "The current input value cannot exceed 3%",
+  "orderEntry.slippage.error.max":
+    "Estimated slippage exceeds your maximum allowed slippage.",
 };
 
 export type OrderEntry = typeof orderEntry;

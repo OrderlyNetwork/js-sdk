@@ -1,12 +1,26 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import React from "react";
+import { useAccount } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
+import {
+  Flex,
+  Text,
+  Divider,
+  Box,
+  Tabs,
+  TabPanel,
+  DataFilter,
+  formatAddress,
+} from "@orderly.network/ui";
 import {
   LiquidationWidget,
   PositionHistoryWidget,
   PositionsProps,
+  CombinePositionsWidget,
   PositionsWidget,
 } from "@orderly.network/ui-positions";
-import { Flex, Text, Divider, Box, Tabs, TabPanel } from "@orderly.network/ui";
-import { useTranslation } from "@orderly.network/i18n";
+import type { SelectOption } from "@orderly.network/ui/src/select/withOptions";
+import { AccountType } from "../assets/assets.ui";
 
 enum TabsType {
   positions = "Positions",
@@ -14,9 +28,48 @@ enum TabsType {
   liquidation = "Liquidation",
 }
 
-export const PositionsPage = (props: PositionsProps) => {
+export const PositionsPage: React.FC<PositionsProps> = (props) => {
   const [tab, setTab] = useState(TabsType.positions);
   const { t } = useTranslation();
+  const { state, isMainAccount } = useAccount();
+
+  const subAccounts = state.subAccounts ?? [];
+
+  const [selectedAccount, setAccount] = React.useState<string>(AccountType.ALL);
+
+  const onAccountFilter = React.useCallback(
+    (filter: { name: string; value: string }) => {
+      const { name, value } = filter;
+      if (name === "account") {
+        setAccount(value);
+      }
+    },
+    [],
+  );
+
+  const ALL_ACCOUNTS: SelectOption = {
+    label: t("common.allAccount"),
+    value: AccountType.ALL,
+  };
+
+  const MAIN_ACCOUNT: SelectOption = {
+    label: t("common.mainAccount"),
+    value: AccountType.MAIN,
+  };
+
+  const memoizedOptions = useMemo(() => {
+    if (Array.isArray(subAccounts) && subAccounts.length) {
+      return [
+        ALL_ACCOUNTS,
+        MAIN_ACCOUNT,
+        ...subAccounts.map<SelectOption>((value) => ({
+          value: value.id,
+          label: value?.description || formatAddress(value?.id),
+        })),
+      ];
+    }
+    return [ALL_ACCOUNTS, MAIN_ACCOUNT];
+  }, [subAccounts]);
 
   return (
     <Flex
@@ -43,7 +96,27 @@ export const PositionsPage = (props: PositionsProps) => {
           className="oui-h-full"
         >
           <TabPanel value={TabsType.positions} title={t("common.positions")}>
-            <PositionsWidget {...props} />
+            {isMainAccount && (
+              <DataFilter
+                onFilter={onAccountFilter}
+                items={[
+                  {
+                    type: "select",
+                    name: "account",
+                    value: selectedAccount,
+                    options: memoizedOptions,
+                  },
+                ]}
+              />
+            )}
+            {isMainAccount ? (
+              <CombinePositionsWidget
+                selectedAccount={selectedAccount}
+                {...props}
+              />
+            ) : (
+              <PositionsWidget {...props} />
+            )}
           </TabPanel>
           <TabPanel
             value={TabsType.positionHistory}

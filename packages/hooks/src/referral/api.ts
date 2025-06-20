@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export declare namespace RefferalAPI {
   export interface ReferralInfo {
     referrer_info: Referrer;
@@ -11,6 +12,12 @@ export declare namespace RefferalAPI {
     referrer_rebate_rate: number;
     total_invites: number;
     total_traded: number;
+  };
+
+  export type AutoGenerateCode = {
+    code: string;
+    requireVolume: number;
+    completedVolume: number;
   };
 
   export type Referrer = {

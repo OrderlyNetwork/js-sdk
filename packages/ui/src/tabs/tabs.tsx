@@ -9,6 +9,10 @@ import React, {
   ReactElement,
 } from "react";
 import * as TabsPrimitive from "@radix-ui/react-tabs";
+import { cnBase, VariantProps } from "tailwind-variants";
+import { Flex } from "../flex";
+import { useOrderlyTheme } from "../provider/orderlyThemeProvider";
+import { ScrollIndicator } from "../scrollIndicator";
 import {
   TabsBase,
   TabsList,
@@ -16,10 +20,6 @@ import {
   TabsTrigger,
   tabsVariants,
 } from "./tabsBase";
-import { Flex } from "../flex";
-import { cnBase, VariantProps } from "tailwind-variants";
-import { useOrderlyTheme } from "../provider/orderlyThemeProvider";
-import { ScrollIndicator } from "../scrollIndicator";
 
 type tabConfig = {
   title: ReactNode;
@@ -45,9 +45,11 @@ type TabsProps<T = string> = {
   leading?: ReactNode;
   trailing?: ReactNode;
   classNames?: {
+    tabsListContainer?: string;
     tabsList?: string;
     tabsContent?: string;
     scrollIndicator?: string;
+    trigger?: string;
   };
   contentVisible?: boolean;
   showScrollIndicator?: boolean;
@@ -63,7 +65,13 @@ const Tabs: FC<TabsProps> = (props) => {
     showScrollIndicator,
     ...rest
   } = props;
-  const tabsOverrides = getComponentTheme("tabs", { variant: "contained" });
+
+  const tabsOverrides = getComponentTheme("tabs", {
+    variant: "contained",
+  });
+
+  const tabsVariant = variant || tabsOverrides.variant;
+
   // const { value, onChange, defaultValue } = props;
   const [tabList, setTabList] = useState<{ [key: string]: tabConfig }>({});
 
@@ -79,12 +87,9 @@ const Tabs: FC<TabsProps> = (props) => {
   const renderTabsList = () => {
     const tabsList = (
       <TabsList
-        variant={tabsOverrides.variant!}
+        variant={tabsVariant}
         size={rest.size}
-        className={cnBase(
-          "oui-flex-1 oui-border-0",
-          props.classNames?.tabsList
-        )}
+        className={cnBase("oui-flex-1 oui-border-0", classNames?.tabsList)}
       >
         {Object.keys(tabList).map((key) => {
           const tab = tabList[key];
@@ -93,9 +98,10 @@ const Tabs: FC<TabsProps> = (props) => {
               key={key}
               value={tab.value}
               icon={tab.icon}
-              variant={tabsOverrides.variant}
+              variant={tabsVariant}
               size={rest.size}
               data-testid={tab.testid}
+              className={classNames?.trigger}
             >
               {tab.title}
             </TabsTrigger>
@@ -106,7 +112,7 @@ const Tabs: FC<TabsProps> = (props) => {
 
     if (showScrollIndicator) {
       return (
-        <ScrollIndicator className={props.classNames?.scrollIndicator}>
+        <ScrollIndicator className={classNames?.scrollIndicator}>
           {tabsList}
         </ScrollIndicator>
       );
@@ -128,8 +134,8 @@ const Tabs: FC<TabsProps> = (props) => {
           itemAlign="center"
           width="100%"
           className={cnBase(
-            tabsOverrides.variant !== "contained" &&
-              "oui-border-b oui-border-b-line-6"
+            tabsVariant !== "contained" && "oui-border-b oui-border-b-line-6",
+            classNames?.tabsListContainer,
           )}
         >
           {props.leading}
@@ -144,7 +150,7 @@ const Tabs: FC<TabsProps> = (props) => {
               <TabsContent
                 key={key}
                 value={tab.value}
-                className={props.classNames?.tabsContent}
+                className={classNames?.tabsContent}
               >
                 {tab.content}
               </TabsContent>

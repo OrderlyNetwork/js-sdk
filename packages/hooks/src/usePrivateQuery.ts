@@ -1,8 +1,9 @@
-import useSWR, { SWRResponse } from "swr";
-import { signatureMiddleware } from "./middleware/signatureMiddleware";
-import { fetcher, useQueryOptions } from "./utils/fetcher";
-import { useAccount } from "./useAccount";
+import useSWR from "swr";
+import type { SWRHook, SWRResponse } from "swr";
 import { AccountStatusEnum } from "@orderly.network/types";
+import { signatureMiddleware } from "./middleware/signatureMiddleware";
+import { useAccount } from "./useAccount";
+import { fetcher, useQueryOptions } from "./utils/fetcher";
 
 /**
  * usePrivateQuery
@@ -11,14 +12,13 @@ import { AccountStatusEnum } from "@orderly.network/types";
  * @param options
  */
 export const usePrivateQuery = <T>(
-  query: Parameters<typeof useSWR>["0"],
-  options?: useQueryOptions<T>
+  query: Parameters<SWRHook>[0],
+  options?: useQueryOptions<T>,
 ): SWRResponse<T> => {
   const { formatter, ...swrOptions } = options || {};
   const { state } = useAccount();
-  const middleware = Array.isArray(options?.use) ? options?.use ?? [] : [];
+  const middleware = Array.isArray(options?.use) ? (options?.use ?? []) : [];
 
-  // @ts-ignore
   return useSWR<T>(
     () =>
       state.status >= AccountStatusEnum.EnableTrading ||
@@ -31,7 +31,7 @@ export const usePrivateQuery = <T>(
     {
       ...swrOptions,
       use: [signatureMiddleware, ...middleware],
-      onError: (err) => {},
-    }
+      onError: () => {},
+    },
   );
 };

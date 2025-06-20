@@ -1,6 +1,6 @@
+import { useMemo } from "react";
 import { API } from "@orderly.network/types";
 import { usePrivateQuery } from "../../usePrivateQuery";
-import { useMemo } from "react";
 import { useSymbolsInfo } from "../useSymbolsInfo";
 
 type DistributionSearchParams = {
@@ -17,7 +17,7 @@ type DistributionSearchParams = {
 };
 
 export const useDistributionHistory = (parmas: DistributionSearchParams) => {
-  let { type, dataRange, page, pageSize } = parmas;
+  const { type, dataRange, page, pageSize } = parmas;
 
   const infos = useSymbolsInfo();
 
@@ -46,9 +46,7 @@ export const useDistributionHistory = (parmas: DistributionSearchParams) => {
     });
 
   const parsedData = useMemo<
-    (API.FundingFeeRow & {
-      annual_rate: number;
-    })[]
+    (API.FundingFeeRow & { annual_rate: number })[]
   >(() => {
     if (!Array.isArray(data?.rows) || !data?.rows.length || infos.isNil) {
       return [];
@@ -63,14 +61,7 @@ export const useDistributionHistory = (parmas: DistributionSearchParams) => {
     });
   }, [data, infos]);
 
-  return [
-    parsedData,
-    {
-      meta: data?.meta,
-      isLoading,
-      isValidating,
-    },
-  ] as const;
+  return [parsedData, { meta: data?.meta, isLoading, isValidating }] as const;
 };
 
 export type UseDistributionHistoryReturn = ReturnType<

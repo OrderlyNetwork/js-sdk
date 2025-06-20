@@ -3,7 +3,7 @@ import { HistoryDataGroupDesktop } from "./historyDataGroup.ui.desktop";
 import { HistoryDataGroupMobile } from "./historyDataGroup.ui.mobile";
 import { useStateScript } from "./useState.script";
 
-export const HistoryDataGroupWidget = () => {
+export const HistoryDataGroupWidget: React.FC = () => {
   const state = useStateScript();
   const { isMobile } = useScreen();
   if (isMobile) {

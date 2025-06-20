@@ -1,11 +1,11 @@
 import { FC, PropsWithChildren } from "react";
-import { Box, cn, Grid } from "@orderly.network/ui";
-import { MainNavWidget } from "../main/mainNav.widget";
-import { SideNavbarWidget } from "../sidebar";
 import { isValidElement } from "react";
-import { FooterWidget } from "../footer";
-import { RestrictedInfoWidget } from "../restrictedInfo";
+import { Box, cn, Grid } from "@orderly.network/ui";
 import { AnnouncementWidget } from "../announcement";
+import { FooterWidget } from "../footer";
+import { MainNavWidget } from "../main/mainNav.widget";
+import { RestrictedInfoWidget } from "../restrictedInfo";
+import { SideNavbarWidget } from "../sidebar";
 import { ScaffoldScriptReturn } from "./scaffold.script";
 import { ScaffoldProps } from "./scaffold.widget";
 
@@ -23,10 +23,10 @@ export const DesktopScaffold: FC<DesktopScaffoldProps> = (props) => {
       className={cn(
         "oui-scaffold-root oui-font-semibold",
         // default text and background color
-        "oui-text-base-contrast oui-bg-base-10",
+        "oui-bg-base-10 oui-text-base-contrast",
         "oui-flex oui-flex-col",
-        "oui-overflow-auto oui-custom-scrollbar",
-        classNames?.root
+        "oui-custom-scrollbar oui-overflow-auto",
+        classNames?.root,
       )}
     >
       {/* topNavbar */}
@@ -34,7 +34,7 @@ export const DesktopScaffold: FC<DesktopScaffoldProps> = (props) => {
         ref={props.topNavbarRef}
         className={cn(
           "oui-scaffold-topNavbar oui-bg-base-9",
-          classNames?.topNavbar
+          classNames?.topNavbar,
         )}
       >
         {props.topBar ?? <MainNavWidget {...props.mainNavProps} />}
@@ -45,28 +45,28 @@ export const DesktopScaffold: FC<DesktopScaffoldProps> = (props) => {
           "oui-relative oui-h-full",
           // 1024px - 6px (scrollbar widt) = 1018px
           "oui-min-w-[1018px]",
-          classNames?.container
+          classNames?.container,
         )}
       >
-        <Box px={3} ref={props.announcementRef}>
+        <Box px={2} ref={props.announcementRef}>
           <RestrictedInfoWidget
             className={cn(
               "oui-scaffold-restricted-info",
               "oui-relative oui-z-[1]",
-              "oui-mt-3",
+              "oui-mt-2",
               "oui-bg-base-9",
               // 1024px - 6px (scrollbar widt) - 12 * 2px (padding) = 994px
-              "oui-min-w-[994px]"
+              "oui-min-w-[994px]",
             )}
           />
           <AnnouncementWidget
             className={cn(
               "oui-scaffold-maintenance-tips",
-              "oui-mt-3",
+              "oui-mt-2",
               "oui-relative oui-z-[1]",
               "oui-bg-base-9",
               // 1024px - 6px (scrollbar widt) - 12 * 2px (padding) = 994px
-              "oui-min-w-[994px]"
+              "oui-min-w-[994px]",
             )}
             hideTips={props.restrictedInfo?.restrictedOpen}
           />
@@ -83,9 +83,9 @@ export const DesktopScaffold: FC<DesktopScaffoldProps> = (props) => {
           // ---------- left & body layout start ---------
           <Grid
             className={cn(
-              "oui-box-content oui-transition-all oui-flex xl:oui-grid",
-              "oui-flex-1 oui-min-h-full",
-              classNames?.body
+              "oui-box-content oui-flex oui-transition-all xl:oui-grid",
+              "oui-min-h-full oui-flex-1",
+              classNames?.body,
             )}
             style={{
               gridTemplateColumns: `${
@@ -122,8 +122,8 @@ export const DesktopScaffold: FC<DesktopScaffoldProps> = (props) => {
         className={cn(
           "oui-scaffold-footer oui-w-full oui-bg-base-10",
           "oui-fixed oui-bottom-0 oui-z-50",
-          "oui-border-t-[1px] oui-border-line-12",
-          classNames?.footer
+          "oui-border-t oui-border-line-12",
+          classNames?.footer,
         )}
       >
         {props.footer || <FooterWidget {...props.footerProps} />}

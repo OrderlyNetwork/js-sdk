@@ -1,20 +1,27 @@
-import { FC } from "react";
+import React, { FC } from "react";
+import { DateRange } from "react-day-picker";
+import { cnBase } from "tailwind-variants";
+import { Flex } from "../flex";
 import {
   DateRangePicker,
   DateRangePickerProps,
 } from "../pickers/dateRangePicker";
-import { Flex } from "../flex";
+import { DatePicker, DatePickerProps } from "../pickers/datepicker";
+import { Picker, PickerProps } from "../pickers/picker";
+import { CombineSelect } from "../select/combine";
 import {
   SelectWithOptions,
   type SelectWithOptionsProps,
 } from "../select/withOptions";
-import { DatePicker, DatePickerProps } from "../pickers/datepicker";
-import { Picker, PickerProps } from "../pickers/picker";
-import { CombineSelect } from "../select/combine";
-import { DateRange } from "react-day-picker";
-import { cnBase } from "tailwind-variants";
 
-type FilterType = "select" | "input" | "date" | "range" | "custom" | "symbol" | "picker";
+type FilterType =
+  | "select"
+  | "input"
+  | "date"
+  | "range"
+  | "custom"
+  | "symbol"
+  | "picker";
 
 type DataFilterGeneral = {
   // initialValue?: any;
@@ -46,13 +53,13 @@ type SymbolFilter = {
 
 type PickerFilter = {
   type: "picker";
-} & PickerProps;  
+} & PickerProps;
 
-export type DataFilterItems = (DataFilterGeneral &
-  (SelectFilter | DateFilter | DateRangeFilter | SymbolFilter | PickerFilter))[];
+export type DataFilterItem = DataFilterGeneral &
+  (SelectFilter | DateFilter | DateRangeFilter | SymbolFilter | PickerFilter);
 
 export type DataFilterProps = {
-  items: DataFilterItems;
+  items: DataFilterItem[];
   onFilter: (filter: { name: string; value: any }) => void;
   className?: string;
   trailing?: React.ReactNode;
@@ -138,7 +145,7 @@ export const DataFilterRenderer: FC<{
   }
 };
 
-export const DataFilter = (props: DataFilterProps) => {
+export const DataFilter: React.FC<DataFilterProps> = (props) => {
   return (
     <Flex
       justify={"start"}
@@ -147,14 +154,13 @@ export const DataFilter = (props: DataFilterProps) => {
       width={"100%"}
       className={cnBase(
         "oui-data-filter-bar oui-border-b oui-border-line",
-        props.className
+        props.className,
       )}
     >
-      {props.items.map((item, index: number) => {
+      {props.items.filter(Boolean).map((item, index: number) => {
         if (item.type === "date") {
           (item as DatePickerProps).mode = "range";
         }
-
         return (
           <DataFilterRenderer
             key={index}
@@ -167,7 +173,7 @@ export const DataFilter = (props: DataFilterProps) => {
         );
       })}
       {props.trailing && (
-        <div className="oui-flex-1 oui-flex oui-justify-end">
+        <div className="oui-flex oui-flex-1 oui-justify-end">
           {props.trailing}
         </div>
       )}

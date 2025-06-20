@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
 import { SIDE_MARKETS_TAB_SORT_STORAGE_KEY } from "../../constant";
-import { TabName } from "../../type";
+import { MarketsTabName } from "../../type";
 import { useMarketsContext } from "../marketsProvider";
 import { useTabSort } from "../shared/hooks/useTabSort";
 
 export type ExpandMarketsScriptOptions = {
-  activeTab?: TabName;
-  onTabChange?: (tab: TabName) => void;
+  activeTab?: MarketsTabName;
+  onTabChange?: (tab: MarketsTabName) => void;
 };
 
 export type ExpandMarketsScriptReturn = ReturnType<
@@ -14,7 +14,9 @@ export type ExpandMarketsScriptReturn = ReturnType<
 >;
 
 export function useExpandMarketsScript(options: ExpandMarketsScriptOptions) {
-  const [activeTab, setActiveTab] = useState<TabName>(options.activeTab!);
+  const [activeTab, setActiveTab] = useState<MarketsTabName>(
+    options.activeTab!,
+  );
 
   const { tabSort, onTabSort } = useTabSort({
     storageKey: SIDE_MARKETS_TAB_SORT_STORAGE_KEY,
@@ -25,15 +27,15 @@ export function useExpandMarketsScript(options: ExpandMarketsScriptOptions) {
   const onTabChange = useCallback(
     (value: string) => {
       if (typeof options?.onTabChange === "function") {
-        options.onTabChange(value as TabName);
+        options.onTabChange(value as MarketsTabName);
       } else {
-        setActiveTab(value as TabName);
+        setActiveTab(value as MarketsTabName);
       }
     },
     [options?.onTabChange],
   );
   useEffect(() => {
-    setActiveTab(options?.activeTab || TabName.Favorites);
+    setActiveTab(options?.activeTab || MarketsTabName.Favorites);
   }, [options?.activeTab]);
 
   useEffect(() => {

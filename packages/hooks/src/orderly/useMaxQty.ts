@@ -1,38 +1,43 @@
-import { useEffect, useMemo } from "react";
-import { type API, OrderSide, OrderStatus } from "@orderly.network/types";
-
-import { useSymbolsInfo } from "./useSymbolsInfo";
-
-import { useMarkPricesStream } from "./useMarkPricesStream";
+import { useMemo } from "react";
 import { account } from "@orderly.network/perp";
-import { useCollateral } from "./useCollateral";
-
-import { pathOr } from "ramda";
-import { useOrderStream } from "./useOrderStream/useOrderStream";
-import { usePositions } from "./usePositionStream/usePosition.store";
+import { type API, OrderSide, OrderStatus } from "@orderly.network/types";
 import { useAccountInfo } from "./appStore";
+import { useCollateral } from "./useCollateral";
+import { useMarkPricesStream } from "./useMarkPricesStream";
+import { usePositions } from "./usePositionStream/usePosition.store";
+import { useSymbolsInfo } from "./useSymbolsInfo";
 
 // const positionsPath = pathOr([], [0, "rows"]);
 
 /**
- * @param symbol
- * @param side
- * @param reduceOnly
- * @returns the maximum quantity available for trading in USD
+ * A hook that calculates the maximum tradeable quantity for a given symbol and side
+ * @returns Maximum tradeable quantity
+ * @example
+ * ```tsx
+ * // Get max buy quantity for BTC
+ * const maxBuyQty = useMaxQty("PERP_BTC_USDC", OrderSide.BUY);
+ *
+ * // Get max sell quantity with reduce only
+ * const maxSellQty = useMaxQty("PERP_BTC_USDC", OrderSide.SELL, true);
+ * ```
  */
 export const useMaxQty = (
+  /**
+   * Trading pair symbol (e.g. "PERP_BTC_USDC")
+   * */
   symbol: string,
+  /**
+   * Order side ("BUY" or "SELL")
+   * */
   side: OrderSide,
-  reduceOnly: boolean = false
+  /**
+   * Executes buy or sell orders which only reduce a current position.
+   *
+   * If true, only allows orders that reduce current position
+   * */
+  reduceOnly: boolean = false,
 ) => {
-  // const positionsData = usePositionStream();
-
   const positions = usePositions();
-
-  const [orders] = useOrderStream({ status: OrderStatus.NEW, size: 500 });
-
-  // const { data: accountInfo } =
-  //   usePrivateQuery<API.AccountInfo>("/v1/client/info");
 
   const accountInfo = useAccountInfo();
 
@@ -51,7 +56,7 @@ export const useMaxQty = (
 
     const positionQty = account.getQtyFromPositions(
       positions === null ? [] : positions,
-      symbol
+      symbol,
     );
     /**
      * Reduce-only mode handling:
@@ -82,37 +87,30 @@ export const useMaxQty = (
       return 0;
     }
 
-    if (!markPrices || !markPrices[symbol] || !orders || !accountInfo) return 0;
+    if (!markPrices || !markPrices[symbol] || !accountInfo || !positions)
+      return 0;
 
     const getSymbolInfo = symbolInfo[symbol];
 
-    const filterAlgoOrders = orders.filter(
-      (item) => item.algo_order_id === undefined || item.algo_type === "BRACKET"
+    // const filterAlgoOrders = orders.filter(
+    //   (item) =>
+    //     item.algo_order_id === undefined || item.algo_type === "BRACKET",
+    // );
+
+    const currentSymbolPosition = positions.find(
+      (item) => item.symbol === symbol,
     );
 
     // current symbol buy order quantity
-    const buyOrdersQty = account.getQtyFromOrdersBySide(
-      filterAlgoOrders,
-      symbol,
-      OrderSide.BUY
-    );
+    const buyOrdersQty = currentSymbolPosition?.pending_long_qty ?? 0;
     // current symbol sell order quantity
-    const sellOrdersQty = account.getQtyFromOrdersBySide(
-      filterAlgoOrders,
-      symbol,
-      OrderSide.SELL
-    );
+    const sellOrdersQty = currentSymbolPosition?.pending_short_qty ?? 0;
 
     const otherPositions = !Array.isArray(positions)
       ? []
       : positions.filter((item: API.Position) => item.symbol !== symbol);
 
-    const otherOrders = filterAlgoOrders.filter(
-      (item: API.Order) => item.symbol !== symbol
-    );
-
     const otherIMs = account.otherIMs({
-      orders: otherOrders,
       positions: otherPositions,
       symbolInfo,
       markPrices,
@@ -139,7 +137,6 @@ export const useMaxQty = (
     positions,
     reduceOnly,
     markPrices,
-    orders,
     accountInfo,
     symbolInfo,
     side,

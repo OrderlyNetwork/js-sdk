@@ -14,13 +14,18 @@ export const portfolio = {
 
   "portfolio.overview.deposits&Withdrawals": "Deposits & Withdrawals",
   "portfolio.overview.distribution": "Distribution",
+  "portfolio.overview.transferHistory": "Transfer history",
 
   "portfolio.overview.column.txId": "TxID",
-  "portfolio.overview.column.funding&AnnualRate": "Funding rate / Annual rate",
-  "portfolio.overview.column.paymentType": "Payment type",
-  "portfolio.overview.column.paymentType.paid": "Paid",
-  "portfolio.overview.column.paymentType.received": "Received",
-  "portfolio.overview.column.fundingFee": "Funding fee",
+
+  "portfolio.overview.column.token": "Token",
+  "portfolio.overview.column.qty": "Qty.",
+  "portfolio.overview.column.indexPrice": "Index price",
+  "portfolio.overview.column.collateralRatio": "Collateral ratio",
+  "portfolio.overview.column.assetContribution": "Asset contribution",
+
+  "portfolio.overview.column.form": "Form",
+  "portfolio.overview.column.to": "To",
 
   "portfolio.overview.distribution.type.referralCommission":
     "Referral commission",

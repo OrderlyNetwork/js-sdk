@@ -6,11 +6,11 @@ import {
   useRef,
   useState,
 } from "react";
-import { tv } from "../utils/tv";
 import { VariantProps } from "tailwind-variants";
-import { SelectOption } from "../select/withOptions";
-import { ActionSheet } from "../sheet";
 import { ChevronDownIcon, ChevronUpIcon, cn } from "..";
+import { SelectOption } from "../select/withOptions";
+import { ActionSheet, ActionSheetItem } from "../sheet";
+import { tv } from "../utils/tv";
 
 const pickerVariants = tv({
   base: "oui-flex oui-flex-row oui-items-stretch oui-rounded-md oui-cursor-pointer oui-border oui-border-line-6 oui-bg-line-4 oui-text-base-contrast-54",
@@ -52,27 +52,30 @@ export interface PickerProps
   options: SelectOption[];
   value?: SelectOption | string | number;
   onValueChange?: (value: any) => void;
+  valueRenderer?: (
+    value: any,
+    options: { open?: boolean; data?: any },
+  ) => React.ReactNode;
 }
 
-
 export type PickerRef = {};
+
 export const Picker = forwardRef<PickerRef, PickerProps>(
-  (
-    {
+  (originalProps, ref) => {
+    const {
       size,
       color,
       value,
       label,
-      //@ts-ignore
       placeholder,
       className,
       options,
       fullWidth,
       disabled,
+      valueRenderer,
       ...props
-    },
-    ref
-  ) => {
+    } = originalProps;
+
     const [open, setOpen] = useState(false);
 
     const selectedItem = useMemo<SelectOption | undefined>(() => {
@@ -95,8 +98,7 @@ export const Picker = forwardRef<PickerRef, PickerProps>(
       return placeholder || label || "";
     }, [selectedItem, label, placeholder]);
 
-    // @ts-ignore
-    const actions: ActionSheetItem[] = useMemo(() => {
+    const actions = useMemo<ActionSheetItem[]>(() => {
       return [...options, "---", "Cancel"];
     }, [options]);
 
@@ -121,33 +123,40 @@ export const Picker = forwardRef<PickerRef, PickerProps>(
         value={selectedItem}
         onValueChange={props.onValueChange}
       >
-        <div
-          className={cn(
-            "oui-space-x-1 oui-text-base-contrast-54 ",
-            "oui-rounded-md",
-            "oui-bg-base-8",
-            pickerVariants({
-              size,
-              color,
-              fullWidth,
-              disabled: disabled || options.length === 0,
-              className,
-            })
-          )}
-        >
-          <div className="oui-flex-1 oui-flex oui-justify-start oui-items-center oui-text-inherit oui-text-2xs">
-            {text}
-          </div>
-          <div className="oui-flex oui-items-center">
-            {/* <ArrowIcon size={12} className="oui-text-inherit" /> */}
-            {open ? (
-              <ChevronUpIcon size={14} color="white" />
-            ) : (
-              <ChevronDownIcon size={14} color="white" />
+        {typeof valueRenderer === "function" ? (
+          valueRenderer(selectedItem?.value || props.defaultValue, {
+            open: open,
+            data: (selectedItem as any)?.data,
+          })
+        ) : (
+          <div
+            className={cn(
+              "oui-space-x-1",
+              "oui-text-base-contrast-54",
+              "oui-rounded-md",
+              "oui-bg-base-8",
+              pickerVariants({
+                size,
+                color,
+                fullWidth,
+                disabled: disabled || options.length === 0,
+                className,
+              }),
             )}
+          >
+            <div className="oui-flex oui-flex-1 oui-items-center oui-justify-start oui-text-2xs oui-text-inherit">
+              {text}
+            </div>
+            <div className="oui-flex oui-items-center">
+              {open ? (
+                <ChevronUpIcon size={14} color="white" />
+              ) : (
+                <ChevronDownIcon size={14} color="white" />
+              )}
+            </div>
           </div>
-        </div>
+        )}
       </ActionSheet>
     );
-  }
+  },
 );

@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as SheetPrimitive from "@radix-ui/react-dialog";
-import { cnBase, tv, type VariantProps } from "tailwind-variants";
+import { cn, cnBase, tv, type VariantProps } from "tailwind-variants";
 import { CloseIcon } from "../icon/close";
 
 const Sheet = SheetPrimitive.Root;
@@ -18,7 +18,7 @@ const SheetOverlay = React.forwardRef<
   <SheetPrimitive.Overlay
     className={cnBase(
       "oui-fixed oui-inset-0 oui-z-50 oui-bg-black/80  data-[state=open]:oui-animate-in data-[state=closed]:oui-animate-out data-[state=closed]:oui-fade-out-0 data-[state=open]:oui-fade-in-0",
-      className
+      className,
     )}
     {...props}
     ref={ref}
@@ -56,7 +56,7 @@ const SheetContent = React.forwardRef<
 >(
   (
     { side = "bottom", closeable = true, className, children, ...props },
-    ref
+    ref,
   ) => (
     <SheetPortal>
       <SheetOverlay />
@@ -70,7 +70,7 @@ const SheetContent = React.forwardRef<
         {closeable && (
           <SheetPrimitive.Close
             className={cnBase(
-              "oui-absolute oui-right-4 oui-top-4 oui-rounded-sm oui-ring-offset-base-700 oui-transition-opacity  focus:oui-outline-none focus:oui-ring-2 focus:oui-ring-ring focus:oui-ring-offset-2 disabled:oui-pointer-events-none data-[state=open]:oui-bg-secondary"
+              "oui-absolute oui-right-4 oui-top-4 oui-rounded-sm oui-ring-offset-base-700 oui-transition-opacity  focus:oui-outline-none focus:oui-ring-2 focus:oui-ring-ring focus:oui-ring-offset-2 disabled:oui-pointer-events-none data-[state=open]:oui-bg-secondary",
               // "oui-opacity-70 hover:oui-opacity-100"
             )}
           >
@@ -81,7 +81,7 @@ const SheetContent = React.forwardRef<
         {children}
       </SheetPrimitive.Content>
     </SheetPortal>
-  )
+  ),
 );
 SheetContent.displayName = SheetPrimitive.Content.displayName;
 
@@ -94,7 +94,7 @@ const SheetHeader = ({
 }) => (
   <div
     className={cnBase(
-      "oui-sheet-header oui-grid oui-grid-cols-[40px_1fr_40px] oui-items-center oui-min-h-12"
+      "oui-sheet-header oui-grid oui-grid-cols-[40px_1fr_40px] oui-items-center oui-min-h-12",
     )}
   >
     <div>{leading}</div>
@@ -102,7 +102,7 @@ const SheetHeader = ({
       {...props}
       className={cnBase(
         "oui-flex oui-flex-col oui-space-y-2 oui-text-center oui-text-lg oui-text-base-contrast",
-        className
+        className,
       )}
     />
   </div>
@@ -113,7 +113,9 @@ const SheetBody = ({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => {
-  return <div className={cnBase("oui-py-4", className)} {...props} />;
+  return (
+    <div className={cn("oui-py-4", className)({ twMerge: true })} {...props} />
+  );
 };
 
 SheetBody.displayName = "DialogBody";
@@ -125,7 +127,7 @@ const SheetFooter = ({
   <div
     className={cnBase(
       "oui-sheet-footer oui-flex oui-flex-col-reverse sm:oui-flex-row sm:oui-justify-end sm:oui-space-x-2",
-      className
+      className,
     )}
     {...props}
   />
@@ -146,7 +148,7 @@ const SheetTitle = React.forwardRef<
     <div
       className={cnBase(
         "oui-flex oui-flex-col oui-space-y-2 oui-text-center oui-text-lg oui-text-base-contrast",
-        className
+        className,
       )}
       {...props}
     />
@@ -162,7 +164,7 @@ const SheetDescription = React.forwardRef<
     ref={ref}
     className={cnBase(
       "oui-sheet-description oui-text-2xs oui-text-base-contrast-54",
-      className
+      className,
     )}
     {...props}
   />

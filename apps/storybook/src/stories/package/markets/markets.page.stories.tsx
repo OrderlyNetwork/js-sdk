@@ -9,6 +9,7 @@ import {
   MarketsProvider,
   FundingComparisonWidget,
 } from "@orderly.network/markets";
+import { useScreen } from "@orderly.network/ui";
 import { BaseLayout } from "../../../components/layout";
 
 const meta: Meta<typeof MarketsHomePage> = {
@@ -30,8 +31,13 @@ export const LayoutPage: Story = {
     layout: "fullscreen",
   },
   render: (args) => {
+    const { isMobile } = useScreen();
     return (
-      <BaseLayout initialMenu="/markets">
+      <BaseLayout
+        initialMenu="/markets"
+        // hide top bar
+        topBar={isMobile ? <></> : undefined}
+      >
         <MarketsHomePage />
       </BaseLayout>
     );
@@ -53,7 +59,10 @@ export const Favorites: Story = {
 export const AllMarkets: Story = {
   render: (args) => {
     return (
-      <MarketsListFullWidget type="all" sortKey="24h_amount" sortOrder="desc" />
+      <MarketsListFullWidget
+        type="all"
+        initialSort={{ sortKey: "24h_amount", sortOrder: "desc" }}
+      />
     );
   },
 };
@@ -63,8 +72,7 @@ export const NewListings: Story = {
     return (
       <MarketsListFullWidget
         type="new"
-        sortKey="created_time"
-        sortOrder="desc"
+        initialSort={{ sortKey: "created_time", sortOrder: "desc" }}
       />
     );
   },

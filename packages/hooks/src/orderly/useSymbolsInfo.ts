@@ -1,50 +1,38 @@
 import { useMemo } from "react";
-import { useQuery } from "../useQuery";
-import { type API } from "@orderly.network/types";
 import { createGetter } from "../utils/createGetter";
-import { getPrecisionByNumber } from "@orderly.network/utils";
 import { useAppStore } from "./appStore";
-import { original } from "immer";
 
+/**
+ * Type alias for the return type of useSymbolsInfo hook
+ */
 export type SymbolInfo = ReturnType<typeof useSymbolsInfo>;
 
+/**
+ * A hook that provides access to symbol information.
+ *
+ * @returns A getter object that provides access to symbol information.
+ * The getter allows accessing symbol data either by symbol name directly,
+ * or through a two-level access pattern (symbol and property).
+ *
+ * @example
+ * ```typescript
+ * const symbolsInfo = useSymbolsInfo();
+ *
+ * // Get all info for a symbol
+ * const ethInfo = symbolsInfo["PERP_ETH_USDC"]();
+ *
+ * // Get specific property for a symbol
+ * const baseDP = symbolsInfo["PERP_ETH_USDC"]('base_dp');
+ *
+ * // Get specific property for a symbol with default value
+ * const quoteDP = symbolsInfo["PERP_ETH_USDC"]('quote_dp', 2);
+ * ```
+ */
 export const useSymbolsInfo = () => {
-  // const { data } = useQuery<Record<string, API.SymbolExt>>(`/v1/public/info`, {
-  //   focusThrottleInterval: 1000 * 60 * 60 * 24,
-  //   dedupingInterval: 1000 * 60 * 60 * 24,
-  //   revalidateOnFocus: false,
-  //   formatter(data: { rows: API.Symbol[] }) {
-  //     if (!data?.rows || !data?.rows?.length) {
-  //       return {};
-  //     }
-  //     const obj = Object.create(null);
-
-  //     for (let index = 0; index < data.rows.length; index++) {
-  //       const item = data.rows[index];
-  //       const arr = item.symbol.split("_");
-  //       const base_dp = getPrecisionByNumber(item.base_tick);
-  //       const quote_dp = getPrecisionByNumber(item.quote_tick);
-  //       obj[item.symbol] = {
-  //         ...item,
-  //         base_dp,
-  //         quote_dp,
-  //         base: arr[1],
-  //         quote: arr[2],
-  //         type: arr[0],
-  //         name: `${arr[1]}-${arr[0]}`,
-  //       };
-  //     }
-
-  //     return obj;
-  //   },
-  // });
   const symbolsInfo = useAppStore((state) => state.symbolsInfo);
+  return useMemo(() => createGetter({ ...symbolsInfo }), [symbolsInfo]);
+};
 
-  return useMemo(
-    () => createGetter<API.SymbolExt, string>({ ...symbolsInfo }),
-    [symbolsInfo]
-  );
-  // console.log(">>>>>symbolsInfo<<<<<<<", symbolsInfo);
-
-  // return createGetter<API.SymbolExt, string>({ ...symbolsInfo });
+export const useSymbolsInfoStore = () => {
+  return useAppStore((state) => state.symbolsInfo);
 };

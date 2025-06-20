@@ -38,8 +38,6 @@ export const positions = {
   "positions.history.column.timeOpened": "Time opened",
   "positions.history.column.timeClosed": "Time closed",
   "positions.history.column.updatedTime": "Updated time",
-
-  "positions.history.netPnl.fundingFee": "Funding fee",
   "positions.history.netPnl.tradingFee": "Trading fee",
 
   "positions.Liquidation.column.liquidationId": "Liquidation id",

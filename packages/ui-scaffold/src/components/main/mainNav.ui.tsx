@@ -6,6 +6,7 @@ import { WalletConnectButtonExtension } from "../accountMenu/menu.widget";
 import { AccountSummaryWidget } from "../accountSummary";
 import { ChainMenuWidget } from "../chainMenu";
 import { LanguageSwitcherWidget } from "../languageSwitcher";
+import { SubAccountWidget } from "../subAccount";
 import { CampaignButton, CampaignProps } from "./campaignButton";
 import { LinkDeviceWidget } from "./linkDevice";
 import { MainLogo } from "./mainLogo";
@@ -50,6 +51,8 @@ export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
     !props.disabledConnect &&
     props.status! >= AccountStatusEnum.SignedIn;
 
+  const showSubAccount = props.status! >= AccountStatusEnum.EnableTrading;
+
   const hideWalletConnectButton =
     !props.disabledConnect && props.wrongNetwork && props.isConnected;
 
@@ -60,8 +63,6 @@ export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
 
     return <Flex grow>{props.children}</Flex>;
   }, [props.children]);
-
-  console.log("isDesktop", isDesktop, props);
 
   return (
     <Flex
@@ -81,7 +82,7 @@ export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
       <Flex
         itemAlign={"center"}
         className={cn(
-          "oui-gap-3 2xl:oui-gap-4",
+          "oui-gap-3",
           // let the left and right views show spacing when overlapping
           "oui-overflow-hidden",
         )}
@@ -92,17 +93,17 @@ export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
           {...props.mainMenus}
           classNames={classNames?.mainNav}
         />
-        {props.trailing}
-      </Flex>
-      {children}
-
-      <Flex itemAlign={"center"} className="oui-gap-3 2xl:oui-gap-4">
         {!!showCampaignButton && (
           <CampaignButton
             {...campaigns}
             className={classNames?.campaignButton}
           />
         )}
+        {props.trailing}
+      </Flex>
+      {children}
+
+      <Flex itemAlign={"center"} className="oui-gap-2">
         <AccountSummaryWidget />
         {showLinkIcon && (
           <>
@@ -111,6 +112,7 @@ export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
           </>
         )}
         <LanguageSwitcherWidget />
+        {showSubAccount && <SubAccountWidget />}
         {isDesktop && <ChainMenuWidget />}
         {!hideWalletConnectButton && <WalletConnectButtonExtension />}
       </Flex>

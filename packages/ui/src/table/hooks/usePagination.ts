@@ -21,7 +21,7 @@ export const usePagination = (initial?: {
         }
       }
     },
-    [page]
+    [page],
   );
 
   /**
@@ -52,25 +52,25 @@ export const usePagination = (initial?: {
       total: number;
       current_page: number;
       records_per_page: number;
-    }) => {
+    }): PaginationMeta => {
       return {
         ...parseMeta(meta),
         onPageChange: setPage,
         onPageSizeChange: setPageSize,
-      } as PaginationMeta;
+      };
     },
-    [page, pageSize]
+    [page, pageSize],
   );
 
   /** manual pagination */
-  const pagination = useMemo(
+  const pagination = useMemo<PaginationMeta>(
     () => ({
       page,
       pageSize,
       onPageChange: setPage,
       onPageSizeChange: setPageSize,
     }),
-    [parsePagination]
+    [parsePagination],
   );
 
   useEffect(() => {

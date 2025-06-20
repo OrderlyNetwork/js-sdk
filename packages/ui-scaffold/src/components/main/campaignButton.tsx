@@ -1,6 +1,6 @@
 import { Divider } from "@orderly.network/ui";
-import { MainNavItem, NavItem } from "./mainMenus/navItem";
 import { cn } from "@orderly.network/ui";
+import { MainNavItem, NavItem } from "./mainMenus/navItem";
 
 export type CampaignProps = {
   item: MainNavItem;
@@ -17,10 +17,9 @@ export const CampaignButton = (props: CampaignProps) => {
         item={props.item}
         onClick={props.onItemClick}
         classNames={{
-          navItem: cn("oui-gradient-primary oui-text-white", props.className),
+          navItem: cn("oui-text-base-contrast-54 -oui-ml-2", props.className),
         }}
       />
-      <Divider direction="vertical" className="oui-h-8" intensity={8} />
     </>
   );
 };

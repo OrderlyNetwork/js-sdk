@@ -1,15 +1,18 @@
-import { Button, Text } from "@orderly.network/ui";
-import { NumeralWithCtx } from "./numeralWithCtx";
-import { PriceInput } from "./priceInput";
-import { QuantityInput } from "./quantityInput";
+import { Text } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { useSymbolContext } from "../../../providers/symbolProvider";
+import { PriceInput } from "./priceInput";
+import { QuantityInput } from "./quantityInput";
 
-export const renderQuantity = (value: number, record: any) => {
-
+export const renderQuantity = (value: number) => {
   const symbolInfo = useSymbolContext();
   return (
-    <Text.numeral dp={symbolInfo.base_dp} rm={Decimal.ROUND_DOWN} padding={false} coloring>
+    <Text.numeral
+      dp={symbolInfo.base_dp}
+      rm={Decimal.ROUND_DOWN}
+      padding={false}
+      coloring
+    >
       {value}
     </Text.numeral>
   );

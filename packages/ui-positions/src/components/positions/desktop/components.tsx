@@ -1,7 +1,8 @@
+import React from "react";
+import { useTranslation } from "@orderly.network/i18n";
+import { EditIcon } from "@orderly.network/ui";
 import { PositionTPSLPopover } from "@orderly.network/ui-tpsl";
 import { usePositionsRowContext } from "./positionRowContext";
-import { EditIcon } from "@orderly.network/ui";
-import { useTranslation } from "@orderly.network/i18n";
 
 // ------------ TP/SL Price input end------------
 export const TPSLButton = () => {
@@ -32,7 +33,7 @@ export const TPSLEditIcon = () => {
     >
       <EditIcon
         opacity={1}
-        className="oui-text-base-contrast-54 oui-cursor-pointer"
+        className="oui-cursor-pointer oui-text-base-contrast-54"
         size={16}
       />
     </PositionTPSLPopover>

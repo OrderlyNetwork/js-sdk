@@ -14,6 +14,7 @@ import {
   SOLANA_TESTNET_CHAINID,
   ARBITRUM_TESTNET_CHAINID,
   ABSTRACT_TESTNET_CHAINID,
+  BSC_TESTNET_CHAINID,
 } from "@orderly.network/types";
 import { nativeTokenAddress } from "@orderly.network/types";
 import { isTestnet } from "@orderly.network/utils";
@@ -26,6 +27,7 @@ const TestNetWhiteList = [
   SOLANA_TESTNET_CHAINID,
   MONAD_TESTNET_CHAINID,
   ABSTRACT_TESTNET_CHAINID,
+  BSC_TESTNET_CHAINID,
 ];
 
 export type Chain = API.Chain & {
@@ -96,6 +98,28 @@ export function useChains<
   UseChainsReturnObject,
 ];
 
+/**
+ *
+ * @example
+ * // { testnet: API.Chain[];  mainnet: API.Chain[]; }
+ * const [chains1] = useChains();
+ *
+ * // { testnet: API.Chain[];  mainnet: API.Chain[]; }
+ * const [chains2] = useChains(undefined);
+ *
+ * // { testnet: API.NetworkInfos[];  mainnet: API.NetworkInfos[]; }
+ * const [chains3] = useChains(undefined, { pick: "network_infos" });
+ *
+ * // API.Chain[]
+ * const [chains4] = useChains("testnet");
+ *
+ * // API.Chain[]
+ * const [chains5] = useChains("mainnet");
+ *
+ * // API.NetworkInfos[]
+ * const [chains6] = useChains("testnet", { pick: "network_infos" }); *
+ *
+ */
 export function useChains(
   networkId?: NetworkId,
   options: UseChainsOptions = {},

@@ -1,4 +1,9 @@
 import { useRef, useState } from "react";
+import { useLocalStorage, utils } from "@orderly.network/hooks";
+import { OrderValidationResult } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
+import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
+import { API, OrderSide } from "@orderly.network/types";
 import {
   Badge,
   Box,
@@ -16,15 +21,10 @@ import {
   convertValueToPercentage,
   ThrottledButton,
 } from "@orderly.network/ui";
-import { PnlInputWidget } from "./pnlInput/pnlInput.widget";
-import { TPSLBuilderState } from "./useTPSL.script";
-import type { PNL_Values } from "./pnlInput/useBuilder.script";
-import { useLocalStorage, utils } from "@orderly.network/hooks";
-import { API, OrderSide } from "@orderly.network/types";
 import { transSymbolformString } from "@orderly.network/utils";
-import { useTranslation } from "@orderly.network/i18n";
-import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
-import { OrderValidationResult } from "@orderly.network/hooks";
+import { PnlInputWidget } from "./pnlInput/pnlInput.widget";
+import type { PNL_Values } from "./pnlInput/useBuilder.script";
+import { TPSLBuilderState } from "./useTPSL.script";
 
 export type TPSLProps = {
   onCancel?: () => void;
@@ -103,14 +103,14 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
           disabled={!props.valid || status.isCreateMutating}
           loading={status.isCreateMutating || status.isUpdateMutating}
           onClick={() => {
-            props.onSubmit().then(
-              () => {
+            props
+              .onSubmit()
+              .then(() => {
                 onComplete?.();
-              },
-              () => {
-                console.log("--->>>cancel order");
-              }
-            );
+              })
+              .catch((err) => {
+                console.log("--->>>cancel order", err);
+              });
           }}
         >
           {t("common.confirm")}
@@ -186,7 +186,7 @@ const TPSLQuantity = (props: {
               prefix: "oui-text-base-contrast-54",
               root: cn(
                 "oui-bg-base-5 oui-outline-line-12",
-                errorMsg && "oui-outline-danger"
+                errorMsg && "oui-outline-danger",
               ),
             }}
             tooltipProps={{
@@ -251,7 +251,7 @@ const TPSLQuantity = (props: {
               "oui-text-2xs oui-w-[68px] oui-h-[40px] xl:oui-h-[32px]",
               isPosition
                 ? "oui-border-primary-light oui-text-primary-light hover:oui-bg-primary-light/20"
-                : "oui-bg-base-6 oui-border-line-12 oui-text-base-contrast-54 hover:oui-bg-base-5"
+                : "oui-bg-base-6 oui-border-line-12 oui-text-base-contrast-54 hover:oui-bg-base-5",
             )}
           >
             {t("common.position")}
@@ -507,7 +507,7 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
 
   const [needConfirm, setNeedConfirm] = useLocalStorage(
     "orderly_order_confirm",
-    true
+    true,
   );
   const textClassName = textVariants({
     size: "xs",
@@ -527,7 +527,7 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
           intensity={80}
           className="oui-mb-3"
         >{`You agree to edit your ${transSymbolformString(
-          symbol
+          symbol,
         )} order.`}</Text>
       )}
 

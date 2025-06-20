@@ -1,8 +1,15 @@
-import { FC, useMemo } from "react";
-
-import { useOrderBookContext } from "../../base/orderBook/orderContext";
-import { Flex, Text } from "@orderly.network/ui";
+import React, { FC, useMemo } from "react";
+import { useLocalStorage } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
+import {
+  CaretDownIcon,
+  CaretUpIcon,
+  Flex,
+  Picker,
+  Text,
+} from "@orderly.network/ui";
+import { SelectOption } from "@orderly.network/ui/src/select/withOptions";
+import { ORDERBOOK_MOBILE_COIN_TYPE_KEY } from "../../base/orderBook/orderContext";
 
 interface Props {
   quote: string;
@@ -12,25 +19,36 @@ interface Props {
 export const Header: FC<Props> = (props) => {
   const { t } = useTranslation();
 
-  const { mode, onModeChange } = useOrderBookContext();
-  const currency = useMemo(() => {
-    if (mode === "amount") {
-      return props.quote;
-    }
-    return props.base;
-  }, [mode, props.quote, props.base]);
+  const { base, quote } = props;
 
-  const qtyLabel = useMemo(() => {
-    return mode === "amount"
-      ? t("trading.orderBook.column.value")
-      : t("common.qty");
-  }, [mode, t]);
+  const [coinTypeConfig, setCoinTypeConfig]: [string, React.Dispatch<string>] =
+    useLocalStorage(ORDERBOOK_MOBILE_COIN_TYPE_KEY, ["total", base].join("_"));
+
+  const options = useMemo<SelectOption[]>(() => {
+    return [
+      {
+        value: ["qty", base].join("_"),
+        label: `${t("common.quantity")}(${base})`,
+        data: [t("common.quantity"), base],
+      },
+      {
+        value: ["total", base].join("_"),
+        label: `${t("common.total")}(${base})`,
+        data: [t("common.total"), base],
+      },
+      {
+        value: ["total", quote].join("_"),
+        label: `${t("common.total")}(${quote})`,
+        data: [t("common.total"), quote],
+      },
+    ];
+  }, [t, base, quote]);
 
   return (
     <Flex
       justify={"between"}
       width={"100%"}
-      className="oui-text-base-contrast-36 oui-text-2xs oui-py-[5px]"
+      className="oui-py-[5px] oui-text-2xs oui-text-base-contrast-36"
     >
       <Flex
         direction={"column"}
@@ -38,19 +56,31 @@ export const Header: FC<Props> = (props) => {
         id="oui-order-book-header-price"
       >
         <Text>{t("common.price")}</Text>
-        <Text>{`(${props.quote})`}</Text>
+        <Text>{`(${quote})`}</Text>
       </Flex>
-      <Flex
-        direction={"column"}
-        itemAlign={"end"}
-        className="oui-cursor-pointer"
-        onClick={() =>
-          onModeChange?.(mode === "amount" ? "quantity" : "amount")
-        }
-      >
-        <Text>{qtyLabel}</Text>
-        <Text>{`(${currency})`}</Text>
-      </Flex>
+      <Picker
+        size="sm"
+        value={coinTypeConfig}
+        onValueChange={setCoinTypeConfig}
+        options={options}
+        valueRenderer={(_, { open, data }) => {
+          return (
+            <Flex justify="between" itemAlign="center" gap={1}>
+              {Array.isArray(data) && (
+                <Flex direction={"column"} itemAlign={"end"}>
+                  {data[0] && <Text>{data[0]}</Text>}
+                  {data[1] && <Text>({data[1]})</Text>}
+                </Flex>
+              )}
+              {open ? (
+                <CaretUpIcon size={14} color="inherit" />
+              ) : (
+                <CaretDownIcon size={14} color="inherit" />
+              )}
+            </Flex>
+          );
+        }}
+      />
     </Flex>
   );
 };

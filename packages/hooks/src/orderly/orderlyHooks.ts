@@ -17,15 +17,23 @@ export {
   MarketsStorageKey,
   MarketsType,
 } from "./useMarkets";
-export type { FavoriteTab, Favorite, Recent, NewListing } from "./useMarkets";
+export type {
+  FavoriteTab,
+  Favorite,
+  Recent,
+  NewListing,
+  MarketsStore,
+  MarketsItem,
+} from "./useMarkets";
 export { useMarkPricesStream } from "./useMarkPricesStream";
+export { useIndexPricesStream } from "./useIndexPricesStream";
 export { useMarkPrice } from "./useMarkPrice";
 export { useIndexPrice } from "./useIndexPrice";
 export { useLeverage } from "./useLeverage";
 
 export { useTickerStream } from "./useTickerStream";
 export { useFundingRate } from "./useFundingRate";
-export { useFundingRates } from "./useFundingRates";
+export { useFundingRates, type FundingRates } from "./useFundingRates";
 export { useFundingRateHistory } from "./useFundingRateHistory";
 export { usePositionStream } from "./usePositionStream/usePositionStream";
 export type { PriceMode } from "./usePositionStream/usePositionStream";
@@ -35,7 +43,7 @@ export { useMarketTradeStream } from "./useMarketTradeStream";
 export { useCollateral } from "./useCollateral";
 export type { CollateralOutputs } from "./useCollateral";
 export { useMaxQty } from "./useMaxQty";
-export { useMarginRatio } from "./useMarginRatio";
+export { useMarginRatio, type MarginRatioReturn } from "./useMarginRatio";
 
 export { useChains } from "./useChains";
 export { useStorageChain } from "./useStorageChain";
@@ -48,6 +56,7 @@ export type {
 export { useChain } from "./useChain";
 export { useWithdraw } from "./useWithdraw";
 export { useDeposit } from "./useDeposit";
+export { useTransfer } from "./useTransfer";
 
 export { useHoldingStream } from "./useHoldingStream";
 export { useWalletSubscription } from "./useWalletSubscription";
@@ -71,6 +80,7 @@ export {
 export { useStatisticsDaily } from "./statistics/useStatisticsDaily";
 export { useFundingFeeHistory } from "./statistics/useFundingFeeHistory";
 export { useDistributionHistory } from "./statistics/useDistributionHistory";
+export { useTransferHistory } from "./statistics/useTransferHistory";
 
 export {
   useMaintenanceStatus,
@@ -84,3 +94,6 @@ export {
 } from "./useMarkPrice/useMarkPriceStore";
 export { usePositionActions } from "./usePositionStream/usePosition.store";
 export { useStorageLedgerAddress } from "./useStorageLedgerAddress";
+
+export { useSymbolsInfoStore } from "./useSymbolsInfo";
+export { useFundingRatesStore } from "./useFundingRates";

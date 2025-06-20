@@ -54,10 +54,12 @@ import { commifyOptional } from "@orderly.network/utils";
 // import { useBalanceScript } from "../../trading/src/components/mobile/bottomNavBar/balance";
 import { AdditionalInfoWidget } from "./components/additional/additionnalInfo.widget";
 import { orderConfirmDialogId } from "./components/dialog/confirm.ui";
+import { FeesWidget } from "./components/fees";
 import {
   OrderEntryContext,
   OrderEntryProvider,
 } from "./components/orderEntryContext";
+import { SlippageUI } from "./components/slippage/slippage.ui";
 import { OrderTPSL } from "./components/tpsl";
 import { type OrderEntryScriptReturn } from "./orderEntry.script";
 import { InputType } from "./types";
@@ -104,6 +106,12 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
   );
   const [hidden, setHidden] = useLocalStorage("orderly-order-hidden", false);
 
+  const [slippage, setSlippage] = useLocalStorage("orderly-slippage", "1", {
+    parseJSON: ((value: string | null) => {
+      return !value || value === '""' ? "1" : JSON.parse(value);
+    }) as any,
+  });
+
   const buttonLabel = useMemo(() => {
     return side === OrderSide.BUY
       ? t("orderEntry.buyLong")
@@ -115,6 +123,15 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
       setErrorMsgVisible(true);
     }
   }, [validated]);
+
+  // set slippage
+  useEffect(() => {
+    if (slippage) {
+      setOrderValue("slippage", Number(slippage));
+    } else {
+      setOrderValue("slippage", undefined);
+    }
+  }, [slippage]);
 
   useEffect(() => {
     const clickHandler = (event: MouseEvent) => {
@@ -164,6 +181,12 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           return true;
         },
         (errors) => {
+          if (errors.slippage) {
+            // toast.error(errors.slippage.message);
+            toast.error(t("orderEntry.slippage.error.max"));
+            return Promise.reject("cancel");
+          }
+
           setErrorMsgVisible(true);
 
           if (typeof errors === "object") {
@@ -191,6 +214,8 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
         if (error === "cancel") {
           return;
         }
+        // console.log("error--->>>>", error);
+
         if (typeof error === "object" && error.message)
           toast.error(error.message);
         // toast.error(`Error:${error.message}`);
@@ -372,7 +397,13 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           estLiqPrice={props.estLiqPrice}
           estLeverage={props.estLeverage}
           currentLeverage={props.currentLeverage}
+          slippage={slippage}
+          dp={symbolInfo.quote_dp}
+          setSlippage={setSlippage}
+          estSlippage={props.estSlippage}
+          orderType={formattedOrder.order_type!}
         />
+
         <Divider className="oui-w-full" />
         {/* TP SL switch and content */}
         <OrderTPSL
@@ -928,6 +959,11 @@ function AssetInfo(props: {
   estLiqPrice: number | null;
   estLeverage: number | null;
   currentLeverage: number | null;
+  slippage: string;
+  dp: number;
+  estSlippage: number | null;
+  setSlippage: (slippage: string) => void;
+  orderType: OrderType;
 }) {
   const { canTrade } = props;
   const { t } = useTranslation();
@@ -939,6 +975,7 @@ function AssetInfo(props: {
         <Text.numeral
           unit={props.quote}
           size={"2xs"}
+          dp={props.dp}
           className={"oui-text-base-contrast-80"}
           unitClassName={"oui-ml-1 oui-text-base-contrast-36"}
         >
@@ -981,6 +1018,14 @@ function AssetInfo(props: {
           {props.estLeverage ?? "--"}
         </Text.numeral> */}
       </Flex>
+      {props.orderType === OrderType.MARKET && (
+        <SlippageUI
+          slippage={props.slippage}
+          setSlippage={props.setSlippage}
+          estSlippage={props.estSlippage}
+        />
+      )}
+      <FeesWidget />
     </div>
   );
 }

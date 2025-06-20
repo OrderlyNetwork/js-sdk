@@ -2,15 +2,33 @@
   "extends": "./tsconfig.build.json",
   "compilerOptions": {
     "paths": {
-      "@orderly.network/ui": ["../ui/src"],
-      "@orderly.network/chart": ["../chart/src"],
-      "@orderly.network/hooks": ["../hooks/src"],
-      "@orderly.network/utils": ["../utils/src"],
-      "@orderly.network/types": ["../types/src"],
-      "@orderly.network/ui-connector": ["../ui-connector/src"],
-      "@orderly.network/react-app": ["../app/src"],
-      "@orderly.network/i18n": ["../i18n/src"],
-      "@orderly.network/ui-leverage": ["../ui-leverage/src"]
+      "@orderly.network/ui": [
+        "../ui/src"
+      ],
+      "@orderly.network/chart": [
+        "../chart/src"
+      ],
+      "@orderly.network/hooks": [
+        "../hooks/src"
+      ],
+      "@orderly.network/utils": [
+        "../utils/src"
+      ],
+      "@orderly.network/types": [
+        "../types/src"
+      ],
+      "@orderly.network/ui-connector": [
+        "../ui-connector/src"
+      ],
+      "@orderly.network/react-app": [
+        "../app/src"
+      ],
+      "@orderly.network/i18n": [
+        "../i18n/src"
+      ],
+      "@orderly.network/ui-leverage": [
+        "../ui-leverage/src"
+      ]
     }
   }
 }

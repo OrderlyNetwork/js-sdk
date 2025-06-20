@@ -1,5 +1,5 @@
+import { TransactionResponse } from "ethers";
 import { API } from "@orderly.network/types";
-import { TransactionRequest, TransactionResponse } from "ethers";
 
 export interface IWalletAdapter {
   //   get address(): string;
@@ -10,13 +10,13 @@ export interface IWalletAdapter {
    * Set the chain id
    */
   set chainId(chainId: number);
-  parseUnits: (amount: string, decimals?: number) => string;
-  formatUnits: (amount: string, decimals?: number) => string;
+  parseUnits: (amount: string, decimals: number) => string;
+  formatUnits: (amount: string, decimals: number) => string;
   // getBalance: (address: string) => Promise<any>;
   // deposit: (from: string, to: string, amount: string) => Promise<any>;
   send: (
     method: string,
-    params: Array<any> | Record<string, any>
+    params: Array<any> | Record<string, any>,
   ) => Promise<any>;
 
   sendTransaction(
@@ -30,7 +30,7 @@ export interface IWalletAdapter {
     },
     options: {
       abi: any;
-    }
+    },
   ): Promise<TransactionResponse>;
 
   getTransactionRecipect: (txHash: string) => Promise<any>;
@@ -40,13 +40,13 @@ export interface IWalletAdapter {
     txHash: string,
     baseInterval?: number,
     maxInterval?: number,
-    maxRetries?: number
+    maxRetries?: number,
   ) => Promise<any>;
 
   // Get the balance of address
   getBalance: (
     // address: string,
-    userAddress: string
+    userAddress: string,
   ) => Promise<any>;
 
   call(
@@ -55,7 +55,7 @@ export interface IWalletAdapter {
     params: any,
     options: {
       abi: any;
-    }
+    },
   ): Promise<any>;
 
   callOnChain(
@@ -65,7 +65,7 @@ export interface IWalletAdapter {
     params: any,
     options: {
       abi: any;
-    }
+    },
   ): Promise<any>;
 
   on(eventName: any, listener: any): void;
@@ -79,5 +79,5 @@ export type WalletAdapterOptions = {
 };
 
 export type getWalletAdapterFunc = (
-  options: WalletAdapterOptions
+  options: WalletAdapterOptions,
 ) => IWalletAdapter;

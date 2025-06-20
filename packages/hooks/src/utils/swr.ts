@@ -1,23 +1,27 @@
+import { is, lensIndex, over, startsWith } from "ramda";
 import { API } from "@orderly.network/types";
 import { WSMessage } from "@orderly.network/types";
-import { is, lensIndex, over, startsWith } from "ramda";
 import { AlgoOrderMergeHandler } from "../services/orderMerge/algoOrderMergeHandler";
 import { RegularOrderMergeHandler } from "../services/orderMerge/regularOrderMergeHandler";
 
 // import { useSWRConfig, unstable_serialize } from "swr";
 
 export const generateKeyFun =
-  (args: {
-    status?: string;
-    symbol?: string;
-    side?: string;
-    size?: number;
-    page?: number;
-    dateRange?: {
-      from?: Date;
-      to?: Date;
-    };
-  }) =>
+  (
+    url: string,
+    args: {
+      status?: string;
+      symbol?: string;
+      side?: string;
+      size?: number;
+      page?: number;
+      sourceTypeAll?: boolean;
+      dateRange?: {
+        from?: Date;
+        to?: Date;
+      };
+    },
+  ) =>
   (pageIndex: number, previousPageData: any): string | null => {
     // reached the end
     if (previousPageData && !previousPageData.rows?.length) return null;
@@ -27,8 +31,12 @@ export const generateKeyFun =
     const search = new URLSearchParams([
       ["size", size.toString()],
       ["page", `${pageIndex + 1}`],
-      ["source_type", "ALL"],
+      // ["source_type", "ALL"],
     ]);
+
+    if (args.sourceTypeAll) {
+      search.set("source_type", "ALL");
+    }
 
     if (dateRange) {
       if (dateRange.from) {
@@ -56,14 +64,14 @@ export const generateKeyFun =
       search.set(`side`, side);
     }
 
-    return `/v1/orders?${search.toString()}`;
+    return `${url}?${search.toString()}`;
   };
 
 export const updateOrdersHandler = (
   key: string,
   updatedOrder: WSMessage.Order,
   // isAlgoOrder:boolean,
-  orders?: API.OrderResponse[]
+  orders?: API.OrderResponse[],
 ) => {
   if (!orders) {
     return;
@@ -202,7 +210,7 @@ export const updateOrdersHandler = (
 export function updateAlgoOrdersHandler(
   key: string,
   message: WSMessage.AlgoOrder[],
-  orders: API.OrderResponse[]
+  orders: API.OrderResponse[],
 ) {
   if (!orders) {
     return;
@@ -217,7 +225,7 @@ export function updateAlgoOrdersHandler(
 
 function updateOrders(
   orders: API.OrderResponse[],
-  formattedOrder: API.Order & API.AlgoOrder
+  formattedOrder: API.Order & API.AlgoOrder,
 ) {
   return orders.map((item) => {
     return {
@@ -245,7 +253,7 @@ function updateOrders(
 
 function insertOrders(
   orders: API.OrderResponse[],
-  formattedOrder: API.Order & API.AlgoOrder
+  formattedOrder: API.Order & API.AlgoOrder,
 ) {
   const index = lensIndex(0);
   return over(
@@ -257,13 +265,13 @@ function insertOrders(
       },
       rows: [formattedOrder, ...item.rows],
     }),
-    orders
+    orders,
   );
 }
 
 function removeOrderIfExisting(
   orders: API.OrderResponse[],
-  orderId: number
+  orderId: number,
 ): API.OrderResponse[] {
   const isExisting = orderIsExisting(orders, orderId);
   if (!isExisting) return orders;
@@ -282,7 +290,7 @@ function removeOrderIfExisting(
 
 function findOrderIndex(
   orders: API.OrderResponse[],
-  orderId: number
+  orderId: number,
 ): number[] | undefined {
   let index: number = 0;
   let index2: number | undefined;

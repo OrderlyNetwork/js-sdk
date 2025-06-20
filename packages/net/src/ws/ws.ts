@@ -4,7 +4,7 @@ export type NetworkId = "testnet" | "mainnet";
 
 export type WSOptions = {
   privateUrl: string;
-  publicUrl: string;
+  publicUrl?: string;
   networkId?: NetworkId;
   accountId?: string;
 
@@ -57,7 +57,7 @@ export class WS {
   private _publicSocket!: WebSocket;
   private privateSocket?: WebSocket;
 
-  private _eventContainer: Map<string, Set<Function>> = new Map();
+  private _eventContainer: Map<string, Set<(message: any) => void>> = new Map();
 
   private publicIsReconnecting: boolean = false;
   private privateIsReconnecting: boolean = false;
@@ -93,12 +93,15 @@ export class WS {
     if (typeof document !== "undefined") {
       document.addEventListener?.(
         "visibilitychange",
-        this.onVisibilityChange.bind(this)
+        this.onVisibilityChange.bind(this),
       );
     }
 
     if (typeof window !== "undefined") {
-      window.addEventListener?.("online", this.onNetworkStatusChange.bind(this));
+      window.addEventListener?.(
+        "online",
+        this.onNetworkStatusChange.bind(this),
+      );
       // window.addEventListener?.("offline", this.onNetworkStatusChange);
     }
   }
@@ -145,12 +148,12 @@ export class WS {
 
     // public
     if (!this.publicIsReconnecting) {
-      if (this._publicSocket.readyState === WebSocket.CLOSED) {
+      if (this._publicSocket?.readyState === WebSocket.CLOSED) {
         this.reconnectPublic();
       } else {
         if (now - this._publicHeartbeatTime! > TIME_OUT) {
           //unsubscribe all public topic
-          this._publicSocket.close();
+          this._publicSocket?.close();
         }
       }
     }
@@ -196,16 +199,25 @@ export class WS {
   }
 
   private createPublicSC(options: WSOptions) {
-    if (this._publicSocket && this._publicSocket.readyState === WebSocket.OPEN)
+    if (!options.publicUrl) {
       return;
+    }
+
+    if (
+      this._publicSocket &&
+      this._publicSocket.readyState === WebSocket.OPEN
+    ) {
+      return;
+    }
+
     this._publicSocket = new WebSocket(
-      `${this.options.publicUrl}/ws/stream/${COMMON_ID}`
+      `${options.publicUrl}/ws/stream/${COMMON_ID}`,
     );
     this._publicSocket.onopen = this.onOpen.bind(this);
     // this.publicSocket.onmessage = this.onPublicMessage.bind(this);
     this._publicSocket.addEventListener(
       "message",
-      this.onPublicMessage.bind(this)
+      this.onPublicMessage.bind(this),
     );
     this._publicSocket.addEventListener("close", this.onPublicClose.bind(this));
     this._publicSocket.addEventListener("error", this.onPublicError.bind(this));
@@ -214,13 +226,17 @@ export class WS {
   }
 
   private createPrivateSC(options: WSOptions) {
-    if (this.privateSocket && this.privateSocket.readyState === WebSocket.OPEN)
+    if (
+      this.privateSocket &&
+      this.privateSocket.readyState === WebSocket.OPEN
+    ) {
       return;
+    }
 
     this.options = options;
 
     this.privateSocket = new WebSocket(
-      `${this.options.privateUrl}/v2/ws/private/stream/${options.accountId}`
+      `${this.options.privateUrl}/v2/ws/private/stream/${options.accountId}`,
     );
     this.privateSocket.onopen = this.onPrivateOpen.bind(this);
     this.privateSocket.onmessage = this.onPrivateMessage.bind(this);
@@ -244,7 +260,7 @@ export class WS {
   }
 
   private onPrivateOpen(event: Event) {
-    //auth
+    // auth
     this.authenticate(this.options.accountId!);
     this.privateIsReconnecting = false;
     this._privateRetryCount = 0;
@@ -255,7 +271,7 @@ export class WS {
   private onMessage(
     event: MessageEvent,
     socket: WebSocket,
-    handlerMap: Map<string, Topics>
+    handlerMap: Map<string, Topics>,
   ) {
     try {
       const message = JSON.parse(event.data);
@@ -367,8 +383,8 @@ export class WS {
     console.error("public WebSocket error:", event);
     this.publicIsReconnecting = false;
 
-    if (this._publicSocket.readyState === WebSocket.OPEN) {
-      this._publicSocket.close();
+    if (this._publicSocket?.readyState === WebSocket.OPEN) {
+      this._publicSocket?.close();
     } else {
       // retry connect
       if (this._publicRetryCount > CONNECT_LIMIT) return;
@@ -419,8 +435,8 @@ export class WS {
       message = JSON.stringify(message);
     }
     if (typeof message === "undefined") return;
-    if (this._publicSocket.readyState === WebSocket.OPEN) {
-      this._publicSocket.send(message);
+    if (this._publicSocket?.readyState === WebSocket.OPEN) {
+      this._publicSocket?.send(message);
       //
     } else {
       console.warn("WebSocket connection is not open. Cannot send message.");
@@ -428,7 +444,7 @@ export class WS {
   };
 
   close() {
-    this._publicSocket.close();
+    this._publicSocket?.close();
     this.privateSocket?.close();
   }
 
@@ -456,7 +472,7 @@ export class WS {
           sign: message.signature,
           timestamp: message.timestamp,
         },
-      })
+      }),
     );
     // this.wsSubject.next({ type: "authenticate" });
     // this.authenticated = true;
@@ -464,11 +480,11 @@ export class WS {
 
   privateSubscribe(
     params: any,
-    callback: WSMessageHandler | Omit<WSMessageHandler, "onUnsubscribe">
+    callback: WSMessageHandler | Omit<WSMessageHandler, "onUnsubscribe">,
   ) {
     const [subscribeMessage, onUnsubscribe] = this.generateMessage(
       params,
-      (callback as WSMessageHandler).onUnsubscribe
+      (callback as WSMessageHandler).onUnsubscribe,
     );
 
     if (this.privateSocket?.readyState !== WebSocket.OPEN) {
@@ -505,14 +521,16 @@ export class WS {
     params: any,
     callback: WSMessageHandler | Omit<WSMessageHandler, "onUnsubscribe">,
     once?: boolean,
-    id?: string
+    id?: string,
   ): unsubscribe | undefined {
-    //
+    if (!this._publicSocket) {
+      return;
+    }
 
     const [subscribeMessage, onUnsubscribe] = this.generateMessage(
       params,
       (callback as WSMessageHandler).onUnsubscribe,
-      (callback as WSMessageHandler).onMessage
+      (callback as WSMessageHandler).onMessage,
     );
 
     //
@@ -528,7 +546,7 @@ export class WS {
       return;
     }
 
-    let topic = this.getTopicKeyFromParams(subscribeMessage);
+    const topic = this.getTopicKeyFromParams(subscribeMessage);
     // const topic = subscribeMessage.topic || subscribeMessage.event;
 
     const handler = this._eventHandlers.get(topic);
@@ -602,7 +620,7 @@ export class WS {
 
   onceSubscribe(
     params: any,
-    callback: Omit<WSMessageHandler, "onUnsubscribe">
+    callback: Omit<WSMessageHandler, "onUnsubscribe">,
   ) {
     this.subscribe(params, callback, true);
   }
@@ -610,7 +628,7 @@ export class WS {
   private unsubscribe(
     parmas: MessageParams,
     webSocket: WebSocket,
-    handlerMap: Map<string, Topics>
+    handlerMap: Map<string, Topics>,
   ) {
     const topic = parmas.topic || parmas.event;
     const handler = handlerMap.get(topic);
@@ -627,7 +645,7 @@ export class WS {
         //post unsubscribe message
       } else {
         const index = handler.callback.findIndex(
-          (cb) => cb.onMessage === parmas.onMessage
+          (cb) => cb.onMessage === parmas.onMessage,
         );
 
         // console.log(index, handler.callback.length);
@@ -655,7 +673,7 @@ export class WS {
   private generateMessage(
     params: any,
     onUnsubscribe?: (event: string) => any,
-    onMessage?: (message: any) => any
+    onMessage?: (message: any) => any,
   ): [MessageParams, (event: string) => any] {
     let subscribeMessage;
 

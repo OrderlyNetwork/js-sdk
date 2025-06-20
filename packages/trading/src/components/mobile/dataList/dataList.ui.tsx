@@ -162,7 +162,7 @@ const SymbolControlHeader: FC<
       gap={2}
       className="oui-rounded-b-xl oui-bg-base-9"
     >
-      <Flex className="oui-gap-[2px] oui-cursor-pointer">
+      <Flex className="oui-cursor-pointer oui-gap-[2px]">
         <Checkbox
           color="white"
           checked={!props.showAllSymbol}

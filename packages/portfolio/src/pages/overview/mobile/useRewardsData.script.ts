@@ -10,8 +10,8 @@ import {
   usePrivateQuery,
 } from "@orderly.network/hooks";
 import { DistributionId, TWType } from "@orderly.network/hooks";
+import { useAppContext } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
-import { useWalletStateHandle } from "../../../../../app/src/hooks/useWalletStateHandle";
 import { OverviewContext } from "../providers/overviewCtx";
 
 export const useRewardsData = ({ type = TWType.normal }: { type?: TWType }) => {
@@ -68,7 +68,7 @@ export const useRewardsDataScript = () => {
     referralInfo,
   } = useContext(OverviewContext);
   const { state } = useAccount();
-  const { wrongNetwork } = useWalletStateHandle({});
+  const { wrongNetwork } = useAppContext();
   const isSignIn =
     state.status === AccountStatusEnum.EnableTrading ||
     state.status === AccountStatusEnum.EnableTradingWithoutConnected;

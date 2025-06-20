@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-namespace */
 import { AlgoOrderRootType, OrderSide, OrderType } from "../order";
 
 export enum AnnouncementType {
@@ -262,6 +263,7 @@ export declare namespace API {
   }
 
   export interface Position {
+    account_id?: string;
     symbol: string;
     position_qty: number;
     cost_position: number;
@@ -289,6 +291,7 @@ export declare namespace API {
     MMR_with_orders: number;
     pnl_24_h: number;
     fee_24_h: number;
+    fundingFee?: number;
   }
 
   export interface PositionExt extends Position {
@@ -433,6 +436,33 @@ export declare namespace API {
     payment_type: string;
     status: string;
     created_time: number;
+    updated_time: number;
+  }
+
+  export interface TransferHistoryRow {
+    amount: number;
+    created_time: number;
+    from_account_id: string;
+    id: string;
+    status: "CREATED" | "PENDING" | "COMPLETED" | "FAILED";
+    to_account_id: string;
+    token: string;
+    updated_time: number;
+  }
+
+  export interface TransferHistory {
+    meta: RecordsMeta;
+    rows: TransferHistoryRow[];
+  }
+
+  export interface TransferHistoryRow {
+    amount: number;
+    created_time: number;
+    from_account_id: string;
+    id: string;
+    status: "CREATED" | "PENDING" | "COMPLETED" | "FAILED";
+    to_account_id: string;
+    token: string;
     updated_time: number;
   }
 

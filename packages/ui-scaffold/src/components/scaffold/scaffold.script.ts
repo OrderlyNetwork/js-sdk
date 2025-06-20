@@ -13,6 +13,7 @@ export const useScaffoldScript = (options: ScaffoldScriptOptions) => {
 
   const [topNavbarRef, topNavbarHeight] = useRefAndHeight(48);
   const [footerRef, footerHeight] = useRefAndHeight(29);
+  const [bottomNavRef, bottomNavHeight] = useRefAndHeight(64);
   const [announcementRef, announcementHeight] = useRefAndHeight(0, [
     showAnnouncement,
   ]);
@@ -46,6 +47,8 @@ export const useScaffoldScript = (options: ScaffoldScriptOptions) => {
     routerAdapter: options.routerAdapter,
     mainNavProps: options.mainNavProps,
     bottomNavProps: options.bottomNavProps,
+    bottomNavRef,
+    bottomNavHeight,
   };
 };
 

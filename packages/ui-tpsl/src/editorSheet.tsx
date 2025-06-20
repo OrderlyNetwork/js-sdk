@@ -1,4 +1,6 @@
 import { useMemo } from "react";
+import { useLocalStorage, useMarkPrice } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 import { AlgoOrderRootType, API } from "@orderly.network/types";
 import {
   Flex,
@@ -10,10 +12,8 @@ import {
   Divider,
   toast,
 } from "@orderly.network/ui";
-import { TPSLWidget, TPSLWidgetProps } from "./tpsl.widget";
 import { PositionTPSLConfirm } from "./tpsl.ui";
-import { useLocalStorage, useMarkPrice } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import { TPSLWidget, TPSLWidgetProps } from "./tpsl.widget";
 
 type TPSLSheetProps = {
   position: API.Position;
@@ -58,7 +58,7 @@ export const PositionTPSLSheet = (props: TPSLWidgetProps & TPSLSheetProps) => {
           updateSheetTitle(
             type === AlgoOrderRootType.TP_SL
               ? t("common.tpsl")
-              : t("tpsl.positionTpsl")
+              : t("tpsl.positionTpsl"),
           );
         }}
         onComplete={onCompleted}
@@ -81,8 +81,27 @@ export const PositionTPSLSheet = (props: TPSLWidgetProps & TPSLSheetProps) => {
                 ? t("orders.editOrder")
                 : t("tpsl.confirmOrder"),
               bodyClassName: "oui-pb-0 lg:oui-pb-0",
-              onOk: () => {
-                return options.submit();
+              onOk: async () => {
+                try {
+                  const res = await options.submit({
+                    accountId: position.account_id,
+                  });
+
+                  if (res.success) {
+                    return res;
+                  }
+
+                  if (res.message) {
+                    toast.error(res.message);
+                  }
+
+                  return false;
+                } catch (err: any) {
+                  if (err?.message) {
+                    toast.error(err.message);
+                  }
+                  return false;
+                }
               },
               content: (
                 <PositionTPSLConfirm
@@ -112,7 +131,7 @@ export const PositionTPSLSheet = (props: TPSLWidgetProps & TPSLSheetProps) => {
 
                 // setVisible(true);
                 return Promise.reject(false);
-              }
+              },
             );
         }}
         onCancel={() => {
