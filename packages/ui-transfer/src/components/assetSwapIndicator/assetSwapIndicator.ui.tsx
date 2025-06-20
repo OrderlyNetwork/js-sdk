@@ -6,7 +6,7 @@ import type { AssetSwapIndicatorReturns } from "./assetSwapIndicator.script";
 export const AssetSwapIndicatorUI: React.FC<
   Readonly<AssetSwapIndicatorReturns>
 > = (props) => {
-  const { fromToken, toToken, feeMessage } = props;
+  const { fromToken, toToken } = props;
   return (
     <Flex
       width="100%"
@@ -38,7 +38,7 @@ export const AssetSwapIndicatorUI: React.FC<
         className="oui-text-center oui-text-warning"
         intensity={36}
       >
-        {feeMessage}
+        Please note that convert fees will be charged.
       </Text>
     </Flex>
   );

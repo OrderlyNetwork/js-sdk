@@ -111,7 +111,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
             <SlippageUI slippage="1" />
             <MinimumReceivedWidget />
             <Fee {...fee} />
-            <AssetSwapIndicatorWidget feeMessage="Please note that convert fees will be charged." />
+            <AssetSwapIndicatorWidget />
           </Flex>
         )}
       </Box>
