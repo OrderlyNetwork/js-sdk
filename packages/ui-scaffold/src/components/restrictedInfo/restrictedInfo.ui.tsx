@@ -1,8 +1,9 @@
 import { FC } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import { cn, Flex } from "@orderly.network/ui";
 import { InfoIcon } from "../icons";
 import { UseRestrictedInfoScriptReturn } from "./restrictedInfo.script";
-import { useTranslation } from "@orderly.network/i18n";
+
 export type RestrictedInfoProps = UseRestrictedInfoScriptReturn & {
   className?: string;
 };
@@ -37,9 +38,10 @@ export const RestrictedInfo: FC<RestrictedInfoProps> = (props) => {
       ref={props.container}
       justify="center"
       className={cn(
+        "oui-restricted-info",
         "oui-rounded-xl oui-p-[7px]",
         "oui-text-warning-darken",
-        props.className
+        props.className,
       )}
     >
       <Flex
@@ -47,7 +49,7 @@ export const RestrictedInfo: FC<RestrictedInfoProps> = (props) => {
           "oui-min-h-[20px] oui-gap-1",
           "oui-text-2xs md:oui-text-sm oui-leading-4",
           "oui-items-start lg:oui-justify-center",
-          props.mutiLine ? "lg:oui-items-start" : "lg:oui-items-center"
+          props.mutiLine ? "lg:oui-items-start" : "lg:oui-items-center",
         )}
       >
         <InfoIcon

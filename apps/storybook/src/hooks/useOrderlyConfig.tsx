@@ -10,6 +10,9 @@ import {
   PortfolioInactiveIcon,
   LeaderboardActiveIcon,
   LeaderboardInactiveIcon,
+  MarketsActiveIcon,
+  MarketsInactiveIcon,
+  useScreen,
 } from "@orderly.network/ui";
 import {
   FooterProps,
@@ -44,10 +47,12 @@ export type OrderlyConfig = {
 
 export const useOrderlyConfig = () => {
   const { t } = useTranslation();
+  const { isMobile } = useScreen();
 
   return useMemo<OrderlyConfig>(() => {
     return {
       scaffold: {
+        topBar: <></>,
         mainNavProps: {
           // leading: <CustomProductNav />,
           trailing: null,
@@ -99,6 +104,12 @@ export const useOrderlyConfig = () => {
         },
         bottomNavProps: {
           mainMenus: [
+            {
+              name: t("common.markets"),
+              href: "/markets",
+              activeIcon: <MarketsActiveIcon />,
+              inactiveIcon: <MarketsInactiveIcon />,
+            },
             {
               name: t("common.trading"),
               href: "/",

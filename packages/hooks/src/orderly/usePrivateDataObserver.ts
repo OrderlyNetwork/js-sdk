@@ -170,7 +170,18 @@ export const usePrivateDataObserver = (options: {
   ) => {
     const keysMap = options.getKeysMap("orders");
 
-    keysMap.forEach((getKey, key) => {
+    const filteredKeys = new Map();
+    const keyStartWith = isAlgoOrder ? "algoOrders" : "orders";
+
+    const keys = keysMap.keys();
+
+    for (const key of keys) {
+      if (key.startsWith(keyStartWith)) {
+        filteredKeys.set(key, keysMap.get(key));
+      }
+    }
+
+    filteredKeys.forEach((getKey, key) => {
       mutate(
         unstable_serialize((index, prevData) => [
           getKey(index, prevData),

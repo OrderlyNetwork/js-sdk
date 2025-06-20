@@ -1,4 +1,3 @@
-import { usePrivateInfiniteQuery } from "../../usePrivateInfiniteQuery";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   OrderSide,
@@ -7,14 +6,15 @@ import {
   API,
   AlgoOrderRootType,
 } from "@orderly.network/types";
-import { useMarkPricesStream } from "../useMarkPricesStream";
-import { useMutation } from "../../useMutation";
-import version from "../../version";
-import { useDataCenterContext } from "../../dataProvider";
-import { generateKeyFun } from "../../utils/swr";
-import { useEventEmitter } from "../../useEventEmitter";
 import { SDKError } from "@orderly.network/types";
 import { AlgoOrderType } from "@orderly.network/types";
+import { useDataCenterContext } from "../../dataProvider";
+import { useEventEmitter } from "../../useEventEmitter";
+import { useMutation } from "../../useMutation";
+import { usePrivateInfiniteQuery } from "../../usePrivateInfiniteQuery";
+import { generateKeyFun } from "../../utils/swr";
+import version from "../../version";
+import { useMarkPricesStream } from "../useMarkPricesStream";
 
 type CreateOrderType = "normalOrder" | "algoOrder";
 
@@ -30,6 +30,7 @@ export const useOrderStream = (
     page?: number;
     size?: number;
     side?: OrderSide;
+    sourceTypeAll?: boolean;
     /**
      * Include the order type
      * @default ["ALL"]
@@ -54,7 +55,7 @@ export const useOrderStream = (
      * Stop the state update when the component unmount
      */
     stopOnUnmount?: boolean;
-  }
+  },
 ) => {
   const {
     status,
@@ -63,10 +64,15 @@ export const useOrderStream = (
     size = 50,
     page,
     dateRange,
+    sourceTypeAll,
   } = params;
 
-  const [includes, setIncludes] = useState<CombineOrderType[]>(params.includes ?? ['ALL'])
-  const [excludes, setExcludes] = useState<CombineOrderType[]>(params.excludes ?? []);
+  const [includes, setIncludes] = useState<CombineOrderType[]>(
+    params.includes ?? ["ALL"],
+  );
+  const [excludes, setExcludes] = useState<CombineOrderType[]>(
+    params.excludes ?? [],
+  );
 
   const { data: markPrices } = useMarkPricesStream();
 
@@ -95,42 +101,94 @@ export const useOrderStream = (
     { error: updateAlgoOrderError, isMutating: updateAlgoMutating },
   ] = useMutation("/v1/algo/order", "PUT");
 
+  const normalOrderKeyFn = useMemo(() => {
+    return generateKeyFun("/v1/orders", {
+      status,
+      symbol,
+      side,
+      size,
+      page,
+      dateRange,
+      sourceTypeAll,
+    });
+  }, [status, symbol, side, size, page, dateRange]);
+
+  const algoOrderKeyFn = useMemo(() => {
+    return sourceTypeAll
+      ? null
+      : generateKeyFun("/v1/algo/orders", {
+          status,
+          symbol,
+          side,
+          size: 100,
+          page,
+          dateRange,
+        });
+  }, [status, symbol, side, dateRange, size]);
+
   useEffect(() => {
     const formatKey = (value?: string) => (value ? `:${value}` : "");
     const key = `orders${formatKey(status)}${formatKey(symbol)}${formatKey(
-      side
+      side,
     )}${formatKey(size.toString())}`;
 
-    registerKeyHandler?.(
-      key,
-      generateKeyFun({ status, symbol, side, size, page, dateRange })
-    );
+    registerKeyHandler?.(key, normalOrderKeyFn);
+
+    if (algoOrderKeyFn) {
+      registerKeyHandler?.(key.replace("orders", "algoOrders"), algoOrderKeyFn);
+    }
 
     return () => {
       if (!options?.stopOnUnmount) return;
 
       unregisterKeyHandler(key);
-    };
-  }, [status, symbol, side, size, page, dateRange, options?.keeplive]);
 
-  const ordersResponse = usePrivateInfiniteQuery(
-    generateKeyFun({ status, symbol, side, size, page, dateRange }),
-    {
-      initialSize: 1,
-      // revalidateFirstPage: false,
-      // onError: (err) => {
-      //   console.error("fetch failed::::", err);
-      // },
-      formatter: (data) => data,
-      revalidateOnFocus: false,
-    }
-  );
+      if (algoOrderKeyFn) {
+        unregisterKeyHandler(key.replace("orders", "algoOrders"));
+      }
+    };
+  }, [normalOrderKeyFn, options?.keeplive]);
+
+  const normalOrdersResponse = usePrivateInfiniteQuery<{
+    rows: any[];
+    meta: any;
+  }>(normalOrderKeyFn, {
+    initialSize: 1,
+    formatter: (data) => data,
+    revalidateOnFocus: false,
+  });
+
+  // console.log("ordersResponse", ordersResponse);
+
+  const algoOrdersResponse = usePrivateInfiniteQuery<{
+    rows: any[];
+    meta: any;
+  }>(algoOrderKeyFn, {
+    formatter: (data) => data,
+    revalidateOnFocus: false,
+  });
+
+  // console.log("algoOrdersResponse", algoOrdersResponse, algoOrdersResponse);
 
   const flattenOrders = useMemo(() => {
-    if (!ordersResponse.data) {
+    if (
+      !normalOrdersResponse.data ||
+      (!algoOrdersResponse.data && !sourceTypeAll)
+    ) {
       return null;
     }
-    let orders = ordersResponse.data?.map((item: any) => item.rows)?.flat();
+
+    let orders = normalOrdersResponse.data
+      ?.map((item: any) => item.rows)
+      ?.flat();
+
+    if (algoOrdersResponse.data) {
+      const algoOrders = algoOrdersResponse.data
+        ?.map((item: any) => item.rows)
+        ?.flat();
+
+      orders = [...orders, ...algoOrders];
+    }
 
     // return ordersResponse.data?.map((item) => item.rows)?.flat();
 
@@ -150,12 +208,12 @@ export const useOrderStream = (
       return orders?.filter(
         (item) =>
           includes.includes(item.algo_type) &&
-          !excludes.includes(item.algo_type)
+          !excludes.includes(item.algo_type),
       );
     }
 
     return orders;
-  }, [ordersResponse.data, includes, excludes]);
+  }, [normalOrdersResponse.data, algoOrdersResponse.data, includes, excludes]);
 
   // console.log(ordersResponse.data);
 
@@ -192,6 +250,16 @@ export const useOrderStream = (
     // return ordersResponse.data?.[0]?.meta?.total || 0;
   }, [orders?.length]);
 
+  // console.log("---->>>>>>!!!! orders", total, orders, {
+  //   status,
+  //   symbol,
+  //   side,
+  //   size,
+  //   page,
+  //   dateRange,
+  //   sourceTypeAll,
+  // });
+
   const cancelAlgoOrdersByTypes = (types: AlgoOrderRootType[]) => {
     if (!types) {
       throw new SDKError("Types is required");
@@ -206,7 +274,7 @@ export const useOrderStream = (
     return Promise.all(
       types.map((type) => {
         return doCancelAllAlgoOrders(null, { algo_type: type });
-      })
+      }),
     );
   };
 
@@ -218,14 +286,14 @@ export const useOrderStream = (
       doCancelAllOrders(null),
       doCancelAllAlgoOrders(null, { algo_type: "STOP" }),
     ]);
-  }, [ordersResponse.data]);
+  }, [normalOrdersResponse.data, algoOrdersResponse.data]);
 
   const cancelAllTPSLOrders = useCallback(() => {
     return cancelAlgoOrdersByTypes([
       AlgoOrderRootType.POSITIONAL_TP_SL,
       AlgoOrderRootType.TP_SL,
     ]);
-  }, [ordersResponse.data]);
+  }, [algoOrdersResponse.data]);
 
   const _updateOrder = useCallback(
     (orderId: string, order: OrderEntity, type: CreateOrderType) => {
@@ -241,7 +309,7 @@ export const useOrderStream = (
           return doUpdateOrder({ ...order, order_id: orderId });
       }
     },
-    []
+    [],
   );
 
   /**
@@ -269,7 +337,9 @@ export const useOrderStream = (
             source: `SDK${version}`,
           }).then((res: any) => {
             if (res.success) {
-              ordersResponse.mutate();
+              // ordersResponse.mutate();
+              normalOrdersResponse.mutate();
+              algoOrdersResponse.mutate();
               return res;
             } else {
               throw new Error(res.message);
@@ -294,7 +364,7 @@ export const useOrderStream = (
           });
       }
     },
-    []
+    [],
   );
   /**
    * calcel order
@@ -311,7 +381,7 @@ export const useOrderStream = (
   }, []);
 
   const loadMore = () => {
-    ordersResponse.setSize(ordersResponse.size + 1);
+    // ordersResponse.setSize(ordersResponse.size + 1);
   };
 
   // const cancelTPSLOrder = useCallback((orderId:number, symbol:string)=>{
@@ -330,7 +400,7 @@ export const useOrderStream = (
         ],
       });
     },
-    []
+    [],
   );
 
   const updateTPSLOrder = useCallback(
@@ -339,7 +409,7 @@ export const useOrderStream = (
        * the root algo order id
        */
       orderId: number,
-      childOrders: API.AlgoOrder["child_orders"]
+      childOrders: API.AlgoOrder["child_orders"],
     ) => {
       if (!Array.isArray(childOrders)) {
         throw new SDKError("Children orders is required");
@@ -349,20 +419,24 @@ export const useOrderStream = (
         child_orders: childOrders,
       });
     },
-    []
+    [],
   );
 
   const meta = useMemo(() => {
-    // @ts-ignore
-    return ordersResponse.data?.[0]?.meta;
-  }, [ordersResponse.data?.[0]]);
+    return normalOrdersResponse.data?.[0]?.meta;
+  }, [normalOrdersResponse.data?.[0]]);
+
+  const refresh = useCallback(() => {
+    normalOrdersResponse.mutate();
+    algoOrdersResponse.mutate();
+  }, []);
 
   return [
     orders,
     {
       total,
-      isLoading: ordersResponse.isLoading,
-      refresh: ordersResponse.mutate,
+      isLoading: normalOrdersResponse.isLoading || algoOrdersResponse.isLoading,
+      refresh,
       loadMore,
       cancelAllOrders,
       cancelAllTPSLOrders,

@@ -1,13 +1,18 @@
-import { FC} from "react";
-import { Header } from "./header";
-import { Bids } from "./bids";
-import { Asks } from "./asks";
-import { MarkPrice } from "./markPrice";
-import { OrderBookProvider } from "../../base/orderBook/orderContext";
-import { DepthSelect } from "./depthSelect";
+import { FC, useEffect } from "react";
+import { useLocalStorage } from "@orderly.network/hooks";
 import { cn, Flex, Spinner } from "@orderly.network/ui";
 import { BasicSymbolInfo } from "../../../types/types";
+import {
+  ORDERBOOK_MOBILE_COIN_TYPE_KEY,
+  OrderBookProvider,
+} from "../../base/orderBook/orderContext";
 import { FundingRateWidget } from "../fundingRate";
+import { Asks } from "./asks";
+import { Bids } from "./bids";
+import { DepthSelect } from "./depthSelect";
+import { Header } from "./header";
+import { MarkPrice } from "./markPrice";
+
 export interface OrderBookProps {
   asks: any[];
   bids: any[];
@@ -33,8 +38,18 @@ export interface OrderBookProps {
 
 export const OrderBook: FC<OrderBookProps> = (props) => {
   const { lastPrice, markPrice, quote, base, isLoading, onDepthChange } = props;
-  // const onModeChange = useCallback((mode: QtyMode) => {}, []);
+
   const symbol = `PERP_${props.symbolInfo.base}_${props.symbolInfo.quote}`;
+
+  const [coinTypeConfig, setCoinTypeConfig]: [string, React.Dispatch<string>] =
+    useLocalStorage(ORDERBOOK_MOBILE_COIN_TYPE_KEY, ["total", base].join("_"));
+
+  useEffect(() => {
+    const [prevMode] = (coinTypeConfig?.split("_") as [string, string]) ?? [];
+    if (!coinTypeConfig.includes(quote) && base) {
+      setCoinTypeConfig([prevMode, base].join("_"));
+    }
+  }, [quote, base, coinTypeConfig]);
 
   return (
     <OrderBookProvider
@@ -49,7 +64,7 @@ export const OrderBook: FC<OrderBookProps> = (props) => {
         direction={"column"}
         p={2}
         id="oui-orderbook-mobile"
-        className={cn("oui-h-full oui-wfull oui-relative", props.className)}
+        className={cn("oui-relative oui-size-full", props.className)}
         justify={"start"}
         itemAlign={"start"}
       >
@@ -58,14 +73,13 @@ export const OrderBook: FC<OrderBookProps> = (props) => {
         <Asks data={props.asks} />
         <MarkPrice lastPrice={lastPrice} markPrice={markPrice} />
         <Bids data={props.bids} />
-
         <DepthSelect
           depth={props.depths || []}
           value={props.activeDepth}
           onChange={onDepthChange}
         />
         {isLoading && (
-          <div className="oui-absolute oui-left-0 oui-top-0 oui-right-0 oui-bottom-0 oui-z-10 oui-flex oui-items-center oui-justify-center oui-bg-base-800/70 oui-h-full oui-min-h-[420px]">
+          <div className="oui-bg-base-800/70 oui-absolute oui-inset-0 oui-z-10 oui-flex oui-h-full oui-min-h-[420px] oui-items-center oui-justify-center">
             <Spinner />
           </div>
         )}

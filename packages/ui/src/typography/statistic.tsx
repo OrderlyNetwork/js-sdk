@@ -51,7 +51,7 @@ const StatisticLabel = React.forwardRef<HTMLDivElement, StatisticLabelProps>(
         {props.children}
       </div>
     );
-  }
+  },
 );
 
 StatisticLabel.displayName = "StatisticLabel";
@@ -61,7 +61,7 @@ type DivElement = React.ElementRef<"div">;
 type StatisticProps = VariantProps<typeof statisticVariants> &
   HTMLAttributes<HTMLDivElement> & {
     label: string | ReactNode;
-    valueProps?: NumeralProps;
+    valueProps?: Omit<NumeralProps, "children">;
     classNames?: {
       root?: string;
       label?: string;
@@ -81,6 +81,7 @@ const Statistic = React.forwardRef<
     if (typeof children === "string" || typeof children === "number") {
       const { className: valueClass, ...restValueProps } = valueProps ?? {};
       return (
+        // @ts-ignore
         <Numeral
           {...restValueProps}
           className={cnBase(
@@ -88,7 +89,7 @@ const Statistic = React.forwardRef<
               className: valueClass,
             }),
             "oui-font-semibold",
-            !valueProps?.coloring && "oui-text-base-contrast-80"
+            !valueProps?.coloring && "oui-text-base-contrast-80",
           )}
         >
           {children}

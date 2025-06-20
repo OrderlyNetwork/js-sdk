@@ -2,26 +2,28 @@ import useSWRInfinite, {
   type SWRInfiniteKeyLoader,
   type SWRInfiniteConfiguration,
 } from "swr/infinite";
-import { signatureMiddleware } from "./middleware/signatureMiddleware";
 import { get } from "@orderly.network/net";
-import { useAccount } from "./useAccount";
 import { AccountStatusEnum } from "@orderly.network/types";
+import { signatureMiddleware } from "./middleware/signatureMiddleware";
+import { useAccount } from "./useAccount";
 
 export const usePrivateInfiniteQuery = <T>(
-  getKey: SWRInfiniteKeyLoader,
+  getKey: SWRInfiniteKeyLoader | null,
   options?: SWRInfiniteConfiguration & {
     formatter?: (data: any) => any;
-  }
+  },
 ) => {
   const { formatter, ...restOptions } = options || {};
   const { state } = useAccount();
 
   const middleware = Array.isArray(restOptions?.use)
-    ? restOptions?.use ?? []
+    ? (restOptions?.use ?? [])
     : [];
 
   const result = useSWRInfinite<T>(
     (pageIndex: number, previousPageData) => {
+      if (!getKey) return null;
+
       const queryKey = getKey(pageIndex, previousPageData);
       if (
         queryKey &&
@@ -39,7 +41,7 @@ export const usePrivateInfiniteQuery = <T>(
     {
       ...restOptions,
       use: [signatureMiddleware, ...middleware],
-    }
+    },
   );
 
   return result;

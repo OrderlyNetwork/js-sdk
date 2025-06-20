@@ -1,5 +1,31 @@
 # @orderly.network/default-solana-adapter
 
+## 2.3.0
+
+### Minor Changes
+
+- publish
+- 4e5f109: publish
+
+### Patch Changes
+
+- Updated dependencies
+- Updated dependencies [4e5f109]
+  - @orderly.network/core@2.3.0
+  - @orderly.network/types@2.3.0
+
+## 2.3.0-alpha.0
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/core@2.3.0-alpha.0
+  - @orderly.network/types@2.3.0-alpha.0
+
 ## 2.2.0
 
 ### Minor Changes

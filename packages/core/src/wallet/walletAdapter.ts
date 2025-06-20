@@ -151,8 +151,8 @@ export interface WalletAdapter<Config = any> {
     maxRetries?: number,
   ): Promise<any>;
 
-  parseUnits: (amount: string, decimals?: number) => string;
-  formatUnits: (amount: BigNumberish, decimals?: number) => string;
+  parseUnits: (amount: string, decimals: number) => string;
+  formatUnits: (amount: BigNumberish, decimals: number) => string;
 
   on(eventName: string, listener: (...args: any[]) => void): void;
 

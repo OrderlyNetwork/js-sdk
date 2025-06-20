@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { CopyIcon, formatAddress, toast, Tooltip } from "@orderly.network/ui";
 import { cn, Flex, Text } from "@orderly.network/ui";
@@ -12,7 +12,7 @@ interface AccountItemProps {
   balance?: string;
   isCurrent?: boolean;
   onSwitch?: (accountId: string) => void;
-  holdings?: { token: string; holding: number }[];
+  accountValue?: number;
   onEdit?: (accountItem: { accountId: string; description: string }) => void;
 }
 
@@ -50,13 +50,8 @@ const AccountIdForCopy = (props: { accountId: string }) => {
 };
 
 export const AccountItem = (props: AccountItemProps) => {
-  const holdings = useMemo(() => {
-    if (!props.holdings || !props.holdings.length) {
-      return [{ holding: 0, token: "USDC" }];
-    }
-    return props.holdings;
-  }, [props.holdings]);
   const { t } = useTranslation();
+
   return (
     <>
       <Flex
@@ -127,12 +122,11 @@ export const AccountItem = (props: AccountItemProps) => {
             </Text>
           </Tooltip>
         </Flex>
-        <Flex>
-          {holdings.map((holding) => (
-            <Flex key={holding.token}>
-              {holding.holding} {holding.token}
-            </Flex>
-          ))}
+        <Flex className="oui-text-xs" itemAlign="end" gap={1}>
+          <Text.numeral rule="price" dp={2}>
+            {props.accountValue ?? 0}
+          </Text.numeral>
+          <Text>USDC</Text>
         </Flex>
       </Flex>
     </>

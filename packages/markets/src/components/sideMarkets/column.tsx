@@ -19,7 +19,7 @@ export const useSideMarketsColumns = (
 
   return [
     {
-      title: t("markets.column.market&Volume"),
+      title: `${t("markets.column.market")} / ${t("common.volume")}`,
       dataIndex: "24h_amount",
       onSort: true,
       className: "oui-h-[36px]",

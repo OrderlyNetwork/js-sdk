@@ -1,5 +1,5 @@
-export * from "./pages/home/header";
-export * from "./pages/home/dataList";
+export * from "./pages/home/marketsHeader";
+export * from "./pages/home/marketsDataList";
 
 export * from "./components/marketsListFull";
 export * from "./components/favoritesListFull";
@@ -22,6 +22,7 @@ export * from "./components/symbolInfoBarFull";
 export * from "./deprecated/newListingList";
 export * from "./deprecated/favoritesList";
 export * from "./deprecated/recentList";
+export * from "./type";
 
 export { MarketsHomePage } from "./pages/home/page";
 export { MarketsProvider } from "./components/marketsProvider";

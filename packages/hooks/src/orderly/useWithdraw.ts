@@ -14,7 +14,7 @@ import { useChains } from "./useChains";
 import { useCollateral } from "./useCollateral";
 import { useHoldingStream } from "./useHoldingStream";
 
-export type UseWithdrawOptions = { srcChainId?: number };
+export type UseWithdrawOptions = { srcChainId?: number; decimals?: number };
 
 export const useWithdraw = (options?: UseWithdrawOptions) => {
   const { account, state } = useAccount();
@@ -121,29 +121,33 @@ export const useWithdraw = (options?: UseWithdrawOptions) => {
       amount: string;
       allowCrossChainWithdraw: boolean;
     }): Promise<any> => {
-      return account.assetsManager
-        .withdraw(inputs)
-        .then((res: any) => {
-          if (res.success) {
-            track(TrackerEventName.withdrawSuccess, {
+      return (
+        account.assetsManager
+          // TODO: use orderly token decimals variable from api instead of hardcode 6
+          .withdraw({ ...inputs, decimals: 6 })
+          .then((res: any) => {
+            if (res.success) {
+              track(TrackerEventName.withdrawSuccess, {
+                wallet: state?.connectWallet?.name,
+                // TODO: fix network name, befault is not pass srcChainId
+                network: targetChain?.network_infos.name,
+                quantity: inputs.amount,
+              });
+              //   withdrawQueue.current.push(res.data.withdraw_id);
+            }
+            return res;
+          })
+          .catch((err) => {
+            track(TrackerEventName.withdrawFailed, {
               wallet: state?.connectWallet?.name,
               network: targetChain?.network_infos.name,
-              quantity: inputs.amount,
+              msg: JSON.stringify(err),
             });
-            //   withdrawQueue.current.push(res.data.withdraw_id);
-          }
-          return res;
-        })
-        .catch((err) => {
-          track(TrackerEventName.withdrawFailed, {
-            wallet: state?.connectWallet?.name,
-            network: targetChain?.network_infos.name,
-            msg: JSON.stringify(err),
-          });
-          throw err;
-        });
+            throw err;
+          })
+      );
     },
-    [state, targetChain, state],
+    [state, targetChain, state, options?.decimals],
   );
 
   return {

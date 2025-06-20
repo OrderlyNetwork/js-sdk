@@ -1,3 +1,12 @@
+import * as ed from "@noble/ed25519";
+import { encode as bs58encode, decode as bs58Decode } from "bs58";
+import { ethers } from "ethers";
+import type { BigNumberish } from "ethers/src.ts/utils";
+import { API, SDKError, ChainNamespace } from "@orderly.network/types";
+import { Account } from "../account";
+import { IContract } from "../contract";
+import { SimpleDI } from "../di/simpleDI";
+import { getTimestamp, SignatureDomain } from "../utils";
 import {
   Message,
   RegisterAccountInputs,
@@ -6,47 +15,37 @@ import {
   SettleInputs,
   AddOrderlyKeyInputs,
 } from "./walletAdapter";
-import { API, SDKError, ChainNamespace } from "@orderly.network/types";
-import * as ed from "@noble/ed25519";
-import { encode as bs58encode, decode as bs58Decode } from "bs58";
-import { IContract } from "../contract";
-import { getTimestamp, SignatureDomain } from "../utils";
-import { ethers } from "ethers";
-import type { BigNumberish } from "ethers/src.ts/utils";
-import { SimpleDI } from "../di/simpleDI";
-import { Account } from "../account";
 
 abstract class BaseWalletAdapter<Config> implements WalletAdapter<Config> {
   // private readonly contractManager: ContractManager;
 
   abstract generateRegisterAccountMessage(
-    inputs: RegisterAccountInputs
+    inputs: RegisterAccountInputs,
   ): Promise<Message>;
 
   abstract generateWithdrawMessage(
-    inputs: WithdrawInputs
+    inputs: WithdrawInputs,
   ): Promise<Message & { domain: SignatureDomain }>;
 
   abstract generateSettleMessage(
-    inputs: SettleInputs
+    inputs: SettleInputs,
   ): Promise<Message & { domain: SignatureDomain }>;
 
   abstract generateAddOrderlyKeyMessage(
-    inputs: AddOrderlyKeyInputs
+    inputs: AddOrderlyKeyInputs,
   ): Promise<Message>;
 
   abstract getBalance(): Promise<bigint>;
 
   abstract chainNamespace: ChainNamespace;
 
-  async signMessageByOrderlyKey(payload: any ) {
+  async signMessageByOrderlyKey(payload: any) {
     // signature
-    let account = SimpleDI.get<Account>("account");
+    const account = SimpleDI.get<Account>("account");
     const signer = account.signer;
     const signature = await signer.sign(payload, getTimestamp());
     signature["orderly-account-id"] = account.accountId;
     return signature;
-
   }
 
   abstract call(
@@ -55,7 +54,7 @@ abstract class BaseWalletAdapter<Config> implements WalletAdapter<Config> {
     params: any[],
     options?: {
       abi: any;
-    }
+    },
   ): Promise<any>;
 
   abstract sendTransaction(
@@ -69,7 +68,7 @@ abstract class BaseWalletAdapter<Config> implements WalletAdapter<Config> {
     },
     options: {
       abi: any;
-    }
+    },
   ): Promise<any>;
 
   abstract callOnChain(
@@ -79,7 +78,7 @@ abstract class BaseWalletAdapter<Config> implements WalletAdapter<Config> {
     params: any[],
     options: {
       abi: any;
-    }
+    },
   ): Promise<any>;
 
   get address(): string {
@@ -110,11 +109,11 @@ abstract class BaseWalletAdapter<Config> implements WalletAdapter<Config> {
     return secretKey;
   }
 
-  parseUnits(amount: string, decimals = 6) {
+  parseUnits(amount: string, decimals: number) {
     return ethers.parseUnits(amount, decimals).toString();
   }
 
-  formatUnits(amount: BigNumberish, decimals = 6) {
+  formatUnits(amount: BigNumberish, decimals: number) {
     return ethers.formatUnits(amount, decimals);
   }
 
@@ -130,7 +129,7 @@ abstract class BaseWalletAdapter<Config> implements WalletAdapter<Config> {
     txHash: string,
     baseInterval?: number,
     maxInterval?: number,
-    maxRetries?: number
+    maxRetries?: number,
   ): Promise<any>;
 }
 

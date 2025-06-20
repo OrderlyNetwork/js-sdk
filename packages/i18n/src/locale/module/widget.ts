@@ -70,7 +70,7 @@ export const widget = {
   "subAccount.modal.create.description":
     "You have {{subAccountCount}} sub-accounts. {{remainingCount}} more can be created.",
   "subAccount.modal.create.nickname.role":
-    "5-20 characters. Only letters, numbers, and @ , _ - (space) allowed.",
+    "1-20 characters. Only letters, numbers, and @ , _ - (space) allowed.",
   "subAccount.modal.create.success.description":
     "Sub-account created successfully.",
   "subAccount.modal.create.failed.description": "Failed to create sub-account.",
@@ -78,4 +78,11 @@ export const widget = {
   "subAccount.modal.nickName.label": "Sub-account nickname",
   "subAccount.modal.edit.success.description": "Nickname updated successfully.",
   "subAccount.modal.edit.failed.description": "Failed to update nickname.",
+
+  "funding.fundingFee": "Funding fee",
+  "funding.fundingRate": "Funding rate",
+  "funding.annualRate": "Annual rate",
+  "funding.paymentType": "Payment type",
+  "funding.paymentType.paid": "Paid",
+  "funding.paymentType.received": "Received",
 };

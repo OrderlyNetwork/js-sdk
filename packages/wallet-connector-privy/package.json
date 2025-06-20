@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/wallet-connector-privy",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "",
   "main": "dist/index.mjs",
   "module": "dist/index.mjs",
@@ -36,7 +36,8 @@
     "@wagmi/connectors": "^5.7.3",
     "lodash": "^4.17.21",
     "viem": "^2.29.2",
-    "wagmi": "^2.14.11"
+    "wagmi": "^2.14.11",
+    "zustand": "^4.5.5"
   },
   "devDependencies": {
     "@types/react": "^18.2.38",

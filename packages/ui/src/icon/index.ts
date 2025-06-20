@@ -39,6 +39,7 @@ export { EyeCloseIcon } from "./eyeClose";
 export { RefreshIcon } from "./refresh";
 export { OrderlyIcon } from "./orderly";
 export { EsOrderlyIcon } from "./esOrderly";
+export { InfoCircleIcon } from "./infoCircle";
 
 export { TokenIcon } from "./tokenIcon";
 export { ChainIcon } from "./chainIcon";
@@ -65,6 +66,8 @@ export { TradingActiveIcon } from "./tradingActiveIcon";
 export { TradingInactiveIcon } from "./tradingInactiveIcon";
 export { LeaderboardActiveIcon } from "./leaderboardActive";
 export { LeaderboardInactiveIcon } from "./leaderboardInactive";
+export { MarketsActiveIcon } from "./marketsActiveIcon";
+export { MarketsInactiveIcon } from "./marketsInactiveIcon";
 
 type IconType = typeof BaseIcon & {
   combine: typeof CombineIcon;

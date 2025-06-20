@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
 import {
@@ -13,6 +13,7 @@ import {
 } from "@orderly.network/ui";
 import { SharePnLOptions, SharePnLDialogId } from "@orderly.network/ui-share";
 import { Decimal } from "@orderly.network/utils";
+import { FundingFeeButton } from "../../fundingFeeHistory/fundingFeeButton";
 import { CloseButton } from "./closeButton";
 import { TPSLButton } from "./components";
 import {
@@ -35,6 +36,7 @@ export const useColumn = (config: ColumnConfig) => {
   const { pnlNotionalDecimalPrecision, sharePnLConfig, onSymbolChange } =
     config;
   const { t } = useTranslation();
+  const fundingFeeEndTime = useRef(Date.now().toString());
   const column = useMemo<Column<API.PositionTPSLExt>[]>(
     () => [
       {
@@ -250,6 +252,19 @@ export const useColumn = (config: ColumnConfig) => {
         width: 100,
         rule: "price",
         render: (value: string) => <Text.numeral>{value}</Text.numeral>,
+      },
+      {
+        title: t("funding.fundingFee"),
+        dataIndex: "fundingFee",
+        width: 100,
+        render: (value: string, record) => (
+          <FundingFeeButton
+            fee={value}
+            symbol={record.symbol}
+            start_t={record.timestamp.toString()}
+            end_t={fundingFeeEndTime.current}
+          />
+        ),
       },
       {
         title: t("common.qty"),

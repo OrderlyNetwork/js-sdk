@@ -125,7 +125,9 @@ async function getPreTagFromCurrentBranch() {
 
 async function release() {
   // update dependencies in local environment
-  !isCI && (await $`pnpm install --frozen-lockfile`);
+  if (!isCI) {
+    await $`pnpm install --frozen-lockfile`;
+  }
 
   await generateChangeset(releaseVersionType);
 
@@ -136,16 +138,29 @@ async function release() {
 
   await $`pnpm build`;
 
-  npm.token && (await authNPM());
+  if (npm.token) {
+    await authNPM();
+  }
 
-  await $`${npmRegistry} pnpm changeset publish`;
+  if (npmRegistry) {
+    await $`${npmRegistry} pnpm changeset publish`;
+  } else {
+    await $`pnpm changeset publish`;
+  }
 
   // restore .npmrc file change when publish success
-  npm.token && (await $`git restore .npmrc`);
+  if (npm.token) {
+    await $`git restore .npmrc`;
+  }
 
   // if not provide, use local user config
-  git.name && (await $`git config user.name ${git.name}`);
-  git.email && (await $`git config user.email ${git.email}`);
+  if (git.name) {
+    await $`git config user.name ${git.name}`;
+  }
+
+  if (git.email) {
+    await $`git config user.email ${git.email}`;
+  }
 
   // add all file to stash
   await $`git add .`;
@@ -157,7 +172,11 @@ async function release() {
     const remoteUrl = await getRemoteUrl();
     // if not provide, use local origin and git token
     // use --no-verify to ignore push hook
-    await $`git push --no-verify ${remoteUrl}`;
+    if (remoteUrl) {
+      await $`git push --no-verify ${remoteUrl}`;
+    } else {
+      await $`git push --no-verify`;
+    }
   }
 }
 
@@ -221,7 +240,10 @@ async function getRepoPath() {
  * if not provide token, if will use ~/.npmrc file config
  * */
 async function authNPM() {
-  const registry = npm.registry!.replace("http://", "").replace("https://", "");
+  // if not provide registry, use npmjs.org
+  const registry = (npm.registry || "https://registry.npmjs.org")
+    .replace("http://", "")
+    .replace("https://", "");
   const content = `\n//${registry}/:_authToken="${npm.token}"`;
   await $`echo ${content} >> .npmrc`;
 }

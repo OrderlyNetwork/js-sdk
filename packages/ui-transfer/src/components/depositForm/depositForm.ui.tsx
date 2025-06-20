@@ -1,15 +1,15 @@
 import { FC } from "react";
-import { UseDepositFormScriptReturn } from "./depositForm.script";
 import { Box, Flex, textVariants } from "@orderly.network/ui";
-import { QuantityInput } from "../quantityInput";
+import { ActionButton } from "../actionButton";
+import { AvailableQuantity } from "../availableQuantity";
+import { BrokerWallet } from "../brokerWallet";
 import { ChainSelect } from "../chainSelect";
 import { ExchangeDivider } from "../exchangeDivider";
-import { Web3Wallet } from "../web3Wallet";
-import { BrokerWallet } from "../brokerWallet";
-import { AvailableQuantity } from "../availableQuantity";
-import { SwapCoin } from "../swapCoin";
 import { Fee } from "../fee";
-import { ActionButton } from "../actionButton";
+import { QuantityInput } from "../quantityInput";
+import { SwapCoin } from "../swapCoin";
+import { Web3Wallet } from "../web3Wallet";
+import { UseDepositFormScriptReturn } from "./depositForm.script";
 
 export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
   const {

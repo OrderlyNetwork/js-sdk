@@ -13,9 +13,19 @@ export type GetColumns = (
   isFavoriteList: boolean,
 ) => Column[];
 
-export enum TabName {
+export enum MarketsPageTab {
+  Markets = "markets",
+  Funding = "funding",
+}
+
+export enum MarketsTabName {
   Favorites = "favorites",
   Recent = "recent",
   All = "all",
   NewListing = "newListing",
+}
+
+export enum FundingTabName {
+  Overview = "overview",
+  Comparison = "comparison",
 }
