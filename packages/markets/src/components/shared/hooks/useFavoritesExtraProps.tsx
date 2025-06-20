@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { Favorite, FavoriteTab } from "@orderly.network/hooks";
 import { Box } from "@orderly.network/ui";
-import { FavoriteInstance } from "../../../type";
+import { FavoriteInstance, MarketsTabName } from "../../../type";
 import { FavoritesTabWidget } from "../../favoritesTabs";
 
 export function useFavoritesProps() {
@@ -38,8 +38,19 @@ export function useFavoritesProps() {
     [],
   );
 
+  const getFavoritesProps = useCallback(
+    (type: MarketsTabName) => {
+      if (type === MarketsTabName.Favorites) {
+        return { renderHeader, dataFilter };
+      }
+      return {};
+    },
+    [renderHeader, dataFilter],
+  );
+
   return {
     renderHeader,
     dataFilter,
+    getFavoritesProps,
   };
 }

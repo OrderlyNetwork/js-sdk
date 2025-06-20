@@ -5,7 +5,7 @@ import { Decimal } from "@orderly.network/utils";
 import { useMarketsContext } from "../../components/marketsProvider";
 import { useSort, searchBySymbol } from "../../utils";
 
-const baseEX = "WOOFi Pro";
+export const baseEX = "WOOFi Pro";
 
 export const exchanges = [
   baseEX,
@@ -22,6 +22,10 @@ export const exchanges = [
   "KuCoin",
   `${baseEX} - KuCoin`,
 ];
+
+export type FundingComparisonReturn = ReturnType<
+  typeof useFundingComparisonScript
+>;
 
 export const useFundingComparisonScript = () => {
   const { pagination } = usePagination({ pageSize: 10 });
@@ -83,7 +87,7 @@ export const useFundingComparisonScript = () => {
   );
 
   return {
-    data: dataSource,
+    dataSource,
     isLoading,
     pagination,
     onSort,

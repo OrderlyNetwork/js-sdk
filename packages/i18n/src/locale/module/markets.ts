@@ -28,7 +28,9 @@ export const markets = {
   "markets.column.market": "Market",
   "markets.column.24hChange": "24h change",
   "markets.column.24hVolume": "24h volume",
+  // TODO: use markets.column.market and common.volume
   "markets.column.market&Volume": "Market / Volume",
+  // TODO: confirm "change" first letter capital
   "markets.column.price&Change": "Price / change",
   "markets.column.last": "Last",
   "markets.column.24hPercentage": "24h%",

@@ -1,14 +1,4 @@
-import {
-  DisplayControlSettingInterface,
-  TradingviewWidgetPropsInterface,
-} from "../type";
 import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  getOveriides,
-  withExchangePrefix,
-  defaultColorConfig,
-  chartBG,
-} from "../utils/chart.util";
 import {
   useAccount,
   useConfig,
@@ -17,24 +7,34 @@ import {
   useSymbolsInfo,
   useWS,
 } from "@orderly.network/hooks";
+import { LocaleCode, useLocaleCode } from "@orderly.network/i18n";
+import { WS } from "@orderly.network/net";
 import {
   AccountStatusEnum,
   MEDIA_TABLET,
   OrderSide,
   OrderType,
 } from "@orderly.network/types";
-import useBroker from "../tradingviewAdapter/hooks/useBroker";
-import useCreateRenderer from "../tradingviewAdapter/hooks/useCreateRenderer";
-import { Datafeed } from "../tradingviewAdapter/datafeed/datafeed";
-import { Widget, WidgetProps } from "../tradingviewAdapter/widget";
-import { WebsocketService } from "../tradingviewAdapter/datafeed/websocket.service";
-import { WS } from "@orderly.network/net";
-import { TradingViewSDKLocalstorageKey } from "../utils/common.util";
 import { modal, toast } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
-import brokerHostHandler from "../tradingviewAdapter/renderer/brokerHostHandler";
 import getBrokerAdapter from "../tradingviewAdapter/broker/getBrokerAdapter";
-import { LocaleCode, useLocaleCode } from "@orderly.network/i18n";
+import { Datafeed } from "../tradingviewAdapter/datafeed/datafeed";
+import { WebsocketService } from "../tradingviewAdapter/datafeed/websocket.service";
+import useBroker from "../tradingviewAdapter/hooks/useBroker";
+import useCreateRenderer from "../tradingviewAdapter/hooks/useCreateRenderer";
+import brokerHostHandler from "../tradingviewAdapter/renderer/brokerHostHandler";
+import { Widget, WidgetProps } from "../tradingviewAdapter/widget";
+import {
+  DisplayControlSettingInterface,
+  TradingviewWidgetPropsInterface,
+} from "../type";
+import {
+  getOveriides,
+  withExchangePrefix,
+  defaultColorConfig,
+  chartBG,
+} from "../utils/chart.util";
+import { TradingViewSDKLocalstorageKey } from "../utils/common.util";
 
 const CHART_KEY = "SDK_Tradingview";
 const MOBILE_CHART_KEY = "SDK_Moblie_Tradingview";
@@ -79,12 +79,12 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
     },
     {
       watchOrderbook: true,
-    }
+    },
   );
   const [displayControlState, setDisplayControlState] =
     useState<DisplayControlSettingInterface>(() => {
       const displaySettingInfo = localStorage.getItem(
-        TradingViewSDKLocalstorageKey.displayControlSetting
+        TradingViewSDKLocalstorageKey.displayControlSetting,
       );
       if (displaySettingInfo) {
         return JSON.parse(displaySettingInfo) as DisplayControlSettingInterface;
@@ -101,17 +101,17 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
 
   const [interval, setInterval] = useState<string>(() => {
     const lastUsedInterval = localStorage.getItem(
-      TradingViewSDKLocalstorageKey.interval
+      TradingViewSDKLocalstorageKey.interval,
     );
     if (!lastUsedInterval) {
-      return "1";
+      return "15";
     }
     return lastUsedInterval;
   });
 
   const [lineType, setLineType] = useState<string>(() => {
     const lastUsedLineType = localStorage.getItem(
-      TradingViewSDKLocalstorageKey.lineType
+      TradingViewSDKLocalstorageKey.lineType,
     );
     if (!lastUsedLineType) {
       return "1";
@@ -123,7 +123,7 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
 
   const colorConfig = useMemo(
     () => Object.assign({}, defaultColorConfig, customerColorConfig ?? {}),
-    [customerColorConfig]
+    [customerColorConfig],
   );
 
   const loadingScreen = useMemo(() => {
@@ -191,7 +191,7 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
   });
   const [createRenderer, removeRenderer] = useCreateRenderer(
     symbol!,
-    displayControlState
+    displayControlState,
   );
 
   const changeInterval = (newInterval: string) => {
@@ -215,7 +215,7 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
   const changeDisplaySetting = (newSetting: DisplayControlSettingInterface) => {
     localStorage.setItem(
       TradingViewSDKLocalstorageKey.displayControlSetting,
-      JSON.stringify(newSetting)
+      JSON.stringify(newSetting),
     );
     setDisplayControlState(newSetting);
   };
@@ -274,10 +274,10 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
     // console.log('-- overrides', overrides);
     const studiesOverrides = customerStudiesOverrides
       ? Object.assign(
-        {},
-        defaultOverrides.studiesOverrides,
-        customerStudiesOverrides
-      )
+          {},
+          defaultOverrides.studiesOverrides,
+          customerStudiesOverrides,
+        )
       : defaultOverrides.studiesOverrides;
     if (chartRef.current) {
       // options example: https://www.tradingview.com/widget-docs/widgets/charts/advanced-chart/
@@ -316,7 +316,7 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
         options,
         chartKey: getChartKey(isMobile),
         mode,
-        onClick: () => { },
+        onClick: () => {},
       };
 
       chart.current = new Widget(chartProps);

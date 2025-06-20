@@ -7,6 +7,7 @@ import {
   RecentListWidget,
   SideMarketsWidget,
   NewListingListWidget,
+  MarketsTabName,
 } from "@orderly.network/markets";
 import { Box } from "@orderly.network/ui";
 
@@ -78,9 +79,8 @@ export const CollapseMarkets: Story = {
   render: (args) => {
     return (
       <MarketsListWidget
-        type="all"
-        sortKey="24h_amount"
-        sortOrder="desc"
+        type={MarketsTabName.All}
+        initialSort={{ sortKey: "24h_amount", sortOrder: "desc" }}
         collapsed={true}
       />
     );
@@ -145,9 +145,8 @@ export const All: Story = {
   render: (args) => {
     return (
       <MarketsListWidget
-        type="all"
-        sortKey="24h_amount"
-        sortOrder="desc"
+        type={MarketsTabName.All}
+        initialSort={{ sortKey: "24h_amount", sortOrder: "desc" }}
         tableClassNames={{
           scroll: "oui-px-1",
         }}

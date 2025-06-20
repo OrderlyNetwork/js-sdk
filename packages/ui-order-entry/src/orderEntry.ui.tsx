@@ -106,7 +106,11 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
   );
   const [hidden, setHidden] = useLocalStorage("orderly-order-hidden", false);
 
-  const [slippage, setSlippage] = useLocalStorage("orderly-slippage", "");
+  const [slippage, setSlippage] = useLocalStorage("orderly-slippage", "1", {
+    parseJSON: ((value: string | null) => {
+      return !value || value === '""' ? "1" : JSON.parse(value);
+    }) as any,
+  });
 
   const buttonLabel = useMemo(() => {
     return side === OrderSide.BUY

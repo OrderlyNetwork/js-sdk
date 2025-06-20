@@ -1,12 +1,16 @@
 import { FC, ReactNode, useMemo } from "react";
-import { HeaderReturns } from "./header.script";
+import { useTranslation } from "@orderly.network/i18n";
 import { Box, cn, Flex, Text } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { useMarketsContext } from "../../../components/marketsProvider";
 import { OrderlyIcon } from "../../../icons";
-import { useTranslation } from "@orderly.network/i18n";
+import { MarketsHeaderReturns } from "./marketsHeader.script";
+
 /** -----------MarketsHeader start ------------ */
-export const MarketsHeader: FC<HeaderReturns> = (props) => {
+type MarketsHeaderProps = MarketsHeaderReturns & {
+  className?: string;
+};
+export const MarketsHeader: FC<MarketsHeaderProps> = (props) => {
   const {
     emblaRef,
     emblaApi,
@@ -24,8 +28,8 @@ export const MarketsHeader: FC<HeaderReturns> = (props) => {
   const { t } = useTranslation();
 
   const cls = cn(
-    "oui-flex-[0_0_calc((100%_-_32px)_/_3)] 3xl:oui-flex-[0_0_calc((100%_-_48px)_/_4)] oui-min-w-0",
-    enableScroll && "oui-select-none oui-cursor-pointer"
+    "oui-min-w-0 oui-flex-[0_0_calc((100%_-_32px)_/_3)] 3xl:oui-flex-[0_0_calc((100%_-_48px)_/_4)]",
+    enableScroll && "oui-cursor-pointer oui-select-none",
   );
 
   const onSymbol = (item: any) => {
@@ -36,10 +40,10 @@ export const MarketsHeader: FC<HeaderReturns> = (props) => {
   return (
     <div
       id="oui-markets-header"
-      className="oui-overflow-hidden"
+      className={cn("oui-overflow-hidden", props.className)}
       ref={enableScroll ? emblaRef : undefined}
     >
-      <Flex width="100%" gapX={4} mt={4}>
+      <Flex width="100%" gapX={4}>
         <BlockList
           total24Amount={total24Amount}
           totalOpenInterest={totalOpenInterest}
@@ -77,7 +81,7 @@ export const MarketsHeader: FC<HeaderReturns> = (props) => {
           onSymbol={onSymbol}
         />
       </Flex>
-      <div className="oui-mt-1 oui-mb-3  3xl:oui-mt-4 3xl:oui-mb-0">
+      <div className="oui-mb-3 oui-mt-1  3xl:oui-mb-0 3xl:oui-mt-4">
         <ScrollIndicator
           scrollIndex={scrollIndex}
           scrollPrev={emblaApi?.scrollPrev}
@@ -137,9 +141,7 @@ const BlockList: React.FC<BlockListProps> = (props) => {
       height={236}
       className={props.className}
     >
-      {list?.map((item, index) => (
-        <BlockItem key={index} {...item} />
-      ))}
+      {list?.map((item, index) => <BlockItem key={index} {...item} />)}
     </Flex>
   );
 };
@@ -227,7 +229,7 @@ const ListItem: React.FC<ListItemProps> = (props) => {
       gapX={3}
       py={2}
       px={4}
-      className={cn("hover:oui-bg-base-8 oui-cursor-pointer", props.className)}
+      className={cn("oui-cursor-pointer hover:oui-bg-base-8", props.className)}
       onClick={() => {
         props.onSymbol(item);
       }}
@@ -306,8 +308,8 @@ const ScrollIndicator: React.FC<ScrollIndicatorProps> = (props) => {
               className={cn(
                 "oui-transition-all oui-duration-300",
                 scrollIndex === item
-                  ? "oui-bg-base-contrast-36 oui-w-4"
-                  : "oui-bg-base-contrast-20"
+                  ? "oui-w-4 oui-bg-base-contrast-36"
+                  : "oui-bg-base-contrast-20",
               )}
             />
           </Box>

@@ -1,9 +1,9 @@
 import { PropsWithChildren } from "react";
-import { FavoritesDropdownMenu } from "./favoritesDropdownMenu.ui";
 import {
   useFavoritesDropdownMenuScript,
   UseFavoritesDropdownMenuScriptOptions,
 } from "./favoritesDropdownMenu.script";
+import { FavoritesDropdownMenu } from "./favoritesDropdownMenu.ui";
 
 export type FavoritesDropdownMenuWidgetProps =
   PropsWithChildren<UseFavoritesDropdownMenuScriptOptions>;

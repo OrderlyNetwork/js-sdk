@@ -8,7 +8,7 @@ export type SymbolInfoBarWidgetPros = UseSymbolInfoBarScriptOptions &
   Pick<SymbolInfoBarProps, "className" | "trailing" | "onSymbol">;
 
 export const SymbolInfoBarWidget: React.FC<SymbolInfoBarWidgetPros> = (
-  props
+  props,
 ) => {
   const { symbol, ...rest } = props;
 

@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from "react";
+import React, { PropsWithChildren, ReactNode } from "react";
 import { BottomNavProps } from "../bottomNav/bottomNav.widget";
 import { FooterProps } from "../footer";
 import { MainNavWidgetProps } from "../main/mainNav.widget";
@@ -11,15 +11,37 @@ import { ScaffoldProvider } from "./scaffoldProvider";
 
 export type ScaffoldProps = {
   /**
-   * Custom left sidebar component,
+   * custom left sidebar component, only works on desktop
    * if provided, the layout will use this component over the default sidebar component
    */
-  leftSidebar?: React.ReactNode;
+  leftSidebar?: ReactNode;
+  /**
+   * custom left sidebar props, only works on desktop
+   */
   leftSideProps?: SideBarProps;
-  topBar?: React.ReactNode;
+  /**
+   * custom top bar component
+   */
+  topBar?: ReactNode;
+  /**
+   * custom top nav props, only works on desktop
+   */
   mainNavProps?: MainNavWidgetProps;
+  /**
+   * custom bottom nav component, only works on mobile
+   */
+  bottomNav?: ReactNode;
+  /**
+   * custom bottom nav component, only works on mobile
+   */
   bottomNavProps?: BottomNavProps;
-  footer?: React.ReactNode;
+  /**
+   * custom footer component, only works on desktop
+   */
+  footer?: ReactNode;
+  /**
+   * custom footer props, only works on desktop
+   */
   footerProps?: FooterProps;
   routerAdapter?: RouterAdapter;
   classNames?: {
@@ -32,6 +54,7 @@ export type ScaffoldProps = {
     leftSidebar?: string;
     topNavbar?: string;
     footer?: string;
+    bottomNav?: string;
   };
 };
 
@@ -40,7 +63,11 @@ export const Scaffold = (props: PropsWithChildren<ScaffoldProps>) => {
 
   const renderContent = () => {
     if (state.isMobile) {
-      return <MobileScaffold {...state}>{props.children}</MobileScaffold>;
+      return (
+        <MobileScaffold {...props} {...state}>
+          {props.children}
+        </MobileScaffold>
+      );
     }
 
     return (

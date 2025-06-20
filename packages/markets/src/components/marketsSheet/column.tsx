@@ -1,9 +1,15 @@
-import { MouseEventHandler } from "react";
+import { MouseEventHandler, ReactNode } from "react";
 import { i18n } from "@orderly.network/i18n";
 import { Flex, TokenIcon, Text, Badge, cn, Column } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
-import { DeleteIcon, TopIcon } from "../../icons";
+import {
+  DeleteIcon,
+  FavoritesIcon2,
+  TopIcon,
+  UnFavoritesIcon2,
+} from "../../icons";
 import { FavoriteInstance } from "../../type";
+import { FavoritesDropdownMenuWidget } from "../favoritesDropdownMenu";
 
 export const getMarketsSheetColumns = (
   favorite: FavoriteInstance,
@@ -11,36 +17,59 @@ export const getMarketsSheetColumns = (
 ) => {
   return [
     {
-      title: i18n.t("markets.column.market&Volume"),
+      title: `${i18n.t("markets.column.market")} / ${i18n.t("common.volume")}`,
       dataIndex: "24h_amount",
       onSort: true,
       className: "oui-h-[36px]",
       render: (value, record) => {
-        return (
-          <Flex direction="column" itemAlign="start" gapY={1}>
-            <Flex gapX={1}>
-              <TokenIcon symbol={record.symbol} className="oui-size-[18px]" />
-              <Text.formatted
-                rule="symbol"
-                formatString="base"
-                size="2xs"
-                weight="semibold"
+        let favoritesIcon: ReactNode;
+        if (!isFavoriteList) {
+          favoritesIcon = (
+            <FavoritesDropdownMenuWidget row={record} favorite={favorite}>
+              <Flex
+                width={12}
+                height={12}
+                justify="center"
+                itemAlign="center"
+                className="oui-mr-1 oui-cursor-pointer"
               >
-                {record.symbol}
-              </Text.formatted>
-              <Badge size="xs" color="primary">
-                {record.leverage}x
-              </Badge>
-            </Flex>
+                {record.isFavorite ? (
+                  <FavoritesIcon2 className="oui-size-3 oui-text-[rgba(255,154,46,1)]" />
+                ) : (
+                  <UnFavoritesIcon2 className="oui-size-3 oui-text-base-contrast-36 hover:oui-text-[rgba(255,154,46,1)]" />
+                )}
+              </Flex>
+            </FavoritesDropdownMenuWidget>
+          );
+        }
+        return (
+          <Flex>
+            {favoritesIcon}
+            <Flex direction="column" itemAlign="start" gapY={1}>
+              <Flex gapX={1}>
+                <TokenIcon symbol={record.symbol} className="oui-size-[18px]" />
+                <Text.formatted
+                  rule="symbol"
+                  formatString="base"
+                  size="2xs"
+                  weight="semibold"
+                >
+                  {record.symbol}
+                </Text.formatted>
+                <Badge size="xs" color="primary">
+                  {record.leverage}x
+                </Badge>
+              </Flex>
 
-            <Text.numeral
-              intensity={54}
-              rule="human"
-              dp={2}
-              rm={Decimal.ROUND_DOWN}
-            >
-              {value}
-            </Text.numeral>
+              <Text.numeral
+                intensity={54}
+                rule="human"
+                dp={2}
+                rm={Decimal.ROUND_DOWN}
+              >
+                {value}
+              </Text.numeral>
+            </Flex>
           </Flex>
         );
       },

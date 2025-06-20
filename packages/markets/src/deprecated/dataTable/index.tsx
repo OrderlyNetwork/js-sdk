@@ -39,7 +39,7 @@ function alignClassName(align?: Column["align"]) {
   return cn(
     align === "left" && "oui-justify-start",
     align === "right" && "oui-justify-end",
-    align === "center" && "oui-justify-center"
+    align === "center" && "oui-justify-center",
   );
 }
 
@@ -56,14 +56,14 @@ const DataTable: FC<TableProps> = (props) => {
       className={cn(
         "oui-h-full oui-overflow-hidden",
         className,
-        classNames?.root
+        classNames?.root,
       )}
     >
       <div
         className={cn(
           "oui-flex oui-mx-3",
           "oui-text-xs oui-text-base-contrast-36",
-          classNames?.header
+          classNames?.header,
         )}
       >
         {columns.map((column, index) => {
@@ -78,7 +78,7 @@ const DataTable: FC<TableProps> = (props) => {
                 "oui-basis-[100%]",
                 sortable && "oui-cursor-pointer",
                 alignClassName(column.align),
-                column.className
+                column.className,
               )}
               onClick={(e) => {
                 e.stopPropagation();
@@ -98,7 +98,7 @@ const DataTable: FC<TableProps> = (props) => {
         className={cn(
           "oui-relative oui-h-full oui-overflow-y-auto oui-custom-scrollbar",
           "oui-text-2xs oui-text-base-contrast-80",
-          classNames?.body
+          classNames?.body,
         )}
       >
         {dataSource?.length
@@ -156,7 +156,7 @@ const TableItem: React.FC<TableItemProps> = (props) => {
         "oui-mx-1 oui-px-2",
         "hover:oui-bg-base-7 oui-rounded-md",
         props.className,
-        rowClassName
+        rowClassName,
       )}
       {...rest}
     >
@@ -170,7 +170,7 @@ const TableItem: React.FC<TableItemProps> = (props) => {
               "oui-flex oui-items-center",
               "oui-basis-[100%]",
               alignClassName(column.align),
-              column.className
+              column.className,
             )}
           >
             {column.render ? column.render(value, row) : value}

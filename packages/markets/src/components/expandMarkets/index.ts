@@ -1,3 +1,3 @@
 export { ExpandMarkets } from "./expandMarkets.ui";
 export { useExpandMarketsScript } from "./expandMarkets.script";
-export { ExpandMarketsWidget } from "./widget";
+export { ExpandMarketsWidget } from "./expandMarkets.widget";

@@ -496,16 +496,18 @@ export const AccountSummary = (props: AccountSummaryUi) => {
     const resizeObserver = new ResizeObserver((entries) => {
       if (Array.isArray(entries) && entries.length > 0) {
         const width = entries[0].contentRect.width;
-        if (width > 1440) {
+        if (width > 1556) {
           sizeRef.current = 5;
-        } else if (width > 1366) {
+        } else if (width > 1480) {
           sizeRef.current = 4;
-        } else if (width > 1280) {
+        } else if (width > 1366) {
           sizeRef.current = 3;
-        } else if (width > 1140) {
+        } else if (width > 1280) {
           sizeRef.current = 2;
-        } else {
+        } else if (width > 1180) {
           sizeRef.current = 1;
+        } else {
+          sizeRef.current = 0;
         }
       }
     });

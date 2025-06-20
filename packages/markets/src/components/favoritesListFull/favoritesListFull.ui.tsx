@@ -4,7 +4,7 @@ import { cn, Flex, DataTable } from "@orderly.network/ui";
 import { FavoritesTabWidget } from "../../components/favoritesTabs";
 import { useMarketsContext } from "../../components/marketsProvider";
 import { UnFavoritesIcon } from "../../icons";
-import { useFavoritesListFullColumns } from "./column";
+import { useMarketsListFullColumns } from "../marketsListFull/column";
 import { UseFavoritesListFullReturn } from "./favoritesListFull.script";
 
 export type FavoritesListFullProps = UseFavoritesListFullReturn;
@@ -14,7 +14,7 @@ export const FavoritesListFull: FC<FavoritesListFullProps> = (props) => {
 
   const { symbol, onSymbolChange } = useMarketsContext();
 
-  const columns = useFavoritesListFullColumns(favorite, true);
+  const columns = useMarketsListFullColumns(favorite, true);
 
   const emptyView = (
     <Flex className="oui-text-xs oui-text-base-contrast-36">

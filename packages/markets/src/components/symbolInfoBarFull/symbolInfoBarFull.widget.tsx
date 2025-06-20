@@ -14,7 +14,7 @@ export type SymbolInfoBarFullWidgetPros = UseSymbolInfoBarFullScriptOptions &
   Pick<MarketsProviderProps, "onSymbolChange">;
 
 export const SymbolInfoBarFullWidget: FC<SymbolInfoBarFullWidgetPros> = (
-  props
+  props,
 ) => {
   const { symbol, ...rest } = props;
 

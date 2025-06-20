@@ -9,8 +9,6 @@ import { usePagination } from "@orderly.network/ui";
 import { useMarketsContext } from "../../components/marketsProvider";
 import { useSort, searchBySymbol } from "../../utils";
 
-export type PeriodKey = "1d" | "3d" | "7d" | "14d" | "30d" | "90d";
-
 export type ProcessedFundingData = {
   symbol: string;
   estFunding: number;
@@ -30,15 +28,7 @@ export type ProcessedFundingData = {
   "90dPositive": number | string;
 };
 
-export type UseFundingOverviewReturn = {
-  dataSource: ProcessedFundingData[];
-  isLoading: boolean;
-  pagination: {
-    pageSize: number;
-    page: number;
-  };
-  onSort: any;
-};
+export type FundingOverviewReturn = ReturnType<typeof useFundingOverviewScript>;
 
 export const useFundingOverviewScript = () => {
   const { pagination } = usePagination({ pageSize: 10 });
@@ -57,7 +47,7 @@ export const useFundingOverviewScript = () => {
   const processedData = useMemo((): ProcessedFundingData[] => {
     if (!marketData?.length) return [];
 
-    const periods: PeriodKey[] = ["1d", "3d", "7d", "14d", "30d", "90d"];
+    const periods = ["1d", "3d", "7d", "14d", "30d", "90d"] as const;
     const posRates = periods.reduce(
       (acc, period) => {
         acc[period] = getPositiveRates(fundingHistory, period);
