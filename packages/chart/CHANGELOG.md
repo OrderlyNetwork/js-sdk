@@ -1,5 +1,18 @@
 # @orderly.network/chart
 
+## 2.3.0-alpha.0
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/i18n@2.3.0-alpha.0
+  - @orderly.network/ui@2.3.0-alpha.0
+  - @orderly.network/utils@2.3.0-alpha.0
+
 ## 2.2.0
 
 ### Minor Changes
