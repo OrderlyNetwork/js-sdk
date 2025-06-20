@@ -173,6 +173,7 @@
   "portfolio.apiKey.permissions": "権限",
   "portfolio.apiKey.permissions.read": "読み取り",
   "portfolio.apiKey.permissions.trading": "取引",
+  "portfolio.apiKey.permissions.asset": "資産",
   "portfolio.apiKey.description": "取引ニーズに合わせてAPIキーを作成してください。セキュリティのため、APIキーを他人と共有しないでください。",
   "portfolio.apiKey.readApiGuide": "APIガイドを読む",
   "portfolio.apiKey.column.apiKey": "APIキー",

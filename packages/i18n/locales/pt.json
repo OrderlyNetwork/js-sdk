@@ -173,6 +173,7 @@
   "portfolio.apiKey.permissions": "Permissões",
   "portfolio.apiKey.permissions.read": "Leitura",
   "portfolio.apiKey.permissions.trading": "Negociação",
+  "portfolio.apiKey.permissions.asset": "Ativo",
   "portfolio.apiKey.description": "Crie chaves API para atender às suas necessidades de negociação. Para sua segurança, não compartilhe suas chaves API com ninguém.",
   "portfolio.apiKey.readApiGuide": "Ler guia da API",
   "portfolio.apiKey.column.apiKey": "Chave API",

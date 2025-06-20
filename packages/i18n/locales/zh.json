@@ -173,6 +173,7 @@
   "portfolio.apiKey.permissions": "权限",
   "portfolio.apiKey.permissions.read": "读取",
   "portfolio.apiKey.permissions.trading": "交易",
+  "portfolio.apiKey.permissions.asset": "资产",
   "portfolio.apiKey.description": "创建适合您交易需求的API密钥。为了您的安全，请不要与任何人分享您的API密钥。",
   "portfolio.apiKey.readApiGuide": "阅读API指南",
   "portfolio.apiKey.column.apiKey": "API密钥",

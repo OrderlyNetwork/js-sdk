@@ -173,6 +173,7 @@
   "portfolio.apiKey.permissions": "Berechtigungen",
   "portfolio.apiKey.permissions.read": "Lesen",
   "portfolio.apiKey.permissions.trading": "Handel",
+  "portfolio.apiKey.permissions.asset": "Vermögenswert",
   "portfolio.apiKey.description": "Erstellen Sie API-Schlüssel entsprechend Ihren Handelsbedürfnissen. Aus Sicherheitsgründen geben Sie Ihre API-Schlüssel nicht an Dritte weiter.",
   "portfolio.apiKey.readApiGuide": "API-Anleitung lesen",
   "portfolio.apiKey.column.apiKey": "API-Schlüssel",

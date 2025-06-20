@@ -173,6 +173,7 @@
   "portfolio.apiKey.permissions": "Дозволи",
   "portfolio.apiKey.permissions.read": "Читання",
   "portfolio.apiKey.permissions.trading": "Торгівля",
+  "portfolio.apiKey.permissions.asset": "Актив",
   "portfolio.apiKey.description": "Створіть API ключі відповідно до ваших торгових потреб. З міркувань безпеки не діліться своїми API ключами з кимось.",
   "portfolio.apiKey.readApiGuide": "Прочитати гід по API",
   "portfolio.apiKey.column.apiKey": "API ключ",

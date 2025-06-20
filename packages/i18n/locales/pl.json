@@ -173,6 +173,7 @@
   "portfolio.apiKey.permissions": "Uprawnienia",
   "portfolio.apiKey.permissions.read": "Odczyt",
   "portfolio.apiKey.permissions.trading": "Handel",
+  "portfolio.apiKey.permissions.asset": "Aktywa",
   "portfolio.apiKey.description": "Utwórz klucze API dostosowane do Twoich potrzeb handlowych. Ze względów bezpieczeństwa nie udostępniaj swoich kluczy API nikomu.",
   "portfolio.apiKey.readApiGuide": "Przeczytaj przewodnik API",
   "portfolio.apiKey.column.apiKey": "Klucz API",

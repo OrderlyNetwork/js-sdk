@@ -173,6 +173,7 @@
   "portfolio.apiKey.permissions": "Rechten",
   "portfolio.apiKey.permissions.read": "Lezen",
   "portfolio.apiKey.permissions.trading": "Handelen",
+  "portfolio.apiKey.permissions.asset": "Activa",
   "portfolio.apiKey.description": "Maak API-sleutels aan voor uw handelsbehoeften. Voor uw veiligheid, deel uw API-sleutels met niemand.",
   "portfolio.apiKey.readApiGuide": "Lees API-handleiding",
   "portfolio.apiKey.column.apiKey": "API-sleutel",

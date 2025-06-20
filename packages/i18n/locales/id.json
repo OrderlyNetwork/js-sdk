@@ -173,6 +173,7 @@
   "portfolio.apiKey.permissions": "Izin",
   "portfolio.apiKey.permissions.read": "Baca",
   "portfolio.apiKey.permissions.trading": "Trading",
+  "portfolio.apiKey.permissions.asset": "Aset",
   "portfolio.apiKey.description": "Buat kunci API sesuai kebutuhan trading Anda. Untuk keamanan Anda, jangan membagikan kunci API Anda kepada siapa pun.",
   "portfolio.apiKey.readApiGuide": "Baca panduan API",
   "portfolio.apiKey.column.apiKey": "Kunci API",

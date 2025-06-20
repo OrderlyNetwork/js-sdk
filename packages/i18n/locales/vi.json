@@ -173,6 +173,7 @@
   "portfolio.apiKey.permissions": "Quyền",
   "portfolio.apiKey.permissions.read": "Đọc",
   "portfolio.apiKey.permissions.trading": "Giao dịch",
+  "portfolio.apiKey.permissions.asset": "Tài sản",
   "portfolio.apiKey.description": "Tạo khóa API phù hợp với nhu cầu giao dịch của bạn. Vì lý do bảo mật, không chia sẻ khóa API của bạn với bất kỳ ai.",
   "portfolio.apiKey.readApiGuide": "Đọc hướng dẫn API",
   "portfolio.apiKey.column.apiKey": "Khóa API",

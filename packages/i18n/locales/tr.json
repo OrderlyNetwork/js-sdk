@@ -173,6 +173,7 @@
   "portfolio.apiKey.permissions": "İzinler",
   "portfolio.apiKey.permissions.read": "Okuma",
   "portfolio.apiKey.permissions.trading": "İşlem",
+  "portfolio.apiKey.permissions.asset": "Varlık",
   "portfolio.apiKey.description": "İşlem ihtiyaçlarınıza uygun API anahtarları oluşturun. Güvenliğiniz için API anahtarlarınızı kimseyle paylaşmayın.",
   "portfolio.apiKey.readApiGuide": "API kılavuzunu oku",
   "portfolio.apiKey.column.apiKey": "API anahtarı",

@@ -173,6 +173,7 @@
   "portfolio.apiKey.permissions": "권한",
   "portfolio.apiKey.permissions.read": "읽기",
   "portfolio.apiKey.permissions.trading": "트레이딩",
+  "portfolio.apiKey.permissions.asset": "자산",
   "portfolio.apiKey.description": "거래 요구에 맞는 API 키를 생성하세요. 보안을 위해 API 키를 타인과 공유하지 마세요.",
   "portfolio.apiKey.readApiGuide": "API 가이드 읽기",
   "portfolio.apiKey.column.apiKey": "API 키",
