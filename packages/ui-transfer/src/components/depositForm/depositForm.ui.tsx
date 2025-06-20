@@ -3,6 +3,7 @@ import type { API } from "@orderly.network/types";
 import { Box, Flex, textVariants } from "@orderly.network/ui";
 import { LtvWidget } from "../LTV";
 import { ActionButton } from "../actionButton";
+import { AssetSwapIndicatorWidget } from "../assetSwapIndicator";
 import { AvailableQuantity } from "../availableQuantity";
 import { BrokerWallet } from "../brokerWallet";
 import { ChainSelect } from "../chainSelect";
@@ -16,6 +17,8 @@ import { SlippageUI } from "../slippage/slippage.ui";
 import { SwapCoin } from "../swapCoin";
 import { Web3Wallet } from "../web3Wallet";
 import { UseDepositFormScriptReturn } from "./depositForm.script";
+
+const flag = true;
 
 export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
   const {
@@ -44,8 +47,6 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
     networkId,
     fee,
   } = props;
-
-  const flag = true;
 
   return (
     <Box id="oui-deposit-form" className={textVariants({ weight: "semibold" })}>
@@ -97,22 +98,22 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
             root: "oui-mt-3 oui-border-transparent focus-within:oui-outline-transparent",
           }}
         />
-        <Flex direction="column" itemAlign="start" mt={1} gapY={1}>
-          {flag ? (
-            <>
-              <CollateralRatioWidget />
-              <CollateralContributionWidget />
-              <LtvWidget />
-            </>
-          ) : (
-            <>
-              <SwapCoin token={token} dst={dst} price={1} />
-              <SlippageUI slippage="1" />
-              <MinimumReceivedWidget />
-            </>
-          )}
-          <Fee {...fee} />
-        </Flex>
+        {!flag ? (
+          <Flex direction="column" itemAlign="start" mt={1} gapY={1}>
+            <CollateralRatioWidget />
+            <CollateralContributionWidget />
+            <LtvWidget />
+            <Fee {...fee} />
+          </Flex>
+        ) : (
+          <Flex direction="column" itemAlign="start" mt={1} gapY={1}>
+            <SwapCoin token={token} dst={dst} price={1} />
+            <SlippageUI slippage="1" />
+            <MinimumReceivedWidget />
+            <Fee {...fee} />
+            <AssetSwapIndicatorWidget />
+          </Flex>
+        )}
       </Box>
       <Flex justify="center">
         <ActionButton

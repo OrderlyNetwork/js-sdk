@@ -1,9 +1,9 @@
 import * as React from "react";
+import { useMemo } from "react";
 import * as AvatarPrimitive from "@radix-ui/react-avatar";
+import makeBlockie from "ethereum-blockies-base64";
 import { type VariantProps } from "tailwind-variants";
 import { tv } from "../utils/tv";
-import makeBlockie from "ethereum-blockies-base64";
-import { useMemo } from "react";
 
 const avatarVariants = tv({
   slots: {
@@ -14,7 +14,7 @@ const avatarVariants = tv({
   },
   variants: {
     size: {
-      '2xs': {
+      "2xs": {
         root: "oui-w-4 oui-h-4",
       },
       xs: {
@@ -89,6 +89,7 @@ type AvatarProps = React.ComponentProps<typeof AvatarBase> &
     delayMs?: number;
     onLoadingStatusChange?: AvatarPrimitive.AvatarImageProps["onLoadingStatusChange"];
   };
+
 const Avatar = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Root>,
   AvatarProps
