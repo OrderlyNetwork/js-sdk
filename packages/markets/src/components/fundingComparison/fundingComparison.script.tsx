@@ -51,7 +51,6 @@ export const useFundingComparisonScript = () => {
       const target = futures?.find((item) => item.symbol === row.symbol);
       const result: Record<PropertyKey, any> = {
         symbol: row.symbol,
-        // @ts-ignore
         openInterest: target
           ? getOpenInterest(
               target?.open_interest as number,
