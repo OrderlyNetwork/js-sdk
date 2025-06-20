@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { addDays } from "date-fns";
 import {
@@ -346,9 +347,15 @@ export const Page: Story = {
 
 export const LayoutPage: Story = {
   render: (args) => {
+    const [campaignId, setCampaignId] = useState("116");
     return (
       <BaseLayout initialMenu="/leaderboard">
-        <LeaderboardPage {...args} className="oui-py-5" campaignId={116} />
+        <LeaderboardPage
+          {...args}
+          className="oui-py-5"
+          campaignId={campaignId}
+          onCampaignChange={setCampaignId as any}
+        />
       </BaseLayout>
     );
   },
