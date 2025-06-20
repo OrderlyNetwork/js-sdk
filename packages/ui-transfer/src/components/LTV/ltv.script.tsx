@@ -1,7 +1,7 @@
 export const useLtvScript = () => {
   return {
-    from: 0,
-    to: 80, // Example value
+    from: 50,
+    to: 0, // Example value
   };
 };
 

@@ -1,6 +1,7 @@
 {
   "extends": "./tsconfig.build.json",
   "compilerOptions": {
+    "types": ["jest"],
     "paths": {
       "@orderly.network/types": [
         "../types/src"
@@ -8,6 +9,6 @@
       "@orderly.network/utils": [
         "../utils/src"
       ]
-    },
+    }
   }
 }

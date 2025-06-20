@@ -98,7 +98,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
             root: "oui-mt-3 oui-border-transparent focus-within:oui-outline-transparent",
           }}
         />
-        {!flag ? (
+        {flag ? (
           <Flex direction="column" itemAlign="start" mt={1} gapY={1}>
             <CollateralRatioWidget />
             <CollateralContributionWidget />
@@ -111,7 +111,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
             <SlippageUI slippage="1" />
             <MinimumReceivedWidget />
             <Fee {...fee} />
-            <AssetSwapIndicatorWidget />
+            <AssetSwapIndicatorWidget feeMessage="Please note that convert fees will be charged." />
           </Flex>
         )}
       </Box>

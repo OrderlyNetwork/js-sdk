@@ -1,7 +1,8 @@
 // import React from "react";
 
-export const useAssetSwapIndicatorScript = () => {
+export const useAssetSwapIndicatorScript = (props: { feeMessage: string }) => {
   return {
+    ...props,
     fromToken: "ETH",
     toToken: "USDC",
   };
