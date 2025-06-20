@@ -1,4 +1,4 @@
-import { FC, useCallback, useState, useEffect, memo } from "react";
+import { FC, useCallback, useState, useEffect, memo, useRef } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@orderly.network/ui";
 import { DefaultCampaign } from "../DefaultCampaign";
@@ -15,6 +15,7 @@ export const CampaignsHeaderMobileUI: FC<{
   ({ campaigns, currentCampaignId, onCampaignChange, backgroundSrc }) => {
     const [canScrollPrev, setCanScrollPrev] = useState(false);
     const [canScrollNext, setCanScrollNext] = useState(false);
+    const hasInitialScrolled = useRef(false);
 
     const [emblaRef, emblaApi] = useEmblaCarousel({
       loop: false,
@@ -38,9 +39,15 @@ export const CampaignsHeaderMobileUI: FC<{
       setCanScrollPrev(emblaApi.canScrollPrev());
       setCanScrollNext(emblaApi.canScrollNext());
 
+      // Only auto trigger onCampaignChange after initial scroll is completed
+      // This prevents race condition where updateScrollAvailability triggers before scrollToCurrentCampaign
+      if (!hasInitialScrolled.current) return;
+
       // Auto trigger onCampaignChange when slide changes
       const selectedIndex = emblaApi.selectedScrollSnap();
       const selectedCampaign = allCampaignItems[selectedIndex];
+
+      console.log("selectedCampaign", selectedCampaign, selectedIndex);
 
       if (selectedCampaign) {
         const campaignId = selectedCampaign.isDefault
@@ -58,11 +65,33 @@ export const CampaignsHeaderMobileUI: FC<{
       allCampaignItems,
     ]);
 
+    // Auto scroll to current campaign on initial load
+    const scrollToCurrentCampaign = useCallback(() => {
+      if (!emblaApi || !campaigns?.length) return;
+
+      const targetIndex = allCampaignItems.findIndex((item) => {
+        const campaignId = item.isDefault
+          ? "general"
+          : String(item.campaign_id);
+        return campaignId === currentCampaignId;
+      });
+
+      if (targetIndex !== -1 && targetIndex !== emblaApi.selectedScrollSnap()) {
+        emblaApi.scrollTo(targetIndex, false); // false to disable animation for initial scroll
+      }
+
+      // Mark as scrolled after the scroll operation
+      hasInitialScrolled.current = true;
+    }, [emblaApi, campaigns, currentCampaignId, allCampaignItems]);
+
     useEffect(() => {
       if (!emblaApi) return;
 
       // Initial check
       updateScrollAvailability();
+
+      // Auto scroll to current campaign on initial load
+      scrollToCurrentCampaign();
 
       // Listen for scroll events
       emblaApi.on("select", updateScrollAvailability);
@@ -72,7 +101,15 @@ export const CampaignsHeaderMobileUI: FC<{
         emblaApi.off("select", updateScrollAvailability);
         emblaApi.off("reInit", updateScrollAvailability);
       };
-    }, [emblaApi, updateScrollAvailability]);
+    }, [emblaApi, updateScrollAvailability, scrollToCurrentCampaign]);
+
+    // Reset scroll flag when currentCampaignId changes externally
+    useEffect(() => {
+      hasInitialScrolled.current = false;
+      if (emblaApi) {
+        scrollToCurrentCampaign();
+      }
+    }, [currentCampaignId, scrollToCurrentCampaign, emblaApi]);
 
     const scrollPrev = useCallback(() => {
       if (emblaApi) emblaApi.scrollPrev();
@@ -89,11 +126,11 @@ export const CampaignsHeaderMobileUI: FC<{
     const shouldHideScrollButtons = campaigns.length < 1;
 
     return (
-      <div className="oui-flex oui-gap-2 oui-w-full oui-items-center oui-px-3">
+      <div className="oui-flex oui-w-full oui-items-center oui-gap-2 oui-px-3">
         <button
           onClick={scrollPrev}
           disabled={!canScrollPrev}
-          className={`oui-group oui-flex oui-items-center oui-justify-center oui-shrink-0 oui-w-6 oui-h-[42px] oui-rounded-lg oui-transition-colors hover:oui-bg-base-7 disabled:oui-opacity-30 disabled:oui-cursor-not-allowed disabled:hover:oui-bg-transparent ${shouldHideScrollButtons ? "oui-hidden" : ""}`}
+          className={`oui-group oui-flex oui-h-[42px] oui-w-6 oui-shrink-0 oui-items-center oui-justify-center oui-rounded-lg oui-transition-colors hover:oui-bg-base-7 disabled:oui-cursor-not-allowed disabled:oui-opacity-30 disabled:hover:oui-bg-transparent ${shouldHideScrollButtons ? "oui-hidden" : ""}`}
           aria-label="Previous campaigns"
         >
           <ChevronLeftIcon
@@ -102,7 +139,7 @@ export const CampaignsHeaderMobileUI: FC<{
           />
         </button>
 
-        <div className="oui-flex-1 oui-min-w-0 oui-overflow-hidden">
+        <div className="oui-min-w-0 oui-flex-1 oui-overflow-hidden">
           <div ref={emblaRef}>
             <div className="oui-flex oui-gap-2">
               <DefaultCampaign
@@ -110,12 +147,12 @@ export const CampaignsHeaderMobileUI: FC<{
                 currentCampaignId={currentCampaignId}
                 onCampaignChange={onCampaignChange}
                 style={slideStyle}
-                className="oui-w-full oui-flex-shrink-0"
+                className="oui-w-full oui-shrink-0"
               />
               {campaigns?.map((campaign) => (
                 <div
                   key={campaign.campaign_id}
-                  className="oui-flex-shrink-0"
+                  className="oui-shrink-0"
                   style={slideStyle}
                 >
                   <CampaignItemUI
@@ -142,7 +179,7 @@ export const CampaignsHeaderMobileUI: FC<{
         <button
           onClick={scrollNext}
           disabled={!canScrollNext}
-          className={`oui-group oui-flex oui-items-center oui-justify-center oui-shrink-0 oui-w-6 oui-h-[42px] oui-rounded-lg oui-transition-colors hover:oui-bg-base-7 disabled:oui-opacity-30 disabled:oui-cursor-not-allowed disabled:hover:oui-bg-transparent ${shouldHideScrollButtons ? "oui-hidden" : ""}`}
+          className={`oui-group oui-flex oui-h-[42px] oui-w-6 oui-shrink-0 oui-items-center oui-justify-center oui-rounded-lg oui-transition-colors hover:oui-bg-base-7 disabled:oui-cursor-not-allowed disabled:oui-opacity-30 disabled:hover:oui-bg-transparent ${shouldHideScrollButtons ? "oui-hidden" : ""}`}
           aria-label="Next campaigns"
         >
           <ChevronRightIcon
