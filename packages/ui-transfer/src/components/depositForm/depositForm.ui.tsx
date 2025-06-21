@@ -48,6 +48,16 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
     fee,
   } = props;
 
+  const mockTokens = [
+    ...tokens,
+    {
+      symbol: "BTC",
+      address: "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d",
+      decimals: 6,
+      display_name: "BTC",
+    } as API.TokenInfo,
+  ];
+
   return (
     <Box id="oui-deposit-form" className={textVariants({ weight: "semibold" })}>
       <Box className="oui-mb-6 lg:oui-mb-8">
@@ -66,7 +76,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
             }}
             value={quantity}
             onValueChange={onQuantityChange}
-            tokens={tokens}
+            tokens={mockTokens}
             token={token}
             onTokenChange={onTokenChange}
             status={inputStatus}
@@ -93,6 +103,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
         <QuantityInput
           readOnly
           token={dst as unknown as API.TokenInfo}
+          tokens={mockTokens}
           value={quantity}
           classNames={{
             root: "oui-mt-3 oui-border-transparent focus-within:oui-outline-transparent",
