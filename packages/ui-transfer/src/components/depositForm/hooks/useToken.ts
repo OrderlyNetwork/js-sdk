@@ -1,5 +1,5 @@
-import { API } from "@orderly.network/types";
 import { useCallback, useEffect, useState } from "react";
+import { API } from "@orderly.network/types";
 import { getTokenByTokenList } from "../../../utils";
 import { CurrentChain } from "./useChainSelect";
 
@@ -8,10 +8,11 @@ type Options = {
   tokensFilter?: (chainInfo: API.Chain) => API.TokenInfo[];
 };
 
-export function useToken(options: Options) {
+export const useToken = (options: Options) => {
   const { currentChain, tokensFilter } = options;
-  const [token, setToken] = useState<API.TokenInfo>();
-  const [tokens, setTokens] = useState<API.TokenInfo[]>([]);
+  const [fromToken, setFromToken] = useState<API.TokenInfo>();
+  const [toToken, setToToken] = useState<API.TokenInfo>();
+  const [tokensList, setTokensList] = useState<API.TokenInfo[]>([]);
 
   // when chain changed and chain data ready then call this function
   const onChainInited = useCallback(
@@ -21,17 +22,17 @@ export function useToken(options: Options) {
           typeof tokensFilter === "function"
             ? tokensFilter(chainInfo)
             : chainInfo.token_infos;
-
-        setTokens(tokens);
+        setTokensList(tokens);
 
         const newToken = getTokenByTokenList(tokens);
-
-        if (!newToken) return;
-
-        setToken(newToken);
+        if (!newToken) {
+          return;
+        }
+        setFromToken(newToken);
+        setToToken(newToken);
       }
     },
-    [tokensFilter]
+    [tokensFilter],
   );
 
   useEffect(() => {
@@ -39,5 +40,11 @@ export function useToken(options: Options) {
     // if settingChain is true, the currentChain will change, so use currentChain.id
   }, [currentChain?.id, onChainInited]);
 
-  return { token, tokens, onTokenChange: setToken };
-}
+  return {
+    fromToken,
+    toToken,
+    tokensList,
+    onFromTokenChange: setFromToken,
+    onToTokenChange: setToToken,
+  };
+};
