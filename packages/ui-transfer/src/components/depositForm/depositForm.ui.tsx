@@ -18,8 +18,6 @@ import { SwapCoin } from "../swapCoin";
 import { Web3Wallet } from "../web3Wallet";
 import type { UseDepositFormScriptReturn } from "./depositForm.script";
 
-const flag = true;
-
 export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
   const {
     fromToken,
@@ -112,7 +110,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
             root: "oui-mt-3 oui-border-transparent focus-within:oui-outline-transparent",
           }}
         />
-        {flag ? (
+        {fromToken?.symbol === toToken?.symbol ? (
           <Flex direction="column" itemAlign="start" mt={1} gapY={1}>
             <CollateralRatioWidget />
             <CollateralContributionWidget />
