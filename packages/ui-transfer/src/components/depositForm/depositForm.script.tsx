@@ -33,7 +33,8 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
   const { chains, currentChain, settingChain, onChainChange } =
     useChainSelect();
 
-  const { token, tokens, onTokenChange } = useToken({ currentChain });
+  const { tokensList, fromToken, toToken, onFromTokenChange, onToTokenChange } =
+    useToken({ currentChain });
 
   const {
     dst,
@@ -49,18 +50,18 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     balanceRevalidating,
     fetchBalance,
   } = useDeposit({
-    address: token?.address,
-    decimals: token?.decimals,
+    address: fromToken?.address,
+    decimals: fromToken?.decimals,
     srcChainId: currentChain?.id,
-    srcToken: token?.symbol,
+    srcToken: fromToken?.symbol,
   });
 
   const maxQuantity = useMemo(
     () =>
       new Decimal(balance || 0)
-        .todp(token?.precision ?? 2, Decimal.ROUND_DOWN)
+        .todp(fromToken?.precision ?? 2, Decimal.ROUND_DOWN)
         .toString(),
-    [balance, token],
+    [balance, fromToken],
   );
 
   const { inputStatus, hintMessage } = useInputStatus({
@@ -68,14 +69,14 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     maxQuantity,
   });
 
-  const cleanData = () => {
+  const cleanData = useCallback(() => {
     setQuantity("");
-  };
+  }, [setQuantity]);
 
   const onSuccess = useCallback(() => {
     cleanData();
     options.onClose?.();
-  }, [options.onClose]);
+  }, [cleanData, options.onClose]);
 
   const { submitting, onApprove, onDeposit } = useDepositAction({
     quantity,
@@ -90,7 +91,7 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
   const disabled =
     !quantity ||
     Number(quantity) === 0 ||
-    !token ||
+    !fromToken ||
     inputStatus === "error" ||
     depositFeeRevalidating!;
 
@@ -113,12 +114,14 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
 
   useEffect(() => {
     cleanData();
-  }, [token, currentChain?.id]);
+  }, [fromToken, currentChain?.id]);
 
   return {
-    token,
-    tokens,
-    onTokenChange,
+    fromToken,
+    toToken,
+    tokensList,
+    onFromTokenChange,
+    onToTokenChange,
     amount,
     quantity,
     maxQuantity,

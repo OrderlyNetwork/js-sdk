@@ -22,9 +22,11 @@ const flag = true;
 
 export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
   const {
-    token,
-    tokens,
-    onTokenChange,
+    fromToken,
+    toToken,
+    onFromTokenChange,
+    onToTokenChange,
+    tokensList,
     amount,
     quantity,
     maxQuantity,
@@ -48,8 +50,8 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
     fee,
   } = props;
 
-  const mockTokens = [
-    ...tokens,
+  const mockTokensList = [
+    ...tokensList,
     {
       symbol: "BTC",
       address: "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d",
@@ -76,9 +78,9 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
             }}
             value={quantity}
             onValueChange={onQuantityChange}
-            tokens={mockTokens}
-            token={token}
-            onTokenChange={onTokenChange}
+            tokens={mockTokensList}
+            token={fromToken}
+            onTokenChange={onFromTokenChange}
             status={inputStatus}
             hintMessage={hintMessage}
             fetchBalance={fetchBalance}
@@ -87,7 +89,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
         </Box>
 
         <AvailableQuantity
-          token={token}
+          token={fromToken}
           amount={amount}
           maxQuantity={maxQuantity}
           loading={balanceRevalidating}
@@ -102,8 +104,9 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
 
         <QuantityInput
           readOnly
-          token={dst as unknown as API.TokenInfo}
-          tokens={mockTokens}
+          token={toToken}
+          tokens={mockTokensList}
+          onTokenChange={onToTokenChange}
           value={quantity}
           classNames={{
             root: "oui-mt-3 oui-border-transparent focus-within:oui-outline-transparent",
@@ -118,7 +121,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
           </Flex>
         ) : (
           <Flex direction="column" itemAlign="start" mt={1} gapY={1}>
-            <SwapCoin token={token} dst={dst} price={1} />
+            <SwapCoin token={fromToken} dst={dst} price={1} />
             <SlippageUI slippage="1" />
             <MinimumReceivedWidget />
             <Fee {...fee} />
@@ -129,7 +132,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
       <Flex justify="center">
         <ActionButton
           actionType={actionType}
-          symbol={token?.symbol}
+          symbol={fromToken?.symbol}
           disabled={disabled}
           loading={loading}
           onDeposit={onDeposit}
