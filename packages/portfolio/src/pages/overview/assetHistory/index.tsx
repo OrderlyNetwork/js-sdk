@@ -1,6 +1,4 @@
 export { useAssetHistoryColumns } from "./column";
-
-export { useAssetHistoryHook } from "./useDataSource.script";
-
-export { AssetHistory } from "./dataTable.ui";
-export { AssetHistoryWidget } from "./widget";
+export { useAssetHistoryScript } from "../assetChart/assetHistory.script";
+export { AssetHistory } from "./assetHistory.ui";
+export { AssetHistoryWidget } from "./assetHistory.widget";

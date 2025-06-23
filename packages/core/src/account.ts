@@ -971,7 +971,7 @@ export class Account {
         expiration,
         timestamp: getTimestamp(),
         // domain: any;
-        scope: options?.scope,
+        scope: options?.scope || "read,trading,asset",
         tag: options?.tag,
         subAccountId: options?.subAccountId,
       });

@@ -3,12 +3,7 @@ export { AssetsChartWidget } from "./assetChart/assetsChart.widget";
 export { useAssetsLineChartScript } from "./assetChart/assetsChart.script";
 export { HistoryDataGroupWidget } from "./historyDataGroup";
 
-export {
-  AssetHistory,
-  AssetHistoryWidget,
-  useAssetHistoryHook,
-  useAssetHistoryColumns,
-} from "./assetHistory";
+export * from "./assetHistory";
 
 export {
   PerformanceUI,

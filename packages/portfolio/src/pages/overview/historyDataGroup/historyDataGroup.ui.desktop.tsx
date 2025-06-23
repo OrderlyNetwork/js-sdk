@@ -1,7 +1,9 @@
 import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import {
+  ArrowDownSquareFillIcon,
   ArrowLeftRightSquareFill,
+  ArrowUpSquareFillIcon,
   Card,
   FeeTierIcon,
   ServerFillIcon,
@@ -34,11 +36,18 @@ export const HistoryDataGroupDesktop = (props: {
         // }}
       >
         <TabPanel
-          title={t("portfolio.overview.deposits&Withdrawals")}
-          icon={<ArrowLeftRightIcon />}
+          title={t("common.deposits")}
+          icon={<ArrowDownSquareFillIcon />}
           value={"deposit"}
         >
-          <AssetHistoryWidget />
+          <AssetHistoryWidget side="deposit" />
+        </TabPanel>
+        <TabPanel
+          title={t("common.withdrawals")}
+          icon={<ArrowUpSquareFillIcon />}
+          value={"withdraw"}
+        >
+          <AssetHistoryWidget side="withdraw" />
         </TabPanel>
         <TabPanel
           title={t("common.funding")}

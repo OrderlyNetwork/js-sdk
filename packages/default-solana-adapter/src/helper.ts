@@ -76,7 +76,7 @@ export function addOrderlyKeyMessage(
     brokerId: brokerId,
     chainType: "SOL",
     orderlyKey: publicKey,
-    scope: scope || "read,trading",
+    scope: scope || "read,trading,asset",
     chainId,
     timestamp,
     expiration: timestamp + 1000 * 60 * 60 * 24 * expiration,
