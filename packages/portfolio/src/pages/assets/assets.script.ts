@@ -1,21 +1,18 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useCallback, useMemo } from "react";
-import { produce } from "immer";
 import {
   SubAccount,
   useAccount,
   useCollateral,
   useLocalStorage,
 } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import type { API } from "@orderly.network/types";
 import { modal } from "@orderly.network/ui";
 import {
   DepositAndWithdrawWithDialogId,
   TransferDialogId,
 } from "@orderly.network/ui-transfer";
 import { Decimal } from "@orderly.network/utils";
-import { AccountType } from "./assets.ui";
+import { useAccountsData } from "../../hooks/useAccountsData";
+import { useAssetsAccountFilter } from "../../hooks/useAssetsAccountFilter";
 import { useAssetsColumns } from "./column";
 
 const isNumber = (val: unknown): val is number => {
@@ -40,19 +37,11 @@ const calculateTotalHolding = (data: SubAccount[] | SubAccount["holding"]) => {
 
 const ORDERLY_ASSETS_VISIBLE_KEY = "orderly_assets_visible";
 
-const EMPTY_HOLDING: Partial<API.Holding> = {
-  token: "USDC",
-  holding: 0,
-  frozen: 0,
-};
-
 export const useAssetsScript = () => {
   const [visible, setVisible] = useLocalStorage<boolean>(
     ORDERLY_ASSETS_VISIBLE_KEY,
     true,
   );
-
-  const { t } = useTranslation();
 
   const { state, isMainAccount } = useAccount();
 
@@ -65,59 +54,15 @@ export const useAssetsScript = () => {
     setVisible((visible: boolean) => !visible);
   };
 
-  const [selectedAccount, setAccount] = React.useState<string>(AccountType.ALL);
+  // Use the extracted accounts data hook
+  const allAccounts = useAccountsData();
 
-  const allAccounts = useMemo(() => {
-    return produce<any[]>(subAccounts, (draft) => {
-      for (const sub of draft) {
-        sub.account_id = sub.id;
-        if (Array.isArray(sub.holding) && sub.holding.length) {
-          sub.children = sub.holding.map((item: API.Holding) => ({
-            ...item,
-            account_id: sub.id,
-          }));
-        } else {
-          sub.children = [{ ...EMPTY_HOLDING, account_id: sub.id }];
-        }
-        Reflect.deleteProperty(sub, "holding");
-      }
-      if (isMainAccount) {
-        draft.unshift({
-          account_id: state.mainAccountId,
-          description: t("common.mainAccount"),
-          children:
-            Array.isArray(holding) && holding.length
-              ? holding.map((item: API.Holding) => ({
-                  ...item,
-                  account_id: state.mainAccountId,
-                }))
-              : [
-                  {
-                    ...EMPTY_HOLDING,
-                    account_id: state.mainAccountId,
-                  },
-                ],
-        });
-      }
-    });
-  }, [holding, subAccounts, isMainAccount, state.mainAccountId]);
-
-  const filtered = React.useMemo(() => {
-    return allAccounts.filter((item) => {
-      if (isMainAccount) {
-        if (!selectedAccount || selectedAccount === AccountType.ALL) {
-          return true;
-        }
-        if (selectedAccount === AccountType.MAIN) {
-          return item.account_id === state.mainAccountId;
-        } else {
-          return item.account_id === selectedAccount;
-        }
-      } else {
-        return item.account_id === state.accountId;
-      }
-    });
-  }, [allAccounts, selectedAccount, isMainAccount, state]);
+  // Use the extracted account filter hook
+  const {
+    selectedAccount,
+    filteredData: filtered,
+    onAccountFilter: onFilter,
+  } = useAssetsAccountFilter(allAccounts);
 
   const mainTotalValue = useMemo<Decimal>(
     () => calculateTotalHolding(holding),
@@ -146,16 +91,6 @@ export const useAssetsScript = () => {
     allAccounts,
     state.accountId,
   ]);
-
-  const onAccountFilter = React.useCallback(
-    (filter: { name: string; value: string }) => {
-      const { name, value } = filter;
-      if (name === "account") {
-        setAccount(value);
-      }
-    },
-    [],
-  );
 
   const handleTransfer = (accountId: string) => {
     if (!accountId) {
@@ -191,7 +126,7 @@ export const useAssetsScript = () => {
     visible: visible as boolean,
     onToggleVisibility: toggleVisible,
     selectedAccount,
-    onFilter: onAccountFilter,
+    onFilter,
     totalValue: memoizedTotalValue,
     hasSubAccount: subAccounts.length > 0,
     onDeposit,

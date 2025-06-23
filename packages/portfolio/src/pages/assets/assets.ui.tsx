@@ -22,6 +22,7 @@ import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import type { SelectOption } from "@orderly.network/ui/src/select/withOptions";
 import type { useAssetsScriptReturn } from "./assets.script";
 import type { AssetsWidgetProps } from "./assets.widget";
+import { ConvertDesktopUI } from "./convert.ui.desktop";
 
 export type AssetsProps = useAssetsScriptReturn;
 
@@ -203,7 +204,7 @@ export const AssetsTable: React.FC<Readonly<AssetsWidgetProps>> = (props) => {
                   children:
                     column.id === "token" ? (
                       <Badge color="neutral" size="xs">
-                        {record?.description || formatAddress(record?.id)}
+                        {record?.description || formatAddress(record?.id ?? "")}
                       </Badge>
                     ) : null,
                 };
@@ -212,7 +213,10 @@ export const AssetsTable: React.FC<Readonly<AssetsWidgetProps>> = (props) => {
           />
         </TabPanel>
         <TabPanel value="convertHistory" title={"Convert History"}>
-          Convert History
+          <ConvertDesktopUI
+            memoizedOptions={memoizedOptions}
+            convertState={props.convertState}
+          />
         </TabPanel>
       </Tabs>
     </Card>
