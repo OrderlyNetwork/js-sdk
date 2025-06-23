@@ -4,7 +4,9 @@ import {
   useConfig,
   useDeposit,
   useIndexPrice,
+  useIndexPricesStream,
 } from "@orderly.network/hooks";
+import { account } from "@orderly.network/perp";
 import { useAppContext } from "@orderly.network/react-app";
 import { API, NetworkId, ChainNamespace } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
@@ -33,7 +35,7 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
   const { chains, currentChain, settingChain, onChainChange } =
     useChainSelect();
 
-  const { tokensList, fromToken, toToken, onFromTokenChange, onToTokenChange } =
+  const { tokens, fromToken, toToken, onFromTokenChange, onToTokenChange } =
     useToken({ currentChain });
 
   const {
@@ -112,6 +114,11 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     depositFee,
   });
 
+  const toQuantity = useCollateralValue({
+    token: fromToken,
+    qty: quantity,
+  });
+
   useEffect(() => {
     cleanData();
   }, [fromToken, currentChain?.id]);
@@ -119,11 +126,12 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
   return {
     fromToken,
     toToken,
-    tokensList,
+    tokens,
     onFromTokenChange,
     onToTokenChange,
     amount,
-    quantity,
+    fromQty: quantity,
+    toQty: toQuantity,
     maxQuantity,
     onQuantityChange: setQuantity,
     hintMessage,
@@ -183,3 +191,32 @@ export function useDepositFee(options: {
 
   return { ...feeProps, nativeSymbol };
 }
+
+const useCollateralValue = (params: { token?: API.TokenInfo; qty: string }) => {
+  const { token, qty } = params;
+
+  const { data: indexPrices } = useIndexPricesStream();
+
+  const indexPrice = useMemo(() => {
+    if (token?.symbol === "USDC") {
+      return 1;
+    }
+    const symbol = `PERP_${token?.symbol}_USDC`;
+    return indexPrices[symbol] ?? 0;
+  }, [token, indexPrices]);
+
+  const collateralRatio = account.collateralRatio({
+    baseWeight: 2, // from API v1/public/token
+    discountFactor: 3, // from API v1/public/token
+    collateralQty: Number(qty),
+    indexPrice: indexPrice,
+  });
+
+  const toQuantity = account.collateralContribution({
+    collateralQty: Number(qty),
+    collateralRatio: collateralRatio,
+    indexPrice: indexPrice,
+  });
+
+  return toQuantity;
+};

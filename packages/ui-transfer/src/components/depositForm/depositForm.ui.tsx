@@ -1,5 +1,4 @@
 import { FC } from "react";
-import type { API } from "@orderly.network/types";
 import { Box, Flex, textVariants } from "@orderly.network/ui";
 import { LtvWidget } from "../LTV";
 import { ActionButton } from "../actionButton";
@@ -24,9 +23,10 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
     toToken,
     onFromTokenChange,
     onToTokenChange,
-    tokensList,
+    tokens,
     amount,
-    quantity,
+    fromQty,
+    toQty,
     maxQuantity,
     onQuantityChange,
     hintMessage,
@@ -48,16 +48,6 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
     fee,
   } = props;
 
-  const mockTokensList = [
-    ...tokensList,
-    {
-      symbol: "BTC",
-      address: "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d",
-      decimals: 6,
-      display_name: "BTC",
-    } as API.TokenInfo,
-  ];
-
   return (
     <Box id="oui-deposit-form" className={textVariants({ weight: "semibold" })}>
       <Box className="oui-mb-6 lg:oui-mb-8">
@@ -74,9 +64,9 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
             classNames={{
               root: "oui-mt-[2px] oui-rounded-t-sm oui-rounded-b-xl",
             }}
-            value={quantity}
+            value={fromQty}
             onValueChange={onQuantityChange}
-            tokens={mockTokensList}
+            tokens={tokens}
             token={fromToken}
             onTokenChange={onFromTokenChange}
             status={inputStatus}
@@ -103,9 +93,9 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
         <QuantityInput
           readOnly
           token={toToken}
-          tokens={mockTokensList}
+          tokens={tokens}
           onTokenChange={onToTokenChange}
-          value={quantity}
+          value={toQty}
           classNames={{
             root: "oui-mt-3 oui-border-transparent focus-within:oui-outline-transparent",
           }}

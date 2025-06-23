@@ -384,6 +384,11 @@ export declare namespace API {
     token_hash: string;
     decimals: number;
     minimum_withdraw_amount: number;
+    base_weight: number;
+    discount_factor?: number | null;
+    haircut: number;
+    user_max_qty: number;
+    is_collateral: boolean;
     chain_details: ChainDetail[];
   }
 
@@ -397,6 +402,8 @@ export declare namespace API {
     contract_address: string;
     decimals: number;
     withdrawal_fee: number;
+    cross_chain_withdrawal_fee: number;
+    display_name: string;
   }
 
   export interface AssetHistory {

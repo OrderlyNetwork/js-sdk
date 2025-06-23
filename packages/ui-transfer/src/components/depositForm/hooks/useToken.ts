@@ -12,7 +12,7 @@ export const useToken = (options: Options) => {
   const { currentChain, tokensFilter } = options;
   const [fromToken, setFromToken] = useState<API.TokenInfo>();
   const [toToken, setToToken] = useState<API.TokenInfo>();
-  const [tokensList, setTokensList] = useState<API.TokenInfo[]>([]);
+  const [tokens, setTokens] = useState<API.TokenInfo[]>([]);
 
   // when chain changed and chain data ready then call this function
   const onChainInited = useCallback(
@@ -22,7 +22,7 @@ export const useToken = (options: Options) => {
           typeof tokensFilter === "function"
             ? tokensFilter(chainInfo)
             : chainInfo.token_infos;
-        setTokensList(tokens);
+        setTokens(tokens);
 
         const newToken = getTokenByTokenList(tokens);
         if (!newToken) {
@@ -43,7 +43,7 @@ export const useToken = (options: Options) => {
   return {
     fromToken,
     toToken,
-    tokensList,
+    tokens,
     onFromTokenChange: setFromToken,
     onToTokenChange: setToToken,
   };

@@ -67,7 +67,7 @@ export const TokenOption: React.FC<TokenOptionProps> = (props) => {
       }}
     >
       <Flex gapX={1}>
-        <TokenIcon name={symbol} className="oui-w-[16px] oui-h-[16px]" />
+        <TokenIcon name={symbol} className="oui-size-[16px]" />
         <Text
           className={cn(
             "oui-text-base-contrast-54 group-hover:oui-text-base-contrast-80",

@@ -732,7 +732,7 @@ export function MMR(inputs: AccountMMRInputs): number | null {
 
 export const collateralRatio = (params: {
   baseWeight: number;
-  discountFactor: number;
+  discountFactor: number | null;
   collateralQty: number;
   indexPrice: number;
 }) => {
@@ -742,7 +742,7 @@ export const collateralRatio = (params: {
   const { baseWeight, discountFactor, collateralQty, indexPrice } = params;
 
   const K = new Decimal(1.2);
-  const DCF = new Decimal(discountFactor);
+  const DCF = new Decimal(discountFactor || 0);
   const qty = new Decimal(collateralQty);
   const price = new Decimal(indexPrice);
 
@@ -754,9 +754,9 @@ export const collateralRatio = (params: {
 };
 
 export const collateralContribution = (params: {
-  collateralQty: number;
-  collateralRatio: number;
-  indexPrice: number;
+  collateralQty: number; // collateralQty 就是上面 fromValue 输入的值
+  collateralRatio: number; // collateralRatio 是用另一个公式算出来的
+  indexPrice: number; // indexPrice 是我们现在可以直接拿到的
 }) => {
   // Collateral contribution = collateral_qty * collateral_ratio * index_price
 
