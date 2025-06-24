@@ -1,7 +1,8 @@
 import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Flex, Text, Tooltip } from "@orderly.network/ui";
-import type { CollateralRatioReturns } from "./collateralRatio.script";
+
+// import type { CollateralRatioReturns } from "./collateralRatio.script";
 
 const TooltipIcon = React.forwardRef<
   SVGSVGElement,
@@ -23,9 +24,9 @@ const TooltipIcon = React.forwardRef<
   );
 });
 
-export const CollateralRatioUI: React.FC<Readonly<CollateralRatioReturns>> = (
-  props,
-) => {
+export const CollateralRatioUI: React.FC<
+  Readonly<{ collateralRatio: number }>
+> = (props) => {
   const { t } = useTranslation();
   const { collateralRatio } = props;
   return (

@@ -8,6 +8,12 @@ export enum AnnouncementType {
 }
 
 export declare namespace API {
+  // /v1/public/auto_convert_threshold
+  export interface ConvertThreshold {
+    ltv_threshold: number;
+    negative_usdc_threshold: number;
+  }
+
   //v1/public/token
   export interface Token {
     token: string;

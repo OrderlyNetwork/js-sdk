@@ -1,12 +1,14 @@
 import React from "react";
 // import { useTranslation } from "@orderly.network/i18n";
 import { Flex, Text, TokenIcon } from "@orderly.network/ui";
-import type { AssetSwapIndicatorReturns } from "./assetSwapIndicator.script";
 
 export const AssetSwapIndicatorUI: React.FC<
-  Readonly<AssetSwapIndicatorReturns>
+  Readonly<Record<"fromToken" | "toToken", string>>
 > = (props) => {
   const { fromToken, toToken } = props;
+  if (fromToken === toToken) {
+    return null;
+  }
   return (
     <Flex
       width="100%"

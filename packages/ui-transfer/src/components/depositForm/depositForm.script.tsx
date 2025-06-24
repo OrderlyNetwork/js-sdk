@@ -1,13 +1,17 @@
 import { useCallback, useEffect, useMemo } from "react";
+// import { console } from "inspector";
 import {
   useAccount,
   useConfig,
   useDeposit,
+  useHoldingStream,
   useIndexPrice,
   useIndexPricesStream,
+  usePositionStream,
+  useQuery,
 } from "@orderly.network/hooks";
 import { account } from "@orderly.network/perp";
-import { useAppContext } from "@orderly.network/react-app";
+import { useAppContext, useDataTap } from "@orderly.network/react-app";
 import { API, NetworkId, ChainNamespace } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 import { feeDecimalsOffset } from "../../utils";
@@ -18,6 +22,49 @@ import {
   useInputStatus,
   useToken,
 } from "./hooks";
+
+// TODO: 需要替换成真实数据
+const hardCode = [
+  {
+    token: "USDC",
+    decimals: 6,
+    minimum_withdraw_amount: 0.000001,
+    base_weight: 1,
+    discount_factor: null,
+    haircut: 0,
+    user_max_qty: -1,
+    is_collateral: true,
+    display_name: "USDC",
+    address: "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d",
+    symbol: "USDC",
+  },
+  {
+    token: "ETH",
+    decimals: 6,
+    minimum_withdraw_amount: 0.000001,
+    base_weight: 1,
+    discount_factor: null,
+    haircut: 0,
+    user_max_qty: -1,
+    is_collateral: true,
+    display_name: "ETH",
+    address: "",
+    symbol: "ETH",
+  },
+  {
+    token: "USDT",
+    decimals: 6,
+    minimum_withdraw_amount: 0.000001,
+    base_weight: 1,
+    discount_factor: null,
+    haircut: 0,
+    user_max_qty: -1,
+    is_collateral: true,
+    display_name: "USDT",
+    address: "0xEf54C221Fc94517877F0F40eCd71E0A3866D66C2",
+    symbol: "USDT",
+  },
+];
 
 export type UseDepositFormScriptReturn = ReturnType<
   typeof useDepositFormScript
@@ -114,10 +161,16 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     depositFee,
   });
 
-  const toQuantity = useCollateralValue({
+  const { collateralRatio, toQuantity, ltv } = useCollateralValue({
     token: fromToken,
     qty: quantity,
   });
+
+  const {
+    ltv_threshold,
+    negative_usdc_threshold,
+    isLoading: isConvertThresholdLoading,
+  } = useConvertThreshold();
 
   useEffect(() => {
     cleanData();
@@ -151,6 +204,11 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     disabled,
     networkId,
     fee,
+    collateralRatio,
+    ltv,
+    ltv_threshold,
+    negative_usdc_threshold,
+    isConvertThresholdLoading,
   };
 };
 
@@ -195,7 +253,13 @@ export function useDepositFee(options: {
 const useCollateralValue = (params: { token?: API.TokenInfo; qty: string }) => {
   const { token, qty } = params;
 
+  const { data: holdingData, usdc } = useHoldingStream();
   const { data: indexPrices } = useIndexPricesStream();
+  const [data] = usePositionStream(token?.symbol);
+  const aggregated = useDataTap(data.aggregated);
+  const unrealPnL = aggregated?.total_unreal_pnl ?? 0;
+
+  const usdcBalance = usdc?.holding ?? 0;
 
   const indexPrice = useMemo(() => {
     if (token?.symbol === "USDC") {
@@ -218,5 +282,34 @@ const useCollateralValue = (params: { token?: API.TokenInfo; qty: string }) => {
     indexPrice: indexPrice,
   });
 
-  return toQuantity;
+  const ltv = account.LTV({
+    usdcBalance: usdcBalance,
+    upnl: unrealPnL,
+    collateralAssets: hardCode.map((item) => {
+      const qty = holdingData?.find((h) => h.token === item.symbol)?.holding;
+      const indexPrice = item.symbol === "USDC" ? 1 : indexPrices[item.symbol];
+      return {
+        qty: qty ?? 0,
+        indexPrice: indexPrice ?? 0,
+        weight: collateralRatio,
+      };
+    }),
+  });
+
+  return { collateralRatio, toQuantity, ltv: ltv };
+};
+
+const useConvertThreshold = () => {
+  const { data, error, isLoading } = useQuery<API.ConvertThreshold>(
+    "/v1/public/auto_convert_threshold",
+    {
+      errorRetryCount: 3,
+    },
+  );
+  return {
+    ltv_threshold: data?.ltv_threshold,
+    negative_usdc_threshold: data?.negative_usdc_threshold,
+    isLoading,
+    error,
+  } as const;
 };

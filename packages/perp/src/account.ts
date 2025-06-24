@@ -769,17 +769,17 @@ export const collateralContribution = (params: {
 
 export const LTV = (params: {
   usdcBalance: number;
-  unpl: number;
-  collateralAssets: Record<"qty" | "indexPrice" | "weight", number>[];
+  upnl: number;
+  collateralAssets: Array<Record<"qty" | "indexPrice" | "weight", number>>;
 }) => {
   // LTV = (abs(min(USDC_balance, 0)) + abs(min(upnl, 0)) ) /
   // [sum(max(collateral_qty_i, 0) × index_price_i × weight_i ) + max(upnl, 0)]
 
-  const { usdcBalance, unpl, collateralAssets } = params;
+  const { usdcBalance, upnl, collateralAssets } = params;
 
   const usdcLoss = new Decimal(Math.min(usdcBalance, 0)).abs();
-  const unplLoss = new Decimal(Math.min(unpl, 0)).abs();
-  const numerator = usdcLoss.add(unplLoss);
+  const upnlLoss = new Decimal(Math.min(upnl, 0)).abs();
+  const numerator = usdcLoss.add(upnlLoss);
 
   const collateralSum = collateralAssets.reduce<Decimal>((acc, asset) => {
     return acc.add(
@@ -789,7 +789,7 @@ export const LTV = (params: {
     );
   }, zero);
 
-  const denominator = collateralSum.add(new Decimal(Math.max(unpl, 0)));
+  const denominator = collateralSum.add(new Decimal(Math.max(upnl, 0)));
 
   // 分母如果为 0，则直接返回 0
   if (denominator.isZero()) {
