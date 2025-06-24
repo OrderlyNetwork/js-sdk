@@ -379,9 +379,14 @@ export declare namespace API {
 
   export interface TokenInfo {
     address: string;
-    symbol: string;
+    base_weight: number;
     decimals: number;
+    discount_factor: number;
     display_name: string;
+    haircut: number;
+    is_collateral: true;
+    symbol: string;
+    user_max_qty: number;
     precision: number;
   }
 

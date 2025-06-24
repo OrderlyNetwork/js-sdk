@@ -47,7 +47,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
     networkId,
     fee,
     collateralRatio,
-    // ltv,
+    ltv,
   } = props;
 
   return (
@@ -107,9 +107,9 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
             <CollateralRatioWidget collateralRatio={collateralRatio} />
             <CollateralContributionWidget
               collateralContribution={toQty}
-              token={toToken.symbol}
+              token={toToken?.symbol ?? ""}
             />
-            <LtvWidget />
+            <LtvWidget currentLtv={20} newLtv={ltv} />
             <Fee {...fee} />
           </Flex>
         ) : (
@@ -119,8 +119,8 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
             <MinimumReceivedWidget />
             <Fee {...fee} />
             <AssetSwapIndicatorWidget
-              fromToken={fromToken?.symbol}
-              toToken={toToken?.symbol}
+              fromToken={fromToken?.symbol ?? ""}
+              toToken={toToken?.symbol ?? ""}
             />
           </Flex>
         )}

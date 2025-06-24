@@ -8,55 +8,12 @@ type Options = {
   tokensFilter?: (chainInfo: API.Chain) => API.TokenInfo[];
 };
 
-// TODO: 需要替换成真实数据
-const hardCode = [
-  {
-    token: "USDC",
-    decimals: 6,
-    minimum_withdraw_amount: 0.000001,
-    base_weight: 1,
-    discount_factor: null,
-    haircut: 0,
-    user_max_qty: -1,
-    is_collateral: true,
-    display_name: "USDC",
-    address: "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d",
-    symbol: "USDC",
-  },
-  {
-    token: "ETH",
-    decimals: 6,
-    minimum_withdraw_amount: 0.000001,
-    base_weight: 1,
-    discount_factor: null,
-    haircut: 0,
-    user_max_qty: -1,
-    is_collateral: true,
-    display_name: "ETH",
-    address: "",
-    symbol: "ETH",
-  },
-  {
-    token: "USDT",
-    decimals: 6,
-    minimum_withdraw_amount: 0.000001,
-    base_weight: 1,
-    discount_factor: null,
-    haircut: 0,
-    user_max_qty: -1,
-    is_collateral: true,
-    display_name: "USDT",
-    address: "0xEf54C221Fc94517877F0F40eCd71E0A3866D66C2",
-    symbol: "USDT",
-  },
-];
-
 export const useToken = (options: Options) => {
   const { currentChain, tokensFilter } = options;
 
-  const [fromToken, setFromToken] = useState<API.TokenInfo>(hardCode[0] as any);
-  const [toToken, setToToken] = useState<API.TokenInfo>(hardCode[0] as any);
-  const [tokens, setTokens] = useState<API.TokenInfo[]>(hardCode as any);
+  const [fromToken, setFromToken] = useState<API.TokenInfo>();
+  const [toToken, setToToken] = useState<API.TokenInfo>();
+  const [tokens, setTokens] = useState<API.TokenInfo[]>([]);
 
   // when chain changed and chain data ready then call this function
   const onChainInited = useCallback(
@@ -78,11 +35,10 @@ export const useToken = (options: Options) => {
     [tokensFilter],
   );
 
-  // TODO: 暂时注释掉，后面需要替换成真实数据
-  // useEffect(() => {
-  //   onChainInited(currentChain?.info);
-  //   // if settingChain is true, the currentChain will change, so use currentChain.id
-  // }, [currentChain?.id, onChainInited]);
+  useEffect(() => {
+    onChainInited(currentChain?.info);
+    // if settingChain is true, the currentChain will change, so use currentChain.id
+  }, [currentChain?.id, onChainInited]);
 
   return {
     fromToken,

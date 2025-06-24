@@ -23,49 +23,6 @@ import {
   useToken,
 } from "./hooks";
 
-// TODO: 需要替换成真实数据
-const hardCode = [
-  {
-    token: "USDC",
-    decimals: 6,
-    minimum_withdraw_amount: 0.000001,
-    base_weight: 1,
-    discount_factor: null,
-    haircut: 0,
-    user_max_qty: -1,
-    is_collateral: true,
-    display_name: "USDC",
-    address: "0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d",
-    symbol: "USDC",
-  },
-  {
-    token: "ETH",
-    decimals: 6,
-    minimum_withdraw_amount: 0.000001,
-    base_weight: 1,
-    discount_factor: null,
-    haircut: 0,
-    user_max_qty: -1,
-    is_collateral: true,
-    display_name: "ETH",
-    address: "",
-    symbol: "ETH",
-  },
-  {
-    token: "USDT",
-    decimals: 6,
-    minimum_withdraw_amount: 0.000001,
-    base_weight: 1,
-    discount_factor: null,
-    haircut: 0,
-    user_max_qty: -1,
-    is_collateral: true,
-    display_name: "USDT",
-    address: "0xEf54C221Fc94517877F0F40eCd71E0A3866D66C2",
-    symbol: "USDT",
-  },
-];
-
 export type UseDepositFormScriptReturn = ReturnType<
   typeof useDepositFormScript
 >;
@@ -162,7 +119,9 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
   });
 
   const { collateralRatio, toQuantity, ltv } = useCollateralValue({
-    token: fromToken,
+    tokens: tokens,
+    fromToken: fromToken,
+    toToken: toToken,
     qty: quantity,
   });
 
@@ -250,28 +209,33 @@ export function useDepositFee(options: {
   return { ...feeProps, nativeSymbol };
 }
 
-const useCollateralValue = (params: { token?: API.TokenInfo; qty: string }) => {
-  const { token, qty } = params;
+const useCollateralValue = (params: {
+  tokens: API.TokenInfo[];
+  fromToken?: API.TokenInfo;
+  toToken?: API.TokenInfo;
+  qty: string;
+}) => {
+  const { fromToken, toToken, qty, tokens } = params;
 
   const { data: holdingData, usdc } = useHoldingStream();
   const { data: indexPrices } = useIndexPricesStream();
-  const [data] = usePositionStream(token?.symbol);
+  const [data] = usePositionStream(fromToken?.symbol);
   const aggregated = useDataTap(data.aggregated);
   const unrealPnL = aggregated?.total_unreal_pnl ?? 0;
 
   const usdcBalance = usdc?.holding ?? 0;
 
   const indexPrice = useMemo(() => {
-    if (token?.symbol === "USDC") {
+    if (fromToken?.symbol === "USDC") {
       return 1;
     }
-    const symbol = `PERP_${token?.symbol}_USDC`;
+    const symbol = `PERP_${fromToken?.symbol}_USDC`;
     return indexPrices[symbol] ?? 0;
-  }, [token, indexPrices]);
+  }, [fromToken?.symbol, indexPrices]);
 
   const collateralRatio = account.collateralRatio({
-    baseWeight: 2, // from API v1/public/token
-    discountFactor: 3, // from API v1/public/token
+    baseWeight: toToken?.base_weight ?? 0,
+    discountFactor: toToken?.discount_factor ?? 0,
     collateralQty: Number(qty),
     indexPrice: indexPrice,
   });
@@ -285,7 +249,7 @@ const useCollateralValue = (params: { token?: API.TokenInfo; qty: string }) => {
   const ltv = account.LTV({
     usdcBalance: usdcBalance,
     upnl: unrealPnL,
-    collateralAssets: hardCode.map((item) => {
+    collateralAssets: tokens.map((item) => {
       const qty = holdingData?.find((h) => h.token === item.symbol)?.holding;
       const indexPrice = item.symbol === "USDC" ? 1 : indexPrices[item.symbol];
       return {
