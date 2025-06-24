@@ -405,11 +405,8 @@ export class Account {
 
         if (now > expiration || !validScope) {
           // orderlyKey is expired, remove orderlyKey
-          const { accountId, mainAccountId, ...filteredState } =
-            this.stateValue;
-
           nextState = {
-            ...filteredState,
+            ...this.stateValue,
             validating: false,
             status: AccountStatusEnum.DisabledTrading,
           };
