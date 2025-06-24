@@ -344,46 +344,64 @@ function _checkChainSupport(chainId: number | string, chains: API.Chain[]) {
 
 /** orderly chains array form (/v1/public/token) api */
 export function fillChainsInfo(
-  chains?: API.Chain[],
+  tokenChains?: API.Chain[],
   filter?: (chain: any) => boolean,
   chainInfos?: any,
 ) {
-  const _chains: API.Chain[] = [];
+  const chains: API.Chain[] = [];
 
-  chains?.forEach((item) => {
+  tokenChains?.forEach((item) => {
     item.chain_details.forEach((chain: any) => {
       const chainId = Number(chain.chain_id);
       const chainInfo = chainInfos?.find(
         (item: any) => item.chain_id == chainId,
       );
 
+      const existChain = chains.find(
+        (item) => item.network_infos?.chain_id === chainId,
+      );
+
+      const network_infos = {
+        name: chain.chain_name ?? chainInfo?.name ?? "--",
+        chain_id: chainId,
+        withdrawal_fee: chain.withdrawal_fee,
+        cross_chain_withdrawal_fee: chain.cross_chain_withdrawal_fee,
+        bridgeless: true,
+      };
+
+      const token_info: any = {
+        symbol: item.token,
+        address: chain.contract_address,
+        decimals: chain.decimals,
+        display_name: chain.display_name,
+
+        base_weight: item.base_weight,
+        discount_factor: item.discount_factor,
+        haircut: item.haircut,
+        user_max_qty: item.user_max_qty,
+        is_collateral: item.is_collateral,
+      };
+
       const _chain: any = {
-        network_infos: {
-          name: chain.chain_name ?? chainInfo?.name ?? "--",
-          chain_id: chainId,
-          withdrawal_fee: chain.withdrawal_fee,
-          cross_chain_withdrawal_fee: chain.cross_chain_withdrawal_fee,
-          bridgeless: true,
-        },
-        token_infos: [
-          {
-            symbol: item.token,
-            address: chain.contract_address,
-            decimals: chain.decimals,
-            display_name: chain.display_name,
-          },
-        ],
+        network_infos,
+        token_infos: [token_info],
       };
 
       if (typeof filter === "function") {
         if (!filter(_chain)) return;
       }
 
-      _chains.push(_chain);
+      // if is a exist chain, add token_info to exist chain
+      if (existChain?.token_infos?.length) {
+        existChain.token_infos = [...existChain.token_infos, token_info];
+        return;
+      }
+
+      chains.push(_chain);
     });
   });
 
-  return _chains;
+  return chains;
 }
 
 /** filter chains and update network_infos by chain_info api (v1/public/chain_info) */
