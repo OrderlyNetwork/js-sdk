@@ -419,7 +419,7 @@ type InternalWithdrawOptions = {
 function useInternalWithdraw(options: InternalWithdrawOptions) {
   const { symbol, quantity, setQuantity, close, setLoading } = options;
   const { t } = useTranslation();
-  const [withdrawTo, setWithdrawTo] = useState<WithdrawTo>(WithdrawTo.Account);
+  const [withdrawTo, setWithdrawTo] = useState<WithdrawTo>(WithdrawTo.Wallet);
   const [toAccountId, setToAccountId] = useState<string>("");
   const [inputStatus, setInputStatus] = useState<InputStatus>("default");
   const [hintMessage, setHintMessage] = useState<string>();
