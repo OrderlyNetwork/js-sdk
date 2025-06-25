@@ -31,7 +31,6 @@ export const useOrderBookScript = (props: {
   const [level, setLevel] = useState(10);
   const { base, quote, quote_dp } = getBasicSymbolInfo(symbolInfo);
   const counter = useRef(0);
-  const counter = useRef(0);
 
   const [data, { onDepthChange, isLoading, onItemClick, depth, allDepths }] =
     useOrderbookStream(symbol, undefined, {
