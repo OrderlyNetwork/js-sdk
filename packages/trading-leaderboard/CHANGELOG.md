@@ -1,5 +1,22 @@
 # @orderly.network/trading-leaderboard
 
+## 2.3.1
+
+### Patch Changes
+
+- b2ca83a: publish
+- publish
+- Updated dependencies [b2ca83a]
+- Updated dependencies
+  - @orderly.network/react-app@2.3.1
+  - @orderly.network/hooks@2.3.1
+  - @orderly.network/i18n@2.3.1
+  - @orderly.network/trading@2.3.1
+  - @orderly.network/types@2.3.1
+  - @orderly.network/ui@2.3.1
+  - @orderly.network/ui-connector@2.3.1
+  - @orderly.network/utils@2.3.1
+
 ## 2.3.1-alpha.0
 
 ### Patch Changes

@@ -1,5 +1,18 @@
 # @orderly/docs
 
+## 1.3.1
+
+### Patch Changes
+
+- b2ca83a: publish
+- publish
+- Updated dependencies [b2ca83a]
+- Updated dependencies
+  - @orderly.network/react@2.3.1
+  - @orderly.network/hooks@2.3.1
+  - @orderly.network/web3-onboard@2.3.1
+  - @orderly.network/types@2.3.1
+
 ## 1.3.1-alpha.0
 
 ### Patch Changes

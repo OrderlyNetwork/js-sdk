@@ -1,5 +1,12 @@
 # @orderly.network/codemod
 
+## 1.3.1
+
+### Patch Changes
+
+- b2ca83a: publish
+- publish
+
 ## 1.3.1-alpha.0
 
 ### Patch Changes
