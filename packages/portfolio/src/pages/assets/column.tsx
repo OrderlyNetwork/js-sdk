@@ -3,15 +3,22 @@ import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Button, Flex, Text, TokenIcon } from "@orderly.network/ui";
 import type { Column } from "@orderly.network/ui";
+import { Decimal } from "@orderly.network/utils";
 
 export interface ColumnsOptions {
   onClick?: (id: string) => void;
 }
 
-const INDEX_PRICE = 1;
-const COLLATERAL_RATIO = 100;
-// TODO: use real index price
-// const { data } = useIndexPrice("");
+// Define the enhanced holding interface with calculated fields
+interface EnhancedHolding {
+  token: string;
+  holding: number;
+  indexPrice: number;
+  assetValue: number;
+  collateralRatio: number;
+  collateralContribution: number;
+  account_id: string;
+}
 
 export const useAssetsColumns = (options: ColumnsOptions) => {
   const { t } = useTranslation();
@@ -37,31 +44,63 @@ export const useAssetsColumns = (options: ColumnsOptions) => {
         dataIndex: "holding",
         align: "left",
         width: 170,
+        render(val: number) {
+          return (
+            <Text.numeral dp={6} padding={false}>
+              {val}
+            </Text.numeral>
+          );
+        },
       },
       {
         title: t("portfolio.overview.column.indexPrice"),
-        dataIndex: "price",
+        dataIndex: "indexPrice",
         align: "left",
         width: 100,
-        render: () => INDEX_PRICE,
+        render(val: number) {
+          return (
+            <Text.numeral rule="price" dp={2} currency="$">
+              {val}
+            </Text.numeral>
+          );
+        },
+      },
+      {
+        title: "Asset Value",
+        dataIndex: "assetValue",
+        align: "left",
+        width: 120,
+        render(val: number) {
+          return (
+            <Text.numeral rule="price" dp={2} currency="$">
+              {val}
+            </Text.numeral>
+          );
+        },
       },
       {
         title: t("portfolio.overview.column.collateralRatio"),
-        dataIndex: "ratio",
+        dataIndex: "collateralRatio",
         align: "left",
-        width: 100,
-        render: () => `${COLLATERAL_RATIO}%`,
+        width: 140,
+        render(val: number) {
+          return (
+            <Text.numeral dp={2} suffix="%">
+              {val * 100}
+            </Text.numeral>
+          );
+        },
       },
       {
-        title: t("portfolio.overview.column.assetContribution"),
-        dataIndex: "asset_contribution",
+        title: "Collateral Contribution",
+        dataIndex: "collateralContribution",
         align: "left",
-        width: 100,
-        render(_, record) {
+        width: 160,
+        render(val: number, record: EnhancedHolding) {
           return (
-            <Text>
-              {record.holding * INDEX_PRICE} {record.token}
-            </Text>
+            <Text.numeral rule="price" dp={2} currency="$">
+              {val}
+            </Text.numeral>
           );
         },
       },
@@ -84,6 +123,6 @@ export const useAssetsColumns = (options: ColumnsOptions) => {
         },
       },
     ];
-  }, [t]);
+  }, [t, onClick]);
   return columns;
 };

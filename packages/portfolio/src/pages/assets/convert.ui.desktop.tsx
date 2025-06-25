@@ -5,7 +5,6 @@ import {
   DataTable,
   modal,
   SimpleDialog,
-  Text,
 } from "@orderly.network/ui";
 import { useModal } from "@orderly.network/ui";
 import { useConvertColumns, useConvertDetailColumns } from "./convert.column";
@@ -69,7 +68,7 @@ const ConvertDetailsModal = modal.create<{ record: ConvertRecord }>((props) => {
     <SimpleDialog
       open={visible}
       onOpenChange={onOpenChange}
-      title={`Convert Details - ID: ${props.record.convert_id}`}
+      title={`Convert details`}
       size="lg"
       closable
       classNames={{
@@ -160,7 +159,7 @@ export const ConvertDesktopUI: React.FC<ConvertDesktopUIProps> = ({
         bordered
         pagination={convertState.pagination}
         manualPagination
-        className="oui-w-full oui-mt-4"
+        className="oui-mt-4 oui-w-full"
         classNames={{
           root: "oui-h-[calc(100vh_-_200px)]",
           header: "oui-h-12",

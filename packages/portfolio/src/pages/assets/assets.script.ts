@@ -1,10 +1,14 @@
-import React, { useCallback, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import {
   SubAccount,
   useAccount,
   useCollateral,
   useLocalStorage,
+  useIndexPricesStream,
+  useChains,
 } from "@orderly.network/hooks";
+import { account } from "@orderly.network/perp";
+import { API } from "@orderly.network/types";
 import { modal } from "@orderly.network/ui";
 import {
   DepositAndWithdrawWithDialogId,
@@ -44,8 +48,11 @@ export const useAssetsScript = () => {
   );
 
   const { state, isMainAccount } = useAccount();
-
   const { holding = [] } = useCollateral();
+  const { data: indexPrices } = useIndexPricesStream();
+
+  // Get token information including base_weight and discount_factor
+  const [chains] = useChains();
 
   const subAccounts = state.subAccounts ?? [];
 
@@ -53,6 +60,24 @@ export const useAssetsScript = () => {
     // @ts-ignore
     setVisible((visible: boolean) => !visible);
   };
+
+  // Create token info map for easy lookup
+  const tokenInfoMap = useMemo(() => {
+    const map = new Map<string, API.TokenInfo>();
+    if (chains) {
+      const allChains = Array.isArray(chains)
+        ? chains
+        : [...(chains.testnet || []), ...(chains.mainnet || [])];
+      allChains.forEach((chain: API.Chain) => {
+        if (chain.token_infos) {
+          chain.token_infos.forEach((tokenInfo: API.TokenInfo) => {
+            map.set(tokenInfo.symbol, tokenInfo);
+          });
+        }
+      });
+    }
+    return map;
+  }, [chains]);
 
   // Use the extracted accounts data hook
   const allAccounts = useAccountsData();
@@ -63,6 +88,60 @@ export const useAssetsScript = () => {
     filteredData: filtered,
     onAccountFilter: onFilter,
   } = useAssetsAccountFilter(allAccounts);
+
+  // Enhanced filtered data with additional calculations for children
+  const enhancedFiltered = useMemo(() => {
+    return filtered.map((accountData) => {
+      // Enhance each child (holding) with calculated fields
+      const enhancedChildren =
+        accountData.children?.map((holding) => {
+          const tokenInfo = tokenInfoMap.get(holding.token);
+
+          // Calculate index price
+          const indexPrice =
+            holding.token === "USDC"
+              ? 1
+              : (indexPrices?.[`PERP_${holding.token}_USDC`] ?? 0);
+
+          // console.log(holding, indexPrice, tokenInfo, tokenInfoMap);
+
+          // Calculate asset value (holding * index price)
+          const assetValue = new Decimal(holding.holding)
+            .mul(indexPrice)
+            .toNumber();
+
+          // Calculate collateral ratio for this token
+          const collateralRatio = tokenInfo
+            ? account.collateralRatio({
+                baseWeight: tokenInfo.base_weight ?? 0,
+                discountFactor: tokenInfo.discount_factor ?? 0,
+                collateralQty: holding.holding,
+                indexPrice: indexPrice,
+              })
+            : 0;
+
+          // Calculate collateral contribution for this token
+          const collateralContribution = account.collateralContribution({
+            collateralQty: holding.holding,
+            collateralRatio: collateralRatio,
+            indexPrice: indexPrice,
+          });
+
+          return {
+            ...holding,
+            indexPrice,
+            assetValue,
+            collateralRatio,
+            collateralContribution,
+          };
+        }) || [];
+
+      return {
+        ...accountData,
+        children: enhancedChildren,
+      };
+    });
+  }, [filtered, indexPrices, tokenInfoMap]);
 
   const mainTotalValue = useMemo<Decimal>(
     () => calculateTotalHolding(holding),
@@ -122,7 +201,7 @@ export const useAssetsScript = () => {
 
   return {
     columns: assetsColumns,
-    dataSource: filtered,
+    dataSource: enhancedFiltered, // Use enhanced filtered data with calculated children
     visible: visible as boolean,
     onToggleVisibility: toggleVisible,
     selectedAccount,
