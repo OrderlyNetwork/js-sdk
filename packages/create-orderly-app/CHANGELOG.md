@@ -1,5 +1,18 @@
 # create-orderly-app
 
+## 1.8.1
+
+### Patch Changes
+
+- b2ca83a: publish
+- publish
+
+## 1.8.1-alpha.0
+
+### Patch Changes
+
+- publish
+
 ## 1.8.0
 
 ### Minor Changes

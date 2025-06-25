@@ -45,11 +45,12 @@ export const Ranking: FC<RankingProps> = (props) => {
 
       return {
         className: cn(
-          "oui-h-[48px]",
+          "oui-h-[40px] md:oui-h-[48px]",
           // use oui-relative to let the background image position based on row
           "oui-relative",
           isYou
-            ? "oui-h-[52px]"
+            ? // add 4px extra height to make row has 2px space
+              "oui-h-[44px] md:oui-h-[52px]"
             : cn(
                 showBg && "oui-border-b-2 oui-border-b-transparent",
                 isFirst &&
@@ -77,7 +78,7 @@ export const Ranking: FC<RankingProps> = (props) => {
       if (record.key === getCurrentAddressRowKey(props.address!)) {
         return {
           className: cn(
-            "after:oui-absolute after:oui-h-[48px] after:oui-w-full",
+            "after:oui-absolute after:oui-h-[40px] after:oui-w-full md:after:oui-h-[48px]",
             "after:oui-border-[rgb(var(--oui-gradient-brand-start))]",
             "after:oui-left-0 after:oui-top-[2px] after:oui-z-[-1]",
             "after:oui-border-y",
@@ -88,14 +89,16 @@ export const Ranking: FC<RankingProps> = (props) => {
       }
       return {
         className: cn(
-          isFirstColumn && isRank && "oui-rounded-l-lg",
-          isLastColumn && isRank && "oui-rounded-r-lg",
+          isFirstColumn &&
+            isRank &&
+            "oui-rounded-l-lg oui-mix-blend-luminosity",
+          isLastColumn && isRank && "oui-rounded-r-lg oui-mix-blend-luminosity",
         ),
-        style: isRank
-          ? {
-              position: "unset",
-            }
-          : undefined,
+        // style: isRank
+        //   ? {
+        //       position: "unset",
+        //     }
+        //   : undefined,
       };
     },
     [props.address],

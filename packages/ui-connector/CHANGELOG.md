@@ -1,5 +1,33 @@
 # @orderly.network/ui-connector
 
+## 2.3.1
+
+### Patch Changes
+
+- b2ca83a: publish
+- publish
+- Updated dependencies [b2ca83a]
+- Updated dependencies
+  - @orderly.network/react-app@2.3.1
+  - @orderly.network/hooks@2.3.1
+  - @orderly.network/i18n@2.3.1
+  - @orderly.network/types@2.3.1
+  - @orderly.network/ui@2.3.1
+  - @orderly.network/ui-chain-selector@2.3.1
+
+## 2.3.1-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.3.1-alpha.0
+  - @orderly.network/hooks@2.3.1-alpha.0
+  - @orderly.network/i18n@2.3.1-alpha.0
+  - @orderly.network/types@2.3.1-alpha.0
+  - @orderly.network/ui@2.3.1-alpha.0
+  - @orderly.network/ui-chain-selector@2.3.1-alpha.0
+
 ## 2.3.0
 
 ### Minor Changes

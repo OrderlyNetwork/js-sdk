@@ -1,5 +1,18 @@
 # tsconfig
 
+## 0.6.1
+
+### Patch Changes
+
+- b2ca83a: publish
+- publish
+
+## 0.6.1-alpha.0
+
+### Patch Changes
+
+- publish
+
 ## 0.6.0
 
 ### Minor Changes

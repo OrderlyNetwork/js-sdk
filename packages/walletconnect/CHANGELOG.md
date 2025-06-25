@@ -1,5 +1,23 @@
 # @orderly.network/web3-modal
 
+## 2.3.1
+
+### Patch Changes
+
+- b2ca83a: publish
+- publish
+- Updated dependencies [b2ca83a]
+- Updated dependencies
+  - @orderly.network/hooks@2.3.1
+
+## 2.3.1-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.3.1-alpha.0
+
 ## 2.3.0
 
 ### Minor Changes

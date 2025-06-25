@@ -1,5 +1,18 @@
 # @orderly.network/net
 
+## 2.3.1
+
+### Patch Changes
+
+- b2ca83a: publish
+- publish
+
+## 2.3.1-alpha.0
+
+### Patch Changes
+
+- publish
+
 ## 2.3.0
 
 ### Minor Changes
