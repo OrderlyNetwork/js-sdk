@@ -96,7 +96,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
   //   display_name: "",
   //   precision: 6,
   // });
-  const { fromToken: _token } = useToken({ currentChain });
+  const { token: _token } = useToken({ currentChain });
 
   const token = useMemo(() => {
     return {
