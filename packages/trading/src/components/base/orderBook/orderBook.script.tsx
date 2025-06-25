@@ -4,10 +4,10 @@ import {
   useOrderStream,
   useSymbolsInfo,
 } from "@orderly.network/hooks";
-import { removeTrailingZeros } from "@orderly.network/utils";
 import { OrderStatus } from "@orderly.network/types";
-import { getBasicSymbolInfo } from "../../../utils/utils";
 import { useScreen } from "@orderly.network/ui";
+import { removeTrailingZeros } from "@orderly.network/utils";
+import { getBasicSymbolInfo } from "../../../utils/utils";
 
 const CELL_MAX = 30;
 const DEFAULT_CELL_HEIGHT = 20;
@@ -36,7 +36,7 @@ export const useOrderBookScript = (props: {
     if (height) {
       //   setCellHeight(height.content / level);
       const level = Math.floor(
-        (height - SPACE) / ((DEFAULT_CELL_HEIGHT + 1) * 2)
+        (height - SPACE) / ((DEFAULT_CELL_HEIGHT + 1) * 2),
       );
 
       const cellsHeight = (DEFAULT_CELL_HEIGHT + 1) * 2 * level;
@@ -66,10 +66,17 @@ export const useOrderBookScript = (props: {
     if (typeof depth === "undefined" || typeof quote_dp === "undefined") {
       return undefined;
     }
+    // FIXME: hardcode for now, need to optimize it
+    if (symbol === "PERP_BTC_USDC") {
+      return "1";
+    }
 
-    let formattedNumber = removeTrailingZeros(depth);
-    return formattedNumber;
-  }, [depth, quote_dp]);
+    if (symbol === "PERP_ETH_USDC") {
+      return "0.1";
+    }
+
+    return removeTrailingZeros(depth);
+  }, [depth, quote_dp, symbol]);
 
   const depths = useMemo(() => {
     return allDepths?.map((e) => removeTrailingZeros(e)) || [];
