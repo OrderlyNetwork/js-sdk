@@ -14,6 +14,11 @@ const DEFAULT_CELL_HEIGHT = 20;
 
 const SPACE = 104;
 
+const DEFAULT_DEPTH: Record<string, string> = {
+  PERP_BTC_USDC: "1",
+  PERP_ETH_USDC: "0.1",
+};
+
 export const useOrderBookScript = (props: {
   symbol: string;
   height?: number;
@@ -26,11 +31,16 @@ export const useOrderBookScript = (props: {
   const [level, setLevel] = useState(10);
   const { base, quote, quote_dp } = getBasicSymbolInfo(symbolInfo);
   const counter = useRef(0);
+  const counter = useRef(0);
 
   const [data, { onDepthChange, isLoading, onItemClick, depth, allDepths }] =
     useOrderbookStream(symbol, undefined, {
       level,
     });
+
+  useEffect(() => {
+    counter.current = 0;
+  }, [symbol]);
 
   useEffect(() => {
     counter.current = 0;
@@ -73,14 +83,8 @@ export const useOrderBookScript = (props: {
     }
     // FIXME: hardcode for now, need to optimize it
     counter.current++;
-    if (counter.current === 1) {
-      if (symbol === "PERP_BTC_USDC") {
-        return "1";
-      }
-
-      if (symbol === "PERP_ETH_USDC") {
-        return "0.1";
-      }
+    if (counter.current === 1 && DEFAULT_DEPTH[symbol]) {
+      return DEFAULT_DEPTH[symbol];
     }
 
     return removeTrailingZeros(depth);
