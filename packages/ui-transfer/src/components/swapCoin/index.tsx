@@ -2,21 +2,22 @@ import { FC } from "react";
 // import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
 import { Flex, Text } from "@orderly.network/ui";
-import { DST } from "../../types";
 
 type SwapCoinProps = {
   className?: string;
-  token?: API.TokenInfo;
-  dst?: DST;
+  sourceToken?: API.TokenInfo;
+  targetToken?: API.TokenInfo;
   price?: number;
 };
 
 export const SwapCoin: FC<SwapCoinProps> = (props) => {
-  const { token, dst, price } = props;
+  const { sourceToken, targetToken, price } = props;
 
   // const { t } = useTranslation();
 
-  const srcSymbol = token?.display_name || token?.symbol || "USDC";
+  const sourceSymbol = sourceToken?.display_name || sourceToken?.symbol;
+
+  const targetSymbol = targetToken?.display_name || targetToken?.symbol;
 
   return (
     <Flex width={"100%"} itemAlign="center" justify="between">
@@ -27,15 +28,11 @@ export const SwapCoin: FC<SwapCoinProps> = (props) => {
         <Text size="xs" intensity={80}>
           1
         </Text>
-        {` ${srcSymbol} = `}
-        {price ? (
-          <Text.numeral size="xs" intensity={80} dp={3} padding={false}>
-            {price}
-          </Text.numeral>
-        ) : (
-          "-"
-        )}
-        {` ${dst?.symbol}`}
+        {` ${sourceSymbol} = `}
+        <Text.numeral size="xs" intensity={80} dp={3} padding={false}>
+          {price || 1}
+        </Text.numeral>
+        {targetSymbol}
       </Text>
     </Flex>
   );

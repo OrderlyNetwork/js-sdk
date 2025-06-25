@@ -40,7 +40,6 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
     onDeposit,
     onApprove,
     fetchBalance,
-    dst,
     wrongNetwork,
     balanceRevalidating,
     loading,
@@ -120,7 +119,11 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
           </Flex>
         ) : (
           <Flex direction="column" itemAlign="start" mt={1} gapY={1}>
-            <SwapCoin token={sourceToken} dst={dst} price={1} />
+            <SwapCoin
+              sourceToken={sourceToken}
+              targetToken={targetToken}
+              price={1}
+            />
             <SlippageUI slippage="1" />
             <MinimumReceivedWidget />
             <Fee {...fee} />
