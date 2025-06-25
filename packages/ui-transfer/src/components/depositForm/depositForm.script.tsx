@@ -20,7 +20,7 @@ import {
   useChainSelect,
   useDepositAction,
   useInputStatus,
-  useToken,
+  useToken_v2,
 } from "./hooks";
 
 export type UseDepositFormScriptReturn = ReturnType<
@@ -39,8 +39,14 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
   const { chains, currentChain, settingChain, onChainChange } =
     useChainSelect();
 
-  const { tokens, fromToken, toToken, onFromTokenChange, onToTokenChange } =
-    useToken({ currentChain });
+  const {
+    sourceToken,
+    targetToken,
+    sourceTokens,
+    targetTokens,
+    onSourceTokenChange,
+    onTargetTokenChange,
+  } = useToken_v2({ currentChain });
 
   const {
     dst,
@@ -56,18 +62,18 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     balanceRevalidating,
     fetchBalance,
   } = useDeposit({
-    address: fromToken?.address,
-    decimals: fromToken?.decimals,
+    address: sourceToken?.address,
+    decimals: sourceToken?.decimals,
     srcChainId: currentChain?.id,
-    srcToken: fromToken?.symbol,
+    srcToken: sourceToken?.symbol,
   });
 
   const maxQuantity = useMemo(
     () =>
       new Decimal(balance || 0)
-        .todp(fromToken?.precision ?? 2, Decimal.ROUND_DOWN)
+        .todp(sourceToken?.precision ?? 2, Decimal.ROUND_DOWN)
         .toString(),
-    [balance, fromToken],
+    [balance, sourceToken?.precision],
   );
 
   const { inputStatus, hintMessage } = useInputStatus({
@@ -97,7 +103,7 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
   const disabled =
     !quantity ||
     Number(quantity) === 0 ||
-    !fromToken ||
+    !sourceToken ||
     inputStatus === "error" ||
     depositFeeRevalidating!;
 
@@ -118,12 +124,13 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     depositFee,
   });
 
-  const { collateralRatio, toQuantity, ltv } = useCollateralValue({
-    tokens: tokens,
-    fromToken: fromToken,
-    toToken: toToken,
-    qty: quantity,
-  });
+  const { collateralRatio, toQuantity, currentLTV, nextLTV } =
+    useCollateralValue({
+      tokens: sourceTokens,
+      sourceToken: sourceToken,
+      targetToken: targetToken,
+      qty: quantity,
+    });
 
   const {
     ltv_threshold,
@@ -133,15 +140,20 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
 
   useEffect(() => {
     cleanData();
-  }, [fromToken, currentChain?.id]);
+  }, [sourceToken, currentChain?.id]);
 
   return {
-    fromToken,
-    toToken,
-    tokens,
-    onFromTokenChange,
-    onToTokenChange,
+    sourceToken,
+    targetToken,
+
+    sourceTokens,
+    targetTokens,
+
+    onSourceTokenChange,
+    onTargetTokenChange,
+
     amount,
+    isNativeToken,
     fromQty: quantity,
     toQty: toQuantity,
     maxQuantity,
@@ -164,7 +176,8 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     networkId,
     fee,
     collateralRatio,
-    ltv,
+    currentLTV,
+    nextLTV,
     ltv_threshold,
     negative_usdc_threshold,
     isConvertThresholdLoading,
@@ -211,56 +224,74 @@ export function useDepositFee(options: {
 
 const useCollateralValue = (params: {
   tokens: API.TokenInfo[];
-  fromToken?: API.TokenInfo;
-  toToken?: API.TokenInfo;
+  sourceToken?: API.TokenInfo;
+  targetToken?: API.TokenInfo;
   qty: string;
 }) => {
-  const { fromToken, toToken, qty, tokens } = params;
+  const { sourceToken, targetToken, tokens } = params;
+
+  const qty = Number(params.qty);
 
   const { data: holdingData, usdc } = useHoldingStream();
   const { data: indexPrices } = useIndexPricesStream();
-  const [data] = usePositionStream(fromToken?.symbol);
+  const [data] = usePositionStream(sourceToken?.symbol);
   const aggregated = useDataTap(data.aggregated);
   const unrealPnL = aggregated?.total_unreal_pnl ?? 0;
 
   const usdcBalance = usdc?.holding ?? 0;
 
   const indexPrice = useMemo(() => {
-    if (fromToken?.symbol === "USDC") {
+    if (sourceToken?.symbol === "USDC") {
       return 1;
     }
-    const symbol = `PERP_${fromToken?.symbol}_USDC`;
+    const symbol = `PERP_${sourceToken?.symbol}_USDC`;
     return indexPrices[symbol] ?? 0;
-  }, [fromToken?.symbol, indexPrices]);
+  }, [sourceToken?.symbol, indexPrices]);
 
-  const collateralRatio = account.collateralRatio({
-    baseWeight: toToken?.base_weight ?? 0,
-    discountFactor: toToken?.discount_factor ?? 0,
-    collateralQty: Number(qty),
-    indexPrice: indexPrice,
-  });
+  const getCollateralRatio = useCallback(
+    (collateralQty: number) => {
+      return account.collateralRatio({
+        baseWeight: targetToken?.base_weight ?? 0,
+        discountFactor: targetToken?.discount_factor ?? 0,
+        collateralQty: collateralQty,
+        indexPrice: indexPrice,
+      });
+    },
+    [targetToken, indexPrice],
+  );
 
   const toQuantity = account.collateralContribution({
-    collateralQty: Number(qty),
-    collateralRatio: collateralRatio,
+    collateralQty: qty,
+    collateralRatio: getCollateralRatio(qty),
     indexPrice: indexPrice,
   });
 
-  const ltv = account.LTV({
-    usdcBalance: usdcBalance,
-    upnl: unrealPnL,
-    collateralAssets: tokens.map((item) => {
-      const qty = holdingData?.find((h) => h.token === item.symbol)?.holding;
-      const indexPrice = item.symbol === "USDC" ? 1 : indexPrices[item.symbol];
-      return {
-        qty: qty ?? 0,
-        indexPrice: indexPrice ?? 0,
-        weight: collateralRatio,
-      };
-    }),
-  });
+  const getLTV = useCallback(
+    (collRatio: number) => {
+      return account.LTV({
+        usdcBalance: usdcBalance,
+        upnl: unrealPnL,
+        collateralAssets: tokens.map((item) => {
+          const qtyData = holdingData?.find((h) => h.token === item.symbol);
+          const indexPrice =
+            item.symbol === "USDC" ? 1 : indexPrices[item.symbol];
+          return {
+            qty: qtyData?.holding ?? 0,
+            indexPrice: indexPrice ?? 0,
+            weight: collRatio,
+          };
+        }),
+      });
+    },
+    [holdingData, usdcBalance, unrealPnL, tokens, indexPrices],
+  );
 
-  return { collateralRatio, toQuantity, ltv: ltv };
+  return {
+    collateralRatio: getCollateralRatio(qty),
+    toQuantity,
+    currentLTV: getLTV(getCollateralRatio(qty)),
+    nextLTV: getLTV(getCollateralRatio(0)),
+  };
 };
 
 const useConvertThreshold = () => {

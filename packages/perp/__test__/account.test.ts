@@ -200,7 +200,7 @@ describe("account farmula", () => {
     it("returns 0 when both USDC balance and uPnL are positive", () => {
       const params: Parameters<typeof LTV>[0] = {
         usdcBalance: 100,
-        unpl: 50,
+        upnl: 50,
         collateralAssets: [{ qty: 1, indexPrice: 100, weight: 1 }],
       };
       expect(LTV(params)).toBe(0);
@@ -209,7 +209,7 @@ describe("account farmula", () => {
     it("returns 0 when no collateral and both USDC balance and uPnL are negative", () => {
       const params: Parameters<typeof LTV>[0] = {
         usdcBalance: -100,
-        unpl: -200,
+        upnl: -200,
         collateralAssets: [],
       };
       expect(LTV(params)).toBe(0);
@@ -218,7 +218,7 @@ describe("account farmula", () => {
     it("returns 0 when only positive uPnL exists", () => {
       const params: Parameters<typeof LTV>[0] = {
         usdcBalance: 0,
-        unpl: 50,
+        upnl: 50,
         collateralAssets: [{ qty: 1, indexPrice: 100, weight: 1 }],
       };
       // numerator = 0, denominator = 100 + 50 = 150
@@ -228,7 +228,7 @@ describe("account farmula", () => {
     it("ignores negative collateral quantity", () => {
       const params: Parameters<typeof LTV>[0] = {
         usdcBalance: -10,
-        unpl: 0,
+        upnl: 0,
         collateralAssets: [
           { qty: -100, indexPrice: 1000, weight: 1 }, // ignored
         ],

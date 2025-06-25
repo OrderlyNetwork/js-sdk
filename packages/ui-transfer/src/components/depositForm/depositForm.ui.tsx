@@ -19,11 +19,12 @@ import type { UseDepositFormScriptReturn } from "./depositForm.script";
 
 export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
   const {
-    fromToken,
-    toToken,
-    onFromTokenChange,
-    onToTokenChange,
-    tokens,
+    sourceToken,
+    targetToken,
+    sourceTokens,
+    targetTokens,
+    onSourceTokenChange,
+    onTargetTokenChange,
     amount,
     fromQty,
     toQty,
@@ -47,7 +48,8 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
     networkId,
     fee,
     collateralRatio,
-    ltv,
+    currentLTV,
+    nextLTV,
   } = props;
 
   return (
@@ -68,9 +70,9 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
             }}
             value={fromQty}
             onValueChange={onQuantityChange}
-            tokens={tokens}
-            token={fromToken}
-            onTokenChange={onFromTokenChange}
+            token={sourceToken}
+            tokens={sourceTokens}
+            onTokenChange={onSourceTokenChange}
             status={inputStatus}
             hintMessage={hintMessage}
             fetchBalance={fetchBalance}
@@ -79,7 +81,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
         </Box>
 
         <AvailableQuantity
-          token={fromToken}
+          token={sourceToken}
           amount={amount}
           maxQuantity={maxQuantity}
           loading={balanceRevalidating}
@@ -94,33 +96,37 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
 
         <QuantityInput
           readOnly
-          token={toToken}
-          tokens={tokens}
-          onTokenChange={onToTokenChange}
+          token={targetToken}
+          tokens={targetTokens}
+          onTokenChange={onTargetTokenChange}
           value={toQty}
           classNames={{
             root: "oui-mt-3 oui-border-transparent focus-within:oui-outline-transparent",
           }}
         />
-        {fromToken?.symbol === toToken?.symbol ? (
+        {sourceToken?.symbol === targetToken?.symbol ? (
           <Flex direction="column" itemAlign="start" mt={1} gapY={1}>
             <CollateralRatioWidget collateralRatio={collateralRatio} />
             <CollateralContributionWidget
               collateralContribution={toQty}
-              token={toToken?.symbol ?? ""}
+              token={targetToken?.symbol ?? ""}
             />
-            <LtvWidget currentLtv={20} newLtv={ltv} />
+            <LtvWidget
+              showDiff={typeof fromQty !== "undefined" && Number(fromQty) > 0}
+              currentLtv={currentLTV}
+              nextLTV={nextLTV}
+            />
             <Fee {...fee} />
           </Flex>
         ) : (
           <Flex direction="column" itemAlign="start" mt={1} gapY={1}>
-            <SwapCoin token={fromToken} dst={dst} price={1} />
+            <SwapCoin token={sourceToken} dst={dst} price={1} />
             <SlippageUI slippage="1" />
             <MinimumReceivedWidget />
             <Fee {...fee} />
             <AssetSwapIndicatorWidget
-              fromToken={fromToken?.symbol ?? ""}
-              toToken={toToken?.symbol ?? ""}
+              sourceToken={sourceToken?.symbol ?? ""}
+              targetToken={targetToken?.symbol ?? ""}
             />
           </Flex>
         )}
@@ -128,7 +134,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
       <Flex justify="center">
         <ActionButton
           actionType={actionType}
-          symbol={fromToken?.symbol}
+          symbol={sourceToken?.symbol}
           disabled={disabled}
           loading={loading}
           onDeposit={onDeposit}

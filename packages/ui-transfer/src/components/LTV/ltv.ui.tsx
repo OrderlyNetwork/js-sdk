@@ -35,10 +35,14 @@ const calculateTextColor = (val: number): string => {
 };
 
 export const LtvUI: React.FC<
-  Readonly<{ currentLtv: number; newLtv: number }>
+  Readonly<{
+    currentLtv: number;
+    nextLTV: number;
+    showDiff?: boolean;
+  }>
 > = (props) => {
   // const { t } = useTranslation();
-  const { currentLtv, newLtv } = props;
+  const { currentLtv, nextLTV, showDiff } = props;
   return (
     <Flex width="100%" itemAlign="center" justify="between">
       <Flex justify="start" itemAlign="center">
@@ -49,15 +53,23 @@ export const LtvUI: React.FC<
           <TooltipIcon className="oui-ml-[2px] oui-cursor-pointer oui-text-base-contrast-36" />
         </Tooltip>
       </Flex>
-      <Flex itemAlign="center" justify="between" gap={1}>
+      {showDiff ? (
+        <Flex itemAlign="center" justify="between" gap={1}>
+          <span
+            className={cn("oui-select-none", calculateTextColor(currentLtv))}
+          >
+            {currentLtv}%
+          </span>
+          →
+          <span className={cn("oui-select-none", calculateTextColor(nextLTV))}>
+            {nextLTV}%
+          </span>
+        </Flex>
+      ) : (
         <span className={cn("oui-select-none", calculateTextColor(currentLtv))}>
           {currentLtv}%
         </span>
-        →
-        <span className={cn("oui-select-none", calculateTextColor(newLtv))}>
-          {newLtv}%
-        </span>
-      </Flex>
+      )}
     </Flex>
   );
 };

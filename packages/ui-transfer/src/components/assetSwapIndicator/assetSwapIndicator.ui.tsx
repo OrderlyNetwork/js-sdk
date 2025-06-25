@@ -3,10 +3,10 @@ import React from "react";
 import { Flex, Text, TokenIcon } from "@orderly.network/ui";
 
 export const AssetSwapIndicatorUI: React.FC<
-  Readonly<Record<"fromToken" | "toToken", string>>
+  Readonly<Record<"sourceToken" | "targetToken", string>>
 > = (props) => {
-  const { fromToken, toToken } = props;
-  if (fromToken === toToken) {
+  const { sourceToken, targetToken } = props;
+  if (sourceToken === targetToken) {
     return null;
   }
   return (
@@ -20,18 +20,18 @@ export const AssetSwapIndicatorUI: React.FC<
     >
       <Flex itemAlign="center" justify="center" gap={1}>
         <Flex itemAlign="center" justify="center" gap={1}>
-          <TokenIcon size="xs" name={fromToken} />
+          <TokenIcon size="xs" name={sourceToken} />
           <Text weight="semibold" intensity={80}>
-            {fromToken}
+            {sourceToken}
           </Text>
         </Flex>
         <Text className="oui-select-none" intensity={36}>
           →
         </Text>
         <Flex itemAlign="center" justify="center" gap={1}>
-          <TokenIcon size="xs" name={toToken} />
+          <TokenIcon size="xs" name={targetToken} />
           <Text weight="semibold" intensity={80}>
-            {toToken}
+            {targetToken}
           </Text>
         </Flex>
       </Flex>
