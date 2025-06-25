@@ -655,6 +655,7 @@
   "tradingLeaderboard.tradeForMoreTickets": "Sonraki biletleri almak için <0/> daha işlem yapın",
   "tradingLeaderboard.earnTickets": "Her {{amount}} işlem hacmi için {{ticket}} bilet kazanın",
   "tradingLeaderboard.arena": "Arena",
+  "tradingLeaderboard.generalLeaderboard": "Genel Sıralama",
   "assetHistory.status.pending": "Beklemede",
   "assetHistory.status.confirm": "Onayla",
   "assetHistory.status.processing": "İşleniyor",

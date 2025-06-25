@@ -655,6 +655,7 @@
   "tradingLeaderboard.tradeForMoreTickets": "Handel <0/> meer om de volgende tickets te krijgen",
   "tradingLeaderboard.earnTickets": "Verdien {{ticket}} tickets voor elke {{amount}} handelsvolume",
   "tradingLeaderboard.arena": "Arena",
+  "tradingLeaderboard.generalLeaderboard": "Algemeen klassement",
   "assetHistory.status.pending": "In afwachting",
   "assetHistory.status.confirm": "Bevestigen",
   "assetHistory.status.processing": "Verwerken",

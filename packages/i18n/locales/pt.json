@@ -655,6 +655,7 @@
   "tradingLeaderboard.tradeForMoreTickets": "Negocie <0/> mais para obter os próximos tickets",
   "tradingLeaderboard.earnTickets": "Ganhe {{ticket}} tickets para cada {{amount}} de volume de negociação",
   "tradingLeaderboard.arena": "Arena",
+  "tradingLeaderboard.generalLeaderboard": "Classificação geral",
   "assetHistory.status.pending": "Pendente",
   "assetHistory.status.confirm": "Confirmar",
   "assetHistory.status.processing": "Processando",

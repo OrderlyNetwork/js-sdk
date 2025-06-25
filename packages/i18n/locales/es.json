@@ -655,6 +655,7 @@
   "tradingLeaderboard.tradeForMoreTickets": "Opera <0/> más para obtener los siguientes tickets",
   "tradingLeaderboard.earnTickets": "Gana {{ticket}} tickets por cada {{amount}} de volumen de operaciones",
   "tradingLeaderboard.arena": "Arena",
+  "tradingLeaderboard.generalLeaderboard": "Tabla de clasificación general",
   "assetHistory.status.pending": "Pendiente",
   "assetHistory.status.confirm": "Confirmar",
   "assetHistory.status.processing": "Procesando",

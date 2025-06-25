@@ -655,6 +655,7 @@
   "tradingLeaderboard.tradeForMoreTickets": "<0/> 더 거래하여 다음 티켓 획득",
   "tradingLeaderboard.earnTickets": "{{amount}} 거래량마다 {{ticket}} 티켓 획득",
   "tradingLeaderboard.arena": "아레나",
+  "tradingLeaderboard.generalLeaderboard": "종합 순위표",
   "assetHistory.status.pending": "대기 중",
   "assetHistory.status.confirm": "확인",
   "assetHistory.status.processing": "처리 중",

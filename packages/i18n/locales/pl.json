@@ -655,6 +655,7 @@
   "tradingLeaderboard.tradeForMoreTickets": "Handluj <0/> więcej, aby zdobyć kolejne bilety",
   "tradingLeaderboard.earnTickets": "Zdobądź {{ticket}} biletów za każdy {{amount}} wolumenu handlu",
   "tradingLeaderboard.arena": "Arena",
+  "tradingLeaderboard.generalLeaderboard": "Ranking ogólny",
   "assetHistory.status.pending": "Oczekujące",
   "assetHistory.status.confirm": "Potwierdź",
   "assetHistory.status.processing": "Przetwarzanie",

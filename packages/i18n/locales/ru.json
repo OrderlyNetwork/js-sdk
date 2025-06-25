@@ -655,6 +655,7 @@
   "tradingLeaderboard.tradeForMoreTickets": "Торгуйте еще на <0/>, чтобы получить следующие билеты",
   "tradingLeaderboard.earnTickets": "Зарабатывайте {{ticket}} билетов за каждый {{amount}} объема торгов",
   "tradingLeaderboard.arena": "Арена",
+  "tradingLeaderboard.generalLeaderboard": "Общий рейтинг",
   "assetHistory.status.pending": "В ожидании",
   "assetHistory.status.confirm": "Подтверждено",
   "assetHistory.status.processing": "В обработке",

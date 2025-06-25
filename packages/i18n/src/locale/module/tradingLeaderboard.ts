@@ -28,6 +28,7 @@ export const tradingLeaderboard = {
   "tradingLeaderboard.earnTickets":
     "Earn {{ticket}} tickets every {{amount}} trading volume.",
   "tradingLeaderboard.arena": "Arena",
+  "tradingLeaderboard.generalLeaderboard": "General leaderboard",
 };
 
 export type TradingLeaderboard = typeof tradingLeaderboard;

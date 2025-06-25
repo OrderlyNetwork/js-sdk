@@ -655,6 +655,7 @@
   "tradingLeaderboard.tradeForMoreTickets": "Giao dịch thêm <0/> để nhận vé tiếp theo",
   "tradingLeaderboard.earnTickets": "Kiếm {{ticket}} vé cho mỗi {{amount}} khối lượng giao dịch",
   "tradingLeaderboard.arena": "Đấu trường",
+  "tradingLeaderboard.generalLeaderboard": "Bảng xếp hạng chung",
   "assetHistory.status.pending": "Đang chờ",
   "assetHistory.status.confirm": "Xác nhận",
   "assetHistory.status.processing": "Đang xử lý",
