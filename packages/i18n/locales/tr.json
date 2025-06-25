@@ -654,6 +654,7 @@
   "tradingLeaderboard.batteleHasEnded": "Savaş sona erdi",
   "tradingLeaderboard.tradeForMoreTickets": "Sonraki biletleri almak için <0/> daha işlem yapın",
   "tradingLeaderboard.earnTickets": "Her {{amount}} işlem hacmi için {{ticket}} bilet kazanın",
+  "tradingLeaderboard.arena": "Arena",
   "assetHistory.status.pending": "Beklemede",
   "assetHistory.status.confirm": "Onayla",
   "assetHistory.status.processing": "İşleniyor",

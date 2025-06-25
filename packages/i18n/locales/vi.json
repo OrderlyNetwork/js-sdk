@@ -654,6 +654,7 @@
   "tradingLeaderboard.batteleHasEnded": "Trận chiến đã kết thúc",
   "tradingLeaderboard.tradeForMoreTickets": "Giao dịch thêm <0/> để nhận vé tiếp theo",
   "tradingLeaderboard.earnTickets": "Kiếm {{ticket}} vé cho mỗi {{amount}} khối lượng giao dịch",
+  "tradingLeaderboard.arena": "Đấu trường",
   "assetHistory.status.pending": "Đang chờ",
   "assetHistory.status.confirm": "Xác nhận",
   "assetHistory.status.processing": "Đang xử lý",

@@ -654,6 +654,7 @@
   "tradingLeaderboard.batteleHasEnded": "La bataille est terminée",
   "tradingLeaderboard.tradeForMoreTickets": "Tradez <0/> de plus pour obtenir les prochains tickets",
   "tradingLeaderboard.earnTickets": "Gagnez {{ticket}} tickets pour chaque {{amount}} de volume de trading",
+  "tradingLeaderboard.arena": "Arène",
   "assetHistory.status.pending": "En attente",
   "assetHistory.status.confirm": "Confirmer",
   "assetHistory.status.processing": "En traitement",

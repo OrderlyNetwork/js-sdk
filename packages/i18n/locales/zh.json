@@ -654,6 +654,7 @@
   "tradingLeaderboard.batteleHasEnded": "战斗已结束",
   "tradingLeaderboard.tradeForMoreTickets": "再交易 <0/> 获得下一张票",
   "tradingLeaderboard.earnTickets": "每 {{amount}} 交易量获得 {{ticket}} 张票",
+  "tradingLeaderboard.arena": "竞技场",
   "assetHistory.status.pending": "待处理",
   "assetHistory.status.confirm": "确认",
   "assetHistory.status.processing": "处理中",

@@ -654,6 +654,7 @@
   "tradingLeaderboard.batteleHasEnded": "バトルが終了しました",
   "tradingLeaderboard.tradeForMoreTickets": "あと <0/> 取引して次のチケットを獲得",
   "tradingLeaderboard.earnTickets": "{{amount}} の取引量ごとに {{ticket}} チケットを獲得",
+  "tradingLeaderboard.arena": "アリーナ",
   "assetHistory.status.pending": "保留中",
   "assetHistory.status.confirm": "確認",
   "assetHistory.status.processing": "処理中",

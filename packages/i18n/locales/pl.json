@@ -654,6 +654,7 @@
   "tradingLeaderboard.batteleHasEnded": "Bitwa się skończyła",
   "tradingLeaderboard.tradeForMoreTickets": "Handluj <0/> więcej, aby zdobyć kolejne bilety",
   "tradingLeaderboard.earnTickets": "Zdobądź {{ticket}} biletów za każdy {{amount}} wolumenu handlu",
+  "tradingLeaderboard.arena": "Arena",
   "assetHistory.status.pending": "Oczekujące",
   "assetHistory.status.confirm": "Potwierdź",
   "assetHistory.status.processing": "Przetwarzanie",

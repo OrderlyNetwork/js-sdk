@@ -654,6 +654,7 @@
   "tradingLeaderboard.batteleHasEnded": "Pertempuran telah berakhir",
   "tradingLeaderboard.tradeForMoreTickets": "Trading <0/> lagi untuk mendapatkan tiket berikutnya",
   "tradingLeaderboard.earnTickets": "Dapatkan {{ticket}} tiket setiap {{amount}} volume trading",
+  "tradingLeaderboard.arena": "Arena",
   "assetHistory.status.pending": "Tertunda",
   "assetHistory.status.confirm": "Konfirmasi",
   "assetHistory.status.processing": "Diproses",
