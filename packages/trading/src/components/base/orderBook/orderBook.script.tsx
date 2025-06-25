@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   useOrderbookStream,
   useOrderStream,
@@ -25,11 +25,16 @@ export const useOrderBookScript = (props: {
 
   const [level, setLevel] = useState(10);
   const { base, quote, quote_dp } = getBasicSymbolInfo(symbolInfo);
+  const counter = useRef(0);
 
   const [data, { onDepthChange, isLoading, onItemClick, depth, allDepths }] =
     useOrderbookStream(symbol, undefined, {
       level,
     });
+
+  useEffect(() => {
+    counter.current = 0;
+  }, [symbol]);
 
   const pendingOrders = usePendingOrderStream(symbol);
   useEffect(() => {
@@ -67,12 +72,15 @@ export const useOrderBookScript = (props: {
       return undefined;
     }
     // FIXME: hardcode for now, need to optimize it
-    if (symbol === "PERP_BTC_USDC") {
-      return "1";
-    }
+    counter.current++;
+    if (counter.current === 1) {
+      if (symbol === "PERP_BTC_USDC") {
+        return "1";
+      }
 
-    if (symbol === "PERP_ETH_USDC") {
-      return "0.1";
+      if (symbol === "PERP_ETH_USDC") {
+        return "0.1";
+      }
     }
 
     return removeTrailingZeros(depth);
