@@ -656,6 +656,7 @@
   "tradingLeaderboard.earnTickets": "Her {{amount}} işlem hacmi için {{ticket}} bilet kazanın",
   "tradingLeaderboard.arena": "Arena",
   "tradingLeaderboard.generalLeaderboard": "Genel Sıralama",
+  "tradingLeaderboard.maxTicketsAchieved": "Ulaşılan maksimum bilet sayısı",
   "assetHistory.status.pending": "Beklemede",
   "assetHistory.status.confirm": "Onayla",
   "assetHistory.status.processing": "İşleniyor",

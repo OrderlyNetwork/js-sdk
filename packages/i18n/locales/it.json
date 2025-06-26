@@ -656,6 +656,7 @@
   "tradingLeaderboard.earnTickets": "Guadagna {{ticket}} ticket per ogni {{amount}} di volume di trading",
   "tradingLeaderboard.arena": "Arena",
   "tradingLeaderboard.generalLeaderboard": "Classifica generale",
+  "tradingLeaderboard.maxTicketsAchieved": "Biglietti massimi ottenuti",
   "assetHistory.status.pending": "In attesa",
   "assetHistory.status.confirm": "Conferma",
   "assetHistory.status.processing": "In elaborazione",

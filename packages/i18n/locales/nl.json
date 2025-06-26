@@ -656,6 +656,7 @@
   "tradingLeaderboard.earnTickets": "Verdien {{ticket}} tickets voor elke {{amount}} handelsvolume",
   "tradingLeaderboard.arena": "Arena",
   "tradingLeaderboard.generalLeaderboard": "Algemeen klassement",
+  "tradingLeaderboard.maxTicketsAchieved": "Maximum aantal behaalde tickets",
   "assetHistory.status.pending": "In afwachting",
   "assetHistory.status.confirm": "Bevestigen",
   "assetHistory.status.processing": "Verwerken",

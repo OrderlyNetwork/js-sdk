@@ -656,6 +656,7 @@
   "tradingLeaderboard.earnTickets": "每 {{amount}} 交易量获得 {{ticket}} 张票",
   "tradingLeaderboard.arena": "竞技场",
   "tradingLeaderboard.generalLeaderboard": "总排行榜",
+  "tradingLeaderboard.maxTicketsAchieved": "获得的最大票数",
   "assetHistory.status.pending": "待处理",
   "assetHistory.status.confirm": "确认",
   "assetHistory.status.processing": "处理中",

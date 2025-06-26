@@ -656,6 +656,7 @@
   "tradingLeaderboard.earnTickets": "Dapatkan {{ticket}} tiket setiap {{amount}} volume trading",
   "tradingLeaderboard.arena": "Arena",
   "tradingLeaderboard.generalLeaderboard": "Papan Peringkat Umum",
+  "tradingLeaderboard.maxTicketsAchieved": "Tiket maksimum yang dicapai",
   "assetHistory.status.pending": "Tertunda",
   "assetHistory.status.confirm": "Konfirmasi",
   "assetHistory.status.processing": "Diproses",

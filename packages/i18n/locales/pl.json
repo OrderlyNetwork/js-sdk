@@ -656,6 +656,7 @@
   "tradingLeaderboard.earnTickets": "Zdobądź {{ticket}} biletów za każdy {{amount}} wolumenu handlu",
   "tradingLeaderboard.arena": "Arena",
   "tradingLeaderboard.generalLeaderboard": "Ranking ogólny",
+  "tradingLeaderboard.maxTicketsAchieved": "Maksymalna liczba uzyskanych biletów",
   "assetHistory.status.pending": "Oczekujące",
   "assetHistory.status.confirm": "Potwierdź",
   "assetHistory.status.processing": "Przetwarzanie",

@@ -656,6 +656,7 @@
   "tradingLeaderboard.earnTickets": "Зарабатывайте {{ticket}} билетов за каждый {{amount}} объема торгов",
   "tradingLeaderboard.arena": "Арена",
   "tradingLeaderboard.generalLeaderboard": "Общий рейтинг",
+  "tradingLeaderboard.maxTicketsAchieved": "Максимум полученных билетов",
   "assetHistory.status.pending": "В ожидании",
   "assetHistory.status.confirm": "Подтверждено",
   "assetHistory.status.processing": "В обработке",

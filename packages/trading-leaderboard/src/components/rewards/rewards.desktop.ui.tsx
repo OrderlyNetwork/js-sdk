@@ -63,7 +63,7 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
     // }
 
     return (
-      <div className="oui-flex oui-flex-col oui-gap-1 oui-min-w-[240px]">
+      <div className="oui-flex oui-min-w-[240px] oui-flex-col oui-gap-1">
         {campaign?.prize_pools?.map((pool) => {
           if (pool.tiers.length == 0) {
             return null;
@@ -75,7 +75,7 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
           return (
             <div
               key={pool.pool_id}
-              className="oui-flex oui-items-center oui-justify-between oui-h-[18px]"
+              className="oui-flex oui-h-[18px] oui-items-center oui-justify-between"
             >
               <Text
                 size="2xs"
@@ -127,12 +127,12 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
     }
 
     return (
-      <div className="oui-flex oui-flex-col oui-gap-1 oui-min-w-[240px]">
+      <div className="oui-flex oui-min-w-[240px] oui-flex-col oui-gap-1">
         {ticketRules?.tiers?.map((tier) => {
           return (
             <div
               key={tier.value}
-              className="oui-flex oui-items-center oui-justify-between h-[18px] oui-text-2xs oui-font-semibold"
+              className="h-[18px] oui-flex oui-items-center oui-justify-between oui-text-2xs oui-font-semibold"
             >
               <div className="oui-text-base-contrast-54">{`$${tier.value} volume`}</div>
               <div className="oui-text-base-contrast">
@@ -176,13 +176,13 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
   return (
     <div
       className={cn([
-        "oui-flex oui-flex-col oui-pb-10 oui-mb-10 oui-max-w-[992px] oui-mx-auto",
+        "oui-mx-auto oui-mb-10 oui-flex oui-max-w-[992px] oui-flex-col oui-pb-10",
         isMobile ? "oui-gap-3" : "oui-gap-6",
       ])}
     >
       <div
         className={cn([
-          "oui-w-full oui-flex oui-items-stretch oui-gap-3",
+          "oui-flex oui-w-full oui-items-stretch oui-gap-3",
           isMobile ? "oui-px-3" : "",
         ])}
       >
@@ -204,7 +204,7 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
       </div>
       <div
         className={cn([
-          "oui-flex oui-gap-3 oui-justify-center",
+          "oui-flex oui-justify-center oui-gap-3",
           isMobile ? "oui-px-3" : "",
         ])}
       >
@@ -262,12 +262,12 @@ const RewardItem: FC<{
   }, [tooltipOpen, props.isMobile, setTooltipOpen]);
 
   return (
-    <div className="oui-flex-1 oui-px-5 oui-py-4 oui-flex oui-flex-col oui-items-center oui-bg-base-9 oui-rounded-2xl oui-justify-center">
+    <div className="oui-flex oui-flex-1 oui-flex-col oui-items-center oui-justify-center oui-rounded-2xl oui-bg-base-9 oui-px-5 oui-py-4">
       <div
         className={cn([
           "oui-text-base-contrast-54",
           props.isMobile
-            ? "oui-text-2xs oui-leading-[15px] oui-h-[15px]"
+            ? "oui-h-[15px] oui-text-2xs oui-leading-[15px]"
             : "oui-text-sm oui-font-semibold",
         ])}
       >
@@ -280,8 +280,8 @@ const RewardItem: FC<{
           className={cn([
             "oui-trading-leaderboard-title",
             props.isMobile
-              ? "oui-text-base oui-leading-[16px] oui-h-[16px]"
-              : "oui-text-[32px] oui-h-10 oui-leading-10",
+              ? "oui-h-[16px] oui-text-base oui-leading-[16px]"
+              : "oui-h-10 oui-text-[32px] oui-leading-10",
           ])}
         >
           {props.value}
@@ -289,7 +289,7 @@ const RewardItem: FC<{
         {props.showTooltip && (
           <Tooltip content={props.tooltip} {...tooltipProps}>
             <div
-              className="oui-flex oui-items-center oui-justify-center oui-w-4 oui-h-4"
+              className="oui-flex oui-size-4 oui-items-center oui-justify-center"
               onClick={() => setTooltipOpen(true)}
             >
               <InfoCircleIcon className="oui-cursor-pointer" />
@@ -304,10 +304,10 @@ const RewardItem: FC<{
             props.isMobile ? "oui-mt-2" : "",
           ])}
         >
-          <div className="oui-text-base-contrast-36 oui-text-2xs oui-font-semibold oui-flex oui-flex-col oui-items-center oui-gap-1">
+          <div className="oui-flex oui-flex-col oui-items-center oui-gap-1 oui-text-2xs oui-font-semibold oui-text-base-contrast-36">
             <div
               className={cn([
-                "oui-w-[225px] oui-h-[18px] oui-p-[2px] oui-bg-base-5 oui-rounded-[100px] oui-flex oui-items-center",
+                "oui-flex oui-h-[18px] oui-w-[225px] oui-items-center oui-rounded-[100px] oui-bg-base-5 oui-p-[2px]",
                 props.isMobile ? "oui-w-full" : "oui-w-[225px]",
               ])}
             >
@@ -326,14 +326,18 @@ const RewardItem: FC<{
               ])}
             >
               {/* @ts-ignore */}
-              <Trans
-                i18nKey="tradingLeaderboard.tradeForMoreTickets"
-                components={[
-                  <span key="0" className="oui-text-base-contrast">
-                    ${props?.extraInfo?.value?.toFixed(2)}
-                  </span>,
-                ]}
-              />
+              {props.extraInfo.atMax ? (
+                <Trans i18nKey="tradingLeaderboard.maxTicketsAchieved" />
+              ) : (
+                <Trans
+                  i18nKey="tradingLeaderboard.tradeForMoreTickets"
+                  components={[
+                    <span key="0" className="oui-text-base-contrast">
+                      ${props?.extraInfo?.value?.toFixed(2)}
+                    </span>,
+                  ]}
+                />
+              )}
             </div>
           </div>
         </div>
