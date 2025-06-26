@@ -828,3 +828,16 @@ export const maxWithdrawalOtherCollateral = (inputs: {
   const maxQtyByValue = new Decimal(freeCollateral).div(denominator).toNumber();
   return Math.min(collateralQty, maxQtyByValue);
 };
+
+export const calcMinimumReceived = (inputs: {
+  amount: number;
+  slippage: number;
+}) => {
+  const { amount, slippage } = inputs;
+  const MAX_SLIPPAGE = 3;
+  const safeSlippage = Math.min(slippage, MAX_SLIPPAGE);
+  const slippageRatio = new Decimal(safeSlippage).div(100);
+  return new Decimal(amount)
+    .mul(new Decimal(1).minus(slippageRatio))
+    .toNumber();
+};

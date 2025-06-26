@@ -1,8 +1,8 @@
 import { FC } from "react";
-import { Box, Flex, modal, Text } from "@orderly.network/ui";
-import { UseFeeReturn } from "../depositForm/depositForm.script";
-import { Decimal } from "@orderly.network/utils";
 import { useTranslation } from "@orderly.network/i18n";
+import { Box, Flex, modal, Text } from "@orderly.network/ui";
+import { Decimal } from "@orderly.network/utils";
+import { UseFeeReturn } from "../depositForm/depositForm.script";
 
 type FeeProps = UseFeeReturn;
 
@@ -59,14 +59,12 @@ export const Fee: FC<FeeProps> = (props) => {
       </Text>
       {showFeeQty && (
         <span>
-          (
           <Text intensity={54}>
             <Text.numeral dp={dp} padding={false} rm={Decimal.ROUND_UP}>
               {feeQty}
             </Text.numeral>
             {nativeSymbol}
           </Text>
-          )
         </span>
       )}
     </Text>

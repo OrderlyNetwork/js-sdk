@@ -1,11 +1,15 @@
 import React from "react";
 // import { useTranslation } from "@orderly.network/i18n";
 import { Flex, Text } from "@orderly.network/ui";
-import type { MinimumReceivedReturns } from "./minimumReceived.script";
 
-export const MinimumReceivedUI: React.FC<MinimumReceivedReturns> = (props) => {
+export const MinimumReceivedUI: React.FC<
+  Readonly<{
+    minimumReceived: number;
+    symbol: string;
+  }>
+> = (props) => {
   // const { t } = useTranslation();
-  const { minimumReceived, type } = props;
+  const { minimumReceived, symbol } = props;
   return (
     <Flex width="100%" itemAlign="center" justify="between">
       <Flex itemAlign="center" justify="start">
@@ -18,7 +22,7 @@ export const MinimumReceivedUI: React.FC<MinimumReceivedReturns> = (props) => {
           {minimumReceived}
         </Text>
         <Text className="oui-select-none" intensity={36}>
-          {type}
+          {symbol}
         </Text>
       </Flex>
     </Flex>

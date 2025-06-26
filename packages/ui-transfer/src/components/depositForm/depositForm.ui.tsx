@@ -49,6 +49,10 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
     collateralRatio,
     currentLTV,
     nextLTV,
+    indexPrice,
+    slippage,
+    setSlippage,
+    minimumReceived,
   } = props;
 
   return (
@@ -122,10 +126,13 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
             <SwapCoin
               sourceToken={sourceToken}
               targetToken={targetToken}
-              price={1}
+              indexPrice={indexPrice}
             />
-            <SlippageUI slippage="1" />
-            <MinimumReceivedWidget />
+            <SlippageUI slippage={slippage} setSlippage={setSlippage} />
+            <MinimumReceivedWidget
+              minimumReceived={minimumReceived}
+              symbol={targetToken?.symbol ?? ""}
+            />
             <Fee {...fee} />
             <AssetSwapIndicatorWidget
               sourceToken={sourceToken?.symbol ?? ""}

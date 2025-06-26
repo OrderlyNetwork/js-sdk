@@ -7,6 +7,7 @@ import {
   useHoldingStream,
   useIndexPrice,
   useIndexPricesStream,
+  useLocalStorage,
   usePositionStream,
   useQuery,
 } from "@orderly.network/hooks";
@@ -22,6 +23,8 @@ import {
   useInputStatus,
   useToken_v2,
 } from "./hooks";
+
+const ORDERLY_DEPOSIT_SLIPPAGE_KEY = "ORDERLY_DEPOSIT_SLIPPAGE";
 
 export type UseDepositFormScriptReturn = ReturnType<
   typeof useDepositFormScript
@@ -124,13 +127,21 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     depositFee,
   });
 
-  const { collateralRatio, toQuantity, currentLTV, nextLTV } =
-    useCollateralValue({
-      tokens: sourceTokens,
-      sourceToken: sourceToken,
-      targetToken: targetToken,
-      qty: quantity,
-    });
+  const {
+    collateralRatio,
+    toQuantity,
+    currentLTV,
+    nextLTV,
+    indexPrice,
+    slippage,
+    setSlippage,
+    minimumReceived,
+  } = useCollateralValue({
+    tokens: sourceTokens,
+    sourceToken: sourceToken,
+    targetToken: targetToken,
+    qty: quantity,
+  });
 
   const {
     ltv_threshold,
@@ -157,6 +168,7 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     fromQty: quantity,
     toQty: toQuantity,
     maxQuantity,
+    indexPrice,
     onQuantityChange: setQuantity,
     hintMessage,
     inputStatus,
@@ -181,6 +193,9 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     ltv_threshold,
     negative_usdc_threshold,
     isConvertThresholdLoading,
+    slippage,
+    setSlippage,
+    minimumReceived,
   };
 };
 
@@ -286,11 +301,30 @@ const useCollateralValue = (params: {
     [holdingData, usdcBalance, unrealPnL, tokens, indexPrices],
   );
 
+  const [slippage, setSlippage] = useLocalStorage(
+    ORDERLY_DEPOSIT_SLIPPAGE_KEY,
+    "1",
+    {
+      parseJSON: (value: string | null) => {
+        return !value || value === '""' ? "1" : JSON.parse(value);
+      },
+    },
+  );
+
+  const minimumReceived = account.calcMinimumReceived({
+    amount: toQuantity,
+    slippage,
+  });
+
   return {
+    slippage,
+    setSlippage,
     collateralRatio: getCollateralRatio(qty),
     toQuantity,
     currentLTV: getLTV(getCollateralRatio(qty)),
     nextLTV: getLTV(getCollateralRatio(0)),
+    indexPrice,
+    minimumReceived,
   };
 };
 

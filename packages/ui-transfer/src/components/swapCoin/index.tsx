@@ -3,15 +3,15 @@ import { FC } from "react";
 import { API } from "@orderly.network/types";
 import { Flex, Text } from "@orderly.network/ui";
 
-type SwapCoinProps = {
+interface SwapCoinProps {
   className?: string;
   sourceToken?: API.TokenInfo;
   targetToken?: API.TokenInfo;
-  price?: number;
-};
+  indexPrice: number;
+}
 
 export const SwapCoin: FC<SwapCoinProps> = (props) => {
-  const { sourceToken, targetToken, price } = props;
+  const { sourceToken, targetToken, indexPrice } = props;
 
   // const { t } = useTranslation();
 
@@ -24,16 +24,26 @@ export const SwapCoin: FC<SwapCoinProps> = (props) => {
       <Text size="xs" intensity={36}>
         Convert rate
       </Text>
-      <Text size="xs" intensity={36} className={props.className}>
+      <Flex
+        itemAlign="center"
+        justify="center"
+        gap={1}
+        className={props.className}
+      >
         <Text size="xs" intensity={80}>
           1
         </Text>
-        {` ${sourceSymbol} = `}
-        <Text.numeral size="xs" intensity={80} dp={3} padding={false}>
-          {price || 1}
+        <Text size="xs" intensity={36}>
+          {sourceSymbol}
+        </Text>
+        =
+        <Text.numeral size="xs" intensity={80} dp={4}>
+          {indexPrice}
         </Text.numeral>
-        {targetSymbol}
-      </Text>
+        <Text size="xs" intensity={36}>
+          {targetSymbol}
+        </Text>
+      </Flex>
     </Flex>
   );
 };
