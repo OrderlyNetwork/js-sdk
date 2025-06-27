@@ -11,6 +11,7 @@ import {
   LTV,
   maxWithdrawalUSDC,
   maxWithdrawalOtherCollateral,
+  calcMinimumReceived,
 } from "../src/account";
 
 // Update the path to your source file
@@ -363,6 +364,29 @@ describe("account farmula", () => {
         weight: 1,
       };
       expect(maxWithdrawalOtherCollateral(inputs)).toBe(0);
+    });
+  });
+
+  describe("calcMinimumReceived should work", () => {
+    it("should return correct value with normal slippage", () => {
+      expect(calcMinimumReceived({ amount: 100, slippage: 1 })).toBe(99);
+      expect(calcMinimumReceived({ amount: 200, slippage: 2 })).toBe(196);
+    });
+    it("should cap slippage to 3% when input slippage exceeds 3%", () => {
+      expect(calcMinimumReceived({ amount: 100, slippage: 5 })).toBe(97);
+      expect(calcMinimumReceived({ amount: 150, slippage: 10 })).toBe(145.5);
+    });
+    it("should allow slippage = 3", () => {
+      expect(calcMinimumReceived({ amount: 300, slippage: 3 })).toBe(291);
+    });
+    it("should handle slippage = 0", () => {
+      expect(calcMinimumReceived({ amount: 100, slippage: 0 })).toBe(100);
+    });
+    it("should return 0 if amount is 0", () => {
+      expect(calcMinimumReceived({ amount: 0, slippage: 2 })).toBe(0);
+    });
+    it("should work with floating point amount and exact slippage result", () => {
+      expect(calcMinimumReceived({ amount: 100.5, slippage: 3 })).toBe(97.485);
     });
   });
 });
