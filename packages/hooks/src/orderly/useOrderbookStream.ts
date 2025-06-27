@@ -300,7 +300,7 @@ export const useOrderbookStream = (
     } else {
       setDepth(config("quote_tick"));
     }
-  }, [config("quote_tick")]);
+  }, [config("quote_tick"), symbol]);
 
   const ws = useWS();
 
