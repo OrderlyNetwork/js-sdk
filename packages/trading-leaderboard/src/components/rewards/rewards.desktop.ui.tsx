@@ -134,7 +134,14 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
               key={tier.value}
               className="h-[18px] oui-flex oui-items-center oui-justify-between oui-text-2xs oui-font-semibold"
             >
-              <div className="oui-text-base-contrast-54">{`$${tier.value} volume`}</div>
+              <Text.numeral
+                currency="$"
+                suffix=" volume"
+                dp={0}
+                className="oui-text-base-contrast-54"
+              >
+                {tier.value}
+              </Text.numeral>
               <div className="oui-text-base-contrast">
                 {tier.tickets} tickets
               </div>
