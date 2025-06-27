@@ -528,7 +528,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           <Box className="oui-absolute oui-right-3 oui-top-[44px] oui-bottom-0 oui-w-[360px] oui-bg-base-9">
             <TPSLAdvancedWidget
               setOrderValue={setOrderValue}
-              order={formattedOrder}
+              order={formattedOrder as OrderlyOrder}
             />
           </Box>
         </Box>
