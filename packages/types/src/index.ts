@@ -7,6 +7,7 @@ export {
   OrderSide,
   OrderStatus,
   AlgoOrderRootType,
+  PositionType,
   AlgoOrderType,
   TriggerPriceType,
   BBOOrderType,

@@ -576,6 +576,7 @@ const useOrderEntry = (
     }
 
     const order = generateOrder(creator, prepareData());
+    console.log("xxx -- order", order);
 
     const result = await doCreateOrder(order);
 

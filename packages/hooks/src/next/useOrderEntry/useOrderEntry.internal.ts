@@ -73,14 +73,17 @@ const useOrderEntryNextInternal = (
         | "tp_offset_percentage"
         | "tp_ROI"
         | "tp_trigger_price"
+        | "tp_order_price"
         | "sl_pnl"
         | "sl_offset"
         | "sl_offset_percentage"
         | "sl_ROI"
         | "sl_trigger_price"
+        | "sl_order_price"
         | "quantity"
         | "price"
-        | "type",
+        | "type"
+        | "position_type",
       value: any,
       markPrice: number,
       config: API.SymbolExt,

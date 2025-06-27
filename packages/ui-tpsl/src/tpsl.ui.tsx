@@ -428,8 +428,9 @@ const TPSLPrice = (props: {
 };
 // ------------ TP/SL Price and PNL input end------------
 // ------------ TP/SL Price input start------------
-const PriceInput = (props: {
+export const PriceInput = (props: {
   type: string;
+  label?: string;
   value?: string | number;
   error?: string;
   onValueChange: (value: string) => void;
@@ -442,7 +443,7 @@ const PriceInput = (props: {
     <Input.tooltip
       data-testid={`oui-testid-tpsl-popUp-${props.type.toLowerCase()}-input`}
       // prefix={`${props.type} price`}
-      prefix={t("common.markPrice")}
+      prefix={props.label ?? t("common.markPrice")}
       size={{
         initial: "lg",
         lg: "md",

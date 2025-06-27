@@ -1,19 +1,19 @@
 import { FC, useMemo } from "react";
-import { Box, cn, Flex } from "@orderly.network/ui";
-import { getOffsetSizeNum, TradingState } from "./trading.script";
-import { DataListWidget } from "../../components/desktop/dataList";
-import { TradingviewWidget } from "@orderly.network/ui-tradingview";
-import { AssetViewWidget } from "../../components/desktop/assetView";
-import { RiskRateWidget } from "../../components/desktop/riskRate";
-import { OrderBookAndTradesWidget } from "../../components/desktop/orderBookAndTrades";
 import {
   SideMarketsWidget,
   SymbolInfoBarFullWidget,
 } from "@orderly.network/markets";
-import { SwitchLayout } from "../../components/desktop/layout/switchLayout";
-import { SplitLayout } from "../../components/desktop/layout/splitLayout";
-import { RemovablePanel } from "../../components/desktop/layout/removablePanel";
+import { Box, cn, Flex } from "@orderly.network/ui";
 import { OrderEntryWidget } from "@orderly.network/ui-order-entry";
+import { TradingviewWidget } from "@orderly.network/ui-tradingview";
+import { AssetViewWidget } from "../../components/desktop/assetView";
+import { DataListWidget } from "../../components/desktop/dataList";
+import { RemovablePanel } from "../../components/desktop/layout/removablePanel";
+import { SplitLayout } from "../../components/desktop/layout/splitLayout";
+import { SwitchLayout } from "../../components/desktop/layout/switchLayout";
+import { OrderBookAndTradesWidget } from "../../components/desktop/orderBookAndTrades";
+import { RiskRateWidget } from "../../components/desktop/riskRate";
+import { getOffsetSizeNum, TradingState } from "./trading.script";
 import {
   scrollBarWidth,
   topBarHeight,
@@ -221,7 +221,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
   ];
 
   const orderEntryWidget = positions.map(
-    (index) => assetsOrderEntryMargin[index]
+    (index) => assetsOrderEntryMargin[index],
   );
 
   const orderEntryView = (
@@ -339,7 +339,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
           "oui-flex oui-flex-1 ",
           "oui-min-w-[1018px] oui-h-full oui-w-full",
           "oui-p-3",
-          props.className
+          props.className,
         )}
         onSizeChange={setDataListSplitHeightSM}
         onDragging={props.onDataListSplitHeightDragging}
@@ -350,7 +350,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
           itemAlign="stretch"
           className={cn(
             "oui-flex-1",
-            layout === "left" && "oui-flex-row-reverse"
+            layout === "left" && "oui-flex-row-reverse",
           )}
           style={{
             minHeight: Math.max(
@@ -358,7 +358,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
                 tradindviewMinHeight +
                 orderbookMinHeight +
                 space * 2,
-              props.orderEntryHeight
+              props.orderEntryHeight,
             ),
             maxHeight:
               symbolInfoBarHeight +
@@ -385,7 +385,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
               }}
               className={cn(
                 "oui-flex-1",
-                layout === "left" && "oui-flex-row-reverse"
+                layout === "left" && "oui-flex-row-reverse",
               )}
             >
               <Box
@@ -441,8 +441,10 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
           </Flex>
           <Flex
             ref={props.orderEntryViewRef}
+            id="orderEntryView"
             gapY={3}
             direction="column"
+            className="oui-relative"
             style={{
               width: orderEntryMinWidth,
               // force order entry render actual content height
@@ -483,7 +485,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
       }}
       className={cn(
         props.className,
-        layout === "left" && "oui-flex-row-reverse"
+        layout === "left" && "oui-flex-row-reverse",
       )}
       width="100%"
       p={3}

@@ -9,8 +9,7 @@ import React, {
 import { OrderValidationResult } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
-import { OrderlyOrder } from "@orderly.network/types";
-import { OrderType } from "@orderly.network/types";
+import { OrderlyOrder, OrderType, PositionType } from "@orderly.network/types";
 import {
   cn,
   Flex,
@@ -19,9 +18,16 @@ import {
   inputFormatter,
   modal,
   Switch,
+  SettingFillIcon,
+  Box,
 } from "@orderly.network/ui";
 import { Grid } from "@orderly.network/ui";
 import { ExclamationFillIcon } from "@orderly.network/ui";
+import {
+  TPSLAdvancedDialogId,
+  TPSLAdvancedWidget,
+  TPSLPositionTypeWidget,
+} from "@orderly.network/ui-tpsl";
 import { OrderEntryContext } from "./orderEntryContext";
 import { PnlInputWidget } from "./pnlInput/pnlInput.widget";
 import {
@@ -36,7 +42,11 @@ type Est_Values = PNL_Values & {
   trigger_price?: string;
 };
 
-type TPSL_Values = { tp: Est_Values; sl: Est_Values };
+type TPSL_Values = {
+  tp: Est_Values;
+  sl: Est_Values;
+  position_type: PositionType;
+};
 
 export const OrderTPSL = (props: {
   // onCancelTPSL: () => void;
@@ -49,6 +59,8 @@ export const OrderTPSL = (props: {
   isReduceOnly?: boolean;
   errors: OrderValidationResult | null;
   quote_dp: number | undefined;
+  showTPSLAdvanced: () => void;
+  setOrderValue: (key: string, value: any) => void;
 }) => {
   // const [open, setOpen] = useState(false);
   const tpslFormRef = React.useRef<HTMLDivElement>(null);
@@ -75,43 +87,55 @@ export const OrderTPSL = (props: {
 
   return (
     <div>
-      <Flex itemAlign={"center"} gapX={1}>
-        <Switch
-          id={"order_entry_tpsl"}
-          className="oui-h-[14px]"
-          checked={props.switchState}
-          disabled={
-            (props.orderType !== OrderType.LIMIT &&
-              props.orderType !== OrderType.MARKET) ||
-            props.isReduceOnly
-          }
-          onCheckedChange={(checked) => {
-            // setOpen(checked);
-            props.onSwitchChanged(checked);
-            // if (!checked) {
-            //   props.onCancelTPSL();
-            // } else {
-            //   props.onEnableTP_SL();
-            // }
-          }}
-        />
-        <label htmlFor={"order_entry_tpsl"} className={"oui-text-xs"}>
-          {t("common.tpsl")}
-        </label>
-        <ExclamationFillIcon
-          color="white"
-          // opacity={0.36}
-          size={14}
-          opacity={1}
-          className="oui-cursor-pointer oui-text-white/[.36] hover:oui-text-white/80"
-          onClick={() => {
-            modal.dialog({
-              title: t("common.tips"),
-              size: "xs",
-              content: <Text intensity={54}>{t("orderEntry.tpsl.tips")}</Text>,
-            });
-          }}
-        />
+      <Flex itemAlign={"center"} justify={"between"}>
+        <Flex itemAlign={"center"} gapX={1}>
+          <Switch
+            id={"order_entry_tpsl"}
+            className="oui-h-[14px]"
+            checked={props.switchState}
+            disabled={
+              (props.orderType !== OrderType.LIMIT &&
+                props.orderType !== OrderType.MARKET) ||
+              props.isReduceOnly
+            }
+            onCheckedChange={(checked) => {
+              // setOpen(checked);
+              props.onSwitchChanged(checked);
+              // if (!checked) {
+              //   props.onCancelTPSL();
+              // } else {
+              //   props.onEnableTP_SL();
+              // }
+            }}
+          />
+          <label htmlFor={"order_entry_tpsl"} className={"oui-text-xs"}>
+            {t("common.tpsl")}
+          </label>
+          {/* <ExclamationFillIcon
+            color="white"
+            // opacity={0.36}
+            size={14}
+            opacity={1}
+            className="oui-cursor-pointer oui-text-white/[.36] hover:oui-text-white/80"
+            onClick={() => {
+              modal.dialog({
+                title: t("common.tips"),
+                size: "xs",
+                content: (
+                  <Text intensity={54}>{t("orderEntry.tpsl.tips")}</Text>
+                ),
+              });
+            }}
+          /> */}
+        </Flex>
+        <Flex itemAlign={"center"} gapX={1}>
+          <Text className="oui-text-sm">Advanced</Text>
+          <SettingFillIcon
+            size={12}
+            className="oui-text-base-contrast-54 hover:oui-text-white/80"
+            onClick={props.showTPSLAdvanced}
+          />
+        </Flex>
       </Flex>
       <div
         className={cn(
@@ -128,6 +152,7 @@ export const OrderTPSL = (props: {
       >
         <TPSLInputForm
           ref={tpslFormRef}
+          setOrderValue={props.setOrderValue}
           onChange={props.onChange}
           values={props.values}
           errors={props.errors}
@@ -141,6 +166,7 @@ export const OrderTPSL = (props: {
 const TPSLInputForm = React.forwardRef<
   HTMLDivElement,
   {
+    setOrderValue: (key: string, value: any) => void;
     onChange: (key: OrderValueKeys, value: any) => void;
     values: TPSL_Values;
     errors: OrderValidationResult | null;
@@ -154,6 +180,10 @@ const TPSLInputForm = React.forwardRef<
       ref={ref}
       className={"oui-space-y-1 oui-px-px oui-py-2 oui-transition-all"}
     >
+      <TPSLPositionTypeWidget
+        value={props.values.position_type}
+        onChange={props.onChange}
+      />
       <PnlInputProvider values={props.values.tp} type={"TP"}>
         <TPSLInputRow
           type={"TP"}

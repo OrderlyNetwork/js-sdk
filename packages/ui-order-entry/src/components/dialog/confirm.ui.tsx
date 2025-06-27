@@ -1,3 +1,8 @@
+import { useMemo } from "react";
+import { useLocalStorage } from "@orderly.network/hooks";
+import { i18n, useTranslation } from "@orderly.network/i18n";
+import { BBOOrderType, OrderSide, OrderType } from "@orderly.network/types";
+import { OrderlyOrder } from "@orderly.network/types";
 import {
   Badge,
   Box,
@@ -10,12 +15,7 @@ import {
   Text,
   textVariants,
 } from "@orderly.network/ui";
-import { BBOOrderType, OrderSide, OrderType } from "@orderly.network/types";
-import { OrderlyOrder } from "@orderly.network/types";
-import { useMemo } from "react";
-import { useLocalStorage } from "@orderly.network/hooks";
 import { getBBOType, isBBOOrder } from "../../utils";
-import { i18n, useTranslation } from "@orderly.network/i18n";
 
 type Props = {
   order: OrderlyOrder;
@@ -152,36 +152,68 @@ export const OrderConfirmDialog = (props: Props) => {
               className: "oui-space-y-1",
             })}
           >
+            {/* TODO i18n*/}
+            <Text>TP/SL for {order.position_type}</Text>
+            <Flex justify={"between"}>
+              <Text>Quantity</Text>
+              <Text.numeral
+                rule={"price"}
+                dp={baseDP}
+                padding={false}
+                className="oui-text-base-contrast"
+              >
+                {/* TODO if positionType is full, need show position qty*/}
+                {order.order_quantity}
+              </Text.numeral>
+            </Flex>
+
             {order.tp_trigger_price && (
-              <Flex justify={"between"}>
-                <Text>{t("orderEntry.tpMarkPrice")}</Text>
-                <Text.numeral
-                  unit={"USDC"}
-                  rule={"price"}
-                  coloring
-                  dp={quoteDP}
-                  padding={false}
-                  unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
-                >
-                  {order.tp_trigger_price}
-                </Text.numeral>
-              </Flex>
+              <>
+                <Flex justify={"between"}>
+                  {/* TODO i18n*/}
+                  <Text>TP trigger price</Text>
+                  <Text.numeral
+                    unit={"USDC"}
+                    rule={"price"}
+                    coloring
+                    dp={quoteDP}
+                    padding={false}
+                    unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
+                  >
+                    {order.tp_trigger_price}
+                  </Text.numeral>
+                </Flex>
+
+                <Flex justify={"between"}>
+                  {/* TODO i18n*/}
+                  <Text>TP order price</Text>
+                  <Text className="oui-text-base-contrast">Market</Text>
+                </Flex>
+              </>
             )}
             {order.sl_trigger_price && (
-              <Flex justify={"between"}>
-                <Text>{t("orderEntry.slMarkPrice")}</Text>
-                <Text.numeral
-                  unit={"USDC"}
-                  rule={"price"}
-                  coloring
-                  className="oui-text-trade-loss"
-                  unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
-                  dp={quoteDP}
-                  padding={false}
-                >
-                  {order.sl_trigger_price}
-                </Text.numeral>
-              </Flex>
+              <>
+                <Flex justify={"between"}>
+                  {/* TODO i18n*/}
+                  <Text>SL trigger price</Text>
+                  <Text.numeral
+                    unit={"USDC"}
+                    rule={"price"}
+                    coloring
+                    className="oui-text-trade-loss"
+                    unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
+                    dp={quoteDP}
+                    padding={false}
+                  >
+                    {order.sl_trigger_price}
+                  </Text.numeral>
+                </Flex>
+                <Flex justify={"between"}>
+                  {/* TODO i18n*/}
+                  <Text>SL order price</Text>
+                  <Text className="oui-text-base-contrast">Market</Text>
+                </Flex>
+              </>
             )}
           </div>
         </>
@@ -257,7 +289,7 @@ const Dialog = (
     close: () => void;
     resolve: (value?: any) => void;
     reject: (reason?: any) => void;
-  }
+  },
 ) => {
   const { close, resolve, reject, ...rest } = props;
 

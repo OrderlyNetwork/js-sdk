@@ -14,6 +14,7 @@ import {
   OrderLevel,
   OrderSide,
   OrderType,
+  PositionType,
 } from "@orderly.network/types";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { convertValueToPercentage } from "@orderly.network/ui";
@@ -124,12 +125,14 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     setValues({
       tp_trigger_price: "",
       sl_trigger_price: "",
+      position_type: PositionType.FULL,
     });
   };
 
   const enableTP_SL = () => {
     setValues({
       order_type_ext: undefined,
+      position_type: PositionType.FULL,
     });
   };
 

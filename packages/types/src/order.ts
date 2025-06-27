@@ -42,6 +42,10 @@ export enum AlgoOrderRootType {
 export enum TriggerPriceType {
   MARK_PRICE = "MARK_PRICE",
 }
+export enum PositionType {
+  FULL = "FULL",
+  PARTIAL = "PARTIAL",
+}
 
 export enum AlgoOrderType {
   TAKE_PROFIT = "TAKE_PROFIT",
@@ -116,11 +120,13 @@ export interface BracketOrder extends AlgoOrder, OrderExt {
   /**
    * Computed take profit
    */
+  position_type?: PositionType;
   tp_pnl?: string;
   tp_offset?: string;
   tp_offset_percentage?: string;
   tp_ROI?: string;
   tp_trigger_price?: string;
+  tp_order_price?: string;
 
   /**
    * Computed stop loss
@@ -130,6 +136,7 @@ export interface BracketOrder extends AlgoOrder, OrderExt {
   sl_offset_percentage?: string;
   sl_ROI?: string;
   sl_trigger_price?: string;
+  sl_order_price?: string;
 }
 
 export type OrderlyOrder = RegularOrder & AlgoOrder & BracketOrder;

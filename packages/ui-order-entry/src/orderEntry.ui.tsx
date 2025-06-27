@@ -24,6 +24,7 @@ import {
   OrderlyOrder,
   OrderSide,
   OrderType,
+  PositionType,
 } from "@orderly.network/types";
 import {
   Box,
@@ -50,6 +51,10 @@ import {
   useScreen,
 } from "@orderly.network/ui";
 import { LeverageWidgetWithSheetId } from "@orderly.network/ui-leverage";
+import {
+  TPSLAdvancedDialogId,
+  TPSLAdvancedWidget,
+} from "@orderly.network/ui-tpsl";
 import { commifyOptional } from "@orderly.network/utils";
 // import { useBalanceScript } from "../../trading/src/components/mobile/bottomNavBar/balance";
 import { AdditionalInfoWidget } from "./components/additional/additionnalInfo.widget";
@@ -104,6 +109,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
     "orderly-order-additional-pinned",
     true,
   );
+  const [showTPSLAdvanced, setShowTPSLAdvanced] = useState(false);
   const [hidden, setHidden] = useLocalStorage("orderly-order-hidden", false);
 
   const [slippage, setSlippage] = useLocalStorage("orderly-slippage", "");
@@ -162,6 +168,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
       .validate()
       .then(
         () => {
+          console.log("xxx -- formattedOrder", formattedOrder);
           if (needConfirm) {
             return modal.show(orderConfirmDialogId, {
               order: formattedOrder,
@@ -220,6 +227,14 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
         // toast.error(error.message);
         // }
       });
+  };
+
+  const onShowTPSLAdvanced = () => {
+    // modal.show(TPSLAdvancedDialogId, {
+    //   order: formattedOrder,
+    //   setOrderValue: setOrderValue,
+    // });
+    setShowTPSLAdvanced(true);
   };
 
   const mergedShowSheet = isMobile && props.canTrade;
@@ -410,7 +425,9 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           orderType={formattedOrder.order_type!}
           errors={validated ? errors : null}
           isReduceOnly={formattedOrder.reduce_only}
+          setOrderValue={props.setOrderValue}
           values={{
+            position_type: formattedOrder.position_type ?? PositionType.PARTIAL,
             tp: {
               trigger_price: formattedOrder.tp_trigger_price ?? "",
               PnL: formattedOrder.tp_pnl ?? "",
@@ -426,6 +443,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
               ROI: formattedOrder.sl_ROI ?? "",
             },
           }}
+          showTPSLAdvanced={onShowTPSLAdvanced}
           onChange={(key, value) => {
             props.setOrderValue(key, value);
           }}
@@ -498,6 +516,23 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           </Box>
         )}
       </div>
+      {showTPSLAdvanced && (
+        <Box className="oui-fixed oui-inset-0 oui-z-30">
+          <div
+            className="oui-absolute oui-inset-0 oui-bg-base-10/60"
+            onClick={() => {
+              setShowTPSLAdvanced(false);
+            }}
+          />
+
+          <Box className="oui-absolute oui-right-3 oui-top-[44px] oui-bottom-0 oui-w-[360px] oui-bg-base-9">
+            <TPSLAdvancedWidget
+              setOrderValue={setOrderValue}
+              order={formattedOrder}
+            />
+          </Box>
+        </Box>
+      )}
     </OrderEntryProvider>
   );
 };
