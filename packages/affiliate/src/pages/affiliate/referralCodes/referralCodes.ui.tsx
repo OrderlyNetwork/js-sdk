@@ -28,11 +28,11 @@ export const ReferralCodes: FC<ReferralCodesReturns> = (props) => {
       width={"100%"}
       gap={4}
       direction={"column"}
-      className="oui-bg-base-9 oui-tabular-nums oui-p-6 oui-h-full"
+      className="oui-h-full oui-bg-base-9 oui-p-6 oui-tabular-nums"
     >
       <Title {...props} />
 
-      <div className="oui-w-full oui-flex oui-flex-col 2xl:oui-h-full">
+      <div className="oui-flex oui-w-full oui-flex-col 2xl:oui-h-full">
         <Divider />
         {isTablet ? <MobileLayout {...props} /> : <DesktopLayout {...props} />}
       </div>
@@ -73,8 +73,9 @@ const MobileLayout: FC<ReferralCodesReturns> = (props) => {
               copyLink={props.copyLink}
               copyCode={props.copyCode}
               setPinCode={props.setPinCode}
+              editCode={props.editCode}
             />
-            <Divider className="oui-w-full oui-mt-3" />
+            <Divider className="oui-mt-3 oui-w-full" />
           </Flex>
         );
       }}
@@ -98,7 +99,7 @@ const MobileCellItem: FC<{
       id="oui-affiliate-affiliate-referralCodes"
       className={cn("oui-flex-1", className)}
       label={
-        <Text className="oui-text-base-contrast-36 oui-text-2xs">{title}</Text>
+        <Text className="oui-text-2xs oui-text-base-contrast-36">{title}</Text>
       }
       align={align}
       children={
@@ -108,16 +109,16 @@ const MobileCellItem: FC<{
             onCopy={() => {
               onCopy?.();
             }}
-            className="oui-text-base-contrast-80 oui-text-sm oui-mt-[6px]"
+            className="oui-mt-[6px] oui-text-sm oui-text-base-contrast-80"
           >
             {value as string}
           </Text.formatted>
           {editRate && (
             <EditIcon
-              className=" oui-fill-white/[.36] hover:oui-fill-white/80 oui-cursor-pointer oui-mt-[1px]"
+              className="oui-mt-px oui-cursor-pointer oui-fill-white/[.36] hover:oui-fill-white/80"
               fillOpacity={1}
               fill="currentColor"
-              onClick={(e) => editRate()}
+              onClick={() => editRate()}
             />
           )}
         </Flex>
@@ -131,8 +132,9 @@ const MobileCell: FC<{
   copyLink: (code: string) => void;
   copyCode: (code: string) => void;
   editRate: (code: ReferralCodeType) => void;
+  editCode: (code: ReferralCodeType) => void;
 }> = (props) => {
-  const { data, setPinCode, copyLink, copyCode, editRate } = props;
+  const { data, setPinCode, copyLink, editRate, editCode } = props;
   const { t } = useTranslation();
 
   return (
@@ -149,6 +151,9 @@ const MobileCell: FC<{
           copyable
           onCopy={() => {
             props.copyCode?.(data.code);
+          }}
+          editRate={() => {
+            editCode(data);
           }}
         />
         <MobileCellItem
@@ -269,7 +274,7 @@ const DesktopLayout: FC<ReferralCodesReturns> = (props) => {
             <Flex direction={"row"} itemAlign={"center"} gap={1}>
               {getRate(data)}
               <EditIcon
-                className=" oui-fill-white/[.36] hover:oui-fill-white/80 oui-cursor-pointer oui-mt-[1px]"
+                className="oui-mt-[6px] oui-cursor-pointer oui-fill-white/[.36] hover:oui-fill-white/80"
                 fillOpacity={1}
                 fill="currentColor"
                 onClick={(e) => props.editRate?.(data)}

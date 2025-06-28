@@ -10,10 +10,17 @@ interface TransferHistorySearchParams {
   fromId?: string;
   toId?: string;
   side: "IN" | "OUT";
+  /**
+   * If True, return only internal transfers between main account and sub-accounts.
+   * If False, return only internal transfers between main account and other main accounts.
+   * If empty, return all transfer history.
+   * @default true
+   */
+  main_sub_only?: boolean;
 }
 
 export const useTransferHistory = (parmas: TransferHistorySearchParams) => {
-  const { dataRange, page, size, side, fromId, toId } = parmas;
+  const { dataRange, page, size, side, fromId, toId, main_sub_only } = parmas;
 
   const infos = useSymbolsInfo();
 
@@ -22,13 +29,15 @@ export const useTransferHistory = (parmas: TransferHistorySearchParams) => {
     search.set("page", page.toString());
     search.set("size", size.toString());
     search.set("side", side);
-    search.set("main_sub_only", `${true}`);
+    if (main_sub_only === true || main_sub_only === false) {
+      search.set("main_sub_only", main_sub_only.toString());
+    }
     if (dataRange) {
       search.set("start_t", dataRange[0].toString());
       search.set("end_t", dataRange[1].toString());
     }
     return `/v1/internal_transfer_history?${search.toString()}`;
-  }, [page, size, fromId, toId, dataRange]);
+  }, [page, size, fromId, toId, dataRange, main_sub_only]);
 
   const { data, isLoading } = usePrivateQuery<API.TransferHistory>(
     memoizedQueryKey,

@@ -1,9 +1,9 @@
 import { PropsWithChildren, useMemo, useState } from "react";
 import { useAccount } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { Tooltip } from "@orderly.network/ui";
-import { useTranslation } from "@orderly.network/i18n";
 
 type AuthGuardProps = {
   content?: string;
@@ -27,7 +27,7 @@ const AuthGuardTooltip = (props: PropsWithChildren<AuthGuardProps>) => {
     opactiy = 90,
     tooltip = {
       connectWallet: t("connector.setUp.connectWallet.tooltip"),
-      signIn: t("connector.setUp.signIn.tooltip"),
+      signIn: t("connector.setUp.createAccount.tooltip"),
       enableTrading: t("connector.setUp.enableTrading.tooltip"),
       wrongNetwork: t("connector.wrongNetwork.tooltip"),
     },

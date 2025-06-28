@@ -1,47 +1,48 @@
 import { Trans, useTranslation } from "@orderly.network/i18n";
-import { Box, Flex, Text, textVariants } from "@orderly.network/ui";
+import {
+  Box,
+  Flex,
+  Text,
+  textVariants,
+  Tabs,
+  TabPanel,
+  WalletIcon,
+  cn,
+} from "@orderly.network/ui";
+import { WithdrawTo } from "../../types";
+import { TextAreaInput } from "../accountIdInput";
 import { AvailableQuantity } from "../availableQuantity";
 import { BrokerWallet } from "../brokerWallet";
 import { ChainSelect } from "../chainSelect";
 import { ExchangeDivider } from "../exchangeDivider";
 import { QuantityInput } from "../quantityInput";
 import { UnsettlePnlInfo } from "../unsettlePnlInfo";
-import { Web3Wallet } from "../web3Wallet";
 import { WithdrawAction } from "../withdrawAction";
 import { WithdrawWarningMessage } from "../withdrawWarningMessage";
 import { WithdrawFormScriptReturn } from "./withdrawForm.script";
 
 export type WithdrawFormProps = WithdrawFormScriptReturn;
 
-export const WithdrawForm = ({
-  address,
-  loading,
-  disabled,
-  quantity,
-  onQuantityChange,
-  token,
-  inputStatus,
-  hintMessage,
-  amount,
-  maxQuantity,
-  balanceRevalidating,
-  chains,
-  currentChain,
-  onChainChange,
-  fee,
-  settingChain,
-  wrongNetwork,
-  hasPositions,
-  unsettledPnL,
-  onSettlePnl,
-  onWithdraw,
-  chainVaultBalance,
-  crossChainWithdraw,
-  crossChainTrans,
-  showQty,
-  networkId,
-  checkIsBridgeless,
-}: WithdrawFormProps) => {
+export const WithdrawForm = (props: WithdrawFormProps) => {
+  const {
+    address,
+    loading,
+    disabled,
+    quantity,
+    onQuantityChange,
+    token,
+    amount,
+    maxQuantity,
+    chains,
+    currentChain,
+    fee,
+    settingChain,
+    chainVaultBalance,
+    crossChainTrans,
+    checkIsBridgeless,
+    withdrawTo,
+  } = props;
+
   const { t } = useTranslation();
 
   return (
@@ -57,8 +58,8 @@ export const WithdrawForm = ({
             onValueChange={onQuantityChange}
             token={token}
             onTokenChange={() => {}}
-            status={inputStatus}
-            hintMessage={hintMessage}
+            status={props.inputStatus}
+            hintMessage={props.hintMessage}
             testId="oui-testid-withdraw-dialog-quantity-input"
           />
         </Box>
@@ -67,16 +68,16 @@ export const WithdrawForm = ({
           token={token}
           amount={amount}
           maxQuantity={maxQuantity.toString()}
-          loading={balanceRevalidating}
+          loading={props.balanceRevalidating}
           onClick={() => {
             onQuantityChange(maxQuantity.toString());
           }}
         />
         <Box mx={2} mt={1}>
           <UnsettlePnlInfo
-            unsettledPnl={unsettledPnL}
-            hasPositions={hasPositions}
-            onSettlePnl={onSettlePnl}
+            unsettledPnl={props.unsettledPnL}
+            hasPositions={props.hasPositions}
+            onSettlePnl={props.onSettlePnl}
             tooltipContent={t("settle.unsettled.tooltip")}
             // @ts-ignore
             dialogContent={<Trans i18nKey="settle.settlePnl.description" />}
@@ -84,31 +85,79 @@ export const WithdrawForm = ({
         </Box>
 
         <ExchangeDivider />
-        <Web3Wallet />
-        <Box mt={3}>
-          <ChainSelect
-            chains={chains}
-            value={currentChain!}
-            onValueChange={onChainChange}
-            wrongNetwork={wrongNetwork}
-            loading={settingChain}
-          />
-          <QuantityInput
-            classNames={{
-              root: "oui-mt-[2px] oui-rounded-t-sm oui-rounded-b-xl",
-            }}
-            token={token}
-            value={showQty}
-            readOnly
-          />
-        </Box>
+
+        <Tabs
+          value={withdrawTo}
+          onValueChange={props.setWithdrawTo as (tab: string) => void}
+          variant="contained"
+          size="lg"
+          classNames={{
+            tabsList: "oui-px-0",
+            tabsContent: "oui-pt-3",
+          }}
+        >
+          <TabPanel
+            title={t("transfer.web3Wallet.my")}
+            icon={<WalletIcon size={"xs"} name={props.walletName ?? ""} />}
+            value={WithdrawTo.Wallet}
+          >
+            <ChainSelect
+              chains={chains}
+              value={currentChain!}
+              onValueChange={props.onChainChange}
+              wrongNetwork={props.wrongNetwork}
+              loading={settingChain}
+            />
+            <QuantityInput
+              classNames={{
+                root: "oui-mt-[2px] oui-rounded-t-sm oui-rounded-b-xl",
+              }}
+              token={token}
+              value={props.showQty}
+              readOnly
+            />
+          </TabPanel>
+          <TabPanel
+            title={t("transfer.withdraw.otherAccount", {
+              brokerName: props.brokerName,
+            })}
+            value={WithdrawTo.Account}
+          >
+            <TextAreaInput
+              label={t("common.accountId")}
+              value={props.toAccountId}
+              onChange={props.setToAccountId}
+              status={props.toAccountIdInputStatus}
+              hintMessage={props.toAccountIdHintMessage}
+            />
+            <Box my={2}>
+              <Text size="xs" intensity={54}>
+                {t("transfer.withdraw.accountId.tips")}
+              </Text>
+            </Box>
+          </TabPanel>
+        </Tabs>
+
         <Flex direction="column" mt={1} gapY={1} itemAlign="start">
           <Text size="xs" intensity={36}>
-            {`${t("common.fee")} ≈ `}
-            <Text size="xs" intensity={80}>
-              {`${fee} `}
-            </Text>
-            <Text>USDC</Text>
+            {t("common.fee")}
+            {withdrawTo === WithdrawTo.Wallet ? (
+              <>
+                {" ≈ "}
+                <Text size="xs" intensity={80}>
+                  {fee}
+                </Text>
+              </>
+            ) : (
+              <>
+                {" = "}
+                <Text size="xs" intensity={80}>
+                  0
+                </Text>
+              </>
+            )}
+
+            <Text>{` USDC`}</Text>
           </Text>
         </Flex>
       </Box>
@@ -125,15 +174,17 @@ export const WithdrawForm = ({
       <Flex justify="center">
         <WithdrawAction
           checkIsBridgeless={checkIsBridgeless}
-          networkId={networkId}
+          networkId={props.networkId}
           disabled={disabled}
           loading={loading}
-          onWithdraw={onWithdraw}
-          crossChainWithdraw={crossChainWithdraw}
+          onWithdraw={props.onWithdraw}
+          crossChainWithdraw={props.crossChainWithdraw}
           currentChain={currentChain}
           address={address}
           quantity={quantity}
           fee={fee}
+          withdrawTo={withdrawTo}
+          onTransfer={props.onTransfer}
         />
       </Flex>
     </Box>

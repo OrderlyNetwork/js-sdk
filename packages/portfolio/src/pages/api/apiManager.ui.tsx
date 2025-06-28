@@ -72,7 +72,7 @@ const AccountInfo: FC<ApiManagerScriptReturns> = (props) => {
         className="oui-w-1/2"
       >
         <Text size="xs" intensity={36}>
-          {t("portfolio.apiKey.accountId")}
+          {t("common.accountId")}
         </Text>
         <Text.formatted
           size="base"
@@ -139,7 +139,7 @@ const Subtitle: FC<ApiManagerScriptReturns> = (props) => {
         side="top"
         tooltip={{
           connectWallet: t("portfolio.apiKey.create.connectWallet.tooltip"),
-          signIn: t("portfolio.apiKey.create.signIn.tooltip"),
+          signIn: t("portfolio.apiKey.create.createAccount.tooltip"),
           enableTrading: t("portfolio.apiKey.create.enableTrading.tooltip"),
           wrongNetwork: t("portfolio.apiKey.create.wrongNetwork.tooltip"),
         }}

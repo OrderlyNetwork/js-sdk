@@ -77,7 +77,7 @@ export const OrderBookCell: FC<OrderBookCellProps> = (props) => {
           </Text.numeral>
         )}
         {mode === "total" && currency === quote && (
-          <Text.numeral className="oui-text-base-contrast-80" dp={2}>
+          <Text.numeral className="oui-text-base-contrast-80" dp={0}>
             {totalAmount}
           </Text.numeral>
         )}

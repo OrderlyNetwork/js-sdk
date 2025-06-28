@@ -231,7 +231,12 @@ export const EditSheet: FC<EditSheetState> = (props) => {
               padding={false}
               rule="percentages"
             >{`${percentages ?? 0}`}</Text.numeral>
-            <Flex gap={1}>
+            <Flex
+              gap={1}
+              onClick={() => {
+                props.setQuantity(props.maxQty.toString());
+              }}
+            >
               <Text size="2xs" color="primary">
                 {t("common.max")}
               </Text>

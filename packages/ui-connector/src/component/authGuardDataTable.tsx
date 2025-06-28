@@ -1,16 +1,16 @@
 import { PropsWithChildren, useMemo } from "react";
+import { useAccount } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
+import { useAppContext, useDataTap } from "@orderly.network/react-app";
+import { AccountStatusEnum } from "@orderly.network/types";
 import {
   ExtensionPositionEnum,
   ExtensionSlot,
   DataTable,
   DataTableProps,
 } from "@orderly.network/ui";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { useAppContext, useDataTap } from "@orderly.network/react-app";
 import { Flex } from "@orderly.network/ui";
 import { alertMessages, AuthGuard } from "./authGuard";
-import { useAccount } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
 
 export const AuthGuardDataTable = <RecordType extends unknown>(
   props: PropsWithChildren<
@@ -21,7 +21,7 @@ export const AuthGuardDataTable = <RecordType extends unknown>(
           authGuardDescription?: string;
         };
       }
-  >
+  >,
 ) => {
   const {
     status,
@@ -87,7 +87,7 @@ const GuardView = (props: GuardViewProps) => {
     connectWallet: t("connector.trade.connectWallet.tooltip"),
     switchChain: t("connector.wrongNetwork.tooltip"),
     enableTrading: t("connector.trade.enableTrading.tooltip"),
-    signin: t("connector.trade.signIn.tooltip"),
+    signin: t("connector.trade.createAccount.tooltip"),
   };
 
   const descriptions = { ...DESCRIPTIONS, ...props.description };

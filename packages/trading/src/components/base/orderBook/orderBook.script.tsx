@@ -1,13 +1,13 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   useOrderbookStream,
   useOrderStream,
   useSymbolsInfo,
 } from "@orderly.network/hooks";
-import { removeTrailingZeros } from "@orderly.network/utils";
 import { OrderStatus } from "@orderly.network/types";
-import { getBasicSymbolInfo } from "../../../utils/utils";
 import { useScreen } from "@orderly.network/ui";
+import { removeTrailingZeros } from "@orderly.network/utils";
+import { getBasicSymbolInfo } from "../../../utils/utils";
 
 const CELL_MAX = 30;
 const DEFAULT_CELL_HEIGHT = 20;
@@ -25,18 +25,23 @@ export const useOrderBookScript = (props: {
 
   const [level, setLevel] = useState(10);
   const { base, quote, quote_dp } = getBasicSymbolInfo(symbolInfo);
+  // const counter = useRef(0);
 
   const [data, { onDepthChange, isLoading, onItemClick, depth, allDepths }] =
     useOrderbookStream(symbol, undefined, {
       level,
     });
 
+  // useEffect(() => {
+  //   counter.current = 0;
+  // }, [symbol]);
+
   const pendingOrders = usePendingOrderStream(symbol);
   useEffect(() => {
     if (height) {
       //   setCellHeight(height.content / level);
       const level = Math.floor(
-        (height - SPACE) / ((DEFAULT_CELL_HEIGHT + 1) * 2)
+        (height - SPACE) / ((DEFAULT_CELL_HEIGHT + 1) * 2),
       );
 
       const cellsHeight = (DEFAULT_CELL_HEIGHT + 1) * 2 * level;
@@ -66,10 +71,14 @@ export const useOrderBookScript = (props: {
     if (typeof depth === "undefined" || typeof quote_dp === "undefined") {
       return undefined;
     }
+    // // FIXME: hardcode for now, need to optimize it
+    // counter.current++;
+    // if (counter.current === 1 && DEFAULT_DEPTH[symbol]) {
+    //   return DEFAULT_DEPTH[symbol];
+    // }
 
-    let formattedNumber = removeTrailingZeros(depth);
-    return formattedNumber;
-  }, [depth, quote_dp]);
+    return removeTrailingZeros(depth);
+  }, [depth, quote_dp, symbol]);
 
   const depths = useMemo(() => {
     return allDepths?.map((e) => removeTrailingZeros(e)) || [];

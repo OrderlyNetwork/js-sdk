@@ -66,7 +66,7 @@ export const useApiManagerScript = (props?: {
   };
   const onReadApiGuide = () => {
     window.open(
-      "https://orderly.network/docs/build-on-evm/evm-api/api-authentication",
+      "https://orderly.network/docs/build-on-omnichain/evm-api/api-authentication#api-authentication",
       "_blank",
     );
   };

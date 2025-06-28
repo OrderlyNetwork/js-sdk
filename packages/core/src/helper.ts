@@ -106,7 +106,7 @@ export function generateAddOrderlyKeyMessage(inputs: {
   const message = {
     brokerId,
     orderlyKey: publicKey,
-    scope: scope || "read,trading",
+    scope: scope || "read,trading,asset",
     chainId,
     timestamp,
     expiration: timestamp + 1000 * 60 * 60 * 24 * expiration,

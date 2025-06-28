@@ -16,12 +16,12 @@ const APIS: Record<ENV_NAME, URLS> = {
     },
   },
   qa: {
-    apiBaseUrl: "https://qa-api.orderly.org",
-    publicWsUrl: "wss://qa-ws-evm.orderly.org",
-    privateWsUrl: "wss://qa-ws-private-evm.orderly.org",
+    apiBaseUrl: "https://qa-api-aliyun.orderly.org",
+    publicWsUrl: "wss://qa-ws-aliyun.orderly.org",
+    privateWsUrl: "wss://qa-ws-private-aliyun.orderly.org",
     operatorUrl: {
-      EVM: "https://qa-operator-evm.orderly.network",
-      SOL: "https://qa-sol-operator.orderly.network",
+      EVM: "https://qa-operator-aliyun.orderly.network",
+      SOL: "https://qa-sol-operator-aliyun.orderly.network",
     },
   },
 };

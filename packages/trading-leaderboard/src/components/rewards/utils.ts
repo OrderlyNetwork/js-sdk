@@ -204,7 +204,7 @@ export function calculateUserPoolReward(
 export function calculateTicketProgress(
   userdata: UserData,
   ticketRules: TicketRules,
-): { percent: number; value: number } | null {
+): { percent: number; value: number; atMax?: boolean } | null {
   if (!userdata || !ticketRules) return null;
 
   const userMetricValue = getUserMetricValue(userdata, ticketRules.metric);
@@ -276,6 +276,7 @@ export function calculateTicketProgress(
       return {
         percent: 100,
         value: 0,
+        atMax: true,
       };
     }
 
