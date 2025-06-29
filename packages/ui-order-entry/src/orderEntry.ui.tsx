@@ -757,6 +757,7 @@ const CustomInput = forwardRef<
     onFocus: InputProps["onFocus"];
     onBlur: InputProps["onBlur"];
     formatters?: InputProps["formatters"];
+    overrideFormatters?: InputProps["formatters"];
     // helperText?: InputProps["helperText"];
     classNames?: InputProps["classNames"];
     readonly?: boolean;
@@ -790,12 +791,14 @@ const CustomInput = forwardRef<
       onBlur={(event) => {
         props.onBlur?.(event);
       }}
-      formatters={[
-        ...(props.formatters ?? []),
-        inputFormatter.numberFormatter,
-        inputFormatter.currencyFormatter,
-        inputFormatter.decimalPointFormatter,
-      ]}
+      formatters={
+        props.overrideFormatters || [
+          ...(props.formatters ?? []),
+          inputFormatter.numberFormatter,
+          inputFormatter.currencyFormatter,
+          inputFormatter.decimalPointFormatter,
+        ]
+      }
       classNames={{
         root: cn(
           "orderly-order-entry oui-relative oui-h-[54px] oui-rounded oui-border oui-border-solid oui-border-line oui-px-2 oui-py-1 group-first:oui-rounded-t-xl group-last:oui-rounded-b-xl",
@@ -1261,8 +1264,8 @@ const ScaledOrderInput = (props: {
           onChange={(e) => {
             props.onChange("total_orders", e);
           }}
-          formatters={[
-            inputFormatter.rangeFormatter({ min: 2, max: 20 }),
+          overrideFormatters={[
+            // inputFormatter.rangeFormatter({ min: 2, max: 20 }),
             inputFormatter.dpFormatter(0),
           ]}
           onFocus={onFocus(InputType.TOTAL_ORDERS)}
@@ -1307,8 +1310,8 @@ const ScaledOrderInput = (props: {
             }}
             onFocus={onFocus(InputType.SKEW)}
             onBlur={onBlur(InputType.SKEW)}
-            formatters={[
-              inputFormatter.rangeFormatter({ min: 0, max: 100 }),
+            overrideFormatters={[
+              // inputFormatter.rangeFormatter({ min: 0, max: 100 }),
               inputFormatter.dpFormatter(0),
             ]}
             classNames={{

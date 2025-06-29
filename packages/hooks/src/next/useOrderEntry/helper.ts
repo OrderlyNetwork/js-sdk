@@ -426,16 +426,23 @@ export function calcScaledOrderBatchBody(
       base_dp,
     });
 
-    const orders = prices.map((price, index) => ({
-      symbol,
-      side,
-      // this order type is scaled order, so we need to set the order type to limit
-      order_type: OrderType.LIMIT,
-      order_quantity: qtys[index],
-      order_price: price,
-      reduce_only,
-      visible_quantity,
-    }));
+    const orders = prices.map((price, index) => {
+      const subOrder = {
+        symbol,
+        side,
+        // this order type is scaled order, so we need to set the order type to limit
+        order_type: OrderType.LIMIT,
+        order_quantity: qtys[index],
+        order_price: price,
+        reduce_only,
+        visible_quantity,
+      };
+      // if visible_quantity is 0, set visible_quantity to 0
+      if (visible_quantity === 0) {
+        subOrder.visible_quantity = visible_quantity;
+      }
+      return subOrder;
+    });
 
     return orders;
   } catch (error) {
@@ -490,7 +497,10 @@ export function validateScaledOrderInput(order: Partial<OrderlyOrder>) {
     !order_quantity ||
     !total_orders ||
     !distribution_type ||
-    (distribution_type === DistributionType.CUSTOM && !skew)
+    (distribution_type === DistributionType.CUSTOM &&
+      (!skew || skew < 0 || skew > 100)) ||
+    total_orders < 2 ||
+    total_orders > 20
   ) {
     return false;
   }

@@ -1,5 +1,5 @@
-import { InputFormatterOptions } from "./inputFormatter";
 import { Decimal } from "@orderly.network/utils";
+import { InputFormatterOptions } from "./inputFormatter";
 
 export const rangeFormatter = (props: { max?: number; min?: number }) => {
   const onBefore = (value: string | number, options: InputFormatterOptions) => {
@@ -14,8 +14,8 @@ export const rangeFormatter = (props: { max?: number; min?: number }) => {
       innerValue < innerMin
         ? innerMin
         : innerValue > innerMax
-        ? innerMax
-        : innerValue
+          ? innerMax
+          : innerValue
     }`;
   };
 
