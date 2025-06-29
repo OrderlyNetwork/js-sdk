@@ -1,10 +1,13 @@
 import { order as orderUtils } from "@orderly.network/perp";
 import {
   AlgoOrderRootType,
+  API,
+  DistributionType,
   OrderlyOrder,
   OrderSide,
   OrderType,
 } from "@orderly.network/types";
+import { Decimal, zero } from "@orderly.network/utils";
 import { OrderFactory } from "../../services/orderCreator/factory";
 
 export const getCreateOrderUrl = (order: Partial<OrderlyOrder>): string => {
@@ -14,6 +17,12 @@ export const getCreateOrderUrl = (order: Partial<OrderlyOrder>): string => {
     order?.order_type === OrderType.CLOSE_POSITION ||
     (order.algo_type && order.algo_type === AlgoOrderRootType.BRACKET) ||
     isBracketOrder(order);
+
+  // scaled order will create multiple orders, so it is a batch order
+  if (order.order_type === OrderType.SCALED_ORDER) {
+    return "/v1/batch-order";
+  }
+
   return isAlgoOrder ? "/v1/algo/order" : "/v1/order";
 };
 
@@ -48,12 +57,54 @@ export const hasTPSL = (order: Partial<OrderlyOrder>): boolean => {
   return tpslFields.some((field) => !!order[field]);
 };
 
+/**
+ * if order_type = market order,
+ * order side = buy/long, then order_price_i = ask0
+ * order side = sell/short, then order_price_i = bid0
+ * if order_type = limit order
+ * order side = buy/long
+ * limit_price >= ask0, then order_price_i = ask0
+ * limit_price < ask0, then order_price_i = limit_price
+ * order side = sell/short
+ * limit_price <= bid0, then order_price_i = bid0
+ * limit_price > ask0, then order_price_i = ask0
+ */
+function getOrderPrice(order: Partial<OrderlyOrder>, askAndBid: number[]) {
+  const orderPrice = Number(order.order_price);
+  if (
+    order.order_type === OrderType.MARKET ||
+    order.order_type === OrderType.STOP_MARKET
+  ) {
+    if (order.side === OrderSide.BUY) {
+      return askAndBid[0];
+    } else {
+      return askAndBid[1];
+    }
+  } else {
+    // LIMIT order
+    if (order.side === OrderSide.BUY) {
+      if (orderPrice >= askAndBid[0]) {
+        return askAndBid[0];
+      } else {
+        return orderPrice;
+      }
+    } else {
+      if (orderPrice <= askAndBid[1]) {
+        return askAndBid[1];
+      } else {
+        return orderPrice;
+      }
+    }
+  }
+}
+
 export const getPriceAndQty = (
-  symbolOrOrder: Partial<OrderlyOrder>,
+  order: Partial<OrderlyOrder>,
+  symbolInfo: API.SymbolExt,
   askAndBid: number[],
-): { quantity: number; price: number } | null => {
-  let quantity = Number(symbolOrOrder.order_quantity);
-  const orderPrice = Number(symbolOrOrder.order_price);
+) => {
+  let quantity = Number(order.order_quantity);
+  const orderPrice = Number(order.order_price);
 
   if (isNaN(quantity) || quantity <= 0) {
     return null;
@@ -67,58 +118,42 @@ export const getPriceAndQty = (
   }
 
   if (
-    (symbolOrOrder.order_type === OrderType.LIMIT ||
-      symbolOrOrder.order_type === OrderType.STOP_LIMIT) &&
+    (order.order_type === OrderType.LIMIT ||
+      order.order_type === OrderType.STOP_LIMIT) &&
     isNaN(orderPrice)
-  )
-    return null;
-
-  /**
-   * price
-   * if order_type = market order,
-   order side = long, then order_price_i = ask0
-   order side = short, then order_price_i = bid0
-   if order_type = limit order
-   order side = long
-   limit_price >= ask0, then order_price_i = ask0
-   limit_price < ask0, then order_price_i = limit_price
-   order side = short
-   limit_price <= bid0, then order_price_i = bid0
-   limit_price > ask0, then order_price_i = ask0
-   */
-  let price: number | undefined;
-
-  if (
-    symbolOrOrder.order_type === OrderType.MARKET ||
-    symbolOrOrder.order_type === OrderType.STOP_MARKET
   ) {
-    if (symbolOrOrder.side === OrderSide.BUY) {
-      price = askAndBid[0];
-    } else {
-      price = askAndBid[1];
-    }
-  } else {
-    // LIMIT order
-    if (symbolOrOrder.side === OrderSide.BUY) {
-      if (orderPrice >= askAndBid[0]) {
-        price = askAndBid[0];
-      } else {
-        price = orderPrice;
-      }
-    } else {
-      if (orderPrice <= askAndBid[1]) {
-        price = askAndBid[1];
-      } else {
-        price = orderPrice;
-      }
-    }
+    return null;
   }
 
-  if (symbolOrOrder.side === OrderSide.SELL) {
+  let price: number | null;
+
+  if (order.order_type === OrderType.SCALED_ORDER) {
+    price = calcScaledOrderAvgOrderPrice(order, symbolInfo, askAndBid);
+    const orders = calcScaledOrderBatchBody(order, symbolInfo);
+
+    const sumQtys = orders.reduce((acc, order) => {
+      return acc.plus(new Decimal(order.order_quantity));
+    }, zero);
+
+    quantity = sumQtys.todp(symbolInfo.base_dp).toNumber();
+
+    // revalidate quantity
+    if (!quantity || isNaN(quantity)) {
+      return null;
+    }
+  } else {
+    price = getOrderPrice(order, askAndBid);
+  }
+
+  if (!price || isNaN(price)) {
+    return null;
+  }
+
+  if (order.side === OrderSide.SELL) {
     quantity = -quantity;
   }
 
-  return { price, quantity } as const;
+  return { price, quantity };
 };
 
 export const calcEstLiqPrice = (
@@ -128,14 +163,14 @@ export const calcEstLiqPrice = (
     futures_taker_fee_rate: number;
     imr_factor: number;
     symbol: string;
-    baseIMR: number;
-    baseMMR: number;
     totalCollateral: number;
     markPrice: number;
     positions: any;
+    symbolInfo: API.SymbolExt;
   },
 ) => {
-  const result = getPriceAndQty(order, askAndBid);
+  const { symbolInfo } = inputs;
+  const result = getPriceAndQty(order, symbolInfo, askAndBid);
 
   if (!result) return null;
 
@@ -144,8 +179,6 @@ export const calcEstLiqPrice = (
 
   const {
     symbol,
-    baseIMR,
-    baseMMR,
     imr_factor,
     markPrice,
     totalCollateral,
@@ -161,8 +194,8 @@ export const calcEstLiqPrice = (
 
   const liqPrice = orderUtils.estLiqPrice({
     markPrice,
-    baseIMR,
-    baseMMR,
+    baseIMR: symbolInfo.base_imr,
+    baseMMR: symbolInfo.base_mmr,
     totalCollateral,
     positions: positions == null ? [] : positions,
     IMR_Factor: imr_factor,
@@ -173,8 +206,6 @@ export const calcEstLiqPrice = (
       symbol,
     },
   });
-
-  // console.log("********", liqPrice, markPrice, totalCollateral, result);
 
   if (liqPrice <= 0) return null;
 
@@ -188,10 +219,12 @@ export const calcEstLeverage = (
     totalCollateral: number;
     positions: any;
     symbol: string;
+    symbolInfo: API.SymbolExt;
   },
 ) => {
-  const result = getPriceAndQty(order, askAndBid);
-  const { totalCollateral, positions, symbol } = inputs;
+  const { totalCollateral, positions, symbol, symbolInfo } = inputs;
+
+  const result = getPriceAndQty(order, symbolInfo, askAndBid);
 
   if (!result) return null;
 
@@ -219,4 +252,345 @@ export function isBBOOrder(options: {
     order_type === OrderType.LIMIT &&
     [OrderType.ASK, OrderType.BID].includes(order_type_ext!)
   );
+}
+
+/**
+ * priceStep = (maxPrice - minPrice) / (totalOrders - 1)
+ * price[i] = minPrice + i × priceStep
+ */
+export function calcScaledOrderPrices(inputs: {
+  min_price?: string;
+  max_price?: string;
+  total_orders?: number;
+  quote_dp: number;
+}) {
+  const { min_price, max_price, total_orders, quote_dp } = inputs;
+
+  if (!min_price || !max_price || !total_orders) {
+    return [];
+  }
+
+  const minPrice = new Decimal(min_price);
+  const maxPrice = new Decimal(max_price);
+  const totalOrders = Number(total_orders);
+
+  const priceStep = maxPrice.minus(minPrice).div(totalOrders - 1);
+
+  const prices = [];
+
+  for (let i = 0; i < totalOrders; i++) {
+    prices[i] = minPrice.plus(priceStep.mul(i)).todp(quote_dp).toString();
+  }
+
+  return prices;
+}
+
+/**
+ * For BUY: weights[i] = 1 + (skew - 1) × (i / (totalOrders - 1))
+ * For SELL: weights[i] = 1 + (skew - 1) × ((totalOrders - 1 - i) / (totalOrders - 1))
+ */
+function calcScaledOrderWeights(inputs: {
+  side?: OrderSide;
+  total_orders?: number;
+  distribution_type?: DistributionType;
+  skew?: number;
+}) {
+  const { side, total_orders, distribution_type, skew } = inputs;
+
+  const weights: number[] = [];
+
+  if (
+    !total_orders ||
+    !distribution_type ||
+    (distribution_type === DistributionType.CUSTOM && !skew)
+  ) {
+    return {
+      weights: [],
+      sumWeights: 0,
+      minWeight: 0,
+    };
+  }
+
+  const totalOrders = Number(total_orders);
+
+  let sizeSkew = Number(skew);
+
+  if (distribution_type === DistributionType.FLAT) {
+    sizeSkew = 1;
+  } else if (distribution_type === DistributionType.ASCENDING) {
+    sizeSkew = totalOrders;
+  } else if (distribution_type === DistributionType.DESCENDING) {
+    sizeSkew = 1 / totalOrders;
+  }
+
+  for (let i = 0; i < totalOrders; i++) {
+    const x = side === OrderSide.BUY ? i : totalOrders - 1 - i;
+    weights[i] = 1 + ((sizeSkew - 1) * x) / (totalOrders - 1);
+  }
+
+  const sumWeights = weights.reduce((acc, cur) => acc + cur, 0);
+
+  // Find the min weight
+  const minWeight = weights.reduce(
+    (min, current) => (current < min ? current : min),
+    weights?.[0],
+  );
+
+  return {
+    weights,
+    sumWeights,
+    minWeight,
+  };
+}
+
+/**
+ * qty[i] = (weights[i] / sum(weights)) × totalAmount
+ */
+function calcScaledOrderQtys(inputs: {
+  side?: OrderSide;
+  order_quantity?: string;
+  total_orders?: number;
+  distribution_type?: DistributionType;
+  skew?: number;
+  base_dp: number;
+}) {
+  const {
+    side,
+    order_quantity = 0,
+    total_orders = 0,
+    distribution_type,
+    skew,
+    base_dp,
+  } = inputs;
+  const qtys = [];
+
+  if (!order_quantity || !total_orders) {
+    return [];
+  }
+
+  const { weights, sumWeights } = calcScaledOrderWeights({
+    side,
+    total_orders,
+    distribution_type,
+    skew,
+  });
+
+  for (let i = 0; i < total_orders; i++) {
+    qtys[i] = new Decimal(order_quantity)
+      .mul(weights[i])
+      .div(sumWeights)
+      .todp(base_dp)
+      .toString();
+  }
+
+  return qtys;
+}
+
+export function calcScaledOrderBatchBody(
+  order: Partial<OrderlyOrder>,
+  symbolInfo: API.SymbolExt,
+) {
+  if (!validateScaledOrderInput(order)) {
+    return [];
+  }
+
+  try {
+    const { base_dp, quote_dp } = symbolInfo;
+
+    const {
+      symbol,
+      side,
+      order_quantity,
+      min_price,
+      max_price,
+      total_orders,
+      distribution_type,
+      skew,
+      reduce_only,
+      visible_quantity,
+    } = order;
+
+    const prices = calcScaledOrderPrices({
+      min_price,
+      max_price,
+      total_orders,
+      quote_dp,
+    });
+
+    const qtys = calcScaledOrderQtys({
+      side,
+      order_quantity,
+      total_orders,
+      distribution_type,
+      skew,
+      base_dp,
+    });
+
+    const orders = prices.map((price, index) => ({
+      symbol,
+      side,
+      // this order type is scaled order, so we need to set the order type to limit
+      order_type: OrderType.LIMIT,
+      order_quantity: qtys[index],
+      order_price: price,
+      reduce_only,
+      visible_quantity,
+    }));
+
+    return orders;
+  } catch (error) {
+    console.error("calcScaledOrdersBody error", error);
+    return [];
+  }
+}
+
+/**
+ * avg_order_price = sum(order_price_i * qty_i) / sum(qty_i)
+ */
+export function calcScaledOrderAvgOrderPrice(
+  order: Partial<OrderlyOrder>,
+  symbolInfo: API.SymbolExt,
+  askAndBid: number[],
+) {
+  if (!validateScaledOrderInput(order)) {
+    return null;
+  }
+
+  try {
+    const orders = calcScaledOrderBatchBody(order, symbolInfo);
+
+    const sumQtys = orders.reduce((acc, order) => {
+      return acc.plus(new Decimal(order.order_quantity));
+    }, zero);
+
+    const totalNational = orders.reduce((acc, order) => {
+      const orderPrice = getOrderPrice(order, askAndBid);
+      return acc.plus(new Decimal(orderPrice).mul(order.order_quantity));
+    }, zero);
+
+    return totalNational.div(sumQtys).todp(symbolInfo.quote_dp).toNumber();
+  } catch (error) {
+    console.error("calcScaledOrderAvgOrderPrice error", error);
+    return null;
+  }
+}
+
+export function validateScaledOrderInput(order: Partial<OrderlyOrder>) {
+  const {
+    min_price,
+    max_price,
+    order_quantity,
+    total_orders,
+    distribution_type,
+    skew,
+  } = order;
+  if (
+    !min_price ||
+    !max_price ||
+    !order_quantity ||
+    !total_orders ||
+    !distribution_type ||
+    (distribution_type === DistributionType.CUSTOM && !skew)
+  ) {
+    return false;
+  }
+
+  return true;
+}
+
+export function calcScaledOrderMinTotalAmount(
+  order: Partial<OrderlyOrder>,
+  symbolInfo: API.SymbolExt,
+  askAndBid: number[],
+) {
+  try {
+    const minTotalAmount_baseMin = calcScaledOrderMinTotalAmountByBaseMin(
+      order,
+      symbolInfo,
+    );
+
+    const minTotalAmount_minNotional =
+      calcScaledOrderMinTotalAmountByMinNotional(order, symbolInfo, askAndBid);
+
+    const minTotalAmount = Math.max(
+      minTotalAmount_baseMin,
+      minTotalAmount_minNotional,
+    );
+
+    return minTotalAmount;
+  } catch (error) {
+    console.error("calcScaledOrderMinTotalAmount error", error);
+    return null;
+  }
+}
+/**
+ * minWeight / sum(weights)) × totalAmount ≥ base_min
+ * totalAmount ≥ base_min × (sum(weights) / minWeight), value need to ceil
+ * totalAmount ≥ max ((min_notional x sum(weights)) / (weights[i] x order_price[i]))
+ */
+export function calcScaledOrderMinTotalAmountByBaseMin(
+  order: Partial<OrderlyOrder>,
+  symbolInfo: API.SymbolExt,
+) {
+  const { side, total_orders, distribution_type, skew } = order;
+  const { base_min, base_dp } = symbolInfo;
+
+  const { sumWeights, minWeight } = calcScaledOrderWeights({
+    side,
+    total_orders,
+    distribution_type,
+    skew,
+  });
+
+  const minTotalAmount = new Decimal(base_min)
+    .mul(new Decimal(sumWeights).div(minWeight))
+    .todp(base_dp, Decimal.ROUND_UP)
+    .toNumber();
+
+  return minTotalAmount;
+}
+
+export function calcScaledOrderMinTotalAmountByMinNotional(
+  order: Partial<OrderlyOrder>,
+  symbolInfo: API.SymbolExt,
+  askAndBid: number[],
+) {
+  const { base_dp, min_notional } = symbolInfo;
+
+  const orders = calcScaledOrderBatchBody(order, symbolInfo);
+
+  const { side, total_orders, distribution_type, skew } = order;
+
+  const { weights, sumWeights } = calcScaledOrderWeights({
+    side,
+    total_orders,
+    distribution_type,
+    skew,
+  });
+
+  const minQtys = orders.map((order, i) => {
+    const orderPrice = getOrderPrice(order, askAndBid);
+    return new Decimal(min_notional)
+      .mul(sumWeights)
+      .div(new Decimal(weights[i]).mul(orderPrice));
+  });
+
+  // Find the max minQty
+  const max_minQty = minQtys.reduce(
+    (max, current) => (current.gt(max) ? current : max),
+    minQtys?.[0],
+  );
+
+  return max_minQty.todp(base_dp, Decimal.ROUND_UP).toNumber();
+}
+
+/**
+ * group orders , it is used for batch order, default is 10 orders per group
+ */
+export function groupOrders(arr: any[], size = 10) {
+  const result = [];
+  for (let i = 0; i < arr.length; i += size) {
+    result.push(arr.slice(i, i + size));
+  }
+  return result;
 }

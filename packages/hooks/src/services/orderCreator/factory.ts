@@ -1,27 +1,25 @@
 import { OrderType } from "@orderly.network/types";
-import { MarketOrderCreator } from "./marketOrderCreator";
-import { LimitOrderCreator } from "./limitOrderCreator";
-import { StopLimitOrderCreator } from "./stopLimitOrderCreator";
-import { OrderCreator } from "./interface";
-import { GeneralOrderCreator } from "./generalCreator";
-import { StopMarketOrderCreator } from "./stopMarketOrderCreator";
-import { PostOnlyOrderCreator } from "./postOnlyCreator";
-import { FOKOrderCreator } from "./fokCreator";
-import { IOCOrderCreator } from "./iocCreator";
 import { AlgoOrderRootType } from "@orderly.network/types";
-
+import { BBOOrderCreator } from "./bboOrderCreator";
+import { BracketLimitOrderCreator } from "./bracketLimitOrderCreator";
+import { BracketMarketOrderCreator } from "./bracketMarketOrderCreator";
+import { FOKOrderCreator } from "./fokCreator";
+import { GeneralOrderCreator } from "./generalCreator";
+import { OrderCreator } from "./interface";
+import { IOCOrderCreator } from "./iocCreator";
+import { LimitOrderCreator } from "./limitOrderCreator";
+import { MarketOrderCreator } from "./marketOrderCreator";
+import { PostOnlyOrderCreator } from "./postOnlyCreator";
+import { ScaledOrderCreator } from "./scaledOrderCreator";
+import { StopLimitOrderCreator } from "./stopLimitOrderCreator";
+import { StopMarketOrderCreator } from "./stopMarketOrderCreator";
 import { TPSLOrderCreator } from "./tpslOrderCreator";
 import { TPSLPositionOrderCreator } from "./tpslPositionOrderCreator";
-import { BracketLimitOrderCreator } from "./bracketLimitOrderCreator";
-import { OrderlyOrder } from "@orderly.network/types";
-import { BracketMarketOrderCreator } from "./bracketMarketOrderCreator";
-import { BBOOrderCreator } from "./bboOrderCreator";
 
 export class OrderFactory {
   static create(
-    type: OrderType | AlgoOrderRootType | string
+    type: OrderType | AlgoOrderRootType | string,
   ): OrderCreator<any> {
-    // console.log("type", type);
     switch (type) {
       case `${AlgoOrderRootType.BRACKET}:${OrderType.LIMIT}`:
         return new BracketLimitOrderCreator();
@@ -44,6 +42,8 @@ export class OrderFactory {
         return new StopLimitOrderCreator();
       case OrderType.STOP_MARKET:
         return new StopMarketOrderCreator();
+      case OrderType.SCALED_ORDER:
+        return new ScaledOrderCreator();
 
       // algo order
       case AlgoOrderRootType.TP_SL:

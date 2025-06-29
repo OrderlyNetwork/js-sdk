@@ -12,6 +12,17 @@ export const orderEntry = {
   "orderEntry.orderType.postOnly": "Post only",
   "orderEntry.orderType.ioc": "IOC",
   "orderEntry.orderType.fok": "FOK",
+  "orderEntry.orderType.scaledOrder": "Scaled order",
+
+  "orderEntry.upperPrice": "Upper price",
+  "orderEntry.lowerPrice": "Lower price",
+  "orderEntry.quantityDistribution": "Qty distribution",
+  "orderEntry.distributionType.flat": "Flat",
+  "orderEntry.distributionType.ascending": "Asc.",
+  "orderEntry.distributionType.descending": "Desc.",
+  "orderEntry.distributionType.custom": "Custom",
+  "orderEntry.skew": "Skew",
+  "orderEntry.totalOrders": "Total orders",
 
   "orderEntry.bbo": "BBO",
   "orderEntry.bbo.counterparty1": "Counterparty 1",
@@ -25,6 +36,7 @@ export const orderEntry = {
 
   "orderEntry.disableOrderConfirm": "Disable order confirmation",
   "orderEntry.orderConfirm": "Order confirm",
+  "orderEntry.confirmScaledOrder": "Confirm scaled order",
   "orderEntry.hidden": "Hidden",
   "orderEntry.keepVisible": "Keep visible",
 
@@ -41,6 +53,7 @@ export const orderEntry = {
   "orderEntry.tpsl.tips":
     "TP/SL triggers at the specified mark price and executes as a market order. By default, it applies to the entire position. Adjust settings in open positions for partial TP/SL.",
 
+  // form errors
   "orderEntry.orderQuantity.error.required": "Quantity is required",
   "orderEntry.orderQuantity.error.min":
     "Quantity must be greater than {{value}}",
@@ -67,6 +80,24 @@ export const orderEntry = {
   "orderEntry.total.error.min":
     "The order value should be greater or equal to {{value}} USDC",
 
+  "orderEntry.upperPrice.error.required": "Upper price is required",
+  "orderEntry.upperPrice.error.min":
+    "Upper price must be greater than {{value}}",
+  "orderEntry.upperPrice.error.max": "Upper price must be less than {{value}}",
+
+  "orderEntry.lowerPrice.error.required": "Lower price is required",
+  "orderEntry.lowerPrice.error.min":
+    "Lower price must be greater than {{value}}",
+  "orderEntry.lowerPrice.error.max":
+    "Lower price must be less than upper price",
+
+  "orderEntry.totalOrders.error.required": "Total orders is required",
+  "orderEntry.totalOrders.error.range":
+    "Total orders must be in the range of 2 to 20.",
+
+  "orderEntry.skew.error.required": "Skew is required",
+  "orderEntry.skew.error.range": "Skew must be in the range of 0 to 100",
+
   "orderEntry.slippage": "Slippage",
   "orderEntry.slippage.est": "Est",
   "orderEntry.slippage.tips":
@@ -75,6 +106,9 @@ export const orderEntry = {
     "The current input value cannot exceed 3%",
   "orderEntry.slippage.error.max":
     "Estimated slippage exceeds your maximum allowed slippage.",
+
+  "orderEntry.confirmScaledOrder.orderPrice.warning":
+    "This order will be filled immediately based on the current market price.",
 };
 
 export type OrderEntry = typeof orderEntry;

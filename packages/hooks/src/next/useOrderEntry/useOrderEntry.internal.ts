@@ -49,38 +49,7 @@ const useOrderEntryNextInternal = (
   const calculate = useCallback(
     (
       values: Partial<FullOrderState>,
-      fieldName:
-        | "symbol"
-        | "order_type"
-        | "order_type_ext"
-        | "order_price"
-        | "order_quantity"
-        | "order_amount"
-        | "visible_quantity"
-        | "side"
-        | "reduce_only"
-        | "slippage"
-        | "order_tag"
-        | "level"
-        | "post_only_adjust"
-        | "total"
-        | "algo_type"
-        | "trigger_price_type"
-        | "trigger_price"
-        | "child_orders"
-        | "tp_pnl"
-        | "tp_offset"
-        | "tp_offset_percentage"
-        | "tp_ROI"
-        | "tp_trigger_price"
-        | "sl_pnl"
-        | "sl_offset"
-        | "sl_offset_percentage"
-        | "sl_ROI"
-        | "sl_trigger_price"
-        | "quantity"
-        | "price"
-        | "type",
+      fieldName: keyof FullOrderState,
       value: any,
       markPrice: number,
       config: API.SymbolExt,
@@ -351,21 +320,27 @@ const useOrderEntryNextInternal = (
   const validate = (
     order: Partial<OrderlyOrder>,
     creator: OrderCreator<any>,
-    options: { maxQty: number; markPrice: number; estSlippage?: number | null },
+    options: {
+      maxQty: number;
+      markPrice: number;
+      estSlippage?: number | null;
+      askAndBid?: number[];
+    },
   ) => {
-    const { markPrice, maxQty, estSlippage } = options;
-
     return creator?.validate(order, {
+      ...options,
       symbol: symbolInfo!,
-      maxQty,
-      markPrice,
-      estSlippage,
     });
   };
 
   const generateOrder = (
     creator: OrderCreator<any>,
-    options: { maxQty: number; markPrice: number },
+    options: {
+      maxQty: number;
+      markPrice: number;
+      estSlippage?: number | null;
+      askAndBid?: number[];
+    },
   ) => {
     const order = creator.create(orderEntity, {
       ...options,

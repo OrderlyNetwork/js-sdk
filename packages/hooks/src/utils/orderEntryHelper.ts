@@ -427,38 +427,7 @@ export function formatNumber(
 
 export function calculate(
   values: Partial<FullOrderState>,
-  fieldName:
-    | "symbol"
-    | "order_type"
-    | "order_type_ext"
-    | "order_price"
-    | "order_quantity"
-    | "order_amount"
-    | "visible_quantity"
-    | "side"
-    | "reduce_only"
-    | "slippage"
-    | "order_tag"
-    | "level"
-    | "post_only_adjust"
-    | "total"
-    | "algo_type"
-    | "trigger_price_type"
-    | "trigger_price"
-    | "child_orders"
-    | "tp_pnl"
-    | "tp_offset"
-    | "tp_offset_percentage"
-    | "tp_ROI"
-    | "tp_trigger_price"
-    | "sl_pnl"
-    | "sl_offset"
-    | "sl_offset_percentage"
-    | "sl_ROI"
-    | "sl_trigger_price"
-    | "quantity"
-    | "price"
-    | "type",
+  fieldName: keyof FullOrderState,
   value: any,
   markPrice: number,
   config: API.SymbolExt,

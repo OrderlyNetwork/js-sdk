@@ -2,7 +2,6 @@ import { useEffect, useRef, FocusEvent, useMemo, useState } from "react";
 import {
   useAccount,
   useEventEmitter,
-  useLeverage,
   useLocalStorage,
   useMarginRatio,
   useOrderEntry,
@@ -11,6 +10,7 @@ import {
 import { useAppContext } from "@orderly.network/react-app";
 import {
   BBOOrderType,
+  DistributionType,
   OrderLevel,
   OrderSide,
   OrderType,
@@ -76,6 +76,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   const ee = useEventEmitter();
 
   const currentFocusInput = useRef<InputType>(InputType.NONE);
+  const lastScaledOrderPriceInput = useRef<InputType>(InputType.MAX_PRICE);
   const triggerPriceInputRef = useRef<HTMLInputElement | null>(null);
   const priceInputRef = useRef<HTMLInputElement | null>(null);
   const priceInputContainerRef = useRef<HTMLDivElement | null>(null);
@@ -105,6 +106,15 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
 
   const onFocus = (type: InputType) => (_: FocusEvent) => {
     currentFocusInput.current = type;
+
+    // set last scaled order price input
+    if (
+      [InputType.MIN_PRICE, InputType.MAX_PRICE].includes(
+        currentFocusInput.current!,
+      )
+    ) {
+      lastScaledOrderPriceInput.current = type;
+    }
   };
 
   const onBlur = (type: InputType) => (_: FocusEvent) => {
@@ -182,6 +192,14 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
 
       setValues(data);
 
+      return;
+    }
+
+    if (key === "order_type" && value === OrderType.SCALED_ORDER) {
+      setValues({
+        distribution_type: DistributionType.FLAT,
+        [key]: value,
+      });
       return;
     }
 
@@ -360,6 +378,19 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
         return;
       }
 
+      if (
+        order_type === OrderType.SCALED_ORDER &&
+        lastScaledOrderPriceInput.current
+      ) {
+        const field =
+          lastScaledOrderPriceInput.current === InputType.MIN_PRICE
+            ? "min_price"
+            : "max_price";
+        setValue(field, price);
+        focusInputElement(priceInputRef.current);
+        return;
+      }
+
       // default, set order price and focus on order price input
       setValue("order_price", price);
       focusInputElement(priceInputRef.current);
@@ -400,6 +431,16 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     state.reset();
     state.resetMetaState();
   }, [inputs.symbol]);
+
+  // if scaled order, and distribution_type is not set, set it to flat
+  useEffect(() => {
+    if (
+      formattedOrder.order_type === OrderType.SCALED_ORDER &&
+      !formattedOrder.distribution_type
+    ) {
+      setValue("distribution_type", DistributionType.FLAT);
+    }
+  }, [formattedOrder.order_type, formattedOrder.distribution_type]);
 
   return {
     ...state,
