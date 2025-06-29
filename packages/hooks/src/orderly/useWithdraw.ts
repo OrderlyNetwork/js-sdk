@@ -1,6 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
 import { account as accountPerp } from "@orderly.network/perp";
-import { useDataTap } from "@orderly.network/react-app";
 import {
   API,
   ARBITRUM_MAINNET_CHAINID,
@@ -44,8 +43,8 @@ export const useWithdraw = (options?: UseWithdrawOptions) => {
   const { data: indexPrices } = useIndexPricesStream();
 
   const [data] = usePositionStream(options?.symbol);
-  const aggregated = useDataTap(data.aggregated);
-  const unrealPnL = aggregated?.total_unreal_pnl ?? 0;
+
+  const unrealPnL = data?.aggregated?.total_unreal_pnl ?? 0;
 
   const usdcBalance = usdc?.holding ?? 0;
 
