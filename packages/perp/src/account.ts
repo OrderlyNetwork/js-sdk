@@ -736,9 +736,6 @@ export const collateralRatio = (params: {
   collateralQty: number;
   indexPrice: number;
 }) => {
-  // weight_i = min(base_weight_i, K / (1 + DCF_i * abs(collateral_qty_i * index_price_i )^(4/5))
-  // DCF_i = Discount Collateral Factor
-
   const { baseWeight, discountFactor, collateralQty, indexPrice } = params;
 
   const K = new Decimal(1.2);

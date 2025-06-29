@@ -6,25 +6,25 @@ import {
   useMemo,
   useState,
 } from "react";
+import { useQuery } from "@orderly.network/hooks";
+import { API, CurrentChain, WithdrawStatus } from "@orderly.network/types";
+import { modal } from "@orderly.network/ui";
+import { Decimal, int2hex } from "@orderly.network/utils";
+import { QuantityInput } from "@/block/quantityInput";
+import { Summary } from "@/block/withdraw/sections/summary";
 import { Divider } from "@/divider";
 import { Coin, MoveDownIcon } from "@/icon";
-import { QuantityInput } from "@/block/quantityInput";
-import { TokenQtyInput } from "@/input/tokenQtyInput";
-import { Summary } from "@/block/withdraw/sections/summary";
-import { WalletPicker } from "../pickers/walletPicker";
-import { cn } from "@/utils/css";
 import { NetworkImage } from "@/icon/networkImage";
-import { API, CurrentChain, WithdrawStatus } from "@orderly.network/types";
-import { toast } from "@/toast";
-import { Decimal, int2hex } from "@orderly.network/utils";
-import { ActionButton } from "./sections/actionButton";
-import { InputStatus } from "../quantityInput/quantityInput";
-import { UnsettledInfo } from "./sections/settledInfo";
-import { ChainDialog } from "../pickers/chainPicker/chainDialog";
-import { modal } from "@orderly.network/ui";
-import { OrderlyAppContext } from "@/provider";
+import { TokenQtyInput } from "@/input/tokenQtyInput";
 import { Logo } from "@/logo";
-import { useQuery } from "@orderly.network/hooks";
+import { OrderlyAppContext } from "@/provider";
+import { toast } from "@/toast";
+import { cn } from "@/utils/css";
+import { ChainDialog } from "../pickers/chainPicker/chainDialog";
+import { WalletPicker } from "../pickers/walletPicker";
+import { InputStatus } from "../quantityInput/quantityInput";
+import { ActionButton } from "./sections/actionButton";
+import { UnsettledInfo } from "./sections/settledInfo";
 
 type DST = {
   symbol: string;
@@ -86,19 +86,18 @@ export const WithdrawForm: FC<WithdrawProps> = ({
 
   const [quantity, setQuantity] = useState("");
 
-  // @ts-ignore
   const { data: balanceList } = useQuery<API.VaultBalance[]>(
     `/v1/public/vault_balance`,
     {
       revalidateOnMount: true,
-    }
+    },
   );
 
   const chainVaultBalance = useMemo(() => {
     if (!balanceList || !chain) return null;
     // chain.id
     const vaultBalance = balanceList.find(
-      (item: any) => parseInt(item.chain_id) === chain?.id
+      (item) => parseInt(item.chain_id) === chain?.id,
     );
     if (vaultBalance) {
       return vaultBalance.balance;
@@ -114,7 +113,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
       {
         testChains: chains,
         currentChainId: chain?.id,
-      }
+      },
     );
     return { id: result?.id, name: result?.name };
   }, [chains, chain]);
@@ -138,10 +137,10 @@ export const WithdrawForm: FC<WithdrawProps> = ({
         (error) => {
           //
           toast.error(`Switch chain failed: ${error.message}`);
-        }
+        },
       );
     },
-    [switchChain, chain]
+    [switchChain, chain],
   );
 
   const crossChainWithdraw = useMemo(() => {
@@ -187,7 +186,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
         },
         (error) => {
           toast.error(error.message);
-        }
+        },
       )
       .finally(() => {
         setSubmitting(false);
@@ -229,7 +228,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
         setQuantity("");
       }
     },
-    [decimals]
+    [decimals],
   );
 
   const fee = useMemo(() => {
@@ -318,7 +317,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
             "orderly-outline-trade-loss":
               status === WithdrawStatus.InsufficientBalance,
             "orderly-outline-yellow-500": status === WithdrawStatus.Unsettle,
-          }
+          },
         )}
         quantity={quantity}
         onValueChange={onValueChange}
@@ -371,7 +370,7 @@ export const WithdrawForm: FC<WithdrawProps> = ({
         quantity={quantity}
         loading={submitting}
         openChainPicker={openChainPicker}
-        chainVaultBalance={chainVaultBalance}
+        chainVaultBalance={chainVaultBalance as number}
         maxAmount={maxAmount}
         crossChainWithdraw={crossChainWithdraw}
         address={address}

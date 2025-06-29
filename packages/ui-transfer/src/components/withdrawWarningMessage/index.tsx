@@ -1,10 +1,11 @@
-import { Box, Flex } from "@orderly.network/ui";
-import { useAppContext } from "@orderly.network/react-app";
 import { useMemo } from "react";
-import { Decimal } from "@orderly.network/utils";
-import { AccountStatusEnum } from "@orderly.network/types";
 import { useAccount } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
+import { useAppContext } from "@orderly.network/react-app";
+import { AccountStatusEnum } from "@orderly.network/types";
+import { Box, Flex } from "@orderly.network/ui";
+import { Decimal } from "@orderly.network/utils";
+
 interface IProps {
   quantity: string;
   chainVaultBalance: number;
@@ -61,9 +62,7 @@ export const WithdrawWarningMessage = ({
       return (
         <Box>
           {networkName
-            ? t("transfer.withdraw.unsupported.networkName", {
-                networkName,
-              })
+            ? t("transfer.withdraw.unsupported.networkName", { networkName })
             : t("transfer.withdraw.unsupported.chain")}
         </Box>
       );

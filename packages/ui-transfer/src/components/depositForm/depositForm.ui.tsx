@@ -26,8 +26,8 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
     onSourceTokenChange,
     onTargetTokenChange,
     amount,
-    fromQty,
-    toQty,
+    sourceQuantity,
+    targetQuantity,
     maxQuantity,
     onQuantityChange,
     hintMessage,
@@ -71,7 +71,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
             classNames={{
               root: "oui-mt-[2px] oui-rounded-t-sm oui-rounded-b-xl",
             }}
-            value={fromQty}
+            value={sourceQuantity}
             onValueChange={onQuantityChange}
             token={sourceToken}
             tokens={sourceTokens}
@@ -102,7 +102,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
           token={targetToken}
           tokens={targetTokens}
           onTokenChange={onTargetTokenChange}
-          value={toQty}
+          value={targetQuantity}
           classNames={{
             root: "oui-mt-3 oui-border-transparent focus-within:oui-outline-transparent",
           }}
@@ -111,11 +111,14 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
           <Flex direction="column" itemAlign="start" mt={1} gapY={1}>
             <CollateralRatioWidget collateralRatio={collateralRatio} />
             <CollateralContributionWidget
-              collateralContribution={toQty}
+              collateralContribution={targetQuantity}
               token={targetToken?.symbol ?? ""}
             />
             <LtvWidget
-              showDiff={typeof fromQty !== "undefined" && Number(fromQty) > 0}
+              showDiff={
+                typeof sourceQuantity !== "undefined" &&
+                Number(sourceQuantity) > 0
+              }
               currentLtv={currentLTV}
               nextLTV={nextLTV}
             />

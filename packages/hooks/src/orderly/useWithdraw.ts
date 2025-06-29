@@ -1,4 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
+import { account as accountPerp } from "@orderly.network/perp";
+import { useDataTap } from "@orderly.network/react-app";
 import {
   API,
   ARBITRUM_MAINNET_CHAINID,
@@ -6,6 +8,7 @@ import {
   TrackerEventName,
 } from "@orderly.network/types";
 import { isTestnet } from "@orderly.network/utils";
+import { useIndexPricesStream, usePositionStream } from "..";
 import { useAccount } from "../useAccount";
 import { useConfig } from "../useConfig";
 import { useEventEmitter } from "../useEventEmitter";
@@ -14,7 +17,11 @@ import { useChains } from "./useChains";
 import { useCollateral } from "./useCollateral";
 import { useHoldingStream } from "./useHoldingStream";
 
-export type UseWithdrawOptions = { srcChainId?: number; decimals?: number };
+export type UseWithdrawOptions = {
+  srcChainId?: number;
+  decimals?: number;
+  symbol?: string;
+};
 
 export const useWithdraw = (options?: UseWithdrawOptions) => {
   const { account, state } = useAccount();
@@ -33,6 +40,22 @@ export const useWithdraw = (options?: UseWithdrawOptions) => {
   // const withdrawQueue = useRef<number[]>([]);
 
   const { usdc } = useHoldingStream();
+
+  const { data: indexPrices } = useIndexPricesStream();
+
+  const [data] = usePositionStream(options?.symbol);
+  const aggregated = useDataTap(data.aggregated);
+  const unrealPnL = aggregated?.total_unreal_pnl ?? 0;
+
+  const usdcBalance = usdc?.holding ?? 0;
+
+  const indexPrice = useMemo(() => {
+    if (options?.symbol === "USDC") {
+      return 1;
+    }
+    const symbol = `PERP_${options?.symbol}_USDC`;
+    return indexPrices[symbol] ?? 0;
+  }, [options?.symbol, indexPrices]);
 
   // useEffect(() => {
   //   const unsubscribe = ws.privateSubscribe(
@@ -61,14 +84,21 @@ export const useWithdraw = (options?: UseWithdrawOptions) => {
   // }, []);
 
   const maxAmount = useMemo(() => {
-    // if (!usdc || !usdc.holding) return 0;
+    return accountPerp.maxWithdrawalUSDC({
+      USDCBalance: usdcBalance,
+      freeCollateral: freeCollateral,
+      upnl: unrealPnL,
+    });
+  }, [usdcBalance, freeCollateral, unrealPnL]);
 
-    // if (unsettledPnL >= 0) return usdc?.holding ?? 0;
-
-    // return new Decimal(usdc.holding).add(unsettledPnL).toNumber();
-
-    return freeCollateral;
-  }, [freeCollateral]);
+  const maxOthersAmount = useMemo(() => {
+    return accountPerp.maxWithdrawalOtherCollateral({
+      collateralQty: 0,
+      freeCollateral: freeCollateral,
+      indexPrice: indexPrice,
+      weight: 0,
+    });
+  }, [freeCollateral, indexPrice]);
 
   const availableWithdraw = useMemo(() => {
     if (unsettledPnL < 0) {
@@ -155,6 +185,7 @@ export const useWithdraw = (options?: UseWithdrawOptions) => {
     withdraw,
     isLoading,
     maxAmount,
+    maxOthersAmount,
     availableBalance,
     availableWithdraw,
     unsettledPnL,

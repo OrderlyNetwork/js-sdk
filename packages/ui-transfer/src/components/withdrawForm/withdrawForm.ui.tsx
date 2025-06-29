@@ -1,3 +1,5 @@
+import React from "react";
+import { useQuery } from "@orderly.network/hooks";
 import { Trans, useTranslation } from "@orderly.network/i18n";
 import {
   Box,
@@ -7,7 +9,6 @@ import {
   Tabs,
   TabPanel,
   WalletIcon,
-  cn,
 } from "@orderly.network/ui";
 import { WithdrawTo } from "../../types";
 import { TextAreaInput } from "../accountIdInput";
@@ -23,7 +24,7 @@ import { WithdrawFormScriptReturn } from "./withdrawForm.script";
 
 export type WithdrawFormProps = WithdrawFormScriptReturn;
 
-export const WithdrawForm = (props: WithdrawFormProps) => {
+export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
   const {
     address,
     loading,
@@ -41,6 +42,9 @@ export const WithdrawForm = (props: WithdrawFormProps) => {
     crossChainTrans,
     checkIsBridgeless,
     withdrawTo,
+    sourceTokens,
+    onSourceTokenChange,
+    vaultBalanceList,
   } = props;
 
   const { t } = useTranslation();
@@ -57,13 +61,14 @@ export const WithdrawForm = (props: WithdrawFormProps) => {
             value={quantity}
             onValueChange={onQuantityChange}
             token={token}
-            onTokenChange={() => {}}
+            tokens={sourceTokens}
+            onTokenChange={onSourceTokenChange}
             status={props.inputStatus}
             hintMessage={props.hintMessage}
+            vaultBalanceList={vaultBalanceList}
             testId="oui-testid-withdraw-dialog-quantity-input"
           />
         </Box>
-
         <AvailableQuantity
           token={token}
           amount={amount}
@@ -79,13 +84,10 @@ export const WithdrawForm = (props: WithdrawFormProps) => {
             hasPositions={props.hasPositions}
             onSettlePnl={props.onSettlePnl}
             tooltipContent={t("settle.unsettled.tooltip")}
-            // @ts-ignore
             dialogContent={<Trans i18nKey="settle.settlePnl.description" />}
           />
         </Box>
-
         <ExchangeDivider />
-
         <Tabs
           value={withdrawTo}
           onValueChange={props.setWithdrawTo as (tab: string) => void}
@@ -164,7 +166,7 @@ export const WithdrawForm = (props: WithdrawFormProps) => {
 
       <WithdrawWarningMessage
         checkIsBridgeless={checkIsBridgeless}
-        chainVaultBalance={chainVaultBalance}
+        chainVaultBalance={chainVaultBalance as number}
         currentChain={currentChain}
         quantity={quantity}
         maxAmount={maxQuantity}

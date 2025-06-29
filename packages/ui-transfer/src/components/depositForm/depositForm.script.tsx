@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo } from "react";
-// import { console } from "inspector";
 import {
   useAccount,
   useConfig,
@@ -129,7 +128,7 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
 
   const {
     collateralRatio,
-    toQuantity,
+    targetQuantity,
     currentLTV,
     nextLTV,
     indexPrice,
@@ -165,8 +164,8 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
 
     amount,
     isNativeToken,
-    fromQty: quantity,
-    toQty: toQuantity,
+    sourceQuantity: quantity,
+    targetQuantity: targetQuantity,
     maxQuantity,
     indexPrice,
     onQuantityChange: setQuantity,
@@ -275,7 +274,7 @@ const useCollateralValue = (params: {
     [targetToken, indexPrice],
   );
 
-  const toQuantity = account.collateralContribution({
+  const targetQuantity = account.collateralContribution({
     collateralQty: qty,
     collateralRatio: getCollateralRatio(qty),
     indexPrice: indexPrice,
@@ -312,7 +311,7 @@ const useCollateralValue = (params: {
   );
 
   const minimumReceived = account.calcMinimumReceived({
-    amount: toQuantity,
+    amount: targetQuantity,
     slippage,
   });
 
@@ -320,7 +319,7 @@ const useCollateralValue = (params: {
     slippage,
     setSlippage,
     collateralRatio: getCollateralRatio(qty),
-    toQuantity,
+    targetQuantity,
     currentLTV: getLTV(getCollateralRatio(qty)),
     nextLTV: getLTV(getCollateralRatio(0)),
     indexPrice,
@@ -341,4 +340,32 @@ const useConvertThreshold = () => {
     isLoading,
     error,
   } as const;
+};
+
+export const useCollateralRatio = (inputs: {
+  token?: API.TokenInfo;
+  indexPrice: number;
+}) => {
+  const { token, indexPrice } = inputs;
+  return useCallback(
+    (qty: number) => {
+      return account.collateralRatio({
+        baseWeight: token?.base_weight ?? 0,
+        discountFactor: token?.discount_factor ?? 0,
+        collateralQty: qty,
+        indexPrice,
+      });
+    },
+    [token, indexPrice],
+  );
+};
+
+export const useTargetQuantity = () => {
+  return useCallback((qty: number, ratio: number, indexPrice: number) => {
+    return account.collateralContribution({
+      collateralQty: qty,
+      collateralRatio: ratio,
+      indexPrice,
+    });
+  }, []);
 };

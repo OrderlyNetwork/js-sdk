@@ -529,6 +529,13 @@ export declare namespace API {
     transfer_amount_to_insurance_fund: number;
     positions_by_perp: LiquidationPositionByPerp[];
   }
+
+  export interface VaultBalance {
+    chain_id: string;
+    token: string;
+    balance: number;
+    pending_rebalance: number;
+  }
 }
 
 export declare namespace WSMessage {
@@ -575,6 +582,7 @@ export declare namespace WSMessage {
     chain_id: string;
     token: string;
     balance: number;
+    pending_rebalance: number;
   }
 
   export interface Order {

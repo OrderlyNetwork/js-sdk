@@ -66,6 +66,7 @@
     "@orderly.network/default-solana-adapter": "workspace:*",
     "@orderly.network/net": "workspace:*",
     "@orderly.network/perp": "workspace:*",
+    "@orderly.network/react-app": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@orderly.network/utils": "workspace:*",
     "@orderly.network/web3-provider-ethers": "workspace:*",

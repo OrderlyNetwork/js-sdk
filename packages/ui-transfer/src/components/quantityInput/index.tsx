@@ -14,6 +14,7 @@ import {
   Spinner,
   InputFormatter,
 } from "@orderly.network/ui";
+import { Decimal } from "@orderly.network/utils";
 import { InputStatus } from "../../types";
 import { TokenOption } from "./tokenOption";
 
@@ -29,6 +30,7 @@ export type QuantityInputProps = {
   loading?: boolean;
   testId?: string;
   formatters?: InputFormatter[];
+  vaultBalanceList?: API.VaultBalance[];
 } & Omit<InputProps, "onClear" | "suffix" | "onValueChange">;
 
 export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
@@ -47,6 +49,7 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
       loading,
       placeholder,
       formatters,
+      vaultBalanceList,
       ...rest
     } = props;
 
@@ -57,11 +60,20 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
     const [width, setWidth] = useState(0);
 
     const tokenOptions = useMemo(() => {
-      return tokens.map((token) => ({
-        ...token,
-        name: token.display_name || token.symbol!,
-      }));
-    }, [tokens]);
+      return tokens.map((token) => {
+        const currentToken = vaultBalanceList?.find(
+          (item) => item.token === token.symbol,
+        );
+        const insufficientBalance = new Decimal(currentToken?.balance ?? 0).lt(
+          value ? Number(value) : 0,
+        );
+        return {
+          ...token,
+          name: token.display_name || token.symbol!,
+          insufficientBalance: insufficientBalance,
+        };
+      });
+    }, [tokens, value, vaultBalanceList]);
 
     useEffect(() => {
       const rect = inputRef?.current?.getBoundingClientRect();
@@ -77,15 +89,16 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
 
     const optionRenderer = (item: any) => {
       const isActive = item.symbol === token?.symbol;
+
       return (
         <TokenOption
           token={item}
+          isActive={isActive}
           fetchBalance={fetchBalance}
           onTokenChange={(item) => {
             onTokenChange?.(item);
             setOpen(false);
           }}
-          isActive={isActive}
         />
       );
     };
