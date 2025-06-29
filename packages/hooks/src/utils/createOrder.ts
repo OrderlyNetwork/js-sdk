@@ -14,20 +14,19 @@ export function getMinNotional(props: {
 }) {
   const { price, base_tick, qty, min_notional, base_dp, quote_dp, quote_tick } =
     props;
-  if (price !== undefined && qty !== undefined && min_notional !== undefined) {
+  if (price && qty && min_notional) {
     try {
-      const calcNotional = new Decimal(price).mul(new Decimal(qty)).toNumber();
-      const notional = Number.parseFloat(`${min_notional}`);
+      const calcMinNotional = new Decimal(price).mul(new Decimal(qty));
 
-      if (calcNotional < notional) {
-        let minQty = new Decimal(notional)
+      if (calcMinNotional.lt(min_notional)) {
+        let minQty = new Decimal(min_notional)
           .div(price)
           .toDecimalPlaces(base_dp, Decimal.ROUND_DOWN)
           .add(base_tick ?? 0);
 
         if (base_tick && base_tick > 0) {
           minQty = new Decimal(
-            getRoundedDownDivision(minQty.toNumber(), base_tick)
+            getRoundedDownDivision(minQty.toNumber(), base_tick),
           );
         }
 
@@ -45,7 +44,7 @@ export function getMinNotional(props: {
 }
 
 /**
- * @deprecated please use getMinNotional instead
+ * @deprecated please use getMinNotional instead, it will be removed in next major version
  */
 export function checkNotional(props: {
   base_tick: number;
@@ -70,7 +69,7 @@ export function checkNotional(props: {
           .add(base_tick ?? 0);
         if (base_tick && base_tick > 0) {
           minQty = new Decimal(
-            getRoundedDownDivision(minQty.toNumber(), base_tick)
+            getRoundedDownDivision(minQty.toNumber(), base_tick),
           );
         }
         const newMinNotional = minQty
@@ -97,7 +96,7 @@ export function checkNotional(props: {
  */
 function getRoundedDownDivision(
   value: number | string,
-  tick: number | string
+  tick: number | string,
 ): number {
   const decimalValue = new Decimal(value);
   const decimalTick = new Decimal(tick);
