@@ -7,6 +7,7 @@ import {
   OrderSide,
   OrderType,
 } from "@orderly.network/types";
+import { OrderEntity } from "@orderly.network/types";
 import { Decimal, zero } from "@orderly.network/utils";
 import { OrderFactory } from "../../services/orderCreator/factory";
 
@@ -427,7 +428,7 @@ export function calcScaledOrderBatchBody(
     });
 
     const orders = prices.map((price, index) => {
-      const subOrder = {
+      const subOrder: Partial<OrderEntity> = {
         symbol,
         side,
         // this order type is scaled order, so we need to set the order type to limit
@@ -435,7 +436,6 @@ export function calcScaledOrderBatchBody(
         order_quantity: qtys[index],
         order_price: price,
         reduce_only,
-        visible_quantity,
       };
       // if visible_quantity is 0, set visible_quantity to 0
       if (visible_quantity === 0) {
