@@ -21,12 +21,16 @@ import {
 import { OrderValidation } from "./orderValidation";
 
 export class ScaledOrderCreator extends BaseOrderCreator<OrderEntity> {
-  orderType = OrderType.SCALED_ORDER;
+  orderType = OrderType.SCALED;
   create(values: OrderEntity, config: ValuesDepConfig) {
     const orders = calcScaledOrderBatchBody(values, config.symbol);
+    const { total_orders, distribution_type, skew } = values;
 
     const order = {
       ...this.baseOrder(values as unknown as OrderlyOrder),
+      total_orders,
+      distribution_type,
+      skew,
       orders,
     };
 
@@ -39,6 +43,9 @@ export class ScaledOrderCreator extends BaseOrderCreator<OrderEntity> {
         "side",
         "order_type",
         "orders",
+        "total_orders",
+        "distribution_type",
+        "skew",
       ],
       order,
     );

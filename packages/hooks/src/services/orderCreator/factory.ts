@@ -42,7 +42,7 @@ export class OrderFactory {
         return new StopLimitOrderCreator();
       case OrderType.STOP_MARKET:
         return new StopMarketOrderCreator();
-      case OrderType.SCALED_ORDER:
+      case OrderType.SCALED:
         return new ScaledOrderCreator();
 
       // algo order

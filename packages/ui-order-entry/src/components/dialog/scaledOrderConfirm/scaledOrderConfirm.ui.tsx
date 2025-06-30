@@ -44,6 +44,7 @@ export const ScaledOrderConfirm = (props: ScaledOrderConfirmProps) => {
       {
         title: t("common.symbol"),
         dataIndex: "symbol",
+        width: 125,
         render: (value: string, record: any) => {
           return (
             <Flex gap={2}>
@@ -62,7 +63,6 @@ export const ScaledOrderConfirm = (props: ScaledOrderConfirmProps) => {
                     rule="symbol"
                     size="xs"
                     formatString="base-type"
-                    className="oui-cursor-pointer oui-text-xs"
                   >
                     {value}
                   </Text.formatted>
@@ -79,6 +79,7 @@ export const ScaledOrderConfirm = (props: ScaledOrderConfirmProps) => {
       {
         title: t("common.quantity"),
         dataIndex: "order_quantity",
+        width: 100,
         render: (value: string, record: any) => {
           return (
             <Text.numeral
@@ -95,6 +96,7 @@ export const ScaledOrderConfirm = (props: ScaledOrderConfirmProps) => {
       {
         title: t("common.orderPrice"),
         dataIndex: "order_price",
+        width: 100,
         render: (value: string, record: any) => {
           // buy: limit_price_i >= ask0 , show warning.
           // sell: limit price <= bid0 , show warning.
@@ -129,7 +131,19 @@ export const ScaledOrderConfirm = (props: ScaledOrderConfirmProps) => {
   return (
     <div className="oui-font-semibold">
       <DataTable
-        classNames={{ root: "oui-bg-base-7 oui-h-[320px] oui-rounded-lg" }}
+        classNames={{
+          root: cn(
+            "oui-bg-base-7",
+            "oui-rounded-lg",
+            // need to set overflow hidden because table header will avoid the border radius
+            "oui-overflow-hidden",
+            // "oui-text-2xs lg:oui-text-xs",
+            // if orders is greater than 6, set the height to 320px to show scroll bar
+            order.orders?.length >= 6 && "oui-h-[320px]",
+          ),
+          // set the min height of the table to show 2 rows
+          scroll: "!oui-min-h-[130px]",
+        }}
         dataSource={dataSource}
         columns={columns}
         bordered

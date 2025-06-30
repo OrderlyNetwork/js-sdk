@@ -31,7 +31,6 @@ import {
   tpslFields,
   hasTPSL,
   isBBOOrder,
-  groupOrders,
 } from "./helper";
 import type { FullOrderState } from "./orderEntry.store";
 import { useOrderEntryNextInternal } from "./useOrderEntry.internal";
@@ -626,25 +625,32 @@ const useOrderEntry = (
 
     const order = generateOrder(creator, prepareData());
 
-    let result: any;
+    const isScaledOrder = order.order_type === OrderType.SCALED;
 
-    if (order.order_type === OrderType.SCALED_ORDER) {
-      const groups = groupOrders(order.orders);
-      for (const group of groups) {
-        result = await doCreateOrder({ orders: group });
-        // console.log("groups orders", result);
-      }
-    } else {
-      result = await doCreateOrder(order);
-    }
+    const params = isScaledOrder ? { orders: order.orders } : order;
+
+    const result = await doCreateOrder(params);
 
     if (result.success) {
-      track(TrackerEventName.placeOrderSuccess, {
+      let trackParams: any = {
         side: order.side,
         order_type: order.order_type,
         tp_sl: hasTPSL(formattedOrder),
         symbol: order.symbol,
-      });
+      };
+
+      if (isScaledOrder) {
+        trackParams = {
+          ...trackParams,
+          order_type: "scaled",
+          distribution_type: order.distribution_type,
+          // hide skew when it is ""
+          skew: order.skew || undefined,
+          total_orders: order.total_orders,
+        };
+      }
+
+      track(TrackerEventName.placeOrderSuccess, trackParams);
     }
 
     if (result.success && resetOnSuccess) {

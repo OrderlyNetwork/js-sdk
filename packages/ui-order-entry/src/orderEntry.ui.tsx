@@ -176,10 +176,11 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
         // TODO: get order from other function
         (order: any) => {
           // scaled order is always need confirm
-          if (formattedOrder.order_type === OrderType.SCALED_ORDER) {
+          if (formattedOrder.order_type === OrderType.SCALED) {
             return modal.show(scaledOrderConfirmDialogId, {
               order,
               symbolInfo,
+              size: isMobile ? "sm" : "md",
             });
           }
 
@@ -318,7 +319,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           </Text.numeral>
         </Flex>
         {/* Inputs (price,quantity,triggerPrice) */}
-        {formattedOrder.order_type === OrderType.SCALED_ORDER ? (
+        {formattedOrder.order_type === OrderType.SCALED ? (
           <ScaledOrderInput
             type={props.type}
             symbolInfo={symbolInfo}
@@ -935,7 +936,7 @@ const OrderTypeSelect = (props: {
       },
       {
         label: t("orderEntry.orderType.scaledOrder"),
-        value: OrderType.SCALED_ORDER,
+        value: OrderType.SCALED,
       },
     ];
   }, [t]);
@@ -946,7 +947,7 @@ const OrderTypeSelect = (props: {
       [OrderType.MARKET]: t("common.marketPrice"),
       [OrderType.STOP_LIMIT]: t("orderEntry.orderType.stopLimit"),
       [OrderType.STOP_MARKET]: t("orderEntry.orderType.stopMarket"),
-      [OrderType.SCALED_ORDER]: t("orderEntry.orderType.scaledOrder"),
+      [OrderType.SCALED]: t("orderEntry.orderType.scaledOrder"),
     };
   }, [t]);
 

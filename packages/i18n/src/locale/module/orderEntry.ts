@@ -5,14 +5,14 @@ export const orderEntry = {
 
   "orderEntry.orderType.limit": "Limit",
   "orderEntry.orderType.market": "Market",
-  "orderEntry.orderType.limitOrder": "Limit order",
-  "orderEntry.orderType.marketOrder": "Market order",
+  "orderEntry.orderType.limitOrder": "Limit",
+  "orderEntry.orderType.marketOrder": "Market",
   "orderEntry.orderType.stopLimit": "Stop limit",
   "orderEntry.orderType.stopMarket": "Stop market",
   "orderEntry.orderType.postOnly": "Post only",
   "orderEntry.orderType.ioc": "IOC",
   "orderEntry.orderType.fok": "FOK",
-  "orderEntry.orderType.scaledOrder": "Scaled order",
+  "orderEntry.orderType.scaledOrder": "Scaled",
 
   "orderEntry.upperPrice": "Upper price",
   "orderEntry.lowerPrice": "Lower price",

@@ -18,7 +18,7 @@ export enum OrderType {
   /**
    * Scaled order
    */
-  SCALED_ORDER = "SCALED_ORDER",
+  SCALED = "SCALED",
 }
 
 export enum BBOOrderType {
@@ -194,10 +194,11 @@ export interface OrderEntity extends ScaledOrder {
 }
 
 export enum DistributionType {
-  FLAT = "FLAT",
-  ASCENDING = "ASCENDING",
-  DESCENDING = "DESCENDING",
-  CUSTOM = "CUSTOM",
+  // enum value need to use lowercase to match the track params
+  FLAT = "flat",
+  ASCENDING = "ascending",
+  DESCENDING = "descending",
+  CUSTOM = "custom",
 }
 
 export type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;

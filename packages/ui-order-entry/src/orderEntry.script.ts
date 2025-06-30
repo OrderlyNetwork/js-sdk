@@ -195,7 +195,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       return;
     }
 
-    if (key === "order_type" && value === OrderType.SCALED_ORDER) {
+    if (key === "order_type" && value === OrderType.SCALED) {
       setValues({
         distribution_type: DistributionType.FLAT,
         [key]: value,
@@ -379,7 +379,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       }
 
       if (
-        order_type === OrderType.SCALED_ORDER &&
+        order_type === OrderType.SCALED &&
         lastScaledOrderPriceInput.current
       ) {
         const field =
@@ -435,7 +435,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   // if scaled order, and distribution_type is not set, set it to flat
   useEffect(() => {
     if (
-      formattedOrder.order_type === OrderType.SCALED_ORDER &&
+      formattedOrder.order_type === OrderType.SCALED &&
       !formattedOrder.distribution_type
     ) {
       setValue("distribution_type", DistributionType.FLAT);

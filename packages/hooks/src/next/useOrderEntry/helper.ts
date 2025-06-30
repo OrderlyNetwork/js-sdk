@@ -20,7 +20,7 @@ export const getCreateOrderUrl = (order: Partial<OrderlyOrder>): string => {
     isBracketOrder(order);
 
   // scaled order will create multiple orders, so it is a batch order
-  if (order.order_type === OrderType.SCALED_ORDER) {
+  if (order.order_type === OrderType.SCALED) {
     return "/v1/batch-order";
   }
 
@@ -128,12 +128,12 @@ export const getPriceAndQty = (
 
   let price: number | null;
 
-  if (order.order_type === OrderType.SCALED_ORDER) {
+  if (order.order_type === OrderType.SCALED) {
     price = calcScaledOrderAvgOrderPrice(order, symbolInfo, askAndBid);
     const orders = calcScaledOrderBatchBody(order, symbolInfo);
 
     const sumQtys = orders.reduce((acc, order) => {
-      return acc.plus(new Decimal(order.order_quantity));
+      return acc.plus(new Decimal(order.order_quantity!));
     }, zero);
 
     quantity = sumQtys.todp(symbolInfo.base_dp).toNumber();
@@ -597,10 +597,10 @@ export function calcScaledOrderMinTotalAmountByMinNotional(
 /**
  * group orders , it is used for batch order, default is 10 orders per group
  */
-export function groupOrders(arr: any[], size = 10) {
-  const result = [];
-  for (let i = 0; i < arr.length; i += size) {
-    result.push(arr.slice(i, i + size));
-  }
-  return result;
-}
+// export function groupOrders(arr: any[], size = 10) {
+//   const result = [];
+//   for (let i = 0; i < arr.length; i += size) {
+//     result.push(arr.slice(i, i + size));
+//   }
+//   return result;
+// }
