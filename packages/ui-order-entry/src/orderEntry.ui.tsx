@@ -53,7 +53,7 @@ import {
 } from "@orderly.network/ui";
 import { LeverageWidgetWithSheetId } from "@orderly.network/ui-leverage";
 import { commifyOptional } from "@orderly.network/utils";
-import { LTVRiskTooltip } from "./components/LTVRiskTooltip";
+import { LTVRiskTooltipWidget } from "./components/LTVRiskTooltip";
 // import { useBalanceScript } from "../../trading/src/components/mobile/bottomNavBar/balance";
 import { AdditionalInfoWidget } from "./components/additional/additionnalInfo.widget";
 import { orderConfirmDialogId } from "./components/dialog/confirm.ui";
@@ -317,7 +317,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
         <Flex itemAlign={"center"} justify={"between"}>
           <Text size={"2xs"}>{t("common.available")}</Text>
           <Flex itemAlign={"center"} justify={"center"} gap={1}>
-            <Tooltip className={"oui-p-2"} content={<LTVRiskTooltip />}>
+            <Tooltip className={"oui-p-2"} content={<LTVRiskTooltipWidget />}>
               <InfoCircleIcon
                 className={"oui-cursor-pointer oui-text-warning oui-opacity-80"}
               />

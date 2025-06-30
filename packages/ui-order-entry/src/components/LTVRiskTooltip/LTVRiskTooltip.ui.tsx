@@ -1,6 +1,7 @@
 import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Button, cn, Divider, Flex, Text } from "@orderly.network/ui";
+import type { LTVTooltipScriptReturn } from "./LTVRiskTooltip.script";
 
 const calculateLTVColor = (val: number): string => {
   if (val >= 0 && val < 50) {
@@ -21,8 +22,9 @@ const testData = [
 
 const currentLtv = 64; // Test data
 
-export const LTVRiskTooltip: React.FC = () => {
+export const LTVRiskTooltipUI: React.FC<LTVTooltipScriptReturn> = (props) => {
   const { t } = useTranslation();
+  const { ltv_threshold, negative_usdc_threshold, isThresholdLoading } = props;
   return (
     <Flex gap={1} className="oui-w-72 oui-max-w-72" direction="column">
       <Flex width={"100%"} justify="between" itemAlign="center">

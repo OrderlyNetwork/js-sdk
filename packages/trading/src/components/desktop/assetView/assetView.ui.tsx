@@ -18,7 +18,7 @@ import {
   cn,
 } from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
-import { LTVRiskTooltip } from "@orderly.network/ui-order-entry";
+import { LTVRiskTooltipWidget } from "@orderly.network/ui-order-entry";
 import { AssetViewState } from "./assetView.script";
 import { FaucetWidget } from "./faucet/faucet.widget";
 
@@ -311,7 +311,7 @@ const AssetValueList: FC<AssetValueListProps> = ({
           rule="percentages"
           showPercentage
           placeholder="--%"
-          tooltipContent={<LTVRiskTooltip />}
+          tooltipContent={<LTVRiskTooltipWidget />}
         />
       </Box>
     </Box>
