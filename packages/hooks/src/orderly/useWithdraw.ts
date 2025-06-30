@@ -84,11 +84,12 @@ export const useWithdraw = (options?: UseWithdrawOptions) => {
   // }, []);
 
   const maxAmount = useMemo(() => {
-    return accountPerp.maxWithdrawalUSDC({
+    const parameters = {
       USDCBalance: usdcBalance,
       freeCollateral: freeCollateral,
       upnl: unrealPnL,
-    });
+    };
+    return accountPerp.maxWithdrawalUSDC(parameters);
   }, [usdcBalance, freeCollateral, unrealPnL]);
 
   const getCollateralRatio = useCallback(

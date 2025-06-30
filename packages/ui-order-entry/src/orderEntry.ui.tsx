@@ -33,6 +33,7 @@ import {
   Divider,
   Flex,
   Grid,
+  InfoCircleIcon,
   Input,
   inputFormatter,
   InputProps,
@@ -47,10 +48,12 @@ import {
   textVariants,
   ThrottledButton,
   toast,
+  Tooltip,
   useScreen,
 } from "@orderly.network/ui";
 import { LeverageWidgetWithSheetId } from "@orderly.network/ui-leverage";
 import { commifyOptional } from "@orderly.network/utils";
+import { LTVRiskTooltip } from "./components/LTVRiskTooltip";
 // import { useBalanceScript } from "../../trading/src/components/mobile/bottomNavBar/balance";
 import { AdditionalInfoWidget } from "./components/additional/additionnalInfo.widget";
 import { orderConfirmDialogId } from "./components/dialog/confirm.ui";
@@ -311,18 +314,25 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           </div>
         </Flex>
         {/* Available */}
-        <Flex justify={"between"}>
+        <Flex itemAlign={"center"} justify={"between"}>
           <Text size={"2xs"}>{t("common.available")}</Text>
-          <Text.numeral
-            unit={symbolInfo.quote}
-            size={"2xs"}
-            className={"oui-text-base-contrast-80"}
-            unitClassName={"oui-ml-1 oui-text-base-contrast-54"}
-            dp={2}
-            padding={false}
-          >
-            {props.canTrade ? freeCollateral : 0}
-          </Text.numeral>
+          <Flex itemAlign={"center"} justify={"center"} gap={1}>
+            <Tooltip className={"oui-p-2"} content={<LTVRiskTooltip />}>
+              <InfoCircleIcon
+                className={"oui-cursor-pointer oui-text-warning oui-opacity-80"}
+              />
+            </Tooltip>
+            <Text.numeral
+              unit={symbolInfo.quote}
+              size={"2xs"}
+              className={"oui-text-base-contrast-80"}
+              unitClassName={"oui-ml-1 oui-text-base-contrast-54"}
+              dp={2}
+              padding={false}
+            >
+              {props.canTrade ? freeCollateral : 0}
+            </Text.numeral>
+          </Flex>
         </Flex>
         {/* Inputs (price,quantity,triggerPrice) */}
         <OrderQuantityInput

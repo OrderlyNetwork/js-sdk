@@ -18,6 +18,7 @@ import {
   cn,
 } from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
+import { LTVRiskTooltip } from "@orderly.network/ui-order-entry";
 import { AssetViewState } from "./assetView.script";
 import { FaucetWidget } from "./faucet/faucet.widget";
 
@@ -41,8 +42,8 @@ interface TotalValueProps {
 
 interface AssetDetailProps {
   label: string;
-  description: ReactNode;
-  formula: ReactNode;
+  description?: ReactNode;
+  formula?: ReactNode;
   visible: boolean;
   value?: number | string;
   unit?: string;
@@ -50,6 +51,7 @@ interface AssetDetailProps {
   isConnected?: boolean;
   showPercentage?: boolean;
   placeholder?: string;
+  tooltipContent?: ReactNode;
 }
 
 interface AssetValueListProps {
@@ -115,16 +117,20 @@ const useCurrentStatusText = (): StatusInfo => {
   }, [state.status, wrongNetwork, t]);
 };
 
-export const TooltipContent: FC<TooltipContentProps> = ({
-  description,
-  formula,
-}) => (
-  <div className="oui-min-w-[204px] oui-max-w-[240px] oui-text-2xs oui-leading-normal oui-text-base-contrast-80">
-    <span>{description}</span>
-    <Divider className="oui-border-white/10" my={2} />
-    <span>{formula}</span>
-  </div>
-);
+export const TooltipContent: FC<TooltipContentProps> = (props) => {
+  const { description, formula } = props;
+  return (
+    <div className="oui-min-w-[204px] oui-max-w-[240px] oui-text-2xs oui-leading-normal oui-text-base-contrast-80">
+      {typeof description !== "undefined" && description !== null && (
+        <span>{description}</span>
+      )}
+      <Divider className="oui-border-white/10" my={2} />
+      {typeof formula !== "undefined" && formula !== null && (
+        <span>{formula}</span>
+      )}
+    </div>
+  );
+};
 
 const TotalValue: FC<TotalValueProps> = ({
   totalValue,
@@ -167,49 +173,58 @@ const TotalValue: FC<TotalValueProps> = ({
   );
 };
 
-const AssetDetail: FC<AssetDetailProps> = ({
-  label,
-  description,
-  formula,
-  visible,
-  value,
-  unit,
-  rule,
-  isConnected,
-  showPercentage = false,
-  placeholder,
-}) => (
-  <Flex justify="between">
-    <Tooltip
-      content={
-        (<TooltipContent description={description} formula={formula} />) as any
-      }
-    >
-      <Text
-        size="2xs"
-        color="neutral"
-        weight="semibold"
-        className="oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12"
+const AssetDetail: FC<AssetDetailProps> = (props) => {
+  const {
+    label,
+    description,
+    formula,
+    visible,
+    value,
+    unit,
+    rule,
+    isConnected,
+    showPercentage = false,
+    placeholder,
+    tooltipContent,
+  } = props;
+  return (
+    <Flex justify="between">
+      <Tooltip
+        className={cn(tooltipContent ? "oui-p-2" : undefined)}
+        content={
+          tooltipContent ? (
+            tooltipContent
+          ) : (
+            <TooltipContent description={description} formula={formula} />
+          )
+        }
       >
-        {label}
-      </Text>
-    </Tooltip>
-    <Text.numeral
-      visible={visible}
-      size="2xs"
-      unit={unit}
-      unitClassName="oui-text-base-contrast-36 oui-ml-0.5"
-      as="div"
-      rule={rule}
-      padding={false}
-      dp={2}
-      // suffix={value && unit}
-      placeholder={placeholder}
-    >
-      {value || "--"}
-    </Text.numeral>
-  </Flex>
-);
+        <Text
+          size="2xs"
+          color="neutral"
+          weight="semibold"
+          className="oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12"
+        >
+          {label}
+        </Text>
+      </Tooltip>
+      <Text.numeral
+        visible={visible}
+        size="2xs"
+        unit={unit}
+        unitClassName="oui-text-base-contrast-36 oui-ml-0.5"
+        as="div"
+        rule={rule}
+        padding={false}
+        dp={2}
+        // suffix={value && unit}
+        placeholder={placeholder}
+      >
+        {value || "--"}
+      </Text.numeral>
+    </Flex>
+  );
+};
 
 const AssetValueList: FC<AssetValueListProps> = ({
   visible = true,
@@ -250,16 +265,13 @@ const AssetValueList: FC<AssetValueListProps> = ({
         />
         <Divider className="oui-flex-1" />
       </Flex>
-
       <Box
-        style={{
-          transform: "translateZ(0)",
-        }}
+        style={{ transform: "translateZ(0)" }}
         className={cn(
           "oui-select-none oui-space-y-1.5 oui-overflow-hidden",
           "oui-transition-[max-height] oui-duration-150",
           "group-hover:oui-will-change-[max-height]",
-          open ? "oui-max-h-[69px]" : "oui-max-h-0",
+          open ? "oui-max-h-[94px]" : "oui-max-h-0",
         )}
       >
         <AssetDetail
@@ -291,6 +303,15 @@ const AssetValueList: FC<AssetValueListProps> = ({
           rule="percentages"
           showPercentage={true}
           placeholder="--%"
+        />
+        <AssetDetail
+          label={"LTV"}
+          visible={visible}
+          value={"999"}
+          rule="percentages"
+          showPercentage
+          placeholder="--%"
+          tooltipContent={<LTVRiskTooltip />}
         />
       </Box>
     </Box>
