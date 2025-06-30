@@ -1320,16 +1320,16 @@ importers:
         version: 18.3.1(react@18.3.1)
       swr:
         specifier: 2.2.4
-        version: 2.2.4
+        version: 2.2.4(react@18.3.1)
       use-constant:
         specifier: ^1.1.1
-        version: 1.1.1
+        version: 1.1.1(react@18.3.1)
       use-debounce:
         specifier: ^9.0.4
-        version: 9.0.4
+        version: 9.0.4(react@18.3.1)
       zustand:
         specifier: ^4.5.5
-        version: 4.5.7(@types/react@18.3.21)(immer@10.1.1)
+        version: 4.5.7(@types/react@18.3.21)(immer@10.1.1)(react@18.3.1)
     devDependencies:
       '@babel/preset-env':
         specifier: ^7.22.9
@@ -1351,10 +1351,10 @@ importers:
         version: 1.5.121
       '@testing-library/react':
         specifier: ^14.2.1
-        version: 14.3.1(@types/react@18.3.21)
+        version: 14.3.1(@types/react@18.3.21)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@testing-library/react-hooks':
         specifier: ^8.0.1
-        version: 8.0.1(@types/react@18.3.21)(react-test-renderer@18.3.1)
+        version: 8.0.1(@types/react@18.3.21)(react-dom@18.3.1(react@18.3.1))(react-test-renderer@18.3.1(react@18.3.1))(react@18.3.1)
       '@types/jest':
         specifier: ^29.5.3
         version: 29.5.14
@@ -1387,7 +1387,7 @@ importers:
         version: 1.2.2
       react-test-renderer:
         specifier: ^18.2.0
-        version: 18.3.1
+        version: 18.3.1(react@18.3.1)
       rimraf:
         specifier: ^5.0.5
         version: 5.0.10
@@ -2413,6 +2413,9 @@ importers:
       '@orderly.network/i18n':
         specifier: workspace:*
         version: link:../i18n
+      '@orderly.network/perp':
+        specifier: workspace:*
+        version: link:../perp
       '@orderly.network/react-app':
         specifier: workspace:*
         version: link:../app
@@ -19764,7 +19767,7 @@ snapshots:
       '@babel/traverse': 7.27.1
       '@babel/types': 7.27.1
       convert-source-map: 2.0.0
-      debug: 4.4.1
+      debug: 4.4.1(supports-color@8.1.1)
       gensync: 1.0.0-beta.2
       json5: 2.2.3
       semver: 6.3.1
@@ -19857,7 +19860,7 @@ snapshots:
       '@babel/core': 7.27.1
       '@babel/helper-compilation-targets': 7.27.2
       '@babel/helper-plugin-utils': 7.27.1
-      debug: 4.4.1
+      debug: 4.4.1(supports-color@8.1.1)
       lodash.debounce: 4.0.8
       resolve: 1.22.10
     transitivePeerDependencies:
@@ -20746,7 +20749,7 @@ snapshots:
       '@babel/parser': 7.27.2
       '@babel/template': 7.27.2
       '@babel/types': 7.27.1
-      debug: 4.4.1
+      debug: 4.4.1(supports-color@8.1.1)
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
@@ -28372,21 +28375,15 @@ snapshots:
       lodash: 4.17.21
       redent: 3.0.0
 
-  '@testing-library/react-hooks@8.0.1(@types/react@18.3.21)(react-test-renderer@18.3.1)':
+  '@testing-library/react-hooks@8.0.1(@types/react@18.3.21)(react-dom@18.3.1(react@18.3.1))(react-test-renderer@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@babel/runtime': 7.27.1
-      react-error-boundary: 3.1.4
+      react: 18.3.1
+      react-error-boundary: 3.1.4(react@18.3.1)
     optionalDependencies:
       '@types/react': 18.3.21
-      react-test-renderer: 18.3.1
-
-  '@testing-library/react@14.3.1(@types/react@18.3.21)':
-    dependencies:
-      '@babel/runtime': 7.27.1
-      '@testing-library/dom': 9.3.4
-      '@types/react-dom': 18.3.7(@types/react@18.3.21)
-    transitivePeerDependencies:
-      - '@types/react'
+      react-dom: 18.3.1(react@18.3.1)
+      react-test-renderer: 18.3.1(react@18.3.1)
 
   '@testing-library/react@14.3.1(@types/react@18.3.21)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
@@ -33020,7 +33017,7 @@ snapshots:
 
   agent-base@6.0.2:
     dependencies:
-      debug: 4.4.1
+      debug: 4.4.1(supports-color@8.1.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -37559,7 +37556,7 @@ snapshots:
     dependencies:
       '@tootallnate/once': 2.0.0
       agent-base: 6.0.2
-      debug: 4.4.1
+      debug: 4.4.1(supports-color@8.1.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -37593,7 +37590,7 @@ snapshots:
   https-proxy-agent@5.0.1:
     dependencies:
       agent-base: 6.0.2
-      debug: 4.4.1
+      debug: 4.4.1(supports-color@8.1.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -38168,7 +38165,7 @@ snapshots:
 
   istanbul-lib-source-maps@4.0.1:
     dependencies:
-      debug: 4.4.1
+      debug: 4.4.1(supports-color@8.1.1)
       istanbul-lib-coverage: 3.2.2
       source-map: 0.6.1
     transitivePeerDependencies:
@@ -42278,9 +42275,10 @@ snapshots:
       react: 18.3.1
       scheduler: 0.23.2
 
-  react-error-boundary@3.1.4:
+  react-error-boundary@3.1.4(react@18.3.1):
     dependencies:
       '@babel/runtime': 7.27.1
+      react: 18.3.1
 
   react-error-boundary@4.1.2(react@18.3.1):
     dependencies:
@@ -42550,9 +42548,10 @@ snapshots:
     optionalDependencies:
       '@types/react': 18.3.21
 
-  react-shallow-renderer@16.15.0:
+  react-shallow-renderer@16.15.0(react@18.3.1):
     dependencies:
       object-assign: 4.1.1
+      react: 18.3.1
       react-is: 18.3.1
 
   react-smooth@4.0.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
@@ -42571,10 +42570,11 @@ snapshots:
     optionalDependencies:
       '@types/react': 18.3.21
 
-  react-test-renderer@18.3.1:
+  react-test-renderer@18.3.1(react@18.3.1):
     dependencies:
+      react: 18.3.1
       react-is: 18.3.1
-      react-shallow-renderer: 16.15.0
+      react-shallow-renderer: 16.15.0(react@18.3.1)
       scheduler: 0.23.2
 
   react-transition-group@4.4.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
@@ -43261,7 +43261,7 @@ snapshots:
 
   send@1.2.0:
     dependencies:
-      debug: 4.4.1
+      debug: 4.4.1(supports-color@8.1.1)
       encodeurl: 2.0.0
       escape-html: 1.0.3
       etag: 1.8.1
@@ -44034,10 +44034,11 @@ snapshots:
       '@swc/counter': 0.1.3
       webpack: 5.99.8(@swc/core@1.11.24(@swc/helpers@0.5.17))(esbuild@0.25.4)
 
-  swr@2.2.4:
+  swr@2.2.4(react@18.3.1):
     dependencies:
       client-only: 0.0.1
-      use-sync-external-store: 1.5.0
+      react: 18.3.1
+      use-sync-external-store: 1.5.0(react@18.3.1)
 
   symbol-tree@3.2.4: {}
 
@@ -45155,9 +45156,13 @@ snapshots:
     optionalDependencies:
       '@types/react': 18.3.21
 
-  use-constant@1.1.1: {}
+  use-constant@1.1.1(react@18.3.1):
+    dependencies:
+      react: 18.3.1
 
-  use-debounce@9.0.4: {}
+  use-debounce@9.0.4(react@18.3.1):
+    dependencies:
+      react: 18.3.1
 
   use-editable@2.3.3(react@18.3.1):
     dependencies:
@@ -45182,8 +45187,6 @@ snapshots:
   use-sync-external-store@1.4.0(react@18.3.1):
     dependencies:
       react: 18.3.1
-
-  use-sync-external-store@1.5.0: {}
 
   use-sync-external-store@1.5.0(react@18.3.1):
     dependencies:
@@ -46317,13 +46320,6 @@ snapshots:
   zod@3.22.4: {}
 
   zod@3.24.4: {}
-
-  zustand@4.5.7(@types/react@18.3.21)(immer@10.1.1):
-    dependencies:
-      use-sync-external-store: 1.5.0
-    optionalDependencies:
-      '@types/react': 18.3.21
-      immer: 10.1.1
 
   zustand@4.5.7(@types/react@18.3.21)(immer@10.1.1)(react@18.3.1):
     dependencies:

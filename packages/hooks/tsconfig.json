@@ -2,16 +2,30 @@
   "extends": "./tsconfig.build.json",
   "compilerOptions": {
     "paths": {
-      "@orderly.network/core": ["../core/src"],
-      "@orderly.network/net": ["../net/src"],
-      "@orderly.network/perp": ["../perp/src"],
-      "@orderly.network/types": ["../types/src"],
-      "@orderly.network/utils": ["../utils/src"],
-      "@orderly.network/default-evm-adapter": ["../default-evm-adapter/src"],
+      "@orderly.network/core": [
+        "../core/src"
+      ],
+      "@orderly.network/net": [
+        "../net/src"
+      ],
+      "@orderly.network/perp": [
+        "../perp/src"
+      ],
+      "@orderly.network/types": [
+        "../types/src"
+      ],
+      "@orderly.network/utils": [
+        "../utils/src"
+      ],
+      "@orderly.network/default-evm-adapter": [
+        "../default-evm-adapter/src"
+      ],
       "@orderly.network/default-solana-adapter": [
         "../default-solana-adapter/src"
       ],
-      "@orderly.network/web3-provider-ethers": ["../web3-provider-ethers/src"]
+      "@orderly.network/web3-provider-ethers": [
+        "../web3-provider-ethers/src"
+      ]
     }
   }
 }
