@@ -351,6 +351,14 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     }
   }, [quantity, maxAmount, unsettledPnL, crossChainTrans]);
 
+  const maxQuantity = useMemo(() => {
+    const symbol = token?.display_name || token?.symbol;
+    if (symbol === "USDC") {
+      return maxAmount;
+    }
+    return maxOthersAmount(token, quantity ? Number(quantity) : 0);
+  }, [token, maxAmount, maxOthersAmount, quantity]);
+
   const disabled =
     crossChainTrans ||
     !quantity ||
@@ -395,7 +403,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     hintMessage,
     amount,
     balanceRevalidating: false,
-    maxQuantity: maxAmount,
+    maxQuantity: maxQuantity,
     disabled,
     loading,
     unsettledPnL,

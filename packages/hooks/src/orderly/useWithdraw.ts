@@ -34,6 +34,7 @@ export const useWithdraw = (options?: UseWithdrawOptions) => {
   const [_, { findByChainId }] = useChains(undefined);
 
   const ee = useEventEmitter();
+
   const { track } = useTrack();
 
   // const withdrawQueue = useRef<number[]>([]);
@@ -90,14 +91,29 @@ export const useWithdraw = (options?: UseWithdrawOptions) => {
     });
   }, [usdcBalance, freeCollateral, unrealPnL]);
 
-  const maxOthersAmount = useMemo(() => {
-    return accountPerp.maxWithdrawalOtherCollateral({
-      collateralQty: 0,
-      freeCollateral: freeCollateral,
-      indexPrice: indexPrice,
-      weight: 0,
-    });
-  }, [freeCollateral, indexPrice]);
+  const getCollateralRatio = useCallback(
+    (token: API.TokenInfo, collateralQty: number) => {
+      return accountPerp.collateralRatio({
+        baseWeight: token?.base_weight ?? 0,
+        discountFactor: token?.discount_factor ?? 0,
+        collateralQty: collateralQty,
+        indexPrice: indexPrice,
+      });
+    },
+    [indexPrice],
+  );
+
+  const maxOthersAmount = useCallback(
+    (token: API.TokenInfo, qty: number) => {
+      return accountPerp.maxWithdrawalOtherCollateral({
+        collateralQty: qty,
+        freeCollateral: freeCollateral,
+        indexPrice: indexPrice,
+        weight: getCollateralRatio(token, qty),
+      });
+    },
+    [freeCollateral, indexPrice, getCollateralRatio],
+  );
 
   const availableWithdraw = useMemo(() => {
     if (unsettledPnL < 0) {
@@ -183,8 +199,8 @@ export const useWithdraw = (options?: UseWithdrawOptions) => {
     dst,
     withdraw,
     isLoading,
-    maxAmount,
-    maxOthersAmount,
+    maxAmount: maxAmount,
+    maxOthersAmount: maxOthersAmount,
     availableBalance,
     availableWithdraw,
     unsettledPnL,
