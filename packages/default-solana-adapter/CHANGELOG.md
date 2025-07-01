@@ -1,5 +1,16 @@
 # @orderly.network/default-solana-adapter
 
+## 2.3.2
+
+### Patch Changes
+
+- 311e2a7: publish
+- publish
+- Updated dependencies [311e2a7]
+- Updated dependencies
+  - @orderly.network/core@2.3.2
+  - @orderly.network/types@2.3.2
+
 ## 2.3.2-alpha.0
 
 ### Patch Changes

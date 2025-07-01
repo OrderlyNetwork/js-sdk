@@ -1,5 +1,12 @@
 # create-orderly-app
 
+## 1.8.2
+
+### Patch Changes
+
+- 311e2a7: publish
+- publish
+
 ## 1.8.2-alpha.0
 
 ### Patch Changes

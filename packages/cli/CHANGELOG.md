@@ -1,5 +1,15 @@
 # @orderly.network/cli
 
+## 0.6.2
+
+### Patch Changes
+
+- 311e2a7: publish
+- publish
+- Updated dependencies [311e2a7]
+- Updated dependencies
+  - @orderly.network/core@2.3.2
+
 ## 0.6.2-alpha.0
 
 ### Patch Changes
