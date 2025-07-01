@@ -16,7 +16,7 @@ import {
 } from "@orderly.network/ui-transfer";
 import { Decimal } from "@orderly.network/utils";
 import { useAccountsData } from "../../hooks/useAccountsData";
-import { useAssetsAccountFilter } from "../../hooks/useAssetsAccountFilter";
+import { useAssetsMultiFilter } from "../../hooks/useAssetsAccountFilter";
 import { useAssetsColumns } from "./column";
 
 const isNumber = (val: unknown): val is number => {
@@ -82,19 +82,20 @@ export const useAssetsScript = () => {
   // Use the extracted accounts data hook
   const allAccounts = useAccountsData();
 
-  // Use the extracted account filter hook
+  // Use the extracted account and asset filter hook
   const {
     selectedAccount,
+    selectedAsset,
     filteredData: filtered,
-    onAccountFilter: onFilter,
-  } = useAssetsAccountFilter(allAccounts);
+    onFilter,
+  } = useAssetsMultiFilter(allAccounts);
 
   // Enhanced filtered data with additional calculations for children
   const enhancedFiltered = useMemo(() => {
-    return filtered.map((accountData) => {
+    return filtered.map((accountData: any) => {
       // Enhance each child (holding) with calculated fields
       const enhancedChildren =
-        accountData.children?.map((holding) => {
+        accountData.children?.map((holding: any) => {
           const tokenInfo = tokenInfoMap.get(holding.token);
 
           // Calculate index price
@@ -205,11 +206,13 @@ export const useAssetsScript = () => {
     visible: visible as boolean,
     onToggleVisibility: toggleVisible,
     selectedAccount,
+    selectedAsset,
     onFilter,
     totalValue: memoizedTotalValue,
     hasSubAccount: subAccounts.length > 0,
     onDeposit,
     onWithdraw,
+    holding,
   };
 };
 

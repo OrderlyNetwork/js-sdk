@@ -7,12 +7,13 @@ import {
   SimpleDialog,
 } from "@orderly.network/ui";
 import { useModal } from "@orderly.network/ui";
+import { SelectOption } from "@orderly.network/ui/src/select/withOptions";
 import { useConvertColumns, useConvertDetailColumns } from "./convert.column";
 import { useConvertScript } from "./convert.script";
 import type { ConvertRecord } from "./type";
 
 type ConvertDesktopUIProps = {
-  memoizedOptions: any;
+  memoizedOptions: SelectOption[];
   convertState: ReturnType<typeof useConvertScript>;
 };
 
