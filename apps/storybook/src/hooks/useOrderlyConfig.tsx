@@ -135,6 +135,46 @@ export const useOrderlyConfig = () => {
           discordUrl: "https://discord.com/invite/orderlynetwork",
           twitterUrl: "https://twitter.com/OrderlyNetwork",
         },
+        leftNavProps: {
+          items: [
+            {
+              name: t("common.trading"),
+              href: "/",
+              icon: <TradingActiveIcon />,
+            },
+            {
+              name: t("common.markets"),
+              href: "/markets",
+              icon: <MarketsActiveIcon />,
+            },
+            {
+              name: t("common.portfolio"),
+              href: "/portfolio",
+              icon: <PortfolioActiveIcon />,
+            },
+            { name: t("common.assets"), href: "/portfolio/assets", icon: "" },
+            {
+              name: t("common.leaderboard"),
+              href: "/leaderboard",
+              icon: <LeaderboardActiveIcon />,
+            },
+            {
+              name: t("common.affiliate"),
+              href: "/rewards/affiliate",
+              icon: "",
+            },
+            {
+              name: t("common.tradingRewards"),
+              href: "/rewards/trading",
+              icon: "",
+            },
+            {
+              name: t("common.settings"),
+              href: "/portfolio/settings",
+              icon: "",
+            },
+          ],
+        },
       },
       orderlyAppProvider: {
         appIcons: {
