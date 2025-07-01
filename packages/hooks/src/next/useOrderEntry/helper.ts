@@ -287,16 +287,14 @@ export function calcScaledOrderPrices(inputs: {
 }
 
 /**
- * For BUY: weights[i] = 1 + (skew - 1) × (i / (totalOrders - 1))
- * For SELL: weights[i] = 1 + (skew - 1) × ((totalOrders - 1 - i) / (totalOrders - 1))
+ * weights[i] = 1 + (skew - 1) × (i / (totalOrders - 1)) *
  */
 function calcScaledOrderWeights(inputs: {
-  side?: OrderSide;
   total_orders?: number;
   distribution_type?: DistributionType;
   skew?: number;
 }) {
-  const { side, total_orders, distribution_type, skew } = inputs;
+  const { total_orders, distribution_type, skew } = inputs;
 
   const weights: number[] = [];
 
@@ -325,8 +323,7 @@ function calcScaledOrderWeights(inputs: {
   }
 
   for (let i = 0; i < totalOrders; i++) {
-    const x = side === OrderSide.BUY ? i : totalOrders - 1 - i;
-    weights[i] = 1 + ((sizeSkew - 1) * x) / (totalOrders - 1);
+    weights[i] = 1 + ((sizeSkew - 1) * i) / (totalOrders - 1);
   }
 
   const sumWeights = weights.reduce((acc, cur) => acc + cur, 0);
@@ -356,7 +353,6 @@ function calcScaledOrderQtys(inputs: {
   base_dp: number;
 }) {
   const {
-    side,
     order_quantity = 0,
     total_orders = 0,
     distribution_type,
@@ -370,7 +366,6 @@ function calcScaledOrderQtys(inputs: {
   }
 
   const { weights, sumWeights } = calcScaledOrderWeights({
-    side,
     total_orders,
     distribution_type,
     skew,
@@ -428,7 +423,7 @@ export function calcScaledOrderBatchBody(
     });
 
     const orders = prices.map((price, index) => {
-      const subOrder: Partial<OrderEntity> = {
+      const subOrder: Partial<OrderlyOrder> = {
         symbol,
         side,
         // this order type is scaled order, so we need to set the order type to limit
@@ -467,12 +462,12 @@ export function calcScaledOrderAvgOrderPrice(
     const orders = calcScaledOrderBatchBody(order, symbolInfo);
 
     const sumQtys = orders.reduce((acc, order) => {
-      return acc.plus(new Decimal(order.order_quantity));
+      return acc.plus(new Decimal(order.order_quantity!));
     }, zero);
 
     const totalNational = orders.reduce((acc, order) => {
       const orderPrice = getOrderPrice(order, askAndBid);
-      return acc.plus(new Decimal(orderPrice).mul(order.order_quantity));
+      return acc.plus(new Decimal(orderPrice).mul(order.order_quantity!));
     }, zero);
 
     return totalNational.div(sumQtys).todp(symbolInfo.quote_dp).toNumber();
@@ -542,11 +537,10 @@ export function calcScaledOrderMinTotalAmountByBaseMin(
   order: Partial<OrderlyOrder>,
   symbolInfo: API.SymbolExt,
 ) {
-  const { side, total_orders, distribution_type, skew } = order;
+  const { total_orders, distribution_type, skew } = order;
   const { base_min, base_dp } = symbolInfo;
 
   const { sumWeights, minWeight } = calcScaledOrderWeights({
-    side,
     total_orders,
     distribution_type,
     skew,
@@ -569,10 +563,9 @@ export function calcScaledOrderMinTotalAmountByMinNotional(
 
   const orders = calcScaledOrderBatchBody(order, symbolInfo);
 
-  const { side, total_orders, distribution_type, skew } = order;
+  const { total_orders, distribution_type, skew } = order;
 
   const { weights, sumWeights } = calcScaledOrderWeights({
-    side,
     total_orders,
     distribution_type,
     skew,
