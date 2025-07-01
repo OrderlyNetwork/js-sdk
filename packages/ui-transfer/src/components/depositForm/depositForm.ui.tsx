@@ -127,9 +127,9 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
         ) : (
           <Flex direction="column" itemAlign="start" mt={1} gapY={1}>
             <SwapCoin
-              sourceToken={sourceToken}
-              targetToken={targetToken}
               indexPrice={indexPrice}
+              sourceSymbol={sourceToken?.display_name || sourceToken?.symbol}
+              targetSymbol={targetToken?.display_name || targetToken?.symbol}
             />
             <SlippageUI slippage={slippage} setSlippage={setSlippage} />
             <MinimumReceivedWidget

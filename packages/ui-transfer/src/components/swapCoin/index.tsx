@@ -1,23 +1,17 @@
 import { FC } from "react";
-// import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
 import { Flex, Text } from "@orderly.network/ui";
 
 interface SwapCoinProps {
   className?: string;
-  sourceToken?: API.TokenInfo;
-  targetToken?: API.TokenInfo;
+  sourceSymbol?: string;
+  targetSymbol?: string;
   indexPrice: number;
 }
 
 export const SwapCoin: FC<SwapCoinProps> = (props) => {
-  const { sourceToken, targetToken, indexPrice } = props;
+  const { sourceSymbol, targetSymbol, indexPrice } = props;
 
   // const { t } = useTranslation();
-
-  const sourceSymbol = sourceToken?.display_name || sourceToken?.symbol;
-
-  const targetSymbol = targetToken?.display_name || targetToken?.symbol;
 
   return (
     <Flex width={"100%"} itemAlign="center" justify="between">

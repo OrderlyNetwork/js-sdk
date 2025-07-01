@@ -35,11 +35,7 @@ const calculateTextColor = (val: number): string => {
 };
 
 export const LtvUI: React.FC<
-  Readonly<{
-    currentLtv: number;
-    nextLTV: number;
-    showDiff?: boolean;
-  }>
+  Readonly<{ currentLtv: number; nextLTV: number; showDiff?: boolean }>
 > = (props) => {
   // const { t } = useTranslation();
   const { currentLtv, nextLTV, showDiff } = props;

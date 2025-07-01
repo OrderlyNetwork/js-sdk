@@ -1,12 +1,15 @@
 import React from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Box, Flex, Text, textVariants } from "@orderly.network/ui";
-import { WithdrawTo } from "../../types";
+// import { useTranslation } from "@orderly.network/i18n";
+import { Box, Flex, textVariants } from "@orderly.network/ui";
+import { LtvWidget } from "../LTV";
 import { AvailableQuantity } from "../availableQuantity";
 import { ExchangeDivider } from "../exchangeDivider";
+import { Fee } from "../fee";
+import { MinimumReceivedWidget } from "../minimumReceived";
 import { QuantityInput } from "../quantityInput";
+import { SlippageUI } from "../slippage/slippage.ui";
+import { SwapCoin } from "../swapCoin";
 import { WithdrawAction } from "../withdrawAction";
-import { WithdrawWarningMessage } from "../withdrawWarningMessage";
 import type { ConvertFormScriptReturn } from "./convertForm.script";
 
 export type ConvertFormProps = ConvertFormScriptReturn;
@@ -23,8 +26,6 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
     maxQuantity,
     currentChain,
     fee,
-    chainVaultBalance,
-    crossChainTrans,
     checkIsBridgeless,
     withdrawTo,
     sourceTokens,
@@ -32,7 +33,7 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
     vaultBalanceList,
   } = props;
 
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
 
   return (
     <Box className={textVariants({ weight: "semibold" })}>
@@ -60,39 +61,14 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
         />
         <ExchangeDivider />
         <QuantityInput token={token} value={props.showQty} readOnly />
-        <Flex direction="column" mt={1} gapY={1} itemAlign="start">
-          <Text size="xs" intensity={36}>
-            {t("common.fee")}
-            {withdrawTo === WithdrawTo.Wallet ? (
-              <>
-                {" ≈ "}
-                <Text size="xs" intensity={80}>
-                  {fee}
-                </Text>
-              </>
-            ) : (
-              <>
-                {" = "}
-                <Text size="xs" intensity={80}>
-                  0
-                </Text>
-              </>
-            )}
-
-            <Text>{` USDC`}</Text>
-          </Text>
+        <Flex direction="column" itemAlign="start" mt={2} gap={1}>
+          <SwapCoin indexPrice={1} sourceSymbol={""} targetSymbol={""} />
+          <SlippageUI slippage={"1"} />
+          <MinimumReceivedWidget minimumReceived={2} symbol={""} />
+          <LtvWidget showDiff={true} currentLtv={20} nextLTV={50} />
+          <Fee {...fee} />
         </Flex>
       </Box>
-
-      <WithdrawWarningMessage
-        checkIsBridgeless={checkIsBridgeless}
-        chainVaultBalance={chainVaultBalance as number}
-        currentChain={currentChain}
-        quantity={quantity}
-        maxAmount={maxQuantity}
-        crossChainTrans={crossChainTrans}
-      />
-
       <Flex justify="center">
         <WithdrawAction
           checkIsBridgeless={checkIsBridgeless}
