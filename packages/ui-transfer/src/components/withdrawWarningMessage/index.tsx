@@ -58,15 +58,16 @@ export const WithdrawWarningMessage = ({
       return;
     }
 
-    if (wrongNetwork || !checkIsBridgeless) {
-      return (
-        <Box>
-          {networkName
-            ? t("transfer.withdraw.unsupported.networkName", { networkName })
-            : t("transfer.withdraw.unsupported.chain")}
-        </Box>
-      );
-    }
+    // if (wrongNetwork || !checkIsBridgeless) {
+    //   return (
+    //     <Box>
+    //       {networkName
+    //         ? t("transfer.withdraw.unsupported.networkName", { networkName })
+    //         : t("transfer.withdraw.unsupported.chain")}
+    //     </Box>
+    //   );
+    // }
+
     if (crossChainTrans) {
       return t("transfer.withdraw.crossChain.process");
     }

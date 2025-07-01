@@ -113,20 +113,6 @@ export const ChainSelect: React.FC<ChainSelectProps> = (props) => {
           <Text size="2xs" intensity={54}>
             {chain.name}
           </Text>
-          {chain.bridgeless && (
-            <Flex
-              className="oui-bg-success-light/15"
-              height={18}
-              px={2}
-              r="base"
-              justify="center"
-              itemAlign="center"
-            >
-              <Text size="2xs" className="oui-text-success-light">
-                {t("transfer.lowestFee")}
-              </Text>
-            </Flex>
-          )}
         </Flex>
         {isActive && (
           <Box
