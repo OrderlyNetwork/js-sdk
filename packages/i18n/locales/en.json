@@ -107,6 +107,7 @@
   "markets.favorites.tabs.maxName": "List name cannot exceed 15 characters",
   "markets.favorites.tabs.delete.dialog.title": "Delete list",
   "markets.favorites.tabs.delete.dialog.description": "Are you sure you want to delete {{name}}?",
+  "markets.favorites.addFavorites": "Add favorites",
   "markets.column.market": "Market",
   "markets.column.24hChange": "24h change",
   "markets.column.24hVolume": "24h volume",

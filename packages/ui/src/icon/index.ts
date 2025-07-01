@@ -68,6 +68,7 @@ export { LeaderboardActiveIcon } from "./leaderboardActive";
 export { LeaderboardInactiveIcon } from "./leaderboardInactive";
 export { MarketsActiveIcon } from "./marketsActiveIcon";
 export { MarketsInactiveIcon } from "./marketsInactiveIcon";
+export { EmptyStateIcon } from "./emptyData";
 
 type IconType = typeof BaseIcon & {
   combine: typeof CombineIcon;

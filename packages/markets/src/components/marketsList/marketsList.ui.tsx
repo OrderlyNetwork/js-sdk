@@ -15,6 +15,7 @@ export type MarketsListProps = MarketsListScriiptReturn &
     | "rowClassName"
     | "initialSort"
     | "renderHeader"
+    | "emptyView"
   >;
 
 export const MarketsList: FC<MarketsListProps> = (props) => {
@@ -28,6 +29,7 @@ export const MarketsList: FC<MarketsListProps> = (props) => {
     collapsed,
     isFavoritesList,
     renderHeader,
+    emptyView,
   } = props;
 
   const { symbol, onSymbolChange } = useMarketsContext();
@@ -77,6 +79,7 @@ export const MarketsList: FC<MarketsListProps> = (props) => {
             : undefined
         }
         manualSorting
+        emptyView={emptyView}
       />
     </>
   );

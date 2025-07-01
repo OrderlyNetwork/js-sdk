@@ -1,5 +1,15 @@
 import { useTranslation } from "@orderly.network/i18n";
-import { Box, cn, TabPanel, Tabs, Text } from "@orderly.network/ui";
+import {
+  Box,
+  Button,
+  cn,
+  EmptyStateIcon,
+  Flex,
+  PlusIcon,
+  TabPanel,
+  Tabs,
+  Text,
+} from "@orderly.network/ui";
 import { FavoritesIcon } from "../../icons";
 import { MarketsTabName } from "../../type";
 import { MarketsListWidget } from "../marketsList";
@@ -20,6 +30,7 @@ export const MarketsSheet: React.FC<MarketsSheetProps> = (props) => {
   const { getFavoritesProps } = useFavoritesProps();
 
   const renderTab = (type: MarketsTabName) => {
+    const isFavorites = type === MarketsTabName.Favorites;
     return (
       <MarketsListWidget
         type={type}
@@ -30,11 +41,40 @@ export const MarketsSheet: React.FC<MarketsSheetProps> = (props) => {
           root: "!oui-bg-base-8",
           scroll: cn(
             "oui-pb-[env(safe-area-inset-bottom,_20px)]",
-            type === MarketsTabName.Favorites
+            isFavorites
               ? "oui-h-[calc(100%_-_70px)]"
               : "oui-h-[calc(100%_-_40px)]",
           ),
         }}
+        emptyView={
+          isFavorites ? (
+            <Flex
+              direction="column"
+              itemAlign="center"
+              gapY={4}
+              className="oui-h-[calc(100%_-_70px)] oui-text-center"
+            >
+              <EmptyStateIcon />
+              <Button
+                color="gray"
+                size="xs"
+                className="oui-bg-base-4"
+                onClick={() => {
+                  props.onTabChange(MarketsTabName.All);
+                }}
+              >
+                <PlusIcon
+                  className="oui-mr-1 oui-text-base-contrast"
+                  opacity={1}
+                  size={12}
+                />
+                <Text intensity={98}>
+                  {t("markets.favorites.addFavorites")}
+                </Text>
+              </Button>
+            </Flex>
+          ) : undefined
+        }
         {...getFavoritesProps(type)}
       />
     );
