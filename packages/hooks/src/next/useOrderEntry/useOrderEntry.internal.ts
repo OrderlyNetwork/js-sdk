@@ -74,11 +74,13 @@ const useOrderEntryNextInternal = (
         | "tp_ROI"
         | "tp_trigger_price"
         | "tp_order_price"
+        | "tp_order_type"
         | "sl_pnl"
         | "sl_offset"
         | "sl_offset_percentage"
         | "sl_ROI"
         | "sl_trigger_price"
+        | "sl_order_type"
         | "sl_order_price"
         | "quantity"
         | "price"
@@ -178,6 +180,7 @@ const useOrderEntryNextInternal = (
     // console.log("newValues++++++", newValues);
 
     orderEntryActions.updateOrder(newValues);
+    console.log("newValues++++++", newValues);
 
     return newValues;
   };

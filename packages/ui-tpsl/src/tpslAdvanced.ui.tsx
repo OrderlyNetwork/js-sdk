@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
 import { OrderSide, OrderType, PositionType } from "@orderly.network/types";
@@ -17,33 +17,88 @@ export const TPSLAdvancedUI = (props: Props) => {
   const { t } = useTranslation();
   const { parseErrorMsg } = useOrderEntryFormErrorMsg(null);
   const { order: formattedOrder, setOrderValue } = props;
-  const side = useMemo(() => {
-    if (formattedOrder.side === OrderSide.BUY) {
-      return "Buy";
-    }
-    return "Sell";
-  }, [formattedOrder.side]);
-  console.log("side", side);
-  const values = {
-    position_type: formattedOrder.position_type ?? PositionType.PARTIAL,
-    tp: {
+  const [tpValues, setTpValuse] = useState<{
+    enable: boolean;
+    trigger_price: string;
+    PnL: string;
+    Offset: string;
+    "Offset%": string;
+    ROI: string;
+    order_price: string;
+    order_type: OrderType;
+  }>({
+    enable: true,
+    order_type: formattedOrder.tp_order_type ?? OrderType.MARKET,
+    order_price: formattedOrder.tp_order_price ?? "",
+    trigger_price: formattedOrder.tp_trigger_price ?? "",
+    PnL: formattedOrder.tp_pnl ?? "",
+    Offset: formattedOrder.tp_offset ?? "",
+    "Offset%": formattedOrder.tp_offset_percentage ?? "",
+    ROI: formattedOrder.tp_ROI ?? "",
+  });
+
+  // Update tpValues when formattedOrder changes
+  useEffect(() => {
+    console.log("update tpValues", formattedOrder);
+    setTpValuse((prev) => ({
+      ...prev,
+      order_type: formattedOrder.tp_order_type ?? OrderType.MARKET,
+      order_price: formattedOrder.tp_order_price ?? "",
       trigger_price: formattedOrder.tp_trigger_price ?? "",
       PnL: formattedOrder.tp_pnl ?? "",
       Offset: formattedOrder.tp_offset ?? "",
       "Offset%": formattedOrder.tp_offset_percentage ?? "",
       ROI: formattedOrder.tp_ROI ?? "",
-      order_price: formattedOrder.tp_order_price ?? "",
-    },
-    sl: {
+    }));
+  }, [
+    formattedOrder.tp_trigger_price,
+    formattedOrder.tp_pnl,
+    formattedOrder.tp_offset,
+    formattedOrder.tp_offset_percentage,
+    formattedOrder.tp_order_type,
+    formattedOrder.tp_order_price,
+  ]);
+
+  const [slValues, setSlValues] = useState<{
+    enable: boolean;
+    trigger_price: string;
+    PnL: string;
+    Offset: string;
+    "Offset%": string;
+    ROI: string;
+    order_price: string;
+    order_type: OrderType;
+  }>({
+    enable: true,
+    order_type: formattedOrder.sl_order_type ?? OrderType.MARKET,
+    order_price: formattedOrder.sl_order_price ?? "",
+    trigger_price: formattedOrder.sl_trigger_price ?? "",
+    PnL: formattedOrder.sl_pnl ?? "",
+    Offset: formattedOrder.sl_offset ?? "",
+    "Offset%": formattedOrder.sl_offset_percentage ?? "",
+    ROI: formattedOrder.sl_ROI ?? "",
+  });
+
+  useEffect(() => {
+    setSlValues((prev) => ({
+      ...prev,
+      order_type: formattedOrder.sl_order_type ?? OrderType.MARKET,
+      order_price: formattedOrder.sl_order_price ?? "",
       trigger_price: formattedOrder.sl_trigger_price ?? "",
       PnL: formattedOrder.sl_pnl ?? "",
       Offset: formattedOrder.sl_offset ?? "",
       "Offset%": formattedOrder.sl_offset_percentage ?? "",
       ROI: formattedOrder.sl_ROI ?? "",
-      order_price: formattedOrder.sl_order_price ?? "",
-    },
-  };
-  console.log("xxx formated order in tspl advanced", formattedOrder);
+    }));
+  }, [
+    formattedOrder.sl_trigger_price,
+    formattedOrder.sl_pnl,
+    formattedOrder.sl_offset,
+    formattedOrder.sl_offset_percentage,
+    formattedOrder.sl_order_type,
+    formattedOrder.sl_order_price,
+  ]);
+
   return (
     <div className="oui-py-3">
       <div className="oui-px-3">
@@ -100,13 +155,36 @@ export const TPSLAdvancedUI = (props: Props) => {
         <Flex direction={"column"} gap={6}>
           <TPSLInputRowWidget
             type="tp"
-            values={values.tp}
-            onChange={() => {}}
+            values={tpValues}
+            onChange={(key, value) => {
+              console.log("key", key, "value", value);
+              // setTpValuse((prev) => ({ ...prev, [key]: value }));
+              if (key === "enable") {
+                if (value === false) {
+                  // clear tp value
+                  setOrderValue("tp_pnl", undefined);
+                  setOrderValue("tp_trigger_price", undefined);
+                }
+                setTpValuse((prev) => ({ ...prev, enable: !!value }));
+                return;
+              }
+              setOrderValue(key, value);
+            }}
           />
           <TPSLInputRowWidget
             type="sl"
-            values={values.sl}
-            onChange={() => {}}
+            values={slValues}
+            onChange={(key, value) => {
+              if (key === "enable") {
+                if (value === false) {
+                  setOrderValue("sl_pnl", undefined);
+                  setOrderValue("sl_trigger_price", undefined);
+                }
+                setSlValues((prev) => ({ ...prev, enable: !!value }));
+                return;
+              }
+              setOrderValue(key, value);
+            }}
           />
         </Flex>
 

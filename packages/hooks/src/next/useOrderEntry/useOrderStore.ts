@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { produce } from "immer";
-import { OrderlyOrder, RequireKeys } from "@orderly.network/types";
+import { OrderlyOrder, OrderType, RequireKeys } from "@orderly.network/types";
 
 export type FullOrderState = OrderlyOrder;
 
@@ -15,12 +15,14 @@ const initialOrderState = {
   trigger_price: "",
   tp_trigger_price: "",
   sl_trigger_price: "",
+  tp_order_type: OrderType.MARKET,
   tp_pnl: "",
   sl_pnl: "",
   tp_offset_percentage: "",
   sl_offset_percentage: "",
   tp_offset: "",
   sl_offset: "",
+  sl_order_type: OrderType.MARKET,
   total: "",
   // symbol: "",
 };
@@ -29,7 +31,7 @@ export const useOrderStore = (initialOrder: OrderEntryStateEntity) => {
   const [entry, setEntry] = useState<OrderEntryStateEntity>(initialOrder);
   const [estLeverage, setEstLeverage] = useState<number | null>(null);
   const [estLiquidationPrice, setEstLiquidationPrice] = useState<number | null>(
-    null
+    null,
   );
   const [errors, setErrors] = useState<
     Partial<Record<keyof FullOrderState, string>>
@@ -40,19 +42,19 @@ export const useOrderStore = (initialOrder: OrderEntryStateEntity) => {
     setEntry(
       produce((draft) => {
         return { ...draft, ...order };
-      })
+      }),
       // (prev) => ({ ...prev, ...order })
     );
   };
 
   const updateOrderByKey = <K extends keyof FullOrderState>(
     key: K,
-    value: FullOrderState[K]
+    value: FullOrderState[K],
   ) => {
     setEntry(
       produce((draft) => {
         draft[key] = value;
-      })
+      }),
     );
   };
 
@@ -73,7 +75,7 @@ export const useOrderStore = (initialOrder: OrderEntryStateEntity) => {
       produce((draft) => ({
         ...draft,
         ...(order ?? initialOrderState),
-      }))
+      })),
     );
   };
 

@@ -1,4 +1,9 @@
-import { API, OrderSide, PositionSide } from "@orderly.network/types";
+import {
+  API,
+  OrderlyOrder,
+  OrderSide,
+  PositionSide,
+} from "@orderly.network/types";
 import { OrderType } from "@orderly.network/types";
 import { AlgoOrderType } from "@orderly.network/types";
 import { Decimal, todpIfNeed, zero } from "@orderly.network/utils";
@@ -53,7 +58,7 @@ export function priceToOffset(
     orderSide: OrderSide;
     orderType: AlgoOrderType;
   },
-  options: { symbol?: Pick<API.SymbolExt, "quote_dp"> } = {}
+  options: { symbol?: Pick<API.SymbolExt, "quote_dp"> } = {},
 ) {
   const { qty, price, entryPrice, orderType, orderSide } = inputs;
   const { symbol } = options;
@@ -220,37 +225,35 @@ export function priceToPnl(
     orderSide: OrderSide;
     orderType: AlgoOrderType;
   },
-  options: { symbol?: Pick<API.SymbolExt, "quote_dp"> } = {}
+  options: { symbol?: Pick<API.SymbolExt, "quote_dp"> } = {},
 ): number {
   const { qty, price, entryPrice, orderType, orderSide } = inputs;
   const { symbol } = options;
   let decimal = zero;
   // const qty =
   //   orderSide === OrderSide.BUY ? Math.abs(_qty) : Math.abs(_qty) * -1;
-    
-    
 
   if (orderSide === OrderSide.BUY) {
     if (orderType === AlgoOrderType.TAKE_PROFIT) {
       decimal = new Decimal(qty).mul(
-        new Decimal(price).minus(new Decimal(entryPrice))
+        new Decimal(price).minus(new Decimal(entryPrice)),
       );
     }
 
     decimal = new Decimal(qty).mul(
-      new Decimal(price).minus(new Decimal(entryPrice))
+      new Decimal(price).minus(new Decimal(entryPrice)),
     );
   }
 
   if (orderSide === OrderSide.SELL) {
     if (orderType === AlgoOrderType.TAKE_PROFIT) {
       decimal = new Decimal(qty).mul(
-        new Decimal(price).minus(new Decimal(entryPrice))
+        new Decimal(price).minus(new Decimal(entryPrice)),
       );
     }
 
     decimal = new Decimal(qty).mul(
-      new Decimal(price).minus(new Decimal(entryPrice))
+      new Decimal(price).minus(new Decimal(entryPrice)),
     );
   }
 
@@ -288,6 +291,17 @@ export function calcTPSL_ROI(inputs: {
 //     .toNumber();
 // }
 
+function checkTPSLOrderTypeIsMarket(
+  key: string,
+  values: Partial<OrderlyOrder>,
+) {
+  const keyPrefix = key.slice(0, 3);
+  const orderTypeKey = `${keyPrefix}order_type` as keyof OrderlyOrder;
+  return values[orderTypeKey]
+    ? values[orderTypeKey] === OrderType.MARKET
+    : true;
+}
+
 export function tpslCalculateHelper(
   key: string,
   inputs: {
@@ -296,8 +310,9 @@ export function tpslCalculateHelper(
     entryPrice: number | string;
     qty: number | string;
     orderSide: OrderSide;
+    values: Partial<OrderlyOrder>;
   },
-  options: { symbol?: Pick<API.SymbolExt, "quote_dp"> } = {}
+  options: { symbol?: Pick<API.SymbolExt, "quote_dp"> } = {},
 ) {
   const { symbol } = options;
   // if not need to be computed, return the value directly
@@ -310,7 +325,11 @@ export function tpslCalculateHelper(
     key !== "tp_offset" &&
     key !== "sl_offset" &&
     key !== "tp_offset_percentage" &&
-    key !== "sl_offset_percentage"
+    key !== "sl_offset_percentage" &&
+    key !== "tp_order_price" &&
+    key !== "sl_order_price" &&
+    key !== "tp_order_type" &&
+    key !== "sl_order_type"
   ) {
     return {
       [key]: inputs.value,
@@ -322,7 +341,7 @@ export function tpslCalculateHelper(
     : AlgoOrderType.STOP_LOSS;
   const keyPrefix = key.slice(0, 3);
 
-  let qty = Number(key === "quantity" ? inputs.value : inputs.qty);
+  const qty = Number(key === "quantity" ? inputs.value : inputs.qty);
 
   if (
     qty === 0 &&
@@ -333,14 +352,21 @@ export function tpslCalculateHelper(
   ) {
     return {
       [`${keyPrefix}trigger_price`]: "",
+      [`${keyPrefix}order_price`]: "",
       // [`${keyPrefix}offset`]: "",
       // [`${keyPrefix}offset_percentage`]: "",
       [`${keyPrefix}pnl`]: "",
       [key]: inputs.value,
     };
   }
-  let trigger_price, offset, offset_percentage, pnl;
+  let trigger_price,
+    offset,
+    offset_percentage,
+    pnl,
+    order_price,
+    tpsl_order_type;
 
+  console.log("entryPrice", inputs.entryPrice);
   const entryPrice = new Decimal(inputs.entryPrice)
     .todp(options.symbol?.quote_dp ?? 2, Decimal.ROUND_UP)
     .toNumber();
@@ -350,44 +376,114 @@ export function tpslCalculateHelper(
     case "sl_trigger_price": {
       trigger_price = inputs.value;
       // if trigger price is empty and the key is `*_trigger_price`, reset the offset and pnl
-      if (inputs.value === "") {
-        return {
-          [`${keyPrefix}trigger_price`]: trigger_price,
-          [`${keyPrefix}offset`]: "",
-          [`${keyPrefix}offset_percentage`]: "",
-          [`${keyPrefix}pnl`]: "",
-          [`${keyPrefix}ROI`]: "",
-        };
+      // if order_type is market, set trigger_price to order_price
+      if (checkTPSLOrderTypeIsMarket(key, inputs.values)) {
+        if (inputs.value === "") {
+          return {
+            [`${keyPrefix}trigger_price`]: trigger_price,
+            [`${keyPrefix}offset`]: "",
+            [`${keyPrefix}offset_percentage`]: "",
+            [`${keyPrefix}pnl`]: "",
+            [`${keyPrefix}ROI`]: "",
+          };
+        }
       }
+
       break;
     }
+
+    // case 'tp_pnl':{
+    //   if (inputs.values.tp_order_type !== OrderType.MARKET) {
+    //     pnl = inputs.value;
+    //     trigger_price = pnlToPrice({
+    //     qty,
+    //     pnl: Number(inputs.value),
+    //     entryPrice,
+    //     orderSide: inputs.orderSide,
+    //     orderType,
+    //     })
+
+    //   }
+    // }
 
     case "tp_pnl":
     case "sl_pnl": {
       pnl = inputs.value;
-      trigger_price = pnlToPrice({
-        qty,
-        pnl: Number(inputs.value),
-        entryPrice,
-        orderSide: inputs.orderSide,
-        orderType,
-      });
+      if (!checkTPSLOrderTypeIsMarket(key, inputs.values)) {
+        order_price = pnlToPrice({
+          qty,
+          pnl: Number(inputs.value),
+          entryPrice,
+          orderSide: inputs.orderSide,
+          orderType,
+        });
+        trigger_price =
+          inputs.values[`${keyPrefix}trigger_price` as keyof OrderlyOrder] ??
+          order_price;
+      } else {
+        trigger_price = pnlToPrice({
+          qty,
+          pnl: Number(inputs.value),
+          entryPrice,
+          orderSide: inputs.orderSide,
+          orderType,
+        });
+      }
+
       break;
     }
 
     case "tp_offset":
     case "sl_offset": {
       offset = inputs.value;
-      trigger_price = offsetToPrice({
-        qty,
-        offset: Number(inputs.value),
-        entryPrice,
-        orderSide: inputs.orderSide,
-        orderType:
-          key === "tp_offset"
-            ? AlgoOrderType.TAKE_PROFIT
-            : AlgoOrderType.STOP_LOSS,
-      });
+      if (!checkTPSLOrderTypeIsMarket(key, inputs.values)) {
+        order_price = offsetToPrice({
+          qty,
+          offset: Number(inputs.value),
+          entryPrice,
+          orderSide: inputs.orderSide,
+          orderType:
+            key === "tp_offset"
+              ? AlgoOrderType.TAKE_PROFIT
+              : AlgoOrderType.STOP_LOSS,
+        });
+        trigger_price =
+          inputs.values[`${keyPrefix}trigger_price` as keyof OrderlyOrder] ??
+          order_price;
+      } else {
+        trigger_price = offsetToPrice({
+          qty,
+          offset: Number(inputs.value),
+          entryPrice,
+          orderSide: inputs.orderSide,
+          orderType:
+            key === "tp_offset"
+              ? AlgoOrderType.TAKE_PROFIT
+              : AlgoOrderType.STOP_LOSS,
+        });
+      }
+      break;
+    }
+
+    case "tp_order_price":
+    case "sl_order_price": {
+      order_price = inputs.value;
+      trigger_price =
+        inputs.values[`${keyPrefix}trigger_price` as keyof OrderlyOrder] ??
+        order_price;
+      break;
+    }
+
+    case "tp_order_type":
+    case "sl_order_type": {
+      tpsl_order_type = inputs.value;
+      trigger_price =
+        inputs.values[`${keyPrefix}trigger_price` as keyof OrderlyOrder] ?? "";
+      if (tpsl_order_type === OrderType.MARKET) {
+        order_price = "";
+      } else {
+        order_price = trigger_price;
+      }
       break;
     }
 
@@ -395,18 +491,30 @@ export function tpslCalculateHelper(
     case "sl_offset_percentage": {
       offset_percentage = inputs.value;
       // console.log("offset_percentage", offset_percentage);
-      trigger_price = offsetPercentageToPrice({
-        qty,
-        percentage: Number(`${inputs.value}`.replace(/\.0{0,2}$/, "")),
-        entryPrice,
-        orderSide: inputs.orderSide,
-        orderType,
-      });
+      if (!checkTPSLOrderTypeIsMarket(key, inputs.values)) {
+        order_price = offsetPercentageToPrice({
+          qty,
+          percentage: Number(`${inputs.value}`.replace(/\.0{0,2}$/, "")),
+          entryPrice,
+          orderSide: inputs.orderSide,
+          orderType,
+        });
+        trigger_price =
+          inputs.values[`${keyPrefix}trigger_price` as keyof OrderlyOrder] ??
+          order_price;
+      } else {
+        trigger_price = offsetPercentageToPrice({
+          qty,
+          percentage: Number(`${inputs.value}`.replace(/\.0{0,2}$/, "")),
+          entryPrice,
+          orderSide: inputs.orderSide,
+          orderType,
+        });
+      }
       break;
     }
   }
-
-  if (!trigger_price)
+  if (!trigger_price && checkTPSLOrderTypeIsMarket(key, inputs.values)) {
     return {
       [`${keyPrefix}trigger_price`]: "",
       [`${keyPrefix}offset`]: "",
@@ -415,45 +523,62 @@ export function tpslCalculateHelper(
       [`${keyPrefix}ROI`]: "",
       [key]: inputs.value,
     };
+  }
+  let calcPrice = trigger_price;
+  if (tpsl_order_type && tpsl_order_type === OrderType.LIMIT) {
+    calcPrice = order_price;
+  } else if (!checkTPSLOrderTypeIsMarket(key, inputs.values)) {
+    calcPrice = order_price;
+  }
 
-  return {
-    [`${keyPrefix}trigger_price`]: todpIfNeed(
-      trigger_price,
-      symbol?.quote_dp ?? 2
-    ),
-    [`${keyPrefix}offset`]:
-      offset ??
-      priceToOffset(
-        {
-          qty,
-          price: Number(trigger_price!),
-          entryPrice,
-          orderSide: inputs.orderSide,
-          orderType,
-        },
-        options
-      ),
-    [`${keyPrefix}offset_percentage`]:
-      offset_percentage ??
-      priceToOffsetPercentage({
-        qty,
-        price: Number(trigger_price!),
-        entryPrice,
-        orderSide: inputs.orderSide,
-        orderType,
-      }),
-    [`${keyPrefix}pnl`]:
+  if (calcPrice) {
+    pnl =
       pnl ??
       priceToPnl(
         {
           qty,
-          price: Number(trigger_price!),
+          price: Number(calcPrice),
           entryPrice,
           orderSide: inputs.orderSide,
           orderType,
         },
-        options
-      ),
+        options,
+      );
+    offset =
+      offset ??
+      priceToOffset(
+        {
+          qty,
+          price: Number(calcPrice),
+          entryPrice,
+          orderSide: inputs.orderSide,
+          orderType,
+        },
+        options,
+      );
+    offset_percentage =
+      offset_percentage ??
+      priceToOffsetPercentage({
+        qty,
+        price: Number(calcPrice),
+        entryPrice,
+        orderSide: inputs.orderSide,
+        orderType,
+      });
+  }
+  // const
+
+  return {
+    [`${keyPrefix}trigger_price`]: trigger_price
+      ? todpIfNeed(trigger_price as number, symbol?.quote_dp ?? 2)
+      : "",
+    [`${keyPrefix}order_price`]: order_price
+      ? todpIfNeed(order_price, symbol?.quote_dp ?? 2)
+      : "",
+
+    [`${keyPrefix}offset`]: offset ?? "",
+    [`${keyPrefix}offset_percentage`]: offset_percentage ?? "",
+    [`${keyPrefix}pnl`]: pnl ?? "",
     // [`${keyPrefix}ROI`]: calcROI({
     //   pnl: Number(pnl ?? 0),
     //   qty,

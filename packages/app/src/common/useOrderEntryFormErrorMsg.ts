@@ -11,17 +11,19 @@ type Keys =
   | "trigger_price"
   | "total"
   | "tp_trigger_price"
-  | "sl_trigger_price";
+  | "sl_trigger_price"
+  | "tp_order_price"
+  | "sl_order_price";
 
 export function useOrderEntryFormErrorMsg(
-  errors: OrderValidationResult | null
+  errors: OrderValidationResult | null,
 ) {
   const { t } = useTranslation();
 
   const getMessage = (
     key: Keys,
     value?: number | string,
-    type?: OrderValidationItem["type"]
+    type?: OrderValidationItem["type"],
   ) => {
     const map = {
       quantity: {
@@ -52,12 +54,20 @@ export function useOrderEntryFormErrorMsg(
         min: t("orderEntry.slTriggerPrice.error.min", { value }),
         max: t("orderEntry.slTriggerPrice.error.max", { value }),
       },
+      tp_order_price: {
+        min: t("orderEntry.tpTriggerPrice.error.min", { value }),
+        max: t("orderEntry.tpTriggerPrice.error.max", { value }),
+      },
+      sl_order_price: {
+        min: t("orderEntry.slTriggerPrice.error.min", { value }),
+        max: t("orderEntry.slTriggerPrice.error.max", { value }),
+      },
       total: {
         min: t("orderEntry.total.error.min", { value }),
       },
     };
 
-    return map[key]?.[type as keyof typeof map[Keys]];
+    return map[key]?.[type as keyof (typeof map)[Keys]];
   };
 
   const parseErrorMsg = (key: Keys) => {

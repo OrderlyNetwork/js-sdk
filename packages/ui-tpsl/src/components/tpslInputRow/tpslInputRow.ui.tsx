@@ -1,6 +1,6 @@
 import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
 import { OrderType } from "@orderly.network/types";
-import { Flex, Text, Grid } from "@orderly.network/ui";
+import { Flex, Text, Grid, Checkbox } from "@orderly.network/ui";
 import { PnlInputWidget } from "../../pnlInput/pnlInput.widget";
 import { PriceInput } from "../../tpsl.ui";
 import { OrderPriceType } from "../orderPriceType";
@@ -12,7 +12,25 @@ export const TPSLInputRowUI = (props: Props) => {
   const { values } = props;
   return (
     <Flex direction={"column"} gap={2} itemAlign={"start"}>
-      <Text>{props.type === "tp" ? "Take profit" : "Stop loss"}</Text>
+      <Flex>
+        <Checkbox
+          size={18}
+          className="oui-size-[18px]"
+          data-testid={`oui-testid-orderEntry-${props.type}-enable-checkBox`}
+          id={`enable_${props.type}`}
+          color={"white"}
+          checked={values.enable}
+          onCheckedChange={(checked: boolean) => {
+            props.onChange("enable", !!checked);
+          }}
+        />
+        <label
+          htmlFor={`enable_${props.type}`}
+          className={"oui-ml-1 oui-text-sm oui-text-base-contrast-36"}
+        >
+          {props.type === "tp" ? "Take profit" : "Stop loss"}
+        </label>
+      </Flex>
       <Flex
         direction={"column"}
         itemAlign={"start"}
@@ -23,18 +41,21 @@ export const TPSLInputRowUI = (props: Props) => {
         </Text>
         <Grid cols={2} gap={2}>
           <PriceInput
-            type={"TP price"}
+            type={`${props.type} price`}
             value={values.trigger_price}
-            error={parseErrorMsg("tp_trigger_price")}
+            error={parseErrorMsg(`${props.type}_trigger_price`)}
             onValueChange={(value) => {
-              // props.onPriceChange("tp_trigger_price", value);
+              props.onChange(`${props.type}_trigger_price`, value);
             }}
             quote_dp={2}
           />
           <PnlInputWidget
-            type={"TP"}
-            onChange={() => {}}
-            quote={"USDT"}
+            type={props.type === "tp" ? "TP" : "SL"}
+            onChange={(key, value) => {
+              console.log("key", key, "value", value);
+              props.onChange(key, value as string);
+            }}
+            quote={"USDC"}
             quote_dp={2}
             values={values}
           />
@@ -52,18 +73,18 @@ export const TPSLInputRowUI = (props: Props) => {
         <Grid cols={2} gap={2}>
           <PriceInput
             type={"order price"}
-            label={props.priceType === OrderType.LIMIT ? "Limit" : "Market"}
+            label={values.order_type === OrderType.LIMIT ? "Limit" : "Market"}
             value={values.order_price}
-            error={parseErrorMsg("order_price")}
+            error={parseErrorMsg(`${props.type}_order_price`)}
             onValueChange={(value) => {
-              // props.onPriceChange("tp_trigger_price", value);
+              props.onChange(`${props.type}_order_price`, value);
             }}
             quote_dp={2}
           />
           <OrderPriceType
-            type={props.priceType}
+            type={values.order_type}
             onChange={(value) => {
-              props.setPriceType(value as OrderType);
+              props.onChange(`${props.type}_order_type`, value as OrderType);
             }}
           />
         </Grid>
