@@ -22,7 +22,7 @@ import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import type { SelectOption } from "@orderly.network/ui/src/select/withOptions";
 import type { useAssetsScriptReturn } from "./assets.script";
 import type { AssetsWidgetProps } from "./assets.widget";
-import { ConvertDesktopUI } from "./convert.ui.desktop";
+import { ConvertHistoryWidget } from "./convert.widget";
 
 export type AssetsProps = useAssetsScriptReturn;
 
@@ -117,9 +117,11 @@ export const AssetsTable: React.FC<Readonly<AssetsWidgetProps>> = (props) => {
     state,
     isMainAccount,
     selectedAccount,
+    selectedAsset,
     columns,
     dataSource,
     onFilter,
+    holding,
   } = props;
 
   const { t } = useTranslation();
@@ -132,6 +134,11 @@ export const AssetsTable: React.FC<Readonly<AssetsWidgetProps>> = (props) => {
   const MAIN_ACCOUNT: SelectOption = {
     label: t("common.mainAccount"),
     value: AccountType.MAIN,
+  };
+
+  const ALL_ASSETS: SelectOption = {
+    label: t("common.allAssets", "All assets"),
+    value: "all",
   };
 
   const subAccounts = state.subAccounts ?? [];
@@ -149,6 +156,30 @@ export const AssetsTable: React.FC<Readonly<AssetsWidgetProps>> = (props) => {
     }
     return [ALL_ACCOUNTS, MAIN_ACCOUNT];
   }, [subAccounts]);
+
+  // Create asset options from holding data - optimized and simplified
+  const memoizedAssetOptions = useMemo(() => {
+    if (!Array.isArray(holding) || holding.length === 0) {
+      return [ALL_ASSETS];
+    }
+
+    // Extract unique tokens from stable holding data only
+    const uniqueTokens = [
+      ...new Set(
+        holding
+          .filter((item) => item.token) // Filter out items without token
+          .map((item) => item.token), // Extract token names
+      ),
+    ];
+
+    // Create options array
+    const assetOptions = uniqueTokens.map((token) => ({
+      value: token,
+      label: token,
+    }));
+
+    return [ALL_ASSETS, ...assetOptions];
+  }, [holding]);
 
   return (
     <Card className="oui-w-full">
@@ -183,6 +214,12 @@ export const AssetsTable: React.FC<Readonly<AssetsWidgetProps>> = (props) => {
                   value: selectedAccount,
                   options: memoizedOptions,
                 },
+                {
+                  type: "select",
+                  name: "asset",
+                  value: selectedAsset,
+                  options: memoizedAssetOptions,
+                },
               ]}
             />
           )}
@@ -213,10 +250,7 @@ export const AssetsTable: React.FC<Readonly<AssetsWidgetProps>> = (props) => {
           />
         </TabPanel>
         <TabPanel value="convertHistory" title={"Convert History"}>
-          <ConvertDesktopUI
-            memoizedOptions={memoizedOptions}
-            convertState={props.convertState}
-          />
+          <ConvertHistoryWidget memoizedOptions={memoizedOptions} />
         </TabPanel>
       </Tabs>
     </Card>

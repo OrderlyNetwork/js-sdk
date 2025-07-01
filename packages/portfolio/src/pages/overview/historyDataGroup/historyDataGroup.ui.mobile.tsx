@@ -1,5 +1,6 @@
 import { useTranslation } from "@orderly.network/i18n";
 import { TabPanel, Tabs } from "@orderly.network/ui";
+import { ConvertHistoryWidget } from "../../assets/convert.widget";
 import { AssetHistoryWidget } from "../assetHistory";
 import { DistributionHistoryWidget } from "../distribution";
 import { FundingHistoryWidget } from "../funding";
@@ -20,6 +21,7 @@ export const HistoryDataGroupMobile = (props: {
       size="lg"
       classNames={{
         tabsList: "oui-px-3 oui-py-2",
+        tabsListContainer: "oui-overflow-x-auto",
       }}
     >
       <TabPanel title={t("common.deposits")} value={"deposit"}>
@@ -36,6 +38,9 @@ export const HistoryDataGroupMobile = (props: {
         value={"distribution"}
       >
         <DistributionHistoryWidget />
+      </TabPanel>
+      <TabPanel title={"Convert history"} value={"convert"}>
+        <ConvertHistoryWidget memoizedOptions={[]} />
       </TabPanel>
     </Tabs>
   );
