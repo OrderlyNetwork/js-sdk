@@ -60,6 +60,7 @@ interface AssetValueListProps {
   marginRatioVal?: number;
   renderMMR?: string | number;
   isConnected: boolean;
+  currentLtv?: string | number;
 }
 
 const useCurrentStatusText = (): StatusInfo => {
@@ -220,7 +221,7 @@ const AssetDetail: FC<AssetDetailProps> = (props) => {
         // suffix={value && unit}
         placeholder={placeholder}
       >
-        {value || "--"}
+        {typeof value === "number" ? value : value || "--"}
       </Text.numeral>
     </Flex>
   );
@@ -232,6 +233,7 @@ const AssetValueList: FC<AssetValueListProps> = ({
   marginRatioVal,
   renderMMR,
   isConnected,
+  currentLtv,
 }) => {
   const [optionsOpen, setOptionsOpen] = useLocalStorage(
     "orderly_entry_asset_list_open",
@@ -307,7 +309,7 @@ const AssetValueList: FC<AssetValueListProps> = ({
         <AssetDetail
           label={"LTV"}
           visible={visible}
-          value={"999"}
+          value={currentLtv}
           rule="percentages"
           showPercentage
           placeholder="--%"
@@ -333,6 +335,7 @@ export const AssetView: FC<AssetViewState> = ({
   isConnected,
   isMainAccount,
   hasSubAccount,
+  currentLtv,
 }) => {
   const { title, description, titleColor, titleClsName } =
     useCurrentStatusText();
@@ -446,6 +449,7 @@ export const AssetView: FC<AssetViewState> = ({
               marginRatioVal={marginRatioVal}
               renderMMR={renderMMR}
               isConnected={isConnected}
+              currentLtv={currentLtv}
             />
             <Flex
               gap={isMainAccount ? (hasSubAccount ? 2 : 3) : 0}

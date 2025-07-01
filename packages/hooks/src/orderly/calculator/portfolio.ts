@@ -10,6 +10,7 @@ import { BaseCalculator } from "./baseCalculator";
 import { MarketCalculatorName } from "./markPrice";
 
 export const PortfolioCalculatorName = "portfolio";
+
 class PortfolioCalculator extends BaseCalculator<any> {
   name = PortfolioCalculatorName;
 
