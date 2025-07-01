@@ -5,7 +5,9 @@ export const orderEntry = {
 
   "orderEntry.orderType.limit": "Limit",
   "orderEntry.orderType.market": "Market",
+  // TODO：use orderEntry.orderType.limit
   "orderEntry.orderType.limitOrder": "Limit",
+  // TODO：use orderEntry.orderType.market
   "orderEntry.orderType.marketOrder": "Market",
   "orderEntry.orderType.stopLimit": "Stop limit",
   "orderEntry.orderType.stopMarket": "Stop market",
@@ -109,6 +111,12 @@ export const orderEntry = {
 
   "orderEntry.confirmScaledOrder.orderPrice.warning":
     "This order will be filled immediately based on the current market price.",
+  "orderEntry.scaledOrder.fullySuccessful":
+    "Scaled order placed: {{total}} orders submitted successfully.",
+  "orderEntry.scaledOrder.partiallySuccessful":
+    "Scaled order partially submitted: {{successCount}} of {{total}} orders placed.",
+  "orderEntry.scaledOrder.allFailed":
+    "Scaled order failed. No orders were placed.",
 };
 
 export type OrderEntry = typeof orderEntry;

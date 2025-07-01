@@ -65,7 +65,7 @@ import { SlippageUI } from "./components/slippage/slippage.ui";
 import { OrderTPSL } from "./components/tpsl";
 import { type OrderEntryScriptReturn } from "./orderEntry.script";
 import { InputType } from "./types";
-import { BBOStatus } from "./utils";
+import { BBOStatus, getScaledPlaceOrderMessage } from "./utils";
 
 type Refs = OrderEntryScriptReturn["refs"];
 
@@ -169,6 +169,8 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
   }, [errorMsgVisible]);
 
   const onSubmit = () => {
+    const isScaledOrder = formattedOrder.order_type === OrderType.SCALED;
+
     helper
       .validate()
       .then(
@@ -176,7 +178,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
         // TODO: get order from other function
         (order: any) => {
           // scaled order is always need confirm
-          if (formattedOrder.order_type === OrderType.SCALED) {
+          if (isScaledOrder) {
             return modal.show(scaledOrderConfirmDialogId, {
               order,
               symbolInfo,
@@ -207,13 +209,20 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
         },
       )
       .then(() => {
+        // validate success, submit order
         return submit({ resetOnSuccess: false }).then((result: any) => {
           if (!result.success && result.message) {
             toast.error(result.message);
+          } else if (result.success && isScaledOrder) {
+            const message = getScaledPlaceOrderMessage(result);
+            if (message) {
+              toast.success(message);
+            }
           }
         });
       })
       .catch((error) => {
+        // submit order error
         if (error?.message) {
           toast.error(error.message);
         }
@@ -1284,7 +1293,7 @@ const ScaledOrderInput = (props: {
           intensity={600}
           className={cn(
             "oui-h-[54px]",
-            "oui-t-rounded",
+            "oui-t-rounded oui-text-base-contrast-36",
             "oui-border oui-border-solid oui-border-line",
             showSkewInput
               ? "oui-rounded-r-none oui-rounded-bl-xl oui-border-r-0"
@@ -1313,7 +1322,7 @@ const ScaledOrderInput = (props: {
             onBlur={onBlur(InputType.SKEW)}
             overrideFormatters={[
               // inputFormatter.rangeFormatter({ min: 0, max: 100 }),
-              inputFormatter.dpFormatter(0),
+              inputFormatter.dpFormatter(2),
             ]}
             classNames={{
               root: "oui-w-11 oui-rounded-l-none oui-rounded-br-xl !oui-px-1",

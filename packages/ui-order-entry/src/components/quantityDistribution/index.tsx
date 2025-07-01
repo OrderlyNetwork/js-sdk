@@ -44,7 +44,7 @@ export const QuantityDistribution = (props: QuantityDistributionProps) => {
               htmlFor={`distribution-type-${type}`}
               className={cn(
                 "oui-text-2xs",
-                "oui-ml-1 peer-data-[disabled]:oui-text-base-contrast-20",
+                "oui-ml-1",
                 "oui-whitespace-nowrap oui-break-normal",
               )}
             >

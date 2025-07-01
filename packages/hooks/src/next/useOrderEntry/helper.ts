@@ -422,6 +422,7 @@ export function calcScaledOrderBatchBody(
       base_dp,
     });
 
+    const now = Date.now();
     const orders = prices.map((price, index) => {
       const subOrder: Partial<OrderlyOrder> = {
         symbol,
@@ -431,6 +432,8 @@ export function calcScaledOrderBatchBody(
         order_quantity: qtys[index],
         order_price: price,
         reduce_only,
+        // it will be used for identify the scaled order from ws
+        client_order_id: `scaled_${index}_${now}`,
       };
       // if visible_quantity is 0, set visible_quantity to 0
       if (visible_quantity === 0) {

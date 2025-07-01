@@ -95,6 +95,8 @@ export interface BaseOrder {
   order_tag: string;
   level: OrderLevel;
   post_only_adjust: boolean;
+  /** custom order id, it is used to identify the order from ws */
+  client_order_id: string;
 }
 
 /** Scaled order fields */

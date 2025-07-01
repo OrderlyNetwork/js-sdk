@@ -15,6 +15,9 @@ export const orders = {
   "orders.status.rejected.toast.title": "Order rejected",
   "orders.status.replaced.toast.title": "Order edited",
 
+  "orders.status.scaledSubOrderOpened.toast.title":
+    "Scale order: sub-order opened",
+
   "orders.column.fill&Quantity": "Filled / Quantity",
   "orders.column.triggerPrice": "Trigger price",
   "orders.column.orderTime": "Order time",
