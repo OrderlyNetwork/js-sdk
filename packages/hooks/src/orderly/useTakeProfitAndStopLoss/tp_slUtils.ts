@@ -363,7 +363,7 @@ export function tpslCalculateHelper(
     offset,
     offset_percentage,
     pnl,
-    order_price,
+    order_price: string | number | undefined,
     tpsl_order_type;
 
   console.log("entryPrice", inputs.entryPrice);
@@ -478,7 +478,10 @@ export function tpslCalculateHelper(
     case "sl_order_type": {
       tpsl_order_type = inputs.value;
       trigger_price =
-        inputs.values[`${keyPrefix}trigger_price` as keyof OrderlyOrder] ?? "";
+        (inputs.values[`${keyPrefix}trigger_price` as keyof OrderlyOrder] as
+          | string
+          | number
+          | undefined) ?? "";
       if (tpsl_order_type === OrderType.MARKET) {
         order_price = "";
       } else {
