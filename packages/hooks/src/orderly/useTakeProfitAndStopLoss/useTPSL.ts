@@ -4,6 +4,7 @@ import {
   API,
   AlgoOrderEntity,
   OrderSide,
+  OrderlyOrder,
   SDKError,
 } from "@orderly.network/types";
 import { AlgoOrderRootType } from "@orderly.network/types";
@@ -167,6 +168,7 @@ export const useTaskProfitAndStopLossInternal = (
               ? Number(prev.quantity)!
               : -Number(prev.quantity)!,
           orderSide: side,
+          values: prev as Partial<OrderlyOrder>,
         },
         {
           symbol: symbolInfo,
