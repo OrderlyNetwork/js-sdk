@@ -65,8 +65,8 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
     if (initAccountState < AccountStatusEnum.SignedIn) {
       steps.push({
         key: "signIn",
-        title: t("connector.signIn"),
-        description: t("connector.signIn.description"),
+        title: t("connector.createAccount"),
+        description: t("connector.createAccount.description"),
       });
     }
 
@@ -254,7 +254,7 @@ const ActionButton: FC<{
             loading={loading}
             disabled={disabled}
           >
-            {t("connector.signIn")}
+            {t("connector.createAccount")}
           </Button>
         ),
         enableTrading: (

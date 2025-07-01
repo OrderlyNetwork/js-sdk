@@ -82,8 +82,8 @@ const useCurrentStatusText = (): StatusInfo => {
           "oui-text-transparent oui-bg-clip-text oui-gradient-brand",
       },
       notSignedIn: {
-        title: t("connector.signIn"),
-        description: t("connector.trade.signIn.tooltip"),
+        title: t("connector.createAccount"),
+        description: t("connector.trade.createAccount.tooltip"),
         titleColor: "primary",
       },
       disabledTrading: {

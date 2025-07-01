@@ -1,13 +1,14 @@
 import { FC, useEffect, useState } from "react";
-import { cn, Flex, SimpleDialog, Statistic, Text } from "@orderly.network/ui";
-import { ApiManagerScriptReturns } from "../apiManager.script";
 import { ScopeType } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
+import { cn, Flex, SimpleDialog, Statistic, Text } from "@orderly.network/ui";
+import { ApiManagerScriptReturns } from "../apiManager.script";
 
 export const CreateAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
   const [ipText, setIpText] = useState("");
   const [read, setRead] = useState(true);
   const [trade, setTrade] = useState(true);
+  const [asset, setAsset] = useState(true);
   const [hint, setHint] = useState("");
   const { t } = useTranslation();
 
@@ -53,9 +54,12 @@ export const CreateAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
             if (trade) {
               scopes.push("trading");
             }
+            if (asset) {
+              scopes.push("asset");
+            }
             await props.doCreate(ipText, scopes.join(",") as ScopeType);
           },
-          disabled: !trade && !read,
+          disabled: !trade && !read && !asset,
           size: "md",
         },
       }}
@@ -66,10 +70,6 @@ export const CreateAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
       }}
     >
       <Flex direction={"column"} gap={6}>
-        {/* <TextField label={"IP restriction (optional)"} rows={5} className="oui-w-full oui-h-auto" classNames={{
-          input: "oui-h-[100px]",
-          root: "oui-h-[100px]"
-        }}/> */}
         <Flex direction={"column"} gap={1} width={"100%"} itemAlign={"start"}>
           <Text intensity={54} size="2xs">
             {t("portfolio.apiKey.create.ipRestriction")}
@@ -78,11 +78,11 @@ export const CreateAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
             data-testid="oui-testid-apiKey-createApiKey-dialog-textarea"
             placeholder={t("portfolio.apiKey.create.ipRestriction.placeholder")}
             className={cn(
-              "oui-text-sm oui-text-base-contrast-80 oui-p-3 oui-h-[100px] oui-rounded-xl oui-bg-base-6 oui-w-full",
-              "oui-border-0 focus:oui-border-2 focus:oui-border-primary-darken oui-outline-none",
+              "oui-h-[100px] oui-w-full oui-rounded-xl oui-bg-base-6 oui-p-3 oui-text-sm oui-text-base-contrast-80",
+              "oui-border-0 oui-outline-none focus:oui-border-2 focus:oui-border-primary-darken",
               "oui-placeholder-base-contrast-20",
               hint.length > 0 &&
-                "oui-outline-1 oui-outline-danger focus:oui-outline-none"
+                "oui-outline-1 oui-outline-danger focus:oui-outline-none",
             )}
             value={ipText}
             onChange={(e) => {
@@ -97,7 +97,7 @@ export const CreateAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
               <div
                 className={cn(
                   "oui-absolute oui-top-[10px]",
-                  "oui-h-1 oui-w-1 oui-rounded-full oui-bg-danger"
+                  "oui-size-1 oui-rounded-full oui-bg-danger",
                 )}
               />
               <Text color="danger" size="xs" className="oui-ml-2">
@@ -134,6 +134,13 @@ export const CreateAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
               label={t("portfolio.apiKey.permissions.trading")}
               testid="oui-testid-apiKey-createApiKey-dialog-trading-checkbox"
             />
+            <Checkbox
+              size={18}
+              checked={asset}
+              onCheckedChange={(e) => setAsset(e as boolean)}
+              label={t("portfolio.apiKey.permissions.asset")}
+              testid="oui-testid-apiKey-createApiKey-dialog-asset-checkbox"
+            />
           </Flex>
         </Statistic>
       </Flex>
@@ -156,7 +163,7 @@ export const Checkbox: FC<{
         props.onCheckedChange(!props.checked);
       }}
       className={
-        "disabled:oui-cursor-not-allowed disabled:oui-opacity-50 oui-flex oui-items-center oui-gap-2"
+        "oui-flex oui-items-center oui-gap-2 disabled:oui-cursor-not-allowed disabled:oui-opacity-50"
       }
       data-testid={props.testid}
     >
@@ -195,7 +202,7 @@ export const Checkbox: FC<{
       <Text
         intensity={54}
         size="sm"
-        className="oui-break-normal oui-whitespace-nowrap"
+        className="oui-whitespace-nowrap oui-break-normal"
       >
         {props.label}
       </Text>

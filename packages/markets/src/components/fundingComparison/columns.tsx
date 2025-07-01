@@ -4,6 +4,7 @@ import { cn, Flex, TokenIcon, useScreen } from "@orderly.network/ui";
 import type { Column } from "@orderly.network/ui";
 import { Text } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
+import { OrderlyIcon } from "../../icons";
 import { baseEX, exchanges } from "./fundingComparison.script";
 
 const CDN_PREFIX = "https://oss.orderly.network/static/exchange_logo";
@@ -37,6 +38,27 @@ export const useFundingColumns = () => {
             </Text.formatted>
           </Flex>
         ),
+      },
+      {
+        title: (
+          <Flex gapX={1}>
+            <OrderlyIcon /> {t("markets.openInterest")}
+          </Flex>
+        ),
+        dataIndex: "openInterest",
+        width: 120,
+        // align: "right",
+        onSort: true,
+        render: (value) => {
+          if (value === "-") {
+            return "-";
+          }
+          return (
+            <Text.numeral currency="$" dp={0} rm={Decimal.ROUND_DOWN}>
+              {value}
+            </Text.numeral>
+          );
+        },
       },
       ...exchanges.map<Column>((item) => ({
         title: (

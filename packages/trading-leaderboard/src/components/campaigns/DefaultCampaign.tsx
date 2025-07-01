@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import { cn } from "@orderly.network/ui";
 
 export const DefaultCampaign: FC<{
@@ -7,6 +8,7 @@ export const DefaultCampaign: FC<{
   style?: React.CSSProperties;
   className?: string;
 }> = ({ currentCampaignId, onCampaignChange, style, className }) => {
+  const { t } = useTranslation();
   return (
     <div
       className={cn([
@@ -21,7 +23,7 @@ export const DefaultCampaign: FC<{
       style={style}
       onClick={() => onCampaignChange("general")}
     >
-      General leaderboard
+      {t("tradingLeaderboard.generalLeaderboard")}
     </div>
   );
 };

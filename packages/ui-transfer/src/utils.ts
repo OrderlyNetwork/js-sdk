@@ -32,11 +32,11 @@ export function getTransferErrorMessage(errorCode: number) {
   }
 
   if (errorCode === 35) {
-    return i18n.t("transfer.internalTransfer.error.transferToSelf");
+    return i18n.t("transfer.internalTransfer.error.accountIdNotExist");
   }
 
   if (errorCode === 37) {
-    return i18n.t("transfer.internalTransfer.error.accountIdNotExist");
+    return i18n.t("transfer.internalTransfer.error.transferToSelf");
   }
 
   if (errorCode === 46) {
