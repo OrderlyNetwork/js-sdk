@@ -24,6 +24,7 @@ export const LTVRiskTooltipUI: React.FC<LTVTooltipScriptReturn> = (props) => {
     isThresholdLoading,
     holdingList = [],
     currentLtv,
+    onConvert,
   } = props;
   return (
     <Flex gap={1} className="oui-w-72 oui-max-w-72" direction="column">
@@ -76,7 +77,13 @@ export const LTVRiskTooltipUI: React.FC<LTVTooltipScriptReturn> = (props) => {
         will be automatically converted with a haircut. To avoid this, you can
         manually convert assets to USDC.
       </Text>
-      <Button fullWidth size={"md"} variant={"outlined"} color={"secondary"}>
+      <Button
+        fullWidth
+        size={"md"}
+        variant={"outlined"}
+        color={"secondary"}
+        onClick={onConvert}
+      >
         Convert assets to USDC
       </Button>
     </Flex>

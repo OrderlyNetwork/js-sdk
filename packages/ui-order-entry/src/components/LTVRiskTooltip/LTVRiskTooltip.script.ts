@@ -1,9 +1,11 @@
+import { useCallback } from "react";
 import {
   useCurrentLtv,
   useHoldingStream,
   useQuery,
 } from "@orderly.network/hooks";
 import type { API } from "@orderly.network/types";
+import { modal } from "@orderly.network/ui";
 
 const useConvertThreshold = () => {
   const { data, error, isLoading } = useQuery<API.ConvertThreshold>(
@@ -30,6 +32,10 @@ export const useLTVTooltipScript = () => {
 
   const currentLtv = useCurrentLtv();
 
+  const onConvert = useCallback(async () => {
+    return modal.show("ConvertDialogId");
+  }, []);
+
   return {
     holdingList,
     isHoldingLoading,
@@ -37,6 +43,7 @@ export const useLTVTooltipScript = () => {
     negative_usdc_threshold,
     isThresholdLoading,
     currentLtv: currentLtv,
+    onConvert: onConvert,
   };
 };
 

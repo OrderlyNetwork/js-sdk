@@ -1,6 +1,6 @@
+import { useTranslation } from "@orderly.network/i18n";
 import { Button } from "@orderly.network/ui";
 import { FaucetState } from "./faucet.script";
-import { useTranslation } from "@orderly.network/i18n";
 
 export function FaucetUi(props: FaucetState) {
   const { t } = useTranslation();
