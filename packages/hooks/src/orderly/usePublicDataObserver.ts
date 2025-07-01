@@ -1,7 +1,7 @@
-import { useQuery } from "../useQuery";
 import { type API } from "@orderly.network/types";
 // import { createGetter } from "../utils/createGetter";
 import { getPrecisionByNumber } from "@orderly.network/utils";
+import { useQuery } from "../useQuery";
 import { useAppStore } from "./appStore";
 import { useMarketStore } from "./useMarket/market.store";
 
@@ -13,7 +13,7 @@ const publicQueryOptions = {
 
 export const usePublicDataObserver = () => {
   const { setSymbolsInfo, setFundingRates } = useAppStore(
-    (state) => state.actions
+    (state) => state.actions,
   );
 
   const { updateMarket } = useMarketStore((state) => state.actions);
@@ -83,7 +83,7 @@ export const usePublicDataObserver = () => {
         return [];
       }
       // console.log(data);
-      updateMarket(data);
+      updateMarket(data as API.MarketInfoExt[]);
     },
   });
 };
