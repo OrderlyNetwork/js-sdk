@@ -525,6 +525,8 @@ export declare namespace WSMessage {
     amount: number;
     count: number;
     change: number;
+    open_interest?: number;
+    index_price?: number;
   }
 
   export interface MarkPrice {

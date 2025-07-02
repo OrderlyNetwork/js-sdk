@@ -10,6 +10,7 @@ type Receiver = {
 };
 
 type TransferOptions = {
+  /** if not provided, use current account id */
   fromAccountId?: string;
 };
 

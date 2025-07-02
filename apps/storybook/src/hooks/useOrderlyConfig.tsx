@@ -61,7 +61,7 @@ export const useOrderlyConfig = () => {
             { name: t("common.portfolio"), href: "/portfolio" },
             { name: t("common.markets"), href: "/markets" },
             {
-              name: t("tradingLeaderboard.leaderboard"),
+              name: t("tradingLeaderboard.arena"),
               href: "/leaderboard",
             },
           ],
@@ -117,7 +117,7 @@ export const useOrderlyConfig = () => {
               inactiveIcon: <TradingInactiveIcon />,
             },
             {
-              name: t("tradingLeaderboard.leaderboard"),
+              name: t("tradingLeaderboard.arena"),
               href: "/leaderboard",
               activeIcon: <LeaderboardActiveIcon />,
               inactiveIcon: <LeaderboardInactiveIcon />,

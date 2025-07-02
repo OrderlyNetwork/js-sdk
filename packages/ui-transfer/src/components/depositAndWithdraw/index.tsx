@@ -1,12 +1,13 @@
 import { FC, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import {
+  ArrowDownSquareFillIcon,
+  ArrowUpSquareFillIcon,
   registerSimpleDialog,
   registerSimpleSheet,
   TabPanel,
   Tabs,
 } from "@orderly.network/ui";
-import { DepositIcon, WithdrawIcon } from "../../icons";
 import { WithdrawFormWidget } from "../withdrawForm";
 import { DepositSlot } from "./plugin";
 
@@ -37,14 +38,14 @@ export const DepositAndWithdraw: FC<DepositAndWithdrawProps> = (props) => {
     >
       <TabPanel
         title={t("common.deposit")}
-        icon={<DepositIcon />}
+        icon={<ArrowDownSquareFillIcon />}
         value="deposit"
       >
         <DepositSlot onClose={props.close} />
       </TabPanel>
       <TabPanel
         title={t("common.withdraw")}
-        icon={<WithdrawIcon />}
+        icon={<ArrowUpSquareFillIcon />}
         value="withdraw"
       >
         <WithdrawFormWidget {...props} />

@@ -23,6 +23,18 @@ interface SolanaWalletContextValue {
   isConnected: boolean;
 }
 
+const defaultUseSolanaWallet = {
+  wallets: [],
+  select: () => Promise.resolve(),
+  connect: () => Promise.resolve(),
+  wallet: null,
+  publicKey: null,
+  signMessage: () => Promise.resolve(),
+  signTransaction: () => Promise.resolve(),
+  sendTransaction: () => Promise.resolve(),
+  disconnect: () => Promise.resolve(),
+};
+
 const SolanaWalletContext = createContext<SolanaWalletContextValue | null>(
   null,
 );
@@ -44,19 +56,7 @@ export const SolanaWalletProvider: React.FC<{ children: React.ReactNode }> = ({
     signTransaction,
     sendTransaction,
     disconnect: disconnectSolana,
-  } = connectorWalletType.disableSolana
-    ? {
-        wallets: [],
-        select: () => Promise.resolve(),
-        connect: () => Promise.resolve(),
-        wallet: null,
-        publicKey: null,
-        signMessage: () => Promise.resolve(),
-        signTransaction: () => Promise.resolve(),
-        sendTransaction: () => Promise.resolve(),
-        disconnect: () => Promise.resolve(),
-      }
-    : useWallet();
+  } = connectorWalletType.disableSolana ? defaultUseSolanaWallet : useWallet();
 
   const {
     wallet,

@@ -41,7 +41,7 @@ const useCurrentStatus = () => {
       rootClass: "oui-bg-[linear-gradient(15deg,#27FDFE_0%,transparent_30%)]",
     },
     notSignedIn: {
-      description: t("connector.trade.signIn.tooltip"),
+      description: t("connector.trade.createAccount.tooltip"),
       rootClass: "oui-bg-[linear-gradient(15deg,#335FFC_0%,transparent_30%)]",
     },
     disabledTrading: {

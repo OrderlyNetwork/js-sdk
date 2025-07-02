@@ -1,8 +1,8 @@
 import { FC, useEffect, useState } from "react";
-import { cn, Flex, SimpleDialog, Statistic, Text } from "@orderly.network/ui";
 import { APIKeyItem } from "@orderly.network/hooks";
-import { Checkbox } from "./createApiKey";
 import { useTranslation } from "@orderly.network/i18n";
+import { cn, Flex, SimpleDialog, Statistic, Text } from "@orderly.network/ui";
+import { Checkbox } from "./createApiKey";
 
 export const EditAPIKeyDialog: FC<{
   item: APIKeyItem;
@@ -15,12 +15,17 @@ export const EditAPIKeyDialog: FC<{
   const [ipText, setIpText] = useState(item.ip_restriction_list?.join(","));
   const [read, setRead] = useState(true);
   const [trade, setTrade] = useState(true);
+  const [asset, setAsset] = useState(true);
   const [hint, setHint] = useState("");
   const { t } = useTranslation();
+
   useEffect(() => {
     setIpText(item.ip_restriction_list.join(","));
-    setRead(item.scope?.toLocaleLowerCase().includes("read") || false);
-    setTrade(item.scope?.toLocaleLowerCase().includes("trading") || false);
+    const scope = item.scope?.toLocaleLowerCase() || "";
+
+    setRead(scope.includes("read"));
+    setTrade(scope.includes("trading"));
+    setAsset(scope.includes("asset"));
   }, [item]);
 
   useEffect(() => {
@@ -73,11 +78,11 @@ export const EditAPIKeyDialog: FC<{
             data-testid="oui-testid-apiKey-editApiKey-dialog-textarea"
             placeholder={t("portfolio.apiKey.create.ipRestriction.placeholder")}
             className={cn(
-              "oui-text-sm oui-text-base-contrast-80 oui-p-3 oui-h-[100px] oui-rounded-xl oui-bg-base-6 oui-w-full",
-              "oui-border-0 focus:oui-border-2 focus:oui-border-primary-darken oui-outline-none",
+              "oui-h-[100px] oui-w-full oui-rounded-xl oui-bg-base-6 oui-p-3 oui-text-sm oui-text-base-contrast-80",
+              "oui-border-0 oui-outline-none focus:oui-border-2 focus:oui-border-primary-darken",
               "oui-placeholder-base-contrast-20",
               hint.length > 0 &&
-                "oui-outline-1 oui-outline-danger focus:oui-outline-none"
+                "oui-outline-1 oui-outline-danger focus:oui-outline-none",
             )}
             value={ipText}
             onChange={(e) => {
@@ -92,7 +97,7 @@ export const EditAPIKeyDialog: FC<{
               <div
                 className={cn(
                   "oui-absolute oui-top-[10px]",
-                  "oui-h-1 oui-w-1 oui-rounded-full oui-bg-danger"
+                  "oui-size-1 oui-rounded-full oui-bg-danger",
                 )}
               />
               <Text color="danger" size="xs" className="oui-ml-2">
@@ -128,6 +133,13 @@ export const EditAPIKeyDialog: FC<{
               checked={trade}
               onCheckedChange={(e) => setTrade(e as boolean)}
               label={t("portfolio.apiKey.permissions.trading")}
+            />
+            <Checkbox
+              disabled
+              size={18}
+              checked={asset}
+              onCheckedChange={(e) => setAsset(e as boolean)}
+              label={t("portfolio.apiKey.permissions.asset")}
             />
           </Flex>
         </Statistic>

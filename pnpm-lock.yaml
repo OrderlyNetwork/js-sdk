@@ -1926,9 +1926,6 @@ importers:
       '@orderly.network/react-app':
         specifier: workspace:*
         version: link:../app
-      '@orderly.network/trading':
-        specifier: workspace:*
-        version: link:../trading
       '@orderly.network/types':
         specifier: workspace:*
         version: link:../types

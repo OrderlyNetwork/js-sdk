@@ -67,7 +67,7 @@ export const LeaderboardSection: FC<LeaderboardSectionProps> = (props) => {
     return (
       <Box px={3}>
         <LeaderboardTitle
-          title={t("tradingLeaderboard.leaderboard")}
+          title={t("tradingLeaderboard.arena")}
           isMobile={isMobile}
         />
         <CampaignLeaderboardWidget {...props} campaignId={currentCampaignId} />

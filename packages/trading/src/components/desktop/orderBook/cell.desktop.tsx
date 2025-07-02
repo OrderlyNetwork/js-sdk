@@ -112,7 +112,7 @@ export const DesktopOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
               </Text.numeral>
             </div>
             <div className={cn("oui-flex-1 oui-pr-3 oui-text-right")}>
-              <Text.numeral dp={2} className="oui-z-10">
+              <Text.numeral dp={0} className="oui-z-10">
                 {totalAmount}
               </Text.numeral>
             </div>
@@ -125,7 +125,7 @@ export const DesktopOrderBookCell: FC<DesktopOrderBookCellProps> = (props) => {
               </Text.numeral>
             )}
             {coinType === quote && (
-              <Text.numeral dp={2} className="oui-z-10">
+              <Text.numeral dp={0} className="oui-z-10">
                 {totalAmount}
               </Text.numeral>
             )}

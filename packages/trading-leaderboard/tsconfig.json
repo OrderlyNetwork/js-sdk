@@ -22,9 +22,6 @@
       ],
       "@orderly.network/i18n": [
         "../i18n/src"
-      ],
-      "@orderly.network/trading": [
-        "../trading/src"
       ]
     }
   }
