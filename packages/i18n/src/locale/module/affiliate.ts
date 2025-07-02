@@ -31,7 +31,6 @@ export const affiliate = {
   "affiliate.referralCode.notExist": "This referral code does not exist.",
 
   "affiliate.process.title": "Becoming an affiliate is easy",
-  a: "A",
   "affiliate.process.step1.title": "Trade $10,000+ or apply",
   "affiliate.process.step1.description":
     "Earn a referral code automatically ($0 of $10,000 completed), or apply for a higher rate via form.",
