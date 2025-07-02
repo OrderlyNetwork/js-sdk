@@ -27,7 +27,7 @@ export const MarketsSheet: React.FC<MarketsSheetProps> = (props) => {
 
   const { t } = useTranslation();
 
-  const { getFavoritesProps } = useFavoritesProps();
+  const { getFavoritesProps, renderEmptyView } = useFavoritesProps();
 
   const renderTab = (type: MarketsTabName) => {
     const isFavorites = type === MarketsTabName.Favorites;
@@ -46,35 +46,13 @@ export const MarketsSheet: React.FC<MarketsSheetProps> = (props) => {
               : "oui-h-[calc(100%_-_40px)]",
           ),
         }}
-        emptyView={
-          isFavorites ? (
-            <Flex
-              direction="column"
-              itemAlign="center"
-              gapY={4}
-              className="oui-h-[calc(100%_-_70px)] oui-text-center"
-            >
-              <EmptyStateIcon />
-              <Button
-                color="gray"
-                size="xs"
-                className="oui-bg-base-4"
-                onClick={() => {
-                  props.onTabChange(MarketsTabName.All);
-                }}
-              >
-                <PlusIcon
-                  className="oui-mr-1 oui-text-base-contrast"
-                  opacity={1}
-                  size={12}
-                />
-                <Text intensity={98}>
-                  {t("markets.favorites.addFavorites")}
-                </Text>
-              </Button>
-            </Flex>
-          ) : undefined
-        }
+        emptyView={renderEmptyView({
+          type,
+          onClick: () => {
+            props.onTabChange(MarketsTabName.All);
+          },
+          className: "oui-h-[calc(100%_-_70px)]",
+        })}
         {...getFavoritesProps(type)}
       />
     );
