@@ -4,15 +4,22 @@ import { useTranslation } from "@orderly.network/i18n";
 import { AppLogos } from "@orderly.network/react-app";
 import { TradingPageProps } from "@orderly.network/trading";
 import {
+  TradingIcon,
   TradingActiveIcon,
   TradingInactiveIcon,
   PortfolioActiveIcon,
   PortfolioInactiveIcon,
   LeaderboardActiveIcon,
   LeaderboardInactiveIcon,
+  SettingFillIcon,
   MarketsActiveIcon,
   MarketsInactiveIcon,
   useScreen,
+  BarChartIcon,
+  PersonIcon,
+  BattleIcon,
+  AssetIcon,
+  Text,
 } from "@orderly.network/ui";
 import {
   FooterProps,
@@ -100,6 +107,54 @@ export const useOrderlyConfig = () => {
                 activeIcon: <OrderlyActiveIcon size={14} />,
               },
             ],
+          },
+          leftNav: {
+            menus: [
+              { name: t("common.trading"), href: "/", icon: <TradingIcon /> },
+              {
+                name: t("common.markets"),
+                href: "/markets",
+                icon: <BarChartIcon />,
+              },
+              {
+                name: t("common.portfolio"),
+                href: "/portfolio",
+                icon: <PersonIcon />,
+              },
+              {
+                name: t("common.assets"),
+                href: "/portfolio/assets",
+                icon: <AssetIcon />,
+              },
+              {
+                name: t("tradingLeaderboard.arena"),
+                href: "/leaderboard",
+                icon: <BattleIcon />,
+              },
+              {
+                name: t("common.affiliate"),
+                href: "/rewards/affiliate",
+                icon: <img src="box-ani.gif" className="oui-w-6 oui-h-6" />,
+                trailing: <Tag text="Unlock @ $10K volume" />,
+              },
+              {
+                name: t("common.tradingRewards"),
+                href: "/rewards/trading",
+                icon: (
+                  <TradingRewardsIcon size={24} color="white" opacity={0.8} />
+                ),
+              },
+              {
+                name: t("common.settings"),
+                href: "/portfolio/settings",
+                icon: <SettingFillIcon color="white" opacity={0.8} />,
+              },
+            ],
+            twitterUrl: "https://twitter.com/OrderlyNetwork",
+            telegramUrl: "https://t.me/orderlynetwork",
+            discordUrl: "https://discord.com/invite/orderlynetwork",
+            duneUrl: "https://dune.com/orderlynetwork",
+            feedbackUrl: "https://orderly.network/feedback",
           },
         },
         bottomNavProps: {
@@ -228,4 +283,22 @@ export const useOrderlyConfig = () => {
       },
     };
   }, [t]);
+};
+
+const Tag = (props: { text: string }) => {
+  return (
+    <div
+      className={
+        "oui-ml-1 oui-inline-flex oui-rounded oui-bg-gradient-to-r oui-from-[rgb(var(--oui-gradient-brand-start)_/_0.12)] oui-to-[rgb(var(--oui-gradient-brand-end)_/_0.12)] oui-px-2 oui-py-1"
+      }
+    >
+      <Text.gradient
+        color={"brand"}
+        size={"3xs"}
+        className="oui-whitespace-nowrap oui-break-normal"
+      >
+        {props.text}
+      </Text.gradient>
+    </div>
+  );
 };

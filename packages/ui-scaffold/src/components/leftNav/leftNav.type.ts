@@ -1,11 +1,19 @@
 import { ReactNode } from "react";
 
 export type LeftNavProps = {
-  items: LeftNavItem[];
+  menus?: LeftNavItem[];
+  twitterUrl?: string;
+  telegramUrl?: string;
+  discordUrl?: string;
+  duneUrl?: string;
+  feedbackUrl?: string;
+  customLeftNav?: ReactNode;
+  products?: ReactNode;
 };
 
 export type LeftNavItem = {
   name: string;
   href: string;
   icon?: ReactNode;
+  trailing?: ReactNode;
 };

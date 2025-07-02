@@ -6,6 +6,7 @@ import { Flex, Text, ChevronLeftIcon } from "@orderly.network/ui";
 import { WalletConnectButtonExtension } from "../accountMenu/menu.widget";
 import { ChainMenuWidget } from "../chainMenu";
 import { LanguageSwitcherWidget } from "../languageSwitcher";
+import { LeftNavUI } from "../leftNav/leftNav.ui";
 import { RouterAdapter } from "../scaffold";
 import { ScanQRCodeWidget } from "../scanQRCode";
 import { SubAccountWidget } from "../subAccount";
@@ -141,8 +142,18 @@ export const MainNavMobile: FC<Props> = (props) => {
 
     return (
       <>
+        {props?.customLeftNav ||
+          (props.leftNav && (
+            <LeftNavUI
+              className="oui-mr-2"
+              {...props?.leftNav}
+              logo={props?.logo}
+              routerAdapter={props?.routerAdapter}
+              showSubAccount={showSubAccount}
+            />
+          ))}
         {title}
-        <Flex gapX={2}>
+        <Flex gapX={2} className="oui-ml-auto">
           {props.leading}
           {languageSwitcher}
           {scanQRCode}
@@ -162,7 +173,6 @@ export const MainNavMobile: FC<Props> = (props) => {
       height={44}
       px={3}
       itemAlign={"center"}
-      justify={"between"}
       className={props.classNames?.mainNav?.root}
     >
       {renderCustomComponents()}
