@@ -142,8 +142,10 @@ export class ScaledOrderCreator extends BaseOrderCreator<OrderEntity> {
         errors.skew = OrderValidation.required("skew");
       } else {
         const skewNum = Number(skew);
-        if (skewNum < 0 || skewNum > 100) {
-          errors.skew = OrderValidation.range("skew", 0, 100);
+        if (skewNum <= 0) {
+          errors.skew = OrderValidation.min("skew", 0);
+        } else if (skewNum > 100) {
+          errors.skew = OrderValidation.max("skew", 100);
         }
       }
     }

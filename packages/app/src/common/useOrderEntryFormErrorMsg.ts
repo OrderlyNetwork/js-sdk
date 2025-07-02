@@ -66,7 +66,8 @@ export function useOrderEntryFormErrorMsg(
       },
       skew: {
         required: t("orderEntry.skew.error.required"),
-        range: t("orderEntry.skew.error.range"),
+        min: t("orderEntry.skew.error.min", { value }),
+        max: t("orderEntry.skew.error.max", { value }),
       },
     };
 

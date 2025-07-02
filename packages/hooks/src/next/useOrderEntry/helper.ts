@@ -286,10 +286,28 @@ export function calcScaledOrderPrices(inputs: {
   return prices;
 }
 
+export function getScaledOrderSkew(inputs: {
+  skew: number;
+  distribution_type: DistributionType;
+  total_orders: number;
+}) {
+  const { skew, distribution_type, total_orders } = inputs;
+
+  if (distribution_type === DistributionType.FLAT) {
+    return 1;
+  } else if (distribution_type === DistributionType.ASCENDING) {
+    return total_orders;
+  } else if (distribution_type === DistributionType.DESCENDING) {
+    return 1 / total_orders;
+  }
+
+  return skew;
+}
+
 /**
  * weights[i] = 1 + (skew - 1) × (i / (totalOrders - 1)) *
  */
-function calcScaledOrderWeights(inputs: {
+export function calcScaledOrderWeights(inputs: {
   total_orders?: number;
   distribution_type?: DistributionType;
   skew?: number;
@@ -301,7 +319,8 @@ function calcScaledOrderWeights(inputs: {
   if (
     !total_orders ||
     !distribution_type ||
-    (distribution_type === DistributionType.CUSTOM && !skew)
+    (distribution_type === DistributionType.CUSTOM &&
+      (!skew || skew <= 0 || skew > 100))
   ) {
     return {
       weights: [],
@@ -312,18 +331,14 @@ function calcScaledOrderWeights(inputs: {
 
   const totalOrders = Number(total_orders);
 
-  let sizeSkew = Number(skew);
-
-  if (distribution_type === DistributionType.FLAT) {
-    sizeSkew = 1;
-  } else if (distribution_type === DistributionType.ASCENDING) {
-    sizeSkew = totalOrders;
-  } else if (distribution_type === DistributionType.DESCENDING) {
-    sizeSkew = 1 / totalOrders;
-  }
+  const skewNum = getScaledOrderSkew({
+    skew: skew!,
+    distribution_type,
+    total_orders: totalOrders,
+  });
 
   for (let i = 0; i < totalOrders; i++) {
-    weights[i] = 1 + ((sizeSkew - 1) * i) / (totalOrders - 1);
+    weights[i] = 1 + ((skewNum - 1) * i) / (totalOrders - 1);
   }
 
   const sumWeights = weights.reduce((acc, cur) => acc + cur, 0);
@@ -344,7 +359,7 @@ function calcScaledOrderWeights(inputs: {
 /**
  * qty[i] = (weights[i] / sum(weights)) × totalAmount
  */
-function calcScaledOrderQtys(inputs: {
+export function calcScaledOrderQtys(inputs: {
   side?: OrderSide;
   order_quantity?: string;
   total_orders?: number;
@@ -496,7 +511,7 @@ export function validateScaledOrderInput(order: Partial<OrderlyOrder>) {
     !total_orders ||
     !distribution_type ||
     (distribution_type === DistributionType.CUSTOM &&
-      (!skew || skew < 0 || skew > 100)) ||
+      (!skew || skew <= 0 || skew > 100)) ||
     total_orders < 2 ||
     total_orders > 20
   ) {

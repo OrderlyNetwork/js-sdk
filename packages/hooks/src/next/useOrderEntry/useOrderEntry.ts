@@ -31,6 +31,7 @@ import {
   tpslFields,
   hasTPSL,
   isBBOOrder,
+  getScaledOrderSkew,
 } from "./helper";
 import type { FullOrderState } from "./orderEntry.store";
 import { useOrderEntryNextInternal } from "./useOrderEntry.internal";
@@ -640,12 +641,16 @@ const useOrderEntry = (
       };
 
       if (isScaledOrder) {
+        const skew = getScaledOrderSkew({
+          skew: order.skew,
+          distribution_type: order.distribution_type,
+          total_orders: order.total_orders,
+        });
         trackParams = {
           ...trackParams,
           order_type: "scaled",
           distribution_type: order.distribution_type,
-          // hide skew when it is ""
-          skew: order.skew || undefined,
+          skew: new Decimal(skew).todp(2).toNumber(),
           total_orders: order.total_orders,
         };
       }

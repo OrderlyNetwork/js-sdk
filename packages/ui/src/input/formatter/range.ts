@@ -1,4 +1,3 @@
-import { Decimal } from "@orderly.network/utils";
 import { InputFormatterOptions } from "./inputFormatter";
 
 export const rangeFormatter = (props: { max?: number; min?: number }) => {
@@ -9,6 +8,10 @@ export const rangeFormatter = (props: { max?: number; min?: number }) => {
     const innerMax = props.max ?? Number(value);
     const innerMin = props.min ?? Number(value);
     const innerValue = Number(value);
+
+    if (isNaN(innerValue)) {
+      return "";
+    }
 
     return `${
       innerValue < innerMin

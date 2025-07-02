@@ -60,7 +60,7 @@ import {
   OrderEntryContext,
   OrderEntryProvider,
 } from "./components/orderEntryContext";
-import { QuantityDistribution } from "./components/quantityDistribution";
+import { QuantityDistributionInput } from "./components/quantityDistribution";
 import { SlippageUI } from "./components/slippage/slippage.ui";
 import { OrderTPSL } from "./components/tpsl";
 import { type OrderEntryScriptReturn } from "./orderEntry.script";
@@ -1276,61 +1276,42 @@ const ScaledOrderInput = (props: {
           }}
           overrideFormatters={[
             // inputFormatter.rangeFormatter({ min: 2, max: 20 }),
+            inputFormatter.numberFormatter,
             inputFormatter.dpFormatter(0),
           ]}
           onFocus={onFocus(InputType.TOTAL_ORDERS)}
           onBlur={onBlur(InputType.TOTAL_ORDERS)}
         />
       </Grid>
-      <Flex>
-        <Flex
-          direction="column"
-          itemAlign="start"
-          justify="center"
-          pl={2}
-          gapY={1}
-          width="100%"
-          intensity={600}
-          className={cn(
-            "oui-h-[54px]",
-            "oui-t-rounded oui-text-base-contrast-36",
-            "oui-border oui-border-solid oui-border-line",
-            showSkewInput
-              ? "oui-rounded-r-none oui-rounded-bl-xl oui-border-r-0"
-              : "oui-rounded-b-xl",
-          )}
-        >
-          <Text size={"2xs"}>{t("orderEntry.quantityDistribution")}</Text>
-          <QuantityDistribution
-            value={values.distribution_type}
-            onValueChange={(value) => {
-              props.onChange("distribution_type", value);
-            }}
-          />
-        </Flex>
-        {showSkewInput && (
-          <CustomInput
-            id="order_skew_input"
-            label={t("orderEntry.skew")}
-            placeholder="0-100"
-            value={values.skew}
-            error={parseErrorMsg("skew")}
-            onChange={(e) => {
-              props.onChange("skew", e);
-            }}
-            onFocus={onFocus(InputType.SKEW)}
-            onBlur={onBlur(InputType.SKEW)}
-            overrideFormatters={[
-              // inputFormatter.rangeFormatter({ min: 0, max: 100 }),
-              inputFormatter.dpFormatter(2),
-            ]}
-            classNames={{
-              root: "oui-w-11 oui-rounded-l-none oui-rounded-br-xl !oui-px-1",
-              prefix: "!oui-left-1",
-            }}
-          />
-        )}
-      </Flex>
+      <QuantityDistributionInput
+        value={values.distribution_type}
+        onValueChange={(value) => {
+          props.onChange("distribution_type", value);
+        }}
+        className={cn(!showSkewInput && "oui-rounded-b-xl")}
+      />
+
+      {showSkewInput && (
+        <CustomInput
+          id="order_skew_input"
+          label={t("orderEntry.skew")}
+          placeholder="0"
+          value={values.skew}
+          error={parseErrorMsg("skew")}
+          onChange={(e) => {
+            props.onChange("skew", e);
+          }}
+          onFocus={onFocus(InputType.SKEW)}
+          onBlur={onBlur(InputType.SKEW)}
+          overrideFormatters={[
+            inputFormatter.rangeFormatter({ min: 0, max: 100 }),
+            inputFormatter.dpFormatter(2),
+          ]}
+          classNames={{
+            root: "oui-rounded-b-xl",
+          }}
+        />
+      )}
     </div>
   );
 };

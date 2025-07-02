@@ -18,13 +18,29 @@ export const orderEntry = {
 
   "orderEntry.upperPrice": "Upper price",
   "orderEntry.lowerPrice": "Lower price",
-  "orderEntry.quantityDistribution": "Qty distribution",
-  "orderEntry.distributionType.flat": "Flat",
-  "orderEntry.distributionType.ascending": "Asc.",
-  "orderEntry.distributionType.descending": "Desc.",
-  "orderEntry.distributionType.custom": "Custom",
   "orderEntry.skew": "Skew",
   "orderEntry.totalOrders": "Total orders",
+
+  "orderEntry.quantityDistribution": "Qty distribution",
+
+  "orderEntry.quantityDistribution.description":
+    "Controls how order size is distributed across price levels. ",
+  "orderEntry.quantityDistribution.formula":
+    "Size Skew = (Size at highest price) ÷ (Size at lowest price)",
+
+  "orderEntry.distributionType.flat": "Flat",
+  "orderEntry.distributionType.ascending": "Ascending",
+  "orderEntry.distributionType.ascending.abbr": "Asc.",
+  "orderEntry.distributionType.descending": "Descending",
+  "orderEntry.distributionType.descending.abbr": "Desc.",
+  "orderEntry.distributionType.custom": "Custom",
+
+  "orderEntry.distributionType.flat.description":
+    "Uniform order allocation across the range.",
+  "orderEntry.distributionType.ascending.description":
+    "Greater size allocated to higher price levels.",
+  "orderEntry.distributionType.descending.description":
+    "Greater size allocated to lower price levels.",
 
   "orderEntry.bbo": "BBO",
   "orderEntry.bbo.counterparty1": "Counterparty 1",
@@ -98,7 +114,8 @@ export const orderEntry = {
     "Total orders must be in the range of 2 to 20.",
 
   "orderEntry.skew.error.required": "Skew is required",
-  "orderEntry.skew.error.range": "Skew must be in the range of 0 to 100",
+  "orderEntry.skew.error.min": "Skew must be greater than {{value}}",
+  "orderEntry.skew.error.max": "Skew must be less than {{value}}",
 
   "orderEntry.slippage": "Slippage",
   "orderEntry.slippage.est": "Est",
