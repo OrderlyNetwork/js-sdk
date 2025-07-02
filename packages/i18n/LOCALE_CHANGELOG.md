@@ -1,5 +1,1045 @@
 # Locale Changelog
 
+## 2.3.3
+
+### Added Keys
+
+#### Language: **en**
+
+| Key                                            | Value                                                                                                                                                                                                                                        |
+| ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| markets.favorites.addFavorites                 | Add favorites                                                                                                                                                                                                                                |
+| positions.limitClose.errors.exceed.title       | Close size limit exceeded                                                                                                                                                                                                                    |
+| positions.limitClose.errors.exceed.description | Cannot close {{quantity}} {{symbol}} position. Max allowed per close is {{maxQuantity}} {{symbol}}.                                                                                                                                          |
+| restrictedInfo.accessRestricted                | Access Restricted                                                                                                                                                                                                                            |
+| restrictedInfo.accessRestricted.description    | Due to laws and regulations, we currently do not operate in the United States. By continuing to use our platform, you represent and warrant at all times that you are not a resident of the United States throughout the period of such use. |
+| restrictedInfo.accessRestricted.agree          | I understand and agree                                                                                                                                                                                                                       |
+
+#### Language: **zh**
+
+| Key                                            | Value                                                                                                    |
+| ---------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| markets.favorites.addFavorites                 | 添加收藏                                                                                                 |
+| positions.limitClose.errors.exceed.title       | 超出平仓数量限制                                                                                         |
+| positions.limitClose.errors.exceed.description | 无法平仓 {{quantity}} {{symbol}} 仓位。每次平仓最大允许数量为 {{maxQuantity}} {{symbol}}。               |
+| restrictedInfo.accessRestricted                | 访问受限                                                                                                 |
+| restrictedInfo.accessRestricted.description    | 根据法律法规，我们目前不在美国开展业务。继续使用我们的平台即表示您声明并保证在使用期间始终不是美国居民。 |
+| restrictedInfo.accessRestricted.agree          | 我理解并同意                                                                                             |
+
+#### Language: **vi**
+
+| Key                                            | Value                                                                                                                                                                                                                  |
+| ---------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| markets.favorites.addFavorites                 | Thêm vào yêu thích                                                                                                                                                                                                     |
+| positions.limitClose.errors.exceed.title       | Vượt quá giới hạn đóng vị thế                                                                                                                                                                                          |
+| positions.limitClose.errors.exceed.description | Không thể đóng vị thế {{quantity}} {{symbol}}. Số lượng tối đa cho phép mỗi lần đóng là {{maxQuantity}} {{symbol}}.                                                                                                    |
+| restrictedInfo.accessRestricted                | Hạn chế Truy cập                                                                                                                                                                                                       |
+| restrictedInfo.accessRestricted.description    | Do luật pháp và quy định, hiện tại chúng tôi không hoạt động tại Hoa Kỳ. Bằng việc tiếp tục sử dụng nền tảng của chúng tôi, bạn cam đoan và đảm bảo rằng bạn không phải là cư dân Hoa Kỳ trong suốt thời gian sử dụng. |
+| restrictedInfo.accessRestricted.agree          | Tôi hiểu và đồng ý                                                                                                                                                                                                     |
+
+#### Language: **uk**
+
+| Key                                            | Value                                                                                                                                                                                                                                     |
+| ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| markets.favorites.addFavorites                 | Додати до обраного                                                                                                                                                                                                                        |
+| positions.limitClose.errors.exceed.title       | Перевищено ліміт закриття позиції                                                                                                                                                                                                         |
+| positions.limitClose.errors.exceed.description | Неможливо закрити позицію {{quantity}} {{symbol}}. Максимально дозволений обсяг на одне закриття {{maxQuantity}} {{symbol}}.                                                                                                              |
+| restrictedInfo.accessRestricted                | Доступ обмежено                                                                                                                                                                                                                           |
+| restrictedInfo.accessRestricted.description    | Відповідно до законів та нормативних актів, ми наразі не працюємо в Сполучених Штатах. Продовжуючи користуватися нашою платформою, ви заявляєте та гарантуєте, що не є резидентом Сполучених Штатів протягом усього періоду використання. |
+| restrictedInfo.accessRestricted.agree          | Я розумію та погоджуюся                                                                                                                                                                                                                   |
+
+#### Language: **tr**
+
+| Key                                            | Value                                                                                                                                                                                                                                             |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| markets.favorites.addFavorites                 | Favorilere ekle                                                                                                                                                                                                                                   |
+| positions.limitClose.errors.exceed.title       | Pozisyon kapatma limiti aşıldı                                                                                                                                                                                                                    |
+| positions.limitClose.errors.exceed.description | {{quantity}} {{symbol}} pozisyonu kapatılamıyor. Kapatma başına izin verilen maksimum miktar {{maxQuantity}} {{symbol}}.                                                                                                                          |
+| restrictedInfo.accessRestricted                | Erişim Kısıtlı                                                                                                                                                                                                                                    |
+| restrictedInfo.accessRestricted.description    | Yasa ve düzenlemeler nedeniyle, şu anda Amerika Birleşik Devletleri'nde faaliyet göstermemekteyiz. Platformumuzu kullanmaya devam ederek, kullanım süresi boyunca Amerika Birleşik Devletleri'nde ikamet etmediğinizi beyan ve garanti edersiniz. |
+| restrictedInfo.accessRestricted.agree          | Anlıyorum ve kabul ediyorum                                                                                                                                                                                                                       |
+
+#### Language: **ru**
+
+| Key                                            | Value                                                                                                                                                                                                                                                          |
+| ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| markets.favorites.addFavorites                 | Добавить в избранное                                                                                                                                                                                                                                           |
+| positions.limitClose.errors.exceed.title       | Превышен лимит закрытия позиции                                                                                                                                                                                                                                |
+| positions.limitClose.errors.exceed.description | Невозможно закрыть позицию {{quantity}} {{symbol}}. Максимально допустимый объем на одно закрытие {{maxQuantity}} {{symbol}}.                                                                                                                                  |
+| restrictedInfo.accessRestricted                | Доступ ограничен                                                                                                                                                                                                                                               |
+| restrictedInfo.accessRestricted.description    | В связи с законами и нормативными актами, мы в настоящее время не работаем в Соединенных Штатах. Продолжая использовать нашу платформу, вы заявляете и гарантируете, что не являетесь резидентом Соединенных Штатов на протяжении всего периода использования. |
+| restrictedInfo.accessRestricted.agree          | Я понимаю и согласен                                                                                                                                                                                                                                           |
+
+#### Language: **pt**
+
+| Key                                            | Value                                                                                                                                                                                                                             |
+| ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| markets.favorites.addFavorites                 | Adicionar aos favoritos                                                                                                                                                                                                           |
+| positions.limitClose.errors.exceed.title       | Limite de fechamento de posição excedido                                                                                                                                                                                          |
+| positions.limitClose.errors.exceed.description | Não é possível fechar a posição de {{quantity}} {{symbol}}. O máximo permitido por fechamento é {{maxQuantity}} {{symbol}}.                                                                                                       |
+| restrictedInfo.accessRestricted                | Acesso Restrito                                                                                                                                                                                                                   |
+| restrictedInfo.accessRestricted.description    | Devido a leis e regulamentos, atualmente não operamos nos Estados Unidos. Ao continuar a usar nossa plataforma, você declara e garante em todos os momentos que não é residente dos Estados Unidos durante todo o período de uso. |
+| restrictedInfo.accessRestricted.agree          | Eu entendo e concordo                                                                                                                                                                                                             |
+
+#### Language: **pl**
+
+| Key                                            | Value                                                                                                                                                                                                                                                      |
+| ---------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| markets.favorites.addFavorites                 | Dodaj do ulubionych                                                                                                                                                                                                                                        |
+| positions.limitClose.errors.exceed.title       | Przekroczono limit zamknięcia pozycji                                                                                                                                                                                                                      |
+| positions.limitClose.errors.exceed.description | Nie można zamknąć pozycji {{quantity}} {{symbol}}. Maksymalna dozwolona ilość na jedno zamknięcie to {{maxQuantity}} {{symbol}}.                                                                                                                           |
+| restrictedInfo.accessRestricted                | Dostęp ograniczony                                                                                                                                                                                                                                         |
+| restrictedInfo.accessRestricted.description    | Ze względu na przepisy prawa i regulacje, obecnie nie prowadzimy działalności w Stanach Zjednoczonych. Kontynuując korzystanie z naszej platformy, oświadczasz i gwarantujesz, że nie jesteś rezydentem Stanów Zjednoczonych przez cały okres korzystania. |
+| restrictedInfo.accessRestricted.agree          | Rozumiem i zgadzam się                                                                                                                                                                                                                                     |
+
+#### Language: **nl**
+
+| Key                                            | Value                                                                                                                                                                                                                                                            |
+| ---------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| markets.favorites.addFavorites                 | Toevoegen aan favorieten                                                                                                                                                                                                                                         |
+| positions.limitClose.errors.exceed.title       | Limiet voor positiesluiting overschreden                                                                                                                                                                                                                         |
+| positions.limitClose.errors.exceed.description | Kan positie van {{quantity}} {{symbol}} niet sluiten. Maximum toegestaan per sluiting is {{maxQuantity}} {{symbol}}.                                                                                                                                             |
+| restrictedInfo.accessRestricted                | Toegang Beperkt                                                                                                                                                                                                                                                  |
+| restrictedInfo.accessRestricted.description    | Vanwege wet- en regelgeving opereren we momenteel niet in de Verenigde Staten. Door gebruik te blijven maken van ons platform, verklaart en garandeert u te allen tijde dat u geen inwoner bent van de Verenigde Staten gedurende de gehele periode van gebruik. |
+| restrictedInfo.accessRestricted.agree          | Ik begrijp het en ga akkoord                                                                                                                                                                                                                                     |
+
+#### Language: **ko**
+
+| Key                                            | Value                                                                                                                                                            |
+| ---------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| markets.favorites.addFavorites                 | 즐겨찾기 추가                                                                                                                                                    |
+| positions.limitClose.errors.exceed.title       | 청산 수량 한도 초과                                                                                                                                              |
+| positions.limitClose.errors.exceed.description | {{quantity}} {{symbol}} 포지션을 청산할 수 없습니다. 1회 청산 최대 허용량은 {{maxQuantity}} {{symbol}}입니다.                                                    |
+| restrictedInfo.accessRestricted                | 접근 제한                                                                                                                                                        |
+| restrictedInfo.accessRestricted.description    | 법률 및 규정에 따라 현재 미국에서는 서비스를 제공하지 않습니다. 우리 플랫폼을 계속 사용함으로써, 귀하는 사용 기간 동안 미국 거주자가 아님을 진술하고 보증합니다. |
+| restrictedInfo.accessRestricted.agree          | 이해하고 동의합니다                                                                                                                                              |
+
+#### Language: **ja**
+
+| Key                                            | Value                                                                                                                                                                                                  |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| markets.favorites.addFavorites                 | お気に入りに追加                                                                                                                                                                                       |
+| positions.limitClose.errors.exceed.title       | 決済数量制限超過                                                                                                                                                                                       |
+| positions.limitClose.errors.exceed.description | {{quantity}} {{symbol}}のポジションを決済できません。1回の決済上限は{{maxQuantity}} {{symbol}}です。                                                                                                   |
+| restrictedInfo.accessRestricted                | アクセス制限                                                                                                                                                                                           |
+| restrictedInfo.accessRestricted.description    | 法律および規制により、現在アメリカ合衆国では事業を展開しておりません。当プラットフォームの利用を継続することにより、利用期間中を通じてアメリカ合衆国の居住者ではないことを表明し保証するものとします。 |
+| restrictedInfo.accessRestricted.agree          | 理解し同意します                                                                                                                                                                                       |
+
+#### Language: **it**
+
+| Key                                            | Value                                                                                                                                                                                                                                             |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| markets.favorites.addFavorites                 | Aggiungi ai preferiti                                                                                                                                                                                                                             |
+| positions.limitClose.errors.exceed.title       | Limite di chiusura posizione superato                                                                                                                                                                                                             |
+| positions.limitClose.errors.exceed.description | Impossibile chiudere la posizione di {{quantity}} {{symbol}}. Il massimo consentito per chiusura è {{maxQuantity}} {{symbol}}.                                                                                                                    |
+| restrictedInfo.accessRestricted                | Accesso Limitato                                                                                                                                                                                                                                  |
+| restrictedInfo.accessRestricted.description    | A causa di leggi e regolamenti, attualmente non operiamo negli Stati Uniti. Continuando a utilizzare la nostra piattaforma, dichiari e garantisci in ogni momento di non essere residente negli Stati Uniti durante tutto il periodo di utilizzo. |
+| restrictedInfo.accessRestricted.agree          | Ho capito e accetto                                                                                                                                                                                                                               |
+
+#### Language: **id**
+
+| Key                                            | Value                                                                                                                                                                                                                                              |
+| ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| markets.favorites.addFavorites                 | Tambah ke favorit                                                                                                                                                                                                                                  |
+| positions.limitClose.errors.exceed.title       | Melebihi batas penutupan posisi                                                                                                                                                                                                                    |
+| positions.limitClose.errors.exceed.description | Tidak dapat menutup posisi {{quantity}} {{symbol}}. Jumlah maksimum yang diizinkan per penutupan adalah {{maxQuantity}} {{symbol}}.                                                                                                                |
+| restrictedInfo.accessRestricted                | Akses Dibatasi                                                                                                                                                                                                                                     |
+| restrictedInfo.accessRestricted.description    | Karena hukum dan peraturan, saat ini kami tidak beroperasi di Amerika Serikat. Dengan melanjutkan penggunaan platform kami, Anda menyatakan dan menjamin setiap saat bahwa Anda bukan penduduk Amerika Serikat selama periode penggunaan tersebut. |
+| restrictedInfo.accessRestricted.agree          | Saya mengerti dan setuju                                                                                                                                                                                                                           |
+
+#### Language: **fr**
+
+| Key                                            | Value                                                                                                                                                                                                                                                                 |
+| ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| markets.favorites.addFavorites                 | Ajouter aux favoris                                                                                                                                                                                                                                                   |
+| positions.limitClose.errors.exceed.title       | Limite de clôture dépassée                                                                                                                                                                                                                                            |
+| positions.limitClose.errors.exceed.description | Impossible de clôturer la position de {{quantity}} {{symbol}}. Le maximum autorisé par clôture est de {{maxQuantity}} {{symbol}}.                                                                                                                                     |
+| restrictedInfo.accessRestricted                | Accès Restreint                                                                                                                                                                                                                                                       |
+| restrictedInfo.accessRestricted.description    | En raison des lois et réglementations, nous n'opérons actuellement pas aux États-Unis. En continuant à utiliser notre plateforme, vous déclarez et garantissez à tout moment que vous n'êtes pas résident des États-Unis pendant toute la durée de cette utilisation. |
+| restrictedInfo.accessRestricted.agree          | Je comprends et j'accepte                                                                                                                                                                                                                                             |
+
+#### Language: **es**
+
+| Key                                            | Value                                                                                                                                                                                                                                     |
+| ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| markets.favorites.addFavorites                 | Añadir a favoritos                                                                                                                                                                                                                        |
+| positions.limitClose.errors.exceed.title       | Límite de cierre de posición excedido                                                                                                                                                                                                     |
+| positions.limitClose.errors.exceed.description | No se puede cerrar la posición de {{quantity}} {{symbol}}. El máximo permitido por cierre es {{maxQuantity}} {{symbol}}.                                                                                                                  |
+| restrictedInfo.accessRestricted                | Acceso Restringido                                                                                                                                                                                                                        |
+| restrictedInfo.accessRestricted.description    | Debido a leyes y regulaciones, actualmente no operamos en los Estados Unidos. Al continuar usando nuestra plataforma, usted declara y garantiza en todo momento que no es residente de los Estados Unidos durante todo el período de uso. |
+| restrictedInfo.accessRestricted.agree          | Entiendo y acepto                                                                                                                                                                                                                         |
+
+#### Language: **de**
+
+| Key                                            | Value                                                                                                                                                                                                                                                                    |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| markets.favorites.addFavorites                 | Zu Favoriten hinzufügen                                                                                                                                                                                                                                                  |
+| positions.limitClose.errors.exceed.title       | Schließungslimit überschritten                                                                                                                                                                                                                                           |
+| positions.limitClose.errors.exceed.description | Position {{quantity}} {{symbol}} kann nicht geschlossen werden. Maximal erlaubte Menge pro Schließung ist {{maxQuantity}} {{symbol}}.                                                                                                                                    |
+| restrictedInfo.accessRestricted                | Zugriff eingeschränkt                                                                                                                                                                                                                                                    |
+| restrictedInfo.accessRestricted.description    | Aufgrund von Gesetzen und Vorschriften sind wir derzeit nicht in den Vereinigten Staaten tätig. Durch die weitere Nutzung unserer Plattform versichern und garantieren Sie, dass Sie während des gesamten Nutzungszeitraums kein Einwohner der Vereinigten Staaten sind. |
+| restrictedInfo.accessRestricted.agree          | Ich verstehe und stimme zu                                                                                                                                                                                                                                               |
+
+### Updated Keys
+
+#### Language: **en**
+
+| Key                                 | Old Value                           | New Value                                                                                          |
+| ----------------------------------- | ----------------------------------- | -------------------------------------------------------------------------------------------------- |
+| affiliate.process.step1.title       | Apply                               | Trade $10,000+ or apply                                                                            |
+| affiliate.process.step1.description | Apply for a referral code via form. | Earn a referral code automatically ($0 of $10,000 completed), or apply for a higher rate via form. |
+
+#### Language: **zh**
+
+| Key                                 | Old Value            | New Value                                                     |
+| ----------------------------------- | -------------------- | ------------------------------------------------------------- |
+| affiliate.process.step1.title       | 申请                 | 交易 $10,000+ 或申请                                          |
+| affiliate.process.step1.description | 通过表单申请推荐码。 | 自动获得推荐码（已完成 $0/$10,000），或通过表单申请更高费率。 |
+
+#### Language: **vi**
+
+| Key                                 | Old Value                                 | New Value                                                                                       |
+| ----------------------------------- | ----------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| affiliate.process.step1.title       | Đăng ký                                   | Giao dịch $10,000+ hoặc đăng ký                                                                 |
+| affiliate.process.step1.description | Đăng ký mã giới thiệu thông qua biểu mẫu. | Tự động nhận mã giới thiệu ($0/$10,000 đã hoàn thành), hoặc đăng ký tỷ lệ cao hơn qua biểu mẫu. |
+
+#### Language: **uk**
+
+| Key                                 | Old Value                                      | New Value                                                                                                             |
+| ----------------------------------- | ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| affiliate.process.step1.title       | Подати заявку                                  | Торгуйте на $10,000+ або подайте заявку                                                                               |
+| affiliate.process.step1.description | Подайте заявку на реферальний код через форму. | Автоматично отримайте реферальний код ($0 з $10,000 виконано), або подайте заявку на більш високу ставку через форму. |
+
+#### Language: **tr**
+
+| Key                                 | Old Value                                      | New Value                                                                                                                 |
+| ----------------------------------- | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| affiliate.process.step1.title       | Başvur                                         | $10,000+ işlem yapın veya başvurun                                                                                        |
+| affiliate.process.step1.description | Form aracılığıyla referans kodu için başvurun. | Otomatik olarak referans kodu kazanın ($10,000'den $0 tamamlandı), veya form aracılığıyla daha yüksek oran için başvurun. |
+
+#### Language: **ru**
+
+| Key                                 | Old Value                                      | New Value                                                                                                                 |
+| ----------------------------------- | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| affiliate.process.step1.title       | Подать заявку                                  | Торгуйте на $10,000+ или подайте заявку                                                                                   |
+| affiliate.process.step1.description | Подайте заявку на реферальный код через форму. | Автоматически получите реферальный код ($0 из $10,000 выполнено), или подайте заявку на более высокую ставку через форму. |
+
+#### Language: **pt**
+
+| Key                                 | Old Value                                                     | New Value                                                                                                                     |
+| ----------------------------------- | ------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| affiliate.process.step1.title       | Candidatar                                                    | Negocie $10,000+ ou candidate-se                                                                                              |
+| affiliate.process.step1.description | Candidate-se a um código de referência através do formulário. | Ganhe um código de referência automaticamente ($0 de $10,000 concluído), ou candidate-se a uma taxa mais alta via formulário. |
+
+#### Language: **pl**
+
+| Key                                 | Old Value                                        | New Value                                                                                                    |
+| ----------------------------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
+| affiliate.process.step1.title       | Aplikuj                                          | Handluj $10,000+ lub aplikuj                                                                                 |
+| affiliate.process.step1.description | Złóż wniosek o kod polecający poprzez formularz. | Automatycznie otrzymaj kod polecający ($0 z $10,000 ukończone), lub aplikuj o wyższą stawkę przez formularz. |
+
+#### Language: **nl**
+
+| Key                                 | Old Value                                        | New Value                                                                                                                   |
+| ----------------------------------- | ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------- |
+| affiliate.process.step1.title       | Aanvragen                                        | Handel $10,000+ of solliciteer                                                                                              |
+| affiliate.process.step1.description | Vraag een verwijzingscode aan via het formulier. | Verdien automatisch een verwijzingscode ($0 van $10,000 voltooid), of solliciteer voor een hogere tarief via het formulier. |
+
+#### Language: **ko**
+
+| Key                                 | Old Value                           | New Value                                                                             |
+| ----------------------------------- | ----------------------------------- | ------------------------------------------------------------------------------------- |
+| affiliate.process.step1.title       | 신청                                | $10,000+ 거래 또는 신청                                                               |
+| affiliate.process.step1.description | 양식을 통해 추천 코드를 신청하세요. | 자동으로 추천 코드 획득 ($10,000 중 $0 완료), 또는 양식을 통해 더 높은 수수료율 신청. |
+
+#### Language: **ja**
+
+| Key                                 | Old Value                            | New Value                                                                                  |
+| ----------------------------------- | ------------------------------------ | ------------------------------------------------------------------------------------------ |
+| affiliate.process.step1.title       | 申し込む                             | $10,000+ 取引または申請                                                                    |
+| affiliate.process.step1.description | フォームから紹介コードを申請します。 | 自動的に紹介コードを獲得（$10,000 のうち $0 完了）、またはフォームでより高いレートを申請。 |
+
+#### Language: **it**
+
+| Key                                 | Old Value                                           | New Value                                                                                                                          |
+| ----------------------------------- | --------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| affiliate.process.step1.title       | Candidati                                           | Trading $10,000+ o candidati                                                                                                       |
+| affiliate.process.step1.description | Candidati per un codice referral tramite il modulo. | Guadagna automaticamente un codice di referral ($0 di $10,000 completato), o candidati per una tariffa più alta tramite il modulo. |
+
+#### Language: **id**
+
+| Key                                 | Old Value                                    | New Value                                                                                                                |
+| ----------------------------------- | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| affiliate.process.step1.title       | Daftar                                       | Trading $10,000+ atau daftar                                                                                             |
+| affiliate.process.step1.description | Daftar untuk kode referral melalui formulir. | Dapatkan kode referral secara otomatis ($0 dari $10,000 selesai), atau daftar untuk tarif lebih tinggi melalui formulir. |
+
+#### Language: **fr**
+
+| Key                                 | Old Value                                              | New Value                                                                                                                     |
+| ----------------------------------- | ------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
+| affiliate.process.step1.title       | Postuler                                               | Échangez $10,000+ ou postulez                                                                                                 |
+| affiliate.process.step1.description | Postulez pour un code de parrainage via le formulaire. | Gagnez automatiquement un code de parrainage ($0 sur $10,000 terminé), ou postulez pour un taux plus élevé via le formulaire. |
+
+#### Language: **es**
+
+| Key                                 | Old Value                                               | New Value                                                                                                                    |
+| ----------------------------------- | ------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| affiliate.process.step1.title       | Solicitar                                               | Opera $10,000+ o solicita                                                                                                    |
+| affiliate.process.step1.description | Solicite un código de referido a través del formulario. | Gana un código de referido automáticamente ($0 de $10,000 completado), o solicita una tasa más alta a través del formulario. |
+
+#### Language: **de**
+
+| Key                                 | Old Value                                                      | New Value                                                                                                                                     |
+| ----------------------------------- | -------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| affiliate.process.step1.title       | Bewerben                                                       | Handeln Sie $10,000+ oder bewerben Sie sich                                                                                                   |
+| affiliate.process.step1.description | Bewerben Sie sich über das Formular für einen Empfehlungscode. | Erhalten Sie automatisch einen Empfehlungscode ($0 von $10,000 abgeschlossen), oder bewerben Sie sich über das Formular für eine höhere Rate. |
+
+## 2.3.2
+
+### Added Keys
+
+#### Language: **en**
+
+| Key                                                  | Value                                                                      |
+| ---------------------------------------------------- | -------------------------------------------------------------------------- |
+| common.deposits                                      | Deposits                                                                   |
+| common.withdrawals                                   | Withdrawals                                                                |
+| common.accountId                                     | Account ID                                                                 |
+| common.web3Wallet                                    | Web3 wallet                                                                |
+| common.txId                                          | TxID                                                                       |
+| portfolio.apiKey.permissions.asset                   | Asset                                                                      |
+| portfolio.apiKey.create.createAccount.tooltip        | Please create account before create API key                                |
+| connector.createAccount                              | Create account                                                             |
+| connector.createAccount.description                  | Confirm wallet ownership to create an account                              |
+| connector.trade.createAccount.tooltip                | Please create account before starting to trade                             |
+| connector.setUp.createAccount.tooltip                | Please create account before set up                                        |
+| transfer.web3Wallet.your                             | Your Web3 Wallet                                                           |
+| transfer.web3Wallet.my                               | My Web3 wallet                                                             |
+| transfer.withdraw.otherAccount                       | Other {{brokerName}} account                                               |
+| transfer.withdraw.accountId.tips                     | Please enter an Account ID instead of a wallet address.                    |
+| transfer.withdraw.accountId.invalid                  | Invalid Account ID. Please try again.                                      |
+| transfer.internalTransfer.error.default              | Unable to complete transfer. Please try again later.                       |
+| transfer.internalTransfer.error.transferInProgress   | An internal transfer is currently in progress.                             |
+| transfer.internalTransfer.error.withdrawalInProgress | There is a withdrawal in progress.                                         |
+| transfer.internalTransfer.error.transferToSelf       | Transfers to your own account are not allowed                              |
+| transfer.internalTransfer.error.accountIdNotExist    | Receiver account ID does not exist.                                        |
+| transfer.internalTransfer.error.transferToSubAccount | Transfers to sub-accounts under different main accounts are not permitted. |
+| tradingLeaderboard.arena                             | Arena                                                                      |
+| tradingLeaderboard.generalLeaderboard                | General leaderboard                                                        |
+| tradingLeaderboard.maxTicketsAchieved                | Max tickets achieved                                                       |
+
+#### Language: **zh**
+
+| Key                                                  | Value                              |
+| ---------------------------------------------------- | ---------------------------------- |
+| common.deposits                                      | 充值                               |
+| common.withdrawals                                   | 提现                               |
+| common.accountId                                     | 账户 ID                            |
+| common.web3Wallet                                    | Web3 钱包                          |
+| common.txId                                          | 交易ID                             |
+| portfolio.apiKey.permissions.asset                   | 资产                               |
+| portfolio.apiKey.create.createAccount.tooltip        | 请在创建 API 密钥前创建账户        |
+| connector.createAccount                              | 创建账户                           |
+| connector.createAccount.description                  | 确认钱包所有权以创建账户           |
+| connector.trade.createAccount.tooltip                | 请在开始交易前创建账户             |
+| connector.setUp.createAccount.tooltip                | 请在设置前创建账户                 |
+| transfer.web3Wallet.your                             | 你的 Web3 钱包                     |
+| transfer.web3Wallet.my                               | 我的 Web3 钱包                     |
+| transfer.withdraw.otherAccount                       | 其他 {{brokerName}} 账户           |
+| transfer.withdraw.accountId.tips                     | 请输入账户 ID，而不是钱包地址。    |
+| transfer.withdraw.accountId.invalid                  | 账户 ID 无效。请重试。             |
+| transfer.internalTransfer.error.default              | 无法完成转账。请稍后再试。         |
+| transfer.internalTransfer.error.transferInProgress   | 内部转账正在进行中。               |
+| transfer.internalTransfer.error.withdrawalInProgress | 提现正在进行中。                   |
+| transfer.internalTransfer.error.transferToSelf       | 不允许向自己的账户转账             |
+| transfer.internalTransfer.error.accountIdNotExist    | 收款账户 ID 不存在。               |
+| transfer.internalTransfer.error.transferToSubAccount | 不允许向不同主账户下的子账户转账。 |
+| tradingLeaderboard.arena                             | 竞技场                             |
+| tradingLeaderboard.generalLeaderboard                | 总排行榜                           |
+| tradingLeaderboard.maxTicketsAchieved                | 获得的最大票数                     |
+
+#### Language: **vi**
+
+| Key                                                  | Value                                                                        |
+| ---------------------------------------------------- | ---------------------------------------------------------------------------- |
+| common.deposits                                      | Nạp tiền                                                                     |
+| common.withdrawals                                   | Rút tiền                                                                     |
+| common.accountId                                     | ID tài khoản                                                                 |
+| common.web3Wallet                                    | Ví Web3                                                                      |
+| common.txId                                          | TxID                                                                         |
+| portfolio.apiKey.permissions.asset                   | Tài sản                                                                      |
+| portfolio.apiKey.create.createAccount.tooltip        | Vui lòng tạo tài khoản trước khi tạo khóa API                                |
+| connector.createAccount                              | Tạo tài khoản                                                                |
+| connector.createAccount.description                  | Xác nhận quyền sở hữu ví để tạo tài khoản                                    |
+| connector.trade.createAccount.tooltip                | Vui lòng tạo tài khoản trước khi bắt đầu giao dịch                           |
+| connector.setUp.createAccount.tooltip                | Vui lòng tạo tài khoản trước khi thiết lập                                   |
+| transfer.web3Wallet.your                             | Ví Web3 của bạn                                                              |
+| transfer.web3Wallet.my                               | Ví Web3 của tôi                                                              |
+| transfer.withdraw.otherAccount                       | Tài khoản {{brokerName}} khác                                                |
+| transfer.withdraw.accountId.tips                     | Vui lòng nhập ID tài khoản thay vì địa chỉ ví.                               |
+| transfer.withdraw.accountId.invalid                  | ID tài khoản không hợp lệ. Vui lòng thử lại.                                 |
+| transfer.internalTransfer.error.default              | Không thể hoàn tất chuyển khoản. Vui lòng thử lại sau.                       |
+| transfer.internalTransfer.error.transferInProgress   | Đang có chuyển khoản nội bộ diễn ra.                                         |
+| transfer.internalTransfer.error.withdrawalInProgress | Đang có rút tiền diễn ra.                                                    |
+| transfer.internalTransfer.error.transferToSelf       | Không được phép chuyển vào tài khoản của chính bạn                           |
+| transfer.internalTransfer.error.accountIdNotExist    | ID tài khoản người nhận không tồn tại.                                       |
+| transfer.internalTransfer.error.transferToSubAccount | Không được phép chuyển vào tài khoản phụ dưới các tài khoản chính khác nhau. |
+| tradingLeaderboard.arena                             | Đấu trường                                                                   |
+| tradingLeaderboard.generalLeaderboard                | Bảng xếp hạng chung                                                          |
+| tradingLeaderboard.maxTicketsAchieved                | Số vé tối đa đã đạt được                                                     |
+
+#### Language: **uk**
+
+| Key                                                  | Value                                                                |
+| ---------------------------------------------------- | -------------------------------------------------------------------- |
+| common.deposits                                      | Депозити                                                             |
+| common.withdrawals                                   | Виведення коштів                                                     |
+| common.accountId                                     | ID акаунта                                                           |
+| common.web3Wallet                                    | Web3 гаманець                                                        |
+| common.txId                                          | ID транзакції                                                        |
+| portfolio.apiKey.permissions.asset                   | Актив                                                                |
+| portfolio.apiKey.create.createAccount.tooltip        | Будь ласка, створіть обліковий запис перед створенням ключа API      |
+| connector.createAccount                              | Створити обліковий запис                                             |
+| connector.createAccount.description                  | Підтвердьте володіння гаманцем, щоб створити обліковий запис         |
+| connector.trade.createAccount.tooltip                | Будь ласка, створіть обліковий запис перед початком торгівлі         |
+| connector.setUp.createAccount.tooltip                | Будь ласка, створіть обліковий запис перед налаштуванням             |
+| transfer.web3Wallet.your                             | Ваш Web3 гаманець                                                    |
+| transfer.web3Wallet.my                               | Мій Web3 гаманець                                                    |
+| transfer.withdraw.otherAccount                       | Інший акаунт {{brokerName}}                                          |
+| transfer.withdraw.accountId.tips                     | Будь ласка, введіть ID акаунта, а не адресу гаманця.                 |
+| transfer.withdraw.accountId.invalid                  | Недійсний ID акаунта. Будь ласка, спробуйте ще раз.                  |
+| transfer.internalTransfer.error.default              | Не вдалося завершити переказ. Будь ласка, спробуйте пізніше.         |
+| transfer.internalTransfer.error.transferInProgress   | Внутрішній переказ триває.                                           |
+| transfer.internalTransfer.error.withdrawalInProgress | Виведення коштів триває.                                             |
+| transfer.internalTransfer.error.transferToSelf       | Перекази на власний акаунт заборонені                                |
+| transfer.internalTransfer.error.accountIdNotExist    | ID акаунта одержувача не існує.                                      |
+| transfer.internalTransfer.error.transferToSubAccount | Перекази на субакаунти під різними основними акаунтами не дозволені. |
+| tradingLeaderboard.arena                             | Арена                                                                |
+| tradingLeaderboard.generalLeaderboard                | Загальний рейтинг                                                    |
+| tradingLeaderboard.maxTicketsAchieved                | Максимум отриманих квитків                                           |
+
+#### Language: **tr**
+
+| Key                                                  | Value                                                           |
+| ---------------------------------------------------- | --------------------------------------------------------------- |
+| common.deposits                                      | Mevduatlar                                                      |
+| common.withdrawals                                   | Çekimler                                                        |
+| common.accountId                                     | Hesap Kimliği                                                   |
+| common.web3Wallet                                    | Web3 cüzdanı                                                    |
+| common.txId                                          | İşlem ID                                                        |
+| portfolio.apiKey.permissions.asset                   | Varlık                                                          |
+| portfolio.apiKey.create.createAccount.tooltip        | Lütfen API anahtarı oluşturmadan önce hesap oluşturun           |
+| connector.createAccount                              | Hesap oluştur                                                   |
+| connector.createAccount.description                  | Hesap oluşturmak için cüzdan sahipliğini onaylayın              |
+| connector.trade.createAccount.tooltip                | Lütfen ticarete başlamadan önce hesap oluşturun                 |
+| connector.setUp.createAccount.tooltip                | Lütfen kurmadan önce hesap oluşturun                            |
+| transfer.web3Wallet.your                             | Senin Web3 cüzdanın                                             |
+| transfer.web3Wallet.my                               | Benim Web3 cüzdanım                                             |
+| transfer.withdraw.otherAccount                       | Diğer {{brokerName}} hesabı                                     |
+| transfer.withdraw.accountId.tips                     | Lütfen cüzdan adresi yerine bir Hesap Kimliği girin.            |
+| transfer.withdraw.accountId.invalid                  | Geçersiz Hesap Kimliği. Lütfen tekrar deneyin.                  |
+| transfer.internalTransfer.error.default              | Transfer tamamlanamıyor. Lütfen daha sonra tekrar deneyin.      |
+| transfer.internalTransfer.error.transferInProgress   | Bir dahili transfer devam ediyor.                               |
+| transfer.internalTransfer.error.withdrawalInProgress | Bir çekim işlemi devam ediyor.                                  |
+| transfer.internalTransfer.error.transferToSelf       | Kendi hesabınıza transfer yapılamaz                             |
+| transfer.internalTransfer.error.accountIdNotExist    | Alıcı hesap kimliği mevcut değil.                               |
+| transfer.internalTransfer.error.transferToSubAccount | Farklı ana hesaplar altındaki alt hesaplara transfer yapılamaz. |
+| tradingLeaderboard.arena                             | Arena                                                           |
+| tradingLeaderboard.generalLeaderboard                | Genel Sıralama                                                  |
+| tradingLeaderboard.maxTicketsAchieved                | Ulaşılan maksimum bilet sayısı                                  |
+
+#### Language: **ru**
+
+| Key                                                  | Value                                                                  |
+| ---------------------------------------------------- | ---------------------------------------------------------------------- |
+| common.deposits                                      | Депозиты                                                               |
+| common.withdrawals                                   | Выводы средств                                                         |
+| common.accountId                                     | ID аккаунта                                                            |
+| common.web3Wallet                                    | Web3 кошелек                                                           |
+| common.txId                                          | ID транзакции                                                          |
+| portfolio.apiKey.permissions.asset                   | Актив                                                                  |
+| portfolio.apiKey.create.createAccount.tooltip        | Пожалуйста, создайте учетную запись перед созданием ключа API          |
+| connector.createAccount                              | Создать учетную запись                                                 |
+| connector.createAccount.description                  | Подтвердите владение кошельком для создания учетной записи             |
+| connector.trade.createAccount.tooltip                | Пожалуйста, создайте учетную запись перед началом торговли             |
+| connector.setUp.createAccount.tooltip                | Пожалуйста, создайте учетную запись перед настройкой                   |
+| transfer.web3Wallet.your                             | Ваш Web3 кошелек                                                       |
+| transfer.web3Wallet.my                               | Мой Web3 кошелек                                                       |
+| transfer.withdraw.otherAccount                       | Другой аккаунт {{brokerName}}                                          |
+| transfer.withdraw.accountId.tips                     | Пожалуйста, введите ID аккаунта, а не адрес кошелька.                  |
+| transfer.withdraw.accountId.invalid                  | Недействительный ID аккаунта. Пожалуйста, попробуйте еще раз.          |
+| transfer.internalTransfer.error.default              | Не удалось выполнить перевод. Пожалуйста, попробуйте позже.            |
+| transfer.internalTransfer.error.transferInProgress   | Внутренний перевод в процессе.                                         |
+| transfer.internalTransfer.error.withdrawalInProgress | Выполняется вывод средств.                                             |
+| transfer.internalTransfer.error.transferToSelf       | Переводы на свой аккаунт запрещены                                     |
+| transfer.internalTransfer.error.accountIdNotExist    | ID аккаунта получателя не существует.                                  |
+| transfer.internalTransfer.error.transferToSubAccount | Переводы на субаккаунты под разными основными аккаунтами не разрешены. |
+| tradingLeaderboard.arena                             | Арена                                                                  |
+| tradingLeaderboard.generalLeaderboard                | Общий рейтинг                                                          |
+| tradingLeaderboard.maxTicketsAchieved                | Максимум полученных билетов                                            |
+
+#### Language: **pt**
+
+| Key                                                  | Value                                                                              |
+| ---------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| common.deposits                                      | Depósitos                                                                          |
+| common.withdrawals                                   | Saques                                                                             |
+| common.accountId                                     | ID da conta                                                                        |
+| common.web3Wallet                                    | Carteira Web3                                                                      |
+| common.txId                                          | ID da Transação                                                                    |
+| portfolio.apiKey.permissions.asset                   | Ativo                                                                              |
+| portfolio.apiKey.create.createAccount.tooltip        | Por favor, crie uma conta antes de criar a chave de API                            |
+| connector.createAccount                              | Criar conta                                                                        |
+| connector.createAccount.description                  | Confirme a posse da carteira para criar uma conta                                  |
+| connector.trade.createAccount.tooltip                | Por favor, crie uma conta antes de começar a negociar                              |
+| connector.setUp.createAccount.tooltip                | Por favor, crie uma conta antes de configurar                                      |
+| transfer.web3Wallet.your                             | Sua carteira Web3                                                                  |
+| transfer.web3Wallet.my                               | Minha carteira Web3                                                                |
+| transfer.withdraw.otherAccount                       | Outra conta {{brokerName}}                                                         |
+| transfer.withdraw.accountId.tips                     | Por favor, insira um ID de conta em vez de um endereço de carteira.                |
+| transfer.withdraw.accountId.invalid                  | ID da conta inválido. Por favor, tente novamente.                                  |
+| transfer.internalTransfer.error.default              | Não foi possível concluir a transferência. Por favor, tente novamente mais tarde.  |
+| transfer.internalTransfer.error.transferInProgress   | Uma transferência interna está em andamento.                                       |
+| transfer.internalTransfer.error.withdrawalInProgress | Um saque está em andamento.                                                        |
+| transfer.internalTransfer.error.transferToSelf       | Transferências para sua própria conta não são permitidas                           |
+| transfer.internalTransfer.error.accountIdNotExist    | O ID da conta do destinatário não existe.                                          |
+| transfer.internalTransfer.error.transferToSubAccount | Transferências para subcontas sob diferentes contas principais não são permitidas. |
+| tradingLeaderboard.arena                             | Arena                                                                              |
+| tradingLeaderboard.generalLeaderboard                | Classificação geral                                                                |
+| tradingLeaderboard.maxTicketsAchieved                | Máximo de bilhetes alcançados                                                      |
+
+#### Language: **pl**
+
+| Key                                                  | Value                                                              |
+| ---------------------------------------------------- | ------------------------------------------------------------------ |
+| common.deposits                                      | Depozyty                                                           |
+| common.withdrawals                                   | Wypłaty                                                            |
+| common.accountId                                     | ID konta                                                           |
+| common.web3Wallet                                    | Portfel Web3                                                       |
+| common.txId                                          | ID transakcji                                                      |
+| portfolio.apiKey.permissions.asset                   | Aktywa                                                             |
+| portfolio.apiKey.create.createAccount.tooltip        | Proszę utworzyć konto przed utworzeniem klucza API                 |
+| connector.createAccount                              | Utwórz konto                                                       |
+| connector.createAccount.description                  | Potwierdź własność portfela, aby utworzyć konto                    |
+| connector.trade.createAccount.tooltip                | Proszę utworzyć konto przed rozpoczęciem handlu                    |
+| connector.setUp.createAccount.tooltip                | Proszę utworzyć konto przed konfiguracją                           |
+| transfer.web3Wallet.your                             | Twój portfel Web3                                                  |
+| transfer.web3Wallet.my                               | Mój portfel Web3                                                   |
+| transfer.withdraw.otherAccount                       | Inne konto {{brokerName}}                                          |
+| transfer.withdraw.accountId.tips                     | Proszę wprowadzić ID konta zamiast adresu portfela.                |
+| transfer.withdraw.accountId.invalid                  | Nieprawidłowy ID konta. Spróbuj ponownie.                          |
+| transfer.internalTransfer.error.default              | Nie można zakończyć transferu. Spróbuj ponownie później.           |
+| transfer.internalTransfer.error.transferInProgress   | Trwa transfer wewnętrzny.                                          |
+| transfer.internalTransfer.error.withdrawalInProgress | Trwa wypłata.                                                      |
+| transfer.internalTransfer.error.transferToSelf       | Przelewy na własne konto są niedozwolone                           |
+| transfer.internalTransfer.error.accountIdNotExist    | ID konta odbiorcy nie istnieje.                                    |
+| transfer.internalTransfer.error.transferToSubAccount | Przelewy na subkonta pod różnymi głównymi kontami są niedozwolone. |
+| tradingLeaderboard.arena                             | Arena                                                              |
+| tradingLeaderboard.generalLeaderboard                | Ranking ogólny                                                     |
+| tradingLeaderboard.maxTicketsAchieved                | Maksymalna liczba uzyskanych biletów                               |
+
+#### Language: **nl**
+
+| Key                                                  | Value                                                                                  |
+| ---------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| common.deposits                                      | Stortingen                                                                             |
+| common.withdrawals                                   | Opnames                                                                                |
+| common.accountId                                     | Account-ID                                                                             |
+| common.web3Wallet                                    | Web3-portemonnee                                                                       |
+| common.txId                                          | TxID                                                                                   |
+| portfolio.apiKey.permissions.asset                   | Activa                                                                                 |
+| portfolio.apiKey.create.createAccount.tooltip        | Maak een account aan voordat u de API-sleutel aanmaakt                                 |
+| connector.createAccount                              | Account aanmaken                                                                       |
+| connector.createAccount.description                  | Bevestig het eigendom van de portemonnee om een account aan te maken                   |
+| connector.trade.createAccount.tooltip                | Maak een account aan voordat u begint met handelen                                     |
+| connector.setUp.createAccount.tooltip                | Maak een account aan voordat u instelt                                                 |
+| transfer.web3Wallet.your                             | Jouw Web3-portemonnee                                                                  |
+| transfer.web3Wallet.my                               | Mijn Web3-portemonnee                                                                  |
+| transfer.withdraw.otherAccount                       | Andere {{brokerName}} account                                                          |
+| transfer.withdraw.accountId.tips                     | Voer een account-ID in in plaats van een portemonnee-adres.                            |
+| transfer.withdraw.accountId.invalid                  | Ongeldig account-ID. Probeer het opnieuw.                                              |
+| transfer.internalTransfer.error.default              | Kan overdracht niet voltooien. Probeer het later opnieuw.                              |
+| transfer.internalTransfer.error.transferInProgress   | Er is een interne overdracht gaande.                                                   |
+| transfer.internalTransfer.error.withdrawalInProgress | Er is een opname gaande.                                                               |
+| transfer.internalTransfer.error.transferToSelf       | Overboekingen naar je eigen account zijn niet toegestaan                               |
+| transfer.internalTransfer.error.accountIdNotExist    | Ontvanger account-ID bestaat niet.                                                     |
+| transfer.internalTransfer.error.transferToSubAccount | Overboekingen naar subaccounts onder verschillende hoofdaccounts zijn niet toegestaan. |
+| tradingLeaderboard.arena                             | Arena                                                                                  |
+| tradingLeaderboard.generalLeaderboard                | Algemeen klassement                                                                    |
+| tradingLeaderboard.maxTicketsAchieved                | Maximum aantal behaalde tickets                                                        |
+
+#### Language: **ko**
+
+| Key                                                  | Value                                                      |
+| ---------------------------------------------------- | ---------------------------------------------------------- |
+| common.deposits                                      | 입금                                                       |
+| common.withdrawals                                   | 출금                                                       |
+| common.accountId                                     | 계정 ID                                                    |
+| common.web3Wallet                                    | Web3 지갑                                                  |
+| common.txId                                          | 거래 ID                                                    |
+| portfolio.apiKey.permissions.asset                   | 자산                                                       |
+| portfolio.apiKey.create.createAccount.tooltip        | API 키를 생성하기 전에 계정을 생성해주세요                 |
+| connector.createAccount                              | 계정 생성                                                  |
+| connector.createAccount.description                  | 계정을 생성하려면 지갑 소유권을 확인하세요                 |
+| connector.trade.createAccount.tooltip                | 거래를 시작하기 전에 계정을 생성해주세요                   |
+| connector.setUp.createAccount.tooltip                | 설정하기 전에 계정을 생성해주세요                          |
+| transfer.web3Wallet.your                             | 당신의 Web3 지갑                                           |
+| transfer.web3Wallet.my                               | 나의 Web3 지갑                                             |
+| transfer.withdraw.otherAccount                       | 다른 {{brokerName}} 계정                                   |
+| transfer.withdraw.accountId.tips                     | 지갑 주소가 아닌 계정 ID를 입력하세요.                     |
+| transfer.withdraw.accountId.invalid                  | 잘못된 계정 ID입니다. 다시 시도하세요.                     |
+| transfer.internalTransfer.error.default              | 이체를 완료할 수 없습니다. 나중에 다시 시도하세요.         |
+| transfer.internalTransfer.error.transferInProgress   | 내부 이체가 진행 중입니다.                                 |
+| transfer.internalTransfer.error.withdrawalInProgress | 출금이 진행 중입니다.                                      |
+| transfer.internalTransfer.error.transferToSelf       | 본인 계정으로의 이체는 허용되지 않습니다                   |
+| transfer.internalTransfer.error.accountIdNotExist    | 수신자 계정 ID가 존재하지 않습니다.                        |
+| transfer.internalTransfer.error.transferToSubAccount | 다른 메인 계정의 하위 계정으로의 이체는 허용되지 않습니다. |
+| tradingLeaderboard.arena                             | 아레나                                                     |
+| tradingLeaderboard.generalLeaderboard                | 종합 순위표                                                |
+| tradingLeaderboard.maxTicketsAchieved                | 달성한 최대 티켓 수                                        |
+
+#### Language: **ja**
+
+| Key                                                  | Value                                                                |
+| ---------------------------------------------------- | -------------------------------------------------------------------- |
+| common.deposits                                      | 入金                                                                 |
+| common.withdrawals                                   | 出金                                                                 |
+| common.accountId                                     | アカウントID                                                         |
+| common.web3Wallet                                    | Web3ウォレット                                                       |
+| common.txId                                          | トランザクションID                                                   |
+| portfolio.apiKey.permissions.asset                   | 資産                                                                 |
+| portfolio.apiKey.create.createAccount.tooltip        | APIキーを作成する前にアカウントを作成してください                    |
+| connector.createAccount                              | アカウントを作成                                                     |
+| connector.createAccount.description                  | アカウントを作成するためにウォレットの所有権を確認してください       |
+| connector.trade.createAccount.tooltip                | 取引を開始する前にアカウントを作成してください                       |
+| connector.setUp.createAccount.tooltip                | 設定する前にアカウントを作成してください                             |
+| transfer.web3Wallet.your                             | あなたのWeb3ウォレット                                               |
+| transfer.web3Wallet.my                               | 私のWeb3ウォレット                                                   |
+| transfer.withdraw.otherAccount                       | 他の{{brokerName}}アカウント                                         |
+| transfer.withdraw.accountId.tips                     | ウォレットアドレスではなくアカウントIDを入力してください。           |
+| transfer.withdraw.accountId.invalid                  | 無効なアカウントIDです。もう一度お試しください。                     |
+| transfer.internalTransfer.error.default              | 転送できません。後でもう一度お試しください。                         |
+| transfer.internalTransfer.error.transferInProgress   | 内部転送が進行中です。                                               |
+| transfer.internalTransfer.error.withdrawalInProgress | 出金が進行中です。                                                   |
+| transfer.internalTransfer.error.transferToSelf       | 自分のアカウントへの転送はできません                                 |
+| transfer.internalTransfer.error.accountIdNotExist    | 受取人のアカウントIDが存在しません。                                 |
+| transfer.internalTransfer.error.transferToSubAccount | 異なるメインアカウントのサブアカウントへの転送は許可されていません。 |
+| tradingLeaderboard.arena                             | アリーナ                                                             |
+| tradingLeaderboard.generalLeaderboard                | 総合ランキング                                                       |
+| tradingLeaderboard.maxTicketsAchieved                | 獲得した最大チケット数                                               |
+
+#### Language: **it**
+
+| Key                                                  | Value                                                                                  |
+| ---------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| common.deposits                                      | Depositi                                                                               |
+| common.withdrawals                                   | Prelievi                                                                               |
+| common.accountId                                     | ID account                                                                             |
+| common.web3Wallet                                    | Portafoglio Web3                                                                       |
+| common.txId                                          | ID Transazione                                                                         |
+| portfolio.apiKey.permissions.asset                   | Asset                                                                                  |
+| portfolio.apiKey.create.createAccount.tooltip        | Si prega di creare un account prima di creare la chiave API                            |
+| connector.createAccount                              | Crea account                                                                           |
+| connector.createAccount.description                  | Conferma la proprietà del portafoglio per creare un account                            |
+| connector.trade.createAccount.tooltip                | Si prega di creare un account prima di iniziare a fare trading                         |
+| connector.setUp.createAccount.tooltip                | Si prega di creare un account prima di configurare                                     |
+| transfer.web3Wallet.your                             | Il tuo portafoglio Web3                                                                |
+| transfer.web3Wallet.my                               | Il mio portafoglio Web3                                                                |
+| transfer.withdraw.otherAccount                       | Altro account {{brokerName}}                                                           |
+| transfer.withdraw.accountId.tips                     | Inserisci un ID account invece di un indirizzo wallet.                                 |
+| transfer.withdraw.accountId.invalid                  | ID account non valido. Riprova.                                                        |
+| transfer.internalTransfer.error.default              | Impossibile completare il trasferimento. Riprova più tardi.                            |
+| transfer.internalTransfer.error.transferInProgress   | Un trasferimento interno è in corso.                                                   |
+| transfer.internalTransfer.error.withdrawalInProgress | Un prelievo è in corso.                                                                |
+| transfer.internalTransfer.error.transferToSelf       | I trasferimenti verso il proprio account non sono consentiti                           |
+| transfer.internalTransfer.error.accountIdNotExist    | L'ID account del destinatario non esiste.                                              |
+| transfer.internalTransfer.error.transferToSubAccount | I trasferimenti verso sottoconti sotto diversi account principali non sono consentiti. |
+| tradingLeaderboard.arena                             | Arena                                                                                  |
+| tradingLeaderboard.generalLeaderboard                | Classifica generale                                                                    |
+| tradingLeaderboard.maxTicketsAchieved                | Biglietti massimi ottenuti                                                             |
+
+#### Language: **id**
+
+| Key                                                  | Value                                                                  |
+| ---------------------------------------------------- | ---------------------------------------------------------------------- |
+| common.deposits                                      | Deposit                                                                |
+| common.withdrawals                                   | Penarikan                                                              |
+| common.accountId                                     | ID Akun                                                                |
+| common.web3Wallet                                    | Dompet Web3                                                            |
+| common.txId                                          | TxID                                                                   |
+| portfolio.apiKey.permissions.asset                   | Aset                                                                   |
+| portfolio.apiKey.create.createAccount.tooltip        | Silakan buat akun sebelum membuat kunci API                            |
+| connector.createAccount                              | Buat akun                                                              |
+| connector.createAccount.description                  | Konfirmasi kepemilikan dompet untuk membuat akun                       |
+| connector.trade.createAccount.tooltip                | Silakan buat akun sebelum mulai berdagang                              |
+| connector.setUp.createAccount.tooltip                | Silakan buat akun sebelum mengatur                                     |
+| transfer.web3Wallet.your                             | Dompet Web3 Anda                                                       |
+| transfer.web3Wallet.my                               | Dompet Web3 Saya                                                       |
+| transfer.withdraw.otherAccount                       | Akun {{brokerName}} lain                                               |
+| transfer.withdraw.accountId.tips                     | Silakan masukkan ID Akun, bukan alamat dompet.                         |
+| transfer.withdraw.accountId.invalid                  | ID Akun tidak valid. Silakan coba lagi.                                |
+| transfer.internalTransfer.error.default              | Tidak dapat menyelesaikan transfer. Silakan coba lagi nanti.           |
+| transfer.internalTransfer.error.transferInProgress   | Transfer internal sedang berlangsung.                                  |
+| transfer.internalTransfer.error.withdrawalInProgress | Penarikan sedang berlangsung.                                          |
+| transfer.internalTransfer.error.transferToSelf       | Transfer ke akun sendiri tidak diperbolehkan                           |
+| transfer.internalTransfer.error.accountIdNotExist    | ID akun penerima tidak ada.                                            |
+| transfer.internalTransfer.error.transferToSubAccount | Transfer ke sub-akun di bawah akun utama yang berbeda tidak diizinkan. |
+| tradingLeaderboard.arena                             | Arena                                                                  |
+| tradingLeaderboard.generalLeaderboard                | Papan Peringkat Umum                                                   |
+| tradingLeaderboard.maxTicketsAchieved                | Tiket maksimum yang dicapai                                            |
+
+#### Language: **fr**
+
+| Key                                                  | Value                                                                                          |
+| ---------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| common.deposits                                      | Dépôts                                                                                         |
+| common.withdrawals                                   | Retraits                                                                                       |
+| common.accountId                                     | ID de compte                                                                                   |
+| common.web3Wallet                                    | Portefeuille Web3                                                                              |
+| common.txId                                          | ID de transaction                                                                              |
+| portfolio.apiKey.permissions.asset                   | Actif                                                                                          |
+| portfolio.apiKey.create.createAccount.tooltip        | Veuillez créer un compte avant de créer la clé API                                             |
+| connector.createAccount                              | Créer un compte                                                                                |
+| connector.createAccount.description                  | Confirmez la propriété du portefeuille pour créer un compte                                    |
+| connector.trade.createAccount.tooltip                | Veuillez créer un compte avant de commencer à trader                                           |
+| connector.setUp.createAccount.tooltip                | Veuillez créer un compte avant de configurer                                                   |
+| transfer.web3Wallet.your                             | Votre portefeuille Web3                                                                        |
+| transfer.web3Wallet.my                               | Mon portefeuille Web3                                                                          |
+| transfer.withdraw.otherAccount                       | Autre compte {{brokerName}}                                                                    |
+| transfer.withdraw.accountId.tips                     | Veuillez saisir un ID de compte au lieu d'une adresse de portefeuille.                         |
+| transfer.withdraw.accountId.invalid                  | ID de compte invalide. Veuillez réessayer.                                                     |
+| transfer.internalTransfer.error.default              | Impossible d'effectuer le transfert. Veuillez réessayer plus tard.                             |
+| transfer.internalTransfer.error.transferInProgress   | Un transfert interne est en cours.                                                             |
+| transfer.internalTransfer.error.withdrawalInProgress | Un retrait est en cours.                                                                       |
+| transfer.internalTransfer.error.transferToSelf       | Les transferts vers votre propre compte ne sont pas autorisés                                  |
+| transfer.internalTransfer.error.accountIdNotExist    | L'ID du compte du destinataire n'existe pas.                                                   |
+| transfer.internalTransfer.error.transferToSubAccount | Les transferts vers des sous-comptes sous différents comptes principaux ne sont pas autorisés. |
+| tradingLeaderboard.arena                             | Arène                                                                                          |
+| tradingLeaderboard.generalLeaderboard                | Classement général                                                                             |
+| tradingLeaderboard.maxTicketsAchieved                | Maximum de billets obtenus                                                                     |
+
+#### Language: **es**
+
+| Key                                                  | Value                                                                           |
+| ---------------------------------------------------- | ------------------------------------------------------------------------------- |
+| common.deposits                                      | Depósitos                                                                       |
+| common.withdrawals                                   | Retiros                                                                         |
+| common.accountId                                     | ID de cuenta                                                                    |
+| common.web3Wallet                                    | Billetera Web3                                                                  |
+| common.txId                                          | ID de transacción                                                               |
+| portfolio.apiKey.permissions.asset                   | Activo                                                                          |
+| portfolio.apiKey.create.createAccount.tooltip        | Por favor, cree una cuenta antes de crear la clave de API                       |
+| connector.createAccount                              | Crear cuenta                                                                    |
+| connector.createAccount.description                  | Confirme la propiedad de la billetera para crear una cuenta                     |
+| connector.trade.createAccount.tooltip                | Por favor, cree una cuenta antes de empezar a operar                            |
+| connector.setUp.createAccount.tooltip                | Por favor, cree una cuenta antes de configurar                                  |
+| transfer.web3Wallet.your                             | Tu billetera Web3                                                               |
+| transfer.web3Wallet.my                               | Mi billetera Web3                                                               |
+| transfer.withdraw.otherAccount                       | Otra cuenta de {{brokerName}}                                                   |
+| transfer.withdraw.accountId.tips                     | Por favor, ingrese un ID de cuenta en lugar de una dirección de billetera.      |
+| transfer.withdraw.accountId.invalid                  | ID de cuenta inválido. Por favor, inténtelo de nuevo.                           |
+| transfer.internalTransfer.error.default              | No se puede completar la transferencia. Por favor, inténtelo más tarde.         |
+| transfer.internalTransfer.error.transferInProgress   | Hay una transferencia interna en curso.                                         |
+| transfer.internalTransfer.error.withdrawalInProgress | Hay un retiro en curso.                                                         |
+| transfer.internalTransfer.error.transferToSelf       | No se permiten transferencias a su propia cuenta                                |
+| transfer.internalTransfer.error.accountIdNotExist    | El ID de cuenta del receptor no existe.                                         |
+| transfer.internalTransfer.error.transferToSubAccount | No se permiten transferencias a subcuentas bajo diferentes cuentas principales. |
+| tradingLeaderboard.arena                             | Arena                                                                           |
+| tradingLeaderboard.generalLeaderboard                | Tabla de clasificación general                                                  |
+| tradingLeaderboard.maxTicketsAchieved                | Máximo de boletos obtenidos                                                     |
+
+#### Language: **de**
+
+| Key                                                  | Value                                                                                |
+| ---------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| common.deposits                                      | Einzahlungen                                                                         |
+| common.withdrawals                                   | Auszahlungen                                                                         |
+| common.accountId                                     | Konto-ID                                                                             |
+| common.web3Wallet                                    | Web3-Wallet                                                                          |
+| common.txId                                          | TxID                                                                                 |
+| portfolio.apiKey.permissions.asset                   | Vermögenswert                                                                        |
+| portfolio.apiKey.create.createAccount.tooltip        | Bitte erstellen Sie ein Konto, bevor Sie den API-Schlüssel erstellen                 |
+| connector.createAccount                              | Konto erstellen                                                                      |
+| connector.createAccount.description                  | Bestätigen Sie den Besitz der Brieftasche, um ein Konto zu erstellen                 |
+| connector.trade.createAccount.tooltip                | Bitte erstellen Sie ein Konto, bevor Sie mit dem Handel beginnen                     |
+| connector.setUp.createAccount.tooltip                | Bitte erstellen Sie ein Konto, bevor Sie die Einrichtung vornehmen                   |
+| transfer.web3Wallet.your                             | Dein Web3-Wallet                                                                     |
+| transfer.web3Wallet.my                               | Mein Web3-Wallet                                                                     |
+| transfer.withdraw.otherAccount                       | Anderes {{brokerName}}-Konto                                                         |
+| transfer.withdraw.accountId.tips                     | Bitte geben Sie eine Konto-ID anstelle einer Wallet-Adresse ein.                     |
+| transfer.withdraw.accountId.invalid                  | Ungültige Konto-ID. Bitte versuchen Sie es erneut.                                   |
+| transfer.internalTransfer.error.default              | Überweisung konnte nicht abgeschlossen werden. Bitte versuchen Sie es später erneut. |
+| transfer.internalTransfer.error.transferInProgress   | Eine interne Überweisung ist derzeit im Gange.                                       |
+| transfer.internalTransfer.error.withdrawalInProgress | Eine Auszahlung ist im Gange.                                                        |
+| transfer.internalTransfer.error.transferToSelf       | Überweisungen auf das eigene Konto sind nicht erlaubt                                |
+| transfer.internalTransfer.error.accountIdNotExist    | Empfänger-Konto-ID existiert nicht.                                                  |
+| transfer.internalTransfer.error.transferToSubAccount | Überweisungen auf Unterkonten unter verschiedenen Hauptkonten sind nicht gestattet.  |
+| tradingLeaderboard.arena                             | Arena                                                                                |
+| tradingLeaderboard.generalLeaderboard                | Allgemeine Rangliste                                                                 |
+| tradingLeaderboard.maxTicketsAchieved                | Maximal erreichte Tickets                                                            |
+
+### Removed Keys
+
+#### Language: **en**
+
+| Key                                                   | Value                                                |
+| ----------------------------------------------------- | ---------------------------------------------------- |
+| portfolio.overview.deposits&Withdrawals               | Deposits & Withdrawals                               |
+| portfolio.apiKey.accountId                            | Account ID                                           |
+| portfolio.apiKey.create.signIn.tooltip                | Please sign in before create API key                 |
+| connector.signIn                                      | Sign in                                              |
+| connector.signIn.description                          | Confirm you are the owner of this wallet             |
+| connector.trade.signIn.tooltip                        | Please sign in before starting to trade              |
+| connector.setUp.signIn.tooltip                        | Please sign in before set up                         |
+| transfer.web3Wallet                                   | Your Web3 Wallet                                     |
+| transfer.internalTransfer.failed                      | Unable to complete transfer. Please try again later. |
+| transfer.internalTransfer.failed.transferInProgress   | An internal transfer is currently in progress.       |
+| transfer.internalTransfer.failed.withdrawalInProgress | There is a withdrawal in progress.                   |
+
+#### Language: **zh**
+
+| Key                                                   | Value                      |
+| ----------------------------------------------------- | -------------------------- |
+| portfolio.overview.deposits&Withdrawals               | 存款与取款                 |
+| portfolio.apiKey.accountId                            | 账户ID                     |
+| portfolio.apiKey.create.signIn.tooltip                | 请登录后再创建API密钥      |
+| connector.signIn                                      | 登录                       |
+| connector.signIn.description                          | 确认您是此钱包的所有者     |
+| connector.trade.signIn.tooltip                        | 请在开始交易前登录         |
+| connector.setUp.signIn.tooltip                        | 请在设置前登录             |
+| transfer.web3Wallet                                   | 您的Web3钱包               |
+| transfer.internalTransfer.failed                      | 无法完成转账。请稍后重试。 |
+| transfer.internalTransfer.failed.transferInProgress   | 当前正在进行内部转账。     |
+| transfer.internalTransfer.failed.withdrawalInProgress | 当前正在进行提现。         |
+
+#### Language: **vi**
+
+| Key                                                   | Value                                                          |
+| ----------------------------------------------------- | -------------------------------------------------------------- |
+| portfolio.overview.deposits&Withdrawals               | Nạp & Rút tiền                                                 |
+| portfolio.apiKey.accountId                            | ID tài khoản                                                   |
+| portfolio.apiKey.create.signIn.tooltip                | Vui lòng đăng nhập trước khi tạo khóa API                      |
+| connector.signIn                                      | Đăng nhập                                                      |
+| connector.signIn.description                          | Xác nhận bạn là chủ sở hữu của ví này                          |
+| connector.trade.signIn.tooltip                        | Vui lòng đăng nhập trước khi bắt đầu giao dịch                 |
+| connector.setUp.signIn.tooltip                        | Vui lòng đăng nhập trước khi thiết lập                         |
+| transfer.web3Wallet                                   | Ví Web3 của bạn                                                |
+| transfer.internalTransfer.failed                      | Không thể hoàn tất chuyển khoản. Vui lòng thử lại sau.         |
+| transfer.internalTransfer.failed.transferInProgress   | Đang có một giao dịch chuyển khoản nội bộ đang được thực hiện. |
+| transfer.internalTransfer.failed.withdrawalInProgress | Đang có một giao dịch rút tiền đang được thực hiện.            |
+
+#### Language: **uk**
+
+| Key                                                   | Value                                                        |
+| ----------------------------------------------------- | ------------------------------------------------------------ |
+| portfolio.overview.deposits&Withdrawals               | Депозити та виведення                                        |
+| portfolio.apiKey.accountId                            | ID рахунку                                                   |
+| portfolio.apiKey.create.signIn.tooltip                | Будь ласка, увійдіть перед створенням API ключа              |
+| connector.signIn                                      | Увійти                                                       |
+| connector.signIn.description                          | Підтвердіть, що ви є власником цього гаманця                 |
+| connector.trade.signIn.tooltip                        | Будь ласка, увійдіть перед початком торгівлі                 |
+| connector.setUp.signIn.tooltip                        | Будь ласка, увійдіть перед налаштуванням                     |
+| transfer.web3Wallet                                   | Ваш Web3 гаманець                                            |
+| transfer.internalTransfer.failed                      | Не вдалося завершити переказ. Будь ласка, спробуйте пізніше. |
+| transfer.internalTransfer.failed.transferInProgress   | Внутрішній переказ у процесі виконання.                      |
+| transfer.internalTransfer.failed.withdrawalInProgress | Виведення коштів у процесі виконання.                        |
+
+#### Language: **tr**
+
+| Key                                                   | Value                                                     |
+| ----------------------------------------------------- | --------------------------------------------------------- |
+| portfolio.overview.deposits&Withdrawals               | Yatırma ve Çekme                                          |
+| portfolio.apiKey.accountId                            | Hesap ID                                                  |
+| portfolio.apiKey.create.signIn.tooltip                | API anahtarı oluşturmadan önce lütfen giriş yapın         |
+| connector.signIn                                      | Giriş yap                                                 |
+| connector.signIn.description                          | Bu cüzdanın sahibi olduğunuzu onaylayın                   |
+| connector.trade.signIn.tooltip                        | İşlem yapmaya başlamadan önce lütfen giriş yapın          |
+| connector.setUp.signIn.tooltip                        | Kurulum yapmadan önce lütfen giriş yapın                  |
+| transfer.web3Wallet                                   | Web3 Cüzdanınız                                           |
+| transfer.internalTransfer.failed                      | Transfer tamamlanamadı. Lütfen daha sonra tekrar deneyin. |
+| transfer.internalTransfer.failed.transferInProgress   | Dahili bir transfer işlemi devam ediyor.                  |
+| transfer.internalTransfer.failed.withdrawalInProgress | Bir para çekme işlemi devam ediyor.                       |
+
+#### Language: **ru**
+
+| Key                                                   | Value                                                       |
+| ----------------------------------------------------- | ----------------------------------------------------------- |
+| portfolio.overview.deposits&Withdrawals               | Депозиты и выводы                                           |
+| portfolio.apiKey.accountId                            | ID аккаунта                                                 |
+| portfolio.apiKey.create.signIn.tooltip                | Пожалуйста, войдите в систему перед созданием API ключа     |
+| connector.signIn                                      | Войти                                                       |
+| connector.signIn.description                          | Подтвердите, что вы владелец этого кошелька                 |
+| connector.trade.signIn.tooltip                        | Пожалуйста, войдите в систему перед началом торговли        |
+| connector.setUp.signIn.tooltip                        | Пожалуйста, войдите в систему перед настройкой              |
+| transfer.web3Wallet                                   | Ваш Web3 кошелек                                            |
+| transfer.internalTransfer.failed                      | Не удалось завершить перевод. Пожалуйста, попробуйте позже. |
+| transfer.internalTransfer.failed.transferInProgress   | Внутренний перевод в процессе выполнения.                   |
+| transfer.internalTransfer.failed.withdrawalInProgress | Вывод средств в процессе выполнения.                        |
+
+#### Language: **pt**
+
+| Key                                                   | Value                                                                              |
+| ----------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| portfolio.overview.deposits&Withdrawals               | Depósitos & Saques                                                                 |
+| portfolio.apiKey.accountId                            | ID da conta                                                                        |
+| portfolio.apiKey.create.signIn.tooltip                | Por favor, faça login antes de criar a chave API                                   |
+| connector.signIn                                      | Entrar                                                                             |
+| connector.signIn.description                          | Confirme que você é o proprietário desta carteira                                  |
+| connector.trade.signIn.tooltip                        | Por favor, faça login antes de começar a negociar                                  |
+| connector.setUp.signIn.tooltip                        | Por favor, faça login antes de configurar                                          |
+| transfer.web3Wallet                                   | Sua Carteira Web3                                                                  |
+| transfer.internalTransfer.failed                      | Não foi possível completar a transferência. Por favor, tente novamente mais tarde. |
+| transfer.internalTransfer.failed.transferInProgress   | Uma transferência interna está em andamento.                                       |
+| transfer.internalTransfer.failed.withdrawalInProgress | Uma retirada está em andamento.                                                    |
+
+#### Language: **pl**
+
+| Key                                                   | Value                                                   |
+| ----------------------------------------------------- | ------------------------------------------------------- |
+| portfolio.overview.deposits&Withdrawals               | Wpłaty i wypłaty                                        |
+| portfolio.apiKey.accountId                            | ID konta                                                |
+| portfolio.apiKey.create.signIn.tooltip                | Proszę zalogować się przed utworzeniem klucza API       |
+| connector.signIn                                      | Zaloguj się                                             |
+| connector.signIn.description                          | Potwierdź, że jesteś właścicielem tego portfela         |
+| connector.trade.signIn.tooltip                        | Proszę zalogować się przed rozpoczęciem handlu          |
+| connector.setUp.signIn.tooltip                        | Proszę zalogować się przed konfiguracją                 |
+| transfer.web3Wallet                                   | Twój portfel Web3                                       |
+| transfer.internalTransfer.failed                      | Nie można zakończyć przelewu. Proszę spróbować później. |
+| transfer.internalTransfer.failed.transferInProgress   | Trwa wewnętrzny przelew.                                |
+| transfer.internalTransfer.failed.withdrawalInProgress | Trwa wypłata środków.                                   |
+
+#### Language: **nl**
+
+| Key                                                   | Value                                                         |
+| ----------------------------------------------------- | ------------------------------------------------------------- |
+| portfolio.overview.deposits&Withdrawals               | Stortingen & Opnames                                          |
+| portfolio.apiKey.accountId                            | Account-ID                                                    |
+| portfolio.apiKey.create.signIn.tooltip                | Log eerst in voordat u een API-sleutel aanmaakt               |
+| connector.signIn                                      | Inloggen                                                      |
+| connector.signIn.description                          | Bevestig dat u de eigenaar bent van deze wallet               |
+| connector.trade.signIn.tooltip                        | Log eerst in voordat u begint met handelen                    |
+| connector.setUp.signIn.tooltip                        | Log eerst in voordat u instelt                                |
+| transfer.web3Wallet                                   | Uw Web3 Wallet                                                |
+| transfer.internalTransfer.failed                      | Kan de overboeking niet voltooien. Probeer het later opnieuw. |
+| transfer.internalTransfer.failed.transferInProgress   | Er is een interne overboeking in behandeling.                 |
+| transfer.internalTransfer.failed.withdrawalInProgress | Er is een opname in behandeling.                              |
+
+#### Language: **ko**
+
+| Key                                                   | Value                                                 |
+| ----------------------------------------------------- | ----------------------------------------------------- |
+| portfolio.overview.deposits&Withdrawals               | 입금 및 출금                                          |
+| portfolio.apiKey.accountId                            | 계정 ID                                               |
+| portfolio.apiKey.create.signIn.tooltip                | API 키를 생성하기 전에 로그인해 주세요                |
+| connector.signIn                                      | 로그인                                                |
+| connector.signIn.description                          | 이 지갑의 소유자임을 확인하세요                       |
+| connector.trade.signIn.tooltip                        | 거래를 시작하기 전에 로그인해 주세요                  |
+| connector.setUp.signIn.tooltip                        | 설정하기 전에 로그인해 주세요                         |
+| transfer.web3Wallet                                   | Web3 지갑                                             |
+| transfer.internalTransfer.failed                      | 이체를 완료할 수 없습니다. 나중에 다시 시도해 주세요. |
+| transfer.internalTransfer.failed.transferInProgress   | 내부 이체가 진행 중입니다.                            |
+| transfer.internalTransfer.failed.withdrawalInProgress | 출금이 진행 중입니다.                                 |
+
+#### Language: **ja**
+
+| Key                                                   | Value                                                    |
+| ----------------------------------------------------- | -------------------------------------------------------- |
+| portfolio.overview.deposits&Withdrawals               | 入出金                                                   |
+| portfolio.apiKey.accountId                            | アカウントID                                             |
+| portfolio.apiKey.create.signIn.tooltip                | APIキーを作成する前にサインインしてください              |
+| connector.signIn                                      | サインイン                                               |
+| connector.signIn.description                          | このウォレットの所有者であることを確認してください       |
+| connector.trade.signIn.tooltip                        | 取引を開始する前にサインインしてください                 |
+| connector.setUp.signIn.tooltip                        | 設定する前にサインインしてください                       |
+| transfer.web3Wallet                                   | あなたのWeb3ウォレット                                   |
+| transfer.internalTransfer.failed                      | 送金を完了できませんでした。後でもう一度お試しください。 |
+| transfer.internalTransfer.failed.transferInProgress   | 内部転送が進行中です。                                   |
+| transfer.internalTransfer.failed.withdrawalInProgress | 出金が進行中です。                                       |
+
+#### Language: **it**
+
+| Key                                                   | Value                                                                     |
+| ----------------------------------------------------- | ------------------------------------------------------------------------- |
+| portfolio.overview.deposits&Withdrawals               | Depositi e Prelievi                                                       |
+| portfolio.apiKey.accountId                            | ID Account                                                                |
+| portfolio.apiKey.create.signIn.tooltip                | Effettua l'accesso prima di creare la chiave API                          |
+| connector.signIn                                      | Accedi                                                                    |
+| connector.signIn.description                          | Conferma di essere il proprietario di questo portafoglio                  |
+| connector.trade.signIn.tooltip                        | Accedi prima di iniziare a fare trading                                   |
+| connector.setUp.signIn.tooltip                        | Accedi prima di configurare                                               |
+| transfer.web3Wallet                                   | Il tuo portafoglio Web3                                                   |
+| transfer.internalTransfer.failed                      | Impossibile completare il trasferimento. Si prega di riprovare più tardi. |
+| transfer.internalTransfer.failed.transferInProgress   | È in corso un trasferimento interno.                                      |
+| transfer.internalTransfer.failed.withdrawalInProgress | È in corso un prelievo.                                                   |
+
+#### Language: **id**
+
+| Key                                                   | Value                                                        |
+| ----------------------------------------------------- | ------------------------------------------------------------ |
+| portfolio.overview.deposits&Withdrawals               | Setoran & Penarikan                                          |
+| portfolio.apiKey.accountId                            | ID Akun                                                      |
+| portfolio.apiKey.create.signIn.tooltip                | Harap masuk sebelum membuat kunci API                        |
+| connector.signIn                                      | Masuk                                                        |
+| connector.signIn.description                          | Konfirmasi Anda adalah pemilik wallet ini                    |
+| connector.trade.signIn.tooltip                        | Harap masuk sebelum mulai trading                            |
+| connector.setUp.signIn.tooltip                        | Harap masuk sebelum menyiapkan                               |
+| transfer.web3Wallet                                   | Wallet Web3 Anda                                             |
+| transfer.internalTransfer.failed                      | Tidak dapat menyelesaikan transfer. Silakan coba lagi nanti. |
+| transfer.internalTransfer.failed.transferInProgress   | Transfer internal sedang dalam proses.                       |
+| transfer.internalTransfer.failed.withdrawalInProgress | Penarikan sedang dalam proses.                               |
+
+#### Language: **fr**
+
+| Key                                                   | Value                                                               |
+| ----------------------------------------------------- | ------------------------------------------------------------------- |
+| portfolio.overview.deposits&Withdrawals               | Dépôts & Retraits                                                   |
+| portfolio.apiKey.accountId                            | ID de compte                                                        |
+| portfolio.apiKey.create.signIn.tooltip                | Veuillez vous connecter avant de créer une clé API                  |
+| connector.signIn                                      | Se connecter                                                        |
+| connector.signIn.description                          | Confirmez que vous êtes le propriétaire de ce portefeuille          |
+| connector.trade.signIn.tooltip                        | Veuillez vous connecter avant de commencer à trader                 |
+| connector.setUp.signIn.tooltip                        | Veuillez vous connecter avant la configuration                      |
+| transfer.web3Wallet                                   | Votre portefeuille Web3                                             |
+| transfer.internalTransfer.failed                      | Impossible de compléter le transfert. Veuillez réessayer plus tard. |
+| transfer.internalTransfer.failed.transferInProgress   | Un transfert interne est en cours.                                  |
+| transfer.internalTransfer.failed.withdrawalInProgress | Un retrait est en cours.                                            |
+
+#### Language: **es**
+
+| Key                                                   | Value                                                                           |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------- |
+| portfolio.overview.deposits&Withdrawals               | Depósitos y retiros                                                             |
+| portfolio.apiKey.accountId                            | ID de cuenta                                                                    |
+| portfolio.apiKey.create.signIn.tooltip                | Por favor inicia sesión antes de crear una clave API                            |
+| connector.signIn                                      | Iniciar sesión                                                                  |
+| connector.signIn.description                          | Confirma que eres el propietario de esta billetera                              |
+| connector.trade.signIn.tooltip                        | Por favor inicia sesión antes de comenzar a operar                              |
+| connector.setUp.signIn.tooltip                        | Por favor inicia sesión antes de configurar                                     |
+| transfer.web3Wallet                                   | Tu billetera Web3                                                               |
+| transfer.internalTransfer.failed                      | No se pudo completar la transferencia. Por favor, inténtelo de nuevo más tarde. |
+| transfer.internalTransfer.failed.transferInProgress   | Hay una transferencia interna en progreso.                                      |
+| transfer.internalTransfer.failed.withdrawalInProgress | Hay un retiro en progreso.                                                      |
+
+#### Language: **de**
+
+| Key                                                   | Value                                                                                |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| portfolio.overview.deposits&Withdrawals               | Einzahlungen & Auszahlungen                                                          |
+| portfolio.apiKey.accountId                            | Konto-ID                                                                             |
+| portfolio.apiKey.create.signIn.tooltip                | Bitte melden Sie sich an, bevor Sie einen API-Schlüssel erstellen                    |
+| connector.signIn                                      | Anmelden                                                                             |
+| connector.signIn.description                          | Bestätigen Sie, dass Sie der Besitzer dieser Wallet sind                             |
+| connector.trade.signIn.tooltip                        | Bitte melden Sie sich an, bevor Sie mit dem Handel beginnen                          |
+| connector.setUp.signIn.tooltip                        | Bitte melden Sie sich an, bevor Sie die Einrichtung vornehmen                        |
+| transfer.web3Wallet                                   | Ihre Web3-Wallet                                                                     |
+| transfer.internalTransfer.failed                      | Überweisung konnte nicht abgeschlossen werden. Bitte versuchen Sie es später erneut. |
+| transfer.internalTransfer.failed.transferInProgress   | Eine interne Überweisung ist derzeit in Bearbeitung.                                 |
+| transfer.internalTransfer.failed.withdrawalInProgress | Eine Auszahlung ist derzeit in Bearbeitung.                                          |
+
+## 2.3.1
+
+### No locale changes
+
 ## 2.3.0
 
 ### Added Keys
