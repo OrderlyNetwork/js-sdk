@@ -46,7 +46,7 @@ export function InitSolanaProvider({
     });
   }, [network, mainnetRpc, devnetRpc, setSolanaInfo]);
   return (
-    <WalletProvider wallets={wallets} onError={onError}>
+    <WalletProvider wallets={wallets} onError={onError} autoConnect>
       {children}
     </WalletProvider>
   );

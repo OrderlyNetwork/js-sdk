@@ -102,7 +102,6 @@ export const useSolanaWalletStore = create<SolanaWalletState>((set, get) => ({
       }
 
       const updatedWalletMethods = get().walletMethods;
-      console.log("updatedWalletMethods", updatedWalletMethods);
       if (!updatedWalletMethods) {
         throw new Error("Wallet methods not initialized");
       }
@@ -114,6 +113,9 @@ export const useSolanaWalletStore = create<SolanaWalletState>((set, get) => ({
       const lastestWalletMethods = get().walletMethods;
       if (!lastestWalletMethods) {
         throw new Error("Wallet methods not initialized");
+      }
+      if (!lastestWalletMethods.publicKey) {
+        throw new Error("Wallet not connected");
       }
 
       const wallet: Wallet = {
@@ -130,7 +132,7 @@ export const useSolanaWalletStore = create<SolanaWalletState>((set, get) => ({
         },
         accounts: [
           {
-            address: updatedWalletMethods.publicKey.toBase58(),
+            address: lastestWalletMethods.publicKey.toBase58(),
           },
         ],
         chains: [
