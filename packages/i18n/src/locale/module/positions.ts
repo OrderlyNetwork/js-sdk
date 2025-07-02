@@ -22,6 +22,9 @@ export const positions = {
   "positions.marketClose": "Market close",
   "positions.marketClose.description":
     "You agree closing {{quantity}} {{base}} position at market price.",
+  "positions.limitClose.errors.exceed.title": "Close size limit exceeded",
+  "positions.limitClose.errors.exceed.description":
+    "Cannot close {{quantity}} {{symbol}} position. Max allowed per close is {{maxQuantity}} {{symbol}}.",
 
   "positions.history.status.closed": "Closed",
   "positions.history.status.partialClosed": "Partially closed",
