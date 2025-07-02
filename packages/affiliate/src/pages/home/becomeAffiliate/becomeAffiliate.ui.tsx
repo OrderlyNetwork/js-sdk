@@ -38,7 +38,7 @@ export const BecomeAffiliate: FC<BecomeAffiliateReturns> = (props) => {
       title: t("affiliate.process.step1.volumeEq0.title"),
       desc: t("affiliate.process.step1.volumeEq0.description"),
     };
-  }, [generateCode]);
+  }, [generateCode, t]);
 
   return (
     <Flex
