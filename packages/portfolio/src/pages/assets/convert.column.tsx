@@ -1,5 +1,6 @@
-import React from "react";
-import { Button, Flex, Text, TokenIcon } from "@orderly.network/ui";
+import React, { useMemo } from "react";
+import { useTranslation } from "@orderly.network/i18n";
+import { Button, Flex, Text, TokenIcon, Tooltip } from "@orderly.network/ui";
 import type { Column } from "@orderly.network/ui";
 import type { ConvertRecord, ConvertTransaction } from "./type";
 
@@ -11,6 +12,77 @@ export interface ConvertDetailColumnsOptions {
   onTxClick?: (txId: string) => void;
 }
 
+export const ConvertedAssetColumn = ({
+  convertedAssets,
+}: {
+  convertedAssets: Record<string, number>;
+}) => {
+  const { t } = useTranslation();
+  const assets = useMemo(() => {
+    return Object.keys(convertedAssets);
+  }, [convertedAssets]);
+
+  const tooltipContent = useMemo(() => {
+    return (
+      <Flex
+        direction="column"
+        gap={2}
+        className="oui-w-[275px] oui-font-semibold oui-text-base-contrast-80"
+      >
+        <Flex
+          itemAlign="center"
+          justify="between"
+          className="oui-w-full oui-text-2xs oui-text-base-contrast-36"
+        >
+          <div>{t("common.assets")}</div>
+          <div>{t("common.qty")}</div>
+        </Flex>
+        {assets.map((asset) => (
+          <Flex
+            key={asset}
+            itemAlign="center"
+            justify="between"
+            className="oui-w-full"
+          >
+            <Flex itemAlign="center" gap={1}>
+              <TokenIcon size="xs" name={asset} />
+              <Text.formatted>{asset}</Text.formatted>
+            </Flex>
+            <div>
+              <Text.formatted>{convertedAssets[asset]}</Text.formatted>
+            </div>
+          </Flex>
+        ))}
+      </Flex>
+    );
+  }, [assets]);
+
+  return (
+    <Flex itemAlign="center" gap={2}>
+      <div className="oui-relative oui-flex">
+        {assets.slice(0, 3).map((asset, index) => (
+          <div
+            key={asset}
+            className="oui-relative"
+            style={{
+              marginLeft: index > 0 ? "-8px" : "0",
+              zIndex: assets.length + index,
+            }}
+          >
+            <TokenIcon size="xs" name={asset} />
+          </div>
+        ))}
+      </div>
+      <Tooltip content={tooltipContent}>
+        <Text.formatted className="oui-cursor-pointer oui-underline oui-decoration-line-16 oui-decoration-dashed oui-underline-offset-4">
+          {assets.slice(0, 3).join(", ")}{" "}
+          {assets.length > 3 && `+${assets.length - 3}`}
+        </Text.formatted>
+      </Tooltip>
+    </Flex>
+  );
+};
+
 export const useConvertColumns = (options: ConvertColumnsOptions) => {
   const { onDetailsClick } = options;
 
@@ -20,22 +92,9 @@ export const useConvertColumns = (options: ConvertColumnsOptions) => {
         title: "Converted Asset",
         dataIndex: "converted_asset",
         align: "left",
-        width: 150,
+        width: 250,
         render(convertedAssets: Record<string, number>) {
-          const assets = Object.keys(convertedAssets);
-          if (assets.length === 1) {
-            return (
-              <Flex itemAlign="center" gap={2}>
-                <TokenIcon name={assets[0]} />
-                {assets[0]}
-              </Flex>
-            );
-          }
-          return (
-            <Flex itemAlign="center" gap={2}>
-              <Text>{assets.length} Assets</Text>
-            </Flex>
-          );
+          return <ConvertedAssetColumn convertedAssets={convertedAssets} />;
         },
       },
       {
@@ -61,33 +120,29 @@ export const useConvertColumns = (options: ConvertColumnsOptions) => {
             (sum, detail) => sum + detail.haircut,
             0,
           );
-          return (
-            <Text.numeral dp={4} coloring showIdentifier>
-              {totalHaircut}
-            </Text.numeral>
-          );
+          return <Text.numeral dp={2}>{totalHaircut}</Text.numeral>;
         },
       },
       {
         title: "Type",
         dataIndex: "type",
         align: "left",
-        width: 80,
-        render(type: string) {
-          return <Text>{type.toUpperCase()}</Text>;
-        },
+        width: 120,
       },
       {
         title: "Convert ID",
         dataIndex: "convert_id",
         align: "left",
         width: 100,
+        render(convertId: number) {
+          return <Text.formatted copyable>{convertId}</Text.formatted>;
+        },
       },
       {
         title: "Time",
         dataIndex: "created_time",
         align: "left",
-        width: 120,
+        width: 180,
         rule: "date",
       },
       {
@@ -108,8 +163,8 @@ export const useConvertColumns = (options: ConvertColumnsOptions) => {
           return (
             <Button
               size="sm"
-              variant="outlined"
-              color="secondary"
+              variant="text"
+              className="oui-text-primary"
               onClick={() => onDetailsClick?.(convertId)}
             >
               Details
@@ -163,12 +218,8 @@ export const useConvertDetailColumns = (
         dataIndex: "received_qty",
         align: "left",
         width: 120,
-        render(qty: number, record: ConvertTransaction) {
-          return (
-            <Text.numeral dp={2} currency="$">
-              {qty}
-            </Text.numeral>
-          );
+        render(qty: number) {
+          return <Text.numeral dp={2}>{qty}</Text.numeral>;
         },
       },
       {
@@ -177,11 +228,7 @@ export const useConvertDetailColumns = (
         align: "left",
         width: 100,
         render(haircut: number) {
-          return (
-            <Text.numeral dp={4} coloring showIdentifier>
-              {haircut}
-            </Text.numeral>
-          );
+          return <Text.numeral dp={2}>{haircut}</Text.numeral>;
         },
       },
       {
@@ -195,7 +242,7 @@ export const useConvertDetailColumns = (
             <Text.formatted
               rule="txId"
               copyable
-              className="oui-underline oui-decoration-line-16 oui-decoration-dashed oui-underline-offset-4 oui-cursor-pointer"
+              className="oui-cursor-pointer oui-underline oui-decoration-line-16 oui-decoration-dashed oui-underline-offset-4"
               onClick={() => onTxClick?.(txId)}
             >
               {txId}

@@ -83,6 +83,7 @@ const ConvertDetailsModal = modal.create<{ record: ConvertRecord }>((props) => {
         className="oui-w-full"
         classNames={{
           header: "oui-h-10",
+          root: "oui-bg-base-8",
         }}
         onRow={() => ({
           className: "oui-h-[40px]",

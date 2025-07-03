@@ -1,6 +1,6 @@
 import { useTranslation } from "@orderly.network/i18n";
-import { TokenIcon } from "@orderly.network/ui";
 import { SelectOption } from "@orderly.network/ui/src/select/withOptions";
+import { ConvertedAssetColumn } from "./convert.column";
 import { useConvertScript } from "./convert.script";
 
 type ConvertMobileUIProps = {
@@ -24,9 +24,9 @@ export const ConvertMobileUI: React.FC<ConvertMobileUIProps> = (props) => {
   return (
     <div className="oui-flex oui-flex-col oui-gap-1 oui-px-3">
       <div>filter</div>
-      <div>
-        <ConvertMobileItem item={9} />
-      </div>
+      {props.convertState.dataSource.map((item) => (
+        <ConvertMobileItem key={item.convert_id} item={item} />
+      ))}
     </div>
   );
 };
@@ -50,6 +50,8 @@ const ConvertMobileItem: React.FC<ConvertMobileItemProps> = (props) => {
   const { item } = props;
   const { t } = useTranslation();
 
+  console.log("item", item);
+
   if (!item) {
     return null;
   }
@@ -57,12 +59,9 @@ const ConvertMobileItem: React.FC<ConvertMobileItemProps> = (props) => {
   return (
     <div className="oui-flex oui-flex-col oui-gap-2 oui-rounded-xl oui-bg-base-9 oui-p-2">
       <div className="oui-flex oui-justify-between">
-        <div className="oui-flex oui-items-center">
-          <div>
-            <TokenIcon name={"USDC"} size="sm" />
-          </div>
-          <div>USDC</div>
-          <div>Details</div>
+        <div className="oui-flex oui-items-center oui-text-xs oui-font-semibold oui-text-base-contrast-80">
+          <ConvertedAssetColumn convertedAssets={item.converted_asset} />
+          <div className="">Details</div>
         </div>
         <div>2022-08-30 17:19:47</div>
       </div>
