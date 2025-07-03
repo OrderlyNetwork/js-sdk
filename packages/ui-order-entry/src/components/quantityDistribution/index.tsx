@@ -1,4 +1,4 @@
-import { FC, useMemo, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { DistributionType } from "@orderly.network/types";
 import { Box, Checkbox, cn, Flex, modal, Text } from "@orderly.network/ui";
@@ -30,12 +30,12 @@ export const QuantityDistributionInput: FC<QuantityDistributionInputProps> = (
       direction="column"
       itemAlign="start"
       justify="center"
-      pl={2}
-      gapY={1}
+      p={2}
+      r="base"
+      // gapY={1}
       width="100%"
       intensity={600}
       className={cn(
-        "oui-h-[54px]",
         "oui-t-rounded oui-text-base-contrast-36",
         "oui-border oui-border-solid oui-border-line",
         className,
@@ -59,7 +59,19 @@ type QuantityDistributionHintProps = {
 
 const QuantityDistributionHint: FC<QuantityDistributionHintProps> = (props) => {
   const { t } = useTranslation();
-  const [type, setType] = useState(props.value || DistributionType.FLAT);
+  const [type, setType] = useState(DistributionType.FLAT);
+
+  useEffect(() => {
+    setType(
+      [
+        DistributionType.FLAT,
+        DistributionType.ASCENDING,
+        DistributionType.DESCENDING,
+      ].includes(props.value!)
+        ? props.value!
+        : DistributionType.FLAT,
+    );
+  }, [props.value]);
 
   const content = useMemo(() => {
     return [

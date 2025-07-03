@@ -1295,7 +1295,6 @@ const ScaledOrderInput = (props: {
         <CustomInput
           id="order_skew_input"
           label={t("orderEntry.skew")}
-          placeholder="0"
           value={values.skew}
           error={parseErrorMsg("skew")}
           onChange={(e) => {
@@ -1304,7 +1303,7 @@ const ScaledOrderInput = (props: {
           onFocus={onFocus(InputType.SKEW)}
           onBlur={onBlur(InputType.SKEW)}
           overrideFormatters={[
-            inputFormatter.rangeFormatter({ min: 0, max: 100 }),
+            inputFormatter.rangeFormatter({ min: 0, max: 100, dp: 2 }),
             inputFormatter.dpFormatter(2),
           ]}
           classNames={{
