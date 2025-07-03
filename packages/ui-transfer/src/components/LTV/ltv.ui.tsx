@@ -1,6 +1,6 @@
 import React from "react";
 // import { useTranslation } from "@orderly.network/i18n";
-import { cn, Flex, Tooltip, Text } from "@orderly.network/ui";
+import { cn, Flex, Tooltip, Text, Box } from "@orderly.network/ui";
 import type { LtvScriptReturns } from "./ltv.script";
 
 const TooltipIcon = React.forwardRef<
@@ -40,13 +40,17 @@ const TooltipContent: React.FC<{
   ltv_threshold: string;
 }> = (props) => {
   const { isLoading, ltv_threshold } = props;
+  // const { t } = useTranslation();
   return (
-    <Flex className="oui-w-72 oui-max-w-72">
+    <Box className="oui-w-72 oui-max-w-72">
       LTV (Loan-to-Value) is the ratio between your negative USDC and the
       current value of your collateral. If your LTV exceeds{" "}
       {isLoading ? "-" : ltv_threshold}, your collateral will be automatically
-      converted to USDC. Learn more
-    </Flex>
+      converted to USDC.{" "}
+      <Text className="oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12 oui-text-primary">
+        Learn More
+      </Text>
+    </Box>
   );
 };
 
@@ -68,6 +72,7 @@ export const LtvUI: React.FC<
           LTV
         </Text>
         <Tooltip
+          className="oui-p-2"
           content={
             <TooltipContent
               isLoading={isLoading}

@@ -218,7 +218,7 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
       return 0;
     }
     return calcMinimumReceived({
-      amount: quoteData.outAmounts[0],
+      amount: quoteData?.outAmounts[0],
       slippage: Number(slippage),
     });
   }, [quoteData, isQuoteLoading, slippage]);

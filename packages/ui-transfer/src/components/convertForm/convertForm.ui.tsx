@@ -65,7 +65,7 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
           readOnly
           loading={isQuoteLoading}
           token={targetToken}
-          value={isQuoteLoading ? "" : minimumReceived}
+          value={isQuoteLoading || !quantity ? "" : minimumReceived}
         />
         <Flex direction="column" itemAlign="start" mt={2} gap={1}>
           <SwapCoin
@@ -75,8 +75,10 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
           />
           <SlippageUI slippage={slippage} setSlippage={setSlippage} />
           <MinimumReceivedWidget
-            minimumReceived={minimumReceived}
             symbol={targetToken?.display_name || targetToken?.symbol || ""}
+            minimumReceived={
+              isQuoteLoading || !quantity ? "-" : minimumReceived
+            }
           />
           <LtvWidget
             showDiff={typeof quantity !== "undefined" && Number(quantity) > 0}
