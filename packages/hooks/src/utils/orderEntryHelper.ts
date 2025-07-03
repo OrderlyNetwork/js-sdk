@@ -380,7 +380,10 @@ export const getCalculateHandler = (
   }
 };
 
-//** format number */
+/**
+ * format number
+ * TODO: refactor this
+ */
 export function formatNumber(
   qty?: string | number,
   dp?: number | string,

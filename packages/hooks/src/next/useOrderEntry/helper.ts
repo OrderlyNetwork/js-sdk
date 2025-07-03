@@ -9,6 +9,7 @@ import {
 } from "@orderly.network/types";
 import { OrderEntity } from "@orderly.network/types";
 import { Decimal, zero } from "@orderly.network/utils";
+import { utils } from "../..";
 import { OrderFactory } from "../../services/orderCreator/factory";
 
 export const getCreateOrderUrl = (order: Partial<OrderlyOrder>): string => {
@@ -366,6 +367,7 @@ export function calcScaledOrderQtys(inputs: {
   distribution_type?: DistributionType;
   skew?: number;
   base_dp: number;
+  base_tick: number;
 }) {
   const {
     order_quantity = 0,
@@ -373,6 +375,7 @@ export function calcScaledOrderQtys(inputs: {
     distribution_type,
     skew,
     base_dp,
+    base_tick,
   } = inputs;
   const qtys = [];
 
@@ -387,11 +390,18 @@ export function calcScaledOrderQtys(inputs: {
   });
 
   for (let i = 0; i < total_orders; i++) {
-    qtys[i] = new Decimal(order_quantity)
+    let qty: Decimal | string = new Decimal(order_quantity)
       .mul(weights[i])
-      .div(sumWeights)
-      .todp(base_dp)
-      .toString();
+      .div(sumWeights);
+
+    if (base_tick > 1) {
+      // format quantity to base_tick, if base_tick is 10, 11 => 10, 115 => 110
+      qty = qty.div(base_tick).todp(0, Decimal.ROUND_DOWN).mul(base_tick);
+    } else {
+      qty = qty.todp(base_dp);
+    }
+
+    qtys[i] = qty.toString();
   }
 
   return qtys;
@@ -406,7 +416,7 @@ export function calcScaledOrderBatchBody(
   }
 
   try {
-    const { base_dp, quote_dp } = symbolInfo;
+    const { base_dp, quote_dp, base_tick } = symbolInfo;
 
     const {
       symbol,
@@ -435,6 +445,7 @@ export function calcScaledOrderBatchBody(
       distribution_type,
       skew,
       base_dp,
+      base_tick,
     });
 
     const now = Date.now();

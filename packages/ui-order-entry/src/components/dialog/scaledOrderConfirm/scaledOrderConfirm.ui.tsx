@@ -100,10 +100,9 @@ export const ScaledOrderConfirm = (props: ScaledOrderConfirmProps) => {
         render: (value: string, record: any) => {
           // buy: limit_price_i >= ask0 , show warning.
           // sell: limit price <= bid0 , show warning.
-          const showWarning =
-            record.side === OrderSide.BUY
-              ? askAndBid?.[0] && Number(value) >= askAndBid?.[0]
-              : askAndBid?.[1] && Number(value) <= askAndBid?.[1];
+          const showWarning = !!(record.side === OrderSide.BUY
+            ? askAndBid?.[0] && Number(value) >= askAndBid?.[0]
+            : askAndBid?.[1] && Number(value) <= askAndBid?.[1]);
 
           return (
             <Flex gapX={1}>
