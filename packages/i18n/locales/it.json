@@ -364,6 +364,7 @@
   "orderEntry.lowerPrice": "Prezzo inferiore",
   "orderEntry.skew": "Inclinazione",
   "orderEntry.totalOrders": "Totale ordini",
+  "orderEntry.totalQuantity": "Quantità totale",
   "orderEntry.quantityDistribution": "Distribuzione della quantità",
   "orderEntry.quantityDistribution.description": "Controlla la distribuzione della dimensione dell'ordine tra i livelli di prezzo.",
   "orderEntry.quantityDistribution.formula": "Asimmetria dimensione = (Dimensione al prezzo più alto) ÷ (Dimensione al prezzo più basso)",

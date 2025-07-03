@@ -364,6 +364,7 @@
   "orderEntry.lowerPrice": "Precio inferior",
   "orderEntry.skew": "Sesgo",
   "orderEntry.totalOrders": "Total de órdenes",
+  "orderEntry.totalQuantity": "Cantidad total",
   "orderEntry.quantityDistribution": "Distribución de cantidad",
   "orderEntry.quantityDistribution.description": "Controla cómo se distribuye el tamaño de la orden entre los niveles de precio.",
   "orderEntry.quantityDistribution.formula": "Sesgo de tamaño = (Tamaño al precio más alto) ÷ (Tamaño al precio más bajo)",

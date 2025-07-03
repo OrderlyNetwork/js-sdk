@@ -364,6 +364,7 @@
   "orderEntry.lowerPrice": "Harga terendah",
   "orderEntry.skew": "Kemiringan",
   "orderEntry.totalOrders": "Total order",
+  "orderEntry.totalQuantity": "Jumlah total",
   "orderEntry.quantityDistribution": "Distribusi jumlah",
   "orderEntry.quantityDistribution.description": "Mengontrol distribusi ukuran order di antara level harga.",
   "orderEntry.quantityDistribution.formula": "Kemiringan Ukuran = (Ukuran pada harga tertinggi) ÷ (Ukuran pada harga terendah)",

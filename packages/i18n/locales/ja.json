@@ -364,6 +364,7 @@
   "orderEntry.lowerPrice": "下限価格",
   "orderEntry.skew": "歪度",
   "orderEntry.totalOrders": "注文総数",
+  "orderEntry.totalQuantity": "合計数量",
   "orderEntry.quantityDistribution": "数量分布",
   "orderEntry.quantityDistribution.description": "価格レベル間での注文サイズの分布を制御します。",
   "orderEntry.quantityDistribution.formula": "サイズ偏差 = (最高価格のサイズ) ÷ (最低価格のサイズ)",

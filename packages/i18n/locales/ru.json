@@ -364,6 +364,7 @@
   "orderEntry.lowerPrice": "Нижняя цена",
   "orderEntry.skew": "Перекос",
   "orderEntry.totalOrders": "Всего ордеров",
+  "orderEntry.totalQuantity": "Общее количество",
   "orderEntry.quantityDistribution": "Распределение количества",
   "orderEntry.quantityDistribution.description": "Управляет распределением размера ордера между ценовыми уровнями.",
   "orderEntry.quantityDistribution.formula": "Перекос размера = (Размер по самой высокой цене) ÷ (Размер по самой низкой цене)",

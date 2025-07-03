@@ -364,6 +364,7 @@
   "orderEntry.lowerPrice": "Lower price",
   "orderEntry.skew": "Skew",
   "orderEntry.totalOrders": "Total orders",
+  "orderEntry.totalQuantity": "Total quantity",
   "orderEntry.quantityDistribution": "Qty distribution",
   "orderEntry.quantityDistribution.description": "Controls how order size is distributed across price levels. ",
   "orderEntry.quantityDistribution.formula": "Size Skew = (Size at highest price) ÷ (Size at lowest price)",

@@ -32,6 +32,14 @@ export function useScaledOrderConfirmScript(
     return national.toNumber();
   }, [orders]);
 
+  const sumQty = useMemo(() => {
+    const sumQty = orders.reduce((acc, order) => {
+      return acc.add(new Decimal(order.order_quantity));
+    }, zero);
+
+    return sumQty.toString();
+  }, [orders]);
+
   useEffect(() => {
     const onOrderBookUpdate = (data: any) => {
       const ask0 = data.asks?.[data.asks.length - 1]?.[0];
@@ -45,5 +53,5 @@ export function useScaledOrderConfirmScript(
     };
   }, []);
 
-  return { dataSource: orders, national, askAndBid };
+  return { dataSource: orders, national, askAndBid, sumQty };
 }

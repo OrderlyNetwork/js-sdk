@@ -364,6 +364,7 @@
   "orderEntry.lowerPrice": "Cena dolna",
   "orderEntry.skew": "Skośność",
   "orderEntry.totalOrders": "Łączna liczba zleceń",
+  "orderEntry.totalQuantity": "Całkowita ilość",
   "orderEntry.quantityDistribution": "Rozkład ilości",
   "orderEntry.quantityDistribution.description": "Kontroluje rozkład wielkości zlecenia między poziomami cen.",
   "orderEntry.quantityDistribution.formula": "Skośność wielkości = (Wielkość przy najwyższej cenie) ÷ (Wielkość przy najniższej cenie)",

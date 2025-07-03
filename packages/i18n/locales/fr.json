@@ -364,6 +364,7 @@
   "orderEntry.lowerPrice": "Prix inférieur",
   "orderEntry.skew": "Biais",
   "orderEntry.totalOrders": "Total des ordres",
+  "orderEntry.totalQuantity": "Quantité totale",
   "orderEntry.quantityDistribution": "Distribution des quantités",
   "orderEntry.quantityDistribution.description": "Contrôle la distribution de la taille des ordres entre les niveaux de prix.",
   "orderEntry.quantityDistribution.formula": "Biais de taille = (Taille au prix le plus élevé) ÷ (Taille au prix le plus bas)",

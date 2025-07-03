@@ -364,6 +364,7 @@
   "orderEntry.lowerPrice": "Alt fiyat",
   "orderEntry.skew": "Eğim",
   "orderEntry.totalOrders": "Toplam emir",
+  "orderEntry.totalQuantity": "Toplam miktar",
   "orderEntry.quantityDistribution": "Miktar dağılımı",
   "orderEntry.quantityDistribution.description": "Emir büyüklüğünün fiyat seviyeleri arasındaki dağılımını kontrol eder.",
   "orderEntry.quantityDistribution.formula": "Büyüklük Eğimi = (En yüksek fiyattaki büyüklük) ÷ (En düşük fiyattaki büyüklük)",

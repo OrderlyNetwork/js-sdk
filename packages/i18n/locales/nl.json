@@ -364,6 +364,7 @@
   "orderEntry.lowerPrice": "Onderprijs",
   "orderEntry.skew": "Scheefheid",
   "orderEntry.totalOrders": "Totaal orders",
+  "orderEntry.totalQuantity": "Totale hoeveelheid",
   "orderEntry.quantityDistribution": "Hoeveelheidsverdeling",
   "orderEntry.quantityDistribution.description": "Bepaalt de verdeling van ordergrootte tussen prijsniveaus.",
   "orderEntry.quantityDistribution.formula": "Grootte scheefheid = (Grootte bij hoogste prijs) ÷ (Grootte bij laagste prijs)",

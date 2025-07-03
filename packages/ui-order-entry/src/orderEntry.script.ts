@@ -94,11 +94,26 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   }, [formattedOrder.order_quantity, state.maxQty]);
 
   const formatQty = () => {
-    if (symbolInfo.base_tick < 1) return;
+    if (
+      symbolInfo.base_tick < 1 ||
+      // scaled order should not format quantity, because it is total quantity
+      formattedOrder.order_type === OrderType.SCALED ||
+      !formattedOrder.order_quantity
+    ) {
+      return;
+    }
+
+    // TODO: use this to format quantity instead of utils.formatNumber, need time to test
+    // const formatQty = new Decimal(formattedOrder.order_quantity)
+    //   .todp(0, Decimal.ROUND_DOWN)
+    //   .div(symbolInfo.base_tick)
+    //   .toString();
+
     const quantity = utils.formatNumber(
       formattedOrder?.order_quantity,
       new Decimal(symbolInfo?.base_tick || "0").toNumber(),
     );
+
     setValue("order_quantity", quantity, {
       shouldUpdateLastChangedField: false,
     });

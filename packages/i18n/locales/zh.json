@@ -364,6 +364,7 @@
   "orderEntry.lowerPrice": "最低价格",
   "orderEntry.skew": "偏差",
   "orderEntry.totalOrders": "订单总数",
+  "orderEntry.totalQuantity": "总数量",
   "orderEntry.quantityDistribution": "数量分布",
   "orderEntry.quantityDistribution.description": "控制订单数量在不同价格区间的分布方式。",
   "orderEntry.quantityDistribution.formula": "数量偏差 = (最高价格的数量) ÷ (最低价格的数量)",

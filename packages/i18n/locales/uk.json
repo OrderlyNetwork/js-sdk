@@ -364,6 +364,7 @@
   "orderEntry.lowerPrice": "Нижня ціна",
   "orderEntry.skew": "Перекіс",
   "orderEntry.totalOrders": "Всього ордерів",
+  "orderEntry.totalQuantity": "Загальна кількість",
   "orderEntry.quantityDistribution": "Розподіл кількості",
   "orderEntry.quantityDistribution.description": "Контролює розподіл розміру ордера між рівнями цін.",
   "orderEntry.quantityDistribution.formula": "Перекіс розміру = (Розмір за найвищою ціною) ÷ (Розмір за найнижчою ціною)",

@@ -364,6 +364,7 @@
   "orderEntry.lowerPrice": "Unterpreis",
   "orderEntry.skew": "Schiefe",
   "orderEntry.totalOrders": "Gesamtaufträge",
+  "orderEntry.totalQuantity": "Gesamtmenge",
   "orderEntry.quantityDistribution": "Mengenverteilung",
   "orderEntry.quantityDistribution.description": "Steuert die Verteilung der Auftragsgröße über Preisstufen.",
   "orderEntry.quantityDistribution.formula": "Größenverzerrung = (Größe zum höchsten Preis) ÷ (Größe zum niedrigsten Preis)",

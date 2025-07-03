@@ -364,6 +364,7 @@
   "orderEntry.lowerPrice": "Giá thấp nhất",
   "orderEntry.skew": "Độ lệch",
   "orderEntry.totalOrders": "Tổng số lệnh",
+  "orderEntry.totalQuantity": "Tổng số lượng",
   "orderEntry.quantityDistribution": "Phân phối số lượng",
   "orderEntry.quantityDistribution.description": "Kiểm soát phân phối kích thước lệnh giữa các mức giá.",
   "orderEntry.quantityDistribution.formula": "Độ lệch kích thước = (Kích thước ở giá cao nhất) ÷ (Kích thước ở giá thấp nhất)",

@@ -20,6 +20,7 @@ export const orderEntry = {
   "orderEntry.lowerPrice": "Lower price",
   "orderEntry.skew": "Skew",
   "orderEntry.totalOrders": "Total orders",
+  "orderEntry.totalQuantity": "Total quantity",
 
   "orderEntry.quantityDistribution": "Qty distribution",
 

@@ -364,6 +364,7 @@
   "orderEntry.lowerPrice": "하한가",
   "orderEntry.skew": "편향",
   "orderEntry.totalOrders": "총 주문 수",
+  "orderEntry.totalQuantity": "총 수량",
   "orderEntry.quantityDistribution": "수량 분포",
   "orderEntry.quantityDistribution.description": "가격 수준 간의 주문 크기 분포를 제어합니다.",
   "orderEntry.quantityDistribution.formula": "크기 편차 = (최고 가격의 크기) ÷ (최저 가격의 크기)",

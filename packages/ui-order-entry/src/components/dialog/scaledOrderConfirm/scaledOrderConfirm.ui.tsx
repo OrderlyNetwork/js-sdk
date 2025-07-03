@@ -25,8 +25,8 @@ export type ScaledOrderConfirmProps = ScaledOrderConfirmScriptOptions &
   };
 
 export const ScaledOrderConfirm = (props: ScaledOrderConfirmProps) => {
-  const { order, symbolInfo, dataSource, national, askAndBid } = props;
-  const { quote, base_dp, quote_dp } = symbolInfo;
+  const { order, symbolInfo, dataSource, national, askAndBid, sumQty } = props;
+  const { base, quote, base_dp, quote_dp } = symbolInfo;
   const { t } = useTranslation();
 
   const onCancel = () => {
@@ -156,6 +156,20 @@ export const ScaledOrderConfirm = (props: ScaledOrderConfirmProps) => {
         <Flex justify="between">
           <Text>{t("orderEntry.totalOrders")}</Text>
           <Text intensity={80}>{order.orders?.length}</Text>
+        </Flex>
+
+        <Flex justify="between" mt={2}>
+          <Text>Total Quantity</Text>
+          <Text.numeral
+            rule="price"
+            unit={base}
+            dp={quote_dp}
+            padding={false}
+            intensity={80}
+            unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
+          >
+            {sumQty}
+          </Text.numeral>
         </Flex>
 
         <Flex justify="between" mt={2}>
