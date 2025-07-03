@@ -1,6 +1,7 @@
 import React from "react";
 // import { useTranslation } from "@orderly.network/i18n";
 import { cn, Flex, Tooltip, Text } from "@orderly.network/ui";
+import type { LtvScriptReturns } from "./ltv.script";
 
 const TooltipIcon = React.forwardRef<
   SVGSVGElement,
@@ -34,18 +35,46 @@ const calculateTextColor = (val: number): string => {
   }
 };
 
+const TooltipContent: React.FC<{
+  isLoading: boolean;
+  ltv_threshold: string;
+}> = (props) => {
+  const { isLoading, ltv_threshold } = props;
+  return (
+    <Flex className="oui-w-72 oui-max-w-72">
+      LTV (Loan-to-Value) is the ratio between your negative USDC and the
+      current value of your collateral. If your LTV exceeds{" "}
+      {isLoading ? "-" : ltv_threshold}, your collateral will be automatically
+      converted to USDC. Learn more
+    </Flex>
+  );
+};
+
 export const LtvUI: React.FC<
-  Readonly<{ currentLtv: number; nextLTV: number; showDiff?: boolean }>
+  Readonly<
+    LtvScriptReturns & {
+      currentLtv: number;
+      nextLTV: number;
+      showDiff?: boolean;
+    }
+  >
 > = (props) => {
   // const { t } = useTranslation();
-  const { currentLtv, nextLTV, showDiff } = props;
+  const { currentLtv, nextLTV, showDiff, ltv_threshold, isLoading } = props;
   return (
     <Flex width="100%" itemAlign="center" justify="between">
       <Flex justify="start" itemAlign="center">
         <Text size="xs" intensity={36}>
           LTV
         </Text>
-        <Tooltip content={"Tooltip content"}>
+        <Tooltip
+          content={
+            <TooltipContent
+              isLoading={isLoading}
+              ltv_threshold={ltv_threshold}
+            />
+          }
+        >
           <TooltipIcon className="oui-ml-[2px] oui-cursor-pointer oui-text-base-contrast-36" />
         </Tooltip>
       </Flex>

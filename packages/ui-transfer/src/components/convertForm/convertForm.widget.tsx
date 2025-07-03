@@ -16,9 +16,9 @@ export const ConvertFormWidget: React.FC<DepositAndWithdrawProps> = (props) => {
 registerSimpleDialog(ConvertDialogId, ConvertFormWidget, {
   size: "md",
   classNames: { content: "oui-border oui-border-line-6" },
-  title: () => i18n.t("common.transfer"),
+  title: () => "Convert",
 });
 
 registerSimpleSheet(ConverSheetId, ConvertFormWidget, {
-  title: () => i18n.t("common.transfer"),
+  title: () => "Convert",
 });

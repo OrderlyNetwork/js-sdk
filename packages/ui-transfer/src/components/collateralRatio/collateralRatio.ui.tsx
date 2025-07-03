@@ -24,6 +24,15 @@ const TooltipIcon = React.forwardRef<
   );
 });
 
+const TooltipContent: React.FC = () => {
+  return (
+    <Flex className="oui-w-72 oui-max-w-72">
+      Collateral ratio shows how much of an asset’s value can be used as margin.
+      Learn more
+    </Flex>
+  );
+};
+
 export const CollateralRatioUI: React.FC<
   Readonly<{ collateralRatio: number }>
 > = (props) => {
@@ -35,7 +44,7 @@ export const CollateralRatioUI: React.FC<
         <Text size="xs" intensity={36}>
           {t("portfolio.overview.column.collateralRatio")}
         </Text>
-        <Tooltip content={"Tooltip content"}>
+        <Tooltip content={<TooltipContent />}>
           <TooltipIcon className="oui-ml-[2px] oui-cursor-pointer oui-text-base-contrast-36" />
         </Tooltip>
       </Flex>

@@ -264,7 +264,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     setLoading(true);
     return withdraw({
       amount: quantity,
-      token: "USDC",
+      token: token.symbol,
       // @ts-ignore
       chainId: currentChain?.id,
       allowCrossChainWithdraw: crossChainWithdraw,
