@@ -232,11 +232,11 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     if (currentChain?.id && token.address && targetToken?.address) {
       postQuote({
         chainId: currentChain.id,
-        inputTokens: [{ amount: "1000", tokenAddress: token.address }],
+        inputTokens: [{ amount: quantity, tokenAddress: token.address }],
         outputTokens: [{ proportion: 1, tokenAddress: targetToken.address }],
       });
     }
-  }, [currentChain?.id, token, targetToken]);
+  }, [quantity, currentChain?.id, token, targetToken]);
 
   const maxQuantity = useMemo(() => {
     const holding = holdingData.find((item) => item.token === token.symbol);
