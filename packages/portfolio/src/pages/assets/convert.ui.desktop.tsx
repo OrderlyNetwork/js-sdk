@@ -17,41 +17,18 @@ type ConvertDesktopUIProps = {
   convertState: ReturnType<typeof useConvertScript>;
 };
 
-const ASSET_OPTIONS = [
+export const CONVERT_STATUS_OPTIONS = [
   {
-    label: "All assets",
+    label: "All status",
     value: "all",
   },
   {
-    label: "USDC",
-    value: "USDC",
+    label: "Success",
+    value: "success",
   },
   {
-    label: "USDT",
-    value: "USDT",
-  },
-  {
-    label: "ETH",
-    value: "ETH",
-  },
-  {
-    label: "BTC",
-    value: "BTC",
-  },
-];
-
-const TYPE_OPTIONS = [
-  {
-    label: "All types",
-    value: "all",
-  },
-  {
-    label: "Auto",
-    value: "auto",
-  },
-  {
-    label: "Manual",
-    value: "manual",
+    label: "Failed",
+    value: "failed",
   },
 ];
 
@@ -131,13 +108,13 @@ export const ConvertDesktopUI: React.FC<ConvertDesktopUIProps> = ({
               type: "select",
               name: "converted_asset",
               value: convertState.convertedAssetFilter,
-              options: ASSET_OPTIONS,
+              options: convertState.convertedAssetOptions,
             },
             {
               type: "select",
-              name: "type",
-              value: convertState.typeFilter,
-              options: TYPE_OPTIONS,
+              name: "status",
+              value: convertState.statusFilter,
+              options: CONVERT_STATUS_OPTIONS,
             },
             {
               type: "range",

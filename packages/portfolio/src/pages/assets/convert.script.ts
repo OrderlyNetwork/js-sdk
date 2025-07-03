@@ -40,14 +40,10 @@ const formatDatePickerRange = (range: { from?: Date; to?: Date }) => {
   };
 };
 
-const areDatesEqual = (date1?: Date, date2?: Date) => {
-  if (!date1 || !date2) return false;
-  return date1.getTime() === date2.getTime();
-};
-
 export const useConvertScript = () => {
   const { t } = useTranslation();
   const { isMainAccount, state } = useAccount();
+  const { holding = [] } = useCollateral();
 
   // Pagination
   const { page, pageSize, setPage, parsePagination } = usePagination({
@@ -59,8 +55,10 @@ export const useConvertScript = () => {
   const allAccounts = useAccountsData();
 
   // Use the same account filter logic as assets
-  const { selectedAccount, filteredData, onAccountFilter } =
+  const { selectedAccount, onAccountFilter } =
     useAssetsAccountFilter(allAccounts);
+
+  // console.log("holding", selectedAccount);
 
   // Date range filter (default to last 90 days)
   const defaultRange = formatDatePickerRange({
@@ -68,7 +66,6 @@ export const useConvertScript = () => {
     from: offsetStartOfDay(subDays(new Date(), 89)),
   });
 
-  const [filterDays, setFilterDays] = useState<1 | 7 | 30 | 90 | null>(90);
   const [dateRange, setDateRange] = useState<{
     from?: Date;
     to?: Date;
@@ -76,18 +73,32 @@ export const useConvertScript = () => {
 
   // Filter states (matching API fields)
   const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [typeFilter, setTypeFilter] = useState<string>("all");
   const [convertedAssetFilter, setConvertedAssetFilter] =
     useState<string>("all");
 
-  // Update filter days helper
-  const updateFilterDays = React.useCallback((days: 1 | 7 | 30 | 90) => {
-    setFilterDays(days);
-    setDateRange({
-      from: offsetStartOfDay(subDays(new Date(), days - 1)),
-      to: offsetEndOfDay(new Date()),
-    });
-  }, []);
+  // Create asset options from holding data - similar to assets script
+  const convertedAssetOptions = useMemo(() => {
+    if (!Array.isArray(holding) || holding.length === 0) {
+      return [{ label: "All assets", value: "all" }];
+    }
+
+    // Extract unique tokens from holding data
+    const uniqueTokens = [
+      ...new Set(
+        holding
+          .filter((item) => item.token && item.token !== "USDC") // Exclude USDC as it's the received asset
+          .map((item) => item.token),
+      ),
+    ];
+
+    // Create options array
+    const assetOptions = uniqueTokens.map((token) => ({
+      value: token,
+      label: token,
+    }));
+
+    return [{ label: "All assets", value: "all" }, ...assetOptions];
+  }, [holding]);
 
   // Handle all filters (including account filter and date range)
   const onFilter = React.useCallback(
@@ -100,9 +111,6 @@ export const useConvertScript = () => {
       } else if (name === "status") {
         setStatusFilter(value as string);
         setPage(1); // Reset to first page when filter changes
-      } else if (name === "type") {
-        setTypeFilter(value as string);
-        setPage(1);
       } else if (name === "converted_asset") {
         setConvertedAssetFilter(value as string);
         setPage(1);
@@ -112,26 +120,6 @@ export const useConvertScript = () => {
         );
         setDateRange(dateRangeValue);
         setPage(1);
-
-        // Check if it matches any predefined range
-        const now = new Date();
-        const dayOptions = [1, 7, 30, 90] as const;
-        let matchedDays: 1 | 7 | 30 | 90 | null = null;
-
-        for (const days of dayOptions) {
-          const expectedFrom = offsetStartOfDay(subDays(now, days - 1));
-          const expectedTo = offsetEndOfDay(now);
-
-          if (
-            areDatesEqual(dateRangeValue.from, expectedFrom) &&
-            areDatesEqual(dateRangeValue.to, expectedTo)
-          ) {
-            matchedDays = days;
-            break;
-          }
-        }
-
-        setFilterDays(matchedDays);
       }
     },
     [onAccountFilter, setPage],
@@ -157,26 +145,17 @@ export const useConvertScript = () => {
     if (statusFilter !== "all") {
       params.set("status", statusFilter);
     }
-    if (typeFilter !== "all") {
-      params.set("type", typeFilter);
-    }
+
     if (convertedAssetFilter !== "all") {
       params.set("converted_asset", convertedAssetFilter);
     }
 
     return `/v1/asset/convert_history?${params.toString()}`;
-  }, [
-    page,
-    pageSize,
-    dateRange,
-    statusFilter,
-    typeFilter,
-    convertedAssetFilter,
-  ]);
+  }, [page, pageSize, dateRange, statusFilter, convertedAssetFilter]);
 
   // Query convert history with all parameters
-  const { data, isLoading } = useSubAccountQuery<{
-    data: ConvertRecord[];
+  const { data, isLoading, ...res } = useSubAccountQuery<{
+    rows: ConvertRecord[];
     meta: {
       total: number;
       current_page: number;
@@ -184,6 +163,9 @@ export const useConvertScript = () => {
     };
   }>(queryUrl, {
     accountId: isMainAccount ? state.mainAccountId : state.accountId,
+    formatter: (data) => {
+      return data;
+    },
   });
 
   // Parse pagination from API response meta
@@ -454,8 +436,8 @@ export const useConvertScript = () => {
     },
   ];
 
-  // Use real data if available, otherwise use mock data
-  const dataSource = data?.data || mockData;
+  // Use real data if available, otherwise use mock data for development
+  const dataSource = data?.rows || [];
 
   // Calculate summary
   const summary = useMemo(() => {
@@ -497,11 +479,9 @@ export const useConvertScript = () => {
     console.log("Show details for convert ID:", convertId);
   }, []);
 
-  console.log("request data", data);
-
   return {
-    // Datas
-    dataSource: mockData,
+    // Data
+    dataSource: data?.rows || [],
     summary,
     pagination,
 
@@ -511,13 +491,11 @@ export const useConvertScript = () => {
 
     // Date range state
     dateRange,
-    filterDays,
-    updateFilterDays,
 
     // Filter states
     statusFilter,
-    typeFilter,
     convertedAssetFilter,
+    convertedAssetOptions,
 
     // Actions
     onConvert: handleConvert,
@@ -527,6 +505,7 @@ export const useConvertScript = () => {
     // State
     isMainAccount,
     isLoading,
+    holding,
   };
 };
 
