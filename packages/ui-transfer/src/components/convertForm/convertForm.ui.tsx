@@ -20,7 +20,6 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
     disabled,
     quantity,
     onQuantityChange,
-    amount,
     maxQuantity,
     fee,
     token,
@@ -31,6 +30,7 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
     slippage,
     setSlippage,
     convertRate,
+    minimumReceived,
   } = props;
 
   // const { t } = useTranslation();
@@ -51,7 +51,7 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
         </Box>
         <AvailableQuantity
           token={token}
-          amount={amount}
+          amount={quantity}
           maxQuantity={maxQuantity.toString()}
           loading={props.balanceRevalidating}
           onClick={() => {
@@ -59,7 +59,7 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
           }}
         />
         <ExchangeDivider />
-        <QuantityInput token={targetToken} value={props.showQty} readOnly />
+        <QuantityInput token={targetToken} value={minimumReceived} readOnly />
         <Flex direction="column" itemAlign="start" mt={2} gap={1}>
           <SwapCoin
             indexPrice={convertRate}
@@ -68,7 +68,7 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
           />
           <SlippageUI slippage={slippage} setSlippage={setSlippage} />
           <MinimumReceivedWidget
-            minimumReceived={2}
+            minimumReceived={minimumReceived}
             symbol={targetToken?.display_name || targetToken?.symbol || ""}
           />
           <LtvWidget showDiff={true} currentLtv={20} nextLTV={50} />

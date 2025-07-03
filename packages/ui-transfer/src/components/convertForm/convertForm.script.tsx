@@ -1,21 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import {
   OrderlyContext,
   useAccount,
   useChains,
   useConfig,
-  useEventEmitter,
   useHoldingStream,
   useLocalStorage,
   useOdosQuote,
   useQuery,
-  useTransfer,
   useWalletConnector,
   useWalletSubscription,
-  useWithdraw,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
+import { account as accountPerp } from "@orderly.network/perp";
 import { useAppContext } from "@orderly.network/react-app";
 import { API, NetworkId } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
@@ -24,17 +22,16 @@ import {
   praseChainIdToNumber,
   removeTrailingZeros,
 } from "@orderly.network/utils";
-import { InputStatus, WithdrawTo } from "../../types";
-import { checkIsAccountId, getTransferErrorMessage } from "../../utils";
+import { InputStatus } from "../../types";
 import { CurrentChain } from "../depositForm/hooks";
 import { useSettlePnl } from "../unsettlePnlInfo/useSettlePnl";
 import { useToken } from "./hooks/useToken";
 
+const { calcMinimumReceived } = accountPerp;
+
 export type ConvertFormScriptReturn = ReturnType<typeof useConvertFormScript>;
 
 const ORDERLY_DEPOSIT_SLIPPAGE_KEY = "ORDERLY_DEPOSIT_SLIPPAGE";
-
-const markPrice = 1;
 
 interface ConvertFormScriptOptions {
   onClose?: () => void;
@@ -50,8 +47,6 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
   const brokerName = config.get("brokerName");
   const networkId = config.get("networkId") as NetworkId;
 
-  const ee = useEventEmitter();
-
   const [quantity, setQuantity] = useState<string>("");
   const [inputStatus, setInputStatus] = useState<InputStatus>("default");
   const [hintMessage, setHintMessage] = useState<string>();
@@ -59,7 +54,7 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
   const { wrongNetwork } = useAppContext();
   const { account } = useAccount();
 
-  const [allChains, { findByChainId }] = useChains(networkId, {
+  const [, { findByChainId }] = useChains(networkId, {
     pick: "network_infos",
     filter: (chain: any) =>
       chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,
@@ -67,7 +62,7 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
 
   const [linkDeviceStorage] = useLocalStorage("orderly_link_device", {});
 
-  const { connectedChain, wallet, settingChain } = useWalletConnector();
+  const { connectedChain, wallet } = useWalletConnector();
 
   const currentChain = useMemo(() => {
     // if (!connectedChain) return null;
@@ -93,11 +88,14 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     useToken({ currentChain });
 
   const token = useMemo<API.TokenInfo>(() => {
-    return {
+    const _token = {
       ...sourceToken!,
-      // withdraw display precision is 6
-      precision: sourceToken?.precision ?? 6,
+      precision: sourceToken?.precision ?? sourceToken?.decimals ?? 6,
     };
+    if (!_token.address && _token.symbol === "ETH") {
+      _token.address = "0x0000000000000000000000000000000000000000";
+    }
+    return _token;
   }, [sourceToken]);
 
   const { walletName, address } = useMemo(
@@ -112,20 +110,6 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     setQuantity(qty);
   };
 
-  const amount = useMemo(() => {
-    return new Decimal(quantity || 0).mul(markPrice).toNumber();
-  }, [quantity, markPrice]);
-
-  const internalWithdrawState = useInternalWithdraw({
-    symbol: token.symbol,
-    quantity,
-    setQuantity,
-    close: options.onClose,
-    setLoading,
-  });
-
-  const { withdrawTo, toAccountId } = internalWithdrawState;
-
   const [slippage, setSlippage] = useLocalStorage(
     ORDERLY_DEPOSIT_SLIPPAGE_KEY,
     "1",
@@ -135,14 +119,6 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
       },
     },
   );
-
-  const chains = useMemo(() => {
-    if (networkId === "mainnet") {
-      return allChains.filter((item) => item.bridgeless);
-    }
-
-    return allChains;
-  }, [allChains, networkId]);
 
   const { configStore } = useContext(OrderlyContext);
   const apiBaseUrl = configStore.get("apiBaseUrl");
@@ -169,11 +145,6 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     return true;
   }, [currentChain, wrongNetwork]);
 
-  const minAmount = useMemo(() => {
-    // @ts-ignore;
-    return chains.minimum_withdraw_amount ?? 1;
-  }, [chains]);
-
   const onConvert = async () => {
     if (loading) {
       return;
@@ -189,7 +160,7 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
         converted_asset: token?.symbol ?? "",
       })
       .then(() => {
-        toast.success(t("transfer.withdraw.requested"));
+        toast.success("convert success");
         options.onClose?.();
         setQuantity("");
       })
@@ -211,18 +182,6 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     currentChain,
     token: token.symbol,
   });
-
-  const showQty = useMemo(() => {
-    if (!quantity) {
-      return "";
-    }
-
-    const value = new Decimal(quantity).sub(fee ?? 0);
-    if (value.isNegative()) {
-      return "";
-    }
-    return value.toNumber();
-  }, [fee, quantity]);
 
   const { data: holdingData = [] } = useHoldingStream();
 
@@ -248,6 +207,16 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
       });
     }
   }, [quantity, currentChain?.id, token, targetToken]);
+
+  const minimumReceived = useMemo(() => {
+    if (!quoteData || isQuoteLoading) {
+      return 0;
+    }
+    return calcMinimumReceived({
+      amount: quoteData.outAmounts[0],
+      slippage: Number(slippage),
+    });
+  }, [quoteData, isQuoteLoading, slippage]);
 
   const maxQuantity = useMemo(() => {
     const holding = holdingData.find((item) => item.token === token.symbol);
@@ -285,7 +254,6 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     targetToken,
     inputStatus,
     hintMessage,
-    amount,
     balanceRevalidating: false,
     maxQuantity: maxQuantity,
     disabled,
@@ -294,7 +262,6 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     onConvert,
     fee,
     crossChainTrans,
-    showQty,
     networkId,
     checkIsBridgeless,
     hasPositions,
@@ -303,86 +270,9 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     slippage,
     setSlippage,
     convertRate,
-    ...internalWithdrawState,
+    minimumReceived: minimumReceived,
   };
 };
-
-type InternalWithdrawOptions = {
-  symbol: string;
-  quantity: string;
-  setQuantity: (quantity: string) => void;
-  close?: () => void;
-  setLoading: (loading: boolean) => void;
-};
-
-function useInternalWithdraw(options: InternalWithdrawOptions) {
-  const { symbol, quantity, setQuantity, close, setLoading } = options;
-  const { t } = useTranslation();
-  const [withdrawTo, setWithdrawTo] = useState<WithdrawTo>(WithdrawTo.Account);
-  const [toAccountId, setToAccountId] = useState<string>("");
-  const [inputStatus, setInputStatus] = useState<InputStatus>("default");
-  const [hintMessage, setHintMessage] = useState<string>();
-
-  const { transfer, submitting } = useTransfer();
-
-  const onTransfer = useCallback(() => {
-    const num = Number(quantity);
-
-    if (Number.isNaN(num) || num <= 0) {
-      toast.error(t("transfer.quantity.invalid"));
-      return;
-    }
-
-    if (submitting || !toAccountId) {
-      return;
-    }
-    setLoading(true);
-
-    transfer(symbol, {
-      account_id: toAccountId,
-      amount: new Decimal(quantity).toNumber(),
-    })
-      .then(() => {
-        toast.success(t("transfer.internalTransfer.success"));
-        setQuantity("");
-        close?.();
-      })
-      .catch((err) => {
-        const errorMsg = getTransferErrorMessage(err.code);
-        toast.error(errorMsg);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [t, quantity, symbol, submitting, toAccountId, transfer]);
-
-  useEffect(() => {
-    if (!toAccountId) {
-      setInputStatus("default");
-      setHintMessage("");
-      return;
-    }
-
-    if (checkIsAccountId(toAccountId)) {
-      setInputStatus("default");
-      setHintMessage("");
-    } else {
-      setInputStatus("error");
-      setHintMessage(t("transfer.withdraw.accountId.invalid"));
-    }
-  }, [toAccountId]);
-
-  return {
-    withdrawTo,
-    setWithdrawTo,
-    toAccountId,
-    setToAccountId,
-    onTransfer,
-    internalWithdrawSubmitting: submitting,
-    toAccountIdInputStatus: inputStatus,
-    toAccountIdHintMessage: hintMessage,
-  };
-}
 
 export function useWithdrawFee(options: {
   apiBaseUrl: string;

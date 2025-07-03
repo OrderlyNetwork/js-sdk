@@ -3,10 +3,7 @@ import React from "react";
 import { Flex, Text } from "@orderly.network/ui";
 
 export const MinimumReceivedUI: React.FC<
-  Readonly<{
-    minimumReceived: number;
-    symbol: string;
-  }>
+  Readonly<{ symbol: string; minimumReceived: number | string }>
 > = (props) => {
   // const { t } = useTranslation();
   const { minimumReceived, symbol } = props;
