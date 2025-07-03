@@ -59,6 +59,11 @@ const LeftNavSheet = modal.create<LeftNavUIProps>((props) => {
     [state.status],
   );
 
+  const onRouteChange = (option: RouteOption) => {
+    props?.routerAdapter?.onRouteChange?.(option);
+    hide();
+  };
+
   const subAccountTrigger = useMemo(() => {
     const name =
       state.accountId === state.mainAccountId
@@ -110,13 +115,9 @@ const LeftNavSheet = modal.create<LeftNavUIProps>((props) => {
           {showSubAccount && (
             <SubAccountWidget customTrigger={subAccountTrigger} />
           )}
-          <div className="oui-flex oui-flex-col">
+          <div className="oui-flex oui-h-[calc(100vh-260px)] oui-overflow-y-auto oui-flex-col">
             {props?.menus?.map((item) => (
-              <NavItem
-                key={item.name}
-                item={item}
-                onClick={props?.routerAdapter?.onRouteChange}
-              />
+              <NavItem key={item.name} item={item} onClick={onRouteChange} />
             ))}
           </div>
           <div className="oui-absolute oui-bottom-6 oui-flex oui-w-full oui-flex-col oui-gap-4">
