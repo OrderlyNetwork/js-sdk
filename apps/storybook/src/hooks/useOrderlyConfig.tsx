@@ -19,6 +19,7 @@ import {
   PersonIcon,
   BattleIcon,
   AssetIcon,
+  TradingLeftNavIcon,
   Text,
 } from "@orderly.network/ui";
 import {
@@ -141,7 +142,7 @@ export const useOrderlyConfig = () => {
                 name: t("common.tradingRewards"),
                 href: "/rewards/trading",
                 icon: (
-                  <TradingRewardsIcon size={24} color="white" opacity={0.8} />
+                  <TradingLeftNavIcon width={24} height={24} opacity={0.8} />
                 ),
               },
               {

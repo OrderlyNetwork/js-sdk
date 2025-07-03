@@ -77,6 +77,7 @@ export { SwapHorizIcon } from "./swapHoriz";
 export { PeopleIcon } from "./peopleIcon";
 export { PersonIcon } from "./personIcon";
 export { SettingFillIcon } from "./settingFill";
+export { TradingLeftNavIcon } from "./tradingLeftNavIcon";
 
 type IconType = typeof BaseIcon & {
   combine: typeof CombineIcon;

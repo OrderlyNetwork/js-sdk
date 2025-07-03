@@ -89,12 +89,18 @@ const LeftNavSheet = modal.create<LeftNavUIProps>((props) => {
 
   return (
     <Sheet open={visible} onOpenChange={onOpenChange}>
-      <SheetContent side="left" className="oui-w-[276px] oui-bg-base-8">
+      <SheetContent
+        side="left"
+        className="oui-w-[276px] oui-bg-base-8"
+        closeable
+        closeableSize={24}
+        closeOpacity={0.54}
+      >
         <div className="oui-relative oui-flex oui-h-full oui-flex-col oui-gap-3">
-          {props?.products}
-          <div className="oui-mt-3 [&_img]:!oui-h-[24px]">
+          <div className="oui-mt-[6px] oui-flex oui-h-[44px] oui-items-center [&_img]:!oui-h-[18px]">
             <MainLogo {...props?.logo} />
           </div>
+          {props?.products}
           {showSubAccount && (
             <SubAccountWidget customTrigger={subAccountTrigger} />
           )}
