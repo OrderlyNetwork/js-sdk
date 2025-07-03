@@ -269,7 +269,7 @@ export const useConvertDetailColumns = (
         width: 100,
         render() {
           // All detail transactions are completed if they appear in the list
-          return <Text>Completed</Text>;
+          return <Text>Success</Text>;
         },
       },
     ];
