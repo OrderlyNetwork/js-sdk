@@ -85,21 +85,19 @@ export const useSolanaWalletStore = create<SolanaWalletState>((set, get) => ({
 
       const { walletSolana, select } = walletMethods;
 
-      if (!walletSolana) {
-        select(walletName as WalletName);
-        await new Promise<void>((resolve) => {
-          const checkWallet = () => {
-            const currentWallet = get().walletMethods?.walletSolana;
-            console.log("currentWallet", currentWallet);
-            if (currentWallet) {
-              resolve();
-            } else {
-              setTimeout(checkWallet, 500);
-            }
-          };
-          checkWallet();
-        });
-      }
+      select(walletName as WalletName);
+      await new Promise<void>((resolve) => {
+        const checkWallet = () => {
+          const currentWallet = get().walletMethods?.walletSolana;
+          console.log("currentWallet", currentWallet);
+          if (currentWallet) {
+            resolve();
+          } else {
+            setTimeout(checkWallet, 500);
+          }
+        };
+        checkWallet();
+      });
 
       const updatedWalletMethods = get().walletMethods;
       if (!updatedWalletMethods) {

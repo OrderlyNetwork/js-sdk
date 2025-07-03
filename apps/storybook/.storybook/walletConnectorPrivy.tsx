@@ -84,7 +84,19 @@ export const WalletConnectorPrivy: FC<{ children: ReactNode }> = (props) => {
         devnetRpc: "https://api.devnet.solana.com",
         wallets: wallets,
         onError: (error: WalletError, adapter?: Adapter) => {
-          console.log("-- error", error, adapter);
+          console.log(
+            "error",
+            error,
+            adapter,
+            error instanceof WalletNotReadyError,
+            typeof error,
+          );
+          console.log("error message", error.message);
+          console.log("error message", error.name);
+          if (error.name === "WalletNotReadyError") {
+            window.open(adapter?.url, "_blank");
+            return;
+          }
         },
       }}
       abstractConfig={{}}
