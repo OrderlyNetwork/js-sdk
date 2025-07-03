@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   useAccount,
+  useAssetconvertEvent,
   useChains,
   useConfig,
   useHoldingStream,
@@ -98,6 +99,12 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     return _token;
   }, [sourceToken]);
 
+  useAssetconvertEvent({
+    onMessage: (data: any) => {
+      toast.success("successfully");
+    },
+  });
+
   const { walletName, address } = useMemo(
     () => ({
       walletName: wallet?.label,
@@ -153,7 +160,7 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     return account.assetsManager
       .convert({
         amount: Number(quantity),
-        slippage: slippage,
+        slippage: new Decimal(slippage).div(100).toNumber(),
         converted_asset: token?.symbol ?? "",
       })
       .then(() => {
