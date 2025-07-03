@@ -423,7 +423,9 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     hasPositions,
     onSettlePnl,
     brokerName,
-    vaultBalanceList,
+    vaultBalanceList: vaultBalanceList?.filter(
+      (item) => Number.parseInt(item.chain_id) === currentChain?.id,
+    ),
     ...internalWithdrawState,
   };
 };

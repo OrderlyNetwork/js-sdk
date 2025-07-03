@@ -67,6 +67,7 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
             hintMessage={props.hintMessage}
             vaultBalanceList={vaultBalanceList}
             testId="oui-testid-withdraw-dialog-quantity-input"
+            displayType="vaultBalance"
           />
         </Box>
         <AvailableQuantity

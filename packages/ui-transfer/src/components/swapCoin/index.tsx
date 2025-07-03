@@ -5,7 +5,7 @@ interface SwapCoinProps {
   className?: string;
   sourceSymbol?: string;
   targetSymbol?: string;
-  indexPrice: number;
+  indexPrice: number | string;
 }
 
 export const SwapCoin: FC<SwapCoinProps> = (props) => {

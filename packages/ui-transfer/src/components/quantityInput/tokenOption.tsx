@@ -14,10 +14,11 @@ interface TokenOptionProps {
   onTokenChange?: (token: API.TokenInfo) => void;
   isActive: boolean;
   index?: number;
+  displayType?: "balance" | "vaultBalance";
 }
 
 export const TokenOption: React.FC<TokenOptionProps> = (props) => {
-  const { token, isActive, onTokenChange, fetchBalance } = props;
+  const { token, isActive, displayType, onTokenChange, fetchBalance } = props;
   const { symbol, precision, insufficientBalance } = token;
   const { balance, loading } = useBalance(token, fetchBalance);
 
@@ -25,7 +26,7 @@ export const TokenOption: React.FC<TokenOptionProps> = (props) => {
 
   const dp = precision ?? 2;
 
-  if (insufficientBalance) {
+  if (displayType === "vaultBalance" && insufficientBalance) {
     return (
       <Flex
         key={symbol}

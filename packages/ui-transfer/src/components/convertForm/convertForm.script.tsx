@@ -226,7 +226,18 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
 
   const { data: holdingData = [] } = useHoldingStream();
 
-  const [postQuote, { data: quoteData }] = useOdosQuote();
+  const [postQuote, { data: quoteData, isMutating: isQuoteLoading }] =
+    useOdosQuote();
+
+  const convertRate = useMemo(() => {
+    if (!quoteData || isQuoteLoading) {
+      return "-";
+    }
+    const rate = new Decimal(quoteData.outAmounts[0])
+      .div(quoteData.inAmounts[0])
+      .toNumber();
+    return rate;
+  }, [quoteData]);
 
   useEffect(() => {
     if (currentChain?.id && token.address && targetToken?.address) {
@@ -291,6 +302,7 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     brokerName,
     slippage,
     setSlippage,
+    convertRate,
     ...internalWithdrawState,
   };
 };

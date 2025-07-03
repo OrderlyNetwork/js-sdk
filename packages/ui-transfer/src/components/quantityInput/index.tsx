@@ -31,6 +31,7 @@ export type QuantityInputProps = {
   testId?: string;
   formatters?: InputFormatter[];
   vaultBalanceList?: API.VaultBalance[];
+  displayType?: "balance" | "vaultBalance";
 } & Omit<InputProps, "onClear" | "suffix" | "onValueChange">;
 
 export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
@@ -50,6 +51,7 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
       placeholder,
       formatters,
       vaultBalanceList,
+      displayType,
       ...rest
     } = props;
 
@@ -89,12 +91,12 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
 
     const optionRenderer = (item: any) => {
       const isActive = item.symbol === token?.symbol;
-
       return (
         <TokenOption
           token={item}
           isActive={isActive}
           fetchBalance={fetchBalance}
+          displayType={displayType}
           onTokenChange={(item) => {
             onTokenChange?.(item);
             setOpen(false);

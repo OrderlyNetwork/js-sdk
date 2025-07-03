@@ -30,6 +30,7 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
     onConvert,
     slippage,
     setSlippage,
+    convertRate,
   } = props;
 
   // const { t } = useTranslation();
@@ -61,7 +62,7 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
         <QuantityInput token={targetToken} value={props.showQty} readOnly />
         <Flex direction="column" itemAlign="start" mt={2} gap={1}>
           <SwapCoin
-            indexPrice={1}
+            indexPrice={convertRate}
             sourceSymbol={token?.display_name || token?.symbol}
             targetSymbol={targetToken?.display_name || targetToken?.symbol}
           />
