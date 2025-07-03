@@ -62,15 +62,21 @@ const LeftNavSheet = modal.create<LeftNavUIProps>((props) => {
   const subAccountTrigger = useMemo(() => {
     const name =
       state.accountId === state.mainAccountId
-        ? t("common.mainAccount")
-        : t("common.subAccount");
+        ? state.address
+        : state.subAccounts?.find((item) => item.id === state.accountId)
+            ?.description || "";
     return (
       <div className="oui-flex oui-w-full oui-cursor-pointer oui-items-center oui-gap-2 oui-rounded-xl oui-bg-base-5 oui-p-3">
         <div>
           <PeopleIcon />
         </div>
         <div className="oui-flex oui-flex-col oui-gap-1 oui-font-semibold">
-          <div className="oui-text-sm oui-text-base-contrast">{name}</div>
+          <Text.formatted
+            rule="address"
+            className="oui-text-sm oui-text-base-contrast"
+          >
+            {name}
+          </Text.formatted>
           <Text.formatted
             rule="address"
             className="oui-text-2xs oui-text-base-contrast-36"

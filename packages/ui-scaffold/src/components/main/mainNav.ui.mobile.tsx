@@ -123,7 +123,7 @@ export const MainNavMobile: FC<Props> = (props) => {
   const renderCustomComponents = () => {
     const languageSwitcher = <LanguageSwitcherWidget />;
     const scanQRCode = showQrcode && <ScanQRCodeWidget />;
-    const subAccount = showSubAccount && <SubAccountWidget />;
+    // const subAccount = showSubAccount && <SubAccountWidget />;
     const linkDevice = showLinkDevice && <LinkDeviceWidget />;
     const chainMenu = showChainMenu && <ChainMenuWidget />;
     const walletConnect = <WalletConnectButtonExtension />;
@@ -133,7 +133,7 @@ export const MainNavMobile: FC<Props> = (props) => {
         title,
         languageSwitcher,
         scanQRCode,
-        subAccount,
+        // subAccount,
         linkDevice,
         chainMenu,
         walletConnect,
@@ -157,7 +157,7 @@ export const MainNavMobile: FC<Props> = (props) => {
           {props.leading}
           {languageSwitcher}
           {scanQRCode}
-          {subAccount}
+          {/* {subAccount} */}
           {linkDevice}
           {chainMenu}
           {walletConnect}
