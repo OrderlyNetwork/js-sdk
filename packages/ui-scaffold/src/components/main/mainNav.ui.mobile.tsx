@@ -149,7 +149,6 @@ export const MainNavMobile: FC<Props> = (props) => {
               {...props?.leftNav}
               logo={props?.logo}
               routerAdapter={props?.routerAdapter}
-              showSubAccount={showSubAccount}
             />
           ))}
         {title}

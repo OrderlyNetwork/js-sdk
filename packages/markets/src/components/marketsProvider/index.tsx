@@ -7,6 +7,7 @@ import {
   useCallback,
 } from "react";
 import { API } from "@orderly.network/types";
+import { LeftNavProps, RouterAdapter } from "@orderly.network/ui-scaffold";
 
 type MarketsContextState = {
   symbol?: string;
@@ -20,6 +21,15 @@ export const MarketsContext = createContext({} as MarketsContextState);
 export type MarketsProviderProps = {
   symbol?: string;
   onSymbolChange?: (symbol: API.Symbol) => void;
+  // only for mobile
+  navProps?: {
+    logo?: {
+      src: string;
+      alt: string;
+    };
+    routerAdapter?: RouterAdapter;
+    leftNav?: LeftNavProps;
+  };
 };
 
 export const MarketsProvider: FC<PropsWithChildren<MarketsProviderProps>> = (

@@ -22,6 +22,7 @@
     "@orderly.network/ui": "workspace:*",
     "@orderly.network/utils": "workspace:*",
     "@orderly.network/types": "workspace:*",
+    "@orderly.network/ui-scaffold": "workspace:*",
     "embla-carousel-react": "^8.2.0"
   },
   "devDependencies": {
