@@ -6,8 +6,15 @@ import {
   ChainNamespace,
   SolanaChains,
 } from "@orderly.network/types";
-import { ExclamationFillIcon } from "@orderly.network/ui";
+import {
+  ExclamationFillIcon,
+  Flex,
+  modal,
+  useScreen,
+} from "@orderly.network/ui";
+import { useWalletConnectorPrivy } from "../provider";
 import { WalletType } from "../types";
+import { ArrowRightIcon } from "./icons";
 
 export function SwitchNetworkTips({
   tipsContent,
@@ -15,20 +22,45 @@ export function SwitchNetworkTips({
   tipsContent: string | null;
 }) {
   const { t } = useTranslation();
+  const { isMobile } = useScreen();
+  const { network, setOpenConnectDrawer } = useWalletConnectorPrivy();
   if (!tipsContent) {
     return null;
   }
+
+  const onSwitchNetwork = () => {
+    setOpenConnectDrawer(false);
+    modal
+      .show<{
+        wrongNetwork: boolean;
+      }>(isMobile ? "ChainSelectorSheetId" : "ChainSelectorDialogId", {
+        networkId: network,
+        bridgeLessOnly: false,
+      })
+      .then(
+        (r) => {
+          console.log("[switchChain success]", r);
+        },
+        (error) => console.log("[switchChain error]", error),
+      );
+  };
   return (
-    <div className="oui-flex oui-mb-3 oui-items-center oui-gap-1  oui-px-2 oui-py-[6px] oui-bg-[rgba(255,125,0,0.1)] oui-rounded-[8px] ">
-      <ExclamationFillIcon
-        size={14}
-        className=" oui-text-warning-darken oui-flex-shrink-0"
-      />
-      <div className="oui-text-2xs oui-text-warning-darken">
-        {t("connector.privy.switchNetwork.tips", {
-          chainName: tipsContent,
-        })}
-      </div>
+    <div
+      onClick={onSwitchNetwork}
+      className="oui-mb-3 oui-flex oui-cursor-pointer oui-items-center oui-justify-between  oui-gap-1 oui-rounded-[8px] oui-bg-[rgba(255,125,0,0.1)] oui-px-2 oui-py-[6px] "
+    >
+      <Flex gap={1}>
+        <ExclamationFillIcon
+          size={14}
+          className=" oui-shrink-0 oui-text-warning-darken"
+        />
+        <div className="oui-text-2xs oui-text-warning-darken">
+          {t("connector.privy.switchNetwork.tips", {
+            chainName: tipsContent,
+          })}
+        </div>
+      </Flex>
+      <ArrowRightIcon />
     </div>
   );
 }

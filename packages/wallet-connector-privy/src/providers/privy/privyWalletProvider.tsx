@@ -45,6 +45,14 @@ const getPrivyEmbeddedWalletChainId = (chainId: string) => {
   return parseInt(chainId.split("eip155:")[1]);
 };
 
+const defaultUseSolanaWallets = {
+  ready: false,
+  wallets: [],
+  createWallet: () => Promise.resolve(),
+  exportWallet: () => Promise.resolve(),
+};
+const defaultUseWallets = { wallets: [] };
+
 const PrivyWalletContext = createContext<PrivyWalletContextValue | null>(null);
 
 export const PrivyWalletProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -62,7 +70,7 @@ export const PrivyWalletProvider: React.FC<{ children: React.ReactNode }> = ({
     createWallet: createEvmWallet,
   } = usePrivy();
   const { wallets: walletsEVM } = connectorWalletType.disablePrivy
-    ? { wallets: [] }
+    ? defaultUseWallets
     : useWallets();
   const connectedRef = useRef(false);
 
@@ -72,12 +80,7 @@ export const PrivyWalletProvider: React.FC<{ children: React.ReactNode }> = ({
     createWallet: createSolanaWallet,
     exportWallet: exportSolanaWallet,
   } = connectorWalletType.disablePrivy
-    ? {
-        ready: false,
-        wallets: [],
-        createWallet: () => Promise.resolve(),
-        exportWallet: () => Promise.resolve(),
-      }
+    ? defaultUseSolanaWallets
     : useSolanaWallets();
 
   const [walletEVM, setWalletEVM] = useState<WalletStatePrivy | null>(null);

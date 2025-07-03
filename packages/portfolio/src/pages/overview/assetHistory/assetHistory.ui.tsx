@@ -1,28 +1,30 @@
 import { FC, useMemo } from "react";
-import { DataFilter } from "@orderly.network/ui";
-import { useAssetHistoryColumns } from "./column";
-import { type UseAssetHistoryReturn } from "./useDataSource.script";
-import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import { useTranslation } from "@orderly.network/i18n";
+import { DataFilter } from "@orderly.network/ui";
+import { AuthGuardDataTable } from "@orderly.network/ui-connector";
+import {
+  AssetTarget,
+  type AssetHistoryScriptReturn,
+} from "../assetChart/assetHistory.script";
+import { useAssetHistoryColumns } from "./column";
 
-type AssetHistoryProps = {
-  // dataSource?: any[];
-  // page?: number;
-  // pageSize?: number;
-  // dataCount?: number;
-} & UseAssetHistoryReturn;
+type AssetHistoryProps = AssetHistoryScriptReturn;
 
 export const AssetHistory: FC<AssetHistoryProps> = (props) => {
   const { dataSource, queryParameter, onFilter, isLoading } = props;
-  const { side, dateRange } = queryParameter;
-  const columns = useAssetHistoryColumns();
+  const { dateRange } = queryParameter;
+  const columns = useAssetHistoryColumns({
+    side: props.side,
+    chainsInfo: props.chainsInfo,
+    isDeposit: props.isDeposit,
+    isWeb3Wallet: props.isWeb3Wallet,
+  });
   const { t } = useTranslation();
 
-  const SIDES = useMemo(() => {
+  const options = useMemo(() => {
     return [
-      { label: t("common.all"), value: "All" },
-      { label: t("common.deposit"), value: "DEPOSIT" },
-      { label: t("common.withdraw"), value: "WITHDRAW" },
+      { label: t("common.web3Wallet"), value: AssetTarget.Web3Wallet },
+      { label: t("common.accountId"), value: AssetTarget.AccountId },
     ];
   }, [t]);
 
@@ -32,9 +34,9 @@ export const AssetHistory: FC<AssetHistoryProps> = (props) => {
         items={[
           {
             type: "select",
-            name: "side",
-            options: SIDES,
-            value: side,
+            name: "target",
+            options: options,
+            value: props.target,
           },
           {
             type: "range",
@@ -53,7 +55,10 @@ export const AssetHistory: FC<AssetHistoryProps> = (props) => {
       <AuthGuardDataTable
         bordered
         loading={isLoading}
-        classNames={{ root: "oui-h-[calc(100%_-_49px)]" }}
+        classNames={{
+          root: "oui-h-[calc(100%_-_49px)]",
+          scroll: "oui-min-h-[400px]",
+        }}
         columns={columns}
         dataSource={dataSource}
         pagination={props.pagination}

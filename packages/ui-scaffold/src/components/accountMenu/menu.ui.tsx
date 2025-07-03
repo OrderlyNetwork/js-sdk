@@ -1,3 +1,4 @@
+import { useTranslation } from "@orderly.network/i18n";
 import { AccountStatusEnum } from "@orderly.network/types";
 import {
   Button,
@@ -12,7 +13,6 @@ import {
   Flex,
   Text,
 } from "@orderly.network/ui";
-import { useTranslation } from "@orderly.network/i18n";
 
 export type AccountMenuProps = {
   accountState: AccountState;
@@ -82,7 +82,7 @@ export const AccountMenu = (props: AccountMenuProps) => {
   if (state.status <= AccountStatusEnum.NotSignedIn) {
     return (
       <Button size="md" onClick={() => props.onCrateAccount()}>
-        {t("connector.signIn")}
+        {t("connector.createAccount")}
       </Button>
     );
     // return (

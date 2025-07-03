@@ -11,6 +11,11 @@ import { useTickerStream } from "./useTickerStream";
 
 export type OrderBookItem = number[];
 
+const DEFAULT_DEPTH: Record<string, string> = {
+  PERP_BTC_USDC: "1",
+  PERP_ETH_USDC: "0.1",
+};
+
 export type OrderbookData = {
   asks: OrderBookItem[];
   bids: OrderBookItem[];
@@ -290,8 +295,12 @@ export const useOrderbookStream = (
   }, [config("quote_tick")]);
 
   useEffect(() => {
-    setDepth(config("quote_tick"));
-  }, [config("quote_tick")]);
+    if (DEFAULT_DEPTH[symbol]) {
+      setDepth(Number(DEFAULT_DEPTH[symbol]));
+    } else {
+      setDepth(config("quote_tick"));
+    }
+  }, [config("quote_tick"), symbol]);
 
   const ws = useWS();
 

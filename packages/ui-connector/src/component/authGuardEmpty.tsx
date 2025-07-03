@@ -1,8 +1,8 @@
 import { PropsWithChildren } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { Box, EmptyDataState } from "@orderly.network/ui";
 import { AuthGuard } from "./authGuard";
-import { useTranslation } from "@orderly.network/i18n";
 
 type AuthGuardProps = {
   hint?: {
@@ -19,7 +19,7 @@ const AuthGuardEmpty = (props: PropsWithChildren<AuthGuardProps>) => {
   const {
     hint = {
       connectWallet: t("connector.trade.connectWallet.tooltip"),
-      signIn: t("connector.trade.signIn.tooltip"),
+      signIn: t("connector.trade.createAccount.tooltip"),
       enableTrading: t("connector.trade.enableTrading.tooltip"),
       wrongNetwork: t("connector.wrongNetwork.tooltip"),
     },

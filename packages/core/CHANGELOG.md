@@ -1,5 +1,41 @@
 # @orderly.network/core
 
+## 2.3.2
+
+### Patch Changes
+
+- 311e2a7: publish
+- publish
+- Updated dependencies [311e2a7]
+- Updated dependencies
+  - @orderly.network/types@2.3.2
+
+## 2.3.2-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@2.3.2-alpha.0
+
+## 2.3.1
+
+### Patch Changes
+
+- b2ca83a: publish
+- publish
+- Updated dependencies [b2ca83a]
+- Updated dependencies
+  - @orderly.network/types@2.3.1
+
+## 2.3.1-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@2.3.1-alpha.0
+
 ## 2.3.0
 
 ### Minor Changes

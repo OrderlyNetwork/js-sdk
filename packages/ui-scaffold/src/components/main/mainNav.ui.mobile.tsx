@@ -5,6 +5,7 @@ import { AccountStatusEnum } from "@orderly.network/types";
 import { Flex, Text, ChevronLeftIcon } from "@orderly.network/ui";
 import { WalletConnectButtonExtension } from "../accountMenu/menu.widget";
 import { ChainMenuWidget } from "../chainMenu";
+import { LanguageSwitcherWidget } from "../languageSwitcher";
 import { RouterAdapter } from "../scaffold";
 import { ScanQRCodeWidget } from "../scanQRCode";
 import { SubAccountWidget } from "../subAccount";
@@ -72,22 +73,17 @@ export const MainNavMobile: FC<Props> = (props) => {
     props?.routerAdapter?.onRouteChange(target as any);
   };
 
-  const renderContent = () => {
-    if (state.status === AccountStatusEnum.EnableTradingWithoutConnected) {
-      return <LinkDeviceWidget />;
-    }
-    if (wrongNetwork) {
-      return null;
-    }
-    return (
-      <>
-        <ChainMenuWidget />
-      </>
-    );
-  };
+  const showLinkDevice =
+    state.status === AccountStatusEnum.EnableTradingWithoutConnected;
 
+  const showChainMenu = !showLinkDevice && !wrongNetwork;
+
+  // TODO: fix this
   const showQrcode = useMemo(() => {
     if (state.status === AccountStatusEnum.EnableTradingWithoutConnected) {
+      return false;
+    }
+    if (state.status === AccountStatusEnum.EnableTrading) {
       return false;
     }
     if (disabledConnect) {
@@ -123,6 +119,43 @@ export const MainNavMobile: FC<Props> = (props) => {
     );
   }
 
+  const renderCustomComponents = () => {
+    const languageSwitcher = <LanguageSwitcherWidget />;
+    const scanQRCode = showQrcode && <ScanQRCodeWidget />;
+    const subAccount = showSubAccount && <SubAccountWidget />;
+    const linkDevice = showLinkDevice && <LinkDeviceWidget />;
+    const chainMenu = showChainMenu && <ChainMenuWidget />;
+    const walletConnect = <WalletConnectButtonExtension />;
+
+    if (typeof props.customRender === "function") {
+      return props.customRender?.({
+        title,
+        languageSwitcher,
+        scanQRCode,
+        subAccount,
+        linkDevice,
+        chainMenu,
+        walletConnect,
+      });
+    }
+
+    return (
+      <>
+        {title}
+        <Flex gapX={2}>
+          {props.leading}
+          {languageSwitcher}
+          {scanQRCode}
+          {subAccount}
+          {linkDevice}
+          {chainMenu}
+          {walletConnect}
+          {props.trailing}
+        </Flex>
+      </>
+    );
+  };
+
   return (
     <Flex
       width={"100%"}
@@ -130,14 +163,9 @@ export const MainNavMobile: FC<Props> = (props) => {
       px={3}
       itemAlign={"center"}
       justify={"between"}
+      className={props.classNames?.mainNav?.root}
     >
-      <Flex>{title}</Flex>
-      <Flex gapX={2}>
-        {showQrcode && <ScanQRCodeWidget />}
-        {showSubAccount && <SubAccountWidget />}
-        {renderContent()}
-        <WalletConnectButtonExtension />
-      </Flex>
+      {renderCustomComponents()}
     </Flex>
   );
 };

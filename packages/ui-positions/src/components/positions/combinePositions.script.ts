@@ -64,7 +64,7 @@ export const useCombinePositionsScript = (props: PositionsProps) => {
     });
 
   const processPositions = produce<API.PositionTPSLExt[]>(
-    newPositions,
+    newPositions.filter((acc) => acc.account_id !== state.mainAccountId),
     (draft) => {
       for (const item of draft) {
         const info = symbolsInfo[item.symbol];
@@ -126,14 +126,6 @@ export const useCombinePositionsScript = (props: PositionsProps) => {
         item.unrealized_pnl = unrealPnl;
         item.unrealized_pnl_ROI = unrealPnlROI;
         item.unrealized_pnl_ROI_index = unrealPnlROI_index;
-      }
-
-      // delete main account position
-      const idx = draft.findIndex(
-        (acc) => acc.account_id === state.mainAccountId,
-      );
-      if (idx !== -1) {
-        draft.splice(idx, 1);
       }
     },
   );

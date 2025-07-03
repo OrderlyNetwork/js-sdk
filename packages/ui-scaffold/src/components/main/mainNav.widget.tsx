@@ -1,6 +1,6 @@
 import { PropsWithChildren, ReactNode } from "react";
-import { MainNav, MainNavProps } from "./mainNav.ui";
 import { MainNavItem } from "./mainMenus/navItem";
+import { MainNav, MainNavProps } from "./mainNav.ui";
 import {
   CampaignPositionEnum,
   useMainNavBuilder,
@@ -30,6 +30,16 @@ export type MainNavWidgetProps = PropsWithChildren<{
     name: string;
     scope?: string;
   }) => void;
+  /** only works on mobile */
+  customRender?: (components: {
+    title?: ReactNode;
+    languageSwitcher?: ReactNode;
+    scanQRCode?: ReactNode;
+    subAccount?: ReactNode;
+    linkDevice?: ReactNode;
+    chainMenu?: ReactNode;
+    walletConnect?: ReactNode;
+  }) => ReactNode;
 }> &
   Pick<MainNavProps, "classNames">;
 

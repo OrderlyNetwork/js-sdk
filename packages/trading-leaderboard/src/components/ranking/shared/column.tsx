@@ -26,7 +26,7 @@ export const useRankingColumns = (
       {
         title: t("tradingLeaderboard.rank"),
         dataIndex: "rank",
-        width: 40,
+        width: 50,
         render: (value: number, record: any) => {
           const isYou = record.key === getCurrentAddressRowKey(address!);
 
@@ -53,13 +53,15 @@ export const useRankingColumns = (
                   src={badgeImg as string}
                   alt={`${value}th badge`}
                   className={cn(
-                    "oui-z-0 oui-h-[47px] oui-opacity-30",
+                    "oui-z-0 oui-h-[38px] oui-opacity-30 md:oui-h-[46px]",
                     "oui-absolute oui-left-0 oui-top-0",
                     "oui-mix-blend-luminosity",
+                    // force create a separate layer in order to fix mix-blend-luminosity not working on ios
+                    "oui-transform-gpu",
                   )}
                 />
               )}
-              <div className="oui-relative ">
+              <div className="oui-relative">
                 {rankIcon || (
                   <Box width={20} pl={2} className="oui-text-center">
                     {value}

@@ -1,4 +1,5 @@
 export const tradingLeaderboard = {
+  // TODO: remove this key
   "tradingLeaderboard.leaderboard": "Leaderboard",
   "tradingLeaderboard.campaigns": "Campaigns",
   "tradingLeaderboard.ongoing": "Ongoing",
@@ -26,6 +27,9 @@ export const tradingLeaderboard = {
     "Trade <0/> more to get next tickets",
   "tradingLeaderboard.earnTickets":
     "Earn {{ticket}} tickets every {{amount}} trading volume.",
+  "tradingLeaderboard.arena": "Arena",
+  "tradingLeaderboard.generalLeaderboard": "General leaderboard",
+  "tradingLeaderboard.maxTicketsAchieved": "Max tickets achieved",
 };
 
 export type TradingLeaderboard = typeof tradingLeaderboard;

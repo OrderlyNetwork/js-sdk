@@ -151,6 +151,12 @@ export class Account {
       };
       [key: string]: any;
     },
+    options?: {
+      /**
+       * @deprecated will be remove this in next minor version
+       */
+      validateOrderlyKeyScope?: (scope: string) => boolean;
+    },
   ): Promise<AccountStatusEnum> {
     if (!address) throw new SDKError("Address is required");
     if (!wallet) throw new SDKError("Wallet is required");
@@ -216,7 +222,7 @@ export class Account {
 
     this._ee.emit(EVENT_NAMES.validateStart);
 
-    const finallyState = await this._checkAccount(address);
+    const finallyState = await this._checkAccount(address, options);
 
     this._ee.emit(EVENT_NAMES.validateEnd, finallyState);
 
@@ -312,7 +318,15 @@ export class Account {
   }
 
   // Check account status
-  private async _checkAccount(address: string): Promise<AccountStatusEnum> {
+  private async _checkAccount(
+    address: string,
+    options?: {
+      /**
+       * @deprecated will be remove this in next minor version
+       */
+      validateOrderlyKeyScope?: (scope: string) => boolean;
+    },
+  ): Promise<AccountStatusEnum> {
     // if (!this.walletClient) return;
     //
     let nextState: AccountState;
@@ -383,14 +397,18 @@ export class Account {
       ) {
         const now = getTimestamp();
         const expiration = orderlyKeyStatus.expiration;
-        if (now > expiration) {
-          // orderlyKey is expired, remove orderlyKey
-          const { accountId, mainAccountId, ...filteredState } =
-            this.stateValue;
 
+        const validScope =
+          typeof options?.validateOrderlyKeyScope === "function"
+            ? options.validateOrderlyKeyScope(orderlyKeyStatus.scope)
+            : true;
+
+        if (now > expiration || !validScope) {
+          // orderlyKey is expired, remove orderlyKey
           nextState = {
-            ...filteredState,
+            ...this.stateValue,
             validating: false,
+            status: AccountStatusEnum.DisabledTrading,
           };
           this._ee.emit(EVENT_NAMES.statusChanged, nextState);
           this.keyStore.cleanKey(address, "orderlyKey");
@@ -971,7 +989,7 @@ export class Account {
         expiration,
         timestamp: getTimestamp(),
         // domain: any;
-        scope: options?.scope,
+        scope: options?.scope || "read,trading,asset",
         tag: options?.tag,
         subAccountId: options?.subAccountId,
       });

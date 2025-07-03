@@ -1,11 +1,13 @@
 import { useMemo } from "react";
+import { useTranslation } from "@orderly.network/i18n";
+import { AccountStatusEnum, NetworkId } from "@orderly.network/types";
 import { Box, Button, modal } from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
-import { AccountStatusEnum, NetworkId } from "@orderly.network/types";
-import { CrossWithdrawConfirm } from "../crossWithdrawConfirm";
 import { Decimal } from "@orderly.network/utils";
+import { WithdrawTo } from "../../types";
+import { CrossWithdrawConfirm } from "../crossWithdrawConfirm";
 import SwitchChainButton from "./SwitchChainButton";
-import { useTranslation } from "@orderly.network/i18n";
+
 interface IProps {
   disabled?: boolean;
   loading?: boolean;
@@ -17,6 +19,8 @@ interface IProps {
   quantity: string;
   fee: number;
   checkIsBridgeless: boolean;
+  withdrawTo: WithdrawTo;
+  onTransfer: () => void;
 }
 
 export const WithdrawAction = (props: IProps) => {
@@ -31,6 +35,7 @@ export const WithdrawAction = (props: IProps) => {
     quantity,
     fee,
     checkIsBridgeless,
+    onTransfer,
   } = props;
   const { t } = useTranslation();
 
@@ -69,6 +74,38 @@ export const WithdrawAction = (props: IProps) => {
 
   const buttonSize = { initial: "md", lg: "lg" } as const;
 
+  const renderButton = () => {
+    if (props.withdrawTo === WithdrawTo.Account) {
+      return (
+        <Button
+          fullWidth
+          disabled={disabled}
+          loading={loading}
+          onClick={onTransfer}
+          size={buttonSize}
+        >
+          {t("common.withdraw")}
+        </Button>
+      );
+    }
+
+    if (checkIsBridgeless) {
+      return (
+        <Button
+          data-testid="oui-testid-withdraw-dialog-withdraw-btn"
+          fullWidth
+          disabled={disabled}
+          loading={loading}
+          onClick={preWithdraw}
+          size={buttonSize}
+        >
+          {t("common.withdraw")}
+        </Button>
+      );
+    }
+    return <SwitchChainButton networkId={networkId} size={buttonSize} />;
+  };
+
   return (
     <Box className="oui-w-full lg:oui-w-auto lg:oui-min-w-[184px]">
       <AuthGuard
@@ -77,20 +114,7 @@ export const WithdrawAction = (props: IProps) => {
         bridgeLessOnly
         buttonProps={{ fullWidth: true, size: buttonSize }}
       >
-        {checkIsBridgeless ? (
-          <Button
-            data-testid="oui-testid-withdraw-dialog-withdraw-btn"
-            fullWidth
-            disabled={disabled}
-            loading={loading}
-            onClick={preWithdraw}
-            size={buttonSize}
-          >
-            {t("common.withdraw")}
-          </Button>
-        ) : (
-          <SwitchChainButton networkId={networkId} size={buttonSize} />
-        )}
+        {renderButton()}
       </AuthGuard>
     </Box>
   );
