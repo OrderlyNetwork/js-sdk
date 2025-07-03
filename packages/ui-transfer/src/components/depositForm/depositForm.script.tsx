@@ -50,6 +50,17 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     onTargetTokenChange,
   } = useToken_v2({ currentChain });
 
+  const _sourceToken = useMemo<API.TokenInfo>(() => {
+    const _token = {
+      ...sourceToken!,
+      precision: sourceToken?.precision ?? sourceToken?.decimals ?? 6,
+    };
+    if (!_token.address && _token.symbol === "ETH") {
+      _token.address = "0x0000000000000000000000000000000000000000";
+    }
+    return _token;
+  }, [sourceToken]);
+
   const {
     dst,
     balance,
@@ -64,18 +75,18 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     balanceRevalidating,
     fetchBalance,
   } = useDeposit({
-    address: sourceToken?.address,
-    decimals: sourceToken?.decimals,
+    address: _sourceToken?.address,
+    decimals: _sourceToken?.decimals,
     srcChainId: currentChain?.id,
-    srcToken: sourceToken?.symbol,
+    srcToken: _sourceToken?.symbol,
   });
 
   const maxQuantity = useMemo(
     () =>
       new Decimal(balance || 0)
-        .todp(sourceToken?.precision ?? 2, Decimal.ROUND_DOWN)
+        .todp(_sourceToken?.precision ?? 2, Decimal.ROUND_DOWN)
         .toString(),
-    [balance, sourceToken?.precision],
+    [balance, _sourceToken?.precision],
   );
 
   const { inputStatus, hintMessage } = useInputStatus({
@@ -105,7 +116,7 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
   const disabled =
     !quantity ||
     Number(quantity) === 0 ||
-    !sourceToken ||
+    !_sourceToken ||
     inputStatus === "error" ||
     depositFeeRevalidating!;
 
@@ -137,7 +148,7 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     minimumReceived,
   } = useCollateralValue({
     tokens: sourceTokens,
-    sourceToken: sourceToken,
+    sourceToken: _sourceToken,
     targetToken: targetToken,
     qty: quantity,
   });
@@ -150,10 +161,10 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
 
   useEffect(() => {
     cleanData();
-  }, [sourceToken, currentChain?.id]);
+  }, [_sourceToken, currentChain?.id]);
 
   return {
-    sourceToken,
+    sourceToken: _sourceToken,
     targetToken,
 
     sourceTokens,
@@ -340,32 +351,4 @@ const useConvertThreshold = () => {
     isLoading,
     error,
   } as const;
-};
-
-export const useCollateralRatio = (inputs: {
-  token?: API.TokenInfo;
-  indexPrice: number;
-}) => {
-  const { token, indexPrice } = inputs;
-  return useCallback(
-    (qty: number) => {
-      return account.collateralRatio({
-        baseWeight: token?.base_weight ?? 0,
-        discountFactor: token?.discount_factor ?? 0,
-        collateralQty: qty,
-        indexPrice,
-      });
-    },
-    [token, indexPrice],
-  );
-};
-
-export const useTargetQuantity = () => {
-  return useCallback((qty: number, ratio: number, indexPrice: number) => {
-    return account.collateralContribution({
-      collateralQty: qty,
-      collateralRatio: ratio,
-      indexPrice,
-    });
-  }, []);
 };
