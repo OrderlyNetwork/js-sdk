@@ -6,8 +6,9 @@ import {
   useChains,
   useConfig,
   useEventEmitter,
+  useHoldingStream,
   useLocalStorage,
-  usePrivateQuery,
+  useOdosQuote,
   useQuery,
   useTransfer,
   useWalletConnector,
@@ -18,13 +19,20 @@ import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext } from "@orderly.network/react-app";
 import { API, NetworkId } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
-import { Decimal, int2hex, praseChainIdToNumber } from "@orderly.network/utils";
+import {
+  Decimal,
+  praseChainIdToNumber,
+  removeTrailingZeros,
+} from "@orderly.network/utils";
 import { InputStatus, WithdrawTo } from "../../types";
 import { checkIsAccountId, getTransferErrorMessage } from "../../utils";
-import { CurrentChain, useToken_v2 } from "../depositForm/hooks";
+import { CurrentChain } from "../depositForm/hooks";
 import { useSettlePnl } from "../unsettlePnlInfo/useSettlePnl";
+import { useToken } from "./hooks/useToken";
 
 export type ConvertFormScriptReturn = ReturnType<typeof useConvertFormScript>;
+
+const ORDERLY_DEPOSIT_SLIPPAGE_KEY = "ORDERLY_DEPOSIT_SLIPPAGE";
 
 const markPrice = 1;
 
@@ -35,10 +43,8 @@ interface ConvertFormScriptOptions {
 export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
   const { t } = useTranslation();
   const [crossChainTrans, setCrossChainTrans] = useState<boolean>(false);
-  const [loading, setLoading] = useState(false);
-  const { data: assetHistory } = usePrivateQuery<any[]>("/v1/asset/history", {
-    revalidateOnMount: true,
-  });
+  const [loading, setLoading] = useState<boolean>(false);
+
   const config = useConfig();
 
   const brokerName = config.get("brokerName");
@@ -61,20 +67,7 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
 
   const [linkDeviceStorage] = useLocalStorage("orderly_link_device", {});
 
-  const { data: vaultBalanceList } = useQuery<API.VaultBalance[]>(
-    `/v1/public/vault_balance`,
-    {
-      revalidateOnMount: true,
-      errorRetryCount: 3,
-    },
-  );
-
-  const {
-    connectedChain,
-    wallet,
-    setChain: switchChain,
-    settingChain,
-  } = useWalletConnector();
+  const { connectedChain, wallet, settingChain } = useWalletConnector();
 
   const currentChain = useMemo(() => {
     // if (!connectedChain) return null;
@@ -83,7 +76,9 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
       ? praseChainIdToNumber(connectedChain.id)
       : Number.parseInt(linkDeviceStorage?.chainId);
 
-    if (!chainId) return null;
+    if (!chainId) {
+      return null;
+    }
 
     const chain = findByChainId(chainId);
 
@@ -94,16 +89,8 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     } as CurrentChain;
   }, [findByChainId, connectedChain, linkDeviceStorage]);
 
-  // const [token, setToken] = useState<API.TokenInfo>({
-  //   symbol: "USDC",
-  //   decimals: 6,
-  //   address: "",
-  //   display_name: "",
-  //   precision: 6,
-  // });
-  const { sourceToken, onSourceTokenChange, sourceTokens } = useToken_v2({
-    currentChain,
-  });
+  const { sourceToken, sourceTokens, onSourceTokenChange, targetToken } =
+    useToken({ currentChain });
 
   const token = useMemo<API.TokenInfo>(() => {
     return {
@@ -129,18 +116,6 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     return new Decimal(quantity || 0).mul(markPrice).toNumber();
   }, [quantity, markPrice]);
 
-  const {
-    withdraw,
-
-    maxAmount,
-    maxOthersAmount,
-
-    unsettledPnL,
-  } = useWithdraw({
-    decimals: token?.decimals,
-    symbol: token?.symbol,
-  });
-
   const internalWithdrawState = useInternalWithdraw({
     symbol: token.symbol,
     quantity,
@@ -150,6 +125,16 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
   });
 
   const { withdrawTo, toAccountId } = internalWithdrawState;
+
+  const [slippage, setSlippage] = useLocalStorage(
+    ORDERLY_DEPOSIT_SLIPPAGE_KEY,
+    "1",
+    {
+      parseJSON: (value: string | null) => {
+        return !value || value === '""' ? "1" : JSON.parse(value);
+      },
+    },
+  );
 
   const chains = useMemo(() => {
     if (networkId === "mainnet") {
@@ -184,115 +169,36 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     return true;
   }, [currentChain, wrongNetwork]);
 
-  const cleanData = () => {
-    setQuantity("");
-  };
-
-  const onChainChange = useCallback(
-    async (chain: API.NetworkInfos) => {
-      const chainInfo = findByChainId(chain.chain_id);
-
-      if (
-        !chainInfo ||
-        chainInfo.network_infos?.chain_id === currentChain?.id
-      ) {
-        return Promise.resolve();
-      }
-
-      return switchChain?.({
-        chainId: int2hex(Number(chainInfo.network_infos?.chain_id)),
-      })
-        .then((switched) => {
-          if (switched) {
-            toast.success(t("connector.networkSwitched"));
-            // clean input value
-            cleanData();
-          } else {
-            toast.error(t("connector.switchChain.failed"));
-          }
-        })
-        .catch((error) => {
-          toast.error(`${t("connector.switchChain.failed")}: ${error.message}`);
-        });
-    },
-    [currentChain, switchChain, findByChainId, t],
-  );
-
-  const chainVaultBalance = useMemo(() => {
-    if (!Array.isArray(vaultBalanceList) || !currentChain) {
-      return null;
-    }
-    // chain.id
-    const vaultBalance = vaultBalanceList.find(
-      (item) => Number.parseInt(item.chain_id) === currentChain?.id,
-    );
-    if (vaultBalance) {
-      return vaultBalance.balance;
-    }
-    return null;
-  }, [chains, currentChain, vaultBalanceList]);
-
-  const crossChainWithdraw = useMemo(() => {
-    if (chainVaultBalance !== null) {
-      const qtyNum = Number.parseFloat(quantity);
-      const value = qtyNum > chainVaultBalance && qtyNum <= maxAmount;
-      return value;
-    }
-    return false;
-  }, [quantity, maxAmount, chainVaultBalance]);
-
   const minAmount = useMemo(() => {
     // @ts-ignore;
     return chains.minimum_withdraw_amount ?? 1;
   }, [chains]);
 
-  const onWithdraw = async () => {
+  const onConvert = async () => {
     if (loading) {
       return;
     }
     if (inputStatus !== "default") {
       return;
     }
-    if (new Decimal(quantity).lt(minAmount)) {
-      toast.error(
-        t("transfer.withdraw.minAmount.error", {
-          minAmount,
-        }),
-      );
-      return;
-    }
     setLoading(true);
-    return withdraw({
-      amount: quantity,
-      token: "USDC",
-      // @ts-ignore
-      chainId: currentChain?.id,
-      allowCrossChainWithdraw: crossChainWithdraw,
-    })
+    return account.assetsManager
+      .convert({
+        amount: Number(quantity),
+        slippage: slippage,
+        converted_asset: token?.symbol ?? "",
+      })
       .then(() => {
         toast.success(t("transfer.withdraw.requested"));
-        ee.emit("withdraw:requested");
         options.onClose?.();
         setQuantity("");
       })
-      .catch((e) => {
-        if (e.message.indexOf("user rejected") !== -1) {
-          toast.error(t("transfer.rejectTransaction"));
-          return;
-        }
-        if (
-          e.message.indexOf(
-            "Signing off chain messages with Ledger is not yet supported",
-          ) !== -1
-        ) {
-          ee.emit("wallet:sign-message-with-ledger-error", {
-            message: e.message,
-            userAddress: account.address,
-          });
-          return;
-        }
-
-        toast.error(e.message);
+      .catch((e: Error) => {
+        toast.error(
+          e.message.includes("user rejected")
+            ? t("transfer.rejectTransaction")
+            : e.message,
+        );
       })
       .finally(() => {
         setLoading(false);
@@ -301,7 +207,7 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
 
   const fee = useWithdrawFee({
     apiBaseUrl,
-    crossChainWithdraw,
+    crossChainWithdraw: false,
     currentChain,
     token: token.symbol,
   });
@@ -318,65 +224,29 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     return value.toNumber();
   }, [fee, quantity]);
 
-  useEffect(() => {
-    if (!quantity) {
-      setInputStatus("default");
-      setHintMessage("");
-      return;
-    }
-    const qty = new Decimal(quantity ?? 0);
+  const { data: holdingData = [] } = useHoldingStream();
 
-    if (unsettledPnL < 0) {
-      if (qty.gt(maxAmount)) {
-        setInputStatus("error");
-        setHintMessage(t("transfer.insufficientBalance"));
-      } else {
-        setInputStatus("default");
-        setHintMessage("");
-      }
-    } else {
-      if (qty.gt(maxAmount)) {
-        setInputStatus("error");
-        setHintMessage(t("transfer.insufficientBalance"));
-      } else if (
-        qty.gt(new Decimal(maxAmount).minus(unsettledPnL)) &&
-        qty.lessThanOrEqualTo(maxAmount)
-      ) {
-        setInputStatus("warning");
-        setHintMessage(t("settle.settlePnl.warning"));
-      } else {
-        setInputStatus("default");
-        setHintMessage("");
-      }
+  const [postQuote, { data: quoteData }] = useOdosQuote();
+
+  useEffect(() => {
+    if (currentChain?.id && token.address && targetToken?.address) {
+      postQuote({
+        chainId: currentChain.id,
+        inputTokens: [{ amount: "1000", tokenAddress: token.address }],
+        outputTokens: [{ proportion: 1, tokenAddress: targetToken.address }],
+      });
     }
-  }, [quantity, maxAmount, unsettledPnL, crossChainTrans]);
+  }, [currentChain?.id, token, targetToken]);
 
   const maxQuantity = useMemo(() => {
-    const symbol = token?.display_name || token?.symbol;
-    if (symbol === "USDC") {
-      return maxAmount;
-    }
-    return maxOthersAmount(token, quantity ? Number(quantity) : 0);
-  }, [token, maxAmount, maxOthersAmount, quantity]);
+    const holding = holdingData.find((item) => item.token === token.symbol);
+    return holding ? removeTrailingZeros(holding.holding) : "0";
+  }, [holdingData, token.symbol]);
 
   const disabled =
-    crossChainTrans ||
     !quantity ||
     Number(quantity) === 0 ||
-    ["error", "warning"].includes(inputStatus) ||
-    (withdrawTo === WithdrawTo.Account && !toAccountId);
-
-  useEffect(() => {
-    // const item = assetHistory?.find((e: any) => e.trans_status === "COMPLETED");
-    const item = assetHistory?.find(
-      (e: any) => e.trans_status === "pending_rebalance".toUpperCase(),
-    );
-    if (item) {
-      setCrossChainTrans(true);
-    } else {
-      setCrossChainTrans(false);
-    }
-  }, [assetHistory]);
+    ["error", "warning"].includes(inputStatus);
 
   useWalletSubscription({
     onMessage(data: any) {
@@ -399,8 +269,9 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     quantity,
     onQuantityChange,
     token: token,
-    onSourceTokenChange,
     sourceTokens,
+    onSourceTokenChange,
+    targetToken,
     inputStatus,
     hintMessage,
     amount,
@@ -408,16 +279,9 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     maxQuantity: maxQuantity,
     disabled,
     loading,
-    unsettledPnL,
     wrongNetwork,
-    settingChain,
-    chains,
-    currentChain,
-    onChainChange,
-    onWithdraw,
-    chainVaultBalance,
+    onConvert,
     fee,
-    crossChainWithdraw,
     crossChainTrans,
     showQty,
     networkId,
@@ -425,7 +289,8 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     hasPositions,
     onSettlePnl,
     brokerName,
-    vaultBalanceList,
+    slippage,
+    setSlippage,
     ...internalWithdrawState,
   };
 };
@@ -451,12 +316,14 @@ function useInternalWithdraw(options: InternalWithdrawOptions) {
   const onTransfer = useCallback(() => {
     const num = Number(quantity);
 
-    if (isNaN(num) || num <= 0) {
+    if (Number.isNaN(num) || num <= 0) {
       toast.error(t("transfer.quantity.invalid"));
       return;
     }
 
-    if (submitting || !toAccountId) return;
+    if (submitting || !toAccountId) {
+      return;
+    }
     setLoading(true);
 
     transfer(symbol, {

@@ -71,9 +71,8 @@ export const useDeposit = (options: DepositOptions) => {
 
   const dst = useMemo(() => {
     const USDC = targetChain?.token_infos.find(
-      (token: API.TokenInfo) => token.symbol === "USDC",
+      (token) => token.symbol === "USDC",
     );
-
     return {
       symbol: "USDC",
       address: USDC?.address,

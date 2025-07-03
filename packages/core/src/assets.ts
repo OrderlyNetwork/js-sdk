@@ -27,6 +27,59 @@ export class Assets {
     private readonly account: Account,
   ) {}
 
+  /**
+   * Convert non-USDC asset to USDC manually
+   */
+  async convert(inputs: {
+    slippage: number;
+    amount: number;
+    converted_asset: string; // must NOT be USDC
+  }) {
+    if (!this.account.walletAdapter) {
+      throw new Error("walletAdapter is undefined");
+    }
+    if (!this.account.stateValue.address) {
+      throw new Error("account address is required");
+    }
+
+    const { slippage, amount, converted_asset } = inputs;
+
+    if (!converted_asset || converted_asset.toUpperCase() === "USDC") {
+      throw new Error("converted_asset cannot be USDC");
+    }
+
+    const payload = {
+      slippage,
+      amount,
+      converted_asset,
+    };
+
+    const url = "/v1/asset/manual_convert";
+
+    const timestamp = getTimestamp().toString();
+    const message = [timestamp, "POST", url, JSON.stringify(payload)].join("");
+    const signer = this.account.signer;
+    const { publicKey, signature } = await signer.signText(message);
+
+    const res = await this._simpleFetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "orderly-account-id": this.account.stateValue.accountId!,
+        "orderly-key": publicKey,
+        "orderly-timestamp": timestamp,
+        "orderly-signature": signature,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.success) {
+      throw new ApiError(res.message, res.code);
+    }
+
+    return res;
+  }
+
   async withdraw(inputs: {
     chainId: number;
     token: string;
