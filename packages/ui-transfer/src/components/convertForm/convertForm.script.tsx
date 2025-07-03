@@ -1,20 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
-  OrderlyContext,
   useAccount,
   useChains,
   useConfig,
   useHoldingStream,
+  useIndexPricesStream,
   useLocalStorage,
   useOdosQuote,
-  useQuery,
+  usePositionStream,
   useWalletConnector,
   useWalletSubscription,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { account as accountPerp } from "@orderly.network/perp";
-import { useAppContext } from "@orderly.network/react-app";
+import { useAppContext, useDataTap } from "@orderly.network/react-app";
 import { API, NetworkId } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
 import {
@@ -27,7 +27,7 @@ import { CurrentChain } from "../depositForm/hooks";
 import { useSettlePnl } from "../unsettlePnlInfo/useSettlePnl";
 import { useToken } from "./hooks/useToken";
 
-const { calcMinimumReceived } = accountPerp;
+const { calcMinimumReceived, collateralRatio, LTV } = accountPerp;
 
 export type ConvertFormScriptReturn = ReturnType<typeof useConvertFormScript>;
 
@@ -120,9 +120,6 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     },
   );
 
-  const { configStore } = useContext(OrderlyContext);
-  const apiBaseUrl = configStore.get("apiBaseUrl");
-
   const checkIsBridgeless = useMemo(() => {
     if (wrongNetwork) {
       return false;
@@ -176,14 +173,7 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
       });
   };
 
-  const fee = useWithdrawFee({
-    apiBaseUrl,
-    crossChainWithdraw: false,
-    currentChain,
-    token: token.symbol,
-  });
-
-  const { data: holdingData = [] } = useHoldingStream();
+  const { data: holdingData = [], usdc } = useHoldingStream();
 
   const [postQuote, { data: quoteData, isMutating: isQuoteLoading }] =
     useOdosQuote();
@@ -208,6 +198,21 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     }
   }, [quantity, currentChain?.id, token, targetToken]);
 
+  const { data: indexPrices } = useIndexPricesStream();
+  const [data] = usePositionStream(sourceToken?.symbol);
+  const aggregated = useDataTap(data.aggregated);
+  const unrealPnL = aggregated?.total_unreal_pnl ?? 0;
+
+  const usdcBalance = usdc?.holding ?? 0;
+
+  const indexPrice = useMemo(() => {
+    if (sourceToken?.symbol === "USDC") {
+      return 1;
+    }
+    const symbol = `PERP_${sourceToken?.symbol}_USDC`;
+    return indexPrices[symbol] ?? 0;
+  }, [sourceToken?.symbol, indexPrices]);
+
   const minimumReceived = useMemo(() => {
     if (!quoteData || isQuoteLoading) {
       return 0;
@@ -217,6 +222,38 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
       slippage: Number(slippage),
     });
   }, [quoteData, isQuoteLoading, slippage]);
+
+  const getCollateralRatio = useCallback(
+    (collateralQty: number) => {
+      return collateralRatio({
+        baseWeight: targetToken?.base_weight ?? 0,
+        discountFactor: targetToken?.discount_factor ?? 0,
+        collateralQty: collateralQty,
+        indexPrice: indexPrice,
+      });
+    },
+    [targetToken, indexPrice],
+  );
+
+  const getLTV = useCallback(
+    (collRatio: number) => {
+      return LTV({
+        usdcBalance: usdcBalance,
+        upnl: unrealPnL,
+        collateralAssets: sourceTokens.map((item) => {
+          const qtyData = holdingData?.find((h) => h.token === item.symbol);
+          const indexPrice =
+            item.symbol === "USDC" ? 1 : indexPrices[item.symbol];
+          return {
+            qty: qtyData?.holding ?? 0,
+            indexPrice: indexPrice ?? 0,
+            weight: collRatio,
+          };
+        }),
+      });
+    },
+    [holdingData, usdcBalance, unrealPnL, sourceTokens, indexPrices],
+  );
 
   const maxQuantity = useMemo(() => {
     const holding = holdingData.find((item) => item.token === token.symbol);
@@ -260,7 +297,6 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     loading,
     wrongNetwork,
     onConvert,
-    fee,
     crossChainTrans,
     networkId,
     checkIsBridgeless,
@@ -271,53 +307,8 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     setSlippage,
     convertRate,
     minimumReceived: minimumReceived,
+    isQuoteLoading,
+    currentLTV: getLTV(getCollateralRatio(Number(quantity))),
+    nextLTV: getLTV(getCollateralRatio(0)),
   };
 };
-
-export function useWithdrawFee(options: {
-  apiBaseUrl: string;
-  token: string;
-  currentChain?: CurrentChain | null;
-  crossChainWithdraw: boolean;
-}) {
-  const { apiBaseUrl, crossChainWithdraw, currentChain, token } = options;
-
-  const { data: tokenChainsRes } = useQuery<any[]>(
-    `${apiBaseUrl}/v1/public/token?t=withdraw`,
-    {
-      revalidateIfStale: false,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      // If false, undefined data gets cached against the key.
-      revalidateOnMount: true,
-      // dont duplicate a request w/ same key for 1hr
-      dedupingInterval: 3_600_000,
-    },
-  );
-
-  const fee = useMemo(() => {
-    if (!currentChain) {
-      return 0;
-    }
-
-    const tokenChain = tokenChainsRes?.find((item) => item.token === token);
-
-    const item = tokenChain?.chain_details?.find(
-      (c: any) => Number.parseInt(c.chain_id) === currentChain!.id,
-    );
-
-    if (!item) {
-      return 0;
-    }
-
-    if (crossChainWithdraw) {
-      return (
-        (item.withdrawal_fee || 0) + (item.cross_chain_withdrawal_fee || 0)
-      );
-    }
-
-    return item.withdrawal_fee || 0;
-  }, [tokenChainsRes, token, currentChain, crossChainWithdraw]);
-
-  return fee;
-}

@@ -21,7 +21,6 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
     quantity,
     onQuantityChange,
     maxQuantity,
-    fee,
     token,
     targetToken,
     sourceTokens,
@@ -31,6 +30,9 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
     setSlippage,
     convertRate,
     minimumReceived,
+    isQuoteLoading,
+    currentLTV,
+    nextLTV,
   } = props;
 
   // const { t } = useTranslation();
@@ -59,7 +61,12 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
           }}
         />
         <ExchangeDivider />
-        <QuantityInput token={targetToken} value={minimumReceived} readOnly />
+        <QuantityInput
+          readOnly
+          loading={isQuoteLoading}
+          token={targetToken}
+          value={isQuoteLoading ? "" : minimumReceived}
+        />
         <Flex direction="column" itemAlign="start" mt={2} gap={1}>
           <SwapCoin
             indexPrice={convertRate}
@@ -71,8 +78,12 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
             minimumReceived={minimumReceived}
             symbol={targetToken?.display_name || targetToken?.symbol || ""}
           />
-          <LtvWidget showDiff={true} currentLtv={20} nextLTV={50} />
-          <Fee {...fee} />
+          <LtvWidget
+            showDiff={typeof quantity !== "undefined" && Number(quantity) > 0}
+            currentLtv={currentLTV}
+            nextLTV={nextLTV}
+          />
+          <Fee dstGasFee={"0"} />
         </Flex>
       </Box>
       <Flex itemAlign={"center"} justify="center">
@@ -81,10 +92,6 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
           disabled={disabled}
           loading={loading}
           onConvert={onConvert}
-          // address={address}
-          // quantity={quantity}
-          // fee={fee}
-          // withdrawTo={withdrawTo}
         />
       </Flex>
     </Box>

@@ -6,7 +6,7 @@ import { UseFeeReturn } from "../depositForm/depositForm.script";
 
 type FeeProps = UseFeeReturn;
 
-export const Fee: FC<FeeProps> = (props) => {
+export const Fee: FC<Partial<FeeProps>> = (props) => {
   const { dstGasFee, feeQty, feeAmount, dp, nativeSymbol } = props;
   const { t } = useTranslation();
 
@@ -23,7 +23,7 @@ export const Fee: FC<FeeProps> = (props) => {
             rm={Decimal.ROUND_UP}
             padding={false}
           >
-            {feeQty}
+            {feeQty!}
           </Text.numeral>
           <Text intensity={54}>{nativeSymbol}</Text>
         </Flex>
@@ -54,14 +54,14 @@ export const Fee: FC<FeeProps> = (props) => {
       <Text size="xs" intensity={80}>
         $
         <Text.numeral dp={2} padding={false} rm={Decimal.ROUND_UP}>
-          {feeAmount}
+          {feeAmount!}
         </Text.numeral>{" "}
       </Text>
       {showFeeQty && (
         <span>
           <Text intensity={54}>
             <Text.numeral dp={dp} padding={false} rm={Decimal.ROUND_UP}>
-              {feeQty}
+              {feeQty!}
             </Text.numeral>
             {nativeSymbol}
           </Text>

@@ -108,7 +108,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     return {
       ...sourceToken!,
       // withdraw display precision is 6
-      precision: sourceToken?.precision ?? 6,
+      precision: sourceToken?.precision ?? sourceToken?.decimals ?? 6,
     };
   }, [sourceToken]);
 
@@ -318,39 +318,6 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     return value.toNumber();
   }, [fee, quantity]);
 
-  useEffect(() => {
-    if (!quantity) {
-      setInputStatus("default");
-      setHintMessage("");
-      return;
-    }
-    const qty = new Decimal(quantity ?? 0);
-
-    if (unsettledPnL < 0) {
-      if (qty.gt(maxAmount)) {
-        setInputStatus("error");
-        setHintMessage(t("transfer.insufficientBalance"));
-      } else {
-        setInputStatus("default");
-        setHintMessage("");
-      }
-    } else {
-      if (qty.gt(maxAmount)) {
-        setInputStatus("error");
-        setHintMessage(t("transfer.insufficientBalance"));
-      } else if (
-        qty.gt(new Decimal(maxAmount).minus(unsettledPnL)) &&
-        qty.lessThanOrEqualTo(maxAmount)
-      ) {
-        setInputStatus("warning");
-        setHintMessage(t("settle.settlePnl.warning"));
-      } else {
-        setInputStatus("default");
-        setHintMessage("");
-      }
-    }
-  }, [quantity, maxAmount, unsettledPnL, crossChainTrans]);
-
   const maxQuantity = useMemo(() => {
     const symbol = token?.display_name || token?.symbol;
     if (symbol === "USDC") {
@@ -358,6 +325,24 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     }
     return maxOthersAmount(token, quantity ? Number(quantity) : 0);
   }, [token, maxAmount, maxOthersAmount, quantity]);
+
+  useEffect(() => {
+    if (!quantity) {
+      setInputStatus("default");
+      setHintMessage("");
+      return;
+    }
+    const qty = new Decimal(quantity ?? 0);
+    if (unsettledPnL < 0) {
+      if (qty.gt(maxQuantity)) {
+        setInputStatus("error");
+        setHintMessage(t("transfer.insufficientBalance"));
+      } else {
+        setInputStatus("default");
+        setHintMessage("");
+      }
+    }
+  }, [quantity, maxAmount, unsettledPnL, crossChainTrans]);
 
   const disabled =
     crossChainTrans ||
