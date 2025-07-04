@@ -45,6 +45,7 @@ export const transfer = {
   "transfer.withdraw.requested": "Withdraw requested",
   "transfer.withdraw.completed": "Withdraw completed",
   "transfer.withdraw.failed": "Withdraw failed",
+
   // "transfer.withdraw.unsettled.tooltip":
   //   "Unsettled balance can not be withdrawn. In order to withdraw, please settle your balance first.",
   // "transfer.withdraw.settlePnl.description":
@@ -80,6 +81,45 @@ export const transfer = {
     "Transfers to sub-accounts under different main accounts are not permitted.",
   // "transfer.internalTransfer.error.scopeInsufficient":
   //   "The scope is insufficient",
+
+  // swap deposit
+  "transfer.swapDeposit.crossSwap.notice":
+    "Cross-chain transaction fees will be charged. To avoid these, use our supported <0>Bridgeless networks</0>",
+  "transfer.swapDeposit.swap.notice":
+    "Please note that swap fees will be charged.",
+
+  "transfer.swapDeposit.bridging": "Bridging",
+  "transfer.swapDeposit.bridge": "Bridge",
+  "transfer.swapDeposit.bridge.description": "Bridge to Arbirtum via Stargate",
+  "transfer.swapDeposit.depositing": "Depositing",
+  "transfer.swapDeposit.deposit": "Deposit",
+  "transfer.swapDeposit.deposit.description": "Deposit to {{brokerName}}",
+
+  "transfer.swapDeposit.viewStatus": "View status",
+  "transfer.swapDeposit.depositFailed":
+    "Deposit failed, please try again later.",
+
+  "transfer.swapDeposit.slippage": "Slippage",
+  "transfer.swapDeposit.slippage.slippageTolerance": "Slippage tolerance",
+  "transfer.swapDeposit.slippage.slippageTolerance.description":
+    "Your transaction will revert if the price changes unfavorably by more than this percentage.",
+
+  "transfer.swapDeposit.swapFee": "Swap fee",
+  "transfer.swapDeposit.swapFee.description":
+    "WOOFi charges a 0.025% on each swap.",
+  "transfer.swapDeposit.bridgeFee": "Bridge fee",
+  "transfer.swapDeposit.bridgeFee.description":
+    "Stargate charges a fee to bridge your assets.",
+
+  "transfer.swapDeposit.minimumReceived": "Minimum received",
+  "transfer.swapDeposit.confirmSwap": "Confirm to swap",
+  "transfer.swapDeposit.averageSwapTime":
+    "Average swap time <0>~ {{time}} mins</0>",
+
+  "transfer.swapDeposit.swapDialog.title": "Review swap details",
+  "transfer.swapDeposit.viewFAQs": "Need help? <0>View FAQs</0>",
+  "transfer.swapDeposit.notEnoughLiquidity":
+    "Not enough liquidity. Please try again later or use another chain to deposit.",
 };
 
 export type Transfer = typeof transfer;
