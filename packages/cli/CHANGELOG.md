@@ -1,5 +1,18 @@
 # @orderly.network/cli
 
+## 0.7.0
+
+### Minor Changes
+
+- decb695: publish
+- publish
+
+### Patch Changes
+
+- Updated dependencies [decb695]
+- Updated dependencies
+  - @orderly.network/core@2.4.0
+
 ## 0.7.0-alpha.0
 
 ### Minor Changes

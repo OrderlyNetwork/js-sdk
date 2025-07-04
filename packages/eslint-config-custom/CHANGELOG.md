@@ -1,5 +1,12 @@
 # eslint-config-custom
 
+## 1.4.0
+
+### Minor Changes
+
+- decb695: publish
+- publish
+
 ## 1.4.0-alpha.0
 
 ### Minor Changes

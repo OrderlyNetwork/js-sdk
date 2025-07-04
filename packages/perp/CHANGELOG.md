@@ -1,5 +1,19 @@
 # @orderly.network/futures
 
+## 4.4.0
+
+### Minor Changes
+
+- decb695: publish
+- publish
+
+### Patch Changes
+
+- Updated dependencies [decb695]
+- Updated dependencies
+  - @orderly.network/types@2.4.0
+  - @orderly.network/utils@2.4.0
+
 ## 4.4.0-alpha.0
 
 ### Minor Changes

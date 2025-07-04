@@ -1,5 +1,12 @@
 # create-orderly-app
 
+## 1.9.0
+
+### Minor Changes
+
+- decb695: publish
+- publish
+
 ## 1.9.0-alpha.0
 
 ### Minor Changes

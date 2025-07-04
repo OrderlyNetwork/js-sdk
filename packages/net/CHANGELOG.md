@@ -1,5 +1,12 @@
 # @orderly.network/net
 
+## 2.4.0
+
+### Minor Changes
+
+- decb695: publish
+- publish
+
 ## 2.4.0-alpha.0
 
 ### Minor Changes

@@ -1,5 +1,12 @@
 # tsconfig
 
+## 0.7.0
+
+### Minor Changes
+
+- decb695: publish
+- publish
+
 ## 0.7.0-alpha.0
 
 ### Minor Changes

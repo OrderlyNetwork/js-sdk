@@ -1,5 +1,25 @@
 # @orderly.network/hooks
 
+## 2.4.0
+
+### Minor Changes
+
+- decb695: publish
+- publish
+
+### Patch Changes
+
+- Updated dependencies [decb695]
+- Updated dependencies
+  - @orderly.network/core@2.4.0
+  - @orderly.network/default-evm-adapter@2.4.0
+  - @orderly.network/default-solana-adapter@2.4.0
+  - @orderly.network/net@2.4.0
+  - @orderly.network/perp@4.4.0
+  - @orderly.network/types@2.4.0
+  - @orderly.network/utils@2.4.0
+  - @orderly.network/web3-provider-ethers@2.4.0
+
 ## 2.4.0-alpha.0
 
 ### Minor Changes

@@ -1,5 +1,18 @@
 # @orderly.network/web3-modal
 
+## 2.4.0
+
+### Minor Changes
+
+- decb695: publish
+- publish
+
+### Patch Changes
+
+- Updated dependencies [decb695]
+- Updated dependencies
+  - @orderly.network/hooks@2.4.0
+
 ## 2.4.0-alpha.0
 
 ### Minor Changes
