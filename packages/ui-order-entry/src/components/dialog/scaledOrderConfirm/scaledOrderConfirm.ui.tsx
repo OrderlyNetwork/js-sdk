@@ -25,7 +25,8 @@ export type ScaledOrderConfirmProps = ScaledOrderConfirmScriptOptions &
   };
 
 export const ScaledOrderConfirm = (props: ScaledOrderConfirmProps) => {
-  const { order, symbolInfo, dataSource, national, askAndBid, sumQty } = props;
+  const { order, symbolInfo, dataSource, national, askAndBid, totalQuantity } =
+    props;
   const { base, quote, base_dp, quote_dp } = symbolInfo;
   const { t } = useTranslation();
 
@@ -125,7 +126,7 @@ export const ScaledOrderConfirm = (props: ScaledOrderConfirmProps) => {
         },
       },
     ];
-  }, [t, base_dp, quote_dp, askAndBid]);
+  }, [t, symbolInfo, askAndBid, base_dp, quote_dp]);
 
   return (
     <div className="oui-font-semibold">
@@ -159,16 +160,16 @@ export const ScaledOrderConfirm = (props: ScaledOrderConfirmProps) => {
         </Flex>
 
         <Flex justify="between" mt={2}>
-          <Text>Total Quantity</Text>
+          <Text>{t("orderEntry.totalQuantity")}</Text>
           <Text.numeral
             rule="price"
             unit={base}
-            dp={quote_dp}
+            dp={base_dp}
             padding={false}
             intensity={80}
             unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
           >
-            {sumQty}
+            {totalQuantity}
           </Text.numeral>
         </Flex>
 

@@ -17,7 +17,7 @@ export type ScaledOrderConfirmScriptReturns = ReturnType<
 export function useScaledOrderConfirmScript(
   options: ScaledOrderConfirmScriptOptions,
 ) {
-  const { order } = options;
+  const { order, symbolInfo } = options;
   const orders = order.orders;
 
   const [askAndBid, setAskAndBid] = useState<number[]>();
@@ -32,13 +32,13 @@ export function useScaledOrderConfirmScript(
     return national.toNumber();
   }, [orders]);
 
-  const sumQty = useMemo(() => {
-    const sumQty = orders.reduce((acc, order) => {
+  const totalQuantity = useMemo(() => {
+    const totalQuantity = orders.reduce((acc, order) => {
       return acc.add(new Decimal(order.order_quantity));
     }, zero);
 
-    return sumQty.toString();
-  }, [orders]);
+    return totalQuantity.toString();
+  }, [orders, symbolInfo.base_dp]);
 
   useEffect(() => {
     const onOrderBookUpdate = (data: any) => {
@@ -53,5 +53,5 @@ export function useScaledOrderConfirmScript(
     };
   }, []);
 
-  return { dataSource: orders, national, askAndBid, sumQty };
+  return { dataSource: orders, national, askAndBid, totalQuantity };
 }
