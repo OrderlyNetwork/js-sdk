@@ -1,5 +1,15 @@
 import { useTranslation } from "@orderly.network/i18n";
-import { Box, cn, TabPanel, Tabs, Text } from "@orderly.network/ui";
+import {
+  Box,
+  Button,
+  cn,
+  EmptyStateIcon,
+  Flex,
+  PlusIcon,
+  TabPanel,
+  Tabs,
+  Text,
+} from "@orderly.network/ui";
 import { FavoritesIcon } from "../../icons";
 import { MarketsTabName } from "../../type";
 import { MarketsListWidget } from "../marketsList";
@@ -17,9 +27,10 @@ export const MarketsSheet: React.FC<MarketsSheetProps> = (props) => {
 
   const { t } = useTranslation();
 
-  const { getFavoritesProps } = useFavoritesProps();
+  const { getFavoritesProps, renderEmptyView } = useFavoritesProps();
 
   const renderTab = (type: MarketsTabName) => {
+    const isFavorites = type === MarketsTabName.Favorites;
     return (
       <MarketsListWidget
         type={type}
@@ -30,11 +41,18 @@ export const MarketsSheet: React.FC<MarketsSheetProps> = (props) => {
           root: "!oui-bg-base-8",
           scroll: cn(
             "oui-pb-[env(safe-area-inset-bottom,_20px)]",
-            type === MarketsTabName.Favorites
+            isFavorites
               ? "oui-h-[calc(100%_-_70px)]"
               : "oui-h-[calc(100%_-_40px)]",
           ),
         }}
+        emptyView={renderEmptyView({
+          type,
+          onClick: () => {
+            props.onTabChange(MarketsTabName.All);
+          },
+          className: "oui-h-[calc(100%_-_70px)]",
+        })}
         {...getFavoritesProps(type)}
       />
     );

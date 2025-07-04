@@ -512,6 +512,18 @@ export declare namespace API {
     transfer_amount_to_insurance_fund: number;
     positions_by_perp: LiquidationPositionByPerp[];
   }
+
+  export interface RestrictedAreas {
+    invalid_web_country: string;
+    invalid_web_city: string;
+  }
+
+  export interface IpInfo {
+    ip: string;
+    city: string;
+    region: string;
+    checked: boolean;
+  }
 }
 
 export declare namespace WSMessage {

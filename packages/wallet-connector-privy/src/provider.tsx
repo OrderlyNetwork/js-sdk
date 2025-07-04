@@ -8,6 +8,7 @@ import React, {
   type RefObject,
   useMemo,
 } from "react";
+import { PrivyClientConfig } from "@privy-io/react-auth";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import { type Chain, defineChain } from "viem";
 import { mainnet } from "viem/chains";
@@ -95,6 +96,9 @@ interface WalletConnectorPrivyContextType {
   // TODO new chaintype config
   walletChainTypeConfig: WalletChainTypeConfig;
   connectorWalletType: ConnectorWalletType;
+  privyConfig: {
+    loginMethods?: PrivyClientConfig["loginMethods"];
+  };
 }
 
 const WalletConnectorPrivyContext =
@@ -124,6 +128,9 @@ const WalletConnectorPrivyContext =
       disableSolana: false,
       disableAGW: false,
     },
+    privyConfig: {
+      loginMethods: [],
+    },
   });
 
 export const useWalletConnectorPrivy = () =>
@@ -141,6 +148,12 @@ interface WalletConnectorPrivyProps extends PropsWithChildren {
     mobile: React.ReactNode;
   };
 }
+
+const defaultPrivyLoginMethod = [
+  "email",
+  "google",
+  "twitter",
+] as PrivyClientConfig["loginMethods"];
 export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
   const [walletChainType, setWalletChainType] = useState<WalletChainType>(
     WalletChainTypeEnum.EVM_SOL,
@@ -156,6 +169,11 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
   const [targetWalletType, setTargetWalletType] = useState<
     WalletType | undefined
   >();
+  const [privyConfig, setPrivyConfig] = useState<PrivyClientConfig>({
+    loginMethods: props.privyConfig
+      ? (props.privyConfig?.config?.loginMethods ?? defaultPrivyLoginMethod)
+      : defaultPrivyLoginMethod,
+  });
   const [solanaInfo, setSolanaInfo] = useState<{
     rpcUrl: string | null;
     network: WalletAdapterNetwork | null;
@@ -305,6 +323,7 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
       walletChainType,
       connectorWalletType,
       walletChainTypeConfig,
+      privyConfig,
     }),
     [
       initChains,
@@ -323,6 +342,7 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
       walletChainType,
       connectorWalletType,
       walletChainTypeConfig,
+      privyConfig,
     ],
   );
 

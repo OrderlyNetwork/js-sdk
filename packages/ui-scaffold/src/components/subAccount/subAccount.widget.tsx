@@ -1,7 +1,12 @@
+import { FC, ReactNode } from "react";
 import { SubAccountScript } from "./subAccount.script";
 import { SubAccountUI } from "./subAccount.ui";
 
-export const SubAccountWidget = () => {
+type SubAccountWidgetProps = {
+  customTrigger?: ReactNode;
+};
+
+export const SubAccountWidget: FC<SubAccountWidgetProps> = (props) => {
   const state = SubAccountScript();
-  return <SubAccountUI {...state} />;
+  return <SubAccountUI {...state} customTrigger={props?.customTrigger} />;
 };
