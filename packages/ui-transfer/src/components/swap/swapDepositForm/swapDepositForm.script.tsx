@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo } from "react";
-import { useConfig, useLocalStorage } from "@orderly.network/hooks";
+import { useConfig, useDeposit, useLocalStorage } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
 import { API, NetworkId } from "@orderly.network/types";
 import { modal } from "@orderly.network/ui";
@@ -12,11 +12,10 @@ import {
   useToken,
 } from "../../depositForm/hooks";
 import { SwapDialog } from "../components/swapDialog";
-import { useDeposit } from "../hooks/useDeposit";
 import { useNeedSwapAndCross } from "../hooks/useNeedSwapAndCross";
 import { useSwapEnquiry } from "../hooks/useSwapEnquiry";
 import { useSwapFee } from "../hooks/useSwapFee";
-import { NetworkInfos, SwapMode, TokenInfo } from "../types";
+import { SwapMode } from "../types";
 
 export type UseSwapDepositFormScriptReturn = ReturnType<
   typeof useSwapDepositFormScript
@@ -49,7 +48,7 @@ export const useSwapDepositFormScript = (
         if (chainInfo.network_infos.bridgeless && token.symbol === "USDC") {
           return true;
         }
-        return !!(token as TokenInfo).swap_enable;
+        return !!(token as API.TokenInfo).swap_enable;
       }) ?? []
     );
   }, []);
@@ -77,10 +76,11 @@ export const useSwapDepositFormScript = (
     decimals: token?.decimals,
     srcChainId: currentChain?.id,
     srcToken: token?.symbol,
-    crossChainRouteAddress: (currentChain?.info?.network_infos as NetworkInfos)
-      ?.woofi_dex_cross_chain_router,
-    depositorAddress: (currentChain?.info?.network_infos as NetworkInfos)
-      ?.woofi_dex_depositor,
+    crossChainRouteAddress: (
+      currentChain?.info?.network_infos as API.NetworkInfos
+    )?.cross_chain_router,
+    depositorAddress: (currentChain?.info?.network_infos as API.NetworkInfos)
+      ?.depositor,
   });
 
   const maxQuantity = useMemo(
@@ -97,7 +97,7 @@ export const useSwapDepositFormScript = (
   });
 
   const { needSwap, needCrossSwap } = useNeedSwapAndCross({
-    symbol: token?.symbol,
+    isCollateral: token?.is_collateral,
     srcChainId: currentChain?.id,
     dstChainId: dst?.chainId,
   });
@@ -118,8 +118,8 @@ export const useSwapDepositFormScript = (
       srcNetwork: currentChain?.info?.network_infos?.shortName,
       dstToken: dst.address,
       crossChainRouteAddress: (
-        currentChain?.info?.network_infos as NetworkInfos
-      )?.woofi_dex_cross_chain_router,
+        currentChain?.info?.network_infos as API.NetworkInfos
+      )?.cross_chain_router,
       amount: new Decimal(quantity || 0)
         .mul(10 ** (token?.decimals || 0))
         .toString(),
@@ -154,7 +154,7 @@ export const useSwapDepositFormScript = (
           src: {
             chain: currentChain?.id,
             token: token!.symbol,
-            displayDecimals: (token as TokenInfo)!.woofi_dex_precision,
+            displayDecimals: (token as API.TokenInfo)!.swap_precision,
             amount: quantity,
             decimals: token!.decimals,
           },

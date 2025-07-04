@@ -499,6 +499,7 @@ export function useWithdrawFee(options: {
 }) {
   const { apiBaseUrl, crossChainWithdraw, currentChain, token } = options;
 
+  // get withdraw fee by env
   const { data: tokenChainsRes } = useQuery<any[]>(
     `${apiBaseUrl}/v1/public/token?t=withdraw`,
     {

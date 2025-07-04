@@ -375,12 +375,20 @@ export declare namespace API {
     bridgeless?: boolean;
     withdrawal_fee?: number;
     minimum_withdraw_amount?: number;
+
+    cross_chain_router: string;
+    depositor: string;
   }
 
   export interface TokenInfo {
     address: string;
     base_weight: number;
+    /** @deprecated use chain_decimals instead */
     decimals: number;
+    /** token decimals */
+    token_decimal: number;
+    /** chain decimals */
+    chain_decimals: number;
     discount_factor: number;
     display_name: string;
     haircut: number;
@@ -388,6 +396,9 @@ export declare namespace API {
     symbol: string;
     user_max_qty: number;
     precision: number;
+
+    swap_enable: boolean;
+    swap_precision: number;
   }
 
   export interface Chain {

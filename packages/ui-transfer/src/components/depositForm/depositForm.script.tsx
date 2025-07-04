@@ -20,6 +20,7 @@ import {
 } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 import { feeDecimalsOffset } from "../../utils";
+import { useSwapDeposit } from "../swap/hooks/useSwapDeposit";
 import {
   useActionType,
   useChainSelect,
@@ -28,7 +29,7 @@ import {
   useToken_v2,
 } from "./hooks";
 
-const ORDERLY_DEPOSIT_SLIPPAGE_KEY = "ORDERLY_DEPOSIT_SLIPPAGE";
+const ORDERLY_DEPOSIT_SLIPPAGE_KEY = "orderly_deposit_slippage";
 
 export type UseDepositFormScriptReturn = ReturnType<
   typeof useDepositFormScript
@@ -42,6 +43,16 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
   const { wrongNetwork } = useAppContext();
 
   const networkId = useConfig("networkId") as NetworkId;
+
+  const [slippage, setSlippage] = useLocalStorage(
+    ORDERLY_DEPOSIT_SLIPPAGE_KEY,
+    "1",
+    {
+      parseJSON: (value: string | null) => {
+        return !value || value === '""' ? "1" : JSON.parse(value);
+      },
+    },
+  );
 
   const { chains, currentChain, settingChain, onChainChange } =
     useChainSelect();
@@ -84,6 +95,9 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     decimals: _sourceToken?.decimals,
     srcChainId: currentChain?.id,
     srcToken: _sourceToken?.symbol,
+    crossChainRouteAddress:
+      currentChain?.info?.network_infos?.cross_chain_router,
+    depositorAddress: currentChain?.info?.network_infos?.depositor,
   });
 
   const maxQuantity = useMemo(
@@ -99,8 +113,33 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     maxQuantity,
   });
 
+  const {
+    cleanTransactionInfo,
+    onSwapDeposit,
+    swapRevalidating,
+    needSwap,
+    needCrossSwap,
+    swapPrice,
+    markPrice,
+    swapQuantity,
+    swapFee,
+    warningMessage,
+  } = useSwapDeposit({
+    srcToken: _sourceToken,
+    srcChainId: currentChain?.id,
+    dstChainId: dst?.chainId,
+    currentChain,
+    dst,
+    quantity,
+    isNativeToken,
+    depositFee,
+    setQuantity,
+    slippage,
+  });
+
   const cleanData = useCallback(() => {
     setQuantity("");
+    cleanTransactionInfo();
   }, [setQuantity]);
 
   const onSuccess = useCallback(() => {
@@ -113,6 +152,8 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     allowance,
     approve,
     deposit,
+    enableCustomDeposit: needSwap || needCrossSwap,
+    customDeposit: onSwapDeposit,
     onSuccess,
   });
 
@@ -123,7 +164,8 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     Number(quantity) === 0 ||
     !_sourceToken ||
     inputStatus === "error" ||
-    depositFeeRevalidating!;
+    depositFeeRevalidating! ||
+    swapRevalidating;
 
   const amount = useMemo(() => {
     const markPrice = 1;
@@ -148,14 +190,13 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     currentLTV,
     nextLTV,
     indexPrice,
-    slippage,
-    setSlippage,
     minimumReceived,
   } = useCollateralValue({
     tokens: sourceTokens,
     sourceToken: _sourceToken,
     targetToken: targetToken,
     qty: quantity,
+    slippage,
   });
 
   const {
@@ -171,10 +212,8 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
   return {
     sourceToken: _sourceToken,
     targetToken,
-
     sourceTokens,
     targetTokens,
-
     onSourceTokenChange,
     onTargetTokenChange,
 
@@ -211,12 +250,21 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     slippage,
     setSlippage,
     minimumReceived,
+
+    needSwap,
+    needCrossSwap,
+    swapPrice,
+    markPrice,
+    swapQuantity,
+    swapFee,
+    warningMessage,
+    swapRevalidating,
   };
 };
 
-export type UseFeeReturn = ReturnType<typeof useDepositFee>;
+export type UseDepositFeeReturn = ReturnType<typeof useDepositFee>;
 
-export function useDepositFee(options: {
+function useDepositFee(options: {
   nativeToken?: API.TokenInfo;
   depositFee?: bigint;
 }) {
@@ -257,8 +305,9 @@ const useCollateralValue = (params: {
   sourceToken?: API.TokenInfo;
   targetToken?: API.TokenInfo;
   qty: string;
+  slippage: number;
 }) => {
-  const { sourceToken, targetToken, tokens } = params;
+  const { sourceToken, targetToken, tokens, slippage } = params;
 
   const qty = Number(params.qty);
 
@@ -316,24 +365,14 @@ const useCollateralValue = (params: {
     [holdingData, usdcBalance, unrealPnL, tokens, indexPrices],
   );
 
-  const [slippage, setSlippage] = useLocalStorage(
-    ORDERLY_DEPOSIT_SLIPPAGE_KEY,
-    "1",
-    {
-      parseJSON: (value: string | null) => {
-        return !value || value === '""' ? "1" : JSON.parse(value);
-      },
-    },
-  );
-
   const minimumReceived = account.calcMinimumReceived({
     amount: targetQuantity,
     slippage,
   });
 
   return {
-    slippage,
-    setSlippage,
+    // slippage,
+    // setSlippage,
     collateralRatio: getCollateralRatio(qty),
     targetQuantity,
     currentLTV: getLTV(getCollateralRatio(qty)),

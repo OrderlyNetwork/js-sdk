@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { API } from "@orderly.network/types";
-import { NetworkInfos, SwapMode, SymbolInfo } from "../types";
+import { SwapMode, SymbolInfo } from "../types";
 import { CrossSwap } from "./crossSwap";
 import { SingleSwap } from "./singleSwap";
 
@@ -8,7 +8,7 @@ export interface SwapProps {
   mode: SwapMode;
   src: SymbolInfo;
   dst: SymbolInfo;
-  chain?: NetworkInfos;
+  chain?: API.NetworkInfos;
   nativeToken?: API.TokenInfo;
   depositFee?: bigint;
   transactionData: any;

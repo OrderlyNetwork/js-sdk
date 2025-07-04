@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
 
 export function useNeedSwapAndCross(options: {
-  symbol?: string;
+  isCollateral?: boolean;
   srcChainId?: number;
   dstChainId?: number;
 }) {
-  const { symbol, srcChainId, dstChainId } = options;
+  const { isCollateral, srcChainId, dstChainId } = options;
   const [needSwap, setNeedSwap] = useState(false);
   const [needCrossSwap, setNeedCrossSwap] = useState(false);
 
   useEffect(() => {
-    if (!symbol || !srcChainId) return;
+    if (!srcChainId) return;
 
-    // if symbol is not USDC, it will need swap
-    setNeedSwap(symbol !== "USDC");
+    // if isCollateral is false, it will need swap
+    setNeedSwap(!isCollateral);
 
     if (srcChainId !== dstChainId) {
       setNeedCrossSwap(true);
@@ -21,7 +21,7 @@ export function useNeedSwapAndCross(options: {
     } else {
       setNeedCrossSwap(false);
     }
-  }, [symbol, srcChainId, dstChainId]);
+  }, [isCollateral, srcChainId, dstChainId]);
 
   return { needSwap, needCrossSwap };
 }

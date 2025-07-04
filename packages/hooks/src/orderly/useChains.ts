@@ -1,6 +1,6 @@
 import { useCallback, useContext, useMemo, useRef } from "react";
 import { prop } from "ramda";
-import { SWRConfiguration } from "swr";
+import useSWR, { SWRConfiguration } from "swr";
 import {
   NetworkId,
   type API,
@@ -129,6 +129,7 @@ export function useChains(
     filteredChains: allowedChains,
     configStore,
     customChains,
+    customChainsFormat,
   } = useContext(OrderlyContext);
 
   const filterFun = useRef(options?.filter);
@@ -191,68 +192,35 @@ export function useChains(
     },
   );
 
+  const { swapChains, swapChainsError } = useSwapChains();
+
   const chains = useMemo(() => {
-    /* TODO need remove this code,just for test abstract chain
-    // @ts-ignore
-    // let tempTestChainInfos = [...testChainInfos, AbstractTestnetChainInfo];
-    // let tempTestTokenChainsRes= testTokenChainsRes?.map((item)=>({
-    //   ...item,
-    //   chain_details: [...item.chain_details, AbstractTestnetTokenInfo]
-    // }))
-    // const tokenChains = fillChainsInfo(
-    //   tokenChainsRes,
-    //   filterFun.current,
-    //   chainInfos
-    // );
-    // const testTokenChains = fillChainsInfo(
-    //   tempTestTokenChainsRes,
-    //   undefined,
-    //   tempTestChainInfos
-    // );
-
-    // let testnetArr = needFetchFromAPI
-    //   ? filterAndUpdateChains(testTokenChains, tempTestChainInfos, undefined, true)
-    //   : customChains?.testnet;
-
-    // test abstract wallet end
-     */
-    const tokenChains = fillChainsInfo(
-      tokenChainsRes,
-      filterFun.current,
+    const mainnetChains = formatChains({
+      tokenChains: tokenChainsRes,
       chainInfos,
-    );
-    const testTokenChains = fillChainsInfo(
-      testTokenChainsRes,
-      undefined,
-      testChainInfos,
-    );
-
-    let testnetArr = needFetchFromAPI
-      ? filterAndUpdateChains(testTokenChains, testChainInfos, undefined, true)
-      : customChains?.testnet;
-
-    tokenChains?.forEach((item) => {
-      const chainId = item.network_infos?.chain_id;
-      chainsMap.current.set(chainId, item);
+      swapChains,
+      filter: filterFun.current,
+      mainnet: true,
+      customChainsFormat,
     });
 
-    testnetArr.forEach((chain) => {
+    const testnetChains = formatChains({
+      tokenChains: testTokenChainsRes,
+      chainInfos: testChainInfos,
+      swapChains,
+      mainnet: false,
+      customChainsFormat,
+    });
+
+    let mainnetArr = needFetchFromAPI ? mainnetChains : customChains?.mainnet;
+    let testnetArr = needFetchFromAPI ? testnetChains : customChains?.testnet;
+
+    testnetArr?.forEach((chain) => {
       chainsMap.current.set(chain.network_infos?.chain_id, chain);
     });
 
-    let mainnetArr: API.Chain[] = [];
-
-    mainnetArr = filterAndUpdateChains(
-      tokenChains,
-      chainInfos,
-      filterFun.current,
-    );
-
-    mainnetArr = needFetchFromAPI ? mainnetArr : customChains?.mainnet;
-
-    mainnetArr.forEach((item) => {
-      const chainId = item.network_infos?.chain_id;
-      chainsMap.current.set(chainId, item);
+    mainnetArr?.forEach((chain) => {
+      chainsMap.current.set(chain.network_infos?.chain_id, chain);
     });
 
     mainnetArr = filterByAllowedChains(mainnetArr, allowedChains?.mainnet);
@@ -290,6 +258,8 @@ export function useChains(
     customChains,
     pickField,
     allowedChains,
+    swapChains,
+    customChainsFormat,
   ]);
 
   const findByChainId = useCallback(
@@ -328,7 +298,7 @@ export function useChains(
     {
       findByChainId,
       checkChainSupport,
-      error: tokenError,
+      error: tokenError || swapChainsError,
     },
   ];
 }
@@ -432,7 +402,6 @@ export function filterAndUpdateChains(
         bridge_enable: true,
         mainnet: !isTestNet,
         explorer_base_url,
-        // est_txn_mins: null,
       };
     }
 
@@ -478,4 +447,176 @@ export function filterByAllowedChains(
         allowedChain.id === parseInt(chain?.network_infos?.chain_id as any),
     ),
   );
+}
+
+function useSwapChains() {
+  const { enableSwapDeposit } = useContext(OrderlyContext);
+
+  const { data: swapChainsRes, error: swapChainsError } = useSWR<any>(
+    () => (enableSwapDeposit ? "https://fi-api.woo.org/swap_support" : null),
+    (url) => fetch(url).then((res) => res.json()),
+    {
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      // If false, undefined data gets cached against the key.
+      revalidateOnMount: true,
+      // dont duplicate a request w/ same key for 1hr
+      dedupingInterval: 3_600_000,
+    },
+  );
+
+  const swapChains = useMemo(() => {
+    if (!enableSwapDeposit || !swapChainsRes || !swapChainsRes.data) {
+      return [];
+    }
+    const data = swapChainsRes.data;
+
+    return Object.keys(data).map((key) => {
+      const chain = data[key];
+      const { network_infos, token_infos } = chain;
+
+      const nativeToken = token_infos.find(
+        (item: any) => item.symbol === network_infos.currency_symbol,
+      );
+      if (nativeToken) {
+        network_infos.currency_decimal = nativeToken.decimals;
+      } else {
+        // default 18 decimals
+        network_infos.currency_decimal = 18;
+      }
+
+      // filter tokens by swap_enable
+      const swapTokenInfos = token_infos
+        ?.filter((item: any) => item.swap_enable)
+        .map((item: any) => {
+          const { woofi_dex_precision, ...rest } = item;
+          return {
+            ...rest,
+            precision: woofi_dex_precision,
+          };
+        });
+
+      return {
+        network_infos,
+        token_infos: swapTokenInfos || [],
+      } as API.Chain;
+    });
+  }, [enableSwapDeposit, swapChainsRes]);
+
+  return { swapChains, swapChainsError };
+}
+
+export function formatChains({
+  chainInfos = [],
+  tokenChains = [],
+  swapChains = [],
+  filter,
+  mainnet,
+  customChainsFormat,
+}: {
+  chainInfos?: any;
+  tokenChains?: API.Chain[];
+  swapChains?: any[];
+  filter?: (chain: any) => boolean;
+  mainnet: boolean;
+  customChainsFormat?: (params: {
+    chains: API.Chain[];
+    tokenChains: API.Chain[];
+    chainInfos: any[];
+    swapChains: any[];
+    mainnet: boolean;
+  }) => API.Chain[];
+}) {
+  const chains: API.Chain[] = [];
+
+  for (const chainInfo of chainInfos) {
+    const chainId = Number(chainInfo.chain_id);
+    const swapChainInfo = swapChains.find(
+      (item: any) => item.network_infos.chain_id === chainId,
+    );
+    const swapNetworkInfo = swapChainInfo?.network_infos;
+    const swapTokenInfos = swapChainInfo?.token_infos || [];
+
+    const { name, public_rpc_url, currency_symbol, explorer_base_url } =
+      chainInfo;
+    const network_infos = {
+      name: chainInfo?.name,
+      chain_id: chainId,
+      bridgeless: true,
+      mainnet,
+
+      shortName: name,
+      public_rpc_url,
+      currency_symbol,
+      bridge_enable: true,
+      explorer_base_url,
+
+      // swap field
+      cross_chain_router: swapNetworkInfo?.woofi_dex_cross_chain_router,
+      depositor: swapNetworkInfo?.woofi_dex_depositor,
+      est_txn_mins: swapNetworkInfo?.est_txn_mins,
+    };
+
+    const tokenInfos = tokenChains
+      .filter((item) => {
+        return item.chain_details.some(
+          (item) => Number(item.chain_id) === chainId,
+        );
+      })
+      .map((item) => {
+        const chain = item.chain_details.find(
+          (item) => Number(item.chain_id) === chainId,
+        );
+
+        return {
+          symbol: item.token,
+          address: chain?.contract_address,
+          /** chain decimals */
+          decimals: chain?.decimals,
+          chain_decimals: chain?.decimals,
+          /** token decimals */
+          token_decimal: item?.decimals,
+          display_name: chain?.display_name,
+
+          withdrawal_fee: chain?.withdrawal_fee,
+          cross_chain_withdrawal_fee: chain?.cross_chain_withdrawal_fee,
+
+          base_weight: item.base_weight,
+          discount_factor: item.discount_factor,
+          haircut: item.haircut,
+          user_max_qty: item.user_max_qty,
+          is_collateral: item.is_collateral,
+          swap_enable: false,
+        };
+      });
+
+    // filter swap tokens that is not in tokenInfos
+    const swapTokens = swapTokenInfos?.filter((item: any) => {
+      return !tokenInfos?.some((token) => token.symbol === item.symbol);
+    });
+
+    const _chain: any = {
+      network_infos,
+      token_infos: [...tokenInfos, ...swapTokens],
+    };
+
+    if (typeof filter === "function") {
+      if (!filter(_chain)) continue;
+    }
+
+    chains.push(_chain);
+  }
+
+  if (typeof customChainsFormat === "function") {
+    return customChainsFormat({
+      chains,
+      chainInfos,
+      tokenChains,
+      swapChains,
+      mainnet,
+    });
+  }
+
+  return chains;
 }
