@@ -6,6 +6,7 @@ import { Flex, Text, ChevronLeftIcon } from "@orderly.network/ui";
 import { WalletConnectButtonExtension } from "../accountMenu/menu.widget";
 import { ChainMenuWidget } from "../chainMenu";
 import { LanguageSwitcherWidget } from "../languageSwitcher";
+import { LeftNavUI } from "../leftNav/leftNav.ui";
 import { RouterAdapter } from "../scaffold";
 import { ScanQRCodeWidget } from "../scanQRCode";
 import { SubAccountWidget } from "../subAccount";
@@ -122,7 +123,7 @@ export const MainNavMobile: FC<Props> = (props) => {
   const renderCustomComponents = () => {
     const languageSwitcher = <LanguageSwitcherWidget />;
     const scanQRCode = showQrcode && <ScanQRCodeWidget />;
-    const subAccount = showSubAccount && <SubAccountWidget />;
+    // const subAccount = showSubAccount && <SubAccountWidget />;
     const linkDevice = showLinkDevice && <LinkDeviceWidget />;
     const chainMenu = showChainMenu && <ChainMenuWidget />;
     const walletConnect = <WalletConnectButtonExtension />;
@@ -132,7 +133,7 @@ export const MainNavMobile: FC<Props> = (props) => {
         title,
         languageSwitcher,
         scanQRCode,
-        subAccount,
+        // subAccount,
         linkDevice,
         chainMenu,
         walletConnect,
@@ -141,12 +142,21 @@ export const MainNavMobile: FC<Props> = (props) => {
 
     return (
       <>
+        {props?.customLeftNav ||
+          (props.leftNav && (
+            <LeftNavUI
+              className="oui-mr-2"
+              {...props?.leftNav}
+              logo={props?.logo}
+              routerAdapter={props?.routerAdapter}
+            />
+          ))}
         {title}
-        <Flex gapX={2}>
+        <Flex gapX={2} className="oui-ml-auto">
           {props.leading}
           {languageSwitcher}
           {scanQRCode}
-          {subAccount}
+          {/* {subAccount} */}
           {linkDevice}
           {chainMenu}
           {walletConnect}
@@ -162,7 +172,6 @@ export const MainNavMobile: FC<Props> = (props) => {
       height={44}
       px={3}
       itemAlign={"center"}
-      justify={"between"}
       className={props.classNames?.mainNav?.root}
     >
       {renderCustomComponents()}

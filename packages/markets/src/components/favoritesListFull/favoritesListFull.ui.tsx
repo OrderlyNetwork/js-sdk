@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, ReactNode } from "react";
 import { Trans } from "@orderly.network/i18n";
 import { cn, Flex, DataTable } from "@orderly.network/ui";
 import { FavoritesTabWidget } from "../../components/favoritesTabs";
@@ -7,7 +7,9 @@ import { UnFavoritesIcon } from "../../icons";
 import { useMarketsListFullColumns } from "../marketsListFull/column";
 import { UseFavoritesListFullReturn } from "./favoritesListFull.script";
 
-export type FavoritesListFullProps = UseFavoritesListFullReturn;
+export type FavoritesListFullProps = UseFavoritesListFullReturn & {
+  emptyView?: ReactNode;
+};
 
 export const FavoritesListFull: FC<FavoritesListFullProps> = (props) => {
   const { dataSource, favorite, onSort, loading, pagination } = props;
@@ -16,7 +18,7 @@ export const FavoritesListFull: FC<FavoritesListFullProps> = (props) => {
 
   const columns = useMarketsListFullColumns(favorite, true);
 
-  const emptyView = (
+  const emptyView = props.emptyView || (
     <Flex className="oui-text-xs oui-text-base-contrast-36">
       {/* @ts-ignore */}
       <Trans

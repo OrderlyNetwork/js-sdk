@@ -1,24 +1,9 @@
 import { ReactNode, useEffect, useState } from "react";
-import { useConfig } from "./useConfig";
+import { API } from "@orderly.network/types";
+import { useLocalStorage } from "./useLocalStorage";
+import { useQuery } from "./useQuery";
 
 export type RestrictedInfoReturns = ReturnType<typeof useRestrictedInfo>;
-
-interface ApiResponse<T> {
-  success: boolean;
-  data: T;
-}
-
-interface RestrictedInfoData {
-  invalid_web_country: string;
-  invalid_web_city: string;
-}
-
-interface IpInfoData {
-  ip: string;
-  city: string;
-  region: string;
-  checked: boolean;
-}
 
 export interface RestrictedInfoOptions {
   enableDefault?: boolean;
@@ -29,6 +14,9 @@ export interface RestrictedInfoOptions {
     | ((data: { ip: string; brokerName: string }) => ReactNode);
 }
 
+/** default can unblock regions */
+const canUnblockRegions = ["United States"];
+
 export const useRestrictedInfo = (options?: RestrictedInfoOptions) => {
   const {
     enableDefault = false,
@@ -36,82 +24,97 @@ export const useRestrictedInfo = (options?: RestrictedInfoOptions) => {
     customRestrictedRegions = [],
     content,
   } = options || {};
-  const apiBaseUrl: string = useConfig("apiBaseUrl") as string;
-  const [invalidWebCity, setInvalidWebCity] = useState<string[]>([]);
-  const [invalidWebCountry, setInvalidWebCountry] = useState<string[]>([]);
-  const [invalidRegions, setInvalidRegions] = useState<string[]>([]);
-  const [allInvalidAreas, setAllInvalidAreas] = useState<string[]>([]);
-  const [city, setCity] = useState<string>("");
-  const [region, setRegion] = useState<string>("");
   const [ip, setIp] = useState<string>("");
+  const [allInvalidAreas, setAllInvalidAreas] = useState<string[]>([]);
   const [restrictedOpen, setRestrictedOpen] = useState<boolean>(false);
+  const [canUnblock, setCanUnblock] = useState<boolean>(false);
+
+  const [accessRestricted, setAccessRestricted] = useLocalStorage<
+    boolean | undefined
+  >("orderly_access_restricted", undefined);
+
+  const { data: ipInfo } = useQuery<API.IpInfo>("/v1/ip_info");
+
+  const { data: restrictedAreas } = useQuery<API.RestrictedAreas>(
+    "/v1/restricted_areas",
+  );
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const areaRes = await fetch(`${apiBaseUrl}/v1/restricted_areas`);
-        const areaResdata: ApiResponse<RestrictedInfoData> =
-          await areaRes.json();
+    if (!restrictedAreas || !ipInfo) {
+      return;
+    }
 
-        const ipRes = await fetch(`${apiBaseUrl}/v1/ip_info`);
-        const ipData: ApiResponse<IpInfoData> = await ipRes.json();
-        if (areaResdata.success && ipData.success) {
-          // invalid regions
-          const invalidCountries = areaResdata?.data?.invalid_web_country
-            ?.toLocaleLowerCase()
-            ?.replace(/\s+/g, "")
-            .split(",");
-          const invalidCities = areaResdata?.data?.invalid_web_city
-            ?.toLocaleLowerCase()
-            ?.replace(/\s+/g, "")
-            .split(",");
-          const combinedInvalidRegions = (
-            enableDefault ? invalidCities.concat(invalidCountries) : []
-          ).concat(
-            customRestrictedRegions?.map((item) =>
-              item?.replace(/\s+/g, "")?.toLocaleLowerCase()
-            )
-          );
-          const allInvalidAreas = [
-            enableDefault ? areaResdata?.data?.invalid_web_country : "",
-            enableDefault ? areaResdata?.data?.invalid_web_city : "",
-            customRestrictedRegions?.join(", "),
-          ].filter((item) => !!item);
+    try {
+      const { invalid_web_country, invalid_web_city } = restrictedAreas;
 
-          setInvalidWebCity(invalidCities);
-          setInvalidWebCountry(invalidCountries);
-          setInvalidRegions(combinedInvalidRegions);
-          setAllInvalidAreas(allInvalidAreas);
+      const invalidCountries = invalid_web_country
+        ?.toLowerCase()
+        .replace(/\s+/g, "")
+        .split(",");
 
-          // user's current location
-          const { city, region, ip } = ipData.data;
-          setCity(city);
-          setRegion(region);
-          setIp(ip);
-          if (
-            combinedInvalidRegions.includes(
-              ipData?.data?.city?.replace(/\s+/g, "").toLocaleLowerCase()
-            ) ||
-            combinedInvalidRegions.includes(
-              ipData?.data?.region?.replace(/\s+/g, "").toLocaleLowerCase()
-            ) ||
-            customRestrictedIps.includes(ipData?.data?.ip)
-          ) {
-            setRestrictedOpen(true);
-          }
+      const invalidCities = invalid_web_city
+        ?.toLowerCase()
+        .replace(/\s+/g, "")
+        .split(",");
+
+      const formattedCustomRegions = customRestrictedRegions?.map((item) =>
+        formatRegion(item),
+      );
+
+      const combinedInvalidRegions = [
+        ...formattedCustomRegions,
+        ...(enableDefault ? [...invalidCountries, ...invalidCities] : []),
+      ];
+
+      const allInvalidAreas = [
+        enableDefault ? invalid_web_country : "",
+        enableDefault ? invalid_web_city : "",
+        customRestrictedRegions?.join(", "),
+      ].filter((item) => !!item);
+
+      const { city, region, ip } = ipInfo;
+
+      const formattedCity = formatRegion(city);
+      const formattedRegion = formatRegion(region);
+
+      const showRestricted =
+        accessRestricted &&
+        (combinedInvalidRegions.includes(formattedCity) ||
+          combinedInvalidRegions.includes(formattedRegion) ||
+          customRestrictedIps.includes(ip));
+
+      for (const item of canUnblockRegions) {
+        if (formatRegion(item) === formatRegion(region)) {
+          setCanUnblock(true);
         }
-      } catch (error) {
-        console.error("API regions Error", error);
       }
-    };
 
-    fetchData();
-  }, [apiBaseUrl]);
+      setIp(ip);
+      setAllInvalidAreas(allInvalidAreas);
+      setRestrictedOpen(showRestricted);
+    } catch (error) {
+      console.error("useRestrictedInfo error", error);
+    }
+  }, [
+    ipInfo,
+    restrictedAreas,
+    enableDefault,
+    customRestrictedIps,
+    customRestrictedRegions,
+    accessRestricted,
+  ]);
 
   return {
     ip,
     invalidRegions: allInvalidAreas,
     restrictedOpen,
     content,
+    canUnblock,
+    accessRestricted,
+    setAccessRestricted,
   };
 };
+
+function formatRegion(region: string) {
+  return region?.replace(/\s+/g, "").toLowerCase();
+}
