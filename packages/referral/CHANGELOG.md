@@ -1,5 +1,15 @@
 # @orderly.network/referral
 
+## 2.3.3-internal-multi-collateral.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react@2.3.3-internal-multi-collateral.0
+  - @orderly.network/hooks@2.3.3-internal-multi-collateral.0
+  - @orderly.network/utils@2.3.3-internal-multi-collateral.0
+
 ## 2.3.2
 
 ### Patch Changes
