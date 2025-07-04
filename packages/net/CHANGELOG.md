@@ -1,5 +1,11 @@
 # @orderly.network/net
 
+## 2.4.0-alpha.0
+
+### Minor Changes
+
+- publish
+
 ## 2.3.2
 
 ### Patch Changes
