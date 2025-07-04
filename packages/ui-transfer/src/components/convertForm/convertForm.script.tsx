@@ -16,7 +16,7 @@ import {
 import { useTranslation } from "@orderly.network/i18n";
 import { account as accountPerp } from "@orderly.network/perp";
 import { useAppContext, useDataTap } from "@orderly.network/react-app";
-import { API, NetworkId } from "@orderly.network/types";
+import { API, nativeETHAddress, NetworkId } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
 import {
   Decimal,
@@ -94,7 +94,7 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
       precision: sourceToken?.precision ?? sourceToken?.decimals ?? 6,
     };
     if (!_token.address && _token.symbol === "ETH") {
-      _token.address = "0x0000000000000000000000000000000000000000";
+      _token.address = nativeETHAddress;
     }
     return _token;
   }, [sourceToken]);

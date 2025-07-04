@@ -12,7 +12,12 @@ import {
 } from "@orderly.network/hooks";
 import { account } from "@orderly.network/perp";
 import { useAppContext, useDataTap } from "@orderly.network/react-app";
-import { API, NetworkId, ChainNamespace } from "@orderly.network/types";
+import {
+  API,
+  NetworkId,
+  ChainNamespace,
+  nativeETHAddress,
+} from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 import { feeDecimalsOffset } from "../../utils";
 import {
@@ -56,7 +61,7 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
       precision: sourceToken?.precision ?? sourceToken?.decimals ?? 6,
     };
     if (!_token.address && _token.symbol === "ETH") {
-      _token.address = "0x0000000000000000000000000000000000000000";
+      _token.address = nativeETHAddress;
     }
     return _token;
   }, [sourceToken]);
