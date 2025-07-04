@@ -50,6 +50,7 @@ export const common = {
   "common.fee": "Fee",
   "common.fees": "Fees",
 
+  "common.orderPrice": "Order price",
   "common.avgPrice": "Avg. price",
   "common.avgOpen": "Avg. open",
   "common.avgClose": "Avg. close",

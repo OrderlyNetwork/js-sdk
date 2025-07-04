@@ -20,6 +20,7 @@ import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
 import {
   API,
   BBOOrderType,
+  DistributionType,
   OrderLevel,
   OrderlyOrder,
   OrderSide,
@@ -51,19 +52,20 @@ import {
 } from "@orderly.network/ui";
 import { LeverageWidgetWithSheetId } from "@orderly.network/ui-leverage";
 import { commifyOptional } from "@orderly.network/utils";
-// import { useBalanceScript } from "../../trading/src/components/mobile/bottomNavBar/balance";
 import { AdditionalInfoWidget } from "./components/additional/additionnalInfo.widget";
 import { orderConfirmDialogId } from "./components/dialog/confirm.ui";
+import { scaledOrderConfirmDialogId } from "./components/dialog/scaledOrderConfirm";
 import { FeesWidget } from "./components/fees";
 import {
   OrderEntryContext,
   OrderEntryProvider,
 } from "./components/orderEntryContext";
+import { QuantityDistributionInput } from "./components/quantityDistribution";
 import { SlippageUI } from "./components/slippage/slippage.ui";
 import { OrderTPSL } from "./components/tpsl";
 import { type OrderEntryScriptReturn } from "./orderEntry.script";
 import { InputType } from "./types";
-import { BBOStatus } from "./utils";
+import { BBOStatus, getScaledPlaceOrderMessage } from "./utils";
 
 type Refs = OrderEntryScriptReturn["refs"];
 
@@ -96,6 +98,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
 
   const { errors, validated } = metaState;
   const [errorMsgVisible, setErrorMsgVisible] = useState(false);
+
   const [needConfirm, setNeedConfirm] = useLocalStorage(
     "orderly_order_confirm",
     true,
@@ -111,6 +114,10 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
       return !value || value === '""' ? "1" : JSON.parse(value);
     }) as any,
   });
+
+  const { parseErrorMsg } = useOrderEntryFormErrorMsg(
+    validated ? errors : null,
+  );
 
   const buttonLabel = useMemo(() => {
     return side === OrderSide.BUY
@@ -162,67 +169,63 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
   }, [errorMsgVisible]);
 
   const onSubmit = () => {
+    const isScaledOrder = formattedOrder.order_type === OrderType.SCALED;
+
     helper
       .validate()
       .then(
-        () => {
+        // validate success, it return the order
+        // TODO: get order from other function
+        (order: any) => {
+          // scaled order is always need confirm
+          if (isScaledOrder) {
+            return modal.show(scaledOrderConfirmDialogId, {
+              order,
+              symbolInfo,
+              size: isMobile ? "sm" : "md",
+            });
+          }
+
           if (needConfirm) {
             return modal.show(orderConfirmDialogId, {
               order: formattedOrder,
-
-              quote: symbolInfo.quote,
-              base: symbolInfo.base,
-
-              quoteDP: symbolInfo.quote_dp,
-              baseDP: symbolInfo.base_dp,
+              symbolInfo,
             });
           }
 
           return true;
         },
-        (errors) => {
+        // should catch validate error first, then submit
+        (errors: OrderValidationResult) => {
+          // slippage error message is not show input tooltip, so we need to manually show it by toast
           if (errors.slippage) {
-            // toast.error(errors.slippage.message);
-            toast.error(t("orderEntry.slippage.error.max"));
-            return Promise.reject("cancel");
+            toast.error(errors.slippage.message);
           }
 
+          // when switch order type, validated not changed, so we need to set it to true
           setErrorMsgVisible(true);
 
-          if (typeof errors === "object") {
-            if (
-              errors.total != null ||
-              errors.order_quantity != null ||
-              errors.order_price != null ||
-              errors.trigger_price != null
-            ) {
-              return Promise.reject();
-            }
-          }
+          return Promise.reject();
         },
       )
       .then(() => {
+        // validate success, submit order
         return submit({ resetOnSuccess: false }).then((result: any) => {
-          if (result.success) {
-            // setOrderValue("order_quantity", "");
-          } else {
+          if (!result.success && result.message) {
             toast.error(result.message);
+          } else if (result.success && isScaledOrder) {
+            const message = getScaledPlaceOrderMessage(result);
+            if (message) {
+              toast.success(message);
+            }
           }
         });
       })
       .catch((error) => {
-        if (error === "cancel") {
-          return;
-        }
-        // console.log("error--->>>>", error);
-
-        if (typeof error === "object" && error.message)
+        // submit order error
+        if (error?.message) {
           toast.error(error.message);
-        // toast.error(`Error:${error.message}`);
-
-        // if (error instanceof ApiError) {
-        // toast.error(error.message);
-        // }
+        }
       });
   };
 
@@ -325,34 +328,58 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           </Text.numeral>
         </Flex>
         {/* Inputs (price,quantity,triggerPrice) */}
-        <OrderQuantityInput
-          type={props.type}
-          symbolInfo={symbolInfo}
-          values={{
-            quantity: formattedOrder.order_quantity,
-            price: formattedOrder.order_price,
-            trigger_price: formattedOrder.trigger_price,
-            total: formattedOrder.total,
-            level: formattedOrder.level,
-            side: formattedOrder.side,
-            order_type_ext: formattedOrder.order_type_ext,
-          }}
-          errors={validated ? errors : null}
-          onChange={(key, value) => {
-            props.setOrderValue(key, value);
-          }}
-          onValuesChange={props.setOrderValues}
-          refs={props.refs}
-          onBlur={props.onBlur}
-          onFocus={props.onFocus}
-          bbo={{
-            bboStatus,
-            bboType,
-            onBBOChange,
-            toggleBBO,
-          }}
-          priceInputContainerWidth={props.priceInputContainerWidth}
-        />
+        {formattedOrder.order_type === OrderType.SCALED ? (
+          <ScaledOrderInput
+            type={props.type}
+            symbolInfo={symbolInfo}
+            values={{
+              quantity: formattedOrder.order_quantity,
+              total: formattedOrder.total,
+              side: formattedOrder.side,
+              max_price: formattedOrder.max_price,
+              min_price: formattedOrder.min_price,
+              total_orders: formattedOrder.total_orders,
+              distribution_type: formattedOrder.distribution_type,
+              skew: formattedOrder.skew,
+            }}
+            onChange={(key, value) => {
+              props.setOrderValue(key, value);
+            }}
+            onValuesChange={props.setOrderValues}
+            onBlur={props.onBlur}
+            onFocus={props.onFocus}
+            parseErrorMsg={parseErrorMsg}
+          />
+        ) : (
+          <OrderQuantityInput
+            type={props.type}
+            symbolInfo={symbolInfo}
+            values={{
+              quantity: formattedOrder.order_quantity,
+              price: formattedOrder.order_price,
+              trigger_price: formattedOrder.trigger_price,
+              total: formattedOrder.total,
+              level: formattedOrder.level,
+              side: formattedOrder.side,
+              order_type_ext: formattedOrder.order_type_ext,
+            }}
+            onChange={(key, value) => {
+              props.setOrderValue(key, value);
+            }}
+            onValuesChange={props.setOrderValues}
+            refs={props.refs}
+            onBlur={props.onBlur}
+            onFocus={props.onFocus}
+            bbo={{
+              bboStatus,
+              bboType,
+              onBBOChange,
+              toggleBBO,
+            }}
+            priceInputContainerWidth={props.priceInputContainerWidth}
+            parseErrorMsg={parseErrorMsg}
+          />
+        )}
         {/* Slider */}
         <QuantitySlider
           canTrade={props.canTrade}
@@ -541,7 +568,6 @@ const PinButton = (props: HTMLAttributes<HTMLButtonElement>) => {
 const OrderQuantityInput = (props: {
   type: OrderType;
   symbolInfo: API.SymbolExt;
-  errors: OrderValidationResult | null;
   values: {
     quantity?: string;
     price?: string;
@@ -571,11 +597,11 @@ const OrderQuantityInput = (props: {
     "bboStatus" | "bboType" | "onBBOChange" | "toggleBBO"
   >;
   priceInputContainerWidth?: number;
+  parseErrorMsg: (key: keyof OrderValidationResult) => string;
 }) => {
-  const { type, symbolInfo, errors, values, onFocus, onBlur, bbo } = props;
+  const { type, symbolInfo, values, onFocus, onBlur, bbo, parseErrorMsg } =
+    props;
   const { t } = useTranslation();
-
-  const { parseErrorMsg } = useOrderEntryFormErrorMsg(errors);
 
   const readOnly = bbo.bboStatus === BBOStatus.ON;
 
@@ -728,7 +754,8 @@ const CustomInput = forwardRef<
   HTMLInputElement,
   {
     label: string;
-    suffix: ReactNode;
+    suffix?: ReactNode;
+    placeholder?: string;
     id: string;
     className?: string;
     name?: string;
@@ -740,13 +767,14 @@ const CustomInput = forwardRef<
     onFocus: InputProps["onFocus"];
     onBlur: InputProps["onBlur"];
     formatters?: InputProps["formatters"];
+    overrideFormatters?: InputProps["formatters"];
     // helperText?: InputProps["helperText"];
     classNames?: InputProps["classNames"];
     readonly?: boolean;
   }
 >((props, ref) => {
+  const { placeholder = "0" } = props;
   const { errorMsgVisible } = useContext(OrderEntryContext);
-  const [placeholder, setPlaceholder] = useState<string>("0");
   return (
     <Input.tooltip
       ref={ref}
@@ -758,25 +786,29 @@ const CustomInput = forwardRef<
       id={props.id}
       name={props.name}
       color={props.error ? "danger" : undefined}
-      prefix={<InputLabel id={props.id}>{props.label}</InputLabel>}
+      prefix={
+        <InputLabel id={props.id} className={props.classNames?.prefix}>
+          {props.label}
+        </InputLabel>
+      }
       suffix={props.suffix}
       value={props.readonly ? "" : props.value || ""}
       // onChange={props.onChange}
       onValueChange={props.onChange}
       onFocus={(event) => {
-        setPlaceholder("");
         props.onFocus?.(event);
       }}
       onBlur={(event) => {
-        setPlaceholder("0");
         props.onBlur?.(event);
       }}
-      formatters={[
-        ...(props.formatters ?? []),
-        inputFormatter.numberFormatter,
-        inputFormatter.currencyFormatter,
-        inputFormatter.decimalPointFormatter,
-      ]}
+      formatters={
+        props.overrideFormatters || [
+          ...(props.formatters ?? []),
+          inputFormatter.numberFormatter,
+          inputFormatter.currencyFormatter,
+          inputFormatter.decimalPointFormatter,
+        ]
+      }
       classNames={{
         root: cn(
           "orderly-order-entry oui-relative oui-h-[54px] oui-rounded oui-border oui-border-solid oui-border-line oui-px-2 oui-py-1 group-first:oui-rounded-t-xl group-last:oui-rounded-b-xl",
@@ -784,10 +816,7 @@ const CustomInput = forwardRef<
           props.classNames?.root,
         ),
         input: cn("oui-mb-1 oui-mt-5 oui-h-5", props?.classNames?.input),
-        prefix: cn(
-          "oui-absolute oui-left-2 oui-top-[7px] oui-text-base-contrast-36",
-          props.classNames?.prefix,
-        ),
+        // prefix: cn(props.classNames?.prefix),
         suffix: cn(
           "oui-absolute oui-right-0 oui-top-0 oui-justify-start oui-py-2 oui-text-2xs oui-text-base-contrast-36",
           props.classNames?.suffix,
@@ -800,13 +829,16 @@ const CustomInput = forwardRef<
 
 CustomInput.displayName = "CustomInput";
 
-const InputLabel = (props: PropsWithChildren<{ id: string }>) => {
+const InputLabel = (
+  props: PropsWithChildren<{ id: string; className?: string }>,
+) => {
   return (
     <label
       htmlFor={props.id}
-      className={
-        "oui-absolute oui-left-2 oui-top-[7px] oui-text-2xs oui-text-base-contrast-36"
-      }
+      className={cn(
+        "oui-absolute oui-left-2 oui-top-[7px] oui-text-2xs oui-text-base-contrast-36",
+        props.className,
+      )}
     >
       {props.children}
     </label>
@@ -899,15 +931,35 @@ const OrderTypeSelect = (props: {
 }) => {
   const { t } = useTranslation();
 
-  const options = [
-    { label: t("orderEntry.orderType.limitOrder"), value: OrderType.LIMIT },
-    { label: t("orderEntry.orderType.marketOrder"), value: OrderType.MARKET },
-    { label: t("orderEntry.orderType.stopLimit"), value: OrderType.STOP_LIMIT },
-    {
-      label: t("orderEntry.orderType.stopMarket"),
-      value: OrderType.STOP_MARKET,
-    },
-  ];
+  const options = useMemo(() => {
+    return [
+      { label: t("orderEntry.orderType.limitOrder"), value: OrderType.LIMIT },
+      { label: t("orderEntry.orderType.marketOrder"), value: OrderType.MARKET },
+      {
+        label: t("orderEntry.orderType.stopLimit"),
+        value: OrderType.STOP_LIMIT,
+      },
+      {
+        label: t("orderEntry.orderType.stopMarket"),
+        value: OrderType.STOP_MARKET,
+      },
+      {
+        label: t("orderEntry.orderType.scaledOrder"),
+        value: OrderType.SCALED,
+      },
+    ];
+  }, [t]);
+
+  const displayLabelMap = useMemo(() => {
+    return {
+      [OrderType.LIMIT]: t("orderEntry.orderType.limit"),
+      [OrderType.MARKET]: t("common.marketPrice"),
+      [OrderType.STOP_LIMIT]: t("orderEntry.orderType.stopLimit"),
+      [OrderType.STOP_MARKET]: t("orderEntry.orderType.stopMarket"),
+      [OrderType.SCALED]: t("orderEntry.orderType.scaledOrder"),
+    };
+  }, [t]);
+
   return (
     <Select.options
       testid="oui-testid-orderEntry-orderType-button"
@@ -924,12 +976,7 @@ const OrderTypeSelect = (props: {
           return <Text size={"xs"}>{option.placeholder}</Text>;
         }
 
-        const displayLabel = {
-          [OrderType.LIMIT]: t("orderEntry.orderType.limit"),
-          [OrderType.MARKET]: t("common.marketPrice"),
-          [OrderType.STOP_LIMIT]: t("orderEntry.orderType.stopLimit"),
-          [OrderType.STOP_MARKET]: t("orderEntry.orderType.stopMarket"),
-        }[value];
+        const label = displayLabelMap[value as keyof typeof displayLabelMap];
 
         return (
           <Text
@@ -942,7 +989,7 @@ const OrderTypeSelect = (props: {
                 : undefined
             }
           >
-            {displayLabel}
+            {label}
           </Text>
         );
       }}
@@ -1132,3 +1179,138 @@ const BBOOrderTypeSelect = (props: {
 };
 
 // -----------BBO type Select Component end ------------
+
+const ScaledOrderInput = (props: {
+  type: OrderType;
+  symbolInfo: API.SymbolExt;
+  values: {
+    quantity?: string;
+    total?: string;
+    side?: OrderSide;
+    max_price?: string;
+    min_price?: string;
+    total_orders?: number;
+    distribution_type?: DistributionType;
+    skew?: number;
+  };
+  onChange: (
+    key:
+      | "order_quantity"
+      | "total"
+      | "order_type"
+      | "min_price"
+      | "max_price"
+      | "total_orders"
+      | "distribution_type"
+      | "skew",
+    value: any,
+  ) => void;
+  onValuesChange: (value: any) => void;
+  onFocus: (type: InputType) => FocusEventHandler;
+  onBlur: (type: InputType) => FocusEventHandler;
+  parseErrorMsg: (key: keyof OrderValidationResult) => string;
+}) => {
+  const { symbolInfo, values, onFocus, onBlur, parseErrorMsg } = props;
+  const { t } = useTranslation();
+
+  const showSkewInput = values.distribution_type === DistributionType.CUSTOM;
+
+  return (
+    <div className="oui-space-y-1">
+      <CustomInput
+        label={t("orderEntry.upperPrice")}
+        suffix={symbolInfo.quote}
+        id="order_max_price_input"
+        value={values.max_price}
+        error={parseErrorMsg("max_price")}
+        onChange={(e) => {
+          props.onChange("max_price", e);
+        }}
+        formatters={[inputFormatter.dpFormatter(symbolInfo.quote_dp)]}
+        onFocus={onFocus(InputType.MAX_PRICE)}
+        onBlur={onBlur(InputType.MAX_PRICE)}
+        classNames={{
+          root: "oui-rounded-t-xl",
+        }}
+      />
+
+      <CustomInput
+        label={t("orderEntry.lowerPrice")}
+        suffix={symbolInfo.quote}
+        id="order_min_price_input"
+        value={values.min_price}
+        error={parseErrorMsg("min_price")}
+        onChange={(e) => {
+          props.onChange("min_price", e);
+        }}
+        formatters={[inputFormatter.dpFormatter(symbolInfo.quote_dp)]}
+        onFocus={onFocus(InputType.MIN_PRICE)}
+        onBlur={onBlur(InputType.MIN_PRICE)}
+      />
+
+      <Grid cols={2} className={"oui-group oui-space-x-1"}>
+        <CustomInput
+          label={t("common.qty")}
+          suffix={symbolInfo.base}
+          id="order_quantity_input"
+          name="order_quantity_input"
+          className={"!oui-rounded-r"}
+          value={values.quantity}
+          error={parseErrorMsg("order_quantity")}
+          onChange={(e) => {
+            props.onChange("order_quantity", e);
+          }}
+          formatters={[inputFormatter.dpFormatter(symbolInfo.base_dp)]}
+          onFocus={onFocus(InputType.QUANTITY)}
+          onBlur={onBlur(InputType.QUANTITY)}
+        />
+        <CustomInput
+          label={t("orderEntry.totalOrders")}
+          placeholder="2-20"
+          id="order_total_orders_input"
+          className={"!oui-rounded-l"}
+          value={values.total_orders}
+          error={parseErrorMsg("total_orders")}
+          onChange={(e) => {
+            props.onChange("total_orders", e);
+          }}
+          overrideFormatters={[
+            // inputFormatter.rangeFormatter({ min: 2, max: 20 }),
+            inputFormatter.numberFormatter,
+            inputFormatter.dpFormatter(0),
+          ]}
+          onFocus={onFocus(InputType.TOTAL_ORDERS)}
+          onBlur={onBlur(InputType.TOTAL_ORDERS)}
+        />
+      </Grid>
+      <QuantityDistributionInput
+        value={values.distribution_type}
+        onValueChange={(value) => {
+          props.onChange("distribution_type", value);
+        }}
+        className={cn(!showSkewInput && "oui-rounded-b-xl")}
+      />
+
+      {showSkewInput && (
+        <CustomInput
+          id="order_skew_input"
+          label={t("orderEntry.skew")}
+          value={values.skew}
+          error={parseErrorMsg("skew")}
+          onChange={(e) => {
+            props.onChange("skew", e);
+          }}
+          onFocus={onFocus(InputType.SKEW)}
+          onBlur={onBlur(InputType.SKEW)}
+          overrideFormatters={[
+            inputFormatter.rangeFormatter({ min: 0, max: 100, dp: 2 }),
+            inputFormatter.dpFormatter(2),
+          ]}
+          classNames={{
+            root: "oui-rounded-b-xl",
+          }}
+        />
+      )}
+    </div>
+  );
+};

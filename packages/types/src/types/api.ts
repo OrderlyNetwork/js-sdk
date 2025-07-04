@@ -132,7 +132,7 @@ export declare namespace API {
     executed: number;
     total_fee: number;
     fee_asset: string;
-    client_order_id: null;
+    client_order_id?: string;
     average_executed_price: number;
     total_executed_quantity: number;
     visible_quantity: number;
@@ -173,6 +173,7 @@ export declare namespace API {
     created_time: number;
     updated_time: number;
     order_tag?: string;
+    client_order_id?: string;
   }
 
   export interface AlgoOrderExt extends AlgoOrder {
