@@ -66,6 +66,7 @@ async function main() {
     }`;
     console.error(msg);
     await notifyTelegram(msg);
+    throw err;
   }
 }
 
