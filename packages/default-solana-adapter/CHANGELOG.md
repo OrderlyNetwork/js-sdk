@@ -1,5 +1,14 @@
 # @orderly.network/default-solana-adapter
 
+## 2.3.3-internal-multi-collateral.2
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.3.3-internal-multi-collateral.2
+  - @orderly.network/types@2.3.3-internal-multi-collateral.2
+
 ## 2.3.3-internal-multi-collateral.1
 
 ### Patch Changes

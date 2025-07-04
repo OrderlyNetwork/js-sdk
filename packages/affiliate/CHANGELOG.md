@@ -1,5 +1,21 @@
 # @orderly.network/affiliate
 
+## 2.3.3-internal-multi-collateral.2
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.3.3-internal-multi-collateral.2
+  - @orderly.network/chart@2.3.3-internal-multi-collateral.2
+  - @orderly.network/hooks@2.3.3-internal-multi-collateral.2
+  - @orderly.network/i18n@2.3.3-internal-multi-collateral.2
+  - @orderly.network/types@2.3.3-internal-multi-collateral.2
+  - @orderly.network/ui@2.3.3-internal-multi-collateral.2
+  - @orderly.network/ui-connector@2.3.3-internal-multi-collateral.2
+  - @orderly.network/ui-scaffold@2.3.3-internal-multi-collateral.2
+  - @orderly.network/utils@2.3.3-internal-multi-collateral.2
+
 ## 2.3.3-internal-multi-collateral.1
 
 ### Patch Changes

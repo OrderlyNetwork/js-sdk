@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/ui",
-  "version": "2.3.3-internal-multi-collateral.1",
+  "version": "2.3.3-internal-multi-collateral.2",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
