@@ -181,7 +181,14 @@ export const useAssetsScript = () => {
     });
   };
 
-  const assetsColumns = useAssetsColumns({ onClick: handleTransfer });
+  const handleConvert = () => {
+    modal.show("ConvertDialogId");
+  };
+
+  const assetsColumns = useAssetsColumns({
+    onClick: handleTransfer,
+    onConvert: handleConvert,
+  });
 
   const openDepositAndWithdraw = useCallback(
     (viewName: "deposit" | "withdraw") => {
