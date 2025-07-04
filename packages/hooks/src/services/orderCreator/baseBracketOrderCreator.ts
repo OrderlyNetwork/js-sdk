@@ -3,19 +3,27 @@ import {
   AlgoOrderRootType,
   OrderSide,
 } from "@orderly.network/types";
-import { ValuesDepConfig, OrderValidationResult } from "./interface";
-import { Decimal } from "@orderly.network/utils";
 import { OrderType } from "@orderly.network/types";
+import { Decimal } from "@orderly.network/utils";
+import { ValuesDepConfig, OrderValidationResult } from "./interface";
 import { OrderValidation } from "./orderValidation";
 
 export async function bracketOrderValidator<
   T extends AlgoOrderEntity<
     AlgoOrderRootType.POSITIONAL_TP_SL | AlgoOrderRootType.TP_SL
-  >
+  >,
 >(values: Partial<T>, config: ValuesDepConfig): Promise<OrderValidationResult> {
   const result: OrderValidationResult = Object.create(null);
   await Promise.resolve();
-  const { tp_trigger_price, sl_trigger_price, side } = values;
+  const {
+    tp_trigger_price,
+    tp_order_price,
+    tp_order_type,
+    sl_trigger_price,
+    sl_order_price,
+    sl_order_type,
+    side,
+  } = values;
   const qty = Number(values.quantity);
   const maxQty = config.maxQty;
   const type = values.order_type;
@@ -25,8 +33,8 @@ export async function bracketOrderValidator<
     type === OrderType.MARKET
       ? config.markPrice
       : values.order_price
-      ? Number(values.order_price)
-      : undefined;
+        ? Number(values.order_price)
+        : undefined;
 
   if (!isNaN(qty) && qty > maxQty) {
     result.quantity = OrderValidation.max("quantity", config.maxQty);
@@ -46,28 +54,28 @@ export async function bracketOrderValidator<
     if (!!sl_trigger_price && Number(sl_trigger_price) < slTriggerPriceScope) {
       result.sl_trigger_price = OrderValidation.min(
         "sl_trigger_price",
-        slTriggerPriceScope
+        slTriggerPriceScope,
       );
     }
 
     if (!!tp_trigger_price && Number(tp_trigger_price) <= mark_price) {
       result.tp_trigger_price = OrderValidation.min(
         "tp_trigger_price",
-        mark_price
+        mark_price,
       );
     }
 
     if (!!tp_trigger_price && Number(tp_trigger_price) > quote_max) {
       result.tp_trigger_price = OrderValidation.max(
         "tp_trigger_price",
-        quote_max
+        quote_max,
       );
     }
 
     if (!!sl_trigger_price && Number(sl_trigger_price) < quote_min) {
       result.sl_trigger_price = OrderValidation.min(
         "sl_trigger_price",
-        quote_min
+        quote_min,
       );
     }
   }
@@ -78,28 +86,28 @@ export async function bracketOrderValidator<
     if (!!sl_trigger_price && Number(sl_trigger_price) > slTriggerPriceScope) {
       result.sl_trigger_price = OrderValidation.max(
         "sl_trigger_price",
-        slTriggerPriceScope
+        slTriggerPriceScope,
       );
     }
 
     if (!!tp_trigger_price && Number(tp_trigger_price) >= mark_price) {
       result.tp_trigger_price = OrderValidation.max(
         "tp_trigger_price",
-        mark_price
+        mark_price,
       );
     }
 
     if (!!tp_trigger_price && Number(tp_trigger_price) > quote_max) {
       result.tp_trigger_price = OrderValidation.max(
         "tp_trigger_price",
-        quote_max
+        quote_max,
       );
     }
 
     if (!!sl_trigger_price && Number(sl_trigger_price) < quote_min) {
       result.sl_trigger_price = OrderValidation.min(
         "sl_trigger_price",
-        quote_min
+        quote_min,
       );
     }
   }

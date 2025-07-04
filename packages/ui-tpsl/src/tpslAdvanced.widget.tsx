@@ -7,12 +7,14 @@ import { useTPSLAdvanced } from "./useTPSLAdvanced.script";
 type Props = {
   order: OrderlyOrder;
   setOrderValue: (key: string, value: any) => void;
+  onSubmit: (formattedOrder: OrderlyOrder) => void;
 };
 
 export const TPSLAdvancedWidget = (props: Props) => {
   const state = useTPSLAdvanced({
     order: props.order,
     setOrderValue: props.setOrderValue,
+    onSubmit: props.onSubmit,
   });
   return <TPSLAdvancedUI {...state} />;
 };

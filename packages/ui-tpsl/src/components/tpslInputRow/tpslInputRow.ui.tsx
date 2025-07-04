@@ -47,7 +47,7 @@ export const TPSLInputRowUI = (props: Props) => {
             onValueChange={(value) => {
               props.onChange(`${props.type}_trigger_price`, value);
             }}
-            quote_dp={2}
+            quote_dp={props.quote_dp}
           />
           <PnlInputWidget
             type={props.type === "tp" ? "TP" : "SL"}
@@ -56,7 +56,7 @@ export const TPSLInputRowUI = (props: Props) => {
               props.onChange(key, value as string);
             }}
             quote={"USDC"}
-            quote_dp={2}
+            quote_dp={props.quote_dp}
             values={values}
           />
         </Grid>

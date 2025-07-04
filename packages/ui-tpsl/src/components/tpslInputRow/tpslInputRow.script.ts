@@ -3,6 +3,7 @@ import { OrderType } from "@orderly.network/types";
 
 export type Props = {
   type: "tp" | "sl";
+  quote_dp: number;
   values: {
     enable: boolean;
     trigger_price: string;
@@ -20,5 +21,6 @@ export const useTPSLInputRowScript = (props: Props) => {
     values: props.values,
     onChange: props.onChange,
     type: props.type,
+    quote_dp: props.quote_dp,
   };
 };

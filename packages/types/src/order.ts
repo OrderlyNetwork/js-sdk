@@ -217,6 +217,10 @@ export interface BaseAlgoOrderEntity<T extends AlgoOrderRootType>
   is_activated?: boolean;
   tp_trigger_price?: string | number;
   sl_trigger_price?: string | number;
+  tp_order_price?: string | number;
+  tp_order_type?: OrderType;
+  sl_order_price?: string | number;
+  sl_order_type?: OrderType;
 }
 
 export type AlgoOrderEntity<
@@ -229,7 +233,15 @@ export type AlgoOrderEntity<
   : T extends AlgoOrderRootType.POSITIONAL_TP_SL
     ? Optional<
         BaseAlgoOrderEntity<T>,
-        "side" | "type" | "trigger_price" | "order_type" | "quantity"
+        | "side"
+        | "type"
+        | "trigger_price"
+        | "order_type"
+        | "quantity"
+        | "tp_order_price"
+        | "tp_order_type"
+        | "sl_order_price"
+        | "sl_order_type"
       >
     : Omit<BaseAlgoOrderEntity<T>, "child_orders" | "order_type">;
 
