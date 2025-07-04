@@ -60,9 +60,9 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
       ...sourceToken!,
       precision: sourceToken?.precision ?? sourceToken?.decimals ?? 6,
     };
-    if (!_token.address && _token.symbol === "ETH") {
-      _token.address = nativeETHAddress;
-    }
+    // if (!_token.address && _token.symbol === "ETH") {
+    //   _token.address = nativeETHAddress;
+    // }
     return _token;
   }, [sourceToken]);
 

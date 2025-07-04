@@ -29,6 +29,7 @@ import {
   bscTestnetUSDCAddress,
   bscTestnetDevVaultAddress,
   bscTestnetStagingVaultAddress,
+  qaArbitrumTestnetVaultAddress,
 } from "./constants";
 import mainnetUSDCAbi from "./wallet/abis/mainnetUSDCAbi.json";
 import mainnetVaultAbi from "./wallet/abis/mainnetVaultAbi.json";
@@ -95,6 +96,7 @@ export class BaseContract implements IContract {
     const abstractUSDCAddress = AbstractTestnetUSDCAddress;
     let bscVaultAddress = bscTestnetStagingVaultAddress;
     let bscUSDCAddress = bscTestnetUSDCAddress;
+    let vaultAddress = stagingVaultAddressOnArbitrumTestnet;
     if (env === "qa") {
       solanaVaultAddress = solanaQaVaultAddress;
       verifyContractAddress = "0x50F59504D3623Ad99302835da367676d1f7E3D44";
@@ -103,6 +105,7 @@ export class BaseContract implements IContract {
       abstractVaultAddress = AbstractQaVaultAddress;
       bscVaultAddress = bscTestnetQaVaultAddress;
       bscUSDCAddress = bscTestnetUSDCAddress;
+      vaultAddress = qaArbitrumTestnetVaultAddress;
     } else if (env === "dev") {
       abstractVaultAddress = AbstractDevVaultAddress;
       bscVaultAddress = bscTestnetDevVaultAddress;
@@ -113,7 +116,7 @@ export class BaseContract implements IContract {
     return {
       usdcAddress: nativeUSDCAddress,
       usdcAbi: stagingUSDCAbiOnArbitrumTestnet,
-      vaultAddress: stagingVaultAddressOnArbitrumTestnet,
+      vaultAddress: vaultAddress,
       solanaVaultAddress: solanaVaultAddress,
       solanaUSDCAddress: solanaUSDCAddress,
       vaultAbi: stagingVaultAbiOnArbitrumTestnet,
