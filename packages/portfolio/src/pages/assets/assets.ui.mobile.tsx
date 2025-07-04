@@ -7,6 +7,7 @@ import {
   Text,
   formatAddress,
   DataFilter,
+  modal,
 } from "@orderly.network/ui";
 import { SelectOption } from "@orderly.network/ui/src/select/withOptions";
 import { useAssetsScriptReturn } from "./assets.script";
@@ -155,6 +156,8 @@ const AssetMobileItem: FC<AssetMobileItemProps> = ({ item }) => {
           variant="outlined"
           size="sm"
           color="gray"
+          onClick={() => modal.show("ConvertDialogId")}
+          disabled={item.token === "USDC"}
           className={cn(
             "oui-flex-1 oui-border-white/[0.36] oui-text-base-contrast-54",
           )}

@@ -1,12 +1,11 @@
 import React from "react";
-// import { useIndexPrice } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { Button, Flex, Text, TokenIcon } from "@orderly.network/ui";
+import { Button, cn, Flex, Text, TokenIcon } from "@orderly.network/ui";
 import type { Column } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
 
 export interface ColumnsOptions {
   onClick?: (id: string) => void;
+  onConvert?: () => void;
 }
 
 // Define the enhanced holding interface with calculated fields
@@ -22,7 +21,7 @@ interface EnhancedHolding {
 
 export const useAssetsColumns = (options: ColumnsOptions) => {
   const { t } = useTranslation();
-  const { onClick } = options;
+  const { onClick, onConvert } = options;
   const columns = React.useMemo<Column[]>(() => {
     return [
       {
@@ -107,18 +106,31 @@ export const useAssetsColumns = (options: ColumnsOptions) => {
       {
         title: null,
         dataIndex: "account_id",
-        align: "center",
-        width: 100,
-        render(id: string) {
+        align: "right",
+        width: 180,
+        render(id: string, record: EnhancedHolding) {
           return (
-            <Button
-              size={"sm"}
-              variant={"outlined"}
-              color={"secondary"}
-              onClick={() => onClick?.(id)}
-            >
-              {t("common.transfer")}
-            </Button>
+            <Flex itemAlign="center" gap={3}>
+              <Button
+                size={"sm"}
+                variant={"outlined"}
+                color={"secondary"}
+                onClick={() => onConvert?.()}
+                className={cn(
+                  record.token === "USDC" ? "oui-invisible" : "oui-visible",
+                )}
+              >
+                Convert
+              </Button>
+              <Button
+                size={"sm"}
+                variant={"outlined"}
+                color={"secondary"}
+                onClick={() => onClick?.(id)}
+              >
+                {t("common.transfer")}
+              </Button>
+            </Flex>
           );
         },
       },
