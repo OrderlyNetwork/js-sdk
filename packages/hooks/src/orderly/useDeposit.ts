@@ -23,15 +23,21 @@ export type DepositOptions = {
   // from address
   address?: string;
   decimals?: number;
-  networkId?: NetworkId;
+
   srcChainId?: number;
   srcToken?: string;
+  dstToken?: string;
 
   // swap deposit options
   swapEnable?: boolean;
   crossChainRouteAddress?: string;
   depositorAddress?: string;
+
+  /** @deprecated unused, will be removed in the future */
+  networkId?: NetworkId;
 };
+
+export type DepositReturn = ReturnType<typeof useDeposit>;
 
 export const useDeposit = (options: DepositOptions) => {
   const networkId = useConfig("networkId");
@@ -75,10 +81,6 @@ export const useDeposit = (options: DepositOptions) => {
   }, [networkId, findByChainId, options.srcChainId]);
 
   const dst = useMemo(() => {
-    // if (!targetChain) {
-    //   throw new Error("dst chain not found");
-    // }
-
     const USDC = targetChain?.token_infos.find(
       (token) => token.symbol === "USDC",
     );
@@ -101,7 +103,7 @@ export const useDeposit = (options: DepositOptions) => {
     async (address: string, decimals?: number) => {
       let balance: string;
 
-      if (!!address && isNativeTokenChecker(address)) {
+      if (address && isNativeTokenChecker(address)) {
         balance = await account.assetsManager.getNativeBalance({
           decimals,
         });
@@ -141,10 +143,11 @@ export const useDeposit = (options: DepositOptions) => {
     const tasks = [];
 
     for (const token of tokens) {
-      // native token skip
+      // skip native token
       if (isNativeTokenChecker(token.address)) {
         continue;
       }
+
       tasks.push(
         account.assetsManager.getBalanceByAddress(token.address, {
           decimals: token?.decimals,
@@ -154,8 +157,7 @@ export const useDeposit = (options: DepositOptions) => {
 
     const balances = await Promise.all(tasks);
 
-    // const balances = await account.assetsManager.getBalances(tokens);
-    // setBalance(() => balances);
+    return balances;
   }, []);
 
   const getAllowance = async (inputs: {
@@ -169,6 +171,7 @@ export const useDeposit = (options: DepositOptions) => {
     if (prevAddress.current === key) return;
 
     if (!address || !vaultAddress) return;
+
     // native token don't need to get allowance and approve
     if (isNativeTokenChecker(address)) return;
 
@@ -180,7 +183,7 @@ export const useDeposit = (options: DepositOptions) => {
       decimals,
     });
 
-    setAllowance(() => allowance);
+    setAllowance(allowance);
     // setAllowanceRevalidating(false);
     return allowance;
   };
@@ -189,20 +192,19 @@ export const useDeposit = (options: DepositOptions) => {
     address?: string;
     decimals?: number;
   }) => {
-    console.log("getAllowanceByDefaultAddress", inputs, prevAddress.current);
     const { address, decimals } = inputs;
-    // if (prevAddress.current === address) return;
+    if (prevAddress.current === address) return;
 
-    // if (!address || isNativeTokenChecker(address)) return;
+    if (!address || isNativeTokenChecker(address)) return;
 
-    // prevAddress.current = address;
+    prevAddress.current = address;
 
     const allowance = await account.assetsManager.getAllowance({
       address,
       decimals,
     });
 
-    setAllowance(() => allowance);
+    setAllowance(allowance);
     return allowance;
   };
 
@@ -222,16 +224,6 @@ export const useDeposit = (options: DepositOptions) => {
     options.crossChainRouteAddress,
     options.depositorAddress,
   ]);
-
-  const getVaultAddress = useCallback((): string | undefined => {
-    if (dst.chainId !== options.srcChainId) {
-      return options.crossChainRouteAddress;
-    } else {
-      if (dst.symbol !== options.srcToken) {
-        return options.depositorAddress;
-      }
-    }
-  }, [options, dst.chainId, dst.symbol]);
 
   const queryBalance = useDebouncedCallback(
     (address?: string, decimals?: number) => {
@@ -255,21 +247,17 @@ export const useDeposit = (options: DepositOptions) => {
 
   useEffect(() => {
     if (state.status < AccountStatusEnum.Connected) return;
-    setBalanceRevalidating(true);
-    // fetchBalance(options.address, options.decimals).finally(() => {
-    //   setBalanceRevalidating(false);
-    // });
 
+    setBalanceRevalidating(true);
     queryBalance(options.address, options.decimals);
 
+    // solana don't need to get allowance, set allowance to max uint256
     if (account.walletAdapter?.chainNamespace === ChainNamespace.solana) {
       setAllowance(
         account.walletAdapter.formatUnits(MaxUint256, options.decimals!),
       );
       return;
     }
-
-    console.log("-- dst chainid", dst, options);
 
     if (vaultAddress && options.address) {
       queryAllowance({
@@ -283,22 +271,6 @@ export const useDeposit = (options: DepositOptions) => {
         decimals: options.decimals,
       });
     }
-
-    // if (dst.chainId !== options.srcChainId) {
-    //   queryAllowance({
-    //     ...commonParams,
-    //     vaultAddress: options.crossChainRouteAddress,
-    //   });
-    // } else {
-    //   if (dst.symbol !== options.srcToken) {
-    //     queryAllowance({
-    //       ...commonParams,
-    //       vaultAddress: options.depositorAddress,
-    //     });
-    //   } else {
-    //     getAllowanceByDefaultAddress(commonParams);
-    //   }
-    // }
   }, [
     state.status,
     options.address,
@@ -316,11 +288,11 @@ export const useDeposit = (options: DepositOptions) => {
             account.assetsManager
               .getAllowance({
                 address: options.address,
-                vaultAddress,
                 decimals: options.decimals,
+                vaultAddress,
               })
               .then((allowance) => {
-                setAllowance(() => allowance);
+                setAllowance(allowance);
               });
           }
         });
@@ -330,6 +302,11 @@ export const useDeposit = (options: DepositOptions) => {
 
   // TODO: get allowance for cross chain
   const enquireAllowance = useCallback(async () => {
+    // only check allowance for non-native token
+    if (isNativeToken) {
+      return;
+    }
+
     if (!options.address) {
       throw new Error("address is required");
     }
@@ -340,14 +317,21 @@ export const useDeposit = (options: DepositOptions) => {
       decimals: options.decimals,
     });
 
-    setAllowance(() => _allowance);
+    setAllowance(_allowance);
 
     if (new Decimal(quantity).greaterThan(_allowance)) {
       throw new SDKError("Insufficient allowance");
     }
 
     return _allowance;
-  }, [account, options.address, options.decimals, vaultAddress]);
+  }, [
+    account,
+    options.address,
+    options.decimals,
+    vaultAddress,
+    quantity,
+    isNativeToken,
+  ]);
 
   const approve = useCallback(
     async (amount?: string) => {
@@ -368,25 +352,22 @@ export const useDeposit = (options: DepositOptions) => {
     },
     [
       account,
-      updateAllowanceWhenTxSuccess,
-      dst,
       options.address,
       options.decimals,
       vaultAddress,
+      updateAllowanceWhenTxSuccess,
     ],
   );
 
   // only support orderly deposit
   const deposit = useCallback(async () => {
-    if (isNativeToken) {
-      await enquireAllowance();
-    }
-
+    await enquireAllowance();
     return account.assetsManager
       .deposit({
         amount: quantity,
         fee: depositFee,
         decimals: options.decimals!,
+        token: options.dstToken,
       })
       .then((result: any) => {
         updateAllowanceWhenTxSuccess(result.hash);
@@ -413,13 +394,13 @@ export const useDeposit = (options: DepositOptions) => {
     quantity,
     depositFee,
     targetChain,
-    // fetchBalance,
-    // getVaultAddress,
-    updateAllowanceWhenTxSuccess,
     options.decimals,
-    isNativeToken,
+    options.dstToken,
+    enquireAllowance,
+    updateAllowanceWhenTxSuccess,
   ]);
 
+  // get balance every 3s or 10s depends on chain namespace
   const loopGetBalance = async () => {
     if (getBalanceListener.current) {
       clearTimeout(getBalanceListener.current);
@@ -451,9 +432,10 @@ export const useDeposit = (options: DepositOptions) => {
         amount: quantity,
         chain: targetChain?.network_infos!,
         decimals: options.decimals!,
+        token: options.dstToken,
       });
     },
-    [account, targetChain, options.decimals],
+    [account, targetChain, options.decimals, options.dstToken],
   );
 
   const enquiryDepositFee = useCallback(() => {
@@ -501,16 +483,6 @@ export const useDeposit = (options: DepositOptions) => {
         clearTimeout(getBalanceListener.current);
       }
     };
-
-    // account.walletClient.on(
-    //   // {
-    //   //   address: options.address,
-    //   // },
-    //   "block",
-    //   (log: any, event: any) => {
-    //     console.log("account.walletClient.on", log, event);
-    //   }
-    // );
   }, [options.address, options.decimals]);
 
   return {
@@ -529,8 +501,8 @@ export const useDeposit = (options: DepositOptions) => {
     depositFeeRevalidating,
     approve,
     deposit,
-    fetchBalances,
     fetchBalance: fetchBalanceHandler,
+    fetchBalances,
     /** set input quantity */
     setQuantity,
   };
