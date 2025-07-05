@@ -10,7 +10,6 @@ import {
 } from "@orderly.network/ui";
 import { DepositFormWidget } from "../depositForm";
 import { WithdrawFormWidget } from "../withdrawForm";
-import { DepositSlot } from "./plugin";
 
 export const DepositAndWithdrawWithDialogId = "DepositAndWithdrawWithDialogId";
 export const DepositAndWithdrawWithSheetId = "DepositAndWithdrawWithSheetId";

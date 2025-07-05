@@ -1,19 +1,27 @@
 import { useEffect, useState } from "react";
+import { API } from "@orderly.network/types";
 
 export function useNeedSwapAndCross(options: {
-  isCollateral?: boolean;
+  srcToken?: API.TokenInfo;
   srcChainId?: number;
   dstChainId?: number;
 }) {
-  const { isCollateral, srcChainId, dstChainId } = options;
+  const { srcToken, srcChainId, dstChainId } = options;
   const [needSwap, setNeedSwap] = useState(false);
   const [needCrossSwap, setNeedCrossSwap] = useState(false);
 
   useEffect(() => {
     if (!srcChainId) return;
 
-    // if isCollateral is false, it will need swap
-    setNeedSwap(!isCollateral);
+    // if srcToken is USDC, it will not need swap
+    if (srcToken?.symbol === "USDC") {
+      setNeedCrossSwap(false);
+      setNeedSwap(false);
+      return;
+    }
+
+    // if isCollateral is false or undefined, it will need swap
+    setNeedSwap(!srcToken?.is_collateral);
 
     if (srcChainId !== dstChainId) {
       setNeedCrossSwap(true);
@@ -21,7 +29,7 @@ export function useNeedSwapAndCross(options: {
     } else {
       setNeedCrossSwap(false);
     }
-  }, [isCollateral, srcChainId, dstChainId]);
+  }, [srcToken, srcChainId, dstChainId]);
 
   return { needSwap, needCrossSwap };
 }

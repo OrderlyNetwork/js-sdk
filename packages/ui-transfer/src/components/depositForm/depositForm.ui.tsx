@@ -64,6 +64,8 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
     swapFee,
     warningMessage,
     swapRevalidating,
+    swapSlippage,
+    onSwapSlippageChange,
   } = props;
 
   const renderContent = () => {
@@ -125,8 +127,11 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
             indexPrice={swapPrice}
           />
           {(needSwap || needCrossSwap) && (
-            // @ts-ignore TODO: refactor slippage
-            <Slippage value={slippage} onValueChange={setSlippage} />
+            // swap slippage max value is not the same as deposit slippage max value
+            <Slippage
+              value={swapSlippage}
+              onValueChange={onSwapSlippageChange}
+            />
           )}
         </Flex>
 

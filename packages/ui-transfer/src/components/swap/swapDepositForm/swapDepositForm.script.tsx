@@ -97,7 +97,7 @@ export const useSwapDepositFormScript = (
   });
 
   const { needSwap, needCrossSwap } = useNeedSwapAndCross({
-    isCollateral: token?.is_collateral,
+    srcToken: token,
     srcChainId: currentChain?.id,
     dstChainId: dst?.chainId,
   });
@@ -154,7 +154,8 @@ export const useSwapDepositFormScript = (
           src: {
             chain: currentChain?.id,
             token: token!.symbol,
-            displayDecimals: (token as API.TokenInfo)!.swap_precision,
+            // swap precision
+            displayDecimals: token?.precision,
             amount: quantity,
             decimals: token!.decimals,
           },

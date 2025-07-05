@@ -108,6 +108,8 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     swapQuantity,
     swapFee,
     warningMessage,
+    slippage: swapSlippage,
+    onSlippageChange: onSwapSlippageChange,
   } = useSwapDeposit({
     srcToken: sourceToken!,
     srcChainId: currentChain?.id,
@@ -118,7 +120,6 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     isNativeToken,
     depositFee,
     setQuantity,
-    slippage,
   });
 
   const cleanData = useCallback(() => {
@@ -204,7 +205,7 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     amount,
     isNativeToken,
     sourceQuantity: quantity,
-    targetQuantity: targetQuantity,
+    targetQuantity,
     maxQuantity,
     indexPrice,
     onQuantityChange: setQuantity,
@@ -243,6 +244,8 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     swapFee,
     warningMessage,
     swapRevalidating,
+    swapSlippage,
+    onSwapSlippageChange,
   };
 };
 

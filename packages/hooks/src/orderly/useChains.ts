@@ -476,6 +476,9 @@ function useSwapChains() {
       const chain = data[key];
       const { network_infos, token_infos } = chain;
 
+      // swap deposit will use shortName to get swap info
+      network_infos.shortName = key;
+
       const nativeToken = token_infos.find(
         (item: any) => item.symbol === network_infos.currency_symbol,
       );
@@ -487,7 +490,7 @@ function useSwapChains() {
       }
 
       // filter tokens by swap_enable
-      const swapTokenInfos = token_infos
+      const tokenInfos = token_infos
         ?.filter((item: any) => item.swap_enable)
         .map((item: any) => {
           const { woofi_dex_precision, ...rest } = item;
@@ -499,7 +502,7 @@ function useSwapChains() {
 
       return {
         network_infos,
-        token_infos: swapTokenInfos || [],
+        token_infos: tokenInfos || [],
       } as API.Chain;
     });
   }, [enableSwapDeposit, swapChainsRes]);
@@ -546,13 +549,13 @@ export function formatChains({
       bridgeless: true,
       mainnet,
 
-      shortName: name,
       public_rpc_url,
       currency_symbol,
       bridge_enable: true,
       explorer_base_url,
 
       // swap field
+      shortName: swapNetworkInfo?.shortName ?? name,
       cross_chain_router: swapNetworkInfo?.woofi_dex_cross_chain_router,
       depositor: swapNetworkInfo?.woofi_dex_depositor,
       est_txn_mins: swapNetworkInfo?.est_txn_mins,

@@ -19,7 +19,7 @@ interface TokenOptionProps {
 
 export const TokenOption: React.FC<TokenOptionProps> = (props) => {
   const { token, isActive, displayType, onTokenChange, fetchBalance } = props;
-  const { symbol, precision = 2, insufficientBalance } = token;
+  const { symbol, precision, insufficientBalance } = token;
   const { balance, loading } = useBalance(token, fetchBalance);
 
   const showBalance = typeof fetchBalance === "function";
@@ -65,7 +65,7 @@ export const TokenOption: React.FC<TokenOptionProps> = (props) => {
     return (
       <Text.numeral
         rule="price"
-        dp={precision}
+        dp={precision ?? 2}
         rm={Decimal.ROUND_DOWN}
         className={cn(
           "oui-text-base-contrast-80 group-hover:oui-text-base-contrast-54",

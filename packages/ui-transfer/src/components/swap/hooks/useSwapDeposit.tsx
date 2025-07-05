@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from "react";
-import { useConfig } from "@orderly.network/hooks";
+import { useConfig, useLocalStorage } from "@orderly.network/hooks";
 import { API } from "@orderly.network/types";
 import { modal } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
@@ -20,7 +20,6 @@ type SwapDepositOptions = {
   isNativeToken: boolean;
   depositFee: bigint;
   setQuantity: (quantity: string) => void;
-  slippage: number;
 };
 
 export const useSwapDeposit = (options: SwapDepositOptions) => {
@@ -34,18 +33,18 @@ export const useSwapDeposit = (options: SwapDepositOptions) => {
     isNativeToken,
     depositFee,
     setQuantity,
-    slippage,
   } = options;
-  // const [slippage, setSlippage] = useLocalStorage(
-  //   "orderly_swap_deposit_slippage",
-  //   1,
-  // );
+
+  const [slippage, setSlippage] = useLocalStorage(
+    "orderly_swap_deposit_slippage",
+    1,
+  );
 
   const config = useConfig();
   const brokerName = config.get("brokerName") || "";
 
   const { needSwap, needCrossSwap } = useNeedSwapAndCross({
-    isCollateral: srcToken?.is_collateral,
+    srcToken,
     srcChainId: srcChainId,
     dstChainId: dstChainId,
   });
@@ -62,12 +61,11 @@ export const useSwapDeposit = (options: SwapDepositOptions) => {
     dst,
     queryParams: {
       network: dst.network,
-      srcToken: srcToken?.address,
       srcNetwork: currentChain?.info?.network_infos?.shortName,
+      srcToken: srcToken?.address,
       dstToken: dst.address,
-      crossChainRouteAddress: (
-        currentChain?.info?.network_infos as API.NetworkInfos
-      )?.cross_chain_router,
+      crossChainRouteAddress:
+        currentChain?.info?.network_infos?.cross_chain_router,
       amount: new Decimal(quantity || 0)
         .mul(10 ** (srcToken?.decimals || 0))
         .toString(),
@@ -97,7 +95,8 @@ export const useSwapDeposit = (options: SwapDepositOptions) => {
           src: {
             chain: currentChain?.id,
             token: srcToken!.symbol,
-            displayDecimals: (srcToken as API.TokenInfo)!.swap_precision,
+            // swap precision
+            displayDecimals: srcToken?.precision,
             amount: quantity,
             decimals: srcToken!.decimals,
           },
@@ -170,7 +169,7 @@ export const useSwapDeposit = (options: SwapDepositOptions) => {
     warningMessage,
     needSwap,
     needCrossSwap,
-    // slippage,
-    // onSlippageChange: setSlippage,
+    slippage,
+    onSlippageChange: setSlippage,
   };
 };
