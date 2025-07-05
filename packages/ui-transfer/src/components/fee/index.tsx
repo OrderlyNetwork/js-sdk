@@ -12,7 +12,7 @@ export const Fee: FC<Partial<UseDepositFeeReturn>> = (props) => {
     const content = (
       <div className="oui-text-2xs">
         <Flex gapX={1}>
-          <Text intensity={54}>
+          <Text size="2xs" intensity={54}>
             {`${t("transfer.deposit.destinationGasFee")}: `}
           </Text>
           <Text.numeral
@@ -43,13 +43,13 @@ export const Fee: FC<Partial<UseDepositFeeReturn>> = (props) => {
 
   return (
     <Text
-      size="xs"
+      size="2xs"
       intensity={36}
       className="oui-border-dashed oui-border-b oui-border-line-12 oui-cursor-pointer"
       onClick={onShowFee}
     >
       {`${t("common.fee")} ≈ `}
-      <Text size="xs" intensity={80}>
+      <Text size="2xs" intensity={80}>
         $
         <Text.numeral dp={2} padding={false} rm={Decimal.ROUND_UP}>
           {feeAmount!}

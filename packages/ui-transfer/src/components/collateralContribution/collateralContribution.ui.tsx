@@ -12,15 +12,15 @@ export const CollateralContributionUI: React.FC<
   return (
     <Flex width="100%" itemAlign="center" justify="between">
       <Flex itemAlign="center" justify="start">
-        <Text size="xs" intensity={36}>
+        <Text size="2xs" intensity={36}>
           Collateral contribution
         </Text>
       </Flex>
       <Flex itemAlign="center" justify="end" gap={1}>
-        <Text intensity={80} className="oui-select-none">
+        <Text size="2xs" intensity={80} className="oui-select-none">
           {collateralContribution}
         </Text>
-        <Text intensity={36} className="oui-select-none">
+        <Text size="2xs" intensity={36} className="oui-select-none">
           {token}
         </Text>
       </Flex>

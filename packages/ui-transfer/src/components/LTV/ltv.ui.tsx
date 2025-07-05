@@ -68,7 +68,7 @@ export const LtvUI: React.FC<
   return (
     <Flex width="100%" itemAlign="center" justify="between">
       <Flex justify="start" itemAlign="center">
-        <Text size="xs" intensity={36}>
+        <Text size="2xs" intensity={36}>
           LTV
         </Text>
         <Tooltip
@@ -85,20 +85,27 @@ export const LtvUI: React.FC<
       </Flex>
       {showDiff ? (
         <Flex itemAlign="center" justify="between" gap={1}>
-          <span
+          <Text
+            size="2xs"
             className={cn("oui-select-none", calculateTextColor(currentLtv))}
           >
             {currentLtv}%
-          </span>
+          </Text>
           →
-          <span className={cn("oui-select-none", calculateTextColor(nextLTV))}>
+          <Text
+            size="2xs"
+            className={cn("oui-select-none", calculateTextColor(nextLTV))}
+          >
             {nextLTV}%
-          </span>
+          </Text>
         </Flex>
       ) : (
-        <span className={cn("oui-select-none", calculateTextColor(currentLtv))}>
+        <Text
+          size="2xs"
+          className={cn("oui-select-none", calculateTextColor(currentLtv))}
+        >
           {currentLtv}%
-        </span>
+        </Text>
       )}
     </Flex>
   );

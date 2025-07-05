@@ -44,14 +44,14 @@ export const CollateralRatioUI: React.FC<
   return (
     <Flex width="100%" itemAlign="center" justify="between">
       <Flex justify="start" itemAlign="center">
-        <Text size="xs" intensity={36}>
+        <Text size="2xs" intensity={36}>
           {t("portfolio.overview.column.collateralRatio")}
         </Text>
         <Tooltip className="oui-p-2" content={<TooltipContent />}>
           <TooltipIcon className="oui-ml-[2px] oui-cursor-pointer oui-text-base-contrast-36" />
         </Tooltip>
       </Flex>
-      <Text className="oui-select-none" intensity={80}>
+      <Text size="2xs" className="oui-select-none" intensity={80}>
         {collateralRatio}%
       </Text>
     </Flex>
