@@ -1,5 +1,15 @@
 # @orderly.network/ui
 
+## 2.4.1
+
+### Patch Changes
+
+- publish
+- 5a220e0: publish
+- Updated dependencies
+- Updated dependencies [5a220e0]
+  - @orderly.network/utils@2.4.1
+
 ## 2.4.1-alpha.0
 
 ### Patch Changes

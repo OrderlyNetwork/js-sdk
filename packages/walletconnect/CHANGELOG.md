@@ -1,5 +1,15 @@
 # @orderly.network/web3-modal
 
+## 2.4.1
+
+### Patch Changes
+
+- publish
+- 5a220e0: publish
+- Updated dependencies
+- Updated dependencies [5a220e0]
+  - @orderly.network/hooks@2.4.1
+
 ## 2.4.1-alpha.0
 
 ### Patch Changes
