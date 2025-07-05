@@ -1,109 +1,154 @@
 # storybook2
 
-## 1.3.3-internal-multi-collateral.2
+## 1.4.1
+
+### Patch Changes
+
+- publish
+- 5a220e0: publish
+- Updated dependencies
+- Updated dependencies [5a220e0]
+  - @orderly.network/affiliate@2.4.1
+  - @orderly.network/react-app@2.4.1
+  - @orderly.network/chart@2.4.1
+  - @orderly.network/core@2.4.1
+  - @orderly.network/default-evm-adapter@2.4.1
+  - @orderly.network/default-solana-adapter@2.4.1
+  - @orderly.network/hooks@2.4.1
+  - @orderly.network/i18n@2.4.1
+  - @orderly.network/markets@2.4.1
+  - @orderly.network/portfolio@2.4.1
+  - @orderly.network/trading@2.4.1
+  - @orderly.network/trading-leaderboard@2.4.1
+  - @orderly.network/trading-rewards@2.4.1
+  - @orderly.network/types@2.4.1
+  - @orderly.network/ui@2.4.1
+  - @orderly.network/ui-chain-selector@2.4.1
+  - @orderly.network/ui-connector@2.4.1
+  - @orderly.network/ui-leverage@2.4.1
+  - @orderly.network/ui-order-entry@2.4.1
+  - @orderly.network/ui-orders@2.4.1
+  - @orderly.network/ui-positions@2.4.1
+  - @orderly.network/ui-scaffold@2.4.1
+  - @orderly.network/ui-share@2.4.1
+  - @orderly.network/ui-tpsl@2.4.1
+  - @orderly.network/ui-tradingview@2.4.1
+  - @orderly.network/utils@2.4.1
+  - @orderly.network/wallet-connector@2.4.1
+  - @orderly.network/wallet-connector-privy@2.4.1
+
+## 1.4.1-alpha.0
 
 ### Patch Changes
 
 - publish
 - Updated dependencies
-  - @orderly.network/affiliate@2.3.3-internal-multi-collateral.2
-  - @orderly.network/react-app@2.3.3-internal-multi-collateral.2
-  - @orderly.network/chart@2.3.3-internal-multi-collateral.2
-  - @orderly.network/core@2.3.3-internal-multi-collateral.2
-  - @orderly.network/default-evm-adapter@2.3.3-internal-multi-collateral.2
-  - @orderly.network/default-solana-adapter@2.3.3-internal-multi-collateral.2
-  - @orderly.network/hooks@2.3.3-internal-multi-collateral.2
-  - @orderly.network/i18n@2.3.3-internal-multi-collateral.2
-  - @orderly.network/markets@2.3.3-internal-multi-collateral.2
-  - @orderly.network/portfolio@2.3.3-internal-multi-collateral.2
-  - @orderly.network/trading@2.3.3-internal-multi-collateral.2
-  - @orderly.network/trading-leaderboard@2.3.3-internal-multi-collateral.2
-  - @orderly.network/trading-rewards@2.3.3-internal-multi-collateral.2
-  - @orderly.network/types@2.3.3-internal-multi-collateral.2
-  - @orderly.network/ui@2.3.3-internal-multi-collateral.2
-  - @orderly.network/ui-chain-selector@2.3.3-internal-multi-collateral.2
-  - @orderly.network/ui-connector@2.3.3-internal-multi-collateral.2
-  - @orderly.network/ui-leverage@2.3.3-internal-multi-collateral.2
-  - @orderly.network/ui-order-entry@2.3.3-internal-multi-collateral.2
-  - @orderly.network/ui-orders@2.3.3-internal-multi-collateral.2
-  - @orderly.network/ui-positions@2.3.3-internal-multi-collateral.2
-  - @orderly.network/ui-scaffold@2.3.3-internal-multi-collateral.2
-  - @orderly.network/ui-share@2.3.3-internal-multi-collateral.2
-  - @orderly.network/ui-tpsl@2.3.3-internal-multi-collateral.2
-  - @orderly.network/ui-tradingview@2.3.3-internal-multi-collateral.2
-  - @orderly.network/utils@2.3.3-internal-multi-collateral.2
-  - @orderly.network/wallet-connector@2.3.3-internal-multi-collateral.2
-  - @orderly.network/wallet-connector-privy@2.3.3-internal-multi-collateral.2
+  - @orderly.network/affiliate@2.4.1-alpha.0
+  - @orderly.network/react-app@2.4.1-alpha.0
+  - @orderly.network/chart@2.4.1-alpha.0
+  - @orderly.network/core@2.4.1-alpha.0
+  - @orderly.network/default-evm-adapter@2.4.1-alpha.0
+  - @orderly.network/default-solana-adapter@2.4.1-alpha.0
+  - @orderly.network/hooks@2.4.1-alpha.0
+  - @orderly.network/i18n@2.4.1-alpha.0
+  - @orderly.network/markets@2.4.1-alpha.0
+  - @orderly.network/portfolio@2.4.1-alpha.0
+  - @orderly.network/trading@2.4.1-alpha.0
+  - @orderly.network/trading-leaderboard@2.4.1-alpha.0
+  - @orderly.network/trading-rewards@2.4.1-alpha.0
+  - @orderly.network/types@2.4.1-alpha.0
+  - @orderly.network/ui@2.4.1-alpha.0
+  - @orderly.network/ui-chain-selector@2.4.1-alpha.0
+  - @orderly.network/ui-connector@2.4.1-alpha.0
+  - @orderly.network/ui-leverage@2.4.1-alpha.0
+  - @orderly.network/ui-order-entry@2.4.1-alpha.0
+  - @orderly.network/ui-orders@2.4.1-alpha.0
+  - @orderly.network/ui-positions@2.4.1-alpha.0
+  - @orderly.network/ui-scaffold@2.4.1-alpha.0
+  - @orderly.network/ui-share@2.4.1-alpha.0
+  - @orderly.network/ui-tpsl@2.4.1-alpha.0
+  - @orderly.network/ui-tradingview@2.4.1-alpha.0
+  - @orderly.network/utils@2.4.1-alpha.0
+  - @orderly.network/wallet-connector@2.4.1-alpha.0
+  - @orderly.network/wallet-connector-privy@2.4.1-alpha.0
 
-## 1.3.3-internal-multi-collateral.1
+## 1.4.0
+
+### Minor Changes
+
+- decb695: publish
+- publish
 
 ### Patch Changes
 
-- publish
+- Updated dependencies [decb695]
 - Updated dependencies
-  - @orderly.network/affiliate@2.3.3-internal-multi-collateral.1
-  - @orderly.network/react-app@2.3.3-internal-multi-collateral.1
-  - @orderly.network/chart@2.3.3-internal-multi-collateral.1
-  - @orderly.network/core@2.3.3-internal-multi-collateral.1
-  - @orderly.network/default-evm-adapter@2.3.3-internal-multi-collateral.1
-  - @orderly.network/default-solana-adapter@2.3.3-internal-multi-collateral.1
-  - @orderly.network/hooks@2.3.3-internal-multi-collateral.1
-  - @orderly.network/i18n@2.3.3-internal-multi-collateral.1
-  - @orderly.network/markets@2.3.3-internal-multi-collateral.1
-  - @orderly.network/portfolio@2.3.3-internal-multi-collateral.1
-  - @orderly.network/trading@2.3.3-internal-multi-collateral.1
-  - @orderly.network/trading-leaderboard@2.3.3-internal-multi-collateral.1
-  - @orderly.network/trading-rewards@2.3.3-internal-multi-collateral.1
-  - @orderly.network/types@2.3.3-internal-multi-collateral.1
-  - @orderly.network/ui@2.3.3-internal-multi-collateral.1
-  - @orderly.network/ui-chain-selector@2.3.3-internal-multi-collateral.1
-  - @orderly.network/ui-connector@2.3.3-internal-multi-collateral.1
-  - @orderly.network/ui-leverage@2.3.3-internal-multi-collateral.1
-  - @orderly.network/ui-order-entry@2.3.3-internal-multi-collateral.1
-  - @orderly.network/ui-orders@2.3.3-internal-multi-collateral.1
-  - @orderly.network/ui-positions@2.3.3-internal-multi-collateral.1
-  - @orderly.network/ui-scaffold@2.3.3-internal-multi-collateral.1
-  - @orderly.network/ui-share@2.3.3-internal-multi-collateral.1
-  - @orderly.network/ui-tpsl@2.3.3-internal-multi-collateral.1
-  - @orderly.network/ui-tradingview@2.3.3-internal-multi-collateral.1
-  - @orderly.network/utils@2.3.3-internal-multi-collateral.1
-  - @orderly.network/wallet-connector@2.3.3-internal-multi-collateral.1
-  - @orderly.network/wallet-connector-privy@2.3.3-internal-multi-collateral.1
+  - @orderly.network/affiliate@2.4.0
+  - @orderly.network/react-app@2.4.0
+  - @orderly.network/chart@2.4.0
+  - @orderly.network/core@2.4.0
+  - @orderly.network/default-evm-adapter@2.4.0
+  - @orderly.network/default-solana-adapter@2.4.0
+  - @orderly.network/hooks@2.4.0
+  - @orderly.network/i18n@2.4.0
+  - @orderly.network/markets@2.4.0
+  - @orderly.network/portfolio@2.4.0
+  - @orderly.network/trading@2.4.0
+  - @orderly.network/trading-leaderboard@2.4.0
+  - @orderly.network/trading-rewards@2.4.0
+  - @orderly.network/types@2.4.0
+  - @orderly.network/ui@2.4.0
+  - @orderly.network/ui-chain-selector@2.4.0
+  - @orderly.network/ui-connector@2.4.0
+  - @orderly.network/ui-leverage@2.4.0
+  - @orderly.network/ui-order-entry@2.4.0
+  - @orderly.network/ui-orders@2.4.0
+  - @orderly.network/ui-positions@2.4.0
+  - @orderly.network/ui-scaffold@2.4.0
+  - @orderly.network/ui-share@2.4.0
+  - @orderly.network/ui-tpsl@2.4.0
+  - @orderly.network/ui-tradingview@2.4.0
+  - @orderly.network/utils@2.4.0
+  - @orderly.network/wallet-connector@2.4.0
+  - @orderly.network/wallet-connector-privy@2.4.0
 
-## 1.3.3-internal-multi-collateral.0
+## 1.4.0-alpha.0
+
+### Minor Changes
+
+- publish
 
 ### Patch Changes
 
-- publish
 - Updated dependencies
-  - @orderly.network/affiliate@2.3.3-internal-multi-collateral.0
-  - @orderly.network/react-app@2.3.3-internal-multi-collateral.0
-  - @orderly.network/chart@2.3.3-internal-multi-collateral.0
-  - @orderly.network/core@2.3.3-internal-multi-collateral.0
-  - @orderly.network/default-evm-adapter@2.3.3-internal-multi-collateral.0
-  - @orderly.network/default-solana-adapter@2.3.3-internal-multi-collateral.0
-  - @orderly.network/hooks@2.3.3-internal-multi-collateral.0
-  - @orderly.network/i18n@2.3.3-internal-multi-collateral.0
-  - @orderly.network/markets@2.3.3-internal-multi-collateral.0
-  - @orderly.network/portfolio@2.3.3-internal-multi-collateral.0
-  - @orderly.network/trading@2.3.3-internal-multi-collateral.0
-  - @orderly.network/trading-leaderboard@2.3.3-internal-multi-collateral.0
-  - @orderly.network/trading-rewards@2.3.3-internal-multi-collateral.0
-  - @orderly.network/types@2.3.3-internal-multi-collateral.0
-  - @orderly.network/ui@2.3.3-internal-multi-collateral.0
-  - @orderly.network/ui-chain-selector@2.3.3-internal-multi-collateral.0
-  - @orderly.network/ui-connector@2.3.3-internal-multi-collateral.0
-  - @orderly.network/ui-leverage@2.3.3-internal-multi-collateral.0
-  - @orderly.network/ui-order-entry@2.3.3-internal-multi-collateral.0
-  - @orderly.network/ui-orders@2.3.3-internal-multi-collateral.0
-  - @orderly.network/ui-positions@2.3.3-internal-multi-collateral.0
-  - @orderly.network/ui-scaffold@2.3.3-internal-multi-collateral.0
-  - @orderly.network/ui-share@2.3.3-internal-multi-collateral.0
-  - @orderly.network/ui-tpsl@2.3.3-internal-multi-collateral.0
-  - @orderly.network/ui-tradingview@2.3.3-internal-multi-collateral.0
-  - @orderly.network/utils@2.3.3-internal-multi-collateral.0
-  - @orderly.network/wallet-connector@2.3.3-internal-multi-collateral.0
-  - @orderly.network/wallet-connector-privy@2.3.3-internal-multi-collateral.0
+  - @orderly.network/affiliate@2.4.0-alpha.0
+  - @orderly.network/react-app@2.4.0-alpha.0
+  - @orderly.network/chart@2.4.0-alpha.0
+  - @orderly.network/core@2.4.0-alpha.0
+  - @orderly.network/default-evm-adapter@2.4.0-alpha.0
+  - @orderly.network/default-solana-adapter@2.4.0-alpha.0
+  - @orderly.network/hooks@2.4.0-alpha.0
+  - @orderly.network/i18n@2.4.0-alpha.0
+  - @orderly.network/markets@2.4.0-alpha.0
+  - @orderly.network/portfolio@2.4.0-alpha.0
+  - @orderly.network/trading@2.4.0-alpha.0
+  - @orderly.network/trading-leaderboard@2.4.0-alpha.0
+  - @orderly.network/trading-rewards@2.4.0-alpha.0
+  - @orderly.network/types@2.4.0-alpha.0
+  - @orderly.network/ui@2.4.0-alpha.0
+  - @orderly.network/ui-chain-selector@2.4.0-alpha.0
+  - @orderly.network/ui-connector@2.4.0-alpha.0
+  - @orderly.network/ui-leverage@2.4.0-alpha.0
+  - @orderly.network/ui-order-entry@2.4.0-alpha.0
+  - @orderly.network/ui-orders@2.4.0-alpha.0
+  - @orderly.network/ui-positions@2.4.0-alpha.0
+  - @orderly.network/ui-scaffold@2.4.0-alpha.0
+  - @orderly.network/ui-share@2.4.0-alpha.0
+  - @orderly.network/ui-tpsl@2.4.0-alpha.0
+  - @orderly.network/ui-tradingview@2.4.0-alpha.0
+  - @orderly.network/utils@2.4.0-alpha.0
+  - @orderly.network/wallet-connector@2.4.0-alpha.0
+  - @orderly.network/wallet-connector-privy@2.4.0-alpha.0
 
 ## 1.3.2
 

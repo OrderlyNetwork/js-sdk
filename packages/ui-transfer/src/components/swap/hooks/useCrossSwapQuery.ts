@@ -98,22 +98,25 @@ export const useWooCrossSwapQuery = () => {
           throw new Error(data.message);
         })
         .then((swapInfo) => {
-          //
           return queryDestinationFee(inputs.crossChainRouteAddress, {
             chainId: swapInfo.dst_infos.chain_id,
             bridgedToken: swapInfo.dst_infos.bridged_token,
             toToken: swapInfo.dst_infos.to_token,
             minToAmount: BigInt(swapInfo.dst_infos.min_to_amount),
             orderlyNativeFees: 0n,
-          }).then((data) => {
-            return {
-              ...swapInfo,
-              dst_infos: {
-                ...swapInfo.dst_infos,
-                gas_fee: data,
-              },
-            };
-          });
+          })
+            .then((data) => {
+              return {
+                ...swapInfo,
+                dst_infos: {
+                  ...swapInfo.dst_infos,
+                  gas_fee: data,
+                },
+              };
+            })
+            .catch((e) => {
+              console.error("queryDestinationFee error", e);
+            });
         })
         .finally(() => stop());
     },

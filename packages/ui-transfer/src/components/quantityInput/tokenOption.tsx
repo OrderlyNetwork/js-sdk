@@ -24,8 +24,6 @@ export const TokenOption: React.FC<TokenOptionProps> = (props) => {
 
   const showBalance = typeof fetchBalance === "function";
 
-  const dp = precision ?? 2;
-
   if (displayType === "vaultBalance" && insufficientBalance) {
     return (
       <Flex
@@ -67,7 +65,7 @@ export const TokenOption: React.FC<TokenOptionProps> = (props) => {
     return (
       <Text.numeral
         rule="price"
-        dp={dp}
+        dp={precision ?? 2}
         rm={Decimal.ROUND_DOWN}
         className={cn(
           "oui-text-base-contrast-80 group-hover:oui-text-base-contrast-54",

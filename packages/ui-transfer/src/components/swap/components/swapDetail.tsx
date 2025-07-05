@@ -91,7 +91,8 @@ export const SwapDetail: FC<SwapDetailProps> = (props) => {
             color="primaryLight"
             padding={false}
             rm={Decimal.ROUND_UP}
-            dp={feeDecimalsOffset((nativeToken as any)?.woofi_dex_precision)}
+            // swap precision
+            dp={feeDecimalsOffset(nativeToken?.precision)}
           >
             {info.dstGasFee!}
           </Text.numeral>

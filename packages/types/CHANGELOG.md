@@ -1,20 +1,28 @@
 # @orderly.network/types
 
-## 2.3.3-internal-multi-collateral.2
+## 2.4.1
+
+### Patch Changes
+
+- publish
+- 5a220e0: publish
+
+## 2.4.1-alpha.0
 
 ### Patch Changes
 
 - publish
 
-## 2.3.3-internal-multi-collateral.1
+## 2.4.0
 
-### Patch Changes
+### Minor Changes
 
+- decb695: publish
 - publish
 
-## 2.3.3-internal-multi-collateral.0
+## 2.4.0-alpha.0
 
-### Patch Changes
+### Minor Changes
 
 - publish
 

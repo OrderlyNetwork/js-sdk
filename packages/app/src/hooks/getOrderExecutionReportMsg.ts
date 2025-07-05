@@ -1,11 +1,11 @@
+import { i18n } from "@orderly.network/i18n";
+import { API, OrderStatus } from "@orderly.network/types";
+import { AlgoOrderRootType } from "@orderly.network/types";
+import { parseNumber } from "@orderly.network/ui";
 import {
   capitalizeString,
   transSymbolformString,
 } from "@orderly.network/utils";
-import { API, OrderStatus } from "@orderly.network/types";
-import { AlgoOrderRootType } from "@orderly.network/types";
-import { parseNumber } from "@orderly.network/ui";
-import { i18n } from "@orderly.network/i18n";
 
 function getDisplaySide(side: string) {
   if (side === "BUY") {
@@ -18,9 +18,9 @@ function getDisplaySide(side: string) {
 
 export function getOrderExecutionReportMsg(
   data: API.AlgoOrder | API.Order,
-  symbolsInfo: any
+  symbolsInfo: any,
 ) {
-  const { symbol, side, quantity } = data;
+  const { symbol, side, quantity, client_order_id } = data;
   const total_executed_quantity =
     "total_executed_quantity" in data ? data.total_executed_quantity : 0;
   const status = "status" in data ? data.status : data.algo_status;
@@ -32,15 +32,23 @@ export function getOrderExecutionReportMsg(
     "algo_type" in data && data.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL
       ? i18n.t("tpsl.entirePosition")
       : base_dp === undefined
-      ? quantity
-      : parseNumber(quantity, { dp: base_dp });
+        ? quantity
+        : parseNumber(quantity, { dp: base_dp });
 
   let title = "";
   let msg = "";
   switch (status) {
     case OrderStatus.NEW:
-      title = i18n.t("orders.status.opened.toast.title");
-      msg = `${displaySide} ${displaySymbol} ${displayQuantity}`;
+      const isScaledOrder = client_order_id?.startsWith("scaled_");
+      // if client_order_id is scaled order, show the scaled order message
+      if (isScaledOrder) {
+        title = i18n.t("orders.status.scaledSubOrderOpened.toast.title");
+        msg = `${displaySide} ${displaySymbol} ${displayQuantity}`;
+      } else {
+        title = i18n.t("orders.status.opened.toast.title");
+        msg = `${displaySide} ${displaySymbol} ${displayQuantity}`;
+      }
+
       break;
     case OrderStatus.FILLED:
     case OrderStatus.PARTIAL_FILLED:

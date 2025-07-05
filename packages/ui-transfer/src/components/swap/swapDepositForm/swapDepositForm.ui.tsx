@@ -107,11 +107,11 @@ export const SwapDepositForm: FC<UseSwapDepositFormScriptReturn> = (props) => {
         <Flex direction="column" itemAlign="start" mt={1} gapY={1}>
           <Flex justify="between" width="100%">
             {/* <SwapCoin token={token as any} dst={dst} price={swapPrice} /> */}
-            <SwapCoin
+            {/* <SwapCoin
               sourceSymbol={token as any}
               targetSymbol={dst.symbol}
               indexPrice={swapPrice}
-            />
+            /> */}
             {(needSwap || needCrossSwap) && (
               <Slippage value={slippage} onValueChange={onSlippageChange} />
             )}

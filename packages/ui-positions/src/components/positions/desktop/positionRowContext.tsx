@@ -66,10 +66,10 @@ export const PositionsRowProvider: FC<PositionsRowProviderProps> = (props) => {
 
   const symbol = position.symbol;
   const symbolsInfo = useSymbolsInfo();
-  const info = symbolsInfo?.[symbol];
-  const quoteDp = info("quote_dp");
-  const baseDp = info("base_dp");
-  const baseTick = info("base_tick");
+  const symbolInfo = symbolsInfo?.[symbol];
+  const quoteDp = symbolInfo("quote_dp");
+  const baseDp = symbolInfo("base_dp");
+  const baseTick = symbolInfo("base_tick");
 
   const {
     side,
@@ -94,7 +94,7 @@ export const PositionsRowProvider: FC<PositionsRowProviderProps> = (props) => {
         "order_quantity",
         value,
         position.mark_price,
-        info(),
+        symbolInfo(),
       ) as OrderEntity;
       setQuantity(newValues["order_quantity"] as string);
     },
@@ -108,7 +108,7 @@ export const PositionsRowProvider: FC<PositionsRowProviderProps> = (props) => {
         "order_price",
         value,
         position.mark_price,
-        info(),
+        symbolInfo(),
       ) as OrderEntity;
       setPrice(newValues["order_price"] as string);
     },
@@ -128,6 +128,23 @@ export const PositionsRowProvider: FC<PositionsRowProviderProps> = (props) => {
   }, []);
 
   const onSubmit = useCallback(async () => {
+    if (Number(quantity) > symbolInfo("base_max")) {
+      toast.error(
+        <div>
+          {t("positions.limitClose.errors.exceed.title")}
+          <br />
+          <div className="oui-break-normal">
+            {t("positions.limitClose.errors.exceed.description", {
+              quantity: quantity,
+              symbol: transSymbolformString(symbol, "base"),
+              maxQuantity: symbolInfo("base_max"),
+            })}
+          </div>
+        </div>,
+      );
+      return;
+    }
+
     return submit()
       .then((res) => {
         if (res.success) {
@@ -174,3 +191,15 @@ export const PositionsRowProvider: FC<PositionsRowProviderProps> = (props) => {
     </PositionsRowContext.Provider>
   );
 };
+
+function transSymbolformString(symbol: string, formatString = "base") {
+  const arr = symbol.split("_");
+  const type = arr[0];
+  const base = arr[1];
+  const quote = arr[2];
+
+  return (formatString ?? "base-quote")
+    .replace("type", type)
+    .replace("base", base)
+    .replace("quote", quote);
+}

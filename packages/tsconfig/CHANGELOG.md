@@ -1,20 +1,28 @@
 # tsconfig
 
-## 0.6.3-internal-multi-collateral.2
+## 0.7.1
+
+### Patch Changes
+
+- publish
+- 5a220e0: publish
+
+## 0.7.1-alpha.0
 
 ### Patch Changes
 
 - publish
 
-## 0.6.3-internal-multi-collateral.1
+## 0.7.0
 
-### Patch Changes
+### Minor Changes
 
+- decb695: publish
 - publish
 
-## 0.6.3-internal-multi-collateral.0
+## 0.7.0-alpha.0
 
-### Patch Changes
+### Minor Changes
 
 - publish
 

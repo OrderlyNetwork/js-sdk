@@ -31,6 +31,7 @@ import {
   tpslFields,
   hasTPSL,
   isBBOOrder,
+  getScaledOrderSkew,
 } from "./helper";
 import type { FullOrderState } from "./orderEntry.store";
 import { useOrderEntryNextInternal } from "./useOrderEntry.internal";
@@ -370,6 +371,7 @@ const useOrderEntry = (
       markPrice: actions.getMarkPriceBySymbol(symbol),
       maxQty,
       estSlippage,
+      askAndBid: askAndBid.current?.[0] || [],
     };
   }, [maxQty, symbol, estSlippage]);
 
@@ -478,6 +480,7 @@ const useOrderEntry = (
 
   /**
    * Validate the order
+   * TODO: confirm validate result return order
    */
   const validateOrder = (): Promise<OrderValidationResult | null> => {
     return new Promise<OrderValidationResult | null>(
@@ -512,9 +515,12 @@ const useOrderEntry = (
 
   const { freeCollateral, totalCollateral } = useCollateral();
 
+  // TODO: move to the calculation service
   const estLiqPrice = useMemo(() => {
     const markPrice = actions.getMarkPriceBySymbol(symbol);
-    if (!markPrice || !accountInfo) return null;
+    if (!markPrice || !accountInfo || !symbolInfo) {
+      return null;
+    }
 
     const orderQuantity = Number(formattedOrder.order_quantity);
 
@@ -523,21 +529,33 @@ const useOrderEntry = (
     }
 
     const estLiqPrice = calcEstLiqPrice(formattedOrder, askAndBid.current[0], {
-      baseIMR: symbolInfo?.base_imr,
-      baseMMR: symbolInfo?.base_mmr,
       markPrice,
       totalCollateral,
       futures_taker_fee_rate: accountInfo.futures_taker_fee_rate,
       imr_factor: accountInfo.imr_factor[symbol],
       symbol,
       positions,
+      symbolInfo,
     });
 
     return estLiqPrice;
-  }, [formattedOrder, accountInfo, positions, totalCollateral, symbol, maxQty]);
+  }, [
+    formattedOrder,
+    accountInfo,
+    positions,
+    totalCollateral,
+    symbol,
+    maxQty,
+    symbolInfo,
+  ]);
 
   const estLeverage = useMemo(() => {
+    if (!symbolInfo) {
+      return null;
+    }
+
     const orderQuantity = Number(formattedOrder.order_quantity);
+
     if (orderQuantity === 0 || orderQuantity > maxQty) {
       return null;
     }
@@ -546,8 +564,17 @@ const useOrderEntry = (
       totalCollateral,
       positions,
       symbol,
+      symbolInfo,
     });
-  }, [formattedOrder, accountInfo, positions, totalCollateral, symbol, maxQty]);
+  }, [
+    formattedOrder,
+    accountInfo,
+    positions,
+    totalCollateral,
+    symbol,
+    maxQty,
+    symbolInfo,
+  ]);
 
   const resetErrors = () => {
     setMeta(
@@ -599,15 +626,36 @@ const useOrderEntry = (
 
     const order = generateOrder(creator, prepareData());
 
-    const result = await doCreateOrder(order);
+    const isScaledOrder = order.order_type === OrderType.SCALED;
+
+    const params = isScaledOrder ? { orders: order.orders } : order;
+
+    const result = await doCreateOrder(params);
 
     if (result.success) {
-      track(TrackerEventName.placeOrderSuccess, {
+      let trackParams: any = {
         side: order.side,
         order_type: order.order_type,
         tp_sl: hasTPSL(formattedOrder),
         symbol: order.symbol,
-      });
+      };
+
+      if (isScaledOrder) {
+        const skew = getScaledOrderSkew({
+          skew: order.skew,
+          distribution_type: order.distribution_type,
+          total_orders: order.total_orders,
+        });
+        trackParams = {
+          ...trackParams,
+          order_type: "scaled",
+          distribution_type: order.distribution_type,
+          skew: new Decimal(skew).todp(2).toNumber(),
+          total_orders: order.total_orders,
+        };
+      }
+
+      track(TrackerEventName.placeOrderSuccess, trackParams);
     }
 
     if (result.success && resetOnSuccess) {
@@ -615,7 +663,6 @@ const useOrderEntry = (
       resetMetaState();
     }
     return result;
-    // return submit();
   };
 
   return {

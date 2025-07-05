@@ -1,9 +1,11 @@
 import { useTranslation } from "@orderly.network/i18n";
 import { Box, TabPanel, Tabs } from "@orderly.network/ui";
+import { FavoritesEmpty } from "../../../components/favoritesEmpty";
 import { FavoritesListFullWidget } from "../../../components/favoritesListFull";
 import { MarketsListFullWidget } from "../../../components/marketsListFull";
 import { SearchInput } from "../../../components/searchInput.tsx";
 import { AllMarketsIcon, FavoritesIcon, NewListingsIcon } from "../../../icons";
+import { MarketsTabName } from "../../../type";
 import { UseMarketsDataListScript } from "./marketsDataList.script";
 
 export type MarketsDataListProps = UseMarketsDataListScript;
@@ -29,7 +31,17 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
           value="favorites"
           testid="oui-testid-markets-favorites-tab"
         >
-          <FavoritesListFullWidget />
+          <FavoritesListFullWidget
+            emptyView={
+              !props.searchValue && (
+                <FavoritesEmpty
+                  onClick={() => {
+                    onTabChange(MarketsTabName.All);
+                  }}
+                />
+              )
+            }
+          />
         </TabPanel>
         <TabPanel
           title={t("markets.allMarkets")}

@@ -34,7 +34,7 @@ export const parseNumber = (
     return "--";
   }
 
-  dp = typeof dp !== "undefined" ? dp : tick ? getPrecisionByNumber(tick) : 2;
+  dp = dp != null ? dp : tick ? getPrecisionByNumber(tick) : 2;
 
   if (rule === "human") {
     return numberToHumanStyle(

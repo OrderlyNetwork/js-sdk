@@ -1,5 +1,3 @@
-import { API } from "@orderly.network/types";
-
 export enum SwapMode {
   Single,
   Cross,
@@ -33,15 +31,3 @@ export type SymbolInfo = {
   amount: string;
   decimals: number;
 };
-
-export type NetworkInfos = API.NetworkInfos & {
-  woofi_dex_cross_chain_router: string;
-  woofi_dex_depositor: string;
-};
-
-export type TokenInfo = API.TokenInfo & {
-  swap_enable: boolean;
-  woofi_dex_precision: string;
-};
-
-export type InputStatus = "error" | "warning" | "success" | "default";

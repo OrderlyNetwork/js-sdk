@@ -7,10 +7,10 @@ import {
   useLocalStorage,
   useWalletConnector,
 } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 import { API, NetworkId } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
 import { int2hex, praseChainIdToNumber } from "@orderly.network/utils";
-import { useTranslation } from "@orderly.network/i18n";
 
 export type CurrentChain = Pick<ConnectedChain, "namespace"> & {
   id: number;
@@ -31,8 +31,6 @@ export function useChainSelect() {
   });
 
   const currentChain = useMemo(() => {
-    // if (!connectedChain) return null;
-
     const chainId = connectedChain
       ? praseChainIdToNumber(connectedChain.id)
       : parseInt(linkDeviceStorage?.chainId);
@@ -67,19 +65,21 @@ export function useChainSelect() {
         chainId: int2hex(Number(chainInfo.network_infos?.chain_id)),
       })
         .then((switched) => {
-          switched
-            ? toast.success(t("connector.networkSwitched"))
-            : toast.error(t("connector.switchChain.failed"));
+          if (switched) {
+            toast.success(t("connector.networkSwitched"));
+          } else {
+            toast.error(t("connector.switchChain.failed"));
+          }
         })
         .catch((error) => {
           if (error && error.message) {
             toast.error(
-              `${t("connector.switchChain.failed")}: ${error.message}`
+              `${t("connector.switchChain.failed")}: ${error.message}`,
             );
           }
         });
     },
-    [currentChain, setChain, findByChainId]
+    [currentChain, setChain, findByChainId],
   );
 
   return {

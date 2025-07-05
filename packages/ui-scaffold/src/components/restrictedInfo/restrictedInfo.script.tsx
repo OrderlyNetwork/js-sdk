@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
+import { useConfig, useLocalStorage } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
-import { useConfig } from "@orderly.network/hooks";
 import { useObserverElement } from "@orderly.network/ui";
 
 export type UseRestrictedInfoScriptReturn = ReturnType<
@@ -14,6 +14,12 @@ export const useRestrictedInfoScript = () => {
   const brokerName = useConfig("brokerName");
   const container = useRef<HTMLDivElement>(null);
   const [mutiLine, setMutiLine] = useState(false);
+  const [agree, setAgree] = useState(false);
+
+  const [canUnblock, setCanUnblock] = useLocalStorage(
+    "orderly_unblock_restricted",
+    true,
+  );
 
   useObserverElement(container.current, (entry) => {
     setMutiLine(entry.contentRect.height > 28);
@@ -24,5 +30,7 @@ export const useRestrictedInfoScript = () => {
     brokerName,
     container,
     mutiLine,
+    agree,
+    setAgree,
   };
 };

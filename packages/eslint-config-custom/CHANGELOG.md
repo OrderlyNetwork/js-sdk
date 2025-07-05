@@ -1,20 +1,28 @@
 # eslint-config-custom
 
-## 1.3.3-internal-multi-collateral.2
+## 1.4.1
+
+### Patch Changes
+
+- publish
+- 5a220e0: publish
+
+## 1.4.1-alpha.0
 
 ### Patch Changes
 
 - publish
 
-## 1.3.3-internal-multi-collateral.1
+## 1.4.0
 
-### Patch Changes
+### Minor Changes
 
+- decb695: publish
 - publish
 
-## 1.3.3-internal-multi-collateral.0
+## 1.4.0-alpha.0
 
-### Patch Changes
+### Minor Changes
 
 - publish
 
