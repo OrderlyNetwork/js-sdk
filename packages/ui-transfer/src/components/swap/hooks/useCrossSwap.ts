@@ -65,8 +65,10 @@ export const useCrossSwap = (): any => {
   }, [txHashFromBridge.current]);
 
   const checkLayerStatus = useCallback((txHash: string) => {
-    checkLayerStatusListener.current &&
+    if (checkLayerStatusListener.current) {
       clearTimeout(checkLayerStatusListener.current);
+    }
+
     checkLayerStatusListener.current = setTimeout(async () => {
       try {
         const { messages } = await client.getMessagesBySrcTxHash(txHash);
@@ -146,16 +148,16 @@ export const useCrossSwap = (): any => {
     if (loading) return;
     start();
 
-    const quotoLZFee = await account.walletAdapter.call(
-      crossChainRouteAddress,
-      "quoteLayerZeroFee",
-      [account.address, dst, dstValutDeposit()],
-      {
-        abi: woofiDexCrossSwapChainRouterAbi,
-      },
-    );
-
     try {
+      const quotoLZFee = await account.walletAdapter.call(
+        crossChainRouteAddress,
+        "quoteLayerZeroFee",
+        [account.address, dst, dstValutDeposit()],
+        {
+          abi: woofiDexCrossSwapChainRouterAbi,
+        },
+      );
+
       const result = await account.walletAdapter.sendTransaction(
         crossChainRouteAddress,
         "crossSwap",
@@ -179,6 +181,7 @@ export const useCrossSwap = (): any => {
       // @ts-ignore
       return pick(["from", "to", "hash", "value"], result);
     } catch (e: any) {
+      console.error("crossSwap error", e);
       stop();
       throw new Error(e.errorCode);
     }

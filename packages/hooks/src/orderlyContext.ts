@@ -34,7 +34,7 @@ export interface OrderlyConfigContextState {
   // extraApis:ExtraAPIs
   filteredChains?: filteredChains | null;
   customChains?: Chains<undefined, undefined>;
-  customChainsFormat?: (params: {
+  chainTransformer?: (params: {
     chains: API.Chain[];
     tokenChains: API.Chain[];
     chainInfos: any[];

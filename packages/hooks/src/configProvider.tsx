@@ -44,7 +44,7 @@ export type BaseConfigProviderProps = {
   chainFilter?: filteredChains | filterChainsFunc;
 } & Pick<
   OrderlyConfigContextState,
-  "customChainsFormat" | "enableSwapDeposit" | "customChains"
+  "enableSwapDeposit" | "customChains" | "chainTransformer"
 >;
 
 export type ExclusiveConfigProviderProps =
@@ -80,7 +80,7 @@ export const OrderlyConfigProvider: FC<
     chainFilter,
     customChains,
     enableSwapDeposit = true,
-    customChainsFormat,
+    chainTransformer,
   } = props;
 
   if (!brokerId && typeof configStore === "undefined") {
@@ -185,7 +185,7 @@ export const OrderlyConfigProvider: FC<
         // apiBaseUrl,
         customChains,
         enableSwapDeposit,
-        customChainsFormat,
+        chainTransformer,
       }}
     >
       <StatusProvider>
