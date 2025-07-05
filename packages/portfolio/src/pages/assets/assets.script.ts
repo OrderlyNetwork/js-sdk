@@ -111,6 +111,8 @@ export const useAssetsScript = () => {
             .mul(indexPrice)
             .toNumber();
 
+          // console.log(tokenInfo, holding, indexPrice, tokenInfoMap);
+
           // Calculate collateral ratio for this token
           const collateralRatio = tokenInfo
             ? account.collateralRatio({

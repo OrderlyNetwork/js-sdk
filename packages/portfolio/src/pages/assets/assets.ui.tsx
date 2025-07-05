@@ -182,7 +182,7 @@ export const AssetsTable: React.FC<Readonly<AssetsWidgetProps>> = (props) => {
   }, [holding]);
 
   return (
-    <Card className="oui-w-full">
+    <Card classNames={{ content: "!oui-py-6" }}>
       <Tabs
         defaultValue="assets"
         variant="contained"
