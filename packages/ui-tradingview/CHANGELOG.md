@@ -1,5 +1,20 @@
 # @orderly.network/ui-tradingview
 
+## 2.4.1-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.4.1-alpha.0
+  - @orderly.network/i18n@2.4.1-alpha.0
+  - @orderly.network/net@2.4.1-alpha.0
+  - @orderly.network/types@2.4.1-alpha.0
+  - @orderly.network/ui@2.4.1-alpha.0
+  - @orderly.network/ui-connector@2.4.1-alpha.0
+  - @orderly.network/ui-positions@2.4.1-alpha.0
+  - @orderly.network/utils@2.4.1-alpha.0
+
 ## 2.4.0
 
 ### Minor Changes
