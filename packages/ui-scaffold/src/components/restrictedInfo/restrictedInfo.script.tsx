@@ -21,8 +21,6 @@ export const useRestrictedInfoScript = () => {
     true,
   );
 
-  console.log("restrictedInfo", restrictedInfo);
-
   useObserverElement(container.current, (entry) => {
     setMutiLine(entry.contentRect.height > 28);
   });

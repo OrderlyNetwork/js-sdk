@@ -98,10 +98,11 @@ export const useRestrictedInfo = (options?: RestrictedInfoOptions) => {
   }, [
     ipInfo,
     restrictedAreas,
-    enableDefault,
-    customRestrictedIps,
-    customRestrictedRegions,
     accessRestricted,
+    enableDefault,
+    // it will lead to infinite re-render when these values change, so we don't need to watch these
+    // customRestrictedIps,
+    // customRestrictedRegions,
   ]);
 
   return {
