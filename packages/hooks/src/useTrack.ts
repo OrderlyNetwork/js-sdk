@@ -24,6 +24,8 @@ export const useTrack = () => {
           page_url: url,
           page_domain: origin,
           user_agent: userAgent,
+          sdk_version:
+            window?.__ORDERLY_VERSION__?.["@orderly.network/net"] ?? "",
         });
         if (eventName === TrackerEventName.placeOrderSuccess) {
           Object.assign(params, {

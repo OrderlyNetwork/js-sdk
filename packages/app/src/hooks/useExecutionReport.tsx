@@ -1,11 +1,11 @@
 import { useEffect, useRef } from "react";
-import { getOrderExecutionReportMsg } from "./getOrderExecutionReportMsg";
 import {
   useSymbolsInfo,
   useEventEmitter,
   useDebouncedCallback,
 } from "@orderly.network/hooks";
 import { toast } from "@orderly.network/ui";
+import { getOrderExecutionReportMsg } from "./getOrderExecutionReportMsg";
 
 export function useExecutionReport() {
   const ee = useEventEmitter();
@@ -21,8 +21,11 @@ export function useExecutionReport() {
     const showToast = (data: any) => {
       const { title, msg } = getOrderExecutionReportMsg(
         data,
-        symbolsInfoRef.current
+        symbolsInfoRef.current,
       );
+
+      // only show latest msg for same order type
+      const orderType = data.algo_type || data.type;
 
       if (title && msg) {
         toast.success(
@@ -32,7 +35,10 @@ export function useExecutionReport() {
             <div className="orderly-text-white/[0.54] orderly-text-xs">
               {msg}
             </div>
-          </div>
+          </div>,
+          {
+            id: orderType,
+          },
         );
       }
     };

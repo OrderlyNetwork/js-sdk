@@ -381,7 +381,8 @@ export function filterAndUpdateChains(
   filter?: (chain: any) => boolean,
   isTestNet?: boolean,
 ) {
-  const filterChains: API.Chain[] = [];
+  // const filterChains: API.Chain[] = [];
+  const chainsMap = new Map<number, API.Chain>();
 
   chains.forEach((chain) => {
     const _chain = { ...chain };
@@ -410,11 +411,11 @@ export function filterAndUpdateChains(
     }
 
     if (networkInfo) {
-      filterChains.push(_chain);
+      chainsMap.set(chain.network_infos.chain_id, _chain);
     }
   });
 
-  return filterChains;
+  return Array.from(chainsMap.values());
 }
 
 /** if chain is testnet, update testnet network_infos */

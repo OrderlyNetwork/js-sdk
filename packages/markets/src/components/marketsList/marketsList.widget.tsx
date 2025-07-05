@@ -23,6 +23,7 @@ export type MarketsListWidgetProps = {
     data: any[],
     options: { favorites: Favorite[]; selectedFavoriteTab: FavoriteTab },
   ) => any[];
+  emptyView?: ReactNode;
 };
 
 export const MarketsListWidget: React.FC<MarketsListWidgetProps> = (props) => {
@@ -37,6 +38,7 @@ export const MarketsListWidget: React.FC<MarketsListWidgetProps> = (props) => {
       tableClassNames={props.tableClassNames}
       rowClassName={props.rowClassName}
       renderHeader={props.renderHeader}
+      emptyView={props.emptyView}
     />
   );
 };

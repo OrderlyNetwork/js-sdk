@@ -142,6 +142,10 @@ export const usePrivateDataObserver = (options: {
   const isHoldingInit = useRef(false);
 
   useEffect(() => {
+    isHoldingInit.current = false;
+  }, [state.accountId]);
+
+  useEffect(() => {
     if (!holding) {
       return;
     }

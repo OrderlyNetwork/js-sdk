@@ -24,6 +24,7 @@ export const markets = {
   "markets.favorites.tabs.delete.dialog.title": "Delete list",
   "markets.favorites.tabs.delete.dialog.description":
     "Are you sure you want to delete {{name}}?",
+  "markets.favorites.addFavorites": "Add favorites",
 
   "markets.column.market": "Market",
   "markets.column.24hChange": "24h change",

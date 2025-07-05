@@ -1,5 +1,1721 @@
 # Locale Changelog
 
+## 2.4.0
+
+### Added Keys
+
+#### Language: **en**
+
+| Key                                                | Value                                                                                                                                                                                                                                        |
+| -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| common.orderPrice                                  | Order price                                                                                                                                                                                                                                  |
+| markets.favorites.addFavorites                     | Add favorites                                                                                                                                                                                                                                |
+| positions.limitClose.errors.exceed.title           | Close size limit exceeded                                                                                                                                                                                                                    |
+| positions.limitClose.errors.exceed.description     | Cannot close {{quantity}} {{symbol}} position. Max allowed per close is {{maxQuantity}} {{symbol}}.                                                                                                                                          |
+| orders.status.scaledSubOrderOpened.toast.title     | Scale order: sub-order opened                                                                                                                                                                                                                |
+| orderEntry.orderType.scaledOrder                   | Scaled                                                                                                                                                                                                                                       |
+| orderEntry.upperPrice                              | Upper price                                                                                                                                                                                                                                  |
+| orderEntry.lowerPrice                              | Lower price                                                                                                                                                                                                                                  |
+| orderEntry.skew                                    | Skew                                                                                                                                                                                                                                         |
+| orderEntry.totalOrders                             | Total orders                                                                                                                                                                                                                                 |
+| orderEntry.totalQuantity                           | Total quantity                                                                                                                                                                                                                               |
+| orderEntry.quantityDistribution                    | Qty distribution                                                                                                                                                                                                                             |
+| orderEntry.quantityDistribution.description        | Controls how order size is distributed across price levels.                                                                                                                                                                                  |
+| orderEntry.quantityDistribution.formula            | Size Skew = (Size at highest price) ÷ (Size at lowest price)                                                                                                                                                                                 |
+| orderEntry.distributionType.flat                   | Flat                                                                                                                                                                                                                                         |
+| orderEntry.distributionType.ascending              | Ascending                                                                                                                                                                                                                                    |
+| orderEntry.distributionType.ascending.abbr         | Asc.                                                                                                                                                                                                                                         |
+| orderEntry.distributionType.descending             | Descending                                                                                                                                                                                                                                   |
+| orderEntry.distributionType.descending.abbr        | Desc.                                                                                                                                                                                                                                        |
+| orderEntry.distributionType.custom                 | Custom                                                                                                                                                                                                                                       |
+| orderEntry.distributionType.flat.description       | Uniform order allocation across the range.                                                                                                                                                                                                   |
+| orderEntry.distributionType.ascending.description  | Greater size allocated to higher price levels.                                                                                                                                                                                               |
+| orderEntry.distributionType.descending.description | Greater size allocated to lower price levels.                                                                                                                                                                                                |
+| orderEntry.confirmScaledOrder                      | Confirm scaled order                                                                                                                                                                                                                         |
+| orderEntry.upperPrice.error.required               | Upper price is required                                                                                                                                                                                                                      |
+| orderEntry.upperPrice.error.min                    | Upper price must be greater than {{value}}                                                                                                                                                                                                   |
+| orderEntry.upperPrice.error.max                    | Upper price must be less than {{value}}                                                                                                                                                                                                      |
+| orderEntry.lowerPrice.error.required               | Lower price is required                                                                                                                                                                                                                      |
+| orderEntry.lowerPrice.error.min                    | Lower price must be greater than {{value}}                                                                                                                                                                                                   |
+| orderEntry.lowerPrice.error.max                    | Lower price must be less than upper price                                                                                                                                                                                                    |
+| orderEntry.totalOrders.error.required              | Total orders is required                                                                                                                                                                                                                     |
+| orderEntry.totalOrders.error.range                 | Total orders must be in the range of 2 to 20.                                                                                                                                                                                                |
+| orderEntry.skew.error.required                     | Skew is required                                                                                                                                                                                                                             |
+| orderEntry.skew.error.min                          | Skew must be greater than {{value}}                                                                                                                                                                                                          |
+| orderEntry.skew.error.max                          | Skew must be less than {{value}}                                                                                                                                                                                                             |
+| orderEntry.confirmScaledOrder.orderPrice.warning   | This order will be filled immediately based on the current market price.                                                                                                                                                                     |
+| orderEntry.scaledOrder.fullySuccessful             | Scaled order placed: {{total}} orders submitted successfully.                                                                                                                                                                                |
+| orderEntry.scaledOrder.partiallySuccessful         | Scaled order partially submitted: {{successCount}} of {{total}} orders placed.                                                                                                                                                               |
+| orderEntry.scaledOrder.allFailed                   | Scaled order failed. No orders were placed.                                                                                                                                                                                                  |
+| restrictedInfo.accessRestricted                    | Access Restricted                                                                                                                                                                                                                            |
+| restrictedInfo.accessRestricted.description        | Due to laws and regulations, we currently do not operate in the United States. By continuing to use our platform, you represent and warrant at all times that you are not a resident of the United States throughout the period of such use. |
+| restrictedInfo.accessRestricted.agree              | I understand and agree                                                                                                                                                                                                                       |
+
+#### Language: **zh**
+
+| Key                                                | Value                                                                                                    |
+| -------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| common.orderPrice                                  | 订单价格                                                                                                 |
+| markets.favorites.addFavorites                     | 添加收藏                                                                                                 |
+| positions.limitClose.errors.exceed.title           | 超出平仓数量限制                                                                                         |
+| positions.limitClose.errors.exceed.description     | 无法平仓 {{quantity}} {{symbol}} 仓位。每次平仓最大允许数量为 {{maxQuantity}} {{symbol}}。               |
+| orders.status.scaledSubOrderOpened.toast.title     | 分批订单：子订单已开启                                                                                   |
+| orderEntry.orderType.scaledOrder                   | 阶梯订单                                                                                                 |
+| orderEntry.upperPrice                              | 最高价格                                                                                                 |
+| orderEntry.lowerPrice                              | 最低价格                                                                                                 |
+| orderEntry.skew                                    | 偏差                                                                                                     |
+| orderEntry.totalOrders                             | 订单总数                                                                                                 |
+| orderEntry.totalQuantity                           | 总数量                                                                                                   |
+| orderEntry.quantityDistribution                    | 数量分布                                                                                                 |
+| orderEntry.quantityDistribution.description        | 控制订单数量在不同价格区间的分布方式。                                                                   |
+| orderEntry.quantityDistribution.formula            | 数量偏差 = (最高价格的数量) ÷ (最低价格的数量)                                                           |
+| orderEntry.distributionType.flat                   | 均匀                                                                                                     |
+| orderEntry.distributionType.ascending              | 递增                                                                                                     |
+| orderEntry.distributionType.ascending.abbr         | 递增                                                                                                     |
+| orderEntry.distributionType.descending             | 递减                                                                                                     |
+| orderEntry.distributionType.descending.abbr        | 递减                                                                                                     |
+| orderEntry.distributionType.custom                 | 自定义                                                                                                   |
+| orderEntry.distributionType.flat.description       | 在价格区间内均匀分配订单数量。                                                                           |
+| orderEntry.distributionType.ascending.description  | 在较高价格区间分配更多数量。                                                                             |
+| orderEntry.distributionType.descending.description | 在较低价格区间分配更多数量。                                                                             |
+| orderEntry.confirmScaledOrder                      | 确认阶梯订单                                                                                             |
+| orderEntry.upperPrice.error.required               | 请输入最高价格                                                                                           |
+| orderEntry.upperPrice.error.min                    | 最高价格必须大于 {{value}}                                                                               |
+| orderEntry.upperPrice.error.max                    | 最高价格必须小于 {{value}}                                                                               |
+| orderEntry.lowerPrice.error.required               | 请输入最低价格                                                                                           |
+| orderEntry.lowerPrice.error.min                    | 最低价格必须大于 {{value}}                                                                               |
+| orderEntry.lowerPrice.error.max                    | 最低价格必须小于最高价格                                                                                 |
+| orderEntry.totalOrders.error.required              | 请输入订单总数                                                                                           |
+| orderEntry.totalOrders.error.range                 | 订单总数必须在2到20之间                                                                                  |
+| orderEntry.skew.error.required                     | 请输入偏差值                                                                                             |
+| orderEntry.skew.error.min                          | 偏差必须大于 {{value}}                                                                                   |
+| orderEntry.skew.error.max                          | 偏差必须小于 {{value}}                                                                                   |
+| orderEntry.confirmScaledOrder.orderPrice.warning   | 基于当前市场价格，此订单将立即成交                                                                       |
+| orderEntry.scaledOrder.fullySuccessful             | 分批订单已提交：{{total}}个订单全部提交成功。                                                            |
+| orderEntry.scaledOrder.partiallySuccessful         | 分批订单部分提交：{{total}}个订单中的{{successCount}}个已成功提交。                                      |
+| orderEntry.scaledOrder.allFailed                   | 分批订单失败。没有订单被成功提交。                                                                       |
+| restrictedInfo.accessRestricted                    | 访问受限                                                                                                 |
+| restrictedInfo.accessRestricted.description        | 根据法律法规，我们目前不在美国开展业务。继续使用我们的平台即表示您声明并保证在使用期间始终不是美国居民。 |
+| restrictedInfo.accessRestricted.agree              | 我理解并同意                                                                                             |
+
+#### Language: **vi**
+
+| Key                                                | Value                                                                                                                                                                                                                  |
+| -------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| common.orderPrice                                  | Giá đặt lệnh                                                                                                                                                                                                           |
+| markets.favorites.addFavorites                     | Thêm vào yêu thích                                                                                                                                                                                                     |
+| positions.limitClose.errors.exceed.title           | Vượt quá giới hạn đóng vị thế                                                                                                                                                                                          |
+| positions.limitClose.errors.exceed.description     | Không thể đóng vị thế {{quantity}} {{symbol}}. Số lượng tối đa cho phép mỗi lần đóng là {{maxQuantity}} {{symbol}}.                                                                                                    |
+| orders.status.scaledSubOrderOpened.toast.title     | Lệnh theo tỷ lệ: đã mở lệnh con                                                                                                                                                                                        |
+| orderEntry.orderType.scaledOrder                   | Lệnh theo tỷ lệ                                                                                                                                                                                                        |
+| orderEntry.upperPrice                              | Giá cao nhất                                                                                                                                                                                                           |
+| orderEntry.lowerPrice                              | Giá thấp nhất                                                                                                                                                                                                          |
+| orderEntry.skew                                    | Độ lệch                                                                                                                                                                                                                |
+| orderEntry.totalOrders                             | Tổng số lệnh                                                                                                                                                                                                           |
+| orderEntry.totalQuantity                           | Tổng số lượng                                                                                                                                                                                                          |
+| orderEntry.quantityDistribution                    | Phân phối số lượng                                                                                                                                                                                                     |
+| orderEntry.quantityDistribution.description        | Kiểm soát phân phối kích thước lệnh giữa các mức giá.                                                                                                                                                                  |
+| orderEntry.quantityDistribution.formula            | Độ lệch kích thước = (Kích thước ở giá cao nhất) ÷ (Kích thước ở giá thấp nhất)                                                                                                                                        |
+| orderEntry.distributionType.flat                   | Đều                                                                                                                                                                                                                    |
+| orderEntry.distributionType.ascending              | Tăng dần                                                                                                                                                                                                               |
+| orderEntry.distributionType.ascending.abbr         | Tăng                                                                                                                                                                                                                   |
+| orderEntry.distributionType.descending             | Giảm dần                                                                                                                                                                                                               |
+| orderEntry.distributionType.descending.abbr        | Giảm                                                                                                                                                                                                                   |
+| orderEntry.distributionType.custom                 | Tùy chỉnh                                                                                                                                                                                                              |
+| orderEntry.distributionType.flat.description       | Phân bổ lệnh đồng đều trong phạm vi.                                                                                                                                                                                   |
+| orderEntry.distributionType.ascending.description  | Phân bổ kích thước lớn hơn cho mức giá cao hơn.                                                                                                                                                                        |
+| orderEntry.distributionType.descending.description | Phân bổ kích thước lớn hơn cho mức giá thấp hơn.                                                                                                                                                                       |
+| orderEntry.confirmScaledOrder                      | Xác nhận lệnh theo tỷ lệ                                                                                                                                                                                               |
+| orderEntry.upperPrice.error.required               | Vui lòng nhập giá cao nhất                                                                                                                                                                                             |
+| orderEntry.upperPrice.error.min                    | Giá cao nhất phải lớn hơn {{value}}                                                                                                                                                                                    |
+| orderEntry.upperPrice.error.max                    | Giá cao nhất phải nhỏ hơn {{value}}                                                                                                                                                                                    |
+| orderEntry.lowerPrice.error.required               | Vui lòng nhập giá thấp nhất                                                                                                                                                                                            |
+| orderEntry.lowerPrice.error.min                    | Giá thấp nhất phải lớn hơn {{value}}                                                                                                                                                                                   |
+| orderEntry.lowerPrice.error.max                    | Giá thấp nhất phải nhỏ hơn giá cao nhất                                                                                                                                                                                |
+| orderEntry.totalOrders.error.required              | Vui lòng nhập tổng số lệnh                                                                                                                                                                                             |
+| orderEntry.totalOrders.error.range                 | Tổng số lệnh phải từ 2 đến 20                                                                                                                                                                                          |
+| orderEntry.skew.error.required                     | Vui lòng nhập độ lệch                                                                                                                                                                                                  |
+| orderEntry.skew.error.min                          | Độ lệch phải lớn hơn {{value}}                                                                                                                                                                                         |
+| orderEntry.skew.error.max                          | Độ lệch phải nhỏ hơn {{value}}                                                                                                                                                                                         |
+| orderEntry.confirmScaledOrder.orderPrice.warning   | Lệnh này sẽ được khớp ngay lập tức dựa trên giá thị trường hiện tại                                                                                                                                                    |
+| orderEntry.scaledOrder.fullySuccessful             | Đã đặt lệnh theo tỷ lệ: {{total}} lệnh đã được gửi thành công.                                                                                                                                                         |
+| orderEntry.scaledOrder.partiallySuccessful         | Lệnh theo tỷ lệ được gửi một phần: {{successCount}} trong số {{total}} lệnh đã được đặt.                                                                                                                               |
+| orderEntry.scaledOrder.allFailed                   | Lệnh theo tỷ lệ thất bại. Không có lệnh nào được đặt.                                                                                                                                                                  |
+| restrictedInfo.accessRestricted                    | Hạn chế Truy cập                                                                                                                                                                                                       |
+| restrictedInfo.accessRestricted.description        | Do luật pháp và quy định, hiện tại chúng tôi không hoạt động tại Hoa Kỳ. Bằng việc tiếp tục sử dụng nền tảng của chúng tôi, bạn cam đoan và đảm bảo rằng bạn không phải là cư dân Hoa Kỳ trong suốt thời gian sử dụng. |
+| restrictedInfo.accessRestricted.agree              | Tôi hiểu và đồng ý                                                                                                                                                                                                     |
+
+#### Language: **uk**
+
+| Key                                                | Value                                                                                                                                                                                                                                     |
+| -------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| common.orderPrice                                  | Ціна ордера                                                                                                                                                                                                                               |
+| markets.favorites.addFavorites                     | Додати до обраного                                                                                                                                                                                                                        |
+| positions.limitClose.errors.exceed.title           | Перевищено ліміт закриття позиції                                                                                                                                                                                                         |
+| positions.limitClose.errors.exceed.description     | Неможливо закрити позицію {{quantity}} {{symbol}}. Максимально дозволений обсяг на одне закриття {{maxQuantity}} {{symbol}}.                                                                                                              |
+| orders.status.scaledSubOrderOpened.toast.title     | Масштабований ордер: відкрито підордер                                                                                                                                                                                                    |
+| orderEntry.orderType.scaledOrder                   | Масштабований ордер                                                                                                                                                                                                                       |
+| orderEntry.upperPrice                              | Верхня ціна                                                                                                                                                                                                                               |
+| orderEntry.lowerPrice                              | Нижня ціна                                                                                                                                                                                                                                |
+| orderEntry.skew                                    | Перекіс                                                                                                                                                                                                                                   |
+| orderEntry.totalOrders                             | Всього ордерів                                                                                                                                                                                                                            |
+| orderEntry.totalQuantity                           | Загальна кількість                                                                                                                                                                                                                        |
+| orderEntry.quantityDistribution                    | Розподіл кількості                                                                                                                                                                                                                        |
+| orderEntry.quantityDistribution.description        | Контролює розподіл розміру ордера між рівнями цін.                                                                                                                                                                                        |
+| orderEntry.quantityDistribution.formula            | Перекіс розміру = (Розмір за найвищою ціною) ÷ (Розмір за найнижчою ціною)                                                                                                                                                                |
+| orderEntry.distributionType.flat                   | Рівномірний                                                                                                                                                                                                                               |
+| orderEntry.distributionType.ascending              | За зростанням                                                                                                                                                                                                                             |
+| orderEntry.distributionType.ascending.abbr         | Зрост.                                                                                                                                                                                                                                    |
+| orderEntry.distributionType.descending             | За спаданням                                                                                                                                                                                                                              |
+| orderEntry.distributionType.descending.abbr        | Спад.                                                                                                                                                                                                                                     |
+| orderEntry.distributionType.custom                 | Користувацький                                                                                                                                                                                                                            |
+| orderEntry.distributionType.flat.description       | Рівномірний розподіл ордерів по діапазону.                                                                                                                                                                                                |
+| orderEntry.distributionType.ascending.description  | Більший розмір на вищих цінових рівнях.                                                                                                                                                                                                   |
+| orderEntry.distributionType.descending.description | Більший розмір на нижчих цінових рівнях.                                                                                                                                                                                                  |
+| orderEntry.confirmScaledOrder                      | Підтвердити масштабований ордер                                                                                                                                                                                                           |
+| orderEntry.upperPrice.error.required               | Потрібна верхня ціна                                                                                                                                                                                                                      |
+| orderEntry.upperPrice.error.min                    | Верхня ціна має бути більша за {{value}}                                                                                                                                                                                                  |
+| orderEntry.upperPrice.error.max                    | Верхня ціна має бути менша за {{value}}                                                                                                                                                                                                   |
+| orderEntry.lowerPrice.error.required               | Потрібна нижня ціна                                                                                                                                                                                                                       |
+| orderEntry.lowerPrice.error.min                    | Нижня ціна має бути більша за {{value}}                                                                                                                                                                                                   |
+| orderEntry.lowerPrice.error.max                    | Нижня ціна має бути менша за верхню ціну                                                                                                                                                                                                  |
+| orderEntry.totalOrders.error.required              | Потрібна загальна кількість ордерів                                                                                                                                                                                                       |
+| orderEntry.totalOrders.error.range                 | Загальна кількість ордерів має бути від 2 до 20                                                                                                                                                                                           |
+| orderEntry.skew.error.required                     | Потрібен перекіс                                                                                                                                                                                                                          |
+| orderEntry.skew.error.min                          | Перекіс має бути більшим за {{value}}                                                                                                                                                                                                     |
+| orderEntry.skew.error.max                          | Перекіс має бути меншим за {{value}}                                                                                                                                                                                                      |
+| orderEntry.confirmScaledOrder.orderPrice.warning   | Цей ордер буде виконано негайно за поточною ринковою ціною                                                                                                                                                                                |
+| orderEntry.scaledOrder.fullySuccessful             | Масштабований ордер розміщено: {{total}} ордерів успішно надіслано.                                                                                                                                                                       |
+| orderEntry.scaledOrder.partiallySuccessful         | Масштабований ордер частково надіслано: розміщено {{successCount}} з {{total}} ордерів.                                                                                                                                                   |
+| orderEntry.scaledOrder.allFailed                   | Масштабований ордер не виконано. Жодного ордера не було розміщено.                                                                                                                                                                        |
+| restrictedInfo.accessRestricted                    | Доступ обмежено                                                                                                                                                                                                                           |
+| restrictedInfo.accessRestricted.description        | Відповідно до законів та нормативних актів, ми наразі не працюємо в Сполучених Штатах. Продовжуючи користуватися нашою платформою, ви заявляєте та гарантуєте, що не є резидентом Сполучених Штатів протягом усього періоду використання. |
+| restrictedInfo.accessRestricted.agree              | Я розумію та погоджуюся                                                                                                                                                                                                                   |
+
+#### Language: **tr**
+
+| Key                                                | Value                                                                                                                                                                                                                                             |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| common.orderPrice                                  | Emir fiyatı                                                                                                                                                                                                                                       |
+| markets.favorites.addFavorites                     | Favorilere ekle                                                                                                                                                                                                                                   |
+| positions.limitClose.errors.exceed.title           | Pozisyon kapatma limiti aşıldı                                                                                                                                                                                                                    |
+| positions.limitClose.errors.exceed.description     | {{quantity}} {{symbol}} pozisyonu kapatılamıyor. Kapatma başına izin verilen maksimum miktar {{maxQuantity}} {{symbol}}.                                                                                                                          |
+| orders.status.scaledSubOrderOpened.toast.title     | Ölçekli emir: alt emir açıldı                                                                                                                                                                                                                     |
+| orderEntry.orderType.scaledOrder                   | Ölçekli emir                                                                                                                                                                                                                                      |
+| orderEntry.upperPrice                              | Üst fiyat                                                                                                                                                                                                                                         |
+| orderEntry.lowerPrice                              | Alt fiyat                                                                                                                                                                                                                                         |
+| orderEntry.skew                                    | Eğim                                                                                                                                                                                                                                              |
+| orderEntry.totalOrders                             | Toplam emir                                                                                                                                                                                                                                       |
+| orderEntry.totalQuantity                           | Toplam miktar                                                                                                                                                                                                                                     |
+| orderEntry.quantityDistribution                    | Miktar dağılımı                                                                                                                                                                                                                                   |
+| orderEntry.quantityDistribution.description        | Emir büyüklüğünün fiyat seviyeleri arasındaki dağılımını kontrol eder.                                                                                                                                                                            |
+| orderEntry.quantityDistribution.formula            | Büyüklük Eğimi = (En yüksek fiyattaki büyüklük) ÷ (En düşük fiyattaki büyüklük)                                                                                                                                                                   |
+| orderEntry.distributionType.flat                   | Düz                                                                                                                                                                                                                                               |
+| orderEntry.distributionType.ascending              | Artan                                                                                                                                                                                                                                             |
+| orderEntry.distributionType.ascending.abbr         | Art.                                                                                                                                                                                                                                              |
+| orderEntry.distributionType.descending             | Azalan                                                                                                                                                                                                                                            |
+| orderEntry.distributionType.descending.abbr        | Az.                                                                                                                                                                                                                                               |
+| orderEntry.distributionType.custom                 | Özel                                                                                                                                                                                                                                              |
+| orderEntry.distributionType.flat.description       | Aralık boyunca eşit emir dağılımı.                                                                                                                                                                                                                |
+| orderEntry.distributionType.ascending.description  | Daha yüksek fiyat seviyelerine daha büyük hacim tahsisi.                                                                                                                                                                                          |
+| orderEntry.distributionType.descending.description | Daha düşük fiyat seviyelerine daha büyük hacim tahsisi.                                                                                                                                                                                           |
+| orderEntry.confirmScaledOrder                      | Ölçekli emiri onayla                                                                                                                                                                                                                              |
+| orderEntry.upperPrice.error.required               | Üst fiyat gereklidir                                                                                                                                                                                                                              |
+| orderEntry.upperPrice.error.min                    | Üst fiyat {{value}} değerinden büyük olmalıdır                                                                                                                                                                                                    |
+| orderEntry.upperPrice.error.max                    | Üst fiyat {{value}} değerinden küçük olmalıdır                                                                                                                                                                                                    |
+| orderEntry.lowerPrice.error.required               | Alt fiyat gereklidir                                                                                                                                                                                                                              |
+| orderEntry.lowerPrice.error.min                    | Alt fiyat {{value}} değerinden büyük olmalıdır                                                                                                                                                                                                    |
+| orderEntry.lowerPrice.error.max                    | Alt fiyat üst fiyattan küçük olmalıdır                                                                                                                                                                                                            |
+| orderEntry.totalOrders.error.required              | Toplam emir sayısı gereklidir                                                                                                                                                                                                                     |
+| orderEntry.totalOrders.error.range                 | Toplam emir sayısı 2 ile 20 arasında olmalıdır                                                                                                                                                                                                    |
+| orderEntry.skew.error.required                     | Eğim gereklidir                                                                                                                                                                                                                                   |
+| orderEntry.skew.error.min                          | Eğim {{value}} değerinden büyük olmalıdır                                                                                                                                                                                                         |
+| orderEntry.skew.error.max                          | Eğim {{value}} değerinden küçük olmalıdır                                                                                                                                                                                                         |
+| orderEntry.confirmScaledOrder.orderPrice.warning   | Bu emir mevcut piyasa fiyatına göre hemen gerçekleştirilecektir                                                                                                                                                                                   |
+| orderEntry.scaledOrder.fullySuccessful             | Ölçekli emir yerleştirildi: {{total}} emir başarıyla gönderildi.                                                                                                                                                                                  |
+| orderEntry.scaledOrder.partiallySuccessful         | Ölçekli emir kısmen gönderildi: {{total}} emirden {{successCount}} tanesi yerleştirildi.                                                                                                                                                          |
+| orderEntry.scaledOrder.allFailed                   | Ölçekli emir başarısız. Hiçbir emir yerleştirilmedi.                                                                                                                                                                                              |
+| restrictedInfo.accessRestricted                    | Erişim Kısıtlı                                                                                                                                                                                                                                    |
+| restrictedInfo.accessRestricted.description        | Yasa ve düzenlemeler nedeniyle, şu anda Amerika Birleşik Devletleri'nde faaliyet göstermemekteyiz. Platformumuzu kullanmaya devam ederek, kullanım süresi boyunca Amerika Birleşik Devletleri'nde ikamet etmediğinizi beyan ve garanti edersiniz. |
+| restrictedInfo.accessRestricted.agree              | Anlıyorum ve kabul ediyorum                                                                                                                                                                                                                       |
+
+#### Language: **ru**
+
+| Key                                                | Value                                                                                                                                                                                                                                                          |
+| -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| common.orderPrice                                  | Цена ордера                                                                                                                                                                                                                                                    |
+| markets.favorites.addFavorites                     | Добавить в избранное                                                                                                                                                                                                                                           |
+| positions.limitClose.errors.exceed.title           | Превышен лимит закрытия позиции                                                                                                                                                                                                                                |
+| positions.limitClose.errors.exceed.description     | Невозможно закрыть позицию {{quantity}} {{symbol}}. Максимально допустимый объем на одно закрытие {{maxQuantity}} {{symbol}}.                                                                                                                                  |
+| orders.status.scaledSubOrderOpened.toast.title     | Масштабный ордер: открыт подордер                                                                                                                                                                                                                              |
+| orderEntry.orderType.scaledOrder                   | Масштабированный ордер                                                                                                                                                                                                                                         |
+| orderEntry.upperPrice                              | Верхняя цена                                                                                                                                                                                                                                                   |
+| orderEntry.lowerPrice                              | Нижняя цена                                                                                                                                                                                                                                                    |
+| orderEntry.skew                                    | Перекос                                                                                                                                                                                                                                                        |
+| orderEntry.totalOrders                             | Всего ордеров                                                                                                                                                                                                                                                  |
+| orderEntry.totalQuantity                           | Общее количество                                                                                                                                                                                                                                               |
+| orderEntry.quantityDistribution                    | Распределение количества                                                                                                                                                                                                                                       |
+| orderEntry.quantityDistribution.description        | Управляет распределением размера ордера между ценовыми уровнями.                                                                                                                                                                                               |
+| orderEntry.quantityDistribution.formula            | Перекос размера = (Размер по самой высокой цене) ÷ (Размер по самой низкой цене)                                                                                                                                                                               |
+| orderEntry.distributionType.flat                   | Равномерное                                                                                                                                                                                                                                                    |
+| orderEntry.distributionType.ascending              | По возрастанию                                                                                                                                                                                                                                                 |
+| orderEntry.distributionType.ascending.abbr         | Возр.                                                                                                                                                                                                                                                          |
+| orderEntry.distributionType.descending             | По убыванию                                                                                                                                                                                                                                                    |
+| orderEntry.distributionType.descending.abbr        | Убыв.                                                                                                                                                                                                                                                          |
+| orderEntry.distributionType.custom                 | Пользовательское                                                                                                                                                                                                                                               |
+| orderEntry.distributionType.flat.description       | Равномерное распределение ордеров по диапазону.                                                                                                                                                                                                                |
+| orderEntry.distributionType.ascending.description  | Больший размер на более высоких ценовых уровнях.                                                                                                                                                                                                               |
+| orderEntry.distributionType.descending.description | Больший размер на более низких ценовых уровнях.                                                                                                                                                                                                                |
+| orderEntry.confirmScaledOrder                      | Подтвердить масштабированный ордер                                                                                                                                                                                                                             |
+| orderEntry.upperPrice.error.required               | Требуется верхняя цена                                                                                                                                                                                                                                         |
+| orderEntry.upperPrice.error.min                    | Верхняя цена должна быть больше {{value}}                                                                                                                                                                                                                      |
+| orderEntry.upperPrice.error.max                    | Верхняя цена должна быть меньше {{value}}                                                                                                                                                                                                                      |
+| orderEntry.lowerPrice.error.required               | Требуется нижняя цена                                                                                                                                                                                                                                          |
+| orderEntry.lowerPrice.error.min                    | Нижняя цена должна быть больше {{value}}                                                                                                                                                                                                                       |
+| orderEntry.lowerPrice.error.max                    | Нижняя цена должна быть меньше верхней цены                                                                                                                                                                                                                    |
+| orderEntry.totalOrders.error.required              | Требуется указать общее количество ордеров                                                                                                                                                                                                                     |
+| orderEntry.totalOrders.error.range                 | Общее количество ордеров должно быть от 2 до 20                                                                                                                                                                                                                |
+| orderEntry.skew.error.required                     | Требуется указать перекос                                                                                                                                                                                                                                      |
+| orderEntry.skew.error.min                          | Перекос должен быть больше {{value}}                                                                                                                                                                                                                           |
+| orderEntry.skew.error.max                          | Перекос должен быть меньше {{value}}                                                                                                                                                                                                                           |
+| orderEntry.confirmScaledOrder.orderPrice.warning   | Этот ордер будет исполнен немедленно по текущей рыночной цене                                                                                                                                                                                                  |
+| orderEntry.scaledOrder.fullySuccessful             | Масштабный ордер размещен: {{total}} ордеров успешно отправлено.                                                                                                                                                                                               |
+| orderEntry.scaledOrder.partiallySuccessful         | Масштабный ордер частично размещен: размещено {{successCount}} из {{total}} ордеров.                                                                                                                                                                           |
+| orderEntry.scaledOrder.allFailed                   | Масштабный ордер не выполнен. Ордера не были размещены.                                                                                                                                                                                                        |
+| restrictedInfo.accessRestricted                    | Доступ ограничен                                                                                                                                                                                                                                               |
+| restrictedInfo.accessRestricted.description        | В связи с законами и нормативными актами, мы в настоящее время не работаем в Соединенных Штатах. Продолжая использовать нашу платформу, вы заявляете и гарантируете, что не являетесь резидентом Соединенных Штатов на протяжении всего периода использования. |
+| restrictedInfo.accessRestricted.agree              | Я понимаю и согласен                                                                                                                                                                                                                                           |
+
+#### Language: **pt**
+
+| Key                                                | Value                                                                                                                                                                                                                             |
+| -------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| common.orderPrice                                  | Preço da ordem                                                                                                                                                                                                                    |
+| markets.favorites.addFavorites                     | Adicionar aos favoritos                                                                                                                                                                                                           |
+| positions.limitClose.errors.exceed.title           | Limite de fechamento de posição excedido                                                                                                                                                                                          |
+| positions.limitClose.errors.exceed.description     | Não é possível fechar a posição de {{quantity}} {{symbol}}. O máximo permitido por fechamento é {{maxQuantity}} {{symbol}}.                                                                                                       |
+| orders.status.scaledSubOrderOpened.toast.title     | Ordem escalonada: subordem aberta                                                                                                                                                                                                 |
+| orderEntry.orderType.scaledOrder                   | Ordem escalonada                                                                                                                                                                                                                  |
+| orderEntry.upperPrice                              | Preço superior                                                                                                                                                                                                                    |
+| orderEntry.lowerPrice                              | Preço inferior                                                                                                                                                                                                                    |
+| orderEntry.skew                                    | Inclinação                                                                                                                                                                                                                        |
+| orderEntry.totalOrders                             | Total de ordens                                                                                                                                                                                                                   |
+| orderEntry.totalQuantity                           | Quantidade total                                                                                                                                                                                                                  |
+| orderEntry.quantityDistribution                    | Distribuição de quantidade                                                                                                                                                                                                        |
+| orderEntry.quantityDistribution.description        | Controla a distribuição do tamanho da ordem entre os níveis de preço.                                                                                                                                                             |
+| orderEntry.quantityDistribution.formula            | Distorção de tamanho = (Tamanho no preço mais alto) ÷ (Tamanho no preço mais baixo)                                                                                                                                               |
+| orderEntry.distributionType.flat                   | Uniforme                                                                                                                                                                                                                          |
+| orderEntry.distributionType.ascending              | Ascendente                                                                                                                                                                                                                        |
+| orderEntry.distributionType.ascending.abbr         | Asc.                                                                                                                                                                                                                              |
+| orderEntry.distributionType.descending             | Descendente                                                                                                                                                                                                                       |
+| orderEntry.distributionType.descending.abbr        | Desc.                                                                                                                                                                                                                             |
+| orderEntry.distributionType.custom                 | Personalizado                                                                                                                                                                                                                     |
+| orderEntry.distributionType.flat.description       | Alocação uniforme de ordens ao longo do intervalo.                                                                                                                                                                                |
+| orderEntry.distributionType.ascending.description  | Maior tamanho alocado aos níveis de preço mais altos.                                                                                                                                                                             |
+| orderEntry.distributionType.descending.description | Maior tamanho alocado aos níveis de preço mais baixos.                                                                                                                                                                            |
+| orderEntry.confirmScaledOrder                      | Confirmar ordem escalonada                                                                                                                                                                                                        |
+| orderEntry.upperPrice.error.required               | Preço superior é obrigatório                                                                                                                                                                                                      |
+| orderEntry.upperPrice.error.min                    | Preço superior deve ser maior que {{value}}                                                                                                                                                                                       |
+| orderEntry.upperPrice.error.max                    | Preço superior deve ser menor que {{value}}                                                                                                                                                                                       |
+| orderEntry.lowerPrice.error.required               | Preço inferior é obrigatório                                                                                                                                                                                                      |
+| orderEntry.lowerPrice.error.min                    | Preço inferior deve ser maior que {{value}}                                                                                                                                                                                       |
+| orderEntry.lowerPrice.error.max                    | Preço inferior deve ser menor que o preço superior                                                                                                                                                                                |
+| orderEntry.totalOrders.error.required              | Total de ordens é obrigatório                                                                                                                                                                                                     |
+| orderEntry.totalOrders.error.range                 | Total de ordens deve estar entre 2 e 20                                                                                                                                                                                           |
+| orderEntry.skew.error.required                     | Inclinação é obrigatória                                                                                                                                                                                                          |
+| orderEntry.skew.error.min                          | A distorção deve ser maior que {{value}}                                                                                                                                                                                          |
+| orderEntry.skew.error.max                          | A distorção deve ser menor que {{value}}                                                                                                                                                                                          |
+| orderEntry.confirmScaledOrder.orderPrice.warning   | Esta ordem será executada imediatamente com base no preço atual do mercado                                                                                                                                                        |
+| orderEntry.scaledOrder.fullySuccessful             | Ordem escalonada colocada: {{total}} ordens enviadas com sucesso.                                                                                                                                                                 |
+| orderEntry.scaledOrder.partiallySuccessful         | Ordem escalonada parcialmente enviada: {{successCount}} de {{total}} ordens colocadas.                                                                                                                                            |
+| orderEntry.scaledOrder.allFailed                   | Ordem escalonada falhou. Nenhuma ordem foi colocada.                                                                                                                                                                              |
+| restrictedInfo.accessRestricted                    | Acesso Restrito                                                                                                                                                                                                                   |
+| restrictedInfo.accessRestricted.description        | Devido a leis e regulamentos, atualmente não operamos nos Estados Unidos. Ao continuar a usar nossa plataforma, você declara e garante em todos os momentos que não é residente dos Estados Unidos durante todo o período de uso. |
+| restrictedInfo.accessRestricted.agree              | Eu entendo e concordo                                                                                                                                                                                                             |
+
+#### Language: **pl**
+
+| Key                                                | Value                                                                                                                                                                                                                                                      |
+| -------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| common.orderPrice                                  | Cena zlecenia                                                                                                                                                                                                                                              |
+| markets.favorites.addFavorites                     | Dodaj do ulubionych                                                                                                                                                                                                                                        |
+| positions.limitClose.errors.exceed.title           | Przekroczono limit zamknięcia pozycji                                                                                                                                                                                                                      |
+| positions.limitClose.errors.exceed.description     | Nie można zamknąć pozycji {{quantity}} {{symbol}}. Maksymalna dozwolona ilość na jedno zamknięcie to {{maxQuantity}} {{symbol}}.                                                                                                                           |
+| orders.status.scaledSubOrderOpened.toast.title     | Zlecenie skalowane: podzlecenie otwarte                                                                                                                                                                                                                    |
+| orderEntry.orderType.scaledOrder                   | Zlecenie skalowane                                                                                                                                                                                                                                         |
+| orderEntry.upperPrice                              | Cena górna                                                                                                                                                                                                                                                 |
+| orderEntry.lowerPrice                              | Cena dolna                                                                                                                                                                                                                                                 |
+| orderEntry.skew                                    | Skośność                                                                                                                                                                                                                                                   |
+| orderEntry.totalOrders                             | Łączna liczba zleceń                                                                                                                                                                                                                                       |
+| orderEntry.totalQuantity                           | Całkowita ilość                                                                                                                                                                                                                                            |
+| orderEntry.quantityDistribution                    | Rozkład ilości                                                                                                                                                                                                                                             |
+| orderEntry.quantityDistribution.description        | Kontroluje rozkład wielkości zlecenia między poziomami cen.                                                                                                                                                                                                |
+| orderEntry.quantityDistribution.formula            | Skośność wielkości = (Wielkość przy najwyższej cenie) ÷ (Wielkość przy najniższej cenie)                                                                                                                                                                   |
+| orderEntry.distributionType.flat                   | Równomierny                                                                                                                                                                                                                                                |
+| orderEntry.distributionType.ascending              | Rosnąco                                                                                                                                                                                                                                                    |
+| orderEntry.distributionType.ascending.abbr         | Rosn.                                                                                                                                                                                                                                                      |
+| orderEntry.distributionType.descending             | Malejąco                                                                                                                                                                                                                                                   |
+| orderEntry.distributionType.descending.abbr        | Mal.                                                                                                                                                                                                                                                       |
+| orderEntry.distributionType.custom                 | Niestandardowy                                                                                                                                                                                                                                             |
+| orderEntry.distributionType.flat.description       | Równomierne rozłożenie zleceń w zakresie.                                                                                                                                                                                                                  |
+| orderEntry.distributionType.ascending.description  | Większa wielkość przydzielana do wyższych poziomów cen.                                                                                                                                                                                                    |
+| orderEntry.distributionType.descending.description | Większa wielkość przydzielana do niższych poziomów cen.                                                                                                                                                                                                    |
+| orderEntry.confirmScaledOrder                      | Potwierdź zlecenie skalowane                                                                                                                                                                                                                               |
+| orderEntry.upperPrice.error.required               | Wymagana cena górna                                                                                                                                                                                                                                        |
+| orderEntry.upperPrice.error.min                    | Cena górna musi być większa niż {{value}}                                                                                                                                                                                                                  |
+| orderEntry.upperPrice.error.max                    | Cena górna musi być mniejsza niż {{value}}                                                                                                                                                                                                                 |
+| orderEntry.lowerPrice.error.required               | Wymagana cena dolna                                                                                                                                                                                                                                        |
+| orderEntry.lowerPrice.error.min                    | Cena dolna musi być większa niż {{value}}                                                                                                                                                                                                                  |
+| orderEntry.lowerPrice.error.max                    | Cena dolna musi być mniejsza niż cena górna                                                                                                                                                                                                                |
+| orderEntry.totalOrders.error.required              | Wymagana łączna liczba zleceń                                                                                                                                                                                                                              |
+| orderEntry.totalOrders.error.range                 | Łączna liczba zleceń musi być między 2 a 20                                                                                                                                                                                                                |
+| orderEntry.skew.error.required                     | Wymagana skośność                                                                                                                                                                                                                                          |
+| orderEntry.skew.error.min                          | Skośność musi być większa niż {{value}}                                                                                                                                                                                                                    |
+| orderEntry.skew.error.max                          | Skośność musi być mniejsza niż {{value}}                                                                                                                                                                                                                   |
+| orderEntry.confirmScaledOrder.orderPrice.warning   | To zlecenie zostanie zrealizowane natychmiast po aktualnej cenie rynkowej                                                                                                                                                                                  |
+| orderEntry.scaledOrder.fullySuccessful             | Zlecenie skalowane złożone: {{total}} zleceń wysłanych pomyślnie.                                                                                                                                                                                          |
+| orderEntry.scaledOrder.partiallySuccessful         | Zlecenie skalowane częściowo wysłane: złożono {{successCount}} z {{total}} zleceń.                                                                                                                                                                         |
+| orderEntry.scaledOrder.allFailed                   | Zlecenie skalowane nie powiodło się. Nie złożono żadnych zleceń.                                                                                                                                                                                           |
+| restrictedInfo.accessRestricted                    | Dostęp ograniczony                                                                                                                                                                                                                                         |
+| restrictedInfo.accessRestricted.description        | Ze względu na przepisy prawa i regulacje, obecnie nie prowadzimy działalności w Stanach Zjednoczonych. Kontynuując korzystanie z naszej platformy, oświadczasz i gwarantujesz, że nie jesteś rezydentem Stanów Zjednoczonych przez cały okres korzystania. |
+| restrictedInfo.accessRestricted.agree              | Rozumiem i zgadzam się                                                                                                                                                                                                                                     |
+
+#### Language: **nl**
+
+| Key                                                | Value                                                                                                                                                                                                                                                            |
+| -------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| common.orderPrice                                  | Orderprijs                                                                                                                                                                                                                                                       |
+| markets.favorites.addFavorites                     | Toevoegen aan favorieten                                                                                                                                                                                                                                         |
+| positions.limitClose.errors.exceed.title           | Limiet voor positiesluiting overschreden                                                                                                                                                                                                                         |
+| positions.limitClose.errors.exceed.description     | Kan positie van {{quantity}} {{symbol}} niet sluiten. Maximum toegestaan per sluiting is {{maxQuantity}} {{symbol}}.                                                                                                                                             |
+| orders.status.scaledSubOrderOpened.toast.title     | Geschaalde order: suborder geopend                                                                                                                                                                                                                               |
+| orderEntry.orderType.scaledOrder                   | Geschaalde order                                                                                                                                                                                                                                                 |
+| orderEntry.upperPrice                              | Bovenprijs                                                                                                                                                                                                                                                       |
+| orderEntry.lowerPrice                              | Onderprijs                                                                                                                                                                                                                                                       |
+| orderEntry.skew                                    | Scheefheid                                                                                                                                                                                                                                                       |
+| orderEntry.totalOrders                             | Totaal orders                                                                                                                                                                                                                                                    |
+| orderEntry.totalQuantity                           | Totale hoeveelheid                                                                                                                                                                                                                                               |
+| orderEntry.quantityDistribution                    | Hoeveelheidsverdeling                                                                                                                                                                                                                                            |
+| orderEntry.quantityDistribution.description        | Bepaalt de verdeling van ordergrootte tussen prijsniveaus.                                                                                                                                                                                                       |
+| orderEntry.quantityDistribution.formula            | Grootte scheefheid = (Grootte bij hoogste prijs) ÷ (Grootte bij laagste prijs)                                                                                                                                                                                   |
+| orderEntry.distributionType.flat                   | Gelijk                                                                                                                                                                                                                                                           |
+| orderEntry.distributionType.ascending              | Oplopend                                                                                                                                                                                                                                                         |
+| orderEntry.distributionType.ascending.abbr         | Opl.                                                                                                                                                                                                                                                             |
+| orderEntry.distributionType.descending             | Aflopend                                                                                                                                                                                                                                                         |
+| orderEntry.distributionType.descending.abbr        | Afl.                                                                                                                                                                                                                                                             |
+| orderEntry.distributionType.custom                 | Aangepast                                                                                                                                                                                                                                                        |
+| orderEntry.distributionType.flat.description       | Gelijkmatige orderverdeling over het bereik.                                                                                                                                                                                                                     |
+| orderEntry.distributionType.ascending.description  | Grotere omvang toegewezen aan hogere prijsniveaus.                                                                                                                                                                                                               |
+| orderEntry.distributionType.descending.description | Grotere omvang toegewezen aan lagere prijsniveaus.                                                                                                                                                                                                               |
+| orderEntry.confirmScaledOrder                      | Bevestig geschaalde order                                                                                                                                                                                                                                        |
+| orderEntry.upperPrice.error.required               | Bovenprijs is verplicht                                                                                                                                                                                                                                          |
+| orderEntry.upperPrice.error.min                    | Bovenprijs moet groter zijn dan {{value}}                                                                                                                                                                                                                        |
+| orderEntry.upperPrice.error.max                    | Bovenprijs moet kleiner zijn dan {{value}}                                                                                                                                                                                                                       |
+| orderEntry.lowerPrice.error.required               | Onderprijs is verplicht                                                                                                                                                                                                                                          |
+| orderEntry.lowerPrice.error.min                    | Onderprijs moet groter zijn dan {{value}}                                                                                                                                                                                                                        |
+| orderEntry.lowerPrice.error.max                    | Onderprijs moet kleiner zijn dan bovenprijs                                                                                                                                                                                                                      |
+| orderEntry.totalOrders.error.required              | Totaal aantal orders is verplicht                                                                                                                                                                                                                                |
+| orderEntry.totalOrders.error.range                 | Totaal aantal orders moet tussen 2 en 20 liggen                                                                                                                                                                                                                  |
+| orderEntry.skew.error.required                     | Scheefheid is verplicht                                                                                                                                                                                                                                          |
+| orderEntry.skew.error.min                          | Scheefheid moet groter zijn dan {{value}}                                                                                                                                                                                                                        |
+| orderEntry.skew.error.max                          | Scheefheid moet kleiner zijn dan {{value}}                                                                                                                                                                                                                       |
+| orderEntry.confirmScaledOrder.orderPrice.warning   | Deze order zal onmiddellijk worden uitgevoerd op basis van de huidige marktprijs                                                                                                                                                                                 |
+| orderEntry.scaledOrder.fullySuccessful             | Geschaalde order geplaatst: {{total}} orders succesvol verzonden.                                                                                                                                                                                                |
+| orderEntry.scaledOrder.partiallySuccessful         | Geschaalde order gedeeltelijk verzonden: {{successCount}} van {{total}} orders geplaatst.                                                                                                                                                                        |
+| orderEntry.scaledOrder.allFailed                   | Geschaalde order mislukt. Geen orders zijn geplaatst.                                                                                                                                                                                                            |
+| restrictedInfo.accessRestricted                    | Toegang Beperkt                                                                                                                                                                                                                                                  |
+| restrictedInfo.accessRestricted.description        | Vanwege wet- en regelgeving opereren we momenteel niet in de Verenigde Staten. Door gebruik te blijven maken van ons platform, verklaart en garandeert u te allen tijde dat u geen inwoner bent van de Verenigde Staten gedurende de gehele periode van gebruik. |
+| restrictedInfo.accessRestricted.agree              | Ik begrijp het en ga akkoord                                                                                                                                                                                                                                     |
+
+#### Language: **ko**
+
+| Key                                                | Value                                                                                                                                                            |
+| -------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| common.orderPrice                                  | 주문 가격                                                                                                                                                        |
+| markets.favorites.addFavorites                     | 즐겨찾기 추가                                                                                                                                                    |
+| positions.limitClose.errors.exceed.title           | 청산 수량 한도 초과                                                                                                                                              |
+| positions.limitClose.errors.exceed.description     | {{quantity}} {{symbol}} 포지션을 청산할 수 없습니다. 1회 청산 최대 허용량은 {{maxQuantity}} {{symbol}}입니다.                                                    |
+| orders.status.scaledSubOrderOpened.toast.title     | 스케일 주문: 하위 주문 시작됨                                                                                                                                    |
+| orderEntry.orderType.scaledOrder                   | 스케일 주문                                                                                                                                                      |
+| orderEntry.upperPrice                              | 상한가                                                                                                                                                           |
+| orderEntry.lowerPrice                              | 하한가                                                                                                                                                           |
+| orderEntry.skew                                    | 편향                                                                                                                                                             |
+| orderEntry.totalOrders                             | 총 주문 수                                                                                                                                                       |
+| orderEntry.totalQuantity                           | 총 수량                                                                                                                                                          |
+| orderEntry.quantityDistribution                    | 수량 분포                                                                                                                                                        |
+| orderEntry.quantityDistribution.description        | 가격 수준 간의 주문 크기 분포를 제어합니다.                                                                                                                      |
+| orderEntry.quantityDistribution.formula            | 크기 편차 = (최고 가격의 크기) ÷ (최저 가격의 크기)                                                                                                              |
+| orderEntry.distributionType.flat                   | 균등                                                                                                                                                             |
+| orderEntry.distributionType.ascending              | 오름차순                                                                                                                                                         |
+| orderEntry.distributionType.ascending.abbr         | 오름                                                                                                                                                             |
+| orderEntry.distributionType.descending             | 내림차순                                                                                                                                                         |
+| orderEntry.distributionType.descending.abbr        | 내림                                                                                                                                                             |
+| orderEntry.distributionType.custom                 | 사용자 지정                                                                                                                                                      |
+| orderEntry.distributionType.flat.description       | 범위 내에서 균일한 주문 할당.                                                                                                                                    |
+| orderEntry.distributionType.ascending.description  | 더 높은 가격 수준에 더 큰 크기 할당.                                                                                                                             |
+| orderEntry.distributionType.descending.description | 더 낮은 가격 수준에 더 큰 크기 할당.                                                                                                                             |
+| orderEntry.confirmScaledOrder                      | 스케일 주문 확인                                                                                                                                                 |
+| orderEntry.upperPrice.error.required               | 상한가를 입력해주세요                                                                                                                                            |
+| orderEntry.upperPrice.error.min                    | 상한가는 {{value}}보다 커야 합니다                                                                                                                               |
+| orderEntry.upperPrice.error.max                    | 상한가는 {{value}}보다 작아야 합니다                                                                                                                             |
+| orderEntry.lowerPrice.error.required               | 하한가를 입력해주세요                                                                                                                                            |
+| orderEntry.lowerPrice.error.min                    | 하한가는 {{value}}보다 커야 합니다                                                                                                                               |
+| orderEntry.lowerPrice.error.max                    | 하한가는 상한가보다 작아야 합니다                                                                                                                                |
+| orderEntry.totalOrders.error.required              | 총 주문 수를 입력해주세요                                                                                                                                        |
+| orderEntry.totalOrders.error.range                 | 총 주문 수는 2에서 20 사이여야 합니다                                                                                                                            |
+| orderEntry.skew.error.required                     | 편향값을 입력해주세요                                                                                                                                            |
+| orderEntry.skew.error.min                          | 편차는 {{value}}보다 커야 합니다                                                                                                                                 |
+| orderEntry.skew.error.max                          | 편차는 {{value}}보다 작아야 합니다                                                                                                                               |
+| orderEntry.confirmScaledOrder.orderPrice.warning   | 현재 시장 가격에 따라 이 주문은 즉시 체결될 것입니다                                                                                                             |
+| orderEntry.scaledOrder.fullySuccessful             | 스케일 주문 완료: {{total}}개 주문이 모두 성공적으로 제출되었습니다.                                                                                             |
+| orderEntry.scaledOrder.partiallySuccessful         | 스케일 주문 부분 제출: {{total}}개 중 {{successCount}}개 주문이 완료되었습니다.                                                                                  |
+| orderEntry.scaledOrder.allFailed                   | 스케일 주문 실패. 주문이 처리되지 않았습니다.                                                                                                                    |
+| restrictedInfo.accessRestricted                    | 접근 제한                                                                                                                                                        |
+| restrictedInfo.accessRestricted.description        | 법률 및 규정에 따라 현재 미국에서는 서비스를 제공하지 않습니다. 우리 플랫폼을 계속 사용함으로써, 귀하는 사용 기간 동안 미국 거주자가 아님을 진술하고 보증합니다. |
+| restrictedInfo.accessRestricted.agree              | 이해하고 동의합니다                                                                                                                                              |
+
+#### Language: **ja**
+
+| Key                                                | Value                                                                                                                                                                                                  |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| common.orderPrice                                  | 注文価格                                                                                                                                                                                               |
+| markets.favorites.addFavorites                     | お気に入りに追加                                                                                                                                                                                       |
+| positions.limitClose.errors.exceed.title           | 決済数量制限超過                                                                                                                                                                                       |
+| positions.limitClose.errors.exceed.description     | {{quantity}} {{symbol}}のポジションを決済できません。1回の決済上限は{{maxQuantity}} {{symbol}}です。                                                                                                   |
+| orders.status.scaledSubOrderOpened.toast.title     | スケール注文：サブオーダーが開始されました                                                                                                                                                             |
+| orderEntry.orderType.scaledOrder                   | スケール注文                                                                                                                                                                                           |
+| orderEntry.upperPrice                              | 上限価格                                                                                                                                                                                               |
+| orderEntry.lowerPrice                              | 下限価格                                                                                                                                                                                               |
+| orderEntry.skew                                    | 歪度                                                                                                                                                                                                   |
+| orderEntry.totalOrders                             | 注文総数                                                                                                                                                                                               |
+| orderEntry.totalQuantity                           | 合計数量                                                                                                                                                                                               |
+| orderEntry.quantityDistribution                    | 数量分布                                                                                                                                                                                               |
+| orderEntry.quantityDistribution.description        | 価格レベル間での注文サイズの分布を制御します。                                                                                                                                                         |
+| orderEntry.quantityDistribution.formula            | サイズ偏差 = (最高価格のサイズ) ÷ (最低価格のサイズ)                                                                                                                                                   |
+| orderEntry.distributionType.flat                   | 均等                                                                                                                                                                                                   |
+| orderEntry.distributionType.ascending              | 上昇                                                                                                                                                                                                   |
+| orderEntry.distributionType.ascending.abbr         | 上昇                                                                                                                                                                                                   |
+| orderEntry.distributionType.descending             | 下降                                                                                                                                                                                                   |
+| orderEntry.distributionType.descending.abbr        | 下降                                                                                                                                                                                                   |
+| orderEntry.distributionType.custom                 | カスタム                                                                                                                                                                                               |
+| orderEntry.distributionType.flat.description       | 価格範囲内で均一な注文配分。                                                                                                                                                                           |
+| orderEntry.distributionType.ascending.description  | より高い価格レベルにより多くのサイズを配分。                                                                                                                                                           |
+| orderEntry.distributionType.descending.description | より低い価格レベルにより多くのサイズを配分。                                                                                                                                                           |
+| orderEntry.confirmScaledOrder                      | スケール注文の確認                                                                                                                                                                                     |
+| orderEntry.upperPrice.error.required               | 上限価格を入力してください                                                                                                                                                                             |
+| orderEntry.upperPrice.error.min                    | 上限価格は{{value}}より大きい必要があります                                                                                                                                                            |
+| orderEntry.upperPrice.error.max                    | 上限価格は{{value}}より小さい必要があります                                                                                                                                                            |
+| orderEntry.lowerPrice.error.required               | 下限価格を入力してください                                                                                                                                                                             |
+| orderEntry.lowerPrice.error.min                    | 下限価格は{{value}}より大きい必要があります                                                                                                                                                            |
+| orderEntry.lowerPrice.error.max                    | 下限価格は上限価格より小さい必要があります                                                                                                                                                             |
+| orderEntry.totalOrders.error.required              | 注文総数を入力してください                                                                                                                                                                             |
+| orderEntry.totalOrders.error.range                 | 注文総数は2から20の間である必要があります                                                                                                                                                              |
+| orderEntry.skew.error.required                     | 歪度を入力してください                                                                                                                                                                                 |
+| orderEntry.skew.error.min                          | 偏差は {{value}} より大きくなければなりません                                                                                                                                                          |
+| orderEntry.skew.error.max                          | 偏差は {{value}} より小さくなければなりません                                                                                                                                                          |
+| orderEntry.confirmScaledOrder.orderPrice.warning   | 現在の市場価格に基づいて、この注文は即時に約定されます                                                                                                                                                 |
+| orderEntry.scaledOrder.fullySuccessful             | スケール注文が完了：{{total}}件の注文がすべて正常に送信されました。                                                                                                                                    |
+| orderEntry.scaledOrder.partiallySuccessful         | スケール注文が一部完了：{{total}}件中{{successCount}}件の注文が送信されました。                                                                                                                        |
+| orderEntry.scaledOrder.allFailed                   | スケール注文が失敗しました。注文は送信されませんでした。                                                                                                                                               |
+| restrictedInfo.accessRestricted                    | アクセス制限                                                                                                                                                                                           |
+| restrictedInfo.accessRestricted.description        | 法律および規制により、現在アメリカ合衆国では事業を展開しておりません。当プラットフォームの利用を継続することにより、利用期間中を通じてアメリカ合衆国の居住者ではないことを表明し保証するものとします。 |
+| restrictedInfo.accessRestricted.agree              | 理解し同意します                                                                                                                                                                                       |
+
+#### Language: **it**
+
+| Key                                                | Value                                                                                                                                                                                                                                             |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| common.orderPrice                                  | Prezzo dell'ordine                                                                                                                                                                                                                                |
+| markets.favorites.addFavorites                     | Aggiungi ai preferiti                                                                                                                                                                                                                             |
+| positions.limitClose.errors.exceed.title           | Limite di chiusura posizione superato                                                                                                                                                                                                             |
+| positions.limitClose.errors.exceed.description     | Impossibile chiudere la posizione di {{quantity}} {{symbol}}. Il massimo consentito per chiusura è {{maxQuantity}} {{symbol}}.                                                                                                                    |
+| orders.status.scaledSubOrderOpened.toast.title     | Ordine scalato: sotto-ordine aperto                                                                                                                                                                                                               |
+| orderEntry.orderType.scaledOrder                   | Ordine scalato                                                                                                                                                                                                                                    |
+| orderEntry.upperPrice                              | Prezzo superiore                                                                                                                                                                                                                                  |
+| orderEntry.lowerPrice                              | Prezzo inferiore                                                                                                                                                                                                                                  |
+| orderEntry.skew                                    | Inclinazione                                                                                                                                                                                                                                      |
+| orderEntry.totalOrders                             | Totale ordini                                                                                                                                                                                                                                     |
+| orderEntry.totalQuantity                           | Quantità totale                                                                                                                                                                                                                                   |
+| orderEntry.quantityDistribution                    | Distribuzione della quantità                                                                                                                                                                                                                      |
+| orderEntry.quantityDistribution.description        | Controlla la distribuzione della dimensione dell'ordine tra i livelli di prezzo.                                                                                                                                                                  |
+| orderEntry.quantityDistribution.formula            | Asimmetria dimensione = (Dimensione al prezzo più alto) ÷ (Dimensione al prezzo più basso)                                                                                                                                                        |
+| orderEntry.distributionType.flat                   | Uniforme                                                                                                                                                                                                                                          |
+| orderEntry.distributionType.ascending              | Crescente                                                                                                                                                                                                                                         |
+| orderEntry.distributionType.ascending.abbr         | Cresc.                                                                                                                                                                                                                                            |
+| orderEntry.distributionType.descending             | Decrescente                                                                                                                                                                                                                                       |
+| orderEntry.distributionType.descending.abbr        | Decr.                                                                                                                                                                                                                                             |
+| orderEntry.distributionType.custom                 | Personalizzato                                                                                                                                                                                                                                    |
+| orderEntry.distributionType.flat.description       | Allocazione uniforme degli ordini nell'intervallo.                                                                                                                                                                                                |
+| orderEntry.distributionType.ascending.description  | Dimensione maggiore allocata ai livelli di prezzo più alti.                                                                                                                                                                                       |
+| orderEntry.distributionType.descending.description | Dimensione maggiore allocata ai livelli di prezzo più bassi.                                                                                                                                                                                      |
+| orderEntry.confirmScaledOrder                      | Conferma ordine scalato                                                                                                                                                                                                                           |
+| orderEntry.upperPrice.error.required               | Il prezzo superiore è obbligatorio                                                                                                                                                                                                                |
+| orderEntry.upperPrice.error.min                    | Il prezzo superiore deve essere maggiore di {{value}}                                                                                                                                                                                             |
+| orderEntry.upperPrice.error.max                    | Il prezzo superiore deve essere minore di {{value}}                                                                                                                                                                                               |
+| orderEntry.lowerPrice.error.required               | Il prezzo inferiore è obbligatorio                                                                                                                                                                                                                |
+| orderEntry.lowerPrice.error.min                    | Il prezzo inferiore deve essere maggiore di {{value}}                                                                                                                                                                                             |
+| orderEntry.lowerPrice.error.max                    | Il prezzo inferiore deve essere minore del prezzo superiore                                                                                                                                                                                       |
+| orderEntry.totalOrders.error.required              | Il totale degli ordini è obbligatorio                                                                                                                                                                                                             |
+| orderEntry.totalOrders.error.range                 | Il totale degli ordini deve essere tra 2 e 20                                                                                                                                                                                                     |
+| orderEntry.skew.error.required                     | L'inclinazione è obbligatoria                                                                                                                                                                                                                     |
+| orderEntry.skew.error.min                          | L'asimmetria deve essere maggiore di {{value}}                                                                                                                                                                                                    |
+| orderEntry.skew.error.max                          | L'asimmetria deve essere minore di {{value}}                                                                                                                                                                                                      |
+| orderEntry.confirmScaledOrder.orderPrice.warning   | Questo ordine sarà eseguito immediatamente in base al prezzo di mercato attuale                                                                                                                                                                   |
+| orderEntry.scaledOrder.fullySuccessful             | Ordine scalato piazzato: {{total}} ordini inviati con successo.                                                                                                                                                                                   |
+| orderEntry.scaledOrder.partiallySuccessful         | Ordine scalato parzialmente inviato: {{successCount}} di {{total}} ordini piazzati.                                                                                                                                                               |
+| orderEntry.scaledOrder.allFailed                   | Ordine scalato fallito. Nessun ordine è stato piazzato.                                                                                                                                                                                           |
+| restrictedInfo.accessRestricted                    | Accesso Limitato                                                                                                                                                                                                                                  |
+| restrictedInfo.accessRestricted.description        | A causa di leggi e regolamenti, attualmente non operiamo negli Stati Uniti. Continuando a utilizzare la nostra piattaforma, dichiari e garantisci in ogni momento di non essere residente negli Stati Uniti durante tutto il periodo di utilizzo. |
+| restrictedInfo.accessRestricted.agree              | Ho capito e accetto                                                                                                                                                                                                                               |
+
+#### Language: **id**
+
+| Key                                                | Value                                                                                                                                                                                                                                              |
+| -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| common.orderPrice                                  | Harga order                                                                                                                                                                                                                                        |
+| markets.favorites.addFavorites                     | Tambah ke favorit                                                                                                                                                                                                                                  |
+| positions.limitClose.errors.exceed.title           | Melebihi batas penutupan posisi                                                                                                                                                                                                                    |
+| positions.limitClose.errors.exceed.description     | Tidak dapat menutup posisi {{quantity}} {{symbol}}. Jumlah maksimum yang diizinkan per penutupan adalah {{maxQuantity}} {{symbol}}.                                                                                                                |
+| orders.status.scaledSubOrderOpened.toast.title     | Order berskala: sub-order dibuka                                                                                                                                                                                                                   |
+| orderEntry.orderType.scaledOrder                   | Order berskala                                                                                                                                                                                                                                     |
+| orderEntry.upperPrice                              | Harga tertinggi                                                                                                                                                                                                                                    |
+| orderEntry.lowerPrice                              | Harga terendah                                                                                                                                                                                                                                     |
+| orderEntry.skew                                    | Kemiringan                                                                                                                                                                                                                                         |
+| orderEntry.totalOrders                             | Total order                                                                                                                                                                                                                                        |
+| orderEntry.totalQuantity                           | Jumlah total                                                                                                                                                                                                                                       |
+| orderEntry.quantityDistribution                    | Distribusi jumlah                                                                                                                                                                                                                                  |
+| orderEntry.quantityDistribution.description        | Mengontrol distribusi ukuran order di antara level harga.                                                                                                                                                                                          |
+| orderEntry.quantityDistribution.formula            | Kemiringan Ukuran = (Ukuran pada harga tertinggi) ÷ (Ukuran pada harga terendah)                                                                                                                                                                   |
+| orderEntry.distributionType.flat                   | Rata                                                                                                                                                                                                                                               |
+| orderEntry.distributionType.ascending              | Menaik                                                                                                                                                                                                                                             |
+| orderEntry.distributionType.ascending.abbr         | Naik                                                                                                                                                                                                                                               |
+| orderEntry.distributionType.descending             | Menurun                                                                                                                                                                                                                                            |
+| orderEntry.distributionType.descending.abbr        | Turun                                                                                                                                                                                                                                              |
+| orderEntry.distributionType.custom                 | Kustom                                                                                                                                                                                                                                             |
+| orderEntry.distributionType.flat.description       | Alokasi order merata di seluruh rentang.                                                                                                                                                                                                           |
+| orderEntry.distributionType.ascending.description  | Ukuran lebih besar dialokasikan ke level harga lebih tinggi.                                                                                                                                                                                       |
+| orderEntry.distributionType.descending.description | Ukuran lebih besar dialokasikan ke level harga lebih rendah.                                                                                                                                                                                       |
+| orderEntry.confirmScaledOrder                      | Konfirmasi order berskala                                                                                                                                                                                                                          |
+| orderEntry.upperPrice.error.required               | Harga tertinggi wajib diisi                                                                                                                                                                                                                        |
+| orderEntry.upperPrice.error.min                    | Harga tertinggi harus lebih besar dari {{value}}                                                                                                                                                                                                   |
+| orderEntry.upperPrice.error.max                    | Harga tertinggi harus lebih kecil dari {{value}}                                                                                                                                                                                                   |
+| orderEntry.lowerPrice.error.required               | Harga terendah wajib diisi                                                                                                                                                                                                                         |
+| orderEntry.lowerPrice.error.min                    | Harga terendah harus lebih besar dari {{value}}                                                                                                                                                                                                    |
+| orderEntry.lowerPrice.error.max                    | Harga terendah harus lebih kecil dari harga tertinggi                                                                                                                                                                                              |
+| orderEntry.totalOrders.error.required              | Total order wajib diisi                                                                                                                                                                                                                            |
+| orderEntry.totalOrders.error.range                 | Total order harus antara 2 sampai 20                                                                                                                                                                                                               |
+| orderEntry.skew.error.required                     | Kemiringan wajib diisi                                                                                                                                                                                                                             |
+| orderEntry.skew.error.min                          | Kemiringan harus lebih besar dari {{value}}                                                                                                                                                                                                        |
+| orderEntry.skew.error.max                          | Kemiringan harus lebih kecil dari {{value}}                                                                                                                                                                                                        |
+| orderEntry.confirmScaledOrder.orderPrice.warning   | Order ini akan dieksekusi segera berdasarkan harga pasar saat ini                                                                                                                                                                                  |
+| orderEntry.scaledOrder.fullySuccessful             | Order berskala ditempatkan: {{total}} order berhasil dikirim.                                                                                                                                                                                      |
+| orderEntry.scaledOrder.partiallySuccessful         | Order berskala sebagian terkirim: {{successCount}} dari {{total}} order ditempatkan.                                                                                                                                                               |
+| orderEntry.scaledOrder.allFailed                   | Order berskala gagal. Tidak ada order yang ditempatkan.                                                                                                                                                                                            |
+| restrictedInfo.accessRestricted                    | Akses Dibatasi                                                                                                                                                                                                                                     |
+| restrictedInfo.accessRestricted.description        | Karena hukum dan peraturan, saat ini kami tidak beroperasi di Amerika Serikat. Dengan melanjutkan penggunaan platform kami, Anda menyatakan dan menjamin setiap saat bahwa Anda bukan penduduk Amerika Serikat selama periode penggunaan tersebut. |
+| restrictedInfo.accessRestricted.agree              | Saya mengerti dan setuju                                                                                                                                                                                                                           |
+
+#### Language: **fr**
+
+| Key                                                | Value                                                                                                                                                                                                                                                                 |
+| -------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| common.orderPrice                                  | Prix de l'ordre                                                                                                                                                                                                                                                       |
+| markets.favorites.addFavorites                     | Ajouter aux favoris                                                                                                                                                                                                                                                   |
+| positions.limitClose.errors.exceed.title           | Limite de clôture dépassée                                                                                                                                                                                                                                            |
+| positions.limitClose.errors.exceed.description     | Impossible de clôturer la position de {{quantity}} {{symbol}}. Le maximum autorisé par clôture est de {{maxQuantity}} {{symbol}}.                                                                                                                                     |
+| orders.status.scaledSubOrderOpened.toast.title     | Ordre échelonné : sous-ordre ouvert                                                                                                                                                                                                                                   |
+| orderEntry.orderType.scaledOrder                   | Ordre échelonné                                                                                                                                                                                                                                                       |
+| orderEntry.upperPrice                              | Prix supérieur                                                                                                                                                                                                                                                        |
+| orderEntry.lowerPrice                              | Prix inférieur                                                                                                                                                                                                                                                        |
+| orderEntry.skew                                    | Biais                                                                                                                                                                                                                                                                 |
+| orderEntry.totalOrders                             | Total des ordres                                                                                                                                                                                                                                                      |
+| orderEntry.totalQuantity                           | Quantité totale                                                                                                                                                                                                                                                       |
+| orderEntry.quantityDistribution                    | Distribution des quantités                                                                                                                                                                                                                                            |
+| orderEntry.quantityDistribution.description        | Contrôle la distribution de la taille des ordres entre les niveaux de prix.                                                                                                                                                                                           |
+| orderEntry.quantityDistribution.formula            | Biais de taille = (Taille au prix le plus élevé) ÷ (Taille au prix le plus bas)                                                                                                                                                                                       |
+| orderEntry.distributionType.flat                   | Uniforme                                                                                                                                                                                                                                                              |
+| orderEntry.distributionType.ascending              | Ascendant                                                                                                                                                                                                                                                             |
+| orderEntry.distributionType.ascending.abbr         | Asc.                                                                                                                                                                                                                                                                  |
+| orderEntry.distributionType.descending             | Descendant                                                                                                                                                                                                                                                            |
+| orderEntry.distributionType.descending.abbr        | Desc.                                                                                                                                                                                                                                                                 |
+| orderEntry.distributionType.custom                 | Personnalisé                                                                                                                                                                                                                                                          |
+| orderEntry.distributionType.flat.description       | Répartition uniforme des ordres sur la plage.                                                                                                                                                                                                                         |
+| orderEntry.distributionType.ascending.description  | Plus grande taille allouée aux niveaux de prix plus élevés.                                                                                                                                                                                                           |
+| orderEntry.distributionType.descending.description | Plus grande taille allouée aux niveaux de prix plus bas.                                                                                                                                                                                                              |
+| orderEntry.confirmScaledOrder                      | Confirmer l'ordre échelonné                                                                                                                                                                                                                                           |
+| orderEntry.upperPrice.error.required               | Le prix supérieur est requis                                                                                                                                                                                                                                          |
+| orderEntry.upperPrice.error.min                    | Le prix supérieur doit être supérieur à {{value}}                                                                                                                                                                                                                     |
+| orderEntry.upperPrice.error.max                    | Le prix supérieur doit être inférieur à {{value}}                                                                                                                                                                                                                     |
+| orderEntry.lowerPrice.error.required               | Le prix inférieur est requis                                                                                                                                                                                                                                          |
+| orderEntry.lowerPrice.error.min                    | Le prix inférieur doit être supérieur à {{value}}                                                                                                                                                                                                                     |
+| orderEntry.lowerPrice.error.max                    | Le prix inférieur doit être inférieur au prix supérieur                                                                                                                                                                                                               |
+| orderEntry.totalOrders.error.required              | Le total des ordres est requis                                                                                                                                                                                                                                        |
+| orderEntry.totalOrders.error.range                 | Le total des ordres doit être entre 2 et 20                                                                                                                                                                                                                           |
+| orderEntry.skew.error.required                     | Le biais est requis                                                                                                                                                                                                                                                   |
+| orderEntry.skew.error.min                          | Le biais doit être supérieur à {{value}}                                                                                                                                                                                                                              |
+| orderEntry.skew.error.max                          | Le biais doit être inférieur à {{value}}                                                                                                                                                                                                                              |
+| orderEntry.confirmScaledOrder.orderPrice.warning   | Cet ordre sera exécuté immédiatement selon le prix actuel du marché                                                                                                                                                                                                   |
+| orderEntry.scaledOrder.fullySuccessful             | Ordre échelonné placé : {{total}} ordres soumis avec succès.                                                                                                                                                                                                          |
+| orderEntry.scaledOrder.partiallySuccessful         | Ordre échelonné partiellement soumis : {{successCount}} sur {{total}} ordres placés.                                                                                                                                                                                  |
+| orderEntry.scaledOrder.allFailed                   | Échec de l'ordre échelonné. Aucun ordre n'a été placé.                                                                                                                                                                                                                |
+| restrictedInfo.accessRestricted                    | Accès Restreint                                                                                                                                                                                                                                                       |
+| restrictedInfo.accessRestricted.description        | En raison des lois et réglementations, nous n'opérons actuellement pas aux États-Unis. En continuant à utiliser notre plateforme, vous déclarez et garantissez à tout moment que vous n'êtes pas résident des États-Unis pendant toute la durée de cette utilisation. |
+| restrictedInfo.accessRestricted.agree              | Je comprends et j'accepte                                                                                                                                                                                                                                             |
+
+#### Language: **es**
+
+| Key                                                | Value                                                                                                                                                                                                                                     |
+| -------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| common.orderPrice                                  | Precio de orden                                                                                                                                                                                                                           |
+| markets.favorites.addFavorites                     | Añadir a favoritos                                                                                                                                                                                                                        |
+| positions.limitClose.errors.exceed.title           | Límite de cierre de posición excedido                                                                                                                                                                                                     |
+| positions.limitClose.errors.exceed.description     | No se puede cerrar la posición de {{quantity}} {{symbol}}. El máximo permitido por cierre es {{maxQuantity}} {{symbol}}.                                                                                                                  |
+| orders.status.scaledSubOrderOpened.toast.title     | Orden escalonada: suborden abierta                                                                                                                                                                                                        |
+| orderEntry.orderType.scaledOrder                   | Orden escalonada                                                                                                                                                                                                                          |
+| orderEntry.upperPrice                              | Precio superior                                                                                                                                                                                                                           |
+| orderEntry.lowerPrice                              | Precio inferior                                                                                                                                                                                                                           |
+| orderEntry.skew                                    | Sesgo                                                                                                                                                                                                                                     |
+| orderEntry.totalOrders                             | Total de órdenes                                                                                                                                                                                                                          |
+| orderEntry.totalQuantity                           | Cantidad total                                                                                                                                                                                                                            |
+| orderEntry.quantityDistribution                    | Distribución de cantidad                                                                                                                                                                                                                  |
+| orderEntry.quantityDistribution.description        | Controla cómo se distribuye el tamaño de la orden entre los niveles de precio.                                                                                                                                                            |
+| orderEntry.quantityDistribution.formula            | Sesgo de tamaño = (Tamaño al precio más alto) ÷ (Tamaño al precio más bajo)                                                                                                                                                               |
+| orderEntry.distributionType.flat                   | Plana                                                                                                                                                                                                                                     |
+| orderEntry.distributionType.ascending              | Ascendente                                                                                                                                                                                                                                |
+| orderEntry.distributionType.ascending.abbr         | Asc.                                                                                                                                                                                                                                      |
+| orderEntry.distributionType.descending             | Descendente                                                                                                                                                                                                                               |
+| orderEntry.distributionType.descending.abbr        | Desc.                                                                                                                                                                                                                                     |
+| orderEntry.distributionType.custom                 | Personalizada                                                                                                                                                                                                                             |
+| orderEntry.distributionType.flat.description       | Asignación uniforme de órdenes en el rango.                                                                                                                                                                                               |
+| orderEntry.distributionType.ascending.description  | Mayor tamaño asignado a niveles de precio más altos.                                                                                                                                                                                      |
+| orderEntry.distributionType.descending.description | Mayor tamaño asignado a niveles de precio más bajos.                                                                                                                                                                                      |
+| orderEntry.confirmScaledOrder                      | Confirmar orden escalonada                                                                                                                                                                                                                |
+| orderEntry.upperPrice.error.required               | El precio superior es requerido                                                                                                                                                                                                           |
+| orderEntry.upperPrice.error.min                    | El precio superior debe ser mayor que {{value}}                                                                                                                                                                                           |
+| orderEntry.upperPrice.error.max                    | El precio superior debe ser menor que {{value}}                                                                                                                                                                                           |
+| orderEntry.lowerPrice.error.required               | El precio inferior es requerido                                                                                                                                                                                                           |
+| orderEntry.lowerPrice.error.min                    | El precio inferior debe ser mayor que {{value}}                                                                                                                                                                                           |
+| orderEntry.lowerPrice.error.max                    | El precio inferior debe ser menor que el precio superior                                                                                                                                                                                  |
+| orderEntry.totalOrders.error.required              | El total de órdenes es requerido                                                                                                                                                                                                          |
+| orderEntry.totalOrders.error.range                 | El total de órdenes debe estar entre 2 y 20                                                                                                                                                                                               |
+| orderEntry.skew.error.required                     | El sesgo es requerido                                                                                                                                                                                                                     |
+| orderEntry.skew.error.min                          | El sesgo debe ser mayor que {{value}}                                                                                                                                                                                                     |
+| orderEntry.skew.error.max                          | El sesgo debe ser menor que {{value}}                                                                                                                                                                                                     |
+| orderEntry.confirmScaledOrder.orderPrice.warning   | Esta orden se ejecutará inmediatamente según el precio actual del mercado                                                                                                                                                                 |
+| orderEntry.scaledOrder.fullySuccessful             | Orden escalonada colocada: {{total}} órdenes enviadas con éxito.                                                                                                                                                                          |
+| orderEntry.scaledOrder.partiallySuccessful         | Orden escalonada parcialmente enviada: {{successCount}} de {{total}} órdenes colocadas.                                                                                                                                                   |
+| orderEntry.scaledOrder.allFailed                   | Orden escalonada fallida. No se colocaron órdenes.                                                                                                                                                                                        |
+| restrictedInfo.accessRestricted                    | Acceso Restringido                                                                                                                                                                                                                        |
+| restrictedInfo.accessRestricted.description        | Debido a leyes y regulaciones, actualmente no operamos en los Estados Unidos. Al continuar usando nuestra plataforma, usted declara y garantiza en todo momento que no es residente de los Estados Unidos durante todo el período de uso. |
+| restrictedInfo.accessRestricted.agree              | Entiendo y acepto                                                                                                                                                                                                                         |
+
+#### Language: **de**
+
+| Key                                                | Value                                                                                                                                                                                                                                                                    |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| common.orderPrice                                  | Orderpreis                                                                                                                                                                                                                                                               |
+| markets.favorites.addFavorites                     | Zu Favoriten hinzufügen                                                                                                                                                                                                                                                  |
+| positions.limitClose.errors.exceed.title           | Schließungslimit überschritten                                                                                                                                                                                                                                           |
+| positions.limitClose.errors.exceed.description     | Position {{quantity}} {{symbol}} kann nicht geschlossen werden. Maximal erlaubte Menge pro Schließung ist {{maxQuantity}} {{symbol}}.                                                                                                                                    |
+| orders.status.scaledSubOrderOpened.toast.title     | Skalierte Order: Unterorder geöffnet                                                                                                                                                                                                                                     |
+| orderEntry.orderType.scaledOrder                   | Skalierte Order                                                                                                                                                                                                                                                          |
+| orderEntry.upperPrice                              | Oberpreis                                                                                                                                                                                                                                                                |
+| orderEntry.lowerPrice                              | Unterpreis                                                                                                                                                                                                                                                               |
+| orderEntry.skew                                    | Schiefe                                                                                                                                                                                                                                                                  |
+| orderEntry.totalOrders                             | Gesamtaufträge                                                                                                                                                                                                                                                           |
+| orderEntry.totalQuantity                           | Gesamtmenge                                                                                                                                                                                                                                                              |
+| orderEntry.quantityDistribution                    | Mengenverteilung                                                                                                                                                                                                                                                         |
+| orderEntry.quantityDistribution.description        | Steuert die Verteilung der Auftragsgröße über Preisstufen.                                                                                                                                                                                                               |
+| orderEntry.quantityDistribution.formula            | Größenverzerrung = (Größe zum höchsten Preis) ÷ (Größe zum niedrigsten Preis)                                                                                                                                                                                            |
+| orderEntry.distributionType.flat                   | Gleichmäßig                                                                                                                                                                                                                                                              |
+| orderEntry.distributionType.ascending              | Aufsteigend                                                                                                                                                                                                                                                              |
+| orderEntry.distributionType.ascending.abbr         | Auf.                                                                                                                                                                                                                                                                     |
+| orderEntry.distributionType.descending             | Absteigend                                                                                                                                                                                                                                                               |
+| orderEntry.distributionType.descending.abbr        | Ab.                                                                                                                                                                                                                                                                      |
+| orderEntry.distributionType.custom                 | Benutzerdefiniert                                                                                                                                                                                                                                                        |
+| orderEntry.distributionType.flat.description       | Gleichmäßige Auftragsverteilung über den Bereich.                                                                                                                                                                                                                        |
+| orderEntry.distributionType.ascending.description  | Größere Zuteilung bei höheren Preisstufen.                                                                                                                                                                                                                               |
+| orderEntry.distributionType.descending.description | Größere Zuteilung bei niedrigeren Preisstufen.                                                                                                                                                                                                                           |
+| orderEntry.confirmScaledOrder                      | Skalierte Order bestätigen                                                                                                                                                                                                                                               |
+| orderEntry.upperPrice.error.required               | Oberpreis ist erforderlich                                                                                                                                                                                                                                               |
+| orderEntry.upperPrice.error.min                    | Oberpreis muss größer als {{value}} sein                                                                                                                                                                                                                                 |
+| orderEntry.upperPrice.error.max                    | Oberpreis muss kleiner als {{value}} sein                                                                                                                                                                                                                                |
+| orderEntry.lowerPrice.error.required               | Unterpreis ist erforderlich                                                                                                                                                                                                                                              |
+| orderEntry.lowerPrice.error.min                    | Unterpreis muss größer als {{value}} sein                                                                                                                                                                                                                                |
+| orderEntry.lowerPrice.error.max                    | Unterpreis muss kleiner als der Oberpreis sein                                                                                                                                                                                                                           |
+| orderEntry.totalOrders.error.required              | Gesamtaufträge sind erforderlich                                                                                                                                                                                                                                         |
+| orderEntry.totalOrders.error.range                 | Gesamtaufträge müssen zwischen 2 und 20 liegen                                                                                                                                                                                                                           |
+| orderEntry.skew.error.required                     | Schiefe ist erforderlich                                                                                                                                                                                                                                                 |
+| orderEntry.skew.error.min                          | Verzerrung muss größer als {{value}} sein                                                                                                                                                                                                                                |
+| orderEntry.skew.error.max                          | Verzerrung muss kleiner als {{value}} sein                                                                                                                                                                                                                               |
+| orderEntry.confirmScaledOrder.orderPrice.warning   | Diese Order wird basierend auf dem aktuellen Marktpreis sofort ausgeführt                                                                                                                                                                                                |
+| orderEntry.scaledOrder.fullySuccessful             | Skalierte Order platziert: {{total}} Orders erfolgreich übermittelt.                                                                                                                                                                                                     |
+| orderEntry.scaledOrder.partiallySuccessful         | Skalierte Order teilweise übermittelt: {{successCount}} von {{total}} Orders platziert.                                                                                                                                                                                  |
+| orderEntry.scaledOrder.allFailed                   | Skalierte Order fehlgeschlagen. Keine Orders wurden platziert.                                                                                                                                                                                                           |
+| restrictedInfo.accessRestricted                    | Zugriff eingeschränkt                                                                                                                                                                                                                                                    |
+| restrictedInfo.accessRestricted.description        | Aufgrund von Gesetzen und Vorschriften sind wir derzeit nicht in den Vereinigten Staaten tätig. Durch die weitere Nutzung unserer Plattform versichern und garantieren Sie, dass Sie während des gesamten Nutzungszeitraums kein Einwohner der Vereinigten Staaten sind. |
+| restrictedInfo.accessRestricted.agree              | Ich verstehe und stimme zu                                                                                                                                                                                                                                               |
+
+### Removed Keys
+
+#### Language: **en**
+
+| Key                      | Value       |
+| ------------------------ | ----------- |
+| orders.column.orderPrice | Order price |
+
+#### Language: **zh**
+
+| Key                      | Value    |
+| ------------------------ | -------- |
+| orders.column.orderPrice | 订单价格 |
+
+#### Language: **vi**
+
+| Key                      | Value    |
+| ------------------------ | -------- |
+| orders.column.orderPrice | Giá lệnh |
+
+#### Language: **uk**
+
+| Key                      | Value       |
+| ------------------------ | ----------- |
+| orders.column.orderPrice | Ціна ордера |
+
+#### Language: **tr**
+
+| Key                      | Value       |
+| ------------------------ | ----------- |
+| orders.column.orderPrice | Emir fiyatı |
+
+#### Language: **ru**
+
+| Key                      | Value       |
+| ------------------------ | ----------- |
+| orders.column.orderPrice | Цена ордера |
+
+#### Language: **pt**
+
+| Key                      | Value          |
+| ------------------------ | -------------- |
+| orders.column.orderPrice | Preço da ordem |
+
+#### Language: **pl**
+
+| Key                      | Value         |
+| ------------------------ | ------------- |
+| orders.column.orderPrice | Cena zlecenia |
+
+#### Language: **nl**
+
+| Key                      | Value      |
+| ------------------------ | ---------- |
+| orders.column.orderPrice | Orderprijs |
+
+#### Language: **ko**
+
+| Key                      | Value     |
+| ------------------------ | --------- |
+| orders.column.orderPrice | 주문 가격 |
+
+#### Language: **ja**
+
+| Key                      | Value    |
+| ------------------------ | -------- |
+| orders.column.orderPrice | 注文価格 |
+
+#### Language: **it**
+
+| Key                      | Value         |
+| ------------------------ | ------------- |
+| orders.column.orderPrice | Prezzo ordine |
+
+#### Language: **id**
+
+| Key                      | Value         |
+| ------------------------ | ------------- |
+| orders.column.orderPrice | Harga pesanan |
+
+#### Language: **fr**
+
+| Key                      | Value           |
+| ------------------------ | --------------- |
+| orders.column.orderPrice | Prix de l'ordre |
+
+#### Language: **es**
+
+| Key                      | Value           |
+| ------------------------ | --------------- |
+| orders.column.orderPrice | Precio de orden |
+
+#### Language: **de**
+
+| Key                      | Value         |
+| ------------------------ | ------------- |
+| orders.column.orderPrice | Auftragspreis |
+
+### Updated Keys
+
+#### Language: **en**
+
+| Key                                 | Old Value                           | New Value                                                                                          |
+| ----------------------------------- | ----------------------------------- | -------------------------------------------------------------------------------------------------- |
+| orderEntry.orderType.limitOrder     | Limit order                         | Limit                                                                                              |
+| orderEntry.orderType.marketOrder    | Market order                        | Market                                                                                             |
+| affiliate.process.step1.title       | Apply                               | Trade $10,000+ or apply                                                                            |
+| affiliate.process.step1.description | Apply for a referral code via form. | Earn a referral code automatically ($0 of $10,000 completed), or apply for a higher rate via form. |
+
+#### Language: **zh**
+
+| Key                                 | Old Value            | New Value                                                     |
+| ----------------------------------- | -------------------- | ------------------------------------------------------------- |
+| affiliate.process.step1.title       | 申请                 | 交易 $10,000+ 或申请                                          |
+| affiliate.process.step1.description | 通过表单申请推荐码。 | 自动获得推荐码（已完成 $0/$10,000），或通过表单申请更高费率。 |
+
+#### Language: **vi**
+
+| Key                                 | Old Value                                 | New Value                                                                                       |
+| ----------------------------------- | ----------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| affiliate.process.step1.title       | Đăng ký                                   | Giao dịch $10,000+ hoặc đăng ký                                                                 |
+| affiliate.process.step1.description | Đăng ký mã giới thiệu thông qua biểu mẫu. | Tự động nhận mã giới thiệu ($0/$10,000 đã hoàn thành), hoặc đăng ký tỷ lệ cao hơn qua biểu mẫu. |
+
+#### Language: **uk**
+
+| Key                                 | Old Value                                      | New Value                                                                                                             |
+| ----------------------------------- | ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| affiliate.process.step1.title       | Подати заявку                                  | Торгуйте на $10,000+ або подайте заявку                                                                               |
+| affiliate.process.step1.description | Подайте заявку на реферальний код через форму. | Автоматично отримайте реферальний код ($0 з $10,000 виконано), або подайте заявку на більш високу ставку через форму. |
+
+#### Language: **tr**
+
+| Key                                 | Old Value                                      | New Value                                                                                                                 |
+| ----------------------------------- | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| affiliate.process.step1.title       | Başvur                                         | $10,000+ işlem yapın veya başvurun                                                                                        |
+| affiliate.process.step1.description | Form aracılığıyla referans kodu için başvurun. | Otomatik olarak referans kodu kazanın ($10,000'den $0 tamamlandı), veya form aracılığıyla daha yüksek oran için başvurun. |
+
+#### Language: **ru**
+
+| Key                                 | Old Value                                      | New Value                                                                                                                 |
+| ----------------------------------- | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| affiliate.process.step1.title       | Подать заявку                                  | Торгуйте на $10,000+ или подайте заявку                                                                                   |
+| affiliate.process.step1.description | Подайте заявку на реферальный код через форму. | Автоматически получите реферальный код ($0 из $10,000 выполнено), или подайте заявку на более высокую ставку через форму. |
+
+#### Language: **pt**
+
+| Key                                 | Old Value                                                     | New Value                                                                                                                     |
+| ----------------------------------- | ------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| affiliate.process.step1.title       | Candidatar                                                    | Negocie $10,000+ ou candidate-se                                                                                              |
+| affiliate.process.step1.description | Candidate-se a um código de referência através do formulário. | Ganhe um código de referência automaticamente ($0 de $10,000 concluído), ou candidate-se a uma taxa mais alta via formulário. |
+
+#### Language: **pl**
+
+| Key                                 | Old Value                                        | New Value                                                                                                    |
+| ----------------------------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
+| affiliate.process.step1.title       | Aplikuj                                          | Handluj $10,000+ lub aplikuj                                                                                 |
+| affiliate.process.step1.description | Złóż wniosek o kod polecający poprzez formularz. | Automatycznie otrzymaj kod polecający ($0 z $10,000 ukończone), lub aplikuj o wyższą stawkę przez formularz. |
+
+#### Language: **nl**
+
+| Key                                 | Old Value                                        | New Value                                                                                                                   |
+| ----------------------------------- | ------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------- |
+| affiliate.process.step1.title       | Aanvragen                                        | Handel $10,000+ of solliciteer                                                                                              |
+| affiliate.process.step1.description | Vraag een verwijzingscode aan via het formulier. | Verdien automatisch een verwijzingscode ($0 van $10,000 voltooid), of solliciteer voor een hogere tarief via het formulier. |
+
+#### Language: **ko**
+
+| Key                                 | Old Value                           | New Value                                                                             |
+| ----------------------------------- | ----------------------------------- | ------------------------------------------------------------------------------------- |
+| affiliate.process.step1.title       | 신청                                | $10,000+ 거래 또는 신청                                                               |
+| affiliate.process.step1.description | 양식을 통해 추천 코드를 신청하세요. | 자동으로 추천 코드 획득 ($10,000 중 $0 완료), 또는 양식을 통해 더 높은 수수료율 신청. |
+
+#### Language: **ja**
+
+| Key                                 | Old Value                            | New Value                                                                                  |
+| ----------------------------------- | ------------------------------------ | ------------------------------------------------------------------------------------------ |
+| affiliate.process.step1.title       | 申し込む                             | $10,000+ 取引または申請                                                                    |
+| affiliate.process.step1.description | フォームから紹介コードを申請します。 | 自動的に紹介コードを獲得（$10,000 のうち $0 完了）、またはフォームでより高いレートを申請。 |
+
+#### Language: **it**
+
+| Key                                 | Old Value                                           | New Value                                                                                                                          |
+| ----------------------------------- | --------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| affiliate.process.step1.title       | Candidati                                           | Trading $10,000+ o candidati                                                                                                       |
+| affiliate.process.step1.description | Candidati per un codice referral tramite il modulo. | Guadagna automaticamente un codice di referral ($0 di $10,000 completato), o candidati per una tariffa più alta tramite il modulo. |
+
+#### Language: **id**
+
+| Key                                 | Old Value                                    | New Value                                                                                                                |
+| ----------------------------------- | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| affiliate.process.step1.title       | Daftar                                       | Trading $10,000+ atau daftar                                                                                             |
+| affiliate.process.step1.description | Daftar untuk kode referral melalui formulir. | Dapatkan kode referral secara otomatis ($0 dari $10,000 selesai), atau daftar untuk tarif lebih tinggi melalui formulir. |
+
+#### Language: **fr**
+
+| Key                                 | Old Value                                              | New Value                                                                                                                     |
+| ----------------------------------- | ------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
+| affiliate.process.step1.title       | Postuler                                               | Échangez $10,000+ ou postulez                                                                                                 |
+| affiliate.process.step1.description | Postulez pour un code de parrainage via le formulaire. | Gagnez automatiquement un code de parrainage ($0 sur $10,000 terminé), ou postulez pour un taux plus élevé via le formulaire. |
+
+#### Language: **es**
+
+| Key                                 | Old Value                                               | New Value                                                                                                                    |
+| ----------------------------------- | ------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| affiliate.process.step1.title       | Solicitar                                               | Opera $10,000+ o solicita                                                                                                    |
+| affiliate.process.step1.description | Solicite un código de referido a través del formulario. | Gana un código de referido automáticamente ($0 de $10,000 completado), o solicita una tasa más alta a través del formulario. |
+
+#### Language: **de**
+
+| Key                                 | Old Value                                                      | New Value                                                                                                                                     |
+| ----------------------------------- | -------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| affiliate.process.step1.title       | Bewerben                                                       | Handeln Sie $10,000+ oder bewerben Sie sich                                                                                                   |
+| affiliate.process.step1.description | Bewerben Sie sich über das Formular für einen Empfehlungscode. | Erhalten Sie automatisch einen Empfehlungscode ($0 von $10,000 abgeschlossen), oder bewerben Sie sich über das Formular für eine höhere Rate. |
+
+## 2.3.2
+
+### Added Keys
+
+#### Language: **en**
+
+| Key                                                  | Value                                                                      |
+| ---------------------------------------------------- | -------------------------------------------------------------------------- |
+| common.deposits                                      | Deposits                                                                   |
+| common.withdrawals                                   | Withdrawals                                                                |
+| common.accountId                                     | Account ID                                                                 |
+| common.web3Wallet                                    | Web3 wallet                                                                |
+| common.txId                                          | TxID                                                                       |
+| portfolio.apiKey.permissions.asset                   | Asset                                                                      |
+| portfolio.apiKey.create.createAccount.tooltip        | Please create account before create API key                                |
+| connector.createAccount                              | Create account                                                             |
+| connector.createAccount.description                  | Confirm wallet ownership to create an account                              |
+| connector.trade.createAccount.tooltip                | Please create account before starting to trade                             |
+| connector.setUp.createAccount.tooltip                | Please create account before set up                                        |
+| transfer.web3Wallet.your                             | Your Web3 Wallet                                                           |
+| transfer.web3Wallet.my                               | My Web3 wallet                                                             |
+| transfer.withdraw.otherAccount                       | Other {{brokerName}} account                                               |
+| transfer.withdraw.accountId.tips                     | Please enter an Account ID instead of a wallet address.                    |
+| transfer.withdraw.accountId.invalid                  | Invalid Account ID. Please try again.                                      |
+| transfer.internalTransfer.error.default              | Unable to complete transfer. Please try again later.                       |
+| transfer.internalTransfer.error.transferInProgress   | An internal transfer is currently in progress.                             |
+| transfer.internalTransfer.error.withdrawalInProgress | There is a withdrawal in progress.                                         |
+| transfer.internalTransfer.error.transferToSelf       | Transfers to your own account are not allowed                              |
+| transfer.internalTransfer.error.accountIdNotExist    | Receiver account ID does not exist.                                        |
+| transfer.internalTransfer.error.transferToSubAccount | Transfers to sub-accounts under different main accounts are not permitted. |
+| tradingLeaderboard.arena                             | Arena                                                                      |
+| tradingLeaderboard.generalLeaderboard                | General leaderboard                                                        |
+| tradingLeaderboard.maxTicketsAchieved                | Max tickets achieved                                                       |
+
+#### Language: **zh**
+
+| Key                                                  | Value                              |
+| ---------------------------------------------------- | ---------------------------------- |
+| common.deposits                                      | 充值                               |
+| common.withdrawals                                   | 提现                               |
+| common.accountId                                     | 账户 ID                            |
+| common.web3Wallet                                    | Web3 钱包                          |
+| common.txId                                          | 交易ID                             |
+| portfolio.apiKey.permissions.asset                   | 资产                               |
+| portfolio.apiKey.create.createAccount.tooltip        | 请在创建 API 密钥前创建账户        |
+| connector.createAccount                              | 创建账户                           |
+| connector.createAccount.description                  | 确认钱包所有权以创建账户           |
+| connector.trade.createAccount.tooltip                | 请在开始交易前创建账户             |
+| connector.setUp.createAccount.tooltip                | 请在设置前创建账户                 |
+| transfer.web3Wallet.your                             | 你的 Web3 钱包                     |
+| transfer.web3Wallet.my                               | 我的 Web3 钱包                     |
+| transfer.withdraw.otherAccount                       | 其他 {{brokerName}} 账户           |
+| transfer.withdraw.accountId.tips                     | 请输入账户 ID，而不是钱包地址。    |
+| transfer.withdraw.accountId.invalid                  | 账户 ID 无效。请重试。             |
+| transfer.internalTransfer.error.default              | 无法完成转账。请稍后再试。         |
+| transfer.internalTransfer.error.transferInProgress   | 内部转账正在进行中。               |
+| transfer.internalTransfer.error.withdrawalInProgress | 提现正在进行中。                   |
+| transfer.internalTransfer.error.transferToSelf       | 不允许向自己的账户转账             |
+| transfer.internalTransfer.error.accountIdNotExist    | 收款账户 ID 不存在。               |
+| transfer.internalTransfer.error.transferToSubAccount | 不允许向不同主账户下的子账户转账。 |
+| tradingLeaderboard.arena                             | 竞技场                             |
+| tradingLeaderboard.generalLeaderboard                | 总排行榜                           |
+| tradingLeaderboard.maxTicketsAchieved                | 获得的最大票数                     |
+
+#### Language: **vi**
+
+| Key                                                  | Value                                                                        |
+| ---------------------------------------------------- | ---------------------------------------------------------------------------- |
+| common.deposits                                      | Nạp tiền                                                                     |
+| common.withdrawals                                   | Rút tiền                                                                     |
+| common.accountId                                     | ID tài khoản                                                                 |
+| common.web3Wallet                                    | Ví Web3                                                                      |
+| common.txId                                          | TxID                                                                         |
+| portfolio.apiKey.permissions.asset                   | Tài sản                                                                      |
+| portfolio.apiKey.create.createAccount.tooltip        | Vui lòng tạo tài khoản trước khi tạo khóa API                                |
+| connector.createAccount                              | Tạo tài khoản                                                                |
+| connector.createAccount.description                  | Xác nhận quyền sở hữu ví để tạo tài khoản                                    |
+| connector.trade.createAccount.tooltip                | Vui lòng tạo tài khoản trước khi bắt đầu giao dịch                           |
+| connector.setUp.createAccount.tooltip                | Vui lòng tạo tài khoản trước khi thiết lập                                   |
+| transfer.web3Wallet.your                             | Ví Web3 của bạn                                                              |
+| transfer.web3Wallet.my                               | Ví Web3 của tôi                                                              |
+| transfer.withdraw.otherAccount                       | Tài khoản {{brokerName}} khác                                                |
+| transfer.withdraw.accountId.tips                     | Vui lòng nhập ID tài khoản thay vì địa chỉ ví.                               |
+| transfer.withdraw.accountId.invalid                  | ID tài khoản không hợp lệ. Vui lòng thử lại.                                 |
+| transfer.internalTransfer.error.default              | Không thể hoàn tất chuyển khoản. Vui lòng thử lại sau.                       |
+| transfer.internalTransfer.error.transferInProgress   | Đang có chuyển khoản nội bộ diễn ra.                                         |
+| transfer.internalTransfer.error.withdrawalInProgress | Đang có rút tiền diễn ra.                                                    |
+| transfer.internalTransfer.error.transferToSelf       | Không được phép chuyển vào tài khoản của chính bạn                           |
+| transfer.internalTransfer.error.accountIdNotExist    | ID tài khoản người nhận không tồn tại.                                       |
+| transfer.internalTransfer.error.transferToSubAccount | Không được phép chuyển vào tài khoản phụ dưới các tài khoản chính khác nhau. |
+| tradingLeaderboard.arena                             | Đấu trường                                                                   |
+| tradingLeaderboard.generalLeaderboard                | Bảng xếp hạng chung                                                          |
+| tradingLeaderboard.maxTicketsAchieved                | Số vé tối đa đã đạt được                                                     |
+
+#### Language: **uk**
+
+| Key                                                  | Value                                                                |
+| ---------------------------------------------------- | -------------------------------------------------------------------- |
+| common.deposits                                      | Депозити                                                             |
+| common.withdrawals                                   | Виведення коштів                                                     |
+| common.accountId                                     | ID акаунта                                                           |
+| common.web3Wallet                                    | Web3 гаманець                                                        |
+| common.txId                                          | ID транзакції                                                        |
+| portfolio.apiKey.permissions.asset                   | Актив                                                                |
+| portfolio.apiKey.create.createAccount.tooltip        | Будь ласка, створіть обліковий запис перед створенням ключа API      |
+| connector.createAccount                              | Створити обліковий запис                                             |
+| connector.createAccount.description                  | Підтвердьте володіння гаманцем, щоб створити обліковий запис         |
+| connector.trade.createAccount.tooltip                | Будь ласка, створіть обліковий запис перед початком торгівлі         |
+| connector.setUp.createAccount.tooltip                | Будь ласка, створіть обліковий запис перед налаштуванням             |
+| transfer.web3Wallet.your                             | Ваш Web3 гаманець                                                    |
+| transfer.web3Wallet.my                               | Мій Web3 гаманець                                                    |
+| transfer.withdraw.otherAccount                       | Інший акаунт {{brokerName}}                                          |
+| transfer.withdraw.accountId.tips                     | Будь ласка, введіть ID акаунта, а не адресу гаманця.                 |
+| transfer.withdraw.accountId.invalid                  | Недійсний ID акаунта. Будь ласка, спробуйте ще раз.                  |
+| transfer.internalTransfer.error.default              | Не вдалося завершити переказ. Будь ласка, спробуйте пізніше.         |
+| transfer.internalTransfer.error.transferInProgress   | Внутрішній переказ триває.                                           |
+| transfer.internalTransfer.error.withdrawalInProgress | Виведення коштів триває.                                             |
+| transfer.internalTransfer.error.transferToSelf       | Перекази на власний акаунт заборонені                                |
+| transfer.internalTransfer.error.accountIdNotExist    | ID акаунта одержувача не існує.                                      |
+| transfer.internalTransfer.error.transferToSubAccount | Перекази на субакаунти під різними основними акаунтами не дозволені. |
+| tradingLeaderboard.arena                             | Арена                                                                |
+| tradingLeaderboard.generalLeaderboard                | Загальний рейтинг                                                    |
+| tradingLeaderboard.maxTicketsAchieved                | Максимум отриманих квитків                                           |
+
+#### Language: **tr**
+
+| Key                                                  | Value                                                           |
+| ---------------------------------------------------- | --------------------------------------------------------------- |
+| common.deposits                                      | Mevduatlar                                                      |
+| common.withdrawals                                   | Çekimler                                                        |
+| common.accountId                                     | Hesap Kimliği                                                   |
+| common.web3Wallet                                    | Web3 cüzdanı                                                    |
+| common.txId                                          | İşlem ID                                                        |
+| portfolio.apiKey.permissions.asset                   | Varlık                                                          |
+| portfolio.apiKey.create.createAccount.tooltip        | Lütfen API anahtarı oluşturmadan önce hesap oluşturun           |
+| connector.createAccount                              | Hesap oluştur                                                   |
+| connector.createAccount.description                  | Hesap oluşturmak için cüzdan sahipliğini onaylayın              |
+| connector.trade.createAccount.tooltip                | Lütfen ticarete başlamadan önce hesap oluşturun                 |
+| connector.setUp.createAccount.tooltip                | Lütfen kurmadan önce hesap oluşturun                            |
+| transfer.web3Wallet.your                             | Senin Web3 cüzdanın                                             |
+| transfer.web3Wallet.my                               | Benim Web3 cüzdanım                                             |
+| transfer.withdraw.otherAccount                       | Diğer {{brokerName}} hesabı                                     |
+| transfer.withdraw.accountId.tips                     | Lütfen cüzdan adresi yerine bir Hesap Kimliği girin.            |
+| transfer.withdraw.accountId.invalid                  | Geçersiz Hesap Kimliği. Lütfen tekrar deneyin.                  |
+| transfer.internalTransfer.error.default              | Transfer tamamlanamıyor. Lütfen daha sonra tekrar deneyin.      |
+| transfer.internalTransfer.error.transferInProgress   | Bir dahili transfer devam ediyor.                               |
+| transfer.internalTransfer.error.withdrawalInProgress | Bir çekim işlemi devam ediyor.                                  |
+| transfer.internalTransfer.error.transferToSelf       | Kendi hesabınıza transfer yapılamaz                             |
+| transfer.internalTransfer.error.accountIdNotExist    | Alıcı hesap kimliği mevcut değil.                               |
+| transfer.internalTransfer.error.transferToSubAccount | Farklı ana hesaplar altındaki alt hesaplara transfer yapılamaz. |
+| tradingLeaderboard.arena                             | Arena                                                           |
+| tradingLeaderboard.generalLeaderboard                | Genel Sıralama                                                  |
+| tradingLeaderboard.maxTicketsAchieved                | Ulaşılan maksimum bilet sayısı                                  |
+
+#### Language: **ru**
+
+| Key                                                  | Value                                                                  |
+| ---------------------------------------------------- | ---------------------------------------------------------------------- |
+| common.deposits                                      | Депозиты                                                               |
+| common.withdrawals                                   | Выводы средств                                                         |
+| common.accountId                                     | ID аккаунта                                                            |
+| common.web3Wallet                                    | Web3 кошелек                                                           |
+| common.txId                                          | ID транзакции                                                          |
+| portfolio.apiKey.permissions.asset                   | Актив                                                                  |
+| portfolio.apiKey.create.createAccount.tooltip        | Пожалуйста, создайте учетную запись перед созданием ключа API          |
+| connector.createAccount                              | Создать учетную запись                                                 |
+| connector.createAccount.description                  | Подтвердите владение кошельком для создания учетной записи             |
+| connector.trade.createAccount.tooltip                | Пожалуйста, создайте учетную запись перед началом торговли             |
+| connector.setUp.createAccount.tooltip                | Пожалуйста, создайте учетную запись перед настройкой                   |
+| transfer.web3Wallet.your                             | Ваш Web3 кошелек                                                       |
+| transfer.web3Wallet.my                               | Мой Web3 кошелек                                                       |
+| transfer.withdraw.otherAccount                       | Другой аккаунт {{brokerName}}                                          |
+| transfer.withdraw.accountId.tips                     | Пожалуйста, введите ID аккаунта, а не адрес кошелька.                  |
+| transfer.withdraw.accountId.invalid                  | Недействительный ID аккаунта. Пожалуйста, попробуйте еще раз.          |
+| transfer.internalTransfer.error.default              | Не удалось выполнить перевод. Пожалуйста, попробуйте позже.            |
+| transfer.internalTransfer.error.transferInProgress   | Внутренний перевод в процессе.                                         |
+| transfer.internalTransfer.error.withdrawalInProgress | Выполняется вывод средств.                                             |
+| transfer.internalTransfer.error.transferToSelf       | Переводы на свой аккаунт запрещены                                     |
+| transfer.internalTransfer.error.accountIdNotExist    | ID аккаунта получателя не существует.                                  |
+| transfer.internalTransfer.error.transferToSubAccount | Переводы на субаккаунты под разными основными аккаунтами не разрешены. |
+| tradingLeaderboard.arena                             | Арена                                                                  |
+| tradingLeaderboard.generalLeaderboard                | Общий рейтинг                                                          |
+| tradingLeaderboard.maxTicketsAchieved                | Максимум полученных билетов                                            |
+
+#### Language: **pt**
+
+| Key                                                  | Value                                                                              |
+| ---------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| common.deposits                                      | Depósitos                                                                          |
+| common.withdrawals                                   | Saques                                                                             |
+| common.accountId                                     | ID da conta                                                                        |
+| common.web3Wallet                                    | Carteira Web3                                                                      |
+| common.txId                                          | ID da Transação                                                                    |
+| portfolio.apiKey.permissions.asset                   | Ativo                                                                              |
+| portfolio.apiKey.create.createAccount.tooltip        | Por favor, crie uma conta antes de criar a chave de API                            |
+| connector.createAccount                              | Criar conta                                                                        |
+| connector.createAccount.description                  | Confirme a posse da carteira para criar uma conta                                  |
+| connector.trade.createAccount.tooltip                | Por favor, crie uma conta antes de começar a negociar                              |
+| connector.setUp.createAccount.tooltip                | Por favor, crie uma conta antes de configurar                                      |
+| transfer.web3Wallet.your                             | Sua carteira Web3                                                                  |
+| transfer.web3Wallet.my                               | Minha carteira Web3                                                                |
+| transfer.withdraw.otherAccount                       | Outra conta {{brokerName}}                                                         |
+| transfer.withdraw.accountId.tips                     | Por favor, insira um ID de conta em vez de um endereço de carteira.                |
+| transfer.withdraw.accountId.invalid                  | ID da conta inválido. Por favor, tente novamente.                                  |
+| transfer.internalTransfer.error.default              | Não foi possível concluir a transferência. Por favor, tente novamente mais tarde.  |
+| transfer.internalTransfer.error.transferInProgress   | Uma transferência interna está em andamento.                                       |
+| transfer.internalTransfer.error.withdrawalInProgress | Um saque está em andamento.                                                        |
+| transfer.internalTransfer.error.transferToSelf       | Transferências para sua própria conta não são permitidas                           |
+| transfer.internalTransfer.error.accountIdNotExist    | O ID da conta do destinatário não existe.                                          |
+| transfer.internalTransfer.error.transferToSubAccount | Transferências para subcontas sob diferentes contas principais não são permitidas. |
+| tradingLeaderboard.arena                             | Arena                                                                              |
+| tradingLeaderboard.generalLeaderboard                | Classificação geral                                                                |
+| tradingLeaderboard.maxTicketsAchieved                | Máximo de bilhetes alcançados                                                      |
+
+#### Language: **pl**
+
+| Key                                                  | Value                                                              |
+| ---------------------------------------------------- | ------------------------------------------------------------------ |
+| common.deposits                                      | Depozyty                                                           |
+| common.withdrawals                                   | Wypłaty                                                            |
+| common.accountId                                     | ID konta                                                           |
+| common.web3Wallet                                    | Portfel Web3                                                       |
+| common.txId                                          | ID transakcji                                                      |
+| portfolio.apiKey.permissions.asset                   | Aktywa                                                             |
+| portfolio.apiKey.create.createAccount.tooltip        | Proszę utworzyć konto przed utworzeniem klucza API                 |
+| connector.createAccount                              | Utwórz konto                                                       |
+| connector.createAccount.description                  | Potwierdź własność portfela, aby utworzyć konto                    |
+| connector.trade.createAccount.tooltip                | Proszę utworzyć konto przed rozpoczęciem handlu                    |
+| connector.setUp.createAccount.tooltip                | Proszę utworzyć konto przed konfiguracją                           |
+| transfer.web3Wallet.your                             | Twój portfel Web3                                                  |
+| transfer.web3Wallet.my                               | Mój portfel Web3                                                   |
+| transfer.withdraw.otherAccount                       | Inne konto {{brokerName}}                                          |
+| transfer.withdraw.accountId.tips                     | Proszę wprowadzić ID konta zamiast adresu portfela.                |
+| transfer.withdraw.accountId.invalid                  | Nieprawidłowy ID konta. Spróbuj ponownie.                          |
+| transfer.internalTransfer.error.default              | Nie można zakończyć transferu. Spróbuj ponownie później.           |
+| transfer.internalTransfer.error.transferInProgress   | Trwa transfer wewnętrzny.                                          |
+| transfer.internalTransfer.error.withdrawalInProgress | Trwa wypłata.                                                      |
+| transfer.internalTransfer.error.transferToSelf       | Przelewy na własne konto są niedozwolone                           |
+| transfer.internalTransfer.error.accountIdNotExist    | ID konta odbiorcy nie istnieje.                                    |
+| transfer.internalTransfer.error.transferToSubAccount | Przelewy na subkonta pod różnymi głównymi kontami są niedozwolone. |
+| tradingLeaderboard.arena                             | Arena                                                              |
+| tradingLeaderboard.generalLeaderboard                | Ranking ogólny                                                     |
+| tradingLeaderboard.maxTicketsAchieved                | Maksymalna liczba uzyskanych biletów                               |
+
+#### Language: **nl**
+
+| Key                                                  | Value                                                                                  |
+| ---------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| common.deposits                                      | Stortingen                                                                             |
+| common.withdrawals                                   | Opnames                                                                                |
+| common.accountId                                     | Account-ID                                                                             |
+| common.web3Wallet                                    | Web3-portemonnee                                                                       |
+| common.txId                                          | TxID                                                                                   |
+| portfolio.apiKey.permissions.asset                   | Activa                                                                                 |
+| portfolio.apiKey.create.createAccount.tooltip        | Maak een account aan voordat u de API-sleutel aanmaakt                                 |
+| connector.createAccount                              | Account aanmaken                                                                       |
+| connector.createAccount.description                  | Bevestig het eigendom van de portemonnee om een account aan te maken                   |
+| connector.trade.createAccount.tooltip                | Maak een account aan voordat u begint met handelen                                     |
+| connector.setUp.createAccount.tooltip                | Maak een account aan voordat u instelt                                                 |
+| transfer.web3Wallet.your                             | Jouw Web3-portemonnee                                                                  |
+| transfer.web3Wallet.my                               | Mijn Web3-portemonnee                                                                  |
+| transfer.withdraw.otherAccount                       | Andere {{brokerName}} account                                                          |
+| transfer.withdraw.accountId.tips                     | Voer een account-ID in in plaats van een portemonnee-adres.                            |
+| transfer.withdraw.accountId.invalid                  | Ongeldig account-ID. Probeer het opnieuw.                                              |
+| transfer.internalTransfer.error.default              | Kan overdracht niet voltooien. Probeer het later opnieuw.                              |
+| transfer.internalTransfer.error.transferInProgress   | Er is een interne overdracht gaande.                                                   |
+| transfer.internalTransfer.error.withdrawalInProgress | Er is een opname gaande.                                                               |
+| transfer.internalTransfer.error.transferToSelf       | Overboekingen naar je eigen account zijn niet toegestaan                               |
+| transfer.internalTransfer.error.accountIdNotExist    | Ontvanger account-ID bestaat niet.                                                     |
+| transfer.internalTransfer.error.transferToSubAccount | Overboekingen naar subaccounts onder verschillende hoofdaccounts zijn niet toegestaan. |
+| tradingLeaderboard.arena                             | Arena                                                                                  |
+| tradingLeaderboard.generalLeaderboard                | Algemeen klassement                                                                    |
+| tradingLeaderboard.maxTicketsAchieved                | Maximum aantal behaalde tickets                                                        |
+
+#### Language: **ko**
+
+| Key                                                  | Value                                                      |
+| ---------------------------------------------------- | ---------------------------------------------------------- |
+| common.deposits                                      | 입금                                                       |
+| common.withdrawals                                   | 출금                                                       |
+| common.accountId                                     | 계정 ID                                                    |
+| common.web3Wallet                                    | Web3 지갑                                                  |
+| common.txId                                          | 거래 ID                                                    |
+| portfolio.apiKey.permissions.asset                   | 자산                                                       |
+| portfolio.apiKey.create.createAccount.tooltip        | API 키를 생성하기 전에 계정을 생성해주세요                 |
+| connector.createAccount                              | 계정 생성                                                  |
+| connector.createAccount.description                  | 계정을 생성하려면 지갑 소유권을 확인하세요                 |
+| connector.trade.createAccount.tooltip                | 거래를 시작하기 전에 계정을 생성해주세요                   |
+| connector.setUp.createAccount.tooltip                | 설정하기 전에 계정을 생성해주세요                          |
+| transfer.web3Wallet.your                             | 당신의 Web3 지갑                                           |
+| transfer.web3Wallet.my                               | 나의 Web3 지갑                                             |
+| transfer.withdraw.otherAccount                       | 다른 {{brokerName}} 계정                                   |
+| transfer.withdraw.accountId.tips                     | 지갑 주소가 아닌 계정 ID를 입력하세요.                     |
+| transfer.withdraw.accountId.invalid                  | 잘못된 계정 ID입니다. 다시 시도하세요.                     |
+| transfer.internalTransfer.error.default              | 이체를 완료할 수 없습니다. 나중에 다시 시도하세요.         |
+| transfer.internalTransfer.error.transferInProgress   | 내부 이체가 진행 중입니다.                                 |
+| transfer.internalTransfer.error.withdrawalInProgress | 출금이 진행 중입니다.                                      |
+| transfer.internalTransfer.error.transferToSelf       | 본인 계정으로의 이체는 허용되지 않습니다                   |
+| transfer.internalTransfer.error.accountIdNotExist    | 수신자 계정 ID가 존재하지 않습니다.                        |
+| transfer.internalTransfer.error.transferToSubAccount | 다른 메인 계정의 하위 계정으로의 이체는 허용되지 않습니다. |
+| tradingLeaderboard.arena                             | 아레나                                                     |
+| tradingLeaderboard.generalLeaderboard                | 종합 순위표                                                |
+| tradingLeaderboard.maxTicketsAchieved                | 달성한 최대 티켓 수                                        |
+
+#### Language: **ja**
+
+| Key                                                  | Value                                                                |
+| ---------------------------------------------------- | -------------------------------------------------------------------- |
+| common.deposits                                      | 入金                                                                 |
+| common.withdrawals                                   | 出金                                                                 |
+| common.accountId                                     | アカウントID                                                         |
+| common.web3Wallet                                    | Web3ウォレット                                                       |
+| common.txId                                          | トランザクションID                                                   |
+| portfolio.apiKey.permissions.asset                   | 資産                                                                 |
+| portfolio.apiKey.create.createAccount.tooltip        | APIキーを作成する前にアカウントを作成してください                    |
+| connector.createAccount                              | アカウントを作成                                                     |
+| connector.createAccount.description                  | アカウントを作成するためにウォレットの所有権を確認してください       |
+| connector.trade.createAccount.tooltip                | 取引を開始する前にアカウントを作成してください                       |
+| connector.setUp.createAccount.tooltip                | 設定する前にアカウントを作成してください                             |
+| transfer.web3Wallet.your                             | あなたのWeb3ウォレット                                               |
+| transfer.web3Wallet.my                               | 私のWeb3ウォレット                                                   |
+| transfer.withdraw.otherAccount                       | 他の{{brokerName}}アカウント                                         |
+| transfer.withdraw.accountId.tips                     | ウォレットアドレスではなくアカウントIDを入力してください。           |
+| transfer.withdraw.accountId.invalid                  | 無効なアカウントIDです。もう一度お試しください。                     |
+| transfer.internalTransfer.error.default              | 転送できません。後でもう一度お試しください。                         |
+| transfer.internalTransfer.error.transferInProgress   | 内部転送が進行中です。                                               |
+| transfer.internalTransfer.error.withdrawalInProgress | 出金が進行中です。                                                   |
+| transfer.internalTransfer.error.transferToSelf       | 自分のアカウントへの転送はできません                                 |
+| transfer.internalTransfer.error.accountIdNotExist    | 受取人のアカウントIDが存在しません。                                 |
+| transfer.internalTransfer.error.transferToSubAccount | 異なるメインアカウントのサブアカウントへの転送は許可されていません。 |
+| tradingLeaderboard.arena                             | アリーナ                                                             |
+| tradingLeaderboard.generalLeaderboard                | 総合ランキング                                                       |
+| tradingLeaderboard.maxTicketsAchieved                | 獲得した最大チケット数                                               |
+
+#### Language: **it**
+
+| Key                                                  | Value                                                                                  |
+| ---------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| common.deposits                                      | Depositi                                                                               |
+| common.withdrawals                                   | Prelievi                                                                               |
+| common.accountId                                     | ID account                                                                             |
+| common.web3Wallet                                    | Portafoglio Web3                                                                       |
+| common.txId                                          | ID Transazione                                                                         |
+| portfolio.apiKey.permissions.asset                   | Asset                                                                                  |
+| portfolio.apiKey.create.createAccount.tooltip        | Si prega di creare un account prima di creare la chiave API                            |
+| connector.createAccount                              | Crea account                                                                           |
+| connector.createAccount.description                  | Conferma la proprietà del portafoglio per creare un account                            |
+| connector.trade.createAccount.tooltip                | Si prega di creare un account prima di iniziare a fare trading                         |
+| connector.setUp.createAccount.tooltip                | Si prega di creare un account prima di configurare                                     |
+| transfer.web3Wallet.your                             | Il tuo portafoglio Web3                                                                |
+| transfer.web3Wallet.my                               | Il mio portafoglio Web3                                                                |
+| transfer.withdraw.otherAccount                       | Altro account {{brokerName}}                                                           |
+| transfer.withdraw.accountId.tips                     | Inserisci un ID account invece di un indirizzo wallet.                                 |
+| transfer.withdraw.accountId.invalid                  | ID account non valido. Riprova.                                                        |
+| transfer.internalTransfer.error.default              | Impossibile completare il trasferimento. Riprova più tardi.                            |
+| transfer.internalTransfer.error.transferInProgress   | Un trasferimento interno è in corso.                                                   |
+| transfer.internalTransfer.error.withdrawalInProgress | Un prelievo è in corso.                                                                |
+| transfer.internalTransfer.error.transferToSelf       | I trasferimenti verso il proprio account non sono consentiti                           |
+| transfer.internalTransfer.error.accountIdNotExist    | L'ID account del destinatario non esiste.                                              |
+| transfer.internalTransfer.error.transferToSubAccount | I trasferimenti verso sottoconti sotto diversi account principali non sono consentiti. |
+| tradingLeaderboard.arena                             | Arena                                                                                  |
+| tradingLeaderboard.generalLeaderboard                | Classifica generale                                                                    |
+| tradingLeaderboard.maxTicketsAchieved                | Biglietti massimi ottenuti                                                             |
+
+#### Language: **id**
+
+| Key                                                  | Value                                                                  |
+| ---------------------------------------------------- | ---------------------------------------------------------------------- |
+| common.deposits                                      | Deposit                                                                |
+| common.withdrawals                                   | Penarikan                                                              |
+| common.accountId                                     | ID Akun                                                                |
+| common.web3Wallet                                    | Dompet Web3                                                            |
+| common.txId                                          | TxID                                                                   |
+| portfolio.apiKey.permissions.asset                   | Aset                                                                   |
+| portfolio.apiKey.create.createAccount.tooltip        | Silakan buat akun sebelum membuat kunci API                            |
+| connector.createAccount                              | Buat akun                                                              |
+| connector.createAccount.description                  | Konfirmasi kepemilikan dompet untuk membuat akun                       |
+| connector.trade.createAccount.tooltip                | Silakan buat akun sebelum mulai berdagang                              |
+| connector.setUp.createAccount.tooltip                | Silakan buat akun sebelum mengatur                                     |
+| transfer.web3Wallet.your                             | Dompet Web3 Anda                                                       |
+| transfer.web3Wallet.my                               | Dompet Web3 Saya                                                       |
+| transfer.withdraw.otherAccount                       | Akun {{brokerName}} lain                                               |
+| transfer.withdraw.accountId.tips                     | Silakan masukkan ID Akun, bukan alamat dompet.                         |
+| transfer.withdraw.accountId.invalid                  | ID Akun tidak valid. Silakan coba lagi.                                |
+| transfer.internalTransfer.error.default              | Tidak dapat menyelesaikan transfer. Silakan coba lagi nanti.           |
+| transfer.internalTransfer.error.transferInProgress   | Transfer internal sedang berlangsung.                                  |
+| transfer.internalTransfer.error.withdrawalInProgress | Penarikan sedang berlangsung.                                          |
+| transfer.internalTransfer.error.transferToSelf       | Transfer ke akun sendiri tidak diperbolehkan                           |
+| transfer.internalTransfer.error.accountIdNotExist    | ID akun penerima tidak ada.                                            |
+| transfer.internalTransfer.error.transferToSubAccount | Transfer ke sub-akun di bawah akun utama yang berbeda tidak diizinkan. |
+| tradingLeaderboard.arena                             | Arena                                                                  |
+| tradingLeaderboard.generalLeaderboard                | Papan Peringkat Umum                                                   |
+| tradingLeaderboard.maxTicketsAchieved                | Tiket maksimum yang dicapai                                            |
+
+#### Language: **fr**
+
+| Key                                                  | Value                                                                                          |
+| ---------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| common.deposits                                      | Dépôts                                                                                         |
+| common.withdrawals                                   | Retraits                                                                                       |
+| common.accountId                                     | ID de compte                                                                                   |
+| common.web3Wallet                                    | Portefeuille Web3                                                                              |
+| common.txId                                          | ID de transaction                                                                              |
+| portfolio.apiKey.permissions.asset                   | Actif                                                                                          |
+| portfolio.apiKey.create.createAccount.tooltip        | Veuillez créer un compte avant de créer la clé API                                             |
+| connector.createAccount                              | Créer un compte                                                                                |
+| connector.createAccount.description                  | Confirmez la propriété du portefeuille pour créer un compte                                    |
+| connector.trade.createAccount.tooltip                | Veuillez créer un compte avant de commencer à trader                                           |
+| connector.setUp.createAccount.tooltip                | Veuillez créer un compte avant de configurer                                                   |
+| transfer.web3Wallet.your                             | Votre portefeuille Web3                                                                        |
+| transfer.web3Wallet.my                               | Mon portefeuille Web3                                                                          |
+| transfer.withdraw.otherAccount                       | Autre compte {{brokerName}}                                                                    |
+| transfer.withdraw.accountId.tips                     | Veuillez saisir un ID de compte au lieu d'une adresse de portefeuille.                         |
+| transfer.withdraw.accountId.invalid                  | ID de compte invalide. Veuillez réessayer.                                                     |
+| transfer.internalTransfer.error.default              | Impossible d'effectuer le transfert. Veuillez réessayer plus tard.                             |
+| transfer.internalTransfer.error.transferInProgress   | Un transfert interne est en cours.                                                             |
+| transfer.internalTransfer.error.withdrawalInProgress | Un retrait est en cours.                                                                       |
+| transfer.internalTransfer.error.transferToSelf       | Les transferts vers votre propre compte ne sont pas autorisés                                  |
+| transfer.internalTransfer.error.accountIdNotExist    | L'ID du compte du destinataire n'existe pas.                                                   |
+| transfer.internalTransfer.error.transferToSubAccount | Les transferts vers des sous-comptes sous différents comptes principaux ne sont pas autorisés. |
+| tradingLeaderboard.arena                             | Arène                                                                                          |
+| tradingLeaderboard.generalLeaderboard                | Classement général                                                                             |
+| tradingLeaderboard.maxTicketsAchieved                | Maximum de billets obtenus                                                                     |
+
+#### Language: **es**
+
+| Key                                                  | Value                                                                           |
+| ---------------------------------------------------- | ------------------------------------------------------------------------------- |
+| common.deposits                                      | Depósitos                                                                       |
+| common.withdrawals                                   | Retiros                                                                         |
+| common.accountId                                     | ID de cuenta                                                                    |
+| common.web3Wallet                                    | Billetera Web3                                                                  |
+| common.txId                                          | ID de transacción                                                               |
+| portfolio.apiKey.permissions.asset                   | Activo                                                                          |
+| portfolio.apiKey.create.createAccount.tooltip        | Por favor, cree una cuenta antes de crear la clave de API                       |
+| connector.createAccount                              | Crear cuenta                                                                    |
+| connector.createAccount.description                  | Confirme la propiedad de la billetera para crear una cuenta                     |
+| connector.trade.createAccount.tooltip                | Por favor, cree una cuenta antes de empezar a operar                            |
+| connector.setUp.createAccount.tooltip                | Por favor, cree una cuenta antes de configurar                                  |
+| transfer.web3Wallet.your                             | Tu billetera Web3                                                               |
+| transfer.web3Wallet.my                               | Mi billetera Web3                                                               |
+| transfer.withdraw.otherAccount                       | Otra cuenta de {{brokerName}}                                                   |
+| transfer.withdraw.accountId.tips                     | Por favor, ingrese un ID de cuenta en lugar de una dirección de billetera.      |
+| transfer.withdraw.accountId.invalid                  | ID de cuenta inválido. Por favor, inténtelo de nuevo.                           |
+| transfer.internalTransfer.error.default              | No se puede completar la transferencia. Por favor, inténtelo más tarde.         |
+| transfer.internalTransfer.error.transferInProgress   | Hay una transferencia interna en curso.                                         |
+| transfer.internalTransfer.error.withdrawalInProgress | Hay un retiro en curso.                                                         |
+| transfer.internalTransfer.error.transferToSelf       | No se permiten transferencias a su propia cuenta                                |
+| transfer.internalTransfer.error.accountIdNotExist    | El ID de cuenta del receptor no existe.                                         |
+| transfer.internalTransfer.error.transferToSubAccount | No se permiten transferencias a subcuentas bajo diferentes cuentas principales. |
+| tradingLeaderboard.arena                             | Arena                                                                           |
+| tradingLeaderboard.generalLeaderboard                | Tabla de clasificación general                                                  |
+| tradingLeaderboard.maxTicketsAchieved                | Máximo de boletos obtenidos                                                     |
+
+#### Language: **de**
+
+| Key                                                  | Value                                                                                |
+| ---------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| common.deposits                                      | Einzahlungen                                                                         |
+| common.withdrawals                                   | Auszahlungen                                                                         |
+| common.accountId                                     | Konto-ID                                                                             |
+| common.web3Wallet                                    | Web3-Wallet                                                                          |
+| common.txId                                          | TxID                                                                                 |
+| portfolio.apiKey.permissions.asset                   | Vermögenswert                                                                        |
+| portfolio.apiKey.create.createAccount.tooltip        | Bitte erstellen Sie ein Konto, bevor Sie den API-Schlüssel erstellen                 |
+| connector.createAccount                              | Konto erstellen                                                                      |
+| connector.createAccount.description                  | Bestätigen Sie den Besitz der Brieftasche, um ein Konto zu erstellen                 |
+| connector.trade.createAccount.tooltip                | Bitte erstellen Sie ein Konto, bevor Sie mit dem Handel beginnen                     |
+| connector.setUp.createAccount.tooltip                | Bitte erstellen Sie ein Konto, bevor Sie die Einrichtung vornehmen                   |
+| transfer.web3Wallet.your                             | Dein Web3-Wallet                                                                     |
+| transfer.web3Wallet.my                               | Mein Web3-Wallet                                                                     |
+| transfer.withdraw.otherAccount                       | Anderes {{brokerName}}-Konto                                                         |
+| transfer.withdraw.accountId.tips                     | Bitte geben Sie eine Konto-ID anstelle einer Wallet-Adresse ein.                     |
+| transfer.withdraw.accountId.invalid                  | Ungültige Konto-ID. Bitte versuchen Sie es erneut.                                   |
+| transfer.internalTransfer.error.default              | Überweisung konnte nicht abgeschlossen werden. Bitte versuchen Sie es später erneut. |
+| transfer.internalTransfer.error.transferInProgress   | Eine interne Überweisung ist derzeit im Gange.                                       |
+| transfer.internalTransfer.error.withdrawalInProgress | Eine Auszahlung ist im Gange.                                                        |
+| transfer.internalTransfer.error.transferToSelf       | Überweisungen auf das eigene Konto sind nicht erlaubt                                |
+| transfer.internalTransfer.error.accountIdNotExist    | Empfänger-Konto-ID existiert nicht.                                                  |
+| transfer.internalTransfer.error.transferToSubAccount | Überweisungen auf Unterkonten unter verschiedenen Hauptkonten sind nicht gestattet.  |
+| tradingLeaderboard.arena                             | Arena                                                                                |
+| tradingLeaderboard.generalLeaderboard                | Allgemeine Rangliste                                                                 |
+| tradingLeaderboard.maxTicketsAchieved                | Maximal erreichte Tickets                                                            |
+
+### Removed Keys
+
+#### Language: **en**
+
+| Key                                                   | Value                                                |
+| ----------------------------------------------------- | ---------------------------------------------------- |
+| portfolio.overview.deposits&Withdrawals               | Deposits & Withdrawals                               |
+| portfolio.apiKey.accountId                            | Account ID                                           |
+| portfolio.apiKey.create.signIn.tooltip                | Please sign in before create API key                 |
+| connector.signIn                                      | Sign in                                              |
+| connector.signIn.description                          | Confirm you are the owner of this wallet             |
+| connector.trade.signIn.tooltip                        | Please sign in before starting to trade              |
+| connector.setUp.signIn.tooltip                        | Please sign in before set up                         |
+| transfer.web3Wallet                                   | Your Web3 Wallet                                     |
+| transfer.internalTransfer.failed                      | Unable to complete transfer. Please try again later. |
+| transfer.internalTransfer.failed.transferInProgress   | An internal transfer is currently in progress.       |
+| transfer.internalTransfer.failed.withdrawalInProgress | There is a withdrawal in progress.                   |
+
+#### Language: **zh**
+
+| Key                                                   | Value                      |
+| ----------------------------------------------------- | -------------------------- |
+| portfolio.overview.deposits&Withdrawals               | 存款与取款                 |
+| portfolio.apiKey.accountId                            | 账户ID                     |
+| portfolio.apiKey.create.signIn.tooltip                | 请登录后再创建API密钥      |
+| connector.signIn                                      | 登录                       |
+| connector.signIn.description                          | 确认您是此钱包的所有者     |
+| connector.trade.signIn.tooltip                        | 请在开始交易前登录         |
+| connector.setUp.signIn.tooltip                        | 请在设置前登录             |
+| transfer.web3Wallet                                   | 您的Web3钱包               |
+| transfer.internalTransfer.failed                      | 无法完成转账。请稍后重试。 |
+| transfer.internalTransfer.failed.transferInProgress   | 当前正在进行内部转账。     |
+| transfer.internalTransfer.failed.withdrawalInProgress | 当前正在进行提现。         |
+
+#### Language: **vi**
+
+| Key                                                   | Value                                                          |
+| ----------------------------------------------------- | -------------------------------------------------------------- |
+| portfolio.overview.deposits&Withdrawals               | Nạp & Rút tiền                                                 |
+| portfolio.apiKey.accountId                            | ID tài khoản                                                   |
+| portfolio.apiKey.create.signIn.tooltip                | Vui lòng đăng nhập trước khi tạo khóa API                      |
+| connector.signIn                                      | Đăng nhập                                                      |
+| connector.signIn.description                          | Xác nhận bạn là chủ sở hữu của ví này                          |
+| connector.trade.signIn.tooltip                        | Vui lòng đăng nhập trước khi bắt đầu giao dịch                 |
+| connector.setUp.signIn.tooltip                        | Vui lòng đăng nhập trước khi thiết lập                         |
+| transfer.web3Wallet                                   | Ví Web3 của bạn                                                |
+| transfer.internalTransfer.failed                      | Không thể hoàn tất chuyển khoản. Vui lòng thử lại sau.         |
+| transfer.internalTransfer.failed.transferInProgress   | Đang có một giao dịch chuyển khoản nội bộ đang được thực hiện. |
+| transfer.internalTransfer.failed.withdrawalInProgress | Đang có một giao dịch rút tiền đang được thực hiện.            |
+
+#### Language: **uk**
+
+| Key                                                   | Value                                                        |
+| ----------------------------------------------------- | ------------------------------------------------------------ |
+| portfolio.overview.deposits&Withdrawals               | Депозити та виведення                                        |
+| portfolio.apiKey.accountId                            | ID рахунку                                                   |
+| portfolio.apiKey.create.signIn.tooltip                | Будь ласка, увійдіть перед створенням API ключа              |
+| connector.signIn                                      | Увійти                                                       |
+| connector.signIn.description                          | Підтвердіть, що ви є власником цього гаманця                 |
+| connector.trade.signIn.tooltip                        | Будь ласка, увійдіть перед початком торгівлі                 |
+| connector.setUp.signIn.tooltip                        | Будь ласка, увійдіть перед налаштуванням                     |
+| transfer.web3Wallet                                   | Ваш Web3 гаманець                                            |
+| transfer.internalTransfer.failed                      | Не вдалося завершити переказ. Будь ласка, спробуйте пізніше. |
+| transfer.internalTransfer.failed.transferInProgress   | Внутрішній переказ у процесі виконання.                      |
+| transfer.internalTransfer.failed.withdrawalInProgress | Виведення коштів у процесі виконання.                        |
+
+#### Language: **tr**
+
+| Key                                                   | Value                                                     |
+| ----------------------------------------------------- | --------------------------------------------------------- |
+| portfolio.overview.deposits&Withdrawals               | Yatırma ve Çekme                                          |
+| portfolio.apiKey.accountId                            | Hesap ID                                                  |
+| portfolio.apiKey.create.signIn.tooltip                | API anahtarı oluşturmadan önce lütfen giriş yapın         |
+| connector.signIn                                      | Giriş yap                                                 |
+| connector.signIn.description                          | Bu cüzdanın sahibi olduğunuzu onaylayın                   |
+| connector.trade.signIn.tooltip                        | İşlem yapmaya başlamadan önce lütfen giriş yapın          |
+| connector.setUp.signIn.tooltip                        | Kurulum yapmadan önce lütfen giriş yapın                  |
+| transfer.web3Wallet                                   | Web3 Cüzdanınız                                           |
+| transfer.internalTransfer.failed                      | Transfer tamamlanamadı. Lütfen daha sonra tekrar deneyin. |
+| transfer.internalTransfer.failed.transferInProgress   | Dahili bir transfer işlemi devam ediyor.                  |
+| transfer.internalTransfer.failed.withdrawalInProgress | Bir para çekme işlemi devam ediyor.                       |
+
+#### Language: **ru**
+
+| Key                                                   | Value                                                       |
+| ----------------------------------------------------- | ----------------------------------------------------------- |
+| portfolio.overview.deposits&Withdrawals               | Депозиты и выводы                                           |
+| portfolio.apiKey.accountId                            | ID аккаунта                                                 |
+| portfolio.apiKey.create.signIn.tooltip                | Пожалуйста, войдите в систему перед созданием API ключа     |
+| connector.signIn                                      | Войти                                                       |
+| connector.signIn.description                          | Подтвердите, что вы владелец этого кошелька                 |
+| connector.trade.signIn.tooltip                        | Пожалуйста, войдите в систему перед началом торговли        |
+| connector.setUp.signIn.tooltip                        | Пожалуйста, войдите в систему перед настройкой              |
+| transfer.web3Wallet                                   | Ваш Web3 кошелек                                            |
+| transfer.internalTransfer.failed                      | Не удалось завершить перевод. Пожалуйста, попробуйте позже. |
+| transfer.internalTransfer.failed.transferInProgress   | Внутренний перевод в процессе выполнения.                   |
+| transfer.internalTransfer.failed.withdrawalInProgress | Вывод средств в процессе выполнения.                        |
+
+#### Language: **pt**
+
+| Key                                                   | Value                                                                              |
+| ----------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| portfolio.overview.deposits&Withdrawals               | Depósitos & Saques                                                                 |
+| portfolio.apiKey.accountId                            | ID da conta                                                                        |
+| portfolio.apiKey.create.signIn.tooltip                | Por favor, faça login antes de criar a chave API                                   |
+| connector.signIn                                      | Entrar                                                                             |
+| connector.signIn.description                          | Confirme que você é o proprietário desta carteira                                  |
+| connector.trade.signIn.tooltip                        | Por favor, faça login antes de começar a negociar                                  |
+| connector.setUp.signIn.tooltip                        | Por favor, faça login antes de configurar                                          |
+| transfer.web3Wallet                                   | Sua Carteira Web3                                                                  |
+| transfer.internalTransfer.failed                      | Não foi possível completar a transferência. Por favor, tente novamente mais tarde. |
+| transfer.internalTransfer.failed.transferInProgress   | Uma transferência interna está em andamento.                                       |
+| transfer.internalTransfer.failed.withdrawalInProgress | Uma retirada está em andamento.                                                    |
+
+#### Language: **pl**
+
+| Key                                                   | Value                                                   |
+| ----------------------------------------------------- | ------------------------------------------------------- |
+| portfolio.overview.deposits&Withdrawals               | Wpłaty i wypłaty                                        |
+| portfolio.apiKey.accountId                            | ID konta                                                |
+| portfolio.apiKey.create.signIn.tooltip                | Proszę zalogować się przed utworzeniem klucza API       |
+| connector.signIn                                      | Zaloguj się                                             |
+| connector.signIn.description                          | Potwierdź, że jesteś właścicielem tego portfela         |
+| connector.trade.signIn.tooltip                        | Proszę zalogować się przed rozpoczęciem handlu          |
+| connector.setUp.signIn.tooltip                        | Proszę zalogować się przed konfiguracją                 |
+| transfer.web3Wallet                                   | Twój portfel Web3                                       |
+| transfer.internalTransfer.failed                      | Nie można zakończyć przelewu. Proszę spróbować później. |
+| transfer.internalTransfer.failed.transferInProgress   | Trwa wewnętrzny przelew.                                |
+| transfer.internalTransfer.failed.withdrawalInProgress | Trwa wypłata środków.                                   |
+
+#### Language: **nl**
+
+| Key                                                   | Value                                                         |
+| ----------------------------------------------------- | ------------------------------------------------------------- |
+| portfolio.overview.deposits&Withdrawals               | Stortingen & Opnames                                          |
+| portfolio.apiKey.accountId                            | Account-ID                                                    |
+| portfolio.apiKey.create.signIn.tooltip                | Log eerst in voordat u een API-sleutel aanmaakt               |
+| connector.signIn                                      | Inloggen                                                      |
+| connector.signIn.description                          | Bevestig dat u de eigenaar bent van deze wallet               |
+| connector.trade.signIn.tooltip                        | Log eerst in voordat u begint met handelen                    |
+| connector.setUp.signIn.tooltip                        | Log eerst in voordat u instelt                                |
+| transfer.web3Wallet                                   | Uw Web3 Wallet                                                |
+| transfer.internalTransfer.failed                      | Kan de overboeking niet voltooien. Probeer het later opnieuw. |
+| transfer.internalTransfer.failed.transferInProgress   | Er is een interne overboeking in behandeling.                 |
+| transfer.internalTransfer.failed.withdrawalInProgress | Er is een opname in behandeling.                              |
+
+#### Language: **ko**
+
+| Key                                                   | Value                                                 |
+| ----------------------------------------------------- | ----------------------------------------------------- |
+| portfolio.overview.deposits&Withdrawals               | 입금 및 출금                                          |
+| portfolio.apiKey.accountId                            | 계정 ID                                               |
+| portfolio.apiKey.create.signIn.tooltip                | API 키를 생성하기 전에 로그인해 주세요                |
+| connector.signIn                                      | 로그인                                                |
+| connector.signIn.description                          | 이 지갑의 소유자임을 확인하세요                       |
+| connector.trade.signIn.tooltip                        | 거래를 시작하기 전에 로그인해 주세요                  |
+| connector.setUp.signIn.tooltip                        | 설정하기 전에 로그인해 주세요                         |
+| transfer.web3Wallet                                   | Web3 지갑                                             |
+| transfer.internalTransfer.failed                      | 이체를 완료할 수 없습니다. 나중에 다시 시도해 주세요. |
+| transfer.internalTransfer.failed.transferInProgress   | 내부 이체가 진행 중입니다.                            |
+| transfer.internalTransfer.failed.withdrawalInProgress | 출금이 진행 중입니다.                                 |
+
+#### Language: **ja**
+
+| Key                                                   | Value                                                    |
+| ----------------------------------------------------- | -------------------------------------------------------- |
+| portfolio.overview.deposits&Withdrawals               | 入出金                                                   |
+| portfolio.apiKey.accountId                            | アカウントID                                             |
+| portfolio.apiKey.create.signIn.tooltip                | APIキーを作成する前にサインインしてください              |
+| connector.signIn                                      | サインイン                                               |
+| connector.signIn.description                          | このウォレットの所有者であることを確認してください       |
+| connector.trade.signIn.tooltip                        | 取引を開始する前にサインインしてください                 |
+| connector.setUp.signIn.tooltip                        | 設定する前にサインインしてください                       |
+| transfer.web3Wallet                                   | あなたのWeb3ウォレット                                   |
+| transfer.internalTransfer.failed                      | 送金を完了できませんでした。後でもう一度お試しください。 |
+| transfer.internalTransfer.failed.transferInProgress   | 内部転送が進行中です。                                   |
+| transfer.internalTransfer.failed.withdrawalInProgress | 出金が進行中です。                                       |
+
+#### Language: **it**
+
+| Key                                                   | Value                                                                     |
+| ----------------------------------------------------- | ------------------------------------------------------------------------- |
+| portfolio.overview.deposits&Withdrawals               | Depositi e Prelievi                                                       |
+| portfolio.apiKey.accountId                            | ID Account                                                                |
+| portfolio.apiKey.create.signIn.tooltip                | Effettua l'accesso prima di creare la chiave API                          |
+| connector.signIn                                      | Accedi                                                                    |
+| connector.signIn.description                          | Conferma di essere il proprietario di questo portafoglio                  |
+| connector.trade.signIn.tooltip                        | Accedi prima di iniziare a fare trading                                   |
+| connector.setUp.signIn.tooltip                        | Accedi prima di configurare                                               |
+| transfer.web3Wallet                                   | Il tuo portafoglio Web3                                                   |
+| transfer.internalTransfer.failed                      | Impossibile completare il trasferimento. Si prega di riprovare più tardi. |
+| transfer.internalTransfer.failed.transferInProgress   | È in corso un trasferimento interno.                                      |
+| transfer.internalTransfer.failed.withdrawalInProgress | È in corso un prelievo.                                                   |
+
+#### Language: **id**
+
+| Key                                                   | Value                                                        |
+| ----------------------------------------------------- | ------------------------------------------------------------ |
+| portfolio.overview.deposits&Withdrawals               | Setoran & Penarikan                                          |
+| portfolio.apiKey.accountId                            | ID Akun                                                      |
+| portfolio.apiKey.create.signIn.tooltip                | Harap masuk sebelum membuat kunci API                        |
+| connector.signIn                                      | Masuk                                                        |
+| connector.signIn.description                          | Konfirmasi Anda adalah pemilik wallet ini                    |
+| connector.trade.signIn.tooltip                        | Harap masuk sebelum mulai trading                            |
+| connector.setUp.signIn.tooltip                        | Harap masuk sebelum menyiapkan                               |
+| transfer.web3Wallet                                   | Wallet Web3 Anda                                             |
+| transfer.internalTransfer.failed                      | Tidak dapat menyelesaikan transfer. Silakan coba lagi nanti. |
+| transfer.internalTransfer.failed.transferInProgress   | Transfer internal sedang dalam proses.                       |
+| transfer.internalTransfer.failed.withdrawalInProgress | Penarikan sedang dalam proses.                               |
+
+#### Language: **fr**
+
+| Key                                                   | Value                                                               |
+| ----------------------------------------------------- | ------------------------------------------------------------------- |
+| portfolio.overview.deposits&Withdrawals               | Dépôts & Retraits                                                   |
+| portfolio.apiKey.accountId                            | ID de compte                                                        |
+| portfolio.apiKey.create.signIn.tooltip                | Veuillez vous connecter avant de créer une clé API                  |
+| connector.signIn                                      | Se connecter                                                        |
+| connector.signIn.description                          | Confirmez que vous êtes le propriétaire de ce portefeuille          |
+| connector.trade.signIn.tooltip                        | Veuillez vous connecter avant de commencer à trader                 |
+| connector.setUp.signIn.tooltip                        | Veuillez vous connecter avant la configuration                      |
+| transfer.web3Wallet                                   | Votre portefeuille Web3                                             |
+| transfer.internalTransfer.failed                      | Impossible de compléter le transfert. Veuillez réessayer plus tard. |
+| transfer.internalTransfer.failed.transferInProgress   | Un transfert interne est en cours.                                  |
+| transfer.internalTransfer.failed.withdrawalInProgress | Un retrait est en cours.                                            |
+
+#### Language: **es**
+
+| Key                                                   | Value                                                                           |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------- |
+| portfolio.overview.deposits&Withdrawals               | Depósitos y retiros                                                             |
+| portfolio.apiKey.accountId                            | ID de cuenta                                                                    |
+| portfolio.apiKey.create.signIn.tooltip                | Por favor inicia sesión antes de crear una clave API                            |
+| connector.signIn                                      | Iniciar sesión                                                                  |
+| connector.signIn.description                          | Confirma que eres el propietario de esta billetera                              |
+| connector.trade.signIn.tooltip                        | Por favor inicia sesión antes de comenzar a operar                              |
+| connector.setUp.signIn.tooltip                        | Por favor inicia sesión antes de configurar                                     |
+| transfer.web3Wallet                                   | Tu billetera Web3                                                               |
+| transfer.internalTransfer.failed                      | No se pudo completar la transferencia. Por favor, inténtelo de nuevo más tarde. |
+| transfer.internalTransfer.failed.transferInProgress   | Hay una transferencia interna en progreso.                                      |
+| transfer.internalTransfer.failed.withdrawalInProgress | Hay un retiro en progreso.                                                      |
+
+#### Language: **de**
+
+| Key                                                   | Value                                                                                |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| portfolio.overview.deposits&Withdrawals               | Einzahlungen & Auszahlungen                                                          |
+| portfolio.apiKey.accountId                            | Konto-ID                                                                             |
+| portfolio.apiKey.create.signIn.tooltip                | Bitte melden Sie sich an, bevor Sie einen API-Schlüssel erstellen                    |
+| connector.signIn                                      | Anmelden                                                                             |
+| connector.signIn.description                          | Bestätigen Sie, dass Sie der Besitzer dieser Wallet sind                             |
+| connector.trade.signIn.tooltip                        | Bitte melden Sie sich an, bevor Sie mit dem Handel beginnen                          |
+| connector.setUp.signIn.tooltip                        | Bitte melden Sie sich an, bevor Sie die Einrichtung vornehmen                        |
+| transfer.web3Wallet                                   | Ihre Web3-Wallet                                                                     |
+| transfer.internalTransfer.failed                      | Überweisung konnte nicht abgeschlossen werden. Bitte versuchen Sie es später erneut. |
+| transfer.internalTransfer.failed.transferInProgress   | Eine interne Überweisung ist derzeit in Bearbeitung.                                 |
+| transfer.internalTransfer.failed.withdrawalInProgress | Eine Auszahlung ist derzeit in Bearbeitung.                                          |
+
+## 2.3.1
+
+### No locale changes
+
 ## 2.3.0
 
 ### Added Keys

@@ -1,3 +1,4 @@
+import { i18n } from "@orderly.network/i18n";
 import {
   BBOOrderType,
   OrderLevel,
@@ -83,5 +84,32 @@ export function getBBOType(options: {
         ? BBOOrderType.QUEUE5
         : BBOOrderType.COUNTERPARTY5;
     }
+  }
+}
+
+export function getScaledPlaceOrderMessage(result: any) {
+  const rows = result?.data?.rows || [];
+
+  if (rows.length > 0) {
+    const totalCount = rows.length;
+    const successCount = rows.filter((row: any) => row.success).length;
+
+    // fully successful
+    if (successCount === totalCount) {
+      return i18n.t("orderEntry.scaledOrder.fullySuccessful", {
+        total: totalCount,
+      });
+    }
+
+    // all failed
+    if (successCount === 0) {
+      return i18n.t("orderEntry.scaledOrder.allFailed");
+    }
+
+    // partially successful
+    return i18n.t("orderEntry.scaledOrder.partiallySuccessful", {
+      successCount,
+      total: totalCount,
+    });
   }
 }
