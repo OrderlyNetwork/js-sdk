@@ -9,12 +9,12 @@ import {
   useChainSelect,
   useDepositAction,
   useInputStatus,
-  useToken,
 } from "../../depositForm/hooks";
 import { SwapDialog } from "../components/swapDialog";
 import { useNeedSwapAndCross } from "../hooks/useNeedSwapAndCross";
 import { useSwapEnquiry } from "../hooks/useSwapEnquiry";
 import { useSwapFee } from "../hooks/useSwapFee";
+import { useToken } from "../hooks/useToken";
 import { SwapMode } from "../types";
 
 export type UseSwapDepositFormScriptReturn = ReturnType<

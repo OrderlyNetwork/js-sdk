@@ -20,7 +20,8 @@ import { toast } from "@orderly.network/ui";
 import { Decimal, int2hex, praseChainIdToNumber } from "@orderly.network/utils";
 import { InputStatus, WithdrawTo } from "../../types";
 import { checkIsAccountId, getTransferErrorMessage } from "../../utils";
-import { CurrentChain, useToken_v2 } from "../depositForm/hooks";
+import { CurrentChain } from "../depositForm/hooks";
+import { useToken } from "../depositForm/hooks/useToken";
 import { useSettlePnl } from "../unsettlePnlInfo/useSettlePnl";
 
 export type WithdrawFormScriptReturn = ReturnType<typeof useWithdrawFormScript>;
@@ -93,24 +94,8 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     } as CurrentChain;
   }, [findByChainId, connectedChain, linkDeviceStorage]);
 
-  // const [token, setToken] = useState<API.TokenInfo>({
-  //   symbol: "USDC",
-  //   decimals: 6,
-  //   address: "",
-  //   display_name: "",
-  //   precision: 6,
-  // });
-  const { sourceToken, onSourceTokenChange, sourceTokens } = useToken_v2({
-    currentChain,
-  });
-
-  const token = useMemo<API.TokenInfo>(() => {
-    return {
-      ...sourceToken!,
-      // withdraw display precision is 6
-      precision: sourceToken?.precision ?? sourceToken?.decimals ?? 6,
-    };
-  }, [sourceToken]);
+  const { sourceToken, onSourceTokenChange, sourceTokens } =
+    useToken(currentChain);
 
   const { walletName, address } = useMemo(
     () => ({
@@ -137,12 +122,12 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     availableWithdraw,
     unsettledPnL,
   } = useWithdraw({
-    decimals: token?.decimals,
-    symbol: token?.symbol,
+    decimals: sourceToken?.decimals,
+    symbol: sourceToken?.symbol,
   });
 
   const internalWithdrawState = useInternalWithdraw({
-    symbol: token.symbol,
+    symbol: sourceToken?.symbol!,
     quantity,
     setQuantity,
     close: options.onClose,
@@ -264,7 +249,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     setLoading(true);
     return withdraw({
       amount: quantity,
-      token: token.symbol,
+      token: sourceToken?.symbol!,
       // @ts-ignore
       chainId: currentChain?.id,
       allowCrossChainWithdraw: crossChainWithdraw,
@@ -303,7 +288,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     apiBaseUrl,
     crossChainWithdraw,
     currentChain,
-    token: token.symbol,
+    token: sourceToken?.symbol!,
   });
 
   const showQty = useMemo(() => {
@@ -319,12 +304,12 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
   }, [fee, quantity]);
 
   const maxQuantity = useMemo(() => {
-    const symbol = token?.display_name || token?.symbol;
+    const symbol = sourceToken?.display_name || sourceToken?.symbol;
     if (symbol === "USDC") {
       return maxAmount;
     }
-    return maxOthersAmount(token, quantity ? Number(quantity) : 0);
-  }, [token, maxAmount, maxOthersAmount, quantity]);
+    return maxOthersAmount(sourceToken!, quantity ? Number(quantity) : 0);
+  }, [sourceToken, maxAmount, maxOthersAmount, quantity]);
 
   useEffect(() => {
     if (!quantity) {
@@ -381,7 +366,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     address,
     quantity,
     onQuantityChange,
-    token: token,
+    sourceToken,
     onSourceTokenChange,
     sourceTokens,
     inputStatus,

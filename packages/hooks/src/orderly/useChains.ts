@@ -574,9 +574,11 @@ export function formatChains({
           address: chain?.contract_address,
           /** chain decimals */
           decimals: chain?.decimals,
-          chain_decimals: chain?.decimals,
+          // chain_decimals: chain?.decimals,
           /** token decimals */
           token_decimal: item?.decimals,
+          precision: item.decimals,
+
           display_name: chain?.display_name,
 
           withdrawal_fee: chain?.withdrawal_fee,

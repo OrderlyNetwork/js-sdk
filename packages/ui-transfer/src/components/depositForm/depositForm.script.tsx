@@ -12,12 +12,7 @@ import {
 } from "@orderly.network/hooks";
 import { account } from "@orderly.network/perp";
 import { useAppContext, useDataTap } from "@orderly.network/react-app";
-import {
-  API,
-  NetworkId,
-  ChainNamespace,
-  nativeETHAddress,
-} from "@orderly.network/types";
+import { API, NetworkId, ChainNamespace } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 import { feeDecimalsOffset } from "../../utils";
 import { useSwapDeposit } from "../swap/hooks/useSwapDeposit";
@@ -26,8 +21,8 @@ import {
   useChainSelect,
   useDepositAction,
   useInputStatus,
-  useToken_v2,
 } from "./hooks";
+import { useToken } from "./hooks/useToken";
 
 const ORDERLY_DEPOSIT_SLIPPAGE_KEY = "orderly_deposit_slippage";
 
@@ -64,18 +59,7 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     targetTokens,
     onSourceTokenChange,
     onTargetTokenChange,
-  } = useToken_v2({ currentChain });
-
-  const _sourceToken = useMemo<API.TokenInfo>(() => {
-    const _token = {
-      ...sourceToken!,
-      precision: sourceToken?.precision ?? sourceToken?.decimals ?? 6,
-    };
-    if (!_token.address && _token.symbol === "ETH") {
-      _token.address = nativeETHAddress;
-    }
-    return _token;
-  }, [sourceToken]);
+  } = useToken(currentChain);
 
   const {
     dst,
@@ -91,10 +75,10 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     balanceRevalidating,
     fetchBalance,
   } = useDeposit({
-    address: _sourceToken?.address,
-    decimals: _sourceToken?.decimals,
+    address: sourceToken?.address,
+    decimals: sourceToken?.decimals,
     srcChainId: currentChain?.id,
-    srcToken: _sourceToken?.symbol,
+    srcToken: sourceToken?.symbol,
     crossChainRouteAddress:
       currentChain?.info?.network_infos?.cross_chain_router,
     depositorAddress: currentChain?.info?.network_infos?.depositor,
@@ -103,9 +87,9 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
   const maxQuantity = useMemo(
     () =>
       new Decimal(balance || 0)
-        .todp(_sourceToken?.precision ?? 2, Decimal.ROUND_DOWN)
+        .todp(sourceToken?.precision ?? 2, Decimal.ROUND_DOWN)
         .toString(),
-    [balance, _sourceToken?.precision],
+    [balance, sourceToken?.precision],
   );
 
   const { inputStatus, hintMessage } = useInputStatus({
@@ -125,7 +109,7 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     swapFee,
     warningMessage,
   } = useSwapDeposit({
-    srcToken: _sourceToken,
+    srcToken: sourceToken!,
     srcChainId: currentChain?.id,
     dstChainId: dst?.chainId,
     currentChain,
@@ -162,7 +146,7 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
   const disabled =
     !quantity ||
     Number(quantity) === 0 ||
-    !_sourceToken ||
+    !sourceToken ||
     inputStatus === "error" ||
     depositFeeRevalidating! ||
     swapRevalidating;
@@ -193,8 +177,8 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     minimumReceived,
   } = useCollateralValue({
     tokens: sourceTokens,
-    sourceToken: _sourceToken,
-    targetToken: targetToken,
+    sourceToken,
+    targetToken,
     qty: quantity,
     slippage,
   });
@@ -207,10 +191,10 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
 
   useEffect(() => {
     cleanData();
-  }, [_sourceToken, currentChain?.id]);
+  }, [sourceToken, currentChain?.id]);
 
   return {
-    sourceToken: _sourceToken,
+    sourceToken,
     targetToken,
     sourceTokens,
     targetTokens,
