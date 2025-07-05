@@ -267,6 +267,7 @@ export function DataTable<RecordType extends any>(
           visible={showPlaceholder}
           loading={loading}
           emptyView={emptyView}
+          className={classNames?.empty}
         />
       </div>
 

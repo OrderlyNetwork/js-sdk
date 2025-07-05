@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
-import { NumeralProps, type NumeralRule } from "../typography/numeral";
 import { FormattedTextProps, TextRule } from "../typography/formatted";
+import { NumeralProps, type NumeralRule } from "../typography/numeral";
+
 export {
   type Column as TanstackColumn,
   type Table,
@@ -23,7 +24,7 @@ export type TableCellRenderer<T> =
 export type TableCellPlainTextRenderer<T> = (
   value: any,
   record: T,
-  index: number
+  index: number,
 ) => PlainText;
 
 export type Column<RecordType extends unknown = any> = {
@@ -60,7 +61,7 @@ export type Column<RecordType extends unknown = any> = {
     | ((
         value: any,
         record: RecordType,
-        index: number
+        index: number,
       ) => Omit<NumeralProps, "children" | "as" | "rule">);
   /**
    * text props for formatted text
@@ -70,7 +71,7 @@ export type Column<RecordType extends unknown = any> = {
     | ((
         value: any,
         record: RecordType,
-        index: number
+        index: number,
       ) => Omit<FormattedTextProps, "children" | "as" | "rule">);
 };
 
@@ -92,4 +93,5 @@ export type DataTableClassNames = {
   footer?: string;
   pagination?: string;
   scroll?: string;
+  empty?: string;
 };

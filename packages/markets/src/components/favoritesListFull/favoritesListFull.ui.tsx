@@ -40,6 +40,9 @@ export const FavoritesListFull: FC<FavoritesListFullProps> = (props) => {
         columns={columns}
         dataSource={dataSource}
         emptyView={emptyView}
+        classNames={{
+          empty: "oui-items-start oui-mt-6",
+        }}
         loading={loading}
         onRow={(record, index) => {
           return {
