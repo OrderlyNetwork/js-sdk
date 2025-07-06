@@ -59,7 +59,6 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
     needSwap,
     needCrossSwap,
     swapPrice,
-    markPrice,
     swapQuantity,
     swapFee,
     warningMessage,
@@ -74,10 +73,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
         return (
           <Flex direction="column" itemAlign="start" mt={2} gap={1}>
             <CollateralRatioWidget collateralRatio={collateralRatio} />
-            <CollateralContributionWidget
-              collateralContribution={targetQuantity}
-              token={targetToken?.symbol ?? ""}
-            />
+            <CollateralContributionWidget value={targetQuantity} />
             <LtvWidget
               showDiff={
                 typeof sourceQuantity !== "undefined" &&
@@ -132,7 +128,6 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
             />
           )}
         </Flex>
-
         <SwapFee {...swapFee} />
       </Flex>
     );

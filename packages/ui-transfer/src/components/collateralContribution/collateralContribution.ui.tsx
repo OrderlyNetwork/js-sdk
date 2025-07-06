@@ -4,11 +4,11 @@ import { Flex, Text } from "@orderly.network/ui";
 
 // import type { CollateralContributionReturns } from "./collateralContribution.script";
 
-export const CollateralContributionUI: React.FC<
-  Readonly<{ collateralContribution: number; token: string }>
-> = (props) => {
+export const CollateralContributionUI: React.FC<Readonly<{ value: number }>> = (
+  props,
+) => {
   // const { t } = useTranslation();
-  const { collateralContribution, token } = props;
+  const { value } = props;
   return (
     <Flex width="100%" itemAlign="center" justify="between">
       <Flex itemAlign="center" justify="start">
@@ -18,10 +18,10 @@ export const CollateralContributionUI: React.FC<
       </Flex>
       <Flex itemAlign="center" justify="end" gap={1}>
         <Text size="2xs" intensity={80} className="oui-select-none">
-          {collateralContribution}
+          {value}
         </Text>
         <Text size="2xs" intensity={36} className="oui-select-none">
-          {token}
+          USDC
         </Text>
       </Flex>
     </Flex>

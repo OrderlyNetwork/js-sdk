@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import { account as accountPerp } from "@orderly.network/perp";
 import { useCollateral, useIndexPricesStream, useTokensInfo } from "..";
 import { useHoldingStream } from "./useHoldingStream";
@@ -18,6 +18,8 @@ export function useMaxWithdrawal(token?: string) {
   const { data: indexPrices } = useIndexPricesStream();
   const { usdc, data: holdings = [] } = useHoldingStream();
 
+  const holding = holdings.find((item) => item?.token === token);
+
   const usdcBalance = usdc?.holding ?? 0;
 
   const indexPrice = useMemo(() => {
@@ -28,21 +30,16 @@ export function useMaxWithdrawal(token?: string) {
     return indexPrices[symbol] ?? 0;
   }, [token, indexPrices]);
 
-  const getCollateralRatio = useCallback(
-    (token: string) => {
-      const { base_weight, discount_factor } =
-        tokensInfo?.find((item) => item?.token === token) ?? {};
-
-      const holding = holdings.find((item) => item?.token === token);
-      return collateralRatio({
-        baseWeight: base_weight ?? 0,
-        discountFactor: discount_factor ?? 0,
-        collateralQty: holding?.holding ?? 0,
-        indexPrice,
-      });
-    },
-    [holdings, tokensInfo, indexPrice],
-  );
+  const memoizedCollateralRatio = useMemo(() => {
+    const { base_weight, discount_factor } =
+      tokensInfo?.find((item) => item?.token === token) ?? {};
+    return collateralRatio({
+      baseWeight: base_weight ?? 0,
+      discountFactor: discount_factor ?? 0,
+      collateralQty: holding?.holding ?? 0,
+      indexPrice,
+    });
+  }, [holdings, tokensInfo, indexPrice, token, holding]);
 
   const maxAmount = useMemo(() => {
     if (token === "USDC") {
@@ -52,24 +49,21 @@ export function useMaxWithdrawal(token?: string) {
         upnl: unsettledPnL ?? 0,
       });
     }
-
-    const weight = getCollateralRatio(token!);
-    const holding = holdings.find((item) => item?.token === token);
-
     return maxWithdrawalOtherCollateral({
       collateralQty: holding?.holding ?? 0,
       freeCollateral,
       indexPrice,
-      weight,
+      weight: memoizedCollateralRatio,
     });
   }, [
     usdcBalance,
     freeCollateral,
     unsettledPnL,
-    getCollateralRatio,
+    memoizedCollateralRatio,
     holdings,
     indexPrice,
     token,
+    holding,
   ]);
 
   return maxAmount;
