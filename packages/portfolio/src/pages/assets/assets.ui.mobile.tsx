@@ -143,7 +143,7 @@ const AssetMobileItem: FC<AssetMobileItemProps> = ({ item }) => {
         </div>
         <div className="oui-flex oui-flex-col">
           <div className="oui-text-2xs oui-font-semibold oui-text-base-contrast-36">
-            {"Collateral contribution"}
+            {t("transfer.deposit.collateralContribution")}
           </div>
           <div className="oui-flex oui-items-center oui-gap-1 oui-self-end oui-text-xs oui-font-semibold oui-text-base-contrast-80">
             <Text.numeral dp={2}>{item.collateralContribution}</Text.numeral>

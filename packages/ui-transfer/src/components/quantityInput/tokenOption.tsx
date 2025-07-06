@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
 import { Badge, cn, Flex, Spinner, Text, TokenIcon } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
@@ -24,6 +25,8 @@ export const TokenOption: React.FC<TokenOptionProps> = (props) => {
 
   const showBalance = typeof fetchBalance === "function";
 
+  const { t } = useTranslation();
+
   if (displayType === "vaultBalance" && insufficientBalance) {
     return (
       <Flex
@@ -36,7 +39,6 @@ export const TokenOption: React.FC<TokenOptionProps> = (props) => {
           "group",
           "oui-h-[30px]",
           "oui-text-2xs oui-font-semibold",
-          "oui-cursor-pointer",
           isActive && "oui-bg-base-5",
           props.index !== 0 && "oui-mt-[2px]",
           "oui-cursor-not-allowed",
@@ -46,7 +48,7 @@ export const TokenOption: React.FC<TokenOptionProps> = (props) => {
           <TokenIcon name={symbol} className="oui-size-[16px] oui-opacity-50" />
           <Text intensity={36}>{symbol}</Text>
           <Badge color="neutral" size="xs">
-            Insufficient vault balance
+            {t("transfer.withdraw.InsufficientVaultBalance")}
           </Badge>
         </Flex>
       </Flex>

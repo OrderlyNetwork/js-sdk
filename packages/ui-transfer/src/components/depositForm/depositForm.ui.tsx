@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import { Box, Flex, textVariants, Text } from "@orderly.network/ui";
 import { LtvWidget } from "../LTV";
 import { ActionButton } from "../actionButton";
@@ -67,6 +68,8 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
     onSwapSlippageChange,
   } = props;
 
+  const { t } = useTranslation();
+
   const renderContent = () => {
     if (sourceToken?.is_collateral) {
       if (targetToken?.symbol !== "USDC") {
@@ -90,7 +93,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
         <Flex direction="column" itemAlign="start" mt={2} gapY={1}>
           <Flex width={"100%"} itemAlign="center" justify="between">
             <Text size="2xs" intensity={36}>
-              Convert rate
+              {t("transfer.deposit.convertRate")}
             </Text>
             <SwapCoin
               indexPrice={indexPrice}

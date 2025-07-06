@@ -6,6 +6,7 @@ import {
 } from "@orderly.network/hooks";
 import type { API } from "@orderly.network/types";
 import { modal } from "@orderly.network/ui";
+import { Decimal } from "@orderly.network/utils";
 
 const useConvertThreshold = () => {
   const { data, error, isLoading } = useQuery<API.ConvertThreshold>(
@@ -13,7 +14,7 @@ const useConvertThreshold = () => {
     { errorRetryCount: 3 },
   );
   return {
-    ltv_threshold: data?.ltv_threshold,
+    ltv_threshold: new Decimal(data?.ltv_threshold ?? 0).mul(100).toNumber(),
     negative_usdc_threshold: data?.negative_usdc_threshold,
     isLoading,
     error,

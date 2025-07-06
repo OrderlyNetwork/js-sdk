@@ -33,7 +33,7 @@ export const LTVRiskTooltipUI: React.FC<LTVTooltipScriptReturn> = (props) => {
           {t("common.assets")}
         </Text>
         <Text intensity={36} size="xs">
-          Collateral contribution
+          {t("transfer.deposit.collateralContribution")}
         </Text>
       </Flex>
       {holdingList.map((asset, index) => {
@@ -60,7 +60,7 @@ export const LTVRiskTooltipUI: React.FC<LTVTooltipScriptReturn> = (props) => {
       <Divider className="oui-w-full" />
       <Flex width={"100%"} justify="between" itemAlign="center">
         <Text intensity={36} size="xs">
-          Current LTV
+          {t("transfer.LTV.currentLTV")}
         </Text>
         <Text
           size="xs"
@@ -71,11 +71,10 @@ export const LTVRiskTooltipUI: React.FC<LTVTooltipScriptReturn> = (props) => {
         </Text>
       </Flex>
       <Text className="oui-py-2" intensity={54} size="2xs">
-        If your LTV exceeds {isThresholdLoading ? "-" : ltv_threshold}% or your
-        USDC balance plus Unsettled PnL falls below{" "}
-        {isThresholdLoading ? "-" : negative_usdc_threshold}, your collateral
-        will be automatically converted with a haircut. To avoid this, you can
-        manually convert assets to USDC.
+        {t("transfer.LTV.tooltip", {
+          threshold: isThresholdLoading ? "-" : ltv_threshold,
+          usdcThreshold: isThresholdLoading ? "-" : negative_usdc_threshold,
+        })}
       </Text>
       <Button
         fullWidth
@@ -84,7 +83,7 @@ export const LTVRiskTooltipUI: React.FC<LTVTooltipScriptReturn> = (props) => {
         color={"secondary"}
         onClick={onConvert}
       >
-        Convert assets to USDC
+        {t("transfer.deposit.convertAssets")}
       </Button>
     </Flex>
   );

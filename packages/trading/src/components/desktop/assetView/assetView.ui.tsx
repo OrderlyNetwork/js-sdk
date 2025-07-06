@@ -307,7 +307,7 @@ const AssetValueList: FC<AssetValueListProps> = ({
           placeholder="--%"
         />
         <AssetDetail
-          label={"LTV"}
+          label={t("transfer.LTV")}
           visible={visible}
           value={currentLtv}
           rule="percentages"
