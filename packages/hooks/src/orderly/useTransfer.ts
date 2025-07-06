@@ -1,6 +1,7 @@
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 import { useSubAccountMutation } from "../subAccount/useSubAccountMutation";
 import { useCollateral } from "./useCollateral";
+import { useMaxWithdrawal } from "./useMaxWithdrawal";
 
 export type TransferReturn = ReturnType<typeof useTransfer>;
 
@@ -18,8 +19,7 @@ type TransferOptions = {
 export const useTransfer = (options?: TransferOptions) => {
   const { fromAccountId, token } = options || {};
 
-  const { unsettledPnL, availableBalance, freeCollateral, holding } =
-    useCollateral();
+  const { unsettledPnL, holding } = useCollateral();
 
   const [doTransfer, { isMutating: submitting }] = useSubAccountMutation(
     "/v1/internal_transfer",
@@ -48,25 +48,13 @@ export const useTransfer = (options?: TransferOptions) => {
     [doTransfer],
   );
 
-  const maxAmount = useMemo(() => {
-    return freeCollateral;
-  }, [freeCollateral]);
-
-  const availableTransfer = useMemo(() => {
-    if (unsettledPnL < 0) {
-      return freeCollateral;
-    } else {
-      return freeCollateral - unsettledPnL;
-    }
-  }, [freeCollateral, unsettledPnL]);
+  const maxAmount = useMaxWithdrawal(token);
 
   return {
     submitting,
     transfer,
     maxAmount,
     unsettledPnL,
-    availableBalance,
-    availableTransfer,
     holding,
   };
 };

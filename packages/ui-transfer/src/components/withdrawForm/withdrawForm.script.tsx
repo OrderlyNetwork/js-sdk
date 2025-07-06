@@ -113,20 +113,13 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     return new Decimal(quantity || 0).mul(markPrice).toNumber();
   }, [quantity, markPrice]);
 
-  const {
-    withdraw,
-    isLoading,
-    availableBalance,
-    availableWithdraw,
-    maxQuantity,
-    unsettledPnL,
-  } = useWithdraw({
-    decimals: sourceToken?.decimals,
-    token: sourceToken?.symbol!,
+  const { withdraw, maxAmount, unsettledPnL } = useWithdraw({
+    token: sourceToken?.symbol,
+    decimals: sourceToken?.token_decimal,
   });
 
   const internalWithdrawState = useInternalWithdraw({
-    symbol: sourceToken?.symbol!,
+    token: sourceToken?.symbol!,
     quantity,
     setQuantity,
     close: options.onClose,
@@ -219,11 +212,11 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
   const crossChainWithdraw = useMemo(() => {
     if (chainVaultBalance !== null) {
       const qtyNum = Number.parseFloat(quantity);
-      const value = qtyNum > chainVaultBalance && qtyNum <= maxQuantity;
+      const value = qtyNum > chainVaultBalance && qtyNum <= maxAmount;
       return value;
     }
     return false;
-  }, [quantity, maxQuantity, chainVaultBalance]);
+  }, [quantity, maxAmount, chainVaultBalance]);
 
   const minAmount = useMemo(() => {
     // @ts-ignore;
@@ -310,7 +303,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     }
     const qty = new Decimal(quantity ?? 0);
     if (unsettledPnL < 0) {
-      if (qty.gt(maxQuantity)) {
+      if (qty.gt(maxAmount)) {
         setInputStatus("error");
         setHintMessage(t("transfer.insufficientBalance"));
       } else {
@@ -318,7 +311,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
         setHintMessage("");
       }
     }
-  }, [quantity, maxQuantity, unsettledPnL, crossChainTrans]);
+  }, [quantity, maxAmount, unsettledPnL, crossChainTrans]);
 
   const disabled =
     crossChainTrans ||
@@ -364,7 +357,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     hintMessage,
     amount,
     balanceRevalidating: false,
-    maxQuantity: maxQuantity,
+    maxQuantity: maxAmount,
     disabled,
     loading,
     unsettledPnL,
@@ -392,7 +385,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
 };
 
 type InternalWithdrawOptions = {
-  symbol: string;
+  token: string;
   quantity: string;
   setQuantity: (quantity: string) => void;
   close?: () => void;
@@ -400,7 +393,7 @@ type InternalWithdrawOptions = {
 };
 
 function useInternalWithdraw(options: InternalWithdrawOptions) {
-  const { symbol, quantity, setQuantity, close, setLoading } = options;
+  const { token, quantity, setQuantity, close, setLoading } = options;
   const { t } = useTranslation();
   const [withdrawTo, setWithdrawTo] = useState<WithdrawTo>(WithdrawTo.Wallet);
   const [toAccountId, setToAccountId] = useState<string>("");
@@ -420,7 +413,7 @@ function useInternalWithdraw(options: InternalWithdrawOptions) {
     if (submitting || !toAccountId) return;
     setLoading(true);
 
-    transfer(symbol, {
+    transfer(token, {
       account_id: toAccountId,
       amount: new Decimal(quantity).toNumber(),
     })
@@ -430,14 +423,14 @@ function useInternalWithdraw(options: InternalWithdrawOptions) {
         close?.();
       })
       .catch((err) => {
-        console.log("transfer error: ", err, err.code);
+        console.error("transfer error: ", err, err.code);
         const errorMsg = getTransferErrorMessage(err.code);
         toast.error(errorMsg);
       })
       .finally(() => {
         setLoading(false);
       });
-  }, [t, quantity, symbol, submitting, toAccountId, transfer]);
+  }, [t, quantity, token, submitting, toAccountId, transfer]);
 
   useEffect(() => {
     if (!toAccountId) {
