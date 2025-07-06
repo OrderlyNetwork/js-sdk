@@ -5,13 +5,13 @@ type NonUSDCHolding = {
   indexPrice: number;
   // margin replacement rate, default 0
   collateralCap: number;
-  discount: number;
+  discountFactor: number;
 };
 
 export const parseHolding = (
   holding: API.Holding[],
   indexPrices: Record<string, number>,
-  tokenInfo: API.Chain[],
+  tokensInfo: API.Chain[],
 ): [number, NonUSDCHolding[]] => {
   // if (!holding || !indexPrices) {
   //   return [zero, zero];
@@ -24,12 +24,12 @@ export const parseHolding = (
     if (item.token === "USDC") {
       USDC_holding = item.holding;
     } else {
-      const findToken = tokenInfo.find((item) => item.token === item.token);
+      const findToken = tokensInfo.find(({ token }) => token === item.token);
       nonUSDC.push({
         holding: item.holding,
         indexPrice: indexPrices[item.token] ?? 0,
         collateralCap: findToken?.user_max_qty ?? 0,
-        discount: 0,
+        discountFactor: findToken?.discount_factor ?? 0,
       });
     }
   });

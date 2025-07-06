@@ -1,19 +1,15 @@
 import { useMemo } from "react";
 import { account } from "@orderly.network/perp";
 import { Decimal } from "@orderly.network/utils";
-import {
-  useTokenInfos,
-  useHoldingStream,
-  useIndexPricesStream,
-  usePositionStream,
-} from "..";
+import { useHoldingStream, useIndexPricesStream, usePositionStream } from "..";
+import { useTokensInfoStore } from "./useTokensInfo/tokensInfo.store";
 
 const { LTV, collateralRatio } = account;
 
 export const useCurrentLtv = () => {
   const { usdc, data: holdingList = [] } = useHoldingStream();
 
-  const { data: tokenChains = [] } = useTokenInfos();
+  const tokensInfo = useTokensInfoStore((state) => state.tokensInfo);
 
   const { data: indexPrices } = useIndexPricesStream();
 
@@ -28,7 +24,7 @@ export const useCurrentLtv = () => {
       upnl: unrealPnL,
       collateralAssets: holdingList.map((item) => {
         const indexPrice = item.token === "USDC" ? 1 : indexPrices[item.token];
-        const findToken = tokenChains?.find(
+        const findToken = tokensInfo?.find(
           (token) => token.token === item.token,
         );
         const qty = item?.holding ?? 0;
@@ -44,7 +40,7 @@ export const useCurrentLtv = () => {
         };
       }),
     });
-  }, [usdc?.holding, unrealPnL, holdingList, indexPrices, tokenChains]);
+  }, [usdc?.holding, unrealPnL, holdingList, indexPrices, tokensInfo]);
 
   return new Decimal(currentLtv)
     .mul(100)

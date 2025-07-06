@@ -4,7 +4,7 @@ import { getPrecisionByNumber } from "@orderly.network/utils";
 import { useQuery } from "../useQuery";
 import { useAppStore } from "./appStore";
 import { useMarketStore } from "./useMarket/market.store";
-import { useTokenInfoStore } from "./useTokenInfo/tokenInfo.store";
+import { useTokensInfoStore } from "./useTokensInfo/tokensInfo.store";
 
 const publicQueryOptions = {
   focusThrottleInterval: 1000 * 60 * 60 * 24,
@@ -19,7 +19,7 @@ export const usePublicDataObserver = () => {
 
   const { updateMarket } = useMarketStore((state) => state.actions);
 
-  const setTokenInfo = useTokenInfoStore((state) => state.setTokenInfo);
+  const setTokensInfo = useTokensInfoStore((state) => state.setTokensInfo);
 
   /**
    * symbol config
@@ -100,7 +100,7 @@ export const usePublicDataObserver = () => {
       if (!data || !data.length) {
         return [];
       }
-      setTokenInfo(data);
+      setTokensInfo(data);
     },
   });
 };

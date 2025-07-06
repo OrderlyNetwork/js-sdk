@@ -60,7 +60,7 @@ class PortfolioCalculator extends BaseCalculator<any> {
 
     const accountInfo = ctx.accountInfo!;
     const symbolsInfo = ctx.symbolsInfo!;
-    const tokenInfo = ctx.tokenInfo;
+    const tokensInfo = ctx.tokensInfo;
 
     return this.format({
       holding,
@@ -68,7 +68,7 @@ class PortfolioCalculator extends BaseCalculator<any> {
       markPrices,
       accountInfo,
       symbolsInfo,
-      tokenInfo: tokenInfo ?? [],
+      tokensInfo: tokensInfo ?? [],
     });
   }
 
@@ -85,7 +85,7 @@ class PortfolioCalculator extends BaseCalculator<any> {
     markPrices: Record<string, number> | null;
     accountInfo: API.AccountInfo;
     symbolsInfo: Record<string, API.SymbolExt>;
-    tokenInfo: API.Chain[];
+    tokensInfo: API.Chain[];
   }) {
     const {
       holding,
@@ -93,7 +93,7 @@ class PortfolioCalculator extends BaseCalculator<any> {
       markPrices,
       accountInfo,
       symbolsInfo,
-      tokenInfo,
+      tokensInfo,
     } = inputs;
 
     if (
@@ -112,7 +112,7 @@ class PortfolioCalculator extends BaseCalculator<any> {
     const [USDC_holding, nonUSDC] = parseHolding(
       holding,
       markPrices,
-      tokenInfo,
+      tokensInfo,
     );
 
     const usdc = holding.find((item) => item.token === "USDC");

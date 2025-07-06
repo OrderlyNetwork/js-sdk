@@ -4,9 +4,9 @@ import {
   useAccount,
   useConfig,
   useSubAccountDataObserver,
-  useTokenInfos,
   useTransfer,
 } from "@orderly.network/hooks";
+import { useTokensInfoStore } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { API, NetworkId } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
@@ -41,7 +41,7 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
 
   const { state, isMainAccount, subAccount } = useAccount();
 
-  const { data: tokenInfos } = useTokenInfos();
+  const tokensInfo = useTokensInfoStore((state) => state.tokensInfo);
 
   const {
     transfer,
@@ -216,7 +216,7 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
   }, [options?.toAccountId, isMainAccount, mainAccount, subAccounts]);
 
   useEffect(() => {
-    const tokens = tokenInfos?.map((item) => ({
+    const tokens = tokensInfo?.map((item) => ({
       symbol: item.token,
     })) as API.TokenInfo[];
 
@@ -232,7 +232,7 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
       setTokens(tokens);
       setToken(targetToken || tokens?.[0] || DEFAULT_TOKEN);
     }
-  }, [tokenInfos, options.token]);
+  }, [tokensInfo, options.token]);
 
   const onFromAccountChange = useCallback(
     (account: SubAccount) => {

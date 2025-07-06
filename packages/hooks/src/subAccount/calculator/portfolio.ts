@@ -21,7 +21,7 @@ export function formatPortfolio(inputs: {
   markPrices: Record<string, number> | null;
   accountInfo?: API.AccountInfo;
   symbolsInfo?: SymbolInfo;
-  tokenInfo?: API.Chain[];
+  tokensInfo?: API.Chain[];
 }) {
   const {
     holding,
@@ -29,7 +29,7 @@ export function formatPortfolio(inputs: {
     markPrices,
     accountInfo,
     symbolsInfo,
-    tokenInfo,
+    tokensInfo,
   } = inputs;
 
   if (
@@ -46,7 +46,11 @@ export function formatPortfolio(inputs: {
   const unsettledPnL = pathOr(0, ["total_unsettled_pnl"])(positions);
   const unrealizedPnL = pathOr(0, ["total_unreal_pnl"])(positions);
 
-  const [USDC_holding, nonUSDC] = parseHolding(holding, markPrices, tokenInfo!);
+  const [USDC_holding, nonUSDC] = parseHolding(
+    holding,
+    markPrices,
+    tokensInfo!,
+  );
 
   const usdc = holding.find((item) => item.token === "USDC");
 

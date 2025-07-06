@@ -30,7 +30,6 @@ export { useIndexPricesStream } from "./useIndexPricesStream";
 export { useMarkPrice } from "./useMarkPrice";
 export { useIndexPrice } from "./useIndexPrice";
 export { useLeverage } from "./useLeverage";
-export { useTokenInfos } from "./useTokenInfos";
 export { useOdosQuote } from "./useOdosQuote";
 export { useCurrentLtv } from "./useCurrentLtv";
 
@@ -97,6 +96,7 @@ export {
 } from "./useMarkPrice/useMarkPriceStore";
 export { usePositionActions } from "./usePositionStream/usePosition.store";
 export { useStorageLedgerAddress } from "./useStorageLedgerAddress";
+export { useTokensInfoStore } from "./useTokensInfo/tokensInfo.store";
 
 export { useSymbolsInfoStore } from "./useSymbolsInfo";
 export { useFundingRatesStore } from "./useFundingRates";

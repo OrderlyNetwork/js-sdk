@@ -14,7 +14,7 @@ export type TotalValueInputs = {
     holding: number;
     indexPrice: number;
     //Margin replacement rate, currently default to 0
-    discount: number;
+    discountFactor: number;
   }[];
 };
 
@@ -54,7 +54,7 @@ export type TotalCollateralValueInputs = {
     holding: number; // collateral_qty_i
     collateralCap: number; // collateral_cap_i
     indexPrice: number; // index_price_i
-    discount: number; // weight_i
+    discountFactor: number; // weight_i
   }[];
   // Unsettled profit and loss
   unsettlementPnL: number;
@@ -68,7 +68,7 @@ export function totalCollateral(inputs: TotalCollateralValueInputs): Decimal {
   const nonUSDCHoldingValue = nonUSDCHolding.reduce<Decimal>((acc, cur) => {
     const finalHolding = Math.min(cur.holding, cur.collateralCap);
     const value = new Decimal(finalHolding)
-      .mul(cur.discount)
+      .mul(cur.discountFactor)
       .mul(cur.indexPrice);
     return acc.add(value);
   }, zero);
@@ -791,7 +791,6 @@ export const LTV = (params: {
 
   const denominator = collateralSum.add(new Decimal(Math.max(upnl, 0)));
 
-  // 分母如果为 0，则直接返回 0
   if (denominator.isZero()) {
     return 0;
   }
@@ -821,7 +820,6 @@ export const maxWithdrawalOtherCollateral = (inputs: {
   const { collateralQty, freeCollateral, indexPrice, weight } = inputs;
   const denominator = new Decimal(indexPrice).mul(weight);
 
-  // 分母如果为 0，则直接返回 0
   if (denominator.isZero()) {
     return 0;
   }
