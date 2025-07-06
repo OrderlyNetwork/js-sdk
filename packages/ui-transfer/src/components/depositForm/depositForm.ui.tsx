@@ -60,6 +60,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
     needSwap,
     needCrossSwap,
     swapPrice,
+    markPrice,
     swapQuantity,
     swapFee,
     warningMessage,
@@ -71,46 +72,59 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
   const { t } = useTranslation();
 
   const renderContent = () => {
+    if (sourceToken?.symbol === "USDC") {
+      return (
+        <Flex mt={2} direction="column" itemAlign="start">
+          <SwapCoin
+            indexPrice={1}
+            precision={0}
+            sourceSymbol={sourceToken?.display_name || sourceToken?.symbol}
+            targetSymbol={targetToken?.display_name || targetToken?.symbol}
+          />
+          <Fee {...fee} />
+        </Flex>
+      );
+    }
     if (sourceToken?.is_collateral) {
-      if (targetToken?.symbol !== "USDC") {
+      if (targetToken?.symbol === "USDC") {
         return (
-          <Flex direction="column" itemAlign="start" mt={2} gap={1}>
-            <CollateralRatioWidget collateralRatio={collateralRatio} />
-            <CollateralContributionWidget value={targetQuantity} />
-            <LtvWidget
-              showDiff={
-                typeof sourceQuantity !== "undefined" &&
-                Number(sourceQuantity) > 0
-              }
-              currentLtv={currentLTV}
-              nextLTV={nextLTV}
+          <Flex direction="column" itemAlign="start" mt={2} gapY={1}>
+            <Flex width={"100%"} itemAlign="center" justify="between">
+              <Text size="2xs" intensity={36}>
+                {t("transfer.deposit.convertRate")}
+              </Text>
+              <SwapCoin
+                indexPrice={indexPrice}
+                sourceSymbol={sourceToken?.display_name || sourceToken?.symbol}
+                targetSymbol={targetToken?.display_name || targetToken?.symbol}
+              />
+            </Flex>
+            <SlippageUI slippage={slippage} setSlippage={setSlippage} />
+            <MinimumReceivedWidget
+              minimumReceived={minimumReceived}
+              symbol={targetToken?.symbol ?? ""}
             />
             <Fee {...fee} />
+            <AssetSwapIndicatorWidget
+              sourceToken={sourceToken?.symbol ?? ""}
+              targetToken={targetToken?.symbol ?? ""}
+            />
           </Flex>
         );
       }
       return (
-        <Flex direction="column" itemAlign="start" mt={2} gapY={1}>
-          <Flex width={"100%"} itemAlign="center" justify="between">
-            <Text size="2xs" intensity={36}>
-              {t("transfer.deposit.convertRate")}
-            </Text>
-            <SwapCoin
-              indexPrice={indexPrice}
-              sourceSymbol={sourceToken?.display_name || sourceToken?.symbol}
-              targetSymbol={targetToken?.display_name || targetToken?.symbol}
-            />
-          </Flex>
-          <SlippageUI slippage={slippage} setSlippage={setSlippage} />
-          <MinimumReceivedWidget
-            minimumReceived={minimumReceived}
-            symbol={targetToken?.symbol ?? ""}
+        <Flex direction="column" itemAlign="start" mt={2} gap={1}>
+          <CollateralRatioWidget collateralRatio={collateralRatio} />
+          <CollateralContributionWidget value={targetQuantity} />
+          <LtvWidget
+            showDiff={
+              typeof sourceQuantity !== "undefined" &&
+              Number(sourceQuantity) > 0
+            }
+            currentLtv={currentLTV}
+            nextLTV={nextLTV}
           />
           <Fee {...fee} />
-          <AssetSwapIndicatorWidget
-            sourceToken={sourceToken?.symbol ?? ""}
-            targetToken={targetToken?.symbol ?? ""}
-          />
         </Flex>
       );
     }

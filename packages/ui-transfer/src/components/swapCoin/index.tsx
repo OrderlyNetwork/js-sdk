@@ -6,17 +6,15 @@ interface SwapCoinProps {
   sourceSymbol?: string;
   targetSymbol?: string;
   indexPrice: number | string;
+  precision?: number;
 }
 
 export const SwapCoin: FC<SwapCoinProps> = (props) => {
-  const { sourceSymbol, targetSymbol, indexPrice } = props;
-
-  // const { t } = useTranslation();
+  const { sourceSymbol, targetSymbol, indexPrice, precision = 3 } = props;
 
   return (
     <Flex
       itemAlign="center"
-      justify="center"
       gap={1}
       className={cn(props.className, "oui-text-2xs")}
     >
@@ -27,7 +25,7 @@ export const SwapCoin: FC<SwapCoinProps> = (props) => {
         {sourceSymbol}
       </Text>
       =
-      <Text.numeral size="2xs" intensity={80} dp={4}>
+      <Text.numeral size="2xs" intensity={80} dp={precision} padding={false}>
         {indexPrice}
       </Text.numeral>
       <Text size="2xs" intensity={36}>

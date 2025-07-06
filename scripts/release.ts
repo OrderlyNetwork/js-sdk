@@ -59,14 +59,13 @@ async function main() {
     await checkTag();
     await release();
     const successfulPackages = await getSuccessfulPackages();
-    await notifyTelegram(successfulPackages);
+    await notifyTelegram(successfulPackages, true);
   } catch (err: any) {
     const msg = `release error: ${
       err.message || err.stderr || JSON.stringify(err)
     }`;
     console.error(msg);
-    await notifyTelegram(msg);
-    throw err;
+    await notifyTelegram(msg, false);
   }
 }
 
@@ -306,7 +305,7 @@ async function generateChangeset(versionType?: VersionType) {
   console.log("generate changeset successfully:", changesetID);
 }
 
-async function notifyTelegram(message: string) {
+async function notifyTelegram(message: string, success: boolean) {
   if (!telegram.chatId || !telegram.token) {
     console.error("Not provider telegram chat id and token");
     return;
@@ -345,6 +344,9 @@ async function notifyTelegram(message: string) {
 
     res.on("end", () => {
       console.log("Response:", data);
+      if (!success) {
+        throw new Error(message);
+      }
     });
   });
 
