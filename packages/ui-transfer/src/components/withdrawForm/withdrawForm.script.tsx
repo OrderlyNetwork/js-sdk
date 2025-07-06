@@ -116,14 +116,13 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
   const {
     withdraw,
     isLoading,
-    maxAmount,
-    maxOthersAmount,
     availableBalance,
     availableWithdraw,
+    maxQuantity,
     unsettledPnL,
   } = useWithdraw({
     decimals: sourceToken?.decimals,
-    symbol: sourceToken?.symbol,
+    token: sourceToken?.symbol!,
   });
 
   const internalWithdrawState = useInternalWithdraw({
@@ -220,11 +219,11 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
   const crossChainWithdraw = useMemo(() => {
     if (chainVaultBalance !== null) {
       const qtyNum = Number.parseFloat(quantity);
-      const value = qtyNum > chainVaultBalance && qtyNum <= maxAmount;
+      const value = qtyNum > chainVaultBalance && qtyNum <= maxQuantity;
       return value;
     }
     return false;
-  }, [quantity, maxAmount, chainVaultBalance]);
+  }, [quantity, maxQuantity, chainVaultBalance]);
 
   const minAmount = useMemo(() => {
     // @ts-ignore;
@@ -303,14 +302,6 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     return value.toNumber();
   }, [fee, quantity]);
 
-  const maxQuantity = useMemo(() => {
-    const symbol = sourceToken?.display_name || sourceToken?.symbol;
-    if (symbol === "USDC") {
-      return maxAmount;
-    }
-    return maxOthersAmount(sourceToken!, quantity ? Number(quantity) : 0);
-  }, [sourceToken, maxAmount, maxOthersAmount, quantity]);
-
   useEffect(() => {
     if (!quantity) {
       setInputStatus("default");
@@ -327,7 +318,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
         setHintMessage("");
       }
     }
-  }, [quantity, maxAmount, unsettledPnL, crossChainTrans]);
+  }, [quantity, maxQuantity, unsettledPnL, crossChainTrans]);
 
   const disabled =
     crossChainTrans ||

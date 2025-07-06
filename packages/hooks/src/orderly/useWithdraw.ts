@@ -7,7 +7,7 @@ import {
   TrackerEventName,
 } from "@orderly.network/types";
 import { isTestnet } from "@orderly.network/utils";
-import { useIndexPricesStream, usePositionStream } from "..";
+import { useIndexPricesStream, usePositionStream, useTokensInfo } from "..";
 import { useAccount } from "../useAccount";
 import { useConfig } from "../useConfig";
 import { useEventEmitter } from "../useEventEmitter";
@@ -16,13 +16,16 @@ import { useChains } from "./useChains";
 import { useCollateral } from "./useCollateral";
 import { useHoldingStream } from "./useHoldingStream";
 
+const { maxWithdrawalUSDC, maxWithdrawalOtherCollateral, collateralRatio } =
+  accountPerp;
+
 export type UseWithdrawOptions = {
   srcChainId?: number;
   decimals?: number;
-  symbol?: string;
+  token: string;
 };
 
-export const useWithdraw = (options?: UseWithdrawOptions) => {
+export const useWithdraw = (options: UseWithdrawOptions) => {
   const { account, state } = useAccount();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -43,19 +46,21 @@ export const useWithdraw = (options?: UseWithdrawOptions) => {
 
   const { data: indexPrices } = useIndexPricesStream();
 
-  const [data] = usePositionStream(options?.symbol);
+  const tokensInfo = useTokensInfo();
+
+  const [data] = usePositionStream(options?.token);
 
   const unrealPnL = data?.aggregated?.total_unreal_pnl ?? 0;
 
   const usdcBalance = usdc?.holding ?? 0;
 
   const indexPrice = useMemo(() => {
-    if (options?.symbol === "USDC") {
+    if (options?.token === "USDC") {
       return 1;
     }
-    const symbol = `PERP_${options?.symbol}_USDC`;
+    const symbol = `PERP_${options?.token}_USDC`;
     return indexPrices[symbol] ?? 0;
-  }, [options?.symbol, indexPrices]);
+  }, [options?.token, indexPrices]);
 
   // useEffect(() => {
   //   const unsubscribe = ws.privateSubscribe(
@@ -83,39 +88,53 @@ export const useWithdraw = (options?: UseWithdrawOptions) => {
   //   return () => unsubscribe();
   // }, []);
 
-  const maxAmount = useMemo(() => {
-    const parameters = {
-      USDCBalance: usdcBalance,
-      freeCollateral: freeCollateral,
-      upnl: unrealPnL,
-    };
-    return accountPerp.maxWithdrawalUSDC(parameters);
-  }, [usdcBalance, freeCollateral, unrealPnL]);
-
   const getCollateralRatio = useCallback(
-    (token: API.TokenInfo, collateralQty: number) => {
-      return accountPerp.collateralRatio({
-        baseWeight: token?.base_weight ?? 0,
-        discountFactor: token?.discount_factor ?? 0,
-        collateralQty: collateralQty,
+    (token: string) => {
+      const { base_weight, discount_factor } =
+        tokensInfo?.find((item) => item?.token === token) ?? {};
+      const holding = holdingData.find((item) => item?.token === token);
+      return collateralRatio({
+        baseWeight: base_weight ?? 0,
+        discountFactor: discount_factor ?? 0,
+        collateralQty: holding?.holding ?? 0,
         indexPrice: indexPrice,
       });
     },
-    [indexPrice],
+    [holdingData, tokensInfo, indexPrice],
   );
 
-  const maxOthersAmount = useCallback(
-    (token: API.TokenInfo, qty: number) => {
-      const weight = getCollateralRatio(token, qty);
-      const holding = holdingData.find((item) => item?.token === token?.symbol);
-      return accountPerp.maxWithdrawalOtherCollateral({
-        collateralQty: holding?.holding ?? 0,
-        freeCollateral: freeCollateral,
-        indexPrice: indexPrice,
-        weight: weight,
-      });
+  const maxAmount = useCallback(
+    (token: string) => {
+      if (token === "USDC") {
+        return maxWithdrawalUSDC({
+          USDCBalance: usdcBalance,
+          freeCollateral: freeCollateral,
+          upnl: unrealPnL,
+        });
+      } else {
+        const weight = getCollateralRatio(token);
+        const holding = holdingData.find((item) => item?.token === token);
+        return maxWithdrawalOtherCollateral({
+          collateralQty: holding?.holding ?? 0,
+          freeCollateral: freeCollateral,
+          indexPrice: indexPrice,
+          weight: weight,
+        });
+      }
     },
-    [freeCollateral, indexPrice, holdingData, getCollateralRatio],
+    [
+      usdcBalance,
+      freeCollateral,
+      unrealPnL,
+      getCollateralRatio,
+      holdingData,
+      indexPrice,
+    ],
+  );
+
+  const maxQuantity = useMemo(
+    () => maxAmount(options.token),
+    [maxAmount, options?.token],
   );
 
   const availableWithdraw = useMemo(() => {
@@ -202,8 +221,7 @@ export const useWithdraw = (options?: UseWithdrawOptions) => {
     dst,
     withdraw,
     isLoading,
-    maxAmount: maxAmount,
-    maxOthersAmount: maxOthersAmount,
+    maxQuantity,
     availableBalance,
     availableWithdraw,
     unsettledPnL,
