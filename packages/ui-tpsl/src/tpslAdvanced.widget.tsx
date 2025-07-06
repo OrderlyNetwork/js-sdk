@@ -8,6 +8,7 @@ type Props = {
   order: OrderlyOrder;
   setOrderValue: (key: string, value: any) => void;
   onSubmit: (formattedOrder: OrderlyOrder) => void;
+  onClose: () => void;
 };
 
 export const TPSLAdvancedWidget = (props: Props) => {
@@ -15,6 +16,7 @@ export const TPSLAdvancedWidget = (props: Props) => {
     order: props.order,
     setOrderValue: props.setOrderValue,
     onSubmit: props.onSubmit,
+    onClose: props.onClose,
   });
   return <TPSLAdvancedUI {...state} />;
 };

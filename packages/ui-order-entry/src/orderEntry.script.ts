@@ -53,6 +53,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       initialOrder: {
         symbol: inputs.symbol,
         order_type: localOrderType,
+        position_type: PositionType.PARTIAL,
         side: localOrderSide,
       },
     });

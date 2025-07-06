@@ -194,8 +194,8 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
   }
 
   protected getChildOrderType(
-    positionType: PositionType,
-    orderPrice?: number,
+    positionType?: PositionType,
+    orderPrice?: string,
   ): OrderType {
     if (positionType === PositionType.FULL) {
       return OrderType.CLOSE_POSITION;
@@ -217,30 +217,41 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
         : AlgoOrderRootType.POSITIONAL_TP_SL;
     if (!!data.tp_trigger_price) {
       const tp_trigger_price = data.tp_trigger_price;
-
-      orders.push({
+      const orderItem: ChildOrder = {
         algo_type: AlgoOrderType.TAKE_PROFIT,
         side: side,
         // TODO need confirm child order type
-        type: this.getChildOrderType(data.position_type),
+        type: this.getChildOrderType(data.position_type, data.tp_order_price),
         trigger_price: tp_trigger_price,
         symbol: data.symbol,
         reduce_only: true,
-      });
+      };
+      if (typeof data.tp_order_price !== "undefined") {
+        orderItem.type = OrderType.LIMIT;
+        orderItem.price = data.tp_order_price;
+      }
+
+      orders.push(orderItem);
     }
 
     if (!!data.sl_trigger_price) {
       const sl_trigger_price = data.sl_trigger_price;
-
-      orders.push({
+      const orderItem: ChildOrder = {
         algo_type: AlgoOrderType.STOP_LOSS,
         side: side,
         // TODO need confirm child order type
-        type: this.getChildOrderType(data.position_type),
+        type: this.getChildOrderType(data.position_type, data.sl_order_price),
         trigger_price: sl_trigger_price,
         symbol: data.symbol,
         reduce_only: true,
-      });
+      };
+
+      if (typeof data.sl_order_price !== "undefined") {
+        orderItem.type = OrderType.LIMIT;
+        orderItem.price = data.sl_order_price;
+      }
+
+      orders.push(orderItem);
     }
 
     if (!orders.length) return null;

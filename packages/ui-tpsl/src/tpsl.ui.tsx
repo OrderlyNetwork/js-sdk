@@ -435,6 +435,7 @@ export const PriceInput = (props: {
   error?: string;
   onValueChange: (value: string) => void;
   quote_dp: number;
+  disabled?: boolean;
 }) => {
   const [placeholder, setPlaceholder] = useState<string>("USDC");
   const { t } = useTranslation();
@@ -450,6 +451,7 @@ export const PriceInput = (props: {
       }}
       tooltip={props.error}
       placeholder={placeholder}
+      disabled={props.disabled}
       align={"right"}
       autoComplete={"off"}
       value={props.value}

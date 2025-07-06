@@ -22,7 +22,12 @@ type Props = ReturnType<typeof useTPSLAdvanced>;
 export const TPSLAdvancedUI = (props: Props) => {
   const { t } = useTranslation();
   const { parseErrorMsg } = useOrderEntryFormErrorMsg(null);
-  const { formattedOrder, setValue: setOrderValue, symbolInfo } = props;
+  const {
+    formattedOrder,
+    setValue: setOrderValue,
+    symbolInfo,
+    setValues,
+  } = props;
   const [tpValues, setTpValuse] = useState<{
     enable: boolean;
     trigger_price: string;
@@ -176,7 +181,20 @@ export const TPSLAdvancedUI = (props: Props) => {
         <div className="oui-py-3">
           <TPSLPositionTypeWidget
             value={formattedOrder.position_type ?? PositionType.PARTIAL}
-            onChange={() => {}}
+            onChange={(key, value) => {
+              // setOrderValue("position_type", value);
+              if (value === PositionType.FULL) {
+                setValues({
+                  position_type: PositionType.FULL,
+                  tp_order_type: OrderType.MARKET,
+                  sl_order_type: OrderType.MARKET,
+                });
+                // setOrderValue("tp_order_type", OrderType.MARKET);
+                // setOrderValue("sl_order_type", OrderType.MARKET);
+                return;
+              }
+              setOrderValue("position_type", value);
+            }}
           />
         </div>
         <Flex direction={"column"} gap={6}>
@@ -198,11 +216,13 @@ export const TPSLAdvancedUI = (props: Props) => {
               }
               setOrderValue(key as keyof OrderlyOrder, value);
             }}
+            positionType={formattedOrder.position_type ?? PositionType.PARTIAL}
           />
           <TPSLInputRowWidget
             type="sl"
             values={slValues}
             quote_dp={symbolInfo.quote_dp}
+            positionType={formattedOrder.position_type ?? PositionType.PARTIAL}
             onChange={(key, value) => {
               if (key === "enable") {
                 if (value === false) {
@@ -273,6 +293,7 @@ export const TPSLAdvancedUI = (props: Props) => {
             color="gray"
             variant="outlined"
             className="oui-text-base-contrast-36"
+            onClick={props.onClose}
           >
             {t("common.cancel")}
           </Button>

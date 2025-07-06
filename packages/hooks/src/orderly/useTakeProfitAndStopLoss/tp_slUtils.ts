@@ -3,6 +3,7 @@ import {
   OrderlyOrder,
   OrderSide,
   PositionSide,
+  PositionType,
 } from "@orderly.network/types";
 import { OrderType } from "@orderly.network/types";
 import { AlgoOrderType } from "@orderly.network/types";
@@ -364,7 +365,9 @@ export function tpslCalculateHelper(
     offset_percentage,
     pnl,
     order_price: string | number | undefined,
-    tpsl_order_type;
+    tpsl_order_type =
+      inputs.values[`${keyPrefix}order_type` as keyof OrderlyOrder] ??
+      OrderType.MARKET;
 
   console.log("entryPrice", inputs.entryPrice);
   const entryPrice = new Decimal(inputs.entryPrice)
@@ -487,6 +490,11 @@ export function tpslCalculateHelper(
       } else {
         order_price = trigger_price;
       }
+      console.log("tp/sl order type change", {
+        tpsl_order_type,
+        trigger_price,
+        order_price,
+      });
       break;
     }
 
@@ -575,6 +583,7 @@ export function tpslCalculateHelper(
     [`${keyPrefix}trigger_price`]: trigger_price
       ? todpIfNeed(trigger_price as number, symbol?.quote_dp ?? 2)
       : "",
+    [`${keyPrefix}order_type`]: tpsl_order_type ?? OrderType.MARKET,
     [`${keyPrefix}order_price`]: order_price
       ? todpIfNeed(order_price, symbol?.quote_dp ?? 2)
       : "",

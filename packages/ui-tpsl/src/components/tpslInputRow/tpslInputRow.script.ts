@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { OrderType } from "@orderly.network/types";
+import { OrderType, PositionType } from "@orderly.network/types";
 
 export type Props = {
   type: "tp" | "sl";
   quote_dp: number;
+  positionType: PositionType;
   values: {
     enable: boolean;
     trigger_price: string;
@@ -22,5 +22,6 @@ export const useTPSLInputRowScript = (props: Props) => {
     onChange: props.onChange,
     type: props.type,
     quote_dp: props.quote_dp,
+    positionType: props.positionType,
   };
 };

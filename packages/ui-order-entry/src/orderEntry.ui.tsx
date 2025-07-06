@@ -257,6 +257,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
       sl_pnl: order.sl_pnl,
       position_type: order.position_type,
     });
+    setShowTPSLAdvanced(false);
     setHasAdvancedTPSLResult(true);
   };
 
@@ -583,6 +584,9 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
               setOrderValue={setOrderValue}
               order={formattedOrder as OrderlyOrder}
               onSubmit={onSubmitAdvancedTPSL}
+              onClose={() => {
+                setShowTPSLAdvanced(false);
+              }}
             />
           </Box>
         </Box>
@@ -1077,6 +1081,132 @@ function AdvancedTPSLResult(props: {
   onDelete: () => void;
 }) {
   const { order: formattedOrder, symbolInfo, onEdit, onDelete } = props;
+
+  const renderTp = () => {
+    if (formattedOrder.tp_trigger_price || formattedOrder.tp_order_price) {
+      return (
+        <Flex
+          direction={"column"}
+          itemAlign={"start"}
+          justify={"between"}
+          gapY={1}
+          className="oui-w-full"
+        >
+          <Flex justify={"between"} className="oui-w-full">
+            <Text>TP trigger price</Text>
+            <Text.numeral
+              suffix={
+                <Text className="oui-text-base-contrast-36 oui-ml-1">
+                  {symbolInfo.quote}
+                </Text>
+              }
+              className="oui-text-base-contrast"
+              dp={symbolInfo.quote_dp}
+            >
+              {formattedOrder.tp_trigger_price ?? ""}
+            </Text.numeral>
+          </Flex>
+          <Flex justify={"between"} className="oui-w-full">
+            <Text>TP order price</Text>
+            {formattedOrder.tp_order_type === OrderType.LIMIT ? (
+              <Text.numeral
+                suffix={
+                  <Text className="oui-text-base-contrast-36 oui-ml-1">
+                    {symbolInfo.quote}
+                  </Text>
+                }
+                className="oui-text-base-contrast"
+                dp={symbolInfo.quote_dp}
+              >
+                {formattedOrder.tp_order_price ?? ""}
+              </Text.numeral>
+            ) : (
+              <Text className="oui-text-base-contrast">Market</Text>
+            )}
+          </Flex>
+          <Flex justify={"between"} className="oui-w-full">
+            <Text>TP est. PnL</Text>
+            <Text.numeral
+              suffix={
+                <Text className="oui-ml-1 oui-text-base-contrast-36">
+                  {symbolInfo.quote}
+                </Text>
+              }
+              coloring
+              dp={2}
+            >
+              {Number(formattedOrder.tp_pnl)}
+            </Text.numeral>
+          </Flex>
+        </Flex>
+      );
+    }
+    return null;
+  };
+
+  const renderSl = () => {
+    if (formattedOrder.sl_trigger_price || formattedOrder.sl_order_price) {
+      return (
+        <Flex
+          direction={"column"}
+          itemAlign={"start"}
+          justify={"between"}
+          gapY={1}
+          className="oui-w-full"
+        >
+          <Flex justify={"between"} className="oui-w-full">
+            <Text>SL trigger price</Text>
+            <Text.numeral
+              suffix={
+                <Text className="oui-text-base-contrast-36 oui-ml-1">
+                  {symbolInfo.quote}
+                </Text>
+              }
+              className="oui-text-base-contrast"
+              dp={symbolInfo.quote_dp}
+            >
+              {formattedOrder.sl_trigger_price ?? ""}
+            </Text.numeral>
+          </Flex>
+          <Flex justify={"between"} className="oui-w-full">
+            <Text>SL order price</Text>
+            {formattedOrder.sl_order_type === OrderType.LIMIT ? (
+              <Text.numeral
+                suffix={
+                  <Text className="oui-text-base-contrast-36 oui-ml-1">
+                    {symbolInfo.quote}
+                  </Text>
+                }
+                className="oui-text-base-contrast"
+                dp={symbolInfo.quote_dp}
+              >
+                {formattedOrder.sl_order_price ?? ""}
+              </Text.numeral>
+            ) : (
+              <Text className="oui-text-base-contrast">Market</Text>
+            )}
+          </Flex>
+
+          <Flex justify={"between"} className="oui-w-full">
+            <Text>SL est. PnL</Text>
+            <Text.numeral
+              coloring
+              suffix={
+                <Text className="oui-ml-1 oui-text-base-contrast-36">
+                  {symbolInfo.quote}
+                </Text>
+              }
+              dp={2}
+            >
+              {Number(formattedOrder.sl_pnl)}
+            </Text.numeral>
+          </Flex>
+        </Flex>
+      );
+    }
+    return null;
+  };
+
   return (
     <Flex
       direction={"column"}
@@ -1102,118 +1232,14 @@ function AdvancedTPSLResult(props: {
       </Flex>
       <Flex justify={"between"} itemAlign={"start"} className="oui-w-full">
         <Text>Mode</Text>
-        <Text className="oui-text-base-contrast">Partial position</Text>
+        <Text className="oui-text-base-contrast">
+          {formattedOrder.position_type === PositionType.FULL
+            ? "Full position"
+            : "Partial position"}
+        </Text>
       </Flex>
-      <Flex
-        direction={"column"}
-        itemAlign={"start"}
-        justify={"between"}
-        gapY={1}
-        className="oui-w-full"
-      >
-        <Flex justify={"between"} className="oui-w-full">
-          <Text>TP trigger price</Text>
-          <Text.numeral
-            suffix={
-              <Text className="oui-text-base-contrast-36 oui-ml-1">
-                {symbolInfo.quote}
-              </Text>
-            }
-            className="oui-text-base-contrast"
-            dp={symbolInfo.quote_dp}
-          >
-            {formattedOrder.tp_trigger_price ?? ""}
-          </Text.numeral>
-        </Flex>
-        <Flex justify={"between"} className="oui-w-full">
-          <Text>TP order price</Text>
-          {formattedOrder.tp_order_type === OrderType.LIMIT ? (
-            <Text.numeral
-              suffix={
-                <Text className="oui-text-base-contrast-36 oui-ml-1">
-                  {symbolInfo.quote}
-                </Text>
-              }
-              className="oui-text-base-contrast"
-              dp={symbolInfo.quote_dp}
-            >
-              {formattedOrder.tp_order_price ?? ""}
-            </Text.numeral>
-          ) : (
-            <Text className="oui-text-base-contrast">Market</Text>
-          )}
-        </Flex>
-        <Flex justify={"between"} className="oui-w-full">
-          <Text>TP est. PnL</Text>
-          <Text.numeral
-            suffix={
-              <Text className="oui-ml-1 oui-text-base-contrast-36">
-                {symbolInfo.quote}
-              </Text>
-            }
-            coloring
-            dp={2}
-          >
-            {Number(formattedOrder.tp_pnl)}
-          </Text.numeral>
-        </Flex>
-      </Flex>
-
-      <Flex
-        direction={"column"}
-        itemAlign={"start"}
-        justify={"between"}
-        gapY={1}
-        className="oui-w-full"
-      >
-        <Flex justify={"between"} className="oui-w-full">
-          <Text>SL trigger price</Text>
-          <Text.numeral
-            suffix={
-              <Text className="oui-text-base-contrast-36 oui-ml-1">
-                {symbolInfo.quote}
-              </Text>
-            }
-            className="oui-text-base-contrast"
-            dp={symbolInfo.quote_dp}
-          >
-            {formattedOrder.sl_trigger_price ?? ""}
-          </Text.numeral>
-        </Flex>
-        <Flex justify={"between"} className="oui-w-full">
-          <Text>SL order price</Text>
-          {formattedOrder.sl_order_type === OrderType.LIMIT ? (
-            <Text.numeral
-              suffix={
-                <Text className="oui-text-base-contrast-36 oui-ml-1">
-                  {symbolInfo.quote}
-                </Text>
-              }
-              className="oui-text-base-contrast"
-              dp={symbolInfo.quote_dp}
-            >
-              {formattedOrder.sl_order_price ?? ""}
-            </Text.numeral>
-          ) : (
-            <Text className="oui-text-base-contrast">Market</Text>
-          )}
-        </Flex>
-
-        <Flex justify={"between"} className="oui-w-full">
-          <Text>SL est. PnL</Text>
-          <Text.numeral
-            coloring
-            suffix={
-              <Text className="oui-ml-1 oui-text-base-contrast-36">
-                {symbolInfo.quote}
-              </Text>
-            }
-            dp={2}
-          >
-            {Number(formattedOrder.sl_pnl)}
-          </Text.numeral>
-        </Flex>
-      </Flex>
+      {renderTp()}
+      {renderSl()}
 
       <Divider className="oui-w-full" />
     </Flex>

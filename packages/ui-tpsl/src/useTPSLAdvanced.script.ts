@@ -1,14 +1,15 @@
 import { useOrderEntry } from "@orderly.network/hooks";
-import { OrderlyOrder } from "@orderly.network/types";
+import { OrderlyOrder, PositionType } from "@orderly.network/types";
 
 type Props = {
   order: OrderlyOrder;
   setOrderValue: (key: string, value: any) => void;
   onSubmit: (formattedOrder: OrderlyOrder) => void;
+  onClose: () => void;
 };
 
 export const useTPSLAdvanced = (props: Props) => {
-  const { order, setOrderValue } = props;
+  const { order, setOrderValue, onClose } = props;
   const { formattedOrder, setValue, setValues, symbolInfo, ...state } =
     useOrderEntry(order.symbol, {
       initialOrder: {
@@ -17,7 +18,7 @@ export const useTPSLAdvanced = (props: Props) => {
         side: order.side,
         order_price: order.order_price,
         order_quantity: order.order_quantity,
-        position_type: order.position_type,
+        position_type: order.position_type ?? PositionType.PARTIAL,
         trigger_price: order.trigger_price,
         tp_trigger_price: order.tp_trigger_price,
         sl_trigger_price: order.sl_trigger_price,
@@ -38,6 +39,8 @@ export const useTPSLAdvanced = (props: Props) => {
     formattedOrder,
     symbolInfo,
     setValue,
+    setValues,
     onSubmit,
+    onClose,
   };
 };

@@ -155,7 +155,7 @@ export interface ChildOrder {
   side: string;
   type: OrderType;
   trigger_price: string;
-
+  price?: string;
   reduce_only: boolean;
   trigger_price_type?: string;
 }
@@ -221,6 +221,7 @@ export interface BaseAlgoOrderEntity<T extends AlgoOrderRootType>
   tp_order_type?: OrderType;
   sl_order_price?: string | number;
   sl_order_type?: OrderType;
+  position_type?: PositionType;
 }
 
 export type AlgoOrderEntity<
@@ -242,6 +243,7 @@ export type AlgoOrderEntity<
         | "tp_order_type"
         | "sl_order_price"
         | "sl_order_type"
+        | "position_type"
       >
     : Omit<BaseAlgoOrderEntity<T>, "child_orders" | "order_type">;
 

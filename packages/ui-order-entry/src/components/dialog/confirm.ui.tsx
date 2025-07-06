@@ -1,13 +1,20 @@
 import { useMemo } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
+import { usePositionStream } from "@orderly.network/hooks";
 import { i18n, useTranslation } from "@orderly.network/i18n";
-import { BBOOrderType, OrderSide, OrderType } from "@orderly.network/types";
+import {
+  BBOOrderType,
+  OrderSide,
+  OrderType,
+  PositionType,
+} from "@orderly.network/types";
 import { OrderlyOrder } from "@orderly.network/types";
 import {
   Badge,
   Box,
   Button,
   Checkbox,
+  cn,
   Divider,
   Flex,
   Grid,
@@ -28,10 +35,20 @@ type Props = {
 
 export const OrderConfirmDialog = (props: Props) => {
   const { baseDP, quoteDP, order, onConfirm, onCancel } = props;
-  const { side, order_type, order_type_ext, level } = order;
+  const { side, order_type, order_type_ext, level, symbol } = order;
   const { t } = useTranslation();
+  const [{ rows: positions }, positionsInfo] = usePositionStream(symbol);
+  const position = positions?.[0];
+  const positionQty = position?.position_qty;
 
   const [_, setNeedConfirm] = useLocalStorage("orderly_order_confirm", true);
+
+  const renderPositionType = () => {
+    if (order.position_type === PositionType.FULL) {
+      return <Text>Full position</Text>;
+    }
+    return <Text>Partial position</Text>;
+  };
 
   const renderPrice = () => {
     if (
@@ -67,6 +84,42 @@ export const OrderConfirmDialog = (props: Props) => {
         padding={false}
       >
         {order.order_price}
+      </Text.numeral>
+    );
+  };
+
+  const renderTPSLPrice = ({
+    price,
+    isOrderPrice,
+    isEnable,
+    colorType,
+  }: {
+    price: string;
+    isOrderPrice?: boolean;
+    isEnable?: boolean;
+    colorType: "TP" | "SL";
+  }) => {
+    if (!isEnable) {
+      return <Text className="oui-text-base-contrast-36">-- USDC</Text>;
+    }
+    if (!price) {
+      if (isOrderPrice) {
+        return <Text className="oui-text-base-contrast-36">Market</Text>;
+      }
+    }
+    return (
+      <Text.numeral
+        unit={"USDC"}
+        rule={"price"}
+        className={cn(
+          "oui-text-base-contrast",
+          colorType === "TP" ? "oui-text-trade-profit" : "oui-text-trade-loss",
+        )}
+        unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
+        dp={quoteDP}
+        padding={false}
+      >
+        {price}
       </Text.numeral>
     );
   };
@@ -149,13 +202,16 @@ export const OrderConfirmDialog = (props: Props) => {
             className={textVariants({
               size: "sm",
               intensity: 54,
-              className: "oui-space-y-1",
+              className:
+                "oui-space-y-1 oui-w-full oui-flex oui-flex-col oui-gap-3",
             })}
           >
             {/* TODO i18n*/}
-            <Text>TP/SL for {order.position_type}</Text>
+            <Text className="oui-text-base-contrast">
+              TP/SL for {renderPositionType()}
+            </Text>
             <Flex justify={"between"}>
-              <Text>Quantity</Text>
+              <Text>Order Qty.</Text>
               <Text.numeral
                 rule={"price"}
                 dp={baseDP}
@@ -163,58 +219,69 @@ export const OrderConfirmDialog = (props: Props) => {
                 className="oui-text-base-contrast"
               >
                 {/* TODO if positionType is full, need show position qty*/}
-                {order.order_quantity}
+                {order.position_type === PositionType.FULL
+                  ? positionQty
+                  : order.order_quantity}
               </Text.numeral>
             </Flex>
 
-            {order.tp_trigger_price && (
-              <>
-                <Flex justify={"between"}>
-                  {/* TODO i18n*/}
-                  <Text>TP trigger price</Text>
-                  <Text.numeral
-                    unit={"USDC"}
-                    rule={"price"}
-                    coloring
-                    dp={quoteDP}
-                    padding={false}
-                    unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
-                  >
-                    {order.tp_trigger_price}
-                  </Text.numeral>
-                </Flex>
+            <Flex
+              direction={"column"}
+              justify={"between"}
+              itemAlign={"start"}
+              gap={1}
+              className="oui-w-full"
+            >
+              <Flex justify={"between"} className="oui-w-full">
+                {/* TODO i18n*/}
+                <Text>TP trigger price</Text>
+                {renderTPSLPrice({
+                  price: order.tp_trigger_price ?? "",
+                  isOrderPrice: false,
+                  isEnable: !!order.tp_trigger_price,
+                  colorType: "TP",
+                })}
+              </Flex>
+              <Flex justify={"between"} className="oui-w-full">
+                {/* TODO i18n*/}
+                <Text>TP order price</Text>
+                {renderTPSLPrice({
+                  price: order.tp_order_price ?? "",
+                  isOrderPrice: true,
+                  isEnable: !!order.tp_trigger_price,
+                  colorType: "TP",
+                })}
+              </Flex>
+            </Flex>
 
-                <Flex justify={"between"}>
-                  {/* TODO i18n*/}
-                  <Text>TP order price</Text>
-                  <Text className="oui-text-base-contrast">Market</Text>
-                </Flex>
-              </>
-            )}
-            {order.sl_trigger_price && (
-              <>
-                <Flex justify={"between"}>
-                  {/* TODO i18n*/}
-                  <Text>SL trigger price</Text>
-                  <Text.numeral
-                    unit={"USDC"}
-                    rule={"price"}
-                    coloring
-                    className="oui-text-trade-loss"
-                    unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
-                    dp={quoteDP}
-                    padding={false}
-                  >
-                    {order.sl_trigger_price}
-                  </Text.numeral>
-                </Flex>
-                <Flex justify={"between"}>
-                  {/* TODO i18n*/}
-                  <Text>SL order price</Text>
-                  <Text className="oui-text-base-contrast">Market</Text>
-                </Flex>
-              </>
-            )}
+            <Flex
+              direction={"column"}
+              justify={"between"}
+              itemAlign={"start"}
+              gap={1}
+              className="oui-w-full"
+            >
+              <Flex justify={"between"} className="oui-w-full">
+                {/* TODO i18n*/}
+                <Text>SL trigger price</Text>
+                {renderTPSLPrice({
+                  price: order.sl_trigger_price ?? "",
+                  isOrderPrice: false,
+                  isEnable: !!order.sl_trigger_price,
+                  colorType: "SL",
+                })}
+              </Flex>
+              <Flex justify={"between"} className="oui-w-full">
+                {/* TODO i18n*/}
+                <Text>SL order price</Text>
+                {renderTPSLPrice({
+                  price: order.sl_order_price ?? "",
+                  isOrderPrice: true,
+                  isEnable: !!order.sl_trigger_price,
+                  colorType: "SL",
+                })}
+              </Flex>
+            </Flex>
           </div>
         </>
       ) : null}
@@ -237,14 +304,6 @@ export const OrderConfirmDialog = (props: Props) => {
           {t("orderEntry.disableOrderConfirm")}
         </label>
       </Flex>
-
-      {order.tp_trigger_price || order.sl_trigger_price ? (
-        <Box py={3} px={3} className="oui-text-center">
-          <Text color="warning" size="xs">
-            {t("orderEntry.tpsl.trigger.description")}
-          </Text>
-        </Box>
-      ) : null}
 
       <Grid cols={2} gapX={3}>
         <Button color={"secondary"} size={"md"} onClick={() => onCancel()}>
