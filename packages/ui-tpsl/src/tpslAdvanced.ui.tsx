@@ -21,7 +21,9 @@ type Props = ReturnType<typeof useTPSLAdvanced>;
 
 export const TPSLAdvancedUI = (props: Props) => {
   const { t } = useTranslation();
-  const { parseErrorMsg } = useOrderEntryFormErrorMsg(null);
+  const { errors, validated } = props.metaState;
+  const { parseErrorMsg } = useOrderEntryFormErrorMsg(errors);
+
   const {
     formattedOrder,
     setValue: setOrderValue,
@@ -94,6 +96,7 @@ export const TPSLAdvancedUI = (props: Props) => {
     console.log("update tpValues", formattedOrder);
     setTpValuse((prev) => ({
       ...prev,
+      enable: formattedOrder.tp_enable ?? true,
       order_type: formattedOrder.tp_order_type ?? OrderType.MARKET,
       order_price: formattedOrder.tp_order_price ?? "",
       trigger_price: formattedOrder.tp_trigger_price ?? "",
@@ -103,6 +106,7 @@ export const TPSLAdvancedUI = (props: Props) => {
       ROI: formattedOrder.tp_ROI ?? "",
     }));
   }, [
+    formattedOrder.tp_enable,
     formattedOrder.tp_trigger_price,
     formattedOrder.tp_pnl,
     formattedOrder.tp_offset,
@@ -114,6 +118,7 @@ export const TPSLAdvancedUI = (props: Props) => {
   useEffect(() => {
     setSlValues((prev) => ({
       ...prev,
+      enable: formattedOrder.sl_enable ?? true,
       order_type: formattedOrder.sl_order_type ?? OrderType.MARKET,
       order_price: formattedOrder.sl_order_price ?? "",
       trigger_price: formattedOrder.sl_trigger_price ?? "",
@@ -123,6 +128,7 @@ export const TPSLAdvancedUI = (props: Props) => {
       ROI: formattedOrder.sl_ROI ?? "",
     }));
   }, [
+    formattedOrder.sl_enable,
     formattedOrder.sl_trigger_price,
     formattedOrder.sl_pnl,
     formattedOrder.sl_offset,
@@ -201,19 +207,11 @@ export const TPSLAdvancedUI = (props: Props) => {
           <TPSLInputRowWidget
             type="tp"
             values={tpValues}
+            errors={validated ? errors : null}
             quote_dp={symbolInfo.quote_dp}
             onChange={(key, value) => {
               console.log("key", key, "value", value);
               // setTpValuse((prev) => ({ ...prev, [key]: value }));
-              if (key === "enable") {
-                if (value === false) {
-                  // clear tp value
-                  setOrderValue("tp_pnl", undefined);
-                  setOrderValue("tp_trigger_price", undefined);
-                }
-                setTpValuse((prev) => ({ ...prev, enable: !!value }));
-                return;
-              }
               setOrderValue(key as keyof OrderlyOrder, value);
             }}
             positionType={formattedOrder.position_type ?? PositionType.PARTIAL}
@@ -221,17 +219,10 @@ export const TPSLAdvancedUI = (props: Props) => {
           <TPSLInputRowWidget
             type="sl"
             values={slValues}
+            errors={validated ? errors : null}
             quote_dp={symbolInfo.quote_dp}
             positionType={formattedOrder.position_type ?? PositionType.PARTIAL}
             onChange={(key, value) => {
-              if (key === "enable") {
-                if (value === false) {
-                  setOrderValue("sl_pnl", undefined);
-                  setOrderValue("sl_trigger_price", undefined);
-                }
-                setSlValues((prev) => ({ ...prev, enable: !!value }));
-                return;
-              }
               setOrderValue(key as keyof OrderlyOrder, value);
             }}
           />

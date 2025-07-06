@@ -8,7 +8,7 @@ import { useTPSLInputRowScript } from "./tpslInputRow.script";
 
 type Props = ReturnType<typeof useTPSLInputRowScript>;
 export const TPSLInputRowUI = (props: Props) => {
-  const { parseErrorMsg } = useOrderEntryFormErrorMsg(null);
+  const { parseErrorMsg } = useOrderEntryFormErrorMsg(props.errors);
   const { values, positionType } = props;
   return (
     <Flex
@@ -25,7 +25,7 @@ export const TPSLInputRowUI = (props: Props) => {
           color={"white"}
           checked={values.enable}
           onCheckedChange={(checked: boolean) => {
-            props.onChange("enable", !!checked);
+            props.onChange(`${props.type}_enable`, !!checked);
           }}
         />
         <label
@@ -82,7 +82,10 @@ export const TPSLInputRowUI = (props: Props) => {
 
           <Grid cols={2} gap={2}>
             <PriceInput
-              disabled={positionType === PositionType.FULL}
+              disabled={
+                positionType === PositionType.FULL ||
+                values.order_type === OrderType.MARKET
+              }
               type={"order price"}
               label={values.order_type === OrderType.LIMIT ? "Limit" : "Market"}
               value={values.order_price}

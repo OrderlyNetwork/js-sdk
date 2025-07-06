@@ -307,7 +307,7 @@ export function tpslCalculateHelper(
   key: string,
   inputs: {
     key: string;
-    value: string | number;
+    value: string | number | boolean;
     entryPrice: number | string;
     qty: number | string;
     orderSide: OrderSide;
@@ -330,7 +330,9 @@ export function tpslCalculateHelper(
     key !== "tp_order_price" &&
     key !== "sl_order_price" &&
     key !== "tp_order_type" &&
-    key !== "sl_order_type"
+    key !== "sl_order_type" &&
+    key !== "tp_enable" &&
+    key !== "sl_enable"
   ) {
     return {
       [key]: inputs.value,
@@ -364,7 +366,7 @@ export function tpslCalculateHelper(
     offset,
     offset_percentage,
     pnl,
-    order_price: string | number | undefined,
+    order_price,
     tpsl_order_type =
       inputs.values[`${keyPrefix}order_type` as keyof OrderlyOrder] ??
       OrderType.MARKET;
@@ -393,6 +395,20 @@ export function tpslCalculateHelper(
       }
 
       break;
+    }
+
+    case "tp_enable":
+    case "sl_enable": {
+      return {
+        [`${keyPrefix}enable`]: inputs.value,
+        [`${keyPrefix}order_type`]: OrderType.MARKET,
+        [`${keyPrefix}trigger_price`]: "",
+        [`${keyPrefix}order_price`]: "",
+        [`${keyPrefix}offset`]: "",
+        [`${keyPrefix}offset_percentage`]: "",
+        [`${keyPrefix}pnl`]: "",
+        [`${keyPrefix}ROI`]: "",
+      };
     }
 
     // case 'tp_pnl':{
@@ -585,7 +601,7 @@ export function tpslCalculateHelper(
       : "",
     [`${keyPrefix}order_type`]: tpsl_order_type ?? OrderType.MARKET,
     [`${keyPrefix}order_price`]: order_price
-      ? todpIfNeed(order_price, symbol?.quote_dp ?? 2)
+      ? todpIfNeed(order_price as number, symbol?.quote_dp ?? 2)
       : "",
 
     [`${keyPrefix}offset`]: offset ?? "",

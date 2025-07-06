@@ -226,8 +226,7 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
         symbol: data.symbol,
         reduce_only: true,
       };
-      if (typeof data.tp_order_price !== "undefined") {
-        orderItem.type = OrderType.LIMIT;
+      if (data.tp_order_price) {
         orderItem.price = data.tp_order_price;
       }
 
@@ -246,8 +245,7 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
         reduce_only: true,
       };
 
-      if (typeof data.sl_order_price !== "undefined") {
-        orderItem.type = OrderType.LIMIT;
+      if (data.sl_order_price) {
         orderItem.price = data.sl_order_price;
       }
 

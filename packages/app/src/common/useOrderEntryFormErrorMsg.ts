@@ -47,18 +47,30 @@ export function useOrderEntryFormErrorMsg(
         max: t("orderEntry.triggerPrice.error.max", { value }),
       },
       tp_trigger_price: {
+        required: "TP trigger price is required",
         min: t("orderEntry.tpTriggerPrice.error.min", { value }),
         max: t("orderEntry.tpTriggerPrice.error.max", { value }),
+        priceErrorMin:
+          "Your TP trigger price should be set lower than your order price.",
+        priceErrorMax:
+          "Your TP trigger price should be set higher than your order price.",
       },
       sl_trigger_price: {
+        required: "SL trigger price is required",
         min: t("orderEntry.slTriggerPrice.error.min", { value }),
         max: t("orderEntry.slTriggerPrice.error.max", { value }),
+        priceErrorMin:
+          "Your SL trigger price should be set lower than your order price.",
+        priceErrorMax:
+          "Your SL trigger price should be set higher than your order price.",
       },
       tp_order_price: {
+        required: "TP order price is required",
         min: t("orderEntry.tpTriggerPrice.error.min", { value }),
         max: t("orderEntry.tpTriggerPrice.error.max", { value }),
       },
       sl_order_price: {
+        required: "SL order price is required",
         min: t("orderEntry.slTriggerPrice.error.min", { value }),
         max: t("orderEntry.slTriggerPrice.error.max", { value }),
       },

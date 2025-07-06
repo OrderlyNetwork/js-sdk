@@ -458,7 +458,7 @@ export const PriceInput = (props: {
       color={props.error ? "danger" : undefined}
       classNames={{
         prefix: "oui-text-base-contrast-54",
-        root: "oui-outline-line-12 focus-within:oui-outline-primary-light",
+        // root: "oui-outline-line-12 focus-within:oui-outline-primary-light",
       }}
       onValueChange={props.onValueChange}
       onFocus={() => {
