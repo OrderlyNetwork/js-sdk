@@ -5,6 +5,7 @@ import {
   useAssetconvertEvent,
   useChains,
   useConfig,
+  useConvert,
   useHoldingStream,
   useIndexPricesStream,
   useLocalStorage,
@@ -99,12 +100,6 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     return _token;
   }, [sourceToken]);
 
-  useAssetconvertEvent({
-    onMessage: (data: any) => {
-      toast.success("successfully");
-    },
-  });
-
   const { walletName, address } = useMemo(
     () => ({
       walletName: wallet?.label,
@@ -149,6 +144,8 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     return true;
   }, [currentChain, wrongNetwork]);
 
+  const { maxAmount, convert } = useConvert({ token: token.symbol });
+
   const onConvert = async () => {
     if (loading) {
       return;
@@ -157,12 +154,10 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
       return;
     }
     setLoading(true);
-    return account.assetsManager
-      .convert({
-        amount: Number(quantity),
-        slippage: new Decimal(slippage).div(100).toNumber(),
-        converted_asset: token?.symbol ?? "",
-      })
+    return convert({
+      amount: Number(quantity),
+      slippage: new Decimal(slippage).div(100).toNumber(),
+    })
       .then(() => {
         toast.success("convert success");
         options.onClose?.();
@@ -196,7 +191,7 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
   }, [quoteData]);
 
   useEffect(() => {
-    if (currentChain?.id && token.address && targetToken?.address) {
+    if (quantity && currentChain?.id && token.address && targetToken?.address) {
       postQuote({
         chainId: currentChain.id,
         inputTokens: [{ amount: quantity, tokenAddress: token.address }],
@@ -262,11 +257,6 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     [holdingData, usdcBalance, unrealPnL, sourceTokens, indexPrices],
   );
 
-  const maxQuantity = useMemo(() => {
-    const holding = holdingData.find((item) => item.token === token.symbol);
-    return holding ? removeTrailingZeros(holding.holding) : "0";
-  }, [holdingData, token.symbol]);
-
   const disabled =
     !quantity ||
     Number(quantity) === 0 ||
@@ -299,7 +289,7 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     inputStatus,
     hintMessage,
     balanceRevalidating: false,
-    maxQuantity: maxQuantity,
+    maxQuantity: maxAmount,
     disabled,
     loading,
     wrongNetwork,

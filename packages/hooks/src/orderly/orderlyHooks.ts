@@ -30,7 +30,6 @@ export { useIndexPricesStream } from "./useIndexPricesStream";
 export { useMarkPrice } from "./useMarkPrice";
 export { useIndexPrice } from "./useIndexPrice";
 export { useLeverage } from "./useLeverage";
-export { useChainsInfo } from "./useChainsInfo";
 export { useOdosQuote } from "./useOdosQuote";
 export { useCurrentLtv } from "./useCurrentLtv";
 
@@ -59,6 +58,7 @@ export type {
 export { useChain } from "./useChain";
 export { useWithdraw } from "./useWithdraw";
 export { useDeposit } from "./useDeposit";
+export { useConvert } from "./useConvert";
 export { useTransfer } from "./useTransfer";
 
 export { useHoldingStream } from "./useHoldingStream";
@@ -97,6 +97,7 @@ export {
 } from "./useMarkPrice/useMarkPriceStore";
 export { usePositionActions } from "./usePositionStream/usePosition.store";
 export { useStorageLedgerAddress } from "./useStorageLedgerAddress";
+export { useTokensInfo } from "./useTokensInfo/tokensInfo.store";
 
 export { useSymbolsInfoStore } from "./useSymbolsInfo";
 export { useFundingRatesStore } from "./useFundingRates";

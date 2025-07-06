@@ -6,6 +6,7 @@ import {
   useSubAccountDataObserver,
   useTransfer,
 } from "@orderly.network/hooks";
+import { useTokensInfo } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { API, NetworkId } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
@@ -19,6 +20,7 @@ export type TransferFormScriptReturn = ReturnType<typeof useTransferFormScript>;
 export type TransferFormScriptOptions = {
   /** target sub account id */
   toAccountId?: string;
+  token?: string;
   close?: () => void;
 };
 
@@ -39,13 +41,15 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
 
   const { state, isMainAccount, subAccount } = useAccount();
 
+  const tokensInfo = useTokensInfo();
+
   const {
     transfer,
     submitting,
     maxAmount: currentMaxAmount,
     unsettledPnL: currentUnsettledPnL,
     holding: currentHolding,
-  } = useTransfer({ fromAccountId: fromAccount?.id });
+  } = useTransfer({ fromAccountId: fromAccount?.id, token: token.symbol });
 
   const subAccounts = state.subAccounts;
   const mainAccountId = state.mainAccountId;
@@ -80,8 +84,7 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
       return {
         unsettledPnL: portfolio?.unsettledPnL,
         holding: portfolio?.holding,
-        maxQuantity:
-          portfolio?.freeCollateral.toDecimalPlaces(6).toNumber() || 0,
+        maxQuantity: portfolio?.freeCollateral.todp(6).toNumber() || 0,
       };
     }
     return {
@@ -123,7 +126,7 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
         options.close?.();
       })
       .catch((err) => {
-        console.log("transfer error: ", err);
+        console.error("transfer error: ", err);
         const errorMsg = getTransferErrorMessage(err.code);
         toast.error(errorMsg);
       });
@@ -212,16 +215,24 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
     }
   }, [options?.toAccountId, isMainAccount, mainAccount, subAccounts]);
 
-  // update tokens by current holding
   useEffect(() => {
-    const tokens = holding?.map((item) => ({
+    const tokens = tokensInfo?.map((item) => ({
       symbol: item.token,
     })) as API.TokenInfo[];
+
     if (tokens?.length) {
+      tokens.sort((a, b) => {
+        if (a.symbol === "USDC") return -1;
+        if (b.symbol === "USDC") return 1;
+        return 0;
+      });
+
+      const targetToken = tokens?.find((item) => item.symbol === options.token);
+
       setTokens(tokens);
-      setToken(tokens?.[0] || DEFAULT_TOKEN);
+      setToken(targetToken || tokens?.[0] || DEFAULT_TOKEN);
     }
-  }, [holding]);
+  }, [tokensInfo, options.token]);
 
   const onFromAccountChange = useCallback(
     (account: SubAccount) => {

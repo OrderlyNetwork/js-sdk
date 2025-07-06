@@ -12,21 +12,20 @@ export type TotalValueInputs = {
   USDCHolding: number;
   nonUSDCHolding: {
     holding: number;
-    markPrice: number;
+    indexPrice: number;
     //Margin replacement rate, currently default to 0
-    discount: number;
+    discountFactor: number;
   }[];
 };
+
 /**
  * User's total asset value (denominated in USDC), including assets that cannot be used as collateral.
  */
 export function totalValue(inputs: TotalValueInputs): Decimal {
   const { totalUnsettlementPnL, USDCHolding, nonUSDCHolding } = inputs;
-
   const nonUSDCHoldingValue = nonUSDCHolding.reduce((acc, cur) => {
-    return new Decimal(cur.holding).mul(cur.markPrice).add(acc);
+    return new Decimal(cur.holding).mul(cur.indexPrice).add(acc);
   }, zero);
-
   return nonUSDCHoldingValue.add(USDCHolding).add(totalUnsettlementPnL);
 }
 
@@ -52,29 +51,29 @@ export type TotalCollateralValueInputs = {
   // Quantity of USDC holdings
   USDCHolding: number;
   nonUSDCHolding: {
-    holding: number;
-    markPrice: number;
-    // Margin replacement rate, currently default to 0
-    discount: number;
+    holding: number; // collateral_qty_i
+    collateralCap: number; // collateral_cap_i
+    indexPrice: number; // index_price_i
+    discountFactor: number; // weight_i
   }[];
   // Unsettled profit and loss
   unsettlementPnL: number;
 };
+
 /**
  * Calculate total collateral.
  */
 export function totalCollateral(inputs: TotalCollateralValueInputs): Decimal {
-  const { USDCHolding, nonUSDCHolding } = inputs;
-  const nonUSDCHoldingValue = nonUSDCHolding.reduce((acc, cur) => {
-    return (
-      acc +
-      new Decimal(cur.holding).mul(cur.markPrice).mul(cur.discount).toNumber()
-    );
-  }, 0);
+  const { USDCHolding, nonUSDCHolding, unsettlementPnL } = inputs;
+  const nonUSDCHoldingValue = nonUSDCHolding.reduce<Decimal>((acc, cur) => {
+    const finalHolding = Math.min(cur.holding, cur.collateralCap);
+    const value = new Decimal(finalHolding)
+      .mul(cur.discountFactor)
+      .mul(cur.indexPrice);
+    return acc.add(value);
+  }, zero);
 
-  return new Decimal(USDCHolding)
-    .add(nonUSDCHoldingValue)
-    .add(inputs.unsettlementPnL);
+  return new Decimal(USDCHolding).add(nonUSDCHoldingValue).add(unsettlementPnL);
 }
 
 export function initialMarginWithOrder() {}
@@ -751,9 +750,9 @@ export const collateralRatio = (params: {
 };
 
 export const collateralContribution = (params: {
-  collateralQty: number; // collateralQty 就是上面 fromValue 输入的值
-  collateralRatio: number; // collateralRatio 是用另一个公式算出来的
-  indexPrice: number; // indexPrice 是我们现在可以直接拿到的
+  collateralQty: number;
+  collateralRatio: number;
+  indexPrice: number;
 }) => {
   // Collateral contribution = collateral_qty * collateral_ratio * index_price
 
@@ -767,7 +766,11 @@ export const collateralContribution = (params: {
 export const LTV = (params: {
   usdcBalance: number;
   upnl: number;
-  collateralAssets: Array<Record<"qty" | "indexPrice" | "weight", number>>;
+  collateralAssets: Array<{
+    qty: number;
+    indexPrice: number;
+    weight: number;
+  }>;
 }) => {
   // LTV = (abs(min(USDC_balance, 0)) + abs(min(upnl, 0)) ) /
   // [sum(max(collateral_qty_i, 0) × index_price_i × weight_i ) + max(upnl, 0)]
@@ -788,7 +791,6 @@ export const LTV = (params: {
 
   const denominator = collateralSum.add(new Decimal(Math.max(upnl, 0)));
 
-  // 分母如果为 0，则直接返回 0
   if (denominator.isZero()) {
     return 0;
   }
@@ -818,7 +820,6 @@ export const maxWithdrawalOtherCollateral = (inputs: {
   const { collateralQty, freeCollateral, indexPrice, weight } = inputs;
   const denominator = new Decimal(indexPrice).mul(weight);
 
-  // 分母如果为 0，则直接返回 0
   if (denominator.isZero()) {
     return 0;
   }

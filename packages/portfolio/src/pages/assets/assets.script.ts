@@ -172,21 +172,22 @@ export const useAssetsScript = () => {
     state.accountId,
   ]);
 
-  const handleTransfer = (accountId: string) => {
+  const handleTransfer = useCallback((accountId: string, token: string) => {
     if (!accountId) {
       return;
     }
     modal.show(TransferDialogId, {
       toAccountId: accountId,
+      token,
     });
-  };
+  }, []);
 
   const handleConvert = () => {
     modal.show("ConvertDialogId");
   };
 
   const assetsColumns = useAssetsColumns({
-    onClick: handleTransfer,
+    onTransfer: handleTransfer,
     onConvert: handleConvert,
   });
 

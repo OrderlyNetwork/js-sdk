@@ -181,7 +181,6 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
     return (
       <>
         <Input
-          data-testid={props.testId}
           ref={inputRef}
           autoComplete="off"
           placeholder={_placeholder}

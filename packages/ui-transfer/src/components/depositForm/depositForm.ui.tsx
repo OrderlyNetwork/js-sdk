@@ -70,9 +70,9 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
 
   const renderContent = () => {
     if (sourceToken?.is_collateral) {
-      if (targetToken?.symbol === "USDC") {
+      if (targetToken?.symbol !== "USDC") {
         return (
-          <Flex direction="column" itemAlign="start" mt={1} gapY={1}>
+          <Flex direction="column" itemAlign="start" mt={2} gap={1}>
             <CollateralRatioWidget collateralRatio={collateralRatio} />
             <CollateralContributionWidget
               collateralContribution={targetQuantity}
@@ -90,11 +90,10 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
           </Flex>
         );
       }
-
       return (
-        <Flex direction="column" itemAlign="start" mt={1} gapY={1}>
+        <Flex direction="column" itemAlign="start" mt={2} gapY={1}>
           <Flex width={"100%"} itemAlign="center" justify="between">
-            <Text size="xs" intensity={36}>
+            <Text size="2xs" intensity={36}>
               Convert rate
             </Text>
             <SwapCoin
@@ -103,7 +102,6 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
               targetSymbol={targetToken?.display_name || targetToken?.symbol}
             />
           </Flex>
-
           <SlippageUI slippage={slippage} setSlippage={setSlippage} />
           <MinimumReceivedWidget
             minimumReceived={minimumReceived}
