@@ -1,5 +1,11 @@
 # create-orderly-app
 
+## 1.9.2-internal-multi-collateral.1
+
+### Patch Changes
+
+- publish
+
 ## 1.9.2-internal-multi-collateral.0
 
 ### Patch Changes
