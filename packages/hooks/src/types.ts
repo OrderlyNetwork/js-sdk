@@ -1,5 +1,5 @@
-import { API } from "@orderly.network/types";
 import { StateCreator } from "zustand";
+import { API } from "@orderly.network/types";
 import { Portfolio } from "./orderly/appStore";
 
 // export type ImmerStateCreator<T> = StateCreator<CommonState, [["zustand/immer", never], never], [], T>;
@@ -14,6 +14,8 @@ export interface CalculatorCtx {
   // positions: API.PositionTPSLExt[];
   // markets: Record<string, API.MarketInfoExt> | null;
   portfolio?: Portfolio;
+  tokenInfo?: API.Chain[];
+
   get: <T extends any>(fn: (output: Record<string, any>) => T) => T;
   outputToValue: () => any;
 
@@ -54,7 +56,7 @@ export interface CalculatorScheduler {
     scope: CalculatorScope,
     calculators: Calculator[],
     data: any,
-    ctx: CalculatorCtx
+    ctx: CalculatorCtx,
   ) => Promise<any>;
   update: (scope: CalculatorScope, calculators: Calculator[], data: any) => any;
 }

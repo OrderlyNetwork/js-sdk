@@ -24,7 +24,7 @@ export const useSubAccountDataObserver = (accountId?: string) => {
   const [positions, setPositions] = useState(
     POSITION_EMPTY as API.PositionsTPSLExt,
   );
-  const [portfolio, setportfolio] = useState<Portfolio>();
+  const [portfolio, setPortfolio] = useState<Portfolio>();
 
   // need to get sub account info to calculate portfolio and positions
   const { data: accountInfo } = useSubAccountQuery<API.AccountInfo>(
@@ -48,6 +48,13 @@ export const useSubAccountDataObserver = (accountId?: string) => {
     },
   );
 
+  const { data: tokenInfo } = useSubAccountQuery<API.Chain[]>(
+    "/v1/public/token",
+    {
+      accountId,
+    },
+  );
+
   useEffect(() => {
     const portfolio = formatPortfolio({
       holding,
@@ -55,8 +62,9 @@ export const useSubAccountDataObserver = (accountId?: string) => {
       markPrices,
       accountInfo,
       symbolsInfo,
+      tokenInfo,
     });
-    setportfolio(portfolio!);
+    setPortfolio(portfolio!);
   }, [holding, positions, markPrices, accountInfo, symbolsInfo]);
 
   useEffect(() => {

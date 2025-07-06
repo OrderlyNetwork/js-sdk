@@ -3,6 +3,7 @@ import { CalculatorCtx, CalculatorScope } from "../../types";
 import { Portfolio, useAppStore } from "../appStore";
 import { useMarketStore } from "../useMarket/market.store";
 import { usePositionStore } from "../usePositionStream/usePosition.store";
+import { useTokenInfoStore } from "../useTokenInfo/tokenInfo.store";
 import { MarketCalculatorName } from "./markPrice";
 
 export class CalculatorContext implements CalculatorCtx {
@@ -15,6 +16,8 @@ export class CalculatorContext implements CalculatorCtx {
   markPrices?: Record<string, number> | null;
   // positions: API.PositionTPSLExt[];
   // markets: Record<string, API.MarketInfoExt> | null;
+  tokenInfo?: API.Chain[];
+
   private output: Record<string, any>;
 
   private static _instance: CalculatorContext;
@@ -77,6 +80,7 @@ export class CalculatorContext implements CalculatorCtx {
       string,
       API.FundingRate
     >;
+    this.tokenInfo = useTokenInfoStore.getState().tokenInfo;
   }
 
   get(fn: (output: Record<string, any>) => any) {

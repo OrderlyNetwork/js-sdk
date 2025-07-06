@@ -1,19 +1,21 @@
-import { API } from "@orderly.network/types";
+import type { API } from "@orderly.network/types";
 
 type NonUSDCHolding = {
   holding: number;
-  markPrice: number;
+  indexPrice: number;
   // margin replacement rate, default 0
+  collateralCap: number;
   discount: number;
 };
 
 export const parseHolding = (
   holding: API.Holding[],
-  markPrices: Record<string, number>
+  indexPrices: Record<string, number>,
+  tokenInfo: API.Chain[],
 ): [number, NonUSDCHolding[]] => {
-  // if (!holding || !markPrices) {
-  //     return [zero, zero];
-  //   }
+  // if (!holding || !indexPrices) {
+  //   return [zero, zero];
+  // }
   const nonUSDC: NonUSDCHolding[] = [];
 
   let USDC_holding = 0;
@@ -22,10 +24,11 @@ export const parseHolding = (
     if (item.token === "USDC") {
       USDC_holding = item.holding;
     } else {
+      const findToken = tokenInfo.find((item) => item.token === item.token);
       nonUSDC.push({
         holding: item.holding,
-        markPrice: markPrices[item.token] ?? 0,
-        // markPrice: 0,
+        indexPrice: indexPrices[item.token] ?? 0,
+        collateralCap: findToken?.user_max_qty ?? 0,
         discount: 0,
       });
     }

@@ -60,6 +60,7 @@ class PortfolioCalculator extends BaseCalculator<any> {
 
     const accountInfo = ctx.accountInfo!;
     const symbolsInfo = ctx.symbolsInfo!;
+    const tokenInfo = ctx.tokenInfo;
 
     return this.format({
       holding,
@@ -67,6 +68,7 @@ class PortfolioCalculator extends BaseCalculator<any> {
       markPrices,
       accountInfo,
       symbolsInfo,
+      tokenInfo: tokenInfo ?? [],
     });
   }
 
@@ -83,8 +85,16 @@ class PortfolioCalculator extends BaseCalculator<any> {
     markPrices: Record<string, number> | null;
     accountInfo: API.AccountInfo;
     symbolsInfo: Record<string, API.SymbolExt>;
+    tokenInfo: API.Chain[];
   }) {
-    const { holding, positions, markPrices, accountInfo, symbolsInfo } = inputs;
+    const {
+      holding,
+      positions,
+      markPrices,
+      accountInfo,
+      symbolsInfo,
+      tokenInfo,
+    } = inputs;
 
     if (
       !holding ||
@@ -99,7 +109,12 @@ class PortfolioCalculator extends BaseCalculator<any> {
     const unsettledPnL = pathOr(0, ["total_unsettled_pnl"])(positions);
     const unrealizedPnL = pathOr(0, ["total_unreal_pnl"])(positions);
 
-    const [USDC_holding, nonUSDC] = parseHolding(holding, markPrices);
+    const [USDC_holding, nonUSDC] = parseHolding(
+      holding,
+      markPrices,
+      tokenInfo,
+    );
+
     const usdc = holding.find((item) => item.token === "USDC");
 
     const totalCollateral = account.totalCollateral({

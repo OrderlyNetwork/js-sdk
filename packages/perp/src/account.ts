@@ -12,21 +12,20 @@ export type TotalValueInputs = {
   USDCHolding: number;
   nonUSDCHolding: {
     holding: number;
-    markPrice: number;
+    indexPrice: number;
     //Margin replacement rate, currently default to 0
     discount: number;
   }[];
 };
+
 /**
  * User's total asset value (denominated in USDC), including assets that cannot be used as collateral.
  */
 export function totalValue(inputs: TotalValueInputs): Decimal {
   const { totalUnsettlementPnL, USDCHolding, nonUSDCHolding } = inputs;
-
   const nonUSDCHoldingValue = nonUSDCHolding.reduce((acc, cur) => {
-    return new Decimal(cur.holding).mul(cur.markPrice).add(acc);
+    return new Decimal(cur.holding).mul(cur.indexPrice).add(acc);
   }, zero);
-
   return nonUSDCHoldingValue.add(USDCHolding).add(totalUnsettlementPnL);
 }
 
@@ -52,29 +51,29 @@ export type TotalCollateralValueInputs = {
   // Quantity of USDC holdings
   USDCHolding: number;
   nonUSDCHolding: {
-    holding: number;
-    markPrice: number;
-    // Margin replacement rate, currently default to 0
-    discount: number;
+    holding: number; // collateral_qty_i
+    collateralCap: number; // collateral_cap_i
+    indexPrice: number; // index_price_i
+    discount: number; // weight_i
   }[];
   // Unsettled profit and loss
   unsettlementPnL: number;
 };
+
 /**
  * Calculate total collateral.
  */
 export function totalCollateral(inputs: TotalCollateralValueInputs): Decimal {
-  const { USDCHolding, nonUSDCHolding } = inputs;
-  const nonUSDCHoldingValue = nonUSDCHolding.reduce((acc, cur) => {
-    return (
-      acc +
-      new Decimal(cur.holding).mul(cur.markPrice).mul(cur.discount).toNumber()
-    );
-  }, 0);
+  const { USDCHolding, nonUSDCHolding, unsettlementPnL } = inputs;
+  const nonUSDCHoldingValue = nonUSDCHolding.reduce<Decimal>((acc, cur) => {
+    const finalHolding = Math.min(cur.holding, cur.collateralCap);
+    const value = new Decimal(finalHolding)
+      .mul(cur.discount)
+      .mul(cur.indexPrice);
+    return acc.add(value);
+  }, zero);
 
-  return new Decimal(USDCHolding)
-    .add(nonUSDCHoldingValue)
-    .add(inputs.unsettlementPnL);
+  return new Decimal(USDCHolding).add(nonUSDCHoldingValue).add(unsettlementPnL);
 }
 
 export function initialMarginWithOrder() {}
