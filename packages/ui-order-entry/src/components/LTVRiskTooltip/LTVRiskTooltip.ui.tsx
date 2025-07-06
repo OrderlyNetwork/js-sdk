@@ -70,7 +70,7 @@ export const LTVRiskTooltipUI: React.FC<LTVTooltipScriptReturn> = (props) => {
           {currentLtv}%
         </Text>
       </Flex>
-      <Text className="oui-py-2" intensity={54} size="xs">
+      <Text className="oui-py-2" intensity={54} size="2xs">
         If your LTV exceeds {isThresholdLoading ? "-" : ltv_threshold}% or your
         USDC balance plus Unsettled PnL falls below{" "}
         {isThresholdLoading ? "-" : negative_usdc_threshold}, your collateral
