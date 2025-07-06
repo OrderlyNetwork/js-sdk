@@ -54,16 +54,20 @@ export const SlippageCell: React.FC<SlippageProps> = (props) => {
         />
       </SimpleDialog>
       <Flex width={"100%"} itemAlign="center" justify={"between"}>
-        <Text intensity={36} size="xs">
+        <Text intensity={36} size="2xs">
           {t("orderEntry.slippage")}
         </Text>
-        <AuthGuard fallback={() => <Text size="xs">-%</Text>}>
+        <AuthGuard fallback={() => <Text size="2xs">-%</Text>}>
           <Flex itemAlign={"center"} justify={"end"} gap={1}>
-            <Text size="xs" className="oui-text-primary">
+            <Text size="2xs" className="oui-text-primary">
               {props.slippage || "-"}%
             </Text>
-            <button className="oui-text-xs" onClick={setTrue}>
-              <EditIcon className="oui-text-primary" opacity={1} size={12} />
+            <button className="oui-text-2xs" onClick={setTrue}>
+              <EditIcon
+                size={12}
+                opacity={1}
+                className="oui-text-2xs oui-text-primary"
+              />
             </button>
           </Flex>
         </AuthGuard>

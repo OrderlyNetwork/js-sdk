@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Flex, Text } from "@orderly.network/ui";
+import { cn, Flex, Text } from "@orderly.network/ui";
 
 interface SwapCoinProps {
   className?: string;
@@ -18,19 +18,19 @@ export const SwapCoin: FC<SwapCoinProps> = (props) => {
       itemAlign="center"
       justify="center"
       gap={1}
-      className={props.className}
+      className={cn(props.className, "oui-text-2xs")}
     >
-      <Text size="xs" intensity={80}>
+      <Text size="2xs" intensity={80}>
         1
       </Text>
-      <Text size="xs" intensity={36}>
+      <Text size="2xs" intensity={36}>
         {sourceSymbol}
       </Text>
       =
-      <Text.numeral size="xs" intensity={80} dp={4}>
+      <Text.numeral size="2xs" intensity={80} dp={4}>
         {indexPrice}
       </Text.numeral>
-      <Text size="xs" intensity={36}>
+      <Text size="2xs" intensity={36}>
         {targetSymbol}
       </Text>
     </Flex>
