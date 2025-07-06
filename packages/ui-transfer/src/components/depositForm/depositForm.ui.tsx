@@ -70,7 +70,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
 
   const renderContent = () => {
     if (sourceToken?.is_collateral) {
-      if (targetToken?.symbol === "USDC") {
+      if (targetToken?.symbol !== "USDC") {
         return (
           <Flex direction="column" itemAlign="start" mt={2} gap={1}>
             <CollateralRatioWidget collateralRatio={collateralRatio} />

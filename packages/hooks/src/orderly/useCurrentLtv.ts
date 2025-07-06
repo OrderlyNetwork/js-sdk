@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { account } from "@orderly.network/perp";
 import { Decimal } from "@orderly.network/utils";
 import {
-  useChainsInfo,
+  useTokenInfos,
   useHoldingStream,
   useIndexPricesStream,
   usePositionStream,
@@ -13,7 +13,7 @@ const { LTV, collateralRatio } = account;
 export const useCurrentLtv = () => {
   const { usdc, data: holdingList = [] } = useHoldingStream();
 
-  const { data: tokenChains = [] } = useChainsInfo();
+  const { data: tokenChains = [] } = useTokenInfos();
 
   const { data: indexPrices } = useIndexPricesStream();
 

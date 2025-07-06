@@ -12,10 +12,11 @@ type Receiver = {
 type TransferOptions = {
   /** if not provided, use current account id */
   fromAccountId?: string;
+  token?: string;
 };
 
 export const useTransfer = (options?: TransferOptions) => {
-  const { fromAccountId } = options || {};
+  const { fromAccountId, token } = options || {};
 
   const { unsettledPnL, availableBalance, freeCollateral, holding } =
     useCollateral();

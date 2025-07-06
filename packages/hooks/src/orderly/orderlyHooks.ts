@@ -30,7 +30,7 @@ export { useIndexPricesStream } from "./useIndexPricesStream";
 export { useMarkPrice } from "./useMarkPrice";
 export { useIndexPrice } from "./useIndexPrice";
 export { useLeverage } from "./useLeverage";
-export { useChainsInfo } from "./useChainsInfo";
+export { useTokenInfos } from "./useTokenInfos";
 export { useOdosQuote } from "./useOdosQuote";
 export { useCurrentLtv } from "./useCurrentLtv";
 

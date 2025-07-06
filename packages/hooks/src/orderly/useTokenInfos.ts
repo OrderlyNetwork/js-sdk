@@ -1,7 +1,7 @@
 import type { API } from "@orderly.network/types";
 import { useQuery } from "../useQuery";
 
-export const useChainsInfo = () => {
+export const useTokenInfos = () => {
   return useQuery<API.Chain[]>(`/v1/public/token`, {
     errorRetryCount: 3,
     revalidateOnFocus: false,
