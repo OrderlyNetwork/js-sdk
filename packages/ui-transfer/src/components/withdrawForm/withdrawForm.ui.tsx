@@ -34,7 +34,7 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
     sourceToken,
     amount,
     maxQuantity,
-    chains,
+    tokenChains,
     currentChain,
     fee,
     settingChain,
@@ -105,7 +105,7 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
             value={WithdrawTo.Wallet}
           >
             <ChainSelect
-              chains={chains}
+              chains={tokenChains}
               value={currentChain!}
               onValueChange={props.onChainChange}
               wrongNetwork={props.wrongNetwork}

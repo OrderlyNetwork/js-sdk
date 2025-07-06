@@ -3,7 +3,10 @@ import { nativeETHAddress, type API } from "@orderly.network/types";
 import { getTokenByTokenList } from "../../../utils";
 import type { CurrentChain } from "./useChainSelect";
 
-export const useToken = (currentChain?: CurrentChain | null) => {
+export const useToken = (
+  currentChain?: CurrentChain | null,
+  filter: (token: API.TokenInfo) => boolean = () => true,
+) => {
   const [sourceToken, setSourceToken] = useState<API.TokenInfo>();
   const [targetToken, setTargetToken] = useState<API.TokenInfo>();
 
@@ -15,7 +18,7 @@ export const useToken = (currentChain?: CurrentChain | null) => {
     if (chainInfo && chainInfo?.token_infos?.length > 0) {
       // const tokens = chainInfo.token_infos.filter((i) => i.is_collateral);
       // all tokens available in the chain, include swap tokens
-      const tokens = chainInfo.token_infos?.map((item) => {
+      const tokens = chainInfo.token_infos?.filter(filter)?.map((item) => {
         // if sourceToken is ETH, set address to nativeETHAddress
         if (!item.address && item.symbol === "ETH") {
           item.address = nativeETHAddress;
