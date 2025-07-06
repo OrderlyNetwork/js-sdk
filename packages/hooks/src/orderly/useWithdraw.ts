@@ -39,7 +39,7 @@ export const useWithdraw = (options?: UseWithdrawOptions) => {
 
   // const withdrawQueue = useRef<number[]>([]);
 
-  const { usdc } = useHoldingStream();
+  const { usdc, data: holdingData = [] } = useHoldingStream();
 
   const { data: indexPrices } = useIndexPricesStream();
 
@@ -106,14 +106,16 @@ export const useWithdraw = (options?: UseWithdrawOptions) => {
 
   const maxOthersAmount = useCallback(
     (token: API.TokenInfo, qty: number) => {
+      const weight = getCollateralRatio(token, qty);
+      const holding = holdingData.find((item) => item?.token === token?.symbol);
       return accountPerp.maxWithdrawalOtherCollateral({
-        collateralQty: qty,
+        collateralQty: holding?.holding ?? 0,
         freeCollateral: freeCollateral,
         indexPrice: indexPrice,
-        weight: getCollateralRatio(token, qty),
+        weight: weight,
       });
     },
-    [freeCollateral, indexPrice, getCollateralRatio],
+    [freeCollateral, indexPrice, holdingData, getCollateralRatio],
   );
 
   const availableWithdraw = useMemo(() => {

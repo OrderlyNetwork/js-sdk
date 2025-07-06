@@ -2,14 +2,14 @@ import { useMemo } from "react";
 import { account } from "@orderly.network/perp";
 import { Decimal } from "@orderly.network/utils";
 import { useHoldingStream, useIndexPricesStream, usePositionStream } from "..";
-import { useTokensInfoStore } from "./useTokensInfo/tokensInfo.store";
+import { useTokensInfo } from "./useTokensInfo/tokensInfo.store";
 
 const { LTV, collateralRatio } = account;
 
 export const useCurrentLtv = () => {
   const { usdc, data: holdingList = [] } = useHoldingStream();
 
-  const tokensInfo = useTokensInfoStore((state) => state.tokensInfo);
+  const tokensInfo = useTokensInfo();
 
   const { data: indexPrices } = useIndexPricesStream();
 

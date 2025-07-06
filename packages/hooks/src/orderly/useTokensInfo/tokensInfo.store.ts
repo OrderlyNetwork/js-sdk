@@ -17,3 +17,8 @@ export const useTokensInfoStore = create<TokensInfoStore & TokensInfoActions>(
     },
   }),
 );
+
+export const useTokensInfo = () => {
+  const tokensInfo = useTokensInfoStore((state) => state.tokensInfo);
+  return tokensInfo;
+};

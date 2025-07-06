@@ -6,7 +6,7 @@ import {
   useSubAccountDataObserver,
   useTransfer,
 } from "@orderly.network/hooks";
-import { useTokensInfoStore } from "@orderly.network/hooks";
+import { useTokensInfo } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { API, NetworkId } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
@@ -41,7 +41,7 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
 
   const { state, isMainAccount, subAccount } = useAccount();
 
-  const tokensInfo = useTokensInfoStore((state) => state.tokensInfo);
+  const tokensInfo = useTokensInfo();
 
   const {
     transfer,

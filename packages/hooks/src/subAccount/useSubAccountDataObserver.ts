@@ -6,7 +6,7 @@ import { useIndexPricesStream } from "../orderly/useIndexPricesStream";
 import { useMarkPricesStream } from "../orderly/useMarkPricesStream";
 import { POSITION_EMPTY } from "../orderly/usePositionStream/usePosition.store";
 import { useSymbolsInfo } from "../orderly/useSymbolsInfo";
-import { useTokensInfoStore } from "../orderly/useTokensInfo/tokensInfo.store";
+import { useTokensInfo } from "../orderly/useTokensInfo/tokensInfo.store";
 import { object2underscore } from "../utils/ws";
 import { formatPortfolio, Portfolio } from "./calculator/portfolio";
 import { calcByPrice, formatPositions } from "./calculator/positions";
@@ -20,7 +20,7 @@ export const useSubAccountDataObserver = (accountId?: string) => {
   const { data: indexPrices } = useIndexPricesStream();
   const symbolsInfo = useSymbolsInfo();
   const fundingRates = useFundingRatesStore();
-  const tokensInfo = useTokensInfoStore((state) => state.tokensInfo);
+  const tokensInfo = useTokensInfo();
 
   const [holding, setHolding] = useState<API.Holding[]>([]);
   const [positions, setPositions] = useState(
