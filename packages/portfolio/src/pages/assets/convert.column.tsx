@@ -10,6 +10,8 @@ export interface ConvertColumnsOptions {
 
 export interface ConvertDetailColumnsOptions {
   onTxClick?: (txId: string) => void;
+  indexPrices: Record<string, number>;
+  chainsInfo: any[];
 }
 
 export const ConvertedAssetColumn = ({
@@ -85,11 +87,12 @@ export const ConvertedAssetColumn = ({
 
 export const useConvertColumns = (options: ConvertColumnsOptions) => {
   const { onDetailsClick } = options;
+  const { t } = useTranslation();
 
   const columns = React.useMemo<Column[]>(() => {
     return [
       {
-        title: "Converted Asset",
+        title: t("portfolio.overview.column.convert.convertedAsset"),
         dataIndex: "converted_asset",
         align: "left",
         width: 250,
@@ -98,20 +101,16 @@ export const useConvertColumns = (options: ConvertColumnsOptions) => {
         },
       },
       {
-        title: "USDC Amount",
+        title: t("portfolio.overview.column.convert.usdcAmount"),
         dataIndex: "received_qty",
         align: "left",
         width: 120,
         render(qty: number, record: ConvertRecord) {
-          return (
-            <Text.numeral dp={2} currency="$">
-              {qty}
-            </Text.numeral>
-          );
+          return <Text.numeral dp={6}>{qty}</Text.numeral>;
         },
       },
       {
-        title: "Fee",
+        title: t("common.fee"),
         dataIndex: "details",
         align: "left",
         width: 100,
@@ -120,17 +119,17 @@ export const useConvertColumns = (options: ConvertColumnsOptions) => {
             (sum, detail) => sum + detail.haircut,
             0,
           );
-          return <Text.numeral dp={2}>{totalHaircut}</Text.numeral>;
+          return <Text.numeral dp={6}>{totalHaircut}</Text.numeral>;
         },
       },
       {
-        title: "Type",
+        title: t("common.type"),
         dataIndex: "type",
         align: "left",
         width: 120,
       },
       {
-        title: "Convert ID",
+        title: t("portfolio.overview.column.convert.convertId"),
         dataIndex: "convert_id",
         align: "left",
         width: 100,
@@ -139,14 +138,14 @@ export const useConvertColumns = (options: ConvertColumnsOptions) => {
         },
       },
       {
-        title: "Time",
+        title: t("common.time"),
         dataIndex: "created_time",
         align: "left",
         width: 180,
         rule: "date",
       },
       {
-        title: "Status",
+        title: t("common.status"),
         dataIndex: "status",
         align: "left",
         width: 100,
@@ -183,11 +182,11 @@ export const useConvertDetailColumns = (
   options: ConvertDetailColumnsOptions,
 ) => {
   const { onTxClick } = options;
-
+  const { t } = useTranslation();
   const columns = React.useMemo<Column[]>(() => {
     return [
       {
-        title: "Converted Asset",
+        title: t("portfolio.overview.column.convert.convertedAsset"),
         dataIndex: "converted_asset",
         align: "left",
         width: 150,
@@ -201,10 +200,10 @@ export const useConvertDetailColumns = (
         },
       },
       {
-        title: "Qty.",
+        title: t("common.qty"),
         dataIndex: "converted_qty",
         align: "left",
-        width: 120,
+        width: 100,
         render(qty: number, record: ConvertTransaction) {
           return (
             <Text.numeral dp={6} padding={false}>
@@ -214,56 +213,73 @@ export const useConvertDetailColumns = (
         },
       },
       {
-        title: "USDC Amount",
+        title: t("portfolio.overview.column.convert.usdcAmount"),
         dataIndex: "received_qty",
         align: "left",
-        width: 120,
-        render(qty: number) {
-          return <Text.numeral dp={2}>{qty}</Text.numeral>;
-        },
-      },
-      {
-        title: "Fee",
-        dataIndex: "haircut",
-        align: "left",
         width: 100,
-        render(haircut: number) {
-          return <Text.numeral dp={2}>{haircut}</Text.numeral>;
-        },
-      },
-      {
-        title: "TxID",
-        dataIndex: "tx_id",
-        align: "left",
-        width: 120,
-        render(txId?: string) {
-          if (!txId) return <Text intensity={54}>-</Text>;
+        render(qty: number, record: ConvertTransaction) {
           return (
-            <Text.formatted
-              rule="txId"
-              copyable
-              className="oui-cursor-pointer oui-underline oui-decoration-line-16 oui-decoration-dashed oui-underline-offset-4"
-              onClick={() => onTxClick?.(txId)}
-            >
-              {txId}
-            </Text.formatted>
+            <Text.numeral dp={6}>
+              {qty}
+              {/* {getIndexPrice(record.converted_asset, options.indexPrices) * record.converted_qty} */}
+            </Text.numeral>
           );
         },
       },
       {
-        title: "Network",
+        title: t("common.fee"),
+        dataIndex: "haircut",
+        align: "left",
+        width: 100,
+        render(haircut: number) {
+          return <Text.numeral dp={6}>{haircut}</Text.numeral>;
+        },
+      },
+      {
+        title: t("common.txId"),
+        dataIndex: "tx_id",
+        align: "left",
+        width: 150,
+        render(txId: string, record: ConvertTransaction) {
+          if (!txId) return <Text intensity={54}>-</Text>;
+          const chainInfo = (options.chainsInfo as any[])?.find(
+            (item) => record.chain_id === parseInt(item.chain_id),
+          );
+          const explorer_base_url = chainInfo?.explorer_base_url;
+          const href = `${explorer_base_url}/tx/${txId}`;
+          return (
+            <a href={href} target="_blank" rel="noopener noreferrer">
+              <Text.formatted
+                rule="txId"
+                copyable
+                className="oui-cursor-pointer oui-underline oui-decoration-line-16 oui-decoration-dashed oui-underline-offset-4"
+              >
+                {txId}
+              </Text.formatted>
+            </a>
+          );
+        },
+      },
+      {
+        title: t("transfer.network"),
         dataIndex: "venue",
         align: "left",
-        width: 120,
+        width: 150,
         render(venue: string, record: ConvertTransaction) {
           if (venue === "internal_fund") {
             return <Text>Internal</Text>;
           }
-          return <Text>Chain {record.chain_id || "-"}</Text>;
+          return (
+            <Text>
+              {options.chainsInfo.find(
+                (item) => item.chain_id == record.chain_id,
+              )?.name || "-"}
+            </Text>
+          );
         },
       },
       {
-        title: "Status",
+        title: t("common.status"),
         dataIndex: "transaction_id",
         align: "left",
         width: 100,

@@ -1,16 +1,11 @@
 import React, { useMemo, useState } from "react";
-import {
-  differenceInDays,
-  subDays,
-  setHours,
-  setMinutes,
-  setSeconds,
-  setMilliseconds,
-} from "date-fns";
+import { subDays } from "date-fns";
 import {
   useAccount,
   useCollateral,
+  useIndexPricesStream,
   useSubAccountQuery,
+  useQuery,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { usePagination } from "@orderly.network/ui";
@@ -44,6 +39,11 @@ export const useConvertScript = () => {
   const { t } = useTranslation();
   const { isMainAccount, state } = useAccount();
   const { holding = [] } = useCollateral();
+  const { data: indexPrices } = useIndexPricesStream();
+
+  const { data: chainsInfo } = useQuery("/v1/public/chain_info", {
+    revalidateOnFocus: false,
+  });
 
   // Pagination
   const { page, pageSize, setPage, parsePagination } = usePagination({
@@ -506,6 +506,10 @@ export const useConvertScript = () => {
     isMainAccount,
     isLoading,
     holding,
+
+    // Index prices
+    indexPrices,
+    chainsInfo,
   };
 };
 

@@ -23,8 +23,8 @@ export const CONVERT_STATUS_OPTIONS = [
     value: "all",
   },
   {
-    label: "Success",
-    value: "success",
+    label: "Completed",
+    value: "completed",
   },
   {
     label: "Failed",
@@ -33,13 +33,21 @@ export const CONVERT_STATUS_OPTIONS = [
 ];
 
 // Convert Details Modal Component
-const ConvertDetailsModal = modal.create<{ record: ConvertRecord }>((props) => {
+const ConvertDetailsModal = modal.create<{
+  record: ConvertRecord;
+  indexPrices: Record<string, number>;
+  chainsInfo: any[];
+}>((props) => {
   const { visible, onOpenChange } = useModal();
+
+  console.log(props);
 
   const detailColumns = useConvertDetailColumns({
     onTxClick: (txId: string) => {
       console.log("Open transaction:", txId);
     },
+    indexPrices: props.indexPrices,
+    chainsInfo: props.chainsInfo,
   });
 
   return (
@@ -83,7 +91,11 @@ export const ConvertDesktopUI: React.FC<ConvertDesktopUIProps> = ({
       (item) => item.convert_id === convertId,
     );
     if (record) {
-      modal.show(ConvertDetailsModal, { record });
+      modal.show(ConvertDetailsModal, {
+        record,
+        indexPrices: convertState.indexPrices,
+        chainsInfo: convertState.chainsInfo as any,
+      });
     }
   };
 
