@@ -1,6 +1,7 @@
 import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { cn, Flex, Tooltip, Text, Box } from "@orderly.network/ui";
+import { Decimal } from "@orderly.network/utils";
 import type { LtvScriptReturns } from "./ltv.script";
 
 const TooltipIcon = React.forwardRef<
@@ -90,27 +91,36 @@ export const LtvUI: React.FC<
       </Flex>
       {showDiff ? (
         <Flex itemAlign="center" justify="between" gap={1}>
-          <Text
+          <Text.numeral
+            dp={2}
             size="2xs"
-            className={cn("oui-select-none", calculateTextColor(currentLtv))}
+            rm={Decimal.ROUND_DOWN}
+            className={cn("oui-font-semibold", calculateTextColor(currentLtv))}
+            rule="percentages"
           >
-            {currentLtv}%
-          </Text>
+            {currentLtv}
+          </Text.numeral>
           →
-          <Text
+          <Text.numeral
+            dp={2}
             size="2xs"
-            className={cn("oui-select-none", calculateTextColor(nextLTV))}
+            rm={Decimal.ROUND_DOWN}
+            className={cn("oui-font-semibold", calculateTextColor(nextLTV))}
+            rule="percentages"
           >
-            {nextLTV}%
-          </Text>
+            {nextLTV}
+          </Text.numeral>
         </Flex>
       ) : (
-        <Text
+        <Text.numeral
+          dp={2}
           size="2xs"
-          className={cn("oui-select-none", calculateTextColor(currentLtv))}
+          rm={Decimal.ROUND_DOWN}
+          className={cn("oui-font-semibold", calculateTextColor(currentLtv))}
+          rule="percentages"
         >
-          {currentLtv}%
-        </Text>
+          {currentLtv}
+        </Text.numeral>
       )}
     </Flex>
   );

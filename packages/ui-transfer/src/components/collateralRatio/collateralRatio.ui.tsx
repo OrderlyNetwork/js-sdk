@@ -1,6 +1,7 @@
 import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Box, Flex, Text, Tooltip } from "@orderly.network/ui";
+import { Decimal } from "@orderly.network/utils";
 
 // import type { CollateralRatioReturns } from "./collateralRatio.script";
 
@@ -42,11 +43,9 @@ const TooltipContent: React.FC = () => {
   );
 };
 
-export const CollateralRatioUI: React.FC<
-  Readonly<{ collateralRatio: number }>
-> = (props) => {
+export const CollateralRatioUI: React.FC<{ value: number }> = (props) => {
   const { t } = useTranslation();
-  const { collateralRatio } = props;
+  const { value } = props;
   return (
     <Flex width="100%" itemAlign="center" justify="between">
       <Flex justify="start" itemAlign="center">
@@ -57,9 +56,15 @@ export const CollateralRatioUI: React.FC<
           <TooltipIcon className="oui-ml-[2px] oui-cursor-pointer oui-text-base-contrast-36" />
         </Tooltip>
       </Flex>
-      <Text size="2xs" className="oui-select-none" intensity={80}>
-        {collateralRatio}%
-      </Text>
+      <Text.numeral
+        dp={2}
+        rm={Decimal.ROUND_DOWN}
+        coloring
+        className="oui-font-semibold"
+        rule="percentages"
+      >
+        {value}
+      </Text.numeral>
     </Flex>
   );
 };
