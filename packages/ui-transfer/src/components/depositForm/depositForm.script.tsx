@@ -341,7 +341,9 @@ const useCollateralValue = (params: {
         collateralAssets: tokens.map((item) => {
           const qtyData = holdingData?.find((h) => h.token === item.symbol);
           const indexPrice =
-            item.symbol === "USDC" ? 1 : indexPrices[item.symbol];
+            item.symbol === "USDC"
+              ? 1
+              : indexPrices[`PERP_${item.symbol}_USDC`];
           return {
             qty: qtyData?.holding ?? 0,
             indexPrice: indexPrice ?? 0,
