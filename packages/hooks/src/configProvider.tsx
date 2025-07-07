@@ -1,6 +1,6 @@
 import type { FC, PropsWithChildren } from "react";
 import React, { useLayoutEffect, useMemo } from "react";
-import { OrderlyProvider } from "./orderlyContext";
+import useConstant from "use-constant";
 import {
   ConfigStore,
   // MemoryConfigStore,
@@ -14,19 +14,20 @@ import {
   IContract,
   WalletAdapter,
 } from "@orderly.network/core";
-
-import useConstant from "use-constant";
-import { Chain, NetworkId } from "@orderly.network/types";
-// import { usePreLoadData } from "./usePreloadData";
-import { DataCenterProvider } from "./dataProvider";
-import { StatusProvider } from "./statusProvider";
-import { SDKError } from "@orderly.network/types";
-import { ProxyConfigStore } from "./dev/proxyConfigStore";
-import type { Chains } from "./orderly/useChains";
 import { DefaultEVMWalletAdapter } from "@orderly.network/default-evm-adapter";
 import { DefaultSolanaWalletAdapter } from "@orderly.network/default-solana-adapter";
+import { Chain, NetworkId } from "@orderly.network/types";
+import { SDKError } from "@orderly.network/types";
 import { EthersProvider } from "@orderly.network/web3-provider-ethers";
+import { DEFAULT_DEPTH } from "./constants";
+// import { usePreLoadData } from "./usePreloadData";
+import { DataCenterProvider } from "./dataProvider";
+import { ProxyConfigStore } from "./dev/proxyConfigStore";
 import { ExtendedConfigStore } from "./extendedConfigStore";
+import type { Chains } from "./orderly/useChains";
+import { OrderlyProvider } from "./orderlyContext";
+import { StatusProvider } from "./statusProvider";
+
 // import { useParamsCheck } from "./useParamsCheck";
 
 type filteredChains = {
@@ -43,6 +44,10 @@ export type BaseConfigProviderProps = {
   walletAdapters?: WalletAdapter[];
   chainFilter?: filteredChains | filterChainsFunc;
   customChains?: Chains<undefined, undefined>;
+  /**
+   * Custom orderbook default depth.
+   */
+  customOrderbookDepth?: Record<string, string>;
 };
 
 export type ExclusiveConfigProviderProps =
@@ -93,7 +98,7 @@ export const OrderlyConfigProvider: FC<
   if (typeof configStore !== "undefined" && !configStore.get("brokerId")) {
     // console.error("[OrderlyConfigProvider]: brokerId is required");
     throw new SDKError(
-      "if configStore is provided, brokerId is required in configStore"
+      "if configStore is provided, brokerId is required in configStore",
     );
   }
 
@@ -103,14 +108,14 @@ export const OrderlyConfigProvider: FC<
     brokerId !== (configStore as ConfigStore).get("brokerId")
   ) {
     throw new SDKError(
-      "If you have provided a custom `configStore` and the `brokerId` is set in the `configStore`, please remove the `brokerId` prop."
+      "If you have provided a custom `configStore` and the `brokerId` is set in the `configStore`, please remove the `brokerId` prop.",
     );
   }
 
   const innerConfigStore = useMemo<ConfigStore>(() => {
     return new ProxyConfigStore(
       configStore ||
-        new ExtendedConfigStore({ brokerId, brokerName, networkId })
+        new ExtendedConfigStore({ brokerId, brokerName, networkId }),
     );
   }, [configStore, brokerId, brokerName, networkId]);
 
@@ -134,6 +139,10 @@ export const OrderlyConfigProvider: FC<
     );
   }, [walletAdapters]);
 
+  const defaultOrderbookDepth = useMemo<Record<string, string>>(() => {
+    return props.customOrderbookDepth || DEFAULT_DEPTH;
+  }, [props.customOrderbookDepth]);
+
   // check params, if has mismatch, throw warning message to console
   // useParamsCheck({ brokerId: innerConfigStore.get("brokerId") });
 
@@ -148,7 +157,7 @@ export const OrderlyConfigProvider: FC<
         innerWalletAdapters,
         {
           contracts,
-        }
+        },
       );
 
       SimpleDI.registerByName(Account.instanceName, account);
@@ -180,6 +189,7 @@ export const OrderlyConfigProvider: FC<
         walletAdapters: innerWalletAdapters,
         // apiBaseUrl,
         customChains,
+        defaultOrderbookDepth,
       }}
     >
       <StatusProvider>

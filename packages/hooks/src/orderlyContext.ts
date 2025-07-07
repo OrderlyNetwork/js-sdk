@@ -1,12 +1,10 @@
 import { createContext } from "react";
-
 import {
   type ConfigStore,
   type OrderlyKeyStore,
   type getWalletAdapterFunc,
-  WalletAdapter
+  WalletAdapter,
 } from "@orderly.network/core";
-
 import { Chain, NetworkId } from "@orderly.network/types";
 import { Chains } from "./orderly/useChains";
 
@@ -36,6 +34,7 @@ export interface OrderlyConfigContextState {
   // extraApis:ExtraAPIs
   filteredChains?: filteredChains | null;
   customChains?: Chains<undefined, undefined>;
+  defaultOrderbookDepth: Record<string, string>;
 }
 
 export const OrderlyContext = createContext<OrderlyConfigContextState>({
