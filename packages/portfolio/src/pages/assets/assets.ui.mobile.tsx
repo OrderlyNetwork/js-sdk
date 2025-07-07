@@ -14,7 +14,7 @@ import { useAssetsScriptReturn } from "./assets.script";
 import { AccountType } from "./assets.ui";
 
 export const AssetsTableMobile = (props: useAssetsScriptReturn) => {
-  console.log(props);
+  // console.log(props);
   const { t } = useTranslation();
 
   const subAccounts = props.state.subAccounts ?? [];
@@ -156,10 +156,17 @@ const AssetMobileItem: FC<AssetMobileItemProps> = ({ item }) => {
           variant="outlined"
           size="sm"
           color="gray"
-          onClick={() => modal.show("ConvertDialogId")}
+          onClick={() =>
+            modal.show("ConverSheetId", {
+              accountId: item.account_id,
+              token: item.token,
+            })
+          }
           disabled={item.token === "USDC"}
           className={cn(
             "oui-flex-1 oui-border-white/[0.36] oui-text-base-contrast-54",
+            item.token === "USDC" &&
+              "hover:!oui-bg-transparent disabled:oui-border-white/[0.16] disabled:!oui-bg-transparent disabled:oui-text-base-contrast-20",
           )}
         >
           Convert
@@ -168,6 +175,12 @@ const AssetMobileItem: FC<AssetMobileItemProps> = ({ item }) => {
           variant="outlined"
           size="sm"
           color="gray"
+          onClick={() =>
+            modal.show("TransferSheetId", {
+              accountId: item.account_id,
+              token: item.token,
+            })
+          }
           className={cn(
             "oui-flex-1 oui-border-white/[0.36] oui-text-base-contrast-54",
           )}

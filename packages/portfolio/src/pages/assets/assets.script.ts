@@ -184,8 +184,11 @@ export const useAssetsScript = () => {
     });
   }, []);
 
-  const handleConvert = () => {
-    modal.show("ConvertDialogId");
+  const handleConvert = (accountId: string, token: string) => {
+    modal.show("ConvertDialogId", {
+      accountId,
+      token,
+    });
   };
 
   const assetsColumns = useAssetsColumns({
