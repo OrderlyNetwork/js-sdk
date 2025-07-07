@@ -6,7 +6,6 @@ import {
   useHoldingStream,
   useIndexPrice,
   useIndexPricesStream,
-  useLocalStorage,
   usePositionStream,
   useQuery,
 } from "@orderly.network/hooks";
@@ -28,8 +27,6 @@ import { useToken } from "./hooks/useToken";
 const { collateralRatio, LTV, collateralContribution, calcMinimumReceived } =
   account;
 
-const ORDERLY_DEPOSIT_SLIPPAGE_KEY = "orderly_deposit_slippage";
-
 export type UseDepositFormScriptReturn = ReturnType<
   typeof useDepositFormScript
 >;
@@ -42,16 +39,6 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
   const { wrongNetwork } = useAppContext();
 
   const networkId = useConfig("networkId") as NetworkId;
-
-  const [slippage, setSlippage] = useLocalStorage(
-    ORDERLY_DEPOSIT_SLIPPAGE_KEY,
-    "1",
-    {
-      parseJSON: (value: string | null) => {
-        return !value || value === '""' ? "1" : JSON.parse(value);
-      },
-    },
-  );
 
   const { chains, currentChain, settingChain, onChainChange } =
     useChainSelect();
@@ -123,8 +110,8 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     swapQuantity,
     swapFee,
     warningMessage,
-    slippage: swapSlippage,
-    onSlippageChange: onSwapSlippageChange,
+    slippage,
+    onSlippageChange,
   } = useSwapDeposit({
     srcToken: sourceToken!,
     currentChain,
@@ -248,7 +235,7 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     negative_usdc_threshold,
     isConvertThresholdLoading,
     slippage,
-    setSlippage,
+    onSlippageChange,
     minimumReceived,
     usdcToken,
 
@@ -260,8 +247,6 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     swapFee,
     warningMessage,
     swapRevalidating,
-    swapSlippage,
-    onSwapSlippageChange,
   };
 };
 

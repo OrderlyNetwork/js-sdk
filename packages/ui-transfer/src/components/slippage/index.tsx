@@ -15,11 +15,14 @@ import { Decimal } from "@orderly.network/utils";
 interface SlippageProps {
   value?: number;
   onValueChange?: (value: number) => void;
+  max?: number;
+  min?: number;
 }
 
 const options = [0.5, 1, 2];
 
 export const Slippage: FC<SlippageProps> = (props) => {
+  const { min = 0.2, max = 10 } = props;
   const [value, setValue] = useState<number>();
   const [customValue, setCustomValue] = useState("");
   const [open, setOpen] = useState(false);
@@ -47,15 +50,17 @@ export const Slippage: FC<SlippageProps> = (props) => {
   };
 
   const onValueChange = (val: string) => {
-    if (!val) {
+    if (!val || Number(val) === 0) {
       setCustomValue(val);
       return;
     }
 
     const d = new Decimal(val);
     setValue(undefined);
-    if (d.gt(10)) {
-      setCustomValue("10");
+    if (d.lt(min)) {
+      setCustomValue(min.toString());
+    } else if (d.gt(max)) {
+      setCustomValue(max.toString());
     } else {
       setCustomValue(val);
     }
@@ -116,7 +121,7 @@ export const Slippage: FC<SlippageProps> = (props) => {
 
       <Box mt={5}>
         <Text intensity={54}>
-          {t("transfer.swapDeposit.slippage.slippageTolerance.description")}
+          {t("transfer.slippage.slippageTolerance.description")}
         </Text>
       </Box>
     </div>
@@ -127,24 +132,27 @@ export const Slippage: FC<SlippageProps> = (props) => {
       <AlertDialog
         open={open}
         onOpenChange={setOpen}
-        title={t("transfer.swapDeposit.slippage.slippageTolerance")}
+        title={t("transfer.slippage.slippageTolerance")}
         okLabel={t("common.confirm")}
         message={content}
         onOk={onConfirm}
         actions={{ primary: { disabled } }}
       />
       <Flex
-        gapX={1}
+        width="100%"
+        justify="between"
         className="oui-cursor-pointer oui-select-none"
         onClick={showSlippage}
       >
         <Text intensity={36} size="2xs">
-          {`${t("transfer.swapDeposit.slippage")}:`}
+          {t("transfer.slippage")}
         </Text>
-        <Text size="2xs" color="primaryLight">
-          {props.value}%
-        </Text>
-        <EditIcon className="oui-size-3 oui-text-primary-light" />
+        <Flex gapX={1}>
+          <Text size="2xs" color="primaryLight">
+            {props.value}%
+          </Text>
+          <EditIcon className="oui-size-3 oui-text-primary-light" />
+        </Flex>
       </Flex>
     </>
   );

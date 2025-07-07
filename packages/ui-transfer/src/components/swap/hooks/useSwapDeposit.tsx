@@ -21,6 +21,8 @@ type SwapDepositOptions = {
   needCrossSwap: boolean;
 };
 
+const ORDERLY_SWAP_DEPOSIT_SLIPPAGE_KEY = "orderly_swap_deposit_slippage";
+
 export const useSwapDeposit = (options: SwapDepositOptions) => {
   const {
     srcToken,
@@ -35,7 +37,7 @@ export const useSwapDeposit = (options: SwapDepositOptions) => {
   } = options;
 
   const [slippage, setSlippage] = useLocalStorage(
-    "orderly_swap_deposit_slippage",
+    ORDERLY_SWAP_DEPOSIT_SLIPPAGE_KEY,
     1,
   );
 

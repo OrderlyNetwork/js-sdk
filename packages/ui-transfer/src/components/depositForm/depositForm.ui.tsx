@@ -3,7 +3,6 @@ import { useTranslation } from "@orderly.network/i18n";
 import { Box, Flex, textVariants, Text } from "@orderly.network/ui";
 import { LtvWidget } from "../LTV";
 import { ActionButton } from "../actionButton";
-import { AssetSwapIndicatorWidget } from "../assetSwapIndicator";
 import { AvailableQuantity } from "../availableQuantity";
 import { BrokerWallet } from "../brokerWallet";
 import { ChainSelect } from "../chainSelect";
@@ -11,13 +10,13 @@ import { CollateralContributionWidget } from "../collateralContribution";
 import { CollateralRatioWidget } from "../collateralRatio";
 import { ExchangeDivider } from "../exchangeDivider";
 import { Fee } from "../fee";
-import { MinimumReceivedWidget } from "../minimumReceived";
+import { MinimumReceived } from "../minimumReceived";
 import { QuantityInput } from "../quantityInput";
-import { SlippageUI } from "../slippage/slippage.ui";
+import { Slippage } from "../slippage";
 import { Notice } from "../swap/components/notice";
-import { Slippage } from "../swap/components/slippage";
 import { SwapFee } from "../swap/components/swapFee";
 import { SwapCoin } from "../swapCoin";
+import { SwapIndicator } from "../swapIndicator";
 import { Web3Wallet } from "../web3Wallet";
 import type { UseDepositFormScriptReturn } from "./depositForm.script";
 
@@ -53,20 +52,16 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
     collateralRatio,
     currentLTV,
     nextLTV,
-    indexPrice,
     slippage,
-    setSlippage,
+    onSlippageChange,
     minimumReceived,
     needSwap,
     needCrossSwap,
     swapPrice,
-    markPrice,
     swapQuantity,
     swapFee,
     warningMessage,
     swapRevalidating,
-    swapSlippage,
-    onSwapSlippageChange,
     usdcToken,
   } = props;
 
@@ -76,20 +71,23 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
     if (needSwap || needCrossSwap) {
       return (
         <Flex direction="column" itemAlign="start" mt={1} gapY={1}>
-          <Flex justify="between" width="100%">
+          <Flex width={"100%"} itemAlign="center" justify="between">
+            <Text size="2xs" intensity={36}>
+              {t("transfer.deposit.convertRate")}
+            </Text>
             <SwapCoin
               sourceSymbol={sourceToken?.display_name || sourceToken?.symbol}
               targetSymbol={targetToken?.display_name || targetToken?.symbol}
               indexPrice={swapPrice}
             />
-            {(needSwap || needCrossSwap) && (
-              // swap slippage max value is not the same as deposit slippage max value
-              <Slippage
-                value={swapSlippage}
-                onValueChange={onSwapSlippageChange}
-              />
-            )}
           </Flex>
+          {(needSwap || needCrossSwap) && (
+            <Slippage value={slippage} onValueChange={onSlippageChange} />
+          )}
+          <MinimumReceived
+            value={minimumReceived}
+            symbol={targetToken?.symbol ?? ""}
+          />
           <SwapFee {...swapFee} />
         </Flex>
       );
@@ -109,33 +107,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
       );
     }
 
-    if (sourceToken?.is_collateral) {
-      if (targetToken?.symbol === "USDC") {
-        return (
-          <Flex direction="column" itemAlign="start" mt={2} gapY={1}>
-            <Flex width={"100%"} itemAlign="center" justify="between">
-              <Text size="2xs" intensity={36}>
-                {t("transfer.deposit.convertRate")}
-              </Text>
-              <SwapCoin
-                indexPrice={indexPrice}
-                sourceSymbol={sourceToken?.display_name || sourceToken?.symbol}
-                targetSymbol={targetToken?.display_name || targetToken?.symbol}
-              />
-            </Flex>
-            <SlippageUI slippage={slippage} setSlippage={setSlippage} />
-            <MinimumReceivedWidget
-              minimumReceived={minimumReceived}
-              symbol={targetToken?.symbol ?? ""}
-            />
-            <Fee {...fee} />
-            <AssetSwapIndicatorWidget
-              sourceToken={sourceToken?.symbol ?? ""}
-              targetToken={targetToken?.symbol ?? ""}
-            />
-          </Flex>
-        );
-      }
+    if (sourceToken?.is_collateral && targetToken?.symbol !== "USDC") {
       return (
         <Flex direction="column" itemAlign="start" mt={2} gap={1}>
           <CollateralRatioWidget value={collateralRatio} />
@@ -210,6 +182,12 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
         />
         {renderContent()}
       </Box>
+
+      <SwapIndicator
+        sourceToken={sourceToken?.symbol}
+        targetToken={targetToken?.symbol}
+        className="oui-mb-3"
+      />
 
       <Notice
         message={warningMessage}

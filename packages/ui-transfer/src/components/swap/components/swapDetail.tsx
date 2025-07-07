@@ -188,7 +188,7 @@ export const SwapDetail: FC<SwapDetailProps> = (props) => {
       ),
     },
     {
-      label: t("transfer.swapDeposit.slippage.slippageTolerance"),
+      label: t("transfer.slippage"),
       value: `${info.slippage}%`,
     },
   ];

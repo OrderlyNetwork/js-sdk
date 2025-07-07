@@ -27,7 +27,7 @@ const { calcMinimumReceived, collateralRatio, LTV } = account;
 
 export type ConvertFormScriptReturn = ReturnType<typeof useConvertFormScript>;
 
-const ORDERLY_DEPOSIT_SLIPPAGE_KEY = "ORDERLY_DEPOSIT_SLIPPAGE";
+const ORDERLY_CONVERT_SLIPPAGE_KEY = "orderly_convert_slippage";
 
 interface ConvertFormScriptOptions {
   onClose?: () => void;
@@ -106,13 +106,8 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
   };
 
   const [slippage, setSlippage] = useLocalStorage(
-    ORDERLY_DEPOSIT_SLIPPAGE_KEY,
-    "1",
-    {
-      parseJSON: (value: string | null) => {
-        return !value || value === '""' ? "1" : JSON.parse(value);
-      },
-    },
+    ORDERLY_CONVERT_SLIPPAGE_KEY,
+    1,
   );
 
   const checkIsBridgeless = useMemo(() => {
@@ -318,7 +313,7 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     onSettlePnl,
     brokerName,
     slippage,
-    setSlippage,
+    onSlippageChange: setSlippage,
     convertRate,
     minimumReceived: minimumReceived,
     isQuoteLoading,

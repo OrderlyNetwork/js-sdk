@@ -99,9 +99,9 @@ export const transfer = {
   "transfer.swapDeposit.depositFailed":
     "Deposit failed, please try again later.",
 
-  "transfer.swapDeposit.slippage": "Slippage",
-  "transfer.swapDeposit.slippage.slippageTolerance": "Slippage tolerance",
-  "transfer.swapDeposit.slippage.slippageTolerance.description":
+  "transfer.slippage": "Slippage",
+  "transfer.slippage.slippageTolerance": "Slippage tolerance",
+  "transfer.slippage.slippageTolerance.description":
     "Your transaction will revert if the price changes unfavorably by more than this percentage.",
 
   "transfer.swapDeposit.swapFee": "Swap fee",
@@ -131,7 +131,7 @@ export const transfer = {
   "transfer.LTV.tooltip": `If your LTV exceeds {{threshold}}% or your USDC balance plus Unsettled PnL falls below {{usdcThreshold}}, your collateral will be automatically converted with a haircut. To avoid this, you can manually convert assets to USDC.`,
   "transfer.LTV.currentLTV": "Current LTV",
   "transfer.convert": "Convert",
-  "transfer.convert.note": "Please note that convert fees will be charged.",
+  // "transfer.convert.note": "Please note that convert fees will be charged.",
 };
 
 export type Transfer = typeof transfer;
