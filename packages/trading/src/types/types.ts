@@ -1,5 +1,5 @@
-import { API } from "@orderly.network/types";
 import { ReactNode } from "react";
+import { API } from "@orderly.network/types";
 import { SharePnLConfig } from "@orderly.network/ui-share";
 import { TradingviewWidgetPropsInterface } from "@orderly.network/ui-tradingview";
 
@@ -82,6 +82,8 @@ export enum TradingFeatures {
   Positions = "positions",
   Orders = "orders",
   AssetAndMarginInfo = "asset_margin_info",
+  SlippageSetting = "slippageSetting",
+  FeesInfo = "feesInfo",
 }
 
 export type BasicSymbolInfo = {

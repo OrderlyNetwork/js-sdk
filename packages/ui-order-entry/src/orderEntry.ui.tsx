@@ -71,6 +71,7 @@ type Refs = OrderEntryScriptReturn["refs"];
 
 type OrderEntryProps = OrderEntryScriptReturn & {
   containerRef: any;
+  disableFeatures?: ("slippageSetting" | "feesInfo")[];
 };
 
 export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
@@ -88,6 +89,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
     bboType,
     onBBOChange,
     toggleBBO,
+    disableFeatures,
   } = props;
 
   const { curLeverage } = useLeverage();
@@ -133,12 +135,16 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
 
   // set slippage
   useEffect(() => {
+    if (props.disableFeatures?.includes("slippageSetting")) {
+      return;
+    }
+
     if (slippage) {
       setOrderValue("slippage", Number(slippage));
     } else {
       setOrderValue("slippage", undefined);
     }
-  }, [slippage]);
+  }, [slippage, props.disableFeatures]);
 
   useEffect(() => {
     const clickHandler = (event: MouseEvent) => {
@@ -429,6 +435,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           setSlippage={setSlippage}
           estSlippage={props.estSlippage}
           orderType={formattedOrder.order_type!}
+          disableFeatures={disableFeatures}
         />
 
         <Divider className="oui-w-full" />
@@ -1011,6 +1018,7 @@ function AssetInfo(props: {
   estSlippage: number | null;
   setSlippage: (slippage: string) => void;
   orderType: OrderType;
+  disableFeatures?: ("slippageSetting" | "feesInfo")[];
 }) {
   const { canTrade } = props;
   const { t } = useTranslation();
@@ -1065,14 +1073,16 @@ function AssetInfo(props: {
           {props.estLeverage ?? "--"}
         </Text.numeral> */}
       </Flex>
-      {props.orderType === OrderType.MARKET && (
-        <SlippageUI
-          slippage={props.slippage}
-          setSlippage={props.setSlippage}
-          estSlippage={props.estSlippage}
-        />
-      )}
-      <FeesWidget />
+      {props.orderType === OrderType.MARKET &&
+        !props.disableFeatures?.includes("slippageSetting") && (
+          <SlippageUI
+            slippage={props.slippage}
+            setSlippage={props.setSlippage}
+            estSlippage={props.estSlippage}
+          />
+        )}
+
+      {!props.disableFeatures?.includes("feesInfo") && <FeesWidget />}
     </div>
   );
 }
