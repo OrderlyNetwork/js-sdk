@@ -1,6 +1,5 @@
 import { useCallback, useMemo } from "react";
 import {
-  SubAccount,
   useAccount,
   useCollateral,
   useLocalStorage,
@@ -14,60 +13,14 @@ import {
   DepositAndWithdrawWithDialogId,
   TransferDialogId,
 } from "@orderly.network/ui-transfer";
-import { Decimal } from "@orderly.network/utils";
 import { useAccountsData } from "../../hooks/useAccountsData";
+import {
+  calculateAssetValue,
+  getIndexPrice,
+  useAssetTotalValue,
+} from "../../hooks/useAssetTotalValue";
 import { useAssetsMultiFilter } from "../../hooks/useAssetsAccountFilter";
 import { useAssetsColumns } from "./column";
-
-const isNumber = (val: unknown): val is number => {
-  return typeof val === "number" && !Number.isNaN(val);
-};
-
-// Extract index price calculation logic
-const getIndexPrice = (token: string, indexPrices?: Record<string, number>) => {
-  return token === "USDC" ? 1 : (indexPrices?.[`PERP_${token}_USDC`] ?? 0);
-};
-
-// Extract asset value calculation logic
-const calculateAssetValue = (
-  holding: number,
-  token: string,
-  indexPrices?: Record<string, number>,
-) => {
-  const indexPrice = getIndexPrice(token, indexPrices);
-  return new Decimal(holding).mul(indexPrice);
-};
-
-const calculateTotalHolding = (
-  data: SubAccount[] | SubAccount["holding"],
-  indexPrices?: Record<string, number>,
-) => {
-  let total = new Decimal(0);
-  for (const item of data) {
-    if (Array.isArray(item.holding)) {
-      for (const hol of item.holding) {
-        if (isNumber(hol.holding)) {
-          // Use extracted function for asset value calculation
-          const assetValue = calculateAssetValue(
-            hol.holding,
-            hol.token,
-            indexPrices,
-          );
-          total = total.plus(assetValue);
-        }
-      }
-    } else if (isNumber(item.holding) && "token" in item) {
-      // Use extracted function for asset value calculation
-      const assetValue = calculateAssetValue(
-        item.holding,
-        (item as any).token,
-        indexPrices,
-      );
-      total = total.plus(assetValue);
-    }
-  }
-  return total;
-};
 
 const ORDERLY_ASSETS_VISIBLE_KEY = "orderly_assets_visible";
 
@@ -77,7 +30,7 @@ export const useAssetsScript = () => {
     true,
   );
 
-  const { state, isMainAccount } = useAccount();
+  const { state } = useAccount();
   const { holding = [] } = useCollateral();
   const { data: indexPrices } = useIndexPricesStream();
 
@@ -85,6 +38,9 @@ export const useAssetsScript = () => {
   const [chains] = useChains();
 
   const subAccounts = state.subAccounts ?? [];
+
+  // Use the extracted total value hook
+  const totalValue = useAssetTotalValue();
 
   const toggleVisible = () => {
     // @ts-ignore
@@ -175,37 +131,6 @@ export const useAssetsScript = () => {
     });
   }, [filtered, indexPrices, tokenInfoMap]);
 
-  const mainTotalValue = useMemo<Decimal>(
-    () => calculateTotalHolding(holding, indexPrices),
-    [holding, indexPrices],
-  );
-
-  const subTotalValue = useMemo<Decimal>(
-    () => calculateTotalHolding(subAccounts, indexPrices),
-    [subAccounts, indexPrices],
-  );
-
-  // console.log(holding, subAccounts, indexPrices);
-
-  const memoizedTotalValue = useMemo<number>(() => {
-    if (isMainAccount) {
-      return mainTotalValue.plus(subTotalValue).toNumber();
-    } else {
-      const find = allAccounts.find((item) => item.id === state.accountId);
-      if (Array.isArray(find?.children)) {
-        return calculateTotalHolding(find.children, indexPrices).toNumber();
-      }
-      return 0;
-    }
-  }, [
-    isMainAccount,
-    mainTotalValue,
-    subTotalValue,
-    allAccounts,
-    state.accountId,
-    indexPrices,
-  ]);
-
   const handleTransfer = useCallback((accountId: string, token: string) => {
     if (!accountId) {
       return;
@@ -253,7 +178,7 @@ export const useAssetsScript = () => {
     selectedAccount,
     selectedAsset,
     onFilter,
-    totalValue: memoizedTotalValue,
+    totalValue: totalValue, // Use the hook's return value
     hasSubAccount: subAccounts.length > 0,
     onDeposit,
     onWithdraw,

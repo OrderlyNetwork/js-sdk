@@ -17,11 +17,13 @@ import {
   TransferDialogId,
   TransferSheetId,
 } from "@orderly.network/ui-transfer";
+import { useAssetTotalValue } from "../../../hooks/useAssetTotalValue";
 
 export const useAssetScript = () => {
   const { connect, namespace } = useWalletConnector();
   const { state, isMainAccount } = useAccount();
-  const { totalValue, freeCollateral } = useCollateral();
+  const { freeCollateral } = useCollateral();
+  const totalValue = useAssetTotalValue();
   const { wrongNetwork, disabledConnect } = useAppContext();
   const [data] = usePositionStream();
   const { curLeverage } = useLeverage();
