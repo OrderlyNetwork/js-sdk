@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { account as accountPerp } from "@orderly.network/perp";
-import { useCollateral, useIndexPricesStream, useTokensInfo } from "..";
-import { useHoldingStream } from "./useHoldingStream";
+import { API } from "@orderly.network/types";
+import { useIndexPricesStream, useTokensInfo } from "..";
 
 const { maxWithdrawalUSDC, maxWithdrawalOtherCollateral, collateralRatio } =
   accountPerp;
@@ -10,13 +10,22 @@ const { maxWithdrawalUSDC, maxWithdrawalOtherCollateral, collateralRatio } =
  * The max withdrawal amount for the token
  * if token is not provided, return the max withdrawal amount for USDC
  */
-export function useMaxWithdrawal(token?: string) {
-  const { unsettledPnL, freeCollateral } = useCollateral();
+export function useSubAccountMaxWithdrawal(options: {
+  token?: string;
+  unsettledPnL?: number;
+  freeCollateral: number;
+  holdings?: API.Holding[];
+}) {
+  const { token, unsettledPnL, freeCollateral, holdings } = options;
 
   const tokensInfo = useTokensInfo();
 
   const { data: indexPrices } = useIndexPricesStream();
-  const { usdc, data: holdings = [] } = useHoldingStream();
+
+  const usdc = useMemo(() => {
+    const usdc = holdings?.find((item) => item.token === "USDC");
+    return usdc;
+  }, [holdings]);
 
   const holding = useMemo(() => {
     return holdings?.find((item) => item?.token === token);
