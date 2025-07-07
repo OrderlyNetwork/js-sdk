@@ -7,7 +7,7 @@ import {
   useLocalStorage,
   usePrivateQuery,
   useQuery,
-  useTokensInfo,
+  useTokenInfo,
   useTransfer,
   useWalletConnector,
   useWalletSubscription,
@@ -464,14 +464,12 @@ export function useWithdrawFee(options: {
 }) {
   const { crossChainWithdraw, currentChain, token } = options;
 
-  const tokensInfo = useTokensInfo();
+  const tokenInfo = useTokenInfo(token);
 
   const fee = useMemo(() => {
     if (!currentChain) return 0;
 
-    const tokenChain = tokensInfo?.find((item) => item.token === token);
-
-    const item = tokenChain?.chain_details?.find(
+    const item = tokenInfo?.chain_details?.find(
       (chain) => Number.parseInt(chain.chain_id) === currentChain!.id,
     );
 
@@ -486,7 +484,7 @@ export function useWithdrawFee(options: {
     }
 
     return item.withdrawal_fee || 0;
-  }, [tokensInfo, token, currentChain, crossChainWithdraw]);
+  }, [tokenInfo, token, currentChain, crossChainWithdraw]);
 
   return fee;
 }

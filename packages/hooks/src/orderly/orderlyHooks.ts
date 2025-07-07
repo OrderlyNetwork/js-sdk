@@ -97,7 +97,7 @@ export {
 } from "./useMarkPrice/useMarkPriceStore";
 export { usePositionActions } from "./usePositionStream/usePosition.store";
 export { useStorageLedgerAddress } from "./useStorageLedgerAddress";
-export { useTokensInfo } from "./useTokensInfo/tokensInfo.store";
+export { useTokensInfo, useTokenInfo } from "./useTokensInfo/tokensInfo.store";
 
 export { useSymbolsInfoStore } from "./useSymbolsInfo";
 export { useFundingRatesStore } from "./useFundingRates";
