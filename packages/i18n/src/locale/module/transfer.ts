@@ -120,6 +120,16 @@ export const transfer = {
   "transfer.swapDeposit.viewFAQs": "Need help? <0>View FAQs</0>",
   "transfer.swapDeposit.notEnoughLiquidity":
     "Not enough liquidity. Please try again later or use another chain to deposit.",
+
+  "transfer.deposit.convertRate": "Convert rate",
+  "transfer.deposit.convertAssets": "Convert assets to USDC",
+  "transfer.deposit.collateralContribution": "Collateral contribution",
+  "transfer.withdraw.InsufficientVaultBalance": "Insufficient vault balance",
+
+  "transfer.LTV": "LTV",
+  "transfer.LTV.description": `LTV (Loan-to-Value) is the ratio between your negative USDC and the current value of your collateral. If your LTV exceeds {{threshold}}, your collateral will be automatically converted to USDC.`,
+  "transfer.LTV.tooltip": `If your LTV exceeds {{threshold}}% or your USDC balance plus Unsettled PnL falls below {{usdcThreshold}}, your collateral will be automatically converted with a haircut. To avoid this, you can manually convert assets to USDC.`,
+  "transfer.LTV.currentLTV": "Current LTV",
 };
 
 export type Transfer = typeof transfer;

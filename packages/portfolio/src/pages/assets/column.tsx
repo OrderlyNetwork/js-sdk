@@ -91,11 +91,11 @@ export const useAssetsColumns = (options: ColumnsOptions) => {
         },
       },
       {
-        title: "Collateral Contribution",
+        title: t("transfer.deposit.collateralContribution"),
         dataIndex: "collateralContribution",
         align: "left",
         width: 160,
-        render(val: number, record: EnhancedHolding) {
+        render(val: number) {
           return (
             <Text.numeral rule="price" dp={2} currency="$">
               {val}

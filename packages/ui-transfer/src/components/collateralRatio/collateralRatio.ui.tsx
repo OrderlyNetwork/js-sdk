@@ -28,8 +28,15 @@ const TooltipContent: React.FC = () => {
   // const { t } = useTranslation();
   return (
     <Box className="oui-w-72 oui-max-w-72">
-      Collateral ratio shows how much of an asset’s value can be used as margin.{" "}
-      <Text className="oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12 oui-text-primary">
+      <Text size="2xs" intensity={80}>
+        Collateral ratio shows how much of an asset’s value can be used as
+        margin.
+      </Text>{" "}
+      <Text
+        size="2xs"
+        intensity={80}
+        className="oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12 oui-text-primary"
+      >
         Learn More
       </Text>
     </Box>

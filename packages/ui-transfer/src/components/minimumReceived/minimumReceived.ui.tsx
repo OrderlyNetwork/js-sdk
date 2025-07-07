@@ -1,17 +1,17 @@
 import React from "react";
-// import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@orderly.network/i18n";
 import { Flex, Text } from "@orderly.network/ui";
 
 export const MinimumReceivedUI: React.FC<
   Readonly<{ symbol: string; minimumReceived: number | string }>
 > = (props) => {
-  // const { t } = useTranslation();
+  const { t } = useTranslation();
   const { minimumReceived, symbol } = props;
   return (
     <Flex width="100%" itemAlign="center" justify="between">
       <Flex itemAlign="center" justify="start">
         <Text size="2xs" intensity={36}>
-          Minimum received
+          {t("transfer.swapDeposit.minimumReceived")}
         </Text>
       </Flex>
       <Flex itemAlign="center" justify="end" gap={1}>
