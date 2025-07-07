@@ -15,6 +15,7 @@ import { DefaultSolanaWalletAdapter } from "@orderly.network/default-solana-adap
 import { Chain, NetworkId } from "@orderly.network/types";
 import { SDKError } from "@orderly.network/types";
 import { EthersProvider } from "@orderly.network/web3-provider-ethers";
+import { DEFAULT_DEPTH } from "./constants";
 // import { usePreLoadData } from "./usePreloadData";
 import { DataCenterProvider } from "./dataProvider";
 import { ProxyConfigStore } from "./dev/proxyConfigStore";
@@ -39,6 +40,10 @@ export type BaseConfigProviderProps = {
   walletAdapters?: WalletAdapter[];
   chainFilter?: filteredChains | filterChainsFunc;
   customChains?: Chains<undefined, undefined>;
+  /**
+   * Custom orderbook default depth.
+   */
+  customOrderbookDepth?: Record<string, string>;
 };
 
 export type ExclusiveConfigProviderProps =
@@ -130,6 +135,10 @@ export const OrderlyConfigProvider: FC<
     );
   }, [walletAdapters]);
 
+  const defaultOrderbookDepth = useMemo<Record<string, string>>(() => {
+    return props.customOrderbookDepth || DEFAULT_DEPTH;
+  }, [props.customOrderbookDepth]);
+
   // check params, if has mismatch, throw warning message to console
   // useParamsCheck({ brokerId: innerConfigStore.get("brokerId") });
 
@@ -176,6 +185,7 @@ export const OrderlyConfigProvider: FC<
         walletAdapters: innerWalletAdapters,
         // apiBaseUrl,
         customChains,
+        defaultOrderbookDepth,
       }}
     >
       <StatusProvider>

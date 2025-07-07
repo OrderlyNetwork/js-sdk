@@ -1,7 +1,15 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { max, min } from "ramda";
 import { SDKError } from "@orderly.network/types";
 import { Decimal, removeTrailingZeros } from "@orderly.network/utils";
+import { OrderlyContext } from "../orderlyContext";
 import { useEventEmitter } from "../useEventEmitter";
 import { useWS } from "../useWS";
 import orderbooksService from "./orderbook.service";
@@ -11,10 +19,11 @@ import { useTickerStream } from "./useTickerStream";
 
 export type OrderBookItem = number[];
 
-const DEFAULT_DEPTH: Record<string, string> = {
-  PERP_BTC_USDC: "1",
-  PERP_ETH_USDC: "0.1",
-};
+// const DEFAULT_DEPTH: Record<string, string> = {
+//   PERP_BTC_USDC: "1",
+//   PERP_ETH_USDC: "0.1",
+//   PERP_SOL_USDC: "0.01",
+// };
 
 export type OrderbookData = {
   asks: OrderBookItem[];
@@ -266,7 +275,8 @@ export const useOrderbookStream = (
 
   symbolRef.current = symbol;
 
-  const [requestData, setRequestData] = useState<OrderbookData | null>(null);
+  const { defaultOrderbookDepth: DEFAULT_DEPTH } = useContext(OrderlyContext);
+
   const [data, setData] = useState<OrderbookData>(initial);
   const [isLoading, setIsLoading] = useState(true);
   // const [level, setLevel] = useState(() => options?.level ?? 10);
