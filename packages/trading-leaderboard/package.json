@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/trading-leaderboard",
-  "version": "2.4.2-internal-multi-collateral.4",
+  "version": "2.4.2-internal-multi-collateral.5",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
