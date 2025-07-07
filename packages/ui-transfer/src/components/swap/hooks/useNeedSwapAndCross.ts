@@ -3,33 +3,37 @@ import { API } from "@orderly.network/types";
 
 export function useNeedSwapAndCross(options: {
   srcToken?: API.TokenInfo;
+  dstToken?: API.TokenInfo;
   srcChainId?: number;
   dstChainId?: number;
 }) {
-  const { srcToken, srcChainId, dstChainId } = options;
+  const { srcToken, dstToken, srcChainId, dstChainId } = options;
   const [needSwap, setNeedSwap] = useState(false);
   const [needCrossSwap, setNeedCrossSwap] = useState(false);
 
   useEffect(() => {
-    if (!srcChainId) return;
+    if (!srcChainId || !dstChainId || !srcToken || !dstToken) return;
+    const isCrossChain = srcChainId !== dstChainId;
 
-    // if srcToken is USDC, it will not need swap
-    if (srcToken?.symbol === "USDC") {
-      setNeedCrossSwap(false);
+    if (
+      (srcToken?.symbol === "USDC" && !isCrossChain) ||
+      // if srcToken is collateral and srcToken.symbol is the same as dstToken.symbol, it will not need swap
+      (srcToken.is_collateral && srcToken.symbol === dstToken?.symbol)
+    ) {
       setNeedSwap(false);
+      setNeedCrossSwap(false);
       return;
     }
 
-    // if isCollateral is false or undefined, it will need swap
-    setNeedSwap(!srcToken?.is_collateral);
+    setNeedSwap(srcToken?.symbol !== "USDC");
 
-    if (srcChainId !== dstChainId) {
+    if (isCrossChain) {
       setNeedCrossSwap(true);
       setNeedSwap(true);
     } else {
       setNeedCrossSwap(false);
     }
-  }, [srcToken, srcChainId, dstChainId]);
+  }, [srcToken, dstToken, srcChainId, dstChainId]);
 
   return { needSwap, needCrossSwap };
 }

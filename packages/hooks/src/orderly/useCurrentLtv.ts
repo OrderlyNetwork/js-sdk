@@ -23,7 +23,8 @@ export const useCurrentLtv = () => {
       usdcBalance: usdcBalance,
       upnl: unrealPnL,
       collateralAssets: holdingList.map((item) => {
-        const indexPrice = item.token === "USDC" ? 1 : indexPrices[item.token];
+        const indexPrice =
+          item.token === "USDC" ? 1 : indexPrices[`PERP_${item.token}_USDC`];
         const findToken = tokensInfo?.find(
           (token) => token.token === item.token,
         );

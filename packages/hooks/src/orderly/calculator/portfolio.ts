@@ -16,8 +16,8 @@ class PortfolioCalculator extends BaseCalculator<any> {
   name = PortfolioCalculatorName;
 
   calc(scope: CalculatorScope, data: any, ctx: CalculatorCtx) {
-    let markPrices;
-    let indexPrices;
+    let markPrices: Record<PropertyKey, number>;
+    let indexPrices: Record<PropertyKey, number>;
     const portfolio = this.getPortfolio(ctx);
 
     if (scope === CalculatorScope.MARK_PRICE) {

@@ -55,12 +55,21 @@ export const useSubAccountDataObserver = (accountId?: string) => {
       holding,
       positions,
       markPrices,
+      indexPrices,
       accountInfo,
       symbolsInfo,
       tokensInfo,
     });
     setPortfolio(portfolio!);
-  }, [holding, positions, markPrices, accountInfo, symbolsInfo]);
+  }, [
+    holding,
+    positions,
+    markPrices,
+    indexPrices,
+    accountInfo,
+    symbolsInfo,
+    tokensInfo,
+  ]);
 
   useEffect(() => {
     if (!positionsInfo) return;

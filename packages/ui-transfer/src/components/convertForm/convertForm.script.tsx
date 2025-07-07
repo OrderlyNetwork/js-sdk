@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
-  useAccount,
-  useAssetconvertEvent,
   useChains,
   useConfig,
   useConvert,
@@ -15,21 +13,17 @@ import {
   useWalletSubscription,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { account as accountPerp } from "@orderly.network/perp";
+import { account } from "@orderly.network/perp";
 import { useAppContext, useDataTap } from "@orderly.network/react-app";
 import { API, nativeETHAddress, NetworkId } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
-import {
-  Decimal,
-  praseChainIdToNumber,
-  removeTrailingZeros,
-} from "@orderly.network/utils";
+import { Decimal, praseChainIdToNumber } from "@orderly.network/utils";
 import { InputStatus } from "../../types";
 import { CurrentChain } from "../depositForm/hooks";
 import { useSettlePnl } from "../unsettlePnlInfo/useSettlePnl";
 import { useToken } from "./hooks/useToken";
 
-const { calcMinimumReceived, collateralRatio, LTV } = accountPerp;
+const { calcMinimumReceived, collateralRatio, LTV } = account;
 
 export type ConvertFormScriptReturn = ReturnType<typeof useConvertFormScript>;
 
@@ -54,7 +48,6 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
   const [hintMessage, setHintMessage] = useState<string>();
 
   const { wrongNetwork } = useAppContext();
-  const { account } = useAccount();
 
   const [, { findByChainId }] = useChains(networkId, {
     pick: "network_infos",
@@ -245,7 +238,9 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
         collateralAssets: sourceTokens.map((item) => {
           const qtyData = holdingData?.find((h) => h.token === item.symbol);
           const indexPrice =
-            item.symbol === "USDC" ? 1 : indexPrices[item.symbol];
+            item.symbol === "USDC"
+              ? 1
+              : indexPrices[`PERP_${item.symbol}_USDC`];
           return {
             qty: qtyData?.holding ?? 0,
             indexPrice: indexPrice ?? 0,
