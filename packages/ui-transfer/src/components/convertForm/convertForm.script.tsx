@@ -218,36 +218,61 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     });
   }, [quoteData, isQuoteLoading, slippage]);
 
-  const getCollateralRatio = useCallback(
-    (collateralQty: number) => {
-      return collateralRatio({
-        baseWeight: targetToken?.base_weight ?? 0,
-        discountFactor: targetToken?.discount_factor ?? 0,
-        collateralQty: collateralQty,
-        indexPrice: indexPrice,
-      });
-    },
-    [targetToken, indexPrice],
-  );
+  const memoizedCurrentLTV = useMemo(() => {
+    const value = LTV({
+      usdcBalance: usdcBalance,
+      upnl: unrealPnL,
+      collateralAssets: holdingList
+        .filter((h) => h.token !== "USDC")
+        .map((item) => {
+          const originalQty = item?.holding ?? 0;
+          const _indexPrice = indexPrices[`PERP_${item.token}_USDC`] ?? 0;
+          return {
+            qty: originalQty,
+            indexPrice: _indexPrice,
+            weight: collateralRatio({
+              baseWeight: targetToken?.base_weight ?? 0,
+              discountFactor: targetToken?.discount_factor ?? 0,
+              indexPrice: _indexPrice,
+              collateralQty: originalQty,
+            }),
+          };
+        }),
+    });
+    return new Decimal(value)
+      .mul(100)
+      .toDecimalPlaces(2, Decimal.ROUND_DOWN)
+      .toNumber();
+  }, [holdingList, usdcBalance, unrealPnL, indexPrices, targetToken]);
 
-  const getLTV = useCallback(
-    (collRatio: number) => {
-      return LTV({
-        usdcBalance: usdcBalance,
-        upnl: unrealPnL,
-        collateralAssets: holdingList
-          .filter((h) => h.token !== "USDC")
-          .map((item) => {
-            return {
-              qty: item.holding ?? 0,
-              indexPrice: indexPrices[`PERP_${item.token}_USDC`] ?? 0,
-              weight: collRatio,
-            };
-          }),
-      });
-    },
-    [holdingList, usdcBalance, unrealPnL, sourceTokens, indexPrices],
-  );
+  const memoizedNextLTV = useMemo(() => {
+    const value = LTV({
+      usdcBalance: usdcBalance,
+      upnl: unrealPnL,
+      collateralAssets: holdingList
+        .filter((h) => h.token !== "USDC")
+        .map((item) => {
+          const originalQty = item?.holding ?? 0;
+          const _indexPrice = indexPrices[`PERP_${item.token}_USDC`] ?? 0;
+          return {
+            qty: originalQty,
+            indexPrice: _indexPrice,
+            weight: collateralRatio({
+              baseWeight: targetToken?.base_weight ?? 0,
+              discountFactor: targetToken?.discount_factor ?? 0,
+              indexPrice: _indexPrice,
+              collateralQty: quantity
+                ? new Decimal(originalQty).add(quantity).toNumber()
+                : originalQty,
+            }),
+          };
+        }),
+    });
+    return new Decimal(value)
+      .mul(100)
+      .toDecimalPlaces(2, Decimal.ROUND_DOWN)
+      .toNumber();
+  }, [holdingList, usdcBalance, unrealPnL, indexPrices, quantity, targetToken]);
 
   const disabled =
     !quantity ||
@@ -297,7 +322,7 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     convertRate,
     minimumReceived: minimumReceived,
     isQuoteLoading,
-    currentLTV: getLTV(getCollateralRatio(Number(quantity))),
-    nextLTV: getLTV(getCollateralRatio(0)),
+    currentLTV: memoizedCurrentLTV,
+    nextLTV: memoizedNextLTV,
   };
 };

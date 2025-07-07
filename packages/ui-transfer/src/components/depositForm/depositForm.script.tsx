@@ -331,11 +331,11 @@ const useCollateralValue = (params: {
   }, [sourceToken?.symbol, indexPrices]);
 
   const getCollateralRatio = useCallback(
-    (collateralQty: number) => {
+    (inputQty: number) => {
       return collateralRatio({
         baseWeight: targetToken?.base_weight ?? 0,
         discountFactor: targetToken?.discount_factor ?? 0,
-        collateralQty: collateralQty,
+        collateralQty: new Decimal(inputQty).toNumber(),
         indexPrice: indexPrice,
       });
     },
@@ -348,24 +348,61 @@ const useCollateralValue = (params: {
     indexPrice: indexPrice,
   });
 
-  const getLTV = useCallback(
-    (collRatio: number) => {
-      return LTV({
-        usdcBalance: usdcBalance,
-        upnl: unrealPnL,
-        collateralAssets: holdingList
-          .filter((h) => h.token !== "USDC")
-          .map((item) => {
-            return {
-              qty: item.holding ?? 0,
-              indexPrice: indexPrices[`PERP_${item.token}_USDC`] ?? 0,
-              weight: collRatio,
-            };
-          }),
-      });
-    },
-    [holdingList, usdcBalance, unrealPnL, tokens, indexPrices],
-  );
+  const memoizedCurrentLTV = useMemo(() => {
+    const value = LTV({
+      usdcBalance: usdcBalance,
+      upnl: unrealPnL,
+      collateralAssets: holdingList
+        .filter((h) => h.token !== "USDC")
+        .map((item) => {
+          const originalQty = item?.holding ?? 0;
+          const _indexPrice = indexPrices[`PERP_${item.token}_USDC`] ?? 0;
+          return {
+            qty: originalQty,
+            indexPrice: _indexPrice,
+            weight: collateralRatio({
+              baseWeight: targetToken?.base_weight ?? 0,
+              discountFactor: targetToken?.discount_factor ?? 0,
+              indexPrice: _indexPrice,
+              collateralQty: originalQty,
+            }),
+          };
+        }),
+    });
+    return new Decimal(value)
+      .mul(100)
+      .toDecimalPlaces(2, Decimal.ROUND_DOWN)
+      .toNumber();
+  }, [holdingList, usdcBalance, unrealPnL, indexPrices, targetToken]);
+
+  const memoizedNextLTV = useMemo(() => {
+    const value = LTV({
+      usdcBalance: usdcBalance,
+      upnl: unrealPnL,
+      collateralAssets: holdingList
+        .filter((h) => h.token !== "USDC")
+        .map((item) => {
+          const originalQty = item?.holding ?? 0;
+          const _indexPrice = indexPrices[`PERP_${item.token}_USDC`] ?? 0;
+          return {
+            qty: originalQty,
+            indexPrice: _indexPrice,
+            weight: collateralRatio({
+              baseWeight: targetToken?.base_weight ?? 0,
+              discountFactor: targetToken?.discount_factor ?? 0,
+              indexPrice: _indexPrice,
+              collateralQty: qty
+                ? new Decimal(originalQty).add(qty).toNumber()
+                : originalQty,
+            }),
+          };
+        }),
+    });
+    return new Decimal(value)
+      .mul(100)
+      .toDecimalPlaces(2, Decimal.ROUND_DOWN)
+      .toNumber();
+  }, [holdingList, usdcBalance, unrealPnL, indexPrices, qty, targetToken]);
 
   const minimumReceived = calcMinimumReceived({
     amount: collateralContributionQuantity,
@@ -375,8 +412,8 @@ const useCollateralValue = (params: {
   return {
     collateralRatio: getCollateralRatio(qty),
     collateralContributionQuantity,
-    currentLTV: getLTV(getCollateralRatio(0)),
-    nextLTV: getLTV(getCollateralRatio(qty)),
+    currentLTV: memoizedCurrentLTV,
+    nextLTV: memoizedNextLTV,
     indexPrice,
     minimumReceived,
   };
