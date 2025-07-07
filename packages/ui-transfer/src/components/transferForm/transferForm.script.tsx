@@ -65,7 +65,7 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
     : fromAccount?.id;
 
   const { hasPositions: currentHasPositions, onSettlePnl } = useSettlePnl({
-    subAccountId: observerAccountId,
+    accountId: fromAccount?.id,
   });
 
   // when select sub account, open the private websocket
