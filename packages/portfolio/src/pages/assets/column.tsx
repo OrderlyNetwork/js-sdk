@@ -65,7 +65,7 @@ export const useAssetsColumns = (options: ColumnsOptions) => {
         },
       },
       {
-        title: "Asset Value",
+        title: t("portfolio.overview.column.assetValue"),
         dataIndex: "assetValue",
         align: "left",
         width: 120,
@@ -120,7 +120,7 @@ export const useAssetsColumns = (options: ColumnsOptions) => {
                   record.token === "USDC" ? "oui-invisible" : "oui-visible",
                 )}
               >
-                Convert
+                {t("transfer.convert")}
               </Button>
               <Button
                 size={"sm"}

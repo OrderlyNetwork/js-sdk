@@ -3,7 +3,7 @@ import React from "react";
 import { CollateralContributionUI } from "./collateralContribution.ui";
 
 export const CollateralContributionWidget: React.FC<
-  Readonly<{ value: number }>
+  Readonly<{ value: number; precision: number }>
 > = (props) => {
   return <CollateralContributionUI {...props} />;
 };

@@ -134,7 +134,7 @@ const ConvertMobileItem: React.FC<ConvertMobileItemProps> = (props) => {
               modal.show(ConverHistoryItemDetailsDialog, { item });
             }}
           >
-            Details
+            {t("portfolio.overview.column.convert.details")}
           </div>
         </div>
         <Text.formatted
@@ -147,15 +147,18 @@ const ConvertMobileItem: React.FC<ConvertMobileItemProps> = (props) => {
 
       {/* 5 fields in grid container: 3 per row, wrap to next line */}
       <div className="oui-grid oui-grid-cols-3 oui-gap-2">
-        <ConvertMobileField label="USDC amount" value={item.received_qty} />
+        <ConvertMobileField
+          label={t("portfolio.overview.column.convert.usdcAmount")}
+          value={item.received_qty}
+        />
         <ConvertMobileField label={t("common.fee")} value={totalHaircut} />
         <ConvertMobileField
-          label="Convert ID"
+          label={t("portfolio.overview.column.convert.convertId")}
           value={item.convert_id}
           copyable={true}
         />
-        <ConvertMobileField label="Type" value={item.type} />
-        <ConvertMobileField label="Status" value={item.status} />
+        <ConvertMobileField label={t("common.type")} value={item.type} />
+        <ConvertMobileField label={t("common.status")} value={item.status} />
       </div>
     </div>
   );
@@ -189,16 +192,16 @@ const ConverHistoryItemDetailsDialog =
                 </div>
                 <div className="oui-grid oui-grid-cols-3 oui-gap-2">
                   <ConvertMobileField
-                    label="Qty."
+                    label={t("common.qty")}
                     value={detail.converted_qty}
                   />
                   <ConvertMobileField
-                    label="USDC amount"
+                    label={t("portfolio.overview.column.convert.usdcAmount")}
                     value={detail.received_qty}
                   />
                   <ConvertMobileField label="Fee" value={detail.haircut} />
                   <ConvertMobileField
-                    label="TxID"
+                    label={t("common.txId")}
                     copyable
                     rule="address"
                     value={detail.tx_id}
