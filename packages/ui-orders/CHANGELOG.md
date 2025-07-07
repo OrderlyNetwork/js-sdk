@@ -1,5 +1,21 @@
 # @orderly.network/ui-orders
 
+## 2.4.2-internal-multi-collateral.2
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.4.2-internal-multi-collateral.2
+  - @orderly.network/hooks@2.4.2-internal-multi-collateral.2
+  - @orderly.network/i18n@2.4.2-internal-multi-collateral.2
+  - @orderly.network/types@2.4.2-internal-multi-collateral.2
+  - @orderly.network/ui@2.4.2-internal-multi-collateral.2
+  - @orderly.network/ui-connector@2.4.2-internal-multi-collateral.2
+  - @orderly.network/ui-share@2.4.2-internal-multi-collateral.2
+  - @orderly.network/ui-tpsl@2.4.2-internal-multi-collateral.2
+  - @orderly.network/utils@2.4.2-internal-multi-collateral.2
+
 ## 2.4.2-internal-multi-collateral.1
 
 ### Patch Changes
