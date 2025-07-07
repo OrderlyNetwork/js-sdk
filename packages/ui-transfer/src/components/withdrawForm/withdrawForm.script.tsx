@@ -219,9 +219,8 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
   }, [quantity, maxAmount, chainVaultBalance]);
 
   const minAmount = useMemo(() => {
-    // @ts-ignore;
-    return chains.minimum_withdraw_amount ?? 1;
-  }, [chains]);
+    return sourceToken?.minimum_withdraw_amount ?? 0;
+  }, [sourceToken]);
 
   const onWithdraw = async () => {
     if (loading) {

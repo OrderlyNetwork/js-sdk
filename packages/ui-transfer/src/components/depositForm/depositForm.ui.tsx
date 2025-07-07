@@ -72,6 +72,28 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
   const { t } = useTranslation();
 
   const renderContent = () => {
+    if (needSwap || needCrossSwap) {
+      return (
+        <Flex direction="column" itemAlign="start" mt={1} gapY={1}>
+          <Flex justify="between" width="100%">
+            <SwapCoin
+              sourceSymbol={sourceToken?.display_name || sourceToken?.symbol}
+              targetSymbol={targetToken?.display_name || targetToken?.symbol}
+              indexPrice={swapPrice}
+            />
+            {(needSwap || needCrossSwap) && (
+              // swap slippage max value is not the same as deposit slippage max value
+              <Slippage
+                value={swapSlippage}
+                onValueChange={onSwapSlippageChange}
+              />
+            )}
+          </Flex>
+          <SwapFee {...swapFee} />
+        </Flex>
+      );
+    }
+
     if (sourceToken?.symbol === "USDC") {
       return (
         <Flex mt={2} direction="column" itemAlign="start">
@@ -85,6 +107,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
         </Flex>
       );
     }
+
     if (sourceToken?.is_collateral) {
       if (targetToken?.symbol === "USDC") {
         return (
@@ -131,26 +154,6 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
         </Flex>
       );
     }
-
-    return (
-      <Flex direction="column" itemAlign="start" mt={1} gapY={1}>
-        <Flex justify="between" width="100%">
-          <SwapCoin
-            sourceSymbol={sourceToken?.display_name || sourceToken?.symbol}
-            targetSymbol={targetToken?.display_name || targetToken?.symbol}
-            indexPrice={swapPrice}
-          />
-          {(needSwap || needCrossSwap) && (
-            // swap slippage max value is not the same as deposit slippage max value
-            <Slippage
-              value={swapSlippage}
-              onValueChange={onSwapSlippageChange}
-            />
-          )}
-        </Flex>
-        <SwapFee {...swapFee} />
-      </Flex>
-    );
   };
 
   return (
