@@ -24,6 +24,9 @@ import {
 } from "./hooks";
 import { useToken } from "./hooks/useToken";
 
+const { collateralRatio, LTV, collateralContribution, calcMinimumReceived } =
+  account;
+
 const ORDERLY_DEPOSIT_SLIPPAGE_KEY = "orderly_deposit_slippage";
 
 export type UseDepositFormScriptReturn = ReturnType<
@@ -299,7 +302,7 @@ const useCollateralValue = (params: {
 
   const qty = Number(params.qty);
 
-  const { data: holdingData, usdc } = useHoldingStream();
+  const { data: holdingList = [], usdc } = useHoldingStream();
   const { data: indexPrices } = useIndexPricesStream();
   const [data] = usePositionStream(sourceToken?.symbol);
   const aggregated = useDataTap(data.aggregated);
@@ -317,7 +320,7 @@ const useCollateralValue = (params: {
 
   const getCollateralRatio = useCallback(
     (collateralQty: number) => {
-      return account.collateralRatio({
+      return collateralRatio({
         baseWeight: targetToken?.base_weight ?? 0,
         discountFactor: targetToken?.discount_factor ?? 0,
         collateralQty: collateralQty,
@@ -327,7 +330,7 @@ const useCollateralValue = (params: {
     [targetToken, indexPrice],
   );
 
-  const targetQuantity = account.collateralContribution({
+  const targetQuantity = collateralContribution({
     collateralQty: qty,
     collateralRatio: getCollateralRatio(qty),
     indexPrice: indexPrice,
@@ -335,27 +338,24 @@ const useCollateralValue = (params: {
 
   const getLTV = useCallback(
     (collRatio: number) => {
-      return account.LTV({
+      return LTV({
         usdcBalance: usdcBalance,
         upnl: unrealPnL,
-        collateralAssets: tokens.map((item) => {
-          const qtyData = holdingData?.find((h) => h.token === item.symbol);
-          const indexPrice =
-            item.symbol === "USDC"
-              ? 1
-              : indexPrices[`PERP_${item.symbol}_USDC`];
-          return {
-            qty: qtyData?.holding ?? 0,
-            indexPrice: indexPrice ?? 0,
-            weight: collRatio,
-          };
-        }),
+        collateralAssets: holdingList
+          .filter((h) => h.token !== "USDC")
+          .map((item) => {
+            return {
+              qty: item.holding ?? 0,
+              indexPrice: indexPrices[`PERP_${item.token}_USDC`] ?? 0,
+              weight: collRatio,
+            };
+          }),
       });
     },
-    [holdingData, usdcBalance, unrealPnL, tokens, indexPrices],
+    [holdingList, usdcBalance, unrealPnL, tokens, indexPrices],
   );
 
-  const minimumReceived = account.calcMinimumReceived({
+  const minimumReceived = calcMinimumReceived({
     amount: targetQuantity,
     slippage,
   });

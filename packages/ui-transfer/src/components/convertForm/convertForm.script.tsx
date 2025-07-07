@@ -168,7 +168,7 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
       });
   };
 
-  const { data: holdingData = [], usdc } = useHoldingStream();
+  const { data: holdingList = [], usdc } = useHoldingStream();
 
   const [postQuote, { data: quoteData, isMutating: isQuoteLoading }] =
     useOdosQuote();
@@ -235,21 +235,18 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
       return LTV({
         usdcBalance: usdcBalance,
         upnl: unrealPnL,
-        collateralAssets: sourceTokens.map((item) => {
-          const qtyData = holdingData?.find((h) => h.token === item.symbol);
-          const indexPrice =
-            item.symbol === "USDC"
-              ? 1
-              : indexPrices[`PERP_${item.symbol}_USDC`];
-          return {
-            qty: qtyData?.holding ?? 0,
-            indexPrice: indexPrice ?? 0,
-            weight: collRatio,
-          };
-        }),
+        collateralAssets: holdingList
+          .filter((h) => h.token !== "USDC")
+          .map((item) => {
+            return {
+              qty: item.holding ?? 0,
+              indexPrice: indexPrices[`PERP_${item.token}_USDC`] ?? 0,
+              weight: collRatio,
+            };
+          }),
       });
     },
-    [holdingData, usdcBalance, unrealPnL, sourceTokens, indexPrices],
+    [holdingList, usdcBalance, unrealPnL, sourceTokens, indexPrices],
   );
 
   const disabled =
