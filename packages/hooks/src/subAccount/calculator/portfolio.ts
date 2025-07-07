@@ -19,6 +19,7 @@ export function formatPortfolio(inputs: {
   holding?: API.Holding[];
   positions?: API.PositionsTPSLExt;
   markPrices: Record<string, number> | null;
+  indexPrices?: Record<string, number> | null;
   accountInfo?: API.AccountInfo;
   symbolsInfo?: SymbolInfo;
   tokensInfo?: API.Chain[];
@@ -27,6 +28,7 @@ export function formatPortfolio(inputs: {
     holding,
     positions,
     markPrices,
+    indexPrices,
     accountInfo,
     symbolsInfo,
     tokensInfo,
@@ -37,6 +39,7 @@ export function formatPortfolio(inputs: {
     !positions ||
     !Array.isArray(positions.rows) ||
     !markPrices ||
+    !indexPrices ||
     !accountInfo ||
     symbolsInfo?.isNil
   ) {
@@ -48,7 +51,7 @@ export function formatPortfolio(inputs: {
 
   const [USDC_holding, nonUSDC] = parseHolding(
     holding,
-    markPrices,
+    indexPrices,
     tokensInfo!,
   );
 
