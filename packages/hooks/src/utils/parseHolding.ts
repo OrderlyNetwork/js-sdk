@@ -27,7 +27,7 @@ export const parseHolding = (
       const findToken = tokensInfo.find(({ token }) => token === item.token);
       nonUSDC.push({
         holding: item.holding,
-        indexPrice: indexPrices[item.token] ?? 0,
+        indexPrice: indexPrices[`PERP_${item.token}_USDC`] ?? 0,
         collateralCap: findToken?.user_max_qty ?? 0,
         discountFactor: findToken?.discount_factor ?? 0,
       });
