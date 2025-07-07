@@ -21,6 +21,7 @@ import {
   renderQuantityInput,
 } from "./listElement";
 import { NumeralWithCtx } from "./numeralWithCtx";
+import { PartialTPSL } from "./partialTPSL";
 import { ShareButtonWidget } from "./shareButton";
 import { TriggerPrice } from "./triggerPrice";
 import { UnrealizedPnLPopoverCard } from "./unrealPnLHover";
@@ -205,17 +206,31 @@ export const useColumn = (config: ColumnConfig) => {
         },
       },
       {
-        title: t("common.tpsl"),
-        dataIndex: "__",
+        title: "Full TP/SL",
+        dataIndex: "full_tpsl",
+        width: 150,
+        render: (_: string, record) => {
+          return (
+            <TriggerPrice
+              stopLossPrice={record.full_tp_sl?.sl_trigger_price}
+              takeProfitPrice={record.full_tp_sl?.tp_trigger_price}
+            />
+          );
+        },
+      },
+
+      {
+        title: "Partial TP/SL",
+        dataIndex: "partial_tpsl",
         width: 150,
         render: (_: string, record) => (
-          <TriggerPrice
-            stopLossPrice={record.sl_trigger_price}
-            takeProfitPrice={record.tp_trigger_price}
+          <PartialTPSL
+            orderNum={record.partial_tp_sl?.order_num}
+            tpTriggerPrice={record.partial_tp_sl?.tp_trigger_price}
+            slTriggerPrice={record.partial_tp_sl?.sl_trigger_price}
           />
         ),
       },
-
       {
         title: t("common.notional"),
         dataIndex: "notional",

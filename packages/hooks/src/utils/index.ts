@@ -1,6 +1,5 @@
 export {
   findTPSLFromOrder,
-  findTPSLFromOrders,
   findPositionTPSLFromOrders,
 } from "../orderly/usePositionStream/utils";
 

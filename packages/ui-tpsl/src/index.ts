@@ -1,4 +1,4 @@
-export { TPSLWidget } from "./tpsl.widget";
+export { TPSLWidget, TPSLDialogId, TPSLSheetId } from "./tpsl.widget";
 export { PositionTPSLPopover } from "./editorPopover";
 export { PositionTPSLSheet } from "./editorSheet";
 export { PositionTPSLConfirm } from "./tpsl.ui";

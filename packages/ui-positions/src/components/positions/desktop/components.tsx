@@ -1,7 +1,8 @@
 import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { EditIcon } from "@orderly.network/ui";
-import { PositionTPSLPopover } from "@orderly.network/ui-tpsl";
+import { EditIcon, Text } from "@orderly.network/ui";
+import { modal } from "@orderly.network/ui";
+import { PositionTPSLPopover, TPSLDialogId } from "@orderly.network/ui-tpsl";
 import { usePositionsRowContext } from "./positionRowContext";
 
 // ------------ TP/SL Price input end------------
@@ -37,5 +38,25 @@ export const TPSLEditIcon = () => {
         size={16}
       />
     </PositionTPSLPopover>
+  );
+};
+
+export const AddIcon = () => {
+  const { position, baseDp, quoteDp, tpslOrder } = usePositionsRowContext();
+  const onAdd = () => {
+    modal.show(TPSLDialogId, {
+      position,
+      baseDP: baseDp,
+      quoteDP: quoteDp,
+      isEditing: false,
+    });
+  };
+  return (
+    <Text
+      className="oui-text-base-contrast-36 hover:oui-text-base-contrast oui-cursor-pointer"
+      onClick={onAdd}
+    >
+      Add
+    </Text>
   );
 };

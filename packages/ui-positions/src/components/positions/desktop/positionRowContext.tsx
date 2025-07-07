@@ -32,6 +32,7 @@ export interface PositionsRowContextState {
   onSubmit: () => Promise<any>;
   submitting: boolean;
   tpslOrder?: API.AlgoOrder;
+  partialTPSLOrder?: API.AlgoOrder;
   quoteDp?: number;
   baseDp?: number;
   baseTick?: number;
@@ -160,7 +161,9 @@ export const PositionsRowProvider: FC<PositionsRowProviderProps> = (props) => {
         updatePriceChange,
         updateQuantity,
         updateOrderType,
-        tpslOrder: (position as API.PositionTPSLExt).algo_order,
+        tpslOrder: (position as API.PositionTPSLExt).full_tp_sl?.algo_order,
+        partialTPSLOrder: (position as API.PositionTPSLExt).partial_tp_sl
+          ?.algo_order,
         onSubmit,
         submitting,
         closeOrderData,

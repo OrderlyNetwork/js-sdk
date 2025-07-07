@@ -1,10 +1,10 @@
 import { FC, useMemo } from "react";
-import { usePositionsRowContext } from "./positionRowContext";
-import { AlgoOrderType, API, OrderSide } from "@orderly.network/types";
 import { useSymbolsInfo, utils } from "@orderly.network/hooks";
-import { cn, Flex, Text, Tooltip } from "@orderly.network/ui";
-import { TPSLEditIcon } from "./components";
 import { useTranslation } from "@orderly.network/i18n";
+import { AlgoOrderType, API, OrderSide } from "@orderly.network/types";
+import { cn, Flex, Text, Tooltip } from "@orderly.network/ui";
+import { AddIcon, TPSLEditIcon } from "./components";
+import { usePositionsRowContext } from "./positionRowContext";
 
 export const TriggerPrice: FC<{
   stopLossPrice?: number;
@@ -44,7 +44,7 @@ export const TriggerPriceItem: FC<{
     },
     {
       symbol: symbolInfo,
-    }
+    },
   );
 
   const type = orderType === AlgoOrderType.TAKE_PROFIT ? "TP" : "SL";
@@ -58,8 +58,8 @@ export const TriggerPriceItem: FC<{
           pnl === 0
             ? "oui-text-base-contrast-36"
             : pnl > 0
-            ? "oui-text-trade-profit oui-gap-0"
-            : "oui-text-trade-loss oui-gap-0"
+              ? "oui-text-trade-profit oui-gap-0"
+              : "oui-text-trade-loss oui-gap-0"
         }
         prefix={<Text>{pnl === 0 ? "" : pnl > 0 ? "+" : "-"}</Text>}
         suffix={
@@ -108,7 +108,7 @@ export const TPSLTriggerPrice: FC<{
           orderSide={order.side as OrderSide}
           orderType={AlgoOrderType.TAKE_PROFIT}
           symbolInfo={symbolInfo[order.symbol]()}
-        />
+        />,
       );
     }
 
@@ -122,7 +122,7 @@ export const TPSLTriggerPrice: FC<{
           orderSide={order.side as OrderSide}
           orderType={AlgoOrderType.STOP_LOSS}
           symbolInfo={symbolInfo[order.symbol]()}
-        />
+        />,
       );
     }
 
@@ -139,7 +139,7 @@ export const TPSLTriggerPrice: FC<{
   const child = useMemo(() => {
     const children = [];
 
-    if (!order?.symbol) return <span>-</span>;
+    if (!order?.symbol) return <AddIcon />;
 
     const Label = ({ children }: { children?: string }) => {
       return !props.stopLossPrice || direction === "column" ? (
@@ -153,7 +153,7 @@ export const TPSLTriggerPrice: FC<{
       children.push(
         <Text.formatted
           className={cn(
-            "oui-text-trade-profit oui-gap-0 oui-decoration-white/20"
+            "oui-text-trade-profit oui-gap-0 oui-decoration-white/20",
           )}
           key={"tp"}
           rule="price"
@@ -166,7 +166,7 @@ export const TPSLTriggerPrice: FC<{
               ""
             )
           }
-        />
+        />,
       );
     }
     if (props.stopLossPrice) {
@@ -174,7 +174,7 @@ export const TPSLTriggerPrice: FC<{
         <Text.formatted
           key={"sl"}
           className={cn(
-            "oui-text-trade-loss oui-gap-0 oui-decoration-white/20 "
+            "oui-text-trade-loss oui-gap-0 oui-decoration-white/20 ",
           )}
           rule={"price"}
           dp={symbolInfo[order!.symbol]("quote_dp", 2)}
@@ -186,11 +186,11 @@ export const TPSLTriggerPrice: FC<{
               ""
             )
           }
-        />
+        />,
       );
     }
 
-    if (children.length === 0) return <Text>-</Text>;
+    if (children.length === 0) return <AddIcon />;
 
     if (children.length === 2 && direction === "row") {
       children.splice(1, 0, <Text key={"split"}>/</Text>);
@@ -206,7 +206,7 @@ export const TPSLTriggerPrice: FC<{
         props.direction === "column"
           ? "oui-flex-col"
           : "oui-flex-row oui-gap-1",
-        props.className
+        props.className,
       )}
     >
       {child}

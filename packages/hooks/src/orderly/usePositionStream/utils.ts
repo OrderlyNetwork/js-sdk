@@ -6,18 +6,6 @@ import {
   OrderStatus,
 } from "@orderly.network/types";
 
-export const findTPSLFromOrders = (
-  orders: API.AlgoOrder[],
-  symbol: string,
-): Partial<AlgoOrderEntity> | undefined => {
-  const order = findPositionTPSLFromOrders(orders, symbol);
-
-  // console.log("!!!!!", order);
-
-  if (!order) return;
-  return findTPSLFromOrder(order);
-};
-
 export const findTPSLFromOrder = (
   order: API.AlgoOrder,
 ): {
@@ -53,9 +41,11 @@ export const findTPSLFromOrder = (
 export const findPositionTPSLFromOrders = (
   orders: API.AlgoOrder[],
   symbol: string,
-): API.AlgoOrder | undefined => {
-  return orders?.find((order) => {
-    // console.log(order.symbol, symbol, order.algo_type);
+): {
+  fullPositionOrder?: API.AlgoOrder;
+  partialPositionOrders?: API.AlgoOrder[];
+} => {
+  const fullPositionOrder = orders?.find((order) => {
     return (
       order.symbol === symbol &&
       order.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL &&
@@ -64,6 +54,22 @@ export const findPositionTPSLFromOrders = (
         order.root_algo_status === OrderStatus.PARTIAL_FILLED)
     );
   });
+  const partialPositionOrders = orders
+    ?.filter((order) => {
+      return (
+        order.symbol === symbol &&
+        order.algo_type === AlgoOrderRootType.TP_SL &&
+        (order.root_algo_status === OrderStatus.NEW ||
+          order.root_algo_status === OrderStatus.REPLACED ||
+          order.root_algo_status === OrderStatus.PARTIAL_FILLED)
+      );
+    })
+    .sort((a, b) => {
+      return b.created_time - a.created_time;
+    });
 
-  // return order;
+  return {
+    fullPositionOrder,
+    partialPositionOrders,
+  };
 };

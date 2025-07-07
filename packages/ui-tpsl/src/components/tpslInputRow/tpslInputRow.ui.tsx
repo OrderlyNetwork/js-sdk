@@ -83,7 +83,7 @@ export const TPSLInputRowUI = (props: Props) => {
             Order price
           </Text>
 
-          <Grid cols={2} gap={2}>
+          <Grid cols={2} gap={2} className="oui-w-full">
             <PriceInput
               disabled={
                 positionType === PositionType.FULL ||
