@@ -48,6 +48,7 @@
     "@orderly.network/web3-provider-ethers": "2.3.2"
   },
   "changesets": [
+    "cyan-days-sparkle",
     "large-lemons-exercise",
     "odd-drinks-explain",
     "shaggy-mangos-sneeze",

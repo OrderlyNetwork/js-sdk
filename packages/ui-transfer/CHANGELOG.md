@@ -1,5 +1,22 @@
 # @orderly.network/ui-transfer
 
+## 2.4.2-internal-multi-collateral.3
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.4.2-internal-multi-collateral.3
+  - @orderly.network/core@2.4.2-internal-multi-collateral.3
+  - @orderly.network/hooks@2.4.2-internal-multi-collateral.3
+  - @orderly.network/i18n@2.4.2-internal-multi-collateral.3
+  - @orderly.network/perp@4.4.2-internal-multi-collateral.3
+  - @orderly.network/types@2.4.2-internal-multi-collateral.3
+  - @orderly.network/ui@2.4.2-internal-multi-collateral.3
+  - @orderly.network/ui-chain-selector@2.4.2-internal-multi-collateral.3
+  - @orderly.network/ui-connector@2.4.2-internal-multi-collateral.3
+  - @orderly.network/utils@2.4.2-internal-multi-collateral.3
+
 ## 2.4.2-internal-multi-collateral.2
 
 ### Patch Changes

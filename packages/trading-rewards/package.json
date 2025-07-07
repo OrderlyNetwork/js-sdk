@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/trading-rewards",
-  "version": "2.4.2-internal-multi-collateral.2",
+  "version": "2.4.2-internal-multi-collateral.3",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
