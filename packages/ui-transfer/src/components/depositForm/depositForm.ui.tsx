@@ -30,8 +30,8 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
     onSourceTokenChange,
     onTargetTokenChange,
     amount,
-    sourceQuantity,
-    targetQuantity,
+    quantity,
+    collateralContributionQuantity,
     maxQuantity,
     onQuantityChange,
     hintMessage,
@@ -67,6 +67,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
     swapRevalidating,
     swapSlippage,
     onSwapSlippageChange,
+    usdcToken,
   } = props;
 
   const { t } = useTranslation();
@@ -139,14 +140,12 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
         <Flex direction="column" itemAlign="start" mt={2} gap={1}>
           <CollateralRatioWidget value={collateralRatio} />
           <CollateralContributionWidget
-            precision={targetToken?.precision ?? 6}
-            value={targetQuantity}
+            // it need to use USDC precision
+            precision={usdcToken?.precision ?? 6}
+            value={collateralContributionQuantity}
           />
           <LtvWidget
-            showDiff={
-              typeof sourceQuantity !== "undefined" &&
-              Number(sourceQuantity) > 0
-            }
+            showDiff={typeof quantity !== "undefined" && Number(quantity) > 0}
             currentLtv={currentLTV}
             nextLTV={nextLTV}
           />
@@ -172,7 +171,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
             classNames={{
               root: "oui-mt-[2px] oui-rounded-t-sm oui-rounded-b-xl",
             }}
-            value={sourceQuantity}
+            value={quantity}
             onValueChange={onQuantityChange}
             token={sourceToken}
             tokens={sourceTokens}
@@ -203,7 +202,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
           token={targetToken}
           tokens={targetTokens}
           onTokenChange={onTargetTokenChange}
-          value={needSwap ? swapQuantity : targetQuantity}
+          value={needSwap ? swapQuantity : quantity}
           loading={swapRevalidating}
           classNames={{
             root: "oui-mt-3 oui-border-transparent focus-within:oui-outline-transparent",

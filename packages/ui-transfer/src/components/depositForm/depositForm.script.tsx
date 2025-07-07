@@ -65,6 +65,10 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     onTargetTokenChange,
   } = useToken(currentChain);
 
+  const usdcToken = useMemo(() => {
+    return sourceTokens?.find((item) => item.symbol === "USDC");
+  }, [sourceTokens]);
+
   const {
     dst,
     balance,
@@ -182,7 +186,7 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
 
   const {
     collateralRatio,
-    targetQuantity,
+    collateralContributionQuantity,
     currentLTV,
     nextLTV,
     indexPrice,
@@ -215,8 +219,8 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
 
     amount,
     isNativeToken,
-    sourceQuantity: quantity,
-    targetQuantity,
+    quantity,
+    collateralContributionQuantity,
     maxQuantity,
     indexPrice,
     onQuantityChange: setQuantity,
@@ -246,6 +250,7 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     slippage,
     setSlippage,
     minimumReceived,
+    usdcToken,
 
     needSwap,
     needCrossSwap,
@@ -337,7 +342,7 @@ const useCollateralValue = (params: {
     [targetToken, indexPrice],
   );
 
-  const targetQuantity = collateralContribution({
+  const collateralContributionQuantity = collateralContribution({
     collateralQty: qty,
     collateralRatio: getCollateralRatio(qty),
     indexPrice: indexPrice,
@@ -363,13 +368,13 @@ const useCollateralValue = (params: {
   );
 
   const minimumReceived = calcMinimumReceived({
-    amount: targetQuantity,
+    amount: collateralContributionQuantity,
     slippage,
   });
 
   return {
     collateralRatio: getCollateralRatio(qty),
-    targetQuantity,
+    collateralContributionQuantity,
     currentLTV: getLTV(getCollateralRatio(0)),
     nextLTV: getLTV(getCollateralRatio(qty)),
     indexPrice,
