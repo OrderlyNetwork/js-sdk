@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { nativeETHAddress, type API } from "@orderly.network/types";
+import { useConfig } from "@orderly.network/hooks";
+import { nativeETHAddress, NetworkId, type API } from "@orderly.network/types";
 import { getTokenByTokenList } from "../../../utils";
 import type { CurrentChain } from "./useChainSelect";
 
@@ -12,6 +13,8 @@ export const useToken = (
 
   const [sourceTokens, setSourceTokens] = useState<API.TokenInfo[]>([]);
   const [targetTokens, setTargetTokens] = useState<API.TokenInfo[]>([]);
+
+  const networkId = useConfig("networkId") as NetworkId;
 
   // when chain changed and chain data ready then call this function init tokens
   const onChainInited = useCallback((chainInfo?: API.Chain) => {
@@ -58,17 +61,24 @@ export const useToken = (
 
     const usdc = sourceTokens.find((t) => t.symbol === "USDC")!;
 
-    // if is_collateral: [token] => [USDC,token]
+    // if is_collateral
     if (sourceToken.is_collateral) {
-      setTargetToken(usdc);
-      setTargetTokens([usdc, sourceToken]);
+      // mainnet: [token] => [USDC,token]
+      if (networkId === "mainnet") {
+        setTargetToken(usdc);
+        setTargetTokens([usdc, sourceToken]);
+      } else {
+        // testnet: [token] => [token]
+        setTargetToken(sourceToken);
+        setTargetTokens([sourceToken]);
+      }
       return;
     }
 
     // if swap token: [token] => [USDC]
     setTargetToken(usdc);
     setTargetTokens([usdc]);
-  }, [sourceToken, sourceTokens]);
+  }, [networkId, sourceToken, sourceTokens]);
 
   return {
     sourceToken,

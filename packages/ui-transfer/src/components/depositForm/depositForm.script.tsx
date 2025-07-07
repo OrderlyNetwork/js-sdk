@@ -15,6 +15,7 @@ import { useAppContext, useDataTap } from "@orderly.network/react-app";
 import { API, NetworkId, ChainNamespace } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 import { feeDecimalsOffset } from "../../utils";
+import { useNeedSwapAndCross } from "../swap/hooks/useNeedSwapAndCross";
 import { useSwapDeposit } from "../swap/hooks/useSwapDeposit";
 import {
   useActionType,
@@ -98,12 +99,18 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     maxQuantity,
   });
 
+  const { needSwap, needCrossSwap } = useNeedSwapAndCross({
+    srcToken: sourceToken,
+    dstToken: targetToken,
+    srcChainId: currentChain?.id,
+    dstChainId: dst?.chainId,
+  });
+
   const {
     cleanTransactionInfo,
     onSwapDeposit,
     swapRevalidating,
-    needSwap,
-    needCrossSwap,
+
     swapPrice,
     markPrice,
     swapQuantity,
@@ -113,14 +120,14 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     onSlippageChange: onSwapSlippageChange,
   } = useSwapDeposit({
     srcToken: sourceToken!,
-    srcChainId: currentChain?.id,
-    dstChainId: dst?.chainId,
     currentChain,
     dst,
     quantity,
     isNativeToken,
     depositFee,
     setQuantity,
+    needSwap,
+    needCrossSwap,
   });
 
   const cleanData = useCallback(() => {

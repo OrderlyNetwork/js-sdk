@@ -6,33 +6,32 @@ import { Decimal } from "@orderly.network/utils";
 import { CurrentChain } from "../../depositForm/hooks/useChainSelect";
 import { SwapDialog } from "../components/swapDialog";
 import { DST, SwapMode } from "../types";
-import { useNeedSwapAndCross } from "./useNeedSwapAndCross";
 import { useSwapEnquiry } from "./useSwapEnquiry";
 import { useSwapFee } from "./useSwapFee";
 
 type SwapDepositOptions = {
   srcToken: API.TokenInfo;
-  srcChainId?: number;
-  dstChainId: number;
   currentChain?: CurrentChain | null;
   dst: DST;
   quantity: string;
   isNativeToken: boolean;
   depositFee: bigint;
   setQuantity: (quantity: string) => void;
+  needSwap: boolean;
+  needCrossSwap: boolean;
 };
 
 export const useSwapDeposit = (options: SwapDepositOptions) => {
   const {
     srcToken,
-    srcChainId,
-    dstChainId,
     currentChain,
     dst,
     quantity,
     isNativeToken,
     depositFee,
     setQuantity,
+    needSwap,
+    needCrossSwap,
   } = options;
 
   const [slippage, setSlippage] = useLocalStorage(
@@ -42,12 +41,6 @@ export const useSwapDeposit = (options: SwapDepositOptions) => {
 
   const config = useConfig();
   const brokerName = config.get("brokerName") || "";
-
-  const { needSwap, needCrossSwap } = useNeedSwapAndCross({
-    srcToken,
-    srcChainId: srcChainId,
-    dstChainId: dstChainId,
-  });
 
   const {
     enquiry,
