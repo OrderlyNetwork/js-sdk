@@ -23,17 +23,47 @@ const isNumber = (val: unknown): val is number => {
   return typeof val === "number" && !Number.isNaN(val);
 };
 
-const calculateTotalHolding = (data: SubAccount[] | SubAccount["holding"]) => {
+// Extract index price calculation logic
+const getIndexPrice = (token: string, indexPrices?: Record<string, number>) => {
+  return token === "USDC" ? 1 : (indexPrices?.[`PERP_${token}_USDC`] ?? 0);
+};
+
+// Extract asset value calculation logic
+const calculateAssetValue = (
+  holding: number,
+  token: string,
+  indexPrices?: Record<string, number>,
+) => {
+  const indexPrice = getIndexPrice(token, indexPrices);
+  return new Decimal(holding).mul(indexPrice);
+};
+
+const calculateTotalHolding = (
+  data: SubAccount[] | SubAccount["holding"],
+  indexPrices?: Record<string, number>,
+) => {
   let total = new Decimal(0);
   for (const item of data) {
     if (Array.isArray(item.holding)) {
       for (const hol of item.holding) {
         if (isNumber(hol.holding)) {
-          total = total.plus(hol.holding);
+          // Use extracted function for asset value calculation
+          const assetValue = calculateAssetValue(
+            hol.holding,
+            hol.token,
+            indexPrices,
+          );
+          total = total.plus(assetValue);
         }
       }
-    } else if (isNumber(item.holding)) {
-      total = total.plus(item.holding);
+    } else if (isNumber(item.holding) && "token" in item) {
+      // Use extracted function for asset value calculation
+      const assetValue = calculateAssetValue(
+        item.holding,
+        (item as any).token,
+        indexPrices,
+      );
+      total = total.plus(assetValue);
     }
   }
   return total;
@@ -98,18 +128,17 @@ export const useAssetsScript = () => {
         accountData.children?.map((holding: any) => {
           const tokenInfo = tokenInfoMap.get(holding.token);
 
-          // Calculate index price
-          const indexPrice =
-            holding.token === "USDC"
-              ? 1
-              : (indexPrices?.[`PERP_${holding.token}_USDC`] ?? 0);
+          // Use extracted function for index price calculation
+          const indexPrice = getIndexPrice(holding.token, indexPrices);
 
           // console.log(holding, indexPrice, tokenInfo, tokenInfoMap);
 
-          // Calculate asset value (holding * index price)
-          const assetValue = new Decimal(holding.holding)
-            .mul(indexPrice)
-            .toNumber();
+          // Use extracted function for asset value calculation
+          const assetValue = calculateAssetValue(
+            holding.holding,
+            holding.token,
+            indexPrices,
+          ).toNumber();
 
           // console.log(tokenInfo, holding, indexPrice, tokenInfoMap);
 
@@ -147,14 +176,16 @@ export const useAssetsScript = () => {
   }, [filtered, indexPrices, tokenInfoMap]);
 
   const mainTotalValue = useMemo<Decimal>(
-    () => calculateTotalHolding(holding),
-    [holding],
+    () => calculateTotalHolding(holding, indexPrices),
+    [holding, indexPrices],
   );
 
   const subTotalValue = useMemo<Decimal>(
-    () => calculateTotalHolding(subAccounts),
-    [subAccounts],
+    () => calculateTotalHolding(subAccounts, indexPrices),
+    [subAccounts, indexPrices],
   );
+
+  // console.log(holding, subAccounts, indexPrices);
 
   const memoizedTotalValue = useMemo<number>(() => {
     if (isMainAccount) {
@@ -162,7 +193,7 @@ export const useAssetsScript = () => {
     } else {
       const find = allAccounts.find((item) => item.id === state.accountId);
       if (Array.isArray(find?.children)) {
-        return calculateTotalHolding(find.children).toNumber();
+        return calculateTotalHolding(find.children, indexPrices).toNumber();
       }
       return 0;
     }
@@ -172,6 +203,7 @@ export const useAssetsScript = () => {
     subTotalValue,
     allAccounts,
     state.accountId,
+    indexPrices,
   ]);
 
   const handleTransfer = useCallback((accountId: string, token: string) => {
