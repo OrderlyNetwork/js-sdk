@@ -1,5 +1,17 @@
 # @orderly.network/react-app
 
+## 2.4.2-internal-multi-collateral.4
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.4.2-internal-multi-collateral.4
+  - @orderly.network/i18n@2.4.2-internal-multi-collateral.4
+  - @orderly.network/types@2.4.2-internal-multi-collateral.4
+  - @orderly.network/ui@2.4.2-internal-multi-collateral.4
+  - @orderly.network/utils@2.4.2-internal-multi-collateral.4
+
 ## 2.4.2-internal-multi-collateral.3
 
 ### Patch Changes

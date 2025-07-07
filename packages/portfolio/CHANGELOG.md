@@ -1,5 +1,28 @@
 # @orderly.network/portfolio
 
+## 2.4.2-internal-multi-collateral.4
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.4.2-internal-multi-collateral.4
+  - @orderly.network/chart@2.4.2-internal-multi-collateral.4
+  - @orderly.network/hooks@2.4.2-internal-multi-collateral.4
+  - @orderly.network/i18n@2.4.2-internal-multi-collateral.4
+  - @orderly.network/perp@4.4.2-internal-multi-collateral.4
+  - @orderly.network/types@2.4.2-internal-multi-collateral.4
+  - @orderly.network/ui@2.4.2-internal-multi-collateral.4
+  - @orderly.network/ui-chain-selector@2.4.2-internal-multi-collateral.4
+  - @orderly.network/ui-connector@2.4.2-internal-multi-collateral.4
+  - @orderly.network/ui-leverage@2.4.2-internal-multi-collateral.4
+  - @orderly.network/ui-orders@2.4.2-internal-multi-collateral.4
+  - @orderly.network/ui-positions@2.4.2-internal-multi-collateral.4
+  - @orderly.network/ui-scaffold@2.4.2-internal-multi-collateral.4
+  - @orderly.network/ui-share@2.4.2-internal-multi-collateral.4
+  - @orderly.network/ui-transfer@2.4.2-internal-multi-collateral.4
+  - @orderly.network/utils@2.4.2-internal-multi-collateral.4
+
 ## 2.4.2-internal-multi-collateral.3
 
 ### Patch Changes
