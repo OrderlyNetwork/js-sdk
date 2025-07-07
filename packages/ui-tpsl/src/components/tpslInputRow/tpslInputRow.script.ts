@@ -12,11 +12,11 @@ export type Props = {
     PnL: string;
     Offset: string;
     "Offset%": string;
-    ROI: string;
+    ROI?: string;
     order_price: string;
     order_type: OrderType;
   };
-  onChange: (key: string, value: string | boolean) => void;
+  onChange: (key: string, value: string | boolean | number) => void;
 };
 export const useTPSLInputRowScript = (props: Props) => {
   return {

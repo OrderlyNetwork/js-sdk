@@ -59,6 +59,10 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
     },
     {
       defaultOrder: order,
+      tpslEnable: {
+        tp_enable: true,
+        sl_enable: true,
+      },
       isEditing,
     },
   );
@@ -132,7 +136,9 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
     return diff;
   }, [
     tpslOrder.tp_trigger_price,
+    tpslOrder.tp_order_price,
     tpslOrder.sl_trigger_price,
+    tpslOrder.sl_order_price,
     tpslOrder.quantity,
     order,
     isEditing,
@@ -202,22 +208,30 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
   };
 
   const onSubmit = async () => {
-    if (typeof options.onConfirm !== "function" || !needConfirm) {
-      return submit({ accountId: position.account_id })
-        .then(() => true)
-        .catch((err) => {
-          if (err?.message) {
-            toast.error(err.message);
-          }
-          throw false;
-        });
-    }
+    try {
+      const validOrder = await validate();
+      console.log("validOrder", validOrder);
+      if (validOrder) {
+        if (typeof options.onConfirm !== "function" || !needConfirm) {
+          return submit({ accountId: position.account_id })
+            .then(() => true)
+            .catch((err) => {
+              if (err?.message) {
+                toast.error(err.message);
+              }
+              throw false;
+            });
+        }
 
-    return options.onConfirm(tpslOrder, {
-      position,
-      submit,
-      cancel,
-    });
+        return options.onConfirm(tpslOrder, {
+          position,
+          submit,
+          cancel,
+        });
+      }
+    } catch (error) {
+      return Promise.reject(error);
+    }
   };
 
   return {
@@ -240,6 +254,7 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
       isCreateMutating,
       isUpdateMutating,
     },
+    position,
   } as const;
 };
 

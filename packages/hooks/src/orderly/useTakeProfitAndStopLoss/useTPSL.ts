@@ -56,6 +56,10 @@ export const useTaskProfitAndStopLossInternal = (
      * Conversely, even if defaultOrder is provided and isEditing is false, a new TPSL order is still created
      */
     isEditing?: boolean;
+    tpslEnable?: {
+      tp_enable?: boolean;
+      sl_enable?: boolean;
+    };
   },
 ): [
   /**
@@ -66,7 +70,7 @@ export const useTaskProfitAndStopLossInternal = (
     /**
      * Update the take profit and stop loss order, this will merge the new data with the old one
      */
-    setValue: (key: string, value: number | string) => void;
+    setValue: (key: string, value: number | string | boolean) => void;
     setValues: (values: Partial<ComputedAlgoOrder>) => void;
     // getOrderEntity: () => AlgoOrderEntity<AlgoOrderRootType.TP_SL|AlgoOrderRootType.POSITIONAL_TP_SL>;
     /**
@@ -113,6 +117,8 @@ export const useTaskProfitAndStopLossInternal = (
     // quantity:
     //   options?.defaultOrder?.quantity || Math.abs(position.position_qty),
     algo_type: options?.defaultOrder?.algo_type as AlgoOrderRootType,
+    tp_enable: options?.tpslEnable?.tp_enable,
+    sl_enable: options?.tpslEnable?.sl_enable,
   });
 
   const symbolInfo = useSymbolsInfo()[position.symbol!]();
@@ -143,7 +149,7 @@ export const useTaskProfitAndStopLossInternal = (
 
   const _setOrderValue = (
     key: string,
-    value: number | string,
+    value: number | string | boolean,
     options?: {
       ignoreValidate?: boolean;
     },
@@ -185,23 +191,33 @@ export const useTaskProfitAndStopLossInternal = (
 
   const setOrderValue = async (
     key: string,
-    value: number | string,
+    value: number | string | boolean,
     options?: {
       ignoreValidate?: boolean;
     },
   ) => {
     // console.log("-------->>>>>", key, value);
     if (key === "quantity") {
-      setOrder((prev) => ({ ...prev, quantity: value }));
+      setOrder((prev) => ({ ...prev, quantity: value as string }));
 
       if (typeof order.sl_trigger_price !== "undefined") {
         _setOrderValue("sl_trigger_price", order.sl_trigger_price, {
           ignoreValidate: true,
         });
       }
+      if (typeof order.sl_order_price !== "undefined") {
+        _setOrderValue("sl_order_price", order.sl_order_price, {
+          ignoreValidate: true,
+        });
+      }
 
       if (typeof order.tp_trigger_price !== "undefined") {
         _setOrderValue("tp_trigger_price", order.tp_trigger_price, {
+          ignoreValidate: true,
+        });
+      }
+      if (typeof order.tp_order_price !== "undefined") {
+        _setOrderValue("tp_order_price", order.tp_order_price, {
           ignoreValidate: true,
         });
       }
@@ -228,6 +244,9 @@ export const useTaskProfitAndStopLossInternal = (
   useEffect(() => {
     requestAnimationFrame(() => {
       if (order.ignoreValidate) return;
+      if (!order.quantity) {
+        return;
+      }
       const orderCreator = getOrderCreator();
       orderCreator
         .validate(order as AlgoOrderEntity, valueConfig)

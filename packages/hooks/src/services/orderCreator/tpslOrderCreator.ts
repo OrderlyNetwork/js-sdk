@@ -1,11 +1,16 @@
-import { AlgoOrderEntity, OrderType, API } from "@orderly.network/types";
+import {
+  AlgoOrderEntity,
+  OrderType,
+  API,
+  ChildOrder,
+} from "@orderly.network/types";
 import { TriggerPriceType } from "@orderly.network/types";
 import { AlgoOrderType } from "@orderly.network/types";
 import { AlgoOrderRootType } from "@orderly.network/types";
 import { OrderSide } from "@orderly.network/types";
+import { Decimal } from "@orderly.network/utils";
 import { AlgoOrderUpdateEntity, BaseAlgoOrderCreator } from "./baseAlgoCreator";
 import { ValuesDepConfig } from "./interface";
-import { Decimal } from "@orderly.network/utils";
 
 export class TPSLOrderCreator extends BaseAlgoOrderCreator<
   AlgoOrderEntity<AlgoOrderRootType.TP_SL>
@@ -14,12 +19,13 @@ export class TPSLOrderCreator extends BaseAlgoOrderCreator<
 
   create(
     values: AlgoOrderEntity<AlgoOrderRootType.TP_SL>,
-    config: ValuesDepConfig
+    config: ValuesDepConfig,
   ) {
     const side =
       values.side! === OrderSide.BUY ? OrderSide.SELL : OrderSide.BUY;
 
     const child_orders = [];
+    console.log("tp_sl values", values);
 
     if (typeof values.tp_trigger_price !== "undefined") {
       const tp_trigger_price = !!values.tp_trigger_price
@@ -28,15 +34,21 @@ export class TPSLOrderCreator extends BaseAlgoOrderCreator<
             .toNumber()
         : values.tp_trigger_price;
 
-      child_orders.push({
+      const orderItem: any = {
         algo_type: AlgoOrderType.TAKE_PROFIT,
         reduce_only: true,
         side,
         type: OrderType.MARKET,
-        trigger_price: tp_trigger_price,
+        trigger_price: new Decimal(tp_trigger_price).toNumber(),
         symbol: values.symbol,
         is_activated: !!values.tp_trigger_price,
-      });
+      };
+      if (values.tp_order_price) {
+        orderItem.price = new Decimal(values.tp_order_price).toNumber();
+        orderItem.type = OrderType.LIMIT;
+      }
+
+      child_orders.push(orderItem);
     }
 
     if (typeof values.sl_trigger_price !== "undefined") {
@@ -45,15 +57,20 @@ export class TPSLOrderCreator extends BaseAlgoOrderCreator<
             .todp(config.symbol.quote_dp)
             .toNumber()
         : values.sl_trigger_price;
-      child_orders.push({
+      const orderItem: any = {
         algo_type: AlgoOrderType.STOP_LOSS,
         reduce_only: true,
         side,
         type: OrderType.MARKET,
-        trigger_price: sl_trigger_price,
+        trigger_price: new Decimal(sl_trigger_price).toNumber(),
         symbol: values.symbol,
         is_activated: !!values.sl_trigger_price,
-      });
+      };
+      if (values.sl_order_price) {
+        orderItem.price = new Decimal(values.sl_order_price).toNumber();
+        orderItem.type = OrderType.LIMIT;
+      }
+      child_orders.push(orderItem);
     }
 
     return {
@@ -69,10 +86,10 @@ export class TPSLOrderCreator extends BaseAlgoOrderCreator<
   crateUpdateOrder(
     values: AlgoOrderEntity<AlgoOrderRootType.TP_SL>,
     oldValue: API.AlgoOrder,
-    config: ValuesDepConfig
+    config: ValuesDepConfig,
   ): [
     { child_orders: AlgoOrderUpdateEntity[] },
-    AlgoOrderEntity<AlgoOrderRootType.TP_SL>
+    AlgoOrderEntity<AlgoOrderRootType.TP_SL>,
   ] {
     const data = this.create(values, config);
     const newData: AlgoOrderUpdateEntity[] = [];
@@ -81,14 +98,14 @@ export class TPSLOrderCreator extends BaseAlgoOrderCreator<
 
     data.child_orders.forEach((order) => {
       // find the old order
-      let _order = Object.create(null);
+      const _order = Object.create(null);
 
       if (needUpdateQty) {
         _order["quantity"] = data.quantity;
       }
 
       const oldOrder = oldValue.child_orders?.find(
-        (oldOrder) => oldOrder.algo_type === order.algo_type
+        (oldOrder) => oldOrder.algo_type === order.algo_type,
       );
 
       if (oldOrder) {
@@ -109,7 +126,7 @@ export class TPSLOrderCreator extends BaseAlgoOrderCreator<
     if (needUpdateQty && newData.length < 2) {
       // if quantity is changed, need to update all child orders
       const missingOrders = oldValue.child_orders.filter(
-        (order) => order.algo_order_id !== newData[0].order_id
+        (order) => order.algo_order_id !== newData[0].order_id,
       );
 
       if (missingOrders.length) {

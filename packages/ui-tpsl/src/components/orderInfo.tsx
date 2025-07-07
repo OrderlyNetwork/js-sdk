@@ -7,14 +7,16 @@ import { OrderlyOrder } from "@orderly.network/types";
 import { Flex, Grid, Text, TokenIcon } from "@orderly.network/ui";
 
 type Props = {
-  order: OrderlyOrder;
+  order: Partial<OrderlyOrder>;
+  baseDP?: number;
+  quoteDP?: number;
 };
 export const OrderInfo = (props: Props) => {
   const { order } = props;
   const { symbol, side } = order;
-  const markPrice = useMarkPrice(symbol);
-  const indexPrice = useIndexPrice(symbol);
-  const symbolLeverage = useSymbolLeverage(symbol);
+  const markPrice = useMarkPrice(symbol!);
+  const indexPrice = useIndexPrice(symbol!);
+  const symbolLeverage = useSymbolLeverage(symbol!);
   return (
     <Flex direction={"column"} gap={2} itemAlign={"start"}>
       <Flex gap={2} itemAlign={"center"}>
@@ -41,43 +43,47 @@ export const OrderInfo = (props: Props) => {
       <Grid cols={2} gapX={2} gapY={1} className="oui-w-full">
         <Flex justify={"between"} className="oui-text-base-contrast-36">
           <Text size="2xs">Quantity </Text>
-          <Text.formatted
+          <Text.numeral
             rule="price"
             className="oui-text-base-contrast-80"
             size="2xs"
+            dp={props.baseDP ?? 2}
           >
-            {order.order_quantity}
-          </Text.formatted>
+            {Number(order.order_quantity)}
+          </Text.numeral>
         </Flex>
         <Flex justify={"between"} className="oui-text-base-contrast-36">
           <Text size="2xs">Last price </Text>
-          <Text.formatted
+          <Text.numeral
             rule="price"
             className="oui-text-base-contrast-80"
             size="2xs"
+            dp={props.quoteDP ?? 2}
           >
             {indexPrice?.data}
-          </Text.formatted>
+          </Text.numeral>
         </Flex>
         <Flex justify={"between"} className="oui-text-base-contrast-36">
           <Text size="2xs">Order price </Text>
-          <Text.formatted
+          <Text.numeral
             rule="price"
             className="oui-text-base-contrast-80"
             size="2xs"
+            dp={props.quoteDP ?? 2}
           >
-            {order.order_price}
-          </Text.formatted>
+            {Number(order.order_price)}
+          </Text.numeral>
         </Flex>
         <Flex justify={"between"} className="oui-text-base-contrast-36">
           <Text size="2xs">Mark price </Text>
-          <Text.formatted
+          <Text.numeral
             rule="price"
             className="oui-text-base-contrast-80"
             size="2xs"
+            dp={props.quoteDP ?? 2}
           >
             {markPrice?.data}
-          </Text.formatted>
+          </Text.numeral>
         </Flex>
       </Grid>
     </Flex>

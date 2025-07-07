@@ -11,6 +11,7 @@ import { Button, cn, Divider, Flex, Grid, Text } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { OrderInfo } from "./components/orderInfo";
 import { OrderPriceType } from "./components/orderPriceType";
+import { PnlInfo } from "./components/pnlInfo";
 import { TPSLInputRowWidget } from "./components/tpslInputRow";
 import { TPSLPositionTypeWidget } from "./components/tpslPostionType";
 import { PnlInputWidget } from "./pnlInput/pnlInput.widget";
@@ -144,7 +145,11 @@ export const TPSLAdvancedUI = (props: Props) => {
           TP/SL
         </Flex>
 
-        <OrderInfo order={formattedOrder as OrderlyOrder} />
+        <OrderInfo
+          order={formattedOrder as OrderlyOrder}
+          baseDP={symbolInfo.base_dp}
+          quoteDP={symbolInfo.quote_dp}
+        />
       </div>
       <Divider className="oui-my-3" />
       <div className="oui-px-3">
@@ -228,55 +233,12 @@ export const TPSLAdvancedUI = (props: Props) => {
           />
         </Flex>
 
-        <Flex
-          direction={"column"}
-          itemAlign={"start"}
-          className="oui-w-full oui-text-2xs oui-text-base-contrast-36 oui-gap-[6px] oui-mt-6"
-        >
-          <Flex justify={"between"} className="oui-w-full">
-            <Text size="2xs">Total est. TP PnL</Text>
-            {formattedOrder.tp_pnl ? (
-              <Text.numeral
-                suffix={<Text className="oui-text-base-contrast-36">USDC</Text>}
-                coloring
-                visible={true}
-                size="2xs"
-                dp={2}
-              >
-                {Number(formattedOrder.tp_pnl)}
-              </Text.numeral>
-            ) : (
-              <Text size="2xs">-- USDC</Text>
-            )}
-          </Flex>
-          <Flex justify={"between"} className="oui-w-full">
-            <Text size="2xs">Total est. SL PnL</Text>
-            {formattedOrder.sl_pnl ? (
-              <Text.numeral
-                suffix={
-                  <Text className="oui-text-base-contrast-36 oui-ml-1">
-                    USDC
-                  </Text>
-                }
-                coloring
-                visible={true}
-                size="2xs"
-                dp={2}
-              >
-                {Number(formattedOrder.sl_pnl)}
-              </Text.numeral>
-            ) : (
-              <Text size="2xs">-- USDC</Text>
-            )}
-          </Flex>
+        <PnlInfo
+          tp_pnl={formattedOrder.tp_pnl}
+          sl_pnl={formattedOrder.sl_pnl}
+          className="oui-mt-6"
+        />
 
-          <Flex justify={"between"} className="oui-w-full">
-            <Text size="2xs">Risk reward ratio</Text>
-            <Text className="oui-text-base-contrast-80" size="2xs">
-              {riskRatio}
-            </Text>
-          </Flex>
-        </Flex>
         <Flex className="oui-mt-6" gap={2}>
           <Button
             size="md"

@@ -3,7 +3,13 @@ import { useLocalStorage, utils } from "@orderly.network/hooks";
 import { OrderValidationResult } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
-import { API, OrderSide } from "@orderly.network/types";
+import {
+  API,
+  OrderlyOrder,
+  OrderSide,
+  OrderType,
+  PositionType,
+} from "@orderly.network/types";
 import {
   Badge,
   Box,
@@ -22,6 +28,10 @@ import {
   ThrottledButton,
 } from "@orderly.network/ui";
 import { transSymbolformString } from "@orderly.network/utils";
+import { OrderInfo } from "./components/orderInfo";
+import { PnlInfo } from "./components/pnlInfo";
+import { TPSLInputRowWidget } from "./components/tpslInputRow";
+import { TPSLPositionTypeWidget } from "./components/tpslPostionType";
 import { PnlInputWidget } from "./pnlInput/pnlInput.widget";
 import type { PNL_Values } from "./pnlInput/useBuilder.script";
 import { TPSLBuilderState } from "./useTPSL.script";
@@ -40,7 +50,9 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
     onComplete,
     status,
     errors,
+    valid,
     isPosition,
+    position,
   } = props;
   const { t } = useTranslation();
 
@@ -48,6 +60,24 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
 
   return (
     <div id="orderly-tp_sl-order-edit-content">
+      <OrderInfo
+        baseDP={symbolInfo("base_dp")}
+        quoteDP={symbolInfo("quote_dp")}
+        order={{
+          symbol: position.symbol,
+          order_quantity: position.position_qty.toString(),
+          order_price: position.average_open_price.toString(),
+        }}
+      />
+      <TPSLPositionTypeWidget
+        value={TPSL_OrderEntity.position_type ?? PositionType.PARTIAL}
+        onChange={(key, value) => {
+          props.setOrderValue("position_type", value);
+        }}
+      />
+      <Text className="oui-text-warning oui-text-2xs">
+        Full positions TP/SL only support market price to place the orders
+      </Text>
       {(!props.isEditing || (props.isEditing && !props.isPosition)) && (
         <>
           <TPSLQuantity
@@ -64,8 +94,47 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
           <Divider my={4} intensity={8} />
         </>
       )}
+      <TPSLInputRowWidget
+        type="tp"
+        values={{
+          enable: TPSL_OrderEntity.tp_enable ?? true,
+          trigger_price: TPSL_OrderEntity.tp_trigger_price?.toString() ?? "",
+          PnL: TPSL_OrderEntity.tp_pnl?.toString() ?? "",
+          Offset: TPSL_OrderEntity.tp_offset?.toString() ?? "",
+          "Offset%": TPSL_OrderEntity.tp_offset_percentage?.toString() ?? "",
+          order_price: TPSL_OrderEntity.tp_order_price?.toString() ?? "",
+          order_type: TPSL_OrderEntity.tp_order_type ?? OrderType.MARKET,
+        }}
+        errors={errors}
+        quote_dp={symbolInfo("quote_dp")}
+        positionType={TPSL_OrderEntity.position_type ?? PositionType.PARTIAL}
+        onChange={(key, value) => {
+          console.log("key", key, "value", value);
+          props.setOrderValue(key as keyof OrderlyOrder, value);
+        }}
+      />
 
-      <TPSLPrice
+      <TPSLInputRowWidget
+        type="sl"
+        values={{
+          enable: TPSL_OrderEntity.sl_enable ?? true,
+          trigger_price: TPSL_OrderEntity.sl_trigger_price?.toString() ?? "",
+          PnL: TPSL_OrderEntity.sl_pnl?.toString() ?? "",
+          Offset: TPSL_OrderEntity.sl_offset?.toString() ?? "",
+          "Offset%": TPSL_OrderEntity.sl_offset_percentage?.toString() ?? "",
+          order_price: TPSL_OrderEntity.sl_order_price?.toString() ?? "",
+          order_type: TPSL_OrderEntity.sl_order_type ?? OrderType.MARKET,
+        }}
+        errors={errors}
+        quote_dp={symbolInfo("quote_dp")}
+        positionType={TPSL_OrderEntity.position_type ?? PositionType.PARTIAL}
+        onChange={(key, value) => {
+          console.log("key", key, "value", value);
+          props.setOrderValue(key as keyof OrderlyOrder, value);
+        }}
+      />
+
+      {/* <TPSLPrice
         sl_pnl={TPSL_OrderEntity.sl_pnl}
         tp_pnl={TPSL_OrderEntity.tp_pnl}
         quote={symbolInfo("quote")}
@@ -85,6 +154,11 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
         }}
         tp_trigger_price={TPSL_OrderEntity.tp_trigger_price ?? ""}
         sl_trigger_price={TPSL_OrderEntity.sl_trigger_price ?? ""}
+      /> */}
+      <PnlInfo
+        tp_pnl={TPSL_OrderEntity.tp_pnl}
+        sl_pnl={TPSL_OrderEntity.sl_pnl}
+        className="oui-mt-3"
       />
       <Grid cols={2} gap={3} mt={4}>
         <Button
