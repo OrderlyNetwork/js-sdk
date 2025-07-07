@@ -53,7 +53,7 @@ const TooltipContent: React.FC<{
         intensity={80}
         className="oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12 oui-text-primary"
       >
-        Learn More
+        {t("tradingLeaderboard.learnMore")}
       </Text>
     </Box>
   );
@@ -68,13 +68,13 @@ export const LtvUI: React.FC<
     }
   >
 > = (props) => {
-  // const { t } = useTranslation();
+  const { t } = useTranslation();
   const { currentLtv, nextLTV, showDiff, ltv_threshold, isLoading } = props;
   return (
     <Flex width="100%" itemAlign="center" justify="between">
       <Flex justify="start" itemAlign="center">
         <Text size="2xs" intensity={36}>
-          LTV
+          {t("transfer.LTV")}
         </Text>
         <Tooltip
           className="oui-p-2"
