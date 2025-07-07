@@ -450,11 +450,9 @@ export function formatChains({
     };
 
     const tokenInfos = tokenChains
-      .filter((item) => {
-        return item.chain_details.some(
-          (item) => Number(item.chain_id) === chainId,
-        );
-      })
+      .filter((item) =>
+        item.chain_details.some((item) => Number(item.chain_id) === chainId),
+      )
       .map((item) => {
         const chain = item.chain_details.find(
           (item) => Number(item.chain_id) === chainId,
@@ -474,6 +472,7 @@ export function formatChains({
 
           withdrawal_fee: chain?.withdrawal_fee,
           cross_chain_withdrawal_fee: chain?.cross_chain_withdrawal_fee,
+          minimum_withdraw_amount: item.minimum_withdraw_amount,
 
           base_weight: item.base_weight,
           discount_factor: item.discount_factor,

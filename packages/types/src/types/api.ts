@@ -394,6 +394,7 @@ export declare namespace API {
     symbol: string;
     user_max_qty: number;
     precision: number;
+    minimum_withdraw_amount: number;
 
     swap_enable: boolean;
   }
