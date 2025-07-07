@@ -4,12 +4,13 @@ import {
   useSymbolLeverage,
 } from "@orderly.network/hooks";
 import { OrderlyOrder } from "@orderly.network/types";
-import { Flex, Grid, Text, TokenIcon } from "@orderly.network/ui";
+import { cn, Flex, Grid, Text, TokenIcon } from "@orderly.network/ui";
 
 type Props = {
   order: Partial<OrderlyOrder>;
   baseDP?: number;
   quoteDP?: number;
+  className?: string;
 };
 export const OrderInfo = (props: Props) => {
   const { order } = props;
@@ -18,7 +19,12 @@ export const OrderInfo = (props: Props) => {
   const indexPrice = useIndexPrice(symbol!);
   const symbolLeverage = useSymbolLeverage(symbol!);
   return (
-    <Flex direction={"column"} gap={2} itemAlign={"start"}>
+    <Flex
+      direction={"column"}
+      gap={2}
+      itemAlign={"start"}
+      className={cn(props.className, "oui-w-full")}
+    >
       <Flex gap={2} itemAlign={"center"}>
         <Flex gap={1} itemAlign={"center"}>
           <TokenIcon symbol={symbol} className="oui-w-5 oui-h-5" />

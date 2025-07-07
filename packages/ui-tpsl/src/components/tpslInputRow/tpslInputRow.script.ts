@@ -6,6 +6,7 @@ export type Props = {
   quote_dp: number;
   positionType: PositionType;
   errors: OrderValidationResult | null;
+  hideOrderPrice?: boolean;
   values: {
     enable: boolean;
     trigger_price: string;
@@ -26,5 +27,6 @@ export const useTPSLInputRowScript = (props: Props) => {
     quote_dp: props.quote_dp,
     positionType: props.positionType,
     errors: props.errors,
+    hideOrderPrice: props.hideOrderPrice,
   };
 };

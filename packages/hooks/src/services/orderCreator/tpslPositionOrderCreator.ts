@@ -45,9 +45,11 @@ export class TPSLPositionOrderCreator extends BaseAlgoOrderCreator<
         symbol: values.symbol,
         is_activated: !!values.tp_trigger_price,
       };
-      if (typeof values.tp_order_price !== "undefined") {
+      if (values.tp_order_price) {
         childOrderItem.type = OrderType.LIMIT;
-        childOrderItem.price = values.tp_order_price;
+        childOrderItem.price = new Decimal(values.tp_order_price)
+          .todp(config.symbol.quote_dp)
+          .toNumber();
       }
 
       child_orders.push(childOrderItem);
@@ -72,9 +74,11 @@ export class TPSLPositionOrderCreator extends BaseAlgoOrderCreator<
         symbol: values.symbol,
         is_activated: !!values.sl_trigger_price,
       };
-      if (typeof values.sl_order_price !== "undefined") {
+      if (values.sl_order_price) {
         childOrderItem.type = OrderType.LIMIT;
-        childOrderItem.price = values.sl_order_price;
+        childOrderItem.price = new Decimal(values.sl_order_price)
+          .todp(config.symbol.quote_dp)
+          .toNumber();
       }
       child_orders.push(childOrderItem);
     }

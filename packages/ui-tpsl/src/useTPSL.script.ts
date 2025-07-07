@@ -46,6 +46,7 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
       submit,
       deleteOrder,
       setValue,
+      setValues,
       validate,
       errors,
       isCreateMutating,
@@ -255,6 +256,7 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
       isUpdateMutating,
     },
     position,
+    setValues,
   } as const;
 };
 

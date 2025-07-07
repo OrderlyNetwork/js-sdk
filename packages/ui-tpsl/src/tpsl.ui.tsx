@@ -1,5 +1,9 @@
 import { useRef, useState } from "react";
-import { useLocalStorage, utils } from "@orderly.network/hooks";
+import {
+  ComputedAlgoOrder,
+  useLocalStorage,
+  utils,
+} from "@orderly.network/hooks";
 import { OrderValidationResult } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
@@ -53,10 +57,38 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
     valid,
     isPosition,
     position,
+    setValues,
   } = props;
+
   const { t } = useTranslation();
 
   const { parseErrorMsg } = useOrderEntryFormErrorMsg(errors);
+
+  const renderQtyInput = () => {
+    if (TPSL_OrderEntity.position_type === PositionType.FULL) {
+      return null;
+    }
+
+    if (props.isEditing) {
+      return null;
+    }
+    return (
+      <>
+        <TPSLQuantity
+          maxQty={props.maxQty}
+          quantity={(props.orderQuantity ?? props.maxQty) as number}
+          baseTick={symbolInfo("base_tick")}
+          dp={symbolInfo("base_dp")}
+          onQuantityChange={props.setQuantity}
+          quote={symbolInfo("base")}
+          isEditing={props.isEditing}
+          isPosition={isPosition}
+          errorMsg={parseErrorMsg("quantity")}
+        />
+        <Divider my={4} intensity={8} />
+      </>
+    );
+  };
 
   return (
     <div id="orderly-tp_sl-order-edit-content">
@@ -72,28 +104,35 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
       <TPSLPositionTypeWidget
         value={TPSL_OrderEntity.position_type ?? PositionType.PARTIAL}
         onChange={(key, value) => {
-          props.setOrderValue("position_type", value);
+          if (value === PositionType.FULL) {
+            setValues({
+              position_type: value,
+              quantity: Math.abs(position.position_qty).toString(),
+              tp_order_price: "",
+              tp_order_type: OrderType.MARKET,
+              tp_trigger_price: "",
+              sl_order_price: "",
+              sl_order_type: OrderType.MARKET,
+              sl_trigger_price: "",
+            });
+          } else {
+            setValues({
+              position_type: value,
+              quantity: "",
+              tp_order_price: "",
+              tp_order_type: OrderType.MARKET,
+              tp_trigger_price: "",
+              sl_order_price: "",
+              sl_order_type: OrderType.MARKET,
+              sl_trigger_price: "",
+            });
+          }
         }}
       />
       <Text className="oui-text-warning oui-text-2xs">
         Full positions TP/SL only support market price to place the orders
       </Text>
-      {(!props.isEditing || (props.isEditing && !props.isPosition)) && (
-        <>
-          <TPSLQuantity
-            maxQty={props.maxQty}
-            quantity={(props.orderQuantity ?? props.maxQty) as number}
-            baseTick={symbolInfo("base_tick")}
-            dp={symbolInfo("base_dp")}
-            onQuantityChange={props.setQuantity}
-            quote={symbolInfo("base")}
-            isEditing={props.isEditing}
-            isPosition={isPosition}
-            errorMsg={parseErrorMsg("quantity")}
-          />
-          <Divider my={4} intensity={8} />
-        </>
-      )}
+      {renderQtyInput()}
       <TPSLInputRowWidget
         type="tp"
         values={{
@@ -105,6 +144,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
           order_price: TPSL_OrderEntity.tp_order_price?.toString() ?? "",
           order_type: TPSL_OrderEntity.tp_order_type ?? OrderType.MARKET,
         }}
+        hideOrderPrice={TPSL_OrderEntity.position_type === PositionType.FULL}
         errors={errors}
         quote_dp={symbolInfo("quote_dp")}
         positionType={TPSL_OrderEntity.position_type ?? PositionType.PARTIAL}
@@ -125,6 +165,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
           order_price: TPSL_OrderEntity.sl_order_price?.toString() ?? "",
           order_type: TPSL_OrderEntity.sl_order_type ?? OrderType.MARKET,
         }}
+        hideOrderPrice={TPSL_OrderEntity.position_type === PositionType.FULL}
         errors={errors}
         quote_dp={symbolInfo("quote_dp")}
         positionType={TPSL_OrderEntity.position_type ?? PositionType.PARTIAL}
@@ -226,12 +267,17 @@ const TPSLQuantity = (props: {
   };
 
   const formatQuantity = (qty: string) => {
+    let _qty = qty;
+    if (Number(qty) > props.maxQty) {
+      _qty = props.maxQty.toString();
+    }
+    console.log("xxx formateQuantity", qty, _qty);
     if (props.baseTick > 0) {
       const quantity = Number(qty);
       // if (quantity) {
       //   props.onQuantityChange?.(Math.min(props.maxQty, quantity));
       // } else {
-      props.onQuantityChange?.(utils.formatNumber(qty, props.baseTick) ?? qty);
+      props.onQuantityChange?.(utils.formatNumber(_qty, props.baseTick) ?? qty);
       // }
     }
   };
@@ -254,7 +300,7 @@ const TPSLQuantity = (props: {
               lg: "md",
             }}
             align="right"
-            value={isPosition ? "" : props.quantity}
+            value={props.quantity}
             autoComplete="off"
             classNames={{
               prefix: "oui-text-base-contrast-54",
@@ -282,6 +328,7 @@ const TPSLQuantity = (props: {
             onValueChange={(value) => {
               props.onQuantityChange?.(value);
               const qty = Number(value);
+              console.log("qty", value, Number(value), qty);
               if (qty && qty > props.maxQty) {
                 const qty = isPosition ? 0 : props.maxQty;
                 props.onQuantityChange?.(qty);
@@ -290,47 +337,12 @@ const TPSLQuantity = (props: {
             }}
             onBlur={(e) => formatQuantity(e.target.value)}
             suffix={
-              isPosition ? (
-                <button
-                  className="oui-text-2xs oui-text-base-contrast-54 oui-px-3"
-                  onClick={() => {
-                    setTPSL();
-                  }}
-                >
-                  {t("tpsl.entirePosition")}
-                </button>
-              ) : (
-                <span className="oui-text-2xs oui-text-base-contrast-54 oui-px-3">
-                  {props.quote}
-                </span>
-              )
+              <span className="oui-text-2xs oui-text-base-contrast-54 oui-px-3">
+                {props.quote}
+              </span>
             }
           />
         </div>
-        {!props.isEditing && (
-          <Button
-            onClick={() => {
-              const qty = isPosition ? 0 : props.maxQty;
-              props.onQuantityChange?.(qty);
-              if (qty === 0) {
-                setTPSL();
-              }
-            }}
-            variant={"outlined"}
-            // size={{
-            //   lg: "md",
-            //   md: "lg",
-            // }}
-            className={cn(
-              "oui-text-2xs oui-w-[68px] oui-h-[40px] xl:oui-h-[32px]",
-              isPosition
-                ? "oui-border-primary-light oui-text-primary-light hover:oui-bg-primary-light/20"
-                : "oui-bg-base-6 oui-border-line-12 oui-text-base-contrast-54 hover:oui-bg-base-5",
-            )}
-          >
-            {t("common.position")}
-          </Button>
-        )}
       </Flex>
       <Flex mt={2} itemAlign={"center"} height={"15px"}>
         <Slider.single
@@ -564,6 +576,7 @@ export type PositionTPSLConfirmProps = {
   quoteDP: number;
   isEditing?: boolean;
   isPositionTPSL?: boolean;
+  orderInfo: ComputedAlgoOrder;
 };
 
 // ------------ Position TP/SL Confirm dialog start------------
@@ -579,6 +592,7 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
     baseDP,
     isEditing,
     isPositionTPSL: _isPositionTPSL,
+    orderInfo: order,
   } = props;
   const { t } = useTranslation();
 
@@ -590,8 +604,49 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
     size: "xs",
     intensity: 54,
   });
-
+  const renderPositionType = () => {
+    if (order.position_type === PositionType.FULL) {
+      return <Text>Full position</Text>;
+    }
+    return <Text>Partial position</Text>;
+  };
   // console.log("PositionTPSLConfirm", qty, maxQty, quoteDP);
+
+  const renderTPSLPrice = ({
+    price,
+    isOrderPrice,
+    isEnable,
+    colorType,
+  }: {
+    price: string | number;
+    isOrderPrice?: boolean;
+    isEnable?: boolean;
+    colorType: "TP" | "SL";
+  }) => {
+    if (!isEnable) {
+      return <Text className="oui-text-base-contrast-36">-- USDC</Text>;
+    }
+    if (!price) {
+      if (isOrderPrice) {
+        return <Text className="oui-text-base-contrast-36">Market</Text>;
+      }
+    }
+    return (
+      <Text.numeral
+        unit={"USDC"}
+        rule={"price"}
+        className={cn(
+          "oui-text-base-contrast",
+          colorType === "TP" ? "oui-text-trade-profit" : "oui-text-trade-loss",
+        )}
+        unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
+        dp={quoteDP}
+        padding={false}
+      >
+        {price}
+      </Text.numeral>
+    );
+  };
 
   const isPositionTPSL = _isPositionTPSL ?? qty >= maxQty;
 
@@ -644,68 +699,93 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
         </Flex>
       </Flex>
       <Divider />
-      <Flex
-        direction={"column"}
-        itemAlign={"stretch"}
-        gapY={1}
-        pt={4}
-        // pb={5}
-        className={cn(textClassName, "oui-pb-4 xl:oui-pb-5")}
-      >
-        <Flex>
-          <Box grow>{t("common.qty")}</Box>
-
-          <div>
-            {isPositionTPSL ? (
-              <span className="oui-text-base-contrast">
-                {t("tpsl.entirePosition")}
-              </span>
-            ) : (
-              <Text.numeral intensity={98} dp={baseDP} padding={false}>
-                {qty}
+      {order.tp_trigger_price || order.sl_trigger_price ? (
+        <>
+          <Divider className="oui-my-4" />
+          <div
+            className={textVariants({
+              size: "sm",
+              intensity: 54,
+              className:
+                "oui-space-y-1 oui-w-full oui-flex oui-flex-col oui-gap-3",
+            })}
+          >
+            {/* TODO i18n*/}
+            <Text className="oui-text-base-contrast">
+              TP/SL for {renderPositionType()}
+            </Text>
+            <Flex justify={"between"}>
+              <Text>Order Qty.</Text>
+              <Text.numeral
+                rule={"price"}
+                dp={baseDP}
+                padding={false}
+                className="oui-text-base-contrast"
+              >
+                {order.quantity ?? "-"}
               </Text.numeral>
-            )}
-          </div>
-        </Flex>
-        {typeof tpPrice === "number" && tpPrice > 0 ? (
-          <Flex>
-            <Box grow>{t("tpsl.tpPrice")}</Box>
-            <Text.numeral
-              as={"div"}
-              coloring
-              unit={"USDC"}
-              size={"sm"}
-              dp={quoteDP}
-              unitClassName={"oui-text-base-contrast-54 oui-ml-1"}
-            >
-              {tpPrice}
-            </Text.numeral>
-          </Flex>
-        ) : null}
-        {typeof slPrice === "number" && slPrice > 0 ? (
-          <Flex>
-            <Box grow>{t("tpsl.slPrice")}</Box>
-            <Text.numeral
-              as={"div"}
-              coloring
-              unit={"USDC"}
-              size={"sm"}
-              dp={quoteDP}
-              className="oui-text-trade-loss"
-              unitClassName={"oui-text-base-contrast-54 oui-ml-1"}
-            >
-              {slPrice}
-            </Text.numeral>
-          </Flex>
-        ) : null}
+            </Flex>
 
-        <Flex>
-          <Box grow>{t("common.price")}</Box>
-          <div className="oui-text-base-contrast">
-            {t("common.marketPrice")}
+            <Flex
+              direction={"column"}
+              justify={"between"}
+              itemAlign={"start"}
+              gap={1}
+              className="oui-w-full"
+            >
+              <Flex justify={"between"} className="oui-w-full">
+                {/* TODO i18n*/}
+                <Text>TP trigger price</Text>
+                {renderTPSLPrice({
+                  price: order.tp_trigger_price ?? "",
+                  isOrderPrice: false,
+                  isEnable: !!order.tp_trigger_price,
+                  colorType: "TP",
+                })}
+              </Flex>
+              <Flex justify={"between"} className="oui-w-full">
+                {/* TODO i18n*/}
+                <Text>TP order price</Text>
+                {renderTPSLPrice({
+                  price: order.tp_order_price ?? "",
+                  isOrderPrice: true,
+                  isEnable: !!order.tp_trigger_price,
+                  colorType: "TP",
+                })}
+              </Flex>
+            </Flex>
+
+            <Flex
+              direction={"column"}
+              justify={"between"}
+              itemAlign={"start"}
+              gap={1}
+              className="oui-w-full"
+            >
+              <Flex justify={"between"} className="oui-w-full">
+                {/* TODO i18n*/}
+                <Text>SL trigger price</Text>
+                {renderTPSLPrice({
+                  price: order.sl_trigger_price ?? "",
+                  isOrderPrice: false,
+                  isEnable: !!order.sl_trigger_price,
+                  colorType: "SL",
+                })}
+              </Flex>
+              <Flex justify={"between"} className="oui-w-full">
+                {/* TODO i18n*/}
+                <Text>SL order price</Text>
+                {renderTPSLPrice({
+                  price: order.sl_order_price ?? "",
+                  isOrderPrice: true,
+                  isEnable: !!order.sl_trigger_price,
+                  colorType: "SL",
+                })}
+              </Flex>
+            </Flex>
           </div>
-        </Flex>
-      </Flex>
+        </>
+      ) : null}
       <Box pt={2}>
         <Flex gap={1}>
           <Checkbox

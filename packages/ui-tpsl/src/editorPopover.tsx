@@ -179,6 +179,7 @@ export const PositionTPSLPopover = (props: {
                     tpPrice={Number(order.tp_trigger_price)}
                     slPrice={Number(order.sl_trigger_price)}
                     side={order.side!}
+                    orderInfo={order}
                     quoteDP={quoteDP ?? 2}
                     baseDP={baseDP ?? 2}
                   />

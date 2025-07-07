@@ -66,7 +66,7 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
     const bracketOrder = this.parseBracketOrder(data);
 
     if (!bracketOrder) {
-      return order;
+      return order as OrderlyOrder;
     }
 
     return {
@@ -74,7 +74,7 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
       algo_type: AlgoOrderRootType.BRACKET,
 
       child_orders: [bracketOrder],
-    };
+    } as OrderlyOrder;
   }
 
   baseValidate(

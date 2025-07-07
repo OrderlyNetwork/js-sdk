@@ -73,7 +73,10 @@ export const TPSLInputRowUI = (props: Props) => {
         </Flex>
         <Flex
           direction={"column"}
-          className="oui-w-full oui-gap-0.5"
+          className={cn(
+            "oui-w-full oui-gap-0.5",
+            props.hideOrderPrice ? "oui-hidden" : "",
+          )}
           itemAlign={"start"}
         >
           <Text className="oui-text-2xs oui-text-base-contrast-36">
