@@ -612,7 +612,7 @@
   "transfer.swapDeposit.viewFAQs": "Hulp nodig? <0>Bekijk FAQ's</0>",
   "transfer.swapDeposit.notEnoughLiquidity": "Onvoldoende liquiditeit. Probeer het later opnieuw of gebruik een andere chain om te storten.",
   "transfer.deposit.convertRate": "Omrekeningskoers",
-  "transfer.deposit.convertAssets": "Converteer activa naar USDC",
+  "transfer.convert.convertAssets": "Converteer activa naar USDC",
   "transfer.deposit.collateralContribution": "Onderpandbijdrage",
   "transfer.withdraw.InsufficientVaultBalance": "Onvoldoende kluissaldo",
   "transfer.LTV": "LTV",

@@ -612,7 +612,7 @@
   "transfer.swapDeposit.viewFAQs": "도움이 필요하신가요? <0>FAQ 보기</0>",
   "transfer.swapDeposit.notEnoughLiquidity": "유동성이 부족합니다. 나중에 다시 시도하거나 다른 체인을 사용하여 입금하세요.",
   "transfer.deposit.convertRate": "변환 환율",
-  "transfer.deposit.convertAssets": "자산을 USDC로 변환",
+  "transfer.convert.convertAssets": "자산을 USDC로 변환",
   "transfer.deposit.collateralContribution": "담보 기여도",
   "transfer.withdraw.InsufficientVaultBalance": "보관함 잔액 부족",
   "transfer.LTV": "LTV",

@@ -612,7 +612,7 @@
   "transfer.swapDeposit.viewFAQs": "Potrzebujesz pomocy? <0>Zobacz FAQ</0>",
   "transfer.swapDeposit.notEnoughLiquidity": "Niewystarczająca płynność. Spróbuj ponownie później lub użyj innego łańcucha do wpłaty.",
   "transfer.deposit.convertRate": "Kurs wymiany",
-  "transfer.deposit.convertAssets": "Konwertuj aktywa na USDC",
+  "transfer.convert.convertAssets": "Konwertuj aktywa na USDC",
   "transfer.deposit.collateralContribution": "Wkład zabezpieczenia",
   "transfer.withdraw.InsufficientVaultBalance": "Niewystarczające saldo skarbca",
   "transfer.LTV": "LTV",

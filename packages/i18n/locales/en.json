@@ -612,7 +612,7 @@
   "transfer.swapDeposit.viewFAQs": "Need help? <0>View FAQs</0>",
   "transfer.swapDeposit.notEnoughLiquidity": "Not enough liquidity. Please try again later or use another chain to deposit.",
   "transfer.deposit.convertRate": "Convert rate",
-  "transfer.deposit.convertAssets": "Convert assets to USDC",
+  "transfer.convert.convertAssets": "Convert assets to USDC",
   "transfer.deposit.collateralContribution": "Collateral contribution",
   "transfer.withdraw.InsufficientVaultBalance": "Insufficient vault balance",
   "transfer.LTV": "LTV",

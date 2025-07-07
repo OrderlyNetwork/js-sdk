@@ -612,7 +612,7 @@
   "transfer.swapDeposit.viewFAQs": "Yardıma mı ihtiyacınız var? <0>SSS'yi görüntüle</0>",
   "transfer.swapDeposit.notEnoughLiquidity": "Yeterli likidite yok. Lütfen daha sonra tekrar deneyin veya başka bir zincir kullanarak yatırın.",
   "transfer.deposit.convertRate": "Dönüştürme oranı",
-  "transfer.deposit.convertAssets": "Varlıkları USDC'ye dönüştür",
+  "transfer.convert.convertAssets": "Varlıkları USDC'ye dönüştür",
   "transfer.deposit.collateralContribution": "Teminat katkısı",
   "transfer.withdraw.InsufficientVaultBalance": "Yetersiz kasa bakiyesi",
   "transfer.LTV": "LTV",

@@ -612,7 +612,7 @@
   "transfer.swapDeposit.viewFAQs": "Besoin d'aide ? <0>Voir les FAQ</0>",
   "transfer.swapDeposit.notEnoughLiquidity": "Liquidité insuffisante. Veuillez réessayer plus tard ou utiliser une autre chaîne pour le dépôt.",
   "transfer.deposit.convertRate": "Taux de conversion",
-  "transfer.deposit.convertAssets": "Convertir les actifs en USDC",
+  "transfer.convert.convertAssets": "Convertir les actifs en USDC",
   "transfer.deposit.collateralContribution": "Contribution de garantie",
   "transfer.withdraw.InsufficientVaultBalance": "Solde du coffre-fort insuffisant",
   "transfer.LTV": "LTV",

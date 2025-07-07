@@ -612,7 +612,7 @@
   "transfer.swapDeposit.viewFAQs": "Butuh bantuan? <0>Lihat FAQ</0>",
   "transfer.swapDeposit.notEnoughLiquidity": "Likuiditas tidak cukup. Silakan coba lagi nanti atau gunakan chain lain untuk menyetor.",
   "transfer.deposit.convertRate": "Tingkat konversi",
-  "transfer.deposit.convertAssets": "Konversi aset ke USDC",
+  "transfer.convert.convertAssets": "Konversi aset ke USDC",
   "transfer.deposit.collateralContribution": "Kontribusi jaminan",
   "transfer.withdraw.InsufficientVaultBalance": "Saldo vault tidak mencukupi",
   "transfer.LTV": "LTV",

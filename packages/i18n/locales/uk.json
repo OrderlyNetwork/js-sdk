@@ -612,7 +612,7 @@
   "transfer.swapDeposit.viewFAQs": "Потрібна допомога? <0>Переглянути FAQ</0>",
   "transfer.swapDeposit.notEnoughLiquidity": "Недостатньо ліквідності. Будь ласка, спробуйте пізніше або використайте інший ланцюг для депозиту.",
   "transfer.deposit.convertRate": "Курс конвертації",
-  "transfer.deposit.convertAssets": "Конвертувати активи в USDC",
+  "transfer.convert.convertAssets": "Конвертувати активи в USDC",
   "transfer.deposit.collateralContribution": "Внесок застави",
   "transfer.withdraw.InsufficientVaultBalance": "Недостатній баланс сховища",
   "transfer.LTV": "LTV",
