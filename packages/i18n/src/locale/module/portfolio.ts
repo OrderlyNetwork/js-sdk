@@ -21,6 +21,8 @@ export const portfolio = {
   "portfolio.overview.column.qty": "Qty.",
   "portfolio.overview.column.indexPrice": "Index price",
   "portfolio.overview.column.collateralRatio": "Collateral ratio",
+  "portfolio.overview.column.collateralRatio.explain":
+    "Collateral ratio shows how much of an asset’s value can be used as margin",
   "portfolio.overview.column.assetContribution": "Asset contribution",
 
   "portfolio.overview.column.form": "Form",

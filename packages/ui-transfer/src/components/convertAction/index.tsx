@@ -13,8 +13,8 @@ export interface ConvertActionButtonProps {
 }
 
 export const ConvertAction: React.FC<ConvertActionButtonProps> = (props) => {
-  const { disabled, loading, symbol, networkId, onConvert } = props;
-  // const { t } = useTranslation();
+  const { disabled, loading, networkId, onConvert } = props;
+  const { t } = useTranslation();
   return (
     <Box className="oui-w-full lg:oui-w-auto lg:oui-min-w-[184px]">
       <AuthGuard
@@ -29,7 +29,7 @@ export const ConvertAction: React.FC<ConvertActionButtonProps> = (props) => {
           size={{ initial: "md", lg: "lg" }}
           onClick={onConvert}
         >
-          Convert
+          {t("transfer.convert")}
         </Button>
       </AuthGuard>
     </Box>
