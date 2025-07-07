@@ -4,7 +4,7 @@ import { Button, cn, Flex, Text, TokenIcon } from "@orderly.network/ui";
 import type { Column } from "@orderly.network/ui";
 
 export interface ColumnsOptions {
-  onClick?: (id: string) => void;
+  onTransfer?: (accountId: string, token: string) => void;
   onConvert?: () => void;
 }
 
@@ -21,7 +21,7 @@ interface EnhancedHolding {
 
 export const useAssetsColumns = (options: ColumnsOptions) => {
   const { t } = useTranslation();
-  const { onClick, onConvert } = options;
+  const { onTransfer, onConvert } = options;
   const columns = React.useMemo<Column[]>(() => {
     return [
       {
@@ -91,11 +91,11 @@ export const useAssetsColumns = (options: ColumnsOptions) => {
         },
       },
       {
-        title: "Collateral Contribution",
+        title: t("transfer.deposit.collateralContribution"),
         dataIndex: "collateralContribution",
         align: "left",
         width: 160,
-        render(val: number, record: EnhancedHolding) {
+        render(val: number) {
           return (
             <Text.numeral rule="price" dp={2} currency="$">
               {val}
@@ -126,7 +126,7 @@ export const useAssetsColumns = (options: ColumnsOptions) => {
                 size={"sm"}
                 variant={"outlined"}
                 color={"secondary"}
-                onClick={() => onClick?.(id)}
+                onClick={() => onTransfer?.(id, record.token)}
               >
                 {t("common.transfer")}
               </Button>
@@ -135,6 +135,6 @@ export const useAssetsColumns = (options: ColumnsOptions) => {
         },
       },
     ];
-  }, [t, onClick]);
+  }, [t, onTransfer]);
   return columns;
 };

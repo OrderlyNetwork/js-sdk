@@ -2,6 +2,11 @@ import { FC, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Box, cn, TabPanel, Tabs, useScreen } from "@orderly.network/ui";
 import {
+  LeftNavProps,
+  RouterAdapter,
+  LeftNavUI,
+} from "@orderly.network/ui-scaffold";
+import {
   MarketsProvider,
   MarketsProviderProps,
 } from "../../components/marketsProvider";
@@ -22,7 +27,10 @@ export const MarketsHomePage: FC<MarketsHomePageProps> = (props) => {
   );
 
   return (
-    <MarketsProvider onSymbolChange={props.onSymbolChange}>
+    <MarketsProvider
+      onSymbolChange={props.onSymbolChange}
+      navProps={props.navProps}
+    >
       <div
         id="oui-markets-home-page"
         className={cn("oui-font-semibold", props.className)}
@@ -31,6 +39,7 @@ export const MarketsHomePage: FC<MarketsHomePageProps> = (props) => {
           <MarketsMobileContent
             activeTab={activeTab}
             onTabChange={setActiveTab}
+            navProps={props.navProps}
           />
         ) : (
           <MarketsDesktopContent
@@ -46,6 +55,15 @@ export const MarketsHomePage: FC<MarketsHomePageProps> = (props) => {
 type MarketsContentProps = {
   activeTab: MarketsPageTab;
   onTabChange: (value: MarketsPageTab) => void;
+  // only for mobile
+  navProps?: {
+    logo?: {
+      src: string;
+      alt: string;
+    };
+    routerAdapter?: RouterAdapter;
+    leftNav?: LeftNavProps;
+  };
 };
 
 const MarketsDesktopContent = (props: MarketsContentProps) => {
@@ -96,6 +114,16 @@ const MarketsMobileContent = (props: MarketsContentProps) => {
         ),
         tabsContent: "oui-px-3",
       }}
+      leading={
+        props.navProps?.leftNav && (
+          <LeftNavUI
+            className="oui-ml-3 -oui-mr-4"
+            {...props?.navProps?.leftNav}
+            logo={props?.navProps?.logo}
+            routerAdapter={props?.navProps?.routerAdapter}
+          />
+        )
+      }
     >
       <TabPanel
         title={t("common.markets")}

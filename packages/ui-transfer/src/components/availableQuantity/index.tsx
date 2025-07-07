@@ -17,7 +17,7 @@ export const AvailableQuantity: FC<AvailableQuantityProps> = (props) => {
   const { t } = useTranslation();
 
   const name = token?.display_name || token?.symbol || "";
-  const dp = token?.precision ?? 2;
+  const dp = token?.precision ?? token?.decimals ?? 2;
 
   return (
     <Flex justify="between" px={2}>

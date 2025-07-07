@@ -15,6 +15,10 @@ export enum OrderType {
    * Only for POSITIONAL_TP_SL type algo order
    */
   CLOSE_POSITION = "CLOSE_POSITION",
+  /**
+   * Scaled order
+   */
+  SCALED = "SCALED",
 }
 
 export enum BBOOrderType {
@@ -91,9 +95,25 @@ export interface BaseOrder {
   order_tag: string;
   level: OrderLevel;
   post_only_adjust: boolean;
+  /** custom order id, it is used to identify the order from ws */
+  client_order_id: string;
 }
 
-export interface RegularOrder extends BaseOrder, OrderExt {
+/** Scaled order fields */
+export interface ScaledOrder {
+  /** upper price */
+  max_price?: string;
+  /** lower price */
+  min_price?: string;
+  /** total orders */
+  total_orders?: number;
+  /** quantity distribution type */
+  distribution_type?: DistributionType;
+  /** the ratio between upper and lower price. */
+  skew?: number;
+}
+
+export interface RegularOrder extends BaseOrder, OrderExt, ScaledOrder {
   // symbol:           string;
   // client_order_id:  string;
   // type:       OrderType;
@@ -151,9 +171,7 @@ export interface ChildOrder {
   trigger_price_type?: string;
 }
 
-// export interface OrderEntity {}
-
-export interface OrderEntity {
+export interface OrderEntity extends ScaledOrder {
   symbol: string;
   order_type: OrderType;
   algo_type?: AlgoOrderRootType;
@@ -175,6 +193,14 @@ export interface OrderEntity {
   trigger_price?: string;
   order_tag?: string;
   level?: OrderLevel;
+}
+
+export enum DistributionType {
+  // enum value need to use lowercase to match the track params
+  FLAT = "flat",
+  ASCENDING = "ascending",
+  DESCENDING = "descending",
+  CUSTOM = "custom",
 }
 
 export type Optional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;

@@ -3,6 +3,7 @@ import { useEventEmitter } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { WS_WalletStatusEnum } from "@orderly.network/types";
 import { Box, toast } from "@orderly.network/ui";
+import { useCrossSwap } from "../hooks/useCrossSwap";
 import { SwapMode, SwapProcessStatus } from "../types";
 import { ProcessStatus } from "./processStatus";
 import { SwapProps } from "./swap";
@@ -79,7 +80,7 @@ export const CrossSwap: FC<SwapProps> = (props) => {
 
     return doCrossSwap({
       address: "",
-      crossChainRouteAddress: (chainInfo as any)!.woofi_dex_cross_chain_router!,
+      crossChainRouteAddress: chainInfo?.cross_chain_router!,
       src: {
         fromToken: transaction.src_infos.from_token,
         fromAmount: BigInt(transaction.src_infos.from_amount),

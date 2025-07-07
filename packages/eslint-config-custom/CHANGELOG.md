@@ -1,5 +1,31 @@
 # eslint-config-custom
 
+## 1.4.1
+
+### Patch Changes
+
+- publish
+- 5a220e0: publish
+
+## 1.4.1-alpha.0
+
+### Patch Changes
+
+- publish
+
+## 1.4.0
+
+### Minor Changes
+
+- decb695: publish
+- publish
+
+## 1.4.0-alpha.0
+
+### Minor Changes
+
+- publish
+
 ## 1.3.2
 
 ### Patch Changes

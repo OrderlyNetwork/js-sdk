@@ -11,6 +11,7 @@ export {
   TriggerPriceType,
   BBOOrderType,
   OrderLevel,
+  DistributionType,
 } from "./order";
 export type {
   OrderEntity,

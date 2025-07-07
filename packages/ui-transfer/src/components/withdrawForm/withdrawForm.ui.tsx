@@ -31,10 +31,10 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
     disabled,
     quantity,
     onQuantityChange,
-    token,
+    sourceToken,
     amount,
     maxQuantity,
-    chains,
+    tokenChains,
     currentChain,
     fee,
     settingChain,
@@ -60,7 +60,7 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
           <QuantityInput
             value={quantity}
             onValueChange={onQuantityChange}
-            token={token}
+            token={sourceToken}
             tokens={sourceTokens}
             onTokenChange={onSourceTokenChange}
             status={props.inputStatus}
@@ -71,7 +71,7 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
           />
         </Box>
         <AvailableQuantity
-          token={token}
+          token={sourceToken}
           amount={amount}
           maxQuantity={maxQuantity.toString()}
           loading={props.balanceRevalidating}
@@ -105,7 +105,7 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
             value={WithdrawTo.Wallet}
           >
             <ChainSelect
-              chains={chains}
+              chains={tokenChains}
               value={currentChain!}
               onValueChange={props.onChainChange}
               wrongNetwork={props.wrongNetwork}
@@ -115,7 +115,7 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
               classNames={{
                 root: "oui-mt-[2px] oui-rounded-t-sm oui-rounded-b-xl",
               }}
-              token={token}
+              token={sourceToken}
               value={props.showQty}
               readOnly
             />

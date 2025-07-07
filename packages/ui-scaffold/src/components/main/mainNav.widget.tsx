@@ -1,4 +1,5 @@
 import { PropsWithChildren, ReactNode } from "react";
+import { LeftNavProps } from "../leftNav/leftNav.type";
 import { MainNavItem } from "./mainMenus/navItem";
 import { MainNav, MainNavProps } from "./mainNav.ui";
 import {
@@ -40,6 +41,9 @@ export type MainNavWidgetProps = PropsWithChildren<{
     chainMenu?: ReactNode;
     walletConnect?: ReactNode;
   }) => ReactNode;
+  /** only works on mobile */
+  leftNav?: LeftNavProps;
+  customLeftNav?: ReactNode;
 }> &
   Pick<MainNavProps, "classNames">;
 

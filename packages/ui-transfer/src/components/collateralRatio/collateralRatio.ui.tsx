@@ -28,8 +28,15 @@ const TooltipContent: React.FC = () => {
   // const { t } = useTranslation();
   return (
     <Box className="oui-w-72 oui-max-w-72">
-      Collateral ratio shows how much of an asset’s value can be used as margin.{" "}
-      <Text className="oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12 oui-text-primary">
+      <Text size="2xs" intensity={80}>
+        Collateral ratio shows how much of an asset’s value can be used as
+        margin.
+      </Text>{" "}
+      <Text
+        size="2xs"
+        intensity={80}
+        className="oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12 oui-text-primary"
+      >
         Learn More
       </Text>
     </Box>
@@ -44,14 +51,14 @@ export const CollateralRatioUI: React.FC<
   return (
     <Flex width="100%" itemAlign="center" justify="between">
       <Flex justify="start" itemAlign="center">
-        <Text size="xs" intensity={36}>
+        <Text size="2xs" intensity={36}>
           {t("portfolio.overview.column.collateralRatio")}
         </Text>
         <Tooltip className="oui-p-2" content={<TooltipContent />}>
           <TooltipIcon className="oui-ml-[2px] oui-cursor-pointer oui-text-base-contrast-36" />
         </Tooltip>
       </Flex>
-      <Text className="oui-select-none" intensity={80}>
+      <Text size="2xs" className="oui-select-none" intensity={80}>
         {collateralRatio}%
       </Text>
     </Flex>

@@ -1,6 +1,7 @@
 import React, { PropsWithChildren, ReactNode } from "react";
 import { BottomNavProps } from "../bottomNav/bottomNav.widget";
 import { FooterProps } from "../footer";
+import { LeftNavProps } from "../leftNav";
 import { MainNavWidgetProps } from "../main/mainNav.widget";
 import { SideBarProps } from "../sidebar";
 import { MobileScaffold } from "./scaffold.mobile.ui";
@@ -19,6 +20,10 @@ export type ScaffoldProps = {
    * custom left sidebar props, only works on desktop
    */
   leftSideProps?: SideBarProps;
+  /**
+   * custom left nav props, only works on mobile
+   */
+  leftNavProps?: LeftNavProps;
   /**
    * custom top bar component
    */

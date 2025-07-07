@@ -1,5 +1,31 @@
 # @orderly.network/net
 
+## 2.4.1
+
+### Patch Changes
+
+- publish
+- 5a220e0: publish
+
+## 2.4.1-alpha.0
+
+### Patch Changes
+
+- publish
+
+## 2.4.0
+
+### Minor Changes
+
+- decb695: publish
+- publish
+
+## 2.4.0-alpha.0
+
+### Minor Changes
+
+- publish
+
 ## 2.3.2
 
 ### Patch Changes

@@ -64,13 +64,12 @@ export const SingleSwap: FC<SwapProps> = (props) => {
     setView("processing");
 
     if (!transaction) return Promise.reject("No transaction data");
-    if (!chain || !chain.woofi_dex_depositor)
-      return Promise.reject("No chain data");
+    if (!chain || !chain.depositor) return Promise.reject("No chain data");
 
     setStatus(SwapProcessStatus.Depositing);
 
     return doSingleSwap(
-      chain.woofi_dex_depositor,
+      chain.depositor,
       {
         fromToken: transaction.infos.from_token,
         fromAmount: transaction.infos.from_amount,

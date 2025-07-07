@@ -62,7 +62,7 @@ export const useOrderColumn = (props: {
           }),
           price({
             width: 130,
-            title: t("orders.column.orderPrice"),
+            title: t("common.orderPrice"),
             disableEdit: true,
             enableSort: false,
           }),
@@ -138,7 +138,7 @@ export const useOrderColumn = (props: {
           }),
           price({
             width: 124,
-            title: t("orders.column.orderPrice"),
+            title: t("common.orderPrice"),
             disableEdit: true,
           }),
           avgPrice({ width: 124 }),

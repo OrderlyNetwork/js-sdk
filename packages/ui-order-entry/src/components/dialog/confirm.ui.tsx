@@ -1,3 +1,13 @@
+import { useMemo } from "react";
+import { useLocalStorage } from "@orderly.network/hooks";
+import { i18n, useTranslation } from "@orderly.network/i18n";
+import {
+  API,
+  BBOOrderType,
+  OrderSide,
+  OrderType,
+} from "@orderly.network/types";
+import { OrderlyOrder } from "@orderly.network/types";
 import {
   Badge,
   Box,
@@ -10,24 +20,18 @@ import {
   Text,
   textVariants,
 } from "@orderly.network/ui";
-import { BBOOrderType, OrderSide, OrderType } from "@orderly.network/types";
-import { OrderlyOrder } from "@orderly.network/types";
-import { useMemo } from "react";
-import { useLocalStorage } from "@orderly.network/hooks";
 import { getBBOType, isBBOOrder } from "../../utils";
-import { i18n, useTranslation } from "@orderly.network/i18n";
 
-type Props = {
+type OrderConfirmDialogProps = {
   order: OrderlyOrder;
-  quoteDP: number;
-  baseDP: number;
-
+  symbolInfo: API.SymbolExt;
   onConfirm: () => void;
   onCancel: () => void;
 };
 
-export const OrderConfirmDialog = (props: Props) => {
-  const { baseDP, quoteDP, order, onConfirm, onCancel } = props;
+export const OrderConfirmDialog = (props: OrderConfirmDialogProps) => {
+  const { symbolInfo, order, onConfirm, onCancel } = props;
+  const { quote_dp, base_dp } = symbolInfo;
   const { side, order_type, order_type_ext, level } = order;
   const { t } = useTranslation();
 
@@ -63,7 +67,7 @@ export const OrderConfirmDialog = (props: Props) => {
         rule={"price"}
         className={"oui-text-base-contrast"}
         unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
-        dp={quoteDP}
+        dp={quote_dp}
         padding={false}
       >
         {order.order_price}
@@ -102,7 +106,7 @@ export const OrderConfirmDialog = (props: Props) => {
           <Text>{t("common.qty")}</Text>
           <Text.numeral
             rule={"price"}
-            dp={baseDP}
+            dp={base_dp}
             padding={false}
             className="oui-text-base-contrast"
           >
@@ -117,7 +121,7 @@ export const OrderConfirmDialog = (props: Props) => {
               rule={"price"}
               className={"oui-text-base-contrast"}
               unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
-              dp={quoteDP}
+              dp={quote_dp}
               padding={false}
             >
               {order.trigger_price}
@@ -133,7 +137,7 @@ export const OrderConfirmDialog = (props: Props) => {
           <Text.numeral
             unit={"USDC"}
             rule={"price"}
-            dp={quoteDP}
+            dp={quote_dp}
             padding={false}
             className={"oui-text-base-contrast"}
             unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
@@ -159,7 +163,7 @@ export const OrderConfirmDialog = (props: Props) => {
                   unit={"USDC"}
                   rule={"price"}
                   coloring
-                  dp={quoteDP}
+                  dp={quote_dp}
                   padding={false}
                   unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
                 >
@@ -176,7 +180,7 @@ export const OrderConfirmDialog = (props: Props) => {
                   coloring
                   className="oui-text-trade-loss"
                   unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
-                  dp={quoteDP}
+                  dp={quote_dp}
                   padding={false}
                 >
                   {order.sl_trigger_price}
@@ -253,18 +257,21 @@ const OrderTypeTag = (props: { type: OrderType }) => {
 };
 
 const Dialog = (
-  props: Omit<Props, "onCancel" | "onConfirm"> & {
+  props: Omit<OrderConfirmDialogProps, "onCancel" | "onConfirm"> & {
     close: () => void;
     resolve: (value?: any) => void;
     reject: (reason?: any) => void;
-  }
+  },
 ) => {
   const { close, resolve, reject, ...rest } = props;
 
   return (
     <OrderConfirmDialog
       {...rest}
-      onCancel={close}
+      onCancel={() => {
+        reject();
+        close();
+      }}
       onConfirm={() => {
         resolve();
         close();

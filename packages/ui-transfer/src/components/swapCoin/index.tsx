@@ -1,43 +1,36 @@
 import { FC } from "react";
-import { Flex, Text } from "@orderly.network/ui";
+import { cn, Flex, Text } from "@orderly.network/ui";
 
 interface SwapCoinProps {
   className?: string;
   sourceSymbol?: string;
   targetSymbol?: string;
   indexPrice: number | string;
+  precision?: number;
 }
 
 export const SwapCoin: FC<SwapCoinProps> = (props) => {
-  const { sourceSymbol, targetSymbol, indexPrice } = props;
-
-  // const { t } = useTranslation();
+  const { sourceSymbol, targetSymbol, indexPrice, precision = 3 } = props;
 
   return (
-    <Flex width={"100%"} itemAlign="center" justify="between">
-      <Text size="xs" intensity={36}>
-        Convert rate
+    <Flex
+      itemAlign="center"
+      gap={1}
+      className={cn(props.className, "oui-text-2xs")}
+    >
+      <Text size="2xs" intensity={80}>
+        1
       </Text>
-      <Flex
-        itemAlign="center"
-        justify="center"
-        gap={1}
-        className={props.className}
-      >
-        <Text size="xs" intensity={80}>
-          1
-        </Text>
-        <Text size="xs" intensity={36}>
-          {sourceSymbol}
-        </Text>
-        =
-        <Text.numeral size="xs" intensity={80} dp={4}>
-          {indexPrice}
-        </Text.numeral>
-        <Text size="xs" intensity={36}>
-          {targetSymbol}
-        </Text>
-      </Flex>
+      <Text size="2xs" intensity={36}>
+        {sourceSymbol}
+      </Text>
+      =
+      <Text.numeral size="2xs" intensity={80} dp={precision} padding={false}>
+        {indexPrice}
+      </Text.numeral>
+      <Text size="2xs" intensity={36}>
+        {targetSymbol}
+      </Text>
     </Flex>
   );
 };

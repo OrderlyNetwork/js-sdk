@@ -1,5 +1,47 @@
 # @orderly.network/cli
 
+## 0.7.1
+
+### Patch Changes
+
+- publish
+- 5a220e0: publish
+- Updated dependencies
+- Updated dependencies [5a220e0]
+  - @orderly.network/core@2.4.1
+
+## 0.7.1-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.4.1-alpha.0
+
+## 0.7.0
+
+### Minor Changes
+
+- decb695: publish
+- publish
+
+### Patch Changes
+
+- Updated dependencies [decb695]
+- Updated dependencies
+  - @orderly.network/core@2.4.0
+
+## 0.7.0-alpha.0
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/core@2.4.0-alpha.0
+
 ## 0.6.2
 
 ### Patch Changes

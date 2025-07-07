@@ -1,5 +1,31 @@
 # create-orderly-app
 
+## 1.9.1
+
+### Patch Changes
+
+- publish
+- 5a220e0: publish
+
+## 1.9.1-alpha.0
+
+### Patch Changes
+
+- publish
+
+## 1.9.0
+
+### Minor Changes
+
+- decb695: publish
+- publish
+
+## 1.9.0-alpha.0
+
+### Minor Changes
+
+- publish
+
 ## 1.8.2
 
 ### Patch Changes

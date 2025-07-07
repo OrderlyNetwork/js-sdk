@@ -55,10 +55,12 @@ export function useSwapFee(options: {
     let feeQtys: FeeQty[] = [];
 
     const nativeDp = feeDecimalsOffset(
-      (nativeToken as any)?.woofi_dex_precision,
+      // swap precision
+      nativeToken?.precision,
     );
 
-    const srcDp = feeDecimalsOffset((src as any)?.woofi_dex_precision);
+    // swap precision
+    const srcDp = feeDecimalsOffset(src?.precision);
 
     const dstGasFee = needCrossSwap
       ? destinationGasFee

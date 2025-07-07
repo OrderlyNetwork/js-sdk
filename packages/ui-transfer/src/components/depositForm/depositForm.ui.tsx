@@ -1,5 +1,6 @@
 import { FC } from "react";
-import { Box, Flex, textVariants } from "@orderly.network/ui";
+import { useTranslation } from "@orderly.network/i18n";
+import { Box, Flex, textVariants, Text } from "@orderly.network/ui";
 import { LtvWidget } from "../LTV";
 import { ActionButton } from "../actionButton";
 import { AssetSwapIndicatorWidget } from "../assetSwapIndicator";
@@ -13,6 +14,9 @@ import { Fee } from "../fee";
 import { MinimumReceivedWidget } from "../minimumReceived";
 import { QuantityInput } from "../quantityInput";
 import { SlippageUI } from "../slippage/slippage.ui";
+import { Notice } from "../swap/components/notice";
+import { Slippage } from "../swap/components/slippage";
+import { SwapFee } from "../swap/components/swapFee";
 import { SwapCoin } from "../swapCoin";
 import { Web3Wallet } from "../web3Wallet";
 import type { UseDepositFormScriptReturn } from "./depositForm.script";
@@ -53,7 +57,98 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
     slippage,
     setSlippage,
     minimumReceived,
+    needSwap,
+    needCrossSwap,
+    swapPrice,
+    markPrice,
+    swapQuantity,
+    swapFee,
+    warningMessage,
+    swapRevalidating,
+    swapSlippage,
+    onSwapSlippageChange,
   } = props;
+
+  const { t } = useTranslation();
+
+  const renderContent = () => {
+    if (sourceToken?.symbol === "USDC") {
+      return (
+        <Flex mt={2} direction="column" itemAlign="start">
+          <SwapCoin
+            indexPrice={1}
+            precision={0}
+            sourceSymbol={sourceToken?.display_name || sourceToken?.symbol}
+            targetSymbol={targetToken?.display_name || targetToken?.symbol}
+          />
+          <Fee {...fee} />
+        </Flex>
+      );
+    }
+    if (sourceToken?.is_collateral) {
+      if (targetToken?.symbol === "USDC") {
+        return (
+          <Flex direction="column" itemAlign="start" mt={2} gapY={1}>
+            <Flex width={"100%"} itemAlign="center" justify="between">
+              <Text size="2xs" intensity={36}>
+                {t("transfer.deposit.convertRate")}
+              </Text>
+              <SwapCoin
+                indexPrice={indexPrice}
+                sourceSymbol={sourceToken?.display_name || sourceToken?.symbol}
+                targetSymbol={targetToken?.display_name || targetToken?.symbol}
+              />
+            </Flex>
+            <SlippageUI slippage={slippage} setSlippage={setSlippage} />
+            <MinimumReceivedWidget
+              minimumReceived={minimumReceived}
+              symbol={targetToken?.symbol ?? ""}
+            />
+            <Fee {...fee} />
+            <AssetSwapIndicatorWidget
+              sourceToken={sourceToken?.symbol ?? ""}
+              targetToken={targetToken?.symbol ?? ""}
+            />
+          </Flex>
+        );
+      }
+      return (
+        <Flex direction="column" itemAlign="start" mt={2} gap={1}>
+          <CollateralRatioWidget collateralRatio={collateralRatio} />
+          <CollateralContributionWidget value={targetQuantity} />
+          <LtvWidget
+            showDiff={
+              typeof sourceQuantity !== "undefined" &&
+              Number(sourceQuantity) > 0
+            }
+            currentLtv={currentLTV}
+            nextLTV={nextLTV}
+          />
+          <Fee {...fee} />
+        </Flex>
+      );
+    }
+
+    return (
+      <Flex direction="column" itemAlign="start" mt={1} gapY={1}>
+        <Flex justify="between" width="100%">
+          <SwapCoin
+            sourceSymbol={sourceToken?.display_name || sourceToken?.symbol}
+            targetSymbol={targetToken?.display_name || targetToken?.symbol}
+            indexPrice={swapPrice}
+          />
+          {(needSwap || needCrossSwap) && (
+            // swap slippage max value is not the same as deposit slippage max value
+            <Slippage
+              value={swapSlippage}
+              onValueChange={onSwapSlippageChange}
+            />
+          )}
+        </Flex>
+        <SwapFee {...swapFee} />
+      </Flex>
+    );
+  };
 
   return (
     <Box id="oui-deposit-form" className={textVariants({ weight: "semibold" })}>
@@ -102,48 +197,23 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
           token={targetToken}
           tokens={targetTokens}
           onTokenChange={onTargetTokenChange}
-          value={targetQuantity}
+          value={needSwap ? swapQuantity : targetQuantity}
+          loading={swapRevalidating}
           classNames={{
             root: "oui-mt-3 oui-border-transparent focus-within:oui-outline-transparent",
           }}
         />
-        {sourceToken?.symbol === targetToken?.symbol ? (
-          <Flex direction="column" itemAlign="start" mt={1} gapY={1}>
-            <CollateralRatioWidget collateralRatio={collateralRatio} />
-            <CollateralContributionWidget
-              collateralContribution={targetQuantity}
-              token={targetToken?.symbol ?? ""}
-            />
-            <LtvWidget
-              showDiff={
-                typeof sourceQuantity !== "undefined" &&
-                Number(sourceQuantity) > 0
-              }
-              currentLtv={currentLTV}
-              nextLTV={nextLTV}
-            />
-            <Fee {...fee} />
-          </Flex>
-        ) : (
-          <Flex direction="column" itemAlign="start" mt={1} gapY={1}>
-            <SwapCoin
-              indexPrice={indexPrice}
-              sourceSymbol={sourceToken?.display_name || sourceToken?.symbol}
-              targetSymbol={targetToken?.display_name || targetToken?.symbol}
-            />
-            <SlippageUI slippage={slippage} setSlippage={setSlippage} />
-            <MinimumReceivedWidget
-              minimumReceived={minimumReceived}
-              symbol={targetToken?.symbol ?? ""}
-            />
-            <Fee {...fee} />
-            <AssetSwapIndicatorWidget
-              sourceToken={sourceToken?.symbol ?? ""}
-              targetToken={targetToken?.symbol ?? ""}
-            />
-          </Flex>
-        )}
+        {renderContent()}
       </Box>
+
+      <Notice
+        message={warningMessage}
+        needSwap={needSwap}
+        needCrossSwap={needCrossSwap}
+        wrongNetwork={wrongNetwork}
+        networkId={networkId}
+      />
+
       <Flex justify="center">
         <ActionButton
           actionType={actionType}

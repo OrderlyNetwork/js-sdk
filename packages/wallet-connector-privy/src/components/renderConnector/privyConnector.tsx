@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { cn } from "@orderly.network/ui";
 import { useScreen } from "@orderly.network/ui";
@@ -11,7 +11,62 @@ export function PrivyConnectArea({
 }) {
   const { t } = useTranslation();
   const { isMobile, isDesktop } = useScreen();
-  const { connectorWalletType } = useWalletConnectorPrivy();
+  const { connectorWalletType, privyConfig } = useWalletConnectorPrivy();
+  const loginMethods = privyConfig.loginMethods;
+  const renderLoginMethodsDom = () => {
+    const arr = [];
+    if (loginMethods?.includes("email")) {
+      arr.push(
+        <div
+          className="oui-flex oui-cursor-pointer oui-items-center oui-justify-center oui-gap-1 oui-rounded-[6px] oui-bg-[#333948] oui-px-2 oui-py-[11px]"
+          onClick={() => connect({ walletType: "privy", extraType: "email" })}
+        >
+          <img
+            src="https://oss.orderly.network/static/sdk/privy/email.svg"
+            className="oui-size-[18px]"
+          />
+          <div className="oui-text-2xs oui-text-base-contrast">
+            {t("connector.privy.email")}
+          </div>
+        </div>,
+      );
+    }
+    if (loginMethods?.includes("google")) {
+      arr.push(
+        <div
+          className="oui-flex oui-cursor-pointer oui-items-center oui-justify-center oui-gap-1 oui-rounded-[6px] oui-bg-[#335FFC] oui-px-2 oui-py-[11px]"
+          onClick={() => connect({ walletType: "privy", extraType: "google" })}
+        >
+          <img
+            src="https://oss.orderly.network/static/sdk/privy/google.svg"
+            className="oui-size-[18px]"
+          />
+          <div className="oui-text-2xs oui-text-base-contrast">
+            {t("connector.privy.google")}
+          </div>
+        </div>,
+      );
+    }
+    if (loginMethods?.includes("twitter")) {
+      arr.push(
+        <div
+          className="oui-flex oui-cursor-pointer oui-items-center oui-justify-center oui-gap-1 oui-rounded-[6px] oui-bg-[#07080A] oui-px-2 oui-py-[11px]"
+          onClick={() => connect({ walletType: "privy", extraType: "twitter" })}
+        >
+          <img
+            src="https://oss.orderly.network/static/sdk/privy/twitter.svg"
+            className="oui-size-[18px]"
+          />
+          <div className="oui-text-2xs oui-text-base-contrast">
+            {t("connector.privy.twitter")}
+          </div>
+        </div>,
+      );
+    }
+    return arr.map((item, index) => {
+      return <div key={index}>{item}</div>;
+    });
+  };
   return (
     <div className="">
       <div
@@ -37,44 +92,7 @@ export function PrivyConnectArea({
           "md:oui-flex md:oui-flex-col md:oui-gap-2",
         )}
       >
-        <div
-          className="oui-flex oui-cursor-pointer oui-items-center oui-justify-center oui-gap-1 oui-rounded-[6px] oui-bg-[#333948] oui-px-2 oui-py-[11px]"
-          onClick={() => connect({ walletType: "privy", extraType: "email" })}
-        >
-          <img
-            src="https://oss.orderly.network/static/sdk/privy/email.svg"
-            className="oui-size-[18px]"
-          />
-          <div className="oui-text-2xs oui-text-base-contrast">
-            {t("connector.privy.email")}
-          </div>
-        </div>
-
-        <div
-          className="oui-flex oui-cursor-pointer oui-items-center oui-justify-center oui-gap-1 oui-rounded-[6px] oui-bg-[#335FFC] oui-px-2 oui-py-[11px]"
-          onClick={() => connect({ walletType: "privy", extraType: "google" })}
-        >
-          <img
-            src="https://oss.orderly.network/static/sdk/privy/google.svg"
-            className="oui-size-[18px]"
-          />
-          <div className="oui-text-2xs oui-text-base-contrast">
-            {t("connector.privy.google")}
-          </div>
-        </div>
-
-        <div
-          className="oui-flex oui-cursor-pointer oui-items-center oui-justify-center oui-gap-1 oui-rounded-[6px] oui-bg-[#07080A] oui-px-2 oui-py-[11px]"
-          onClick={() => connect({ walletType: "privy", extraType: "twitter" })}
-        >
-          <img
-            src="https://oss.orderly.network/static/sdk/privy/twitter.svg"
-            className="oui-size-[18px]"
-          />
-          <div className="oui-text-2xs oui-text-base-contrast">
-            {t("connector.privy.twitter")}
-          </div>
-        </div>
+        {renderLoginMethodsDom()}
       </div>
       {isDesktop && (
         <div className="oui-mt-4 oui-flex oui-h-3 oui-justify-center">

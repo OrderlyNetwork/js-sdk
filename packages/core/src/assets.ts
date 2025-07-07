@@ -1,6 +1,5 @@
 import {
   ABSTRACT_CHAIN_ID_MAP,
-  ABSTRACT_TESTNET_CHAINID,
   API,
   ApiError,
   BSC_TESTNET_CHAINID,
@@ -295,20 +294,12 @@ export class Assets {
     const { address, vaultAddress, decimals } =
       typeof inputs === "object"
         ? inputs
-        : {
-            address: inputs,
-            vaultAddress: _vaultAddress,
-            decimals: undefined,
-          };
+        : { address: inputs, vaultAddress: _vaultAddress };
 
     if (!this.account.walletAdapter) {
       return "0";
     }
-    console.log("xxx get allowance before", {
-      address,
-      vaultAddress,
-      decimals,
-    });
+
     let userAddress = this.account.stateValue.address;
     const contractAddress = this.contractManger.getContractInfoByEnv();
     let tempVaultAddress = vaultAddress ?? contractAddress.vaultAddress;
@@ -336,11 +327,11 @@ export class Assets {
       userAddress = agwGobalAddress;
     }
 
-    console.log("xxx get allowance", {
-      tempUSDCAddress,
-      tempVaultAddress,
-      userAddress,
-    });
+    // console.log("get allowance", {
+    //   tempUSDCAddress,
+    //   tempVaultAddress,
+    //   userAddress,
+    // });
 
     const result = await this.account.walletAdapter?.call(
       tempUSDCAddress ?? "",
@@ -414,11 +405,11 @@ export class Assets {
       tempVaultAddress = contractAddress.bscVaultAddress ?? "";
       tempUSDCAddress = contractAddress.bscUSDCAddress ?? "";
     }
-    console.log("xxx approve", {
-      tempVaultAddress,
-      tempUSDCAddress,
-      parsedAmount,
-    });
+    // console.log("xxx approve", {
+    //   tempVaultAddress,
+    //   tempUSDCAddress,
+    //   parsedAmount,
+    // });
 
     const result = await this.account.walletAdapter?.call(
       tempUSDCAddress,
@@ -471,18 +462,19 @@ export class Assets {
           amount: string;
           chain: API.NetworkInfos;
           decimals: number;
+          token?: string;
         },
     /** @deprecated use inputs.chain instead, will be removed in the future */
     _chain?: API.NetworkInfos,
   ) {
-    const { amount, chain, decimals } =
-      typeof inputs === "object"
-        ? inputs
-        : {
-            amount: inputs,
-            chain: _chain!,
-            decimals: undefined,
-          };
+    const {
+      amount,
+      chain,
+      decimals,
+      token = "USDC",
+    } = typeof inputs === "object"
+      ? inputs
+      : { amount: inputs, chain: _chain! };
 
     if (!this.account.walletAdapter) {
       throw new Error("walletAdapter is undefined");
@@ -505,7 +497,7 @@ export class Assets {
     } = {
       accountId: this.account.accountIdHashStr,
       brokerHash: parseBrokerHash(brokerId!),
-      tokenHash: parseTokenHash("USDC"),
+      tokenHash: parseTokenHash(token),
       tokenAmount: this.account.walletAdapter?.parseUnits(amount, decimals!),
     };
     const contractAddress = this.contractManger.getContractInfoByEnv();
@@ -530,11 +522,12 @@ export class Assets {
       vaultAddress = contractAddress.abstractVaultAddress ?? "";
     }
 
-    console.log("xxx get deposit fee", {
-      userAddress,
-      vaultAddress,
-      depositData,
-    });
+    // console.log("get deposit fee", {
+    //   userAddress,
+    //   vaultAddress,
+    //   depositData,
+    // });
+
     return await this.account.walletAdapter.callOnChain(
       chain,
       vaultAddress,
@@ -554,6 +547,7 @@ export class Assets {
           amount: string;
           fee: bigint;
           decimals: number;
+          token?: string;
         },
     /** @deprecated use inputs.fee instead, will be removed in the future */
     _fee?: bigint,
@@ -562,13 +556,8 @@ export class Assets {
       amount,
       fee = 0n,
       decimals,
-    } = typeof inputs === "object"
-      ? inputs
-      : {
-          amount: inputs,
-          fee: _fee,
-          decimals: undefined,
-        };
+      token = "USDC",
+    } = typeof inputs === "object" ? inputs : { amount: inputs, fee: _fee };
 
     if (!this.account.walletAdapter) {
       throw new Error("walletAdapter is undefined");
@@ -593,7 +582,7 @@ export class Assets {
     } = {
       accountId: this.account.accountIdHashStr,
       brokerHash: parseBrokerHash(brokerId!),
-      tokenHash: parseTokenHash("USDC"),
+      tokenHash: parseTokenHash(token!),
       tokenAmount: this.account.walletAdapter?.parseUnits(amount, decimals),
     };
 
@@ -640,7 +629,9 @@ export class Assets {
       fromAddress,
       contractMethod,
       contractData,
+      fee,
     });
+
     const result = await this.account.walletAdapter?.sendTransaction(
       vaultAddress,
       contractMethod,
