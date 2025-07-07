@@ -362,10 +362,18 @@ export const useDeposit = (options: DepositOptions) => {
   // only support orderly deposit
   const deposit = useCallback(async () => {
     await enquireAllowance();
+
+    const amount = account.walletAdapter?.parseUnits(
+      quantity,
+      options.decimals!,
+    );
+    // if native token, fee is amount + depositFee, TODO: move it to assets
+    const fee = isNativeToken ? BigInt(amount!) + depositFee : depositFee;
+
     return account.assetsManager
       .deposit({
         amount: quantity,
-        fee: depositFee,
+        fee,
         decimals: options.decimals!,
         token: options.dstToken,
       })
@@ -398,6 +406,7 @@ export const useDeposit = (options: DepositOptions) => {
     options.dstToken,
     enquireAllowance,
     updateAllowanceWhenTxSuccess,
+    isNativeToken,
   ]);
 
   // get balance every 3s or 10s depends on chain namespace
