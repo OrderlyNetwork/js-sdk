@@ -1,6 +1,7 @@
 import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { cn, Flex, Tooltip, Text, Box } from "@orderly.network/ui";
+import { Decimal } from "@orderly.network/utils";
 import type { LtvScriptReturns } from "./ltv.script";
 
 const TooltipIcon = React.forwardRef<
@@ -53,7 +54,7 @@ const TooltipContent: React.FC<{
         intensity={80}
         className="oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12 oui-text-primary"
       >
-        Learn More
+        {t("tradingLeaderboard.learnMore")}
       </Text>
     </Box>
   );
@@ -68,13 +69,13 @@ export const LtvUI: React.FC<
     }
   >
 > = (props) => {
-  // const { t } = useTranslation();
+  const { t } = useTranslation();
   const { currentLtv, nextLTV, showDiff, ltv_threshold, isLoading } = props;
   return (
     <Flex width="100%" itemAlign="center" justify="between">
       <Flex justify="start" itemAlign="center">
         <Text size="2xs" intensity={36}>
-          LTV
+          {t("transfer.LTV")}
         </Text>
         <Tooltip
           className="oui-p-2"
@@ -90,27 +91,36 @@ export const LtvUI: React.FC<
       </Flex>
       {showDiff ? (
         <Flex itemAlign="center" justify="between" gap={1}>
-          <Text
+          <Text.numeral
+            dp={2}
             size="2xs"
-            className={cn("oui-select-none", calculateTextColor(currentLtv))}
+            rm={Decimal.ROUND_DOWN}
+            className={cn("oui-font-semibold", calculateTextColor(currentLtv))}
+            rule="percentages"
           >
-            {currentLtv}%
-          </Text>
+            {currentLtv}
+          </Text.numeral>
           →
-          <Text
+          <Text.numeral
+            dp={2}
             size="2xs"
-            className={cn("oui-select-none", calculateTextColor(nextLTV))}
+            rm={Decimal.ROUND_DOWN}
+            className={cn("oui-font-semibold", calculateTextColor(nextLTV))}
+            rule="percentages"
           >
-            {nextLTV}%
-          </Text>
+            {nextLTV}
+          </Text.numeral>
         </Flex>
       ) : (
-        <Text
+        <Text.numeral
+          dp={2}
           size="2xs"
-          className={cn("oui-select-none", calculateTextColor(currentLtv))}
+          rm={Decimal.ROUND_DOWN}
+          className={cn("oui-font-semibold", calculateTextColor(currentLtv))}
+          rule="percentages"
         >
-          {currentLtv}%
-        </Text>
+          {currentLtv}
+        </Text.numeral>
       )}
     </Flex>
   );

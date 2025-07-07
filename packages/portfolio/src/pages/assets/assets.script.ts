@@ -1,6 +1,5 @@
 import { useCallback, useMemo } from "react";
 import {
-  SubAccount,
   useAccount,
   useCollateral,
   useLocalStorage,
@@ -14,30 +13,14 @@ import {
   DepositAndWithdrawWithDialogId,
   TransferDialogId,
 } from "@orderly.network/ui-transfer";
-import { Decimal } from "@orderly.network/utils";
 import { useAccountsData } from "../../hooks/useAccountsData";
+import {
+  calculateAssetValue,
+  getIndexPrice,
+  useAssetTotalValue,
+} from "../../hooks/useAssetTotalValue";
 import { useAssetsMultiFilter } from "../../hooks/useAssetsAccountFilter";
 import { useAssetsColumns } from "./column";
-
-const isNumber = (val: unknown): val is number => {
-  return typeof val === "number" && !Number.isNaN(val);
-};
-
-const calculateTotalHolding = (data: SubAccount[] | SubAccount["holding"]) => {
-  let total = new Decimal(0);
-  for (const item of data) {
-    if (Array.isArray(item.holding)) {
-      for (const hol of item.holding) {
-        if (isNumber(hol.holding)) {
-          total = total.plus(hol.holding);
-        }
-      }
-    } else if (isNumber(item.holding)) {
-      total = total.plus(item.holding);
-    }
-  }
-  return total;
-};
 
 const ORDERLY_ASSETS_VISIBLE_KEY = "orderly_assets_visible";
 
@@ -47,7 +30,7 @@ export const useAssetsScript = () => {
     true,
   );
 
-  const { state, isMainAccount } = useAccount();
+  const { state } = useAccount();
   const { holding = [] } = useCollateral();
   const { data: indexPrices } = useIndexPricesStream();
 
@@ -55,6 +38,9 @@ export const useAssetsScript = () => {
   const [chains] = useChains();
 
   const subAccounts = state.subAccounts ?? [];
+
+  // Use the extracted total value hook
+  const totalValue = useAssetTotalValue();
 
   const toggleVisible = () => {
     // @ts-ignore
@@ -98,18 +84,19 @@ export const useAssetsScript = () => {
         accountData.children?.map((holding: any) => {
           const tokenInfo = tokenInfoMap.get(holding.token);
 
-          // Calculate index price
-          const indexPrice =
-            holding.token === "USDC"
-              ? 1
-              : (indexPrices?.[`PERP_${holding.token}_USDC`] ?? 0);
+          // Use extracted function for index price calculation
+          const indexPrice = getIndexPrice(holding.token, indexPrices);
 
           // console.log(holding, indexPrice, tokenInfo, tokenInfoMap);
 
-          // Calculate asset value (holding * index price)
-          const assetValue = new Decimal(holding.holding)
-            .mul(indexPrice)
-            .toNumber();
+          // Use extracted function for asset value calculation
+          const assetValue = calculateAssetValue(
+            holding.holding,
+            holding.token,
+            indexPrices,
+          ).toNumber();
+
+          // console.log(tokenInfo, holding, indexPrice, tokenInfoMap);
 
           // Calculate collateral ratio for this token
           const collateralRatio = tokenInfo
@@ -144,34 +131,6 @@ export const useAssetsScript = () => {
     });
   }, [filtered, indexPrices, tokenInfoMap]);
 
-  const mainTotalValue = useMemo<Decimal>(
-    () => calculateTotalHolding(holding),
-    [holding],
-  );
-
-  const subTotalValue = useMemo<Decimal>(
-    () => calculateTotalHolding(subAccounts),
-    [subAccounts],
-  );
-
-  const memoizedTotalValue = useMemo<number>(() => {
-    if (isMainAccount) {
-      return mainTotalValue.plus(subTotalValue).toNumber();
-    } else {
-      const find = allAccounts.find((item) => item.id === state.accountId);
-      if (Array.isArray(find?.children)) {
-        return calculateTotalHolding(find.children).toNumber();
-      }
-      return 0;
-    }
-  }, [
-    isMainAccount,
-    mainTotalValue,
-    subTotalValue,
-    allAccounts,
-    state.accountId,
-  ]);
-
   const handleTransfer = useCallback((accountId: string, token: string) => {
     if (!accountId) {
       return;
@@ -182,8 +141,11 @@ export const useAssetsScript = () => {
     });
   }, []);
 
-  const handleConvert = () => {
-    modal.show("ConvertDialogId");
+  const handleConvert = (accountId: string, token: string) => {
+    modal.show("ConvertDialogId", {
+      accountId,
+      token,
+    });
   };
 
   const assetsColumns = useAssetsColumns({
@@ -216,7 +178,7 @@ export const useAssetsScript = () => {
     selectedAccount,
     selectedAsset,
     onFilter,
-    totalValue: memoizedTotalValue,
+    totalValue: totalValue, // Use the hook's return value
     hasSubAccount: subAccounts.length > 0,
     onDeposit,
     onWithdraw,

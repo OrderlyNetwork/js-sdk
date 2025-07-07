@@ -114,7 +114,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
       }
       return (
         <Flex direction="column" itemAlign="start" mt={2} gap={1}>
-          <CollateralRatioWidget collateralRatio={collateralRatio} />
+          <CollateralRatioWidget value={collateralRatio} />
           <CollateralContributionWidget value={targetQuantity} />
           <LtvWidget
             showDiff={

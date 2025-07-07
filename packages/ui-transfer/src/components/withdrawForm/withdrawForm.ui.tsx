@@ -159,8 +159,6 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
                 </Text>
               </>
             )}
-
-            <Text>{` USDC`}</Text>
           </Text>
         </Flex>
       </Box>

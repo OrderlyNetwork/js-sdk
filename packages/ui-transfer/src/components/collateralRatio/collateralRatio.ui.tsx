@@ -1,6 +1,7 @@
 import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Box, Flex, Text, Tooltip } from "@orderly.network/ui";
+import { Decimal } from "@orderly.network/utils";
 
 // import type { CollateralRatioReturns } from "./collateralRatio.script";
 
@@ -25,29 +26,26 @@ const TooltipIcon = React.forwardRef<
 });
 
 const TooltipContent: React.FC = () => {
-  // const { t } = useTranslation();
+  const { t } = useTranslation();
   return (
     <Box className="oui-w-72 oui-max-w-72">
       <Text size="2xs" intensity={80}>
-        Collateral ratio shows how much of an asset’s value can be used as
-        margin.
+        {t("portfolio.overview.column.collateralRatio.explain")}
       </Text>{" "}
       <Text
         size="2xs"
         intensity={80}
         className="oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12 oui-text-primary"
       >
-        Learn More
+        {t("tradingLeaderboard.learnMore")}
       </Text>
     </Box>
   );
 };
 
-export const CollateralRatioUI: React.FC<
-  Readonly<{ collateralRatio: number }>
-> = (props) => {
+export const CollateralRatioUI: React.FC<{ value: number }> = (props) => {
   const { t } = useTranslation();
-  const { collateralRatio } = props;
+  const { value } = props;
   return (
     <Flex width="100%" itemAlign="center" justify="between">
       <Flex justify="start" itemAlign="center">
@@ -58,9 +56,15 @@ export const CollateralRatioUI: React.FC<
           <TooltipIcon className="oui-ml-[2px] oui-cursor-pointer oui-text-base-contrast-36" />
         </Tooltip>
       </Flex>
-      <Text size="2xs" className="oui-select-none" intensity={80}>
-        {collateralRatio}%
-      </Text>
+      <Text.numeral
+        dp={2}
+        rm={Decimal.ROUND_DOWN}
+        coloring
+        className="oui-font-semibold"
+        rule="percentages"
+      >
+        {value}
+      </Text.numeral>
     </Flex>
   );
 };

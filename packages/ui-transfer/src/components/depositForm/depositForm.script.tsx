@@ -359,12 +359,10 @@ const useCollateralValue = (params: {
   });
 
   return {
-    // slippage,
-    // setSlippage,
     collateralRatio: getCollateralRatio(qty),
     targetQuantity,
-    currentLTV: getLTV(getCollateralRatio(qty)),
-    nextLTV: getLTV(getCollateralRatio(0)),
+    currentLTV: getLTV(getCollateralRatio(0)),
+    nextLTV: getLTV(getCollateralRatio(qty)),
     indexPrice,
     minimumReceived,
   };

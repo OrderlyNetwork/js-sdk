@@ -83,7 +83,7 @@ export const LTVRiskTooltipUI: React.FC<LTVTooltipScriptReturn> = (props) => {
         color={"secondary"}
         onClick={onConvert}
       >
-        {t("transfer.deposit.convertAssets")}
+        {t("transfer.convert.convertAssets")}
       </Button>
     </Flex>
   );

@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "@orderly.network/i18n";
 // import { useTranslation } from "@orderly.network/i18n";
 import { Flex, Text, TokenIcon } from "@orderly.network/ui";
 
@@ -6,6 +7,7 @@ export const AssetSwapIndicatorUI: React.FC<
   Readonly<Record<"sourceToken" | "targetToken", string>>
 > = (props) => {
   const { sourceToken, targetToken } = props;
+  const { t } = useTranslation();
   if (sourceToken === targetToken) {
     return null;
   }
@@ -40,7 +42,7 @@ export const AssetSwapIndicatorUI: React.FC<
         className="oui-text-center oui-text-warning"
         intensity={36}
       >
-        Please note that convert fees will be charged.
+        {t("transfer.convert.note")}
       </Text>
     </Flex>
   );

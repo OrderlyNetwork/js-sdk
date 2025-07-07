@@ -5,7 +5,7 @@ import type { Column } from "@orderly.network/ui";
 
 export interface ColumnsOptions {
   onTransfer?: (accountId: string, token: string) => void;
-  onConvert?: () => void;
+  onConvert?: (accountId: string, token: string) => void;
 }
 
 // Define the enhanced holding interface with calculated fields
@@ -115,7 +115,7 @@ export const useAssetsColumns = (options: ColumnsOptions) => {
                 size={"sm"}
                 variant={"outlined"}
                 color={"secondary"}
-                onClick={() => onConvert?.()}
+                onClick={() => onConvert?.(id, record.token)}
                 className={cn(
                   record.token === "USDC" ? "oui-invisible" : "oui-visible",
                 )}

@@ -4,6 +4,7 @@ import {
   useAccount,
   useConfig,
   useSubAccountDataObserver,
+  useSubAccountMaxWithdrawal,
   useTransfer,
 } from "@orderly.network/hooks";
 import { useTokensInfo } from "@orderly.network/hooks";
@@ -69,6 +70,13 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
 
   // when select sub account, open the private websocket
   const { portfolio, positions } = useSubAccountDataObserver(observerAccountId);
+  const subAccountMaxAmount = useSubAccountMaxWithdrawal({
+    token: token.symbol,
+    unsettledPnL: portfolio?.unsettledPnL,
+    freeCollateral:
+      portfolio?.freeCollateral?.todp(token?.precision).toNumber() || 0,
+    holdings: portfolio?.holding,
+  });
 
   const formHasPositions = useMemo(
     () => !!positions?.rows?.length,
@@ -79,25 +87,24 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
     return observerAccountId ? formHasPositions : currentHasPositions;
   }, [observerAccountId, formHasPositions, currentHasPositions]);
 
-  const { unsettledPnL, holding, maxQuantity } = useMemo(() => {
+  const { unsettledPnL, maxQuantity } = useMemo(() => {
     if (observerAccountId) {
       return {
         unsettledPnL: portfolio?.unsettledPnL,
-        holding: portfolio?.holding,
-        maxQuantity: portfolio?.freeCollateral.todp(6).toNumber() || 0,
+        maxQuantity: subAccountMaxAmount,
       };
     }
     return {
-      holding: currentHolding,
       unsettledPnL: currentUnsettledPnL,
       maxQuantity: currentMaxAmount,
     };
   }, [
     observerAccountId,
-    portfolio,
-    currentHolding,
     currentUnsettledPnL,
     currentMaxAmount,
+    portfolio?.unsettledPnL,
+    portfolio?.freeCollateral,
+    subAccountMaxAmount,
   ]);
 
   const { inputStatus, hintMessage } = useInputStatus({
@@ -140,12 +147,19 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
   }, [quantity]);
 
   const toAccountAsset = useMemo(() => {
-    const asset = toAccount?.holding?.find(
-      (item) => item.token === token.symbol,
-    );
+    const holdings =
+      fromAccount?.id === mainAccountId ? toAccount?.holding : currentHolding;
+
+    const asset = holdings?.find((item) => item.token === token.symbol);
 
     return asset?.holding || 0;
-  }, [toAccount, token]);
+  }, [
+    observerAccountId,
+    currentHolding,
+    portfolio?.holding,
+    token,
+    fromAccount,
+  ]);
 
   const { fromAccounts, toAccounts } = useMemo(() => {
     if (isMainAccount) {
@@ -218,6 +232,7 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
   useEffect(() => {
     const tokens = tokensInfo?.map((item) => ({
       symbol: item.token,
+      precision: item.decimals,
     })) as API.TokenInfo[];
 
     if (tokens?.length) {

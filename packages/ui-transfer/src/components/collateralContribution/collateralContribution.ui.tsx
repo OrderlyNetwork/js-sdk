@@ -2,9 +2,7 @@ import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Flex, Text } from "@orderly.network/ui";
 
-// import type { CollateralContributionReturns } from "./collateralContribution.script";
-
-export const CollateralContributionUI: React.FC<Readonly<{ value: number }>> = (
+export const CollateralContributionUI: React.FC<{ value: number }> = (
   props,
 ) => {
   const { t } = useTranslation();
