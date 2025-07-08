@@ -104,6 +104,7 @@ export const useAssetsScript = () => {
           // Calculate collateral contribution for this token
           const collateralContribution = account.collateralContribution({
             collateralQty: holding.holding,
+            collateralCap: tokenInfo?.user_max_qty ?? holding.holding,
             collateralRatio: collateralRatio,
             indexPrice: indexPrice,
           });

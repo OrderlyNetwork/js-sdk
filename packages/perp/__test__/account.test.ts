@@ -154,6 +154,7 @@ describe("account farmula", () => {
     it("should return correct result for positive values", () => {
       const params: Parameters<typeof collateralContribution>[0] = {
         collateralQty: 10,
+        collateralCap: 100,
         collateralRatio: 0.5,
         indexPrice: 2,
       };
@@ -164,6 +165,7 @@ describe("account farmula", () => {
       const params: Parameters<typeof collateralContribution>[0] = {
         collateralQty: 0,
         collateralRatio: 0.5,
+        collateralCap: 100,
         indexPrice: 100,
       };
       expect(collateralContribution(params)).toBe(0);
@@ -172,6 +174,7 @@ describe("account farmula", () => {
     it("should return 0 when collateralRatio is 0", () => {
       const params: Parameters<typeof collateralContribution>[0] = {
         collateralQty: 100,
+        collateralCap: 100,
         collateralRatio: 0,
         indexPrice: 999,
       };
@@ -181,6 +184,7 @@ describe("account farmula", () => {
     it("should return 0 when indexPrice is 0", () => {
       const params: Parameters<typeof collateralContribution>[0] = {
         collateralQty: 100,
+        collateralCap: 100,
         collateralRatio: 0.9,
         indexPrice: 0,
       };
@@ -190,6 +194,7 @@ describe("account farmula", () => {
     it("should handle negative values", () => {
       const params: Parameters<typeof collateralContribution>[0] = {
         collateralQty: -1,
+        collateralCap: 100,
         collateralRatio: 0.5,
         indexPrice: 10,
       };

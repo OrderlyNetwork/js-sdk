@@ -745,15 +745,15 @@ export const collateralRatio = (params: {
   return Math.min(baseWeight, result.toNumber());
 };
 
+/** collateral_value_i = min(collateral_qty_i , collateral_cap_i) * weight_i * index_price_i */
 export const collateralContribution = (params: {
   collateralQty: number;
+  collateralCap: number;
   collateralRatio: number;
   indexPrice: number;
 }) => {
-  // Collateral contribution = collateral_qty * collateral_ratio * index_price
-
-  const { collateralQty, collateralRatio, indexPrice } = params;
-  return new Decimal(collateralQty)
+  const { collateralQty, collateralCap, collateralRatio, indexPrice } = params;
+  return new Decimal(Math.min(collateralQty, collateralCap))
     .mul(collateralRatio)
     .mul(indexPrice)
     .toNumber();

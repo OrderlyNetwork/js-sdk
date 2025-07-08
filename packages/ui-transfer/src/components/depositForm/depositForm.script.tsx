@@ -348,6 +348,7 @@ const useCollateralValue = (params: {
 
   const collateralContributionQuantity = collateralContribution({
     collateralQty: quantity,
+    collateralCap: sourceToken?.user_max_qty ?? quantity,
     collateralRatio: getCollateralRatio(quantity),
     indexPrice: indexPrice,
   });
