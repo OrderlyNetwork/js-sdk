@@ -97,6 +97,7 @@ export const useAssetsScript = () => {
                 baseWeight: tokenInfo.base_weight ?? 0,
                 discountFactor: tokenInfo.discount_factor ?? 0,
                 collateralQty: holding.holding,
+                collateralCap: tokenInfo?.user_max_qty ?? holding.holding,
                 indexPrice: indexPrice,
               })
             : 0;

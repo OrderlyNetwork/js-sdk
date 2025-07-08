@@ -336,10 +336,12 @@ const useCollateralValue = (params: {
 
   const getCollateralRatio = useCallback(
     (inputQty: number) => {
+      const collateralQty = new Decimal(inputQty).toNumber();
       return collateralRatio({
         baseWeight: targetToken?.base_weight ?? 0,
         discountFactor: targetToken?.discount_factor ?? 0,
-        collateralQty: new Decimal(inputQty).toNumber(),
+        collateralQty,
+        collateralCap: sourceToken?.user_max_qty ?? collateralQty,
         indexPrice: indexPrice,
       });
     },

@@ -135,6 +135,7 @@ describe("account farmula", () => {
         baseWeight: 0.8,
         discountFactor: 0.3,
         collateralQty: 0,
+        collateralCap: 100,
         indexPrice: 1000,
       };
       expect(collateralRatio(params)).toBe(0.8);
@@ -144,6 +145,7 @@ describe("account farmula", () => {
         baseWeight: 1.2,
         discountFactor: 0,
         collateralQty: 100,
+        collateralCap: 100,
         indexPrice: 1,
       };
       expect(collateralRatio(params)).toBe(1.2);

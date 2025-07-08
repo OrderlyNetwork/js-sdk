@@ -33,11 +33,13 @@ export function useMaxWithdrawal(token?: string) {
   }, [token, indexPrices]);
 
   const memoizedCollateralRatio = useMemo(() => {
-    const { base_weight, discount_factor } = tokenInfo || {};
+    const { base_weight = 0, discount_factor = 0 } = tokenInfo || {};
+    const holdingQty = holding?.holding ?? 0;
     return collateralRatio({
-      baseWeight: base_weight ?? 0,
-      discountFactor: discount_factor ?? 0,
-      collateralQty: holding?.holding ?? 0,
+      baseWeight: base_weight,
+      discountFactor: discount_factor,
+      collateralQty: holdingQty,
+      collateralCap: tokenInfo?.user_max_qty ?? holdingQty,
       indexPrice,
     });
   }, [holdings, tokenInfo, indexPrice, token, holding]);

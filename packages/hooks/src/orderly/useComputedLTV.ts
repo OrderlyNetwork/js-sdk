@@ -53,6 +53,7 @@ export const useComputedLTV = (options: LTVOptions = {}) => {
               baseWeight: findToken?.base_weight ?? 0,
               discountFactor: findToken?.discount_factor ?? 0,
               collateralQty: qty,
+              collateralCap: findToken?.user_max_qty ?? qty,
               indexPrice: indexPrice ?? 1,
             }),
           };

@@ -40,6 +40,7 @@ export const parseHolding = (
         baseWeight: base_weight,
         discountFactor: discount_factor,
         collateralQty: holdingQty,
+        collateralCap: user_max_qty,
         indexPrice,
       });
 
