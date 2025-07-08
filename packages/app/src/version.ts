@@ -8,7 +8,7 @@ declare global {
 if (typeof window !== "undefined") {
   window.__ORDERLY_VERSION__ = window.__ORDERLY_VERSION__ || {};
   window.__ORDERLY_VERSION__["@orderly.network/react-app"] =
-    "2.4.2-internal-multi-collateral.11";
+    "2.4.2-internal-multi-collateral.12";
 }
 
-export default "2.4.2-internal-multi-collateral.11";
+export default "2.4.2-internal-multi-collateral.12";

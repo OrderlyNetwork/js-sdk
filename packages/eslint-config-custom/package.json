@@ -1,6 +1,6 @@
 {
   "name": "eslint-config-custom",
-  "version": "1.4.2-internal-multi-collateral.11",
+  "version": "1.4.2-internal-multi-collateral.12",
   "main": "index.mjs",
   "license": "MIT",
   "private": true,

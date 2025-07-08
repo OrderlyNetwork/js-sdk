@@ -1,5 +1,11 @@
 # tsconfig
 
+## 0.7.2-internal-multi-collateral.12
+
+### Patch Changes
+
+- publish
+
 ## 0.7.2-internal-multi-collateral.11
 
 ### Patch Changes
