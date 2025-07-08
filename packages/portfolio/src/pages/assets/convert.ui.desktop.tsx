@@ -28,8 +28,8 @@ export const CONVERT_STATUS_OPTIONS = [
     value: "completed",
   },
   {
-    label: "Failed",
-    value: "failed",
+    label: "Pending",
+    value: "pending",
   },
 ];
 
@@ -43,9 +43,6 @@ const ConvertDetailsModal = modal.create<{
   // console.log(props);
 
   const detailColumns = useConvertDetailColumns({
-    onTxClick: (txId: string) => {
-      console.log("Open transaction:", txId);
-    },
     indexPrices: props.indexPrices,
     chainsInfo: props.chainsInfo,
   });
