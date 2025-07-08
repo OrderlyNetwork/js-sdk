@@ -1,3 +1,4 @@
+import { account } from "@orderly.network/perp";
 import type { API } from "@orderly.network/types";
 
 type NonUSDCHolding = {
@@ -5,7 +6,7 @@ type NonUSDCHolding = {
   indexPrice: number;
   // margin replacement rate, default 0
   collateralCap: number;
-  discountFactor: number;
+  collateralRatio: number;
 };
 
 export const parseHolding = (
@@ -24,12 +25,29 @@ export const parseHolding = (
     if (item.token === "USDC") {
       USDC_holding = item.holding;
     } else {
-      const findToken = tokensInfo.find(({ token }) => token === item.token);
+      const tokenInfo = tokensInfo.find(({ token }) => token === item.token);
+      const {
+        base_weight = 0,
+        discount_factor = 0,
+        user_max_qty = 0,
+      } = tokenInfo || {};
+
+      const holdingQty = item?.holding ?? 0;
+
+      const indexPrice = indexPrices[`PERP_${item.token}_USDC`] ?? 0;
+
+      const collateralRatio = account.collateralRatio({
+        baseWeight: base_weight,
+        discountFactor: discount_factor,
+        collateralQty: holdingQty,
+        indexPrice,
+      });
+
       nonUSDC.push({
-        holding: item.holding,
-        indexPrice: indexPrices[`PERP_${item.token}_USDC`] ?? 0,
-        collateralCap: findToken?.user_max_qty ?? 0,
-        discountFactor: findToken?.discount_factor ?? 0,
+        holding: holdingQty,
+        indexPrice,
+        collateralCap: user_max_qty,
+        collateralRatio,
       });
     }
   });
