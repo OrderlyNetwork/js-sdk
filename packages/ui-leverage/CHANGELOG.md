@@ -1,5 +1,16 @@
 # @orderly.network/ui-leverage
 
+## 2.4.2-internal-multi-collateral.7
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.4.2-internal-multi-collateral.7
+  - @orderly.network/i18n@2.4.2-internal-multi-collateral.7
+  - @orderly.network/types@2.4.2-internal-multi-collateral.7
+  - @orderly.network/ui@2.4.2-internal-multi-collateral.7
+
 ## 2.4.2-internal-multi-collateral.6
 
 ### Patch Changes
