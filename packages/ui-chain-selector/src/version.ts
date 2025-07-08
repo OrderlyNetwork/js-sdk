@@ -8,7 +8,7 @@ declare global {
 if (typeof window !== "undefined") {
   window.__ORDERLY_VERSION__ = window.__ORDERLY_VERSION__ || {};
   window.__ORDERLY_VERSION__["@orderly.network/ui-chain-selector"] =
-    "2.4.2-internal-multi-collateral.8";
+    "2.4.2-internal-multi-collateral.9";
 }
 
-export default "2.4.2-internal-multi-collateral.8";
+export default "2.4.2-internal-multi-collateral.9";

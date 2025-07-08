@@ -1,5 +1,20 @@
 # @orderly.network/hooks
 
+## 2.4.2-internal-multi-collateral.9
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.4.2-internal-multi-collateral.9
+  - @orderly.network/default-evm-adapter@2.4.2-internal-multi-collateral.9
+  - @orderly.network/default-solana-adapter@2.4.2-internal-multi-collateral.9
+  - @orderly.network/net@2.4.2-internal-multi-collateral.9
+  - @orderly.network/perp@4.4.2-internal-multi-collateral.9
+  - @orderly.network/types@2.4.2-internal-multi-collateral.9
+  - @orderly.network/utils@2.4.2-internal-multi-collateral.9
+  - @orderly.network/web3-provider-ethers@2.4.2-internal-multi-collateral.9
+
 ## 2.4.2-internal-multi-collateral.8
 
 ### Patch Changes
