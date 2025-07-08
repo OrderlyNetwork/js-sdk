@@ -80,3 +80,15 @@ export type CampaignStatsDetailsResponse = {
   volume: number;
   symbol: string;
 }[];
+
+export type CampaignStatsResponse = {
+  sign_up_count: number;
+  user_count: number;
+  volume: number;
+  updated_time: number;
+};
+
+export type UserCampaignsResponse = {
+  id: string;
+  register_time: number;
+}[];
