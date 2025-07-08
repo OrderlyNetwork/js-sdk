@@ -1,5 +1,14 @@
 # @orderly.network/web3-provider-ethers
 
+## 2.4.2-internal-multi-collateral.10
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/default-evm-adapter@2.4.2-internal-multi-collateral.10
+  - @orderly.network/types@2.4.2-internal-multi-collateral.10
+
 ## 2.4.2-internal-multi-collateral.9
 
 ### Patch Changes

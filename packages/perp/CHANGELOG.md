@@ -1,5 +1,14 @@
 # @orderly.network/futures
 
+## 4.4.2-internal-multi-collateral.10
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@2.4.2-internal-multi-collateral.10
+  - @orderly.network/utils@2.4.2-internal-multi-collateral.10
+
 ## 4.4.2-internal-multi-collateral.9
 
 ### Patch Changes
