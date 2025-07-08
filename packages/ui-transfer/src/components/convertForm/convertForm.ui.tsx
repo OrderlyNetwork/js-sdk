@@ -37,14 +37,6 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
     nextLTV,
   } = props;
 
-  const minimumReceivedValue =
-    isQuoteLoading || !quantity
-      ? "-"
-      : unnormalizeAmount(
-          minimumReceived.toString(),
-          targetToken?.decimals ?? 6,
-        );
-
   return (
     <Box className={textVariants({ weight: "semibold" })}>
       <Box className="oui-mb-6 lg:oui-mb-8">
@@ -73,7 +65,14 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
           readOnly
           loading={isQuoteLoading}
           token={targetToken}
-          value={minimumReceivedValue}
+          value={
+            isQuoteLoading || !quantity
+              ? ""
+              : unnormalizeAmount(
+                  minimumReceived.toString(),
+                  targetToken?.decimals ?? 6,
+                )
+          }
         />
         <Flex direction="column" itemAlign="start" mt={2} gap={1}>
           <SwapCoin
@@ -84,7 +83,14 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
           <Slippage value={slippage} onValueChange={onSlippageChange} />
           <MinimumReceived
             symbol={targetToken?.display_name || targetToken?.symbol || ""}
-            value={minimumReceivedValue}
+            value={
+              isQuoteLoading || !quantity
+                ? "-"
+                : unnormalizeAmount(
+                    minimumReceived.toString(),
+                    targetToken?.decimals ?? 6,
+                  )
+            }
           />
           <LtvWidget
             showDiff={typeof quantity !== "undefined" && Number(quantity) > 0}
