@@ -740,9 +740,12 @@ export const collateralRatio = (params: {
     indexPrice,
   } = params;
 
+  // if collateralCap is -1, it means the collateral is unlimited
+  const cap = collateralCap === -1 ? collateralQty : collateralCap;
+
   const K = new Decimal(1.2);
   const DCF = new Decimal(discountFactor || 0);
-  const qty = new Decimal(Math.min(collateralQty, collateralCap));
+  const qty = new Decimal(Math.min(collateralQty, cap));
   const price = new Decimal(indexPrice);
 
   const notionalAbs = qty.mul(price).abs();
@@ -760,7 +763,11 @@ export const collateralContribution = (params: {
   indexPrice: number;
 }) => {
   const { collateralQty, collateralCap, collateralRatio, indexPrice } = params;
-  return new Decimal(Math.min(collateralQty, collateralCap))
+
+  // if collateralCap is -1, it means the collateral is unlimited
+  const cap = collateralCap === -1 ? collateralQty : collateralCap;
+
+  return new Decimal(Math.min(collateralQty, cap))
     .mul(collateralRatio)
     .mul(indexPrice)
     .toNumber();
