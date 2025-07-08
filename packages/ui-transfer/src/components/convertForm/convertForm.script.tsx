@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   useChains,
   useConfig,
@@ -9,8 +9,6 @@ import {
   useLocalStorage,
   useOdosQuote,
   usePositionStream,
-  useTokenInfo,
-  useTokensInfo,
   useWalletConnector,
   useWalletSubscription,
 } from "@orderly.network/hooks";
@@ -31,7 +29,8 @@ export type ConvertFormScriptReturn = ReturnType<typeof useConvertFormScript>;
 
 const ORDERLY_CONVERT_SLIPPAGE_KEY = "orderly_convert_slippage";
 
-interface ConvertFormScriptOptions {
+export interface ConvertFormScriptOptions {
+  token?: string;
   onClose?: () => void;
 }
 
@@ -44,6 +43,8 @@ export const unnormalizeAmount = (amount: string, decimals: number) => {
 };
 
 export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
+  const { token: defaultToken, onClose } = options;
+
   const { t } = useTranslation();
   const [crossChainTrans, setCrossChainTrans] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -90,7 +91,10 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
   }, [findByChainId, connectedChain, linkDeviceStorage]);
 
   const { sourceToken, sourceTokens, onSourceTokenChange, targetToken } =
-    useToken({ currentChain });
+    useToken({
+      currentChain,
+      defaultValue: defaultToken,
+    });
 
   const token = useMemo<API.TokenInfo>(() => {
     const _token = {
@@ -158,7 +162,7 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     })
       .then(() => {
         toast.success("convert success");
-        options.onClose?.();
+        onClose?.();
         setQuantity("");
       })
       .catch((e: Error) => {
