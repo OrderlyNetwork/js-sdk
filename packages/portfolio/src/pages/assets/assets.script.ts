@@ -102,21 +102,6 @@ export const useAssetsScript = () => {
             indexPrice: indexPrice,
           });
 
-          console.log(
-            "holding",
-            holding,
-            "tokenInfo",
-            tokenInfo,
-            "indexPrice",
-            indexPrice,
-            "assetValue",
-            assetValue,
-            "collateralRatio",
-            collateralRatio,
-            "collateralContribution",
-            collateralContribution,
-          );
-
           return {
             ...holding,
             indexPrice,
