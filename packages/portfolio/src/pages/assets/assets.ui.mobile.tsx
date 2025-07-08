@@ -50,27 +50,8 @@ export const AssetsTableMobile = (props: useAssetsScriptReturn) => {
 
   // Create asset options from holding data - optimized and consistent with desktop
   const memoizedAssets = useMemo(() => {
-    if (!Array.isArray(props.holding) || props.holding.length === 0) {
-      return [ALL_ASSETS];
-    }
-
-    // Extract unique tokens from stable holding data only
-    const uniqueTokens = [
-      ...new Set(
-        props.holding
-          .filter((item) => item.token) // Filter out items without token
-          .map((item) => item.token), // Extract token names
-      ),
-    ];
-
-    // Create options array
-    const assetOptions = uniqueTokens.map((token) => ({
-      value: token,
-      label: token,
-    }));
-
-    return [ALL_ASSETS, ...assetOptions];
-  }, [props.holding]);
+    return [ALL_ASSETS, ...props.assetsOptions];
+  }, [props.assetsOptions]);
 
   return (
     <div className="oui-flex oui-flex-col oui-gap-1 oui-px-3 oui-pb-4">

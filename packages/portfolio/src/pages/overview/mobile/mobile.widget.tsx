@@ -57,6 +57,7 @@ export const MobileOverview: FC = (props) => {
           visible={visible}
           canTrade={canTrade}
           namespace={namespace}
+          routerAdapter={layoutContext?.routerAdapter}
         />
         <PortfolioHandleMobile
           disabled={!canTrade}

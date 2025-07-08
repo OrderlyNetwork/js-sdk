@@ -160,6 +160,7 @@
   "portfolio.overview.column.convert.usdcAmount": "USDC amount",
   "portfolio.overview.column.convert.convertId": "Convert ID",
   "portfolio.overview.column.convert.details": "Details",
+  "portfolio.overview.tab.convert.history": "Convert history",
   "portfolio.overview.distribution.type.referralCommission": "Referral commission",
   "portfolio.overview.distribution.type.refereeRebate": "Referee rebate",
   "portfolio.overview.distribution.type.brokerFee": "Broker fee",

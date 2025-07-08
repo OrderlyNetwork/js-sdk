@@ -5,6 +5,7 @@ import {
   useLocalStorage,
   useIndexPricesStream,
   useChains,
+  useTokensInfo,
 } from "@orderly.network/hooks";
 import { account } from "@orderly.network/perp";
 import { API } from "@orderly.network/types";
@@ -37,6 +38,8 @@ export const useAssetsScript = () => {
   // Get token information including base_weight and discount_factor
   const [chains] = useChains();
 
+  const tokensInfo = useTokensInfo();
+
   const subAccounts = state.subAccounts ?? [];
 
   // Use the extracted total value hook
@@ -46,6 +49,15 @@ export const useAssetsScript = () => {
     // @ts-ignore
     setVisible((visible: boolean) => !visible);
   };
+
+  const assetsOptions = useMemo(() => {
+    return (
+      tokensInfo?.map((item) => ({
+        label: item.token,
+        value: item.token,
+      })) || []
+    );
+  }, [tokensInfo]);
 
   // Create token info map for easy lookup
   const tokenInfoMap = useMemo(() => {
@@ -183,6 +195,7 @@ export const useAssetsScript = () => {
     onDeposit,
     onWithdraw,
     holding,
+    assetsOptions,
   };
 };
 
