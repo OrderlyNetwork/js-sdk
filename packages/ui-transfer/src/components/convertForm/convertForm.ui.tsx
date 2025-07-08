@@ -34,6 +34,9 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
     nextLTV,
   } = props;
 
+  console.log("ConvertFormUI props", currentLTV);
+  console.log("ConvertFormUI props", nextLTV);
+
   return (
     <Box className={textVariants({ weight: "semibold" })}>
       <Box className="oui-mb-6 lg:oui-mb-8">

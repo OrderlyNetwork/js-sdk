@@ -4,17 +4,15 @@ import {
   useChains,
   useConfig,
   useConvert,
-  useHoldingStream,
-  useIndexPricesStream,
+  useComputedLTV,
   useLocalStorage,
   useOdosQuote,
-  usePositionStream,
   useWalletConnector,
   useWalletSubscription,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { account } from "@orderly.network/perp";
-import { useAppContext, useDataTap } from "@orderly.network/react-app";
+import { useAppContext } from "@orderly.network/react-app";
 import { API, nativeETHAddress, NetworkId } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
 import { Decimal, praseChainIdToNumber } from "@orderly.network/utils";
@@ -23,7 +21,7 @@ import { CurrentChain } from "../depositForm/hooks";
 import { useSettlePnl } from "../unsettlePnlInfo/useSettlePnl";
 import { useToken } from "./hooks/useToken";
 
-const { calcMinimumReceived, collateralRatio, LTV } = account;
+const { calcMinimumReceived } = account;
 
 export type ConvertFormScriptReturn = ReturnType<typeof useConvertFormScript>;
 
@@ -177,8 +175,6 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
       });
   };
 
-  const { data: holdingList = [], usdc } = useHoldingStream();
-
   const [postQuote, { data: quoteData, isMutating: isQuoteLoading }] =
     useOdosQuote();
 
@@ -212,21 +208,6 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     }
   }, [quantity, currentChain?.id, token, targetToken]);
 
-  const { data: indexPrices } = useIndexPricesStream();
-  const [data] = usePositionStream(sourceToken?.symbol);
-  const aggregated = useDataTap(data.aggregated);
-  const unrealPnL = aggregated?.total_unreal_pnl ?? 0;
-
-  const usdcBalance = usdc?.holding ?? 0;
-
-  const indexPrice = useMemo(() => {
-    if (sourceToken?.symbol === "USDC") {
-      return 1;
-    }
-    const symbol = `PERP_${sourceToken?.symbol}_USDC`;
-    return indexPrices[symbol] ?? 0;
-  }, [sourceToken?.symbol, indexPrices]);
-
   const minimumReceived = useMemo(() => {
     if (!quoteData || isQuoteLoading) {
       return 0;
@@ -237,61 +218,12 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     });
   }, [quoteData, isQuoteLoading, slippage]);
 
-  const memoizedCurrentLTV = useMemo(() => {
-    const value = LTV({
-      usdcBalance: usdcBalance,
-      upnl: unrealPnL,
-      collateralAssets: holdingList
-        .filter((h) => h.token !== "USDC")
-        .map((item) => {
-          const originalQty = item?.holding ?? 0;
-          const _indexPrice = indexPrices[`PERP_${item.token}_USDC`] ?? 0;
-          return {
-            qty: originalQty,
-            indexPrice: _indexPrice,
-            weight: collateralRatio({
-              baseWeight: targetToken?.base_weight ?? 0,
-              discountFactor: targetToken?.discount_factor ?? 0,
-              indexPrice: _indexPrice,
-              collateralQty: originalQty,
-            }),
-          };
-        }),
-    });
-    return new Decimal(value)
-      .mul(100)
-      .toDecimalPlaces(2, Decimal.ROUND_DOWN)
-      .toNumber();
-  }, [holdingList, usdcBalance, unrealPnL, indexPrices, targetToken]);
+  const currentLtv = useComputedLTV();
 
-  const memoizedNextLTV = useMemo(() => {
-    const value = LTV({
-      usdcBalance: usdcBalance,
-      upnl: unrealPnL,
-      collateralAssets: holdingList
-        .filter((h) => h.token !== "USDC")
-        .map((item) => {
-          const originalQty = item?.holding ?? 0;
-          const _indexPrice = indexPrices[`PERP_${item.token}_USDC`] ?? 0;
-          return {
-            qty: originalQty,
-            indexPrice: _indexPrice,
-            weight: collateralRatio({
-              baseWeight: targetToken?.base_weight ?? 0,
-              discountFactor: targetToken?.discount_factor ?? 0,
-              indexPrice: _indexPrice,
-              collateralQty: quantity
-                ? new Decimal(originalQty).add(quantity).toNumber()
-                : originalQty,
-            }),
-          };
-        }),
-    });
-    return new Decimal(value)
-      .mul(100)
-      .toDecimalPlaces(2, Decimal.ROUND_DOWN)
-      .toNumber();
-  }, [holdingList, usdcBalance, unrealPnL, indexPrices, quantity, targetToken]);
+  const nextLTV = useComputedLTV({
+    input: Number(quantity),
+    token: sourceToken?.symbol,
+  });
 
   const disabled =
     !quantity ||
@@ -341,7 +273,7 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     convertRate,
     minimumReceived: minimumReceived,
     isQuoteLoading,
-    currentLTV: memoizedCurrentLTV,
-    nextLTV: memoizedNextLTV,
+    currentLTV: currentLtv,
+    nextLTV: nextLTV,
   };
 };
