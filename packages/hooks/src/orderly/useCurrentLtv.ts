@@ -13,9 +13,9 @@ export const useCurrentLtv = () => {
 
   const { data: indexPrices } = useIndexPricesStream();
 
-  const [data] = usePositionStream();
+  const [position] = usePositionStream();
 
-  const unrealPnL = data?.aggregated?.total_unreal_pnl ?? 0;
+  const unrealPnL = position?.aggregated?.total_unreal_pnl ?? 0;
 
   const currentLtv = useMemo(() => {
     const usdcBalance = usdc?.holding ?? 0;

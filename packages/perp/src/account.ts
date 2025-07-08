@@ -60,9 +60,7 @@ export type TotalCollateralValueInputs = {
  * Calculate total collateral.
  */
 export function totalCollateral(inputs: TotalCollateralValueInputs): Decimal {
-  console.log("totalCollateral inputs", inputs);
   const { USDCHolding, nonUSDCHolding, unsettlementPnL } = inputs;
-
   const nonUSDCHoldingValue = nonUSDCHolding.reduce<Decimal>((acc, cur) => {
     const finalHolding = Math.min(cur.holding, cur.collateralCap);
     const value = new Decimal(finalHolding)

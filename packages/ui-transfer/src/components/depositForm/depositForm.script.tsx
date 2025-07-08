@@ -321,9 +321,9 @@ const useCollateralValue = (params: {
   qty: string;
   slippage: number;
 }) => {
-  const { sourceToken, targetToken, tokens, slippage } = params;
+  const { sourceToken, targetToken, slippage } = params;
 
-  const qty = Number(params.qty);
+  const quantity = Number(params.qty);
 
   const { data: holdingList = [], usdc } = useHoldingStream();
   const { data: indexPrices } = useIndexPricesStream();
@@ -354,8 +354,8 @@ const useCollateralValue = (params: {
   );
 
   const collateralContributionQuantity = collateralContribution({
-    collateralQty: qty,
-    collateralRatio: getCollateralRatio(qty),
+    collateralQty: quantity,
+    collateralRatio: getCollateralRatio(quantity),
     indexPrice: indexPrice,
   });
 
@@ -402,8 +402,8 @@ const useCollateralValue = (params: {
               baseWeight: targetToken?.base_weight ?? 0,
               discountFactor: targetToken?.discount_factor ?? 0,
               indexPrice: _indexPrice,
-              collateralQty: qty
-                ? new Decimal(originalQty).add(qty).toNumber()
+              collateralQty: quantity
+                ? new Decimal(originalQty).add(quantity).toNumber()
                 : originalQty,
             }),
           };
@@ -413,7 +413,7 @@ const useCollateralValue = (params: {
       .mul(100)
       .toDecimalPlaces(2, Decimal.ROUND_DOWN)
       .toNumber();
-  }, [holdingList, usdcBalance, unrealPnL, indexPrices, qty, targetToken]);
+  }, [holdingList, usdcBalance, unrealPnL, indexPrices, quantity, targetToken]);
 
   const minimumReceived = calcMinimumReceived({
     amount: collateralContributionQuantity,
@@ -421,7 +421,7 @@ const useCollateralValue = (params: {
   });
 
   return {
-    collateralRatio: getCollateralRatio(qty),
+    collateralRatio: getCollateralRatio(quantity),
     collateralContributionQuantity,
     currentLTV: memoizedCurrentLTV,
     nextLTV: memoizedNextLTV,
