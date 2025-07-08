@@ -74,7 +74,10 @@ export const HistoryDataGroupMobile = (props: {
       >
         <DistributionHistoryWidget />
       </TabPanel>
-      <TabPanel title={"Convert history"} value={"convert"}>
+      <TabPanel
+        title={t("portfolio.overview.tab.convert.history")}
+        value={"convert"}
+      >
         <ConvertHistoryWidget memoizedOptions={memoizedOptions} />
       </TabPanel>
     </Tabs>

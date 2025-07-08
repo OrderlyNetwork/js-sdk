@@ -130,7 +130,7 @@ export const AssetsTable: React.FC<Readonly<AssetsWidgetProps>> = (props) => {
     columns,
     dataSource,
     onFilter,
-    holding,
+    assetsOptions,
   } = props;
 
   const { t } = useTranslation();
@@ -168,27 +168,8 @@ export const AssetsTable: React.FC<Readonly<AssetsWidgetProps>> = (props) => {
 
   // Create asset options from holding data - optimized and simplified
   const memoizedAssetOptions = useMemo(() => {
-    if (!Array.isArray(holding) || holding.length === 0) {
-      return [ALL_ASSETS];
-    }
-
-    // Extract unique tokens from stable holding data only
-    const uniqueTokens = [
-      ...new Set(
-        holding
-          .filter((item) => item.token) // Filter out items without token
-          .map((item) => item.token), // Extract token names
-      ),
-    ];
-
-    // Create options array
-    const assetOptions = uniqueTokens.map((token) => ({
-      value: token,
-      label: token,
-    }));
-
-    return [ALL_ASSETS, ...assetOptions];
-  }, [holding]);
+    return [ALL_ASSETS, ...assetsOptions];
+  }, [assetsOptions]);
 
   return (
     <Card classNames={{ content: "!oui-py-6" }}>
@@ -258,7 +239,10 @@ export const AssetsTable: React.FC<Readonly<AssetsWidgetProps>> = (props) => {
             }}
           />
         </TabPanel>
-        <TabPanel value="convertHistory" title={"Convert History"}>
+        <TabPanel
+          value="convertHistory"
+          title={t("portfolio.overview.tab.convert.history")}
+        >
           <ConvertHistoryWidget memoizedOptions={memoizedOptions} />
         </TabPanel>
       </Tabs>

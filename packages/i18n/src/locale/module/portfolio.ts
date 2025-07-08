@@ -33,6 +33,7 @@ export const portfolio = {
   "portfolio.overview.column.convert.usdcAmount": "USDC amount",
   "portfolio.overview.column.convert.convertId": "Convert ID",
   "portfolio.overview.column.convert.details": "Details",
+  "portfolio.overview.tab.convert.history": "Convert history",
 
   "portfolio.overview.distribution.type.referralCommission":
     "Referral commission",

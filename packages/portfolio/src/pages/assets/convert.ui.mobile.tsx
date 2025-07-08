@@ -1,13 +1,15 @@
+import { useEffect, useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   useModal,
-  SimpleDialog,
   modal,
   Text,
   Divider,
   TokenIcon,
   Flex,
   DataFilter,
+  SimpleSheet,
+  toast,
 } from "@orderly.network/ui";
 import { SelectOption } from "@orderly.network/ui/src/select/withOptions";
 import { ConvertedAssetColumn } from "./convert.column";
@@ -22,6 +24,7 @@ type ConvertMobileUIProps = {
 
 type ConvertMobileItemProps = {
   item?: any;
+  chainsInfo: any[];
 };
 
 type ConvertMobileFieldProps = {
@@ -29,7 +32,8 @@ type ConvertMobileFieldProps = {
   value?: string | number;
   className?: string;
   copyable?: boolean;
-  rule?: "address";
+  rule?: "address" | "txId";
+  onClick?: () => void;
 };
 
 export const ConvertMobileUI: React.FC<ConvertMobileUIProps> = ({
@@ -38,52 +42,75 @@ export const ConvertMobileUI: React.FC<ConvertMobileUIProps> = ({
 }) => {
   const { t } = useTranslation();
 
+  const {
+    selectedAccount,
+    convertedAssetFilter,
+    statusFilter,
+    dateRange,
+    onFilter,
+    convertedAssetOptions,
+  } = convertState;
+
+  const dataFilter = useMemo(() => {
+    return (
+      <DataFilter
+        className="oui-min-w-[125vw]"
+        onFilter={onFilter}
+        items={[
+          {
+            size: "sm",
+            type: "picker",
+            name: "account",
+            value: selectedAccount,
+            options: memoizedOptions,
+          },
+          {
+            size: "sm",
+            type: "picker",
+            name: "converted_asset",
+            value: convertedAssetFilter,
+            options: convertedAssetOptions,
+          },
+          {
+            size: "sm",
+            type: "picker",
+            name: "status",
+            value: statusFilter,
+            options: CONVERT_STATUS_OPTIONS,
+          },
+          {
+            size: "sm",
+            type: "range",
+            name: "time",
+            value: {
+              from: dateRange?.[0],
+              to: dateRange?.[1],
+            },
+          },
+        ]}
+      />
+    );
+  }, [
+    selectedAccount,
+    convertedAssetFilter,
+    statusFilter,
+    dateRange,
+    onFilter,
+    convertedAssetOptions,
+    memoizedOptions,
+  ]);
+
   return (
     <div className="oui-flex oui-flex-col oui-gap-1 oui-px-3">
-      <Flex direction="row" className="oui-w-full oui-overflow-hidden">
-        <DataFilter
-          className="oui-overflow-x-scroll"
-          onFilter={convertState.onFilter}
-          items={[
-            {
-              size: "sm",
-              type: "picker",
-              name: "account",
-              value: convertState.selectedAccount,
-              options: memoizedOptions,
-            },
-            {
-              size: "sm",
-              type: "picker",
-              name: "converted_asset",
-              value: convertState.convertedAssetFilter,
-              options: convertState.convertedAssetOptions,
-            },
-            {
-              size: "sm",
-              type: "picker",
-              name: "status",
-              value: convertState.statusFilter,
-              options: CONVERT_STATUS_OPTIONS,
-            },
-            {
-              size: "sm",
-              type: "range",
-              name: "time",
-              value: {
-                from:
-                  convertState.dateRange.from ||
-                  new Date(Date.now() - 90 * 24 * 60 * 60 * 1000),
-                to: convertState.dateRange.to || new Date(),
-              },
-              fromDate: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000), // 90 days ago
-              toDate: new Date(),
-            },
-          ]}
-        />
+      <Flex direction="row" className="oui-w-full oui-overflow-x-scroll">
+        {dataFilter}
       </Flex>
       {convertState.dataSource.map((item) => (
-        <ConvertMobileItem key={item.convert_id} item={item} />
+        <ConvertMobileItem
+          key={item.convert_id}
+          item={item}
+          chainsInfo={convertState.chainsInfo as any}
+        />
       ))}
     </div>
   );
@@ -95,13 +122,21 @@ const ConvertMobileField: React.FC<ConvertMobileFieldProps> = ({
   rule,
   copyable = false,
   className = "",
+  onClick,
 }) => {
+  const { t } = useTranslation();
+  const onCopy = (e: any) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toast.success(t("common.copy.copied"));
+  };
   return (
     <div
       className={`oui-text-2xs oui-font-semibold oui-text-base-contrast-80 [&_p]:oui-text-base-contrast-36 ${className}`}
+      onClick={onClick}
     >
       <p>{label}</p>
-      <Text.formatted rule={rule} copyable={copyable}>
+      <Text.formatted rule={rule} copyable={copyable} onCopy={onCopy}>
         {value}
       </Text.formatted>
     </div>
@@ -111,8 +146,6 @@ const ConvertMobileField: React.FC<ConvertMobileFieldProps> = ({
 const ConvertMobileItem: React.FC<ConvertMobileItemProps> = (props) => {
   const { item } = props;
   const { t } = useTranslation();
-
-  console.log("item", item);
 
   if (!item) {
     return null;
@@ -131,7 +164,10 @@ const ConvertMobileItem: React.FC<ConvertMobileItemProps> = (props) => {
           <div
             className="oui-ml-2 oui-text-primary"
             onClick={() => {
-              modal.show(ConverHistoryItemDetailsDialog, { item });
+              modal.show(ConverHistoryItemDetailsDialog, {
+                item,
+                chainsInfo: props.chainsInfo,
+              });
             }}
           >
             {t("portfolio.overview.column.convert.details")}
@@ -157,8 +193,14 @@ const ConvertMobileItem: React.FC<ConvertMobileItemProps> = (props) => {
           value={item.convert_id}
           copyable={true}
         />
-        <ConvertMobileField label={t("common.type")} value={item.type} />
-        <ConvertMobileField label={t("common.status")} value={item.status} />
+        <ConvertMobileField
+          label={t("common.type")}
+          value={item.type?.charAt(0).toUpperCase() + item.type?.slice(1)}
+        />
+        <ConvertMobileField
+          label={t("common.status")}
+          value={item.status?.charAt(0).toUpperCase() + item.status?.slice(1)}
+        />
       </div>
     </div>
   );
@@ -166,16 +208,17 @@ const ConvertMobileItem: React.FC<ConvertMobileItemProps> = (props) => {
 
 type ConvertHistoryItemDetailsDialogProps = {
   item: ConvertRecord;
+  chainsInfo: any[];
 };
 
 const ConverHistoryItemDetailsDialog =
   modal.create<ConvertHistoryItemDetailsDialogProps>((props) => {
-    const { item } = props;
+    const { item, chainsInfo } = props;
     const { t } = useTranslation();
     const { visible, hide, resolve, reject, onOpenChange } = useModal();
 
     return (
-      <SimpleDialog
+      <SimpleSheet
         title="Convert details"
         open={visible}
         onOpenChange={onOpenChange}
@@ -202,18 +245,46 @@ const ConverHistoryItemDetailsDialog =
                   <ConvertMobileField label="Fee" value={detail.haircut} />
                   <ConvertMobileField
                     label={t("common.txId")}
-                    copyable
-                    rule="address"
+                    copyable={!!detail.tx_id}
+                    rule="txId"
                     value={detail.tx_id}
+                    onClick={() => {
+                      if (detail.tx_id) {
+                        const chainInfo = chainsInfo.find(
+                          (item) => item.chain_id == detail.chain_id,
+                        );
+                        if (chainInfo?.explorer_base_url) {
+                          window.open(
+                            `${chainInfo.explorer_base_url}/tx/${detail.tx_id}`,
+                            "_blank",
+                          );
+                        }
+                      }
+                    }}
                   />
-                  <ConvertMobileField label="Network" value={detail.venue} />
-                  <ConvertMobileField label="Status" value={"Success"} />
+                  <ConvertMobileField
+                    label="Network"
+                    value={
+                      detail.venue == "internal_fund"
+                        ? "Internal"
+                        : chainsInfo.find(
+                            (item) => item.chain_id == detail.chain_id,
+                          )?.name || "-"
+                    }
+                  />
+                  <ConvertMobileField
+                    label="Status"
+                    value={
+                      item.status?.charAt(0).toUpperCase() +
+                      item.status?.slice(1)
+                    }
+                  />
                 </div>
               </div>
               {index < item.details.length - 1 && <Divider />}
             </>
           ))}
         </div>
-      </SimpleDialog>
+      </SimpleSheet>
     );
   });

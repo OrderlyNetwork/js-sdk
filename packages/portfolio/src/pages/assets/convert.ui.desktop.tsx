@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import {
   DataFilter,
   Divider,
@@ -39,8 +40,7 @@ const ConvertDetailsModal = modal.create<{
   chainsInfo: any[];
 }>((props) => {
   const { visible, onOpenChange } = useModal();
-
-  console.log(props);
+  // console.log(props);
 
   const detailColumns = useConvertDetailColumns({
     onTxClick: (txId: string) => {
@@ -68,7 +68,7 @@ const ConvertDetailsModal = modal.create<{
         className="oui-w-full"
         classNames={{
           header: "oui-h-10",
-          root: "oui-bg-base-8",
+          root: "oui-bg-base-8 oui-max-h-[60vh] oui-overflow-y-scroll",
         }}
         onRow={() => ({
           className: "oui-h-[40px]",
@@ -103,45 +103,64 @@ export const ConvertDesktopUI: React.FC<ConvertDesktopUIProps> = ({
     onDetailsClick: handleDetailsClick,
   });
 
+  const {
+    selectedAccount,
+    convertedAssetFilter,
+    statusFilter,
+    dateRange,
+    onFilter,
+    convertedAssetOptions,
+  } = convertState;
+
+  const dataFilter = useMemo(() => {
+    return (
+      <DataFilter
+        onFilter={onFilter}
+        items={[
+          {
+            type: "select",
+            name: "account",
+            value: selectedAccount,
+            options: memoizedOptions,
+          },
+          {
+            type: "select",
+            name: "converted_asset",
+            value: convertedAssetFilter,
+            options: convertedAssetOptions,
+          },
+          {
+            type: "select",
+            name: "status",
+            value: statusFilter,
+            options: CONVERT_STATUS_OPTIONS,
+          },
+          {
+            type: "range",
+            name: "time",
+            value: {
+              from: dateRange?.[0],
+              to: dateRange?.[1],
+            },
+          },
+        ]}
+      />
+    );
+  }, [
+    selectedAccount,
+    convertedAssetFilter,
+    statusFilter,
+    dateRange,
+    onFilter,
+    convertedAssetOptions,
+    memoizedOptions,
+  ]);
+
   return (
     <Flex direction="column" mt={4} itemAlign="center" className="oui-w-full">
       <Divider className="oui-w-full" />
       <Flex direction="row" className="oui-w-full">
-        <DataFilter
-          onFilter={convertState.onFilter}
-          items={[
-            {
-              type: "select",
-              name: "account",
-              value: convertState.selectedAccount,
-              options: memoizedOptions,
-            },
-            {
-              type: "select",
-              name: "converted_asset",
-              value: convertState.convertedAssetFilter,
-              options: convertState.convertedAssetOptions,
-            },
-            {
-              type: "select",
-              name: "status",
-              value: convertState.statusFilter,
-              options: CONVERT_STATUS_OPTIONS,
-            },
-            {
-              type: "range",
-              name: "time",
-              value: {
-                from:
-                  convertState.dateRange.from ||
-                  new Date(Date.now() - 90 * 24 * 60 * 60 * 1000),
-                to: convertState.dateRange.to || new Date(),
-              },
-              fromDate: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000), // 90 days ago
-              toDate: new Date(),
-            },
-          ]}
-        />
+        {dataFilter}
       </Flex>
       <DataTable
         columns={columns}
@@ -158,7 +177,9 @@ export const ConvertDesktopUI: React.FC<ConvertDesktopUIProps> = ({
         onRow={() => ({
           className: "oui-h-[48px] oui-cursor-pointer",
         })}
-        generatedRowKey={(record) => record.convert_id.toString()}
+        generatedRowKey={(record) => {
+          return record.convert_id.toString();
+        }}
       />
     </Flex>
   );
