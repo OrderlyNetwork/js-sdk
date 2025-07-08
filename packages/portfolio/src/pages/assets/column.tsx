@@ -1,5 +1,4 @@
 import React from "react";
-import { useTokensInfo } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { Button, cn, Flex, Text, TokenIcon } from "@orderly.network/ui";
 import type { Column } from "@orderly.network/ui";
@@ -23,7 +22,7 @@ interface EnhancedHolding {
 export const useAssetsColumns = (options: ColumnsOptions) => {
   const { t } = useTranslation();
   const { onTransfer, onConvert } = options;
-  const tokensInfo = useTokensInfo();
+
   const columns = React.useMemo<Column[]>(() => {
     return [
       {
@@ -44,13 +43,10 @@ export const useAssetsColumns = (options: ColumnsOptions) => {
         title: t("portfolio.overview.column.qty"),
         dataIndex: "holding",
         align: "left",
-        width: 170,
+        width: 140,
         render(val: number, record) {
-          const findToken = tokensInfo?.find(
-            ({ token }) => token === record.token,
-          );
           return (
-            <Text.numeral dp={findToken?.decimals} padding={false}>
+            <Text.numeral dp={6} padding={false}>
               {val}
             </Text.numeral>
           );
@@ -60,10 +56,10 @@ export const useAssetsColumns = (options: ColumnsOptions) => {
         title: t("portfolio.overview.column.indexPrice"),
         dataIndex: "indexPrice",
         align: "left",
-        width: 100,
+        width: 140,
         render(val: number) {
           return (
-            <Text.numeral rule="price" dp={val > 10 ? 2 : 6} currency="$">
+            <Text.numeral rule="price" dp={6} currency="$" padding={false}>
               {val}
             </Text.numeral>
           );
@@ -73,10 +69,10 @@ export const useAssetsColumns = (options: ColumnsOptions) => {
         title: t("portfolio.overview.column.assetValue"),
         dataIndex: "assetValue",
         align: "left",
-        width: 120,
+        width: 140,
         render(val: number) {
           return (
-            <Text.numeral rule="price" dp={val > 10 ? 2 : 6} currency="$">
+            <Text.numeral rule="price" dp={6} currency="$" padding={false}>
               {val}
             </Text.numeral>
           );
@@ -99,10 +95,10 @@ export const useAssetsColumns = (options: ColumnsOptions) => {
         title: t("transfer.deposit.collateralContribution"),
         dataIndex: "collateralContribution",
         align: "left",
-        width: 160,
+        width: 140,
         render(val: number) {
           return (
-            <Text.numeral rule="price" dp={2} currency="$">
+            <Text.numeral rule="price" dp={6} currency="$" padding={false}>
               {val}
             </Text.numeral>
           );

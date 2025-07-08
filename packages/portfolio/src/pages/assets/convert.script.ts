@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo, useState, useCallback } from "react";
-import { subDays, getDate, getMonth, getYear, set } from "date-fns";
+import React, { useMemo, useState } from "react";
+import { getDate, getMonth, getYear, set } from "date-fns";
 import {
   useAccount,
   useCollateral,
@@ -8,7 +8,6 @@ import {
   useQuery,
   useTokensInfo,
 } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
 import { usePagination } from "@orderly.network/ui";
 import { subtractDaysFromCurrentDate } from "@orderly.network/utils";
 import { useAccountsData } from "../../hooks/useAccountsData";
@@ -17,7 +16,6 @@ import { parseDateRangeForFilter } from "../overview/helper/date";
 import { ConvertRecord } from "./type";
 
 export const useConvertScript = () => {
-  const { t } = useTranslation();
   const { isMainAccount, state } = useAccount();
   const { holding = [] } = useCollateral();
   const { data: indexPrices } = useIndexPricesStream();
@@ -84,7 +82,6 @@ export const useConvertScript = () => {
         setConvertedAssetFilter(value as string);
         setPage(1);
       } else if (name === "time" || name === "dateRange") {
-        console.log("value", value);
         setDateRange(
           parseDateRangeForFilter(value as { from: Date; to: Date }),
         );
@@ -188,26 +185,6 @@ export const useConvertScript = () => {
     };
   }, [data]);
 
-  // Action handlers
-  const handleConvert = useCallback(() => {
-    // Implement convert action
-    console.log("Open convert modal");
-  }, []);
-
-  const handleRefresh = useCallback(() => {
-    // Implement refresh action
-    console.log("Refresh data");
-  }, []);
-
-  const handleDetailsClick = useCallback((convertId: number) => {
-    // Implement details view
-    console.log("Show details for convert ID:", convertId);
-  }, []);
-
-  useEffect(() => {
-    console.log("data --------------------------");
-  }, []);
-
   return {
     // Data
     dataSource: data?.rows || [],
@@ -225,11 +202,6 @@ export const useConvertScript = () => {
     statusFilter,
     convertedAssetFilter,
     convertedAssetOptions,
-
-    // Actions
-    onConvert: handleConvert,
-    onRefresh: handleRefresh,
-    onDetailsClick: handleDetailsClick,
 
     // State
     isMainAccount,

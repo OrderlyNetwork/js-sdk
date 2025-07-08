@@ -119,7 +119,9 @@ const AssetMobileItem: FC<AssetMobileItemProps> = ({ item }) => {
             {t("common.quantity")}
           </div>
           <div>
-            <Text.numeral dp={2}>{item.holding}</Text.numeral>
+            <Text.numeral dp={6} padding={false}>
+              {item.holding}
+            </Text.numeral>
           </div>
         </div>
         <div className="oui-flex oui-flex-col">
@@ -127,7 +129,9 @@ const AssetMobileItem: FC<AssetMobileItemProps> = ({ item }) => {
             {t("transfer.deposit.collateralContribution")}
           </div>
           <div className="oui-flex oui-items-center oui-gap-1 oui-self-end oui-text-xs oui-font-semibold oui-text-base-contrast-80">
-            <Text.numeral dp={2}>{item.collateralContribution}</Text.numeral>
+            <Text.numeral dp={6} padding={false}>
+              {item.collateralContribution}
+            </Text.numeral>
             <div className="oui-text-base-contrast-36">USDC</div>
           </div>
         </div>
@@ -150,7 +154,7 @@ const AssetMobileItem: FC<AssetMobileItemProps> = ({ item }) => {
               "hover:!oui-bg-transparent disabled:oui-border-white/[0.16] disabled:!oui-bg-transparent disabled:oui-text-base-contrast-20",
           )}
         >
-          Convert
+          {t("transfer.convert")}
         </Button>
         <Button
           variant="outlined"
