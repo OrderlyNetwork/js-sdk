@@ -2,16 +2,15 @@ import { useCallback, useEffect, useMemo } from "react";
 import {
   useAccount,
   useConfig,
+  useComputedLTV,
   useDeposit,
-  useHoldingStream,
   useIndexPrice,
   useIndexPricesStream,
-  usePositionStream,
   useQuery,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { account } from "@orderly.network/perp";
-import { useAppContext, useDataTap } from "@orderly.network/react-app";
+import { useAppContext } from "@orderly.network/react-app";
 import { API, NetworkId, ChainNamespace } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 import { feeDecimalsOffset } from "../../utils";
@@ -25,7 +24,7 @@ import {
 } from "./hooks";
 import { useToken } from "./hooks/useToken";
 
-const { collateralRatio, LTV, collateralContribution, calcMinimumReceived } =
+const { collateralRatio, collateralContribution, calcMinimumReceived } =
   account;
 
 export type UseDepositFormScriptReturn = ReturnType<
@@ -325,13 +324,7 @@ const useCollateralValue = (params: {
 
   const quantity = Number(params.qty);
 
-  const { data: holdingList = [], usdc } = useHoldingStream();
   const { data: indexPrices } = useIndexPricesStream();
-  const [data] = usePositionStream(sourceToken?.symbol);
-  const aggregated = useDataTap(data.aggregated);
-  const unrealPnL = aggregated?.total_unreal_pnl ?? 0;
-
-  const usdcBalance = usdc?.holding ?? 0;
 
   const indexPrice = useMemo(() => {
     if (sourceToken?.symbol === "USDC") {
@@ -359,72 +352,23 @@ const useCollateralValue = (params: {
     indexPrice: indexPrice,
   });
 
-  const memoizedCurrentLTV = useMemo(() => {
-    const value = LTV({
-      usdcBalance: usdcBalance,
-      upnl: unrealPnL,
-      collateralAssets: holdingList
-        .filter((h) => h.token !== "USDC")
-        .map((item) => {
-          const originalQty = item?.holding ?? 0;
-          const _indexPrice = indexPrices[`PERP_${item.token}_USDC`] ?? 0;
-          return {
-            qty: originalQty,
-            indexPrice: _indexPrice,
-            weight: collateralRatio({
-              baseWeight: targetToken?.base_weight ?? 0,
-              discountFactor: targetToken?.discount_factor ?? 0,
-              indexPrice: _indexPrice,
-              collateralQty: originalQty,
-            }),
-          };
-        }),
-    });
-    return new Decimal(value)
-      .mul(100)
-      .toDecimalPlaces(2, Decimal.ROUND_DOWN)
-      .toNumber();
-  }, [holdingList, usdcBalance, unrealPnL, indexPrices, targetToken]);
-
-  const memoizedNextLTV = useMemo(() => {
-    const value = LTV({
-      usdcBalance: usdcBalance,
-      upnl: unrealPnL,
-      collateralAssets: holdingList
-        .filter((h) => h.token !== "USDC")
-        .map((item) => {
-          const originalQty = item?.holding ?? 0;
-          const _indexPrice = indexPrices[`PERP_${item.token}_USDC`] ?? 0;
-          return {
-            qty: originalQty,
-            indexPrice: _indexPrice,
-            weight: collateralRatio({
-              baseWeight: targetToken?.base_weight ?? 0,
-              discountFactor: targetToken?.discount_factor ?? 0,
-              indexPrice: _indexPrice,
-              collateralQty: quantity
-                ? new Decimal(originalQty).add(quantity).toNumber()
-                : originalQty,
-            }),
-          };
-        }),
-    });
-    return new Decimal(value)
-      .mul(100)
-      .toDecimalPlaces(2, Decimal.ROUND_DOWN)
-      .toNumber();
-  }, [holdingList, usdcBalance, unrealPnL, indexPrices, quantity, targetToken]);
-
   const minimumReceived = calcMinimumReceived({
     amount: collateralContributionQuantity,
     slippage,
   });
 
+  const currentLtv = useComputedLTV();
+
+  const nextLTV = useComputedLTV({
+    input: quantity,
+    token: sourceToken?.symbol,
+  });
+
   return {
     collateralRatio: getCollateralRatio(quantity),
     collateralContributionQuantity,
-    currentLTV: memoizedCurrentLTV,
-    nextLTV: memoizedNextLTV,
+    currentLTV: currentLtv,
+    nextLTV: nextLTV,
     indexPrice,
     minimumReceived,
   };

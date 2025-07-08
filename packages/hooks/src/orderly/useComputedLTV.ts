@@ -6,7 +6,14 @@ import { useTokensInfo } from "./useTokensInfo/tokensInfo.store";
 
 const { LTV, collateralRatio } = account;
 
-export const useCurrentLtv = () => {
+interface LTVOptions {
+  input?: number;
+  token?: string;
+}
+
+export const useComputedLTV = (options: LTVOptions = {}) => {
+  const { input, token } = options;
+
   const { usdc, data: holdingList = [] } = useHoldingStream();
 
   const tokensInfo = useTokensInfo();
@@ -17,8 +24,14 @@ export const useCurrentLtv = () => {
 
   const unrealPnL = position?.aggregated?.total_unreal_pnl ?? 0;
 
+  const usdcBalance = useMemo(() => {
+    if (token === "USDC" && input) {
+      return new Decimal(usdc?.holding ?? 0).add(input).toNumber();
+    }
+    return usdc?.holding ?? 0;
+  }, [usdc?.holding, input, token]);
+
   const currentLtv = useMemo(() => {
-    const usdcBalance = usdc?.holding ?? 0;
     return LTV({
       usdcBalance: usdcBalance,
       upnl: unrealPnL,
@@ -29,7 +42,10 @@ export const useCurrentLtv = () => {
           const findToken = tokensInfo?.find(
             (token) => token.token === item.token,
           );
-          const qty = item?.holding ?? 0;
+          const qty =
+            token !== "USDC" && input
+              ? new Decimal(item?.holding ?? 0).add(input).toNumber()
+              : (item?.holding ?? 0);
           return {
             qty: qty,
             indexPrice: indexPrice ?? 0,
@@ -42,7 +58,15 @@ export const useCurrentLtv = () => {
           };
         }),
     });
-  }, [usdc?.holding, unrealPnL, holdingList, indexPrices, tokensInfo]);
+  }, [
+    usdc?.holding,
+    unrealPnL,
+    holdingList,
+    indexPrices,
+    tokensInfo,
+    input,
+    token,
+  ]);
 
   return new Decimal(currentLtv)
     .mul(100)

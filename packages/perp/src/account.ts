@@ -828,9 +828,7 @@ export const calcMinimumReceived = (inputs: {
   slippage: number;
 }) => {
   const { amount, slippage } = inputs;
-  const MAX_SLIPPAGE = 3;
-  const safeSlippage = Math.min(slippage, MAX_SLIPPAGE);
-  const slippageRatio = new Decimal(safeSlippage).div(100);
+  const slippageRatio = new Decimal(slippage).div(100);
   return new Decimal(amount)
     .mul(new Decimal(1).minus(slippageRatio))
     .toNumber();

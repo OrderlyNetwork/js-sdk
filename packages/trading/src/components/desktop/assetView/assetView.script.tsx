@@ -11,7 +11,7 @@ import {
   useCollateral,
   useMarginRatio,
   usePositionStream,
-  useCurrentLtv,
+  useComputedLTV,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext, useDataTap } from "@orderly.network/react-app";
@@ -204,7 +204,7 @@ export const useAssetViewScript = () => {
     },
   });
 
-  const currentLtv = useCurrentLtv();
+  const currentLtv = useComputedLTV();
   const _freeCollateral = useDataTap(freeCollateral) ?? undefined;
   const _marginRatioVal = useDataTap(marginRatioVal) ?? undefined;
   const _mmr = useDataTap(mmr) ?? undefined;

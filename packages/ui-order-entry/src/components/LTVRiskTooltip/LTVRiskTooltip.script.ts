@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import {
-  useCurrentLtv,
+  useComputedLTV,
   useHoldingStream,
   useQuery,
 } from "@orderly.network/hooks";
@@ -31,7 +31,7 @@ export const useLTVTooltipScript = () => {
     isLoading: isThresholdLoading,
   } = useConvertThreshold();
 
-  const currentLtv = useCurrentLtv();
+  const currentLtv = useComputedLTV();
 
   const onConvert = useCallback(async () => {
     return modal.show("ConvertDialogId");

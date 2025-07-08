@@ -31,8 +31,7 @@ export { useMarkPrice } from "./useMarkPrice";
 export { useIndexPrice } from "./useIndexPrice";
 export { useLeverage } from "./useLeverage";
 export { useOdosQuote } from "./useOdosQuote";
-export { useCurrentLtv } from "./useCurrentLtv";
-
+export { useComputedLTV } from "./useComputedLTV";
 export { useTickerStream } from "./useTickerStream";
 export { useFundingRate } from "./useFundingRate";
 export { useFundingRates, type FundingRates } from "./useFundingRates";
