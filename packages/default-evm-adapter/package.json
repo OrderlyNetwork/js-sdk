@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/default-evm-adapter",
-  "version": "2.4.2-internal-multi-collateral.12",
+  "version": "2.4.2-internal-multi-collateral.13",
   "description": "",
   "scripts": {
     "build": "tsup",

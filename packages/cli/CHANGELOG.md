@@ -1,5 +1,13 @@
 # @orderly.network/cli
 
+## 0.7.2-internal-multi-collateral.13
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.4.2-internal-multi-collateral.13
+
 ## 0.7.2-internal-multi-collateral.12
 
 ### Patch Changes

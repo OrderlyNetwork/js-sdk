@@ -8,7 +8,7 @@ declare global {
 if (typeof window !== "undefined") {
   window.__ORDERLY_VERSION__ = window.__ORDERLY_VERSION__ || {};
   window.__ORDERLY_VERSION__["@orderly.network/perp"] =
-    "4.4.2-internal-multi-collateral.12";
+    "4.4.2-internal-multi-collateral.13";
 }
 
-export default "4.4.2-internal-multi-collateral.12";
+export default "4.4.2-internal-multi-collateral.13";
