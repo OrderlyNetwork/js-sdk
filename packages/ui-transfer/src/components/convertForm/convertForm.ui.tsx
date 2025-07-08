@@ -9,7 +9,10 @@ import { MinimumReceived } from "../minimumReceived";
 import { QuantityInput } from "../quantityInput";
 import { Slippage } from "../slippage";
 import { SwapCoin } from "../swapCoin";
-import type { ConvertFormScriptReturn } from "./convertForm.script";
+import {
+  unnormalizeAmount,
+  type ConvertFormScriptReturn,
+} from "./convertForm.script";
 
 export type ConvertFormProps = ConvertFormScriptReturn;
 
@@ -33,9 +36,6 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
     currentLTV,
     nextLTV,
   } = props;
-
-  console.log("ConvertFormUI props", currentLTV);
-  console.log("ConvertFormUI props", nextLTV);
 
   return (
     <Box className={textVariants({ weight: "semibold" })}>
@@ -65,18 +65,32 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
           readOnly
           loading={isQuoteLoading}
           token={targetToken}
-          value={isQuoteLoading || !quantity ? "" : minimumReceived}
+          value={
+            isQuoteLoading || !quantity
+              ? ""
+              : unnormalizeAmount(
+                  minimumReceived.toString(),
+                  targetToken?.decimals ?? 6,
+                )
+          }
         />
         <Flex direction="column" itemAlign="start" mt={2} gap={1}>
           <SwapCoin
-            indexPrice={convertRate}
+            indexPrice={isQuoteLoading || !quantity ? "-" : convertRate}
             sourceSymbol={token?.display_name || token?.symbol}
             targetSymbol={targetToken?.display_name || targetToken?.symbol}
           />
           <Slippage value={slippage} onValueChange={onSlippageChange} />
           <MinimumReceived
             symbol={targetToken?.display_name || targetToken?.symbol || ""}
-            value={isQuoteLoading || !quantity ? "-" : minimumReceived}
+            value={
+              isQuoteLoading || !quantity
+                ? "-"
+                : unnormalizeAmount(
+                    minimumReceived.toString(),
+                    targetToken?.decimals ?? 6,
+                  )
+            }
           />
           <LtvWidget
             showDiff={typeof quantity !== "undefined" && Number(quantity) > 0}

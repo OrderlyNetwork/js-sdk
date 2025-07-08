@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useConfig } from "@orderly.network/hooks";
-import { nativeETHAddress, NetworkId, type API } from "@orderly.network/types";
+import { NetworkId, type API } from "@orderly.network/types";
 import { getTokenByTokenList } from "../../../utils";
 import type { CurrentChain } from "./useChainSelect";
 
@@ -21,13 +21,7 @@ export const useToken = (
     if (chainInfo && chainInfo?.token_infos?.length > 0) {
       // const tokens = chainInfo.token_infos.filter((i) => i.is_collateral);
       // all tokens available in the chain, include swap tokens
-      const tokens = chainInfo.token_infos?.filter(filter)?.map((item) => {
-        // if sourceToken is ETH, set address to nativeETHAddress
-        if (!item.address && item.symbol === "ETH") {
-          item.address = nativeETHAddress;
-        }
-        return item;
-      });
+      const tokens = chainInfo.token_infos?.filter(filter);
 
       const usdcToken = getTokenByTokenList(tokens);
       if (!usdcToken) {

@@ -460,7 +460,8 @@ export function formatChains({
 
         return {
           symbol: item.token,
-          address: chain?.contract_address,
+          // if contract_address is not exist, use nativeTokenAddress to place holder
+          address: chain?.contract_address || nativeTokenAddress,
           /** chain decimals */
           decimals: chain?.decimals,
           // chain_decimals: chain?.decimals,

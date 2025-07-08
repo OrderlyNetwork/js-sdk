@@ -13,7 +13,12 @@ import {
 import { useTranslation } from "@orderly.network/i18n";
 import { account } from "@orderly.network/perp";
 import { useAppContext } from "@orderly.network/react-app";
-import { API, nativeETHAddress, NetworkId } from "@orderly.network/types";
+import {
+  API,
+  nativeETHAddress,
+  nativeTokenAddress,
+  NetworkId,
+} from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
 import { Decimal, praseChainIdToNumber } from "@orderly.network/utils";
 import { InputStatus } from "../../types";
@@ -99,7 +104,10 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
       ...sourceToken!,
       precision: sourceToken?.precision ?? 6,
     };
-    if (!_token.address && _token.symbol === "ETH") {
+    if (
+      _token.symbol === "ETH" &&
+      (!_token.address || _token.address === nativeTokenAddress)
+    ) {
       _token.address = nativeETHAddress;
     }
     return _token;
@@ -182,25 +190,30 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     if (!quoteData || isQuoteLoading) {
       return "-";
     }
-    const rate = new Decimal(quoteData.outAmounts[0])
-      .div(quoteData.inAmounts[0])
-      .toNumber();
+    const rate = new Decimal(
+      unnormalizeAmount(quoteData.outAmounts[0], targetToken?.decimals ?? 6),
+    )
+      .div(unnormalizeAmount(quoteData.inAmounts[0], token.decimals))
+      .toString();
     return rate;
   }, [quoteData]);
 
   useEffect(() => {
     if (quantity && currentChain?.id && token.address && targetToken?.address) {
       postQuote({
+        // chainId: 8453,
         chainId: currentChain.id,
         inputTokens: [
           {
             amount: normalizeAmount(quantity, token.decimals),
+            // tokenAddress: "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2",
             tokenAddress: token.address,
           },
         ],
         outputTokens: [
           {
             proportion: 1,
+            // tokenAddress: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
             tokenAddress: targetToken.address,
           },
         ],

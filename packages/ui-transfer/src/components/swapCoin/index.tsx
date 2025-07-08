@@ -10,8 +10,7 @@ interface SwapCoinProps {
 }
 
 export const SwapCoin: FC<SwapCoinProps> = (props) => {
-  const { sourceSymbol, targetSymbol, indexPrice, precision = 3 } = props;
-
+  const { sourceSymbol, targetSymbol, indexPrice, precision = 6 } = props;
   return (
     <Flex
       itemAlign="center"
