@@ -627,6 +627,7 @@
   "transfer.LTV.tooltip": "Wenn Ihr LTV {{threshold}}% überschreitet oder Ihr USDC-Saldo plus unabgewickelter PnL unter {{usdcThreshold}} fällt, werden Ihre Sicherheiten automatisch mit einem Abschlag umgewandelt. Um dies zu vermeiden, können Sie Vermögenswerte manuell in USDC umwandeln.",
   "transfer.LTV.currentLTV": "Aktueller LTV",
   "transfer.convert": "Umwandeln",
+  "transfer.deposit.userMaxQty.error": "Sicherheitenlimit erreicht. Maximal erlaubt: {{maxQty}} {{token}}.",
   "affiliate.referral": "Empfehlung",
   "affiliate.trader": "Händler",
   "affiliate.enter": "Eingeben",

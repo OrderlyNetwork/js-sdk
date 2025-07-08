@@ -627,6 +627,7 @@
   "transfer.LTV.tooltip": "Jika LTV Anda melebihi {{threshold}}% atau saldo USDC Anda ditambah PnL yang belum diselesaikan turun di bawah {{usdcThreshold}}, jaminan Anda akan secara otomatis dikonversi dengan potongan harga. Untuk menghindari hal ini, Anda dapat secara manual mengkonversi aset ke USDC.",
   "transfer.LTV.currentLTV": "LTV saat ini",
   "transfer.convert": "Konversi",
+  "transfer.deposit.userMaxQty.error": "Batas jaminan tercapai. Maksimum yang diizinkan: {{maxQty}} {{token}}.",
   "affiliate.referral": "Referral",
   "affiliate.trader": "Trader",
   "affiliate.enter": "Masuk",

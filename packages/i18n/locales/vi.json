@@ -627,6 +627,7 @@
   "transfer.LTV.tooltip": "Nếu LTV của bạn vượt quá {{threshold}}% hoặc số dư USDC cộng với PnL chưa thanh toán giảm xuống dưới {{usdcThreshold}}, tài sản thế chấp sẽ được tự động chuyển đổi với mức giảm giá. Để tránh điều này, bạn có thể chuyển đổi tài sản sang USDC thủ công.",
   "transfer.LTV.currentLTV": "LTV hiện tại",
   "transfer.convert": "Chuyển đổi",
+  "transfer.deposit.userMaxQty.error": "Đã đạt giới hạn tài sản thế chấp. Số lượng tối đa cho phép: {{maxQty}} {{token}}.",
   "affiliate.referral": "Giới thiệu",
   "affiliate.trader": "Nhà giao dịch",
   "affiliate.enter": "Nhập",

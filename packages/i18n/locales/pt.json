@@ -627,6 +627,7 @@
   "transfer.LTV.tooltip": "Se seu LTV exceder {{threshold}}% ou seu saldo USDC mais PnL não liquidado cair abaixo de {{usdcThreshold}}, sua garantia será automaticamente convertida com desconto. Para evitar isso, você pode converter manualmente os ativos para USDC.",
   "transfer.LTV.currentLTV": "LTV atual",
   "transfer.convert": "Converter",
+  "transfer.deposit.userMaxQty.error": "Limite de garantia atingido. Máximo permitido: {{maxQty}} {{token}}.",
   "affiliate.referral": "Indicação",
   "affiliate.trader": "Trader",
   "affiliate.enter": "Entrar",

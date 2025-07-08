@@ -627,6 +627,7 @@
   "transfer.LTV.tooltip": "Если ваш LTV превышает {{threshold}}% или ваш баланс USDC плюс неурегулированный PnL падает ниже {{usdcThreshold}}, ваш залог будет автоматически конвертирован со скидкой. Чтобы избежать этого, вы можете вручную конвертировать активы в USDC.",
   "transfer.LTV.currentLTV": "Текущий LTV",
   "transfer.convert": "Конвертировать",
+  "transfer.deposit.userMaxQty.error": "Достигнут лимит обеспечения. Максимально допустимо: {{maxQty}} {{token}}.",
   "affiliate.referral": "Реферальная программа",
   "affiliate.trader": "Трейдер",
   "affiliate.enter": "Войти",
