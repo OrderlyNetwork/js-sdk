@@ -1,5 +1,18 @@
 # @orderly.network/ui-connector
 
+## 2.4.2-internal-multi-collateral.6
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.4.2-internal-multi-collateral.6
+  - @orderly.network/hooks@2.4.2-internal-multi-collateral.6
+  - @orderly.network/i18n@2.4.2-internal-multi-collateral.6
+  - @orderly.network/types@2.4.2-internal-multi-collateral.6
+  - @orderly.network/ui@2.4.2-internal-multi-collateral.6
+  - @orderly.network/ui-chain-selector@2.4.2-internal-multi-collateral.6
+
 ## 2.4.2-internal-multi-collateral.5
 
 ### Patch Changes

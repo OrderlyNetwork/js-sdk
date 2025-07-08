@@ -1,5 +1,13 @@
 # @orderly.network/core
 
+## 2.4.2-internal-multi-collateral.6
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@2.4.2-internal-multi-collateral.6
+
 ## 2.4.2-internal-multi-collateral.5
 
 ### Patch Changes
