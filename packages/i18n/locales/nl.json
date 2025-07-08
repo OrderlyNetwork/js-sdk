@@ -627,6 +627,7 @@
   "transfer.LTV.tooltip": "Als uw LTV {{threshold}}% overschrijdt of uw USDC-saldo plus onafgewikkelde PnL onder {{usdcThreshold}} valt, wordt uw onderpand automatisch geconverteerd met korting. Om dit te voorkomen, kunt u handmatig activa naar USDC converteren.",
   "transfer.LTV.currentLTV": "Huidige LTV",
   "transfer.convert": "Converteren",
+  "transfer.deposit.userMaxQty.error": "Onderpandlimiet bereikt. Maximum toegestaan: {{maxQty}} {{token}}.",
   "affiliate.referral": "Verwijzing",
   "affiliate.trader": "Handelaar",
   "affiliate.enter": "Invoeren",

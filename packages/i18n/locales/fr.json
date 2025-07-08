@@ -627,6 +627,7 @@
   "transfer.LTV.tooltip": "Si votre LTV dépasse {{threshold}}% ou si votre solde USDC plus PnL non réglé tombe en dessous de {{usdcThreshold}}, votre garantie sera automatiquement convertie avec une décote. Pour éviter cela, vous pouvez convertir manuellement les actifs en USDC.",
   "transfer.LTV.currentLTV": "LTV actuel",
   "transfer.convert": "Convertir",
+  "transfer.deposit.userMaxQty.error": "Plafond de garantie atteint. Maximum autorisé : {{maxQty}} {{token}}.",
   "affiliate.referral": "Parrainage",
   "affiliate.trader": "Trader",
   "affiliate.enter": "Entrer",

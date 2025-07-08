@@ -15,7 +15,7 @@ export const useSettlePnl = (options?: SettlePnlOptions) => {
   const { accountId } = options || {};
   const { t } = useTranslation();
   const ee = useEventEmitter();
-  const { account } = useAccount();
+  const { account, state } = useAccount();
   const [positionData] = usePositionStream();
 
   const hasPositions = useMemo(
@@ -24,10 +24,10 @@ export const useSettlePnl = (options?: SettlePnlOptions) => {
   );
 
   const onSettlePnl = async () => {
-    const isMainAccount = account.stateValue.mainAccountId === accountId;
-    const settleFn = isMainAccount
-      ? account.settle({ accountId })
-      : account.settleSubAccount({ subAccountId: accountId });
+    const isSubAccount = accountId && state.mainAccountId !== accountId;
+    const settleFn = isSubAccount
+      ? account.settleSubAccount({ subAccountId: accountId })
+      : account.settle({ accountId });
     return settleFn
       .then((res) => {
         toast.success(t("settle.settlement.requested"));

@@ -627,6 +627,7 @@
   "transfer.LTV.tooltip": "LTV'niz {{threshold}}%'ı aşarsa veya USDC bakiyeniz artı kapatılmamış PnL {{usdcThreshold}}'ın altına düşerse, teminatınız indirimli olarak otomatik dönüştürülecektir. Bunu önlemek için varlıkları manuel olarak USDC'ye dönüştürebilirsiniz.",
   "transfer.LTV.currentLTV": "Mevcut LTV",
   "transfer.convert": "Dönüştür",
+  "transfer.deposit.userMaxQty.error": "Teminat limitine ulaşıldı. İzin verilen maksimum: {{maxQty}} {{token}}.",
   "affiliate.referral": "Yönlendirme",
   "affiliate.trader": "İşlemci",
   "affiliate.enter": "Gir",
