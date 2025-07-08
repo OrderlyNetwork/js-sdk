@@ -729,13 +729,20 @@ export const collateralRatio = (params: {
   baseWeight: number;
   discountFactor: number | null;
   collateralQty: number;
+  collateralCap: number;
   indexPrice: number;
 }) => {
-  const { baseWeight, discountFactor, collateralQty, indexPrice } = params;
+  const {
+    baseWeight,
+    discountFactor,
+    collateralQty,
+    collateralCap,
+    indexPrice,
+  } = params;
 
   const K = new Decimal(1.2);
   const DCF = new Decimal(discountFactor || 0);
-  const qty = new Decimal(collateralQty);
+  const qty = new Decimal(Math.min(collateralQty, collateralCap));
   const price = new Decimal(indexPrice);
 
   const notionalAbs = qty.mul(price).abs();
