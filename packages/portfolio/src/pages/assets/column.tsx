@@ -63,7 +63,7 @@ export const useAssetsColumns = (options: ColumnsOptions) => {
         width: 100,
         render(val: number) {
           return (
-            <Text.numeral rule="price" dp={2} currency="$">
+            <Text.numeral rule="price" dp={val > 10 ? 2 : 6} currency="$">
               {val}
             </Text.numeral>
           );
@@ -76,7 +76,7 @@ export const useAssetsColumns = (options: ColumnsOptions) => {
         width: 120,
         render(val: number) {
           return (
-            <Text.numeral rule="price" dp={2} currency="$">
+            <Text.numeral rule="price" dp={val > 10 ? 2 : 6} currency="$">
               {val}
             </Text.numeral>
           );

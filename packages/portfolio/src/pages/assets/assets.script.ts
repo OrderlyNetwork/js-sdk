@@ -4,10 +4,9 @@ import {
   useCollateral,
   useLocalStorage,
   useIndexPricesStream,
-  useChains,
+  useTokensInfo,
 } from "@orderly.network/hooks";
 import { account } from "@orderly.network/perp";
-import { API } from "@orderly.network/types";
 import { modal } from "@orderly.network/ui";
 import {
   DepositAndWithdrawWithDialogId,
@@ -34,8 +33,7 @@ export const useAssetsScript = () => {
   const { holding = [] } = useCollateral();
   const { data: indexPrices } = useIndexPricesStream();
 
-  // Get token information including base_weight and discount_factor
-  const [chains] = useChains();
+  const tokensInfo = useTokensInfo();
 
   const subAccounts = state.subAccounts ?? [];
 
@@ -47,23 +45,14 @@ export const useAssetsScript = () => {
     setVisible((visible: boolean) => !visible);
   };
 
-  // Create token info map for easy lookup
-  const tokenInfoMap = useMemo(() => {
-    const map = new Map<string, API.TokenInfo>();
-    if (chains) {
-      const allChains = Array.isArray(chains)
-        ? chains
-        : [...(chains.testnet || []), ...(chains.mainnet || [])];
-      allChains.forEach((chain: API.Chain) => {
-        if (chain.token_infos) {
-          chain.token_infos.forEach((tokenInfo: API.TokenInfo) => {
-            map.set(tokenInfo.symbol, tokenInfo);
-          });
-        }
-      });
-    }
-    return map;
-  }, [chains]);
+  const assetsOptions = useMemo(() => {
+    return (
+      tokensInfo?.map((item) => ({
+        label: item.token,
+        value: item.token,
+      })) || []
+    );
+  }, [tokensInfo]);
 
   // Use the extracted accounts data hook
   const allAccounts = useAccountsData();
@@ -82,12 +71,12 @@ export const useAssetsScript = () => {
       // Enhance each child (holding) with calculated fields
       const enhancedChildren =
         accountData.children?.map((holding: any) => {
-          const tokenInfo = tokenInfoMap.get(holding.token);
+          const tokenInfo = tokensInfo?.find(
+            (item) => item.token === holding.token,
+          );
 
           // Use extracted function for index price calculation
           const indexPrice = getIndexPrice(holding.token, indexPrices);
-
-          // console.log(holding, indexPrice, tokenInfo, tokenInfoMap);
 
           // Use extracted function for asset value calculation
           const assetValue = calculateAssetValue(
@@ -95,8 +84,6 @@ export const useAssetsScript = () => {
             holding.token,
             indexPrices,
           ).toNumber();
-
-          // console.log(tokenInfo, holding, indexPrice, tokenInfoMap);
 
           // Calculate collateral ratio for this token
           const collateralRatio = tokenInfo
@@ -129,7 +116,7 @@ export const useAssetsScript = () => {
         children: enhancedChildren,
       };
     });
-  }, [filtered, indexPrices, tokenInfoMap]);
+  }, [filtered, indexPrices, tokensInfo]);
 
   const handleTransfer = useCallback((accountId: string, token: string) => {
     if (!accountId) {
@@ -178,11 +165,12 @@ export const useAssetsScript = () => {
     selectedAccount,
     selectedAsset,
     onFilter,
-    totalValue: totalValue, // Use the hook's return value
+    totalValue,
     hasSubAccount: subAccounts.length > 0,
     onDeposit,
     onWithdraw,
     holding,
+    assetsOptions,
   };
 };
 

@@ -1116,6 +1116,7 @@ export class Account {
     }
   }
 
+  /** set main account pnl */
   async settle(options?: {
     /**
      * if you are main account, you don't need to pass the accountId

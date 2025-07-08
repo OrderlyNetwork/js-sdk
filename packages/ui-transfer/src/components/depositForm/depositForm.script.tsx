@@ -9,6 +9,7 @@ import {
   usePositionStream,
   useQuery,
 } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 import { account } from "@orderly.network/perp";
 import { useAppContext, useDataTap } from "@orderly.network/react-app";
 import { API, NetworkId, ChainNamespace } from "@orderly.network/types";
@@ -37,6 +38,7 @@ export type UseDepositFormScriptOptions = {
 
 export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
   const { wrongNetwork } = useAppContext();
+  const { t } = useTranslation();
 
   const networkId = useConfig("networkId") as NetworkId;
 
@@ -100,6 +102,26 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     dstChainId: dst?.chainId,
   });
 
+  const userMaxQtyMessage = useMemo(() => {
+    if (
+      sourceToken?.symbol === "USDC" ||
+      sourceToken?.symbol !== targetToken?.symbol ||
+      !sourceToken?.is_collateral ||
+      !quantity ||
+      isNaN(Number(quantity))
+    ) {
+      return "";
+    }
+
+    if (new Decimal(quantity).gt(sourceToken?.user_max_qty)) {
+      return t("transfer.deposit.userMaxQty.error", {
+        maxQty: sourceToken?.user_max_qty,
+        token: sourceToken?.symbol,
+      });
+    }
+    return "";
+  }, [sourceToken, targetToken, quantity, t]);
+
   const {
     cleanTransactionInfo,
     onSwapDeposit,
@@ -109,7 +131,7 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     markPrice,
     swapQuantity,
     swapFee,
-    warningMessage,
+    warningMessage: swapWarningMessage,
     slippage,
     onSlippageChange,
   } = useSwapDeposit({
@@ -152,7 +174,9 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     !sourceToken ||
     inputStatus === "error" ||
     depositFeeRevalidating! ||
-    swapRevalidating;
+    swapRevalidating ||
+    // if exceed collateral cap, disable deposit
+    !!userMaxQtyMessage;
 
   const amount = useMemo(() => {
     const markPrice = 1;
@@ -195,6 +219,8 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
   useEffect(() => {
     cleanData();
   }, [sourceToken, currentChain?.id]);
+
+  const warningMessage = swapWarningMessage || userMaxQtyMessage;
 
   return {
     sourceToken,

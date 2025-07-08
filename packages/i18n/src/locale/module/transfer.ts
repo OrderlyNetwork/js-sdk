@@ -132,6 +132,8 @@ export const transfer = {
   "transfer.LTV.currentLTV": "Current LTV",
   "transfer.convert": "Convert",
   // "transfer.convert.note": "Please note that convert fees will be charged.",
+  "transfer.deposit.userMaxQty.error":
+    "Collateral cap reached. Maximum allowed: {{maxQty}} {{token}}.",
 };
 
 export type Transfer = typeof transfer;

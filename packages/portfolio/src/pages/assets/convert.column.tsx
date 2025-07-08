@@ -1,6 +1,13 @@
 import React, { useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { Button, Flex, Text, TokenIcon, Tooltip } from "@orderly.network/ui";
+import {
+  Button,
+  Flex,
+  Text,
+  TokenIcon,
+  Tooltip,
+  toast,
+} from "@orderly.network/ui";
 import type { Column } from "@orderly.network/ui";
 import type { ConvertRecord, ConvertTransaction } from "./type";
 
@@ -88,6 +95,11 @@ export const ConvertedAssetColumn = ({
 export const useConvertColumns = (options: ConvertColumnsOptions) => {
   const { onDetailsClick } = options;
   const { t } = useTranslation();
+  const onCopy = (e: any) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toast.success(t("common.copy.copied"));
+  };
 
   const columns = React.useMemo<Column[]>(() => {
     return [
@@ -127,6 +139,9 @@ export const useConvertColumns = (options: ConvertColumnsOptions) => {
         dataIndex: "type",
         align: "left",
         width: 120,
+        render(type: string) {
+          return <Text>{type.charAt(0).toUpperCase() + type.slice(1)}</Text>;
+        },
       },
       {
         title: t("portfolio.overview.column.convert.convertId"),
@@ -134,7 +149,11 @@ export const useConvertColumns = (options: ConvertColumnsOptions) => {
         align: "left",
         width: 100,
         render(convertId: number) {
-          return <Text.formatted copyable>{convertId}</Text.formatted>;
+          return (
+            <Text.formatted onCopy={onCopy} copyable>
+              {convertId}
+            </Text.formatted>
+          );
         },
       },
       {
@@ -150,21 +169,23 @@ export const useConvertColumns = (options: ConvertColumnsOptions) => {
         align: "left",
         width: 100,
         render(status: string) {
-          return <Text>{status}</Text>;
+          return (
+            <Text>{status.charAt(0).toUpperCase() + status.slice(1)}</Text>
+          );
         },
       },
       {
-        title: null,
-        dataIndex: "convert_id",
+        title: "",
+        dataIndex: "updated_time",
         align: "center",
         width: 80,
-        render(convertId: number) {
+        render(convertId: number, record: ConvertRecord) {
           return (
             <Button
               size="sm"
               variant="text"
               className="oui-text-primary"
-              onClick={() => onDetailsClick?.(convertId)}
+              onClick={() => onDetailsClick?.(record.convert_id)}
             >
               Details
             </Button>
@@ -183,6 +204,11 @@ export const useConvertDetailColumns = (
 ) => {
   const { onTxClick } = options;
   const { t } = useTranslation();
+  const onCopy = (e: any) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toast.success(t("common.copy.copied"));
+  };
   const columns = React.useMemo<Column[]>(() => {
     return [
       {
@@ -248,10 +274,11 @@ export const useConvertDetailColumns = (
           const explorer_base_url = chainInfo?.explorer_base_url;
           const href = `${explorer_base_url}/tx/${txId}`;
           return (
-            <a href={href} target="_blank" rel="noopener noreferrer">
+            <a href={href} target="_blank" rel="noreferrer">
               <Text.formatted
+                onCopy={onCopy}
                 rule="txId"
-                copyable
+                copyable={!!txId}
                 className="oui-cursor-pointer oui-underline oui-decoration-line-16 oui-decoration-dashed oui-underline-offset-4"
               >
                 {txId}
