@@ -45,7 +45,6 @@ export { useCollateral } from "./useCollateral";
 export type { CollateralOutputs } from "./useCollateral";
 export { useMaxQty } from "./useMaxQty";
 export { useMarginRatio, type MarginRatioReturn } from "./useMarginRatio";
-export { useAssetconvertEvent } from "./useAssetconvertStream";
 export { useChains } from "./useChains";
 export { useStorageChain } from "./useStorageChain";
 export type {
