@@ -1,5 +1,18 @@
 # @orderly.network/ui-tpsl
 
+## 2.4.2-internal-multi-collateral.8
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.4.2-internal-multi-collateral.8
+  - @orderly.network/hooks@2.4.2-internal-multi-collateral.8
+  - @orderly.network/i18n@2.4.2-internal-multi-collateral.8
+  - @orderly.network/types@2.4.2-internal-multi-collateral.8
+  - @orderly.network/ui@2.4.2-internal-multi-collateral.8
+  - @orderly.network/utils@2.4.2-internal-multi-collateral.8
+
 ## 2.4.2-internal-multi-collateral.7
 
 ### Patch Changes

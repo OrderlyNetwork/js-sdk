@@ -1,5 +1,11 @@
 # @orderly.network/types
 
+## 2.4.2-internal-multi-collateral.8
+
+### Patch Changes
+
+- publish
+
 ## 2.4.2-internal-multi-collateral.7
 
 ### Patch Changes
