@@ -314,9 +314,14 @@ export const useConvertDetailColumns = (
       },
       {
         title: t("common.status"),
-        dataIndex: "venue",
+        dataIndex: "result",
         align: "left",
         width: 100,
+        render(result: string) {
+          return (
+            <Text>{result?.charAt(0).toUpperCase() + result?.slice(1)}</Text>
+          );
+        },
       },
     ];
   }, []);

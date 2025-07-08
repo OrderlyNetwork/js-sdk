@@ -137,7 +137,7 @@ const ConvertMobileField: React.FC<ConvertMobileFieldProps> = ({
     >
       <p>{label}</p>
       <Text.formatted rule={rule} copyable={copyable} onCopy={onCopy}>
-        {value}
+        {value || "-"}
       </Text.formatted>
     </div>
   );
@@ -270,7 +270,15 @@ const ConverHistoryItemDetailsDialog =
                       )?.name || "-"
                     }
                   />
-                  <ConvertMobileField label="Status" value={detail.venue} />
+                  <ConvertMobileField
+                    label="Status"
+                    value={
+                      detail.result
+                        ? detail.result.charAt(0).toUpperCase() +
+                          detail.result.slice(1)
+                        : "-"
+                    }
+                  />
                 </div>
               </div>
               {index < item.details.length - 1 && <Divider />}

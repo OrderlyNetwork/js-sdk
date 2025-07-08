@@ -18,10 +18,11 @@ const splitTokenBySymbol = <T extends API.TokenInfo>(items: T[]) => {
 
 interface Options {
   currentChain?: CurrentChain | null;
+  defaultValue?: string;
 }
 
 export const useToken = (options: Options) => {
-  const { currentChain } = options;
+  const { currentChain, defaultValue } = options;
 
   const [sourceToken, setSourceToken] = useState<API.TokenInfo>();
   const [targetToken, setTargetToken] = useState<API.TokenInfo>();
@@ -31,7 +32,15 @@ export const useToken = (options: Options) => {
   const onChainInited = useCallback((chainInfo?: API.Chain) => {
     if (chainInfo && chainInfo?.token_infos?.length > 0) {
       const { usdc, others } = splitTokenBySymbol(chainInfo.token_infos);
-      setSourceToken(others[0]);
+      setSourceToken(() => {
+        if (defaultValue) {
+          const defaultToken = others.find(
+            ({ symbol }) => symbol === defaultValue,
+          );
+          return defaultToken ? defaultToken : others[0];
+        }
+        return others[0];
+      });
       setSourceTokens(others);
       setTargetToken(usdc[0]);
     }

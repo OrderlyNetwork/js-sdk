@@ -13,6 +13,7 @@ export interface ConvertTransaction {
   haircut: number;
   chain_id?: number; // Optional, only for on_chain venue
   tx_id?: string; // Optional, only for on_chain venue
+  result?: string;
 }
 
 export interface ConvertRecord {

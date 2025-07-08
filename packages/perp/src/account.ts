@@ -13,8 +13,6 @@ export type TotalValueInputs = {
   nonUSDCHolding: {
     holding: number;
     indexPrice: number;
-    //Margin replacement rate, currently default to 0
-    discountFactor: number;
   }[];
 };
 
@@ -48,15 +46,13 @@ export function freeCollateral(inputs: FreeCollateralInputs): Decimal {
 }
 
 export type TotalCollateralValueInputs = {
-  // Quantity of USDC holdings
   USDCHolding: number;
   nonUSDCHolding: {
-    holding: number; // collateral_qty_i
-    collateralCap: number; // collateral_cap_i
-    indexPrice: number; // index_price_i
-    discountFactor: number; // weight_i
+    holding: number;
+    indexPrice: number;
+    collateralCap: number;
+    collateralRatio: number;
   }[];
-  // Unsettled profit and loss
   unsettlementPnL: number;
 };
 
@@ -64,11 +60,13 @@ export type TotalCollateralValueInputs = {
  * Calculate total collateral.
  */
 export function totalCollateral(inputs: TotalCollateralValueInputs): Decimal {
+  console.log("totalCollateral inputs", inputs);
   const { USDCHolding, nonUSDCHolding, unsettlementPnL } = inputs;
+
   const nonUSDCHoldingValue = nonUSDCHolding.reduce<Decimal>((acc, cur) => {
     const finalHolding = Math.min(cur.holding, cur.collateralCap);
     const value = new Decimal(finalHolding)
-      .mul(cur.discountFactor)
+      .mul(cur.collateralRatio)
       .mul(cur.indexPrice);
     return acc.add(value);
   }, zero);
