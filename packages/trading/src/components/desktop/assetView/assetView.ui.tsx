@@ -191,7 +191,7 @@ const AssetDetail: FC<AssetDetailProps> = (props) => {
   return (
     <Flex justify="between">
       <Tooltip
-        className={cn(tooltipContent ? "oui-p-2" : undefined)}
+        className={cn(tooltipContent ? "oui-bg-base-6 oui-p-2" : undefined)}
         content={
           tooltipContent ? (
             tooltipContent

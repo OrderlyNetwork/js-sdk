@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { account as accountPerp } from "@orderly.network/perp";
-import { useCollateral, useIndexPricesStream, useTokensInfo } from "..";
+import { useCollateral, useIndexPricesStream, useTokenInfo } from "..";
 import { useHoldingStream } from "./useHoldingStream";
 
 const { maxWithdrawalUSDC, maxWithdrawalOtherCollateral, collateralRatio } =
@@ -13,7 +13,7 @@ const { maxWithdrawalUSDC, maxWithdrawalOtherCollateral, collateralRatio } =
 export function useMaxWithdrawal(token?: string) {
   const { unsettledPnL, freeCollateral } = useCollateral();
 
-  const tokensInfo = useTokensInfo();
+  const tokenInfo = useTokenInfo(token!);
 
   const { data: indexPrices } = useIndexPricesStream();
   const { usdc, data: holdings = [] } = useHoldingStream();
@@ -33,15 +33,14 @@ export function useMaxWithdrawal(token?: string) {
   }, [token, indexPrices]);
 
   const memoizedCollateralRatio = useMemo(() => {
-    const { base_weight, discount_factor } =
-      tokensInfo?.find((item) => item?.token === token) ?? {};
+    const { base_weight, discount_factor } = tokenInfo || {};
     return collateralRatio({
       baseWeight: base_weight ?? 0,
       discountFactor: discount_factor ?? 0,
       collateralQty: holding?.holding ?? 0,
       indexPrice,
     });
-  }, [holdings, tokensInfo, indexPrice, token, holding]);
+  }, [holdings, tokenInfo, indexPrice, token, holding]);
 
   const maxAmount = useMemo(() => {
     if (token === "USDC") {

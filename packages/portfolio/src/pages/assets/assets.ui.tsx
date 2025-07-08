@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import pick from "ramda/es/pick";
 import { useTranslation } from "@orderly.network/i18n";
+import { useAppContext } from "@orderly.network/react-app";
 import {
   Text,
   Card,
@@ -76,9 +77,11 @@ const DepositAndWithdrawButton: React.FC<
 > = (props) => {
   const { t } = useTranslation();
   const { isMainAccount, onWithdraw, onDeposit } = props;
+  const { wrongNetwork, disabledConnect } = useAppContext();
   if (!isMainAccount) {
     return null;
   }
+  const mergedDisabled = wrongNetwork || disabledConnect;
   return (
     <Flex
       className="oui-text-2xs oui-text-base-contrast-54"
@@ -87,6 +90,7 @@ const DepositAndWithdrawButton: React.FC<
     >
       <Button
         fullWidth
+        disabled={mergedDisabled}
         color="secondary"
         size="md"
         onClick={onWithdraw}
@@ -94,18 +98,23 @@ const DepositAndWithdrawButton: React.FC<
       >
         <ArrowDownShortIcon
           color="white"
-          opacity={1}
+          opacity={mergedDisabled ? 0.4 : 1}
           className="oui-rotate-180"
         />
         <Text>{t("common.withdraw")}</Text>
       </Button>
       <Button
+        disabled={mergedDisabled}
         data-testid="oui-testid-assetView-deposit-button"
         fullWidth
         size="md"
         onClick={onDeposit}
       >
-        <ArrowDownShortIcon color="white" opacity={1} />
+        <ArrowDownShortIcon
+          color="white"
+          opacity={mergedDisabled ? 0.4 : 1}
+          className="oui-rotate-0"
+        />
         <Text>{t("common.deposit")}</Text>
       </Button>
     </Flex>

@@ -6,10 +6,10 @@ import { BrokerWallet } from "../../brokerWallet";
 import { ChainSelect } from "../../chainSelect";
 import { ExchangeDivider } from "../../exchangeDivider";
 import { QuantityInput } from "../../quantityInput";
+import { Slippage } from "../../slippage";
 import { SwapCoin } from "../../swapCoin";
 import { Web3Wallet } from "../../web3Wallet";
 import { Notice } from "../components/notice";
-import { Slippage } from "../components/slippage";
 import { SwapFee } from "../components/swapFee";
 import { UseSwapDepositFormScriptReturn } from "./swapDepositForm.script";
 

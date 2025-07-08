@@ -6,7 +6,6 @@ import {
   useHoldingStream,
   useIndexPrice,
   useIndexPricesStream,
-  useLocalStorage,
   usePositionStream,
   useQuery,
 } from "@orderly.network/hooks";
@@ -25,7 +24,8 @@ import {
 } from "./hooks";
 import { useToken } from "./hooks/useToken";
 
-const ORDERLY_DEPOSIT_SLIPPAGE_KEY = "orderly_deposit_slippage";
+const { collateralRatio, LTV, collateralContribution, calcMinimumReceived } =
+  account;
 
 export type UseDepositFormScriptReturn = ReturnType<
   typeof useDepositFormScript
@@ -40,16 +40,6 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
 
   const networkId = useConfig("networkId") as NetworkId;
 
-  const [slippage, setSlippage] = useLocalStorage(
-    ORDERLY_DEPOSIT_SLIPPAGE_KEY,
-    "1",
-    {
-      parseJSON: (value: string | null) => {
-        return !value || value === '""' ? "1" : JSON.parse(value);
-      },
-    },
-  );
-
   const { chains, currentChain, settingChain, onChainChange } =
     useChainSelect();
 
@@ -61,6 +51,10 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     onSourceTokenChange,
     onTargetTokenChange,
   } = useToken(currentChain);
+
+  const usdcToken = useMemo(() => {
+    return sourceTokens?.find((item) => item.symbol === "USDC");
+  }, [sourceTokens]);
 
   const {
     dst,
@@ -116,8 +110,8 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     swapQuantity,
     swapFee,
     warningMessage,
-    slippage: swapSlippage,
-    onSlippageChange: onSwapSlippageChange,
+    slippage,
+    onSlippageChange,
   } = useSwapDeposit({
     srcToken: sourceToken!,
     currentChain,
@@ -179,7 +173,7 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
 
   const {
     collateralRatio,
-    targetQuantity,
+    collateralContributionQuantity,
     currentLTV,
     nextLTV,
     indexPrice,
@@ -212,8 +206,8 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
 
     amount,
     isNativeToken,
-    sourceQuantity: quantity,
-    targetQuantity,
+    quantity,
+    collateralContributionQuantity,
     maxQuantity,
     indexPrice,
     onQuantityChange: setQuantity,
@@ -241,8 +235,9 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     negative_usdc_threshold,
     isConvertThresholdLoading,
     slippage,
-    setSlippage,
+    onSlippageChange,
     minimumReceived,
+    usdcToken,
 
     needSwap,
     needCrossSwap,
@@ -252,8 +247,6 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     swapFee,
     warningMessage,
     swapRevalidating,
-    swapSlippage,
-    onSwapSlippageChange,
   };
 };
 
@@ -306,7 +299,7 @@ const useCollateralValue = (params: {
 
   const qty = Number(params.qty);
 
-  const { data: holdingData, usdc } = useHoldingStream();
+  const { data: holdingList = [], usdc } = useHoldingStream();
   const { data: indexPrices } = useIndexPricesStream();
   const [data] = usePositionStream(sourceToken?.symbol);
   const aggregated = useDataTap(data.aggregated);
@@ -323,55 +316,89 @@ const useCollateralValue = (params: {
   }, [sourceToken?.symbol, indexPrices]);
 
   const getCollateralRatio = useCallback(
-    (collateralQty: number) => {
-      return account.collateralRatio({
+    (inputQty: number) => {
+      return collateralRatio({
         baseWeight: targetToken?.base_weight ?? 0,
         discountFactor: targetToken?.discount_factor ?? 0,
-        collateralQty: collateralQty,
+        collateralQty: new Decimal(inputQty).toNumber(),
         indexPrice: indexPrice,
       });
     },
     [targetToken, indexPrice],
   );
 
-  const targetQuantity = account.collateralContribution({
+  const collateralContributionQuantity = collateralContribution({
     collateralQty: qty,
     collateralRatio: getCollateralRatio(qty),
     indexPrice: indexPrice,
   });
 
-  const getLTV = useCallback(
-    (collRatio: number) => {
-      return account.LTV({
-        usdcBalance: usdcBalance,
-        upnl: unrealPnL,
-        collateralAssets: tokens.map((item) => {
-          const qtyData = holdingData?.find((h) => h.token === item.symbol);
-          const indexPrice =
-            item.symbol === "USDC"
-              ? 1
-              : indexPrices[`PERP_${item.symbol}_USDC`];
+  const memoizedCurrentLTV = useMemo(() => {
+    const value = LTV({
+      usdcBalance: usdcBalance,
+      upnl: unrealPnL,
+      collateralAssets: holdingList
+        .filter((h) => h.token !== "USDC")
+        .map((item) => {
+          const originalQty = item?.holding ?? 0;
+          const _indexPrice = indexPrices[`PERP_${item.token}_USDC`] ?? 0;
           return {
-            qty: qtyData?.holding ?? 0,
-            indexPrice: indexPrice ?? 0,
-            weight: collRatio,
+            qty: originalQty,
+            indexPrice: _indexPrice,
+            weight: collateralRatio({
+              baseWeight: targetToken?.base_weight ?? 0,
+              discountFactor: targetToken?.discount_factor ?? 0,
+              indexPrice: _indexPrice,
+              collateralQty: originalQty,
+            }),
           };
         }),
-      });
-    },
-    [holdingData, usdcBalance, unrealPnL, tokens, indexPrices],
-  );
+    });
+    return new Decimal(value)
+      .mul(100)
+      .toDecimalPlaces(2, Decimal.ROUND_DOWN)
+      .toNumber();
+  }, [holdingList, usdcBalance, unrealPnL, indexPrices, targetToken]);
 
-  const minimumReceived = account.calcMinimumReceived({
-    amount: targetQuantity,
+  const memoizedNextLTV = useMemo(() => {
+    const value = LTV({
+      usdcBalance: usdcBalance,
+      upnl: unrealPnL,
+      collateralAssets: holdingList
+        .filter((h) => h.token !== "USDC")
+        .map((item) => {
+          const originalQty = item?.holding ?? 0;
+          const _indexPrice = indexPrices[`PERP_${item.token}_USDC`] ?? 0;
+          return {
+            qty: originalQty,
+            indexPrice: _indexPrice,
+            weight: collateralRatio({
+              baseWeight: targetToken?.base_weight ?? 0,
+              discountFactor: targetToken?.discount_factor ?? 0,
+              indexPrice: _indexPrice,
+              collateralQty: qty
+                ? new Decimal(originalQty).add(qty).toNumber()
+                : originalQty,
+            }),
+          };
+        }),
+    });
+    return new Decimal(value)
+      .mul(100)
+      .toDecimalPlaces(2, Decimal.ROUND_DOWN)
+      .toNumber();
+  }, [holdingList, usdcBalance, unrealPnL, indexPrices, qty, targetToken]);
+
+  const minimumReceived = calcMinimumReceived({
+    amount: collateralContributionQuantity,
     slippage,
   });
 
   return {
     collateralRatio: getCollateralRatio(qty),
-    targetQuantity,
-    currentLTV: getLTV(getCollateralRatio(0)),
-    nextLTV: getLTV(getCollateralRatio(qty)),
+    collateralContributionQuantity,
+    currentLTV: memoizedCurrentLTV,
+    nextLTV: memoizedNextLTV,
     indexPrice,
     minimumReceived,
   };

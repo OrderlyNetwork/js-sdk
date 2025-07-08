@@ -1,14 +1,13 @@
 import React from "react";
-// import { useTranslation } from "@orderly.network/i18n";
 import { Box, Flex, textVariants } from "@orderly.network/ui";
 import { LtvWidget } from "../LTV";
 import { AvailableQuantity } from "../availableQuantity";
 import { ConvertAction } from "../convertAction";
 import { ExchangeDivider } from "../exchangeDivider";
 import { Fee } from "../fee";
-import { MinimumReceivedWidget } from "../minimumReceived";
+import { MinimumReceived } from "../minimumReceived";
 import { QuantityInput } from "../quantityInput";
-import { SlippageUI } from "../slippage/slippage.ui";
+import { Slippage } from "../slippage";
 import { SwapCoin } from "../swapCoin";
 import type { ConvertFormScriptReturn } from "./convertForm.script";
 
@@ -27,15 +26,13 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
     onSourceTokenChange,
     onConvert,
     slippage,
-    setSlippage,
+    onSlippageChange,
     convertRate,
     minimumReceived,
     isQuoteLoading,
     currentLTV,
     nextLTV,
   } = props;
-
-  // const { t } = useTranslation();
 
   return (
     <Box className={textVariants({ weight: "semibold" })}>
@@ -73,12 +70,10 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
             sourceSymbol={token?.display_name || token?.symbol}
             targetSymbol={targetToken?.display_name || targetToken?.symbol}
           />
-          <SlippageUI slippage={slippage} setSlippage={setSlippage} />
-          <MinimumReceivedWidget
+          <Slippage value={slippage} onValueChange={onSlippageChange} />
+          <MinimumReceived
             symbol={targetToken?.display_name || targetToken?.symbol || ""}
-            minimumReceived={
-              isQuoteLoading || !quantity ? "-" : minimumReceived
-            }
+            value={isQuoteLoading || !quantity ? "-" : minimumReceived}
           />
           <LtvWidget
             showDiff={typeof quantity !== "undefined" && Number(quantity) > 0}

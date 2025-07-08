@@ -27,7 +27,7 @@ const { calcMinimumReceived, collateralRatio, LTV } = account;
 
 export type ConvertFormScriptReturn = ReturnType<typeof useConvertFormScript>;
 
-const ORDERLY_DEPOSIT_SLIPPAGE_KEY = "ORDERLY_DEPOSIT_SLIPPAGE";
+const ORDERLY_CONVERT_SLIPPAGE_KEY = "orderly_convert_slippage";
 
 interface ConvertFormScriptOptions {
   onClose?: () => void;
@@ -106,13 +106,8 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
   };
 
   const [slippage, setSlippage] = useLocalStorage(
-    ORDERLY_DEPOSIT_SLIPPAGE_KEY,
-    "1",
-    {
-      parseJSON: (value: string | null) => {
-        return !value || value === '""' ? "1" : JSON.parse(value);
-      },
-    },
+    ORDERLY_CONVERT_SLIPPAGE_KEY,
+    1,
   );
 
   const checkIsBridgeless = useMemo(() => {
@@ -168,7 +163,7 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
       });
   };
 
-  const { data: holdingData = [], usdc } = useHoldingStream();
+  const { data: holdingList = [], usdc } = useHoldingStream();
 
   const [postQuote, { data: quoteData, isMutating: isQuoteLoading }] =
     useOdosQuote();
@@ -218,39 +213,61 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     });
   }, [quoteData, isQuoteLoading, slippage]);
 
-  const getCollateralRatio = useCallback(
-    (collateralQty: number) => {
-      return collateralRatio({
-        baseWeight: targetToken?.base_weight ?? 0,
-        discountFactor: targetToken?.discount_factor ?? 0,
-        collateralQty: collateralQty,
-        indexPrice: indexPrice,
-      });
-    },
-    [targetToken, indexPrice],
-  );
-
-  const getLTV = useCallback(
-    (collRatio: number) => {
-      return LTV({
-        usdcBalance: usdcBalance,
-        upnl: unrealPnL,
-        collateralAssets: sourceTokens.map((item) => {
-          const qtyData = holdingData?.find((h) => h.token === item.symbol);
-          const indexPrice =
-            item.symbol === "USDC"
-              ? 1
-              : indexPrices[`PERP_${item.symbol}_USDC`];
+  const memoizedCurrentLTV = useMemo(() => {
+    const value = LTV({
+      usdcBalance: usdcBalance,
+      upnl: unrealPnL,
+      collateralAssets: holdingList
+        .filter((h) => h.token !== "USDC")
+        .map((item) => {
+          const originalQty = item?.holding ?? 0;
+          const _indexPrice = indexPrices[`PERP_${item.token}_USDC`] ?? 0;
           return {
-            qty: qtyData?.holding ?? 0,
-            indexPrice: indexPrice ?? 0,
-            weight: collRatio,
+            qty: originalQty,
+            indexPrice: _indexPrice,
+            weight: collateralRatio({
+              baseWeight: targetToken?.base_weight ?? 0,
+              discountFactor: targetToken?.discount_factor ?? 0,
+              indexPrice: _indexPrice,
+              collateralQty: originalQty,
+            }),
           };
         }),
-      });
-    },
-    [holdingData, usdcBalance, unrealPnL, sourceTokens, indexPrices],
-  );
+    });
+    return new Decimal(value)
+      .mul(100)
+      .toDecimalPlaces(2, Decimal.ROUND_DOWN)
+      .toNumber();
+  }, [holdingList, usdcBalance, unrealPnL, indexPrices, targetToken]);
+
+  const memoizedNextLTV = useMemo(() => {
+    const value = LTV({
+      usdcBalance: usdcBalance,
+      upnl: unrealPnL,
+      collateralAssets: holdingList
+        .filter((h) => h.token !== "USDC")
+        .map((item) => {
+          const originalQty = item?.holding ?? 0;
+          const _indexPrice = indexPrices[`PERP_${item.token}_USDC`] ?? 0;
+          return {
+            qty: originalQty,
+            indexPrice: _indexPrice,
+            weight: collateralRatio({
+              baseWeight: targetToken?.base_weight ?? 0,
+              discountFactor: targetToken?.discount_factor ?? 0,
+              indexPrice: _indexPrice,
+              collateralQty: quantity
+                ? new Decimal(originalQty).add(quantity).toNumber()
+                : originalQty,
+            }),
+          };
+        }),
+    });
+    return new Decimal(value)
+      .mul(100)
+      .toDecimalPlaces(2, Decimal.ROUND_DOWN)
+      .toNumber();
+  }, [holdingList, usdcBalance, unrealPnL, indexPrices, quantity, targetToken]);
 
   const disabled =
     !quantity ||
@@ -296,11 +313,11 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     onSettlePnl,
     brokerName,
     slippage,
-    setSlippage,
+    onSlippageChange: setSlippage,
     convertRate,
     minimumReceived: minimumReceived,
     isQuoteLoading,
-    currentLTV: getLTV(getCollateralRatio(Number(quantity))),
-    nextLTV: getLTV(getCollateralRatio(0)),
+    currentLTV: memoizedCurrentLTV,
+    nextLTV: memoizedNextLTV,
   };
 };

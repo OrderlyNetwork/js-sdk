@@ -321,7 +321,10 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
         <Flex itemAlign={"center"} justify={"between"}>
           <Text size={"2xs"}>{t("common.available")}</Text>
           <Flex itemAlign={"center"} justify={"center"} gap={1}>
-            <Tooltip className={"oui-p-2"} content={<LTVRiskTooltipWidget />}>
+            <Tooltip
+              className={"oui-bg-base-6 oui-p-2"}
+              content={<LTVRiskTooltipWidget />}
+            >
               <InfoCircleIcon
                 className={"oui-cursor-pointer oui-text-warning oui-opacity-80"}
               />
