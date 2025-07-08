@@ -9,6 +9,8 @@ import {
   useLocalStorage,
   useOdosQuote,
   usePositionStream,
+  useTokenInfo,
+  useTokensInfo,
   useWalletConnector,
   useWalletSubscription,
 } from "@orderly.network/hooks";
@@ -32,6 +34,14 @@ const ORDERLY_CONVERT_SLIPPAGE_KEY = "orderly_convert_slippage";
 interface ConvertFormScriptOptions {
   onClose?: () => void;
 }
+
+export const normalizeAmount = (amount: string, decimals: number) => {
+  return new Decimal(amount).mul(new Decimal(10).pow(decimals)).toFixed(0);
+};
+
+export const unnormalizeAmount = (amount: string, decimals: number) => {
+  return new Decimal(amount).div(new Decimal(10).pow(decimals)).toString();
+};
 
 export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
   const { t } = useTranslation();
@@ -85,7 +95,7 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
   const token = useMemo<API.TokenInfo>(() => {
     const _token = {
       ...sourceToken!,
-      precision: sourceToken?.precision ?? sourceToken?.decimals ?? 6,
+      precision: sourceToken?.precision ?? 6,
     };
     if (!_token.address && _token.symbol === "ETH") {
       _token.address = nativeETHAddress;
@@ -182,8 +192,18 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     if (quantity && currentChain?.id && token.address && targetToken?.address) {
       postQuote({
         chainId: currentChain.id,
-        inputTokens: [{ amount: quantity, tokenAddress: token.address }],
-        outputTokens: [{ proportion: 1, tokenAddress: targetToken.address }],
+        inputTokens: [
+          {
+            amount: normalizeAmount(quantity, token.decimals),
+            tokenAddress: token.address,
+          },
+        ],
+        outputTokens: [
+          {
+            proportion: 1,
+            tokenAddress: targetToken.address,
+          },
+        ],
       });
     }
   }, [quantity, currentChain?.id, token, targetToken]);

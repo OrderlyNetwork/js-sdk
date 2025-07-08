@@ -118,7 +118,11 @@ export const useConvertColumns = (options: ConvertColumnsOptions) => {
         align: "left",
         width: 120,
         render(qty: number, record: ConvertRecord) {
-          return <Text.numeral dp={6}>{qty}</Text.numeral>;
+          return (
+            <Text.numeral dp={6} padding={false}>
+              {qty}
+            </Text.numeral>
+          );
         },
       },
       {
@@ -131,7 +135,11 @@ export const useConvertColumns = (options: ConvertColumnsOptions) => {
             (sum, detail) => sum + detail.haircut,
             0,
           );
-          return <Text.numeral dp={6}>{totalHaircut}</Text.numeral>;
+          return (
+            <Text.numeral dp={6} padding={false}>
+              {totalHaircut}
+            </Text.numeral>
+          );
         },
       },
       {
@@ -202,7 +210,6 @@ export const useConvertColumns = (options: ConvertColumnsOptions) => {
 export const useConvertDetailColumns = (
   options: ConvertDetailColumnsOptions,
 ) => {
-  const { onTxClick } = options;
   const { t } = useTranslation();
   const onCopy = (e: any) => {
     e.preventDefault();
@@ -245,9 +252,8 @@ export const useConvertDetailColumns = (
         width: 100,
         render(qty: number, record: ConvertTransaction) {
           return (
-            <Text.numeral dp={6}>
+            <Text.numeral dp={6} padding={false}>
               {qty}
-              {/* {getIndexPrice(record.converted_asset, options.indexPrices) * record.converted_qty} */}
             </Text.numeral>
           );
         },
@@ -258,7 +264,11 @@ export const useConvertDetailColumns = (
         align: "left",
         width: 100,
         render(haircut: number) {
-          return <Text.numeral dp={6}>{haircut}</Text.numeral>;
+          return (
+            <Text.numeral dp={6} padding={false}>
+              {haircut}
+            </Text.numeral>
+          );
         },
       },
       {
@@ -289,13 +299,10 @@ export const useConvertDetailColumns = (
       },
       {
         title: t("transfer.network"),
-        dataIndex: "venue",
+        dataIndex: "chain_id",
         align: "left",
         width: 150,
         render(venue: string, record: ConvertTransaction) {
-          if (venue === "internal_fund") {
-            return <Text>Internal</Text>;
-          }
           return (
             <Text>
               {options.chainsInfo.find(
@@ -307,16 +314,12 @@ export const useConvertDetailColumns = (
       },
       {
         title: t("common.status"),
-        dataIndex: "transaction_id",
+        dataIndex: "venue",
         align: "left",
         width: 100,
-        render() {
-          // All detail transactions are completed if they appear in the list
-          return <Text>Success</Text>;
-        },
       },
     ];
-  }, [onTxClick]);
+  }, []);
 
   return columns;
 };

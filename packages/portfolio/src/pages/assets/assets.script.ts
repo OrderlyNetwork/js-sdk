@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import {
   useAccount,
   useCollateral,
@@ -29,13 +29,19 @@ export const useAssetsScript = () => {
     true,
   );
 
-  const { state } = useAccount();
+  const { state, subAccount } = useAccount();
   const { holding = [] } = useCollateral();
   const { data: indexPrices } = useIndexPricesStream();
 
   const tokensInfo = useTokensInfo();
 
   const subAccounts = state.subAccounts ?? [];
+
+  useEffect(() => {
+    if (holding.length > 0) {
+      subAccount.refresh();
+    }
+  }, [holding]);
 
   // Use the extracted total value hook
   const totalValue = useAssetTotalValue();

@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   useModal,
@@ -265,20 +265,12 @@ const ConverHistoryItemDetailsDialog =
                   <ConvertMobileField
                     label="Network"
                     value={
-                      detail.venue == "internal_fund"
-                        ? "Internal"
-                        : chainsInfo.find(
-                            (item) => item.chain_id == detail.chain_id,
-                          )?.name || "-"
+                      chainsInfo.find(
+                        (item) => item.chain_id == detail.chain_id,
+                      )?.name || "-"
                     }
                   />
-                  <ConvertMobileField
-                    label="Status"
-                    value={
-                      item.status?.charAt(0).toUpperCase() +
-                      item.status?.slice(1)
-                    }
-                  />
+                  <ConvertMobileField label="Status" value={detail.venue} />
                 </div>
               </div>
               {index < item.details.length - 1 && <Divider />}
