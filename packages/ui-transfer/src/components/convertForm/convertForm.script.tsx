@@ -13,7 +13,12 @@ import {
 import { useTranslation } from "@orderly.network/i18n";
 import { account } from "@orderly.network/perp";
 import { useAppContext } from "@orderly.network/react-app";
-import { API, nativeETHAddress, NetworkId } from "@orderly.network/types";
+import {
+  API,
+  nativeETHAddress,
+  nativeTokenAddress,
+  NetworkId,
+} from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
 import { Decimal, praseChainIdToNumber } from "@orderly.network/utils";
 import { InputStatus } from "../../types";
@@ -99,7 +104,10 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
       ...sourceToken!,
       precision: sourceToken?.precision ?? 6,
     };
-    if (!_token.address && _token.symbol === "ETH") {
+    if (
+      _token.symbol === "ETH" &&
+      (!_token.address || _token.address === nativeTokenAddress)
+    ) {
       _token.address = nativeETHAddress;
     }
     return _token;
