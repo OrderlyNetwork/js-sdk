@@ -14,6 +14,8 @@ interface LTVOptions {
 export const useComputedLTV = (options: LTVOptions = {}) => {
   const { input, token } = options;
 
+  const isUSDC = token?.toUpperCase() === "USDC";
+
   const { usdc, data: holdingList = [] } = useHoldingStream();
 
   const tokensInfo = useTokensInfo();
@@ -25,7 +27,7 @@ export const useComputedLTV = (options: LTVOptions = {}) => {
   const unrealPnL = position?.aggregated?.total_unreal_pnl ?? 0;
 
   const usdcBalance = useMemo(() => {
-    if (token === "USDC" && input) {
+    if (isUSDC && input) {
       return new Decimal(usdc?.holding ?? 0).add(input).toNumber();
     }
     return usdc?.holding ?? 0;
@@ -43,7 +45,7 @@ export const useComputedLTV = (options: LTVOptions = {}) => {
             (token) => token.token === item.token,
           );
           const qty =
-            token !== "USDC" && input
+            !isUSDC && input
               ? new Decimal(item?.holding ?? 0).add(input).toNumber()
               : (item?.holding ?? 0);
           return {

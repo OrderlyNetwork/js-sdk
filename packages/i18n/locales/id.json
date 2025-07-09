@@ -618,6 +618,7 @@
   "transfer.swapDeposit.swapDialog.title": "Tinjau detail swap",
   "transfer.swapDeposit.viewFAQs": "Butuh bantuan? <0>Lihat FAQ</0>",
   "transfer.swapDeposit.notEnoughLiquidity": "Likuiditas tidak cukup. Silakan coba lagi nanti atau gunakan chain lain untuk menyetor.",
+  "transfer.convert.completed": "Konversi selesai",
   "transfer.deposit.convertRate": "Tingkat konversi",
   "transfer.convert.convertAssets": "Konversi aset ke USDC",
   "transfer.deposit.collateralContribution": "Kontribusi jaminan",

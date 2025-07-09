@@ -618,6 +618,7 @@
   "transfer.swapDeposit.swapDialog.title": "Rivedi i dettagli dello swap",
   "transfer.swapDeposit.viewFAQs": "Hai bisogno di aiuto? <0>Vedi le FAQ</0>",
   "transfer.swapDeposit.notEnoughLiquidity": "Liquidità insufficiente. Riprova più tardi o usa un'altra chain per depositare.",
+  "transfer.convert.completed": "Conversione completata",
   "transfer.deposit.convertRate": "Tasso di conversione",
   "transfer.convert.convertAssets": "Converti asset in USDC",
   "transfer.deposit.collateralContribution": "Contributo di garanzia",
