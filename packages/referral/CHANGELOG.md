@@ -1,5 +1,15 @@
 # @orderly.network/referral
 
+## 2.4.2-internal-multi-collateral.16
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react@2.4.2-internal-multi-collateral.16
+  - @orderly.network/hooks@2.4.2-internal-multi-collateral.16
+  - @orderly.network/utils@2.4.2-internal-multi-collateral.16
+
 ## 2.4.2-internal-multi-collateral.15
 
 ### Patch Changes

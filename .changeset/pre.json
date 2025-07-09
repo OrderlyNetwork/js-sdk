@@ -48,6 +48,7 @@
     "@orderly.network/web3-provider-ethers": "2.3.2"
   },
   "changesets": [
+    "brown-tigers-chew",
     "cyan-days-sparkle",
     "dry-mugs-provide",
     "forty-geckos-collect",
