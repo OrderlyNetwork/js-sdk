@@ -72,6 +72,7 @@ export const useComputedLTV = (options: LTVOptions = {}) => {
   ]);
 
   return new Decimal(memoizedLTV)
+    .mul(100)
     .toDecimalPlaces(2, Decimal.ROUND_DOWN)
     .toNumber();
 };
