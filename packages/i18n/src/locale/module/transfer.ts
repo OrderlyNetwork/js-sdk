@@ -122,6 +122,7 @@ export const transfer = {
     "Not enough liquidity. Please try again later or use another chain to deposit.",
 
   "transfer.convert.completed": "Convert completed",
+  "transfer.convert.failed": "Convert failed",
   "transfer.deposit.convertRate": "Convert rate",
   "transfer.convert.convertAssets": "Convert assets to USDC",
   "transfer.deposit.collateralContribution": "Collateral contribution",

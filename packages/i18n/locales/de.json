@@ -621,6 +621,7 @@
   "transfer.swapDeposit.viewFAQs": "Hilfe benötigt? <0>FAQs anzeigen</0>",
   "transfer.swapDeposit.notEnoughLiquidity": "Nicht genügend Liquidität. Bitte versuchen Sie es später erneut oder verwenden Sie eine andere Chain für die Einzahlung.",
   "transfer.convert.completed": "Konvertierung abgeschlossen",
+  "transfer.convert.failed": "Konvertierung fehlgeschlagen",
   "transfer.deposit.convertRate": "Umrechnungskurs",
   "transfer.convert.convertAssets": "Vermögenswerte in USDC umwandeln",
   "transfer.deposit.collateralContribution": "Sicherheitenbeitrag",

@@ -621,6 +621,7 @@
   "transfer.swapDeposit.viewFAQs": "Cần giúp đỡ? <0>Xem Câu hỏi thường gặp</0>",
   "transfer.swapDeposit.notEnoughLiquidity": "Không đủ thanh khoản. Vui lòng thử lại sau hoặc sử dụng chuỗi khác để nạp tiền.",
   "transfer.convert.completed": "Chuyển đổi đã hoàn thành",
+  "transfer.convert.failed": "Chuyển đổi thất bại",
   "transfer.deposit.convertRate": "Tỷ lệ chuyển đổi",
   "transfer.convert.convertAssets": "Chuyển đổi tài sản sang USDC",
   "transfer.deposit.collateralContribution": "Đóng góp tài sản thế chấp",

@@ -621,6 +621,7 @@
   "transfer.swapDeposit.viewFAQs": "需要帮助？<0>查看常见问题</0>",
   "transfer.swapDeposit.notEnoughLiquidity": "流动性不足。请稍后再试或使用其他链进行存款。",
   "transfer.convert.completed": "转换完成",
+  "transfer.convert.failed": "转换失败",
   "transfer.deposit.convertRate": "兑换汇率",
   "transfer.convert.convertAssets": "将资产转换为 USDC",
   "transfer.deposit.collateralContribution": "抵押品贡献",
