@@ -1,15 +1,15 @@
-import { FC } from "react";
+import React from "react";
 import { NumeralProps, Text } from "@orderly.network/ui";
 import { useSymbolContext } from "../../../providers/symbolProvider";
 
 export type TickName = "quote_dp" | "base_dp";
 
-export const NumeralWithCtx: FC<
-  Omit<NumeralProps, "precision" | "tick"> & {
-    tick?: TickName;
-  }
+export const NumeralWithCtx: React.FC<
+  React.PropsWithChildren<
+    Omit<NumeralProps, "precision" | "tick"> & { tick?: TickName }
+  >
 > = (props) => {
-  const { tick = "quote_dp", ...rest } = props;
+  const { tick = "quote_dp", children, ...rest } = props;
   const symbolInfo = useSymbolContext();
 
   if (!symbolInfo) {
@@ -17,6 +17,9 @@ export const NumeralWithCtx: FC<
     throw new Error("NumeralWithCtx must be used inside SymbolProvider");
   }
 
-  // @ts-ignore
-  return <Text.numeral as="span" {...rest} dp={symbolInfo[tick]} />;
+  return (
+    <Text.numeral as={"span" as any} dp={symbolInfo[tick]} {...rest}>
+      {children}
+    </Text.numeral>
+  );
 };

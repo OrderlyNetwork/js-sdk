@@ -91,36 +91,27 @@ export const LtvUI: React.FC<
       </Flex>
       {showDiff ? (
         <Flex itemAlign="center" justify="between" gap={1}>
-          <Text.numeral
-            dp={2}
+          <Text
             size="2xs"
-            rm={Decimal.ROUND_DOWN}
             className={cn("oui-font-semibold", calculateTextColor(currentLtv))}
-            rule="percentages"
           >
-            {currentLtv}
-          </Text.numeral>
+            {currentLtv}%
+          </Text>
           →
-          <Text.numeral
-            dp={2}
+          <Text
             size="2xs"
-            rm={Decimal.ROUND_DOWN}
             className={cn("oui-font-semibold", calculateTextColor(nextLTV))}
-            rule="percentages"
           >
-            {nextLTV}
-          </Text.numeral>
+            {nextLTV}%
+          </Text>
         </Flex>
       ) : (
-        <Text.numeral
-          dp={2}
+        <Text
           size="2xs"
-          rm={Decimal.ROUND_DOWN}
           className={cn("oui-font-semibold", calculateTextColor(currentLtv))}
-          rule="percentages"
         >
-          {currentLtv}
-        </Text.numeral>
+          {currentLtv}%
+        </Text>
       )}
     </Flex>
   );

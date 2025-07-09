@@ -51,7 +51,6 @@ interface AssetDetailProps {
   isConnected?: boolean;
   showPercentage?: boolean;
   placeholder?: string;
-  tooltipContent?: ReactNode;
 }
 
 interface AssetValueListProps {
@@ -133,13 +132,9 @@ export const TooltipContent: FC<TooltipContentProps> = (props) => {
   );
 };
 
-const TotalValue: FC<TotalValueProps> = ({
-  totalValue,
-  visible = true,
-  onToggleVisibility,
-}) => {
+const TotalValue: FC<TotalValueProps> = (props) => {
   const { t } = useTranslation();
-
+  const { totalValue, visible = true, onToggleVisibility } = props;
   return (
     <Flex
       direction="column"
@@ -183,22 +178,13 @@ const AssetDetail: FC<AssetDetailProps> = (props) => {
     value,
     unit,
     rule,
-    isConnected,
-    showPercentage = false,
     placeholder,
-    tooltipContent,
   } = props;
   return (
     <Flex justify="between">
       <Tooltip
-        className={cn(tooltipContent ? "oui-bg-base-6 oui-p-2" : undefined)}
-        content={
-          tooltipContent ? (
-            tooltipContent
-          ) : (
-            <TooltipContent description={description} formula={formula} />
-          )
-        }
+        className={""}
+        content={<TooltipContent description={description} formula={formula} />}
       >
         <Text
           size="2xs"
@@ -221,20 +207,47 @@ const AssetDetail: FC<AssetDetailProps> = (props) => {
         // suffix={value && unit}
         placeholder={placeholder}
       >
-        {typeof value === "number" ? value : value || "--"}
+        {value || "--"}
       </Text.numeral>
     </Flex>
   );
 };
 
-const AssetValueList: FC<AssetValueListProps> = ({
-  visible = true,
-  freeCollateral,
-  marginRatioVal,
-  renderMMR,
-  isConnected,
-  currentLtv,
-}) => {
+const LTVDetail: FC<Pick<AssetDetailProps, "value" | "visible">> = (props) => {
+  const { visible, value } = props;
+  const { t } = useTranslation();
+  return (
+    <Flex justify="between">
+      <Tooltip
+        className={cn("oui-bg-base-6 oui-p-2")}
+        content={<LTVRiskTooltipWidget />}
+      >
+        <Text
+          size="2xs"
+          color="neutral"
+          weight="semibold"
+          className="oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12"
+        >
+          {t("transfer.LTV")}
+        </Text>
+      </Tooltip>
+      <Text size="2xs" className="select-none">
+        {visible ? `${value}%` : "*****"}
+      </Text>
+    </Flex>
+  );
+};
+
+const AssetValueList: FC<AssetValueListProps> = (props) => {
+  const {
+    visible = true,
+    freeCollateral,
+    marginRatioVal,
+    renderMMR,
+    isConnected,
+    currentLtv,
+  } = props;
+
   const [optionsOpen, setOptionsOpen] = useLocalStorage(
     "orderly_entry_asset_list_open",
     false,
@@ -306,15 +319,7 @@ const AssetValueList: FC<AssetValueListProps> = ({
           showPercentage={true}
           placeholder="--%"
         />
-        <AssetDetail
-          label={t("transfer.LTV")}
-          visible={visible}
-          value={currentLtv}
-          rule="percentages"
-          showPercentage
-          placeholder="--%"
-          tooltipContent={<LTVRiskTooltipWidget />}
-        />
+        <LTVDetail visible={visible} value={currentLtv} />
       </Box>
     </Box>
   );
