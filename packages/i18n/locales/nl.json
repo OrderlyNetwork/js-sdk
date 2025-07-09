@@ -161,6 +161,7 @@
   "portfolio.overview.column.convert.convertId": "Conversie-ID",
   "portfolio.overview.column.convert.details": "Details",
   "portfolio.overview.tab.convert.history": "Conversiegeschiedenis",
+  "portfolio.overview.convert.dialog.title.details": "Conversie details",
   "portfolio.overview.distribution.type.referralCommission": "Verwijzingscommissie",
   "portfolio.overview.distribution.type.refereeRebate": "Verwezen korting",
   "portfolio.overview.distribution.type.brokerFee": "Brokerkosten",

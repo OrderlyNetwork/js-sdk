@@ -13,16 +13,12 @@ import {
 import { useTranslation } from "@orderly.network/i18n";
 import { account } from "@orderly.network/perp";
 import { useAppContext } from "@orderly.network/react-app";
-import {
-  API,
-  nativeETHAddress,
-  nativeTokenAddress,
-  NetworkId,
-} from "@orderly.network/types";
+import { nativeETHAddress, nativeTokenAddress } from "@orderly.network/types";
+import type { API, NetworkId } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
 import { Decimal, praseChainIdToNumber } from "@orderly.network/utils";
 import { InputStatus } from "../../types";
-import { CurrentChain } from "../depositForm/hooks";
+import type { CurrentChain } from "../depositForm/hooks";
 import { useSettlePnl } from "../unsettlePnlInfo/useSettlePnl";
 import { useToken } from "./hooks/useToken";
 

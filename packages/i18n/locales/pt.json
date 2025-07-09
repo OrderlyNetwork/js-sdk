@@ -161,6 +161,7 @@
   "portfolio.overview.column.convert.convertId": "ID de conversão",
   "portfolio.overview.column.convert.details": "Detalhes",
   "portfolio.overview.tab.convert.history": "Histórico de conversão",
+  "portfolio.overview.convert.dialog.title.details": "Detalhes da conversão",
   "portfolio.overview.distribution.type.referralCommission": "Comissão de indicação",
   "portfolio.overview.distribution.type.refereeRebate": "Reembolso do indicado",
   "portfolio.overview.distribution.type.brokerFee": "Taxa do corretor",

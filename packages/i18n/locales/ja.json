@@ -161,6 +161,7 @@
   "portfolio.overview.column.convert.convertId": "変換 ID",
   "portfolio.overview.column.convert.details": "詳細",
   "portfolio.overview.tab.convert.history": "変換履歴",
+  "portfolio.overview.convert.dialog.title.details": "変換詳細",
   "portfolio.overview.distribution.type.referralCommission": "紹介手数料",
   "portfolio.overview.distribution.type.refereeRebate": "被紹介者リベート",
   "portfolio.overview.distribution.type.brokerFee": "ブローカー手数料",

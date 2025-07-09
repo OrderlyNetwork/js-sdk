@@ -161,6 +161,7 @@
   "portfolio.overview.column.convert.convertId": "ID chuyển đổi",
   "portfolio.overview.column.convert.details": "Chi tiết",
   "portfolio.overview.tab.convert.history": "Lịch sử chuyển đổi",
+  "portfolio.overview.convert.dialog.title.details": "Chi tiết chuyển đổi",
   "portfolio.overview.distribution.type.referralCommission": "Hoa hồng giới thiệu",
   "portfolio.overview.distribution.type.refereeRebate": "Hoàn tiền người được giới thiệu",
   "portfolio.overview.distribution.type.brokerFee": "Phí môi giới",
