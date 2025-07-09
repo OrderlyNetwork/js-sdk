@@ -632,6 +632,7 @@
   "transfer.LTV.currentLTV": "当前 LTV",
   "transfer.convert": "转换",
   "transfer.deposit.userMaxQty.error": "已达到抵押品上限。最大允许数量：{{maxQty}} {{token}}。",
+  "transfer.deposit.gasFee.error": "请确保您有足够的 {{token}} 用于支付 gas 费用。",
   "affiliate.referral": "推荐",
   "affiliate.trader": "交易员",
   "affiliate.enter": "输入",

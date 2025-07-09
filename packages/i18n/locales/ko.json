@@ -632,6 +632,7 @@
   "transfer.LTV.currentLTV": "현재 LTV",
   "transfer.convert": "변환",
   "transfer.deposit.userMaxQty.error": "담보 한도에 도달했습니다. 최대 허용량: {{maxQty}} {{token}}.",
+  "transfer.deposit.gasFee.error": "가스 수수료를 위한 충분한 {{token}}이(가) 있는지 확인하세요.",
   "affiliate.referral": "추천",
   "affiliate.trader": "트레이더",
   "affiliate.enter": "입력",

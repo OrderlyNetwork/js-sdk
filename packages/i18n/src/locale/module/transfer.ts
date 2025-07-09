@@ -136,6 +136,8 @@ export const transfer = {
   // "transfer.convert.note": "Please note that convert fees will be charged.",
   "transfer.deposit.userMaxQty.error":
     "Collateral cap reached. Maximum allowed: {{maxQty}} {{token}}.",
+  "transfer.deposit.gasFee.error":
+    "Please ensure you have enough {{token}} for gas fees.",
 };
 
 export type Transfer = typeof transfer;

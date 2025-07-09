@@ -632,6 +632,7 @@
   "transfer.LTV.currentLTV": "LTV hiện tại",
   "transfer.convert": "Chuyển đổi",
   "transfer.deposit.userMaxQty.error": "Đã đạt giới hạn tài sản thế chấp. Số lượng tối đa cho phép: {{maxQty}} {{token}}.",
+  "transfer.deposit.gasFee.error": "Vui lòng đảm bảo bạn có đủ {{token}} cho phí gas.",
   "affiliate.referral": "Giới thiệu",
   "affiliate.trader": "Nhà giao dịch",
   "affiliate.enter": "Nhập",

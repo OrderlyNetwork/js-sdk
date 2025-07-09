@@ -632,6 +632,7 @@
   "transfer.LTV.currentLTV": "Current LTV",
   "transfer.convert": "Convert",
   "transfer.deposit.userMaxQty.error": "Collateral cap reached. Maximum allowed: {{maxQty}} {{token}}.",
+  "transfer.deposit.gasFee.error": "Please ensure you have enough {{token}} for gas fees.",
   "affiliate.referral": "Referral",
   "affiliate.trader": "Trader",
   "affiliate.enter": "Enter",

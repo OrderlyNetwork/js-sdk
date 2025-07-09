@@ -57,12 +57,14 @@ export const Fee: FC<Partial<UseDepositFeeReturn>> = (props) => {
       </Text>
       {showFeeQty && (
         <span>
+          (
           <Text intensity={54}>
             <Text.numeral dp={dp} padding={false} rm={Decimal.ROUND_UP}>
               {feeQty!}
             </Text.numeral>
             {nativeSymbol}
           </Text>
+          )
         </span>
       )}
     </Text>

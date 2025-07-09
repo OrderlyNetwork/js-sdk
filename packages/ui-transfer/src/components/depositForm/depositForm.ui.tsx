@@ -58,11 +58,11 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
     needSwap,
     needCrossSwap,
     swapPrice,
-    swapQuantity,
     swapFee,
     warningMessage,
-    swapRevalidating,
     usdcToken,
+    targetQuantity,
+    targetQuantityLoading,
   } = props;
 
   const { t } = useTranslation();
@@ -174,8 +174,8 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
           token={targetToken}
           tokens={targetTokens}
           onTokenChange={onTargetTokenChange}
-          value={needSwap ? swapQuantity : quantity}
-          loading={swapRevalidating}
+          value={targetQuantity}
+          loading={targetQuantityLoading}
           classNames={{
             root: "oui-mt-3 oui-border-transparent focus-within:oui-outline-transparent",
           }}

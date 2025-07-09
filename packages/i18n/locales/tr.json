@@ -632,6 +632,7 @@
   "transfer.LTV.currentLTV": "Mevcut LTV",
   "transfer.convert": "Dönüştür",
   "transfer.deposit.userMaxQty.error": "Teminat limitine ulaşıldı. İzin verilen maksimum: {{maxQty}} {{token}}.",
+  "transfer.deposit.gasFee.error": "Lütfen gas ücretleri için yeterli {{token}} olduğundan emin olun.",
   "affiliate.referral": "Yönlendirme",
   "affiliate.trader": "İşlemci",
   "affiliate.enter": "Gir",

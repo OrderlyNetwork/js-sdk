@@ -632,6 +632,7 @@
   "transfer.LTV.currentLTV": "Текущий LTV",
   "transfer.convert": "Конвертировать",
   "transfer.deposit.userMaxQty.error": "Достигнут лимит обеспечения. Максимально допустимо: {{maxQty}} {{token}}.",
+  "transfer.deposit.gasFee.error": "Пожалуйста, убедитесь, что у вас достаточно {{token}} для оплаты газа.",
   "affiliate.referral": "Реферальная программа",
   "affiliate.trader": "Трейдер",
   "affiliate.enter": "Войти",

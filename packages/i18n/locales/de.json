@@ -632,6 +632,7 @@
   "transfer.LTV.currentLTV": "Aktueller LTV",
   "transfer.convert": "Umwandeln",
   "transfer.deposit.userMaxQty.error": "Sicherheitenlimit erreicht. Maximal erlaubt: {{maxQty}} {{token}}.",
+  "transfer.deposit.gasFee.error": "Bitte stellen Sie sicher, dass Sie genügend {{token}} für die Gas-Gebühren haben.",
   "affiliate.referral": "Empfehlung",
   "affiliate.trader": "Händler",
   "affiliate.enter": "Eingeben",

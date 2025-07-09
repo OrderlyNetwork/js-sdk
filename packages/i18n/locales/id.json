@@ -632,6 +632,7 @@
   "transfer.LTV.currentLTV": "LTV saat ini",
   "transfer.convert": "Konversi",
   "transfer.deposit.userMaxQty.error": "Batas jaminan tercapai. Maksimum yang diizinkan: {{maxQty}} {{token}}.",
+  "transfer.deposit.gasFee.error": "Pastikan Anda memiliki cukup {{token}} untuk biaya gas.",
   "affiliate.referral": "Referral",
   "affiliate.trader": "Trader",
   "affiliate.enter": "Masuk",
