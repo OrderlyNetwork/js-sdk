@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/web3-modal",
-  "version": "2.4.2-internal-multi-collateral.13",
+  "version": "2.4.2-internal-multi-collateral.14",
   "description": "",
   "private": true,
   "main": "dist/index.mjs",

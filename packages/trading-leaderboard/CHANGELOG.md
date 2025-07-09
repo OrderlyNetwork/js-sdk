@@ -1,5 +1,19 @@
 # @orderly.network/trading-leaderboard
 
+## 2.4.2-internal-multi-collateral.14
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.4.2-internal-multi-collateral.14
+  - @orderly.network/hooks@2.4.2-internal-multi-collateral.14
+  - @orderly.network/i18n@2.4.2-internal-multi-collateral.14
+  - @orderly.network/types@2.4.2-internal-multi-collateral.14
+  - @orderly.network/ui@2.4.2-internal-multi-collateral.14
+  - @orderly.network/ui-connector@2.4.2-internal-multi-collateral.14
+  - @orderly.network/utils@2.4.2-internal-multi-collateral.14
+
 ## 2.4.2-internal-multi-collateral.13
 
 ### Patch Changes

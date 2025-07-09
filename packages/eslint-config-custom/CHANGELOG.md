@@ -1,5 +1,11 @@
 # eslint-config-custom
 
+## 1.4.2-internal-multi-collateral.14
+
+### Patch Changes
+
+- publish
+
 ## 1.4.2-internal-multi-collateral.13
 
 ### Patch Changes
