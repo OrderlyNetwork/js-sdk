@@ -37,6 +37,9 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
   const [mainAccount, setMainAccount] = useState<SubAccount>();
   const [tokens, setTokens] = useState<API.TokenInfo[]>([DEFAULT_TOKEN]);
   const [token, setToken] = useState<API.TokenInfo>(DEFAULT_TOKEN);
+  const [holdingMap, setHoldingMap] = useState<Record<string, API.Holding[]>>(
+    {},
+  );
 
   const networkId = useConfig("networkId") as NetworkId;
 
@@ -49,7 +52,6 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
     submitting,
     maxAmount: currentMaxAmount,
     unsettledPnL: currentUnsettledPnL,
-    holding: currentHolding,
   } = useTransfer({ fromAccountId: fromAccount?.id, token: token.symbol });
 
   const subAccounts = state.subAccounts;
@@ -103,7 +105,6 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
     currentUnsettledPnL,
     currentMaxAmount,
     portfolio?.unsettledPnL,
-    portfolio?.freeCollateral,
     subAccountMaxAmount,
   ]);
 
@@ -147,19 +148,13 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
   }, [quantity]);
 
   const toAccountAsset = useMemo(() => {
-    const holdings =
-      fromAccount?.id === mainAccountId ? toAccount?.holding : currentHolding;
-
+    if (!toAccount?.id) {
+      return 0;
+    }
+    const holdings = holdingMap[toAccount.id];
     const asset = holdings?.find((item) => item.token === token.symbol);
-
     return asset?.holding || 0;
-  }, [
-    observerAccountId,
-    currentHolding,
-    portfolio?.holding,
-    token,
-    fromAccount,
-  ]);
+  }, [toAccount, token, holdingMap]);
 
   const { fromAccounts, toAccounts } = useMemo(() => {
     if (isMainAccount) {
@@ -190,6 +185,7 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
     setMainAccount(_mainAccount);
 
     subAccount.refresh().then((res) => {
+      setHoldingMap(res);
       setMainAccount({
         ..._mainAccount,
         holding: res[mainAccountId],
