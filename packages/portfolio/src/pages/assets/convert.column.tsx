@@ -107,7 +107,8 @@ export const useConvertColumns = (options: ConvertColumnsOptions) => {
         title: t("portfolio.overview.column.convert.convertedAsset"),
         dataIndex: "converted_asset",
         align: "left",
-        width: 250,
+        width: 200,
+        maxWidth: 200,
         render(convertedAssets: Record<string, number>) {
           return <ConvertedAssetColumn convertedAssets={convertedAssets} />;
         },
@@ -116,7 +117,7 @@ export const useConvertColumns = (options: ConvertColumnsOptions) => {
         title: t("portfolio.overview.column.convert.usdcAmount"),
         dataIndex: "received_qty",
         align: "left",
-        width: 120,
+        width: 150,
         render(qty: number, record: ConvertRecord) {
           return (
             <Text.numeral dp={6} padding={false}>
@@ -129,7 +130,7 @@ export const useConvertColumns = (options: ConvertColumnsOptions) => {
         title: t("common.fee"),
         dataIndex: "details",
         align: "left",
-        width: 100,
+        width: 120,
         render(details: ConvertRecord["details"]) {
           const totalHaircut = details.reduce(
             (sum, detail) => sum + detail.haircut,
@@ -146,7 +147,7 @@ export const useConvertColumns = (options: ConvertColumnsOptions) => {
         title: t("common.type"),
         dataIndex: "type",
         align: "left",
-        width: 120,
+        width: 150,
         render(type: string) {
           return <Text>{type.charAt(0).toUpperCase() + type.slice(1)}</Text>;
         },
@@ -155,7 +156,7 @@ export const useConvertColumns = (options: ConvertColumnsOptions) => {
         title: t("portfolio.overview.column.convert.convertId"),
         dataIndex: "convert_id",
         align: "left",
-        width: 100,
+        width: 150,
         render(convertId: number) {
           return (
             <Text.formatted onCopy={onCopy} copyable>
@@ -168,14 +169,14 @@ export const useConvertColumns = (options: ConvertColumnsOptions) => {
         title: t("common.time"),
         dataIndex: "created_time",
         align: "left",
-        width: 180,
+        width: 160,
         rule: "date",
       },
       {
         title: t("common.status"),
         dataIndex: "status",
         align: "left",
-        width: 100,
+        width: 150,
         render(status: string) {
           return (
             <Text>{status.charAt(0).toUpperCase() + status.slice(1)}</Text>
@@ -313,7 +314,7 @@ export const useConvertDetailColumns = (
         },
       },
       {
-        title: t("common.status"),
+        title: t("common.result"),
         dataIndex: "result",
         align: "left",
         width: 100,

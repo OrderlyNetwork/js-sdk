@@ -90,6 +90,7 @@
   "common.accountId": "계정 ID",
   "common.web3Wallet": "Web3 지갑",
   "common.txId": "거래 ID",
+  "common.result": "결과",
   "markets.favorites": "즐겨찾기",
   "markets.recent": "최근",
   "markets.newListings": "신규 상장",

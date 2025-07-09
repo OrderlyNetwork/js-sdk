@@ -90,6 +90,7 @@
   "common.accountId": "ID da conta",
   "common.web3Wallet": "Carteira Web3",
   "common.txId": "ID da Transação",
+  "common.result": "Resultado",
   "markets.favorites": "Favoritos",
   "markets.recent": "Recentes",
   "markets.newListings": "Novas listagens",

@@ -90,6 +90,7 @@
   "common.accountId": "账户 ID",
   "common.web3Wallet": "Web3 钱包",
   "common.txId": "交易ID",
+  "common.result": "结果",
   "markets.favorites": "收藏",
   "markets.recent": "最近",
   "markets.newListings": "新上市",

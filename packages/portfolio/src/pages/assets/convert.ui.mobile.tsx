@@ -271,7 +271,7 @@ const ConverHistoryItemDetailsDialog =
                     }
                   />
                   <ConvertMobileField
-                    label={t("common.status")}
+                    label={t("common.result")}
                     value={
                       detail.result
                         ? detail.result.charAt(0).toUpperCase() +

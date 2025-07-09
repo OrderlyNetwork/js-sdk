@@ -90,6 +90,7 @@
   "common.accountId": "アカウントID",
   "common.web3Wallet": "Web3ウォレット",
   "common.txId": "トランザクションID",
+  "common.result": "結果",
   "markets.favorites": "お気に入り",
   "markets.recent": "最近",
   "markets.newListings": "新規上場",
