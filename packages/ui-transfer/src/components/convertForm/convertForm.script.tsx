@@ -30,7 +30,7 @@ const ORDERLY_CONVERT_SLIPPAGE_KEY = "orderly_convert_slippage";
 
 export interface ConvertFormScriptOptions {
   token?: string;
-  onClose?: () => void;
+  close?: () => void;
 }
 
 export const normalizeAmount = (amount: string, decimals: number) => {
@@ -42,7 +42,7 @@ export const unnormalizeAmount = (amount: string, decimals: number) => {
 };
 
 export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
-  const { token: defaultToken, onClose } = options;
+  const { token: defaultToken, close } = options;
 
   const { t } = useTranslation();
   const [crossChainTrans, setCrossChainTrans] = useState<boolean>(false);
@@ -163,15 +163,13 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
       slippage: new Decimal(slippage).div(100).toNumber(),
     })
       .then(() => {
-        toast.success("convert success");
-        onClose?.();
+        toast.success(t("transfer.convert.completed"));
+        close?.();
         setQuantity("");
       })
       .catch((e: Error) => {
         toast.error(
-          e.message.includes("user rejected")
-            ? t("transfer.rejectTransaction")
-            : e.message,
+          e.message.includes("user rejected") ? "Convert fail" : e.message,
         );
       })
       .finally(() => {

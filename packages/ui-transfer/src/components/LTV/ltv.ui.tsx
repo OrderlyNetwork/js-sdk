@@ -71,6 +71,8 @@ export const LtvUI: React.FC<
 > = (props) => {
   const { t } = useTranslation();
   const { currentLtv, nextLTV, showDiff, ltv_threshold, isLoading } = props;
+  // console.log("currentLtv", currentLtv);
+  // console.log("nextLTV", nextLTV);
   return (
     <Flex width="100%" itemAlign="center" justify="between">
       <Flex justify="start" itemAlign="center">
