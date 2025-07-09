@@ -1,4 +1,5 @@
 import React from "react";
+import { useTokensInfo } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { Button, cn, Flex, Text, TokenIcon } from "@orderly.network/ui";
 import type { Column } from "@orderly.network/ui";
@@ -21,8 +22,8 @@ interface EnhancedHolding {
 
 export const useAssetsColumns = (options: ColumnsOptions) => {
   const { t } = useTranslation();
+  const tokensInfo = useTokensInfo();
   const { onTransfer, onConvert } = options;
-
   const columns = React.useMemo<Column[]>(() => {
     return [
       {
@@ -45,8 +46,11 @@ export const useAssetsColumns = (options: ColumnsOptions) => {
         align: "left",
         width: 140,
         render(val: number, record) {
+          const findToken = tokensInfo?.find(
+            ({ token }) => token === record.token,
+          );
           return (
-            <Text.numeral dp={6} padding={false}>
+            <Text.numeral dp={findToken?.decimals ?? 6} padding={false}>
               {val}
             </Text.numeral>
           );
