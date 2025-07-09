@@ -224,7 +224,7 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
         token: sourceToken?.symbol,
       });
     }
-  }, [maxQuantity, quantity]);
+  }, [maxQuantity, quantity, sourceToken?.symbol, t]);
 
   const warningMessage =
     swapWarningMessage || userMaxQtyMessage || gasFeeMessage;
