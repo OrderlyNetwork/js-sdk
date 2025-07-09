@@ -167,9 +167,11 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
         close?.();
         setQuantity("");
       })
-      .catch((e: Error) => {
+      .catch((err: Error) => {
         toast.error(
-          e.message.includes("user rejected") ? "Convert fail" : e.message,
+          err.message?.includes("user rejected")
+            ? t("transfer.convert.failed")
+            : err.message,
         );
       })
       .finally(() => {

@@ -621,6 +621,7 @@
   "transfer.swapDeposit.viewFAQs": "ヘルプが必要ですか？<0>FAQを表示</0>",
   "transfer.swapDeposit.notEnoughLiquidity": "流動性が不足しています。後ほど再度お試しください。または、別のチェーンを使用して入金してください。",
   "transfer.convert.completed": "変換が完了しました",
+  "transfer.convert.failed": "変換に失敗しました",
   "transfer.deposit.convertRate": "換算レート",
   "transfer.convert.convertAssets": "資産をUSDCに変換",
   "transfer.deposit.collateralContribution": "担保貢献",

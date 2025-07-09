@@ -1,5 +1,6 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { account } from "@orderly.network/perp";
+import type { API } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 import { useHoldingStream, useIndexPricesStream, usePositionStream } from "..";
 import { useTokensInfo } from "./useTokensInfo/tokensInfo.store";
@@ -16,9 +17,9 @@ export const useComputedLTV = (options: LTVOptions = {}) => {
 
   const isUSDC = token?.toUpperCase() === "USDC";
 
-  const { usdc, data: holdingList = [] } = useHoldingStream();
-
   const tokensInfo = useTokensInfo();
+
+  const { usdc, data: holdingList = [] } = useHoldingStream();
 
   const { data: indexPrices } = useIndexPricesStream();
 
@@ -26,49 +27,53 @@ export const useComputedLTV = (options: LTVOptions = {}) => {
 
   const unrealPnL = position?.aggregated?.total_unreal_pnl ?? 0;
 
-  const usdcBalance = useMemo(() => {
+  const usdcBalance = useMemo<number>(() => {
     if (isUSDC && input) {
       return new Decimal(usdc?.holding ?? 0).add(input).toNumber();
     }
     return usdc?.holding ?? 0;
-  }, [usdc?.holding, input, token]);
+  }, [usdc?.holding, input, token, isUSDC]);
 
-  const memoizedLTV = useMemo(() => {
+  const getAdjustedQty = useCallback(
+    (item: API.Holding) => {
+      if (input && item.token === token) {
+        return new Decimal(item?.holding ?? 0).add(input).toNumber();
+      }
+      return item?.holding ?? 0;
+    },
+    [input, token],
+  );
+
+  const memoizedLTV = useMemo<number>(() => {
     return LTV({
       usdcBalance: usdcBalance,
       upnl: unrealPnL,
-      collateralAssets: holdingList
+      assets: holdingList
         .filter((h) => h.token !== "USDC")
         .map((item) => {
-          const indexPrice = indexPrices[`PERP_${item.token}_USDC`];
-          const findToken = tokensInfo?.find(
-            (token) => token.token === item.token,
-          );
-          const qty =
-            !isUSDC && input
-              ? new Decimal(item?.holding ?? 0).add(input).toNumber()
-              : (item?.holding ?? 0);
+          const indexPrice = indexPrices[`PERP_${item.token}_USDC`] ?? 0;
+          const findToken = tokensInfo?.find((i) => i.token === item.token);
+          const qty = getAdjustedQty(item);
           return {
             qty: qty,
-            indexPrice: indexPrice ?? 0,
+            indexPrice: indexPrice,
             weight: collateralRatio({
               baseWeight: findToken?.base_weight ?? 0,
               discountFactor: findToken?.discount_factor ?? 0,
-              collateralQty: qty,
               collateralCap: findToken?.user_max_qty ?? qty,
-              indexPrice: indexPrice ?? 1,
+              collateralQty: qty,
+              indexPrice: indexPrice,
             }),
           };
         }),
     });
   }, [
-    usdc?.holding,
+    usdcBalance,
     unrealPnL,
     holdingList,
     indexPrices,
     tokensInfo,
-    input,
-    token,
+    getAdjustedQty,
   ]);
 
   return new Decimal(memoizedLTV)

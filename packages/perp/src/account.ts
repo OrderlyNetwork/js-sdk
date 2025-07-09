@@ -776,22 +776,15 @@ export const collateralContribution = (params: {
 export const LTV = (params: {
   usdcBalance: number;
   upnl: number;
-  collateralAssets: Array<{
-    qty: number;
-    indexPrice: number;
-    weight: number;
-  }>;
+  assets: Array<{ qty: number; indexPrice: number; weight: number }>;
 }) => {
-  // LTV = (abs(min(USDC_balance, 0)) + abs(min(upnl, 0)) ) /
-  // [sum(max(collateral_qty_i, 0) × index_price_i × weight_i ) + max(upnl, 0)]
-
-  const { usdcBalance, upnl, collateralAssets } = params;
+  const { usdcBalance, upnl, assets } = params;
 
   const usdcLoss = new Decimal(Math.min(usdcBalance, 0)).abs();
   const upnlLoss = new Decimal(Math.min(upnl, 0)).abs();
   const numerator = usdcLoss.add(upnlLoss);
 
-  const collateralSum = collateralAssets.reduce<Decimal>((acc, asset) => {
+  const collateralSum = assets.reduce<Decimal>((acc, asset) => {
     return acc.add(
       new Decimal(Math.max(asset.qty, 0))
         .mul(new Decimal(asset.indexPrice))
@@ -804,7 +797,6 @@ export const LTV = (params: {
   if (denominator.isZero()) {
     return 0;
   }
-
   return numerator.div(denominator).toNumber();
 };
 
