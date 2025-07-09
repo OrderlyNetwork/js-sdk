@@ -1,5 +1,20 @@
 # @orderly.network/ui-tradingview
 
+## 2.4.2-internal-multi-collateral.18
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.4.2-internal-multi-collateral.18
+  - @orderly.network/i18n@2.4.2-internal-multi-collateral.18
+  - @orderly.network/net@2.4.2-internal-multi-collateral.18
+  - @orderly.network/types@2.4.2-internal-multi-collateral.18
+  - @orderly.network/ui@2.4.2-internal-multi-collateral.18
+  - @orderly.network/ui-connector@2.4.2-internal-multi-collateral.18
+  - @orderly.network/ui-positions@2.4.2-internal-multi-collateral.18
+  - @orderly.network/utils@2.4.2-internal-multi-collateral.18
+
 ## 2.4.2-internal-multi-collateral.17
 
 ### Patch Changes
