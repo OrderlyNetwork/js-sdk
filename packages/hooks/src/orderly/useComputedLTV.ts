@@ -31,7 +31,7 @@ export const useComputedLTV = (options: LTVOptions = {}) => {
     return usdc?.holding ?? 0;
   }, [usdc?.holding, input, token]);
 
-  const currentLtv = useMemo(() => {
+  const memoizedLTV = useMemo(() => {
     return LTV({
       usdcBalance: usdcBalance,
       upnl: unrealPnL,
@@ -69,7 +69,7 @@ export const useComputedLTV = (options: LTVOptions = {}) => {
     token,
   ]);
 
-  return new Decimal(currentLtv)
+  return new Decimal(memoizedLTV)
     .mul(100)
     .toDecimalPlaces(2, Decimal.ROUND_DOWN)
     .toNumber();
