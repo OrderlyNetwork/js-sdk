@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/types",
-  "version": "2.4.2-internal-multi-collateral.16",
+  "version": "2.4.2-internal-multi-collateral.17",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

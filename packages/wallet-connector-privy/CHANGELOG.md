@@ -1,5 +1,19 @@
 # @orderly.network/wallet-connector-privy
 
+## 2.4.2-internal-multi-collateral.17
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.4.2-internal-multi-collateral.17
+  - @orderly.network/hooks@2.4.2-internal-multi-collateral.17
+  - @orderly.network/i18n@2.4.2-internal-multi-collateral.17
+  - @orderly.network/types@2.4.2-internal-multi-collateral.17
+  - @orderly.network/ui@2.4.2-internal-multi-collateral.17
+  - @orderly.network/ui-connector@2.4.2-internal-multi-collateral.17
+  - @orderly.network/utils@2.4.2-internal-multi-collateral.17
+
 ## 2.4.2-internal-multi-collateral.16
 
 ### Patch Changes
