@@ -161,6 +161,7 @@
   "portfolio.overview.column.convert.convertId": "Konvertierungs-ID",
   "portfolio.overview.column.convert.details": "Details",
   "portfolio.overview.tab.convert.history": "Konvertierungshistorie",
+  "portfolio.overview.convert.dialog.title.details": "Konvertierungsdetails",
   "portfolio.overview.distribution.type.referralCommission": "Vermittlungsprovision",
   "portfolio.overview.distribution.type.refereeRebate": "Empfehlungsrabatt",
   "portfolio.overview.distribution.type.brokerFee": "Maklergebühr",

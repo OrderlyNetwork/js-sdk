@@ -161,6 +161,7 @@
   "portfolio.overview.column.convert.convertId": "ID konversi",
   "portfolio.overview.column.convert.details": "Detail",
   "portfolio.overview.tab.convert.history": "Riwayat konversi",
+  "portfolio.overview.convert.dialog.title.details": "Detail konversi",
   "portfolio.overview.distribution.type.referralCommission": "Komisi referral",
   "portfolio.overview.distribution.type.refereeRebate": "Rebate referee",
   "portfolio.overview.distribution.type.brokerFee": "Biaya broker",

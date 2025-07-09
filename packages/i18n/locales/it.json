@@ -161,6 +161,7 @@
   "portfolio.overview.column.convert.convertId": "ID di conversione",
   "portfolio.overview.column.convert.details": "Dettagli",
   "portfolio.overview.tab.convert.history": "Cronologia conversioni",
+  "portfolio.overview.convert.dialog.title.details": "Dettagli conversione",
   "portfolio.overview.distribution.type.referralCommission": "Commissione referral",
   "portfolio.overview.distribution.type.refereeRebate": "Rimborso referee",
   "portfolio.overview.distribution.type.brokerFee": "Commissione broker",

@@ -34,6 +34,7 @@ export const portfolio = {
   "portfolio.overview.column.convert.convertId": "Convert ID",
   "portfolio.overview.column.convert.details": "Details",
   "portfolio.overview.tab.convert.history": "Convert history",
+  "portfolio.overview.convert.dialog.title.details": "Convert details",
 
   "portfolio.overview.distribution.type.referralCommission":
     "Referral commission",

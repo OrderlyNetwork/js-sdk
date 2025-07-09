@@ -219,7 +219,7 @@ const ConverHistoryItemDetailsDialog =
 
     return (
       <SimpleSheet
-        title="Convert details"
+        title={t("portfolio.overview.convert.dialog.title.details")}
         open={visible}
         onOpenChange={onOpenChange}
       >
@@ -263,7 +263,7 @@ const ConverHistoryItemDetailsDialog =
                     }}
                   />
                   <ConvertMobileField
-                    label="Network"
+                    label={t("transfer.network")}
                     value={
                       chainsInfo.find(
                         (item) => item.chain_id == detail.chain_id,
@@ -271,7 +271,7 @@ const ConverHistoryItemDetailsDialog =
                     }
                   />
                   <ConvertMobileField
-                    label="Status"
+                    label={t("common.status")}
                     value={
                       detail.result
                         ? detail.result.charAt(0).toUpperCase() +

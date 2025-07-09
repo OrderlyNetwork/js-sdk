@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import {
   DataFilter,
   Divider,
@@ -39,6 +40,7 @@ const ConvertDetailsModal = modal.create<{
   indexPrices: Record<string, number>;
   chainsInfo: any[];
 }>((props) => {
+  const { t } = useTranslation();
   const { visible, onOpenChange } = useModal();
   // console.log(props);
 
@@ -51,7 +53,7 @@ const ConvertDetailsModal = modal.create<{
     <SimpleDialog
       open={visible}
       onOpenChange={onOpenChange}
-      title={`Convert details`}
+      title={t("portfolio.overview.convert.dialog.title.details")}
       size="lg"
       closable
       classNames={{

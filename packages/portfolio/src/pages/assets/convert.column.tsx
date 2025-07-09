@@ -195,7 +195,7 @@ export const useConvertColumns = (options: ConvertColumnsOptions) => {
               className="oui-text-primary"
               onClick={() => onDetailsClick?.(record.convert_id)}
             >
-              Details
+              {t("portfolio.overview.column.convert.details")}
             </Button>
           );
         },

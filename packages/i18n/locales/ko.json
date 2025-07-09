@@ -161,6 +161,7 @@
   "portfolio.overview.column.convert.convertId": "변환 ID",
   "portfolio.overview.column.convert.details": "세부 정보",
   "portfolio.overview.tab.convert.history": "변환 내역",
+  "portfolio.overview.convert.dialog.title.details": "변환 세부사항",
   "portfolio.overview.distribution.type.referralCommission": "추천 수수료",
   "portfolio.overview.distribution.type.refereeRebate": "피추천인 리베이트",
   "portfolio.overview.distribution.type.brokerFee": "브로커 수수료",
