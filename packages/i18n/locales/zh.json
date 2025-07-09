@@ -161,6 +161,7 @@
   "portfolio.overview.column.convert.convertId": "转换 ID",
   "portfolio.overview.column.convert.details": "详情",
   "portfolio.overview.tab.convert.history": "转换历史",
+  "portfolio.overview.convert.dialog.title.details": "转换详情",
   "portfolio.overview.distribution.type.referralCommission": "推荐佣金",
   "portfolio.overview.distribution.type.refereeRebate": "被推荐人返利",
   "portfolio.overview.distribution.type.brokerFee": "经纪人费用",

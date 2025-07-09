@@ -161,6 +161,7 @@
   "portfolio.overview.column.convert.convertId": "ID конвертации",
   "portfolio.overview.column.convert.details": "Детали",
   "portfolio.overview.tab.convert.history": "История конвертации",
+  "portfolio.overview.convert.dialog.title.details": "Детали конвертации",
   "portfolio.overview.distribution.type.referralCommission": "Реферальная комиссия",
   "portfolio.overview.distribution.type.refereeRebate": "Реферальный возврат",
   "portfolio.overview.distribution.type.brokerFee": "Комиссия брокера",

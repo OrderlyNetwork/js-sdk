@@ -161,6 +161,7 @@
   "portfolio.overview.column.convert.convertId": "ID konwersji",
   "portfolio.overview.column.convert.details": "Szczegóły",
   "portfolio.overview.tab.convert.history": "Historia konwersji",
+  "portfolio.overview.convert.dialog.title.details": "Szczegóły konwersji",
   "portfolio.overview.distribution.type.referralCommission": "Prowizja polecającego",
   "portfolio.overview.distribution.type.refereeRebate": "Rabat poleconego",
   "portfolio.overview.distribution.type.brokerFee": "Opłata brokera",

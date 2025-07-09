@@ -161,6 +161,7 @@
   "portfolio.overview.column.convert.convertId": "Dönüştürme ID'si",
   "portfolio.overview.column.convert.details": "Detaylar",
   "portfolio.overview.tab.convert.history": "Dönüştürme geçmişi",
+  "portfolio.overview.convert.dialog.title.details": "Dönüşüm ayrıntıları",
   "portfolio.overview.distribution.type.referralCommission": "Yönlendirme komisyonu",
   "portfolio.overview.distribution.type.refereeRebate": "Yönlendirilen iade",
   "portfolio.overview.distribution.type.brokerFee": "Broker ücreti",
