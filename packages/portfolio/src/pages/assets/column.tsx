@@ -127,14 +127,16 @@ export const useAssetsColumns = (options: ColumnsOptions) => {
               >
                 {t("transfer.convert")}
               </Button>
-              <Button
-                size={"sm"}
-                variant={"outlined"}
-                color={"secondary"}
-                onClick={() => onTransfer?.(id, record.token)}
-              >
-                {t("common.transfer")}
-              </Button>
+              {onTransfer && (
+                <Button
+                  size={"sm"}
+                  variant={"outlined"}
+                  color={"secondary"}
+                  onClick={() => onTransfer?.(id, record.token)}
+                >
+                  {t("common.transfer")}
+                </Button>
+              )}
             </Flex>
           );
         },

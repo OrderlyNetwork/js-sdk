@@ -29,7 +29,7 @@ export const useAssetsScript = () => {
     true,
   );
 
-  const { state, subAccount } = useAccount();
+  const { state, subAccount, isMainAccount } = useAccount();
   const { holding = [] } = useCollateral();
   const { data: indexPrices } = useIndexPricesStream();
 
@@ -143,8 +143,10 @@ export const useAssetsScript = () => {
     });
   };
 
+  const showTransfer = isMainAccount ? subAccounts.length > 0 : true;
+
   const assetsColumns = useAssetsColumns({
-    onTransfer: handleTransfer,
+    onTransfer: showTransfer ? handleTransfer : undefined,
     onConvert: handleConvert,
   });
 
