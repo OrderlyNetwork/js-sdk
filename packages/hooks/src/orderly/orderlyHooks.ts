@@ -36,6 +36,11 @@ export { useFundingRate } from "./useFundingRate";
 export { useFundingRates, type FundingRates } from "./useFundingRates";
 export { useFundingRateHistory } from "./useFundingRateHistory";
 export { usePositionStream } from "./usePositionStream/usePositionStream";
+export {
+  findTPSLFromOrder,
+  findPositionTPSLFromOrders,
+  findTPSLOrderPriceFromOrder,
+} from "./usePositionStream/utils";
 export type { PriceMode } from "./usePositionStream/usePositionStream";
 export { useOrderStream } from "./useOrderStream/useOrderStream";
 export { useMarketTradeStream } from "./useMarketTradeStream";

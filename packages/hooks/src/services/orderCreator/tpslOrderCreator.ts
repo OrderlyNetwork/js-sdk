@@ -27,7 +27,7 @@ export class TPSLOrderCreator extends BaseAlgoOrderCreator<
     const child_orders = [];
     console.log("tp_sl values", values);
 
-    if (typeof values.tp_trigger_price !== "undefined") {
+    if (values.tp_trigger_price) {
       const tp_trigger_price = !!values.tp_trigger_price
         ? new Decimal(values.tp_trigger_price)
             .todp(config.symbol.quote_dp)
@@ -51,7 +51,7 @@ export class TPSLOrderCreator extends BaseAlgoOrderCreator<
       child_orders.push(orderItem);
     }
 
-    if (typeof values.sl_trigger_price !== "undefined") {
+    if (values.sl_trigger_price) {
       const sl_trigger_price = !!values.sl_trigger_price
         ? new Decimal(values.sl_trigger_price)
             .todp(config.symbol.quote_dp)

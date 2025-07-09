@@ -9,12 +9,12 @@ export type Props = {
   hideOrderPrice?: boolean;
   values: {
     enable: boolean;
-    trigger_price: string;
-    PnL: string;
-    Offset: string;
-    "Offset%": string;
-    ROI?: string;
-    order_price: string;
+    trigger_price: string | undefined;
+    PnL: string | undefined;
+    Offset: string | undefined;
+    "Offset%": string | undefined;
+    ROI?: string | undefined;
+    order_price: string | undefined;
     order_type: OrderType;
   };
   onChange: (key: string, value: string | boolean | number) => void;

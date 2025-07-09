@@ -1,3 +1,4 @@
+import { OrderType } from "@orderly.network/types";
 import {
   API,
   AlgoOrderEntity,
@@ -35,6 +36,45 @@ export const findTPSLFromOrder = (
   return {
     tp_trigger_price,
     sl_trigger_price,
+  };
+};
+
+export const findTPSLOrderPriceFromOrder = (
+  order: API.AlgoOrder,
+): {
+  tp_order_price: OrderType | number | undefined;
+  sl_order_price: OrderType | number | undefined;
+} => {
+  let tp_order_price: OrderType | number | undefined;
+  let sl_order_price: OrderType | number | undefined;
+
+  const tpOrder = order?.child_orders?.find(
+    (order: any) => order.algo_type === AlgoOrderType.TAKE_PROFIT,
+  );
+  const slOrder = order?.child_orders?.find(
+    (order: any) => order.algo_type === AlgoOrderType.STOP_LOSS,
+  );
+  if (tpOrder) {
+    if (tpOrder.trigger_price) {
+      if (tpOrder.price) {
+        tp_order_price = tpOrder.price;
+      } else {
+        tp_order_price = OrderType.MARKET;
+      }
+    }
+  }
+  if (slOrder) {
+    if (slOrder.trigger_price) {
+      if (slOrder.price) {
+        sl_order_price = slOrder.price;
+      } else {
+        sl_order_price = OrderType.MARKET;
+      }
+    }
+  }
+  return {
+    tp_order_price,
+    sl_order_price,
   };
 };
 

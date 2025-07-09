@@ -55,11 +55,7 @@ export const PartialTPSL: FC<{
           )}
           rule={"price"}
           dp={symbolInfo[order!.symbol]("quote_dp", 2)}
-          prefix={
-            !tpTriggerPrice || direction === "column" ? (
-              <Text intensity={54}>{`${t("tpsl.sl")} - `}</Text>
-            ) : null
-          }
+          prefix={<Text intensity={54}>{`${t("tpsl.sl")} - `}</Text>}
         >
           {slTriggerPrice}
         </Text.formatted>,
@@ -73,9 +69,9 @@ export const PartialTPSL: FC<{
 
     return children;
   }, [tpTriggerPrice, slTriggerPrice, order?.symbol, t]);
-  const showIcon = Array.isArray(child) ? !!child.length : !child;
+  const hasTPSL = Array.isArray(child) ? !!child.length : !child;
   return (
-    <Flex gapX={2}>
+    <Flex className="oui-gap-[6px]">
       <div
         className={cn(
           "oui-inline-flex oui-text-base-contrast-36",
@@ -84,7 +80,12 @@ export const PartialTPSL: FC<{
       >
         {child}
       </div>
-      {showIcon && <TPSLEditIcon />}
+      {hasTPSL && (
+        <>
+          <Text className="oui-text-base-contrast-54">({orderNum})</Text>
+          <TPSLEditIcon />
+        </>
+      )}
     </Flex>
   );
 };

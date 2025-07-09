@@ -2709,6 +2709,9 @@ importers:
       '@orderly.network/i18n':
         specifier: workspace:*
         version: link:../i18n
+      '@orderly.network/perp':
+        specifier: workspace:*
+        version: link:../perp
       '@orderly.network/react-app':
         specifier: workspace:*
         version: link:../app
@@ -2718,6 +2721,9 @@ importers:
       '@orderly.network/ui':
         specifier: workspace:*
         version: link:../ui
+      '@orderly.network/ui-connector':
+        specifier: workspace:*
+        version: link:../ui-connector
       '@orderly.network/utils':
         specifier: workspace:*
         version: link:../utils

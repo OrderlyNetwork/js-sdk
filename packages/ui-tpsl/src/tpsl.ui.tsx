@@ -154,11 +154,14 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
           type="tp"
           values={{
             enable: TPSL_OrderEntity.tp_enable ?? true,
-            trigger_price: TPSL_OrderEntity.tp_trigger_price?.toString() ?? "",
-            PnL: TPSL_OrderEntity.tp_pnl?.toString() ?? "",
-            Offset: TPSL_OrderEntity.tp_offset?.toString() ?? "",
-            "Offset%": TPSL_OrderEntity.tp_offset_percentage?.toString() ?? "",
-            order_price: TPSL_OrderEntity.tp_order_price?.toString() ?? "",
+            trigger_price:
+              TPSL_OrderEntity.tp_trigger_price?.toString() ?? undefined,
+            PnL: TPSL_OrderEntity.tp_pnl?.toString() ?? undefined,
+            Offset: TPSL_OrderEntity.tp_offset?.toString() ?? undefined,
+            "Offset%":
+              TPSL_OrderEntity.tp_offset_percentage?.toString() ?? undefined,
+            order_price:
+              TPSL_OrderEntity.tp_order_price?.toString() ?? undefined,
             order_type: TPSL_OrderEntity.tp_order_type ?? OrderType.MARKET,
           }}
           hideOrderPrice={TPSL_OrderEntity.position_type === PositionType.FULL}
@@ -175,11 +178,14 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
           type="sl"
           values={{
             enable: TPSL_OrderEntity.sl_enable ?? true,
-            trigger_price: TPSL_OrderEntity.sl_trigger_price?.toString() ?? "",
-            PnL: TPSL_OrderEntity.sl_pnl?.toString() ?? "",
-            Offset: TPSL_OrderEntity.sl_offset?.toString() ?? "",
-            "Offset%": TPSL_OrderEntity.sl_offset_percentage?.toString() ?? "",
-            order_price: TPSL_OrderEntity.sl_order_price?.toString() ?? "",
+            trigger_price:
+              TPSL_OrderEntity.sl_trigger_price?.toString() ?? undefined,
+            PnL: TPSL_OrderEntity.sl_pnl?.toString() ?? undefined,
+            Offset: TPSL_OrderEntity.sl_offset?.toString() ?? undefined,
+            "Offset%":
+              TPSL_OrderEntity.sl_offset_percentage?.toString() ?? undefined,
+            order_price:
+              TPSL_OrderEntity.sl_order_price?.toString() ?? undefined,
             order_type: TPSL_OrderEntity.sl_order_type ?? OrderType.MARKET,
           }}
           hideOrderPrice={TPSL_OrderEntity.position_type === PositionType.FULL}

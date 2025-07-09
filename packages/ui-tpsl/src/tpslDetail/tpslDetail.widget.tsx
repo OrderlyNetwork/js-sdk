@@ -1,0 +1,32 @@
+import { AlgoOrder, API } from "@orderly.network/types";
+import { registerSimpleDialog } from "@orderly.network/ui";
+import { useTPSLDetail } from "./tpslDetail.script";
+import { TPSLDetailProvider } from "./tpslDetailProvider";
+import { TPSLDetailUI } from "./tsplDetail.ui";
+
+export type TPSLDetailProps = {
+  position: API.Position;
+  order: AlgoOrder;
+  baseDP: number;
+  quoteDP: number;
+};
+
+export const TPSLDetailWidget = (props: TPSLDetailProps) => {
+  const state = useTPSLDetail(props);
+  return (
+    <TPSLDetailProvider
+      symbol={props.position.symbol}
+      position={props.position}
+    >
+      <TPSLDetailUI {...state} />
+    </TPSLDetailProvider>
+  );
+};
+export const TPSLDetailDialogId = "TPSLDetailDialogId ";
+
+registerSimpleDialog(TPSLDetailDialogId, TPSLDetailWidget, {
+  classNames: {
+    content: "oui-w-[420px] lg:oui-pt-4 lg:oui-pb-2 lg:oui-px-0",
+    body: "lg:oui-py-0",
+  },
+});

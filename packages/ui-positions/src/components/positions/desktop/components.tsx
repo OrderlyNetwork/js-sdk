@@ -2,7 +2,11 @@ import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { EditIcon, Text } from "@orderly.network/ui";
 import { modal } from "@orderly.network/ui";
-import { PositionTPSLPopover, TPSLDialogId } from "@orderly.network/ui-tpsl";
+import {
+  PositionTPSLPopover,
+  TPSLDetailDialogId,
+  TPSLDialogId,
+} from "@orderly.network/ui-tpsl";
 import { usePositionsRowContext } from "./positionRowContext";
 
 // ------------ TP/SL Price input end------------
@@ -24,20 +28,30 @@ export const TPSLButton = () => {
 export const TPSLEditIcon = () => {
   const { position, baseDp, quoteDp, tpslOrder } = usePositionsRowContext();
 
+  const onEdit = () => {
+    modal.show(TPSLDetailDialogId, {
+      order: tpslOrder,
+      position: position,
+      baseDP: baseDp,
+      quoteDP: quoteDp,
+    });
+  };
+
   return (
-    <PositionTPSLPopover
-      position={position}
-      order={tpslOrder}
-      baseDP={baseDp}
-      quoteDP={quoteDp}
-      isEditing
-    >
-      <EditIcon
-        opacity={1}
-        className="oui-cursor-pointer oui-text-base-contrast-54"
-        size={16}
-      />
-    </PositionTPSLPopover>
+    // <PositionTPSLPopover
+    //   position={position}
+    //   order={tpslOrder}
+    //   baseDP={baseDp}
+    //   quoteDP={quoteDp}
+    //   isEditing
+    // >
+    <EditIcon
+      onClick={onEdit}
+      opacity={1}
+      className="oui-cursor-pointer oui-text-base-contrast-54"
+      size={16}
+    />
+    // </PositionTPSLPopover>
   );
 };
 
