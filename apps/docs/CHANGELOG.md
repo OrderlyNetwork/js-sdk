@@ -1,5 +1,16 @@
 # @orderly/docs
 
+## 1.4.2-internal-multi-collateral.15
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react@2.4.2-internal-multi-collateral.15
+  - @orderly.network/hooks@2.4.2-internal-multi-collateral.15
+  - @orderly.network/web3-onboard@2.4.2-internal-multi-collateral.15
+  - @orderly.network/types@2.4.2-internal-multi-collateral.15
+
 ## 1.4.2-internal-multi-collateral.14
 
 ### Patch Changes

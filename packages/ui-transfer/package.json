@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/ui-transfer",
-  "version": "2.4.2-internal-multi-collateral.14",
+  "version": "2.4.2-internal-multi-collateral.15",
   "description": "deposit & withdraw",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
