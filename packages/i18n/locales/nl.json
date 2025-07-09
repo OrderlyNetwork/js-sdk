@@ -90,6 +90,7 @@
   "common.accountId": "Account-ID",
   "common.web3Wallet": "Web3-portemonnee",
   "common.txId": "TxID",
+  "common.result": "Resultaat",
   "markets.favorites": "Favorieten",
   "markets.recent": "Recent",
   "markets.newListings": "Nieuwe noteringen",

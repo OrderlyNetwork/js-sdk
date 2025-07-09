@@ -98,4 +98,5 @@ export const common = {
   "common.accountId": "Account ID",
   "common.web3Wallet": "Web3 wallet",
   "common.txId": "TxID",
+  "common.result": "Result",
 };

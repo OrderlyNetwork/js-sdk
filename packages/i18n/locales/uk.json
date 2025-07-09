@@ -90,6 +90,7 @@
   "common.accountId": "ID акаунта",
   "common.web3Wallet": "Web3 гаманець",
   "common.txId": "ID транзакції",
+  "common.result": "Результат",
   "markets.favorites": "Улюблені",
   "markets.recent": "Недавні",
   "markets.newListings": "Нові лістинги",

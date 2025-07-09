@@ -90,6 +90,7 @@
   "common.accountId": "ID Akun",
   "common.web3Wallet": "Dompet Web3",
   "common.txId": "TxID",
+  "common.result": "Hasil",
   "markets.favorites": "Favorit",
   "markets.recent": "Terbaru",
   "markets.newListings": "Listing baru",

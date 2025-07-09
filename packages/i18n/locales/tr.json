@@ -90,6 +90,7 @@
   "common.accountId": "Hesap Kimliği",
   "common.web3Wallet": "Web3 cüzdanı",
   "common.txId": "İşlem ID",
+  "common.result": "Sonuç",
   "markets.favorites": "Favoriler",
   "markets.recent": "Son",
   "markets.newListings": "Yeni listeler",
