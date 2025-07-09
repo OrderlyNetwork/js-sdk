@@ -26,7 +26,6 @@ export type DepositOptions = {
 
   srcChainId?: number;
   srcToken?: string;
-  dstToken?: string;
 
   // swap deposit options
   swapEnable?: boolean;
@@ -363,19 +362,41 @@ export const useDeposit = (options: DepositOptions) => {
   const deposit = useCallback(async () => {
     await enquireAllowance();
 
-    const amount = account.walletAdapter?.parseUnits(
-      quantity,
-      options.decimals!,
-    );
-    // if native token, fee is amount + depositFee, TODO: move it to assets
-    const fee = isNativeToken ? BigInt(amount!) + depositFee : depositFee;
+    // let amount = quantity;
+    // let fee = depositFee;
+
+    // // if native token, amount = quantity - depositFee
+    // if (isNativeToken) {
+    //   const feeQty = account.walletAdapter?.formatUnits(
+    //     depositFee,
+    //     options.decimals!,
+    //   );
+    //   amount = new Decimal(quantity).sub(new Decimal(feeQty || 0)).toString();
+    // }
+
+    // // if native token, fee = amount + depositFee = quantity - depositFee + depositFee = quantity
+    // if (isNativeToken) {
+    //   fee = BigInt(
+    //     account.walletAdapter?.parseUnits(quantity, options.decimals!) || 0,
+    //   );
+    // }
+
+    let fee = depositFee;
+    // if native token, fee is amount + depositFee, TODO: move it to core?
+    if (isNativeToken) {
+      const amount = account.walletAdapter?.parseUnits(
+        quantity,
+        options.decimals!,
+      );
+      fee = BigInt(amount!) + depositFee;
+    }
 
     return account.assetsManager
       .deposit({
         amount: quantity,
         fee,
         decimals: options.decimals!,
-        token: options.dstToken,
+        token: options.srcToken,
       })
       .then((result: any) => {
         updateAllowanceWhenTxSuccess(result.hash);
@@ -403,7 +424,7 @@ export const useDeposit = (options: DepositOptions) => {
     depositFee,
     targetChain,
     options.decimals,
-    options.dstToken,
+    options.srcToken,
     enquireAllowance,
     updateAllowanceWhenTxSuccess,
     isNativeToken,
@@ -441,10 +462,10 @@ export const useDeposit = (options: DepositOptions) => {
         amount: quantity,
         chain: targetChain?.network_infos!,
         decimals: options.decimals!,
-        token: options.dstToken,
+        token: options.srcToken,
       });
     },
-    [account, targetChain, options.decimals, options.dstToken],
+    [account, targetChain, options.decimals, options.srcToken],
   );
 
   const enquiryDepositFee = useCallback(() => {

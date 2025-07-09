@@ -794,9 +794,10 @@ export const LTV = (params: {
 
   const denominator = collateralSum.add(new Decimal(Math.max(upnl, 0)));
 
-  if (denominator.isZero()) {
+  if (numerator.isZero() || denominator.isZero()) {
     return 0;
   }
+
   return numerator.div(denominator).toNumber();
 };
 

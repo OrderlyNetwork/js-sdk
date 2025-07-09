@@ -632,6 +632,7 @@
   "transfer.LTV.currentLTV": "現在のLTV",
   "transfer.convert": "変換",
   "transfer.deposit.userMaxQty.error": "担保上限に達しました。最大許容量：{{maxQty}} {{token}}。",
+  "transfer.deposit.gasFee.error": "ガス代のために十分な {{token}} があることを確認してください。",
   "affiliate.referral": "紹介",
   "affiliate.trader": "トレーダー",
   "affiliate.enter": "入力",

@@ -19,14 +19,15 @@ export const SwapFee: FC<SwapFeeProps> = (props) => {
             <Box key={index}>
               <Flex gapX={1}>
                 <Text intensity={54}>{item.title}:</Text>
-                <Text.numeral
+                {/* TODO: format price in data */}
+                <Text
                   intensity={80}
-                  dp={item.dp}
-                  rm={Decimal.ROUND_UP}
-                  padding={false}
+                  // dp={item.dp}
+                  // rm={Decimal.ROUND_UP}
+                  // padding={false}
                 >
                   {item.value}
-                </Text.numeral>
+                </Text>
                 <Text intensity={54}>{item.symbol}</Text>
               </Flex>
 

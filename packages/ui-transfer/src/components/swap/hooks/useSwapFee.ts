@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useIndexPrice } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+import { Decimal, toNonExponential } from "@orderly.network/utils";
 import { feeDecimalsOffset } from "../../../utils";
 import { TransactionInfo } from "./useSwapEnquiry";
 
@@ -82,16 +82,16 @@ export function useSwapFee(options: {
     if (needSwap || needCrossSwap) {
       // if native token, Destination gas fee、fee (Swap fee + Bridge fee ) will use a same symbol unit
       if (isNativeToken) {
-        const totalQuantity = new Decimal(dstGasFee).plus(fee);
+        const totalFeeQty = new Decimal(dstGasFee).plus(fee);
 
         feeQtys = [
           {
-            value: totalQuantity.toString(),
+            value: totalFeeQty.toString(),
             dp: nativeDp,
           },
         ];
 
-        feeAmount = totalQuantity.mul(nativeMarkPrice ?? 1).toString();
+        feeAmount = totalFeeQty.mul(nativeMarkPrice ?? 1).toString();
       } else {
         feeQtys = [
           {
@@ -139,11 +139,19 @@ export function useSwapFee(options: {
         dp: srcDp,
         symbol: srcSymbol,
       },
-    ].filter(
-      // alway show Destination gas fee
-      (item, index) =>
-        index === 0 || (!!item.value && Number(item.value) !== 0),
-    );
+    ]
+      .filter(
+        // alway show Destination gas fee
+        (item, index) =>
+          index === 0 || (!!item.value && Number(item.value) !== 0),
+      )
+      .map((item) => {
+        const value = new Decimal(item.value || 0).todp(item.dp).toNumber();
+        return {
+          ...item,
+          value: toNonExponential(value),
+        };
+      });
 
     return {
       feeAmount,

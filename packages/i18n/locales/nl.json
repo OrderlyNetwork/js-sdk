@@ -632,6 +632,7 @@
   "transfer.LTV.currentLTV": "Huidige LTV",
   "transfer.convert": "Converteren",
   "transfer.deposit.userMaxQty.error": "Onderpandlimiet bereikt. Maximum toegestaan: {{maxQty}} {{token}}.",
+  "transfer.deposit.gasFee.error": "Zorg ervoor dat u voldoende {{token}} heeft voor de gas-kosten.",
   "affiliate.referral": "Verwijzing",
   "affiliate.trader": "Handelaar",
   "affiliate.enter": "Invoeren",

@@ -7,13 +7,13 @@ import {
   useIndexPrice,
   useIndexPricesStream,
   useQuery,
+  useTokenInfo,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { account } from "@orderly.network/perp";
+import { account as accountPerp } from "@orderly.network/perp";
 import { useAppContext } from "@orderly.network/react-app";
 import { API, NetworkId, ChainNamespace } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
-import { feeDecimalsOffset } from "../../utils";
 import { useNeedSwapAndCross } from "../swap/hooks/useNeedSwapAndCross";
 import { useSwapDeposit } from "../swap/hooks/useSwapDeposit";
 import {
@@ -25,7 +25,7 @@ import {
 import { useToken } from "./hooks/useToken";
 
 const { collateralRatio, collateralContribution, calcMinimumReceived } =
-  account;
+  accountPerp;
 
 export type UseDepositFormScriptReturn = ReturnType<
   typeof useDepositFormScript
@@ -75,7 +75,6 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     decimals: sourceToken?.decimals,
     srcChainId: currentChain?.id,
     srcToken: sourceToken?.symbol,
-    dstToken: targetToken?.symbol,
     crossChainRouteAddress:
       currentChain?.info?.network_infos?.cross_chain_router,
     depositorAddress: currentChain?.info?.network_infos?.depositor,
@@ -100,26 +99,6 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     srcChainId: currentChain?.id,
     dstChainId: dst?.chainId,
   });
-
-  const userMaxQtyMessage = useMemo(() => {
-    if (
-      sourceToken?.symbol === "USDC" ||
-      sourceToken?.symbol !== targetToken?.symbol ||
-      !sourceToken?.is_collateral ||
-      !quantity ||
-      isNaN(Number(quantity))
-    ) {
-      return "";
-    }
-
-    if (new Decimal(quantity).gt(sourceToken?.user_max_qty)) {
-      return t("transfer.deposit.userMaxQty.error", {
-        maxQty: sourceToken?.user_max_qty,
-        token: sourceToken?.symbol,
-      });
-    }
-    return "";
-  }, [sourceToken, targetToken, quantity, t]);
 
   const {
     cleanTransactionInfo,
@@ -164,6 +143,26 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     customDeposit: onSwapDeposit,
     onSuccess,
   });
+
+  const userMaxQtyMessage = useMemo(() => {
+    if (
+      sourceToken?.symbol === "USDC" ||
+      sourceToken?.symbol !== targetToken?.symbol ||
+      !sourceToken?.is_collateral ||
+      !quantity ||
+      isNaN(Number(quantity))
+    ) {
+      return "";
+    }
+
+    if (new Decimal(quantity).gt(sourceToken?.user_max_qty)) {
+      return t("transfer.deposit.userMaxQty.error", {
+        maxQty: sourceToken?.user_max_qty,
+        token: sourceToken?.symbol,
+      });
+    }
+    return "";
+  }, [sourceToken, targetToken, quantity, t]);
 
   const loading = submitting || depositFeeRevalidating!;
 
@@ -219,7 +218,35 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     cleanData();
   }, [sourceToken, currentChain?.id]);
 
-  const warningMessage = swapWarningMessage || userMaxQtyMessage;
+  const gasFeeMessage = useMemo(() => {
+    if (isNativeToken && maxQuantity === quantity) {
+      return t("transfer.deposit.gasFee.error", {
+        token: sourceToken?.symbol,
+      });
+    }
+  }, [maxQuantity, quantity]);
+
+  const warningMessage =
+    swapWarningMessage || userMaxQtyMessage || gasFeeMessage;
+
+  // const isCollateralNativeToken = useMemo(() => {
+  //   return (
+  //     sourceToken?.is_collateral &&
+  //     sourceToken?.symbol === targetToken?.symbol &&
+  //     isNativeToken &&
+  //     !needSwap &&
+  //     !needCrossSwap
+  //   );
+  // }, [sourceToken, targetToken, isNativeToken, needSwap, needCrossSwap]);
+
+  const targetQuantity = useMemo(() => {
+    if (needSwap) {
+      return swapQuantity;
+    }
+    return quantity;
+  }, [needSwap, swapQuantity, quantity]);
+
+  const targetQuantityLoading = swapRevalidating;
 
   return {
     sourceToken,
@@ -268,10 +295,10 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     needCrossSwap,
     swapPrice,
     markPrice,
-    swapQuantity,
     swapFee,
     warningMessage,
-    swapRevalidating,
+    targetQuantity,
+    targetQuantityLoading,
   };
 };
 
@@ -285,10 +312,12 @@ function useDepositFee(options: {
   const { account } = useAccount();
 
   const nativeSymbol = nativeToken?.symbol;
+  const tokenInfo = useTokenInfo(nativeSymbol!);
 
-  const { data: symbolPrice } = useIndexPrice(`SPOT_${nativeSymbol}_USDC`);
+  const { data: indexPrice } = useIndexPrice(`SPOT_${nativeSymbol}_USDC`);
 
   const feeProps = useMemo(() => {
+    // deposit fee is native token, so decimals is 18
     const dstGasFee = new Decimal(depositFee.toString())
       // todo solana is 9, evm is 18
       .div(
@@ -300,15 +329,16 @@ function useDepositFee(options: {
       )
       .toString();
 
-    const feeAmount = new Decimal(dstGasFee).mul(symbolPrice || 0).toString();
+    const feeAmount = new Decimal(dstGasFee).mul(indexPrice || 0).toString();
 
     return {
       dstGasFee,
       feeQty: dstGasFee,
       feeAmount,
-      dp: feeDecimalsOffset(4),
+      // dp: feeDecimalsOffset(4),
+      dp: tokenInfo?.decimals || 8,
     };
-  }, [depositFee, symbolPrice]);
+  }, [depositFee, indexPrice]);
 
   return { ...feeProps, nativeSymbol };
 }
