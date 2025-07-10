@@ -6,7 +6,7 @@ import { ActionButton } from "../actionButton";
 import { AvailableQuantity } from "../availableQuantity";
 import { BrokerWallet } from "../brokerWallet";
 import { ChainSelect } from "../chainSelect";
-import { CollateralContributionWidget } from "../collateralContribution";
+import { CollateralContribution } from "../collateralContribution";
 import { CollateralRatioWidget } from "../collateralRatio";
 import { ExchangeDivider } from "../exchangeDivider";
 import { Fee } from "../fee";
@@ -81,9 +81,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
               indexPrice={swapPrice}
             />
           </Flex>
-          {(needSwap || needCrossSwap) && (
-            <Slippage value={slippage} onValueChange={onSlippageChange} />
-          )}
+          <Slippage value={slippage} onValueChange={onSlippageChange} />
           <MinimumReceived
             value={minimumReceived}
             symbol={targetToken?.symbol ?? ""}
@@ -93,38 +91,22 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
       );
     }
 
-    if (sourceToken?.symbol === "USDC") {
-      return (
-        <Flex mt={2} direction="column" itemAlign="start">
-          <SwapCoin
-            indexPrice={1}
-            precision={0}
-            sourceSymbol={sourceToken?.display_name || sourceToken?.symbol}
-            targetSymbol={targetToken?.display_name || targetToken?.symbol}
-          />
-          <Fee {...fee} />
-        </Flex>
-      );
-    }
-
-    if (sourceToken?.is_collateral && targetToken?.symbol !== "USDC") {
-      return (
-        <Flex direction="column" itemAlign="start" mt={2} gap={1}>
-          <CollateralRatioWidget value={collateralRatio} />
-          <CollateralContributionWidget
-            // it need to use USDC precision
-            precision={usdcToken?.precision ?? 6}
-            value={collateralContributionQuantity}
-          />
-          <LtvWidget
-            showDiff={typeof quantity !== "undefined" && Number(quantity) > 0}
-            currentLtv={currentLTV}
-            nextLTV={nextLTV}
-          />
-          <Fee {...fee} />
-        </Flex>
-      );
-    }
+    return (
+      <Flex direction="column" itemAlign="start" mt={2} gap={1}>
+        <CollateralRatioWidget value={collateralRatio} />
+        <CollateralContribution
+          // it need to use USDC precision
+          precision={usdcToken?.precision ?? 6}
+          value={collateralContributionQuantity}
+        />
+        <LtvWidget
+          showDiff={typeof quantity !== "undefined" && Number(quantity) > 0}
+          currentLtv={currentLTV}
+          nextLTV={nextLTV}
+        />
+        <Fee {...fee} />
+      </Flex>
+    );
   };
 
   return (
