@@ -8,7 +8,7 @@ declare global {
 if (typeof window !== "undefined") {
   window.__ORDERLY_VERSION__ = window.__ORDERLY_VERSION__ || {};
   window.__ORDERLY_VERSION__["@orderly.network/ui-leverage"] =
-    "2.4.2-internal-multi-collateral.20";
+    "2.4.2-internal-multi-collateral.21";
 }
 
-export default "2.4.2-internal-multi-collateral.20";
+export default "2.4.2-internal-multi-collateral.21";
