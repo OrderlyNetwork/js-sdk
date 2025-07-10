@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/referral",
-  "version": "2.4.2-internal-multi-collateral.18",
+  "version": "2.4.2-internal-multi-collateral.19",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

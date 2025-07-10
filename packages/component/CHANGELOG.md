@@ -1,5 +1,22 @@
 # @orderly.network/react
 
+## 2.4.2-internal-multi-collateral.19
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.4.2-internal-multi-collateral.19
+  - @orderly.network/hooks@2.4.2-internal-multi-collateral.19
+  - @orderly.network/net@2.4.2-internal-multi-collateral.19
+  - @orderly.network/trading-view@2.4.2-internal-multi-collateral.19
+  - @orderly.network/types@2.4.2-internal-multi-collateral.19
+  - @orderly.network/ui@2.4.2-internal-multi-collateral.19
+  - @orderly.network/ui-connector@2.4.2-internal-multi-collateral.19
+  - @orderly.network/ui-leverage@2.4.2-internal-multi-collateral.19
+  - @orderly.network/ui-transfer@2.4.2-internal-multi-collateral.19
+  - @orderly.network/utils@2.4.2-internal-multi-collateral.19
+
 ## 2.4.2-internal-multi-collateral.18
 
 ### Patch Changes
