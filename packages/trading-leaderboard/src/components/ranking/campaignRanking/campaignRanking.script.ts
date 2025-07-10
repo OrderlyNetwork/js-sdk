@@ -57,7 +57,7 @@ export function useCampaignRankingScript(
   });
   const [sort, setSort] = useState<TableSort | undefined>(initialSort);
 
-  const { currentCampaign, setUserData, setUpdatedTime } =
+  const { currentCampaign, setUserData, setUpdatedTime, dataAdapter } =
     useTradingLeaderboardContext();
 
   const { state } = useAccount();
@@ -69,11 +69,22 @@ export function useCampaignRankingScript(
     pageSize: isMobile ? 100 : 20,
   });
 
+  const isCustomData = typeof dataAdapter === "function";
+
+  const customData = useMemo(() => {
+    if (typeof dataAdapter === "function") {
+      return dataAdapter({ page, pageSize });
+    }
+  }, [dataAdapter, page, pageSize]);
+
   const getUrl = (args: {
     page: number;
     pageSize: number;
     sort?: string | null;
   }) => {
+    if (isCustomData) {
+      return null;
+    }
     const searchParams = new URLSearchParams();
 
     searchParams.set("page", args.page.toString());
@@ -152,7 +163,7 @@ export function useCampaignRankingScript(
   );
 
   const getUserUrl = () => {
-    if (!state.address || !campaignId) {
+    if (!state.address || !campaignId || isCustomData) {
       return null;
     }
 
@@ -189,6 +200,10 @@ export function useCampaignRankingScript(
   );
 
   const userData = useMemo(() => {
+    if (customData) {
+      return customData?.userData;
+    }
+
     if (!state.address || isLoading) {
       return undefined;
     }
@@ -207,7 +222,7 @@ export function useCampaignRankingScript(
       rank: getAddressRank(state.address!),
       key: getCurrentAddressRowKey(state.address!),
     };
-  }, [state.address, userDataRes, isLoading, getAddressRank]);
+  }, [state.address, userDataRes, isLoading, getAddressRank, customData]);
 
   const addRankForList = useCallback(
     (list: CampaignRankingData[], total: number) => {
@@ -230,12 +245,17 @@ export function useCampaignRankingScript(
   );
 
   const dataSource = useMemo(() => {
+    if (customData) {
+      return formatData(customData?.dataSource, currentCampaign, sortKey);
+    }
+
     let list = data?.rows || [];
     if (page === 1) {
       list = list.slice(0, pageSize);
     }
     const total = data?.meta.total || 0;
     const rankList = addRankForList(list, total);
+
     const _data =
       page === 1 ? (userData ? [userData, ...rankList] : rankList) : rankList;
 
@@ -248,9 +268,14 @@ export function useCampaignRankingScript(
     addRankForList,
     currentCampaign,
     sortKey,
+    customData,
   ]);
 
   const dataList = useMemo(() => {
+    if (customData) {
+      return formatData(customData?.dataList, currentCampaign, sortKey);
+    }
+
     if (!infiniteData?.length) {
       return [];
     }
@@ -262,17 +287,32 @@ export function useCampaignRankingScript(
     const _data = userData ? [userData, ...rankList] : rankList;
 
     return formatData(_data, currentCampaign, sortKey);
-  }, [infiniteData, userData, addRankForList, currentCampaign, sortKey]);
+  }, [
+    infiniteData,
+    userData,
+    addRankForList,
+    currentCampaign,
+    sortKey,
+    customData,
+  ]);
 
   const sentinelRef = useRef<HTMLDivElement | null>(null);
+
   const pagination = useMemo(
     () =>
       parsePagination({
-        total: data?.meta?.total || 0,
-        current_page: data?.meta?.current_page || 1,
+        total: customData?.meta?.total || data?.meta?.total || 0,
+        current_page:
+          customData?.meta?.current_page || data?.meta?.current_page || 1,
         records_per_page: pageSize,
       }),
-    [data?.meta?.total, data?.meta?.current_page, pageSize],
+    [
+      data?.meta?.total,
+      data?.meta?.current_page,
+      pageSize,
+      parsePagination,
+      customData,
+    ],
   );
 
   useEndReached(sentinelRef, () => {
@@ -292,9 +332,10 @@ export function useCampaignRankingScript(
   }, [userData]);
 
   useEffect(() => {
-    setUpdatedTime?.(data?.updated_time || 0);
+    const time = customData?.updatedTime || data?.updated_time || 0;
+    setUpdatedTime?.(time);
     // when currentCampaign changed, we need to reset the campaign ranking list updated time
-  }, [data, currentCampaign]);
+  }, [data, currentCampaign, customData]);
 
   useEffect(() => {
     setSort({ sortKey, sort: "desc" });
@@ -304,7 +345,7 @@ export function useCampaignRankingScript(
     pagination,
     initialSort,
     dataSource,
-    isLoading: isLoading || isValidating,
+    isLoading: isLoading || isValidating || customData?.loading,
     isMobile,
     sentinelRef,
     dataList,
@@ -313,7 +354,7 @@ export function useCampaignRankingScript(
 }
 
 function formatData(
-  data: any[],
+  data?: any[],
   currentCampaign?: CampaignConfig,
   metric?: "volume" | "pnl",
 ) {
@@ -321,7 +362,7 @@ function formatData(
     (item) => item.metric === metric,
   );
 
-  return data.map((item) => {
+  return data?.map((item) => {
     const rewards = pool ? calculateUserPoolReward(item as UserData, pool!) : 0;
 
     return {
