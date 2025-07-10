@@ -62,8 +62,10 @@ export default defineConfig([
   reactPlugin.configs.flat.recommended,
   // Add this if you are using React 17+
   reactPlugin.configs.flat["jsx-runtime"],
-  // https://github.com/facebook/react/blob/main/packages/eslint-plugin-react-hooks/README.md#flat-config-eslintconfigjsts
-  reactHooks.configs.recommended,
+
+  //https://github.com/facebook/react/tree/main/packages/eslint-plugin-react-hooks#520
+  // TODO: update to latest version config when v6 is released, now is v5
+  reactHooks.configs["recommended-latest"],
 
   // https://github.com/import-js/eslint-plugin-import
   // importPlugin.flatConfigs.recommended,
