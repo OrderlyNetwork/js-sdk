@@ -362,42 +362,18 @@ export const useDeposit = (options: DepositOptions) => {
   const deposit = useCallback(async () => {
     await enquireAllowance();
 
-    // let amount = quantity;
-    // let fee = depositFee;
+    const inputs: Parameters<typeof account.assetsManager.deposit>[0] = {
+      amount: quantity,
+      fee: depositFee,
+      decimals: options.decimals!,
+      token: options.srcToken,
+    };
 
-    // // if native token, amount = quantity - depositFee
-    // if (isNativeToken) {
-    //   const feeQty = account.walletAdapter?.formatUnits(
-    //     depositFee,
-    //     options.decimals!,
-    //   );
-    //   amount = new Decimal(quantity).sub(new Decimal(feeQty || 0)).toString();
-    // }
+    const depositPromise = isNativeToken
+      ? account.assetsManager.depositNativeToken(inputs)
+      : account.assetsManager.deposit(inputs);
 
-    // // if native token, fee = amount + depositFee = quantity - depositFee + depositFee = quantity
-    // if (isNativeToken) {
-    //   fee = BigInt(
-    //     account.walletAdapter?.parseUnits(quantity, options.decimals!) || 0,
-    //   );
-    // }
-
-    let fee = depositFee;
-    // if native token, fee is amount + depositFee, TODO: move it to core?
-    if (isNativeToken) {
-      const amount = account.walletAdapter?.parseUnits(
-        quantity,
-        options.decimals!,
-      );
-      fee = BigInt(amount!) + depositFee;
-    }
-
-    return account.assetsManager
-      .deposit({
-        amount: quantity,
-        fee,
-        decimals: options.decimals!,
-        token: options.srcToken,
-      })
+    return depositPromise
       .then((result: any) => {
         updateAllowanceWhenTxSuccess(result.hash);
         setBalance((value) => new Decimal(value).sub(quantity).toString());

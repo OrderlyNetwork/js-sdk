@@ -199,13 +199,11 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     currentLTV,
     nextLTV,
     indexPrice,
-    minimumReceived,
   } = useCollateralValue({
     tokens: sourceTokens,
     sourceToken,
     targetToken,
     qty: quantity,
-    slippage,
   });
 
   const {
@@ -245,6 +243,17 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     }
     return quantity;
   }, [needSwap, swapQuantity, quantity]);
+
+  // only swap deposit show minimum received
+  const minimumReceived = useMemo(() => {
+    if (!swapQuantity) {
+      return "-";
+    }
+    return calcMinimumReceived({
+      amount: Number(swapQuantity),
+      slippage,
+    });
+  }, [swapQuantity, slippage]);
 
   const targetQuantityLoading = swapRevalidating;
 
@@ -348,9 +357,8 @@ const useCollateralValue = (params: {
   sourceToken?: API.TokenInfo;
   targetToken?: API.TokenInfo;
   qty: string;
-  slippage: number;
 }) => {
-  const { sourceToken, targetToken, slippage } = params;
+  const { sourceToken, targetToken } = params;
 
   const quantity = Number(params.qty);
 
@@ -385,11 +393,6 @@ const useCollateralValue = (params: {
     indexPrice: indexPrice,
   });
 
-  const minimumReceived = calcMinimumReceived({
-    amount: collateralContributionQuantity,
-    slippage,
-  });
-
   const currentLtv = useComputedLTV();
 
   const nextLTV = useComputedLTV({
@@ -403,7 +406,6 @@ const useCollateralValue = (params: {
     currentLTV: currentLtv,
     nextLTV: nextLTV,
     indexPrice,
-    minimumReceived,
   };
 };
 
