@@ -63,10 +63,6 @@ export default defineConfig([
   // Add this if you are using React 17+
   reactPlugin.configs.flat["jsx-runtime"],
 
-  //https://github.com/facebook/react/tree/main/packages/eslint-plugin-react-hooks#520
-  // TODO: update to latest version config when v6 is released, now is v5
-  reactHooks.configs["recommended-latest"],
-
   // https://github.com/import-js/eslint-plugin-import
   // importPlugin.flatConfigs.recommended,
   // use custom config instead of importPlugin.flatConfigs.recommended, because it's too strict for our project
@@ -104,6 +100,7 @@ export default defineConfig([
       // https://eslint.style/packages/default
       "@stylistic": stylistic,
       "monorepo-cop": monorepoCop,
+      "react-hooks": reactHooks,
     },
     rules: {
       "no-console": ["warn", { allow: ["warn", "error"] }],
@@ -129,6 +126,10 @@ export default defineConfig([
       // prevent relative imports outside of monorepo package
       "monorepo-cop/no-relative-import-outside-package": "error",
       "monorepo-cop/no-disable-monorepo-no-relative-rule": "error",
+
+      // https://github.com/facebook/react/tree/main/packages/eslint-plugin-react-hooks#flat-config-eslintconfigjsts-1
+      "react-hooks/rules-of-hooks": "warn",
+      "react-hooks/exhaustive-deps": "warn",
     },
   },
 
