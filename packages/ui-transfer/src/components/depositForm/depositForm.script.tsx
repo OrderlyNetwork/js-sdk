@@ -383,7 +383,7 @@ const useCollateralValue = (params: {
         indexPrice: indexPrice,
       });
     },
-    [targetToken, indexPrice],
+    [targetToken, indexPrice, sourceToken?.user_max_qty],
   );
 
   const collateralContributionQuantity = collateralContribution({
