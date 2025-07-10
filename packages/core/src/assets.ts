@@ -539,6 +539,31 @@ export class Assets {
     );
   }
 
+  /** deposit native token */
+  async depositNativeToken(inputs: {
+    amount: string;
+    fee: bigint;
+    decimals: number;
+    token?: string;
+  }) {
+    const { amount, fee, decimals, token } = inputs;
+
+    const tokenAmount = this.account.walletAdapter?.parseUnits(
+      amount,
+      decimals,
+    );
+
+    // if native token, fee is amount + depositFee
+    const value = BigInt(tokenAmount!) + fee;
+
+    return this.deposit({
+      amount,
+      fee: value,
+      decimals,
+      token,
+    });
+  }
+
   async deposit(
     /** please use object inputs instead */
     inputs:
