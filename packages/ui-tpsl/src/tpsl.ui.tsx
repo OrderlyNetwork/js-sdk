@@ -41,6 +41,8 @@ import type { PNL_Values } from "./pnlInput/useBuilder.script";
 import { TPSLBuilderState } from "./useTPSL.script";
 
 export type TPSLProps = {
+  close?: () => void;
+  onClose?: () => void;
   onCancel?: () => void;
   onComplete?: () => void;
 };
@@ -58,6 +60,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
     isPosition,
     position,
     setValues,
+    onClose,
   } = props;
 
   const { t } = useTranslation();
@@ -94,7 +97,10 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
       <OrderInfo
         baseDP={symbolInfo("base_dp")}
         quoteDP={symbolInfo("quote_dp")}
-        className="oui-mb-6"
+        classNames={{
+          root: "oui-mb-6",
+          container: "oui-gap-x-[30px]",
+        }}
         order={{
           symbol: position.symbol,
           order_quantity: position.position_qty.toString(),
@@ -109,6 +115,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
         className="oui-w-full oui-mb-3"
       >
         <TPSLPositionTypeWidget
+          disableSelector
           value={TPSL_OrderEntity.position_type ?? PositionType.PARTIAL}
           onChange={(key, value) => {
             if (value === PositionType.FULL) {
@@ -231,7 +238,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
           color={"secondary"}
           data-testid={"tpsl-cancel"}
           onClick={() => {
-            onCancel?.();
+            props.close?.();
           }}
         >
           {t("common.cancel")}

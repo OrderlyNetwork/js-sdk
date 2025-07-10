@@ -1,6 +1,7 @@
 import { FC, useMemo } from "react";
 import { useSymbolsInfo } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
+import { PositionType } from "@orderly.network/types";
 import { cn, Flex, Text } from "@orderly.network/ui";
 import { AddIcon, TPSLEditIcon } from "./components";
 import { usePositionsRowContext } from "./positionRowContext";
@@ -24,7 +25,7 @@ export const PartialTPSL: FC<{
   const child = useMemo(() => {
     const children = [];
 
-    if (!order?.symbol) return <AddIcon />;
+    if (!order?.symbol) return <AddIcon positionType={PositionType.PARTIAL} />;
 
     if (tpTriggerPrice) {
       children.push(
@@ -61,7 +62,8 @@ export const PartialTPSL: FC<{
         </Text.formatted>,
       );
     }
-    if (children.length === 0) return <AddIcon />;
+    if (children.length === 0)
+      return <AddIcon positionType={PositionType.PARTIAL} />;
 
     if (children.length === 2 && direction === "row") {
       children.splice(1, 0, <Text key={"split"}>/</Text>);

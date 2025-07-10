@@ -1,4 +1,4 @@
-import { API, SDKError } from "@orderly.network/types";
+import { API, PositionType, SDKError } from "@orderly.network/types";
 import { useTaskProfitAndStopLossInternal } from "./useTPSL";
 
 export const useTPSLOrder = (
@@ -18,6 +18,7 @@ export const useTPSLOrder = (
       sl_enable?: boolean;
     };
     isEditing?: boolean;
+    positionType?: PositionType;
   },
 ): ReturnType<typeof useTaskProfitAndStopLossInternal> => {
   if (!position) {

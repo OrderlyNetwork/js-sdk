@@ -5,6 +5,7 @@ import {
   AlgoOrderEntity,
   OrderSide,
   OrderlyOrder,
+  PositionType,
   SDKError,
 } from "@orderly.network/types";
 import { AlgoOrderRootType } from "@orderly.network/types";
@@ -60,6 +61,7 @@ export const useTaskProfitAndStopLossInternal = (
       tp_enable?: boolean;
       sl_enable?: boolean;
     };
+    positionType?: PositionType;
   },
 ): [
   /**
@@ -109,16 +111,21 @@ export const useTaskProfitAndStopLossInternal = (
     algo_order_id: options?.defaultOrder?.algo_order_id,
     symbol: position.symbol as string,
     side: Number(position.position_qty) > 0 ? OrderSide.BUY : OrderSide.SELL,
-    quantity: isEditing
-      ? options?.defaultOrder?.quantity === 0
-        ? Math.abs(position.position_qty)
-        : options?.defaultOrder?.quantity
-      : "",
+    // quantity: isEditing
+    //   ? options?.defaultOrder?.quantity === 0
+    //     ? Math.abs(position.position_qty)
+    //     : options?.defaultOrder?.quantity
+    //   : "",
+    quantity:
+      options?.positionType === PositionType.PARTIAL
+        ? 0
+        : Math.abs(position.position_qty),
     // quantity:
     //   options?.defaultOrder?.quantity || Math.abs(position.position_qty),
     algo_type: options?.defaultOrder?.algo_type as AlgoOrderRootType,
     tp_enable: options?.tpslEnable?.tp_enable,
     sl_enable: options?.tpslEnable?.sl_enable,
+    position_type: options?.positionType,
   });
 
   const symbolInfo = useSymbolsInfo()[position.symbol!]();

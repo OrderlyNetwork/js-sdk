@@ -30,7 +30,9 @@ export const TPSLInputRowUI = (props: Props) => {
         />
         <label
           htmlFor={`enable_${props.type}`}
-          className={"oui-ml-1 oui-text-sm oui-text-base-contrast-36"}
+          className={
+            "oui-ml-1 oui-text-sm oui-text-base-contrast-36 oui-cursor-pointer"
+          }
         >
           {props.type === "tp" ? "Take profit" : "Stop loss"}
         </label>

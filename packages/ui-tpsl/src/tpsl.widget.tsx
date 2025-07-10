@@ -10,10 +10,17 @@ export type TPSLWidgetProps = {
   TPSLProps;
 
 export const TPSLWidget = (props: TPSLWidgetProps) => {
-  const { onCancel, onComplete, ...rest } = props;
+  const { onCancel, onComplete, close, ...rest } = props;
   const state = useTPSLBuilder(rest);
 
-  return <TPSL {...state} onCancel={onCancel} onComplete={onComplete} />;
+  return (
+    <TPSL
+      {...state}
+      onCancel={onCancel}
+      onComplete={onComplete}
+      close={close}
+    />
+  );
 };
 
 export const TPSLSheetId = "TPSLSheetId";

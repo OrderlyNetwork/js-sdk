@@ -11,6 +11,11 @@ type Props = {
   baseDP?: number;
   quoteDP?: number;
   className?: string;
+  classNames?: {
+    root?: string;
+    symbol?: string;
+    container?: string;
+  };
 };
 export const OrderInfo = (props: Props) => {
   const { order } = props;
@@ -21,11 +26,16 @@ export const OrderInfo = (props: Props) => {
   return (
     <Flex
       direction={"column"}
-      gap={2}
       itemAlign={"start"}
-      className={cn(props.className, "oui-w-full")}
+      className={cn(
+        "oui-w-full oui-gap-3 oui-font-semibold ",
+        props.classNames?.root,
+      )}
     >
-      <Flex gap={2} itemAlign={"center"}>
+      <Flex
+        itemAlign={"center"}
+        className={cn("oui-gap-2 ", props.classNames?.symbol)}
+      >
         <Flex gap={1} itemAlign={"center"}>
           <TokenIcon symbol={symbol} className="oui-w-5 oui-h-5" />
           <Text.formatted
@@ -41,14 +51,19 @@ export const OrderInfo = (props: Props) => {
         </Flex>
         <Text
           size="2xs"
-          className="oui-text-base-contrast-36 oui-h-[18px] oui-px-2 oui-bg-base-7 oui-rounded"
+          className="oui-text-base-contrast-36 oui-h-[18px] oui-px-2 oui-bg-base-7 oui-rounded oui-font-semibold"
         >
           {symbolLeverage}x
         </Text>
       </Flex>
-      <Grid cols={2} gapX={2} gapY={1} className="oui-w-full">
-        <Flex justify={"between"} className="oui-text-base-contrast-36">
-          <Text size="2xs">Quantity </Text>
+      <Grid
+        cols={2}
+        gapX={2}
+        gapY={1}
+        className={cn("oui-w-full oui-gap-x-2 ", props.classNames?.container)}
+      >
+        <Flex justify={"between"} className=" oui-text-base-contrast-36">
+          <Text size="2xs">Quantity</Text>
           <Text.numeral
             rule="price"
             className="oui-text-base-contrast-80"
@@ -59,7 +74,7 @@ export const OrderInfo = (props: Props) => {
           </Text.numeral>
         </Flex>
         <Flex justify={"between"} className="oui-text-base-contrast-36">
-          <Text size="2xs">Last price </Text>
+          <Text size="2xs">Last price</Text>
           <Text.numeral
             rule="price"
             className="oui-text-base-contrast-80"

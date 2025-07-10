@@ -1,12 +1,9 @@
-import { useState } from "react";
 import { PositionType } from "@orderly.network/types";
 import {
-  CaretDownIcon,
   ExclamationFillIcon,
   Flex,
-  MenuItem,
   Select,
-  SimpleDropdownMenu,
+  Text,
   Tooltip,
 } from "@orderly.network/ui";
 import { useTPSLPositionTypeScript } from "./tpslPositionType.script";
@@ -41,21 +38,33 @@ export const TPSLPositionTypeUI = (props: TPSLPositionTypeUIProps) => {
           size={12}
         />
       </Tooltip>
-      <Select.options
-        value={props.value}
-        options={options}
-        onValueChange={(event) => {
-          console.log("event", event);
-          props.onChange(positionTypeKey, event as PositionType);
-        }}
-        size={"xs"}
-        classNames={{
-          trigger: " oui-bg-transparent oui-border-0 oui-w-auto oui-px-0",
-        }}
-        contentProps={{
-          className: " oui-bg-base-8 oui-border-0",
-        }}
-      />
+      {props.disableSelector ? (
+        props.value === PositionType.FULL ? (
+          <Text className="oui-text-2xs oui-font-semibold oui-text-base-contrast-54">
+            TP/SL: Full position
+          </Text>
+        ) : (
+          <Text className="oui-text-2xs oui-font-semibold oui-text-base-contrast-54">
+            TP/SL: Full position
+          </Text>
+        )
+      ) : (
+        <Select.options
+          value={props.value}
+          options={options}
+          onValueChange={(event) => {
+            console.log("event", event);
+            props.onChange(positionTypeKey, event as PositionType);
+          }}
+          size={"xs"}
+          classNames={{
+            trigger: " oui-bg-transparent oui-border-0 oui-w-auto oui-px-0",
+          }}
+          contentProps={{
+            className: " oui-bg-base-8 oui-border-0",
+          }}
+        />
+      )}
     </Flex>
   );
 };

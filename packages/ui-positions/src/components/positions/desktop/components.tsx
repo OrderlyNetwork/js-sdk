@@ -1,5 +1,6 @@
 import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
+import { PositionType } from "@orderly.network/types";
 import { EditIcon, Text } from "@orderly.network/ui";
 import { modal } from "@orderly.network/ui";
 import {
@@ -55,7 +56,7 @@ export const TPSLEditIcon = () => {
   );
 };
 
-export const AddIcon = () => {
+export const AddIcon = (props: { positionType: PositionType }) => {
   const { position, baseDp, quoteDp, tpslOrder } = usePositionsRowContext();
   const onAdd = () => {
     modal.show(TPSLDialogId, {
@@ -63,6 +64,7 @@ export const AddIcon = () => {
       baseDP: baseDp,
       quoteDP: quoteDp,
       isEditing: false,
+      positionType: props.positionType,
     });
   };
   return (

@@ -6,8 +6,13 @@ import {
   useTPSLOrder,
   utils,
 } from "@orderly.network/hooks";
-import { SDKError } from "@orderly.network/types";
-import { AlgoOrderRootType, AlgoOrderType, API } from "@orderly.network/types";
+import {
+  AlgoOrderRootType,
+  AlgoOrderType,
+  API,
+  PositionType,
+  SDKError,
+} from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
 
 export type TPSLBuilderOptions = {
@@ -15,6 +20,7 @@ export type TPSLBuilderOptions = {
   order?: API.AlgoOrder;
   onTPSLTypeChange?: (type: AlgoOrderRootType) => void;
   isEditing?: boolean;
+  positionType: PositionType;
   /**
    * either show the confirm dialog or not,
    * if the Promise reject or return false, cancel the submit action
@@ -27,10 +33,11 @@ export type TPSLBuilderOptions = {
       cancel: () => Promise<any>;
     },
   ) => Promise<boolean>;
+  close?: () => void;
 };
 
 export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
-  const { position, order, isEditing } = options;
+  const { position, order, isEditing, positionType } = options;
   // const isEditing = !!order;
   if (isEditing && !order) {
     throw new SDKError("order is required when isEditing is true");
@@ -60,6 +67,7 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
     },
     {
       defaultOrder: order,
+      positionType,
       tpslEnable: {
         tp_enable: true,
         sl_enable: true,
