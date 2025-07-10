@@ -1,5 +1,14 @@
 # @orderly.network/onboard
 
+## 2.4.2-internal-multi-collateral.20
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.4.2-internal-multi-collateral.20
+  - @orderly.network/types@2.4.2-internal-multi-collateral.20
+
 ## 2.4.2-internal-multi-collateral.19
 
 ### Patch Changes

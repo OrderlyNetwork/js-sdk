@@ -1,5 +1,18 @@
 # @orderly.network/markets
 
+## 2.4.2-internal-multi-collateral.20
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.4.2-internal-multi-collateral.20
+  - @orderly.network/i18n@2.4.2-internal-multi-collateral.20
+  - @orderly.network/types@2.4.2-internal-multi-collateral.20
+  - @orderly.network/ui@2.4.2-internal-multi-collateral.20
+  - @orderly.network/ui-scaffold@2.4.2-internal-multi-collateral.20
+  - @orderly.network/utils@2.4.2-internal-multi-collateral.20
+
 ## 2.4.2-internal-multi-collateral.19
 
 ### Patch Changes
