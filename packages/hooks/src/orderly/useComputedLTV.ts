@@ -2,7 +2,7 @@ import { useCallback, useMemo } from "react";
 import { account } from "@orderly.network/perp";
 import type { API } from "@orderly.network/types";
 import { Decimal, zero } from "@orderly.network/utils";
-import { useHoldingStream, useIndexPricesStream, usePositionStream } from "..";
+import { useCollateral, useHoldingStream, useIndexPricesStream } from "..";
 import { useTokensInfo } from "./useTokensInfo/tokensInfo.store";
 
 const { LTV, collateralRatio } = account;
@@ -23,9 +23,7 @@ export const useComputedLTV = (options: LTVOptions = {}) => {
 
   const { data: indexPrices } = useIndexPricesStream();
 
-  const [position] = usePositionStream();
-
-  const unrealPnL = position?.aggregated?.total_unreal_pnl ?? 0;
+  const { unsettledPnL } = useCollateral();
 
   const usdcBalance = useMemo<number>(() => {
     if (isUSDC && input) {
@@ -47,7 +45,7 @@ export const useComputedLTV = (options: LTVOptions = {}) => {
   const memoizedLTV = useMemo<number>(() => {
     return LTV({
       usdcBalance: usdcBalance,
-      upnl: unrealPnL,
+      upnl: unsettledPnL,
       assets: holdingList
         .filter((h) => h.token.toUpperCase() !== "USDC")
         .map((item) => {
@@ -69,14 +67,14 @@ export const useComputedLTV = (options: LTVOptions = {}) => {
     });
   }, [
     usdcBalance,
-    unrealPnL,
+    unsettledPnL,
     holdingList,
     indexPrices,
     tokensInfo,
     getAdjustedQty,
   ]);
 
-  if (new Decimal(usdcBalance).add(new Decimal(unrealPnL)).gte(zero)) {
+  if (new Decimal(usdcBalance).add(new Decimal(unsettledPnL)).gte(zero)) {
     return 0;
   }
 
