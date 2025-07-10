@@ -10,7 +10,10 @@ import {
   AlgoOrderRootType,
   API,
   OrderStatus,
+  PositionType,
 } from "@orderly.network/types";
+import { modal } from "@orderly.network/ui";
+import { TPSLDialogId } from "../tpsl.widget";
 import { TPSLDetailProps } from "./tpslDetail.widget";
 
 export const useTPSLDetail = (props: TPSLDetailProps) => {
@@ -24,17 +27,37 @@ export const useTPSLDetail = (props: TPSLDetailProps) => {
     API.AlgoOrder[]
   >([]);
 
-  const [tpslOrders] = useOrderStream(
-    {
-      symbol: position.symbol,
-      status: OrderStatus.INCOMPLETE,
-      includes: [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL],
-      size: 500,
-    },
-    {
-      keeplive: true,
-    },
-  );
+  const [tpslOrders, { cancelAlgoOrder, cancelPostionOrdersByTypes }] =
+    useOrderStream(
+      {
+        symbol: position.symbol,
+        status: OrderStatus.INCOMPLETE,
+        includes: [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL],
+        size: 500,
+      },
+      {
+        keeplive: true,
+      },
+    );
+
+  const onCancelOrder = async (order: API.AlgoOrder) => {
+    return await cancelAlgoOrder(order.algo_order_id, order.symbol);
+  };
+  const onCancelAllTPSLOrders = async () => {
+    return await cancelPostionOrdersByTypes(symbol, [AlgoOrderRootType.TP_SL]);
+  };
+
+  const editTPSLOrder = async (
+    order: API.AlgoOrder,
+    positionType: PositionType,
+  ) => {
+    modal.show(TPSLDialogId, {
+      positionType: positionType,
+      position: position,
+      order: order,
+      isEditing: true,
+    });
+  };
 
   useEffect(() => {
     if (tpslOrders) {
@@ -52,6 +75,10 @@ export const useTPSLDetail = (props: TPSLDetailProps) => {
     symbol,
     fullPositionOrders,
     partialPositionOrders,
+    cancelPostionOrdersByTypes,
+    onCancelOrder,
+    onCancelAllTPSLOrders,
+    editTPSLOrder,
   };
 };
 

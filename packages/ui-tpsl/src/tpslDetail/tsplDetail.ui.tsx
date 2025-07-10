@@ -13,16 +13,27 @@ import {
   ExclamationFillIcon,
   Flex,
   Text,
+  toast,
   Tooltip,
+  ThrottledButton,
+  modal,
 } from "@orderly.network/ui";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import { OrderInfo } from "../components/orderInfo";
+import { TPSLDialogId } from "../tpsl.widget";
 import { TPSLDetailState } from "./tpslDetail.script";
 import { useColumn } from "./useColum";
 
 export const TPSLDetailUI = (props: TPSLDetailState) => {
-  const { symbolInfo, position, fullPositionOrders, partialPositionOrders } =
-    props;
+  const {
+    symbolInfo,
+    position,
+    fullPositionOrders,
+    partialPositionOrders,
+    onCancelOrder,
+    onCancelAllTPSLOrders,
+    editTPSLOrder,
+  } = props;
 
   return (
     <Box>
@@ -32,17 +43,38 @@ export const TPSLDetailUI = (props: TPSLDetailState) => {
           order_quantity: position.position_qty.toString(),
           order_price: position.average_open_price.toString(),
         }}
-        className="oui-gap-3 oui-px-5"
+        classNames={{
+          root: "oui-mb-6 oui-gap-3 oui-px-5",
+          container: "oui-gap-x-[30px]",
+        }}
       />
-      <FullPositionPart orders={fullPositionOrders} />
-      <PartialPositionPart orders={partialPositionOrders} />
+      <FullPositionPart
+        position={position}
+        orders={fullPositionOrders}
+        onCancelOrder={onCancelOrder}
+        onCancelAllTPSLOrders={onCancelAllTPSLOrders}
+        editTPSLOrder={editTPSLOrder}
+      />
+      <PartialPositionPart
+        position={position}
+        orders={partialPositionOrders}
+        onCancelOrder={onCancelOrder}
+        onCancelAllTPSLOrders={onCancelAllTPSLOrders}
+        editTPSLOrder={editTPSLOrder}
+      />
     </Box>
   );
 };
 
-const FullPositionPart = (props: { orders: API.AlgoOrder[] }) => {
+const FullPositionPart = (props: {
+  orders: API.AlgoOrder[];
+  onCancelOrder: (order: API.AlgoOrder) => Promise<void>;
+  onCancelAllTPSLOrders: () => Promise<void>;
+  position: API.Position;
+  editTPSLOrder: (order: API.AlgoOrder, positionType: PositionType) => void;
+}) => {
   const [open, setOpen] = useState(true);
-  const columns = useColumn();
+  const columns = useColumn({ onCancelOrder: props.onCancelOrder });
   const { orders } = props;
   return (
     <Box className="oui-mt-6">
@@ -52,9 +84,14 @@ const FullPositionPart = (props: { orders: API.AlgoOrder[] }) => {
           open={open}
           onOpenChange={setOpen}
         />
-        <Flex gap={2}>
-          <AddButton />
-        </Flex>
+        {orders && orders.length === 0 && (
+          <Flex gap={2}>
+            <AddButton
+              positionType={PositionType.FULL}
+              position={props.position}
+            />
+          </Flex>
+        )}
       </Box>
 
       <Box
@@ -68,13 +105,13 @@ const FullPositionPart = (props: { orders: API.AlgoOrder[] }) => {
           dataSource={orders}
           className="oui-bg-transparent oui-text-2xs"
           classNames={{
-            scroll: "!oui-min-h-[170px]",
+            scroll: cn(orders && orders.length > 0 && "!oui-min-h-[170px]"),
           }}
           onRow={(record, index) => {
             return {
               className: cn("oui-h-[53px] oui-cursor-svg-edit"),
               onClick: () => {
-                console.log("edit");
+                props.editTPSLOrder(record, PositionType.FULL);
               },
             };
           }}
@@ -84,9 +121,18 @@ const FullPositionPart = (props: { orders: API.AlgoOrder[] }) => {
   );
 };
 
-const PartialPositionPart = (props: { orders: API.AlgoOrder[] }) => {
+const PartialPositionPart = (props: {
+  position: API.Position;
+  orders: API.AlgoOrder[];
+  onCancelOrder: (order: API.AlgoOrder) => Promise<void>;
+  onCancelAllTPSLOrders: () => Promise<void>;
+  editTPSLOrder: (
+    order: API.AlgoOrder,
+    positionType: PositionType,
+  ) => Promise<void>;
+}) => {
   const [open, setOpen] = useState(true);
-  const columns = useColumn();
+  const columns = useColumn({ onCancelOrder: props.onCancelOrder });
   const { orders } = props;
   return (
     <Box>
@@ -96,10 +142,18 @@ const PartialPositionPart = (props: { orders: API.AlgoOrder[] }) => {
           open={open}
           onOpenChange={setOpen}
         />
-        <Flex gap={2}>
-          <AddButton />
-          <CancelAllBtn />
-        </Flex>
+        {orders && orders.length === 0 && (
+          <Flex gap={2}>
+            <AddButton
+              positionType={PositionType.PARTIAL}
+              position={props.position}
+            />
+            <CancelAllBtn
+              canCancelAll={orders && orders.length > 0}
+              onCancelAllTPSLOrders={props.onCancelAllTPSLOrders}
+            />
+          </Flex>
+        )}
       </Box>
       <Box
         className={cn(
@@ -112,13 +166,13 @@ const PartialPositionPart = (props: { orders: API.AlgoOrder[] }) => {
           dataSource={orders}
           className="oui-bg-transparent oui-text-2xs"
           classNames={{
-            scroll: "!oui-min-h-[170px]",
+            scroll: cn(orders && orders.length > 0 && "!oui-min-h-[170px]"),
           }}
           onRow={(record, index) => {
             return {
               className: cn("oui-h-[53px] oui-cursor-svg-edit"),
               onClick: () => {
-                console.log("edit");
+                props.editTPSLOrder(record, PositionType.PARTIAL);
               },
             };
           }}
@@ -178,28 +232,58 @@ const PositionTypeDescription = (props: {
   );
 };
 
-export const AddButton = () => {
+export const AddButton = (props: {
+  positionType: PositionType;
+  position: API.Position;
+}) => {
+  const onAdd = () => {
+    modal.show(TPSLDialogId, {
+      positionType: props.positionType,
+      position: props.position,
+    });
+  };
   return (
-    <Button
+    <ThrottledButton
       variant="outlined"
       size="sm"
       color="gray"
       className="oui-h-6 oui-min-w-[94px] oui-text-2xs"
+      onClick={onAdd}
     >
       Add
-    </Button>
+    </ThrottledButton>
   );
 };
 
-export const CancelAllBtn = () => {
+export const CancelAllBtn = (props: {
+  onCancelAllTPSLOrders: () => Promise<void>;
+  canCancelAll: boolean;
+}) => {
+  const [loading, setLoading] = useState(false);
   return (
-    <Button
+    <ThrottledButton
+      loading={loading}
       variant="outlined"
+      disabled={!props.canCancelAll}
       size="sm"
       color="gray"
-      className="oui-h-6 oui-min-w-[94px] oui-text-2xs"
+      className="oui-h-6 oui-min-w-[94px] oui-text-2xs disabled:oui-border-base-contrast-16 disabled:oui-bg-transparent disabled:oui-text-base-contrast-20"
+      onClick={() => {
+        setLoading(true);
+        props
+          .onCancelAllTPSLOrders()
+          .then(
+            () => {},
+            (error) => {
+              toast.error(error.message);
+            },
+          )
+          .finally(() => {
+            setLoading(false);
+          });
+      }}
     >
       Cancel all
-    </Button>
+    </ThrottledButton>
   );
 };

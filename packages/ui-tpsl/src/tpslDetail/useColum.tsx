@@ -1,17 +1,31 @@
-import { FC, SVGProps, useMemo } from "react";
+import { FC, SVGProps, useMemo, useState } from "react";
+import { error } from "console";
 import {
   findTPSLFromOrder,
   findTPSLOrderPriceFromOrder,
+  useOrderStream,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { positions as perpPositions } from "@orderly.network/perp";
-import { API } from "@orderly.network/types";
-import { Button, Flex, Text, Tooltip } from "@orderly.network/ui";
+import { API, OrderStatus } from "@orderly.network/types";
+import {
+  Button,
+  Flex,
+  Text,
+  ThrottledButton,
+  toast,
+  Tooltip,
+} from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { useTPSLDetailContext } from "./tpslDetailProvider";
 
-export const useColumn = () => {
+export const useColumn = (props: {
+  onCancelOrder: (order: API.AlgoOrder) => Promise<void>;
+}) => {
   const { t } = useTranslation();
+  const { position, base_dp } = useTPSLDetailContext();
+  const { onCancelOrder } = props;
+
   const columns = useMemo(() => {
     return [
       {
@@ -20,7 +34,6 @@ export const useColumn = () => {
         width: 70,
         className: "oui-pl-5 oui-py-2",
         render: (_: string, record: API.AlgoOrder) => {
-          const { position, base_dp } = useTPSLDetailContext();
           const { tp_trigger_price, sl_trigger_price } =
             findTPSLFromOrder(record);
           const { position_qty } = position;
@@ -263,15 +276,7 @@ export const useColumn = () => {
         width: 50,
         className: "oui-pl-1 oui-pr-5 oui-py-2",
         render: (_, record: API.AlgoOrder) => {
-          return (
-            <DeleteIcon
-              className="oui-text-base-contrast-54 hover:oui-text-base-contrast oui-cursor-pointer"
-              onClick={(e) => {
-                e.stopPropagation();
-                console.log("delete");
-              }}
-            />
-          );
+          return <CancelAllBtn order={record} onCancelOrder={onCancelOrder} />;
         },
       },
     ];
@@ -308,5 +313,35 @@ const DeleteIcon: FC<IconProps> = (props) => {
     >
       <path d="M5.48081 15.375C5.10681 15.375 4.78731 15.2426 4.52231 14.9777C4.25744 14.7127 4.125 14.3932 4.125 14.0192V4.50004H3.375V3.37505H6.75V2.71167H11.25V3.37505H14.625V4.50004H13.875V14.0192C13.875 14.3981 13.7438 14.7188 13.4813 14.9813C13.2188 15.2438 12.8981 15.375 12.5192 15.375H5.48081ZM12.75 4.50004H5.25V14.0192C5.25 14.0866 5.27162 14.1419 5.31487 14.1852C5.35812 14.2284 5.41344 14.25 5.48081 14.25H12.5192C12.5769 14.25 12.6298 14.226 12.6778 14.1779C12.7259 14.1299 12.75 14.077 12.75 14.0192V4.50004ZM7.053 12.75H8.17781V6.00004H7.053V12.75ZM9.82219 12.75H10.947V6.00004H9.82219V12.75Z" />
     </svg>
+  );
+};
+
+export const CancelAllBtn = (props: {
+  order: API.AlgoOrder;
+  onCancelOrder: (order: API.AlgoOrder) => Promise<void>;
+}) => {
+  const [loading, setLoading] = useState(false);
+  return (
+    <ThrottledButton size="sm" loading={loading} variant="text" color="gray">
+      <DeleteIcon
+        className="oui-text-base-contrast-54 hover:oui-text-base-contrast oui-cursor-pointer"
+        onClick={(e) => {
+          e.stopPropagation();
+          console.log("delete");
+          setLoading(true);
+          props
+            .onCancelOrder(props.order)
+            .then(
+              () => {},
+              (error) => {
+                toast.error(error.message);
+              },
+            )
+            .finally(() => {
+              setLoading(false);
+            });
+        }}
+      />
+    </ThrottledButton>
   );
 };

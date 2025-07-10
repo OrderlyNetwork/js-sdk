@@ -1,4 +1,3 @@
-import { usePrivateInfiniteQuery } from "../../usePrivateInfiniteQuery";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   OrderSide,
@@ -7,14 +6,15 @@ import {
   API,
   AlgoOrderRootType,
 } from "@orderly.network/types";
-import { useMarkPricesStream } from "../useMarkPricesStream";
-import { useMutation } from "../../useMutation";
-import version from "../../version";
-import { useDataCenterContext } from "../../dataProvider";
-import { generateKeyFun } from "../../utils/swr";
-import { useEventEmitter } from "../../useEventEmitter";
 import { SDKError } from "@orderly.network/types";
 import { AlgoOrderType } from "@orderly.network/types";
+import { useDataCenterContext } from "../../dataProvider";
+import { useEventEmitter } from "../../useEventEmitter";
+import { useMutation } from "../../useMutation";
+import { usePrivateInfiniteQuery } from "../../usePrivateInfiniteQuery";
+import { generateKeyFun } from "../../utils/swr";
+import version from "../../version";
+import { useMarkPricesStream } from "../useMarkPricesStream";
 
 type CreateOrderType = "normalOrder" | "algoOrder";
 
@@ -54,19 +54,16 @@ export const useOrderStream = (
      * Stop the state update when the component unmount
      */
     stopOnUnmount?: boolean;
-  }
+  },
 ) => {
-  const {
-    status,
-    symbol,
-    side,
-    size = 50,
-    page,
-    dateRange,
-  } = params;
+  const { status, symbol, side, size = 50, page, dateRange } = params;
 
-  const [includes, setIncludes] = useState<CombineOrderType[]>(params.includes ?? ['ALL'])
-  const [excludes, setExcludes] = useState<CombineOrderType[]>(params.excludes ?? []);
+  const [includes, setIncludes] = useState<CombineOrderType[]>(
+    params.includes ?? ["ALL"],
+  );
+  const [excludes, setExcludes] = useState<CombineOrderType[]>(
+    params.excludes ?? [],
+  );
 
   const { data: markPrices } = useMarkPricesStream();
 
@@ -98,12 +95,12 @@ export const useOrderStream = (
   useEffect(() => {
     const formatKey = (value?: string) => (value ? `:${value}` : "");
     const key = `orders${formatKey(status)}${formatKey(symbol)}${formatKey(
-      side
+      side,
     )}${formatKey(size.toString())}`;
 
     registerKeyHandler?.(
       key,
-      generateKeyFun({ status, symbol, side, size, page, dateRange })
+      generateKeyFun({ status, symbol, side, size, page, dateRange }),
     );
 
     return () => {
@@ -123,14 +120,14 @@ export const useOrderStream = (
       // },
       formatter: (data) => data,
       revalidateOnFocus: false,
-    }
+    },
   );
 
   const flattenOrders = useMemo(() => {
     if (!ordersResponse.data) {
       return null;
     }
-    let orders = ordersResponse.data?.map((item: any) => item.rows)?.flat();
+    const orders = ordersResponse.data?.map((item: any) => item.rows)?.flat();
 
     // return ordersResponse.data?.map((item) => item.rows)?.flat();
 
@@ -150,7 +147,7 @@ export const useOrderStream = (
       return orders?.filter(
         (item) =>
           includes.includes(item.algo_type) &&
-          !excludes.includes(item.algo_type)
+          !excludes.includes(item.algo_type),
       );
     }
 
@@ -206,7 +203,7 @@ export const useOrderStream = (
     return Promise.all(
       types.map((type) => {
         return doCancelAllAlgoOrders(null, { algo_type: type });
-      })
+      }),
     );
   };
 
@@ -219,6 +216,16 @@ export const useOrderStream = (
       doCancelAllAlgoOrders(null, { algo_type: "STOP" }),
     ]);
   }, [ordersResponse.data]);
+
+  const cancelPostionOrdersByTypes = useCallback(
+    (symbol: string, types: AlgoOrderRootType[]) => {
+      return doCancelAllAlgoOrders(null, {
+        symbol,
+        algo_type: types,
+      });
+    },
+    [ordersResponse.data],
+  );
 
   const cancelAllTPSLOrders = useCallback(() => {
     return cancelAlgoOrdersByTypes([
@@ -241,7 +248,7 @@ export const useOrderStream = (
           return doUpdateOrder({ ...order, order_id: orderId });
       }
     },
-    []
+    [],
   );
 
   /**
@@ -294,7 +301,7 @@ export const useOrderStream = (
           });
       }
     },
-    []
+    [],
   );
   /**
    * calcel order
@@ -330,7 +337,7 @@ export const useOrderStream = (
         ],
       });
     },
-    []
+    [],
   );
 
   const updateTPSLOrder = useCallback(
@@ -339,7 +346,7 @@ export const useOrderStream = (
        * the root algo order id
        */
       orderId: number,
-      childOrders: API.AlgoOrder["child_orders"]
+      childOrders: API.AlgoOrder["child_orders"],
     ) => {
       if (!Array.isArray(childOrders)) {
         throw new SDKError("Children orders is required");
@@ -349,7 +356,7 @@ export const useOrderStream = (
         child_orders: childOrders,
       });
     },
-    []
+    [],
   );
 
   const meta = useMemo(() => {
@@ -373,6 +380,7 @@ export const useOrderStream = (
       cancelAlgoOrder,
       cancelTPSLChildOrder,
       updateTPSLOrder,
+      cancelPostionOrdersByTypes,
       meta,
       errors: {
         cancelOrder: cancelOrderError,
