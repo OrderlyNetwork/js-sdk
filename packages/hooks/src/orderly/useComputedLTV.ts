@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react";
 import { account } from "@orderly.network/perp";
 import type { API } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+import { Decimal, zero } from "@orderly.network/utils";
 import { useHoldingStream, useIndexPricesStream, usePositionStream } from "..";
 import { useTokensInfo } from "./useTokensInfo/tokensInfo.store";
 
@@ -49,7 +49,7 @@ export const useComputedLTV = (options: LTVOptions = {}) => {
       usdcBalance: usdcBalance,
       upnl: unrealPnL,
       assets: holdingList
-        .filter((h) => h.token !== "USDC")
+        .filter((h) => h.token.toUpperCase() !== "USDC")
         .map((item) => {
           const indexPrice = indexPrices[`PERP_${item.token}_USDC`] ?? 0;
           const findToken = tokensInfo?.find((i) => i.token === item.token);
@@ -75,6 +75,10 @@ export const useComputedLTV = (options: LTVOptions = {}) => {
     tokensInfo,
     getAdjustedQty,
   ]);
+
+  if (new Decimal(usdcBalance).add(new Decimal(unrealPnL)).gte(zero)) {
+    return 0;
+  }
 
   return new Decimal(memoizedLTV)
     .mul(100)

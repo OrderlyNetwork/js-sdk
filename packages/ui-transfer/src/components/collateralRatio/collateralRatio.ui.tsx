@@ -32,13 +32,16 @@ const TooltipContent: React.FC = () => {
       <Text size="2xs" intensity={80}>
         {t("portfolio.overview.column.collateralRatio.explain")}
       </Text>{" "}
-      <Text
-        size="2xs"
-        intensity={80}
-        className="oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12 oui-text-primary"
+      <a
+        href="https://orderly.network/docs/home"
+        target="_blank"
+        rel="noreferrer"
+        className={
+          "oui-border-b oui-border-dashed oui-border-line-12 oui-text-2xs oui-text-primary"
+        }
       >
         {t("tradingLeaderboard.learnMore")}
-      </Text>
+      </a>
     </Box>
   );
 };

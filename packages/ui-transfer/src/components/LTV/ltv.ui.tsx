@@ -1,7 +1,6 @@
 import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { cn, Flex, Tooltip, Text, Box } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
 import type { LtvScriptReturns } from "./ltv.script";
 
 const TooltipIcon = React.forwardRef<
@@ -49,13 +48,16 @@ const TooltipContent: React.FC<{
           threshold: isLoading ? "-" : ltv_threshold,
         })}
       </Text>{" "}
-      <Text
-        size="2xs"
-        intensity={80}
-        className="oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12 oui-text-primary"
+      <a
+        href="https://orderly.network/docs/home"
+        target="_blank"
+        rel="noreferrer"
+        className={
+          "oui-border-b oui-border-dashed oui-border-line-12 oui-text-2xs oui-text-primary"
+        }
       >
         {t("tradingLeaderboard.learnMore")}
-      </Text>
+      </a>
     </Box>
   );
 };
