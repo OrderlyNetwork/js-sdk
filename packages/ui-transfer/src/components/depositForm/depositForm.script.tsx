@@ -372,24 +372,20 @@ const useCollateralValue = (params: {
     return indexPrices[symbol] ?? 0;
   }, [sourceToken?.symbol, indexPrices]);
 
-  const getCollateralRatio = useCallback(
-    (inputQty: number) => {
-      const collateralQty = new Decimal(inputQty).toNumber();
-      return collateralRatio({
-        baseWeight: targetToken?.base_weight ?? 0,
-        discountFactor: targetToken?.discount_factor ?? 0,
-        collateralQty,
-        collateralCap: sourceToken?.user_max_qty ?? collateralQty,
-        indexPrice: indexPrice,
-      });
-    },
-    [targetToken, indexPrice, sourceToken?.user_max_qty],
-  );
+  const memoizedCollateralRatio = useMemo<number>(() => {
+    return collateralRatio({
+      baseWeight: targetToken?.base_weight ?? 0,
+      discountFactor: targetToken?.discount_factor ?? 0,
+      collateralQty: quantity,
+      collateralCap: sourceToken?.user_max_qty ?? quantity,
+      indexPrice: indexPrice,
+    });
+  }, [targetToken, quantity, sourceToken?.user_max_qty, indexPrice]);
 
   const collateralContributionQuantity = collateralContribution({
     collateralQty: quantity,
     collateralCap: sourceToken?.user_max_qty ?? quantity,
-    collateralRatio: getCollateralRatio(quantity),
+    collateralRatio: memoizedCollateralRatio,
     indexPrice: indexPrice,
   });
 
@@ -401,7 +397,7 @@ const useCollateralValue = (params: {
   });
 
   return {
-    collateralRatio: getCollateralRatio(quantity),
+    collateralRatio: memoizedCollateralRatio,
     collateralContributionQuantity,
     currentLTV: currentLtv,
     nextLTV: nextLTV,
