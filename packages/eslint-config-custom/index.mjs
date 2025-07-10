@@ -3,6 +3,7 @@ import eslintConfigPrettier from "eslint-config-prettier/flat";
 // import importPlugin from "eslint-plugin-import";
 import monorepoCop from "eslint-plugin-monorepo-cop";
 import reactPlugin from "eslint-plugin-react";
+import * as reactHooks from "eslint-plugin-react-hooks";
 import tailwind from "eslint-plugin-tailwindcss";
 import { defineConfig, globalIgnores } from "eslint/config";
 import globals from "globals";
@@ -61,6 +62,8 @@ export default defineConfig([
   reactPlugin.configs.flat.recommended,
   // Add this if you are using React 17+
   reactPlugin.configs.flat["jsx-runtime"],
+  // https://github.com/facebook/react/blob/main/packages/eslint-plugin-react-hooks/README.md#flat-config-eslintconfigjsts
+  reactHooks.configs.recommended,
 
   // https://github.com/import-js/eslint-plugin-import
   // importPlugin.flatConfigs.recommended,
