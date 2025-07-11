@@ -1,5 +1,15 @@
 # @orderly.network/chart
 
+## 2.4.2-internal-multi-collateral.22
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/i18n@2.4.2-internal-multi-collateral.22
+  - @orderly.network/ui@2.4.2-internal-multi-collateral.22
+  - @orderly.network/utils@2.4.2-internal-multi-collateral.22
+
 ## 2.4.2-internal-multi-collateral.21
 
 ### Patch Changes

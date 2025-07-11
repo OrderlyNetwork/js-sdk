@@ -1,5 +1,13 @@
 # @orderly.network/web3-modal
 
+## 2.4.2-internal-multi-collateral.22
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.4.2-internal-multi-collateral.22
+
 ## 2.4.2-internal-multi-collateral.21
 
 ### Patch Changes
