@@ -90,10 +90,10 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
   }, [findByChainId, connectedChain, linkDeviceStorage]);
 
   const { sourceToken, sourceTokens, onSourceTokenChange, targetToken } =
-    useToken({
-      currentChain,
-      defaultValue: defaultToken,
-    });
+    useToken(
+      { currentChain, defaultValue: defaultToken },
+      (token) => token.symbol === "USDC" || token.is_collateral,
+    );
 
   const token = useMemo<API.TokenInfo>(() => {
     const _token = {
