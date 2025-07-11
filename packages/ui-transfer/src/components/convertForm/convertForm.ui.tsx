@@ -83,6 +83,7 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
           <Slippage value={slippage} onValueChange={onSlippageChange} />
           <MinimumReceived
             symbol={targetToken?.display_name || targetToken?.symbol || ""}
+            precision={targetToken?.precision!}
             value={
               isQuoteLoading || !quantity
                 ? "-"

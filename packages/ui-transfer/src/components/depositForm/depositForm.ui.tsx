@@ -18,7 +18,10 @@ import { SwapFee } from "../swap/components/swapFee";
 import { SwapCoin } from "../swapCoin";
 import { SwapIndicator } from "../swapIndicator";
 import { Web3Wallet } from "../web3Wallet";
-import type { UseDepositFormScriptReturn } from "./depositForm.script";
+import {
+  SWAP_USDC_PRECISION,
+  type UseDepositFormScriptReturn,
+} from "./depositForm.script";
 
 export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
   const {
@@ -78,6 +81,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
             <SwapCoin
               sourceSymbol={sourceToken?.display_name || sourceToken?.symbol}
               targetSymbol={targetToken?.display_name || targetToken?.symbol}
+              precision={SWAP_USDC_PRECISION}
               indexPrice={swapPrice}
             />
           </Flex>
@@ -85,6 +89,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
           <MinimumReceived
             value={minimumReceived}
             symbol={targetToken?.symbol ?? ""}
+            precision={SWAP_USDC_PRECISION}
           />
           <SwapFee {...swapFee} />
         </Flex>

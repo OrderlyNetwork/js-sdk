@@ -34,6 +34,8 @@ export type UseDepositFormScriptReturn = ReturnType<
 export type UseDepositFormScriptOptions = {
   onClose?: () => void;
 };
+// swap to usdc precision is 3
+export const SWAP_USDC_PRECISION = 3;
 
 export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
   const { wrongNetwork } = useAppContext();
@@ -239,7 +241,11 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
 
   const targetQuantity = useMemo(() => {
     if (needSwap) {
-      return swapQuantity;
+      return swapQuantity
+        ? new Decimal(swapQuantity)
+            ?.todp(SWAP_USDC_PRECISION, Decimal.ROUND_DOWN)
+            .toString()
+        : swapQuantity;
     }
     return quantity;
   }, [needSwap, swapQuantity, quantity]);

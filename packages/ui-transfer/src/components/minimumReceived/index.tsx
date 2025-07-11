@@ -3,10 +3,10 @@ import { useTranslation } from "@orderly.network/i18n";
 import { Flex, Text } from "@orderly.network/ui";
 
 export const MinimumReceived: React.FC<
-  Readonly<{ symbol: string; value: number | string }>
+  Readonly<{ symbol: string; value: number | string; precision: number }>
 > = (props) => {
   const { t } = useTranslation();
-  const { value, symbol } = props;
+  const { value, symbol, precision = 6 } = props;
 
   return (
     <Flex width="100%" itemAlign="center" justify="between">
@@ -16,9 +16,14 @@ export const MinimumReceived: React.FC<
         </Text>
       </Flex>
       <Flex itemAlign="center" justify="end" gap={1}>
-        <Text size="2xs" className="oui-select-none" intensity={80}>
+        <Text.numeral
+          dp={precision}
+          size="2xs"
+          className="oui-select-none"
+          intensity={80}
+        >
           {value}
-        </Text>
+        </Text.numeral>
         <Text size="2xs" className="oui-select-none" intensity={36}>
           {symbol}
         </Text>
