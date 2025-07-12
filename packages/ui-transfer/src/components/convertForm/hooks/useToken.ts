@@ -21,7 +21,14 @@ interface Options {
   defaultValue?: string;
 }
 
-export const useToken = (options: Options) => {
+export const useToken = (
+  options: Options,
+  predicate: (
+    value: API.TokenInfo,
+    index: number,
+    array: API.TokenInfo[],
+  ) => boolean = () => true,
+) => {
   const { currentChain, defaultValue } = options;
 
   const [sourceToken, setSourceToken] = useState<API.TokenInfo>();
@@ -31,7 +38,9 @@ export const useToken = (options: Options) => {
   // when chain changed and chain data ready then call this function
   const onChainInited = useCallback((chainInfo?: API.Chain) => {
     if (chainInfo && chainInfo?.token_infos?.length > 0) {
-      const { usdc, others } = splitTokenBySymbol(chainInfo.token_infos);
+      const { usdc, others } = splitTokenBySymbol(
+        chainInfo.token_infos.filter(predicate),
+      );
       setSourceToken(() => {
         if (defaultValue) {
           const defaultToken = others.find(

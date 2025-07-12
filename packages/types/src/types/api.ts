@@ -376,6 +376,7 @@ export declare namespace API {
     bridgeless?: boolean;
     withdrawal_fee?: number;
     minimum_withdraw_amount?: number;
+    vault_address: string;
 
     cross_chain_router: string;
     depositor: string;

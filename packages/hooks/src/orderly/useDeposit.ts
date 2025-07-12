@@ -25,7 +25,10 @@ export type DepositOptions = {
   decimals?: number;
 
   srcChainId?: number;
+  /** input token */
   srcToken?: string;
+  /** output token */
+  dstToken?: string;
 
   // swap deposit options
   swapEnable?: boolean;
@@ -148,7 +151,7 @@ export const useDeposit = (options: DepositOptions) => {
       }
 
       tasks.push(
-        account.assetsManager.getBalanceByAddress(token.address, {
+        account.assetsManager.getBalance(token.address, {
           decimals: token?.decimals,
         }),
       );
@@ -201,6 +204,7 @@ export const useDeposit = (options: DepositOptions) => {
     const allowance = await account.assetsManager.getAllowance({
       address,
       decimals,
+      vaultAddress,
     });
 
     setAllowance(allowance);
@@ -208,20 +212,26 @@ export const useDeposit = (options: DepositOptions) => {
   };
 
   const vaultAddress = useMemo(() => {
+    // cross swap deposit vault address
     if (dst.chainId !== options.srcChainId) {
       return options.crossChainRouteAddress;
-    } else {
-      if (dst.symbol !== options.srcToken) {
-        return options.depositorAddress;
-      }
     }
+
+    // swap deposit vault address
+    if (options.srcToken !== (options.dstToken || dst.symbol)) {
+      return options.depositorAddress;
+    }
+
+    // target chain vault address
+    return targetChain?.network_infos.vault_address;
   }, [
-    dst.chainId,
-    dst.symbol,
+    dst,
     options.srcChainId,
     options.srcToken,
+    options.dstToken,
     options.crossChainRouteAddress,
     options.depositorAddress,
+    targetChain,
   ]);
 
   const queryBalance = useDebouncedCallback(
@@ -286,7 +296,7 @@ export const useDeposit = (options: DepositOptions) => {
           if (receipt.status === 1) {
             account.assetsManager
               .getAllowance({
-                address: options.address,
+                address: options.address!,
                 decimals: options.decimals,
                 vaultAddress,
               })
@@ -367,6 +377,7 @@ export const useDeposit = (options: DepositOptions) => {
       fee: depositFee,
       decimals: options.decimals!,
       token: options.srcToken,
+      vaultAddress,
     };
 
     const depositPromise = isNativeToken
@@ -404,6 +415,7 @@ export const useDeposit = (options: DepositOptions) => {
     enquireAllowance,
     updateAllowanceWhenTxSuccess,
     isNativeToken,
+    vaultAddress,
   ]);
 
   // get balance every 3s or 10s depends on chain namespace
@@ -439,9 +451,10 @@ export const useDeposit = (options: DepositOptions) => {
         chain: targetChain?.network_infos!,
         decimals: options.decimals!,
         token: options.srcToken,
+        address: options.address,
       });
     },
-    [account, targetChain, options.decimals, options.srcToken],
+    [account, targetChain, options.decimals, options.srcToken, options.address],
   );
 
   const enquiryDepositFee = useCallback(() => {
