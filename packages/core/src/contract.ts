@@ -1,3 +1,9 @@
+import {
+  BSC_TESTNET_CHAINID,
+  ABSTRACT_CHAIN_ID_MAP,
+  MONAD_TESTNET_CHAINID,
+  STORY_TESTNET_CHAINID,
+} from "@orderly.network/types";
 import { ConfigStore } from "./configStore/configStore";
 import {
   mainnetUSDCAddress,
@@ -131,4 +137,36 @@ export class BaseContract implements IContract {
       bscUSDCAddress: bscUSDCAddress,
     };
   }
+}
+
+export function getContractInfoByChainId(
+  chainId: number,
+  contractInfo: OrderlyContracts,
+) {
+  let vaultAddress = contractInfo.vaultAddress;
+  let tokenAddress = contractInfo.usdcAddress;
+
+  if (chainId === STORY_TESTNET_CHAINID) {
+    vaultAddress = contractInfo.storyTestnetVaultAddress ?? "";
+  }
+
+  if (chainId === MONAD_TESTNET_CHAINID) {
+    vaultAddress = contractInfo.monadTestnetVaultAddress ?? "";
+    tokenAddress = contractInfo.monadTestnetUSDCAddress ?? "";
+  }
+
+  if (ABSTRACT_CHAIN_ID_MAP.has(chainId)) {
+    vaultAddress = contractInfo.abstractVaultAddress ?? "";
+    tokenAddress = contractInfo.abstractUSDCAddress ?? "";
+  }
+
+  if (chainId === BSC_TESTNET_CHAINID) {
+    vaultAddress = contractInfo.bscVaultAddress ?? "";
+    tokenAddress = contractInfo.bscUSDCAddress ?? "";
+  }
+
+  return {
+    vaultAddress,
+    tokenAddress,
+  };
 }

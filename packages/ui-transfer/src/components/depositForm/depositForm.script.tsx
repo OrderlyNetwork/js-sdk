@@ -77,6 +77,7 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     decimals: sourceToken?.decimals,
     srcChainId: currentChain?.id,
     srcToken: sourceToken?.symbol,
+    dstToken: targetToken?.symbol,
     crossChainRouteAddress:
       currentChain?.info?.network_infos?.cross_chain_router,
     depositorAddress: currentChain?.info?.network_infos?.depositor,
