@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/portfolio",
-  "version": "2.4.2-internal-multi-collateral.22",
+  "version": "2.4.2-internal-multi-collateral.23",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

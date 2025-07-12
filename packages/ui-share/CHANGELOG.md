@@ -1,5 +1,17 @@
 # @orderly.network/ui-share
 
+## 2.4.2-internal-multi-collateral.23
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.4.2-internal-multi-collateral.23
+  - @orderly.network/i18n@2.4.2-internal-multi-collateral.23
+  - @orderly.network/types@2.4.2-internal-multi-collateral.23
+  - @orderly.network/ui@2.4.2-internal-multi-collateral.23
+  - @orderly.network/utils@2.4.2-internal-multi-collateral.23
+
 ## 2.4.2-internal-multi-collateral.22
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @orderly.network/codemod
 
+## 1.4.2-internal-multi-collateral.23
+
+### Patch Changes
+
+- publish
+
 ## 1.4.2-internal-multi-collateral.22
 
 ### Patch Changes
