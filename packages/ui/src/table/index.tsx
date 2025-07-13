@@ -6,5 +6,4 @@ export { usePagination } from "./hooks/usePagination";
 export { useMultiSort } from "./hooks/useMultiSort";
 export { EmptyDataState } from "./emptyDataState";
 export { MultiSortHeader, type MultiSortHeaderProps } from "./multiSortHeader";
-export { MultiSortUtils } from "./utils/multiSortUtils";
 export * as TableFeatures from "./features";
