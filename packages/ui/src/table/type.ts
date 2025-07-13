@@ -11,6 +11,14 @@ export type ColumnFixed = "left" | "right";
 
 export type SortOrder = "asc" | "desc";
 
+export type TableSort = { sortKey: string; sort: SortOrder };
+
+// Multi-field display support
+export type MultiFieldSort = {
+  sortKey: string;
+  sort: SortOrder;
+};
+
 type PlainText = number | string | null | undefined;
 
 export type TableCellFormatter<T> =
@@ -26,6 +34,12 @@ export type TableCellPlainTextRenderer<T> = (
   record: T,
   index: number,
 ) => PlainText;
+
+export type MultiSortField = {
+  sortKey: string;
+  label?: string;
+  className?: string;
+};
 
 export type Column<RecordType extends unknown = any> = {
   type?: "data" | "action" | "group";
@@ -44,6 +58,12 @@ export type Column<RecordType extends unknown = any> = {
   onSort?:
     | boolean
     | ((r1: RecordType, r2: RecordType, sortOrder?: SortOrder) => number);
+  // Multi-field sorting support
+  multiSort?: {
+    fields: MultiSortField[];
+    initialSort?: MultiFieldSort[]; // UI display only - shows initial sort indicators
+    onSort?: (fieldKey: string, sortOrder?: SortOrder) => void; // Handler for field-specific sorting
+  };
   formatter?: TableCellFormatter<RecordType>;
   render?: TableCellRenderer<RecordType>;
   /**
@@ -83,8 +103,6 @@ export type PaginationMeta = {
   onPageChange?: (page: number) => void;
   onPageSizeChange?: (pageSize: number) => void;
 };
-
-export type TableSort = { sortKey: string; sort: SortOrder };
 
 export type DataTableClassNames = {
   root?: string;

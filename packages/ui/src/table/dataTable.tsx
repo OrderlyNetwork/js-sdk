@@ -1,4 +1,10 @@
-import { PropsWithChildren, ReactNode, useEffect, useMemo } from "react";
+import {
+  PropsWithChildren,
+  ReactNode,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import {
   getCoreRowModel,
   useReactTable,
@@ -102,15 +108,45 @@ export function DataTable<RecordType extends any>(
     onExpandedChange,
   } = props;
 
-  const dataSource = useMemo(() => {
-    if (!props.dataSource) {
-      return [];
+  const [sorting, setSorting] = useSort({
+    onSort,
+    initialSort,
+  });
+
+  // Check if we need to override manualSorting for multiSort columns
+  const hasMultiSortColumns = useMemo(() => {
+    return columns.some((col) => col.multiSort && !col.multiSort.onSort);
+  }, [columns]);
+
+  // For multiSort columns, check if current sorting is a multiSort field
+  const effectiveManualSorting = useMemo(() => {
+    if (!hasMultiSortColumns) {
+      return manualSorting;
     }
 
-    return props.dataSource;
-  }, [props.dataSource]);
+    // If current sorting is a multiSort field, use manual sorting
+    if (sorting.length > 0) {
+      const currentSort = sorting[0];
+      const sortId = currentSort.id;
 
-  const formatColumns = useMemo(() => Transform.columns(columns), [columns]);
+      const isMultiSortField = columns.some((col) =>
+        col.multiSort?.fields?.some((field) => field.sortKey === sortId),
+      );
+
+      return isMultiSortField; // Use manual sorting for multiSort fields
+    }
+
+    return false; // Use client-side sorting for regular columns
+  }, [hasMultiSortColumns, manualSorting, sorting, columns]);
+
+  const dataSource = useMemo(() => {
+    return Transform.dataSource(props.dataSource || [], columns, sorting);
+  }, [props.dataSource, columns, sorting]);
+
+  const formatColumns = useMemo(
+    () => Transform.columns(columns, sorting, setSorting),
+    [columns, sorting, setSorting],
+  );
 
   const columnPinning = useMemo(
     () => Transform.columnPinning(columns),
@@ -126,11 +162,6 @@ export function DataTable<RecordType extends any>(
     () => Transform.pagination(pagination),
     [pagination],
   );
-
-  const [sorting, setSorting] = useSort({
-    onSort,
-    initialSort,
-  });
 
   // const { state: sortState, config: sortConfig } = useMemo(
   //   () => Transform.sorting(onSort, initialSort),
@@ -170,8 +201,8 @@ export function DataTable<RecordType extends any>(
     getSubRows: props.getSubRows,
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    // use pre-sorted row model instead of sorted row model
-    manualSorting,
+    // use pre-sorted row model instead of sorted row model, but force client-side for multiSort
+    manualSorting: effectiveManualSorting,
     // turn off client-side pagination
     manualPagination,
     // only allow a single row to be selected at once
@@ -246,6 +277,7 @@ export function DataTable<RecordType extends any>(
               bordered={props.bordered}
               showLeftShadow={showLeftShadow}
               showRightShadow={showRightShadow}
+              sorting={sorting}
             />
           )}
 
