@@ -128,11 +128,20 @@ export const OrderTPSL = (props: {
             }}
           /> */}
         </Flex>
-        <Flex itemAlign={"center"} gapX={1}>
-          <Text className="oui-text-sm">Advanced</Text>
+        <Flex
+          itemAlign={"center"}
+          gapX={1}
+          onClick={props.showTPSLAdvanced}
+          className="oui-group"
+        >
+          <Text className="oui-text-sm oui-cursor-pointer group-hover:oui-text-base-contrast">
+            Advanced
+          </Text>
+          {/* <AdvancedIcon/> */}
           <SettingFillIcon
             size={12}
-            className="oui-text-base-contrast-54 hover:oui-text-white/80"
+            className="oui-text-base-contrast-54 group-hover:oui-text-base-contrast oui-cursor-pointer"
+            opacity={1}
             onClick={props.showTPSLAdvanced}
           />
         </Flex>

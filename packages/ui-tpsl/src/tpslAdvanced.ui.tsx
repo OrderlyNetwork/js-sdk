@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, SVGProps } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
 import {
@@ -7,7 +7,15 @@ import {
   OrderType,
   PositionType,
 } from "@orderly.network/types";
-import { Button, cn, Divider, Flex, Grid, Text } from "@orderly.network/ui";
+import {
+  Button,
+  ChevronDownIcon,
+  cn,
+  Divider,
+  Flex,
+  Grid,
+  Text,
+} from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { OrderInfo } from "./components/orderInfo";
 import { OrderPriceType } from "./components/orderPriceType";
@@ -139,10 +147,16 @@ export const TPSLAdvancedUI = (props: Props) => {
   ]);
 
   return (
-    <div className="oui-py-3">
+    <div className="oui-py-3 oui-rounded-[16px]">
       <div className="oui-px-3">
-        <Flex className="oui-text-base-contrast-80 oui-text-base  oui-mb-5">
-          TP/SL
+        <Flex
+          className="oui-mb-5 oui-cursor-pointer  oui-text-base oui-text-base-contrast-80"
+          gap={1}
+          itemAlign={"center"}
+          onClick={props.onClose}
+        >
+          <ArrowRightIcon className=" oui-text-base-contrast-80" />
+          <Text>TP/SL</Text>
         </Flex>
 
         <OrderInfo
@@ -266,5 +280,20 @@ export const TPSLAdvancedUI = (props: Props) => {
         </Flex>
       </div>
     </div>
+  );
+};
+
+export const ArrowRightIcon = (props: SVGProps<SVGSVGElement>) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="14"
+      height="14"
+      viewBox="0 0 14 14"
+      fill="currentColor"
+      {...props}
+    >
+      <path d="M8.03752 2.9294C7.89169 2.95857 7.74527 3.03207 7.65661 3.16624L5.33145 6.66624C5.20137 6.86224 5.20137 7.12648 5.33145 7.32248L7.65661 10.8225C7.83452 11.0902 8.20669 11.1655 8.47385 10.9864C8.74044 10.8079 8.8151 10.434 8.63719 10.1662L6.53019 6.99408L8.63719 3.82249C8.8151 3.55416 8.74044 3.18082 8.47385 3.00232C8.34027 2.91249 8.18335 2.89965 8.03752 2.9294Z" />
+    </svg>
   );
 };
