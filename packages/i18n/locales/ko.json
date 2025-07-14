@@ -732,7 +732,7 @@
   "restrictedInfo.accessRestricted.description": "법률 및 규정에 따라 현재 미국에서는 서비스를 제공하지 않습니다. 우리 플랫폼을 계속 사용함으로써, 귀하는 사용 기간 동안 미국 거주자가 아님을 진술하고 보증합니다.",
   "restrictedInfo.accessRestricted.agree": "이해하고 동의합니다",
   "subAccount.modal.title": "계정 전환",
-  "subAccount.modal.switch.success.description": "계정 전환이 완료되었습니다",
+  "subAccount.modal.switch.success.description": "계정 전환됨",
   "subAccount.modal.mainAccount.title": "메인 계정",
   "subAccount.modal.subAccounts.title": "서브 계정",
   "subAccount.modal.current": "현재",

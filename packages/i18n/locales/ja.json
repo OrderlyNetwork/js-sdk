@@ -732,7 +732,7 @@
   "restrictedInfo.accessRestricted.description": "法律および規制により、現在アメリカ合衆国では事業を展開しておりません。当プラットフォームの利用を継続することにより、利用期間中を通じてアメリカ合衆国の居住者ではないことを表明し保証するものとします。",
   "restrictedInfo.accessRestricted.agree": "理解し同意します",
   "subAccount.modal.title": "アカウントを切り替える",
-  "subAccount.modal.switch.success.description": "アカウントの切り替えが完了しました",
+  "subAccount.modal.switch.success.description": "アカウント切り替え完了",
   "subAccount.modal.mainAccount.title": "メインアカウント",
   "subAccount.modal.subAccounts.title": "サブアカウント",
   "subAccount.modal.current": "現在",

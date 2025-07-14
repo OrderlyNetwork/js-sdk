@@ -732,7 +732,7 @@
   "restrictedInfo.accessRestricted.description": "根据法律法规，我们目前不在美国开展业务。继续使用我们的平台即表示您声明并保证在使用期间始终不是美国居民。",
   "restrictedInfo.accessRestricted.agree": "我理解并同意",
   "subAccount.modal.title": "切换账户",
-  "subAccount.modal.switch.success.description": "切换账户成功",
+  "subAccount.modal.switch.success.description": "账户已切换",
   "subAccount.modal.mainAccount.title": "主账户",
   "subAccount.modal.subAccounts.title": "子账户",
   "subAccount.modal.current": "当前",

@@ -732,7 +732,7 @@
   "restrictedInfo.accessRestricted.description": "Відповідно до законів та нормативних актів, ми наразі не працюємо в Сполучених Штатах. Продовжуючи користуватися нашою платформою, ви заявляєте та гарантуєте, що не є резидентом Сполучених Штатів протягом усього періоду використання.",
   "restrictedInfo.accessRestricted.agree": "Я розумію та погоджуюся",
   "subAccount.modal.title": "Змінити акаунт",
-  "subAccount.modal.switch.success.description": "Успішне перемикання облікового запису",
+  "subAccount.modal.switch.success.description": "Обліковий запис змінено",
   "subAccount.modal.mainAccount.title": "Головний рахунок",
   "subAccount.modal.subAccounts.title": "Підрахунки",
   "subAccount.modal.current": "Поточний",

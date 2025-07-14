@@ -732,7 +732,7 @@
   "restrictedInfo.accessRestricted.description": "Do luật pháp và quy định, hiện tại chúng tôi không hoạt động tại Hoa Kỳ. Bằng việc tiếp tục sử dụng nền tảng của chúng tôi, bạn cam đoan và đảm bảo rằng bạn không phải là cư dân Hoa Kỳ trong suốt thời gian sử dụng.",
   "restrictedInfo.accessRestricted.agree": "Tôi hiểu và đồng ý",
   "subAccount.modal.title": "Chuyển tài khoản",
-  "subAccount.modal.switch.success.description": "Chuyển đổi tài khoản thành công",
+  "subAccount.modal.switch.success.description": "Đã chuyển tài khoản",
   "subAccount.modal.mainAccount.title": "Tài khoản chính",
   "subAccount.modal.subAccounts.title": "Tài khoản phụ",
   "subAccount.modal.current": "Hiện tại",

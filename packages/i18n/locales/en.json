@@ -732,7 +732,7 @@
   "restrictedInfo.accessRestricted.description": "Due to laws and regulations, we currently do not operate in the United States. By continuing to use our platform, you represent and warrant at all times that you are not a resident of the United States throughout the period of such use.",
   "restrictedInfo.accessRestricted.agree": "I understand and agree",
   "subAccount.modal.title": "Switch account",
-  "subAccount.modal.switch.success.description": "Switch account successfully",
+  "subAccount.modal.switch.success.description": "Account switched",
   "subAccount.modal.mainAccount.title": "Main account",
   "subAccount.modal.subAccounts.title": "Sub-accounts",
   "subAccount.modal.current": "Current",

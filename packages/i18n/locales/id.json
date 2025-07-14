@@ -732,7 +732,7 @@
   "restrictedInfo.accessRestricted.description": "Karena hukum dan peraturan, saat ini kami tidak beroperasi di Amerika Serikat. Dengan melanjutkan penggunaan platform kami, Anda menyatakan dan menjamin setiap saat bahwa Anda bukan penduduk Amerika Serikat selama periode penggunaan tersebut.",
   "restrictedInfo.accessRestricted.agree": "Saya mengerti dan setuju",
   "subAccount.modal.title": "Ganti akun",
-  "subAccount.modal.switch.success.description": "Berhasil beralih akun",
+  "subAccount.modal.switch.success.description": "Akun beralih",
   "subAccount.modal.mainAccount.title": "Akun utama",
   "subAccount.modal.subAccounts.title": "Sub-akun",
   "subAccount.modal.current": "Saat ini",

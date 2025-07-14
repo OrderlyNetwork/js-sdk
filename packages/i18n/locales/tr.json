@@ -732,7 +732,7 @@
   "restrictedInfo.accessRestricted.description": "Yasa ve düzenlemeler nedeniyle, şu anda Amerika Birleşik Devletleri'nde faaliyet göstermemekteyiz. Platformumuzu kullanmaya devam ederek, kullanım süresi boyunca Amerika Birleşik Devletleri'nde ikamet etmediğinizi beyan ve garanti edersiniz.",
   "restrictedInfo.accessRestricted.agree": "Anlıyorum ve kabul ediyorum",
   "subAccount.modal.title": "Hesap değiştir",
-  "subAccount.modal.switch.success.description": "Hesap değiştirme başarılı",
+  "subAccount.modal.switch.success.description": "Hesap değiştirildi",
   "subAccount.modal.mainAccount.title": "Ana hesap",
   "subAccount.modal.subAccounts.title": "Alt hesaplar",
   "subAccount.modal.current": "Mevcut",

@@ -732,7 +732,7 @@
   "restrictedInfo.accessRestricted.description": "Aufgrund von Gesetzen und Vorschriften sind wir derzeit nicht in den Vereinigten Staaten tätig. Durch die weitere Nutzung unserer Plattform versichern und garantieren Sie, dass Sie während des gesamten Nutzungszeitraums kein Einwohner der Vereinigten Staaten sind.",
   "restrictedInfo.accessRestricted.agree": "Ich verstehe und stimme zu",
   "subAccount.modal.title": "Konto wechseln",
-  "subAccount.modal.switch.success.description": "Kontowechsel erfolgreich",
+  "subAccount.modal.switch.success.description": "Konto gewechselt",
   "subAccount.modal.mainAccount.title": "Hauptkonto",
   "subAccount.modal.subAccounts.title": "Unterkonten",
   "subAccount.modal.current": "Aktuell",
