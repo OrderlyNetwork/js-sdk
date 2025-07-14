@@ -182,39 +182,29 @@ export const useTaskProfitAndStopLossInternal = (
   useEffect(() => {
     if (!isEditing || !options?.defaultOrder) return;
     const trigger_prices = findTPSLFromOrder(options.defaultOrder!);
+    const order: ComputedAlgoOrder = {};
     if (trigger_prices.tp_trigger_price) {
-      setOrderValue("tp_trigger_price", trigger_prices.tp_trigger_price, {
-        ignoreValidate: true,
-      });
+      order.tp_trigger_price = trigger_prices.tp_trigger_price;
     }
     if (trigger_prices.sl_trigger_price) {
-      setOrderValue("sl_trigger_price", trigger_prices.sl_trigger_price, {
-        ignoreValidate: true,
-      });
+      order.sl_trigger_price = trigger_prices.sl_trigger_price;
     }
     const order_prices = findTPSLOrderPriceFromOrder(options.defaultOrder!);
     if (
       order_prices.tp_order_price &&
       order_prices.tp_order_price !== OrderType.MARKET
     ) {
-      setOrderValue("tp_order_type", OrderType.LIMIT, {
-        ignoreValidate: true,
-      });
-      setOrderValue("tp_order_price", order_prices.tp_order_price, {
-        ignoreValidate: true,
-      });
+      order.tp_order_type = OrderType.LIMIT;
+      order.tp_order_price = order_prices.tp_order_price;
     }
     if (
       order_prices.sl_order_price &&
       order_prices.sl_order_price !== OrderType.MARKET
     ) {
-      setOrderValue("sl_order_type", OrderType.LIMIT, {
-        ignoreValidate: true,
-      });
-      setOrderValue("sl_order_price", order_prices.sl_order_price, {
-        ignoreValidate: true,
-      });
+      order.sl_order_type = OrderType.LIMIT;
+      order.sl_order_price = order_prices.sl_order_price;
     }
+    setValues(order);
   }, []);
 
   const _setOrderValue = (

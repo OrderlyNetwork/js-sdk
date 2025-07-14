@@ -234,15 +234,27 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
   };
 
   const onShowTPSLAdvanced = () => {
+    helper.validate().then(
+      (result) => {
+        console.log("result", result);
+        setShowTPSLAdvanced(true);
+      },
+      (errors) => {
+        console.log("errors", errors);
+        const tpslKey = new Set(["tp_trigger_price", "sl_trigger_price"]);
+        if (Object.keys(errors).every((key: string) => tpslKey.has(key))) {
+          setShowTPSLAdvanced(true);
+        }
+      },
+    );
     // modal.show(TPSLAdvancedDialogId, {
     //   order: formattedOrder,
     //   setOrderValue: setOrderValue,
     // });
-    setShowTPSLAdvanced(true);
+    // setShowTPSLAdvanced(true);
   };
 
   const onSubmitAdvancedTPSL = (order: OrderlyOrder) => {
-    console.log("onSubmitAdvancedTPSL", order);
     if (order.side !== formattedOrder.side) {
       setOrderValue("side", order.side);
     }

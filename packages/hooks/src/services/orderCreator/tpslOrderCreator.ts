@@ -132,13 +132,10 @@ export class TPSLOrderCreator extends BaseAlgoOrderCreator<
           }
         }
 
-        if (Object.keys(_order).length > 0) {
-          _order["order_id"] = Number(oldOrder.algo_order_id);
-          newData.push(_order);
-        }
+        _order["order_id"] = Number(oldOrder.algo_order_id);
+        newData.push(_order);
       }
     });
-    console.log("newData", newData);
 
     if (newData.length < 2) {
       // if quantity is changed, need to update all child orders

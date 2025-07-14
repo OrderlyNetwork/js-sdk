@@ -171,6 +171,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
           }}
           hideOrderPrice={TPSL_OrderEntity.position_type === PositionType.FULL}
           errors={errors}
+          disableOrderTypeSelector={isEditing}
           quote_dp={symbolInfo("quote_dp")}
           positionType={TPSL_OrderEntity.position_type ?? PositionType.PARTIAL}
           onChange={(key, value) => {

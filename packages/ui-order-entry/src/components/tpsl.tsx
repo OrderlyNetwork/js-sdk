@@ -132,7 +132,10 @@ export const OrderTPSL = (props: {
           itemAlign={"center"}
           gapX={1}
           onClick={props.showTPSLAdvanced}
-          className="oui-group"
+          className={cn(
+            "oui-group oui-invisible",
+            props.switchState && "oui-visible",
+          )}
         >
           <Text className="oui-text-sm oui-cursor-pointer group-hover:oui-text-base-contrast">
             Advanced

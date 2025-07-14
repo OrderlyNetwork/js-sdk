@@ -52,8 +52,6 @@ export abstract class BaseAlgoOrderCreator<
         tp_order_price,
         sl_order_price,
       } = values;
-      console.log("tpsl values validate", values);
-
       const qty = Number(values.quantity);
       const maxQty = config.maxQty;
       const orderType = values.order_type;
