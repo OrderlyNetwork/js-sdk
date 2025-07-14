@@ -33,6 +33,7 @@ export const TPSLDetailUI = (props: TPSLDetailState) => {
     onCancelOrder,
     onCancelAllTPSLOrders,
     editTPSLOrder,
+    addTPSLOrder,
   } = props;
 
   return (
@@ -54,6 +55,7 @@ export const TPSLDetailUI = (props: TPSLDetailState) => {
         onCancelOrder={onCancelOrder}
         onCancelAllTPSLOrders={onCancelAllTPSLOrders}
         editTPSLOrder={editTPSLOrder}
+        addTPSLOrder={addTPSLOrder}
       />
       <PartialPositionPart
         position={position}
@@ -61,6 +63,7 @@ export const TPSLDetailUI = (props: TPSLDetailState) => {
         onCancelOrder={onCancelOrder}
         onCancelAllTPSLOrders={onCancelAllTPSLOrders}
         editTPSLOrder={editTPSLOrder}
+        addTPSLOrder={addTPSLOrder}
       />
     </Box>
   );
@@ -72,6 +75,7 @@ const FullPositionPart = (props: {
   onCancelAllTPSLOrders: () => Promise<void>;
   position: API.Position;
   editTPSLOrder: (order: API.AlgoOrder, positionType: PositionType) => void;
+  addTPSLOrder: (positionType: PositionType) => void;
 }) => {
   const [open, setOpen] = useState(true);
   const columns = useColumn({ onCancelOrder: props.onCancelOrder });
@@ -89,6 +93,7 @@ const FullPositionPart = (props: {
             <AddButton
               positionType={PositionType.FULL}
               position={props.position}
+              addTPSLOrder={props.addTPSLOrder}
             />
           </Flex>
         )}
@@ -130,10 +135,8 @@ const PartialPositionPart = (props: {
   orders: API.AlgoOrder[];
   onCancelOrder: (order: API.AlgoOrder) => Promise<void>;
   onCancelAllTPSLOrders: () => Promise<void>;
-  editTPSLOrder: (
-    order: API.AlgoOrder,
-    positionType: PositionType,
-  ) => Promise<void>;
+  editTPSLOrder: (order: API.AlgoOrder, positionType: PositionType) => void;
+  addTPSLOrder: (positionType: PositionType) => void;
 }) => {
   const [open, setOpen] = useState(true);
   const columns = useColumn({ onCancelOrder: props.onCancelOrder });
@@ -150,6 +153,7 @@ const PartialPositionPart = (props: {
           <AddButton
             positionType={PositionType.PARTIAL}
             position={props.position}
+            addTPSLOrder={props.addTPSLOrder}
           />
           {orders && orders.length > 0 && (
             <CancelAllBtn
@@ -243,12 +247,10 @@ const PositionTypeDescription = (props: {
 export const AddButton = (props: {
   positionType: PositionType;
   position: API.Position;
+  addTPSLOrder: (positionType: PositionType) => void;
 }) => {
   const onAdd = () => {
-    modal.show(TPSLDialogId, {
-      positionType: props.positionType,
-      position: props.position,
-    });
+    props.addTPSLOrder(props.positionType);
   };
   return (
     <ThrottledButton

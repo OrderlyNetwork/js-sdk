@@ -285,13 +285,12 @@ export const useColumn = (config: ColumnConfig) => {
         title: null,
         dataIndex: "close_position",
         align: "right",
-        width: 160,
+        width: 70,
         fixed: "right",
         render() {
           return (
             <Flex gapX={2} justify={"end"}>
               <CloseButton />
-              <TPSLButton />
             </Flex>
           );
         },
