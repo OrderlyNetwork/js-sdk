@@ -79,30 +79,8 @@ export const TPSLAdvancedUI = (props: Props) => {
     ROI: formattedOrder.sl_ROI ?? "",
   });
 
-  const riskRatio = useMemo(() => {
-    if (formattedOrder.tp_pnl && formattedOrder.sl_pnl) {
-      const ratio = new Decimal(formattedOrder.tp_pnl)
-        .div(formattedOrder.sl_pnl)
-        .abs()
-        .toNumber()
-        .toFixed(2);
-      return (
-        <Flex
-          gap={1}
-          itemAlign={"center"}
-          className="oui-text-base-contrast-80"
-        >
-          <Text>{ratio}</Text>
-          <Text className="oui-text-base-contrast-36">x</Text>
-        </Flex>
-      );
-    }
-    return "-";
-  }, [formattedOrder.tp_pnl, formattedOrder.sl_pnl]);
-
   // Update tpValues when formattedOrder changes
   useEffect(() => {
-    console.log("update tpValues", formattedOrder);
     setTpValuse((prev) => ({
       ...prev,
       enable: formattedOrder.tp_enable ?? true,

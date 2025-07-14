@@ -371,7 +371,6 @@ export function tpslCalculateHelper(
       inputs.values[`${keyPrefix}order_type` as keyof OrderlyOrder] ??
       OrderType.MARKET;
 
-  console.log("entryPrice", inputs.entryPrice);
   const entryPrice = new Decimal(inputs.entryPrice)
     .todp(options.symbol?.quote_dp ?? 2, Decimal.ROUND_UP)
     .toNumber();
@@ -506,11 +505,7 @@ export function tpslCalculateHelper(
       } else {
         order_price = trigger_price;
       }
-      console.log("tp/sl order type change", {
-        tpsl_order_type,
-        trigger_price,
-        order_price,
-      });
+
       break;
     }
 

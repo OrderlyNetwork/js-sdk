@@ -55,10 +55,6 @@ export const useTPSLAdvanced = (props: Props) => {
       });
   };
 
-  useEffect(() => {
-    setOrderValue("tp_enable", true);
-    setOrderValue("sl_enable", true);
-  }, []);
   return {
     order,
     formattedOrder,
