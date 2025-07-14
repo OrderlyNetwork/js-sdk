@@ -1,11 +1,11 @@
 import { useMemo, useState } from "react";
-import { useScaffoldContext } from "../scaffold";
 import {
   useAccount,
   useEventEmitter,
   useWalletConnector,
 } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
+import { useScaffoldContext } from "../scaffold";
 import type { MainNavItem } from "./mainMenus/navItem";
 import { type MainNavWidgetProps } from "./mainNav.widget";
 

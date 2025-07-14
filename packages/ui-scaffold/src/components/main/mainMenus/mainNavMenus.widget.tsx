@@ -1,10 +1,10 @@
 import { FC } from "react";
-import { MainNavMenusUI, type MainNavItemsProps } from "./mainNavMenus.ui";
 import {
   ExtensionPositionEnum,
   ExtensionSlot,
   installExtension,
 } from "@orderly.network/ui";
+import { MainNavMenusUI, type MainNavItemsProps } from "./mainNavMenus.ui";
 
 export const MainNavMenusWidget: FC<MainNavItemsProps> = (props) => {
   return <MainNavMenusUI {...props} />;

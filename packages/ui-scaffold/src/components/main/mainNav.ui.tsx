@@ -59,8 +59,9 @@ export const MainNav: FC<PropsWithChildren<MainNavProps>> = (props) => {
   const { isDesktop } = useScreen();
 
   const children = useMemo(() => {
-    if (typeof props.children === "undefined") return null;
-
+    if (typeof props.children === "undefined") {
+      return null;
+    }
     return <Flex grow>{props.children}</Flex>;
   }, [props.children]);
 

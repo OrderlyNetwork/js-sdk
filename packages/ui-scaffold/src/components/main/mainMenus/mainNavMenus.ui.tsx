@@ -18,7 +18,9 @@ export type MainNavItemsProps = {
 export const MainNavMenusUI: FC<MainNavItemsProps> = (props) => {
   const { items, classNames } = props;
 
-  if (!Array.isArray(items) || items.length === 0) return null;
+  if (!Array.isArray(items) || items.length === 0) {
+    return null;
+  }
 
   return (
     <Flex className={cn("oui-gap-1", classNames?.root)}>
