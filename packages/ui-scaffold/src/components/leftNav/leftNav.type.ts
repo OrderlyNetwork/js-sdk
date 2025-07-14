@@ -16,4 +16,5 @@ export type LeftNavItem = {
   href: string;
   icon?: ReactNode;
   trailing?: ReactNode;
+  customRender?: ReactNode;
 };

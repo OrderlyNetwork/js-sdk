@@ -5,6 +5,7 @@ import React, {
   PropsWithChildren,
   ReactElement,
   useCallback,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -12,6 +13,35 @@ import React, {
 import { ChevronDownIcon, PopoverContent } from "@orderly.network/ui";
 import { Flex } from "@orderly.network/ui";
 import { Box, cn, PopoverAnchor, PopoverRoot, Text } from "@orderly.network/ui";
+
+const ActiveIcon: React.FC = () => (
+  <svg
+    width={12}
+    height={12}
+    viewBox="0 0 12 12"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    focusable={false}
+  >
+    <path
+      d="M2.913 4.515a.5.5 0 0 0-.328.202.51.51 0 0 0 .14.701L5.722 7.41a.51.51 0 0 0 .562 0l2.995-1.992a.51.51 0 0 0 .14-.7.51.51 0 0 0-.701-.14L6.002 6.382 3.287 4.577a.5.5 0 0 0-.374-.062"
+      fill="url(#mainNavDropDownIcon)"
+    />
+    <defs>
+      <linearGradient
+        id="mainNavDropDownIcon"
+        x1="9.502"
+        y1="5.994"
+        x2="2.502"
+        y2="5.994"
+        gradientUnits="userSpaceOnUse"
+      >
+        <stop stopColor="rgb(var(--oui-gradient-brand-end))" />
+        <stop stopColor="rgb(var(--oui-gradient-brand-start))" offset={1} />
+      </linearGradient>
+    </defs>
+  </svg>
+);
 
 export type MainNavItem = {
   id?: string;
@@ -27,6 +57,8 @@ export type MainNavItem = {
   children?: MainNavItem[];
   className?: string;
   asChild?: boolean;
+
+  customRender?: React.ReactNode;
   /**
    * if true, the item will be shown as a submenu in mobile
    */
@@ -58,114 +90,97 @@ export const NavItem: FC<
 > = (props) => {
   const { classNames, currentPath, item, onClick, ...buttonProps } = props;
 
-  const isActive = useMemo(
-    () => props.currentPath?.[0] === props.item.href,
-    [currentPath],
-  );
+  const isActive = useMemo(() => currentPath?.[0] === item.href, [currentPath]);
 
   const onClickHandler = useCallback(() => {
-    if (Array.isArray(props.item.children)) return;
-    props.onClick?.([props.item]);
-  }, [props.item]);
+    if (Array.isArray(item.children)) {
+      return;
+    }
+    onClick?.([item]);
+  }, [item, onClick]);
 
-  const button = (
-    <button
-      id={item.id}
-      data-testid={item.testid}
-      {...buttonProps}
-      disabled={props.item.disabled}
-      data-actived={isActive}
-      className={cn(
-        "oui-group oui-relative oui-h-[32px] oui-rounded oui-px-3 oui-py-1 oui-text-sm oui-text-base-contrast-36 hover:oui-bg-base-7",
-        classNames?.navItem,
-      )}
-      onClick={onClickHandler}
-    >
-      <span className={"oui-flex oui-items-center"}>
-        <ItemIcon isActive={isActive} item={props.item} />
-        <Text.gradient
-          color={isActive ? "brand" : "inherit"}
-          angle={45}
-          className="oui-whitespace-nowrap oui-break-normal"
-        >
-          {props.item.name}
-        </Text.gradient>
-        {Array.isArray(props.item.children) && (
-          <span className={"oui-ml-1 group-data-[open=true]:oui-rotate-180"}>
-            {isActive ? (
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 12 12"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M2.913 4.515a.5.5 0 0 0-.328.202.51.51 0 0 0 .14.701L5.722 7.41a.51.51 0 0 0 .562 0l2.995-1.992a.51.51 0 0 0 .14-.7.51.51 0 0 0-.701-.14L6.002 6.382 3.287 4.577a.5.5 0 0 0-.374-.062"
-                  fill="url(#mainNavDropDownIcon)"
-                />
-                <defs>
-                  <linearGradient
-                    id="mainNavDropDownIcon"
-                    x1="9.502"
-                    y1="5.994"
-                    x2="2.502"
-                    y2="5.994"
-                    gradientUnits="userSpaceOnUse"
-                  >
-                    <stop stopColor="rgb(var(--oui-gradient-brand-end))" />
-                    <stop
-                      offset="1"
-                      stopColor="rgb(var(--oui-gradient-brand-start))"
-                    />
-                  </linearGradient>
-                </defs>
-              </svg>
-            ) : (
-              <ChevronDownIcon size={12} color={"white"} />
-            )}
-          </span>
+  const buttonRender = () => {
+    if (
+      typeof item.customRender !== "undefined" &&
+      item.customRender !== null
+    ) {
+      return item.customRender;
+    }
+    return (
+      <button
+        id={item.id}
+        data-testid={item.testid}
+        {...buttonProps}
+        disabled={item.disabled}
+        data-actived={isActive}
+        className={cn(
+          "oui-group oui-relative oui-h-[32px] oui-rounded oui-px-3 oui-py-1 oui-text-sm oui-text-base-contrast-36 hover:oui-bg-base-7",
+          classNames?.navItem,
         )}
-      </span>
-      <Box
-        invisible={!isActive}
-        position="absolute"
-        bottom={0}
-        left={"50%"}
-        height={"3px"}
-        r="full"
-        width={"60%"}
-        gradient="brand"
-        angle={45}
-        className="-oui-translate-x-1/2 "
-      />
-    </button>
-  );
+        onClick={onClickHandler}
+      >
+        <span className={"oui-flex oui-items-center"}>
+          <ItemIcon isActive={isActive} item={item} />
+          <Text.gradient
+            color={isActive ? "brand" : "inherit"}
+            angle={45}
+            className="oui-whitespace-nowrap oui-break-normal"
+          >
+            {item.name}
+          </Text.gradient>
+          {Array.isArray(item.children) && (
+            <span className={"oui-ml-1 group-data-[open=true]:oui-rotate-180"}>
+              {isActive ? (
+                <ActiveIcon />
+              ) : (
+                <ChevronDownIcon size={12} color={"white"} />
+              )}
+            </span>
+          )}
+        </span>
+        <Box
+          invisible={!isActive}
+          position="absolute"
+          bottom={0}
+          left={"50%"}
+          height={"3px"}
+          r="full"
+          width={"60%"}
+          gradient="brand"
+          angle={45}
+          className="-oui-translate-x-1/2 "
+        />
+      </button>
+    );
+  };
 
-  if (!Array.isArray(props.item.children)) return button;
+  if (!Array.isArray(item.children)) {
+    return buttonRender();
+  }
 
   return (
     <SubMenus
-      items={props.item.children}
+      items={item.children}
       className={classNames?.subMenu}
-      current={props.currentPath?.[1]}
+      current={currentPath?.[1]}
       onItemClick={(subItem: MainNavItem) => {
-        props.onClick?.([props.item, subItem]);
+        onClick?.([item, subItem]);
       }}
     >
-      {button}
+      {buttonRender()}
     </SubMenus>
   );
 };
 
-const SubMenus = (
-  props: PropsWithChildren<{
+const SubMenus: React.FC<
+  PropsWithChildren<{
     items: MainNavItem[];
     className?: string;
     current?: string;
     onItemClick: (item: MainNavItem) => void;
-  }>,
-) => {
+  }>
+> = (props) => {
+  const { children, items, className, current, onItemClick } = props;
   const [open, setOpen] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -177,7 +192,15 @@ const SubMenus = (
     // setOpen(true);
   }, []);
 
-  const classNames = (props.children as ReactElement).props.className;
+  useEffect(() => {
+    return () => {
+      if (timer.current) {
+        clearTimeout(timer.current);
+      }
+    };
+  }, []);
+
+  const classNames = (children as ReactElement).props?.className;
 
   return (
     <PopoverRoot open={open}>
@@ -194,7 +217,7 @@ const SubMenus = (
             }, 150);
           }}
         >
-          {cloneElement(props.children as React.ReactElement, {
+          {cloneElement(children as React.ReactElement<any>, {
             className: cn(classNames, open && "oui-bg-base-7"),
           })}
         </div>
@@ -204,20 +227,22 @@ const SubMenus = (
         onMouseEnter={onMouseEnter}
         onMouseLeave={() => {
           setOpen(false);
-          timer.current ? clearTimeout(timer.current) : void 0;
+          if (timer.current) {
+            clearTimeout(timer.current);
+          }
         }}
         className={cn(
           "oui-w-[260px] oui-space-y-[2px] oui-border oui-border-line-6 oui-p-1",
-          props.className,
+          className,
         )}
       >
-        {props.items.map((item, index) => {
+        {items.map((item, index) => {
           return (
             <SubMenu
               key={index}
               item={item}
-              onClick={props.onItemClick}
-              active={item.href === props.current}
+              onClick={onItemClick}
+              active={item.href === current}
             />
           );
         })}
@@ -226,37 +251,44 @@ const SubMenus = (
   );
 };
 
-const SubMenu = (props: {
+const SubMenu: React.FC<{
   item: MainNavItem;
   active?: boolean;
   onClick: (item: MainNavItem) => void;
-}) => {
-  const { item } = props;
+}> = (props) => {
+  const { item, active, onClick } = props;
+  const hasDescription = typeof item.description !== "undefined";
+  const hasIcon = typeof item.icon !== "undefined" && item.icon !== null;
   return (
     <Flex
       px={2}
       py={3}
       gapX={2}
-      data-active={props.active ?? false}
+      data-active={active ?? false}
+      itemAlign={hasDescription ? "start" : "center"}
       className={cn(
-        "oui-group oui-w-full oui-cursor-pointer oui-items-start oui-text-base-contrast-80 hover:oui-bg-base-6 data-[active=true]:oui-bg-base-5",
+        "oui-group oui-w-full oui-cursor-pointer oui-text-base-contrast-80 hover:oui-bg-base-6 data-[active=true]:oui-bg-base-5",
         // props.active && "oui-bg-base-5"
       )}
       r={"md"}
       onClick={() => {
-        props.onClick(item);
+        onClick(item);
       }}
       data-testid={item.testid}
     >
-      {!!props.item.icon && (
-        <div className="oui-relative oui-size-6 oui-translate-y-1">
-          <ItemIcon isActive={props.active ?? false} item={props.item} />
+      {hasIcon && (
+        <div
+          className={cn(
+            "oui-relative oui-size-6",
+            hasDescription && "oui-translate-y-1",
+          )}
+        >
+          <ItemIcon isActive={active ?? false} item={item} />
         </div>
       )}
-
       <div className="oui-flex-1">
-        <SubMenuTitle item={item} isActive={props.active} />
-        {typeof item.description !== "undefined" && (
+        <SubMenuTitle item={item} isActive={active} />
+        {hasDescription && (
           <Text size={"2xs"} as={"div"} intensity={36}>
             {item.description}
           </Text>
@@ -266,11 +298,10 @@ const SubMenu = (props: {
   );
 };
 
-const SubMenuTitle = (props: { item: MainNavItem; isActive?: boolean }) => {
-  const {
-    item: { name },
-    isActive,
-  } = props;
+const SubMenuTitle: React.FC<{ item: MainNavItem; isActive?: boolean }> = (
+  props,
+) => {
+  const { item, isActive } = props;
   return (
     <Flex itemAlign={"center"} width={"100%"} position="relative">
       <div className="oui-flex oui-flex-1">
@@ -282,16 +313,16 @@ const SubMenuTitle = (props: { item: MainNavItem; isActive?: boolean }) => {
           weight={"semibold"}
           className="oui-whitespace-nowrap oui-break-normal"
         >
-          {name}
+          {item.name}
         </Text.gradient>
-        {typeof props.item.tag !== "undefined" && <Tag item={props.item} />}
+        {typeof item.tag !== "undefined" && <Tag item={item} />}
       </div>
-      {props.item.target === "_blank" && <OutlinkIcon />}
+      {item.target === "_blank" && <OutlinkIcon />}
     </Flex>
   );
 };
 
-const Tag = (props: { item: MainNavItem }) => {
+const Tag: React.FC<{ item: MainNavItem }> = (props) => {
   return (
     <div
       className={
@@ -312,10 +343,13 @@ const Tag = (props: { item: MainNavItem }) => {
 const ICON_CLASSNAME =
   "oui-flex oui-border oui-border-line oui-w-6 oui-h-6 oui-rounded-md oui-justify-center oui-items-center oui-absolute oui-left-0 oui-top-0";
 
-const ItemIcon = (props: { item: MainNavItem; isActive: boolean }) => {
-  const { item, isActive } = props;
-
-  if (!props.item.icon) return null;
+const ItemIcon: React.FC<{ item: MainNavItem; isActive: boolean }> = (
+  props,
+) => {
+  const { isActive } = props;
+  if (!props.item.icon) {
+    return null;
+  }
   if (typeof props.item.icon === "string") {
     return (
       <span className={"oui-mr-1 oui-size-[20px]"}>
@@ -355,7 +389,7 @@ const ItemIcon = (props: { item: MainNavItem; isActive: boolean }) => {
   );
 };
 
-const OutlinkIcon = () => {
+const OutlinkIcon: React.FC = () => {
   return (
     <>
       <svg

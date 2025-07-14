@@ -115,11 +115,17 @@ const LeftNavSheet = modal.create<LeftNavUIProps>((props) => {
           {showSubAccount && (
             <SubAccountWidget customTrigger={subAccountTrigger} />
           )}
-          <div className="oui-flex oui-h-[calc(100vh-260px)] oui-overflow-y-auto oui-flex-col">
-            {props?.menus?.map((item) => (
-              <NavItem key={item.name} item={item} onClick={onRouteChange} />
-            ))}
-          </div>
+          {Array.isArray(props?.menus) && props.menus.length > 0 && (
+            <div className="oui-flex oui-h-[calc(100vh-260px)] oui-flex-col oui-items-start oui-overflow-y-auto">
+              {props.menus?.map((item) => (
+                <NavItem
+                  item={item}
+                  key={`item-${item.name}`}
+                  onClick={onRouteChange}
+                />
+              ))}
+            </div>
+          )}
           <div className="oui-absolute oui-bottom-6 oui-flex oui-w-full oui-flex-col oui-gap-4">
             <div className="oui-flex oui-items-center oui-justify-around">
               {props.telegramUrl && (
@@ -171,23 +177,30 @@ type NavItemProps = {
 };
 
 const NavItem: FC<NavItemProps> = ({ item, onClick }) => {
+  const { href, name, icon, trailing, customRender } = item;
   const onItemClick = () => {
-    onClick?.({
-      href: item.href,
-      name: item.name,
-      scope: "leftNav",
-    });
+    onClick?.({ href: href, name: name, scope: "leftNav" });
   };
+  if (typeof customRender !== "undefined" && customRender !== null) {
+    return (
+      <div
+        className="oui-flex oui-items-center oui-px-3 oui-py-4"
+        onClick={onItemClick}
+      >
+        {customRender}
+      </div>
+    );
+  }
   return (
     <div
       className="oui-flex oui-items-center oui-gap-2 oui-px-3 oui-py-4"
       onClick={onItemClick}
     >
-      <div>{item.icon}</div>
+      <div>{icon}</div>
       <div className="oui-text-base oui-font-semibold oui-text-base-contrast-80">
-        {item.name}
+        {name}
       </div>
-      {item.trailing}
+      {trailing}
     </div>
   );
 };

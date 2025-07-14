@@ -146,5 +146,9 @@ export const TradingLeaderboardProvider = (
 };
 
 export const useTradingLeaderboardContext = () => {
-  return useContext(TradingLeaderboardContext);
+  const ctx = useContext(TradingLeaderboardContext);
+  // if (!ctx) {
+  //   throw new Error("useContext must be used within a Provider");
+  // }
+  return ctx;
 };
