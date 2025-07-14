@@ -34,7 +34,7 @@ export interface OrderlyConfigContextState {
   // extraApis:ExtraAPIs
   filteredChains?: filteredChains | null;
   customChains?: Chains<undefined, undefined>;
-  defaultOrderbookDepth: Record<string, string>;
+  defaultOrderbookTickSizes: Record<string, string>;
 }
 
 export const OrderlyContext = createContext<OrderlyConfigContextState>({

@@ -275,7 +275,8 @@ export const useOrderbookStream = (
 
   symbolRef.current = symbol;
 
-  const { defaultOrderbookDepth: DEFAULT_DEPTH } = useContext(OrderlyContext);
+  const { defaultOrderbookTickSizes: DEFAULT_TICK_SIZES } =
+    useContext(OrderlyContext);
 
   const [data, setData] = useState<OrderbookData>(initial);
   const [isLoading, setIsLoading] = useState(true);
@@ -305,12 +306,12 @@ export const useOrderbookStream = (
   }, [config("quote_tick")]);
 
   useEffect(() => {
-    if (DEFAULT_DEPTH[symbol]) {
-      setDepth(Number(DEFAULT_DEPTH[symbol]));
+    if (DEFAULT_TICK_SIZES[symbol]) {
+      setDepth(Number(DEFAULT_TICK_SIZES[symbol]));
     } else {
       setDepth(config("quote_tick"));
     }
-  }, [config("quote_tick"), symbol]);
+  }, [config("quote_tick"), symbol, DEFAULT_TICK_SIZES]);
 
   const ws = useWS();
 
