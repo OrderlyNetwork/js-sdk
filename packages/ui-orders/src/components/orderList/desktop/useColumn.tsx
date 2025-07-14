@@ -1,3 +1,7 @@
+import { useMemo } from "react";
+import { format } from "date-fns";
+import { SymbolInfo, utils } from "@orderly.network/hooks";
+import { useTranslation, i18n } from "@orderly.network/i18n";
 import {
   AlgoOrderRootType,
   AlgoOrderType,
@@ -7,6 +11,8 @@ import {
   OrderType,
 } from "@orderly.network/types";
 import { cn, Column, Flex, Text } from "@orderly.network/ui";
+import { Badge } from "@orderly.network/ui";
+import { SharePnLConfig, SharePnLDialogId } from "@orderly.network/ui-share";
 import { commifyOptional, Decimal } from "@orderly.network/utils";
 import {
   grayCell,
@@ -14,23 +20,17 @@ import {
   upperCaseFirstLetter,
 } from "../../../utils/util";
 import { TabType } from "../../orders.widget";
-import { Badge } from "@orderly.network/ui";
-import { OrderQuantity } from "./quantity";
-import { Price } from "./price";
-import { TriggerPrice } from "./triggerPrice";
-import { CancelButton } from "./cancelBtn";
-import { Renew } from "./renew";
-import { OrderTriggerPrice } from "./tpslTriggerPrice";
+import { ShareButtonWidget } from "../../shareButton";
+import { useSymbolContext } from "../symbolProvider";
 import { BracketOrderPrice } from "./bracketOrderPrice";
+import { CancelButton } from "./cancelBtn";
+import { Price } from "./price";
+import { OrderQuantity } from "./quantity";
+import { Renew } from "./renew";
 import { TP_SLEditButton } from "./tpslEdit";
 import { TPSLOrderPrice, useTPSLOrderPrice } from "./tpslPrice";
-import { useMemo } from "react";
-import { useSymbolContext } from "../symbolProvider";
-import { ShareButtonWidget } from "../../shareButton";
-import { SharePnLConfig, SharePnLDialogId } from "@orderly.network/ui-share";
-import { format } from "date-fns";
-import { SymbolInfo, utils } from "@orderly.network/hooks";
-import { useTranslation, i18n } from "@orderly.network/i18n";
+import { OrderTriggerPrice } from "./tpslTriggerPrice";
+import { TriggerPrice } from "./triggerPrice";
 
 export const useOrderColumn = (props: {
   _type: TabType;
@@ -53,7 +53,7 @@ export const useOrderColumn = (props: {
             onSymbolChange: onSymbolChange,
             enableSort: false,
           }),
-          // side({ width: 130 }),
+          side({ width: 130 }),
           fillAndQuantity({
             width: 130,
             disableEdit: true,
@@ -62,7 +62,7 @@ export const useOrderColumn = (props: {
           }),
           price({
             width: 130,
-            title: t("orders.column.orderPrice"),
+            title: t("common.orderPrice"),
             disableEdit: true,
             enableSort: false,
           }),
@@ -138,7 +138,7 @@ export const useOrderColumn = (props: {
           }),
           price({
             width: 124,
-            title: t("orders.column.orderPrice"),
+            title: t("common.orderPrice"),
             disableEdit: true,
           }),
           avgPrice({ width: 124 }),
@@ -278,7 +278,7 @@ function instrument(option?: {
               "oui-rounded-[1px] oui-w-1 oui-h-7 oui-shrink-0",
               record.side === OrderSide.BUY
                 ? "oui-bg-trade-profit"
-                : "oui-bg-trade-loss"
+                : "oui-bg-trade-loss",
             )}
           />
           <Flex direction="column" itemAlign={"start"}>
@@ -346,8 +346,8 @@ function side(option?: {
       const clsName = grayCell(record)
         ? "oui-text-base-contrast-20"
         : value === OrderSide.BUY
-        ? "oui-text-trade-profit"
-        : "oui-text-trade-loss";
+          ? "oui-text-trade-profit"
+          : "oui-text-trade-loss";
       return (
         <span className={cn("oui-font-semibold", clsName)}>
           {upperCaseFirstLetter(value)}
@@ -402,7 +402,7 @@ function fillAndQuantity(option?: {
     className: option?.className,
     width: option?.width,
     onSort:
-      option?.enableSort ?? false
+      (option?.enableSort ?? false)
         ? (a, b) => {
             const aQuantity =
               (a.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL
@@ -461,7 +461,7 @@ function quantity(option?: {
     dataIndex: "quantity",
     width: option?.width,
     onSort:
-      option?.enableSort ?? false
+      (option?.enableSort ?? false)
         ? (a, b) => {
             const aQuantity =
               (a.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL
@@ -513,7 +513,7 @@ function price(option?: {
     className: option?.className,
     width: option?.width,
     onSort:
-      option?.enableSort ?? false
+      (option?.enableSort ?? false)
         ? (a, b, type) => {
             return compareNumbers(a.price ?? 0, b.price ?? 0);
           }
@@ -629,7 +629,7 @@ function tpslTriggerPrice(option?: {
           : "") +
         (sl_trigger_price != null
           ? `${tp_trigger_price ? "\n" : ""}${i18n.t(
-              "tpsl.sl"
+              "tpsl.sl",
             )}: ${commifyOptional(sl_trigger_price, {
               fix: quote_dp,
               padEnd: true,
@@ -671,7 +671,7 @@ function bracketOrderPrice(option?: {
           : "") +
         (sl_trigger_price != null
           ? `${tp_trigger_price ? "\n" : ""}${i18n.t(
-              "tpsl.sl"
+              "tpsl.sl",
             )}: ${sl_trigger_price}`
           : "");
       return callback.length > 0 ? callback : "--";
@@ -694,26 +694,26 @@ function estTotal(option?: {
     width: option?.width,
     className: option?.className,
     onSort:
-      option?.enableSort ?? false
+      (option?.enableSort ?? false)
         ? (a, b, type) => {
             const aTotal =
               a.type === OrderType.CLOSE_POSITION &&
               a.status !== OrderStatus.FILLED
                 ? 0
                 : a.total_executed_quantity === 0 ||
-                  Number.isNaN(a.average_executed_price) ||
-                  a.average_executed_price === null
-                ? 0
-                : a.total_executed_quantity * a.average_executed_price;
+                    Number.isNaN(a.average_executed_price) ||
+                    a.average_executed_price === null
+                  ? 0
+                  : a.total_executed_quantity * a.average_executed_price;
             const bTotal =
               b.type === OrderType.CLOSE_POSITION &&
               b.status !== OrderStatus.FILLED
                 ? 0
                 : b.total_executed_quantity === 0 ||
-                  Number.isNaN(b.average_executed_price) ||
-                  b.average_executed_price === null
-                ? 0
-                : b.total_executed_quantity * b.average_executed_price;
+                    Number.isNaN(b.average_executed_price) ||
+                    b.average_executed_price === null
+                  ? 0
+                  : b.total_executed_quantity * b.average_executed_price;
             return compareNumbers(aTotal, bTotal);
             // if (type === "asc") {
             //   return compareNumbers(aTotal, bTotal);
@@ -730,7 +730,7 @@ function estTotal(option?: {
 
       return commifyOptional(
         estTotalValue(record, option?.isPending ?? false),
-        { fix: 2 }
+        { fix: 2 },
       );
     },
     render: (value: string, record: any) => {
@@ -937,7 +937,7 @@ function tpslNotional(option?: {
           : `${new Decimal(record.mark_price)
               .mul(record.quantity)
               .todp(2)
-              .toNumber()}`
+              .toNumber()}`,
       );
     },
     render: (value: any, record: any) => {
@@ -1006,11 +1006,11 @@ function avgOpen(option?: {
     dataIndex: "average_executed_price",
     width: option?.width,
     onSort:
-      option?.enableSort ?? false
+      (option?.enableSort ?? false)
         ? (a, b) => {
             return compareNumbers(
               a.average_executed_price ?? 0,
-              b.average_executed_price ?? 0
+              b.average_executed_price ?? 0,
             );
           }
         : undefined,

@@ -1,5 +1,159 @@
 # @orderly.network/ui-chain-selector
 
+## 2.4.2-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.4.2-alpha.0
+  - @orderly.network/hooks@2.4.2-alpha.0
+  - @orderly.network/i18n@2.4.2-alpha.0
+  - @orderly.network/types@2.4.2-alpha.0
+  - @orderly.network/ui@2.4.2-alpha.0
+
+## 2.4.1
+
+### Patch Changes
+
+- publish
+- 5a220e0: publish
+- Updated dependencies
+- Updated dependencies [5a220e0]
+  - @orderly.network/react-app@2.4.1
+  - @orderly.network/hooks@2.4.1
+  - @orderly.network/i18n@2.4.1
+  - @orderly.network/types@2.4.1
+  - @orderly.network/ui@2.4.1
+
+## 2.4.1-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.4.1-alpha.0
+  - @orderly.network/hooks@2.4.1-alpha.0
+  - @orderly.network/i18n@2.4.1-alpha.0
+  - @orderly.network/types@2.4.1-alpha.0
+  - @orderly.network/ui@2.4.1-alpha.0
+
+## 2.4.0
+
+### Minor Changes
+
+- decb695: publish
+- publish
+
+### Patch Changes
+
+- Updated dependencies [decb695]
+- Updated dependencies
+  - @orderly.network/react-app@2.4.0
+  - @orderly.network/hooks@2.4.0
+  - @orderly.network/i18n@2.4.0
+  - @orderly.network/types@2.4.0
+  - @orderly.network/ui@2.4.0
+
+## 2.4.0-alpha.0
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/react-app@2.4.0-alpha.0
+  - @orderly.network/hooks@2.4.0-alpha.0
+  - @orderly.network/i18n@2.4.0-alpha.0
+  - @orderly.network/types@2.4.0-alpha.0
+  - @orderly.network/ui@2.4.0-alpha.0
+
+## 2.3.2
+
+### Patch Changes
+
+- 311e2a7: publish
+- publish
+- Updated dependencies [311e2a7]
+- Updated dependencies
+  - @orderly.network/react-app@2.3.2
+  - @orderly.network/hooks@2.3.2
+  - @orderly.network/i18n@2.3.2
+  - @orderly.network/types@2.3.2
+  - @orderly.network/ui@2.3.2
+
+## 2.3.2-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.3.2-alpha.0
+  - @orderly.network/hooks@2.3.2-alpha.0
+  - @orderly.network/i18n@2.3.2-alpha.0
+  - @orderly.network/types@2.3.2-alpha.0
+  - @orderly.network/ui@2.3.2-alpha.0
+
+## 2.3.1
+
+### Patch Changes
+
+- b2ca83a: publish
+- publish
+- Updated dependencies [b2ca83a]
+- Updated dependencies
+  - @orderly.network/react-app@2.3.1
+  - @orderly.network/hooks@2.3.1
+  - @orderly.network/i18n@2.3.1
+  - @orderly.network/types@2.3.1
+  - @orderly.network/ui@2.3.1
+
+## 2.3.1-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.3.1-alpha.0
+  - @orderly.network/hooks@2.3.1-alpha.0
+  - @orderly.network/i18n@2.3.1-alpha.0
+  - @orderly.network/types@2.3.1-alpha.0
+  - @orderly.network/ui@2.3.1-alpha.0
+
+## 2.3.0
+
+### Minor Changes
+
+- publish
+- 4e5f109: publish
+
+### Patch Changes
+
+- Updated dependencies
+- Updated dependencies [4e5f109]
+  - @orderly.network/react-app@2.3.0
+  - @orderly.network/hooks@2.3.0
+  - @orderly.network/i18n@2.3.0
+  - @orderly.network/types@2.3.0
+  - @orderly.network/ui@2.3.0
+
+## 2.3.0-alpha.0
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/react-app@2.3.0-alpha.0
+  - @orderly.network/hooks@2.3.0-alpha.0
+  - @orderly.network/i18n@2.3.0-alpha.0
+  - @orderly.network/types@2.3.0-alpha.0
+  - @orderly.network/ui@2.3.0-alpha.0
+
 ## 2.2.0
 
 ### Minor Changes

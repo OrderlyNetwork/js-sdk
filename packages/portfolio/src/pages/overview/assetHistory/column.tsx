@@ -1,4 +1,6 @@
 import { useMemo } from "react";
+import { useTranslation } from "@orderly.network/i18n";
+import { AssetHistoryStatusEnum } from "@orderly.network/types";
 import {
   capitalizeFirstLetter,
   Text,
@@ -7,15 +9,73 @@ import {
   toast,
   type Column,
 } from "@orderly.network/ui";
-import { useQuery } from "@orderly.network/hooks";
-import { useTranslation, i18n } from "@orderly.network/i18n";
-import { AssetHistoryStatusEnum } from "@orderly.network/types";
+import { AssetSide } from "../assetChart/assetHistory.script";
 
-export const useAssetHistoryColumns = () => {
-  const { data: chains } = useQuery("/v1/public/chain_info");
+type Options = {
+  side: AssetSide;
+  chainsInfo: any[];
+  isDeposit: boolean;
+  isWeb3Wallet: boolean;
+};
+
+export const useAssetHistoryColumns = (options: Options) => {
+  const { side, chainsInfo, isDeposit, isWeb3Wallet } = options;
   const { t } = useTranslation();
 
+  const onCopy = (e: any) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toast.success(t("common.copy.copied"));
+  };
+
   const columns = useMemo(() => {
+    const txIdColumn = {
+      title: t("common.txId"),
+      dataIndex: "tx_id",
+      width: 120,
+      render: (value, record) => {
+        if (!value) {
+          return <div className="oui-text-base-contrast-54">-</div>;
+        }
+        const chainInfo = (chainsInfo as any[])?.find(
+          (item) => parseInt(record.chain_id) === parseInt(item.chain_id),
+        );
+        const explorer_base_url = chainInfo?.explorer_base_url;
+        const href = `${explorer_base_url}/tx/${value}`;
+        return (
+          <a href={href} target="_blank" rel="noreferrer">
+            {/* <Tooltip content={value} delayDuration={0}> */}
+            <Text.formatted
+              copyable={!!value}
+              rule="txId"
+              className="oui-underline oui-decoration-line-16 oui-decoration-dashed oui-underline-offset-4"
+              onCopy={onCopy}
+            >
+              {value}
+            </Text.formatted>
+            {/* </Tooltip> */}
+          </a>
+        );
+      },
+    } as Column;
+
+    const accountIdColumn = {
+      title: t("common.accountId"),
+      dataIndex: "account_id",
+      width: 120,
+      render: (value, record) => {
+        const accountId = isDeposit
+          ? record.from_account_id
+          : record.to_account_id;
+
+        return (
+          <Text.formatted rule="address" copyable={!!accountId} onCopy={onCopy}>
+            {accountId}
+          </Text.formatted>
+        );
+      },
+    } as Column;
+
     return [
       {
         title: t("common.token"),
@@ -36,73 +96,27 @@ export const useAssetHistoryColumns = () => {
         width: 80,
         rule: "date",
       },
-      {
-        title: t("portfolio.overview.column.txId"),
-        dataIndex: "tx_id",
-        width: 120,
-
-        render: (value, record) => {
-          if (!value) {
-            return <div className="oui-text-base-contrast-54">-</div>;
-          }
-          const chainInfo = (chains as any[])?.find(
-            (item) => parseInt(record.chain_id) === parseInt(item.chain_id)
-          );
-          const explorer_base_url = chainInfo?.explorer_base_url;
-          const href = `${explorer_base_url}/tx/${value}`;
-          return (
-            <a href={href} target="_blank">
-              {/* <Tooltip content={value} delayDuration={0}> */}
-
-              <Text.formatted
-                copyable={!!value}
-                rule="txId"
-                className="oui-underline-offset-4 oui-underline oui-decoration-dashed oui-decoration-line-16"
-                onCopy={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  toast.success(t("common.copy.copied"));
-                }}
-              >
-                {value}
-              </Text.formatted>
-              {/* </Tooltip> */}
-            </a>
-          );
-        },
-      },
+      isWeb3Wallet ? txIdColumn : accountIdColumn,
       {
         title: t("common.status"),
         dataIndex: "trans_status",
         width: 100,
-        render: (value) => {
+        render: (value, recoed) => {
+          value = isWeb3Wallet ? value : recoed.status;
           const statusMap = {
             [AssetHistoryStatusEnum.NEW]: t("assetHistory.status.pending"),
             [AssetHistoryStatusEnum.CONFIRM]: t("assetHistory.status.confirm"),
             [AssetHistoryStatusEnum.PROCESSING]: t(
-              "assetHistory.status.processing"
+              "assetHistory.status.processing",
             ),
             [AssetHistoryStatusEnum.COMPLETED]: t(
-              "assetHistory.status.completed"
+              "assetHistory.status.completed",
             ),
             [AssetHistoryStatusEnum.FAILED]: t("assetHistory.status.failed"),
           };
           return (
             statusMap[value as keyof typeof statusMap] ||
-            capitalizeFirstLetter(value.toLowerCase())
-          );
-        },
-      },
-      {
-        title: t("common.type"),
-        dataIndex: "side",
-        width: 80,
-        // formatter: (value) => capitalizeFirstLetter(value.toLowerCase()),
-        render: (value) => {
-          return (
-            <Text color={value === "DEPOSIT" ? "deposit" : "withdraw"}>
-              {value === "DEPOSIT" ? t("common.deposit") : t("common.withdraw")}
-            </Text>
+            capitalizeFirstLetter(value?.toLowerCase())
           );
         },
       },
@@ -112,9 +126,7 @@ export const useAssetHistoryColumns = () => {
         width: 100,
         rule: "price",
         formatter: (value, record) =>
-          record.side === "WITHDRAW"
-            ? -(value - (record.fee ?? 0))
-            : value - (record.fee ?? 0),
+          isDeposit ? value - (record.fee ?? 0) : -(value - (record.fee ?? 0)),
         numeralProps: {
           coloring: true,
           showIdentifier: true,
@@ -122,7 +134,7 @@ export const useAssetHistoryColumns = () => {
         // formatter: "date",
       },
     ] as Column[];
-  }, [chains, t]);
+  }, [t, chainsInfo, side, isDeposit, isWeb3Wallet]);
 
   return columns;
 };

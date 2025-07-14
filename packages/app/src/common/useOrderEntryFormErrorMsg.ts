@@ -4,28 +4,16 @@ import {
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 
-type Keys =
-  | "quantity"
-  | "order_quantity"
-  | "order_price"
-  | "trigger_price"
-  | "total"
-  | "tp_trigger_price"
-  | "sl_trigger_price"
-  | "tp_order_price"
-  | "sl_order_price";
+type Keys = keyof OrderValidationResult;
+type ErrorType = Partial<OrderValidationItem["type"]>;
 
 export function useOrderEntryFormErrorMsg(
   errors: OrderValidationResult | null,
 ) {
   const { t } = useTranslation();
 
-  const getMessage = (
-    key: Keys,
-    value?: number | string,
-    type?: OrderValidationItem["type"],
-  ) => {
-    const map = {
+  const getMessage = (key: Keys, type: ErrorType, value?: number | string) => {
+    const map: Partial<Record<Keys, Partial<Record<ErrorType, string>>>> = {
       quantity: {
         required: t("orderEntry.orderQuantity.error.required"),
         min: t("orderEntry.orderQuantity.error.min", { value }),
@@ -77,15 +65,39 @@ export function useOrderEntryFormErrorMsg(
       total: {
         min: t("orderEntry.total.error.min", { value }),
       },
+      // not show form input tooltip
+      // slippage: {
+      //   max: t("orderEntry.slippage.error.max"),
+      // },
+      max_price: {
+        required: t("orderEntry.upperPrice.error.required"),
+        min: t("orderEntry.upperPrice.error.min", { value }),
+        max: t("orderEntry.upperPrice.error.max", { value }),
+      },
+      min_price: {
+        required: t("orderEntry.lowerPrice.error.required"),
+        min: t("orderEntry.lowerPrice.error.min", { value }),
+        // not use value
+        max: t("orderEntry.lowerPrice.error.max"),
+      },
+      total_orders: {
+        required: t("orderEntry.totalOrders.error.required"),
+        range: t("orderEntry.totalOrders.error.range"),
+      },
+      skew: {
+        required: t("orderEntry.skew.error.required"),
+        min: t("orderEntry.skew.error.min", { value }),
+        max: t("orderEntry.skew.error.max", { value }),
+      },
     };
 
-    return map[key]?.[type as keyof (typeof map)[Keys]];
+    return map[key]?.[type] || "";
   };
 
   const parseErrorMsg = (key: Keys) => {
     const { type, value } = errors?.[key] || ({} as OrderValidationItem);
     if (type) {
-      return getMessage(key, value, type);
+      return getMessage(key, type, value);
     }
     return "";
   };

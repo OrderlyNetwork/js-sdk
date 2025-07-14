@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+import { Box, Button, modal, useScreen } from "@orderly.network/ui";
 import {
   LiquidationWidget,
   MobileLiquidationWidget,
@@ -6,8 +7,8 @@ import {
   MobilePositionsWidget,
   PositionHistoryWidget,
   PositionsWidget,
+  FundingFeeHistoryUI,
 } from "@orderly.network/ui-positions";
-import { Box, Button, modal, useScreen } from "@orderly.network/ui";
 
 const meta: Meta<typeof PositionsWidget> = {
   title: "Package/ui-positions/Positions",
@@ -52,7 +53,6 @@ export const PositionHistory: Story = {
   },
 };
 
-
 export const Liquidation: Story = {
   decorators: [
     (Stroy) => (
@@ -92,5 +92,11 @@ export const MarketClose: Story = {
         Show market close
       </Button>
     );
+  },
+};
+
+export const FundingFeeHistory: Story = {
+  render: () => {
+    return <FundingFeeHistoryUI />;
   },
 };

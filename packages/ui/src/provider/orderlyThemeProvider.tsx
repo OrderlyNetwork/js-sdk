@@ -19,11 +19,15 @@ type ComponentOverrides = {
      * */
     showTestnet: boolean;
   };
+  /** @hidden */
+  announcement: {
+    dataAdapter: (data: any[]) => any[];
+  };
 };
 
 type GetComponentTheme = <T extends keyof ComponentOverrides>(
   component: T,
-  defaultValue?: ComponentOverrides[T]
+  defaultValue?: ComponentOverrides[T],
 ) => ComponentOverrides[T];
 
 export type OrderlyThemeContextState = {
@@ -32,7 +36,7 @@ export type OrderlyThemeContextState = {
 };
 
 const OrderlyThemeContext = createContext<OrderlyThemeContextState>(
-  {} as OrderlyThemeContextState
+  {} as OrderlyThemeContextState,
 );
 
 export type OrderlyThemeProviderProps = {
@@ -52,7 +56,7 @@ export const OrderlyThemeProvider: FC<
 > = (props) => {
   const getComponentTheme = <T extends keyof ComponentOverrides>(
     component: T,
-    defaultValue?: ComponentOverrides[T]
+    defaultValue?: ComponentOverrides[T],
   ) => {
     return (props.overrides?.[component] ||
       defaultValue) as ComponentOverrides[T];

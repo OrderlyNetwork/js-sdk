@@ -76,7 +76,7 @@ export const CreateSubAccount = (props: CreateSubAccountProps) => {
   };
 
   const validateNickName = (nickName: string | undefined) => {
-    if (nickName && nickName.length >= 1 && nickName.length < 5) {
+    if (!nickName || !(nickName.length >= 1 && nickName.length <= 20)) {
       setInvalid(true);
       return true;
     }

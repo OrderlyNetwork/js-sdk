@@ -12,6 +12,13 @@ export type OrderValidationItem =
       value: number | string;
     }
   | {
+      type: "range";
+      message: string;
+      value?: never;
+      min: number | string;
+      max: number | string;
+    }
+  | {
       type: "priceErrorMin" | "priceErrorMax";
       message: string;
       value?: never;
@@ -32,6 +39,8 @@ export type ValuesDepConfig = {
   maxQty: number;
   markPrice: number;
   estSlippage?: number | null;
+  /** [ask0, bid0] */
+  askAndBid?: number[];
 };
 
 export interface OrderCreator<T> {

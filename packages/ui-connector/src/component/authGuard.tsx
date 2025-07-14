@@ -101,7 +101,7 @@ const AuthGuard = (props: PropsWithChildren<AuthGuardProps>) => {
     connectWallet: t("connector.connectWallet"),
     switchChain: t("connector.wrongNetwork"),
     enableTrading: t("connector.enableTrading"),
-    signin: t("connector.signIn"),
+    signin: t("connector.createAccount"),
     ...props.labels,
   };
 

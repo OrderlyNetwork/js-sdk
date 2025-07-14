@@ -10,7 +10,7 @@ import {
   TrackerEventName,
   OrderSide,
 } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+import { Decimal, zero } from "@orderly.network/utils";
 import { useAccountInfo } from "../../orderly/appStore";
 import {
   useCollateral,
@@ -31,6 +31,7 @@ import {
   tpslFields,
   hasTPSL,
   isBBOOrder,
+  getScaledOrderSkew,
 } from "./helper";
 import type { FullOrderState } from "./orderEntry.store";
 import { useOrderEntryNextInternal } from "./useOrderEntry.internal";
@@ -262,8 +263,10 @@ const useOrderEntry = (
     const { order_quantity, side } = formattedOrder;
 
     // const avgExecutionPrice = orderBook;
-    let avgExecutionPrice: number | undefined;
+    let avgExecutionPrice: Decimal | undefined;
     let book: any;
+    const filledBorders: number[][] = [];
+    let orderQuantity = new Decimal(order_quantity);
 
     if (side === OrderSide.BUY) {
       book = orderBook.asks.reverse();
@@ -273,17 +276,37 @@ const useOrderEntry = (
 
     for (let i = 0; i < book.length; i++) {
       // console.log(book[i]);
+      // const price = book[i][0];
+      // const quantity = book[i][2];
+      // if (quantity >= order_quantity) {
+      //   avgExecutionPrice = price;
+      //   break;
+      // }
       const price = book[i][0];
-      const quantity = book[i][2];
-      if (quantity >= order_quantity) {
-        avgExecutionPrice = price;
+      const quantity = book[i][1];
+      if (isNaN(price) || isNaN(quantity)) {
+        continue;
+      }
+      if (orderQuantity.gt(quantity)) {
+        orderQuantity = orderQuantity.minus(quantity);
+        filledBorders.push([price, quantity]);
+      } else {
+        filledBorders.push([price, orderQuantity.toNumber()]);
         break;
       }
     }
 
+    if (filledBorders.length > 0) {
+      const sumPrice = filledBorders.reduce((acc, curr) => {
+        return acc.plus(new Decimal(curr[0]).mul(curr[1]));
+      }, zero);
+
+      avgExecutionPrice = sumPrice.div(order_quantity);
+    }
+
     if (avgExecutionPrice) {
       const bestPrice = book[0][0];
-      const estSlippage = new Decimal(avgExecutionPrice)
+      const estSlippage = avgExecutionPrice
         .minus(bestPrice)
         .abs()
         .div(bestPrice)
@@ -348,6 +371,7 @@ const useOrderEntry = (
       markPrice: actions.getMarkPriceBySymbol(symbol),
       maxQty,
       estSlippage,
+      askAndBid: askAndBid.current?.[0] || [],
     };
   }, [maxQty, symbol, estSlippage]);
 
@@ -456,6 +480,7 @@ const useOrderEntry = (
 
   /**
    * Validate the order
+   * TODO: confirm validate result return order
    */
   const validateOrder = (): Promise<OrderValidationResult | null> => {
     return new Promise<OrderValidationResult | null>(
@@ -492,9 +517,12 @@ const useOrderEntry = (
 
   const { freeCollateral, totalCollateral } = useCollateral();
 
+  // TODO: move to the calculation service
   const estLiqPrice = useMemo(() => {
     const markPrice = actions.getMarkPriceBySymbol(symbol);
-    if (!markPrice || !accountInfo) return null;
+    if (!markPrice || !accountInfo || !symbolInfo) {
+      return null;
+    }
 
     const orderQuantity = Number(formattedOrder.order_quantity);
 
@@ -503,21 +531,33 @@ const useOrderEntry = (
     }
 
     const estLiqPrice = calcEstLiqPrice(formattedOrder, askAndBid.current[0], {
-      baseIMR: symbolInfo?.base_imr,
-      baseMMR: symbolInfo?.base_mmr,
       markPrice,
       totalCollateral,
       futures_taker_fee_rate: accountInfo.futures_taker_fee_rate,
       imr_factor: accountInfo.imr_factor[symbol],
       symbol,
       positions,
+      symbolInfo,
     });
 
     return estLiqPrice;
-  }, [formattedOrder, accountInfo, positions, totalCollateral, symbol, maxQty]);
+  }, [
+    formattedOrder,
+    accountInfo,
+    positions,
+    totalCollateral,
+    symbol,
+    maxQty,
+    symbolInfo,
+  ]);
 
   const estLeverage = useMemo(() => {
+    if (!symbolInfo) {
+      return null;
+    }
+
     const orderQuantity = Number(formattedOrder.order_quantity);
+
     if (orderQuantity === 0 || orderQuantity > maxQty) {
       return null;
     }
@@ -526,8 +566,17 @@ const useOrderEntry = (
       totalCollateral,
       positions,
       symbol,
+      symbolInfo,
     });
-  }, [formattedOrder, accountInfo, positions, totalCollateral, symbol, maxQty]);
+  }, [
+    formattedOrder,
+    accountInfo,
+    positions,
+    totalCollateral,
+    symbol,
+    maxQty,
+    symbolInfo,
+  ]);
 
   const resetErrors = () => {
     setMeta(
@@ -580,15 +629,36 @@ const useOrderEntry = (
     const order = generateOrder(creator, prepareData());
     console.log("xxx -- order", order);
 
-    const result = await doCreateOrder(order);
+    const isScaledOrder = order.order_type === OrderType.SCALED;
+
+    const params = isScaledOrder ? { orders: order.orders } : order;
+
+    const result = await doCreateOrder(params);
 
     if (result.success) {
-      track(TrackerEventName.placeOrderSuccess, {
+      let trackParams: any = {
         side: order.side,
         order_type: order.order_type,
         tp_sl: hasTPSL(formattedOrder),
         symbol: order.symbol,
-      });
+      };
+
+      if (isScaledOrder) {
+        const skew = getScaledOrderSkew({
+          skew: order.skew,
+          distribution_type: order.distribution_type,
+          total_orders: order.total_orders,
+        });
+        trackParams = {
+          ...trackParams,
+          order_type: "scaled",
+          distribution_type: order.distribution_type,
+          skew: new Decimal(skew).todp(2).toNumber(),
+          total_orders: order.total_orders,
+        };
+      }
+
+      track(TrackerEventName.placeOrderSuccess, trackParams);
     }
 
     if (result.success && resetOnSuccess) {
@@ -596,7 +666,6 @@ const useOrderEntry = (
       resetMetaState();
     }
     return result;
-    // return submit();
   };
 
   return {

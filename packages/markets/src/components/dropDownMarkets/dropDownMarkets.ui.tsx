@@ -5,7 +5,6 @@ import {
   CloseIcon,
   cn,
   Flex,
-  Input,
   TabPanel,
   Tabs,
   DropdownMenuContent,
@@ -13,10 +12,10 @@ import {
   DropdownMenuRoot,
   DropdownMenuTrigger,
 } from "@orderly.network/ui";
-import { FavoritesIcon, SearchIcon } from "../../icons";
-import { TabName } from "../../type";
+import { FavoritesIcon } from "../../icons";
+import { MarketsTabName } from "../../type";
 import { MarketsListWidget } from "../marketsList";
-import { useMarketsContext } from "../marketsProvider";
+import { SearchInput } from "../searchInput.tsx";
 import { useFavoritesProps } from "../shared/hooks/useFavoritesExtraProps";
 import { useDropDownMarketsColumns } from "./column";
 import { DropDownMarketsScriptReturn } from "./dropDownMarkets.script";
@@ -55,28 +54,16 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
 ) => {
   const { activeTab, onTabChange, tabSort, onTabSort } = props;
 
-  const { searchValue, onSearchValueChange } = useMarketsContext();
-
   const { t } = useTranslation();
 
   const getColumns = useDropDownMarketsColumns();
 
   const search = (
     <Flex mx={3} gapX={3} pt={3} pb={2}>
-      <Input
-        value={searchValue}
-        onValueChange={onSearchValueChange}
-        placeholder={t("markets.search.placeholder")}
+      <SearchInput
         classNames={{
-          root: "oui-border oui-mt-[1px] oui-border-line oui-flex-1",
+          root: "oui-w-full",
         }}
-        size="sm"
-        prefix={
-          <Box pl={3} pr={1}>
-            <SearchIcon className="oui-text-base-contrast-36" />
-          </Box>
-        }
-        autoComplete="off"
       />
       <CloseIcon
         size={12}
@@ -89,12 +76,9 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
 
   const cls = "oui-h-[calc(100%_-_36px)]";
 
-  const { renderHeader, dataFilter } = useFavoritesProps();
+  const { getFavoritesProps, renderEmptyView } = useFavoritesProps();
 
-  const renderTab = (type: TabName) => {
-    const extraProps =
-      type === TabName.Favorites ? { renderHeader, dataFilter } : {};
-
+  const renderTab = (type: MarketsTabName) => {
     return (
       <div className={cls}>
         <MarketsListWidget
@@ -107,7 +91,14 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
             scroll: "oui-pb-5 oui-px-1",
           }}
           rowClassName="!oui-h-[34px]"
-          {...extraProps}
+          {...getFavoritesProps(type)}
+          emptyView={renderEmptyView({
+            type,
+            onClick: () => {
+              onTabChange(MarketsTabName.All);
+            },
+            className: "oui-h-[calc(100%_-_36px)]",
+          })}
         />
       </div>
     );
@@ -135,18 +126,21 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
         <TabPanel
           title={t("markets.favorites")}
           icon={<FavoritesIcon />}
-          value={TabName.Favorites}
+          value={MarketsTabName.Favorites}
         >
-          {renderTab(TabName.Favorites)}
+          {renderTab(MarketsTabName.Favorites)}
         </TabPanel>
-        <TabPanel title={t("markets.recent")} value={TabName.Recent}>
-          {renderTab(TabName.Recent)}
+        <TabPanel title={t("markets.recent")} value={MarketsTabName.Recent}>
+          {renderTab(MarketsTabName.Recent)}
         </TabPanel>
-        <TabPanel title={t("common.all")} value={TabName.All}>
-          {renderTab(TabName.All)}
+        <TabPanel title={t("common.all")} value={MarketsTabName.All}>
+          {renderTab(MarketsTabName.All)}
         </TabPanel>
-        <TabPanel title={t("markets.newListings")} value={TabName.NewListing}>
-          {renderTab(TabName.NewListing)}
+        <TabPanel
+          title={t("markets.newListings")}
+          value={MarketsTabName.NewListing}
+        >
+          {renderTab(MarketsTabName.NewListing)}
         </TabPanel>
       </Tabs>
     </Box>

@@ -56,6 +56,10 @@ export const widget = {
 
   "restrictedInfo.description.default":
     " You are accessing {{brokerName}} from an IP address ({{ip}}) associated with a restricted country.",
+  "restrictedInfo.accessRestricted": "Access Restricted",
+  "restrictedInfo.accessRestricted.description":
+    "Due to laws and regulations, we currently do not operate in the United States. By continuing to use our platform, you represent and warrant at all times that you are not a resident of the United States throughout the period of such use.",
+  "restrictedInfo.accessRestricted.agree": "I understand and agree",
 
   "subAccount.modal.title": "Switch account",
   "subAccount.modal.switch.success.description": "Switch account successfully",
@@ -70,7 +74,7 @@ export const widget = {
   "subAccount.modal.create.description":
     "You have {{subAccountCount}} sub-accounts. {{remainingCount}} more can be created.",
   "subAccount.modal.create.nickname.role":
-    "5-20 characters. Only letters, numbers, and @ , _ - (space) allowed.",
+    "1-20 characters. Only letters, numbers, and @ , _ - (space) allowed.",
   "subAccount.modal.create.success.description":
     "Sub-account created successfully.",
   "subAccount.modal.create.failed.description": "Failed to create sub-account.",
@@ -78,4 +82,11 @@ export const widget = {
   "subAccount.modal.nickName.label": "Sub-account nickname",
   "subAccount.modal.edit.success.description": "Nickname updated successfully.",
   "subAccount.modal.edit.failed.description": "Failed to update nickname.",
+
+  "funding.fundingFee": "Funding fee",
+  "funding.fundingRate": "Funding rate",
+  "funding.annualRate": "Annual rate",
+  "funding.paymentType": "Payment type",
+  "funding.paymentType.paid": "Paid",
+  "funding.paymentType.received": "Received",
 };

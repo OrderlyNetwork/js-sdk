@@ -24,6 +24,11 @@ const initialOrderState = {
   sl_offset: "",
   sl_order_type: OrderType.MARKET,
   total: "",
+  min_price: "",
+  max_price: "",
+  totalOrders: "",
+  distribution_type: "",
+  skew: "",
   // symbol: "",
 };
 

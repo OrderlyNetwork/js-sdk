@@ -1,16 +1,9 @@
 import { useTranslation } from "@orderly.network/i18n";
-import {
-  Box,
-  CloseCircleFillIcon,
-  cn,
-  Input,
-  TabPanel,
-  Tabs,
-} from "@orderly.network/ui";
-import { FavoritesIcon, SearchIcon } from "../../icons";
-import { TabName } from "../../type";
+import { Box, cn, TabPanel, Tabs } from "@orderly.network/ui";
+import { FavoritesIcon } from "../../icons";
+import { MarketsTabName } from "../../type";
 import { MarketsListWidget } from "../marketsList";
-import { useMarketsContext } from "../marketsProvider";
+import { SearchInput } from "../searchInput.tsx";
 import { useFavoritesProps } from "../shared/hooks/useFavoritesExtraProps";
 import { ExpandMarketsScriptReturn } from "./expandMarkets.script";
 
@@ -19,46 +12,13 @@ export type ExpandMarketsProps = ExpandMarketsScriptReturn;
 export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
   const { activeTab, onTabChange, tabSort, onTabSort } = props;
 
-  const { searchValue, onSearchValueChange, clearSearchValue } =
-    useMarketsContext();
-
   const { t } = useTranslation();
-
-  const search = (
-    <Input
-      value={searchValue}
-      onValueChange={onSearchValueChange}
-      placeholder={t("markets.search.placeholder")}
-      classNames={{ root: "oui-border oui-mt-[1px] oui-border-line" }}
-      size="sm"
-      prefix={
-        <Box pl={3} pr={1}>
-          <SearchIcon className="oui-text-base-contrast-36" />
-        </Box>
-      }
-      suffix={
-        searchValue && (
-          <Box mr={2}>
-            <CloseCircleFillIcon
-              size={14}
-              className="oui-cursor-pointer oui-text-base-contrast-36"
-              onClick={clearSearchValue}
-            />
-          </Box>
-        )
-      }
-      autoComplete="off"
-    />
-  );
 
   const cls = "oui-h-[calc(100%_-_36px)]";
 
-  const { renderHeader, dataFilter } = useFavoritesProps();
+  const { getFavoritesProps, renderEmptyView } = useFavoritesProps();
 
-  const renderTab = (type: TabName) => {
-    const extraProps =
-      type === TabName.Favorites ? { renderHeader, dataFilter } : {};
-
+  const renderTab = (type: MarketsTabName) => {
     return (
       <div className={cls}>
         <MarketsListWidget
@@ -68,10 +28,17 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
           tableClassNames={{
             scroll: cn(
               "oui-px-1",
-              type === TabName.Favorites ? "oui-pb-9" : "oui-pb-2",
+              type === MarketsTabName.Favorites ? "oui-pb-9" : "oui-pb-2",
             ),
           }}
-          {...extraProps}
+          {...getFavoritesProps(type)}
+          emptyView={renderEmptyView({
+            type,
+            onClick: () => {
+              onTabChange(MarketsTabName.All);
+            },
+            className: "oui-h-[calc(100%_-_36px)]",
+          })}
         />
       </div>
     );
@@ -80,7 +47,7 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
   return (
     <Box className={cn("oui-overflow-hidden oui-font-semibold")} height="100%">
       <Box px={3} pb={2}>
-        {search}
+        <SearchInput />
       </Box>
       <Tabs
         variant="contained"
@@ -98,18 +65,21 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
         <TabPanel
           title={t("markets.favorites")}
           icon={<FavoritesIcon />}
-          value={TabName.Favorites}
+          value={MarketsTabName.Favorites}
         >
-          {renderTab(TabName.Favorites)}
+          {renderTab(MarketsTabName.Favorites)}
         </TabPanel>
-        <TabPanel title={t("markets.recent")} value={TabName.Recent}>
-          {renderTab(TabName.Recent)}
+        <TabPanel title={t("markets.recent")} value={MarketsTabName.Recent}>
+          {renderTab(MarketsTabName.Recent)}
         </TabPanel>
-        <TabPanel title={t("common.all")} value={TabName.All}>
-          {renderTab(TabName.All)}
+        <TabPanel title={t("common.all")} value={MarketsTabName.All}>
+          {renderTab(MarketsTabName.All)}
         </TabPanel>
-        <TabPanel title={t("markets.newListings")} value={TabName.NewListing}>
-          {renderTab(TabName.NewListing)}
+        <TabPanel
+          title={t("markets.newListings")}
+          value={MarketsTabName.NewListing}
+        >
+          {renderTab(MarketsTabName.NewListing)}
         </TabPanel>
       </Tabs>
     </Box>

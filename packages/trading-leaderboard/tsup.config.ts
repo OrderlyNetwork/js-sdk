@@ -17,4 +17,10 @@ export default defineConfig((options) => ({
       esOptions.drop = ["console", "debugger"];
     }
   },
+  // need to add this to support image import
+  loader: {
+    ".png": "dataurl",
+    ".jpg": "dataurl",
+    ".jpeg": "dataurl",
+  },
 }));

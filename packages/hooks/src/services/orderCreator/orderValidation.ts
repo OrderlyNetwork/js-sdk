@@ -19,6 +19,14 @@ export class OrderValidation {
         return "TP order price";
       case "sl_order_price":
         return "SL order price";
+      case "max_price":
+        return "Upper price";
+      case "min_price":
+        return "Lower price";
+      case "total_orders":
+        return "Total orders";
+      case "skew":
+        return "Skew";
       default:
         return key;
     }
@@ -57,6 +65,19 @@ export class OrderValidation {
       type: "max",
       message: `${this.getLabel(key)} must be less than ${value}`,
       value,
+    } as OrderValidationItem;
+  }
+
+  static range(
+    key: keyof OrderlyOrder,
+    min?: number | string,
+    max?: number | string,
+  ) {
+    return {
+      type: "range",
+      message: `${this.getLabel(key)} must be in the range of ${min} to ${max}`,
+      min,
+      max,
     } as OrderValidationItem;
   }
 }

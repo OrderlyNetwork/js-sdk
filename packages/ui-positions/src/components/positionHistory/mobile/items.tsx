@@ -1,5 +1,5 @@
 import { FC, ReactNode, useMemo } from "react";
-import { PositionHistorySide } from "../positionHistory.script";
+import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
 import {
   Badge,
@@ -9,9 +9,10 @@ import {
   Statistic,
   Text,
 } from "@orderly.network/ui";
-import { PositionHistoryCellState } from "./positionHistoryCell.script";
 import { commifyOptional } from "@orderly.network/utils";
-import { useTranslation } from "@orderly.network/i18n";
+import { FundingFeeButton } from "../../fundingFeeHistory/fundingFeeButton";
+import { PositionHistorySide } from "../positionHistory.script";
+import { PositionHistoryCellState } from "./positionHistoryCell.script";
 
 export const SymbolToken: FC<PositionHistoryCellState> = (props) => {
   const { side, symbol } = props.item;
@@ -112,7 +113,7 @@ export const PositionHistoryType: FC<PositionHistoryCellState> = (props) => {
     list.push(
       <Badge color={status !== "closed" ? "primaryLight" : "neutral"} size="xs">
         {renderStatus()}
-      </Badge>
+      </Badge>,
     );
 
     if (record.type === "adl") {
@@ -120,7 +121,7 @@ export const PositionHistoryType: FC<PositionHistoryCellState> = (props) => {
         <Badge color={"danger"} size="xs">
           {/* {capitalizeFirstLetter(record.type)} */}
           {t("positions.history.type.adl")}
-        </Badge>
+        </Badge>,
       );
     } else if (record.type === "liquidated") {
       list.push(
@@ -134,7 +135,7 @@ export const PositionHistoryType: FC<PositionHistoryCellState> = (props) => {
             {/* {capitalizeFirstLetter(record.type)} */}
             {t("positions.history.type.liquidated")}
           </span>
-        </Badge>
+        </Badge>,
       );
     }
 
@@ -298,5 +299,23 @@ export const ClosedTime: FC<PositionHistoryCellState> = (props) => {
     >
       {child}
     </Statistic>
+  );
+};
+
+export const FundingFee: FC<PositionHistoryCellState> = (props) => {
+  const { t } = useTranslation();
+  return (
+    <Flex
+      justify={"end"}
+      className="oui-text-2xs oui-w-full oui-py-2 oui-gap-1 oui-gap-1"
+    >
+      <Text intensity={36}>{t("funding.fundingFee")}: </Text>
+      <FundingFeeButton
+        fee={-props.item.accumulated_funding_fee}
+        symbol={props.item.symbol}
+        start_t={props.item.open_timestamp.toString()}
+        end_t={props.item.close_timestamp?.toString()}
+      />
+    </Flex>
   );
 };

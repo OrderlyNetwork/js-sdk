@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   API,
   OrderlyOrder,
@@ -30,6 +30,12 @@ export const usePositionClose = (options: PositionCloseOptions) => {
 
   const symbolsInfo = useSymbolsInfo();
   const { data: markPrices } = useMarkPricesStream();
+
+  const markPricesRef = useRef(markPrices);
+
+  useEffect(() => {
+    markPricesRef.current = markPrices;
+  }, [markPrices]);
 
   const [doCreateOrder, { isMutating }] = useSubAccountMutation(
     "/v1/order",
@@ -100,11 +106,12 @@ export const usePositionClose = (options: PositionCloseOptions) => {
       const errors = await creator.validate(data, {
         symbol: symbolsInfo[symbol](),
         maxQty,
-        markPrice: markPrices[symbol],
+        // use ref to avoid re-render when markPrices change
+        markPrice: markPricesRef.current[symbol],
       });
       return errors;
     },
-    [markPrices, maxQty, symbol, symbolsInfo],
+    [maxQty, symbol, symbolsInfo],
   );
 
   useEffect(() => {

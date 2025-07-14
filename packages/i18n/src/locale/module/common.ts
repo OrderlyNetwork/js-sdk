@@ -50,6 +50,7 @@ export const common = {
   "common.fee": "Fee",
   "common.fees": "Fees",
 
+  "common.orderPrice": "Order price",
   "common.avgPrice": "Avg. price",
   "common.avgOpen": "Avg. open",
   "common.avgClose": "Avg. close",
@@ -76,6 +77,8 @@ export const common = {
 
   "common.deposit": "Deposit",
   "common.withdraw": "Withdraw",
+  "common.deposits": "Deposits",
+  "common.withdrawals": "Withdrawals",
   "common.transfer": "Transfer",
   "common.settle": "Settle",
   "common.markets": "Markets",
@@ -92,4 +95,7 @@ export const common = {
   "common.mainAccount": "Main account",
   "common.subAccount": "Sub account",
   "common.settings": "Settings",
+  "common.accountId": "Account ID",
+  "common.web3Wallet": "Web3 wallet",
+  "common.txId": "TxID",
 };

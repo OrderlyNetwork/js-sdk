@@ -1,63 +1,97 @@
 import { useMemo } from "react";
-import { useFundingRates, useQuery } from "@orderly.network/hooks";
+import {
+  useFundingRates,
+  useMarketsStream,
+  useQuery,
+} from "@orderly.network/hooks";
 import { usePagination } from "@orderly.network/ui";
+import { Decimal } from "@orderly.network/utils";
 import { useMarketsContext } from "../../components/marketsProvider";
 import { useSort, searchBySymbol } from "../../utils";
 
+function getOpenInterest(open_interest?: number, index_price?: number) {
+  return new Decimal(open_interest || 0).mul(index_price || 0).toNumber();
+}
+
+export const baseEX = "WOOFi Pro";
+
 export const exchanges = [
-  "WOOFi Pro",
+  baseEX,
   "Binance",
+  `${baseEX} - Binance`,
   "OKX",
+  `${baseEX} - OKX`,
   "Bybit",
+  `${baseEX} - Bybit`,
   "dYdX",
+  `${baseEX} - dYdX`,
   "Bitget",
-  "Kucoin",
+  `${baseEX} - Bitget`,
+  "KuCoin",
+  `${baseEX} - KuCoin`,
 ];
 
+export type FundingComparisonReturn = ReturnType<
+  typeof useFundingComparisonScript
+>;
+
 export const useFundingComparisonScript = () => {
-  const { pagination } = usePagination({
-    pageSize: 10,
-  });
+  const { pagination } = usePagination({ pageSize: 10 });
   const { onSort, getSortedList } = useSort();
   const { searchValue } = useMarketsContext();
 
   const fundingRates = useFundingRates();
 
   const { data, isLoading } = useQuery<
-    Array<{
-      symbol: string;
-      exchanges: Array<{
-        name: string;
-        last: number;
-      }>;
-    }>
+    Array<{ symbol: string; exchanges: Array<{ name: string; last: number }> }>
   >("/v1/public/market_info/funding_comparison");
+  const { data: futures } = useMarketsStream();
 
   const processedData = useMemo(() => {
-    if (!data?.length) return [];
-    return data.map((row: any) => {
-      const exchangeData: any = {
+    if (!Array.isArray(data) || !data.length) {
+      return [];
+    }
+    return data.map((row) => {
+      const target = futures?.find((item) => item.symbol === row.symbol);
+      const result: Record<PropertyKey, any> = {
         symbol: row.symbol,
+        openInterest: target
+          ? getOpenInterest(
+              target?.open_interest as number,
+              target?.index_price as number,
+            )
+          : "-",
       };
-
-      exchanges.forEach((name, index) => {
-        const normalizedName = name.toLowerCase();
-
-        if (normalizedName === "woofi pro") {
+      exchanges.forEach((item) => {
+        const isCompare = item.includes(` - `);
+        if (!isCompare) {
+          if (item === baseEX) {
+            const rate = fundingRates[row.symbol];
+            result[item] = rate("last_funding_rate") ?? null;
+          } else {
+            const exchange = row.exchanges?.find(
+              (e) => e.name.toLowerCase() === item.toLowerCase(),
+            );
+            result[item] = exchange?.last ?? null;
+          }
+        } else {
+          const [, exchangeName] = item.replace(/ /g, "").split("-");
           const rate = fundingRates[row.symbol];
-          exchangeData[`exchange_${index}`] = rate("last_funding_rate") ?? null;
-          return;
+          const wooFiRate = rate("last_funding_rate") ?? null;
+          const exchange = row.exchanges?.find(
+            (e) => e.name.toLowerCase() === exchangeName.toLowerCase(),
+          );
+          const otherRate = exchange?.last ?? null;
+          if (wooFiRate !== null && otherRate !== null) {
+            result[item] = new Decimal(wooFiRate).sub(otherRate).toString();
+          } else {
+            result[item] = null;
+          }
         }
-
-        const exchange = row.exchanges.find(
-          (e: any) => e.name.toLowerCase() === normalizedName,
-        );
-        exchangeData[`exchange_${index}`] = exchange?.last ?? null;
       });
-
-      return exchangeData;
+      return result;
     });
-  }, [data, exchanges, fundingRates]);
+  }, [data, fundingRates]);
 
   const filteredData = useMemo(() => {
     return searchBySymbol(processedData, searchValue, "base-type");
@@ -65,11 +99,11 @@ export const useFundingComparisonScript = () => {
 
   const dataSource = useMemo(
     () => getSortedList(filteredData),
-    [filteredData, getSortedList],
+    [getSortedList, filteredData],
   );
 
   return {
-    data: dataSource,
+    dataSource,
     isLoading,
     pagination,
     onSort,

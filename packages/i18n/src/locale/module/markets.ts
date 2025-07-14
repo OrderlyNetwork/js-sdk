@@ -24,11 +24,14 @@ export const markets = {
   "markets.favorites.tabs.delete.dialog.title": "Delete list",
   "markets.favorites.tabs.delete.dialog.description":
     "Are you sure you want to delete {{name}}?",
+  "markets.favorites.addFavorites": "Add favorites",
 
   "markets.column.market": "Market",
   "markets.column.24hChange": "24h change",
   "markets.column.24hVolume": "24h volume",
+  // TODO: use markets.column.market and common.volume
   "markets.column.market&Volume": "Market / Volume",
+  // TODO: confirm "change" first letter capital
   "markets.column.price&Change": "Price / change",
   "markets.column.last": "Last",
   "markets.column.24hPercentage": "24h%",

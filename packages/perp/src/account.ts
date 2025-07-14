@@ -1,11 +1,11 @@
-import { Decimal, zero } from "@orderly.network/utils";
-import { IMRFactorPower } from "./constants";
 import {
   API,
   OrderSide,
   OrderType,
   type WSMessage,
 } from "@orderly.network/types";
+import { Decimal, zero } from "@orderly.network/utils";
+import { IMRFactorPower } from "./constants";
 
 export type ResultOptions = {
   dp: number;
@@ -92,7 +92,7 @@ export type PositionNotionalWithOrderInputs = {
  * Sum of notional value for a symbol's position and orders.
  */
 export function positionNotionalWithOrder_by_symbol(
-  inputs: PositionNotionalWithOrderInputs
+  inputs: PositionNotionalWithOrderInputs,
 ): Decimal {
   return new Decimal(inputs.markPrice).mul(inputs.positionQtyWithOrders);
 }
@@ -108,13 +108,13 @@ export type PositionQtyWithOrderInputs = {
  *  Sum of position quantity and orders quantity for a symbol.
  */
 export function positionQtyWithOrders_by_symbol(
-  inputs: PositionQtyWithOrderInputs
+  inputs: PositionQtyWithOrderInputs,
 ): number {
   const { positionQty, buyOrdersQty, sellOrdersQty } = inputs;
   const positionQtyDecimal = new Decimal(positionQty);
   const qty = Math.max(
     positionQtyDecimal.add(buyOrdersQty).abs().toNumber(),
-    positionQtyDecimal.sub(sellOrdersQty).abs().toNumber()
+    positionQtyDecimal.sub(sellOrdersQty).abs().toNumber(),
   );
 
   return qty;
@@ -150,27 +150,27 @@ export function IMR(inputs: IMRInputs): number {
         new Decimal(positionNotional)
           .add(orderNotional)
           .abs()
-          .toPower(IMR_factor_power)
+          .toPower(IMR_factor_power),
       )
-      .toNumber()
+      .toNumber(),
   );
 }
 
 export function buyOrdersFilter_by_symbol(
   orders: API.Order[],
-  symbol: string
+  symbol: string,
 ): API.Order[] {
   return orders.filter(
-    (item) => item.symbol === symbol && item.side === OrderSide.BUY
+    (item) => item.symbol === symbol && item.side === OrderSide.BUY,
   );
 }
 
 export function sellOrdersFilter_by_symbol(
   orders: API.Order[],
-  symbol: string
+  symbol: string,
 ): API.Order[] {
   return orders.filter(
-    (item) => item.symbol === symbol && item.side === OrderSide.SELL
+    (item) => item.symbol === symbol && item.side === OrderSide.SELL,
   );
 }
 
@@ -179,7 +179,7 @@ export function sellOrdersFilter_by_symbol(
  */
 export function getQtyFromPositions(
   positions: API.Position[],
-  symbol: string
+  symbol: string,
 ): number {
   if (!positions) {
     return 0;
@@ -194,7 +194,7 @@ export function getQtyFromPositions(
 export function getQtyFromOrdersBySide(
   orders: API.Order[],
   symbol: string,
-  side: OrderSide
+  side: OrderSide,
 ): number {
   const ordersBySide =
     side === OrderSide.SELL
@@ -238,7 +238,7 @@ export type TotalInitialMarginWithOrdersInputs = {
  * Calculate the total initial margin used by the user (including positions and orders).
  */
 export function totalInitialMarginWithOrders(
-  inputs: TotalInitialMarginWithOrdersInputs
+  inputs: TotalInitialMarginWithOrdersInputs,
 ): number {
   const {
     positions,
@@ -258,7 +258,7 @@ export function totalInitialMarginWithOrders(
     const sellOrdersQty = getQtyFromOrdersBySide(
       orders,
       symbol,
-      OrderSide.SELL
+      OrderSide.SELL,
     );
 
     const markPrice = markPrices[symbol] || 0;
@@ -374,7 +374,7 @@ export function groupOrdersBySymbol(orders: API.Order[]) {
  */
 export function extractSymbols(
   positions: Pick<API.Position, "symbol">[],
-  orders: Pick<API.Order, "symbol">[]
+  orders: Pick<API.Order, "symbol">[],
 ): string[] {
   const symbols = new Set<string>();
 
@@ -396,8 +396,6 @@ export function extractSymbols(
 export type OtherIMsInputs = {
   // the position list for other symbols except the current symbol
   positions: API.Position[];
-  // the order list for other symbols except the current symbol
-  orders: API.Order[];
 
   markPrices: { [key: string]: number };
   maxLeverage: number;
@@ -409,7 +407,7 @@ export type OtherIMsInputs = {
  */
 export function otherIMs(inputs: OtherIMsInputs): number {
   const {
-    orders,
+    // orders,
     positions,
     maxLeverage,
     IMR_Factors,
@@ -417,7 +415,7 @@ export function otherIMs(inputs: OtherIMsInputs): number {
     markPrices,
   } = inputs;
 
-  const symbols = extractSymbols(positions, orders);
+  const symbols = positions.map((item) => item.symbol);
 
   return symbols
     .reduce((acc, cur) => {
@@ -430,19 +428,13 @@ export function otherIMs(inputs: OtherIMsInputs): number {
 
       const markPriceDecimal = new Decimal(markPrices[symbol] || 0);
 
+      const position = positions.find((item) => item.symbol === symbol);
+
       const positionQty = getQtyFromPositions(positions, symbol);
       const positionNotional = markPriceDecimal.mul(positionQty).toNumber();
 
-      const buyOrdersQty = getQtyFromOrdersBySide(
-        orders,
-        symbol,
-        OrderSide.BUY
-      );
-      const sellOrdersQty = getQtyFromOrdersBySide(
-        orders,
-        symbol,
-        OrderSide.SELL
-      );
+      const buyOrdersQty = position!.pending_long_qty;
+      const sellOrdersQty = position!.pending_short_qty;
 
       const ordersNotional = markPriceDecimal
         .mul(new Decimal(buyOrdersQty).add(sellOrdersQty))
@@ -515,7 +507,7 @@ export type MaxQtyInputs = {
 export function maxQty(
   side: OrderSide,
   inputs: MaxQtyInputs,
-  options?: ResultOptions
+  options?: ResultOptions,
 ): number {
   if (side === OrderSide.BUY) {
     return maxQtyByLong(inputs);
@@ -525,7 +517,7 @@ export function maxQty(
 
 export function maxQtyByLong(
   inputs: Omit<MaxQtyInputs, "side">,
-  options?: ResultOptions
+  options?: ResultOptions,
 ): number {
   try {
     const {
@@ -553,7 +545,7 @@ export function maxQtyByLong(
         new Decimal(takerFeeRate)
           .mul(2)
           .mul(0.0001)
-          .add(Math.max(1 / maxLeverage, baseIMR))
+          .add(Math.max(1 / maxLeverage, baseIMR)),
       )
       .div(markPrice)
       .mul(0.995)
@@ -570,7 +562,7 @@ export function maxQtyByLong(
       .toPower(1 / 1.8)
       .div(markPrice)
       .sub(
-        new Decimal(positionQty).add(buyOrdersQty)
+        new Decimal(positionQty).add(buyOrdersQty),
         // .abs()
         // .div(new Decimal(takerFeeRate).mul(2).mul(0.0001).add(1))
       )
@@ -586,7 +578,7 @@ export function maxQtyByLong(
 
 export function maxQtyByShort(
   inputs: Omit<MaxQtyInputs, "side">,
-  options?: ResultOptions
+  options?: ResultOptions,
 ): number {
   try {
     const {
@@ -611,7 +603,7 @@ export function maxQtyByShort(
         new Decimal(takerFeeRate)
           .mul(2)
           .mul(0.0001)
-          .add(Math.max(1 / maxLeverage, baseIMR))
+          .add(Math.max(1 / maxLeverage, baseIMR)),
       )
       .div(markPrice)
       .mul(0.995)
@@ -657,7 +649,7 @@ export type TotalMarginRatioInputs = {
  */
 export function totalMarginRatio(
   inputs: TotalMarginRatioInputs,
-  dp?: number
+  dp?: number,
 ): number {
   const { totalCollateral, markPrices, positions } = inputs;
 

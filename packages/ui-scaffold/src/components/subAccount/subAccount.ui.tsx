@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useCallback, useRef, useMemo, useState, ReactNode } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   SimpleDialog,
@@ -8,6 +8,13 @@ import {
   ScrollArea,
   modal,
   cn,
+  DropdownMenuRoot,
+  DropdownMenuTrigger,
+  DropdownMenuPortal,
+  DropdownMenuContent,
+  PopoverRoot,
+  PopoverContent,
+  PopoverAnchor,
 } from "@orderly.network/ui";
 import { AccountItem } from "./components/accountItem";
 import { CreateSubAccount } from "./components/createSubAccountModal";
@@ -15,15 +22,33 @@ import { EditNickNameDialog } from "./components/editNickNameModal";
 import { SubAccountIcon, SwapIcon } from "./icons";
 import { SubAccountScriptReturn } from "./subAccount.script";
 
-export function SubAccountUI(props: SubAccountScriptReturn) {
+export function SubAccountUI(
+  props: SubAccountScriptReturn & { customTrigger?: ReactNode },
+) {
   const { t } = useTranslation();
   const { isMobile } = useScreen();
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const onMouseEnter = useCallback(() => {
+    if (timer.current) {
+      clearTimeout(timer.current);
+      timer.current = null;
+    }
+    // setOpen(true);
+  }, []);
   const header = <Text weight="semibold">{t("subAccount.modal.title")}</Text>;
   const trigger = useMemo(() => {
+    if (props.customTrigger && isMobile) {
+      return (
+        <div onClick={() => props.onOpenChange(true)}>
+          {props.customTrigger}
+        </div>
+      );
+    }
     if (isMobile) {
       return (
         <Flex
-          className="oui-bg-base-6 oui-h-8 oui-w-8 oui-rounded-md"
+          className="oui-size-8 oui-rounded-md oui-bg-base-6"
           itemAlign="center"
           justify="center"
         >
@@ -34,13 +59,8 @@ export function SubAccountUI(props: SubAccountScriptReturn) {
         </Flex>
       );
     }
-    return (
-      <SubAccountIcon
-        className={cn("oui-cursor-pointer")}
-        onClick={() => props.onOpenChange(true)}
-      />
-    );
-  }, [isMobile]);
+    return <SubAccountIcon className={cn("oui-cursor-pointer")} />;
+  }, [isMobile, props.customTrigger]);
 
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editAccountItem, setEditAccountItem] = useState<
@@ -83,11 +103,11 @@ export function SubAccountUI(props: SubAccountScriptReturn) {
               onSwitch={(accountId) => {
                 props.onSwitch?.(accountId);
               }}
-              holdings={subAccount.holding}
+              accountValue={subAccount.accountValue ?? 0}
               onEdit={() => {
                 setEditAccountItem({
                   accountId: subAccount.id,
-                  description: subAccount.description,
+                  description: subAccount.description ?? "",
                 });
                 setEditDialogOpen(true);
               }}
@@ -98,18 +118,10 @@ export function SubAccountUI(props: SubAccountScriptReturn) {
     );
   };
 
-  return (
+  const content = (
     <>
-      {trigger}
-      <SimpleDialog
-        title={header}
-        open={props.open}
-        onOpenChange={props.onOpenChange}
-        size="xs"
-        classNames={{
-          content: "oui-w-[300px]",
-        }}
-      >
+      <Flex direction="column" gap={5} itemAlign="start" width="100%">
+        {!isMobile && header}
         <Flex direction="column" gap={5} itemAlign="start" width="100%">
           <Flex direction="column" gap={2} itemAlign="start" width="100%">
             <Text className="oui-text-xs oui-leading-3 oui-text-base-contrast-54">
@@ -123,7 +135,7 @@ export function SubAccountUI(props: SubAccountScriptReturn) {
               onSwitch={(accountId) => {
                 props.onSwitch?.(accountId);
               }}
-              holdings={props.mainAccount?.holding ?? []}
+              accountValue={props.mainAccount?.accountValue ?? 0}
             />
           </Flex>
 
@@ -152,8 +164,7 @@ export function SubAccountUI(props: SubAccountScriptReturn) {
             {renderSubAccount()}
           </Flex>
         </Flex>
-      </SimpleDialog>
-
+      </Flex>
       <EditNickNameDialog
         accountId={editAccountItem?.accountId ?? ""}
         nickName={editAccountItem?.description ?? ""}
@@ -161,5 +172,58 @@ export function SubAccountUI(props: SubAccountScriptReturn) {
         onOpenChange={setEditDialogOpen}
       />
     </>
+  );
+  if (isMobile) {
+    return (
+      <>
+        {trigger}
+        <SimpleDialog
+          title={header}
+          open={props.open}
+          onOpenChange={props.onOpenChange}
+          size="xs"
+          classNames={{
+            content: "oui-w-[300px]",
+          }}
+        >
+          {content}
+        </SimpleDialog>
+      </>
+    );
+  }
+
+  return (
+    <PopoverRoot open={props.open} onOpenChange={props.onOpenChange}>
+      <PopoverAnchor>
+        <div
+          onMouseEnter={() => {
+            props.onOpenChange(true);
+          }}
+          onMouseLeave={() => {
+            timer.current = setTimeout(() => {
+              props.onOpenChange(false);
+            }, 150);
+          }}
+        >
+          {trigger}
+        </div>
+      </PopoverAnchor>
+      <PopoverContent
+        align="start"
+        side="bottom"
+        sideOffset={16}
+        collisionPadding={{ right: 16 }}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={() => {
+          props.onOpenChange(false);
+          timer.current ? clearTimeout(timer.current) : void 0;
+        }}
+        className={cn(
+          "oui-w-[300px] oui-space-y-[2px] oui-border oui-border-line-6 oui-p-5",
+        )}
+      >
+        {content}
+      </PopoverContent>
+    </PopoverRoot>
   );
 }

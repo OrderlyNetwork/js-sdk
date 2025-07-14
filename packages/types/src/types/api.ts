@@ -132,7 +132,7 @@ export declare namespace API {
     executed: number;
     total_fee: number;
     fee_asset: string;
-    client_order_id: null;
+    client_order_id?: string;
     average_executed_price: number;
     total_executed_quantity: number;
     visible_quantity: number;
@@ -173,6 +173,7 @@ export declare namespace API {
     created_time: number;
     updated_time: number;
     order_tag?: string;
+    client_order_id?: string;
   }
 
   export interface AlgoOrderExt extends AlgoOrder {
@@ -291,6 +292,7 @@ export declare namespace API {
     MMR_with_orders: number;
     pnl_24_h: number;
     fee_24_h: number;
+    fundingFee?: number;
   }
 
   export interface PositionExt extends Position {
@@ -519,6 +521,18 @@ export declare namespace API {
     transfer_amount_to_insurance_fund: number;
     positions_by_perp: LiquidationPositionByPerp[];
   }
+
+  export interface RestrictedAreas {
+    invalid_web_country: string;
+    invalid_web_city: string;
+  }
+
+  export interface IpInfo {
+    ip: string;
+    city: string;
+    region: string;
+    checked: boolean;
+  }
 }
 
 export declare namespace WSMessage {
@@ -532,6 +546,8 @@ export declare namespace WSMessage {
     amount: number;
     count: number;
     change: number;
+    open_interest?: number;
+    index_price?: number;
   }
 
   export interface MarkPrice {

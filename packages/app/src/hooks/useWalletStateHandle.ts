@@ -170,17 +170,26 @@ export const useWalletStateHandle = (options: {
       currentWalletAddress !== account.address &&
       !linkData
     ) {
-      account.setAddress(currentWalletAddress, {
-        provider: connectedWallet?.provider,
-        chain: {
-          id: praseChainIdToNumber(currentChain!.id),
-          namespace: currentChain!.namespace.toUpperCase() as ChainNamespace,
+      account.setAddress(
+        currentWalletAddress,
+        {
+          provider: connectedWallet?.provider,
+          chain: {
+            id: praseChainIdToNumber(currentChain!.id),
+            namespace: currentChain!.namespace.toUpperCase() as ChainNamespace,
+          },
+          wallet: {
+            name: connectedWallet?.label ?? "",
+          },
+          additionalInfo: connectedWallet?.additionalInfo ?? {},
         },
-        wallet: {
-          name: connectedWallet?.label ?? "",
+        {
+          // TODO: remove this when default orderly key scope includes asset
+          validateOrderlyKeyScope: (scope: string) => {
+            return scope.includes("asset");
+          },
         },
-        additionalInfo: connectedWallet?.additionalInfo ?? {},
-      });
+      );
       track(TrackerEventName.walletConnect, {
         wallet: connectedWallet?.label ?? "",
         network: currentChain!.namespace.toUpperCase() as ChainNamespace,

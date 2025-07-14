@@ -12,8 +12,6 @@ export type BottomNavProps = {
 export const BottomNav = (props: BottomNavProps) => {
   const { mainMenus, current, onRouteChange } = props;
 
-  // console.log("BottomNav", props);
-
   const isSubmenu = useMemo(() => {
     return mainMenus?.every((menu) => menu.href !== current);
   }, [mainMenus, current]);
@@ -29,7 +27,6 @@ export const BottomNav = (props: BottomNavProps) => {
           justify={"center"}
           className="oui-flex-1"
           onClick={() => {
-            console.log("menu", menu, onRouteChange);
             onRouteChange?.({ href: menu.href, name: menu.name });
           }}
         >

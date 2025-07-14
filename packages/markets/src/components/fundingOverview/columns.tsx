@@ -1,5 +1,14 @@
+import { useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { Column, Text } from "@orderly.network/ui";
+import {
+  Column,
+  Flex,
+  Picker,
+  Select,
+  Text,
+  TokenIcon,
+  useScreen,
+} from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { ProcessedFundingData } from "./fundingOverview.script";
 
@@ -26,144 +35,180 @@ const createFundingRenderer =
 export const useFundingOverviewColumns = (
   selectedPeriod: string,
   setSelectedPeriod: (value: string) => void,
-): Column<ProcessedFundingData>[] => {
+) => {
   const { t } = useTranslation();
-  return [
-    {
-      title: t("markets.column.market"),
-      dataIndex: "symbol",
-      width: 120,
-      render: (value) => (
-        <Text.formatted
-          rule="symbol"
-          formatString="base-type"
-          size="xs"
-          weight="semibold"
-          showIcon
-        >
-          {value}
-        </Text.formatted>
-      ),
-    },
-    {
-      title: t("markets.funding.column.estFunding"),
-      dataIndex: "estFunding",
-      width: 120,
-      onSort: true,
-      render: (value, record) => (
-        <div>
-          <Text.numeral
-            rule="percentages"
-            dp={5}
-            coloring
-            rm={Decimal.ROUND_DOWN}
-            showIdentifier
-          >
-            {value}
-          </Text.numeral>
-          <span className="oui-text-base-contrast-54">
-            {`/ ${record.fundingInterval}h`}
-          </span>
-        </div>
-      ),
-    },
-    {
-      title: t("markets.funding.column.lastFunding"),
-      dataIndex: "lastFunding",
-      width: 90,
-      onSort: true,
-      render: createFundingRenderer(),
-    },
-    {
-      title: t("markets.funding.column.1dAvg"),
-      dataIndex: "funding1d",
-      width: 90,
-      onSort: true,
-      render: createFundingRenderer(),
-    },
-    {
-      title: t("markets.funding.column.3dAvg"),
-      dataIndex: "funding3d",
-      width: 90,
-      onSort: true,
-      render: createFundingRenderer(),
-    },
-    {
-      title: t("markets.funding.column.7dAvg"),
-      dataIndex: "funding7d",
-      width: 90,
-      onSort: true,
-      render: createFundingRenderer(),
-    },
-    {
-      title: t("markets.funding.column.14dAvg"),
-      dataIndex: "funding14d",
-      width: 90,
-      onSort: true,
-      render: createFundingRenderer(),
-    },
-    {
-      title: t("markets.funding.column.30dAvg"),
-      dataIndex: "funding30d",
-      width: 90,
-      onSort: true,
-      render: createFundingRenderer(),
-    },
-    {
-      title: t("markets.funding.column.90dAvg"),
-      dataIndex: "funding90d",
-      width: 90,
-      onSort: true,
-      render: createFundingRenderer(),
-    },
-    {
-      title: (
-        <div className="oui-flex oui-gap-1">
-          <select
-            value={selectedPeriod}
-            onChange={(e) => setSelectedPeriod(e.target.value)}
-            onClick={(e) => e.stopPropagation()}
-            className="oui-w-12 oui-rounded-md oui-border oui-border-line oui-bg-[var(--oui-table-background-color)]"
-          >
-            {[
-              {
-                label: t("common.select.1d"),
-                value: "1dPositive",
-              },
-              {
-                label: t("common.select.3d"),
-                value: "3dPositive",
-              },
-              {
-                label: t("common.select.7d"),
-                value: "7dPositive",
-              },
-              {
-                label: t("common.select.14d"),
-                value: "14dPositive",
-              },
-              {
-                label: t("common.select.30d"),
-                value: "30dPositive",
-              },
-              {
-                label: t("common.select.90d"),
-                value: "90dPositive",
-              },
-            ].map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-          <span>{t("markets.funding.column.positiveRate")}</span>
-        </div>
-      ),
-      dataIndex: selectedPeriod,
-      width: 130,
-      align: "right",
-      onSort: true,
-      render: createFundingRenderer(2),
-    },
-  ];
+  const { isMobile } = useScreen();
+
+  return useMemo<Column<ProcessedFundingData>[]>(() => {
+    return [
+      {
+        title: t("markets.column.market"),
+        dataIndex: "symbol",
+        width: 135,
+        className: isMobile ? "oui-pl-0" : undefined,
+        render: (value) => (
+          <Flex gapX={1}>
+            <TokenIcon
+              symbol={value}
+              className={isMobile ? "oui-size-[18px]" : "oui-size-5"}
+            />
+
+            <Text.formatted
+              rule="symbol"
+              formatString="base-type"
+              weight="semibold"
+            >
+              {value}
+            </Text.formatted>
+          </Flex>
+        ),
+      },
+      {
+        title: t("markets.funding.column.estFunding"),
+        dataIndex: "estFunding",
+        width: 120,
+        onSort: true,
+        render: (value, record) => (
+          <div>
+            <Text.numeral
+              rule="percentages"
+              dp={5}
+              coloring
+              rm={Decimal.ROUND_DOWN}
+              showIdentifier
+            >
+              {value}
+            </Text.numeral>
+            <span className="oui-text-base-contrast-54">
+              {`/ ${record.fundingInterval}h`}
+            </span>
+          </div>
+        ),
+      },
+      {
+        title: t("markets.funding.column.lastFunding"),
+        dataIndex: "lastFunding",
+        width: 90,
+        onSort: true,
+        render: createFundingRenderer(),
+      },
+      {
+        title: t("markets.funding.column.1dAvg"),
+        dataIndex: "funding1d",
+        width: 90,
+        onSort: true,
+        render: createFundingRenderer(),
+      },
+      {
+        title: t("markets.funding.column.3dAvg"),
+        dataIndex: "funding3d",
+        width: 90,
+        onSort: true,
+        render: createFundingRenderer(),
+      },
+      {
+        title: t("markets.funding.column.7dAvg"),
+        dataIndex: "funding7d",
+        width: 90,
+        onSort: true,
+        render: createFundingRenderer(),
+      },
+      {
+        title: t("markets.funding.column.14dAvg"),
+        dataIndex: "funding14d",
+        width: 90,
+        onSort: true,
+        render: createFundingRenderer(),
+      },
+      {
+        title: t("markets.funding.column.30dAvg"),
+        dataIndex: "funding30d",
+        width: 90,
+        onSort: true,
+        render: createFundingRenderer(),
+      },
+      {
+        title: t("markets.funding.column.90dAvg"),
+        dataIndex: "funding90d",
+        width: 90,
+        onSort: true,
+        render: createFundingRenderer(),
+      },
+      {
+        title: (
+          <div className="oui-flex oui-gap-1">
+            <FundingPeriodSelect
+              value={selectedPeriod}
+              onValueChange={setSelectedPeriod}
+            />
+            <span>{t("markets.funding.column.positiveRate")}</span>
+          </div>
+        ),
+        dataIndex: selectedPeriod,
+        width: 130,
+        align: "right",
+        onSort: true,
+        render: createFundingRenderer(2),
+      },
+    ];
+  }, [t, isMobile, selectedPeriod, setSelectedPeriod]);
+};
+
+type FundingPeriodSelectProps = {
+  value: string;
+  onValueChange: (value: string) => void;
+};
+
+const FundingPeriodSelect = (props: FundingPeriodSelectProps) => {
+  const { t } = useTranslation();
+  const { isMobile } = useScreen();
+
+  const options = useMemo(() => {
+    return [
+      {
+        label: t("common.select.1d"),
+        value: "1dPositive",
+      },
+      {
+        label: t("common.select.3d"),
+        value: "3dPositive",
+      },
+      {
+        label: t("common.select.7d"),
+        value: "7dPositive",
+      },
+      {
+        label: t("common.select.14d"),
+        value: "14dPositive",
+      },
+      {
+        label: t("common.select.30d"),
+        value: "30dPositive",
+      },
+      {
+        label: t("common.select.90d"),
+        value: "90dPositive",
+      },
+    ];
+  }, [t]);
+
+  if (isMobile) {
+    return (
+      <Picker
+        size="sm"
+        value={props.value}
+        onValueChange={props.onValueChange}
+        options={options}
+      />
+    );
+  }
+
+  return (
+    <Select.options
+      size="xs"
+      value={props.value}
+      onValueChange={props.onValueChange}
+      options={options}
+    />
+  );
 };

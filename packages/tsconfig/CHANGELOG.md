@@ -1,5 +1,76 @@
 # tsconfig
 
+## 0.7.2-alpha.0
+
+### Patch Changes
+
+- publish
+
+## 0.7.1
+
+### Patch Changes
+
+- publish
+- 5a220e0: publish
+
+## 0.7.1-alpha.0
+
+### Patch Changes
+
+- publish
+
+## 0.7.0
+
+### Minor Changes
+
+- decb695: publish
+- publish
+
+## 0.7.0-alpha.0
+
+### Minor Changes
+
+- publish
+
+## 0.6.2
+
+### Patch Changes
+
+- 311e2a7: publish
+- publish
+
+## 0.6.2-alpha.0
+
+### Patch Changes
+
+- publish
+
+## 0.6.1
+
+### Patch Changes
+
+- b2ca83a: publish
+- publish
+
+## 0.6.1-alpha.0
+
+### Patch Changes
+
+- publish
+
+## 0.6.0
+
+### Minor Changes
+
+- publish
+- 4e5f109: publish
+
+## 0.6.0-alpha.0
+
+### Minor Changes
+
+- publish
+
 ## 0.5.0
 
 ### Minor Changes

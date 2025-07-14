@@ -21,14 +21,12 @@ export const SlippageCell = (props: {
     useBoolean(false);
 
   const { isMobile } = useScreen();
-
-  // const [slippage, setSlippage] = useLocalStorage("orderly-slippage", "");
   const slippageRef = useRef<{ getValue: () => number | undefined }>(null);
 
   const onConfirm = () => {
     const val = slippageRef.current?.getValue();
 
-    props.setSlippage(val?.toString() ?? "");
+    props.setSlippage(!val ? "1" : val.toString());
     setClose();
     return Promise.resolve(true);
   };
@@ -71,16 +69,22 @@ export const SlippageCell = (props: {
             <Text.numeral
               size="2xs"
               rule="percentages"
-              prefix={`${t("orderEntry.slippage.est")}:`}
+              prefix={`${t("orderEntry.slippage.est")}: `}
               suffix={` / ${t("common.max")}: `}
             >
               {props.estSlippage ?? 0}
             </Text.numeral>
-            <Text size="2xs" className="oui-text-base-contrast-80">
-              {`${props.slippage || "-"}%`}
-            </Text>
             <button className="oui-text-2xs" onClick={() => setOpen()}>
-              <EditIcon className="oui-text-base-contrast-54" size={12} />
+              <Flex className="oui-gap-0.5" as="span">
+                <Text size="2xs" className="oui-text-primary">
+                  {`${props.slippage || "-"}%`}
+                </Text>
+                <EditIcon
+                  className="oui-text-primary oui-hidden md:oui-block"
+                  size={12}
+                  opacity={1}
+                />
+              </Flex>
             </button>
           </Flex>
         </AuthGuard>

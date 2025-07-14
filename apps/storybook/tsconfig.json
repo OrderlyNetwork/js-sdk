@@ -19,21 +19,6 @@
     "esModuleInterop": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      // "@orderly.network/ui": [
-      //   "../../packages/ui/src"
-      // ],
-      // "@orderly.network/portfolio": [
-      //   "../../packages/portfolio/src"
-      // ],
-      // "@orderly.network/chart": [
-      //   "../../packages/chart/src"
-      // ],
-      // "@orderly.network/ui-connector": [
-      //   "../../packages/ui-connector/src"
-      // ],
-      // "@orderly.network/react-app": [
-      //   "../../packages/app/src"
-      // ],
       "@orderly.network/core": [
         "../../packages/core/src"
       ],
@@ -46,20 +31,8 @@
       "@orderly.network/affiliate": [
         "../../packages/affiliate/src"
       ],
-      // "@orderly.network/ui-scaffold": [
-      //   "../../packages/ui-scaffold/src"
-      // ],
-      // "@orderly.network/ui-leverage": [
-      //   "../../packages/ui-leverage/src"
-      // ],
-      // "@orderly.network/ui-positions": [
-      //   "../../packages/ui-positions/src"
-      // ],
-      // "@orderly.network/ui-orders": [
-      //   "../../packages/ui-orders/src"
-      // ],
-      "@orderly.network/ui-share": [
-        "../../packages/ui-share/src"
+      "@orderly.network/ui-positions": [
+        "../../packages/ui-positions/src"
       ],
       "@orderly.network/markets": [
         "../../packages/markets/src"
@@ -73,38 +46,65 @@
       "@orderly.network/ui-order-entry": [
         "../../packages/ui-order-entry/src"
       ],
-      // "@orderly.network/default-evm-adapter": [
-      //   "../../packages/default-evm-adapter/src"
-      // ],
-      // "@orderly.network/default-solana-adapter": [
-      //   "../../packages/default-solana-adapter/src"
-      // ],
-      // "@orderly.network/wallet-connector": [
-      //   "../../packages/wallet-connector/src"
-      // ],
       "@orderly.network/wallet-connector-privy": [
         "../../packages/wallet-connector-privy/src"
       ],
-      // "@orderly.network/ui-chain-selector": [
-      //   "../../packages/ui-chain-selector/src"
-      // ],
-      // "@orderly.network/ui-tradingview": [
-      //   "../../packages/ui-tradingview/src"
-      // ],
-      // "@orderly.network/ui-tpsl": [
-      //   "../../packages/ui-tpsl/src"
-      // ],
-      // "@orderly.network/types": [
-      //   "../../packages/types/src"
-      // ],
-      // "@orderly.network/utils": [
-      //   "../../packages/utils/src"
-      // ],
-      // "@orderly.network/i18n": [
-      //   "../../packages/i18n/src"
-      // ],
       "@orderly.network/trading-leaderboard": [
         "../../packages/trading-leaderboard/src"
+      ],
+      "@orderly.network/chart": [
+        "../../packages/chart/src"
+      ],
+      "@orderly.network/default-evm-adapter": [
+        "../../packages/default-evm-adapter/src"
+      ],
+      "@orderly.network/default-solana-adapter": [
+        "../../packages/default-solana-adapter/src"
+      ],
+      "@orderly.network/i18n": [
+        "../../packages/i18n/src"
+      ],
+      "@orderly.network/portfolio": [
+        "../../packages/portfolio/src"
+      ],
+      "@orderly.network/react-app": [
+        "../../packages/app/src"
+      ],
+      "@orderly.network/types": [
+        "../../packages/types/src"
+      ],
+      "@orderly.network/ui": [
+        "../../packages/ui/src"
+      ],
+      "@orderly.network/ui-chain-selector": [
+        "../../packages/ui-chain-selector/src"
+      ],
+      "@orderly.network/ui-connector": [
+        "../../packages/ui-connector/src"
+      ],
+      "@orderly.network/ui-leverage": [
+        "../../packages/ui-leverage/src"
+      ],
+      "@orderly.network/ui-orders": [
+        "../../packages/ui-orders/src"
+      ],
+      "@orderly.network/ui-scaffold": [
+        "../../packages/ui-scaffold/src"
+      ],
+      "@orderly.network/ui-share": [
+        "../../packages/ui-share/src"
+      ],
+      "@orderly.network/ui-tpsl": [
+        "../../packages/ui-tpsl/src"
+      ],
+      "@orderly.network/ui-tradingview": [
+        "../../packages/ui-tradingview/src"
+      ],
+      "@orderly.network/utils": [
+        "../../packages/utils/src"
+      ],
+      "@orderly.network/wallet-connector": [
+        "../../packages/wallet-connector/src"
       ]
     }
   },

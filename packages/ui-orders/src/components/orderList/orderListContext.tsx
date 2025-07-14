@@ -5,27 +5,28 @@ import {
   useCallback,
   useContext,
 } from "react";
-import { modal } from "@orderly.network/ui";
-import { API, OrderEntity } from "@orderly.network/types";
 import { getMinNotional, useSymbolsInfo } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
+import { API, OrderEntity } from "@orderly.network/types";
+import { modal } from "@orderly.network/ui";
+
 export interface OrderListContextState {
   onCancelOrder: (order: API.Order | API.AlgoOrder) => Promise<any>;
   onEditOrder: (
     order: API.Order | API.AlgoOrder,
-    position?: API.Position
+    position?: API.Position,
   ) => Promise<any>;
   editOrder: (id: string, order: OrderEntity) => Promise<any>;
   editAlgoOrder: (id: string, order: OrderEntity) => Promise<any>;
   checkMinNotional: (
     symbol: string,
     price?: string | number,
-    qty?: string | number
+    qty?: string | number,
   ) => string | undefined;
 }
 
 export const OrderListContext = createContext<OrderListContextState>(
-  {} as OrderListContextState
+  {} as OrderListContextState,
 );
 
 export const useOrderListContext = () => {
@@ -62,7 +63,7 @@ export const OrderListProvider: FC<
         }
 
         return cancelAlgoOrder(order.algo_order_id, order.symbol).then(
-          () => {}
+          () => {},
         );
       }
       // @ts-ignore
@@ -70,18 +71,18 @@ export const OrderListProvider: FC<
         // toast.success("Order canceled successfully");
       });
     },
-    []
+    [],
   );
 
   const onEditOrder = useCallback(
     async (order: API.Order | API.AlgoOrder, position?: API.Position) => {
       // @ts-ignore
-      let isHidden =
+      const isHidden =
         order.visible_quantity !== undefined
           ? order.visible_quantity === 0
           : (order as any).visible !== undefined
-          ? (order as any).visible === 0
-          : false;
+            ? (order as any).visible === 0
+            : false;
 
       const orderEntry = await modal.sheet({
         title: t("orders.editOrder"),
@@ -115,18 +116,19 @@ export const OrderListProvider: FC<
         ),
       });
     },
-    [t]
+    [t],
   );
 
   const checkMinNotional = useCallback(
     (symbol: string, price?: string | number, qty?: string | number) => {
       const { min_notional } = symbolInfo[symbol]();
+      console.log("min_notional", { price, qty, min_notional });
       const minNotional = getMinNotional({ price, qty, min_notional });
       if (minNotional !== undefined) {
         return t("orderEntry.total.error.min", { value: minNotional });
       }
     },
-    [symbolInfo, t]
+    [symbolInfo, t],
   );
 
   return (

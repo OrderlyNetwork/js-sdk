@@ -12,16 +12,10 @@ export const portfolio = {
   "portfolio.overview.performance.dailyPnl": "Daily PnL",
   "portfolio.overview.performance.cumulativePnl": "Cumulative PnL",
 
-  "portfolio.overview.deposits&Withdrawals": "Deposits & Withdrawals",
   "portfolio.overview.distribution": "Distribution",
   "portfolio.overview.transferHistory": "Transfer history",
 
   "portfolio.overview.column.txId": "TxID",
-  "portfolio.overview.column.funding&AnnualRate": "Funding rate / Annual rate",
-  "portfolio.overview.column.paymentType": "Payment type",
-  "portfolio.overview.column.paymentType.paid": "Paid",
-  "portfolio.overview.column.paymentType.received": "Received",
-  "portfolio.overview.column.fundingFee": "Funding fee",
 
   "portfolio.overview.column.token": "Token",
   "portfolio.overview.column.qty": "Qty.",
@@ -47,8 +41,6 @@ export const portfolio = {
   "portfolio.feeTier.column.30dVolume.above": "Above {{volume}}",
   "portfolio.feeTier.column.maker": "Maker",
   "portfolio.feeTier.column.taker": "Taker",
-
-  "portfolio.apiKey.accountId": "Account ID",
   "portfolio.apiKey.accountId.copied": "Account id copied",
   "portfolio.apiKey.uid": "UID",
   "portfolio.apiKey.secretKey": "Secret key",
@@ -58,6 +50,7 @@ export const portfolio = {
   "portfolio.apiKey.permissions": "Permissions",
   "portfolio.apiKey.permissions.read": "Read",
   "portfolio.apiKey.permissions.trading": "Trading",
+  "portfolio.apiKey.permissions.asset": "Asset",
 
   "portfolio.apiKey.description":
     "Create API keys to suit your trading needs. For your security, don't share your API keys with anyone.",
@@ -74,8 +67,10 @@ export const portfolio = {
 
   "portfolio.apiKey.create.connectWallet.tooltip":
     "Please connect wallet before create API key",
-  "portfolio.apiKey.create.signIn.tooltip":
-    "Please sign in before create API key",
+  // "portfolio.apiKey.create.signIn.tooltip":
+  //   "Please sign in before create API key",
+  "portfolio.apiKey.create.createAccount.tooltip":
+    "Please create account before create API key",
   "portfolio.apiKey.create.enableTrading.tooltip":
     "Please enable trading before create API key",
   "portfolio.apiKey.create.wrongNetwork.tooltip":
