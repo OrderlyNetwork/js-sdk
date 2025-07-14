@@ -1,4 +1,4 @@
-# eslint-config-custom
+# @orderly.network/eslint-config
 
 ## 1.4.2-alpha.0
 
