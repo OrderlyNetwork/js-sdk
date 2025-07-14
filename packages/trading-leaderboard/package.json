@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/trading-leaderboard",
-  "version": "2.4.1",
+  "version": "2.4.2-alpha.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
