@@ -25,6 +25,8 @@ export const RewardsWidget = () => {
         onLearnMore={state.onLearnMore}
         onTradeNow={state.onTradeNow}
         isMobile={isMobile}
+        shouldShowJoinButton={state.shouldShowJoinButton}
+        joinCampaign={state.joinCampaign}
       />
     </>
   );

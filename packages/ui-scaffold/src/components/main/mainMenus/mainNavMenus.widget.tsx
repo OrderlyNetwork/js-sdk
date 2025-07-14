@@ -1,13 +1,13 @@
 import { FC } from "react";
-import { MainNavMenusUI, type MainNavItemsProps } from "./mainNavMenus.ui";
 import {
   ExtensionPositionEnum,
   ExtensionSlot,
   installExtension,
 } from "@orderly.network/ui";
+import { MainNavMenus, type MainNavItemsProps } from "./mainNavMenus.ui";
 
 export const MainNavMenusWidget: FC<MainNavItemsProps> = (props) => {
-  return <MainNavMenusUI {...props} />;
+  return <MainNavMenus {...props} />;
 };
 
 installExtension<MainNavItemsProps>({
@@ -16,7 +16,7 @@ installExtension<MainNavItemsProps>({
   positions: [ExtensionPositionEnum.MainMenus],
   __isInternal: true,
 })((props: MainNavItemsProps) => {
-  return <MainNavMenusUI {...props} />;
+  return <MainNavMenus {...props} />;
 });
 
 export const MainNavMenusExtension: FC<MainNavItemsProps> = (props) => {

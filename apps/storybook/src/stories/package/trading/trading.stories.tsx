@@ -11,10 +11,10 @@ import {
   BottomNavBarWidget,
 } from "@orderly.network/trading";
 import { Box, Flex } from "@orderly.network/ui";
-import { OrderlyIcon } from "./icons";
-import { useOrderlyConfig } from "../../../hooks/useOrderlyConfig";
 import { BaseLayout } from "../../../components/layout";
+import { useOrderlyConfig } from "../../../hooks/useOrderlyConfig";
 import { getSymbol, updateSymbol } from "../../../utils/storage";
+import { OrderlyIcon } from "./icons";
 
 const meta: Meta<typeof TradingPage> = {
   title: "Package/trading/TradingPage",
@@ -73,6 +73,9 @@ export const Page: Story = {
         }}
       />
     );
+  },
+  args: {
+    disableFeatures: [],
   },
 };
 

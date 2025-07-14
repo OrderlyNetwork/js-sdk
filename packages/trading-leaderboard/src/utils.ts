@@ -51,7 +51,7 @@ export function formatCampaignDate(date: Date | string): string {
 export function formatUpdateDate(timestamp: number) {
   const time = new Date(timestamp);
   try {
-    return format(time, "yyyy-MM-dd HH:mm 'UTC'");
+    return format(time, "yyyy-MM-dd HH:mm");
   } catch (error) {
     console.error("Error formatting time:", error);
     return "";

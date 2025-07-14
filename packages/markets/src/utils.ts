@@ -2,6 +2,47 @@ import { useCallback, useEffect, useState } from "react";
 import { TableSort } from "@orderly.network/ui";
 import { SortType } from "./type";
 
+/**
+ * Compare two values intelligently
+ */
+const compareValues = (aValue: any, bValue: any): number => {
+  // Handle null/undefined values (always sort to bottom)
+  if (aValue == null && bValue == null) return 0;
+  if (aValue == null) return 1;
+  if (bValue == null) return -1;
+
+  // Convert to string first for type checking
+  const aStr = String(aValue);
+  const bStr = String(bValue);
+
+  // Check if both are valid numbers (not just convertible to numbers)
+  const aIsNumber = /^-?\d+(\.\d+)?$/.test(aStr.trim());
+  const bIsNumber = /^-?\d+(\.\d+)?$/.test(bStr.trim());
+
+  if (aIsNumber && bIsNumber) {
+    return Number(aValue) - Number(bValue);
+  }
+
+  // Check if both are valid dates (ISO format or timestamp)
+  const aIsDate = /^\d{4}-\d{2}-\d{2}/.test(aStr) || /^\d{13}$/.test(aStr);
+  const bIsDate = /^\d{4}-\d{2}-\d{2}/.test(bStr) || /^\d{13}$/.test(bStr);
+
+  if (aIsDate && bIsDate) {
+    const aDate = new Date(aValue);
+    const bDate = new Date(bValue);
+    if (!isNaN(aDate.getTime()) && !isNaN(bDate.getTime())) {
+      return aDate.getTime() - bDate.getTime();
+    }
+  }
+
+  // String comparison - use localeCompare for proper string sorting
+  return aStr.localeCompare(bStr, undefined, {
+    sensitivity: "base",
+    numeric: false, // Disable numeric sorting for pure string comparison
+    caseFirst: "upper",
+  });
+};
+
 /** get page data */
 export function getPagedData(list: any[], pageSize: number, pageIndex: number) {
   const pageData: any[][] = [];
@@ -20,22 +61,12 @@ export function sortList(list: any[], sort?: SortType) {
   const { sortKey, sortOrder } = sort || {};
   const sortedList = [...(list || [])];
 
-  const isEmpty = (value: any) => value === undefined || value === null;
-
   if (sortKey && sortOrder) {
     // sort list
     sortedList.sort((a: any, b: any) => {
-      const val1 = a[sortKey];
-      const val2 = b[sortKey];
-
-      if (isEmpty(val1)) return 1;
-      if (isEmpty(val2)) return -1;
-
-      if (sortOrder === "desc") {
-        return val2 - val1;
-      }
-
-      return val1 - val2;
+      const comparison = compareValues(a[sortKey], b[sortKey]);
+      // Handle sort order: desc means reverse the comparison result
+      return sortOrder === "desc" ? -comparison : comparison;
     });
   }
   return sortedList;

@@ -35,6 +35,19 @@ export type TradingLeaderboardState = {
   updatedTime?: number;
   /** set snapshot time */
   setUpdatedTime?: (updatedTime?: number) => void;
+  /** custom data, if use this, you can full control the data */
+  dataAdapter?: (info: { page: number; pageSize: number }) => {
+    loading: boolean;
+    dataSource?: any[];
+    dataList?: any[];
+    userData?: any;
+    updatedTime?: number;
+    meta?: {
+      total: number;
+      current_page: number;
+      records_per_page: number;
+    };
+  };
 };
 
 /**
@@ -45,7 +58,10 @@ export const TradingLeaderboardContext = createContext<TradingLeaderboardState>(
 );
 
 export type TradingLeaderboardProviderProps = PropsWithChildren<
-  Pick<TradingLeaderboardState, "campaigns" | "href" | "backgroundSrc">
+  Pick<
+    TradingLeaderboardState,
+    "campaigns" | "href" | "backgroundSrc" | "dataAdapter"
+  >
 > & {
   campaignId?: string | number;
   onCampaignChange?: (campaignId: string | number) => void;
@@ -138,6 +154,7 @@ export const TradingLeaderboardProvider = (
         setUserData,
         updatedTime,
         setUpdatedTime,
+        dataAdapter: props.dataAdapter,
       }}
     >
       {props.children}
