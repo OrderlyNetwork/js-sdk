@@ -1,14 +1,10 @@
 import type { FC, PropsWithChildren } from "react";
 import React, { useLayoutEffect, useMemo } from "react";
-import useConstant from "use-constant";
 import {
   ConfigStore,
   // MemoryConfigStore,
   OrderlyKeyStore,
-  getWalletAdapterFunc,
-  WalletAdapterOptions,
   LocalStorageStore,
-  EtherAdapter,
   SimpleDI,
   Account,
   IContract,
@@ -19,11 +15,11 @@ import { DefaultSolanaWalletAdapter } from "@orderly.network/default-solana-adap
 import { Chain, NetworkId } from "@orderly.network/types";
 import { SDKError } from "@orderly.network/types";
 import { EthersProvider } from "@orderly.network/web3-provider-ethers";
+import { DEFAULT_TICK_SIZES } from "./constants";
 // import { usePreLoadData } from "./usePreloadData";
 import { DataCenterProvider } from "./dataProvider";
 import { ProxyConfigStore } from "./dev/proxyConfigStore";
 import { ExtendedConfigStore } from "./extendedConfigStore";
-import type { Chains } from "./orderly/useChains";
 import { OrderlyConfigContextState, OrderlyProvider } from "./orderlyContext";
 import { StatusProvider } from "./statusProvider";
 
@@ -42,6 +38,10 @@ export type BaseConfigProviderProps = {
   // getWalletAdapter?: getWalletAdapterFunc;
   walletAdapters?: WalletAdapter[];
   chainFilter?: filteredChains | filterChainsFunc;
+  /**
+   * Custom orderbook default tick sizes.
+   */
+  orderbookDefaultTickSizes?: Record<string, string>;
 } & Pick<
   OrderlyConfigContextState,
   "enableSwapDeposit" | "customChains" | "chainTransformer"
@@ -138,6 +138,10 @@ export const OrderlyConfigProvider: FC<
     );
   }, [walletAdapters]);
 
+  const defaultOrderbookTickSizes = useMemo<Record<string, string>>(() => {
+    return props.orderbookDefaultTickSizes || DEFAULT_TICK_SIZES;
+  }, [props.orderbookDefaultTickSizes]);
+
   // check params, if has mismatch, throw warning message to console
   // useParamsCheck({ brokerId: innerConfigStore.get("brokerId") });
 
@@ -186,6 +190,7 @@ export const OrderlyConfigProvider: FC<
         customChains,
         enableSwapDeposit,
         chainTransformer,
+        defaultOrderbookTickSizes,
       }}
     >
       <StatusProvider>

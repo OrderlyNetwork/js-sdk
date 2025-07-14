@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
-import { NumeralProps, type NumeralRule } from "../typography/numeral";
 import { FormattedTextProps, TextRule } from "../typography/formatted";
+import { NumeralProps, type NumeralRule } from "../typography/numeral";
+
 export {
   type Column as TanstackColumn,
   type Table,
@@ -9,6 +10,14 @@ export {
 export type ColumnFixed = "left" | "right";
 
 export type SortOrder = "asc" | "desc";
+
+export type TableSort = { sortKey: string; sort: SortOrder };
+
+// Multi-field display support
+export type MultiFieldSort = {
+  sortKey: string;
+  sort: SortOrder;
+};
 
 type PlainText = number | string | null | undefined;
 
@@ -23,8 +32,14 @@ export type TableCellRenderer<T> =
 export type TableCellPlainTextRenderer<T> = (
   value: any,
   record: T,
-  index: number
+  index: number,
 ) => PlainText;
+
+export type MultiSortField = {
+  sortKey: string;
+  label?: string;
+  className?: string;
+};
 
 export type Column<RecordType extends unknown = any> = {
   type?: "data" | "action" | "group";
@@ -43,6 +58,12 @@ export type Column<RecordType extends unknown = any> = {
   onSort?:
     | boolean
     | ((r1: RecordType, r2: RecordType, sortOrder?: SortOrder) => number);
+  // Multi-field sorting support
+  multiSort?: {
+    fields: MultiSortField[];
+    initialSort?: MultiFieldSort[]; // UI display only - shows initial sort indicators
+    onSort?: (fieldKey: string, sortOrder?: SortOrder) => void; // Handler for field-specific sorting
+  };
   formatter?: TableCellFormatter<RecordType>;
   render?: TableCellRenderer<RecordType>;
   /**
@@ -60,7 +81,7 @@ export type Column<RecordType extends unknown = any> = {
     | ((
         value: any,
         record: RecordType,
-        index: number
+        index: number,
       ) => Omit<NumeralProps, "children" | "as" | "rule">);
   /**
    * text props for formatted text
@@ -70,7 +91,7 @@ export type Column<RecordType extends unknown = any> = {
     | ((
         value: any,
         record: RecordType,
-        index: number
+        index: number,
       ) => Omit<FormattedTextProps, "children" | "as" | "rule">);
 };
 
@@ -83,8 +104,6 @@ export type PaginationMeta = {
   onPageSizeChange?: (pageSize: number) => void;
 };
 
-export type TableSort = { sortKey: string; sort: SortOrder };
-
 export type DataTableClassNames = {
   root?: string;
   header?: string;
@@ -92,4 +111,5 @@ export type DataTableClassNames = {
   footer?: string;
   pagination?: string;
   scroll?: string;
+  empty?: string;
 };

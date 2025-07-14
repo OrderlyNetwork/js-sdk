@@ -4,10 +4,7 @@
     "paths": {
       "@/*": [
         "./*"
-      ],
-      "@orderly.network/react": [
-        "../../packages/component/src"
-      ],
+      ],     
       "@orderly.network/hooks": [
         "../../packages/hooks/src"
       ],

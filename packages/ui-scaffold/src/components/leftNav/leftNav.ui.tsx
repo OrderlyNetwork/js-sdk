@@ -111,7 +111,7 @@ const LeftNavSheet = modal.create<LeftNavUIProps>((props) => {
           <div className="oui-mt-[6px] oui-flex oui-h-[44px] oui-items-center [&_img]:!oui-h-[18px]">
             <MainLogo {...props?.logo} />
           </div>
-          {props?.products}
+          {props?.leading}
           {showSubAccount && (
             <SubAccountWidget customTrigger={subAccountTrigger} />
           )}

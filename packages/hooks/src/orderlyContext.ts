@@ -43,6 +43,10 @@ export interface OrderlyConfigContextState {
   }) => API.Chain[];
   /** enable swap deposit, default is true */
   enableSwapDeposit?: boolean;
+  /**
+   * Custom orderbook default tick sizes.
+   */
+  defaultOrderbookTickSizes: Record<string, string>;
 }
 
 export const OrderlyContext = createContext<OrderlyConfigContextState>({

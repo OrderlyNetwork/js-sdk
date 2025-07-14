@@ -1,15 +1,5 @@
 import { useTranslation } from "@orderly.network/i18n";
-import {
-  Box,
-  Button,
-  cn,
-  EmptyStateIcon,
-  Flex,
-  PlusIcon,
-  TabPanel,
-  Tabs,
-  Text,
-} from "@orderly.network/ui";
+import { Box, cn, TabPanel, Tabs, Text } from "@orderly.network/ui";
 import { FavoritesIcon } from "../../icons";
 import { MarketsTabName } from "../../type";
 import { MarketsListWidget } from "../marketsList";
@@ -51,7 +41,6 @@ export const MarketsSheet: React.FC<MarketsSheetProps> = (props) => {
           onClick: () => {
             props.onTabChange(MarketsTabName.All);
           },
-          className: "oui-h-[calc(100%_-_70px)]",
         })}
         {...getFavoritesProps(type)}
       />

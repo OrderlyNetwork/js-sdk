@@ -37,7 +37,6 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
             onClick: () => {
               onTabChange(MarketsTabName.All);
             },
-            className: "oui-h-[calc(100%_-_36px)]",
           })}
         />
       </div>
