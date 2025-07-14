@@ -115,6 +115,7 @@ export const PositionTPSLSheet = (props: TPSLWidgetProps & TPSLSheetProps) => {
                   side={order.side!}
                   quoteDP={quote_dp ?? 2}
                   baseDP={base_dp ?? 2}
+                  orderInfo={order}
                 />
               ),
             })
