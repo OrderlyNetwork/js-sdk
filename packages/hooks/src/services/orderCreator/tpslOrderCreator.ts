@@ -95,6 +95,12 @@ export class TPSLOrderCreator extends BaseAlgoOrderCreator<
     const newData: AlgoOrderUpdateEntity[] = [];
 
     const needUpdateQty = values.quantity !== oldValue.quantity;
+    console.log("create update order", {
+      data,
+      needUpdateQty,
+      values,
+      oldValue,
+    });
 
     data.child_orders.forEach((order) => {
       // find the old order
@@ -108,12 +114,22 @@ export class TPSLOrderCreator extends BaseAlgoOrderCreator<
         (oldOrder) => oldOrder.algo_type === order.algo_type,
       );
 
+      // if the oldValue is single order, also have two child order.
       if (oldOrder) {
         if (!order.is_activated) {
           _order["is_activated"] = false;
-        } else if (oldOrder.trigger_price !== order.trigger_price) {
-          // _order["order_id"] = Number(oldOrder.algo_order_id);
-          _order["trigger_price"] = order.trigger_price;
+        } else {
+          if (oldOrder.trigger_price !== order.trigger_price) {
+            // _order["order_id"] = Number(oldOrder.algo_order_id);
+            _order["trigger_price"] = order.trigger_price;
+          }
+          if (
+            oldOrder.price !== order.price &&
+            order.type === OrderType.LIMIT
+          ) {
+            _order["price"] = order.price;
+            // _order["type"] = OrderType.LIMIT;
+          }
         }
 
         if (Object.keys(_order).length > 0) {
@@ -122,18 +138,24 @@ export class TPSLOrderCreator extends BaseAlgoOrderCreator<
         }
       }
     });
+    console.log("newData", newData);
 
-    if (needUpdateQty && newData.length < 2) {
+    if (newData.length < 2) {
       // if quantity is changed, need to update all child orders
       const missingOrders = oldValue.child_orders.filter(
         (order) => order.algo_order_id !== newData[0].order_id,
       );
+      console.log("missingOrders", missingOrders);
 
       if (missingOrders.length) {
-        newData.push({
-          quantity: Number(data.quantity),
+        const _data: AlgoOrderUpdateEntity = {
+          is_activated: false,
           order_id: missingOrders[0].algo_order_id,
-        });
+        };
+        if (needUpdateQty) {
+          _data.quantity = Number(data.quantity);
+        }
+        newData.push(_data);
       }
     }
 

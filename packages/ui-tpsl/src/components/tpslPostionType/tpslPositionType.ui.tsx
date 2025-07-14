@@ -45,7 +45,7 @@ export const TPSLPositionTypeUI = (props: TPSLPositionTypeUIProps) => {
           </Text>
         ) : (
           <Text className="oui-text-2xs oui-font-semibold oui-text-base-contrast-54">
-            TP/SL: Full position
+            TP/SL: Partial position
           </Text>
         )
       ) : (

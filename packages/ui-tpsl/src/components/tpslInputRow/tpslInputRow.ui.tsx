@@ -101,7 +101,10 @@ export const TPSLInputRowUI = (props: Props) => {
               quote_dp={2}
             />
             <OrderPriceType
-              disabled={positionType === PositionType.FULL}
+              disabled={
+                positionType === PositionType.FULL ||
+                props.disableOrderTypeSelector
+              }
               type={values.order_type}
               onChange={(value) => {
                 props.onChange(`${props.type}_order_type`, value as OrderType);

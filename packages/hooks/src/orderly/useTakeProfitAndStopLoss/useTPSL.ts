@@ -4,18 +4,23 @@ import {
   API,
   AlgoOrderEntity,
   OrderSide,
+  OrderType,
   OrderlyOrder,
   PositionType,
   SDKError,
 } from "@orderly.network/types";
 import { AlgoOrderRootType } from "@orderly.network/types";
+import { AlgoOrderType } from "@orderly.network/types";
 import { OrderFactory } from "../../services/orderCreator/factory";
 import { OrderValidationItem } from "../../services/orderCreator/interface";
 import { TPSLPositionOrderCreator } from "../../services/orderCreator/tpslPositionOrderCreator";
 import { useSubAccountMutation } from "../../subAccount";
 import { useMutation } from "../../useMutation";
 import { useMarkPrice } from "../useMarkPrice";
-import { findTPSLFromOrder } from "../usePositionStream/utils";
+import {
+  findTPSLFromOrder,
+  findTPSLOrderPriceFromOrder,
+} from "../usePositionStream/utils";
 import { useSymbolsInfo } from "../useSymbolsInfo";
 import { UpdateOrderKey, tpslCalculateHelper } from "./tp_slUtils";
 
@@ -41,6 +46,35 @@ export type ComputedAlgoOrder = Partial<
 
 export type ValidateError = {
   [P in keyof ComputedAlgoOrder]?: OrderValidationItem;
+};
+
+const checkIsEnableTpSL = (
+  order?: API.AlgoOrder,
+): {
+  tp_enable: boolean;
+  sl_enable: boolean;
+} => {
+  const result = {
+    tp_enable: true,
+    sl_enable: true,
+  };
+  if (!order) {
+    return result;
+  }
+  const tp = order.child_orders.find(
+    (o) => o.algo_type === AlgoOrderType.TAKE_PROFIT && o.is_activated,
+  );
+  const sl = order.child_orders.find(
+    (o) => o.algo_type === AlgoOrderType.STOP_LOSS && o.is_activated,
+  );
+
+  if (!tp) {
+    result.tp_enable = false;
+  }
+  if (!sl) {
+    result.sl_enable = false;
+  }
+  return result;
 };
 
 /**
@@ -111,20 +145,26 @@ export const useTaskProfitAndStopLossInternal = (
     algo_order_id: options?.defaultOrder?.algo_order_id,
     symbol: position.symbol as string,
     side: Number(position.position_qty) > 0 ? OrderSide.BUY : OrderSide.SELL,
-    // quantity: isEditing
-    //   ? options?.defaultOrder?.quantity === 0
-    //     ? Math.abs(position.position_qty)
-    //     : options?.defaultOrder?.quantity
-    //   : "",
-    quantity:
-      options?.positionType === PositionType.PARTIAL
-        ? 0
-        : Math.abs(position.position_qty),
+    quantity: isEditing
+      ? options?.defaultOrder?.quantity === 0
+        ? Math.abs(position.position_qty)
+        : options?.defaultOrder?.quantity
+      : options?.positionType === PositionType.FULL
+        ? Math.abs(position.position_qty)
+        : 0,
+    // quantity:
+    //   options?.positionType === PositionType.PARTIAL
+    //     ? 0
+    //     : Math.abs(position.position_qty),
     // quantity:
     //   options?.defaultOrder?.quantity || Math.abs(position.position_qty),
     algo_type: options?.defaultOrder?.algo_type as AlgoOrderRootType,
-    tp_enable: options?.tpslEnable?.tp_enable,
-    sl_enable: options?.tpslEnable?.sl_enable,
+    tp_enable: isEditing
+      ? checkIsEnableTpSL(options?.defaultOrder).tp_enable
+      : options?.tpslEnable?.tp_enable,
+    sl_enable: isEditing
+      ? checkIsEnableTpSL(options?.defaultOrder).sl_enable
+      : options?.tpslEnable?.sl_enable,
     position_type: options?.positionType,
   });
 
@@ -152,6 +192,29 @@ export const useTaskProfitAndStopLossInternal = (
         ignoreValidate: true,
       });
     }
+    const order_prices = findTPSLOrderPriceFromOrder(options.defaultOrder!);
+    if (
+      order_prices.tp_order_price &&
+      order_prices.tp_order_price !== OrderType.MARKET
+    ) {
+      setOrderValue("tp_order_type", OrderType.LIMIT, {
+        ignoreValidate: true,
+      });
+      setOrderValue("tp_order_price", order_prices.tp_order_price, {
+        ignoreValidate: true,
+      });
+    }
+    if (
+      order_prices.sl_order_price &&
+      order_prices.sl_order_price !== OrderType.MARKET
+    ) {
+      setOrderValue("sl_order_type", OrderType.LIMIT, {
+        ignoreValidate: true,
+      });
+      setOrderValue("sl_order_price", order_prices.sl_order_price, {
+        ignoreValidate: true,
+      });
+    }
   }, []);
 
   const _setOrderValue = (
@@ -170,6 +233,17 @@ export const useTaskProfitAndStopLossInternal = (
       //   value = value ? `-${value}` : "";
       // }
 
+      console.log("setorder value", {
+        key,
+        value,
+        entryPrice: position.average_open_price!,
+        qty:
+          side === OrderSide.BUY
+            ? Number(prev.quantity)!
+            : -Number(prev.quantity)!,
+        orderSide: side,
+        values: prev as Partial<OrderlyOrder>,
+      });
       const newValue = tpslCalculateHelper(
         key,
         {

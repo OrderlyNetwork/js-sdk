@@ -61,6 +61,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
     position,
     setValues,
     onClose,
+    isEditing,
   } = props;
 
   const { t } = useTranslation();
@@ -72,9 +73,6 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
       return null;
     }
 
-    if (props.isEditing) {
-      return null;
-    }
     return (
       <>
         <TPSLQuantity
@@ -199,6 +197,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
           errors={errors}
           quote_dp={symbolInfo("quote_dp")}
           positionType={TPSL_OrderEntity.position_type ?? PositionType.PARTIAL}
+          disableOrderTypeSelector={isEditing}
           onChange={(key, value) => {
             console.log("key", key, "value", value);
             props.setOrderValue(key as keyof OrderlyOrder, value);
@@ -252,6 +251,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
             props
               .onSubmit()
               .then(() => {
+                props.close?.();
                 onComplete?.();
               })
               .catch((err) => {

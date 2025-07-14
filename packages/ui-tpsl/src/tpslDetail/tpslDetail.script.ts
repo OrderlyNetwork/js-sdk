@@ -27,7 +27,7 @@ export const useTPSLDetail = (props: TPSLDetailProps) => {
     API.AlgoOrder[]
   >([]);
 
-  const [tpslOrders, { cancelAlgoOrder, cancelPostionOrdersByTypes }] =
+  const [tpslOrders, { cancelAlgoOrder, cancelPostionOrdersByTypes, refresh }] =
     useOrderStream(
       {
         symbol: position.symbol,
@@ -56,6 +56,9 @@ export const useTPSLDetail = (props: TPSLDetailProps) => {
       position: position,
       order: order,
       isEditing: true,
+      onComplete: () => {
+        refresh();
+      },
     });
   };
 

@@ -2,6 +2,7 @@ import { OrderValidationResult } from "@orderly.network/hooks";
 import { OrderType, PositionType } from "@orderly.network/types";
 
 export type Props = {
+  disableOrderTypeSelector?: boolean;
   type: "tp" | "sl";
   quote_dp: number;
   positionType: PositionType;
@@ -21,6 +22,7 @@ export type Props = {
 };
 export const useTPSLInputRowScript = (props: Props) => {
   return {
+    disableOrderTypeSelector: props.disableOrderTypeSelector,
     values: props.values,
     onChange: props.onChange,
     type: props.type,

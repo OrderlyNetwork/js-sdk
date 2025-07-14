@@ -105,7 +105,11 @@ const FullPositionPart = (props: {
           dataSource={orders}
           className="oui-bg-transparent oui-text-2xs"
           classNames={{
-            scroll: cn(orders && orders.length > 0 && "!oui-min-h-[170px]"),
+            scroll: cn(
+              !orders || orders.length === 0
+                ? "!oui-min-h-[170px]"
+                : "!oui-min-h-[100px]",
+            ),
           }}
           onRow={(record, index) => {
             return {
@@ -142,18 +146,18 @@ const PartialPositionPart = (props: {
           open={open}
           onOpenChange={setOpen}
         />
-        {orders && orders.length === 0 && (
-          <Flex gap={2}>
-            <AddButton
-              positionType={PositionType.PARTIAL}
-              position={props.position}
-            />
+        <Flex gap={2}>
+          <AddButton
+            positionType={PositionType.PARTIAL}
+            position={props.position}
+          />
+          {orders && orders.length > 0 && (
             <CancelAllBtn
               canCancelAll={orders && orders.length > 0}
               onCancelAllTPSLOrders={props.onCancelAllTPSLOrders}
             />
-          </Flex>
-        )}
+          )}
+        </Flex>
       </Box>
       <Box
         className={cn(
@@ -166,7 +170,11 @@ const PartialPositionPart = (props: {
           dataSource={orders}
           className="oui-bg-transparent oui-text-2xs"
           classNames={{
-            scroll: cn(orders && orders.length > 0 && "!oui-min-h-[170px]"),
+            scroll: cn(
+              !orders || orders.length === 0
+                ? "!oui-min-h-[170px]"
+                : "!oui-min-h-[100px]",
+            ),
           }}
           onRow={(record, index) => {
             return {
