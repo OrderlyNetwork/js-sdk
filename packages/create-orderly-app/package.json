@@ -1,6 +1,6 @@
 {
   "name": "create-orderly-app",
-  "version": "1.9.1",
+  "version": "1.9.2-alpha.0",
   "bin": {
     "create-orderly-app": "./dist/index.js"
   },
