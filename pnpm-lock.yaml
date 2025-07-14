@@ -110,6 +110,9 @@ importers:
       '@orderly.network/hooks':
         specifier: workspace:*
         version: link:../../packages/hooks
+      '@orderly.network/react':
+        specifier: workspace:*
+        version: link:../../packages/component
       '@orderly.network/types':
         specifier: workspace:*
         version: link:../../packages/types
@@ -901,7 +904,7 @@ importers:
         version: 2.10.16(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.24.4)
       '@web3-onboard/walletconnect':
         specifier: 2.5.1
-        version: 2.5.1(@react-native-async-storage/async-storage@1.24.0(react-native@0.79.2(@babel/core@7.27.4)(@types/react@18.3.21)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10)))(@types/react@18.3.21)(bufferutil@4.0.9)(react@18.3.1)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.24.4)
+        version: 2.5.1(@react-native-async-storage/async-storage@1.24.0(react-native@0.79.2(@babel/core@7.27.4)(@types/react@18.3.21)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10)))(@types/react@18.3.21)(bufferutil@4.0.9)(encoding@0.1.13)(react@18.3.1)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.24.4)
       autoprefixer:
         specifier: ^10.4.14
         version: 10.4.21(postcss@8.5.3)
@@ -1254,9 +1257,6 @@ importers:
       eslint-plugin-react:
         specifier: ^7.37.5
         version: 7.37.5(eslint@9.26.0(jiti@1.21.7))
-      eslint-plugin-react-hooks:
-        specifier: ^5.2.0
-        version: 5.2.0(eslint@9.26.0(jiti@1.21.7))
       eslint-plugin-tailwindcss:
         specifier: ^3.18.0
         version: 3.18.0(tailwindcss@3.4.17(ts-node@10.9.2(@swc/core@1.11.24(@swc/helpers@0.5.17))(@types/node@22.15.21)(typescript@5.8.3)))
@@ -1744,6 +1744,9 @@ importers:
       '@orderly.network/hooks':
         specifier: workspace:*
         version: link:../hooks
+      '@orderly.network/react':
+        specifier: workspace:*
+        version: link:../component
       '@orderly.network/utils':
         specifier: workspace:*
         version: link:../utils
@@ -12148,12 +12151,6 @@ packages:
     engines: {node: '>=10'}
     peerDependencies:
       eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0
-
-  eslint-plugin-react-hooks@5.2.0:
-    resolution: {integrity: sha512-+f15FfK64YQwZdJNELETdn5ibXEUQmW1DZL6KXhNnc2heoy/sg9VJJeT7n8TlMWouzWqSWavFkIhHyIbIAEapg==}
-    engines: {node: '>=10'}
-    peerDependencies:
-      eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0 || ^9.0.0
 
   eslint-plugin-react-refresh@0.4.20:
     resolution: {integrity: sha512-XpbHQ2q5gUF8BGOX4dHe+71qoirYMhApEPZ7sfhF/dNnOF1UXnCMGZf79SFTBO7Bz5YEIT4TMieSlJBWhP9WBA==}
@@ -32591,7 +32588,7 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@web3-onboard/walletconnect@2.5.1(@react-native-async-storage/async-storage@1.24.0(react-native@0.79.2(@babel/core@7.27.4)(@types/react@18.3.21)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10)))(@types/react@18.3.21)(bufferutil@4.0.9)(react@18.3.1)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.24.4)':
+  '@web3-onboard/walletconnect@2.5.1(@react-native-async-storage/async-storage@1.24.0(react-native@0.79.2(@babel/core@7.27.4)(@types/react@18.3.21)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10)))(@types/react@18.3.21)(bufferutil@4.0.9)(encoding@0.1.13)(react@18.3.1)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.24.4)':
     dependencies:
       '@walletconnect/ethereum-provider': 2.20.0(@react-native-async-storage/async-storage@1.24.0(react-native@0.79.2(@babel/core@7.27.4)(@types/react@18.3.21)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10)))(@types/react@18.3.21)(bufferutil@4.0.9)(encoding@0.1.13)(react@18.3.1)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.24.4)
       '@walletconnect/modal': 2.6.2(@types/react@18.3.21)(react@18.3.1)
@@ -35854,10 +35851,6 @@ snapshots:
   eslint-plugin-react-hooks@4.6.2(eslint@8.57.1):
     dependencies:
       eslint: 8.57.1
-
-  eslint-plugin-react-hooks@5.2.0(eslint@9.26.0(jiti@1.21.7)):
-    dependencies:
-      eslint: 9.26.0(jiti@1.21.7)
 
   eslint-plugin-react-refresh@0.4.20(eslint@8.57.1):
     dependencies:
