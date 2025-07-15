@@ -4,7 +4,9 @@ import { useMarketsContext } from "../marketsProvider";
 export const useEXchanges = () => {
   const { comparisonProps } = useMarketsContext();
   const brokerName = comparisonProps?.exchangesName || "Orderly";
-  const brokerIconSrc = comparisonProps?.exchangesIconSrc;
+  const brokerIconSrc =
+    comparisonProps?.exchangesIconSrc ||
+    "https://oss.orderly.network/static/exchange_logo/orderly.png";
   const exchanges = useMemo<string[]>(() => {
     return [
       brokerName,
@@ -22,5 +24,9 @@ export const useEXchanges = () => {
       `${brokerName} - KuCoin`,
     ];
   }, [comparisonProps?.exchangesName]);
-  return { exchanges, brokerName, brokerIconSrc };
+  return {
+    exchanges,
+    brokerName,
+    brokerIconSrc: brokerIconSrc,
+  };
 };
