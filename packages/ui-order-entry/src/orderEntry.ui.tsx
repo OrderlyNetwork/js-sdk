@@ -44,6 +44,7 @@ import {
   PopoverRoot,
   PopoverTrigger,
   Select,
+  SimpleSheet,
   Slider,
   Switch,
   Text,
@@ -618,34 +619,30 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           </Box>
         )}
       </div>
-      {showTPSLAdvanced && (
-        <Box className="oui-fixed oui-inset-0 oui-z-30">
-          <div
-            className="oui-absolute oui-inset-0 oui-bg-base-10/60"
-            onClick={() => {
-              setShowTPSLAdvanced(false);
-            }}
-          />
-
-          <Box
-            className={cn(
-              "oui-absolute oui-bg-base-9 oui-rounded-[16px]",
-              isMobile
-                ? "oui-inset-y-0 oui-right-0 oui-w-[280px]"
-                : "oui-right-3 oui-top-[44px] oui-bottom-[40px] oui-w-[360px]",
-            )}
-          >
-            <TPSLAdvancedWidget
-              setOrderValue={setOrderValue}
-              order={formattedOrder as OrderlyOrder}
-              onSubmit={onSubmitAdvancedTPSL}
-              onClose={() => {
-                setShowTPSLAdvanced(false);
-              }}
-            />
-          </Box>
-        </Box>
-      )}
+      <SimpleSheet
+        open={showTPSLAdvanced}
+        onOpenChange={setShowTPSLAdvanced}
+        classNames={{
+          body: "oui-h-full oui-pb-0 oui-border-none",
+          overlay: "!oui-bg-base-10/60",
+          content: cn(
+            "oui-rounded-[16px] oui-border-none !oui-p-0",
+            isMobile
+              ? "oui-inset-y-0 oui-right-0 oui-w-[280px]"
+              : "!oui-bottom-[40px] oui-right-3 oui-top-[44px] !oui-h-auto oui-w-[360px]",
+          ),
+        }}
+        contentProps={{ side: "right", closeable: false }}
+      >
+        <TPSLAdvancedWidget
+          setOrderValue={setOrderValue}
+          order={formattedOrder as OrderlyOrder}
+          onSubmit={onSubmitAdvancedTPSL}
+          onClose={() => {
+            setShowTPSLAdvanced(false);
+          }}
+        />
+      </SimpleSheet>
     </OrderEntryProvider>
   );
 };
