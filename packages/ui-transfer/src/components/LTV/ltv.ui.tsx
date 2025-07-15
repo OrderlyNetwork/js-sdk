@@ -49,7 +49,7 @@ const TooltipContent: React.FC<{
         })}
       </Text>{" "}
       <a
-        href="https://orderly.network/docs/home"
+        href="https://orderly.network/docs/introduction/trade-on-orderly/multi-collateral"
         target="_blank"
         rel="noreferrer"
         className={

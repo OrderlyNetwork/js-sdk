@@ -33,7 +33,7 @@ const TooltipContent: React.FC = () => {
         {t("portfolio.overview.column.collateralRatio.explain")}
       </Text>{" "}
       <a
-        href="https://orderly.network/docs/home"
+        href="https://orderly.network/docs/introduction/trade-on-orderly/multi-collateral"
         target="_blank"
         rel="noreferrer"
         className={
