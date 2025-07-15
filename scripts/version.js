@@ -25,7 +25,7 @@ export default "{{version}}";
 function generateVersionFile(name, version) {
   return VERSION_TEMPLATE.replace(/{{name}}/g, name).replace(
     /{{version}}/g,
-    version
+    version,
   );
 }
 
@@ -43,13 +43,13 @@ async function wirteVersionFile(path, content) {
 async function updateCreateOrderlyPkg() {
   //=========== update create-orderly-app package.json version ===========
   const reactPakageJson = await PackageJson.load(
-    path.resolve(packageSrc, "component")
+    path.resolve(packageSrc, "component"),
   );
   const web3OnboardPakageJson = await PackageJson.load(
-    path.resolve(packageSrc, "onboard")
+    path.resolve(packageSrc, "onboard"),
   );
   const createOrderlyAppJson = await PackageJson.load(
-    path.resolve(packageSrc, "create-orderly-app")
+    path.resolve(packageSrc, "create-orderly-app"),
   );
 
   // wirte create-orderly-app package.json version
@@ -57,7 +57,6 @@ async function updateCreateOrderlyPkg() {
     ...createOrderlyAppJson.content,
     orderly: {
       version: {
-        "@orderly.network/react": reactPakageJson.content.version,
         "@orderly.network/web3-onboard": web3OnboardPakageJson.content.version,
       },
     },
@@ -106,11 +105,11 @@ async function updateCreateOrderlyPkg() {
 
   for (const pkgName of Object.keys(packagePathMap)) {
     const pakageJson = await PackageJson.load(
-      path.resolve(packageSrc, packagePathMap[pkgName])
+      path.resolve(packageSrc, packagePathMap[pkgName]),
     );
     await wirteVersionFile(
       path.resolve(packageSrc, `${packagePathMap[pkgName]}/src`, "version.ts"),
-      generateVersionFile(pkgName, pakageJson.content.version)
+      generateVersionFile(pkgName, pakageJson.content.version),
     );
   }
 }

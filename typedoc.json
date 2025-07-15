@@ -1,6 +1,5 @@
 {
   "entryPoints": [
-    "packages/component",
     "packages/core",
     "packages/hooks",
     "packages/net",

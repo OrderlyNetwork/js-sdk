@@ -22,7 +22,6 @@ export default defineConfig([
     "**/public/",
     "**/__test__/",
     "**/storybook-static/",
-    "packages/component/",
     "apps/docs/",
     "**/*.js",
     "**/*.cjs",

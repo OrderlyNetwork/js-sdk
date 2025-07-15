@@ -6,12 +6,11 @@
 "@orderly.network/chart": patch
 "@orderly.network/cli": patch
 "@orderly.network/codemod": patch
-"@orderly.network/react": patch
 "@orderly.network/core": patch
 "create-orderly-app": patch
 "@orderly.network/default-evm-adapter": patch
 "@orderly.network/default-solana-adapter": patch
-"eslint-config-custom": patch
+"@orderly.network/eslint-config": patch
 "@orderly.network/hooks": patch
 "@orderly.network/i18n": patch
 "@orderly.network/markets": patch
