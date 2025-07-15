@@ -94,6 +94,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
     onBBOChange,
     toggleBBO,
     disableFeatures,
+    currentLtv,
   } = props;
 
   const { curLeverage } = useLeverage();
@@ -241,6 +242,11 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
 
   const mergedShowSheet = isMobile && props.canTrade;
 
+  const showLTV =
+    typeof currentLtv === "number" &&
+    !Number.isNaN(currentLtv) &&
+    currentLtv > 0;
+
   return (
     <OrderEntryProvider value={{ errorMsgVisible }}>
       <div
@@ -327,14 +333,18 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
         <Flex itemAlign={"center"} justify={"between"}>
           <Text size={"2xs"}>{t("common.available")}</Text>
           <Flex itemAlign={"center"} justify={"center"} gap={1}>
-            <Tooltip
-              className={"oui-bg-base-6 oui-p-2"}
-              content={<LTVRiskTooltipWidget />}
-            >
-              <InfoCircleIcon
-                className={"oui-cursor-pointer oui-text-warning oui-opacity-80"}
-              />
-            </Tooltip>
+            {showLTV && (
+              <Tooltip
+                className={"oui-bg-base-6 oui-p-2"}
+                content={<LTVRiskTooltipWidget />}
+              >
+                <InfoCircleIcon
+                  className={
+                    "oui-cursor-pointer oui-text-warning oui-opacity-80"
+                  }
+                />
+              </Tooltip>
+            )}
             <Text.numeral
               unit={symbolInfo.quote}
               size={"2xs"}

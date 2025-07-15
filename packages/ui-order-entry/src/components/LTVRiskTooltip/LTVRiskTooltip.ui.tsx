@@ -22,7 +22,7 @@ export const LTVRiskTooltipUI: React.FC<LTVTooltipScriptReturn> = (props) => {
     ltv_threshold,
     negative_usdc_threshold,
     isThresholdLoading,
-    holdingList = [],
+    holdingData = [],
     currentLtv,
     onConvert,
   } = props;
@@ -36,7 +36,7 @@ export const LTVRiskTooltipUI: React.FC<LTVTooltipScriptReturn> = (props) => {
           {t("transfer.deposit.collateralContribution")}
         </Text>
       </Flex>
-      {holdingList.map((asset, index) => {
+      {holdingData.map((asset, index) => {
         return (
           <Flex
             key={`item-${index}`}
@@ -50,9 +50,11 @@ export const LTVRiskTooltipUI: React.FC<LTVTooltipScriptReturn> = (props) => {
             <Text
               size="xs"
               intensity={80}
-              className={cn(Number(asset.holding) < 0 && "oui-text-warning")}
+              className={cn(
+                Number(asset.collateralContribution) < 0 && "oui-text-warning",
+              )}
             >
-              {removeTrailingZeros(asset.holding)}
+              {removeTrailingZeros(asset.collateralContribution)}
             </Text>
           </Flex>
         );

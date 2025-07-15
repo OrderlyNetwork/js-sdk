@@ -2,8 +2,11 @@ import { useCallback } from "react";
 import {
   useComputedLTV,
   useHoldingStream,
+  useIndexPricesStream,
   useQuery,
+  useTokensInfo,
 } from "@orderly.network/hooks";
+import { account } from "@orderly.network/perp";
 import type { API } from "@orderly.network/types";
 import { modal } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
@@ -31,6 +34,44 @@ export const useLTVTooltipScript = () => {
     isLoading: isThresholdLoading,
   } = useConvertThreshold();
 
+  const tokensInfo = useTokensInfo();
+
+  const { data: indexPrices } = useIndexPricesStream();
+
+  const holdingData = holdingList.map((item) => {
+    const tokenInfo = tokensInfo?.find(({ token }) => token === item.token);
+
+    // Use extracted function for index price calculation
+    const indexPrice =
+      item.token === "USDC"
+        ? 1
+        : (indexPrices?.[`PERP_${item.token}_USDC`] ?? 0);
+
+    // Calculate collateral ratio for this token
+    const collateralRatio = tokenInfo
+      ? account.collateralRatio({
+          baseWeight: tokenInfo.base_weight ?? 0,
+          discountFactor: tokenInfo.discount_factor ?? 0,
+          collateralQty: item.holding,
+          collateralCap: tokenInfo?.user_max_qty ?? item.holding,
+          indexPrice: indexPrice,
+        })
+      : 0;
+
+    // Calculate collateral contribution for this token
+    const collateralContribution = account.collateralContribution({
+      collateralQty: item.holding,
+      collateralCap: tokenInfo?.user_max_qty ?? item.holding,
+      collateralRatio: collateralRatio,
+      indexPrice: indexPrice,
+    });
+
+    return {
+      ...item,
+      collateralContribution: collateralContribution,
+    };
+  });
+
   const currentLtv = useComputedLTV();
 
   const onConvert = useCallback(async () => {
@@ -38,7 +79,7 @@ export const useLTVTooltipScript = () => {
   }, []);
 
   return {
-    holdingList,
+    holdingData,
     isHoldingLoading,
     ltv_threshold,
     negative_usdc_threshold,

@@ -263,6 +263,11 @@ const AssetValueList: FC<AssetValueListProps> = (props) => {
     }, 0);
   }, []);
 
+  const showLTV =
+    typeof currentLtv === "number" &&
+    !Number.isNaN(currentLtv) &&
+    currentLtv > 0;
+
   return (
     <Box className="oui-group">
       <Flex
@@ -286,7 +291,11 @@ const AssetValueList: FC<AssetValueListProps> = (props) => {
           "oui-select-none oui-space-y-1.5 oui-overflow-hidden",
           "oui-transition-[max-height] oui-duration-150",
           "group-hover:oui-will-change-[max-height]",
-          open ? "oui-max-h-[94px]" : "oui-max-h-0",
+          open
+            ? showLTV
+              ? "oui-max-h-[94px]"
+              : "oui-max-h-[69px]"
+            : "oui-max-h-0",
         )}
       >
         <AssetDetail
@@ -319,7 +328,7 @@ const AssetValueList: FC<AssetValueListProps> = (props) => {
           showPercentage={true}
           placeholder="--%"
         />
-        <LTVDetail visible={visible} value={currentLtv} />
+        {showLTV && <LTVDetail visible={visible} value={currentLtv} />}
       </Box>
     </Box>
   );

@@ -1,6 +1,7 @@
 import { useEffect, useRef, FocusEvent, useMemo, useState } from "react";
 import {
   useAccount,
+  useComputedLTV,
   useEventEmitter,
   useLocalStorage,
   useMarginRatio,
@@ -457,6 +458,8 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     }
   }, [formattedOrder.order_type, formattedOrder.distribution_type]);
 
+  const currentLtv = useComputedLTV();
+
   return {
     ...state,
     currentQtyPercentage,
@@ -490,5 +493,6 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     onBBOChange,
     toggleBBO,
     priceInputContainerWidth,
+    currentLtv,
   };
 };
