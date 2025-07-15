@@ -575,7 +575,8 @@ export const PriceInput = (props: {
       value={props.value}
       color={props.error ? "danger" : undefined}
       classNames={{
-        prefix: "oui-text-base-contrast-54",
+        input: "oui-text-2xs placeholder:oui-text-2xs",
+        prefix: "oui-text-base-contrast-54 oui-text-2xs",
         root: "oui-w-full",
         // root: "oui-outline-line-12 focus-within:oui-outline-primary-light",
       }}

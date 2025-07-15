@@ -15,6 +15,7 @@ import {
   Flex,
   Grid,
   Text,
+  useScreen,
 } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { OrderInfo } from "./components/orderInfo";
@@ -32,6 +33,7 @@ export const TPSLAdvancedUI = (props: Props) => {
   const { t } = useTranslation();
   const { errors, validated } = props.metaState;
   const { parseErrorMsg } = useOrderEntryFormErrorMsg(errors);
+  const { isMobile } = useScreen();
 
   const {
     formattedOrder,
@@ -150,7 +152,7 @@ export const TPSLAdvancedUI = (props: Props) => {
             onClick={() => {
               setOrderValue("side", OrderSide.BUY);
             }}
-            size={"md"}
+            size={"sm"}
             fullWidth
             data-type={OrderSide.BUY}
             // color={side === OrderSide.BUY ? "buy" : "secondary"}
@@ -169,7 +171,7 @@ export const TPSLAdvancedUI = (props: Props) => {
             }}
             data-type={OrderSide.SELL}
             fullWidth
-            size={"md"}
+            size={"sm"}
             // color={side === OrderSide.SELL ? "sell" : "secondary"}
             className={cn(
               formattedOrder.side === OrderSide.SELL
@@ -190,7 +192,9 @@ export const TPSLAdvancedUI = (props: Props) => {
                 setValues({
                   position_type: PositionType.FULL,
                   tp_order_type: OrderType.MARKET,
+                  tp_order_price: undefined,
                   sl_order_type: OrderType.MARKET,
+                  sl_order_price: undefined,
                 });
                 // setOrderValue("tp_order_type", OrderType.MARKET);
                 // setOrderValue("sl_order_type", OrderType.MARKET);
@@ -199,6 +203,20 @@ export const TPSLAdvancedUI = (props: Props) => {
               setOrderValue("position_type", value);
             }}
           />
+          {formattedOrder.position_type === PositionType.FULL && (
+            <Flex
+              justify={"start"}
+              itemAlign={"start"}
+              gap={2}
+              className="oui-w-full oui-mt-3"
+            >
+              <div className="oui-relative oui-top-[7px] oui-w-1 oui-h-1 oui-bg-[#D25f00] oui-rounded-full" />
+              <Text className="oui-text-[#D25f00] oui-text-2xs">
+                Full positions TP/SL only support market price to place the
+                orders
+              </Text>
+            </Flex>
+          )}
         </div>
         <Flex direction={"column"} gap={6}>
           <TPSLInputRowWidget
@@ -206,6 +224,7 @@ export const TPSLAdvancedUI = (props: Props) => {
             values={tpValues}
             errors={validated ? errors : null}
             quote_dp={symbolInfo.quote_dp}
+            hideOrderPrice={formattedOrder.position_type === PositionType.FULL}
             onChange={(key, value) => {
               console.log("key", key, "value", value);
               // setTpValuse((prev) => ({ ...prev, [key]: value }));
@@ -216,6 +235,7 @@ export const TPSLAdvancedUI = (props: Props) => {
           <TPSLInputRowWidget
             type="sl"
             values={slValues}
+            hideOrderPrice={formattedOrder.position_type === PositionType.FULL}
             errors={validated ? errors : null}
             quote_dp={symbolInfo.quote_dp}
             positionType={formattedOrder.position_type ?? PositionType.PARTIAL}

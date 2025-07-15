@@ -612,7 +612,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
               onClick={() => {
                 setPinned(false);
               }}
-              className={"oui-group oui-absolute oui-right-2 oui-top-2"}
+              className={"oui-absolute oui-right-2 oui-top-2 oui-group"}
               data-testid="oui-testid-orderEntry-pinned-button"
             ></PinButton>
           </Box>
@@ -627,7 +627,14 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
             }}
           />
 
-          <Box className="oui-absolute oui-right-3 oui-top-[44px] oui-bottom-[40px] oui-w-[360px] oui-bg-base-9 oui-rounded-[16px]">
+          <Box
+            className={cn(
+              "oui-absolute oui-bg-base-9 oui-rounded-[16px]",
+              isMobile
+                ? "oui-inset-y-0 oui-right-0 oui-w-[280px]"
+                : "oui-right-3 oui-top-[44px] oui-bottom-[40px] oui-w-[360px]",
+            )}
+          >
             <TPSLAdvancedWidget
               setOrderValue={setOrderValue}
               order={formattedOrder as OrderlyOrder}
@@ -787,7 +794,7 @@ const OrderQuantityInput = (props: {
       {type === OrderType.LIMIT || type === OrderType.STOP_LIMIT ? (
         <div
           ref={props.refs.priceInputContainerRef}
-          className="oui-group oui-relative oui-w-full"
+          className="oui-relative oui-w-full oui-group"
         >
           <CustomInput
             label={t("common.price")}
@@ -810,7 +817,7 @@ const OrderQuantityInput = (props: {
             }}
           />
           {bbo.bboStatus === BBOStatus.ON && (
-            <div className={cn("oui-absolute oui-bottom-1 oui-left-0")}>
+            <div className={cn("oui-absolute oui-left-0 oui-bottom-1")}>
               <BBOOrderTypeSelect
                 value={bbo.bboType}
                 onChange={bbo.onBBOChange}
@@ -1224,7 +1231,7 @@ function AdvancedTPSLResult(props: {
               gap={2}
               className="oui-w-full"
             >
-              <div className="oui-w-1 oui-h-1 oui-bg-danger oui-rounded-full oui-relative oui-top-[7px]" />
+              <div className="oui-relative oui-top-[7px] oui-w-1 oui-h-1 oui-bg-danger oui-rounded-full" />
               <Text className="oui-text-danger">{error}</Text>
             </Flex>
           )}
@@ -1305,7 +1312,7 @@ function AdvancedTPSLResult(props: {
                 gap={2}
                 className="oui-w-full"
               >
-                <div className="oui-w-1 oui-h-1 oui-bg-danger oui-rounded-full oui-relative oui-top-[7px]" />
+                <div className="oui-relative oui-top-[7px] oui-w-1 oui-h-1 oui-bg-danger oui-rounded-full" />
                 <Text className="oui-text-danger">{error}</Text>
               </Flex>
             )}
@@ -1350,7 +1357,7 @@ function AdvancedTPSLResult(props: {
       {renderTp()}
       {renderSl()}
 
-      <Divider className="oui-w-full" />
+      <Divider className="oui-w-full oui-mb-2" />
     </Flex>
   );
 }

@@ -48,7 +48,7 @@ export const TPSLInputRowUI = (props: Props) => {
           itemAlign={"start"}
           className="oui-w-full oui-gap-0.5"
         >
-          <Text className="oui-text-2xs oui-text-base-contrast-36">
+          <Text className="oui-text-2xs oui-text-base-contrast-54">
             Trigger price
           </Text>
           <Grid cols={2} gap={2}>
@@ -81,7 +81,7 @@ export const TPSLInputRowUI = (props: Props) => {
           )}
           itemAlign={"start"}
         >
-          <Text className="oui-text-2xs oui-text-base-contrast-36">
+          <Text className="oui-text-2xs oui-text-base-contrast-54">
             Order price
           </Text>
 

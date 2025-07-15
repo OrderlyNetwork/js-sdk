@@ -30,7 +30,7 @@ export const OrderPriceType = (props: Props) => {
           [OrderType.LIMIT]: t("orderEntry.orderType.limit"),
           [OrderType.MARKET]: t("common.marketPrice"),
         }[value];
-        return <Text size={"xs"}>{displayLabel}</Text>;
+        return <Text size={"2xs"}>{displayLabel}</Text>;
       }}
     />
   );
