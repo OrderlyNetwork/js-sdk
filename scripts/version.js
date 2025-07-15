@@ -42,9 +42,6 @@ async function wirteVersionFile(path, content) {
 
 async function updateCreateOrderlyPkg() {
   //=========== update create-orderly-app package.json version ===========
-  const reactPakageJson = await PackageJson.load(
-    path.resolve(packageSrc, "component"),
-  );
   const web3OnboardPakageJson = await PackageJson.load(
     path.resolve(packageSrc, "onboard"),
   );
