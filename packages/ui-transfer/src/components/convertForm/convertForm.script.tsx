@@ -8,6 +8,7 @@ import {
   useOdosQuote,
   useWalletConnector,
   useWalletSubscription,
+  useMemoizedFn,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { account } from "@orderly.network/perp";
@@ -125,6 +126,8 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
   const [postQuote, { data: quoteData, isMutating: isQuoteLoading }] =
     useOdosQuote();
 
+  const memoizedPostQuote = useMemoizedFn(postQuote);
+
   const convertRate = useMemo(() => {
     if (!quoteData || isQuoteLoading) {
       return "-";
@@ -139,7 +142,7 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
 
   useEffect(() => {
     if (quantity && chainId && token.address && targetToken?.address) {
-      postQuote({
+      memoizedPostQuote({
         chainId: chainId,
         inputTokens: [
           {
@@ -155,8 +158,7 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
         ],
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [quantity, token, targetToken, chainId]);
+  }, [quantity, token, targetToken, chainId, memoizedPostQuote]);
 
   const minimumReceived = useMemo(() => {
     if (!quoteData || isQuoteLoading) {
