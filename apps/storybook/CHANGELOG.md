@@ -1,4 +1,4 @@
-# storybook2
+# storybook
 
 ## 1.5.0
 

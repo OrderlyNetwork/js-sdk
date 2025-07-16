@@ -1,7 +1,7 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { OrdersWidget, TabType } from "@orderly.network/ui-orders";
-import { Flex, Text, Divider } from "@orderly.network/ui";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { PortfolioLayoutWidget } from "@orderly.network/portfolio";
+import { Flex, Text, Divider } from "@orderly.network/ui";
+import { OrdersWidget, TabType } from "@orderly.network/ui-orders";
 
 const meta: Meta<typeof OrdersWidget> = {
   title: "Package/ui-orders/Orders",

@@ -1,7 +1,7 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { fn } from "@storybook/test";
-import { TPSLWidget, PositionTPSLConfirm } from "@orderly.network/ui-tpsl";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { fn } from "storybook/test";
 import { Box } from "@orderly.network/ui";
+import { TPSLWidget, PositionTPSLConfirm } from "@orderly.network/ui-tpsl";
 
 const meta: Meta<typeof TPSLWidget> = {
   title: "Package/ui-tpsl/TPSL",

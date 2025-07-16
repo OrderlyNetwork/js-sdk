@@ -1,9 +1,9 @@
 import { FC } from "react";
+import { Slot } from "@radix-ui/react-slot";
 import {
   Box,
   CheckedCircleFillIcon,
   cn,
-  Match,
   Spinner,
   Text,
 } from "@orderly.network/ui";
@@ -18,9 +18,6 @@ type StepItemProps = {
 
 export const StepItem = (props: StepItemProps) => {
   const { title, description } = props;
-
-  // console.log(props);
-
   return (
     <Box position="relative" className="oui-pl-8">
       <Box>
@@ -31,7 +28,9 @@ export const StepItem = (props: StepItemProps) => {
           {description}
         </Text>
       </Box>
-      <Identifier {...props} />
+      <div className="oui-absolute oui-left-0 oui-top-1 oui-z-10">
+        <Identifier {...props} />
+      </div>
     </Box>
   );
 };
@@ -43,38 +42,48 @@ const Identifier = (props: {
 }) => {
   const { active, isLoading, isCompleted } = props;
 
-  return (
-    <Match
-      className={"oui-absolute oui-left-0 oui-top-1 oui-z-10"}
-      value={() => {
-        if (isCompleted) {
-          return "completed";
-        }
-        if (isLoading) {
-          return "loading";
-        }
+  if (isLoading) {
+    return <Spinner size={"sm"} className={"oui-ml-1"} />;
+  }
 
-        if (active) {
-          return "active";
-        }
+  if (isCompleted) {
+    return <CheckedCircleFillIcon opacity={1} className="oui-text-primary" />;
+  }
 
-        return "normal";
-      }}
-      case={{
-        loading: (
-          <div>
-            <Spinner size={"sm"} className={"oui-ml-1"} />
-          </div>
-        ),
-        completed: (
-          <div>
-            <CheckedCircleFillIcon opacity={1} className="oui-text-primary" />
-          </div>
-        ),
-      }}
-      default={<Dot active={!!active} />}
-    />
-  );
+  return <Dot active={!!active} />;
+
+  // return (
+  //   <Match
+  //     className={"oui-absolute oui-left-0 oui-top-1 oui-z-10"}
+  //     value={() => {
+  //       if (isCompleted) {
+  //         return "completed";
+  //       }
+  //       if (isLoading) {
+  //         return "loading";
+  //       }
+
+  //       if (active) {
+  //         return "active";
+  //       }
+
+  //       return "normal";
+  //     }}
+  //     case={{
+  //       loading: (
+  //         <div>
+  //           <Spinner size={"sm"} className={"oui-ml-1"} />
+  //         </div>
+  //       ),
+  //       completed: (
+  //         <div>
+  //           <CheckedCircleFillIcon opacity={1} className="oui-text-primary" />
+  //         </div>
+  //       ),
+  //     }}
+  //     default={<Dot active={!!active} />}
+  //   />
+  // );
 };
 
 const Dot: FC<{ active: boolean; className?: string }> = ({
@@ -86,7 +95,7 @@ const Dot: FC<{ active: boolean; className?: string }> = ({
       className={cn(
         "oui-w-[8.3px] oui-h-[8.3px] oui-rounded-full oui-ml-2 oui-mt-1",
         className,
-        active ? "oui-bg-primary-light" : "oui-bg-base-2"
+        active ? "oui-bg-primary-light" : "oui-bg-base-2",
       )}
     />
   );

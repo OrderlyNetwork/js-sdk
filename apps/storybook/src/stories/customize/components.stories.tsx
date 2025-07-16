@@ -1,9 +1,8 @@
-import type { StoryObj } from "@storybook/react";
+import type { StoryObj } from "@storybook/react-vite";
+import { fn } from "storybook/test";
 import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { Flex, Text, ExtensionPositionEnum } from "@orderly.network/ui";
 import { Scaffold } from "@orderly.network/ui-scaffold";
-import { fn } from "@storybook/test";
-
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 
 const meta = {
@@ -28,7 +27,7 @@ const meta = {
                   <ul className="oui-flex oui-gap-x-2">
                     {props.items.map((menu) => {
                       const isActive = (props.current as string[]).includes(
-                        menu.href
+                        menu.href,
                       );
                       console.log("isActive", isActive);
                       return (

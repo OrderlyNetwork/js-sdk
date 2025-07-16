@@ -1,12 +1,13 @@
 import React from "react";
-import { styled } from "@storybook/theming";
-import { ThemeMenu } from "./menu";
-import { ColorList, GradientColorList } from "./colorList";
-import { EditorProvider, useTheme } from "./editorContext";
-import { Radius } from "./radius";
-import { Typography } from "./typography";
-import { Toolbar } from "./toolbar";
+import { styled } from "storybook/theming";
 import { CodeEditor } from "./codeEditor";
+import { ColorList, GradientColorList } from "./colorList";
+import { useTheme } from "./context";
+import { EditorProvider } from "./editorContext";
+import { ThemeMenu } from "./menu";
+import { Radius } from "./radius";
+import { Toolbar } from "./toolbar";
+import { Typography } from "./typography";
 
 const Layout = styled.div`
   display: flex;

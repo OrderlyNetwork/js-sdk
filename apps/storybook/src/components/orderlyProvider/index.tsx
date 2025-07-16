@@ -39,7 +39,7 @@ import {
   WalletConnectorPrivyProvider,
   wagmiConnectors,
 } from "@orderly.network/wallet-connector-privy";
-import { useOrderlyConfig } from "../src/hooks/useOrderlyConfig";
+import { useOrderlyConfig } from "../../hooks/useOrderlyConfig";
 import { customChainsAbstarct } from "./customChains";
 import { CustomConfigStore } from "./customConfigStore";
 import { WalletConnector } from "./walletConnector";
@@ -81,6 +81,7 @@ const resources: Resources<ExtendLocaleMessages> = {
 
 const OrderApp = (props: { children: ReactNode }) => {
   const config = useOrderlyConfig();
+
   return (
     <OrderlyAppProvider
       configStore={configStore}

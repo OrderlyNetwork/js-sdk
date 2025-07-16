@@ -1,4 +1,6 @@
-import { MainNavWidget } from "@orderly.network/ui-scaffold";
+import { useState } from "react";
+import { StoryObj } from "@storybook/react-vite";
+import { TradingPage } from "@orderly.network/trading";
 import {
   Box,
   ExtensionPositionEnum,
@@ -6,12 +8,10 @@ import {
   installExtension,
   Text,
 } from "@orderly.network/ui";
+import { MainNavWidget } from "@orderly.network/ui-scaffold";
 import { Scaffold } from "@orderly.network/ui-scaffold";
-import { StoryObj } from "@storybook/react";
-import { TradingPage } from "@orderly.network/trading";
 import { useOrderlyConfig } from "../../../hooks/useOrderlyConfig";
 import { OrderlyIcon } from "../trading/icons.tsx";
-import { useState } from "react";
 
 const meta = {
   title: "Package/wallet-connector-privy",

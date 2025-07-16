@@ -58,7 +58,8 @@ export * from "./plugin";
 
 //===== Misc widgets
 export { Either } from "./misc/either";
-export { Match } from "./misc/switch";
+// TODO: remove this component, because vite will throw Maximum call stack size exceeded
+// export { Match } from "./misc/switch";
 
 //===== re-exported
 export { cnBase as cn } from "tailwind-variants";

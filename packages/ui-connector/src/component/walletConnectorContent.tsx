@@ -13,7 +13,6 @@ import {
   Divider,
   Flex,
   inputFormatter,
-  Match,
   modal,
   Switch,
   Text,
@@ -238,38 +237,62 @@ const ActionButton: FC<{
 }> = ({ state, signIn, enableTrading, loading, disabled }) => {
   const { t } = useTranslation();
 
+  if (state <= AccountStatusEnum.NotSignedIn) {
+    return (
+      <Button
+        fullWidth
+        onClick={() => signIn()}
+        loading={loading}
+        disabled={disabled}
+      >
+        {t("connector.createAccount")}
+      </Button>
+    );
+  }
+
   return (
-    <Match
-      value={() => {
-        if (state <= AccountStatusEnum.NotSignedIn) {
-          return "signIn";
-        }
-        return "enableTrading";
-      }}
-      case={{
-        signIn: (
-          <Button
-            fullWidth
-            onClick={() => signIn()}
-            loading={loading}
-            disabled={disabled}
-          >
-            {t("connector.createAccount")}
-          </Button>
-        ),
-        enableTrading: (
-          <Button
-            fullWidth
-            onClick={() => enableTrading()}
-            loading={loading}
-            disabled={disabled}
-          >
-            {t("connector.enableTrading")}
-          </Button>
-        ),
-      }}
-    />
+    <Button
+      fullWidth
+      onClick={() => enableTrading()}
+      loading={loading}
+      disabled={disabled}
+    >
+      {t("connector.enableTrading")}
+    </Button>
   );
+
+  // return (
+  //   <Match
+  //     value={() => {
+  //       if (state <= AccountStatusEnum.NotSignedIn) {
+  //         return "signIn";
+  //       }
+  //       return "enableTrading";
+  //     }}
+  //     case={{
+  //       signIn: (
+  //         <Button
+  //           fullWidth
+  //           onClick={() => signIn()}
+  //           loading={loading}
+  //           disabled={disabled}
+  //         >
+  //           {t("connector.createAccount")}
+  //         </Button>
+  //       ),
+  //       enableTrading: (
+  //         <Button
+  //           fullWidth
+  //           onClick={() => enableTrading()}
+  //           loading={loading}
+  //           disabled={disabled}
+  //         >
+  //           {t("connector.enableTrading")}
+  //         </Button>
+  //       ),
+  //     }}
+  //   />
+  // );
 };
 
 const ReferralCode: FC<WalletConnectContentProps> = (props) => {

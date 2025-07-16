@@ -1,6 +1,6 @@
-import { ViewerToolbar } from "./toolbar";
-import { DiffView } from "./diffView";
 import { useState } from "react";
+import { DiffView } from "./diffView";
+import { ViewerToolbar } from "./toolbar";
 
 export const DataViewer = (props: { data: any }) => {
   const [diffViewProps, setDiffViewProps] = useState<{
