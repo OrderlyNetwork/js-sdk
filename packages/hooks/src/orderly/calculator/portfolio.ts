@@ -7,14 +7,17 @@ import { createGetter } from "../../utils/createGetter";
 import { parseHolding } from "../../utils/parseHolding";
 import { Portfolio, useAppStore } from "../appStore";
 import { BaseCalculator } from "./baseCalculator";
+import { IndexPriceCalculatorName } from "./indexPrice";
 import { MarketCalculatorName } from "./markPrice";
 
 export const PortfolioCalculatorName = "portfolio";
+
 class PortfolioCalculator extends BaseCalculator<any> {
   name = PortfolioCalculatorName;
 
   calc(scope: CalculatorScope, data: any, ctx: CalculatorCtx) {
-    let markPrices, positions;
+    let markPrices: Record<PropertyKey, number>;
+    let indexPrices: Record<PropertyKey, number>;
     const portfolio = this.getPortfolio(ctx);
 
     if (scope === CalculatorScope.MARK_PRICE) {
@@ -25,10 +28,18 @@ class PortfolioCalculator extends BaseCalculator<any> {
       );
     }
 
+    if (scope === CalculatorScope.INDEX_PRICE) {
+      indexPrices = data;
+    } else {
+      indexPrices = ctx.get<Record<string, number>>(
+        (cache) => cache[IndexPriceCalculatorName],
+      );
+    }
+
     // if (scope === CalculatorScope.POSITION) {
     //   positions = data;
     // } else {
-    positions = ctx.get<API.PositionsTPSLExt>(
+    const positions = ctx.get<API.PositionsTPSLExt>(
       (output: Record<string, any>) => output.positionCalculator_all,
     );
     // }
@@ -59,6 +70,7 @@ class PortfolioCalculator extends BaseCalculator<any> {
 
     const accountInfo = ctx.accountInfo!;
     const symbolsInfo = ctx.symbolsInfo!;
+    const tokensInfo = ctx.tokensInfo;
 
     return this.format({
       holding,
@@ -66,13 +78,15 @@ class PortfolioCalculator extends BaseCalculator<any> {
       markPrices,
       accountInfo,
       symbolsInfo,
+      indexPrices: indexPrices,
+      tokensInfo: tokensInfo ?? [],
     });
   }
 
   private getPortfolio(ctx: CalculatorCtx) {
     return (
       ctx.get<Portfolio>((output) => output[this.name]) ||
-      (useAppStore.getState().portfolio as Portfolio)
+      useAppStore.getState().portfolio
     );
   }
 
@@ -80,16 +94,27 @@ class PortfolioCalculator extends BaseCalculator<any> {
     holding?: API.Holding[];
     positions: API.PositionsTPSLExt;
     markPrices: Record<string, number> | null;
+    indexPrices: Record<string, number> | null;
     accountInfo: API.AccountInfo;
     symbolsInfo: Record<string, API.SymbolExt>;
+    tokensInfo: API.Chain[];
   }) {
-    const { holding, positions, markPrices, accountInfo, symbolsInfo } = inputs;
+    const {
+      holding,
+      positions,
+      markPrices,
+      indexPrices,
+      accountInfo,
+      symbolsInfo,
+      tokensInfo,
+    } = inputs;
 
     if (
       !holding ||
       !positions ||
       !Array.isArray(positions.rows) ||
       !markPrices ||
+      !indexPrices ||
       !accountInfo
     ) {
       return null;
@@ -98,7 +123,12 @@ class PortfolioCalculator extends BaseCalculator<any> {
     const unsettledPnL = pathOr(0, ["total_unsettled_pnl"])(positions);
     const unrealizedPnL = pathOr(0, ["total_unreal_pnl"])(positions);
 
-    const [USDC_holding, nonUSDC] = parseHolding(holding, markPrices);
+    const [USDC_holding, nonUSDC] = parseHolding(
+      holding,
+      indexPrices,
+      tokensInfo,
+    );
+
     const usdc = holding.find((item) => item.token === "USDC");
 
     const totalCollateral = account.totalCollateral({

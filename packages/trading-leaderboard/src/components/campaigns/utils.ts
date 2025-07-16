@@ -98,11 +98,10 @@ export const formatCampaignDateRange = (
 
     // Format dates using date-fns
     // MMM d, yyyy format gives us "Feb 28, 2025" style
-    // Assuming the input timestamps are already in UTC
     const startFormatted = format(startDate, "MMM d, yyyy");
     const endFormatted = format(endDate, "MMM d, yyyy");
 
-    return `${startFormatted} - ${endFormatted} UTC`;
+    return `${startFormatted} - ${endFormatted}`;
   } catch (error) {
     console.error("Error formatting campaign date range:", error, {
       startTime,
@@ -251,7 +250,7 @@ export const generateCampaignTimeline = (
   // Helper function to format time for display
   const formatTimeDisplay = (time: Date): string => {
     try {
-      return format(time, "yyyy-MM-dd HH:mm 'UTC'");
+      return format(time, "yyyy-MM-dd HH:mm");
     } catch (error) {
       console.error("Error formatting time:", error);
       return time.toISOString();

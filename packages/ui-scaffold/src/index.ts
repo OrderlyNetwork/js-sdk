@@ -12,7 +12,7 @@ export {
 export { AccountSummaryWidget } from "./components/accountSummary";
 export { ChainMenuWidget, ChainMenu } from "./components/chainMenu";
 export { SideNavbarWidget, SideBar } from "./components/sidebar";
-export { CampaignPositionEnum } from "./components/main/useWidgetBuilder.script";
+export { CampaignPositionEnum } from "./components/main/mainNav.script";
 
 export * from "./components/footer";
 export * from "./components/maintenanceTips";
@@ -34,3 +34,4 @@ export {
 export { MainLogo } from "./components/main/mainLogo";
 export * from "./components/languageSwitcher";
 export * from "./components/scanQRCode";
+export * from "./components/leftNav";

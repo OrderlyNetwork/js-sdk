@@ -71,7 +71,6 @@ export const SolanaWalletProvider: React.FC<{ children: React.ReactNode }> = ({
     if (!walletSolana || isManual) return;
 
     if (!publicKey) {
-      connectSolana();
       return;
     }
 

@@ -1,6 +1,6 @@
-import { API } from "@orderly.network/types";
 import { produce } from "immer";
 import { create } from "zustand";
+import { API } from "@orderly.network/types";
 
 type MarketStore = {
   market: API.MarketInfoExt[];
@@ -42,11 +42,11 @@ const useMarketStore = create<MarketStore & { actions: MarketActions }>(
         set(
           produce((state) => {
             state.market = data;
-          })
+          }),
         );
       },
     },
-  })
+  }),
 );
 
 export { useMarketStore };

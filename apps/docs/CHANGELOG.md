@@ -1,5 +1,115 @@
 # @orderly/docs
 
+## 1.5.0
+
+### Minor Changes
+
+- 0e3a9ce: publish
+- 86eeea2: publish
+- publish
+
+### Patch Changes
+
+- 728895d: publish
+- Updated dependencies [0e3a9ce]
+- Updated dependencies [86eeea2]
+- Updated dependencies [728895d]
+- Updated dependencies
+  - @orderly.network/hooks@2.5.0
+  - @orderly.network/web3-onboard@2.5.0
+  - @orderly.network/types@2.5.0
+
+## 1.5.0-alpha.2
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/hooks@2.5.0-alpha.2
+  - @orderly.network/web3-onboard@2.5.0-alpha.2
+  - @orderly.network/types@2.5.0-alpha.2
+
+## 1.5.0-alpha.1
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/hooks@2.5.0-alpha.1
+  - @orderly.network/web3-onboard@2.5.0-alpha.1
+  - @orderly.network/types@2.5.0-alpha.1
+
+## 1.4.2-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react@2.4.2-alpha.0
+  - @orderly.network/hooks@2.4.2-alpha.0
+  - @orderly.network/web3-onboard@2.4.2-alpha.0
+  - @orderly.network/types@2.4.2-alpha.0
+
+## 1.4.1
+
+### Patch Changes
+
+- publish
+- 5a220e0: publish
+- Updated dependencies
+- Updated dependencies [5a220e0]
+  - @orderly.network/react@2.4.1
+  - @orderly.network/hooks@2.4.1
+  - @orderly.network/web3-onboard@2.4.1
+  - @orderly.network/types@2.4.1
+
+## 1.4.1-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react@2.4.1-alpha.0
+  - @orderly.network/hooks@2.4.1-alpha.0
+  - @orderly.network/web3-onboard@2.4.1-alpha.0
+  - @orderly.network/types@2.4.1-alpha.0
+
+## 1.4.0
+
+### Minor Changes
+
+- decb695: publish
+- publish
+
+### Patch Changes
+
+- Updated dependencies [decb695]
+- Updated dependencies
+  - @orderly.network/react@2.4.0
+  - @orderly.network/hooks@2.4.0
+  - @orderly.network/web3-onboard@2.4.0
+  - @orderly.network/types@2.4.0
+
+## 1.4.0-alpha.0
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/react@2.4.0-alpha.0
+  - @orderly.network/hooks@2.4.0-alpha.0
+  - @orderly.network/web3-onboard@2.4.0-alpha.0
+  - @orderly.network/types@2.4.0-alpha.0
+
 ## 1.3.2
 
 ### Patch Changes

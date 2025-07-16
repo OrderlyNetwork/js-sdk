@@ -19,16 +19,27 @@ export function formatPortfolio(inputs: {
   holding?: API.Holding[];
   positions?: API.PositionsTPSLExt;
   markPrices: Record<string, number> | null;
+  indexPrices?: Record<string, number> | null;
   accountInfo?: API.AccountInfo;
   symbolsInfo?: SymbolInfo;
+  tokensInfo?: API.Chain[];
 }) {
-  const { holding, positions, markPrices, accountInfo, symbolsInfo } = inputs;
+  const {
+    holding,
+    positions,
+    markPrices,
+    indexPrices,
+    accountInfo,
+    symbolsInfo,
+    tokensInfo,
+  } = inputs;
 
   if (
     !holding ||
     !positions ||
     !Array.isArray(positions.rows) ||
     !markPrices ||
+    !indexPrices ||
     !accountInfo ||
     symbolsInfo?.isNil
   ) {
@@ -38,7 +49,12 @@ export function formatPortfolio(inputs: {
   const unsettledPnL = pathOr(0, ["total_unsettled_pnl"])(positions);
   const unrealizedPnL = pathOr(0, ["total_unreal_pnl"])(positions);
 
-  const [USDC_holding, nonUSDC] = parseHolding(holding, markPrices);
+  const [USDC_holding, nonUSDC] = parseHolding(
+    holding,
+    indexPrices,
+    tokensInfo!,
+  );
+
   const usdc = holding.find((item) => item.token === "USDC");
 
   const totalCollateral = account.totalCollateral({

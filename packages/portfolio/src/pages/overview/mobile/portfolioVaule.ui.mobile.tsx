@@ -2,8 +2,15 @@ import { FC, useMemo } from "react";
 import { parseJSON, useAccount } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { AccountStatusEnum, ChainNamespace } from "@orderly.network/types";
-import { Flex, Text, cn } from "@orderly.network/ui";
-import { EyeIcon } from "@orderly.network/ui";
+import {
+  Flex,
+  Text,
+  cn,
+  ArrowRightShortIcon,
+  EyeIcon,
+} from "@orderly.network/ui";
+import { RouterAdapter } from "@orderly.network/ui-scaffold";
+import { PortfolioLeftSidebarPath } from "../../../layout";
 
 type Props = {
   portfolioValue: number | null;
@@ -13,6 +20,7 @@ type Props = {
   namespace: string | null;
   toggleVisible: () => void;
   canTrade: boolean;
+  routerAdapter?: RouterAdapter;
 };
 
 export const PortfolioValueMobile: FC<Props> = (props) => {
@@ -60,7 +68,7 @@ export const PortfolioValueMobile: FC<Props> = (props) => {
       >
         <Text.numeral
           visible={props.visible}
-          className="oui-text-base-contrast oui-text-3xl oui-font-bold"
+          className="oui-text-3xl oui-font-bold oui-text-base-contrast"
         >
           {props.portfolioValue ?? "--"}
         </Text.numeral>
@@ -72,7 +80,7 @@ export const PortfolioValueMobile: FC<Props> = (props) => {
         direction="row"
         gapX={1}
         itemAlign={"center"}
-        className="oui-text-base-contrast oui-text-sm"
+        className="oui-text-sm oui-text-base-contrast"
       >
         <Text.numeral visible={props.visible}>
           {props.unrealPnL ?? "--"}
@@ -86,6 +94,17 @@ export const PortfolioValueMobile: FC<Props> = (props) => {
           {props.unrealROI ?? "--"}
         </Text.numeral>
       </Flex>
+      <div
+        className="oui-absolute oui-right-0 oui-top-0 oui-flex oui-h-full oui-items-center oui-justify-center oui-px-4"
+        onClick={() =>
+          props.routerAdapter?.onRouteChange({
+            href: PortfolioLeftSidebarPath.Assets,
+            name: "Assets",
+          })
+        }
+      >
+        <ArrowRightShortIcon size={18} color="white" opacity={0.54} />
+      </div>
     </Flex>
   );
 };

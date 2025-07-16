@@ -16,7 +16,7 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
 
   const cls = "oui-h-[calc(100%_-_36px)]";
 
-  const { getFavoritesProps } = useFavoritesProps();
+  const { getFavoritesProps, renderEmptyView } = useFavoritesProps();
 
   const renderTab = (type: MarketsTabName) => {
     return (
@@ -32,6 +32,12 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
             ),
           }}
           {...getFavoritesProps(type)}
+          emptyView={renderEmptyView({
+            type,
+            onClick: () => {
+              onTabChange(MarketsTabName.All);
+            },
+          })}
         />
       </div>
     );

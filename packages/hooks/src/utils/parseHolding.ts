@@ -1,19 +1,22 @@
-import { API } from "@orderly.network/types";
+import { account } from "@orderly.network/perp";
+import type { API } from "@orderly.network/types";
 
 type NonUSDCHolding = {
   holding: number;
-  markPrice: number;
+  indexPrice: number;
   // margin replacement rate, default 0
-  discount: number;
+  collateralCap: number;
+  collateralRatio: number;
 };
 
 export const parseHolding = (
   holding: API.Holding[],
-  markPrices: Record<string, number>
+  indexPrices: Record<string, number>,
+  tokensInfo: API.Chain[],
 ): [number, NonUSDCHolding[]] => {
-  // if (!holding || !markPrices) {
-  //     return [zero, zero];
-  //   }
+  // if (!holding || !indexPrices) {
+  //   return [zero, zero];
+  // }
   const nonUSDC: NonUSDCHolding[] = [];
 
   let USDC_holding = 0;
@@ -22,11 +25,30 @@ export const parseHolding = (
     if (item.token === "USDC") {
       USDC_holding = item.holding;
     } else {
+      const tokenInfo = tokensInfo.find(({ token }) => token === item.token);
+      const {
+        base_weight = 0,
+        discount_factor = 0,
+        user_max_qty = 0,
+      } = tokenInfo || {};
+
+      const holdingQty = item?.holding ?? 0;
+
+      const indexPrice = indexPrices[`PERP_${item.token}_USDC`] ?? 0;
+
+      const collateralRatio = account.collateralRatio({
+        baseWeight: base_weight,
+        discountFactor: discount_factor,
+        collateralQty: holdingQty,
+        collateralCap: user_max_qty,
+        indexPrice,
+      });
+
       nonUSDC.push({
-        holding: item.holding,
-        markPrice: markPrices[item.token] ?? 0,
-        // markPrice: 0,
-        discount: 0,
+        holding: holdingQty,
+        indexPrice,
+        collateralCap: user_max_qty,
+        collateralRatio,
       });
     }
   });

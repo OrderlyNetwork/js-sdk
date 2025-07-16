@@ -1,6 +1,6 @@
 {
   "name": "@orderly/docs",
-  "version": "1.3.2",
+  "version": "1.5.0",
   "private": true,
   "scripts": {
     "dev": "next dev -p 4000",
@@ -13,7 +13,6 @@
     "@codesandbox/sandpack-react": "^2.9.0",
     "@codesandbox/sandpack-themes": "^2.0.21",
     "@orderly.network/hooks": "workspace:*",
-    "@orderly.network/react": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@orderly.network/web3-onboard": "workspace:*",
     "@prisma/client": "5.0.0",

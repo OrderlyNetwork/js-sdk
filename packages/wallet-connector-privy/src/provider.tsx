@@ -8,10 +8,11 @@ import React, {
   type RefObject,
   useMemo,
 } from "react";
+import { PrivyClientConfig } from "@privy-io/react-auth";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import { type Chain, defineChain } from "viem";
 import { mainnet } from "viem/chains";
-import { Chains } from "@orderly.network/hooks";
+import { Chains, useSWR } from "@orderly.network/hooks";
 import {
   AbstractChains,
   AbstractTestnetChainInfo,
@@ -39,12 +40,44 @@ import {
   WalletType,
 } from "./types";
 
+const commonSwrOpts = {
+  revalidateIfStale: false,
+  revalidateOnFocus: false,
+  revalidateOnReconnect: false,
+  // If false, undefined data gets cached against the key.
+  revalidateOnMount: true,
+  // don't duplicate a request with the same key for 1hr
+  dedupingInterval: 3_600_000,
+};
+
 const fetchChainInfo = async (url: string) => {
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error(`Failed to fetch data from ${url}`);
   }
   return response.json();
+};
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
+const formatSwapChainInfo = (data: any = {}) => {
+  return Object.keys(data).map((key) => {
+    const chain = data[key];
+    const { network_infos, token_infos } = chain;
+
+    const nativeToken = token_infos.find(
+      (item: any) => item.symbol === network_infos.currency_symbol,
+    );
+
+    if (nativeToken) {
+      network_infos.currency_decimal = nativeToken.decimals;
+    } else {
+      // default 18 decimals
+      network_infos.currency_decimal = 18;
+    }
+
+    return network_infos;
+  });
 };
 
 const processChainInfo = (chainInfo: any) =>
@@ -95,6 +128,9 @@ interface WalletConnectorPrivyContextType {
   // TODO new chaintype config
   walletChainTypeConfig: WalletChainTypeConfig;
   connectorWalletType: ConnectorWalletType;
+  privyConfig: {
+    loginMethods?: PrivyClientConfig["loginMethods"];
+  };
 }
 
 const WalletConnectorPrivyContext =
@@ -124,6 +160,9 @@ const WalletConnectorPrivyContext =
       disableSolana: false,
       disableAGW: false,
     },
+    privyConfig: {
+      loginMethods: [],
+    },
   });
 
 export const useWalletConnectorPrivy = () =>
@@ -141,6 +180,12 @@ interface WalletConnectorPrivyProps extends PropsWithChildren {
     mobile: React.ReactNode;
   };
 }
+
+const defaultPrivyLoginMethod = [
+  "email",
+  "google",
+  "twitter",
+] as PrivyClientConfig["loginMethods"];
 export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
   const [walletChainType, setWalletChainType] = useState<WalletChainType>(
     WalletChainTypeEnum.EVM_SOL,
@@ -156,6 +201,11 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
   const [targetWalletType, setTargetWalletType] = useState<
     WalletType | undefined
   >();
+  const [privyConfig, setPrivyConfig] = useState<PrivyClientConfig>({
+    loginMethods: props.privyConfig
+      ? (props.privyConfig?.config?.loginMethods ?? defaultPrivyLoginMethod)
+      : defaultPrivyLoginMethod,
+  });
   const [solanaInfo, setSolanaInfo] = useState<{
     rpcUrl: string | null;
     network: WalletAdapterNetwork | null;
@@ -201,39 +251,25 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     return chainTypeObj;
   }, [initChains]);
 
-  const fetchAllChains = async () => {
-    let testChainsList = [];
-    let mainnetChainsList = [];
-    try {
-      const testChainInfoRes = await fetchChainInfo(
-        "https://testnet-api-evm.orderly.org/v1/public/chain_info",
-      );
-      testChainsList = testChainInfoRes.data.rows;
-      // TODO only for test, need remove this code
-      testChainsList.push(AbstractTestnetChainInfo);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      testChainsList = [ArbitrumSepoliaChainInfo, SolanaDevnetChainInfo];
-    }
+  const { data: mainnetChainInfoRes } = useSWR(
+    !props.customChains ? "https://api.orderly.org/v1/public/chain_info" : null,
+    fetcher,
+    commonSwrOpts,
+  );
 
-    try {
-      const mainnetChainInfoRes = await fetchChainInfo(
-        "https://api-evm.orderly.org/v1/public/chain_info",
-      );
-      mainnetChainsList = mainnetChainInfoRes.data.rows;
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      mainnetChainsList = [];
-    }
+  const { data: testChainInfoRes } = useSWR(
+    !props.customChains
+      ? "https://testnet-api.orderly.org/v1/public/chain_info"
+      : null,
+    fetcher,
+    commonSwrOpts,
+  );
 
-    const testChains = processChainInfo(testChainsList);
-    const mainnetChains = processChainInfo(mainnetChainsList);
-
-    setTestnetChains(testChains);
-    setMainnetChains(mainnetChains);
-    setInitChains([...testChains, ...mainnetChains] as [Chain, ...Chain[]]);
-    initRef.current = true;
-  };
+  const { data: swapChainInfoRes } = useSWR(
+    !props.customChains ? "https://fi-api.woo.org/swap_support" : null,
+    fetcher,
+    commonSwrOpts,
+  );
 
   const handleCustomerChains = () => {
     const testChains = processChainInfo(
@@ -305,6 +341,7 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
       walletChainType,
       connectorWalletType,
       walletChainTypeConfig,
+      privyConfig,
     }),
     [
       initChains,
@@ -323,15 +360,63 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
       walletChainType,
       connectorWalletType,
       walletChainTypeConfig,
+      privyConfig,
     ],
   );
 
   useEffect(() => {
-    if (!props.customChains) {
-      fetchAllChains();
+    if (props.customChains) {
       return;
     }
-    handleCustomerChains();
+
+    if (!mainnetChainInfoRes || !testChainInfoRes || !swapChainInfoRes) {
+      return;
+    }
+
+    let testChainsList = [];
+    let mainnetChainsList = [];
+    try {
+      testChainsList = testChainInfoRes?.data?.rows;
+      // TODO only for test, need remove this code
+      testChainsList.push(AbstractTestnetChainInfo);
+
+      mainnetChainsList = mainnetChainInfoRes?.data?.rows;
+
+      const testChains = processChainInfo(testChainsList);
+      const mainnetChains = processChainInfo(mainnetChainsList);
+
+      const swapChains = processChainInfo(
+        formatSwapChainInfo(swapChainInfoRes?.data),
+      );
+
+      const chains = [...testChains, ...mainnetChains];
+
+      const filterSwapChains = swapChains.filter(
+        (item: any) => !chains.some((chain) => chain.id === item.id),
+      );
+
+      setTestnetChains(testChains);
+      setMainnetChains(mainnetChains);
+
+      setInitChains([...chains, ...filterSwapChains] as [Chain, ...Chain[]]);
+    } catch (error) {
+      console.error("Error initChains:", error);
+      testChainsList = [ArbitrumSepoliaChainInfo, SolanaDevnetChainInfo];
+      mainnetChainsList = [];
+    }
+
+    initRef.current = true;
+  }, [
+    props.customChains,
+    mainnetChainInfoRes,
+    testChainInfoRes,
+    swapChainInfoRes,
+  ]);
+
+  useEffect(() => {
+    if (props.customChains) {
+      handleCustomerChains();
+    }
   }, [props.customChains]);
 
   if (!initRef.current) {

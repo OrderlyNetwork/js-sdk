@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
-import { toast } from "@orderly.network/ui";
 import { useEventEmitter } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
+import { toast } from "@orderly.network/ui";
 
 type Options = {
   quantity: string;
@@ -38,7 +38,7 @@ export function useDepositAction(options: Options) {
       .catch((err) => {
         console.error("approve error", err);
         toast.error(
-          err.message || err.errorCode || t("transfer.deposit.approve.failed")
+          err.message || err.errorCode || t("transfer.deposit.approve.failed"),
         );
       })
       .finally(() => {
@@ -55,9 +55,7 @@ export function useDepositAction(options: Options) {
       })
       .catch((err) => {
         console.error("deposit error", err);
-        toast.error(
-          err.message || err.errorCode || t("transfer.deposit.failed")
-        );
+        toast.error(err.message || t("transfer.deposit.failed"));
       });
   }, [deposit, onSuccess, t]);
 

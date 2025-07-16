@@ -1,6 +1,3 @@
-import { Badge, cn, Flex, Statistic, Text, Tooltip } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
-import { OrderCellState } from "./orderCell.script";
 import {
   FC,
   PropsWithChildren,
@@ -9,18 +6,21 @@ import {
   useMemo,
   useState,
 } from "react";
-import { parseBadgesFor, upperCaseFirstLetter } from "../../../utils/util";
+import { useTranslation } from "@orderly.network/i18n";
 import {
   AlgoOrderRootType,
   API,
   OrderStatus,
   OrderType,
 } from "@orderly.network/types";
-import { useTPSLOrderRowContext } from "../tpslOrderRowContext";
 import { OrderSide } from "@orderly.network/types";
-import { ShareButtonWidget } from "../../shareButton";
+import { Badge, cn, Flex, Statistic, Text, Tooltip } from "@orderly.network/ui";
 import { SharePnLBottomSheetId } from "@orderly.network/ui-share";
-import { useTranslation } from "@orderly.network/i18n";
+import { Decimal } from "@orderly.network/utils";
+import { parseBadgesFor, upperCaseFirstLetter } from "../../../utils/util";
+import { ShareButtonWidget } from "../../shareButton";
+import { useTPSLOrderRowContext } from "../tpslOrderRowContext";
+import { OrderCellState } from "./orderCell.script";
 
 export const SymbolToken: FC<OrderCellState> = (props) => {
   const { item } = props;
@@ -539,7 +539,7 @@ export const OrderPrice: FC<OrderCellState> = (props) => {
     <Statistic
       label={
         <Text>
-          {t("orders.column.orderPrice")}
+          {t("common.orderPrice")}
           <Text intensity={20}>(USDC)</Text>
         </Text>
       }

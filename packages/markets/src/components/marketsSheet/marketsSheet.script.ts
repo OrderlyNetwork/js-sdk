@@ -17,5 +17,10 @@ export function useMarketsSheetScript() {
     MarketsTabName.Favorites,
   );
 
-  return { tabSort, onTabSort, activeTab, onTabChange: setActiveTab };
+  return {
+    tabSort,
+    onTabSort,
+    activeTab,
+    onTabChange: setActiveTab,
+  };
 }

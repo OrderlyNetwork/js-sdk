@@ -67,6 +67,7 @@ export const useMarketsListFullColumns = (
         title: t("markets.column.market"),
         dataIndex: "symbol",
         width: 90,
+        onSort: true,
         render: (value) => {
           return (
             <Text.formatted

@@ -128,7 +128,13 @@ export const TransferForm: FC<TransferFormProps> = (props) => {
             <Text size="2xs">
               {t("transfer.internalTransfer.currentAssetValue")}
             </Text>
-            <Text.numeral size="2xs" intensity={54} unit=" USDC">
+            <Text.numeral
+              size="2xs"
+              intensity={54}
+              unit={` ${token.symbol}`}
+              dp={token?.precision}
+              padding={false}
+            >
               {toAccountAsset}
             </Text.numeral>
           </Flex>

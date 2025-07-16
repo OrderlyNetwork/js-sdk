@@ -201,9 +201,17 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
 
   const assetsOrderEntryMargin = [
     <RemovablePanel
+      key="margin"
+      index={positions.findIndex((item) => item === 0)}
+      onLayout={updatePositions}
+      showIndicator={showPositionIcon}
+    >
+      <RiskRateWidget />
+    </RemovablePanel>,
+    <RemovablePanel
       key="assets"
       className="oui-border oui-border-line-12"
-      index={positions.findIndex((item) => item === 0)}
+      index={positions.findIndex((item) => item === 1)}
       onLayout={updatePositions}
       showIndicator={showPositionIcon}
     >
@@ -211,19 +219,16 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
     </RemovablePanel>,
     <RemovablePanel
       key="orderEntry"
-      index={positions.findIndex((item) => item === 1)}
-      onLayout={updatePositions}
-      showIndicator={showPositionIcon}
-    >
-      <OrderEntryWidget symbol={props.symbol} />
-    </RemovablePanel>,
-    <RemovablePanel
-      key="margin"
       index={positions.findIndex((item) => item === 2)}
       onLayout={updatePositions}
       showIndicator={showPositionIcon}
     >
-      <RiskRateWidget />
+      <OrderEntryWidget
+        symbol={props.symbol}
+        disableFeatures={
+          props.disableFeatures as unknown as ("slippageSetting" | "feesInfo")[]
+        }
+      />
     </RemovablePanel>,
   ];
 

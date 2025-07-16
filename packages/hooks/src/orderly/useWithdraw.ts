@@ -8,15 +8,20 @@ import {
 import { isTestnet } from "@orderly.network/utils";
 import { useAccount } from "../useAccount";
 import { useConfig } from "../useConfig";
-import { useEventEmitter } from "../useEventEmitter";
 import { useTrack } from "../useTrack";
 import { useChains } from "./useChains";
 import { useCollateral } from "./useCollateral";
-import { useHoldingStream } from "./useHoldingStream";
+import { useMaxWithdrawal } from "./useMaxWithdrawal";
 
-export type UseWithdrawOptions = { srcChainId?: number; decimals?: number };
+export type UseWithdrawOptions = {
+  srcChainId?: number;
+  token?: string;
+  /** orderly token decimals */
+  decimals?: number;
+};
 
-export const useWithdraw = (options?: UseWithdrawOptions) => {
+export const useWithdraw = (options: UseWithdrawOptions) => {
+  const { srcChainId, token, decimals } = options;
   const { account, state } = useAccount();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -27,48 +32,9 @@ export const useWithdraw = (options?: UseWithdrawOptions) => {
 
   const [_, { findByChainId }] = useChains(undefined);
 
-  const ee = useEventEmitter();
   const { track } = useTrack();
 
-  // const withdrawQueue = useRef<number[]>([]);
-
-  const { usdc } = useHoldingStream();
-
-  // useEffect(() => {
-  //   const unsubscribe = ws.privateSubscribe(
-  //     {
-  //       id: "wallet",
-  //       event: "subscribe",
-  //       topic: "wallet",
-  //       ts: Date.now(),
-  //     },
-  //     {
-  //       onMessage: (data: any) => {
-  //         //
-  //         const { id } = data;
-
-  //         if (withdrawQueue.current.includes(id)) {
-  //           withdrawQueue.current = withdrawQueue.current.filter(
-  //             (item) => item !== id
-  //           );
-  //           ee.emit("withdraw:success", data);
-  //         }
-  //       },
-  //     }
-  //   );
-
-  //   return () => unsubscribe();
-  // }, []);
-
-  const maxAmount = useMemo(() => {
-    // if (!usdc || !usdc.holding) return 0;
-
-    // if (unsettledPnL >= 0) return usdc?.holding ?? 0;
-
-    // return new Decimal(usdc.holding).add(unsettledPnL).toNumber();
-
-    return freeCollateral;
-  }, [freeCollateral]);
+  const maxAmount = useMaxWithdrawal(token);
 
   const availableWithdraw = useMemo(() => {
     if (unsettledPnL < 0) {
@@ -84,12 +50,10 @@ export const useWithdraw = (options?: UseWithdrawOptions) => {
     // Orderly testnet supported chain
     if (networkId === "testnet") {
       chain = findByChainId(
-        isTestnet(options?.srcChainId!)
-          ? options?.srcChainId!
-          : ARBITRUM_TESTNET_CHAINID,
+        isTestnet(srcChainId!) ? srcChainId! : ARBITRUM_TESTNET_CHAINID,
       ) as API.Chain;
     } else {
-      chain = findByChainId(options?.srcChainId!) as API.Chain;
+      chain = findByChainId(srcChainId!) as API.Chain;
       // if is orderly un-supported chain
       if (!chain?.network_infos?.bridgeless) {
         // Orderly mainnet supported chain
@@ -97,7 +61,7 @@ export const useWithdraw = (options?: UseWithdrawOptions) => {
       }
     }
     return chain;
-  }, [networkId, findByChainId, options?.srcChainId]);
+  }, [networkId, findByChainId, srcChainId]);
 
   // Mantle chain: USDC → USDC.e
   const dst = useMemo(() => {
@@ -121,33 +85,30 @@ export const useWithdraw = (options?: UseWithdrawOptions) => {
       amount: string;
       allowCrossChainWithdraw: boolean;
     }): Promise<any> => {
-      return (
-        account.assetsManager
-          // TODO: use orderly token decimals variable from api instead of hardcode 6
-          .withdraw({ ...inputs, decimals: 6 })
-          .then((res: any) => {
-            if (res.success) {
-              track(TrackerEventName.withdrawSuccess, {
-                wallet: state?.connectWallet?.name,
-                // TODO: fix network name, befault is not pass srcChainId
-                network: targetChain?.network_infos.name,
-                quantity: inputs.amount,
-              });
-              //   withdrawQueue.current.push(res.data.withdraw_id);
-            }
-            return res;
-          })
-          .catch((err) => {
-            track(TrackerEventName.withdrawFailed, {
+      return account.assetsManager
+        .withdraw({ ...inputs, decimals: decimals ?? 6 })
+        .then((res: any) => {
+          if (res.success) {
+            track(TrackerEventName.withdrawSuccess, {
               wallet: state?.connectWallet?.name,
+              // TODO: fix network name, befault is not pass srcChainId
               network: targetChain?.network_infos.name,
-              msg: JSON.stringify(err),
+              quantity: inputs.amount,
             });
-            throw err;
-          })
-      );
+            //   withdrawQueue.current.push(res.data.withdraw_id);
+          }
+          return res;
+        })
+        .catch((err) => {
+          track(TrackerEventName.withdrawFailed, {
+            wallet: state?.connectWallet?.name,
+            network: targetChain?.network_infos.name,
+            msg: JSON.stringify(err),
+          });
+          throw err;
+        });
     },
-    [state, targetChain, state, options?.decimals],
+    [state, targetChain, state, decimals],
   );
 
   return {
@@ -155,8 +116,9 @@ export const useWithdraw = (options?: UseWithdrawOptions) => {
     withdraw,
     isLoading,
     maxAmount,
-    availableBalance,
-    availableWithdraw,
     unsettledPnL,
+    availableBalance,
+    /** @deprecated use maxAmount instead */
+    availableWithdraw,
   };
 };

@@ -20,11 +20,21 @@ export const portfolio = {
   "portfolio.overview.column.token": "Token",
   "portfolio.overview.column.qty": "Qty.",
   "portfolio.overview.column.indexPrice": "Index price",
+  "portfolio.overview.column.assetValue": "Asset value",
   "portfolio.overview.column.collateralRatio": "Collateral ratio",
+  "portfolio.overview.column.collateralRatio.explain":
+    "Collateral ratio shows how much of an asset’s value can be used as margin",
   "portfolio.overview.column.assetContribution": "Asset contribution",
 
   "portfolio.overview.column.form": "Form",
   "portfolio.overview.column.to": "To",
+
+  "portfolio.overview.column.convert.convertedAsset": "Converted asset",
+  "portfolio.overview.column.convert.usdcAmount": "USDC amount",
+  "portfolio.overview.column.convert.convertId": "Convert ID",
+  "portfolio.overview.column.convert.details": "Details",
+  "portfolio.overview.tab.convert.history": "Convert history",
+  "portfolio.overview.convert.dialog.title.details": "Convert details",
 
   "portfolio.overview.distribution.type.referralCommission":
     "Referral commission",

@@ -48,6 +48,10 @@ export interface SheetContentProps
     VariantProps<typeof sheetVariants> {
   // if true, show close button
   closeable?: boolean;
+  onClose?: () => void;
+  closeableSize?: number;
+  closeOpacity?: number;
+  closeClassName?: string;
 }
 
 const SheetContent = React.forwardRef<
@@ -55,7 +59,15 @@ const SheetContent = React.forwardRef<
   SheetContentProps
 >(
   (
-    { side = "bottom", closeable = true, className, children, ...props },
+    {
+      side = "bottom",
+      closeable = true,
+      closeableSize = 16,
+      closeOpacity = 0.98,
+      className,
+      children,
+      ...props
+    },
     ref,
   ) => (
     <SheetPortal>
@@ -70,11 +82,16 @@ const SheetContent = React.forwardRef<
         {closeable && (
           <SheetPrimitive.Close
             className={cnBase(
-              "oui-absolute oui-right-4 oui-top-4 oui-rounded-sm oui-ring-offset-base-700 oui-transition-opacity  focus:oui-outline-none focus:oui-ring-2 focus:oui-ring-ring focus:oui-ring-offset-2 disabled:oui-pointer-events-none data-[state=open]:oui-bg-secondary",
-              // "oui-opacity-70 hover:oui-opacity-100"
+              "oui-ring-offset-base-700 focus:oui-ring-ring oui-absolute oui-right-4 oui-top-4 oui-z-10 oui-rounded-sm oui-transition-opacity focus:oui-outline-none focus:oui-ring-2 focus:oui-ring-offset-2 active:oui-outline-none focus:orderly-outline-none disabled:oui-pointer-events-none data-[state=open]:oui-bg-secondary",
+              props?.closeClassName,
             )}
           >
-            <CloseIcon size={16} color="white" opacity={0.98} />
+            <CloseIcon
+              size={closeableSize}
+              color="white"
+              opacity={closeOpacity}
+              onClick={props?.onClose}
+            />
             <span className="oui-sr-only">Close</span>
           </SheetPrimitive.Close>
         )}
@@ -94,7 +111,7 @@ const SheetHeader = ({
 }) => (
   <div
     className={cnBase(
-      "oui-sheet-header oui-grid oui-grid-cols-[40px_1fr_40px] oui-items-center oui-min-h-12",
+      "oui-sheet-header oui-grid oui-min-h-12 oui-grid-cols-[40px_1fr_40px] oui-items-center",
     )}
   >
     <div>{leading}</div>

@@ -1,14 +1,16 @@
 import { useMemo } from "react";
-import { useQuery } from "../useQuery";
 import { API, chainsInfoMap } from "@orderly.network/types";
+import { useQuery } from "../useQuery";
 
 export const useChain = (token: string) => {
   const { data, isLoading } = useQuery<API.Chain[]>("/v1/public/token");
 
   const chains = useMemo(() => {
-    if (!data) return null;
+    if (!data) {
+      return null;
+    }
 
-    let item = data.find((chain) => chain.token === token);
+    const item = data.find((chain) => chain.token === token);
 
     if (item) {
       item.chain_details = item.chain_details.map((d) => {

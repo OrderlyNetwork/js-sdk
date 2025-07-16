@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { forwardRef, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
@@ -13,6 +14,7 @@ import {
   Spinner,
   InputFormatter,
 } from "@orderly.network/ui";
+import { Decimal } from "@orderly.network/utils";
 import { InputStatus } from "../../types";
 import { TokenOption } from "./tokenOption";
 
@@ -28,10 +30,12 @@ export type QuantityInputProps = {
   loading?: boolean;
   testId?: string;
   formatters?: InputFormatter[];
+  vaultBalanceList?: API.VaultBalance[];
+  displayType?: "balance" | "vaultBalance";
 } & Omit<InputProps, "onClear" | "suffix" | "onValueChange">;
 
 export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
-  (props, ref) => {
+  (props) => {
     const {
       token,
       tokens = [],
@@ -46,6 +50,8 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
       loading,
       placeholder,
       formatters,
+      vaultBalanceList,
+      displayType,
       ...rest
     } = props;
 
@@ -56,11 +62,20 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
     const [width, setWidth] = useState(0);
 
     const tokenOptions = useMemo(() => {
-      return tokens!.map((token) => ({
-        ...token,
-        name: token.display_name || token.symbol!,
-      }));
-    }, [tokens]);
+      return tokens.map((token) => {
+        const currentToken = vaultBalanceList?.find(
+          (item) => item.token === token.symbol,
+        );
+        const insufficientBalance = new Decimal(currentToken?.balance ?? 0).lt(
+          value ? Number(value) : 0,
+        );
+        return {
+          ...token,
+          name: token.display_name || token.symbol!,
+          insufficientBalance: insufficientBalance,
+        };
+      });
+    }, [tokens, value, vaultBalanceList]);
 
     useEffect(() => {
       const rect = inputRef?.current?.getBoundingClientRect();
@@ -68,7 +83,7 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
     }, [inputRef]);
 
     const _onTokenChange = (value: string) => {
-      const find = tokens!.find((item) => item.symbol === value);
+      const find = tokens.find((item) => item.symbol === value);
       if (find) {
         onTokenChange?.(find);
       }
@@ -79,12 +94,13 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
       return (
         <TokenOption
           token={item}
+          isActive={isActive}
           fetchBalance={fetchBalance}
+          displayType={displayType}
           onTokenChange={(item) => {
             onTokenChange?.(item);
             setOpen(false);
           }}
-          isActive={isActive}
         />
       );
     };
@@ -165,7 +181,6 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
     return (
       <>
         <Input
-          data-testid={props.testId}
           ref={inputRef}
           autoComplete="off"
           placeholder={_placeholder}

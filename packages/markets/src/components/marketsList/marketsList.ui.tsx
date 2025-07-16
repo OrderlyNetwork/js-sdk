@@ -15,6 +15,7 @@ export type MarketsListProps = MarketsListScriiptReturn &
     | "rowClassName"
     | "initialSort"
     | "renderHeader"
+    | "emptyView"
   >;
 
 export const MarketsList: FC<MarketsListProps> = (props) => {
@@ -28,6 +29,7 @@ export const MarketsList: FC<MarketsListProps> = (props) => {
     collapsed,
     isFavoritesList,
     renderHeader,
+    emptyView,
   } = props;
 
   const { symbol, onSymbolChange } = useMarketsContext();
@@ -52,6 +54,7 @@ export const MarketsList: FC<MarketsListProps> = (props) => {
           body: props.tableClassNames?.body,
           header: cn("oui-h-9", props.tableClassNames?.header),
           scroll: props.tableClassNames?.scroll,
+          empty: "oui-items-start oui-mt-6",
         }}
         columns={columns}
         loading={loading}
@@ -77,6 +80,7 @@ export const MarketsList: FC<MarketsListProps> = (props) => {
             : undefined
         }
         manualSorting
+        emptyView={emptyView}
       />
     </>
   );

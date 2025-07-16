@@ -2,10 +2,11 @@ import { FC, useMemo } from "react";
 import { useAccount } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
-import { Flex, Text, ChevronLeftIcon } from "@orderly.network/ui";
+import { Flex, Text, ChevronLeftIcon, cn } from "@orderly.network/ui";
 import { WalletConnectButtonExtension } from "../accountMenu/menu.widget";
 import { ChainMenuWidget } from "../chainMenu";
 import { LanguageSwitcherWidget } from "../languageSwitcher";
+import { LeftNavUI } from "../leftNav/leftNav.ui";
 import { RouterAdapter } from "../scaffold";
 import { ScanQRCodeWidget } from "../scanQRCode";
 import { SubAccountWidget } from "../subAccount";
@@ -13,7 +14,7 @@ import { LinkDeviceWidget } from "./linkDevice";
 import { MainLogo } from "./mainLogo";
 import { MainNavWidgetProps } from "./mainNav.widget";
 
-type Props = {
+type MainNavMobileProps = {
   current?: string;
   subItems?: {
     name: string;
@@ -22,7 +23,7 @@ type Props = {
   routerAdapter?: RouterAdapter;
 } & MainNavWidgetProps;
 
-export const MainNavMobile: FC<Props> = (props) => {
+export const MainNavMobile: FC<MainNavMobileProps> = (props) => {
   const { wrongNetwork, disabledConnect } = useAppContext();
   const { state } = useAccount();
   const currentMenu = useMemo(() => {
@@ -78,17 +79,15 @@ export const MainNavMobile: FC<Props> = (props) => {
 
   const showChainMenu = !showLinkDevice && !wrongNetwork;
 
-  // TODO: fix this
   const showQrcode = useMemo(() => {
-    if (state.status === AccountStatusEnum.EnableTradingWithoutConnected) {
+    if (
+      state.status === AccountStatusEnum.EnableTradingWithoutConnected ||
+      state.status === AccountStatusEnum.EnableTrading ||
+      disabledConnect
+    ) {
       return false;
     }
-    if (state.status === AccountStatusEnum.EnableTrading) {
-      return false;
-    }
-    if (disabledConnect) {
-      return false;
-    }
+
     return true;
   }, [state.status, disabledConnect]);
 
@@ -119,7 +118,7 @@ export const MainNavMobile: FC<Props> = (props) => {
     );
   }
 
-  const renderCustomComponents = () => {
+  const renderContent = () => {
     const languageSwitcher = <LanguageSwitcherWidget />;
     const scanQRCode = showQrcode && <ScanQRCodeWidget />;
     const subAccount = showSubAccount && <SubAccountWidget />;
@@ -127,8 +126,17 @@ export const MainNavMobile: FC<Props> = (props) => {
     const chainMenu = showChainMenu && <ChainMenuWidget />;
     const walletConnect = <WalletConnectButtonExtension />;
 
+    const leftNav = (
+      <LeftNavUI
+        {...props?.leftNav}
+        logo={props?.logo}
+        routerAdapter={props?.routerAdapter}
+      />
+    );
+
     if (typeof props.customRender === "function") {
       return props.customRender?.({
+        leftNav,
         title,
         languageSwitcher,
         scanQRCode,
@@ -140,19 +148,23 @@ export const MainNavMobile: FC<Props> = (props) => {
     }
 
     return (
-      <>
-        {title}
+      <Flex width="100%" justify="between">
+        <Flex gapX={2}>
+          {props?.customLeftNav || leftNav}
+          {title}
+        </Flex>
+
         <Flex gapX={2}>
           {props.leading}
           {languageSwitcher}
           {scanQRCode}
-          {subAccount}
+          {/* {subAccount} */}
           {linkDevice}
           {chainMenu}
           {walletConnect}
           {props.trailing}
         </Flex>
-      </>
+      </Flex>
     );
   };
 
@@ -162,10 +174,9 @@ export const MainNavMobile: FC<Props> = (props) => {
       height={44}
       px={3}
       itemAlign={"center"}
-      justify={"between"}
-      className={props.classNames?.mainNav?.root}
+      className={cn(props.className, props.classNames?.root)}
     >
-      {renderCustomComponents()}
+      {renderContent()}
     </Flex>
   );
 };

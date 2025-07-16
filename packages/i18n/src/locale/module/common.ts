@@ -50,6 +50,7 @@ export const common = {
   "common.fee": "Fee",
   "common.fees": "Fees",
 
+  "common.orderPrice": "Order price",
   "common.avgPrice": "Avg. price",
   "common.avgOpen": "Avg. open",
   "common.avgClose": "Avg. close",
@@ -97,4 +98,5 @@ export const common = {
   "common.accountId": "Account ID",
   "common.web3Wallet": "Web3 wallet",
   "common.txId": "TxID",
+  "common.result": "Result",
 };

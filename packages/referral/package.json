@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/referral",
-  "version": "2.3.2",
+  "version": "2.5.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -47,7 +47,6 @@
   },
   "dependencies": {
     "@orderly.network/hooks": "workspace:*",
-    "@orderly.network/react": "workspace:*",
     "@orderly.network/utils": "workspace:*",
     "class-variance-authority": "^0.6.1",
     "embla-carousel-react": "^8.2.0",

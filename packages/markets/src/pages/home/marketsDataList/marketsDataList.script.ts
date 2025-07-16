@@ -13,7 +13,7 @@ export function useMarketsDataListScript() {
   const [activeTab, setActiveTab] = useState<MarketsTabName>(
     MarketsTabName.All,
   );
-  const { clearSearchValue } = useMarketsContext();
+  const { clearSearchValue, searchValue } = useMarketsContext();
 
   const { tabSort, onTabSort } = useTabSort({
     storageKey: MOBILE_MARKETS_TAB_SORT_STORAGE_KEY,
@@ -28,5 +28,6 @@ export function useMarketsDataListScript() {
     onTabChange: (value: string) => setActiveTab(value as MarketsTabName),
     tabSort,
     onTabSort,
+    searchValue,
   };
 }

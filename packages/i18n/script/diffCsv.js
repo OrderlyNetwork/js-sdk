@@ -3,7 +3,10 @@ const path = require("path");
 const { csv2multiJson } = require("./json-csv-converter");
 const packageJson = require("../package.json");
 
-/** Compare two locale CSV files */
+/**
+ * https://www.jsdelivr.com/package/npm/@orderly.network/i18n?tab=files&path=dist
+ * Compare two locale CSV files
+ */
 async function diffCsv(oldFile, newFile) {
   const oldCsv = await fs.readFile(oldFile, { encoding: "utf8" });
   const newCsv = await fs.readFile(newFile, { encoding: "utf8" });
@@ -27,8 +30,27 @@ async function diffCsv(oldFile, newFile) {
     });
     console.log("LOCALE_CHANGELOG.md created");
   } else {
-    markdownContent = `\n\n${markdownContent}`;
-    await fs.appendFile(filepath, markdownContent, {
+    // Read existing content
+    const existingContent = await fs.readFile(filepath, { encoding: "utf8" });
+
+    // Find the position after "# Locale Changelog"
+    const titleIndex = existingContent.indexOf("# Locale Changelog");
+    if (titleIndex === -1) {
+      console.error("Could not find '# Locale Changelog' title in the file");
+      return;
+    }
+
+    const titleEndIndex = titleIndex + "# Locale Changelog".length;
+
+    // Split content and insert new content after the title
+    const beforeTitle = existingContent.slice(0, titleEndIndex);
+    const afterTitle = existingContent.slice(titleEndIndex);
+
+    // Combine all parts
+    const newContent = `${beforeTitle}\n\n${markdownContent}${afterTitle}`;
+
+    // Write back to file
+    await fs.writeFile(filepath, newContent, {
       encoding: "utf8",
     });
     console.log("LOCALE_CHANGELOG.md updated");

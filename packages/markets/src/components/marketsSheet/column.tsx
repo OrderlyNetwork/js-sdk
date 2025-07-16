@@ -19,7 +19,18 @@ export const getMarketsSheetColumns = (
     {
       title: `${i18n.t("markets.column.market")} / ${i18n.t("common.volume")}`,
       dataIndex: "24h_amount",
-      onSort: true,
+      multiSort: {
+        fields: [
+          {
+            sortKey: "symbol",
+            label: i18n.t("markets.column.market"),
+          },
+          {
+            sortKey: "24h_amount",
+            label: i18n.t("common.volume"),
+          },
+        ],
+      },
       className: "oui-h-[36px]",
       render: (value, record) => {
         let favoritesIcon: ReactNode;

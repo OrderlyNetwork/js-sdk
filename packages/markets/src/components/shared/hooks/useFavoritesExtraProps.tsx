@@ -2,9 +2,12 @@ import { useCallback } from "react";
 import { Favorite, FavoriteTab } from "@orderly.network/hooks";
 import { Box } from "@orderly.network/ui";
 import { FavoriteInstance, MarketsTabName } from "../../../type";
+import { FavoritesEmpty } from "../../favoritesEmpty";
 import { FavoritesTabWidget } from "../../favoritesTabs";
+import { useMarketsContext } from "../../marketsProvider";
 
 export function useFavoritesProps() {
+  const { searchValue } = useMarketsContext();
   const renderHeader = useCallback((favorite: FavoriteInstance) => {
     return (
       <Box px={3} className="oui-my-[6px]">
@@ -48,9 +51,30 @@ export function useFavoritesProps() {
     [renderHeader, dataFilter],
   );
 
+  const renderEmptyView = useCallback(
+    (options: {
+      type: MarketsTabName;
+      onClick: () => void;
+      className?: string;
+    }) => {
+      if (options.type === MarketsTabName.Favorites && !searchValue) {
+        return (
+          <FavoritesEmpty
+            onClick={options.onClick}
+            className={options.className}
+          />
+        );
+      }
+
+      return undefined;
+    },
+    [searchValue],
+  );
+
   return {
     renderHeader,
     dataFilter,
     getFavoritesProps,
+    renderEmptyView,
   };
 }

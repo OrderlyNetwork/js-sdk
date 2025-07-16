@@ -1,4 +1,4 @@
-import { useCallback, useRef, useMemo, useState } from "react";
+import { useCallback, useRef, useMemo, useState, ReactNode } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   SimpleDialog,
@@ -22,7 +22,9 @@ import { EditNickNameDialog } from "./components/editNickNameModal";
 import { SubAccountIcon, SwapIcon } from "./icons";
 import { SubAccountScriptReturn } from "./subAccount.script";
 
-export function SubAccountUI(props: SubAccountScriptReturn) {
+export function SubAccountUI(
+  props: SubAccountScriptReturn & { customTrigger?: ReactNode },
+) {
   const { t } = useTranslation();
   const { isMobile } = useScreen();
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -36,10 +38,17 @@ export function SubAccountUI(props: SubAccountScriptReturn) {
   }, []);
   const header = <Text weight="semibold">{t("subAccount.modal.title")}</Text>;
   const trigger = useMemo(() => {
+    if (props.customTrigger && isMobile) {
+      return (
+        <div onClick={() => props.onOpenChange(true)}>
+          {props.customTrigger}
+        </div>
+      );
+    }
     if (isMobile) {
       return (
         <Flex
-          className="oui-bg-base-6 oui-h-8 oui-w-8 oui-rounded-md"
+          className="oui-size-8 oui-rounded-md oui-bg-base-6"
           itemAlign="center"
           justify="center"
         >
@@ -51,7 +60,7 @@ export function SubAccountUI(props: SubAccountScriptReturn) {
       );
     }
     return <SubAccountIcon className={cn("oui-cursor-pointer")} />;
-  }, [isMobile]);
+  }, [isMobile, props.customTrigger]);
 
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editAccountItem, setEditAccountItem] = useState<

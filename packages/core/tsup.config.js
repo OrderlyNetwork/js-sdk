@@ -1,7 +1,8 @@
-import { defineConfig } from "tsup";
+import stdLibBrowser from "node-stdlib-browser";
 // import { polyfillNode } from "esbuild-plugin-polyfill-node";
 import plugin from "node-stdlib-browser/helpers/esbuild/plugin";
-import stdLibBrowser from "node-stdlib-browser";
+import { defineConfig } from "tsup";
+
 // import shim from "node-stdlib-browser/helpers/esbuild/shim";
 
 export default defineConfig((options) => ({
@@ -31,6 +32,9 @@ export default defineConfig((options) => ({
     options.inject = [
       require.resolve("node-stdlib-browser/helpers/esbuild/shim"),
     ];
+    if (!options.watch) {
+      options.drop = ["debugger"];
+    }
   },
   tsconfig: "tsconfig.build.json",
 }));

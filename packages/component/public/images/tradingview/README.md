@@ -1,1 +1,0 @@
-This repository is used in the build pipeline of [Example DEX](https://github.com/OrderlyNetwork/example-dex) to hide tradingview assets.

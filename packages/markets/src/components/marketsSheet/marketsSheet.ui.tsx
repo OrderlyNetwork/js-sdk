@@ -17,9 +17,10 @@ export const MarketsSheet: React.FC<MarketsSheetProps> = (props) => {
 
   const { t } = useTranslation();
 
-  const { getFavoritesProps } = useFavoritesProps();
+  const { getFavoritesProps, renderEmptyView } = useFavoritesProps();
 
   const renderTab = (type: MarketsTabName) => {
+    const isFavorites = type === MarketsTabName.Favorites;
     return (
       <MarketsListWidget
         type={type}
@@ -30,11 +31,17 @@ export const MarketsSheet: React.FC<MarketsSheetProps> = (props) => {
           root: "!oui-bg-base-8",
           scroll: cn(
             "oui-pb-[env(safe-area-inset-bottom,_20px)]",
-            type === MarketsTabName.Favorites
+            isFavorites
               ? "oui-h-[calc(100%_-_70px)]"
               : "oui-h-[calc(100%_-_40px)]",
           ),
         }}
+        emptyView={renderEmptyView({
+          type,
+          onClick: () => {
+            props.onTabChange(MarketsTabName.All);
+          },
+        })}
         {...getFavoritesProps(type)}
       />
     );

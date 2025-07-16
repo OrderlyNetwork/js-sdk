@@ -2,11 +2,10 @@ import { i18n } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
 
 export const getTokenByTokenList = (tokens: API.TokenInfo[] = []) => {
-  const tokenObj = tokens.reduce((acc, item) => {
+  const tokenObj = tokens.reduce<Record<string, API.TokenInfo>>((acc, item) => {
     acc[item.symbol] = item;
     return acc;
-  }, {} as any);
-
+  }, {});
   return tokenObj["USDC"] || tokenObj["USDbC"] || tokens[0];
 };
 

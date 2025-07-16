@@ -42,6 +42,8 @@ export const MonadTestnetUSDCAddress =
   "0x77F77926C6596c78f285D230Cd0dC8dC3540e3a6";
 export const qaMonadTestnetVaultAddress =
   "0xdd6E018D747D70C705BA84B67B6eAD7748a57cDa";
+export const qaArbitrumTestnetVaultAddress =
+  "0xB15a3a4D451311e03e34d9331C695078Ad5Cf5F1";
 export const AbstractMainnetUSDCAddress =
   "0x84A71ccD554Cc1b02749b35d22F684CC8ec987e1";
 export const AbstractTestnetUSDCAddress =
