@@ -196,11 +196,16 @@ export const SymbolInfoBarFull: React.FC<SymbolInfoBarFullProps> = (props) => {
                     gap={1}
                   >
                     <Flex justify="between" itemAlign={"center"} width={"100%"}>
-                      <Text intensity={54}>Interval</Text>
+                      <Text intensity={54}>
+                        {t("trading.fundingRate.predFundingRate.interval")}
+                      </Text>
                       <Text intensity={80}>{fundingPeriod}</Text>
                     </Flex>
                     <Flex justify="between" itemAlign={"center"} width={"100%"}>
-                      <Text intensity={54}>Funding cap / floor</Text>
+                      <Text intensity={54}>
+                        {t("trading.fundingRate.predFundingRate.cap")} /
+                        {t("trading.fundingRate.predFundingRate.floor")}
+                      </Text>
                       <Text intensity={80}>
                         {capFunding} / {floorFunding}
                       </Text>
