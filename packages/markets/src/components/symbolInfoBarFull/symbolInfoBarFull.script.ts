@@ -1,11 +1,12 @@
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
+  useFundingDetails,
   useFundingRate,
   useMarketsStore,
   useSymbolsInfo,
   useTickerStream,
 } from "@orderly.network/hooks";
 import { Decimal } from "@orderly.network/utils";
-import { useEffect, useMemo, useRef, useState } from "react";
 
 export type UseSymbolInfoBarFullScriptOptions = {
   symbol: string;
@@ -16,7 +17,7 @@ export type UseSymbolInfoBarFullScriptReturn = ReturnType<
 >;
 
 export function useSymbolInfoBarFullScript(
-  options: UseSymbolInfoBarFullScriptOptions
+  options: UseSymbolInfoBarFullScriptOptions,
 ) {
   const { symbol } = options;
 
@@ -24,6 +25,30 @@ export function useSymbolInfoBarFullScript(
   const fundingRate = useFundingRate(symbol);
 
   const favorite = useMarketsStore();
+
+  const { data: fundingDetails, isLoading: isFundingLoading } =
+    useFundingDetails(symbol);
+
+  const fundingPeriod = useMemo(() => {
+    if (!fundingDetails || isFundingLoading) {
+      return "-";
+    }
+    return `${fundingDetails.funding_period}h`;
+  }, [fundingDetails, isFundingLoading]);
+
+  const capFunding = useMemo(() => {
+    if (!fundingDetails || isFundingLoading) {
+      return "-";
+    }
+    return `${new Decimal(fundingDetails.cap_funding).mul(100).toNumber()}%`;
+  }, [fundingDetails, isFundingLoading]);
+
+  const floorFunding = useMemo(() => {
+    if (!fundingDetails || isFundingLoading) {
+      return "-";
+    }
+    return `${new Decimal(fundingDetails.floor_funding).mul(100).toNumber()}%`;
+  }, [fundingDetails, isFundingLoading]);
 
   const info = useSymbolsInfo();
   const quotoDp = info[symbol]("quote_dp");
@@ -36,7 +61,7 @@ export function useSymbolInfoBarFullScript(
 
   const isFavorite = useMemo(
     () => !!favorite.favorites.find((item) => item.name === symbol),
-    [favorite.favorites, symbol]
+    [favorite.favorites, symbol],
   );
 
   const openInterest = useMemo(
@@ -45,7 +70,7 @@ export function useSymbolInfoBarFullScript(
         .mul(data?.index_price ?? 0)
         .toDecimalPlaces(2)
         .valueOf(),
-    [data]
+    [data],
   );
 
   useEffect(() => {
@@ -77,9 +102,10 @@ export function useSymbolInfoBarFullScript(
   }, []);
 
   const onScoll = (direction: string) => {
-    if (direction === "left")
-      containerRef.current?.scrollBy({ left: -100, behavior: "smooth" });
-    else containerRef.current?.scrollBy({ left: 100, behavior: "smooth" });
+    containerRef.current?.scrollBy({
+      left: direction === "left" ? -100 : 100,
+      behavior: "smooth",
+    });
   };
 
   return {
@@ -96,5 +122,8 @@ export function useSymbolInfoBarFullScript(
     leadingVisible,
     tailingVisible,
     onScoll,
+    fundingPeriod,
+    capFunding,
+    floorFunding,
   };
 }
