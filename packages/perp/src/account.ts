@@ -1,9 +1,4 @@
-import {
-  API,
-  OrderSide,
-  OrderType,
-  type WSMessage,
-} from "@orderly.network/types";
+import { API, OrderSide } from "@orderly.network/types";
 import { Decimal, zero } from "@orderly.network/utils";
 import { IMRFactorPower } from "./constants";
 
@@ -17,21 +12,18 @@ export type TotalValueInputs = {
   USDCHolding: number;
   nonUSDCHolding: {
     holding: number;
-    markPrice: number;
-    //Margin replacement rate, currently default to 0
-    discount: number;
+    indexPrice: number;
   }[];
 };
+
 /**
  * User's total asset value (denominated in USDC), including assets that cannot be used as collateral.
  */
 export function totalValue(inputs: TotalValueInputs): Decimal {
   const { totalUnsettlementPnL, USDCHolding, nonUSDCHolding } = inputs;
-
   const nonUSDCHoldingValue = nonUSDCHolding.reduce((acc, cur) => {
-    return new Decimal(cur.holding).mul(cur.markPrice).add(acc);
+    return new Decimal(cur.holding).mul(cur.indexPrice).add(acc);
   }, zero);
-
   return nonUSDCHoldingValue.add(USDCHolding).add(totalUnsettlementPnL);
 }
 
@@ -54,32 +46,30 @@ export function freeCollateral(inputs: FreeCollateralInputs): Decimal {
 }
 
 export type TotalCollateralValueInputs = {
-  // Quantity of USDC holdings
   USDCHolding: number;
   nonUSDCHolding: {
     holding: number;
-    markPrice: number;
-    // Margin replacement rate, currently default to 0
-    discount: number;
+    indexPrice: number;
+    collateralCap: number;
+    collateralRatio: number;
   }[];
-  // Unsettled profit and loss
   unsettlementPnL: number;
 };
+
 /**
  * Calculate total collateral.
  */
 export function totalCollateral(inputs: TotalCollateralValueInputs): Decimal {
-  const { USDCHolding, nonUSDCHolding } = inputs;
-  const nonUSDCHoldingValue = nonUSDCHolding.reduce((acc, cur) => {
-    return (
-      acc +
-      new Decimal(cur.holding).mul(cur.markPrice).mul(cur.discount).toNumber()
-    );
-  }, 0);
+  const { USDCHolding, nonUSDCHolding, unsettlementPnL } = inputs;
+  const nonUSDCHoldingValue = nonUSDCHolding.reduce<Decimal>((acc, cur) => {
+    const finalHolding = Math.min(cur.holding, cur.collateralCap);
+    const value = new Decimal(finalHolding)
+      .mul(cur.collateralRatio)
+      .mul(cur.indexPrice);
+    return acc.add(value);
+  }, zero);
 
-  return new Decimal(USDCHolding)
-    .add(nonUSDCHoldingValue)
-    .add(inputs.unsettlementPnL);
+  return new Decimal(USDCHolding).add(nonUSDCHoldingValue).add(unsettlementPnL);
 }
 
 export function initialMarginWithOrder() {}
@@ -727,8 +717,126 @@ export function MMR(inputs: AccountMMRInputs): number | null {
   if (inputs.positionsNotional === 0) {
     return null;
   }
-  if (inputs.positionsMMR === 0) return null;
+  if (inputs.positionsMMR === 0) {
+    return null;
+  }
   return new Decimal(inputs.positionsMMR)
     .div(inputs.positionsNotional)
     .toNumber();
 }
+
+export const collateralRatio = (params: {
+  baseWeight: number;
+  discountFactor: number | null;
+  collateralQty: number;
+  collateralCap: number;
+  indexPrice: number;
+}) => {
+  const {
+    baseWeight,
+    discountFactor,
+    collateralQty,
+    collateralCap,
+    indexPrice,
+  } = params;
+
+  // if collateralCap is -1, it means the collateral is unlimited
+  const cap = collateralCap === -1 ? collateralQty : collateralCap;
+
+  const K = new Decimal(1.2);
+  const DCF = new Decimal(discountFactor || 0);
+  const qty = new Decimal(Math.min(collateralQty, cap));
+  const price = new Decimal(indexPrice);
+
+  const notionalAbs = qty.mul(price).abs();
+  const dynamicWeight = DCF.mul(notionalAbs).toPower(IMRFactorPower);
+  const result = K.div(new Decimal(1).add(dynamicWeight));
+
+  return Math.min(baseWeight, result.toNumber());
+};
+
+/** collateral_value_i = min(collateral_qty_i , collateral_cap_i) * weight_i * index_price_i */
+export const collateralContribution = (params: {
+  collateralQty: number;
+  collateralCap: number;
+  collateralRatio: number;
+  indexPrice: number;
+}) => {
+  const { collateralQty, collateralCap, collateralRatio, indexPrice } = params;
+
+  // if collateralCap is -1, it means the collateral is unlimited
+  const cap = collateralCap === -1 ? collateralQty : collateralCap;
+
+  return new Decimal(Math.min(collateralQty, cap))
+    .mul(collateralRatio)
+    .mul(indexPrice)
+    .toNumber();
+};
+
+export const LTV = (params: {
+  usdcBalance: number;
+  upnl: number;
+  assets: Array<{ qty: number; indexPrice: number; weight: number }>;
+}) => {
+  const { usdcBalance, upnl, assets } = params;
+
+  const usdcLoss = new Decimal(Math.min(usdcBalance, 0)).abs();
+  const upnlLoss = new Decimal(Math.min(upnl, 0)).abs();
+  const numerator = usdcLoss.add(upnlLoss);
+
+  const collateralSum = assets.reduce<Decimal>((acc, asset) => {
+    return acc.add(
+      new Decimal(Math.max(asset.qty, 0))
+        .mul(new Decimal(asset.indexPrice))
+        .mul(new Decimal(asset.weight)),
+    );
+  }, zero);
+
+  const denominator = collateralSum.add(new Decimal(Math.max(upnl, 0)));
+
+  if (numerator.isZero() || denominator.isZero()) {
+    return 0;
+  }
+
+  return numerator.div(denominator).toNumber();
+};
+
+export const maxWithdrawalUSDC = (inputs: {
+  USDCBalance: number;
+  freeCollateral: number;
+  upnl: number;
+}) => {
+  const { USDCBalance, freeCollateral, upnl } = inputs;
+  const value = Math.min(
+    new Decimal(USDCBalance).toNumber(),
+    new Decimal(freeCollateral).sub(Math.max(upnl, 0)).toNumber(),
+  );
+  return Math.max(0, value);
+};
+
+export const maxWithdrawalOtherCollateral = (inputs: {
+  collateralQty: number;
+  freeCollateral: number;
+  indexPrice: number;
+  weight: number;
+}) => {
+  const { collateralQty, freeCollateral, indexPrice, weight } = inputs;
+  const denominator = new Decimal(indexPrice).mul(weight);
+
+  if (denominator.isZero()) {
+    return 0;
+  }
+  const maxQtyByValue = new Decimal(freeCollateral).div(denominator).toNumber();
+  return Math.min(collateralQty, maxQtyByValue);
+};
+
+export const calcMinimumReceived = (inputs: {
+  amount: number;
+  slippage: number;
+}) => {
+  const { amount, slippage } = inputs;
+  const slippageRatio = new Decimal(slippage).div(100);
+  return new Decimal(amount)
+    .mul(new Decimal(1).minus(slippageRatio))
+    .toNumber();
+};

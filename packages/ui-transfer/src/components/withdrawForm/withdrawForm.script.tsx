@@ -1,6 +1,5 @@
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
-  OrderlyContext,
   useAccount,
   useChains,
   useConfig,
@@ -8,6 +7,7 @@ import {
   useLocalStorage,
   usePrivateQuery,
   useQuery,
+  useTokenInfo,
   useTransfer,
   useWalletConnector,
   useWalletSubscription,
@@ -20,7 +20,8 @@ import { toast } from "@orderly.network/ui";
 import { Decimal, int2hex, praseChainIdToNumber } from "@orderly.network/utils";
 import { InputStatus, WithdrawTo } from "../../types";
 import { checkIsAccountId, getTransferErrorMessage } from "../../utils";
-import { CurrentChain, useToken } from "../depositForm/hooks";
+import { CurrentChain } from "../depositForm/hooks";
+import { useToken } from "../depositForm/hooks/useToken";
 import { useSettlePnl } from "../unsettlePnlInfo/useSettlePnl";
 
 export type WithdrawFormScriptReturn = ReturnType<typeof useWithdrawFormScript>;
@@ -52,17 +53,20 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
   const { wrongNetwork } = useAppContext();
   const { account } = useAccount();
 
-  const [allChains, { findByChainId }] = useChains(networkId, {
-    pick: "network_infos",
+  const [chains, { findByChainId }] = useChains(networkId, {
     filter: (chain: any) =>
       chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,
   });
 
   const [linkDeviceStorage] = useLocalStorage("orderly_link_device", {});
 
-  const { data: balanceList } = useQuery<any>(`/v1/public/vault_balance`, {
-    revalidateOnMount: true,
-  });
+  const { data: vaultBalanceList } = useQuery<API.VaultBalance[]>(
+    `/v1/public/vault_balance`,
+    {
+      revalidateOnMount: true,
+      errorRetryCount: 3,
+    },
+  );
 
   const {
     connectedChain,
@@ -76,7 +80,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
 
     const chainId = connectedChain
       ? praseChainIdToNumber(connectedChain.id)
-      : parseInt(linkDeviceStorage?.chainId);
+      : Number.parseInt(linkDeviceStorage?.chainId);
 
     if (!chainId) return null;
 
@@ -89,22 +93,20 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     } as CurrentChain;
   }, [findByChainId, connectedChain, linkDeviceStorage]);
 
-  // const [token, setToken] = useState<API.TokenInfo>({
-  //   symbol: "USDC",
-  //   decimals: 6,
-  //   address: "",
-  //   display_name: "",
-  //   precision: 6,
-  // });
-  const { token: _token } = useToken({ currentChain });
+  const { sourceToken, onSourceTokenChange, sourceTokens } = useToken(
+    currentChain,
+    (token) => token.symbol === "USDC" || token.is_collateral,
+  );
 
-  const token = useMemo(() => {
-    return {
-      ..._token,
-      // withdraw display precision is 6
-      precision: _token?.precision ?? 6,
-    } as API.TokenInfo;
-  }, [_token]);
+  const tokenChains = useMemo(() => {
+    return chains
+      .filter((chain) =>
+        chain.token_infos?.some(
+          (token) => token.symbol === sourceToken?.symbol,
+        ),
+      )
+      .map((chain) => chain.network_infos);
+  }, [chains, networkId, sourceToken]);
 
   const { walletName, address } = useMemo(
     () => ({
@@ -117,24 +119,18 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
   const onQuantityChange = (qty: string) => {
     setQuantity(qty);
   };
+
   const amount = useMemo(() => {
     return new Decimal(quantity || 0).mul(markPrice).toNumber();
   }, [quantity, markPrice]);
 
-  const {
-    dst,
-    withdraw,
-    isLoading,
-    maxAmount,
-    availableBalance,
-    availableWithdraw,
-    unsettledPnL,
-  } = useWithdraw({
-    decimals: token?.decimals,
+  const { withdraw, maxAmount, unsettledPnL } = useWithdraw({
+    token: sourceToken?.symbol,
+    decimals: sourceToken?.token_decimal,
   });
 
   const internalWithdrawState = useInternalWithdraw({
-    symbol: token.symbol,
+    token: sourceToken?.symbol!,
     quantity,
     setQuantity,
     close: options.onClose,
@@ -142,17 +138,6 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
   });
 
   const { withdrawTo, toAccountId } = internalWithdrawState;
-
-  const chains = useMemo(() => {
-    if (networkId === "mainnet") {
-      return allChains.filter((item) => item.bridgeless);
-    }
-
-    return allChains;
-  }, [allChains, networkId]);
-
-  const { configStore } = useContext(OrderlyContext);
-  const apiBaseUrl = configStore.get("apiBaseUrl");
 
   const checkIsBridgeless = useMemo(() => {
     if (wrongNetwork) {
@@ -211,20 +196,22 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
   );
 
   const chainVaultBalance = useMemo(() => {
-    if (!balanceList || !currentChain) return null;
+    if (!Array.isArray(vaultBalanceList) || !currentChain) {
+      return null;
+    }
     // chain.id
-    const vaultBalance = balanceList.find(
-      (item: any) => parseInt(item.chain_id) === currentChain?.id,
+    const vaultBalance = vaultBalanceList.find(
+      (item) => Number.parseInt(item.chain_id) === currentChain?.id,
     );
     if (vaultBalance) {
       return vaultBalance.balance;
     }
     return null;
-  }, [chains, currentChain, balanceList]);
+  }, [chains, currentChain, vaultBalanceList]);
 
   const crossChainWithdraw = useMemo(() => {
     if (chainVaultBalance !== null) {
-      const qtyNum = parseFloat(quantity);
+      const qtyNum = Number.parseFloat(quantity);
       const value = qtyNum > chainVaultBalance && qtyNum <= maxAmount;
       return value;
     }
@@ -232,9 +219,8 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
   }, [quantity, maxAmount, chainVaultBalance]);
 
   const minAmount = useMemo(() => {
-    // @ts-ignore;
-    return chains.minimum_withdraw_amount ?? 1;
-  }, [chains]);
+    return sourceToken?.minimum_withdraw_amount ?? 0;
+  }, [sourceToken]);
 
   const onWithdraw = async () => {
     if (loading) {
@@ -254,9 +240,8 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     setLoading(true);
     return withdraw({
       amount: quantity,
-      token: "USDC",
-      // @ts-ignore
-      chainId: currentChain?.id,
+      token: sourceToken?.symbol!,
+      chainId: currentChain?.id!,
       allowCrossChainWithdraw: crossChainWithdraw,
     })
       .then((res) => {
@@ -290,10 +275,9 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
   };
 
   const fee = useWithdrawFee({
-    apiBaseUrl,
     crossChainWithdraw,
     currentChain,
-    token: token.symbol,
+    token: sourceToken?.symbol!,
   });
 
   const showQty = useMemo(() => {
@@ -315,25 +299,10 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
       return;
     }
     const qty = new Decimal(quantity ?? 0);
-
     if (unsettledPnL < 0) {
       if (qty.gt(maxAmount)) {
         setInputStatus("error");
         setHintMessage(t("transfer.insufficientBalance"));
-      } else {
-        setInputStatus("default");
-        setHintMessage("");
-      }
-    } else {
-      if (qty.gt(maxAmount)) {
-        setInputStatus("error");
-        setHintMessage(t("transfer.insufficientBalance"));
-      } else if (
-        qty.gt(new Decimal(maxAmount).minus(unsettledPnL)) &&
-        qty.lessThanOrEqualTo(maxAmount)
-      ) {
-        setInputStatus("warning");
-        setHintMessage(t("settle.settlePnl.warning"));
       } else {
         setInputStatus("default");
         setHintMessage("");
@@ -378,10 +347,11 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     address,
     quantity,
     onQuantityChange,
-    token,
+    sourceToken,
+    onSourceTokenChange,
+    sourceTokens,
     inputStatus,
     hintMessage,
-    dst,
     amount,
     balanceRevalidating: false,
     maxQuantity: maxAmount,
@@ -390,7 +360,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     unsettledPnL,
     wrongNetwork,
     settingChain,
-    chains,
+    tokenChains,
     currentChain,
     onChainChange,
     onWithdraw,
@@ -404,12 +374,15 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     hasPositions,
     onSettlePnl,
     brokerName,
+    vaultBalanceList: vaultBalanceList?.filter(
+      (item) => Number.parseInt(item.chain_id) === currentChain?.id,
+    ),
     ...internalWithdrawState,
   };
 };
 
 type InternalWithdrawOptions = {
-  symbol: string;
+  token: string;
   quantity: string;
   setQuantity: (quantity: string) => void;
   close?: () => void;
@@ -417,7 +390,7 @@ type InternalWithdrawOptions = {
 };
 
 function useInternalWithdraw(options: InternalWithdrawOptions) {
-  const { symbol, quantity, setQuantity, close, setLoading } = options;
+  const { token, quantity, setQuantity, close, setLoading } = options;
   const { t } = useTranslation();
   const [withdrawTo, setWithdrawTo] = useState<WithdrawTo>(WithdrawTo.Wallet);
   const [toAccountId, setToAccountId] = useState<string>("");
@@ -437,7 +410,7 @@ function useInternalWithdraw(options: InternalWithdrawOptions) {
     if (submitting || !toAccountId) return;
     setLoading(true);
 
-    transfer(symbol, {
+    transfer(token, {
       account_id: toAccountId,
       amount: new Decimal(quantity).toNumber(),
     })
@@ -447,14 +420,14 @@ function useInternalWithdraw(options: InternalWithdrawOptions) {
         close?.();
       })
       .catch((err) => {
-        console.log("transfer error: ", err, err.code);
+        console.error("transfer error: ", err, err.code);
         const errorMsg = getTransferErrorMessage(err.code);
         toast.error(errorMsg);
       })
       .finally(() => {
         setLoading(false);
       });
-  }, [t, quantity, symbol, submitting, toAccountId, transfer]);
+  }, [t, quantity, token, submitting, toAccountId, transfer]);
 
   useEffect(() => {
     if (!toAccountId) {
@@ -485,33 +458,19 @@ function useInternalWithdraw(options: InternalWithdrawOptions) {
 }
 
 export function useWithdrawFee(options: {
-  apiBaseUrl: string;
   token: string;
   currentChain?: CurrentChain | null;
   crossChainWithdraw: boolean;
 }) {
-  const { apiBaseUrl, crossChainWithdraw, currentChain, token } = options;
+  const { crossChainWithdraw, currentChain, token } = options;
 
-  const { data: tokenChainsRes } = useQuery<any[]>(
-    `${apiBaseUrl}/v1/public/token?t=withdraw`,
-    {
-      revalidateIfStale: false,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      // If false, undefined data gets cached against the key.
-      revalidateOnMount: true,
-      // dont duplicate a request w/ same key for 1hr
-      dedupingInterval: 3_600_000,
-    },
-  );
+  const tokenInfo = useTokenInfo(token);
 
   const fee = useMemo(() => {
     if (!currentChain) return 0;
 
-    const tokenChain = tokenChainsRes?.find((item) => item.token === token);
-
-    const item = tokenChain?.chain_details?.find(
-      (c: any) => parseInt(c.chain_id) === currentChain!.id,
+    const item = tokenInfo?.chain_details?.find(
+      (chain) => Number.parseInt(chain.chain_id) === currentChain!.id,
     );
 
     if (!item) {
@@ -520,13 +479,12 @@ export function useWithdrawFee(options: {
 
     if (crossChainWithdraw) {
       return (
-        // @ts-ignore
         (item.withdrawal_fee || 0) + (item.cross_chain_withdrawal_fee || 0)
       );
     }
 
     return item.withdrawal_fee || 0;
-  }, [tokenChainsRes, token, currentChain, crossChainWithdraw]);
+  }, [tokenInfo, token, currentChain, crossChainWithdraw]);
 
   return fee;
 }

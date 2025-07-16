@@ -1,3 +1,4 @@
+import { expect } from "@jest/globals";
 import { estLeverage, estLiqPrice, orderFee } from "../src/order";
 
 describe("order", () => {

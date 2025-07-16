@@ -55,7 +55,7 @@ export function useFavoritesProps() {
     (options: {
       type: MarketsTabName;
       onClick: () => void;
-      className: string;
+      className?: string;
     }) => {
       if (options.type === MarketsTabName.Favorites && !searchValue) {
         return (

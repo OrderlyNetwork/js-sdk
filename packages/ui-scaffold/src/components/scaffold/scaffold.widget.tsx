@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, ReactNode } from "react";
+import { PropsWithChildren, ReactNode } from "react";
 import { BottomNavProps } from "../bottomNav/bottomNav.widget";
 import { FooterProps } from "../footer";
 import { LeftNavProps } from "../leftNav";
@@ -29,7 +29,7 @@ export type ScaffoldProps = {
    */
   topBar?: ReactNode;
   /**
-   * custom top nav props, only works on desktop
+   * custom top nav props
    */
   mainNavProps?: MainNavWidgetProps;
   /**

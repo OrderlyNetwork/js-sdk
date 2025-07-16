@@ -47,7 +47,6 @@
   },
   "dependencies": {
     "@orderly.network/hooks": "workspace:*",
-    "@orderly.network/react": "workspace:*",
     "@orderly.network/utils": "workspace:*",
     "class-variance-authority": "^0.6.1",
     "embla-carousel-react": "^8.2.0",

@@ -21,7 +21,18 @@ export const useSideMarketsColumns = (
     {
       title: `${t("markets.column.market")} / ${t("common.volume")}`,
       dataIndex: "24h_amount",
-      onSort: true,
+      multiSort: {
+        fields: [
+          {
+            sortKey: "symbol",
+            label: t("markets.column.market"),
+          },
+          {
+            sortKey: "24h_amount",
+            label: t("common.volume"),
+          },
+        ],
+      },
       className: "oui-h-[36px]",
       render: (value, record) => {
         let favoritesIcon: ReactNode;

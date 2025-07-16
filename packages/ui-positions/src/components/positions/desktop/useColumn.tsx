@@ -257,7 +257,7 @@ export const useColumn = (config: ColumnConfig) => {
         title: t("funding.fundingFee"),
         dataIndex: "fundingFee",
         width: 100,
-        render: (value: string, record) => (
+        render: (value, record) => (
           <FundingFeeButton
             fee={value}
             symbol={record.symbol}

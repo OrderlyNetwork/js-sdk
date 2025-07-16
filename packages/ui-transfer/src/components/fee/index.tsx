@@ -1,12 +1,10 @@
 import { FC } from "react";
-import { Box, Flex, modal, Text } from "@orderly.network/ui";
-import { UseFeeReturn } from "../depositForm/depositForm.script";
-import { Decimal } from "@orderly.network/utils";
 import { useTranslation } from "@orderly.network/i18n";
+import { Box, Flex, modal, Text } from "@orderly.network/ui";
+import { Decimal } from "@orderly.network/utils";
+import { type UseDepositFeeReturn } from "../depositForm/depositForm.script";
 
-type FeeProps = UseFeeReturn;
-
-export const Fee: FC<FeeProps> = (props) => {
+export const Fee: FC<Partial<UseDepositFeeReturn>> = (props) => {
   const { dstGasFee, feeQty, feeAmount, dp, nativeSymbol } = props;
   const { t } = useTranslation();
 
@@ -14,7 +12,7 @@ export const Fee: FC<FeeProps> = (props) => {
     const content = (
       <div className="oui-text-2xs">
         <Flex gapX={1}>
-          <Text intensity={54}>
+          <Text size="2xs" intensity={54}>
             {`${t("transfer.deposit.destinationGasFee")}: `}
           </Text>
           <Text.numeral
@@ -23,7 +21,7 @@ export const Fee: FC<FeeProps> = (props) => {
             rm={Decimal.ROUND_UP}
             padding={false}
           >
-            {feeQty}
+            {feeQty!}
           </Text.numeral>
           <Text intensity={54}>{nativeSymbol}</Text>
         </Flex>
@@ -45,16 +43,16 @@ export const Fee: FC<FeeProps> = (props) => {
 
   return (
     <Text
-      size="xs"
+      size="2xs"
       intensity={36}
       className="oui-border-dashed oui-border-b oui-border-line-12 oui-cursor-pointer"
       onClick={onShowFee}
     >
       {`${t("common.fee")} ≈ `}
-      <Text size="xs" intensity={80}>
+      <Text size="2xs" intensity={80}>
         $
         <Text.numeral dp={2} padding={false} rm={Decimal.ROUND_UP}>
-          {feeAmount}
+          {feeAmount!}
         </Text.numeral>{" "}
       </Text>
       {showFeeQty && (
@@ -62,7 +60,7 @@ export const Fee: FC<FeeProps> = (props) => {
           (
           <Text intensity={54}>
             <Text.numeral dp={dp} padding={false} rm={Decimal.ROUND_UP}>
-              {feeQty}
+              {feeQty!}
             </Text.numeral>
             {nativeSymbol}
           </Text>

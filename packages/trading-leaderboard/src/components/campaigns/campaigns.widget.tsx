@@ -37,13 +37,13 @@ export const CampaignsWidget: FC<CampaignsWidgetProps> = (props) => {
 
   return (
     <div
-      className={cn(["oui-overflow-hidden oui-relative oui-z-[1]"])}
+      className={cn(["oui-relative oui-z-[1] oui-overflow-hidden"])}
       style={props.style}
     >
       <CampaignsHeaderWidget
         backgroundSrc={state.backgroundSrc}
         campaigns={state.campaigns}
-        currentCampaignId={state.currentCampaignId}
+        currentCampaignId={state.currentCampaignId.toString()}
         onCampaignChange={state.onCampaignChange}
       />
       {state.currentCampaign && (
@@ -55,6 +55,11 @@ export const CampaignsWidget: FC<CampaignsWidgetProps> = (props) => {
           backgroundSrc={state.backgroundSrc}
           classNames={contentClassNames}
           isMobile={isMobile}
+          isParticipated={state.isParticipated}
+          shouldShowJoinButton={state.shouldShowJoinButton}
+          joinCampaign={state.joinCampaign}
+          isJoining={state.isJoining}
+          joinError={state.joinError}
         />
       )}
       {state.currentCampaign && (

@@ -1,5 +1,5 @@
 {
-  "mode": "pre",
+  "mode": "exit",
   "tag": "alpha",
   "initialVersions": {
     "@orderly/docs": "1.4.1",
@@ -9,12 +9,11 @@
     "@orderly.network/chart": "2.4.1",
     "@orderly.network/cli": "0.7.1",
     "@orderly.network/codemod": "1.4.1",
-    "@orderly.network/react": "2.4.1",
     "@orderly.network/core": "2.4.1",
     "create-orderly-app": "1.9.1",
     "@orderly.network/default-evm-adapter": "2.4.1",
     "@orderly.network/default-solana-adapter": "2.4.1",
-    "eslint-config-custom": "1.4.1",
+    "@orderly.network/eslint-config": "1.4.1",
     "@orderly.network/hooks": "2.4.1",
     "@orderly.network/i18n": "2.4.1",
     "@orderly.network/markets": "2.4.1",

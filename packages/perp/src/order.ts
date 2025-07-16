@@ -23,7 +23,7 @@ export function minPrice(markprice: number, range: number) {
 export function scopePrice(
   price: number,
   scope: number,
-  side: "BUY" | "SELL"
+  side: "BUY" | "SELL",
 ): number {
   if (side === "BUY") {
     return price * (1 - scope);
@@ -125,20 +125,20 @@ export function estLiqPrice(inputs: EstimatedLiquidationPriceInputs): number {
           .add(
             !!currentPosition
               ? new Decimal(currentPosition.position_qty).mul(
-                  currentPosition.mark_price
+                  currentPosition.mark_price,
                 )
-              : zero
+              : zero,
           )
-          .abs()
+          .abs(),
       )
       .toPower(4 / 5)
-      .toNumber()
+      .toNumber(),
   );
 
   // console.log("new MMR", newMMR, newTotalMM.toNumber());
 
   const newQty = new Decimal(newOrder.qty).add(
-    currentPosition?.position_qty ?? 0
+    currentPosition?.position_qty ?? 0,
   );
 
   if (newQty.eq(0)) {
@@ -150,7 +150,7 @@ export function estLiqPrice(inputs: EstimatedLiquidationPriceInputs): number {
       new Decimal(totalCollateral)
         .sub(newTotalMM)
         .sub(orderFee)
-        .div(newQty.abs().mul(newMMR).sub(newQty))
+        .div(newQty.abs().mul(newMMR).sub(newQty)),
     )
     .toNumber();
 
@@ -199,7 +199,7 @@ export function estLeverage(inputs: EstimatedLeverageInputs): number | null {
 
   if (!hasPosition) {
     sumPositionNotional = sumPositionNotional.add(
-      new Decimal(newOrder.qty).mul(newOrder.price).abs()
+      new Decimal(newOrder.qty).mul(newOrder.price).abs(),
     );
   }
 
@@ -208,7 +208,7 @@ export function estLeverage(inputs: EstimatedLeverageInputs): number | null {
   }
 
   const totalMarginRatio = new Decimal(totalCollateral).div(
-    sumPositionNotional
+    sumPositionNotional,
   );
 
   return new Decimal(1)

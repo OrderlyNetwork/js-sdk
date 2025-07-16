@@ -1,30 +1,29 @@
-import { ReactElement, useMemo } from "react";
-import { SelectOption, SelectWithOptions } from "./withOptions";
-import { SelectProps } from "./select";
-import { selectVariants } from "./selectPrimitive";
-import { Text } from "../typography";
+import React, { ReactElement, useMemo } from "react";
 import {
   ItemIndicator,
   SelectItem,
   SelectItemText,
 } from "@radix-ui/react-select";
-import { TokenIcon } from "../icon";
-import { SizeType } from "../helpers/sizeType";
 import { Flex } from "../flex";
-import { cnBase } from "tailwind-variants";
+import type { SizeType } from "../helpers/sizeType";
+import { TokenIcon } from "../icon";
+import { Text } from "../typography";
+import type { SelectProps } from "./select";
+import { selectVariants } from "./selectPrimitive";
+import { SelectOption, SelectWithOptions } from "./withOptions";
 
 type TokenItem = {
   name: string;
   [x: string]: any;
 };
 
-export type TokenSelect = {
+export type TokenSelectProps = {
   tokens: TokenItem[];
   showIcon?: boolean;
   optionRenderer?: (option: SelectOption) => ReactElement;
 } & SelectProps<string>;
 
-export const TokenSelect = (props: TokenSelect) => {
+export const TokenSelect: React.FC<TokenSelectProps> = (props) => {
   const { tokens, showIcon = true, ...rest } = props;
   const { icon } = selectVariants();
 
@@ -73,11 +72,8 @@ export const TokenSelect = (props: TokenSelect) => {
   );
 };
 
-const Option = (
-  props: SelectOption & {
-    size?: SizeType;
-    index?: number;
-  }
+const Option: React.FC<SelectOption & { size?: SizeType; index?: number }> = (
+  props,
 ) => {
   const { size, label, value } = props;
 

@@ -46,6 +46,9 @@
       ],
       "@orderly.network/ui-chain-selector": [
         "../ui-chain-selector/src"
+      ],
+      "@orderly.network/perp": [
+        "../perp/src"
       ]
     }
   }

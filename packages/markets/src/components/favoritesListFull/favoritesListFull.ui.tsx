@@ -30,6 +30,8 @@ export const FavoritesListFull: FC<FavoritesListFullProps> = (props) => {
     </Flex>
   );
 
+  console.log("🏗️ onSort", onSort);
+
   return (
     <div>
       <FavoritesTabWidget favorite={favorite} className="oui-my-3" />
@@ -40,6 +42,9 @@ export const FavoritesListFull: FC<FavoritesListFullProps> = (props) => {
         columns={columns}
         dataSource={dataSource}
         emptyView={emptyView}
+        classNames={{
+          empty: "oui-items-start oui-mt-6",
+        }}
         loading={loading}
         onRow={(record, index) => {
           return {

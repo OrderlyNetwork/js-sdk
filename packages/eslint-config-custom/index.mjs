@@ -3,6 +3,7 @@ import eslintConfigPrettier from "eslint-config-prettier/flat";
 // import importPlugin from "eslint-plugin-import";
 import monorepoCop from "eslint-plugin-monorepo-cop";
 import reactPlugin from "eslint-plugin-react";
+import * as reactHooks from "eslint-plugin-react-hooks";
 import tailwind from "eslint-plugin-tailwindcss";
 import { defineConfig, globalIgnores } from "eslint/config";
 import globals from "globals";
@@ -21,7 +22,6 @@ export default defineConfig([
     "**/public/",
     "**/__test__/",
     "**/storybook-static/",
-    "packages/component/",
     "apps/docs/",
     "**/*.js",
     "**/*.cjs",
@@ -99,6 +99,7 @@ export default defineConfig([
       // https://eslint.style/packages/default
       "@stylistic": stylistic,
       "monorepo-cop": monorepoCop,
+      "react-hooks": reactHooks,
     },
     rules: {
       "no-console": ["warn", { allow: ["warn", "error"] }],
@@ -124,6 +125,10 @@ export default defineConfig([
       // prevent relative imports outside of monorepo package
       "monorepo-cop/no-relative-import-outside-package": "error",
       "monorepo-cop/no-disable-monorepo-no-relative-rule": "error",
+
+      // https://github.com/facebook/react/tree/main/packages/eslint-plugin-react-hooks#flat-config-eslintconfigjsts-1
+      "react-hooks/rules-of-hooks": "warn",
+      "react-hooks/exhaustive-deps": "warn",
     },
   },
 

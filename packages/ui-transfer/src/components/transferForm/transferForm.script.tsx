@@ -4,8 +4,10 @@ import {
   useAccount,
   useConfig,
   useSubAccountDataObserver,
+  useSubAccountMaxWithdrawal,
   useTransfer,
 } from "@orderly.network/hooks";
+import { useTokensInfo } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { API, NetworkId } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
@@ -19,6 +21,7 @@ export type TransferFormScriptReturn = ReturnType<typeof useTransferFormScript>;
 export type TransferFormScriptOptions = {
   /** target sub account id */
   toAccountId?: string;
+  token?: string;
   close?: () => void;
 };
 
@@ -34,18 +37,22 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
   const [mainAccount, setMainAccount] = useState<SubAccount>();
   const [tokens, setTokens] = useState<API.TokenInfo[]>([DEFAULT_TOKEN]);
   const [token, setToken] = useState<API.TokenInfo>(DEFAULT_TOKEN);
+  const [holdingMap, setHoldingMap] = useState<Record<string, API.Holding[]>>(
+    {},
+  );
 
   const networkId = useConfig("networkId") as NetworkId;
 
   const { state, isMainAccount, subAccount } = useAccount();
+
+  const tokensInfo = useTokensInfo();
 
   const {
     transfer,
     submitting,
     maxAmount: currentMaxAmount,
     unsettledPnL: currentUnsettledPnL,
-    holding: currentHolding,
-  } = useTransfer({ fromAccountId: fromAccount?.id });
+  } = useTransfer({ fromAccountId: fromAccount?.id, token: token.symbol });
 
   const subAccounts = state.subAccounts;
   const mainAccountId = state.mainAccountId;
@@ -60,11 +67,18 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
     : fromAccount?.id;
 
   const { hasPositions: currentHasPositions, onSettlePnl } = useSettlePnl({
-    subAccountId: observerAccountId,
+    accountId: fromAccount?.id,
   });
 
   // when select sub account, open the private websocket
   const { portfolio, positions } = useSubAccountDataObserver(observerAccountId);
+  const subAccountMaxAmount = useSubAccountMaxWithdrawal({
+    token: token.symbol,
+    unsettledPnL: portfolio?.unsettledPnL,
+    freeCollateral:
+      portfolio?.freeCollateral?.todp(token?.precision).toNumber() || 0,
+    holdings: portfolio?.holding,
+  });
 
   const formHasPositions = useMemo(
     () => !!positions?.rows?.length,
@@ -75,26 +89,23 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
     return observerAccountId ? formHasPositions : currentHasPositions;
   }, [observerAccountId, formHasPositions, currentHasPositions]);
 
-  const { unsettledPnL, holding, maxQuantity } = useMemo(() => {
+  const { unsettledPnL, maxQuantity } = useMemo(() => {
     if (observerAccountId) {
       return {
         unsettledPnL: portfolio?.unsettledPnL,
-        holding: portfolio?.holding,
-        maxQuantity:
-          portfolio?.freeCollateral.toDecimalPlaces(6).toNumber() || 0,
+        maxQuantity: subAccountMaxAmount,
       };
     }
     return {
-      holding: currentHolding,
       unsettledPnL: currentUnsettledPnL,
       maxQuantity: currentMaxAmount,
     };
   }, [
     observerAccountId,
-    portfolio,
-    currentHolding,
     currentUnsettledPnL,
     currentMaxAmount,
+    portfolio?.unsettledPnL,
+    subAccountMaxAmount,
   ]);
 
   const { inputStatus, hintMessage } = useInputStatus({
@@ -123,7 +134,7 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
         options.close?.();
       })
       .catch((err) => {
-        console.log("transfer error: ", err);
+        console.error("transfer error: ", err);
         const errorMsg = getTransferErrorMessage(err.code);
         toast.error(errorMsg);
       });
@@ -137,12 +148,13 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
   }, [quantity]);
 
   const toAccountAsset = useMemo(() => {
-    const asset = toAccount?.holding?.find(
-      (item) => item.token === token.symbol,
-    );
-
+    if (!toAccount?.id) {
+      return 0;
+    }
+    const holdings = holdingMap[toAccount.id];
+    const asset = holdings?.find((item) => item.token === token.symbol);
     return asset?.holding || 0;
-  }, [toAccount, token]);
+  }, [toAccount, token, holdingMap]);
 
   const { fromAccounts, toAccounts } = useMemo(() => {
     if (isMainAccount) {
@@ -173,6 +185,7 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
     setMainAccount(_mainAccount);
 
     subAccount.refresh().then((res) => {
+      setHoldingMap(res);
       setMainAccount({
         ..._mainAccount,
         holding: res[mainAccountId],
@@ -212,16 +225,25 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
     }
   }, [options?.toAccountId, isMainAccount, mainAccount, subAccounts]);
 
-  // update tokens by current holding
   useEffect(() => {
-    const tokens = holding?.map((item) => ({
+    const tokens = tokensInfo?.map((item) => ({
       symbol: item.token,
+      precision: item.decimals,
     })) as API.TokenInfo[];
+
     if (tokens?.length) {
+      tokens.sort((a, b) => {
+        if (a.symbol === "USDC") return -1;
+        if (b.symbol === "USDC") return 1;
+        return 0;
+      });
+
+      const targetToken = tokens?.find((item) => item.symbol === options.token);
+
       setTokens(tokens);
-      setToken(tokens?.[0] || DEFAULT_TOKEN);
+      setToken(targetToken || tokens?.[0] || DEFAULT_TOKEN);
     }
-  }, [holding]);
+  }, [tokensInfo, options.token]);
 
   const onFromAccountChange = useCallback(
     (account: SubAccount) => {

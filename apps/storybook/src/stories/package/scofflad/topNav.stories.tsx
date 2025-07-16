@@ -1,5 +1,7 @@
-import type { Meta, StoryObj } from "@storybook/react";
 import { useMemo } from "react";
+import type { Meta, StoryObj } from "@storybook/react";
+import { fn } from "@storybook/test";
+import { useChains } from "@orderly.network/hooks";
 import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { Box, Flex, Text } from "@orderly.network/ui";
 import {
@@ -11,8 +13,6 @@ import {
   CampaignPositionEnum,
   LanguageSwitcherWidget,
 } from "@orderly.network/ui-scaffold";
-import { useChains } from "@orderly.network/hooks";
-import { fn } from "@storybook/test";
 import {
   ARBActiveIcon,
   ARBIcon,
@@ -182,12 +182,7 @@ export const CustomMainNav: Story = {
       { name: "Reward", href: "/rewards" },
       { name: "Markets", href: "/markets" },
     ],
-    products: [
-      { name: "Swap", href: "/swap" },
-      { name: "Trade", href: "/trade" },
-    ],
     initialMenu: "/markets",
-    initialProduct: "/trade",
   },
 };
 export const SubMainNav: Story = {
@@ -326,12 +321,7 @@ export const SubMainNav: Story = {
         ],
       },
     ],
-    products: [
-      { name: "Swap", href: "/swap" },
-      { name: "Trade", href: "/trade" },
-    ],
     initialMenu: "/markets",
-    initialProduct: "/trade",
     onItemClick: fn(),
   },
 };
@@ -342,12 +332,7 @@ export const CampaignsNav: Story = {
       { name: "Trading", href: "/" },
       { name: "Markets", href: "/markets" },
     ],
-    products: [
-      { name: "Swap", href: "/swap" },
-      { name: "Trade", href: "/trade" },
-    ],
     initialMenu: "/markets",
-    initialProduct: "/trade",
     campaigns: {
       name: "Reward",
       href: "/rewards",

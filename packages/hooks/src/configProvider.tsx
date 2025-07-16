@@ -1,14 +1,10 @@
 import type { FC, PropsWithChildren } from "react";
 import React, { useLayoutEffect, useMemo } from "react";
-import useConstant from "use-constant";
 import {
   ConfigStore,
   // MemoryConfigStore,
   OrderlyKeyStore,
-  getWalletAdapterFunc,
-  WalletAdapterOptions,
   LocalStorageStore,
-  EtherAdapter,
   SimpleDI,
   Account,
   IContract,
@@ -24,8 +20,7 @@ import { DEFAULT_TICK_SIZES } from "./constants";
 import { DataCenterProvider } from "./dataProvider";
 import { ProxyConfigStore } from "./dev/proxyConfigStore";
 import { ExtendedConfigStore } from "./extendedConfigStore";
-import type { Chains } from "./orderly/useChains";
-import { OrderlyProvider } from "./orderlyContext";
+import { OrderlyConfigContextState, OrderlyProvider } from "./orderlyContext";
 import { StatusProvider } from "./statusProvider";
 
 // import { useParamsCheck } from "./useParamsCheck";
@@ -43,12 +38,14 @@ export type BaseConfigProviderProps = {
   // getWalletAdapter?: getWalletAdapterFunc;
   walletAdapters?: WalletAdapter[];
   chainFilter?: filteredChains | filterChainsFunc;
-  customChains?: Chains<undefined, undefined>;
   /**
    * Custom orderbook default tick sizes.
    */
   orderbookDefaultTickSizes?: Record<string, string>;
-};
+} & Pick<
+  OrderlyConfigContextState,
+  "enableSwapDeposit" | "customChains" | "chainTransformer"
+>;
 
 export type ExclusiveConfigProviderProps =
   | {
@@ -82,6 +79,8 @@ export const OrderlyConfigProvider: FC<
     contracts,
     chainFilter,
     customChains,
+    enableSwapDeposit = true,
+    chainTransformer,
   } = props;
 
   if (!brokerId && typeof configStore === "undefined") {
@@ -189,6 +188,8 @@ export const OrderlyConfigProvider: FC<
         walletAdapters: innerWalletAdapters,
         // apiBaseUrl,
         customChains,
+        enableSwapDeposit,
+        chainTransformer,
         defaultOrderbookTickSizes,
       }}
     >

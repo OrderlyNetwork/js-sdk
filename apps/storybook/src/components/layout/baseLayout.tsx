@@ -22,24 +22,46 @@ export const BaseLayout: FC<BaseLayoutProps> = (props) => {
       mainNavProps={{
         ...config.scaffold.mainNavProps,
         initialMenu: props.initialMenu || "/",
-        // customRender: isMobile
-        //   ? (components) => {
-        //       return (
-        //         <>
-        //           {components.title}
-        //           <Flex gapX={2}>
-        //             {/* hide languageSwitcher on mobile */}
-        //             {/* {components.languageSwitcher} */}
-        //             {components.scanQRCode}
-        //             {components.subAccount}
-        //             {components.linkDevice}
-        //             {components.chainMenu}
-        //             {/* {components.walletConnect} */}
-        //           </Flex>
-        //         </>
-        //       );
-        //     }
-        //   : undefined,
+        customRender: (components) => {
+          // mobile
+          if (isMobile) {
+            return (
+              <Flex width="100%" justify="between">
+                <Flex gapX={2}>
+                  {components.leftNav}
+                  {components.title}
+                </Flex>
+
+                <Flex gapX={2}>
+                  {components.languageSwitcher}
+                  {components.scanQRCode}
+                  {components.linkDevice}
+                  {components.chainMenu}
+                  {components.walletConnect}
+                </Flex>
+              </Flex>
+            );
+          }
+
+          // desktop
+          return (
+            <Flex width="100%" justify="between">
+              <Flex gapX={2}>
+                {components.title}
+                {components.mainNav}
+              </Flex>
+
+              <Flex gapX={2}>
+                {components.accountSummary}
+                {components.linkDevice}
+                {components.languageSwitcher}
+                {components.subAccount}
+                {components.chainMenu}
+                {components.walletConnect}
+              </Flex>
+            </Flex>
+          );
+        },
       }}
       bottomNavProps={{
         ...config.scaffold.bottomNavProps,

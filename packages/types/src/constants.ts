@@ -68,8 +68,10 @@ export const MaxUint256: bigint = BigInt(
 
 export const nativeTokenAddress = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE";
 
+export const nativeETHAddress = "0x0000000000000000000000000000000000000000";
+
 export const isNativeTokenChecker = (address: string) =>
-  address === nativeTokenAddress;
+  address === nativeTokenAddress || address === nativeETHAddress;
 
 export const ArbitrumSepoliaChainInfo = {
   name: "Arbitrum Sepolia",
