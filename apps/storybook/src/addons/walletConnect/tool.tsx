@@ -1,6 +1,6 @@
 import React, { memo } from "react";
-import { IconButton } from "@storybook/components";
-import { useChannel, useGlobals } from "@storybook/manager-api";
+import { IconButton } from "storybook/internal/components";
+import { useChannel, useGlobals } from "storybook/manager-api";
 
 export const WalletConnectAddonId = "walletConnectAddon";
 export const WalletConnectToolId = "walletConnectToolId";

@@ -1,7 +1,7 @@
 import React from "react";
-import { styled } from "@storybook/theming";
+import { styled } from "storybook/theming";
+import { useTheme } from "./context";
 import { Label, StyledInput, Wrap } from "./radius";
-import { useTheme } from "./editorContext";
 
 const StyledGroupName = styled.h3`
   font-size: 14px;

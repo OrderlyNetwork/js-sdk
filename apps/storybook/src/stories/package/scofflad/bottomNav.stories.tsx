@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Box } from "@orderly.network/ui";
 import { FooterWidget, Scaffold } from "@orderly.network/ui-scaffold";
 
@@ -33,9 +33,15 @@ export const CumstomizeUrls: Story = {
           telegramUrl: "https://orderly.network",
           discordUrl: "https://orderly.network",
           twitterUrl: "https://orderly.network",
-          trailing: <a onClick={() => window.open('https://orderly.network')} style={{fontSize: '12px', color:'blue', cursor: 'pointer'}}>Product feedback</a>
+          trailing: (
+            <a
+              onClick={() => window.open("https://orderly.network")}
+              style={{ fontSize: "12px", color: "blue", cursor: "pointer" }}
+            >
+              Product feedback
+            </a>
+          ),
         }}
-      
       ></Scaffold>
     );
   },

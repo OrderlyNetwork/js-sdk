@@ -1,9 +1,8 @@
-import { Box, Flex, ListView } from "@orderly.network/ui";
-import type { Meta, StoryObj } from "@storybook/react";
-
 import { ReactNode, useState } from "react";
 // @ts-ignore
 import React from "react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Box, Flex, ListView } from "@orderly.network/ui";
 
 const meta: Meta<typeof ListView> = {
   title: "Base/ListView",
@@ -47,7 +46,7 @@ export const Default: Story = {
 export const LoadMore: Story = {
   render: () => {
     const [loading, setLoading] = useState(false);
-    const [dataSource, setDataSouce] = useState([1, 2, 3, 4, 5, 6, 7,8]);
+    const [dataSource, setDataSouce] = useState([1, 2, 3, 4, 5, 6, 7, 8]);
 
     return (
       <>
@@ -69,7 +68,7 @@ export const LoadMore: Story = {
                 return [
                   ...e,
                   ...Array.from({ length: 10 }).map(
-                    (_, index) => e.length + 1 + index
+                    (_, index) => e.length + 1 + index,
                   ),
                 ];
               });

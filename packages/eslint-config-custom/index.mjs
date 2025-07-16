@@ -22,6 +22,9 @@ export default defineConfig([
     "**/public/",
     "**/__test__/",
     "**/storybook-static/",
+    // TODO: remove this when packages/component/ deleted
+    // "packages/component/",
+    // TODO: remove this when apps/docs/ deleted
     "apps/docs/",
     "**/*.js",
     "**/*.cjs",

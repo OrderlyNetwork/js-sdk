@@ -1,7 +1,7 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { OrderEntryWidget, OrderEntry } from "@orderly.network/ui-order-entry";
-import { Box } from "@orderly.network/ui";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { OrderSide, OrderType } from "@orderly.network/types";
+import { Box } from "@orderly.network/ui";
+import { OrderEntryWidget, OrderEntry } from "@orderly.network/ui-order-entry";
 
 const meta: Meta<typeof OrderEntry> = {
   title: "Package/ui-order-entry/form",

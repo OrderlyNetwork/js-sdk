@@ -1,12 +1,12 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { fn } from "@storybook/test";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { fn } from "storybook/test";
+import { AccountStatusEnum } from "@orderly.network/types";
+import { Box, Button, Card, modal, SimpleDialog } from "@orderly.network/ui";
 import {
   WalletConnectContent,
   WalletConnectorWidget,
   WalletConnectorModalId,
 } from "@orderly.network/ui-connector";
-import { Box, Button, Card, modal, SimpleDialog } from "@orderly.network/ui";
-import { AccountStatusEnum } from "@orderly.network/types";
 
 const meta: Meta<typeof WalletConnectContent> = {
   title: "Package/ui-connector",
@@ -14,7 +14,7 @@ const meta: Meta<typeof WalletConnectContent> = {
   parameters: {
     layout: "centered",
   },
-  tags:['!autodocs'],
+  tags: ["!autodocs"],
   argTypes: {},
   args: {
     initAccountState: AccountStatusEnum.NotConnected,
@@ -77,7 +77,7 @@ export const CommandStyle: Story = {
             },
             (err) => {
               console.log("error:::", err);
-            }
+            },
           );
         }}
       >

@@ -1,5 +1,5 @@
 import React from "react";
-import { AddonPanel } from "@storybook/components";
+import { AddonPanel } from "storybook/internal/components";
 
 export const Panel = (props) => {
   return (

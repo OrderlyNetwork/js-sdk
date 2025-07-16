@@ -2,67 +2,71 @@
 @tailwind components;
 @tailwind utilities;
 
-
 @font-face {
-  font-family: 'DIN2014-Regular';
-  src: url('/fonts/DIN2014/din-2014_regular.woff2') format('woff2'),
-      url('/fonts/DIN2014/din-2014_regular.woff') format('woff');
+  font-family: "DIN2014-Regular";
+  src:
+    url("/fonts/DIN2014/din-2014_regular.woff2") format("woff2"),
+    url("/fonts/DIN2014/din-2014_regular.woff") format("woff");
   font-weight: normal;
 }
 
 @font-face {
-  font-family: 'DIN2014-Demi';
-  src: url('/fonts/DIN2014/din-2014_demi.woff2') format('woff2'),
-      url('/fonts/DIN2014/din-2014_demi.woff') format('woff');
+  font-family: "DIN2014-Demi";
+  src:
+    url("/fonts/DIN2014/din-2014_demi.woff2") format("woff2"),
+    url("/fonts/DIN2014/din-2014_demi.woff") format("woff");
   font-weight: 600;
 }
 
 @font-face {
-  font-family: 'DIN2014-Bold';
-  src: url('/fonts/DIN2014/din-2014_bold.woff2') format('woff2'),
-      url('/fonts/DIN2014/din-2014_bold.woff') format('woff');
+  font-family: "DIN2014-Bold";
+  src:
+    url("/fonts/DIN2014/din-2014_bold.woff2") format("woff2"),
+    url("/fonts/DIN2014/din-2014_bold.woff") format("woff");
   font-weight: 700;
 }
 
 @font-face {
-  font-family: 'DIN2014';
-  src: url('/fonts/DIN2014/din-2014_regular.woff2') format('woff2'),
-      url('/fonts/DIN2014/din-2014_regular.woff') format('woff');
+  font-family: "DIN2014";
+  src:
+    url("/fonts/DIN2014/din-2014_regular.woff2") format("woff2"),
+    url("/fonts/DIN2014/din-2014_regular.woff") format("woff");
   font-weight: normal;
 }
 
 @font-face {
-  font-family: 'DIN2014';
-  src: url('/fonts/DIN2014/din-2014_demi.woff2') format('woff2'),
-      url('/fonts/DIN2014/din-2014_demi.woff') format('woff');
+  font-family: "DIN2014";
+  src:
+    url("/fonts/DIN2014/din-2014_demi.woff2") format("woff2"),
+    url("/fonts/DIN2014/din-2014_demi.woff") format("woff");
   font-weight: 600;
 }
 
 @font-face {
-  font-family: 'DIN2014';
-  src: url('/fonts/DIN2014/din-2014_bold.woff2') format('woff2'),
-      url('/fonts/DIN2014/din-2014_bold.woff') format('woff');
+  font-family: "DIN2014";
+  src:
+    url("/fonts/DIN2014/din-2014_bold.woff2") format("woff2"),
+    url("/fonts/DIN2014/din-2014_bold.woff") format("woff");
   font-weight: 700;
 }
 
-
 @font-face {
-  font-family: 'Manrope';
-  src: url('/fonts/Manrope/Manrope-Medium.ttf') format('truetype');
+  font-family: "Manrope";
+  src: url("/fonts/Manrope/Manrope-Medium.ttf") format("truetype");
   font-weight: 500;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Manrope';
-  src: url('/fonts/Manrope/Manrope-SemiBold.ttf') format('truetype');
+  font-family: "Manrope";
+  src: url("/fonts/Manrope/Manrope-SemiBold.ttf") format("truetype");
   font-weight: 600;
   font-style: normal;
 }
 
 @font-face {
-  font-family: 'Manrope';
-  src: url('/fonts/Manrope/Manrope-Bold.ttf') format('truetype');
+  font-family: "Manrope";
+  src: url("/fonts/Manrope/Manrope-Bold.ttf") format("truetype");
   font-weight: 700;
   font-style: normal;
 }

@@ -1,6 +1,6 @@
 import React from "react";
+import { styled } from "storybook/theming";
 import { ColorGradientInput, ColorInput } from "./colorInput";
-import { styled } from "@storybook/theming";
 
 type ColorItem = {
   name: string;
