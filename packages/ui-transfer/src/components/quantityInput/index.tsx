@@ -25,7 +25,7 @@ export type QuantityInputProps = {
   status?: InputStatus;
   hintMessage?: string;
   onValueChange?: (value: string) => void;
-  onTokenChange?: (token: API.TokenInfo) => void;
+  onTokenChange?: (token: any) => void;
   fetchBalance?: (token: string, decimals: number) => Promise<any>;
   loading?: boolean;
   testId?: string;
