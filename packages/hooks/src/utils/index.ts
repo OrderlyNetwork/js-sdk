@@ -1,6 +1,7 @@
 export {
   findTPSLFromOrder,
   findPositionTPSLFromOrders,
+  findTPSLOrderPriceFromOrder,
 } from "../orderly/usePositionStream/utils";
 
 export { cleanStringStyle } from "./orderEntryHelper";

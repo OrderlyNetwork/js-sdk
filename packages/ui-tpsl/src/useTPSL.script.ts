@@ -10,6 +10,7 @@ import {
   AlgoOrderRootType,
   AlgoOrderType,
   API,
+  OrderType,
   PositionType,
   SDKError,
 } from "@orderly.network/types";
@@ -111,15 +112,13 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
     }
 
     if (order && isEditing) {
-      const tp = order.child_orders.find(
-        (o) => o.algo_type === AlgoOrderType.TAKE_PROFIT,
-      );
-      const sl = order.child_orders.find(
-        (o) => o.algo_type === AlgoOrderType.STOP_LOSS,
-      );
+      const { tp_trigger_price, sl_trigger_price } =
+        utils.findTPSLFromOrder(order);
+      const { tp_order_price, sl_order_price } =
+        utils.findTPSLOrderPriceFromOrder(order);
 
       if (
-        tp?.trigger_price !== Number(tpslOrder.tp_trigger_price) &&
+        tp_trigger_price !== Number(tpslOrder.tp_trigger_price) &&
         typeof typeof tpslOrder.tp_trigger_price !== "undefined"
       ) {
         // return true;
@@ -127,10 +126,24 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
       }
 
       if (
-        sl?.trigger_price !== Number(tpslOrder.sl_trigger_price) &&
+        sl_trigger_price !== Number(tpslOrder.sl_trigger_price) &&
         typeof tpslOrder.sl_trigger_price !== "undefined"
       ) {
         diff = 3;
+      }
+      if (
+        typeof tpslOrder.tp_order_price !== "undefined" &&
+        tp_order_price !== OrderType.MARKET &&
+        tp_order_price !== Number(tpslOrder.tp_order_price)
+      ) {
+        diff = 4;
+      }
+      if (
+        typeof tpslOrder.sl_order_price !== "undefined" &&
+        sl_order_price !== OrderType.MARKET &&
+        sl_order_price !== Number(tpslOrder.sl_order_price)
+      ) {
+        diff = 5;
       }
     }
 
