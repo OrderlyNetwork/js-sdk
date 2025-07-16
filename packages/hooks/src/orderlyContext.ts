@@ -41,7 +41,7 @@ export interface OrderlyConfigContextState {
     swapChains: any[];
     mainnet: boolean;
   }) => API.Chain[];
-  /** enable swap deposit, default is true */
+  /** enable swap deposit, default is false */
   enableSwapDeposit?: boolean;
   /**
    * Custom orderbook default tick sizes.
