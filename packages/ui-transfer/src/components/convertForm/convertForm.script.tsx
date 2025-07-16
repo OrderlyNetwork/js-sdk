@@ -155,7 +155,8 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
         ],
       });
     }
-  }, [quantity, token, targetToken, chainId, postQuote]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [quantity, token, targetToken, chainId]);
 
   const minimumReceived = useMemo(() => {
     if (!quoteData || isQuoteLoading) {
