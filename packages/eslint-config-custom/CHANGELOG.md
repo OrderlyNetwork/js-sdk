@@ -1,5 +1,11 @@
 # @orderly.network/eslint-config
 
+## 2.5.1-internal-fix-multi-collateral.1
+
+### Patch Changes
+
+- publish
+
 ## 2.5.1-internal-fix-multi-collateral.0
 
 ### Patch Changes
