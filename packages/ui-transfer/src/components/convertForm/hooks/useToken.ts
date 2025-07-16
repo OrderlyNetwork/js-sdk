@@ -1,11 +1,12 @@
-import { useCallback, useEffect, useState } from "react";
-import type { API } from "@orderly.network/types";
-import type { CurrentChain } from "../../depositForm/hooks";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useEffect, useMemo, useState } from "react";
+import { useChains, useConfig, useTokensInfo } from "@orderly.network/hooks";
+import { Arbitrum, type API, type NetworkId } from "@orderly.network/types";
 
-const splitTokenBySymbol = <T extends API.TokenInfo>(items: T[]) => {
+const splitTokenBySymbol = <T extends API.Chain>(items: T[]) => {
   return items.reduce<Record<"usdc" | "others", T[]>>(
     (result, item) => {
-      if (item.symbol.toUpperCase() === "USDC") {
+      if (item.token?.toUpperCase() === "USDC") {
         result.usdc.push(item);
       } else {
         result.others.push(item);
@@ -17,49 +18,62 @@ const splitTokenBySymbol = <T extends API.TokenInfo>(items: T[]) => {
 };
 
 interface Options {
-  currentChain?: CurrentChain | null;
   defaultValue?: string;
 }
 
-export const useToken = (
-  options: Options,
-  predicate: (
-    value: API.TokenInfo,
-    index: number,
-    array: API.TokenInfo[],
-  ) => boolean = () => true,
-) => {
-  const { currentChain, defaultValue } = options;
+export const useToken = (options: Options) => {
+  const { defaultValue } = options;
 
-  const [sourceToken, setSourceToken] = useState<API.TokenInfo>();
-  const [targetToken, setTargetToken] = useState<API.TokenInfo>();
-  const [sourceTokens, setSourceTokens] = useState<API.TokenInfo[]>([]);
+  const config = useConfig();
 
-  // when chain changed and chain data ready then call this function
-  const onChainInited = useCallback((chainInfo?: API.Chain) => {
-    if (chainInfo && chainInfo?.token_infos?.length > 0) {
-      const { usdc, others } = splitTokenBySymbol(
-        chainInfo.token_infos.filter(predicate),
+  const networkId = config.get("networkId") as NetworkId;
+
+  const [, { findByChainId }] = useChains(networkId, {
+    pick: "network_infos",
+    filter: (chain: any) =>
+      chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,
+  });
+
+  const [sourceToken, setSourceToken] = useState<API.Chain>();
+  const [targetToken, setTargetToken] = useState<API.Chain>();
+  const [sourceTokens, setSourceTokens] = useState<API.Chain[]>([]);
+
+  const tokensInfo = useTokensInfo();
+
+  const chain = findByChainId(Arbitrum.id);
+
+  const chainId = chain?.network_infos?.chain_id;
+
+  const newTokensInfo = useMemo(() => {
+    return tokensInfo.map<API.Chain>((item) => {
+      const findToken = chain?.token_infos?.find(
+        ({ symbol }) => symbol === item.token,
       );
-      setSourceToken(() => {
-        if (defaultValue) {
-          const defaultToken = others.find(
-            ({ symbol }) => symbol === defaultValue,
-          );
-          return defaultToken ? defaultToken : others[0];
-        }
-        return others[0];
-      });
-      setSourceTokens(others);
-      setTargetToken(usdc[0]);
-    }
-  }, []);
+      return {
+        ...item,
+        symbol: item.token,
+        address: findToken?.address,
+        decimals: item.chain_details[0]?.decimals,
+        precision: item.decimals,
+      };
+    });
+  }, [chain?.token_infos, tokensInfo]);
 
   useEffect(() => {
-    onChainInited(currentChain?.info);
-  }, [currentChain?.id, onChainInited]);
+    const { usdc, others } = splitTokenBySymbol(newTokensInfo);
+    setSourceToken(() => {
+      if (defaultValue) {
+        const defaultToken = others.find(({ token }) => token === defaultValue);
+        return defaultToken ? defaultToken : others[0];
+      }
+      return others[0];
+    });
+    setSourceTokens(others);
+    setTargetToken(usdc[0]);
+  }, [defaultValue, newTokensInfo]);
 
   return {
+    chainId,
     sourceToken,
     sourceTokens,
     onSourceTokenChange: setSourceToken,
