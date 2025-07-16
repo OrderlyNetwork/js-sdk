@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/portfolio",
-  "version": "2.4.1",
+  "version": "2.5.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -21,6 +21,7 @@
     "@orderly.network/chart": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/i18n": "workspace:*",
+    "@orderly.network/perp": "workspace:*",
     "@orderly.network/react-app": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@orderly.network/ui": "workspace:*",

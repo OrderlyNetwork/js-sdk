@@ -1,23 +1,26 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { useWalletModal } from "@solana/wallet-adapter-react-ui";
-import { ChainNamespace, LedgerWalletKey } from "@orderly.network/types";
-import { useScreen } from "@orderly.network/ui";
-import { useEventEmitter, useLocalStorage, useStorageLedgerAddress, WalletState } from "@orderly.network/hooks";
 import {
   WalletAdapterNetwork,
   WalletNotReadyError,
   WalletReadyState,
 } from "@solana/wallet-adapter-base";
-import { SolanaChainIdEnum, SolanaChains } from "./config";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { useWalletModal } from "@solana/wallet-adapter-react-ui";
+import {
+  useEventEmitter,
+  useLocalStorage,
+  useStorageLedgerAddress,
+  WalletState,
+} from "@orderly.network/hooks";
+import { ChainNamespace, LedgerWalletKey } from "@orderly.network/types";
+import { useScreen } from "@orderly.network/ui";
 import { useSolanaContext } from "./SolanaProvider";
-
-
+import { SolanaChainIdEnum, SolanaChains } from "./config";
 
 export function useSOL() {
   const [wallet, setWallet] = useState<WalletState | null>(null);
   const { isMobile } = useScreen();
-  const { endpoint, network} = useSolanaContext();
+  const { endpoint, network } = useSolanaContext();
   const { setVisible: setModalVisible, visible } = useWalletModal();
   const { setLedgerAddress } = useStorageLedgerAddress();
   const {
@@ -47,19 +50,19 @@ export function useSOL() {
   }>({
     walletSelect: null,
     connect: null,
-    walletSelectResolve: () => { },
-    walletSelectReject: () => { },
-    connectReject: () => { },
-    connectResolve: () => { },
+    walletSelectResolve: () => {},
+    walletSelectReject: () => {},
+    connectReject: () => {},
+    connectResolve: () => {},
   });
   const ee = useEventEmitter();
 
   const initPromiseRef = () => {
     console.log("-- init solana promise");
-    solanaPromiseRef.current.walletSelectResolve = () => { };
-    solanaPromiseRef.current.walletSelectReject = () => { };
-    solanaPromiseRef.current.connectReject = () => { };
-    solanaPromiseRef.current.connectReject = () => { };
+    solanaPromiseRef.current.walletSelectResolve = () => {};
+    solanaPromiseRef.current.walletSelectReject = () => {};
+    solanaPromiseRef.current.connectReject = () => {};
+    solanaPromiseRef.current.connectReject = () => {};
     solanaPromiseRef.current.connect = null;
     solanaPromiseRef.current.walletSelect = null;
     solanaPromiseRef.current.walletSelect = new Promise((resolve, reject) => {
@@ -118,40 +121,45 @@ export function useSOL() {
       solanaPromiseRef.current.walletSelect,
       solanaPromiseRef.current.connect,
     ])
-      .then(([wallet, { userAddress, signMessage, signTransaction, sendTransaction }]) => {
-        // console.log('-- connect sol res',{
-        //   wallet,
-        //   userAddress, signMessage, sendTransaction
-        // });
-        const tempWallet = {
-          label: wallet.adapter.name,
-          icon: "",
-          provider: {
-            rpcUrl: endpoint,
-            network: network,
-            signMessage: signMessage,
-            signTransaction,
-            sendTransaction,
-          },
-          accounts: [
-            {
-              address: userAddress,
+      .then(
+        ([
+          wallet,
+          { userAddress, signMessage, signTransaction, sendTransaction },
+        ]) => {
+          // console.log('-- connect sol res',{
+          //   wallet,
+          //   userAddress, signMessage, sendTransaction
+          // });
+          const tempWallet = {
+            label: wallet.adapter.name,
+            icon: "",
+            provider: {
+              rpcUrl: endpoint,
+              network: network,
+              signMessage: signMessage,
+              signTransaction,
+              sendTransaction,
             },
-          ],
-          chains: [
-            {
-              id: SolanaChains.get(network)!,
-              namespace: ChainNamespace.solana,
-            },
-          ],
-        };
-        if (wallet.adapter.name === 'Ledger') {
-          setLedgerAddress(userAddress);
-        }
-        setWallet(tempWallet);
-        setConnected(true);
-        return [tempWallet];
-      })
+            accounts: [
+              {
+                address: userAddress,
+              },
+            ],
+            chains: [
+              {
+                id: SolanaChains.get(network)!,
+                namespace: ChainNamespace.solana,
+              },
+            ],
+          };
+          if (wallet.adapter.name === "Ledger") {
+            setLedgerAddress(userAddress);
+          }
+          setWallet(tempWallet);
+          setConnected(true);
+          return [tempWallet];
+        },
+      )
       .catch((e) => {
         console.log("connect solana error", e);
         handleSolanaError(e);
@@ -188,7 +196,7 @@ export function useSOL() {
       if (!visible && !solanaWallet && solanaPromiseRef.current) {
         console.log(
           "-- select modal visible ref",
-          selectModalVisibleRef.current
+          selectModalVisibleRef.current,
         );
         console.log("-- use reject solana select modal");
         solanaPromiseRef.current.walletSelectReject("user reject");
@@ -235,8 +243,8 @@ export function useSOL() {
         signTransaction,
         sendTransaction,
         rpcUrl: endpoint,
-        network: network,     
-       },
+        network: network,
+      },
       accounts: [
         {
           address: userAddress,
@@ -249,7 +257,7 @@ export function useSOL() {
         },
       ],
     });
-    if (solanaWallet.adapter.name === 'Ledger') {
+    if (solanaWallet.adapter.name === "Ledger") {
       setLedgerAddress(userAddress);
     }
 
@@ -264,7 +272,6 @@ export function useSOL() {
     endpoint,
     network,
   ]);
-
 
   useEffect(() => {
     if (!solanaWallet) {

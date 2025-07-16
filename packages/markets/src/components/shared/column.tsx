@@ -14,6 +14,7 @@ export function getSymbolColumn(
     title: i18n.t("common.symbol"),
     dataIndex: "symbol",
     width: 150,
+    onSort: true,
     render: (value, record) => {
       let favoritesIcon: ReactNode;
       if (!isFavoriteList) {

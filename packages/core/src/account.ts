@@ -1116,16 +1116,19 @@ export class Account {
     }
   }
 
-  async settle(): Promise<any> {
-    if (this.isSubAccount) {
-      return this.settleSubAccount();
-    }
-
+  /** set main account pnl */
+  async settle(options?: {
+    /**
+     * if you are main account, you don't need to pass the accountId
+     * if you are sub account and you want to settle the main account, you need to pass main account id
+     * */
+    accountId?: string;
+  }): Promise<any> {
     if (!this.walletAdapter) {
       return Promise.reject("walletAdapter is undefined");
     }
 
-    const nonce = await this._getSettleNonce();
+    const nonce = await this._getSettleNonce(options?.accountId);
     const address = this.stateValue.address;
 
     // const domain = this.getDomain(true);
@@ -1159,7 +1162,7 @@ export class Account {
       body: JSON.stringify(data),
       headers: {
         "Content-Type": "application/json",
-        "orderly-account-id": this.stateValue.accountId!,
+        "orderly-account-id": options?.accountId || this.stateValue.accountId!,
         ...signature,
       },
     });

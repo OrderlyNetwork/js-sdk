@@ -1,4 +1,4 @@
-import eslintConfigCustom from "eslint-config-custom";
 import { defineConfig } from "eslint/config";
+import customEslintConfig from "@orderly.network/eslint-config";
 
-export default defineConfig(eslintConfigCustom);
+export default defineConfig(customEslintConfig);

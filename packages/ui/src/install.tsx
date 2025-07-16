@@ -1,4 +1,4 @@
-// import { MainNav, MainNavProps } from "./nav/main/mainNav";
+// import { MainNav } from "./nav/main/mainNav";
 // import { useMainNavBuilder } from "./nav/main/widgetBuilder";
 // import { SideBar } from "./nav/sidebar";
 // import { useSideNavBuilder } from "./nav/sidebar/builders/useSideNavBuilder";
@@ -6,7 +6,7 @@
 // import { installExtension } from "./plugin";
 // import { ExtensionPositionEnum } from "./plugin";
 
-// installExtension<MainNavProps>({
+// installExtension({
 //   name: "main-navbar",
 //   scope: ["*"],
 //   positions: [ExtensionPositionEnum.MainNav],

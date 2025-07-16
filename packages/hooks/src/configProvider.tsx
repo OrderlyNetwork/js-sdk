@@ -1,32 +1,28 @@
 import type { FC, PropsWithChildren } from "react";
 import React, { useLayoutEffect, useMemo } from "react";
-import { OrderlyProvider } from "./orderlyContext";
 import {
   ConfigStore,
   // MemoryConfigStore,
   OrderlyKeyStore,
-  getWalletAdapterFunc,
-  WalletAdapterOptions,
   LocalStorageStore,
-  EtherAdapter,
   SimpleDI,
   Account,
   IContract,
   WalletAdapter,
 } from "@orderly.network/core";
-
-import useConstant from "use-constant";
-import { Chain, NetworkId } from "@orderly.network/types";
-// import { usePreLoadData } from "./usePreloadData";
-import { DataCenterProvider } from "./dataProvider";
-import { StatusProvider } from "./statusProvider";
-import { SDKError } from "@orderly.network/types";
-import { ProxyConfigStore } from "./dev/proxyConfigStore";
-import type { Chains } from "./orderly/useChains";
 import { DefaultEVMWalletAdapter } from "@orderly.network/default-evm-adapter";
 import { DefaultSolanaWalletAdapter } from "@orderly.network/default-solana-adapter";
+import { Chain, NetworkId } from "@orderly.network/types";
+import { SDKError } from "@orderly.network/types";
 import { EthersProvider } from "@orderly.network/web3-provider-ethers";
+import { DEFAULT_TICK_SIZES } from "./constants";
+// import { usePreLoadData } from "./usePreloadData";
+import { DataCenterProvider } from "./dataProvider";
+import { ProxyConfigStore } from "./dev/proxyConfigStore";
 import { ExtendedConfigStore } from "./extendedConfigStore";
+import { OrderlyConfigContextState, OrderlyProvider } from "./orderlyContext";
+import { StatusProvider } from "./statusProvider";
+
 // import { useParamsCheck } from "./useParamsCheck";
 
 type filteredChains = {
@@ -42,8 +38,14 @@ export type BaseConfigProviderProps = {
   // getWalletAdapter?: getWalletAdapterFunc;
   walletAdapters?: WalletAdapter[];
   chainFilter?: filteredChains | filterChainsFunc;
-  customChains?: Chains<undefined, undefined>;
-};
+  /**
+   * Custom orderbook default tick sizes.
+   */
+  orderbookDefaultTickSizes?: Record<string, string>;
+} & Pick<
+  OrderlyConfigContextState,
+  "enableSwapDeposit" | "customChains" | "chainTransformer"
+>;
 
 export type ExclusiveConfigProviderProps =
   | {
@@ -77,6 +79,8 @@ export const OrderlyConfigProvider: FC<
     contracts,
     chainFilter,
     customChains,
+    enableSwapDeposit = true,
+    chainTransformer,
   } = props;
 
   if (!brokerId && typeof configStore === "undefined") {
@@ -93,7 +97,7 @@ export const OrderlyConfigProvider: FC<
   if (typeof configStore !== "undefined" && !configStore.get("brokerId")) {
     // console.error("[OrderlyConfigProvider]: brokerId is required");
     throw new SDKError(
-      "if configStore is provided, brokerId is required in configStore"
+      "if configStore is provided, brokerId is required in configStore",
     );
   }
 
@@ -103,14 +107,14 @@ export const OrderlyConfigProvider: FC<
     brokerId !== (configStore as ConfigStore).get("brokerId")
   ) {
     throw new SDKError(
-      "If you have provided a custom `configStore` and the `brokerId` is set in the `configStore`, please remove the `brokerId` prop."
+      "If you have provided a custom `configStore` and the `brokerId` is set in the `configStore`, please remove the `brokerId` prop.",
     );
   }
 
   const innerConfigStore = useMemo<ConfigStore>(() => {
     return new ProxyConfigStore(
       configStore ||
-        new ExtendedConfigStore({ brokerId, brokerName, networkId })
+        new ExtendedConfigStore({ brokerId, brokerName, networkId }),
     );
   }, [configStore, brokerId, brokerName, networkId]);
 
@@ -134,6 +138,10 @@ export const OrderlyConfigProvider: FC<
     );
   }, [walletAdapters]);
 
+  const defaultOrderbookTickSizes = useMemo<Record<string, string>>(() => {
+    return props.orderbookDefaultTickSizes || DEFAULT_TICK_SIZES;
+  }, [props.orderbookDefaultTickSizes]);
+
   // check params, if has mismatch, throw warning message to console
   // useParamsCheck({ brokerId: innerConfigStore.get("brokerId") });
 
@@ -148,7 +156,7 @@ export const OrderlyConfigProvider: FC<
         innerWalletAdapters,
         {
           contracts,
-        }
+        },
       );
 
       SimpleDI.registerByName(Account.instanceName, account);
@@ -180,6 +188,9 @@ export const OrderlyConfigProvider: FC<
         walletAdapters: innerWalletAdapters,
         // apiBaseUrl,
         customChains,
+        enableSwapDeposit,
+        chainTransformer,
+        defaultOrderbookTickSizes,
       }}
     >
       <StatusProvider>

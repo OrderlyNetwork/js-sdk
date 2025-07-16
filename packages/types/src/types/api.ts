@@ -8,6 +8,12 @@ export enum AnnouncementType {
 }
 
 export declare namespace API {
+  // /v1/public/auto_convert_threshold
+  export interface ConvertThreshold {
+    ltv_threshold: number;
+    negative_usdc_threshold: number;
+  }
+
   //v1/public/token
   export interface Token {
     token: string;
@@ -370,14 +376,28 @@ export declare namespace API {
     bridgeless?: boolean;
     withdrawal_fee?: number;
     minimum_withdraw_amount?: number;
+    vault_address: string;
+
+    cross_chain_router: string;
+    depositor: string;
   }
 
   export interface TokenInfo {
     address: string;
-    symbol: string;
+    base_weight: number;
     decimals: number;
+    /** token decimals */
+    token_decimal: number;
+    discount_factor: number;
     display_name: string;
+    haircut: number;
+    is_collateral: true;
+    symbol: string;
+    user_max_qty: number;
     precision: number;
+    minimum_withdraw_amount: number;
+
+    swap_enable: boolean;
   }
 
   export interface Chain {
@@ -385,6 +405,11 @@ export declare namespace API {
     token_hash: string;
     decimals: number;
     minimum_withdraw_amount: number;
+    base_weight: number;
+    discount_factor?: number | null;
+    haircut: number;
+    user_max_qty: number;
+    is_collateral: boolean;
     chain_details: ChainDetail[];
   }
 
@@ -398,6 +423,8 @@ export declare namespace API {
     contract_address: string;
     decimals: number;
     withdrawal_fee: number;
+    cross_chain_withdrawal_fee: number;
+    display_name: string;
   }
 
   export interface AssetHistory {
@@ -513,6 +540,13 @@ export declare namespace API {
     positions_by_perp: LiquidationPositionByPerp[];
   }
 
+  export interface VaultBalance {
+    chain_id: string;
+    token: string;
+    balance: number;
+    pending_rebalance: number;
+  }
+
   export interface RestrictedAreas {
     invalid_web_country: string;
     invalid_web_city: string;
@@ -572,6 +606,7 @@ export declare namespace WSMessage {
     chain_id: string;
     token: string;
     balance: number;
+    pending_rebalance: number;
   }
 
   export interface Order {

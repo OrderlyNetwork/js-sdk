@@ -143,7 +143,8 @@ export const usePrivateDataObserver = (options: {
 
   useEffect(() => {
     isHoldingInit.current = false;
-  }, [state.accountId]);
+    // if switch address, we should reset the holding
+  }, [state.address]);
 
   useEffect(() => {
     if (!holding) {

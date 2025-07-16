@@ -97,7 +97,6 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
             onClick: () => {
               onTabChange(MarketsTabName.All);
             },
-            className: "oui-h-[calc(100%_-_36px)]",
           })}
         />
       </div>

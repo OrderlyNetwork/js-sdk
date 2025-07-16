@@ -26,20 +26,26 @@ import { LocaleProvider } from "@orderly.network/i18n";
 
 #### Supported Locales
 
-We currently support **8 locales**, located in the `dist/locales` directory:
+We currently support **16 locales**
 
 | Locale Code | Language   |
 | ----------- | ---------- |
-| `en.json`   | English    |
-| `zh.json`   | Chinese    |
-| `ja.json`   | Japanese   |
-| `es.json`   | Spanish    |
-| `ko.json`   | Korean     |
-| `vi.json`   | Vietnamese |
-| `de.json`   | German     |
-| `fr.json`   | French     |
-
-> We plan to add more languages in future updates.
+| `en`        | English    |
+| `zh`        | Chinese    |
+| `ja`        | Japanese   |
+| `es`        | Spanish    |
+| `ko`        | Korean     |
+| `vi`        | Vietnamese |
+| `de`        | German     |
+| `fr`        | French     |
+| `ru`        | Russian    |
+| `id`        | Indonesian |
+| `tr`        | Turkish    |
+| `it`        | Italian    |
+| `pt`        | Portuguese |
+| `uk`        | Ukrainian  |
+| `pl`        | Polish     |
+| `nl`        | Dutch      |
 
 #### CSV for Easy Translation
 
@@ -73,7 +79,7 @@ import { LocaleProvider, LocaleEnum, LocaleCode } from "@orderly.network/i18n";
 const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
   const onLanguageChanged = async (lang: LocaleCode) => {};
 
-  // please copy build-in locale files to you public/locales
+  // please copy build-in locale files (@orderly.network/i18n/locales) to you public/locales
   // and copy you extend locale files to public/locales/extend
   const loadPath = (lang: LocaleCode) => {
     if (lang === LocaleEnum.en) {
@@ -110,6 +116,8 @@ import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { LocaleProvider, LocaleCode, Resources } from "@orderly.network/i18n";
 import zh from "@orderly.network/i18n/locales/zh.json";
+import ja from "@orderly.network/i18n/locales/ja.json";
+import ko from "@orderly.network/i18n/locales/ko.json";
 
 // extend or overrides English translations
 const extendEn = {
@@ -121,12 +129,30 @@ const extendZh = {
   "extend.trading": "交易",
 };
 
+// extend or overrides japanese translations
+const extendJa = {
+  "extend.trading": "取引",
+};
+
+// extend or overrides korean translations
+const extendKo = {
+  "extend.trading": "거래",
+};
+
 // define language resources
 const resources: Resources = {
   en: extendEn,
   zh: {
     ...zh,
     ...extendZh,
+  },
+  ja: {
+    ...ja,
+    ...extendJa,
+  },
+  ko: {
+    ...ko,
+    ...extendKo,
   },
 };
 

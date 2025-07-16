@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { AssetHistoryStatusEnum } from "@orderly.network/types";
@@ -9,6 +10,7 @@ import {
   toast,
   type Column,
 } from "@orderly.network/ui";
+import { Decimal } from "@orderly.network/utils";
 import { AssetSide } from "../assetChart/assetHistory.script";
 
 type Options = {
@@ -28,8 +30,8 @@ export const useAssetHistoryColumns = (options: Options) => {
     toast.success(t("common.copy.copied"));
   };
 
-  const columns = useMemo(() => {
-    const txIdColumn = {
+  const columns = useMemo<Column[]>(() => {
+    const txIdColumn: Column = {
       title: t("common.txId"),
       dataIndex: "tx_id",
       width: 120,
@@ -37,7 +39,7 @@ export const useAssetHistoryColumns = (options: Options) => {
         if (!value) {
           return <div className="oui-text-base-contrast-54">-</div>;
         }
-        const chainInfo = (chainsInfo as any[])?.find(
+        const chainInfo = chainsInfo?.find(
           (item) => parseInt(record.chain_id) === parseInt(item.chain_id),
         );
         const explorer_base_url = chainInfo?.explorer_base_url;
@@ -57,9 +59,9 @@ export const useAssetHistoryColumns = (options: Options) => {
           </a>
         );
       },
-    } as Column;
+    };
 
-    const accountIdColumn = {
+    const accountIdColumn: Column = {
       title: t("common.accountId"),
       dataIndex: "account_id",
       width: 120,
@@ -74,7 +76,7 @@ export const useAssetHistoryColumns = (options: Options) => {
           </Text.formatted>
         );
       },
-    } as Column;
+    };
 
     return [
       {
@@ -125,15 +127,22 @@ export const useAssetHistoryColumns = (options: Options) => {
         dataIndex: "amount",
         width: 100,
         rule: "price",
-        formatter: (value, record) =>
-          isDeposit ? value - (record.fee ?? 0) : -(value - (record.fee ?? 0)),
-        numeralProps: {
-          coloring: true,
-          showIdentifier: true,
+        render: (value, record) => {
+          const netAmount = new Decimal(value).minus(record.fee ?? 0);
+          return (
+            <Text.numeral
+              dp={record.decimals}
+              rule="price"
+              coloring
+              showIdentifier
+              padding={false}
+            >
+              {isDeposit ? netAmount.toNumber() : netAmount.neg().toNumber()}
+            </Text.numeral>
+          );
         },
-        // formatter: "date",
       },
-    ] as Column[];
+    ];
   }, [t, chainsInfo, side, isDeposit, isWeb3Wallet]);
 
   return columns;

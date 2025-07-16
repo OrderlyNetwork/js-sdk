@@ -16,6 +16,7 @@ export type TransferFormWidgetProps = TransferFormScriptOptions;
 export const TransferFormWidget = (props: TransferFormWidgetProps) => {
   const state = useTransferFormScript({
     toAccountId: props.toAccountId,
+    token: props.token,
     close: props.close,
   });
   return <TransferForm {...state} />;
@@ -23,7 +24,11 @@ export const TransferFormWidget = (props: TransferFormWidgetProps) => {
 
 export const TransferWidget: FC<TransferFormWidgetProps> = (props) => {
   return (
-    <TransferFormWidget close={props.close} toAccountId={props.toAccountId} />
+    <TransferFormWidget
+      close={props.close}
+      toAccountId={props.toAccountId}
+      token={props.token}
+    />
   );
 };
 

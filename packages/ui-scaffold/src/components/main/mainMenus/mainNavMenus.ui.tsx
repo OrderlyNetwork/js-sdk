@@ -15,7 +15,7 @@ export type MainNavItemsProps = {
   onItemClick?: (item: MainNavItem[]) => void;
 };
 
-export const MainNavMenusUI: FC<MainNavItemsProps> = (props) => {
+export const MainNavMenus: FC<MainNavItemsProps> = (props) => {
   const { items, classNames } = props;
 
   if (!Array.isArray(items) || items.length === 0) {

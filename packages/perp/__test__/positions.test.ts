@@ -1,3 +1,4 @@
+import { expect } from "@jest/globals";
 import * as positions from "../src/positions";
 import type { LiqPriceInputs, MMRInputs } from "../src/positions";
 
@@ -131,7 +132,6 @@ describe("positions formula", () => {
         IMRFactor: 0.0000003517,
         positionNotional: 255000,
         IMR_factor_power: 4 / 5,
-
       };
       expect(positions.MMR(inputs)).toBe(0.025);
     });

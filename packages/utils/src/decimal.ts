@@ -178,13 +178,11 @@ export function parseNumStr(str: string | number): Decimal | undefined {
   return result;
 }
 
+const scientificNotationPattern = /^[-+]?[0-9]+(\.[0-9]+)?[eE][-+]?[0-9]+$/;
+
 //** remove trailing zeros 0.00000100 => 0.000001, 1 => 1 */
-export function removeTrailingZeros(
-  value: number,
-  fixedCount: number = 16,
-): string {
+export const removeTrailingZeros = (value: number, fixedCount: number = 16) => {
   const text = `${value}`;
-  const scientificNotationPattern = /^[-+]?[0-9]+(\.[0-9]+)?[eE][-+]?[0-9]+$/;
   const isScientific = scientificNotationPattern.test(text);
   if (!value.toString().includes(".") && !isScientific) {
     return `${value}`;
@@ -193,7 +191,7 @@ export function removeTrailingZeros(
     .toFixed(fixedCount)
     .replace(/(\.[0-9]*[1-9])0+$/, "$1");
   return formattedNumber;
-}
+};
 
 export const todpIfNeed = (value: string | number, dp: number) => {
   if (value === undefined || value === "") {

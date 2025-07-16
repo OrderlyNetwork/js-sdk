@@ -1,4 +1,3 @@
-import { Divider } from "@orderly.network/ui";
 import { cn } from "@orderly.network/ui";
 import { MainNavItem, NavItem } from "./mainMenus/navItem";
 

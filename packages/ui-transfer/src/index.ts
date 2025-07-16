@@ -1,9 +1,11 @@
 export * from "./components/depositForm";
 export * from "./components/withdrawForm";
 export * from "./components/depositAndWithdraw";
+export * from "./components/swap/swapDepositForm";
 export { installDeposit } from "./components/depositAndWithdraw/plugin";
 export * from "./components/depositForm/hooks";
 export * from "./components/transferForm";
+export * from "./components/convertForm";
 export * from "./utils";
 
 export { ChainSelect } from "./components/chainSelect";

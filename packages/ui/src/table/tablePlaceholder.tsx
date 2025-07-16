@@ -1,4 +1,5 @@
 import { FC, ReactNode } from "react";
+import { cnBase } from "tailwind-variants";
 import { Box } from "../box";
 import { ExtensionPositionEnum, ExtensionSlot } from "../plugin";
 import { Spinner } from "../spinner/spinner";
@@ -7,10 +8,11 @@ type TablePlaceholderProps = {
   visible?: boolean;
   loading?: boolean;
   emptyView?: ReactNode;
+  className?: string;
 };
 
 export const TablePlaceholder: FC<TablePlaceholderProps> = (props) => {
-  const { visible, loading, emptyView } = props;
+  const { visible, loading, emptyView, className } = props;
   if (!visible) {
     return null;
   }
@@ -21,7 +23,10 @@ export const TablePlaceholder: FC<TablePlaceholderProps> = (props) => {
       top={0}
       right={0}
       bottom={0}
-      className="oui-flex oui-justify-center oui-items-center"
+      className={cnBase(
+        "oui-flex oui-items-center oui-justify-center",
+        className,
+      )}
     >
       {loading ? (
         <Spinner />

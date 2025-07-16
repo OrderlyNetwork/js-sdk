@@ -1,9 +1,9 @@
-import eslintConfigCustom from "eslint-config-custom";
 import { defineConfig } from "eslint/config";
+import customEslintConfig from "@orderly.network/eslint-config";
 
 // this config is used to auto fix eslint rules when commit
 export default defineConfig([
-  ...eslintConfigCustom,
+  ...customEslintConfig,
   {
     // disable auto fix tailwindcss rules when commit
     rules: {
