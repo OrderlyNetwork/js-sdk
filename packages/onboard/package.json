@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/web3-onboard",
-  "version": "2.4.2-alpha.0",
+  "version": "2.5.0-alpha.1",
   "description": "",
   "private": true,
   "main": "dist/index.mjs",
