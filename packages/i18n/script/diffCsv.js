@@ -3,7 +3,10 @@ const path = require("path");
 const { csv2multiJson } = require("./json-csv-converter");
 const packageJson = require("../package.json");
 
-/** Compare two locale CSV files */
+/**
+ * https://www.jsdelivr.com/package/npm/@orderly.network/i18n?tab=files&path=dist
+ * Compare two locale CSV files
+ */
 async function diffCsv(oldFile, newFile) {
   const oldCsv = await fs.readFile(oldFile, { encoding: "utf8" });
   const newCsv = await fs.readFile(newFile, { encoding: "utf8" });

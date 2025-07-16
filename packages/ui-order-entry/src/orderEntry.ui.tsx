@@ -36,6 +36,7 @@ import {
   Divider,
   Flex,
   Grid,
+  InfoCircleIcon,
   Input,
   inputFormatter,
   InputProps,
@@ -51,6 +52,7 @@ import {
   textVariants,
   ThrottledButton,
   toast,
+  Tooltip,
   useScreen,
 } from "@orderly.network/ui";
 import { LeverageWidgetWithSheetId } from "@orderly.network/ui-leverage";
@@ -59,6 +61,8 @@ import {
   TPSLAdvancedWidget,
 } from "@orderly.network/ui-tpsl";
 import { commifyOptional } from "@orderly.network/utils";
+import { LTVRiskTooltipWidget } from "./components/LTVRiskTooltip";
+// import { useBalanceScript } from "../../trading/src/components/mobile/bottomNavBar/balance";
 import { AdditionalInfoWidget } from "./components/additional/additionnalInfo.widget";
 import { orderConfirmDialogId } from "./components/dialog/confirm.ui";
 import { scaledOrderConfirmDialogId } from "./components/dialog/scaledOrderConfirm";
@@ -78,6 +82,7 @@ type Refs = OrderEntryScriptReturn["refs"];
 
 type OrderEntryProps = OrderEntryScriptReturn & {
   containerRef: any;
+  disableFeatures?: ("slippageSetting" | "feesInfo")[];
 };
 
 export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
@@ -96,6 +101,8 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
     bboType,
     onBBOChange,
     toggleBBO,
+    disableFeatures,
+    currentLtv,
   } = props;
 
   const { curLeverage } = useLeverage();
@@ -144,12 +151,16 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
 
   // set slippage
   useEffect(() => {
+    if (props.disableFeatures?.includes("slippageSetting")) {
+      return;
+    }
+
     if (slippage) {
       setOrderValue("slippage", Number(slippage));
     } else {
       setOrderValue("slippage", undefined);
     }
-  }, [slippage]);
+  }, [slippage, props.disableFeatures]);
 
   useEffect(() => {
     const clickHandler = (event: MouseEvent) => {
@@ -301,6 +312,11 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
 
   const mergedShowSheet = isMobile && props.canTrade;
 
+  const showLTV =
+    typeof currentLtv === "number" &&
+    !Number.isNaN(currentLtv) &&
+    currentLtv > 0;
+
   return (
     <OrderEntryProvider value={{ errorMsgVisible }}>
       <div
@@ -384,18 +400,32 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           </div>
         </Flex>
         {/* Available */}
-        <Flex justify={"between"}>
+        <Flex itemAlign={"center"} justify={"between"}>
           <Text size={"2xs"}>{t("common.available")}</Text>
-          <Text.numeral
-            unit={symbolInfo.quote}
-            size={"2xs"}
-            className={"oui-text-base-contrast-80"}
-            unitClassName={"oui-ml-1 oui-text-base-contrast-54"}
-            dp={2}
-            padding={false}
-          >
-            {props.canTrade ? freeCollateral : 0}
-          </Text.numeral>
+          <Flex itemAlign={"center"} justify={"center"} gap={1}>
+            {showLTV && (
+              <Tooltip
+                className={"oui-bg-base-6 oui-p-2"}
+                content={<LTVRiskTooltipWidget />}
+              >
+                <InfoCircleIcon
+                  className={
+                    "oui-cursor-pointer oui-text-warning oui-opacity-80"
+                  }
+                />
+              </Tooltip>
+            )}
+            <Text.numeral
+              unit={symbolInfo.quote}
+              size={"2xs"}
+              className={"oui-text-base-contrast-80"}
+              unitClassName={"oui-ml-1 oui-text-base-contrast-54"}
+              dp={2}
+              padding={false}
+            >
+              {props.canTrade ? freeCollateral : 0}
+            </Text.numeral>
+          </Flex>
         </Flex>
         {/* Inputs (price,quantity,triggerPrice) */}
         {formattedOrder.order_type === OrderType.SCALED ? (
@@ -499,6 +529,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           setSlippage={setSlippage}
           estSlippage={props.estSlippage}
           orderType={formattedOrder.order_type!}
+          disableFeatures={disableFeatures}
         />
 
         <Divider className="oui-w-full" />
@@ -1370,6 +1401,7 @@ function AssetInfo(props: {
   estSlippage: number | null;
   setSlippage: (slippage: string) => void;
   orderType: OrderType;
+  disableFeatures?: ("slippageSetting" | "feesInfo")[];
 }) {
   const { canTrade } = props;
   const { t } = useTranslation();
@@ -1424,14 +1456,16 @@ function AssetInfo(props: {
           {props.estLeverage ?? "--"}
         </Text.numeral> */}
       </Flex>
-      {props.orderType === OrderType.MARKET && (
-        <SlippageUI
-          slippage={props.slippage}
-          setSlippage={props.setSlippage}
-          estSlippage={props.estSlippage}
-        />
-      )}
-      <FeesWidget />
+      {props.orderType === OrderType.MARKET &&
+        !props.disableFeatures?.includes("slippageSetting") && (
+          <SlippageUI
+            slippage={props.slippage}
+            setSlippage={props.setSlippage}
+            estSlippage={props.estSlippage}
+          />
+        )}
+
+      {!props.disableFeatures?.includes("feesInfo") && <FeesWidget />}
     </div>
   );
 }

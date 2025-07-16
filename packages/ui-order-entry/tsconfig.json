@@ -29,6 +29,9 @@
       "@orderly.network/ui-leverage": [
         "../ui-leverage/src"
       ],
+      "@orderly.network/perp": [
+        "../perp/src"
+      ],
       "@orderly.network/ui-tpsl": [
         "../ui-tpsl/src"
       ]

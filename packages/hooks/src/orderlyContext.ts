@@ -5,7 +5,7 @@ import {
   type getWalletAdapterFunc,
   WalletAdapter,
 } from "@orderly.network/core";
-import { Chain, NetworkId } from "@orderly.network/types";
+import { API, Chain, NetworkId } from "@orderly.network/types";
 import { Chains } from "./orderly/useChains";
 
 export type filteredChains = {
@@ -34,6 +34,18 @@ export interface OrderlyConfigContextState {
   // extraApis:ExtraAPIs
   filteredChains?: filteredChains | null;
   customChains?: Chains<undefined, undefined>;
+  chainTransformer?: (params: {
+    chains: API.Chain[];
+    tokenChains: API.Chain[];
+    chainInfos: any[];
+    swapChains: any[];
+    mainnet: boolean;
+  }) => API.Chain[];
+  /** enable swap deposit, default is true */
+  enableSwapDeposit?: boolean;
+  /**
+   * Custom orderbook default tick sizes.
+   */
   defaultOrderbookTickSizes: Record<string, string>;
 }
 

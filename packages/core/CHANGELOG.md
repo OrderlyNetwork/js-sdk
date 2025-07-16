@@ -1,5 +1,44 @@
 # @orderly.network/core
 
+## 2.5.0
+
+### Minor Changes
+
+- 0e3a9ce: publish
+- 86eeea2: publish
+- publish
+
+### Patch Changes
+
+- 728895d: publish
+- Updated dependencies [0e3a9ce]
+- Updated dependencies [86eeea2]
+- Updated dependencies [728895d]
+- Updated dependencies
+  - @orderly.network/types@2.5.0
+
+## 2.5.0-alpha.2
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/types@2.5.0-alpha.2
+
+## 2.5.0-alpha.1
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/types@2.5.0-alpha.1
+
 ## 2.4.2-alpha.0
 
 ### Patch Changes

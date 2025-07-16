@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useTranslation } from "@orderly.network/i18n";
+import { API } from "@orderly.network/types";
 import {
   Box,
   ChainIcon,
@@ -13,9 +15,7 @@ import {
   cn,
 } from "@orderly.network/ui";
 import { ExchangeIcon } from "../../icons";
-import { API } from "@orderly.network/types";
 import { CurrentChain } from "../depositForm/hooks";
-import { useTranslation } from "@orderly.network/i18n";
 
 type ChainSelectProps = {
   chains: API.NetworkInfos[];
@@ -46,8 +46,9 @@ export const ChainSelect: React.FC<ChainSelectProps> = (props) => {
       </Text>
     </Flex>
   ) : (
-    <ChainIcon className="oui-w-[18px] oui-h-[18px]" chainId={value?.id} />
+    <ChainIcon className="oui-size-[18px]" chainId={value?.id} />
   );
+
   const chainName = wrongNetwork ? "Unknown" : value?.info?.network_infos?.name;
 
   const renderRightIcon = () => {
@@ -64,7 +65,7 @@ export const ChainSelect: React.FC<ChainSelectProps> = (props) => {
       intensity={500}
       className={cn(
         "oui-rounded-t-xl oui-rounded-b-sm oui-border oui-border-line",
-        selectable ? "oui-cursor-pointer" : "oui-cursor-auto"
+        selectable ? "oui-cursor-pointer" : "oui-cursor-auto",
       )}
       height={54}
       px={3}
@@ -100,7 +101,7 @@ export const ChainSelect: React.FC<ChainSelectProps> = (props) => {
           "oui-deposit-network-select-item",
           "hover:oui-bg-base-5 oui-h-[30px] oui-cursor-pointer",
           isActive && "oui-bg-base-5",
-          index !== 0 && "oui-mt-[2px]"
+          index !== 0 && "oui-mt-[2px]",
         )}
         onClick={async () => {
           setOpen(false);
@@ -108,27 +109,10 @@ export const ChainSelect: React.FC<ChainSelectProps> = (props) => {
         }}
       >
         <Flex gapX={1} itemAlign="center">
-          <ChainIcon
-            className="oui-w-[18px] oui-h-[18px]"
-            chainId={chain.chain_id}
-          />
+          <ChainIcon className="oui-size-[18px]" chainId={chain.chain_id} />
           <Text size="2xs" intensity={54}>
             {chain.name}
           </Text>
-          {chain.bridgeless && (
-            <Flex
-              className="oui-bg-success-light/15"
-              height={18}
-              px={2}
-              r="base"
-              justify="center"
-              itemAlign="center"
-            >
-              <Text size="2xs" className="oui-text-success-light">
-                {t("transfer.lowestFee")}
-              </Text>
-            </Flex>
-          )}
         </Flex>
         {isActive && (
           <Box
@@ -154,11 +138,11 @@ export const ChainSelect: React.FC<ChainSelectProps> = (props) => {
             "oui-deposit-token-select-dropdown-menu-content",
             "oui-bg-base-8 oui-p-1",
             "oui-w-[var(--radix-dropdown-menu-trigger-width)]",
-            "oui-rounded-md oui-select-none"
+            "oui-rounded-md oui-select-none",
           )}
         >
           <ScrollArea>
-            <div className="oui-max-h-[254px]">{content} </div>
+            <div className="oui-max-h-[254px]">{content}</div>
           </ScrollArea>
         </DropdownMenuContent>
       </DropdownMenuPortal>

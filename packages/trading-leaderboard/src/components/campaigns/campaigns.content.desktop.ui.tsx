@@ -32,6 +32,11 @@ export const CampaignsContentDesktopUI: FC<{
     descriptionContainer?: string;
   };
   isMobile?: boolean;
+  isParticipated?: boolean;
+  shouldShowJoinButton?: boolean;
+  joinCampaign?: (data: { campaign_id: string | number }) => Promise<any>;
+  isJoining?: boolean;
+  joinError?: any;
 }> = ({
   campaign,
   statistics,
@@ -40,6 +45,9 @@ export const CampaignsContentDesktopUI: FC<{
   backgroundSrc,
   classNames,
   isMobile,
+  shouldShowJoinButton,
+  joinCampaign,
+  isJoining,
 }) => {
   const { t } = useTranslation();
   const bgSrc = campaign?.image || backgroundSrc;
@@ -329,7 +337,26 @@ export const CampaignsContentDesktopUI: FC<{
                 {t("tradingLeaderboard.viewRules")}
               </Button>
             )}
-            {canTrade && (
+            {shouldShowJoinButton && (
+              <Button
+                size={isMobile ? "sm" : "md"}
+                variant="gradient"
+                color="primary"
+                className="oui-flex-1"
+                loading={isJoining}
+                disabled={isJoining}
+                onClick={async () => {
+                  try {
+                    await joinCampaign?.({ campaign_id: campaign.campaign_id });
+                  } catch (error) {
+                    console.error("Failed to join campaign:", error);
+                  }
+                }}
+              >
+                Join now
+              </Button>
+            )}
+            {!shouldShowJoinButton && canTrade && (
               <Button
                 size={isMobile ? "sm" : "md"}
                 variant="gradient"

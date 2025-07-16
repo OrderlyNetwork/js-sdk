@@ -223,7 +223,12 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
       onLayout={updatePositions}
       showIndicator={showPositionIcon}
     >
-      <OrderEntryWidget symbol={props.symbol} />
+      <OrderEntryWidget
+        symbol={props.symbol}
+        disableFeatures={
+          props.disableFeatures as unknown as ("slippageSetting" | "feesInfo")[]
+        }
+      />
     </RemovablePanel>,
   ];
 

@@ -101,9 +101,21 @@ const sidebarMenus = [
   - `mainMenus`: Array of main menu items
   - `campaigns`: Campaign menu item
   - `campaignPosition`: Campaign menu position
-  - `initialProduct`: Initial product
   - `initialMenu`: Initial menu path
   - `onItemClick`: Menu item click callback
+  - `customRender`: Function to customize the main navigation layout
+    - **Type**: `(components: MainNavComponents) => ReactNode`
+    - **Components**:
+      - `title`: Logo or title component (desktop & mobile)
+      - `languageSwitcher`: Language selection component (desktop & mobile)
+      - `subAccount`: Sub-account component (desktop & mobile)
+      - `linkDevice`: Device linking component (desktop & mobile)
+      - `chainMenu`: Chain selection menu (desktop & mobile)
+      - `walletConnect`: Wallet connection component (desktop & mobile)
+      - `mainNav`: Main navigation menu (desktop only)
+      - `accountSummary`: Account summary component (desktop only)
+      - `leftNav`: Left navigation component (mobile only)
+      - `scanQRCode`: QR code scanner component (mobile only)
 
 ```typescript
 <Scaffold
@@ -120,6 +132,45 @@ const sidebarMenus = [
     trailing: <UserActions />,
     onItemClick: ({ href, name }) => {
       console.log(`Navigating to ${href}`);
+    },
+    // Custom layout for main navigation
+    customRender: (components) => {
+      // Mobile layout
+      if (isMobile) {
+        return (
+          <Flex width="100%" justify="between">
+            <Flex gapX={2}>
+              {components.leftNav}
+              {components.title}
+            </Flex>
+            <Flex gapX={2}>
+              {components.languageSwitcher}
+              {components.scanQRCode}
+              {components.linkDevice}
+              {components.chainMenu}
+              {components.walletConnect}
+            </Flex>
+          </Flex>
+        );
+      }
+
+      // Desktop layout
+      return (
+        <Flex width="100%" justify="between">
+          <Flex gapX={2}>
+            {components.title}
+            {components.mainNav}
+          </Flex>
+          <Flex gapX={2}>
+            {components.accountSummary}
+            {components.linkDevice}
+            {components.languageSwitcher}
+            {components.subAccount}
+            {components.chainMenu}
+            {components.walletConnect}
+          </Flex>
+        </Flex>
+      );
     }
   }}
 >

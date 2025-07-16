@@ -1,6 +1,8 @@
 import { ReactNode } from "react";
 
 export type LeftNavProps = {
+  /** custom leading */
+  leading?: ReactNode;
   menus?: LeftNavItem[];
   twitterUrl?: string;
   telegramUrl?: string;
@@ -8,7 +10,6 @@ export type LeftNavProps = {
   duneUrl?: string;
   feedbackUrl?: string;
   customLeftNav?: ReactNode;
-  products?: ReactNode;
 };
 
 export type LeftNavItem = {

@@ -1,13 +1,11 @@
 import { PropsWithChildren, ReactNode } from "react";
 import { LeftNavProps } from "../leftNav/leftNav.type";
+import { MainNavClassNames } from "./mainMenus/mainNavMenus.ui";
 import { MainNavItem } from "./mainMenus/navItem";
-import { MainNav, MainNavProps } from "./mainNav.ui";
-import {
-  CampaignPositionEnum,
-  useMainNavBuilder,
-} from "./useWidgetBuilder.script";
+import { CampaignPositionEnum, useMainNavScript } from "./mainNav.script";
+import { MainNav } from "./mainNav.ui";
 
-export type MainNavWidgetProps = PropsWithChildren<{
+export type MainNavWidgetProps = {
   leading?: ReactNode;
   trailing?: ReactNode;
   logo?: {
@@ -18,8 +16,6 @@ export type MainNavWidgetProps = PropsWithChildren<{
 
   campaigns?: MainNavItem;
   campaignPosition?: CampaignPositionEnum;
-
-  initialProduct?: string;
   /**
    * initial menu path, if it has submenus, use array
    * @type string | string[]
@@ -31,25 +27,51 @@ export type MainNavWidgetProps = PropsWithChildren<{
     name: string;
     scope?: string;
   }) => void;
-  /** only works on mobile */
-  customRender?: (components: {
-    title?: ReactNode;
-    languageSwitcher?: ReactNode;
-    scanQRCode?: ReactNode;
-    subAccount?: ReactNode;
-    linkDevice?: ReactNode;
-    chainMenu?: ReactNode;
-    walletConnect?: ReactNode;
-  }) => ReactNode;
+
   /** only works on mobile */
   leftNav?: LeftNavProps;
   customLeftNav?: ReactNode;
-}> &
-  Pick<MainNavProps, "classNames">;
+  className?: string;
+  classNames?: {
+    root?: string;
+    mainNav?: MainNavClassNames;
+    // subNav?: string;
+    logo?: string;
+    account?: string;
+    chains?: string;
+    campaignButton?: string;
+  };
 
-export const MainNavWidget = (props: MainNavWidgetProps) => {
+  /** custom render main nav */
+  customRender?: (components: {
+    /** Logo or title component (desktop & mobile) */
+    title?: ReactNode;
+    /** Language selection component (desktop & mobile) */
+    languageSwitcher?: ReactNode;
+    /** Sub-account component (desktop & mobile) */
+    subAccount?: ReactNode;
+    /** Device linking component (desktop & mobile) */
+    linkDevice?: ReactNode;
+    /** Chain selection menu (desktop & mobile) */
+    chainMenu?: ReactNode;
+    /** Wallet connection component (desktop & mobile) */
+    walletConnect?: ReactNode;
+
+    /** Main navigation menu (desktop & mobile) */
+    mainNav?: ReactNode;
+    /** Account summary component (desktop only) */
+    accountSummary?: ReactNode;
+
+    /** Left navigation component (mobile only) */
+    leftNav?: ReactNode;
+    /** QR code scanner component (mobile only) */
+    scanQRCode?: ReactNode;
+  }) => ReactNode;
+};
+
+export const MainNavWidget = (props: PropsWithChildren<MainNavWidgetProps>) => {
   const { children, classNames, ...rest } = props;
-  const state = useMainNavBuilder(rest);
+  const state = useMainNavScript(rest);
   return (
     <MainNav classNames={classNames} {...state}>
       {children}

@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCallback, useMemo, useState } from "react";
 import { getDate, getMonth, getYear, set } from "date-fns";
 import {
   useAssetsHistory,
   useQuery,
+  useTokensInfo,
   useTransferHistory,
 } from "@orderly.network/hooks";
 import { modal, usePagination } from "@orderly.network/ui";
@@ -29,6 +31,9 @@ export const useAssetHistoryScript = (options: AssetHistoryScriptOptions) => {
     const d = new Date();
     return new Date(getYear(d), getMonth(d), getDate(d), 0, 0, 0);
   });
+
+  const tokensInfo = useTokensInfo();
+
   const [target, setTarget] = useState<AssetTarget>(AssetTarget.Web3Wallet);
 
   const [dateRange, setDateRange] = useState<Date[]>([
@@ -97,11 +102,16 @@ export const useAssetHistoryScript = (options: AssetHistoryScriptOptions) => {
   );
 
   const dataSource = useMemo(() => {
-    if (target === AssetTarget.Web3Wallet) {
-      return withdrawData;
-    }
-    return transferData;
-  }, [target, withdrawData, transferData]);
+    return (
+      target === AssetTarget.Web3Wallet ? withdrawData : transferData
+    ).map((item) => {
+      const findToken = tokensInfo?.find(({ token }) => token === item.token);
+      return {
+        ...item,
+        decimals: findToken?.decimals ?? 2,
+      };
+    });
+  }, [target, withdrawData, transferData, tokensInfo]);
 
   const onDeposit = useCallback(() => {
     modal.show(DepositAndWithdrawWithSheetId, { activeTab: "deposit" });

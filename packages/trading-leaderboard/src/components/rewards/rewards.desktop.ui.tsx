@@ -17,6 +17,9 @@ interface RewardsDesktopUIProps {
   onLearnMore: () => void;
   onTradeNow: () => void;
   isMobile?: boolean;
+  shouldShowJoinButton?: boolean;
+  joinCampaign?: (data: { campaign_id: string | number }) => Promise<any>;
+  isJoining?: boolean;
 }
 
 export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
@@ -25,6 +28,9 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
   onLearnMore,
   onTradeNow,
   isMobile,
+  shouldShowJoinButton,
+  joinCampaign,
+  isJoining,
 }) => {
   const { t } = useTranslation();
   // Use mock data for userdata if not provided
@@ -228,7 +234,22 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
             {t("tradingLeaderboard.viewRules")}
           </Button>
         )}
-        {canTrade && (
+        {shouldShowJoinButton && (
+          <Button
+            size={isMobile ? "md" : "lg"}
+            variant="gradient"
+            color="primary"
+            loading={isJoining}
+            disabled={isJoining}
+            className={cn([isMobile ? "oui-flex-1" : "oui-w-[140px]"])}
+            onClick={() =>
+              joinCampaign?.({ campaign_id: campaign?.campaign_id as string })
+            }
+          >
+            Join now
+          </Button>
+        )}
+        {!shouldShowJoinButton && canTrade && (
           <Button
             size={isMobile ? "md" : "lg"}
             variant="gradient"
