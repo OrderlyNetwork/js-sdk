@@ -14,5 +14,7 @@ export * from "./components/desktop/orderBookAndTrades";
 export * from "./components/desktop/layout/splitLayout/splitLayout";
 export * from "./components/mobile/bottomNavBar";
 export * from "./components/mobile/portfolioSheet";
+export * from "./components/mobile/fundingRate";
+export * from "./components/mobile/fundingRateModal";
 export * from "./pages/trading";
 export * from "./provider";

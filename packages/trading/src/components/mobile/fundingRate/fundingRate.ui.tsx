@@ -4,16 +4,20 @@ import { Flex, Text } from "@orderly.network/ui";
 import { FundingRateState } from "./fundingRate.script";
 
 export const FundingRate: FC<FundingRateState> = (props) => {
-  const predFundingRate = props.data.est_funding_rate;
-  const countDown = props.data.countDown;
+  const { data, onClick } = props;
+  const predFundingRate = data.est_funding_rate;
+  const countDown = data.countDown;
   const { t } = useTranslation();
-
   return (
     <Flex direction={"column"} itemAlign={"start"} pb={2}>
-      <Text intensity={36} size="2xs">
+      <Text
+        size="2xs"
+        intensity={36}
+        className="oui-cursor-pointer oui-underline oui-decoration-line-16 oui-decoration-dashed oui-underline-offset-4"
+        onClick={onClick}
+      >
         {t("trading.fundingRate.predFundingRate")}
       </Text>
-
       {predFundingRate === null ? (
         "--"
       ) : (

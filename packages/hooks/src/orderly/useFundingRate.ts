@@ -1,11 +1,11 @@
+import { useEffect, useMemo, useRef, useState } from "react";
 import { API, SDKError } from "@orderly.network/types";
-import { useQuery } from "../useQuery";
-import { useEffect, useMemo, useState } from "react";
 import {
   Decimal,
   getTimestamp,
   timeConvertString,
 } from "@orderly.network/utils";
+import { useQuery } from "../useQuery";
 
 export const useFundingRate = (symbol: string) => {
   if (!symbol) {
@@ -14,40 +14,48 @@ export const useFundingRate = (symbol: string) => {
 
   const [countDown, setCountDown] = useState("00:00:00");
 
-  const { data } = useQuery<API.FundingRate>(
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const { data, isLoading } = useQuery<API.FundingRate>(
     `/v1/public/funding_rate/${symbol}`,
     {
       fallbackData: {
         est_funding_rate: 0,
         next_funing_time: 0,
       },
-    }
+    },
   );
 
   useEffect(() => {
-    if (!data) return;
+    if (!data || isLoading) {
+      return;
+    }
     const { next_funding_time } = data;
     if (!next_funding_time || next_funding_time <= 0) {
       return;
     }
-    const timer = setInterval(() => {
+    timerRef.current = setInterval(() => {
       const diff = new Date(next_funding_time).getTime() - getTimestamp();
       const result = timeConvertString(diff);
       if (result.length === 3) {
         setCountDown(
           `${result[0].toString().padStart(2, "0")}:${result[1]
             .toString()
-            .padStart(2, "0")}:${result[2].toString().padStart(2, "0")}`
+            .padStart(2, "0")}:${result[2].toString().padStart(2, "0")}`,
         );
       }
     }, 1000);
     return () => {
-      clearInterval(timer as unknown as number);
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
     };
-  }, [data]);
+  }, [data, isLoading]);
 
   const est_funding_rate = useMemo(() => {
-    if (!data) return;
+    if (!data) {
+      return;
+    }
 
     const { next_funding_time, est_funding_rate = 0 } = data;
 
@@ -57,7 +65,7 @@ export const useFundingRate = (symbol: string) => {
 
     return new Decimal(Number(est_funding_rate) * 100).toFixed(
       4,
-      Decimal.ROUND_DOWN
+      Decimal.ROUND_DOWN,
     );
   }, [data]);
 
