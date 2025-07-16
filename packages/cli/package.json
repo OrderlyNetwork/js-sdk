@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/cli",
-  "version": "0.8.1-internal-fix-multi-collateral.1",
+  "version": "0.8.1-internal-fix-multi-collateral.2",
   "description": "",
   "bin": {
     "orderly": "./bin/cli.js"

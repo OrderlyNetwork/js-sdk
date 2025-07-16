@@ -1,5 +1,17 @@
 # @orderly.network/trading-view
 
+## 2.5.1-internal-fix-multi-collateral.2
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.5.1-internal-fix-multi-collateral.2
+  - @orderly.network/hooks@2.5.1-internal-fix-multi-collateral.2
+  - @orderly.network/net@2.5.1-internal-fix-multi-collateral.2
+  - @orderly.network/types@2.5.1-internal-fix-multi-collateral.2
+  - @orderly.network/utils@2.5.1-internal-fix-multi-collateral.2
+
 ## 2.5.1-internal-fix-multi-collateral.1
 
 ### Patch Changes

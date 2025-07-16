@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/eslint-config",
-  "version": "2.5.1-internal-fix-multi-collateral.1",
+  "version": "2.5.1-internal-fix-multi-collateral.2",
   "main": "index.mjs",
   "module": "index.mjs",
   "license": "MIT",

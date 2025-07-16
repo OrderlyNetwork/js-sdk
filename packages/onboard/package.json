@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/web3-onboard",
-  "version": "2.5.1-internal-fix-multi-collateral.1",
+  "version": "2.5.1-internal-fix-multi-collateral.2",
   "description": "",
   "private": true,
   "main": "dist/index.mjs",
