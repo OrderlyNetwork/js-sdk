@@ -1,5 +1,15 @@
 # @orderly.network/chart
 
+## 2.5.1-internal-20250717.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/i18n@2.5.1-internal-20250717.0
+  - @orderly.network/ui@2.5.1-internal-20250717.0
+  - @orderly.network/utils@2.5.1-internal-20250717.0
+
 ## 2.5.0
 
 ### Minor Changes
