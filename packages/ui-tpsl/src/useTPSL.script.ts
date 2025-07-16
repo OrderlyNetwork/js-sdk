@@ -20,7 +20,7 @@ export type TPSLBuilderOptions = {
   order?: API.AlgoOrder;
   onTPSLTypeChange?: (type: AlgoOrderRootType) => void;
   isEditing?: boolean;
-  positionType: PositionType;
+  positionType?: PositionType;
   /**
    * either show the confirm dialog or not,
    * if the Promise reject or return false, cancel the submit action

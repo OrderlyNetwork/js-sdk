@@ -1,10 +1,19 @@
-import { FC, useRef } from "react";
+import { FC, useMemo, useRef } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
-import { Badge, cn, Flex, Statistic, Text } from "@orderly.network/ui";
+import { API, PositionType } from "@orderly.network/types";
+import {
+  Badge,
+  cn,
+  EditIcon,
+  Flex,
+  Grid,
+  Statistic,
+  Text,
+} from "@orderly.network/ui";
 import { SharePnLBottomSheetId } from "@orderly.network/ui-share";
 import { Decimal } from "@orderly.network/utils";
 import { FundingFeeButton } from "../../../fundingFeeHistory/fundingFeeButton";
+import { AddIcon, TPSLEditIcon } from "../../desktop/components";
 import { ShareButtonWidget } from "../../desktop/shareButton";
 import { PositionCellState } from "./positionCell.script";
 
@@ -210,22 +219,77 @@ export const LiqPrice: FC<PositionCellState> = (props) => {
 export const TPSLPrice: FC<PositionCellState> = (props) => {
   const { item } = props;
   const { t } = useTranslation();
-  if (item.tp_trigger_price == null && item.sl_trigger_price == null)
-    return <></>;
+
+  const fullTPSL = useMemo(() => {
+    if (
+      item.full_tp_sl?.tp_trigger_price == null &&
+      item.full_tp_sl?.sl_trigger_price == null
+    )
+      return <AddIcon positionType={PositionType.FULL} />;
+
+    return (
+      <Flex className="oui-gap-[2px]">
+        {item.full_tp_sl?.tp_trigger_price && (
+          <Text.numeral color="buy">
+            {item.full_tp_sl.tp_trigger_price}
+          </Text.numeral>
+        )}
+        {item.full_tp_sl?.sl_trigger_price && "/"}
+        {item.full_tp_sl?.sl_trigger_price && (
+          <Text.numeral color="sell">
+            {item.full_tp_sl.sl_trigger_price}
+          </Text.numeral>
+        )}
+        <TPSLEditIcon />
+      </Flex>
+    );
+  }, [item.full_tp_sl]);
+
+  const partialTPSL = useMemo(() => {
+    if (
+      item.partial_tp_sl?.tp_trigger_price == null &&
+      item.partial_tp_sl?.sl_trigger_price == null
+    )
+      return <AddIcon positionType={PositionType.PARTIAL} />;
+
+    return (
+      <Flex className="oui-gap-[2px]" itemAlign={"center"}>
+        {item.partial_tp_sl?.tp_trigger_price && (
+          <Text.numeral color="buy">
+            {item.partial_tp_sl.tp_trigger_price}
+          </Text.numeral>
+        )}
+        {item.partial_tp_sl?.sl_trigger_price && "/"}
+        {item.partial_tp_sl?.sl_trigger_price && (
+          <Text.numeral color="sell">
+            {item.partial_tp_sl.sl_trigger_price}
+          </Text.numeral>
+        )}
+        <Text>{`(${item.partial_tp_sl?.order_num})`}</Text>
+        <TPSLEditIcon />
+      </Flex>
+    );
+  }, [item.partial_tp_sl]);
 
   return (
-    <Flex className="oui-text-2xs oui-text-base-contrast-36">
-      <Text>{`${t("common.tpsl")}:`}&nbsp;</Text>
-      <Flex className="oui-gap-[2px]">
-        {item.tp_trigger_price && (
-          <Text.numeral color="buy">{item.tp_trigger_price}</Text.numeral>
-        )}
-        {item.sl_trigger_price && "/"}
-        {item.sl_trigger_price && (
-          <Text.numeral color="sell">{item.sl_trigger_price}</Text.numeral>
-        )}
+    <Grid cols={2} rows={1} gap={2} width={"100%"}>
+      <Flex
+        className="oui-text-2xs oui-text-base-contrast-36"
+        direction={"column"}
+        itemAlign={"start"}
+      >
+        <Text>Full TP/SL: </Text>
+        {fullTPSL}
       </Flex>
-    </Flex>
+      <Flex
+        className="oui-text-2xs oui-text-base-contrast-36 oui-grid-cols-end"
+        direction={"column"}
+        itemAlign={"start"}
+      >
+        <Text>Partial TP/SL: </Text>
+        {partialTPSL}
+      </Flex>
+    </Grid>
   );
 };
 

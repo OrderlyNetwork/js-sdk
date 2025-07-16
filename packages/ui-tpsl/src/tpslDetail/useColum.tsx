@@ -7,14 +7,16 @@ import {
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { positions as perpPositions } from "@orderly.network/perp";
-import { API, OrderStatus } from "@orderly.network/types";
+import { API, OrderStatus, OrderType } from "@orderly.network/types";
 import {
   Button,
+  cn,
   Flex,
   Text,
   ThrottledButton,
   toast,
   Tooltip,
+  useScreen,
 } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { useTPSLDetailContext } from "./tpslDetailProvider";
@@ -23,6 +25,7 @@ export const useColumn = (props: {
   onCancelOrder: (order: API.AlgoOrder) => Promise<void>;
 }) => {
   const { t } = useTranslation();
+  const { isMobile } = useScreen();
   const { position, base_dp } = useTPSLDetailContext();
   const { onCancelOrder } = props;
 
@@ -32,7 +35,7 @@ export const useColumn = (props: {
         title: "Qty.",
         dataIndex: "quantity",
         width: 70,
-        className: "oui-pl-5 oui-py-2",
+        className: cn(" oui-py-2", isMobile ? "oui-pl-0" : "oui-pl-5"),
         render: (_: string, record: API.AlgoOrder) => {
           const { tp_trigger_price, sl_trigger_price } =
             findTPSLFromOrder(record);
@@ -67,7 +70,7 @@ export const useColumn = (props: {
       {
         title: "Type",
         dataIndex: "type",
-        width: 40,
+        width: 35,
         className: "oui-pl-1 oui-py-2",
         render: (_: string, record: API.AlgoOrder) => {
           const { tp_trigger_price, sl_trigger_price } =
@@ -98,7 +101,7 @@ export const useColumn = (props: {
       {
         title: "trigger",
         dataIndex: "trigger",
-        width: 80,
+        width: 70,
         className: "oui-pl-1 oui-py-2",
         render: (_: string, record: API.AlgoOrder) => {
           const { base_dp } = useTPSLDetailContext();
@@ -156,7 +159,7 @@ export const useColumn = (props: {
       {
         title: "price",
         dataIndex: "price",
-        width: 80,
+        width: 70,
         className: "oui-pl-1 oui-py-2",
         render: (_: string, record: API.AlgoOrder) => {
           const { tp_order_price, sl_order_price } =
@@ -171,12 +174,32 @@ export const useColumn = (props: {
             >
               {tp_order_price && (
                 <FlexCell>
-                  <Text>{tp_order_price}</Text>
+                  {tp_order_price === OrderType.MARKET ? (
+                    <Text>Market</Text>
+                  ) : (
+                    <Text.numeral
+                      dp={base_dp}
+                      rm={Decimal.ROUND_DOWN}
+                      padding={false}
+                    >
+                      {tp_order_price}
+                    </Text.numeral>
+                  )}
                 </FlexCell>
               )}
               {sl_order_price && (
                 <FlexCell>
-                  <Text>{sl_order_price}</Text>
+                  {sl_order_price === OrderType.MARKET ? (
+                    <Text>Market</Text>
+                  ) : (
+                    <Text.numeral
+                      dp={base_dp}
+                      rm={Decimal.ROUND_DOWN}
+                      padding={false}
+                    >
+                      {sl_order_price}
+                    </Text.numeral>
+                  )}
                 </FlexCell>
               )}
             </Flex>
@@ -273,8 +296,8 @@ export const useColumn = (props: {
       {
         title: "",
         dataIndex: "delete",
-        width: 50,
-        className: "oui-pl-1 oui-pr-5 oui-py-2",
+        width: 30,
+        className: cn("oui-py-2", isMobile ? "oui-pl-0" : "oui-pl-5"),
         render: (_, record: API.AlgoOrder) => {
           return <CancelAllBtn order={record} onCancelOrder={onCancelOrder} />;
         },

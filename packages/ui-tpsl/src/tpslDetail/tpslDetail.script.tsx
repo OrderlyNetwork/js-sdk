@@ -15,9 +15,9 @@ import {
   OrderStatus,
   PositionType,
 } from "@orderly.network/types";
-import { modal, toast } from "@orderly.network/ui";
+import { modal, toast, useScreen } from "@orderly.network/ui";
 import { PositionTPSLConfirm } from "../tpsl.ui";
-import { TPSLDialogId } from "../tpsl.widget";
+import { TPSLDialogId, TPSLSheetId } from "../tpsl.widget";
 import { TPSLDetailProps } from "./tpslDetail.widget";
 
 export const useTPSLDetail = (props: TPSLDetailProps) => {
@@ -27,6 +27,7 @@ export const useTPSLDetail = (props: TPSLDetailProps) => {
 
   const [needConfirm] = useLocalStorage("orderly_order_confirm", true);
 
+  const { isMobile } = useScreen();
   const { t } = useTranslation();
   const [fullPositionOrders, setFullPositionOrders] = useState<API.AlgoOrder[]>(
     [],
@@ -64,7 +65,8 @@ export const useTPSLDetail = (props: TPSLDetailProps) => {
     positionType: PositionType;
     isEditing: boolean;
   }) => {
-    modal.show(TPSLDialogId, {
+    const dialogId = isMobile ? TPSLSheetId : TPSLDialogId;
+    modal.show(dialogId, {
       order: order,
       position: position,
       positionType,

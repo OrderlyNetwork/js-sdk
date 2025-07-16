@@ -96,7 +96,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
         baseDP={symbolInfo("base_dp")}
         quoteDP={symbolInfo("quote_dp")}
         classNames={{
-          root: "oui-mb-6",
+          root: "oui-mb-3",
           container: "oui-gap-x-[30px]",
         }}
         order={{
@@ -112,35 +112,37 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
         gap={3}
         className="oui-w-full oui-mb-3"
       >
-        <TPSLPositionTypeWidget
-          disableSelector
-          value={TPSL_OrderEntity.position_type ?? PositionType.PARTIAL}
-          onChange={(key, value) => {
-            if (value === PositionType.FULL) {
-              setValues({
-                position_type: value,
-                quantity: Math.abs(position.position_qty).toString(),
-                tp_order_price: "",
-                tp_order_type: OrderType.MARKET,
-                tp_trigger_price: "",
-                sl_order_price: "",
-                sl_order_type: OrderType.MARKET,
-                sl_trigger_price: "",
-              });
-            } else {
-              setValues({
-                position_type: value,
-                quantity: "",
-                tp_order_price: "",
-                tp_order_type: OrderType.MARKET,
-                tp_trigger_price: "",
-                sl_order_price: "",
-                sl_order_type: OrderType.MARKET,
-                sl_trigger_price: "",
-              });
-            }
-          }}
-        />
+        {!isEditing && (
+          <TPSLPositionTypeWidget
+            disableSelector
+            value={TPSL_OrderEntity.position_type ?? PositionType.PARTIAL}
+            onChange={(key, value) => {
+              if (value === PositionType.FULL) {
+                setValues({
+                  position_type: value,
+                  quantity: Math.abs(position.position_qty).toString(),
+                  tp_order_price: "",
+                  tp_order_type: OrderType.MARKET,
+                  tp_trigger_price: "",
+                  sl_order_price: "",
+                  sl_order_type: OrderType.MARKET,
+                  sl_trigger_price: "",
+                });
+              } else {
+                setValues({
+                  position_type: value,
+                  quantity: "",
+                  tp_order_price: "",
+                  tp_order_type: OrderType.MARKET,
+                  tp_trigger_price: "",
+                  sl_order_price: "",
+                  sl_order_type: OrderType.MARKET,
+                  sl_trigger_price: "",
+                });
+              }
+            }}
+          />
+        )}
         {TPSL_OrderEntity.position_type === PositionType.FULL && (
           <Text className="oui-text-warning oui-text-2xs">
             Full positions TP/SL only support market price to place the orders
@@ -328,8 +330,8 @@ const TPSLQuantity = (props: {
             ref={inputRef}
             prefix={t("common.quantity")}
             size={{
-              initial: "lg",
-              lg: "md",
+              initial: "md",
+              lg: "sm",
             }}
             align="right"
             value={props.quantity}

@@ -67,8 +67,7 @@ const Body: FC<PositionCellState> = (props) => {
 
 const Buttons: FC<PositionCellState> = (props) => {
   return (
-    <Grid width={"100%"} gap={2} cols={3} rows={1}>
-      <TpSLBtnWidget state={props} />
+    <Grid width={"100%"} gap={2} cols={2} rows={1}>
       <LimitCloseBtnWidget state={props} />
       <MarketCloseBtnWidget state={props} />
     </Grid>

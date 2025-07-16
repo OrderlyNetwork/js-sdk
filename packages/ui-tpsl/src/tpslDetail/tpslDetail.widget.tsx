@@ -1,5 +1,5 @@
 import { AlgoOrder, API } from "@orderly.network/types";
-import { registerSimpleDialog } from "@orderly.network/ui";
+import { registerSimpleDialog, registerSimpleSheet } from "@orderly.network/ui";
 import { useTPSLDetail } from "./tpslDetail.script";
 import { TPSLDetailProvider } from "./tpslDetailProvider";
 import { TPSLDetailUI } from "./tsplDetail.ui";
@@ -23,10 +23,16 @@ export const TPSLDetailWidget = (props: TPSLDetailProps) => {
   );
 };
 export const TPSLDetailDialogId = "TPSLDetailDialogId ";
-
+export const TPSLDetailSheetId = "TPSLDetailSheetId";
 registerSimpleDialog(TPSLDetailDialogId, TPSLDetailWidget, {
   classNames: {
     content: "oui-w-[420px] lg:oui-pt-4 lg:oui-pb-2 lg:oui-px-0",
     body: "lg:oui-py-0",
+  },
+});
+
+registerSimpleSheet(TPSLDetailSheetId, TPSLDetailWidget, {
+  classNames: {
+    content: "oui-p-0",
   },
 });

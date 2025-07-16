@@ -17,6 +17,8 @@ import {
   Tooltip,
   ThrottledButton,
   modal,
+  useScreen,
+  Grid,
 } from "@orderly.network/ui";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import { OrderInfo } from "../components/orderInfo";
@@ -36,6 +38,8 @@ export const TPSLDetailUI = (props: TPSLDetailState) => {
     addTPSLOrder,
   } = props;
 
+  const { isMobile } = useScreen();
+
   return (
     <Box>
       <OrderInfo
@@ -45,7 +49,7 @@ export const TPSLDetailUI = (props: TPSLDetailState) => {
           order_price: position.average_open_price.toString(),
         }}
         classNames={{
-          root: "oui-mb-6 oui-gap-3 oui-px-5",
+          root: cn("oui-mb-6 oui-gap-3", isMobile ? "oui-px-0" : "oui-px-5"),
           container: "oui-gap-x-[30px]",
         }}
       />
@@ -80,9 +84,15 @@ const FullPositionPart = (props: {
   const [open, setOpen] = useState(true);
   const columns = useColumn({ onCancelOrder: props.onCancelOrder });
   const { orders } = props;
+  const { isMobile } = useScreen();
   return (
     <Box className="oui-mt-6">
-      <Box className="oui-flex oui-items-center oui-justify-between oui-px-5">
+      <Box
+        className={cn(
+          "oui-flex oui-items-center oui-justify-between",
+          isMobile ? "oui-px-0" : "oui-px-5",
+        )}
+      >
         <PositionTypeDescription
           positionType={PositionType.FULL}
           open={open}
@@ -141,15 +151,21 @@ const PartialPositionPart = (props: {
   const [open, setOpen] = useState(true);
   const columns = useColumn({ onCancelOrder: props.onCancelOrder });
   const { orders } = props;
+  const { isMobile } = useScreen();
   return (
     <Box>
-      <Box className="oui-flex oui-items-center oui-justify-between oui-px-5 oui-pt-4">
+      <Box
+        className={cn(
+          "oui-flex oui-items-center oui-justify-between",
+          isMobile ? "oui-px-0" : "oui-px-5",
+        )}
+      >
         <PositionTypeDescription
           positionType={PositionType.PARTIAL}
           open={open}
           onOpenChange={setOpen}
         />
-        <Flex gap={2}>
+        <Grid gap={2} cols={2}>
           <AddButton
             positionType={PositionType.PARTIAL}
             position={props.position}
@@ -161,7 +177,7 @@ const PartialPositionPart = (props: {
               onCancelAllTPSLOrders={props.onCancelAllTPSLOrders}
             />
           )}
-        </Flex>
+        </Grid>
       </Box>
       <Box
         className={cn(
@@ -257,7 +273,7 @@ export const AddButton = (props: {
       variant="outlined"
       size="sm"
       color="gray"
-      className="oui-h-6 oui-min-w-[94px] oui-text-2xs"
+      className="oui-h-6 oui-text-2xs"
       onClick={onAdd}
     >
       Add
@@ -277,7 +293,7 @@ export const CancelAllBtn = (props: {
       disabled={!props.canCancelAll}
       size="sm"
       color="gray"
-      className="oui-h-6 oui-min-w-[94px] oui-text-2xs disabled:oui-border-base-contrast-16 disabled:oui-bg-transparent disabled:oui-text-base-contrast-20"
+      className="oui-h-6  oui-text-2xs disabled:oui-border-base-contrast-16 disabled:oui-bg-transparent disabled:oui-text-base-contrast-20"
       onClick={() => {
         setLoading(true);
         props

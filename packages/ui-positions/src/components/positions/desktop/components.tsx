@@ -2,13 +2,15 @@ import React from "react";
 import { ComputedAlgoOrder, useLocalStorage } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { PositionType } from "@orderly.network/types";
-import { EditIcon, Text, toast } from "@orderly.network/ui";
+import { cn, EditIcon, Text, toast, useScreen } from "@orderly.network/ui";
 import { modal } from "@orderly.network/ui";
 import {
   PositionTPSLConfirm,
   PositionTPSLPopover,
   TPSLDetailDialogId,
   TPSLDialogId,
+  TPSLSheetId,
+  TPSLDetailSheetId,
 } from "@orderly.network/ui-tpsl";
 import { usePositionsRowContext } from "./positionRowContext";
 
@@ -30,9 +32,11 @@ export const TPSLButton = () => {
 
 export const TPSLEditIcon = () => {
   const { position, baseDp, quoteDp, tpslOrder } = usePositionsRowContext();
+  const { isMobile } = useScreen();
 
   const onEdit = () => {
-    modal.show(TPSLDetailDialogId, {
+    const dialogId = isMobile ? TPSLDetailSheetId : TPSLDetailDialogId;
+    modal.show(dialogId, {
       order: tpslOrder,
       position: position,
       baseDP: baseDp,
@@ -62,8 +66,10 @@ export const AddIcon = (props: { positionType: PositionType }) => {
   const { position, baseDp, quoteDp, tpslOrder } = usePositionsRowContext();
   const [needConfirm] = useLocalStorage("orderly_order_confirm", true);
   const { t } = useTranslation();
+  const { isMobile } = useScreen();
   const onAdd = () => {
-    modal.show(TPSLDialogId, {
+    const dialogId = isMobile ? TPSLSheetId : TPSLDialogId;
+    const modalParams = {
       position,
       baseDP: baseDp,
       quoteDP: quoteDp,
@@ -151,11 +157,15 @@ export const AddIcon = (props: { positionType: PositionType }) => {
             },
           );
       },
-    });
+    };
+    modal.show(dialogId, modalParams);
   };
   return (
     <Text
-      className="oui-text-base-contrast-36 hover:oui-text-base-contrast oui-cursor-pointer"
+      className={cn(
+        "oui-text-base-contrast-36 hover:oui-text-base-contrast oui-cursor-pointer",
+        isMobile && "oui-text-base-contrast-80",
+      )}
       onClick={onAdd}
     >
       Add

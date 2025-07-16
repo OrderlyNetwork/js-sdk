@@ -31,7 +31,7 @@ export const PnlInfo = (props: Props) => {
       direction={"column"}
       itemAlign={"start"}
       className={cn(
-        "oui-w-full oui-gap-[6px] oui-text-2xs oui-text-base-contrast-36",
+        "oui-w-full oui-gap-1 oui-text-2xs oui-text-base-contrast-36",
         props.className,
       )}
     >
