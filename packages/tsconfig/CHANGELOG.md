@@ -1,5 +1,11 @@
 # tsconfig
 
+## 0.8.1-internal-fix-multi-collateral.0
+
+### Patch Changes
+
+- publish
+
 ## 0.8.0
 
 ### Minor Changes

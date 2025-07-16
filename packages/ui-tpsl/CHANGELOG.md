@@ -1,5 +1,18 @@
 # @orderly.network/ui-tpsl
 
+## 2.5.1-internal-fix-multi-collateral.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.5.1-internal-fix-multi-collateral.0
+  - @orderly.network/hooks@2.5.1-internal-fix-multi-collateral.0
+  - @orderly.network/i18n@2.5.1-internal-fix-multi-collateral.0
+  - @orderly.network/types@2.5.1-internal-fix-multi-collateral.0
+  - @orderly.network/ui@2.5.1-internal-fix-multi-collateral.0
+  - @orderly.network/utils@2.5.1-internal-fix-multi-collateral.0
+
 ## 2.5.0
 
 ### Minor Changes
