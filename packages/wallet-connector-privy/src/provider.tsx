@@ -179,6 +179,7 @@ interface WalletConnectorPrivyProps extends PropsWithChildren {
   headerProps?: {
     mobile: React.ReactNode;
   };
+  enableSwapDeposit?: boolean;
 }
 
 const defaultPrivyLoginMethod = [
@@ -251,6 +252,14 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     return chainTypeObj;
   }, [initChains]);
 
+  const { data: swapChainInfoRes, isLoading: swapLoading } = useSWR(
+    !props.customChains && props.enableSwapDeposit
+      ? "https://fi-api.woo.org/swap_support"
+      : null,
+    fetcher,
+    commonSwrOpts,
+  );
+
   const { data: mainnetChainInfoRes } = useSWR(
     !props.customChains ? "https://api.orderly.org/v1/public/chain_info" : null,
     fetcher,
@@ -261,12 +270,6 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     !props.customChains
       ? "https://testnet-api.orderly.org/v1/public/chain_info"
       : null,
-    fetcher,
-    commonSwrOpts,
-  );
-
-  const { data: swapChainInfoRes } = useSWR(
-    !props.customChains ? "https://fi-api.woo.org/swap_support" : null,
     fetcher,
     commonSwrOpts,
   );
@@ -369,7 +372,7 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
       return;
     }
 
-    if (!mainnetChainInfoRes || !testChainInfoRes || !swapChainInfoRes) {
+    if (!mainnetChainInfoRes || !testChainInfoRes || swapLoading) {
       return;
     }
 
@@ -386,7 +389,7 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
       const mainnetChains = processChainInfo(mainnetChainsList);
 
       const swapChains = processChainInfo(
-        formatSwapChainInfo(swapChainInfoRes?.data),
+        formatSwapChainInfo(swapChainInfoRes?.data || {}),
       );
 
       const chains = [...testChains, ...mainnetChains];
@@ -411,6 +414,7 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     mainnetChainInfoRes,
     testChainInfoRes,
     swapChainInfoRes,
+    swapLoading,
   ]);
 
   useEffect(() => {
