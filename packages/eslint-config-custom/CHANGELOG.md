@@ -1,5 +1,11 @@
 # @orderly.network/eslint-config
 
+## 2.5.0-alpha.2
+
+### Minor Changes
+
+- publish
+
 ## 2.5.0-alpha.1
 
 ### Minor Changes

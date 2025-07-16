@@ -1,5 +1,11 @@
 # create-orderly-app
 
+## 1.10.0-alpha.2
+
+### Minor Changes
+
+- publish
+
 ## 1.10.0-alpha.1
 
 ### Minor Changes

@@ -1,5 +1,16 @@
 # @orderly.network/utils
 
+## 2.5.0-alpha.2
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/types@2.5.0-alpha.2
+
 ## 2.5.0-alpha.1
 
 ### Minor Changes

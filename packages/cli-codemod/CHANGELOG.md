@@ -1,5 +1,11 @@
 # @orderly.network/codemod
 
+## 1.5.0-alpha.2
+
+### Minor Changes
+
+- publish
+
 ## 1.5.0-alpha.1
 
 ### Minor Changes

@@ -1,5 +1,20 @@
 # @orderly.network/trading-view
 
+## 2.5.0-alpha.2
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/core@2.5.0-alpha.2
+  - @orderly.network/hooks@2.5.0-alpha.2
+  - @orderly.network/net@2.5.0-alpha.2
+  - @orderly.network/types@2.5.0-alpha.2
+  - @orderly.network/utils@2.5.0-alpha.2
+
 ## 2.5.0-alpha.1
 
 ### Minor Changes

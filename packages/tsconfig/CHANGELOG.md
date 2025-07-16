@@ -1,5 +1,11 @@
 # tsconfig
 
+## 0.8.0-alpha.2
+
+### Minor Changes
+
+- publish
+
 ## 0.8.0-alpha.1
 
 ### Minor Changes
