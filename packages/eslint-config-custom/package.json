@@ -2,7 +2,11 @@
   "name": "@orderly.network/eslint-config",
   "version": "2.4.2-alpha.0",
   "main": "index.mjs",
+  "module": "index.mjs",
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@eslint/js": "^9.25.1",
     "@stylistic/eslint-plugin": "^4.2.0",
