@@ -152,7 +152,7 @@ export const useOrderlyConfig = () => {
             { name: t("common.portfolio"), href: "/portfolio" },
             { name: t("common.markets"), href: "/markets" },
             {
-              name: "more",
+              name: t("tradingView.timeInterval.more"),
               href: "",
               children: [
                 {

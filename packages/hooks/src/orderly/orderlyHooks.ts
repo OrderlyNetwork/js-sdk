@@ -34,6 +34,7 @@ export { useOdosQuote } from "./useOdosQuote";
 export { useComputedLTV } from "./useComputedLTV";
 export { useTickerStream } from "./useTickerStream";
 export { useFundingRate } from "./useFundingRate";
+export { useFundingDetails } from "./useFundingDetails";
 export { useFundingRates, type FundingRates } from "./useFundingRates";
 export { useFundingRateHistory } from "./useFundingRateHistory";
 export { usePositionStream } from "./usePositionStream/usePositionStream";
