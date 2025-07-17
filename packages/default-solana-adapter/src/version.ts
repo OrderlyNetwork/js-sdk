@@ -8,7 +8,7 @@ declare global {
 if (typeof window !== "undefined") {
   window.__ORDERLY_VERSION__ = window.__ORDERLY_VERSION__ || {};
   window.__ORDERLY_VERSION__["@orderly.network/default-solana-adapter"] =
-    "2.5.1-internal-20250717.1";
+    "2.5.1";
 }
 
-export default "2.5.1-internal-20250717.1";
+export default "2.5.1";

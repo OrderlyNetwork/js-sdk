@@ -146,12 +146,12 @@ export const useDeposit = (options: DepositOptions) => {
 
     for (const token of tokens) {
       // skip native token
-      if (isNativeTokenChecker(token.address)) {
+      if (isNativeTokenChecker(token.address!)) {
         continue;
       }
 
       tasks.push(
-        account.assetsManager.getBalance(token.address, {
+        account.assetsManager.getBalance(token.address!, {
           decimals: token?.decimals,
         }),
       );

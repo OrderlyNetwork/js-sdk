@@ -1,22 +1,24 @@
 # @orderly.network/default-solana-adapter
 
-## 2.5.1-internal-20250717.1
+## 2.5.1
+
+### Patch Changes
+
+- publish
+- 5ad8a1b: publish
+- Updated dependencies
+- Updated dependencies [5ad8a1b]
+  - @orderly.network/core@2.5.1
+  - @orderly.network/types@2.5.1
+
+## 2.5.1-alpha.0
 
 ### Patch Changes
 
 - publish
 - Updated dependencies
-  - @orderly.network/core@2.5.1-internal-20250717.1
-  - @orderly.network/types@2.5.1-internal-20250717.1
-
-## 2.5.1-internal-20250717.0
-
-### Patch Changes
-
-- publish
-- Updated dependencies
-  - @orderly.network/core@2.5.1-internal-20250717.0
-  - @orderly.network/types@2.5.1-internal-20250717.0
+  - @orderly.network/core@2.5.1-alpha.0
+  - @orderly.network/types@2.5.1-alpha.0
 
 ## 2.5.0
 

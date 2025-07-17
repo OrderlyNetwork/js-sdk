@@ -1,34 +1,36 @@
 # @orderly.network/hooks
 
-## 2.5.1-internal-20250717.1
+## 2.5.1
+
+### Patch Changes
+
+- publish
+- 5ad8a1b: publish
+- Updated dependencies
+- Updated dependencies [5ad8a1b]
+  - @orderly.network/core@2.5.1
+  - @orderly.network/default-evm-adapter@2.5.1
+  - @orderly.network/default-solana-adapter@2.5.1
+  - @orderly.network/net@2.5.1
+  - @orderly.network/perp@4.5.1
+  - @orderly.network/types@2.5.1
+  - @orderly.network/utils@2.5.1
+  - @orderly.network/web3-provider-ethers@2.5.1
+
+## 2.5.1-alpha.0
 
 ### Patch Changes
 
 - publish
 - Updated dependencies
-  - @orderly.network/core@2.5.1-internal-20250717.1
-  - @orderly.network/default-evm-adapter@2.5.1-internal-20250717.1
-  - @orderly.network/default-solana-adapter@2.5.1-internal-20250717.1
-  - @orderly.network/net@2.5.1-internal-20250717.1
-  - @orderly.network/perp@4.5.1-internal-20250717.1
-  - @orderly.network/types@2.5.1-internal-20250717.1
-  - @orderly.network/utils@2.5.1-internal-20250717.1
-  - @orderly.network/web3-provider-ethers@2.5.1-internal-20250717.1
-
-## 2.5.1-internal-20250717.0
-
-### Patch Changes
-
-- publish
-- Updated dependencies
-  - @orderly.network/core@2.5.1-internal-20250717.0
-  - @orderly.network/default-evm-adapter@2.5.1-internal-20250717.0
-  - @orderly.network/default-solana-adapter@2.5.1-internal-20250717.0
-  - @orderly.network/net@2.5.1-internal-20250717.0
-  - @orderly.network/perp@4.5.1-internal-20250717.0
-  - @orderly.network/types@2.5.1-internal-20250717.0
-  - @orderly.network/utils@2.5.1-internal-20250717.0
-  - @orderly.network/web3-provider-ethers@2.5.1-internal-20250717.0
+  - @orderly.network/core@2.5.1-alpha.0
+  - @orderly.network/default-evm-adapter@2.5.1-alpha.0
+  - @orderly.network/default-solana-adapter@2.5.1-alpha.0
+  - @orderly.network/net@2.5.1-alpha.0
+  - @orderly.network/perp@4.5.1-alpha.0
+  - @orderly.network/types@2.5.1-alpha.0
+  - @orderly.network/utils@2.5.1-alpha.0
+  - @orderly.network/web3-provider-ethers@2.5.1-alpha.0
 
 ## 2.5.0
 

@@ -1,12 +1,13 @@
 # tsconfig
 
-## 0.8.1-internal-20250717.1
+## 0.8.1
 
 ### Patch Changes
 
 - publish
+- 5ad8a1b: publish
 
-## 0.8.1-internal-20250717.0
+## 0.8.1-alpha.0
 
 ### Patch Changes
 
