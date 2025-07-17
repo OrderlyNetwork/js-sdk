@@ -1,5 +1,17 @@
 # @orderly.network/ui-share
 
+## 2.5.2-internal-20250717.2
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.5.2-internal-20250717.2
+  - @orderly.network/i18n@2.5.2-internal-20250717.2
+  - @orderly.network/types@2.5.2-internal-20250717.2
+  - @orderly.network/ui@2.5.2-internal-20250717.2
+  - @orderly.network/utils@2.5.2-internal-20250717.2
+
 ## 2.5.2-internal-20250717.1
 
 ### Patch Changes
