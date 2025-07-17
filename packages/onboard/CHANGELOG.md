@@ -1,5 +1,14 @@
 # @orderly.network/onboard
 
+## 2.5.1-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.5.1-alpha.0
+  - @orderly.network/types@2.5.1-alpha.0
+
 ## 2.5.0
 
 ### Minor Changes

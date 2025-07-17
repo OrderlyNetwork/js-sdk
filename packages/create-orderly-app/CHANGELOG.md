@@ -1,5 +1,11 @@
 # create-orderly-app
 
+## 1.10.1-alpha.0
+
+### Patch Changes
+
+- publish
+
 ## 1.10.0
 
 ### Minor Changes
