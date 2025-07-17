@@ -1,5 +1,14 @@
 # @orderly.network/web3-provider-ethers
 
+## 2.5.2-internal-20250717.1
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/default-evm-adapter@2.5.2-internal-20250717.1
+  - @orderly.network/types@2.5.2-internal-20250717.1
+
 ## 2.5.2-internal-20250717.0
 
 ### Patch Changes
