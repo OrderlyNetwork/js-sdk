@@ -1,5 +1,33 @@
 # @orderly.network/markets
 
+## 2.5.1
+
+### Patch Changes
+
+- publish
+- 5ad8a1b: publish
+- Updated dependencies
+- Updated dependencies [5ad8a1b]
+  - @orderly.network/hooks@2.5.1
+  - @orderly.network/i18n@2.5.1
+  - @orderly.network/types@2.5.1
+  - @orderly.network/ui@2.5.1
+  - @orderly.network/ui-scaffold@2.5.1
+  - @orderly.network/utils@2.5.1
+
+## 2.5.1-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.5.1-alpha.0
+  - @orderly.network/i18n@2.5.1-alpha.0
+  - @orderly.network/types@2.5.1-alpha.0
+  - @orderly.network/ui@2.5.1-alpha.0
+  - @orderly.network/ui-scaffold@2.5.1-alpha.0
+  - @orderly.network/utils@2.5.1-alpha.0
+
 ## 2.5.0
 
 ### Minor Changes

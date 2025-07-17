@@ -1,5 +1,23 @@
 # @orderly.network/cli
 
+## 0.8.1
+
+### Patch Changes
+
+- publish
+- 5ad8a1b: publish
+- Updated dependencies
+- Updated dependencies [5ad8a1b]
+  - @orderly.network/core@2.5.1
+
+## 0.8.1-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.5.1-alpha.0
+
 ## 0.8.0
 
 ### Minor Changes

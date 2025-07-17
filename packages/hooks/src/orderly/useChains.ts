@@ -462,6 +462,10 @@ export function formatChains({
       vault_address,
     };
 
+    const usdcSwapToken = swapTokenInfos.find(
+      (item: any) => item.symbol === "USDC",
+    );
+
     const tokenInfos = tokenChains
       .filter((item) =>
         item.chain_details.some((item) => Number(item.chain_id) === chainId),
@@ -469,6 +473,9 @@ export function formatChains({
       .map((item) => {
         const chain = item.chain_details.find(
           (item) => Number(item.chain_id) === chainId,
+        );
+        const swapToken = swapTokenInfos.find(
+          (swapItem: any) => swapItem.symbol === item.token,
         );
 
         return {
@@ -493,14 +500,17 @@ export function formatChains({
           haircut: item.haircut,
           user_max_qty: item.user_max_qty,
           is_collateral: item.is_collateral,
-          swap_enable: false,
+          // if source token is swap token, and usdc is swap token, set swap_enable to true
+          swap_enable: !!swapToken?.swap_enable && usdcSwapToken?.swap_enable,
         };
       });
 
-    // filter swap tokens that is not in tokenInfos
-    const swapTokens = swapTokenInfos?.filter((item: any) => {
-      return !tokenInfos?.some((token) => token.symbol === item.symbol);
-    });
+    // filter swap tokens that is not in tokenInfos, chain swap deposit need to check usdc swap_enable
+    const swapTokens = usdcSwapToken?.swap_enable
+      ? swapTokenInfos?.filter((item: any) => {
+          return !tokenInfos?.some((token) => token.symbol === item.symbol);
+        })
+      : [];
 
     const _chain: any = {
       network_infos,

@@ -392,6 +392,8 @@ export declare namespace API {
     network_infos: NetworkInfos;
     token_infos: TokenInfo[];
     nativeToken?: TokenInfo;
+    address?: string;
+    symbol?: string;
     // nativeToken
   }
 
@@ -415,21 +417,20 @@ export declare namespace API {
   }
 
   export interface TokenInfo {
-    address: string;
+    address?: string;
     base_weight: number;
-    decimals: number;
+    decimals?: number;
     /** token decimals */
-    token_decimal: number;
-    discount_factor: number;
-    display_name: string;
+    token_decimal?: number;
+    discount_factor?: number | null;
+    display_name?: string;
     haircut: number;
-    is_collateral: true;
-    symbol: string;
+    is_collateral: boolean;
+    symbol?: string;
     user_max_qty: number;
-    precision: number;
+    precision?: number;
     minimum_withdraw_amount: number;
-
-    swap_enable: boolean;
+    swap_enable?: boolean;
   }
 
   export interface Chain {
