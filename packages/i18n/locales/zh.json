@@ -711,6 +711,7 @@
   "affiliate.referralRate.editRateModal.label.referee": "推荐人获得",
   "affiliate.referralRate.editRateModal.helpText.max": "总佣金率必须等于您的最高佣金率限制",
   "affiliate.referralRate.editRateModal.success": "推荐费率更新成功",
+  "affiliate.referralTooltip": "交易 $10K 即可解锁您的推荐码，并从推荐中赚取交易返佣。",
   "ui.pagination.morePages": "更多页面",
   "ui.pagination.rowsPerPage": "每页行数",
   "ui.picker.selectDate": "选择日期",

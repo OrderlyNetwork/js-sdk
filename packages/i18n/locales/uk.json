@@ -711,6 +711,7 @@
   "affiliate.referralRate.editRateModal.label.referee": "Реферал отримує",
   "affiliate.referralRate.editRateModal.helpText.max": "Загальна комісія повинна дорівнювати вашому максимальному ліміту комісії",
   "affiliate.referralRate.editRateModal.success": "Реферальну ставку успішно оновлено",
+  "affiliate.referralTooltip": "Торгуйте на $10K, щоб розблокувати ваш реферальний код і заробляти торговельні знижки з рефералів.",
   "ui.pagination.morePages": "Більше сторінок",
   "ui.pagination.rowsPerPage": "Рядків на сторінку",
   "ui.picker.selectDate": "Виберіть дату",

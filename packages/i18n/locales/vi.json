@@ -711,6 +711,7 @@
   "affiliate.referralRate.editRateModal.label.referee": "Người được giới thiệu nhận được",
   "affiliate.referralRate.editRateModal.helpText.max": "Tổng tỷ lệ hoa hồng phải bằng với giới hạn tỷ lệ hoa hồng tối đa của bạn",
   "affiliate.referralRate.editRateModal.success": "Cập nhật tỷ lệ giới thiệu thành công",
+  "affiliate.referralTooltip": "Giao dịch $10K để mở khóa mã giới thiệu của bạn và kiếm hoàn tiền giao dịch từ giới thiệu.",
   "ui.pagination.morePages": "Thêm trang",
   "ui.pagination.rowsPerPage": "Số hàng mỗi trang",
   "ui.picker.selectDate": "Chọn ngày",

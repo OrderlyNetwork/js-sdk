@@ -711,6 +711,7 @@
   "affiliate.referralRate.editRateModal.label.referee": "Yönlendirilen kişi alır",
   "affiliate.referralRate.editRateModal.helpText.max": "Toplam komisyon oranı maksimum komisyon oranı limitinize eşit olmalıdır",
   "affiliate.referralRate.editRateModal.success": "Yönlendirme oranı başarıyla güncellendi",
+  "affiliate.referralTooltip": "Referans kodunuzu açmak ve referanslardan ticaret komisyon iadesi kazanmak için $10K işlem yapın.",
   "ui.pagination.morePages": "Daha fazla sayfa",
   "ui.pagination.rowsPerPage": "Sayfa başına satır",
   "ui.picker.selectDate": "Tarih Seç",

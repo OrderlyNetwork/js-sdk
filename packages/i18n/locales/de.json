@@ -711,6 +711,7 @@
   "affiliate.referralRate.editRateModal.label.referee": "Empfohlener erhält",
   "affiliate.referralRate.editRateModal.helpText.max": "Die Gesamtprovision muss Ihrer maximalen Provisionsgrenze entsprechen",
   "affiliate.referralRate.editRateModal.success": "Empfehlungsrate erfolgreich aktualisiert",
+  "affiliate.referralTooltip": "Handeln Sie $10K, um Ihren Empfehlungscode freizuschalten und Trading-Rückvergütungen aus Empfehlungen zu verdienen.",
   "ui.pagination.morePages": "Weitere Seiten",
   "ui.pagination.rowsPerPage": "Zeilen pro Seite",
   "ui.picker.selectDate": "Datum auswählen",

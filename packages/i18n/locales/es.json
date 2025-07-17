@@ -711,6 +711,7 @@
   "affiliate.referralRate.editRateModal.label.referee": "El referido recibe",
   "affiliate.referralRate.editRateModal.helpText.max": "La tasa total de comisión debe ser igual a su límite máximo de tasa de comisión",
   "affiliate.referralRate.editRateModal.success": "Tasa de referidos actualizada con éxito",
+  "affiliate.referralTooltip": "Comercia $10K para desbloquear tu código de referido y ganar reembolsos de trading por referencias.",
   "ui.pagination.morePages": "Más páginas",
   "ui.pagination.rowsPerPage": "Filas por página",
   "ui.picker.selectDate": "Seleccionar fecha",

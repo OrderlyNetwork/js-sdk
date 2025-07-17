@@ -10,7 +10,8 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { ChevronDownIcon, PopoverContent } from "@orderly.network/ui";
+import { useLocalStorage } from "@orderly.network/hooks";
+import { ChevronDownIcon, PopoverContent, Tooltip } from "@orderly.network/ui";
 import { Flex } from "@orderly.network/ui";
 import { Box, cn, PopoverAnchor, PopoverRoot, Text } from "@orderly.network/ui";
 
@@ -58,7 +59,6 @@ export type MainNavItem = {
   className?: string;
   asChild?: boolean;
 
-  customRender?: React.ReactNode;
   /**
    * if true, the item will be shown as a submenu in mobile
    */
@@ -74,7 +74,24 @@ export type MainNavItem = {
    * if true, the item will be shown as a home page in mobile
    */
   isHomePageInMobile?: boolean;
+  customRender?: React.ReactNode;
+  tooltipConfig?: {
+    /**
+     * if true, the tooltip will be shown on first visit
+     */
+    showOnFirstVisit?: boolean;
+    /**
+     * the text to show in the tooltip
+     */
+    text?: string;
+  };
 };
+
+const isObject = (value: any): value is object => {
+  return !!value && value.constructor === Object;
+};
+
+const ORDERLY_NAV_BUTTON_TOOLTIP_OPEN = "ORDERLY_NAV_BUTTON_TOOLTIP_OPEN";
 
 export const NavItem: FC<
   Omit<React.HTMLAttributes<HTMLButtonElement>, "onClick"> & {
@@ -90,7 +107,30 @@ export const NavItem: FC<
 > = (props) => {
   const { classNames, currentPath, item, onClick, ...buttonProps } = props;
 
-  const isActive = useMemo(() => currentPath?.[0] === item.href, [currentPath]);
+  const [showButtonTooltip, setShowButtonTooltip] = useLocalStorage(
+    ORDERLY_NAV_BUTTON_TOOLTIP_OPEN,
+    true,
+  );
+
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    if (showButtonTooltip) {
+      timerRef.current = setTimeout(() => {
+        setShowButtonTooltip(false);
+      }, 8000);
+    }
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
+  }, [showButtonTooltip]);
+
+  const isActive = useMemo(
+    () => currentPath?.[0] === item.href,
+    [currentPath, item.href],
+  );
 
   const onClickHandler = useCallback(() => {
     if (Array.isArray(item.children)) {
@@ -100,13 +140,11 @@ export const NavItem: FC<
   }, [item, onClick]);
 
   const buttonRender = () => {
-    if (
-      typeof item.customRender !== "undefined" &&
-      item.customRender !== null
-    ) {
-      return item.customRender;
+    const { customRender, tooltipConfig } = item;
+    if (typeof customRender !== "undefined" && customRender !== null) {
+      return customRender;
     }
-    return (
+    const button = (
       <button
         id={item.id}
         data-testid={item.testid}
@@ -152,6 +190,20 @@ export const NavItem: FC<
         />
       </button>
     );
+    if (isObject(tooltipConfig) && tooltipConfig.showOnFirstVisit) {
+      return (
+        <Tooltip
+          open={showButtonTooltip}
+          content={tooltipConfig.text}
+          className={
+            "oui-w-64 oui-max-w-64 oui-bg-base-6 oui-text-2xs oui-font-semibold"
+          }
+        >
+          {button}
+        </Tooltip>
+      );
+    }
+    return button;
   };
 
   if (!Array.isArray(item.children)) {

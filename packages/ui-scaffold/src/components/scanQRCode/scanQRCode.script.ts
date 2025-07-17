@@ -1,10 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
 
 export type UseScanQRCodeScriptReturn = ReturnType<typeof useScanQRCodeScript>;
 
 export function useScanQRCodeScript() {
   const [open, setOpen] = useState(false);
+
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const [showScanTooltip, setShowScanTooltip] = useLocalStorage(
     "orderly_qr_code_scan_tooltip_open",
     true,
@@ -26,10 +29,15 @@ export function useScanQRCodeScript() {
 
   useEffect(() => {
     if (showScanTooltip) {
-      setTimeout(() => {
+      timerRef.current = setTimeout(() => {
         setShowScanTooltip(false);
       }, 8000);
     }
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
   }, [showScanTooltip]);
 
   return {
