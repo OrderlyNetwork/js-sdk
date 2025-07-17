@@ -711,6 +711,7 @@
   "affiliate.referralRate.editRateModal.label.referee": "추천인이 받는 금액",
   "affiliate.referralRate.editRateModal.helpText.max": "총 수수료율은 최대 수수료율 한도와 같아야 합니다",
   "affiliate.referralRate.editRateModal.success": "추천 수수료율이 성공적으로 업데이트되었습니다",
+  "affiliate.referralTooltip": "$10K를 거래하여 추천 코드를 잠금 해제하고 추천을 통해 거래 리베이트를 획득하세요.",
   "ui.pagination.morePages": "더 많은 페이지",
   "ui.pagination.rowsPerPage": "페이지당 행 수",
   "ui.picker.selectDate": "날짜 선택",

@@ -711,6 +711,7 @@
   "affiliate.referralRate.editRateModal.label.referee": "Il referral riceve",
   "affiliate.referralRate.editRateModal.helpText.max": "La percentuale totale di commissione deve essere uguale al tuo limite massimo di commissione",
   "affiliate.referralRate.editRateModal.success": "Percentuale di referral aggiornata con successo",
+  "affiliate.referralTooltip": "Fai trading per $10K per sbloccare il tuo codice di riferimento e guadagnare rimborsi di trading dai riferimenti.",
   "ui.pagination.morePages": "Più pagine",
   "ui.pagination.rowsPerPage": "Righe per pagina",
   "ui.picker.selectDate": "Seleziona data",

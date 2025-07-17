@@ -711,6 +711,7 @@
   "affiliate.referralRate.editRateModal.label.referee": "Le filleul reçoit",
   "affiliate.referralRate.editRateModal.helpText.max": "Le taux de commission total doit être égal à votre limite de taux de commission maximum",
   "affiliate.referralRate.editRateModal.success": "Taux de parrainage mis à jour avec succès",
+  "affiliate.referralTooltip": "Tradez $10K pour débloquer votre code de parrainage et gagner des remises de trading grâce aux parrainages.",
   "ui.pagination.morePages": "Plus de pages",
   "ui.pagination.rowsPerPage": "Lignes par page",
   "ui.picker.selectDate": "Sélectionner une date",

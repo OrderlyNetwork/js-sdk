@@ -711,6 +711,7 @@
   "affiliate.referralRate.editRateModal.label.referee": "紹介者が受け取る",
   "affiliate.referralRate.editRateModal.helpText.max": "総手数料率は最大手数料率制限と等しくなければなりません",
   "affiliate.referralRate.editRateModal.success": "紹介率が正常に更新されました",
+  "affiliate.referralTooltip": "$10Kを取引して紹介コードをアンロックし、紹介から取引リベートを獲得しましょう。",
   "ui.pagination.morePages": "その他のページ",
   "ui.pagination.rowsPerPage": "1ページあたりの行数",
   "ui.picker.selectDate": "日付を選択",

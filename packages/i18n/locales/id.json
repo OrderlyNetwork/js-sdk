@@ -711,6 +711,7 @@
   "affiliate.referralRate.editRateModal.label.referee": "Referensi menerima",
   "affiliate.referralRate.editRateModal.helpText.max": "Total tingkat komisi harus sama dengan batas tingkat komisi maksimum Anda",
   "affiliate.referralRate.editRateModal.success": "Tingkat referensi berhasil diperbarui",
+  "affiliate.referralTooltip": "Trading $10K untuk membuka kode referral Anda dan dapatkan rabat trading dari referral.",
   "ui.pagination.morePages": "Halaman lainnya",
   "ui.pagination.rowsPerPage": "Baris per halaman",
   "ui.picker.selectDate": "Pilih Tanggal",

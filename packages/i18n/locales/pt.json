@@ -711,6 +711,7 @@
   "affiliate.referralRate.editRateModal.label.referee": "Indicado recebe",
   "affiliate.referralRate.editRateModal.helpText.max": "A taxa total de comissão deve ser igual ao seu limite máximo de taxa de comissão",
   "affiliate.referralRate.editRateModal.success": "Taxa de indicação atualizada com sucesso",
+  "affiliate.referralTooltip": "Negocie $10K para desbloquear seu código de indicação e ganhar reembolsos de trading através de indicações.",
   "ui.pagination.morePages": "Mais páginas",
   "ui.pagination.rowsPerPage": "Linhas por página",
   "ui.picker.selectDate": "Selecionar Data",

@@ -711,6 +711,7 @@
   "affiliate.referralRate.editRateModal.label.referee": "Реферал получает",
   "affiliate.referralRate.editRateModal.helpText.max": "Общая комиссия должна быть равна вашему максимальному лимиту комиссии",
   "affiliate.referralRate.editRateModal.success": "Реферальная ставка успешно обновлена",
+  "affiliate.referralTooltip": "Торгуйте на $10K, чтобы разблокировать ваш реферальный код и зарабатывать торговые скидки с рефералов.",
   "ui.pagination.morePages": "Больше страниц",
   "ui.pagination.rowsPerPage": "Строк на странице",
   "ui.picker.selectDate": "Выбрать дату",

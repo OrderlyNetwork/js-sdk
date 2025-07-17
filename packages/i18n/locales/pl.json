@@ -711,6 +711,7 @@
   "affiliate.referralRate.editRateModal.label.referee": "Osoba polecona otrzymuje",
   "affiliate.referralRate.editRateModal.helpText.max": "Całkowita stawka prowizji musi być równa Twojemu maksymalnemu limitowi prowizji",
   "affiliate.referralRate.editRateModal.success": "Stawka polecającego została pomyślnie zaktualizowana",
+  "affiliate.referralTooltip": "Handluj za $10K, aby odblokować swój kod polecający i zarabiać rabaty handlowe z poleceń.",
   "ui.pagination.morePages": "Więcej stron",
   "ui.pagination.rowsPerPage": "Wierszy na stronę",
   "ui.picker.selectDate": "Wybierz datę",

@@ -134,12 +134,10 @@ const CustomButton: React.FC<{ className?: string }> = (props) => {
   );
 };
 
+const isOnGoing = true; // fake ongoing status for demo
+
 export const useOrderlyConfig = () => {
   const { t } = useTranslation();
-  const { isMobile } = useScreen();
-
-  const { currentCampaign } = useTradingLeaderboardContext();
-
   return useMemo<OrderlyConfig>(() => {
     return {
       scaffold: {
@@ -178,14 +176,23 @@ export const useOrderlyConfig = () => {
             {
               name: t("tradingLeaderboard.arena"),
               href: "/leaderboard",
-              customRender: (
+              customRender: isOnGoing ? (
                 <CustomButton className={"oui-bg-base-9 after:oui-bg-base-9"} />
-              ),
+              ) : null,
+            },
+            {
+              name: t("affiliate.referral"),
+              href: "/rewards/affiliate",
+              icon: "box-ani.gif",
+              tooltipConfig: {
+                showOnFirstVisit: true,
+                text: t("affiliate.referralTooltip"),
+              },
             },
           ],
           initialMenu: "/",
           campaigns: {
-            name: t("tradingRewards.rewards"),
+            name: t("affiliate.referral"),
             href: "/rewards",
             icon: "box-ani.gif",
             isSubMenuInMobile: true,
@@ -193,31 +200,6 @@ export const useOrderlyConfig = () => {
               name: t("common.portfolio"),
               href: "/portfolio",
             },
-            children: [
-              {
-                name: t("common.affiliate"),
-                href: "/rewards/affiliate",
-                tag: t("extend.affiliate.tag"),
-                description: t("extend.affiliate.description"),
-                icon: <AffiliatesIcon size={14} />,
-                activeIcon: <AffiliatesActiveIcon size={14} />,
-              },
-              {
-                name: t("common.tradingRewards"),
-                href: "/rewards/trading",
-                description: t("extend.tradingRewards.description"),
-                icon: <TradingRewardsIcon size={14} />,
-                activeIcon: <TradingRewardsActiveIcon size={14} />,
-              },
-              {
-                name: t("extend.staking"),
-                href: "https://app.orderly.network/staking",
-                description: t("extend.staking.description"),
-                target: "_blank",
-                icon: <OrderlyIcon size={14} />,
-                activeIcon: <OrderlyActiveIcon size={14} />,
-              },
-            ],
           },
           leftNav: {
             menus: [
@@ -241,16 +223,23 @@ export const useOrderlyConfig = () => {
                 name: t("tradingLeaderboard.arena"),
                 href: "/leaderboard",
                 icon: <BattleIcon />,
-                customRender: (
+                customRender: isOnGoing ? (
                   <CustomButton
                     className={"oui-bg-base-8 after:oui-bg-base-8"}
                   />
-                ),
+                ) : null,
               },
               {
-                name: t("common.affiliate"),
+                name: t("affiliate.referral"),
                 href: "/rewards/affiliate",
-                icon: <img src="box-ani.gif" className="oui-w-6 oui-h-6" />,
+                icon: (
+                  <img
+                    src="box-ani.gif"
+                    alt="logo"
+                    draggable={false}
+                    className="oui-w-6 oui-h-6"
+                  />
+                ),
                 trailing: <Tag text="Unlock @ $10K volume" />,
               },
               {
@@ -262,7 +251,7 @@ export const useOrderlyConfig = () => {
               },
               {
                 name: t("common.settings"),
-                href: "/portfolio/settings",
+                href: "/portfolio/setting",
                 icon: <SettingFillIcon color="white" opacity={0.8} />,
               },
             ],
@@ -341,7 +330,7 @@ export const useOrderlyConfig = () => {
             },
             {
               name: t("common.settings"),
-              href: "/portfolio/settings",
+              href: "/portfolio/setting",
               icon: "",
             },
           ],
@@ -350,7 +339,14 @@ export const useOrderlyConfig = () => {
       orderlyAppProvider: {
         appIcons: {
           main: {
-            component: <img src="/orderly-logo.svg" style={{ height: 40 }} />,
+            component: (
+              <img
+                src="/orderly-logo.svg"
+                alt="logo"
+                draggable={false}
+                style={{ height: 40 }}
+              />
+            ),
           },
           secondary: {
             img: "/orderly-logo-secondary.svg",

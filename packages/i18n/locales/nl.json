@@ -711,6 +711,7 @@
   "affiliate.referralRate.editRateModal.label.referee": "Verwijzing ontvangt",
   "affiliate.referralRate.editRateModal.helpText.max": "Het totale commissiepercentage moet gelijk zijn aan uw maximale commissielimiet",
   "affiliate.referralRate.editRateModal.success": "Verwijzingspercentage succesvol bijgewerkt",
+  "affiliate.referralTooltip": "Handel $10K om je verwijzingscode te ontgrendelen en handelskorting te verdienen via verwijzingen.",
   "ui.pagination.morePages": "Meer pagina's",
   "ui.pagination.rowsPerPage": "Rijen per pagina",
   "ui.picker.selectDate": "Selecteer datum",
