@@ -1,5 +1,12 @@
 # @orderly.network/eslint-config
 
+## 2.5.1
+
+### Patch Changes
+
+- publish
+- 5ad8a1b: publish
+
 ## 2.5.1-alpha.0
 
 ### Patch Changes
