@@ -86,6 +86,7 @@ const OrderApp = (props: { children: ReactNode }) => {
       configStore={configStore}
       appIcons={config.orderlyAppProvider.appIcons}
       restrictedInfo={config.orderlyAppProvider.restrictedInfo}
+      enableSwapDeposit={true}
       overrides={{
         announcement: {
           dataAdapter: (data) => [

@@ -232,6 +232,7 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
     })) as API.TokenInfo[];
 
     if (tokens?.length) {
+      // sort tokens, USDC should be the first
       tokens.sort((a, b) => {
         if (a.symbol === "USDC") return -1;
         if (b.symbol === "USDC") return 1;

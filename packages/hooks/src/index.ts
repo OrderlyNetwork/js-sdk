@@ -10,6 +10,7 @@ export { usePrivateQuery } from "./usePrivateQuery";
 export { usePrivateInfiniteQuery } from "./usePrivateInfiniteQuery";
 export { useInfiniteQuery } from "./useInfiniteQuery";
 export { useBoolean } from "./useBoolean";
+export { useMemoizedFn } from "./useMemoizedFn";
 
 export { useAccount } from "./useAccount";
 export { type SubAccount } from "@orderly.network/core";

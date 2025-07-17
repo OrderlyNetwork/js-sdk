@@ -35,6 +35,8 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
     isQuoteLoading,
     currentLTV,
     nextLTV,
+    networkId,
+    balanceRevalidating,
   } = props;
 
   return (
@@ -47,15 +49,13 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
             token={token}
             tokens={sourceTokens}
             onTokenChange={onSourceTokenChange}
-            status={props.inputStatus}
-            hintMessage={props.hintMessage}
           />
         </Box>
         <AvailableQuantity
           token={token}
           amount={quantity}
           maxQuantity={maxQuantity.toString()}
-          loading={props.balanceRevalidating}
+          loading={balanceRevalidating}
           onClick={() => {
             onQuantityChange(maxQuantity.toString());
           }}
@@ -77,13 +77,13 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
         <Flex direction="column" itemAlign="start" mt={2} gap={1}>
           <SwapCoin
             indexPrice={isQuoteLoading || !quantity ? "-" : convertRate}
-            sourceSymbol={token?.display_name || token?.symbol}
-            targetSymbol={targetToken?.display_name || targetToken?.symbol}
+            sourceSymbol={token?.token}
+            targetSymbol={targetToken?.token}
           />
           <Slippage value={slippage} onValueChange={onSlippageChange} />
           <MinimumReceived
-            symbol={targetToken?.display_name || targetToken?.symbol || ""}
-            precision={targetToken?.precision!}
+            symbol={targetToken?.token || ""}
+            precision={targetToken?.decimals ?? 6}
             value={
               isQuoteLoading || !quantity
                 ? "-"
@@ -103,7 +103,7 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
       </Box>
       <Flex itemAlign={"center"} justify="center">
         <ConvertAction
-          networkId={props.networkId}
+          networkId={networkId}
           disabled={disabled}
           loading={loading}
           onConvert={onConvert}

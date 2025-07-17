@@ -23,6 +23,15 @@ export const useToken = (
       // all tokens available in the chain, include swap tokens
       const tokens = chainInfo.token_infos?.filter(filter);
 
+      if (tokens?.length) {
+        // sort tokens, USDC should be the first
+        tokens.sort((a, b) => {
+          if (a.symbol === "USDC") return -1;
+          if (b.symbol === "USDC") return 1;
+          return 0;
+        });
+      }
+
       const usdcToken = getTokenByTokenList(tokens);
       if (!usdcToken) {
         return;
@@ -57,8 +66,8 @@ export const useToken = (
 
     // if is_collateral
     if (sourceToken.is_collateral) {
-      // mainnet: [token] => [USDC,token]
-      if (networkId === "mainnet") {
+      // mainnet and swap_enable: [token] => [USDC,token]
+      if (networkId === "mainnet" && sourceToken.swap_enable) {
         setTargetToken(usdc);
         setTargetTokens([usdc, sourceToken]);
       } else {

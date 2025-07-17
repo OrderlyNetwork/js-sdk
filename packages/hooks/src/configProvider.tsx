@@ -79,7 +79,7 @@ export const OrderlyConfigProvider: FC<
     contracts,
     chainFilter,
     customChains,
-    enableSwapDeposit = true,
+    enableSwapDeposit = false,
     chainTransformer,
   } = props;
 
