@@ -41,6 +41,7 @@ import {
   TradingRewardsActiveIcon,
   TradingRewardsIcon,
 } from "../components/icons";
+import { useNav } from "./useNav";
 
 export type OrderlyConfig = {
   orderlyAppProvider: {
@@ -100,27 +101,24 @@ const Battle: React.FC<{ isActive?: boolean }> = (props) => {
   );
 };
 
-const CustomButton: React.FC<{ className?: string }> = (props) => {
+const CustomButton: React.FC<{
+  className?: string;
+  style?: React.CSSProperties;
+  onClick?: React.MouseEventHandler<HTMLDivElement>;
+}> = (props) => {
   const { t } = useTranslation();
-  const { routerAdapter } = useScaffoldContext();
+  const { className, style, onClick } = props;
   return (
     <div
       className={cn(
-        props.className,
+        className,
         "oui-relative oui-z-0 oui-flex oui-cursor-pointer oui-select-none oui-items-center oui-justify-center oui-gap-1 oui-rounded-full oui-border oui-border-solid oui-border-transparent oui-px-3 oui-py-1",
         "before:oui-absolute before:oui-inset-0 before:oui-z-[-1] before:oui-rounded-full before:oui-content-['']",
         "after:oui-absolute after:oui-inset-px after:oui-z-[-1] after:oui-box-border after:oui-rounded-full after:oui-content-['']",
         "oui-gradient-button",
       )}
-      onClick={() => {
-        const args = {
-          href: "/leaderboard",
-          name: t("tradingLeaderboard.arena"),
-          scope: "mainMenu",
-          target: undefined,
-        };
-        routerAdapter?.onRouteChange(args);
-      }}
+      style={style}
+      onClick={onClick}
     >
       <Battle />
       <Text.gradient
@@ -138,6 +136,9 @@ const isOnGoing = true; // fake ongoing status for demo
 
 export const useOrderlyConfig = () => {
   const { t } = useTranslation();
+  const { routerAdapter } = useScaffoldContext();
+  const nav = useNav();
+  const onRouteChange = routerAdapter?.onRouteChange ?? nav.onRouteChange;
   return useMemo<OrderlyConfig>(() => {
     return {
       scaffold: {
@@ -176,9 +177,22 @@ export const useOrderlyConfig = () => {
             {
               name: t("tradingLeaderboard.arena"),
               href: "/leaderboard",
-              customRender: isOnGoing ? (
-                <CustomButton className={"oui-bg-base-9 after:oui-bg-base-9"} />
-              ) : null,
+              customRender: isOnGoing
+                ? (options) => {
+                    return (
+                      <CustomButton
+                        className={"oui-bg-base-9 after:oui-bg-base-9"}
+                        onClick={() => {
+                          onRouteChange({
+                            name: options.name,
+                            href: options.href,
+                            scope: "mainMenu",
+                          });
+                        }}
+                      />
+                    );
+                  }
+                : undefined,
             },
             {
               name: t("affiliate.referral"),
@@ -223,11 +237,22 @@ export const useOrderlyConfig = () => {
                 name: t("tradingLeaderboard.arena"),
                 href: "/leaderboard",
                 icon: <BattleIcon />,
-                customRender: isOnGoing ? (
-                  <CustomButton
-                    className={"oui-bg-base-8 after:oui-bg-base-8"}
-                  />
-                ) : null,
+                customRender: isOnGoing
+                  ? (options) => {
+                      return (
+                        <CustomButton
+                          className={"oui-bg-base-8 after:oui-bg-base-8"}
+                          onClick={() => {
+                            onRouteChange({
+                              name: options.name,
+                              href: options.href,
+                              scope: "leftNav",
+                            });
+                          }}
+                        />
+                      );
+                    }
+                  : undefined,
               },
               {
                 name: t("affiliate.referral"),
@@ -394,7 +419,7 @@ export const useOrderlyConfig = () => {
         },
       },
     };
-  }, [t]);
+  }, [t, onRouteChange, nav.onRouteChange]);
 };
 
 const Tag = (props: { text: string }) => {
