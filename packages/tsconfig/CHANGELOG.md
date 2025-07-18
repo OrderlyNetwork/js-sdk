@@ -1,5 +1,24 @@
 # tsconfig
 
+## 0.8.2-alpha.0
+
+### Patch Changes
+
+- publish
+
+## 0.8.1
+
+### Patch Changes
+
+- publish
+- 5ad8a1b: publish
+
+## 0.8.1-alpha.0
+
+### Patch Changes
+
+- publish
+
 ## 0.8.0
 
 ### Minor Changes

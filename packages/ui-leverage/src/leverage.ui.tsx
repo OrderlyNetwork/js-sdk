@@ -15,8 +15,6 @@ import {
 } from "@orderly.network/ui";
 import { LeverageScriptReturns } from "./leverage.script";
 
-const toggles = [5, 10, 20, 50, 100];
-
 const IconButton: React.FC<{
   Icon: React.ComponentType<any>;
   onClick: React.MouseEventHandler<SVGSVGElement>;
@@ -38,11 +36,7 @@ const IconButton: React.FC<{
 
 const LeverageInput: React.FC<LeverageProps> = (props) => {
   const formatters = React.useMemo<InputFormatter[]>(
-    () => [
-      inputFormatter.numberFormatter,
-      inputFormatter.currencyFormatter,
-      inputFormatter.decimalPointFormatter,
-    ],
+    () => [inputFormatter.numberFormatter, inputFormatter.dpFormatter(0)],
     [],
   );
   const id = useId();
@@ -127,6 +121,7 @@ export const Leverage: FC<LeverageProps> = (props) => {
           loading={props.isLoading}
           onClick={props.onSave}
           data-testid="oui-testid-leverage-save-btn"
+          disabled={props.disabled}
         >
           {t("common.save")}
         </Button>
@@ -144,7 +139,7 @@ export const LeverageHeader: FC<LeverageHeaderProps> = (props) => {
     <Flex justify={"center"} width={"100%"} mb={2}>
       <Flex gap={1}>
         {`${t("common.current")}:`}
-        <Text.numeral unit="x" size={"sm"} intensity={80}>
+        <Text.numeral unit="x" size={"sm"} intensity={80} dp={0}>
           {currentLeverage ?? "--"}
         </Text.numeral>
       </Flex>
@@ -155,13 +150,14 @@ export const LeverageHeader: FC<LeverageHeaderProps> = (props) => {
 interface LeverageSelectorProps {
   value: number;
   onLeverageChange: (value: number) => void;
+  toggles: number[];
 }
 
 export const LeverageSelector: React.FC<LeverageSelectorProps> = (props) => {
   const { value, onLeverageChange } = props;
   return (
     <Flex itemAlign="center" justify="between" width={"100%"} mt={2}>
-      {toggles.map((option) => (
+      {props.toggles.map((option) => (
         <Flex
           key={option}
           itemAlign="center"

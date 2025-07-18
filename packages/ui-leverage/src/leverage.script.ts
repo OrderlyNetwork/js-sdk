@@ -41,10 +41,9 @@ export const useLeverageScript = (options?: UseLeverageScriptOptions) => {
 
   const onInputChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
     (e) => {
-      const parsed = Number.parseInt(e.target.value, 10);
-      const raw = Number.isNaN(parsed) ? 0 : parsed;
-      const clamped = Math.min(Math.max(raw, 1), maxLeverage);
-      setLeverage(clamped);
+      const parsed = Number.parseInt(e.target.value);
+      const value = Number.isNaN(parsed) ? "" : parsed;
+      setLeverage(value as number);
     },
     [maxLeverage],
   );
@@ -60,10 +59,20 @@ export const useLeverageScript = (options?: UseLeverageScriptOptions) => {
           toast.error(err.message);
         },
       );
-    } catch {
-      //
+    } catch (err) {
+      console.log("update leverage error", err);
     }
   };
+
+  const isReduceDisabled = leverage <= 1;
+  const isIncreaseDisabled = leverage >= maxLeverage;
+  const disabled = !leverage || leverage < 1 || leverage > maxLeverage;
+
+  const toggles = useMemo(() => {
+    return [5, 10, 20, 50, 100];
+    // TODO: filter by maxLeverage
+    // return [5, 10, 20, 50, 100].filter((e) => e <= maxLeverage);
+  }, [leverageLevers, maxLeverage]);
 
   return {
     leverageLevers,
@@ -74,8 +83,9 @@ export const useLeverageScript = (options?: UseLeverageScriptOptions) => {
     onLeverageIncrease,
     onLeverageReduce,
     onInputChange,
-    isReduceDisabled: leverage <= 1,
-    isIncreaseDisabled: leverage >= maxLeverage,
+    isReduceDisabled,
+    isIncreaseDisabled,
+    disabled,
     step,
     onCancel: options?.close,
     onSave,
@@ -83,5 +93,6 @@ export const useLeverageScript = (options?: UseLeverageScriptOptions) => {
     showSliderTip,
     setShowSliderTip,
     maxLeverage,
+    toggles,
   };
 };

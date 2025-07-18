@@ -3,7 +3,7 @@ import { API } from "@orderly.network/types";
 
 export const getTokenByTokenList = (tokens: API.TokenInfo[] = []) => {
   const tokenObj = tokens.reduce<Record<string, API.TokenInfo>>((acc, item) => {
-    acc[item.symbol] = item;
+    acc[item.symbol!] = item;
     return acc;
   }, {});
   return tokenObj["USDC"] || tokenObj["USDbC"] || tokens[0];

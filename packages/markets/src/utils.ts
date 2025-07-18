@@ -12,15 +12,19 @@ const compareValues = (aValue: any, bValue: any): number => {
   if (bValue == null) return -1;
 
   // Convert to string first for type checking
-  const aStr = String(aValue);
-  const bStr = String(bValue);
+  const aStr = String(aValue).trim();
+  const bStr = String(bValue).trim();
 
-  // Check if both are valid numbers (not just convertible to numbers)
-  const aIsNumber = /^-?\d+(\.\d+)?$/.test(aStr.trim());
-  const bIsNumber = /^-?\d+(\.\d+)?$/.test(bStr.trim());
+  // More robust number detection - check if values can be converted to valid numbers
+  const aNum = Number(aStr);
+  const bNum = Number(bStr);
+  const aIsNumber =
+    !isNaN(aNum) && isFinite(aNum) && /^-?\d*\.?\d+([eE][+-]?\d+)?$/.test(aStr);
+  const bIsNumber =
+    !isNaN(bNum) && isFinite(bNum) && /^-?\d*\.?\d+([eE][+-]?\d+)?$/.test(bStr);
 
   if (aIsNumber && bIsNumber) {
-    return Number(aValue) - Number(bValue);
+    return aNum - bNum;
   }
 
   // Check if both are valid dates (ISO format or timestamp)

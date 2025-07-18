@@ -63,6 +63,7 @@ export const WalletConnectorPrivy: FC<{ children: ReactNode }> = (props) => {
           },
         },
       }}
+      enableSwapDeposit={true}
       wagmiConfig={{
         connectors: [
           wagmiConnectors.injected(),

@@ -99,6 +99,10 @@ export const LayoutPage: Story = {
               feedbackUrl: "https://orderly.network/feedback",
             },
           }}
+          comparisonProps={{
+            exchangesName: "Orderly",
+            exchangesIconSrc: "",
+          }}
         />
       </BaseLayout>
     );
