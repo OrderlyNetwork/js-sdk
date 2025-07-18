@@ -145,7 +145,7 @@ export const NavItem: FC<
 
   const buttonRender = () => {
     const { customRender, tooltipConfig } = item;
-    if (typeof customRender == "function") {
+    if (typeof customRender === "function") {
       return customRender({
         name: item.name,
         href: item.href,
