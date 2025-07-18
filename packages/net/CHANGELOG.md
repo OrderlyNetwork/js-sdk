@@ -1,5 +1,11 @@
 # @orderly.network/net
 
+## 2.5.2-alpha.0
+
+### Patch Changes
+
+- publish
+
 ## 2.5.1
 
 ### Patch Changes
