@@ -139,7 +139,7 @@ export const LeverageHeader: FC<LeverageHeaderProps> = (props) => {
     <Flex justify={"center"} width={"100%"} mb={2}>
       <Flex gap={1}>
         {`${t("common.current")}:`}
-        <Text.numeral unit="x" size={"sm"} intensity={80}>
+        <Text.numeral unit="x" size={"sm"} intensity={80} dp={0}>
           {currentLeverage ?? "--"}
         </Text.numeral>
       </Flex>
