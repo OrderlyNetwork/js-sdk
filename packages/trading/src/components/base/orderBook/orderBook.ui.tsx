@@ -4,11 +4,9 @@ import { DesktopOrderBook } from "../../desktop/orderBook/index.desktop";
 import { OrderBook as MWebOrderBook } from "../../mobile/orderBook";
 import type { OrderBookState } from "./orderBook.script";
 
-export const OrderBook: FC<
-  OrderBookState & {
-    className?: string;
-  }
-> = (props) => {
+export const OrderBook: FC<OrderBookState & { className?: string }> = (
+  props,
+) => {
   return (
     <Box className="oui-font-semibold" width={"100%"} height={"100%"}>
       {props.isMobile ? (

@@ -1,10 +1,18 @@
-import { useEffect, useRef, FocusEvent, useMemo, useState } from "react";
+import {
+  useEffect,
+  useRef,
+  FocusEvent,
+  useMemo,
+  useState,
+  useCallback,
+} from "react";
 import {
   useAccount,
   useComputedLTV,
   useEventEmitter,
   useLocalStorage,
   useMarginRatio,
+  useOrderbookStream,
   useOrderEntry,
   utils,
 } from "@orderly.network/hooks";
@@ -26,6 +34,11 @@ import {
   getOrderTypeByBBO,
   isBBOOrder,
 } from "./utils";
+
+const safeNumber = (val: unknown) => {
+  const num = Number(val);
+  return Number.isNaN(num) ? 0 : num;
+};
 
 export type OrderEntryScriptInputs = {
   symbol: string;
@@ -56,6 +69,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
         side: localOrderSide,
       },
     });
+
   const [tpslSwitch, setTpslSwitch] = useLocalStorage(
     "orderly-order-entry-tp_sl-switch",
     false,
@@ -84,7 +98,9 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   const [priceInputContainerWidth, setPriceInputContainerWidth] = useState(0);
 
   const currentQtyPercentage = useMemo(() => {
-    if (Number(formattedOrder.order_quantity) >= Number(state.maxQty)) return 1;
+    if (Number(formattedOrder.order_quantity) >= Number(state.maxQty)) {
+      return 1;
+    }
     return (
       convertValueToPercentage(
         Number(formattedOrder.order_quantity ?? 0),
@@ -135,7 +151,9 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
 
   const onBlur = (type: InputType) => (_: FocusEvent) => {
     setTimeout(() => {
-      if (currentFocusInput.current !== type) return;
+      if (currentFocusInput.current !== type) {
+        return;
+      }
       currentFocusInput.current = InputType.NONE;
     }, 300);
 
@@ -423,7 +441,9 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   useEffect(() => {
     const element = priceInputContainerRef.current;
 
-    if (!element) return;
+    if (!element) {
+      return;
+    }
 
     const resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {
@@ -460,6 +480,30 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
 
   const currentLtv = useComputedLTV();
 
+  const [{ asks, bids }, { isLoading }] = useOrderbookStream(
+    symbolInfo.symbol ?? "PERP_ETH_USDC",
+  );
+
+  const calcMidPrice = useMemo<number>(() => {
+    if (isLoading) {
+      return 0;
+    }
+    let bestAsk = 0;
+    let bestBid = 0;
+    if (Array.isArray(asks) && asks.length) {
+      const lastIdx = asks.length - 1;
+      bestAsk = safeNumber(asks[lastIdx][0]);
+    }
+    if (Array.isArray(bids) && bids.length) {
+      bestBid = safeNumber(bids[0][0]);
+    }
+    return new Decimal(bestAsk).add(bestBid).div(2).toNumber();
+  }, [asks, bids, isLoading]);
+
+  const fillMiddleValue = useCallback(() => {
+    ee.emit("update:orderPrice", calcMidPrice);
+  }, [ee, calcMidPrice]);
+
   return {
     ...state,
     currentQtyPercentage,
@@ -494,5 +538,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     toggleBBO,
     priceInputContainerWidth,
     currentLtv,
+    calcMidPrice,
+    fillMiddleValue: fillMiddleValue,
   };
 };
