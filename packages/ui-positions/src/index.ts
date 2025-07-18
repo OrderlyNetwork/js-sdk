@@ -1,5 +1,5 @@
 import { registerSimpleDialog } from "@orderly.network/ui";
-import { MarketCloseConfirm } from "./components/positions/desktop/closeButton";
+import { MarketCloseConfirm } from "./components/positions/closePosition/components/confirmDialog";
 
 export { FundingFeeHistoryUI } from "./components/fundingFeeHistory/fundingFeeHistory.ui";
 export { FundingFeeButton } from "./components/fundingFeeHistory/fundingFeeButton";
