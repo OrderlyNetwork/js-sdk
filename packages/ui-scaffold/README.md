@@ -103,6 +103,8 @@ const sidebarMenus = [
   - `campaignPosition`: Campaign menu position
   - `initialMenu`: Initial menu path
   - `onItemClick`: Menu item click callback
+  - `leftNav`: Left navigation configuration for mobile drawer (only works on mobile)
+  - `customLeftNav`: Custom left navigation component to replace the default leftNav
   - `customRender`: Function to customize the main navigation layout
     - **Type**: `(components: MainNavComponents) => ReactNode`
     - **Components**:
@@ -132,6 +134,19 @@ const sidebarMenus = [
     trailing: <UserActions />,
     onItemClick: ({ href, name }) => {
       console.log(`Navigating to ${href}`);
+    },
+    leftNav: {
+      menus: [
+        { name: "Dashboard", href: "/dashboard", icon: <DashboardIcon /> },
+        { name: "Trading", href: "/trading", icon: <TradingIcon /> },
+        { name: "Portfolio", href: "/portfolio", icon: <PortfolioIcon /> }
+      ],
+      leading: <CustomLeftNavHeader />,
+      twitterUrl: "https://twitter.com/yourhandle",
+      telegramUrl: "https://t.me/yourgroup",
+      discordUrl: "https://discord.gg/yourserver",
+      duneUrl: "https://dune.com/youranalytics",
+      feedbackUrl: "https://feedback.yoursite.com"
     },
     // Custom layout for main navigation
     customRender: (components) => {
@@ -178,7 +193,113 @@ const sidebarMenus = [
 </Scaffold>
 ```
 
-### 5. bottomNavProps (Optional)
+### 5. leftNav Configuration (Optional)
+
+`leftNav` is a configuration property within `mainNavProps` that controls the mobile slide-out navigation drawer. It only appears on mobile devices and provides a comprehensive menu system.
+
+#### LeftNavProps Properties
+
+- **Type**: `LeftNavProps`
+- **Description**: Configuration for the mobile left navigation drawer
+- **Main Properties**:
+  - `menus`: Array of navigation menu items for the drawer
+  - `leading`: Custom content at the top of the drawer (below logo)
+  - `twitterUrl`: Twitter/X social media link
+  - `telegramUrl`: Telegram community link
+  - `discordUrl`: Discord community link
+  - `duneUrl`: Dune Analytics link
+  - `feedbackUrl`: Feedback form link
+  - `customLeftNav`: Custom component to replace the default leftNav trigger
+
+#### LeftNavItem Properties
+
+Each menu item in the `menus` array supports:
+
+- `name`: Display name of the menu item
+- `href`: Navigation URL
+- `icon`: Icon component to display (optional)
+- `trailing`: Additional content on the right side (optional)
+- `customRender`: Custom render function for complete control over item appearance
+
+#### Usage Example
+
+```typescript
+<Scaffold
+  mainNavProps={{
+    leftNav: {
+      menus: [
+        {
+          name: "Dashboard",
+          href: "/dashboard",
+          icon: <DashboardIcon />
+        },
+        {
+          name: "Trading",
+          href: "/trading",
+          icon: <TradingIcon />,
+          trailing: <NotificationBadge />
+        },
+        {
+          name: "Portfolio",
+          href: "/portfolio",
+          icon: <PortfolioIcon />,
+          customRender: ({ name, href, isActive }) => (
+            <div className={`custom-menu-item ${isActive ? 'active' : ''}`}>
+              <PortfolioIcon />
+              <span>{name}</span>
+              <SpecialBadge />
+            </div>
+          )
+        }
+      ],
+      leading: (
+        <div className="px-3 py-2">
+          <Text className="text-sm text-gray-500">Quick Actions</Text>
+        </div>
+      ),
+      twitterUrl: "https://twitter.com/yourhandle",
+      telegramUrl: "https://t.me/yourgroup",
+      discordUrl: "https://discord.gg/yourserver",
+      duneUrl: "https://dune.com/youranalytics",
+      feedbackUrl: "https://feedback.yoursite.com"
+    }
+  }}
+>
+  {children}
+</Scaffold>
+```
+
+#### Mobile Navigation Behavior
+
+- **Trigger**: The leftNav appears as a hamburger menu icon on mobile devices
+- **Drawer**: Slides out from the left side when triggered
+- **Content Structure**:
+  1. Logo at the top
+  2. Leading content (if provided)
+  3. Sub-account selector (if user is logged in with trading enabled)
+  4. Menu items list (scrollable if needed)
+  5. Social media links at the bottom
+  6. Feedback link at the very bottom
+- **Auto-close**: The drawer automatically closes when a menu item is selected
+
+#### Advanced Customization
+
+You can provide a completely custom left navigation trigger:
+
+```typescript
+<Scaffold
+  mainNavProps={{
+    customLeftNav: <CustomHamburgerButton />,
+    leftNav: {
+      // ... leftNav configuration
+    }
+  }}
+>
+  {children}
+</Scaffold>
+```
+
+### 6. bottomNavProps (Optional)
 
 - **Type**: `BottomNavProps`
 - **Description**: Mobile bottom navigation configuration (only displayed on mobile devices)
@@ -210,7 +331,7 @@ const bottomMenus = [
 </Scaffold>
 ```
 
-### 6. footer (Optional)
+### 7. footer (Optional)
 
 - **Type**: `React.ReactNode`
 - **Description**: Custom footer component
@@ -223,7 +344,7 @@ const bottomMenus = [
 </Scaffold>
 ```
 
-### 7. footerProps (Optional)
+### 8. footerProps (Optional)
 
 - **Type**: `FooterProps`
 - **Description**: Configuration properties for the default footer component
@@ -246,7 +367,7 @@ const bottomMenus = [
 </Scaffold>
 ```
 
-### 8. routerAdapter (Optional)
+### 9. routerAdapter (Optional)
 
 - **Type**: `RouterAdapter`
 - **Description**: Router adapter for integrating with different routing libraries
@@ -274,7 +395,7 @@ const routerAdapter = {
 </Scaffold>
 ```
 
-### 9. classNames (Optional)
+### 10. classNames (Optional)
 
 - **Type**: Style class name configuration object
 - **Description**: Used to customize styles for various layout areas
@@ -381,7 +502,14 @@ const App = () => {
         ],
         leading: <BrandSection />,
         trailing: <UserActions />,
-        onItemClick: ({ href }) => navigate(href)
+        onItemClick: ({ href }) => navigate(href),
+        leftNav: {
+          menus: sidebarMenus, // Reuse the same menu items
+          twitterUrl: "https://twitter.com/yourhandle",
+          telegramUrl: "https://t.me/yourgroup",
+          discordUrl: "https://discord.gg/yourserver",
+          feedbackUrl: "https://feedback.yoursite.com"
+        }
       }}
       bottomNavProps={{
         mainMenus: bottomMenus,
@@ -414,21 +542,29 @@ export default App;
 The Scaffold component automatically detects device type and provides appropriate layouts:
 
 - **Desktop**: Displays complete sidebar, top navigation bar, and footer
-- **Mobile**: Hides sidebar, displays bottom navigation bar, optimized for touch interaction
+- **Mobile**: Hides sidebar, displays bottom navigation bar and left navigation drawer (leftNav), optimized for touch interaction
+
+### Mobile Navigation Features
+
+- **Left Navigation Drawer**: Accessed via hamburger menu icon, provides slide-out menu with complete navigation options
+- **Bottom Navigation**: Fixed bottom bar for quick access to main sections
+- **Responsive Top Bar**: Adapts to show essential controls and navigation elements
 
 ## Best Practices
 
 1. **Router Integration**: Always provide `routerAdapter` to ensure navigation functionality works properly
-2. **Responsive Design**: Provide `bottomNavProps` configuration for mobile devices
+2. **Responsive Design**: Provide `bottomNavProps` and `leftNav` configuration for optimal mobile experience
 3. **Style Customization**: Use the `classNames` property for style customization instead of directly modifying component styles
 4. **Menu State Management**: Ensure the `current` property is synchronized with actual route state
 5. **Performance Optimization**: For large menu lists, consider using React.memo to optimize rendering performance
+6. **Mobile Navigation**: Configure `leftNav` with social media links and feedback URL to provide comprehensive mobile navigation experience
 
 ## Important Notes
 
 - The Scaffold component must be wrapped in `ScaffoldProvider` to work properly (automatically handled internally)
 - Sidebar expand/collapse state is automatically saved to localStorage
 - Mobile and desktop use different layout components to ensure good user experience on different devices
+- The `leftNav` drawer is only available on mobile devices and provides a comprehensive navigation menu
 - All navigation callbacks should properly handle route navigation logic
 
 ## Related Components

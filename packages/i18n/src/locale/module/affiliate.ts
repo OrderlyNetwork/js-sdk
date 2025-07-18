@@ -105,6 +105,8 @@ export const affiliate = {
     "The total commission rate must equal to your maximum commission rate limit",
   "affiliate.referralRate.editRateModal.success":
     "Referral rate updated successfully",
+  "affiliate.referralTooltip":
+    "Trade $10K to unlock your referral code and earn trading rebates from referrals.",
 };
 
 export type Affiliate = typeof affiliate;

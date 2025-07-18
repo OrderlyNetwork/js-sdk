@@ -214,6 +214,38 @@ export declare namespace API {
     negative: number;
   }
 
+  export interface FundingDetails {
+    symbol: string;
+    quote_min: number;
+    quote_max: number;
+    quote_tick: number;
+    base_min: number;
+    base_max: number;
+    base_tick: number;
+    min_notional: number;
+    price_range: number;
+    price_scope: number;
+    std_liquidation_fee: number;
+    liquidator_fee: number;
+    claim_insurance_fund_discount: number;
+    funding_period: number;
+    cap_funding: number;
+    floor_funding: number;
+    interest_rate: number;
+    created_time: number;
+    updated_time: number;
+    liquidation_tier: number;
+    cap_ir: number;
+    floor_ir: number;
+    mark_index_price_deviation_floor: number;
+    mark_index_price_deviation_cap: number;
+    global_max_oi_cap: number;
+    base_mmr: number;
+    base_imr: number;
+    imr_factor: number;
+    deviation_factor: number;
+  }
+
   export interface FundingHistory {
     symbol: string;
     data_start_time: string;

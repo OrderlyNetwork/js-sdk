@@ -8,28 +8,11 @@ import { usePagination } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { useMarketsContext } from "../../components/marketsProvider";
 import { useSort, searchBySymbol } from "../../utils";
+import { useEXchanges } from "./useEXchanges";
 
 function getOpenInterest(open_interest?: number, index_price?: number) {
   return new Decimal(open_interest || 0).mul(index_price || 0).toNumber();
 }
-
-export const baseEX = "WOOFi Pro";
-
-export const exchanges = [
-  baseEX,
-  "Binance",
-  `${baseEX} - Binance`,
-  "OKX",
-  `${baseEX} - OKX`,
-  "Bybit",
-  `${baseEX} - Bybit`,
-  "dYdX",
-  `${baseEX} - dYdX`,
-  "Bitget",
-  `${baseEX} - Bitget`,
-  "KuCoin",
-  `${baseEX} - KuCoin`,
-];
 
 export type FundingComparisonReturn = ReturnType<
   typeof useFundingComparisonScript
@@ -39,7 +22,7 @@ export const useFundingComparisonScript = () => {
   const { pagination } = usePagination({ pageSize: 10 });
   const { onSort, getSortedList } = useSort();
   const { searchValue } = useMarketsContext();
-
+  const { exchanges, brokerName } = useEXchanges();
   const fundingRates = useFundingRates();
 
   const { data, isLoading } = useQuery<
@@ -62,10 +45,10 @@ export const useFundingComparisonScript = () => {
             )
           : "-",
       };
-      exchanges.forEach((item) => {
+      for (const item of exchanges) {
         const isCompare = item.includes(` - `);
         if (!isCompare) {
-          if (item === baseEX) {
+          if (item === brokerName) {
             const rate = fundingRates[row.symbol];
             result[item] = rate("last_funding_rate") ?? null;
           } else {
@@ -88,10 +71,10 @@ export const useFundingComparisonScript = () => {
             result[item] = null;
           }
         }
-      });
+      }
       return result;
     });
-  }, [data, fundingRates]);
+  }, [data, futures, fundingRates, exchanges, brokerName]);
 
   const filteredData = useMemo(() => {
     return searchBySymbol(processedData, searchValue, "base-type");
