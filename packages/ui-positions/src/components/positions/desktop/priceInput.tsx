@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { OrderType } from "@orderly.network/types";
 import {
@@ -12,13 +11,13 @@ import {
   Input,
   inputFormatter,
 } from "@orderly.network/ui";
-import { usePositionsRowContext } from "./positionRowContext";
+import { usePositionsRowContext } from "../positionsRowContext";
 
 export const PriceInput = () => {
-  const { type, quoteDp, price, updatePriceChange, updateOrderType, position } =
+  const { type, quoteDp, price, updatePriceChange, updateOrderType } =
     usePositionsRowContext();
-  const [, setHasFocus] = useState(false);
   const { t } = useTranslation();
+
   return (
     <DropdownMenuRoot>
       <Input
@@ -31,16 +30,10 @@ export const PriceInput = () => {
           inputFormatter.numberFormatter,
           ...(quoteDp ? [inputFormatter.dpFormatter(quoteDp)] : []),
         ]}
-        onFocus={(e) => {
+        onFocus={() => {
           if (type === OrderType.MARKET) {
-            updateOrderType(OrderType.LIMIT, `${position.mark_price}`);
+            updateOrderType(OrderType.LIMIT);
           }
-          setHasFocus(true);
-        }}
-        onBlur={(e) => {
-          setTimeout(() => {
-            setHasFocus(false);
-          }, 100);
         }}
         suffix={
           <DropdownMenuTrigger asChild>
@@ -63,7 +56,7 @@ export const PriceInput = () => {
         <DropdownMenuGroup>
           <DropdownMenuItem
             size="xs"
-            onSelect={(vent) => {
+            onSelect={() => {
               updateOrderType(OrderType.MARKET);
             }}
           >

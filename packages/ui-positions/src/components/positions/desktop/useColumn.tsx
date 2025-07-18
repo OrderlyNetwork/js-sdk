@@ -14,7 +14,7 @@ import {
 import { SharePnLOptions, SharePnLDialogId } from "@orderly.network/ui-share";
 import { Decimal } from "@orderly.network/utils";
 import { FundingFeeButton } from "../../fundingFeeHistory/fundingFeeButton";
-import { CloseButton } from "./closeButton";
+import { ClosePositionWidget } from "../closePosition";
 import { TPSLButton } from "./components";
 import {
   renderPriceInput,
@@ -290,7 +290,7 @@ export const useColumn = (config: ColumnConfig) => {
         render() {
           return (
             <Flex gapX={2} justify={"end"}>
-              <CloseButton />
+              <ClosePositionWidget />
               <TPSLButton />
             </Flex>
           );

@@ -233,10 +233,10 @@ export const FundingFee: FC<PositionCellState> = (props) => {
   const { t } = useTranslation();
   const fundingFeeEndTime = useRef(Date.now().toString());
   return (
-    <Flex justify={"end"} className="oui-text-2xs oui-w-full">
+    <Flex justify={"end"} className="oui-w-full oui-text-2xs">
       <Text intensity={36}>{t("funding.fundingFee")}: </Text>
       <FundingFeeButton
-        fee={props.item.fundingFee}
+        fee={props.item.fundingFee!}
         symbol={props.item.symbol}
         start_t={props.item.timestamp.toString()}
         end_t={fundingFeeEndTime.current}
