@@ -20,22 +20,23 @@ export const defaultColorConfig: ColorConfigInterface = {
   textColor,
   qtyTextColor,
   font,
-  volumeUpColor: '#0C3E3A',
-  volumeDownColor: '#5A1E36',
+  volumeUpColor: "#0C3E3A",
+  volumeDownColor: "#5A1E36",
   closeIcon: "rgba(255, 255, 255, 0.8)",
 };
 
-
-
-export const getOveriides = (colorConfig: ColorConfigInterface,isMobile?:boolean) => {
+export const getOveriides = (
+  colorConfig: ColorConfigInterface,
+  isMobile?: boolean,
+) => {
   const overrides = {
-    "paneProperties.background":colorConfig.chartBG,
+    "paneProperties.background": colorConfig.chartBG,
     // "paneProperties.background": "#ffff00",
     // "mainSeriesProperties.style": 1,
     "paneProperties.backgroundType": "solid",
     // "paneProperties.background": "#151822",
 
-    "mainSeriesProperties.candleStyle.upColor":colorConfig.upColor,
+    "mainSeriesProperties.candleStyle.upColor": colorConfig.upColor,
     "mainSeriesProperties.candleStyle.downColor": colorConfig.downColor,
     "mainSeriesProperties.candleStyle.borderColor": colorConfig.upColor,
     "mainSeriesProperties.candleStyle.borderUpColor": colorConfig.upColor,
@@ -47,7 +48,8 @@ export const getOveriides = (colorConfig: ColorConfigInterface,isMobile?:boolean
     "paneProperties.horzGridProperties.color": "#26232F",
     "scalesProperties.fontSize": isMobile ? 8 : 12,
     "scalesProperties.textColor": "#97969B",
-    "paneProperties.legendProperties.showSeriesTitle": false,
+    "paneProperties.legendProperties.showSeriesTitle": isMobile ? false : true,
+    "mainSeriesProperties.statusViewStyle.symbolTextSource": "ticker",
   };
   const studiesOverrides = {
     "volume.volume.color.0": colorConfig.volumeDownColor,
@@ -60,7 +62,9 @@ export const getOveriides = (colorConfig: ColorConfigInterface,isMobile?:boolean
   };
 };
 
-export const EXCHANGE = 'Orderly';
-export const withoutExchangePrefix = (symbol: string) => (symbol.includes(':') ? symbol.split(':')[1] : symbol);
+export const EXCHANGE = "Orderly";
+export const withoutExchangePrefix = (symbol: string) =>
+  symbol.includes(":") ? symbol.split(":")[1] : symbol;
 
-export const withExchangePrefix = (symbol: string) => (symbol.startsWith(`${EXCHANGE}:`) ? symbol : `${EXCHANGE}:${symbol}`);
+export const withExchangePrefix = (symbol: string) =>
+  symbol.startsWith(`${EXCHANGE}:`) ? symbol : `${EXCHANGE}:${symbol}`;
