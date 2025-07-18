@@ -126,9 +126,9 @@ export const MainNavMobile: FC<MainNavMobileProps> = (props) => {
     const chainMenu = showChainMenu && <ChainMenuWidget />;
     const walletConnect = <WalletConnectButtonExtension />;
 
-    const leftNav = (
+    const leftNav = props.leftNav && (
       <LeftNavUI
-        {...props?.leftNav}
+        {...props.leftNav}
         logo={props?.logo}
         routerAdapter={props?.routerAdapter}
       />
