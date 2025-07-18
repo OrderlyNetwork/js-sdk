@@ -181,13 +181,13 @@ const NavItem: FC<NavItemProps> = ({ item, onClick }) => {
   const onItemClick = () => {
     onClick?.({ href: href, name: name, scope: "leftNav" });
   };
-  if (typeof customRender !== "undefined" && customRender !== null) {
+  if (typeof customRender === "function") {
     return (
       <div
         className="oui-flex oui-items-center oui-px-3 oui-py-4"
         onClick={onItemClick}
       >
-        {customRender}
+        {customRender({ name: name, href: href })}
       </div>
     );
   }
