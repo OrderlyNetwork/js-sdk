@@ -74,7 +74,11 @@ export type MainNavItem = {
    * if true, the item will be shown as a home page in mobile
    */
   isHomePageInMobile?: boolean;
-  customRender?: React.ReactNode;
+  customRender?: (option: {
+    name: string;
+    href: string;
+    isActive?: boolean;
+  }) => React.ReactNode;
   tooltipConfig?: {
     /**
      * if true, the tooltip will be shown on first visit
@@ -141,8 +145,12 @@ export const NavItem: FC<
 
   const buttonRender = () => {
     const { customRender, tooltipConfig } = item;
-    if (typeof customRender !== "undefined" && customRender !== null) {
-      return customRender;
+    if (typeof customRender == "function") {
+      return customRender({
+        name: item.name,
+        href: item.href,
+        isActive,
+      });
     }
     const button = (
       <button
