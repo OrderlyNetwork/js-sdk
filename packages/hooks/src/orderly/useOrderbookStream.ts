@@ -54,18 +54,16 @@ const reduceItems = (
     return [];
   }
   let newData = [...data];
-
   const result: OrderBookItem[] = [];
+
+  //
 
   if (typeof depth !== "undefined") {
     const prices = new Map<number, number[]>();
     for (let i = 0; i < data.length; i++) {
       const [price, quantity] = data[i];
-      if (Number.isNaN(price) || Number.isNaN(quantity)) {
-        continue;
-      }
-
-      let priceKey: number;
+      if (isNaN(price) || isNaN(quantity)) continue;
+      let priceKey;
 
       if (asks) {
         priceKey = new Decimal(Math.ceil(price / depth)).mul(depth).toNumber();
@@ -105,9 +103,7 @@ const reduceItems = (
 
   for (let i = 0; i < newData.length; i++) {
     const [price, quantity] = newData[i];
-    if (Number.isNaN(price) || Number.isNaN(quantity)) {
-      continue;
-    }
+    if (isNaN(price) || isNaN(quantity)) continue;
 
     const newQuantity = new Decimal(quantity)
       .add(result.length > 0 ? result[result.length - 1][2] : 0)
@@ -207,11 +203,9 @@ export const reduceOrderbook = (
 
 const mergeItems = (data: OrderBookItem[], update: OrderBookItem[]) => {
   // let index = -1;
-  if (data.length === 0) {
-    return update;
-  }
+  if (data.length === 0) return update;
 
-  data = data.filter(([price]) => !Number.isNaN(price));
+  data = data.filter(([price]) => !isNaN(price));
 
   while (update.length > 0) {
     const item = update.shift();
@@ -219,12 +213,10 @@ const mergeItems = (data: OrderBookItem[], update: OrderBookItem[]) => {
     if (item) {
       const [price, quantity] = item;
 
-      const index = data.findIndex(([p]) => p === price);
+      const index = data.findIndex(([p], index) => p === price);
       //
       if (index === -1) {
-        if (quantity === 0) {
-          continue;
-        }
+        if (quantity === 0) continue;
         data.push(item);
       } else {
         if (quantity === 0) {
@@ -262,10 +254,7 @@ export type OrderbookOptions = {
   padding?: boolean;
 };
 
-const INIT_DATA: OrderbookData = {
-  asks: [],
-  bids: [],
-};
+const INIT_DATA = { asks: [], bids: [] };
 
 /**
  * @name useOrderbookStream
@@ -302,9 +291,7 @@ export const useOrderbookStream = (
 
   const depths = useMemo(() => {
     const tick = config("quote_tick");
-    if (typeof tick === "undefined") {
-      return [];
-    }
+    if (typeof tick === "undefined") return [];
 
     try {
       const base = new Decimal(tick);
@@ -314,9 +301,7 @@ export const useOrderbookStream = (
         base.mul(100).toNumber(),
         base.mul(1000).toNumber(),
       ];
-    } catch {
-      //
-    }
+    } catch (e) {}
     return [tick];
   }, [config("quote_tick")]);
 
@@ -334,13 +319,15 @@ export const useOrderbookStream = (
 
   const eventEmitter = useEventEmitter();
 
+  // const orderbookRequest =
+
   useEffect(() => {
     let needRequestFullOrderbook = true;
     setIsLoading(true);
-
+    let orderBookUpdateSub: any;
     let fullOrderBookUpdateSub: any;
 
-    const orderBookUpdateSub = ws.subscribe(
+    orderBookUpdateSub = ws.subscribe(
       {
         event: "subscribe",
         topic: `${symbol}@orderbookupdate`,
@@ -358,9 +345,7 @@ export const useOrderbookStream = (
           orderbooksService.updateOrderbook(
             symbol,
             { asks, bids, ts, prevTs },
-            () => {
-              needRequestFullOrderbook = true;
-            },
+            () => (needRequestFullOrderbook = true),
           );
 
           const data = orderbooksService.getRawOrderbook(symbol);
@@ -443,9 +428,7 @@ export const useOrderbookStream = (
       bidsFirst = data.bids[0][0];
     }
 
-    if (Number.isNaN(asksFrist) || Number.isNaN(bidsFirst) || !ticker) {
-      return 0;
-    }
+    if (isNaN(asksFrist) || isNaN(bidsFirst) || !ticker) return 0;
 
     return [asksFrist, bidsFirst, ticker["24h_close"]].sort()[1];
   }, [ticker?.["24h_close"], data]);

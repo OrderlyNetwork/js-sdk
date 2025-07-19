@@ -13,7 +13,7 @@ export const TradingPage = (props: TradingPageProps) => {
       referral={props.referral}
       tradingRewards={props.tradingRewards}
       bottomSheetLeading={props.bottomSheetLeading}
-      sharePnLConfig={props.sharePnLConfig}
+      sharePnLConfig={props.sharePnLConfig} 
     >
       <TradingWidget />
     </TradingPageProvider>
