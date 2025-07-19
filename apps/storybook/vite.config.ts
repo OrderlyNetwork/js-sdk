@@ -29,7 +29,9 @@ function getAliasConfig(): Record<string, string> {
   if (!isProd) {
     const alias: Record<string, string> = {};
     packageAlias.forEach((item) => {
-      if (watchPackages?.includes(item.package)) {
+      if (watchPackages && watchPackages.includes(item.package)) {
+        alias[item.package] = resolve(dirname, item.path);
+      } else {
         alias[item.package] = resolve(dirname, item.path);
       }
     });
