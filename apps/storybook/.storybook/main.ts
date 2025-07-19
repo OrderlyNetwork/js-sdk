@@ -72,14 +72,35 @@ const config: StorybookConfig = {
   // custom build options: https://storybook.js.org/docs/api/main-config/main-config-build
   // build: {
   //   test: {
-  //     disableBlocks: false,
-  //     disabledAddons: [],
-  //     disableMDXEntries: false,
-  //     disableAutoDocs: false,
-  //     disableDocgen: false,
+  //     disableBlocks: true,
+  //     disabledAddons: [
+  //       "@storybook/addon-docs",
+  //       "@storybook/addon-essentials/docs",
+  //       "@storybook/addon-coverage",
+  //       "@storybook/addon-a11y",
+  //       "@storybook/addon-vitest",
+  //     ],
+  //     disableMDXEntries: true,
+  //     disableAutoDocs: true,
+  //     disableDocgen: true,
   //     disableSourcemaps: true,
-  //     disableTreeShaking: false,
+  //     disableTreeShaking: true,
   //   },
+  // },
+  // viteFinal: async (config) => {
+  //   if (config.build?.rollupOptions) {
+  //     config.build.rollupOptions.maxParallelFileOps = 10;
+  //   }
+
+  //   if (config.build) {
+  //     config.build.sourcemap = false;
+  //     config.build.chunkSizeWarningLimit = 1000;
+  //     config.build.commonjsOptions = {
+  //       sourceMap: false,
+  //     };
+  //   }
+
+  //   return config;
   // },
 };
 export default config;

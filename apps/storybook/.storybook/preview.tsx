@@ -27,7 +27,7 @@ const preview: Preview = {
       attributeName: "data-oui-theme",
     }),
   ],
-  tags: ["autodocs"],
+  // tags: ["autodocs"],
   parameters: {
     // custom background colors: http://localhost:6008/?path=/story/package-trading-leaderboard--campaign-leaderboard&globals=theme:custom
     // backgrounds: {

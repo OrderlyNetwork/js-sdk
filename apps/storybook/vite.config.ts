@@ -70,6 +70,7 @@ export default defineConfig({
     alias: getAliasConfig(),
   },
   // optimizeDeps: {
+  //   include: ["react", "react-dom"],
   //   exclude: getOptimizeDepsConfig(),
   // },
   build: {
