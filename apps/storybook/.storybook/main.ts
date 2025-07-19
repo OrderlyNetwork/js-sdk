@@ -11,13 +11,43 @@ import type { StorybookConfig } from "@storybook/react-vite";
 //   return dirname(require.resolve(join(value, "package.json")));
 // }
 
-const config: StorybookConfig = {
-  stories: [
-    // "../src/**/*.mdx",
+function getStories() {
+  const defaultStories = [
+    "../src/**/*.mdx",
     "../src/stories/**/*.mdx",
     "../src/documentation/**/*.mdx",
     "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)",
-  ],
+  ];
+
+  // need to use process.env instead of import.meta.env
+  const pages = process.env.VITE_STORYBOOK_PAGES;
+
+  if (pages) {
+    const list = pages.split(",").map((item) => item.trim());
+
+    const map = {
+      trading:
+        "../src/stories/package/trading/**/*.stories.@(js|jsx|mjs|ts|tsx)",
+      portfolio:
+        "../src/stories/package/portfolio/**/*.stories.@(js|jsx|mjs|ts|tsx)",
+      markets:
+        "../src/stories/package/markets/**/*.stories.@(js|jsx|mjs|ts|tsx)",
+      affiliate:
+        "../src/stories/package/affiliate/**/*.stories.@(js|jsx|mjs|ts|tsx)",
+      rewards:
+        "../src/stories/package/trading-rewards/**/*.stories.@(js|jsx|mjs|ts|tsx)",
+      leaderboard:
+        "../src/stories/package/trading-leaderboard/**/*.stories.@(js|jsx|mjs|ts|tsx)",
+    };
+
+    return list.map((item) => map[item as keyof typeof map]).filter(Boolean);
+  }
+
+  return defaultStories;
+}
+
+const config: StorybookConfig = {
+  stories: getStories(),
   addons: [
     "@chromatic-com/storybook",
     "@storybook/addon-docs",

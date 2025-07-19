@@ -16,15 +16,31 @@ const dirname =
 function getAliasConfig(): Record<string, string> {
   const isProd = process.env.NODE_ENV === "production";
 
+  const watchPackages = process.env.VITE_WATCH_PACKAGES?.split(",").map(
+    (item) => {
+      const packageName = item.trim();
+      if (!packageName.startsWith("@orderly.network/")) {
+        return packageName;
+      }
+      return `${"@orderly.network/"}${packageName}`;
+    },
+  );
+
   if (!isProd) {
     const alias: Record<string, string> = {};
     packageAlias.forEach((item) => {
-      alias[item.package] = resolve(dirname, item.path);
+      if (watchPackages?.includes(item.package)) {
+        alias[item.package] = resolve(dirname, item.path);
+      }
     });
     return alias;
   }
 
   return {};
+}
+
+function getOptimizeDepsConfig(): string[] {
+  return packageAlias.map((item) => item.package);
 }
 
 // https://vite.dev/config/
@@ -53,11 +69,19 @@ export default defineConfig({
   resolve: {
     alias: getAliasConfig(),
   },
+  // optimizeDeps: {
+  //   exclude: getOptimizeDepsConfig(),
+  // },
   build: {
     rollupOptions: {
       // https://cn.rollupjs.org/configuration-options/#maxparallelfileops
       maxParallelFileOps: 100,
     },
+    // chunkSizeWarningLimit: 1000,
+    // sourcemap: false,
+    // commonjsOptions: {
+    //   sourceMap: false,
+    // },
   },
   // More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
   test: {
