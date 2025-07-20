@@ -19,7 +19,7 @@ function getAliasConfig(): Record<string, string> {
   const watchPackages = process.env.VITE_WATCH_PACKAGES?.split(",").map(
     (item) => {
       const packageName = item.trim();
-      if (!packageName.startsWith("@orderly.network/")) {
+      if (packageName.startsWith("@orderly.network/")) {
         return packageName;
       }
       return `${"@orderly.network/"}${packageName}`;
@@ -29,9 +29,10 @@ function getAliasConfig(): Record<string, string> {
   if (!isProd) {
     const alias: Record<string, string> = {};
     packageAlias.forEach((item) => {
-      if (watchPackages && watchPackages.includes(item.package)) {
-        alias[item.package] = resolve(dirname, item.path);
-      } else {
+      if (
+        !watchPackages ||
+        (watchPackages && watchPackages.includes(item.package))
+      ) {
         alias[item.package] = resolve(dirname, item.path);
       }
     });
