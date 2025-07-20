@@ -29,5 +29,5 @@
     "noUnusedParameters": false,
     "erasableSyntaxOnly": false,
   },
-  "include": ["src"]
+  "include": ["src", ".storybook/**/*"]
 }

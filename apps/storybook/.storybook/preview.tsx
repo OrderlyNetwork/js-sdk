@@ -23,7 +23,7 @@ const preview: Preview = {
         custom: "custom",
         roundless: "roundless",
       },
-      defaultTheme: "orderly",
+      defaultTheme: import.meta.env.VITE_DEFAULT_THEME || "orderly",
       attributeName: "data-oui-theme",
     }),
   ],
