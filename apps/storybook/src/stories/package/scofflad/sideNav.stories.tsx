@@ -7,7 +7,6 @@ const meta: Meta<typeof SideNavbarWidget> = {
   title: "Package/ui-scaffold/SideNavbar",
   component: SideNavbarWidget,
   // subComponents: { AccountMenuWidget, AccountSummaryWidget, ChainMenuWidget },
-  tags: ["autodocs"],
   parameters: {
     layout: "centered",
   },

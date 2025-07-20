@@ -5,7 +5,6 @@ import { FooterWidget, Scaffold } from "@orderly.network/ui-scaffold";
 const meta: Meta<typeof FooterWidget> = {
   title: "Package/ui-scaffold/footer",
   component: FooterWidget,
-  tags: ["autodocs"],
   parameters: {
     layout: "fullscreen",
   },

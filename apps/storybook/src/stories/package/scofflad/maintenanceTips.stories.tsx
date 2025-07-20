@@ -12,7 +12,6 @@ const meta = {
   title: "Package/ui-scaffold/maintenanceTips",
   component: MaintenanceTipsUI,
   subComponents: { AccountMenuWidget, AccountSummaryWidget, ChainMenuWidget },
-  tags: ["autodocs"],
   parameters: {
     layout: "fullscreen",
   },

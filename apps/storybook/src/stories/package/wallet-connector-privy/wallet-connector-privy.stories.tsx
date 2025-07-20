@@ -28,7 +28,6 @@ const meta = {
     layout: "fullscreen",
     walletConnectorType: "privy",
   },
-  tags: ["autodocs"],
   argTypes: {},
   args: {
     symbol: "PERP_BTC_USDC",

@@ -31,7 +31,6 @@ const meta: Meta<typeof TradingPage> = {
   parameters: {
     layout: "fullscreen",
   },
-  tags: ["autodocs"],
   argTypes: {},
   args: {
     symbol: "PERP_BTC_USDC",

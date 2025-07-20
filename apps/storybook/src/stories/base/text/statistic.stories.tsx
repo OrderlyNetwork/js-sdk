@@ -7,7 +7,7 @@ const meta: Meta<typeof Statistic> = {
   parameters: {
     layout: "centered",
   },
-  // tags: ['autodocs'],
+  // tags: [''],
   argTypes: {
     //   backgroundColor: { control: 'color' },
   },

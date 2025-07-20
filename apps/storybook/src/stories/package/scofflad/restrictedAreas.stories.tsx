@@ -5,7 +5,6 @@ import { RestrictedInfoWidget } from "@orderly.network/ui-scaffold";
 const meta: Meta<typeof RestrictedInfoWidget> = {
   title: "Package/ui-scaffold/RestrictedAreas",
   component: RestrictedInfoWidget,
-  tags: ["autodocs"],
   parameters: {
     layout: "centered",
   },

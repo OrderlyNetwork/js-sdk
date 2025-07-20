@@ -17,7 +17,6 @@ const meta = {
     ChainMenuWidget,
     // ChainMenu,
   },
-  tags: ["autodocs"],
   parameters: {
     layout: "fullscreen",
   },

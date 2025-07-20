@@ -8,7 +8,6 @@ import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 const meta = {
   title: "Customize/Scaffold/components",
   component: Scaffold,
-  // tags: ["autodocs"],
   parameters: {
     layout: "fullscreen",
   },

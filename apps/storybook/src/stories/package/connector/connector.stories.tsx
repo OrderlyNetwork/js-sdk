@@ -14,7 +14,7 @@ const meta: Meta<typeof WalletConnectContent> = {
   parameters: {
     layout: "centered",
   },
-  tags: ["!autodocs"],
+  tags: ["!"],
   argTypes: {},
   args: {
     initAccountState: AccountStatusEnum.NotConnected,

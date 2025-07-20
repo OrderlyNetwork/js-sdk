@@ -1,4 +1,3 @@
-import React from "react";
 import { withThemeByDataAttribute } from "@storybook/addon-themes";
 import type { Preview } from "@storybook/react-vite";
 import { withThemeBuilder } from "../src/addons/theme_tool/preview";
@@ -62,6 +61,13 @@ const preview: Preview = {
           "Base",
           "Package",
           [
+            "trading",
+            "portfolio",
+            "markets",
+            "affiliate",
+            "trading-rewards",
+            "trading-leaderboard",
+            "wallet-connector-privy",
             "ui-scaffold",
             "ui-connector",
             "ui-chain-selector",
@@ -73,11 +79,7 @@ const preview: Preview = {
             "ui-share",
             "ui-leverage",
             "ui-tradingview",
-            "trading",
-            "portfolio",
-            "markets",
-            "affiliate",
-            "trading-rewards",
+            "i18n",
           ],
         ],
       },
