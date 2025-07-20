@@ -254,7 +254,10 @@ export type OrderbookOptions = {
   padding?: boolean;
 };
 
-const INIT_DATA = { asks: [], bids: [] };
+const INIT_DATA: OrderbookData = {
+  asks: [],
+  bids: [],
+};
 
 /**
  * @name useOrderbookStream
