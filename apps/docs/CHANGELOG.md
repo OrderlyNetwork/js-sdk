@@ -1,5 +1,15 @@
 # @orderly/docs
 
+## 1.5.2-internal-20250724.3
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.5.2-internal-20250724.3
+  - @orderly.network/web3-onboard@2.5.2-internal-20250724.3
+  - @orderly.network/types@2.5.2-internal-20250724.3
+
 ## 1.5.2-internal-20250724.2
 
 ### Patch Changes
