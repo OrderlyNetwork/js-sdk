@@ -2,6 +2,7 @@ import { useEffect, useRef, FocusEvent, useMemo, useState } from "react";
 import {
   useAccount,
   useComputedLTV,
+  useDebouncedCallback,
   useEventEmitter,
   useLocalStorage,
   useMarginRatio,
@@ -460,6 +461,34 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
 
   const currentLtv = useComputedLTV();
 
+  const askAndBid = useRef<[number, number]>([0, 0]);
+
+  const onOrderBookUpdate = useDebouncedCallback((data: any) => {
+    askAndBid.current = [
+      data.asks?.[data.asks.length - 1]?.[0],
+      data.bids?.[0]?.[0],
+    ];
+  }, 200);
+
+  useEffect(() => {
+    ee.on("orderbook:update", onOrderBookUpdate);
+    return () => {
+      ee.off("orderbook:update", onOrderBookUpdate);
+      onOrderBookUpdate.cancel();
+    };
+  }, []);
+
+  const calcMidPrice = useMemo<number>(() => {
+    const [bestAsk = 0, bestBid = 0] = askAndBid.current;
+    return new Decimal(bestAsk).add(bestBid).div(2).toNumber();
+  }, []);
+
+  const fillMiddleValue = () => {
+    if (formattedOrder.order_type === OrderType.LIMIT) {
+      setValue("order_price", calcMidPrice);
+    }
+  };
+
   return {
     ...state,
     currentQtyPercentage,
@@ -494,5 +523,6 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     toggleBBO,
     priceInputContainerWidth,
     currentLtv,
+    fillMiddleValue,
   };
 };
