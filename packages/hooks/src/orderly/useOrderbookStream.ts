@@ -203,7 +203,9 @@ export const reduceOrderbook = (
 
 const mergeItems = (data: OrderBookItem[], update: OrderBookItem[]) => {
   // let index = -1;
-  if (data.length === 0) return update;
+  if (data.length === 0) {
+    return update;
+  }
 
   data = data.filter(([price]) => !isNaN(price));
 
@@ -294,7 +296,9 @@ export const useOrderbookStream = (
 
   const depths = useMemo(() => {
     const tick = config("quote_tick");
-    if (typeof tick === "undefined") return [];
+    if (typeof tick === "undefined") {
+      return [];
+    }
 
     try {
       const base = new Decimal(tick);
@@ -431,7 +435,9 @@ export const useOrderbookStream = (
       bidsFirst = data.bids[0][0];
     }
 
-    if (isNaN(asksFrist) || isNaN(bidsFirst) || !ticker) return 0;
+    if (isNaN(asksFrist) || isNaN(bidsFirst) || !ticker) {
+      return 0;
+    }
 
     return [asksFrist, bidsFirst, ticker["24h_close"]].sort()[1];
   }, [ticker?.["24h_close"], data]);
