@@ -2,7 +2,6 @@ import { useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   DataFilter,
-  Divider,
   Flex,
   DataTable,
   modal,
@@ -72,7 +71,7 @@ const ConvertDetailsModal = modal.create<{
         onRow={() => ({
           className: "oui-h-[40px]",
         })}
-        generatedRowKey={(record: any) =>
+        generatedRowKey={(record) =>
           record.transaction_id || Math.random().toString()
         }
       />
@@ -114,6 +113,7 @@ export const ConvertDesktopUI: React.FC<ConvertDesktopUIProps> = ({
   const dataFilter = useMemo(() => {
     return (
       <DataFilter
+        className="oui-border-none oui-py-0"
         onFilter={onFilter}
         items={[
           {
@@ -157,7 +157,6 @@ export const ConvertDesktopUI: React.FC<ConvertDesktopUIProps> = ({
 
   return (
     <Flex direction="column" mt={4} itemAlign="center" className="oui-w-full">
-      <Divider className="oui-w-full" />
       <Flex direction="row" className="oui-w-full">
         {dataFilter}
       </Flex>
