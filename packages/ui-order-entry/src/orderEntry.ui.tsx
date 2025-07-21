@@ -96,6 +96,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
     disableFeatures,
     currentLtv,
     fillMiddleValue,
+    calcMidPrice,
   } = props;
 
   const { curLeverage } = useLeverage();
@@ -410,6 +411,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
             priceInputContainerWidth={props.priceInputContainerWidth}
             parseErrorMsg={parseErrorMsg}
             fillMiddleValue={fillMiddleValue}
+            calcMidPrice={calcMidPrice}
           />
         )}
         {/* Slider */}
@@ -632,6 +634,7 @@ const OrderQuantityInput = (props: {
   priceInputContainerWidth?: number;
   parseErrorMsg: (key: keyof OrderValidationResult) => string;
   fillMiddleValue: OrderEntryScriptReturn["fillMiddleValue"];
+  calcMidPrice: number;
 }) => {
   const {
     type,
@@ -642,10 +645,13 @@ const OrderQuantityInput = (props: {
     bbo,
     parseErrorMsg,
     fillMiddleValue,
+    calcMidPrice,
   } = props;
   const { t } = useTranslation();
 
   const readOnly = bbo.bboStatus === BBOStatus.ON;
+
+  const disabled = !calcMidPrice || Number.isNaN(Number(calcMidPrice));
 
   const priceSuffix =
     type === OrderType.LIMIT ? (
@@ -694,10 +700,12 @@ const OrderQuantityInput = (props: {
           </Flex>
           <Text
             className={cn(
-              "oui-cursor-pointer oui-select-none",
-              "oui-text-primary",
+              "oui-select-none",
+              disabled
+                ? "oui-cursor-not-allowed oui-text-base-contrast-36"
+                : "oui-cursor-pointer oui-text-primary",
             )}
-            onClick={fillMiddleValue}
+            onClick={disabled ? undefined : fillMiddleValue}
           >
             Mid
           </Text>
