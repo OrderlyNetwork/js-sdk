@@ -1,14 +1,5 @@
 import { FC, useEffect, useMemo, useRef, useState } from "react";
-import { Poster } from "../poster";
-import { PosterRef } from "../poster/poster";
-import {
-  PnLDisplayFormat,
-  ReferralType,
-  ShareEntity,
-  ShareOptions,
-  SharePnLOptions,
-} from "../../types/types";
-import { getPnlInfo, getPnLPosterData, savePnlInfo } from "../utils/utils";
+import { useTranslation } from "@orderly.network/i18n";
 import {
   Button,
   CloseCircleFillIcon,
@@ -17,6 +8,13 @@ import {
   ScrollArea,
   toast,
 } from "@orderly.network/ui";
+import {
+  PnLDisplayFormat,
+  ReferralType,
+  ShareEntity,
+  ShareOptions,
+  SharePnLOptions,
+} from "../../types/types";
 import { Carousel } from "../carousel";
 import {
   CarouselContent,
@@ -24,7 +22,9 @@ import {
   Dot,
   useCarousel,
 } from "../carousel/carousel";
-import { useTranslation } from "@orderly.network/i18n";
+import { Poster } from "../poster";
+import { PosterRef } from "../poster/poster";
+import { getPnlInfo, getPnLPosterData, savePnlInfo } from "../utils/utils";
 
 export const MobileSharePnLContent: FC<{
   entity: ShareEntity;
@@ -43,16 +43,16 @@ export const MobileSharePnLContent: FC<{
   const formats: PnLDisplayFormat[] = hasRoiAndPnl
     ? ["roi_pnl", "roi", "pnl"]
     : props.entity.roi != null
-    ? ["roi"]
-    : props.entity.pnl != null
-    ? ["pnl"]
-    : [];
+      ? ["roi"]
+      : props.entity.pnl != null
+        ? ["pnl"]
+        : [];
 
   const [pnlFormat, setPnlFormat] = useState<PnLDisplayFormat>(
-    formats.length == 1 ? formats[0] : localPnlConfig.pnlFormat
+    formats.length == 1 ? formats[0] : localPnlConfig.pnlFormat,
   );
   const [shareOption, setShareOption] = useState<Set<ShareOptions>>(
-    new Set(localPnlConfig.options)
+    new Set(localPnlConfig.options),
   );
   const [message, setMessage] = useState<string>(localPnlConfig.message);
   const [selectIndex, setSelectIndex] = useState(localPnlConfig.bgIndex);
@@ -64,7 +64,7 @@ export const MobileSharePnLContent: FC<{
   const [domain, setDomain] = useState("");
 
   const posterRefs = shareOptions?.backgroundImages?.map(() =>
-    useRef<PosterRef | null>(null)
+    useRef<PosterRef | null>(null),
   );
 
   useEffect(() => {
@@ -81,7 +81,7 @@ export const MobileSharePnLContent: FC<{
     shareOption,
     props.baseDp,
     props.quoteDp,
-    props.referral
+    props.referral,
   );
   // console.log("pster data", posterData, props.entity);
 
@@ -103,7 +103,7 @@ export const MobileSharePnLContent: FC<{
   }, [carouselRef, domain]);
 
   const onSharePnL = async (
-    posterRef: React.MutableRefObject<PosterRef | null>
+    posterRef: React.MutableRefObject<PosterRef | null>,
   ) => {
     if (!posterRef.current) return;
     const data = posterRef.current?.toDataURL();
@@ -134,7 +134,7 @@ export const MobileSharePnLContent: FC<{
       {/* <div>{`leverage: ${props.leverage}x`}</div> */}
       <div
         ref={carouselRef}
-        className="oui-w-full oui-mt-4 oui-overflow-hidden"
+        className="oui-mt-4 oui-w-full oui-overflow-hidden"
         style={{ height: `${carouselHeight + 20}px` }}
       >
         <Carousel
@@ -146,7 +146,7 @@ export const MobileSharePnLContent: FC<{
             {shareOptions?.backgroundImages?.map((item, index) => (
               <CarouselItem key={index}>
                 <Poster
-                  className="oui-transform oui-origin-top-left"
+                  className="oui-origin-top-left oui-transform"
                   style={{ scale: `${scale}` }}
                   width={552}
                   height={310}
@@ -161,7 +161,7 @@ export const MobileSharePnLContent: FC<{
               </CarouselItem>
             ))}
           </CarouselContent>
-          <div className="oui-mt-2 oui-mb-1 oui-flex oui-justify-center">
+          <div className="oui-mb-1 oui-mt-2 oui-flex oui-justify-center">
             <MyIdentifier
               dotClassName="oui-w-[16px] oui-h-[4px] oui-bg-base-300"
               dotActiveClassName="!oui-bg-primary-darken oui-w-[20px]"
@@ -172,14 +172,15 @@ export const MobileSharePnLContent: FC<{
       </div>
 
       {/* @ts-ignore */}
-      <ScrollArea className="oui-max-h-[200px] oui-overflow-y-auto oui-custom-scrollbar">
+      <ScrollArea className="oui-custom-scrollbar oui-max-h-[200px] oui-overflow-y-auto">
         <div className="oui-mt-4">
           <div className="oui-text-3xs oui-text-base-contrast-54">
             {t("share.pnl.displayFormat")}
           </div>
-          <div className="oui-pt-3 oui-px-1 oui-justify-between oui-gap-3 oui-grid oui-grid-cols-3 oui-row-span-1">
-            {formats.map((item) => (
+          <div className="oui-row-span-1 oui-grid oui-grid-cols-3 oui-justify-between oui-gap-3 oui-px-1 oui-pt-3">
+            {formats.map((item, index) => (
               <PnlFormatView
+                key={index}
                 setPnlFormat={setPnlFormat}
                 type={item}
                 curType={pnlFormat}
@@ -189,10 +190,10 @@ export const MobileSharePnLContent: FC<{
         </div>
 
         <div className="oui-mt-3">
-          <div className="oui-text-3xs oui-text-base-contrast-54 oui-h-[18px]">
+          <div className="oui-h-[18px] oui-text-3xs oui-text-base-contrast-54">
             {t("share.pnl.optionalInfo")}
           </div>
-          <div className="oui-flex oui-flex-wrap oui-gap-3 oui-mt-3">
+          <div className="oui-mt-3 oui-flex oui-flex-wrap oui-gap-3">
             {props.entity.openPrice && (
               <ShareOption
                 setShareOption={setShareOption}
@@ -245,11 +246,11 @@ export const MobileSharePnLContent: FC<{
           </div>
         </div>
 
-        <div className="oui-mt-3 oui-mb-8">
-          <div className="oui-text-3xs oui-text-base-contrast-54 oui-h-[18px]">
+        <div className="oui-mb-8 oui-mt-3">
+          <div className="oui-h-[18px] oui-text-3xs oui-text-base-contrast-54">
             {t("share.pnl.optionalInfo.message")}
           </div>
-          <div className="oui-mt-3 oui-h-[48px] oui-bg-base-600 oui-mx-1">
+          <div className="oui-bg-base-600 oui-mx-1 oui-mt-3 oui-h-[48px]">
             <Input
               placeholder={t("share.pnl.optionalInfo.message.placeholder")}
               containerClassName="oui-bg-transparent oui-h-[48px]"
@@ -332,8 +333,8 @@ const PnlFormatView: FC<{
   return (
     <div
       className={cn(
-        "oui-shadow-lg oui-rounded-lg oui-h-[46px] oui-flex-1 oui-bg-base-4 hover:oui-cursor-pointer oui-flex oui-items-center oui-px-3 oui-referral-shadow",
-        isSelected && "oui-bg-primary-darken oui-dot-sel"
+        "oui-referral-shadow oui-flex oui-h-[46px] oui-flex-1 oui-items-center oui-rounded-lg oui-bg-base-4 oui-px-3 oui-shadow-lg hover:oui-cursor-pointer",
+        isSelected && "oui-dot-sel oui-bg-primary-darken",
       )}
       onClick={() => {
         setPnlFormat(type);
@@ -377,7 +378,7 @@ const ShareOption: FC<{
   return (
     <div
       className={cn(
-        "oui-shadow-lg oui-rounded-lg oui-h-[46px] oui-mt-0 oui-w-[calc(50%-6px)] oui-bg-base-4 hover:oui-cursor-pointer oui-items-center oui-flex oui-p-3 oui-referral-shadow"
+        "oui-referral-shadow oui-mt-0 oui-flex oui-h-[46px] oui-w-[calc(50%-6px)] oui-items-center oui-rounded-lg oui-bg-base-4 oui-p-3 oui-shadow-lg hover:oui-cursor-pointer",
       )}
       onClick={() => {
         // setPnlFormat(type);
@@ -392,7 +393,7 @@ const ShareOption: FC<{
         });
       }}
     >
-      <div className="oui-text-sm oui-flex-1 oui-text-base-contrast">
+      <div className="oui-flex-1 oui-text-sm oui-text-base-contrast">
         {text}
       </div>
       {isSelected && <ChoicesFillIcon />}

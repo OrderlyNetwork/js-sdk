@@ -99,7 +99,7 @@ export const TableBody: React.FC<TableBodyProps<any>> = (props) => {
                     style={{ ...pinStyle, ...cellStyle }}
                     className={cnBase(
                       "oui-table-tbody-td oui-relative",
-                      "oui-px-3",
+                      "oui-px-1",
                       alignVariants({ align }),
                       rowClassName,
                       pinClassNames.content,

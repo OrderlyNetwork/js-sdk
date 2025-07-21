@@ -461,13 +461,10 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
 
   const currentLtv = useComputedLTV();
 
-  const askAndBid = useRef<[number, number]>([0, 0]);
+  const [askAndBid, setAskAndBid] = useState<[number, number]>([0, 0]);
 
   const onOrderBookUpdate = useDebouncedCallback((data: any) => {
-    askAndBid.current = [
-      data.asks?.[data.asks.length - 1]?.[0],
-      data.bids?.[0]?.[0],
-    ];
+    setAskAndBid([data.asks?.[data.asks.length - 1]?.[0], data.bids?.[0]?.[0]]);
   }, 200);
 
   useEffect(() => {
@@ -476,12 +473,12 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       ee.off("orderbook:update", onOrderBookUpdate);
       onOrderBookUpdate.cancel();
     };
-  }, []);
+  }, [onOrderBookUpdate]);
 
   const calcMidPrice = useMemo<number>(() => {
-    const [bestAsk = 0, bestBid = 0] = askAndBid.current;
+    const [bestAsk = 0, bestBid = 0] = askAndBid;
     return new Decimal(bestAsk).add(bestBid).div(2).toNumber();
-  }, []);
+  }, [askAndBid]);
 
   const fillMiddleValue = () => {
     if (formattedOrder.order_type === OrderType.LIMIT) {
@@ -523,6 +520,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     toggleBBO,
     priceInputContainerWidth,
     currentLtv,
+    calcMidPrice,
     fillMiddleValue,
   };
 };

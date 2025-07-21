@@ -2,20 +2,17 @@ import { useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   DataFilter,
-  Divider,
   Flex,
   DataTable,
   modal,
   SimpleDialog,
 } from "@orderly.network/ui";
 import { useModal } from "@orderly.network/ui";
-import { SelectOption } from "@orderly.network/ui/src/select/withOptions";
 import { useConvertColumns, useConvertDetailColumns } from "./convert.column";
 import { useConvertScript } from "./convert.script";
 import type { ConvertRecord } from "./type";
 
 type ConvertDesktopUIProps = {
-  memoizedOptions: SelectOption[];
   convertState: ReturnType<typeof useConvertScript>;
 };
 
@@ -72,7 +69,7 @@ const ConvertDetailsModal = modal.create<{
         onRow={() => ({
           className: "oui-h-[40px]",
         })}
-        generatedRowKey={(record: any) =>
+        generatedRowKey={(record) =>
           record.transaction_id || Math.random().toString()
         }
       />
@@ -81,7 +78,6 @@ const ConvertDetailsModal = modal.create<{
 });
 
 export const ConvertDesktopUI: React.FC<ConvertDesktopUIProps> = ({
-  memoizedOptions,
   convertState,
 }) => {
   const handleDetailsClick = (convertId: number) => {
@@ -103,7 +99,6 @@ export const ConvertDesktopUI: React.FC<ConvertDesktopUIProps> = ({
   });
 
   const {
-    selectedAccount,
     convertedAssetFilter,
     statusFilter,
     dateRange,
@@ -114,14 +109,15 @@ export const ConvertDesktopUI: React.FC<ConvertDesktopUIProps> = ({
   const dataFilter = useMemo(() => {
     return (
       <DataFilter
+        className="oui-border-none oui-py-0"
         onFilter={onFilter}
         items={[
-          {
-            type: "select",
-            name: "account",
-            value: selectedAccount,
-            options: memoizedOptions,
-          },
+          // {
+          //   type: "select",
+          //   name: "account",
+          //   value: selectedAccount,
+          //   options: memoizedOptions,
+          // },
           {
             type: "select",
             name: "converted_asset",
@@ -146,18 +142,15 @@ export const ConvertDesktopUI: React.FC<ConvertDesktopUIProps> = ({
       />
     );
   }, [
-    selectedAccount,
     convertedAssetFilter,
     statusFilter,
     dateRange,
     onFilter,
     convertedAssetOptions,
-    memoizedOptions,
   ]);
 
   return (
     <Flex direction="column" mt={4} itemAlign="center" className="oui-w-full">
-      <Divider className="oui-w-full" />
       <Flex direction="row" className="oui-w-full">
         {dataFilter}
       </Flex>
