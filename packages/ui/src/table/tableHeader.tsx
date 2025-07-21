@@ -55,7 +55,7 @@ export const TableHeader: FC<TableHeaderProps> = (props) => {
                 className={cnBase(
                   "oui-table-thead-th",
                   "oui-whitespace-nowrap",
-                  "oui-px-3",
+                  "oui-px-1",
                   props.bordered &&
                     "after:oui-absolute after:oui-left-0 after:oui-top-0 after:oui-z-[-1] after:oui-block after:oui-size-full after:oui-border-b after:oui-border-line",
                   // use border-b will show bottom element content

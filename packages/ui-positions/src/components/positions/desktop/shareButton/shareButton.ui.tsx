@@ -20,7 +20,7 @@ export const ShareButton: FC<ShareButtonState> = (props) => {
   const showModal = () => {
     let calculatedLeverage = props.leverage;
 
-    // For position history, calculate the minimum of symbol leverage and current leverage
+    // For position history, use the minimum of symbol leverage and current leverage
     if (
       props.isPositionHistory &&
       typeof props.leverage === "number" &&

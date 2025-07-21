@@ -11,7 +11,6 @@ import {
   SimpleSheet,
   toast,
 } from "@orderly.network/ui";
-import { SelectOption } from "@orderly.network/ui/src/select/withOptions";
 import { ConvertedAssetColumn } from "./convert.column";
 import { useConvertScript } from "./convert.script";
 import { CONVERT_STATUS_OPTIONS } from "./convert.ui.desktop";
@@ -19,7 +18,6 @@ import { ConvertRecord, ConvertTransaction } from "./type";
 
 type ConvertMobileUIProps = {
   convertState: ReturnType<typeof useConvertScript>;
-  memoizedOptions: SelectOption[];
 };
 
 type ConvertMobileItemProps = {
@@ -38,12 +36,10 @@ type ConvertMobileFieldProps = {
 
 export const ConvertMobileUI: React.FC<ConvertMobileUIProps> = ({
   convertState,
-  memoizedOptions,
 }) => {
   const { t } = useTranslation();
 
   const {
-    selectedAccount,
     convertedAssetFilter,
     statusFilter,
     dateRange,
@@ -54,16 +50,17 @@ export const ConvertMobileUI: React.FC<ConvertMobileUIProps> = ({
   const dataFilter = useMemo(() => {
     return (
       <DataFilter
-        className="oui-min-w-[125vw]"
+        // className="oui-min-w-[125vw]"
+        className="oui-overflow-x-auto"
         onFilter={onFilter}
         items={[
-          {
-            size: "sm",
-            type: "picker",
-            name: "account",
-            value: selectedAccount,
-            options: memoizedOptions,
-          },
+          // {
+          //   size: "sm",
+          //   type: "picker",
+          //   name: "account",
+          //   value: selectedAccount,
+          //   options: memoizedOptions,
+          // },
           {
             size: "sm",
             type: "picker",
@@ -79,7 +76,6 @@ export const ConvertMobileUI: React.FC<ConvertMobileUIProps> = ({
             options: CONVERT_STATUS_OPTIONS,
           },
           {
-            size: "sm",
             type: "range",
             name: "time",
             value: {
@@ -91,13 +87,11 @@ export const ConvertMobileUI: React.FC<ConvertMobileUIProps> = ({
       />
     );
   }, [
-    selectedAccount,
     convertedAssetFilter,
     statusFilter,
     dateRange,
     onFilter,
     convertedAssetOptions,
-    memoizedOptions,
   ]);
 
   return (

@@ -44,7 +44,7 @@ export const PriceInput = () => {
         }
         classNames={{
           root: cn(
-            "oui-outline-line-12 focus-within:oui-outline-primary-light",
+            "oui-border oui-border-solid oui-border-white/[0.12] oui-outline-none focus-within:oui-outline-primary-light",
           ),
         }}
       />
