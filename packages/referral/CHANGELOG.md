@@ -1,5 +1,14 @@
 # @orderly.network/referral
 
+## 2.5.2-alpha.1
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.5.2-alpha.1
+  - @orderly.network/utils@2.5.2-alpha.1
+
 ## 2.5.2-alpha.0
 
 ### Patch Changes

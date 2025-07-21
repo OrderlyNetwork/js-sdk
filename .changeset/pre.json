@@ -47,6 +47,7 @@
     "@orderly.network/web3-provider-ethers": "2.5.1"
   },
   "changesets": [
-    "large-rules-decide"
+    "large-rules-decide",
+    "thick-apricots-jam"
   ]
 }
