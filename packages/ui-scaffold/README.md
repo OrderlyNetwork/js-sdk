@@ -208,7 +208,7 @@ const sidebarMenus = [
   - `telegramUrl`: Telegram community link
   - `discordUrl`: Discord community link
   - `duneUrl`: Dune Analytics link
-  - `feedbackUrl`: Feedback form link
+  - `feedbackUrl`: Feedback form link (optional - if not provided, feedback section will not be displayed)
   - `customLeftNav`: Custom component to replace the default leftNav trigger
 
 #### LeftNavItem Properties
@@ -217,6 +217,7 @@ Each menu item in the `menus` array supports:
 
 - `name`: Display name of the menu item
 - `href`: Navigation URL
+- `target`: Link target (e.g., "\_blank" for new window). If provided, will use `window.open()` instead of router navigation (optional)
 - `icon`: Icon component to display (optional)
 - `trailing`: Additional content on the right side (optional)
 - `customRender`: Custom render function for complete control over item appearance
@@ -250,6 +251,12 @@ Each menu item in the `menus` array supports:
               <SpecialBadge />
             </div>
           )
+        },
+        {
+          name: "External Link",
+          href: "https://external-site.com",
+          target: "_blank",
+          icon: <ExternalLinkIcon />
         }
       ],
       leading: (
@@ -279,8 +286,11 @@ Each menu item in the `menus` array supports:
   3. Sub-account selector (if user is logged in with trading enabled)
   4. Menu items list (scrollable if needed)
   5. Social media links at the bottom
-  6. Feedback link at the very bottom
+  6. Feedback link at the very bottom (only if `feedbackUrl` is provided)
 - **Auto-close**: The drawer automatically closes when a menu item is selected
+- **Navigation Behavior**:
+  - Items with `target` property will open in new window/tab using `window.open()`
+  - Items without `target` will use router navigation and close the drawer
 
 #### Advanced Customization
 
@@ -573,3 +583,4 @@ The Scaffold component automatically detects device type and provides appropriat
 - `useScaffoldContext`: Hook to get Scaffold state
 - `MobileScaffold`: Mobile layout component
 - `DesktopScaffold`: Desktop layout component
+- `SubAccountWidget`: Sub-account selection component (exported from ui-scaffold)

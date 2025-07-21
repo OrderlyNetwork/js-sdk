@@ -158,12 +158,14 @@ const LeftNavSheet = modal.create<LeftNavUIProps>((props) => {
                 </div>
               )}
             </div>
-            <div
-              className="oui-text-center oui-text-2xs oui-font-semibold oui-text-primary oui-underline"
-              onClick={() => openExternalLink(props.feedbackUrl as string)}
-            >
-              Share your feedback
-            </div>
+            {props.feedbackUrl && (
+              <div
+                className="oui-text-center oui-text-2xs oui-font-semibold oui-text-primary oui-underline"
+                onClick={() => openExternalLink(props.feedbackUrl as string)}
+              >
+                Share your feedback
+              </div>
+            )}
           </div>
         </div>
       </SheetContent>
@@ -177,9 +179,13 @@ type NavItemProps = {
 };
 
 const NavItem: FC<NavItemProps> = ({ item, onClick }) => {
-  const { href, name, icon, trailing, customRender } = item;
+  const { href, name, icon, trailing, customRender, target } = item;
   const onItemClick = () => {
-    onClick?.({ href: href, name: name, scope: "leftNav" });
+    if (target) {
+      window.open(href, target);
+    } else {
+      onClick?.({ href: href, name: name, scope: "leftNav" });
+    }
   };
   if (typeof customRender === "function") {
     return (

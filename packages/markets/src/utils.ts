@@ -103,6 +103,13 @@ export function useSort(
   return { sort, onSort, getSortedList };
 }
 
+/**
+ * Escape special characters for use in regular expressions
+ */
+function escapeRegExp(string: string): string {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 export function searchBySymbol<T extends Record<PropertyKey, any>>(
   list: T[],
   searchValue = "",
@@ -112,7 +119,10 @@ export function searchBySymbol<T extends Record<PropertyKey, any>>(
     return list;
   }
 
-  const reg = new RegExp(searchValue, "i");
+  // Escape special characters to prevent RegExp errors
+  const escapedSearchValue = escapeRegExp(searchValue);
+  const reg = new RegExp(escapedSearchValue, "i");
+
   const searchValueLower = searchValue.toLowerCase();
 
   // Split results into three groups: exact matches, starts with search and other matches

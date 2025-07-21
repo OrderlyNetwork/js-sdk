@@ -15,6 +15,7 @@ export type LeftNavProps = {
 export type LeftNavItem = {
   name: string;
   href: string;
+  target?: string;
   icon?: ReactNode;
   trailing?: ReactNode;
   customRender?: (option: {
