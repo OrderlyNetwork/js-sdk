@@ -10,6 +10,7 @@ import {
   DataFilter,
   SimpleSheet,
   toast,
+  ScrollIndicator,
 } from "@orderly.network/ui";
 import { ConvertedAssetColumn } from "./convert.column";
 import { useConvertScript } from "./convert.script";
@@ -50,8 +51,6 @@ export const ConvertMobileUI: React.FC<ConvertMobileUIProps> = ({
   const dataFilter = useMemo(() => {
     return (
       <DataFilter
-        // className="oui-min-w-[125vw]"
-        className="oui-overflow-x-auto"
         onFilter={onFilter}
         items={[
           // {
@@ -62,18 +61,20 @@ export const ConvertMobileUI: React.FC<ConvertMobileUIProps> = ({
           //   options: memoizedOptions,
           // },
           {
-            size: "sm",
+            size: "md",
             type: "picker",
             name: "converted_asset",
             value: convertedAssetFilter,
             options: convertedAssetOptions,
+            className: "oui-whitespace-nowrap",
           },
           {
-            size: "sm",
+            size: "md",
             type: "picker",
             name: "status",
             value: statusFilter,
             options: CONVERT_STATUS_OPTIONS,
+            className: "oui-whitespace-nowrap",
           },
           {
             type: "range",
@@ -96,9 +97,9 @@ export const ConvertMobileUI: React.FC<ConvertMobileUIProps> = ({
 
   return (
     <div className="oui-flex oui-flex-col oui-gap-1 oui-px-3">
-      <Flex direction="row" className="oui-w-full oui-overflow-x-scroll">
-        {dataFilter}
-      </Flex>
+      <ScrollIndicator className="oui-pr-5">
+        <Flex direction="row">{dataFilter}</Flex>
+      </ScrollIndicator>
       {convertState.dataSource.map((item) => (
         <ConvertMobileItem
           key={item.convert_id}
