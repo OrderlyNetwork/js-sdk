@@ -6,6 +6,7 @@ import {
   DataTable,
   modal,
   SimpleDialog,
+  Divider,
 } from "@orderly.network/ui";
 import { useModal } from "@orderly.network/ui";
 import { useConvertColumns, useConvertDetailColumns } from "./convert.column";
@@ -109,7 +110,7 @@ export const ConvertDesktopUI: React.FC<ConvertDesktopUIProps> = ({
   const dataFilter = useMemo(() => {
     return (
       <DataFilter
-        className="oui-border-none oui-py-0"
+        className=""
         onFilter={onFilter}
         items={[
           // {
@@ -151,6 +152,7 @@ export const ConvertDesktopUI: React.FC<ConvertDesktopUIProps> = ({
 
   return (
     <Flex direction="column" mt={4} itemAlign="center" className="oui-w-full">
+      <Divider className="oui-w-full oui-border-b oui-border-line-4 oui-pt-6" />
       <Flex direction="row" className="oui-w-full">
         {dataFilter}
       </Flex>

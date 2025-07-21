@@ -183,7 +183,7 @@ export const AssetsTable: React.FC<Readonly<AssetsWidgetProps>> = (props) => {
         classNames={{ tabsList: "" }}
         size="lg"
       >
-        <TabPanel value="assets" title={t("common.assets")}>
+        <TabPanel value="assets" className="" title={t("common.assets")}>
           <Flex
             className="oui-rounded-xl oui-bg-base-9 oui-p-6"
             direction={"row"}
@@ -251,10 +251,11 @@ export const AssetsTable: React.FC<Readonly<AssetsWidgetProps>> = (props) => {
           })}
         </TabPanel>
         <TabPanel
+          className="oui-rounded-xl oui-bg-base-9 oui-px-6"
           value="convertHistory"
           title={t("portfolio.overview.tab.convert.history")}
         >
-          <ConvertHistoryWidget memoizedOptions={memoizedOptions} />
+          <ConvertHistoryWidget />
         </TabPanel>
       </Tabs>
     </Card>
