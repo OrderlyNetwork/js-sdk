@@ -82,6 +82,14 @@ export const connector = {
     "Connect an Solana-compatible wallet to continue using the Solana network.",
   "connector.privy.addAbstractWallet.tips":
     "Connect an Abstract-compatible wallet to continue using the Abstract network.",
+  "connector.privy.pwa.title": "Prefer an app-like experience? Try the PWA",
+  "connector.privy.pwa.sheetTitle": "Add as App",
+  "connector.privy.pwa.description":
+    "For a better mobile experience, add this website to your home screen as an app from Safari or Chrome.",
+  "connector.privy.pwa.step1": "Click the share icon in the browser menu.",
+  "connector.privy.pwa.step2": "Choose Add to Home Screen in the options.",
+  "connector.privy.pwa.findOnPage": "Find on Page",
+  "connector.privy.pwa.addToHomeScreen": "Add to Home Screen",
 };
 
 export type Connector = typeof connector;
