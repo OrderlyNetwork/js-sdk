@@ -62,6 +62,7 @@ export { useTransfer } from "./useTransfer";
 
 export { useHoldingStream } from "./useHoldingStream";
 export { useWalletSubscription } from "./useWalletSubscription";
+export { useBalanceSubscription } from "./useBalanceSubscription";
 export { useSettleSubscription } from "./useSettleSubscription";
 export { usePrivateDataObserver } from "./usePrivateDataObserver";
 

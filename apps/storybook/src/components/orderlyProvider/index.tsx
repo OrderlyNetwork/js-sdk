@@ -39,6 +39,7 @@ import {
   WalletConnectorPrivyProvider,
   wagmiConnectors,
 } from "@orderly.network/wallet-connector-privy";
+import { useNav } from "../../hooks/useNav";
 import { useOrderlyConfig } from "../../hooks/useOrderlyConfig";
 import { customChainsAbstarct } from "./customChains";
 import { CustomConfigStore } from "./customConfigStore";
@@ -81,6 +82,7 @@ const resources: Resources<ExtendLocaleMessages> = {
 
 const OrderApp = (props: { children: ReactNode }) => {
   const config = useOrderlyConfig();
+  const { onRouteChange } = useNav();
 
   return (
     <OrderlyAppProvider
@@ -88,6 +90,9 @@ const OrderApp = (props: { children: ReactNode }) => {
       appIcons={config.orderlyAppProvider.appIcons}
       restrictedInfo={config.orderlyAppProvider.restrictedInfo}
       enableSwapDeposit={true}
+      onRouteChange={(option) => {
+        onRouteChange(option as any);
+      }}
       overrides={{
         announcement: {
           dataAdapter: (data) => [

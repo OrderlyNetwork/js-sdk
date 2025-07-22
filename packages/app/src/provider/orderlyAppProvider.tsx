@@ -46,6 +46,7 @@ const OrderlyAppProvider = (props: OrderlyAppProviderProps) => {
             onChainChanged={onChainChanged}
             defaultChain={defaultChain}
             restrictedInfo={props.restrictedInfo}
+            onRouteChange={props.onRouteChange}
           >
             <UILocaleProvider locale={uiLocale}>
               <TooltipProvider delayDuration={300}>
