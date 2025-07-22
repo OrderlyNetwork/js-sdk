@@ -85,7 +85,9 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   const [priceInputContainerWidth, setPriceInputContainerWidth] = useState(0);
 
   const currentQtyPercentage = useMemo(() => {
-    if (Number(formattedOrder.order_quantity) >= Number(state.maxQty)) return 1;
+    if (Number(formattedOrder.order_quantity) >= Number(state.maxQty)) {
+      return 1;
+    }
     return (
       convertValueToPercentage(
         Number(formattedOrder.order_quantity ?? 0),
@@ -136,7 +138,9 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
 
   const onBlur = (type: InputType) => (_: FocusEvent) => {
     setTimeout(() => {
-      if (currentFocusInput.current !== type) return;
+      if (currentFocusInput.current !== type) {
+        return;
+      }
       currentFocusInput.current = InputType.NONE;
     }, 300);
 
@@ -246,10 +250,10 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       ? BBOStatus.ON
       : BBOStatus.OFF;
   }, [
-    localBBOType,
     tpslSwitch,
+    formattedOrder.order_type_ext,
     formattedOrder.order_type,
-    formattedOrder.order_type_ext!,
+    localBBOType,
   ]);
 
   const toggleBBO = () => {
@@ -293,7 +297,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
         level: orderLevel,
       });
     }
-  }, [localBBOType, bboStatus, formattedOrder.side!]);
+  }, [localBBOType, bboStatus, formattedOrder.side]);
 
   // useEffect(() => {
   //   if (
@@ -481,6 +485,9 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   }, [askAndBid]);
 
   const fillMiddleValue = () => {
+    if (bboStatus === BBOStatus.ON) {
+      toggleBBO();
+    }
     if (formattedOrder.order_type === OrderType.LIMIT) {
       setValue("order_price", calcMidPrice);
     }
