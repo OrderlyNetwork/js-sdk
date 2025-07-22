@@ -44,7 +44,7 @@ export type BaseConfigProviderProps = {
   orderbookDefaultTickSizes?: Record<string, string>;
 } & Pick<
   OrderlyConfigContextState,
-  "enableSwapDeposit" | "customChains" | "chainTransformer"
+  "enableSwapDeposit" | "customChains" | "chainTransformer" | "dataAdapter"
 >;
 
 export type ExclusiveConfigProviderProps =
@@ -81,6 +81,7 @@ export const OrderlyConfigProvider: FC<
     customChains,
     enableSwapDeposit = false,
     chainTransformer,
+    dataAdapter,
   } = props;
 
   if (!brokerId && typeof configStore === "undefined") {
@@ -182,18 +183,21 @@ export const OrderlyConfigProvider: FC<
       walletAdapters: innerWalletAdapters,
       customChains,
       enableSwapDeposit,
-      chainTransformer,
       defaultOrderbookTickSizes,
+      chainTransformer,
+      dataAdapter,
     };
   }, [
-    customChains,
-    defaultOrderbookTickSizes,
-    enableSwapDeposit,
-    filteredChains,
     innerConfigStore,
     innerKeyStore,
-    innerWalletAdapters,
     networkId,
+    filteredChains,
+    innerWalletAdapters,
+    customChains,
+    enableSwapDeposit,
+    defaultOrderbookTickSizes,
+    dataAdapter,
+    chainTransformer,
   ]);
 
   if (!account) {

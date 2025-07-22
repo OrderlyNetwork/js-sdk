@@ -1,4 +1,4 @@
-import { PropsWithChildren } from "react";
+import React, { PropsWithChildren } from "react";
 import { OrderlyConfigProvider, useTrack } from "@orderly.network/hooks";
 import {
   LocaleProvider as UILocaleProvider,
@@ -19,7 +19,7 @@ export type OrderlyAppProviderProps = PropsWithChildren<
   OrderlyAppConfig & AppStateProviderProps & OrderlyThemeProviderProps
 >;
 
-const OrderlyAppProvider = (props: OrderlyAppProviderProps) => {
+const OrderlyAppProvider: React.FC<OrderlyAppProviderProps> = (props) => {
   const {
     // dateFormatting,
     components,

@@ -80,10 +80,9 @@ const resources: Resources<ExtendLocaleMessages> = {
   nl,
 };
 
-const OrderApp = (props: { children: ReactNode }) => {
+const OrderApp: React.FC<React.PropsWithChildren> = (props) => {
   const config = useOrderlyConfig();
   const { onRouteChange } = useNav();
-
   return (
     <OrderlyAppProvider
       configStore={configStore}
@@ -92,6 +91,16 @@ const OrderApp = (props: { children: ReactNode }) => {
       enableSwapDeposit={true}
       onRouteChange={(option) => {
         onRouteChange(option as any);
+      }}
+      dataAdapter={{
+        symbolList(original) {
+          return original.filter(
+            (item) =>
+              item.symbol === "PERP_SOL_USDC" ||
+              item.symbol === "PERP_WOO_USDC" ||
+              item.symbol === "PERP_ETH_USDC",
+          );
+        },
       }}
       overrides={{
         announcement: {

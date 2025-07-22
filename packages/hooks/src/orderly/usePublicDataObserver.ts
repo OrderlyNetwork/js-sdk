@@ -1,6 +1,8 @@
+import { useContext } from "react";
 import { type API } from "@orderly.network/types";
 // import { createGetter } from "../utils/createGetter";
 import { getPrecisionByNumber } from "@orderly.network/utils";
+import { OrderlyContext } from "..";
 import { useQuery } from "../useQuery";
 import { useAppStore } from "./appStore";
 import { useMarketStore } from "./useMarket/market.store";
@@ -20,6 +22,13 @@ export const usePublicDataObserver = () => {
   const { updateMarket } = useMarketStore((state) => state.actions);
 
   const setTokensInfo = useTokensInfoStore((state) => state.setTokensInfo);
+
+  const { dataAdapter } = useContext(OrderlyContext);
+
+  const resolveList =
+    typeof dataAdapter?.symbolList === "function"
+      ? dataAdapter.symbolList
+      : (oriVal: API.MarketInfoExt[]) => oriVal;
 
   /**
    * symbol config
@@ -88,6 +97,13 @@ export const usePublicDataObserver = () => {
       // console.log(data);
       updateMarket(data as API.MarketInfoExt[]);
     },
+    formatter(data) {
+      const rowsData = data.rows;
+      if (Array.isArray(rowsData)) {
+        return resolveList(rowsData);
+      }
+      return resolveList(data);
+    },
   });
 
   /**
@@ -106,7 +122,9 @@ export const usePublicDataObserver = () => {
 };
 
 function getEstFundingRate(data: API.FundingRate) {
-  if (!data) return;
+  if (!data) {
+    return;
+  }
 
   const { next_funding_time, est_funding_rate } = data;
 
