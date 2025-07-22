@@ -7,6 +7,8 @@ import React, {
   useState,
   useContext,
   ReactElement,
+  useMemo,
+  useCallback,
 } from "react";
 import * as TabsPrimitive from "@radix-ui/react-tabs";
 import { cnBase, VariantProps } from "tailwind-variants";
@@ -25,10 +27,11 @@ type tabConfig = {
   title: ReactNode;
   icon?: ReactElement;
   testid?: string;
-
   value: string;
   content: ReactNode;
   collapsed?: boolean;
+  className?: string;
+  style?: React.CSSProperties;
 };
 
 type TabsContextState = {
@@ -75,14 +78,16 @@ const Tabs: FC<TabsProps> = (props) => {
   // const { value, onChange, defaultValue } = props;
   const [tabList, setTabList] = useState<{ [key: string]: tabConfig }>({});
 
-  const registerTab = (config: tabConfig) => {
+  const registerTab = useCallback((config: tabConfig) => {
     setTabList((prev) => {
-      return {
-        ...prev,
-        [config.value]: config,
-      };
+      return { ...prev, [config.value]: config };
     });
-  };
+  }, []);
+
+  const memoizedValue = useMemo<TabsContextState>(
+    () => ({ registerTab }),
+    [registerTab],
+  );
 
   const renderTabsList = () => {
     const tabsList = (
@@ -122,11 +127,7 @@ const Tabs: FC<TabsProps> = (props) => {
   };
 
   return (
-    <TabsContext.Provider
-      value={{
-        registerTab,
-      }}
-    >
+    <TabsContext.Provider value={memoizedValue}>
       {props.children}
       <TabsBase {...rest}>
         <Flex
@@ -142,7 +143,6 @@ const Tabs: FC<TabsProps> = (props) => {
           {renderTabsList()}
           {props.trailing}
         </Flex>
-
         {contentVisible &&
           Object.keys(tabList).map((key) => {
             const tab = tabList[key];
@@ -150,7 +150,8 @@ const Tabs: FC<TabsProps> = (props) => {
               <TabsContent
                 key={key}
                 value={tab.value}
-                className={classNames?.tabsContent}
+                className={cnBase(classNames?.tabsContent, tab.className)}
+                style={tab.style}
               >
                 {tab.content}
               </TabsContent>
@@ -168,10 +169,12 @@ type TabPanelProps = {
   title: string | React.ReactNode;
   icon?: React.ReactElement;
   testid?: string;
+  className?: string;
+  style?: React.CSSProperties;
 };
 
 const TabPanel: FC<PropsWithChildren<TabPanelProps>> = (props) => {
-  const { title, value, icon, testid } = props;
+  const { title, value, icon, className, style, testid, children } = props;
   const { registerTab } = useContext(TabsContext);
 
   useEffect(() => {
@@ -180,10 +183,12 @@ const TabPanel: FC<PropsWithChildren<TabPanelProps>> = (props) => {
       value,
       icon,
       testid,
-      content: props.children,
+      className,
+      style,
+      content: children,
     };
     registerTab(tabConfig);
-  }, [props.children, title, value]);
+  }, [children, className, style, icon, testid, title, value]);
 
   return null;
 };
