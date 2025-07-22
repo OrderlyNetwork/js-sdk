@@ -20,6 +20,10 @@ import { useWalletConnectError } from "../hooks/useWalletConnectError";
 import { useWalletEvent } from "../hooks/useWalletEvent";
 import { useWalletStateHandle } from "../hooks/useWalletStateHandle";
 
+export type RouteOption = {
+  href: "/portfolio" | "/portfolio/history";
+};
+
 type AppContextState = {
   connectWallet: ReturnType<typeof useWalletStateHandle>["connectWallet"];
   /**
@@ -37,10 +41,11 @@ type AppContextState = {
   restrictedInfo: RestrictedInfoReturns;
   showAnnouncement: boolean;
   setShowAnnouncement: (show: boolean) => void;
+  onRouteChange?: (option: RouteOption) => void;
 };
 
 const AppContext = createContext<AppContextState>({
-  setCurrentChainId: (chainId: number | undefined) => {},
+  setCurrentChainId: (chainId?: number) => {},
   restrictedInfo: {},
   setShowAnnouncement: (show: boolean) => {},
 } as AppContextState);
@@ -52,7 +57,7 @@ export const useAppContext = () => {
 export type AppStateProviderProps = {
   defaultChain?: DefaultChain;
   restrictedInfo?: RestrictedInfoOptions;
-} & Pick<AppContextState, "onChainChanged">;
+} & Pick<AppContextState, "onChainChanged" | "onRouteChange">;
 
 export const AppStateProvider: FC<PropsWithChildren<AppStateProviderProps>> = (
   props,
@@ -89,6 +94,7 @@ export const AppStateProvider: FC<PropsWithChildren<AppStateProviderProps>> = (
       restrictedInfo,
       showAnnouncement,
       setShowAnnouncement,
+      onRouteChange: props.onRouteChange,
     }),
     [
       connectWallet,
@@ -99,6 +105,7 @@ export const AppStateProvider: FC<PropsWithChildren<AppStateProviderProps>> = (
       setCurrentChainId,
       showAnnouncement,
       wrongNetwork,
+      props.onRouteChange,
     ],
   );
 

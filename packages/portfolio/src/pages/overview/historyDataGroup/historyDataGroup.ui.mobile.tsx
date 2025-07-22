@@ -1,10 +1,11 @@
 import { useTranslation } from "@orderly.network/i18n";
+import { AssetHistorySideEnum } from "@orderly.network/types";
 import { TabPanel, Tabs } from "@orderly.network/ui";
 import { ConvertHistoryWidget } from "../../assets/convert.widget";
 import { AssetHistoryWidget } from "../assetHistory";
 import { DistributionHistoryWidget } from "../distribution";
 import { FundingHistoryWidget } from "../funding";
-import { TabName } from "./useState.script";
+import { TabName } from "./historyDataGroup.script";
 
 export const HistoryDataGroupMobile = (props: {
   active?: TabName;
@@ -26,10 +27,10 @@ export const HistoryDataGroupMobile = (props: {
       showScrollIndicator
     >
       <TabPanel title={t("common.deposits")} value={"deposit"}>
-        <AssetHistoryWidget side="deposit" />
+        <AssetHistoryWidget side={AssetHistorySideEnum.DEPOSIT} />
       </TabPanel>
       <TabPanel title={t("common.withdrawals")} value={"withdraw"}>
-        <AssetHistoryWidget side="withdraw" />
+        <AssetHistoryWidget side={AssetHistorySideEnum.WITHDRAW} />
       </TabPanel>
       <TabPanel title={t("common.funding")} value={"funding"}>
         <FundingHistoryWidget />

@@ -1,48 +1,64 @@
-import { API } from "@orderly.network/types";
-import { SWRInfiniteResponse } from "swr/infinite";
-import { usePrivateInfiniteQuery } from "../../usePrivateInfiniteQuery";
-import { usePrivateQuery } from "../../usePrivateQuery";
-import { useEventEmitter } from "../../useEventEmitter";
 import { useEffect } from "react";
 import { useDebouncedCallback } from "use-debounce";
+import { API, AssetHistoryStatusEnum } from "@orderly.network/types";
+import { useEventEmitter } from "../../useEventEmitter";
+import { usePrivateQuery } from "../../usePrivateQuery";
 
-/**
- * @deprecated use @orderly.network/types AssetHistoryStatusEnum
- */
-export enum AssetHistoryStatusEnum {
-  NEW = "NEW",
-  CONFIRM = "CONFIRM",
-  PROCESSING = "PROCESSING",
-  COMPLETED = "COMPLETED",
-  FAILED = "FAILED",
-  PENDING_REBALANCE = "PENDING_REBALANCE",
-}
-
-const useAssetsHistory = (options: {
-  // token?: string;
+type AssetHistoryOptions = {
+  /** token name you want to search */
+  token?: string;
+  /** DEPOSIT、WITHDRAW, all */
   side?: string;
-  // status?: AssetHistoryStatusEnum;
-  startTime?: string;
-  endTime?: string;
+  status?: AssetHistoryStatusEnum;
+  /** start time in milliseconds */
+  startTime?: number;
+  /** end time in milliseconds */
+  endTime?: number;
   page?: number;
   pageSize?: number;
-}) => {
-  const { page = 1, pageSize = 10 } = options;
+};
+
+/**
+ * Get asset history, including token deposits/withdrawals.
+ * https://orderly.network/docs/build-on-omnichain/evm-api/restful-api/private/get-asset-history#get-asset-history
+ */
+export const useAssetsHistory = (options: AssetHistoryOptions) => {
   const ee = useEventEmitter();
 
   const getKey = () => {
-    // if (previousPageData && !previousPageData.length) return null;
+    const {
+      page = 1,
+      pageSize = 10,
+      token,
+      side,
+      status,
+      startTime,
+      endTime,
+    } = options;
     const searchParams = new URLSearchParams();
 
     searchParams.set("page", page.toString());
     searchParams.set("size", pageSize.toString());
 
-    // if (options.token) searchParams.set("token", options.token);
-    if (options.side && options.side !== "All")
-      searchParams.set("side", options.side);
-    // if (options.status) searchParams.set("status", options.status);
-    if (options.startTime) searchParams.set("start_t", options.startTime);
-    if (options.endTime) searchParams.set("end_t", options.endTime);
+    if (token) {
+      searchParams.set("token", token);
+    }
+
+    if (side && side !== "All") {
+      searchParams.set("side", side);
+    }
+
+    if (status) {
+      searchParams.set("status", status);
+    }
+
+    if (startTime) {
+      searchParams.set("start_t", startTime.toString());
+    }
+
+    if (endTime) {
+      searchParams.set("end_t", endTime.toString());
+    }
 
     return `/v1/asset/history?${searchParams.toString()}`;
   };
@@ -53,14 +69,15 @@ const useAssetsHistory = (options: {
       formatter: (data) => data,
       revalidateOnFocus: false,
       errorRetryInterval: 60 * 1000,
-    }
+    },
   );
+
   const updateList = useDebouncedCallback(
     (data: any) => {
       mutate();
     },
     // delay in ms
-    300
+    300,
   );
 
   useEffect(() => {
@@ -79,5 +96,3 @@ const useAssetsHistory = (options: {
     },
   ] as const;
 };
-
-export { useAssetsHistory };

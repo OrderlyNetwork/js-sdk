@@ -1,4 +1,4 @@
-import { createContext, PropsWithChildren, useContext } from "react";
+import React, { createContext, PropsWithChildren, useContext } from "react";
 import { AppLogos } from "../types";
 
 export type ThemeContextState = {
@@ -7,19 +7,16 @@ export type ThemeContextState = {
 };
 
 const AppConfigContext = createContext<ThemeContextState>(
-  {} as ThemeContextState
+  {} as ThemeContextState,
 );
 
 export const useAppConfig = () => {
   return useContext(AppConfigContext);
 };
 
-export const AppConfigProvider = (
-  props: PropsWithChildren<{
-    appIcons?: AppLogos;
-    brokerName: string;
-  }>
-) => {
+export const AppConfigProvider: React.FC<
+  PropsWithChildren<{ appIcons?: AppLogos; brokerName: string }>
+> = (props) => {
   return (
     <AppConfigContext.Provider value={props}>
       {props.children}

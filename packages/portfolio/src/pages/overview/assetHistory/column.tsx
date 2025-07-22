@@ -11,17 +11,15 @@ import {
   type Column,
 } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
-import { AssetSide } from "../assetChart/assetHistory.script";
 
 type Options = {
-  side: AssetSide;
   chainsInfo: any[];
   isDeposit: boolean;
   isWeb3Wallet: boolean;
 };
 
 export const useAssetHistoryColumns = (options: Options) => {
-  const { side, chainsInfo, isDeposit, isWeb3Wallet } = options;
+  const { chainsInfo, isDeposit, isWeb3Wallet } = options;
   const { t } = useTranslation();
 
   const onCopy = (e: any) => {
@@ -143,7 +141,7 @@ export const useAssetHistoryColumns = (options: Options) => {
         },
       },
     ];
-  }, [t, chainsInfo, side, isDeposit, isWeb3Wallet]);
+  }, [t, chainsInfo, isDeposit, isWeb3Wallet]);
 
   return columns;
 };

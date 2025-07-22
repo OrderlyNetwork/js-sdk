@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   useAccount,
+  useAssetsHistory,
   useChains,
   useConfig,
   useEventEmitter,
   useLocalStorage,
-  usePrivateQuery,
   useQuery,
   useTokenInfo,
   useTransfer,
@@ -15,7 +15,12 @@ import {
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext } from "@orderly.network/react-app";
-import { API, NetworkId } from "@orderly.network/types";
+import {
+  API,
+  AssetHistorySideEnum,
+  AssetHistoryStatusEnum,
+  NetworkId,
+} from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
 import { Decimal, int2hex, praseChainIdToNumber } from "@orderly.network/utils";
 import { InputStatus, WithdrawTo } from "../../types";
@@ -36,8 +41,11 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
   const { t } = useTranslation();
   const [crossChainTrans, setCrossChainTrans] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);
-  const { data: assetHistory } = usePrivateQuery<any[]>("/v1/asset/history", {
-    revalidateOnMount: true,
+  const [assetHistory] = useAssetsHistory({
+    page: 1,
+    pageSize: 1,
+    side: AssetHistorySideEnum.WITHDRAW,
+    status: AssetHistoryStatusEnum.PENDING_REBALANCE,
   });
   const config = useConfig();
 
@@ -318,23 +326,16 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     (withdrawTo === WithdrawTo.Account && !toAccountId);
 
   useEffect(() => {
-    // const item = assetHistory?.find((e: any) => e.trans_status === "COMPLETED");
-    const item = assetHistory?.find(
-      (e: any) => e.trans_status === "pending_rebalance".toUpperCase(),
-    );
-    if (item) {
-      setCrossChainTrans(true);
-    } else {
-      setCrossChainTrans(false);
-    }
+    setCrossChainTrans(!!assetHistory?.length);
   }, [assetHistory]);
 
   useWalletSubscription({
     onMessage(data: any) {
       if (!crossChainTrans) return;
       console.log("subscribe wallet topic", data);
+      const txId = assetHistory?.[0]?.tx_id;
       const { trxId, transStatus } = data;
-      if (trxId === crossChainTrans && transStatus === "COMPLETED") {
+      if (trxId === txId && transStatus === "COMPLETED") {
         setCrossChainTrans(false);
       }
     },
