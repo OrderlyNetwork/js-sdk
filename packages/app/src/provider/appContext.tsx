@@ -40,7 +40,7 @@ type AppContextState = {
 };
 
 const AppContext = createContext<AppContextState>({
-  setCurrentChainId: (chainId: number | undefined) => {},
+  setCurrentChainId: (chainId?: number) => {},
   restrictedInfo: {},
   setShowAnnouncement: (show: boolean) => {},
 } as AppContextState);

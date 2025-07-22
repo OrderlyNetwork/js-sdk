@@ -1,5 +1,5 @@
 import { PropsWithChildren } from "react";
-import { OrderlyAppConfig } from "../types";
+import { OrderlyConfigProvider, useTrack } from "@orderly.network/hooks";
 import {
   LocaleProvider as UILocaleProvider,
   ModalProvider,
@@ -7,17 +7,13 @@ import {
   Toaster,
   TooltipProvider,
 } from "@orderly.network/ui";
+import { OrderlyThemeProviderProps } from "@orderly.network/ui";
 import { useBootstrap } from "../hooks/useBootstrap";
-import {
-  ConfigProviderProps,
-  OrderlyConfigProvider,
-  useTrack,
-} from "@orderly.network/hooks";
-import { AppStateProvider, AppStateProviderProps } from "./appContext";
-import { AppConfigProvider } from "./configContext";
 import { useExecutionReport } from "../hooks/useExecutionReport";
 import { useUILocale } from "../hooks/useUILocale";
-import { OrderlyThemeProviderProps } from "@orderly.network/ui";
+import { OrderlyAppConfig } from "../types";
+import { AppStateProvider, AppStateProviderProps } from "./appContext";
+import { AppConfigProvider } from "./configContext";
 
 export type OrderlyAppProviderProps = PropsWithChildren<
   OrderlyAppConfig & AppStateProviderProps & OrderlyThemeProviderProps
@@ -45,7 +41,7 @@ const OrderlyAppProvider = (props: OrderlyAppProviderProps) => {
         components={components}
         overrides={props.overrides}
       >
-        <OrderlyConfigProvider {...(configProps as ConfigProviderProps)}>
+        <OrderlyConfigProvider {...configProps}>
           <AppStateProvider
             onChainChanged={onChainChanged}
             defaultChain={defaultChain}

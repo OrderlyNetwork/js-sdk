@@ -173,26 +173,35 @@ export const OrderlyConfigProvider: FC<
     return chainFilter;
   }, [props.chainFilter, innerConfigStore]);
 
+  const memoizedValue = useMemo<OrderlyConfigContextState>(() => {
+    return {
+      configStore: innerConfigStore,
+      keyStore: innerKeyStore,
+      networkId: innerConfigStore.get("networkId") || networkId,
+      filteredChains: filteredChains,
+      walletAdapters: innerWalletAdapters,
+      customChains,
+      enableSwapDeposit,
+      chainTransformer,
+      defaultOrderbookTickSizes,
+    };
+  }, [
+    customChains,
+    defaultOrderbookTickSizes,
+    enableSwapDeposit,
+    filteredChains,
+    innerConfigStore,
+    innerKeyStore,
+    innerWalletAdapters,
+    networkId,
+  ]);
+
   if (!account) {
     return null;
   }
 
   return (
-    <OrderlyProvider
-      value={{
-        configStore: innerConfigStore,
-        keyStore: innerKeyStore,
-        // getWalletAdapter: innerGetWalletAdapter,
-        networkId: innerConfigStore.get("networkId") || networkId,
-        filteredChains: filteredChains,
-        walletAdapters: innerWalletAdapters,
-        // apiBaseUrl,
-        customChains,
-        enableSwapDeposit,
-        chainTransformer,
-        defaultOrderbookTickSizes,
-      }}
-    >
+    <OrderlyProvider value={memoizedValue}>
       <StatusProvider>
         <DataCenterProvider>{props.children}</DataCenterProvider>
       </StatusProvider>
