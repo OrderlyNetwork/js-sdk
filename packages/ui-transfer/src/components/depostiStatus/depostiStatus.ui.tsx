@@ -5,23 +5,34 @@ import { Flex, cn, Text, ChevronRightIcon } from "@orderly.network/ui";
 import { DepositStatusScriptReturn } from "./depostiStatus.script";
 
 export type DepositStatusProps = {
-  status: AssetHistoryStatusEnum.NEW | AssetHistoryStatusEnum.COMPLETED;
   className?: string;
+  classNames?: {
+    root?: string;
+    items?: string;
+  };
   onClick?: () => void;
 } & DepositStatusScriptReturn;
 
 export const DepositStatus = (props: DepositStatusProps) => {
+  const { classNames } = props;
   return (
-    <Flex direction="column" gapY={2} className={props.className}>
+    <Flex
+      direction="column"
+      gapY={1}
+      width="100%"
+      className={cn(props.className, classNames?.root)}
+    >
       <DepositStatusContent
         count={props.pendingCount}
         status={AssetHistoryStatusEnum.NEW}
         onClick={props.onClick}
+        className={classNames?.items}
       />
       <DepositStatusContent
         count={props.completedCount}
         status={AssetHistoryStatusEnum.COMPLETED}
         onClick={props.onClick}
+        className={classNames?.items}
       />
     </Flex>
   );
@@ -31,6 +42,7 @@ type DepositStatusContentProps = {
   count: number;
   status: AssetHistoryStatusEnum.NEW | AssetHistoryStatusEnum.COMPLETED;
   onClick?: () => void;
+  className?: string;
 };
 
 export const DepositStatusContent = (props: DepositStatusContentProps) => {
@@ -53,12 +65,22 @@ export const DepositStatusContent = (props: DepositStatusContentProps) => {
     return null;
   }
 
+  const clickable = typeof props.onClick === "function";
+
   return (
     <Flex
       justify="between"
       itemAlign="center"
-      className="oui-cursor-pointer oui-font-normal"
+      intensity={900}
+      className={cn(
+        "oui-font-normal",
+        "oui-px-3 lg:oui-px-0",
+        "oui-py-2 lg:oui-py-0",
+        clickable && "oui-cursor-pointer",
+        props.className,
+      )}
       width="100%"
+      r="full"
       onClick={props.onClick}
     >
       <Flex gapX={1} width="100%">
@@ -75,11 +97,13 @@ export const DepositStatusContent = (props: DepositStatusContentProps) => {
       </Flex>
       <Flex gapX={1}>
         <Badge>{props.count}</Badge>
-        <ChevronRightIcon
-          size={14}
-          opacity={1}
-          className="oui-text-base-contrast-54"
-        />
+        {clickable && (
+          <ChevronRightIcon
+            size={14}
+            opacity={1}
+            className="oui-text-base-contrast-54"
+          />
+        )}
       </Flex>
     </Flex>
   );

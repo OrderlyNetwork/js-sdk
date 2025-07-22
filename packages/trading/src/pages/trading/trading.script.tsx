@@ -45,7 +45,8 @@ export const useTradingScript = () => {
   const props = useTradingPageContext();
   const { state } = useAccount();
   const { t } = useTranslation();
-  const { wrongNetwork, disabledConnect, restrictedInfo } = useAppContext();
+  const { wrongNetwork, disabledConnect, restrictedInfo, onRouteChange } =
+    useAppContext();
   const { hideAssets, setHideAssets } = useTradingLocalStorage();
 
   const { isFirstTimeDeposit } = useFirstTimeDeposit();
@@ -109,6 +110,13 @@ export const useTradingScript = () => {
     dataListMinHeight,
   });
 
+  const navigateToPortfolio =
+    typeof onRouteChange === "function"
+      ? () => {
+          onRouteChange({ href: "/portfolio" });
+        }
+      : undefined;
+
   const map = {
     layout,
     onLayout: setLayout,
@@ -132,6 +140,7 @@ export const useTradingScript = () => {
     hideAssets,
     setHideAssets,
     onShowPortfolioSheet,
+    navigateToPortfolio,
   };
 
   return { ...props, ...map } as TradingPageState & typeof map;
