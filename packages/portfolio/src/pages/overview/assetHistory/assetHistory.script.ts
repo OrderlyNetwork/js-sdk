@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useCallback, useMemo, useState } from "react";
 import { getDate, getMonth, getYear, set } from "date-fns";
 import {
@@ -7,12 +6,11 @@ import {
   useTokensInfo,
   useTransferHistory,
 } from "@orderly.network/hooks";
+import { AssetHistorySideEnum } from "@orderly.network/types";
 import { modal, usePagination } from "@orderly.network/ui";
 import { DepositAndWithdrawWithSheetId } from "@orderly.network/ui-transfer";
 import { subtractDaysFromCurrentDate } from "@orderly.network/utils";
 import { parseDateRangeForFilter } from "../helper/date";
-
-export type AssetSide = "deposit" | "withdraw";
 
 export enum AssetTarget {
   Web3Wallet = "Web3Wallet",
@@ -20,13 +18,15 @@ export enum AssetTarget {
 }
 
 export type AssetHistoryScriptOptions = {
-  side: AssetSide;
+  side: AssetHistorySideEnum;
 };
 
 export type AssetHistoryScriptReturn = ReturnType<typeof useAssetHistoryScript>;
 
 export const useAssetHistoryScript = (options: AssetHistoryScriptOptions) => {
   const { side } = options;
+  const isDeposit = side === AssetHistorySideEnum.DEPOSIT;
+
   const [today] = useState(() => {
     const d = new Date();
     return new Date(getYear(d), getMonth(d), getDate(d), 0, 0, 0);
@@ -42,27 +42,31 @@ export const useAssetHistoryScript = (options: AssetHistoryScriptOptions) => {
   ]);
   const { page, pageSize, setPage, parsePagination } = usePagination();
 
-  const startTime = dateRange[0].getTime();
-  const endTime = set(dateRange[1], {
-    hours: 23,
-    minutes: 59,
-    seconds: 59,
-    milliseconds: 0,
-  }).getTime();
+  const { startTime, endTime } = useMemo(() => {
+    const startTime = dateRange[0].getTime();
+    const endTime = set(dateRange[1], {
+      hours: 23,
+      minutes: 59,
+      seconds: 59,
+      milliseconds: 0,
+    }).getTime();
 
-  const [withdrawData, { meta: withdrawMeta, isLoading: withdrawLoading }] =
+    return { startTime, endTime };
+  }, [dateRange]);
+
+  const [assetData, { meta: assetMeta, isLoading: assetLoading }] =
     useAssetsHistory({
-      startTime: startTime.toString(),
-      endTime: endTime.toString(),
+      startTime,
+      endTime,
       page,
       pageSize,
-      side: side.toUpperCase(),
+      side,
     });
 
   const [transferData, { isLoading: transferLoading, meta: transferMeta }] =
     useTransferHistory({
       dataRange: [startTime, endTime],
-      side: side === "deposit" ? "IN" : "OUT",
+      side: isDeposit ? "IN" : "OUT",
       size: pageSize,
       page: page,
       main_sub_only: false,
@@ -84,17 +88,17 @@ export const useAssetHistoryScript = (options: AssetHistoryScriptOptions) => {
 
   const isLoading = useMemo(() => {
     if (target === AssetTarget.Web3Wallet) {
-      return withdrawLoading;
+      return assetLoading;
     }
     return transferLoading;
-  }, [target, withdrawLoading, transferLoading]);
+  }, [target, assetLoading, transferLoading]);
 
   const meta = useMemo(() => {
     if (target === AssetTarget.Web3Wallet) {
-      return withdrawMeta;
+      return assetMeta;
     }
     return transferMeta;
-  }, [target, withdrawMeta, transferMeta]);
+  }, [target, assetMeta, transferMeta]);
 
   const pagination = useMemo(
     () => parsePagination(meta),
@@ -102,22 +106,21 @@ export const useAssetHistoryScript = (options: AssetHistoryScriptOptions) => {
   );
 
   const dataSource = useMemo(() => {
-    return (
-      target === AssetTarget.Web3Wallet ? withdrawData : transferData
-    ).map((item) => {
-      const findToken = tokensInfo?.find(({ token }) => token === item.token);
-      return {
-        ...item,
-        decimals: findToken?.decimals ?? 2,
-      };
-    });
-  }, [target, withdrawData, transferData, tokensInfo]);
+    return (target === AssetTarget.Web3Wallet ? assetData : transferData).map(
+      (item) => {
+        const findToken = tokensInfo?.find(({ token }) => token === item.token);
+        return {
+          ...item,
+          decimals: findToken?.decimals ?? 2,
+        };
+      },
+    );
+  }, [target, assetData, transferData, tokensInfo]);
 
   const onDeposit = useCallback(() => {
     modal.show(DepositAndWithdrawWithSheetId, { activeTab: "deposit" });
   }, []);
 
-  const isDeposit = side === "deposit";
   const isWeb3Wallet = target === AssetTarget.Web3Wallet;
 
   return {
@@ -125,12 +128,11 @@ export const useAssetHistoryScript = (options: AssetHistoryScriptOptions) => {
     total: meta?.total,
     isLoading,
     queryParameter: {
+      target,
       dateRange,
     },
     onFilter,
     pagination,
-    side,
-    target,
     onDeposit,
     chainsInfo: chainsInfo as any[],
     isDeposit,
