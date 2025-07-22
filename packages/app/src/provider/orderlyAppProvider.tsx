@@ -1,4 +1,4 @@
-import { PropsWithChildren } from "react";
+import React, { PropsWithChildren } from "react";
 import {
   ConfigProviderProps,
   OrderlyConfigProvider,
@@ -23,7 +23,7 @@ export type OrderlyAppProviderProps = PropsWithChildren<
   OrderlyAppConfig & AppStateProviderProps & OrderlyThemeProviderProps
 >;
 
-const OrderlyAppProvider = (props: OrderlyAppProviderProps) => {
+const OrderlyAppProvider: React.FC<OrderlyAppProviderProps> = (props) => {
   const {
     // dateFormatting,
     components,
