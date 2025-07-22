@@ -74,10 +74,7 @@ export {
 
 export { useSymbolLeverage } from "./useSymbolLeverage";
 
-export {
-  useAssetsHistory,
-  AssetHistoryStatusEnum,
-} from "./statistics/useAssetHistory";
+export { useAssetsHistory } from "./statistics/useAssetHistory";
 
 export { useStatisticsDaily } from "./statistics/useStatisticsDaily";
 export { useFundingFeeHistory } from "./statistics/useFundingFeeHistory";

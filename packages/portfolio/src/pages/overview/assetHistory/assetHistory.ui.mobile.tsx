@@ -15,7 +15,7 @@ import {
 import {
   AssetTarget,
   type AssetHistoryScriptReturn,
-} from "../assetChart/assetHistory.script";
+} from "./assetHistory.script";
 
 type AssetHistoryMobileProps = AssetHistoryScriptReturn;
 
@@ -31,7 +31,7 @@ export const AssetHistoryMobile: FC<AssetHistoryMobileProps> = (props) => {
     isDeposit,
     isWeb3Wallet,
   } = props;
-  const { dateRange } = queryParameter;
+  const { dateRange, target } = queryParameter;
   const { t } = useTranslation();
 
   const options = useMemo(() => {
@@ -198,7 +198,7 @@ export const AssetHistoryMobile: FC<AssetHistoryMobileProps> = (props) => {
             type: "picker",
             name: "target",
             options: options,
-            value: props.target,
+            value: target,
             size: "md",
           },
           {

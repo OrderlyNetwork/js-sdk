@@ -7,15 +7,20 @@ import {
   useWalletSubscription,
   useAccount,
   useConfig,
-  usePrivateQuery,
   useCollateral,
   useMarginRatio,
   usePositionStream,
   useComputedLTV,
+  useAssetsHistory,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext, useDataTap } from "@orderly.network/react-app";
-import { AccountStatusEnum, NetworkId, API } from "@orderly.network/types";
+import {
+  AccountStatusEnum,
+  NetworkId,
+  AssetHistorySideEnum,
+  AssetHistoryStatusEnum,
+} from "@orderly.network/types";
 import { modal, toast } from "@orderly.network/ui";
 import {
   DepositAndWithdrawWithDialogId,
@@ -37,36 +42,39 @@ export const useFirstTimeDeposit = () => {
     (state.status < AccountStatusEnum.EnableTrading &&
       state.status !== AccountStatusEnum.EnableTradingWithoutConnected);
 
-  const getKeyMemo = useMemo(() => {
-    const now = new Date();
-    const ninetyDaysAgo = new Date();
-    ninetyDaysAgo.setDate(now.getDate() - 90);
+  const { startTime, endTime } = useMemo(() => {
+    const d = new Date();
+    // must set last second of today, when wallet ws changed, it will get latest data from api
+    const today = new Date(
+      d.getFullYear(),
+      d.getMonth(),
+      d.getDate(),
+      23,
+      59,
+      59,
+    );
 
-    const startTime = ninetyDaysAgo.getTime();
-    const endTime = now.getTime();
+    const endTime = today.getTime();
+    // 90 days ago timestamp
+    const startTime = endTime - 90 * 24 * 60 * 60 * 1000;
 
-    const searchParams = new URLSearchParams();
-
-    searchParams.set("page", "1");
-    searchParams.set("size", "5");
-    searchParams.set("side", "DEPOSIT");
-    searchParams.set("status", "COMPLETED");
-    searchParams.set("startTime", startTime.toString());
-    searchParams.set("endTime", endTime.toString());
-
-    return `/v1/asset/history?${searchParams.toString()}`;
+    return {
+      startTime,
+      endTime,
+    };
   }, []);
 
-  const { data: depositHistoryData } = usePrivateQuery<API.AssetHistory>(
-    getKeyMemo,
-    {
-      formatter: (data) => data,
-    },
-  );
+  const [_, { meta }] = useAssetsHistory({
+    startTime,
+    endTime,
+    page: 1,
+    pageSize: 5,
+    side: AssetHistorySideEnum.DEPOSIT,
+    status: AssetHistoryStatusEnum.COMPLETED,
+  });
 
   return {
-    isFirstTimeDeposit:
-      !unavailable && totalValue === 0 && depositHistoryData?.meta?.total === 0,
+    isFirstTimeDeposit: !unavailable && totalValue === 0 && meta?.total === 0,
     totalValue,
   };
 };

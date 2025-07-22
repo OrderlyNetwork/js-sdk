@@ -1,10 +1,10 @@
 import { useScreen } from "@orderly.network/ui";
+import { useHistoryDataGroupScript } from "./historyDataGroup.script";
 import { HistoryDataGroupDesktop } from "./historyDataGroup.ui.desktop";
 import { HistoryDataGroupMobile } from "./historyDataGroup.ui.mobile";
-import { useStateScript } from "./useState.script";
 
 export const HistoryDataGroupWidget: React.FC = () => {
-  const state = useStateScript();
+  const state = useHistoryDataGroupScript();
   const { isMobile } = useScreen();
   if (isMobile) {
     return <HistoryDataGroupMobile {...state} />;
