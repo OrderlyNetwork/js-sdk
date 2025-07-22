@@ -28,6 +28,10 @@ import {
   isBBOOrder,
 } from "./utils";
 
+const safeNumber = (val: number | string) => {
+  return Number.isNaN(Number(val)) ? 0 : Number(val);
+};
+
 export type OrderEntryScriptInputs = {
   symbol: string;
 };
@@ -479,17 +483,17 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     };
   }, [onOrderBookUpdate]);
 
-  const calcMidPrice = useMemo<number>(() => {
-    const [bestAsk = 0, bestBid = 0] = askAndBid;
-    return new Decimal(bestAsk).add(bestBid).div(2).toNumber();
-  }, [askAndBid]);
-
   const fillMiddleValue = () => {
     if (bboStatus === BBOStatus.ON) {
       toggleBBO();
     }
     if (formattedOrder.order_type === OrderType.LIMIT) {
-      setValue("order_price", calcMidPrice);
+      const [bestAsk = 0, bestBid = 0] = askAndBid;
+      const midPrice = new Decimal(safeNumber(bestAsk))
+        .add(safeNumber(bestBid))
+        .div(2)
+        .toNumber();
+      setValue("order_price", midPrice);
     }
   };
 
@@ -518,16 +522,13 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       priceInputRef,
       priceInputContainerRef,
     },
-
     canTrade,
-
     bboStatus,
     bboType: localBBOType,
     onBBOChange,
     toggleBBO,
     priceInputContainerWidth,
     currentLtv,
-    calcMidPrice,
     fillMiddleValue,
   };
 };
