@@ -1,5 +1,16 @@
 # @orderly.network/referral
 
+## 2.5.2
+
+### Patch Changes
+
+- 13daa3f: publish
+- publish
+- Updated dependencies [13daa3f]
+- Updated dependencies
+  - @orderly.network/hooks@2.5.2
+  - @orderly.network/utils@2.5.2
+
 ## 2.5.2-alpha.0
 
 ### Patch Changes

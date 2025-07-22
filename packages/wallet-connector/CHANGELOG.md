@@ -1,5 +1,19 @@
 # @orderly.network/wallet-connector
 
+## 2.5.2
+
+### Patch Changes
+
+- 13daa3f: publish
+- publish
+- Updated dependencies [13daa3f]
+- Updated dependencies
+  - @orderly.network/core@2.5.2
+  - @orderly.network/hooks@2.5.2
+  - @orderly.network/types@2.5.2
+  - @orderly.network/ui@2.5.2
+  - @orderly.network/utils@2.5.2
+
 ## 2.5.2-alpha.0
 
 ### Patch Changes
