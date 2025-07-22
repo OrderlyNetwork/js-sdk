@@ -83,9 +83,6 @@ export function ConnectDrawer(props: {
   };
 
   const renderHeader = useCallback(() => {
-    if (isMobile && props.headerProps?.mobile) {
-      return props.headerProps?.mobile;
-    }
     return (
       <div
         className={cn(
@@ -99,7 +96,7 @@ export function ConnectDrawer(props: {
           : t("connector.connectWallet")}
       </div>
     );
-  }, [isMobile, props.headerProps?.mobile, isConnected]);
+  }, [isConnected]);
   return (
     <SimpleSheet
       open={props.open}
@@ -109,9 +106,10 @@ export function ConnectDrawer(props: {
         // overlay: "!oui-bg-base-10/60",
         content: cn(
           "!oui-p-4  !oui-bg-[#131519] !oui-border !oui-border-solid !oui-border-line-12",
+
           isMobile
-            ? "oui-inset-y-0 oui-right-0 oui-w-[280px] oui-rounded-none"
-            : "!oui-bottom-[30px] oui-right-3 oui-top-[48px] !oui-h-auto oui-w-[300px] oui-overflow-hidden oui-rounded-[16px] ",
+            ? "oui-inset-y-0 oui-right-0 oui-w-[280px] oui-rounded-none !oui-bg-[#181C23]"
+            : "!oui-bottom-[30px] oui-right-3 oui-top-[48px] !oui-h-auto oui-w-[300px] oui-overflow-hidden oui-rounded-[16px] !oui-bg-[#131519] ",
         ),
       }}
       contentProps={{ side: "right", closeable: false }}
