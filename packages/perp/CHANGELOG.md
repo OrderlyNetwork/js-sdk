@@ -1,5 +1,14 @@
 # @orderly.network/futures
 
+## 4.5.3-internal-aden.3
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@2.5.3-internal-aden.3
+  - @orderly.network/utils@2.5.3-internal-aden.3
+
 ## 4.5.3-internal-aden.2
 
 ### Patch Changes

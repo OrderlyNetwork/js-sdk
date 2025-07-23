@@ -1,5 +1,16 @@
 # @orderly.network/ui-leverage
 
+## 2.5.3-internal-aden.3
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.5.3-internal-aden.3
+  - @orderly.network/i18n@2.5.3-internal-aden.3
+  - @orderly.network/types@2.5.3-internal-aden.3
+  - @orderly.network/ui@2.5.3-internal-aden.3
+
 ## 2.5.3-internal-aden.2
 
 ### Patch Changes

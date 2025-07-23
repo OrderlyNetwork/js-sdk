@@ -8,7 +8,7 @@ declare global {
 if (typeof window !== "undefined") {
   window.__ORDERLY_VERSION__ = window.__ORDERLY_VERSION__ || {};
   window.__ORDERLY_VERSION__["@orderly.network/affiliate"] =
-    "2.5.3-internal-aden.2";
+    "2.5.3-internal-aden.3";
 }
 
-export default "2.5.3-internal-aden.2";
+export default "2.5.3-internal-aden.3";

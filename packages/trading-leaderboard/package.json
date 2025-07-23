@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/trading-leaderboard",
-  "version": "2.5.3-internal-aden.2",
+  "version": "2.5.3-internal-aden.3",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
