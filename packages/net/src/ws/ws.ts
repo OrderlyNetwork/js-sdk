@@ -1,3 +1,4 @@
+import EventEmitter from "eventemitter3";
 import { messageHandlers } from "./handler/handler";
 
 export type NetworkId = "testnet" | "mainnet";
@@ -53,7 +54,7 @@ const COMMON_ID = "OqdphuyCtYWxwzhxyLLjOWNdFP7sQt8RPWzmb5xY";
 const TIME_OUT = 1000 * 60 * 2;
 const CONNECT_LIMIT = 5;
 
-export class WS {
+export class WS extends EventEmitter {
   private _publicSocket!: WebSocket;
   private privateSocket?: WebSocket;
 
@@ -80,6 +81,7 @@ export class WS {
   private _privateRetryCount: number = 0;
 
   constructor(private options: WSOptions) {
+    super();
     this.createPublicSC(options);
 
     if (!!options.accountId) {
@@ -102,7 +104,10 @@ export class WS {
         "online",
         this.onNetworkStatusChange.bind(this),
       );
-      // window.addEventListener?.("offline", this.onNetworkStatusChange);
+      // window.addEventListener?.("offline", (e) => {
+      //   // console.log("👀👀👀👀👀👀👀👀👀", "offline");
+      //   this.emit("offline", e);
+      // });
     }
   }
 
@@ -153,7 +158,7 @@ export class WS {
       } else {
         if (now - this._publicHeartbeatTime! > TIME_OUT) {
           //unsubscribe all public topic
-          this._publicSocket?.close();
+          this._publicSocket?.close(3888);
         }
       }
     }
@@ -168,7 +173,7 @@ export class WS {
           now - this._privateHeartbeatTime! > TIME_OUT
         ) {
           // unsubscribe all private topic
-          this.privateSocket?.close();
+          this.privateSocket?.close(3888);
         }
       }
     }
@@ -254,18 +259,28 @@ export class WS {
     }
 
     this.publicIsReconnecting = false;
-    this._publicRetryCount = 0;
 
-    this.emit("status:change", { type: WebSocketEvent.OPEN, isPrivate: false });
+    this.emit("status:change", {
+      type: WebSocketEvent.OPEN,
+      isPrivate: false,
+      isReconnect: this._publicRetryCount > 0,
+    });
+
+    this._publicRetryCount = 0;
   }
 
   private onPrivateOpen(event: Event) {
     // auth
     this.authenticate(this.options.accountId!);
     this.privateIsReconnecting = false;
-    this._privateRetryCount = 0;
 
-    this.emit("status:change", { type: WebSocketEvent.OPEN, isPrivate: true });
+    this.emit("status:change", {
+      type: WebSocketEvent.OPEN,
+      isPrivate: true,
+      isReconnect: this._privateRetryCount > 0,
+    });
+
+    this._privateRetryCount = 0;
   }
 
   private onMessage(
@@ -359,7 +374,7 @@ export class WS {
   }
 
   private onPrivateClose(event: CloseEvent) {
-    if (event.code === 1000) return;
+    if (event.code === 3887) return;
     if (this.privateIsReconnecting) return;
     this._eventPrivateHandlers.forEach((value, key) => {
       value.callback.forEach((cb) => {
@@ -384,14 +399,14 @@ export class WS {
     this.publicIsReconnecting = false;
 
     if (this._publicSocket?.readyState === WebSocket.OPEN) {
-      this._publicSocket?.close();
+      this._publicSocket?.close(3888);
     } else {
       // retry connect
       if (this._publicRetryCount > CONNECT_LIMIT) return;
       setTimeout(() => {
         // this.createPublicSC(this.options);
         this.reconnectPublic();
-        this._publicRetryCount++;
+        // this._publicRetryCount++;
       }, this._publicRetryCount * 1000);
     }
 
@@ -407,14 +422,14 @@ export class WS {
     this.privateIsReconnecting = false;
 
     if (this.privateSocket?.readyState === WebSocket.OPEN) {
-      this.privateSocket.close();
+      this.privateSocket.close(3888);
     } else {
       // retry connect
       if (this._privateRetryCount > CONNECT_LIMIT) return;
       setTimeout(() => {
         // this.createPublicSC(this.options);
         this.reconnectPrivate();
-        this._privateRetryCount++;
+        // this._privateRetryCount++;
       }, this._privateRetryCount * 1000);
     }
 
@@ -700,6 +715,7 @@ export class WS {
 
     if (typeof window === "undefined") return;
     window.setTimeout(() => {
+      this._publicRetryCount++;
       this.createPublicSC(this.options);
       // this.emit("reconnect:public", { count: this._publicRetryCount });
       this.emit("status:change", {
@@ -717,6 +733,7 @@ export class WS {
 
     if (typeof window === "undefined") return;
     window.setTimeout(() => {
+      this._privateRetryCount++;
       this.createPrivateSC(this.options);
 
       this.emit("status:change", {
@@ -739,24 +756,5 @@ export class WS {
       public: this._publicSocket,
       private: this.privateSocket,
     };
-  }
-
-  on(eventName: string, callback: (message: any) => any) {
-    if (this._eventContainer.has(eventName)) {
-      this._eventContainer.get(eventName)?.add(callback);
-    }
-    this._eventContainer.set(eventName, new Set([callback]));
-  }
-
-  off(eventName: string, callback: (message: any) => any) {
-    if (this._eventContainer.has(eventName)) {
-      this._eventContainer.get(eventName)?.delete(callback);
-    }
-  }
-
-  emit(eventName: string, message: any) {
-    if (this._eventContainer.has(eventName)) {
-      this._eventContainer.get(eventName)?.forEach((cb) => cb(message));
-    }
   }
 }

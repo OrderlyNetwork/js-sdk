@@ -355,6 +355,23 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
   ]);
 
   useEffect(() => {
+    ws.on(
+      "status:change",
+      (message: any) => {
+        if (!message.isPrivate && message.isReconnect) {
+          if (
+            typeof (window as any).onResetCacheNeededCallback === "function"
+          ) {
+            (window as any).onResetCacheNeededCallback();
+            chart.current?.instance.activeChart()?.resetData();
+          }
+        }
+      },
+      "tradingview",
+    );
+  }, [ws]);
+
+  useEffect(() => {
     if (chart.current && chart.current.instance) {
       chart.current.instance.onChartReady(() => {
         console.log("-- chart ready");
