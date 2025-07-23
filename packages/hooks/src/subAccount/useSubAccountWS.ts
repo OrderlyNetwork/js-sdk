@@ -39,12 +39,12 @@ export const useSubAccountWS = (options: Options) => {
       websocketClient.current.openPrivate(accountId);
     } else {
       // when accountId is not exist and user logout, close the private websocket
-      // websocketClient.current.closePrivate(1000, "switch account");
+      // websocketClient.current.closePrivate(3887, "switch account");
     }
 
     return () => {
       // when unmount, close the private websocket
-      websocketClient.current.closePrivate(1000, "switch account");
+      websocketClient.current.closePrivate(3887, "switch account");
     };
   }, [accountId, state.status]);
 

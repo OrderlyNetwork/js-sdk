@@ -51,7 +51,7 @@ type Topics = {
 const defaultMessageFormatter = (message: any) => message.data;
 const COMMON_ID = "OqdphuyCtYWxwzhxyLLjOWNdFP7sQt8RPWzmb5xY";
 
-const TIME_OUT = 1000 * 60 * 2;
+const TIME_OUT = 1000 * 30 * 1;
 const CONNECT_LIMIT = 5;
 
 export class WS extends EventEmitter {
@@ -374,7 +374,7 @@ export class WS extends EventEmitter {
   }
 
   private onPrivateClose(event: CloseEvent) {
-    if (event.code === 1000) return;
+    if (event.code === 3887) return;
     if (this.privateIsReconnecting) return;
     this._eventPrivateHandlers.forEach((value, key) => {
       value.callback.forEach((cb) => {
@@ -757,25 +757,4 @@ export class WS extends EventEmitter {
       private: this.privateSocket,
     };
   }
-
-  // on(eventName: string, callback: (message: any) => any, tag?: string) {
-  //   if (this._eventContainer.has(eventName)) {
-  //     this._eventContainer.get(eventName)?.add(callback);
-  //   }
-  //   console.log("👀👀👀👀ws on👀👀👀👀👀", tag);
-  //   this._eventContainer.set(eventName, new Set([callback]));
-  // }
-
-  // off(eventName: string, callback: (message: any) => any) {
-  //   if (this._eventContainer.has(eventName)) {
-  //     this._eventContainer.get(eventName)?.delete(callback);
-  //   }
-  // }
-
-  // emit(eventName: string, message: any) {
-  //   if (this._eventContainer.has(eventName)) {
-  //     console.log(this._eventContainer.get(eventName)?.size);
-  //     this._eventContainer.get(eventName)?.forEach((cb) => cb(message));
-  //   }
-  // }
 }
