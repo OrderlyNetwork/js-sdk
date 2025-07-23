@@ -211,7 +211,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
         (errors: OrderValidationResult) => {
           // slippage error message is not show input tooltip, so we need to manually show it by toast
           if (errors.slippage) {
-            toast.error(errors.slippage.message);
+            toast.error(t("orderEntry.slippage.error.max"));
           }
 
           // when switch order type, validated not changed, so we need to set it to true
