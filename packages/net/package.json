@@ -27,6 +27,9 @@
     "typedoc": "^0.26.5",
     "typescript": "^5.1.6"
   },
+  "dependencies": {
+    "eventemitter3": "^5.0.1"
+  },
   "publishConfig": {
     "access": "public"
   }

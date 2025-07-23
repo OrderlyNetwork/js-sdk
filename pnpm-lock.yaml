@@ -1241,6 +1241,10 @@ importers:
         version: 5.8.3
 
   packages/net:
+    dependencies:
+      eventemitter3:
+        specifier: ^5.0.1
+        version: 5.0.1
     devDependencies:
       '@babel/core':
         specifier: ^7.22.9
