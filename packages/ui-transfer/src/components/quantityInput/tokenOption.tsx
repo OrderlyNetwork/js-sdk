@@ -16,12 +16,14 @@ interface TokenOptionProps {
   isActive: boolean;
   index?: number;
   displayType?: "balance" | "vaultBalance";
+  open?: boolean;
 }
 
 export const TokenOption: React.FC<TokenOptionProps> = (props) => {
-  const { token, isActive, displayType, onTokenChange, fetchBalance } = props;
+  const { token, isActive, displayType, onTokenChange, fetchBalance, open } =
+    props;
   const { symbol, precision, insufficientBalance } = token;
-  const { balance, loading } = useBalance(token, fetchBalance);
+  const { balance, loading } = useBalance(token, fetchBalance, open);
 
   const showBalance = typeof fetchBalance === "function";
 

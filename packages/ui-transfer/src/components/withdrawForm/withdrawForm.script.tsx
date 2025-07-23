@@ -284,7 +284,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     if (!quantity) {
       return "";
     }
-    console.log("-- qty", quantity);
+    // console.log("-- qty", quantity);
     const value = new Decimal(quantity).sub(fee ?? 0);
     if (value.isNegative()) {
       return "";
@@ -332,7 +332,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
   useWalletSubscription({
     onMessage(data: any) {
       if (!crossChainTrans) return;
-      console.log("subscribe wallet topic", data);
+      // console.log("subscribe wallet topic", data);
       const { trxId, transStatus } = data;
       if (trxId === crossChainTrans && transStatus === "COMPLETED") {
         setCrossChainTrans(false);

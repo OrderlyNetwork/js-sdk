@@ -419,13 +419,13 @@ export const useDeposit = (options: DepositOptions) => {
   ]);
 
   // get balance every 3s or 10s depends on chain namespace
-  const loopGetBalance = async () => {
+  const loopGetBalance = async (timeout?: number) => {
     if (getBalanceListener.current) {
       clearTimeout(getBalanceListener.current);
     }
 
     const time =
-      account.walletAdapter?.chainNamespace === ChainNamespace.solana
+      timeout || account.walletAdapter?.chainNamespace === ChainNamespace.solana
         ? 10000
         : 3000;
 
@@ -435,11 +435,13 @@ export const useDeposit = (options: DepositOptions) => {
           options.address!,
           options.decimals,
         );
-
+        console.log("balance", balance);
         setBalance(balance);
         loopGetBalance();
       } catch (err) {
-        console.log("fetchBalanceHandler error", err);
+        // when fetch balance failed, retry every 1s
+        loopGetBalance(1000);
+        console.log("get balance error", err);
       }
     }, time);
   };
