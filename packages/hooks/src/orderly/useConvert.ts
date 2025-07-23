@@ -1,11 +1,11 @@
 import { useAccount } from "../useAccount";
 import { useMaxWithdrawal } from "./useMaxWithdrawal";
 
-interface UseWithdrawOptions {
+interface ConvertOptions {
   token?: string;
 }
 
-export const useConvert = (options: UseWithdrawOptions) => {
+export const useConvert = (options: ConvertOptions) => {
   const { token = "" } = options;
 
   const { account } = useAccount();

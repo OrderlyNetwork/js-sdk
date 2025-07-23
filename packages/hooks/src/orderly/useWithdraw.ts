@@ -21,10 +21,8 @@ export type UseWithdrawOptions = {
 };
 
 export const useWithdraw = (options: UseWithdrawOptions) => {
-  const { srcChainId, token, decimals } = options;
+  const { srcChainId, token = "", decimals } = options;
   const { account, state } = useAccount();
-
-  const [isLoading, setIsLoading] = useState(false);
 
   const { unsettledPnL, availableBalance, freeCollateral } = useCollateral();
 
@@ -108,13 +106,17 @@ export const useWithdraw = (options: UseWithdrawOptions) => {
           throw err;
         });
     },
-    [state, targetChain, state, decimals],
+    [
+      account.assetsManager,
+      decimals,
+      state?.connectWallet?.name,
+      targetChain?.network_infos.name,
+    ],
   );
 
   return {
     dst,
     withdraw,
-    isLoading,
     maxAmount,
     unsettledPnL,
     availableBalance,
