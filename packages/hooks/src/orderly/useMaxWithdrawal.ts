@@ -10,16 +10,18 @@ const { maxWithdrawalUSDC, maxWithdrawalOtherCollateral, collateralRatio } =
  * The max withdrawal amount for the token
  * if token is not provided, return the max withdrawal amount for USDC
  */
-export function useMaxWithdrawal(token?: string) {
+export const useMaxWithdrawal = (token: string) => {
   const { unsettledPnL, freeCollateral } = useCollateral();
 
-  const tokenInfo = useTokenInfo(token!);
+  const tokenInfo = useTokenInfo(token);
 
   const { data: indexPrices } = useIndexPricesStream();
   const { usdc, data: holdings = [] } = useHoldingStream();
 
   const holding = useMemo(() => {
-    return holdings?.find((item) => item?.token === token);
+    return holdings.find(
+      (item) => item.token?.toUpperCase() === token.toUpperCase(),
+    );
   }, [holdings, token]);
 
   const usdcBalance = usdc?.holding ?? 0;
@@ -42,19 +44,22 @@ export function useMaxWithdrawal(token?: string) {
       collateralCap: tokenInfo?.user_max_qty ?? holdingQty,
       indexPrice,
     });
-  }, [holdings, tokenInfo, indexPrice, token, holding]);
+  }, [tokenInfo, indexPrice, holding]);
 
-  const maxAmount = useMemo(() => {
+  const maxAmount = useMemo<number>(() => {
+    if (!token) {
+      return 0;
+    }
     if (token === "USDC") {
       return maxWithdrawalUSDC({
         USDCBalance: usdcBalance,
-        freeCollateral,
+        freeCollateral: freeCollateral,
         upnl: unsettledPnL ?? 0,
       });
     }
     return maxWithdrawalOtherCollateral({
       collateralQty: holding?.holding ?? 0,
-      freeCollateral,
+      freeCollateral: freeCollateral,
       indexPrice,
       weight: memoizedCollateralRatio,
     });
@@ -63,11 +68,10 @@ export function useMaxWithdrawal(token?: string) {
     freeCollateral,
     unsettledPnL,
     memoizedCollateralRatio,
-    holdings,
     indexPrice,
     token,
     holding,
   ]);
 
   return maxAmount;
-}
+};

@@ -50,7 +50,7 @@ export const useWS = () => {
         ) {
           websocketClient.openPrivate(account.accountId);
         } else {
-          websocketClient.closePrivate(1000, "switch account");
+          websocketClient.closePrivate(3887, "switch account");
         }
 
         // prevAccountState.current = nextState;

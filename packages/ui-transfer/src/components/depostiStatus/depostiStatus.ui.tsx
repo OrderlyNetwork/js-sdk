@@ -14,7 +14,12 @@ export type DepositStatusProps = {
 } & DepositStatusScriptReturn;
 
 export const DepositStatus = (props: DepositStatusProps) => {
-  const { classNames } = props;
+  const { isSignIn, classNames } = props;
+
+  if (!isSignIn) {
+    return null;
+  }
+
   return (
     <Flex
       direction="column"
