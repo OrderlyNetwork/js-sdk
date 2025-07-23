@@ -68,7 +68,7 @@ export const useAccount = () => {
   const switchAccount = useCallback(
     async (accountId: string) => {
       // close existing private connection when switch account
-      ws.closePrivate(1000, "switch account");
+      ws.closePrivate(3887, "switch account");
       return account.switchAccount(accountId);
     },
     [account],
