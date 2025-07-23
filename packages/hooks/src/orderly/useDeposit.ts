@@ -54,6 +54,7 @@ export const useDeposit = (options: DepositOptions) => {
 
   const [balance, setBalance] = useState("0");
   const [allowance, setAllowance] = useState("0");
+  const balanceRef = useRef<string>("");
 
   const { account, state } = useAccount();
   const { track } = useTrack();
@@ -116,29 +117,6 @@ export const useDeposit = (options: DepositOptions) => {
       return balance;
     },
     [],
-  );
-
-  const fetchBalance = useCallback(
-    async (
-      // token contract address
-      address?: string,
-      // format decimals
-      decimals?: number,
-    ) => {
-      if (!address) return;
-
-      try {
-        // if (balanceRevalidating) return;
-        const balance = await fetchBalanceHandler(address, decimals);
-
-        setBalance(() => balance);
-      } catch (e) {
-        console.warn("----- refresh balance error -----", e);
-
-        setBalance(() => "0");
-      }
-    },
-    [state],
   );
 
   const fetchBalances = useCallback(async (tokens: API.TokenInfo[]) => {
@@ -236,7 +214,8 @@ export const useDeposit = (options: DepositOptions) => {
 
   const queryBalance = useDebouncedCallback(
     (address?: string, decimals?: number) => {
-      fetchBalance(address, decimals).finally(() => {
+      fetchBalanceHandler(address!, decimals).then((balance) => {
+        setBalance(balance);
         setBalanceRevalidating(false);
       });
     },
@@ -418,6 +397,7 @@ export const useDeposit = (options: DepositOptions) => {
     vaultAddress,
   ]);
 
+  // TODO: loopGetBalance and queryBalance should be merged, both of them are used to get balance
   // get balance every 3s or 10s depends on chain namespace
   const loopGetBalance = async (timeout?: number) => {
     if (getBalanceListener.current) {
@@ -425,9 +405,15 @@ export const useDeposit = (options: DepositOptions) => {
     }
 
     const time =
-      timeout || account.walletAdapter?.chainNamespace === ChainNamespace.solana
+      timeout ??
+      (account.walletAdapter?.chainNamespace === ChainNamespace.solana
         ? 10000
-        : 3000;
+        : 3000);
+
+    if (balanceRef.current === "") {
+      // when balance is empty, set loading to true
+      setBalanceRevalidating(true);
+    }
 
     getBalanceListener.current = setTimeout(async () => {
       try {
@@ -437,11 +423,16 @@ export const useDeposit = (options: DepositOptions) => {
         );
         console.log("balance", balance);
         setBalance(balance);
+        balanceRef.current = balance;
         loopGetBalance();
       } catch (err) {
         // when fetch balance failed, retry every 1s
         loopGetBalance(1000);
-        console.log("get balance error", err);
+        console.log("get balance error", balanceRef.current, err);
+      } finally {
+        if (balanceRef.current !== "") {
+          setBalanceRevalidating(false);
+        }
       }
     }, time);
   };
@@ -497,7 +488,7 @@ export const useDeposit = (options: DepositOptions) => {
       return;
     }
 
-    loopGetBalance();
+    loopGetBalance(0);
 
     return () => {
       if (getBalanceListener.current) {
