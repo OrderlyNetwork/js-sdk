@@ -358,7 +358,7 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
     ws.on(
       "status:change",
       (message: any) => {
-        if (message.isReconnect) {
+        if (!message.isPrivate && message.isReconnect) {
           if (
             typeof (window as any).onResetCacheNeededCallback === "function"
           ) {
