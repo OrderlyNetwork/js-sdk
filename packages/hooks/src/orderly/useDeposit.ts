@@ -425,9 +425,10 @@ export const useDeposit = (options: DepositOptions) => {
     }
 
     const time =
-      timeout || account.walletAdapter?.chainNamespace === ChainNamespace.solana
+      timeout ||
+      (account.walletAdapter?.chainNamespace === ChainNamespace.solana
         ? 10000
-        : 3000;
+        : 3000);
 
     getBalanceListener.current = setTimeout(async () => {
       try {
@@ -497,7 +498,7 @@ export const useDeposit = (options: DepositOptions) => {
       return;
     }
 
-    loopGetBalance();
+    loopGetBalance(1000);
 
     return () => {
       if (getBalanceListener.current) {

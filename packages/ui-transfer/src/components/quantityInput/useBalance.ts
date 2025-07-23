@@ -39,7 +39,9 @@ export function useBalance(
         // when fetch balance failed, retry
         loopGetTokenBalance(retryInterval);
       } finally {
-        setLoading(false);
+        if (balanceRef.current !== "") {
+          setLoading(false);
+        }
       }
     }, timeout);
   };
