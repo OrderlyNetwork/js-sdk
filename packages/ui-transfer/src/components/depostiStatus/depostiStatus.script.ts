@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import {
+  useAccount,
   useAssetsHistory,
   useBalanceSubscription,
   useDebouncedCallback,
@@ -7,7 +8,10 @@ import {
   useTransferHistory,
   useWalletSubscription,
 } from "@orderly.network/hooks";
-import { AssetHistoryStatusEnum } from "@orderly.network/types";
+import {
+  AccountStatusEnum,
+  AssetHistoryStatusEnum,
+} from "@orderly.network/types";
 
 export type DepositStatusScriptReturn = ReturnType<
   typeof useDepositStatusScript
@@ -29,8 +33,13 @@ export function useDepositStatusScript() {
   const [dataRange, setDataRange] = useState(getTimeRange());
 
   const ee = useEventEmitter();
+  const { state } = useAccount();
 
   const { startTime, endTime } = dataRange;
+
+  const isSignIn =
+    state.status === AccountStatusEnum.EnableTrading ||
+    state.status === AccountStatusEnum.EnableTradingWithoutConnected;
 
   const [assetHistory] = useAssetsHistory({
     startTime,
@@ -100,5 +109,5 @@ export function useDepositStatusScript() {
     );
   }, [assetHistory, transferMeta]);
 
-  return { pendingCount, completedCount };
+  return { pendingCount, completedCount, isSignIn };
 }
