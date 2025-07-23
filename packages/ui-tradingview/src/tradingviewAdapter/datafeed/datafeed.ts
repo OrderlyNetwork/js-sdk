@@ -1,11 +1,15 @@
 import {
+  EXCHANGE,
+  withExchangePrefix,
+  withoutExchangePrefix,
+} from "../../utils/chart.util";
+import {
   LibrarySymbolInfo,
   QuoteData,
   QuotesCallback,
   ResolutionString,
   SubscribeBarsCallback,
 } from "../type";
-import { EXCHANGE, withExchangePrefix, withoutExchangePrefix } from "../../utils/chart.util";
 import { AbstractDatafeed } from "./abstract-datafeed";
 import { MultiBroadcastEventBus } from "./eventBus";
 import { WebsocketService } from "./websocket.service";
@@ -64,7 +68,7 @@ export class Datafeed extends AbstractDatafeed {
           }
           this.eventBus.publish("tickerUpdate", { message: "bbos" });
         },
-      }
+      },
     );
   }
 
@@ -80,13 +84,15 @@ export class Datafeed extends AbstractDatafeed {
     symbolInfo: LibrarySymbolInfo,
     resolution: ResolutionString,
     onTick: SubscribeBarsCallback,
-    listenerGuid: string
+    listenerGuid: string,
+    onResetCacheNeededCallback: () => void,
   ) {
+    (window as any).onResetCacheNeededCallback = onResetCacheNeededCallback;
     this._publicWs.subscribeKline(
       `${this._prefixId}${listenerGuid}`,
       symbolInfo.ticker,
       resolution,
-      onTick
+      onTick,
     );
   }
 
@@ -121,8 +127,8 @@ export class Datafeed extends AbstractDatafeed {
       }
       onDataCallback(
         Array.from(dataMap.values()).map((symbolData: any) =>
-          this._toUDFTicker(symbolData)
-        )
+          this._toUDFTicker(symbolData),
+        ),
       );
     });
     this._subscribeQuoteMap.set(subscriptionId, unsub);
@@ -132,7 +138,7 @@ export class Datafeed extends AbstractDatafeed {
     symbols: string[],
     fastSymbols: string[],
     onRealtimeCallback: QuotesCallback,
-    listenerGuid: string
+    listenerGuid: string,
   ): void {
     const subscriptionId = `${this._prefixId}${listenerGuid}`;
     if (symbols.length > 0) {
@@ -158,8 +164,8 @@ export class Datafeed extends AbstractDatafeed {
         }
         onRealtimeCallback(
           Array.from(dataMap.values()).map((symbolData: any) =>
-            this._toUDFTicker(symbolData)
-          )
+            this._toUDFTicker(symbolData),
+          ),
         );
       });
       this._subscribeQuoteMap.set(subscriptionId, unsub);
