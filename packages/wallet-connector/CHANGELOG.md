@@ -1,5 +1,17 @@
 # @orderly.network/wallet-connector
 
+## 2.5.3-internal-aden.1
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.5.3-internal-aden.1
+  - @orderly.network/hooks@2.5.3-internal-aden.1
+  - @orderly.network/types@2.5.3-internal-aden.1
+  - @orderly.network/ui@2.5.3-internal-aden.1
+  - @orderly.network/utils@2.5.3-internal-aden.1
+
 ## 2.5.3-internal-aden.0
 
 ### Patch Changes

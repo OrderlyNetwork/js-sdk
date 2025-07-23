@@ -1,5 +1,11 @@
 # @orderly.network/i18n
 
+## 2.5.3-internal-aden.1
+
+### Patch Changes
+
+- publish
+
 ## 2.5.3-internal-aden.0
 
 ### Patch Changes

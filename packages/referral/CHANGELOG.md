@@ -1,5 +1,14 @@
 # @orderly.network/referral
 
+## 2.5.3-internal-aden.1
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.5.3-internal-aden.1
+  - @orderly.network/utils@2.5.3-internal-aden.1
+
 ## 2.5.3-internal-aden.0
 
 ### Patch Changes

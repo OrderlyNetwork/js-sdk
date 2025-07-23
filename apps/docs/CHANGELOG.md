@@ -1,5 +1,15 @@
 # @orderly/docs
 
+## 1.5.3-internal-aden.1
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.5.3-internal-aden.1
+  - @orderly.network/web3-onboard@2.5.3-internal-aden.1
+  - @orderly.network/types@2.5.3-internal-aden.1
+
 ## 1.5.3-internal-aden.0
 
 ### Patch Changes
