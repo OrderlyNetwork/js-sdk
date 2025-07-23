@@ -28,20 +28,31 @@ export const AvailableQuantity: FC<AvailableQuantityProps> = (props) => {
         </Text.numeral>
       </Text>
 
-      <Flex gapX={2}>
-        <Text size="2xs" intensity={36}>
-          {`${t("common.available")}: `}
-          <Text.numeral
-            rm={Decimal.ROUND_DOWN}
-            dp={dp}
-            padding={false}
-            data-testid="oui-testid-withdraw_deposit-dialog-available-value"
-          >
-            {maxQuantity!}
-          </Text.numeral>
-          {` ${name}`}
-        </Text>
-        {loading && <Spinner size="sm" />}
+      <Flex gapX={2} itemAlign="center">
+        <Flex gapX={1} itemAlign="center">
+          <Text size="2xs" intensity={36}>
+            {`${t("common.available")}: `}
+          </Text>
+
+          {loading ? (
+            <Spinner size="sm" />
+          ) : (
+            <Text.numeral
+              size="2xs"
+              intensity={36}
+              rm={Decimal.ROUND_DOWN}
+              dp={dp}
+              padding={false}
+              data-testid="oui-testid-withdraw_deposit-dialog-available-value"
+            >
+              {maxQuantity!}
+            </Text.numeral>
+          )}
+
+          <Text size="2xs" intensity={36}>
+            {` ${name}`}
+          </Text>
+        </Flex>
 
         <Text
           size="2xs"
