@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { account as accountPerp } from "@orderly.network/perp";
+import { Decimal } from "@orderly.network/utils";
 import { useCollateral, useIndexPricesStream, useTokenInfo } from "..";
 import { useHoldingStream } from "./useHoldingStream";
 
@@ -50,19 +51,33 @@ export const useMaxWithdrawal = (token: string) => {
     if (!token) {
       return 0;
     }
+
+    let quantity = 0;
+
     if (token === "USDC") {
-      return maxWithdrawalUSDC({
+      quantity = maxWithdrawalUSDC({
         USDCBalance: usdcBalance,
         freeCollateral: freeCollateral,
         upnl: unsettledPnL ?? 0,
       });
+    } else {
+      quantity = maxWithdrawalOtherCollateral({
+        collateralQty: holding?.holding ?? 0,
+        freeCollateral: freeCollateral,
+        indexPrice,
+        weight: memoizedCollateralRatio,
+      });
     }
-    return maxWithdrawalOtherCollateral({
-      collateralQty: holding?.holding ?? 0,
-      freeCollateral: freeCollateral,
-      indexPrice,
-      weight: memoizedCollateralRatio,
-    });
+
+    if (Number.isNaN(quantity)) {
+      return 0;
+    }
+
+    if (tokenInfo?.decimals === undefined) {
+      return quantity;
+    }
+
+    return new Decimal(quantity || 0).todp(tokenInfo.decimals).toNumber();
   }, [
     usdcBalance,
     freeCollateral,
@@ -71,6 +86,7 @@ export const useMaxWithdrawal = (token: string) => {
     indexPrice,
     token,
     holding,
+    tokenInfo?.decimals,
   ]);
 
   return maxAmount;
