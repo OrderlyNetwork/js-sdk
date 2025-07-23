@@ -1,5 +1,27 @@
 # @orderly.network/chart
 
+## 2.5.3-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/i18n@2.5.3-alpha.0
+  - @orderly.network/ui@2.5.3-alpha.0
+  - @orderly.network/utils@2.5.3-alpha.0
+
+## 2.5.2
+
+### Patch Changes
+
+- 13daa3f: publish
+- publish
+- Updated dependencies [13daa3f]
+- Updated dependencies
+  - @orderly.network/i18n@2.5.2
+  - @orderly.network/ui@2.5.2
+  - @orderly.network/utils@2.5.2
+
 ## 2.5.2-alpha.0
 
 ### Patch Changes

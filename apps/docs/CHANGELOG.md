@@ -1,5 +1,27 @@
 # @orderly/docs
 
+## 1.5.3-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.5.3-alpha.0
+  - @orderly.network/web3-onboard@2.5.3-alpha.0
+  - @orderly.network/types@2.5.3-alpha.0
+
+## 1.5.2
+
+### Patch Changes
+
+- 13daa3f: publish
+- publish
+- Updated dependencies [13daa3f]
+- Updated dependencies
+  - @orderly.network/hooks@2.5.2
+  - @orderly.network/web3-onboard@2.5.2
+  - @orderly.network/types@2.5.2
+
 ## 1.5.2-alpha.0
 
 ### Patch Changes

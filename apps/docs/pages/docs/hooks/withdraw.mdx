@@ -10,17 +10,13 @@
 
 `maxAmount` - The maximum balance that can be withdrawn at this moment (without having to settle PnL).
 
-
 ### Available Balance
 
 `availableBalance` - The available balance of the account, which is equal to the amount that can be withdrawn after settling all oustanding unsettled PnL.
 
-
 ### Unsettled PnL
 
 `unsettledPnL` - Amount of PnL that has not been settled into the account balance yet. Balance will be available to withdraw once PnL has been settled (if positive).
-
-
 
 All of the above data can be retrieved through `useWithdraw`.
 
@@ -36,7 +32,7 @@ const { withdraw, isLoading, maxAmount, availableBalance, unsettledPnL } =
 ```typescript
 import { useWithdraw } from "@orderly.network/hooks";
 
-const { withdraw, isLoading } = useWithdraw();
+const { withdraw } = useWithdraw();
 
 const res = await withdraw();
 ```
@@ -65,7 +61,7 @@ export const Example = () => {
         onMessage: (data: any) => {
           //
         },
-      }
+      },
     );
 
     return () => {
