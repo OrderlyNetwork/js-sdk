@@ -51,7 +51,7 @@ type Topics = {
 const defaultMessageFormatter = (message: any) => message.data;
 const COMMON_ID = "OqdphuyCtYWxwzhxyLLjOWNdFP7sQt8RPWzmb5xY";
 
-const TIME_OUT = 1000 * 30 * 1;
+const TIME_OUT = 1000 * 60 * 2;
 const CONNECT_LIMIT = 5;
 
 export class WS extends EventEmitter {
