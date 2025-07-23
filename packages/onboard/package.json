@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/web3-onboard",
-  "version": "2.5.3-internal-aden.3",
+  "version": "2.5.3-internal-aden.4",
   "description": "",
   "private": true,
   "main": "dist/index.mjs",

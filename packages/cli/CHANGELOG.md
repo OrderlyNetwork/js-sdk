@@ -1,5 +1,13 @@
 # @orderly.network/cli
 
+## 0.8.3-internal-aden.4
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.5.3-internal-aden.4
+
 ## 0.8.3-internal-aden.3
 
 ### Patch Changes

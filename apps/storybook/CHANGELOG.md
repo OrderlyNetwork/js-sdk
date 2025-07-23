@@ -1,5 +1,40 @@
 # storybook2
 
+## 1.5.3-internal-aden.4
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/affiliate@2.5.3-internal-aden.4
+  - @orderly.network/react-app@2.5.3-internal-aden.4
+  - @orderly.network/chart@2.5.3-internal-aden.4
+  - @orderly.network/core@2.5.3-internal-aden.4
+  - @orderly.network/default-evm-adapter@2.5.3-internal-aden.4
+  - @orderly.network/default-solana-adapter@2.5.3-internal-aden.4
+  - @orderly.network/hooks@2.5.3-internal-aden.4
+  - @orderly.network/i18n@2.5.3-internal-aden.4
+  - @orderly.network/markets@2.5.3-internal-aden.4
+  - @orderly.network/portfolio@2.5.3-internal-aden.4
+  - @orderly.network/trading@2.5.3-internal-aden.4
+  - @orderly.network/trading-leaderboard@2.5.3-internal-aden.4
+  - @orderly.network/trading-rewards@2.5.3-internal-aden.4
+  - @orderly.network/types@2.5.3-internal-aden.4
+  - @orderly.network/ui@2.5.3-internal-aden.4
+  - @orderly.network/ui-chain-selector@2.5.3-internal-aden.4
+  - @orderly.network/ui-connector@2.5.3-internal-aden.4
+  - @orderly.network/ui-leverage@2.5.3-internal-aden.4
+  - @orderly.network/ui-order-entry@2.5.3-internal-aden.4
+  - @orderly.network/ui-orders@2.5.3-internal-aden.4
+  - @orderly.network/ui-positions@2.5.3-internal-aden.4
+  - @orderly.network/ui-scaffold@2.5.3-internal-aden.4
+  - @orderly.network/ui-share@2.5.3-internal-aden.4
+  - @orderly.network/ui-tpsl@2.5.3-internal-aden.4
+  - @orderly.network/ui-tradingview@2.5.3-internal-aden.4
+  - @orderly.network/utils@2.5.3-internal-aden.4
+  - @orderly.network/wallet-connector@2.5.3-internal-aden.4
+  - @orderly.network/wallet-connector-privy@2.5.3-internal-aden.4
+
 ## 1.5.3-internal-aden.3
 
 ### Patch Changes
