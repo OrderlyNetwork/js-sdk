@@ -1,5 +1,13 @@
 # @orderly.network/web3-modal
 
+## 2.5.3-internal-aden.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.5.3-internal-aden.0
+
 ## 2.5.2
 
 ### Patch Changes
