@@ -1,5 +1,15 @@
 # @orderly.network/cli
 
+## 0.8.2-internal-20250724.6
+
+### Patch Changes
+
+- 64c5b75: publish
+- publish
+- Updated dependencies [64c5b75]
+- Updated dependencies
+  - @orderly.network/core@2.5.2-internal-20250724.6
+
 ## 0.8.2-internal-20250724.5
 
 ### Patch Changes

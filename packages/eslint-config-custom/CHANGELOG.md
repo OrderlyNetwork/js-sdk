@@ -1,5 +1,12 @@
 # @orderly.network/eslint-config
 
+## 2.5.2-internal-20250724.6
+
+### Patch Changes
+
+- 64c5b75: publish
+- publish
+
 ## 2.5.2-internal-20250724.5
 
 ### Patch Changes

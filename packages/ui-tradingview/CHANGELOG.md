@@ -1,5 +1,22 @@
 # @orderly.network/ui-tradingview
 
+## 2.5.2-internal-20250724.6
+
+### Patch Changes
+
+- 64c5b75: publish
+- publish
+- Updated dependencies [64c5b75]
+- Updated dependencies
+  - @orderly.network/hooks@2.5.2-internal-20250724.6
+  - @orderly.network/i18n@2.5.2-internal-20250724.6
+  - @orderly.network/net@2.5.2-internal-20250724.6
+  - @orderly.network/types@2.5.2-internal-20250724.6
+  - @orderly.network/ui@2.5.2-internal-20250724.6
+  - @orderly.network/ui-connector@2.5.2-internal-20250724.6
+  - @orderly.network/ui-positions@2.5.2-internal-20250724.6
+  - @orderly.network/utils@2.5.2-internal-20250724.6
+
 ## 2.5.2-internal-20250724.5
 
 ### Patch Changes

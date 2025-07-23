@@ -1,5 +1,17 @@
 # @orderly/docs
 
+## 1.5.2-internal-20250724.6
+
+### Patch Changes
+
+- 64c5b75: publish
+- publish
+- Updated dependencies [64c5b75]
+- Updated dependencies
+  - @orderly.network/hooks@2.5.2-internal-20250724.6
+  - @orderly.network/web3-onboard@2.5.2-internal-20250724.6
+  - @orderly.network/types@2.5.2-internal-20250724.6
+
 ## 1.5.2-internal-20250724.5
 
 ### Patch Changes
