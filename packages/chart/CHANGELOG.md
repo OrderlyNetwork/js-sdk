@@ -1,5 +1,15 @@
 # @orderly.network/chart
 
+## 2.5.3-internal-aden.2
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/i18n@2.5.3-internal-aden.2
+  - @orderly.network/ui@2.5.3-internal-aden.2
+  - @orderly.network/utils@2.5.3-internal-aden.2
+
 ## 2.5.3-internal-aden.1
 
 ### Patch Changes

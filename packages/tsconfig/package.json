@@ -1,6 +1,6 @@
 {
   "name": "tsconfig",
-  "version": "0.8.3-internal-aden.1",
+  "version": "0.8.3-internal-aden.2",
   "private": true,
   "license": "MIT",
   "publishConfig": {

@@ -1,5 +1,14 @@
 # @orderly.network/onboard
 
+## 2.5.3-internal-aden.2
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.5.3-internal-aden.2
+  - @orderly.network/types@2.5.3-internal-aden.2
+
 ## 2.5.3-internal-aden.1
 
 ### Patch Changes
