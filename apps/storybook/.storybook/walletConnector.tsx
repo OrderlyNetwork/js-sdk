@@ -1,6 +1,26 @@
-import { FC, ReactNode } from "react";
+import { FC, ReactNode, useState, useEffect } from "react";
 import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
+import { initOnBoard } from "./web3OnboardConfig";
 
 export const WalletConnector: FC<{ children: ReactNode }> = (props) => {
-  return <WalletConnectorProvider>{props.children}</WalletConnectorProvider>;
+  const [initWallet, setInitWallet] = useState(false);
+
+  useEffect(() => {
+    initOnBoard().then(() => {
+      setInitWallet(true);
+    });
+  }, []);
+
+  if (!initWallet) {
+    return null;
+  }
+  return (
+    <WalletConnectorProvider
+      evmInitial={{
+        skipInit: true,
+      }}
+    >
+      {props.children}
+    </WalletConnectorProvider>
+  );
 };
