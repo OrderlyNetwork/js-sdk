@@ -1,5 +1,22 @@
 # @orderly.network/ui-positions
 
+## 2.5.3-internal-20250724-hotfix.1
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.5.3-internal-20250724-hotfix.1
+  - @orderly.network/hooks@2.5.3-internal-20250724-hotfix.1
+  - @orderly.network/i18n@2.5.3-internal-20250724-hotfix.1
+  - @orderly.network/perp@4.5.3-internal-20250724-hotfix.1
+  - @orderly.network/types@2.5.3-internal-20250724-hotfix.1
+  - @orderly.network/ui@2.5.3-internal-20250724-hotfix.1
+  - @orderly.network/ui-connector@2.5.3-internal-20250724-hotfix.1
+  - @orderly.network/ui-share@2.5.3-internal-20250724-hotfix.1
+  - @orderly.network/ui-tpsl@2.5.3-internal-20250724-hotfix.1
+  - @orderly.network/utils@2.5.3-internal-20250724-hotfix.1
+
 ## 2.5.3-alpha.0
 
 ### Patch Changes

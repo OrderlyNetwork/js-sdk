@@ -1,5 +1,11 @@
 # @orderly.network/codemod
 
+## 1.5.3-internal-20250724-hotfix.1
+
+### Patch Changes
+
+- publish
+
 ## 1.5.3-alpha.0
 
 ### Patch Changes

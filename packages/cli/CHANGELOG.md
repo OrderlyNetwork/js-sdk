@@ -1,5 +1,13 @@
 # @orderly.network/cli
 
+## 0.8.3-internal-20250724-hotfix.1
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.5.3-internal-20250724-hotfix.1
+
 ## 0.8.3-alpha.0
 
 ### Patch Changes
