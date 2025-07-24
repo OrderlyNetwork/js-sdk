@@ -22,7 +22,14 @@ type AssetHistoryOptions = {
  * Get asset history, including token deposits/withdrawals.
  * https://orderly.network/docs/build-on-omnichain/evm-api/restful-api/private/get-asset-history#get-asset-history
  */
-export const useAssetsHistory = (options: AssetHistoryOptions) => {
+export const useAssetsHistory = (
+  options: AssetHistoryOptions,
+  /**
+   * if subscribe, the data will be updated when wallet changed
+   * @default true
+   * */
+  subscribe = true,
+) => {
   const ee = useEventEmitter();
 
   const getKey = () => {
@@ -81,14 +88,17 @@ export const useAssetsHistory = (options: AssetHistoryOptions) => {
     300,
   );
 
-  // TODO: add config to cancel subscribe
   useEffect(() => {
-    ee.on("wallet:changed", updateList);
+    if (subscribe) {
+      ee.on("wallet:changed", updateList);
+    }
 
     return () => {
-      ee.off("wallet:changed", updateList);
+      if (subscribe) {
+        ee.off("wallet:changed", updateList);
+      }
     };
-  }, []);
+  }, [subscribe]);
 
   return [
     data?.rows || [],
