@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/web3-modal",
-  "version": "2.5.3-internal-20250724-hotfix.2",
+  "version": "2.5.3-internal-20250724-hotfix.3",
   "description": "",
   "private": true,
   "main": "dist/index.mjs",
