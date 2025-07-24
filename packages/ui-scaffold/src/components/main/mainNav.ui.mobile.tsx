@@ -159,7 +159,7 @@ export const MainNavMobile: FC<MainNavMobileProps> = (props) => {
           {languageSwitcher}
           {scanQRCode}
           {/* {subAccount} */}
-          {linkDevice}
+          {/* {linkDevice} */}
           {chainMenu}
           {walletConnect}
           {props.trailing}
