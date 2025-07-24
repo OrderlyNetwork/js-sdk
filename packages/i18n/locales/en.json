@@ -509,6 +509,8 @@
   "connector.disconnect": "Disconnect",
   "connector.connectWallet": "Connect wallet",
   "connector.createAccount": "Create account",
+  "connector.withLedger": "With ledger",
+  "connector.disconnectWallet": "Disconnect wallet",
   "connector.createAccount.description": "Confirm wallet ownership to create an account",
   "connector.enableTrading": "Enable trading",
   "connector.enableTrading.description": "Enable secure access to our API for lightning fast trading",
