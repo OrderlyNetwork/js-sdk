@@ -18,7 +18,8 @@ interface MainProps {
 }
 
 export function Main(props: MainProps) {
-  const { wallet, connectedChain, setChain, namespace } = useWallet();
+  const { wallet, connectedChain, setChain, namespace, onDisconnect } =
+    useWallet();
   const { openConnectDrawer, setOpenConnectDrawer, setTargetWalletType } =
     useWalletConnectorPrivy();
 
@@ -37,14 +38,10 @@ export function Main(props: MainProps) {
   };
   // console.log('--xxxmain wallet', wallet);
 
-  const disconnect = useCallback(async (): Promise<WalletState[]> => {
-    return Promise.resolve([]);
-  }, [wallet]);
-
   const value = useMemo(
     () => ({
       connect,
-      disconnect,
+      disconnect: onDisconnect,
       connecting: false,
       wallet,
       setChain,
