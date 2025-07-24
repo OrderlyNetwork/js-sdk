@@ -1,5 +1,18 @@
 # @orderly.network/ui-connector
 
+## 2.5.3-internal-20250724-hotfix.5
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.5.3-internal-20250724-hotfix.5
+  - @orderly.network/hooks@2.5.3-internal-20250724-hotfix.5
+  - @orderly.network/i18n@2.5.3-internal-20250724-hotfix.5
+  - @orderly.network/types@2.5.3-internal-20250724-hotfix.5
+  - @orderly.network/ui@2.5.3-internal-20250724-hotfix.5
+  - @orderly.network/ui-chain-selector@2.5.3-internal-20250724-hotfix.5
+
 ## 2.5.3-internal-20250724-hotfix.4
 
 ### Patch Changes

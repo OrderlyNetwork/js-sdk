@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/wallet-connector",
-  "version": "2.5.3-internal-20250724-hotfix.4",
+  "version": "2.5.3-internal-20250724-hotfix.5",
   "description": "",
   "main": "dist/index.mjs",
   "module": "dist/index.mjs",
