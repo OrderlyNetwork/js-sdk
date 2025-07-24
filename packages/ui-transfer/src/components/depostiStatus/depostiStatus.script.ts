@@ -96,7 +96,7 @@ export function useDepositStatusScript() {
     }
 
     const pendingList = assetHistory?.filter(
-      (item) => item.trans_status === AssetHistoryStatusEnum.NEW,
+      (item) => item.trans_status === AssetHistoryStatusEnum.PENDING,
     );
 
     const completedList = assetHistory?.filter(

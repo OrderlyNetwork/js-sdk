@@ -51,6 +51,7 @@ export const AssetHistoryMobile: FC<AssetHistoryMobileProps> = (props) => {
     const status = props.isWeb3Wallet ? item.trans_status : item.status;
     const statusMap = {
       [AssetHistoryStatusEnum.NEW]: t("assetHistory.status.pending"),
+      [AssetHistoryStatusEnum.PENDING]: t("assetHistory.status.pending"),
       [AssetHistoryStatusEnum.CONFIRM]: t("assetHistory.status.confirm"),
       [AssetHistoryStatusEnum.PROCESSING]: t("assetHistory.status.processing"),
       [AssetHistoryStatusEnum.COMPLETED]: t("assetHistory.status.completed"),

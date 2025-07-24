@@ -105,6 +105,7 @@ export const useAssetHistoryColumns = (options: Options) => {
           value = isWeb3Wallet ? value : recoed.status;
           const statusMap = {
             [AssetHistoryStatusEnum.NEW]: t("assetHistory.status.pending"),
+            [AssetHistoryStatusEnum.PENDING]: t("assetHistory.status.pending"),
             [AssetHistoryStatusEnum.CONFIRM]: t("assetHistory.status.confirm"),
             [AssetHistoryStatusEnum.PROCESSING]: t(
               "assetHistory.status.processing",

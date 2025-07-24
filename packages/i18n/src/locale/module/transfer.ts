@@ -139,8 +139,8 @@ export const transfer = {
   "transfer.deposit.gasFee.error":
     "Please ensure you have enough {{token}} for gas fees.",
 
-  "transfer.deposit.status.new.one": "You have a pending transaction",
-  "transfer.deposit.status.new.multiple": "You have pending transactions",
+  "transfer.deposit.status.pending.one": "You have a pending transaction",
+  "transfer.deposit.status.pending.multiple": "You have pending transactions",
   "transfer.deposit.status.completed.one": "You have a successful transaction",
   "transfer.deposit.status.completed.multiple":
     "You have successful transactions",
