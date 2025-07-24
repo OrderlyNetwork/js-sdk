@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/eslint-config",
-  "version": "2.5.3-internal-20250724-hotfix.1",
+  "version": "2.5.3-internal-20250724-hotfix.2",
   "main": "index.mjs",
   "module": "index.mjs",
   "license": "MIT",
