@@ -1,5 +1,17 @@
 # @orderly.network/trading-view
 
+## 2.5.3-internal-20250724-hotfix.4
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.5.3-internal-20250724-hotfix.4
+  - @orderly.network/hooks@2.5.3-internal-20250724-hotfix.4
+  - @orderly.network/net@2.5.3-internal-20250724-hotfix.4
+  - @orderly.network/types@2.5.3-internal-20250724-hotfix.4
+  - @orderly.network/utils@2.5.3-internal-20250724-hotfix.4
+
 ## 2.5.3-internal-20250724-hotfix.3
 
 ### Patch Changes

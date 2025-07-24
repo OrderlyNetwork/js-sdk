@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/default-evm-adapter",
-  "version": "2.5.3-internal-20250724-hotfix.3",
+  "version": "2.5.3-internal-20250724-hotfix.4",
   "description": "",
   "scripts": {
     "build": "tsup",
