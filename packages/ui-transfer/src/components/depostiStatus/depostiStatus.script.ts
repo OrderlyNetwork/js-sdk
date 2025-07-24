@@ -6,7 +6,6 @@ import {
   useDebouncedCallback,
   useEventEmitter,
   useTransferHistory,
-  useWalletSubscription,
 } from "@orderly.network/hooks";
 import {
   AccountStatusEnum,
@@ -40,13 +39,16 @@ export function useDepositStatusScript() {
     state.status === AccountStatusEnum.EnableTrading ||
     state.status === AccountStatusEnum.EnableTradingWithoutConnected;
 
-  const [assetHistory] = useAssetsHistory({
-    startTime: depositDataRange[0],
-    endTime: depositDataRange[1],
-    page: 1,
-    pageSize: 200,
-    side: "DEPOSIT",
-  });
+  const [assetHistory, { isLoading }] = useAssetsHistory(
+    {
+      startTime: depositDataRange[0],
+      endTime: depositDataRange[1],
+      page: 1,
+      pageSize: 200,
+      side: "DEPOSIT",
+    },
+    false,
+  );
 
   // pending and completed use one request to reduce api request
   const [_, { meta: transferMeta }] = useTransferHistory({
@@ -78,27 +80,35 @@ export function useDepositStatusScript() {
     };
   }, []);
 
-  useWalletSubscription({
-    onMessage: (data) => {
+  useEffect(() => {
+    const walletHandler = (data: any) => {
       const { side, transStatus } = data;
       // when transStatus === "PENDING", thre api not update data
       if (side === "DEPOSIT" && transStatus === "COMPLETED") {
+        console.log("wallet updated", Date.now(), new Date());
         updateDepositTimeRange();
       }
-    },
-  });
+    };
+    ee.on("wallet:changed", walletHandler);
+
+    return () => {
+      ee.off("wallet:changed", updateDepositTimeRange);
+    };
+  }, []);
 
   useBalanceSubscription({
-    onMessage: () => {
+    onMessage(data) {
+      console.log("balance updated", Date.now(), new Date());
       // update transfer time range when balance changed
       setTransferDataRange(getTimeRange());
     },
   });
 
   useEffect(() => {
-    if (!assetHistory) {
+    if (!assetHistory || isLoading) {
       return;
     }
+
     const pendingList = assetHistory?.filter(
       (item) => item.trans_status === AssetHistoryStatusEnum.PENDING,
     );
@@ -109,12 +119,13 @@ export function useDepositStatusScript() {
 
     setDepositPending(pendingList?.length || 0);
     setDepositCompleted(completedList?.length || 0);
-  }, [assetHistory]);
+  }, [assetHistory, isLoading]);
 
   useEffect(() => {
     if (!transferMeta) {
       return;
     }
+
     setTransferCompleted(transferMeta.total || 0);
   }, [transferMeta]);
 
