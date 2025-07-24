@@ -123,20 +123,18 @@ const OrderApp: React.FC<React.PropsWithChildren> = (props) => {
   );
 };
 export const DappProvider: FC<{ children: ReactNode }> = (props) => {
-  const usePrivy = true;
-
-  if (usePrivy) {
-    return (
-      <WalletConnectorPrivy>
-        <OrderApp>{props.children}</OrderApp>
-      </WalletConnectorPrivy>
-    );
-  }
+  // use privy wallet connector
   return (
-    <WalletConnector>
+    <WalletConnectorPrivy>
       <OrderApp>{props.children}</OrderApp>
-    </WalletConnector>
+    </WalletConnectorPrivy>
   );
+  // use wallet-connector(web3 onboard)
+  // return (
+  //   <WalletConnector>
+  //     <OrderApp>{props.children}</OrderApp>
+  //   </WalletConnector>
+  // );
 };
 export const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
   return (
