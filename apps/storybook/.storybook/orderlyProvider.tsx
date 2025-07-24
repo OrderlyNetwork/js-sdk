@@ -34,14 +34,8 @@ import uk from "@orderly.network/i18n/locales/uk.json";
 import vi from "@orderly.network/i18n/locales/vi.json";
 import zh from "@orderly.network/i18n/locales/zh.json";
 import { OrderlyAppProvider } from "@orderly.network/react-app";
-import {
-  Network,
-  WalletConnectorPrivyProvider,
-  wagmiConnectors,
-} from "@orderly.network/wallet-connector-privy";
 import { useNav } from "../src/hooks/useNav";
 import { useOrderlyConfig } from "../src/hooks/useOrderlyConfig";
-import { customChainsAbstarct } from "./customChains";
 import { CustomConfigStore } from "./customConfigStore";
 import { WalletConnector } from "./walletConnector";
 import { WalletConnectorPrivy } from "./walletConnectorPrivy";
