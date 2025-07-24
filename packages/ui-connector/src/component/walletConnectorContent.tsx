@@ -153,8 +153,12 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
       });
   };
 
-  const onDisconnect = () => {
-    disconnect({}).then(() => {
+  const onDisconnect = async () => {
+    localStorage.removeItem("orderly_link_device");
+    disconnect({
+      label: (state as unknown as any).connectWallet?.name,
+    }).then(() => {
+      account.disconnect();
       if (typeof props.close === "function") {
         props.close();
       }
@@ -263,16 +267,20 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
           />
         </Box>
       </Flex>
-      <Flex
-        justify={"center"}
-        mt={4}
-        gap={1}
-        className="oui-w-full oui-cursor-pointer"
-        onClick={onDisconnect}
-      >
-        <DisconnectIcon />
-        <Text className="oui-text-base-contrast-80">Disconnect wallet</Text>
-      </Flex>
+      {state > AccountStatusEnum.NotConnected && (
+        <Flex
+          justify={"center"}
+          mt={4}
+          gap={1}
+          className="oui-w-full oui-cursor-pointer"
+          onClick={onDisconnect}
+        >
+          <DisconnectIcon />
+          <Text className="oui-text-base-contrast-80 oui-text-sm">
+            {t("connector.disconnectWallet")}
+          </Text>
+        </Flex>
+      )}
     </Box>
   );
 };
@@ -341,7 +349,7 @@ const ActionButton: FC<{
           </Flex>
         ),
         enableTrading: (
-          <>
+          <Flex gap={3} className="oui-w-full">
             <Button
               fullWidth
               onClick={() => enableTrading()}
@@ -357,7 +365,7 @@ const ActionButton: FC<{
                 disabled={disabled}
               />
             )}
-          </>
+          </Flex>
         ),
       }}
     />
@@ -391,7 +399,7 @@ const WithLedgerButton = ({
       disabled={disabled}
       className="oui-w-full"
     >
-      With ledger
+      {t("connector.withLedger")}
     </Button>
   );
 };

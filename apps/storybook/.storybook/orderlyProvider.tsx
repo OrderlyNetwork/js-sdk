@@ -37,7 +37,7 @@ import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { useNav } from "../src/hooks/useNav";
 import { useOrderlyConfig } from "../src/hooks/useOrderlyConfig";
 import { CustomConfigStore } from "./customConfigStore";
-import { WalletConnector } from "./walletConnector";
+// import { WalletConnector } from "./walletConnector";
 import { WalletConnectorPrivy } from "./walletConnectorPrivy";
 
 // const customChains = customChainsEvm;

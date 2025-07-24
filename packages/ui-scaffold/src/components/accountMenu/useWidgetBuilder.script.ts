@@ -1,15 +1,18 @@
+import { useCallback } from "react";
 import {
   useAccount,
   useChains,
   useWalletConnector,
 } from "@orderly.network/hooks";
-import { WalletConnectorModalId } from "@orderly.network/ui-connector";
-import { modal, toast } from "@orderly.network/ui";
-import { useCallback } from "react";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { useAppContext } from "@orderly.network/react-app";
-import { ChainSelectorDialogId } from "@orderly.network/ui-chain-selector";
 import { useTranslation } from "@orderly.network/i18n";
+import { useAppContext } from "@orderly.network/react-app";
+import { AccountStatusEnum } from "@orderly.network/types";
+import { modal, toast, useScreen } from "@orderly.network/ui";
+import { ChainSelectorDialogId } from "@orderly.network/ui-chain-selector";
+import {
+  WalletConnectorModalId,
+  WalletConnectorSheetId,
+} from "@orderly.network/ui-connector";
 
 export const useAccountMenu = (): any => {
   const { t } = useTranslation();
@@ -19,17 +22,21 @@ export const useAccountMenu = (): any => {
 
   const [_, { findByChainId }] = useChains();
 
+  const { isMobile } = useScreen();
+
   const onCrateAccount = async () => {
-    modal.show(WalletConnectorModalId).then(
+    const modalId = isMobile ? WalletConnectorSheetId : WalletConnectorModalId;
+    modal.show(modalId).then(
       (res) => console.log("return ::", res),
-      (err) => console.log("error:::", err)
+      (err) => console.log("error:::", err),
     );
   };
 
   const onCreateOrderlyKey = async () => {
-    modal.show(WalletConnectorModalId).then(
+    const modalId = isMobile ? WalletConnectorSheetId : WalletConnectorModalId;
+    modal.show(modalId).then(
       (res) => console.log("return ::", res),
-      (err) => console.log("error:::", err)
+      (err) => console.log("error:::", err),
     );
   };
 
@@ -58,7 +65,7 @@ export const useAccountMenu = (): any => {
             }
           }
         },
-        (error) => console.log("[switchChain error]", error)
+        (error) => console.log("[switchChain error]", error),
       );
   };
 
@@ -90,7 +97,7 @@ export const useAccountMenu = (): any => {
     if (!connectedChain) return;
     const chainInfo = findByChainId(
       connectedChain!.id as number,
-      "network_infos"
+      "network_infos",
     );
 
     if (chainInfo) {
