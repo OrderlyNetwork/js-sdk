@@ -77,7 +77,9 @@ export const useMaxWithdrawal = (token: string) => {
       return quantity;
     }
 
-    return new Decimal(quantity || 0).todp(tokenInfo.decimals).toNumber();
+    return new Decimal(quantity || 0)
+      .todp(tokenInfo.decimals, Decimal.ROUND_DOWN)
+      .toNumber();
   }, [
     usdcBalance,
     freeCollateral,
