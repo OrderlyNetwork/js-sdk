@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   useAccount,
   useAssetsHistory,
@@ -21,36 +21,36 @@ function getTimeRange() {
   const endTime = Date.now();
   // 1 hour ago
   const startTime = endTime - 1000 * 60 * 60;
-  return {
-    startTime,
-    endTime,
-  };
+
+  return [startTime, endTime];
 }
 
 export function useDepositStatusScript() {
-  const [pendingCount, setPendingCount] = useState(0);
-  const [completedCount, setCompletedCount] = useState(0);
-  const [dataRange, setDataRange] = useState(getTimeRange());
+  const [depositDataRange, setDepositDataRange] = useState(getTimeRange());
+  const [transferDataRange, setTransferDataRange] = useState(getTimeRange());
+  // only deposit have pending status
+  const [depositPending, setDepositPending] = useState(0);
+  const [depositCompleted, setDepositCompleted] = useState(0);
+  const [transferCompleted, setTransferCompleted] = useState(0);
 
   const ee = useEventEmitter();
   const { state } = useAccount();
-
-  const { startTime, endTime } = dataRange;
 
   const isSignIn =
     state.status === AccountStatusEnum.EnableTrading ||
     state.status === AccountStatusEnum.EnableTradingWithoutConnected;
 
   const [assetHistory] = useAssetsHistory({
-    startTime,
-    endTime,
+    startTime: depositDataRange[0],
+    endTime: depositDataRange[1],
     page: 1,
     pageSize: 200,
     side: "DEPOSIT",
   });
 
+  // pending and completed use one request to reduce api request
   const [_, { meta: transferMeta }] = useTransferHistory({
-    dataRange: [startTime, endTime],
+    dataRange: transferDataRange,
     side: "IN",
     size: 100,
     page: 1,
@@ -59,13 +59,14 @@ export function useDepositStatusScript() {
 
   // update time range when wallet and balance changed
   // because DEPOSIT and WITHDRAW will push twice COMPLETED event in a shorttime, so we need to debounce it
-  const updateTimeRange = useDebouncedCallback((data: any) => {
-    setDataRange(getTimeRange());
+  const updateDepositTimeRange = useDebouncedCallback(() => {
+    setDepositDataRange(getTimeRange());
   }, 300);
 
   useEffect(() => {
+    // update deposit time range when deposit requested
     const handler = (data: any) => {
-      updateTimeRange(data);
+      updateDepositTimeRange();
     };
 
     ee.on("deposit:requested", handler);
@@ -77,24 +78,27 @@ export function useDepositStatusScript() {
     };
   }, []);
 
-  useBalanceSubscription({
-    onMessage: updateTimeRange,
-  });
-
   useWalletSubscription({
     onMessage: (data) => {
       const { side, transStatus } = data;
+      // when transStatus === "PENDING", thre api not update data
       if (side === "DEPOSIT" && transStatus === "COMPLETED") {
-        updateTimeRange(data);
+        updateDepositTimeRange();
       }
     },
   });
 
+  useBalanceSubscription({
+    onMessage: () => {
+      // update transfer time range when balance changed
+      setTransferDataRange(getTimeRange());
+    },
+  });
+
   useEffect(() => {
-    if (!assetHistory || !transferMeta) {
+    if (!assetHistory) {
       return;
     }
-
     const pendingList = assetHistory?.filter(
       (item) => item.trans_status === AssetHistoryStatusEnum.PENDING,
     );
@@ -103,11 +107,24 @@ export function useDepositStatusScript() {
       (item) => item.trans_status === AssetHistoryStatusEnum.COMPLETED,
     );
 
-    setPendingCount(pendingList?.length || 0);
-    setCompletedCount(
-      (completedList?.length || 0) + (transferMeta?.total || 0),
-    );
-  }, [assetHistory, transferMeta]);
+    setDepositPending(pendingList?.length || 0);
+    setDepositCompleted(completedList?.length || 0);
+  }, [assetHistory]);
 
-  return { pendingCount, completedCount, isSignIn };
+  useEffect(() => {
+    if (!transferMeta) {
+      return;
+    }
+    setTransferCompleted(transferMeta.total || 0);
+  }, [transferMeta]);
+
+  const completedCount = useMemo(() => {
+    return depositCompleted + transferCompleted;
+  }, [depositCompleted, transferCompleted]);
+
+  return {
+    pendingCount: depositPending,
+    completedCount,
+    isSignIn,
+  };
 }

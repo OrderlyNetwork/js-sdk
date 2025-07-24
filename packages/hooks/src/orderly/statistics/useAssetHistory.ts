@@ -74,12 +74,14 @@ export const useAssetsHistory = (options: AssetHistoryOptions) => {
 
   const updateList = useDebouncedCallback(
     (data: any) => {
+      // TODO: update by side
       mutate();
     },
     // delay in ms
     300,
   );
 
+  // TODO: add config to cancel subscribe
   useEffect(() => {
     ee.on("wallet:changed", updateList);
 
