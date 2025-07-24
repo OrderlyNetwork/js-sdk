@@ -5,10 +5,10 @@ import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import { SymbolProvider } from "../../providers/symbolProvider";
 import type { PositionsProps } from "../../types/types";
 import type { CombinePositionsState } from "./combinePositions.script";
-import { PositionsRowProvider } from "./desktop/positionRowContext";
 import { useColumn } from "./desktop/useColumn";
 import { PositionCellWidget } from "./mobile/positionCell";
 import type { PositionsState } from "./positions.script";
+import { PositionsRowProvider } from "./positionsRowProvider";
 
 export const Positions: React.FC<Readonly<PositionsState>> = (props) => {
   const {

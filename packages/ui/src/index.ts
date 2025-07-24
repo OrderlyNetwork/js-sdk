@@ -20,7 +20,7 @@ export * from "./sheet";
 export * from "./divider";
 export * from "./tabs";
 export { PaginationItems } from "./pagination";
-export { Select, SelectItem } from "./select";
+export { Select, SelectItem, type SelectOption } from "./select";
 export * from "./popover";
 export * from "./card";
 export * from "./pickers";

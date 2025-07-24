@@ -1,50 +1,13 @@
-import {
-  FC,
-  PropsWithChildren,
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { FC, PropsWithChildren, useCallback, useEffect, useState } from "react";
 import {
   KeyedMutator,
   usePositionClose,
   useSymbolsInfo,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { API, OrderEntity, OrderSide, OrderType } from "@orderly.network/types";
+import { API, OrderType } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
-
-export interface PositionsRowContextState {
-  quantity: string;
-  price: string;
-  type: OrderType;
-  side: OrderSide;
-  position: API.PositionExt | API.PositionTPSLExt;
-  updateQuantity: (value: string) => void;
-  updatePriceChange: (value: string) => void;
-
-  updateOrderType: (value: OrderType, price?: string) => void;
-
-  closeOrderData: any;
-
-  onSubmit: () => Promise<any>;
-  submitting: boolean;
-  tpslOrder?: API.AlgoOrder;
-  quoteDp?: number;
-  baseDp?: number;
-  baseTick?: number;
-  errors: any | undefined;
-}
-
-export const PositionsRowContext = createContext(
-  {} as PositionsRowContextState,
-);
-
-export const usePositionsRowContext = () => {
-  return useContext(PositionsRowContext);
-};
+import { PositionsRowContext } from "./positionsRowContext";
 
 type PositionsRowProviderProps = PropsWithChildren<{
   position: API.PositionExt | API.PositionTPSLExt;
@@ -95,8 +58,8 @@ export const PositionsRowProvider: FC<PositionsRowProviderProps> = (props) => {
         value,
         position.mark_price,
         symbolInfo(),
-      ) as OrderEntity;
-      setQuantity(newValues["order_quantity"] as string);
+      );
+      setQuantity(newValues.order_quantity!);
     },
     [calculate, symbolsInfo, position.mark_price],
   );
@@ -109,23 +72,21 @@ export const PositionsRowProvider: FC<PositionsRowProviderProps> = (props) => {
         value,
         position.mark_price,
         symbolInfo(),
-      ) as OrderEntity;
-      setPrice(newValues["order_price"] as string);
+      );
+      setPrice(newValues.order_price!);
     },
     [calculate, symbolsInfo, position.mark_price],
   );
 
-  const updateOrderType = useCallback((type: OrderType, price?: string) => {
-    setType(type);
-    if (type === OrderType.LIMIT) {
-      if (!price) {
-        throw new Error(t("orderEntry.orderPrice.error.required"));
-      }
-      setPrice(price);
-    } else {
-      setPrice("");
-    }
-  }, []);
+  const updateOrderType = useCallback(
+    (type: OrderType) => {
+      setType(type);
+      // when type is Limit, set price to mark price
+      // when type is Market, set price to empty string
+      setPrice(type === OrderType.LIMIT ? position.mark_price?.toString() : "");
+    },
+    [position.mark_price],
+  );
 
   const onSubmit = useCallback(async () => {
     if (Number(quantity) > symbolInfo("base_max")) {

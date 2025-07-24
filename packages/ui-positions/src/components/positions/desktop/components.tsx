@@ -2,7 +2,7 @@ import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { EditIcon } from "@orderly.network/ui";
 import { PositionTPSLPopover } from "@orderly.network/ui-tpsl";
-import { usePositionsRowContext } from "./positionRowContext";
+import { usePositionsRowContext } from "../positionsRowContext";
 
 // ------------ TP/SL Price input end------------
 export const TPSLButton = () => {
