@@ -68,7 +68,7 @@ export const useRestrictedInfo = (options?: RestrictedInfoOptions) => {
       const combinedInvalidRegions = [
         ...formattedCustomRegions,
         ...(enableDefault ? [...invalidCountries, ...invalidCities] : []),
-      ];
+      ].filter((item) => !!item);
 
       const allInvalidAreas = [
         enableDefault ? invalid_web_country : "",
@@ -82,9 +82,9 @@ export const useRestrictedInfo = (options?: RestrictedInfoOptions) => {
       const formattedRegion = formatRegion(region);
 
       const isRestricted =
-        combinedInvalidRegions.includes(formattedCity) ||
-        combinedInvalidRegions.includes(formattedRegion) ||
-        customRestrictedIps.includes(ip);
+        (formattedCity && combinedInvalidRegions.includes(formattedCity)) ||
+        (formattedRegion && combinedInvalidRegions.includes(formattedRegion)) ||
+        (ip && customRestrictedIps.includes(ip));
 
       let canUnblock = false;
 

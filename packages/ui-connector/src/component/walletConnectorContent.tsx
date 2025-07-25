@@ -342,8 +342,6 @@ const ActionButton: FC<{
             {showLedgerButton && (
               <WithLedgerButton
                 onClick={() => signIn()}
-                loading={loading}
-                disabled={disabled}
                 content={t("connector.createAccountWithLedger")}
               />
             )}
@@ -362,7 +360,6 @@ const ActionButton: FC<{
             {showLedgerButton && (
               <WithLedgerButton
                 onClick={() => enableTrading()}
-                loading={loading}
                 disabled={disabled}
                 content={t("connector.enableTradingWithLedger")}
               />
@@ -376,12 +373,10 @@ const ActionButton: FC<{
 
 const WithLedgerButton = ({
   onClick,
-  loading,
   disabled,
   content,
 }: {
   onClick: () => void;
-  loading: boolean;
   disabled?: boolean;
   content: ReactNode;
 }) => {
@@ -399,7 +394,6 @@ const WithLedgerButton = ({
         setLedgerAddress(address);
         onClick();
       }}
-      loading={loading}
       disabled={disabled}
       className="oui-w-full"
     >
