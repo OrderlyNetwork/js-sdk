@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { account as accountPerp } from "@orderly.network/perp";
 import { API } from "@orderly.network/types";
+import { Decimal } from "@orderly.network/utils";
 import { useIndexPricesStream } from "../orderly/useIndexPricesStream";
 import { useTokenInfo } from "../orderly/useTokensInfo/tokensInfo.store";
 
@@ -14,7 +15,7 @@ const { maxWithdrawalUSDC, maxWithdrawalOtherCollateral, collateralRatio } =
 export function useSubAccountMaxWithdrawal(options: {
   token?: string;
   unsettledPnL?: number;
-  freeCollateral: number;
+  freeCollateral: Decimal;
   holdings?: API.Holding[];
 }) {
   const { token, unsettledPnL, freeCollateral, holdings } = options;
@@ -67,7 +68,7 @@ export function useSubAccountMaxWithdrawal(options: {
       freeCollateral,
       indexPrice,
       weight: memoizedCollateralRatio,
-    });
+    }).toNumber();
   }, [
     usdcBalance,
     freeCollateral,
