@@ -1,4 +1,4 @@
-import { expect } from "@jest/globals";
+import { describe, expect, it, test } from "@jest/globals";
 import {
   MMR,
   extractSymbols,
@@ -209,7 +209,7 @@ describe("account farmula", () => {
       const params: Parameters<typeof LTV>[0] = {
         usdcBalance: 100,
         upnl: 50,
-        collateralAssets: [{ qty: 1, indexPrice: 100, weight: 1 }],
+        assets: [{ qty: 1, indexPrice: 100, weight: 1 }],
       };
       expect(LTV(params)).toBe(0);
     });
@@ -218,7 +218,7 @@ describe("account farmula", () => {
       const params: Parameters<typeof LTV>[0] = {
         usdcBalance: -100,
         upnl: -200,
-        collateralAssets: [],
+        assets: [],
       };
       expect(LTV(params)).toBe(0);
     });
@@ -227,7 +227,7 @@ describe("account farmula", () => {
       const params: Parameters<typeof LTV>[0] = {
         usdcBalance: 0,
         upnl: 50,
-        collateralAssets: [{ qty: 1, indexPrice: 100, weight: 1 }],
+        assets: [{ qty: 1, indexPrice: 100, weight: 1 }],
       };
       // numerator = 0, denominator = 100 + 50 = 150
       expect(LTV(params)).toBe(0);
@@ -237,9 +237,7 @@ describe("account farmula", () => {
       const params: Parameters<typeof LTV>[0] = {
         usdcBalance: -10,
         upnl: 0,
-        collateralAssets: [
-          { qty: -100, indexPrice: 1000, weight: 1 }, // ignored
-        ],
+        assets: [{ qty: -100, indexPrice: 1000, weight: 1 }],
       };
       // numerator = 10, denominator = 0
       expect(LTV(params)).toBe(0);
