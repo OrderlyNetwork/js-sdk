@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/ui-orders",
-  "version": "2.5.3-internal-20250724-hotfix.6",
+  "version": "2.5.3-internal-20250724-hotfix.7",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
