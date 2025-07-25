@@ -9,19 +9,23 @@ export interface RestrictedInfoOptions {
   enableDefault?: boolean;
   customRestrictedIps?: string[];
   customRestrictedRegions?: string[];
+  customUnblockRegions?: string[];
   content?:
     | ReactNode
     | ((data: { ip: string; brokerName: string }) => ReactNode);
 }
 
+const defaultRestrictedIps: string[] = [];
+const defaultRestrictedRegions: string[] = [];
 /** default can unblock regions */
-const canUnblockRegions = ["United States"];
+const defaultUnblockRegions: string[] = [];
 
 export const useRestrictedInfo = (options?: RestrictedInfoOptions) => {
   const {
     enableDefault = false,
-    customRestrictedIps = [],
-    customRestrictedRegions = [],
+    customRestrictedIps = defaultRestrictedIps,
+    customRestrictedRegions = defaultRestrictedRegions,
+    customUnblockRegions = defaultUnblockRegions,
     content,
   } = options || {};
   const [ip, setIp] = useState<string>("");
@@ -83,7 +87,7 @@ export const useRestrictedInfo = (options?: RestrictedInfoOptions) => {
           combinedInvalidRegions.includes(formattedRegion) ||
           customRestrictedIps.includes(ip));
 
-      for (const item of canUnblockRegions) {
+      for (const item of customUnblockRegions) {
         if (formatRegion(item) === formatRegion(region)) {
           setCanUnblock(true);
         }
@@ -103,6 +107,7 @@ export const useRestrictedInfo = (options?: RestrictedInfoOptions) => {
     // it will lead to infinite re-render when these values change, so we don't need to watch these
     // customRestrictedIps,
     // customRestrictedRegions,
+    // customUnblockRegions,
   ]);
 
   return {
