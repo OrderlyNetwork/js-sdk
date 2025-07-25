@@ -102,7 +102,7 @@ export const useRestrictedInfo = (options?: RestrictedInfoOptions) => {
 
       setIp(ip);
       setAllInvalidAreas(allInvalidAreas);
-      setRestrictedOpen(restrictedOpen);
+      setRestrictedOpen(!!restrictedOpen);
       setCanUnblock(canUnblock);
     } catch (error) {
       console.error("useRestrictedInfo error", error);
