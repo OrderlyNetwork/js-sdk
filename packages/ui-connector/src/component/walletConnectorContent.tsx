@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useRef, useState } from "react";
+import { FC, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import {
   useAccount,
   useEventEmitter,
@@ -330,7 +330,7 @@ const ActionButton: FC<{
       }}
       case={{
         signIn: (
-          <Flex gap={3} className="oui-w-full">
+          <Flex direction={"column"} gap={3} className="oui-w-full">
             <Button
               fullWidth
               onClick={() => signIn()}
@@ -344,12 +344,13 @@ const ActionButton: FC<{
                 onClick={() => signIn()}
                 loading={loading}
                 disabled={disabled}
+                content={t("connector.createAccountWithLedger")}
               />
             )}
           </Flex>
         ),
         enableTrading: (
-          <Flex gap={3} className="oui-w-full">
+          <Flex direction={"column"} gap={3} className="oui-w-full">
             <Button
               fullWidth
               onClick={() => enableTrading()}
@@ -363,6 +364,7 @@ const ActionButton: FC<{
                 onClick={() => enableTrading()}
                 loading={loading}
                 disabled={disabled}
+                content={t("connector.enableTradingWithLedger")}
               />
             )}
           </Flex>
@@ -376,10 +378,12 @@ const WithLedgerButton = ({
   onClick,
   loading,
   disabled,
+  content,
 }: {
   onClick: () => void;
   loading: boolean;
   disabled?: boolean;
+  content: ReactNode;
 }) => {
   const { t } = useTranslation();
   const { state } = useAccount();
@@ -399,7 +403,7 @@ const WithLedgerButton = ({
       disabled={disabled}
       className="oui-w-full"
     >
-      {t("connector.withLedger")}
+      {content}
     </Button>
   );
 };
