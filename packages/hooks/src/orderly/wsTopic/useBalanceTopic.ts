@@ -1,8 +1,8 @@
 import { useEffect } from "react";
-import { useAccount } from "../useAccount";
-import { useWS } from "../useWS";
+import { useAccount } from "../../useAccount";
+import { useWS } from "../../useWS";
 
-export const useBalanceSubscription = (options: {
+export const useBalanceTopic = (options: {
   onMessage: (data: any) => void;
 }) => {
   const ws = useWS();
