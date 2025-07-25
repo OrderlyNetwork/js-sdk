@@ -8,7 +8,8 @@ export const affiliate = {
   "affiliate.connectWallet.tooltip":
     "Please connect your wallet to use this function",
 
-  "affiliate.page.title": "Earn more as a <0>{{shortBrokerName}}</0> affiliate",
+  "affiliate.page.title":
+    "Refer, Earn, and Grow - Referral & Affiliate Program",
   "affiliate.page.subTitle":
     "Grow your brand | Get 40% commission | Unlock exclusive perks",
   "affiliate.page.learnMore": "Learn how it works",

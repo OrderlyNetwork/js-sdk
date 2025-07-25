@@ -1,7 +1,6 @@
-import { useTitleScript } from "./title.script";
+import React from "react";
 import { Title } from "./title.ui";
 
-export const TitleWidget = () => {
-  const state = useTitleScript();
-  return <Title {...state} />;
+export const TitleWidget: React.FC = () => {
+  return <Title />;
 };
