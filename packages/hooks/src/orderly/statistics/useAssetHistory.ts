@@ -24,11 +24,12 @@ type AssetHistoryOptions = {
  */
 export const useAssetsHistory = (
   options: AssetHistoryOptions,
-  /**
-   * if subscribe, the data will be updated when wallet changed
-   * @default true
-   * */
-  subscribe = true,
+  config?: {
+    /**
+     * should update when wallet changed, default is update
+     */
+    shouldUpdateOnWalletChanged?: (data: any) => boolean;
+  },
 ) => {
   const ee = useEventEmitter();
 
@@ -81,24 +82,26 @@ export const useAssetsHistory = (
 
   const updateList = useDebouncedCallback(
     (data: any) => {
-      // TODO: update by side
-      mutate();
+      const isUpdate =
+        typeof config?.shouldUpdateOnWalletChanged === "function"
+          ? config.shouldUpdateOnWalletChanged(data)
+          : true;
+
+      if (isUpdate) {
+        mutate();
+      }
     },
     // delay in ms
     300,
   );
 
   useEffect(() => {
-    if (subscribe) {
-      ee.on("wallet:changed", updateList);
-    }
+    ee.on("wallet:changed", updateList);
 
     return () => {
-      if (subscribe) {
-        ee.off("wallet:changed", updateList);
-      }
+      ee.off("wallet:changed", updateList);
     };
-  }, [subscribe]);
+  }, []);
 
   return [
     data?.rows || [],

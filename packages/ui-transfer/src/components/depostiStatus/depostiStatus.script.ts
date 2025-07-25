@@ -2,13 +2,14 @@ import { useEffect, useMemo, useState } from "react";
 import {
   useAccount,
   useAssetsHistory,
-  useBalanceSubscription,
+  useBalanceTopic,
   useDebouncedCallback,
-  useEventEmitter,
   useTransferHistory,
+  useWalletTopic,
 } from "@orderly.network/hooks";
 import {
   AccountStatusEnum,
+  AssetHistorySideEnum,
   AssetHistoryStatusEnum,
 } from "@orderly.network/types";
 
@@ -32,7 +33,6 @@ export function useDepositStatusScript() {
   const [depositCompleted, setDepositCompleted] = useState(0);
   const [transferCompleted, setTransferCompleted] = useState(0);
 
-  const ee = useEventEmitter();
   const { state } = useAccount();
 
   const isSignIn =
@@ -47,7 +47,9 @@ export function useDepositStatusScript() {
       pageSize: 200,
       side: "DEPOSIT",
     },
-    false,
+    {
+      shouldUpdateOnWalletChanged: () => false,
+    },
   );
 
   // pending and completed use one request to reduce api request
@@ -65,44 +67,40 @@ export function useDepositStatusScript() {
     setDepositDataRange(getTimeRange());
   }, 300);
 
-  useEffect(() => {
-    // update deposit time range when deposit requested
-    const handler = (data: any) => {
-      updateDepositTimeRange();
-    };
-
-    ee.on("deposit:requested", handler);
-
-    ee.on("deposit:requested", handler);
-
-    return () => {
-      ee.off("deposit:requested");
-    };
-  }, []);
-
-  useEffect(() => {
-    const walletHandler = (data: any) => {
+  useWalletTopic({
+    onMessage(data) {
       const { side, transStatus } = data;
-      // when transStatus === "PENDING", thre api not update data
-      if (side === "DEPOSIT" && transStatus === "COMPLETED") {
-        console.log("wallet updated", Date.now(), new Date());
+      if (
+        side === AssetHistorySideEnum.DEPOSIT &&
+        (transStatus === AssetHistoryStatusEnum.PENDING ||
+          transStatus === AssetHistoryStatusEnum.COMPLETED)
+      ) {
+        console.log("deposit status updated", data);
         updateDepositTimeRange();
       }
-    };
-    ee.on("wallet:changed", walletHandler);
+    },
+  });
 
-    return () => {
-      ee.off("wallet:changed", updateDepositTimeRange);
-    };
-  }, []);
-
-  useBalanceSubscription({
+  useBalanceTopic({
     onMessage(data) {
-      console.log("balance updated", Date.now(), new Date());
+      console.log("balance updated", data);
       // update transfer time range when balance changed
       setTransferDataRange(getTimeRange());
     },
   });
+
+  // useEffect(() => {
+  //   // update deposit time range when deposit requested
+  //   const handler = (data: any) => {
+  //     updateDepositTimeRange();
+  //   };
+
+  //   ee.on("deposit:requested", handler);
+
+  //   return () => {
+  //     ee.off("deposit:requested");
+  //   };
+  // }, []);
 
   useEffect(() => {
     if (!assetHistory || isLoading) {
