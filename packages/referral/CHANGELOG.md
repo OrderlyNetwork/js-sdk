@@ -1,5 +1,14 @@
 # @orderly.network/referral
 
+## 2.5.3-internal-20250724-hotfix.10
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.5.3-internal-20250724-hotfix.10
+  - @orderly.network/utils@2.5.3-internal-20250724-hotfix.10
+
 ## 2.5.3-internal-20250724-hotfix.9
 
 ### Patch Changes
