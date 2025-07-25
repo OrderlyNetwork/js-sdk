@@ -379,7 +379,7 @@ const useCollateralValue = (params: {
     return indexPrices[symbol] ?? 0;
   }, [sourceToken?.symbol, indexPrices]);
 
-  const memoizedCollateralRatio = useMemo<number>(() => {
+  const memoizedCollateralRatio = useMemo(() => {
     return collateralRatio({
       baseWeight: targetToken?.base_weight ?? 0,
       discountFactor: targetToken?.discount_factor ?? 0,
@@ -392,7 +392,7 @@ const useCollateralValue = (params: {
   const collateralContributionQuantity = collateralContribution({
     collateralQty: quantity,
     collateralCap: sourceToken?.user_max_qty ?? quantity,
-    collateralRatio: memoizedCollateralRatio,
+    collateralRatio: memoizedCollateralRatio.toNumber(),
     indexPrice: indexPrice,
   });
 
@@ -404,7 +404,7 @@ const useCollateralValue = (params: {
   });
 
   return {
-    collateralRatio: memoizedCollateralRatio,
+    collateralRatio: memoizedCollateralRatio.toNumber(),
     collateralContributionQuantity,
     currentLTV: currentLtv,
     nextLTV: nextLTV,
