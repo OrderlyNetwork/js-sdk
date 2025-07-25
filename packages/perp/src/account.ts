@@ -599,11 +599,10 @@ export function maxQtyByShort(
       .mul(0.995)
       // .add(new Decimal(positionQty).add(sellOrdersQty))
       .add(positionQty)
-      .sub(sellOrdersQty)
-
+      .sub(Math.abs(sellOrdersQty))
       .toNumber();
 
-    if (positionQty === 0 && buyOrdersQty === 0) {
+    if (positionQty === 0 && sellOrdersQty === 0) {
       return Math.min(baseMaxQty, factor_1);
     }
 
