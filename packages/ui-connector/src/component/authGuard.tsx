@@ -167,6 +167,18 @@ const AuthGuard = (props: PropsWithChildren<AuthGuardProps>) => {
   );
 };
 
+const ModalTitle = () => {
+  const { t } = useTranslation();
+  const { state } = useAccount();
+  if (state.status < AccountStatusEnum.SignedIn) {
+    return <Text>{t("connector.createAccount")}</Text>;
+  }
+  if (state.status < AccountStatusEnum.EnableTrading) {
+    return <Text>{t("connector.enableTrading")}</Text>;
+  }
+  return <Text>{t("connector.connectWallet")}</Text>;
+};
+
 const DefaultFallback = (props: {
   status: AccountStatusEnum;
   wrongNetwork: boolean;
@@ -185,10 +197,14 @@ const DefaultFallback = (props: {
   const matches = useMediaQuery(MEDIA_TABLET);
 
   const onConnectOrderly = () => {
-    modal.show(matches ? WalletConnectorSheetId : WalletConnectorModalId).then(
-      (r) => console.log(r),
-      (error) => console.log(error),
-    );
+    modal
+      .show(matches ? WalletConnectorSheetId : WalletConnectorModalId, {
+        title: <ModalTitle />,
+      })
+      .then(
+        (r) => console.log(r),
+        (error) => console.log(error),
+      );
   };
 
   const onConnectWallet = async () => {

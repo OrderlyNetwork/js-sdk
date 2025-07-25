@@ -7,12 +7,24 @@ import {
 import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
-import { modal, toast, useScreen } from "@orderly.network/ui";
+import { modal, toast, useScreen, Text } from "@orderly.network/ui";
 import { ChainSelectorDialogId } from "@orderly.network/ui-chain-selector";
 import {
   WalletConnectorModalId,
   WalletConnectorSheetId,
 } from "@orderly.network/ui-connector";
+
+const ModalTitle = () => {
+  const { t } = useTranslation();
+  const { state } = useAccount();
+  if (state.status < AccountStatusEnum.SignedIn) {
+    return <Text>{t("connector.createAccount")}</Text>;
+  }
+  if (state.status < AccountStatusEnum.EnableTrading) {
+    return <Text>{t("connector.enableTrading")}</Text>;
+  }
+  return <Text>{t("connector.connectWallet")}</Text>;
+};
 
 export const useAccountMenu = (): any => {
   const { t } = useTranslation();
@@ -26,18 +38,26 @@ export const useAccountMenu = (): any => {
 
   const onCrateAccount = async () => {
     const modalId = isMobile ? WalletConnectorSheetId : WalletConnectorModalId;
-    modal.show(modalId).then(
-      (res) => console.log("return ::", res),
-      (err) => console.log("error:::", err),
-    );
+    modal
+      .show(modalId, {
+        title: <ModalTitle />,
+      })
+      .then(
+        (res) => console.log("return ::", res),
+        (err) => console.log("error:::", err),
+      );
   };
 
   const onCreateOrderlyKey = async () => {
     const modalId = isMobile ? WalletConnectorSheetId : WalletConnectorModalId;
-    modal.show(modalId).then(
-      (res) => console.log("return ::", res),
-      (err) => console.log("error:::", err),
-    );
+    modal
+      .show(modalId, {
+        title: <ModalTitle />,
+      })
+      .then(
+        (res) => console.log("return ::", res),
+        (err) => console.log("error:::", err),
+      );
   };
 
   const switchChain = () => {
