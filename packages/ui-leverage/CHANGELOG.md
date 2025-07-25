@@ -1,5 +1,16 @@
 # @orderly.network/ui-leverage
 
+## 2.5.3-internal-20250724-hotfix.9
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.5.3-internal-20250724-hotfix.9
+  - @orderly.network/i18n@2.5.3-internal-20250724-hotfix.9
+  - @orderly.network/types@2.5.3-internal-20250724-hotfix.9
+  - @orderly.network/ui@2.5.3-internal-20250724-hotfix.9
+
 ## 2.5.3-internal-20250724-hotfix.8
 
 ### Patch Changes
