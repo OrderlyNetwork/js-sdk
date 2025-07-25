@@ -238,7 +238,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
       showIndicator={showPositionIcon}
     >
       <>
-        <AssetViewWidget />
+        <AssetViewWidget isFirstTimeDeposit={props.isFirstTimeDeposit} />
         <DepositStatusWidget
           className="oui-mt-3 oui-gap-y-2"
           onClick={props.navigateToPortfolio}

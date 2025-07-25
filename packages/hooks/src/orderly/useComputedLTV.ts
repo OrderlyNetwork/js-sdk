@@ -21,7 +21,7 @@ export const useComputedLTV = (options: LTVOptions = {}) => {
 
   const { usdc, data: holdingList = [] } = useHoldingStream();
 
-  const { data: indexPrices } = useIndexPricesStream();
+  const { getIndexPrice } = useIndexPricesStream();
 
   const { unsettledPnL } = useCollateral();
 
@@ -30,7 +30,7 @@ export const useComputedLTV = (options: LTVOptions = {}) => {
       return new Decimal(usdc?.holding ?? 0).add(input).toNumber();
     }
     return usdc?.holding ?? 0;
-  }, [usdc?.holding, input, token, isUSDC]);
+  }, [usdc?.holding, input, isUSDC]);
 
   const getAdjustedQty = useCallback(
     (item: API.Holding) => {
@@ -49,19 +49,20 @@ export const useComputedLTV = (options: LTVOptions = {}) => {
       assets: holdingList
         .filter((h) => h.token.toUpperCase() !== "USDC")
         .map((item) => {
-          const indexPrice = indexPrices[`PERP_${item.token}_USDC`] ?? 0;
+          const indexPrice = getIndexPrice(item.token);
           const findToken = tokensInfo?.find((i) => i.token === item.token);
           const qty = getAdjustedQty(item);
+          const weight = collateralRatio({
+            baseWeight: findToken?.base_weight ?? 0,
+            discountFactor: findToken?.discount_factor ?? 0,
+            collateralCap: findToken?.user_max_qty ?? qty,
+            collateralQty: qty,
+            indexPrice: indexPrice,
+          });
           return {
             qty: qty,
             indexPrice: indexPrice,
-            weight: collateralRatio({
-              baseWeight: findToken?.base_weight ?? 0,
-              discountFactor: findToken?.discount_factor ?? 0,
-              collateralCap: findToken?.user_max_qty ?? qty,
-              collateralQty: qty,
-              indexPrice: indexPrice,
-            }),
+            weight: weight.toNumber(),
           };
         }),
     });
@@ -69,8 +70,8 @@ export const useComputedLTV = (options: LTVOptions = {}) => {
     usdcBalance,
     unsettledPnL,
     holdingList,
-    indexPrices,
     tokensInfo,
+    getIndexPrice,
     getAdjustedQty,
   ]);
 

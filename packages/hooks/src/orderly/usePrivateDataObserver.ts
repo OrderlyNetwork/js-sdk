@@ -108,7 +108,7 @@ export const usePrivateDataObserver = (options: {
   useEffect(() => {
     if (!account.accountId) return;
 
-    // TODO: useBalanceSubscription
+    // TODO: useBalanceTopic
     const unsubscribe = ws.privateSubscribe(
       {
         id: "balance",
