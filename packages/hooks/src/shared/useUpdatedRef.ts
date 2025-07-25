@@ -1,6 +1,8 @@
 import { useRef } from "react";
 
-export const useUpdatedRef = <T>(val: T) => {
+type NotFunction<T> = T extends (...args: any[]) => any ? never : T;
+
+export const useUpdatedRef = <T>(val: NotFunction<T>) => {
   const latestRef = useRef<T>(val);
   latestRef.current = val;
   return latestRef;
