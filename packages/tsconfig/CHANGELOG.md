@@ -1,5 +1,11 @@
 # tsconfig
 
+## 0.8.3-internal-20250724-hotfix.13
+
+### Patch Changes
+
+- publish
+
 ## 0.8.3-internal-20250724-hotfix.12
 
 ### Patch Changes

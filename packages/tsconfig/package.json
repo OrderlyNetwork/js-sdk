@@ -1,6 +1,6 @@
 {
   "name": "tsconfig",
-  "version": "0.8.3-internal-20250724-hotfix.12",
+  "version": "0.8.3-internal-20250724-hotfix.13",
   "private": true,
   "license": "MIT",
   "publishConfig": {

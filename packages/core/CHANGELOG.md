@@ -1,5 +1,13 @@
 # @orderly.network/core
 
+## 2.5.3-internal-20250724-hotfix.13
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@2.5.3-internal-20250724-hotfix.13
+
 ## 2.5.3-internal-20250724-hotfix.12
 
 ### Patch Changes

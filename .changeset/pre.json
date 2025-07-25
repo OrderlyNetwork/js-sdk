@@ -47,6 +47,7 @@
     "@orderly.network/web3-provider-ethers": "2.5.3-alpha.0"
   },
   "changesets": [
+    "blue-falcons-do",
     "curvy-otters-tease",
     "five-brooms-live",
     "fluffy-moles-smile",
