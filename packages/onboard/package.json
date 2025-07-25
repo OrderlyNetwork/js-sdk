@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/web3-onboard",
-  "version": "2.5.3-internal-20250724-hotfix.5",
+  "version": "2.5.3-internal-20250724-hotfix.6",
   "description": "",
   "private": true,
   "main": "dist/index.mjs",

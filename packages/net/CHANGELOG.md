@@ -1,5 +1,11 @@
 # @orderly.network/net
 
+## 2.5.3-internal-20250724-hotfix.6
+
+### Patch Changes
+
+- publish
+
 ## 2.5.3-internal-20250724-hotfix.5
 
 ### Patch Changes
