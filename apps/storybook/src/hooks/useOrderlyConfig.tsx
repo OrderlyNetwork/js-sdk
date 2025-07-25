@@ -174,6 +174,7 @@ export const useOrderlyConfig = () => {
               name: t("affiliate.referral"),
               href: "/rewards/affiliate",
               icon: "box-ani.gif",
+              onlyInMainAccount: true,
               tooltipConfig: {
                 showOnFirstVisit: true,
                 text: t("affiliate.referralTooltip"),
@@ -266,6 +267,7 @@ export const useOrderlyConfig = () => {
                   />
                 ),
                 trailing: <Tag text="Unlock @ $10K volume" />,
+                onlyInMainAccount: true,
               },
               {
                 name: t("common.tradingRewards"),

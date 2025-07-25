@@ -1,13 +1,7 @@
-import { PropsWithChildren } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import React, { PropsWithChildren } from "react";
+import omit from "ramda/es/omit";
 import { cn } from "@orderly.network/ui";
-import {
-  RouterAdapter,
-  Scaffold,
-  SideBar,
-  SideBarProps,
-  useScaffoldContext,
-} from "@orderly.network/ui-scaffold";
+import { Scaffold, SideBarProps } from "@orderly.network/ui-scaffold";
 import { ScaffoldProps } from "@orderly.network/ui-scaffold";
 
 export type TradingRewardsLayoutProps = ScaffoldProps & {
@@ -15,23 +9,13 @@ export type TradingRewardsLayoutProps = ScaffoldProps & {
   items?: SideBarProps["items"];
 };
 
-export const TradingRewardsLayout = (
-  props: PropsWithChildren<TradingRewardsLayoutProps>,
-) => {
-  const { children, leftSideProps, classNames, ...rest } = props;
-
+export const TradingRewardsLayout: React.FC<
+  PropsWithChildren<TradingRewardsLayoutProps>
+> = (props) => {
+  const { children, classNames, ...rest } = props;
   return (
     <Scaffold
-      leftSidebar={
-        props.hideSideBar ? null : (
-          <LeftSidebar
-            current={props.routerAdapter?.currentPath}
-            routerAdapter={props.routerAdapter}
-            items={props.items}
-            {...leftSideProps}
-          />
-        )
-      }
+      leftSidebar={null}
       routerAdapter={props.routerAdapter}
       classNames={{
         ...classNames,
@@ -44,34 +28,33 @@ export const TradingRewardsLayout = (
           classNames?.leftSidebar,
         ),
       }}
-      {...rest}
+      {...omit(["leftSideProps"], rest)}
     >
       {children}
     </Scaffold>
   );
 };
 
-type LeftSidebarProps = SideBarProps & {
-  routerAdapter?: RouterAdapter;
-};
+// type LeftSidebarProps = SideBarProps & {
+//   routerAdapter?: RouterAdapter;
+// };
 
-const LeftSidebar = (props: LeftSidebarProps) => {
-  const { t } = useTranslation();
-  const { expanded, setExpand } = useScaffoldContext();
-
-  return (
-    <SideBar
-      title={t("tradingRewards.rewards")}
-      {...props}
-      open={expanded}
-      onOpenChange={(open) => setExpand(open)}
-      onItemSelect={(a) => {
-        props.onItemSelect?.(a);
-        props.routerAdapter?.onRouteChange?.({
-          href: a.href || "",
-          name: a.name,
-        });
-      }}
-    />
-  );
-};
+// const LeftSidebar: React.FC<LeftSidebarProps> = (props) => {
+//   const { t } = useTranslation();
+//   const { expanded, setExpand } = useScaffoldContext();
+//   return (
+//     <SideBar
+//       title={t("tradingRewards.rewards")}
+//       {...props}
+//       open={expanded}
+//       onOpenChange={(open) => setExpand(open)}
+//       onItemSelect={(a) => {
+//         props.onItemSelect?.(a);
+//         props.routerAdapter?.onRouteChange?.({
+//           href: a.href || "",
+//           name: a.name,
+//         });
+//       }}
+//     />
+//   );
+// };

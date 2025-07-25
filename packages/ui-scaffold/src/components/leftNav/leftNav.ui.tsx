@@ -177,7 +177,8 @@ type NavItemProps = {
 };
 
 const NavItem: FC<NavItemProps> = ({ item, onClick }) => {
-  const { href, name, icon, trailing, customRender } = item;
+  const { href, name, icon, trailing, onlyInMainAccount, customRender } = item;
+  const { isMainAccount } = useAccount();
   const onItemClick = () => {
     onClick?.({ href: href, name: name, scope: "leftNav" });
   };
@@ -190,6 +191,9 @@ const NavItem: FC<NavItemProps> = ({ item, onClick }) => {
         {customRender({ name: name, href: href })}
       </div>
     );
+  }
+  if (onlyInMainAccount && !isMainAccount) {
+    return null;
   }
   return (
     <div
