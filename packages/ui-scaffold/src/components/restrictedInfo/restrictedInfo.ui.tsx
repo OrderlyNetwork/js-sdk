@@ -21,7 +21,7 @@ export const RestrictedInfo: FC<RestrictedInfoProps> = (props) => {
   const { t } = useTranslation();
 
   // if user region is in the canUnblock regions and accessRestricted is not set, show the dialog
-  if (canUnblock && accessRestricted === undefined) {
+  if (restrictedOpen && canUnblock && accessRestricted === undefined) {
     return (
       <SimpleDialog
         open={canUnblock}

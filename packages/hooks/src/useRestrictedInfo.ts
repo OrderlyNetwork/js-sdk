@@ -81,21 +81,29 @@ export const useRestrictedInfo = (options?: RestrictedInfoOptions) => {
       const formattedCity = formatRegion(city);
       const formattedRegion = formatRegion(region);
 
-      const showRestricted =
-        accessRestricted &&
-        (combinedInvalidRegions.includes(formattedCity) ||
-          combinedInvalidRegions.includes(formattedRegion) ||
-          customRestrictedIps.includes(ip));
+      const isRestricted =
+        combinedInvalidRegions.includes(formattedCity) ||
+        combinedInvalidRegions.includes(formattedRegion) ||
+        customRestrictedIps.includes(ip);
 
-      for (const item of customUnblockRegions) {
-        if (formatRegion(item) === formatRegion(region)) {
-          setCanUnblock(true);
+      let canUnblock = false;
+
+      if (isRestricted) {
+        for (const item of customUnblockRegions) {
+          if (formatRegion(item) === formatRegion(region)) {
+            canUnblock = true;
+          }
         }
       }
 
+      const restrictedOpen = canUnblock
+        ? isRestricted && accessRestricted !== false
+        : isRestricted;
+
       setIp(ip);
       setAllInvalidAreas(allInvalidAreas);
-      setRestrictedOpen(showRestricted);
+      setRestrictedOpen(restrictedOpen);
+      setCanUnblock(canUnblock);
     } catch (error) {
       console.error("useRestrictedInfo error", error);
     }
