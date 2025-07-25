@@ -169,12 +169,13 @@ async function release() {
     // commit code
     await $`git commit -m ${git.commitMessage}`;
 
-    const remoteUrl = await getRemoteUrl();
-    // if not provide, use local origin and git token
-    // use --no-verify to ignore push hook
-    if (remoteUrl) {
+    // if in ci, it should push to remote
+    if (isCI) {
+      const remoteUrl = await getRemoteUrl();
+      // use --no-verify to ignore push hook
       await $`git push --no-verify ${remoteUrl}`;
     } else {
+      // use local origin and git token
       await $`git push --no-verify`;
     }
   }
