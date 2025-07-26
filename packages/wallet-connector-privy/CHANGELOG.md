@@ -1,5 +1,19 @@
 # @orderly.network/wallet-connector-privy
 
+## 2.5.3-internal-20250724-hotfix.19
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.5.3-internal-20250724-hotfix.19
+  - @orderly.network/hooks@2.5.3-internal-20250724-hotfix.19
+  - @orderly.network/i18n@2.5.3-internal-20250724-hotfix.19
+  - @orderly.network/types@2.5.3-internal-20250724-hotfix.19
+  - @orderly.network/ui@2.5.3-internal-20250724-hotfix.19
+  - @orderly.network/ui-connector@2.5.3-internal-20250724-hotfix.19
+  - @orderly.network/utils@2.5.3-internal-20250724-hotfix.19
+
 ## 2.5.3-internal-20250724-hotfix.18
 
 ### Patch Changes
