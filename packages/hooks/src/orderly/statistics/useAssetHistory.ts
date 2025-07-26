@@ -1,6 +1,10 @@
 import { useEffect } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { API, AssetHistoryStatusEnum } from "@orderly.network/types";
+import {
+  API,
+  AssetHistoryStatusEnum,
+  EMPTY_LIST,
+} from "@orderly.network/types";
 import { useEventEmitter } from "../../useEventEmitter";
 import { usePrivateQuery } from "../../usePrivateQuery";
 
@@ -17,8 +21,6 @@ type AssetHistoryOptions = {
   page?: number;
   pageSize?: number;
 };
-
-const EMPTY_LIST: API.AssetHistoryRow[] = [];
 
 /**
  * Get asset history, including token deposits/withdrawals.
