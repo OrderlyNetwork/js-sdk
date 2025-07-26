@@ -64,6 +64,7 @@ export function useSubAccountMaxWithdrawal(options: {
       });
     }
     return maxWithdrawalOtherCollateral({
+      USDCBalance: usdcBalance,
       collateralQty: holding?.holding ?? 0,
       freeCollateral,
       indexPrice,
@@ -74,7 +75,6 @@ export function useSubAccountMaxWithdrawal(options: {
     freeCollateral,
     unsettledPnL,
     memoizedCollateralRatio,
-    holdings,
     indexPrice,
     token,
     holding,
