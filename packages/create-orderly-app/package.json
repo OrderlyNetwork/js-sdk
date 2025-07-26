@@ -1,6 +1,6 @@
 {
   "name": "create-orderly-app",
-  "version": "1.10.3-internal-20250724-hotfix.15",
+  "version": "1.10.3-internal-20250724-hotfix.16",
   "bin": {
     "create-orderly-app": "./dist/index.js"
   },
@@ -52,7 +52,7 @@
   },
   "orderly": {
     "version": {
-      "@orderly.network/web3-onboard": "2.5.3-internal-20250724-hotfix.15"
+      "@orderly.network/web3-onboard": "2.5.3-internal-20250724-hotfix.16"
     }
   }
 }

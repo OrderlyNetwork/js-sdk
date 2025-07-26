@@ -1,6 +1,6 @@
 {
   "name": "@orderly/docs",
-  "version": "1.5.3-internal-20250724-hotfix.15",
+  "version": "1.5.3-internal-20250724-hotfix.16",
   "private": true,
   "scripts": {
     "dev": "next dev -p 4000",

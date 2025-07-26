@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/wallet-connector-privy",
-  "version": "2.5.3-internal-20250724-hotfix.15",
+  "version": "2.5.3-internal-20250724-hotfix.16",
   "description": "",
   "main": "dist/index.mjs",
   "module": "dist/index.mjs",

@@ -1,5 +1,13 @@
 # @orderly.network/web3-modal
 
+## 2.5.3-internal-20250724-hotfix.16
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.5.3-internal-20250724-hotfix.16
+
 ## 2.5.3-internal-20250724-hotfix.15
 
 ### Patch Changes
