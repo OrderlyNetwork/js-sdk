@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/trading",
-  "version": "2.5.3-internal-20250724-hotfix.20",
+  "version": "2.5.3-internal-20250724-hotfix.21",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

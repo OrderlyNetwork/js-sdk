@@ -1,5 +1,15 @@
 # @orderly/docs
 
+## 1.5.3-internal-20250724-hotfix.21
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.5.3-internal-20250724-hotfix.21
+  - @orderly.network/web3-onboard@2.5.3-internal-20250724-hotfix.21
+  - @orderly.network/types@2.5.3-internal-20250724-hotfix.21
+
 ## 1.5.3-internal-20250724-hotfix.20
 
 ### Patch Changes

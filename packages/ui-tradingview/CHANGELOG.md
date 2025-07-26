@@ -1,5 +1,20 @@
 # @orderly.network/ui-tradingview
 
+## 2.5.3-internal-20250724-hotfix.21
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.5.3-internal-20250724-hotfix.21
+  - @orderly.network/i18n@2.5.3-internal-20250724-hotfix.21
+  - @orderly.network/net@2.5.3-internal-20250724-hotfix.21
+  - @orderly.network/types@2.5.3-internal-20250724-hotfix.21
+  - @orderly.network/ui@2.5.3-internal-20250724-hotfix.21
+  - @orderly.network/ui-connector@2.5.3-internal-20250724-hotfix.21
+  - @orderly.network/ui-positions@2.5.3-internal-20250724-hotfix.21
+  - @orderly.network/utils@2.5.3-internal-20250724-hotfix.21
+
 ## 2.5.3-internal-20250724-hotfix.20
 
 ### Patch Changes

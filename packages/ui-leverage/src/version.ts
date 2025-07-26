@@ -8,7 +8,7 @@ declare global {
 if (typeof window !== "undefined") {
   window.__ORDERLY_VERSION__ = window.__ORDERLY_VERSION__ || {};
   window.__ORDERLY_VERSION__["@orderly.network/ui-leverage"] =
-    "2.5.3-internal-20250724-hotfix.20";
+    "2.5.3-internal-20250724-hotfix.21";
 }
 
-export default "2.5.3-internal-20250724-hotfix.20";
+export default "2.5.3-internal-20250724-hotfix.21";
