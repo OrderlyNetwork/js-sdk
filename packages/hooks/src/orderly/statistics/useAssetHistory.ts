@@ -18,6 +18,8 @@ type AssetHistoryOptions = {
   pageSize?: number;
 };
 
+const EMPTY_LIST: API.AssetHistoryRow[] = [];
+
 /**
  * Get asset history, including token deposits/withdrawals.
  * https://orderly.network/docs/build-on-omnichain/evm-api/restful-api/private/get-asset-history#get-asset-history
@@ -104,7 +106,7 @@ export const useAssetsHistory = (
   }, []);
 
   return [
-    data?.rows || [],
+    data?.rows || EMPTY_LIST,
     {
       meta: data?.meta,
       isLoading,
