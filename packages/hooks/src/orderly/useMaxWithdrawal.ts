@@ -64,14 +64,6 @@ export const useMaxWithdrawal = (token: string) => {
         upnl: unsettledPnL ?? 0,
       });
     } else {
-      console.log("process.env.NODE_ENV", process.env.NODE_ENV);
-      console.log({
-        USDCBalance: usdcBalance,
-        collateralQty: holding?.holding ?? 0,
-        freeCollateral: freeCollateral.toNumber(),
-        indexPrice: indexPriceRef.current,
-        weight: memoizedCollateralRatio.toNumber(),
-      });
       quantity = maxWithdrawalOtherCollateral({
         USDCBalance: usdcBalance,
         collateralQty: holding?.holding ?? 0,
