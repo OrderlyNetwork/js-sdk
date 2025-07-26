@@ -14,7 +14,7 @@ export default defineConfig((options) => ({
   external: ["react", "react-dom"],
   esbuildOptions(esOptions, context) {
     if (!options.watch) {
-      esOptions.drop = ["debugger"];
+      esOptions.drop = ["console", "debugger"];
     }
   },
 }));
