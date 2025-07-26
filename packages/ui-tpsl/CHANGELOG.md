@@ -1,5 +1,18 @@
 # @orderly.network/ui-tpsl
 
+## 2.5.3-internal-20250724-hotfix.15
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.5.3-internal-20250724-hotfix.15
+  - @orderly.network/hooks@2.5.3-internal-20250724-hotfix.15
+  - @orderly.network/i18n@2.5.3-internal-20250724-hotfix.15
+  - @orderly.network/types@2.5.3-internal-20250724-hotfix.15
+  - @orderly.network/ui@2.5.3-internal-20250724-hotfix.15
+  - @orderly.network/utils@2.5.3-internal-20250724-hotfix.15
+
 ## 2.5.3-internal-20250724-hotfix.14
 
 ### Patch Changes

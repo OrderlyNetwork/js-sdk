@@ -1,5 +1,14 @@
 # @orderly.network/default-evm-adapter
 
+## 2.5.3-internal-20250724-hotfix.15
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.5.3-internal-20250724-hotfix.15
+  - @orderly.network/types@2.5.3-internal-20250724-hotfix.15
+
 ## 2.5.3-internal-20250724-hotfix.14
 
 ### Patch Changes
