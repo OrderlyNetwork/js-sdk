@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/ui-scaffold",
-  "version": "2.5.3-internal-20250724-hotfix.19",
+  "version": "2.5.3-internal-20250724-hotfix.20",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

@@ -1,5 +1,17 @@
 # @orderly.network/wallet-connector
 
+## 2.5.3-internal-20250724-hotfix.20
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.5.3-internal-20250724-hotfix.20
+  - @orderly.network/hooks@2.5.3-internal-20250724-hotfix.20
+  - @orderly.network/types@2.5.3-internal-20250724-hotfix.20
+  - @orderly.network/ui@2.5.3-internal-20250724-hotfix.20
+  - @orderly.network/utils@2.5.3-internal-20250724-hotfix.20
+
 ## 2.5.3-internal-20250724-hotfix.19
 
 ### Patch Changes

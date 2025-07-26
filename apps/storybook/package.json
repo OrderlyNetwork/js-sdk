@@ -1,7 +1,7 @@
 {
   "name": "@orderly.network/storybook",
   "private": true,
-  "version": "1.5.3-internal-20250724-hotfix.19",
+  "version": "1.5.3-internal-20250724-hotfix.20",
   "type": "module",
   "scripts": {
     "dev": "vite",

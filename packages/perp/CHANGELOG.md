@@ -1,5 +1,14 @@
 # @orderly.network/futures
 
+## 4.5.3-internal-20250724-hotfix.20
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@2.5.3-internal-20250724-hotfix.20
+  - @orderly.network/utils@2.5.3-internal-20250724-hotfix.20
+
 ## 4.5.3-internal-20250724-hotfix.19
 
 ### Patch Changes
