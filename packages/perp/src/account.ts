@@ -823,7 +823,7 @@ export const maxWithdrawalOtherCollateral = (inputs: {
     inputs;
   const usdcBalance = new Decimal(USDCBalance);
   const denominator = usdcBalance.isNegative()
-    ? new Decimal(indexPrice).mul(weight).mul(new Decimal(1).add(1)) // 1 is for test
+    ? new Decimal(indexPrice).mul(weight).mul(new Decimal(1).add(0.001))
     : new Decimal(indexPrice).mul(weight);
   if (denominator.isZero()) {
     return zero;
