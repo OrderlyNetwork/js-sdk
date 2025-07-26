@@ -113,7 +113,7 @@ export const useTradingScript = () => {
   const navigateToPortfolio =
     typeof onRouteChange === "function"
       ? () => {
-          onRouteChange({ href: "/portfolio" });
+          onRouteChange({ href: "/portfolio", name: t("common.portfolio") });
         }
       : undefined;
 
