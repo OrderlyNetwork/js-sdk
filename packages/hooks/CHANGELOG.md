@@ -1,5 +1,20 @@
 # @orderly.network/hooks
 
+## 2.5.3-internal-20250724-hotfix.14
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.5.3-internal-20250724-hotfix.14
+  - @orderly.network/default-evm-adapter@2.5.3-internal-20250724-hotfix.14
+  - @orderly.network/default-solana-adapter@2.5.3-internal-20250724-hotfix.14
+  - @orderly.network/net@2.5.3-internal-20250724-hotfix.14
+  - @orderly.network/perp@4.5.3-internal-20250724-hotfix.14
+  - @orderly.network/types@2.5.3-internal-20250724-hotfix.14
+  - @orderly.network/utils@2.5.3-internal-20250724-hotfix.14
+  - @orderly.network/web3-provider-ethers@2.5.3-internal-20250724-hotfix.14
+
 ## 2.5.3-internal-20250724-hotfix.13
 
 ### Patch Changes

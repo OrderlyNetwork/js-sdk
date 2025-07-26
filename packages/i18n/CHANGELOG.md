@@ -1,5 +1,11 @@
 # @orderly.network/i18n
 
+## 2.5.3-internal-20250724-hotfix.14
+
+### Patch Changes
+
+- publish
+
 ## 2.5.3-internal-20250724-hotfix.13
 
 ### Patch Changes

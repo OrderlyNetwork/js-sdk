@@ -1,5 +1,14 @@
 # @orderly.network/onboard
 
+## 2.5.3-internal-20250724-hotfix.14
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.5.3-internal-20250724-hotfix.14
+  - @orderly.network/types@2.5.3-internal-20250724-hotfix.14
+
 ## 2.5.3-internal-20250724-hotfix.13
 
 ### Patch Changes
