@@ -136,3 +136,7 @@ export const TesntTokenFallback = (testnetTokens: any) => [
     chain_details: testnetTokens,
   },
 ];
+
+export const EMPTY_LIST: any[] = [];
+
+export const EMPTY_OBJECT = {};

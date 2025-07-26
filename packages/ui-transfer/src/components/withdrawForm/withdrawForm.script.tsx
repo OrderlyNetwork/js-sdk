@@ -340,7 +340,9 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
 
   // it need to use useMemoizedFn wrap ,otherwise crossChainTrans and assetHistory will be first render data
   const handleWalletTopic = useMemoizedFn((data: any) => {
-    if (!crossChainTrans) return;
+    if (!crossChainTrans) {
+      return;
+    }
     const txId = assetHistory?.[0]?.tx_id;
     const { trxId, transStatus } = data;
     if (trxId === txId && transStatus === "COMPLETED") {

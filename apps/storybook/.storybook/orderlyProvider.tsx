@@ -83,9 +83,7 @@ const OrderApp: React.FC<React.PropsWithChildren> = (props) => {
       appIcons={config.orderlyAppProvider.appIcons}
       restrictedInfo={config.orderlyAppProvider.restrictedInfo}
       enableSwapDeposit={true}
-      onRouteChange={(option) => {
-        onRouteChange(option as any);
-      }}
+      onRouteChange={onRouteChange}
       // dataAdapter={{
       //   symbolList(original) {
       //     return original.filter(

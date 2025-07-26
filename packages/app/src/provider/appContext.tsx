@@ -22,6 +22,7 @@ import { useWalletStateHandle } from "../hooks/useWalletStateHandle";
 
 export type RouteOption = {
   href: "/portfolio" | "/portfolio/history";
+  name: string;
 };
 
 type AppContextState = {
