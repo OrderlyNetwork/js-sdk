@@ -1,5 +1,15 @@
 # @orderly.network/chart
 
+## 2.5.3-internal-20250724-hotfix.17
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/i18n@2.5.3-internal-20250724-hotfix.17
+  - @orderly.network/ui@2.5.3-internal-20250724-hotfix.17
+  - @orderly.network/utils@2.5.3-internal-20250724-hotfix.17
+
 ## 2.5.3-internal-20250724-hotfix.16
 
 ### Patch Changes

@@ -1,5 +1,14 @@
 # @orderly.network/default-solana-adapter
 
+## 2.5.3-internal-20250724-hotfix.17
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.5.3-internal-20250724-hotfix.17
+  - @orderly.network/types@2.5.3-internal-20250724-hotfix.17
+
 ## 2.5.3-internal-20250724-hotfix.16
 
 ### Patch Changes
