@@ -266,7 +266,7 @@ export function DataTable<RecordType extends any>(
       >
         <table
           className={cnBase(
-            "oui-w-full",
+            "oui-w-full oui-px-2",
             "oui-table-fixed oui-border-collapse",
           )}
         >

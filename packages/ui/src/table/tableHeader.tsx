@@ -32,7 +32,12 @@ export const TableHeader: FC<TableHeaderProps> = (props) => {
       {props.headerGroups.map((headerGroup) => (
         <tr
           key={headerGroup.id}
-          className={cnBase("oui-table-thead-tr", "oui-h-10", props.className)}
+          className={cnBase(
+            "oui-table-thead-tr",
+            "oui-h-10",
+            "[&>th:first-child]:oui-pl-3 [&>th:last-child]:oui-pr-3",
+            props.className,
+          )}
         >
           {headerGroup.headers.map((header) => {
             const column = header.column;
