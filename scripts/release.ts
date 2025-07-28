@@ -5,7 +5,7 @@ import { Release, VersionType } from "@changesets/types";
 import writeChangeset from "@changesets/write";
 import { getPackages } from "@manypkg/get-packages";
 import SimpleGit from "simple-git";
-import { $ } from "zx";
+import { $, retry, sleep } from "zx";
 
 const simpleGit = SimpleGit();
 
@@ -45,6 +45,9 @@ const exitPreTag = process.env.EXIT_PRE_TAG === "true";
 
 // set publish npm registry
 const npmRegistry = npm.registry ? `npm_config_registry=${npm.registry}` : "";
+
+const retryCount = 0;
+const maxRetryCount = 5;
 
 /** release patch version */
 async function main() {
@@ -141,18 +144,19 @@ async function release() {
     await authNPM();
   }
 
-  await updateNpmRetryConfig();
+  // await updateNpmRetryConfig();
+  await retryPublishNpm();
 
-  try {
-    if (npmRegistry) {
-      await $`${npmRegistry} pnpm changeset publish`;
-    } else {
-      await $`pnpm changeset publish`;
-    }
-  } catch (err) {
-    console.error("publish error: ", err);
-    // throw err;
-  }
+  // try {
+  //   if (npmRegistry) {
+  //     await $`${npmRegistry} pnpm changeset publish`;
+  //   } else {
+  //     await $`pnpm changeset publish`;
+  //   }
+  // } catch (err) {
+  //   console.error("publish error: ", err);
+  //   // throw err;
+  // }
 
   // restore .npmrc file change when publish success
   if (npm.token) {
@@ -185,6 +189,34 @@ async function release() {
       await $`git push --no-verify`;
     }
   }
+}
+
+async function getPublishCommand() {
+  if (npmRegistry) {
+    return $`${npmRegistry} pnpm changeset publish`;
+  } else {
+    return $`pnpm changeset publish`;
+  }
+}
+
+async function retryPublishNpm() {
+  // retry 10 times, 10 seconds each time
+  await retry(10, 10000, getPublishCommand);
+  // return new Promise(async (resolve, reject) => {
+  //   try {
+  //     await getPublishCommand();
+  //     resolve(true);
+  //   } catch (err) {
+  //     retryCount++;
+  //     console.error("publish npm error: ", err);
+  //     if (retryCount < maxRetryCount) {
+  //       await sleep(10000);
+  //       retryPublishNpm();
+  //     } else {
+  //       reject(err);
+  //     }
+  //   }
+  // });
 }
 
 async function updateNpmRetryConfig() {
