@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/codemod",
-  "version": "1.5.2-internal-20250724.7",
+  "version": "1.5.2-internal-20250724.8",
   "description": "",
   "bin": {
     "orderly-codemod": "bin/cli.js"
