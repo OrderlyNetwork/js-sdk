@@ -4,6 +4,7 @@ import {
   createContext,
   useContext,
   useEffect,
+  useMemo,
 } from "react";
 import injectedModule from "@web3-onboard/injected-wallets";
 import { init, useConnectWallet } from "@web3-onboard/react";
@@ -14,7 +15,7 @@ interface WalletConnectContextState {
 }
 
 const WalletConnectContext = createContext<WalletConnectContextState>(
-  {} as WalletConnectContextState
+  {} as WalletConnectContextState,
 );
 
 const injected = injectedModule();
@@ -56,8 +57,12 @@ export const WalletConnectProvider: FC<PropsWithChildren<{}>> = (props) => {
     }
   }, [wallet]);
 
+  const memoizedValue = useMemo<WalletConnectContextState>(() => {
+    return { connect };
+  }, [connect]);
+
   return (
-    <WalletConnectContext.Provider value={{ connect }}>
+    <WalletConnectContext.Provider value={memoizedValue}>
       {props.children}
     </WalletConnectContext.Provider>
   );
