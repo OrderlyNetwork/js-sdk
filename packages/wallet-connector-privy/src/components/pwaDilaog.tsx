@@ -45,7 +45,7 @@ export const PwaDialog = modal.create((props) => {
                   className="oui-bg-black/[0.08] oui-p-2 oui-h-[52px] oui-rounded-[44px] oui-w-full oui-px-4"
                 >
                   <div></div>
-                  <Text className="oui-text-black/[0.88] oui-text-[20px] oui-flex-1">
+                  <Text className="oui-text-black/[0.88] oui-text-[20px] oui-leading-[36px] oui-flex-1">
                     {domain}
                   </Text>
                   <Flex itemAlign={"center"} justify={"end"}>
