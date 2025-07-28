@@ -1,9 +1,5 @@
 import { FC } from "react";
-import {
-  useLeverage,
-  useSymbolsInfo,
-  useAccountInfo,
-} from "@orderly.network/hooks";
+import { useSymbolsInfo, useAccountInfo } from "@orderly.network/hooks";
 import { positions, account } from "@orderly.network/perp";
 import { modal, ShareIcon } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
@@ -13,22 +9,10 @@ export const ShareButton: FC<ShareButtonState> = (props) => {
   if (props.sharePnLConfig == null) return <></>;
 
   const { position } = props;
-  const { curLeverage } = useLeverage();
   const symbolsInfo = useSymbolsInfo();
   const { data: accountInfo } = useAccountInfo();
 
   const showModal = () => {
-    let calculatedLeverage = props.leverage;
-
-    // For position history, use the minimum of symbol leverage and current leverage
-    if (
-      props.isPositionHistory &&
-      typeof props.leverage === "number" &&
-      typeof curLeverage === "number"
-    ) {
-      calculatedLeverage = Math.min(props.leverage, curLeverage);
-    }
-
     const entity = props.isPositionHistory
       ? (() => {
           // Calculate ROI for position history
@@ -43,7 +27,7 @@ export const ShareButton: FC<ShareButtonState> = (props) => {
             quantity !== 0 &&
             openPrice !== 0 &&
             accountInfo &&
-            typeof calculatedLeverage === "number"
+            typeof props.leverage === "number"
           ) {
             // Calculate IMR for ROI calculation
             const symbolInfo = symbolsInfo[position.symbol];
@@ -104,7 +88,6 @@ export const ShareButton: FC<ShareButtonState> = (props) => {
         },
         refCode: props.refCode,
         ...props.sharePnLConfig,
-        leverage: calculatedLeverage,
       },
     });
   };

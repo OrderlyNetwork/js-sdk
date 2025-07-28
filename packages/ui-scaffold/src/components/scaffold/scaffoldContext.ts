@@ -23,7 +23,7 @@ export type ScaffoldState = {
 };
 
 export const ScaffoldContext = createContext<ScaffoldState>(
-  {} as ScaffoldState
+  {} as ScaffoldState,
 );
 
 export const useScaffoldContext = () => {

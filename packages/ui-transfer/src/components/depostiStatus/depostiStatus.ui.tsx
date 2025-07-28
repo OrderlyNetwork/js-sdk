@@ -29,7 +29,7 @@ export const DepositStatus = (props: DepositStatusProps) => {
     >
       <DepositStatusContent
         count={props.pendingCount}
-        status={AssetHistoryStatusEnum.NEW}
+        status={AssetHistoryStatusEnum.PENDING}
         onClick={props.onClick}
         className={classNames?.items}
       />
@@ -45,7 +45,7 @@ export const DepositStatus = (props: DepositStatusProps) => {
 
 type DepositStatusContentProps = {
   count: number;
-  status: AssetHistoryStatusEnum.NEW | AssetHistoryStatusEnum.COMPLETED;
+  status: AssetHistoryStatusEnum.PENDING | AssetHistoryStatusEnum.COMPLETED;
   onClick?: () => void;
   className?: string;
 };
@@ -55,10 +55,10 @@ export const DepositStatusContent = (props: DepositStatusContentProps) => {
   const { count, status } = props;
 
   const content = useMemo(() => {
-    if (status === AssetHistoryStatusEnum.NEW) {
+    if (status === AssetHistoryStatusEnum.PENDING) {
       return count > 1
-        ? t("transfer.deposit.status.new.multiple")
-        : t("transfer.deposit.status.new.one");
+        ? t("transfer.deposit.status.pending.multiple")
+        : t("transfer.deposit.status.pending.one");
     }
 
     return count > 1

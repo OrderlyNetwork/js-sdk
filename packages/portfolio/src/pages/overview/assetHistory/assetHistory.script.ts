@@ -55,13 +55,18 @@ export const useAssetHistoryScript = (options: AssetHistoryScriptOptions) => {
   }, [dateRange]);
 
   const [assetData, { meta: assetMeta, isLoading: assetLoading }] =
-    useAssetsHistory({
-      startTime,
-      endTime,
-      page,
-      pageSize,
-      side,
-    });
+    useAssetsHistory(
+      {
+        startTime,
+        endTime,
+        page,
+        pageSize,
+        side,
+      },
+      {
+        shouldUpdateOnWalletChanged: (data) => data.side === side,
+      },
+    );
 
   const [transferData, { isLoading: transferLoading, meta: transferMeta }] =
     useTransferHistory({

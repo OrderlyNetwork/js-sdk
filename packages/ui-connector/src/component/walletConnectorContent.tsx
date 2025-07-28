@@ -1,11 +1,17 @@
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import {
   useAccount,
   useEventEmitter,
   useLocalStorage,
+  useStorageLedgerAddress,
+  useWalletConnector,
 } from "@orderly.network/hooks";
 import { i18n, useTranslation } from "@orderly.network/i18n";
-import { AccountStatusEnum } from "@orderly.network/types";
+import {
+  AccountStatusEnum,
+  ChainNamespace,
+  LedgerWalletKey,
+} from "@orderly.network/types";
 import {
   Box,
   Button,
@@ -40,11 +46,15 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
   const [remember, setRemember] = useState(true);
   const ee = useEventEmitter();
   const { t } = useTranslation();
+  const { disconnect, namespace } = useWalletConnector();
 
   const { state: accountState, account } = useAccount();
   const [state, setState] = useState(initAccountState);
   const [activeStep, setActiveStep] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [showLedgerButton, setShowLedgerButton] = useState(false);
+  const { ledgerWallet, setLedgerAddress } = useStorageLedgerAddress();
+  const handleRef = useRef(0);
   const [firstShowDialog] = useLocalStorage(
     "orderly-first-show-wallet-connector-dialog",
     undefined,
@@ -80,12 +90,31 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
     return steps;
   }, [initAccountState, t]);
 
+  useEffect(() => {
+    if (namespace != ChainNamespace.solana) {
+      setShowLedgerButton(false);
+      return;
+    }
+    if (!ledgerWallet) {
+      setShowLedgerButton(true);
+      return;
+    }
+    if (ledgerWallet && account.address) {
+      if (!ledgerWallet.includes(account.address)) {
+        setShowLedgerButton(true);
+        return;
+      }
+    }
+    setShowLedgerButton(false);
+  }, [namespace, account.address, ledgerWallet]);
+
   const onEnableTrading = () => {
     setLoading(true);
     return props
       .enableTrading(remember)
       .then(
         async (res) => {
+          handleRef.current++;
           console.log(res);
           setLoading(false);
           setActiveStep((step) => step + 1);
@@ -121,6 +150,18 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
         console.log("enable trading catch error", e);
         setLoading(false);
       });
+  };
+
+  const onDisconnect = async () => {
+    localStorage.removeItem("orderly_link_device");
+    disconnect({
+      label: (state as unknown as any).connectWallet?.name,
+    }).then(() => {
+      account.disconnect();
+      if (typeof props.close === "function") {
+        props.close();
+      }
+    });
   };
 
   const onSignIn = () => {
@@ -213,18 +254,51 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
           />
         </Flex>
       )}
-      <Flex justify={"center"} mt={8}>
-        <Box className="oui-min-w-[144px]">
+      <Flex justify={"center"} mt={8} className="oui-w-full">
+        <Box className="oui-w-full">
           <ActionButton
             state={state}
             signIn={onSignIn}
             enableTrading={onEnableTrading}
             loading={loading}
             disabled={state >= AccountStatusEnum.EnableTrading}
+            showLedgerButton={showLedgerButton}
           />
         </Box>
       </Flex>
+      {state > AccountStatusEnum.NotConnected && (
+        <Flex
+          justify={"center"}
+          mt={4}
+          gap={1}
+          className="oui-w-full oui-cursor-pointer"
+          onClick={onDisconnect}
+        >
+          <DisconnectIcon />
+          <Text className="oui-text-base-contrast-80 oui-text-sm">
+            {t("connector.disconnectWallet")}
+          </Text>
+        </Flex>
+      )}
     </Box>
+  );
+};
+
+const DisconnectIcon = () => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="18"
+      height="18"
+      viewBox="0 0 18 18"
+      fill="none"
+    >
+      <path
+        d="M2.24219 5.24316C2.24219 3.58641 3.58536 2.24316 5.24219 2.24316H8.24219C9.89894 2.24316 11.2422 3.58641 11.2422 5.24316C11.2422 5.65716 10.9062 5.99316 10.4922 5.99316C10.0782 5.99316 9.74219 5.65716 9.74219 5.24316C9.74219 4.41441 9.07094 3.74316 8.24219 3.74316H5.24219C4.41374 3.74316 3.74219 4.41441 3.74219 5.24316V12.7432C3.74219 13.5719 4.41374 14.2432 5.24219 14.2432H8.24219C9.07094 14.2432 9.74219 13.5719 9.74219 12.7432C9.74219 12.3292 10.0782 11.9932 10.4922 11.9932C10.9062 11.9932 11.2422 12.3292 11.2422 12.7432C11.2422 14.3999 9.89894 15.7432 8.24219 15.7432H5.24219C3.58536 15.7432 2.24219 14.3999 2.24219 12.7432V5.24316ZM7.49219 8.99316C7.49219 8.57916 7.82819 8.24316 8.24219 8.24316H13.9144L12.4377 6.74316L13.4922 5.68866L16.2814 8.45391C16.5739 8.74716 16.5739 9.23915 16.2814 9.5324L13.4922 12.2977L12.4377 11.2432L13.9144 9.74316H8.24219C7.82819 9.74316 7.49219 9.40716 7.49219 8.99316Z"
+        fill="white"
+        fillOpacity="0.8"
+      />
+    </svg>
   );
 };
 
@@ -233,32 +307,57 @@ const ActionButton: FC<{
   signIn: () => Promise<any>;
   enableTrading: () => Promise<any>;
   loading: boolean;
+  showLedgerButton?: boolean;
   disabled?: boolean;
-}> = ({ state, signIn, enableTrading, loading, disabled }) => {
+}> = ({
+  state,
+  signIn,
+  enableTrading,
+  loading,
+  disabled,
+  showLedgerButton,
+}) => {
   const { t } = useTranslation();
 
   if (state <= AccountStatusEnum.NotSignedIn) {
     return (
-      <Button
-        fullWidth
-        onClick={() => signIn()}
-        loading={loading}
-        disabled={disabled}
-      >
-        {t("connector.createAccount")}
-      </Button>
+      <Flex direction={"column"} gap={3} className="oui-w-full">
+        <Button
+          fullWidth
+          onClick={() => signIn()}
+          loading={loading}
+          disabled={disabled}
+        >
+          {t("connector.createAccount")}
+        </Button>
+        {showLedgerButton && (
+          <WithLedgerButton
+            onClick={() => signIn()}
+            content={t("connector.createAccountWithLedger")}
+          />
+        )}
+      </Flex>
     );
   }
 
   return (
-    <Button
-      fullWidth
-      onClick={() => enableTrading()}
-      loading={loading}
-      disabled={disabled}
-    >
-      {t("connector.enableTrading")}
-    </Button>
+    <Flex direction={"column"} gap={3} className="oui-w-full">
+      <Button
+        fullWidth
+        onClick={() => enableTrading()}
+        loading={loading}
+        disabled={disabled}
+      >
+        {t("connector.enableTrading")}
+      </Button>
+      {showLedgerButton && (
+        <WithLedgerButton
+          onClick={() => enableTrading()}
+          disabled={disabled}
+          content={t("connector.enableTradingWithLedger")}
+        />
+      )}
+    </Flex>
   );
 
   // return (
@@ -271,28 +370,76 @@ const ActionButton: FC<{
   //     }}
   //     case={{
   //       signIn: (
-  //         <Button
-  //           fullWidth
-  //           onClick={() => signIn()}
-  //           loading={loading}
-  //           disabled={disabled}
-  //         >
-  //           {t("connector.createAccount")}
-  //         </Button>
+  //         <Flex direction={"column"} gap={3} className="oui-w-full">
+  //           <Button
+  //             fullWidth
+  //             onClick={() => signIn()}
+  //             loading={loading}
+  //             disabled={disabled}
+  //           >
+  //             {t("connector.createAccount")}
+  //           </Button>
+  //           {showLedgerButton && (
+  //             <WithLedgerButton
+  //               onClick={() => signIn()}
+  //               content={t("connector.createAccountWithLedger")}
+  //             />
+  //           )}
+  //         </Flex>
   //       ),
   //       enableTrading: (
-  //         <Button
-  //           fullWidth
-  //           onClick={() => enableTrading()}
-  //           loading={loading}
-  //           disabled={disabled}
-  //         >
-  //           {t("connector.enableTrading")}
-  //         </Button>
+  //         <Flex direction={"column"} gap={3} className="oui-w-full">
+  //           <Button
+  //             fullWidth
+  //             onClick={() => enableTrading()}
+  //             loading={loading}
+  //             disabled={disabled}
+  //           >
+  //             {t("connector.enableTrading")}
+  //           </Button>
+  //           {showLedgerButton && (
+  //             <WithLedgerButton
+  //               onClick={() => enableTrading()}
+  //               disabled={disabled}
+  //               content={t("connector.enableTradingWithLedger")}
+  //             />
+  //           )}
+  //         </Flex>
   //       ),
   //     }}
   //   />
   // );
+};
+
+const WithLedgerButton = ({
+  onClick,
+  disabled,
+  content,
+}: {
+  onClick: () => void;
+  disabled?: boolean;
+  content: ReactNode;
+}) => {
+  const { t } = useTranslation();
+  const { state } = useAccount();
+  const address = state.address;
+  const { setLedgerAddress } = useStorageLedgerAddress();
+  if (!address) return null;
+  return (
+    <Button
+      variant="outlined"
+      color="primary"
+      fullWidth
+      onClick={() => {
+        setLedgerAddress(address);
+        onClick();
+      }}
+      disabled={disabled}
+      className="oui-w-full"
+    >
+      {content}
+    </Button>
+  );
 };
 
 const ReferralCode: FC<WalletConnectContentProps> = (props) => {

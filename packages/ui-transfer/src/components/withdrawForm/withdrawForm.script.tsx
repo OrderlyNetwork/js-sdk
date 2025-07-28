@@ -6,11 +6,12 @@ import {
   useConfig,
   useEventEmitter,
   useLocalStorage,
+  useMemoizedFn,
   useQuery,
   useTokenInfo,
   useTransfer,
   useWalletConnector,
-  useWalletSubscription,
+  useWalletTopic,
   useWithdraw,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
@@ -41,12 +42,20 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
   const { t } = useTranslation();
   const [crossChainTrans, setCrossChainTrans] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);
-  const [assetHistory] = useAssetsHistory({
-    page: 1,
-    pageSize: 1,
-    side: AssetHistorySideEnum.WITHDRAW,
-    status: AssetHistoryStatusEnum.PENDING_REBALANCE,
-  });
+  const [assetHistory] = useAssetsHistory(
+    {
+      page: 1,
+      pageSize: 1,
+      side: AssetHistorySideEnum.WITHDRAW,
+      status: AssetHistoryStatusEnum.PENDING_REBALANCE,
+    },
+    // update when withdraw status changed
+    {
+      shouldUpdateOnWalletChanged: (data) =>
+        data.side === AssetHistorySideEnum.WITHDRAW,
+    },
+  );
+
   const config = useConfig();
 
   const brokerName = config.get("brokerName");
@@ -329,16 +338,20 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     setCrossChainTrans(!!assetHistory?.length);
   }, [assetHistory]);
 
-  useWalletSubscription({
-    onMessage(data: any) {
-      if (!crossChainTrans) return;
-      // console.log("subscribe wallet topic", data);
-      const txId = assetHistory?.[0]?.tx_id;
-      const { trxId, transStatus } = data;
-      if (trxId === txId && transStatus === "COMPLETED") {
-        setCrossChainTrans(false);
-      }
-    },
+  // it need to use useMemoizedFn wrap ,otherwise crossChainTrans and assetHistory will be first render data
+  const handleWalletTopic = useMemoizedFn((data: any) => {
+    if (!crossChainTrans) {
+      return;
+    }
+    const txId = assetHistory?.[0]?.tx_id;
+    const { trxId, transStatus } = data;
+    if (trxId === txId && transStatus === "COMPLETED") {
+      setCrossChainTrans(false);
+    }
+  });
+
+  useWalletTopic({
+    onMessage: handleWalletTopic,
   });
 
   const { hasPositions, onSettlePnl } = useSettlePnl();

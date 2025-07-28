@@ -1,6 +1,10 @@
 import { useEffect } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import { API, AssetHistoryStatusEnum } from "@orderly.network/types";
+import {
+  API,
+  AssetHistoryStatusEnum,
+  EMPTY_LIST,
+} from "@orderly.network/types";
 import { useEventEmitter } from "../../useEventEmitter";
 import { usePrivateQuery } from "../../usePrivateQuery";
 
@@ -22,7 +26,15 @@ type AssetHistoryOptions = {
  * Get asset history, including token deposits/withdrawals.
  * https://orderly.network/docs/build-on-omnichain/evm-api/restful-api/private/get-asset-history#get-asset-history
  */
-export const useAssetsHistory = (options: AssetHistoryOptions) => {
+export const useAssetsHistory = (
+  options: AssetHistoryOptions,
+  config?: {
+    /**
+     * should update when wallet changed, default is update
+     */
+    shouldUpdateOnWalletChanged?: (data: any) => boolean;
+  },
+) => {
   const ee = useEventEmitter();
 
   const getKey = () => {
@@ -74,7 +86,14 @@ export const useAssetsHistory = (options: AssetHistoryOptions) => {
 
   const updateList = useDebouncedCallback(
     (data: any) => {
-      mutate();
+      const isUpdate =
+        typeof config?.shouldUpdateOnWalletChanged === "function"
+          ? config.shouldUpdateOnWalletChanged(data)
+          : true;
+
+      if (isUpdate) {
+        mutate();
+      }
     },
     // delay in ms
     300,
@@ -89,7 +108,7 @@ export const useAssetsHistory = (options: AssetHistoryOptions) => {
   }, []);
 
   return [
-    data?.rows || [],
+    data?.rows || EMPTY_LIST,
     {
       meta: data?.meta,
       isLoading,

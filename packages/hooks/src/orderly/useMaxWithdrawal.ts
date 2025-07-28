@@ -1,6 +1,13 @@
 import { useMemo } from "react";
 import { account as accountPerp } from "@orderly.network/perp";
-import { useCollateral, useIndexPricesStream, useTokenInfo } from "..";
+import { Decimal } from "@orderly.network/utils";
+import {
+  useCollateral,
+  useIndexPricesStream,
+  useUpdatedRef,
+  useTokenInfo,
+} from "..";
+import { useAppStore } from "./appStore";
 import { useHoldingStream } from "./useHoldingStream";
 
 const { maxWithdrawalUSDC, maxWithdrawalOtherCollateral, collateralRatio } =
@@ -11,11 +18,16 @@ const { maxWithdrawalUSDC, maxWithdrawalOtherCollateral, collateralRatio } =
  * if token is not provided, return the max withdrawal amount for USDC
  */
 export const useMaxWithdrawal = (token: string) => {
-  const { unsettledPnL, freeCollateral } = useCollateral();
+  const { unsettledPnL } = useCollateral();
+
+  const { freeCollateral } = useAppStore((state) => state.portfolio);
 
   const tokenInfo = useTokenInfo(token);
 
-  const { data: indexPrices } = useIndexPricesStream();
+  const { getIndexPrice } = useIndexPricesStream();
+
+  const indexPriceRef = useUpdatedRef(getIndexPrice(token));
+
   const { usdc, data: holdings = [] } = useHoldingStream();
 
   const holding = useMemo(() => {
@@ -26,14 +38,6 @@ export const useMaxWithdrawal = (token: string) => {
 
   const usdcBalance = usdc?.holding ?? 0;
 
-  const indexPrice = useMemo(() => {
-    if (token === "USDC") {
-      return 1;
-    }
-    const symbol = `PERP_${token}_USDC`;
-    return indexPrices[symbol] ?? 0;
-  }, [token, indexPrices]);
-
   const memoizedCollateralRatio = useMemo(() => {
     const { base_weight = 0, discount_factor = 0 } = tokenInfo || {};
     const holdingQty = holding?.holding ?? 0;
@@ -42,35 +46,53 @@ export const useMaxWithdrawal = (token: string) => {
       discountFactor: discount_factor,
       collateralQty: holdingQty,
       collateralCap: tokenInfo?.user_max_qty ?? holdingQty,
-      indexPrice,
+      indexPrice: indexPriceRef.current,
     });
-  }, [tokenInfo, indexPrice, holding]);
+  }, [tokenInfo, holding?.holding, indexPriceRef]);
 
   const maxAmount = useMemo<number>(() => {
     if (!token) {
       return 0;
     }
+
+    let quantity = 0;
+
     if (token === "USDC") {
-      return maxWithdrawalUSDC({
+      quantity = maxWithdrawalUSDC({
         USDCBalance: usdcBalance,
-        freeCollateral: freeCollateral,
+        freeCollateral,
         upnl: unsettledPnL ?? 0,
       });
+    } else {
+      quantity = maxWithdrawalOtherCollateral({
+        USDCBalance: usdcBalance,
+        collateralQty: holding?.holding ?? 0,
+        freeCollateral,
+        indexPrice: indexPriceRef.current,
+        weight: memoizedCollateralRatio,
+      }).toNumber();
     }
-    return maxWithdrawalOtherCollateral({
-      collateralQty: holding?.holding ?? 0,
-      freeCollateral: freeCollateral,
-      indexPrice,
-      weight: memoizedCollateralRatio,
-    });
+
+    if (Number.isNaN(quantity)) {
+      return 0;
+    }
+
+    if (tokenInfo?.decimals === undefined) {
+      return quantity;
+    }
+
+    return new Decimal(quantity || 0)
+      .todp(tokenInfo.decimals, Decimal.ROUND_DOWN)
+      .toNumber();
   }, [
+    token,
+    tokenInfo?.decimals,
     usdcBalance,
     freeCollateral,
     unsettledPnL,
+    holding?.holding,
+    indexPriceRef,
     memoizedCollateralRatio,
-    indexPrice,
-    token,
-    holding,
   ]);
 
   return maxAmount;
