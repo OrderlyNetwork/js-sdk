@@ -1,5 +1,11 @@
 # create-orderly-app
 
+## 1.10.3-internal-20250724-hotfix.22
+
+### Patch Changes
+
+- publish
+
 ## 1.10.3-internal-20250724-hotfix.21
 
 ### Patch Changes

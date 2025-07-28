@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/default-solana-adapter",
-  "version": "2.5.3-internal-20250724-hotfix.21",
+  "version": "2.5.3-internal-20250724-hotfix.22",
   "description": "",
   "scripts": {
     "build": "tsup",
