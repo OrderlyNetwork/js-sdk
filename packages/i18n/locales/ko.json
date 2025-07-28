@@ -766,6 +766,7 @@
   "linkDevice.scanQRCode.description": "데스크톱 오른쪽 상단 모서리에 있는 <0/> 아이콘을 클릭하여 스캔할 QR 코드를 생성하세요.",
   "linkDevice.scanQRCode.tooltip": "QR 코드를 통해 데스크톱에 연결",
   "linkDevice.scanQRCode.connected.description": "다른 기기를 통해 연결되어 있습니다. 이 모드는 거래만 가능합니다. 네트워크를 전환하거나 자산을 입금 또는 출금하려면 이 기기에서 지갑 연결을 해제하고 다시 연결하세요.",
+  "linkDevice.tooltip": "모바일 기기 연결",
   "settle.settlePnl": "손익 정산",
   "settle.settlePnl.warning": "잔액을 정산해 주세요",
   "settle.settlePnl.description": "정말로 손익을 정산하시겠습니까? <br/> 정산은 가용 잔액을 출금할 수 있기 전까지 최대 1분이 소요됩니다.",

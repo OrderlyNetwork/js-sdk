@@ -766,6 +766,7 @@
   "linkDevice.scanQRCode.description": "Clique no ícone <0/> no canto superior direito no desktop para gerar um código QR para escanear.",
   "linkDevice.scanQRCode.tooltip": "Vincular ao Desktop via Código QR",
   "linkDevice.scanQRCode.connected.description": "Você está conectado via outro dispositivo. Este modo é apenas para negociação. Para trocar de redes, depositar ou sacar ativos, por favor desconecte e reconecte sua carteira neste dispositivo.",
+  "linkDevice.tooltip": "Vincular dispositivo móvel",
   "settle.settlePnl": "Liquidar L/P",
   "settle.settlePnl.warning": "Por favor, liquide seu saldo",
   "settle.settlePnl.description": "Tem certeza que deseja liquidar seu L/P? <br/> A liquidação levará até 1 minuto antes que você possa sacar seu saldo disponível.",

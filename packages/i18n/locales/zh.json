@@ -766,6 +766,7 @@
   "linkDevice.scanQRCode.description": "点击桌面右上角的<0/>图标以生成二维码进行扫描。",
   "linkDevice.scanQRCode.tooltip": "通过二维码链接到桌面",
   "linkDevice.scanQRCode.connected.description": "您已通过其他设备连接。此模式仅用于交易。要切换网络、存款或取款资产，请断开连接并在此设备上重新连接您的钱包。",
+  "linkDevice.tooltip": "连接移动设备",
   "settle.settlePnl": "结算盈亏",
   "settle.settlePnl.warning": "请结算您的余额",
   "settle.settlePnl.description": "您确定要结算您的盈亏吗？<br/>结算将在1分钟内完成，然后您可以提取可用余额。",

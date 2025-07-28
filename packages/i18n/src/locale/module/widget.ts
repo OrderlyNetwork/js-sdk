@@ -23,6 +23,7 @@ export const widget = {
   "linkDevice.scanQRCode.tooltip": "Link to Desktop via QR Code",
   "linkDevice.scanQRCode.connected.description":
     "You are connected via another device. This mode is for trading only. To switch networks, deposit or withdraw assets, please disconnect and reconnect your wallet on this device.",
+  "linkDevice.tooltip": "Link mobile device",
 
   /** settle */
   "settle.settlePnl": "Settle PnL",

@@ -766,6 +766,7 @@
   "linkDevice.scanQRCode.description": "Kliknij ikonę <0/> w prawym górnym rogu na komputerze, aby wygenerować kod QR do zeskanowania.",
   "linkDevice.scanQRCode.tooltip": "Połącz z komputerem za pomocą kodu QR",
   "linkDevice.scanQRCode.connected.description": "Jesteś połączony przez inne urządzenie. Ten tryb jest przeznaczony tylko do handlu. Aby przełączyć sieci, wpłacić lub wypłacić aktywa, odłącz i ponownie połącz swój portfel na tym urządzeniu.",
+  "linkDevice.tooltip": "Połącz urządzenie mobilne",
   "settle.settlePnl": "Rozlicz PnL",
   "settle.settlePnl.warning": "Proszę rozliczyć saldo",
   "settle.settlePnl.description": "Czy na pewno chcesz rozliczyć swój PnL? <br/> Rozliczenie potrwa do 1 minuty, zanim będziesz mógł wypłacić dostępne saldo.",

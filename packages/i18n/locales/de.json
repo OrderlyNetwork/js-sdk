@@ -766,6 +766,7 @@
   "linkDevice.scanQRCode.description": "Klicken Sie auf das <0/>-Symbol in der oberen rechten Ecke auf dem Desktop, um einen QR-Code zum Scannen zu generieren.",
   "linkDevice.scanQRCode.tooltip": "Über QR-Code mit Desktop verbinden",
   "linkDevice.scanQRCode.connected.description": "Sie sind über ein anderes Gerät verbunden. Dieser Modus ist nur für den Handel. Um Netzwerke zu wechseln, Vermögenswerte einzuzahlen oder abzuheben, trennen Sie bitte die Verbindung und verbinden Sie Ihre Wallet auf diesem Gerät erneut.",
+  "linkDevice.tooltip": "Mobiles Gerät verbinden",
   "settle.settlePnl": "PnL abrechnen",
   "settle.settlePnl.warning": "Bitte rechnen Sie Ihren Saldo ab",
   "settle.settlePnl.description": "Sind Sie sicher, dass Sie Ihren PnL abrechnen möchten? <br/> Die Abrechnung dauert bis zu 1 Minute, bevor Sie Ihren verfügbaren Saldo abheben können.",

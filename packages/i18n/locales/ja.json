@@ -766,6 +766,7 @@
   "linkDevice.scanQRCode.description": "デスクトップの右上隅にある<0/>アイコンをクリックして、スキャンするQRコードを生成してください。",
   "linkDevice.scanQRCode.tooltip": "QRコードでデスクトップにリンク",
   "linkDevice.scanQRCode.connected.description": "別のデバイスで接続されています。このモードは取引のみ可能です。ネットワークの切り替え、資産の入出金を行うには、このデバイスでウォレットの接続を解除して再接続してください。",
+  "linkDevice.tooltip": "モバイルデバイスをリンク",
   "settle.settlePnl": "損益を決済",
   "settle.settlePnl.warning": "残高を決済してください",
   "settle.settlePnl.description": "損益を決済してもよろしいですか？<br/> 決済には最大1分かかり、その後利用可能残高を出金できます。",

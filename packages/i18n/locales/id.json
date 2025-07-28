@@ -766,6 +766,7 @@
   "linkDevice.scanQRCode.description": "Klik ikon <0/> di pojok kanan atas pada desktop untuk menghasilkan QR code yang akan dipindai.",
   "linkDevice.scanQRCode.tooltip": "Hubungkan ke Desktop melalui QR Code",
   "linkDevice.scanQRCode.connected.description": "Anda terhubung melalui perangkat lain. Mode ini hanya untuk trading. Untuk beralih jaringan, setor atau tarik aset, silakan putuskan dan sambungkan kembali wallet Anda di perangkat ini.",
+  "linkDevice.tooltip": "Hubungkan perangkat mobile",
   "settle.settlePnl": "Selesaikan PnL",
   "settle.settlePnl.warning": "Harap selesaikan saldo Anda",
   "settle.settlePnl.description": "Apakah Anda yakin ingin menyelesaikan PnL Anda? <br/> Penyelesaian akan memakan waktu hingga 1 menit sebelum Anda dapat menarik saldo yang tersedia.",

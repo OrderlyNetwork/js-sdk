@@ -766,6 +766,7 @@
   "linkDevice.scanQRCode.description": "Klik op het <0/> icoon rechtsboven op desktop om een QR-code te genereren om te scannen.",
   "linkDevice.scanQRCode.tooltip": "Koppelen aan Desktop via QR-code",
   "linkDevice.scanQRCode.connected.description": "U bent verbonden via een ander apparaat. Deze modus is alleen voor handelen. Om van netwerk te wisselen, activa te storten of op te nemen, koppel uw wallet los en verbind deze opnieuw op dit apparaat.",
+  "linkDevice.tooltip": "Mobiel apparaat koppelen",
   "settle.settlePnl": "W/V afwikkelen",
   "settle.settlePnl.warning": "Gelieve uw saldo af te wikkelen",
   "settle.settlePnl.description": "Weet u zeker dat u uw W/V wilt afwikkelen? <br/> Afwikkeling duurt maximaal 1 minuut voordat u uw beschikbare saldo kunt opnemen.",

@@ -766,6 +766,7 @@
   "linkDevice.scanQRCode.description": "Haz clic en el icono <0/> en la esquina superior derecha del escritorio para generar un código QR para escanear.",
   "linkDevice.scanQRCode.tooltip": "Vincular a escritorio vía código QR",
   "linkDevice.scanQRCode.connected.description": "Estás conectado a través de otro dispositivo. Este modo es solo para trading. Para cambiar redes, depositar o retirar activos, por favor desconecta y vuelve a conectar tu billetera en este dispositivo.",
+  "linkDevice.tooltip": "Vincular dispositivo móvil",
   "settle.settlePnl": "Liquidar PnL",
   "settle.settlePnl.warning": "Por favor liquida tu saldo",
   "settle.settlePnl.description": "¿Estás seguro de que deseas liquidar tu PnL? <br/> La liquidación tomará hasta 1 minuto antes de que puedas retirar tu saldo disponible.",

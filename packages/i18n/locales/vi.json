@@ -766,6 +766,7 @@
   "linkDevice.scanQRCode.description": "Nhấp vào biểu tượng <0/> ở góc trên bên phải trên máy tính để tạo mã QR để quét.",
   "linkDevice.scanQRCode.tooltip": "Liên kết với máy tính qua mã QR",
   "linkDevice.scanQRCode.connected.description": "Bạn đã được kết nối qua thiết bị khác. Chế độ này chỉ dành cho giao dịch. Để chuyển đổi mạng, nạp hoặc rút tài sản, vui lòng ngắt kết nối và kết nối lại ví của bạn trên thiết bị này.",
+  "linkDevice.tooltip": "Liên kết thiết bị di động",
   "settle.settlePnl": "Thanh toán PnL",
   "settle.settlePnl.warning": "Vui lòng thanh toán số dư của bạn",
   "settle.settlePnl.description": "Bạn có chắc chắn muốn thanh toán PnL của mình không? <br/> Việc thanh toán sẽ mất tới 1 phút trước khi bạn có thể rút số dư khả dụng.",

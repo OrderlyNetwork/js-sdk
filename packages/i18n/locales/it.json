@@ -766,6 +766,7 @@
   "linkDevice.scanQRCode.description": "Clicca sull'icona <0/> nell'angolo in alto a destra su desktop per generare un codice QR da scansionare.",
   "linkDevice.scanQRCode.tooltip": "Collega al Desktop tramite Codice QR",
   "linkDevice.scanQRCode.connected.description": "Sei connesso tramite un altro dispositivo. Questa modalità è solo per il trading. Per cambiare rete, depositare o prelevare asset, disconnetti e riconnetti il tuo portafoglio su questo dispositivo.",
+  "linkDevice.tooltip": "Collega dispositivo mobile",
   "settle.settlePnl": "Regola P/L",
   "settle.settlePnl.warning": "Per favore regola il tuo saldo",
   "settle.settlePnl.description": "Sei sicuro di voler regolare il tuo P/L? <br/> Il regolamento richiederà fino a 1 minuto prima che tu possa prelevare il tuo saldo disponibile.",

@@ -766,6 +766,7 @@
   "linkDevice.scanQRCode.description": "QR kodu taramak için masaüstünde sağ üst köşedeki <0/> simgesine tıklayın.",
   "linkDevice.scanQRCode.tooltip": "QR Kod ile Masaüstüne Bağlan",
   "linkDevice.scanQRCode.connected.description": "Başka bir cihaz üzerinden bağlısınız. Bu mod sadece işlem yapmak için kullanılır. Ağları değiştirmek, varlık yatırmak veya çekmek için lütfen bağlantıyı kesin ve cüzdanınızı bu cihazda yeniden bağlayın.",
+  "linkDevice.tooltip": "Mobil Cihazı Bağla",
   "settle.settlePnl": "K/Z Öde",
   "settle.settlePnl.warning": "Lütfen bakiyenizi ödeyin",
   "settle.settlePnl.description": "K/Z'nizi ödemek istediğinizden emin misiniz? <br/> Ödeme işlemi, kullanılabilir bakiyenizi çekebilmeniz için 1 dakikaya kadar sürebilir.",

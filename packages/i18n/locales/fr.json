@@ -766,6 +766,7 @@
   "linkDevice.scanQRCode.description": "Cliquez sur l'icône <0/> dans le coin supérieur droit sur le bureau pour générer un QR code à scanner.",
   "linkDevice.scanQRCode.tooltip": "Lier au bureau via QR code",
   "linkDevice.scanQRCode.connected.description": "Vous êtes connecté via un autre appareil. Ce mode est uniquement pour le trading. Pour changer de réseau, déposer ou retirer des actifs, veuillez vous déconnecter et reconnecter votre portefeuille sur cet appareil.",
+  "linkDevice.tooltip": "Lier l'appareil mobile",
   "settle.settlePnl": "Régler le PnL",
   "settle.settlePnl.warning": "Veuillez régler votre solde",
   "settle.settlePnl.description": "Êtes-vous sûr de vouloir régler votre PnL ? <br/> Le règlement prendra jusqu'à 1 minute avant que vous puissiez retirer votre solde disponible.",
