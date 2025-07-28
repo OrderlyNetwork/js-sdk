@@ -130,7 +130,7 @@ export function SubAccountUI(
             <AccountItem
               accountId={props.mainAccount?.id ?? ""}
               isMainAccount={true}
-              userAddress={props.mainAccount?.userAddress ?? ""}
+              userAddress={props.userAddress ?? ""}
               isCurrent={props.currentAccountId === props.mainAccount?.id}
               onSwitch={(accountId) => {
                 props.onSwitch?.(accountId);
