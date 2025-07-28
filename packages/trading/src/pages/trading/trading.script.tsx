@@ -11,10 +11,10 @@ import { useAppContext, useDataTap } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { modal } from "@orderly.network/ui";
 import { PortfolioSheetWidget, useTradingLocalStorage } from "../..";
-import { useFirstTimeDeposit } from "../../components/desktop/assetView/assetView.script";
 import { useSplitPersistent } from "../../components/desktop/layout/useSplitPersistent";
 import { useTradingPageContext } from "../../provider/context";
 import { TradingPageState } from "../../types/types";
+import { useFirstTimeDeposit } from "./hooks/useFirstTimeDeposit";
 
 export type TradingState = ReturnType<typeof useTradingScript>;
 
@@ -45,10 +45,11 @@ export const useTradingScript = () => {
   const props = useTradingPageContext();
   const { state } = useAccount();
   const { t } = useTranslation();
-  const { wrongNetwork, disabledConnect, restrictedInfo } = useAppContext();
+  const { wrongNetwork, disabledConnect, restrictedInfo, onRouteChange } =
+    useAppContext();
   const { hideAssets, setHideAssets } = useTradingLocalStorage();
 
-  const { isFirstTimeDeposit } = useFirstTimeDeposit();
+  const isFirstTimeDeposit = useFirstTimeDeposit();
 
   const { totalValue } = useCollateral();
 
@@ -109,6 +110,13 @@ export const useTradingScript = () => {
     dataListMinHeight,
   });
 
+  const navigateToPortfolio =
+    typeof onRouteChange === "function"
+      ? () => {
+          onRouteChange({ href: "/portfolio", name: t("common.portfolio") });
+        }
+      : undefined;
+
   const map = {
     layout,
     onLayout: setLayout,
@@ -132,6 +140,8 @@ export const useTradingScript = () => {
     hideAssets,
     setHideAssets,
     onShowPortfolioSheet,
+    navigateToPortfolio,
+    isFirstTimeDeposit,
   };
 
   return { ...props, ...map } as TradingPageState & typeof map;

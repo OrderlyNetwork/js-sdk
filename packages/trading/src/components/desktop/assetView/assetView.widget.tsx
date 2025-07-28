@@ -1,7 +1,11 @@
 import { useAssetViewScript } from "./assetView.script";
 import { AssetView } from "./assetView.ui";
 
-export const AssetViewWidget = () => {
+type AssetViewWidgetProps = {
+  isFirstTimeDeposit?: boolean;
+};
+
+export const AssetViewWidget = (props: AssetViewWidgetProps) => {
   const state = useAssetViewScript();
-  return <AssetView {...state} />;
+  return <AssetView {...state} isFirstTimeDeposit={props.isFirstTimeDeposit} />;
 };

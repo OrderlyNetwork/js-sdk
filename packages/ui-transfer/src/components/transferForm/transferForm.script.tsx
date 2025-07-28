@@ -11,7 +11,7 @@ import { useTokensInfo } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { API, NetworkId } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { Decimal, zero } from "@orderly.network/utils";
 import { InputStatus } from "../../types";
 import { getTransferErrorMessage } from "../../utils";
 import { useSettlePnl } from "../unsettlePnlInfo/useSettlePnl";
@@ -75,8 +75,7 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
   const subAccountMaxAmount = useSubAccountMaxWithdrawal({
     token: token.symbol,
     unsettledPnL: portfolio?.unsettledPnL,
-    freeCollateral:
-      portfolio?.freeCollateral?.todp(token?.precision).toNumber() || 0,
+    freeCollateral: portfolio?.freeCollateral ?? zero,
     holdings: portfolio?.holding,
   });
 

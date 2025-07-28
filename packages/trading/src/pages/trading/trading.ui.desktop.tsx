@@ -1,5 +1,4 @@
-import { FC, useMemo, useRef } from "react";
-import Split from "@uiw/react-split";
+import { FC, useMemo } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
 import {
   SideMarketsWidget,
@@ -9,6 +8,7 @@ import { TradingviewFullscreenKey } from "@orderly.network/types";
 import { Box, cn, Flex } from "@orderly.network/ui";
 import { OrderEntryWidget } from "@orderly.network/ui-order-entry";
 import { TradingviewWidget } from "@orderly.network/ui-tradingview";
+import { DepositStatusWidget } from "@orderly.network/ui-transfer";
 import { AssetViewWidget } from "../../components/desktop/assetView";
 import { DataListWidget } from "../../components/desktop/dataList";
 import { RemovablePanel } from "../../components/desktop/layout/removablePanel";
@@ -237,7 +237,13 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
       onLayout={updatePositions}
       showIndicator={showPositionIcon}
     >
-      <AssetViewWidget />
+      <>
+        <AssetViewWidget isFirstTimeDeposit={props.isFirstTimeDeposit} />
+        <DepositStatusWidget
+          className="oui-mt-3 oui-gap-y-2"
+          onClick={props.navigateToPortfolio}
+        />
+      </>
     </RemovablePanel>,
     <RemovablePanel
       key="orderEntry"

@@ -1,13 +1,11 @@
+import { AssetHistorySideEnum } from "@orderly.network/types";
 import { useScreen } from "@orderly.network/ui";
-import {
-  AssetSide,
-  useAssetHistoryScript,
-} from "../assetChart/assetHistory.script";
+import { useAssetHistoryScript } from "./assetHistory.script";
 import { AssetHistory } from "./assetHistory.ui";
 import { AssetHistoryMobile } from "./assetHistory.ui.mobile";
 
 type AssetHistoryWidgetProps = {
-  side: AssetSide;
+  side: AssetHistorySideEnum;
 };
 
 export const AssetHistoryWidget = (props: AssetHistoryWidgetProps) => {

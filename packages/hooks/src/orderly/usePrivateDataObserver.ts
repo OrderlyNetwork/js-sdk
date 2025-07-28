@@ -108,6 +108,7 @@ export const usePrivateDataObserver = (options: {
   useEffect(() => {
     if (!account.accountId) return;
 
+    // TODO: useBalanceTopic
     const unsubscribe = ws.privateSubscribe(
       {
         id: "balance",
@@ -137,6 +138,7 @@ export const usePrivateDataObserver = (options: {
     );
 
     return () => unsubscribe?.();
+    // TODO: use state.accountId
   }, [account.accountId]);
 
   const isHoldingInit = useRef(false);

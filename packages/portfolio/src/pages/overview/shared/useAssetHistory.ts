@@ -1,11 +1,11 @@
 import { useMemo, useState } from "react";
+import { subDays, format, getYear, getMonth, getDate, addDays } from "date-fns";
 import {
   useAssetsHistory,
   useCollateral,
   useLocalStorage,
   useStatisticsDaily,
 } from "@orderly.network/hooks";
-import { subDays, format, getYear, getMonth, getDate, addDays } from "date-fns";
 import { API } from "@orderly.network/types";
 import { Decimal, zero } from "@orderly.network/utils";
 
@@ -19,7 +19,7 @@ export const useAssetsHistoryData = (
   localKey: string,
   options?: {
     isRealtime?: boolean;
-  }
+  },
 ) => {
   const [today] = useState(() => {
     const d = new Date();
@@ -31,7 +31,7 @@ export const useAssetsHistoryData = (
   const periodTypes = Object.values(PeriodType);
   const [period, setPeriod] = useLocalStorage<PeriodType>(
     localKey,
-    PeriodType.WEEK
+    PeriodType.WEEK,
   );
 
   const { totalValue } = useCollateral();
@@ -74,12 +74,12 @@ export const useAssetsHistoryData = (
     },
     {
       ignoreAggregation: true,
-    }
+    },
   );
 
   const [assetHistory] = useAssetsHistory({
-    startTime: subDays(today, 2).getTime().toString(),
-    endTime: endDate.getTime().toString(),
+    startTime: subDays(today, 2).getTime(),
+    endTime: endDate.getTime(),
     pageSize: 50,
   });
 
@@ -145,7 +145,7 @@ export const useAssetsHistoryData = (
       date: todayFormattedStr,
       perp_volume: 0,
       account_value:
-        totalValue !== null ? totalValue : lastItem?.account_value ?? 0,
+        totalValue !== null ? totalValue : (lastItem?.account_value ?? 0),
       pnl: calculateLastPnl({ lastItem, assetHistory, totalValue }) ?? 0,
     };
   };
@@ -219,7 +219,7 @@ export const useAssetsHistoryData = (
 
   const createFakeData = (
     start: Partial<API.DailyRow>,
-    end: Partial<API.DailyRow>
+    end: Partial<API.DailyRow>,
   ) => {
     return Array.from({ length: 2 }, (_, i) => {
       const date = format(i === 0 ? startDate : new Date(), "yyyy-MM-dd");

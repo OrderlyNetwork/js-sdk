@@ -1,119 +1,17 @@
-import React, { FC, useMemo, useState } from "react";
-import { useLocalStorage } from "@orderly.network/hooks";
+import { FC, useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
-import { OrderEntity, OrderSide, OrderType } from "@orderly.network/types";
+import { OrderEntity, OrderSide } from "@orderly.network/types";
 import {
   Button,
-  toast,
   Text,
   CloseIcon,
   Flex,
   Divider,
   Badge,
-  SimpleDialog,
   ThrottledButton,
   Box,
 } from "@orderly.network/ui";
 import { commify, commifyOptional, Decimal } from "@orderly.network/utils";
-import { useSymbolContext } from "../../../providers/symbolProvider";
-import { usePositionsRowContext } from "./positionRowContext";
-
-export const CloseButton: React.FC = () => {
-  const [open, setOpen] = useState(false);
-  const {
-    onSubmit,
-    price,
-    quantity,
-    closeOrderData,
-    type,
-    submitting,
-    quoteDp,
-    errors,
-  } = usePositionsRowContext();
-  const { base } = useSymbolContext();
-  const [orderConfirm] = useLocalStorage("orderly_order_confirm", true);
-
-  const { t } = useTranslation();
-  const { parseErrorMsg } = useOrderEntryFormErrorMsg(errors);
-
-  const onConfirm = () => {
-    return onSubmit().then(() => {
-      setOpen(false);
-    });
-  };
-
-  const onClose = () => {
-    setOpen(false);
-  };
-
-  const disabled = useMemo(() => {
-    if (type === OrderType.MARKET) {
-      if (!quantity) {
-        return true;
-      }
-      return false;
-    }
-
-    return !price || !quantity;
-  }, [price, quantity, type]);
-
-  return (
-    <>
-      <Button
-        variant="outlined"
-        size="sm"
-        color="secondary"
-        disabled={disabled || submitting}
-        loading={submitting}
-        onClick={(e) => {
-          e.stopPropagation();
-          const quantityMsg = parseErrorMsg("order_quantity");
-          const priceMsg = parseErrorMsg("order_price");
-          const msg = quantityMsg || priceMsg;
-          if (msg) {
-            toast.error(msg);
-            return;
-          }
-          if (!orderConfirm) {
-            onSubmit();
-            return;
-          }
-          setOpen(true);
-        }}
-      >
-        {t("positions.column.close")}
-      </Button>
-      <SimpleDialog open={open} onOpenChange={setOpen} size="sm">
-        {type === OrderType.MARKET ? (
-          <MarketCloseConfirm
-            base={base}
-            quantity={quantity}
-            onClose={onClose}
-            onConfirm={onConfirm}
-            submitting={submitting}
-            classNames={{
-              root: "oui-items-start",
-            }}
-            hideCloseIcon
-          />
-        ) : (
-          <LimitConfirmDialog
-            base={base}
-            quantity={quantity}
-            price={price}
-            onClose={onClose}
-            onConfirm={onConfirm}
-            submitting={submitting}
-            quoteDp={quoteDp}
-            order={closeOrderData}
-            hideCloseIcon
-          />
-        )}
-      </SimpleDialog>
-    </>
-  );
-};
 
 export const ConfirmHeader: FC<{
   onClose?: () => void;
@@ -122,12 +20,12 @@ export const ConfirmHeader: FC<{
 }> = (props) => {
   const { hideCloseIcon = false } = props;
   return (
-    <div className="oui-pb-3 oui-border-b oui-border-line-4 oui-relative oui-w-full">
+    <div className="oui-relative oui-w-full oui-border-b oui-border-line-4 oui-pb-3">
       <Text size={"base"}>{props.title}</Text>
       {!hideCloseIcon && (
         <button
           onClick={props.onClose}
-          className="oui-absolute oui-right-0 oui-top-0 oui-text-base-contrast-54 hover:oui-text-base-contrast-80 oui-p-2"
+          className="oui-absolute oui-right-0 oui-top-0 oui-p-2 oui-text-base-contrast-54 hover:oui-text-base-contrast-80"
         >
           <CloseIcon size={18} color="white" />
         </button>
@@ -140,7 +38,8 @@ export const ConfirmFooter: FC<{
   onConfirm?: () => Promise<any>;
   onCancel?: () => void;
   submitting?: boolean;
-}> = ({ onCancel, onConfirm, submitting }) => {
+  disabled?: boolean;
+}> = (props) => {
   const { t } = useTranslation();
 
   return (
@@ -154,16 +53,17 @@ export const ConfirmFooter: FC<{
         id="oui-positions-confirm-footer-cancel-button"
         color={"secondary"}
         fullWidth
-        onClick={onCancel}
+        onClick={props.onCancel}
         size="md"
       >
         {t("common.cancel")}
       </Button>
       <ThrottledButton
         id="oui-positions-confirm-footer-confirm-button"
-        onClick={onConfirm}
+        onClick={props.onConfirm}
         fullWidth
-        loading={submitting}
+        loading={props.submitting}
+        disabled={props.disabled}
         size="md"
       >
         {t("common.confirm")}
@@ -281,7 +181,7 @@ export const LimitConfirmDialog: FC<{
   quoteDp?: number;
   hideCloseIcon?: boolean;
 }> = (props) => {
-  const { order, quoteDp, quantity, price, submitting } = props;
+  const { order, quoteDp, quantity, price } = props;
   const { side } = order;
   const { t } = useTranslation();
 

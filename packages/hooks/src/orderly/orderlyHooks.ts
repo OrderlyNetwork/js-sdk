@@ -62,6 +62,8 @@ export { useTransfer } from "./useTransfer";
 
 export { useHoldingStream } from "./useHoldingStream";
 export { useWalletSubscription } from "./useWalletSubscription";
+export { useWalletTopic } from "./wsTopic/useWalletTopic";
+export { useBalanceTopic } from "./wsTopic/useBalanceTopic";
 export { useSettleSubscription } from "./useSettleSubscription";
 export { usePrivateDataObserver } from "./usePrivateDataObserver";
 
@@ -74,10 +76,7 @@ export {
 
 export { useSymbolLeverage } from "./useSymbolLeverage";
 
-export {
-  useAssetsHistory,
-  AssetHistoryStatusEnum,
-} from "./statistics/useAssetHistory";
+export { useAssetsHistory } from "./statistics/useAssetHistory";
 
 export { useStatisticsDaily } from "./statistics/useStatisticsDaily";
 export { useFundingFeeHistory } from "./statistics/useFundingFeeHistory";
