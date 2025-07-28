@@ -1,12 +1,13 @@
 import { account } from "@orderly.network/perp";
 import type { API } from "@orderly.network/types";
+import { Decimal } from "@orderly.network/utils";
 
 type NonUSDCHolding = {
   holding: number;
   indexPrice: number;
   // margin replacement rate, default 0
   collateralCap: number;
-  collateralRatio: number;
+  collateralRatio: Decimal;
 };
 
 export const parseHolding = (
@@ -48,7 +49,7 @@ export const parseHolding = (
         holding: holdingQty,
         indexPrice,
         collateralCap: user_max_qty,
-        collateralRatio,
+        collateralRatio: collateralRatio,
       });
     }
   });

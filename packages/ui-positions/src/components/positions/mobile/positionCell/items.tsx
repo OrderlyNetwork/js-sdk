@@ -5,6 +5,7 @@ import { Badge, cn, Flex, Statistic, Text } from "@orderly.network/ui";
 import { SharePnLBottomSheetId } from "@orderly.network/ui-share";
 import { Decimal } from "@orderly.network/utils";
 import { FundingFeeButton } from "../../../fundingFeeHistory/fundingFeeButton";
+import { LeverageBadge } from "../../desktop/components";
 import { ShareButtonWidget } from "../../desktop/shareButton";
 import { PositionCellState } from "./positionCell.script";
 
@@ -18,9 +19,12 @@ export const SymbolToken: FC<PositionCellState> = (props) => {
       formatString="base-type"
       size="2xs"
       suffix={
-        <Badge color={isBuy ? "success" : "danger"} size="xs">
-          {isBuy ? t("common.long") : t("common.short")}
-        </Badge>
+        <div className="oui-flex oui-items-center oui-gap-1">
+          <Badge color={isBuy ? "success" : "danger"} size="xs">
+            {isBuy ? t("common.long") : t("common.short")}
+          </Badge>
+          <LeverageBadge symbol={item.symbol} />
+        </div>
       }
       showIcon
       onClick={() => {

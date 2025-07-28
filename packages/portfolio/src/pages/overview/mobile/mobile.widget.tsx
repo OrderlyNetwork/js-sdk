@@ -1,5 +1,6 @@
 import { FC } from "react";
 import { ENVType, useGetEnv } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext } from "@orderly.network/react-app";
 import { Flex } from "@orderly.network/ui";
 import { DepositStatusWidget } from "@orderly.network/ui-transfer";
@@ -28,10 +29,12 @@ export const MobileOverview: FC = (props) => {
     onTransfer,
     isMainAccount,
   } = useAssetScript();
+  const { t } = useTranslation();
   const rewardsData = useRewardsDataScript();
   const layoutContext = useLayoutContext();
   const { onRouteChange } = useAppContext();
   const env = useGetEnv();
+
   const goToClaim = () => {
     const url = `https://${
       env !== ENVType.prod ? `${env}-` : ""
@@ -42,7 +45,10 @@ export const MobileOverview: FC = (props) => {
   const navigateToPortfolioHistory =
     typeof onRouteChange === "function"
       ? () => {
-          onRouteChange({ href: "/portfolio/history" });
+          onRouteChange({
+            href: "/portfolio/history",
+            name: t("trading.history"),
+          });
         }
       : undefined;
 

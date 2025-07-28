@@ -3,88 +3,30 @@ import {
   useAccountInstance,
   useEventEmitter,
   useLocalStorage,
-  useSettleSubscription,
-  useWalletSubscription,
   useAccount,
   useConfig,
   useCollateral,
   useMarginRatio,
   usePositionStream,
   useComputedLTV,
-  useAssetsHistory,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { useAppContext, useDataTap } from "@orderly.network/react-app";
-import {
-  AccountStatusEnum,
-  NetworkId,
-  AssetHistorySideEnum,
-  AssetHistoryStatusEnum,
-} from "@orderly.network/types";
+import { useDataTap } from "@orderly.network/react-app";
+import { AccountStatusEnum, NetworkId } from "@orderly.network/types";
 import { modal, toast } from "@orderly.network/ui";
 import {
   DepositAndWithdrawWithDialogId,
   TransferDialogId,
 } from "@orderly.network/ui-transfer";
-import { capitalizeString } from "@orderly.network/utils";
-import { Decimal } from "@orderly.network/utils";
-
-export const useFirstTimeDeposit = () => {
-  const { state } = useAccount();
-  const { wrongNetwork, disabledConnect } = useAppContext();
-  const { totalValue } = useCollateral({
-    dp: 2,
-  });
-
-  const unavailable =
-    wrongNetwork ||
-    disabledConnect ||
-    (state.status < AccountStatusEnum.EnableTrading &&
-      state.status !== AccountStatusEnum.EnableTradingWithoutConnected);
-
-  const { startTime, endTime } = useMemo(() => {
-    const d = new Date();
-    // must set last second of today, when wallet ws changed, it will get latest data from api
-    const today = new Date(
-      d.getFullYear(),
-      d.getMonth(),
-      d.getDate(),
-      23,
-      59,
-      59,
-    );
-
-    const endTime = today.getTime();
-    // 90 days ago timestamp
-    const startTime = endTime - 90 * 24 * 60 * 60 * 1000;
-
-    return {
-      startTime,
-      endTime,
-    };
-  }, []);
-
-  const [_, { meta }] = useAssetsHistory({
-    startTime,
-    endTime,
-    page: 1,
-    pageSize: 5,
-    side: AssetHistorySideEnum.DEPOSIT,
-    status: AssetHistoryStatusEnum.COMPLETED,
-  });
-
-  return {
-    isFirstTimeDeposit: !unavailable && totalValue === 0 && meta?.total === 0,
-    totalValue,
-  };
-};
 
 export const useAssetViewScript = () => {
   const { t } = useTranslation();
   const account = useAccountInstance();
   const ee = useEventEmitter();
 
-  const { isFirstTimeDeposit, totalValue } = useFirstTimeDeposit();
+  const { totalValue } = useCollateral({
+    dp: 2,
+  });
 
   const networkId = useConfig("networkId") as NetworkId;
   const { state, isMainAccount } = useAccount();
@@ -93,8 +35,7 @@ export const useAssetViewScript = () => {
   });
   const { marginRatio, mmr } = useMarginRatio();
   const isConnected = state.status >= AccountStatusEnum.Connected;
-  const [{ aggregated, totalUnrealizedROI }, positionsInfo] =
-    usePositionStream();
+  const [{ aggregated }, positionsInfo] = usePositionStream();
   const marginRatioVal = useMemo(() => {
     return Math.min(
       10,
@@ -104,13 +45,13 @@ export const useAssetViewScript = () => {
     );
   }, [marginRatio, aggregated]);
 
-  const renderMMR = useMemo(() => {
-    if (!mmr) {
-      return "";
-    }
-    const bigMMR = new Decimal(mmr);
-    return bigMMR.mul(100).todp(2, 0).toFixed(2);
-  }, [mmr]);
+  // const renderMMR = useMemo(() => {
+  //   if (!mmr) {
+  //     return "";
+  //   }
+  //   const bigMMR = new Decimal(mmr);
+  //   return bigMMR.mul(100).todp(2, 0).toFixed(2);
+  // }, [mmr]);
 
   const openDepositAndWithdraw = useCallback(
     (viewName: "deposit" | "withdraw") => {
@@ -171,47 +112,6 @@ export const useAssetViewScript = () => {
     });
   }, [visible]);
 
-  useWalletSubscription({
-    onMessage: (data: any) => {
-      const { side, transStatus } = data;
-
-      if (transStatus === "COMPLETED") {
-        const message = {
-          DEPOSIT: t("transfer.deposit.completed"),
-          WITHDRAW: t("transfer.withdraw.completed"),
-        };
-        const msg = `${capitalizeString(side)} completed`;
-        toast.success(message[side as keyof typeof message] || msg);
-      } else if (transStatus === "FAILED") {
-        const message = {
-          DEPOSIT: t("transfer.deposit.failed"),
-          WITHDRAW: t("transfer.withdraw.failed"),
-        };
-        const msg = `${capitalizeString(side)} failed`;
-        toast.error(message[side as keyof typeof message] || msg);
-      }
-
-      ee.emit("wallet:changed", data);
-    },
-  });
-
-  useSettleSubscription({
-    onMessage: (data: any) => {
-      const { status } = data;
-
-      switch (status) {
-        case "COMPLETED":
-          toast.success(t("settle.settlement.completed"));
-          break;
-        case "FAILED":
-          toast.error(t("settle.settlement.failed"));
-          break;
-        default:
-          break;
-      }
-    },
-  });
-
   const currentLtv = useComputedLTV();
   const _freeCollateral = useDataTap(freeCollateral) ?? undefined;
   const _marginRatioVal = useDataTap(marginRatioVal) ?? undefined;
@@ -226,7 +126,6 @@ export const useAssetViewScript = () => {
     visible,
     toggleVisible,
     networkId,
-    isFirstTimeDeposit,
     totalValue: _totalValue,
     status: state.status,
     freeCollateral: _freeCollateral,

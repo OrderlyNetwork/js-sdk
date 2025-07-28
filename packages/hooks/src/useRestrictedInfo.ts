@@ -9,19 +9,23 @@ export interface RestrictedInfoOptions {
   enableDefault?: boolean;
   customRestrictedIps?: string[];
   customRestrictedRegions?: string[];
+  customUnblockRegions?: string[];
   content?:
     | ReactNode
     | ((data: { ip: string; brokerName: string }) => ReactNode);
 }
 
+const defaultRestrictedIps: string[] = [];
+const defaultRestrictedRegions: string[] = [];
 /** default can unblock regions */
-const canUnblockRegions = ["United States"];
+const defaultUnblockRegions: string[] = [];
 
 export const useRestrictedInfo = (options?: RestrictedInfoOptions) => {
   const {
     enableDefault = false,
-    customRestrictedIps = [],
-    customRestrictedRegions = [],
+    customRestrictedIps = defaultRestrictedIps,
+    customRestrictedRegions = defaultRestrictedRegions,
+    customUnblockRegions = defaultUnblockRegions,
     content,
   } = options || {};
   const [ip, setIp] = useState<string>("");
@@ -64,7 +68,7 @@ export const useRestrictedInfo = (options?: RestrictedInfoOptions) => {
       const combinedInvalidRegions = [
         ...formattedCustomRegions,
         ...(enableDefault ? [...invalidCountries, ...invalidCities] : []),
-      ];
+      ].filter((item) => !!item);
 
       const allInvalidAreas = [
         enableDefault ? invalid_web_country : "",
@@ -77,21 +81,29 @@ export const useRestrictedInfo = (options?: RestrictedInfoOptions) => {
       const formattedCity = formatRegion(city);
       const formattedRegion = formatRegion(region);
 
-      const showRestricted =
-        accessRestricted &&
-        (combinedInvalidRegions.includes(formattedCity) ||
-          combinedInvalidRegions.includes(formattedRegion) ||
-          customRestrictedIps.includes(ip));
+      const isRestricted =
+        (formattedCity && combinedInvalidRegions.includes(formattedCity)) ||
+        (formattedRegion && combinedInvalidRegions.includes(formattedRegion)) ||
+        (ip && customRestrictedIps.includes(ip));
 
-      for (const item of canUnblockRegions) {
-        if (formatRegion(item) === formatRegion(region)) {
-          setCanUnblock(true);
+      let canUnblock = false;
+
+      if (isRestricted) {
+        for (const item of customUnblockRegions) {
+          if (formatRegion(item) === formatRegion(region)) {
+            canUnblock = true;
+          }
         }
       }
 
+      const restrictedOpen = canUnblock
+        ? isRestricted && accessRestricted !== false
+        : isRestricted;
+
       setIp(ip);
       setAllInvalidAreas(allInvalidAreas);
-      setRestrictedOpen(showRestricted);
+      setRestrictedOpen(!!restrictedOpen);
+      setCanUnblock(canUnblock);
     } catch (error) {
       console.error("useRestrictedInfo error", error);
     }
@@ -103,6 +115,7 @@ export const useRestrictedInfo = (options?: RestrictedInfoOptions) => {
     // it will lead to infinite re-render when these values change, so we don't need to watch these
     // customRestrictedIps,
     // customRestrictedRegions,
+    // customUnblockRegions,
   ]);
 
   return {

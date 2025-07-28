@@ -1,6 +1,7 @@
 import React from "react";
+import { useSymbolLeverage } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { EditIcon } from "@orderly.network/ui";
+import { EditIcon, Text } from "@orderly.network/ui";
 import { PositionTPSLPopover } from "@orderly.network/ui-tpsl";
 import { usePositionsRowContext } from "../positionsRowContext";
 
@@ -37,5 +38,25 @@ export const TPSLEditIcon = () => {
         size={16}
       />
     </PositionTPSLPopover>
+  );
+};
+
+export const LeverageBadge = ({ symbol }: { symbol: string }) => {
+  if (!symbol) return null;
+  return (
+    <div className="oui-flex oui-h-[18px] oui-items-center oui-gap-1 oui-rounded oui-bg-white/[0.06] oui-px-2 oui-text-2xs oui-font-semibold oui-text-base-contrast-36">
+      <Text>Cross</Text>
+      <LeverageDisplay symbol={symbol} />
+    </div>
+  );
+};
+
+export const LeverageDisplay = ({ symbol }: { symbol: string }) => {
+  const leverage = useSymbolLeverage(symbol);
+
+  return (
+    <Text.numeral dp={0} size="2xs" unit="X">
+      {leverage !== "-" ? leverage : "--"}
+    </Text.numeral>
   );
 };

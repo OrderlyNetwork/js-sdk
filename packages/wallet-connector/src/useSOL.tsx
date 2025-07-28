@@ -239,9 +239,9 @@ export function useSOL() {
       label: solanaWallet.adapter.name,
       icon: "",
       provider: {
-        signMessage: signMessage,
-        signTransaction,
-        sendTransaction,
+        signMessage: signMessage!,
+        signTransaction: signTransaction!,
+        sendTransaction: sendTransaction!,
         rpcUrl: endpoint,
         network: network,
       },
@@ -292,15 +292,6 @@ export function useSOL() {
     if (solanaPromiseRef.current) {
       solanaPromiseRef.current.walletSelectResolve(solanaWallet);
     }
-
-    solanaConnect()
-      .then((res) => {
-        console.log("-- connect res", res);
-      })
-      .catch((e) => {
-        solanaPromiseRef.current.connectReject(e);
-        handleSolanaError(e);
-      });
   }, [
     solanaWallet,
     solanaConnect,

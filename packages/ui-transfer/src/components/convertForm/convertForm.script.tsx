@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useMemo, useState } from "react";
 import {
   useConfig,
@@ -7,7 +6,6 @@ import {
   useLocalStorage,
   useOdosQuote,
   useWalletConnector,
-  useWalletSubscription,
   useMemoizedFn,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
@@ -43,7 +41,6 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
   const { token: defaultToken, close } = options;
 
   const { t } = useTranslation();
-  const [crossChainTrans, setCrossChainTrans] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
   const config = useConfig();
@@ -186,18 +183,6 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
 
   const disabled = !quantity || Number(quantity) === 0;
 
-  useWalletSubscription({
-    onMessage(data: any) {
-      if (!crossChainTrans) {
-        return;
-      }
-      const { trxId, transStatus } = data;
-      if (trxId === crossChainTrans && transStatus === "COMPLETED") {
-        setCrossChainTrans(false);
-      }
-    },
-  });
-
   const { hasPositions, onSettlePnl } = useSettlePnl();
 
   return {
@@ -215,7 +200,6 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     loading,
     wrongNetwork,
     onConvert,
-    crossChainTrans,
     hasPositions,
     onSettlePnl,
     networkId,
