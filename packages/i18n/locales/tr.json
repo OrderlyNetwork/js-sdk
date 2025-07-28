@@ -776,6 +776,7 @@
   "settle.settlement.failed": "Ödeme başarısız oldu",
   "settle.settlement.error": "Ödeme her 10 dakikada bir sadece bir kez yapılabilir. Lütfen daha sonra tekrar deneyin.",
   "languageSwitcher.language": "Dil",
+  "languageSwitcher.tooltip": "Dili değiştir",
   "languageSwitcher.tips": "AI tarafından oluşturulan çeviriler tam olarak doğru olmayabilir.",
   "announcement.type.listing": "Listeleme",
   "announcement.type.maintenance": "Bakım",

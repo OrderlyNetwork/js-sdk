@@ -776,6 +776,7 @@
   "settle.settlement.failed": "Regolamento fallito",
   "settle.settlement.error": "Il regolamento è consentito solo una volta ogni 10 minuti. Riprova più tardi.",
   "languageSwitcher.language": "Lingua",
+  "languageSwitcher.tooltip": "Cambia lingua",
   "languageSwitcher.tips": "Le traduzioni generate dall'IA potrebbero non essere completamente accurate.",
   "announcement.type.listing": "Quotazione",
   "announcement.type.maintenance": "Manutenzione",

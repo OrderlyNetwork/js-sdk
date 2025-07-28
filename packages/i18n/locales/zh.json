@@ -776,6 +776,7 @@
   "settle.settlement.failed": "结算失败",
   "settle.settlement.error": "每10分钟只允许一次结算。请稍后再试。",
   "languageSwitcher.language": "语言",
+  "languageSwitcher.tooltip": "切换语言",
   "languageSwitcher.tips": "人工智能生成的翻译可能并不完全准确。",
   "announcement.type.listing": "上架",
   "announcement.type.maintenance": "维护",

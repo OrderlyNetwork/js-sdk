@@ -776,6 +776,7 @@
   "settle.settlement.failed": "Afwikkeling mislukt",
   "settle.settlement.error": "Afwikkeling is slechts eenmaal per 10 minuten toegestaan. Probeer het later opnieuw.",
   "languageSwitcher.language": "Taal",
+  "languageSwitcher.tooltip": "Taal wijzigen",
   "languageSwitcher.tips": "Door AI gegenereerde vertalingen zijn mogelijk niet volledig nauwkeurig.",
   "announcement.type.listing": "Notering",
   "announcement.type.maintenance": "Onderhoud",

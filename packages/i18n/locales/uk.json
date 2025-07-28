@@ -776,6 +776,7 @@
   "settle.settlement.failed": "Помилка розрахунку",
   "settle.settlement.error": "Розрахунок дозволено проводити один раз на 10 хвилин. Будь ласка, спробуйте пізніше.",
   "languageSwitcher.language": "Мова",
+  "languageSwitcher.tooltip": "Змінити мову",
   "languageSwitcher.tips": "Переклади, згенеровані ШІ, можуть бути не повністю точними.",
   "announcement.type.listing": "Лістинг",
   "announcement.type.maintenance": "Обслуговування",

@@ -776,6 +776,7 @@
   "settle.settlement.failed": "Abrechnung fehlgeschlagen",
   "settle.settlement.error": "Abrechnung ist nur alle 10 Minuten erlaubt. Bitte versuchen Sie es später erneut.",
   "languageSwitcher.language": "Sprache",
+  "languageSwitcher.tooltip": "Sprache wechseln",
   "languageSwitcher.tips": "AI-generierte Übersetzungen können nicht vollständig genau sein.",
   "announcement.type.listing": "Listing",
   "announcement.type.maintenance": "Wartung",

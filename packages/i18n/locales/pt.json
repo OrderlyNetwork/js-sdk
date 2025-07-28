@@ -776,6 +776,7 @@
   "settle.settlement.failed": "Liquidação falhou",
   "settle.settlement.error": "A liquidação só é permitida uma vez a cada 10 minutos. Por favor, tente novamente mais tarde.",
   "languageSwitcher.language": "Idioma",
+  "languageSwitcher.tooltip": "Alterar idioma",
   "languageSwitcher.tips": "Traduções geradas por IA podem não ser totalmente precisas.",
   "announcement.type.listing": "Listagem",
   "announcement.type.maintenance": "Manutenção",

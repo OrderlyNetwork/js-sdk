@@ -776,6 +776,7 @@
   "settle.settlement.failed": "Penyelesaian gagal",
   "settle.settlement.error": "Penyelesaian hanya diizinkan sekali setiap 10 menit. Silakan coba lagi nanti.",
   "languageSwitcher.language": "Bahasa",
+  "languageSwitcher.tooltip": "Ganti bahasa",
   "languageSwitcher.tips": "Terjemahan yang dihasilkan AI mungkin tidak sepenuhnya akurat.",
   "announcement.type.listing": "Listing",
   "announcement.type.maintenance": "Pemeliharaan",

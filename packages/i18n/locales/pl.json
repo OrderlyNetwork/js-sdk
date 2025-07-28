@@ -776,6 +776,7 @@
   "settle.settlement.failed": "Rozliczenie nie powiodło się",
   "settle.settlement.error": "Rozliczenie jest dozwolone tylko raz na 10 minut. Spróbuj ponownie później.",
   "languageSwitcher.language": "Język",
+  "languageSwitcher.tooltip": "Zmień język",
   "languageSwitcher.tips": "Tłumaczenia generowane przez AI mogą nie być w pełni dokładne.",
   "announcement.type.listing": "Notowanie",
   "announcement.type.maintenance": "Konserwacja",

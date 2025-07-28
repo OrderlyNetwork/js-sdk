@@ -776,6 +776,7 @@
   "settle.settlement.failed": "決済失敗",
   "settle.settlement.error": "決済は10分に1回のみ可能です。後ほど再度お試しください。",
   "languageSwitcher.language": "言語",
+  "languageSwitcher.tooltip": "言語を切り替え",
   "languageSwitcher.tips": "AIによる翻訳は完全に正確でない可能性があります。",
   "announcement.type.listing": "上場",
   "announcement.type.maintenance": "メンテナンス",

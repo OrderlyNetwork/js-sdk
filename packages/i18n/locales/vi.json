@@ -776,6 +776,7 @@
   "settle.settlement.failed": "Thanh toán thất bại",
   "settle.settlement.error": "Thanh toán chỉ được phép một lần mỗi 10 phút. Vui lòng thử lại sau.",
   "languageSwitcher.language": "Ngôn ngữ",
+  "languageSwitcher.tooltip": "Chuyển đổi ngôn ngữ",
   "languageSwitcher.tips": "Bản dịch do AI tạo ra có thể không hoàn toàn chính xác.",
   "announcement.type.listing": "Niêm yết",
   "announcement.type.maintenance": "Bảo trì",

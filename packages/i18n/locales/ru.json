@@ -776,6 +776,7 @@
   "settle.settlement.failed": "Ошибка расчета",
   "settle.settlement.error": "Расчет разрешен только один раз каждые 10 минут. Пожалуйста, попробуйте позже.",
   "languageSwitcher.language": "Язык",
+  "languageSwitcher.tooltip": "Переключить язык",
   "languageSwitcher.tips": "Переводы, созданные ИИ, могут быть не полностью точными.",
   "announcement.type.listing": "Листинг",
   "announcement.type.maintenance": "Обслуживание",
