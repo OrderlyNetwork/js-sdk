@@ -1,7 +1,7 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { AdditionalInfoWidget } from "@orderly.network/ui-order-entry";
-import { Box } from "@orderly.network/ui";
 import { useState } from "react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Box } from "@orderly.network/ui";
+import { AdditionalInfoWidget } from "@orderly.network/ui-order-entry";
 
 const meta: Meta<typeof AdditionalInfoWidget> = {
   title: "Package/ui-order-entry/additional",

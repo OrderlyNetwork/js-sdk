@@ -281,6 +281,11 @@ export const useOrderlyConfig = () => {
                 href: "/portfolio/setting",
                 icon: <SettingFillIcon color="white" opacity={0.8} />,
               },
+              {
+                name: "Orderly App",
+                href: "https://app.orderly.network",
+                target: "_blank",
+              },
             ],
             twitterUrl: "https://twitter.com/OrderlyNetwork",
             telegramUrl: "https://t.me/orderlynetwork",

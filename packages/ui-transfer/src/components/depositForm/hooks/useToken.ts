@@ -68,8 +68,8 @@ export const useToken = (
     if (sourceToken.is_collateral) {
       // mainnet and swap_enable: [token] => [USDC,token]
       if (networkId === "mainnet" && sourceToken.swap_enable) {
-        setTargetToken(usdc);
-        setTargetTokens([usdc, sourceToken]);
+        setTargetToken(sourceToken);
+        setTargetTokens([sourceToken, usdc]);
       } else {
         // testnet: [token] => [token]
         setTargetToken(sourceToken);

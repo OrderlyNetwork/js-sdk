@@ -20,7 +20,7 @@ import {
   WalletConnectorPrivyProvider,
   wagmiConnectors,
 } from "@orderly.network/wallet-connector-privy";
-import { CustomProductNav } from "../src/components/customProductNav/indx";
+import { CustomProductNav } from "../customProductNav";
 
 const { VITE_NETWORK_ID, VITE_BROKER_ID, VITE_BROKER_NAME, VITE_ENV } =
   import.meta.env || {};

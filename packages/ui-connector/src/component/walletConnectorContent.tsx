@@ -19,7 +19,6 @@ import {
   Divider,
   Flex,
   inputFormatter,
-  Match,
   modal,
   Switch,
   Text,
@@ -320,55 +319,96 @@ const ActionButton: FC<{
 }) => {
   const { t } = useTranslation();
 
+  if (state <= AccountStatusEnum.NotSignedIn) {
+    return (
+      <Flex direction={"column"} gap={3} className="oui-w-full">
+        <Button
+          fullWidth
+          onClick={() => signIn()}
+          loading={loading}
+          disabled={disabled}
+        >
+          {t("connector.createAccount")}
+        </Button>
+        {showLedgerButton && (
+          <WithLedgerButton
+            onClick={() => signIn()}
+            content={t("connector.createAccountWithLedger")}
+          />
+        )}
+      </Flex>
+    );
+  }
+
   return (
-    <Match
-      value={() => {
-        if (state <= AccountStatusEnum.NotSignedIn) {
-          return "signIn";
-        }
-        return "enableTrading";
-      }}
-      case={{
-        signIn: (
-          <Flex direction={"column"} gap={3} className="oui-w-full">
-            <Button
-              fullWidth
-              onClick={() => signIn()}
-              loading={loading}
-              disabled={disabled}
-            >
-              {t("connector.createAccount")}
-            </Button>
-            {showLedgerButton && (
-              <WithLedgerButton
-                onClick={() => signIn()}
-                content={t("connector.createAccountWithLedger")}
-              />
-            )}
-          </Flex>
-        ),
-        enableTrading: (
-          <Flex direction={"column"} gap={3} className="oui-w-full">
-            <Button
-              fullWidth
-              onClick={() => enableTrading()}
-              loading={loading}
-              disabled={disabled}
-            >
-              {t("connector.enableTrading")}
-            </Button>
-            {showLedgerButton && (
-              <WithLedgerButton
-                onClick={() => enableTrading()}
-                disabled={disabled}
-                content={t("connector.enableTradingWithLedger")}
-              />
-            )}
-          </Flex>
-        ),
-      }}
-    />
+    <Flex direction={"column"} gap={3} className="oui-w-full">
+      <Button
+        fullWidth
+        onClick={() => enableTrading()}
+        loading={loading}
+        disabled={disabled}
+      >
+        {t("connector.enableTrading")}
+      </Button>
+      {showLedgerButton && (
+        <WithLedgerButton
+          onClick={() => enableTrading()}
+          disabled={disabled}
+          content={t("connector.enableTradingWithLedger")}
+        />
+      )}
+    </Flex>
   );
+
+  // return (
+  //   <Match
+  //     value={() => {
+  //       if (state <= AccountStatusEnum.NotSignedIn) {
+  //         return "signIn";
+  //       }
+  //       return "enableTrading";
+  //     }}
+  //     case={{
+  //       signIn: (
+  //         <Flex direction={"column"} gap={3} className="oui-w-full">
+  //           <Button
+  //             fullWidth
+  //             onClick={() => signIn()}
+  //             loading={loading}
+  //             disabled={disabled}
+  //           >
+  //             {t("connector.createAccount")}
+  //           </Button>
+  //           {showLedgerButton && (
+  //             <WithLedgerButton
+  //               onClick={() => signIn()}
+  //               content={t("connector.createAccountWithLedger")}
+  //             />
+  //           )}
+  //         </Flex>
+  //       ),
+  //       enableTrading: (
+  //         <Flex direction={"column"} gap={3} className="oui-w-full">
+  //           <Button
+  //             fullWidth
+  //             onClick={() => enableTrading()}
+  //             loading={loading}
+  //             disabled={disabled}
+  //           >
+  //             {t("connector.enableTrading")}
+  //           </Button>
+  //           {showLedgerButton && (
+  //             <WithLedgerButton
+  //               onClick={() => enableTrading()}
+  //               disabled={disabled}
+  //               content={t("connector.enableTradingWithLedger")}
+  //             />
+  //           )}
+  //         </Flex>
+  //       ),
+  //     }}
+  //   />
+  // );
 };
 
 const WithLedgerButton = ({

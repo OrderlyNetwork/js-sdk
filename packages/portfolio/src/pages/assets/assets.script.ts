@@ -74,10 +74,10 @@ export const useAssetsScript = () => {
 
   // Enhanced filtered data with additional calculations for children
   const enhancedFiltered = useMemo(() => {
-    return filtered.map((accountData: any) => {
+    return filtered.map((accountData) => {
       // Enhance each child (holding) with calculated fields
       const enhancedChildren =
-        accountData.children?.map((holding: any) => {
+        accountData.children?.map((holding) => {
           const tokenInfo = tokensInfo?.find(
             (item) => item.token === holding.token,
           );

@@ -20,19 +20,29 @@ export const SettingMobile: FC<SettingScriptReturns> = (props) => {
 
   return (
     <>
-      <Flex
-        className="oui-flex-row oui-items-center oui-mt-1 oui-mb-2 oui-p-4 oui-bg-base-9 oui-rounded-xl"
-        onClick={onLanguageChange}
-      >
-        <LanguageSwitcherWidget open={open} setOpen={setOpen} />
-        <Text className="oui-text-base oui-font-semibold oui-text-base-contrast-80 oui-ml-2">
-          {t("languageSwitcher.language")}
-        </Text>
-        <ChevronRightIcon
-          size={18}
-          className="oui-ml-auto oui-text-base-contrast-36"
-        />
+      <Flex mt={1} mb={2} p={4} intensity={900} r="xl" itemAlign="center">
+        <LanguageSwitcherWidget open={open} onOpenChange={setOpen} />
+        <Flex
+          className="oui-cursor-pointer"
+          itemAlign="center"
+          width="100%"
+          onClick={onLanguageChange}
+        >
+          <Text
+            size="base"
+            weight="semibold"
+            intensity={80}
+            className="oui-ml-2"
+          >
+            {t("languageSwitcher.language")}
+          </Text>
+          <ChevronRightIcon
+            size={18}
+            className="oui-ml-auto oui-text-base-contrast-36"
+          />
+        </Flex>
       </Flex>
+
       <Card
         // @ts-ignore
         title={

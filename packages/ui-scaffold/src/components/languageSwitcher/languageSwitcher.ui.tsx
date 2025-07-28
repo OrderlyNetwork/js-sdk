@@ -34,8 +34,8 @@ export const LanguageSwitcher: FC<LanguageSwitcherProps> = (props) => {
         className={cn(
           "oui-size-6 lg:oui-size-5",
           "oui-cursor-pointer oui-text-base-contrast-80",
-          "hover:oui-fill-base-contrast oui-transition-colors",
-          isMobile && "oui-h-[18px] oui-w-[18px]",
+          "oui-transition-colors hover:oui-fill-base-contrast",
+          isMobile && "oui-size-[18px]",
         )}
         id="language-switcher-icon"
         onClick={() => props.onOpenChange(true)}

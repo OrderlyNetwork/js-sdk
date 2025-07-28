@@ -1,5 +1,8 @@
 import React, { FC, SVGProps } from "react";
 
+interface IconProps extends SVGProps<SVGSVGElement> {
+  size: number;
+}
 export const MoreIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -50,18 +53,46 @@ export const CloseIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
   </svg>
 );
 
-export const ArrowRightIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
+export const ArrowRightIcon: FC<IconProps> = ({ size, ...props }) => (
   <svg
-    width="16"
-    height="16"
+    width={size}
+    height={size}
     viewBox="0 0 14 14"
     fill="currentColor"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
+    <path d="M3.50696 6.9958C3.50696 6.6738 3.76788 6.41305 4.08971 6.41305C4.36842 6.41305 7.62762 6.41305 8.49679 6.41305L6.76662 4.6648L7.58621 3.84521L10.336 6.57697C10.4504 6.69072 10.507 6.84355 10.507 6.99639C10.507 7.14864 10.4498 7.30089 10.336 7.41464L7.58621 10.1464L6.76662 9.3268L8.49679 7.57854C7.62762 7.57854 4.36842 7.57854 4.08971 7.57854C3.76788 7.57854 3.50696 7.3178 3.50696 6.9958Z" />
+  </svg>
+);
+
+export const ArrowRightLinearGradientIcon: FC<IconProps> = ({
+  size,
+  ...props
+}) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 20 20"
+    fill="none"
+  >
     <path
-      d="M3.50696 6.9958C3.50696 6.6738 3.76788 6.41305 4.08971 6.41305C4.36842 6.41305 7.62762 6.41305 8.49679 6.41305L6.76662 4.6648L7.58621 3.84521L10.336 6.57697C10.4504 6.69072 10.507 6.84355 10.507 6.99639C10.507 7.14864 10.4498 7.30089 10.336 7.41464L7.58621 10.1464L6.76662 9.3268L8.49679 7.57854C7.62762 7.57854 4.36842 7.57854 4.08971 7.57854C3.76788 7.57854 3.50696 7.3178 3.50696 6.9958Z"
-      fill="#FF7D00"
+      d="M5.01001 9.994C5.01001 9.534 5.38276 9.1615 5.84251 9.1615C6.24068 9.1615 10.8967 9.1615 12.1383 9.1615L9.66667 6.664L10.8375 5.49316L14.7658 9.39568C14.9292 9.55818 15.01 9.7765 15.01 9.99484C15.01 10.2123 14.9283 10.4298 14.7658 10.5923L10.8375 14.4948L9.66667 13.324L12.1383 10.8265C10.8967 10.8265 6.24068 10.8265 5.84251 10.8265C5.38276 10.8265 5.01001 10.454 5.01001 9.994Z"
+      fill="url(#paint0_linear_2269_12077)"
     />
+    <defs>
+      <linearGradient
+        id="paint0_linear_2269_12077"
+        x1="15.01"
+        y1="9.994"
+        x2="5.01001"
+        y2="9.994"
+        gradientUnits="userSpaceOnUse"
+      >
+        <stop stopColor="#59B0FE" />
+        <stop offset="1" stopColor="#26FEFE" />
+      </linearGradient>
+    </defs>
   </svg>
 );

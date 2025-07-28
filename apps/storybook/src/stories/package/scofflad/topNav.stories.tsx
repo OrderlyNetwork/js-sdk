@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import type { Meta, StoryObj } from "@storybook/react";
-import { fn } from "@storybook/test";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { fn } from "storybook/test";
 import { useChains } from "@orderly.network/hooks";
 import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { Box, Flex, Text } from "@orderly.network/ui";
@@ -29,7 +29,6 @@ const meta = {
     ChainMenuWidget,
     // ChainMenu,
   },
-  tags: ["autodocs"],
   parameters: {
     layout: "fullscreen",
   },

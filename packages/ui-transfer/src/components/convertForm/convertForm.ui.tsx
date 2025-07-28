@@ -31,6 +31,7 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
     slippage,
     onSlippageChange,
     convertRate,
+    outAmounts,
     minimumReceived,
     isQuoteLoading,
     currentLTV,
@@ -66,17 +67,18 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
           loading={isQuoteLoading}
           token={targetToken}
           value={
-            isQuoteLoading || !quantity
+            isQuoteLoading || !quantity || Number.isNaN(Number(outAmounts))
               ? ""
-              : unnormalizeAmount(
-                  minimumReceived.toString(),
-                  targetToken?.decimals ?? 6,
-                )
+              : unnormalizeAmount(outAmounts, targetToken?.decimals ?? 6)
           }
         />
         <Flex direction="column" itemAlign="start" mt={2} gap={1}>
           <SwapCoin
-            indexPrice={isQuoteLoading || !quantity ? "-" : convertRate}
+            indexPrice={
+              isQuoteLoading || !quantity || Number.isNaN(Number(convertRate))
+                ? "-"
+                : convertRate
+            }
             sourceSymbol={token?.token}
             targetSymbol={targetToken?.token}
           />
@@ -85,7 +87,9 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
             symbol={targetToken?.token || ""}
             precision={targetToken?.decimals ?? 6}
             value={
-              isQuoteLoading || !quantity
+              isQuoteLoading ||
+              !quantity ||
+              Number.isNaN(Number(minimumReceived))
                 ? "-"
                 : unnormalizeAmount(
                     minimumReceived.toString(),

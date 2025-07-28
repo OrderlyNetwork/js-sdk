@@ -1,5 +1,5 @@
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Tooltip } from "@orderly.network/ui";
-import type { Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta<typeof Tooltip> = {
   title: "Base/Tooltip",

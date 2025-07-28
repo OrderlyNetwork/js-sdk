@@ -4,7 +4,7 @@ import { useCallback } from "react";
 import { navigate } from "@storybook/addon-links";
 import { PortfolioLeftSidebarPath } from "@orderly.network/portfolio";
 import { TradingRewardsLeftSidebarPath } from "@orderly.network/trading-rewards";
-import { RouteOption } from "@orderly.network/ui-scaffold";
+import { type RouteOption } from "@orderly.network/ui-scaffold";
 
 export enum RoutePath {
   Root = "/",

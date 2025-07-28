@@ -1,4 +1,4 @@
-import { PropsWithChildren, useMemo } from "react";
+import React, { PropsWithChildren, useMemo } from "react";
 import { useAccount } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext, useDataTap } from "@orderly.network/react-app";
@@ -12,7 +12,7 @@ import {
 import { Flex } from "@orderly.network/ui";
 import { alertMessages, AuthGuard } from "./authGuard";
 
-export const AuthGuardDataTable = <RecordType extends unknown>(
+export const AuthGuardDataTable = <RecordType,>(
   props: PropsWithChildren<
     DataTableProps<RecordType> &
       Omit<GuardViewProps, "status"> & {
@@ -29,6 +29,7 @@ export const AuthGuardDataTable = <RecordType extends unknown>(
     labels,
     description,
     dataSource,
+    children,
     ...rest
   } = props;
   const { state } = useAccount();
@@ -68,7 +69,9 @@ export const AuthGuardDataTable = <RecordType extends unknown>(
       }
       manualPagination
       {...rest}
-    />
+    >
+      {children}
+    </DataTable>
   );
 };
 
@@ -80,7 +83,7 @@ type GuardViewProps = {
   visible?: boolean;
 };
 
-const GuardView = (props: GuardViewProps) => {
+const GuardView: React.FC<GuardViewProps> = (props) => {
   const { t } = useTranslation();
 
   const DESCRIPTIONS: alertMessages = {
@@ -91,7 +94,9 @@ const GuardView = (props: GuardViewProps) => {
   };
 
   const descriptions = { ...DESCRIPTIONS, ...props.description };
-  if (!props.visible) return null;
+  if (!props.visible) {
+    return null;
+  }
   return (
     <Flex py={8}>
       <AuthGuard

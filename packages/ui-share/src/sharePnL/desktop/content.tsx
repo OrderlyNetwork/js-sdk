@@ -1,4 +1,6 @@
 import { FC, useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "@orderly.network/i18n";
+import { Divider, Flex, toast, Text, Box } from "@orderly.network/ui";
 import {
   PnLDisplayFormat,
   ReferralType,
@@ -6,16 +8,14 @@ import {
   ShareOptions,
   SharePnLOptions,
 } from "../../types/types";
-import { getPnlInfo, getPnLPosterData, savePnlInfo } from "../utils/utils";
-import { Divider, Flex, toast, Text, Box } from "@orderly.network/ui";
 import { Poster } from "../poster";
-import { CarouselBackgroundImage } from "./carousel";
-import { PnlFormatView } from "./pnlFormat";
-import { ShareOption } from "./options";
-import { Message } from "./message";
-import { BottomButtons } from "./bottomBtns";
 import { PosterRef } from "../poster/poster";
-import { useTranslation } from "@orderly.network/i18n";
+import { getPnlInfo, getPnLPosterData, savePnlInfo } from "../utils/utils";
+import { BottomButtons } from "./bottomBtns";
+import { CarouselBackgroundImage } from "./carousel";
+import { Message } from "./message";
+import { ShareOption } from "./options";
+import { PnlFormatView } from "./pnlFormat";
 
 export const DesktopSharePnLContent: FC<{
   entity: ShareEntity;
@@ -34,16 +34,17 @@ export const DesktopSharePnLContent: FC<{
   const formats: PnLDisplayFormat[] = hasRoiAndPnl
     ? ["roi_pnl", "roi", "pnl"]
     : props.entity.roi != null
-    ? ["roi"]
-    : props.entity.pnl != null
-    ? ["pnl"]
-    : [];
+      ? ["roi"]
+      : props.entity.pnl != null
+        ? ["pnl"]
+        : [];
 
   const [pnlFormat, setPnlFormat] = useState<PnLDisplayFormat>(
-    formats.length == 1 ? formats[0] : localPnlConfig.pnlFormat
+    formats.length == 1 ? formats[0] : localPnlConfig.pnlFormat,
   );
+  console.log("pnl format", props.entity);
   const [shareOption, setShareOption] = useState<Set<ShareOptions>>(
-    new Set(localPnlConfig.options)
+    new Set(localPnlConfig.options),
   );
   const [selectedSnap, setSelectedSnap] = useState(localPnlConfig.bgIndex);
   const [message, setMessage] = useState(localPnlConfig.message);
@@ -75,7 +76,7 @@ export const DesktopSharePnLContent: FC<{
     shareOption,
     props.baseDp,
     props.quoteDp,
-    props.referral
+    props.referral,
   );
 
   const onCopy = () => {
@@ -90,7 +91,7 @@ export const DesktopSharePnLContent: FC<{
           return (
             <div>
               <div>{t("common.copy.failed")}</div>
-              <div className="oui-text-2xs oui-max-w-[396px] oui-mt-2 oui-text-base-contrast-54">
+              <div className="oui-mt-2 oui-max-w-[396px] oui-text-2xs oui-text-base-contrast-54">
                 {t("share.pnl.copy.failed.description")}
               </div>
             </div>
@@ -117,8 +118,8 @@ export const DesktopSharePnLContent: FC<{
   savePnlInfo(pnlFormat, shareOption, selectedSnap, message);
 
   return (
-    <div className="oui-h-full oui-flex oui-flex-col oui-relative oui-w-full">
-      <div className="oui-flex-1 oui-h-full oui-overflow-y-auto">
+    <div className="oui-relative oui-flex oui-size-full oui-flex-col">
+      <div className="oui-h-full oui-flex-1 oui-overflow-y-auto">
         <Box mt={9} height={422}>
           <Flex itemAlign={"center"} justify={"center"}>
             <Poster
@@ -163,7 +164,7 @@ export const DesktopSharePnLContent: FC<{
             ))}
           </Flex>
 
-          <Divider className="oui-w-full oui-pt-6 oui-border-white/10" />
+          <Divider className="oui-w-full oui-border-white/10 oui-pt-6" />
 
           <Flex
             mt={6}

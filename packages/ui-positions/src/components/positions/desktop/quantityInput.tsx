@@ -52,7 +52,7 @@ export const QuantityInput = (props: { value: number }) => {
         <Input
           size="sm"
           classNames={{
-            root: "oui-outline-line-12",
+            root: "oui-outline-none oui-border oui-border-solid oui-border-white/[0.12] focus-within:oui-outline-primary-light",
           }}
           formatters={[
             inputFormatter.numberFormatter,

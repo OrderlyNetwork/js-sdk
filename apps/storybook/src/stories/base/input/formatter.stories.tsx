@@ -1,5 +1,7 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { fn, userEvent, within, expect } from "@storybook/test";
+import { useState } from "react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { useArgs } from "storybook/preview-api";
+import { fn, userEvent, within, expect } from "storybook/test";
 import {
   Box,
   CheckedCircleFillIcon,
@@ -8,8 +10,6 @@ import {
   InputAdditional,
   inputFormatter,
 } from "@orderly.network/ui";
-import { useState } from "react";
-import { useArgs } from "@storybook/preview-api";
 import { Decimal } from "@orderly.network/utils";
 
 const meta = {

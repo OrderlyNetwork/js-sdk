@@ -1,9 +1,8 @@
 import { useRef, useMemo } from "react";
 import { Differ, Viewer } from "json-diff-kit";
 import type { DiffResult } from "json-diff-kit";
-
-import "json-diff-kit/dist/viewer.css";
 import "./theme.css";
+import "json-diff-kit/dist/viewer.css";
 
 export const DiffView = (props: { data: any; hideUnchangedLines: boolean }) => {
   const prevData = useRef({});
@@ -14,7 +13,7 @@ export const DiffView = (props: { data: any; hideUnchangedLines: boolean }) => {
       maxDepth: Infinity, // default `Infinity`
       showModifications: true, // default `true`
       arrayDiffMethod: "lcs", // default `"normal"`, but `"lcs"` may be more useful
-    })
+    }),
   );
 
   const diff = useMemo(() => {

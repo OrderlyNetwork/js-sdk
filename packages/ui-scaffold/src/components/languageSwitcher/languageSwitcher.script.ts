@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useTrack } from "@orderly.network/hooks";
 import {
   i18n,
@@ -11,10 +11,11 @@ import { useScreen } from "@orderly.network/ui";
 export type LanguageSwitcherScriptReturn = ReturnType<
   typeof useLanguageSwitcherScript
 >;
+
 export type LanguageSwitcherScriptOptions = Pick<
   LocaleContextState,
   "popup"
-> & { open?: boolean; setOpen?: (open: boolean) => void };
+> & { open?: boolean; onOpenChange?: (open: boolean) => void };
 
 export const useLanguageSwitcherScript = (
   options?: LanguageSwitcherScriptOptions,
@@ -29,14 +30,24 @@ export const useLanguageSwitcherScript = (
 
   const { isMobile } = useScreen();
 
+  const onOpenChange = useCallback(
+    (open: boolean) => {
+      if (typeof options?.onOpenChange === "function") {
+        options.onOpenChange(open);
+      } else {
+        setOpen(open);
+      }
+    },
+    [options?.onOpenChange, setOpen],
+  );
+
   const onLangChange = async (lang: string, displayName: string) => {
     setLoading(true);
     setSelectedLang(lang);
     await onLanguageBeforeChanged(lang);
     await i18n.changeLanguage(lang);
     await onLanguageChanged(lang);
-    setOpen(false);
-    options?.setOpen?.(false);
+    onOpenChange(false);
     setLoading(false);
     track(TrackerEventName.switchLanguage, {
       language: displayName,
@@ -58,9 +69,16 @@ export const useLanguageSwitcherScript = (
     [popup, options?.popup, isMobile],
   );
 
+  const _open = useMemo(() => {
+    if (typeof options?.open === "boolean") {
+      return options.open;
+    }
+    return open;
+  }, [options?.open, open]);
+
   return {
-    open: options?.open || open,
-    onOpenChange: options?.setOpen || setOpen,
+    open: _open,
+    onOpenChange,
     languages,
     selectedLang,
     onLangChange,

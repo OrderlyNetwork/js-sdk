@@ -1,4 +1,5 @@
 import { PropsWithChildren, forwardRef, ElementType, ReactNode } from "react";
+import { cn } from "..";
 import {
   BaseCardProps,
   CardBase,
@@ -23,9 +24,9 @@ interface CardProps extends BaseCardProps {
 
 const Card = forwardRef<React.ElementRef<"div">, PropsWithChildren<CardProps>>(
   (props, ref) => {
-    const { title, children, footer, classNames, ...rest } = props;
+    const { title, children, footer, className, classNames, ...rest } = props;
     return (
-      <CardBase {...rest} className={classNames?.root} ref={ref}>
+      <CardBase {...rest} className={cn(className, classNames?.root)} ref={ref}>
         <CardHeader className={classNames?.header}>
           {typeof title === "string" ? <CardTitle>{title}</CardTitle> : title}
         </CardHeader>

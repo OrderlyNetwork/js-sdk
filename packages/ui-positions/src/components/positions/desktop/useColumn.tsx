@@ -287,8 +287,8 @@ export const useColumn = (config: ColumnConfig) => {
       {
         title: null,
         dataIndex: "close_position",
-        align: "right",
-        width: 160,
+        align: "left",
+        width: 136,
         fixed: "right",
         render() {
           return (

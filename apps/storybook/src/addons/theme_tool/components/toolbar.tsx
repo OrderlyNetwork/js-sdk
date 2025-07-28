@@ -1,6 +1,6 @@
 import React from "react";
-import { styled } from "@storybook/theming";
-import { useTheme } from "./editorContext";
+import { styled } from "storybook/theming";
+import { useTheme } from "./context";
 
 const Wrap = styled.div`
   display: flex;

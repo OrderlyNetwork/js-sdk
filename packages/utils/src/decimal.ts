@@ -45,16 +45,15 @@ export const commifyOptional = (
   return prefix + value;
 };
 
+const THOUSANDS_REGEXP = /\B(?=(\d{3})+(?!\d))/g;
 export const commify = (num: number | string, fix?: number): string => {
   const str = `${num}`;
   const parts = str.split(".");
   const numberPart = parts[0];
   const decimalPart = parts[1];
-  const thousands = /\B(?=(\d{3})+(?!\d))/g;
-
   const endsWithPoint = str.endsWith(".") && str.length > 1;
   const result =
-    numberPart.replace(thousands, ",") +
+    numberPart.replace(THOUSANDS_REGEXP, ",") +
     (decimalPart
       ? "." + decimalPart.substring(0, fix || decimalPart.length)
       : endsWithPoint
@@ -67,8 +66,9 @@ export const commify = (num: number | string, fix?: number): string => {
   return result;
 };
 
+const SCIENTIFICNOTATION_REGEX = /\d(?:\.(\d*))?e([+-]\d+)/;
 export const toNonExponential = (num: number) => {
-  const m = num.toExponential().match(/\d(?:\.(\d*))?e([+-]\d+)/);
+  const m = num.toExponential().match(SCIENTIFICNOTATION_REGEX);
   if (!Array.isArray(m)) {
     return num;
   }
@@ -178,18 +178,20 @@ export function parseNumStr(str: string | number): Decimal | undefined {
   return result;
 }
 
-const scientificNotationPattern = /^[-+]?[0-9]+(\.[0-9]+)?[eE][-+]?[0-9]+$/;
+const SCIENTIFICNOTATIONPATTERN = /^[-+]?[0-9]+(\.[0-9]+)?[eE][-+]?[0-9]+$/;
+
+const TRAILINGZERODECIMAL_REGEX = /(\.[0-9]*[1-9])0+$/;
 
 //** remove trailing zeros 0.00000100 => 0.000001, 1 => 1 */
 export const removeTrailingZeros = (value: number, fixedCount: number = 16) => {
   const text = `${value}`;
-  const isScientific = scientificNotationPattern.test(text);
+  const isScientific = SCIENTIFICNOTATIONPATTERN.test(text);
   if (!value.toString().includes(".") && !isScientific) {
     return `${value}`;
   }
   const formattedNumber = new Decimal(value)
     .toFixed(fixedCount)
-    .replace(/(\.[0-9]*[1-9])0+$/, "$1");
+    .replace(TRAILINGZERODECIMAL_REGEX, "$1");
   return formattedNumber;
 };
 

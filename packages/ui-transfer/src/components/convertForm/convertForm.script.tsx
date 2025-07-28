@@ -125,18 +125,6 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
 
   const memoizedPostQuote = useMemoizedFn(postQuote);
 
-  const convertRate = useMemo(() => {
-    if (!quoteData || isQuoteLoading) {
-      return "-";
-    }
-    const rate = new Decimal(
-      unnormalizeAmount(quoteData.outAmounts[0], targetToken?.decimals ?? 6),
-    )
-      .div(unnormalizeAmount(quoteData.inAmounts[0], token.decimals))
-      .toString();
-    return rate;
-  }, [isQuoteLoading, quoteData, targetToken?.decimals, token?.decimals]);
-
   useEffect(() => {
     if (quantity && chainId && token.address && targetToken?.address) {
       memoizedPostQuote({
@@ -157,7 +145,26 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     }
   }, [quantity, token, targetToken, chainId, memoizedPostQuote]);
 
-  const minimumReceived = useMemo(() => {
+  const memoizedOutAmounts = useMemo<string>(() => {
+    if (!quoteData || isQuoteLoading) {
+      return "-";
+    }
+    return quoteData?.outAmounts[0];
+  }, [quoteData, isQuoteLoading]);
+
+  const memoizedConvertRate = useMemo(() => {
+    if (!quoteData || isQuoteLoading) {
+      return "-";
+    }
+    const rate = new Decimal(
+      unnormalizeAmount(quoteData.outAmounts[0], targetToken?.decimals ?? 6),
+    )
+      .div(unnormalizeAmount(quoteData.inAmounts[0], token.decimals))
+      .toString();
+    return rate;
+  }, [isQuoteLoading, quoteData, targetToken?.decimals, token?.decimals]);
+
+  const memoizedMinimumReceived = useMemo(() => {
     if (!quoteData || isQuoteLoading) {
       return 0;
     }
@@ -198,8 +205,9 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     networkId,
     slippage,
     onSlippageChange: setSlippage,
-    convertRate,
-    minimumReceived: minimumReceived,
+    convertRate: memoizedConvertRate,
+    minimumReceived: memoizedMinimumReceived,
+    outAmounts: memoizedOutAmounts,
     isQuoteLoading,
     currentLTV: currentLtv,
     nextLTV: nextLTV,

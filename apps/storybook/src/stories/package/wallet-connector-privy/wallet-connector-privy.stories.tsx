@@ -1,13 +1,6 @@
 import { useState } from "react";
-import { StoryObj } from "@storybook/react";
+import { StoryObj } from "@storybook/react-vite";
 import { TradingPage } from "@orderly.network/trading";
-import {
-  Box,
-  ExtensionPositionEnum,
-  Flex,
-  installExtension,
-  Text,
-} from "@orderly.network/ui";
 import { MainNavWidget } from "@orderly.network/ui-scaffold";
 import { Scaffold } from "@orderly.network/ui-scaffold";
 import { useNav } from "../../../hooks/useNav";
@@ -35,7 +28,6 @@ const meta = {
     layout: "fullscreen",
     walletConnectorType: "privy",
   },
-  tags: ["autodocs"],
   argTypes: {},
   args: {
     symbol: "PERP_BTC_USDC",

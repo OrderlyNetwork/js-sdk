@@ -1,4 +1,4 @@
-import type { StoryObj } from "@storybook/react";
+import type { StoryObj } from "@storybook/react-vite";
 import { Box } from "@orderly.network/ui";
 import {
   MaintenanceTipsUI,
@@ -12,7 +12,6 @@ const meta = {
   title: "Package/ui-scaffold/maintenanceTips",
   component: MaintenanceTipsUI,
   subComponents: { AccountMenuWidget, AccountSummaryWidget, ChainMenuWidget },
-  tags: ["autodocs"],
   parameters: {
     layout: "fullscreen",
   },

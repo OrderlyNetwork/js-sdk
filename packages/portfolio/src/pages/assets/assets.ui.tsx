@@ -1,18 +1,17 @@
 import React, { useMemo } from "react";
 import pick from "ramda/es/pick";
+import { SubAccount } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext } from "@orderly.network/react-app";
 import {
   Text,
   Card,
   Flex,
-  Divider,
   gradientTextVariants,
   EyeIcon,
   EyeCloseIcon,
   cn,
   DataFilter,
-  Badge,
   formatAddress,
   Tabs,
   TabPanel,
@@ -150,7 +149,9 @@ export const AssetsTable: React.FC<Readonly<AssetsWidgetProps>> = (props) => {
     value: "all",
   };
 
-  const subAccounts = state.subAccounts ?? [];
+  const subAccounts = useMemo<SubAccount[]>(() => {
+    return state.subAccounts ?? [];
+  }, [state.subAccounts]);
 
   const memoizedOptions = useMemo(() => {
     if (Array.isArray(subAccounts) && subAccounts.length) {
@@ -164,23 +165,27 @@ export const AssetsTable: React.FC<Readonly<AssetsWidgetProps>> = (props) => {
       ];
     }
     return [ALL_ACCOUNTS, MAIN_ACCOUNT];
-  }, [subAccounts]);
+  }, [ALL_ACCOUNTS, MAIN_ACCOUNT, subAccounts]);
 
   // Create asset options from holding data - optimized and simplified
   const memoizedAssetOptions = useMemo(() => {
     return [ALL_ASSETS, ...assetsOptions];
-  }, [assetsOptions]);
+  }, [ALL_ASSETS, assetsOptions]);
 
   return (
-    <Card classNames={{ content: "!oui-py-6" }}>
+    <Card
+      className={"oui-bg-transparent oui-p-0"}
+      classNames={{ content: "!oui-pt-0" }}
+    >
       <Tabs
         defaultValue="assets"
         variant="contained"
         classNames={{ tabsList: "" }}
         size="lg"
       >
-        <TabPanel value="assets" title={t("common.assets")}>
+        <TabPanel value="assets" className="" title={t("common.assets")}>
           <Flex
+            className="oui-rounded-xl oui-bg-base-9 oui-p-6"
             direction={"row"}
             itemAlign={"center"}
             justify={"between"}
@@ -193,9 +198,9 @@ export const AssetsTable: React.FC<Readonly<AssetsWidgetProps>> = (props) => {
               {...pick(["isMainAccount", "onDeposit", "onWithdraw"], props)}
             />
           </Flex>
-          <Divider />
           {isMainAccount && (
             <DataFilter
+              className="oui-border-none oui-py-0"
               onFilter={onFilter}
               items={[
                 {
@@ -213,37 +218,44 @@ export const AssetsTable: React.FC<Readonly<AssetsWidgetProps>> = (props) => {
               ]}
             />
           )}
-          <AuthGuardDataTable
-            bordered
-            className="oui-font-semibold"
-            classNames={{ root: "oui-bg-transparent" }}
-            columns={columns}
-            dataSource={dataSource}
-            expanded
-            getSubRows={(row) => row.children}
-            generatedRowKey={(record) => {
-              return `${record.account_id}${record.token ? `_${record.token}` : ""}`;
-            }}
-            onCell={(column, record) => {
-              const isGroup = (record.children ?? []).length > 0;
-              if (isGroup) {
-                return {
-                  children:
-                    column.id === "token" ? (
-                      <Badge color="neutral" size="xs">
-                        {record?.description || formatAddress(record?.id ?? "")}
-                      </Badge>
-                    ) : null,
-                };
-              }
-            }}
-          />
+          {dataSource.map((item, index) => {
+            return (
+              <Flex
+                key={`item-${index}`}
+                className="oui-rounded-xl oui-bg-base-9 oui-p-6"
+                direction={"column"}
+                itemAlign={"start"}
+                justify={"between"}
+                my={4}
+              >
+                <Text
+                  className="oui-mb-4"
+                  intensity={98}
+                  weight="semibold"
+                  size="lg"
+                >
+                  {item?.description || formatAddress(item?.id ?? "")}
+                </Text>
+                <AuthGuardDataTable
+                  bordered
+                  className="oui-font-semibold"
+                  classNames={{
+                    root: "oui-bg-transparent",
+                    scroll: "oui-min-h-0",
+                  }}
+                  columns={columns}
+                  dataSource={item.children}
+                />
+              </Flex>
+            );
+          })}
         </TabPanel>
         <TabPanel
+          className="oui-rounded-xl oui-bg-base-9 oui-px-6"
           value="convertHistory"
           title={t("portfolio.overview.tab.convert.history")}
         >
-          <ConvertHistoryWidget memoizedOptions={memoizedOptions} />
+          <ConvertHistoryWidget />
         </TabPanel>
       </Tabs>
     </Card>
