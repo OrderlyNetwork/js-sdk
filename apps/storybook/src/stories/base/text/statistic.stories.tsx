@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { EditIcon, Statistic } from "@orderly.network/ui";
 
 const meta: Meta<typeof Statistic> = {
@@ -7,7 +7,7 @@ const meta: Meta<typeof Statistic> = {
   parameters: {
     layout: "centered",
   },
-  // tags: ['autodocs'],
+  // tags: [''],
   argTypes: {
     //   backgroundColor: { control: 'color' },
   },

@@ -1,11 +1,11 @@
 import React, { useMemo } from "react";
-import { styled } from "@storybook/theming";
-import { useTheme } from "./editorContext";
-import CodeMirror, { ViewUpdate } from "@uiw/react-codemirror";
 import { css } from "@codemirror/lang-css";
 import { githubLight } from "@uiw/codemirror-theme-github";
+import CodeMirror, { ViewUpdate } from "@uiw/react-codemirror";
+import { styled } from "storybook/theming";
 import { Button } from "@orderly.network/ui";
 import { object2Css, parseCssToJson } from "../utils";
+import { useTheme } from "./context";
 
 const Container = styled.div`
   position: relative;

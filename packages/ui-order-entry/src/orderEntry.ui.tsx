@@ -95,6 +95,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
     toggleBBO,
     disableFeatures,
     currentLtv,
+    fillMiddleValue,
   } = props;
 
   const { curLeverage } = useLeverage();
@@ -210,7 +211,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
         (errors: OrderValidationResult) => {
           // slippage error message is not show input tooltip, so we need to manually show it by toast
           if (errors.slippage) {
-            toast.error(errors.slippage.message);
+            toast.error(t("orderEntry.slippage.error.max"));
           }
 
           // when switch order type, validated not changed, so we need to set it to true
@@ -408,6 +409,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
             }}
             priceInputContainerWidth={props.priceInputContainerWidth}
             parseErrorMsg={parseErrorMsg}
+            fillMiddleValue={fillMiddleValue}
           />
         )}
         {/* Slider */}
@@ -557,7 +559,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
               }}
               className={"oui-group oui-absolute oui-right-2 oui-top-2"}
               data-testid="oui-testid-orderEntry-pinned-button"
-            ></PinButton>
+            />
           </Box>
         )}
       </div>
@@ -629,9 +631,18 @@ const OrderQuantityInput = (props: {
   >;
   priceInputContainerWidth?: number;
   parseErrorMsg: (key: keyof OrderValidationResult) => string;
+  fillMiddleValue: OrderEntryScriptReturn["fillMiddleValue"];
 }) => {
-  const { type, symbolInfo, values, onFocus, onBlur, bbo, parseErrorMsg } =
-    props;
+  const {
+    type,
+    symbolInfo,
+    values,
+    onFocus,
+    onBlur,
+    bbo,
+    parseErrorMsg,
+    fillMiddleValue,
+  } = props;
   const { t } = useTranslation();
 
   const readOnly = bbo.bboStatus === BBOStatus.ON;
@@ -640,44 +651,55 @@ const OrderQuantityInput = (props: {
     type === OrderType.LIMIT ? (
       <Flex direction="column" itemAlign="end" className="oui-text-2xs">
         {symbolInfo.quote}
-        <Flex
-          height={20}
-          px={3}
-          justify="center"
-          itemAlign="center"
-          r="base"
-          className={cn(
-            "oui-mt-[2px] oui-cursor-pointer oui-select-none oui-border",
-            bbo.bboStatus === BBOStatus.ON
-              ? "oui-border-primary"
-              : "oui-border-line-12",
-            bbo.bboStatus === BBOStatus.DISABLED && "oui-cursor-not-allowed",
-          )}
-          onClick={() => {
-            if (bbo.bboStatus === BBOStatus.DISABLED) {
-              modal.dialog({
-                title: t("common.tips"),
-                size: "xs",
-                content: (
-                  <Text intensity={54}>
-                    {t("orderEntry.bbo.disabled.tips")}
-                  </Text>
-                ),
-              });
-            } else {
-              bbo.toggleBBO();
-            }
-          }}
-        >
+        <Flex justify={"end"} itemAlign="center" gap={2}>
+          <Flex
+            px={3}
+            height={20}
+            justify="center"
+            itemAlign="center"
+            r="base"
+            className={cn(
+              "oui-mt-[2px] oui-cursor-pointer oui-select-none oui-border",
+              bbo.bboStatus === BBOStatus.ON
+                ? "oui-border-primary"
+                : "oui-border-line-12",
+              bbo.bboStatus === BBOStatus.DISABLED && "oui-cursor-not-allowed",
+            )}
+            onClick={() => {
+              if (bbo.bboStatus === BBOStatus.DISABLED) {
+                modal.dialog({
+                  title: t("common.tips"),
+                  size: "xs",
+                  content: (
+                    <Text intensity={54}>
+                      {t("orderEntry.bbo.disabled.tips")}
+                    </Text>
+                  ),
+                });
+              } else {
+                bbo.toggleBBO();
+              }
+            }}
+          >
+            <Text
+              className={cn(
+                bbo.bboStatus === BBOStatus.ON && "oui-text-primary",
+                bbo.bboStatus === BBOStatus.OFF && "oui-text-base-contrast-54",
+                bbo.bboStatus === BBOStatus.DISABLED &&
+                  "oui-text-base-contrast-20",
+              )}
+            >
+              {t("orderEntry.bbo")}
+            </Text>
+          </Flex>
           <Text
             className={cn(
-              bbo.bboStatus === BBOStatus.ON && "oui-text-primary",
-              bbo.bboStatus === BBOStatus.OFF && "oui-text-base-contrast-54",
-              bbo.bboStatus === BBOStatus.DISABLED &&
-                "oui-text-base-contrast-20",
+              "oui-select-none",
+              "oui-cursor-pointer oui-text-primary",
             )}
+            onClick={fillMiddleValue}
           >
-            {t("orderEntry.bbo")}
+            Mid
           </Text>
         </Flex>
       </Flex>

@@ -1,7 +1,11 @@
 import { useCallback, useEffect, useMemo, useState, useRef } from "react";
-import { useAccount, useIndexPricesStream } from "@orderly.network/hooks";
+import {
+  useAccount,
+  useIndexPricesStream,
+  useWalletConnector,
+} from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
+import { ABSTRACT_CHAIN_ID_MAP, API } from "@orderly.network/types";
 import { toast, useScreen } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { useAccountValue } from "./useAccountValue";
@@ -21,9 +25,10 @@ export const SubAccountScript = () => {
   const [mainAccountHolding, setMainAccountHolding] = useState<API.Holding[]>(
     [],
   );
+  const { wallet, connectedChain } = useWalletConnector();
   const { data: indexPrices } = useIndexPricesStream();
   const { isMobile } = useScreen();
-  const { state, subAccount, switchAccount } = useAccount();
+  const { state, account, subAccount, switchAccount } = useAccount();
   const { t } = useTranslation();
   const mainAccountId = state.mainAccountId;
 
@@ -32,6 +37,18 @@ export const SubAccountScript = () => {
   const currentAccountId = state.accountId;
 
   const hasRefreshedRef = useRef(false);
+
+  const userAddress = useMemo(() => {
+    let address = state.address;
+    if (
+      connectedChain?.id &&
+      ABSTRACT_CHAIN_ID_MAP.has(parseInt(connectedChain?.id as string))
+    ) {
+      address = account.getAdditionalInfo()?.AGWAddress;
+    }
+
+    return address;
+  }, [wallet, state, account, connectedChain]);
 
   const subAccounts = useMemo(() => {
     if (!state.subAccounts || !state.subAccounts.length) {
@@ -138,6 +155,7 @@ export const SubAccountScript = () => {
   }, [open, mainAccountId, subAccount]);
 
   return {
+    userAddress,
     mainAccount: accountsWithValues.mainAccount,
     currentAccountId,
     open,

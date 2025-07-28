@@ -1,6 +1,5 @@
 import React, { FC, memo } from "react";
-import { styled } from "@storybook/theming";
-
+import { styled } from "storybook/theming";
 import "./style.css";
 
 const ColorTextInput = styled.input({
@@ -66,7 +65,7 @@ export const ColorInput = memo(
         </div>
       </ColorInputContainer>
     );
-  }
+  },
 );
 
 const ColorGradientGroup = styled.div`

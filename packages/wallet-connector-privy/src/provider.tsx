@@ -12,7 +12,7 @@ import { PrivyClientConfig } from "@privy-io/react-auth";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import { type Chain, defineChain } from "viem";
 import { mainnet } from "viem/chains";
-import { Chains, useSWR } from "@orderly.network/hooks";
+import { Chains, fetcher, useSWR } from "@orderly.network/hooks";
 import {
   AbstractChains,
   AbstractTestnetChainInfo,
@@ -58,7 +58,7 @@ const fetchChainInfo = async (url: string) => {
   return response.json();
 };
 
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
+// const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 const formatSwapChainInfo = (data: any = {}) => {
   return Object.keys(data).map((key) => {
@@ -260,13 +260,13 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     commonSwrOpts,
   );
 
-  const { data: mainnetChainInfoRes } = useSWR(
+  const { data: mainnetChainInfos } = useSWR(
     !props.customChains ? "https://api.orderly.org/v1/public/chain_info" : null,
     fetcher,
     commonSwrOpts,
   );
 
-  const { data: testChainInfoRes } = useSWR(
+  const { data: testChainInfos } = useSWR(
     !props.customChains
       ? "https://testnet-api.orderly.org/v1/public/chain_info"
       : null,
@@ -372,18 +372,18 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
       return;
     }
 
-    if (!mainnetChainInfoRes || !testChainInfoRes || swapLoading) {
+    if (!mainnetChainInfos || !testChainInfos || swapLoading) {
       return;
     }
 
     let testChainsList = [];
     let mainnetChainsList = [];
     try {
-      testChainsList = testChainInfoRes?.data?.rows;
+      testChainsList = testChainInfos;
       // TODO only for test, need remove this code
       testChainsList.push(AbstractTestnetChainInfo);
 
-      mainnetChainsList = mainnetChainInfoRes?.data?.rows;
+      mainnetChainsList = mainnetChainInfos;
 
       const testChains = processChainInfo(testChainsList);
       const mainnetChains = processChainInfo(mainnetChainsList);
@@ -411,8 +411,8 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     initRef.current = true;
   }, [
     props.customChains,
-    mainnetChainInfoRes,
-    testChainInfoRes,
+    mainnetChainInfos,
+    testChainInfos,
     swapChainInfoRes,
     swapLoading,
   ]);

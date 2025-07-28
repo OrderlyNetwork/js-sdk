@@ -1,8 +1,8 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { AuthGuard, AuthGuardDataTable } from "@orderly.network/ui-connector";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { OverviewModule } from "@orderly.network/portfolio";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { Text, Flex, Column } from "@orderly.network/ui";
-import { OverviewModule } from "@orderly.network/portfolio";
+import { AuthGuard, AuthGuardDataTable } from "@orderly.network/ui-connector";
 
 const meta: Meta<typeof AuthGuard> = {
   title: "Package/ui-connector/AuthGuard",

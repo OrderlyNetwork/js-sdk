@@ -1,4 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import { useState } from "react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   Button,
   modal,
@@ -7,7 +8,6 @@ import {
   registerSimpleSheet,
   SimpleSheet,
 } from "@orderly.network/ui";
-import { useState } from "react";
 
 const meta = {
   title: "Base/Sheet",

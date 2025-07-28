@@ -1,9 +1,5 @@
 import React, { PropsWithChildren } from "react";
-import {
-  ConfigProviderProps,
-  OrderlyConfigProvider,
-  useTrack,
-} from "@orderly.network/hooks";
+import { OrderlyConfigProvider, useTrack } from "@orderly.network/hooks";
 import {
   LocaleProvider as UILocaleProvider,
   ModalProvider,
@@ -45,7 +41,7 @@ const OrderlyAppProvider: React.FC<OrderlyAppProviderProps> = (props) => {
         components={components}
         overrides={props.overrides}
       >
-        <OrderlyConfigProvider {...(configProps as ConfigProviderProps)}>
+        <OrderlyConfigProvider {...configProps}>
           <AppStateProvider
             onChainChanged={onChainChanged}
             defaultChain={defaultChain}

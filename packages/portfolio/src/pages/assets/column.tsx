@@ -142,6 +142,6 @@ export const useAssetsColumns = (options: ColumnsOptions) => {
         },
       },
     ];
-  }, [t, onTransfer]);
+  }, [t, tokensInfo, onTransfer, onConvert]);
   return columns;
 };

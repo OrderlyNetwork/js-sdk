@@ -62,6 +62,7 @@ export { useTransfer } from "./useTransfer";
 
 export { useHoldingStream } from "./useHoldingStream";
 export { useWalletSubscription } from "./useWalletSubscription";
+export { useBalanceSubscription } from "./useBalanceSubscription";
 export { useWalletTopic } from "./wsTopic/useWalletTopic";
 export { useBalanceTopic } from "./wsTopic/useBalanceTopic";
 export { useSettleSubscription } from "./useSettleSubscription";

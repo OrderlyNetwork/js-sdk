@@ -4,7 +4,7 @@
     "paths": {
       "@/*": [
         "./*"
-      ],     
+      ],
       "@orderly.network/hooks": [
         "../../packages/hooks/src"
       ],

@@ -1,6 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
-// import { fn } from '@storybook/test';
-import { Flex, Text } from "@orderly.network/ui";
+import type { StoryObj } from "@storybook/react-vite";
+import { Text } from "@orderly.network/ui";
 
 const { numeral: Numeral } = Text;
 
@@ -68,7 +67,6 @@ export const Default: Story = {
     children: 2323.023,
     rule: "price",
     dp: 4,
-    copyable: false,
   },
 };
 
@@ -93,22 +91,22 @@ export const RoundingMode: Story = {
     return (
       <div>
         <Text>Origin value: 2343542.23347323</Text>
-        <Table className="oui-w-[400px] oui-border">
-          <TableHeader>
-            <TableRow>
-              <TableHead>Mode</TableHead>
-              <TableHead>Value</TableHead>
-              <TableHead></TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <TableRow>
-              <TableCell>truncate</TableCell>
-              <TableCell>truncate</TableCell>
-              <TableCell>
+        <table className="oui-w-[400px] oui-border">
+          <thead>
+            <tr>
+              <th>Mode</th>
+              <th>Value</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>truncate</td>
+              <td>truncate</td>
+              <td>
                 <Numeral {...args} dp={4} rm={"truncate"} />
-              </TableCell>
-            </TableRow>
+              </td>
+            </tr>
             {[
               "ROUND_UP",
               "ROUND_DOWN",
@@ -121,17 +119,17 @@ export const RoundingMode: Story = {
               "ROUND_HALF_FLOOR",
             ].map((mode, index) => {
               return (
-                <TableRow>
-                  <TableCell>{mode}</TableCell>
-                  <TableCell>{index}</TableCell>
-                  <TableCell>
+                <tr key={mode}>
+                  <td>{mode}</td>
+                  <td>{index}</td>
+                  <td>
                     <Numeral {...args} dp={4} rm={index} />
-                  </TableCell>
-                </TableRow>
+                  </td>
+                </tr>
               );
             })}
-          </TableBody>
-        </Table>
+          </tbody>
+        </table>
       </div>
     );
   },

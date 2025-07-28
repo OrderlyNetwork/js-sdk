@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { i18n, useTranslation } from "@orderly.network/i18n";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { i18n, Trans, useTranslation } from "@orderly.network/i18n";
 
 const meta: Meta = {
   title: "Package/i18n",
@@ -15,7 +15,7 @@ export const I18nInstance: Story = {
   render: () => {
     return (
       <>
-        <div>{i18n.t("common.disconnect")}</div>
+        <div>{i18n.t("connector.disconnect")}</div>
       </>
     );
   },
@@ -27,7 +27,21 @@ export const useTranslationHook: Story = {
 
     return (
       <>
-        <div>{t("common.mainnet")}</div>
+        <div>{t("connector.mainnet")}</div>
+      </>
+    );
+  },
+};
+
+export const TransComponent: Story = {
+  render: () => {
+    return (
+      <>
+        <Trans
+          i18nKey="order.edit.confirm.quantity"
+          values={{ base: "ETH", value: "100" }}
+          components={[<span key="0" className="oui-text-warning-darken" />]}
+        />
       </>
     );
   },

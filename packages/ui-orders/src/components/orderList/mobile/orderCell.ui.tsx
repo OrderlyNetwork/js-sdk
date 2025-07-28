@@ -1,6 +1,9 @@
 import React, { FC } from "react";
 import { Divider, Flex, Grid, Text } from "@orderly.network/ui";
-import { OrderCellState } from "./orderCell.script";
+import { TabType } from "../../orders.widget";
+import { BracketOrderPriceWidget } from "./bracketOrderPrice";
+import { CancelBtnWidget } from "./cancelBtn";
+import { EditBtnWidget } from "./editBtn";
 import {
   OrderTime,
   SymbolToken,
@@ -20,11 +23,9 @@ import {
   OrderPrice,
   RealizedPnL,
   OrderState,
+  Fee,
 } from "./items";
-import { EditBtnWidget } from "./editBtn";
-import { CancelBtnWidget } from "./cancelBtn";
-import { BracketOrderPriceWidget } from "./bracketOrderPrice";
-import { TabType } from "../../orders.widget";
+import { OrderCellState } from "./orderCell.script";
 
 export const OrderCell: FC<
   OrderCellState & {
@@ -122,6 +123,11 @@ function itemsWithType(props: OrderCellState) {
           <AvgPrice {...props} />
           <OrderPrice {...props} />
           <RealizedPnL {...props} />
+          {/* placeholder */}
+          <div></div>
+          {/* placeholder */}
+          <div></div>
+          <Fee {...props} />
         </>
       );
   }

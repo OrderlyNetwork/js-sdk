@@ -8,7 +8,7 @@ async function copyLocales() {
 
   await fs.copy(
     path.resolve(__dirname, "../../../packages/i18n/locales"),
-    path.resolve(__dirname, "../public/locales")
+    path.resolve(__dirname, "../public/locales"),
   );
 }
 

@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Dashboard, ReferralProvider } from "@orderly.network/affiliate";
 import { TradingRewardsLeftSidebarPath } from "@orderly.network/trading-rewards";
 import { TradingRewardsLayout } from "../../../components/layout";

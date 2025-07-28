@@ -1,10 +1,10 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { MarketsType, useMarkets } from "@orderly.network/hooks";
 import {
   FavoritesDropdownMenuWidget,
   FavoritesTabWidget,
 } from "@orderly.network/markets";
 import { Box, Button, Flex } from "@orderly.network/ui";
-import { MarketsType, useMarkets } from "@orderly.network/hooks";
 
 const meta: Meta<typeof FavoritesDropdownMenuWidget> = {
   title: "Package/markets/Favorites",
