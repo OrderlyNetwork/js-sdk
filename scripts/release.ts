@@ -143,10 +143,15 @@ async function release() {
 
   await updateNpmRetryConfig();
 
-  if (npmRegistry) {
-    await $`${npmRegistry} pnpm changeset publish`;
-  } else {
-    await $`pnpm changeset publish`;
+  try {
+    if (npmRegistry) {
+      await $`${npmRegistry} pnpm changeset publish`;
+    } else {
+      await $`pnpm changeset publish`;
+    }
+  } catch (err) {
+    console.error("publish error: ", err);
+    // throw err;
   }
 
   // restore .npmrc file change when publish success
