@@ -327,7 +327,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
 
   useEffect(() => {
     setCrossChainTrans(!!assetHistory?.length);
-  }, [assetHistory]);
+  }, [assetHistory?.length]);
 
   useWalletSubscription({
     onMessage(data: any) {
