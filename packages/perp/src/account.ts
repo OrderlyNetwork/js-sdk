@@ -51,7 +51,7 @@ export type TotalCollateralValueInputs = {
     holding: number;
     indexPrice: number;
     collateralCap: number;
-    collateralRatio: number;
+    collateralRatio: Decimal;
   }[];
   unsettlementPnL: number;
 };
@@ -599,11 +599,10 @@ export function maxQtyByShort(
       .mul(0.995)
       // .add(new Decimal(positionQty).add(sellOrdersQty))
       .add(positionQty)
-      .sub(sellOrdersQty)
-
+      .sub(Math.abs(sellOrdersQty))
       .toNumber();
 
-    if (positionQty === 0 && buyOrdersQty === 0) {
+    if (positionQty === 0 && sellOrdersQty === 0) {
       return Math.min(baseMaxQty, factor_1);
     }
 
@@ -746,13 +745,12 @@ export const collateralRatio = (params: {
   const K = new Decimal(1.2);
   const DCF = new Decimal(discountFactor || 0);
   const qty = new Decimal(Math.min(collateralQty, cap));
-  const price = new Decimal(indexPrice);
 
-  const notionalAbs = qty.mul(price).abs();
+  const notionalAbs = qty.mul(indexPrice).abs();
   const dynamicWeight = DCF.mul(notionalAbs).toPower(IMRFactorPower);
   const result = K.div(new Decimal(1).add(dynamicWeight));
 
-  return Math.min(baseWeight, result.toNumber());
+  return result.lt(baseWeight) ? result : new Decimal(baseWeight);
 };
 
 /** collateral_value_i = min(collateral_qty_i , collateral_cap_i) * weight_i * index_price_i */
@@ -803,7 +801,7 @@ export const LTV = (params: {
 
 export const maxWithdrawalUSDC = (inputs: {
   USDCBalance: number;
-  freeCollateral: number;
+  freeCollateral: Decimal;
   upnl: number;
 }) => {
   const { USDCBalance, freeCollateral, upnl } = inputs;
@@ -815,19 +813,24 @@ export const maxWithdrawalUSDC = (inputs: {
 };
 
 export const maxWithdrawalOtherCollateral = (inputs: {
+  USDCBalance: number;
   collateralQty: number;
-  freeCollateral: number;
+  freeCollateral: Decimal;
   indexPrice: number;
-  weight: number;
+  weight: Decimal;
 }) => {
-  const { collateralQty, freeCollateral, indexPrice, weight } = inputs;
-  const denominator = new Decimal(indexPrice).mul(weight);
-
+  const { USDCBalance, collateralQty, freeCollateral, indexPrice, weight } =
+    inputs;
+  const usdcBalance = new Decimal(USDCBalance);
+  const denominator = usdcBalance.isNegative()
+    ? new Decimal(indexPrice).mul(weight).mul(new Decimal(1).add(0.001))
+    : new Decimal(indexPrice).mul(weight);
   if (denominator.isZero()) {
-    return 0;
+    return zero;
   }
-  const maxQtyByValue = new Decimal(freeCollateral).div(denominator).toNumber();
-  return Math.min(collateralQty, maxQtyByValue);
+  const qty = new Decimal(collateralQty);
+  const maxQtyByValue = new Decimal(freeCollateral).div(denominator);
+  return maxQtyByValue.lt(qty) ? maxQtyByValue : qty;
 };
 
 export const calcMinimumReceived = (inputs: {

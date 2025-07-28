@@ -19,3 +19,5 @@ export { ActionButton } from "./components/actionButton";
 export { Fee } from "./components/fee";
 
 export * from "./types";
+
+export * from "./components/depostiStatus";

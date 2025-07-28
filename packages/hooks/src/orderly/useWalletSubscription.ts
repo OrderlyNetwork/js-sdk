@@ -2,6 +2,8 @@ import useSWRSubscription from "swr/subscription";
 import { useAccount } from "../useAccount";
 import { useWS } from "../useWS";
 
+// only first callball will be called
+// TODO: refactor this, reference useBalanceTopic
 export const useWalletSubscription = (options?: {
   onMessage?: (data: any) => void;
 }) => {

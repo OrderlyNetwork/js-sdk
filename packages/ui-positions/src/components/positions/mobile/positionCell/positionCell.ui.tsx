@@ -1,7 +1,7 @@
 import { FC } from "react";
+import { OrderType } from "@orderly.network/types";
 import { cn, Divider, Flex, Grid } from "@orderly.network/ui";
-import { LimitCloseBtnWidget } from "../limitCloseBtn";
-import { MarketCloseBtnWidget } from "../marketCloseBtn";
+import { ClosePositionWidget } from "../../closePosition";
 import { TpSLBtnWidget } from "../tpSLBtn";
 import {
   UnrealPnL,
@@ -23,6 +23,33 @@ export const PositionCell: FC<
   }
 > = (props) => {
   const { className, ...rest } = props;
+
+  const header = (
+    <Flex justify={"between"} width={"100%"}>
+      <SymbolToken {...props} />
+      <UnrealPnL {...props} />
+    </Flex>
+  );
+
+  const body = (
+    <Grid cols={3} rows={2} gap={2} width={"100%"}>
+      <Qty {...props} />
+      <Margin {...props} />
+      <Notional {...props} />
+      <AvgOpen {...props} />
+      <MarkPrice {...props} />
+      <LiqPrice {...props} />
+    </Grid>
+  );
+
+  const buttons = (
+    <Grid width={"100%"} gap={2} cols={3} rows={1}>
+      <TpSLBtnWidget state={props} />
+      <ClosePositionWidget type={OrderType.LIMIT} />
+      <ClosePositionWidget type={OrderType.MARKET} />
+    </Grid>
+  );
+
   return (
     <Flex
       direction={"column"}
@@ -33,44 +60,12 @@ export const PositionCell: FC<
       itemAlign={"start"}
       className={cn(className, "oui-bg-base-9")}
     >
-      <Header {...rest} />
+      {header}
       <Divider intensity={6} className="oui-w-full" />
-      <Body {...rest} />
+      {body}
       <TPSLPrice {...rest} />
       <FundingFee {...rest} />
-      <Buttons {...rest} />
+      {buttons}
     </Flex>
-  );
-};
-
-const Header: FC<PositionCellState> = (props) => {
-  return (
-    <Flex justify={"between"} width={"100%"}>
-      <SymbolToken {...props} />
-      <UnrealPnL {...props} />
-    </Flex>
-  );
-};
-
-const Body: FC<PositionCellState> = (props) => {
-  return (
-    <Grid cols={3} rows={2} gap={2} width={"100%"}>
-      <Qty {...props} />
-      <Margin {...props} />
-      <Notional {...props} />
-      <AvgOpen {...props} />
-      <MarkPrice {...props} />
-      <LiqPrice {...props} />
-    </Grid>
-  );
-};
-
-const Buttons: FC<PositionCellState> = (props) => {
-  return (
-    <Grid width={"100%"} gap={2} cols={3} rows={1}>
-      <TpSLBtnWidget state={props} />
-      <LimitCloseBtnWidget state={props} />
-      <MarketCloseBtnWidget state={props} />
-    </Grid>
   );
 };

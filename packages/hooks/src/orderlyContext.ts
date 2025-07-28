@@ -47,6 +47,13 @@ export interface OrderlyConfigContextState {
    * Custom orderbook default tick sizes.
    */
   defaultOrderbookTickSizes: Record<string, string>;
+
+  dataAdapter?: {
+    /**
+     * Custom `/v1/public/futures` response data.
+     */
+    symbolList?: (originalVal: API.MarketInfoExt[]) => any[];
+  };
 }
 
 export const OrderlyContext = createContext<OrderlyConfigContextState>({

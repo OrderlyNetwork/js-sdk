@@ -34,15 +34,10 @@ import uk from "@orderly.network/i18n/locales/uk.json";
 import vi from "@orderly.network/i18n/locales/vi.json";
 import zh from "@orderly.network/i18n/locales/zh.json";
 import { OrderlyAppProvider } from "@orderly.network/react-app";
-import {
-  Network,
-  WalletConnectorPrivyProvider,
-  wagmiConnectors,
-} from "@orderly.network/wallet-connector-privy";
+import { useNav } from "../src/hooks/useNav";
 import { useOrderlyConfig } from "../src/hooks/useOrderlyConfig";
-import { customChainsAbstarct } from "./customChains";
 import { CustomConfigStore } from "./customConfigStore";
-import { WalletConnector } from "./walletConnector";
+// import { WalletConnector } from "./walletConnector";
 import { WalletConnectorPrivy } from "./walletConnectorPrivy";
 
 // const customChains = customChainsEvm;
@@ -79,14 +74,26 @@ const resources: Resources<ExtendLocaleMessages> = {
   nl,
 };
 
-const OrderApp = (props: { children: ReactNode }) => {
+const OrderApp: React.FC<React.PropsWithChildren> = (props) => {
   const config = useOrderlyConfig();
+  const { onRouteChange } = useNav();
   return (
     <OrderlyAppProvider
       configStore={configStore}
       appIcons={config.orderlyAppProvider.appIcons}
       restrictedInfo={config.orderlyAppProvider.restrictedInfo}
       enableSwapDeposit={true}
+      onRouteChange={onRouteChange}
+      // dataAdapter={{
+      //   symbolList(original) {
+      //     return original.filter(
+      //       (item) =>
+      //         item.symbol === "PERP_SOL_USDC" ||
+      //         item.symbol === "PERP_WOO_USDC" ||
+      //         item.symbol === "PERP_ETH_USDC",
+      //     );
+      //   },
+      // }}
       overrides={{
         announcement: {
           dataAdapter: (data) => [
@@ -108,20 +115,18 @@ const OrderApp = (props: { children: ReactNode }) => {
   );
 };
 export const DappProvider: FC<{ children: ReactNode }> = (props) => {
-  const usePrivy = true;
-
-  if (usePrivy) {
-    return (
-      <WalletConnectorPrivy>
-        <OrderApp>{props.children}</OrderApp>
-      </WalletConnectorPrivy>
-    );
-  }
+  // use privy wallet connector
   return (
-    <WalletConnector>
+    <WalletConnectorPrivy>
       <OrderApp>{props.children}</OrderApp>
-    </WalletConnector>
+    </WalletConnectorPrivy>
   );
+  // use wallet-connector(web3 onboard)
+  // return (
+  //   <WalletConnector>
+  //     <OrderApp>{props.children}</OrderApp>
+  //   </WalletConnector>
+  // );
 };
 export const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
   return (

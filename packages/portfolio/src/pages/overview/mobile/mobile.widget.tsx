@@ -1,6 +1,9 @@
 import { FC } from "react";
 import { ENVType, useGetEnv } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
+import { useAppContext } from "@orderly.network/react-app";
 import { Flex } from "@orderly.network/ui";
+import { DepositStatusWidget } from "@orderly.network/ui-transfer";
 import { useLayoutContext } from "../../../layout/context";
 import { useAssetScript } from "../assets";
 import { AccountStatusMobile } from "./accountStatus.ui.mobile";
@@ -26,15 +29,28 @@ export const MobileOverview: FC = (props) => {
     onTransfer,
     isMainAccount,
   } = useAssetScript();
+  const { t } = useTranslation();
   const rewardsData = useRewardsDataScript();
   const layoutContext = useLayoutContext();
+  const { onRouteChange } = useAppContext();
   const env = useGetEnv();
+
   const goToClaim = () => {
     const url = `https://${
       env !== ENVType.prod ? `${env}-` : ""
     }app.orderly.network/tradingRewards`;
     window.open(url, "_blank");
   };
+
+  const navigateToPortfolioHistory =
+    typeof onRouteChange === "function"
+      ? () => {
+          onRouteChange({
+            href: "/portfolio/history",
+            name: t("trading.history"),
+          });
+        }
+      : undefined;
 
   // console.log('rewards data', rewardsData, layoutContext, props);
 
@@ -49,16 +65,23 @@ export const MobileOverview: FC = (props) => {
         height={"100%"}
         className="oui-gap-5 oui-px-3"
       >
-        <PortfolioValueMobile
-          toggleVisible={toggleVisible}
-          portfolioValue={portfolioValue}
-          unrealPnL={unrealPnL}
-          unrealROI={unrealROI}
-          visible={visible}
-          canTrade={canTrade}
-          namespace={namespace}
-          routerAdapter={layoutContext?.routerAdapter}
-        />
+        <Flex direction="column" width="100%" gapY={2}>
+          <PortfolioValueMobile
+            toggleVisible={toggleVisible}
+            portfolioValue={portfolioValue}
+            unrealPnL={unrealPnL}
+            unrealROI={unrealROI}
+            visible={visible}
+            canTrade={canTrade}
+            namespace={namespace}
+            routerAdapter={layoutContext?.routerAdapter}
+          />
+          <DepositStatusWidget
+            className="oui-mb-2"
+            onClick={navigateToPortfolioHistory}
+          />
+        </Flex>
+
         <PortfolioHandleMobile
           disabled={!canTrade}
           onWithdraw={onWithdraw}

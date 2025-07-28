@@ -1,4 +1,7 @@
 import { CombineSelect } from "./combine";
+import { Select as SelectComponent } from "./select";
+import { TokenSelect } from "./tokens";
+import { SelectWithOptions } from "./withOptions";
 
 export {
   SelectRoot,
@@ -12,11 +15,6 @@ export {
   SelectScrollUpButton,
   SelectScrollDownButton,
 } from "./selectPrimitive";
-
-import { Select as SelectComponent } from "./select";
-
-import { SelectWithOptions } from "./withOptions";
-import { TokenSelect } from "./tokens";
 
 export type SelectType = typeof SelectComponent & {
   options: typeof SelectWithOptions;
@@ -32,5 +30,5 @@ Select.tokens = TokenSelect;
 export { Select };
 
 export type { SelectProps } from "./select";
-export type { SelectWithOptionsProps } from "./withOptions";
+export type { SelectWithOptionsProps, SelectOption } from "./withOptions";
 export type { ChainSelectProps } from "./chains";

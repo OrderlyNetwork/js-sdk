@@ -7,6 +7,10 @@ export const connector = {
   // "connector.signIn": "Sign in",
   // "connector.signIn.description": "Confirm you are the owner of this wallet",
   "connector.createAccount": "Create account",
+
+  "connector.createAccountWithLedger": "Create account with ledger",
+  "connector.enableTradingWithLedger": "Enable trading with ledger",
+  "connector.disconnectWallet": "Disconnect wallet",
   "connector.createAccount.description":
     "Confirm wallet ownership to create an account",
   "connector.enableTrading": "Enable trading",
