@@ -141,6 +141,8 @@ async function release() {
     await authNPM();
   }
 
+  await updateNpmRetryConfig();
+
   if (npmRegistry) {
     await $`${npmRegistry} pnpm changeset publish`;
   } else {
@@ -178,6 +180,12 @@ async function release() {
       await $`git push --no-verify`;
     }
   }
+}
+
+async function updateNpmRetryConfig() {
+  await $`npm config set fetch-retries=5`;
+  await $`npm config set fetch-retry-mintimeout=10000`;
+  await $`npm config set fetch-retry-maxtimeout=60000`;
 }
 
 async function checkGitStatus() {
