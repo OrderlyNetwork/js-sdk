@@ -5,7 +5,7 @@ import { Release, VersionType } from "@changesets/types";
 import writeChangeset from "@changesets/write";
 import { getPackages } from "@manypkg/get-packages";
 import SimpleGit from "simple-git";
-import { $, retry } from "zx";
+import { $, retry, expBackoff } from "zx";
 
 const simpleGit = SimpleGit();
 
@@ -194,8 +194,8 @@ async function publishNpm() {
 }
 
 async function retryPublishNpm() {
-  // retry 10 times, 10 seconds each time
-  await retry(10, 10000, publishNpm);
+  // retry 10 times, start with 5 seconds, and increase the delay time, max 20 seconds
+  await retry(10, expBackoff("20s", "5s"), publishNpm);
 }
 
 async function checkGitStatus() {
