@@ -12,6 +12,11 @@ export enum BBOStatus {
   DISABLED = "disabled",
 }
 
+export enum MIDStatus {
+  ON = "on",
+  OFF = "off",
+}
+
 /**
  * if provide order_type, check order_type and order_type_ext, otherswise only check order_type_ext
  */
