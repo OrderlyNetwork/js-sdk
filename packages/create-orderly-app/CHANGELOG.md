@@ -1,5 +1,13 @@
 # create-orderly-app
 
+## 1.10.3
+
+### Patch Changes
+
+- 798c4eb: publish
+- 64c5b75: publish
+- publish
+
 ## 1.10.3-alpha.1
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # tsconfig
 
+## 0.8.3
+
+### Patch Changes
+
+- 798c4eb: publish
+- 64c5b75: publish
+- publish
+
 ## 0.8.3-alpha.1
 
 ### Patch Changes

@@ -1,5 +1,18 @@
 # @orderly.network/onboard
 
+## 2.5.3
+
+### Patch Changes
+
+- 798c4eb: publish
+- 64c5b75: publish
+- publish
+- Updated dependencies [798c4eb]
+- Updated dependencies [64c5b75]
+- Updated dependencies
+  - @orderly.network/hooks@2.5.3
+  - @orderly.network/types@2.5.3
+
 ## 2.5.3-alpha.1
 
 ### Patch Changes

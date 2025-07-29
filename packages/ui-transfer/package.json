@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/ui-transfer",
-  "version": "2.5.3-alpha.1",
+  "version": "2.5.3",
   "description": "deposit & withdraw",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

@@ -1,5 +1,25 @@
 # @orderly.network/ui-orders
 
+## 2.5.3
+
+### Patch Changes
+
+- 798c4eb: publish
+- 64c5b75: publish
+- publish
+- Updated dependencies [798c4eb]
+- Updated dependencies [64c5b75]
+- Updated dependencies
+  - @orderly.network/react-app@2.5.3
+  - @orderly.network/hooks@2.5.3
+  - @orderly.network/i18n@2.5.3
+  - @orderly.network/types@2.5.3
+  - @orderly.network/ui@2.5.3
+  - @orderly.network/ui-connector@2.5.3
+  - @orderly.network/ui-share@2.5.3
+  - @orderly.network/ui-tpsl@2.5.3
+  - @orderly.network/utils@2.5.3
+
 ## 2.5.3-alpha.1
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @orderly.network/codemod
 
+## 1.5.3
+
+### Patch Changes
+
+- 798c4eb: publish
+- 64c5b75: publish
+- publish
+
 ## 1.5.3-alpha.1
 
 ### Patch Changes

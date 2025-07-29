@@ -1,5 +1,13 @@
 # @orderly.network/i18n
 
+## 2.5.3
+
+### Patch Changes
+
+- 798c4eb: publish
+- 64c5b75: publish
+- publish
+
 ## 2.5.3-alpha.1
 
 ### Patch Changes
