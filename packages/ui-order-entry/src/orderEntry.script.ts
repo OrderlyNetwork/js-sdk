@@ -26,7 +26,6 @@ import {
   getOrderLevelByBBO,
   getOrderTypeByBBO,
   isBBOOrder,
-  MIDStatus,
 } from "./utils";
 
 const safeNumber = (val: number | string) => {
@@ -267,8 +266,6 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     localBBOType,
   ]);
 
-  const [midStatus, setMidStatus] = useState<MIDStatus>(MIDStatus.OFF);
-
   const toggleBBO = () => {
     if (localBBOType) {
       // unselect bbo
@@ -302,7 +299,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   }, [bboStatus, formattedOrder.order_type_ext]);
 
   useEffect(() => {
-    if (bboStatus === BBOStatus.ON && midStatus === MIDStatus.OFF) {
+    if (bboStatus === BBOStatus.ON) {
       const orderType = getOrderTypeByBBO(localBBOType, formattedOrder.side!);
       const orderLevel = getOrderLevelByBBO(localBBOType)!;
       setValues({
@@ -310,7 +307,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
         level: orderLevel,
       });
     }
-  }, [localBBOType, bboStatus, midStatus, formattedOrder.side]);
+  }, [localBBOType, bboStatus, formattedOrder.side]);
 
   // useEffect(() => {
   //   if (
@@ -495,9 +492,6 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   const fillMiddleValue = () => {
     if (bboStatus === BBOStatus.ON) {
       toggleBBO();
-      setMidStatus(MIDStatus.ON);
-    } else {
-      setMidStatus(MIDStatus.OFF);
     }
     if (formattedOrder.order_type === OrderType.LIMIT) {
       const [bestAsk = 0, bestBid = 0] = askAndBid;
