@@ -1319,6 +1319,9 @@ const ScaledOrderInput = (props: {
         formatters={[inputFormatter.dpFormatter(quote_dp)]}
         onFocus={onFocus(InputType.START_PRICE)}
         onBlur={onBlur(InputType.START_PRICE)}
+        classNames={{
+          root: "oui-rounded-t-xl",
+        }}
       />
       <CustomInput
         label={t("orderEntry.endPrice")}
@@ -1332,9 +1335,6 @@ const ScaledOrderInput = (props: {
         formatters={[inputFormatter.dpFormatter(quote_dp)]}
         onFocus={onFocus(InputType.END_PRICE)}
         onBlur={onBlur(InputType.END_PRICE)}
-        classNames={{
-          root: "oui-rounded-t-xl",
-        }}
       />
 
       <Grid cols={2} className={"oui-group oui-space-x-1"}>
