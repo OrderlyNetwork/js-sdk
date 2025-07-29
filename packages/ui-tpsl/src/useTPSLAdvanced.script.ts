@@ -9,6 +9,19 @@ type Props = {
   onClose: () => void;
 };
 
+const isTPSLEnable = (order: OrderlyOrder, type: "tp" | "sl") => {
+  if (order.tp_trigger_price || order.sl_trigger_price) {
+    if (type === "tp") {
+      return !!order.tp_trigger_price;
+    }
+    if (type === "sl") {
+      return !!order.sl_trigger_price;
+    }
+  }
+  // no edit, enable tp /sl
+  return true;
+};
+
 export const useTPSLAdvanced = (props: Props) => {
   const { order, setOrderValue, onClose } = props;
   const [innerMetaState, setInnerMetaState] =
@@ -30,16 +43,20 @@ export const useTPSLAdvanced = (props: Props) => {
       order_quantity: order.order_quantity,
       position_type: order.position_type ?? PositionType.PARTIAL,
       trigger_price: order.trigger_price,
-      tp_enable: true,
-      sl_enable: true,
+      tp_enable: isTPSLEnable(order, "tp"),
+      sl_enable: isTPSLEnable(order, "sl"),
       tp_trigger_price: order.tp_trigger_price,
       sl_trigger_price: order.sl_trigger_price,
       tp_order_price: order.tp_order_price,
       sl_order_price: order.sl_order_price,
       tp_order_type: order.tp_order_type,
       sl_order_type: order.sl_order_type,
-      tp_pnl: order.tp_pnl,
       sl_pnl: order.sl_pnl,
+      sl_offset: order.sl_offset,
+      sl_offset_percentage: order.sl_offset_percentage,
+      tp_pnl: order.tp_pnl,
+      tp_offset: order.tp_offset,
+      tp_offset_percentage: order.tp_offset_percentage,
     },
   });
 

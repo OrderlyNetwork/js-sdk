@@ -391,6 +391,9 @@ export function tpslCalculateHelper(
             [`${keyPrefix}ROI`]: "",
           };
         }
+      } else {
+        order_price =
+          inputs.values[`${keyPrefix}order_price` as keyof OrderlyOrder] ?? "";
       }
 
       break;
@@ -546,6 +549,12 @@ export function tpslCalculateHelper(
       [key]: inputs.value,
     };
   }
+  // console.log('key', {
+  //   key,
+  //   trigger_price,
+  //   order_price,
+  //   pnl,
+  // })
   let calcPrice = trigger_price;
   if (tpsl_order_type && tpsl_order_type === OrderType.LIMIT) {
     calcPrice = order_price;
