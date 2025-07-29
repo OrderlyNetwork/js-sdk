@@ -60,7 +60,7 @@ export function SwitchNetworkTips({
           })}
         </div>
       </Flex>
-      <ArrowRightIcon />
+      <ArrowRightIcon className="oui-text-[#FF7D00]" />
     </div>
   );
 }

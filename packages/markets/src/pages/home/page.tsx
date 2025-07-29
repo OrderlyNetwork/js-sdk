@@ -28,8 +28,10 @@ export const MarketsHomePage: FC<MarketsHomePageProps> = (props) => {
 
   return (
     <MarketsProvider
+      symbol={props.symbol}
       onSymbolChange={props.onSymbolChange}
       navProps={props.navProps}
+      comparisonProps={props.comparisonProps}
     >
       <div
         id="oui-markets-home-page"

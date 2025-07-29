@@ -14,6 +14,8 @@ type Props<Props = {}> = {
 } & Props &
   ComponentPropsWithout<"div", "value" | "case" | "default">;
 
+/** @deprecated TODO: remove this component, because vite will throw Maximum call stack size exceeded
+ */
 export const Match = <T,>(props: Props<T>) => {
   const { value, case: Case, default: Default, ...rest } = props;
 

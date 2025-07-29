@@ -14,6 +14,8 @@ export { ChainMenuWidget, ChainMenu } from "./components/chainMenu";
 export { SideNavbarWidget, SideBar } from "./components/sidebar";
 export { CampaignPositionEnum } from "./components/main/mainNav.script";
 
+export * from "./components/subAccount";
+
 export * from "./components/footer";
 export * from "./components/maintenanceTips";
 export * from "./components/announcement";

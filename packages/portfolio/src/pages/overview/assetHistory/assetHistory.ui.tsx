@@ -5,16 +5,15 @@ import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import {
   AssetTarget,
   type AssetHistoryScriptReturn,
-} from "../assetChart/assetHistory.script";
+} from "./assetHistory.script";
 import { useAssetHistoryColumns } from "./column";
 
 type AssetHistoryProps = AssetHistoryScriptReturn;
 
 export const AssetHistory: FC<AssetHistoryProps> = (props) => {
   const { dataSource, queryParameter, onFilter, isLoading } = props;
-  const { dateRange } = queryParameter;
+  const { dateRange, target } = queryParameter;
   const columns = useAssetHistoryColumns({
-    side: props.side,
     chainsInfo: props.chainsInfo,
     isDeposit: props.isDeposit,
     isWeb3Wallet: props.isWeb3Wallet,
@@ -36,7 +35,7 @@ export const AssetHistory: FC<AssetHistoryProps> = (props) => {
             type: "select",
             name: "target",
             options: options,
-            value: props.target,
+            value: target,
           },
           {
             type: "range",

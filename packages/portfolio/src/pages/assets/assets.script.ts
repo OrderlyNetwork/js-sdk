@@ -12,6 +12,7 @@ import {
   DepositAndWithdrawWithDialogId,
   TransferDialogId,
 } from "@orderly.network/ui-transfer";
+import { zero } from "@orderly.network/utils";
 import { useAccountsData } from "../../hooks/useAccountsData";
 import {
   calculateAssetValue,
@@ -73,10 +74,10 @@ export const useAssetsScript = () => {
 
   // Enhanced filtered data with additional calculations for children
   const enhancedFiltered = useMemo(() => {
-    return filtered.map((accountData: any) => {
+    return filtered.map((accountData) => {
       // Enhance each child (holding) with calculated fields
       const enhancedChildren =
-        accountData.children?.map((holding: any) => {
+        accountData.children?.map((holding) => {
           const tokenInfo = tokensInfo?.find(
             (item) => item.token === holding.token,
           );
@@ -100,13 +101,13 @@ export const useAssetsScript = () => {
                 collateralCap: tokenInfo?.user_max_qty ?? holding.holding,
                 indexPrice: indexPrice,
               })
-            : 0;
+            : zero;
 
           // Calculate collateral contribution for this token
           const collateralContribution = account.collateralContribution({
             collateralQty: holding.holding,
             collateralCap: tokenInfo?.user_max_qty ?? holding.holding,
-            collateralRatio: collateralRatio,
+            collateralRatio: collateralRatio.toNumber(),
             indexPrice: indexPrice,
           });
 

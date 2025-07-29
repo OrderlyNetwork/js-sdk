@@ -44,7 +44,7 @@ export type BaseConfigProviderProps = {
   orderbookDefaultTickSizes?: Record<string, string>;
 } & Pick<
   OrderlyConfigContextState,
-  "enableSwapDeposit" | "customChains" | "chainTransformer"
+  "enableSwapDeposit" | "customChains" | "chainTransformer" | "dataAdapter"
 >;
 
 export type ExclusiveConfigProviderProps =
@@ -79,8 +79,9 @@ export const OrderlyConfigProvider: FC<
     contracts,
     chainFilter,
     customChains,
-    enableSwapDeposit = true,
+    enableSwapDeposit = false,
     chainTransformer,
+    dataAdapter,
   } = props;
 
   if (!brokerId && typeof configStore === "undefined") {
@@ -173,26 +174,38 @@ export const OrderlyConfigProvider: FC<
     return chainFilter;
   }, [props.chainFilter, innerConfigStore]);
 
+  const memoizedValue = useMemo<OrderlyConfigContextState>(() => {
+    return {
+      configStore: innerConfigStore,
+      keyStore: innerKeyStore,
+      networkId: innerConfigStore.get("networkId") || networkId,
+      filteredChains: filteredChains,
+      walletAdapters: innerWalletAdapters,
+      customChains,
+      enableSwapDeposit,
+      defaultOrderbookTickSizes,
+      chainTransformer,
+      dataAdapter,
+    };
+  }, [
+    innerConfigStore,
+    innerKeyStore,
+    networkId,
+    filteredChains,
+    innerWalletAdapters,
+    customChains,
+    enableSwapDeposit,
+    defaultOrderbookTickSizes,
+    dataAdapter,
+    chainTransformer,
+  ]);
+
   if (!account) {
     return null;
   }
 
   return (
-    <OrderlyProvider
-      value={{
-        configStore: innerConfigStore,
-        keyStore: innerKeyStore,
-        // getWalletAdapter: innerGetWalletAdapter,
-        networkId: innerConfigStore.get("networkId") || networkId,
-        filteredChains: filteredChains,
-        walletAdapters: innerWalletAdapters,
-        // apiBaseUrl,
-        customChains,
-        enableSwapDeposit,
-        chainTransformer,
-        defaultOrderbookTickSizes,
-      }}
-    >
+    <OrderlyProvider value={memoizedValue}>
       <StatusProvider>
         <DataCenterProvider>{props.children}</DataCenterProvider>
       </StatusProvider>

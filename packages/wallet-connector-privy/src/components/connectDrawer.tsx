@@ -2,7 +2,16 @@ import React, { useCallback, useMemo } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
 import { useTranslation, Trans } from "@orderly.network/i18n";
 import { ConnectorKey } from "@orderly.network/types";
-import { useScreen, cn, CloseIcon } from "@orderly.network/ui";
+import {
+  useScreen,
+  cn,
+  CloseIcon,
+  SimpleSheet,
+  Box,
+  Flex,
+  Text,
+  modal,
+} from "@orderly.network/ui";
 import { useWalletConnectorPrivy } from "../provider";
 import { useAbstractWallet } from "../providers/abstractWallet/abstractWalletProvider";
 import { usePrivyWallet } from "../providers/privy/privyWalletProvider";
@@ -10,6 +19,8 @@ import { useSolanaWallet } from "../providers/solana/solanaWalletProvider";
 import { useWagmiWallet } from "../providers/wagmi/wagmiWalletProvider";
 import { WalletConnectType, WalletType } from "../types";
 import { Drawer } from "./drawer";
+import { ArrowRightIcon, ArrowRightLinearGradientIcon } from "./icons";
+import { PwaDialog } from "./pwaDilaog";
 import { RenderConnector } from "./renderConnector";
 import { RenderNonPrivyWallet } from "./renderNonPrivyWallet";
 import { RenderPrivyWallet } from "./renderPrivyWallet";
@@ -67,15 +78,16 @@ export function ConnectDrawer(props: {
 
   const { isMobile } = useScreen();
 
+  const showPwaDialog = () => {
+    modal.show(PwaDialog);
+  };
+
   const renderHeader = useCallback(() => {
-    if (isMobile && props.headerProps?.mobile) {
-      return props.headerProps?.mobile;
-    }
     return (
       <div
         className={cn(
           "oui-font-semibold oui-text-base-contrast-80 ",
-          "oui-py-2 oui-text-[20px]",
+          "oui-pb-2 oui-text-[20px]",
           "md:oui-py-0 md:oui-text-base",
         )}
       >
@@ -84,9 +96,24 @@ export function ConnectDrawer(props: {
           : t("connector.connectWallet")}
       </div>
     );
-  }, [isMobile, props.headerProps?.mobile, isConnected]);
+  }, [isConnected]);
   return (
-    <Drawer isOpen={props.open} onClose={() => props.onChangeOpen(false)}>
+    <SimpleSheet
+      open={props.open}
+      onOpenChange={props.onChangeOpen}
+      classNames={{
+        body: "oui-h-full oui-py-0  oui-border-none oui-relative",
+        // overlay: "!oui-bg-base-10/60",
+        content: cn(
+          "!oui-p-4  !oui-bg-[#131519] !oui-border !oui-border-solid !oui-border-line-12",
+
+          isMobile
+            ? "oui-inset-y-0 oui-right-0 oui-w-[280px] oui-rounded-none !oui-bg-[#181C23]"
+            : "!oui-bottom-[30px] oui-right-3 oui-top-[48px] !oui-h-auto oui-w-[300px] oui-overflow-hidden oui-rounded-[16px] !oui-bg-[#131519] ",
+        ),
+      }}
+      contentProps={{ side: "right", closeable: false }}
+    >
       {!isMobile && (
         <div
           className="oui-absolute oui-inset-x-[50px] -oui-top-[calc(100vh/2)] oui-z-0 oui-h-screen"
@@ -107,24 +134,45 @@ export function ConnectDrawer(props: {
         </div>
         {isConnected ? <MyWallet /> : <RenderConnector />}
 
-        {!isConnected && termsOfUse && (
-          <div className="oui-flex-none oui-text-center oui-text-2xs oui-font-semibold  oui-text-base-contrast-80">
-            {/* @ts-ignore */}
-            <Trans
-              i18nKey="connector.privy.termsOfUse"
-              components={[
-                <a
-                  key="termsOfUse"
-                  href={termsOfUse}
-                  className="oui-cursor-pointer oui-text-primary oui-underline"
-                  target="_blank"
-                  rel="noreferrer"
-                />,
-              ]}
-            />
-          </div>
+        {!isConnected && (
+          <Flex gap={4} direction="column">
+            {isMobile && (
+              <Flex
+                itemAlign="center"
+                justify="between"
+                gap={4}
+                className="oui-rounded-[8px] oui-px-3 oui-py-2 oui-text-2xs oui-bg-[linear-gradient(270deg,rgba(89,176,254,0.10)_0%,rgba(38,254,254,0.10)_100%)] oui-w-full"
+                onClick={() => showPwaDialog()}
+              >
+                <Text className="oui-bg-[linear-gradient(270deg,#59B0FE_0%,#26FEFE_100%)] oui-bg-clip-text oui-text-transparent">
+                  {t("connector.privy.pwa.title")}
+                </Text>
+                <ArrowRightLinearGradientIcon
+                  size={20}
+                  className="oui-flex-shrink-0"
+                />
+              </Flex>
+            )}
+            {termsOfUse && (
+              <div className="oui-flex-none oui-text-center oui-text-2xs oui-font-semibold  oui-text-base-contrast-80">
+                {/* @ts-ignore */}
+                <Trans
+                  i18nKey="connector.privy.termsOfUse"
+                  components={[
+                    <a
+                      key="termsOfUse"
+                      href={termsOfUse}
+                      className="oui-cursor-pointer oui-text-primary oui-underline"
+                      target="_blank"
+                      rel="noreferrer"
+                    />,
+                  ]}
+                />
+              </div>
+            )}
+          </Flex>
         )}
       </div>
-    </Drawer>
+    </SimpleSheet>
   );
 }

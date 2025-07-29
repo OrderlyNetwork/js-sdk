@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { i18n } from "@orderly.network/i18n";
 import {
   MarketsHomePage,
@@ -98,6 +98,10 @@ export const LayoutPage: Story = {
               duneUrl: "https://dune.com/orderlynetwork",
               feedbackUrl: "https://orderly.network/feedback",
             },
+          }}
+          comparisonProps={{
+            exchangesName: "Orderly",
+            exchangesIconSrc: "",
           }}
         />
       </BaseLayout>

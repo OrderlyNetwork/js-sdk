@@ -41,12 +41,19 @@ export interface OrderlyConfigContextState {
     swapChains: any[];
     mainnet: boolean;
   }) => API.Chain[];
-  /** enable swap deposit, default is true */
+  /** enable swap deposit, default is false */
   enableSwapDeposit?: boolean;
   /**
    * Custom orderbook default tick sizes.
    */
   defaultOrderbookTickSizes: Record<string, string>;
+
+  dataAdapter?: {
+    /**
+     * Custom `/v1/public/futures` response data.
+     */
+    symbolList?: (originalVal: API.MarketInfoExt[]) => any[];
+  };
 }
 
 export const OrderlyContext = createContext<OrderlyConfigContextState>({

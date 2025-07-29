@@ -1,9 +1,10 @@
-import {
+import React, {
   ComponentType,
   createContext,
-  FC,
   PropsWithChildren,
+  useCallback,
   useContext,
+  useMemo,
 } from "react";
 import { ExtensionPosition } from "../plugin";
 import { ComponentsProvider } from "./componentProvider";
@@ -51,26 +52,29 @@ export const useOrderlyTheme = () => {
   return useContext(OrderlyThemeContext);
 };
 
-export const OrderlyThemeProvider: FC<
+export const OrderlyThemeProvider: React.FC<
   PropsWithChildren<OrderlyThemeProviderProps>
 > = (props) => {
-  const getComponentTheme = <T extends keyof ComponentOverrides>(
-    component: T,
-    defaultValue?: ComponentOverrides[T],
-  ) => {
-    return (props.overrides?.[component] ||
-      defaultValue) as ComponentOverrides[T];
-  };
+  const { components, overrides, children } = props;
+
+  const resolveComponentTheme = useCallback(
+    <T extends keyof ComponentOverrides>(
+      component: T,
+      defaultValue?: ComponentOverrides[T],
+    ) => {
+      return (overrides as ComponentOverrides)?.[component] || defaultValue;
+    },
+    [overrides],
+  );
+
+  const memoizedValue = useMemo<OrderlyThemeContextState>(() => {
+    return { getComponentTheme: resolveComponentTheme };
+  }, [resolveComponentTheme]);
 
   return (
-    <OrderlyThemeContext.Provider
-      value={{
-        // overrides: props.overrides,
-        getComponentTheme,
-      }}
-    >
-      <ComponentsProvider components={props.components}>
-        {props.children}
+    <OrderlyThemeContext.Provider value={memoizedValue}>
+      <ComponentsProvider components={components}>
+        {children}
       </ComponentsProvider>
     </OrderlyThemeContext.Provider>
   );

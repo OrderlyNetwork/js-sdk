@@ -1,3 +1,5 @@
+import { useAccount } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 import { AccountStatusEnum } from "@orderly.network/types";
 import {
   Button,
@@ -11,6 +13,7 @@ import {
   DropdownMenuRoot,
   DropdownMenuTrigger,
   Spinner,
+  Text,
 } from "@orderly.network/ui";
 import {
   ChainSelectorDialogId,
@@ -18,7 +21,18 @@ import {
 } from "@orderly.network/ui-chain-selector";
 import { WalletConnectorModalId } from "@orderly.network/ui-connector";
 import { UseChainMenuScriptReturn } from "./chainMenu.script";
-import { useTranslation } from "@orderly.network/i18n";
+
+const ModalTitle = () => {
+  const { t } = useTranslation();
+  const { state } = useAccount();
+  if (state.status < AccountStatusEnum.SignedIn) {
+    return <Text>{t("connector.createAccount")}</Text>;
+  }
+  if (state.status < AccountStatusEnum.EnableTrading) {
+    return <Text>{t("connector.enableTrading")}</Text>;
+  }
+  return <Text>{t("connector.connectWallet")}</Text>;
+};
 
 export const ChainMenu = (props: UseChainMenuScriptReturn) => {
   const { t } = useTranslation();
@@ -46,13 +60,17 @@ export const ChainMenu = (props: UseChainMenuScriptReturn) => {
                     !r.wrongNetwork &&
                     props.accountStatus < AccountStatusEnum.EnableTrading
                   ) {
-                    modal.show(WalletConnectorModalId).then(
-                      (r) => console.log(r),
-                      (error) => console.log(error)
-                    );
+                    modal
+                      .show(WalletConnectorModalId, {
+                        title: <ModalTitle />,
+                      })
+                      .then(
+                        (r) => console.log(r),
+                        (error) => console.log(error),
+                      );
                   }
                 },
-                (error) => console.log(error)
+                (error) => console.log(error),
               );
           }}
         >
@@ -79,7 +97,7 @@ export const ChainMenu = (props: UseChainMenuScriptReturn) => {
       className={cn(
         "oui-relative oui-cursor-pointer",
         "oui-w-11 oui-h-8",
-        "oui-rounded-t-[6px] oui-rounded-bl-[6px] oui-rounded-br-[3px]"
+        "oui-rounded-t-[6px] oui-rounded-bl-[6px] oui-rounded-br-[3px]",
       )}
     >
       {renderIcon()}
@@ -123,7 +141,7 @@ export const ChainMenu = (props: UseChainMenuScriptReturn) => {
           className={cn(
             "oui-bg-base-8 oui-w-[456px] oui-p-4 oui-rounded-xl",
             "oui-border oui-border-line-6",
-            "oui-font-semibold"
+            "oui-font-semibold",
           )}
         >
           <ChainSelectorWidget

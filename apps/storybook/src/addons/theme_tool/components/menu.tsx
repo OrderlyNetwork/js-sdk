@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { styled } from "@storybook/theming";
+import { styled } from "storybook/theming";
 
 const StyledUl = styled.ul`
   list-style: none;
@@ -37,7 +37,7 @@ export const ThemeMenu = () => {
           }
         });
       },
-      { threshold: 0.2, rootMargin: "-20px 0px 0px 0px" }
+      { threshold: 0.2, rootMargin: "-20px 0px 0px 0px" },
     );
 
     sections.forEach((section) => {

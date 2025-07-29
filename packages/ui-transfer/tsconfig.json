@@ -28,6 +28,9 @@
       ],
       "@orderly.network/perp": [
         "../perp/src"
+      ],
+      "@orderly.network/core": [
+        "../core/src"
       ]
     }
   }

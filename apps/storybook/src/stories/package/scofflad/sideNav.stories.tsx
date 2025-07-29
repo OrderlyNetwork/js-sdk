@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Box } from "@orderly.network/ui";
 import { SideNavbarWidget } from "@orderly.network/ui-scaffold";
 import { leftSidebarMenus } from "./data";
@@ -7,7 +7,6 @@ const meta: Meta<typeof SideNavbarWidget> = {
   title: "Package/ui-scaffold/SideNavbar",
   component: SideNavbarWidget,
   // subComponents: { AccountMenuWidget, AccountSummaryWidget, ChainMenuWidget },
-  tags: ["autodocs"],
   parameters: {
     layout: "centered",
   },

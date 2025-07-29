@@ -12,15 +12,13 @@ export function useWsStatus() {
   const [wsStatus, setWsStatus] = useState<WsNetworkStatus>(
     ws.client.public.readyState
       ? WsNetworkStatus.Connected
-      : WsNetworkStatus.Disconnected
+      : WsNetworkStatus.Disconnected,
   );
 
   const connectCount = useRef(0);
 
   useEffect(() => {
     ws.on("status:change", (status: any) => {
-      console.log("status:change", status);
-
       const { type, isPrivate } = status;
       if (!isPrivate) {
         switch (type) {
@@ -41,7 +39,9 @@ export function useWsStatus() {
         }
       }
     });
-    return () => ws.off("websocket:status", () => {});
+    return () => {
+      ws.off("status:change", () => {});
+    };
   }, []);
 
   return wsStatus;

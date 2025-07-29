@@ -17,7 +17,7 @@ type TransferOptions = {
 };
 
 export const useTransfer = (options?: TransferOptions) => {
-  const { fromAccountId, token } = options || {};
+  const { fromAccountId, token = "" } = options || {};
 
   const { unsettledPnL, holding } = useCollateral();
 

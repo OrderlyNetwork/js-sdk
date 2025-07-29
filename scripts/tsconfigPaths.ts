@@ -1,8 +1,8 @@
-import path from "path";
+import { getPackages, Package } from "@manypkg/get-packages";
 import fs from "fs-extra";
 import * as jsonc from "jsonc-parser";
+import path from "path";
 import { CompilerOptions } from "typescript";
-import { getPackages, Package } from "@manypkg/get-packages";
 
 interface TsConfig {
   extends?: string;
@@ -27,7 +27,7 @@ async function main() {
     if (Object.keys(paths).length) {
       const cwd = process.cwd();
       const tsConfigPath = path.join(cwd, pkg.relativeDir, "tsconfig.json");
-      await updateTsConfigPaths(tsConfigPath, paths);
+      await updateTsConfigPaths(tsConfigPath, paths, pkg.relativeDir);
     }
   }
   console.log("Successfully updated tsconfig.json paths");
@@ -55,7 +55,7 @@ function getOrderlyDependencies(packageJson: Package["packageJson"]) {
   };
 
   return Object.keys(allDependencies).filter((name) =>
-    name.startsWith("@orderly.network/")
+    name.startsWith("@orderly.network/"),
   );
 }
 
@@ -78,7 +78,7 @@ async function readTsConfig(filePath: string) {
       return;
     }
     const content = await fs.readFile(filePath, "utf8");
-    let jsonContent = jsonc.parse(content) as TsConfig;
+    const jsonContent = jsonc.parse(content) as TsConfig;
     return jsonContent;
   } catch (error) {
     console.error("Error reading JSON:", error);
@@ -87,10 +87,15 @@ async function readTsConfig(filePath: string) {
 
 async function updateTsConfigPaths(
   filePath: string,
-  paths: CompilerOptions["paths"]
+  paths: CompilerOptions["paths"],
+  relativeDir: string,
 ) {
   try {
     const jsonContent = await readTsConfig(filePath);
+    if (jsonContent?.references && jsonContent.references.length > 0) {
+      const cwd = process.cwd();
+      filePath = path.join(cwd, relativeDir, jsonContent.references[0].path);
+    }
     if (jsonContent) {
       const content = await fs.readFile(filePath, "utf8");
       const newPaths = {
@@ -104,7 +109,7 @@ async function updateTsConfigPaths(
         newPaths,
         {
           formattingOptions: { tabSize: 2, insertSpaces: true },
-        }
+        },
       );
       const newContent = jsonc.applyEdits(content, edits);
       await fs.writeFile(filePath, newContent, "utf8");

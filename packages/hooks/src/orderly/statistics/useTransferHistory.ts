@@ -21,7 +21,6 @@ interface TransferHistorySearchParams {
 
 export const useTransferHistory = (parmas: TransferHistorySearchParams) => {
   const { dataRange, page, size, side, fromId, toId, main_sub_only } = parmas;
-
   const infos = useSymbolsInfo();
 
   const memoizedQueryKey = React.useMemo<string>(() => {
@@ -39,7 +38,7 @@ export const useTransferHistory = (parmas: TransferHistorySearchParams) => {
     return `/v1/internal_transfer_history?${search.toString()}`;
   }, [page, size, fromId, toId, dataRange, main_sub_only]);
 
-  const { data, isLoading } = usePrivateQuery<API.TransferHistory>(
+  const { data, isLoading, mutate } = usePrivateQuery<API.TransferHistory>(
     memoizedQueryKey,
     {
       // initialSize: 1,
@@ -56,7 +55,7 @@ export const useTransferHistory = (parmas: TransferHistorySearchParams) => {
     return data.rows;
   }, [data, infos]);
 
-  return [parsedData, { meta: data?.meta, isLoading }] as const;
+  return [parsedData, { meta: data?.meta, isLoading, mutate }] as const;
 };
 
 export type UseTransferHistoryReturn = ReturnType<typeof useTransferHistory>;

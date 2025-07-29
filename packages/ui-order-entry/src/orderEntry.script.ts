@@ -2,6 +2,7 @@ import { useEffect, useRef, FocusEvent, useMemo, useState } from "react";
 import {
   useAccount,
   useComputedLTV,
+  useDebouncedCallback,
   useEventEmitter,
   useLocalStorage,
   useMarginRatio,
@@ -26,6 +27,10 @@ import {
   getOrderTypeByBBO,
   isBBOOrder,
 } from "./utils";
+
+const safeNumber = (val: number | string) => {
+  return Number.isNaN(Number(val)) ? 0 : Number(val);
+};
 
 export type OrderEntryScriptInputs = {
   symbol: string;
@@ -84,7 +89,9 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   const [priceInputContainerWidth, setPriceInputContainerWidth] = useState(0);
 
   const currentQtyPercentage = useMemo(() => {
-    if (Number(formattedOrder.order_quantity) >= Number(state.maxQty)) return 1;
+    if (Number(formattedOrder.order_quantity) >= Number(state.maxQty)) {
+      return 1;
+    }
     return (
       convertValueToPercentage(
         Number(formattedOrder.order_quantity ?? 0),
@@ -135,7 +142,9 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
 
   const onBlur = (type: InputType) => (_: FocusEvent) => {
     setTimeout(() => {
-      if (currentFocusInput.current !== type) return;
+      if (currentFocusInput.current !== type) {
+        return;
+      }
       currentFocusInput.current = InputType.NONE;
     }, 300);
 
@@ -245,10 +254,10 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       ? BBOStatus.ON
       : BBOStatus.OFF;
   }, [
-    localBBOType,
     tpslSwitch,
+    formattedOrder.order_type_ext,
     formattedOrder.order_type,
-    formattedOrder.order_type_ext!,
+    localBBOType,
   ]);
 
   const toggleBBO = () => {
@@ -292,7 +301,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
         level: orderLevel,
       });
     }
-  }, [localBBOType, bboStatus, formattedOrder.side!]);
+  }, [localBBOType, bboStatus, formattedOrder.side]);
 
   // useEffect(() => {
   //   if (
@@ -460,6 +469,34 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
 
   const currentLtv = useComputedLTV();
 
+  const [askAndBid, setAskAndBid] = useState<[number, number]>([0, 0]);
+
+  const onOrderBookUpdate = useDebouncedCallback((data: any) => {
+    setAskAndBid([data.asks?.[data.asks.length - 1]?.[0], data.bids?.[0]?.[0]]);
+  }, 200);
+
+  useEffect(() => {
+    ee.on("orderbook:update", onOrderBookUpdate);
+    return () => {
+      ee.off("orderbook:update", onOrderBookUpdate);
+      onOrderBookUpdate.cancel();
+    };
+  }, [onOrderBookUpdate]);
+
+  const fillMiddleValue = () => {
+    if (bboStatus === BBOStatus.ON) {
+      toggleBBO();
+    }
+    if (formattedOrder.order_type === OrderType.LIMIT) {
+      const [bestAsk = 0, bestBid = 0] = askAndBid;
+      const midPrice = new Decimal(safeNumber(bestAsk))
+        .add(safeNumber(bestBid))
+        .div(2)
+        .toNumber();
+      setValue("order_price", midPrice);
+    }
+  };
+
   return {
     ...state,
     currentQtyPercentage,
@@ -485,14 +522,13 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       priceInputRef,
       priceInputContainerRef,
     },
-
     canTrade,
-
     bboStatus,
     bboType: localBBOType,
     onBBOChange,
     toggleBBO,
     priceInputContainerWidth,
     currentLtv,
+    fillMiddleValue,
   };
 };

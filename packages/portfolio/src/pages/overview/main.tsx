@@ -1,5 +1,5 @@
 import { Grid, useScreen } from "@orderly.network/ui";
-import { AssetsChartWidget } from "./assetChart/assetsChart.widget";
+import { AssetsChartWidget } from "./assetChart";
 import { AssetWidget } from "./assets";
 import { HistoryDataGroupWidget } from "./historyDataGroup";
 import { MobileOverview } from "./mobile";

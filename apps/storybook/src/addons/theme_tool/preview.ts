@@ -1,5 +1,5 @@
 import React from "react";
-import { useChannel, useEffect } from "@storybook/preview-api";
+import { useChannel, useEffect } from "storybook/preview-api";
 import { EVENTS, VARIABLE_KEYS } from "./constants";
 import { hexToRgb, isColorValue, rgbToHex } from "./utils";
 
@@ -9,7 +9,7 @@ export const withThemeBuilder = (StoryFn: any, context: any) => {
   }) => {
     console.log("++++changedValues", params.changedValues);
     Object.entries(params.changedValues).forEach(([key, value]) => {
-      let newValue = isColorValue(key) ? hexToRgb(value) ?? "" : value;
+      const newValue = isColorValue(key) ? (hexToRgb(value) ?? "") : value;
       document.documentElement.style.setProperty(key, newValue as string);
     });
   };

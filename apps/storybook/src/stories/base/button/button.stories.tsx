@@ -1,5 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
-// import { fn } from '@storybook/test';
+import { useState } from "react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+// import { fn } from 'storybook/test';
 import {
   Button,
   Flex,
@@ -8,7 +9,6 @@ import {
   DebouncedButton,
   ThrottledButton,
 } from "@orderly.network/ui";
-import { useState } from "react";
 
 const meta: Meta<typeof Button> = {
   title: "Base/Button",

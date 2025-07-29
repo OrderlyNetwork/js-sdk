@@ -12,15 +12,19 @@ const compareValues = (aValue: any, bValue: any): number => {
   if (bValue == null) return -1;
 
   // Convert to string first for type checking
-  const aStr = String(aValue);
-  const bStr = String(bValue);
+  const aStr = String(aValue).trim();
+  const bStr = String(bValue).trim();
 
-  // Check if both are valid numbers (not just convertible to numbers)
-  const aIsNumber = /^-?\d+(\.\d+)?$/.test(aStr.trim());
-  const bIsNumber = /^-?\d+(\.\d+)?$/.test(bStr.trim());
+  // More robust number detection - check if values can be converted to valid numbers
+  const aNum = Number(aStr);
+  const bNum = Number(bStr);
+  const aIsNumber =
+    !isNaN(aNum) && isFinite(aNum) && /^-?\d*\.?\d+([eE][+-]?\d+)?$/.test(aStr);
+  const bIsNumber =
+    !isNaN(bNum) && isFinite(bNum) && /^-?\d*\.?\d+([eE][+-]?\d+)?$/.test(bStr);
 
   if (aIsNumber && bIsNumber) {
-    return Number(aValue) - Number(bValue);
+    return aNum - bNum;
   }
 
   // Check if both are valid dates (ISO format or timestamp)
@@ -99,6 +103,13 @@ export function useSort(
   return { sort, onSort, getSortedList };
 }
 
+/**
+ * Escape special characters for use in regular expressions
+ */
+function escapeRegExp(string: string): string {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 export function searchBySymbol<T extends Record<PropertyKey, any>>(
   list: T[],
   searchValue = "",
@@ -108,7 +119,10 @@ export function searchBySymbol<T extends Record<PropertyKey, any>>(
     return list;
   }
 
-  const reg = new RegExp(searchValue, "i");
+  // Escape special characters to prevent RegExp errors
+  const escapedSearchValue = escapeRegExp(searchValue);
+  const reg = new RegExp(escapedSearchValue, "i");
+
   const searchValueLower = searchValue.toLowerCase();
 
   // Split results into three groups: exact matches, starts with search and other matches

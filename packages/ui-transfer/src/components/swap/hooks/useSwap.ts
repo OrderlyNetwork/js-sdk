@@ -98,6 +98,8 @@ export const useSwap = (): any => {
 
         txHash.current = result.hash;
 
+        ee.emit("deposit:requested");
+
         // @ts-ignore
         return pick(["from", "to", "hash", "value"], result);
       } catch (e: any) {

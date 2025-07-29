@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   useLocalStorage,
   useStorageChain,
@@ -56,6 +56,7 @@ export function useWallet() {
   } = useAbstractWallet();
   const [wallet, setWallet] = useState<WalletState | null>(null);
   const [namespace, setNamespace] = useState<ChainNamespace | null>(null);
+  const [walletType, setWalletType] = useState<WalletConnectType | null>(null);
   const { storageChain, setStorageChain } = useStorageChain();
   const { setOpenConnectDrawer, targetWalletType, setTargetWalletType } =
     useWalletConnectorPrivy();
@@ -246,8 +247,24 @@ export function useWallet() {
     }
   };
 
+  const onDisconnect = (parmas: any): Promise<any> => {
+    if (!walletType) {
+      throw new Error("No wallet type found");
+    }
+    return new Promise((resolve, reject) => {
+      disconnect(walletType)
+        .then(() => {
+          resolve(true);
+        })
+        .catch((e) => {
+          reject(e);
+        });
+    });
+  };
+
   const setNullWalletStatus = () => {
     setWallet(null);
+    setWalletType(null);
     setConnectedChain(null);
     setNamespace(null);
   };
@@ -270,6 +287,7 @@ export function useWallet() {
       }
       if (privyWalletEVM) {
         setWallet(privyWalletEVM);
+        setWalletType(WalletConnectType.PRIVY);
         setConnectedChain(privyWalletEVM.chain);
         setNamespace(ChainNamespace.evm);
       } else {
@@ -279,6 +297,7 @@ export function useWallet() {
     if (storageChain?.namespace === ChainNamespace.solana) {
       if (privyWalletSOL) {
         setWallet(privyWalletSOL);
+        setWalletType(WalletConnectType.PRIVY);
         setConnectedChain(privyWalletSOL.chain);
         setNamespace(ChainNamespace.solana);
       } else {
@@ -306,6 +325,7 @@ export function useWallet() {
       if (AbstractChains.has(storageChain.chainId)) {
         if (isConnectedAbstract && walletAbstract) {
           setWallet(walletAbstract);
+          setWalletType(WalletConnectType.ABSTRACT);
           setConnectedChain(connectedChainAbstract);
           setNamespace(ChainNamespace.evm);
         } else {
@@ -314,6 +334,7 @@ export function useWallet() {
       } else {
         if (isConnectedEVM && walletEVM) {
           setWallet(walletEVM);
+          setWalletType(WalletConnectType.EVM);
           setConnectedChain(connectedChainEvm);
           setNamespace(ChainNamespace.evm);
         } else {
@@ -324,6 +345,7 @@ export function useWallet() {
     if (storageChain?.namespace === ChainNamespace.solana) {
       if (isConnectedSOL && walletSOL) {
         setWallet(walletSOL);
+        setWalletType(WalletConnectType.SOL);
         setConnectedChain(connectedChainSOL);
         setNamespace(ChainNamespace.solana);
       } else {
@@ -350,5 +372,6 @@ export function useWallet() {
     namespace,
     switchWallet,
     disconnect,
+    onDisconnect,
   };
 }

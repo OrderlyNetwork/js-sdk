@@ -1,5 +1,6 @@
 import React from "react";
 import { WalletAdapter } from "@solana/wallet-adapter-base";
+import { cn, useScreen } from "@orderly.network/ui";
 import { useSolanaWallet } from "../../providers/solana/solanaWalletProvider";
 import { RenderWalletIcon } from "../common";
 
@@ -9,7 +10,7 @@ export function SOLConnectArea({
   connect: (walletAdapter: WalletAdapter) => void;
 }) {
   const { wallets } = useSolanaWallet();
-
+  const { isMobile } = useScreen();
   return (
     <div>
       <div className="oui-mb-2 oui-text-sm oui-font-semibold oui-text-base-contrast-80">
@@ -19,7 +20,10 @@ export function SOLConnectArea({
         {wallets.map((item, key) => (
           <div
             key={key}
-            className=" oui-flex oui-flex-1 oui-cursor-pointer oui-items-center oui-justify-start oui-gap-1 oui-rounded-[6px] oui-bg-[#07080A] oui-px-2 oui-py-[11px]"
+            className={cn(
+              " oui-flex oui-flex-1 oui-cursor-pointer oui-items-center oui-justify-start oui-gap-1 oui-rounded-[6px]  oui-px-2 oui-py-[11px]",
+              isMobile ? "oui-bg-base-5" : "oui-bg-[#07080A]",
+            )}
             onClick={() => connect(item.adapter)}
           >
             <RenderWalletIcon connector={item.adapter} />

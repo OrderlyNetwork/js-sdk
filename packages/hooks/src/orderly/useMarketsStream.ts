@@ -1,9 +1,9 @@
 import { useMemo } from "react";
-import { useQuery } from "../useQuery";
-import { useWS } from "../useWS";
 import useSWRSubscription from "swr/subscription";
 import { WSMessage } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
+import { useQuery } from "../useQuery";
+import { useWS } from "../useWS";
 import { useMarketStore } from "./useMarket/market.store";
 
 export const useMarketsStream = () => {
@@ -32,7 +32,7 @@ export const useMarketsStream = () => {
         // onError: (error: any) => {
         //
         // },
-      }
+      },
     );
 
     return () => {
@@ -46,7 +46,7 @@ export const useMarketsStream = () => {
 
     return futures.map((item) => {
       const ticker = tickers.find(
-        (t: WSMessage.Ticker) => t.symbol === item.symbol
+        (t: WSMessage.Ticker) => t.symbol === item.symbol,
       );
       if (ticker) {
         const data = {
