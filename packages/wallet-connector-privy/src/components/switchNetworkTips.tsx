@@ -60,7 +60,7 @@ export function SwitchNetworkTips({
           })}
         </div>
       </Flex>
-      <ArrowRightIcon className="oui-text-[#FF7D00]" />
+      <ArrowRightIcon size={14} className="oui-text-[#FF7D00]" />
     </div>
   );
 }
