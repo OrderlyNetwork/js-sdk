@@ -336,9 +336,9 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
 
   useEffect(() => {
     const focusInputElement = (target: HTMLInputElement | null) => {
-      setTimeout(() => {
+      requestAnimationFrame(() => {
         target?.focus();
-      }, 0);
+      });
     };
 
     // handle orderbook item click event
@@ -366,12 +366,12 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
           level: undefined,
         });
 
-        setTimeout(() => {
-          // Since BBO will update the price when unselected, we should set order price in setTimeout
-          // We can't call setValue directly here because it's inside a setTimeout, and the formattedOrder accessed inside setValue would be the old value
+        requestAnimationFrame(() => {
+          // Since BBO will update the price when unselected, we should set order price in requestAnimationFrame
+          // We can't call setValue directly here because it's inside a requestAnimationFrame, and the formattedOrder accessed inside setValue would be the old value
           // setValue("order_price", price);
           ee.emit("update:orderPrice", price);
-        }, 0);
+        });
 
         focusInputElement(priceInputRef.current);
         return;
@@ -499,7 +499,9 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
         .add(safeNumber(bestBid))
         .div(2)
         .toNumber();
-      setValue("order_price", midPrice);
+      requestAnimationFrame(() => {
+        ee.emit("update:orderPrice", midPrice);
+      });
     }
   };
 
