@@ -1,5 +1,25 @@
 # @orderly.network/core
 
+## 2.5.3
+
+### Patch Changes
+
+- 798c4eb: publish
+- 64c5b75: publish
+- publish
+- Updated dependencies [798c4eb]
+- Updated dependencies [64c5b75]
+- Updated dependencies
+  - @orderly.network/types@2.5.3
+
+## 2.5.3-alpha.1
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@2.5.3-alpha.1
+
 ## 2.5.3-alpha.0
 
 ### Patch Changes
