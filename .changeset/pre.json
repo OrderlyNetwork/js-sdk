@@ -47,6 +47,7 @@
     "@orderly.network/web3-provider-ethers": "2.5.2"
   },
   "changesets": [
+    "ninety-seas-protect",
     "proud-coins-joke"
   ]
 }
