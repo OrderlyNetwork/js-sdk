@@ -4,6 +4,7 @@ import eslintConfigPrettier from "eslint-config-prettier/flat";
 import monorepoCop from "eslint-plugin-monorepo-cop";
 import reactPlugin from "eslint-plugin-react";
 import * as reactHooks from "eslint-plugin-react-hooks";
+import reactRefresh from "eslint-plugin-react-refresh";
 import tailwind from "eslint-plugin-tailwindcss";
 import { defineConfig, globalIgnores } from "eslint/config";
 import globals from "globals";
@@ -103,6 +104,7 @@ export default defineConfig([
       "@stylistic": stylistic,
       "monorepo-cop": monorepoCop,
       "react-hooks": reactHooks,
+      "react-refresh": reactRefresh,
     },
     rules: {
       "no-console": ["warn", { allow: ["warn", "error"] }],
@@ -131,7 +133,14 @@ export default defineConfig([
 
       // https://github.com/facebook/react/tree/main/packages/eslint-plugin-react-hooks#flat-config-eslintconfigjsts-1
       "react-hooks/rules-of-hooks": "warn",
-      "react-hooks/exhaustive-deps": "warn",
+      // it cause too many false positives, use eslint-plugin-react-hooks-configurable won't solve the problem either
+      // "react-hooks/exhaustive-deps": "warn",
+
+      // https://github.com/ArnaudBarre/eslint-plugin-react-refresh?tab=readme-ov-file#without-config
+      "react-refresh/only-export-components": [
+        "warn",
+        { allowConstantExport: true },
+      ],
     },
   },
 
