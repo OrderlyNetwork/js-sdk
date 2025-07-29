@@ -499,6 +499,8 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
         .add(safeNumber(bestBid))
         .div(2)
         .toNumber();
+      // 1. Since BBO will update the price when unselected, we should set order price in raf
+      // 2. raf is mainly used to solve the timing problem caused by React state update, ensuring that the orderPrice is triggered after the state is fully updated to avoid accessing expired state values.
       requestAnimationFrame(() => {
         ee.emit("update:orderPrice", midPrice);
       });
