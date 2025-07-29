@@ -20,6 +20,7 @@ import {
 import { useMarkPriceActions } from "../../orderly/useMarkPrice/useMarkPriceStore";
 import { usePositions } from "../../orderly/usePositionStream/usePosition.store";
 import { OrderValidationResult } from "../../services/orderCreator/interface";
+import { useMemoizedFn } from "../../shared/useMemoizedFn";
 import { useEventEmitter } from "../../useEventEmitter";
 import { useMutation } from "../../useMutation";
 import { useTrack } from "../../useTrack";
@@ -689,8 +690,8 @@ const useOrderEntry = (
       validate: validateOrder,
     },
     freeCollateral,
-    setValue,
-    setValues,
+    setValue: useMemoizedFn(setValue),
+    setValues: useMemoizedFn(setValues),
     symbolInfo: symbolInfo || {},
     metaState: meta,
     isMutating,
