@@ -23,6 +23,7 @@ import { OrderValidationResult } from "../../services/orderCreator/interface";
 import { useEventEmitter } from "../../useEventEmitter";
 import { useMutation } from "../../useMutation";
 import { useTrack } from "../../useTrack";
+import { getScaledOrderSkew } from "../../utils/order/scaledOrder";
 import {
   calcEstLeverage,
   calcEstLiqPrice,
@@ -31,7 +32,6 @@ import {
   tpslFields,
   hasTPSL,
   isBBOOrder,
-  getScaledOrderSkew,
 } from "./helper";
 import type { FullOrderState } from "./orderEntry.store";
 import { useOrderEntryNextInternal } from "./useOrderEntry.internal";

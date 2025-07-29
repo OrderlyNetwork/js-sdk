@@ -52,6 +52,11 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     BBOOrderType | undefined
   >("orderly_order_bbo_type", undefined);
 
+  const [quantityUnit, setQuantityUnit] = useLocalStorage<"quote" | "base">(
+    "orderly_order_quantity_unit",
+    "quote",
+  );
+
   const lastBBOType = useRef<BBOOrderType>(localBBOType);
 
   const { formattedOrder, setValue, setValues, symbolInfo, ...state } =
@@ -62,6 +67,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
         side: localOrderSide,
       },
     });
+
   const [tpslSwitch, setTpslSwitch] = useLocalStorage(
     "orderly-order-entry-tp_sl-switch",
     false,
@@ -83,7 +89,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   const ee = useEventEmitter();
 
   const currentFocusInput = useRef<InputType>(InputType.NONE);
-  const lastScaledOrderPriceInput = useRef<InputType>(InputType.MAX_PRICE);
+  const lastScaledOrderPriceInput = useRef<InputType>(InputType.END_PRICE);
   const triggerPriceInputRef = useRef<HTMLInputElement | null>(null);
   const priceInputRef = useRef<HTMLInputElement | null>(null);
   const priceInputContainerRef = useRef<HTMLDivElement | null>(null);
@@ -133,7 +139,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
 
     // set last scaled order price input
     if (
-      [InputType.MIN_PRICE, InputType.MAX_PRICE].includes(
+      [InputType.START_PRICE, InputType.END_PRICE].includes(
         currentFocusInput.current!,
       )
     ) {
@@ -411,9 +417,9 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
         lastScaledOrderPriceInput.current
       ) {
         const field =
-          lastScaledOrderPriceInput.current === InputType.MIN_PRICE
-            ? "min_price"
-            : "max_price";
+          lastScaledOrderPriceInput.current === InputType.START_PRICE
+            ? "start_price"
+            : "end_price";
         setValue(field, price);
         focusInputElement(priceInputRef.current);
         return;
@@ -536,5 +542,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     priceInputContainerWidth,
     currentLtv,
     fillMiddleValue,
+    quantityUnit,
+    setQuantityUnit,
   };
 };

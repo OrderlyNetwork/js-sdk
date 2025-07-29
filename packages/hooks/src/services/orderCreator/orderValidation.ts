@@ -15,10 +15,10 @@ export class OrderValidation {
         return "TP price";
       case "sl_trigger_price":
         return "SL price";
-      case "max_price":
-        return "Upper price";
-      case "min_price":
-        return "Lower price";
+      case "start_price":
+        return "Start price";
+      case "end_price":
+        return "End price";
       case "total_orders":
         return "Total orders";
       case "skew":
