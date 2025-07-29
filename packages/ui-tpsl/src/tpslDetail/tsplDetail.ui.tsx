@@ -165,7 +165,7 @@ const PartialPositionPart = (props: {
           open={open}
           onOpenChange={setOpen}
         />
-        <Grid gap={2} cols={2}>
+        <Flex gap={2}>
           <AddButton
             positionType={PositionType.PARTIAL}
             position={props.position}
@@ -177,7 +177,7 @@ const PartialPositionPart = (props: {
               onCancelAllTPSLOrders={props.onCancelAllTPSLOrders}
             />
           )}
-        </Grid>
+        </Flex>
       </Box>
       <Box
         className={cn(
