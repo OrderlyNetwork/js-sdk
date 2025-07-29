@@ -1,10 +1,10 @@
+import { lensIndex, over } from "ramda";
 import { WSMessage, API, OrderStatus } from "@orderly.network/types";
 import { IOrderMergeHandler } from "./interface";
-import { lensIndex, over } from "ramda";
 
 export abstract class BaseMergeHandler<
   T extends WSMessage.AlgoOrder[] | WSMessage.Order,
-  D extends API.AlgoOrder | API.Order
+  D extends API.AlgoOrder | API.Order,
 > implements IOrderMergeHandler<T, D>
 {
   data: D;
@@ -29,12 +29,16 @@ export abstract class BaseMergeHandler<
     if (data.status === OrderStatus.FILLED && !data.updated_time) {
       data.updated_time = data.timestamp;
     }
-    if (data.child_orders && data.child_orders.length ) {
-      data.child_orders.map(child => {
-        if (child.algo_status === OrderStatus.FILLED && child.is_activated && !child.updated_time) {
+    if (data.child_orders && data.child_orders.length) {
+      data.child_orders.map((child) => {
+        if (
+          child.algo_status === OrderStatus.FILLED &&
+          child.is_activated &&
+          !child.updated_time
+        ) {
           child.updated_time = data.timestamp;
         }
-      })
+      });
     }
     if (data.type && data.type.endsWith("_ORDER")) {
       data.type = data.type.replace("_ORDER", "");
@@ -46,7 +50,7 @@ export abstract class BaseMergeHandler<
   merge(
     key: string,
     message: T,
-    prevData: API.OrderResponse[]
+    prevData: API.OrderResponse[],
   ): API.OrderResponse[] {
     switch (this.status) {
       case "NEW": {
@@ -68,7 +72,8 @@ export abstract class BaseMergeHandler<
         }
         if (
           key.startsWith("orders:NEW") ||
-          key.startsWith("orders:INCOMPLETE")
+          key.startsWith("orders:INCOMPLETE") ||
+          key.startsWith("algoOrders:INCOMPLETE")
         ) {
           return this.remove(prevData);
         }
@@ -89,6 +94,7 @@ export abstract class BaseMergeHandler<
           if (
             key.startsWith("orders:INCOMPLETE") ||
             key.startsWith("orders:NEW") ||
+            key.startsWith("algoOrders:INCOMPLETE") ||
             // all orders key
             key.startsWith("orders:")
           ) {
@@ -132,7 +138,7 @@ export abstract class BaseMergeHandler<
         },
         rows: [this.data, ...item.rows],
       }),
-      orders
+      orders,
     ) as API.OrderResponse[];
   }
 
