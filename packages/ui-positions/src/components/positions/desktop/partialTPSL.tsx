@@ -3,8 +3,8 @@ import { useSymbolsInfo } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { PositionType } from "@orderly.network/types";
 import { cn, Flex, Text } from "@orderly.network/ui";
+import { usePositionsRowContext } from "../positionsRowContext";
 import { AddIcon, TPSLEditIcon } from "./components";
-import { usePositionsRowContext } from "./positionRowContext";
 
 export const PartialTPSL: FC<{
   orderNum?: number;
