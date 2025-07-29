@@ -17,8 +17,8 @@ const LayoutContext = createContext<LayoutContextValue>({
 export const LayoutProvider: React.FC<React.PropsWithChildren> = (props) => {
   const [sideOpen, setSideOpen] = useState(true);
   const memoizedValue = useMemo<LayoutContextValue>(
-    () => ({ sideOpen, onSideOpenChange: setSideOpen }),
-    [sideOpen],
+    () => ({ sideOpen: sideOpen, onSideOpenChange: setSideOpen }),
+    [sideOpen, setSideOpen],
   );
   return (
     <LayoutContext.Provider value={memoizedValue}>
