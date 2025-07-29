@@ -1,11 +1,14 @@
 import { FC, useMemo } from "react";
+import { useLocalStorage } from "@orderly.network/hooks";
 import {
   SideMarketsWidget,
   SymbolInfoBarFullWidget,
 } from "@orderly.network/markets";
+import { TradingviewFullscreenKey } from "@orderly.network/types";
 import { Box, cn, Flex } from "@orderly.network/ui";
 import { OrderEntryWidget } from "@orderly.network/ui-order-entry";
 import { TradingviewWidget } from "@orderly.network/ui-tradingview";
+import { DepositStatusWidget } from "@orderly.network/ui-transfer";
 import { AssetViewWidget } from "../../components/desktop/assetView";
 import { DataListWidget } from "../../components/desktop/dataList";
 import { RemovablePanel } from "../../components/desktop/layout/removablePanel";
@@ -69,12 +72,19 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
     dataListMinHeight,
   } = props;
 
-  const minScreenHeight =
-    symbolInfoBarHeight +
-    orderbookMaxHeight +
-    dataListInitialHeight +
-    space * 4;
+  const [tradingViewFullScreen] = useLocalStorage(
+    TradingviewFullscreenKey,
+    false,
+  );
 
+  const minScreenHeight = useMemo(() => {
+    return tradingViewFullScreen
+      ? 0
+      : symbolInfoBarHeight +
+          orderbookMaxHeight +
+          dataListInitialHeight +
+          space * 4;
+  }, [tradingViewFullScreen]);
   const minScreenHeightSM =
     topBarHeight +
     bottomBarHeight +
@@ -138,6 +148,18 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
 
   const tradingviewWidget = (
     <TradingviewWidget
+      classNames={{
+        root: cn(
+          tradingViewFullScreen
+            ? "!oui-absolute oui-top-0 oui-left-0 oui-right-0 oui-bottom-0 oui-z-[40] oui-bg-base-10"
+            : "oui-z-1",
+        ),
+        content: cn(
+          tradingViewFullScreen
+            ? "oui-top-3 oui-bottom-3 oui-left-3 oui-right-3 oui-bg-base-9 oui-rounded-[16px] oui-overflow-hidden"
+            : "",
+        ),
+      }}
       symbol={props.symbol}
       {...restTradingViewConfig}
       libraryPath={library_path}
@@ -215,7 +237,13 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
       onLayout={updatePositions}
       showIndicator={showPositionIcon}
     >
-      <AssetViewWidget />
+      <>
+        <AssetViewWidget isFirstTimeDeposit={props.isFirstTimeDeposit} />
+        <DepositStatusWidget
+          className="oui-mt-3 oui-gap-y-2"
+          onClick={props.navigateToPortfolio}
+        />
+      </>
     </RemovablePanel>,
     <RemovablePanel
       key="orderEntry"
@@ -502,6 +530,8 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
       className={cn(
         props.className,
         layout === "left" && "oui-flex-row-reverse",
+        tradingViewFullScreen &&
+          "oui-relative oui-w-screen oui-h-[calc(100vh-80px)] !oui-p-0 oui-overflow-hidden",
       )}
       width="100%"
       p={2}

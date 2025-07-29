@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { AlertDialog, Button, modal, ModalProvider } from "@orderly.network/ui";
 
 const meta = {

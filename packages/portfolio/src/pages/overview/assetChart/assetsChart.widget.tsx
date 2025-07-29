@@ -1,7 +1,7 @@
-import { useAssetsLineChartScript } from "./assetsChart.script";
-import { AssetsChartUI } from "./assetsChart.ui";
+import { useAssetsChartScript } from "./assetsChart.script";
+import { AssetsChart } from "./assetsChart.ui";
 
 export const AssetsChartWidget = () => {
-  const state = useAssetsLineChartScript();
-  return <AssetsChartUI {...state} />;
+  const state = useAssetsChartScript();
+  return <AssetsChart {...state} />;
 };

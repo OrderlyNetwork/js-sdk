@@ -1,26 +1,24 @@
-import { MainNavWidget } from "@orderly.network/ui-scaffold";
-import {
-  Box,
-  ExtensionPositionEnum,
-  Flex,
-  installExtension,
-  Text,
-} from "@orderly.network/ui";
-import { Scaffold } from "@orderly.network/ui-scaffold";
-import { StoryObj } from "@storybook/react";
+import { useState } from "react";
+import { StoryObj } from "@storybook/react-vite";
 import { TradingPage } from "@orderly.network/trading";
+import { MainNavWidget } from "@orderly.network/ui-scaffold";
+import { Scaffold } from "@orderly.network/ui-scaffold";
+import { useNav } from "../../../hooks/useNav";
 import { useOrderlyConfig } from "../../../hooks/useOrderlyConfig";
 import { OrderlyIcon } from "../trading/icons.tsx";
-import { useState } from "react";
 
 const meta = {
   title: "Package/wallet-connector-privy",
   component: TradingPage,
   decorators: [
-    (Story) => {
+    (Story: any) => {
       const config = useOrderlyConfig();
+      const { onRouteChange } = useNav();
       return (
-        <Scaffold mainNavProps={config.scaffold.mainNavProps}>
+        <Scaffold
+          mainNavProps={config.scaffold.mainNavProps}
+          routerAdapter={{ onRouteChange }}
+        >
           <Story />
         </Scaffold>
       );
@@ -30,7 +28,6 @@ const meta = {
     layout: "fullscreen",
     walletConnectorType: "privy",
   },
-  tags: ["autodocs"],
   argTypes: {},
   args: {
     symbol: "PERP_BTC_USDC",
@@ -50,6 +47,7 @@ const meta = {
 };
 
 export default meta;
+
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {

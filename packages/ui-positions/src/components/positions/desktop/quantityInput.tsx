@@ -13,82 +13,54 @@ import {
 } from "@orderly.network/ui";
 import { Input } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
-import { usePositionsRowContext } from "./positionRowContext";
+import { usePositionsRowContext } from "../positionsRowContext";
 
 export const QuantityInput = (props: { value: number }) => {
-  // const [quantity, setQuantity] = useState(`${props.value}`);
-  const [open, setOpen] = useState(false);
   const [sliderValue, setSliderValue] = useState<number>(100);
-  const {
-    baseDp,
-    updateQuantity: setQuantity,
-    quantity,
-    baseTick,
-  } = usePositionsRowContext();
-
-  useEffect(() => {
-    // when click the outside of the popover, close the popover
-    const handleClick = (event: MouseEvent) => {
-      const target = event.target as HTMLElement;
-      if (!target.closest("[data-popover-root]")) {
-        setOpen(false);
-      }
-    };
-
-    document.addEventListener("click", handleClick);
-
-    return () => {
-      document.removeEventListener("click", handleClick);
-    };
-  }, []);
+  const { baseDp, updateQuantity, quantity, baseTick } =
+    usePositionsRowContext();
 
   const resetQuantity = (percent: number) => {
-    onBlur(`${props.value * (percent / 100)}`);
+    formatQuantityToBaseTick(`${props.value * percent}`);
   };
 
-  const onBlur = (value: string) => {
+  const formatQuantityToBaseTick = (value: string) => {
     if (baseTick && baseTick > 0) {
+      // format quantity to baseTick
       const formatQty = utils.formatNumber(value, baseTick) ?? value;
-      setQuantity(formatQty);
+      updateQuantity(formatQty);
     }
   };
+
+  useEffect(() => {
+    const maxQty = Math.abs(props.value);
+    const qty = Math.min(Number(quantity || 0), maxQty);
+
+    // transform quantity to slider value
+    const slider = new Decimal(qty)
+      .div(maxQty)
+      .mul(100)
+      .todp(2, Decimal.ROUND_DOWN)
+      .toNumber();
+
+    setSliderValue(slider);
+  }, [quantity, props.value]);
 
   return (
     <PopoverRoot>
       <PopoverTrigger>
         <Input
           size="sm"
-          onFocus={() => {
-            setOpen(true);
-          }}
           classNames={{
-            root: "oui-outline-line-12 ",
+            root: "oui-outline-none oui-border oui-border-solid oui-border-white/[0.12] focus-within:oui-outline-primary-light",
           }}
           formatters={[
             inputFormatter.numberFormatter,
             ...(baseDp ? [inputFormatter.dpFormatter(baseDp)] : []),
           ]}
-          // tooltip={errors?.order_quantity?.message}
-          // color={errors?.order_quantity?.message ? "danger" : undefined}
           value={quantity}
-          onBlur={(event) => onBlur(event.target.value)}
-          onValueChange={(e) => {
-            setQuantity(e);
-            // if (type === OrderType.LIMIT) {
-            if (e == "0" || e == "") {
-              setSliderValue(0);
-              return;
-            }
-            const value = new Decimal(e)
-              .div(props.value)
-              .mul(100)
-              .abs()
-              .toFixed(0, Decimal.ROUND_DOWN);
-            // console.log("xxxxxx value", value);
-
-            setSliderValue(Math.min(100, Number(value)));
-            // }
-          }}
+          onBlur={(event) => formatQuantityToBaseTick(event.target.value)}
+          onValueChange={updateQuantity}
         />
       </PopoverTrigger>
       <PopoverContent
@@ -100,25 +72,18 @@ export const QuantityInput = (props: { value: number }) => {
         }}
       >
         <Flex p={1} gap={2} width={"100%"} itemAlign={"start"}>
-          <Text size="xs" intensity={98} className="oui-min-w-[30px]">
+          <Text size="xs" intensity={98} className="oui-min-w-[40px]">
             {`${sliderValue}%`}
           </Text>
           <Flex direction={"column"} width={"100%"} gap={2}>
             <Slider
               markCount={4}
               value={[sliderValue]}
-              onValueChange={(e) => {
-                const values = Array.from(e.values());
-                setSliderValue(values[0]);
-                resetQuantity(values[0]);
+              onValueChange={(values) => {
+                resetQuantity(values[0] / 100);
               }}
             />
-            <Buttons
-              onClick={(value) => {
-                setSliderValue(value * 100);
-                resetQuantity(value * 100);
-              }}
-            />
+            <PercentButtons onClick={resetQuantity} />
           </Flex>
         </Flex>
       </PopoverContent>
@@ -126,7 +91,7 @@ export const QuantityInput = (props: { value: number }) => {
   );
 };
 
-const Buttons = (props: { onClick: (value: number) => void }) => {
+const PercentButtons = (props: { onClick: (value: number) => void }) => {
   const { t } = useTranslation();
   const list = [
     {

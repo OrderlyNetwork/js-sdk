@@ -4,9 +4,8 @@ import { shouldSkipPackage } from "@changesets/should-skip-package";
 import { Release, VersionType } from "@changesets/types";
 import writeChangeset from "@changesets/write";
 import { getPackages } from "@manypkg/get-packages";
-import https from "https";
 import SimpleGit from "simple-git";
-import { $ } from "zx";
+import { $, retry, expBackoff } from "zx";
 
 const simpleGit = SimpleGit();
 
@@ -46,6 +45,10 @@ const exitPreTag = process.env.EXIT_PRE_TAG === "true";
 
 // set publish npm registry
 const npmRegistry = npm.registry ? `npm_config_registry=${npm.registry}` : "";
+
+// if not provide registry, use public npm
+const isPublicNpm =
+  !npm.registry || npm.registry === "https://registry.npmjs.org";
 
 /** release patch version */
 async function main() {
@@ -142,10 +145,11 @@ async function release() {
     await authNPM();
   }
 
-  if (npmRegistry) {
-    await $`${npmRegistry} pnpm changeset publish`;
+  if (isPublicNpm) {
+    // release public npm don't need to retry
+    await publishNpm();
   } else {
-    await $`pnpm changeset publish`;
+    await retryPublishNpm();
   }
 
   // restore .npmrc file change when publish success
@@ -169,15 +173,29 @@ async function release() {
     // commit code
     await $`git commit -m ${git.commitMessage}`;
 
-    const remoteUrl = await getRemoteUrl();
-    // if not provide, use local origin and git token
-    // use --no-verify to ignore push hook
-    if (remoteUrl) {
+    // if in ci, it should push to remote
+    if (isCI) {
+      const remoteUrl = await getRemoteUrl();
+      // use --no-verify to ignore push hook
       await $`git push --no-verify ${remoteUrl}`;
     } else {
+      // use local origin and git token
       await $`git push --no-verify`;
     }
   }
+}
+
+async function publishNpm() {
+  if (npmRegistry) {
+    return $`${npmRegistry} pnpm changeset publish`;
+  } else {
+    return $`pnpm changeset publish`;
+  }
+}
+
+async function retryPublishNpm() {
+  // retry 10 times, start with 5 seconds, and increase the delay time, max 20 seconds
+  await retry(10, expBackoff("20s", "5s"), publishNpm);
 }
 
 async function checkGitStatus() {
@@ -323,39 +341,37 @@ async function notifyTelegram(message: string, success: boolean) {
   }
 
   const url = `https://api.telegram.org/bot${telegram.token}/sendMessage`;
-  const data = JSON.stringify({
+  const data = {
     chat_id: telegram.chatId,
     text: formatCodeMessage(sendMessage),
     parse_mode: "HTML",
-  });
-
-  const options = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
   };
 
-  const req = https.request(url, options, (res) => {
-    let data = "";
-    res.on("data", (chunk) => {
-      data += chunk;
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
     });
 
-    res.on("end", () => {
-      console.log("Response:", data);
-      if (!success) {
-        throw new Error(message);
-      }
-    });
-  });
+    const responseData = await response.json();
+    console.log("notify telegram success:", responseData);
 
-  req.on("error", (e) => {
-    console.error("Error:", e);
-  });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
 
-  req.write(data);
-  req.end();
+    if (!success) {
+      throw new Error(message);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    if (!success) {
+      throw error;
+    }
+  }
 }
 
 function formatCodeMessage(message: string) {

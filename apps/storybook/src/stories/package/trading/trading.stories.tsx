@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   AssetViewWidget,
   DataListWidget,
@@ -31,7 +31,6 @@ const meta: Meta<typeof TradingPage> = {
   parameters: {
     layout: "fullscreen",
   },
-  tags: ["autodocs"],
   argTypes: {},
   args: {
     symbol: "PERP_BTC_USDC",

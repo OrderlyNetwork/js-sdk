@@ -9,7 +9,7 @@ import {
 import { account } from "@orderly.network/perp";
 import type { API } from "@orderly.network/types";
 import { modal } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { Decimal, zero } from "@orderly.network/utils";
 
 const useConvertThreshold = () => {
   const { data, error, isLoading } = useQuery<API.ConvertThreshold>(
@@ -56,13 +56,13 @@ export const useLTVTooltipScript = () => {
           collateralCap: tokenInfo?.user_max_qty ?? item.holding,
           indexPrice: indexPrice,
         })
-      : 0;
+      : zero;
 
     // Calculate collateral contribution for this token
     const collateralContribution = account.collateralContribution({
       collateralQty: item.holding,
       collateralCap: tokenInfo?.user_max_qty ?? item.holding,
-      collateralRatio: collateralRatio,
+      collateralRatio: collateralRatio.toNumber(),
       indexPrice: indexPrice,
     });
 

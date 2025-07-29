@@ -1,8 +1,9 @@
-const path = require("path");
-import { chartPlugin } from "@orderly.network/chart";
 import { withTV } from "tailwind-variants/transformer";
+import { chartPlugin } from "@orderly.network/chart";
 import { customThemePlugin } from "./src/tailwind/customTheme";
 import { roundlessThemePlugin } from "./src/tailwind/roundlessTheme";
+
+const path = require("path");
 
 /** @type {import("tailwindcss").Config} */
 module.exports = withTV({

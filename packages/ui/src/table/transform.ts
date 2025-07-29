@@ -11,6 +11,60 @@ import {
 import { PaginationMeta, Column, TableSort, SortOrder } from "./type";
 
 /**
+ * Compare two values intelligently for table sorting
+ */
+const compareValues = (aValue: any, bValue: any): number => {
+  // Handle null/undefined values (always sort to bottom)
+  if (aValue == null && bValue == null) return 0;
+  if (aValue == null) return 1;
+  if (bValue == null) return -1;
+
+  // Convert to string first for type checking
+  const aStr = String(aValue).trim();
+  const bStr = String(bValue).trim();
+
+  // More robust number detection - check if values can be converted to valid numbers
+  const aNum = Number(aStr);
+  const bNum = Number(bStr);
+  const aIsNumber =
+    !isNaN(aNum) && isFinite(aNum) && /^-?\d*\.?\d+([eE][+-]?\d+)?$/.test(aStr);
+  const bIsNumber =
+    !isNaN(bNum) && isFinite(bNum) && /^-?\d*\.?\d+([eE][+-]?\d+)?$/.test(bStr);
+
+  if (aIsNumber && bIsNumber) {
+    return aNum - bNum;
+  }
+
+  // Check if both are valid dates (ISO format or timestamp)
+  const aIsDate = /^\d{4}-\d{2}-\d{2}/.test(aStr) || /^\d{13}$/.test(aStr);
+  const bIsDate = /^\d{4}-\d{2}-\d{2}/.test(bStr) || /^\d{13}$/.test(bStr);
+
+  if (aIsDate && bIsDate) {
+    const aDate = new Date(aValue);
+    const bDate = new Date(bValue);
+    if (!isNaN(aDate.getTime()) && !isNaN(bDate.getTime())) {
+      return aDate.getTime() - bDate.getTime();
+    }
+  }
+
+  // String comparison - use localeCompare for proper string sorting
+  return aStr.localeCompare(bStr, undefined, {
+    sensitivity: "base",
+    numeric: false, // Disable numeric sorting for pure string comparison
+    caseFirst: "upper",
+  });
+};
+
+/**
+ * Custom sorting function for TanStack Table
+ */
+const customSortingFn = (rowA: any, rowB: any, columnId: string): number => {
+  const aValue = rowA.getValue(columnId);
+  const bValue = rowB.getValue(columnId);
+  return compareValues(aValue, bValue);
+};
+
+/**
  * Create a sorting comparator for multiSort fields
  */
 const createMultiSortComparator = (sortId: string, isDesc: boolean) => {
@@ -103,7 +157,7 @@ export const Transform = {
         sortingFn:
           typeof onSort === "function"
             ? (rowA, rowB, columnId) => onSort?.(rowA.original, rowB.original)
-            : "alphanumeric",
+            : customSortingFn,
         ...commonProps,
       });
     });

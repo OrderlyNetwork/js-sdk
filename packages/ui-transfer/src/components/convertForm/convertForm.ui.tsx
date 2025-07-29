@@ -31,10 +31,13 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
     slippage,
     onSlippageChange,
     convertRate,
+    outAmounts,
     minimumReceived,
     isQuoteLoading,
     currentLTV,
     nextLTV,
+    networkId,
+    balanceRevalidating,
   } = props;
 
   return (
@@ -47,15 +50,13 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
             token={token}
             tokens={sourceTokens}
             onTokenChange={onSourceTokenChange}
-            status={props.inputStatus}
-            hintMessage={props.hintMessage}
           />
         </Box>
         <AvailableQuantity
           token={token}
           amount={quantity}
           maxQuantity={maxQuantity.toString()}
-          loading={props.balanceRevalidating}
+          loading={balanceRevalidating}
           onClick={() => {
             onQuantityChange(maxQuantity.toString());
           }}
@@ -66,26 +67,29 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
           loading={isQuoteLoading}
           token={targetToken}
           value={
-            isQuoteLoading || !quantity
+            isQuoteLoading || !quantity || Number.isNaN(Number(outAmounts))
               ? ""
-              : unnormalizeAmount(
-                  minimumReceived.toString(),
-                  targetToken?.decimals ?? 6,
-                )
+              : unnormalizeAmount(outAmounts, targetToken?.decimals ?? 6)
           }
         />
         <Flex direction="column" itemAlign="start" mt={2} gap={1}>
           <SwapCoin
-            indexPrice={isQuoteLoading || !quantity ? "-" : convertRate}
-            sourceSymbol={token?.display_name || token?.symbol}
-            targetSymbol={targetToken?.display_name || targetToken?.symbol}
+            indexPrice={
+              isQuoteLoading || !quantity || Number.isNaN(Number(convertRate))
+                ? "-"
+                : convertRate
+            }
+            sourceSymbol={token?.token}
+            targetSymbol={targetToken?.token}
           />
           <Slippage value={slippage} onValueChange={onSlippageChange} />
           <MinimumReceived
-            symbol={targetToken?.display_name || targetToken?.symbol || ""}
-            precision={targetToken?.precision!}
+            symbol={targetToken?.token || ""}
+            precision={targetToken?.decimals ?? 6}
             value={
-              isQuoteLoading || !quantity
+              isQuoteLoading ||
+              !quantity ||
+              Number.isNaN(Number(minimumReceived))
                 ? "-"
                 : unnormalizeAmount(
                     minimumReceived.toString(),
@@ -103,7 +107,7 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
       </Box>
       <Flex itemAlign={"center"} justify="center">
         <ConvertAction
-          networkId={props.networkId}
+          networkId={networkId}
           disabled={disabled}
           loading={loading}
           onConvert={onConvert}

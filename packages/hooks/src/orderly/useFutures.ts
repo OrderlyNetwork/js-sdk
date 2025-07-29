@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 import { useQuery } from "../useQuery";
-
 import { useWS } from "../useWS";
 
 interface MarketInfo {}
@@ -11,7 +10,7 @@ export const useFutures = () => {
     `/v1/public/futures`,
     {
       revalidateOnFocus: false,
-    }
+    },
   );
 
   const [sortedData, setSortedData] = useState(data);

@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Flex, Text } from "@orderly.network/ui";
 import {
   AccountMenuWidget,
@@ -17,7 +17,6 @@ const meta = {
     ChainMenuWidget,
     // ChainMenu,
   },
-  tags: ["autodocs"],
   parameters: {
     layout: "fullscreen",
   },

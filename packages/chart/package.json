@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/chart",
-  "version": "2.5.0",
+  "version": "2.5.3-alpha.0",
   "description": "Charting library for Orderly Network",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

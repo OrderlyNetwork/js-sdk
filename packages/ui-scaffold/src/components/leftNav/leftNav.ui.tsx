@@ -115,11 +115,17 @@ const LeftNavSheet = modal.create<LeftNavUIProps>((props) => {
           {showSubAccount && (
             <SubAccountWidget customTrigger={subAccountTrigger} />
           )}
-          <div className="oui-flex oui-h-[calc(100vh-260px)] oui-overflow-y-auto oui-flex-col">
-            {props?.menus?.map((item) => (
-              <NavItem key={item.name} item={item} onClick={onRouteChange} />
-            ))}
-          </div>
+          {Array.isArray(props?.menus) && props.menus.length > 0 && (
+            <div className="oui-flex oui-h-[calc(100vh-260px)] oui-flex-col oui-items-start oui-overflow-y-auto">
+              {props.menus?.map((item) => (
+                <NavItem
+                  item={item}
+                  key={`item-${item.name}`}
+                  onClick={onRouteChange}
+                />
+              ))}
+            </div>
+          )}
           <div className="oui-absolute oui-bottom-6 oui-flex oui-w-full oui-flex-col oui-gap-4">
             <div className="oui-flex oui-items-center oui-justify-around">
               {props.telegramUrl && (
@@ -152,12 +158,14 @@ const LeftNavSheet = modal.create<LeftNavUIProps>((props) => {
                 </div>
               )}
             </div>
-            <div
-              className="oui-text-center oui-text-2xs oui-font-semibold oui-text-primary oui-underline"
-              onClick={() => openExternalLink(props.feedbackUrl as string)}
-            >
-              Share your feedback
-            </div>
+            {props.feedbackUrl && (
+              <div
+                className="oui-text-center oui-text-2xs oui-font-semibold oui-text-primary oui-underline"
+                onClick={() => openExternalLink(props.feedbackUrl as string)}
+              >
+                Share your feedback
+              </div>
+            )}
           </div>
         </div>
       </SheetContent>
@@ -171,23 +179,34 @@ type NavItemProps = {
 };
 
 const NavItem: FC<NavItemProps> = ({ item, onClick }) => {
+  const { href, name, icon, trailing, customRender, target } = item;
   const onItemClick = () => {
-    onClick?.({
-      href: item.href,
-      name: item.name,
-      scope: "leftNav",
-    });
+    if (target) {
+      window.open(href, target);
+    } else {
+      onClick?.({ href: href, name: name, scope: "leftNav" });
+    }
   };
+  if (typeof customRender === "function") {
+    return (
+      <div
+        className="oui-flex oui-items-center oui-px-3 oui-py-4"
+        onClick={onItemClick}
+      >
+        {customRender({ name: name, href: href })}
+      </div>
+    );
+  }
   return (
     <div
       className="oui-flex oui-items-center oui-gap-2 oui-px-3 oui-py-4"
       onClick={onItemClick}
     >
-      <div>{item.icon}</div>
+      <div>{icon}</div>
       <div className="oui-text-base oui-font-semibold oui-text-base-contrast-80">
-        {item.name}
+        {name}
       </div>
-      {item.trailing}
+      {trailing}
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import { ElementType, ReactElement } from "react";
 import { ExtensionProvider } from "./pluginContext";
-import { ExtensionPosition } from "./types";
 import { OrderlyExtensionRegistry } from "./registry";
+import { ExtensionPosition } from "./types";
 
 /**
  * @name ExtensionOptions
@@ -43,26 +43,16 @@ type ExtensionRenderComponentType<Props> =
 // ) => void;
 
 export const installExtension = <Props,>(
-  options: ExtensionOptions<Props>
+  options: ExtensionOptions<Props>,
 ): ((component: ExtensionRenderComponentType<Props>) => void) => {
-  
   return (component) => {
     const registry = OrderlyExtensionRegistry.getInstance();
     console.log("[plugin] install:", options.name);
-
     registry.register<Props>({
       name: options.name,
       positions: options.positions,
       __isInternal: !!options.__isInternal,
       builder: options.builder,
-
-      // render: (props) => {
-      //   console.log("[plugin] render:", options.name);
-      //   const children =
-      //     typeof component === "function" ? component(props) : component;
-
-      //   return <ExtensionProvider>{children}</ExtensionProvider>;
-      // },
       render: component,
     });
   };
@@ -73,7 +63,7 @@ export const installExtension = <Props,>(
  */
 export const setExtensionBuilder = <Props extends unknown = {}>(
   position: ExtensionPosition,
-  builder: () => Props
+  builder: () => Props,
 ) => {
   const registry = OrderlyExtensionRegistry.getInstance();
   registry.setBuilder(position, builder);

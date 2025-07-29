@@ -32,7 +32,7 @@ export const markets = {
   // TODO: use markets.column.market and common.volume
   "markets.column.market&Volume": "Market / Volume",
   // TODO: confirm "change" first letter capital
-  "markets.column.price&Change": "Price / change",
+  "markets.column.price&Change": "Price / Change",
   "markets.column.last": "Last",
   "markets.column.24hPercentage": "24h%",
 

@@ -668,6 +668,11 @@ const useOrderEntry = (
     return result;
   };
 
+  // reset error state when order type change
+  useEffect(() => {
+    resetMetaState();
+  }, [formattedOrder.order_type]);
+
   return {
     ...orderEntryActions,
     submit: submitOrder,

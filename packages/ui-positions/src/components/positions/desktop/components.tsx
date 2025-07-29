@@ -1,5 +1,6 @@
 import React from "react";
 import { ComputedAlgoOrder, useLocalStorage } from "@orderly.network/hooks";
+import { useSymbolLeverage } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { PositionType } from "@orderly.network/types";
 import { cn, EditIcon, Text, toast, useScreen } from "@orderly.network/ui";
@@ -12,7 +13,7 @@ import {
   TPSLSheetId,
   TPSLDetailSheetId,
 } from "@orderly.network/ui-tpsl";
-import { usePositionsRowContext } from "./positionRowContext";
+import { usePositionsRowContext } from "../positionsRowContext";
 
 // ------------ TP/SL Price input end------------
 export const TPSLButton = () => {
@@ -170,5 +171,25 @@ export const AddIcon = (props: { positionType: PositionType }) => {
     >
       Add
     </Text>
+  );
+};
+
+export const LeverageBadge = ({ symbol }: { symbol: string }) => {
+  if (!symbol) return null;
+  return (
+    <div className="oui-flex oui-h-[18px] oui-items-center oui-gap-1 oui-rounded oui-bg-white/[0.06] oui-px-2 oui-text-2xs oui-font-semibold oui-text-base-contrast-36">
+      <Text>Cross</Text>
+      <LeverageDisplay symbol={symbol} />
+    </div>
+  );
+};
+
+export const LeverageDisplay = ({ symbol }: { symbol: string }) => {
+  const leverage = useSymbolLeverage(symbol);
+
+  return (
+    <Text.numeral dp={0} size="2xs" unit="X">
+      {leverage !== "-" ? leverage : "--"}
+    </Text.numeral>
   );
 };

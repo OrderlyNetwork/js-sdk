@@ -68,6 +68,9 @@ export const trading = {
   "trading.asset&Margin": "Asset & Margin",
 
   "trading.fundingRate.predFundingRate": "Pred. funding rate",
+  "trading.fundingRate.predFundingRate.interval": "Interval",
+  "trading.fundingRate.predFundingRate.cap": "Funding cap",
+  "trading.fundingRate.predFundingRate.floor": "floor",
 };
 
 export type Trading = typeof trading;

@@ -14,8 +14,8 @@ import {
 import { SharePnLOptions, SharePnLDialogId } from "@orderly.network/ui-share";
 import { Decimal } from "@orderly.network/utils";
 import { FundingFeeButton } from "../../fundingFeeHistory/fundingFeeButton";
-import { CloseButton } from "./closeButton";
-import { TPSLButton } from "./components";
+import { ClosePositionWidget } from "../closePosition";
+import { TPSLButton, LeverageBadge } from "./components";
 import {
   renderPriceInput,
   renderQuantity,
@@ -58,24 +58,27 @@ export const useColumn = (config: ColumnConfig) => {
               width={4}
               height={20}
               className={cn(
-                "oui-rounded-[1px]",
+                "oui-h-[38px] oui-rounded-[1px]",
                 record.position_qty > 0
                   ? "oui-bg-trade-profit"
                   : "oui-bg-trade-loss",
               )}
             />
-            <Text.formatted
-              // rule={"symbol"}
-              formatString="base-type"
-              className="oui-cursor-pointer"
-              onClick={(e) => {
-                onSymbolChange?.({ symbol: value } as API.Symbol);
-                e.stopPropagation();
-                e.preventDefault();
-              }}
-            >
-              {`${value.split("_")[1]}-PERP`}
-            </Text.formatted>
+            <Flex direction="column" itemAlign="start">
+              <Text.formatted
+                // rule={"symbol"}
+                formatString="base-type"
+                className="oui-cursor-pointer"
+                onClick={(e) => {
+                  onSymbolChange?.({ symbol: value } as API.Symbol);
+                  e.stopPropagation();
+                  e.preventDefault();
+                }}
+              >
+                {`${value.split("_")[1]}-PERP`}
+              </Text.formatted>
+              <LeverageBadge symbol={value} />
+            </Flex>
           </Flex>
         ),
       },
@@ -305,7 +308,7 @@ export const useColumn = (config: ColumnConfig) => {
         render() {
           return (
             <Flex gapX={2} justify={"end"}>
-              <CloseButton />
+              <ClosePositionWidget />
             </Flex>
           );
         },

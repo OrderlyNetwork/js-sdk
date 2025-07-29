@@ -1,10 +1,10 @@
-import { PositionCellState } from "../positionCell/positionCell.script";
+import { useSymbolsInfo } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
+import { API } from "@orderly.network/types";
 import { modal } from "@orderly.network/ui";
 import { PositionTPSLSheet } from "@orderly.network/ui-tpsl";
-import { API } from "@orderly.network/types";
-import { useSymbolsInfo } from "@orderly.network/hooks";
-import { usePositionsRowContext } from "../../desktop/positionRowContext";
-import { useTranslation } from "@orderly.network/i18n";
+import { usePositionsRowContext } from "../../positionsRowContext";
+import { PositionCellState } from "../positionCell/positionCell.script";
 
 export const useTpSLBtnScript = (props: { state: PositionCellState }) => {
   const symbolInfo: API.SymbolExt = useSymbolsInfo()[props.state.item.symbol]();

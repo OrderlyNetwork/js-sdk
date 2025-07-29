@@ -13,3 +13,4 @@ export {
   calcTPSL_ROI,
 } from "../orderly/useTakeProfitAndStopLoss/tp_slUtils";
 export { formatNumber } from "./orderEntryHelper";
+export { fetcher } from "./fetcher";

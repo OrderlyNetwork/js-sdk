@@ -10,7 +10,6 @@ import {
 import {
   Button,
   Either,
-  Match,
   modal,
   Text,
   toast,
@@ -167,6 +166,18 @@ const AuthGuard = (props: PropsWithChildren<AuthGuardProps>) => {
   );
 };
 
+const ModalTitle = () => {
+  const { t } = useTranslation();
+  const { state } = useAccount();
+  if (state.status < AccountStatusEnum.SignedIn) {
+    return <Text>{t("connector.createAccount")}</Text>;
+  }
+  if (state.status < AccountStatusEnum.EnableTrading) {
+    return <Text>{t("connector.enableTrading")}</Text>;
+  }
+  return <Text>{t("connector.connectWallet")}</Text>;
+};
+
 const DefaultFallback = (props: {
   status: AccountStatusEnum;
   wrongNetwork: boolean;
@@ -185,10 +196,14 @@ const DefaultFallback = (props: {
   const matches = useMediaQuery(MEDIA_TABLET);
 
   const onConnectOrderly = () => {
-    modal.show(matches ? WalletConnectorSheetId : WalletConnectorModalId).then(
-      (r) => console.log(r),
-      (error) => console.log(error),
-    );
+    modal
+      .show(matches ? WalletConnectorSheetId : WalletConnectorModalId, {
+        title: <ModalTitle />,
+      })
+      .then(
+        (r) => console.log(r),
+        (error) => console.log(error),
+      );
   };
 
   const onConnectWallet = async () => {
@@ -257,58 +272,106 @@ const DefaultFallback = (props: {
     );
   }
 
+  if (props.status <= AccountStatusEnum.NotConnected || props.disabledConnect) {
+    return (
+      <StatusInfo
+        size="lg"
+        onClick={() => {
+          onConnectWallet();
+        }}
+        // fullWidth
+        variant={props.disabledConnect ? undefined : "gradient"}
+        angle={45}
+        description={descriptions?.connectWallet}
+        disabled={props.disabledConnect}
+        {...buttonProps}
+      >
+        {labels.connectWallet}
+      </StatusInfo>
+    );
+  }
+
+  if (props.status <= AccountStatusEnum.NotSignedIn) {
+    return (
+      <StatusInfo
+        size="lg"
+        onClick={() => {
+          onConnectOrderly();
+        }}
+        // fullWidth
+        angle={45}
+        description={descriptions?.signin}
+        {...buttonProps}
+      >
+        {labels.signin}
+      </StatusInfo>
+    );
+  }
+
   return (
-    <Match
-      value={props.status}
-      case={(value: AccountStatusEnum) => {
-        if (value <= AccountStatusEnum.NotConnected || props.disabledConnect) {
-          return (
-            <StatusInfo
-              size="lg"
-              onClick={() => {
-                onConnectWallet();
-              }}
-              // fullWidth
-              variant={props.disabledConnect ? undefined : "gradient"}
-              angle={45}
-              description={descriptions?.connectWallet}
-              disabled={props.disabledConnect}
-              {...buttonProps}
-            >
-              {labels.connectWallet}
-            </StatusInfo>
-          );
-        }
-        if (value <= AccountStatusEnum.NotSignedIn) {
-          return (
-            <StatusInfo
-              size="lg"
-              onClick={() => {
-                onConnectOrderly();
-              }}
-              // fullWidth
-              angle={45}
-              description={descriptions?.signin}
-              {...buttonProps}
-            >
-              {labels.signin}
-            </StatusInfo>
-          );
-        }
-      }}
-      default={
-        <StatusInfo
-          size="lg"
-          // fullWidth
-          description={descriptions?.enableTrading}
-          {...buttonProps}
-          onClick={() => onConnectOrderly()}
-        >
-          {labels.enableTrading}
-        </StatusInfo>
-      }
-    />
+    <StatusInfo
+      size="lg"
+      // fullWidth
+      description={descriptions?.enableTrading}
+      {...buttonProps}
+      onClick={() => onConnectOrderly()}
+    >
+      {labels.enableTrading}
+    </StatusInfo>
   );
+
+  // return (
+  //   <Match
+  //     value={props.status}
+  //     case={(value: AccountStatusEnum) => {
+  //       if (value <= AccountStatusEnum.NotConnected || props.disabledConnect) {
+  //         return (
+  //           <StatusInfo
+  //             size="lg"
+  //             onClick={() => {
+  //               onConnectWallet();
+  //             }}
+  //             // fullWidth
+  //             variant={props.disabledConnect ? undefined : "gradient"}
+  //             angle={45}
+  //             description={descriptions?.connectWallet}
+  //             disabled={props.disabledConnect}
+  //             {...buttonProps}
+  //           >
+  //             {labels.connectWallet}
+  //           </StatusInfo>
+  //         );
+  //       }
+  //       if (value <= AccountStatusEnum.NotSignedIn) {
+  //         return (
+  //           <StatusInfo
+  //             size="lg"
+  //             onClick={() => {
+  //               onConnectOrderly();
+  //             }}
+  //             // fullWidth
+  //             angle={45}
+  //             description={descriptions?.signin}
+  //             {...buttonProps}
+  //           >
+  //             {labels.signin}
+  //           </StatusInfo>
+  //         );
+  //       }
+  //     }}
+  //     default={
+  //       <StatusInfo
+  //         size="lg"
+  //         // fullWidth
+  //         description={descriptions?.enableTrading}
+  //         {...buttonProps}
+  //         onClick={() => onConnectOrderly()}
+  //       >
+  //         {labels.enableTrading}
+  //       </StatusInfo>
+  //     }
+  //   />
+  // );
 };
 
 AuthGuard.displayName = "AuthGuard";

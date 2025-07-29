@@ -1,6 +1,7 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { PnlLineChart, VolBarChart, PnLBarChart } from "@orderly.network/chart";
 import { Box } from "@orderly.network/ui";
+
 const pnlBarData = [
   {
     date: "2023-05-01",
@@ -86,63 +87,62 @@ const pnlBarData = [
 
 const pnlLineData = [
   {
-      "broker_id": "demo",
-      "date": "2024-11-13",
-      "perp_volume": 88156.047958,
-      "pnl": -867.906318,
-      "account_value": 6460.62474,
-      "snapshot_time": 1731554721345
+    broker_id: "demo",
+    date: "2024-11-13",
+    perp_volume: 88156.047958,
+    pnl: -867.906318,
+    account_value: 6460.62474,
+    snapshot_time: 1731554721345,
   },
   {
-      "broker_id": "demo",
-      "date": "2024-11-14",
-      "perp_volume": 0,
-      "pnl": 672.715952,
-      "account_value": 7133.340692,
-      "snapshot_time": 1731629860129
+    broker_id: "demo",
+    date: "2024-11-14",
+    perp_volume: 0,
+    pnl: 672.715952,
+    account_value: 7133.340692,
+    snapshot_time: 1731629860129,
   },
   {
-      "broker_id": "demo",
-      "date": "2024-11-15",
-      "perp_volume": 73868.165996,
-      "pnl": 521.941453,
-      "account_value": 7655.282145,
-      "snapshot_time": 1731715694458
+    broker_id: "demo",
+    date: "2024-11-15",
+    perp_volume: 73868.165996,
+    pnl: 521.941453,
+    account_value: 7655.282145,
+    snapshot_time: 1731715694458,
   },
   {
-      "broker_id": "demo",
-      "date": "2024-11-16",
-      "perp_volume": 302.01696,
-      "pnl": -285.395666,
-      "account_value": 7369.886479,
-      "snapshot_time": 1731801672920
+    broker_id: "demo",
+    date: "2024-11-16",
+    perp_volume: 302.01696,
+    pnl: -285.395666,
+    account_value: 7369.886479,
+    snapshot_time: 1731801672920,
   },
   {
-      "broker_id": "demo",
-      "date": "2024-11-17",
-      "perp_volume": 0,
-      "pnl": 106.605306,
-      "account_value": 7476.491785,
-      "snapshot_time": 1731888091773
+    broker_id: "demo",
+    date: "2024-11-17",
+    perp_volume: 0,
+    pnl: 106.605306,
+    account_value: 7476.491785,
+    snapshot_time: 1731888091773,
   },
   {
-      "broker_id": "demo",
-      "date": "2024-11-18",
-      "perp_volume": 308.9625,
-      "pnl": -827.6147,
-      "account_value": 6648.877085,
-      "snapshot_time": 1731974577854
+    broker_id: "demo",
+    date: "2024-11-18",
+    perp_volume: 308.9625,
+    pnl: -827.6147,
+    account_value: 6648.877085,
+    snapshot_time: 1731974577854,
   },
   {
-      "broker_id": "demo",
-      "date": "2024-11-19",
-      "perp_volume": 0,
-      "pnl": 496.171504,
-      "account_value": 7145.048589,
-      "snapshot_time": 1731974577854
-  }
+    broker_id: "demo",
+    date: "2024-11-19",
+    perp_volume: 0,
+    pnl: 496.171504,
+    account_value: 7145.048589,
+    snapshot_time: 1731974577854,
+  },
 ];
-
 
 const meta: Meta<typeof PnlLineChart> = {
   title: "Chart/Chart",
@@ -158,20 +158,17 @@ const meta: Meta<typeof PnlLineChart> = {
     ),
   ],
   args: {
-    data: pnlLineData
+    data: pnlLineData,
   },
 };
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-
-
 export const Default: Story = {};
 
 export const pnlBar: Story = {
   render: () => {
-    
     return <PnLBarChart data={pnlBarData} />;
   },
 };

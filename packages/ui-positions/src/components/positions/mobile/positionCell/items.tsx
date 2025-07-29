@@ -13,6 +13,7 @@ import {
 import { SharePnLBottomSheetId } from "@orderly.network/ui-share";
 import { Decimal } from "@orderly.network/utils";
 import { FundingFeeButton } from "../../../fundingFeeHistory/fundingFeeButton";
+import { LeverageBadge } from "../../desktop/components";
 import { AddIcon, TPSLEditIcon } from "../../desktop/components";
 import { ShareButtonWidget } from "../../desktop/shareButton";
 import { PositionCellState } from "./positionCell.script";
@@ -27,9 +28,12 @@ export const SymbolToken: FC<PositionCellState> = (props) => {
       formatString="base-type"
       size="2xs"
       suffix={
-        <Badge color={isBuy ? "success" : "danger"} size="xs">
-          {isBuy ? t("common.long") : t("common.short")}
-        </Badge>
+        <div className="oui-flex oui-items-center oui-gap-1">
+          <Badge color={isBuy ? "success" : "danger"} size="xs">
+            {isBuy ? t("common.long") : t("common.short")}
+          </Badge>
+          <LeverageBadge symbol={item.symbol} />
+        </div>
       }
       showIcon
       onClick={() => {
@@ -297,10 +301,10 @@ export const FundingFee: FC<PositionCellState> = (props) => {
   const { t } = useTranslation();
   const fundingFeeEndTime = useRef(Date.now().toString());
   return (
-    <Flex justify={"end"} className="oui-text-2xs oui-w-full">
+    <Flex justify={"end"} className="oui-w-full oui-text-2xs">
       <Text intensity={36}>{t("funding.fundingFee")}: </Text>
       <FundingFeeButton
-        fee={props.item.fundingFee}
+        fee={props.item.fundingFee!}
         symbol={props.item.symbol}
         start_t={props.item.timestamp.toString()}
         end_t={fundingFeeEndTime.current}

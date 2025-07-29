@@ -19,7 +19,7 @@ export const SettingDesktop: FC<SettingScriptReturns> = (props) => {
         width={"100%"}
         itemAlign={"center"}
         pt={4}
-        className="oui-font-semibold oui-border-t-2 oui-border-line-6"
+        className="oui-border-t-2 oui-border-line-6 oui-font-semibold"
       >
         <Flex direction={"column"} itemAlign={"start"} className="oui-flex-1">
           <Text intensity={80} size="base">

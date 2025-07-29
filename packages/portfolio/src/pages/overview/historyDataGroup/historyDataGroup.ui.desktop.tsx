@@ -1,5 +1,5 @@
-import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
+import { AssetHistorySideEnum } from "@orderly.network/types";
 import {
   ArrowDownSquareFillIcon,
   ArrowLeftRightSquareFill,
@@ -10,12 +10,11 @@ import {
   TabPanel,
   Tabs,
 } from "@orderly.network/ui";
-import { ArrowLeftRightIcon } from "@orderly.network/ui";
 import { TransferHistoryWidget } from "../TransferHistory";
 import { AssetHistoryWidget } from "../assetHistory";
 import { DistributionHistoryWidget } from "../distribution";
 import { FundingHistoryWidget } from "../funding";
-import { TabName } from "./useState.script";
+import { TabName } from "./historyDataGroup.script";
 
 export const HistoryDataGroupDesktop = (props: {
   active?: TabName;
@@ -40,14 +39,14 @@ export const HistoryDataGroupDesktop = (props: {
           icon={<ArrowDownSquareFillIcon />}
           value={"deposit"}
         >
-          <AssetHistoryWidget side="deposit" />
+          <AssetHistoryWidget side={AssetHistorySideEnum.DEPOSIT} />
         </TabPanel>
         <TabPanel
           title={t("common.withdrawals")}
           icon={<ArrowUpSquareFillIcon />}
           value={"withdraw"}
         >
-          <AssetHistoryWidget side="withdraw" />
+          <AssetHistoryWidget side={AssetHistorySideEnum.WITHDRAW} />
         </TabPanel>
         <TabPanel
           title={t("common.funding")}

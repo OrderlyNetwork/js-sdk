@@ -214,6 +214,38 @@ export declare namespace API {
     negative: number;
   }
 
+  export interface FundingDetails {
+    symbol: string;
+    quote_min: number;
+    quote_max: number;
+    quote_tick: number;
+    base_min: number;
+    base_max: number;
+    base_tick: number;
+    min_notional: number;
+    price_range: number;
+    price_scope: number;
+    std_liquidation_fee: number;
+    liquidator_fee: number;
+    claim_insurance_fund_discount: number;
+    funding_period: number;
+    cap_funding: number;
+    floor_funding: number;
+    interest_rate: number;
+    created_time: number;
+    updated_time: number;
+    liquidation_tier: number;
+    cap_ir: number;
+    floor_ir: number;
+    mark_index_price_deviation_floor: number;
+    mark_index_price_deviation_cap: number;
+    global_max_oi_cap: number;
+    base_mmr: number;
+    base_imr: number;
+    imr_factor: number;
+    deviation_factor: number;
+  }
+
   export interface FundingHistory {
     symbol: string;
     data_start_time: string;
@@ -369,6 +401,8 @@ export declare namespace API {
     network_infos: NetworkInfos;
     token_infos: TokenInfo[];
     nativeToken?: TokenInfo;
+    address?: string;
+    symbol?: string;
     // nativeToken
   }
 
@@ -392,21 +426,20 @@ export declare namespace API {
   }
 
   export interface TokenInfo {
-    address: string;
+    address?: string;
     base_weight: number;
-    decimals: number;
+    decimals?: number;
     /** token decimals */
-    token_decimal: number;
-    discount_factor: number;
-    display_name: string;
+    token_decimal?: number;
+    discount_factor?: number | null;
+    display_name?: string;
     haircut: number;
-    is_collateral: true;
-    symbol: string;
+    is_collateral: boolean;
+    symbol?: string;
     user_max_qty: number;
-    precision: number;
+    precision?: number;
     minimum_withdraw_amount: number;
-
-    swap_enable: boolean;
+    swap_enable?: boolean;
   }
 
   export interface Chain {

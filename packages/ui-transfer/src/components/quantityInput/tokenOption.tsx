@@ -16,12 +16,14 @@ interface TokenOptionProps {
   isActive: boolean;
   index?: number;
   displayType?: "balance" | "vaultBalance";
+  open?: boolean;
 }
 
 export const TokenOption: React.FC<TokenOptionProps> = (props) => {
-  const { token, isActive, displayType, onTokenChange, fetchBalance } = props;
+  const { token, isActive, displayType, onTokenChange, fetchBalance, open } =
+    props;
   const { symbol, precision, insufficientBalance } = token;
-  const { balance, loading } = useBalance(token, fetchBalance);
+  const { balance, loading } = useBalance(token, fetchBalance, open);
 
   const showBalance = typeof fetchBalance === "function";
 
@@ -46,7 +48,7 @@ export const TokenOption: React.FC<TokenOptionProps> = (props) => {
       >
         <Flex itemAlign="center" gapX={1}>
           <TokenIcon name={symbol} className="oui-size-[16px] oui-opacity-50" />
-          <Text intensity={36}>{symbol}</Text>
+          <Text intensity={36}>{token.label}</Text>
           <Badge color="neutral" size="xs">
             {t("transfer.withdraw.InsufficientVaultBalance")}
           </Badge>
@@ -105,7 +107,7 @@ export const TokenOption: React.FC<TokenOptionProps> = (props) => {
             isActive && "oui-text-base-contrast-80",
           )}
         >
-          {symbol}
+          {token.label}
         </Text>
       </Flex>
       {renderValue()}

@@ -25,7 +25,7 @@ export type QuantityInputProps = {
   status?: InputStatus;
   hintMessage?: string;
   onValueChange?: (value: string) => void;
-  onTokenChange?: (token: API.TokenInfo) => void;
+  onTokenChange?: (token: any) => void;
   fetchBalance?: (token: string, decimals: number) => Promise<any>;
   loading?: boolean;
   testId?: string;
@@ -89,6 +89,9 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
       }
     };
 
+    const selectable = tokens.length > 1;
+    const selectOpen = selectable ? open : false;
+
     const optionRenderer = (item: any) => {
       const isActive = item.symbol === token?.symbol;
       return (
@@ -101,6 +104,7 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
             onTokenChange?.(item);
             setOpen(false);
           }}
+          open={selectOpen}
         />
       );
     };
@@ -120,12 +124,10 @@ export const QuantityInput = forwardRef<HTMLInputElement, QuantityInputProps>(
       </Box>
     );
 
-    const selectable = tokens.length > 1;
-
     const suffix = (
       <div className="oui-absolute oui-right-0">
         <Select.tokens
-          open={selectable ? open : false}
+          open={selectOpen}
           onOpenChange={setOpen}
           disabled={rest.disabled}
           variant="text"

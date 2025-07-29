@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   useAccount,
   useConfig,
+  useLocalStorage,
   useMediaQuery,
   useOrderEntry_deprecated,
   useSymbolsInfo,
@@ -14,6 +15,7 @@ import {
   MEDIA_TABLET,
   OrderSide,
   OrderType,
+  TradingviewFullscreenKey,
 } from "@orderly.network/types";
 import { modal, toast } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
@@ -54,13 +56,13 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
     customCssUrl: tradingViewCustomCssUrl,
     overrides: customerOverrides,
     studiesOverrides: customerStudiesOverrides,
-    fullscreen,
     symbol,
     theme,
     loadingScreen: customerLoadingScreen,
     mode,
     colorConfig: customerColorConfig,
     locale = defaultLocale,
+    classNames,
   } = props;
 
   const localeCode = useLocaleCode();
@@ -70,6 +72,10 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
   const { state: accountState } = useAccount();
   const [side, setSide] = useState<OrderSide>(OrderSide.SELL);
   const symbolsInfo = useSymbolsInfo();
+  const [fullscreen, setFullscreen] = useLocalStorage(
+    TradingviewFullscreenKey,
+    false,
+  );
 
   const { onSubmit, submitting } = useOrderEntry_deprecated(
     {
@@ -194,6 +200,15 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
     displayControlState,
   );
 
+  const onFullScreenChange = () => {
+    if (fullscreen) {
+      setFullscreen(false);
+    } else {
+      setFullscreen(true);
+    }
+    props.onFullScreenChange?.(!fullscreen);
+  };
+
   const changeInterval = (newInterval: string) => {
     if (!chart.current) {
       return;
@@ -283,7 +298,8 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
       // options example: https://www.tradingview.com/widget-docs/widgets/charts/advanced-chart/
       // ChartingLibraryWidgetOptions
       const options: any = {
-        fullscreen: fullscreen ?? false,
+        // fullscreen: fullscreen ?? false,
+        fullscreen: false,
         autosize: true,
         symbol: withExchangePrefix(symbol!),
         locale: typeof locale === "function" ? locale(localeCode) : locale,
@@ -339,6 +355,23 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
   ]);
 
   useEffect(() => {
+    ws.on(
+      "status:change",
+      (message: any) => {
+        if (!message.isPrivate && message.isReconnect) {
+          if (
+            typeof (window as any).onResetCacheNeededCallback === "function"
+          ) {
+            (window as any).onResetCacheNeededCallback();
+            chart.current?.instance.activeChart()?.resetData();
+          }
+        }
+      },
+      "tradingview",
+    );
+  }, [ws]);
+
+  useEffect(() => {
     if (chart.current && chart.current.instance) {
       chart.current.instance.onChartReady(() => {
         console.log("-- chart ready");
@@ -376,5 +409,8 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
     openChartSetting,
     openChartIndicators,
     symbol,
+    onFullScreenChange,
+    classNames,
+    fullscreen,
   };
 }

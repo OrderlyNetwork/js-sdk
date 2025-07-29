@@ -667,3 +667,17 @@ export const MobileTooltip: FC<
     </Tooltip>
   );
 };
+
+export const Fee: FC<OrderCellState> = (props) => {
+  const { t } = useTranslation();
+  return (
+    <Flex justify="end" gapX={1} mt={1}>
+      <Text size="2xs" intensity={36}>
+        {t("common.fee")}:
+      </Text>
+      <Text size="2xs" intensity={80}>
+        {props.item?.total_fee ?? "--"}
+      </Text>
+    </Flex>
+  );
+};

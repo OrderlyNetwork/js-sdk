@@ -9,6 +9,7 @@ import {
 import {
   Button,
   cn,
+  Flex,
   formatAddress,
   Text,
   useScreen,
@@ -16,6 +17,7 @@ import {
 import { AuthGuard } from "@orderly.network/ui-connector";
 import { usePrivyWallet } from "../providers/privy/privyWalletProvider";
 import { RenderPrivyTypeIcon } from "./common";
+import { LinkDeviceMobile } from "./linkDevice";
 
 export function UserCenter(props: any) {
   const { accountState: state } = props;
@@ -56,17 +58,16 @@ const RenderUserCenter = (props: any) => {
   // if (accountStatus.status <= ) {}
   if (state.status === AccountStatusEnum.EnableTradingWithoutConnected) {
     return (
-      <Button
-        size="md"
-        variant="gradient"
-        angle={45}
-        data-testid="oui-testid-nav-bar-address-btn"
-        className="oui-flex oui-items-center oui-justify-center oui-gap-2"
-      >
-        <Text.formatted rule="address" className="oui-text-[rgba(0,0,0,.88)]">
-          {formatAddress(userAddress!)}
-        </Text.formatted>
-      </Button>
+      <Flex className="oui-bg-base-5 oui-px-[7px] oui-rounded-[6px] oui-gap-[6px]">
+        <LinkDeviceMobile>
+          <Text.formatted
+            rule="address"
+            className="oui-text-base-contrast oui-text-xs"
+          >
+            {formatAddress(userAddress!)}
+          </Text.formatted>
+        </LinkDeviceMobile>
+      </Flex>
     );
   }
   if (state.status <= AccountStatusEnum.NotConnected || disabled) {

@@ -62,7 +62,7 @@ export const widget = {
   "restrictedInfo.accessRestricted.agree": "I understand and agree",
 
   "subAccount.modal.title": "Switch account",
-  "subAccount.modal.switch.success.description": "Switch account successfully",
+  "subAccount.modal.switch.success.description": "Account switched",
   "subAccount.modal.mainAccount.title": "Main account",
   "subAccount.modal.subAccounts.title": "Sub-accounts",
   "subAccount.modal.current": "Current",

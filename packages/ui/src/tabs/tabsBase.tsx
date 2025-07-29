@@ -199,22 +199,27 @@ const TabsTrigger = React.forwardRef<
     </TabsPrimitive.Trigger>
   );
 });
+
 TabsTrigger.displayName = TabsPrimitive.Trigger.displayName;
 
 const TabsContent = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.Content> &
     VariantProps<typeof tabsVariants>
->(({ className, size, ...props }, ref) => {
+>((oriProps, ref) => {
+  const { className, size, children, ...props } = oriProps;
   const { content } = tabsVariants({ size });
   return (
     <TabsPrimitive.Content
       ref={ref}
       className={content({ className })}
       {...props}
-    />
+    >
+      {children}
+    </TabsPrimitive.Content>
   );
 });
+
 TabsContent.displayName = TabsPrimitive.Content.displayName;
 
 export { TabsBase, TabsList, TabsTrigger, TabsContent, tabsVariants };

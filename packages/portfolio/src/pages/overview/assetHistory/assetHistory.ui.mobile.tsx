@@ -15,7 +15,7 @@ import {
 import {
   AssetTarget,
   type AssetHistoryScriptReturn,
-} from "../assetChart/assetHistory.script";
+} from "./assetHistory.script";
 
 type AssetHistoryMobileProps = AssetHistoryScriptReturn;
 
@@ -31,7 +31,7 @@ export const AssetHistoryMobile: FC<AssetHistoryMobileProps> = (props) => {
     isDeposit,
     isWeb3Wallet,
   } = props;
-  const { dateRange } = queryParameter;
+  const { dateRange, target } = queryParameter;
   const { t } = useTranslation();
 
   const options = useMemo(() => {
@@ -51,6 +51,7 @@ export const AssetHistoryMobile: FC<AssetHistoryMobileProps> = (props) => {
     const status = props.isWeb3Wallet ? item.trans_status : item.status;
     const statusMap = {
       [AssetHistoryStatusEnum.NEW]: t("assetHistory.status.pending"),
+      [AssetHistoryStatusEnum.PENDING]: t("assetHistory.status.pending"),
       [AssetHistoryStatusEnum.CONFIRM]: t("assetHistory.status.confirm"),
       [AssetHistoryStatusEnum.PROCESSING]: t("assetHistory.status.processing"),
       [AssetHistoryStatusEnum.COMPLETED]: t("assetHistory.status.completed"),
@@ -198,7 +199,7 @@ export const AssetHistoryMobile: FC<AssetHistoryMobileProps> = (props) => {
             type: "picker",
             name: "target",
             options: options,
-            value: props.target,
+            value: target,
             size: "md",
           },
           {

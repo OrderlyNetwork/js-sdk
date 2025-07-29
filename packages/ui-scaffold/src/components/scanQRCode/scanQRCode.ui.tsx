@@ -16,7 +16,6 @@ type ScanQRCodeProps = UseScanQRCodeScriptReturn;
 
 export const ScanQRCode: FC<ScanQRCodeProps> = (props) => {
   const { t } = useTranslation();
-
   return (
     <>
       <Tooltip

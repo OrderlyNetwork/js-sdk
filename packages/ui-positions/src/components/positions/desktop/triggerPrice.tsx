@@ -8,8 +8,8 @@ import {
   PositionType,
 } from "@orderly.network/types";
 import { cn, Flex, Text, Tooltip } from "@orderly.network/ui";
-import { AddIcon, TPSLEditIcon } from "./components";
-import { usePositionsRowContext } from "./positionRowContext";
+import { usePositionsRowContext } from "../positionsRowContext";
+import { TPSLEditIcon, AddIcon } from "./components";
 
 export const TriggerPrice: FC<{
   stopLossPrice?: number;

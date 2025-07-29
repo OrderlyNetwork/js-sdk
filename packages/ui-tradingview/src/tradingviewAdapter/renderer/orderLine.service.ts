@@ -1,6 +1,7 @@
+import { i18n } from "@orderly.network/i18n";
+import { Decimal, commify } from "@orderly.network/utils";
 import { IChartingLibraryWidget, IOrderLineAdapter } from "../charting_library";
 import useBroker from "../hooks/useBroker";
-import { Decimal, commify } from "@orderly.network/utils";
 import {
   SideType,
   AlgoType,
@@ -10,7 +11,7 @@ import {
   ChartPosition,
   ChartMode,
 } from "../type";
-import { TpslCalService } from "./tpslCal.service";
+import { CHART_QTY_DECIMAL, getOrderId } from "./order.util";
 import {
   getTpslTag,
   isActivatedPositionTpsl,
@@ -18,8 +19,7 @@ import {
   isPositionTpsl,
   isTpslOrder,
 } from "./tpsl.util";
-import { CHART_QTY_DECIMAL, getOrderId } from "./order.util";
-import { i18n, i18n } from "@orderly.network/i18n";
+import { TpslCalService } from "./tpslCal.service";
 
 export class OrderLineService {
   private instance: IChartingLibraryWidget;
@@ -30,7 +30,7 @@ export class OrderLineService {
 
   constructor(
     instance: IChartingLibraryWidget,
-    broker: ReturnType<typeof useBroker>
+    broker: ReturnType<typeof useBroker>,
   ) {
     this.instance = instance;
     this.pendingOrderLineMap = new Map();
@@ -52,7 +52,7 @@ export class OrderLineService {
   updatePositions(positions: ChartPosition[] | null) {
     const changed = this.tpslCalService.recalculatePnl(
       positions,
-      this.pendingOrders
+      this.pendingOrders,
     );
 
     this.pendingOrders
@@ -74,12 +74,12 @@ export class OrderLineService {
 
   cleanOldPendingOrders(newPendingOrders: any[]) {
     const newOrderIdSet = new Set(
-      newPendingOrders.map((order) => OrderLineService.getOrderId(order))
+      newPendingOrders.map((order) => OrderLineService.getOrderId(order)),
     );
 
     this.pendingOrderLineMap.forEach(
       (_, orderId) =>
-        !newOrderIdSet.has(orderId) && this.removePendingOrder(orderId)
+        !newOrderIdSet.has(orderId) && this.removePendingOrder(orderId),
     );
   }
 
@@ -151,7 +151,7 @@ export class OrderLineService {
     ) {
       if (pendingOrder.type === OrderType.LIMIT) {
         return `${i18n.t("orderEntry.orderType.stopLimit")} ${commify(
-          pendingOrder.price
+          pendingOrder.price,
         )}`;
       }
       return i18n.t("orderEntry.orderType.stopMarket");
@@ -188,7 +188,7 @@ export class OrderLineService {
   getTPSLText(pendingOrder: any) {
     const tpslTypeText = getTpslTag(
       pendingOrder,
-      this.tpslCalService.getQuantityTpslNoMap()
+      this.tpslCalService.getQuantityTpslNoMap(),
     );
 
     if (tpslTypeText) {
@@ -208,7 +208,7 @@ export class OrderLineService {
       }
       if (isActivatedQuantityTpsl(pendingOrder)) {
         const qty = new Decimal(pendingOrder.quantity).minus(
-          pendingOrder.executed ?? 0
+          pendingOrder.executed ?? 0,
         );
         const per = qty
           .div(new Decimal(pendingOrder.position_qty!))
@@ -275,7 +275,7 @@ export class OrderLineService {
 
     if (
       [OrderCombinationType.LIMIT, OrderCombinationType.BRACKET_LIMIT].includes(
-        orderCombinationType
+        orderCombinationType,
       )
     ) {
       return "price";

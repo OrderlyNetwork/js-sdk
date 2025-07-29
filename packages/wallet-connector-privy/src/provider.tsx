@@ -12,7 +12,7 @@ import { PrivyClientConfig } from "@privy-io/react-auth";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import { type Chain, defineChain } from "viem";
 import { mainnet } from "viem/chains";
-import { Chains, useSWR } from "@orderly.network/hooks";
+import { Chains, fetcher, useSWR } from "@orderly.network/hooks";
 import {
   AbstractChains,
   AbstractTestnetChainInfo,
@@ -58,7 +58,7 @@ const fetchChainInfo = async (url: string) => {
   return response.json();
 };
 
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
+// const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 const formatSwapChainInfo = (data: any = {}) => {
   return Object.keys(data).map((key) => {
@@ -179,6 +179,7 @@ interface WalletConnectorPrivyProps extends PropsWithChildren {
   headerProps?: {
     mobile: React.ReactNode;
   };
+  enableSwapDeposit?: boolean;
 }
 
 const defaultPrivyLoginMethod = [
@@ -251,22 +252,24 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     return chainTypeObj;
   }, [initChains]);
 
-  const { data: mainnetChainInfoRes } = useSWR(
-    !props.customChains ? "https://api.orderly.org/v1/public/chain_info" : null,
-    fetcher,
-    commonSwrOpts,
-  );
-
-  const { data: testChainInfoRes } = useSWR(
-    !props.customChains
-      ? "https://testnet-api.orderly.org/v1/public/chain_info"
+  const { data: swapChainInfoRes, isLoading: swapLoading } = useSWR(
+    !props.customChains && props.enableSwapDeposit
+      ? "https://fi-api.woo.org/swap_support"
       : null,
     fetcher,
     commonSwrOpts,
   );
 
-  const { data: swapChainInfoRes } = useSWR(
-    !props.customChains ? "https://fi-api.woo.org/swap_support" : null,
+  const { data: mainnetChainInfos } = useSWR(
+    !props.customChains ? "https://api.orderly.org/v1/public/chain_info" : null,
+    fetcher,
+    commonSwrOpts,
+  );
+
+  const { data: testChainInfos } = useSWR(
+    !props.customChains
+      ? "https://testnet-api.orderly.org/v1/public/chain_info"
+      : null,
     fetcher,
     commonSwrOpts,
   );
@@ -369,24 +372,24 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
       return;
     }
 
-    if (!mainnetChainInfoRes || !testChainInfoRes || !swapChainInfoRes) {
+    if (!mainnetChainInfos || !testChainInfos || swapLoading) {
       return;
     }
 
     let testChainsList = [];
     let mainnetChainsList = [];
     try {
-      testChainsList = testChainInfoRes?.data?.rows;
+      testChainsList = testChainInfos;
       // TODO only for test, need remove this code
       testChainsList.push(AbstractTestnetChainInfo);
 
-      mainnetChainsList = mainnetChainInfoRes?.data?.rows;
+      mainnetChainsList = mainnetChainInfos;
 
       const testChains = processChainInfo(testChainsList);
       const mainnetChains = processChainInfo(mainnetChainsList);
 
       const swapChains = processChainInfo(
-        formatSwapChainInfo(swapChainInfoRes?.data),
+        formatSwapChainInfo(swapChainInfoRes?.data || {}),
       );
 
       const chains = [...testChains, ...mainnetChains];
@@ -408,9 +411,10 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     initRef.current = true;
   }, [
     props.customChains,
-    mainnetChainInfoRes,
-    testChainInfoRes,
+    mainnetChainInfos,
+    testChainInfos,
     swapChainInfoRes,
+    swapLoading,
   ]);
 
   useEffect(() => {
