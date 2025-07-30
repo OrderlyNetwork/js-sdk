@@ -61,6 +61,8 @@ const OrderlyAppProvider: React.FC<OrderlyAppProviderProps> = (props) => {
   );
 };
 
-OrderlyAppProvider.displayName = "OrderlyAppProvider";
+if (process.env.NODE_ENV !== "production") {
+  OrderlyAppProvider.displayName = "OrderlyAppProvider";
+}
 
 export { OrderlyAppProvider };
