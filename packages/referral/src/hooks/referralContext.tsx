@@ -11,6 +11,7 @@ import {
   RefferalAPI as API,
   usePrivateQuery,
   useDaily,
+  useMemoizedFn,
 } from "@orderly.network/hooks";
 import { XAxis, YAxis, BarStyle } from "../components";
 import { en } from "../locale/en-US";
@@ -27,7 +28,6 @@ export type OverwiteCard = {
   ref?: BuildNode;
   refClassName?: string;
   refIcon?: ReactNode;
-
   trader?: BuildNode;
   traderClassName?: string;
   traderIcon?: ReactNode;
@@ -165,15 +165,11 @@ export const ReferralProvider: FC<
     return (data?.referee_info.referer_code?.length || 0) > 0;
   }, [data?.referee_info]);
 
-  const userVolume = useMemo(() => {
-    const volume: any = {};
-
+  const userVolume = useMemo<UserVolumeType>(() => {
+    const volume: UserVolumeType = {};
     if (dailyVolume && dailyVolume.length > 0) {
       const now = formatYMDTime(new Date().toLocaleDateString());
-      const index = dailyVolume.findIndex((item: any) => {
-        const itemDate = item.date;
-        return itemDate === now;
-      });
+      const index = dailyVolume.findIndex((item) => item.date === now);
       let oneDayVolume = 0;
       if (index !== -1) {
         oneDayVolume = dailyVolume[index].perp_volume;
@@ -189,11 +185,11 @@ export const ReferralProvider: FC<
     return volume;
   }, [dailyVolume, volumeStatistics]);
 
-  const mutate = () => {
+  const mutate = useMemoizedFn(() => {
     volumeStatisticsMutate();
     dailyVolumeMutate();
     referralInfoMutate();
-  };
+  });
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -227,12 +223,12 @@ export const ReferralProvider: FC<
           referralLinkUrl,
           userVolume,
           dailyVolume,
-          showReferralPage,
+          showReferralPage: showReferralPage,
           onEnterTraderPage: enterTraderPage,
           onEnterAffiliatePage: enterAffiliatePage,
           chartConfig,
           overwrite,
-          splashPage,
+          splashPage: splashPage,
           isLoading,
         }}
       >
