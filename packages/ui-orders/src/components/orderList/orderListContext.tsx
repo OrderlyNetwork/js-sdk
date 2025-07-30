@@ -104,8 +104,6 @@ export const OrderListProvider: FC<
     },
   );
 
-  console.log("huhuhhuuuhuhu");
-
   const memoizedValue = useMemo<OrderListContextState>(() => {
     return {
       onCancelOrder,
