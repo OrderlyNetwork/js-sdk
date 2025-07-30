@@ -47,16 +47,20 @@ Orderly will continue to release support for more wallet connection libraries. S
 You can also customize wallet connections by implementing all the properties defined in `WalletConnectorContextState`. Define the component in the following format:
 
 ```typescript copy
-import {PropsWithChildren} from "react";
+import React from "react";
 import { WalletConnectorContext } from "@orderly.network/hooks";
+import type { WalletConnectorContextState } from "@orderly.network/hooks";
 
-export const WalletConnector = ({children}:PropsWithChildren)=>{
-  return (
-    <WalletConnectorContext.Provider value={{
-      /* 
+export const WalletConnector: React.FC<React.PropsWithChildren> = ({ children })=>{
+   const memoizedValue = useMemo<WalletConnectorContextState>(() => {
+    return {
+     /*
       * implement all properties defined in WalletConnectorContextState
       */
-    }}>
+    };
+  }, []);
+  return (
+    <WalletConnectorContext.Provider value={memoizedValue}>
       {children}
     </WalletConnectorContext.Provider>
   )
@@ -106,6 +110,7 @@ import {
   useCallback,
 } from "react";
 import { useAccount, WalletConnectorContext } from "@orderly.network/hooks";
+import type { WalletConnectorContextState } from "@orderly.network/hooks";
 
 import {
   createWeb3Modal,
@@ -157,8 +162,12 @@ export const WalletConnectProvider: FC<PropsWithChildren<{}>> = (props) => {
     });
   }, []);
 
+   const memoizedValue = useMemo<WalletConnectorContextState>(() => {
+    return { connect };
+  }, [connect]);
+
   return (
-    <WalletConnectorContext.Provider value={{ connect }}>
+    <WalletConnectorContext.Provider value={memoizedValue}>
       {props.children}
     </WalletConnectorContext.Provider>
   );

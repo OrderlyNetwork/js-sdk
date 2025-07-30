@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { useConnectWallet, useSetChain } from "@web3-onboard/react";
 import { WalletConnectorContext } from "@orderly.network/hooks";
-import type { WalletConnectorContextState } from "@orderly.network/hooks/src/walletConnectorContext";
+import type { WalletConnectorContextState } from "@orderly.network/hooks";
 
 export const Main: React.FC<React.PropsWithChildren> = (props) => {
   const [

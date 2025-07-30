@@ -47,6 +47,7 @@ export { ExtendedConfigStore } from "./extendedConfigStore";
 export {
   WalletConnectorContext,
   type ConnectedChain,
+  type WalletConnectorContextState,
   useWalletConnector,
   type WalletState,
 } from "./walletConnectorContext";
