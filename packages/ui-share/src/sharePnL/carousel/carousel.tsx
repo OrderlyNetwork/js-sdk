@@ -4,8 +4,12 @@ import React from "react";
 import useEmblaCarousel, {
   type UseEmblaCarouselType,
 } from "embla-carousel-react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Button, cn } from "@orderly.network/ui";
+import {
+  Button,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  cn,
+} from "@orderly.network/ui";
 
 type CarouselApi = UseEmblaCarouselType[1];
 type UseCarouselParameters = Parameters<typeof useEmblaCarousel>;
@@ -255,7 +259,7 @@ const CarouselPrevious = React.forwardRef<
       onClick={scrollPrev}
       {...props}
     >
-      <ChevronLeft size={20} />
+      <ChevronLeftIcon size={20} />
       <span className="oui-sr-only">Previous slide</span>
     </Button>
   );
@@ -289,7 +293,7 @@ const CarouselNext = React.forwardRef<
       onClick={scrollNext}
       {...props}
     >
-      <ChevronRight size={20} />
+      <ChevronRightIcon size={20} />
       <span className="oui-sr-only">Next slide</span>
     </Button>
   );

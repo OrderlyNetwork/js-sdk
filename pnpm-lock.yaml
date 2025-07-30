@@ -2423,9 +2423,6 @@ importers:
       embla-carousel-react:
         specifier: ^8.2.0
         version: 8.6.0(react@18.3.1)
-      lucide-react:
-        specifier: ^0.534.0
-        version: 0.534.0(react@18.3.1)
     devDependencies:
       '@swc/cli':
         specifier: ^0.3.12
@@ -13694,11 +13691,6 @@ packages:
     resolution: {integrity: sha512-zDjzr5OlS86DJZNSy5igMx18T423LfEyZ6lxo82KpjCi8m5DPddl/OPLRDHyfs/TqZPh7C1ySPw4D6matfm6bQ==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0
-
-  lucide-react@0.534.0:
-    resolution: {integrity: sha512-4Bz7rujQ/mXHqCwjx09ih/Q9SCizz9CjBV5repw9YSHZZZaop9/Oj0RgCDt6WdEaeAPfbcZ8l2b4jzApStqgNw==}
-    peerDependencies:
-      react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
   lunr@2.3.9:
     resolution: {integrity: sha512-zTU3DaZaF3Rt9rhN3uBMGQD3dD2/vFQqnvZCDv4dl5iOzq2IZQqTxu90r4E5J+nP70J3ilqVCrbho2eWaeW8Ow==}
@@ -36267,10 +36259,6 @@ snapshots:
       react: 18.3.1
 
   lucide-react@0.343.0(react@18.3.1):
-    dependencies:
-      react: 18.3.1
-
-  lucide-react@0.534.0(react@18.3.1):
     dependencies:
       react: 18.3.1
 

@@ -25,8 +25,7 @@
     "@orderly.network/types": "workspace:*",
     "@orderly.network/ui": "workspace:*",
     "@orderly.network/utils": "workspace:*",
-    "embla-carousel-react": "^8.2.0",
-    "lucide-react": "^0.534.0"
+    "embla-carousel-react": "^8.2.0"
   },
   "devDependencies": {
     "@swc/cli": "^0.3.12",
