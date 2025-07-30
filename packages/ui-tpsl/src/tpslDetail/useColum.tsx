@@ -1,15 +1,7 @@
 import { FC, SVGProps, useMemo, useState } from "react";
-import { error } from "console";
-import {
-  findTPSLFromOrder,
-  findTPSLOrderPriceFromOrder,
-  useOrderStream,
-} from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { positions as perpPositions } from "@orderly.network/perp";
-import { API, OrderStatus, OrderType } from "@orderly.network/types";
+import { API } from "@orderly.network/types";
 import {
-  Button,
   cn,
   Flex,
   Text,
@@ -18,20 +10,17 @@ import {
   Tooltip,
   useScreen,
 } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
 import { EstPnlRender } from "./components/estPnl";
 import { OrderPriceRender } from "./components/orderPrice";
 import { QtyRender } from "./components/qty";
 import { TriggerPrice } from "./components/triggerPrice";
 import { TypeRender } from "./components/type";
-import { useTPSLDetailContext } from "./tpslDetailProvider";
 
 export const useColumn = (props: {
   onCancelOrder?: (order: API.AlgoOrder) => Promise<void>;
 }) => {
   const { t } = useTranslation();
   const { isMobile } = useScreen();
-  const { position, base_dp } = useTPSLDetailContext();
   const { onCancelOrder } = props;
 
   const columns = useMemo(() => {
@@ -153,7 +142,7 @@ export const useColumn = (props: {
         dataIndex: "delete",
         width: 50,
         className: cn("oui-py-2 !oui-pr-5"),
-        render: (_, record: API.AlgoOrder) => {
+        render: (_: any, record: API.AlgoOrder) => {
           return <CancelAllBtn order={record} onCancelOrder={onCancelOrder} />;
         },
       },

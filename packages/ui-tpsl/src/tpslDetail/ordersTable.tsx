@@ -1,4 +1,4 @@
-import { API, PositionType } from "@orderly.network/types";
+import { API } from "@orderly.network/types";
 import { cn } from "@orderly.network/ui";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import { useColumn } from "./useColum";
@@ -8,7 +8,7 @@ export const OrdersTable = (props: {
   editTPSLOrder: (order: API.AlgoOrder) => void;
   onCancelOrder: (order: API.AlgoOrder) => Promise<void>;
 }) => {
-  const { orders, editTPSLOrder } = props;
+  const { orders } = props;
   const columns = useColumn({ onCancelOrder: props.onCancelOrder });
   return (
     <AuthGuardDataTable
@@ -23,10 +23,10 @@ export const OrdersTable = (props: {
             : "!oui-min-h-[100px]",
         ),
       }}
-      onRow={(record, index) => {
+      onRow={(record) => {
         return {
           className: cn(
-            "oui-h-[53px] oui-cursor-svg-edit !oui-p-0 !oui-border-none",
+            "oui-h-[53px] oui-cursor-svg-edit !oui-border-none !oui-p-0",
           ),
           onClick: () => {
             props.editTPSLOrder(record);

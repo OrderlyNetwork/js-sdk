@@ -1,13 +1,7 @@
-import { useMemo, useState } from "react";
-import {
-  AlgoOrderRootType,
-  API,
-  OrderStatus,
-  PositionType,
-} from "@orderly.network/types";
+import { useState } from "react";
+import { API, PositionType } from "@orderly.network/types";
 import {
   Box,
-  Button,
   ChevronDownIcon,
   cn,
   ExclamationFillIcon,
@@ -16,21 +10,15 @@ import {
   toast,
   Tooltip,
   ThrottledButton,
-  modal,
   useScreen,
-  Grid,
 } from "@orderly.network/ui";
-import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import { OrderInfo } from "../components/orderInfo";
-import { TPSLDialogId } from "../tpsl.widget";
 import { OrdersTable } from "./ordersTable";
 import { OrdersTableMobile } from "./ordersTable.mobile";
 import { TPSLDetailState } from "./tpslDetail.script";
-import { useColumn } from "./useColum";
 
 export const TPSLDetailUI = (props: TPSLDetailState) => {
   const {
-    symbolInfo,
     position,
     fullPositionOrders,
     partialPositionOrders,
@@ -39,8 +27,6 @@ export const TPSLDetailUI = (props: TPSLDetailState) => {
     editTPSLOrder,
     addTPSLOrder,
   } = props;
-
-  const { isMobile } = useScreen();
 
   return (
     <Box>
@@ -84,7 +70,6 @@ const FullPositionPart = (props: {
   addTPSLOrder: (positionType: PositionType) => void;
 }) => {
   const [open, setOpen] = useState(true);
-  const columns = useColumn({ onCancelOrder: props.onCancelOrder });
   const { orders } = props;
   const { isMobile } = useScreen();
   return (
@@ -145,7 +130,6 @@ const PartialPositionPart = (props: {
   addTPSLOrder: (positionType: PositionType) => void;
 }) => {
   const [open, setOpen] = useState(true);
-  const columns = useColumn({ onCancelOrder: props.onCancelOrder });
   const { orders } = props;
   const { isMobile } = useScreen();
   return (
@@ -269,7 +253,7 @@ export const AddButton = (props: {
       variant="outlined"
       size="sm"
       color="gray"
-      className="oui-h-6 oui-text-2xs oui-w-[94px]"
+      className="oui-h-6 oui-w-[94px] oui-text-2xs"
       onClick={onAdd}
     >
       Add
@@ -289,7 +273,7 @@ export const CancelAllBtn = (props: {
       disabled={!props.canCancelAll}
       size="sm"
       color="gray"
-      className="oui-h-6  oui-text-2xs oui-w-[94px] disabled:oui-border-base-contrast-16 disabled:oui-bg-transparent disabled:oui-text-base-contrast-20"
+      className="oui-h-6  oui-w-[94px] oui-text-2xs disabled:oui-border-base-contrast-16 disabled:oui-bg-transparent disabled:oui-text-base-contrast-20"
       onClick={() => {
         setLoading(true);
         props

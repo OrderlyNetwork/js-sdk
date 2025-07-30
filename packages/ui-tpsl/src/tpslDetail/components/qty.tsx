@@ -13,7 +13,7 @@ export const QtyRender = ({ order }: { order: API.AlgoOrder }) => {
       direction={"column"}
       justify={"start"}
       itemAlign={"start"}
-      className="oui-text-2xs oui-h-full"
+      className="oui-h-full oui-text-2xs"
     >
       <FlexCell>
         <Text.numeral dp={base_dp} rm={Decimal.ROUND_DOWN} padding={false}>

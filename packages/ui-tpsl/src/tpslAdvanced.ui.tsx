@@ -1,30 +1,16 @@
-import { useMemo, useState, useEffect, SVGProps } from "react";
+import { useEffect, useState, SVGProps } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
 import {
   OrderlyOrder,
   OrderSide,
   OrderType,
   PositionType,
 } from "@orderly.network/types";
-import {
-  Button,
-  ChevronDownIcon,
-  cn,
-  Divider,
-  Flex,
-  Grid,
-  Text,
-  useScreen,
-} from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { Button, cn, Divider, Flex, Text } from "@orderly.network/ui";
 import { OrderInfo } from "./components/orderInfo";
-import { OrderPriceType } from "./components/orderPriceType";
 import { PnlInfo } from "./components/pnlInfo";
 import { TPSLInputRowWidget } from "./components/tpslInputRow";
 import { TPSLPositionTypeWidget } from "./components/tpslPostionType";
-import { PnlInputWidget } from "./pnlInput/pnlInput.widget";
-import { PriceInput } from "./tpsl.ui";
 import { useTPSLAdvanced } from "./useTPSLAdvanced.script";
 
 type Props = ReturnType<typeof useTPSLAdvanced>;
@@ -32,8 +18,6 @@ type Props = ReturnType<typeof useTPSLAdvanced>;
 export const TPSLAdvancedUI = (props: Props) => {
   const { t } = useTranslation();
   const { errors, validated } = props.metaState;
-  const { parseErrorMsg } = useOrderEntryFormErrorMsg(errors);
-  const { isMobile } = useScreen();
 
   const {
     formattedOrder,
@@ -94,15 +78,7 @@ export const TPSLAdvancedUI = (props: Props) => {
       "Offset%": formattedOrder.tp_offset_percentage ?? "",
       ROI: formattedOrder.tp_ROI ?? "",
     }));
-  }, [
-    formattedOrder.tp_enable,
-    formattedOrder.tp_trigger_price,
-    formattedOrder.tp_pnl,
-    formattedOrder.tp_offset,
-    formattedOrder.tp_offset_percentage,
-    formattedOrder.tp_order_type,
-    formattedOrder.tp_order_price,
-  ]);
+  }, [formattedOrder]);
 
   useEffect(() => {
     setSlValues((prev) => ({
@@ -116,18 +92,10 @@ export const TPSLAdvancedUI = (props: Props) => {
       "Offset%": formattedOrder.sl_offset_percentage ?? "",
       ROI: formattedOrder.sl_ROI ?? "",
     }));
-  }, [
-    formattedOrder.sl_enable,
-    formattedOrder.sl_trigger_price,
-    formattedOrder.sl_pnl,
-    formattedOrder.sl_offset,
-    formattedOrder.sl_offset_percentage,
-    formattedOrder.sl_order_type,
-    formattedOrder.sl_order_price,
-  ]);
+  }, [formattedOrder]);
 
   return (
-    <div className="oui-py-3 oui-rounded-[16px]">
+    <div className="oui-rounded-[16px] oui-py-3">
       <div className="oui-px-3">
         <Flex
           className="oui-mb-5 oui-cursor-pointer  oui-text-base oui-text-base-contrast-80"
@@ -208,10 +176,10 @@ export const TPSLAdvancedUI = (props: Props) => {
               justify={"start"}
               itemAlign={"start"}
               gap={2}
-              className="oui-w-full oui-mt-3"
+              className="oui-mt-3 oui-w-full"
             >
-              <div className="oui-relative oui-top-[7px] oui-w-1 oui-h-1 oui-bg-[#D25f00] oui-rounded-full" />
-              <Text className="oui-text-[#D25f00] oui-text-2xs">
+              <div className="oui-relative oui-top-[7px] oui-size-1 oui-rounded-full oui-bg-[#D25f00]" />
+              <Text className="oui-text-2xs oui-text-[#D25f00]">
                 Full positions TP/SL only support market price to place the
                 orders
               </Text>
@@ -220,6 +188,8 @@ export const TPSLAdvancedUI = (props: Props) => {
         </div>
         <Flex direction={"column"} gap={6}>
           <TPSLInputRowWidget
+            rootOrderPrice={formattedOrder.order_price}
+            symbol={symbolInfo.symbol}
             type="tp"
             values={tpValues}
             errors={validated ? errors : null}
@@ -233,6 +203,8 @@ export const TPSLAdvancedUI = (props: Props) => {
             positionType={formattedOrder.position_type ?? PositionType.PARTIAL}
           />
           <TPSLInputRowWidget
+            rootOrderPrice={formattedOrder.order_price}
+            symbol={symbolInfo.symbol}
             type="sl"
             values={slValues}
             hideOrderPrice={formattedOrder.position_type === PositionType.FULL}

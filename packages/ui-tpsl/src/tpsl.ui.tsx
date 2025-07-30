@@ -158,6 +158,8 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
         className="oui-w-full oui-mt-3"
       >
         <TPSLInputRowWidget
+          symbol={position.symbol}
+          rootOrderPrice={position.average_open_price.toString()}
           type="tp"
           values={{
             enable: TPSL_OrderEntity.tp_enable ?? true,
@@ -183,6 +185,8 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
         />
 
         <TPSLInputRowWidget
+          symbol={position.symbol}
+          rootOrderPrice={position.average_open_price.toString()}
           type="sl"
           values={{
             enable: TPSL_OrderEntity.sl_enable ?? true,
@@ -305,14 +309,8 @@ const TPSLQuantity = (props: {
     if (Number(qty) > props.maxQty) {
       _qty = props.maxQty.toString();
     }
-    console.log("xxx formateQuantity", qty, _qty);
     if (props.baseTick > 0) {
-      const quantity = Number(qty);
-      // if (quantity) {
-      //   props.onQuantityChange?.(Math.min(props.maxQty, quantity));
-      // } else {
       props.onQuantityChange?.(utils.formatNumber(_qty, props.baseTick) ?? qty);
-      // }
     }
   };
 
@@ -427,127 +425,6 @@ const TPSLQuantity = (props: {
 };
 // ------------- Quantity input end------------
 
-// ------------ TP/SL Price and PNL input start------------
-const TPSLPrice = (props: {
-  tp_pnl?: number;
-  sl_pnl?: number;
-  quote: string;
-  quote_dp?: number;
-  onPriceChange: TPSLBuilderState["setOrderPrice"];
-  onPnLChange: TPSLBuilderState["setPnL"];
-  tp_values: PNL_Values;
-  sl_values: PNL_Values;
-  tp_trigger_price?: number | string;
-  sl_trigger_price?: number | string;
-  errors: OrderValidationResult | null;
-}) => {
-  const { t } = useTranslation();
-
-  const { parseErrorMsg } = useOrderEntryFormErrorMsg(props.errors);
-
-  const onPnLChange = (key: string, value: number | string) => {
-    // console.log(key, value);
-    props.onPnLChange(key, value);
-  };
-
-  return (
-    <>
-      <div>
-        <Flex justify={"between"}>
-          <Flex gap={1}>
-            <Text size={"2xs"} intensity={80}>
-              {t("tpsl.takeProfit")}
-            </Text>
-            <Text size={"2xs"} intensity={36}>
-              {`(${(
-                t("orderEntry.orderType.marketOrder") as string
-              )?.toLowerCase()})`}
-            </Text>
-          </Flex>
-          <Flex>
-            <Text size={"2xs"} intensity={36}>
-              {`${t("tpsl.estPnl")}:`}
-            </Text>
-            <Text.numeral
-              size={"2xs"}
-              coloring
-              showIdentifier
-              className="oui-ml-1"
-            >
-              {props.tp_pnl ?? "-"}
-            </Text.numeral>
-          </Flex>
-        </Flex>
-        <Grid cols={2} gap={2} pt={2} pb={4}>
-          <PriceInput
-            type={"TP"}
-            value={props.tp_trigger_price}
-            error={parseErrorMsg("tp_trigger_price")}
-            onValueChange={(value) => {
-              props.onPriceChange("tp_trigger_price", value);
-            }}
-            quote_dp={props.quote_dp ?? 2}
-          />
-          <PnlInputWidget
-            type={"TP"}
-            onChange={onPnLChange}
-            quote={props.quote}
-            quote_dp={props.quote_dp}
-            values={props.tp_values}
-          />
-        </Grid>
-      </div>
-      <div>
-        <Flex justify={"between"}>
-          <Flex gap={1}>
-            <Text size={"2xs"} intensity={80}>
-              {t("tpsl.stopLoss")}
-            </Text>
-            <Text size={"2xs"} intensity={36}>
-              {`(${(
-                t("orderEntry.orderType.marketOrder") as string
-              )?.toLowerCase()})`}
-            </Text>
-          </Flex>
-
-          <Flex>
-            <Text size={"2xs"} intensity={36}>
-              {`${t("tpsl.estPnl")}:`}
-            </Text>
-            <Text.numeral
-              size={"2xs"}
-              coloring
-              showIdentifier
-              className="oui-ml-1"
-            >
-              {props.sl_pnl ?? "-"}
-            </Text.numeral>
-          </Flex>
-        </Flex>
-        <Grid cols={2} gap={2} pt={2} pb={4}>
-          <PriceInput
-            type={"SL"}
-            value={props.sl_trigger_price}
-            error={parseErrorMsg("sl_trigger_price")}
-            onValueChange={(value) => {
-              props.onPriceChange("sl_trigger_price", value);
-            }}
-            quote_dp={props.quote_dp ?? 2}
-          />
-          <PnlInputWidget
-            type={"SL"}
-            onChange={onPnLChange}
-            quote={props.quote}
-            quote_dp={props.quote_dp}
-            values={props.sl_values}
-          />
-        </Grid>
-      </div>
-    </>
-  );
-};
-// ------------ TP/SL Price and PNL input end------------
-// ------------ TP/SL Price input start------------
 export const PriceInput = (props: {
   type: string;
   label?: string;
@@ -636,10 +513,6 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
     "orderly_order_confirm",
     true,
   );
-  const textClassName = textVariants({
-    size: "xs",
-    intensity: 54,
-  });
   const renderPositionType = () => {
     if (order.position_type === PositionType.FULL) {
       return <Text>Full position</Text>;
@@ -879,21 +752,4 @@ const TPSLOrderType = (props: { tpPrice?: number; slPrice?: number }) => {
   }
 
   return null;
-};
-
-const MaxQtyButton = (props: {
-  onClick: () => void;
-  children?: React.ReactNode;
-}) => {
-  return (
-    <button
-      className={"oui-leading-none"}
-      style={{ lineHeight: 0 }}
-      onClick={props.onClick}
-    >
-      <Text color={"primary"} size={"2xs"}>
-        {props.children}
-      </Text>
-    </button>
-  );
 };

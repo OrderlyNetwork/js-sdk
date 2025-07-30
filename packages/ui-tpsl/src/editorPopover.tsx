@@ -1,20 +1,11 @@
-import { ReactNode, useState } from "react";
+import { ReactNode } from "react";
 import { ComputedAlgoOrder, useLocalStorage } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { AlgoOrderRootType, API } from "@orderly.network/types";
-import {
-  Box,
-  Button,
-  cn,
-  modal,
-  PopoverContent,
-  PopoverRoot,
-  PopoverTrigger,
-  toast,
-} from "@orderly.network/ui";
+import { Box, Button, modal, toast } from "@orderly.network/ui";
 import { ButtonProps } from "@orderly.network/ui";
 import { PositionTPSLConfirm } from "./tpsl.ui";
-import { TPSLDialogId, TPSLWidget } from "./tpsl.widget";
+import { TPSLDialogId } from "./tpsl.widget";
 
 export const PositionTPSLPopover = (props: {
   position: API.Position;

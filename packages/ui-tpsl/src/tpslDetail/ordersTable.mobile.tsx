@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { API, PositionType } from "@orderly.network/types";
+import { API } from "@orderly.network/types";
 import { Flex, Button, cn, ThrottledButton, toast } from "@orderly.network/ui";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import { useColumn } from "./useColum";
@@ -9,7 +9,7 @@ export const OrdersTableMobile = (props: {
   editTPSLOrder: (order: API.AlgoOrder) => void;
   canCancelOrder: (order: API.AlgoOrder) => Promise<void>;
 }) => {
-  const { orders, editTPSLOrder } = props;
+  const { orders } = props;
   const columns = useColumn({ onCancelOrder: () => Promise.resolve() });
   const orderIds = useMemo(() => {
     return orders.reduce(
@@ -46,7 +46,7 @@ export const OrdersTableMobile = (props: {
           </Flex>
         );
       }}
-      className="oui-px-2 oui-bg-transparent oui-text-2xs"
+      className="oui-bg-transparent oui-px-2 oui-text-2xs"
       classNames={{
         scroll: cn(
           !orders || orders.length === 0
@@ -54,10 +54,10 @@ export const OrdersTableMobile = (props: {
             : "!oui-min-h-[100px]",
         ),
       }}
-      onRow={(record, index) => {
+      onRow={() => {
         return {
           className: cn(
-            "oui-h-[53px] oui-cursor-svg-edit !oui-p-0 !oui-border-none",
+            "oui-h-[53px] oui-cursor-svg-edit !oui-border-none !oui-p-0",
           ),
         };
       }}
@@ -73,14 +73,13 @@ export const DeleteBtn = (props: {
   const [loading, setLoading] = useState(false);
   return (
     <ThrottledButton
-      className="oui-text-2xs oui-text-base-contrast-54 oui-h-6"
+      className="oui-h-6 oui-text-2xs oui-text-base-contrast-54"
       size="sm"
       loading={loading}
       variant="outlined"
       color="gray"
       onClick={(e) => {
         e.stopPropagation();
-        console.log("delete");
         setLoading(true);
         props
           .onCancelOrder?.(props.order)

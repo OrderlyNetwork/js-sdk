@@ -19,6 +19,8 @@ export type Props = {
     order_type: OrderType;
   };
   onChange: (key: string, value: string | boolean | number) => void;
+  rootOrderPrice: string | undefined;
+  symbol: string;
 };
 export const useTPSLInputRowScript = (props: Props) => {
   return {
@@ -30,5 +32,7 @@ export const useTPSLInputRowScript = (props: Props) => {
     positionType: props.positionType,
     errors: props.errors,
     hideOrderPrice: props.hideOrderPrice,
+    rootOrderPrice: props.rootOrderPrice,
+    symbol: props.symbol,
   };
 };
