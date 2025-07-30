@@ -19,10 +19,15 @@ import {
   useScreen,
 } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
+import { EstPnlRender } from "./components/estPnl";
+import { OrderPriceRender } from "./components/orderPrice";
+import { QtyRender } from "./components/qty";
+import { TriggerPrice } from "./components/triggerPrice";
+import { TypeRender } from "./components/type";
 import { useTPSLDetailContext } from "./tpslDetailProvider";
 
 export const useColumn = (props: {
-  onCancelOrder: (order: API.AlgoOrder) => Promise<void>;
+  onCancelOrder?: (order: API.AlgoOrder) => Promise<void>;
 }) => {
   const { t } = useTranslation();
   const { isMobile } = useScreen();
@@ -30,73 +35,24 @@ export const useColumn = (props: {
   const { onCancelOrder } = props;
 
   const columns = useMemo(() => {
-    return [
+    const moblieColumns = [
       {
         title: "Qty.",
         dataIndex: "quantity",
         width: 70,
-        className: cn(" oui-py-2", isMobile ? "oui-pl-0" : "oui-pl-5"),
-        render: (_: string, record: API.AlgoOrder) => {
-          const { tp_trigger_price, sl_trigger_price } =
-            findTPSLFromOrder(record);
-          const { position_qty } = position;
-          return (
-            <Flex
-              direction={"column"}
-              justify={"start"}
-              itemAlign={"start"}
-              className="oui-text-2xs oui-h-full"
-            >
-              <FlexCell>
-                <Text.numeral
-                  dp={base_dp}
-                  rm={Decimal.ROUND_DOWN}
-                  padding={false}
-                >
-                  {record.quantity === 0
-                    ? position.position_qty
-                    : record.quantity}
-                </Text.numeral>
-              </FlexCell>
-              {tp_trigger_price && sl_trigger_price && (
-                <FlexCell>
-                  <div />
-                </FlexCell>
-              )}
-            </Flex>
-          );
-        },
+        className: "oui-py-2",
+        render: (_: string, record: API.AlgoOrder) => (
+          <QtyRender order={record} />
+        ),
       },
       {
         title: "Type",
         dataIndex: "type",
         width: 35,
         className: "oui-pl-1 oui-py-2",
-        render: (_: string, record: API.AlgoOrder) => {
-          const { tp_trigger_price, sl_trigger_price } =
-            findTPSLFromOrder(record);
-
-          return (
-            <Flex
-              direction={"column"}
-              justify={"between"}
-              itemAlign={"start"}
-              className="oui-text-2xs"
-            >
-              {tp_trigger_price && (
-                <FlexCell>
-                  <Text className="oui-text-trade-profit">TP</Text>
-                </FlexCell>
-              )}
-
-              {sl_trigger_price && (
-                <FlexCell>
-                  <Text className="oui-text-trade-loss">SL</Text>
-                </FlexCell>
-              )}
-            </Flex>
-          );
-        },
+        render: (_: string, record: API.AlgoOrder) => (
+          <TypeRender order={record} />
+        ),
       },
       {
         title: "trigger",
@@ -104,56 +60,64 @@ export const useColumn = (props: {
         width: 70,
         className: "oui-pl-1 oui-py-2",
         render: (_: string, record: API.AlgoOrder) => {
-          const { base_dp } = useTPSLDetailContext();
-          const { tp_trigger_price, sl_trigger_price } =
-            findTPSLFromOrder(record);
+          return <TriggerPrice order={record} />;
+        },
+      },
+      {
+        title: "price",
+        dataIndex: "price",
+        width: 70,
+        className: "oui-py-2",
+        render: (_: string, record: API.AlgoOrder) => (
+          <OrderPriceRender order={record} />
+        ),
+      },
 
-          return (
-            <Flex
-              gap={1}
-              direction={"column"}
-              justify={"between"}
-              itemAlign={"start"}
-              className="oui-text-2xs"
-            >
-              {tp_trigger_price && (
-                <FlexCell>
-                  <Flex
-                    direction={"column"}
-                    justify={"start"}
-                    itemAlign={"start"}
-                  >
-                    <Text className="oui-text-base-contrast-36">Market</Text>
-                    <Text.numeral
-                      dp={base_dp}
-                      rm={Decimal.ROUND_DOWN}
-                      padding={false}
-                    >
-                      {tp_trigger_price}
-                    </Text.numeral>
-                  </Flex>
-                </FlexCell>
-              )}
-              {sl_trigger_price && (
-                <FlexCell>
-                  <Flex
-                    direction={"column"}
-                    justify={"start"}
-                    itemAlign={"start"}
-                  >
-                    <Text className="oui-text-base-contrast-36">Market</Text>
-                    <Text.numeral
-                      dp={base_dp}
-                      rm={Decimal.ROUND_DOWN}
-                      padding={false}
-                    >
-                      {sl_trigger_price}
-                    </Text.numeral>
-                  </Flex>
-                </FlexCell>
-              )}
-            </Flex>
-          );
+      {
+        title: (
+          <Tooltip
+            className="oui-max-w-[280px] oui-bg-base-8 oui-p-3 oui-text-2xs oui-text-base-contrast"
+            content="The actual value may differ based on the actual trading price. This value is only for reference."
+          >
+            <Text className="oui-underline oui-decoration-dashed oui-underline-offset-2">
+              Est.Pnl
+            </Text>
+          </Tooltip>
+        ),
+        dataIndex: "estpnl",
+        width: 70,
+        className: "!oui-pr-0 oui-py-2",
+        render: (_: string, record: API.AlgoOrder) => (
+          <EstPnlRender order={record} />
+        ),
+      },
+    ];
+    const desktopColums = [
+      {
+        title: "Qty.",
+        dataIndex: "quantity",
+        width: 70,
+        className: cn(" oui-py-2 !oui-pl-5"),
+        render: (_: string, record: API.AlgoOrder) => (
+          <QtyRender order={record} />
+        ),
+      },
+      {
+        title: "Type",
+        dataIndex: "type",
+        width: 35,
+        className: "oui-pl-1 oui-py-2",
+        render: (_: string, record: API.AlgoOrder) => (
+          <TypeRender order={record} />
+        ),
+      },
+      {
+        title: "trigger",
+        dataIndex: "trigger",
+        width: 70,
+        className: "oui-pl-1 oui-py-2",
+        render: (_: string, record: API.AlgoOrder) => {
+          return <TriggerPrice order={record} />;
         },
       },
       {
@@ -161,50 +125,9 @@ export const useColumn = (props: {
         dataIndex: "price",
         width: 70,
         className: "oui-pl-1 oui-py-2",
-        render: (_: string, record: API.AlgoOrder) => {
-          const { tp_order_price, sl_order_price } =
-            findTPSLOrderPriceFromOrder(record);
-          return (
-            <Flex
-              gap={2}
-              direction={"column"}
-              justify={"between"}
-              itemAlign={"start"}
-              className="oui-text-2xs"
-            >
-              {tp_order_price && (
-                <FlexCell>
-                  {tp_order_price === OrderType.MARKET ? (
-                    <Text>Market</Text>
-                  ) : (
-                    <Text.numeral
-                      dp={base_dp}
-                      rm={Decimal.ROUND_DOWN}
-                      padding={false}
-                    >
-                      {tp_order_price}
-                    </Text.numeral>
-                  )}
-                </FlexCell>
-              )}
-              {sl_order_price && (
-                <FlexCell>
-                  {sl_order_price === OrderType.MARKET ? (
-                    <Text>Market</Text>
-                  ) : (
-                    <Text.numeral
-                      dp={base_dp}
-                      rm={Decimal.ROUND_DOWN}
-                      padding={false}
-                    >
-                      {sl_order_price}
-                    </Text.numeral>
-                  )}
-                </FlexCell>
-              )}
-            </Flex>
-          );
-        },
+        render: (_: string, record: API.AlgoOrder) => (
+          <OrderPriceRender order={record} />
+        ),
       },
 
       {
@@ -221,89 +144,25 @@ export const useColumn = (props: {
         dataIndex: "estpnl",
         width: 70,
         className: "oui-pl-1 oui-py-2",
-        render: (_: string, record: API.AlgoOrder) => {
-          const { position, base_dp, quote_dp } = useTPSLDetailContext();
-          const { tp_trigger_price, sl_trigger_price } =
-            findTPSLFromOrder(record);
-
-          let tp_unrealPnl = undefined;
-          let sl_unrealPnl = undefined;
-          const qty = new Decimal(record.quantity).eq(0)
-            ? position.position_qty
-            : record.quantity;
-          if (tp_trigger_price) {
-            tp_unrealPnl = new Decimal(
-              perpPositions.unrealizedPnL({
-                qty,
-                openPrice: position?.average_open_price,
-                // markPrice: unRealizedPrice,
-                markPrice: tp_trigger_price,
-              }),
-            )
-              .abs()
-              .toNumber();
-          }
-
-          if (sl_trigger_price) {
-            sl_unrealPnl = new Decimal(
-              perpPositions.unrealizedPnL({
-                qty: qty,
-                openPrice: position?.average_open_price,
-                // markPrice: unRealizedPrice,
-                markPrice: sl_trigger_price,
-              }),
-            )
-              .abs()
-              .mul(-1)
-              .toNumber();
-          }
-          return (
-            <Flex
-              gap={2}
-              direction={"column"}
-              justify={"between"}
-              itemAlign={"start"}
-              className="oui-text-2xs"
-            >
-              {tp_unrealPnl && (
-                <FlexCell>
-                  <Text.numeral
-                    dp={quote_dp}
-                    rm={Decimal.ROUND_DOWN}
-                    coloring
-                    padding={false}
-                  >
-                    {tp_unrealPnl}
-                  </Text.numeral>
-                </FlexCell>
-              )}
-              {sl_unrealPnl && (
-                <FlexCell>
-                  <Text.numeral
-                    dp={quote_dp}
-                    rm={Decimal.ROUND_DOWN}
-                    coloring
-                    padding={false}
-                  >
-                    {sl_unrealPnl}
-                  </Text.numeral>
-                </FlexCell>
-              )}
-            </Flex>
-          );
-        },
+        render: (_: string, record: API.AlgoOrder) => (
+          <EstPnlRender order={record} />
+        ),
       },
       {
         title: "",
         dataIndex: "delete",
-        width: 30,
-        className: cn("oui-py-2", isMobile ? "oui-pl-0" : "oui-pl-5"),
+        width: 50,
+        className: cn("oui-py-2 !oui-pr-5"),
         render: (_, record: API.AlgoOrder) => {
           return <CancelAllBtn order={record} onCancelOrder={onCancelOrder} />;
         },
       },
     ];
-  }, [t]);
+    if (isMobile) {
+      return moblieColumns;
+    }
+    return desktopColums;
+  }, [t, isMobile]);
   return columns;
 };
 
@@ -341,30 +200,33 @@ const DeleteIcon: FC<IconProps> = (props) => {
 
 export const CancelAllBtn = (props: {
   order: API.AlgoOrder;
-  onCancelOrder: (order: API.AlgoOrder) => Promise<void>;
+  onCancelOrder?: (order: API.AlgoOrder) => Promise<void>;
 }) => {
   const [loading, setLoading] = useState(false);
   return (
-    <ThrottledButton size="sm" loading={loading} variant="text" color="gray">
-      <DeleteIcon
-        className="oui-text-base-contrast-54 hover:oui-text-base-contrast oui-cursor-pointer"
-        onClick={(e) => {
-          e.stopPropagation();
-          console.log("delete");
-          setLoading(true);
-          props
-            .onCancelOrder(props.order)
-            .then(
-              () => {},
-              (error) => {
-                toast.error(error.message);
-              },
-            )
-            .finally(() => {
-              setLoading(false);
-            });
-        }}
-      />
+    <ThrottledButton
+      size="sm"
+      loading={loading}
+      variant="text"
+      color="gray"
+      onClick={(e) => {
+        e.stopPropagation();
+        console.log("delete");
+        setLoading(true);
+        props
+          .onCancelOrder?.(props.order)
+          .then(
+            () => {},
+            (error) => {
+              toast.error(error.message);
+            },
+          )
+          .finally(() => {
+            setLoading(false);
+          });
+      }}
+    >
+      <DeleteIcon className="oui-text-base-contrast-54 hover:oui-text-base-contrast oui-cursor-pointer" />
     </ThrottledButton>
   );
 };

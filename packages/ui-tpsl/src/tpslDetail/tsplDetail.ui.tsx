@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   AlgoOrderRootType,
   API,
@@ -23,6 +23,8 @@ import {
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import { OrderInfo } from "../components/orderInfo";
 import { TPSLDialogId } from "../tpsl.widget";
+import { OrdersTable } from "./ordersTable";
+import { OrdersTableMobile } from "./ordersTable.mobile";
 import { TPSLDetailState } from "./tpslDetail.script";
 import { useColumn } from "./useColum";
 
@@ -49,7 +51,7 @@ export const TPSLDetailUI = (props: TPSLDetailState) => {
           order_price: position.average_open_price.toString(),
         }}
         classNames={{
-          root: cn("oui-mb-6 oui-gap-3", isMobile ? "oui-px-0" : "oui-px-5"),
+          root: cn("oui-mb-6 oui-gap-3 oui-px-5"),
           container: "oui-gap-x-[30px]",
         }}
       />
@@ -88,10 +90,7 @@ const FullPositionPart = (props: {
   return (
     <Box className="oui-mt-6">
       <Box
-        className={cn(
-          "oui-flex oui-items-center oui-justify-between",
-          isMobile ? "oui-px-0" : "oui-px-5",
-        )}
+        className={cn("oui-flex oui-items-center oui-justify-between oui-px-5")}
       >
         <PositionTypeDescription
           positionType={PositionType.FULL}
@@ -115,26 +114,23 @@ const FullPositionPart = (props: {
           open ? "oui-h-auto" : "oui-h-0 oui-pb-4",
         )}
       >
-        <AuthGuardDataTable
-          columns={columns}
-          dataSource={orders}
-          className="oui-bg-transparent oui-text-2xs"
-          classNames={{
-            scroll: cn(
-              !orders || orders.length === 0
-                ? "!oui-min-h-[170px]"
-                : "!oui-min-h-[100px]",
-            ),
-          }}
-          onRow={(record, index) => {
-            return {
-              className: cn("oui-h-[53px] oui-cursor-svg-edit"),
-              onClick: () => {
-                props.editTPSLOrder(record, PositionType.FULL);
-              },
-            };
-          }}
-        />
+        {isMobile ? (
+          <OrdersTableMobile
+            orders={orders}
+            editTPSLOrder={(order) =>
+              props.editTPSLOrder(order, PositionType.FULL)
+            }
+            canCancelOrder={props.onCancelOrder}
+          />
+        ) : (
+          <OrdersTable
+            orders={orders}
+            editTPSLOrder={(order) => {
+              props.editTPSLOrder(order, PositionType.FULL);
+            }}
+            onCancelOrder={props.onCancelOrder}
+          />
+        )}
       </Box>
     </Box>
   );
@@ -153,11 +149,14 @@ const PartialPositionPart = (props: {
   const { orders } = props;
   const { isMobile } = useScreen();
   return (
-    <Box>
+    <Box className="oui-pt-6">
       <Box
         className={cn(
           "oui-flex oui-items-center oui-justify-between",
-          isMobile ? "oui-px-0" : "oui-px-5",
+          "oui-px-5",
+          isMobile
+            ? "oui-flex-col oui-items-start oui-justify-start oui-gap-[11px]"
+            : "oui-flex-row oui-items-center oui-justify-between",
         )}
       >
         <PositionTypeDescription
@@ -185,26 +184,23 @@ const PartialPositionPart = (props: {
           open ? "oui-h-auto" : "oui-h-0 oui-pb-4",
         )}
       >
-        <AuthGuardDataTable
-          columns={columns}
-          dataSource={orders}
-          className="oui-bg-transparent oui-text-2xs"
-          classNames={{
-            scroll: cn(
-              !orders || orders.length === 0
-                ? "!oui-min-h-[170px]"
-                : "!oui-min-h-[100px]",
-            ),
-          }}
-          onRow={(record, index) => {
-            return {
-              className: cn("oui-h-[53px] oui-cursor-svg-edit"),
-              onClick: () => {
-                props.editTPSLOrder(record, PositionType.PARTIAL);
-              },
-            };
-          }}
-        />
+        {isMobile ? (
+          <OrdersTableMobile
+            orders={orders}
+            editTPSLOrder={(order) =>
+              props.editTPSLOrder(order, PositionType.PARTIAL)
+            }
+            canCancelOrder={props.onCancelOrder}
+          />
+        ) : (
+          <OrdersTable
+            orders={orders}
+            editTPSLOrder={(order) => {
+              props.editTPSLOrder(order, PositionType.PARTIAL);
+            }}
+            onCancelOrder={props.onCancelOrder}
+          />
+        )}
       </Box>
     </Box>
   );
@@ -273,7 +269,7 @@ export const AddButton = (props: {
       variant="outlined"
       size="sm"
       color="gray"
-      className="oui-h-6 oui-text-2xs"
+      className="oui-h-6 oui-text-2xs oui-w-[94px]"
       onClick={onAdd}
     >
       Add
@@ -293,7 +289,7 @@ export const CancelAllBtn = (props: {
       disabled={!props.canCancelAll}
       size="sm"
       color="gray"
-      className="oui-h-6  oui-text-2xs disabled:oui-border-base-contrast-16 disabled:oui-bg-transparent disabled:oui-text-base-contrast-20"
+      className="oui-h-6  oui-text-2xs oui-w-[94px] disabled:oui-border-base-contrast-16 disabled:oui-bg-transparent disabled:oui-text-base-contrast-20"
       onClick={() => {
         setLoading(true);
         props
