@@ -1,4 +1,9 @@
-import { PropsWithChildren, createContext, useContext, useMemo } from "react";
+import React, {
+  PropsWithChildren,
+  createContext,
+  useContext,
+  useMemo,
+} from "react";
 import {
   TWType,
   EpochInfoType,
@@ -15,7 +20,7 @@ import {
   useTradingRewardsStatus,
   StatusInfo,
 } from "@orderly.network/hooks";
-import { TitleConfig } from "./title/title.script";
+import type { TitleConfig } from "./title/title.script";
 
 export type TradingRewardsState = {
   type: TWType;
@@ -36,16 +41,13 @@ export const TradingRewardsContext = createContext<TradingRewardsState>(
   {} as TradingRewardsState,
 );
 
-export const TradingRewardsProvider = (
-  props: PropsWithChildren<{
-    /** default is 'orderly' */
-    // brokerId?: string;
-    /** default is TWType.normal */
+export const TradingRewardsProvider: React.FC<
+  PropsWithChildren<{
     type?: TWType;
     titleConfig?: TitleConfig;
     showEpochPauseCountdown?: boolean;
-  }>,
-) => {
+  }>
+> = (props) => {
   // const { brokerId = "orderly" } = props;
 
   const brokerId = useConfig("brokerId");

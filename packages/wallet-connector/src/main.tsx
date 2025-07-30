@@ -1,21 +1,15 @@
-import React, {
-  type PropsWithChildren,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import { WalletConnectorContext } from "@orderly.network/hooks";
-import { hex2int, int2hex } from "@orderly.network/utils";
-import { ChainNamespace } from "@orderly.network/types";
-import { useSOL } from "./useSOL";
-import { useEvm } from "./useEvm";
+import React, { useEffect, useRef, useState } from "react";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
+import { WalletConnectorContext } from "@orderly.network/hooks";
+import { ChainNamespace } from "@orderly.network/types";
+import { hex2int } from "@orderly.network/utils";
 import { SolanaChains } from "./config";
+import { useEvm } from "./useEvm";
+import { useSOL } from "./useSOL";
 
-export function Main(
-  props: PropsWithChildren<{ solanaNetwork: WalletAdapterNetwork }>
-) {
+export const Main: React.FC<
+  React.PropsWithChildren<{ solanaNetwork: WalletAdapterNetwork }>
+> = (props) => {
   const sol = useSOL();
   const evm = useEvm();
 
@@ -39,7 +33,7 @@ export function Main(
       ? {
           autoSelect: options.autoSelect,
         }
-      :undefined;
+      : undefined;
 
     return evm
       .connect(evmOption)
@@ -76,8 +70,8 @@ export function Main(
     namespace === ChainNamespace.solana && sol.connected
       ? sol.wallet
       : namespace === ChainNamespace.evm && evm.connected
-      ? evm.wallet
-      : null;
+        ? evm.wallet
+        : null;
 
   const connectedChain =
     namespace === ChainNamespace.solana
@@ -158,4 +152,4 @@ export function Main(
       {props.children}
     </WalletConnectorContext.Provider>
   );
-}
+};

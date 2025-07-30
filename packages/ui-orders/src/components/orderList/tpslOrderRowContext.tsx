@@ -34,7 +34,7 @@ export type TPSLOrderRowContextState = {
   position?: API.PositionTPSLExt;
 };
 
-export const TPSLOrderRowContext = createContext(
+export const TPSLOrderRowContext = createContext<TPSLOrderRowContextState>(
   {} as TPSLOrderRowContextState,
 );
 
@@ -43,9 +43,7 @@ export const useTPSLOrderRowContext = () => {
 };
 
 export const TPSLOrderRowProvider: FC<
-  PropsWithChildren<{
-    order: API.AlgoOrderExt;
-  }>
+  PropsWithChildren<{ order: API.AlgoOrderExt }>
 > = (props) => {
   const { quote_dp } = useSymbolContext();
   const [position, setPosition] = useState<API.PositionTPSLExt>();
@@ -68,7 +66,6 @@ export const TPSLOrderRowProvider: FC<
   };
 
   const onUpdateOrder = async (order: API.AlgoOrderExt, params: any) => {
-    console.log("onUpdateOrder", order, position);
     return doUpdateOrder({
       order_id: order.algo_order_id,
       child_orders: order.child_orders.map((order) => ({

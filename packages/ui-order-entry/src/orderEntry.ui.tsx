@@ -54,7 +54,7 @@ import {
   useScreen,
 } from "@orderly.network/ui";
 import { LeverageWidgetWithSheetId } from "@orderly.network/ui-leverage";
-import { commifyOptional, Decimal } from "@orderly.network/utils";
+import { commifyOptional } from "@orderly.network/utils";
 import { LTVRiskTooltipWidget } from "./components/LTVRiskTooltip";
 // import { useBalanceScript } from "../../trading/src/components/mobile/bottomNavBar/balance";
 import { AdditionalInfoWidget } from "./components/additional/additionnalInfo.widget";
@@ -65,6 +65,7 @@ import {
   OrderEntryContext,
   OrderEntryProvider,
 } from "./components/orderEntryContext";
+import type { OrderEntryContextState } from "./components/orderEntryContext";
 import { QuantityDistributionInput } from "./components/quantityDistribution";
 import { QuantityUnit } from "./components/quantityUnit";
 import { SlippageUI } from "./components/slippage/slippage.ui";
@@ -107,6 +108,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
   const { isMobile } = useScreen();
 
   const { errors, validated } = metaState;
+
   const [errorMsgVisible, setErrorMsgVisible] = useState(false);
 
   const [needConfirm, setNeedConfirm] = useLocalStorage(
@@ -250,8 +252,12 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
     !Number.isNaN(currentLtv) &&
     currentLtv > 0;
 
+  const memoizedValue = useMemo<OrderEntryContextState>(() => {
+    return { errorMsgVisible: errorMsgVisible };
+  }, [errorMsgVisible]);
+
   return (
-    <OrderEntryProvider value={{ errorMsgVisible }}>
+    <OrderEntryProvider value={memoizedValue}>
       <div
         className={"oui-space-y-2 oui-text-base-contrast-54 xl:oui-space-y-3"}
         ref={props.containerRef}
