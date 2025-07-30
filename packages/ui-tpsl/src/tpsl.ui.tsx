@@ -30,6 +30,7 @@ import {
   Checkbox,
   convertValueToPercentage,
   ThrottledButton,
+  ScrollArea,
 } from "@orderly.network/ui";
 import { transSymbolformString } from "@orderly.network/utils";
 import { OrderInfo } from "./components/orderInfo";
@@ -92,127 +93,136 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
 
   return (
     <div id="orderly-tp_sl-order-edit-content">
-      <OrderInfo
-        baseDP={symbolInfo("base_dp")}
-        quoteDP={symbolInfo("quote_dp")}
-        classNames={{
-          root: "oui-mb-3",
-          container: "oui-gap-x-[30px]",
-        }}
-        order={{
-          symbol: position.symbol,
-          order_quantity: position.position_qty.toString(),
-          order_price: position.average_open_price.toString(),
-        }}
-      />
-      <Flex
-        direction="column"
-        justify="start"
-        itemAlign={"start"}
-        gap={3}
-        className="oui-w-full oui-mb-3"
-      >
-        {!isEditing && (
-          <TPSLPositionTypeWidget
-            disableSelector
-            value={TPSL_OrderEntity.position_type ?? PositionType.PARTIAL}
+      <ScrollArea className="oui-h-[calc(100vh-200px)]">
+        <OrderInfo
+          baseDP={symbolInfo("base_dp")}
+          quoteDP={symbolInfo("quote_dp")}
+          classNames={{
+            root: "oui-mb-3",
+            container: "oui-gap-x-[30px]",
+          }}
+          order={{
+            symbol: position.symbol,
+            order_quantity: position.position_qty.toString(),
+            order_price: position.average_open_price.toString(),
+          }}
+        />
+        <Flex
+          direction="column"
+          justify="start"
+          itemAlign={"start"}
+          gap={3}
+          className="oui-w-full oui-mb-3"
+        >
+          {!isEditing && (
+            <TPSLPositionTypeWidget
+              disableSelector
+              value={TPSL_OrderEntity.position_type ?? PositionType.PARTIAL}
+              onChange={(key, value) => {
+                if (value === PositionType.FULL) {
+                  setValues({
+                    position_type: value,
+                    quantity: Math.abs(position.position_qty).toString(),
+                    tp_order_price: "",
+                    tp_order_type: OrderType.MARKET,
+                    tp_trigger_price: "",
+                    sl_order_price: "",
+                    sl_order_type: OrderType.MARKET,
+                    sl_trigger_price: "",
+                  });
+                } else {
+                  setValues({
+                    position_type: value,
+                    quantity: "",
+                    tp_order_price: "",
+                    tp_order_type: OrderType.MARKET,
+                    tp_trigger_price: "",
+                    sl_order_price: "",
+                    sl_order_type: OrderType.MARKET,
+                    sl_trigger_price: "",
+                  });
+                }
+              }}
+            />
+          )}
+          {TPSL_OrderEntity.position_type === PositionType.FULL && (
+            <Text className="oui-text-warning oui-text-2xs">
+              Full positions TP/SL only support market price to place the orders
+            </Text>
+          )}
+        </Flex>
+        {renderQtyInput()}
+        <Flex
+          direction="column"
+          itemAlign={"start"}
+          justify={"start"}
+          gap={6}
+          className="oui-w-full oui-mt-3"
+        >
+          <TPSLInputRowWidget
+            symbol={position.symbol}
+            rootOrderPrice={position.average_open_price.toString()}
+            type="tp"
+            values={{
+              enable: TPSL_OrderEntity.tp_enable ?? true,
+              trigger_price:
+                TPSL_OrderEntity.tp_trigger_price?.toString() ?? undefined,
+              PnL: TPSL_OrderEntity.tp_pnl?.toString() ?? undefined,
+              Offset: TPSL_OrderEntity.tp_offset?.toString() ?? undefined,
+              "Offset%":
+                TPSL_OrderEntity.tp_offset_percentage?.toString() ?? undefined,
+              order_price:
+                TPSL_OrderEntity.tp_order_price?.toString() ?? undefined,
+              order_type: TPSL_OrderEntity.tp_order_type ?? OrderType.MARKET,
+            }}
+            hideOrderPrice={
+              TPSL_OrderEntity.position_type === PositionType.FULL
+            }
+            errors={errors}
+            disableOrderTypeSelector={isEditing}
+            quote_dp={symbolInfo("quote_dp")}
+            positionType={
+              TPSL_OrderEntity.position_type ?? PositionType.PARTIAL
+            }
             onChange={(key, value) => {
-              if (value === PositionType.FULL) {
-                setValues({
-                  position_type: value,
-                  quantity: Math.abs(position.position_qty).toString(),
-                  tp_order_price: "",
-                  tp_order_type: OrderType.MARKET,
-                  tp_trigger_price: "",
-                  sl_order_price: "",
-                  sl_order_type: OrderType.MARKET,
-                  sl_trigger_price: "",
-                });
-              } else {
-                setValues({
-                  position_type: value,
-                  quantity: "",
-                  tp_order_price: "",
-                  tp_order_type: OrderType.MARKET,
-                  tp_trigger_price: "",
-                  sl_order_price: "",
-                  sl_order_type: OrderType.MARKET,
-                  sl_trigger_price: "",
-                });
-              }
+              console.log("key", key, "value", value);
+              props.setOrderValue(key as keyof OrderlyOrder, value);
             }}
           />
-        )}
-        {TPSL_OrderEntity.position_type === PositionType.FULL && (
-          <Text className="oui-text-warning oui-text-2xs">
-            Full positions TP/SL only support market price to place the orders
-          </Text>
-        )}
-      </Flex>
-      {renderQtyInput()}
-      <Flex
-        direction="column"
-        itemAlign={"start"}
-        justify={"start"}
-        gap={6}
-        className="oui-w-full oui-mt-3"
-      >
-        <TPSLInputRowWidget
-          symbol={position.symbol}
-          rootOrderPrice={position.average_open_price.toString()}
-          type="tp"
-          values={{
-            enable: TPSL_OrderEntity.tp_enable ?? true,
-            trigger_price:
-              TPSL_OrderEntity.tp_trigger_price?.toString() ?? undefined,
-            PnL: TPSL_OrderEntity.tp_pnl?.toString() ?? undefined,
-            Offset: TPSL_OrderEntity.tp_offset?.toString() ?? undefined,
-            "Offset%":
-              TPSL_OrderEntity.tp_offset_percentage?.toString() ?? undefined,
-            order_price:
-              TPSL_OrderEntity.tp_order_price?.toString() ?? undefined,
-            order_type: TPSL_OrderEntity.tp_order_type ?? OrderType.MARKET,
-          }}
-          hideOrderPrice={TPSL_OrderEntity.position_type === PositionType.FULL}
-          errors={errors}
-          disableOrderTypeSelector={isEditing}
-          quote_dp={symbolInfo("quote_dp")}
-          positionType={TPSL_OrderEntity.position_type ?? PositionType.PARTIAL}
-          onChange={(key, value) => {
-            console.log("key", key, "value", value);
-            props.setOrderValue(key as keyof OrderlyOrder, value);
-          }}
-        />
 
-        <TPSLInputRowWidget
-          symbol={position.symbol}
-          rootOrderPrice={position.average_open_price.toString()}
-          type="sl"
-          values={{
-            enable: TPSL_OrderEntity.sl_enable ?? true,
-            trigger_price:
-              TPSL_OrderEntity.sl_trigger_price?.toString() ?? undefined,
-            PnL: TPSL_OrderEntity.sl_pnl?.toString() ?? undefined,
-            Offset: TPSL_OrderEntity.sl_offset?.toString() ?? undefined,
-            "Offset%":
-              TPSL_OrderEntity.sl_offset_percentage?.toString() ?? undefined,
-            order_price:
-              TPSL_OrderEntity.sl_order_price?.toString() ?? undefined,
-            order_type: TPSL_OrderEntity.sl_order_type ?? OrderType.MARKET,
-          }}
-          hideOrderPrice={TPSL_OrderEntity.position_type === PositionType.FULL}
-          errors={errors}
-          quote_dp={symbolInfo("quote_dp")}
-          positionType={TPSL_OrderEntity.position_type ?? PositionType.PARTIAL}
-          disableOrderTypeSelector={isEditing}
-          onChange={(key, value) => {
-            console.log("key", key, "value", value);
-            props.setOrderValue(key as keyof OrderlyOrder, value);
-          }}
-        />
-      </Flex>
+          <TPSLInputRowWidget
+            symbol={position.symbol}
+            rootOrderPrice={position.average_open_price.toString()}
+            type="sl"
+            values={{
+              enable: TPSL_OrderEntity.sl_enable ?? true,
+              trigger_price:
+                TPSL_OrderEntity.sl_trigger_price?.toString() ?? undefined,
+              PnL: TPSL_OrderEntity.sl_pnl?.toString() ?? undefined,
+              Offset: TPSL_OrderEntity.sl_offset?.toString() ?? undefined,
+              "Offset%":
+                TPSL_OrderEntity.sl_offset_percentage?.toString() ?? undefined,
+              order_price:
+                TPSL_OrderEntity.sl_order_price?.toString() ?? undefined,
+              order_type: TPSL_OrderEntity.sl_order_type ?? OrderType.MARKET,
+            }}
+            hideOrderPrice={
+              TPSL_OrderEntity.position_type === PositionType.FULL
+            }
+            errors={errors}
+            quote_dp={symbolInfo("quote_dp")}
+            positionType={
+              TPSL_OrderEntity.position_type ?? PositionType.PARTIAL
+            }
+            disableOrderTypeSelector={isEditing}
+            onChange={(key, value) => {
+              console.log("key", key, "value", value);
+              props.setOrderValue(key as keyof OrderlyOrder, value);
+            }}
+          />
+        </Flex>
 
-      {/* <TPSLPrice
+        {/* <TPSLPrice
         sl_pnl={TPSL_OrderEntity.sl_pnl}
         tp_pnl={TPSL_OrderEntity.tp_pnl}
         quote={symbolInfo("quote")}
@@ -233,11 +243,12 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
         tp_trigger_price={TPSL_OrderEntity.tp_trigger_price ?? ""}
         sl_trigger_price={TPSL_OrderEntity.sl_trigger_price ?? ""}
       /> */}
-      <PnlInfo
-        tp_pnl={TPSL_OrderEntity.tp_pnl}
-        sl_pnl={TPSL_OrderEntity.sl_pnl}
-        className="oui-my-3"
-      />
+        <PnlInfo
+          tp_pnl={TPSL_OrderEntity.tp_pnl}
+          sl_pnl={TPSL_OrderEntity.sl_pnl}
+          className="oui-my-3"
+        />
+      </ScrollArea>
       <Grid cols={2} gap={3} mt={4}>
         <Button
           size={"md"}

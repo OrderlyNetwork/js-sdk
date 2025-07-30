@@ -50,7 +50,6 @@ export const TPSLInputRowUI = (props: Props) => {
   return (
     <Flex
       direction={"column"}
-      gap={2}
       itemAlign={"start"}
       justify={"start"}
       className="oui-w-full"
@@ -78,7 +77,7 @@ export const TPSLInputRowUI = (props: Props) => {
         direction={"column"}
         gap={2}
         itemAlign={"start"}
-        className={cn("oui-w-full", values.enable ? "" : "oui-hidden")}
+        className={cn("oui-w-full oui-pt-2", values.enable ? "" : "oui-hidden")}
       >
         <Flex
           direction={"column"}
@@ -156,6 +155,7 @@ export const TPSLInputRowUI = (props: Props) => {
             ? values.trigger_price
             : values.order_price
         }
+        orderType={values.order_type}
         pnl={values.PnL}
         roi={roi}
         dp={props.quote_dp}
@@ -170,6 +170,7 @@ const RenderROI = (props: {
   pnl: number | string | undefined;
   roi: number | null;
   dp: number;
+  orderType: OrderType;
 }) => {
   const { price, pnl, roi, dp } = props;
   if (!roi || !price || !pnl) {
@@ -188,8 +189,10 @@ const RenderROI = (props: {
         {price}
       </Text.numeral>
       , it will trigger a
-      <Text className="oui-text-base-contrast oui-px-1">Market</Text>order, and
-      estimated PnL will be
+      <Text className="oui-text-base-contrast oui-px-1">
+        {props.orderType === OrderType.MARKET ? "Market" : "Limit"}
+      </Text>
+      order, and estimated PnL will be
       <Text.numeral
         coloring
         className="oui-px-1 oui-whitespace-nowrap"

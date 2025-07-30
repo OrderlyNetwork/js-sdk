@@ -6,7 +6,14 @@ import {
   OrderType,
   PositionType,
 } from "@orderly.network/types";
-import { Button, cn, Divider, Flex, Text } from "@orderly.network/ui";
+import {
+  Button,
+  cn,
+  Divider,
+  Flex,
+  ScrollArea,
+  Text,
+} from "@orderly.network/ui";
 import { OrderInfo } from "./components/orderInfo";
 import { PnlInfo } from "./components/pnlInfo";
 import { TPSLInputRowWidget } from "./components/tpslInputRow";
@@ -95,7 +102,7 @@ export const TPSLAdvancedUI = (props: Props) => {
   }, [formattedOrder]);
 
   return (
-    <div className="oui-rounded-[16px] oui-py-3">
+    <div className="oui-rounded-[16px] oui-py-3 oui-flex oui-flex-col oui-justify-between oui-h-full">
       <div className="oui-px-3">
         <Flex
           className="oui-mb-5 oui-cursor-pointer  oui-text-base oui-text-base-contrast-80"
@@ -106,149 +113,159 @@ export const TPSLAdvancedUI = (props: Props) => {
           <ArrowRightIcon className=" oui-text-base-contrast-80" />
           <Text>TP/SL</Text>
         </Flex>
-
-        <OrderInfo
-          order={formattedOrder as OrderlyOrder}
-          baseDP={symbolInfo.base_dp}
-          quoteDP={symbolInfo.quote_dp}
-        />
       </div>
-      <Divider className="oui-my-3" />
-      <div className="oui-px-3">
-        <Flex className="oui-gap-[6px]">
-          <Button
-            onClick={() => {
-              setOrderValue("side", OrderSide.BUY);
-            }}
-            size={"sm"}
-            fullWidth
-            data-type={OrderSide.BUY}
-            // color={side === OrderSide.BUY ? "buy" : "secondary"}
-            className={cn(
-              formattedOrder.side === OrderSide.BUY
-                ? "oui-bg-success-darken hover:oui-bg-success-darken/80 active:oui-bg-success-darken/80"
-                : "oui-bg-base-7 oui-text-base-contrast-36 hover:oui-bg-base-6 active:oui-bg-base-6",
-            )}
-            data-testid="oui-testid-orderEntry-side-buy-button"
-          >
-            {t("common.buy")}
-          </Button>
-          <Button
-            onClick={() => {
-              setOrderValue("side", OrderSide.SELL);
-            }}
-            data-type={OrderSide.SELL}
-            fullWidth
-            size={"sm"}
-            // color={side === OrderSide.SELL ? "sell" : "secondary"}
-            className={cn(
-              formattedOrder.side === OrderSide.SELL
-                ? "oui-bg-danger-darken hover:oui-bg-danger-darken/80 active:oui-bg-danger-darken/80"
-                : "oui-bg-base-7 oui-text-base-contrast-36 hover:oui-bg-base-6 active:oui-bg-base-6",
-            )}
-            data-testid="oui-testid-orderEntry-side-sell-button"
-          >
-            {t("common.sell")}
-          </Button>
-        </Flex>
-        <div className="oui-py-3">
-          <TPSLPositionTypeWidget
-            value={formattedOrder.position_type ?? PositionType.PARTIAL}
-            onChange={(key, value) => {
-              // setOrderValue("position_type", value);
-              if (value === PositionType.FULL) {
-                setValues({
-                  position_type: PositionType.FULL,
-                  tp_order_type: OrderType.MARKET,
-                  tp_order_price: undefined,
-                  sl_order_type: OrderType.MARKET,
-                  sl_order_price: undefined,
-                });
-                // setOrderValue("tp_order_type", OrderType.MARKET);
-                // setOrderValue("sl_order_type", OrderType.MARKET);
-                return;
-              }
-              setOrderValue("position_type", value);
-            }}
+      <ScrollArea className="oui-flex-1">
+        <div className="oui-px-3">
+          <OrderInfo
+            order={formattedOrder as OrderlyOrder}
+            baseDP={symbolInfo.base_dp}
+            quoteDP={symbolInfo.quote_dp}
           />
-          {formattedOrder.position_type === PositionType.FULL && (
-            <Flex
-              justify={"start"}
-              itemAlign={"start"}
-              gap={2}
-              className="oui-mt-3 oui-w-full"
-            >
-              <div className="oui-relative oui-top-[7px] oui-size-1 oui-rounded-full oui-bg-[#D25f00]" />
-              <Text className="oui-text-2xs oui-text-[#D25f00]">
-                Full positions TP/SL only support market price to place the
-                orders
-              </Text>
-            </Flex>
-          )}
         </div>
-        <Flex direction={"column"} gap={6}>
-          <TPSLInputRowWidget
-            rootOrderPrice={formattedOrder.order_price}
-            symbol={symbolInfo.symbol}
-            type="tp"
-            values={tpValues}
-            errors={validated ? errors : null}
-            quote_dp={symbolInfo.quote_dp}
-            hideOrderPrice={formattedOrder.position_type === PositionType.FULL}
-            onChange={(key, value) => {
-              console.log("key", key, "value", value);
-              // setTpValuse((prev) => ({ ...prev, [key]: value }));
-              setOrderValue(key as keyof OrderlyOrder, value);
-            }}
-            positionType={formattedOrder.position_type ?? PositionType.PARTIAL}
-          />
-          <TPSLInputRowWidget
-            rootOrderPrice={formattedOrder.order_price}
-            symbol={symbolInfo.symbol}
-            type="sl"
-            values={slValues}
-            hideOrderPrice={formattedOrder.position_type === PositionType.FULL}
-            errors={validated ? errors : null}
-            quote_dp={symbolInfo.quote_dp}
-            positionType={formattedOrder.position_type ?? PositionType.PARTIAL}
-            onChange={(key, value) => {
-              setOrderValue(key as keyof OrderlyOrder, value);
-            }}
-          />
-        </Flex>
-
-        <PnlInfo
-          tp_pnl={formattedOrder.tp_pnl}
-          sl_pnl={formattedOrder.sl_pnl}
-          className="oui-mt-6"
-        />
-
-        <Flex className="oui-mt-6" gap={2}>
-          <Button
-            size="md"
-            fullWidth
-            color="gray"
-            variant="outlined"
-            className="oui-text-base-contrast-36"
-            onClick={props.onClose}
-          >
-            {t("common.cancel")}
-          </Button>
-          <Button
-            size="md"
-            fullWidth
-            color="success"
-            className={cn(
-              formattedOrder.side === OrderSide.SELL
-                ? "oui-bg-danger-darken hover:oui-bg-danger-darken/80 active:oui-bg-danger-darken/80"
-                : "oui-bg-success-darken hover:oui-bg-success-darken/80 active:oui-bg-success-darken/80",
+        <Divider className="oui-my-3" />
+        <div className="oui-px-3">
+          <Flex className="oui-gap-[6px]">
+            <Button
+              onClick={() => {
+                setOrderValue("side", OrderSide.BUY);
+              }}
+              size={"sm"}
+              fullWidth
+              data-type={OrderSide.BUY}
+              // color={side === OrderSide.BUY ? "buy" : "secondary"}
+              className={cn(
+                formattedOrder.side === OrderSide.BUY
+                  ? "oui-bg-success-darken hover:oui-bg-success-darken/80 active:oui-bg-success-darken/80"
+                  : "oui-bg-base-7 oui-text-base-contrast-36 hover:oui-bg-base-6 active:oui-bg-base-6",
+              )}
+              data-testid="oui-testid-orderEntry-side-buy-button"
+            >
+              {t("common.buy")}
+            </Button>
+            <Button
+              onClick={() => {
+                setOrderValue("side", OrderSide.SELL);
+              }}
+              data-type={OrderSide.SELL}
+              fullWidth
+              size={"sm"}
+              // color={side === OrderSide.SELL ? "sell" : "secondary"}
+              className={cn(
+                formattedOrder.side === OrderSide.SELL
+                  ? "oui-bg-danger-darken hover:oui-bg-danger-darken/80 active:oui-bg-danger-darken/80"
+                  : "oui-bg-base-7 oui-text-base-contrast-36 hover:oui-bg-base-6 active:oui-bg-base-6",
+              )}
+              data-testid="oui-testid-orderEntry-side-sell-button"
+            >
+              {t("common.sell")}
+            </Button>
+          </Flex>
+          <div className="oui-py-3">
+            <TPSLPositionTypeWidget
+              value={formattedOrder.position_type ?? PositionType.PARTIAL}
+              onChange={(key, value) => {
+                // setOrderValue("position_type", value);
+                if (value === PositionType.FULL) {
+                  setValues({
+                    position_type: PositionType.FULL,
+                    tp_order_type: OrderType.MARKET,
+                    tp_order_price: undefined,
+                    sl_order_type: OrderType.MARKET,
+                    sl_order_price: undefined,
+                  });
+                  // setOrderValue("tp_order_type", OrderType.MARKET);
+                  // setOrderValue("sl_order_type", OrderType.MARKET);
+                  return;
+                }
+                setOrderValue("position_type", value);
+              }}
+            />
+            {formattedOrder.position_type === PositionType.FULL && (
+              <Flex
+                justify={"start"}
+                itemAlign={"start"}
+                gap={2}
+                className="oui-mt-3 oui-w-full"
+              >
+                <div className="oui-relative oui-top-[7px] oui-size-1 oui-rounded-full oui-bg-[#D25f00]" />
+                <Text className="oui-text-2xs oui-text-[#D25f00]">
+                  Full positions TP/SL only support market price to place the
+                  orders
+                </Text>
+              </Flex>
             )}
-            onClick={props.onSubmit}
-          >
-            Submit
-          </Button>
-        </Flex>
-      </div>
+          </div>
+          <Flex direction={"column"} gap={6}>
+            <TPSLInputRowWidget
+              rootOrderPrice={formattedOrder.order_price}
+              symbol={symbolInfo.symbol}
+              type="tp"
+              values={tpValues}
+              errors={validated ? errors : null}
+              quote_dp={symbolInfo.quote_dp}
+              hideOrderPrice={
+                formattedOrder.position_type === PositionType.FULL
+              }
+              onChange={(key, value) => {
+                console.log("key", key, "value", value);
+                // setTpValuse((prev) => ({ ...prev, [key]: value }));
+                setOrderValue(key as keyof OrderlyOrder, value);
+              }}
+              positionType={
+                formattedOrder.position_type ?? PositionType.PARTIAL
+              }
+            />
+            <TPSLInputRowWidget
+              rootOrderPrice={formattedOrder.order_price}
+              symbol={symbolInfo.symbol}
+              type="sl"
+              values={slValues}
+              hideOrderPrice={
+                formattedOrder.position_type === PositionType.FULL
+              }
+              errors={validated ? errors : null}
+              quote_dp={symbolInfo.quote_dp}
+              positionType={
+                formattedOrder.position_type ?? PositionType.PARTIAL
+              }
+              onChange={(key, value) => {
+                setOrderValue(key as keyof OrderlyOrder, value);
+              }}
+            />
+          </Flex>
+
+          <PnlInfo
+            tp_pnl={formattedOrder.tp_pnl}
+            sl_pnl={formattedOrder.sl_pnl}
+            className="oui-mt-6"
+          />
+        </div>
+      </ScrollArea>
+      <Flex className="oui-mt-6 oui-px-3" gap={2}>
+        <Button
+          size="md"
+          fullWidth
+          color="gray"
+          variant="outlined"
+          className="oui-text-base-contrast-36"
+          onClick={props.onClose}
+        >
+          {t("common.cancel")}
+        </Button>
+        <Button
+          size="md"
+          fullWidth
+          color="success"
+          className={cn(
+            formattedOrder.side === OrderSide.SELL
+              ? "oui-bg-danger-darken hover:oui-bg-danger-darken/80 active:oui-bg-danger-darken/80"
+              : "oui-bg-success-darken hover:oui-bg-success-darken/80 active:oui-bg-success-darken/80",
+          )}
+          onClick={props.onSubmit}
+        >
+          Submit
+        </Button>
+      </Flex>
     </div>
   );
 };
