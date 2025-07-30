@@ -2,6 +2,7 @@ import React, {
   PropsWithChildren,
   createContext,
   useContext,
+  useMemo,
   useRef,
 } from "react";
 import { CalculatorService } from "./orderly/calculator/calculatorService";
@@ -55,6 +56,17 @@ export const DataCenterProvider: React.FC<PropsWithChildren> = ({
     },
   });
 
+  const memoizedValue = useMemo<DataCenterContextState>(() => {
+    return {
+      registerKeyHandler: (key, fun) => {
+        getKeyHandlerMapRef.current.set(key, fun);
+      },
+      unregisterKeyHandler: (key) => {
+        getKeyHandlerMapRef.current.delete(key);
+      },
+    };
+  }, [getKeyHandlerMapRef.current]);
+
   if (error) {
     return <div>Data load failed</div>;
   }
@@ -64,16 +76,7 @@ export const DataCenterProvider: React.FC<PropsWithChildren> = ({
   }
 
   return (
-    <DataCenterContext.Provider
-      value={{
-        registerKeyHandler: (key, fun) => {
-          getKeyHandlerMapRef.current.set(key, fun);
-        },
-        unregisterKeyHandler: (key) => {
-          getKeyHandlerMapRef.current.delete(key);
-        },
-      }}
-    >
+    <DataCenterContext.Provider value={memoizedValue}>
       {children}
     </DataCenterContext.Provider>
   );
