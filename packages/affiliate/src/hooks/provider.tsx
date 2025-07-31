@@ -15,6 +15,7 @@ import {
   usePrivateQuery,
   useDaily,
   useAccount,
+  useMemoizedFn,
 } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
@@ -226,12 +227,12 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
     }
   }, [isAffiliate, isTrader]);
 
-  const mutate = () => {
+  const mutate = useMemoizedFn(() => {
     volumeStatisticsMutate();
     dailyVolumeMutate();
     referralInfoMutate();
     generateCodeMutate();
-  };
+  });
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -246,17 +247,19 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
   const { wrongNetwork, disabledConnect } = useAppContext();
 
   const lastStete = useRef<AccountStatusEnum>(AccountStatusEnum.NotConnected);
+
   useEffect(() => {
-    let timerId: any;
+    let timerId: ReturnType<typeof setTimeout> | null = null;
     if (lastStete.current !== state.status) {
       lastStete.current = state.status;
       timerId = setTimeout(() => {
         mutate();
       }, 1000);
     }
-
     return () => {
-      if (timerId) clearTimeout(timerId);
+      if (timerId) {
+        clearTimeout(timerId);
+      }
     };
   }, [state.status]);
 
