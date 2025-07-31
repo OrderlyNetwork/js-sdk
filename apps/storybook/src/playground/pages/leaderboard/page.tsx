@@ -1,90 +1,49 @@
-import { useMemo } from "react";
-import {
-  Campaign,
-  LeaderboardWidget,
-} from "@orderly.network/trading-leaderboard";
-import { Box, useScreen } from "@orderly.network/ui";
-import { useScaffoldContext } from "@orderly.network/ui-scaffold";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router";
+import { LeaderboardPage } from "@orderly.network/trading-leaderboard";
+import { getCampaigns } from "../../../stories/package/trading-leaderboard/tradingLeaderboard.stories";
 import { BaseLayout } from "../../components/layout/baseLayout";
 import { PathEnum } from "../../constant";
-import { getSymbol } from "../../storage";
 import { generateLocalePath } from "../../utils";
 
-function getCampaigns() {
-  const addDays = (date: Date, days: number) => {
-    const result = new Date(date);
-    result.setDate(result.getDate() + days);
-    return result;
-  };
+const leaderboardCampaigns = getCampaigns();
 
-  const dateRange = [
-    // ongoing
-    { startTime: addDays(new Date(), -1), endTime: addDays(new Date(), 30) },
-    // future
-    { startTime: addDays(new Date(), 1), endTime: addDays(new Date(), 30) },
-    // past
-    { startTime: addDays(new Date(), -30), endTime: addDays(new Date(), -1) },
-  ];
+export default function Leaderboard() {
+  const [campaignId, setCampaignId] = useState<string | undefined>("116");
+  const { search } = useLocation();
 
-  return dateRange.map(
-    (date) =>
-      ({
-        title: "RISE ABOVE. OUTTRADE THE REST",
-        description:
-          "A new era of traders is rising. Are you the one leading the charge? Compete for your share of $10K by climbing the ranks. Only the bold will make it to the top.",
-        image: "/leaderboard/campaign.jpg",
-        href: "https://orderly.network/",
-        ...date,
-      }) as Campaign,
-  );
-}
-
-export default function LeaderboardPage() {
-  const { isMobile, isDesktop } = useScreen();
+  useEffect(() => {
+    const campaign_id = new URLSearchParams(search).get("campaign_id");
+    const campaign = leaderboardCampaigns.find(
+      (campaign) => campaign.campaign_id === String(campaign_id),
+    );
+    if (campaign_id && campaign) {
+      setCampaignId(campaign_id);
+    } else {
+      const now = new Date().toISOString();
+      const campaign = leaderboardCampaigns.find(
+        (campaign) => campaign.start_time < now && campaign.end_time > now,
+      );
+      if (campaign) {
+        setCampaignId(campaign.campaign_id as string);
+      }
+    }
+  }, [search]);
 
   return (
     <div className="orderly-sdk-layout">
-      <BaseLayout
-        initialMenu={PathEnum.Leaderboard}
-        classNames={{
-          root: isDesktop ? "oui-overflow-hidden" : undefined,
-        }}
-      >
-        <LeaderboardView isMobile={isMobile} />
+      <BaseLayout initialMenu={PathEnum.Leaderboard}>
+        <LeaderboardPage
+          campaigns={leaderboardCampaigns}
+          className="oui-py-5"
+          campaignId={campaignId}
+          onCampaignChange={setCampaignId as any}
+          href={{
+            trading: generateLocalePath(`${PathEnum.Leaderboard}`),
+          }}
+          backgroundSrc="/leaderboard/background.jpg"
+        />
       </BaseLayout>
     </div>
   );
 }
-
-const LeaderboardView = (props: { isMobile: boolean }) => {
-  const { topNavbarHeight, footerHeight, announcementHeight } =
-    useScaffoldContext();
-
-  const tradingUrl = useMemo(() => {
-    const symbol = getSymbol();
-    return generateLocalePath(`${PathEnum.Perp}/${symbol}`);
-  }, []);
-
-  return (
-    <Box
-      style={{
-        minHeight: 379,
-        maxHeight: 2560,
-        overflow: "hidden",
-        height: props.isMobile
-          ? "100%"
-          : `calc(100vh - ${topNavbarHeight}px - ${footerHeight}px - ${
-              announcementHeight ? announcementHeight + 12 : 0
-            }px)`,
-      }}
-    >
-      <LeaderboardWidget
-        campaigns={getCampaigns()}
-        href={{
-          trading: tradingUrl,
-        }}
-        className="oui-py-5"
-      />
-    </Box>
-  );
-};

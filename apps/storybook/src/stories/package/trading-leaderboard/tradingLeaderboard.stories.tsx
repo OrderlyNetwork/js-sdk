@@ -15,7 +15,7 @@ import { Box } from "@orderly.network/ui";
 import { BaseLayout } from "../../../components/layout";
 import { useCustomRanking } from "./useCustomRanking";
 
-function getCampaigns() {
+export function getCampaigns() {
   // Different campaign configurations
   return [
     // Ongoing general campaign with volume-based prizes
