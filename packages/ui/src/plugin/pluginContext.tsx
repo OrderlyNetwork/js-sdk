@@ -1,21 +1,19 @@
-import { FC, PropsWithChildren, createContext, useContext } from "react";
+import React, { createContext, useContext, useMemo } from "react";
 
 export type ExtensionContextState = {};
 
-export const ExtensionContext = createContext({} as ExtensionContextState);
+export const ExtensionContext = createContext<ExtensionContextState>({});
 
 export const useExtensionContext = () => {
-  return useContext(ExtensionContext);
+  return useContext<ExtensionContextState>(ExtensionContext);
 };
 
-interface ExtensionProviderProps {}
-
-export const ExtensionProvider: FC<
-  PropsWithChildren<ExtensionProviderProps>
-> = (props) => {
+export const ExtensionProvider: React.FC<React.PropsWithChildren> = (props) => {
+  const { children } = props;
+  const memoizedValue = useMemo<ExtensionContextState>(() => ({}), []);
   return (
-    <ExtensionContext.Provider value={{}}>
-      {props.children}
+    <ExtensionContext.Provider value={memoizedValue}>
+      {children}
     </ExtensionContext.Provider>
   );
 };

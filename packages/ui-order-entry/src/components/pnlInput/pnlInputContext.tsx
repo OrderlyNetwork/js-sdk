@@ -1,14 +1,8 @@
-import {
-  createContext,
-  PropsWithChildren,
-  ReactNode,
-  useContext,
-  useMemo,
-} from "react";
-import { PNL_Values, PnLMode } from "./useBuilder.script";
+import React, { createContext, ReactNode, useContext, useMemo } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
-import { cn, Flex, Text } from "@orderly.network/ui";
 import { useTranslation } from "@orderly.network/i18n";
+import { cn, Flex, Text } from "@orderly.network/ui";
+import { PNL_Values, PnLMode } from "./useBuilder.script";
 
 type TipType = "ROI" | "PnL" | "Error";
 
@@ -19,31 +13,30 @@ export type PnlInputContextState = {
 };
 
 export const PnlInputContext = createContext<PnlInputContextState>(
-  {} as PnlInputContextState
+  {} as PnlInputContextState,
 );
 
 export const usePnlInputContext = () => {
   return useContext(PnlInputContext);
 };
 
-export const PnlInputProvider = (
-  props: PropsWithChildren<{
-    values: PNL_Values & {
-      trigger_price?: string;
-    };
+export const PnlInputProvider: React.FC<
+  React.PropsWithChildren<{
+    values: PNL_Values & { trigger_price?: string };
     type: "TP" | "SL";
   }>
-) => {
-  const { type, values } = props;
+> = (props) => {
+  const { type, values, children } = props;
   const [mode, setMode] = useLocalStorage<PnLMode>(
     "TP/SL_Mode",
-    PnLMode.PERCENTAGE
+    PnLMode.PERCENTAGE,
   );
   const { t } = useTranslation();
 
   const tipsEle = useMemo(() => {
-    if (!values.PnL || !props.values.trigger_price) return null;
-    
+    if (!values.PnL || !values.trigger_price) {
+      return null;
+    }
     return (
       <Flex>
         <span className={"oui-text-xs oui-text-base-contrast-54"}>
@@ -55,8 +48,8 @@ export const PnlInputProvider = (
           <Text.numeral
             rule={"percentages"}
             className={cn(
-              "oui-text-xs oui-ml-1",
-              type === "TP" ? "oui-text-trade-profit" : "oui-text-trade-loss"
+              "oui-ml-1 oui-text-xs",
+              type === "TP" ? "oui-text-trade-profit" : "oui-text-trade-loss",
             )}
           >
             {values.ROI}
@@ -65,8 +58,8 @@ export const PnlInputProvider = (
           <Text.numeral
             rule={"price"}
             className={cn(
-              "oui-text-xs oui-ml-1",
-              type === "TP" ? "oui-text-trade-profit" : "oui-text-trade-loss"
+              "oui-ml-1 oui-text-xs",
+              type === "TP" ? "oui-text-trade-profit" : "oui-text-trade-loss",
             )}
           >
             {values.PnL}
@@ -74,17 +67,15 @@ export const PnlInputProvider = (
         )}
       </Flex>
     );
-  }, [mode, props.values.PnL, props.values.trigger_price]);
+  }, [mode, values.ROI, values.PnL, values.trigger_price]);
+
+  const memoizedValue = useMemo<PnlInputContextState>(() => {
+    return { mode, setMode, tipsEle };
+  }, [mode, setMode, tipsEle]);
 
   return (
-    <PnlInputContext.Provider
-      value={{
-        mode,
-        setMode,
-        tipsEle,
-      }}
-    >
-      {props.children}
+    <PnlInputContext.Provider value={memoizedValue}>
+      {children}
     </PnlInputContext.Provider>
   );
 };

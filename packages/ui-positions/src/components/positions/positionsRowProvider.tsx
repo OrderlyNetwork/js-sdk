@@ -1,4 +1,11 @@
-import { FC, PropsWithChildren, useCallback, useEffect, useState } from "react";
+import {
+  FC,
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import {
   KeyedMutator,
   usePositionClose,
@@ -8,6 +15,7 @@ import { useTranslation } from "@orderly.network/i18n";
 import { API, OrderType } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
 import { PositionsRowContext } from "./positionsRowContext";
+import type { PositionsRowContextState } from "./positionsRowContext";
 
 type PositionsRowProviderProps = PropsWithChildren<{
   position: API.PositionExt | API.PositionTPSLExt;
@@ -15,7 +23,7 @@ type PositionsRowProviderProps = PropsWithChildren<{
 }>;
 
 export const PositionsRowProvider: FC<PositionsRowProviderProps> = (props) => {
-  const { position } = props;
+  const { position, children, mutatePositions } = props;
   const { t } = useTranslation();
   const [quantity, setQuantity] = useState<string>(
     Math.abs(position.position_qty).toString(),
@@ -109,7 +117,7 @@ export const PositionsRowProvider: FC<PositionsRowProviderProps> = (props) => {
     return submit()
       .then((res) => {
         if (res.success) {
-          props.mutatePositions?.();
+          mutatePositions?.();
           return res;
         }
 
@@ -127,28 +135,46 @@ export const PositionsRowProvider: FC<PositionsRowProviderProps> = (props) => {
       });
   }, [submit]);
 
+  const memoizedValue = useMemo<PositionsRowContextState>(() => {
+    return {
+      quantity,
+      price,
+      type,
+      side,
+      position,
+      tpslOrder: (position as API.PositionTPSLExt).algo_order,
+      updatePriceChange,
+      updateQuantity,
+      updateOrderType,
+      onSubmit,
+      submitting,
+      closeOrderData,
+      quoteDp,
+      baseDp,
+      baseTick,
+      errors,
+    };
+  }, [
+    quantity,
+    price,
+    type,
+    side,
+    position,
+    updatePriceChange,
+    updateQuantity,
+    updateOrderType,
+    onSubmit,
+    submitting,
+    closeOrderData,
+    quoteDp,
+    baseDp,
+    baseTick,
+    errors,
+  ]);
+
   return (
-    <PositionsRowContext.Provider
-      value={{
-        quantity,
-        price,
-        type,
-        side,
-        position,
-        updatePriceChange,
-        updateQuantity,
-        updateOrderType,
-        tpslOrder: (position as API.PositionTPSLExt).algo_order,
-        onSubmit,
-        submitting,
-        closeOrderData,
-        quoteDp,
-        baseDp,
-        baseTick,
-        errors,
-      }}
-    >
-      {props.children}
+    <PositionsRowContext.Provider value={memoizedValue}>
+      {children}
     </PositionsRowContext.Provider>
   );
 };

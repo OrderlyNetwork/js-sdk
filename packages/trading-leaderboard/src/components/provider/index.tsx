@@ -1,4 +1,4 @@
-import {
+import React, {
   createContext,
   PropsWithChildren,
   useContext,
@@ -67,9 +67,9 @@ export type TradingLeaderboardProviderProps = PropsWithChildren<
   onCampaignChange?: (campaignId: string | number) => void;
 };
 
-export const TradingLeaderboardProvider = (
-  props: TradingLeaderboardProviderProps,
-) => {
+export const TradingLeaderboardProvider: React.FC<
+  TradingLeaderboardProviderProps
+> = (props) => {
   const [currentCampaignId, setCurrentCampaignId] = useState<string>("general");
   const [userData, setUserData] = useState<UserData>();
   const [updatedTime, setUpdatedTime] = useState<number>();
