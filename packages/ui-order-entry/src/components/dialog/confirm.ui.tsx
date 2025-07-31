@@ -23,6 +23,7 @@ import {
   Text,
   textVariants,
 } from "@orderly.network/ui";
+import { Decimal } from "@orderly.network/utils";
 import { getBBOType, isBBOOrder } from "../../utils";
 
 type OrderConfirmDialogProps = {
@@ -124,6 +125,31 @@ export const OrderConfirmDialog = (props: OrderConfirmDialogProps) => {
     );
   };
 
+  const renderTPSLQty = useMemo(() => {
+    let qty = new Decimal(order.order_quantity);
+    if (order.position_type === PositionType.FULL) {
+      qty = qty.plus(new Decimal(positionQty));
+    }
+    return (
+      <Flex justify={"between"}>
+        <Text>
+          {/* TODO i18n */}
+          {order.position_type === PositionType.FULL
+            ? "Position Qty."
+            : "Order Qty."}
+        </Text>
+        <Text.numeral
+          rule={"price"}
+          dp={base_dp}
+          padding={false}
+          className="oui-text-base-contrast"
+        >
+          {qty.toNumber()}
+        </Text.numeral>
+      </Flex>
+    );
+  }, [order, positionQty]);
+
   return (
     <>
       <Flex justify={"between"}>
@@ -152,7 +178,8 @@ export const OrderConfirmDialog = (props: OrderConfirmDialogProps) => {
         })}
       >
         <Flex justify={"between"}>
-          <Text>{t("common.qty")}</Text>
+          {/* TODO i18n */}
+          <Text>Order Qty.</Text>
           <Text.numeral
             rule={"price"}
             dp={base_dp}
@@ -182,7 +209,8 @@ export const OrderConfirmDialog = (props: OrderConfirmDialogProps) => {
           {renderPrice()}
         </Flex>
         <Flex justify={"between"}>
-          <Text>{t("common.notional")}</Text>
+          {/* TODO i18n */}
+          <Text>Est. Total</Text>
           <Text.numeral
             unit={"USDC"}
             rule={"price"}
@@ -210,20 +238,7 @@ export const OrderConfirmDialog = (props: OrderConfirmDialogProps) => {
             <Text className="oui-text-base-contrast">
               TP/SL for {renderPositionType()}
             </Text>
-            <Flex justify={"between"}>
-              <Text>Order Qty.</Text>
-              <Text.numeral
-                rule={"price"}
-                dp={base_dp}
-                padding={false}
-                className="oui-text-base-contrast"
-              >
-                {/* TODO if positionType is full, need show position qty*/}
-                {order.position_type === PositionType.FULL
-                  ? positionQty
-                  : order.order_quantity}
-              </Text.numeral>
-            </Flex>
+            {renderTPSLQty}
 
             <Flex
               direction={"column"}

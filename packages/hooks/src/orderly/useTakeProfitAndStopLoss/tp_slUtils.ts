@@ -260,7 +260,7 @@ export function priceToPnl(
 
   if (symbol) {
     // return decimal.todp(symbol.quote_dp, Decimal.ROUND_DOWN).toNumber();
-    return decimal.todp(2, Decimal.ROUND_DOWN).toNumber();
+    return decimal.todp(2, Decimal.ROUND_UP).toNumber();
   }
 
   return decimal.toNumber();
@@ -346,6 +346,8 @@ export function tpslCalculateHelper(
 
   const qty = Number(key === "quantity" ? inputs.value : inputs.qty);
 
+  console.log("key", key, inputs.value, inputs.values, inputs.qty);
+
   if (
     qty === 0 &&
     (key === "tp_pnl" ||
@@ -354,8 +356,8 @@ export function tpslCalculateHelper(
       key === "sl_trigger_price")
   ) {
     return {
-      [`${keyPrefix}trigger_price`]: "",
-      [`${keyPrefix}order_price`]: "",
+      // [`${keyPrefix}trigger_price`]: "",
+      // [`${keyPrefix}order_price`]: "",
       // [`${keyPrefix}offset`]: "",
       // [`${keyPrefix}offset_percentage`]: "",
       [`${keyPrefix}pnl`]: "",
