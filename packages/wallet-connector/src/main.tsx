@@ -1,6 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import { WalletConnectorContext } from "@orderly.network/hooks";
+import type { WalletConnectorContextState } from "@orderly.network/hooks";
 import { ChainNamespace } from "@orderly.network/types";
 import { hex2int } from "@orderly.network/utils";
 import { SolanaChains } from "./config";
@@ -22,7 +23,6 @@ export const Main: React.FC<
       newNamespace.current = ChainNamespace.solana;
       // connect solana
       return sol.connect().then((res) => {
-        console.log("-- connect sol", res);
         if (res) {
           return res;
         }
@@ -38,14 +38,12 @@ export const Main: React.FC<
     return evm
       .connect(evmOption)
       .then((res) => {
-        console.log("-- connect evm", res);
         if (!res.length) {
           return Promise.reject({ message: "user reject" });
         }
         return res;
       })
       .catch((e) => {
-        console.log("-- connect evm error", e);
         return Promise.reject(e);
       });
   };
@@ -92,10 +90,7 @@ export const Main: React.FC<
     if (Array.from(SolanaChains.values()).includes(chainId)) {
       tempNamespace = ChainNamespace.solana;
     }
-    console.log("--- namespace", {
-      namespace,
-      tempNamespace,
-    });
+
     if (namespace === tempNamespace && namespace === ChainNamespace.evm) {
       // todo switch chan on block native
 
@@ -107,10 +102,6 @@ export const Main: React.FC<
   };
 
   useEffect(() => {
-    // console.log("-- connect", {
-    //   sol: sol.connected,
-    //   evm: evm.connected,
-    // });
     if (sol.connected && evm.connected) {
       if (newNamespace.current === ChainNamespace.solana) {
         evm.disconnect().then();
@@ -133,18 +124,30 @@ export const Main: React.FC<
     }
   }, [newNamespace.current, sol.connected, evm.connected]);
 
+  const memoizedValue = useMemo<WalletConnectorContextState>(() => {
+    return {
+      connect: connect as any,
+      disconnect: disconnect as any,
+      connecting,
+      wallet: wallet as any,
+      setChain: setChain as any,
+      connectedChain: connectedChain as any,
+      namespace: namespace,
+      chains: [],
+      settingChain: false,
+    };
+  }, [
+    connect,
+    disconnect,
+    connecting,
+    wallet,
+    setChain,
+    connectedChain,
+    namespace,
+  ]);
+
   return (
-    <WalletConnectorContext.Provider
-      value={{
-        connect,
-        disconnect,
-        connecting,
-        wallet,
-        setChain,
-        connectedChain,
-        namespace,
-      }}
-    >
+    <WalletConnectorContext.Provider value={memoizedValue}>
       {props.children}
     </WalletConnectorContext.Provider>
   );

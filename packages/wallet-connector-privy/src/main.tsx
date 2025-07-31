@@ -24,9 +24,9 @@ export const Main: React.FC<React.PropsWithChildren<MainProps>> = (props) => {
   const { openConnectDrawer, setOpenConnectDrawer, setTargetWalletType } =
     useWalletConnectorPrivy();
 
-  const connect = (props: any): Promise<WalletState[]> => {
+  const connect = (options: any): Promise<WalletState[]> => {
     // fix wallet-connector package connect
-    if (props && props.autoSelect) {
+    if (options && options.autoSelect) {
       return Promise.resolve([]);
     }
     setTargetWalletType(undefined);
