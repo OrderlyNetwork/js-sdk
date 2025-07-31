@@ -197,15 +197,11 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
     return (data?.referee_info.referer_code?.length || 0) > 0;
   }, [data?.referee_info]);
 
-  const userVolume = useMemo(() => {
-    const volume: any = {};
-
+  const userVolume = useMemo<UserVolumeType>(() => {
+    const volume: UserVolumeType = {};
     if (dailyVolume && dailyVolume.length > 0) {
       const now = format(new Date(), "yyyy-MM-dd");
-      const index = dailyVolume.findIndex((item: any) => {
-        const itemDate = item.date;
-        return itemDate === now;
-      });
+      const index = dailyVolume.findIndex((item) => item.date === now);
       let oneDayVolume = 0;
       if (index !== -1) {
         oneDayVolume = dailyVolume[index].perp_volume;

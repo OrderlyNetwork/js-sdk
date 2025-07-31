@@ -48,20 +48,19 @@ export const TradingRewardsProvider: React.FC<
     showEpochPauseCountdown?: boolean;
   }>
 > = (props) => {
-  // const { brokerId = "orderly" } = props;
-
-  const brokerId = useConfig("brokerId");
-
   const {
     type = TWType.normal,
+    showEpochPauseCountdown,
     titleConfig = {
       docOpenOptions: {
         url: "https://orderly.network/docs/introduction/tokenomics/trading-rewards",
         target: "_blank",
       },
     },
-    showEpochPauseCountdown,
+    children,
   } = props;
+
+  const brokerId = useConfig("brokerId");
 
   const { statusInfo } = useTradingRewardsStatus(type === TWType.mm);
   const totalOrderClaimedReward = useGetClaimed(
@@ -77,38 +76,49 @@ export const TradingRewardsProvider: React.FC<
 
   const walletRewardsHistory = useWalletRewardsHistory(type);
 
-  const epochList = useEpochInfo(type as TWType);
+  const epochList = useEpochInfo(type);
 
   const brokerName = useMemo(() => {
     return brokers?.[brokerId];
   }, [brokerId, brokers]);
 
+  const memoizedValue = useMemo<TradingRewardsState>(() => {
+    return {
+      type: type,
+      totalOrderClaimedReward,
+      totalEsOrderClaimedReward,
+      epochList,
+      curEpochEstimate,
+      walletRewardsHistory,
+      titleConfig,
+      brokerId,
+      brokerName,
+      brokers,
+      statusInfo,
+      showEpochPauseCountdown: showEpochPauseCountdown ?? false,
+    };
+  }, [
+    type,
+    totalOrderClaimedReward,
+    totalEsOrderClaimedReward,
+    epochList,
+    curEpochEstimate,
+    walletRewardsHistory,
+    titleConfig,
+    brokerId,
+    brokerName,
+    brokers,
+    statusInfo,
+    showEpochPauseCountdown,
+  ]);
+
   return (
-    <TradingRewardsContext.Provider
-      value={{
-        type: type as TWType,
-        totalOrderClaimedReward,
-        totalEsOrderClaimedReward,
-        // totalOrderClaimedReward: 2000,
-        // totalEsOrderClaimedReward: 0,
-        epochList,
-        curEpochEstimate,
-        walletRewardsHistory,
-        titleConfig,
-        brokerId,
-        brokerName,
-        brokers,
-        statusInfo,
-        showEpochPauseCountdown: showEpochPauseCountdown ?? false,
-      }}
-    >
-      {/* <PageLoading loading={epochList.data === undefined}> */}
-      {props.children}
-      {/* </PageLoading> */}
+    <TradingRewardsContext.Provider value={memoizedValue}>
+      {children}
     </TradingRewardsContext.Provider>
   );
 };
 
-export function useTradingRewardsContext() {
-  return useContext(TradingRewardsContext);
-}
+export const useTradingRewardsContext = () => {
+  return useContext<TradingRewardsState>(TradingRewardsContext);
+};
