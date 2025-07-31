@@ -101,56 +101,49 @@ const config: StorybookConfig = {
   // },
   viteFinal: async (config) => {
     // console.log("config", config);
-
-    const { watchs, unwatchs } = getPackageConfig();
-
+    // const { watchs, unwatchs } = getPackageConfig();
     // watch storybook
-    const storybook = ["../src", "."].map((item) => `!${item}/**`);
-
-    // console.log("storybook", storybook);
-
-    // watch src
-    const includeSrc = watchs.map((item) => `!${item.path}/**`);
-
-    // watch dist
-    const includeDist = unwatchs.map(
-      (item) => `!${resolve(item.path, "../dist")}/**`,
-    );
-
+    // const storybook = ["../src", "."].map((item) => `!${item}/**`);
+    // // console.log("storybook", storybook);
+    // // watch src
+    // const includeSrc = watchs.map((item) => `!${item.path}/**`);
+    // // watch dist
+    // const includeDist = unwatchs.map(
+    //   (item) => `!${resolve(item.path, "../dist")}/**`,
+    // );
     // merge custom config to storybook vite config
-    return mergeConfig(config, {
-      server: {
-        watch: {
-          ignored: [
-            // ignore all files
-            "**",
-            ...storybook,
-            ...includeSrc,
-            ...includeDist,
-            // "**/node_modules/**",
-            // "**/.git/**",
-            // "**/dist/**",
-            // "**/build/**",
-            // "**/storybook-static/**",
-            // "**/__test__/**",
-            // "apps/docs/**",
-            // ".turbo/**",
-          ],
-        },
-      },
-      // build: {
-      //   rollupOptions: {
-      //     maxParallelFileOps: 10,
-      //   },
-      //   commonjsOptions: {
-      //     sourceMap: false,
-      //   },
-      //   chunkSizeWarningLimit: 1000,
-      //   sourcemap: false,
-      // },
-    });
-
-    // return config;
+    // return mergeConfig(config, {
+    //   server: {
+    //     watch: {
+    //       ignored: [
+    //         // ignore all files
+    //         "**",
+    //         ...storybook,
+    //         ...includeSrc,
+    //         ...includeDist,
+    //         // "**/node_modules/**",
+    //         // "**/.git/**",
+    //         // "**/dist/**",
+    //         // "**/build/**",
+    //         // "**/storybook-static/**",
+    //         // "**/__test__/**",
+    //         // "apps/docs/**",
+    //         // ".turbo/**",
+    //       ],
+    //     },
+    //   },
+    //   // build: {
+    //   //   rollupOptions: {
+    //   //     maxParallelFileOps: 10,
+    //   //   },
+    //   //   commonjsOptions: {
+    //   //     sourceMap: false,
+    //   //   },
+    //   //   chunkSizeWarningLimit: 1000,
+    //   //   sourcemap: false,
+    //   // },
+    // });
+    return config;
   },
 };
 export default config;
