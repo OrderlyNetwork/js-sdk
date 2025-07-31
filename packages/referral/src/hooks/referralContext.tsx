@@ -6,7 +6,9 @@ import {
   useEffect,
   useMemo,
 } from "react";
-import { IntlProvider, MessageFormatElement } from "react-intl";
+import { IntlProvider } from "react-intl";
+import type { MessageFormatElement } from "react-intl";
+import { pick } from "ramda";
 import {
   RefferalAPI as API,
   usePrivateQuery,
@@ -247,14 +249,8 @@ export const ReferralProvider: FC<
     memoMutate,
   ]);
 
-  const { messages, locale, defaultLocale } = intl;
-
   return (
-    <IntlProvider
-      locale={locale}
-      messages={messages}
-      defaultLocale={defaultLocale}
-    >
+    <IntlProvider {...pick(["messages", "locale", "defaultLocale"], intl)}>
       <ReferralContext.Provider value={memoizedValue}>
         {children}
       </ReferralContext.Provider>
