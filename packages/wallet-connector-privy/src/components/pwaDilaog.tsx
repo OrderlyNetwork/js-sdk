@@ -39,19 +39,16 @@ export const PwaDialog = modal.create((props) => {
             title={t("connector.privy.pwa.step1")}
             content={
               <Flex className="oui-w-full oui-bg-dark-8">
-                <Grid
-                  rows={1}
-                  cols={3}
-                  className="oui-bg-black/[0.08] oui-p-2 oui-h-[52px] oui-rounded-[44px] oui-w-full oui-px-4"
+                <Flex
+                  className="oui-bg-black/[0.08] oui-p-2 oui-h-[52px] oui-rounded-[44px] oui-w-full oui-px-4 oui-relative"
+                  itemAlign={"center"}
+                  justify={"center"}
                 >
-                  <div></div>
-                  <Text className="oui-text-black/[0.88] oui-text-[20px] oui-leading-[36px] oui-flex-1">
+                  <Text className="oui-text-black/[0.88] oui-text-[18px] oui-leading-[36px] oui-flex-1 oui-text-center oui-whitespace-nowrap">
                     {domain}
                   </Text>
-                  <Flex itemAlign={"center"} justify={"end"}>
-                    <ShareIcon />
-                  </Flex>
-                </Grid>
+                  <ShareIcon className="oui-absolute oui-right-4 oui-top-1/2 oui-translate-y-[-50%]" />
+                </Flex>
               </Flex>
             }
           />
@@ -76,14 +73,16 @@ export const PwaDialog = modal.create((props) => {
                   </Text>
                 </Flex>
                 <Divider className="oui-bg-black/[0.15] oui-w-full" />
-                <Grid cols={3} className="oui-w-full oui-px-4 oui-py-3">
-                  <Text className="oui-text-black/[0.88] oui-text-[18px] oui-col-span-2">
+                <Flex
+                  className="oui-w-full oui-px-4 oui-py-3"
+                  justify={"between"}
+                  itemAlign={"center"}
+                >
+                  <Text className="oui-text-black/[0.88] oui-text-[18px] oui-col-span-2 oui-whitespace-nowrap">
                     {t("connector.privy.pwa.addToHomeScreen")}
                   </Text>
-                  <Flex itemAlign={"center"} justify={"end"}>
-                    <AddIcon />
-                  </Flex>
-                </Grid>
+                  <AddIcon />
+                </Flex>
               </Flex>
             }
           />
@@ -93,7 +92,7 @@ export const PwaDialog = modal.create((props) => {
   );
 });
 
-const ShareIcon = () => {
+const ShareIcon = (props: { className?: string }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -101,6 +100,7 @@ const ShareIcon = () => {
       height="28"
       viewBox="0 0 28 28"
       fill="none"
+      className={props.className}
     >
       <path
         d="M5 23.3333V13.6667C5 12.1939 6.15127 11 7.57143 11H10.6744V12.7778H7.57143C7.09804 12.7778 6.71429 13.1757 6.71429 13.6667V23.3333C6.71429 23.8243 7.09804 24.2222 7.57143 24.2222H20.4286C20.902 24.2222 21.2857 23.8243 21.2857 23.3333V13.6667C21.2857 13.1757 20.902 12.7778 20.4286 12.7778H17.555V11H20.4286C21.8487 11 23 12.1939 23 13.6667V23.3333C23 24.8061 21.8487 26 20.4286 26H7.57143C6.15127 26 5 24.8061 5 23.3333Z"
