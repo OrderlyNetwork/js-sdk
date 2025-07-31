@@ -1,13 +1,15 @@
-import React, { useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { useChannel } from "storybook/manager-api";
 import { EVENTS } from "../constants";
 import { EditorContext } from "./context";
+import type { EditorContextState } from "./context";
 
 export type Theme = Record<string, string>;
 
 type ViewMode = "visual" | "code";
 
-export const EditorProvider = ({ children }: { children: React.ReactNode }) => {
+export const EditorProvider: React.FC<React.PropsWithChildren> = (props) => {
+  const { children } = props;
   const [mode, setMode] = useState<ViewMode>("visual");
   const defaultThemeRef = useRef<Theme | null>(null);
   const [loading, setLoading] = useState(true);
@@ -38,17 +40,19 @@ export const EditorProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const memoizedValue = useMemo<EditorContextState>(() => {
+    return {
+      theme,
+      mode,
+      loading,
+      setTheme: handleSetTheme,
+      setMode,
+      resetTheme,
+    };
+  }, [theme, mode, loading, handleSetTheme, resetTheme]);
+
   return (
-    <EditorContext.Provider
-      value={{
-        theme,
-        mode,
-        setTheme: handleSetTheme,
-        setMode,
-        resetTheme,
-        loading,
-      }}
-    >
+    <EditorContext.Provider value={memoizedValue}>
       {children}
     </EditorContext.Provider>
   );

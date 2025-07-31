@@ -1,10 +1,9 @@
 "use client";
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { httpBatchLink, loggerLink } from "@trpc/client";
 import React, { FC, PropsWithChildren, useState } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-
+import { httpBatchLink, loggerLink } from "@trpc/client";
 import superjson from "superjson";
 import { trpc } from "@/utils/trpc";
 
@@ -17,18 +16,16 @@ function getBaseUrl() {
   return `http://localhost:${process.env.PORT ?? 3000}`;
 }
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+
 export const TRPCProvider: FC<PropsWithChildren> = (props) => {
   const url = `${getBaseUrl()}/api/trpc`;
-  const [queryClient] = useState(
-    () =>
-      new QueryClient({
-        defaultOptions: {
-          queries: {
-            refetchOnWindowFocus: false,
-          },
-        },
-      })
-  );
   const [trpcClient] = useState(() =>
     trpc.createClient({
       links: [
@@ -40,7 +37,7 @@ export const TRPCProvider: FC<PropsWithChildren> = (props) => {
         httpBatchLink({ url }),
       ],
       transformer: superjson,
-    })
+    }),
   );
 
   return (

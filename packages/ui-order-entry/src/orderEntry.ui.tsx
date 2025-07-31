@@ -49,11 +49,12 @@ import {
   textVariants,
   ThrottledButton,
   toast,
+  TokenIcon,
   Tooltip,
   useScreen,
 } from "@orderly.network/ui";
 import { LeverageWidgetWithSheetId } from "@orderly.network/ui-leverage";
-import { commifyOptional } from "@orderly.network/utils";
+import { commifyOptional, Decimal } from "@orderly.network/utils";
 import { LTVRiskTooltipWidget } from "./components/LTVRiskTooltip";
 // import { useBalanceScript } from "../../trading/src/components/mobile/bottomNavBar/balance";
 import { AdditionalInfoWidget } from "./components/additional/additionnalInfo.widget";
@@ -65,6 +66,7 @@ import {
   OrderEntryProvider,
 } from "./components/orderEntryContext";
 import { QuantityDistributionInput } from "./components/quantityDistribution";
+import { QuantityUnit } from "./components/quantityUnit";
 import { SlippageUI } from "./components/slippage/slippage.ui";
 import { OrderTPSL } from "./components/tpsl";
 import { type OrderEntryScriptReturn } from "./orderEntry.script";
@@ -364,11 +366,11 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
             type={props.type}
             symbolInfo={symbolInfo}
             values={{
-              quantity: formattedOrder.order_quantity,
+              order_quantity: formattedOrder.order_quantity,
               total: formattedOrder.total,
               side: formattedOrder.side,
-              max_price: formattedOrder.max_price,
-              min_price: formattedOrder.min_price,
+              end_price: formattedOrder.end_price,
+              start_price: formattedOrder.start_price,
               total_orders: formattedOrder.total_orders,
               distribution_type: formattedOrder.distribution_type,
               skew: formattedOrder.skew,
@@ -380,13 +382,16 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
             onBlur={props.onBlur}
             onFocus={props.onFocus}
             parseErrorMsg={parseErrorMsg}
+            quantityUnit={props.quantityUnit}
+            setQuantityUnit={props.setQuantityUnit}
+            errors={errors}
           />
         ) : (
           <OrderQuantityInput
             type={props.type}
             symbolInfo={symbolInfo}
             values={{
-              quantity: formattedOrder.order_quantity,
+              order_quantity: formattedOrder.order_quantity,
               price: formattedOrder.order_price,
               trigger_price: formattedOrder.trigger_price,
               total: formattedOrder.total,
@@ -602,7 +607,7 @@ const OrderQuantityInput = (props: {
   type: OrderType;
   symbolInfo: API.SymbolExt;
   values: {
-    quantity?: string;
+    order_quantity?: string;
     price?: string;
     trigger_price?: string;
     total?: string;
@@ -774,7 +779,7 @@ const OrderQuantityInput = (props: {
           id="order_quantity_input"
           name="order_quantity_input"
           className={"!oui-rounded-r"}
-          value={values.quantity}
+          value={values.order_quantity}
           error={parseErrorMsg("order_quantity")}
           onChange={(e) => {
             props.onChange("order_quantity", e);
@@ -817,8 +822,8 @@ const CustomInput = forwardRef<
     value?: InputProps["value"];
     autoFocus?: InputProps["autoFocus"];
     error?: string;
-    onFocus: InputProps["onFocus"];
-    onBlur: InputProps["onBlur"];
+    onFocus?: InputProps["onFocus"];
+    onBlur?: InputProps["onBlur"];
     formatters?: InputProps["formatters"];
     overrideFormatters?: InputProps["formatters"];
     // helperText?: InputProps["helperText"];
@@ -1240,22 +1245,22 @@ const ScaledOrderInput = (props: {
   type: OrderType;
   symbolInfo: API.SymbolExt;
   values: {
-    quantity?: string;
+    order_quantity?: string;
     total?: string;
     side?: OrderSide;
-    max_price?: string;
-    min_price?: string;
-    total_orders?: number;
+    end_price?: string;
+    start_price?: string;
+    total_orders?: string;
     distribution_type?: DistributionType;
-    skew?: number;
+    skew?: string;
   };
   onChange: (
     key:
       | "order_quantity"
       | "total"
       | "order_type"
-      | "min_price"
-      | "max_price"
+      | "start_price"
+      | "end_price"
       | "total_orders"
       | "distribution_type"
       | "skew",
@@ -1263,63 +1268,115 @@ const ScaledOrderInput = (props: {
   ) => void;
   onValuesChange: (value: any) => void;
   onFocus: (type: InputType) => FocusEventHandler;
-  onBlur: (type: InputType) => FocusEventHandler;
-  parseErrorMsg: (key: keyof OrderValidationResult) => string;
+  onBlur: (type: InputType, tick?: number) => FocusEventHandler;
+  parseErrorMsg: (
+    key: keyof OrderValidationResult,
+    customValue?: string,
+  ) => string;
+  quantityUnit: "quote" | "base";
+  setQuantityUnit: (unit: "quote" | "base") => void;
+  errors: OrderValidationResult | null;
 }) => {
-  const { symbolInfo, values, onFocus, onBlur, parseErrorMsg } = props;
+  const {
+    symbolInfo,
+    values,
+    onFocus,
+    onBlur,
+    parseErrorMsg,
+    quantityUnit,
+    setQuantityUnit,
+    errors,
+  } = props;
+  const { base, quote, base_dp, quote_dp } = symbolInfo;
   const { t } = useTranslation();
 
+  const isBase = quantityUnit === "base";
+  const unit = isBase ? base : quote;
   const showSkewInput = values.distribution_type === DistributionType.CUSTOM;
+
+  const suffix = (
+    <QuantityUnit
+      base={base}
+      quote={quote}
+      value={unit}
+      onValueChange={(value) => {
+        setQuantityUnit(value === base ? "base" : "quote");
+      }}
+    />
+  );
 
   return (
     <div className="oui-space-y-1">
       <CustomInput
-        label={t("orderEntry.upperPrice")}
-        suffix={symbolInfo.quote}
-        id="order_max_price_input"
-        value={values.max_price}
-        error={parseErrorMsg("max_price")}
+        label={t("orderEntry.startPrice")}
+        suffix={quote}
+        id="order_start_price_input"
+        value={values.start_price}
+        error={parseErrorMsg("start_price")}
         onChange={(e) => {
-          props.onChange("max_price", e);
+          props.onChange("start_price", e);
         }}
-        formatters={[inputFormatter.dpFormatter(symbolInfo.quote_dp)]}
-        onFocus={onFocus(InputType.MAX_PRICE)}
-        onBlur={onBlur(InputType.MAX_PRICE)}
+        formatters={[inputFormatter.dpFormatter(quote_dp)]}
+        onFocus={onFocus(InputType.START_PRICE)}
+        onBlur={onBlur(InputType.START_PRICE)}
         classNames={{
           root: "oui-rounded-t-xl",
         }}
       />
-
       <CustomInput
-        label={t("orderEntry.lowerPrice")}
-        suffix={symbolInfo.quote}
-        id="order_min_price_input"
-        value={values.min_price}
-        error={parseErrorMsg("min_price")}
-        onChange={(e) => {
-          props.onChange("min_price", e);
+        label={t("orderEntry.endPrice")}
+        suffix={quote}
+        id="order_end_price_input"
+        value={values.end_price}
+        error={parseErrorMsg("end_price")}
+        onChange={(val) => {
+          props.onChange("end_price", val);
         }}
-        formatters={[inputFormatter.dpFormatter(symbolInfo.quote_dp)]}
-        onFocus={onFocus(InputType.MIN_PRICE)}
-        onBlur={onBlur(InputType.MIN_PRICE)}
+        formatters={[inputFormatter.dpFormatter(quote_dp)]}
+        onFocus={onFocus(InputType.END_PRICE)}
+        onBlur={onBlur(InputType.END_PRICE)}
       />
 
       <Grid cols={2} className={"oui-group oui-space-x-1"}>
-        <CustomInput
-          label={t("common.qty")}
-          suffix={symbolInfo.base}
-          id="order_quantity_input"
-          name="order_quantity_input"
-          className={"!oui-rounded-r"}
-          value={values.quantity}
-          error={parseErrorMsg("order_quantity")}
-          onChange={(e) => {
-            props.onChange("order_quantity", e);
-          }}
-          formatters={[inputFormatter.dpFormatter(symbolInfo.base_dp)]}
-          onFocus={onFocus(InputType.QUANTITY)}
-          onBlur={onBlur(InputType.QUANTITY)}
-        />
+        {isBase ? (
+          <CustomInput
+            label={t("common.qty")}
+            suffix={suffix}
+            id="order_quantity_input"
+            name="order_quantity_input"
+            className="!oui-rounded-r"
+            value={values.order_quantity}
+            error={parseErrorMsg(
+              "order_quantity",
+              `${errors?.order_quantity?.value} ${base}`,
+            )}
+            onChange={(val) => {
+              props.onChange("order_quantity", val);
+            }}
+            formatters={[inputFormatter.dpFormatter(base_dp)]}
+            onFocus={onFocus(InputType.QUANTITY)}
+            onBlur={onBlur(InputType.QUANTITY)}
+          />
+        ) : (
+          <CustomInput
+            label={t("common.qty")}
+            suffix={suffix}
+            id="order_total_input"
+            name="order_total_input"
+            className="!oui-rounded-r"
+            value={values.total}
+            error={parseErrorMsg(
+              "order_quantity",
+              `${errors?.total?.value} ${quote}`,
+            )}
+            onChange={(val) => {
+              props.onChange("total", val);
+            }}
+            formatters={[inputFormatter.dpFormatter(quote_dp)]}
+            onFocus={onFocus(InputType.TOTAL)}
+            onBlur={onBlur(InputType.TOTAL)}
+          />
+        )}
         <CustomInput
           label={t("orderEntry.totalOrders")}
           placeholder="2-20"
@@ -1327,8 +1384,8 @@ const ScaledOrderInput = (props: {
           className={"!oui-rounded-l"}
           value={values.total_orders}
           error={parseErrorMsg("total_orders")}
-          onChange={(e) => {
-            props.onChange("total_orders", e);
+          onChange={(val) => {
+            props.onChange("total_orders", val);
           }}
           overrideFormatters={[
             // inputFormatter.rangeFormatter({ min: 2, max: 20 }),
@@ -1353,8 +1410,8 @@ const ScaledOrderInput = (props: {
           label={t("orderEntry.skew")}
           value={values.skew}
           error={parseErrorMsg("skew")}
-          onChange={(e) => {
-            props.onChange("skew", e);
+          onChange={(val) => {
+            props.onChange("skew", val);
           }}
           onFocus={onFocus(InputType.SKEW)}
           onBlur={onBlur(InputType.SKEW)}

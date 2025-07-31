@@ -336,7 +336,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
 
   useEffect(() => {
     setCrossChainTrans(!!assetHistory?.length);
-  }, [assetHistory]);
+  }, [assetHistory?.length]);
 
   // it need to use useMemoizedFn wrap ,otherwise crossChainTrans and assetHistory will be first render data
   const handleWalletTopic = useMemoizedFn((data: any) => {

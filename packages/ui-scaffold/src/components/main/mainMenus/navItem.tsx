@@ -10,7 +10,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { useLocalStorage } from "@orderly.network/hooks";
+import { useAccount, useLocalStorage } from "@orderly.network/hooks";
 import { ChevronDownIcon, PopoverContent, Tooltip } from "@orderly.network/ui";
 import { Flex } from "@orderly.network/ui";
 import { Box, cn, PopoverAnchor, PopoverRoot, Text } from "@orderly.network/ui";
@@ -79,6 +79,11 @@ export type MainNavItem = {
     href: string;
     isActive?: boolean;
   }) => React.ReactNode;
+  /**
+   * if true, this item will only be shown in the main account
+   * @default false
+   **/
+  onlyInMainAccount?: boolean;
   tooltipConfig?: {
     /**
      * if true, the tooltip will be shown on first visit
@@ -110,6 +115,10 @@ export const NavItem: FC<
   }
 > = (props) => {
   const { classNames, currentPath, item, onClick, ...buttonProps } = props;
+
+  const { customRender, tooltipConfig, onlyInMainAccount } = item;
+
+  const { isMainAccount } = useAccount();
 
   const [showButtonTooltip, setShowButtonTooltip] = useLocalStorage(
     ORDERLY_NAV_BUTTON_TOOLTIP_OPEN,
@@ -144,7 +153,6 @@ export const NavItem: FC<
   }, [item, onClick]);
 
   const buttonRender = () => {
-    const { customRender, tooltipConfig } = item;
     if (typeof customRender === "function") {
       return customRender({
         name: item.name,
@@ -198,6 +206,7 @@ export const NavItem: FC<
         />
       </button>
     );
+
     if (isObject(tooltipConfig) && tooltipConfig.showOnFirstVisit) {
       return (
         <Tooltip
@@ -213,6 +222,10 @@ export const NavItem: FC<
     }
     return button;
   };
+
+  if (onlyInMainAccount && !isMainAccount) {
+    return null;
+  }
 
   if (!Array.isArray(item.children)) {
     return buttonRender();

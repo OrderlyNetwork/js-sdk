@@ -4,8 +4,10 @@ import {
   createContext,
   useCallback,
   useContext,
+  useMemo,
 } from "react";
 import { getMinNotional, useSymbolsInfo } from "@orderly.network/hooks";
+import { useMemoizedFn } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { API, OrderEntity } from "@orderly.network/types";
 import { modal } from "@orderly.network/ui";
@@ -52,7 +54,8 @@ export const OrderListProvider: FC<
   } = props;
   const { t } = useTranslation();
   const symbolInfo = useSymbolsInfo();
-  const onCancelOrder = useCallback(
+
+  const onCancelOrder = useMemoizedFn(
     async (order: API.Order | API.AlgoOrder) => {
       if (order.algo_order_id !== undefined) {
         if (
@@ -71,76 +74,48 @@ export const OrderListProvider: FC<
         // toast.success("Order canceled successfully");
       });
     },
-    [],
   );
 
-  const onEditOrder = useCallback(
+  const onEditOrder = useMemoizedFn(
     async (order: API.Order | API.AlgoOrder, position?: API.Position) => {
-      // @ts-ignore
       const isHidden =
         order.visible_quantity !== undefined
           ? order.visible_quantity === 0
           : (order as any).visible !== undefined
             ? (order as any).visible === 0
             : false;
-
       const orderEntry = await modal.sheet({
         title: t("orders.editOrder"),
         classNames: {
           content: "oui-edit-order-sheet-content",
         },
-        content: (
-          // <OrderEditFormSheet
-          //   order={order}
-          //   position={position}
-          //   editOrder={(value: OrderEntity) => {
-          //     /// check order has order_tag, if exits add order_tag to request body
-          //     if (
-          //       typeof order.order_tag !== undefined &&
-          //       order.reduce_only !== true
-          //     ) {
-          //       value = { ...value, order_tag: order.order_tag };
-          //     }
-          //     if (order.algo_order_id !== undefined) {
-          //       return editAlgoOrder(order.algo_order_id.toString(), {
-          //         ...value,
-          //       });
-          //     }
-          //     return editOrder((order as any).order_id.toString(), {
-          //       ...value,
-          //       ...(isHidden ? { visible_quantity: 0 } : {}),
-          //     });
-          //   }}
-          // />
-          <>Content</>
-        ),
+        content: <>Content</>,
       });
     },
-    [t],
   );
 
-  const checkMinNotional = useCallback(
+  const checkMinNotional = useMemoizedFn(
     (symbol: string, price?: string | number, qty?: string | number) => {
       const { min_notional } = symbolInfo[symbol]();
-      console.log("min_notional", { price, qty, min_notional });
       const minNotional = getMinNotional({ price, qty, min_notional });
       if (minNotional !== undefined) {
         return t("orderEntry.total.error.min", { value: minNotional });
       }
     },
-    [symbolInfo, t],
   );
 
+  const memoizedValue = useMemo<OrderListContextState>(() => {
+    return {
+      onCancelOrder,
+      onEditOrder,
+      editOrder,
+      editAlgoOrder,
+      checkMinNotional,
+    };
+  }, [onCancelOrder, onEditOrder, editOrder, editAlgoOrder, checkMinNotional]);
+
   return (
-    <OrderListContext.Provider
-      value={{
-        onCancelOrder,
-        onEditOrder,
-        editOrder,
-        editAlgoOrder,
-        checkMinNotional,
-      }}
-    >
+    <OrderListContext.Provider value={memoizedValue}>
       {props.children}
     </OrderListContext.Provider>
   );

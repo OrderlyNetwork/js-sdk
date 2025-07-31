@@ -1,17 +1,16 @@
 import { pick } from "ramda";
-import { order as orderUntil } from "@orderly.network/perp";
 import {
   DistributionType,
   OrderEntity,
   OrderlyOrder,
-  OrderSide,
   OrderType,
 } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
+import { getPriceRange } from "../../utils/order/orderPrice";
 import {
-  calcScaledOrderMinTotalAmount,
   calcScaledOrderBatchBody,
-} from "../../next/useOrderEntry/helper";
+  calcScaledOrderMinTotalAmount,
+} from "../../utils/order/scaledOrder";
 import { BaseOrderCreator } from "./baseCreator";
 import {
   ValuesDepConfig,
@@ -51,82 +50,16 @@ export class ScaledOrderCreator extends BaseOrderCreator<OrderEntity> {
     );
   }
 
-  validatePrice(values: OrderlyOrder, config: ValuesDepConfig) {
-    const errors: {
-      [P in keyof OrderEntity]?: OrderValidationItem;
-    } = {};
-
-    const { side, min_price, max_price } = values;
-    const { price_range, price_scope, quote_max, quote_min, quote_dp } =
-      config.symbol;
-
-    const maxPriceNumber = orderUntil.maxPrice(config.markPrice, price_range);
-    const minPriceNumber = orderUntil.minPrice(config.markPrice, price_range);
-    const scopePriceNumber = orderUntil.scopePrice(
-      config.markPrice,
-      price_scope,
-      side,
-    );
-
-    const priceRange =
-      side === OrderSide.BUY
-        ? {
-            min: scopePriceNumber,
-            max: maxPriceNumber,
-          }
-        : {
-            min: minPriceNumber,
-            max: scopePriceNumber,
-          };
-
-    const minPrice = Number(min_price || 0);
-    const maxPrice = Number(max_price || 0);
-
-    if (!min_price) {
-      errors.min_price = OrderValidation.required("min_price");
-    } else {
-      if (minPrice < priceRange?.min) {
-        errors.min_price = OrderValidation.min(
-          "min_price",
-          new Decimal(priceRange.min).todp(quote_dp).toString(),
-        );
-      } else if (minPrice < quote_min) {
-        errors.min_price = OrderValidation.min("min_price", quote_min);
-      } else if (minPrice > maxPrice) {
-        errors.min_price = OrderValidation.max("min_price", max_price!);
-      }
-    }
-
-    if (!max_price) {
-      errors.max_price = OrderValidation.required("max_price");
-    } else {
-      if (maxPrice < priceRange?.min) {
-        errors.max_price = OrderValidation.min(
-          "max_price",
-          new Decimal(priceRange.min).todp(quote_dp).toString(),
-        );
-      } else if (maxPrice > priceRange?.max) {
-        errors.max_price = OrderValidation.max(
-          "max_price",
-          new Decimal(priceRange.max).todp(quote_dp).toString(),
-        );
-      } else if (maxPrice > quote_max) {
-        errors.max_price = OrderValidation.max("max_price", quote_max);
-      }
-    }
-
-    return errors;
-  }
-
   async validate(
     values: OrderlyOrder,
     config: ValuesDepConfig,
   ): Promise<OrderValidationResult> {
-    const { base_dp } = config.symbol;
-    const { maxQty, askAndBid } = config;
-    const { order_quantity, total_orders, distribution_type, skew } = values;
+    const { maxQty, askAndBid, markPrice, symbol } = config;
+    const { base_dp, quote_dp } = config.symbol;
+    const { order_quantity, total, total_orders, distribution_type, skew } =
+      values;
 
-    const errors = this.validatePrice(values, config);
+    const errors = validatePrice(values, config);
 
     if (!total_orders) {
       errors.total_orders = OrderValidation.required("total_orders");
@@ -160,12 +93,15 @@ export class ScaledOrderCreator extends BaseOrderCreator<OrderEntity> {
           "order_quantity",
           new Decimal(maxQty).todp(base_dp).toString(),
         );
+        errors.total = OrderValidation.max(
+          "total",
+          new Decimal(maxQty).mul(markPrice).todp(quote_dp).toString(),
+        );
       } else if (!errors.skew && !errors.total_orders) {
         // if skew and total_orders are not errors, and order_quantity is less than minTotalAmount, set error
-
         const minTotalAmount = calcScaledOrderMinTotalAmount(
           values,
-          config.symbol,
+          symbol,
           askAndBid!,
         );
 
@@ -174,10 +110,57 @@ export class ScaledOrderCreator extends BaseOrderCreator<OrderEntity> {
             "order_quantity",
             minTotalAmount,
           );
+          errors.total = OrderValidation.min(
+            "total",
+            new Decimal(minTotalAmount)
+              .mul(markPrice)
+              .todp(quote_dp)
+              .toString(),
+          );
         }
       }
     }
 
+    if (!total) {
+      errors.total = OrderValidation.required("total");
+    }
+
     return errors;
   }
+}
+
+function validatePrice(values: OrderlyOrder, config: ValuesDepConfig) {
+  const errors: {
+    [P in keyof OrderEntity]?: OrderValidationItem;
+  } = {};
+
+  const { start_price, end_price } = values;
+  const { quote_dp } = config.symbol;
+
+  const { minPrice, maxPrice } = getPriceRange({
+    side: values.side,
+    basePrice: config.markPrice,
+    symbolInfo: config.symbol,
+  });
+
+  const comparePrice = (key: "start_price" | "end_price", value?: string) => {
+    const price = new Decimal(value || 0);
+
+    if (price.lt(minPrice)) {
+      errors[key] = OrderValidation.min(
+        key,
+        new Decimal(minPrice).todp(quote_dp).toString(),
+      );
+    } else if (price.gt(maxPrice)) {
+      errors[key] = OrderValidation.max(
+        key,
+        new Decimal(maxPrice).todp(quote_dp).toString(),
+      );
+    }
+  };
+
+  comparePrice("start_price", start_price);
+  comparePrice("end_price", end_price);
+
+  return errors;
 }

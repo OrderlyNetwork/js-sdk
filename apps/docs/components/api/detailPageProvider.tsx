@@ -4,6 +4,7 @@ import {
   createContext,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 
@@ -40,17 +41,19 @@ export const DetailsPageProvider: FC<PropsWithChildren<Props>> = (props) => {
     setApiName(apiName);
   }, [props.apiName]);
 
+  const memoizedValue = useMemo<DetailsPageContextState>(() => {
+    return {
+      moduleName,
+      setModuleName,
+      slug: props.slug,
+      type: props.type,
+      apiName,
+      setApiName,
+    };
+  }, [moduleName, props.slug, props.type, apiName, setModuleName, setApiName]);
+
   return (
-    <DetailsPageContext.Provider
-      value={{
-        moduleName,
-        setModuleName,
-        slug: props.slug,
-        type: props.type,
-        apiName,
-        setApiName,
-      }}
-    >
+    <DetailsPageContext.Provider value={memoizedValue}>
       {props.children}
     </DetailsPageContext.Provider>
   );

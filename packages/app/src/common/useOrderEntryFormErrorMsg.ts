@@ -49,16 +49,14 @@ export function useOrderEntryFormErrorMsg(
       // slippage: {
       //   max: t("orderEntry.slippage.error.max"),
       // },
-      max_price: {
-        required: t("orderEntry.upperPrice.error.required"),
-        min: t("orderEntry.upperPrice.error.min", { value }),
-        max: t("orderEntry.upperPrice.error.max", { value }),
+      start_price: {
+        required: t("orderEntry.startPrice.error.required"),
+        min: t("orderEntry.startPrice.error.min", { value }),
       },
-      min_price: {
-        required: t("orderEntry.lowerPrice.error.required"),
-        min: t("orderEntry.lowerPrice.error.min", { value }),
-        // not use value
-        max: t("orderEntry.lowerPrice.error.max"),
+      end_price: {
+        required: t("orderEntry.endPrice.error.required"),
+        min: t("orderEntry.endPrice.error.min", { value }),
+        max: t("orderEntry.endPrice.error.max", { value }),
       },
       total_orders: {
         required: t("orderEntry.totalOrders.error.required"),
@@ -74,10 +72,10 @@ export function useOrderEntryFormErrorMsg(
     return map[key]?.[type] || "";
   };
 
-  const parseErrorMsg = (key: Keys) => {
+  const parseErrorMsg = (key: Keys, formatValue?: string) => {
     const { type, value } = errors?.[key] || ({} as OrderValidationItem);
     if (type) {
-      return getMessage(key, type, value);
+      return getMessage(key, type, formatValue || value);
     }
     return "";
   };

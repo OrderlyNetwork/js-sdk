@@ -151,30 +151,6 @@ export const useOrderlyConfig = () => {
             { name: t("common.portfolio"), href: "/portfolio" },
             { name: t("common.markets"), href: "/markets" },
             {
-              name: t("tradingView.timeInterval.more"),
-              href: "",
-              children: [
-                {
-                  name: t("common.tradingRewards"),
-                  href: "/rewards/trading",
-                  icon: <TradingRewardsIcon size={14} />,
-                  activeIcon: <TradingRewardsActiveIcon size={14} />,
-                },
-                {
-                  name: t("portfolio.feeTier"),
-                  href: PortfolioLeftSidebarPath.FeeTier,
-                  icon: <FeeTier size={14} />,
-                  activeIcon: <FeeTier size={14} />,
-                },
-                {
-                  name: t("portfolio.apiKeys"),
-                  href: PortfolioLeftSidebarPath.ApiKey,
-                  icon: <ApiKeys size={14} />,
-                  activeIcon: <ApiKeys size={14} />,
-                },
-              ],
-            },
-            {
               name: t("tradingLeaderboard.arena"),
               href: "/leaderboard",
               customRender: isOnGoing
@@ -198,10 +174,35 @@ export const useOrderlyConfig = () => {
               name: t("affiliate.referral"),
               href: "/rewards/affiliate",
               icon: "box-ani.gif",
+              onlyInMainAccount: true,
               tooltipConfig: {
                 showOnFirstVisit: true,
                 text: t("affiliate.referralTooltip"),
               },
+            },
+            {
+              name: t("tradingView.timeInterval.more"),
+              href: "",
+              children: [
+                {
+                  name: t("common.tradingRewards"),
+                  href: "/rewards/trading",
+                  icon: <TradingRewardsIcon size={14} />,
+                  activeIcon: <TradingRewardsActiveIcon size={14} />,
+                },
+                {
+                  name: t("portfolio.feeTier"),
+                  href: PortfolioLeftSidebarPath.FeeTier,
+                  icon: <FeeTier size={14} />,
+                  activeIcon: <FeeTier size={14} />,
+                },
+                {
+                  name: t("portfolio.apiKeys"),
+                  href: PortfolioLeftSidebarPath.ApiKey,
+                  icon: <ApiKeys size={14} />,
+                  activeIcon: <ApiKeys size={14} />,
+                },
+              ],
             },
           ],
           initialMenu: "/",
@@ -266,6 +267,7 @@ export const useOrderlyConfig = () => {
                   />
                 ),
                 trailing: <Tag text="Unlock @ $10K volume" />,
+                onlyInMainAccount: true,
               },
               {
                 name: t("common.tradingRewards"),

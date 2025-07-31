@@ -1,9 +1,9 @@
-import { Avatar } from "../avatar";
 import { FC, useMemo } from "react";
-import { ExcludeXsSizeType, SizeType } from "../helpers/sizeType";
+import { Avatar } from "../avatar";
+import { AvatarSizeType } from "../avatar/avatar";
 
 export type TokenIconProps = {
-  size?: SizeType;
+  size?: AvatarSizeType;
   name?: string;
   symbol?: string;
   className?: string;

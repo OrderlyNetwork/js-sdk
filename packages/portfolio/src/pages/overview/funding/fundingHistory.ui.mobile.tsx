@@ -27,8 +27,7 @@ export const FundingHistoryMobile: FC<FundingHistoryProps> = (props) => {
 
   const loadMore = () => {
     if (dataSource && dataSource.length < (pagination?.count || 0)) {
-      pagination?.onPageSizeChange &&
-        pagination.onPageSizeChange(pagination?.pageSize + 50);
+      pagination?.onPageSizeChange?.(pagination?.pageSize + 50);
     }
   };
 

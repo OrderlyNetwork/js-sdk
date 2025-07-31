@@ -1,8 +1,14 @@
-import { PropsWithChildren, useLayoutEffect, useRef, useState } from "react";
+import {
+  PropsWithChildren,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { ChartRenderer } from "./chartRenderer";
-import { ChartProps, Size } from "./constants/types";
 import { DeafultMargin } from "./constants/config";
-import { ChartContext } from "./hooks/chartContext";
+import { ChartProps, Size } from "./constants/types";
+import { ChartContext, ChartContextState } from "./hooks/chartContext";
 import { ChartScale, useChartState } from "./hooks/useChartState";
 
 const Chart = <T,>(props: PropsWithChildren<ChartProps<T>>) => {
@@ -11,14 +17,16 @@ const Chart = <T,>(props: PropsWithChildren<ChartProps<T>>) => {
   const [size, setSize] = useState<Size | undefined>(
     props.width && props.height
       ? { width: props.width, height: props.height }
-      : undefined
+      : undefined,
   );
 
   const [scale, setScale] = useState<ChartScale | undefined>();
 
   // set width and height
   useLayoutEffect(() => {
-    if (!wrapperRef.current || !!size) return;
+    if (!wrapperRef.current || !!size) {
+      return;
+    }
     const resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {
         // console.log(entry);
@@ -34,28 +42,34 @@ const Chart = <T,>(props: PropsWithChildren<ChartProps<T>>) => {
     resizeObserver.observe(wrapperRef.current);
 
     return () => {
-      if (!wrapperRef.current || !resizeObserver) return;
+      if (!wrapperRef.current || !resizeObserver) {
+        return;
+      }
       resizeObserver.unobserve(wrapperRef.current);
     };
   }, []);
 
+  const memoizedValue = useMemo<ChartContextState>(() => {
+    return {
+      margin,
+      size: size!,
+      scale: scale!,
+      data: props.data,
+      registerScale: setScale,
+    };
+  }, [margin, size, scale, props.data, setScale]);
+
   return (
     <div ref={wrapperRef}>
-      <ChartContext.Provider
-        value={{
-          margin,
-          size,
-          data: props.data,
-          scale,
-          registerScale: setScale,
-        }}
-      >
+      <ChartContext.Provider value={memoizedValue}>
         <ChartRenderer {...rest} />
       </ChartContext.Provider>
     </div>
   );
 };
 
-Chart.displayName = "Chart";
+if (process.env.NODE_ENV !== "production") {
+  Chart.displayName = "Chart";
+}
 
 export { Chart };

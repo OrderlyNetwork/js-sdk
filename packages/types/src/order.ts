@@ -101,16 +101,16 @@ export interface BaseOrder {
 
 /** Scaled order fields */
 export interface ScaledOrder {
-  /** upper price */
-  max_price?: string;
-  /** lower price */
-  min_price?: string;
-  /** total orders */
-  total_orders?: number;
+  /** user-defined price at the first order (index 0) */
+  start_price?: string;
+  /** user-defined price at the last order (index total_orders - 1) */
+  end_price?: string;
+  /** total number of orders */
+  total_orders?: string;
   /** quantity distribution type */
   distribution_type?: DistributionType;
-  /** the ratio between upper and lower price. */
-  skew?: number;
+  /** the ratio of qty[end] / qty[start] */
+  skew?: string;
 }
 
 export interface RegularOrder extends BaseOrder, OrderExt, ScaledOrder {

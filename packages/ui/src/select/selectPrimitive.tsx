@@ -1,10 +1,8 @@
 import * as React from "react";
-
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { type VariantProps } from "tailwind-variants";
-import { tv } from "../utils/tv";
-
 import { CaretDownIcon, CaretUpIcon } from "../icon";
+import { tv } from "../utils/tv";
 
 const selectVariants = tv(
   {
@@ -20,7 +18,7 @@ const selectVariants = tv(
         "oui-px-2",
         // "oui-py-2",
 
-        "oui-space-x-2",
+        "oui-space-x-1",
         // "oui-text-sm",
         "oui-shadow-sm",
         // "oui-ring-offset-background",
@@ -163,7 +161,7 @@ const selectVariants = tv(
   },
   {
     responsiveVariants: ["md", "lg"],
-  }
+  },
 );
 
 const SelectRoot = SelectPrimitive.Root;
@@ -190,7 +188,7 @@ const SelectTrigger = React.forwardRef<
       showCaret = true,
       ...props
     },
-    ref
+    ref,
   ) => {
     const { trigger } = selectVariants({ size, error, variant });
     if (asChild) {
@@ -230,7 +228,7 @@ const SelectTrigger = React.forwardRef<
         </>
       </SelectPrimitive.Trigger>
     );
-  }
+  },
 );
 SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
 
