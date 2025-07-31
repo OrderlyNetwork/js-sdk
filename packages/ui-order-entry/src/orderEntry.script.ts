@@ -534,5 +534,6 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     priceInputContainerWidth,
     currentLtv,
     fillMiddleValue,
+    symbol: inputs.symbol,
   };
 };

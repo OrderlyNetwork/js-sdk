@@ -282,15 +282,21 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
       setOrderValue("side", order.side);
     }
     setOrderValues({
+      position_type: order.position_type,
+      tp_order_type: order.tp_order_type,
       tp_trigger_price: order.tp_trigger_price,
       tp_order_price: order.tp_order_price,
-      tp_order_type: order.tp_order_type,
+      tp_pnl: order.tp_pnl,
+      tp_offset: order.tp_offset,
+      tp_offset_percentage: order.tp_offset_percentage,
+      tp_ROI: order.tp_ROI,
+      sl_order_type: order.sl_order_type,
       sl_trigger_price: order.sl_trigger_price,
       sl_order_price: order.sl_order_price,
-      sl_order_type: order.sl_order_type,
-      tp_pnl: order.tp_pnl,
       sl_pnl: order.sl_pnl,
-      position_type: order.position_type,
+      sl_offset: order.sl_offset,
+      sl_offset_percentage: order.sl_offset_percentage,
+      sl_ROI: order.sl_ROI,
     });
     setShowTPSLAdvanced(false);
     setHasAdvancedTPSLResult(true);
@@ -317,6 +323,10 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
     typeof currentLtv === "number" &&
     !Number.isNaN(currentLtv) &&
     currentLtv > 0;
+
+  useEffect(() => {
+    setHasAdvancedTPSLResult(false);
+  }, [props.symbol]);
 
   return (
     <OrderEntryProvider value={{ errorMsgVisible }}>
