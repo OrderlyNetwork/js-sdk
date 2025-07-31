@@ -1,15 +1,17 @@
 import React, {
   createContext,
-  PropsWithChildren,
   useContext,
   useMemo,
   useState,
   useEffect,
-  useCallback,
 } from "react";
 import { parseISO } from "date-fns";
 import { sortWith, descend } from "ramda";
-import { usePrivateQuery, RefferalAPI as API } from "@orderly.network/hooks";
+import {
+  usePrivateQuery,
+  RefferalAPI as API,
+  useMemoizedFn,
+} from "@orderly.network/hooks";
 import { CampaignConfig, UserData } from "../campaigns/type";
 
 /**
@@ -57,19 +59,27 @@ export const TradingLeaderboardContext = createContext<TradingLeaderboardState>(
   {} as TradingLeaderboardState,
 );
 
-export type TradingLeaderboardProviderProps = PropsWithChildren<
-  Pick<
-    TradingLeaderboardState,
-    "campaigns" | "href" | "backgroundSrc" | "dataAdapter"
-  >
+export type TradingLeaderboardProviderProps = Pick<
+  TradingLeaderboardState,
+  "campaigns" | "href" | "backgroundSrc" | "dataAdapter"
 > & {
   campaignId?: string | number;
   onCampaignChange?: (campaignId: string | number) => void;
 };
 
 export const TradingLeaderboardProvider: React.FC<
-  TradingLeaderboardProviderProps
+  React.PropsWithChildren<TradingLeaderboardProviderProps>
 > = (props) => {
+  const {
+    campaignId,
+    campaigns,
+    backgroundSrc,
+    href,
+    children,
+    dataAdapter,
+    onCampaignChange,
+  } = props;
+
   const [currentCampaignId, setCurrentCampaignId] = useState<string>("general");
   const [userData, setUserData] = useState<UserData>();
   const [updatedTime, setUpdatedTime] = useState<number>();
@@ -92,34 +102,30 @@ export const TradingLeaderboardProvider: React.FC<
 
   useEffect(() => {
     if (generateCode?.code && userData?.referral_code != generateCode.code) {
-      setUserData({
-        ...userData,
-        referral_code: generateCode.code,
-      } as UserData);
+      setUserData({ ...userData!, referral_code: generateCode.code });
       generateCodeMutate();
     }
-  }, [generateCode, generateCodeMutate, userData]);
+  }, [userData, generateCode, generateCodeMutate]);
 
   useEffect(() => {
-    if (props.campaignId) {
-      setCurrentCampaignId(props.campaignId as string);
+    if (campaignId) {
+      setCurrentCampaignId(campaignId as string);
     }
-  }, [props.campaignId]);
+  }, [campaignId]);
 
   const currentCampaign = useMemo(() => {
-    return props.campaigns?.find(
+    return campaigns?.find(
       (campaign) => campaign.campaign_id == currentCampaignId,
     );
-  }, [props.campaigns, currentCampaignId]);
+  }, [campaigns, currentCampaignId]);
 
   const filteredCampaigns = useMemo(() => {
-    const filtered = props.campaigns?.filter((campaign) => {
+    const filtered = campaigns?.filter((campaign) => {
       // return true;
       // Campaign without referral_codes is visible to all users
       if (!campaign.referral_codes) {
         return true;
       }
-
       return campaign.referral_codes?.includes(userData?.referral_code || "");
     });
 
@@ -130,42 +136,47 @@ export const TradingLeaderboardProvider: React.FC<
           filtered,
         )
       : filtered;
-  }, [props.campaigns, userData]);
+  }, [campaigns, userData]);
 
-  const onCampaignChange = useCallback(
-    (campaignId: string | number) => {
-      setCurrentCampaignId(campaignId as string);
-      props.onCampaignChange?.(campaignId);
-    },
-    [props.onCampaignChange],
-  );
+  const memoCampaignChange = useMemoizedFn((id: string | number) => {
+    setCurrentCampaignId(id as string);
+    onCampaignChange?.(id);
+  });
+
+  const memoizedValue = useMemo<TradingLeaderboardState>(() => {
+    return {
+      campaigns: filteredCampaigns,
+      href: href,
+      backgroundSrc: backgroundSrc,
+      currentCampaignId,
+      currentCampaign,
+      updatedTime,
+      userData,
+      setUserData,
+      onCampaignChange: memoCampaignChange,
+      setUpdatedTime: setUpdatedTime,
+      dataAdapter: dataAdapter,
+    };
+  }, [
+    backgroundSrc,
+    currentCampaign,
+    currentCampaignId,
+    filteredCampaigns,
+    href,
+    updatedTime,
+    userData,
+    dataAdapter,
+    memoCampaignChange,
+  ]);
 
   return (
-    <TradingLeaderboardContext.Provider
-      value={{
-        campaigns: filteredCampaigns,
-        // campaigns: props.campaigns,
-        href: props.href,
-        backgroundSrc: props.backgroundSrc,
-        currentCampaignId,
-        currentCampaign,
-        onCampaignChange,
-        userData,
-        setUserData,
-        updatedTime,
-        setUpdatedTime,
-        dataAdapter: props.dataAdapter,
-      }}
-    >
-      {props.children}
+    <TradingLeaderboardContext.Provider value={memoizedValue}>
+      {children}
     </TradingLeaderboardContext.Provider>
   );
 };
 
 export const useTradingLeaderboardContext = () => {
-  const ctx = useContext(TradingLeaderboardContext);
-  // if (!ctx) {
-  //   throw new Error("useContext must be used within a Provider");
-  // }
+  const ctx = useContext<TradingLeaderboardState>(TradingLeaderboardContext);
   return ctx;
 };
