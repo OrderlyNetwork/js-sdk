@@ -1,44 +1,42 @@
-import React, {
-  PropsWithChildren,
-  useCallback,
-  useEffect,
-  useMemo,
-} from "react";
-import { WalletConnectorContext, WalletState } from "@orderly.network/hooks";
+import React, { useMemo } from "react";
+import { WalletConnectorContext } from "@orderly.network/hooks";
+import type {
+  WalletConnectorContextState,
+  WalletState,
+} from "@orderly.network/hooks";
 import { ConnectDrawer } from "./components/connectDrawer";
 import { useWallet } from "./hooks/useWallet";
 import "./injectUsercenter";
 import { useWalletConnectorPrivy } from "./provider";
 
 interface MainProps {
-  children: React.ReactNode;
   headerProps?: {
     mobile: React.ReactNode;
   };
 }
 
-export function Main(props: MainProps) {
+export const Main: React.FC<React.PropsWithChildren<MainProps>> = (props) => {
+  const { headerProps, children } = props;
+
   const { wallet, connectedChain, setChain, namespace, onDisconnect } =
     useWallet();
+
   const { openConnectDrawer, setOpenConnectDrawer, setTargetWalletType } =
     useWalletConnectorPrivy();
 
   const connect = (props: any): Promise<WalletState[]> => {
-    console.log("xxxx main connect", props);
     // fix wallet-connector package connect
     if (props && props.autoSelect) {
       return Promise.resolve([]);
     }
-
     setTargetWalletType(undefined);
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       setOpenConnectDrawer(true);
       resolve([]);
     });
   };
-  // console.log('--xxxmain wallet', wallet);
 
-  const value = useMemo(
+  const memoizedValue = useMemo<WalletConnectorContextState>(
     () => ({
       connect,
       disconnect: onDisconnect,
@@ -50,17 +48,17 @@ export function Main(props: MainProps) {
       chains: [],
       settingChain: false,
     }),
-    [connect, setChain, connectedChain, wallet, namespace],
+    [connect, setChain, onDisconnect, connectedChain, wallet, namespace],
   );
 
   return (
-    <WalletConnectorContext.Provider value={value}>
+    <WalletConnectorContext.Provider value={memoizedValue}>
       <ConnectDrawer
         open={openConnectDrawer}
         onChangeOpen={setOpenConnectDrawer}
-        headerProps={props.headerProps}
+        headerProps={headerProps}
       />
-      {props.children}
+      {children}
     </WalletConnectorContext.Provider>
   );
-}
+};

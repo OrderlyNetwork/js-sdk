@@ -132,10 +132,6 @@ export const Main: React.FC<
       return;
     }
   }, [newNamespace.current, sol.connected, evm.connected]);
-  // console.log('--main wallet', {
-  //   wallet,
-  //   'sol wallet': sol.wallet
-  // });
 
   return (
     <WalletConnectorContext.Provider
