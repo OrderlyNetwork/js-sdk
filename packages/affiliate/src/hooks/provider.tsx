@@ -134,17 +134,16 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
   props,
 ) => {
   const {
-    onBecomeAnAffiliate: becomeAnAffiliate,
     becomeAnAffiliateUrl = "https://orderly.network/",
-    bindReferralCodeState,
-    onLearnAffiliate: learnAffiliate,
     learnAffiliateUrl = "https://orderly.network/",
     referralLinkUrl = "https://orderly.network/",
-    showReferralPage,
-    // onEnterTraderPage: enterTraderPage,
-    // onEnterAffiliatePage: enterAffiliatePage,
     chartConfig,
     overwrite,
+    children,
+    onBecomeAnAffiliate,
+    bindReferralCodeState,
+    onLearnAffiliate,
+    showReferralPage,
     splashPage,
   } = props;
 
@@ -175,6 +174,7 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
     );
 
   const [showHome, setShowHome] = useState(isLoading);
+
   useEffect(() => {
     setShowHome(true);
   }, [isLoading]);
@@ -223,7 +223,7 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
     }
   }, [isAffiliate, isTrader]);
 
-  const mutate = useMemoizedFn(() => {
+  const memoMutate = useMemoizedFn(() => {
     volumeStatisticsMutate();
     dailyVolumeMutate();
     referralInfoMutate();
@@ -244,57 +244,87 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
 
   const lastStete = useRef<AccountStatusEnum>(AccountStatusEnum.NotConnected);
 
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   useEffect(() => {
-    let timerId: ReturnType<typeof setTimeout> | null = null;
     if (lastStete.current !== state.status) {
       lastStete.current = state.status;
-      timerId = setTimeout(() => {
-        mutate();
+      timerRef.current = setTimeout(() => {
+        memoMutate();
       }, 1000);
     }
     return () => {
-      if (timerId) {
-        clearTimeout(timerId);
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
       }
     };
-  }, [state.status]);
+  }, [memoMutate, state.status]);
+
+  const memoBecomeAnAffiliate = useMemoizedFn(onBecomeAnAffiliate!);
+  const memoBindReferralCodeState = useMemoizedFn(bindReferralCodeState!);
+  const memoLearnAffiliate = useMemoizedFn(onLearnAffiliate!);
+  const memoShowReferralPage = useMemoizedFn(showReferralPage!);
+  const memoSplashPage = useMemoizedFn(splashPage!);
+
+  const memoizedValue = useMemo<ReferralContextReturns>(() => {
+    return {
+      generateCode,
+      showHome,
+      referralInfo: data,
+      isAffiliate: isAffiliate,
+      isTrader: isTrader,
+      tab,
+      becomeAnAffiliateUrl,
+      learnAffiliateUrl,
+      referralLinkUrl,
+      userVolume,
+      dailyVolume,
+      chartConfig,
+      overwrite,
+      isLoading,
+      wrongNetwork,
+      disabledConnect,
+      setShowHome,
+      setTab: setTab,
+      mutate: memoMutate,
+      onBecomeAnAffiliate: memoBecomeAnAffiliate,
+      bindReferralCodeState: memoBindReferralCodeState,
+      onLearnAffiliate: memoLearnAffiliate,
+      showReferralPage: memoShowReferralPage,
+      splashPage: memoSplashPage,
+    };
+  }, [
+    becomeAnAffiliateUrl,
+    chartConfig,
+    dailyVolume,
+    data,
+    disabledConnect,
+    generateCode,
+    isAffiliate,
+    isLoading,
+    isTrader,
+    learnAffiliateUrl,
+    overwrite,
+    referralLinkUrl,
+    showHome,
+    tab,
+    userVolume,
+    wrongNetwork,
+    memoBecomeAnAffiliate,
+    memoBindReferralCodeState,
+    memoLearnAffiliate,
+    memoShowReferralPage,
+    memoSplashPage,
+    memoMutate,
+  ]);
 
   return (
-    <ReferralContext.Provider
-      value={{
-        generateCode,
-        showHome,
-        setShowHome,
-        referralInfo: data,
-        isAffiliate: isAffiliate,
-        isTrader: isTrader,
-        // isAffiliate: true,
-        // isTrader: false,
-        mutate,
-        onBecomeAnAffiliate: becomeAnAffiliate,
-        becomeAnAffiliateUrl,
-        bindReferralCodeState,
-        onLearnAffiliate: learnAffiliate,
-        learnAffiliateUrl,
-        referralLinkUrl,
-        userVolume,
-        dailyVolume,
-        showReferralPage,
-        chartConfig,
-        overwrite,
-        splashPage,
-        isLoading,
-        tab,
-        setTab,
-        wrongNetwork,
-        disabledConnect,
-      }}
-    >
-      {props.children}
+    <ReferralContext.Provider value={memoizedValue}>
+      {children}
     </ReferralContext.Provider>
   );
 };
 
-export function useReferralContext() {
+export const useReferralContext = () => {
   return useContext(ReferralContext);
-}
+};

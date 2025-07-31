@@ -40,11 +40,7 @@ export type Overwrite = {
     card?: ReactNode | OverwiteCard;
     step?:
       | BuildNode
-      | {
-          applyIcon?: ReactNode;
-          shareIcon?: ReactNode;
-          earnIcon?: ReactNode;
-        };
+      | { applyIcon?: ReactNode; shareIcon?: ReactNode; earnIcon?: ReactNode };
   };
 };
 
@@ -123,23 +119,20 @@ export const ReferralProvider: FC<
   >
 > = (props) => {
   const {
-    onBecomeAnAffiliate: becomeAnAffiliate,
     becomeAnAffiliateUrl = "https://orderly.network/",
-    bindReferralCodeState,
-    onLearnAffiliate: learnAffiliate,
     learnAffiliateUrl = "https://orderly.network/",
     referralLinkUrl = "https://orderly.network/",
-    showReferralPage,
-    onEnterTraderPage: enterTraderPage,
-    onEnterAffiliatePage: enterAffiliatePage,
-    chartConfig,
-    intl = {
-      messages: en,
-      locale: "en",
-      defaultLocale: "en",
-    },
     overwrite,
+    chartConfig,
+    intl = { messages: en, locale: "en", defaultLocale: "en" },
+    children,
     splashPage,
+    onBecomeAnAffiliate,
+    bindReferralCodeState,
+    onLearnAffiliate,
+    showReferralPage,
+    onEnterTraderPage,
+    onEnterAffiliatePage,
   } = props;
 
   const {
@@ -185,7 +178,7 @@ export const ReferralProvider: FC<
     return volume;
   }, [dailyVolume, volumeStatistics]);
 
-  const mutate = useMemoizedFn(() => {
+  const memoMutate = useMemoizedFn(() => {
     volumeStatisticsMutate();
     dailyVolumeMutate();
     referralInfoMutate();
@@ -199,40 +192,68 @@ export const ReferralProvider: FC<
     }
   }, []);
 
+  const memoBecomeAnAffiliate = useMemoizedFn(onBecomeAnAffiliate!);
+  const memoBindReferralCodeState = useMemoizedFn(bindReferralCodeState!);
+  const memoLearnAffiliate = useMemoizedFn(onLearnAffiliate!);
+  const memoShowReferralPage = useMemoizedFn(showReferralPage!);
+  const memoEnterTraderPage = useMemoizedFn(onEnterTraderPage!);
+  const memoEnterAffiliatePage = useMemoizedFn(onEnterAffiliatePage!);
+  const memoSplashPage = useMemoizedFn(splashPage!);
+
+  const memoizedValue = useMemo<ReferralContextReturns>(() => {
+    return {
+      referralInfo: data,
+      isAffiliate: isAffiliate,
+      isTrader: isTrader,
+      becomeAnAffiliateUrl,
+      learnAffiliateUrl,
+      referralLinkUrl,
+      userVolume,
+      dailyVolume,
+      chartConfig,
+      overwrite,
+      isLoading,
+      showReferralPage: memoShowReferralPage,
+      onEnterTraderPage: memoEnterTraderPage,
+      onEnterAffiliatePage: memoEnterAffiliatePage,
+      splashPage: memoSplashPage,
+      mutate: memoMutate,
+      onBecomeAnAffiliate: memoBecomeAnAffiliate,
+      bindReferralCodeState: memoBindReferralCodeState,
+      onLearnAffiliate: memoLearnAffiliate,
+    };
+  }, [
+    becomeAnAffiliateUrl,
+    chartConfig,
+    dailyVolume,
+    data,
+    isAffiliate,
+    isLoading,
+    isTrader,
+    learnAffiliateUrl,
+    overwrite,
+    referralLinkUrl,
+    userVolume,
+    memoBecomeAnAffiliate,
+    memoBindReferralCodeState,
+    memoEnterAffiliatePage,
+    memoEnterTraderPage,
+    memoLearnAffiliate,
+    memoShowReferralPage,
+    memoSplashPage,
+    memoMutate,
+  ]);
+
   const { messages, locale, defaultLocale } = intl;
 
   return (
     <IntlProvider
-      messages={messages}
       locale={locale}
+      messages={messages}
       defaultLocale={defaultLocale}
     >
-      <ReferralContext.Provider
-        value={{
-          referralInfo: data,
-          isAffiliate: isAffiliate,
-          isTrader: isTrader,
-          // isAffiliate: false,
-          // isTrader: false,
-          mutate,
-          onBecomeAnAffiliate: becomeAnAffiliate,
-          becomeAnAffiliateUrl,
-          bindReferralCodeState,
-          onLearnAffiliate: learnAffiliate,
-          learnAffiliateUrl,
-          referralLinkUrl,
-          userVolume,
-          dailyVolume,
-          showReferralPage: showReferralPage,
-          onEnterTraderPage: enterTraderPage,
-          onEnterAffiliatePage: enterAffiliatePage,
-          chartConfig,
-          overwrite,
-          splashPage: splashPage,
-          isLoading,
-        }}
-      >
-        {props.children}
+      <ReferralContext.Provider value={memoizedValue}>
+        {children}
       </ReferralContext.Provider>
     </IntlProvider>
   );
