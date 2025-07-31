@@ -1,14 +1,8 @@
-import React, {
-  FC,
-  PropsWithChildren,
-  createContext,
-  useMemo,
-  useContext,
-} from "react";
+import React, { createContext, useContext } from "react";
 import { useSymbolsInfo } from "@orderly.network/hooks";
-import { API } from "@orderly.network/types";
+import type { API } from "@orderly.network/types";
 
-interface SymbolContextState {
+export interface SymbolContextState {
   base_dp: number;
   quote_dp: number;
   base_tick: number;
@@ -21,37 +15,39 @@ interface SymbolContextState {
   quote_max: number;
 }
 
-export const SymbolContext = createContext({} as SymbolContextState);
+export const SymbolContext = createContext<SymbolContextState>(
+  {} as SymbolContextState,
+);
 
 export const useSymbolContext = () => {
-  return useContext(SymbolContext);
+  return useContext<SymbolContextState>(SymbolContext);
 };
 
 interface FormatterProviderProps {
   symbol: string;
 }
 
-export const SymbolProvider: FC<PropsWithChildren<FormatterProviderProps>> = (
-  props
-) => {
-  const symbolInfo = useSymbolsInfo()[props.symbol];
-
+export const SymbolProvider: React.FC<
+  React.PropsWithChildren<FormatterProviderProps>
+> = (props) => {
+  const { symbol, children } = props;
+  const symbolInfo = useSymbolsInfo()[symbol];
   return (
     <SymbolContext.Provider
       value={{
+        symbol: symbol,
         base_dp: symbolInfo("base_dp"),
         quote_dp: symbolInfo("quote_dp"),
         base_tick: symbolInfo("base_tick"),
         quote_tick: symbolInfo("quote_tick"),
         base: symbolInfo("base"),
         quote: symbolInfo("quote"),
-        symbol: props.symbol,
         origin: symbolInfo(),
         quote_max: symbolInfo("quote_max"),
-        quote_min: symbolInfo("quote_min")
+        quote_min: symbolInfo("quote_min"),
       }}
     >
-      {props.children}
+      {children}
     </SymbolContext.Provider>
   );
 };
