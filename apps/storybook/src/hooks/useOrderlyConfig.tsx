@@ -36,6 +36,7 @@ import {
   TradingRewardsActiveIcon,
   TradingRewardsIcon,
 } from "../components/icons";
+import { useRouteContext } from "../components/orderlyProvider/rounteProvider";
 
 export type OrderlyConfig = {
   orderlyAppProvider: {
@@ -128,13 +129,12 @@ const CustomButton: React.FC<{
 
 const isOnGoing = true; // fake ongoing status for demo
 
-export const useOrderlyConfig = (optins?: {
-  onRouteChange?: (option: RouteOption) => void;
-}) => {
+export const useOrderlyConfig = () => {
   const { t } = useTranslation();
   const { routerAdapter } = useScaffoldContext();
+  const { onRouteChange: onRoute } = useRouteContext();
 
-  const onRouteChange = routerAdapter?.onRouteChange ?? optins?.onRouteChange;
+  const onRouteChange = routerAdapter?.onRouteChange ?? onRoute;
   return useMemo<OrderlyConfig>(() => {
     return {
       scaffold: {

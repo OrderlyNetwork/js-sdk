@@ -6,7 +6,6 @@ import {
 import { Box } from "@orderly.network/ui";
 import { PortfolioLayout } from "../../../components/layout";
 import { useOrderlyConfig } from "../../../hooks/useOrderlyConfig";
-import { onStorybookRounteChange } from "../../../hooks/useStorybookNav";
 
 const meta: Meta<typeof OrdersModule.OrdersPage> = {
   title: "Package/portfolio/Orders",
@@ -53,9 +52,7 @@ export const LayoutPage: Story = {
     layout: "fullscreen",
   },
   render: () => {
-    const config = useOrderlyConfig({
-      onRouteChange: onStorybookRounteChange,
-    });
+    const config = useOrderlyConfig();
     return (
       <PortfolioLayout currentPath={PortfolioLeftSidebarPath.Orders}>
         <Container>

@@ -13,7 +13,6 @@ import {
 import { Box, Flex } from "@orderly.network/ui";
 import { BaseLayout } from "../../../components/layout";
 import { useOrderlyConfig } from "../../../hooks/useOrderlyConfig";
-import { onStorybookRounteChange } from "../../../hooks/useStorybookNav";
 import { getSymbol, updateSymbol } from "../../../utils/storage";
 import { OrderlyIcon } from "./icons";
 
@@ -56,9 +55,7 @@ type Story = StoryObj<typeof meta>;
 export const Page: Story = {
   render: (arg) => {
     const [symbol, setSymbol] = useState(getSymbol() || "PERP_BTC_USDC");
-    const config = useOrderlyConfig({
-      onRouteChange: onStorybookRounteChange,
-    });
+    const config = useOrderlyConfig();
 
     useEffect(() => {
       updateSymbol(symbol);

@@ -2,8 +2,8 @@ import { useState } from "react";
 import { StoryObj } from "@storybook/react-vite";
 import { TradingPage } from "@orderly.network/trading";
 import { Scaffold } from "@orderly.network/ui-scaffold";
+import { useRouteContext } from "../../../components/orderlyProvider/rounteProvider.tsx";
 import { useOrderlyConfig } from "../../../hooks/useOrderlyConfig";
-import { onStorybookRounteChange } from "../../../hooks/useStorybookNav.ts";
 import { OrderlyIcon } from "../trading/icons.tsx";
 
 const meta = {
@@ -11,13 +11,12 @@ const meta = {
   component: TradingPage,
   decorators: [
     (Story: any) => {
-      const config = useOrderlyConfig({
-        onRouteChange: onStorybookRounteChange,
-      });
+      const config = useOrderlyConfig();
+      const { onRouteChange } = useRouteContext();
       return (
         <Scaffold
           mainNavProps={config.scaffold.mainNavProps}
-          routerAdapter={{ onRouteChange: onStorybookRounteChange }}
+          routerAdapter={{ onRouteChange }}
         >
           <Story />
         </Scaffold>

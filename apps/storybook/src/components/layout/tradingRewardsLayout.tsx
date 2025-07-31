@@ -5,7 +5,8 @@ import {
 } from "@orderly.network/trading-rewards";
 import { RouteOption } from "@orderly.network/ui-scaffold";
 import { useOrderlyConfig } from "../../hooks/useOrderlyConfig";
-import { onStorybookRounteChange } from "../../hooks/useStorybookNav";
+import { PathEnum } from "../../playground/constant";
+import { useRouteContext } from "../orderlyProvider/rounteProvider";
 
 type TradingRewardsLayoutProps = {
   children: ReactNode;
@@ -13,31 +14,19 @@ type TradingRewardsLayoutProps = {
 };
 
 export const TradingRewardsLayout: FC<TradingRewardsLayoutProps> = (props) => {
-  return (
-    <CommonTradingRewardsLayout onRouteChange={onStorybookRounteChange}>
-      {props.children}
-    </CommonTradingRewardsLayout>
-  );
-};
+  const config = useOrderlyConfig();
 
-type CommonTradingRewardsLayoutProps = TradingRewardsLayoutProps & {
-  onRouteChange: (option: RouteOption) => void;
-};
-
-export const CommonTradingRewardsLayout: FC<CommonTradingRewardsLayoutProps> = (
-  props,
-) => {
-  const config = useOrderlyConfig({ onRouteChange: props.onRouteChange });
+  const { onRouteChange } = useRouteContext();
 
   return (
     <TradingRewardsLayoutWidget
       footerProps={config.scaffold.footerProps}
       mainNavProps={{
         ...config.scaffold.mainNavProps,
-        initialMenu: ["/rewards"],
+        initialMenu: [PathEnum.Rewards],
       }}
       routerAdapter={{
-        onRouteChange: props.onRouteChange,
+        onRouteChange,
       }}
       leftSideProps={{
         current: props.currentPath || TradingRewardsLeftSidebarPath.Trading,

@@ -1,11 +1,8 @@
 import { FC, ReactNode } from "react";
-import {
-  RouteOption,
-  Scaffold,
-  ScaffoldProps,
-} from "@orderly.network/ui-scaffold";
+import { Scaffold, ScaffoldProps } from "@orderly.network/ui-scaffold";
 import { useOrderlyConfig } from "../../hooks/useOrderlyConfig";
-import { onStorybookRounteChange } from "../../hooks/useStorybookNav";
+import { PathEnum } from "../../playground/constant";
+import { useRouteContext } from "../orderlyProvider/rounteProvider";
 
 type BaseLayoutProps = {
   children: React.ReactNode;
@@ -15,33 +12,23 @@ type BaseLayoutProps = {
 };
 
 export const BaseLayout: FC<BaseLayoutProps> = (props) => {
-  return (
-    <CommonBaseLayout onRouteChange={onStorybookRounteChange}>
-      {props.children}
-    </CommonBaseLayout>
-  );
-};
+  const config = useOrderlyConfig();
 
-type CommonBaseLayoutProps = BaseLayoutProps & {
-  onRouteChange: (option: RouteOption) => void;
-};
-
-export const CommonBaseLayout: FC<CommonBaseLayoutProps> = (props) => {
-  const config = useOrderlyConfig({ onRouteChange: props.onRouteChange });
+  const { onRouteChange } = useRouteContext();
 
   return (
     <Scaffold
       topBar={props.topBar}
       mainNavProps={{
         ...config.scaffold.mainNavProps,
-        initialMenu: props.initialMenu || "/",
+        initialMenu: props.initialMenu || PathEnum.Root,
         // customRender: useCustomRender(),
       }}
       bottomNavProps={{
         ...config.scaffold.bottomNavProps,
       }}
       footerProps={config.scaffold.footerProps}
-      routerAdapter={{ onRouteChange: props.onRouteChange }}
+      routerAdapter={{ onRouteChange }}
       classNames={props.classNames}
     >
       {props.children}
