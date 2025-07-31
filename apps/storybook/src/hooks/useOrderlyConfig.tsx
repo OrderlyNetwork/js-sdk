@@ -4,7 +4,6 @@ import { useTranslation } from "@orderly.network/i18n";
 import { PortfolioLeftSidebarPath } from "@orderly.network/portfolio";
 import { AppLogos } from "@orderly.network/react-app";
 import { TradingPageProps } from "@orderly.network/trading";
-import { useTradingLeaderboardContext } from "@orderly.network/trading-leaderboard";
 import {
   TradingIcon,
   TradingActiveIcon,
@@ -16,7 +15,6 @@ import {
   SettingFillIcon,
   MarketsActiveIcon,
   MarketsInactiveIcon,
-  useScreen,
   BarChartIcon,
   PersonIcon,
   BattleIcon,
@@ -30,18 +28,14 @@ import {
   MainNavWidgetProps,
   BottomNavProps,
   useScaffoldContext,
+  RouteOption,
 } from "@orderly.network/ui-scaffold";
 import {
-  AffiliatesActiveIcon,
-  AffiliatesIcon,
   ApiKeys,
   FeeTier,
-  OrderlyActiveIcon,
-  OrderlyIcon,
   TradingRewardsActiveIcon,
   TradingRewardsIcon,
 } from "../components/icons";
-import { useNav } from "./useNav";
 
 export type OrderlyConfig = {
   orderlyAppProvider: {
@@ -134,11 +128,13 @@ const CustomButton: React.FC<{
 
 const isOnGoing = true; // fake ongoing status for demo
 
-export const useOrderlyConfig = () => {
+export const useOrderlyConfig = (optins?: {
+  onRouteChange?: (option: RouteOption) => void;
+}) => {
   const { t } = useTranslation();
   const { routerAdapter } = useScaffoldContext();
-  const nav = useNav();
-  const onRouteChange = routerAdapter?.onRouteChange ?? nav.onRouteChange;
+
+  const onRouteChange = routerAdapter?.onRouteChange ?? optins?.onRouteChange;
   return useMemo<OrderlyConfig>(() => {
     return {
       scaffold: {
@@ -159,7 +155,7 @@ export const useOrderlyConfig = () => {
                       <CustomButton
                         className={"oui-bg-base-9 after:oui-bg-base-9"}
                         onClick={() => {
-                          onRouteChange({
+                          onRouteChange?.({
                             name: options.name,
                             href: options.href,
                             scope: "mainMenu",
@@ -173,7 +169,7 @@ export const useOrderlyConfig = () => {
             {
               name: t("affiliate.referral"),
               href: "/rewards/affiliate",
-              icon: "box-ani.gif",
+              icon: "/box-ani.gif",
               onlyInMainAccount: true,
               tooltipConfig: {
                 showOnFirstVisit: true,
@@ -209,7 +205,7 @@ export const useOrderlyConfig = () => {
           campaigns: {
             name: t("affiliate.referral"),
             href: "/rewards",
-            icon: "box-ani.gif",
+            icon: "/box-ani.gif",
             isSubMenuInMobile: true,
             subMenuBackNav: {
               name: t("common.portfolio"),
@@ -244,7 +240,7 @@ export const useOrderlyConfig = () => {
                         <CustomButton
                           className={"oui-bg-base-8 after:oui-bg-base-8"}
                           onClick={() => {
-                            onRouteChange({
+                            onRouteChange?.({
                               name: options.name,
                               href: options.href,
                               scope: "leftNav",
@@ -427,7 +423,7 @@ export const useOrderlyConfig = () => {
         },
       },
     };
-  }, [t, onRouteChange, nav.onRouteChange]);
+  }, [t, onRouteChange]);
 };
 
 const Tag = (props: { text: string }) => {

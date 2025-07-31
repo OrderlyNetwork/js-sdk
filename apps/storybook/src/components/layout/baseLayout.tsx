@@ -1,8 +1,11 @@
 import { FC, ReactNode } from "react";
-import { Flex, useScreen } from "@orderly.network/ui";
-import { Scaffold, ScaffoldProps } from "@orderly.network/ui-scaffold";
-import { useNav } from "../../hooks/useNav";
+import {
+  RouteOption,
+  Scaffold,
+  ScaffoldProps,
+} from "@orderly.network/ui-scaffold";
 import { useOrderlyConfig } from "../../hooks/useOrderlyConfig";
+import { onStorybookRounteChange } from "../../hooks/useStorybookNav";
 
 type BaseLayoutProps = {
   children: React.ReactNode;
@@ -12,9 +15,19 @@ type BaseLayoutProps = {
 };
 
 export const BaseLayout: FC<BaseLayoutProps> = (props) => {
-  const { onRouteChange } = useNav();
-  const config = useOrderlyConfig();
-  const { isMobile } = useScreen();
+  return (
+    <CommonBaseLayout onRouteChange={onStorybookRounteChange}>
+      {props.children}
+    </CommonBaseLayout>
+  );
+};
+
+type CommonBaseLayoutProps = BaseLayoutProps & {
+  onRouteChange: (option: RouteOption) => void;
+};
+
+export const CommonBaseLayout: FC<CommonBaseLayoutProps> = (props) => {
+  const config = useOrderlyConfig({ onRouteChange: props.onRouteChange });
 
   return (
     <Scaffold
@@ -22,54 +35,13 @@ export const BaseLayout: FC<BaseLayoutProps> = (props) => {
       mainNavProps={{
         ...config.scaffold.mainNavProps,
         initialMenu: props.initialMenu || "/",
-        // customRender: (components) => {
-        //   // mobile
-        //   if (isMobile) {
-        //     return (
-        //       <Flex width="100%" justify="between">
-        //         <Flex gapX={2}>
-        //           {components.leftNav}
-        //           {components.title}
-        //         </Flex>
-
-        //         <Flex gapX={2}>
-        //           {components.languageSwitcher}
-        //           {components.scanQRCode}
-        //           {components.linkDevice}
-        //           {components.chainMenu}
-        //           {components.walletConnect}
-        //         </Flex>
-        //       </Flex>
-        //     );
-        //   }
-
-        //   // desktop
-        //   return (
-        //     <Flex width="100%" justify="between">
-        //       <Flex gapX={2}>
-        //         {components.title}
-        //         {components.mainNav}
-        //       </Flex>
-
-        //       <Flex gapX={2}>
-        //         {components.accountSummary}
-        //         {components.linkDevice}
-        //         {components.languageSwitcher}
-        //         {components.subAccount}
-        //         {components.chainMenu}
-        //         {components.walletConnect}
-        //       </Flex>
-        //     </Flex>
-        //   );
-        // },
+        // customRender: useCustomRender(),
       }}
       bottomNavProps={{
         ...config.scaffold.bottomNavProps,
       }}
       footerProps={config.scaffold.footerProps}
-      routerAdapter={{
-        onRouteChange,
-      }}
+      routerAdapter={{ onRouteChange: props.onRouteChange }}
       classNames={props.classNames}
     >
       {props.children}

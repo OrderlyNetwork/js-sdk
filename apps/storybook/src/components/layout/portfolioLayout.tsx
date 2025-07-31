@@ -3,8 +3,9 @@ import {
   PortfolioLeftSidebarPath,
   PortfolioLayoutWidget,
 } from "@orderly.network/portfolio";
-import { useNav } from "../../hooks/useNav";
+import { RouteOption } from "@orderly.network/ui-scaffold";
 import { useOrderlyConfig } from "../../hooks/useOrderlyConfig";
+import { onStorybookRounteChange } from "../../hooks/useStorybookNav";
 
 type PortfolioLayoutProps = {
   children: ReactNode;
@@ -12,8 +13,21 @@ type PortfolioLayoutProps = {
 };
 
 export const PortfolioLayout: FC<PortfolioLayoutProps> = (props) => {
-  const { onRouteChange } = useNav();
-  const config = useOrderlyConfig();
+  return (
+    <CommonPortfolioLayout onRouteChange={onStorybookRounteChange}>
+      {props.children}
+    </CommonPortfolioLayout>
+  );
+};
+
+type CommonPortfolioLayoutProps = PortfolioLayoutProps & {
+  onRouteChange: (option: RouteOption) => void;
+};
+
+export const CommonPortfolioLayout: FC<CommonPortfolioLayoutProps> = (
+  props,
+) => {
+  const config = useOrderlyConfig({ onRouteChange: props.onRouteChange });
 
   return (
     <PortfolioLayoutWidget
@@ -26,7 +40,7 @@ export const PortfolioLayout: FC<PortfolioLayoutProps> = (props) => {
         ...config.scaffold.bottomNavProps,
       }}
       routerAdapter={{
-        onRouteChange,
+        onRouteChange: props.onRouteChange,
       }}
       leftSideProps={{
         current: props.currentPath || PortfolioLeftSidebarPath.Overview,

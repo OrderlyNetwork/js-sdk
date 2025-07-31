@@ -82,7 +82,7 @@ export const WagmiWalletProvider: React.FC<{ children: React.ReactNode }> = ({
       setWallet(undefined);
       return;
     }
-    connector.getProvider().then((provider) => {
+    connector.getProvider?.().then((provider) => {
       setWallet({
         label: connector.name,
         icon: "",

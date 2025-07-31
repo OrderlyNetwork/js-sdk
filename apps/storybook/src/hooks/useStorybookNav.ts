@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 // https://github.com/storybookjs/storybook/tree/next/code/addons/links
 // linkTo is not working, so use navigate instead
 import { navigate } from "@storybook/addon-links";
@@ -33,15 +32,11 @@ const routeMap = {
   [RoutePath.TradingLeaderboard]: "Package/trading-leaderboard",
 } as Record<string, { storyId: string; name?: string } | string>;
 
-export function useNav() {
-  const onRouteChange = useCallback((option: RouteOption) => {
-    if (option.target === "_blank") {
-      window.open(option.href);
-      return;
-    }
-    const params = routeMap[option.href];
-    navigate(typeof params === "string" ? { storyId: params, name } : params);
-  }, []);
-
-  return { onRouteChange };
+export function onStorybookRounteChange(option: RouteOption) {
+  if (option.target === "_blank") {
+    window.open(option.href);
+    return;
+  }
+  const params = routeMap[option.href];
+  navigate(typeof params === "string" ? { storyId: params, name } : params);
 }

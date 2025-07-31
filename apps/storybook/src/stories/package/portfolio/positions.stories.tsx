@@ -7,6 +7,7 @@ import { useTradingLocalStorage } from "@orderly.network/trading";
 import { Box } from "@orderly.network/ui";
 import { PortfolioLayout } from "../../../components/layout";
 import { useOrderlyConfig } from "../../../hooks/useOrderlyConfig";
+import { onStorybookRounteChange } from "../../../hooks/useStorybookNav";
 
 const meta: Meta<typeof PositionsModule.PositionsPage> = {
   title: "Package/portfolio/Positions",
@@ -41,7 +42,9 @@ const Container = ({ children }: { children: React.ReactNode }) => {
 
 export const Page: Story = {
   render: () => {
-    const config = useOrderlyConfig();
+    const config = useOrderlyConfig({
+      onRouteChange: onStorybookRounteChange,
+    });
     const local = useTradingLocalStorage();
 
     return (
