@@ -104,7 +104,7 @@ export const TPSLInputRowUI = (props: Props) => {
                 props.onChange(key, value as string);
               }}
               quote={"USDC"}
-              quote_dp={props.quote_dp}
+              quote_dp={2}
               values={values}
             />
           </Grid>

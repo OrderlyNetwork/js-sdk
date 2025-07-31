@@ -51,24 +51,14 @@ export const EstPnlRender = ({ order }: { order: API.AlgoOrder }) => {
     >
       {tp_unrealPnl && (
         <FlexCell>
-          <Text.numeral
-            dp={quote_dp}
-            rm={Decimal.ROUND_DOWN}
-            coloring
-            padding={false}
-          >
+          <Text.numeral dp={2} rm={Decimal.ROUND_DOWN} coloring padding={false}>
             {tp_unrealPnl}
           </Text.numeral>
         </FlexCell>
       )}
       {sl_unrealPnl && (
         <FlexCell>
-          <Text.numeral
-            dp={quote_dp}
-            rm={Decimal.ROUND_DOWN}
-            coloring
-            padding={false}
-          >
+          <Text.numeral dp={2} rm={Decimal.ROUND_DOWN} coloring padding={false}>
             {sl_unrealPnl}
           </Text.numeral>
         </FlexCell>

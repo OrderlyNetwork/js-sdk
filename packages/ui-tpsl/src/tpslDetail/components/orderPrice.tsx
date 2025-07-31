@@ -6,7 +6,7 @@ import { FlexCell } from "../components/common";
 import { useTPSLDetailContext } from "../tpslDetailProvider";
 
 export const OrderPriceRender = ({ order }: { order: API.AlgoOrder }) => {
-  const { base_dp } = useTPSLDetailContext();
+  const { quote_dp } = useTPSLDetailContext();
   const { tp_order_price, sl_order_price } = findTPSLOrderPriceFromOrder(order);
   return (
     <Flex
@@ -21,7 +21,7 @@ export const OrderPriceRender = ({ order }: { order: API.AlgoOrder }) => {
           {tp_order_price === OrderType.MARKET ? (
             <Text>Market</Text>
           ) : (
-            <Text.numeral dp={base_dp} rm={Decimal.ROUND_DOWN} padding={false}>
+            <Text.numeral dp={quote_dp} rm={Decimal.ROUND_DOWN} padding={false}>
               {tp_order_price}
             </Text.numeral>
           )}
@@ -32,7 +32,7 @@ export const OrderPriceRender = ({ order }: { order: API.AlgoOrder }) => {
           {sl_order_price === OrderType.MARKET ? (
             <Text>Market</Text>
           ) : (
-            <Text.numeral dp={base_dp} rm={Decimal.ROUND_DOWN} padding={false}>
+            <Text.numeral dp={quote_dp} rm={Decimal.ROUND_DOWN} padding={false}>
               {sl_order_price}
             </Text.numeral>
           )}

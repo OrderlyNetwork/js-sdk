@@ -6,7 +6,7 @@ import { FlexCell } from "../components/common";
 import { useTPSLDetailContext } from "../tpslDetailProvider";
 
 export const TriggerPrice = ({ order }: { order: API.AlgoOrder }) => {
-  const { base_dp } = useTPSLDetailContext();
+  const { quote_dp } = useTPSLDetailContext();
   const { tp_trigger_price, sl_trigger_price } = findTPSLFromOrder(order);
 
   return (
@@ -21,7 +21,7 @@ export const TriggerPrice = ({ order }: { order: API.AlgoOrder }) => {
         <FlexCell>
           <Flex direction={"column"} justify={"start"} itemAlign={"start"}>
             <Text className="oui-text-base-contrast-36">Market</Text>
-            <Text.numeral dp={base_dp} rm={Decimal.ROUND_DOWN} padding={false}>
+            <Text.numeral dp={quote_dp} rm={Decimal.ROUND_DOWN} padding={false}>
               {tp_trigger_price}
             </Text.numeral>
           </Flex>
@@ -31,7 +31,7 @@ export const TriggerPrice = ({ order }: { order: API.AlgoOrder }) => {
         <FlexCell>
           <Flex direction={"column"} justify={"start"} itemAlign={"start"}>
             <Text className="oui-text-base-contrast-36">Market</Text>
-            <Text.numeral dp={base_dp} rm={Decimal.ROUND_DOWN} padding={false}>
+            <Text.numeral dp={quote_dp} rm={Decimal.ROUND_DOWN} padding={false}>
               {sl_trigger_price}
             </Text.numeral>
           </Flex>

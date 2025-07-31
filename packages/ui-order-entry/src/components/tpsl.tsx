@@ -376,7 +376,7 @@ const TPSLInputRow = (props: {
         }}
         onChange={props.onChange}
         quote={"USDC"}
-        quote_dp={props.quote_dp}
+        quote_dp={2}
         type={props.type}
         values={{
           PnL: props.values.PnL,

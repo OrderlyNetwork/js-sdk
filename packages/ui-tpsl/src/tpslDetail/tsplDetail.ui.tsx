@@ -26,6 +26,7 @@ export const TPSLDetailUI = (props: TPSLDetailState) => {
     onCancelAllTPSLOrders,
     editTPSLOrder,
     addTPSLOrder,
+    symbolInfo,
   } = props;
 
   return (
@@ -36,6 +37,8 @@ export const TPSLDetailUI = (props: TPSLDetailState) => {
           order_quantity: position.position_qty.toString(),
           order_price: position.average_open_price.toString(),
         }}
+        baseDP={symbolInfo("base_dp")}
+        quoteDP={symbolInfo("quote_dp")}
         classNames={{
           root: cn("oui-mb-6 oui-gap-3 oui-px-5"),
           container: "oui-gap-x-[30px]",
