@@ -105,6 +105,9 @@ export const ReferralContext = createContext<ReferralContextReturns>(
 
 export type BuildNode = (state: ReferralContextReturns) => ReactNode;
 
+// Default noop function to avoid undefined errors
+const noop = () => {};
+
 export const ReferralProvider: FC<
   PropsWithChildren<
     ReferralContextProps & {
@@ -126,13 +129,13 @@ export const ReferralProvider: FC<
     chartConfig,
     intl = { messages: en, locale: "en", defaultLocale: "en" },
     children,
-    splashPage,
-    onBecomeAnAffiliate,
-    bindReferralCodeState,
-    onLearnAffiliate,
-    showReferralPage,
-    onEnterTraderPage,
-    onEnterAffiliatePage,
+    splashPage = noop as () => React.ReactNode,
+    onBecomeAnAffiliate = noop,
+    bindReferralCodeState = noop,
+    onLearnAffiliate = noop,
+    showReferralPage = noop,
+    onEnterTraderPage = noop,
+    onEnterAffiliatePage = noop,
   } = props;
 
   const {
@@ -192,13 +195,13 @@ export const ReferralProvider: FC<
     }
   }, []);
 
-  const memoBecomeAnAffiliate = useMemoizedFn(onBecomeAnAffiliate!);
-  const memoBindReferralCodeState = useMemoizedFn(bindReferralCodeState!);
-  const memoLearnAffiliate = useMemoizedFn(onLearnAffiliate!);
-  const memoShowReferralPage = useMemoizedFn(showReferralPage!);
-  const memoEnterTraderPage = useMemoizedFn(onEnterTraderPage!);
-  const memoEnterAffiliatePage = useMemoizedFn(onEnterAffiliatePage!);
-  const memoSplashPage = useMemoizedFn(splashPage!);
+  const memoBecomeAnAffiliate = useMemoizedFn(onBecomeAnAffiliate);
+  const memoBindReferralCodeState = useMemoizedFn(bindReferralCodeState);
+  const memoLearnAffiliate = useMemoizedFn(onLearnAffiliate);
+  const memoShowReferralPage = useMemoizedFn(showReferralPage);
+  const memoEnterTraderPage = useMemoizedFn(onEnterTraderPage);
+  const memoEnterAffiliatePage = useMemoizedFn(onEnterAffiliatePage);
+  const memoSplashPage = useMemoizedFn(splashPage);
 
   const memoizedValue = useMemo<ReferralContextReturns>(() => {
     return {

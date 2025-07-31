@@ -134,7 +134,7 @@ export default defineConfig([
       // https://github.com/facebook/react/tree/main/packages/eslint-plugin-react-hooks#flat-config-eslintconfigjsts-1
       "react-hooks/rules-of-hooks": "warn",
       // it cause too many false positives, use eslint-plugin-react-hooks-configurable won't solve the problem either
-      "react-hooks/exhaustive-deps": "warn",
+      // "react-hooks/exhaustive-deps": "warn",
 
       // https://github.com/ArnaudBarre/eslint-plugin-react-refresh?tab=readme-ov-file#without-config
       "react-refresh/only-export-components": [

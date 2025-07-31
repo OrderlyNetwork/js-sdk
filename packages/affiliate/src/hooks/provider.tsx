@@ -130,6 +130,9 @@ export const ReferralContext = createContext<ReferralContextReturns>(
 
 export type BuildNode = (state: ReferralContextReturns) => ReactNode;
 
+// Default noop function to avoid undefined errors
+const noop = () => {};
+
 export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
   props,
 ) => {
@@ -140,11 +143,11 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
     chartConfig,
     overwrite,
     children,
-    onBecomeAnAffiliate,
-    bindReferralCodeState,
-    onLearnAffiliate,
-    showReferralPage,
-    splashPage,
+    splashPage = noop as () => React.ReactNode,
+    onBecomeAnAffiliate = noop,
+    bindReferralCodeState = noop,
+    onLearnAffiliate = noop,
+    showReferralPage = noop,
   } = props;
 
   const { state } = useAccount();
@@ -260,11 +263,11 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
     };
   }, [memoMutate, state.status]);
 
-  const memoBecomeAnAffiliate = useMemoizedFn(onBecomeAnAffiliate!);
-  const memoBindReferralCodeState = useMemoizedFn(bindReferralCodeState!);
-  const memoLearnAffiliate = useMemoizedFn(onLearnAffiliate!);
-  const memoShowReferralPage = useMemoizedFn(showReferralPage!);
-  const memoSplashPage = useMemoizedFn(splashPage!);
+  const memoBecomeAnAffiliate = useMemoizedFn(onBecomeAnAffiliate);
+  const memoBindReferralCodeState = useMemoizedFn(bindReferralCodeState);
+  const memoLearnAffiliate = useMemoizedFn(onLearnAffiliate);
+  const memoShowReferralPage = useMemoizedFn(showReferralPage);
+  const memoSplashPage = useMemoizedFn(splashPage);
 
   const memoizedValue = useMemo<ReferralContextReturns>(() => {
     return {
