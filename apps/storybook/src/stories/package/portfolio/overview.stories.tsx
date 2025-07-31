@@ -4,7 +4,6 @@ import {
   PortfolioLeftSidebarPath,
 } from "@orderly.network/portfolio";
 import { Box, Card, Flex, Grid } from "@orderly.network/ui";
-import { DataViewer } from "../../../components/dataViewer";
 import { PortfolioLayout } from "../../../components/layout";
 
 const { usePerformanceScript } = OverviewModule;
@@ -120,10 +119,6 @@ export const PerformanceAndData: Story = {
       <Grid cols={2} gapX={2}>
         <div>
           <OverviewModule.PerformanceUI {...state} />
-        </div>
-
-        <div>
-          <DataViewer data={state} />
         </div>
       </Grid>
     );
