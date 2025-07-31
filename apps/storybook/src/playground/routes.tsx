@@ -11,6 +11,7 @@ import {
 } from "@orderly.network/i18n";
 import { PortfolioLayout, TradingRewardsLayout } from "./components/layout";
 import { OrderlyProvider } from "./components/orderlyProvider";
+import { PathEnum } from "./constant";
 import LeaderboardPage from "./pages/leaderboard/page";
 import MarketsPage from "./pages/markets/page";
 import PerpPage from "./pages/perp/page";
@@ -32,9 +33,12 @@ const AppRoute = () => {
   const pathname = window.location.pathname;
   const localePath = getLocalePathFromPathname(pathname);
 
-  if (!localePath) {
-    // redirect to the current locale path  /perp/PERP_ETH_USDC => /en/perp/PERP_ETH_USDC
-    window.history.replaceState({}, "", `/${currentLocale}${pathname}`);
+  // TODO: use react router navigate instead of window.history.replaceState
+  if (!localePath && pathname !== PathEnum.Root) {
+    // redirect to the current locale path
+    // /perp/PERP_ETH_USDC => /en/perp/PERP_ETH_USDC
+    const redirectPath = `/${currentLocale}${pathname}`;
+    window.history.replaceState({}, "", redirectPath);
     return;
   }
 
@@ -124,8 +128,14 @@ const AppRoute = () => {
       children: [
         {
           index: true,
-          element: <Navigate to={currentLocale} />,
+          element: (
+            <Navigate to={`/${currentLocale}${PathEnum.Perp}/${getSymbol()}`} />
+          ),
         },
+        // {
+        //   path: "markets",
+        //   element: <Navigate to={`/${currentLocale}${PathEnum.Markets}`} />,
+        // },
         {
           path: ":lang",
           children: [
