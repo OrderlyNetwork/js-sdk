@@ -22,7 +22,7 @@ const preview: Preview = {
         custom: "custom",
         roundless: "roundless",
       },
-      defaultTheme: import.meta.env.VITE_DEFAULT_THEME || "orderly",
+      defaultTheme: import.meta.env.STORYBOOK_DEFAULT_THEME || "orderly",
       attributeName: "data-oui-theme",
     }),
   ],
@@ -41,7 +41,10 @@ const preview: Preview = {
         color: /(background|color)$/i,
         date: /Date$/i,
       },
+      // disable: true,
     },
+    // actions: { disable: true },
+    // interactions: { disable: true },
 
     a11y: {
       // 'todo' - show a11y violations in the test UI only
@@ -58,7 +61,6 @@ const preview: Preview = {
         order: [
           "Overview",
           "Design Tokens",
-          "Base",
           "Package",
           [
             "trading",
@@ -81,6 +83,7 @@ const preview: Preview = {
             "ui-tradingview",
             "i18n",
           ],
+          "Base",
         ],
       },
     },
