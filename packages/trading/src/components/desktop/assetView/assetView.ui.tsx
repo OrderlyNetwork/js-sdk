@@ -62,6 +62,18 @@ interface AssetValueListProps {
   currentLtv?: string | number;
 }
 
+const calculateTextColor = (val: number): string => {
+  if (val >= 0 && val < 50) {
+    return "oui-text-success";
+  } else if (val >= 50 && val < 80) {
+    return "oui-text-warning";
+  } else if (val >= 80) {
+    return "oui-text-danger";
+  } else {
+    return "";
+  }
+};
+
 const useCurrentStatusText = (): StatusInfo => {
   const { state } = useAccount();
   const { wrongNetwork, disabledConnect } = useAppContext();
@@ -231,9 +243,18 @@ const LTVDetail: FC<Pick<AssetDetailProps, "value" | "visible">> = (props) => {
           {t("transfer.LTV")}
         </Text>
       </Tooltip>
-      <Text size="2xs" className="select-none">
-        {visible ? `${value}%` : "*****"}
-      </Text>
+      {visible ? (
+        <Text
+          size="2xs"
+          className={cn("select-none", calculateTextColor(Number(value)))}
+        >
+          {value}%
+        </Text>
+      ) : (
+        <Text size="2xs" className={"select-none"}>
+          *****
+        </Text>
+      )}
     </Flex>
   );
 };

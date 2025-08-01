@@ -639,7 +639,7 @@
   "transfer.convert.convertAssets": "将资产转换为 USDC",
   "transfer.deposit.collateralContribution": "抵押品贡献",
   "transfer.withdraw.InsufficientVaultBalance": "保险库余额不足",
-  "transfer.LTV": "贷款价值比",
+  "transfer.LTV": "LTV",
   "transfer.LTV.description": "LTV（贷款价值比）是您的负 USDC 与抵押品当前价值之间的比率。如果您的 LTV 超过 {{threshold}}，您的抵押品将自动转换为 USDC。",
   "transfer.LTV.tooltip": "如果您的 LTV 超过 {{threshold}}% 或您的 USDC 余额加上未结算盈亏低于 {{usdcThreshold}}，您的抵押品将自动转换并扣除折扣。为避免这种情况，您可以手动将资产转换为 USDC。",
   "transfer.LTV.currentLTV": "当前 LTV",
