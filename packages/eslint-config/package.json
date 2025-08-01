@@ -1,0 +1,28 @@
+{
+  "name": "@orderly.network/eslint-config",
+  "version": "2.5.3",
+  "main": "index.mjs",
+  "module": "index.mjs",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@eslint/js": "^9.25.1",
+    "@stylistic/eslint-plugin": "^4.2.0",
+    "eslint-config-eslint": "^11.0.0",
+    "eslint-config-prettier": "^10.1.2",
+    "eslint-config-turbo": "^2.5.2",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-monorepo-cop": "^1.0.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.20",
+    "eslint-plugin-tailwindcss": "^3.18.0",
+    "globals": "^16.0.0",
+    "typescript-eslint": "^8.31.0"
+  },
+  "devDependencies": {
+    "next": "14.2.7"
+  }
+}

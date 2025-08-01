@@ -4,7 +4,6 @@ import { useTranslation } from "@orderly.network/i18n";
 import { PortfolioLeftSidebarPath } from "@orderly.network/portfolio";
 import { AppLogos } from "@orderly.network/react-app";
 import { TradingPageProps } from "@orderly.network/trading";
-import { useTradingLeaderboardContext } from "@orderly.network/trading-leaderboard";
 import {
   TradingIcon,
   TradingActiveIcon,
@@ -16,7 +15,6 @@ import {
   SettingFillIcon,
   MarketsActiveIcon,
   MarketsInactiveIcon,
-  useScreen,
   BarChartIcon,
   PersonIcon,
   BattleIcon,
@@ -32,16 +30,12 @@ import {
   useScaffoldContext,
 } from "@orderly.network/ui-scaffold";
 import {
-  AffiliatesActiveIcon,
-  AffiliatesIcon,
   ApiKeys,
   FeeTier,
-  OrderlyActiveIcon,
-  OrderlyIcon,
   TradingRewardsActiveIcon,
   TradingRewardsIcon,
 } from "../components/icons";
-import { useNav } from "./useNav";
+import { useRouteContext } from "../components/orderlyProvider/rounteProvider";
 
 export type OrderlyConfig = {
   orderlyAppProvider: {
@@ -137,8 +131,9 @@ const isOnGoing = true; // fake ongoing status for demo
 export const useOrderlyConfig = () => {
   const { t } = useTranslation();
   const { routerAdapter } = useScaffoldContext();
-  const nav = useNav();
-  const onRouteChange = routerAdapter?.onRouteChange ?? nav.onRouteChange;
+  const { onRouteChange: onRoute } = useRouteContext();
+
+  const onRouteChange = routerAdapter?.onRouteChange ?? onRoute;
   return useMemo<OrderlyConfig>(() => {
     return {
       scaffold: {
@@ -150,6 +145,36 @@ export const useOrderlyConfig = () => {
             { name: t("common.trading"), href: "/", isHomePageInMobile: true },
             { name: t("common.portfolio"), href: "/portfolio" },
             { name: t("common.markets"), href: "/markets" },
+            {
+              name: t("tradingLeaderboard.arena"),
+              href: "/leaderboard",
+              customRender: isOnGoing
+                ? (options) => {
+                    return (
+                      <CustomButton
+                        className={"oui-bg-base-9 after:oui-bg-base-9"}
+                        onClick={() => {
+                          onRouteChange?.({
+                            name: options.name,
+                            href: options.href,
+                            scope: "mainMenu",
+                          });
+                        }}
+                      />
+                    );
+                  }
+                : undefined,
+            },
+            {
+              name: t("affiliate.referral"),
+              href: "/rewards/affiliate",
+              icon: "/box-ani.gif",
+              onlyInMainAccount: true,
+              tooltipConfig: {
+                showOnFirstVisit: true,
+                text: t("affiliate.referralTooltip"),
+              },
+            },
             {
               name: t("tradingView.timeInterval.more"),
               href: "",
@@ -174,41 +199,12 @@ export const useOrderlyConfig = () => {
                 },
               ],
             },
-            {
-              name: t("tradingLeaderboard.arena"),
-              href: "/leaderboard",
-              customRender: isOnGoing
-                ? (options) => {
-                    return (
-                      <CustomButton
-                        className={"oui-bg-base-9 after:oui-bg-base-9"}
-                        onClick={() => {
-                          onRouteChange({
-                            name: options.name,
-                            href: options.href,
-                            scope: "mainMenu",
-                          });
-                        }}
-                      />
-                    );
-                  }
-                : undefined,
-            },
-            {
-              name: t("affiliate.referral"),
-              href: "/rewards/affiliate",
-              icon: "box-ani.gif",
-              tooltipConfig: {
-                showOnFirstVisit: true,
-                text: t("affiliate.referralTooltip"),
-              },
-            },
           ],
           initialMenu: "/",
           campaigns: {
             name: t("affiliate.referral"),
             href: "/rewards",
-            icon: "box-ani.gif",
+            icon: "/box-ani.gif",
             isSubMenuInMobile: true,
             subMenuBackNav: {
               name: t("common.portfolio"),
@@ -243,7 +239,7 @@ export const useOrderlyConfig = () => {
                         <CustomButton
                           className={"oui-bg-base-8 after:oui-bg-base-8"}
                           onClick={() => {
-                            onRouteChange({
+                            onRouteChange?.({
                               name: options.name,
                               href: options.href,
                               scope: "leftNav",
@@ -259,13 +255,14 @@ export const useOrderlyConfig = () => {
                 href: "/rewards/affiliate",
                 icon: (
                   <img
-                    src="box-ani.gif"
+                    src="/box-ani.gif"
                     alt="logo"
                     draggable={false}
                     className="oui-w-6 oui-h-6"
                   />
                 ),
                 trailing: <Tag text="Unlock @ $10K volume" />,
+                onlyInMainAccount: true,
               },
               {
                 name: t("common.tradingRewards"),
@@ -425,7 +422,7 @@ export const useOrderlyConfig = () => {
         },
       },
     };
-  }, [t, onRouteChange, nav.onRouteChange]);
+  }, [t, onRouteChange]);
 };
 
 const Tag = (props: { text: string }) => {

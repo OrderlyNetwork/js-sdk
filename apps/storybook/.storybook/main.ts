@@ -1,6 +1,6 @@
 import type { StorybookConfig } from "@storybook/react-vite";
-
-// import { join, dirname, resolve } from "path";
+import { mergeConfig, UserConfig } from "vite";
+import { getWatchIgnores } from "../watchPackages.config";
 
 /**
  * This function is used to resolve the absolute path of a package.
@@ -11,53 +11,71 @@ import type { StorybookConfig } from "@storybook/react-vite";
 //   return dirname(require.resolve(join(value, "package.json")));
 // }
 
-function getStories() {
-  const defaultStories = [
-    "../src/**/*.mdx",
-    "../src/stories/**/*.mdx",
-    "../src/documentation/**/*.mdx",
-    "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)",
-  ];
+const disabledAddons = process.env.STORYBOOK_DISABLED_ADDONS === "true";
 
+function getStories() {
   // need to use process.env instead of import.meta.env
-  const pages = process.env.VITE_STORYBOOK_PAGES;
+  const pages = process.env.STORYBOOK_PAGES;
 
   if (pages) {
     const list = pages.split(",").map((item) => item.trim());
 
+    // package page dir
     const map = {
-      trading:
-        "../src/stories/package/trading/**/*.stories.@(js|jsx|mjs|ts|tsx)",
-      portfolio:
-        "../src/stories/package/portfolio/**/*.stories.@(js|jsx|mjs|ts|tsx)",
-      markets:
-        "../src/stories/package/markets/**/*.stories.@(js|jsx|mjs|ts|tsx)",
-      affiliate:
-        "../src/stories/package/affiliate/**/*.stories.@(js|jsx|mjs|ts|tsx)",
-      rewards:
-        "../src/stories/package/trading-rewards/**/*.stories.@(js|jsx|mjs|ts|tsx)",
-      leaderboard:
-        "../src/stories/package/trading-leaderboard/**/*.stories.@(js|jsx|mjs|ts|tsx)",
+      trading: "trading",
+      portfolio: "portfolio",
+      markets: "markets",
+      affiliate: "affiliate",
+      rewards: "trading-rewards",
+      leaderboard: "trading-leaderboard",
     };
 
-    return list.map((item) => map[item as keyof typeof map]).filter(Boolean);
+    const prefix = "../src/stories/package";
+    const suffix = "**/*.stories.@(js|jsx|mjs|ts|tsx)";
+
+    return list
+      .map((item) => map[item as keyof typeof map])
+      .filter(Boolean)
+      .map((item) => `${prefix}/${item}/${suffix}`);
   }
+
+  const mdxStories = disabledAddons
+    ? []
+    : [
+        "../src/**/*.mdx",
+        // "../src/stories/**/*.mdx",
+        // "../src/documentation/**/*.mdx",
+      ];
+
+  const defaultStories = [
+    ...mdxStories,
+    "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)",
+  ];
 
   return defaultStories;
 }
 
+const getAddons = () => {
+  const alwaysAddons = ["@storybook/addon-themes"];
+
+  const addons = disabledAddons
+    ? []
+    : [
+        "@chromatic-com/storybook",
+        "@storybook/addon-docs",
+        "@storybook/addon-a11y",
+        "@storybook/addon-vitest",
+        "@storybook/addon-links",
+        "../src/addons/theme_tool/register.ts",
+        // "../src/addons/walletConnect/register.ts",
+      ];
+
+  return [...alwaysAddons, ...addons];
+};
+
 const config: StorybookConfig = {
   stories: getStories(),
-  addons: [
-    "@chromatic-com/storybook",
-    "@storybook/addon-docs",
-    "@storybook/addon-a11y",
-    "@storybook/addon-vitest",
-    "@storybook/addon-themes",
-    "@storybook/addon-links",
-    "../src/addons/theme_tool/register.ts",
-    // "../src/addons/walletConnect/register.ts",
-  ],
+  addons: getAddons(),
   framework: {
     name: "@storybook/react-vite",
     options: {},
@@ -87,20 +105,34 @@ const config: StorybookConfig = {
   //     disableTreeShaking: true,
   //   },
   // },
-  // viteFinal: async (config) => {
-  //   if (config.build?.rollupOptions) {
-  //     config.build.rollupOptions.maxParallelFileOps = 10;
-  //   }
+  viteFinal: async (config) => {
+    // console.log("config", config);
 
-  //   if (config.build) {
-  //     config.build.sourcemap = false;
-  //     config.build.chunkSizeWarningLimit = 1000;
-  //     config.build.commonjsOptions = {
-  //       sourceMap: false,
-  //     };
-  //   }
+    // merge custom config to storybook vite config
+    return mergeConfig<UserConfig, UserConfig>(config, {
+      server: {
+        // using warmup can slow down the initial page load.
+        // warmup: {
+        //   clientFiles: [],
+        // },
+        watch: {
+          ignored: getWatchIgnores(),
+        },
+      },
+      // build: {
+      //   rollupOptions: {
+      //     maxParallelFileOps: 10,
+      //   },
+      //   commonjsOptions: {
+      //     sourceMap: false,
+      //   },
+      //   chunkSizeWarningLimit: 1000,
+      //   sourcemap: false,
+      // },
+    });
 
-  //   return config;
-  // },
+    // return config;
+  },
 };
+
 export default config;

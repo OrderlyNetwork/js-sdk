@@ -1,4 +1,9 @@
-import { PropsWithChildren, createContext, useState } from "react";
+import React, {
+  PropsWithChildren,
+  createContext,
+  useMemo,
+  useState,
+} from "react";
 
 type LayoutContextValue = {
   sideOpen: boolean;
@@ -9,12 +14,14 @@ const LayoutContext = createContext<LayoutContextValue>({
   sideOpen: true,
 } as LayoutContextValue);
 
-// export
-
-export const LayoutProvider = (props: PropsWithChildren) => {
+export const LayoutProvider: React.FC<React.PropsWithChildren> = (props) => {
   const [sideOpen, setSideOpen] = useState(true);
+  const memoizedValue = useMemo<LayoutContextValue>(
+    () => ({ sideOpen: sideOpen, onSideOpenChange: setSideOpen }),
+    [sideOpen, setSideOpen],
+  );
   return (
-    <LayoutContext.Provider value={{ sideOpen, onSideOpenChange: setSideOpen }}>
+    <LayoutContext.Provider value={memoizedValue}>
       {props.children}
     </LayoutContext.Provider>
   );

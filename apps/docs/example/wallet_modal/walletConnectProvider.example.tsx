@@ -4,17 +4,15 @@ import {
   createContext,
   useContext,
   useEffect,
+  useMemo,
 } from "react";
-
 import {
   createWeb3Modal,
   defaultWagmiConfig,
   useWeb3Modal,
 } from "@web3modal/wagmi/react";
-
-import { WagmiConfig } from "wagmi";
 import { arbitrum, mainnet } from "viem/chains";
-
+import { WagmiConfig } from "wagmi";
 import { useAccount } from "@orderly.network/hooks";
 
 interface WalletConnectContextState {
@@ -22,7 +20,7 @@ interface WalletConnectContextState {
 }
 
 const WalletConnectContext = createContext<WalletConnectContextState>(
-  {} as WalletConnectContextState
+  {} as WalletConnectContextState,
 );
 // 1. Get projectId at https://cloud.walletconnect.com
 const projectId = "YOUR_PROJECT_ID";
@@ -50,8 +48,12 @@ export const WalletConnectProvider: FC<PropsWithChildren<{}>> = (props) => {
     // call account's setAdress method to update account status;
   }, []);
 
+  const memoizedValue = useMemo<WalletConnectContextState>(() => {
+    return { connect: open };
+  }, [open]);
+
   return (
-    <WalletConnectContext.Provider value={{ connect: open }}>
+    <WalletConnectContext.Provider value={memoizedValue}>
       {props.children}
     </WalletConnectContext.Provider>
   );

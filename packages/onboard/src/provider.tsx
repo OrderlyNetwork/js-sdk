@@ -1,7 +1,7 @@
 import React, { PropsWithChildren, useEffect, useRef, useState } from "react";
-import { Optional } from "@orderly.network/types";
-import { useSimpleDI } from "@orderly.network/hooks";
 import type { InitOptions, OnboardAPI } from "@web3-onboard/core";
+import { useSimpleDI } from "@orderly.network/hooks";
+import { Optional } from "@orderly.network/types";
 import { initConfig } from "./config";
 import { Main } from "./main";
 
@@ -24,7 +24,7 @@ export type ConnectorInitOptions = Optional<
 >;
 
 export const ConnectorProvider = (
-  props: PropsWithChildren<WalletConnectorProviderProps>
+  props: PropsWithChildren<WalletConnectorProviderProps>,
 ) => {
   const [initialized, setInitialized] = useState(!!props.skipInit);
 

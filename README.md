@@ -22,4 +22,4 @@ Start building with Orderly SDKs using these ready-to-use templates:
 
 - [Remix](https://github.com/OrderlyNetwork/orderly-js-sdk-remix-template)
 
-- [Create React App](https://github.com/OrderlyNetwork/orderly-js-sdk-nextjs-template)
+- [Create React App](https://github.com/OrderlyNetwork/orderly-js-sdk-cra-template)

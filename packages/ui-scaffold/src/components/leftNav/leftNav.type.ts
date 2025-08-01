@@ -23,4 +23,9 @@ export type LeftNavItem = {
     href: string;
     isActive?: boolean;
   }) => React.ReactNode;
+  /**
+   * if true, this item will only be shown in the main account
+   * @default false
+   **/
+  onlyInMainAccount?: boolean;
 };

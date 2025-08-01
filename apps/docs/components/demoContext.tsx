@@ -1,4 +1,12 @@
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   useQuery,
   useLocalStorage,
@@ -29,7 +37,10 @@ export interface DemoContextState {
 
 export const DemoContext = createContext({} as DemoContextState);
 
-export const DemoContextProvider = ({ children }) => {
+export const DemoContextProvider: React.FC<React.PropsWithChildren> = (
+  props,
+) => {
+  const { children } = props;
   const [currentSymbol, setCurrentSymbol] = useState<string>();
   const [viewMode, setViewMode] = useState(EditorViewMode.Component);
   // const [colors, setColors] = useState<any>(defaultStyles);
@@ -60,58 +71,70 @@ export const DemoContextProvider = ({ children }) => {
     }
   }, [symbols]);
 
-  const onSymbolChange = (symbol: API.Symbol) => {
-    setCurrentSymbol(symbol.symbol);
-  };
+  const onSymbolChange = useCallback(
+    (symbol: API.Symbol) => {
+      setCurrentSymbol(symbol.symbol);
+    },
+    [setCurrentSymbol],
+  );
 
-  const onPreviewModeChange = (mode: EditorViewMode) => {
-    setViewMode(mode);
-  };
+  const onPreviewModeChange = useCallback(
+    (mode: EditorViewMode) => {
+      setViewMode(mode);
+    },
+    [setViewMode],
+  );
 
-  const onThemeChange = (key: string, value: string) => {
-    // setStyleVars((prev) => ({ ...prev, [key]: value }));
-    // console.log("setStyleVars", key, value);
-    // cssVarWrap.current?.style.setProperty(key, value);
-    // setStyleVars((prev) => ({ ...prev, [key]: value }));
-    // sessionStorage.setItem("THEME_DOCUMENT", JSON.stringify({ [key]: value }));
-    // setStorage("THEME_DOCUMENT", { [key]: value });
+  const onThemeChange = useCallback(
+    (key: string, value: string) => {
+      setTheme((prev) => ({ ...prev, [key]: value }));
+      const event = new CustomEvent("theme-changed", {
+        detail: { key, value },
+      });
+      // window.document.body.dispatchEvent(event);
+      cssVarWrap.current?.dispatchEvent(event);
+    },
+    [setTheme, cssVarWrap],
+  );
 
-    setTheme((prev) => ({ ...prev, [key]: value }));
-
-    const event = new CustomEvent("theme-changed", {
-      detail: { key, value },
-    });
-
-    // window.document.body.dispatchEvent(event);
-    cssVarWrap.current?.dispatchEvent(event);
-  };
-
-  const clearStorageTheme = () => {
+  const clearStorageTheme = useCallback(() => {
     // removeStorage("THEME_DOCUMENT");
     setTheme(defaultStyles);
-  };
+  }, [setTheme]);
 
-  const resetTheme = () => {
+  const resetTheme = useCallback(() => {
     // removeStorage("THEME_DOCUMENT");
     setTheme(defaultStyles);
-  };
+  }, [setTheme]);
 
-  if (!currentSymbol) return null;
+  const memoizedValue = useMemo<DemoContextState>(() => {
+    return {
+      symbol: currentSymbol!,
+      theme,
+      onSymbolChange,
+      onThemeChange,
+      viewMode,
+      clearStorageTheme,
+      resetTheme,
+      onViewModeChange: onPreviewModeChange,
+    };
+  }, [
+    currentSymbol,
+    theme,
+    viewMode,
+    onSymbolChange,
+    onThemeChange,
+    clearStorageTheme,
+    resetTheme,
+    onPreviewModeChange,
+  ]);
+
+  if (!currentSymbol) {
+    return null;
+  }
 
   return (
-    <DemoContext.Provider
-      value={{
-        symbol: currentSymbol,
-        theme,
-        onSymbolChange,
-        onThemeChange,
-        viewMode,
-        clearStorageTheme,
-        resetTheme,
-        // cssVars:styleVars,
-        onViewModeChange: onPreviewModeChange,
-      }}
-    >
+    <DemoContext.Provider value={memoizedValue}>
       <div ref={cssVarWrap} id="theme-root-el">
         {children}
       </div>

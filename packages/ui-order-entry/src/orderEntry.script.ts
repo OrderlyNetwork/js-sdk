@@ -52,6 +52,11 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     BBOOrderType | undefined
   >("orderly_order_bbo_type", undefined);
 
+  const [quantityUnit, setQuantityUnit] = useLocalStorage<"quote" | "base">(
+    "orderly_order_quantity_unit",
+    "quote",
+  );
+
   const lastBBOType = useRef<BBOOrderType>(localBBOType);
 
   const { formattedOrder, setValue, setValues, symbolInfo, ...state } =
@@ -63,6 +68,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
         side: localOrderSide,
       },
     });
+
   const [tpslSwitch, setTpslSwitch] = useLocalStorage(
     "orderly-order-entry-tp_sl-switch",
     false,
@@ -84,7 +90,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   const ee = useEventEmitter();
 
   const currentFocusInput = useRef<InputType>(InputType.NONE);
-  const lastScaledOrderPriceInput = useRef<InputType>(InputType.MAX_PRICE);
+  const lastScaledOrderPriceInput = useRef<InputType>(InputType.END_PRICE);
   const triggerPriceInputRef = useRef<HTMLInputElement | null>(null);
   const priceInputRef = useRef<HTMLInputElement | null>(null);
   const priceInputContainerRef = useRef<HTMLDivElement | null>(null);
@@ -134,7 +140,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
 
     // set last scaled order price input
     if (
-      [InputType.MIN_PRICE, InputType.MAX_PRICE].includes(
+      [InputType.START_PRICE, InputType.END_PRICE].includes(
         currentFocusInput.current!,
       )
     ) {
@@ -334,9 +340,9 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
 
   useEffect(() => {
     const focusInputElement = (target: HTMLInputElement | null) => {
-      setTimeout(() => {
+      requestAnimationFrame(() => {
         target?.focus();
-      }, 0);
+      });
     };
 
     // handle orderbook item click event
@@ -364,12 +370,12 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
           level: undefined,
         });
 
-        setTimeout(() => {
-          // Since BBO will update the price when unselected, we should set order price in setTimeout
-          // We can't call setValue directly here because it's inside a setTimeout, and the formattedOrder accessed inside setValue would be the old value
+        requestAnimationFrame(() => {
+          // Since BBO will update the price when unselected, we should set order price in requestAnimationFrame
+          // We can't call setValue directly here because it's inside a requestAnimationFrame, and the formattedOrder accessed inside setValue would be the old value
           // setValue("order_price", price);
           ee.emit("update:orderPrice", price);
-        }, 0);
+        });
 
         focusInputElement(priceInputRef.current);
         return;
@@ -412,9 +418,9 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
         lastScaledOrderPriceInput.current
       ) {
         const field =
-          lastScaledOrderPriceInput.current === InputType.MIN_PRICE
-            ? "min_price"
-            : "max_price";
+          lastScaledOrderPriceInput.current === InputType.START_PRICE
+            ? "start_price"
+            : "end_price";
         setValue(field, price);
         focusInputElement(priceInputRef.current);
         return;
@@ -497,7 +503,11 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
         .add(safeNumber(bestBid))
         .div(2)
         .toNumber();
-      setValue("order_price", midPrice);
+      // 1. Since BBO will update the price when unselected, we should set order price in raf
+      // 2. raf is mainly used to solve the timing problem caused by React state update, ensuring that the orderPrice is triggered after the state is fully updated to avoid accessing expired state values.
+      requestAnimationFrame(() => {
+        ee.emit("update:orderPrice", midPrice);
+      });
     }
   };
 
@@ -534,6 +544,8 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     priceInputContainerWidth,
     currentLtv,
     fillMiddleValue,
+    quantityUnit,
+    setQuantityUnit,
     symbol: inputs.symbol,
   };
 };

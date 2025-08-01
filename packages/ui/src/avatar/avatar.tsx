@@ -39,6 +39,8 @@ const avatarVariants = tv({
   },
 });
 
+export type AvatarSizeType = VariantProps<typeof avatarVariants>["size"];
+
 const AvatarBase = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root> &

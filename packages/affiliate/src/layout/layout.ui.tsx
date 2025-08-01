@@ -1,13 +1,12 @@
-import { PropsWithChildren } from "react";
-import { Box, ExtensionPositionEnum, ExtensionSlot } from "@orderly.network/ui";
+import React, { PropsWithChildren } from "react";
+import { Box } from "@orderly.network/ui";
 import { Scaffold, SideBar, SideBarProps } from "@orderly.network/ui-scaffold";
-import { LayoutProvider } from "./context";
 
 export type AffiliateLayoutProps = {} & SideBarProps;
 
-export const AffiliateLayout = (
-  props: PropsWithChildren<AffiliateLayoutProps>,
-) => {
+export const AffiliateLayout: React.FC<
+  PropsWithChildren<AffiliateLayoutProps>
+> = (props) => {
   const { ...rest } = props;
   return (
     <Scaffold leftSidebar={<LeftSidebar {...rest} />}>
@@ -16,27 +15,9 @@ export const AffiliateLayout = (
       </Box>
     </Scaffold>
   );
-  // return (
-  //   <LayoutProvider>
-  //     <div className="oui-h-dvh">
-  //       <ExtensionSlot position={ExtensionPositionEnum.MainNav} />
-  //       <div
-  //         className="oui-grid oui-h-full"
-  //         style={{ gridAutoColumns: "160px 1fr" }}
-  //       >
-  //         <Box p={4} className="oui-bg-base-9 oui-rounded-2xl">
-  //           <ExtensionSlot position={ExtensionPositionEnum.SideNav} />
-  //         </Box>
-  //         <div></div>
-  //       </div>
-  //     </div>
-  //   </LayoutProvider>
-  // );
 };
 
-const LeftSidebar = (props: SideBarProps) => {
-  console.log("xxxxxxx left sidebar", props.items);
-
+const LeftSidebar: React.FC<SideBarProps> = (props) => {
   return (
     <Box p={4} m={3} border borderColor={8} r={"xl"}>
       <SideBar {...props} />
