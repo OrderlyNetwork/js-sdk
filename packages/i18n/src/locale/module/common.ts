@@ -99,4 +99,9 @@ export const common = {
   "common.web3Wallet": "Web3 wallet",
   "common.txId": "TxID",
   "common.result": "Result",
+  "common.orderQty": "Order Qty.",
+  "common.positionQty": "Position Qty.",
+  "common.estTotal": "Est. Total",
+  "common.fullTPSL": "Full TP/SL",
+  "common.partialTPSL": "Partial TP/SL",
 };

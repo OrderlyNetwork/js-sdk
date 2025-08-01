@@ -169,7 +169,7 @@ export const AddIcon = (props: { positionType: PositionType }) => {
       )}
       onClick={onAdd}
     >
-      Add
+      {t("tpsl.add")}
     </Text>
   );
 };

@@ -282,15 +282,15 @@ export const TPSLPrice: FC<PositionCellState> = (props) => {
         direction={"column"}
         itemAlign={"start"}
       >
-        <Text>Full TP/SL: </Text>
+        <Text>{t("common.fullTPSL")}: </Text>
         {fullTPSL}
       </Flex>
       <Flex
         className="oui-text-2xs oui-text-base-contrast-36 oui-grid-cols-end"
         direction={"column"}
-        itemAlign={"start"}
+        itemAlign={"end"}
       >
-        <Text>Partial TP/SL: </Text>
+        <Text>{t("common.partialTPSL")}: </Text>
         {partialTPSL}
       </Flex>
     </Grid>

@@ -1,3 +1,4 @@
+import { useTranslation } from "@orderly.network/i18n";
 import { PositionType } from "@orderly.network/types";
 import {
   ExclamationFillIcon,
@@ -12,13 +13,14 @@ type TPSLPositionTypeUIProps = ReturnType<typeof useTPSLPositionTypeScript>;
 
 const positionTypeKey = "position_type";
 export const TPSLPositionTypeUI = (props: TPSLPositionTypeUIProps) => {
+  const { t } = useTranslation();
   const options = [
     {
-      label: "TP/SL: Partial position",
+      label: t("tpsl.positionType.partial"),
       value: PositionType.PARTIAL,
     },
     {
-      label: "TP/SL: Full position",
+      label: t("tpsl.positionType.full"),
       value: PositionType.FULL,
     },
   ];
@@ -29,8 +31,8 @@ export const TPSLPositionTypeUI = (props: TPSLPositionTypeUIProps) => {
         className="oui-w-[280px] oui-p-3"
         content={
           props.value === PositionType.FULL
-            ? "TPSL (full) applies to the full position. Newly activated TPSL (full) orders will overwrite previous orders. Full position will be market closed when the price is triggered."
-            : "TP/SL triggers at the specified mark price and executes as a market order. By default, it applies to the entire position. Adjust settings in open positions for partial TP/SL."
+            ? t("tpsl.positionType.full.tips")
+            : t("tpsl.positionType.partial.tips")
         }
       >
         <ExclamationFillIcon
@@ -41,11 +43,11 @@ export const TPSLPositionTypeUI = (props: TPSLPositionTypeUIProps) => {
       {props.disableSelector ? (
         props.value === PositionType.FULL ? (
           <Text className="oui-text-2xs oui-font-semibold oui-text-base-contrast-54">
-            TP/SL: Full position
+            {t("tpsl.positionType.full")}
           </Text>
         ) : (
           <Text className="oui-text-2xs oui-font-semibold oui-text-base-contrast-54">
-            TP/SL: Partial position
+            {t("tpsl.positionType.partial")}
           </Text>
         )
       ) : (
@@ -53,7 +55,6 @@ export const TPSLPositionTypeUI = (props: TPSLPositionTypeUIProps) => {
           value={props.value}
           options={options}
           onValueChange={(event) => {
-            console.log("event", event);
             props.onChange(positionTypeKey, event as PositionType);
           }}
           size={"xs"}

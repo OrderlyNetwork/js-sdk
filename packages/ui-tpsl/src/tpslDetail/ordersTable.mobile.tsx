@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
 import { Flex, Button, cn, ThrottledButton, toast } from "@orderly.network/ui";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
@@ -9,6 +10,7 @@ export const OrdersTableMobile = (props: {
   editTPSLOrder: (order: API.AlgoOrder) => void;
   canCancelOrder: (order: API.AlgoOrder) => Promise<void>;
 }) => {
+  const { t } = useTranslation();
   const { orders } = props;
   const columns = useColumn({ onCancelOrder: () => Promise.resolve() });
   const orderIds = useMemo(() => {
@@ -37,7 +39,7 @@ export const OrdersTableMobile = (props: {
               className="oui-h-6 oui-text-2xs oui-text-base-contrast-54"
               onClick={() => props.editTPSLOrder(row.original)}
             >
-              Edit
+              {t("common.edit")}
             </Button>
             <DeleteBtn
               order={row.original}
@@ -71,6 +73,7 @@ export const DeleteBtn = (props: {
   onCancelOrder?: (order: API.AlgoOrder) => Promise<void>;
 }) => {
   const [loading, setLoading] = useState(false);
+  const { t } = useTranslation();
   return (
     <ThrottledButton
       className="oui-h-6 oui-text-2xs oui-text-base-contrast-54"
@@ -94,7 +97,7 @@ export const DeleteBtn = (props: {
           });
       }}
     >
-      Delete
+      {t("common.delete")}
     </ThrottledButton>
   );
 };

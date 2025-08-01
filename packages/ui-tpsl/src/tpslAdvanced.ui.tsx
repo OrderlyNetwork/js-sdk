@@ -111,7 +111,7 @@ export const TPSLAdvancedUI = (props: Props) => {
           onClick={props.onClose}
         >
           <ArrowRightIcon className=" oui-text-base-contrast-80" />
-          <Text>TP/SL</Text>
+          <Text>{t("tpsl.advanced.title")}</Text>
         </Flex>
       </div>
       <ScrollArea className="oui-flex-1">
@@ -189,8 +189,7 @@ export const TPSLAdvancedUI = (props: Props) => {
               >
                 <div className="oui-relative oui-top-[7px] oui-size-1 oui-rounded-full oui-bg-[#D25f00]" />
                 <Text className="oui-text-2xs oui-text-[#D25f00]">
-                  Full positions TP/SL only support market price to place the
-                  orders
+                  {t("tpsl.positionType.full.tips.market")}
                 </Text>
               </Flex>
             )}
@@ -263,7 +262,7 @@ export const TPSLAdvancedUI = (props: Props) => {
           )}
           onClick={props.onSubmit}
         >
-          Submit
+          {t("tpsl.advanced.submit")}
         </Button>
       </Flex>
     </div>

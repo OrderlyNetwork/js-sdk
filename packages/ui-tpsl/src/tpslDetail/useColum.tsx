@@ -26,7 +26,7 @@ export const useColumn = (props: {
   const columns = useMemo(() => {
     const moblieColumns = [
       {
-        title: "Qty.",
+        title: t("tpsl.tpslDetail.qty"),
         dataIndex: "quantity",
         width: 70,
         className: "oui-py-2",
@@ -35,7 +35,7 @@ export const useColumn = (props: {
         ),
       },
       {
-        title: "Type",
+        title: t("tpsl.tpslDetail.type"),
         dataIndex: "type",
         width: 35,
         className: "oui-pl-1 oui-py-2",
@@ -44,7 +44,7 @@ export const useColumn = (props: {
         ),
       },
       {
-        title: "trigger",
+        title: t("tpsl.tpslDetail.trigger"),
         dataIndex: "trigger",
         width: 70,
         className: "oui-pl-1 oui-py-2",
@@ -53,7 +53,7 @@ export const useColumn = (props: {
         },
       },
       {
-        title: "price",
+        title: t("tpsl.tpslDetail.price"),
         dataIndex: "price",
         width: 70,
         className: "oui-py-2",
@@ -66,10 +66,10 @@ export const useColumn = (props: {
         title: (
           <Tooltip
             className="oui-max-w-[280px] oui-bg-base-8 oui-p-3 oui-text-2xs oui-text-base-contrast"
-            content="The actual value may differ based on the actual trading price. This value is only for reference."
+            content={t("tpsl.tpslDetail.estPnl.tooltip")}
           >
             <Text className="oui-underline oui-decoration-dashed oui-underline-offset-2">
-              Est.Pnl
+              {t("tpsl.tpslDetail.estPnl")}
             </Text>
           </Tooltip>
         ),
@@ -83,7 +83,7 @@ export const useColumn = (props: {
     ];
     const desktopColums = [
       {
-        title: "Qty.",
+        title: t("tpsl.tpslDetail.qty"),
         dataIndex: "quantity",
         width: 70,
         className: cn(" oui-py-2 !oui-pl-5"),
@@ -92,7 +92,7 @@ export const useColumn = (props: {
         ),
       },
       {
-        title: "Type",
+        title: t("tpsl.tpslDetail.type"),
         dataIndex: "type",
         width: 35,
         className: "oui-pl-1 oui-py-2",
@@ -101,7 +101,7 @@ export const useColumn = (props: {
         ),
       },
       {
-        title: "trigger",
+        title: t("tpsl.tpslDetail.trigger"),
         dataIndex: "trigger",
         width: 70,
         className: "oui-pl-1 oui-py-2",
@@ -110,7 +110,7 @@ export const useColumn = (props: {
         },
       },
       {
-        title: "price",
+        title: t("tpsl.tpslDetail.price"),
         dataIndex: "price",
         width: 70,
         className: "oui-pl-1 oui-py-2",
@@ -123,10 +123,10 @@ export const useColumn = (props: {
         title: (
           <Tooltip
             className="oui-max-w-[280px] oui-bg-base-8 oui-p-3 oui-text-2xs oui-text-base-contrast"
-            content="The actual value may differ based on the actual trading price. This value is only for reference."
+            content={t("tpsl.tpslDetail.estPnl.tooltip")}
           >
             <Text className="oui-underline oui-decoration-dashed oui-underline-offset-2">
-              Est.Pnl
+              {t("tpsl.tpslDetail.estPnl")}
             </Text>
           </Tooltip>
         ),

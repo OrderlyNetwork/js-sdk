@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import { API, PositionType } from "@orderly.network/types";
 import {
   Box,
@@ -11,6 +12,7 @@ import {
   Tooltip,
   ThrottledButton,
   useScreen,
+  ScrollArea,
 } from "@orderly.network/ui";
 import { OrderInfo } from "../components/orderInfo";
 import { OrdersTable } from "./ordersTable";
@@ -18,6 +20,7 @@ import { OrdersTableMobile } from "./ordersTable.mobile";
 import { TPSLDetailState } from "./tpslDetail.script";
 
 export const TPSLDetailUI = (props: TPSLDetailState) => {
+  const { isMobile } = useScreen();
   const {
     position,
     fullPositionOrders,
@@ -31,35 +34,37 @@ export const TPSLDetailUI = (props: TPSLDetailState) => {
 
   return (
     <Box>
-      <OrderInfo
-        order={{
-          symbol: position.symbol,
-          order_quantity: position.position_qty.toString(),
-          order_price: position.average_open_price.toString(),
-        }}
-        baseDP={symbolInfo("base_dp")}
-        quoteDP={symbolInfo("quote_dp")}
-        classNames={{
-          root: cn("oui-mb-6 oui-gap-3 oui-px-5"),
-          container: "oui-gap-x-[30px]",
-        }}
-      />
-      <FullPositionPart
-        position={position}
-        orders={fullPositionOrders}
-        onCancelOrder={onCancelOrder}
-        onCancelAllTPSLOrders={onCancelAllTPSLOrders}
-        editTPSLOrder={editTPSLOrder}
-        addTPSLOrder={addTPSLOrder}
-      />
-      <PartialPositionPart
-        position={position}
-        orders={partialPositionOrders}
-        onCancelOrder={onCancelOrder}
-        onCancelAllTPSLOrders={onCancelAllTPSLOrders}
-        editTPSLOrder={editTPSLOrder}
-        addTPSLOrder={addTPSLOrder}
-      />
+      <ScrollArea className={cn(isMobile && "oui-h-[calc(100vh-100px)]")}>
+        <OrderInfo
+          order={{
+            symbol: position.symbol,
+            order_quantity: position.position_qty.toString(),
+            order_price: position.average_open_price.toString(),
+          }}
+          baseDP={symbolInfo("base_dp")}
+          quoteDP={symbolInfo("quote_dp")}
+          classNames={{
+            root: cn("oui-mb-6 oui-gap-3 oui-px-5"),
+            container: "oui-gap-x-[30px]",
+          }}
+        />
+        <FullPositionPart
+          position={position}
+          orders={fullPositionOrders}
+          onCancelOrder={onCancelOrder}
+          onCancelAllTPSLOrders={onCancelAllTPSLOrders}
+          editTPSLOrder={editTPSLOrder}
+          addTPSLOrder={addTPSLOrder}
+        />
+        <PartialPositionPart
+          position={position}
+          orders={partialPositionOrders}
+          onCancelOrder={onCancelOrder}
+          onCancelAllTPSLOrders={onCancelAllTPSLOrders}
+          editTPSLOrder={editTPSLOrder}
+          addTPSLOrder={addTPSLOrder}
+        />
+      </ScrollArea>
     </Box>
   );
 };
@@ -198,6 +203,7 @@ const PositionTypeDescription = (props: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) => {
+  const { t } = useTranslation();
   return (
     <Flex
       gap={1}
@@ -221,17 +227,17 @@ const PositionTypeDescription = (props: {
           )}
         />
         {props.positionType === PositionType.FULL ? (
-          <Text>TP/SL: Full position</Text>
+          <Text>{t("tpsl.positionType.full")}</Text>
         ) : (
-          <Text>TP/SL: Partial position </Text>
+          <Text>{t("tpsl.positionType.partial")}</Text>
         )}
       </Flex>
       <Tooltip
         className="oui-w-[280px] oui-p-3"
         content={
           props.positionType === PositionType.FULL
-            ? "TPSL (full) applies to the full position. Newly activated TPSL (full) orders will overwrite previous orders. Full position will be market closed when the price is triggered."
-            : "TP/SL triggers at the specified mark price and executes as a market order. By default, it applies to the entire position. Adjust settings in open positions for partial TP/SL."
+            ? t("tpsl.positionType.full.tips")
+            : t("tpsl.positionType.partial.tips")
         }
       >
         <ExclamationFillIcon
@@ -248,6 +254,7 @@ export const AddButton = (props: {
   position: API.Position;
   addTPSLOrder: (positionType: PositionType) => void;
 }) => {
+  const { t } = useTranslation();
   const onAdd = () => {
     props.addTPSLOrder(props.positionType);
   };
@@ -259,7 +266,7 @@ export const AddButton = (props: {
       className="oui-h-6 oui-w-[94px] oui-text-2xs"
       onClick={onAdd}
     >
-      Add
+      {t("tpsl.add")}
     </ThrottledButton>
   );
 };
@@ -269,6 +276,7 @@ export const CancelAllBtn = (props: {
   canCancelAll: boolean;
 }) => {
   const [loading, setLoading] = useState(false);
+  const { t } = useTranslation();
   return (
     <ThrottledButton
       loading={loading}
@@ -292,7 +300,7 @@ export const CancelAllBtn = (props: {
           });
       }}
     >
-      Cancel all
+      {t("tpsl.cancelAll")}
     </ThrottledButton>
   );
 };

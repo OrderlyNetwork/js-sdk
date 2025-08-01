@@ -46,9 +46,9 @@ export const OrderConfirmDialog = (props: OrderConfirmDialogProps) => {
 
   const renderPositionType = () => {
     if (order.position_type === PositionType.FULL) {
-      return <Text>Full position</Text>;
+      return <Text>{t("tpsl.positionType.full")}</Text>;
     }
-    return <Text>Partial position</Text>;
+    return <Text>{t("tpsl.positionType.partial")}</Text>;
   };
 
   const renderPrice = () => {
@@ -105,7 +105,11 @@ export const OrderConfirmDialog = (props: OrderConfirmDialogProps) => {
     }
     if (!price) {
       if (isOrderPrice) {
-        return <Text className="oui-text-base-contrast-36">Market</Text>;
+        return (
+          <Text className="oui-text-base-contrast-36">
+            {t("common.marketPrice")}
+          </Text>
+        );
       }
     }
     return (
@@ -133,10 +137,9 @@ export const OrderConfirmDialog = (props: OrderConfirmDialogProps) => {
     return (
       <Flex justify={"between"}>
         <Text>
-          {/* TODO i18n */}
           {order.position_type === PositionType.FULL
-            ? "Position Qty."
-            : "Order Qty."}
+            ? t("common.positionQty")
+            : t("common.orderQty")}
         </Text>
         <Text.numeral
           rule={"price"}
@@ -148,7 +151,7 @@ export const OrderConfirmDialog = (props: OrderConfirmDialogProps) => {
         </Text.numeral>
       </Flex>
     );
-  }, [order, positionQty]);
+  }, [order, positionQty, t]);
 
   return (
     <>
@@ -178,8 +181,7 @@ export const OrderConfirmDialog = (props: OrderConfirmDialogProps) => {
         })}
       >
         <Flex justify={"between"}>
-          {/* TODO i18n */}
-          <Text>Order Qty.</Text>
+          <Text>{t("common.orderQty")}</Text>
           <Text.numeral
             rule={"price"}
             dp={base_dp}
@@ -209,8 +211,7 @@ export const OrderConfirmDialog = (props: OrderConfirmDialogProps) => {
           {renderPrice()}
         </Flex>
         <Flex justify={"between"}>
-          {/* TODO i18n */}
-          <Text>Est. Total</Text>
+          <Text>{t("common.estTotal")}</Text>
           <Text.numeral
             unit={"USDC"}
             rule={"price"}
@@ -234,9 +235,8 @@ export const OrderConfirmDialog = (props: OrderConfirmDialogProps) => {
                 "oui-space-y-1 oui-w-full oui-flex oui-flex-col oui-gap-3",
             })}
           >
-            {/* TODO i18n*/}
             <Text className="oui-text-base-contrast">
-              TP/SL for {renderPositionType()}
+              {renderPositionType()}
             </Text>
             {renderTPSLQty}
 
@@ -248,8 +248,7 @@ export const OrderConfirmDialog = (props: OrderConfirmDialogProps) => {
               className="oui-w-full"
             >
               <Flex justify={"between"} className="oui-w-full">
-                {/* TODO i18n*/}
-                <Text>TP trigger price</Text>
+                <Text>{t("tpsl.tpTriggerPrice")}</Text>
                 {renderTPSLPrice({
                   price: order.tp_trigger_price ?? "",
                   isOrderPrice: false,
@@ -258,8 +257,7 @@ export const OrderConfirmDialog = (props: OrderConfirmDialogProps) => {
                 })}
               </Flex>
               <Flex justify={"between"} className="oui-w-full">
-                {/* TODO i18n*/}
-                <Text>TP order price</Text>
+                <Text>{t("tpsl.tpOrderPrice")}</Text>
                 {renderTPSLPrice({
                   price: order.tp_order_price ?? "",
                   isOrderPrice: true,
@@ -277,8 +275,7 @@ export const OrderConfirmDialog = (props: OrderConfirmDialogProps) => {
               className="oui-w-full"
             >
               <Flex justify={"between"} className="oui-w-full">
-                {/* TODO i18n*/}
-                <Text>SL trigger price</Text>
+                <Text>{t("tpsl.slTriggerPrice")}</Text>
                 {renderTPSLPrice({
                   price: order.sl_trigger_price ?? "",
                   isOrderPrice: false,
@@ -287,8 +284,7 @@ export const OrderConfirmDialog = (props: OrderConfirmDialogProps) => {
                 })}
               </Flex>
               <Flex justify={"between"} className="oui-w-full">
-                {/* TODO i18n*/}
-                <Text>SL order price</Text>
+                <Text>{t("tpsl.slOrderPrice")}</Text>
                 {renderTPSLPrice({
                   price: order.sl_order_price ?? "",
                   isOrderPrice: true,

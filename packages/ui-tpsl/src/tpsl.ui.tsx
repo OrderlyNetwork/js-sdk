@@ -31,6 +31,7 @@ import {
   convertValueToPercentage,
   ThrottledButton,
   ScrollArea,
+  useScreen,
 } from "@orderly.network/ui";
 import { transSymbolformString } from "@orderly.network/utils";
 import { OrderInfo } from "./components/orderInfo";
@@ -66,6 +67,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
   } = props;
 
   const { t } = useTranslation();
+  const { isMobile } = useScreen();
 
   const { parseErrorMsg } = useOrderEntryFormErrorMsg(errors);
 
@@ -93,7 +95,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
 
   return (
     <div id="orderly-tp_sl-order-edit-content">
-      <ScrollArea className="oui-h-[calc(100vh-200px)]">
+      <ScrollArea className={cn(isMobile && "oui-h-[calc(100vh-200px)]")}>
         <OrderInfo
           baseDP={symbolInfo("base_dp")}
           quoteDP={symbolInfo("quote_dp")}
@@ -147,7 +149,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
           )}
           {TPSL_OrderEntity.position_type === PositionType.FULL && (
             <Text className="oui-text-warning oui-text-2xs">
-              Full positions TP/SL only support market price to place the orders
+              {t("tpsl.positionType.full.tips.market")}
             </Text>
           )}
         </Flex>
@@ -526,9 +528,9 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
   );
   const renderPositionType = () => {
     if (order.position_type === PositionType.FULL) {
-      return <Text>Full position</Text>;
+      return <Text>{t("tpsl.positionType.full")}</Text>;
     }
-    return <Text>Partial position</Text>;
+    return <Text>{t("tpsl.positionType.partial")}</Text>;
   };
   // console.log("PositionTPSLConfirm", qty, maxQty, quoteDP);
 
@@ -630,9 +632,8 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
                 "oui-space-y-1 oui-w-full oui-flex oui-flex-col oui-gap-3",
             })}
           >
-            {/* TODO i18n*/}
             <Text className="oui-text-base-contrast">
-              TP/SL for {renderPositionType()}
+              {renderPositionType()}
             </Text>
             <Flex justify={"between"}>
               <Text>Order Qty.</Text>
@@ -654,8 +655,7 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
               className="oui-w-full"
             >
               <Flex justify={"between"} className="oui-w-full">
-                {/* TODO i18n*/}
-                <Text>TP trigger price</Text>
+                <Text>{t("tpsl.tpTriggerPrice")}</Text>{" "}
                 {renderTPSLPrice({
                   price: order.tp_trigger_price ?? "",
                   isOrderPrice: false,
@@ -664,8 +664,7 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
                 })}
               </Flex>
               <Flex justify={"between"} className="oui-w-full">
-                {/* TODO i18n*/}
-                <Text>TP order price</Text>
+                <Text>{t("tpsl.tpOrderPrice")}</Text>
                 {renderTPSLPrice({
                   price: order.tp_order_price ?? "",
                   isOrderPrice: true,
@@ -683,8 +682,7 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
               className="oui-w-full"
             >
               <Flex justify={"between"} className="oui-w-full">
-                {/* TODO i18n*/}
-                <Text>SL trigger price</Text>
+                <Text>{t("tpsl.slTriggerPrice")}</Text>
                 {renderTPSLPrice({
                   price: order.sl_trigger_price ?? "",
                   isOrderPrice: false,
@@ -693,8 +691,7 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
                 })}
               </Flex>
               <Flex justify={"between"} className="oui-w-full">
-                {/* TODO i18n*/}
-                <Text>SL order price</Text>
+                <Text>{t("tpsl.slOrderPrice")}</Text>
                 {renderTPSLPrice({
                   price: order.sl_order_price ?? "",
                   isOrderPrice: true,

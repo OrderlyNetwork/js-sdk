@@ -211,7 +211,7 @@ export const useColumn = (config: ColumnConfig) => {
         },
       },
       {
-        title: "Full TP/SL",
+        title: t("common.fullTPSL"),
         dataIndex: "full_tpsl",
         width: 150,
         render: (_: string, record) => {
@@ -225,7 +225,7 @@ export const useColumn = (config: ColumnConfig) => {
       },
 
       {
-        title: "Partial TP/SL",
+        title: t("common.partialTPSL"),
         dataIndex: "partial_tpsl",
         width: 150,
         render: (_: string, record) => (

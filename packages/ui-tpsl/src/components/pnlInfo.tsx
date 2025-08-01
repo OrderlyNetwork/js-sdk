@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import { cn, Flex, Text } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 
@@ -9,6 +10,7 @@ type Props = {
 };
 
 export const PnlInfo = (props: Props) => {
+  const { t } = useTranslation();
   const { tp_pnl, sl_pnl } = props;
   const riskRatio = useMemo(() => {
     if (tp_pnl && sl_pnl) {
@@ -36,7 +38,7 @@ export const PnlInfo = (props: Props) => {
       )}
     >
       <Flex justify={"between"} className="oui-w-full">
-        <Text size="2xs">Total est. TP PnL</Text>
+        <Text size="2xs">{t("tpsl.totalEstTpPnl")}</Text>
         <Text.numeral
           suffix={
             <Text className="oui-text-base-contrast-36 oui-ml-1">USDC</Text>
@@ -51,7 +53,7 @@ export const PnlInfo = (props: Props) => {
         </Text.numeral>
       </Flex>
       <Flex justify={"between"} className="oui-w-full">
-        <Text size="2xs">Total est. SL PnL</Text>
+        <Text size="2xs">{t("tpsl.totalEstSlPnl")}</Text>
         {sl_pnl ? (
           <Text.numeral
             suffix={
@@ -69,7 +71,7 @@ export const PnlInfo = (props: Props) => {
         )}
       </Flex>
       <Flex justify={"between"} className="oui-w-full">
-        <Text size="2xs">Risk reward ratio</Text>
+        <Text size="2xs">{t("tpsl.riskRewardRatio")}</Text>
         <Text className="oui-text-base-contrast-80" size="2xs">
           {riskRatio}
         </Text>

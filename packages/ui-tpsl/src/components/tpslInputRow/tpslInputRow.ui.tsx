@@ -1,5 +1,6 @@
-import { useMemo } from "react";
+import { Fragment, useMemo } from "react";
 import { useSymbolLeverage } from "@orderly.network/hooks";
+import { useTranslation, Trans } from "@orderly.network/i18n";
 import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
 import { OrderType, PositionType } from "@orderly.network/types";
 import { Flex, Text, Grid, Checkbox, cn } from "@orderly.network/ui";
@@ -11,6 +12,7 @@ import { useTPSLInputRowScript } from "./tpslInputRow.script";
 
 type Props = ReturnType<typeof useTPSLInputRowScript>;
 export const TPSLInputRowUI = (props: Props) => {
+  const { t } = useTranslation();
   const { parseErrorMsg } = useOrderEntryFormErrorMsg(props.errors);
   const { values, positionType } = props;
   const symbolLeverage = useSymbolLeverage(props.symbol);
@@ -70,7 +72,9 @@ export const TPSLInputRowUI = (props: Props) => {
             "oui-ml-1 oui-text-sm oui-text-base-contrast-36 oui-cursor-pointer"
           }
         >
-          {props.type === "tp" ? "Take profit" : "Stop loss"}
+          {props.type === "tp"
+            ? t("tpsl.advanced.TP.label")
+            : t("tpsl.advanced.SL.label")}
         </label>
       </Flex>
       <Flex
@@ -85,7 +89,7 @@ export const TPSLInputRowUI = (props: Props) => {
           className="oui-w-full oui-gap-0.5"
         >
           <Text className="oui-text-2xs oui-text-base-contrast-54">
-            Trigger price
+            {t("tpsl.advanced.triggerPrice")}
           </Text>
           <Grid cols={2} gap={2}>
             <PriceInput
@@ -118,7 +122,7 @@ export const TPSLInputRowUI = (props: Props) => {
           itemAlign={"start"}
         >
           <Text className="oui-text-2xs oui-text-base-contrast-54">
-            Order price
+            {t("tpsl.advanced.orderPrice")}
           </Text>
 
           <Grid cols={2} gap={2} className="oui-w-full">
@@ -128,7 +132,11 @@ export const TPSLInputRowUI = (props: Props) => {
                 values.order_type === OrderType.MARKET
               }
               type={"order price"}
-              label={values.order_type === OrderType.LIMIT ? "Limit" : "Market"}
+              label={
+                values.order_type === OrderType.LIMIT
+                  ? t("tpsl.advanced.limit")
+                  : t("tpsl.advanced.market")
+              }
               value={values.order_price}
               error={parseErrorMsg(`${props.type}_order_price`)}
               onValueChange={(value) => {
@@ -172,6 +180,7 @@ const RenderROI = (props: {
   dp: number;
   orderType: OrderType;
 }) => {
+  const { t } = useTranslation();
   const { price, pnl, roi, dp } = props;
   if (!roi || !price || !pnl) {
     return null;
@@ -180,37 +189,47 @@ const RenderROI = (props: {
     <Text
       className={cn("oui-text-2xs oui-text-base-contrast-36", props.className)}
     >
-      When the mark price reaches 
-      <Text.numeral
-        className="oui-text-base-contrast oui-px-1"
-        dp={dp}
-        suffix={<Text className="oui-pl-0.5">USDC</Text>}
-      >
-        {price}
-      </Text.numeral>
-      , it will trigger a
-      <Text className="oui-text-base-contrast oui-px-1">
-        {props.orderType === OrderType.MARKET ? "Market" : "Limit"}
-      </Text>
-      order, and estimated PnL will be
-      <Text.numeral
-        coloring
-        className="oui-px-1 oui-whitespace-nowrap"
-        dp={2}
-        suffix={<Text className="oui-pl-0.5">USDC</Text>}
-      >
-        {pnl}
-      </Text.numeral>
-      and ROI is
-      <Text.numeral
-        coloring
-        className="oui-px-1 oui-whitespace-nowrap"
-        dp={2}
-        suffix="%"
-      >
-        {roi}
-      </Text.numeral>
-      .
+      {/* @ts-ignore */}
+      <Trans
+        i18nKey="tpsl.advanced.ROI"
+        components={[
+          <Fragment key="price">
+            <Text.numeral
+              className="oui-text-base-contrast oui-px-1"
+              dp={dp}
+              suffix={<Text className="oui-pl-0.5">USDC</Text>}
+            >
+              {price}
+            </Text.numeral>
+          </Fragment>,
+          <Fragment key="orderType">
+            <Text className="oui-text-base-contrast oui-px-1">
+              {props.orderType === OrderType.MARKET ? "Market" : "Limit"}
+            </Text>
+          </Fragment>,
+          <Fragment key="pnl">
+            <Text.numeral
+              coloring
+              className="oui-px-1 oui-whitespace-nowrap"
+              dp={2}
+              suffix={<Text className="oui-pl-0.5">USDC</Text>}
+            >
+              {pnl}
+            </Text.numeral>
+          </Fragment>,
+
+          <Fragment key="roi">
+            <Text.numeral
+              coloring
+              className="oui-px-1 oui-whitespace-nowrap"
+              dp={2}
+              suffix="%"
+            >
+              {roi}
+            </Text.numeral>
+          </Fragment>,
+        ]}
+      />
     </Text>
   );
 };

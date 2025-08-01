@@ -3,6 +3,7 @@ import {
   useMarkPrice,
   useSymbolLeverage,
 } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 import { OrderlyOrder } from "@orderly.network/types";
 import { cn, Flex, Grid, Text, TokenIcon } from "@orderly.network/ui";
 
@@ -18,6 +19,7 @@ type Props = {
   };
 };
 export const OrderInfo = (props: Props) => {
+  const { t } = useTranslation();
   const { order } = props;
   const { symbol, side } = order;
   const markPrice = useMarkPrice(symbol!);
@@ -63,7 +65,7 @@ export const OrderInfo = (props: Props) => {
         className={cn("oui-w-full oui-gap-x-2 ", props.classNames?.container)}
       >
         <Flex justify={"between"} className=" oui-text-base-contrast-36">
-          <Text size="2xs">Quantity</Text>
+          <Text size="2xs">{t("tpsl.advanced.quantity")}</Text>
           <Text.numeral
             rule="price"
             className="oui-text-base-contrast-80"
@@ -74,7 +76,7 @@ export const OrderInfo = (props: Props) => {
           </Text.numeral>
         </Flex>
         <Flex justify={"between"} className="oui-text-base-contrast-36">
-          <Text size="2xs">Last price</Text>
+          <Text size="2xs">{t("tpsl.advanced.lastPrice")}</Text>
           <Text.numeral
             rule="price"
             className="oui-text-base-contrast-80"
@@ -85,7 +87,7 @@ export const OrderInfo = (props: Props) => {
           </Text.numeral>
         </Flex>
         <Flex justify={"between"} className="oui-text-base-contrast-36">
-          <Text size="2xs">Order price </Text>
+          <Text size="2xs">{t("tpsl.advanced.orderPrice")}</Text>
           <Text.numeral
             rule="price"
             className="oui-text-base-contrast-80"
@@ -96,7 +98,7 @@ export const OrderInfo = (props: Props) => {
           </Text.numeral>
         </Flex>
         <Flex justify={"between"} className="oui-text-base-contrast-36">
-          <Text size="2xs">Mark price </Text>
+          <Text size="2xs">{t("tpsl.advanced.triggerPrice")}</Text>
           <Text.numeral
             rule="price"
             className="oui-text-base-contrast-80"
