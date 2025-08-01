@@ -550,7 +550,11 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
     }
     if (!price) {
       if (isOrderPrice) {
-        return <Text className="oui-text-base-contrast-36">Market</Text>;
+        return (
+          <Text className="oui-text-base-contrast-36">
+            {t("common.market")}
+          </Text>
+        );
       }
     }
     return (
@@ -575,14 +579,9 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
   return (
     <>
       {isEditing && (
-        <Text
-          as="div"
-          size="2xs"
-          intensity={80}
-          className="oui-mb-3"
-        >{`You agree to edit your ${transSymbolformString(
-          symbol,
-        )} order.`}</Text>
+        <Text as="div" size="2xs" intensity={80} className="oui-mb-3">
+          {t("tpsl.agreement", { symbol: transSymbolformString(symbol) })}
+        </Text>
       )}
 
       <Flex pb={4}>
@@ -636,7 +635,7 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
               {renderPositionType()}
             </Text>
             <Flex justify={"between"}>
-              <Text>Order Qty.</Text>
+              <Text>{t("common.orderQty")}</Text>
               <Text.numeral
                 rule={"price"}
                 dp={baseDP}

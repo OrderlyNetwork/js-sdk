@@ -1,4 +1,5 @@
 import { findTPSLOrderPriceFromOrder } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 import { API, OrderType } from "@orderly.network/types";
 import { Flex, Text } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
@@ -8,6 +9,7 @@ import { useTPSLDetailContext } from "../tpslDetailProvider";
 export const OrderPriceRender = ({ order }: { order: API.AlgoOrder }) => {
   const { quote_dp } = useTPSLDetailContext();
   const { tp_order_price, sl_order_price } = findTPSLOrderPriceFromOrder(order);
+  const { t } = useTranslation();
   return (
     <Flex
       gap={2}
@@ -19,7 +21,7 @@ export const OrderPriceRender = ({ order }: { order: API.AlgoOrder }) => {
       {tp_order_price && (
         <FlexCell>
           {tp_order_price === OrderType.MARKET ? (
-            <Text>Market</Text>
+            <Text>{t("common.market")}</Text>
           ) : (
             <Text.numeral dp={quote_dp} rm={Decimal.ROUND_DOWN} padding={false}>
               {tp_order_price}
@@ -30,7 +32,7 @@ export const OrderPriceRender = ({ order }: { order: API.AlgoOrder }) => {
       {sl_order_price && (
         <FlexCell>
           {sl_order_price === OrderType.MARKET ? (
-            <Text>Market</Text>
+            <Text>{t("common.market")}</Text>
           ) : (
             <Text.numeral dp={quote_dp} rm={Decimal.ROUND_DOWN} padding={false}>
               {sl_order_price}

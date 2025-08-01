@@ -82,6 +82,7 @@ export const tpsl = {
   "tpsl.tpslDetail.estPnl": "Est. PnL",
   "tpsl.tpslDetail.estPnl.tooltip":
     "The actual value may differ based on the actual trading price. This value is only for reference.",
+  "tpsl.agreement": "You agree to edit your {{symbol}} order.",
 };
 
 export type TPSL = typeof tpsl;

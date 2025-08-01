@@ -138,7 +138,7 @@ export const OrderTPSL = (props: {
           )}
         >
           <Text className="oui-text-sm oui-cursor-pointer group-hover:oui-text-base-contrast">
-            Advanced
+            {t("tpsl.advanced")}
           </Text>
           {/* <AdvancedIcon/> */}
           <SettingFillIcon

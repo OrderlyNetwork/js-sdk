@@ -22,7 +22,7 @@ export const TriggerPrice = ({ order }: { order: API.AlgoOrder }) => {
         <FlexCell>
           <Flex direction={"column"} justify={"start"} itemAlign={"start"}>
             <Text className="oui-text-base-contrast-36">
-              {t("common.marketPrice")}
+              {t("common.market")}
             </Text>
             <Text.numeral dp={quote_dp} rm={Decimal.ROUND_DOWN} padding={false}>
               {tp_trigger_price}
@@ -34,7 +34,7 @@ export const TriggerPrice = ({ order }: { order: API.AlgoOrder }) => {
         <FlexCell>
           <Flex direction={"column"} justify={"start"} itemAlign={"start"}>
             <Text className="oui-text-base-contrast-36">
-              {t("common.marketPrice")}
+              {t("common.market")}
             </Text>
             <Text.numeral dp={quote_dp} rm={Decimal.ROUND_DOWN} padding={false}>
               {sl_trigger_price}

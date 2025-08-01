@@ -204,7 +204,9 @@ const RenderROI = (props: {
           </Fragment>,
           <Fragment key="orderType">
             <Text className="oui-text-base-contrast oui-px-1">
-              {props.orderType === OrderType.MARKET ? "Market" : "Limit"}
+              {props.orderType === OrderType.MARKET
+                ? t("common.market")
+                : t("common.limit")}
             </Text>
           </Fragment>,
           <Fragment key="pnl">
