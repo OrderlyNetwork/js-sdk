@@ -1,6 +1,9 @@
 export const tpsl = {
   "tpsl.tp": "TP",
   "tpsl.sl": "SL",
+  "tpsl.mode": "Mode",
+  "tpsl.fullPosition": "Full position",
+  "tpsl.partialPosition": "Partial position",
   "tpsl.tpPrice": "TP Price",
   "tpsl.slPrice": "SL Price",
   "tpsl.tpPnl": "TP PnL",

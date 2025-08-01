@@ -1224,6 +1224,7 @@ function AdvancedTPSLResult(props: {
   const { order: formattedOrder, symbolInfo, onEdit, onDelete, errors } = props;
 
   const { parseErrorMsg } = useOrderEntryFormErrorMsg(errors);
+  const { t } = useTranslation();
 
   const renderTp = () => {
     const error = parseErrorMsg("tp_trigger_price");
@@ -1243,7 +1244,7 @@ function AdvancedTPSLResult(props: {
             className="oui-w-full"
           >
             <Flex justify={"between"} className="oui-w-full">
-              <Text>TP trigger price</Text>
+              <Text>{t("tpsl.tpTriggerPrice")}</Text>
               <Text.numeral
                 suffix={
                   <Text className="oui-text-base-contrast-36 oui-ml-1">
@@ -1257,7 +1258,7 @@ function AdvancedTPSLResult(props: {
               </Text.numeral>
             </Flex>
             <Flex justify={"between"} className="oui-w-full">
-              <Text>TP order price</Text>
+              <Text>{t("tpsl.tpOrderPrice")}</Text>
               {formattedOrder.tp_order_type === OrderType.LIMIT ? (
                 <Text.numeral
                   suffix={
@@ -1275,7 +1276,7 @@ function AdvancedTPSLResult(props: {
               )}
             </Flex>
             <Flex justify={"between"} className="oui-w-full">
-              <Text>TP est. PnL</Text>
+              <Text>{t("tpsl.totalEstTpPnl")}</Text>
               <Text.numeral
                 suffix={
                   <Text className="oui-ml-1 oui-text-base-contrast-36">
@@ -1324,7 +1325,7 @@ function AdvancedTPSLResult(props: {
             className="oui-w-full"
           >
             <Flex justify={"between"} className="oui-w-full">
-              <Text>SL trigger price</Text>
+              <Text>{t("tpsl.slTriggerPrice")}</Text>
               <Text.numeral
                 suffix={
                   <Text className="oui-text-base-contrast-36 oui-ml-1">
@@ -1338,7 +1339,7 @@ function AdvancedTPSLResult(props: {
               </Text.numeral>
             </Flex>
             <Flex justify={"between"} className="oui-w-full">
-              <Text>SL order price</Text>
+              <Text>{t("tpsl.slOrderPrice")}</Text>
               {formattedOrder.sl_order_type === OrderType.LIMIT ? (
                 <Text.numeral
                   suffix={
@@ -1357,7 +1358,7 @@ function AdvancedTPSLResult(props: {
             </Flex>
 
             <Flex justify={"between"} className="oui-w-full">
-              <Text>SL est. PnL</Text>
+              <Text>{t("tpsl.totalEstSlPnl")}</Text>
               <Text.numeral
                 coloring
                 suffix={
@@ -1396,7 +1397,7 @@ function AdvancedTPSLResult(props: {
       gap={4}
     >
       <Flex justify={"between"} itemAlign={"start"} className="oui-w-full">
-        <Text>TP/SL</Text>
+        <Text>{t("tpsl.advanced.title")}</Text>
         <Flex gap={2}>
           <DeleteIcon
             size={12}
@@ -1412,11 +1413,11 @@ function AdvancedTPSLResult(props: {
         </Flex>
       </Flex>
       <Flex justify={"between"} itemAlign={"start"} className="oui-w-full">
-        <Text>Mode</Text>
+        <Text>{t("tpsl.mode")}</Text>
         <Text className="oui-text-base-contrast">
           {formattedOrder.position_type === PositionType.FULL
-            ? "Full position"
-            : "Partial position"}
+            ? t("tpsl.fullPosition")
+            : t("tpsl.partialPosition")}
         </Text>
       </Flex>
       {renderTp()}
