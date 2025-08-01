@@ -1,7 +1,6 @@
 import type { StorybookConfig } from "@storybook/react-vite";
-import { resolve } from "path";
-import { mergeConfig } from "vite";
-import { getPackageConfig } from "../packageAlias";
+import { mergeConfig, UserConfig } from "vite";
+import { getWatchIgnores } from "../watchPackages.config";
 
 /**
  * This function is used to resolve the absolute path of a package.
@@ -56,20 +55,27 @@ function getStories() {
   return defaultStories;
 }
 
-const config: StorybookConfig = {
-  stories: getStories(),
-  addons: disabledAddons
+const getAddons = () => {
+  const alwaysAddons = ["@storybook/addon-themes"];
+
+  const addons = disabledAddons
     ? []
     : [
         "@chromatic-com/storybook",
         "@storybook/addon-docs",
         "@storybook/addon-a11y",
         "@storybook/addon-vitest",
-        "@storybook/addon-themes",
         "@storybook/addon-links",
         "../src/addons/theme_tool/register.ts",
         // "../src/addons/walletConnect/register.ts",
-      ],
+      ];
+
+  return [...alwaysAddons, ...addons];
+};
+
+const config: StorybookConfig = {
+  stories: getStories(),
+  addons: getAddons(),
   framework: {
     name: "@storybook/react-vite",
     options: {},
@@ -101,49 +107,32 @@ const config: StorybookConfig = {
   // },
   viteFinal: async (config) => {
     // console.log("config", config);
-    // const { watchs, unwatchs } = getPackageConfig();
-    // watch storybook
-    // const storybook = ["../src", "."].map((item) => `!${item}/**`);
-    // // console.log("storybook", storybook);
-    // // watch src
-    // const includeSrc = watchs.map((item) => `!${item.path}/**`);
-    // // watch dist
-    // const includeDist = unwatchs.map(
-    //   (item) => `!${resolve(item.path, "../dist")}/**`,
-    // );
+
     // merge custom config to storybook vite config
-    // return mergeConfig(config, {
-    //   server: {
-    //     watch: {
-    //       ignored: [
-    //         // ignore all files
-    //         "**",
-    //         ...storybook,
-    //         ...includeSrc,
-    //         ...includeDist,
-    //         // "**/node_modules/**",
-    //         // "**/.git/**",
-    //         // "**/dist/**",
-    //         // "**/build/**",
-    //         // "**/storybook-static/**",
-    //         // "**/__test__/**",
-    //         // "apps/docs/**",
-    //         // ".turbo/**",
-    //       ],
-    //     },
-    //   },
-    //   // build: {
-    //   //   rollupOptions: {
-    //   //     maxParallelFileOps: 10,
-    //   //   },
-    //   //   commonjsOptions: {
-    //   //     sourceMap: false,
-    //   //   },
-    //   //   chunkSizeWarningLimit: 1000,
-    //   //   sourcemap: false,
-    //   // },
-    // });
-    return config;
+    return mergeConfig<UserConfig, UserConfig>(config, {
+      server: {
+        // using warmup can slow down the initial page load.
+        // warmup: {
+        //   clientFiles: [],
+        // },
+        watch: {
+          ignored: getWatchIgnores(),
+        },
+      },
+      // build: {
+      //   rollupOptions: {
+      //     maxParallelFileOps: 10,
+      //   },
+      //   commonjsOptions: {
+      //     sourceMap: false,
+      //   },
+      //   chunkSizeWarningLimit: 1000,
+      //   sourcemap: false,
+      // },
+    });
+
+    // return config;
   },
 };
+
 export default config;

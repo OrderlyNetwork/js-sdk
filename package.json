@@ -2,11 +2,12 @@
   "name": "orderly-web",
   "private": true,
   "scripts": {
+    "dev": "pnpm --filter @orderly.network/storybook playground",
     "build": "cross-env NODE_OPTIONS=--max_old_space_size=4096 turbo run build",
     "build-storybook": "pnpm --filter @orderly.network/storybook build-storybook",
     "storybook": "pnpm --filter @orderly.network/storybook storybook",
     "storybook:tradingPage": "pnpm --filter @orderly.network/storybook storybook:tradingPage",
-    "dev": "turbo run dev --concurrency=21",
+    "dev:watch": "turbo run dev --concurrency=21",
     "docs": "typedoc",
     "version:add": "pnpm build && changeset add",
     "version:g": "node ./scripts/version.js",

@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { StoryObj } from "@storybook/react-vite";
 import { TradingPage } from "@orderly.network/trading";
-import { MainNavWidget } from "@orderly.network/ui-scaffold";
 import { Scaffold } from "@orderly.network/ui-scaffold";
-import { useNav } from "../../../hooks/useNav";
+import { useRouteContext } from "../../../components/orderlyProvider/rounteProvider.tsx";
 import { useOrderlyConfig } from "../../../hooks/useOrderlyConfig";
 import { OrderlyIcon } from "../trading/icons.tsx";
 
@@ -13,7 +12,7 @@ const meta = {
   decorators: [
     (Story: any) => {
       const config = useOrderlyConfig();
-      const { onRouteChange } = useNav();
+      const { onRouteChange } = useRouteContext();
       return (
         <Scaffold
           mainNavProps={config.scaffold.mainNavProps}

@@ -22,7 +22,7 @@ const preview: Preview = {
         custom: "custom",
         roundless: "roundless",
       },
-      defaultTheme: import.meta.env.STORYBOOK_DEFAULT_THEME || "orderly",
+      defaultTheme: import.meta.env.VITE_DEFAULT_THEME || "orderly",
       attributeName: "data-oui-theme",
     }),
   ],
