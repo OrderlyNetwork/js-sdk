@@ -139,6 +139,7 @@
   "portfolio.apiKeys": "Klucze API",
   "portfolio.setting": "Ustawienia",
   "portfolio.overview.availableWithdraw": "Dostępne do wypłaty",
+  "portfolio.overview.handle.title": "Wartość portfela",
   "portfolio.overview.performance": "Wyniki",
   "portfolio.overview.performance.roi": "ROI {{period}}",
   "portfolio.overview.performance.pnl": "PnL {{period}}",
@@ -818,5 +819,6 @@
   "funding.annualRate": "Roczna stopa",
   "funding.paymentType": "Typ płatności",
   "funding.paymentType.paid": "Zapłacono",
-  "funding.paymentType.received": "Otrzymano"
+  "funding.paymentType.received": "Otrzymano",
+  "leftNav.feedback": "Podziel się opinią"
 }

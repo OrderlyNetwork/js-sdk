@@ -163,7 +163,7 @@ const LeftNavSheet = modal.create<LeftNavUIProps>((props) => {
                 className="oui-text-center oui-text-2xs oui-font-semibold oui-text-primary oui-underline"
                 onClick={() => openExternalLink(props.feedbackUrl as string)}
               >
-                Share your feedback
+                {t("leftNav.feedback")}
               </div>
             )}
           </div>

@@ -139,6 +139,7 @@
   "portfolio.apiKeys": "APIキー",
   "portfolio.setting": "設定",
   "portfolio.overview.availableWithdraw": "出金可能",
+  "portfolio.overview.handle.title": "ポートフォリオ価値",
   "portfolio.overview.performance": "パフォーマンス",
   "portfolio.overview.performance.roi": "{{period}} ROI",
   "portfolio.overview.performance.pnl": "{{period}} 損益",
@@ -818,5 +819,6 @@
   "funding.annualRate": "年率",
   "funding.paymentType": "支払いタイプ",
   "funding.paymentType.paid": "支払い済み",
-  "funding.paymentType.received": "受け取り済み"
+  "funding.paymentType.received": "受け取り済み",
+  "leftNav.feedback": "フィードバックを共有"
 }

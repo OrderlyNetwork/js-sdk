@@ -139,6 +139,7 @@
   "portfolio.apiKeys": "API ключі",
   "portfolio.setting": "Налаштування",
   "portfolio.overview.availableWithdraw": "Доступно для виведення",
+  "portfolio.overview.handle.title": "Вартість портфеля",
   "portfolio.overview.performance": "Продуктивність",
   "portfolio.overview.performance.roi": "{{period}} ROI",
   "portfolio.overview.performance.pnl": "{{period}} PnL",
@@ -818,5 +819,6 @@
   "funding.annualRate": "Річна ставка",
   "funding.paymentType": "Тип платежу",
   "funding.paymentType.paid": "Сплачено",
-  "funding.paymentType.received": "Отримано"
+  "funding.paymentType.received": "Отримано",
+  "leftNav.feedback": "Поділитися відгуком"
 }
