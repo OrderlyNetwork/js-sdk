@@ -243,18 +243,15 @@ const LTVDetail: FC<Pick<AssetDetailProps, "value" | "visible">> = (props) => {
           {t("transfer.LTV")}
         </Text>
       </Tooltip>
-      {visible ? (
-        <Text
-          size="2xs"
-          className={cn("select-none", calculateTextColor(Number(value)))}
-        >
-          {value}%
-        </Text>
-      ) : (
-        <Text size="2xs" className={"select-none"}>
-          *****
-        </Text>
-      )}
+      <Text
+        size="2xs"
+        className={cn(
+          "select-none",
+          visible && calculateTextColor(Number(value)),
+        )}
+      >
+        {visible ? `${value}%` : "*****"}
+      </Text>
     </Flex>
   );
 };
