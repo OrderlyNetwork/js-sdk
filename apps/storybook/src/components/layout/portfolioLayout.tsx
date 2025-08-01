@@ -3,7 +3,6 @@ import {
   PortfolioLeftSidebarPath,
   PortfolioLayoutWidget,
 } from "@orderly.network/portfolio";
-import { RouteOption } from "@orderly.network/ui-scaffold";
 import { useOrderlyConfig } from "../../hooks/useOrderlyConfig";
 import { PathEnum } from "../../playground/constant";
 import { useRouteContext } from "../orderlyProvider/rounteProvider";

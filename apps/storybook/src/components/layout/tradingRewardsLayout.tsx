@@ -3,7 +3,6 @@ import {
   TradingRewardsLayoutWidget,
   TradingRewardsLeftSidebarPath,
 } from "@orderly.network/trading-rewards";
-import { RouteOption } from "@orderly.network/ui-scaffold";
 import { useOrderlyConfig } from "../../hooks/useOrderlyConfig";
 import { PathEnum } from "../../playground/constant";
 import { useRouteContext } from "../orderlyProvider/rounteProvider";

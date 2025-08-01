@@ -28,7 +28,6 @@ import {
   MainNavWidgetProps,
   BottomNavProps,
   useScaffoldContext,
-  RouteOption,
 } from "@orderly.network/ui-scaffold";
 import {
   ApiKeys,
@@ -256,7 +255,7 @@ export const useOrderlyConfig = () => {
                 href: "/rewards/affiliate",
                 icon: (
                   <img
-                    src="box-ani.gif"
+                    src="/box-ani.gif"
                     alt="logo"
                     draggable={false}
                     className="oui-w-6 oui-h-6"

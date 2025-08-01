@@ -1,6 +1,5 @@
 import { FC, ReactNode } from "react";
 import { OrderlyAppProvider as OrderlyAppProviderBase } from "@orderly.network/react-app";
-import { RouteOption } from "@orderly.network/ui-scaffold";
 import { useOrderlyConfig } from "../../hooks/useOrderlyConfig";
 import { configStore } from "./configStore";
 import { useRouteContext } from "./rounteProvider";
