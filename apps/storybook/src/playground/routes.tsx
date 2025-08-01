@@ -18,6 +18,7 @@ import PerpPage from "./pages/perp/page";
 import APIKeyPage from "./pages/portfolio/api-key/page";
 import AssetsPage from "./pages/portfolio/assets/page";
 import FeeTierPage from "./pages/portfolio/fee/page";
+import HistoryPage from "./pages/portfolio/history/page";
 import OrdersPage from "./pages/portfolio/orders/page";
 import PortfolioPage from "./pages/portfolio/page";
 import PositionsPage from "./pages/portfolio/positions/page";
@@ -94,6 +95,10 @@ const AppRoute = () => {
         {
           path: "setting",
           element: <SettingsPage />,
+        },
+        {
+          path: "history",
+          element: <HistoryPage />,
         },
       ],
     },
