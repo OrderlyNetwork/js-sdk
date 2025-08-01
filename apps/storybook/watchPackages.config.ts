@@ -4,6 +4,7 @@ type Package = {
   package: string;
   path: string;
   watch: boolean;
+  alwaysWatch?: boolean;
 };
 
 const base: Package[] = [
@@ -60,6 +61,12 @@ const base: Package[] = [
 ];
 
 const ui: Package[] = [
+  {
+    package: "@orderly.network/ui/dist",
+    path: "../../packages/ui/dist",
+    watch: true,
+    alwaysWatch: true,
+  },
   {
     package: "@orderly.network/ui",
     path: "../../packages/ui/src",
@@ -195,16 +202,7 @@ export const packages: Package[] = [
   ...i18n,
 ];
 
-export function getAllPackages() {
-  return packages.map((item) => {
-    return {
-      ...item,
-      path: resolve(__dirname, item.path),
-    };
-  });
-}
-
-export function getPackageConfig() {
+export function getWatchPackages() {
   const watchPackages = process.env.VITE_WATCH_PACKAGES?.split(",").map(
     (item) => {
       const packageName = item.trim();
@@ -218,12 +216,14 @@ export function getPackageConfig() {
   const watchs: Package[] = [];
   const unwatchs: Package[] = [];
 
-  const allPackages = getAllPackages();
+  packages.forEach((item) => {
+    // fill full path
+    item.path = resolve(__dirname, item.path);
 
-  allPackages.forEach((item) => {
     if (
       (watchPackages && watchPackages.includes(item.package)) ||
-      (!watchPackages && item.watch)
+      (!watchPackages && item.watch) ||
+      item.alwaysWatch
     ) {
       watchs.push(item);
     } else {
@@ -235,4 +235,40 @@ export function getPackageConfig() {
     watchs,
     unwatchs,
   };
+}
+
+export function getWatchIgnores() {
+  /** base ignore */
+  const base = [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/build/**",
+    "**/storybook-static/**",
+    "**/.git/**",
+    "**/.turbo/**",
+    "**/__test__/**",
+    "**/public/**",
+  ];
+
+  /** deprecated or private packages */
+  const deprecatedPackages = [
+    "**/apps/docs/**",
+    "**/packages/cli/**",
+    "**/packages/cli-codemod/**",
+    "**/packages/eslint-config/**",
+    "**/packages/onboard/**",
+    "**/packages/create-orderly-app/**",
+  ];
+
+  const { unwatchs } = getWatchPackages();
+
+  // ignore packages files
+  const ignorePackages = unwatchs.map((item) => resolve(item.path, "../"));
+
+  // watch packages dist
+  const includeDist = unwatchs.map(
+    (item) => `!${resolve(item.path, "../dist")}/**`,
+  );
+
+  return [...base, ...deprecatedPackages, ...ignorePackages, ...includeDist];
 }

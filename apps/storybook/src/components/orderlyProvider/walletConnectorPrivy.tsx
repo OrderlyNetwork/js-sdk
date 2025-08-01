@@ -22,8 +22,6 @@ import {
 } from "@orderly.network/wallet-connector-privy";
 import { CustomProductNav } from "../customProductNav";
 
-const { VITE_NETWORK_ID, VITE_BROKER_ID, VITE_BROKER_NAME, VITE_ENV } =
-  import.meta.env || {};
 const mobileWalletNotFoundHanlder = (adapter: SolanaMobileWalletAdapter) => {
   console.log("-- mobile wallet adapter", adapter);
 

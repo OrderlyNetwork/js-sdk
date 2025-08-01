@@ -5,7 +5,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vite";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
-import { getAllPackages, getPackageConfig } from "./packageAlias";
+import { getWatchPackages, getWatchIgnores } from "./watchPackages.config";
 
 const dirname =
   typeof __dirname !== "undefined"
@@ -16,7 +16,7 @@ function getAliasConfig(): Record<string, string> {
   const isProd = process.env.NODE_ENV === "production";
 
   if (!isProd) {
-    const { watchs } = getPackageConfig();
+    const { watchs } = getWatchPackages();
 
     return watchs.reduce(
       (obj, item) => {
@@ -30,17 +30,18 @@ function getAliasConfig(): Record<string, string> {
   return {};
 }
 
-function getOptimizeDepsConfig(): string[] {
-  const allPackages = getAllPackages();
-  return allPackages.map((item) => item.package);
+function getOptimizeDepsConfig() {
+  // const allPackages = getAllPackages();
+  // return allPackages.map((item) => item.package);
 }
 
 // https://vite.dev/config/
 export default defineConfig({
   server: {
+    open: true,
     watch: {
       // storybook has own watch config, need to use viteFinal to override this in main.ts
-      // ignored: ["**"],
+      ignored: getWatchIgnores(),
     },
   },
   plugins: [
