@@ -37,7 +37,7 @@ export const MainNavMobile: FC<MainNavMobileProps> = (props) => {
         return menu.href === props.current;
       }
     });
-  }, [props?.mainMenus, props?.initialMenu]);
+  }, [props?.mainMenus, props?.initialMenu, props?.current]);
 
   const title = useMemo(() => {
     if (currentMenu?.isHomePageInMobile) {

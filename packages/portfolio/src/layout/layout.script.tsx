@@ -26,10 +26,10 @@ export const usePortfolioLayoutScript = (props: UseLayoutBuilderOptions) => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    if (current || routerAdapter?.currentPath) {
-      setCurrent(current || routerAdapter?.currentPath || "/portfolio");
+    if (props.current || routerAdapter?.currentPath) {
+      setCurrent(props.current || routerAdapter?.currentPath || "/portfolio");
     }
-  }, [current, routerAdapter?.currentPath]);
+  }, [props.current, routerAdapter?.currentPath]);
 
   const items = useMemo(() => {
     return [

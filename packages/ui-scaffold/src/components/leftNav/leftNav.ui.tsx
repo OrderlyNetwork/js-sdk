@@ -199,7 +199,7 @@ const NavItem: FC<NavItemProps> = ({ item, onClick }) => {
   if (typeof customRender === "function") {
     return (
       <div
-        className="oui-flex oui-items-center oui-px-3 oui-py-4"
+        className="oui-flex oui-w-full oui-items-center oui-px-3 oui-py-4"
         onClick={onItemClick}
       >
         {customRender({ name: name, href: href })}
@@ -211,7 +211,7 @@ const NavItem: FC<NavItemProps> = ({ item, onClick }) => {
   }
   return (
     <div
-      className="oui-flex oui-items-center oui-gap-2 oui-px-3 oui-py-4"
+      className="oui-flex oui-w-full oui-items-center oui-gap-2 oui-px-3 oui-py-4"
       onClick={onItemClick}
     >
       <div>{icon}</div>

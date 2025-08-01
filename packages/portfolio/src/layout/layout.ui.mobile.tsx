@@ -13,7 +13,6 @@ export const PortfolioLayoutMobile: FC<
     ScaffoldProps & usePortfolioLayoutScriptType & { current?: string }
   >
 > = (props) => {
-  // console.log("PortfolioLayoutMobile", props, props.routerAdapter);
   return (
     <LayoutProvider {...props}>
       <Flex
