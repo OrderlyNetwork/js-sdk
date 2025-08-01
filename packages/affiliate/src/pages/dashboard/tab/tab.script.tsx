@@ -49,8 +49,6 @@ export const useTabScript = (): TabReturns => {
     }
   }, [window.location.search]);
 
-  console.log(" tab", tab, tableValue, window.location);
-
   const anAnAffiliate = () => {
     // if (becomeAnAffiliateUrl !== undefined) {
     //   window.open(becomeAnAffiliateUrl, "_blank");
