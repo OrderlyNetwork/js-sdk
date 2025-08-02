@@ -1,5 +1,5 @@
 import { API } from "@orderly.network/types";
-import { useSymbolContext } from "../../../../providers/symbolProvider";
+import { useSymbolContext } from "../../../../provider/symbolContext";
 import { PositionsProps } from "../../../../types/types";
 
 type PositionCellScriptProps = {

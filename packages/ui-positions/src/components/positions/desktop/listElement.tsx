@@ -1,6 +1,6 @@
 import { Text } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
-import { useSymbolContext } from "../../../providers/symbolProvider";
+import { useSymbolContext } from "../../../provider/symbolContext";
 import { PriceInput } from "./priceInput";
 import { QuantityInput } from "./quantityInput";
 

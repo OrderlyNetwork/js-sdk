@@ -3,7 +3,7 @@ import { useLocalStorage, utils } from "@orderly.network/hooks";
 import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
 import { OrderType } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
-import { useSymbolContext } from "../../../providers/symbolProvider";
+import { useSymbolContext } from "../../../provider/symbolContext";
 import { usePositionsRowContext } from "../positionsRowContext";
 
 export type ClosePositionScriptProps = {
