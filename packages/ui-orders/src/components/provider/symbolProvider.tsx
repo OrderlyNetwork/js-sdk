@@ -1,35 +1,14 @@
-import React, { createContext, useContext, useMemo } from "react";
+import { FC, PropsWithChildren, useMemo } from "react";
 import { useSymbolsInfo } from "@orderly.network/hooks";
-import type { API } from "@orderly.network/types";
-
-export interface SymbolContextState {
-  base_dp: number;
-  quote_dp: number;
-  base_tick: number;
-  quote_tick: number;
-  base: string;
-  quote: string;
-  symbol: string;
-  origin: API.SymbolExt;
-  quote_min: number;
-  quote_max: number;
-}
-
-export const SymbolContext = createContext<SymbolContextState>(
-  {} as SymbolContextState,
-);
-
-export const useSymbolContext = () => {
-  return useContext<SymbolContextState>(SymbolContext);
-};
+import { SymbolContext, SymbolContextState } from "./symbolContext";
 
 interface FormatterProviderProps {
   symbol: string;
 }
 
-export const SymbolProvider: React.FC<
-  React.PropsWithChildren<FormatterProviderProps>
-> = (props) => {
+export const SymbolProvider: FC<PropsWithChildren<FormatterProviderProps>> = (
+  props,
+) => {
   const { symbol, children } = props;
   const symbolInfo = useSymbolsInfo()[symbol];
   const memoizedValue = useMemo<SymbolContextState>(() => {

@@ -18,7 +18,7 @@ import {
 import { API } from "@orderly.network/types";
 import { OrderSide } from "@orderly.network/types";
 import { AlgoOrderType } from "@orderly.network/types";
-import { useSymbolContext } from "./symbolProvider";
+import { useSymbolContext } from "../provider/symbolContext";
 
 export type TPSLOrderRowContextState = {
   order: API.AlgoOrderExt;

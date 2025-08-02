@@ -9,7 +9,6 @@ interface FormatterProviderProps {
 export const SymbolProvider: FC<PropsWithChildren<FormatterProviderProps>> = (
   props,
 ) => {
-  // console.log("SymbolProvider==");
   const { symbol, children } = props;
   const symbolInfo = useSymbolsInfo()[symbol];
   const memoizedValue = useMemo<SymbolContextState>(() => {
