@@ -17,4 +17,6 @@ export * from "./components/mobile/portfolioSheet";
 export * from "./components/mobile/fundingRate";
 export * from "./components/mobile/fundingRateModal";
 export * from "./pages/trading";
-export * from "./provider";
+export * from "./provider/tradingPageContext";
+export * from "./provider/tradingPageProvider";
+export * from "./hooks";

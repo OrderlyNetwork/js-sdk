@@ -10,9 +10,10 @@ import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext, useDataTap } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { modal } from "@orderly.network/ui";
-import { PortfolioSheetWidget, useTradingLocalStorage } from "../..";
 import { useSplitPersistent } from "../../components/desktop/layout/useSplitPersistent";
-import { useTradingPageContext } from "../../provider/context";
+import { PortfolioSheetWidget } from "../../components/mobile/portfolioSheet";
+import { useTradingLocalStorage } from "../../hooks/";
+import { useTradingPageContext } from "../../provider/tradingPageContext";
 import { TradingPageState } from "../../types/types";
 import { useFirstTimeDeposit } from "./hooks/useFirstTimeDeposit";
 
