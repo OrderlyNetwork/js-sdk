@@ -36,11 +36,11 @@ type LeftNavUIProps = LeftNavProps &
   };
 
 export const LeftNavUI: FC<LeftNavUIProps> = (props) => {
-  const showModal = useCallback(() => {
+  const showModal = () => {
     modal.show(LeftNavSheet, {
       ...props,
     });
-  }, []);
+  };
 
   return (
     <div onClick={showModal} className={props?.className}>
