@@ -35,7 +35,7 @@ export { useKeyStore } from "./useKeyStore";
 export { useSimpleDI } from "./useSimpleDI";
 
 export * from "./orderlyContext";
-export * from "./statusProvider";
+export * from "./provider/status/statusProvider";
 export { useWsStatus, WsNetworkStatus } from "./useWsStatus";
 export type {
   ConfigProviderProps,

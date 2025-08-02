@@ -5,7 +5,7 @@ import { AccountState, EVENT_NAMES } from "@orderly.network/core";
 import { API, WSMessage } from "@orderly.network/types";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { useApiStatusActions } from "../next/apiStatus/apiStatus.store";
-import { getKeyFunction } from "../provider/dataCenter";
+import { getKeyFunction } from "../provider/dataCenter/dataCenterContext";
 import { AlgoOrderMergeHandler } from "../services/orderMerge/algoOrderMergeHandler";
 import { CalculatorScope } from "../types";
 import { useAccount } from "../useAccount";

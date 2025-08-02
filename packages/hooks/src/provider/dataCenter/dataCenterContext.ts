@@ -5,7 +5,6 @@ export type getKeyFunction = (index: number, prevData: any) => string | null;
 export type DataCenterContextState = {
   registerKeyHandler: (key: string, handler: getKeyFunction) => void;
   unregisterKeyHandler: (key: string) => void;
-  // test?: string;
 };
 
 export const DataCenterContext = createContext({} as DataCenterContextState);

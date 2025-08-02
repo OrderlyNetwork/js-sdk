@@ -20,8 +20,8 @@ import { ProxyConfigStore } from "./dev/proxyConfigStore";
 import { ExtendedConfigStore } from "./extendedConfigStore";
 import { OrderlyConfigContextState, OrderlyProvider } from "./orderlyContext";
 // import { usePreLoadData } from "./usePreloadData";
-import { DataCenterProvider } from "./provider/dataCenter";
-import { StatusProvider } from "./statusProvider";
+import { DataCenterProvider } from "./provider/dataCenter/dataCenterProvider";
+import { StatusProvider } from "./provider/status/statusProvider";
 
 // import { useParamsCheck } from "./useParamsCheck";
 
