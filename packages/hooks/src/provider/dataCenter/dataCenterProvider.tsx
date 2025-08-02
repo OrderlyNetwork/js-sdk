@@ -1,34 +1,14 @@
-import React, {
-  PropsWithChildren,
-  createContext,
-  useContext,
-  useMemo,
-  useRef,
-} from "react";
-import { CalculatorService } from "./orderly/calculator/calculatorService";
-import { useWSObserver } from "./orderly/internal/useWSObserver";
-import { usePrivateDataObserver } from "./orderly/usePrivateDataObserver";
-import { usePublicDataObserver } from "./orderly/usePublicDataObserver";
-import { useCalculatorService } from "./useCalculatorService";
-import { usePreLoadData } from "./usePreloadData";
-import { useSimpleDI } from "./useSimpleDI";
-
-export type getKeyFunction = (index: number, prevData: any) => string | null;
-
-interface DataCenterContextState {
-  // orders
-  // positions
-  // balances
-  //
-  registerKeyHandler: (key: string, handler: getKeyFunction) => void;
-  unregisterKeyHandler: (key: string) => void;
-}
-
-export const DataCenterContext = createContext<DataCenterContextState>(
-  {} as any,
-);
-
-export const useDataCenterContext = () => useContext(DataCenterContext);
+import React, { PropsWithChildren, useMemo, useRef } from "react";
+import { useWSObserver } from "../../orderly/internal/useWSObserver";
+import { usePrivateDataObserver } from "../../orderly/usePrivateDataObserver";
+import { usePublicDataObserver } from "../../orderly/usePublicDataObserver";
+import { useCalculatorService } from "../../useCalculatorService";
+import { usePreLoadData } from "../../usePreloadData";
+import {
+  DataCenterContext,
+  DataCenterContextState,
+  getKeyFunction,
+} from "./dataCenterContext";
 
 export const DataCenterProvider: React.FC<PropsWithChildren> = ({
   children,

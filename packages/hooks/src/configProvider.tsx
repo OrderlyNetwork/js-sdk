@@ -16,11 +16,11 @@ import { Chain, NetworkId } from "@orderly.network/types";
 import { SDKError } from "@orderly.network/types";
 import { EthersProvider } from "@orderly.network/web3-provider-ethers";
 import { DEFAULT_TICK_SIZES } from "./constants";
-// import { usePreLoadData } from "./usePreloadData";
-import { DataCenterProvider } from "./dataProvider";
 import { ProxyConfigStore } from "./dev/proxyConfigStore";
 import { ExtendedConfigStore } from "./extendedConfigStore";
 import { OrderlyConfigContextState, OrderlyProvider } from "./orderlyContext";
+// import { usePreLoadData } from "./usePreloadData";
+import { DataCenterProvider } from "./provider/dataCenter";
 import { StatusProvider } from "./statusProvider";
 
 // import { useParamsCheck } from "./useParamsCheck";
