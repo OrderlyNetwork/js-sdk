@@ -1,6 +1,6 @@
 import { FC, ReactNode } from "react";
 import { OrderlyAppProvider as OrderlyAppProviderBase } from "@orderly.network/react-app";
-import { useOrderlyConfig } from "../../hooks/useOrderlyConfig";
+import { orderlyAppProviderConfig } from "../../orderlyConfig";
 import { configStore } from "./configStore";
 import { useRouteContext } from "./rounteProvider";
 
@@ -9,15 +9,13 @@ export type OrderlyAppProviderProps = {
 };
 
 export const OrderlyAppProvider: FC<OrderlyAppProviderProps> = (props) => {
-  const config = useOrderlyConfig();
-
   const { onRouteChange } = useRouteContext();
 
   return (
     <OrderlyAppProviderBase
       configStore={configStore}
-      appIcons={config.orderlyAppProvider.appIcons}
-      restrictedInfo={config.orderlyAppProvider.restrictedInfo}
+      appIcons={orderlyAppProviderConfig.appIcons}
+      restrictedInfo={orderlyAppProviderConfig.restrictedInfo}
       enableSwapDeposit={true}
       onRouteChange={onRouteChange}
       // dataAdapter={{

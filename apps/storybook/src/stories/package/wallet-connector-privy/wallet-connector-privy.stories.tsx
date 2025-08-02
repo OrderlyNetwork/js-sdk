@@ -2,22 +2,19 @@ import { useState } from "react";
 import { StoryObj } from "@storybook/react-vite";
 import { TradingPage } from "@orderly.network/trading";
 import { Scaffold } from "@orderly.network/ui-scaffold";
-import { useRouteContext } from "../../../components/orderlyProvider/rounteProvider.tsx";
-import { useOrderlyConfig } from "../../../hooks/useOrderlyConfig";
-import { OrderlyIcon } from "../trading/icons.tsx";
+import { useRouteContext } from "../../../components/orderlyProvider/rounteProvider";
+import { tradingPageConfig, useMainNav } from "../../../orderlyConfig";
+import { OrderlyIcon } from "../trading/icons";
 
 const meta = {
   title: "Package/wallet-connector-privy",
   component: TradingPage,
   decorators: [
     (Story: any) => {
-      const config = useOrderlyConfig();
+      const mainNavProps = useMainNav();
       const { onRouteChange } = useRouteContext();
       return (
-        <Scaffold
-          mainNavProps={config.scaffold.mainNavProps}
-          routerAdapter={{ onRouteChange }}
-        >
+        <Scaffold mainNavProps={mainNavProps} routerAdapter={{ onRouteChange }}>
           <Story />
         </Scaffold>
       );
@@ -52,12 +49,11 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   render: (arg) => {
     const [symbol, setSymbol] = useState("PERP_BTC_USDC");
-    const config = useOrderlyConfig();
     return (
       <TradingPage
         {...arg}
-        tradingViewConfig={config.tradingPage.tradingViewConfig}
-        sharePnLConfig={config.tradingPage.sharePnLConfig}
+        tradingViewConfig={tradingPageConfig.tradingViewConfig}
+        sharePnLConfig={tradingPageConfig.sharePnLConfig}
         symbol={symbol}
         onSymbolChange={(symbol) => {
           setSymbol(symbol.symbol);

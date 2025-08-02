@@ -4,7 +4,7 @@ import { PositionsModule } from "@orderly.network/portfolio";
 import { useTradingLocalStorage } from "@orderly.network/trading";
 import { API } from "@orderly.network/types";
 import { Box } from "@orderly.network/ui";
-import { useOrderlyConfig } from "../../../../hooks/useOrderlyConfig";
+import { tradingPageConfig } from "../../../../orderlyConfig";
 import { PathEnum } from "../../../constant";
 import { updateSymbol } from "../../../storage";
 import { generateLocalePath } from "../../../utils";
@@ -12,7 +12,6 @@ import { generateLocalePath } from "../../../utils";
 export default function PositionsPage() {
   const local = useTradingLocalStorage();
   const navigate = useNavigate();
-  const config = useOrderlyConfig();
 
   const onSymbolChange = useCallback(
     (data: API.Symbol) => {
@@ -39,7 +38,7 @@ export default function PositionsPage() {
       }}
     >
       <PositionsModule.PositionsPage
-        sharePnLConfig={config.tradingPage.sharePnLConfig}
+        sharePnLConfig={tradingPageConfig.sharePnLConfig}
         pnlNotionalDecimalPrecision={local.pnlNotionalDecimalPrecision}
         calcMode={local.unPnlPriceBasis}
         onSymbolChange={onSymbolChange}
