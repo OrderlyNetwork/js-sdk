@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { API } from "@orderly.network/types";
+import { API, EMPTY_LIST } from "@orderly.network/types";
 import { useQuery } from "../useQuery";
 
 export type PeriodKey = "1d" | "3d" | "7d" | "14d" | "30d" | "90d";
@@ -46,7 +46,7 @@ export const useFundingRateHistory = () => {
   );
 
   return {
-    data: historyData ?? [],
+    data: historyData ?? EMPTY_LIST,
     isLoading,
     getPositiveRates,
   };

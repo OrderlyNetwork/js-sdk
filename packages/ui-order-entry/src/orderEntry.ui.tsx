@@ -74,6 +74,8 @@ import { type OrderEntryScriptReturn } from "./orderEntry.script";
 import { InputType } from "./types";
 import { BBOStatus, getScaledPlaceOrderMessage } from "./utils";
 
+const EMPTY_LIST: any[] = [];
+
 type Refs = OrderEntryScriptReturn["refs"];
 
 type OrderEntryProps = OrderEntryScriptReturn & {
@@ -867,7 +869,7 @@ const CustomInput = forwardRef<
       }}
       formatters={
         props.overrideFormatters || [
-          ...(props.formatters ?? []),
+          ...(props.formatters ?? EMPTY_LIST),
           inputFormatter.numberFormatter,
           inputFormatter.currencyFormatter,
           inputFormatter.decimalPointFormatter,

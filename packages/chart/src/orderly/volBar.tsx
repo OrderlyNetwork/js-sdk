@@ -1,4 +1,3 @@
-import { useColors } from "./useColors";
 import {
   BarChart,
   XAxis,
@@ -12,8 +11,9 @@ import {
   Cross,
 } from "recharts";
 import type { TooltipProps } from "recharts";
-import { OrderlyChartTooltip } from "./customTooltip";
 import { Box, cn } from "@orderly.network/ui";
+import { OrderlyChartTooltip } from "./customTooltip";
+import { useColors } from "./useColors";
 
 export type VolChartDataItem = {
   date: string;
@@ -74,7 +74,7 @@ const CustomizedCross = (props: any) => {
 };
 
 const CustomTooltip = (
-  props: TooltipProps<any, any> & { tooltip?: VolChartTooltip }
+  props: TooltipProps<any, any> & { tooltip?: VolChartTooltip },
 ) => {
   const { active, payload, label, tooltip } = props;
 
@@ -100,12 +100,16 @@ export const VolBarChart = (props: VolChartProps) => {
   const colors = useColors(
     props.colors?.fill
       ? { profit: props.colors?.fill, loss: props.colors?.fill }
-      : undefined
+      : undefined,
   );
 
   const isEmpty = props.data.reduce((a, b) => a + b.volume, 0) === 0;
-  const maxVolume = props.data.reduce((a,b) => (a > b.volume ? a : b.volume), 0);
-  const decimal = maxVolume <= 10 ? 2 : (maxVolume <= 100 ? 1 : 0);
+  const maxVolume = props.data.reduce(
+    (a, b) => (a > b.volume ? a : b.volume),
+    0,
+  );
+
+  const decimal = maxVolume <= 10 ? 2 : maxVolume <= 100 ? 1 : 0;
 
   return (
     // @ts-ignore

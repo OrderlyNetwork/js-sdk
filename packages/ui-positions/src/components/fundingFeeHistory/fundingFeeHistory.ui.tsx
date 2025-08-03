@@ -1,6 +1,7 @@
 import { FC, useCallback, useMemo } from "react";
 import { usePrivateInfiniteQuery } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
+import { EMPTY_LIST } from "@orderly.network/types";
 import {
   Grid,
   Statistic,
@@ -66,7 +67,7 @@ export const FundingFeeHistoryUI: FC<{
     if (isMobile) {
       return (
         <HistoryDataListViewSimple
-          data={flattenData ?? []}
+          data={flattenData ?? EMPTY_LIST}
           isLoading={isLoading}
           loadMore={loadMore}
         />
@@ -74,7 +75,7 @@ export const FundingFeeHistoryUI: FC<{
     }
     return (
       <HistoryDataListView
-        data={flattenData ?? []}
+        data={flattenData ?? EMPTY_LIST}
         isLoading={isLoading}
         loadMore={loadMore}
       />
@@ -179,7 +180,7 @@ const HistoryDataListView: FC<ListProps> = ({ isLoading, data, loadMore }) => {
             root: cn("oui-h-auto oui-bg-base-8 oui-text-sm"),
           }}
           columns={columns}
-          dataSource={data ?? []}
+          dataSource={data ?? EMPTY_LIST}
           loading={isLoading}
         />
       </EndReachedBox>

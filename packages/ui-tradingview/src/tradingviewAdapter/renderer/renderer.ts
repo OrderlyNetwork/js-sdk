@@ -2,11 +2,11 @@ import {
   IChartingLibraryWidget,
   IBrokerConnectionAdapterHost,
 } from "../charting_library";
-import { ChartPosition } from "../type";
-import { PositionLineService } from "./positionLine.service";
 import useBroker from "../hooks/useBroker";
-import { OrderLineService } from "./orderLine.service";
+import { ChartPosition } from "../type";
 import { ExecutionService } from "./execution.service";
+import { OrderLineService } from "./orderLine.service";
+import { PositionLineService } from "./positionLine.service";
 
 export class Renderer {
   private instance: IChartingLibraryWidget;
@@ -17,12 +17,12 @@ export class Renderer {
   constructor(
     instance: IChartingLibraryWidget,
     host: IBrokerConnectionAdapterHost,
-    broker: ReturnType<typeof useBroker>
+    broker: ReturnType<typeof useBroker>,
   ) {
     this.instance = instance;
     this.positionLineService = new PositionLineService(instance, broker);
     this.orderLineService = new OrderLineService(instance, broker);
-    this.executionService = new ExecutionService(instance,broker);
+    this.executionService = new ExecutionService(instance, broker);
   }
 
   async renderPositions(positions: ChartPosition[] | null) {
@@ -37,19 +37,17 @@ export class Renderer {
     this.orderLineService.renderPendingOrders(pendingOrders);
   }
 
-  async renderFilledOrders(filledOrders:any, basePriceDecimal: number) {
+  async renderFilledOrders(filledOrders: any, basePriceDecimal: number) {
     await this.chartReady();
     await this.onDataLoaded();
 
     this.executionService.renderExecutions(filledOrders, basePriceDecimal);
   }
 
-
   remove() {
     this.orderLineService.removeAll();
     this.positionLineService.removePositions();
     this.executionService.destroy();
-
   }
 
   onDataLoaded(): Promise<void> {
@@ -58,7 +56,6 @@ export class Renderer {
     }
 
     return new Promise((resolve) =>
-      // eslint-disable-next-line no-promise-executor-return
       this.instance
         .activeChart()
         .onDataLoaded()
@@ -67,14 +64,13 @@ export class Renderer {
           () => {
             resolve();
           },
-          true
-        )
+          true,
+        ),
     );
   }
 
   chartReady(): Promise<void> {
     return new Promise((resolve) =>
-      // eslint-disable-next-line no-promise-executor-return
       this.instance.onChartReady(() => {
         try {
           this.instance.activeChart().dataReady(() => resolve());
@@ -86,7 +82,7 @@ export class Renderer {
             // throw err;
           }
         }
-      })
+      }),
     );
   }
 }

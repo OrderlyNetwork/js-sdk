@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { account } from "@orderly.network/perp";
-import { AccountStatusEnum } from "@orderly.network/types";
+import { AccountStatusEnum, EMPTY_LIST } from "@orderly.network/types";
 import { zero } from "@orderly.network/utils";
 import { useAccount } from "../useAccount";
 import { useCollateral } from "./useCollateral";
@@ -59,7 +59,7 @@ export const useMarginRatio = (): MarginRatioReturn => {
     return account.totalMarginRatio({
       totalCollateral: totalCollateral,
       markPrices: markPrices,
-      positions: rows ?? [],
+      positions: rows ?? EMPTY_LIST,
     });
   }, [rows, markPrices, totalCollateral]);
 
