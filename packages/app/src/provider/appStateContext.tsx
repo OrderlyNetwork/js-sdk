@@ -7,7 +7,7 @@ export type RouteOption = {
   name: string;
 };
 
-type AppContextState = {
+export type AppContextState = {
   connectWallet: ReturnType<typeof useWalletStateHandle>["connectWallet"];
   /**
    * Whether the current network is not supported
@@ -27,7 +27,7 @@ type AppContextState = {
   onRouteChange?: (option: RouteOption) => void;
 };
 
-const AppStateContext = createContext<AppContextState>({
+export const AppStateContext = createContext<AppContextState>({
   setCurrentChainId: (chainId?: number) => {},
   restrictedInfo: {},
   setShowAnnouncement: (show: boolean) => {},

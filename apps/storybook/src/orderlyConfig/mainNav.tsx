@@ -18,7 +18,10 @@ import {
   TradingRewardsActiveIcon,
   TradingRewardsIcon,
 } from "../components/icons";
-import { customArenRender } from "./components/customArenButton";
+import {
+  CustomArenButton,
+  MainNavCustomRenderOptions,
+} from "./components/customArenButton";
 import { Tag } from "./components/tag";
 
 export function useMainNav() {
@@ -34,6 +37,22 @@ function getMainNavProp(): MainNavWidgetProps {
     initialMenu: "/",
     leftNav: getLeftNavMenus(),
   };
+}
+
+// fake ongoing status for demo
+const isOnGoing = true;
+
+export function customArenRender() {
+  if (isOnGoing) {
+    return (options: MainNavCustomRenderOptions) => {
+      return (
+        <CustomArenButton
+          className={"oui-bg-base-9 after:oui-bg-base-9"}
+          routeOptions={options}
+        />
+      );
+    };
+  }
 }
 
 function getMainMenus(): MainNavWidgetProps["mainMenus"] {

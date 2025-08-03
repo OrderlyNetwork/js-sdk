@@ -2,28 +2,13 @@ import { useTranslation } from "@orderly.network/i18n";
 import { Text, cn } from "@orderly.network/ui";
 import { useScaffoldContext } from "@orderly.network/ui-scaffold";
 
-type MainNavCustomRenderOptions = {
+export type MainNavCustomRenderOptions = {
   name: string;
   href: string;
   isActive?: boolean;
 };
 
-const isOnGoing = true; // fake ongoing status for demo
-
-export function customArenRender() {
-  if (isOnGoing) {
-    return (options: MainNavCustomRenderOptions) => {
-      return (
-        <CustomArenButton
-          className={"oui-bg-base-9 after:oui-bg-base-9"}
-          routeOptions={options}
-        />
-      );
-    };
-  }
-}
-
-const CustomArenButton: React.FC<{
+export const CustomArenButton: React.FC<{
   className?: string;
   style?: React.CSSProperties;
   routeOptions: MainNavCustomRenderOptions;
