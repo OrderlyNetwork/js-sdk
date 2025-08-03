@@ -1,16 +1,17 @@
+import { useMemo } from "react";
+import { useRouter } from "next/router";
+import { EMPTY_OBJECT } from "@orderly.network/types";
 import { ClassPage } from "@/components/api/class";
 import { DetailsPageProvider } from "@/components/api/detailPageProvider";
 import { EnumPage } from "@/components/api/enum";
 import { FunctionPage } from "@/components/api/function";
 import { InterfacePage } from "@/components/api/interface";
 import { ModulesSection } from "@/components/api/module";
+import { TypeAliasPage } from "@/components/api/typeAlias";
 import { VariablePage } from "@/components/api/variable/index.page";
 import { ApiLayout } from "@/components/layout/apiLayout";
 import { decodeName } from "@/helper/typedocParser/name";
 import { ParserServer } from "@/helper/typedocParser/parserServer";
-import { useMemo } from "react";
-import { useRouter } from "next/router";
-import { TypeAliasPage } from "@/components/api/typeAlias";
 
 export const getStaticProps = async (context) => {
   // console.log("---context---", context);
@@ -121,24 +122,24 @@ export default function Page(props) {
   const page = useMemo(() => {
     switch (type) {
       case "Class":
-        return <ClassPage doc={props.doc || {}} />;
+        return <ClassPage doc={props.doc || EMPTY_OBJECT} />;
       case "Interface":
-        return <InterfacePage doc={props.doc || {}} />;
+        return <InterfacePage doc={props.doc || EMPTY_OBJECT} />;
       case "Function":
-        return <FunctionPage doc={props.doc || {}} />;
+        return <FunctionPage doc={props.doc || EMPTY_OBJECT} />;
       case "Variable":
-        return <VariablePage doc={props.doc || {}} />;
+        return <VariablePage doc={props.doc || EMPTY_OBJECT} />;
       case "TypeAlias":
-        return <TypeAliasPage doc={props.doc || {}} />;
+        return <TypeAliasPage doc={props.doc || EMPTY_OBJECT} />;
       case "Namespace":
         return (
           <ModulesSection
-            module={props.doc || {}}
+            module={props.doc || EMPTY_OBJECT}
             paths={[router.query.module as string, props.doc?.name]}
           />
         );
       case "Enum":
-        return <EnumPage doc={props.doc || {}} />;
+        return <EnumPage doc={props.doc || EMPTY_OBJECT} />;
       default:
         return null;
     }
