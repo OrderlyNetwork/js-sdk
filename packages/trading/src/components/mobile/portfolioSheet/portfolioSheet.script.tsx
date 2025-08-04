@@ -17,11 +17,12 @@ import {
 import { useTradingLocalStorage } from "../../../hooks";
 
 export const usePortfolioSheetScript = () => {
-  const { account, isMainAccount } = useAccount();
+  const { state, account, isMainAccount } = useAccount();
   const assets = useAssets();
   const marginRatio = useMarginRatioAndLeverage();
   const ee = useEventEmitter();
   const { t } = useTranslation();
+  const subAccounts = state.subAccounts ?? [];
 
   const [showSliderTip, setShowSliderTip] = useState(false);
 
@@ -82,6 +83,7 @@ export const usePortfolioSheetScript = () => {
     setShowSliderTip,
     isMainAccount,
     onTransfer,
+    hasSubAccount: subAccounts?.length > 0,
   };
 };
 
