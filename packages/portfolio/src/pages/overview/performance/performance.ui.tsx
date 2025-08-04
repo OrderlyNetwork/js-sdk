@@ -1,8 +1,17 @@
-import { useMemo } from "react";
+import { useMemo, ReactNode } from "react";
 import { PnLBarChart, PnlLineChart } from "@orderly.network/chart";
 import { useTranslation } from "@orderly.network/i18n";
 import { EMPTY_LIST } from "@orderly.network/types";
-import { Card, Grid, Box, Statistic, Text, Flex } from "@orderly.network/ui";
+import {
+  Card,
+  Grid,
+  Box,
+  Statistic,
+  Text,
+  Flex,
+  Tooltip,
+  cn,
+} from "@orderly.network/ui";
 import { PeriodTitle } from "../shared/periodHeader";
 import { PeriodType } from "../shared/useAssetHistory";
 import { UsePerformanceScriptReturn } from "./performance.script";
@@ -56,9 +65,14 @@ export const PerformanceUI = (props: PerformanceUIProps) => {
           borderColor={6}
         >
           <Statistic
-            label={t("portfolio.overview.performance.roi", {
-              period: periodLabel[period as PeriodType],
-            })}
+            label={
+              <LabelWithHint
+                label={t("portfolio.overview.performance.roi", {
+                  period: periodLabel[period as PeriodType],
+                })}
+                hint={t("portfolio.overview.performance.roi.tooltip")}
+              />
+            }
             // @ts-ignore
             valueProps={{
               rule: "percentages",
@@ -79,9 +93,14 @@ export const PerformanceUI = (props: PerformanceUIProps) => {
           borderColor={6}
         >
           <Statistic
-            label={t("portfolio.overview.performance.pnl", {
-              period: periodLabel[period as PeriodType],
-            })}
+            label={
+              <LabelWithHint
+                label={t("portfolio.overview.performance.pnl", {
+                  period: periodLabel[period as PeriodType],
+                })}
+                hint={t("portfolio.overview.performance.pnl.tooltip")}
+              />
+            }
             // @ts-ignore
             valueProps={{
               coloring: true,
@@ -108,9 +127,12 @@ export const PerformanceUI = (props: PerformanceUIProps) => {
             label={
               <Flex justify={"between"}>
                 <span>
-                  {t("portfolio.overview.performance.volume", {
-                    period: periodLabel[period as PeriodType],
-                  })}
+                  <LabelWithHint
+                    label={t("portfolio.overview.performance.volume", {
+                      period: periodLabel[period as PeriodType],
+                    })}
+                    hint={t("portfolio.overview.performance.volume.tooltip")}
+                  />
                 </span>
                 <span>{volumeUpdateDate}</span>
               </Flex>
@@ -131,6 +153,35 @@ export const PerformanceUI = (props: PerformanceUIProps) => {
         />
       </Grid>
     </Card>
+  );
+};
+
+type LabelWithHintProps = {
+  label: string;
+  hint?: ReactNode;
+};
+
+const LabelWithHint: React.FC<LabelWithHintProps> = (props) => {
+  const { label, hint } = props;
+  return (
+    <Tooltip
+      open={hint ? undefined : false}
+      content={hint}
+      className="oui-max-w-[240px] oui-bg-base-6 "
+      arrow={{ className: "oui-fill-base-6" }}
+      delayDuration={300}
+    >
+      <Text
+        size="xs"
+        intensity={36}
+        className={cn(
+          hint &&
+            "oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12",
+        )}
+      >
+        {label}
+      </Text>
+    </Tooltip>
   );
 };
 
