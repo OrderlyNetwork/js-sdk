@@ -147,6 +147,8 @@
   "portfolio.overview.performance.cumulativePnl": "PnL Kumulatif",
   "portfolio.overview.distribution": "Distribusi",
   "portfolio.overview.transferHistory": "Riwayat transfer",
+  "portfolio.overview.vaults": "Brankas",
+  "portfolio.overview.vaultName": "Nama brankas",
   "portfolio.overview.column.txId": "TxID",
   "portfolio.overview.column.token": "Token",
   "portfolio.overview.column.qty": "Jumlah",

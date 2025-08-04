@@ -76,7 +76,11 @@ export const HistoryDataGroupDesktop: React.FC<{
           <TransferHistoryWidget />
         </TabPanel>
         {isMainAccount && (
-          <TabPanel title={"vaults"} icon={<VaultsIcon />} value={"vaults"}>
+          <TabPanel
+            value={"vaults"}
+            icon={<VaultsIcon />}
+            title={t("portfolio.overview.vaults")}
+          >
             <VaultsHistoryWidget />
           </TabPanel>
         )}

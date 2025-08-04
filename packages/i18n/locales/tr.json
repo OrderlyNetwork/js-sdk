@@ -147,6 +147,8 @@
   "portfolio.overview.performance.cumulativePnl": "Kümülatif K/Z",
   "portfolio.overview.distribution": "Dağıtım",
   "portfolio.overview.transferHistory": "Transfer geçmişi",
+  "portfolio.overview.vaults": "Kasalar",
+  "portfolio.overview.vaultName": "Kasa adı",
   "portfolio.overview.column.txId": "İşlem ID",
   "portfolio.overview.column.token": "Token",
   "portfolio.overview.column.qty": "Adet",

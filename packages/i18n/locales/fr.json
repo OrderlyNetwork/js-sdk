@@ -147,6 +147,8 @@
   "portfolio.overview.performance.cumulativePnl": "PnL cumulé",
   "portfolio.overview.distribution": "Distribution",
   "portfolio.overview.transferHistory": "Historique des transferts",
+  "portfolio.overview.vaults": "Coffres",
+  "portfolio.overview.vaultName": "Nom du coffre",
   "portfolio.overview.column.txId": "ID de transaction",
   "portfolio.overview.column.token": "Jeton",
   "portfolio.overview.column.qty": "Qté.",

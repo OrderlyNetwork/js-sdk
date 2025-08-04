@@ -147,6 +147,8 @@
   "portfolio.overview.performance.cumulativePnl": "Skumulowany PnL",
   "portfolio.overview.distribution": "Dystrybucja",
   "portfolio.overview.transferHistory": "Historia transferów",
+  "portfolio.overview.vaults": "Skarbce",
+  "portfolio.overview.vaultName": "Nazwa skarbca",
   "portfolio.overview.column.txId": "ID transakcji",
   "portfolio.overview.column.token": "Token",
   "portfolio.overview.column.qty": "Ilość",

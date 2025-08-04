@@ -147,6 +147,8 @@
   "portfolio.overview.performance.cumulativePnl": "Накопичений PnL",
   "portfolio.overview.distribution": "Розподіл",
   "portfolio.overview.transferHistory": "Історія переказів",
+  "portfolio.overview.vaults": "Сховища",
+  "portfolio.overview.vaultName": "Назва сховища",
   "portfolio.overview.column.txId": "ID транзакції",
   "portfolio.overview.column.token": "Токен",
   "portfolio.overview.column.qty": "Кількість",

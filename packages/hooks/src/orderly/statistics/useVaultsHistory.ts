@@ -11,6 +11,7 @@ interface TransferHistorySearchParams {
 
 export const useVaultsHistory = (parmas: TransferHistorySearchParams) => {
   const { dataRange, page, size } = parmas;
+
   const infos = useSymbolsInfo();
 
   const memoizedQueryKey = React.useMemo<string>(() => {
@@ -24,22 +25,30 @@ export const useVaultsHistory = (parmas: TransferHistorySearchParams) => {
     return `/v1/account_sv_transaction_history?${search.toString()}`;
   }, [page, size, dataRange]);
 
-  const { data, isLoading, mutate } = usePrivateQuery<API.TransferHistory>(
+  const { data, isLoading, mutate } = usePrivateQuery<API.StrategyVaultHistory>(
     memoizedQueryKey,
     {
       formatter: (data) => data,
+      revalidateOnFocus: false,
       errorRetryCount: 3,
     },
   );
 
-  // const parsedData = React.useMemo<API.TransferHistoryRow[]>(() => {
-  //   if (!Array.isArray(data?.rows) || !data?.rows.length || infos.isNil) {
-  //     return [];
-  //   }
-  //   return data.rows;
-  // }, [data, infos]);
+  const parsedData = React.useMemo<API.StrategyVaultHistoryRow[]>(() => {
+    if (!Array.isArray(data?.rows) || !data?.rows.length || infos.isNil) {
+      return [];
+    }
+    return data.rows;
+  }, [data, infos]);
 
-  return [data, { meta: data?.meta, isLoading, mutate }] as const;
+  return [
+    parsedData,
+    {
+      isLoading: isLoading,
+      meta: data?.meta,
+      mutate,
+    },
+  ] as const;
 };
 
 export type VaultsHistoryReturn = ReturnType<typeof useVaultsHistory>;

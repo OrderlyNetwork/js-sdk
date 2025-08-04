@@ -147,6 +147,8 @@
   "portfolio.overview.performance.cumulativePnl": "P/L cumulativo",
   "portfolio.overview.distribution": "Distribuzione",
   "portfolio.overview.transferHistory": "Storico trasferimenti",
+  "portfolio.overview.vaults": "Caveau",
+  "portfolio.overview.vaultName": "Nome caveau",
   "portfolio.overview.column.txId": "ID Transazione",
   "portfolio.overview.column.token": "Token",
   "portfolio.overview.column.qty": "Quantità",

@@ -147,6 +147,8 @@
   "portfolio.overview.performance.cumulativePnl": "PnL acumulado",
   "portfolio.overview.distribution": "Distribución",
   "portfolio.overview.transferHistory": "Historial de transferencias",
+  "portfolio.overview.vaults": "Bóvedas",
+  "portfolio.overview.vaultName": "Nombre de bóveda",
   "portfolio.overview.column.txId": "ID de transacción",
   "portfolio.overview.column.token": "Token",
   "portfolio.overview.column.qty": "Cantidad",

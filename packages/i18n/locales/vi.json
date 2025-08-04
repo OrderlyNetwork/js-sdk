@@ -147,6 +147,8 @@
   "portfolio.overview.performance.cumulativePnl": "PnL tích lũy",
   "portfolio.overview.distribution": "Phân phối",
   "portfolio.overview.transferHistory": "Lịch sử chuyển khoản",
+  "portfolio.overview.vaults": "Kho bạc",
+  "portfolio.overview.vaultName": "Tên kho bạc",
   "portfolio.overview.column.txId": "TxID",
   "portfolio.overview.column.token": "Token",
   "portfolio.overview.column.qty": "Số lượng",

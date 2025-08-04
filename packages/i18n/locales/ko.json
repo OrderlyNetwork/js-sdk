@@ -147,6 +147,8 @@
   "portfolio.overview.performance.cumulativePnl": "누적 손익",
   "portfolio.overview.distribution": "분배",
   "portfolio.overview.transferHistory": "이체 내역",
+  "portfolio.overview.vaults": "볼트",
+  "portfolio.overview.vaultName": "볼트 이름",
   "portfolio.overview.column.txId": "거래 ID",
   "portfolio.overview.column.token": "토큰",
   "portfolio.overview.column.qty": "수량",

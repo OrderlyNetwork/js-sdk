@@ -147,6 +147,8 @@
   "portfolio.overview.performance.cumulativePnl": "累计盈亏",
   "portfolio.overview.distribution": "分配",
   "portfolio.overview.transferHistory": "转账历史",
+  "portfolio.overview.vaults": "金库",
+  "portfolio.overview.vaultName": "金库名称",
   "portfolio.overview.column.txId": "交易ID",
   "portfolio.overview.column.token": "代币",
   "portfolio.overview.column.qty": "数量",

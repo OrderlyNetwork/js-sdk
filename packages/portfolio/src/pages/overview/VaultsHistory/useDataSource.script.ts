@@ -1,6 +1,7 @@
 import React from "react";
 import { getDate, getMonth, getYear, set } from "date-fns";
 import { useVaultsHistory } from "@orderly.network/hooks";
+import type { API } from "@orderly.network/types";
 import { usePagination } from "@orderly.network/ui";
 import type { PaginationMeta } from "@orderly.network/ui";
 import { subtractDaysFromCurrentDate } from "@orderly.network/utils";
@@ -33,6 +34,17 @@ export const useVaultsHistoryHook = () => {
     page: page,
   });
 
+  const dataSource = React.useMemo(() => {
+    if (!Array.isArray(data) || !data.length) {
+      return [];
+    }
+    return data.map<API.StrategyVaultHistoryRow>((item) => ({
+      ...item,
+      token: "USDC", // need to hard code for now
+      vaultName: "Orderly Strategies", // need to hard code for now
+    }));
+  }, [data]);
+
   const onDateRangeFilter = React.useCallback(
     (filter: { value: string; name: string }) => {
       if (filter.name === "dateRange") {
@@ -49,7 +61,7 @@ export const useVaultsHistoryHook = () => {
   );
 
   return {
-    dataSource: data,
+    dataSource: dataSource,
     isLoading,
     dateRange,
     onFilter: onDateRangeFilter,

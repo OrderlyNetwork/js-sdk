@@ -147,6 +147,8 @@
   "portfolio.overview.performance.cumulativePnl": "L/P Acumulado",
   "portfolio.overview.distribution": "Distribuição",
   "portfolio.overview.transferHistory": "Histórico de transferências",
+  "portfolio.overview.vaults": "Cofres",
+  "portfolio.overview.vaultName": "Nome do cofre",
   "portfolio.overview.column.txId": "ID da Transação",
   "portfolio.overview.column.token": "Token",
   "portfolio.overview.column.qty": "Qtd.",

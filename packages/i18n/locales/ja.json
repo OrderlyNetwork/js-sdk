@@ -147,6 +147,8 @@
   "portfolio.overview.performance.cumulativePnl": "累積損益",
   "portfolio.overview.distribution": "配分",
   "portfolio.overview.transferHistory": "送金履歴",
+  "portfolio.overview.vaults": "ボルト",
+  "portfolio.overview.vaultName": "ボルト名",
   "portfolio.overview.column.txId": "トランザクションID",
   "portfolio.overview.column.token": "トークン",
   "portfolio.overview.column.qty": "数量",
