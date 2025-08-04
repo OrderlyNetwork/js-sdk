@@ -27,10 +27,8 @@ export type VolChartTooltip = {
 };
 
 export type VolChartProps = {
-  colors?: {
-    fill: string;
-  };
-  data: VolChartDataItem[];
+  colors?: { fill: string };
+  data: ReadonlyArray<VolChartDataItem> | VolChartDataItem[];
   tooltip?: VolChartTooltip;
   className?: string;
 };
@@ -56,7 +54,9 @@ const RoundedRectangle = (props: any) => {
 const CustomizedCross = (props: any) => {
   const { width, height, payload, stroke, fill } = props;
 
-  if (payload?.[0]?.value === 0) return null;
+  if (payload?.[0]?.value === 0) {
+    return null;
+  }
 
   return (
     // @ts-ignore
@@ -78,7 +78,9 @@ const CustomTooltip = (
 ) => {
   const { active, payload, label, tooltip } = props;
 
-  if (payload?.[0]?.value === 0) return null;
+  if (payload?.[0]?.value === 0) {
+    return null;
+  }
 
   if (active && payload && payload.length) {
     return (
@@ -103,9 +105,12 @@ export const VolBarChart = (props: VolChartProps) => {
       : undefined,
   );
 
-  const isEmpty = props.data.reduce((a, b) => a + b.volume, 0) === 0;
-  const maxVolume = props.data.reduce(
-    (a, b) => (a > b.volume ? a : b.volume),
+  const isEmpty =
+    (props.data as any)?.reduce((pre: any, cur: any) => pre + cur.volume, 0) ===
+    0;
+
+  const maxVolume = (props.data as any)?.reduce(
+    (pre: any, cur: any) => (pre > cur.volume ? pre : cur.volume),
     0,
   );
 
@@ -118,7 +123,7 @@ export const VolBarChart = (props: VolChartProps) => {
       <ResponsiveContainer>
         {/* @ts-ignore */}
         <BarChart
-          data={props.data}
+          data={props.data as any[]}
           margin={{ left: -0, top: 6, right: 0, bottom: 20 }}
         >
           {/* @ts-ignore */}

@@ -134,7 +134,10 @@ export const PerformanceUI = (props: PerformanceUIProps) => {
   );
 };
 
-export const PerformancePnL = (props: { data: any[]; invisible: boolean }) => {
+export const PerformancePnL = (props: {
+  data: ReadonlyArray<any> | any[];
+  invisible: boolean;
+}) => {
   // console.log(props.data);
   // const tickValues = useMemo(() => {
   //   if (!Array.isArray(props.data) || !props.data.length) return;
@@ -157,7 +160,7 @@ export const PerformancePnL = (props: { data: any[]; invisible: boolean }) => {
 };
 
 export const CumulativePnlChart = (props: {
-  data: any[];
+  data: ReadonlyArray<any> | any[];
   invisible: boolean;
 }) => {
   const { t } = useTranslation();

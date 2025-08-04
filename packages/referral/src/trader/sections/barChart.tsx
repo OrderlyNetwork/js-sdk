@@ -14,7 +14,7 @@ import { generateData } from "../../utils/utils";
 
 type ChartDataType = "Rebate" | "Volume";
 
-const EMPTY_LIST: any[] = [];
+const EMPTY_LIST: ReadonlyArray<any> = [];
 
 export const BarChart: FC<{ className?: string }> = (props) => {
   const [filterType, setFiltetType] = useState<ChartDataType>("Rebate");

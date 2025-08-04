@@ -8,7 +8,9 @@ export const calculatePositiveRate = (
   periodData?: API.FundingPeriodData,
   period?: PeriodKey,
 ): number => {
-  if (!periodData || !period) return 0;
+  if (!periodData || !period) {
+    return 0;
+  }
 
   const daysMap: Record<PeriodKey, number> = {
     "1d": 1,
@@ -29,9 +31,14 @@ export const useFundingRateHistory = () => {
   );
 
   const getPositiveRates = useCallback(
-    (data: API.FundingHistory[], period: PeriodKey): Record<string, number> => {
-      if (!data?.length) return {};
-      return data.reduce(
+    (
+      data: ReadonlyArray<API.FundingHistory> | API.FundingHistory[],
+      period: PeriodKey,
+    ): Record<string, number> => {
+      if (!data?.length) {
+        return {};
+      }
+      return (data as API.FundingHistory[]).reduce(
         (acc, item) => {
           acc[item.symbol] = calculatePositiveRate(
             item.funding[period],

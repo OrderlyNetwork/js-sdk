@@ -11,9 +11,9 @@ export interface WalletConnectorProviderProps {
   evmInitial?: EvmInitialProps;
 }
 
-export function WalletConnectorProvider(
-  props: PropsWithChildren<WalletConnectorProviderProps>,
-) {
+export const WalletConnectorProvider: React.FC<
+  PropsWithChildren<WalletConnectorProviderProps>
+> = (props) => {
   return (
     <SolanaProvider {...(props.solanaInitial ?? EMPTY_OBJECT)}>
       <InitEvm {...(props.evmInitial ?? EMPTY_OBJECT)}>
@@ -27,4 +27,4 @@ export function WalletConnectorProvider(
       </InitEvm>
     </SolanaProvider>
   );
-}
+};

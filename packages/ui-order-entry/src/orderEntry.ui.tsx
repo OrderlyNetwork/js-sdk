@@ -74,7 +74,7 @@ import { type OrderEntryScriptReturn } from "./orderEntry.script";
 import { InputType } from "./types";
 import { BBOStatus, getScaledPlaceOrderMessage } from "./utils";
 
-const EMPTY_LIST: any[] = [];
+const EMPTY_LIST: ReadonlyArray<any> = [];
 
 type Refs = OrderEntryScriptReturn["refs"];
 
