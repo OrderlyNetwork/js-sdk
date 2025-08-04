@@ -183,12 +183,13 @@ export const useWalletStateHandle = (options: {
           },
           additionalInfo: connectedWallet?.additionalInfo ?? {},
         },
-        {
-          // TODO: remove this when default orderly key scope includes asset
-          validateOrderlyKeyScope: (scope: string) => {
-            return scope.includes("asset");
-          },
-        },
+        // {
+        //   // TODO: remove this when default orderly key scope includes asset
+        //   // if DEFAUL_ORDERLY_KEY_SCOPE includes asset, should validate orderly key scope, otherwise internal withdraw function will be error
+        //   validateOrderlyKeyScope: (scope: string) => {
+        //     return scope.includes("asset");
+        //   },
+        // },
       );
       track(TrackerEventName.walletConnect, {
         wallet: connectedWallet?.label ?? "",
