@@ -102,7 +102,7 @@ export const TPSLOrderRowProvider: FC<
     sl_order_price,
     tp_order_price,
   } = calcTPSLPnL({
-    order: props.order,
+    order: order,
     position,
     quote_dp,
   });
@@ -118,7 +118,7 @@ export const TPSLOrderRowProvider: FC<
 
   const memoizedValue = useMemo<TPSLOrderRowContextState>(() => {
     return {
-      order: props.order,
+      order: order,
       sl_trigger_price,
       tp_trigger_price,
       sl_order_price,
@@ -134,6 +134,8 @@ export const TPSLOrderRowProvider: FC<
     order,
     sl_trigger_price,
     tp_trigger_price,
+    sl_order_price,
+    tp_order_price,
     tpPnL,
     slPnL,
     position,
@@ -144,7 +146,7 @@ export const TPSLOrderRowProvider: FC<
 
   return (
     <TPSLOrderRowContext.Provider value={memoizedValue}>
-      {props.children}
+      {children}
     </TPSLOrderRowContext.Provider>
   );
 };

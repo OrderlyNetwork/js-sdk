@@ -209,7 +209,7 @@ export const PositionsRowProvider: FC<PositionsRowProviderProps> = (props) => {
 
   return (
     <PositionsRowContext.Provider value={memoizedValue}>
-      {props.children}
+      {children}
     </PositionsRowContext.Provider>
   );
 };
