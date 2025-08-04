@@ -1,13 +1,52 @@
-import { FC, PropsWithChildren, useCallback, useEffect, useState } from "react";
+import {
+  createContext,
+  FC,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import {
   KeyedMutator,
   usePositionClose,
   useSymbolsInfo,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { API, OrderType } from "@orderly.network/types";
+import { API, OrderSide, OrderType } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
 import { PositionsRowContext } from "./positionsRowContext";
+
+// export interface PositionsRowContextState {
+//   quantity: string;
+//   price: string;
+//   type: OrderType;
+//   side: OrderSide;
+//   position: API.PositionExt | API.PositionTPSLExt;
+//   updateQuantity: (value: string) => void;
+//   updatePriceChange: (value: string) => void;
+
+//   updateOrderType: (value: OrderType, price?: string) => void;
+
+//   closeOrderData: any;
+
+//   onSubmit: () => Promise<any>;
+//   submitting: boolean;
+//   tpslOrder?: API.AlgoOrder;
+//   partialTPSLOrder?: API.AlgoOrder;
+//   quoteDp?: number;
+//   baseDp?: number;
+//   baseTick?: number;
+//   errors: any | undefined;
+// }
+
+// export const PositionsRowContext = createContext(
+//   {} as PositionsRowContextState,
+// );
+
+// export const usePositionsRowContext = () => {
+//   return useContext(PositionsRowContext);
+// };
 
 type PositionsRowProviderProps = PropsWithChildren<{
   position: API.PositionExt | API.PositionTPSLExt;
@@ -138,7 +177,9 @@ export const PositionsRowProvider: FC<PositionsRowProviderProps> = (props) => {
         updatePriceChange,
         updateQuantity,
         updateOrderType,
-        tpslOrder: (position as API.PositionTPSLExt).algo_order,
+        tpslOrder: (position as API.PositionTPSLExt).full_tp_sl?.algo_order,
+        partialTPSLOrder: (position as API.PositionTPSLExt).partial_tp_sl
+          ?.algo_order,
         onSubmit,
         submitting,
         closeOrderData,

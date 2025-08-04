@@ -1,3 +1,5 @@
+import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import {
   CaretDownIcon,
   cn,
@@ -5,10 +7,8 @@ import {
   MenuItem,
   SimpleDropdownMenu,
 } from "@orderly.network/ui";
-import { PNLInputState, PnLMode } from "./useBuilder.script";
 import { inputFormatter, Text } from "@orderly.network/ui";
-import { useEffect, useMemo, useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { PNLInputState, PnLMode } from "./useBuilder.script";
 
 export type PNLInputProps = PNLInputState & { testId?: string; quote: string };
 
@@ -27,7 +27,7 @@ export const PNLInput = (props: PNLInputProps) => {
 
   const [prefix, setPrefix] = useState<string>(mode);
   const [placeholder, setPlaceholder] = useState<string>(
-    mode === PnLMode.PERCENTAGE ? "%" : quote
+    mode === PnLMode.PERCENTAGE ? "%" : quote,
   );
 
   const color = useMemo(() => {
@@ -66,8 +66,8 @@ export const PNLInput = (props: PNLInputProps) => {
       ]}
       // className={color}
       classNames={{
-        input: color,
-        prefix: "oui-text-base-contrast-54",
+        input: cn("oui-text-2xs", color),
+        prefix: "oui-text-base-contrast-54 oui-text-2xs",
         root: "oui-outline-line-12 focus-within:oui-outline-primary-light",
       }}
       onFocus={() => {

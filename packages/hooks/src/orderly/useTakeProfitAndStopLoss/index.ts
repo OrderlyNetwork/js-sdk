@@ -1,4 +1,4 @@
-import { API, SDKError } from "@orderly.network/types";
+import { API, PositionType, SDKError } from "@orderly.network/types";
 import { useTaskProfitAndStopLossInternal } from "./useTPSL";
 
 export const useTPSLOrder = (
@@ -13,8 +13,13 @@ export const useTPSLOrder = (
      * it is usually used when editing order
      */
     defaultOrder?: API.AlgoOrder;
+    tpslEnable?: {
+      tp_enable?: boolean;
+      sl_enable?: boolean;
+    };
     isEditing?: boolean;
-  }
+    positionType?: PositionType;
+  },
 ): ReturnType<typeof useTaskProfitAndStopLossInternal> => {
   if (!position) {
     throw new SDKError("Position is required");

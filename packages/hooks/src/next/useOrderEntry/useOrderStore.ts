@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { produce } from "immer";
-import { OrderlyOrder, RequireKeys } from "@orderly.network/types";
+import { OrderlyOrder, OrderType, RequireKeys } from "@orderly.network/types";
 
 export type FullOrderState = OrderlyOrder;
 
@@ -15,12 +15,14 @@ const initialOrderState = {
   trigger_price: "",
   tp_trigger_price: "",
   sl_trigger_price: "",
+  tp_order_type: OrderType.MARKET,
   tp_pnl: "",
   sl_pnl: "",
   tp_offset_percentage: "",
   sl_offset_percentage: "",
   tp_offset: "",
   sl_offset: "",
+  sl_order_type: OrderType.MARKET,
   total: "",
   start_price: "",
   end_price: "",

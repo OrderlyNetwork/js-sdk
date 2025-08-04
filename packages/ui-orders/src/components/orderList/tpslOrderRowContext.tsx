@@ -14,7 +14,11 @@ import {
   useSWRConfig,
   utils,
 } from "@orderly.network/hooks";
-import { API } from "@orderly.network/types";
+import {
+  findTPSLOrderPriceFromOrder,
+  findTPSLFromOrder,
+} from "@orderly.network/hooks";
+import { API, OrderType } from "@orderly.network/types";
 import { OrderSide } from "@orderly.network/types";
 import { AlgoOrderType } from "@orderly.network/types";
 import { useSymbolContext } from "./symbolProvider";
@@ -23,6 +27,8 @@ export type TPSLOrderRowContextState = {
   order: API.AlgoOrderExt;
   tp_trigger_price?: number;
   sl_trigger_price?: number;
+  sl_order_price?: number | OrderType;
+  tp_order_price?: number | OrderType;
   tpPnL?: number;
   slPnL?: number;
 
@@ -98,7 +104,14 @@ export const TPSLOrderRowProvider: FC<
   //   return utils.findTPSLFromOrder(props.order);
   // }, [props.order]);
 
-  const { sl_trigger_price, tp_trigger_price, tpPnL, slPnL } = calcTPSLPnL({
+  const {
+    sl_trigger_price,
+    tp_trigger_price,
+    tpPnL,
+    slPnL,
+    sl_order_price,
+    tp_order_price,
+  } = calcTPSLPnL({
     order: props.order,
     position,
     quote_dp,
@@ -122,6 +135,8 @@ export const TPSLOrderRowProvider: FC<
         order: props.order,
         sl_trigger_price,
         tp_trigger_price,
+        sl_order_price,
+        tp_order_price,
         tpPnL,
         slPnL,
         onCancelOrder,
@@ -150,10 +165,20 @@ function calcTPSLPnL(props: {
       tpPnL: undefined,
     };
 
-  const { sl_trigger_price, tp_trigger_price } =
-    !("algo_type" in order) || !Array.isArray(order.child_orders)
-      ? {}
-      : utils.findTPSLFromOrder(order);
+  const isTPSLOrder = "algo_type" in order && Array.isArray(order.child_orders);
+
+  const { sl_trigger_price, tp_trigger_price } = isTPSLOrder
+    ? findTPSLFromOrder(order)
+    : {
+        sl_trigger_price: undefined,
+        tp_trigger_price: undefined,
+      };
+  const { sl_order_price, tp_order_price } = isTPSLOrder
+    ? findTPSLOrderPriceFromOrder(order)
+    : {
+        sl_order_price: undefined,
+        tp_order_price: undefined,
+      };
 
   let quantity = order.quantity;
 
@@ -199,6 +224,8 @@ function calcTPSLPnL(props: {
   return {
     sl_trigger_price,
     tp_trigger_price,
+    sl_order_price,
+    tp_order_price,
     slPnL,
     tpPnL,
   };
