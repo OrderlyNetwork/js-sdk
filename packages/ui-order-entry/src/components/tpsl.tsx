@@ -24,10 +24,8 @@ import { Grid } from "@orderly.network/ui";
 import { ExclamationFillIcon } from "@orderly.network/ui";
 import { OrderEntryContext } from "./orderEntryContext";
 import { PnlInputWidget } from "./pnlInput/pnlInput.widget";
-import {
-  PnlInputProvider,
-  usePnlInputContext,
-} from "./pnlInput/pnlInputContext";
+import { usePnlInputContext } from "./pnlInput/pnlInputContext";
+import { PnlInputProvider } from "./pnlInput/pnlInputProvider";
 import { PNL_Values, PnLMode } from "./pnlInput/useBuilder.script";
 
 type OrderValueKeys = keyof OrderlyOrder;

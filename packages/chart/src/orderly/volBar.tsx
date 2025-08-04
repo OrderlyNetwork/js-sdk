@@ -1,4 +1,3 @@
-import { useColors } from "./useColors";
 import {
   BarChart,
   XAxis,
@@ -12,8 +11,9 @@ import {
   Cross,
 } from "recharts";
 import type { TooltipProps } from "recharts";
-import { OrderlyChartTooltip } from "./customTooltip";
 import { Box, cn } from "@orderly.network/ui";
+import { OrderlyChartTooltip } from "./customTooltip";
+import { useColors } from "./useColors";
 
 export type VolChartDataItem = {
   date: string;
@@ -27,10 +27,8 @@ export type VolChartTooltip = {
 };
 
 export type VolChartProps = {
-  colors?: {
-    fill: string;
-  };
-  data: VolChartDataItem[];
+  colors?: { fill: string };
+  data: ReadonlyArray<VolChartDataItem> | VolChartDataItem[];
   tooltip?: VolChartTooltip;
   className?: string;
 };
@@ -56,7 +54,9 @@ const RoundedRectangle = (props: any) => {
 const CustomizedCross = (props: any) => {
   const { width, height, payload, stroke, fill } = props;
 
-  if (payload?.[0]?.value === 0) return null;
+  if (payload?.[0]?.value === 0) {
+    return null;
+  }
 
   return (
     // @ts-ignore
@@ -74,11 +74,13 @@ const CustomizedCross = (props: any) => {
 };
 
 const CustomTooltip = (
-  props: TooltipProps<any, any> & { tooltip?: VolChartTooltip }
+  props: TooltipProps<any, any> & { tooltip?: VolChartTooltip },
 ) => {
   const { active, payload, label, tooltip } = props;
 
-  if (payload?.[0]?.value === 0) return null;
+  if (payload?.[0]?.value === 0) {
+    return null;
+  }
 
   if (active && payload && payload.length) {
     return (
@@ -100,12 +102,19 @@ export const VolBarChart = (props: VolChartProps) => {
   const colors = useColors(
     props.colors?.fill
       ? { profit: props.colors?.fill, loss: props.colors?.fill }
-      : undefined
+      : undefined,
   );
 
-  const isEmpty = props.data.reduce((a, b) => a + b.volume, 0) === 0;
-  const maxVolume = props.data.reduce((a,b) => (a > b.volume ? a : b.volume), 0);
-  const decimal = maxVolume <= 10 ? 2 : (maxVolume <= 100 ? 1 : 0);
+  const isEmpty =
+    (props.data as any)?.reduce((pre: any, cur: any) => pre + cur.volume, 0) ===
+    0;
+
+  const maxVolume = (props.data as any)?.reduce(
+    (pre: any, cur: any) => (pre > cur.volume ? pre : cur.volume),
+    0,
+  );
+
+  const decimal = maxVolume <= 10 ? 2 : maxVolume <= 100 ? 1 : 0;
 
   return (
     // @ts-ignore
@@ -114,7 +123,7 @@ export const VolBarChart = (props: VolChartProps) => {
       <ResponsiveContainer>
         {/* @ts-ignore */}
         <BarChart
-          data={props.data}
+          data={props.data as any[]}
           margin={{ left: -0, top: 6, right: 0, bottom: 20 }}
         >
           {/* @ts-ignore */}

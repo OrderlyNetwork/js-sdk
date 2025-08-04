@@ -139,6 +139,7 @@
   "portfolio.apiKeys": "Khóa API",
   "portfolio.setting": "Cài đặt",
   "portfolio.overview.availableWithdraw": "Có thể rút",
+  "portfolio.overview.handle.title": "Giá trị danh mục",
   "portfolio.overview.performance": "Hiệu suất",
   "portfolio.overview.performance.roi": "ROI {{period}}",
   "portfolio.overview.performance.pnl": "PnL {{period}}",
@@ -818,5 +819,6 @@
   "funding.annualRate": "Tỷ lệ hàng năm",
   "funding.paymentType": "Loại thanh toán",
   "funding.paymentType.paid": "Đã thanh toán",
-  "funding.paymentType.received": "Đã nhận"
+  "funding.paymentType.received": "Đã nhận",
+  "leftNav.feedback": "Chia sẻ phản hồi"
 }

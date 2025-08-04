@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Box, cn, Column, TabPanel, Tabs } from "@orderly.network/ui";
 import { MarketsListWidget } from "../../../components/marketsList";
-import { SearchInput } from "../../../components/searchInput.tsx";
+import { SearchInput } from "../../../components/searchInput";
 import {
   get24hPercentageColumn,
   getLastColumn,

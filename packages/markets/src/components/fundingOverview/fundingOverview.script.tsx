@@ -45,7 +45,9 @@ export const useFundingOverviewScript = () => {
   const { searchValue } = useMarketsContext();
 
   const processedData = useMemo((): ProcessedFundingData[] => {
-    if (!marketData?.length) return [];
+    if (!marketData?.length) {
+      return [];
+    }
 
     const periods = ["1d", "3d", "7d", "14d", "30d", "90d"] as const;
     const posRates = periods.reduce(

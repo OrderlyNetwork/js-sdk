@@ -36,11 +36,11 @@ type LeftNavUIProps = LeftNavProps &
   };
 
 export const LeftNavUI: FC<LeftNavUIProps> = (props) => {
-  const showModal = useCallback(() => {
+  const showModal = () => {
     modal.show(LeftNavSheet, {
       ...props,
     });
-  }, []);
+  };
 
   return (
     <div onClick={showModal} className={props?.className}>
@@ -163,7 +163,7 @@ const LeftNavSheet = modal.create<LeftNavUIProps>((props) => {
                 className="oui-text-center oui-text-2xs oui-font-semibold oui-text-primary oui-underline"
                 onClick={() => openExternalLink(props.feedbackUrl as string)}
               >
-                Share your feedback
+                {t("leftNav.feedback")}
               </div>
             )}
           </div>
@@ -199,7 +199,7 @@ const NavItem: FC<NavItemProps> = ({ item, onClick }) => {
   if (typeof customRender === "function") {
     return (
       <div
-        className="oui-flex oui-items-center oui-px-3 oui-py-4"
+        className="oui-flex oui-w-full oui-items-center oui-px-3 oui-py-4"
         onClick={onItemClick}
       >
         {customRender({ name: name, href: href })}
@@ -211,7 +211,7 @@ const NavItem: FC<NavItemProps> = ({ item, onClick }) => {
   }
   return (
     <div
-      className="oui-flex oui-items-center oui-gap-2 oui-px-3 oui-py-4"
+      className="oui-flex oui-w-full oui-items-center oui-gap-2 oui-px-3 oui-py-4"
       onClick={onItemClick}
     >
       <div>{icon}</div>

@@ -1,5 +1,4 @@
-import { useEffect, useMemo } from "react";
-import { useLocalStorage, useOrderStream } from "@orderly.network/hooks";
+import { useOrderStream } from "@orderly.network/hooks";
 import { useDataTap } from "@orderly.network/react-app";
 import { AlgoOrderRootType, OrderStatus } from "@orderly.network/types";
 import { TabType } from "@orderly.network/ui-orders";

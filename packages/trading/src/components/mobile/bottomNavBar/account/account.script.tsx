@@ -1,9 +1,9 @@
-import { modal } from "@orderly.network/ui";
-import { AccountSheetWidget } from "../../accountSheet";
-import { useTradingPageContext } from "../../../../provider/context";
+import { AccountState as AccountStateType } from "@orderly.network/core";
 import { useAccount } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { AccountState as AccountStateType } from "@orderly.network/core";
+import { modal } from "@orderly.network/ui";
+import { useTradingPageContext } from "../../../../provider/tradingPageContext";
+import { AccountSheetWidget } from "../../accountSheet";
 
 export const useAccountScript = () => {
   const { t } = useTranslation();

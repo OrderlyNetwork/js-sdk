@@ -139,6 +139,7 @@
   "portfolio.apiKeys": "API 키",
   "portfolio.setting": "설정",
   "portfolio.overview.availableWithdraw": "출금 가능",
+  "portfolio.overview.handle.title": "포트폴리오 가치",
   "portfolio.overview.performance": "성과",
   "portfolio.overview.performance.roi": "{{period}} ROI",
   "portfolio.overview.performance.pnl": "{{period}} 손익",
@@ -818,5 +819,6 @@
   "funding.annualRate": "연간 비율",
   "funding.paymentType": "지불 유형",
   "funding.paymentType.paid": "지불됨",
-  "funding.paymentType.received": "수령됨"
+  "funding.paymentType.received": "수령됨",
+  "leftNav.feedback": "피드백 공유"
 }

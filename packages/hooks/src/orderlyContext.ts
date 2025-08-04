@@ -1,4 +1,4 @@
-import { createContext } from "react";
+import { createContext, useContext } from "react";
 import {
   type ConfigStore,
   type OrderlyKeyStore,
@@ -59,5 +59,9 @@ export interface OrderlyConfigContextState {
 export const OrderlyContext = createContext<OrderlyConfigContextState>({
   // configStore: new MemoryConfigStore(),
 } as OrderlyConfigContextState);
+
+export const useOrderlyContext = () => {
+  return useContext(OrderlyContext);
+};
 
 export const OrderlyProvider = OrderlyContext.Provider;

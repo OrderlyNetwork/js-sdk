@@ -1,8 +1,8 @@
-import { useDemoContext } from "@/components/demoContext";
+import { useState } from "react";
 import { useOrderStream } from "@orderly.network/hooks";
 import { OrdersView } from "@orderly.network/react";
-import { OrderEntity, OrderStatus } from "@orderly.network/types";
-import { useState } from "react";
+import { EMPTY_LIST, OrderEntity, OrderStatus } from "@orderly.network/types";
+import { useDemoContext } from "@/components/demoContext";
 
 export const Orders = () => {
   const { symbol: globalSymbol } = useDemoContext();
@@ -14,7 +14,7 @@ export const Orders = () => {
   //
   return (
     <OrdersView
-      dataSource={data || []}
+      dataSource={data || EMPTY_LIST}
       isLoading={isLoading}
       onCancelAll={() => {}}
       onSymbolChange={(value) => {}}

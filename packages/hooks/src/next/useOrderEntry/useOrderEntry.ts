@@ -9,6 +9,7 @@ import {
   OrderLevel,
   TrackerEventName,
   OrderSide,
+  EMPTY_OBJECT,
 } from "@orderly.network/types";
 import { Decimal, zero } from "@orderly.network/utils";
 import { useAccountInfo } from "../../orderly/appStore";
@@ -692,7 +693,7 @@ const useOrderEntry = (
     freeCollateral,
     setValue: useMemoizedFn(setValue),
     setValues: useMemoizedFn(setValues),
-    symbolInfo: symbolInfo || {},
+    symbolInfo: symbolInfo || EMPTY_OBJECT,
     metaState: meta,
     isMutating,
     markPrice,

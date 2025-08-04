@@ -3,7 +3,7 @@ import { useTranslation } from "@orderly.network/i18n";
 import { Box, cn, TabPanel, Tabs } from "@orderly.network/ui";
 import { FundingComparisonWidget } from "../../../components/fundingComparison";
 import { FundingOverviewWidget } from "../../../components/fundingOverview";
-import { SearchInput } from "../../../components/searchInput.tsx";
+import { SearchInput } from "../../../components/searchInput";
 import { FundingScriptReturn } from "./funding.script";
 
 export const MobileFunding: FC<FundingScriptReturn> = (props) => {

@@ -37,7 +37,7 @@ import { Column, PaginationMeta, TableSort, DataTableClassNames } from "./type";
 
 export type DataTableProps<RecordType> = {
   columns: Column<RecordType>[];
-  dataSource?: RecordType[] | null;
+  dataSource?: RecordType[] | ReadonlyArray<RecordType> | null;
   /**
    * @description loading state
    * @default false
@@ -180,7 +180,7 @@ export function DataTable<RecordType extends any>(
 
   const table = useReactTable({
     _features: props.features,
-    data: dataSource!,
+    data: dataSource! as RecordType[],
     columns: formatColumns,
     state: {
       columnPinning,

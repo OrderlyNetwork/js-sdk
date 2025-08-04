@@ -1,7 +1,7 @@
-import { API, SDKError } from "@orderly.network/types";
 import { useMemo } from "react";
-import { usePrivateQuery } from "../../usePrivateQuery";
+import { API, EMPTY_LIST, SDKError } from "@orderly.network/types";
 import { zero } from "@orderly.network/utils";
+import { usePrivateQuery } from "../../usePrivateQuery";
 
 type QueryParams = {
   startDate: string;
@@ -16,7 +16,7 @@ export const useStatisticsDaily = (
   params: QueryParams,
   options?: {
     ignoreAggregation?: boolean;
-  }
+  },
 ) => {
   const { startDate, endDate, page = 1 } = params;
   const { ignoreAggregation = false } = options || {};
@@ -40,7 +40,7 @@ export const useStatisticsDaily = (
     searchParams.set("page", page.toString());
     searchParams.set(
       "size",
-      (getPeriod(startDate, endDate) + (ignoreAggregation ? 0 : 1)).toString()
+      (getPeriod(startDate, endDate) + (ignoreAggregation ? 0 : 1)).toString(),
     );
 
     /*
@@ -51,7 +51,7 @@ export const useStatisticsDaily = (
 
     searchParams.set(
       "start_date",
-      modifiedStartDate.toISOString().split("T")[0]
+      modifiedStartDate.toISOString().split("T")[0],
     );
     searchParams.set("end_date", params.endDate);
 
@@ -84,10 +84,8 @@ export const useStatisticsDaily = (
     return { vol: vol.toNumber(), pnl: pnl.toNumber(), roi: roi.toNumber() };
   }, [data]);
 
-  // (data?.rows as any[]).shift();
-
   return [
-    data || [],
+    data || EMPTY_LIST,
     {
       aggregateValue,
     },

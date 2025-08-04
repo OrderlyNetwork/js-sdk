@@ -139,6 +139,7 @@
   "portfolio.apiKeys": "API ключи",
   "portfolio.setting": "Настройки",
   "portfolio.overview.availableWithdraw": "Доступно для вывода",
+  "portfolio.overview.handle.title": "Стоимость портфеля",
   "portfolio.overview.performance": "Производительность",
   "portfolio.overview.performance.roi": "{{period}} ROI",
   "portfolio.overview.performance.pnl": "{{period}} PnL",
@@ -818,5 +819,6 @@
   "funding.annualRate": "Годовая ставка",
   "funding.paymentType": "Тип платежа",
   "funding.paymentType.paid": "Оплачено",
-  "funding.paymentType.received": "Получено"
+  "funding.paymentType.received": "Получено",
+  "leftNav.feedback": "Поделиться отзывом"
 }

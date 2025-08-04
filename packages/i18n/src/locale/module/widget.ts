@@ -91,4 +91,6 @@ export const widget = {
   "funding.paymentType": "Payment type",
   "funding.paymentType.paid": "Paid",
   "funding.paymentType.received": "Received",
+
+  "leftNav.feedback": "Share your feedback",
 };

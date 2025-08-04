@@ -1,4 +1,4 @@
-import { TradingPageProvider } from "../../provider";
+import { TradingPageProvider } from "../../provider/tradingPageProvider";
 import { TradingPageProps } from "../../types/types";
 import { TradingWidget } from "./trading.widget";
 
@@ -13,7 +13,7 @@ export const TradingPage = (props: TradingPageProps) => {
       referral={props.referral}
       tradingRewards={props.tradingRewards}
       bottomSheetLeading={props.bottomSheetLeading}
-      sharePnLConfig={props.sharePnLConfig} 
+      sharePnLConfig={props.sharePnLConfig}
     >
       <TradingWidget />
     </TradingPageProvider>

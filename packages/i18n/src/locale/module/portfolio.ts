@@ -4,6 +4,7 @@ export const portfolio = {
   "portfolio.setting": "Settings",
 
   "portfolio.overview.availableWithdraw": "Available to withdraw",
+  "portfolio.overview.handle.title": "Portfolio value",
 
   "portfolio.overview.performance": "Performance",
   "portfolio.overview.performance.roi": "{{period}} ROI",

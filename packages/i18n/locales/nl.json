@@ -139,6 +139,7 @@
   "portfolio.apiKeys": "API-sleutels",
   "portfolio.setting": "Instellingen",
   "portfolio.overview.availableWithdraw": "Beschikbaar voor opname",
+  "portfolio.overview.handle.title": "Portfoliowaarde",
   "portfolio.overview.performance": "Prestaties",
   "portfolio.overview.performance.roi": "{{period}} ROI",
   "portfolio.overview.performance.pnl": "{{period}} W/V",
@@ -818,5 +819,6 @@
   "funding.annualRate": "Jaarlijks percentage",
   "funding.paymentType": "Betalingstype",
   "funding.paymentType.paid": "Betaald",
-  "funding.paymentType.received": "Ontvangen"
+  "funding.paymentType.received": "Ontvangen",
+  "leftNav.feedback": "Deel uw feedback"
 }

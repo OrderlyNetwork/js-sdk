@@ -1,12 +1,12 @@
 import { FC } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import { Box, cn, TabPanel, Tabs } from "@orderly.network/ui";
-import { TopTabState, TopTabType } from "./topTab.script";
+import { useTradingPageContext } from "../../../provider/tradingPageContext";
 import { MWebLastTrades } from "../lastTrades/lastTrades.widget";
 import { TradeDataWidget } from "../tradeData";
 import { TradingviewWidget } from "../tradingview/tradingview.widget";
-import { useTradingPageContext } from "../../../provider/context";
-import { KlineDragIcon } from "../../base/icons";
-import { useTranslation } from "@orderly.network/i18n";
+import { TopTabState, TopTabType } from "./topTab.script";
+
 export const TopTab: FC<
   TopTabState & {
     className?: string;
@@ -68,7 +68,7 @@ const ChevronIcon = (props: { className?: string }) => {
       xmlns="http://www.w3.org/2000/svg"
       className={cn(
         "oui-fill-base-contrast-54 hover:oui-fill-base-contrast-80",
-        props.className
+        props.className,
       )}
     >
       <path

@@ -13,11 +13,11 @@ import {
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import { grayCell } from "../../utils/util";
 import { TabType } from "../orders.widget";
+import { SymbolProvider } from "../provider/symbolProvider";
 import { useOrderColumn } from "./desktop/useColumn";
 import { OrderCellWidget } from "./mobile";
 import { OrdersBuilderState } from "./orderList.script";
 import { OrderListProvider } from "./orderListContext";
-import { SymbolProvider } from "./symbolProvider";
 import { TPSLOrderRowProvider } from "./tpslOrderRowContext";
 
 export const DesktopOrderList: FC<

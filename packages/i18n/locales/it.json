@@ -139,6 +139,7 @@
   "portfolio.apiKeys": "Chiavi API",
   "portfolio.setting": "Impostazioni",
   "portfolio.overview.availableWithdraw": "Disponibile per il prelievo",
+  "portfolio.overview.handle.title": "Valore del portafoglio",
   "portfolio.overview.performance": "Performance",
   "portfolio.overview.performance.roi": "ROI {{period}}",
   "portfolio.overview.performance.pnl": "P/L {{period}}",
@@ -818,5 +819,6 @@
   "funding.annualRate": "Tasso annuale",
   "funding.paymentType": "Tipo di pagamento",
   "funding.paymentType.paid": "Pagato",
-  "funding.paymentType.received": "Ricevuto"
+  "funding.paymentType.received": "Ricevuto",
+  "leftNav.feedback": "Condividi il tuo feedback"
 }

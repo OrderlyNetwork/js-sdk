@@ -1,15 +1,7 @@
-import {
-  FC,
-  createContext,
-  PropsWithChildren,
-  useContext,
-  useState,
-  useMemo,
-} from "react";
+import { FC, PropsWithChildren, useState, useMemo } from "react";
 import {
   RestrictedInfoOptions,
   useRestrictedInfo,
-  RestrictedInfoReturns,
   useTrackingInstance,
 } from "@orderly.network/hooks";
 import { useAssetconvertEvent } from "../hooks/useAssetconvertEvent";
@@ -19,40 +11,11 @@ import { useSettleEvent } from "../hooks/useSettleEvent";
 import { useWalletConnectError } from "../hooks/useWalletConnectError";
 import { useWalletEvent } from "../hooks/useWalletEvent";
 import { useWalletStateHandle } from "../hooks/useWalletStateHandle";
+import { AppContextState, AppStateContext } from "./appStateContext";
 
 export type RouteOption = {
   href: "/portfolio" | "/portfolio/history";
   name: string;
-};
-
-type AppContextState = {
-  connectWallet: ReturnType<typeof useWalletStateHandle>["connectWallet"];
-  /**
-   * Whether the current network is not supported
-   */
-  wrongNetwork: boolean;
-  disabledConnect: boolean;
-  currentChainId: number | undefined;
-  setCurrentChainId: (chainId: number | undefined) => void;
-  onChainChanged?: (
-    chainId: number,
-    state: { isTestnet: boolean; isWalletConnected: boolean },
-  ) => void;
-  // networkStatus: ReturnType<typeof useAppState>["networkStatus"];
-  restrictedInfo: RestrictedInfoReturns;
-  showAnnouncement: boolean;
-  setShowAnnouncement: (show: boolean) => void;
-  onRouteChange?: (option: RouteOption) => void;
-};
-
-const AppContext = createContext<AppContextState>({
-  setCurrentChainId: (chainId?: number) => {},
-  restrictedInfo: {},
-  setShowAnnouncement: (show: boolean) => {},
-} as AppContextState);
-
-export const useAppContext = () => {
-  return useContext(AppContext);
 };
 
 export type AppStateProviderProps = {
@@ -111,8 +74,8 @@ export const AppStateProvider: FC<PropsWithChildren<AppStateProviderProps>> = (
   );
 
   return (
-    <AppContext.Provider value={memoizedValue}>
+    <AppStateContext.Provider value={memoizedValue}>
       {props.children}
-    </AppContext.Provider>
+    </AppStateContext.Provider>
   );
 };

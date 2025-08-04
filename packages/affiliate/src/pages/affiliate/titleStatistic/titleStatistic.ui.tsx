@@ -1,9 +1,10 @@
 import { FC } from "react";
-import { Flex, Select, Text } from "@orderly.network/ui";
 import { VolBarChart } from "@orderly.network/chart";
-import { TitleStatisticReturns } from "./titleStatistic.script";
-import { Decimal } from "@orderly.network/utils";
 import { useTranslation } from "@orderly.network/i18n";
+import { EMPTY_LIST } from "@orderly.network/types";
+import { Flex, Select, Text } from "@orderly.network/ui";
+import { Decimal } from "@orderly.network/utils";
+import { TitleStatisticReturns } from "./titleStatistic.script";
 
 export const TitleStatistic: FC<TitleStatisticReturns> = (props) => {
   return (
@@ -19,7 +20,7 @@ export const TitleStatistic: FC<TitleStatisticReturns> = (props) => {
       <Title {...props} />
       <Flex className="oui-h-[170px] 2xl:oui-h-[196px] oui-w-full oui-flex oui-flex-row oui-items-stretch">
         <VolBarChart
-          data={props.dataSource || []}
+          data={props.dataSource || EMPTY_LIST}
           colors={{ fill: "rgba(0, 180, 158, 1)" }}
           className="oui-w-full oui-flex-1"
           tooltip={{

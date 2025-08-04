@@ -139,6 +139,7 @@
   "portfolio.apiKeys": "API Anahtarları",
   "portfolio.setting": "Ayar",
   "portfolio.overview.availableWithdraw": "Çekilebilir miktar",
+  "portfolio.overview.handle.title": "Portföy değeri",
   "portfolio.overview.performance": "Performans",
   "portfolio.overview.performance.roi": "{{period}} ROI",
   "portfolio.overview.performance.pnl": "{{period}} K/Z",
@@ -818,5 +819,6 @@
   "funding.annualRate": "Yıllık oran",
   "funding.paymentType": "Ödeme türü",
   "funding.paymentType.paid": "Ödendi",
-  "funding.paymentType.received": "Alındı"
+  "funding.paymentType.received": "Alındı",
+  "leftNav.feedback": "Geri bildiriminizi paylaşın"
 }

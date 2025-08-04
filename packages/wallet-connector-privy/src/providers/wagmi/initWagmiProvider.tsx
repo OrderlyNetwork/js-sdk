@@ -36,7 +36,7 @@ export function InitWagmiProvider({
   }
   const [queryClient] = useState(() => new QueryClient());
 
-  const [config, setConfig] = useState(() =>
+  const [config] = useState(() =>
     createConfig({
       chains:
         initChains && initChains.length

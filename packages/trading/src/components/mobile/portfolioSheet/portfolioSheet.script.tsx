@@ -14,7 +14,7 @@ import {
   DepositAndWithdrawWithSheetId,
   TransferSheetId,
 } from "@orderly.network/ui-transfer";
-import { useTradingLocalStorage } from "../../../provider/useTradingLocalStorage";
+import { useTradingLocalStorage } from "../../../hooks";
 
 export const usePortfolioSheetScript = () => {
   const { account, isMainAccount } = useAccount();

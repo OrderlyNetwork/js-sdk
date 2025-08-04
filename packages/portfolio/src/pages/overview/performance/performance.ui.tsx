@@ -1,10 +1,11 @@
 import { useMemo } from "react";
-import { Card, Grid, Box, Statistic, Text, Flex } from "@orderly.network/ui";
 import { PnLBarChart, PnlLineChart } from "@orderly.network/chart";
-import { PeriodTitle } from "../shared/periodHeader";
-import { UsePerformanceScriptReturn } from "./performance.script";
 import { useTranslation } from "@orderly.network/i18n";
+import { EMPTY_LIST } from "@orderly.network/types";
+import { Card, Grid, Box, Statistic, Text, Flex } from "@orderly.network/ui";
+import { PeriodTitle } from "../shared/periodHeader";
 import { PeriodType } from "../shared/useAssetHistory";
+import { UsePerformanceScriptReturn } from "./performance.script";
 
 export type PerformanceUIProps = {
   // periodTypes: string[];
@@ -120,9 +121,12 @@ export const PerformanceUI = (props: PerformanceUIProps) => {
         </Box>
       </Grid>
       <Grid cols={2} gap={4}>
-        <PerformancePnL data={props.data ?? []} invisible={props.invisible} />
+        <PerformancePnL
+          data={props.data ?? EMPTY_LIST}
+          invisible={props.invisible}
+        />
         <CumulativePnlChart
-          data={props.data ?? []}
+          data={props.data ?? EMPTY_LIST}
           invisible={props.invisible || (props.data?.length ?? 0) <= 2}
         />
       </Grid>
@@ -130,7 +134,10 @@ export const PerformanceUI = (props: PerformanceUIProps) => {
   );
 };
 
-export const PerformancePnL = (props: { data: any[]; invisible: boolean }) => {
+export const PerformancePnL = (props: {
+  data: ReadonlyArray<any> | any[];
+  invisible: boolean;
+}) => {
   // console.log(props.data);
   // const tickValues = useMemo(() => {
   //   if (!Array.isArray(props.data) || !props.data.length) return;
@@ -153,7 +160,7 @@ export const PerformancePnL = (props: { data: any[]; invisible: boolean }) => {
 };
 
 export const CumulativePnlChart = (props: {
-  data: any[];
+  data: ReadonlyArray<any> | any[];
   invisible: boolean;
 }) => {
   const { t } = useTranslation();

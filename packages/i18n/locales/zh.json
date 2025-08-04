@@ -139,6 +139,7 @@
   "portfolio.apiKeys": "API密钥",
   "portfolio.setting": "设置",
   "portfolio.overview.availableWithdraw": "可提取",
+  "portfolio.overview.handle.title": "投资组合价值",
   "portfolio.overview.performance": "表现",
   "portfolio.overview.performance.roi": "{{period}} 投资回报率",
   "portfolio.overview.performance.pnl": "{{period}} 盈亏",
@@ -818,5 +819,6 @@
   "funding.annualRate": "年化率",
   "funding.paymentType": "支付类型",
   "funding.paymentType.paid": "已支付",
-  "funding.paymentType.received": "已收到"
+  "funding.paymentType.received": "已收到",
+  "leftNav.feedback": "分享您的反馈"
 }

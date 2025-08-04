@@ -139,6 +139,7 @@
   "portfolio.apiKeys": "Kunci API",
   "portfolio.setting": "Pengaturan",
   "portfolio.overview.availableWithdraw": "Tersedia untuk ditarik",
+  "portfolio.overview.handle.title": "Nilai portofolio",
   "portfolio.overview.performance": "Kinerja",
   "portfolio.overview.performance.roi": "ROI {{period}}",
   "portfolio.overview.performance.pnl": "PnL {{period}}",
@@ -818,5 +819,6 @@
   "funding.annualRate": "Tingkat tahunan",
   "funding.paymentType": "Jenis pembayaran",
   "funding.paymentType.paid": "Dibayar",
-  "funding.paymentType.received": "Diterima"
+  "funding.paymentType.received": "Diterima",
+  "leftNav.feedback": "Bagikan umpan balik Anda"
 }
