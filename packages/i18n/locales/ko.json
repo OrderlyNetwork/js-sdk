@@ -821,6 +821,8 @@
   "tradingLeaderboard.arena": "아레나",
   "tradingLeaderboard.generalLeaderboard": "종합 순위표",
   "tradingLeaderboard.maxTicketsAchieved": "달성한 최대 티켓 수",
+  "tradingLeaderboard.termsAndConditions": "이용약관",
+  "tradingLeaderboard.rules": "규칙",
   "assetHistory.status.pending": "대기 중",
   "assetHistory.status.confirm": "확인",
   "assetHistory.status.processing": "처리 중",

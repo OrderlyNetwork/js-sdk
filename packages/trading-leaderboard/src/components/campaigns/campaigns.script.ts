@@ -92,7 +92,9 @@ export const useCampaignsScript = () => {
   const joinCampaign = useCallback(
     async (data: { campaign_id: string | number }) => {
       try {
+        console.log("data", data);
         const result = await doJoinCampaign(data);
+        console.log("result", result);
 
         if (result?.success !== false) {
           // Refresh user campaigns data to update participation status
@@ -117,7 +119,13 @@ export const useCampaignsScript = () => {
 
   const onLearnMore = () => {
     if (currentCampaign?.rule_url) {
-      window.open(currentCampaign.rule_url, "_blank");
+      if (currentCampaign.rule_config?.action === "scroll") {
+        document
+          .getElementById(currentCampaign.rule_url)
+          ?.scrollIntoView({ behavior: "smooth" });
+      } else {
+        window.open(currentCampaign.rule_url, "_blank");
+      }
     }
   };
 

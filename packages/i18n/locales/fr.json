@@ -821,6 +821,8 @@
   "tradingLeaderboard.arena": "Arène",
   "tradingLeaderboard.generalLeaderboard": "Classement général",
   "tradingLeaderboard.maxTicketsAchieved": "Maximum de billets obtenus",
+  "tradingLeaderboard.termsAndConditions": "Termes et Conditions",
+  "tradingLeaderboard.rules": "Règles",
   "assetHistory.status.pending": "En attente",
   "assetHistory.status.confirm": "Confirmer",
   "assetHistory.status.processing": "En traitement",

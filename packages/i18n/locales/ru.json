@@ -821,6 +821,8 @@
   "tradingLeaderboard.arena": "Арена",
   "tradingLeaderboard.generalLeaderboard": "Общий рейтинг",
   "tradingLeaderboard.maxTicketsAchieved": "Максимум полученных билетов",
+  "tradingLeaderboard.termsAndConditions": "Условия использования",
+  "tradingLeaderboard.rules": "Правила",
   "assetHistory.status.pending": "В ожидании",
   "assetHistory.status.confirm": "Подтверждено",
   "assetHistory.status.processing": "В обработке",

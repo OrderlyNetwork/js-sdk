@@ -821,6 +821,8 @@
   "tradingLeaderboard.arena": "Arena",
   "tradingLeaderboard.generalLeaderboard": "Genel Sıralama",
   "tradingLeaderboard.maxTicketsAchieved": "Ulaşılan maksimum bilet sayısı",
+  "tradingLeaderboard.termsAndConditions": "Şartlar ve Koşullar",
+  "tradingLeaderboard.rules": "Kurallar",
   "assetHistory.status.pending": "Beklemede",
   "assetHistory.status.confirm": "Onayla",
   "assetHistory.status.processing": "İşleniyor",

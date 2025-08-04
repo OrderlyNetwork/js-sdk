@@ -30,6 +30,8 @@ export const tradingLeaderboard = {
   "tradingLeaderboard.arena": "Arena",
   "tradingLeaderboard.generalLeaderboard": "General leaderboard",
   "tradingLeaderboard.maxTicketsAchieved": "Max tickets achieved",
+  "tradingLeaderboard.termsAndConditions": "Terms and Conditions",
+  "tradingLeaderboard.rules": "Rules",
 };
 
 export type TradingLeaderboard = typeof tradingLeaderboard;

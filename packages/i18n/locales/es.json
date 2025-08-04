@@ -821,6 +821,8 @@
   "tradingLeaderboard.arena": "Arena",
   "tradingLeaderboard.generalLeaderboard": "Tabla de clasificación general",
   "tradingLeaderboard.maxTicketsAchieved": "Máximo de boletos obtenidos",
+  "tradingLeaderboard.termsAndConditions": "Términos y Condiciones",
+  "tradingLeaderboard.rules": "Reglas",
   "assetHistory.status.pending": "Pendiente",
   "assetHistory.status.confirm": "Confirmar",
   "assetHistory.status.processing": "Procesando",

@@ -14,16 +14,6 @@ export const CampaignsWidget: FC<CampaignsWidgetProps> = (props) => {
   const state = useCampaignsScript();
   const { isMobile } = useScreen();
 
-  //   if (isMobile) {
-  //     return (
-  //       <MobileCampaigns
-  //         {...state}
-  //         className={props.className}
-  //         style={props.style}
-  //       />
-  //     );
-  //   }
-
   const contentClassNames = useMemo(() => {
     if (!isMobile) return undefined;
     return {

@@ -9,7 +9,10 @@ export const RewardsWidget = () => {
   const { t } = useTranslation();
   const { isMobile } = useScreen();
 
-  if (state.currentCampaignId === "general") {
+  if (
+    state.currentCampaignId === "general" ||
+    state.currentCampaign?.hide_rewards
+  ) {
     return null;
   }
 

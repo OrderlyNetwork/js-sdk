@@ -821,6 +821,8 @@
   "tradingLeaderboard.arena": "Арена",
   "tradingLeaderboard.generalLeaderboard": "Загальний рейтинг",
   "tradingLeaderboard.maxTicketsAchieved": "Максимум отриманих квитків",
+  "tradingLeaderboard.termsAndConditions": "Умови використання",
+  "tradingLeaderboard.rules": "Правила",
   "assetHistory.status.pending": "В очікуванні",
   "assetHistory.status.confirm": "Підтвердити",
   "assetHistory.status.processing": "Обробляється",

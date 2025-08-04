@@ -821,6 +821,8 @@
   "tradingLeaderboard.arena": "アリーナ",
   "tradingLeaderboard.generalLeaderboard": "総合ランキング",
   "tradingLeaderboard.maxTicketsAchieved": "獲得した最大チケット数",
+  "tradingLeaderboard.termsAndConditions": "利用規約",
+  "tradingLeaderboard.rules": "ルール",
   "assetHistory.status.pending": "保留中",
   "assetHistory.status.confirm": "確認",
   "assetHistory.status.processing": "処理中",
