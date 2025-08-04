@@ -388,34 +388,35 @@ export const AssetView: FC<
     </Button>
   );
 
-  const depositAndWithdrawButton = isMainAccount && (
-    <>
-      <Button
-        fullWidth
-        color="secondary"
-        size="md"
-        onClick={onWithdraw}
-        data-testid="oui-testid-assetView-withdraw-button"
-      >
-        {!hasSubAccount && (
-          <ArrowDownShortIcon
-            color="white"
-            opacity={1}
-            className="oui-rotate-180"
-          />
-        )}
-        <Text>{t("common.withdraw")}</Text>
-      </Button>
-      <Button
-        data-testid="oui-testid-assetView-deposit-button"
-        fullWidth
-        size="md"
-        onClick={onDeposit}
-      >
-        {!hasSubAccount && <ArrowDownShortIcon color="white" opacity={1} />}
-        <Text>{t("common.deposit")}</Text>
-      </Button>
-    </>
+  const depositButton = isMainAccount && (
+    <Button
+      data-testid="oui-testid-assetView-deposit-button"
+      fullWidth
+      size="md"
+      onClick={onDeposit}
+    >
+      {!hasSubAccount && <ArrowDownShortIcon color="white" opacity={1} />}
+      <Text>{t("common.deposit")}</Text>
+    </Button>
+  );
+
+  const withdrawButton = isMainAccount && (
+    <Button
+      fullWidth
+      color="secondary"
+      size="md"
+      onClick={onWithdraw}
+      data-testid="oui-testid-assetView-withdraw-button"
+    >
+      {!hasSubAccount && (
+        <ArrowDownShortIcon
+          color="white"
+          opacity={1}
+          className="oui-rotate-180"
+        />
+      )}
+      <Text>{t("common.withdraw")}</Text>
+    </Button>
   );
 
   return (
@@ -491,8 +492,9 @@ export const AssetView: FC<
             >
               {isMainAccount ? (
                 <>
+                  {depositButton}
                   {transferButton}
-                  {depositAndWithdrawButton}
+                  {withdrawButton}
                 </>
               ) : (
                 transferButton
