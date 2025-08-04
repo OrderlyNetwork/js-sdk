@@ -5,6 +5,7 @@ import React, {
   HTMLAttributes,
   PropsWithChildren,
   ReactNode,
+  SVGProps,
   useContext,
   useEffect,
   useMemo,
@@ -25,6 +26,7 @@ import {
   OrderlyOrder,
   OrderSide,
   OrderType,
+  PositionType,
 } from "@orderly.network/types";
 import {
   Box,
@@ -43,6 +45,7 @@ import {
   PopoverRoot,
   PopoverTrigger,
   Select,
+  SimpleSheet,
   Slider,
   Switch,
   Text,
@@ -54,6 +57,10 @@ import {
   useScreen,
 } from "@orderly.network/ui";
 import { LeverageWidgetWithSheetId } from "@orderly.network/ui-leverage";
+import {
+  TPSLAdvancedDialogId,
+  TPSLAdvancedWidget,
+} from "@orderly.network/ui-tpsl";
 import { commifyOptional, Decimal } from "@orderly.network/utils";
 import { LTVRiskTooltipWidget } from "./components/LTVRiskTooltip";
 // import { useBalanceScript } from "../../trading/src/components/mobile/bottomNavBar/balance";
@@ -85,6 +92,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
     side,
     formattedOrder,
     setOrderValue,
+    setOrderValues,
     symbolInfo,
     maxQty,
     freeCollateral,
@@ -105,6 +113,8 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
   const { t } = useTranslation();
 
   const { isMobile } = useScreen();
+  const [hasAdvancedTPSLResult, setHasAdvancedTPSLResult] =
+    useState<boolean>(false);
 
   const { errors, validated } = metaState;
   const [errorMsgVisible, setErrorMsgVisible] = useState(false);
@@ -117,6 +127,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
     "orderly-order-additional-pinned",
     true,
   );
+  const [showTPSLAdvanced, setShowTPSLAdvanced] = useState(false);
   const [hidden, setHidden] = useLocalStorage("orderly-order-hidden", false);
 
   const [slippage, setSlippage] = useLocalStorage("orderly-slippage", "1", {
@@ -239,8 +250,73 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
         // submit order error
         if (error?.message) {
           toast.error(error.message);
+          // toast.error(`Error:${error.message}`);
+
+          // if (error instanceof ApiError) {
+          // toast.error(error.message);
         }
       });
+  };
+
+  const onShowTPSLAdvanced = () => {
+    helper.validate().then(
+      (result) => {
+        console.log("result", result);
+        setShowTPSLAdvanced(true);
+      },
+      (errors) => {
+        console.log("errors", errors);
+        const tpslKey = new Set(["tp_trigger_price", "sl_trigger_price"]);
+        if (Object.keys(errors).every((key: string) => tpslKey.has(key))) {
+          setShowTPSLAdvanced(true);
+        }
+      },
+    );
+    // modal.show(TPSLAdvancedDialogId, {
+    //   order: formattedOrder,
+    //   setOrderValue: setOrderValue,
+    // });
+    // setShowTPSLAdvanced(true);
+  };
+
+  const onSubmitAdvancedTPSL = (order: OrderlyOrder) => {
+    if (order.side !== formattedOrder.side) {
+      setOrderValue("side", order.side);
+    }
+    setOrderValues({
+      position_type: order.position_type,
+      tp_order_type: order.tp_order_type,
+      tp_pnl: order.tp_pnl,
+      tp_offset: order.tp_offset,
+      tp_offset_percentage: order.tp_offset_percentage,
+      tp_ROI: order.tp_ROI,
+      tp_trigger_price: order.tp_trigger_price,
+      tp_order_price: order.tp_order_price,
+      sl_order_type: order.sl_order_type,
+      sl_trigger_price: order.sl_trigger_price,
+      sl_order_price: order.sl_order_price,
+      sl_pnl: order.sl_pnl,
+      sl_offset: order.sl_offset,
+      sl_offset_percentage: order.sl_offset_percentage,
+      sl_ROI: order.sl_ROI,
+    });
+    setShowTPSLAdvanced(false);
+    setHasAdvancedTPSLResult(true);
+  };
+
+  const onDeleteAdvancedTPSL = () => {
+    setHasAdvancedTPSLResult(false);
+    setOrderValues({
+      tp_trigger_price: undefined,
+      tp_order_price: undefined,
+      tp_order_type: OrderType.MARKET,
+      sl_trigger_price: undefined,
+      sl_order_price: undefined,
+      sl_order_type: OrderType.MARKET,
+      tp_pnl: undefined,
+      sl_pnl: undefined,
+      position_type: PositionType.FULL,
+    });
   };
 
   const mergedShowSheet = isMobile && props.canTrade;
@@ -249,6 +325,10 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
     typeof currentLtv === "number" &&
     !Number.isNaN(currentLtv) &&
     currentLtv > 0;
+
+  useEffect(() => {
+    setHasAdvancedTPSLResult(false);
+  }, [props.symbol]);
 
   return (
     <OrderEntryProvider value={{ errorMsgVisible }}>
@@ -471,35 +551,54 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
 
         <Divider className="oui-w-full" />
         {/* TP SL switch and content */}
-        <OrderTPSL
-          // onCancelTPSL={props.cancelTP_SL}
-          // onEnableTP_SL={props.enableTP_SL}
-          quote_dp={props.symbolInfo.quote_dp}
-          switchState={props.tpslSwitch}
-          onSwitchChanged={props.setTpslSwitch}
-          orderType={formattedOrder.order_type!}
-          errors={validated ? errors : null}
-          isReduceOnly={formattedOrder.reduce_only}
-          values={{
-            tp: {
-              trigger_price: formattedOrder.tp_trigger_price ?? "",
-              PnL: formattedOrder.tp_pnl ?? "",
-              Offset: formattedOrder.tp_offset ?? "",
-              "Offset%": formattedOrder.tp_offset_percentage ?? "",
-              ROI: formattedOrder.tp_ROI ?? "",
-            },
-            sl: {
-              trigger_price: formattedOrder.sl_trigger_price ?? "",
-              PnL: formattedOrder.sl_pnl ?? "",
-              Offset: formattedOrder.sl_offset ?? "",
-              "Offset%": formattedOrder.sl_offset_percentage ?? "",
-              ROI: formattedOrder.sl_ROI ?? "",
-            },
-          }}
-          onChange={(key, value) => {
-            props.setOrderValue(key, value);
-          }}
-        />
+        {hasAdvancedTPSLResult ? (
+          <AdvancedTPSLResult
+            order={formattedOrder}
+            symbolInfo={props.symbolInfo}
+            errors={validated ? errors : null}
+            onEdit={() => {
+              // TODO
+              setShowTPSLAdvanced(true);
+            }}
+            onDelete={() => {
+              onDeleteAdvancedTPSL();
+            }}
+          />
+        ) : (
+          <OrderTPSL
+            // onCancelTPSL={props.cancelTP_SL}
+            // onEnableTP_SL={props.enableTP_SL}
+            quote_dp={props.symbolInfo.quote_dp}
+            switchState={props.tpslSwitch}
+            onSwitchChanged={props.setTpslSwitch}
+            orderType={formattedOrder.order_type!}
+            errors={validated ? errors : null}
+            isReduceOnly={formattedOrder.reduce_only}
+            setOrderValue={props.setOrderValue}
+            values={{
+              position_type:
+                formattedOrder.position_type ?? PositionType.PARTIAL,
+              tp: {
+                trigger_price: formattedOrder.tp_trigger_price ?? "",
+                PnL: formattedOrder.tp_pnl ?? "",
+                Offset: formattedOrder.tp_offset ?? "",
+                "Offset%": formattedOrder.tp_offset_percentage ?? "",
+                ROI: formattedOrder.tp_ROI ?? "",
+              },
+              sl: {
+                trigger_price: formattedOrder.sl_trigger_price ?? "",
+                PnL: formattedOrder.sl_pnl ?? "",
+                Offset: formattedOrder.sl_offset ?? "",
+                "Offset%": formattedOrder.sl_offset_percentage ?? "",
+                ROI: formattedOrder.sl_ROI ?? "",
+              },
+            }}
+            showTPSLAdvanced={onShowTPSLAdvanced}
+            onChange={(key, value) => {
+              props.setOrderValue(key, value);
+            }}
+          />
+        )}
         {/* reduce only switch and label */}
         <Flex
           justify={"between"}
@@ -562,12 +661,36 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
               onClick={() => {
                 setPinned(false);
               }}
-              className={"oui-group oui-absolute oui-right-2 oui-top-2"}
+              className={"oui-absolute oui-right-2 oui-top-2 oui-group"}
               data-testid="oui-testid-orderEntry-pinned-button"
             />
           </Box>
         )}
       </div>
+      <SimpleSheet
+        open={showTPSLAdvanced}
+        onOpenChange={setShowTPSLAdvanced}
+        classNames={{
+          body: "oui-h-full oui-pb-0 oui-border-none",
+          overlay: "!oui-bg-base-10/60",
+          content: cn(
+            "oui-rounded-[16px] oui-border-none !oui-p-0",
+            isMobile
+              ? "oui-inset-y-0 oui-right-0 oui-w-[280px]"
+              : "!oui-bottom-[40px] oui-right-3 oui-top-[44px] !oui-h-auto oui-w-[360px]",
+          ),
+        }}
+        contentProps={{ side: "right", closeable: false }}
+      >
+        <TPSLAdvancedWidget
+          setOrderValue={setOrderValue}
+          order={formattedOrder as OrderlyOrder}
+          onSubmit={onSubmitAdvancedTPSL}
+          onClose={() => {
+            setShowTPSLAdvanced(false);
+          }}
+        />
+      </SimpleSheet>
     </OrderEntryProvider>
   );
 };
@@ -736,7 +859,7 @@ const OrderQuantityInput = (props: {
       {type === OrderType.LIMIT || type === OrderType.STOP_LIMIT ? (
         <div
           ref={props.refs.priceInputContainerRef}
-          className="oui-group oui-relative oui-w-full"
+          className="oui-relative oui-w-full oui-group"
         >
           <CustomInput
             label={t("common.price")}
@@ -759,7 +882,7 @@ const OrderQuantityInput = (props: {
             }}
           />
           {bbo.bboStatus === BBOStatus.ON && (
-            <div className={cn("oui-absolute oui-bottom-1 oui-left-0")}>
+            <div className={cn("oui-absolute oui-left-0 oui-bottom-1")}>
               <BBOOrderTypeSelect
                 value={bbo.bboType}
                 onChange={bbo.onBBOChange}
@@ -1057,6 +1180,253 @@ const OrderTypeSelect = (props: {
 };
 
 // -----------Order type Select Component end ------------
+
+interface IconProps extends SVGProps<SVGSVGElement> {
+  size: number;
+}
+const DeleteIcon: React.FC<IconProps> = (props) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={props.size}
+      height={props.size}
+      viewBox="0 0 12 12"
+      fill="currentColor"
+      {...props}
+    >
+      <path d="M5.99903 0.976562C5.44653 0.976562 4.99903 1.42406 4.99903 1.97656H2.49902C2.22302 1.97656 1.99902 2.20056 1.99902 2.47656C1.99902 2.75256 2.22302 2.97656 2.49902 2.97656H9.49903C9.77503 2.97656 9.99903 2.75256 9.99903 2.47656C9.99903 2.20056 9.77503 1.97656 9.49903 1.97656H6.99903C6.99903 1.42406 6.55153 0.976562 5.99903 0.976562ZM2.49902 3.97655V8.97654C2.49902 10.0715 3.40152 10.961 4.49903 10.961L7.51453 10.9765C8.61203 10.9765 9.49903 10.074 9.49903 8.97654V3.97655H2.49902ZM4.99903 5.47655C5.27503 5.47655 5.49903 5.70055 5.49903 5.97655V8.97654C5.49903 9.25254 5.27503 9.47654 4.99903 9.47654C4.72303 9.47654 4.49903 9.25254 4.49903 8.97654V5.97655C4.49903 5.70055 4.72303 5.47655 4.99903 5.47655ZM6.99903 5.47655C7.27503 5.47655 7.49903 5.70055 7.49903 5.97655V8.97654C7.49903 9.25254 7.27503 9.47654 6.99903 9.47654C6.72303 9.47654 6.49903 9.25254 6.49903 8.97654V5.97655C6.49903 5.70055 6.72303 5.47655 6.99903 5.47655Z" />
+    </svg>
+  );
+};
+
+const EditIcon: React.FC<IconProps> = (props) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 12 12"
+      width={props.size}
+      height={props.size}
+      fill="currentColor"
+      {...props}
+    >
+      <path d="M8.49779 0.976562C8.36529 0.976562 8.23229 1.02357 8.13829 1.11707C7.86029 1.39507 6.85979 2.39558 6.63779 2.61808L2.13529 7.12059L1.63479 7.62059C1.56529 7.69059 1.52929 7.78958 1.50979 7.88658L1.00979 10.3881C0.939788 10.7381 1.23779 11.0361 1.58779 10.9666C1.90079 10.9036 3.77679 10.5286 4.08929 10.4661C4.18629 10.4466 4.28529 10.4106 4.35529 10.3411L4.85529 9.84059L9.35779 5.33808C9.58029 5.11608 10.5808 4.11506 10.8588 3.83756C10.9523 3.74356 10.9993 3.61056 10.9993 3.47806C10.9993 2.65956 10.7908 2.07456 10.3583 1.63306C9.92179 1.18756 9.33879 0.976562 8.49779 0.976562ZM8.69479 1.98606C9.14629 2.01256 9.43879 2.11608 9.63929 2.32108C9.84429 2.53008 9.97379 2.82008 10.0018 3.26258C9.72779 3.53608 9.32679 3.93106 8.99829 4.25956C8.60179 3.86306 8.11279 3.37407 7.71629 2.97757C8.04529 2.64907 8.42129 2.25956 8.69479 1.98606ZM6.99729 3.69657L8.27929 4.97858L4.49579 8.76207L3.21379 7.48009L6.99729 3.69657ZM2.49479 8.19908L3.77679 9.48107L3.72979 9.52809C3.39979 9.59409 2.73329 9.73359 2.11929 9.85659L2.44779 8.24608L2.49479 8.19908Z" />
+    </svg>
+  );
+};
+
+function AdvancedTPSLResult(props: {
+  order: Partial<OrderlyOrder>;
+  symbolInfo: API.SymbolExt;
+  errors: OrderValidationResult | null;
+  onEdit: () => void;
+  onDelete: () => void;
+}) {
+  const { order: formattedOrder, symbolInfo, onEdit, onDelete, errors } = props;
+
+  const { parseErrorMsg } = useOrderEntryFormErrorMsg(errors);
+  const { t } = useTranslation();
+
+  const renderTp = () => {
+    const error = parseErrorMsg("tp_trigger_price");
+    if (formattedOrder.tp_trigger_price || formattedOrder.tp_order_price) {
+      return (
+        <Flex
+          direction={"column"}
+          itemAlign={"start"}
+          className="oui-w-full"
+          gap={4}
+        >
+          <Flex
+            direction={"column"}
+            itemAlign={"start"}
+            justify={"between"}
+            gapY={1}
+            className="oui-w-full"
+          >
+            <Flex justify={"between"} className="oui-w-full">
+              <Text>{t("tpsl.tpTriggerPrice")}</Text>
+              <Text.numeral
+                suffix={
+                  <Text className="oui-text-base-contrast-36 oui-ml-1">
+                    {symbolInfo.quote}
+                  </Text>
+                }
+                className="oui-text-base-contrast"
+                dp={symbolInfo.quote_dp}
+              >
+                {formattedOrder.tp_trigger_price ?? ""}
+              </Text.numeral>
+            </Flex>
+            <Flex justify={"between"} className="oui-w-full">
+              <Text>{t("tpsl.tpOrderPrice")}</Text>
+              {formattedOrder.tp_order_type === OrderType.LIMIT ? (
+                <Text.numeral
+                  suffix={
+                    <Text className="oui-text-base-contrast-36 oui-ml-1">
+                      {symbolInfo.quote}
+                    </Text>
+                  }
+                  className="oui-text-base-contrast"
+                  dp={symbolInfo.quote_dp}
+                >
+                  {formattedOrder.tp_order_price ?? ""}
+                </Text.numeral>
+              ) : (
+                <Text className="oui-text-base-contrast">Market</Text>
+              )}
+            </Flex>
+            <Flex justify={"between"} className="oui-w-full">
+              <Text>{t("tpsl.totalEstTpPnl")}</Text>
+              <Text.numeral
+                suffix={
+                  <Text className="oui-ml-1 oui-text-base-contrast-36">
+                    {symbolInfo.quote}
+                  </Text>
+                }
+                coloring
+                dp={2}
+              >
+                {Number(formattedOrder.tp_pnl)}
+              </Text.numeral>
+            </Flex>
+          </Flex>
+          {error && (
+            <Flex
+              justify={"start"}
+              itemAlign={"start"}
+              gap={2}
+              className="oui-w-full"
+            >
+              <div className="oui-relative oui-top-[7px] oui-w-1 oui-h-1 oui-bg-danger oui-rounded-full" />
+              <Text className="oui-text-danger">{error}</Text>
+            </Flex>
+          )}
+        </Flex>
+      );
+    }
+    return null;
+  };
+
+  const renderSl = () => {
+    if (formattedOrder.sl_trigger_price || formattedOrder.sl_order_price) {
+      const error = parseErrorMsg("sl_trigger_price");
+      return (
+        <Flex
+          direction={"column"}
+          itemAlign={"start"}
+          className="oui-w-full"
+          gap={4}
+        >
+          <Flex
+            direction={"column"}
+            itemAlign={"start"}
+            justify={"between"}
+            gapY={1}
+            className="oui-w-full"
+          >
+            <Flex justify={"between"} className="oui-w-full">
+              <Text>{t("tpsl.slTriggerPrice")}</Text>
+              <Text.numeral
+                suffix={
+                  <Text className="oui-text-base-contrast-36 oui-ml-1">
+                    {symbolInfo.quote}
+                  </Text>
+                }
+                className="oui-text-base-contrast"
+                dp={symbolInfo.quote_dp}
+              >
+                {formattedOrder.sl_trigger_price ?? ""}
+              </Text.numeral>
+            </Flex>
+            <Flex justify={"between"} className="oui-w-full">
+              <Text>{t("tpsl.slOrderPrice")}</Text>
+              {formattedOrder.sl_order_type === OrderType.LIMIT ? (
+                <Text.numeral
+                  suffix={
+                    <Text className="oui-text-base-contrast-36 oui-ml-1">
+                      {symbolInfo.quote}
+                    </Text>
+                  }
+                  className="oui-text-base-contrast"
+                  dp={symbolInfo.quote_dp}
+                >
+                  {formattedOrder.sl_order_price ?? ""}
+                </Text.numeral>
+              ) : (
+                <Text className="oui-text-base-contrast">Market</Text>
+              )}
+            </Flex>
+
+            <Flex justify={"between"} className="oui-w-full">
+              <Text>{t("tpsl.totalEstSlPnl")}</Text>
+              <Text.numeral
+                coloring
+                suffix={
+                  <Text className="oui-ml-1 oui-text-base-contrast-36">
+                    {symbolInfo.quote}
+                  </Text>
+                }
+                dp={2}
+              >
+                {Number(formattedOrder.sl_pnl)}
+              </Text.numeral>
+            </Flex>
+            {error && (
+              <Flex
+                justify={"start"}
+                itemAlign={"start"}
+                gap={2}
+                className="oui-w-full"
+              >
+                <div className="oui-relative oui-top-[7px] oui-w-1 oui-h-1 oui-bg-danger oui-rounded-full" />
+                <Text className="oui-text-danger">{error}</Text>
+              </Flex>
+            )}
+          </Flex>
+        </Flex>
+      );
+    }
+    return null;
+  };
+
+  return (
+    <Flex
+      direction={"column"}
+      itemAlign={"start"}
+      className="oui-w-full oui-text-2xs"
+      gap={4}
+    >
+      <Flex justify={"between"} itemAlign={"start"} className="oui-w-full">
+        <Text>{t("tpsl.advanced.title")}</Text>
+        <Flex gap={2}>
+          <DeleteIcon
+            size={12}
+            className="oui-cursor-pointer oui-text-base-contrast-54 hover:oui-text-base-contrast"
+            opacity={1}
+            onClick={onDelete}
+          />
+          <EditIcon
+            size={12}
+            className="oui-cursor-pointer oui-text-base-contrast-54 hover:oui-text-base-contrast"
+            onClick={onEdit}
+          />
+        </Flex>
+      </Flex>
+      <Flex justify={"between"} itemAlign={"start"} className="oui-w-full">
+        <Text>{t("tpsl.mode")}</Text>
+        <Text className="oui-text-base-contrast">
+          {formattedOrder.position_type === PositionType.FULL
+            ? t("tpsl.fullPosition")
+            : t("tpsl.partialPosition")}
+        </Text>
+      </Flex>
+      {renderTp()}
+      {renderSl()}
+
+      <Divider className="oui-w-full oui-mb-2" />
+    </Flex>
+  );
+}
 
 function AssetInfo(props: {
   canTrade: boolean;

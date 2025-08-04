@@ -27,7 +27,9 @@
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@orderly.network/utils": "workspace:*",
-    "@orderly.network/react-app": "workspace:*"
+    "@orderly.network/react-app": "workspace:*",
+    "@orderly.network/ui-connector": "workspace:*",
+    "@orderly.network/perp": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "^18.3.2",

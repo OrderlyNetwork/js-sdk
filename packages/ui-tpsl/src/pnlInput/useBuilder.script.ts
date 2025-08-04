@@ -15,9 +15,9 @@ export enum PnLMode {
 }
 
 export type PNL_Values = {
-  PnL: string;
-  Offset: string;
-  "Offset%": string;
+  PnL: string | undefined;
+  Offset: string | undefined;
+  "Offset%": string | undefined;
 };
 
 export type BuilderProps = {

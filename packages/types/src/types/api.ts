@@ -339,8 +339,17 @@ export declare namespace API {
   }
 
   export interface PositionTPSLExt extends PositionExt {
-    tp_trigger_price?: number;
-    sl_trigger_price?: number;
+    full_tp_sl?: {
+      tp_trigger_price?: number;
+      sl_trigger_price?: number;
+      algo_order?: AlgoOrder;
+    };
+    partial_tp_sl?: {
+      tp_trigger_price?: number;
+      sl_trigger_price?: number;
+      order_num?: number;
+      algo_order?: AlgoOrder;
+    };
 
     // has_position_tp_sl: boolean;
 

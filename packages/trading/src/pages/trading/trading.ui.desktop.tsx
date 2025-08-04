@@ -485,8 +485,10 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
           </Flex>
           <Flex
             ref={props.orderEntryViewRef}
+            id="orderEntryView"
             gapY={3}
             direction="column"
+            className="oui-relative"
             style={{
               width: orderEntryMinWidth,
               // force order entry render actual content height

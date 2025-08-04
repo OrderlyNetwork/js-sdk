@@ -7,6 +7,7 @@ import {
   AlgoOrderRootType,
   AlgoOrderChildOrders,
   OrderSide,
+  PositionType,
 } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 import { getMinNotional } from "../../utils/createOrder";
@@ -65,7 +66,7 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
     const bracketOrder = this.parseBracketOrder(data);
 
     if (!bracketOrder) {
-      return order;
+      return order as OrderlyOrder;
     }
 
     return {
@@ -73,7 +74,7 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
       algo_type: AlgoOrderRootType.BRACKET,
 
       child_orders: [bracketOrder],
-    };
+    } as OrderlyOrder;
   }
 
   baseValidate(
@@ -192,42 +193,70 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
     return this.orderType;
   }
 
+  protected getChildOrderType(
+    positionType?: PositionType,
+    orderPrice?: string,
+  ): OrderType {
+    if (positionType === PositionType.FULL) {
+      return OrderType.CLOSE_POSITION;
+    }
+    let type = OrderType.MARKET;
+    if (orderPrice) {
+      type = OrderType.LIMIT;
+    }
+    return type;
+  }
+
   protected parseBracketOrder(data: OrderlyOrder): AlgoOrderChildOrders | null {
     const orders: ChildOrder[] = [];
 
     const side = data.side === OrderSide.BUY ? OrderSide.SELL : OrderSide.BUY;
-
+    const algoType: AlgoOrderRootType =
+      data.position_type === PositionType.PARTIAL
+        ? AlgoOrderRootType.TP_SL
+        : AlgoOrderRootType.POSITIONAL_TP_SL;
     if (!!data.tp_trigger_price) {
       const tp_trigger_price = data.tp_trigger_price;
-
-      orders.push({
+      const orderItem: ChildOrder = {
         algo_type: AlgoOrderType.TAKE_PROFIT,
         side: side,
-        type: OrderType.CLOSE_POSITION,
+        // TODO need confirm child order type
+        type: this.getChildOrderType(data.position_type, data.tp_order_price),
         trigger_price: tp_trigger_price,
         symbol: data.symbol,
         reduce_only: true,
-      });
+      };
+      if (data.tp_order_price) {
+        orderItem.price = data.tp_order_price;
+      }
+
+      orders.push(orderItem);
     }
 
     if (!!data.sl_trigger_price) {
       const sl_trigger_price = data.sl_trigger_price;
-
-      orders.push({
+      const orderItem: ChildOrder = {
         algo_type: AlgoOrderType.STOP_LOSS,
         side: side,
-        type: OrderType.CLOSE_POSITION,
+        // TODO need confirm child order type
+        type: this.getChildOrderType(data.position_type, data.sl_order_price),
         trigger_price: sl_trigger_price,
         symbol: data.symbol,
         reduce_only: true,
-      });
+      };
+
+      if (data.sl_order_price) {
+        orderItem.price = data.sl_order_price;
+      }
+
+      orders.push(orderItem);
     }
 
     if (!orders.length) return null;
 
     return {
       symbol: data.symbol,
-      algo_type: AlgoOrderRootType.POSITIONAL_TP_SL,
+      algo_type: algoType,
       child_orders: orders,
     };
   }

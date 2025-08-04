@@ -46,6 +46,10 @@ export enum AlgoOrderRootType {
 export enum TriggerPriceType {
   MARK_PRICE = "MARK_PRICE",
 }
+export enum PositionType {
+  FULL = "FULL",
+  PARTIAL = "PARTIAL",
+}
 
 export enum AlgoOrderType {
   TAKE_PROFIT = "TAKE_PROFIT",
@@ -136,11 +140,16 @@ export interface BracketOrder extends AlgoOrder, OrderExt {
   /**
    * Computed take profit
    */
+  position_type?: PositionType;
+  tp_enable?: boolean;
+  sl_enable?: boolean;
   tp_pnl?: string;
   tp_offset?: string;
   tp_offset_percentage?: string;
   tp_ROI?: string;
   tp_trigger_price?: string;
+  tp_order_price?: string;
+  tp_order_type?: OrderType;
 
   /**
    * Computed stop loss
@@ -150,6 +159,8 @@ export interface BracketOrder extends AlgoOrder, OrderExt {
   sl_offset_percentage?: string;
   sl_ROI?: string;
   sl_trigger_price?: string;
+  sl_order_price?: string;
+  sl_order_type?: OrderType;
 }
 
 export type OrderlyOrder = RegularOrder & AlgoOrder & BracketOrder;
@@ -166,7 +177,7 @@ export interface ChildOrder {
   side: string;
   type: OrderType;
   trigger_price: string;
-
+  price?: string;
   reduce_only: boolean;
   trigger_price_type?: string;
 }
@@ -234,6 +245,13 @@ export interface BaseAlgoOrderEntity<T extends AlgoOrderRootType>
   is_activated?: boolean;
   tp_trigger_price?: string | number;
   sl_trigger_price?: string | number;
+  tp_order_price?: string | number;
+  tp_order_type?: OrderType;
+  sl_order_price?: string | number;
+  sl_order_type?: OrderType;
+  tp_enable?: boolean;
+  sl_enable?: boolean;
+  position_type?: PositionType;
 }
 
 export type AlgoOrderEntity<
@@ -246,7 +264,18 @@ export type AlgoOrderEntity<
   : T extends AlgoOrderRootType.POSITIONAL_TP_SL
     ? Optional<
         BaseAlgoOrderEntity<T>,
-        "side" | "type" | "trigger_price" | "order_type" | "quantity"
+        | "side"
+        | "type"
+        | "trigger_price"
+        | "order_type"
+        | "quantity"
+        | "tp_enable"
+        | "sl_enable"
+        | "tp_order_price"
+        | "tp_order_type"
+        | "sl_order_price"
+        | "sl_order_type"
+        | "position_type"
       >
     : Omit<BaseAlgoOrderEntity<T>, "child_orders" | "order_type">;
 
