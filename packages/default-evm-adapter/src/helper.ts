@@ -7,7 +7,7 @@ import type {
   SignatureDomain,
   WithdrawInputs,
 } from "@orderly.network/core";
-import { definedTypes } from "@orderly.network/types";
+import { DEFAUL_ORDERLY_KEY_SCOPE, definedTypes } from "@orderly.network/types";
 
 export async function withdrawMessage(
   inputs: WithdrawInputs & {
@@ -72,7 +72,7 @@ export async function addOrderlyKeyMessage(
   const message = {
     brokerId,
     orderlyKey: publicKey,
-    scope: scope || "read,trading,asset",
+    scope: scope || DEFAUL_ORDERLY_KEY_SCOPE,
     chainId,
     timestamp,
     // chainType,
