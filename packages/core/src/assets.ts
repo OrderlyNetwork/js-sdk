@@ -346,6 +346,7 @@ export class Assets {
     vaultAddress?: string;
     /** token amount */
     amount?: string;
+    isSetMaxValue?: boolean;
     /** token decimals on chain, default is 18 */
     decimals: number;
   }) {
@@ -354,6 +355,7 @@ export class Assets {
       amount,
       vaultAddress: inputVaultAddress,
       decimals,
+      isSetMaxValue,
     } = inputs;
 
     if (!address) {
@@ -367,11 +369,13 @@ export class Assets {
     if (decimals === undefined || decimals === null) {
       throw new Error("decimals is required");
     }
-
-    const parsedAmount =
-      typeof amount !== "undefined" && amount !== ""
-        ? this.account.walletAdapter.parseUnits(amount, decimals!)
-        : MaxUint256.toString();
+    let parsedAmount = MaxUint256.toString();
+    if (!isSetMaxValue) {
+      parsedAmount =
+        typeof amount !== "undefined" && amount !== ""
+          ? this.account.walletAdapter.parseUnits(amount, decimals!)
+          : MaxUint256.toString();
+    }
 
     const contractInfo = this.contractManger.getContractInfoByEnv();
 

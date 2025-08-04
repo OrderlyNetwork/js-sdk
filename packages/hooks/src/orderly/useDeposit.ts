@@ -7,6 +7,7 @@ import {
   AccountStatusEnum,
   ChainNamespace,
   DEPOSIT_FEE_RATE,
+  ETHEREUM_MAINNET_CHAINID,
   MaxUint256,
   NetworkId,
   SDKError,
@@ -321,17 +322,74 @@ export const useDeposit = (options: DepositOptions) => {
     isNativeToken,
   ]);
 
+  const checkIfChainTokenNeedRestApprove = useCallback(
+    (chainId: number, token: string) => {
+      // check chain (except ethereum mainnet)
+      if (chainId !== ETHEREUM_MAINNET_CHAINID) {
+        return false;
+      }
+      if (token !== "USDT") {
+        return false;
+      }
+      return true;
+    },
+    [],
+  );
+
+  const resetApprove = useCallback(
+    async (tokenAddress: string, decimal: number, vaultAddress: string) => {
+      const result = await account.assetsManager.approve({
+        address: tokenAddress,
+        amount: "0",
+        vaultAddress,
+        decimals: decimal,
+      });
+
+      const txResult: any =
+        await account.walletAdapter?.pollTransactionReceiptWithBackoff(
+          result.hash,
+        );
+      if (txResult && txResult.status === 1) {
+        account.assetsManager
+          .getAllowance({
+            address: tokenAddress,
+            decimals: decimal,
+            vaultAddress,
+          })
+          .then((allowance) => {
+            setAllowance(allowance);
+          });
+      }
+    },
+    [],
+  );
+
   const approve = useCallback(
     async (amount?: string) => {
       if (!options.address) {
         throw new Error("address is required");
       }
 
+      let isSetMaxValue = false;
+
+      if (
+        checkIfChainTokenNeedRestApprove(options.srcChainId!, options.srcToken!)
+      ) {
+        isSetMaxValue = true;
+        if (allowance && new Decimal(allowance).gt(0)) {
+          await resetApprove(
+            options.address!,
+            options.decimals!,
+            vaultAddress!,
+          );
+        }
+      }
       return account.assetsManager
         .approve({
           address: options.address,
           amount,
           vaultAddress,
+          isSetMaxValue,
           decimals: options.decimals!,
         })
         .then((result: any) => {
@@ -340,10 +398,15 @@ export const useDeposit = (options: DepositOptions) => {
     },
     [
       account,
+      options.srcChainId,
+      options.srcToken,
+      allowance,
       options.address,
       options.decimals,
       vaultAddress,
       updateAllowanceWhenTxSuccess,
+      checkIfChainTokenNeedRestApprove,
+      resetApprove,
     ],
   );
 
