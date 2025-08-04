@@ -1,16 +1,18 @@
-import { modal } from "@orderly.network/ui";
-import { OrderCellState } from "../orderCell.script";
-import { EditSheetWidget } from "../editSheet";
 import { useCallback } from "react";
-import { useOrderListContext } from "../../orderListContext";
-import { TabType } from "../../../orders.widget";
-import { PositionTPSLSheet } from "@orderly.network/ui-tpsl";
-import { useTPSLOrderRowContext } from "../../tpslOrderRowContext";
+import { useSymbolsInfo } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
+import { modal } from "@orderly.network/ui";
+import { PositionTPSLSheet, TPSLSheetId } from "@orderly.network/ui-tpsl";
+import { TabType } from "../../../orders.widget";
+import { useOrderListContext } from "../../orderListContext";
+import { useTPSLOrderRowContext } from "../../tpslOrderRowContext";
+import { EditSheetWidget } from "../editSheet";
+import { OrderCellState } from "../orderCell.script";
 
 export const useEditBtnScript = (props: { state: OrderCellState }) => {
   const { state } = props;
   const { t } = useTranslation();
+  const symbolInfo = useSymbolsInfo()[props.state.item.symbol]();
 
   const { editAlgoOrder, editOrder } = useOrderListContext();
   const { order, position } = useTPSLOrderRowContext();
@@ -19,13 +21,12 @@ export const useEditBtnScript = (props: { state: OrderCellState }) => {
     if (props.state.type === TabType.tp_sl) {
       modal
         .sheet({
-          title: t("common.tpsl"),
           content: (
             <PositionTPSLSheet
+              symbolInfo={symbolInfo}
               isEditing
               order={props.state.item}
               position={position!}
-              symbolInfo={props.state.origin}
             />
           ),
         })

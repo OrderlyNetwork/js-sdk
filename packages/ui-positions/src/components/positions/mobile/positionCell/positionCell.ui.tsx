@@ -43,8 +43,7 @@ export const PositionCell: FC<
   );
 
   const buttons = (
-    <Grid width={"100%"} gap={2} cols={3} rows={1}>
-      <TpSLBtnWidget state={props} />
+    <Grid width={"100%"} gap={2} cols={2} rows={1}>
       <ClosePositionWidget type={OrderType.LIMIT} />
       <ClosePositionWidget type={OrderType.MARKET} />
     </Grid>

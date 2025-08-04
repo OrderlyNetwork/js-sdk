@@ -141,7 +141,9 @@ const BlockList: React.FC<BlockListProps> = (props) => {
       height={236}
       className={props.className}
     >
-      {list?.map((item, index) => <BlockItem key={index} {...item} />)}
+      {list?.map((item, index) => (
+        <BlockItem key={index} {...item} />
+      ))}
     </Flex>
   );
 };

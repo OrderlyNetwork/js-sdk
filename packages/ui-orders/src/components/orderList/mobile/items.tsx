@@ -435,8 +435,27 @@ export const SLTrigger: FC<OrderCellState> = (props) => {
 };
 
 export const TPPrice: FC<OrderCellState> = (props) => {
-  // const { tp_trigger_price } = useTPSLOrderRowContext();
   const { t } = useTranslation();
+  const { tp_order_price } = useTPSLOrderRowContext();
+
+  const renderOrderPrice = useMemo(() => {
+    if (tp_order_price === undefined) {
+      return <Text>--</Text>;
+    }
+    if (tp_order_price === OrderType.MARKET) {
+      return <Text>{t("common.marketPrice")}</Text>;
+    }
+    return (
+      <Text.numeral
+        dp={props.quote_dp}
+        rm={Decimal.ROUND_DOWN}
+        intensity={80}
+        padding={false}
+      >
+        {tp_order_price}
+      </Text.numeral>
+    );
+  }, [tp_order_price]);
 
   return (
     <Statistic
@@ -446,12 +465,32 @@ export const TPPrice: FC<OrderCellState> = (props) => {
         label: "oui-text-2xs",
       }}
     >
-      <Text intensity={80}>{t("common.marketPrice")}</Text>
+      {renderOrderPrice}
     </Statistic>
   );
 };
 export const SLPrice: FC<OrderCellState> = (props) => {
   const { t } = useTranslation();
+  const { sl_order_price } = useTPSLOrderRowContext();
+
+  const renderOrderPrice = useMemo(() => {
+    if (sl_order_price === undefined) {
+      return <Text>--</Text>;
+    }
+    if (sl_order_price === OrderType.MARKET) {
+      return <Text>{t("common.marketPrice")}</Text>;
+    }
+    return (
+      <Text.numeral
+        dp={props.quote_dp}
+        rm={Decimal.ROUND_DOWN}
+        intensity={80}
+        padding={false}
+      >
+        {sl_order_price}
+      </Text.numeral>
+    );
+  }, [sl_order_price]);
 
   return (
     <Statistic
@@ -461,7 +500,7 @@ export const SLPrice: FC<OrderCellState> = (props) => {
         label: "oui-text-2xs",
       }}
     >
-      <Text intensity={80}>{t("common.marketPrice")}</Text>
+      {renderOrderPrice}
     </Statistic>
   );
 };
@@ -481,7 +520,7 @@ export const TPSLQuantity: FC<OrderCellState> = (props) => {
 
     return (
       <Text.numeral
-        dp={props.quote_dp}
+        dp={props.base_dp}
         rm={Decimal.ROUND_DOWN}
         intensity={80}
         padding={false}
