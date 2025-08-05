@@ -1,5 +1,11 @@
 # tsconfig
 
+## 0.8.4-internal-20250807.2
+
+### Patch Changes
+
+- publish
+
 ## 0.8.4-internal-20250807.1
 
 ### Patch Changes
