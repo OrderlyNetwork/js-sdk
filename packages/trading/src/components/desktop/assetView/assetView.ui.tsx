@@ -92,17 +92,17 @@ const useCurrentStatusText = (): StatusInfo => {
         titleClsName:
           "oui-text-transparent oui-bg-clip-text oui-gradient-brand",
       },
-      notSignedIn: {
+      createAccount: {
         title: t("connector.createAccount"),
         description: t("connector.trade.createAccount.tooltip"),
         titleColor: "primary",
       },
-      disabledTrading: {
+      enableTrading: {
         title: t("connector.enableTrading"),
         description: t("connector.trade.enableTrading.tooltip"),
         titleColor: "primary",
       },
-      default: {
+      empty: {
         title: "",
         description: "",
       },
@@ -116,17 +116,25 @@ const useCurrentStatusText = (): StatusInfo => {
       return statusText.wrongNetwork;
     }
 
-    switch (state.status) {
-      case AccountStatusEnum.NotConnected:
-        return statusText.connectWallet;
-      case AccountStatusEnum.NotSignedIn:
-        return statusText.notSignedIn;
-      case AccountStatusEnum.DisabledTrading:
-        return statusText.disabledTrading;
-      default:
-        return statusText.default;
+    // EnableTradingWithoutConnected is enabled trading status, so we don't need to show anything
+    if (state.status === AccountStatusEnum.EnableTradingWithoutConnected) {
+      return statusText.empty;
     }
-  }, [state.status, wrongNetwork, t]);
+
+    if (state.status <= AccountStatusEnum.NotConnected) {
+      return statusText.connectWallet;
+    }
+
+    if (state.status <= AccountStatusEnum.NotSignedIn) {
+      return statusText.createAccount;
+    }
+
+    if (state.status < AccountStatusEnum.EnableTrading) {
+      return statusText.enableTrading;
+    }
+
+    return statusText.empty;
+  }, [t, state.status, wrongNetwork, disabledConnect]);
 };
 
 export const TooltipContent: FC<TooltipContentProps> = (props) => {
