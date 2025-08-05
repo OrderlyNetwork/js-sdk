@@ -7,6 +7,12 @@ export type RouteOption = {
   name: string;
 };
 
+export type WidgetConfigs = {
+  scanQRCode?: {
+    onSuccess?: (url: string) => void;
+  };
+};
+
 export type AppContextState = {
   connectWallet: ReturnType<typeof useWalletStateHandle>["connectWallet"];
   /**
@@ -25,6 +31,7 @@ export type AppContextState = {
   showAnnouncement: boolean;
   setShowAnnouncement: (show: boolean) => void;
   onRouteChange?: (option: RouteOption) => void;
+  widgetConfigs?: WidgetConfigs;
 };
 
 export const AppStateContext = createContext<AppContextState>({

@@ -1,6 +1,8 @@
 import { FC, ReactNode } from "react";
 import { OrderlyAppProvider as OrderlyAppProviderBase } from "@orderly.network/react-app";
 import { orderlyAppProviderConfig } from "../../orderlyConfig";
+import { dataAdapter } from "../../orderlyConfig/dataAdapter";
+import { widgetConfigs } from "../../orderlyConfig/widgetConfigs";
 import { configStore } from "./configStore";
 import { useRouteContext } from "./rounteProvider";
 
@@ -18,16 +20,8 @@ export const OrderlyAppProvider: FC<OrderlyAppProviderProps> = (props) => {
       restrictedInfo={orderlyAppProviderConfig.restrictedInfo}
       enableSwapDeposit={true}
       onRouteChange={onRouteChange}
-      // dataAdapter={{
-      //   symbolList(original) {
-      //     return original.filter(
-      //       (item) =>
-      //         item.symbol === "PERP_SOL_USDC" ||
-      //         item.symbol === "PERP_WOO_USDC" ||
-      //         item.symbol === "PERP_ETH_USDC",
-      //     );
-      //   },
-      // }}
+      widgetConfigs={widgetConfigs}
+      // dataAdapter={dataAdapter}
       // TODO: use dataAdapter
       // overrides={{
       //   announcement: {
