@@ -15,7 +15,7 @@ export function usePageTitle() {
 
     const symbol = params.symbol;
     if (path.startsWith(PathEnum.Perp) && symbol) {
-      title = generatePageTitle(formatSymbol(symbol));
+      title = formatSymbol(symbol);
     }
 
     document.title = generatePageTitle(title);
