@@ -47,6 +47,7 @@
     "@orderly.network/web3-provider-ethers": "2.5.3"
   },
   "changesets": [
+    "big-dancers-roll",
     "gentle-kings-dream",
     "gentle-ladybugs-flow",
     "olive-carrots-hang"
