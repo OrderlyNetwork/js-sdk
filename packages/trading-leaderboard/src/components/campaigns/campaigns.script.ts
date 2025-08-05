@@ -83,8 +83,8 @@ export const useCampaignsScript = () => {
   }, [userCampaigns, currentCampaignId]);
 
   const shouldShowJoinButton = useMemo(() => {
-    return !!state.address && !isCampaignEnded && !isParticipated;
-  }, [state.address, isCampaignEnded, isParticipated]);
+    return !!state.address && !isCampaignEnded;
+  }, [state.address, isCampaignEnded]);
 
   const [doJoinCampaign, { isMutating: isJoining, error: joinError }] =
     useMutation(`https://api.orderly.org/v1/client/campaign/sign_up`, "POST");
@@ -92,9 +92,9 @@ export const useCampaignsScript = () => {
   const joinCampaign = useCallback(
     async (data: { campaign_id: string | number }) => {
       try {
-        console.log("data", data);
+        // console.log("data", data);
         const result = await doJoinCampaign(data);
-        console.log("result", result);
+        // console.log("result", result);
 
         if (result?.success !== false) {
           // Refresh user campaigns data to update participation status

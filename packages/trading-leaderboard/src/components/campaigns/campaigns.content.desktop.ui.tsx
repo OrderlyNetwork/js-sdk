@@ -377,7 +377,8 @@ export const CampaignsContentDesktopUI: FC<{
                 className="oui-flex-1"
                 onClick={onTradeNow}
               >
-                {t("tradingLeaderboard.tradeNow")}
+                {campaign?.trading_config?.format ||
+                  t("tradingLeaderboard.tradeNow")}
               </Button>
             )}
           </div>

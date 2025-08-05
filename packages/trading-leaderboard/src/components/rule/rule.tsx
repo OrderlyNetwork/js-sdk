@@ -2,19 +2,26 @@ import { FC } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { cn } from "@orderly.network/ui";
 import { LeaderboardTitle } from "../../pages/leaderboard/page";
-import { ruleDescription } from "./constants";
-import { DescriptionContent } from "./description";
+import {
+  DescriptionContent,
+  DescriptionItem,
+  DescriptionConfig,
+} from "./description";
 
 type RuleUIProps = {
   id: string;
   className?: string;
   isMobile?: boolean;
+  rules?: DescriptionItem[];
+  ruleConfig?: DescriptionConfig;
 };
 
 export const CampaignRuleUI: FC<RuleUIProps> = ({
   id,
   className,
   isMobile,
+  rules,
+  ruleConfig,
 }) => {
   const { t } = useTranslation();
   return (
@@ -26,7 +33,7 @@ export const CampaignRuleUI: FC<RuleUIProps> = ({
         isMobile={isMobile}
         title={t("tradingLeaderboard.rules")}
       />
-      <DescriptionContent description={ruleDescription} />
+      <DescriptionContent description={rules || []} config={ruleConfig} />
     </div>
   );
 };
