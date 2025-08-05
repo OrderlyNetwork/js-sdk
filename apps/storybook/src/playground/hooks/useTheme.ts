@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useSearchParams } from "react-router";
+import { useEnvFormUrl } from "./useEnvFormUrl";
 
 const themes = {
   orderly: "orderly",
@@ -9,16 +9,16 @@ const themes = {
 
 /** set custom theme */
 export function useTheme() {
-  const [searchParams] = useSearchParams();
+  const { theme } = useEnvFormUrl();
 
   useEffect(() => {
     const parentElement = document.querySelector("html");
     const envTheme = import.meta.env.VITE_DEFAULT_THEME as keyof typeof themes;
-    const urlTheme = searchParams.get("theme") as keyof typeof themes;
+    const urlTheme = theme as keyof typeof themes;
     const themeKey = urlTheme || envTheme || themes.orderly;
 
     if (parentElement) {
       parentElement.setAttribute("data-oui-theme", themes[themeKey]);
     }
-  }, [searchParams]);
+  }, [theme]);
 }
