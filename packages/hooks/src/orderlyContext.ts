@@ -53,6 +53,10 @@ export interface OrderlyConfigContextState {
      * Custom `/v1/public/futures` response data.
      */
     symbolList?: (originalVal: API.MarketInfoExt[]) => any[];
+    /**
+     * custom `/v2/public/announcement` response data
+     */
+    announcementList?: (data: any[]) => any[];
   };
 }
 
