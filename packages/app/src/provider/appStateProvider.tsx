@@ -21,7 +21,7 @@ export type RouteOption = {
 export type AppStateProviderProps = {
   defaultChain?: DefaultChain;
   restrictedInfo?: RestrictedInfoOptions;
-} & Pick<AppContextState, "onChainChanged" | "onRouteChange">;
+} & Pick<AppContextState, "onChainChanged" | "onRouteChange" | "widgetConfigs">;
 
 export const AppStateProvider: FC<PropsWithChildren<AppStateProviderProps>> = (
   props,
@@ -59,6 +59,7 @@ export const AppStateProvider: FC<PropsWithChildren<AppStateProviderProps>> = (
       showAnnouncement,
       setShowAnnouncement,
       onRouteChange: props.onRouteChange,
+      widgetConfigs: props.widgetConfigs,
     }),
     [
       connectWallet,
@@ -70,6 +71,7 @@ export const AppStateProvider: FC<PropsWithChildren<AppStateProviderProps>> = (
       showAnnouncement,
       wrongNetwork,
       props.onRouteChange,
+      props.widgetConfigs,
     ],
   );
 

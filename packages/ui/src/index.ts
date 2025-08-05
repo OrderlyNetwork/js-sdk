@@ -52,8 +52,8 @@ export type { SizeType } from "./helpers/sizeType";
 export {
   OrderlyThemeProvider,
   type OrderlyThemeProviderProps,
-  useOrderlyTheme,
 } from "./provider/orderlyThemeProvider";
+export { useOrderlyTheme } from "./provider/orderlyThemeContext";
 export * from "./plugin";
 
 //===== Misc widgets

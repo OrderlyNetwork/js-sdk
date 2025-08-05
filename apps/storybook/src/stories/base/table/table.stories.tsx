@@ -69,19 +69,19 @@ export const Default: Story = {
             sub_account: true,
             // PERP_TIA_USDC: true,
           }}
-          // getRowCanExpand={() => true}
-          // expandRowRender={(row) => {
-          //   return (
-          //     <div>
-          //       <Badge>Top</Badge>
-          //     </div>
-          //   );
-          //   return (
-          //     <pre style={{ fontSize: "10px" }} className="oui-bg-base-8">
-          //       <code>{JSON.stringify(row.original, null, 2)}</code>
-          //     </pre>
-          //   );
-          // }}
+          getRowCanExpand={() => true}
+          expandRowRender={(row) => {
+            return (
+              <div>
+                <Badge>Top</Badge>
+              </div>
+            );
+            return (
+              <pre style={{ fontSize: "10px" }} className="oui-bg-base-8">
+                <code>{JSON.stringify(row.original, null, 2)}</code>
+              </pre>
+            );
+          }}
           getSubRows={(row) => row.children}
           bordered
           pagination={pagination}

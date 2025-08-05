@@ -1,3 +1,4 @@
+import { useEffect, useMemo, useState } from "react";
 import {
   CaretDownIcon,
   cn,
@@ -7,9 +8,8 @@ import {
   Text,
   SimpleDropdownMenu,
 } from "@orderly.network/ui";
-import { PNLInputState, PnLMode } from "./useBuilder.script";
 import { inputFormatter } from "@orderly.network/ui";
-import { useEffect, useMemo, useState } from "react";
+import { PNLInputState, PnLMode } from "./useBuilder.script";
 
 export type PNLInputProps = PNLInputState & {
   testIds?: {
@@ -34,12 +34,13 @@ export const PNLInput = (props: PNLInputProps) => {
     tips,
     onFocus,
     onBlur,
+    setFocus,
   } = props;
 
   const [prefix, setPrefix] = useState<string>(mode);
 
   const [placeholder, setPlaceholder] = useState<string>(
-    mode === PnLMode.PERCENTAGE ? "%" : quote
+    mode === PnLMode.PERCENTAGE ? "%" : quote,
   );
 
   useEffect(() => {
@@ -83,6 +84,7 @@ export const PNLInput = (props: PNLInputProps) => {
       onFocus={() => {
         setPrefix("");
         setPlaceholder("");
+        setFocus(true);
         onFocus();
       }}
       onBlur={() => {

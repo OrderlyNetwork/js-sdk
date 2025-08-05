@@ -6,8 +6,8 @@ import {
   useLocalStorage,
   useWalletConnector,
 } from "@orderly.network/hooks";
-import { useScreen } from "@orderly.network/ui";
 import { ChainNamespace } from "@orderly.network/types";
+import { useScreen } from "@orderly.network/ui";
 
 type DecodedData = {
   /** secret key */
@@ -30,7 +30,7 @@ export function useLinkDevice() {
   const { connectedChain, disconnect } = useWalletConnector();
   const [_, setLinkDeviceStorage] = useLocalStorage(
     "orderly_link_device",
-    {} as LinkDeviceStorage
+    {} as LinkDeviceStorage,
   );
 
   const { account } = useAccount();
@@ -71,7 +71,8 @@ export function useLinkDevice() {
 
     const url = new URL(window.location.href);
     url.searchParams.delete("link");
-    url.searchParams.append("utm_medium", "qrcode");
+    // use set instead of append, because the param possibly in the url
+    url.searchParams.set("utm_medium", "qrcode");
     const decodedUrl = decodeURIComponent(url.toString());
     history.replaceState(null, "", decodedUrl);
   };
@@ -92,7 +93,7 @@ export function useLinkDevice() {
       const res = await account.checkOrderlyKey(
         address!,
         orderlyKey!,
-        accountId!
+        accountId!,
       );
       if (res) {
         configStore.set("chainNamespace", chainNamespace);

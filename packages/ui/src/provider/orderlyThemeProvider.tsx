@@ -1,44 +1,17 @@
-import React, {
+import {
   ComponentType,
-  createContext,
+  FC,
   PropsWithChildren,
   useCallback,
-  useContext,
   useMemo,
 } from "react";
 import { ExtensionPosition } from "../plugin";
 import { ComponentsProvider } from "./componentProvider";
-
-type ComponentOverrides = {
-  tabs: {
-    variant: "text" | "contained";
-  };
-  chainSelector: {
-    /**
-     * show testnet chains list
-     * @default true
-     * */
-    showTestnet: boolean;
-  };
-  /** @hidden */
-  announcement: {
-    dataAdapter: (data: any[]) => any[];
-  };
-};
-
-type GetComponentTheme = <T extends keyof ComponentOverrides>(
-  component: T,
-  defaultValue?: ComponentOverrides[T],
-) => ComponentOverrides[T];
-
-export type OrderlyThemeContextState = {
-  // overrides?: Partial<ComponentOverrides>;
-  getComponentTheme: GetComponentTheme;
-};
-
-const OrderlyThemeContext = createContext<OrderlyThemeContextState>(
-  {} as OrderlyThemeContextState,
-);
+import {
+  ComponentOverrides,
+  OrderlyThemeContext,
+  OrderlyThemeContextState,
+} from "./orderlyThemeContext";
 
 export type OrderlyThemeProviderProps = {
   // dateFormatting?: string;
@@ -48,11 +21,7 @@ export type OrderlyThemeProviderProps = {
   overrides?: Partial<ComponentOverrides>;
 };
 
-export const useOrderlyTheme = () => {
-  return useContext(OrderlyThemeContext);
-};
-
-export const OrderlyThemeProvider: React.FC<
+export const OrderlyThemeProvider: FC<
   PropsWithChildren<OrderlyThemeProviderProps>
 > = (props) => {
   const { components, overrides, children } = props;

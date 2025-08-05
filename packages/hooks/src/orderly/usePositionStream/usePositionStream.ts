@@ -156,24 +156,44 @@ export const usePositionStream = (
       });
     }
 
-    // console.log("tpslOrders", tpslOrders);
-
     if (Array.isArray(tpslOrders) && tpslOrders.length) {
       rows = rows.map((item) => {
-        const related_order = findPositionTPSLFromOrders(
-          tpslOrders,
-          item.symbol,
-        );
+        const { fullPositionOrder, partialPositionOrders } =
+          findPositionTPSLFromOrders(tpslOrders, item.symbol);
 
-        const tp_sl_pricer = !!related_order
-          ? findTPSLFromOrder(related_order)
+        const full_tp_sl = fullPositionOrder
+          ? findTPSLFromOrder(fullPositionOrder)
           : undefined;
+
+        const partialPossitionOrder =
+          partialPositionOrders && partialPositionOrders.length
+            ? partialPositionOrders[0]
+            : undefined;
+        const partial_tp_sl = partialPossitionOrder
+          ? findTPSLFromOrder(partialPossitionOrder)
+          : undefined;
+
+        // const tp_sl_pricer = !!related_order
+        //   ? findTPSLFromOrder(related_order)
+        //   : undefined;
 
         return {
           ...item,
-          tp_trigger_price: tp_sl_pricer?.tp_trigger_price,
-          sl_trigger_price: tp_sl_pricer?.sl_trigger_price,
-          algo_order: related_order,
+          // tp_trigger_price: tp_sl_pricer?.tp_trigger_price,
+          // sl_trigger_price: tp_sl_pricer?.sl_trigger_price,
+          // algo_order: related_order,
+          full_tp_sl: {
+            tp_trigger_price: full_tp_sl?.tp_trigger_price,
+            sl_trigger_price: full_tp_sl?.sl_trigger_price,
+            algo_order: fullPositionOrder,
+          },
+          partial_tp_sl: {
+            order_num: partialPositionOrders?.length ?? 0,
+            tp_trigger_price: partial_tp_sl?.tp_trigger_price,
+            sl_trigger_price: partial_tp_sl?.sl_trigger_price,
+            algo_order: partialPossitionOrder,
+            // algo_order: partialPositionOrders,
+          },
         };
       });
     }

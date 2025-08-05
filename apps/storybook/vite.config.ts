@@ -39,6 +39,7 @@ function getOptimizeDepsConfig() {
 export default defineConfig({
   server: {
     open: true,
+    host: true,
     watch: {
       // storybook has own watch config, need to use viteFinal to override this in main.ts
       ignored: getWatchIgnores(),

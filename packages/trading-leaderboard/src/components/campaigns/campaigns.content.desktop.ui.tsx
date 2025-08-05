@@ -84,6 +84,15 @@ export const CampaignsContentDesktopUI: FC<{
     return campaign.start_time < new Date().toISOString();
   }, [campaign]);
 
+  const highlightPool = useMemo(() => {
+    if (!campaign?.highlight_pool_id) {
+      return null;
+    }
+    return campaign?.prize_pools?.find(
+      (pool) => pool.pool_id === campaign.highlight_pool_id,
+    );
+  }, [campaign]);
+
   const tooltipContent = useMemo(() => {
     if (!campaign?.prize_pools) {
       return null;
@@ -272,7 +281,7 @@ export const CampaignsContentDesktopUI: FC<{
                 </Text.gradient>
               </div>
             </div>
-            {ticketPrizePool && (
+            {(ticketPrizePool || highlightPool) && (
               <div className="oui-flex oui-flex-col">
                 <div className="oui-flex oui-items-center oui-gap-1">
                   <Text
@@ -281,7 +290,7 @@ export const CampaignsContentDesktopUI: FC<{
                     className="oui-text-base-contrast-54"
                   >
                     {/* {t("tradingLeaderboard.ticketPrizePool")} */}
-                    {"Raffle prize"}
+                    {highlightPool?.label || "Raffle prize"}
                   </Text>
                 </div>
                 <div>
@@ -296,8 +305,12 @@ export const CampaignsContentDesktopUI: FC<{
                     ])}
                   >
                     {formatPrizeAmount(
-                      ticketPrizePool.amount,
-                      ticketPrizePool.currency,
+                      ticketPrizePool?.amount ||
+                        highlightPool?.total_prize ||
+                        0,
+                      ticketPrizePool?.currency ||
+                        highlightPool?.currency ||
+                        "USDC",
                     )}
                   </Text.gradient>
                 </div>

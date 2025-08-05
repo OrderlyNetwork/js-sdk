@@ -18,6 +18,7 @@ type Props = {
   onTransfer?: () => void;
   isMainAccount?: boolean;
   routerAdapter?: RouterAdapter;
+  hasSubAccount?: boolean;
 };
 
 export const PortfolioHandleMobile: FC<Props> = (props) => {
@@ -37,38 +38,23 @@ export const PortfolioHandleMobile: FC<Props> = (props) => {
       height={"71px"}
       className="oui-gap-3 oui-bg-transparent"
     >
-      {props.isMainAccount ? (
-        <>
-          <Flex
-            direction="column"
-            gapY={2}
-            itemAlign={"center"}
-            className="oui-flex-1 oui-cursor-pointer"
-            onClick={props?.onWithdraw}
-          >
-            <div className="oui-flex oui-size-[48px] oui-items-center oui-justify-center oui-rounded-xl oui-bg-base-9">
-              <ArrowUpSquareFillIcon size={28} color="white" opacity={1} />
-            </div>
-            <Text className="oui-text-base-80 oui-text-2xs">
-              {t("common.withdraw")}
-            </Text>
-          </Flex>
-          <Flex
-            direction="column"
-            gapY={2}
-            itemAlign={"center"}
-            className="oui-flex-1 oui-cursor-pointer"
-            onClick={props?.onDeposit}
-          >
-            <div className="oui-flex oui-size-[48px] oui-items-center oui-justify-center oui-rounded-xl oui-bg-base-9">
-              <ArrowDownSquareFillIcon size={28} color="white" opacity={1} />
-            </div>
-            <Text className="oui-text-base-80 oui-text-2xs">
-              {t("common.deposit")}
-            </Text>
-          </Flex>
-        </>
-      ) : (
+      {props.isMainAccount && (
+        <Flex
+          direction="column"
+          gapY={2}
+          itemAlign={"center"}
+          className="oui-flex-1 oui-cursor-pointer"
+          onClick={props?.onDeposit}
+        >
+          <div className="oui-flex oui-size-[48px] oui-items-center oui-justify-center oui-rounded-xl oui-bg-base-9">
+            <ArrowDownSquareFillIcon size={28} color="white" opacity={1} />
+          </div>
+          <Text className="oui-text-base-80 oui-text-2xs">
+            {t("common.deposit")}
+          </Text>
+        </Flex>
+      )}
+      {props.hasSubAccount && (
         <Flex
           direction="column"
           gapY={2}
@@ -81,6 +67,22 @@ export const PortfolioHandleMobile: FC<Props> = (props) => {
           </div>
           <Text className="oui-text-base-80 oui-text-2xs">
             {t("common.transfer")}
+          </Text>
+        </Flex>
+      )}
+      {props.isMainAccount && (
+        <Flex
+          direction="column"
+          gapY={2}
+          itemAlign={"center"}
+          className="oui-flex-1 oui-cursor-pointer"
+          onClick={props?.onWithdraw}
+        >
+          <div className="oui-flex oui-size-[48px] oui-items-center oui-justify-center oui-rounded-xl oui-bg-base-9">
+            <ArrowUpSquareFillIcon size={28} color="white" opacity={1} />
+          </div>
+          <Text className="oui-text-base-80 oui-text-2xs">
+            {t("common.withdraw")}
           </Text>
         </Flex>
       )}

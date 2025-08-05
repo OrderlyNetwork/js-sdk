@@ -26,6 +26,7 @@ const OrderlyAppProvider: React.FC<OrderlyAppProviderProps> = (props) => {
     appIcons,
     onChainChanged,
     defaultChain,
+    widgetConfigs,
     ...configProps
   } = props;
 
@@ -47,6 +48,7 @@ const OrderlyAppProvider: React.FC<OrderlyAppProviderProps> = (props) => {
             defaultChain={defaultChain}
             restrictedInfo={props.restrictedInfo}
             onRouteChange={props.onRouteChange}
+            widgetConfigs={widgetConfigs}
           >
             <UILocaleProvider locale={uiLocale}>
               <TooltipProvider delayDuration={300}>

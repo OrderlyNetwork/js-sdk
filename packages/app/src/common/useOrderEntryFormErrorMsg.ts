@@ -35,12 +35,28 @@ export function useOrderEntryFormErrorMsg(
         max: t("orderEntry.triggerPrice.error.max", { value }),
       },
       tp_trigger_price: {
+        required: t("tpsl.validate.tpTriggerPrice.error.required"),
         min: t("orderEntry.tpTriggerPrice.error.min", { value }),
         max: t("orderEntry.tpTriggerPrice.error.max", { value }),
+        priceErrorMin: t("tpsl.validate.tpTriggerPrice.error.priceErrorMin"),
+        priceErrorMax: t("tpsl.validate.tpTriggerPrice.error.priceErrorMax"),
       },
       sl_trigger_price: {
+        required: t("tpsl.validate.slTriggerPrice.error.required"),
         min: t("orderEntry.slTriggerPrice.error.min", { value }),
         max: t("orderEntry.slTriggerPrice.error.max", { value }),
+        priceErrorMin: t("tpsl.validate.slTriggerPrice.error.priceErrorMin"),
+        priceErrorMax: t("tpsl.validate.slTriggerPrice.error.priceErrorMax"),
+      },
+      tp_order_price: {
+        required: t("tpsl.validate.tpOrderPrice.error.required"),
+        min: t("tpsl.validate.tpOrderPrice.error.min", { value }),
+        max: t("tpsl.validate.tpOrderPrice.error.max", { value }),
+      },
+      sl_order_price: {
+        required: t("tpsl.validate.slOrderPrice.error.required"),
+        min: t("tpsl.validate.slOrderPrice.error.min", { value }),
+        max: t("tpsl.validate.slOrderPrice.error.max", { value }),
       },
       total: {
         min: t("orderEntry.total.error.min", { value }),

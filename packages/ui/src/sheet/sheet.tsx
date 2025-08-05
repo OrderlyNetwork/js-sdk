@@ -52,6 +52,7 @@ export interface SheetContentProps
   closeableSize?: number;
   closeOpacity?: number;
   closeClassName?: string;
+  overlayClassName?: string;
 }
 
 const SheetContent = React.forwardRef<
@@ -65,13 +66,14 @@ const SheetContent = React.forwardRef<
       closeableSize = 16,
       closeOpacity = 0.98,
       className,
+      overlayClassName,
       children,
       ...props
     },
     ref,
   ) => (
     <SheetPortal>
-      <SheetOverlay />
+      <SheetOverlay className={overlayClassName} />
       <SheetPrimitive.Content
         ref={ref}
         className={cnBase(sheetVariants({ side }), className)}

@@ -60,6 +60,8 @@ export const common = {
   "common.markPrice": "Mark price",
   "common.limitPrice": "Limit price",
   "common.marketPrice": "Market",
+  "common.market": "Market",
+  "common.limit": "Limit",
 
   "common.unrealizedPnl": "Unrealized PnL",
   "common.realizedPnl": "Realized PnL",
@@ -99,4 +101,9 @@ export const common = {
   "common.web3Wallet": "Web3 wallet",
   "common.txId": "TxID",
   "common.result": "Result",
+  "common.orderQty": "Order Qty.",
+  "common.positionQty": "Position Qty.",
+  "common.estTotal": "Est. Total",
+  "common.fullTPSL": "Full TP/SL",
+  "common.partialTPSL": "Partial TP/SL",
 };

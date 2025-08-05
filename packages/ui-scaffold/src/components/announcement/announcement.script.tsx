@@ -6,13 +6,14 @@ import {
   MaintenanceStatus,
   useLocalStorage,
   useMaintenanceStatus,
+  useOrderlyContext,
   useQuery,
   useWS,
 } from "@orderly.network/hooks";
-import { i18n, useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext } from "@orderly.network/react-app";
 import { AnnouncementType, API, WSMessage } from "@orderly.network/types";
-import { useObserverElement, useOrderlyTheme } from "@orderly.network/ui";
+import { useObserverElement } from "@orderly.network/ui";
 import { getTimestamp } from "@orderly.network/utils";
 
 const oneDay = 1000 * 60 * 60 * 24;
@@ -50,18 +51,16 @@ export const useAnnouncementScript = (options?: AnnouncementScriptOptions) => {
   const [isAnimating, setIsAnimating] = useState(false);
 
   const { showAnnouncement, setShowAnnouncement } = useAppContext();
+  const { dataAdapter } = useOrderlyContext();
 
   const { tips: _tips, maintenanceDialogInfo } = useAnnouncementData();
 
-  const { getComponentTheme } = useOrderlyTheme();
-
   const tips = useMemo(() => {
-    const { dataAdapter } = getComponentTheme?.("announcement") || {};
-    if (typeof dataAdapter === "function") {
-      return dataAdapter(_tips.rows || []);
+    if (typeof dataAdapter?.announcementList === "function") {
+      return dataAdapter.announcementList(_tips.rows || []);
     }
     return _tips.rows || [];
-  }, [_tips]);
+  }, [_tips, dataAdapter]);
 
   const [announcementStore, setStore] = useLocalStorage<AnnouncementStore>(
     ORDERLY_ANNOUNCEMENT_KEY,
