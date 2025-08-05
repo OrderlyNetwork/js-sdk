@@ -50,3 +50,11 @@ const useMarketStore = create<MarketStore & { actions: MarketActions }>(
 );
 
 export { useMarketStore };
+
+export const useMarketList = () => {
+  return useMarketStore((state) => state.market);
+};
+
+export const useMarketMap = () => {
+  return useMarketStore((state) => state.marketMap);
+};
