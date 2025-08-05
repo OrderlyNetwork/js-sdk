@@ -164,7 +164,7 @@ export const AddIcon = (props: { positionType: PositionType }) => {
   return (
     <Text
       className={cn(
-        "oui-text-base-contrast-36 hover:oui-text-base-contrast oui-cursor-pointer",
+        "oui-text-base-contrast oui-cursor-pointer",
         isMobile && "oui-text-base-contrast-80",
       )}
       onClick={onAdd}

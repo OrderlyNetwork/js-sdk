@@ -91,7 +91,7 @@ export const TPSLInputRowUI = (props: Props) => {
           <Text className="oui-text-2xs oui-text-base-contrast-54">
             {t("tpsl.advanced.triggerPrice")}
           </Text>
-          <Grid cols={2} gap={2}>
+          <Grid cols={2} gap={2} className="oui-px-0.5">
             <PriceInput
               type={`${props.type} price`}
               value={values.trigger_price}
