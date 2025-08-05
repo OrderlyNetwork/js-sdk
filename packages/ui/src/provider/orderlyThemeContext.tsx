@@ -11,10 +11,6 @@ export type ComponentOverrides = {
      * */
     showTestnet: boolean;
   };
-  /** @hidden */
-  announcement: {
-    dataAdapter: (data: any[]) => any[];
-  };
 };
 
 type GetComponentTheme = <T extends keyof ComponentOverrides>(
