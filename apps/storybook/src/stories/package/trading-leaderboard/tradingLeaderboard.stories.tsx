@@ -160,7 +160,7 @@ export const Page: Story = {
 
 export const LayoutPage: Story = {
   render: (args) => {
-    const [campaignId, setCampaignId] = useState("116");
+    const [campaignId, setCampaignId] = useState("120");
 
     const { dataAdapter } = useCustomRanking();
 
