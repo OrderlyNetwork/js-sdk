@@ -154,7 +154,7 @@ export const CampaignsAxisMobile: FC<CampaignsAxisProps> = ({ points }) => {
                 <div className="oui-trading-leaderboard-title oui-mb-1 oui-text-sm oui-font-medium oui-text-base-contrast-54">
                   {point.title}
                 </div>
-                <div className="oui-min-w-[138px] oui-text-xs oui-text-base-contrast-36">
+                <div className="oui-min-w-[160px] oui-text-xs oui-text-base-contrast-36">
                   {point.type !== "active" && point.time}
                 </div>
               </div>
