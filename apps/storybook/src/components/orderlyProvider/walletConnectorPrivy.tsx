@@ -42,7 +42,13 @@ const wallets = [
     onWalletNotFound: mobileWalletNotFoundHanlder,
   }),
 ];
-export const WalletConnectorPrivy: FC<{ children: ReactNode }> = (props) => {
+
+type WalletConnectorPrivyProps = {
+  children: ReactNode;
+  usePrivy?: boolean;
+};
+
+export const WalletConnectorPrivy: FC<WalletConnectorPrivyProps> = (props) => {
   return (
     <WalletConnectorPrivyProvider
       termsOfUse="https://learn.woo.org/legal/terms-of-use"
@@ -51,16 +57,20 @@ export const WalletConnectorPrivy: FC<{ children: ReactNode }> = (props) => {
         mobile: <CustomProductNav />,
       }}
       // customChains={customChainsAbstarct}
-      privyConfig={{
-        appid: "cm50h5kjc011111gdn7i8cd2k",
-        config: {
-          appearance: {
-            theme: "dark",
-            accentColor: "#181C23",
-            logo: "/orderly-logo.svg",
-          },
-        },
-      }}
+      privyConfig={
+        props.usePrivy
+          ? {
+              appid: "cm50h5kjc011111gdn7i8cd2k",
+              config: {
+                appearance: {
+                  theme: "dark",
+                  accentColor: "#181C23",
+                  logo: "/orderly-logo.svg",
+                },
+              },
+            }
+          : undefined
+      }
       enableSwapDeposit={true}
       wagmiConfig={{
         connectors: [

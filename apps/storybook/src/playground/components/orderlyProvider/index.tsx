@@ -12,12 +12,12 @@ export const OrderlyProvider = () => {
   const { onRouteChange } = useNav();
   usePageTitle();
   useTheme();
-  const { networkId, brokerId, brokerName, env } = useEnvFormUrl();
+  const { networkId, brokerId, brokerName, env, usePrivy } = useEnvFormUrl();
 
   return (
     <RouteProvider onRouteChange={onRouteChange}>
       <LocaleProvider>
-        <WalletConnectorProvider>
+        <WalletConnectorProvider usePrivy={usePrivy}>
           <OrderlyAppProvider
             networkId={networkId}
             brokerId={brokerId}
