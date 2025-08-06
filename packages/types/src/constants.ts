@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 export enum AccountStatusEnum {
   EnableTradingWithoutConnected = -1,
   NotConnected = 0,
