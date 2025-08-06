@@ -5,6 +5,7 @@ import {
   useMutation,
   useAccount,
 } from "@orderly.network/hooks";
+import { AccountStatusEnum } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
 import { useTradingLeaderboardContext } from "../provider";
 import {
@@ -83,15 +84,20 @@ export const useCampaignsScript = () => {
   }, [userCampaigns, currentCampaignId]);
 
   const shouldShowJoinButton = useMemo(() => {
-    return !!state.address && !isCampaignEnded;
-  }, [state.address, isCampaignEnded]);
+    // return false;
+    return !!state.address && !isCampaignEnded && !isParticipated;
+  }, [state.address, isCampaignEnded, isParticipated]);
 
   const [doJoinCampaign, { isMutating: isJoining, error: joinError }] =
-    useMutation(`https://api.orderly.org/v1/client/campaign/sign_up`, "POST");
+    useMutation(`/v1/client/campaign/sign_up`, "POST");
 
   const joinCampaign = useCallback(
     async (data: { campaign_id: string | number }) => {
       try {
+        if (state.status < AccountStatusEnum.EnableTrading) {
+          toast.error("Please complete your account sign-up to join.");
+          return;
+        }
         // console.log("data", data);
         const result = await doJoinCampaign(data);
         // console.log("result", result);
@@ -109,7 +115,7 @@ export const useCampaignsScript = () => {
         throw error;
       }
     },
-    [doJoinCampaign, refreshUserCampaigns],
+    [doJoinCampaign, refreshUserCampaigns, state.status],
   );
 
   const statistics = {

@@ -7,6 +7,7 @@ export const tradingLeaderboard = {
   "tradingLeaderboard.future": "Future",
   "tradingLeaderboard.learnMore": "Learn more",
   "tradingLeaderboard.tradeNow": "Trade now",
+  "tradingLeaderboard.joinNow": "Join now",
   "tradingLeaderboard.tradingVolume": "Trading volume",
   "tradingLeaderboard.realizedPnl": "Realized PnL",
   "tradingLeaderboard.rank": "Rank",

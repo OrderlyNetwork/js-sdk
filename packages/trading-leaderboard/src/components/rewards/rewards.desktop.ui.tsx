@@ -243,10 +243,10 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
             disabled={isJoining}
             className={cn([isMobile ? "oui-flex-1" : "oui-w-[140px]"])}
             onClick={() =>
-              joinCampaign?.({ campaign_id: campaign?.campaign_id as string })
+              joinCampaign?.({ campaign_id: Number(campaign?.campaign_id) })
             }
           >
-            Join now
+            {t("tradingLeaderboard.joinNow")}
           </Button>
         )}
         {!shouldShowJoinButton && canTrade && (

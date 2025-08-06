@@ -80,6 +80,12 @@ export const CampaignsContentDesktopUI: FC<{
     );
   }, [campaign]);
 
+  const showTradeButton = useMemo(() => {
+    return (
+      !shouldShowJoinButton && new Date().toISOString() < campaign.end_time
+    );
+  }, [shouldShowJoinButton, campaign.end_time]);
+
   const isCampaignStarted = useMemo(() => {
     return campaign.start_time < new Date().toISOString();
   }, [campaign]);
@@ -360,21 +366,24 @@ export const CampaignsContentDesktopUI: FC<{
                 disabled={isJoining}
                 onClick={async () => {
                   try {
-                    await joinCampaign?.({ campaign_id: campaign.campaign_id });
+                    await joinCampaign?.({
+                      campaign_id: Number(campaign.campaign_id),
+                    });
                   } catch (error) {
                     console.error("Failed to join campaign:", error);
                   }
                 }}
               >
-                Join now
+                {t("tradingLeaderboard.joinNow")}
               </Button>
             )}
-            {!shouldShowJoinButton && canTrade && (
+            {showTradeButton && (
               <Button
                 size={isMobile ? "sm" : "md"}
-                variant="gradient"
+                variant={canTrade ? "gradient" : "contained"}
                 color="primary"
                 className="oui-flex-1"
+                disabled={!canTrade}
                 onClick={onTradeNow}
               >
                 {campaign?.trading_config?.format ||
