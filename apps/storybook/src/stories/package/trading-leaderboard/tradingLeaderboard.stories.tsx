@@ -92,7 +92,7 @@ export function getCampaigns() {
     {
       campaign_id: "120",
       title: "RECRUIT & REIGN",
-      description: "Invite & Trade to Win",
+      description: "Invite & trade to win",
       image: "/leaderboard/campaign_120.png",
       start_time: new Date("2025-08-07 10:00:00 UTC").toISOString(),
       end_time: new Date("2025-08-17 23:59:59 UTC").toISOString(),
@@ -101,14 +101,14 @@ export function getCampaigns() {
       prize_pools: [
         {
           pool_id: "invite_win",
-          label: "Invite to Win",
+          label: "Invite to win",
           total_prize: 2250,
           currency: "USDC",
           metric: "volume",
         },
         {
           pool_id: "welcome_bonus",
-          label: "Welcome Bonus",
+          label: "Welcome bonus",
           total_prize: 3750,
           currency: "USDC",
           metric: "volume",

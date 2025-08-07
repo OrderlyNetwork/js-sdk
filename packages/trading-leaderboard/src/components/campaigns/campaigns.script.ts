@@ -78,6 +78,12 @@ export const useCampaignsScript = () => {
         : null,
     );
 
+  const accountStatus = useMemo(() => {
+    return state.status === AccountStatusEnum.EnableTradingWithoutConnected
+      ? AccountStatusEnum.EnableTradingWithoutConnected
+      : AccountStatusEnum.EnableTrading;
+  }, [state.status]);
+
   const isParticipated = useMemo(() => {
     const target = userCampaigns?.find((item) => item.id == currentCampaignId);
     return !!target;
@@ -95,7 +101,7 @@ export const useCampaignsScript = () => {
     async (data: { campaign_id: string | number }) => {
       try {
         if (state.status < AccountStatusEnum.EnableTrading) {
-          toast.error("Please complete your account sign-up to join.");
+          toast.error("Please enable trading to proceed.");
           return;
         }
         // console.log("data", data);
@@ -166,5 +172,6 @@ export const useCampaignsScript = () => {
     shouldShowJoinButton,
     joinError,
     canTrade,
+    accountStatus,
   };
 };

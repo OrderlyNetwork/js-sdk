@@ -191,7 +191,7 @@ export const DescriptionContent: FC<{
             >
               {renderContentItem(content)}
               {content?.children?.length && (
-                <div className="oui-mt-2">
+                <div className="oui-mt-2 oui-text-sm oui-text-base-contrast-36">
                   {renderContent(content.children, level + 1)}
                 </div>
               )}
