@@ -19,12 +19,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "peerDependencies": {
-    "react": ">=18",
-    "react-dom": ">=18"
-  },
   "dependencies": {
     "@orderly.network/hooks": "workspace:*",
+    "@orderly.network/types": "workspace:*",
     "@orderly.network/utils": "workspace:*",
     "class-variance-authority": "^0.6.1",
     "embla-carousel-react": "^8.2.0",
@@ -58,6 +55,10 @@
     "tsup": "^7.1.0",
     "typedoc": "^0.26.5",
     "typescript": "^5.1.6"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
   },
   "publishConfig": {
     "access": "public"

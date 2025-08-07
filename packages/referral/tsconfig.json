@@ -10,6 +10,9 @@
       ],
       "@orderly.network/utils": [
         "../utils/src"
+      ],
+      "@orderly.network/types": [
+        "../types/src"
       ]
     },
   }
