@@ -75,7 +75,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
     }
 
     return (
-      <>
+      <Box className="oui-px-0.5">
         <TPSLQuantity
           maxQty={props.maxQty}
           quantity={(props.orderQuantity ?? props.maxQty) as number}
@@ -87,7 +87,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
           isPosition={isPosition}
           errorMsg={parseErrorMsg("quantity")}
         />
-      </>
+      </Box>
     );
   };
 
