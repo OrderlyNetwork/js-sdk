@@ -19,7 +19,10 @@ import {
   type SignatureDomain,
   type WithdrawInputs,
 } from "@orderly.network/core";
-import { LedgerWalletKey } from "@orderly.network/types";
+import {
+  DEFAUL_ORDERLY_KEY_SCOPE,
+  LedgerWalletKey,
+} from "@orderly.network/types";
 import {
   DVN_PROGRAM_ID,
   ENDPOINT_PROGRAM_ID,
@@ -76,7 +79,7 @@ export function addOrderlyKeyMessage(
     brokerId: brokerId,
     chainType: "SOL",
     orderlyKey: publicKey,
-    scope: scope || "read,trading,asset",
+    scope: scope || DEFAUL_ORDERLY_KEY_SCOPE,
     chainId,
     timestamp,
     expiration: timestamp + 1000 * 60 * 60 * 24 * expiration,
