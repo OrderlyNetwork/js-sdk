@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import useSWRMutation, { type SWRMutationConfiguration } from "swr/mutation";
 import {
   type MessageFactor,
@@ -6,6 +5,7 @@ import {
 } from "@orderly.network/core";
 import { mutate } from "@orderly.network/net";
 import { getTimestamp } from "@orderly.network/utils";
+import { useMemoizedFn } from "..";
 import { useAccountInstance } from "../useAccountInstance";
 import { useConfig } from "../useConfig";
 
@@ -87,57 +87,46 @@ export const useSubAccountMutation = <T, E>(
     restOptions,
   );
 
-  const mutation = useCallback(
-    async (
-      /**
-       * The data to send with the request.
-       */
-      data: Record<string, any> | null,
-      /**
-       * The query parameters to send with the request.
-       */
-      params?: Record<string, any>,
-      options?: SubAccountMutationOptions<T, E>,
-    ): Promise<any> => {
-      const { accountId: _accountId, ...restOptions } = options || ({} as any);
-      let newUrl = url;
-      if (typeof params === "object" && Object.keys(params).length) {
-        const search = new URLSearchParams(params);
-        newUrl = `${url}?${search.toString()}`;
-      }
+  const mutation = async (
+    /**
+     * The data to send with the request.
+     */
+    data: Record<string, any> | null,
+    /**
+     * The query parameters to send with the request.
+     */
+    params?: Record<string, any>,
+    options?: SubAccountMutationOptions<T, E>,
+  ): Promise<any> => {
+    const { accountId: _accountId, ...restOptions } = options || ({} as any);
+    let newUrl = url;
+    if (typeof params === "object" && Object.keys(params).length) {
+      const search = new URLSearchParams(params);
+      newUrl = `${url}?${search.toString()}`;
+    }
 
-      const payload: MessageFactor = {
-        method,
-        url: newUrl,
-        data,
-      };
-
-      const signer = account.signer;
-      const signature = await signer.sign(payload, getTimestamp());
-
-      return trigger(
-        {
-          data,
-          params,
-          method,
-          signature: {
-            ...signature,
-            "orderly-account-id": accountId || _accountId || account.accountId,
-          },
-        },
-        restOptions,
-      );
-    },
-    [trigger, account, accountId],
-  );
-
-  return [
-    mutation,
-    {
+    const payload: MessageFactor = {
+      method,
+      url: newUrl,
       data,
-      error,
-      reset,
-      isMutating,
-    },
-  ] as const;
+    };
+
+    const signer = account.signer;
+    const signature = await signer.sign(payload, getTimestamp());
+
+    return trigger(
+      {
+        data,
+        params,
+        method,
+        signature: {
+          ...signature,
+          "orderly-account-id": accountId || _accountId || account.accountId,
+        },
+      },
+      restOptions,
+    );
+  };
+
+  return [useMemoizedFn(mutation), { data, error, reset, isMutating }] as const;
 };

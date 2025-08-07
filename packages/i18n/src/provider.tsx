@@ -1,4 +1,11 @@
-import { FC, ReactNode, useEffect, useRef, useState } from "react";
+import {
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { I18nextProvider, type I18nextProviderProps } from "react-i18next";
 import { Backend, BackendOptions } from "./backend";
 import { defaultLanguages, defaultNS } from "./constant";
@@ -9,7 +16,7 @@ import { parseI18nLang } from "./utils";
 
 export type I18nProviderProps = Partial<I18nextProviderProps>;
 
-export const I18nProvider: FC<I18nProviderProps> = (props) => {
+export const I18nProvider: React.FC<I18nProviderProps> = (props) => {
   const { children, ...rest } = props;
   return (
     // @ts-ignore
@@ -35,10 +42,24 @@ export type LocaleProviderProps = {
   backend?: BackendOptions;
 } & Partial<LocaleContextState>;
 
-export const LocaleProvider: FC<LocaleProviderProps> = (props) => {
-  const { locale, resource, resources, convertDetectedLanguage } = props;
+export const LocaleProvider: React.FC<LocaleProviderProps> = (props) => {
+  const {
+    children,
+    locale,
+    resource,
+    resources,
+    backend,
+    popup,
+    supportedLanguages,
+    onLanguageChanged,
+    convertDetectedLanguage,
+    onLanguageBeforeChanged,
+    onLocaleChange,
+  } = props;
+
   const [languages, setLanguages] = useState<Language[]>(defaultLanguages);
-  const backend = useRef(new Backend(props.backend!));
+
+  const backendRef = useRef(new Backend(backend!));
 
   useEffect(() => {
     // init with resources
@@ -65,16 +86,16 @@ export const LocaleProvider: FC<LocaleProviderProps> = (props) => {
   useEffect(() => {
     if (Array.isArray(props.languages)) {
       setLanguages(props.languages);
-    } else if (Array.isArray(props.supportedLanguages)) {
+    } else if (Array.isArray(supportedLanguages)) {
       setLanguages(
-        props.supportedLanguages
+        supportedLanguages
           .map((localCode) =>
             defaultLanguages.find((l) => l.localCode === localCode),
           )
           .filter((item) => !!item),
       );
     }
-  }, [props.supportedLanguages, props.languages]);
+  }, [supportedLanguages, props.languages]);
 
   useEffect(() => {
     // init language when refresh page
@@ -83,7 +104,7 @@ export const LocaleProvider: FC<LocaleProviderProps> = (props) => {
         typeof convertDetectedLanguage === "function"
           ? convertDetectedLanguage(i18n.language)
           : parseI18nLang(i18n.language);
-      await backend.current.loadLanguage(lang, defaultNS);
+      await backendRef.current.loadLanguage(lang, defaultNS);
       // if browser language is not a valid language, change language
       if (lang !== i18n.language) {
         await i18n.changeLanguage(lang);
@@ -93,29 +114,36 @@ export const LocaleProvider: FC<LocaleProviderProps> = (props) => {
     initLanguage();
   }, [i18n.language]);
 
-  const onLanguageBeforeChanged = async (lang: LocaleCode) => {
-    await props.onLanguageBeforeChanged?.(lang);
-    // load language when language before changed
-    await backend.current.loadLanguage(lang, defaultNS);
-  };
+  const languageBeforeChangedHandle = useCallback(
+    async (lang: LocaleCode) => {
+      await onLanguageBeforeChanged?.(lang);
+      // load language when language before changed
+      await backendRef.current.loadLanguage(lang, defaultNS);
+    },
+    [onLanguageBeforeChanged],
+  );
 
-  const onLanguageChanged = async (lang: LocaleCode) => {
-    props.onLanguageChanged?.(lang);
-    props.onLocaleChange?.(lang);
-  };
+  const languageChangedHandle = useCallback(
+    async (lang: LocaleCode) => {
+      onLanguageChanged?.(lang);
+      onLocaleChange?.(lang);
+    },
+    [onLanguageChanged, onLocaleChange],
+  );
+
+  const memoizedValue = useMemo<LocaleContextState>(() => {
+    return {
+      popup: popup,
+      languages: languages,
+      onLanguageBeforeChanged: languageBeforeChangedHandle,
+      onLanguageChanged: languageChangedHandle,
+    };
+  }, [popup, languages, languageBeforeChangedHandle, languageChangedHandle]);
 
   return (
-    <LocaleContext.Provider
-      value={{
-        languages,
-        onLanguageBeforeChanged,
-        onLanguageChanged,
-        popup: props.popup,
-      }}
-    >
-      {/* @ts-ignore */}
+    <LocaleContext.Provider value={memoizedValue}>
       <I18nextProvider i18n={i18n} defaultNS={defaultNS}>
-        {props.children}
+        {children}
       </I18nextProvider>
     </LocaleContext.Provider>
   );

@@ -62,6 +62,18 @@ interface AssetValueListProps {
   currentLtv?: string | number;
 }
 
+const calculateTextColor = (val: number): string => {
+  if (val >= 0 && val < 50) {
+    return "oui-text-success";
+  } else if (val >= 50 && val < 80) {
+    return "oui-text-warning";
+  } else if (val >= 80) {
+    return "oui-text-danger";
+  } else {
+    return "";
+  }
+};
+
 const useCurrentStatusText = (): StatusInfo => {
   const { state } = useAccount();
   const { wrongNetwork, disabledConnect } = useAppContext();
@@ -80,17 +92,17 @@ const useCurrentStatusText = (): StatusInfo => {
         titleClsName:
           "oui-text-transparent oui-bg-clip-text oui-gradient-brand",
       },
-      notSignedIn: {
+      createAccount: {
         title: t("connector.createAccount"),
         description: t("connector.trade.createAccount.tooltip"),
         titleColor: "primary",
       },
-      disabledTrading: {
+      enableTrading: {
         title: t("connector.enableTrading"),
         description: t("connector.trade.enableTrading.tooltip"),
         titleColor: "primary",
       },
-      default: {
+      empty: {
         title: "",
         description: "",
       },
@@ -104,17 +116,25 @@ const useCurrentStatusText = (): StatusInfo => {
       return statusText.wrongNetwork;
     }
 
-    switch (state.status) {
-      case AccountStatusEnum.NotConnected:
-        return statusText.connectWallet;
-      case AccountStatusEnum.NotSignedIn:
-        return statusText.notSignedIn;
-      case AccountStatusEnum.DisabledTrading:
-        return statusText.disabledTrading;
-      default:
-        return statusText.default;
+    // EnableTradingWithoutConnected is enabled trading status, so we don't need to show anything
+    if (state.status === AccountStatusEnum.EnableTradingWithoutConnected) {
+      return statusText.empty;
     }
-  }, [state.status, wrongNetwork, t]);
+
+    if (state.status <= AccountStatusEnum.NotConnected) {
+      return statusText.connectWallet;
+    }
+
+    if (state.status <= AccountStatusEnum.NotSignedIn) {
+      return statusText.createAccount;
+    }
+
+    if (state.status < AccountStatusEnum.EnableTrading) {
+      return statusText.enableTrading;
+    }
+
+    return statusText.empty;
+  }, [t, state.status, wrongNetwork, disabledConnect]);
 };
 
 export const TooltipContent: FC<TooltipContentProps> = (props) => {
@@ -231,7 +251,13 @@ const LTVDetail: FC<Pick<AssetDetailProps, "value" | "visible">> = (props) => {
           {t("transfer.LTV")}
         </Text>
       </Tooltip>
-      <Text size="2xs" className="select-none">
+      <Text
+        size="2xs"
+        className={cn(
+          "select-none",
+          visible && calculateTextColor(Number(value)),
+        )}
+      >
         {visible ? `${value}%` : "*****"}
       </Text>
     </Flex>
@@ -370,34 +396,35 @@ export const AssetView: FC<
     </Button>
   );
 
-  const depositAndWithdrawButton = isMainAccount && (
-    <>
-      <Button
-        fullWidth
-        color="secondary"
-        size="md"
-        onClick={onWithdraw}
-        data-testid="oui-testid-assetView-withdraw-button"
-      >
-        {!hasSubAccount && (
-          <ArrowDownShortIcon
-            color="white"
-            opacity={1}
-            className="oui-rotate-180"
-          />
-        )}
-        <Text>{t("common.withdraw")}</Text>
-      </Button>
-      <Button
-        data-testid="oui-testid-assetView-deposit-button"
-        fullWidth
-        size="md"
-        onClick={onDeposit}
-      >
-        {!hasSubAccount && <ArrowDownShortIcon color="white" opacity={1} />}
-        <Text>{t("common.deposit")}</Text>
-      </Button>
-    </>
+  const depositButton = isMainAccount && (
+    <Button
+      data-testid="oui-testid-assetView-deposit-button"
+      fullWidth
+      size="md"
+      onClick={onDeposit}
+    >
+      {!hasSubAccount && <ArrowDownShortIcon color="white" opacity={1} />}
+      <Text>{t("common.deposit")}</Text>
+    </Button>
+  );
+
+  const withdrawButton = isMainAccount && (
+    <Button
+      fullWidth
+      color="secondary"
+      size="md"
+      onClick={onWithdraw}
+      data-testid="oui-testid-assetView-withdraw-button"
+    >
+      {!hasSubAccount && (
+        <ArrowDownShortIcon
+          color="white"
+          opacity={1}
+          className="oui-rotate-180"
+        />
+      )}
+      <Text>{t("common.withdraw")}</Text>
+    </Button>
   );
 
   return (
@@ -473,8 +500,9 @@ export const AssetView: FC<
             >
               {isMainAccount ? (
                 <>
+                  {depositButton}
                   {transferButton}
-                  {depositAndWithdrawButton}
+                  {withdrawButton}
                 </>
               ) : (
                 transferButton

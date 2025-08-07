@@ -30,6 +30,7 @@ export const useAssetScript = () => {
   const handleDomId = isMobile
     ? DepositAndWithdrawWithSheetId
     : DepositAndWithdrawWithDialogId;
+  const subAccounts = state.subAccounts ?? [];
 
   const canTrade = useMemo(() => {
     return (
@@ -77,6 +78,7 @@ export const useAssetScript = () => {
     onTransfer,
     namespace,
     isMainAccount,
+    hasSubAccount: subAccounts?.length > 0,
   } as const;
 };
 

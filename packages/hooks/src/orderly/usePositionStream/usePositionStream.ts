@@ -4,6 +4,7 @@ import { omit } from "ramda";
 import { type SWRConfiguration } from "swr";
 import {
   AlgoOrderRootType,
+  EMPTY_OBJECT,
   OrderStatus,
   type API,
 } from "@orderly.network/types";
@@ -207,7 +208,7 @@ export const usePositionStream = (
     {
       rows,
       // rows: formattedPositions[0],
-      aggregated: formattedPositions?.[1] ?? {},
+      aggregated: formattedPositions?.[1] ?? EMPTY_OBJECT,
       totalCollateral,
       totalValue,
       totalUnrealizedROI,

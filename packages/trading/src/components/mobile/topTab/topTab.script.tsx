@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { useTradingPageContext } from "../../../provider/context";
-
+import { useTradingPageContext } from "../../../provider/tradingPageContext";
 
 export enum TopTabType {
   chart = "chart",
@@ -10,12 +9,12 @@ export enum TopTabType {
 
 export const useTopTabScript = () => {
   const [tab, setTab] = useState<TopTabType>(TopTabType.chart);
-  const { symbol} = useTradingPageContext();
+  const { symbol } = useTradingPageContext();
   const [visible, setVisible] = useState(true);
 
   const toggleContentVisible = () => {
     setVisible((e) => !e);
-  }
+  };
 
   return {
     tab,

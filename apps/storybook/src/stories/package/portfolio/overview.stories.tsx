@@ -126,9 +126,9 @@ export const PerformanceAndData: Story = {
 
   decorators: [
     (Story) => (
-      <OverviewModule.OverviewContextProvider>
+      <OverviewModule.OverviewProvider>
         <Story />
-      </OverviewModule.OverviewContextProvider>
+      </OverviewModule.OverviewProvider>
     ),
   ],
 };
@@ -173,9 +173,9 @@ export const DistributionHistory: Story = {
   decorators: [
     (Story) => (
       <Box height={"550px"} className="oui-bg-base-9">
-        <OverviewModule.OverviewContextProvider>
+        <OverviewModule.OverviewProvider>
           <Story />
-        </OverviewModule.OverviewContextProvider>
+        </OverviewModule.OverviewProvider>
       </Box>
     ),
   ],

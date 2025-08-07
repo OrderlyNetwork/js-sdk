@@ -23,4 +23,4 @@ export {
 
 export { OverviewPage } from "./main";
 
-export { OverviewContextProvider } from "./providers/overviewCtx";
+export { OverviewProvider } from "./provider/overviewProvider";

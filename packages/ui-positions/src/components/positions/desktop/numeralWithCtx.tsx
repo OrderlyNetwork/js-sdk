@@ -1,6 +1,6 @@
 import React from "react";
 import { NumeralProps, Text } from "@orderly.network/ui";
-import { useSymbolContext } from "../../../providers/symbolProvider";
+import { useSymbolContext } from "../../../provider/symbolContext";
 
 export type TickName = "quote_dp" | "base_dp";
 

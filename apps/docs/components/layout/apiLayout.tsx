@@ -1,7 +1,8 @@
+import { ChevronRight } from "lucide-react";
+import { EMPTY_LIST } from "@orderly.network/types";
+import { useDetailsPageContext } from "../api/detailPageProvider";
 import { NavBar } from "./navbar";
 import { TreeView } from "./tree";
-import { useDetailsPageContext } from "../api/detailPageProvider";
-import { ChevronRight } from "lucide-react";
 
 export const ApiLayout = ({
   data,
@@ -21,7 +22,7 @@ export const ApiLayout = ({
             className="overflow-y-auto overflow-x-hidden sticky top-[65px] text-base-contrast-54"
             style={{ maxHeight: "calc(100vh - 65px)" }}
           >
-            <TreeView data={data || []} />
+            <TreeView data={data || EMPTY_LIST} />
           </aside>
           <main className="mt-5">
             {moduleName && apiName && (

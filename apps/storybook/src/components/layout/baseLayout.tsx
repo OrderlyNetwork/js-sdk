@@ -1,6 +1,6 @@
 import { FC, ReactNode } from "react";
 import { Scaffold, ScaffoldProps } from "@orderly.network/ui-scaffold";
-import { useOrderlyConfig } from "../../hooks/useOrderlyConfig";
+import { footerConfig, useBottomNav, useMainNav } from "../../orderlyConfig";
 import { PathEnum } from "../../playground/constant";
 import { useRouteContext } from "../orderlyProvider/rounteProvider";
 
@@ -12,7 +12,8 @@ type BaseLayoutProps = {
 };
 
 export const BaseLayout: FC<BaseLayoutProps> = (props) => {
-  const config = useOrderlyConfig();
+  const bottomNavProps = useBottomNav();
+  const mainNavProps = useMainNav();
 
   const { onRouteChange } = useRouteContext();
 
@@ -20,14 +21,12 @@ export const BaseLayout: FC<BaseLayoutProps> = (props) => {
     <Scaffold
       topBar={props.topBar}
       mainNavProps={{
-        ...config.scaffold.mainNavProps,
+        ...mainNavProps,
         initialMenu: props.initialMenu || PathEnum.Root,
         // customRender: useCustomRender(),
       }}
-      bottomNavProps={{
-        ...config.scaffold.bottomNavProps,
-      }}
-      footerProps={config.scaffold.footerProps}
+      bottomNavProps={bottomNavProps}
+      footerProps={footerConfig}
       routerAdapter={{ onRouteChange }}
       classNames={props.classNames}
     >

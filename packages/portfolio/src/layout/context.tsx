@@ -1,11 +1,5 @@
-import {
-  PropsWithChildren,
-  createContext,
-  useContext,
-  useState,
-  useMemo,
-} from "react";
-import { RouterAdapter } from "@orderly.network/ui-scaffold";
+import React, { createContext, useContext, useState, useMemo } from "react";
+import type { RouterAdapter } from "@orderly.network/ui-scaffold";
 
 type LayoutContextValue = {
   sideOpen: boolean;
@@ -21,21 +15,22 @@ export const useLayoutContext = () => {
   return useContext(LayoutContext);
 };
 
-export const LayoutProvider = (
-  props: PropsWithChildren<{ routerAdapter?: RouterAdapter }>,
-) => {
+export const LayoutProvider: React.FC<
+  React.PropsWithChildren<{ routerAdapter?: RouterAdapter }>
+> = (props) => {
+  const { routerAdapter, children } = props;
   const [sideOpen, setSideOpen] = useState(true);
   const memoizedValue = useMemo<LayoutContextValue>(
     () => ({
-      sideOpen,
+      sideOpen: sideOpen,
       onSideOpenChange: setSideOpen,
-      routerAdapter: props.routerAdapter,
+      routerAdapter: routerAdapter,
     }),
-    [sideOpen, setSideOpen, props.routerAdapter],
+    [sideOpen, setSideOpen, routerAdapter],
   );
   return (
     <LayoutContext.Provider value={memoizedValue}>
-      {props.children}
+      {children}
     </LayoutContext.Provider>
   );
 };

@@ -30,10 +30,8 @@ import {
 } from "@orderly.network/ui-tpsl";
 import { OrderEntryContext } from "./orderEntryContext";
 import { PnlInputWidget } from "./pnlInput/pnlInput.widget";
-import {
-  PnlInputProvider,
-  usePnlInputContext,
-} from "./pnlInput/pnlInputContext";
+import { usePnlInputContext } from "./pnlInput/pnlInputContext";
+import { PnlInputProvider } from "./pnlInput/pnlInputProvider";
 import { PNL_Values, PnLMode } from "./pnlInput/useBuilder.script";
 
 type OrderValueKeys = keyof OrderlyOrder;

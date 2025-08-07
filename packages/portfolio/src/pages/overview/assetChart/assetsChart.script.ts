@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useAccount } from "@orderly.network/hooks";
 import { useAppContext, useDataTap } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
-import { useOverviewContext } from "../providers/overviewCtx";
+import { useOverviewContext } from "../provider/overviewContext";
 
 export const useAssetsChartScript = () => {
   const assetHistory = useOverviewContext();

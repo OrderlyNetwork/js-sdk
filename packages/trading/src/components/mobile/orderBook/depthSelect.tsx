@@ -2,7 +2,7 @@ import { FC, useMemo } from "react";
 import { Box, Picker } from "@orderly.network/ui";
 
 interface DepthSelectProps {
-  depth: string[];
+  depth: ReadonlyArray<string> | string[];
   value?: string;
   onChange?: (depth: number) => void;
 }

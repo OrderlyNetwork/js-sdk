@@ -3,7 +3,7 @@ import {
   TradingRewardsLayoutWidget,
   TradingRewardsLeftSidebarPath,
 } from "@orderly.network/trading-rewards";
-import { useOrderlyConfig } from "../../hooks/useOrderlyConfig";
+import { footerConfig, useMainNav } from "../../orderlyConfig";
 import { PathEnum } from "../../playground/constant";
 import { useRouteContext } from "../orderlyProvider/rounteProvider";
 
@@ -13,15 +13,15 @@ type TradingRewardsLayoutProps = {
 };
 
 export const TradingRewardsLayout: FC<TradingRewardsLayoutProps> = (props) => {
-  const config = useOrderlyConfig();
+  const mainNavProps = useMainNav();
 
   const { onRouteChange } = useRouteContext();
 
   return (
     <TradingRewardsLayoutWidget
-      footerProps={config.scaffold.footerProps}
+      footerProps={footerConfig}
       mainNavProps={{
-        ...config.scaffold.mainNavProps,
+        ...mainNavProps,
         initialMenu: [PathEnum.Rewards],
       }}
       routerAdapter={{

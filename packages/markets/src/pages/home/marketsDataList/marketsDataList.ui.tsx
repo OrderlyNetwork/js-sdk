@@ -3,7 +3,7 @@ import { Box, TabPanel, Tabs } from "@orderly.network/ui";
 import { FavoritesEmpty } from "../../../components/favoritesEmpty";
 import { FavoritesListFullWidget } from "../../../components/favoritesListFull";
 import { MarketsListFullWidget } from "../../../components/marketsListFull";
-import { SearchInput } from "../../../components/searchInput.tsx";
+import { SearchInput } from "../../../components/searchInput";
 import { AllMarketsIcon, FavoritesIcon, NewListingsIcon } from "../../../icons";
 import { MarketsTabName } from "../../../type";
 import { UseMarketsDataListScript } from "./marketsDataList.script";

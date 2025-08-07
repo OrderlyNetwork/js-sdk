@@ -1,8 +1,8 @@
+import { useMemo } from "react";
+import { useAccount, useLocalStorage } from "@orderly.network/hooks";
 import { useAppContext, useDataTap } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
-import { useOverviewContext } from "../providers/overviewCtx";
-import { useAccount, useLocalStorage } from "@orderly.network/hooks";
-import { useMemo } from "react";
+import { useOverviewContext } from "../provider/overviewContext";
 
 export const usePerformanceScript = () => {
   const ctx = useOverviewContext();
@@ -20,7 +20,7 @@ export const usePerformanceScript = () => {
         account_value: 0,
         pnl: 0,
       },
-      { account_value: 500, pnl: 500 }
+      { account_value: 500, pnl: 500 },
     ),
     // fallbackData:
     //   ctx.data && ctx.data.length >= 2
@@ -41,7 +41,7 @@ export const usePerformanceScript = () => {
         account_value: 0,
         pnl: 0,
       },
-      { account_value: 500, pnl: 500 }
+      { account_value: 500, pnl: 500 },
     );
   }, [filteredData]);
 

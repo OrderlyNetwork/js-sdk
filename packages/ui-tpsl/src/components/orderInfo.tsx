@@ -98,7 +98,7 @@ export const OrderInfo = (props: Props) => {
           </Text.numeral>
         </Flex>
         <Flex justify={"between"} className="oui-text-base-contrast-36">
-          <Text size="2xs">{t("tpsl.advanced.triggerPrice")}</Text>
+          <Text size="2xs">{t("common.markPrice")}</Text>
           <Text.numeral
             rule="price"
             className="oui-text-base-contrast-80"

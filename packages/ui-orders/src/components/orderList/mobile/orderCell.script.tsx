@@ -1,7 +1,7 @@
 import { API } from "@orderly.network/types";
-import { useSymbolContext } from "../symbolProvider";
-import { TabType } from "../../orders.widget";
 import { SharePnLConfig } from "@orderly.network/ui-share";
+import { TabType } from "../../orders.widget";
+import { useSymbolContext } from "../../provider/symbolContext";
 
 export const useOrderCellScript = (props: {
   item: API.AlgoOrderExt;

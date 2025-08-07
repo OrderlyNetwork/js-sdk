@@ -12,7 +12,7 @@ import {
 } from "@orderly.network/trading";
 import { Box, Flex } from "@orderly.network/ui";
 import { BaseLayout } from "../../../components/layout";
-import { useOrderlyConfig } from "../../../hooks/useOrderlyConfig";
+import { tradingPageConfig } from "../../../orderlyConfig";
 import { getSymbol, updateSymbol } from "../../../utils/storage";
 import { OrderlyIcon } from "./icons";
 
@@ -55,7 +55,6 @@ type Story = StoryObj<typeof meta>;
 export const Page: Story = {
   render: (arg) => {
     const [symbol, setSymbol] = useState(getSymbol() || "PERP_BTC_USDC");
-    const config = useOrderlyConfig();
 
     useEffect(() => {
       updateSymbol(symbol);
@@ -64,8 +63,8 @@ export const Page: Story = {
     return (
       <TradingPage
         {...arg}
-        tradingViewConfig={config.tradingPage.tradingViewConfig}
-        sharePnLConfig={config.tradingPage.sharePnLConfig}
+        tradingViewConfig={tradingPageConfig.tradingViewConfig}
+        sharePnLConfig={tradingPageConfig.sharePnLConfig}
         symbol={symbol}
         onSymbolChange={(symbol) => {
           setSymbol(symbol.symbol);
@@ -80,10 +79,9 @@ export const Page: Story = {
 
 export const DataList: Story = {
   render: (arg) => {
-    const config = useOrderlyConfig();
     return (
       <Box p={3} height={800}>
-        <DataListWidget sharePnLConfig={config.tradingPage.sharePnLConfig} />
+        <DataListWidget sharePnLConfig={tradingPageConfig.sharePnLConfig} />
       </Box>
     );
   },

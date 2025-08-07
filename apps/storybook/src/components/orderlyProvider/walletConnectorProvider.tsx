@@ -2,9 +2,20 @@ import { FC, ReactNode } from "react";
 // import { WalletConnector } from "./walletConnector";
 import { WalletConnectorPrivy } from "./walletConnectorPrivy";
 
-export const WalletConnectorProvider: FC<{ children: ReactNode }> = (props) => {
+type WalletConnectorProviderProps = {
+  children: ReactNode;
+  usePrivy?: boolean;
+};
+
+export const WalletConnectorProvider: FC<WalletConnectorProviderProps> = (
+  props,
+) => {
   // use privy wallet connector
-  return <WalletConnectorPrivy>{props.children}</WalletConnectorPrivy>;
+  return (
+    <WalletConnectorPrivy usePrivy={props.usePrivy}>
+      {props.children}
+    </WalletConnectorPrivy>
+  );
 
   // use wallet-connector(web3 onboard)
   // return (

@@ -1,3 +1,4 @@
+import { EMPTY_LIST, EMPTY_OBJECT } from "@orderly.network/types";
 import { ModulesSection } from "@/components/api/module";
 import { ApiLayout } from "@/components/layout/apiLayout";
 import { decodeName } from "@/helper/typedocParser/name";
@@ -49,10 +50,10 @@ export async function getStaticPaths() {
 
 export default function Module(props) {
   return (
-    <ApiLayout data={props.categories || []}>
+    <ApiLayout data={props.categories || EMPTY_LIST}>
       {props.module ? (
         <ModulesSection
-          module={props.module || {}}
+          module={props.module || EMPTY_OBJECT}
           paths={[props.module.slug]}
         />
       ) : (

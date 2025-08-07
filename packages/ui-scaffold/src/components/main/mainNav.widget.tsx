@@ -13,8 +13,9 @@ export type MainNavWidgetProps = {
     alt: string;
   };
   mainMenus?: MainNavItem[];
-
+  /** @deprecated use mainMenus instead */
   campaigns?: MainNavItem;
+  /** @deprecated use mainMenus instead */
   campaignPosition?: CampaignPositionEnum;
   /**
    * initial menu path, if it has submenus, use array

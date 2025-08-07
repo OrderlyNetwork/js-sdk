@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { API } from "@orderly.network/types";
+import { API, EMPTY_LIST } from "@orderly.network/types";
 import { useQuery } from "../useQuery";
 
 export type PeriodKey = "1d" | "3d" | "7d" | "14d" | "30d" | "90d";
@@ -8,7 +8,9 @@ export const calculatePositiveRate = (
   periodData?: API.FundingPeriodData,
   period?: PeriodKey,
 ): number => {
-  if (!periodData || !period) return 0;
+  if (!periodData || !period) {
+    return 0;
+  }
 
   const daysMap: Record<PeriodKey, number> = {
     "1d": 1,
@@ -29,9 +31,14 @@ export const useFundingRateHistory = () => {
   );
 
   const getPositiveRates = useCallback(
-    (data: API.FundingHistory[], period: PeriodKey): Record<string, number> => {
-      if (!data?.length) return {};
-      return data.reduce(
+    (
+      data: ReadonlyArray<API.FundingHistory> | API.FundingHistory[],
+      period: PeriodKey,
+    ): Record<string, number> => {
+      if (!data?.length) {
+        return {};
+      }
+      return (data as API.FundingHistory[]).reduce(
         (acc, item) => {
           acc[item.symbol] = calculatePositiveRate(
             item.funding[period],
@@ -46,7 +53,7 @@ export const useFundingRateHistory = () => {
   );
 
   return {
-    data: historyData ?? [],
+    data: historyData ?? EMPTY_LIST,
     isLoading,
     getPositiveRates,
   };

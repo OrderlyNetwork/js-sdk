@@ -88,6 +88,20 @@ const DepositAndWithdrawButton: React.FC<
       gap={3}
     >
       <Button
+        disabled={mergedDisabled}
+        data-testid="oui-testid-assetView-deposit-button"
+        fullWidth
+        size="md"
+        onClick={onDeposit}
+      >
+        <ArrowDownShortIcon
+          color="white"
+          opacity={mergedDisabled ? 0.4 : 1}
+          className="oui-rotate-0"
+        />
+        <Text>{t("common.deposit")}</Text>
+      </Button>
+      <Button
         fullWidth
         disabled={mergedDisabled}
         color="secondary"
@@ -101,20 +115,6 @@ const DepositAndWithdrawButton: React.FC<
           className="oui-rotate-180"
         />
         <Text>{t("common.withdraw")}</Text>
-      </Button>
-      <Button
-        disabled={mergedDisabled}
-        data-testid="oui-testid-assetView-deposit-button"
-        fullWidth
-        size="md"
-        onClick={onDeposit}
-      >
-        <ArrowDownShortIcon
-          color="white"
-          opacity={mergedDisabled ? 0.4 : 1}
-          className="oui-rotate-0"
-        />
-        <Text>{t("common.deposit")}</Text>
       </Button>
     </Flex>
   );
