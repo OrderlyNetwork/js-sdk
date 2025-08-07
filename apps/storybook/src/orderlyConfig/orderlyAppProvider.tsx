@@ -11,10 +11,9 @@ export const orderlyAppProviderConfig: OrderlyAppProviderConfigProps = {
     main: {
       component: (
         <img
+          alt="orderlylogo"
           src="/orderly-logo.svg"
-          alt="logo"
-          draggable={false}
-          style={{ height: 40 }}
+          style={{ width: 100, height: 40 }}
         />
       ),
     },

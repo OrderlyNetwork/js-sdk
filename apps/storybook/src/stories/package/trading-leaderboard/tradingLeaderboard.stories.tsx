@@ -21,7 +21,7 @@ export function getCampaigns() {
       title: "DAWN OF DOMINANCE",
       description:
         "A new era begins. Outtrade the competition. Climb the ranks. Secure your legacy.",
-      image: "/leaderboard/woofi_leaderboard_test.jpeg",
+      image: "/leaderboard/campaign_116.png",
       // href: 'https://orderly.network/',
       start_time: new Date("2025-06-18T00:00:00Z").toISOString(),
       end_time: new Date("2025-07-04T23:59:59Z").toISOString(),
