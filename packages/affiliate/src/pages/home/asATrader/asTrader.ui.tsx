@@ -108,7 +108,6 @@ const Bottom: FC<AsTraderReturns> = (props) => {
     if (props.isTrader && !props.wrongNetwork) {
       const totalReferrerRebate =
         props.referralInfo?.referee_info?.total_referee_rebate;
-
       return (
         <>
           <Flex direction={"column"} itemAlign={"start"} gap={2}>
@@ -125,44 +124,24 @@ const Bottom: FC<AsTraderReturns> = (props) => {
               </Text>
             </Flex>
           </Flex>
-
           <Flex
             direction={"row"}
             gap={1}
             justify={"end"}
             itemAlign={"center"}
             className="oui-cursor-pointer"
-            onClick={(e) => {
-              props?.onEnterTraderPage?.();
-            }}
+            onClick={props?.onEnterTraderPage}
           >
             <Text className="oui-text-sm md:oui-text-base xl:oui-text-lg">
               {t("affiliate.enter")}
             </Text>
-            <ArrowRightIcon className="md:oui-w-[18px] md:oui-h-[18px] lg:oui-w-[20px] lg:oui-h-[20px] xl:oui-w-[24px] xl:oui-h-[24px]" />
+            <ArrowRightIcon className="md:oui-size-[18px] lg:oui-size-[20px] xl:oui-size-[24px]" />
           </Flex>
         </>
       );
     }
 
-    return (
-      <>
-        <EntryCode {...props} />
-        <Flex
-          direction={"column"}
-          justify={"between"}
-          className="oui-h-full"
-          itemAlign={"end"}
-        >
-          <Text className="oui-text-base md:oui-text-lg lg:oui-text-xl 2xl:oui-text-2xl">
-            0%~20%
-          </Text>
-          <Text className="oui-text-2xs md:oui-text-xs 2xl:oui-text-sm oui-text-base-contrast-54">
-            {t("affiliate.trader.rebate")}
-          </Text>
-        </Flex>
-      </>
-    );
+    return <EntryCode {...props} />;
   };
 
   return (
@@ -240,7 +219,7 @@ const EntryCode: FC<AsTraderReturns> = (props) => {
           </Text>
 
           <TextField
-            className="oui-w-full oui-mt-4"
+            className="oui-mt-4 oui-w-full"
             placeholder={t("affiliate.referralCode")}
             value={props.code}
             onChange={(e) => {

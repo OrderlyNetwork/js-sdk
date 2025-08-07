@@ -3,7 +3,7 @@ import {
   PortfolioLeftSidebarPath,
   PortfolioLayoutWidget,
 } from "@orderly.network/portfolio";
-import { useOrderlyConfig } from "../../hooks/useOrderlyConfig";
+import { footerConfig, useBottomNav, useMainNav } from "../../orderlyConfig";
 import { PathEnum } from "../../playground/constant";
 import { useRouteContext } from "../orderlyProvider/rounteProvider";
 
@@ -13,19 +13,18 @@ type PortfolioLayoutProps = {
 };
 
 export const PortfolioLayout: FC<PortfolioLayoutProps> = (props) => {
-  const config = useOrderlyConfig();
   const { onRouteChange } = useRouteContext();
+  const mainNavProps = useMainNav();
+  const bottomNavProps = useBottomNav();
 
   return (
     <PortfolioLayoutWidget
-      footerProps={config.scaffold.footerProps}
+      footerProps={footerConfig}
       mainNavProps={{
-        ...config.scaffold.mainNavProps,
+        ...mainNavProps,
         initialMenu: PathEnum.Portfolio,
       }}
-      bottomNavProps={{
-        ...config.scaffold.bottomNavProps,
-      }}
+      bottomNavProps={bottomNavProps}
       routerAdapter={{
         onRouteChange,
       }}

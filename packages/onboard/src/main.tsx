@@ -1,8 +1,9 @@
-import React, { type PropsWithChildren } from "react";
+import React, { useMemo } from "react";
 import { useConnectWallet, useSetChain } from "@web3-onboard/react";
 import { WalletConnectorContext } from "@orderly.network/hooks";
+import type { WalletConnectorContextState } from "@orderly.network/hooks";
 
-export const Main = (props: PropsWithChildren) => {
+export const Main: React.FC<React.PropsWithChildren> = (props) => {
   const [
     {
       wallet, // the wallet that has been connected or null if not yet connected
@@ -24,22 +25,34 @@ export const Main = (props: PropsWithChildren) => {
     setChain, // function to call to initiate user to switch chains in their wallet
   ] = useSetChain();
 
+  const memoizedValue = useMemo<WalletConnectorContextState>(() => {
+    return {
+      connect: connect as any,
+      disconnect,
+      connecting,
+      wallet: wallet as any,
+      setChain: setChain as any,
+      chains,
+      // switchChain,
+      connectedChain: connectedChain
+        ? { ...(connectedChain as any), id: Number.parseInt(connectedChain.id) }
+        : null,
+      settingChain,
+      namespace: undefined as any,
+    };
+  }, [
+    connect,
+    disconnect,
+    connecting,
+    wallet,
+    setChain,
+    chains,
+    connectedChain,
+    settingChain,
+  ]);
+
   return (
-    <WalletConnectorContext.Provider
-      value={{
-        connect,
-        disconnect,
-        connecting,
-        wallet,
-        setChain,
-        chains,
-        // switchChain,
-        connectedChain: connectedChain
-          ? { ...connectedChain, id: parseInt(connectedChain.id) }
-          : null,
-        settingChain,
-      }}
-    >
+    <WalletConnectorContext.Provider value={memoizedValue}>
       {props.children}
     </WalletConnectorContext.Provider>
   );

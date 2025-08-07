@@ -2,6 +2,7 @@ import { FC } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   ArrowDownSquareFillIcon,
+  ArrowLeftRightIcon,
   ArrowUpSquareFillIcon,
   Button,
   CardTitle,
@@ -14,6 +15,7 @@ type Props = {
   onDeposit?: () => void;
   onTransfer?: () => void;
   isMainAccount?: boolean;
+  hasSubAccount?: boolean;
 };
 
 export const AssetsHeader: FC<Props> = (props) => {
@@ -22,8 +24,30 @@ export const AssetsHeader: FC<Props> = (props) => {
   return (
     <Flex justify={"between"}>
       <CardTitle>{t("common.overview")}</CardTitle>
-      {props.isMainAccount ? (
-        <Flex gap={3}>
+      <Flex gap={3}>
+        {props.isMainAccount && (
+          <Button
+            disabled={props.disabled}
+            size="md"
+            onClick={() => props.onDeposit?.()}
+            icon={<ArrowDownSquareFillIcon />}
+            data-testid="oui-testid-portfolio-assets-deposit-btn"
+          >
+            {t("common.deposit")}
+          </Button>
+        )}
+        {props.hasSubAccount && (
+          <Button
+            disabled={props.disabled}
+            size="md"
+            color="secondary"
+            onClick={() => props.onTransfer?.()}
+            icon={<ArrowLeftRightIcon />}
+          >
+            {t("common.transfer")}
+          </Button>
+        )}
+        {props.isMainAccount && (
           <Button
             disabled={props.disabled}
             size="md"
@@ -34,26 +58,8 @@ export const AssetsHeader: FC<Props> = (props) => {
           >
             {t("common.withdraw")}
           </Button>
-          <Button
-            disabled={props.disabled}
-            size="md"
-            onClick={() => props.onDeposit?.()}
-            icon={<ArrowDownSquareFillIcon />}
-            data-testid="oui-testid-portfolio-assets-deposit-btn"
-          >
-            {t("common.deposit")}
-          </Button>
-        </Flex>
-      ) : (
-        <Button
-          disabled={props.disabled}
-          size="md"
-          color="secondary"
-          onClick={() => props.onTransfer?.()}
-        >
-          {t("common.transfer")}
-        </Button>
-      )}
+        )}
+      </Flex>
     </Flex>
   );
 };

@@ -52,16 +52,12 @@ import {
   textVariants,
   ThrottledButton,
   toast,
-  TokenIcon,
   Tooltip,
   useScreen,
 } from "@orderly.network/ui";
 import { LeverageWidgetWithSheetId } from "@orderly.network/ui-leverage";
-import {
-  TPSLAdvancedDialogId,
-  TPSLAdvancedWidget,
-} from "@orderly.network/ui-tpsl";
-import { commifyOptional, Decimal } from "@orderly.network/utils";
+import { TPSLAdvancedWidget } from "@orderly.network/ui-tpsl";
+import { commifyOptional } from "@orderly.network/utils";
 import { LTVRiskTooltipWidget } from "./components/LTVRiskTooltip";
 // import { useBalanceScript } from "../../trading/src/components/mobile/bottomNavBar/balance";
 import { AdditionalInfoWidget } from "./components/additional/additionnalInfo.widget";
@@ -72,6 +68,7 @@ import {
   OrderEntryContext,
   OrderEntryProvider,
 } from "./components/orderEntryContext";
+import type { OrderEntryContextState } from "./components/orderEntryContext";
 import { QuantityDistributionInput } from "./components/quantityDistribution";
 import { QuantityUnit } from "./components/quantityUnit";
 import { SlippageUI } from "./components/slippage/slippage.ui";
@@ -79,6 +76,8 @@ import { OrderTPSL } from "./components/tpsl";
 import { type OrderEntryScriptReturn } from "./orderEntry.script";
 import { InputType } from "./types";
 import { BBOStatus, getScaledPlaceOrderMessage } from "./utils";
+
+const EMPTY_LIST: ReadonlyArray<any> = [];
 
 type Refs = OrderEntryScriptReturn["refs"];
 
@@ -117,6 +116,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
     useState<boolean>(false);
 
   const { errors, validated } = metaState;
+
   const [errorMsgVisible, setErrorMsgVisible] = useState(false);
 
   const [needConfirm, setNeedConfirm] = useLocalStorage(
@@ -330,8 +330,12 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
     setHasAdvancedTPSLResult(false);
   }, [props.symbol]);
 
+  const memoizedValue = useMemo<OrderEntryContextState>(() => {
+    return { errorMsgVisible: errorMsgVisible };
+  }, [errorMsgVisible]);
+
   return (
-    <OrderEntryProvider value={{ errorMsgVisible }}>
+    <OrderEntryProvider value={memoizedValue}>
       <div
         className={"oui-space-y-2 oui-text-base-contrast-54 xl:oui-space-y-3"}
         ref={props.containerRef}
@@ -984,7 +988,7 @@ const CustomInput = forwardRef<
       }}
       formatters={
         props.overrideFormatters || [
-          ...(props.formatters ?? []),
+          ...(props.formatters ?? EMPTY_LIST),
           inputFormatter.numberFormatter,
           inputFormatter.currencyFormatter,
           inputFormatter.decimalPointFormatter,

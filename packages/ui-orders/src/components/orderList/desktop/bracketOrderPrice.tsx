@@ -1,10 +1,10 @@
 import { useMemo } from "react";
-import { API } from "@orderly.network/types";
-import { Flex, Tooltip, Text, cn } from "@orderly.network/ui";
-import { useSymbolContext } from "../symbolProvider";
-import { calcBracketRoiAndPnL } from "../../../utils/util";
 import { utils } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
+import { API } from "@orderly.network/types";
+import { Flex, Tooltip, Text, cn } from "@orderly.network/ui";
+import { calcBracketRoiAndPnL } from "../../../utils/util";
+import { useSymbolContext } from "../../provider/symbolContext";
 
 export const BracketOrderPrice = (props: { order: API.AlgoOrderExt }) => {
   const { order } = props;
@@ -85,7 +85,7 @@ const Price = (props: {
     <Text.numeral
       className={cn(
         "oui-gap-0 oui-decoration-white/20 oui-border-b oui-border-dashed oui-border-base-contrast-12",
-        type === "TP" ? "oui-text-trade-profit" : "oui-text-trade-loss"
+        type === "TP" ? "oui-text-trade-profit" : "oui-text-trade-loss",
       )}
       key={"tp"}
       rule="price"

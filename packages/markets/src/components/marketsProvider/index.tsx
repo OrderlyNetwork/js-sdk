@@ -17,7 +17,7 @@ type MarketsContextState = {
   clearSearchValue?: () => void;
 } & MarketsProviderProps;
 
-export const MarketsContext = createContext({} as MarketsContextState);
+export const MarketsContext = createContext<MarketsContextState>({});
 
 export type MarketsProviderProps = {
   symbol?: string;
@@ -74,5 +74,5 @@ export const MarketsProvider: FC<PropsWithChildren<MarketsProviderProps>> = (
 };
 
 export function useMarketsContext() {
-  return useContext(MarketsContext);
+  return useContext<MarketsContextState>(MarketsContext);
 }

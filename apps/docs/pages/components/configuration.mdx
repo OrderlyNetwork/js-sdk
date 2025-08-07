@@ -110,9 +110,14 @@ The network ID, possible values are `mainnet` and `testnet`.
 ```typescript copy
 import { WalletConnectorContext } from "@orderly.network/hooks";
 
-export const App: FC<PropsWithChildren<{}>> = (props) => {
+export const App: FC<PropsWithChildren> = (props) => {
+  const memoizedValue = useMemo<WalletConnectorContextState>(() => {
+    return {
+     connect, wallet, connectedChain, disconnect
+    };
+  }, [connect, wallet, connectedChain, disconnect]);
   return (
-    <WalletConnectorContext.Provider value={{ connect,wallet,connectedChain,disconnect }}>
+    <WalletConnectorContext.Provider value={memoizedValue}>
       {/* children component */}
     </WalletConnectorContext.Provider>
   );

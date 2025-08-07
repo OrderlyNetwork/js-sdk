@@ -1,13 +1,15 @@
 import { useState } from "react";
-import { useTradingPageContext } from "../../../provider/context";
-import { useTradingLocalStorage } from "../../../provider/useTradingLocalStorage";
 import { useOrderStream } from "@orderly.network/hooks";
-import { usePositionsCount } from "../../../provider/usePositionsCount";
-import { usePendingOrderCount } from "../../../provider/usePendingOrderCount";
-import { modal, Text } from "@orderly.network/ui";
-import { SharePnLConfig } from "@orderly.network/ui-share";
-import { TabType } from "@orderly.network/ui-orders";
 import { useTranslation } from "@orderly.network/i18n";
+import { modal, Text } from "@orderly.network/ui";
+import { TabType } from "@orderly.network/ui-orders";
+import { SharePnLConfig } from "@orderly.network/ui-share";
+import {
+  usePendingOrderCount,
+  usePositionsCount,
+  useTradingLocalStorage,
+} from "../../../hooks";
+import { useTradingPageContext } from "../../../provider/tradingPageContext";
 
 export enum DataListTabType {
   position = "Position",
@@ -30,7 +32,7 @@ export const useDataListScript = (props: {
   const { symbol, sharePnLConfig } = props;
   const [tab, setTab] = useState<DataListTabType>(DataListTabType.position);
   const [subTab, setSubTab] = useState<DataListTabSubType>(
-    DataListTabSubType.positionHistory
+    DataListTabSubType.positionHistory,
   );
   const { t } = useTranslation();
 
@@ -46,14 +48,14 @@ export const useDataListScript = (props: {
       type === TabType.pending
         ? t("orders.pending.cancelAll")
         : type === TabType.tp_sl
-        ? t("orders.tpsl.cancelAll")
-        : "";
+          ? t("orders.tpsl.cancelAll")
+          : "";
     const content =
       type === TabType.pending
         ? t("orders.pending.cancelAll.description")
         : type === TabType.tp_sl
-        ? t("orders.tpsl.cancelAll.description")
-        : "";
+          ? t("orders.tpsl.cancelAll.description")
+          : "";
     modal.confirm({
       title: title,
       content: <Text size="2xs">{content}</Text>,

@@ -5,6 +5,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 import {
@@ -16,6 +17,7 @@ import { useTranslation } from "@orderly.network/i18n";
 import { API, OrderSide, OrderType } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
 import { PositionsRowContext } from "./positionsRowContext";
+import type { PositionsRowContextState } from "./positionsRowContext";
 
 // export interface PositionsRowContextState {
 //   quantity: string;
@@ -54,7 +56,7 @@ type PositionsRowProviderProps = PropsWithChildren<{
 }>;
 
 export const PositionsRowProvider: FC<PositionsRowProviderProps> = (props) => {
-  const { position } = props;
+  const { position, children, mutatePositions } = props;
   const { t } = useTranslation();
   const [quantity, setQuantity] = useState<string>(
     Math.abs(position.position_qty).toString(),
@@ -148,7 +150,7 @@ export const PositionsRowProvider: FC<PositionsRowProviderProps> = (props) => {
     return submit()
       .then((res) => {
         if (res.success) {
-          props.mutatePositions?.();
+          mutatePositions?.();
           return res;
         }
 
@@ -166,30 +168,48 @@ export const PositionsRowProvider: FC<PositionsRowProviderProps> = (props) => {
       });
   }, [submit]);
 
+  const memoizedValue = useMemo<PositionsRowContextState>(() => {
+    return {
+      quantity,
+      price,
+      type,
+      side,
+      position,
+      updatePriceChange,
+      updateQuantity,
+      updateOrderType,
+      tpslOrder: (position as API.PositionTPSLExt).full_tp_sl?.algo_order,
+      partialTPSLOrder: (position as API.PositionTPSLExt).partial_tp_sl
+        ?.algo_order,
+      onSubmit,
+      submitting,
+      closeOrderData,
+      quoteDp,
+      baseDp,
+      baseTick,
+      errors,
+    };
+  }, [
+    quantity,
+    price,
+    type,
+    side,
+    position,
+    updatePriceChange,
+    updateQuantity,
+    updateOrderType,
+    onSubmit,
+    submitting,
+    closeOrderData,
+    quoteDp,
+    baseDp,
+    baseTick,
+    errors,
+  ]);
+
   return (
-    <PositionsRowContext.Provider
-      value={{
-        quantity,
-        price,
-        type,
-        side,
-        position,
-        updatePriceChange,
-        updateQuantity,
-        updateOrderType,
-        tpslOrder: (position as API.PositionTPSLExt).full_tp_sl?.algo_order,
-        partialTPSLOrder: (position as API.PositionTPSLExt).partial_tp_sl
-          ?.algo_order,
-        onSubmit,
-        submitting,
-        closeOrderData,
-        quoteDp,
-        baseDp,
-        baseTick,
-        errors,
-      }}
-    >
-      {props.children}
+    <PositionsRowContext.Provider value={memoizedValue}>
+      {children}
     </PositionsRowContext.Provider>
   );
 };
@@ -199,7 +219,6 @@ function transSymbolformString(symbol: string, formatString = "base") {
   const type = arr[0];
   const base = arr[1];
   const quote = arr[2];
-
   return (formatString ?? "base-quote")
     .replace("type", type)
     .replace("base", base)

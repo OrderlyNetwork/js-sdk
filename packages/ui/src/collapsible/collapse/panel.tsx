@@ -1,12 +1,11 @@
-import { FC, PropsWithChildren, ReactNode, useMemo } from "react";
-
+import React, { FC, PropsWithChildren, ReactNode, useMemo } from "react";
+import { ChevronDownIcon, cn } from "../..";
 import {
   CollapsibleContent,
   Collapsible,
   CollapsibleTrigger,
 } from "../collapsible";
 import { useCollapseContext } from "./collapseContext";
-import { cn } from "../..";
 
 interface Props {
   header: ReactNode;
@@ -17,42 +16,42 @@ interface Props {
 
 export const Panel: FC<PropsWithChildren<Props>> = (props) => {
   const { activeKey, setActiveKey } = useCollapseContext();
-  const header = useMemo(() => {
-    if (typeof props.header === "string") {
+  const { header, headerClassName, itemKey, disabled } = props;
+  const headerNode = useMemo<React.ReactNode>(() => {
+    if (typeof header === "string") {
       return (
         <div
           className={cn(
-            "oui-py-2 oui-border-b oui-border-divider flex items-center oui-group oui-cursor-pointer",
-            props.headerClassName
+            "oui-border-divider flex items-center oui-group oui-cursor-pointer oui-border-b oui-py-2",
+            headerClassName,
           )}
         >
           <div className="oui-flex-1 group-data-[state=open]:oui-font-semibold">
-            {props.header}
+            {header}
           </div>
-          {/* @ts-ignore */}
-          <ChevronDown
+          <ChevronDownIcon
             size={16}
-            className="group-data-[state=open]:oui-rotate-180 oui-transition-transform"
+            className="oui-transition-transform group-data-[state=open]:oui-rotate-180"
           />
         </div>
       );
     }
-    return props.header;
-  }, [props.header, props.headerClassName]);
+    return header;
+  }, [header, headerClassName]);
 
   return (
     <Collapsible
-      disabled={props.disabled}
-      open={props.itemKey === activeKey}
-      onOpenChange={(open: any) => {
+      disabled={disabled}
+      open={itemKey === activeKey}
+      onOpenChange={(open) => {
         if (open) {
-          setActiveKey(props.itemKey);
+          setActiveKey(itemKey);
         } else {
           setActiveKey("");
         }
       }}
     >
-      <CollapsibleTrigger asChild>{header}</CollapsibleTrigger>
+      <CollapsibleTrigger asChild>{headerNode}</CollapsibleTrigger>
       <CollapsibleContent className="oui-py-3">
         {props.children}
       </CollapsibleContent>

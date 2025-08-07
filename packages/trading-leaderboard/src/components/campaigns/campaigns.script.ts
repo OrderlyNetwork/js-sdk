@@ -5,6 +5,7 @@ import {
   useMutation,
   useAccount,
 } from "@orderly.network/hooks";
+import { AccountStatusEnum } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
 import { useTradingLeaderboardContext } from "../provider";
 import {
@@ -77,22 +78,35 @@ export const useCampaignsScript = () => {
         : null,
     );
 
+  const accountStatus = useMemo(() => {
+    return state.status === AccountStatusEnum.EnableTradingWithoutConnected
+      ? AccountStatusEnum.EnableTradingWithoutConnected
+      : AccountStatusEnum.EnableTrading;
+  }, [state.status]);
+
   const isParticipated = useMemo(() => {
     const target = userCampaigns?.find((item) => item.id == currentCampaignId);
     return !!target;
   }, [userCampaigns, currentCampaignId]);
 
   const shouldShowJoinButton = useMemo(() => {
+    // return false;
     return !!state.address && !isCampaignEnded && !isParticipated;
   }, [state.address, isCampaignEnded, isParticipated]);
 
   const [doJoinCampaign, { isMutating: isJoining, error: joinError }] =
-    useMutation(`https://api.orderly.org/v1/client/campaign/sign_up`, "POST");
+    useMutation(`/v1/client/campaign/sign_up`, "POST");
 
   const joinCampaign = useCallback(
     async (data: { campaign_id: string | number }) => {
       try {
+        if (state.status < AccountStatusEnum.EnableTrading) {
+          toast.error("Please enable trading to proceed.");
+          return;
+        }
+        // console.log("data", data);
         const result = await doJoinCampaign(data);
+        // console.log("result", result);
 
         if (result?.success !== false) {
           // Refresh user campaigns data to update participation status
@@ -107,17 +121,23 @@ export const useCampaignsScript = () => {
         throw error;
       }
     },
-    [doJoinCampaign, refreshUserCampaigns],
+    [doJoinCampaign, refreshUserCampaigns, state.status],
   );
 
   const statistics = {
     total_participants: stats?.user_count,
-    total_volume: data?.[0]?.volume,
+    total_volume: stats?.volume,
   };
 
   const onLearnMore = () => {
     if (currentCampaign?.rule_url) {
-      window.open(currentCampaign.rule_url, "_blank");
+      if (currentCampaign.rule_config?.action === "scroll") {
+        document
+          .getElementById(currentCampaign.rule_url)
+          ?.scrollIntoView({ behavior: "smooth" });
+      } else {
+        window.open(currentCampaign.rule_url, "_blank");
+      }
     }
   };
 
@@ -126,6 +146,15 @@ export const useCampaignsScript = () => {
       window.open(currentCampaign.trading_url, "_self");
     }
   };
+
+  const canTrade = useMemo(() => {
+    if (!currentCampaign) return false;
+    return (
+      currentCampaign?.start_time < new Date().toISOString() &&
+      currentCampaign?.end_time > new Date().toISOString() &&
+      state.status >= AccountStatusEnum.EnableTrading
+    );
+  }, [currentCampaign, state.status]);
 
   return {
     campaigns,
@@ -142,5 +171,7 @@ export const useCampaignsScript = () => {
     isParticipated,
     shouldShowJoinButton,
     joinError,
+    canTrade,
+    accountStatus,
   };
 };

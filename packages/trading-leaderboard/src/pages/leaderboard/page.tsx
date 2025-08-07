@@ -14,6 +14,7 @@ import {
   useTradingLeaderboardContext,
 } from "../../components/provider";
 import { RewardsWidget } from "../../components/rewards/rewards.widget";
+import { RuleWidget } from "../../components/rule";
 
 export type LeaderboardPageProps = GeneralLeaderboardWidgetProps &
   TradingLeaderboardProviderProps & {
@@ -38,6 +39,7 @@ export const LeaderboardPage: FC<LeaderboardPageProps> = (props) => {
         <CampaignsWidget className="oui-relative oui-z-[1] oui-mx-6" />
         <RewardsWidget />
         <LeaderboardSection {...props} />
+        <RuleWidget />
       </div>
     </TradingLeaderboardProvider>
   );
@@ -63,7 +65,11 @@ export const LeaderboardSection: FC<LeaderboardSectionProps> = (props) => {
     );
   }
 
-  if (currentCampaign && currentCampaignId != "general") {
+  if (
+    currentCampaign &&
+    !currentCampaign.hide_arena &&
+    currentCampaignId != "general"
+  ) {
     return (
       <Box px={3}>
         <LeaderboardTitle

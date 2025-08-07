@@ -1,10 +1,10 @@
 import { FC } from "react";
-import { Button, cn, Flex, modal, Text, Tooltip } from "@orderly.network/ui";
-import { AsAnAffiliateReturns } from "./asAnAffiliate.script";
-import { USDCIcon } from "../../../components/usdcIcon";
-import { ArrowRightIcon } from "../../../components/arrowRightIcon";
-import { commifyOptional } from "@orderly.network/utils";
 import { useTranslation } from "@orderly.network/i18n";
+import { Button, cn, Flex, modal, Text, Tooltip } from "@orderly.network/ui";
+import { commifyOptional } from "@orderly.network/utils";
+import { ArrowRightIcon } from "../../../components/arrowRightIcon";
+import { USDCIcon } from "../../../components/usdcIcon";
+import { AsAnAffiliateReturns } from "./asAnAffiliate.script";
 
 export const AsAnAffiliate: FC<AsAnAffiliateReturns> = (props) => {
   const { t } = useTranslation();
@@ -21,7 +21,6 @@ export const AsAnAffiliate: FC<AsAnAffiliateReturns> = (props) => {
       justify={"between"}
     >
       <Flex
-        height={80}
         direction={"row"}
         gap={3}
         itemAlign={"start"}
@@ -41,14 +40,14 @@ export const AsAnAffiliate: FC<AsAnAffiliateReturns> = (props) => {
           </Text>
           <Text
             className={cn(
-              "oui-text-xs md:oui-text-sm 2xl:oui-text-base oui-text-base-contrast-54",
-              props.isAffiliate && "oui-hidden"
+              "oui-text-xs oui-text-base-contrast-54 md:oui-text-sm 2xl:oui-text-base",
+              props.isAffiliate && "oui-hidden",
             )}
           >
             {t("affiliate.asAffiliate.description")}
           </Text>
         </Flex>
-        <div className="oui-flex-shrink-0">
+        <div className="oui-shrink-0">
           <Icon />
         </div>
       </Flex>
@@ -185,9 +184,9 @@ const Bottom: FC<AsAnAffiliateReturns> = (props) => {
           itemAlign={"end"}
         >
           <Text className="oui-text-base md:oui-text-lg lg:oui-text-xl 2xl:oui-text-2xl">
-            40%~60%
+            {t("affiliate.upTo")}
           </Text>
-          <Text className="oui-text-2xs md:oui-text-xs 2xl:oui-text-sm oui-text-base-contrast-54">
+          <Text className="oui-text-2xs oui-text-base-contrast-54 md:oui-text-xs 2xl:oui-text-sm">
             {t("affiliate.commission")}
           </Text>
         </Flex>

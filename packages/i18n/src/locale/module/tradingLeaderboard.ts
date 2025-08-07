@@ -7,6 +7,7 @@ export const tradingLeaderboard = {
   "tradingLeaderboard.future": "Future",
   "tradingLeaderboard.learnMore": "Learn more",
   "tradingLeaderboard.tradeNow": "Trade now",
+  "tradingLeaderboard.joinNow": "Join now",
   "tradingLeaderboard.tradingVolume": "Trading volume",
   "tradingLeaderboard.realizedPnl": "Realized PnL",
   "tradingLeaderboard.rank": "Rank",
@@ -30,6 +31,8 @@ export const tradingLeaderboard = {
   "tradingLeaderboard.arena": "Arena",
   "tradingLeaderboard.generalLeaderboard": "General leaderboard",
   "tradingLeaderboard.maxTicketsAchieved": "Max tickets achieved",
+  "tradingLeaderboard.termsAndConditions": "Terms and Conditions",
+  "tradingLeaderboard.rules": "Rules",
 };
 
 export type TradingLeaderboard = typeof tradingLeaderboard;

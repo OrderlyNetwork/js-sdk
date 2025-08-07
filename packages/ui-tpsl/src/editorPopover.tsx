@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { ComputedAlgoOrder, useLocalStorage } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { AlgoOrderRootType, API } from "@orderly.network/types";
+import { AlgoOrderRootType, API, PositionType } from "@orderly.network/types";
 import { Box, Button, modal, toast } from "@orderly.network/ui";
 import { ButtonProps } from "@orderly.network/ui";
 import { PositionTPSLConfirm } from "./tpsl.ui";
@@ -36,6 +36,7 @@ export const PositionTPSLPopover = (props: {
       position: position,
       baseDP: baseDP,
       quoteDP: quoteDP,
+      positionType: isPositionTPSL ? PositionType.FULL : PositionType.PARTIAL,
       isEditing: isEditing,
       onConfirm: (order: ComputedAlgoOrder, options: any) => {
         if (!needConfirm) {

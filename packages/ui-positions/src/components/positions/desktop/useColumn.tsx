@@ -284,21 +284,21 @@ export const useColumn = (config: ColumnConfig) => {
           />
         ),
       },
-      {
-        title: t("common.qty"),
-        dataIndex: "close_qty",
-        width: 100,
-        fixed: "right",
-        render: renderQuantityInput,
-      },
-      {
-        title: t("common.price"),
-        dataIndex: "close_price",
-        width: 100,
-        fixed: "right",
-        render: renderPriceInput,
-        // render: (value: string) => <PriceInput />,
-      },
+      // {
+      //   title: t("common.qty"),
+      //   dataIndex: "close_qty",
+      //   width: 100,
+      //   fixed: "right",
+      //   render: renderQuantityInput,
+      // },
+      // {
+      //   title: t("common.price"),
+      //   dataIndex: "close_price",
+      //   width: 100,
+      //   fixed: "right",
+      //   render: renderPriceInput,
+      //   // render: (value: string) => <PriceInput />,
+      // },
       {
         title: null,
         dataIndex: "close_position",

@@ -13,7 +13,7 @@ import React, {
 import * as TabsPrimitive from "@radix-ui/react-tabs";
 import { cnBase, VariantProps } from "tailwind-variants";
 import { Flex } from "../flex";
-import { useOrderlyTheme } from "../provider/orderlyThemeProvider";
+import { useOrderlyTheme } from "../provider/orderlyThemeContext";
 import { ScrollIndicator } from "../scrollIndicator";
 import {
   TabsBase,

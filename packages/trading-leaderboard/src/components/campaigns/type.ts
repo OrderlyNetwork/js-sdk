@@ -61,8 +61,17 @@ export interface CampaignConfig {
   ticket_rules?: TicketRules;
   image?: string;
   rule_url?: string;
+  rule_config?: {
+    action?: "scroll" | "click";
+  };
   trading_url?: string;
+  trading_config?: {
+    format?: string;
+  };
   href?: string;
+  hide_arena?: boolean;
+  hide_rewards?: boolean;
+  highlight_pool_id?: string;
 }
 
 // User data for calculations

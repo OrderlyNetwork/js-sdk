@@ -1,4 +1,4 @@
-import { createContext, PropsWithChildren, useContext } from "react";
+import React, { createContext, useContext, useMemo } from "react";
 
 export type Campaign = {
   title: string;
@@ -34,24 +34,26 @@ export type TradingLeaderboardState = {
  * Trading leaderboard context
  */
 export const TradingLeaderboardContext = createContext<TradingLeaderboardState>(
-  {} as TradingLeaderboardState,
+  {},
 );
 
 export type TradingLeaderboardProviderProps =
-  PropsWithChildren<TradingLeaderboardState>;
+  React.PropsWithChildren<TradingLeaderboardState>;
 
-export const TradingLeaderboardProvider = (
-  props: TradingLeaderboardProviderProps,
-) => {
+export const TradingLeaderboardProvider: React.FC<
+  Readonly<TradingLeaderboardProviderProps>
+> = (props) => {
+  const { href, campaigns, backgroundSrc, children } = props;
+  const memoizedValue = useMemo<TradingLeaderboardState>(() => {
+    return {
+      href: href,
+      campaigns: campaigns,
+      backgroundSrc: backgroundSrc,
+    };
+  }, [href, campaigns, backgroundSrc]);
   return (
-    <TradingLeaderboardContext.Provider
-      value={{
-        campaigns: props.campaigns,
-        href: props.href,
-        backgroundSrc: props.backgroundSrc,
-      }}
-    >
-      {props.children}
+    <TradingLeaderboardContext.Provider value={memoizedValue}>
+      {children}
     </TradingLeaderboardContext.Provider>
   );
 };
