@@ -129,6 +129,7 @@ export function getCampaigns() {
       trading_config: {
         format: "Invite & Trade",
       },
+      user_account_label: "Active traders",
     } as CampaignConfig,
   ];
 }
