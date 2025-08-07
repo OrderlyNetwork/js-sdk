@@ -38,8 +38,6 @@ import { OrderInfo } from "./components/orderInfo";
 import { PnlInfo } from "./components/pnlInfo";
 import { TPSLInputRowWidget } from "./components/tpslInputRow";
 import { TPSLPositionTypeWidget } from "./components/tpslPostionType";
-import { PnlInputWidget } from "./pnlInput/pnlInput.widget";
-import type { PNL_Values } from "./pnlInput/useBuilder.script";
 import { TPSLBuilderState } from "./useTPSL.script";
 
 export type TPSLProps = {
