@@ -1,5 +1,28 @@
 # @orderly.network/portfolio
 
+## 2.5.4-internal-20250814.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.5.4-internal-20250814.0
+  - @orderly.network/chart@2.5.4-internal-20250814.0
+  - @orderly.network/hooks@2.5.4-internal-20250814.0
+  - @orderly.network/i18n@2.5.4-internal-20250814.0
+  - @orderly.network/perp@4.5.4-internal-20250814.0
+  - @orderly.network/types@2.5.4-internal-20250814.0
+  - @orderly.network/ui@2.5.4-internal-20250814.0
+  - @orderly.network/ui-chain-selector@2.5.4-internal-20250814.0
+  - @orderly.network/ui-connector@2.5.4-internal-20250814.0
+  - @orderly.network/ui-leverage@2.5.4-internal-20250814.0
+  - @orderly.network/ui-orders@2.5.4-internal-20250814.0
+  - @orderly.network/ui-positions@2.5.4-internal-20250814.0
+  - @orderly.network/ui-scaffold@2.5.4-internal-20250814.0
+  - @orderly.network/ui-share@2.5.4-internal-20250814.0
+  - @orderly.network/ui-transfer@2.5.4-internal-20250814.0
+  - @orderly.network/utils@2.5.4-internal-20250814.0
+
 ## 2.5.3
 
 ### Patch Changes
