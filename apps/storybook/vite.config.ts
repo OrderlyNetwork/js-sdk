@@ -1,7 +1,9 @@
 /// <reference types="vitest/config" />
 import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
-import react from "@vitejs/plugin-react-swc";
+// https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react
 // import react from "@vitejs/plugin-react";
+// https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react-swc
+import react from "@vitejs/plugin-react-swc";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vite";
