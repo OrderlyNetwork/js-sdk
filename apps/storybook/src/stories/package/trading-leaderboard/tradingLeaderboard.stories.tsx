@@ -94,7 +94,7 @@ export function getCampaigns() {
       title: "RECRUIT & REIGN",
       description: "Invite & Trade to Win",
       image: "/leaderboard/campaign_120.png",
-      start_time: new Date("2025-08-06 00:00:00 UTC").toISOString(),
+      start_time: new Date("2025-08-07 10:00:00 UTC").toISOString(),
       end_time: new Date("2025-08-17 23:59:59 UTC").toISOString(),
       hide_arena: true,
       hide_rewards: true,

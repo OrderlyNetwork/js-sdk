@@ -120,7 +120,7 @@ export const useCampaignsScript = () => {
 
   const statistics = {
     total_participants: stats?.user_count,
-    total_volume: data?.[0]?.volume,
+    total_volume: stats?.volume,
   };
 
   const onLearnMore = () => {
@@ -141,6 +141,15 @@ export const useCampaignsScript = () => {
     }
   };
 
+  const canTrade = useMemo(() => {
+    if (!currentCampaign) return false;
+    return (
+      currentCampaign?.start_time < new Date().toISOString() &&
+      currentCampaign?.end_time > new Date().toISOString() &&
+      state.status >= AccountStatusEnum.EnableTrading
+    );
+  }, [currentCampaign, state.status]);
+
   return {
     campaigns,
     currentCampaignId,
@@ -156,5 +165,6 @@ export const useCampaignsScript = () => {
     isParticipated,
     shouldShowJoinButton,
     joinError,
+    canTrade,
   };
 };

@@ -37,6 +37,7 @@ export const CampaignsContentDesktopUI: FC<{
   joinCampaign?: (data: { campaign_id: string | number }) => Promise<any>;
   isJoining?: boolean;
   joinError?: any;
+  canTrade?: boolean;
 }> = ({
   campaign,
   statistics,
@@ -48,6 +49,7 @@ export const CampaignsContentDesktopUI: FC<{
   shouldShowJoinButton,
   joinCampaign,
   isJoining,
+  canTrade,
 }) => {
   const { t } = useTranslation();
   const bgSrc = campaign?.image || backgroundSrc;
@@ -72,13 +74,6 @@ export const CampaignsContentDesktopUI: FC<{
   const tradingVolume = getTradingVolume(statistics);
   const totalPrizePool = getTotalPrizePool(campaign);
   const ticketPrizePool = getTicketPrizePool(campaign);
-
-  const canTrade = useMemo(() => {
-    return (
-      campaign.start_time < new Date().toISOString() &&
-      campaign.end_time > new Date().toISOString()
-    );
-  }, [campaign]);
 
   const showTradeButton = useMemo(() => {
     return (
