@@ -23,7 +23,7 @@ export const OrderPriceType = (props: Props) => {
       size={"xs"}
       classNames={{
         trigger:
-          "oui-bg-transparent  oui-w-auto oui-outline-line-1 oui-input-root oui-bg-base-6 oui-h-10 lg:oui-h-8 oui-outline-line-12 disabled:oui-opacity-100",
+          "oui-bg-transparent  oui-w-auto oui-outline-line-1 oui-input-root oui-bg-base-6 oui-h-10 lg:oui-h-8 oui-outline-line-12 ",
       }}
       valueFormatter={(value, option) => {
         const displayLabel = {

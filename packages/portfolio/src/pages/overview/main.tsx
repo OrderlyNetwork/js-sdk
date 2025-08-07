@@ -4,12 +4,12 @@ import { AssetWidget } from "./assets";
 import { HistoryDataGroupWidget } from "./historyDataGroup";
 import { MobileOverview } from "./mobile";
 import { PerformanceWidget } from "./performance";
-import { OverviewContextProvider } from "./providers/overviewCtx";
+import { OverviewProvider } from "./provider/overviewProvider";
 
 export const OverviewPage = () => {
   const { isMobile } = useScreen();
   return (
-    <OverviewContextProvider>
+    <OverviewProvider>
       {isMobile ? (
         <MobileOverview />
       ) : (
@@ -24,6 +24,6 @@ export const OverviewPage = () => {
           </Grid.span>
         </Grid>
       )}
-    </OverviewContextProvider>
+    </OverviewProvider>
   );
 };

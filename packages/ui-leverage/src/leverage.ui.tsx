@@ -195,8 +195,13 @@ export type LeverageSliderProps = {
 };
 
 export const LeverageSlider: FC<LeverageSliderProps> = (props) => {
-  const { leverageLevers, maxLeverage, className, value, showSliderTip } =
-    props;
+  const {
+    leverageLevers,
+    maxLeverage = 0,
+    className,
+    value,
+    showSliderTip,
+  } = props;
   return (
     <Box pt={4} width={"100%"} className={className}>
       <Slider

@@ -34,6 +34,7 @@ export const AssetsUI = (
           onDeposit={props.onDeposit}
           onWithdraw={props.onWithdraw}
           onTransfer={props.onTransfer}
+          hasSubAccount={props.hasSubAccount}
         />
       }
     >

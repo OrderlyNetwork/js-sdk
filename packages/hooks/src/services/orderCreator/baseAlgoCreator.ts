@@ -6,6 +6,10 @@ import {
 } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 import {
+  getPriceRange,
+  getTPSLTriggerPriceRange,
+} from "../../utils/order/orderPrice";
+import {
   OrderCreator,
   ValuesDepConfig,
   OrderValidationItem,
@@ -17,6 +21,10 @@ export type AlgoOrderUpdateEntity = {
   order_id: number;
   quantity?: number;
   is_activated?: boolean;
+};
+
+const formatPrice = (price: number, quote_dp: number) => {
+  return new Decimal(price).toDecimalPlaces(quote_dp).toNumber();
 };
 
 export abstract class BaseAlgoOrderCreator<
@@ -124,115 +132,172 @@ export abstract class BaseAlgoOrderCreator<
 
       // there need use position side to validate
       // so if order's side is buy, then position's side is sell
+      const tpslSide = side === OrderSide.BUY ? OrderSide.SELL : OrderSide.BUY;
       if (side === OrderSide.BUY && mark_price) {
-        const slTriggerPriceScope = new Decimal(mark_price * (1 - price_scope))
-          .toDecimalPlaces(quote_dp, Decimal.ROUND_DOWN)
-          .toNumber();
+        const triggerPriceRange = getTPSLTriggerPriceRange({
+          side: side,
+          basePrice: Number(mark_price),
+          symbolInfo: config.symbol,
+        });
         if (
           !!sl_trigger_price &&
-          Number(sl_trigger_price) < slTriggerPriceScope
+          Number(sl_trigger_price) < triggerPriceRange.minPrice
         ) {
           result.sl_trigger_price = OrderValidation.min(
             "sl_trigger_price",
-            slTriggerPriceScope,
+            formatPrice(triggerPriceRange.minPrice, quote_dp),
           );
         }
 
-        if (!!sl_trigger_price && Number(sl_trigger_price) > config.markPrice) {
+        if (
+          !!sl_trigger_price &&
+          Number(sl_trigger_price) > triggerPriceRange.maxPrice
+        ) {
           result.sl_trigger_price = OrderValidation.max(
             "sl_trigger_price",
-            config.markPrice,
+            formatPrice(triggerPriceRange.maxPrice, quote_dp),
           );
         }
 
         if (
           !!tp_trigger_price &&
-          Number(tp_trigger_price) <= config.markPrice
+          Number(tp_trigger_price) <= triggerPriceRange.minPrice
         ) {
           result.tp_trigger_price = OrderValidation.min(
             "tp_trigger_price",
-            config.markPrice,
+            formatPrice(triggerPriceRange.minPrice, quote_dp),
           );
         }
 
-        if (!!tp_trigger_price && Number(tp_trigger_price) > quote_max) {
-          result.tp_trigger_price = OrderValidation.max(
-            "tp_trigger_price",
-            quote_max,
-          );
-        }
-
-        if (!!sl_trigger_price && Number(sl_trigger_price) < quote_min) {
-          result.sl_trigger_price = OrderValidation.min(
-            "sl_trigger_price",
-            quote_min,
-          );
-        }
         if (sl_trigger_price && sl_order_price) {
+          const slOrderPriceRange = getPriceRange({
+            side: tpslSide,
+            basePrice: Number(sl_trigger_price),
+            symbolInfo: config.symbol,
+          });
+          if (Number(sl_order_price) < slOrderPriceRange.minPrice) {
+            result.sl_order_price = OrderValidation.min(
+              "sl_order_price",
+              formatPrice(slOrderPriceRange.minPrice, quote_dp),
+            );
+          }
+          if (Number(sl_order_price) > slOrderPriceRange.maxPrice) {
+            result.sl_order_price = OrderValidation.max(
+              "sl_order_price",
+              formatPrice(slOrderPriceRange.maxPrice, quote_dp),
+            );
+          }
           if (Number(sl_trigger_price) < Number(sl_order_price)) {
             result.sl_trigger_price =
-              OrderValidation.priceErrorMax("sl_trigger_price");
+              OrderValidation.priceErrorMin("sl_trigger_price");
           }
         }
         if (tp_trigger_price && tp_order_price) {
-          if (Number(tp_trigger_price) > Number(tp_order_price)) {
+          const tpOrderPriceRange = getPriceRange({
+            side: tpslSide,
+            basePrice: Number(tp_trigger_price),
+            symbolInfo: config.symbol,
+          });
+          if (Number(tp_order_price) < tpOrderPriceRange.minPrice) {
+            result.tp_order_price = OrderValidation.min(
+              "tp_order_price",
+              formatPrice(tpOrderPriceRange.minPrice, quote_dp),
+            );
+          }
+          if (Number(tp_order_price) > tpOrderPriceRange.maxPrice) {
+            result.tp_order_price = OrderValidation.max(
+              "tp_order_price",
+              formatPrice(tpOrderPriceRange.maxPrice, quote_dp),
+            );
+          }
+          if (Number(tp_trigger_price) < Number(tp_order_price)) {
             result.tp_trigger_price =
-              OrderValidation.priceErrorMin("tp_trigger_price");
+              OrderValidation.priceErrorMax("tp_trigger_price");
           }
         }
       }
 
       if (side === OrderSide.SELL && mark_price) {
-        const slTriggerPriceScope = new Decimal(mark_price * (1 + price_scope))
-          .toDecimalPlaces(quote_dp, Decimal.ROUND_DOWN)
-          .toNumber();
+        const triggerPriceRange = getTPSLTriggerPriceRange({
+          side: tpslSide,
+          basePrice: Number(mark_price),
+          symbolInfo: config.symbol,
+        });
+        const triggerMin = Math.max(triggerPriceRange.minPrice, mark_price);
         if (
           !!sl_trigger_price &&
-          Number(sl_trigger_price) > slTriggerPriceScope
+          Number(sl_trigger_price) > triggerPriceRange.maxPrice
         ) {
           result.sl_trigger_price = OrderValidation.max(
             "sl_trigger_price",
-            slTriggerPriceScope,
+            formatPrice(triggerPriceRange.maxPrice, quote_dp),
           );
         }
 
-        if (!!sl_trigger_price && Number(sl_trigger_price) < config.markPrice) {
+        if (!!sl_trigger_price && Number(sl_trigger_price) < triggerMin) {
           result.sl_trigger_price = OrderValidation.min(
             "sl_trigger_price",
-            config.markPrice,
+            formatPrice(triggerMin, quote_dp),
           );
         }
 
         if (
           !!tp_trigger_price &&
-          Number(tp_trigger_price) >= config.markPrice
+          Number(tp_trigger_price) >= triggerPriceRange.maxPrice
         ) {
           result.tp_trigger_price = OrderValidation.max(
             "tp_trigger_price",
-            config.markPrice,
+            formatPrice(triggerPriceRange.maxPrice, quote_dp),
           );
         }
 
-        if (!!tp_trigger_price && Number(tp_trigger_price) > quote_max) {
-          result.tp_trigger_price = OrderValidation.max(
-            "tp_trigger_price",
-            quote_max,
-          );
-        }
-
-        if (!!sl_trigger_price && Number(sl_trigger_price) < quote_min) {
+        if (!!sl_trigger_price && Number(sl_trigger_price) < triggerMin) {
           result.sl_trigger_price = OrderValidation.min(
             "sl_trigger_price",
-            quote_min,
+            formatPrice(triggerMin, quote_dp),
           );
         }
         if (sl_trigger_price && sl_order_price) {
+          const slOrderPriceRange = getPriceRange({
+            side: tpslSide,
+            basePrice: Number(sl_trigger_price),
+            symbolInfo: config.symbol,
+          });
+          if (Number(sl_order_price) < slOrderPriceRange.minPrice) {
+            result.sl_order_price = OrderValidation.min(
+              "sl_order_price",
+              formatPrice(slOrderPriceRange.minPrice, quote_dp),
+            );
+          }
+          if (Number(sl_order_price) > slOrderPriceRange.maxPrice) {
+            result.sl_order_price = OrderValidation.max(
+              "sl_order_price",
+              formatPrice(slOrderPriceRange.maxPrice, quote_dp),
+            );
+          }
           if (Number(sl_trigger_price) > Number(sl_order_price)) {
             result.sl_trigger_price =
               OrderValidation.priceErrorMin("sl_trigger_price");
           }
         }
         if (tp_trigger_price && tp_order_price) {
+          const tpOrderPriceRange = getPriceRange({
+            side: tpslSide,
+            basePrice: Number(tp_trigger_price),
+            symbolInfo: config.symbol,
+          });
+          if (Number(tp_order_price) < tpOrderPriceRange.minPrice) {
+            result.tp_order_price = OrderValidation.min(
+              "tp_order_price",
+              formatPrice(tpOrderPriceRange.minPrice, quote_dp),
+            );
+          }
+          if (Number(tp_order_price) > tpOrderPriceRange.maxPrice) {
+            result.tp_order_price = OrderValidation.max(
+              "tp_order_price",
+              formatPrice(tpOrderPriceRange.maxPrice, quote_dp),
+            );
+          }
           if (Number(tp_trigger_price) < Number(tp_order_price)) {
             result.tp_trigger_price =
               OrderValidation.priceErrorMax("tp_trigger_price");

@@ -5,19 +5,19 @@ export const useTradingLocalStorage = (props?: {
 }) => {
   const [unPnlPriceBasis, setUnPnlPriceBasic] = useLocalStorage(
     "unPnlPriceBasis",
-    "markPrice"
+    "markPrice",
   );
   const [pnlNotionalDecimalPrecision, setPnlNotionalDecimalPrecision] =
-    useLocalStorage("pnlNotionalDecimalPrecision", props?.pnlNotionalDecimalPrecision ?? 2);
+    useLocalStorage(
+      "pnlNotionalDecimalPrecision",
+      props?.pnlNotionalDecimalPrecision ?? 2,
+    );
   const [showAllSymbol, setShowAllSymbol] = useLocalStorage(
     "showAllSymbol",
-    true
+    true,
   );
-  
-  const [hideAssets, setHideAssets] = useLocalStorage(
-    "hideAssets",
-    false
-  );
+
+  const [hideAssets, setHideAssets] = useLocalStorage("hideAssets", false);
 
   return {
     unPnlPriceBasis,

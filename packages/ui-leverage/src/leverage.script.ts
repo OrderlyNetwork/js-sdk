@@ -69,10 +69,8 @@ export const useLeverageScript = (options?: UseLeverageScriptOptions) => {
   const disabled = !leverage || leverage < 1 || leverage > maxLeverage;
 
   const toggles = useMemo(() => {
-    return [5, 10, 20, 50, 100];
-    // TODO: filter by maxLeverage
-    // return [5, 10, 20, 50, 100].filter((e) => e <= maxLeverage);
-  }, [leverageLevers, maxLeverage]);
+    return [5, 10, 20, 50, 100].filter((e) => e <= maxLeverage);
+  }, [maxLeverage]);
 
   return {
     leverageLevers,

@@ -5,6 +5,10 @@ import {
 } from "@orderly.network/types";
 import { OrderType } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
+import {
+  getPriceRange,
+  getTPSLTriggerPriceRange,
+} from "../../utils/order/orderPrice";
 import { ValuesDepConfig, OrderValidationResult } from "./interface";
 import { OrderValidation } from "./orderValidation";
 
@@ -29,7 +33,7 @@ export async function bracketOrderValidator<
   const qty = Number(values.quantity);
   const maxQty = config.maxQty;
   const type = values.order_type;
-  const { quote_max, quote_min, price_scope, quote_dp } = config.symbol ?? {};
+  const { quote_max, quote_min } = config.symbol ?? {};
 
   const mark_price =
     type === OrderType.MARKET
@@ -37,6 +41,7 @@ export async function bracketOrderValidator<
       : values.order_price
         ? Number(values.order_price)
         : undefined;
+  const tpslSide = side === OrderSide.BUY ? OrderSide.SELL : OrderSide.BUY;
 
   if (!isNaN(qty) && qty > maxQty) {
     result.quantity = OrderValidation.max("quantity", config.maxQty);
@@ -59,26 +64,23 @@ export async function bracketOrderValidator<
   if (sl_order_type === OrderType.LIMIT && !sl_order_price) {
     result.sl_order_price = OrderValidation.required("sl_order_price");
   }
-  console.log("validation result", {
-    result,
-    tp_enable,
-    tp_trigger_price,
-    tp_order_price,
-    tp_order_type,
-    sl_enable,
-    sl_trigger_price,
-    sl_order_price,
-  });
+
   // there need use position side to validate
   // so if order's side is buy, then position's side is sell
   if (side === OrderSide.BUY && mark_price) {
-    const slTriggerPriceScope = new Decimal(mark_price * (1 - price_scope))
-      .toDecimalPlaces(quote_dp, Decimal.ROUND_DOWN)
-      .toNumber();
-    if (!!sl_trigger_price && Number(sl_trigger_price) < slTriggerPriceScope) {
+    const triggerPriceRange = getTPSLTriggerPriceRange({
+      side: tpslSide,
+      basePrice: Number(mark_price),
+      symbolInfo: config.symbol,
+    });
+
+    if (
+      !!sl_trigger_price &&
+      Number(sl_trigger_price) < triggerPriceRange.minPrice
+    ) {
       result.sl_trigger_price = OrderValidation.min(
         "sl_trigger_price",
-        slTriggerPriceScope,
+        triggerPriceRange.minPrice,
       );
     }
 
@@ -104,26 +106,67 @@ export async function bracketOrderValidator<
     }
 
     if (sl_trigger_price && sl_order_price) {
+      const priceRange = getPriceRange({
+        side: tpslSide,
+        basePrice: Number(sl_trigger_price),
+        symbolInfo: config.symbol,
+      });
+      if (Number(sl_order_price) < priceRange.minPrice) {
+        result.sl_order_price = OrderValidation.min(
+          "sl_order_price",
+          priceRange.minPrice,
+        );
+      }
+      if (Number(sl_order_price) > priceRange.maxPrice) {
+        result.sl_order_price = OrderValidation.max(
+          "sl_order_price",
+          priceRange.maxPrice,
+        );
+      }
+
       if (Number(sl_trigger_price) < Number(sl_order_price)) {
         result.sl_trigger_price =
           OrderValidation.priceErrorMax("sl_trigger_price");
       }
     }
     if (tp_trigger_price && tp_order_price) {
-      if (Number(tp_trigger_price) > Number(tp_order_price)) {
+      const priceRange = getPriceRange({
+        side: tpslSide,
+        basePrice: Number(tp_trigger_price),
+        symbolInfo: config.symbol,
+      });
+      if (Number(tp_order_price) < priceRange.minPrice) {
+        result.tp_order_price = OrderValidation.min(
+          "tp_order_price",
+          priceRange.minPrice,
+        );
+      }
+      if (Number(tp_order_price) > priceRange.maxPrice) {
+        result.tp_order_price = OrderValidation.max(
+          "tp_order_price",
+          priceRange.maxPrice,
+        );
+      }
+      if (Number(tp_trigger_price) < Number(tp_order_price)) {
         result.tp_trigger_price =
-          OrderValidation.priceErrorMin("tp_trigger_price");
+          OrderValidation.priceErrorMax("tp_trigger_price");
       }
     }
   }
   if (side === OrderSide.SELL && mark_price) {
-    const slTriggerPriceScope = new Decimal(mark_price * (1 + price_scope))
-      .toDecimalPlaces(quote_dp, Decimal.ROUND_DOWN)
-      .toNumber();
-    if (!!sl_trigger_price && Number(sl_trigger_price) > slTriggerPriceScope) {
+    const triggerPriceRange = getTPSLTriggerPriceRange({
+      side: tpslSide,
+      basePrice: Number(mark_price),
+      symbolInfo: config.symbol,
+    });
+
+    if (
+      !!sl_trigger_price &&
+      Number(sl_trigger_price) > triggerPriceRange.maxPrice
+    ) {
       result.sl_trigger_price = OrderValidation.max(
         "sl_trigger_price",
-        slTriggerPriceScope,
+        triggerPriceRange.maxPrice,
       );
     }
 
@@ -148,12 +191,48 @@ export async function bracketOrderValidator<
       );
     }
     if (sl_trigger_price && sl_order_price) {
+      const priceRange = getPriceRange({
+        side: tpslSide,
+        basePrice: Number(sl_trigger_price),
+        symbolInfo: config.symbol,
+      });
+
+      if (Number(sl_order_price) < priceRange.minPrice) {
+        result.sl_order_price = OrderValidation.min(
+          "sl_order_price",
+          priceRange.minPrice,
+        );
+      }
+      if (Number(sl_order_price) > priceRange.maxPrice) {
+        result.sl_order_price = OrderValidation.max(
+          "sl_order_price",
+          priceRange.maxPrice,
+        );
+      }
+
       if (Number(sl_trigger_price) > Number(sl_order_price)) {
         result.sl_trigger_price =
           OrderValidation.priceErrorMin("sl_trigger_price");
       }
     }
     if (tp_trigger_price && tp_order_price) {
+      const priceRange = getPriceRange({
+        side: tpslSide,
+        basePrice: Number(tp_trigger_price),
+        symbolInfo: config.symbol,
+      });
+      if (Number(tp_order_price) < priceRange.minPrice) {
+        result.tp_order_price = OrderValidation.min(
+          "tp_order_price",
+          priceRange.minPrice,
+        );
+      }
+      if (Number(tp_order_price) > priceRange.maxPrice) {
+        result.tp_order_price = OrderValidation.max(
+          "tp_order_price",
+          priceRange.maxPrice,
+        );
+      }
       if (Number(tp_trigger_price) < Number(tp_order_price)) {
         result.tp_trigger_price =
           OrderValidation.priceErrorMax("tp_trigger_price");

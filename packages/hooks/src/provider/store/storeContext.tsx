@@ -1,19 +1,8 @@
-import {
-  createContext,
-  PropsWithChildren,
-  useContext,
-  useRef,
-  useState,
-} from "react";
+import { createContext, useContext } from "react";
 import { createStore, StateCreator, useStore } from "zustand";
-import { immer } from "zustand/middleware/immer";
 import { devtools } from "zustand/middleware/devtools";
+import { immer } from "zustand/middleware/immer";
 import { SDKError } from "@orderly.network/types";
-// import {
-//   PositionSlice,
-//   positionSlice,
-// } from "./orderly/usePositionStream/usePosition.store";
-// import { useStoreWithEqualityFn } from 'zustand/traditional'
 
 type OrderlyStoreState = {
   // positions: PositionSlice;
@@ -26,33 +15,23 @@ export type ImmerStateCreator<T> = StateCreator<
   T
 >;
 
-const createOrderlyStore = (initialState: any) => {
+export const createOrderlyStore = (initialState: any) => {
   return createStore<OrderlyStoreState>()(
     immer(
       devtools((...args) => ({
         // positions: positionSlice(...args),
-      }))
-    )
+      })),
+    ),
   );
 };
 
 type OrderlyStore = ReturnType<typeof createOrderlyStore>;
 
-const OrderlyStoreContext = createContext<OrderlyStore | null>(null);
+export const OrderlyStoreContext = createContext<OrderlyStore | null>(null);
 
-export const OrderlyStoreProvider = ({ children }: PropsWithChildren) => {
-  const [store] = useState(() => createOrderlyStore({}));
-
-  return (
-    <OrderlyStoreContext.Provider value={store}>
-      {children}
-    </OrderlyStoreContext.Provider>
-  );
-};
-
-function useOrderlyStoreContext<T>(
+export function useOrderlyStoreContext<T>(
   selector: (state: OrderlyStoreState) => T,
-  equalityFn?: (left: T, right: T) => boolean
+  equalityFn?: (left: T, right: T) => boolean,
 ): T {
   const store = useContext(OrderlyStoreContext);
   if (!store)

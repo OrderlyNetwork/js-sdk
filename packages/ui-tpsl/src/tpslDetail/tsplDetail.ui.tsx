@@ -186,6 +186,7 @@ const PartialPositionPart = (props: {
           />
         ) : (
           <OrdersTable
+            className="oui-h-[300px]"
             orders={orders}
             editTPSLOrder={(order) => {
               props.editTPSLOrder(order, PositionType.PARTIAL);

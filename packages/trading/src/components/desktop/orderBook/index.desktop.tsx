@@ -1,5 +1,6 @@
 import { FC, useEffect, useRef, useState } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
+import { EMPTY_LIST } from "@orderly.network/types";
 import { cn, Grid, Spinner } from "@orderly.network/ui";
 import { BasicSymbolInfo } from "../../../types/types";
 import {
@@ -81,7 +82,7 @@ export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
       onItemClick={props.onItemClick}
       depth={props.activeDepth}
       showTotal={showTotal}
-      pendingOrders={props.pendingOrders || []}
+      pendingOrders={props.pendingOrders || EMPTY_LIST}
       symbolInfo={props.symbolInfo}
     >
       <Grid

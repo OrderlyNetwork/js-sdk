@@ -6,7 +6,7 @@ import {
 import { useTradingLocalStorage } from "@orderly.network/trading";
 import { Box } from "@orderly.network/ui";
 import { PortfolioLayout } from "../../../components/layout";
-import { useOrderlyConfig } from "../../../hooks/useOrderlyConfig";
+import { tradingPageConfig } from "../../../orderlyConfig";
 
 const meta: Meta<typeof PositionsModule.PositionsPage> = {
   title: "Package/portfolio/Positions",
@@ -41,13 +41,12 @@ const Container = ({ children }: { children: React.ReactNode }) => {
 
 export const Page: Story = {
   render: () => {
-    const config = useOrderlyConfig();
     const local = useTradingLocalStorage();
 
     return (
       <Container>
         <PositionsModule.PositionsPage
-          sharePnLConfig={config.tradingPage.sharePnLConfig}
+          sharePnLConfig={tradingPageConfig.sharePnLConfig}
           pnlNotionalDecimalPrecision={local.pnlNotionalDecimalPrecision}
           calcMode={local.unPnlPriceBasis}
           onSymbolChange={(symbol) => {
@@ -64,12 +63,11 @@ export const LayoutPage: Story = {
     layout: "fullscreen",
   },
   render: () => {
-    const config = useOrderlyConfig();
     return (
       <PortfolioLayout currentPath={PortfolioLeftSidebarPath.Positions}>
         <Container>
           <PositionsModule.PositionsPage
-            sharePnLConfig={config.tradingPage.sharePnLConfig}
+            sharePnLConfig={tradingPageConfig.sharePnLConfig}
           />
         </Container>
       </PortfolioLayout>

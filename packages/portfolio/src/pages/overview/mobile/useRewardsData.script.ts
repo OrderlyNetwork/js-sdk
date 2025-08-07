@@ -1,4 +1,4 @@
-import { useMemo, useContext, useRef, useEffect } from "react";
+import { useMemo, useRef, useEffect } from "react";
 import {
   useAllBrokers,
   useConfig,
@@ -12,7 +12,7 @@ import {
 import { DistributionId, TWType } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
-import { OverviewContext } from "../providers/overviewCtx";
+import { useOverviewContext } from "../provider/overviewContext";
 
 export const useRewardsData = ({ type = TWType.normal }: { type?: TWType }) => {
   const totalOrderClaimedReward = useGetClaimed(
@@ -66,7 +66,7 @@ export const useRewardsDataScript = () => {
     epochList,
     brokerName,
     referralInfo,
-  } = useContext(OverviewContext);
+  } = useOverviewContext();
   const { state } = useAccount();
   const { wrongNetwork } = useAppContext();
   const isSignIn =

@@ -164,10 +164,10 @@ export const Transform = {
   },
 
   dataSource: <T>(
-    dataSource: T[],
+    dataSource: ReadonlyArray<T> | T[],
     columns: Column[],
     sorting?: SortingState,
-  ): T[] => {
+  ): ReadonlyArray<T> | T[] => {
     if (
       !dataSource ||
       dataSource.length === 0 ||

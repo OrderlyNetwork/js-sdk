@@ -10,10 +10,6 @@ export const BecomeAffiliate: FC<BecomeAffiliateReturns> = (props) => {
 
   const { generateCode } = useReferralContext();
 
-  if (typeof props.overwrite === "function") {
-    return props.overwrite?.(props.state);
-  }
-
   const applyText = useMemo(() => {
     if (!generateCode) {
       return {
@@ -28,7 +24,6 @@ export const BecomeAffiliate: FC<BecomeAffiliateReturns> = (props) => {
         }),
         desc: t("affiliate.process.step1.volumeGt0.description", {
           volume: commify(generateCode.completedVolume ?? 0, 2),
-          // volume: <Text.formatted></Text.formatted>,
           requireVolume: commify(generateCode.requireVolume),
         }),
       };
@@ -39,6 +34,10 @@ export const BecomeAffiliate: FC<BecomeAffiliateReturns> = (props) => {
       desc: t("affiliate.process.step1.volumeEq0.description"),
     };
   }, [generateCode, t]);
+
+  if (typeof props.overwrite === "function") {
+    return props.overwrite?.(props.state);
+  }
 
   return (
     <Flex
@@ -52,13 +51,13 @@ export const BecomeAffiliate: FC<BecomeAffiliateReturns> = (props) => {
       width={"100%"}
     >
       <Text>{t("affiliate.process.title")}</Text>
-      <Flex className="oui-flex oui-flex-col lg:oui-flex-row oui-gap-3 lg:oui-items-stretch lg:oui-w-full">
+      <Flex className="oui-flex oui-flex-col oui-gap-3 lg:oui-w-full lg:oui-flex-row lg:oui-items-stretch">
         <Item
           icon={<ApplyIcon />}
           title={applyText.title}
           content={applyText.desc}
         />
-        <div className="oui-flex-shrink lg:-oui-rotate-90 lg:oui-flex lg:oui-flex-row lg:oui-items-center lg:oui-justify-center">
+        <div className="oui-shrink lg:oui-flex lg:-oui-rotate-90 lg:oui-flex-row lg:oui-items-center lg:oui-justify-center">
           <ArrowDownIcon />
         </div>
         <Item
@@ -66,7 +65,7 @@ export const BecomeAffiliate: FC<BecomeAffiliateReturns> = (props) => {
           title={t("affiliate.process.step2.title")}
           content={t("affiliate.process.step2.description")}
         />
-        <div className="oui-flex-shrink lg:-oui-rotate-90 lg:oui-flex lg:oui-flex-row lg:oui-items-center lg:oui-justify-center">
+        <div className="oui-shrink lg:oui-flex lg:-oui-rotate-90 lg:oui-flex-row lg:oui-items-center lg:oui-justify-center">
           <ArrowDownIcon />
         </div>
         <Item
@@ -88,12 +87,11 @@ const Item: FC<{
     <Flex
       className={cn(
         "oui-flex oui-flex-row oui-gap-3",
-        // lg
-        "lg:oui-flex-col lg:oui-gap-[6px] lg:oui-flex-1",
+        "lg:oui-flex-1 lg:oui-flex-col lg:oui-gap-[6px]",
       )}
       width={"100%"}
     >
-      <div className="oui-flex-shrink-0">{props.icon}</div>
+      <div className="oui-shrink-0">{props.icon}</div>
       <Flex
         className={cn(
           "oui-flex oui-flex-col oui-items-start oui-h-full oui-justify-between",

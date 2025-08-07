@@ -1,21 +1,21 @@
-import { FC, PropsWithChildren, createContext, useContext } from "react";
+import React, { createContext, useContext, useMemo } from "react";
 
 export interface DepositContextState {}
 
-export const SwapDepositContext = createContext<DepositContextState>(
-  {} as DepositContextState,
-);
+export const SwapDepositContext = createContext<DepositContextState>({});
 
-export const SwapDepositProvider: FC<PropsWithChildren<DepositContextState>> = (
-  props,
-) => {
+export const SwapDepositProvider: React.FC<
+  React.PropsWithChildren<DepositContextState>
+> = (props) => {
+  const { children } = props;
+  const memoizedValue = useMemo<DepositContextState>(() => ({}), []);
   return (
-    <SwapDepositContext.Provider value={{}}>
-      {props.children}
+    <SwapDepositContext.Provider value={memoizedValue}>
+      {children}
     </SwapDepositContext.Provider>
   );
 };
 
-export function useSwapDepositContext() {
-  return useContext(SwapDepositContext);
-}
+export const useSwapDepositContext = () => {
+  return useContext<DepositContextState>(SwapDepositContext);
+};

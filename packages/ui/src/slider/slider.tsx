@@ -1,10 +1,10 @@
 import * as React from "react";
+import { Fragment, useMemo } from "react";
 import * as SliderPrimitive from "@radix-ui/react-slider";
 import { cnBase, VariantProps } from "tailwind-variants";
-import { tv } from "../utils/tv";
-import { Fragment, useMemo } from "react";
-import { convertValueToPercentage, getThumbInBoundsOffset } from "./utils";
 import { cn } from "..";
+import { tv } from "../utils/tv";
+import { convertValueToPercentage, getThumbInBoundsOffset } from "./utils";
 
 const sliderVariants = tv({
   slots: {
@@ -109,7 +109,7 @@ type SliderProps = React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root> &
       value: number,
       min: number,
       max: number,
-      percent: number
+      percent: number,
     ) => string | React.ReactNode;
     classNames?: {
       root?: string;
@@ -122,136 +122,130 @@ type SliderProps = React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root> &
 const BaseSlider = React.forwardRef<
   React.ElementRef<typeof SliderPrimitive.Root>,
   SliderProps
->(
-  (
-    {
-      className,
-      color,
-      marks,
-      markCount,
-      classNames,
-      markLabelVisible,
-      showTip,
-      onValueChange,
-      value: __propsValue,
-      ...props
-    },
-    ref
-  ) => {
-    const { track, range, thumb, root, trackInner, mark, tips } =
-      sliderVariants({
-        color,
-      });
+>((oriProps, ref) => {
+  const {
+    className,
+    color,
+    marks,
+    markCount,
+    classNames,
+    markLabelVisible,
+    showTip,
+    onValueChange,
+    value: __propsValue,
+    ...props
+  } = oriProps;
+  const { track, range, thumb, root, trackInner, mark, tips } = sliderVariants({
+    color,
+  });
 
-    const [innerValue, setInvalue] = React.useState(__propsValue);
+  const [innerValue, setInvalue] = React.useState(__propsValue);
 
-    React.useEffect(() => {
-      setInvalue((prev: any) => {
-        if (!prev) return __propsValue;
-        if (__propsValue?.some((v, i) => v !== prev[i])) {
-          return __propsValue;
-        }
-
-        return prev;
-      });
-    }, [__propsValue]);
-
-    const innerMasks = useMemo<SliderMarks>(() => {
-      if (Array.isArray(marks) && marks.length > 0) {
-        return marks;
+  React.useEffect(() => {
+    setInvalue((prev) => {
+      if (!prev) {
+        return __propsValue;
       }
-
-      let _max = props.max;
-      if (!_max) {
-        _max = 100;
+      if (__propsValue?.some((v, i) => v !== prev[i])) {
+        return __propsValue;
       }
+      return prev;
+    });
+  }, [__propsValue]);
 
-      if (typeof markCount !== "undefined") {
-        const marks: SliderMarks = [];
+  const innerMasks = useMemo<SliderMarks>(() => {
+    if (Array.isArray(marks) && marks.length > 0) {
+      return marks;
+    }
 
-        // if(max === 0){
+    let _max = props.max;
+    if (!_max) {
+      _max = 100;
+    }
 
-        // }
+    if (typeof markCount !== "undefined") {
+      const marks: SliderMarks = [];
 
-        const piece = _max / markCount;
-        const len = markCount - 1;
+      // if(max === 0){
 
-        for (let i = 0; i <= len; i++) {
-          const value = i * piece;
-          marks.push({
-            value,
-            label: `${value}`,
-          });
-        }
+      // }
 
+      const piece = _max / markCount;
+      const len = markCount - 1;
+
+      for (let i = 0; i <= len; i++) {
+        const value = i * piece;
         marks.push({
-          value: _max,
-          label: `100`,
+          value,
+          label: `${value}`,
         });
-
-        return marks;
       }
 
-      return [];
-    }, [marks, markCount, props.max]);
+      marks.push({
+        value: _max,
+        label: `100`,
+      });
 
-    const onValueChangeInner = (value: number[]) => {
-      setInvalue(value);
+      return marks;
+    }
 
-      onValueChange?.(value);
-    };
+    return [];
+  }, [marks, markCount, props.max]);
 
-    return (
-      <SliderPrimitive.Root
-        ref={ref}
-        className={root({ className })}
-        value={onValueChange ? __propsValue : innerValue}
-        onValueChange={onValueChange ? onValueChange : onValueChangeInner}
-        {...props}
+  const onValueChangeInner = (value: number[]) => {
+    setInvalue(value);
+
+    onValueChange?.(value);
+  };
+
+  return (
+    <SliderPrimitive.Root
+      ref={ref}
+      className={root({ className })}
+      value={onValueChange ? __propsValue : innerValue}
+      onValueChange={onValueChange ? onValueChange : onValueChangeInner}
+      {...props}
+    >
+      <SliderPrimitive.Track
+        className={track({ className: classNames?.track })}
       >
-        <SliderPrimitive.Track
-          className={track({ className: classNames?.track })}
-        >
-          <div className={trackInner()} />
-          <SliderPrimitive.Range
-            className={range({ className: classNames?.range })}
-          />
-        </SliderPrimitive.Track>
-        {Array.isArray(innerMasks) && innerMasks.length > 0 && (
-          <Marks
+        <div className={trackInner()} />
+        <SliderPrimitive.Range
+          className={range({ className: classNames?.range })}
+        />
+      </SliderPrimitive.Track>
+      {Array.isArray(innerMasks) && innerMasks.length > 0 && (
+        <Marks
+          value={innerValue}
+          color={color}
+          marks={innerMasks}
+          isInnerMask={!Array.isArray(marks) || marks.length === 0}
+          min={props.min}
+          max={props.max}
+          markLabelVisible={markLabelVisible}
+          disabled={props.disabled}
+          className={mark()}
+          step={props.step}
+        />
+      )}
+      <SliderPrimitive.Thumb
+        className={thumb({
+          className: cn(classNames?.thumb, "oui-slider-thumb"),
+        })}
+      >
+        {showTip && (
+          <SliderTip
             value={innerValue}
-            color={color}
-            marks={innerMasks}
-            isInnerMask={!Array.isArray(marks) || marks.length === 0}
-            // min={props.min}
-            // max={props.max}
-            markLabelVisible={markLabelVisible}
-            disabled={props.disabled}
-            className={mark()}
-            step={props.step}
+            className={tips({ color })}
+            max={props.max ?? 100}
+            min={0}
+            tipFormatter={props.tipFormatter}
           />
         )}
-        <SliderPrimitive.Thumb
-          className={thumb({
-            className: cn(classNames?.thumb, "oui-slider-thumb"),
-          })}
-        >
-          {showTip && (
-            <SliderTip
-              value={innerValue}
-              className={tips({
-                color,
-              })}
-              max={props.max ?? 100}
-              min={0}
-              tipFormatter={props.tipFormatter}
-            />
-          )}
-        </SliderPrimitive.Thumb>
-      </SliderPrimitive.Root>
-    );
-  }
-);
+      </SliderPrimitive.Thumb>
+    </SliderPrimitive.Root>
+  );
+});
 
 BaseSlider.displayName = SliderPrimitive.Root.displayName;
 
@@ -260,9 +254,8 @@ export type SliderMarksProps = {
   marks?: SliderMarks;
   color?: "primary" | "buy" | "sell" | "primaryLight";
   // width: number;
-  // min: number;
-  // max: number;
-
+  min?: number;
+  max?: number;
   disabled?: boolean;
   markLabelVisible?: boolean;
   isInnerMask?: boolean;
@@ -270,7 +263,7 @@ export type SliderMarksProps = {
   step?: number;
 };
 
-const Marks = (props: SliderMarksProps) => {
+const Marks: React.FC<SliderMarksProps> = (props) => {
   const {
     marks,
     value,
@@ -281,7 +274,9 @@ const Marks = (props: SliderMarksProps) => {
   } = props;
   const _value = useMemo(() => value?.[0] ?? 0, [value]);
   const selIndex = useMemo(() => {
-    if (typeof props.step === "undefined") return undefined;
+    if (typeof props.step === "undefined") {
+      return undefined;
+    }
     return Math.floor(_value / props.step);
   }, [_value, props.step]);
 
@@ -314,10 +309,13 @@ const Marks = (props: SliderMarksProps) => {
   return (
     <>
       {marks?.map((mark, index) => {
-        // const percent = convertValueToPercentage(mark.value, props.min, _max);
-        const percent = convertValueToPercentage(index, 0, marks.length - 1);
+        const percent = convertValueToPercentage(
+          mark.value,
+          props.min ?? 1,
+          props.max ?? marks.length - 1,
+        );
+        // const percent = convertValueToPercentage(index, 0, marks.length - 1);
         // const percent = ((100 - 2 * 6) / (marks.length - 1)) * index;
-
         const thumbInBoundsOffset = getThumbInBoundsOffset(6, percent, 1);
         const __value = isInnerMask ? mark.value : index;
         // console.log("_ value", isInnerMask, _value, selIndex, mark, __value, percent);
@@ -333,11 +331,7 @@ const Marks = (props: SliderMarksProps) => {
           <Fragment key={index}>
             <span
               className={cnBase(className, classNames)}
-              style={{
-                left: `calc(${percent}% + ${thumbInBoundsOffset}px)`,
-                // opacity: '0.3'
-                // top: "7px",
-              }}
+              style={{ left: `calc(${percent}% + ${thumbInBoundsOffset}px)` }}
             />
             {!props.disabled && markLabelVisible && (
               <span
@@ -345,11 +339,9 @@ const Marks = (props: SliderMarksProps) => {
                 key={index}
                 className={cn(
                   "oui-absolute oui-top-[16px] oui-text-2xs xl:oui-text-xs oui-text-base-contrast-54 oui-cursor-pointer oui-translate-x-[-50%]",
-                  selIndex === index && textCls
+                  selIndex === index && textCls,
                 )}
-                style={{
-                  left: `calc(${percent}% + ${thumbInBoundsOffset}px)`,
-                }}
+                style={{ left: `calc(${percent}% + ${thumbInBoundsOffset}px)` }}
               >
                 {mark.label}
               </span>
@@ -370,7 +362,7 @@ export interface SliderTipProps {
     value: number,
     min: number,
     max: number,
-    percent: number
+    percent: number,
   ) => string | React.ReactNode;
 }
 

@@ -92,10 +92,12 @@ export const useAssetsHistoryData = (
 
   const calculateLastPnl = (inputs: {
     lastItem: API.DailyRow;
-    assetHistory: API.AssetHistoryRow[];
+    assetHistory: ReadonlyArray<API.AssetHistoryRow> | API.AssetHistoryRow[];
     totalValue: number | null;
   }) => {
-    if (totalValue == null) return null;
+    if (totalValue == null) {
+      return null;
+    }
     // today daily pnl = totalValue - lastItem.account_value - deposit + withdraw
     let value = new Decimal(totalValue).sub(inputs.lastItem.account_value);
 
@@ -150,7 +152,10 @@ export const useAssetsHistoryData = (
     };
   };
 
-  const mergeData = (data: API.DailyRow[], totalValue: number | null) => {
+  const mergeData = (
+    data: ReadonlyArray<API.DailyRow> | API.DailyRow[],
+    totalValue: number | null,
+  ) => {
     if (!Array.isArray(data) || data.length === 0) {
       return data;
     }
@@ -162,7 +167,10 @@ export const useAssetsHistoryData = (
     return data.concat([calculate(data, totalValue)]);
   };
 
-  const calculateData = (data: API.DailyRow[], realtime: boolean) => {
+  const calculateData = (
+    data: ReadonlyArray<API.DailyRow> | API.DailyRow[],
+    realtime: boolean,
+  ) => {
     const _data = !realtime ? data : mergeData(data, totalValue);
 
     return _data.slice(Math.max(0, _data.length - periodValue));
@@ -172,7 +180,9 @@ export const useAssetsHistoryData = (
     /**
      * need the totalValue and data are all ready, else return null;
      */
-    if (totalValue == null) return [];
+    if (totalValue == null) {
+      return [];
+    }
     return calculateData(data, isRealtime);
   }, [data, totalValue, assetHistory, isRealtime]);
 

@@ -1,12 +1,6 @@
-import {
-  FC,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useMaxQty, utils } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 import { API, OrderSide } from "@orderly.network/types";
 import { AlgoOrderRootType } from "@orderly.network/types";
 import {
@@ -21,15 +15,13 @@ import {
   PopoverRoot,
   PopoverContent,
 } from "@orderly.network/ui";
-import { ConfirmContent, EditType } from "./editOrder/confirmContent";
-import { InnerInput } from "./editOrder/innerInput";
+import { commifyOptional, Decimal } from "@orderly.network/utils";
+import { grayCell } from "../../../utils/util";
+import { useSymbolContext } from "../../provider/symbolContext";
 import { useOrderListContext } from "../orderListContext";
 import { useTPSLOrderRowContext } from "../tpslOrderRowContext";
-import { useSymbolContext } from "../symbolProvider";
-import { grayCell } from "../../../utils/util";
-import { useMaxQty, utils } from "@orderly.network/hooks";
-import { commifyOptional, Decimal } from "@orderly.network/utils";
-import { useTranslation } from "@orderly.network/i18n";
+import { ConfirmContent, EditType } from "./editOrder/confirmContent";
+import { InnerInput } from "./editOrder/innerInput";
 
 export const OrderQuantity = (props: {
   order: API.OrderExt | API.AlgoOrder;
@@ -39,7 +31,7 @@ export const OrderQuantity = (props: {
   const { order, otherOrderQuantity } = props;
   const { reduce_only } = order;
   const [quantity, originSetQuantity] = useState<string>(
-    order.quantity.toString()
+    order.quantity.toString(),
   );
 
   const [editing, setEditing] = useState(false);
@@ -67,7 +59,7 @@ export const OrderQuantity = (props: {
       setError(
         t("orders.quantity.lessThanPosition", {
           quantity: positionQty,
-        })
+        }),
       );
     } else {
       const quantity = Number(qty);
@@ -77,7 +69,7 @@ export const OrderQuantity = (props: {
             quantity: commifyOptional(maxQty, {
               fix: base_dp,
             }),
-          })
+          }),
         );
       } else {
         setError(undefined);
@@ -210,7 +202,7 @@ export const OrderQuantity = (props: {
           toast.error(err.message);
           setQuantity(order.quantity.toString());
           cancelPopover();
-        }
+        },
       )
       .finally(() => setIsSubmitting(false));
   }, [quantity]);
@@ -343,7 +335,7 @@ const NormalState: FC<{
 
         order.side === OrderSide.BUY && "oui-text-trade-profit",
         order.side === OrderSide.SELL && "oui-text-trade-loss",
-        grayCell(order) && "oui-text-base-contrast-20"
+        grayCell(order) && "oui-text-base-contrast-20",
       )}
       onClick={(e) => {
         e.stopPropagation();
@@ -365,7 +357,7 @@ const NormalState: FC<{
           "oui-min-w-[70px] oui-h-[28px]",
 
           !props.disableEdit &&
-            "oui-bg-base-7 oui-px-2 oui-border oui-border-line-12"
+            "oui-bg-base-7 oui-px-2 oui-border oui-border-line-12",
         )}
       >
         <Text size="2xs">{quantity}</Text>
@@ -554,7 +546,7 @@ const EditState: FC<{
                   inputRef.current.focus();
                   inputRef.current.setSelectionRange(
                     quantity.length,
-                    quantity.length
+                    quantity.length,
                   );
                 }, 100);
               }}

@@ -1,9 +1,10 @@
 import { API } from "@orderly.network/types";
-import { cn } from "@orderly.network/ui";
+import { cn, ScrollArea } from "@orderly.network/ui";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import { useColumn } from "./useColum";
 
 export const OrdersTable = (props: {
+  className?: string;
   orders: API.AlgoOrder[];
   editTPSLOrder: (order: API.AlgoOrder) => void;
   onCancelOrder: (order: API.AlgoOrder) => Promise<void>;
@@ -11,12 +12,16 @@ export const OrdersTable = (props: {
   const { orders } = props;
   const columns = useColumn({ onCancelOrder: props.onCancelOrder });
   return (
+    // <ScrollArea className={cn( props.className)}>
+
     <AuthGuardDataTable
       columns={columns}
       dataSource={orders}
       className="oui-bg-transparent oui-text-2xs"
       bordered
       classNames={{
+        root: cn(props.className),
+        header: "!oui-bg-base-8",
         scroll: cn(
           !orders || orders.length === 0
             ? "!oui-min-h-[170px]"
@@ -34,5 +39,6 @@ export const OrdersTable = (props: {
         };
       }}
     />
+    // </ScrollArea>
   );
 };

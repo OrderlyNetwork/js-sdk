@@ -1,14 +1,13 @@
 import React from "react";
-
-import { layoutVariants } from "../layout/layout";
 import { Slot } from "@radix-ui/react-slot";
-import { parseSizeProps } from "../helpers/parse-props";
 import { VariantProps } from "tailwind-variants";
-import { shadowVariants } from "../layout/shadow";
+import { parseSizeProps } from "../helpers/parse-props";
 import { decorationVariants } from "../layout/decoration";
-import { tv } from "../utils/tv";
+import { layoutVariants } from "../layout/layout";
 import { positionVariants } from "../layout/position";
+import { shadowVariants } from "../layout/shadow";
 import { visibleVariants } from "../layout/visible";
+import { tv } from "../utils/tv";
 
 const boxVariants = tv({
   base: ["oui-box"],
@@ -99,6 +98,7 @@ const Box = React.forwardRef<BoxElement, BoxProps>((props, forwardedRef) => {
     intensity,
     position,
     borderColor,
+    children,
     ...rest
   } = parseSizeProps(props);
 
@@ -139,11 +139,14 @@ const Box = React.forwardRef<BoxElement, BoxProps>((props, forwardedRef) => {
       })}
       {...rest}
       ref={forwardedRef}
-    />
+    >
+      {children}
+    </Comp>
   );
 });
 
 Box.displayName = "Box";
 
 export { Box, boxVariants };
+
 export type { BoxProps };

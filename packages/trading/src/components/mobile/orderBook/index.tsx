@@ -1,5 +1,6 @@
 import { FC, useEffect } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
+import { EMPTY_LIST } from "@orderly.network/types";
 import { cn, Flex, Spinner } from "@orderly.network/ui";
 import { BasicSymbolInfo } from "../../../types/types";
 import {
@@ -74,7 +75,7 @@ export const OrderBook: FC<OrderBookProps> = (props) => {
         <MarkPrice lastPrice={lastPrice} markPrice={markPrice} />
         <Bids data={props.bids} />
         <DepthSelect
-          depth={props.depths || []}
+          depth={props.depths || EMPTY_LIST}
           value={props.activeDepth}
           onChange={onDepthChange}
         />

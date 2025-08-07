@@ -6,7 +6,6 @@ import {
   useLocalStorage,
   useOdosQuote,
   useWalletConnector,
-  useMemoizedFn,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { account } from "@orderly.network/perp";
@@ -123,11 +122,9 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
   const [postQuote, { data: quoteData, isMutating: isQuoteLoading }] =
     useOdosQuote();
 
-  const memoizedPostQuote = useMemoizedFn(postQuote);
-
   useEffect(() => {
     if (quantity && chainId && token.address && targetToken?.address) {
-      memoizedPostQuote({
+      postQuote({
         chainId: chainId,
         inputTokens: [
           {
@@ -143,7 +140,7 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
         ],
       });
     }
-  }, [quantity, token, targetToken, chainId, memoizedPostQuote]);
+  }, [quantity, token, targetToken, chainId, postQuote]);
 
   const memoizedOutAmounts = useMemo<string>(() => {
     if (!quoteData || isQuoteLoading) {

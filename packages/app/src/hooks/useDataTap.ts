@@ -1,6 +1,6 @@
 import { useAccount } from "@orderly.network/hooks";
 import { AccountStatusEnum } from "@orderly.network/types";
-import { useAppContext } from "../provider/appContext";
+import { useAppContext } from "../provider/appStateContext";
 
 export const useDataTap = <T = any>(
   data: T,

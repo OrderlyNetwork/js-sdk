@@ -1,8 +1,8 @@
+import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
 import { PositionTPSLPopover } from "@orderly.network/ui-tpsl";
+import { useSymbolContext } from "../../provider/symbolContext";
 import { useTPSLOrderRowContext } from "../tpslOrderRowContext";
-import { useSymbolContext } from "../symbolProvider";
-import { useTranslation } from "@orderly.network/i18n";
 
 export const TP_SLEditButton = (props: { order: API.Order }) => {
   const { position, order } = useTPSLOrderRowContext();

@@ -1,6 +1,5 @@
-import type { FC, PropsWithChildren } from "react";
+import React from "react";
 import { useMemo } from "react";
-import { WalletConnectorContext } from "@orderly.network/hooks";
 import { useWeb3Modal } from "@web3modal/wagmi/react";
 import {
   useAccount,
@@ -10,25 +9,24 @@ import {
   useWalletClient,
   usePublicClient,
 } from "wagmi";
+import { WalletConnectorContext } from "@orderly.network/hooks";
+import type { WalletConnectorContextState } from "@orderly.network/hooks";
 
-export const Main: FC<PropsWithChildren> = (props) => {
+export const Main: React.FC<React.PropsWithChildren> = (props) => {
   const { open } = useWeb3Modal();
-  const { address, isConnecting, isDisconnected, connector } = useAccount();
+  const { address, isConnecting } = useAccount();
   const { disconnect: __disconnect, disconnectAsync } = useDisconnect();
   const { chain, chains } = useNetwork();
-  const { error, isLoading, pendingChainId, switchNetwork } =
-    useSwitchNetwork();
+  const { isLoading, switchNetwork } = useSwitchNetwork();
 
   const publicClient = usePublicClient();
 
-  const { data: walletClient, isError } = useWalletClient();
+  const { data: walletClient } = useWalletClient();
 
   const connect = () => {
     return new Promise((resolve, reject) => {
       return open()
         .then((args) => {
-          // resolve(provider);
-          console.log("connect success", args);
           resolve([]);
         })
         .catch((error) => {
@@ -44,7 +42,9 @@ export const Main: FC<PropsWithChildren> = (props) => {
   };
 
   const connectedChain = useMemo(() => {
-    if (!chain || !chain?.id) return null;
+    if (!chain || !chain?.id) {
+      return null;
+    }
     return {
       id: chain.id,
     };
@@ -57,7 +57,9 @@ export const Main: FC<PropsWithChildren> = (props) => {
   };
 
   const wallet = useMemo(() => {
-    if (!address || !connectedChain) return null;
+    if (!address || !connectedChain) {
+      return null;
+    }
 
     return {
       label: "string",
@@ -76,19 +78,31 @@ export const Main: FC<PropsWithChildren> = (props) => {
     };
   }, [address, connectedChain, publicClient, walletClient]);
 
+  const memoizedValue = useMemo<WalletConnectorContextState>(() => {
+    return {
+      connect: connect as any,
+      disconnect: disconnect as any,
+      connecting: isConnecting,
+      wallet: wallet as any,
+      setChain: setChain as any,
+      chains,
+      connectedChain: connectedChain as any,
+      settingChain: isLoading,
+      namespace: undefined as any,
+    };
+  }, [
+    connect,
+    disconnect,
+    isConnecting,
+    wallet,
+    setChain,
+    chains,
+    connectedChain,
+    isLoading,
+  ]);
+
   return (
-    <WalletConnectorContext.Provider
-      value={{
-        connect,
-        disconnect,
-        connecting: isConnecting,
-        wallet,
-        setChain,
-        chains,
-        connectedChain,
-        settingChain: isLoading,
-      }}
-    >
+    <WalletConnectorContext.Provider value={memoizedValue}>
       {props.children}
     </WalletConnectorContext.Provider>
   );

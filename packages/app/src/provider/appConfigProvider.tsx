@@ -1,20 +1,13 @@
-import React, { createContext, PropsWithChildren, useContext } from "react";
+import { FC, PropsWithChildren } from "react";
 import { AppLogos } from "../types";
+import { AppConfigContext } from "./appConfigContext";
 
 export type ThemeContextState = {
   appIcons?: AppLogos;
   brokerName: string;
 };
 
-const AppConfigContext = createContext<ThemeContextState>(
-  {} as ThemeContextState,
-);
-
-export const useAppConfig = () => {
-  return useContext(AppConfigContext);
-};
-
-export const AppConfigProvider: React.FC<
+export const AppConfigProvider: FC<
   PropsWithChildren<{ appIcons?: AppLogos; brokerName: string }>
 > = (props) => {
   return (

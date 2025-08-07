@@ -6,7 +6,7 @@ export interface CollapseContextState {
 }
 
 export const CollapseContext = createContext<CollapseContextState>(
-  {} as CollapseContextState
+  {} as CollapseContextState,
 );
 
 export const useCollapseContext = () => {

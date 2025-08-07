@@ -1,5 +1,6 @@
 import { FC, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
+import { EMPTY_LIST } from "@orderly.network/types";
 import { Divider, Flex, toast, Text, Box } from "@orderly.network/ui";
 import {
   PnLDisplayFormat,
@@ -136,7 +137,7 @@ export const DesktopSharePnLContent: FC<{
             />
           </Flex>
           <CarouselBackgroundImage
-            backgroundImages={shareOptions?.backgroundImages ?? []}
+            backgroundImages={shareOptions?.backgroundImages ?? EMPTY_LIST}
             selectedSnap={selectedSnap}
             setSelectedSnap={setSelectedSnap}
           />

@@ -1,8 +1,6 @@
-import { useContext } from "react";
 import { type API } from "@orderly.network/types";
-// import { createGetter } from "../utils/createGetter";
 import { getPrecisionByNumber } from "@orderly.network/utils";
-import { OrderlyContext } from "..";
+import { useOrderlyContext } from "../orderlyContext";
 import { useQuery } from "../useQuery";
 import { useAppStore } from "./appStore";
 import { useMarketStore } from "./useMarket/market.store";
@@ -23,7 +21,7 @@ export const usePublicDataObserver = () => {
 
   const setTokensInfo = useTokensInfoStore((state) => state.setTokensInfo);
 
-  const { dataAdapter } = useContext(OrderlyContext);
+  const { dataAdapter } = useOrderlyContext();
 
   const resolveList =
     typeof dataAdapter?.symbolList === "function"

@@ -16,6 +16,7 @@ export const CampaignsHeaderMobileUI: FC<{
     const [canScrollPrev, setCanScrollPrev] = useState(false);
     const [canScrollNext, setCanScrollNext] = useState(false);
     const hasInitialScrolled = useRef(false);
+    const isInitializing = useRef(true);
 
     const [emblaRef, emblaApi] = useEmblaCarousel({
       loop: false,
@@ -39,15 +40,12 @@ export const CampaignsHeaderMobileUI: FC<{
       setCanScrollPrev(emblaApi.canScrollPrev());
       setCanScrollNext(emblaApi.canScrollNext());
 
-      // Only auto trigger onCampaignChange after initial scroll is completed
-      // This prevents race condition where updateScrollAvailability triggers before scrollToCurrentCampaign
-      if (!hasInitialScrolled.current) return;
+      // Skip auto campaign change during initialization or before initial scroll is completed
+      if (isInitializing.current || !hasInitialScrolled.current) return;
 
-      // Auto trigger onCampaignChange when slide changes
+      // Auto trigger onCampaignChange when slide changes (only after user interaction)
       const selectedIndex = emblaApi.selectedScrollSnap();
       const selectedCampaign = allCampaignItems[selectedIndex];
-
-      console.log("selectedCampaign", selectedCampaign, selectedIndex);
 
       if (selectedCampaign) {
         const campaignId = selectedCampaign.isDefault
@@ -80,8 +78,12 @@ export const CampaignsHeaderMobileUI: FC<{
         emblaApi.scrollTo(targetIndex, false); // false to disable animation for initial scroll
       }
 
-      // Mark as scrolled after the scroll operation
+      // Mark as scrolled and initialized after the scroll operation
       hasInitialScrolled.current = true;
+      // Small delay to ensure the scroll operation is completed before enabling auto change
+      setTimeout(() => {
+        isInitializing.current = false;
+      }, 100);
     }, [emblaApi, campaigns, currentCampaignId, allCampaignItems]);
 
     useEffect(() => {
@@ -106,17 +108,26 @@ export const CampaignsHeaderMobileUI: FC<{
     // Reset scroll flag when currentCampaignId changes externally
     useEffect(() => {
       hasInitialScrolled.current = false;
+      isInitializing.current = true;
       if (emblaApi) {
         scrollToCurrentCampaign();
       }
     }, [currentCampaignId, scrollToCurrentCampaign, emblaApi]);
 
     const scrollPrev = useCallback(() => {
-      if (emblaApi) emblaApi.scrollPrev();
+      if (emblaApi) {
+        // Enable auto campaign change after user interaction
+        isInitializing.current = false;
+        emblaApi.scrollPrev();
+      }
     }, [emblaApi]);
 
     const scrollNext = useCallback(() => {
-      if (emblaApi) emblaApi.scrollNext();
+      if (emblaApi) {
+        // Enable auto campaign change after user interaction
+        isInitializing.current = false;
+        emblaApi.scrollNext();
+      }
     }, [emblaApi]);
 
     // Mobile shows one item at full width

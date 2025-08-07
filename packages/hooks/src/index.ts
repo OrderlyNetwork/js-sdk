@@ -35,7 +35,7 @@ export { useKeyStore } from "./useKeyStore";
 export { useSimpleDI } from "./useSimpleDI";
 
 export * from "./orderlyContext";
-export * from "./statusProvider";
+export * from "./provider/status/statusProvider";
 export { useWsStatus, WsNetworkStatus } from "./useWsStatus";
 export type {
   ConfigProviderProps,
@@ -47,6 +47,7 @@ export { ExtendedConfigStore } from "./extendedConfigStore";
 export {
   WalletConnectorContext,
   type ConnectedChain,
+  type WalletConnectorContextState,
   useWalletConnector,
   type WalletState,
 } from "./walletConnectorContext";
@@ -112,3 +113,4 @@ export {
 export * from "./subAccount";
 
 export { usePositionClose } from "./next/positions/usePositionClose";
+export { useMarketList, useMarketMap } from "./orderly/useMarket/market.store";

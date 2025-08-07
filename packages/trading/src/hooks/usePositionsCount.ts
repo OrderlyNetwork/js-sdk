@@ -1,7 +1,7 @@
-import { usePositionStream } from "@orderly.network/hooks";
-import { useTradingLocalStorage } from "./useTradingLocalStorage";
 import { useMemo } from "react";
+import { usePositionStream } from "@orderly.network/hooks";
 import { useDataTap } from "@orderly.network/react-app";
+import { useTradingLocalStorage } from "./useTradingLocalStorage";
 
 export const usePositionsCount = (symbol?: string) => {
   const { showAllSymbol } = useTradingLocalStorage();
@@ -13,8 +13,7 @@ export const usePositionsCount = (symbol?: string) => {
 
   const positionCount = useDataTap(count) ?? 0;
 
-
   return {
-    positionCount
-  }
+    positionCount,
+  };
 };

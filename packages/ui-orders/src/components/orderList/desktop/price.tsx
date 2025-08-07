@@ -1,15 +1,16 @@
-import { API } from "@orderly.network/types";
-import { commifyOptional } from "@orderly.network/utils";
 import { FC, useEffect, useMemo, useRef, useState } from "react";
 import { useSymbolPriceRange } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
+import { API } from "@orderly.network/types";
+import { OrderType } from "@orderly.network/types";
 import { cn, Flex, Popover, toast, Text } from "@orderly.network/ui";
+import { commifyOptional } from "@orderly.network/utils";
+import { grayCell } from "../../../utils/util";
+import { useSymbolContext } from "../../provider/symbolContext";
+import { useOrderListContext } from "../orderListContext";
 import { ConfirmContent, EditType } from "./editOrder/confirmContent";
 import { InnerInput } from "./editOrder/innerInput";
-import { useOrderListContext } from "../orderListContext";
-import { useSymbolContext } from "../symbolProvider";
-import { grayCell } from "../../../utils/util";
-import { OrderType } from "@orderly.network/types";
-import { useTranslation } from "@orderly.network/i18n";
+
 export const Price = (props: {
   order: API.OrderExt;
   disableEdit?: boolean;
@@ -40,7 +41,7 @@ export const Price = (props: {
     order.symbol,
     // @ts-ignore
     order.side,
-    isAlgoOrder ? order.trigger_price : undefined
+    isAlgoOrder ? order.trigger_price : undefined,
   );
   const closePopover = () => {
     setOpen(false);
@@ -83,7 +84,7 @@ export const Price = (props: {
       const notionalText = checkMinNotional(
         order.symbol,
         price,
-        order.quantity
+        order.quantity,
       );
       if (notionalText) {
         toast.error(notionalText);
@@ -159,7 +160,7 @@ export const Price = (props: {
         (err: any) => {
           toast.error(err.message);
           cancelPopover();
-        }
+        },
       )
       .finally(() => setIsSubmitting(false));
   };
@@ -267,7 +268,7 @@ const NormalState: FC<{
     <div
       className={cn(
         "oui-flex oui-max-w-[110px] oui-justify-start oui-items-center oui-gap-1 oui-relative oui-font-semibold",
-        grayCell(order) && "oui-text-base-contrast-20"
+        grayCell(order) && "oui-text-base-contrast-20",
       )}
       onClick={(e) => {
         e.stopPropagation();
@@ -280,7 +281,7 @@ const NormalState: FC<{
         className={cn(
           "oui-min-w-[70px] oui-h-[28px]",
           !props.disableEdit &&
-            "oui-bg-base-7 oui-px-2  oui-border oui-border-line-12"
+            "oui-bg-base-7 oui-px-2  oui-border oui-border-line-12",
         )}
       >
         <Text size="2xs">{commifyOptional(price)}</Text>

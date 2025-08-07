@@ -1,41 +1,61 @@
-import { OrderlyContext, useChains } from "@orderly.network/hooks";
-import { ScaffoldContext, ScaffoldState } from "./scaffoldContext";
-import { FC, ReactNode, useContext } from "react";
+import React, { useCallback, useContext, useMemo } from "react";
+import {
+  OrderlyContext,
+  useChains,
+  useMemoizedFn,
+} from "@orderly.network/hooks";
 import { checkChainSupport } from "../../utils/chain";
+import { ScaffoldContext, ScaffoldState } from "./scaffoldContext";
 
-export type ScaffoldProviderProps = {
-  children: ReactNode;
-} & Omit<ScaffoldState, "checkChainSupport">;
+export type ScaffoldProviderProps = Omit<ScaffoldState, "checkChainSupport">;
 
-export const ScaffoldProvider: FC<ScaffoldProviderProps> = (props) => {
+export const ScaffoldProvider: React.FC<
+  React.PropsWithChildren<ScaffoldProviderProps>
+> = (props) => {
+  const {
+    routerAdapter,
+    expanded,
+    setExpand,
+    topNavbarHeight,
+    footerHeight,
+    announcementHeight,
+    children,
+  } = props;
+
   const [chains] = useChains();
 
   const { networkId } = useContext<any>(OrderlyContext);
 
-  const checkChainSupportHandle = (chainId: number | string) => {
+  const checkChainSupportHandle = useMemoizedFn((chainId: number | string) => {
     return checkChainSupport(
       chainId,
-      networkId === "testnet" ? chains.testnet : chains.mainnet
+      networkId === "testnet" ? chains.testnet : chains.mainnet,
     );
-  };
+  });
 
-  const onExpandChange = (expand: boolean) => {
-    props.setExpand(expand);
-  };
+  const memoizedValue = useMemo<ScaffoldState>(() => {
+    return {
+      routerAdapter: routerAdapter,
+      expanded: expanded,
+      setExpand: setExpand,
+      checkChainSupport: checkChainSupportHandle,
+      topNavbarHeight: topNavbarHeight,
+      footerHeight: footerHeight,
+      announcementHeight: announcementHeight,
+    };
+  }, [
+    routerAdapter,
+    expanded,
+    setExpand,
+    checkChainSupportHandle,
+    topNavbarHeight,
+    footerHeight,
+    announcementHeight,
+  ]);
 
   return (
-    <ScaffoldContext.Provider
-      value={{
-        routerAdapter: props.routerAdapter,
-        expanded: props.expanded,
-        setExpand: onExpandChange,
-        checkChainSupport: checkChainSupportHandle,
-        topNavbarHeight: props.topNavbarHeight,
-        footerHeight: props.footerHeight,
-        announcementHeight: props.announcementHeight,
-      }}
-    >
-      {props.children}
+    <ScaffoldContext.Provider value={memoizedValue}>
+      {children}
     </ScaffoldContext.Provider>
   );
 };

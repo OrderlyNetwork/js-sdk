@@ -16,7 +16,7 @@ export interface OrderBookContextValue {
   onItemClick?: (item: number[]) => void;
   showTotal: boolean;
   totalMode: TotalMode;
-  pendingOrders: number[];
+  pendingOrders: ReadonlyArray<number> | number[];
   onTotalModeChange?: (mode: TotalMode) => void;
   symbolInfo: BasicSymbolInfo;
 }
@@ -35,7 +35,7 @@ interface OrderBookProviderProps {
   cellHeight: number;
   depth?: string;
   showTotal: boolean;
-  pendingOrders: number[];
+  pendingOrders: ReadonlyArray<number> | number[];
   onItemClick?: (item: number[]) => void;
   symbolInfo: BasicSymbolInfo;
 }
