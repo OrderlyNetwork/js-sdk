@@ -112,7 +112,8 @@ export abstract class BaseMergeHandler<
           if (
             key.startsWith("orders:CANCELLED") ||
             key.startsWith("orders:INCOMPLETE") ||
-            key.startsWith("orders:NEW")
+            key.startsWith("orders:NEW") ||
+            key.startsWith("algoOrders:INCOMPLETE")
           ) {
             return prevData;
           }
