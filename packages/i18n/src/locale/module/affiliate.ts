@@ -88,8 +88,8 @@ export const affiliate = {
   "affiliate.trader.myRebates": "My rebates",
   "affiliate.trader.tradingVol": "Trading vol.",
   "affiliate.referralCode.editCodeModal.title": "Settings",
-  "affiliate.referralCode.editCodeModal.description": "Edit your Referral Code",
-  "affiliate.referralCode.editCodeModal.label": "Referral Code",
+  "affiliate.referralCode.editCodeModal.description": "Edit your referral code",
+  "affiliate.referralCode.editCodeModal.label": "Referral code",
   "affiliate.referralCode.editCodeModal.helpText.length":
     "Must be 4–10 characters long",
   "affiliate.referralCode.editCodeModal.helpText.format":

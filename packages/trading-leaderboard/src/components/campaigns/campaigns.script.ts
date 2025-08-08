@@ -34,13 +34,6 @@ export const useCampaignsScript = () => {
 
   const brokerId = useConfig("brokerId");
 
-  const isCampaignStarted = useMemo(() => {
-    return (
-      currentCampaign?.start_time &&
-      currentCampaign?.start_time < new Date().toISOString()
-    );
-  }, [currentCampaign]);
-
   const isCampaignEnded = useMemo(() => {
     return (
       currentCampaign?.end_time &&
@@ -57,16 +50,11 @@ export const useCampaignsScript = () => {
     };
   }, [currentCampaignId, symbols, brokerId]);
 
-  const { data } = useQuery<CampaignStatsDetailsResponse>(
-    isCampaignStarted && currentCampaignId !== "general"
-      ? `https://api.orderly.org/v1/public/campaign/stats/details?${new URLSearchParams(searchParams).toString()}`
-      : null,
-  );
-
   const { data: stats } = useQuery<CampaignStatsResponse>(
     currentCampaignId !== "general"
       ? `https://api.orderly.org/v1/public/campaign/stats?${new URLSearchParams(searchParams).toString()}`
       : null,
+    { revalidateOnFocus: false },
   );
 
   const { state } = useAccount();
@@ -76,6 +64,7 @@ export const useCampaignsScript = () => {
       currentCampaignId !== "general" && state.address
         ? `https://api.orderly.org/v1/public/campaigns?address=${state.address}`
         : null,
+      { revalidateOnFocus: false },
     );
 
   const isParticipated = useMemo(() => {
@@ -95,7 +84,7 @@ export const useCampaignsScript = () => {
     async (data: { campaign_id: string | number }) => {
       try {
         if (state.status < AccountStatusEnum.EnableTrading) {
-          toast.error("Please complete your account sign-up to join.");
+          toast.error("Please enable trading to proceed.");
           return;
         }
         // console.log("data", data);

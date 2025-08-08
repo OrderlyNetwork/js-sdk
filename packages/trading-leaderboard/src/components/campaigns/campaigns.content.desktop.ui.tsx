@@ -1,5 +1,6 @@
 import { FC, useMemo, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
+import { AccountStatusEnum } from "@orderly.network/types";
 import {
   cn,
   Text,
@@ -8,6 +9,7 @@ import {
   Tooltip,
   ChevronRightIcon,
 } from "@orderly.network/ui";
+import { AuthGuard } from "@orderly.network/ui-connector";
 import { CampaignConfig, CampaignStatistics } from "./type";
 import {
   formatCampaignDateRange,
@@ -201,7 +203,8 @@ export const CampaignsContentDesktopUI: FC<{
               weight="semibold"
               className="oui-text-base-contrast-54"
             >
-              {t("tradingLeaderboard.participants")}
+              {campaign?.user_account_label ||
+                t("tradingLeaderboard.participants")}
             </Text>
             <Text
               size="2xs"
@@ -351,40 +354,46 @@ export const CampaignsContentDesktopUI: FC<{
                 {t("tradingLeaderboard.viewRules")}
               </Button>
             )}
-            {shouldShowJoinButton && (
-              <Button
-                size={isMobile ? "sm" : "md"}
-                variant="gradient"
-                color="primary"
-                className="oui-flex-1"
-                loading={isJoining}
-                disabled={isJoining}
-                onClick={async () => {
-                  try {
-                    await joinCampaign?.({
-                      campaign_id: Number(campaign.campaign_id),
-                    });
-                  } catch (error) {
-                    console.error("Failed to join campaign:", error);
-                  }
-                }}
-              >
-                {t("tradingLeaderboard.joinNow")}
-              </Button>
-            )}
-            {showTradeButton && (
-              <Button
-                size={isMobile ? "sm" : "md"}
-                variant={canTrade ? "gradient" : "contained"}
-                color="primary"
-                className="oui-flex-1"
-                disabled={!canTrade}
-                onClick={onTradeNow}
-              >
-                {campaign?.trading_config?.format ||
-                  t("tradingLeaderboard.tradeNow")}
-              </Button>
-            )}
+            <AuthGuard
+              buttonProps={{
+                size: isMobile ? "sm" : "md",
+                className: "oui-px-5",
+              }}
+            >
+              {shouldShowJoinButton && (
+                <Button
+                  size={isMobile ? "sm" : "md"}
+                  variant="gradient"
+                  color="primary"
+                  className="oui-flex-1"
+                  loading={isJoining}
+                  disabled={isJoining}
+                  onClick={async () => {
+                    try {
+                      await joinCampaign?.({
+                        campaign_id: Number(campaign.campaign_id),
+                      });
+                    } catch (error) {
+                      console.error("Failed to join campaign:", error);
+                    }
+                  }}
+                >
+                  {t("tradingLeaderboard.joinNow")}
+                </Button>
+              )}
+              {showTradeButton && (
+                <Button
+                  size={isMobile ? "sm" : "md"}
+                  variant="gradient"
+                  color="primary"
+                  className="oui-flex-1"
+                  onClick={onTradeNow}
+                >
+                  {campaign?.trading_config?.format ||
+                    t("tradingLeaderboard.tradeNow")}
+                </Button>
+              )}
+            </AuthGuard>
           </div>
         </div>
       </div>

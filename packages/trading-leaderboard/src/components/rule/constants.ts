@@ -2,10 +2,17 @@ export const arenaRuleMap = {
   "120_campaign_rule": {
     rule: [
       {
-        content: "**How to Participate:**",
+        content: "**How to participate:**",
         type: "text" as const,
-        listStyle: "disc" as const, // Use numbers for the 5 steps
+        listStyle: "none" as const, // Use numbers for the 5 steps
+        className: "oui-text-[20px] oui-font-semibold",
         children: [
+          {
+            content:
+              "**Join now:** To be eligible for the campaign, kindly enable trading and click 'Join Now' to participate.",
+            type: "markdown" as const,
+            listStyle: "decimal" as const,
+          },
           {
             content:
               "**Get your referral link**: Visit the [referral page](https://woofi.com/en/rewards/affiliate) and share your unique link/code with friends.",
@@ -51,9 +58,10 @@ export const arenaRuleMap = {
         ],
       },
       {
-        content: "**Welcome Bonus**",
+        content: "**Welcome bonus**",
         type: "markdown" as const,
-        listStyle: "disc" as const, // Use bullet points for bonus details
+        listStyle: "none" as const, // Use bullet points for bonus details
+        className: "oui-text-[20px] oui-font-semibold",
         children: [
           {
             content:

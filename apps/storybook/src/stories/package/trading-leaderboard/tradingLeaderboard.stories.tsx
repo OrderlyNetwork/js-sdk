@@ -21,7 +21,7 @@ export function getCampaigns() {
       title: "DAWN OF DOMINANCE",
       description:
         "A new era begins. Outtrade the competition. Climb the ranks. Secure your legacy.",
-      image: "/leaderboard/woofi_leaderboard_test.jpeg",
+      image: "/leaderboard/campaign_116.jpg",
       // href: 'https://orderly.network/',
       start_time: new Date("2025-06-18T00:00:00Z").toISOString(),
       end_time: new Date("2025-07-04T23:59:59Z").toISOString(),
@@ -92,7 +92,7 @@ export function getCampaigns() {
     {
       campaign_id: "120",
       title: "RECRUIT & REIGN",
-      description: "Invite & Trade to Win",
+      description: "Invite & trade to win",
       image: "/leaderboard/campaign_120.png",
       start_time: new Date("2025-08-07 10:00:00 UTC").toISOString(),
       end_time: new Date("2025-08-17 23:59:59 UTC").toISOString(),
@@ -101,14 +101,14 @@ export function getCampaigns() {
       prize_pools: [
         {
           pool_id: "invite_win",
-          label: "Invite to Win",
+          label: "Invite to win",
           total_prize: 2250,
           currency: "USDC",
           metric: "volume",
         },
         {
           pool_id: "welcome_bonus",
-          label: "Welcome Bonus",
+          label: "Welcome bonus",
           total_prize: 3750,
           currency: "USDC",
           metric: "volume",
@@ -129,6 +129,7 @@ export function getCampaigns() {
       trading_config: {
         format: "Invite & Trade",
       },
+      user_account_label: "Active traders",
     } as CampaignConfig,
   ];
 }
