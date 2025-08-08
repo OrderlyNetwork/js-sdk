@@ -1,10 +1,10 @@
 import { useCallback } from "react";
 import { useNavigate } from "react-router";
+import { generatePath } from "@orderly.network/i18n";
 import { PortfolioLeftSidebarPath } from "@orderly.network/portfolio";
 import { RouteOption } from "@orderly.network/ui-scaffold";
 import { PathEnum } from "../constant";
 import { getSymbol } from "../storage";
-import { generatePath } from "../utils";
 
 export function useNav() {
   const navigate = useNavigate();

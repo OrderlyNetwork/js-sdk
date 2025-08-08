@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
+import { generatePath } from "@orderly.network/i18n";
 import { TradingPage, TradingPageProps } from "@orderly.network/trading";
 import { API } from "@orderly.network/types";
 import { tradingPageConfig } from "../../../orderlyConfig";
 import { BaseLayout } from "../../components/layout/baseLayout";
 import { PathEnum } from "../../constant";
 import { updateSymbol } from "../../storage";
-import { generatePath } from "../../utils";
 
 export type PerpViewProps = Pick<TradingPageProps, "symbol">;
 
