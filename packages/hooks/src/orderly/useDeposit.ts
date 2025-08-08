@@ -488,10 +488,22 @@ export const useDeposit = (options: DepositOptions) => {
         setBalance(balance);
         balanceRef.current = balance;
         loopGetBalance();
-      } catch (err) {
+      } catch (err: any) {
+        console.log("get balance error", balanceRef.current, err);
+        if (
+          notRetryGetBalance({
+            chainId: options.srcChainId!,
+            token: options.srcToken!,
+            chainNamespace: account.walletAdapter?.chainNamespace!,
+            err,
+          })
+        ) {
+          setBalance("0");
+          balanceRef.current = "0";
+          return;
+        }
         // when fetch balance failed, retry every 1s
         loopGetBalance(1000);
-        console.log("get balance error", balanceRef.current, err);
       } finally {
         if (balanceRef.current !== "") {
           setBalanceRevalidating(false);
@@ -582,3 +594,18 @@ export const useDeposit = (options: DepositOptions) => {
     setQuantity,
   };
 };
+
+function notRetryGetBalance(options: {
+  chainId: number;
+  token: string;
+  chainNamespace: string;
+  err: any;
+}) {
+  const { chainId, token, chainNamespace, err } = options;
+  // when solana account not USDC, get balance will throw TokenAccountNotFoundError
+  return (
+    chainNamespace === ChainNamespace.solana &&
+    token === "USDC" &&
+    err?.name === "TokenAccountNotFoundError"
+  );
+}
