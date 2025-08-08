@@ -7,7 +7,7 @@ import { Box } from "@orderly.network/ui";
 import { tradingPageConfig } from "../../../../orderlyConfig";
 import { PathEnum } from "../../../constant";
 import { updateSymbol } from "../../../storage";
-import { generateLocalePath } from "../../../utils";
+import { generatePath } from "../../../utils";
 
 export default function PositionsPage() {
   const local = useTradingLocalStorage();
@@ -17,7 +17,7 @@ export default function PositionsPage() {
     (data: API.Symbol) => {
       const symbol = data.symbol;
       updateSymbol(symbol);
-      navigate(generateLocalePath(`${PathEnum.Perp}/${symbol}`));
+      navigate(generatePath({ path: `${PathEnum.Perp}/${symbol}` }));
     },
     [navigate],
   );

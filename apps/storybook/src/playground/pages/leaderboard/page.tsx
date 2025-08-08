@@ -4,7 +4,7 @@ import { LeaderboardPage } from "@orderly.network/trading-leaderboard";
 import { getCampaigns } from "../../../stories/package/trading-leaderboard/tradingLeaderboard.stories";
 import { BaseLayout } from "../../components/layout/baseLayout";
 import { PathEnum } from "../../constant";
-import { generateLocalePath } from "../../utils";
+import { generatePath } from "../../utils";
 
 const leaderboardCampaigns = getCampaigns();
 
@@ -39,7 +39,7 @@ export default function Leaderboard() {
           campaignId={campaignId}
           onCampaignChange={setCampaignId as any}
           href={{
-            trading: generateLocalePath(`${PathEnum.Leaderboard}`),
+            trading: generatePath({ path: `${PathEnum.Leaderboard}` }),
           }}
           backgroundSrc="/leaderboard/background.jpg"
         />

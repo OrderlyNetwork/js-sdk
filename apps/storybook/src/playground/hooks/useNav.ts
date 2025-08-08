@@ -4,7 +4,7 @@ import { PortfolioLeftSidebarPath } from "@orderly.network/portfolio";
 import { RouteOption } from "@orderly.network/ui-scaffold";
 import { PathEnum } from "../constant";
 import { getSymbol } from "../storage";
-import { generateLocalePath } from "../utils";
+import { generatePath } from "../utils";
 
 export function useNav() {
   const navigate = useNavigate();
@@ -18,7 +18,7 @@ export function useNav() {
 
       if (option.href === "/") {
         const symbol = getSymbol();
-        navigate(generateLocalePath(`${PathEnum.Perp}/${symbol}`));
+        navigate(generatePath({ path: `${PathEnum.Perp}/${symbol}` }));
         return;
       }
 
@@ -30,7 +30,7 @@ export function useNav() {
 
       const path = routeMap[option.href] || option.href;
 
-      navigate(generateLocalePath(path));
+      navigate(generatePath({ path }));
     },
     [navigate],
   );

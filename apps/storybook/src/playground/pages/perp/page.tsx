@@ -6,7 +6,7 @@ import { tradingPageConfig } from "../../../orderlyConfig";
 import { BaseLayout } from "../../components/layout/baseLayout";
 import { PathEnum } from "../../constant";
 import { updateSymbol } from "../../storage";
-import { generateLocalePath } from "../../utils";
+import { generatePath } from "../../utils";
 
 export type PerpViewProps = Pick<TradingPageProps, "symbol">;
 
@@ -23,7 +23,7 @@ export default function PerpPage() {
     (data: API.Symbol) => {
       const symbol = data.symbol;
       setSymbol(symbol);
-      navigate(generateLocalePath(`${PathEnum.Perp}/${symbol}`));
+      navigate(generatePath({ path: `${PathEnum.Perp}/${symbol}` }));
     },
     [navigate],
   );
