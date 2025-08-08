@@ -6,7 +6,7 @@ import {
   useStorageLedgerAddress,
   useWalletConnector,
 } from "@orderly.network/hooks";
-import { i18n, useTranslation } from "@orderly.network/i18n";
+import { i18n, useTranslation, useLocaleCode } from "@orderly.network/i18n";
 import {
   AccountStatusEnum,
   ChainNamespace,
@@ -46,6 +46,7 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
   const [remember, setRemember] = useState(true);
   const ee = useEventEmitter();
   const { t } = useTranslation();
+  const lang = useLocaleCode();
   const { disconnect, namespace } = useWalletConnector();
 
   const { state: accountState, account } = useAccount();
@@ -225,9 +226,9 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
         {steps.length > 1 && (
           <Box
             position={"absolute"}
-            height={"38px"}
             left={28}
             top={18}
+            bottom={lang === "zh" ? 52 : 70}
             zIndex={0}
           >
             <Divider
