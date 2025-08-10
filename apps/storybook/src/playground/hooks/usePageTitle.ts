@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 import { useParams } from "react-router";
+import { formatSymbol } from "@orderly.network/utils";
 import { PageTitleMap, PathEnum } from "../constant";
-import { formatSymbol, generatePageTitle } from "../utils";
+import { generatePageTitle } from "../utils";
 import { usePathWithoutLang } from "./usePathWithoutLang";
 
 /** update the page title when the path changes */
@@ -15,7 +16,7 @@ export function usePageTitle() {
 
     const symbol = params.symbol;
     if (path.startsWith(PathEnum.Perp) && symbol) {
-      title = formatSymbol(symbol);
+      title = formatSymbol(symbol, "base-type");
     }
 
     document.title = generatePageTitle(title);
