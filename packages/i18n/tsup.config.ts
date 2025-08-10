@@ -1,7 +1,7 @@
 import { defineConfig } from "tsup";
 
 export default defineConfig((options) => ({
-  entry: ["src/index.ts"],
+  entry: ["src/index.ts", "src/utils.ts", "src/constant.ts"],
   format: ["esm", "cjs"],
   target: "es2020",
   minify: !options.watch,
