@@ -385,7 +385,9 @@ export const useTaskProfitAndStopLossInternal = (
       return OrderFactory.create(AlgoOrderRootType.TP_SL);
     }
     return OrderFactory.create(
-      compare() ? AlgoOrderRootType.POSITIONAL_TP_SL : AlgoOrderRootType.TP_SL,
+      options?.positionType === PositionType.FULL
+        ? AlgoOrderRootType.POSITIONAL_TP_SL
+        : AlgoOrderRootType.TP_SL,
     );
   };
 
