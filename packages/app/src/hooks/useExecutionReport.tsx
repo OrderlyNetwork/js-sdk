@@ -21,8 +21,6 @@ export const useExecutionReport = () => {
 
   const { notification } = useOrderlyContext();
 
-  console.log("notification", notification);
-
   useEffect(() => {
     symbolsInfoRef.current = symbolsInfo;
   }, [symbolsInfo]);
