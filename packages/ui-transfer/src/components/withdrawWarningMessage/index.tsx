@@ -36,7 +36,7 @@ export const WithdrawWarningMessage: React.FC<WarningMessageProps> = (
 
   const renderContent = () => {
     if (state.status === AccountStatusEnum.NotConnected) {
-      return "";
+      return null;
     }
     if (crossChainTrans) {
       return t("transfer.withdraw.crossChain.process");
@@ -48,20 +48,21 @@ export const WithdrawWarningMessage: React.FC<WarningMessageProps> = (
         balance: chainVaultBalance,
       });
     }
+    return null;
   };
 
   const content = renderContent();
 
-  if (content) {
-    return (
-      <Flex
-        my={4}
-        className="oui-justify-center oui-text-center oui-text-xs oui-text-warning-darken"
-      >
-        {content}
-      </Flex>
-    );
+  if (!content) {
+    return null;
   }
 
-  return null;
+  return (
+    <Flex
+      my={4}
+      className="oui-justify-center oui-text-center oui-text-xs oui-text-warning-darken"
+    >
+      {content}
+    </Flex>
+  );
 };
