@@ -884,5 +884,6 @@
   "funding.paymentType": "支払いタイプ",
   "funding.paymentType.paid": "支払い済み",
   "funding.paymentType.received": "受け取り済み",
-  "leftNav.feedback": "フィードバックを共有"
+  "leftNav.feedback": "フィードバックを共有",
+  "transfer.withdraw.vaultWarning": "{{chainName}} 上の {{tokenName}} の残高は {{balance}} で、出金要求を満たすには不十分です。後でもう一度お試しいただくか、別のチェーンに切り替えて出金してください。"
 }

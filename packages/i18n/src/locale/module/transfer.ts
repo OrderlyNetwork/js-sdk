@@ -39,6 +39,9 @@ export const transfer = {
   "transfer.withdraw.crossChain.vaultWarning":
     "Withdrawal exceeds the balance of the {{networkName}} vault ( {{chainVaultBalance}} USDC ). Cross-chain rebalancing fee will be charged for withdrawal to {{networkName}}.",
 
+  "transfer.withdraw.vaultWarning":
+    "The balance of {{tokenName}} on the {{chainName}} is {{balance}}, which is insufficient to meet your withdrawal request. Please try again later or switch to another chain for withdrawal.",
+
   "transfer.withdraw.minAmount.error": "quantity must large than {{minAmount}}",
 
   "transfer.withdraw.requested": "Withdraw requested",

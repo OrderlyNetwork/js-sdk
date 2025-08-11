@@ -17,7 +17,6 @@
     "access": "public"
   },
   "dependencies": {
-    "@enzoferey/ethers-error-parser": "^0.2.3",
     "@orderly.network/default-evm-adapter": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "ethers": "^6.15.0",

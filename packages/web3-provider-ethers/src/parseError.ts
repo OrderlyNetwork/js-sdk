@@ -1,4 +1,3 @@
-import { getParsedEthersError } from "@enzoferey/ethers-error-parser";
 import { DecodedError, ErrorDecoder } from "ethers-decode-error";
 
 const errorDecoder = ErrorDecoder.create();
@@ -8,10 +7,6 @@ type ParsedError = DecodedError & {
 };
 
 export async function parseError(rawError: any): Promise<ParsedError> {
-  // const parsedEthersError = getParsedEthersError(rawError);
-
-  // return parsedEthersError;
-
   const error: DecodedError = await errorDecoder.decode(rawError);
   const reason = error.reason ?? "";
   console.error("parsedError", error);

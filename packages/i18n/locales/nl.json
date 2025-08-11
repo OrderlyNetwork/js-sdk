@@ -884,5 +884,6 @@
   "funding.paymentType": "Betalingstype",
   "funding.paymentType.paid": "Betaald",
   "funding.paymentType.received": "Ontvangen",
-  "leftNav.feedback": "Deel uw feedback"
+  "leftNav.feedback": "Deel uw feedback",
+  "transfer.withdraw.vaultWarning": "Het saldo van {{tokenName}} op {{chainName}} is {{balance}}, wat onvoldoende is om aan je opnameverzoek te voldoen. Probeer het later opnieuw of schakel over naar een andere chain voor de opname."
 }

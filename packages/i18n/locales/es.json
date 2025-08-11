@@ -884,5 +884,6 @@
   "funding.paymentType": "Tipo de pago",
   "funding.paymentType.paid": "Pagado",
   "funding.paymentType.received": "Recibido",
-  "leftNav.feedback": "Compartir tu opinión"
+  "leftNav.feedback": "Compartir tu opinión",
+  "transfer.withdraw.vaultWarning": "El saldo de {{tokenName}} en {{chainName}} es {{balance}}, lo cual es insuficiente para satisfacer tu solicitud de retiro. Inténtalo de nuevo más tarde o cambia a otra cadena para retirar."
 }

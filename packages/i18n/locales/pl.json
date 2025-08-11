@@ -884,5 +884,6 @@
   "funding.paymentType": "Typ płatności",
   "funding.paymentType.paid": "Zapłacono",
   "funding.paymentType.received": "Otrzymano",
-  "leftNav.feedback": "Podziel się opinią"
+  "leftNav.feedback": "Podziel się opinią",
+  "transfer.withdraw.vaultWarning": "Saldo {{tokenName}} w sieci {{chainName}} wynosi {{balance}}, co jest niewystarczające, aby zrealizować Twoje żądanie wypłaty. Spróbuj ponownie później lub przełącz się na inną sieć, aby dokonać wypłaty."
 }
