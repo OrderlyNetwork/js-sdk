@@ -57,7 +57,6 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
     status,
     errors,
     valid,
-    isPosition,
     position,
     setValues,
     onClose,
@@ -84,7 +83,6 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
           onQuantityChange={props.setQuantity}
           quote={symbolInfo("base")}
           isEditing={props.isEditing}
-          isPosition={isPosition}
           errorMsg={parseErrorMsg("quantity")}
         />
       </Box>
@@ -295,25 +293,13 @@ const TPSLQuantity = (props: {
   onQuantityChange?: (value: number | string) => void;
   quantity: number;
   isEditing?: boolean;
-  isPosition?: boolean;
   setOrderValue?: (key: string, value: number | string) => void;
   errorMsg?: string;
 }) => {
-  // const isPosition = props.quantity === props.maxQty;
-  const { isPosition } = props;
   const inputRef = useRef<HTMLInputElement>(null);
   const currentQtyPercentage =
     convertValueToPercentage(props.quantity, 0, props.maxQty) / 100;
   const { t } = useTranslation();
-
-  const setTPSL = () => {
-    props.onQuantityChange?.(0);
-    inputRef.current?.focus();
-
-    setTimeout(() => {
-      inputRef.current?.setSelectionRange(0, 1);
-    }, 0);
-  };
 
   const formatQuantity = (qty: string) => {
     let _qty = qty;
@@ -326,9 +312,7 @@ const TPSLQuantity = (props: {
   };
 
   const errorMsg =
-    (isPosition ? "" : props.quantity).toString().length > 0
-      ? props.errorMsg
-      : undefined;
+    props.quantity.toString().length > 0 ? props.errorMsg : undefined;
 
   return (
     <>
@@ -373,7 +357,7 @@ const TPSLQuantity = (props: {
               const qty = Number(value);
               console.log("qty", value, Number(value), qty);
               if (qty && qty > props.maxQty) {
-                const qty = isPosition ? 0 : props.maxQty;
+                const qty = props.maxQty;
                 props.onQuantityChange?.(qty);
                 inputRef.current?.blur();
               }
@@ -489,7 +473,6 @@ export const PriceInput = (props: {
 
 export type PositionTPSLConfirmProps = {
   symbol: string;
-  // isPosition: boolean;
   qty: number;
   tpPrice?: number;
   slPrice?: number;
@@ -572,7 +555,7 @@ export const PositionTPSLConfirm = (props: PositionTPSLConfirmProps) => {
     );
   };
 
-  const isPositionTPSL = _isPositionTPSL ?? qty >= maxQty;
+  const isPositionTPSL = _isPositionTPSL;
 
   return (
     <>

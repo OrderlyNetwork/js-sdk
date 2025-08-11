@@ -99,16 +99,14 @@ export const useTPSLDetail = (props: TPSLDetailProps) => {
             );
         }
 
-        const finalIsEditing =
-          !!order &&
-          order.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL &&
-          order.quantity === maxQty;
-
+        console.log("finalIsEditing", {
+          order,
+          positionType,
+          isEditing,
+        });
         return modal
           .confirm({
-            title: finalIsEditing
-              ? t("orders.editOrder")
-              : t("tpsl.confirmOrder"),
+            title: isEditing ? t("orders.editOrder") : t("tpsl.confirmOrder"),
             // bodyClassName: "lg:oui-py-0",
             onOk: async () => {
               try {
@@ -138,7 +136,7 @@ export const useTPSLDetail = (props: TPSLDetailProps) => {
             content: (
               <PositionTPSLConfirm
                 isPositionTPSL={positionType === PositionType.FULL}
-                isEditing={true}
+                isEditing={isEditing}
                 symbol={order.symbol!}
                 qty={Number(order.quantity)}
                 maxQty={maxQty}

@@ -34,13 +34,6 @@ export const useCampaignsScript = () => {
 
   const brokerId = useConfig("brokerId");
 
-  const isCampaignStarted = useMemo(() => {
-    return (
-      currentCampaign?.start_time &&
-      currentCampaign?.start_time < new Date().toISOString()
-    );
-  }, [currentCampaign]);
-
   const isCampaignEnded = useMemo(() => {
     return (
       currentCampaign?.end_time &&
@@ -57,16 +50,11 @@ export const useCampaignsScript = () => {
     };
   }, [currentCampaignId, symbols, brokerId]);
 
-  const { data } = useQuery<CampaignStatsDetailsResponse>(
-    isCampaignStarted && currentCampaignId !== "general"
-      ? `https://api.orderly.org/v1/public/campaign/stats/details?${new URLSearchParams(searchParams).toString()}`
-      : null,
-  );
-
   const { data: stats } = useQuery<CampaignStatsResponse>(
     currentCampaignId !== "general"
       ? `https://api.orderly.org/v1/public/campaign/stats?${new URLSearchParams(searchParams).toString()}`
       : null,
+    { revalidateOnFocus: false },
   );
 
   const { state } = useAccount();
@@ -76,13 +64,8 @@ export const useCampaignsScript = () => {
       currentCampaignId !== "general" && state.address
         ? `https://api.orderly.org/v1/public/campaigns?address=${state.address}`
         : null,
+      { revalidateOnFocus: false },
     );
-
-  const accountStatus = useMemo(() => {
-    return state.status === AccountStatusEnum.EnableTradingWithoutConnected
-      ? AccountStatusEnum.EnableTradingWithoutConnected
-      : AccountStatusEnum.EnableTrading;
-  }, [state.status]);
 
   const isParticipated = useMemo(() => {
     const target = userCampaigns?.find((item) => item.id == currentCampaignId);
@@ -172,6 +155,5 @@ export const useCampaignsScript = () => {
     shouldShowJoinButton,
     joinError,
     canTrade,
-    accountStatus,
   };
 };
