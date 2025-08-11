@@ -427,6 +427,7 @@
   "orderEntry.buyLong": "매수 / 롱",
   "orderEntry.sellShort": "매도 / 숏",
   "orderEntry.reduceOnly": "감소만",
+  "orderEntry.soundAlerts": "사운드 알림",
   "orderEntry.orderType.limit": "지정가",
   "orderEntry.orderType.market": "시장가",
   "orderEntry.orderType.limitOrder": "지정가 주문",

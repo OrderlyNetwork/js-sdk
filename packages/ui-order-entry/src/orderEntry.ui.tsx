@@ -664,7 +664,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
                 onCheckedChange={(checked) => setSoundAlert(checked)}
               />
               <label htmlFor={soundAlertId} className={"oui-text-xs"}>
-                Sound alerts
+                {t("orderEntry.soundAlerts")}
               </label>
             </Flex>
           </Flex>

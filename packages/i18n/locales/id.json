@@ -427,6 +427,7 @@
   "orderEntry.buyLong": "Beli / Long",
   "orderEntry.sellShort": "Jual / Short",
   "orderEntry.reduceOnly": "Hanya kurangi",
+  "orderEntry.soundAlerts": "Peringatan suara",
   "orderEntry.orderType.limit": "Limit",
   "orderEntry.orderType.market": "Pasar",
   "orderEntry.orderType.limitOrder": "Pesanan limit",

@@ -427,6 +427,7 @@
   "orderEntry.buyLong": "Compra / Long",
   "orderEntry.sellShort": "Vendi / Short",
   "orderEntry.reduceOnly": "Solo riduzione",
+  "orderEntry.soundAlerts": "Avvisi sonori",
   "orderEntry.orderType.limit": "Limite",
   "orderEntry.orderType.market": "Mercato",
   "orderEntry.orderType.limitOrder": "Ordine limite",

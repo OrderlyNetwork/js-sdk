@@ -427,6 +427,7 @@
   "orderEntry.buyLong": "Купити / Long",
   "orderEntry.sellShort": "Продати / Short",
   "orderEntry.reduceOnly": "Тільки зменшення",
+  "orderEntry.soundAlerts": "Звукові сповіщення",
   "orderEntry.orderType.limit": "Ліміт",
   "orderEntry.orderType.market": "Ринок",
   "orderEntry.orderType.limitOrder": "Лімітний ордер",

@@ -427,6 +427,7 @@
   "orderEntry.buyLong": "Kopen / Long",
   "orderEntry.sellShort": "Verkopen / Short",
   "orderEntry.reduceOnly": "Alleen verminderen",
+  "orderEntry.soundAlerts": "Geluidwaarschuwingen",
   "orderEntry.orderType.limit": "Limiet",
   "orderEntry.orderType.market": "Markt",
   "orderEntry.orderType.limitOrder": "Limietorder",

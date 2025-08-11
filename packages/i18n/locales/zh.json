@@ -427,6 +427,7 @@
   "orderEntry.buyLong": "买入/多头",
   "orderEntry.sellShort": "卖出/空头",
   "orderEntry.reduceOnly": "仅减少",
+  "orderEntry.soundAlerts": "声音提醒",
   "orderEntry.orderType.limit": "限价",
   "orderEntry.orderType.market": "市价",
   "orderEntry.orderType.limitOrder": "限价订单",

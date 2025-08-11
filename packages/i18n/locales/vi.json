@@ -427,6 +427,7 @@
   "orderEntry.buyLong": "Mua / Mua",
   "orderEntry.sellShort": "Bán / Bán",
   "orderEntry.reduceOnly": "Chỉ giảm",
+  "orderEntry.soundAlerts": "Cảnh báo âm thanh",
   "orderEntry.orderType.limit": "Giới hạn",
   "orderEntry.orderType.market": "Thị trường",
   "orderEntry.orderType.limitOrder": "Lệnh giới hạn",

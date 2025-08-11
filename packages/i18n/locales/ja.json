@@ -427,6 +427,7 @@
   "orderEntry.buyLong": "購入 / ロング",
   "orderEntry.sellShort": "販売 / ショート",
   "orderEntry.reduceOnly": "削減のみ",
+  "orderEntry.soundAlerts": "サウンドアラート",
   "orderEntry.orderType.limit": "リミット",
   "orderEntry.orderType.market": "マーケット",
   "orderEntry.orderType.limitOrder": "リミット注文",

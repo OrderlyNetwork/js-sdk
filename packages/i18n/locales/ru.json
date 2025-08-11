@@ -427,6 +427,7 @@
   "orderEntry.buyLong": "Купить / Long",
   "orderEntry.sellShort": "Продать / Short",
   "orderEntry.reduceOnly": "Только уменьшение",
+  "orderEntry.soundAlerts": "Звуковые оповещения",
   "orderEntry.orderType.limit": "Лимит",
   "orderEntry.orderType.market": "Рыночный",
   "orderEntry.orderType.limitOrder": "Лимитный ордер",

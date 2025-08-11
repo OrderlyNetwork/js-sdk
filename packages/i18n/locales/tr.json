@@ -427,6 +427,7 @@
   "orderEntry.buyLong": "Satın Al / Uzun",
   "orderEntry.sellShort": "Sat / Kısa",
   "orderEntry.reduceOnly": "Sadece azalt",
+  "orderEntry.soundAlerts": "Ses uyarıları",
   "orderEntry.orderType.limit": "Limit",
   "orderEntry.orderType.market": "Piyasa",
   "orderEntry.orderType.limitOrder": "Limit emir",
