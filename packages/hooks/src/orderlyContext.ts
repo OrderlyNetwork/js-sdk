@@ -58,6 +58,15 @@ export interface OrderlyConfigContextState {
      */
     announcementList?: (data: any[]) => any[];
   };
+  notification?: {
+    orderFilled?: {
+      /**
+       * Sound to play when an order is successful.
+       * @default ""
+       */
+      media?: string;
+    };
+  };
 }
 
 export const OrderlyContext = createContext<OrderlyConfigContextState>({

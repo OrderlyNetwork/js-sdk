@@ -2,7 +2,7 @@ export const orderEntry = {
   "orderEntry.buyLong": "Buy / Long",
   "orderEntry.sellShort": "Sell / Short",
   "orderEntry.reduceOnly": "Reduce only",
-
+  "orderEntry.soundAlerts": "Sound alerts",
   "orderEntry.orderType.limit": "Limit",
   "orderEntry.orderType.market": "Market",
   // TODO：use orderEntry.orderType.limit

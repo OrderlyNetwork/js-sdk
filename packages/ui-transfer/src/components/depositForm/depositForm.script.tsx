@@ -137,15 +137,16 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     options.onClose?.();
   }, [cleanData, options.onClose]);
 
-  const { submitting, onApprove, onDeposit } = useDepositAction({
-    quantity,
-    allowance,
-    approve,
-    deposit,
-    enableCustomDeposit: needSwap || needCrossSwap,
-    customDeposit: onSwapDeposit,
-    onSuccess,
-  });
+  const { submitting, onApprove, onDeposit, onApproveAndDeposit } =
+    useDepositAction({
+      quantity,
+      allowance,
+      approve,
+      deposit,
+      enableCustomDeposit: needSwap || needCrossSwap,
+      customDeposit: onSwapDeposit,
+      onSuccess,
+    });
 
   const userMaxQtyMessage = useMemo(() => {
     if (
@@ -288,6 +289,7 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
     actionType,
     onDeposit,
     onApprove,
+    onApproveAndDeposit,
     fetchBalance,
     dst,
     wrongNetwork,

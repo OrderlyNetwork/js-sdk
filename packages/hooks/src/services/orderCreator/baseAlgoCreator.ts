@@ -134,38 +134,31 @@ export abstract class BaseAlgoOrderCreator<
       // so if order's side is buy, then position's side is sell
       const tpslSide = side === OrderSide.BUY ? OrderSide.SELL : OrderSide.BUY;
       if (side === OrderSide.BUY && mark_price) {
-        const triggerPriceRange = getTPSLTriggerPriceRange({
-          side: side,
-          basePrice: Number(mark_price),
-          symbolInfo: config.symbol,
-        });
-        if (
-          !!sl_trigger_price &&
-          Number(sl_trigger_price) < triggerPriceRange.minPrice
-        ) {
+        if (!!sl_trigger_price && Number(sl_trigger_price) < quote_min) {
           result.sl_trigger_price = OrderValidation.min(
             "sl_trigger_price",
-            formatPrice(triggerPriceRange.minPrice, quote_dp),
+            formatPrice(quote_min, quote_dp),
           );
         }
 
-        if (
-          !!sl_trigger_price &&
-          Number(sl_trigger_price) > triggerPriceRange.maxPrice
-        ) {
+        if (!!sl_trigger_price && Number(sl_trigger_price) > mark_price) {
           result.sl_trigger_price = OrderValidation.max(
             "sl_trigger_price",
-            formatPrice(triggerPriceRange.maxPrice, quote_dp),
+            formatPrice(mark_price, quote_dp),
           );
         }
 
-        if (
-          !!tp_trigger_price &&
-          Number(tp_trigger_price) <= triggerPriceRange.minPrice
-        ) {
+        if (!!tp_trigger_price && Number(tp_trigger_price) <= mark_price) {
           result.tp_trigger_price = OrderValidation.min(
             "tp_trigger_price",
-            formatPrice(triggerPriceRange.minPrice, quote_dp),
+            formatPrice(mark_price, quote_dp),
+          );
+        }
+
+        if (!!tp_trigger_price && Number(tp_trigger_price) > quote_max) {
+          result.tp_trigger_price = OrderValidation.max(
+            "tp_trigger_price",
+            formatPrice(quote_max, quote_dp),
           );
         }
 
@@ -189,7 +182,7 @@ export abstract class BaseAlgoOrderCreator<
           }
           if (Number(sl_trigger_price) < Number(sl_order_price)) {
             result.sl_trigger_price =
-              OrderValidation.priceErrorMin("sl_trigger_price");
+              OrderValidation.priceErrorMax("sl_trigger_price");
           }
         }
         if (tp_trigger_price && tp_order_price) {
@@ -198,65 +191,53 @@ export abstract class BaseAlgoOrderCreator<
             basePrice: Number(tp_trigger_price),
             symbolInfo: config.symbol,
           });
-          if (Number(tp_order_price) < tpOrderPriceRange.minPrice) {
-            result.tp_order_price = OrderValidation.min(
-              "tp_order_price",
-              formatPrice(tpOrderPriceRange.minPrice, quote_dp),
-            );
-          }
           if (Number(tp_order_price) > tpOrderPriceRange.maxPrice) {
             result.tp_order_price = OrderValidation.max(
               "tp_order_price",
               formatPrice(tpOrderPriceRange.maxPrice, quote_dp),
             );
           }
-          if (Number(tp_trigger_price) < Number(tp_order_price)) {
+          if (Number(tp_order_price) < tpOrderPriceRange.minPrice) {
+            result.tp_order_price = OrderValidation.min(
+              "tp_order_price",
+              formatPrice(tpOrderPriceRange.minPrice, quote_dp),
+            );
+          }
+          if (Number(tp_trigger_price) > Number(tp_order_price)) {
             result.tp_trigger_price =
-              OrderValidation.priceErrorMax("tp_trigger_price");
+              OrderValidation.priceErrorMin("tp_trigger_price");
           }
         }
       }
 
       if (side === OrderSide.SELL && mark_price) {
-        const triggerPriceRange = getTPSLTriggerPriceRange({
-          side: tpslSide,
-          basePrice: Number(mark_price),
-          symbolInfo: config.symbol,
-        });
-        const triggerMin = Math.max(triggerPriceRange.minPrice, mark_price);
-        if (
-          !!sl_trigger_price &&
-          Number(sl_trigger_price) > triggerPriceRange.maxPrice
-        ) {
+        if (!!sl_trigger_price && Number(sl_trigger_price) > quote_max) {
           result.sl_trigger_price = OrderValidation.max(
             "sl_trigger_price",
-            formatPrice(triggerPriceRange.maxPrice, quote_dp),
+            formatPrice(quote_max, quote_dp),
           );
         }
 
-        if (!!sl_trigger_price && Number(sl_trigger_price) < triggerMin) {
+        if (!!sl_trigger_price && Number(sl_trigger_price) < mark_price) {
           result.sl_trigger_price = OrderValidation.min(
             "sl_trigger_price",
-            formatPrice(triggerMin, quote_dp),
+            formatPrice(mark_price, quote_dp),
           );
         }
 
-        if (
-          !!tp_trigger_price &&
-          Number(tp_trigger_price) >= triggerPriceRange.maxPrice
-        ) {
+        if (!!tp_trigger_price && Number(tp_trigger_price) >= mark_price) {
           result.tp_trigger_price = OrderValidation.max(
             "tp_trigger_price",
-            formatPrice(triggerPriceRange.maxPrice, quote_dp),
+            formatPrice(mark_price, quote_dp),
+          );
+        }
+        if (!!tp_trigger_price && Number(tp_trigger_price) < quote_min) {
+          result.tp_trigger_price = OrderValidation.min(
+            "tp_trigger_price",
+            formatPrice(quote_min, quote_dp),
           );
         }
 
-        if (!!sl_trigger_price && Number(sl_trigger_price) < triggerMin) {
-          result.sl_trigger_price = OrderValidation.min(
-            "sl_trigger_price",
-            formatPrice(triggerMin, quote_dp),
-          );
-        }
         if (sl_trigger_price && sl_order_price) {
           const slOrderPriceRange = getPriceRange({
             side: tpslSide,

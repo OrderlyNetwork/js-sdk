@@ -72,6 +72,7 @@ export interface CampaignConfig {
   hide_arena?: boolean;
   hide_rewards?: boolean;
   highlight_pool_id?: string;
+  user_account_label?: string;
 }
 
 // User data for calculations

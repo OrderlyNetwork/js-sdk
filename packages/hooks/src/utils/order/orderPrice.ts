@@ -82,6 +82,34 @@ export function getPriceRange(inputs: {
   };
 }
 
+export function getTPSLTriggerPriceScope(inputs: {
+  side: OrderSide;
+  basePrice: number;
+  symbolInfo: API.SymbolExt;
+}) {
+  const { basePrice, side, symbolInfo } = inputs;
+  const { price_scope, quote_min, quote_max } = symbolInfo;
+
+  const scopePriceNumber = orderUtils.scopePrice(basePrice, price_scope, side);
+
+  const priceRange =
+    side === OrderSide.BUY
+      ? {
+          min: scopePriceNumber,
+          max: quote_max,
+        }
+      : {
+          min: quote_min,
+          max: scopePriceNumber,
+        };
+
+  return {
+    minPrice: priceRange.min,
+    maxPrice: priceRange.max,
+  };
+}
+
+/** @deprecated use getTPSLTriggerPriceScope instead */
 export function getTPSLTriggerPriceRange(inputs: {
   side: OrderSide;
   basePrice: number;

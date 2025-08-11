@@ -40,7 +40,6 @@ export const CampaignsContentDesktopUI: FC<{
   isJoining?: boolean;
   joinError?: any;
   canTrade?: boolean;
-  accountStatus?: any;
 }> = ({
   campaign,
   statistics,
@@ -53,7 +52,6 @@ export const CampaignsContentDesktopUI: FC<{
   joinCampaign,
   isJoining,
   canTrade,
-  accountStatus,
 }) => {
   const { t } = useTranslation();
   const bgSrc = campaign?.image || backgroundSrc;
@@ -205,7 +203,8 @@ export const CampaignsContentDesktopUI: FC<{
               weight="semibold"
               className="oui-text-base-contrast-54"
             >
-              {t("tradingLeaderboard.participants")}
+              {campaign?.user_account_label ||
+                t("tradingLeaderboard.participants")}
             </Text>
             <Text
               size="2xs"

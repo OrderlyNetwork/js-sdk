@@ -28,7 +28,7 @@
     "ethereum-cryptography": "2.2.1",
     "bs58": "^5.0.0",
     "@noble/ed25519": "^2.0.0",
-    "ethers": "^6.13.2"
+    "ethers": "^6.15.0"
   },
   "devDependencies": {
     "jest": "^29.7.0",

@@ -143,3 +143,5 @@ export const TesntTokenFallback = (testnetTokens: any) => [
 export const EMPTY_LIST: ReadonlyArray<any> = [];
 
 export const EMPTY_OBJECT: Readonly<Record<PropertyKey, any>> = {};
+
+export const EMPTY_OPERATION = () => {};

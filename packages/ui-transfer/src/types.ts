@@ -9,7 +9,8 @@ export type DST = {
 export enum DepositAction {
   Deposit,
   Approve,
-  Increase,
+  ApproveAndDeposit,
+  // Increase,
 }
 
 export enum WithdrawTo {

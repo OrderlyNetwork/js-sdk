@@ -1,4 +1,5 @@
 import { LocaleEnum } from "./constant";
+import i18n from "./i18n";
 import { LocaleCode } from "./types";
 
 /**
@@ -15,7 +16,7 @@ import { LocaleCode } from "./types";
 export function parseI18nLang(
   lang: string,
   localeCodes?: LocaleCode[],
-  defaultLang?: LocaleCode
+  defaultLang?: LocaleCode,
 ) {
   localeCodes = localeCodes || Object.values(LocaleEnum);
   defaultLang = defaultLang || LocaleEnum.en;
@@ -68,7 +69,7 @@ export function removeLangPrefix(pathname: string, localeCodes?: string[]) {
  */
 export function getLocalePathFromPathname(
   pathname: string,
-  localeCodes?: string[]
+  localeCodes?: string[],
 ) {
   const locale = pathname.split("/")[1];
   localeCodes = localeCodes || Object.values(LocaleEnum);
@@ -76,28 +77,44 @@ export function getLocalePathFromPathname(
 }
 
 /**
- * Generate path with locale
- * @param lang - language
- * @param path - path to generate
- * @param localeCodes - locale codes to check
- * @returns path with locale
+ * Generate a localized path with proper locale prefix and search parameters
+ *
+ * This function ensures that the returned path includes the appropriate locale prefix.
+ * If the path already contains a valid locale prefix, it returns the path as-is.
+ * Otherwise, it prepends the specified locale or falls back to the current i18n language.
+ *
+ * @param params - Configuration object for path generation
+ * @param params.path - The base pathname (e.g., '/markets', '/perp/PERP_ETH_USDC')
+ * @param params.locale - Optional locale code to use as prefix. If not provided, uses i18n.language
+ * @param params.search - Optional search query string. If not provided, uses window.location.search
+ *
+ * @returns A complete URL path with locale prefix and search parameters
+ *
+ * @example
+ * generatePath({ path: '/markets' }) => '/en/markets?tab=spot'
+ * generatePath({ path: '/en/markets', search: '?tab=futures' }) => '/en/markets?tab=futures'
+ * generatePath({ path: '/perp/PERP_ETH_USDC', locale: 'zh' }) => '/zh/perp/PERP_ETH_USDC'
+ * generatePath({ path: '/en/perp/PERP_ETH_USDC' }) => '/en/perp/PERP_ETH_USDC'
  */
-export function generateLocalePath(
-  lang: string,
-  path: string,
-  localeCodes?: string[]
-) {
-  localeCodes = localeCodes || Object.values(LocaleEnum);
+export function generatePath(params: {
+  path: string;
+  locale?: string;
+  search?: string;
+}) {
+  const { path, locale, search } = params;
+  const searchUrl =
+    search || (typeof window !== "undefined" ? window.location.search : "");
 
-  let localePath = getLocalePathFromPathname(path, localeCodes);
+  let localePath = getLocalePathFromPathname(path);
 
-  // if path already has locale, return it
+  // If path already contains a valid locale prefix, return it unchanged
   if (localePath) {
-    return path;
+    return `${path}${searchUrl}`;
   }
 
-  localePath = parseI18nLang(lang, localeCodes);
+  // Use provided locale or fall back to current i18n language
+  localePath = locale || parseI18nLang(i18n.language);
 
-  // if path doesn't have locale, add it
-  return `/${localePath}${path}`;
+  // Prepend locale prefix to path
+  return `/${localePath}${path}${searchUrl}`;
 }

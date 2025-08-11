@@ -718,9 +718,6 @@ importers:
 
   packages/core:
     dependencies:
-      '@enzoferey/ethers-error-parser':
-        specifier: ^0.2.3
-        version: 0.2.3(ethers@6.15.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))
       '@noble/ed25519':
         specifier: ^2.0.0
         version: 2.3.0
@@ -734,8 +731,11 @@ importers:
         specifier: ^5.0.0
         version: 5.0.0
       ethers:
-        specifier: ^6.13.2
+        specifier: ^6.15.0
         version: 6.15.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      ethers-decode-error:
+        specifier: ^2.1.3
+        version: 2.1.3(ethers@6.15.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))
       eventemitter3:
         specifier: ^5.0.1
         version: 5.0.1
@@ -947,7 +947,7 @@ importers:
         specifier: 2.2.1
         version: 2.2.1
       ethers:
-        specifier: ^6.13.2
+        specifier: ^6.15.0
         version: 6.15.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
     devDependencies:
       jest:
@@ -1486,6 +1486,9 @@ importers:
       '@orderly.network/hooks':
         specifier: workspace:*
         version: link:../hooks
+      '@orderly.network/types':
+        specifier: workspace:*
+        version: link:../types
       '@orderly.network/utils':
         specifier: workspace:*
         version: link:../utils
@@ -2888,8 +2891,11 @@ importers:
         specifier: workspace:*
         version: link:../types
       ethers:
-        specifier: ^6.13.2
+        specifier: ^6.15.0
         version: 6.15.0(bufferutil@4.0.9)(utf-8-validate@6.0.5)
+      ethers-decode-error:
+        specifier: ^2.1.3
+        version: 2.1.3(ethers@6.15.0(bufferutil@4.0.9)(utf-8-validate@6.0.5))
     devDependencies:
       jest:
         specifier: ^29.7.0
@@ -11574,6 +11580,12 @@ packages:
   ethereumjs-util@7.1.5:
     resolution: {integrity: sha512-SDl5kKrQAudFBUe5OJM9Ac6WmMyYmXX/6sTmLZ3ffG2eY6ZIGBes3pEDxNN6V72WyOw4CPD5RomKdsa8DAAwLg==}
     engines: {node: '>=10.0.0'}
+
+  ethers-decode-error@2.1.3:
+    resolution: {integrity: sha512-x27u04XC/s8MRpuqiylIXbj4KMrt/5clYS2nle1b0bgbWFuoUZocDzjfXEfc5KzVmCQuITD9elqyO2VyxTGwdw==}
+    engines: {node: '>=16'}
+    peerDependencies:
+      ethers: ^6.0.0
 
   ethers@5.8.0:
     resolution: {integrity: sha512-DUq+7fHrCg1aPDFCHx6UIPb3nmt2XMpM7Y/g2gLhsl3lIBqeAfOJIl1qEvRf2uq3BiKxmh6Fh5pfp2ieyek7Kg==}
@@ -20334,10 +20346,6 @@ snapshots:
 
   '@emurgo/cardano-serialization-lib-nodejs@13.2.0': {}
 
-  '@enzoferey/ethers-error-parser@0.2.3(ethers@6.15.0(bufferutil@4.0.9)(utf-8-validate@5.0.10))':
-    dependencies:
-      ethers: 6.15.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-
   '@enzoferey/ethers-error-parser@0.2.3(ethers@6.15.0(bufferutil@4.0.9)(utf-8-validate@6.0.5))':
     dependencies:
       ethers: 6.15.0(bufferutil@4.0.9)(utf-8-validate@6.0.5)
@@ -24310,7 +24318,7 @@ snapshots:
   '@scure/bip32@1.3.2':
     dependencies:
       '@noble/curves': 1.2.0
-      '@noble/hashes': 1.3.2
+      '@noble/hashes': 1.3.3
       '@scure/base': 1.1.9
 
   '@scure/bip32@1.4.0':
@@ -24327,13 +24335,13 @@ snapshots:
 
   '@scure/bip32@1.7.0':
     dependencies:
-      '@noble/curves': 1.9.2
+      '@noble/curves': 1.9.4
       '@noble/hashes': 1.8.0
       '@scure/base': 1.2.6
 
   '@scure/bip39@1.2.1':
     dependencies:
-      '@noble/hashes': 1.3.2
+      '@noble/hashes': 1.3.3
       '@scure/base': 1.1.9
 
   '@scure/bip39@1.3.0':
@@ -33255,6 +33263,14 @@ snapshots:
       ethereum-cryptography: 0.1.3
       rlp: 2.2.7
 
+  ethers-decode-error@2.1.3(ethers@6.15.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)):
+    dependencies:
+      ethers: 6.15.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+
+  ethers-decode-error@2.1.3(ethers@6.15.0(bufferutil@4.0.9)(utf-8-validate@6.0.5)):
+    dependencies:
+      ethers: 6.15.0(bufferutil@4.0.9)(utf-8-validate@6.0.5)
+
   ethers@5.8.0(bufferutil@4.0.9)(utf-8-validate@5.0.10):
     dependencies:
       '@ethersproject/abi': 5.8.0
@@ -33509,7 +33525,7 @@ snapshots:
 
   extension-port-stream@3.0.0:
     dependencies:
-      readable-stream: 3.6.2
+      readable-stream: 4.7.0
       webextension-polyfill: 0.10.0
 
   external-editor@3.1.0:
@@ -37671,8 +37687,8 @@ snapshots:
   ox@0.6.7(typescript@5.8.3)(zod@3.25.76):
     dependencies:
       '@adraffy/ens-normalize': 1.11.0
-      '@noble/curves': 1.8.1
-      '@noble/hashes': 1.7.1
+      '@noble/curves': 1.9.4
+      '@noble/hashes': 1.8.0
       '@scure/bip32': 1.6.2
       '@scure/bip39': 1.5.4
       abitype: 1.0.8(typescript@5.8.3)(zod@3.25.76)
@@ -37700,7 +37716,7 @@ snapshots:
     dependencies:
       '@adraffy/ens-normalize': 1.11.0
       '@noble/ciphers': 1.3.0
-      '@noble/curves': 1.9.2
+      '@noble/curves': 1.9.4
       '@noble/hashes': 1.8.0
       '@scure/bip32': 1.7.0
       '@scure/bip39': 1.6.0
@@ -37715,7 +37731,7 @@ snapshots:
     dependencies:
       '@adraffy/ens-normalize': 1.11.0
       '@noble/ciphers': 1.3.0
-      '@noble/curves': 1.9.2
+      '@noble/curves': 1.9.4
       '@noble/hashes': 1.8.0
       '@scure/bip32': 1.7.0
       '@scure/bip39': 1.6.0
@@ -37730,7 +37746,7 @@ snapshots:
     dependencies:
       '@adraffy/ens-normalize': 1.11.0
       '@noble/ciphers': 1.3.0
-      '@noble/curves': 1.9.2
+      '@noble/curves': 1.9.4
       '@noble/hashes': 1.8.0
       '@scure/bip32': 1.7.0
       '@scure/bip39': 1.6.0

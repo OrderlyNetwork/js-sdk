@@ -15,14 +15,15 @@ export function useActionType(options: Options) {
     const allowanceNum = isNativeToken ? Number.MAX_VALUE : Number(allowance);
 
     if (allowanceNum <= 0) {
-      return DepositAction.Approve;
+      return DepositAction.ApproveAndDeposit;
     }
 
     const qty = Number(quantity);
     const maxQty = Number(maxQuantity);
 
     if (allowanceNum < qty && qty <= maxQty) {
-      return DepositAction.Increase;
+      // return DepositAction.Increase;
+      return DepositAction.ApproveAndDeposit;
     }
 
     return DepositAction.Deposit;
