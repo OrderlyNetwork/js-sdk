@@ -21,15 +21,7 @@ export const useAssetsHistoryData = (
     isRealtime?: boolean;
   },
 ) => {
-  const [today] = useState(() => {
-    const d = new Date();
-
-    return d;
-
-    // return new Date(
-    //   Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), 0, 0, 0),
-    // );
-  });
+  const [today] = useState(() => new Date());
 
   const { isRealtime = false } = options || {};
   const periodTypes = Object.values(PeriodType);
@@ -44,7 +36,6 @@ export const useAssetsHistoryData = (
     switch (value) {
       case PeriodType.MONTH:
         return subDays(today, 35);
-
       case PeriodType.QUARTER:
         return subDays(today, 95);
       default:
@@ -163,7 +154,7 @@ export const useAssetsHistoryData = (
       return data;
     }
 
-    const UTCStr = `${today.getUTCFullYear()}-${today.getUTCMonth() + 1}-${today.getUTCDate()}`;
+    const UTCStr = `${today.getUTCFullYear()}-${`${today.getUTCMonth() + 1}`.padStart(2, "0")}-${`${today.getUTCDate()}`.padStart(2, "0")}`;
 
     if (data[data.length - 1].date === UTCStr) {
       return data;
