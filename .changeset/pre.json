@@ -48,6 +48,7 @@
   },
   "changesets": [
     "dirty-brooms-carry",
+    "strong-donkeys-warn",
     "wicked-bears-peel"
   ]
 }
