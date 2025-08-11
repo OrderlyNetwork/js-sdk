@@ -27,13 +27,12 @@ const OrderlyAppProvider: React.FC<OrderlyAppProviderProps> = (props) => {
     onChainChanged,
     defaultChain,
     widgetConfigs,
-    notification,
     ...configProps
   } = props;
 
   useTrack();
   useBootstrap();
-  useExecutionReport({ media: notification?.orderFilled?.media });
+  useExecutionReport();
 
   const uiLocale = useUILocale();
 
@@ -44,7 +43,7 @@ const OrderlyAppProvider: React.FC<OrderlyAppProviderProps> = (props) => {
         components={components}
         overrides={props.overrides}
       >
-        <OrderlyConfigProvider notification={notification} {...configProps}>
+        <OrderlyConfigProvider {...configProps}>
           <AppStateProvider
             onChainChanged={onChainChanged}
             defaultChain={defaultChain}

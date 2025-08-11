@@ -5,28 +5,37 @@ import {
   useEventEmitter,
   useDebouncedCallback,
   useAudioPlayer,
+  useLocalStorage,
+  useOrderlyContext,
 } from "@orderly.network/hooks";
 import { toast } from "@orderly.network/ui";
 import { getOrderExecutionReportMsg } from "./getOrderExecutionReportMsg";
 
-interface ExecutionReportProps {
-  media?: string;
-}
+const ORDERLY_SOUND_ALERT_KEY = "orderly_sound_alert";
 
-export const useExecutionReport = (options: ExecutionReportProps) => {
+export const useExecutionReport = () => {
   const ee = useEventEmitter();
 
   const symbolsInfo = useSymbolsInfo();
   const symbolsInfoRef = useRef({});
 
+  const { notification } = useOrderlyContext();
+
+  console.log("notification", notification);
+
   useEffect(() => {
     symbolsInfoRef.current = symbolsInfo;
   }, [symbolsInfo]);
 
-  const src = options.media ?? "";
+  const src = notification?.orderFilled?.media ?? "";
 
-  const [element, audioRef] = useAudioPlayer(src, {
-    autoPlay: true,
+  const [soundAutoPlay] = useLocalStorage<boolean>(
+    ORDERLY_SOUND_ALERT_KEY,
+    false,
+  );
+
+  const [element] = useAudioPlayer(src, {
+    autoPlay: soundAutoPlay,
     volume: 1,
   });
 
@@ -50,7 +59,6 @@ export const useExecutionReport = (options: ExecutionReportProps) => {
           </div>,
           { id: orderType },
         );
-        audioRef.current?.play();
       }
     };
     showToast(data);
