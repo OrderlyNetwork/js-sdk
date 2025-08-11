@@ -166,19 +166,20 @@ export const TPSLInputRowUI: React.FC<TPSLInputRowProps> = (props) => {
         pnl={values.PnL}
         roi={roi}
         dp={props.quote_dp}
+        className="oui-mt-1"
       />
     </Flex>
   );
 };
 
-const RenderROI = (props: {
+const RenderROI: React.FC<{
   className?: string;
-  price: number | string | undefined;
-  pnl: number | string | undefined;
-  roi: number | null;
+  price?: number | string;
+  pnl?: number | string;
+  roi?: number | null;
   dp: number;
   orderType: OrderType;
-}) => {
+}> = (props) => {
   const { t } = useTranslation();
   const { price, pnl, roi, dp } = props;
   if (!roi || !price || !pnl) {
@@ -188,13 +189,12 @@ const RenderROI = (props: {
     <Text
       className={cn("oui-text-2xs oui-text-base-contrast-36", props.className)}
     >
-      {/* @ts-ignore */}
       <Trans
         i18nKey="tpsl.advanced.ROI"
         components={[
           <Fragment key="price">
             <Text.numeral
-              className="oui-text-base-contrast oui-px-1"
+              className="oui-px-1 oui-text-base-contrast"
               dp={dp}
               suffix={<Text className="oui-pl-0.5">USDC</Text>}
             >
