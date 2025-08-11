@@ -884,5 +884,6 @@
   "funding.paymentType": "Loại thanh toán",
   "funding.paymentType.paid": "Đã thanh toán",
   "funding.paymentType.received": "Đã nhận",
-  "leftNav.feedback": "Chia sẻ phản hồi"
+  "leftNav.feedback": "Chia sẻ phản hồi",
+  "transfer.withdraw.vaultWarning": "Số dư {{tokenName}} trên {{chainName}} là {{balance}}, không đủ để đáp ứng yêu cầu rút của bạn. Vui lòng thử lại sau hoặc chuyển sang chuỗi khác để rút."
 }

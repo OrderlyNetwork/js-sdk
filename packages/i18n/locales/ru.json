@@ -884,5 +884,6 @@
   "funding.paymentType": "Тип платежа",
   "funding.paymentType.paid": "Оплачено",
   "funding.paymentType.received": "Получено",
-  "leftNav.feedback": "Поделиться отзывом"
+  "leftNav.feedback": "Поделиться отзывом",
+  "transfer.withdraw.vaultWarning": "Баланс {{tokenName}} в сети {{chainName}} составляет {{balance}}, чего недостаточно для выполнения вашего запроса на вывод. Повторите попытку позже или переключитесь на другую сеть для вывода."
 }

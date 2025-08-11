@@ -884,5 +884,6 @@
   "funding.paymentType": "Ödeme türü",
   "funding.paymentType.paid": "Ödendi",
   "funding.paymentType.received": "Alındı",
-  "leftNav.feedback": "Geri bildiriminizi paylaşın"
+  "leftNav.feedback": "Geri bildiriminizi paylaşın",
+  "transfer.withdraw.vaultWarning": "{{chainName}} üzerindeki {{tokenName}} bakiyesi {{balance}} olup, çekim talebinizi karşılamak için yetersizdir. Lütfen daha sonra tekrar deneyin veya çekim için başka bir ağa geçin."
 }

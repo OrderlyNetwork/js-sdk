@@ -884,5 +884,6 @@
   "funding.paymentType": "Zahlungsart",
   "funding.paymentType.paid": "Bezahlt",
   "funding.paymentType.received": "Erhalten",
-  "leftNav.feedback": "Ihr Feedback teilen"
+  "leftNav.feedback": "Ihr Feedback teilen",
+  "transfer.withdraw.vaultWarning": "Das Guthaben von {{tokenName}} auf {{chainName}} beträgt {{balance}} und ist nicht ausreichend, um deine Auszahlungsanfrage zu erfüllen. Bitte versuche es später erneut oder wechsle für die Auszahlung zu einer anderen Chain."
 }

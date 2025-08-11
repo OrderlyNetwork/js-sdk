@@ -884,5 +884,6 @@
   "funding.paymentType": "Jenis pembayaran",
   "funding.paymentType.paid": "Dibayar",
   "funding.paymentType.received": "Diterima",
-  "leftNav.feedback": "Bagikan umpan balik Anda"
+  "leftNav.feedback": "Bagikan umpan balik Anda",
+  "transfer.withdraw.vaultWarning": "Saldo {{tokenName}} di {{chainName}} adalah {{balance}}, yang tidak cukup untuk memenuhi permintaan penarikan Anda. Silakan coba lagi nanti atau beralih ke chain lain untuk penarikan."
 }

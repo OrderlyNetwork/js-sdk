@@ -884,5 +884,6 @@
   "funding.paymentType": "支付类型",
   "funding.paymentType.paid": "已支付",
   "funding.paymentType.received": "已收到",
-  "leftNav.feedback": "分享您的反馈"
+  "leftNav.feedback": "分享您的反馈",
+  "transfer.withdraw.vaultWarning": "{{chainName}} 上的 {{tokenName}} 余额为 {{balance}}，不能满足您的提现请求，请稍后再试或切换到其他链进行提现。"
 }

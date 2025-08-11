@@ -884,5 +884,6 @@
   "funding.paymentType": "Тип платежу",
   "funding.paymentType.paid": "Сплачено",
   "funding.paymentType.received": "Отримано",
-  "leftNav.feedback": "Поділитися відгуком"
+  "leftNav.feedback": "Поділитися відгуком",
+  "transfer.withdraw.vaultWarning": "Баланс {{tokenName}} у мережі {{chainName}} становить {{balance}}, чого недостатньо для виконання вашого запиту на виведення. Спробуйте пізніше або перейдіть на іншу мережу для виведення."
 }

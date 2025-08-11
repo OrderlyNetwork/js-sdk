@@ -884,5 +884,6 @@
   "funding.paymentType": "Payment type",
   "funding.paymentType.paid": "Paid",
   "funding.paymentType.received": "Received",
-  "leftNav.feedback": "Share your feedback"
+  "leftNav.feedback": "Share your feedback",
+  "transfer.withdraw.vaultWarning": "The balance of {{tokenName}} on the {{chainName}} is {{balance}}, which is insufficient to meet your withdrawal request. Please try again later or switch to another chain for withdrawal."
 }
