@@ -45,6 +45,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
     actionType,
     onDeposit,
     onApprove,
+    onApproveAndDeposit,
     fetchBalance,
     wrongNetwork,
     balanceRevalidating,
@@ -192,6 +193,7 @@ export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
           loading={loading}
           onDeposit={onDeposit}
           onApprove={onApprove}
+          onApproveAndDeposit={onApproveAndDeposit}
           networkId={networkId}
         />
       </Flex>

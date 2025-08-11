@@ -11,10 +11,9 @@ export const transfer = {
   "transfer.insufficientAllowance": "Insufficient allowance",
   "transfer.rejectTransaction": "Rejected transaction",
 
-  "transfer.deposit.approve.symbol": "Approve {{symbol}}",
+  "transfer.deposit.approve": "Approve",
   "transfer.deposit.approve.success": "Approve success",
   "transfer.deposit.approve.failed": "Approve failed",
-  "transfer.deposit.increase.symbol": "Increase {{symbol}} authorized amount",
   "transfer.deposit.requested": "Deposit requested",
   "transfer.deposit.completed": "Deposit completed",
   "transfer.deposit.failed": "Deposit failed",
