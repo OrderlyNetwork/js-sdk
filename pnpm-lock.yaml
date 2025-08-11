@@ -2881,9 +2881,6 @@ importers:
 
   packages/web3-provider-ethers:
     dependencies:
-      '@enzoferey/ethers-error-parser':
-        specifier: ^0.2.3
-        version: 0.2.3(ethers@6.15.0(bufferutil@4.0.9)(utf-8-validate@6.0.5))
       '@orderly.network/default-evm-adapter':
         specifier: workspace:*
         version: link:../default-evm-adapter
@@ -3960,11 +3957,6 @@ packages:
 
   '@emurgo/cardano-serialization-lib-nodejs@13.2.0':
     resolution: {integrity: sha512-Bz1zLGEqBQ0BVkqt1OgMxdBOE3BdUWUd7Ly9Ecr/aUwkA8AV1w1XzBMe4xblmJHnB1XXNlPH4SraXCvO+q0Mig==}
-
-  '@enzoferey/ethers-error-parser@0.2.3':
-    resolution: {integrity: sha512-Xt5DPAwJP/Czvw6bVLuWpk+y3M5z1fKWUy3w8nLV7WLfDxoN+HmtqQ1+vgG4lvmD2Xr/bW2mBvHPyI3bKDkuXA==}
-    peerDependencies:
-      ethers: ^5.7.0
 
   '@es-joy/jsdoccomment@0.46.0':
     resolution: {integrity: sha512-C3Axuq1xd/9VqFZpW4YAzOx5O9q/LP46uIQy/iNDpHG3fmPa6TBtvfglMCs3RBiBxAIi0Go97r8+jvTt55XMyQ==}
@@ -20345,10 +20337,6 @@ snapshots:
   '@emurgo/cardano-serialization-lib-browser@13.2.1': {}
 
   '@emurgo/cardano-serialization-lib-nodejs@13.2.0': {}
-
-  '@enzoferey/ethers-error-parser@0.2.3(ethers@6.15.0(bufferutil@4.0.9)(utf-8-validate@6.0.5))':
-    dependencies:
-      ethers: 6.15.0(bufferutil@4.0.9)(utf-8-validate@6.0.5)
 
   '@es-joy/jsdoccomment@0.46.0':
     dependencies:
