@@ -1,9 +1,9 @@
 import { FC } from "react";
-import { Slot } from "@radix-ui/react-slot";
 import {
   Box,
   CheckedCircleFillIcon,
   cn,
+  Divider,
   Spinner,
   Text,
 } from "@orderly.network/ui";
@@ -14,10 +14,11 @@ type StepItemProps = {
   isCompleted?: boolean;
   title: string;
   description: string;
+  showDivider?: boolean;
 };
 
 export const StepItem = (props: StepItemProps) => {
-  const { title, description } = props;
+  const { title, description, showDivider } = props;
   return (
     <Box position="relative" className="oui-pl-8">
       <Box>
@@ -31,6 +32,16 @@ export const StepItem = (props: StepItemProps) => {
       <div className="oui-absolute oui-left-0 oui-top-1 oui-z-10">
         <Identifier {...props} />
       </div>
+      {showDivider && (
+        <Box position={"absolute"} left={12} top={23} bottom={-21} zIndex={0}>
+          <Divider
+            lineStyle={"dashed"}
+            direction={"vertical"}
+            intensity={16}
+            className="oui-h-full"
+          />
+        </Box>
+      )}
     </Box>
   );
 };
