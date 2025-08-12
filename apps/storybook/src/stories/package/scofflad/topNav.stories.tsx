@@ -192,7 +192,7 @@ export const SubMainNav: Story = {
       {
         name: "Reward",
         href: "/rewards",
-        icon: "box-ani.gif",
+        icon: "box-jump.gif",
         children: [
           {
             name: "Trading rewards",
@@ -335,7 +335,7 @@ export const CampaignsNav: Story = {
     campaigns: {
       name: "Reward",
       href: "/rewards",
-      icon: "box-ani.gif",
+      icon: "box-jump.gif",
       children: [
         {
           name: "Orderly airdrop",
