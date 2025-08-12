@@ -45,6 +45,29 @@ export const OrderBookCell: FC<OrderBookCellProps> = (props) => {
     return getPrecisionByNumber(depth || `${quote_dp}`);
   }, [depth, quote_dp]);
 
+  const renderCell = () => {
+    switch (coinUnit) {
+      case "base":
+        return (
+          <Text.numeral className="oui-text-base-contrast-80" dp={base_dp}>
+            {accumulated}
+          </Text.numeral>
+        );
+      case "quote":
+        return (
+          <Text.numeral className="oui-text-base-contrast-80" dp={0}>
+            {totalAmount}
+          </Text.numeral>
+        );
+      default:
+        return (
+          <Text.numeral className="oui-text-base-contrast-80" dp={base_dp}>
+            {Number.isNaN(quantity) ? "-" : quantity}
+          </Text.numeral>
+        );
+    }
+  };
+
   return (
     <Box
       className={cn(
@@ -65,21 +88,7 @@ export const OrderBookCell: FC<OrderBookCellProps> = (props) => {
         >
           {price}
         </Text.numeral>
-        {coinUnit === "qty" && (
-          <Text.numeral className="oui-text-base-contrast-80" dp={base_dp}>
-            {Number.isNaN(quantity) ? "-" : quantity}
-          </Text.numeral>
-        )}
-        {coinUnit === "base" && (
-          <Text.numeral className="oui-text-base-contrast-80" dp={base_dp}>
-            {accumulated}
-          </Text.numeral>
-        )}
-        {coinUnit === "quote" && (
-          <Text.numeral className="oui-text-base-contrast-80" dp={0}>
-            {totalAmount}
-          </Text.numeral>
-        )}
+        {renderCell()}
       </Flex>
       {Number.isNaN(width) ? null : (
         <CellBar
