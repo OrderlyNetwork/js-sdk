@@ -27,17 +27,15 @@ import { useToken } from "./hooks/useToken";
 const { collateralRatio, collateralContribution, calcMinimumReceived } =
   accountPerp;
 
-export type UseDepositFormScriptReturn = ReturnType<
-  typeof useDepositFormScript
->;
+export type DepositFormScriptReturn = ReturnType<typeof useDepositFormScript>;
 
-export type UseDepositFormScriptOptions = {
-  onClose?: () => void;
+export type DepositFormScriptOptions = {
+  close?: () => void;
 };
 // swap to usdc precision is 3
 export const SWAP_USDC_PRECISION = 3;
 
-export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
+export const useDepositFormScript = (options: DepositFormScriptOptions) => {
   const { wrongNetwork } = useAppContext();
   const { t } = useTranslation();
 
@@ -134,8 +132,8 @@ export const useDepositFormScript = (options: UseDepositFormScriptOptions) => {
 
   const onSuccess = useCallback(() => {
     cleanData();
-    options.onClose?.();
-  }, [cleanData, options.onClose]);
+    options.close?.();
+  }, [cleanData, options.close]);
 
   const { submitting, onApprove, onDeposit, onApproveAndDeposit } =
     useDepositAction({

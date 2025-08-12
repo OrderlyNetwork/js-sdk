@@ -8,8 +8,8 @@ import {
   TabPanel,
   Tabs,
 } from "@orderly.network/ui";
-import { DepositFormWidget } from "../depositForm";
-import { WithdrawFormWidget } from "../withdrawForm";
+import { DepositSlot } from "./depositSlot";
+import { WithdrawSlot } from "./withdrawSlot";
 
 export const DepositAndWithdrawWithDialogId = "DepositAndWithdrawWithDialogId";
 export const DepositAndWithdrawWithSheetId = "DepositAndWithdrawWithSheetId";
@@ -41,15 +41,16 @@ export const DepositAndWithdraw: FC<DepositAndWithdrawProps> = (props) => {
         icon={<ArrowDownSquareFillIcon />}
         value="deposit"
       >
-        {/* <DepositSlot onClose={props.close} /> */}
-        <DepositFormWidget onClose={props.close} />
+        <DepositSlot close={props.close} />
+        {/* <DepositFormWidget close={props.close} /> */}
       </TabPanel>
       <TabPanel
         title={t("common.withdraw")}
         icon={<ArrowUpSquareFillIcon />}
         value="withdraw"
       >
-        <WithdrawFormWidget {...props} />
+        <WithdrawSlot close={props.close} />
+        {/* <WithdrawFormWidget close={props.close} /> */}
       </TabPanel>
     </Tabs>
   );

@@ -1,10 +1,13 @@
-import { DepositAndWithdrawProps } from "../depositAndWithdraw";
-import { useWithdrawFormScript } from "./withdrawForm.script";
+import { FC } from "react";
+import {
+  useWithdrawFormScript,
+  WithdrawFormScriptOptions,
+} from "./withdrawForm.script";
 import { WithdrawForm } from "./withdrawForm.ui";
 
-export const WithdrawFormWidget = (dialogProps: DepositAndWithdrawProps) => {
-  const props = useWithdrawFormScript({
-    onClose: dialogProps.close,
-  });
-  return <WithdrawForm {...props} />;
+export type WithdrawFormWidgetProps = WithdrawFormScriptOptions;
+
+export const WithdrawFormWidget: FC<WithdrawFormWidgetProps> = (props) => {
+  const state = useWithdrawFormScript(props);
+  return <WithdrawForm {...state} />;
 };
