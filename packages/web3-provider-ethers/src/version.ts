@@ -8,7 +8,7 @@ declare global {
 if (typeof window !== "undefined") {
   window.__ORDERLY_VERSION__ = window.__ORDERLY_VERSION__ || {};
   window.__ORDERLY_VERSION__["@orderly.network/web3-provider-ethers"] =
-    "2.5.4-internal-20250814.2";
+    "2.5.4-internal-20250814.3";
 }
 
-export default "2.5.4-internal-20250814.2";
+export default "2.5.4-internal-20250814.3";
