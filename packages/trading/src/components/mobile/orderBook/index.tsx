@@ -42,22 +42,17 @@ export const OrderBook: FC<OrderBookProps> = (props) => {
 
   const symbol = `PERP_${props.symbolInfo.base}_${props.symbolInfo.quote}`;
 
-  const [coinTypeConfig, setCoinTypeConfig]: [string, React.Dispatch<string>] =
-    useLocalStorage(ORDERBOOK_MOBILE_COIN_TYPE_KEY, ["total", base].join("_"));
-
-  useEffect(() => {
-    const [prevMode] = (coinTypeConfig?.split("_") as [string, string]) ?? [];
-    if (!coinTypeConfig.includes(quote) && base) {
-      setCoinTypeConfig([prevMode, base].join("_"));
-    }
-  }, [quote, base, coinTypeConfig]);
+  const [coinUnit, setCoinUnit] = useLocalStorage<"qty" | "base" | "quote">(
+    ORDERBOOK_MOBILE_COIN_TYPE_KEY,
+    "qty",
+  );
 
   return (
     <OrderBookProvider
       cellHeight={props.cellHeight ?? 20}
       onItemClick={props.onItemClick}
       depth={props.activeDepth}
-      pendingOrders={[]}
+      pendingOrders={EMPTY_LIST}
       showTotal={false}
       symbolInfo={props.symbolInfo}
     >

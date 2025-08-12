@@ -32,11 +32,10 @@ export const OrderBookCell: FC<OrderBookCellProps> = (props) => {
 
   const { base_dp, quote_dp, base, quote } = symbolInfo;
 
-  const [coinTypeConfig, setCoinTypeConfig]: [string, React.Dispatch<string>] =
-    useLocalStorage(ORDERBOOK_MOBILE_COIN_TYPE_KEY, ["total", base].join("_"));
-
-  const [mode, currency] =
-    (coinTypeConfig?.split("_") as [string, string]) ?? [];
+  const [coinUnit, setCoinUnit] = useLocalStorage<"qty" | "base" | "quote">(
+    ORDERBOOK_MOBILE_COIN_TYPE_KEY,
+    "qty",
+  );
 
   const totalAmount = Number.isNaN(accumulated)
     ? "-"
@@ -45,6 +44,29 @@ export const OrderBookCell: FC<OrderBookCellProps> = (props) => {
   const dp = useMemo(() => {
     return getPrecisionByNumber(depth || `${quote_dp}`);
   }, [depth, quote_dp]);
+
+  const renderCell = () => {
+    switch (coinUnit) {
+      case "base":
+        return (
+          <Text.numeral className="oui-text-base-contrast-80" dp={base_dp}>
+            {accumulated}
+          </Text.numeral>
+        );
+      case "quote":
+        return (
+          <Text.numeral className="oui-text-base-contrast-80" dp={0}>
+            {totalAmount}
+          </Text.numeral>
+        );
+      default:
+        return (
+          <Text.numeral className="oui-text-base-contrast-80" dp={base_dp}>
+            {Number.isNaN(quantity) ? "-" : quantity}
+          </Text.numeral>
+        );
+    }
+  };
 
   return (
     <Box
@@ -66,21 +88,7 @@ export const OrderBookCell: FC<OrderBookCellProps> = (props) => {
         >
           {price}
         </Text.numeral>
-        {mode === "qty" && (
-          <Text.numeral className="oui-text-base-contrast-80" dp={base_dp}>
-            {Number.isNaN(quantity) ? "-" : quantity}
-          </Text.numeral>
-        )}
-        {mode === "total" && currency === base && (
-          <Text.numeral className="oui-text-base-contrast-80" dp={base_dp}>
-            {accumulated}
-          </Text.numeral>
-        )}
-        {mode === "total" && currency === quote && (
-          <Text.numeral className="oui-text-base-contrast-80" dp={0}>
-            {totalAmount}
-          </Text.numeral>
-        )}
+        {renderCell()}
       </Flex>
       {Number.isNaN(width) ? null : (
         <CellBar

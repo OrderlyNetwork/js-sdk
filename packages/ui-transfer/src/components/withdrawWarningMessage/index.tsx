@@ -11,6 +11,7 @@ interface WarningMessageProps {
   crossChainTrans: boolean;
   checkIsBridgeless: boolean;
   tokenName: string;
+  qtyGreaterThanMaxAmount: boolean;
   qtyGreaterThanVault: boolean;
 }
 
@@ -22,6 +23,7 @@ export const WithdrawWarningMessage: React.FC<WarningMessageProps> = (
     currentChain,
     crossChainTrans,
     tokenName,
+    qtyGreaterThanMaxAmount,
     qtyGreaterThanVault,
   } = props;
   const { t } = useTranslation();
@@ -40,6 +42,9 @@ export const WithdrawWarningMessage: React.FC<WarningMessageProps> = (
     }
     if (crossChainTrans) {
       return t("transfer.withdraw.crossChain.process");
+    }
+    if (qtyGreaterThanMaxAmount) {
+      return t("transfer.insufficientBalance");
     }
     if (qtyGreaterThanVault) {
       return t("transfer.withdraw.vaultWarning", {

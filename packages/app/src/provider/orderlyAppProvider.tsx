@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useContext } from "react";
+import React, { PropsWithChildren } from "react";
 import { OrderlyConfigProvider, useTrack } from "@orderly.network/hooks";
 import {
   LocaleProvider as UILocaleProvider,
@@ -38,7 +38,6 @@ const OrderlyAppProvider: React.FC<OrderlyAppProviderProps> = (props) => {
 
   useTrack();
   useBootstrap();
-  // useExecutionReport();
 
   const uiLocale = useUILocale();
 

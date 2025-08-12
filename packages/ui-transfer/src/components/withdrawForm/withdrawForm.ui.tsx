@@ -48,6 +48,7 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
     sourceTokens,
     onSourceTokenChange,
     vaultBalanceList,
+    qtyGreaterThanMaxAmount,
     qtyGreaterThanVault,
   } = props;
 
@@ -175,8 +176,9 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
         chainVaultBalance={chainVaultBalance as number}
         currentChain={currentChain}
         crossChainTrans={crossChainTrans}
-        qtyGreaterThanVault={qtyGreaterThanVault}
         tokenName={sourceToken?.symbol as string}
+        qtyGreaterThanVault={qtyGreaterThanVault}
+        qtyGreaterThanMaxAmount={qtyGreaterThanMaxAmount}
       />
       <Flex justify="center">
         <WithdrawAction

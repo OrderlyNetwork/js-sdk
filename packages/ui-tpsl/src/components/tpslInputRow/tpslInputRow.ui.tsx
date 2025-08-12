@@ -181,14 +181,12 @@ const RenderROI: React.FC<{
   orderType: OrderType;
 }> = (props) => {
   const { t } = useTranslation();
-  const { price, pnl, roi, dp } = props;
+  const { price, pnl, roi, dp, className, orderType } = props;
   if (!roi || !price || !pnl) {
     return null;
   }
   return (
-    <Text
-      className={cn("oui-text-2xs oui-text-base-contrast-36", props.className)}
-    >
+    <Text className={cn("oui-text-2xs oui-text-base-contrast-36", className)}>
       <Trans
         i18nKey="tpsl.advanced.ROI"
         components={[
@@ -202,8 +200,8 @@ const RenderROI: React.FC<{
             </Text.numeral>
           </Fragment>,
           <Fragment key="orderType">
-            <Text className="oui-text-base-contrast oui-px-1">
-              {props.orderType === OrderType.MARKET
+            <Text className="oui-px-1 oui-text-base-contrast">
+              {orderType === OrderType.MARKET
                 ? t("common.market")
                 : t("common.limit")}
             </Text>
@@ -211,7 +209,7 @@ const RenderROI: React.FC<{
           <Fragment key="pnl">
             <Text.numeral
               coloring
-              className="oui-px-1 oui-whitespace-nowrap"
+              className="oui-whitespace-nowrap oui-px-1"
               dp={2}
               suffix={<Text className="oui-pl-0.5">USDC</Text>}
             >
@@ -222,7 +220,7 @@ const RenderROI: React.FC<{
           <Fragment key="roi">
             <Text.numeral
               coloring
-              className="oui-px-1 oui-whitespace-nowrap"
+              className="oui-whitespace-nowrap oui-px-1"
               dp={2}
               suffix="%"
             >

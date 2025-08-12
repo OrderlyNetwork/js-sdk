@@ -20,10 +20,10 @@ import { SwapIndicator } from "../swapIndicator";
 import { Web3Wallet } from "../web3Wallet";
 import {
   SWAP_USDC_PRECISION,
-  type UseDepositFormScriptReturn,
+  type DepositFormScriptReturn,
 } from "./depositForm.script";
 
-export const DepositForm: FC<UseDepositFormScriptReturn> = (props) => {
+export const DepositForm: FC<DepositFormScriptReturn> = (props) => {
   const {
     sourceToken,
     targetToken,

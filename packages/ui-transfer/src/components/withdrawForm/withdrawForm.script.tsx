@@ -34,8 +34,8 @@ export type WithdrawFormScriptReturn = ReturnType<typeof useWithdrawFormScript>;
 
 const markPrice = 1;
 
-type WithdrawFormScriptOptions = {
-  onClose: (() => void) | undefined;
+export type WithdrawFormScriptOptions = {
+  close?: () => void;
 };
 
 export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
@@ -152,7 +152,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     token: sourceToken?.symbol!,
     quantity,
     setQuantity,
-    close: options.onClose,
+    close: options.close,
     setLoading,
   });
 
@@ -288,7 +288,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
       .then((res) => {
         toast.success(t("transfer.withdraw.requested"));
         ee.emit("withdraw:requested");
-        options.onClose?.();
+        options.close?.();
         setQuantity("");
       })
       .catch((e) => {

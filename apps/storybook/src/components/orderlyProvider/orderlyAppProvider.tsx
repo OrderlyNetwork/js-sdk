@@ -2,8 +2,8 @@ import React, { FC, ReactNode } from "react";
 import { OrderlyAppProvider as OrderlyAppProviderBase } from "@orderly.network/react-app";
 import { orderlyAppProviderConfig } from "../../orderlyConfig";
 import { dataAdapter } from "../../orderlyConfig/dataAdapter";
+import { notification } from "../../orderlyConfig/notification";
 import { widgetConfigs } from "../../orderlyConfig/widgetConfigs";
-import audioSrc from "./Audio/xm2949.wav";
 import { useConfigStore, ConfigStoreOptions } from "./configStore";
 import { useRouteContext } from "./rounteProvider";
 
@@ -15,7 +15,6 @@ export const OrderlyAppProvider: FC<
   const { children, ...rest } = props;
   const { onRouteChange } = useRouteContext();
   const configStore = useConfigStore(rest);
-
   return (
     <OrderlyAppProviderBase
       configStore={configStore}
@@ -24,11 +23,7 @@ export const OrderlyAppProvider: FC<
       enableSwapDeposit={true}
       onRouteChange={onRouteChange}
       widgetConfigs={widgetConfigs}
-      notification={{
-        orderFilled: {
-          media: audioSrc,
-        },
-      }}
+      notification={notification}
       dataAdapter={dataAdapter}
       // customChains={customChainsAbstarct}
       // defaultChain={{testnet: customChains.testnet[0], mainnet: customChains.mainnet[0]}}
