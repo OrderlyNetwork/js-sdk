@@ -36,7 +36,7 @@ export const useTransactionTime = (chainId?: number | string) => {
         wallet,
       })
         .then((time) => {
-          console.log("getBlockTime", chainId, time);
+          console.log("average block time", chainId, time);
           setBlockTime(time);
           // record chain block time
           timeMap.current[chainId] = time;
