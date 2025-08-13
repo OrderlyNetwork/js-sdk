@@ -2585,6 +2585,9 @@ importers:
       '@orderly.network/core':
         specifier: workspace:*
         version: link:../core
+      '@orderly.network/default-solana-adapter':
+        specifier: workspace:*
+        version: link:../default-solana-adapter
       '@orderly.network/hooks':
         specifier: workspace:*
         version: link:../hooks
@@ -2612,6 +2615,12 @@ importers:
       '@orderly.network/utils':
         specifier: workspace:*
         version: link:../utils
+      '@solana/web3.js':
+        specifier: ^1.95.3
+        version: 1.98.2(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.8.3)(utf-8-validate@5.0.10)
+      '@wagmi/core':
+        specifier: ^2.19.0
+        version: 2.19.0(@tanstack/query-core@5.83.0)(@types/react@18.3.23)(immer@10.1.1)(react@18.3.1)(typescript@5.8.3)(use-sync-external-store@1.5.0(react@18.3.1))(viem@2.33.1(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))
       ramda:
         specifier: ^0.29.1
         version: 0.29.1
@@ -2858,7 +2867,7 @@ importers:
         version: link:../hooks
       '@web3modal/wagmi':
         specifier: ^3.5.3
-        version: 3.5.7(@types/react@18.3.23)(@wagmi/core@2.18.0(@tanstack/query-core@5.83.0)(@types/react@18.3.23)(immer@10.1.1)(react@18.3.1)(typescript@5.8.3)(use-sync-external-store@1.5.0(react@18.3.1))(viem@1.21.4(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(typescript@5.8.3)(viem@1.21.4(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))
+        version: 3.5.7(@types/react@18.3.23)(@wagmi/core@2.19.0(@tanstack/query-core@5.83.0)(@types/react@18.3.23)(immer@10.1.1)(react@18.3.1)(typescript@5.8.3)(use-sync-external-store@1.5.0(react@18.3.1))(viem@1.21.4(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(typescript@5.8.3)(viem@1.21.4(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))
     devDependencies:
       '@types/react':
         specifier: ^18.2.38
@@ -8687,6 +8696,18 @@ packages:
 
   '@wagmi/core@2.18.0':
     resolution: {integrity: sha512-33Wc/nnc/Q4qrqSL0F8BIDsG0iFTPrB4avjL/9vIE2DrA3GS3scVnrn6OtxpyF2TrwDZVfA+XUmfvoKuqtWPgw==}
+    peerDependencies:
+      '@tanstack/query-core': '>=5.0.0'
+      typescript: '>=5.0.4'
+      viem: 2.x
+    peerDependenciesMeta:
+      '@tanstack/query-core':
+        optional: true
+      typescript:
+        optional: true
+
+  '@wagmi/core@2.19.0':
+    resolution: {integrity: sha512-lI57q6refAtNU6xnk/oyOpbEtEiwQ6g4rR+C9FEx8Gn2hZlfoyyksndrl6hIKlMBK+UkkKso3VwR5DI65j/5XQ==}
     peerDependencies:
       '@tanstack/query-core': '>=5.0.0'
       typescript: '>=5.0.4'
@@ -28164,11 +28185,26 @@ snapshots:
       - react
       - use-sync-external-store
 
-  '@wagmi/core@2.18.0(@tanstack/query-core@5.83.0)(@types/react@18.3.23)(immer@10.1.1)(react@18.3.1)(typescript@5.8.3)(use-sync-external-store@1.5.0(react@18.3.1))(viem@1.21.4(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))':
+  '@wagmi/core@2.19.0(@tanstack/query-core@5.83.0)(@types/react@18.3.23)(immer@10.1.1)(react@18.3.1)(typescript@5.8.3)(use-sync-external-store@1.5.0(react@18.3.1))(viem@1.21.4(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))':
     dependencies:
       eventemitter3: 5.0.1
       mipd: 0.0.7(typescript@5.8.3)
       viem: 1.21.4(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)
+      zustand: 5.0.0(@types/react@18.3.23)(immer@10.1.1)(react@18.3.1)(use-sync-external-store@1.5.0(react@18.3.1))
+    optionalDependencies:
+      '@tanstack/query-core': 5.83.0
+      typescript: 5.8.3
+    transitivePeerDependencies:
+      - '@types/react'
+      - immer
+      - react
+      - use-sync-external-store
+
+  '@wagmi/core@2.19.0(@tanstack/query-core@5.83.0)(@types/react@18.3.23)(immer@10.1.1)(react@18.3.1)(typescript@5.8.3)(use-sync-external-store@1.5.0(react@18.3.1))(viem@2.33.1(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))':
+    dependencies:
+      eventemitter3: 5.0.1
+      mipd: 0.0.7(typescript@5.8.3)
+      viem: 2.33.1(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)
       zustand: 5.0.0(@types/react@18.3.23)(immer@10.1.1)(react@18.3.1)(use-sync-external-store@1.5.0(react@18.3.1))
     optionalDependencies:
       '@tanstack/query-core': 5.83.0
@@ -29938,9 +29974,9 @@ snapshots:
       lit: 3.1.0
       qrcode: 1.5.3
 
-  '@web3modal/wagmi@3.5.7(@types/react@18.3.23)(@wagmi/core@2.18.0(@tanstack/query-core@5.83.0)(@types/react@18.3.23)(immer@10.1.1)(react@18.3.1)(typescript@5.8.3)(use-sync-external-store@1.5.0(react@18.3.1))(viem@1.21.4(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(typescript@5.8.3)(viem@1.21.4(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))':
+  '@web3modal/wagmi@3.5.7(@types/react@18.3.23)(@wagmi/core@2.19.0(@tanstack/query-core@5.83.0)(@types/react@18.3.23)(immer@10.1.1)(react@18.3.1)(typescript@5.8.3)(use-sync-external-store@1.5.0(react@18.3.1))(viem@1.21.4(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(typescript@5.8.3)(viem@1.21.4(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))':
     dependencies:
-      '@wagmi/core': 2.18.0(@tanstack/query-core@5.83.0)(@types/react@18.3.23)(immer@10.1.1)(react@18.3.1)(typescript@5.8.3)(use-sync-external-store@1.5.0(react@18.3.1))(viem@1.21.4(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))
+      '@wagmi/core': 2.19.0(@tanstack/query-core@5.83.0)(@types/react@18.3.23)(immer@10.1.1)(react@18.3.1)(typescript@5.8.3)(use-sync-external-store@1.5.0(react@18.3.1))(viem@1.21.4(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))
       '@web3modal/polyfills': 3.5.7
       '@web3modal/scaffold': 3.5.7(@types/react@18.3.23)(react@18.3.1)
       '@web3modal/scaffold-react': 3.5.7(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)

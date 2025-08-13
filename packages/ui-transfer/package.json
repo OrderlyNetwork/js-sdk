@@ -25,9 +25,12 @@
     "@orderly.network/types": "workspace:*",
     "@orderly.network/ui-connector": "workspace:*",
     "@orderly.network/ui-chain-selector": "workspace:*",
+    "@orderly.network/default-solana-adapter": "workspace:*",
     "@orderly.network/react-app": "workspace:*",
     "@orderly.network/perp": "workspace:*",
     "@layerzerolabs/scan-client": "^0.0.6",
+    "@solana/web3.js": "^1.95.3",
+    "@wagmi/core": "^2.19.0",
     "ramda": "^0.29.1"
   },
   "devDependencies": {
