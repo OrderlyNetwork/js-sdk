@@ -8,11 +8,7 @@ import {
 import { AccountStatusEnum } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
 import { useTradingLeaderboardContext } from "../provider";
-import {
-  CampaignStatsDetailsResponse,
-  CampaignStatsResponse,
-  UserCampaignsResponse,
-} from "./type";
+import { CampaignStatsResponse, UserCampaignsResponse } from "./type";
 
 /**
  * Hook for managing campaigns data and statistics
@@ -43,7 +39,7 @@ export const useCampaignsScript = () => {
 
   const searchParams = useMemo(() => {
     return {
-      campaign_id: currentCampaignId,
+      campaign_id: currentCampaignId.toString(),
       symbols: symbols || "",
       broker_id: brokerId,
       group_by: "BROKER",

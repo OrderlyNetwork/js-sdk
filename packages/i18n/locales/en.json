@@ -819,7 +819,7 @@
   "tradingLeaderboard.rewardDistribution": "Reward distribution",
   "tradingLeaderboard.batteleHasEnded": "Battle has ended",
   "tradingLeaderboard.tradeForMoreTickets": "Trade <0/> more to get next tickets",
-  "tradingLeaderboard.earnTickets": "Earn {{ticket}} tickets every {{amount}} trading volume.",
+  "tradingLeaderboard.earnTickets": "Earn {{ticket}} ticket every {{amount}} trading volume.",
   "tradingLeaderboard.arena": "Arena",
   "tradingLeaderboard.generalLeaderboard": "General leaderboard",
   "tradingLeaderboard.maxTicketsAchieved": "Max tickets achieved",
