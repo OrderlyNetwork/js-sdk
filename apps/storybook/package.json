@@ -1,7 +1,7 @@
 {
   "name": "@orderly.network/storybook",
   "private": true,
-  "version": "1.5.4-internal-20250814.6",
+  "version": "1.5.4-internal-20250814.7",
   "type": "module",
   "scripts": {
     "playground": "pnpm loadEnv vite",
