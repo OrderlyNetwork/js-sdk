@@ -30,7 +30,8 @@
     "@orderly.network/perp": "workspace:*",
     "@layerzerolabs/scan-client": "^0.0.6",
     "@solana/web3.js": "^1.95.3",
-    "@wagmi/core": "^2.14.11",
+    "@wagmi/core": "^2.18.0",
+    "viem": "^2.29.2",
     "ramda": "^0.29.1"
   },
   "devDependencies": {
