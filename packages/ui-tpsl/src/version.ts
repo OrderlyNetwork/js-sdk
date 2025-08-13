@@ -8,7 +8,7 @@ declare global {
 if (typeof window !== "undefined") {
   window.__ORDERLY_VERSION__ = window.__ORDERLY_VERSION__ || {};
   window.__ORDERLY_VERSION__["@orderly.network/ui-tpsl"] =
-    "2.5.4-internal-20250814.4";
+    "2.5.4-internal-20250814.5";
 }
 
-export default "2.5.4-internal-20250814.4";
+export default "2.5.4-internal-20250814.5";

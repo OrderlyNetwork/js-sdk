@@ -1,5 +1,17 @@
 # @orderly.network/react-app
 
+## 2.5.4-internal-20250814.5
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.5.4-internal-20250814.5
+  - @orderly.network/i18n@2.5.4-internal-20250814.5
+  - @orderly.network/types@2.5.4-internal-20250814.5
+  - @orderly.network/ui@2.5.4-internal-20250814.5
+  - @orderly.network/utils@2.5.4-internal-20250814.5
+
 ## 2.5.4-internal-20250814.4
 
 ### Patch Changes
