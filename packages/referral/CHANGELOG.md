@@ -1,5 +1,15 @@
 # @orderly.network/referral
 
+## 2.5.4-internal-20250814.6
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.5.4-internal-20250814.6
+  - @orderly.network/types@2.5.4-internal-20250814.6
+  - @orderly.network/utils@2.5.4-internal-20250814.6
+
 ## 2.5.4-internal-20250814.5
 
 ### Patch Changes

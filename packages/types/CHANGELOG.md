@@ -1,5 +1,11 @@
 # @orderly.network/types
 
+## 2.5.4-internal-20250814.6
+
+### Patch Changes
+
+- publish
+
 ## 2.5.4-internal-20250814.5
 
 ### Patch Changes

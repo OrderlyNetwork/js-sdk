@@ -1,5 +1,20 @@
 # @orderly.network/ui-tpsl
 
+## 2.5.4-internal-20250814.6
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.5.4-internal-20250814.6
+  - @orderly.network/hooks@2.5.4-internal-20250814.6
+  - @orderly.network/i18n@2.5.4-internal-20250814.6
+  - @orderly.network/perp@4.5.4-internal-20250814.6
+  - @orderly.network/types@2.5.4-internal-20250814.6
+  - @orderly.network/ui@2.5.4-internal-20250814.6
+  - @orderly.network/ui-connector@2.5.4-internal-20250814.6
+  - @orderly.network/utils@2.5.4-internal-20250814.6
+
 ## 2.5.4-internal-20250814.5
 
 ### Patch Changes
