@@ -8,7 +8,6 @@ import {
 } from "@orderly.network/hooks";
 import {
   AlgoOrderRootType,
-  AlgoOrderType,
   API,
   OrderType,
   PositionType,
@@ -43,7 +42,7 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
   if (isEditing && !order) {
     throw new SDKError("order is required when isEditing is true");
   }
-  const symbol = isEditing ? order!.symbol : position.symbol;
+  const symbol = isEditing ? order?.symbol : position?.symbol;
   const symbolInfo = useSymbolsInfo();
   const prevTPSLType = useRef<AlgoOrderRootType>(AlgoOrderRootType.TP_SL);
   const [needConfirm] = useLocalStorage("orderly_order_confirm", true);
@@ -62,18 +61,15 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
     },
   ] = useTPSLOrder(
     {
-      symbol,
-      position_qty: position.position_qty,
-      average_open_price: position.average_open_price,
+      symbol: symbol!,
+      position_qty: position?.position_qty,
+      average_open_price: position?.average_open_price,
     },
     {
       defaultOrder: order,
       positionType,
-      tpslEnable: {
-        tp_enable: true,
-        sl_enable: true,
-      },
-      isEditing,
+      tpslEnable: { tp_enable: true, sl_enable: true },
+      isEditing: isEditing,
     },
   );
 
@@ -119,7 +115,7 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
 
       if (
         tp_trigger_price !== Number(tpslOrder.tp_trigger_price) &&
-        typeof typeof tpslOrder.tp_trigger_price !== "undefined"
+        typeof tpslOrder.tp_trigger_price !== "undefined"
       ) {
         diff = 2;
       }
@@ -183,14 +179,18 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
   }, [tpslOrder.quantity, maxQty, dirty, errors]);
 
   const isPositionTPSL = useMemo(() => {
-    if (!isEditing) return Number(tpslOrder.quantity) >= maxQty;
+    if (!isEditing) {
+      return Number(tpslOrder.quantity) >= maxQty;
+    }
     /**
      * if current order is not a POSITIONAL_TP_SL, then it's always a general TP/SL
      */
     if (!!order && order.algo_type !== AlgoOrderRootType.POSITIONAL_TP_SL) {
       return false;
     }
-    if (tpslOrder.algo_order_id && tpslOrder.quantity == 0) return true;
+    if (tpslOrder.algo_order_id && tpslOrder.quantity == 0) {
+      return true;
+    }
     return Number(tpslOrder.quantity) >= maxQty;
   }, [tpslOrder.quantity, maxQty, order?.algo_type, isEditing]);
 
@@ -257,7 +257,7 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
 
   return {
     isEditing,
-    symbolInfo: symbolInfo[symbol],
+    symbolInfo: symbolInfo[symbol!],
     maxQty,
     setQuantity,
     orderQuantity: tpslOrder.quantity,

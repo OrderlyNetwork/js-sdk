@@ -1,13 +1,31 @@
-import { modal } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-console */
+import React, { useRef } from "react";
+import { useSymbolsInfo, utils } from "@orderly.network/hooks";
+import { i18n, useTranslation } from "@orderly.network/i18n";
+import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
 import {
+  Box,
+  cn,
+  convertValueToPercentage,
+  Flex,
+  Input,
+  inputFormatter,
+  modal,
+  Slider,
+  Text,
+} from "@orderly.network/ui";
+import { Decimal } from "@orderly.network/utils";
+import type {
   CrossHairMovedEventParams,
   EntityId,
   IChartingLibraryWidget,
+  ILineDataSourceApi,
   IOrderLineAdapter,
 } from "../charting_library";
 import useBroker from "../hooks/useBroker";
-import { ChartPosition } from "../type";
+import type { ChartPosition } from "../type";
+import { TPSLDialogWidget } from "./TPSLDialog";
 
 enum MouseInteractiveMode {
   NONE,
@@ -120,15 +138,24 @@ export class TPSLService {
     });
 
     this.instance.subscribe("mouse_up", (params) => {
-      console.log(this.lastArgs);
+      console.log("this", params);
       // open dialog;
+
+      // FIXME: need to get the quantity of the position
+      const pnl = new Decimal(this.lastArgs?.price ?? 0)
+        .minus(this.currentPosition!.open)
+        .mul(0.5);
+
+      const direction = pnl.gt(0)
+        ? i18n.t("tpsl.takeProfit")
+        : i18n.t("tpsl.stopLoss");
 
       if (this.interactiveMode === MouseInteractiveMode.TP_SL_DRAGGING) {
         console.log("current position", this.currentPosition);
         modal
           .dialog({
-            title: "TP/SL",
-            content: <div>{`price: ${this.lastArgs?.price}`}</div>,
+            title: pnl.gt(0) ? "TP order confirm" : "SL order confirm",
+            content: <TPSLDialogWidget />,
           })
           .then(
             () => {
@@ -186,7 +213,10 @@ export class TPSLService {
 
     // FIXME: need to get the quantity of the position
     const pnl = new Decimal(price).minus(this.currentPosition!.open).mul(0.5);
-    const direction = pnl.gt(0) ? "Take Profit" : "Stop Loss";
+
+    const direction = pnl.gt(0)
+      ? i18n.t("tpsl.takeProfit")
+      : i18n.t("tpsl.stopLoss");
 
     tpslOrderLine
       ?.setPrice(price)
@@ -202,10 +232,10 @@ export class TPSLService {
   }
 
   private ensureTPSLElements(params: CrossHairMovedEventParams) {
-    let tpslOrderLine = this.tpslOrderLine,
-      verticalLine,
-      tpslStartCircle,
-      tpslEndCircle;
+    const tpslOrderLine = this.tpslOrderLine;
+    let verticalLine;
+    let tpslStartCircle;
+    let tpslEndCircle;
     // if (this.tpslPnLLabelEntityId) {
     //   tpslPnLLabel = this.chart.getShapeById(this.tpslPnLLabelEntityId);
     // }
@@ -217,7 +247,9 @@ export class TPSLService {
       verticalLine = this.chart.getShapeById(this.tpslPnLVerticalLineEntityId);
     }
     if (!verticalLine) {
-      if (!this.currentPosition || !this.tpslVerticalLineTime) return {};
+      if (!this.currentPosition || !this.tpslVerticalLineTime) {
+        return {};
+      }
       this.tpslPnLVerticalLineEntityId = this.chart.createMultipointShape(
         [
           {
