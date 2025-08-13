@@ -62,6 +62,7 @@ export function useDepositStatusScript() {
   const estimatedTime = useMemo(() => {
     if (transactionTime && blockTime) {
       const seconds = blockTime / 1000 + transactionTime - Date.now() / 1000;
+      console.log("transactionTime", transactionTime, seconds);
       return formatEstimatedTime(seconds);
     }
 
@@ -170,8 +171,9 @@ export function useDepositStatusScript() {
 }
 
 function formatEstimatedTime(totalSeconds: number) {
-  let minutes = Math.floor(totalSeconds / 60);
-  let seconds = totalSeconds % 60;
+  const sec = Math.max(30, totalSeconds);
+  let minutes = Math.floor(sec / 60);
+  let seconds = sec % 60;
 
   if (seconds > 0 && seconds <= 30) {
     seconds = 30;
