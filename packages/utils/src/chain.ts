@@ -5,6 +5,7 @@ import {
   MONAD_TESTNET_CHAINID,
   SOLANA_TESTNET_CHAINID,
   STORY_TESTNET_CHAINID,
+  SOLANA_MAINNET_CHAINID,
 } from "@orderly.network/types";
 
 export const hex2int = (chainId: string): number => parseInt(chainId);
@@ -37,4 +38,8 @@ export const isTestnet = (chainId: number) => {
   ];
 
   return testnetIds.includes(chainId);
+};
+
+export const isSolana = (chainId: number) => {
+  return [SOLANA_TESTNET_CHAINID, SOLANA_MAINNET_CHAINID].includes(chainId);
 };
