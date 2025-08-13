@@ -11,6 +11,7 @@ import {
 } from "@orderly.network/trading-leaderboard";
 import { Box } from "@orderly.network/ui";
 import { BaseLayout } from "../../../components/layout";
+import { campaignRuleMap } from "./rules/constants";
 import { useCustomRanking } from "./useCustomRanking";
 
 export function getCampaigns() {
@@ -130,6 +131,51 @@ export function getCampaigns() {
         format: "Invite & Trade",
       },
       user_account_label: "Active traders",
+      rule: campaignRuleMap["120"],
+    } as CampaignConfig,
+    {
+      campaign_id: "121",
+      referral_codes: ["CHIWEI"],
+      title: "Fireant x WOOFi Pro Trading Celebration",
+      description: " Exclusively for the Fireant community.",
+      prize_pools: [
+        {
+          pool_id: "trading_volume",
+          label: "Trading volume",
+          total_prize: 4000,
+          currency: "USDC",
+          metric: "volume",
+          tiers: [],
+        },
+        {
+          pool_id: "raffle",
+          label: "Raffle",
+          total_prize: 1000,
+          currency: "USDC",
+          metric: "volume",
+          tiers: [],
+        },
+      ],
+      ticket_rules: {
+        total_prize: 1000,
+        currency: "USDC",
+        metric: "volume",
+        mode: "linear",
+        linear: {
+          every: 50000,
+          tickets: 1,
+        },
+      },
+      start_time: new Date("2025-08-14T13:00:00Z").toISOString(),
+      end_time: new Date("2025-08-24T23:59:59Z").toISOString(),
+      hide_estimated_rewards: true,
+      rule_url: "121_campaign_rule",
+      rule_config: {
+        action: "scroll",
+      },
+      rule: campaignRuleMap["121"],
+      exclude_leaderboard_columns: ["rewards"],
+      trading_url: "https://woofi.com/en/trade/ETH_PERP",
     } as CampaignConfig,
   ];
 }
