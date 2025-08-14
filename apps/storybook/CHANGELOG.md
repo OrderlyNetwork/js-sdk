@@ -1,5 +1,41 @@
 # storybook
 
+## 1.5.4-internal-20250814.13
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/affiliate@2.5.4-internal-20250814.13
+  - @orderly.network/react-app@2.5.4-internal-20250814.13
+  - @orderly.network/chart@2.5.4-internal-20250814.13
+  - @orderly.network/core@2.5.4-internal-20250814.13
+  - @orderly.network/default-evm-adapter@2.5.4-internal-20250814.13
+  - @orderly.network/default-solana-adapter@2.5.4-internal-20250814.13
+  - @orderly.network/hooks@2.5.4-internal-20250814.13
+  - @orderly.network/i18n@2.5.4-internal-20250814.13
+  - @orderly.network/markets@2.5.4-internal-20250814.13
+  - @orderly.network/portfolio@2.5.4-internal-20250814.13
+  - @orderly.network/trading@2.5.4-internal-20250814.13
+  - @orderly.network/trading-leaderboard@2.5.4-internal-20250814.13
+  - @orderly.network/trading-rewards@2.5.4-internal-20250814.13
+  - @orderly.network/types@2.5.4-internal-20250814.13
+  - @orderly.network/ui@2.5.4-internal-20250814.13
+  - @orderly.network/ui-chain-selector@2.5.4-internal-20250814.13
+  - @orderly.network/ui-connector@2.5.4-internal-20250814.13
+  - @orderly.network/ui-leverage@2.5.4-internal-20250814.13
+  - @orderly.network/ui-order-entry@2.5.4-internal-20250814.13
+  - @orderly.network/ui-orders@2.5.4-internal-20250814.13
+  - @orderly.network/ui-positions@2.5.4-internal-20250814.13
+  - @orderly.network/ui-scaffold@2.5.4-internal-20250814.13
+  - @orderly.network/ui-share@2.5.4-internal-20250814.13
+  - @orderly.network/ui-tpsl@2.5.4-internal-20250814.13
+  - @orderly.network/ui-tradingview@2.5.4-internal-20250814.13
+  - @orderly.network/ui-transfer@2.5.4-internal-20250814.13
+  - @orderly.network/utils@2.5.4-internal-20250814.13
+  - @orderly.network/wallet-connector@2.5.4-internal-20250814.13
+  - @orderly.network/wallet-connector-privy@2.5.4-internal-20250814.13
+
 ## 1.5.4-internal-20250814.12
 
 ### Patch Changes

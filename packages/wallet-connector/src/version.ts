@@ -8,7 +8,7 @@ declare global {
 if (typeof window !== "undefined") {
   window.__ORDERLY_VERSION__ = window.__ORDERLY_VERSION__ || {};
   window.__ORDERLY_VERSION__["@orderly.network/wallet-connector"] =
-    "2.5.4-internal-20250814.12";
+    "2.5.4-internal-20250814.13";
 }
 
-export default "2.5.4-internal-20250814.12";
+export default "2.5.4-internal-20250814.13";
