@@ -1,4 +1,4 @@
-import { getBlockNumber, getBlock } from "@wagmi/core";
+import { ethers } from "ethers";
 import {
   DefaultSolanaWalletAdapter,
   SolanaWalletProvider,
@@ -6,7 +6,6 @@ import {
 import { WalletState } from "@orderly.network/hooks";
 import { API } from "@orderly.network/types";
 import { isSolana } from "@orderly.network/utils";
-import { getWagmiConfig } from "./getConfig";
 
 // https://tokenterminal.com/explorer/metrics/block-time
 export async function getBlockTime(inputs: {
@@ -61,18 +60,14 @@ async function getSolanaBlockTime(
 const blockCount = 5;
 
 async function getEvmBlockTime(chain: API.Chain) {
-  const chainId = chain.network_infos.chain_id;
-  const config = getWagmiConfig(chainId, chain);
+  const provider = new ethers.JsonRpcProvider(
+    chain.network_infos.public_rpc_url,
+  );
 
-  const latest = await getBlockNumber(config, { chainId });
+  const latest = await provider.getBlockNumber();
 
   const blocks = await Promise.all(
-    Array.from({ length: blockCount }, (_, i) =>
-      getBlock(config, {
-        chainId,
-        blockNumber: latest - BigInt(i),
-      }),
-    ),
+    Array.from({ length: blockCount }, (_, i) => provider.getBlock(latest - i)),
   );
 
   const timestamps = blocks
