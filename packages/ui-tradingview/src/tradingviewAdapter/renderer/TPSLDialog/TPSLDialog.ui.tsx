@@ -6,6 +6,7 @@ import {
   Box,
   cn,
   convertValueToPercentage,
+  Divider,
   Flex,
   Input,
   inputFormatter,
@@ -160,19 +161,44 @@ export const TPSLDialogUI: React.FC<TPSLBuilderState> = (props) => {
     symbolInfo,
   } = props;
   const { parseErrorMsg } = useOrderEntryFormErrorMsg(errors);
+  const { t } = useTranslation();
   return (
     <Box className="oui-w-full oui-px-0.5">
       <TPSLQuantity
-        maxQty={maxQty}
-        quantity={(orderQuantity ?? maxQty) as number}
-        baseTick={symbolInfo("base_tick")}
-        dp={symbolInfo("base_dp")}
+        maxQty={6}
+        quantity={6}
+        baseTick={5}
+        dp={4}
         onQuantityChange={setQuantity}
-        quote={symbolInfo("base")}
+        quote={"2"}
         isEditing={isEditing}
         isPosition={isPosition}
         errorMsg={parseErrorMsg("quantity")}
       />
+      <Flex itemAlign="center" justify="between" my={1}>
+        Trigger price
+        <Flex itemAlign="center" justify="end" gap={1}>
+          <Text intensity={98}>3890.23</Text>
+          <Text intensity={36}>USDC</Text>
+        </Flex>
+      </Flex>
+      <Flex itemAlign="center" justify="between" my={1}>
+        Order price
+        <Text intensity={98}>Market</Text>
+      </Flex>
+      <Flex itemAlign="center" justify="between" my={1}>
+        Total est. TP Pnl
+        <Flex itemAlign="center" justify="end" gap={1}>
+          <Text color="success">52.32</Text>
+          <Text intensity={36}>USDC</Text>
+        </Flex>
+      </Flex>
+      <Divider className="oui-my-3 oui-w-full" />
+      <Flex itemAlign={"center"}>
+        <Text color="primary" className="oui-cursor-pointer oui-text-sm">
+          {t("tpsl.advanced")}
+        </Text>
+      </Flex>
     </Box>
   );
 };

@@ -146,16 +146,23 @@ export class TPSLService {
         .minus(this.currentPosition!.open)
         .mul(0.5);
 
-      const direction = pnl.gt(0)
-        ? i18n.t("tpsl.takeProfit")
-        : i18n.t("tpsl.stopLoss");
-
       if (this.interactiveMode === MouseInteractiveMode.TP_SL_DRAGGING) {
         console.log("current position", this.currentPosition);
         modal
           .dialog({
+            size: "sm",
             title: pnl.gt(0) ? "TP order confirm" : "SL order confirm",
             content: <TPSLDialogWidget />,
+            actions: {
+              primary: {
+                label: i18n.t("common.confirm"),
+                onClick: () => {},
+              },
+              secondary: {
+                label: i18n.t("common.cancel"),
+                onClick: () => {},
+              },
+            },
           })
           .then(
             () => {
