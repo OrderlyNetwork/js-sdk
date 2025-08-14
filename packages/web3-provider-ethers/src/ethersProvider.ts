@@ -1,10 +1,7 @@
-import {
-  EthersError,
-  getParsedEthersError,
-} from "@enzoferey/ethers-error-parser";
 import { BrowserProvider, Eip1193Provider, ethers } from "ethers";
 import { Web3Provider } from "@orderly.network/default-evm-adapter";
 import { API } from "@orderly.network/types";
+import { parseError } from "./parseError";
 
 class EthersProvider implements Web3Provider {
   private _provider!: BrowserProvider;
@@ -62,20 +59,20 @@ class EthersProvider implements Web3Provider {
           hash: transactionHash,
         };
       } catch (error) {
-        const parsedEthersError = getParsedEthersError(error as EthersError);
-        if ((error as any).message.includes("rejected")) {
-          // @ts-ignore
-          throw new Error({ content: "REJECTED_TRANSACTION" });
-        }
+        // const parsedEthersError = getParsedEthersError(error as EthersError);
+        // if ((error as any).message.includes("rejected")) {
+        //   // @ts-ignore
+        //   throw new Error({ content: "REJECTED_TRANSACTION" });
+        // }
+        const parsedEthersError = await parseError(error);
         throw parsedEthersError;
       }
     }
     const singer = await this.browserProvider.getSigner();
     const contract = new ethers.Contract(address, options.abi, singer);
 
-    return contract[method].apply(null, params).catch((error) => {
-      const parsedEthersError = getParsedEthersError(error);
-
+    return contract[method].apply(null, params).catch(async (error) => {
+      const parsedEthersError = await parseError(error);
       throw parsedEthersError;
     });
   }
@@ -126,8 +123,7 @@ class EthersProvider implements Web3Provider {
       }
       return await singer.sendTransaction(tx);
     } catch (error) {
-      const parsedEthersError = getParsedEthersError(error as EthersError);
-
+      const parsedEthersError = await parseError(error);
       throw parsedEthersError;
     }
   }
@@ -173,9 +169,8 @@ class EthersProvider implements Web3Provider {
 
     const contract = new ethers.Contract(address, options.abi, provider);
 
-    return contract[method].apply(null, params).catch((error) => {
-      const parsedEthersError = getParsedEthersError(error);
-
+    return contract[method].apply(null, params).catch(async (error) => {
+      const parsedEthersError = await parseError(error);
       throw parsedEthersError;
     });
   }

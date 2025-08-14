@@ -15,6 +15,7 @@ import {
   useDaily,
   useMemoizedFn,
 } from "@orderly.network/hooks";
+import { EMPTY_OPERATION } from "@orderly.network/types";
 import { XAxis, YAxis, BarStyle } from "../components";
 import { en } from "../locale/en-US";
 import { formatYMDTime } from "../utils/utils";
@@ -107,9 +108,6 @@ export const ReferralContext = createContext<ReferralContextReturns>(
 
 export type BuildNode = (state: ReferralContextReturns) => ReactNode;
 
-// Default noop function to avoid undefined errors
-const noop = () => {};
-
 export const ReferralProvider: FC<
   PropsWithChildren<
     ReferralContextProps & {
@@ -131,13 +129,13 @@ export const ReferralProvider: FC<
     chartConfig,
     intl = { messages: en, locale: "en", defaultLocale: "en" },
     children,
-    splashPage = noop as () => React.ReactNode,
-    onBecomeAnAffiliate = noop,
-    bindReferralCodeState = noop,
-    onLearnAffiliate = noop,
-    showReferralPage = noop,
-    onEnterTraderPage = noop,
-    onEnterAffiliatePage = noop,
+    splashPage = EMPTY_OPERATION as () => React.ReactNode,
+    onBecomeAnAffiliate = EMPTY_OPERATION,
+    bindReferralCodeState = EMPTY_OPERATION,
+    onLearnAffiliate = EMPTY_OPERATION,
+    showReferralPage = EMPTY_OPERATION,
+    onEnterTraderPage = EMPTY_OPERATION,
+    onEnterAffiliatePage = EMPTY_OPERATION,
   } = props;
 
   const {

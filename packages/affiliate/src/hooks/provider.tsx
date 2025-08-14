@@ -18,7 +18,7 @@ import {
   useMemoizedFn,
 } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
-import { AccountStatusEnum } from "@orderly.network/types";
+import { AccountStatusEnum, EMPTY_OPERATION } from "@orderly.network/types";
 
 export enum TabTypes {
   affiliate = "affiliate",
@@ -130,9 +130,6 @@ export const ReferralContext = createContext<ReferralContextReturns>(
 
 export type BuildNode = (state: ReferralContextReturns) => ReactNode;
 
-// Default noop function to avoid undefined errors
-const noop = () => {};
-
 export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
   props,
 ) => {
@@ -143,11 +140,11 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
     chartConfig,
     overwrite,
     children,
-    splashPage = noop as () => React.ReactNode,
-    onBecomeAnAffiliate = noop,
-    bindReferralCodeState = noop,
-    onLearnAffiliate = noop,
-    showReferralPage = noop,
+    splashPage = EMPTY_OPERATION as () => React.ReactNode,
+    onBecomeAnAffiliate = EMPTY_OPERATION,
+    bindReferralCodeState = EMPTY_OPERATION,
+    onLearnAffiliate = EMPTY_OPERATION,
+    showReferralPage = EMPTY_OPERATION,
   } = props;
 
   const { state } = useAccount();

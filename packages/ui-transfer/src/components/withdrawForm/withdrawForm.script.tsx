@@ -34,8 +34,8 @@ export type WithdrawFormScriptReturn = ReturnType<typeof useWithdrawFormScript>;
 
 const markPrice = 1;
 
-type WithdrawFormScriptOptions = {
-  onClose: (() => void) | undefined;
+export type WithdrawFormScriptOptions = {
+  close?: () => void;
 };
 
 export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
@@ -99,7 +99,9 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
       ? praseChainIdToNumber(connectedChain.id)
       : Number.parseInt(linkDeviceStorage?.chainId);
 
-    if (!chainId) return null;
+    if (!chainId) {
+      return null;
+    }
 
     const chain = findByChainId(chainId);
 
@@ -150,7 +152,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     token: sourceToken?.symbol!,
     quantity,
     setQuantity,
-    close: options.onClose,
+    close: options.close,
     setLoading,
   });
 
@@ -218,13 +220,35 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     }
     // chain.id
     const vaultBalance = vaultBalanceList.find(
-      (item) => Number.parseInt(item.chain_id) === currentChain?.id,
+      (item) =>
+        Number.parseInt(item.chain_id) === currentChain?.id &&
+        item.token === sourceToken?.symbol,
     );
     if (vaultBalance) {
       return vaultBalance.balance;
     }
     return null;
-  }, [chains, currentChain, vaultBalanceList]);
+  }, [chains, currentChain, vaultBalanceList, sourceToken?.symbol]);
+
+  const qtyGreaterThanMaxAmount = useMemo<boolean>(() => {
+    if (!quantity || Number.isNaN(quantity)) {
+      return false;
+    }
+    if (!maxAmount || Number.isNaN(maxAmount)) {
+      return true;
+    }
+    return new Decimal(quantity).gt(maxAmount);
+  }, [quantity, maxAmount]);
+
+  const qtyGreaterThanVault = useMemo<boolean>(() => {
+    if (!quantity || Number.isNaN(quantity)) {
+      return false;
+    }
+    if (!chainVaultBalance || Number.isNaN(chainVaultBalance)) {
+      return true;
+    }
+    return new Decimal(quantity).gt(chainVaultBalance);
+  }, [quantity, chainVaultBalance]);
 
   const crossChainWithdraw = useMemo(() => {
     if (chainVaultBalance !== null) {
@@ -264,7 +288,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
       .then((res) => {
         toast.success(t("transfer.withdraw.requested"));
         ee.emit("withdraw:requested");
-        options.onClose?.();
+        options.close?.();
         setQuantity("");
       })
       .catch((e) => {
@@ -301,7 +325,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     if (!quantity) {
       return "";
     }
-    // console.log("-- qty", quantity);
+
     const value = new Decimal(quantity).sub(fee ?? 0);
     if (value.isNegative()) {
       return "";
@@ -332,7 +356,9 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     !quantity ||
     Number(quantity) === 0 ||
     ["error", "warning"].includes(inputStatus) ||
-    (withdrawTo === WithdrawTo.Account && !toAccountId);
+    (withdrawTo === WithdrawTo.Account && !toAccountId) ||
+    qtyGreaterThanMaxAmount ||
+    qtyGreaterThanVault;
 
   useEffect(() => {
     setCrossChainTrans(!!assetHistory?.length);
@@ -388,6 +414,8 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     hasPositions,
     onSettlePnl,
     brokerName,
+    qtyGreaterThanMaxAmount: qtyGreaterThanMaxAmount,
+    qtyGreaterThanVault: qtyGreaterThanVault,
     vaultBalanceList: vaultBalanceList?.filter(
       (item) => Number.parseInt(item.chain_id) === currentChain?.id,
     ),
@@ -416,12 +444,14 @@ function useInternalWithdraw(options: InternalWithdrawOptions) {
   const onTransfer = useCallback(() => {
     const num = Number(quantity);
 
-    if (isNaN(num) || num <= 0) {
+    if (Number.isNaN(num) || num <= 0) {
       toast.error(t("transfer.quantity.invalid"));
       return;
     }
 
-    if (submitting || !toAccountId) return;
+    if (submitting || !toAccountId) {
+      return;
+    }
     setLoading(true);
 
     transfer(token, {
@@ -434,7 +464,6 @@ function useInternalWithdraw(options: InternalWithdrawOptions) {
         close?.();
       })
       .catch((err) => {
-        console.error("transfer error: ", err, err.code);
         const errorMsg = getTransferErrorMessage(err.code);
         toast.error(errorMsg);
       })
@@ -481,10 +510,12 @@ export function useWithdrawFee(options: {
   const tokenInfo = useTokenInfo(token);
 
   const fee = useMemo(() => {
-    if (!currentChain) return 0;
+    if (!currentChain) {
+      return 0;
+    }
 
     const item = tokenInfo?.chain_details?.find(
-      (chain) => Number.parseInt(chain.chain_id) === currentChain!.id,
+      (chain) => Number.parseInt(chain.chain_id) === currentChain.id,
     );
 
     if (!item) {

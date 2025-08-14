@@ -25,6 +25,12 @@
       ],
       "@orderly.network/react-app": [
         "../app/src"
+      ],
+      "@orderly.network/ui-connector": [
+        "../ui-connector/src"
+      ],
+      "@orderly.network/perp": [
+        "../perp/src"
       ]
     }
   }

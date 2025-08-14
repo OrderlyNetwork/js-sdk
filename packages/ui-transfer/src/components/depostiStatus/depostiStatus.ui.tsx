@@ -14,9 +14,9 @@ export type DepositStatusProps = {
 } & DepositStatusScriptReturn;
 
 export const DepositStatus = (props: DepositStatusProps) => {
-  const { isSignIn, classNames } = props;
+  const { canTrade, classNames } = props;
 
-  if (!isSignIn) {
+  if (!canTrade) {
     return null;
   }
 
@@ -32,6 +32,7 @@ export const DepositStatus = (props: DepositStatusProps) => {
         status={AssetHistoryStatusEnum.PENDING}
         onClick={props.onClick}
         className={classNames?.items}
+        estimatedTime={props.estimatedTime}
       />
       <DepositStatusContent
         count={props.completedCount}
@@ -48,11 +49,12 @@ type DepositStatusContentProps = {
   status: AssetHistoryStatusEnum.PENDING | AssetHistoryStatusEnum.COMPLETED;
   onClick?: () => void;
   className?: string;
+  estimatedTime?: string | number;
 };
 
 export const DepositStatusContent = (props: DepositStatusContentProps) => {
   const { t } = useTranslation();
-  const { count, status } = props;
+  const { count, status, estimatedTime } = props;
 
   const content = useMemo(() => {
     if (status === AssetHistoryStatusEnum.PENDING) {
@@ -71,6 +73,22 @@ export const DepositStatusContent = (props: DepositStatusContentProps) => {
   }
 
   const clickable = typeof props.onClick === "function";
+
+  const renderContent = () => {
+    if (
+      status === AssetHistoryStatusEnum.PENDING &&
+      count === 1 &&
+      estimatedTime
+    ) {
+      return (
+        <Text size="2xs" color="primary">
+          ~ {estimatedTime}
+        </Text>
+      );
+    }
+
+    return <Badge>{props.count}</Badge>;
+  };
 
   return (
     <Flex
@@ -100,8 +118,8 @@ export const DepositStatusContent = (props: DepositStatusContentProps) => {
           {content}
         </Text>
       </Flex>
-      <Flex gapX={1}>
-        <Badge>{props.count}</Badge>
+      <Flex gapX={1} itemAlign="center" className="oui-shrink-0">
+        {renderContent()}
         {clickable && (
           <ChevronRightIcon
             size={14}

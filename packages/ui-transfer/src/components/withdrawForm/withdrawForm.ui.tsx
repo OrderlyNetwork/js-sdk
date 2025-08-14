@@ -48,6 +48,8 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
     sourceTokens,
     onSourceTokenChange,
     vaultBalanceList,
+    qtyGreaterThanMaxAmount,
+    qtyGreaterThanVault,
   } = props;
 
   const { t } = useTranslation();
@@ -169,16 +171,15 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
           </Text>
         </Flex>
       </Box>
-
       <WithdrawWarningMessage
         checkIsBridgeless={checkIsBridgeless}
         chainVaultBalance={chainVaultBalance as number}
         currentChain={currentChain}
-        quantity={quantity}
-        maxAmount={maxQuantity}
         crossChainTrans={crossChainTrans}
+        tokenName={sourceToken?.symbol as string}
+        qtyGreaterThanVault={qtyGreaterThanVault}
+        qtyGreaterThanMaxAmount={qtyGreaterThanMaxAmount}
       />
-
       <Flex justify="center">
         <WithdrawAction
           checkIsBridgeless={checkIsBridgeless}

@@ -8,6 +8,7 @@ import React, {
   SVGProps,
   useContext,
   useEffect,
+  useId,
   useMemo,
   useState,
 } from "react";
@@ -15,6 +16,7 @@ import {
   OrderValidationResult,
   useLeverage,
   useLocalStorage,
+  useOrderlyContext,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
@@ -105,6 +107,8 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
     disableFeatures,
     currentLtv,
     fillMiddleValue,
+    soundAlert,
+    setSoundAlert,
   } = props;
 
   const { curLeverage } = useLeverage();
@@ -135,6 +139,10 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
       return !value || value === '""' ? "1" : JSON.parse(value);
     }) as any,
   });
+
+  const { notification } = useOrderlyContext();
+
+  const soundAlertId = useId();
 
   const { parseErrorMsg } = useOrderEntryFormErrorMsg(
     validated ? errors : null,
@@ -260,12 +268,10 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
 
   const onShowTPSLAdvanced = () => {
     helper.validate().then(
-      (result) => {
-        console.log("result", result);
+      () => {
         setShowTPSLAdvanced(true);
       },
       (errors) => {
-        console.log("errors", errors);
         const tpslKey = new Set(["tp_trigger_price", "sl_trigger_price"]);
         if (Object.keys(errors).every((key: string) => tpslKey.has(key))) {
           setShowTPSLAdvanced(true);
@@ -644,6 +650,25 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
             />
           )}
         </Flex>
+        {notification?.orderFilled?.media && (
+          <Flex
+            justify={"between"}
+            itemAlign={"center"}
+            className="!oui-mt-0 xl:!oui-mt-3"
+          >
+            <Flex itemAlign={"center"} gapX={1}>
+              <Switch
+                className="oui-h-[14px]"
+                id={soundAlertId}
+                checked={soundAlert}
+                onCheckedChange={(checked) => setSoundAlert(checked)}
+              />
+              <label htmlFor={soundAlertId} className={"oui-text-xs"}>
+                {t("orderEntry.soundAlerts")}
+              </label>
+            </Flex>
+          </Flex>
+        )}
         {/* Additional info （fok，ioc、post only， order confirm hidden） */}
         {pinned && (
           <Box p={2} r={"md"} intensity={700} position={"relative"}>
