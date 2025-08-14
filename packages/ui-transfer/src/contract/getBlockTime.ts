@@ -71,8 +71,8 @@ async function getEvmBlockTime(chain: API.Chain) {
   );
 
   const timestamps = blocks
-    .filter((b) => b?.timestamp != null)
-    .map((b) => Number(b.timestamp));
+    .filter((b) => !!b?.timestamp)
+    .map((b) => b!.timestamp);
 
   if (timestamps.length < 2) {
     return 0;
