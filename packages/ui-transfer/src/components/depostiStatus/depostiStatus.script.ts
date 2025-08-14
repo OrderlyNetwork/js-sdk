@@ -9,9 +9,11 @@ import {
 } from "@orderly.network/hooks";
 import {
   AccountStatusEnum,
+  API,
   AssetHistorySideEnum,
   AssetHistoryStatusEnum,
 } from "@orderly.network/types";
+import { useTransactionTime } from "../../contract/useTransactionTime";
 
 export type DepositStatusScriptReturn = ReturnType<
   typeof useDepositStatusScript
@@ -32,12 +34,40 @@ export function useDepositStatusScript() {
   const [depositPending, setDepositPending] = useState(0);
   const [depositCompleted, setDepositCompleted] = useState(0);
   const [transferCompleted, setTransferCompleted] = useState(0);
+  const [pendingList, setPendingList] = useState<API.TransferHistoryRow[]>([]);
 
   const { state } = useAccount();
 
-  const isSignIn =
+  const canTrade =
     state.status === AccountStatusEnum.EnableTrading ||
     state.status === AccountStatusEnum.EnableTradingWithoutConnected;
+
+  const { chainId, blockTime } = useMemo(() => {
+    if (canTrade && pendingList.length === 1) {
+      return {
+        chainId: pendingList[0].chain_id,
+        blockTime: pendingList[0].block_time,
+      };
+    }
+
+    return {
+      chainId: undefined,
+      blockTime: undefined,
+    };
+  }, [canTrade, pendingList]);
+
+  const transactionTime = useTransactionTime(chainId);
+
+  // Estimated time remaining = tx_block_time +(total confirmations x average block time) - current time
+  const estimatedTime = useMemo(() => {
+    if (transactionTime && blockTime) {
+      const seconds = blockTime / 1000 + transactionTime - Date.now() / 1000;
+      console.log("transactionTime", transactionTime, seconds);
+      return formatEstimatedTime(seconds);
+    }
+
+    return 0;
+  }, [transactionTime, blockTime]);
 
   const [assetHistory, { isLoading }] = useAssetsHistory(
     {
@@ -117,6 +147,7 @@ export function useDepositStatusScript() {
 
     setDepositPending(pendingList?.length || 0);
     setDepositCompleted(completedList?.length || 0);
+    setPendingList(pendingList || []);
   }, [assetHistory, isLoading]);
 
   useEffect(() => {
@@ -134,6 +165,28 @@ export function useDepositStatusScript() {
   return {
     pendingCount: depositPending,
     completedCount,
-    isSignIn,
+    canTrade,
+    estimatedTime,
   };
+}
+
+function formatEstimatedTime(totalSeconds: number) {
+  const sec = Math.max(30, totalSeconds);
+  let minutes = Math.floor(sec / 60);
+  let seconds = sec % 60;
+
+  if (seconds > 0 && seconds <= 30) {
+    seconds = 30;
+  } else if (seconds > 30) {
+    minutes += 1;
+    seconds = 0;
+  }
+
+  if (minutes > 0) {
+    return seconds > 0 ? `${minutes} m ${seconds} s` : `${minutes} m`;
+  }
+
+  return `${seconds} s`;
+
+  // minutes = Math.max(1, Math.ceil(seconds / 60));
 }

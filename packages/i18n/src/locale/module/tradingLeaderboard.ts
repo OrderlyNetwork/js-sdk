@@ -27,7 +27,7 @@ export const tradingLeaderboard = {
   "tradingLeaderboard.tradeForMoreTickets":
     "Trade <0/> more to get next tickets",
   "tradingLeaderboard.earnTickets":
-    "Earn {{ticket}} tickets every {{amount}} trading volume.",
+    "Earn {{ticket}} ticket every {{amount}} trading volume.",
   "tradingLeaderboard.arena": "Arena",
   "tradingLeaderboard.generalLeaderboard": "General leaderboard",
   "tradingLeaderboard.maxTicketsAchieved": "Max tickets achieved",

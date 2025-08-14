@@ -427,6 +427,7 @@
   "orderEntry.buyLong": "Kaufen / Long",
   "orderEntry.sellShort": "Verkaufen / Short",
   "orderEntry.reduceOnly": "Nur reduzieren",
+  "orderEntry.soundAlerts": "Tonwarnungen",
   "orderEntry.orderType.limit": "Limit",
   "orderEntry.orderType.market": "Markt",
   "orderEntry.orderType.limitOrder": "Limit-Auftrag",
@@ -635,10 +636,9 @@
   "transfer.insufficientBalance": "Unzureichender Saldo",
   "transfer.insufficientAllowance": "Unzureichende Genehmigung",
   "transfer.rejectTransaction": "Transaktion abgelehnt",
-  "transfer.deposit.approve.symbol": "{{symbol}} genehmigen",
+  "transfer.deposit.approve": "Genehmigen",
   "transfer.deposit.approve.success": "Genehmigung erfolgreich",
   "transfer.deposit.approve.failed": "Genehmigung fehlgeschlagen",
-  "transfer.deposit.increase.symbol": "Genehmigten Betrag für {{symbol}} erhöhen",
   "transfer.deposit.requested": "Einzahlung angefordert",
   "transfer.deposit.completed": "Einzahlung abgeschlossen",
   "transfer.deposit.failed": "Einzahlung fehlgeschlagen",
@@ -884,5 +884,6 @@
   "funding.paymentType": "Zahlungsart",
   "funding.paymentType.paid": "Bezahlt",
   "funding.paymentType.received": "Erhalten",
-  "leftNav.feedback": "Ihr Feedback teilen"
+  "leftNav.feedback": "Ihr Feedback teilen",
+  "transfer.withdraw.vaultWarning": "Das Guthaben von {{tokenName}} auf {{chainName}} beträgt {{balance}} und ist nicht ausreichend, um deine Auszahlungsanfrage zu erfüllen. Bitte versuche es später erneut oder wechsle für die Auszahlung zu einer anderen Chain."
 }

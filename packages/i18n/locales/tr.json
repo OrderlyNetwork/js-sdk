@@ -427,6 +427,7 @@
   "orderEntry.buyLong": "Satın Al / Uzun",
   "orderEntry.sellShort": "Sat / Kısa",
   "orderEntry.reduceOnly": "Sadece azalt",
+  "orderEntry.soundAlerts": "Ses uyarıları",
   "orderEntry.orderType.limit": "Limit",
   "orderEntry.orderType.market": "Piyasa",
   "orderEntry.orderType.limitOrder": "Limit emir",
@@ -635,10 +636,9 @@
   "transfer.insufficientBalance": "Yetersiz bakiye",
   "transfer.insufficientAllowance": "Yetersiz izin",
   "transfer.rejectTransaction": "İşlem reddedildi",
-  "transfer.deposit.approve.symbol": "{{symbol}} onayla",
+  "transfer.deposit.approve": "Onayla",
   "transfer.deposit.approve.success": "Onay başarılı",
   "transfer.deposit.approve.failed": "Onay başarısız",
-  "transfer.deposit.increase.symbol": "{{symbol}} yetkilendirilmiş miktarını artır",
   "transfer.deposit.requested": "Yatırma talep edildi",
   "transfer.deposit.completed": "Yatırma tamamlandı",
   "transfer.deposit.failed": "Yatırma başarısız oldu",
@@ -884,5 +884,6 @@
   "funding.paymentType": "Ödeme türü",
   "funding.paymentType.paid": "Ödendi",
   "funding.paymentType.received": "Alındı",
-  "leftNav.feedback": "Geri bildiriminizi paylaşın"
+  "leftNav.feedback": "Geri bildiriminizi paylaşın",
+  "transfer.withdraw.vaultWarning": "{{chainName}} üzerindeki {{tokenName}} bakiyesi {{balance}} olup, çekim talebinizi karşılamak için yetersizdir. Lütfen daha sonra tekrar deneyin veya çekim için başka bir ağa geçin."
 }

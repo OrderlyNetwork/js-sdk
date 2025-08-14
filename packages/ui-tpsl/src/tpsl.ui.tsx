@@ -420,7 +420,7 @@ const TPSLQuantity = (props: {
 };
 // ------------- Quantity input end------------
 
-export const PriceInput = (props: {
+export const PriceInput: React.FC<{
   type: string;
   label?: string;
   value?: string | number;
@@ -428,19 +428,15 @@ export const PriceInput = (props: {
   onValueChange: (value: string) => void;
   quote_dp: number;
   disabled?: boolean;
-}) => {
+}> = (props) => {
   const [placeholder, setPlaceholder] = useState<string>("USDC");
   const { t } = useTranslation();
 
   return (
     <Input.tooltip
       data-testid={`oui-testid-tpsl-popUp-${props.type.toLowerCase()}-input`}
-      // prefix={`${props.type} price`}
       prefix={props.label ?? t("common.markPrice")}
-      size={{
-        initial: "lg",
-        lg: "md",
-      }}
+      size={{ initial: "lg", lg: "md" }}
       tooltip={props.error}
       placeholder={placeholder}
       disabled={props.disabled}

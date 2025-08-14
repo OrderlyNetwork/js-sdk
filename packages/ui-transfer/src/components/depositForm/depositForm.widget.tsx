@@ -1,11 +1,11 @@
 import { FC } from "react";
 import {
   useDepositFormScript,
-  UseDepositFormScriptOptions,
+  DepositFormScriptOptions,
 } from "./depositForm.script";
 import { DepositForm } from "./depositForm.ui";
 
-export type DepositFormWidgetProps = UseDepositFormScriptOptions;
+export type DepositFormWidgetProps = DepositFormScriptOptions;
 
 export const DepositFormWidget: FC<DepositFormWidgetProps> = (props) => {
   const state = useDepositFormScript(props);

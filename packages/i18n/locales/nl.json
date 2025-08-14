@@ -427,6 +427,7 @@
   "orderEntry.buyLong": "Kopen / Long",
   "orderEntry.sellShort": "Verkopen / Short",
   "orderEntry.reduceOnly": "Alleen verminderen",
+  "orderEntry.soundAlerts": "Geluidwaarschuwingen",
   "orderEntry.orderType.limit": "Limiet",
   "orderEntry.orderType.market": "Markt",
   "orderEntry.orderType.limitOrder": "Limietorder",
@@ -635,10 +636,9 @@
   "transfer.insufficientBalance": "Onvoldoende saldo",
   "transfer.insufficientAllowance": "Onvoldoende toewijzing",
   "transfer.rejectTransaction": "Transactie afgewezen",
-  "transfer.deposit.approve.symbol": "{{symbol}} goedkeuren",
+  "transfer.deposit.approve": "Goedkeuren",
   "transfer.deposit.approve.success": "Goedkeuring succesvol",
   "transfer.deposit.approve.failed": "Goedkeuring mislukt",
-  "transfer.deposit.increase.symbol": "Verhoog {{symbol}} toegewezen bedrag",
   "transfer.deposit.requested": "Storting aangevraagd",
   "transfer.deposit.completed": "Storting voltooid",
   "transfer.deposit.failed": "Storting mislukt",
@@ -884,5 +884,6 @@
   "funding.paymentType": "Betalingstype",
   "funding.paymentType.paid": "Betaald",
   "funding.paymentType.received": "Ontvangen",
-  "leftNav.feedback": "Deel uw feedback"
+  "leftNav.feedback": "Deel uw feedback",
+  "transfer.withdraw.vaultWarning": "Het saldo van {{tokenName}} op {{chainName}} is {{balance}}, wat onvoldoende is om aan je opnameverzoek te voldoen. Probeer het later opnieuw of schakel over naar een andere chain voor de opname."
 }
