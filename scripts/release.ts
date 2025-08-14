@@ -195,7 +195,7 @@ async function publishNpm() {
 
 async function retryPublishNpm() {
   // retry 10 times, start with 5 seconds, and increase the delay time, max 20 seconds
-  await retry(10, expBackoff("20s", "5s"), publishNpm);
+  await retry(10, expBackoff("10s", "2s"), publishNpm);
 }
 
 async function checkGitStatus() {

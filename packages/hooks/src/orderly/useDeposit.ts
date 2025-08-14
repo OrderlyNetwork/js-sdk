@@ -107,17 +107,33 @@ export const useDeposit = (options: DepositOptions) => {
     async (address: string, decimals?: number) => {
       let balance: string;
 
-      if (address && isNativeTokenChecker(address)) {
-        balance = await account.assetsManager.getNativeBalance({
-          decimals,
-        });
-      } else {
-        balance = await account.assetsManager.getBalance(address, { decimals });
+      try {
+        if (address && isNativeTokenChecker(address)) {
+          balance = await account.assetsManager.getNativeBalance({
+            decimals,
+          });
+        } else {
+          balance = await account.assetsManager.getBalance(address, {
+            decimals,
+          });
+        }
+      } catch (err: any) {
+        if (
+          ignoreBalanceError({
+            token: options.srcToken!,
+            chainNamespace: account.walletAdapter?.chainNamespace!,
+            err,
+          })
+        ) {
+          console.log("ignore balance error: ", err);
+          return "0";
+        }
+        throw err;
       }
 
-      return balance;
+      return balance!;
     },
-    [],
+    [options.srcToken, account],
   );
 
   const fetchBalances = useCallback(async (tokens: API.TokenInfo[]) => {
@@ -163,6 +179,7 @@ export const useDeposit = (options: DepositOptions) => {
       vaultAddress,
       decimals,
     });
+    console.log("allowance", allowance);
 
     setAllowance(allowance);
     // setAllowanceRevalidating(false);
@@ -488,10 +505,10 @@ export const useDeposit = (options: DepositOptions) => {
         setBalance(balance);
         balanceRef.current = balance;
         loopGetBalance();
-      } catch (err) {
+      } catch (err: any) {
+        console.log("get balance error", balanceRef.current, err);
         // when fetch balance failed, retry every 1s
         loopGetBalance(1000);
-        console.log("get balance error", balanceRef.current, err);
       } finally {
         if (balanceRef.current !== "") {
           setBalanceRevalidating(false);
@@ -582,3 +599,17 @@ export const useDeposit = (options: DepositOptions) => {
     setQuantity,
   };
 };
+
+// when solana account not USDC, get balance will throw TokenAccountNotFoundError
+function ignoreBalanceError(options: {
+  token: string;
+  chainNamespace: string;
+  err: any;
+}) {
+  const { token, chainNamespace, err } = options;
+  return (
+    chainNamespace === ChainNamespace.solana &&
+    token === "USDC" &&
+    err?.name === "TokenAccountNotFoundError"
+  );
+}

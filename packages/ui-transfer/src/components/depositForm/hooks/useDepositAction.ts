@@ -27,39 +27,19 @@ export function useDepositAction(options: Options) {
   const ee = useEventEmitter();
   const { t } = useTranslation();
 
-  const onApprove = useCallback(async () => {
-    if (submitting) return;
-    setSubmitting(true);
-
-    return approve(quantity)
-      .then((res: any) => {
-        toast.success(t("transfer.deposit.approve.success"));
-      })
-      .catch((err) => {
-        console.error("approve error", err);
-        toast.error(
-          err.message || err.errorCode || t("transfer.deposit.approve.failed"),
-        );
-      })
-      .finally(() => {
-        setSubmitting(false);
-      });
-  }, [approve, submitting, quantity, allowance, t]);
-
   const doDeposit = useCallback(async () => {
-    return deposit()
-      .then((res: any) => {
-        toast.success(t("transfer.deposit.requested"));
-        ee.emit("deposit:requested");
-        onSuccess?.();
-      })
-      .catch((err) => {
-        console.error("deposit error", err);
-        toast.error(err.message || t("transfer.deposit.failed"));
-      });
+    try {
+      await deposit();
+      toast.success(t("transfer.deposit.requested"));
+      ee.emit("deposit:requested");
+      onSuccess?.();
+    } catch (err: any) {
+      console.error("deposit error", err);
+      toast.error(err.message || t("transfer.deposit.failed"));
+    }
   }, [deposit, onSuccess, t]);
 
-  const onDeposit = useCallback(() => {
+  const onDeposit = useCallback(async () => {
     const num = Number(quantity);
 
     if (isNaN(num) || num <= 0) {
@@ -67,25 +47,48 @@ export function useDepositAction(options: Options) {
       return;
     }
 
-    // if (!token) {
-    //   toast.error("Please select a token");
-    //   return;
-    // }
-
-    // if (inputStatus !== "default") {
-    //   return;
-    // }
-
     if (submitting) return;
 
     setSubmitting(true);
 
     const execDeposit = enableCustomDeposit ? customDeposit : doDeposit;
 
-    execDeposit?.()?.finally(() => {
+    await execDeposit?.()?.finally(() => {
       setSubmitting(false);
     });
   }, [quantity, submitting, doDeposit, enableCustomDeposit, customDeposit, t]);
 
-  return { submitting, onApprove, onDeposit };
+  const onApprove = useCallback(async () => {
+    if (submitting) return;
+    setSubmitting(true);
+
+    try {
+      await approve(quantity);
+      toast.success(t("transfer.deposit.approve.success"));
+    } catch (err: any) {
+      console.error("approve error", err);
+      toast.error(
+        err.message || err?.errorCode || t("transfer.deposit.approve.failed"),
+      );
+      throw err;
+    } finally {
+      setSubmitting(false);
+    }
+  }, [approve, submitting, quantity, allowance, t]);
+
+  const onApproveAndDeposit = useCallback(async () => {
+    if (submitting) return;
+    setSubmitting(true);
+
+    try {
+      await onApprove();
+      await onDeposit();
+    } catch (err) {
+      console.error("approve and deposit error", err);
+    } finally {
+      setSubmitting(false);
+    }
+  }, [submitting, onApprove, onDeposit]);
+
+  return { submitting, onApprove, onDeposit, onApproveAndDeposit };
 }

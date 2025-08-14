@@ -1,10 +1,9 @@
-import {
-  EthersError,
-  getParsedEthersError,
-} from "@enzoferey/ethers-error-parser";
 import { BrowserProvider, ethers, toNumber } from "ethers";
+import { DecodedError, ErrorDecoder } from "ethers-decode-error";
 import { API } from "@orderly.network/types";
 import { IWalletAdapter, WalletAdapterOptions } from "./adapter";
+
+const errorDecoder = ErrorDecoder.create();
 
 export interface EtherAdapterOptions {
   provider: any;
@@ -56,13 +55,11 @@ export class EtherAdapter implements IWalletAdapter {
       abi: any;
     },
   ): Promise<any> {
-    //
     const singer = await this.provider?.getSigner();
     const contract = new ethers.Contract(address, options.abi, singer);
 
-    return contract[method].apply(null, params).catch((error) => {
-      const parsedEthersError = getParsedEthersError(error);
-
+    return contract[method].apply(null, params).catch(async (error) => {
+      const parsedEthersError = await parseError(error);
       throw parsedEthersError;
     });
   }
@@ -83,9 +80,8 @@ export class EtherAdapter implements IWalletAdapter {
 
     const contract = new ethers.Contract(address, options.abi, provider);
 
-    return contract[method].apply(null, params).catch((error) => {
-      const parsedEthersError = getParsedEthersError(error);
-
+    return contract[method].apply(null, params).catch(async (error) => {
+      const parsedEthersError = await parseError(error);
       throw parsedEthersError;
     });
   }
@@ -155,8 +151,7 @@ export class EtherAdapter implements IWalletAdapter {
 
       return result;
     } catch (error) {
-      const parsedEthersError = getParsedEthersError(error as EthersError);
-
+      const parsedEthersError = await parseError(error);
       throw parsedEthersError;
     }
   }
@@ -225,4 +220,9 @@ export class EtherAdapter implements IWalletAdapter {
     const contract = new ethers.Contract(address, abi, this.provider);
     return contract;
   }
+}
+
+async function parseError(rawError: any): Promise<DecodedError> {
+  const error: DecodedError = await errorDecoder.decode(rawError);
+  return error;
 }

@@ -7,6 +7,7 @@ import {
   useLocalStorage,
   useMarginRatio,
   useOrderEntry,
+  useOrderlyContext,
   utils,
 } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
@@ -37,6 +38,8 @@ export type OrderEntryScriptInputs = {
   symbol: string;
 };
 
+export const ORDERLY_SOUND_ALERT_KEY = "orderly_sound_alert";
+
 export type OrderEntryScriptReturn = ReturnType<typeof useOrderEntryScript>;
 
 export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
@@ -55,6 +58,11 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   const [quantityUnit, setQuantityUnit] = useLocalStorage<"quote" | "base">(
     "orderly_order_quantity_unit",
     "quote",
+  );
+
+  const [soundAlert, setSoundAlert] = useLocalStorage<boolean>(
+    ORDERLY_SOUND_ALERT_KEY,
+    false,
   );
 
   const lastBBOType = useRef<BBOOrderType>(localBBOType);
@@ -547,5 +555,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     quantityUnit,
     setQuantityUnit,
     symbol: inputs.symbol,
+    soundAlert: soundAlert,
+    setSoundAlert,
   };
 };

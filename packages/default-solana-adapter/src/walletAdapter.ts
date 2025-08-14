@@ -1,4 +1,15 @@
-import { SolanaAdapterOption, SolanaWalletProvider } from "./types";
+import * as ed from "@noble/ed25519";
+import { getAccount } from "@solana/spl-token";
+import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
+import {
+  clusterApiUrl,
+  Connection,
+  PublicKey,
+  Transaction,
+  TransactionInstruction,
+} from "@solana/web3.js";
+import { encode as bs58encode, decode as bs58Decode } from "bs58";
+import { bytesToHex } from "ethereum-cryptography/utils";
 import {
   AddOrderlyKeyInputs,
   BaseWalletAdapter,
@@ -12,8 +23,6 @@ import {
   MessageFactor,
 } from "@orderly.network/core";
 import { API, MaxUint256, ChainNamespace } from "@orderly.network/types";
-import * as ed from "@noble/ed25519";
-import { encode as bs58encode, decode as bs58Decode } from "bs58";
 import {
   addOrderlyKeyMessage,
   checkIsLedgerWallet,
@@ -25,17 +34,8 @@ import {
   settleMessage,
   withdrawMessage,
 } from "./helper";
-import { bytesToHex } from "ethereum-cryptography/utils";
-import { getAccount } from "@solana/spl-token";
 import { getUSDCAccounts } from "./solana.util";
-import {
-  clusterApiUrl,
-  Connection,
-  PublicKey,
-  Transaction,
-  TransactionInstruction,
-} from "@solana/web3.js";
-import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
+import { SolanaAdapterOption, SolanaWalletProvider } from "./types";
 
 class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> {
   chainNamespace: ChainNamespace = ChainNamespace.solana;
@@ -66,9 +66,9 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
       return this._connection;
     }
     if (this._provider.rpcUrl) {
-        this._connection = new Connection(this._provider.rpcUrl, {
-          commitment: "confirmed",
-        });
+      this._connection = new Connection(this._provider.rpcUrl, {
+        commitment: "confirmed",
+      });
       return this._connection;
     }
     if (this._provider.network === WalletAdapterNetwork.Devnet) {
@@ -78,25 +78,25 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
       return this._connection;
     }
 
-
     const account = SimpleDI.get<Account>("account");
-    const url = '/v1/solana-rpc-proxy';
+    const url = "/v1/solana-rpc-proxy";
     this._connection = new Connection(`${account.apiBaseUrl}${url}`, {
       commitment: "confirmed",
       fetchMiddleware: async (info, init, fetch) => {
-       
         const payload: MessageFactor = {
           url,
           method: init?.method as "GET" | "POST" | "PUT" | "DELETE",
           data: JSON.parse(init?.body as string),
-        }
+        };
         // console.log('payload', payload);
         const signature = await this.signMessageByOrderlyKey(payload);
         for (const key of Object.keys(signature)) {
-          (init?.headers as any)[key] = signature[key as keyof typeof signature] as string;
+          (init?.headers as any)[key] = signature[
+            key as keyof typeof signature
+          ] as string;
         }
         return fetch(info, init);
-      }
+      },
     });
     return this._connection;
   }
@@ -160,30 +160,30 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
         new TransactionInstruction({
           keys: [],
           programId: new PublicKey(
-            "ComputeBudget111111111111111111111111111111"
+            "ComputeBudget111111111111111111111111111111",
           ),
           data: new Uint8Array([3, 0, 0, 0, 0, 0, 0, 0, 0]) as any,
-        })
+        }),
       );
 
       transaction.add(
         new TransactionInstruction({
           keys: [],
           programId: new PublicKey(
-            "ComputeBudget111111111111111111111111111111"
+            "ComputeBudget111111111111111111111111111111",
           ),
           data: new Uint8Array([2, 0, 0, 0, 0]) as any,
-        })
+        }),
       );
 
       transaction.add(
         new TransactionInstruction({
           keys: [],
           programId: new PublicKey(
-            "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr"
+            "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
           ),
           data: message as any,
-        })
+        }),
       );
 
       const userPublicKey = new PublicKey(this.address);
@@ -193,11 +193,8 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
       const zeroHash = new Uint8Array(32).fill(0);
       transaction.recentBlockhash = new PublicKey(zeroHash).toString();
 
-
-      const signedTransaction = await this._provider.signTransaction(
-        transaction
-      );
-
+      const signedTransaction =
+        await this._provider.signTransaction(transaction);
 
       const signature = signedTransaction.signatures[0].signature;
       if (signature) {
@@ -212,7 +209,7 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
   }
 
   async generateRegisterAccountMessage(
-    inputs: RegisterAccountInputs
+    inputs: RegisterAccountInputs,
   ): Promise<Message> {
     const [message, toSignatureMessage] = registerAccountMessage({
       ...inputs,
@@ -231,14 +228,13 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
   }
 
   async generateWithdrawMessage(
-    inputs: WithdrawInputs
+    inputs: WithdrawInputs,
   ): Promise<Message & { domain: SignatureDomain }> {
     const [message, toSignatureMessage] = withdrawMessage({
       ...inputs,
       chainId: this.chainId,
     });
     const signature = await this.signMessage(toSignatureMessage as Uint8Array);
-
 
     return {
       message: {
@@ -256,7 +252,7 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
   }
 
   async generateAddOrderlyKeyMessage(
-    inputs: AddOrderlyKeyInputs
+    inputs: AddOrderlyKeyInputs,
   ): Promise<Message> {
     const [message, toSignatureMessage] = addOrderlyKeyMessage({
       ...inputs,
@@ -274,7 +270,7 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
   }
 
   async generateSettleMessage(
-    inputs: SettleInputs
+    inputs: SettleInputs,
   ): Promise<Message & { domain: SignatureDomain }> {
     const [message, toSignatureMessage] = settleMessage({
       ...inputs,
@@ -297,7 +293,9 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
   }
 
   async getBalance(): Promise<bigint> {
-    return BigInt(0);
+    const publicKey = new PublicKey(this.address);
+    const lamports = await this.connection.getBalance(publicKey);
+    return BigInt(lamports);
   }
 
   async call(
@@ -306,7 +304,7 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
     params: any[],
     options?: {
       abi: any;
-    }
+    },
   ) {
     // console.log('-- solanan call', {
     //   address,
@@ -323,7 +321,7 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
       const usdcamount = await getAccount(
         connection,
         userUSDCAccount,
-        "confirmed"
+        "confirmed",
       );
       return usdcamount.amount;
     }
@@ -344,7 +342,7 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
     },
     options: {
       abi: any;
-    }
+    },
   ) {
     console.log("-- solanan sendTransaction", {
       contractAddress,
@@ -370,7 +368,7 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
     params: any[],
     options: {
       abi: any;
-    }
+    },
   ): Promise<any> {
     console.log("-- params ", {
       chain,
@@ -393,10 +391,10 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
     txHash: string,
     baseInterval?: number,
     maxInterval?: number,
-    maxRetries?: number
+    maxRetries?: number,
   ): Promise<any> {
-    return Promise.resolve({status: 1})
-   }
+    return Promise.resolve({ status: 1 });
+  }
 }
 
 export { DefaultSolanaWalletAdapter };

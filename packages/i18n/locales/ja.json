@@ -430,6 +430,7 @@
   "orderEntry.buyLong": "購入 / ロング",
   "orderEntry.sellShort": "販売 / ショート",
   "orderEntry.reduceOnly": "削減のみ",
+  "orderEntry.soundAlerts": "サウンドアラート",
   "orderEntry.orderType.limit": "リミット",
   "orderEntry.orderType.market": "マーケット",
   "orderEntry.orderType.limitOrder": "リミット注文",
@@ -638,10 +639,9 @@
   "transfer.insufficientBalance": "残高不足",
   "transfer.insufficientAllowance": "承認額不足",
   "transfer.rejectTransaction": "トランザクションを拒否しました",
-  "transfer.deposit.approve.symbol": "{{symbol}}を承認",
+  "transfer.deposit.approve": "承認",
   "transfer.deposit.approve.success": "承認成功",
   "transfer.deposit.approve.failed": "承認失敗",
-  "transfer.deposit.increase.symbol": "{{symbol}}の承認額を増加",
   "transfer.deposit.requested": "入金リクエスト済み",
   "transfer.deposit.completed": "入金完了",
   "transfer.deposit.failed": "入金失敗",
@@ -887,5 +887,6 @@
   "funding.paymentType": "支払いタイプ",
   "funding.paymentType.paid": "支払い済み",
   "funding.paymentType.received": "受け取り済み",
-  "leftNav.feedback": "フィードバックを共有"
+  "leftNav.feedback": "フィードバックを共有",
+  "transfer.withdraw.vaultWarning": "{{chainName}} 上の {{tokenName}} の残高は {{balance}} で、出金要求を満たすには不十分です。後でもう一度お試しいただくか、別のチェーンに切り替えて出金してください。"
 }

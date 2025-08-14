@@ -430,6 +430,7 @@
   "orderEntry.buyLong": "Beli / Long",
   "orderEntry.sellShort": "Jual / Short",
   "orderEntry.reduceOnly": "Hanya kurangi",
+  "orderEntry.soundAlerts": "Peringatan suara",
   "orderEntry.orderType.limit": "Limit",
   "orderEntry.orderType.market": "Pasar",
   "orderEntry.orderType.limitOrder": "Pesanan limit",
@@ -638,10 +639,9 @@
   "transfer.insufficientBalance": "Saldo tidak mencukupi",
   "transfer.insufficientAllowance": "Izin tidak mencukupi",
   "transfer.rejectTransaction": "Transaksi ditolak",
-  "transfer.deposit.approve.symbol": "Setujui {{symbol}}",
+  "transfer.deposit.approve": "Setujui",
   "transfer.deposit.approve.success": "Persetujuan berhasil",
   "transfer.deposit.approve.failed": "Persetujuan gagal",
-  "transfer.deposit.increase.symbol": "Tingkatkan jumlah yang diizinkan {{symbol}}",
   "transfer.deposit.requested": "Setoran diminta",
   "transfer.deposit.completed": "Setoran selesai",
   "transfer.deposit.failed": "Setoran gagal",
@@ -887,5 +887,6 @@
   "funding.paymentType": "Jenis pembayaran",
   "funding.paymentType.paid": "Dibayar",
   "funding.paymentType.received": "Diterima",
-  "leftNav.feedback": "Bagikan umpan balik Anda"
+  "leftNav.feedback": "Bagikan umpan balik Anda",
+  "transfer.withdraw.vaultWarning": "Saldo {{tokenName}} di {{chainName}} adalah {{balance}}, yang tidak cukup untuk memenuhi permintaan penarikan Anda. Silakan coba lagi nanti atau beralih ke chain lain untuk penarikan."
 }

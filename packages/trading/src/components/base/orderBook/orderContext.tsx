@@ -29,7 +29,7 @@ export const useOrderBookContext = () => useContext(OrderBookContext);
 
 export const ORDERBOOK_COIN_TYPE_KEY = "orderbook_coin_type";
 
-export const ORDERBOOK_MOBILE_COIN_TYPE_KEY = "orderbook_mobile_coin_type";
+export const ORDERBOOK_MOBILE_COIN_TYPE_KEY = "orderbook_mobile_coin_unit";
 
 interface OrderBookProviderProps {
   cellHeight: number;

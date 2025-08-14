@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { useScreen } from "@orderly.network/ui";
 import { LeaderboardTitle } from "../../pages/leaderboard/page";
@@ -8,6 +9,12 @@ export const RewardsWidget = () => {
   const state = useCampaignsScript();
   const { t } = useTranslation();
   const { isMobile } = useScreen();
+
+  const hideConfig = useMemo(() => {
+    return {
+      estimatedRewards: state.currentCampaign?.hide_estimated_rewards,
+    };
+  }, [state.currentCampaign]);
 
   if (
     state.currentCampaignId === "general" ||
@@ -30,6 +37,7 @@ export const RewardsWidget = () => {
         isMobile={isMobile}
         shouldShowJoinButton={state.shouldShowJoinButton}
         joinCampaign={state.joinCampaign}
+        hideConfig={hideConfig}
       />
     </>
   );

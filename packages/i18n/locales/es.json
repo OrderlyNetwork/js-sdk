@@ -430,6 +430,7 @@
   "orderEntry.buyLong": "Comprar / Largo",
   "orderEntry.sellShort": "Vender / Corto",
   "orderEntry.reduceOnly": "Solo reducir",
+  "orderEntry.soundAlerts": "Alertas de sonido",
   "orderEntry.orderType.limit": "Límite",
   "orderEntry.orderType.market": "Mercado",
   "orderEntry.orderType.limitOrder": "Orden límite",
@@ -638,10 +639,9 @@
   "transfer.insufficientBalance": "Saldo insuficiente",
   "transfer.insufficientAllowance": "Permiso insuficiente",
   "transfer.rejectTransaction": "Transacción rechazada",
-  "transfer.deposit.approve.symbol": "Aprobar {{symbol}}",
+  "transfer.deposit.approve": "Aprobar",
   "transfer.deposit.approve.success": "Aprobación exitosa",
   "transfer.deposit.approve.failed": "Error en la aprobación",
-  "transfer.deposit.increase.symbol": "Aumentar cantidad autorizada de {{symbol}}",
   "transfer.deposit.requested": "Depósito solicitado",
   "transfer.deposit.completed": "Depósito completado",
   "transfer.deposit.failed": "Depósito fallido",
@@ -887,5 +887,6 @@
   "funding.paymentType": "Tipo de pago",
   "funding.paymentType.paid": "Pagado",
   "funding.paymentType.received": "Recibido",
-  "leftNav.feedback": "Compartir tu opinión"
+  "leftNav.feedback": "Compartir tu opinión",
+  "transfer.withdraw.vaultWarning": "El saldo de {{tokenName}} en {{chainName}} es {{balance}}, lo cual es insuficiente para satisfacer tu solicitud de retiro. Inténtalo de nuevo más tarde o cambia a otra cadena para retirar."
 }

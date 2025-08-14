@@ -135,7 +135,7 @@ export const AddIcon = (props: { positionType: PositionType }) => {
             },
             content: (
               <PositionTPSLConfirm
-                isPositionTPSL={true}
+                isPositionTPSL={props.positionType === PositionType.FULL}
                 isEditing={false}
                 symbol={order.symbol!}
                 qty={Number(order.quantity)}

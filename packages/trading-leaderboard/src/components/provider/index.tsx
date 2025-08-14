@@ -26,9 +26,9 @@ export type TradingLeaderboardState = {
     /** default trading now button url */
     trading: string;
   };
-  currentCampaignId: string;
+  currentCampaignId: string | number;
   currentCampaign?: CampaignConfig;
-  onCampaignChange: (campaignId: string) => void;
+  onCampaignChange: (campaignId: string | number) => void;
   /** leaderboard user data, it will be used to calculate the rewards */
   userData?: UserData;
   /** set leaderboard user data */
@@ -80,25 +80,21 @@ export const TradingLeaderboardProvider: React.FC<
     onCampaignChange,
   } = props;
 
-  const [currentCampaignId, setCurrentCampaignId] = useState<string>("general");
   const [userData, setUserData] = useState<UserData>();
   const [updatedTime, setUpdatedTime] = useState<number>();
 
-  const { data: generateCode, mutate: generateCodeMutate } =
-    usePrivateQuery<API.AutoGenerateCode>(
-      "/v1/referral/auto_referral/progress",
-      {
-        revalidateOnFocus: false,
-        errorRetryCount: 2,
-        formatter: (data) => {
-          return {
-            code: data.auto_referral_code,
-            requireVolume: data.required_volume,
-            completedVolume: data.completed_volume,
-          };
-        },
+  const { data: generateCode, mutate: generateCodeMutate } = usePrivateQuery(
+    "/v1/referral/info",
+    {
+      revalidateOnFocus: false,
+      errorRetryCount: 2,
+      formatter: (data) => {
+        return {
+          code: data.referee_info.referer_code || "",
+        };
       },
-    );
+    },
+  );
 
   useEffect(() => {
     if (generateCode?.code && userData?.referral_code != generateCode.code) {
@@ -107,17 +103,9 @@ export const TradingLeaderboardProvider: React.FC<
     }
   }, [userData, generateCode, generateCodeMutate]);
 
-  useEffect(() => {
-    if (campaignId) {
-      setCurrentCampaignId(campaignId as string);
-    }
-  }, [campaignId]);
-
   const currentCampaign = useMemo(() => {
-    return campaigns?.find(
-      (campaign) => campaign.campaign_id == currentCampaignId,
-    );
-  }, [campaigns, currentCampaignId]);
+    return campaigns?.find((campaign) => campaign.campaign_id == campaignId);
+  }, [campaigns, campaignId]);
 
   const filteredCampaigns = useMemo(() => {
     const filtered = campaigns?.filter((campaign) => {
@@ -136,10 +124,9 @@ export const TradingLeaderboardProvider: React.FC<
           filtered,
         )
       : filtered;
-  }, [campaigns, userData]);
+  }, [campaigns, userData?.referral_code]);
 
   const memoCampaignChange = useMemoizedFn((id: string | number) => {
-    setCurrentCampaignId(id as string);
     onCampaignChange?.(id);
   });
 
@@ -148,7 +135,7 @@ export const TradingLeaderboardProvider: React.FC<
       campaigns: filteredCampaigns,
       href: href,
       backgroundSrc: backgroundSrc,
-      currentCampaignId,
+      currentCampaignId: campaignId || "general",
       currentCampaign,
       updatedTime,
       userData,
@@ -160,7 +147,7 @@ export const TradingLeaderboardProvider: React.FC<
   }, [
     backgroundSrc,
     currentCampaign,
-    currentCampaignId,
+    campaignId,
     filteredCampaigns,
     href,
     updatedTime,

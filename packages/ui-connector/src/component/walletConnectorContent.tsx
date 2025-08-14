@@ -211,6 +211,7 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
         position={"relative"}
       >
         {steps.map((step, index) => {
+          const isLast = index === steps.length - 1;
           return (
             <StepItem
               title={step.title}
@@ -219,25 +220,10 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
               key={step.key}
               active={activeStep === index}
               isLoading={loading && activeStep === index}
+              showDivider={!isLast}
             />
           );
         })}
-        {steps.length > 1 && (
-          <Box
-            position={"absolute"}
-            height={"38px"}
-            left={28}
-            top={18}
-            zIndex={0}
-          >
-            <Divider
-              lineStyle={"dashed"}
-              direction={"vertical"}
-              intensity={16}
-              className="oui-h-full"
-            />
-          </Box>
-        )}
       </Box>
       {props.showRefCodeInput && steps.length == 2 && (
         <ReferralCode {...props} />

@@ -1,4 +1,4 @@
-import { Fragment, useMemo } from "react";
+import React, { Fragment, useMemo } from "react";
 import { useSymbolLeverage } from "@orderly.network/hooks";
 import { useTranslation, Trans } from "@orderly.network/i18n";
 import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
@@ -10,8 +10,9 @@ import { PriceInput } from "../../tpsl.ui";
 import { OrderPriceType } from "../orderPriceType";
 import { useTPSLInputRowScript } from "./tpslInputRow.script";
 
-type Props = ReturnType<typeof useTPSLInputRowScript>;
-export const TPSLInputRowUI = (props: Props) => {
+type TPSLInputRowProps = ReturnType<typeof useTPSLInputRowScript>;
+
+export const TPSLInputRowUI: React.FC<TPSLInputRowProps> = (props) => {
   const { t } = useTranslation();
   const { parseErrorMsg } = useOrderEntryFormErrorMsg(props.errors);
   const { values, positionType } = props;
@@ -69,7 +70,7 @@ export const TPSLInputRowUI = (props: Props) => {
         <label
           htmlFor={`enable_${props.type}`}
           className={
-            "oui-ml-1 oui-text-sm oui-text-base-contrast-36 oui-cursor-pointer"
+            "oui-ml-1 oui-cursor-pointer oui-text-sm oui-text-base-contrast-36"
           }
         >
           {props.type === "tp"
@@ -91,7 +92,7 @@ export const TPSLInputRowUI = (props: Props) => {
           <Text className="oui-text-2xs oui-text-base-contrast-54">
             {t("tpsl.advanced.triggerPrice")}
           </Text>
-          <Grid cols={2} gap={2} className="oui-px-0.5">
+          <Grid cols={2} gap={2} className="oui-w-full oui-px-0.5">
             <PriceInput
               type={`${props.type} price`}
               value={values.trigger_price}
@@ -104,7 +105,6 @@ export const TPSLInputRowUI = (props: Props) => {
             <PnlInputWidget
               type={props.type === "tp" ? "TP" : "SL"}
               onChange={(key, value) => {
-                console.log("key", key, "value", value);
                 props.onChange(key, value as string);
               }}
               quote={"USDC"}
@@ -124,8 +124,7 @@ export const TPSLInputRowUI = (props: Props) => {
           <Text className="oui-text-2xs oui-text-base-contrast-54">
             {t("tpsl.advanced.orderPrice")}
           </Text>
-
-          <Grid cols={2} gap={2} className="oui-w-full">
+          <Grid cols={2} gap={2} className="oui-w-full oui-px-0.5">
             <PriceInput
               disabled={
                 positionType === PositionType.FULL ||
@@ -167,35 +166,33 @@ export const TPSLInputRowUI = (props: Props) => {
         pnl={values.PnL}
         roi={roi}
         dp={props.quote_dp}
+        className="oui-mt-1"
       />
     </Flex>
   );
 };
 
-const RenderROI = (props: {
+const RenderROI: React.FC<{
   className?: string;
-  price: number | string | undefined;
-  pnl: number | string | undefined;
-  roi: number | null;
+  price?: number | string;
+  pnl?: number | string;
+  roi?: number | null;
   dp: number;
   orderType: OrderType;
-}) => {
+}> = (props) => {
   const { t } = useTranslation();
-  const { price, pnl, roi, dp } = props;
+  const { price, pnl, roi, dp, className, orderType } = props;
   if (!roi || !price || !pnl) {
     return null;
   }
   return (
-    <Text
-      className={cn("oui-text-2xs oui-text-base-contrast-36", props.className)}
-    >
-      {/* @ts-ignore */}
+    <Text className={cn("oui-text-2xs oui-text-base-contrast-36", className)}>
       <Trans
         i18nKey="tpsl.advanced.ROI"
         components={[
           <Fragment key="price">
             <Text.numeral
-              className="oui-text-base-contrast oui-px-1"
+              className="oui-px-1 oui-text-base-contrast"
               dp={dp}
               suffix={<Text className="oui-pl-0.5">USDC</Text>}
             >
@@ -203,8 +200,8 @@ const RenderROI = (props: {
             </Text.numeral>
           </Fragment>,
           <Fragment key="orderType">
-            <Text className="oui-text-base-contrast oui-px-1">
-              {props.orderType === OrderType.MARKET
+            <Text className="oui-px-1 oui-text-base-contrast">
+              {orderType === OrderType.MARKET
                 ? t("common.market")
                 : t("common.limit")}
             </Text>
@@ -212,7 +209,7 @@ const RenderROI = (props: {
           <Fragment key="pnl">
             <Text.numeral
               coloring
-              className="oui-px-1 oui-whitespace-nowrap"
+              className="oui-whitespace-nowrap oui-px-1"
               dp={2}
               suffix={<Text className="oui-pl-0.5">USDC</Text>}
             >
@@ -223,7 +220,7 @@ const RenderROI = (props: {
           <Fragment key="roi">
             <Text.numeral
               coloring
-              className="oui-px-1 oui-whitespace-nowrap"
+              className="oui-whitespace-nowrap oui-px-1"
               dp={2}
               suffix="%"
             >

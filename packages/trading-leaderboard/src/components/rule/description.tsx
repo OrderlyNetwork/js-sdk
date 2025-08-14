@@ -123,7 +123,7 @@ const parseRichText = (text: string): JSX.Element[] => {
             key={key++}
             src={match[2]}
             alt={match[1]}
-            className="oui-block oui-h-auto oui-max-w-full oui-my-2"
+            className="oui-my-2 oui-block oui-h-auto oui-max-w-full"
           />,
         );
         break;
@@ -208,7 +208,7 @@ export const DescriptionContent: FC<{
         <img
           src={content.content}
           alt={content.alt || ""}
-          className="oui-h-auto oui-max-w-full oui-my-2"
+          className="oui-my-2 oui-h-auto oui-max-w-full"
         />
       );
     }
@@ -245,7 +245,7 @@ export const MarkdownDescriptionContent: FC<{
               <img
                 src={content.content}
                 alt={content.alt || ""}
-                className="oui-h-auto oui-max-w-full oui-my-2"
+                className="oui-my-2 oui-h-auto oui-max-w-full"
               />
             ) : (
               <div>{content.content}</div>
