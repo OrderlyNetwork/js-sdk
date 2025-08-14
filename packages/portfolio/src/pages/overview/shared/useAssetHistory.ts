@@ -24,17 +24,12 @@ export const useAssetsHistoryData = (
   const [today] = useState(() => {
     const d = new Date();
 
-    return new Date(
-      d.getUTCFullYear(),
-      d.getUTCMonth(),
-      d.getUTCDate(),
-      0,
-      0,
-      0,
-    );
-  });
+    return d;
 
-  // console.log("today", today.toISOString());
+    // return new Date(
+    //   Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), 0, 0, 0),
+    // );
+  });
 
   const { isRealtime = false } = options || {};
   const periodTypes = Object.values(PeriodType);
@@ -74,7 +69,8 @@ export const useAssetsHistoryData = (
   // const nowStamp = useRef(new Date().getTime().toString());
   // const now = useRef(new Date());
 
-  const endDate = useMemo(() => addDays(today, 1), [today]);
+  // const endDate = useMemo(() => addDays(today, 1), [today]);
+  const endDate = today;
 
   const [data] = useStatisticsDaily(
     {
