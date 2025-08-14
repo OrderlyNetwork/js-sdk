@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/ui-transfer",
-  "version": "2.5.4-internal-20250814.9",
+  "version": "2.5.3",
   "description": "deposit & withdraw",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -30,8 +30,7 @@
     "@orderly.network/perp": "workspace:*",
     "@layerzerolabs/scan-client": "^0.0.6",
     "@solana/web3.js": "^1.95.3",
-    "@wagmi/core": "2.18.0",
-    "viem": "^2.29.2",
+    "ethers": "^6.15.0",
     "ramda": "^0.29.1"
   },
   "devDependencies": {

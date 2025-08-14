@@ -391,23 +391,3 @@ export const CHAIN_ID_TO_ENDPOINT_ID: Record<number | string, number> = {
 export function getEndpointId(chainId: number | string): number | undefined {
   return CHAIN_ID_TO_ENDPOINT_ID[chainId];
 }
-
-/**
- * Check if a chain ID is supported
- * @param chainId - The chain ID to check
- * @returns True if the chain ID is supported
- */
-export function isSupportedChain(chainId: number | string): boolean {
-  return chainId in CHAIN_ID_TO_ENDPOINT_ID;
-}
-
-/**
- * Get all supported chain IDs
- * @returns Array of all supported chain IDs
- */
-export function getSupportedChainIds(): (number | string)[] {
-  return Object.keys(CHAIN_ID_TO_ENDPOINT_ID).map((key) => {
-    // Handle empty string keys (for chains without numeric IDs)
-    return key === "" ? "" : Number(key);
-  });
-}
