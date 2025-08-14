@@ -150,18 +150,18 @@ const TPSLQuantity: React.FC<{
   );
 };
 
-export const TPSLDialogUI: React.FC<TPSLBuilderState> = (props) => {
-  const {
-    maxQty,
-    orderQuantity,
-    setQuantity,
-    isEditing,
-    isPosition,
-    errors,
-    symbolInfo,
-  } = props;
+export const TPSLDialogUI: React.FC<{
+  type: "tp" | "sl";
+  triggerPrice?: number;
+}> = (props) => {
+  const { type, triggerPrice, errors, setQuantity, isEditing, isPosition } =
+    props;
   const { parseErrorMsg } = useOrderEntryFormErrorMsg(errors);
   const { t } = useTranslation();
+  const pnlLabelMap = {
+    tp: t("tpsl.totalEstTpPnl"),
+    sl: t("tpsl.totalEstSlPnl"),
+  };
   return (
     <Box className="oui-w-full oui-px-0.5">
       <TPSLQuantity
@@ -176,18 +176,18 @@ export const TPSLDialogUI: React.FC<TPSLBuilderState> = (props) => {
         errorMsg={parseErrorMsg("quantity")}
       />
       <Flex itemAlign="center" justify="between" my={1}>
-        Trigger price
+        {t("tpsl.advanced.triggerPrice")}
         <Flex itemAlign="center" justify="end" gap={1}>
-          <Text intensity={98}>3890.23</Text>
+          <Text intensity={98}>{triggerPrice}</Text>
           <Text intensity={36}>USDC</Text>
         </Flex>
       </Flex>
       <Flex itemAlign="center" justify="between" my={1}>
-        Order price
+        {t("tpsl.advanced.orderPrice")}
         <Text intensity={98}>Market</Text>
       </Flex>
       <Flex itemAlign="center" justify="between" my={1}>
-        Total est. TP Pnl
+        {pnlLabelMap[type]}
         <Flex itemAlign="center" justify="end" gap={1}>
           <Text color="success">52.32</Text>
           <Text intensity={36}>USDC</Text>
@@ -196,7 +196,7 @@ export const TPSLDialogUI: React.FC<TPSLBuilderState> = (props) => {
       <Divider className="oui-my-3 oui-w-full" />
       <Flex itemAlign={"center"}>
         <Text color="primary" className="oui-cursor-pointer oui-text-sm">
-          {t("tpsl.advanced")}
+          {t("tpsl.advancedSetting")}
         </Text>
       </Flex>
     </Box>

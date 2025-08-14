@@ -30,6 +30,9 @@ export const tpsl = {
     "Are you sure you want to cancel this TP/SL order?",
   "tpsl.confirmOrder": "Confirm Order",
   "tpsl.advanced": "Advanced",
+  "tpsl.advancedSetting": "Advanced setting",
+  "tpsl.TPOrderConfirm": "TP order confirm",
+  "tpsl.SLOrderConfirm": "SL order confirm",
   "tpsl.positionType.full": "TP/SL: Full position",
   "tpsl.positionType.partial": "TP/SL: Partial position",
   "tpsl.positionType.full.tips":

@@ -151,8 +151,15 @@ export class TPSLService {
         modal
           .dialog({
             size: "sm",
-            title: pnl.gt(0) ? "TP order confirm" : "SL order confirm",
-            content: <TPSLDialogWidget />,
+            title: pnl.gt(0)
+              ? i18n.t("tpsl.TPOrderConfirm")
+              : i18n.t("tpsl.SLOrderConfirm"),
+            content: (
+              <TPSLDialogWidget
+                triggerPrice={this.lastArgs?.price}
+                type={pnl.gt(0) ? "tp" : "sl"}
+              />
+            ),
             actions: {
               primary: {
                 label: i18n.t("common.confirm"),
