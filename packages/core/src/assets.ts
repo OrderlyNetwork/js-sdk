@@ -484,7 +484,7 @@ export class Assets {
       brokerHash: string;
       tokenHash: string;
       tokenAmount: string;
-      USDCAddress?: string;
+      tokenAddress?: string;
     } = {
       accountId: this.account.accountIdHashStr,
       brokerHash: parseBrokerHash(brokerId!),
@@ -508,7 +508,7 @@ export class Assets {
       if (!vaultAddress) {
         vaultAddress = contractInfo.solanaVaultAddress;
       }
-      depositData["USDCAddress"] =
+      depositData["tokenAddress"] =
         tokenAddress || contractInfo.solanaUSDCAddress;
     }
 
@@ -603,7 +603,7 @@ export class Assets {
       brokerHash: string;
       tokenHash: string;
       tokenAmount: string;
-      USDCAddress?: string;
+      tokenAddress?: string;
     } = {
       accountId: this.account.accountIdHashStr,
       brokerHash: parseBrokerHash(brokerId!),
@@ -619,7 +619,7 @@ export class Assets {
       if (!vaultAddress) {
         vaultAddress = contractInfo.solanaVaultAddress;
       }
-      depositData["USDCAddress"] =
+      depositData["tokenAddress"] =
         tokenAddress || contractInfo.solanaUSDCAddress;
     }
 

@@ -34,7 +34,7 @@ import {
   settleMessage,
   withdrawMessage,
 } from "./helper";
-import { getUSDCAccounts } from "./solana.util";
+import { getTokenAccounts } from "./solana.util";
 import { SolanaAdapterOption, SolanaWalletProvider } from "./types";
 
 class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> {
@@ -313,17 +313,17 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
     //   options,
     // })
     if (method === "balanceOf") {
-      const usdcPublicKey = new PublicKey(address);
+      const tokenPublicKey = new PublicKey(address);
       const userPublicKey = new PublicKey(this._address);
-      const userUSDCAccount = getUSDCAccounts(usdcPublicKey, userPublicKey);
+      const userTokenAccount = getTokenAccounts(tokenPublicKey, userPublicKey);
       const connection = this.connection;
 
-      const usdcamount = await getAccount(
+      const tokenAmount = await getAccount(
         connection,
-        userUSDCAccount,
+        userTokenAccount,
         "confirmed",
       );
-      return usdcamount.amount;
+      return tokenAmount.amount;
     }
     if (method === "allowance") {
       return MaxUint256;
