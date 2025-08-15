@@ -63,12 +63,6 @@ export const useCampaignsScript = () => {
       { revalidateOnFocus: false },
     );
 
-  const accountStatus = useMemo(() => {
-    return state.status === AccountStatusEnum.EnableTradingWithoutConnected
-      ? AccountStatusEnum.EnableTradingWithoutConnected
-      : AccountStatusEnum.EnableTrading;
-  }, [state.status]);
-
   const isParticipated = useMemo(() => {
     const target = userCampaigns?.find((item) => item.id == currentCampaignId);
     return !!target;

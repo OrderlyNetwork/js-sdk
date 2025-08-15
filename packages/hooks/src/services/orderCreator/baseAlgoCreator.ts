@@ -182,7 +182,7 @@ export abstract class BaseAlgoOrderCreator<
           }
           if (Number(sl_trigger_price) < Number(sl_order_price)) {
             result.sl_trigger_price =
-              OrderValidation.priceErrorMin("sl_trigger_price");
+              OrderValidation.priceErrorMax("sl_trigger_price");
           }
         }
         if (tp_trigger_price && tp_order_price) {
@@ -205,7 +205,7 @@ export abstract class BaseAlgoOrderCreator<
           }
           if (Number(tp_trigger_price) > Number(tp_order_price)) {
             result.tp_trigger_price =
-              OrderValidation.priceErrorMax("tp_trigger_price");
+              OrderValidation.priceErrorMin("tp_trigger_price");
           }
         }
       }
