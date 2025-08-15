@@ -13,7 +13,7 @@ import {
   Slider,
   Text,
 } from "@orderly.network/ui";
-import { TPSLBuilderState } from "./TPSLDialog.script";
+import { TPSLBuilderState } from "./simpleDialog.script";
 
 // ------------- Quantity input start------------
 const TPSLQuantity: React.FC<{
@@ -150,7 +150,7 @@ const TPSLQuantity: React.FC<{
   );
 };
 
-export const TPSLDialogUI: React.FC<{
+export const TPSLSimpleDialogUI: React.FC<{
   type: "tp" | "sl";
   triggerPrice?: number;
 }> = (props) => {
