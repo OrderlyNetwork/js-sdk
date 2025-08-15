@@ -11,7 +11,9 @@
       "import": "./dist/index.mjs",
       "types": "./dist/index.d.ts"
     },
-    "./locales/*": "./dist/locales/*"
+    "./locales/*": "./dist/locales/*",
+    "./constant": "./dist/constant.js",
+    "./utils": "./dist/utils.js"
   },
   "bin": {
     "i18n": "bin/cli.js"
