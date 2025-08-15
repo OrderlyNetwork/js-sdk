@@ -42,6 +42,8 @@ export const useVaultsHistoryHook = () => {
       ...item,
       token: "USDC", // need to hard code for now
       vaultName: "Orderly Strategies", // need to hard code for now
+      amount_change:
+        item.type === "withdrawal" ? -item.amount_change : item.amount_change,
     }));
   }, [data]);
 
