@@ -76,7 +76,7 @@ export const LayoutPage: Story = {
                 // {
                 //   name: i18n.t("common.affiliate"),
                 //   href: "/rewards/affiliate",
-                //   icon: <img src="box-ani.gif" className="oui-w-6 oui-h-6" />,
+                //   icon: <img src="box-jump.gif" className="oui-w-6 oui-h-6" />,
                 //   trailing: '<Tag text="Unlock @ $10K volume" />',
                 // },
                 // {

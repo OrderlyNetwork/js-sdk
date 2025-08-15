@@ -429,6 +429,7 @@
   "orderEntry.buyLong": "Купити / Long",
   "orderEntry.sellShort": "Продати / Short",
   "orderEntry.reduceOnly": "Тільки зменшення",
+  "orderEntry.soundAlerts": "Звукові сповіщення",
   "orderEntry.orderType.limit": "Ліміт",
   "orderEntry.orderType.market": "Ринок",
   "orderEntry.orderType.limitOrder": "Лімітний ордер",
@@ -637,10 +638,9 @@
   "transfer.insufficientBalance": "Недостатній баланс",
   "transfer.insufficientAllowance": "Недостатній дозвіл",
   "transfer.rejectTransaction": "Відхилена транзакція",
-  "transfer.deposit.approve.symbol": "Схвалити {{symbol}}",
+  "transfer.deposit.approve": "Затвердити",
   "transfer.deposit.approve.success": "Схвалення успішне",
   "transfer.deposit.approve.failed": "Помилка схвалення",
-  "transfer.deposit.increase.symbol": "Збільшити дозволену суму {{symbol}}",
   "transfer.deposit.requested": "Запит на депозит",
   "transfer.deposit.completed": "Депозит завершено",
   "transfer.deposit.failed": "Помилка депозиту",
@@ -886,5 +886,6 @@
   "funding.paymentType": "Тип платежу",
   "funding.paymentType.paid": "Сплачено",
   "funding.paymentType.received": "Отримано",
-  "leftNav.feedback": "Поділитися відгуком"
+  "leftNav.feedback": "Поділитися відгуком",
+  "transfer.withdraw.vaultWarning": "Баланс {{tokenName}} у мережі {{chainName}} становить {{balance}}, чого недостатньо для виконання вашого запиту на виведення. Спробуйте пізніше або перейдіть на іншу мережу для виведення."
 }

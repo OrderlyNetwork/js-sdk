@@ -429,6 +429,7 @@
   "orderEntry.buyLong": "Купить / Long",
   "orderEntry.sellShort": "Продать / Short",
   "orderEntry.reduceOnly": "Только уменьшение",
+  "orderEntry.soundAlerts": "Звуковые оповещения",
   "orderEntry.orderType.limit": "Лимит",
   "orderEntry.orderType.market": "Рыночный",
   "orderEntry.orderType.limitOrder": "Лимитный ордер",
@@ -637,10 +638,9 @@
   "transfer.insufficientBalance": "Недостаточно средств",
   "transfer.insufficientAllowance": "Недостаточно разрешений",
   "transfer.rejectTransaction": "Отклоненная транзакция",
-  "transfer.deposit.approve.symbol": "Одобрить {{symbol}}",
+  "transfer.deposit.approve": "Одобрить",
   "transfer.deposit.approve.success": "Одобрение успешно",
   "transfer.deposit.approve.failed": "Ошибка одобрения",
-  "transfer.deposit.increase.symbol": "Увеличить авторизованную сумму {{symbol}}",
   "transfer.deposit.requested": "Запрошен депозит",
   "transfer.deposit.completed": "Депозит завершен",
   "transfer.deposit.failed": "Ошибка депозита",
@@ -886,5 +886,6 @@
   "funding.paymentType": "Тип платежа",
   "funding.paymentType.paid": "Оплачено",
   "funding.paymentType.received": "Получено",
-  "leftNav.feedback": "Поделиться отзывом"
+  "leftNav.feedback": "Поделиться отзывом",
+  "transfer.withdraw.vaultWarning": "Баланс {{tokenName}} в сети {{chainName}} составляет {{balance}}, чего недостаточно для выполнения вашего запроса на вывод. Повторите попытку позже или переключитесь на другую сеть для вывода."
 }

@@ -8,9 +8,14 @@ import { Decimal } from "@orderly.network/utils";
 import {
   getPriceRange,
   getTPSLTriggerPriceRange,
+  getTPSLTriggerPriceScope,
 } from "../../utils/order/orderPrice";
 import { ValuesDepConfig, OrderValidationResult } from "./interface";
 import { OrderValidation } from "./orderValidation";
+
+const formatPrice = (price: number, quote_dp: number) => {
+  return new Decimal(price).toDecimalPlaces(quote_dp).toNumber();
+};
 
 export async function bracketOrderValidator<
   T extends AlgoOrderEntity<
@@ -33,7 +38,7 @@ export async function bracketOrderValidator<
   const qty = Number(values.quantity);
   const maxQty = config.maxQty;
   const type = values.order_type;
-  const { quote_max, quote_min } = config.symbol ?? {};
+  const { quote_max, quote_min, quote_dp } = config.symbol ?? {};
 
   const mark_price =
     type === OrderType.MARKET
@@ -68,40 +73,30 @@ export async function bracketOrderValidator<
   // there need use position side to validate
   // so if order's side is buy, then position's side is sell
   if (side === OrderSide.BUY && mark_price) {
-    const triggerPriceRange = getTPSLTriggerPriceRange({
-      side: tpslSide,
-      basePrice: Number(mark_price),
-      symbolInfo: config.symbol,
-    });
-
-    if (
-      !!sl_trigger_price &&
-      Number(sl_trigger_price) < triggerPriceRange.minPrice
-    ) {
+    if (!!sl_trigger_price && Number(sl_trigger_price) < quote_min) {
       result.sl_trigger_price = OrderValidation.min(
         "sl_trigger_price",
-        triggerPriceRange.minPrice,
+        formatPrice(quote_min, quote_dp),
+      );
+    }
+    if (!!sl_trigger_price && Number(sl_trigger_price) > mark_price) {
+      result.sl_trigger_price = OrderValidation.max(
+        "sl_trigger_price",
+        formatPrice(mark_price, quote_dp),
       );
     }
 
     if (!!tp_trigger_price && Number(tp_trigger_price) <= mark_price) {
       result.tp_trigger_price = OrderValidation.min(
         "tp_trigger_price",
-        mark_price,
+        formatPrice(mark_price, quote_dp),
       );
     }
 
     if (!!tp_trigger_price && Number(tp_trigger_price) > quote_max) {
       result.tp_trigger_price = OrderValidation.max(
         "tp_trigger_price",
-        quote_max,
-      );
-    }
-
-    if (!!sl_trigger_price && Number(sl_trigger_price) < quote_min) {
-      result.sl_trigger_price = OrderValidation.min(
-        "sl_trigger_price",
-        quote_min,
+        formatPrice(quote_max, quote_dp),
       );
     }
 
@@ -114,16 +109,16 @@ export async function bracketOrderValidator<
       if (Number(sl_order_price) < priceRange.minPrice) {
         result.sl_order_price = OrderValidation.min(
           "sl_order_price",
-          priceRange.minPrice,
+          formatPrice(priceRange.minPrice, quote_dp),
         );
       }
       if (Number(sl_order_price) > priceRange.maxPrice) {
         result.sl_order_price = OrderValidation.max(
           "sl_order_price",
-          priceRange.maxPrice,
+          formatPrice(priceRange.maxPrice, quote_dp),
         );
       }
-
+      // FE limit the buy order sl_order_price less than sl_trigger_price
       if (Number(sl_trigger_price) < Number(sl_order_price)) {
         result.sl_trigger_price =
           OrderValidation.priceErrorMax("sl_trigger_price");
@@ -135,78 +130,74 @@ export async function bracketOrderValidator<
         basePrice: Number(tp_trigger_price),
         symbolInfo: config.symbol,
       });
-      if (Number(tp_order_price) < priceRange.minPrice) {
-        result.tp_order_price = OrderValidation.min(
-          "tp_order_price",
-          priceRange.minPrice,
-        );
-      }
       if (Number(tp_order_price) > priceRange.maxPrice) {
         result.tp_order_price = OrderValidation.max(
           "tp_order_price",
-          priceRange.maxPrice,
+          formatPrice(priceRange.maxPrice, quote_dp),
         );
       }
-      if (Number(tp_trigger_price) < Number(tp_order_price)) {
+      // FE limit the buy order tp_order_price greater than tp_trigger_price
+      if (Number(tp_order_price) < priceRange.minPrice) {
+        result.tp_order_price = OrderValidation.min(
+          "tp_order_price",
+          formatPrice(priceRange.minPrice, quote_dp),
+        );
+      }
+      if (Number(tp_trigger_price) > Number(tp_order_price)) {
         result.tp_trigger_price =
           OrderValidation.priceErrorMax("tp_trigger_price");
       }
     }
   }
   if (side === OrderSide.SELL && mark_price) {
-    const triggerPriceRange = getTPSLTriggerPriceRange({
-      side: tpslSide,
-      basePrice: Number(mark_price),
-      symbolInfo: config.symbol,
-    });
-
-    if (
-      !!sl_trigger_price &&
-      Number(sl_trigger_price) > triggerPriceRange.maxPrice
-    ) {
+    if (!!sl_trigger_price && Number(sl_trigger_price) > quote_max) {
       result.sl_trigger_price = OrderValidation.max(
         "sl_trigger_price",
-        triggerPriceRange.maxPrice,
+        formatPrice(quote_max, quote_dp),
+      );
+    }
+
+    if (!!sl_trigger_price && Number(sl_trigger_price) < mark_price) {
+      result.sl_trigger_price = OrderValidation.min(
+        "sl_trigger_price",
+        formatPrice(mark_price, quote_dp),
       );
     }
 
     if (!!tp_trigger_price && Number(tp_trigger_price) >= mark_price) {
       result.tp_trigger_price = OrderValidation.max(
         "tp_trigger_price",
-        mark_price,
+        formatPrice(mark_price, quote_dp),
       );
     }
 
-    if (!!tp_trigger_price && Number(tp_trigger_price) > quote_max) {
-      result.tp_trigger_price = OrderValidation.max(
+    if (!!tp_trigger_price && Number(tp_trigger_price) < quote_min) {
+      result.tp_trigger_price = OrderValidation.min(
         "tp_trigger_price",
-        quote_max,
+        formatPrice(quote_min, quote_dp),
       );
     }
 
-    if (!!sl_trigger_price && Number(sl_trigger_price) < quote_min) {
-      result.sl_trigger_price = OrderValidation.min(
-        "sl_trigger_price",
-        quote_min,
-      );
-    }
     if (sl_trigger_price && sl_order_price) {
       const priceRange = getPriceRange({
         side: tpslSide,
         basePrice: Number(sl_trigger_price),
         symbolInfo: config.symbol,
       });
+      console.log("sell order sl price range", {
+        priceRange,
+      });
 
       if (Number(sl_order_price) < priceRange.minPrice) {
         result.sl_order_price = OrderValidation.min(
           "sl_order_price",
-          priceRange.minPrice,
+          formatPrice(priceRange.minPrice, quote_dp),
         );
       }
       if (Number(sl_order_price) > priceRange.maxPrice) {
         result.sl_order_price = OrderValidation.max(
           "sl_order_price",
-          priceRange.maxPrice,
+          formatPrice(priceRange.maxPrice, quote_dp),
         );
       }
 
@@ -224,13 +215,13 @@ export async function bracketOrderValidator<
       if (Number(tp_order_price) < priceRange.minPrice) {
         result.tp_order_price = OrderValidation.min(
           "tp_order_price",
-          priceRange.minPrice,
+          formatPrice(priceRange.minPrice, quote_dp),
         );
       }
       if (Number(tp_order_price) > priceRange.maxPrice) {
         result.tp_order_price = OrderValidation.max(
           "tp_order_price",
-          priceRange.maxPrice,
+          formatPrice(priceRange.maxPrice, quote_dp),
         );
       }
       if (Number(tp_trigger_price) < Number(tp_order_price)) {

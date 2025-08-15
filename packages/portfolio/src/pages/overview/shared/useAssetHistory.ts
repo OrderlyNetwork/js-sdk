@@ -24,7 +24,11 @@ export const useAssetsHistoryData = (
   const [today] = useState(() => {
     const d = new Date();
 
-    return new Date(getYear(d), getMonth(d), getDate(d), 0, 0, 0);
+    return d;
+
+    // return new Date(
+    //   Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), 0, 0, 0),
+    // );
   });
 
   const { isRealtime = false } = options || {};
@@ -65,7 +69,8 @@ export const useAssetsHistoryData = (
   // const nowStamp = useRef(new Date().getTime().toString());
   // const now = useRef(new Date());
 
-  const endDate = useMemo(() => addDays(today, 1), [today]);
+  // const endDate = useMemo(() => addDays(today, 1), [today]);
+  const endDate = today;
 
   const [data] = useStatisticsDaily(
     {
@@ -117,8 +122,6 @@ export const useAssetsHistoryData = (
         }
       }
 
-      // console.log("--->>>>> list", list);
-
       // calculate the sum of deposit and withdraw
       for (let i = 0; i < list.length; i++) {
         const item = list[i];
@@ -160,8 +163,10 @@ export const useAssetsHistoryData = (
       return data;
     }
 
-    if (data[data.length - 1].date === format(today, "yyyy-MM-dd")) {
-      data;
+    const UTCStr = `${today.getUTCFullYear()}-${today.getUTCMonth() + 1}-${today.getUTCDate()}`;
+
+    if (data[data.length - 1].date === UTCStr) {
+      return data;
     }
 
     return data.concat([calculate(data, totalValue)]);

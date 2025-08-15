@@ -51,7 +51,6 @@ export const CampaignsWidget: FC<CampaignsWidgetProps> = (props) => {
           isJoining={state.isJoining}
           joinError={state.joinError}
           canTrade={state.canTrade}
-          accountStatus={state.accountStatus}
         />
       )}
       {state.currentCampaign && (

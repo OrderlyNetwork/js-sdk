@@ -1,3 +1,6 @@
+import { RankingColumnFields } from "../ranking/shared/column";
+import { DescriptionConfig, DescriptionItem } from "../rule/description";
+
 export enum CampaignTagEnum {
   ONGOING = "ongoing",
   COMING = "coming",
@@ -71,7 +74,15 @@ export interface CampaignConfig {
   href?: string;
   hide_arena?: boolean;
   hide_rewards?: boolean;
+  hide_estimated_rewards?: boolean;
   highlight_pool_id?: string;
+  user_account_label?: string;
+  rule?: {
+    rule: DescriptionItem[];
+    terms: DescriptionItem[];
+    ruleConfig?: DescriptionConfig;
+  };
+  exclude_leaderboard_columns?: RankingColumnFields[];
 }
 
 // User data for calculations

@@ -68,7 +68,7 @@ function getMainMenus(): MainNavWidgetProps["mainMenus"] {
     {
       name: i18n.t("affiliate.referral"),
       href: "/rewards/affiliate",
-      icon: "/box-ani.gif",
+      icon: "/box-jump.gif",
       onlyInMainAccount: true,
       tooltipConfig: {
         showOnFirstVisit: true,
@@ -132,7 +132,7 @@ function getLeftNavMenus(): LeftNavProps {
         href: "/rewards/affiliate",
         icon: (
           <img
-            src="/box-ani.gif"
+            src="/box-jump.gif"
             alt="logo"
             draggable={false}
             className="oui-w-6 oui-h-6"

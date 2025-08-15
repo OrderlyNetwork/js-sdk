@@ -429,6 +429,7 @@
   "orderEntry.buyLong": "매수 / 롱",
   "orderEntry.sellShort": "매도 / 숏",
   "orderEntry.reduceOnly": "감소만",
+  "orderEntry.soundAlerts": "사운드 알림",
   "orderEntry.orderType.limit": "지정가",
   "orderEntry.orderType.market": "시장가",
   "orderEntry.orderType.limitOrder": "지정가 주문",
@@ -637,10 +638,9 @@
   "transfer.insufficientBalance": "잔액 부족",
   "transfer.insufficientAllowance": "허용량 부족",
   "transfer.rejectTransaction": "거래 거부됨",
-  "transfer.deposit.approve.symbol": "{{symbol}} 승인",
+  "transfer.deposit.approve": "승인",
   "transfer.deposit.approve.success": "승인 성공",
   "transfer.deposit.approve.failed": "승인 실패",
-  "transfer.deposit.increase.symbol": "{{symbol}} 승인 금액 증가",
   "transfer.deposit.requested": "입금 요청됨",
   "transfer.deposit.completed": "입금 완료됨",
   "transfer.deposit.failed": "입금 실패",
@@ -886,5 +886,6 @@
   "funding.paymentType": "지불 유형",
   "funding.paymentType.paid": "지불됨",
   "funding.paymentType.received": "수령됨",
-  "leftNav.feedback": "피드백 공유"
+  "leftNav.feedback": "피드백 공유",
+  "transfer.withdraw.vaultWarning": "{{chainName}} 의 {{tokenName}} 잔액은 {{balance}} 로, 출금 요청을 충족하기에 부족합니다. 나중에 다시 시도하거나 다른 체인으로 전환하여 출금하세요."
 }

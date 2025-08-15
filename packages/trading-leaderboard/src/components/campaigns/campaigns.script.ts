@@ -8,11 +8,7 @@ import {
 import { AccountStatusEnum } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
 import { useTradingLeaderboardContext } from "../provider";
-import {
-  CampaignStatsDetailsResponse,
-  CampaignStatsResponse,
-  UserCampaignsResponse,
-} from "./type";
+import { CampaignStatsResponse, UserCampaignsResponse } from "./type";
 
 /**
  * Hook for managing campaigns data and statistics
@@ -34,13 +30,6 @@ export const useCampaignsScript = () => {
 
   const brokerId = useConfig("brokerId");
 
-  const isCampaignStarted = useMemo(() => {
-    return (
-      currentCampaign?.start_time &&
-      currentCampaign?.start_time < new Date().toISOString()
-    );
-  }, [currentCampaign]);
-
   const isCampaignEnded = useMemo(() => {
     return (
       currentCampaign?.end_time &&
@@ -50,23 +39,18 @@ export const useCampaignsScript = () => {
 
   const searchParams = useMemo(() => {
     return {
-      campaign_id: currentCampaignId,
+      campaign_id: currentCampaignId.toString(),
       symbols: symbols || "",
       broker_id: brokerId,
       group_by: "BROKER",
     };
   }, [currentCampaignId, symbols, brokerId]);
 
-  const { data } = useQuery<CampaignStatsDetailsResponse>(
-    isCampaignStarted && currentCampaignId !== "general"
-      ? `https://api.orderly.org/v1/public/campaign/stats/details?${new URLSearchParams(searchParams).toString()}`
-      : null,
-  );
-
   const { data: stats } = useQuery<CampaignStatsResponse>(
     currentCampaignId !== "general"
       ? `https://api.orderly.org/v1/public/campaign/stats?${new URLSearchParams(searchParams).toString()}`
       : null,
+    { revalidateOnFocus: false },
   );
 
   const { state } = useAccount();
@@ -76,6 +60,7 @@ export const useCampaignsScript = () => {
       currentCampaignId !== "general" && state.address
         ? `https://api.orderly.org/v1/public/campaigns?address=${state.address}`
         : null,
+      { revalidateOnFocus: false },
     );
 
   const accountStatus = useMemo(() => {
@@ -172,6 +157,5 @@ export const useCampaignsScript = () => {
     shouldShowJoinButton,
     joinError,
     canTrade,
-    accountStatus,
   };
 };

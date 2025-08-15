@@ -21,23 +21,25 @@ export const Header: FC<Props> = (props) => {
 
   const { base, quote } = props;
 
-  const [coinTypeConfig, setCoinTypeConfig]: [string, React.Dispatch<string>] =
-    useLocalStorage(ORDERBOOK_MOBILE_COIN_TYPE_KEY, ["total", base].join("_"));
+  const [coinUnit, setCoinUnit] = useLocalStorage<"qty" | "base" | "quote">(
+    ORDERBOOK_MOBILE_COIN_TYPE_KEY,
+    "qty",
+  );
 
   const options = useMemo<SelectOption[]>(() => {
     return [
       {
-        value: ["qty", base].join("_"),
+        value: "qty",
         label: `${t("common.quantity")}(${base})`,
         data: [t("common.quantity"), base],
       },
       {
-        value: ["total", base].join("_"),
+        value: "base",
         label: `${t("common.total")}(${base})`,
         data: [t("common.total"), base],
       },
       {
-        value: ["total", quote].join("_"),
+        value: "quote",
         label: `${t("common.total")}(${quote})`,
         data: [t("common.total"), quote],
       },
@@ -60,8 +62,8 @@ export const Header: FC<Props> = (props) => {
       </Flex>
       <Picker
         size="sm"
-        value={coinTypeConfig}
-        onValueChange={setCoinTypeConfig}
+        value={coinUnit}
+        onValueChange={setCoinUnit}
         options={options}
         valueRenderer={(_, { open, data }) => {
           return (

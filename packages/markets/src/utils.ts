@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { TableSort } from "@orderly.network/ui";
+import { formatSymbol } from "@orderly.network/utils";
 import { SortType } from "./type";
 
 /**
@@ -158,21 +159,6 @@ export function searchBySymbol<T extends Record<PropertyKey, any>>(
 
   // Combine results with prioritized matches first
   return [...exactMatches, ...startsWithMatches, ...otherMatches];
-}
-
-function formatSymbol(symbol: string, formatString: string = "base") {
-  if (!symbol) {
-    return "";
-  }
-  const arr = symbol.split("_");
-  const type = arr[0];
-  const base = arr[1];
-  const quote = arr[2];
-
-  return formatString
-    .replace("type", type)
-    .replace("base", base)
-    .replace("quote", quote);
 }
 
 export function useSize() {

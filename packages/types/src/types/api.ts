@@ -420,6 +420,7 @@ export declare namespace API {
     withdrawal_fee?: number;
     minimum_withdraw_amount?: number;
     vault_address: string;
+    currency_decimal?: number;
 
     cross_chain_router: string;
     depositor: string;
@@ -533,6 +534,9 @@ export declare namespace API {
     to_account_id: string;
     token: string;
     updated_time: number;
+    chain_id: string;
+    // timestamp
+    block_time: number;
   }
 
   export interface TransferHistory {

@@ -137,6 +137,11 @@ function validatePrice(values: OrderlyOrder, config: ValuesDepConfig) {
   const { start_price, end_price } = values;
   const { quote_dp } = config.symbol;
 
+  // when markPrice is empty, skip price validation
+  if (!config.markPrice) {
+    return errors;
+  }
+
   const { minPrice, maxPrice } = getPriceRange({
     side: values.side,
     basePrice: config.markPrice,

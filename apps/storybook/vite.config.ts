@@ -52,7 +52,7 @@ export default defineConfig({
     react(),
     // https://github.com/davidmyersdev/vite-plugin-node-polyfills/issues/81
     nodePolyfills({
-      include: ["path", "stream", "util", "assert", "crypto"],
+      include: ["path", "stream", "util", "assert", "crypto", "buffer"],
       exclude: ["http"],
       globals: {
         Buffer: true,

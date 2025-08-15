@@ -1,5 +1,4 @@
 // import "./utils/dev";
-import type { Immer } from "immer";
 
 export { default as version } from "./version";
 export { fetcher } from "./utils/fetcher";
@@ -12,6 +11,7 @@ export { useInfiniteQuery } from "./useInfiniteQuery";
 export { useBoolean } from "./useBoolean";
 export { useUpdatedRef } from "./shared/useUpdatedRef";
 export { useMemoizedFn } from "./shared/useMemoizedFn";
+export { useAudioPlayer } from "./shared/useAudio";
 
 export { useAccount } from "./useAccount";
 export { type SubAccount } from "@orderly.network/core";

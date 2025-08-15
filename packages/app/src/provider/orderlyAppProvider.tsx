@@ -19,6 +19,12 @@ export type OrderlyAppProviderProps = PropsWithChildren<
   OrderlyAppConfig & AppStateProviderProps & OrderlyThemeProviderProps
 >;
 
+// Cannot be called outside of Provider because useExecutionReport requires useOrderlyContext.
+const ExecutionReportListener: React.FC = () => {
+  useExecutionReport();
+  return null;
+};
+
 const OrderlyAppProvider: React.FC<OrderlyAppProviderProps> = (props) => {
   const {
     // dateFormatting,
@@ -32,7 +38,7 @@ const OrderlyAppProvider: React.FC<OrderlyAppProviderProps> = (props) => {
 
   useTrack();
   useBootstrap();
-  useExecutionReport();
+
   const uiLocale = useUILocale();
 
   return (
@@ -43,6 +49,7 @@ const OrderlyAppProvider: React.FC<OrderlyAppProviderProps> = (props) => {
         overrides={props.overrides}
       >
         <OrderlyConfigProvider {...configProps}>
+          <ExecutionReportListener />
           <AppStateProvider
             onChainChanged={onChainChanged}
             defaultChain={defaultChain}
