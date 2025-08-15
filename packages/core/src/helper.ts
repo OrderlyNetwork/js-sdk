@@ -163,3 +163,58 @@ export function generateSettleMessage(inputs: {
 
   return [message, toSignatureMessage] as const;
 }
+
+/**
+ * generate `dexRequest` data and to be signed message structure
+ */
+export function generateDexRequestMessage(inputs: {
+  chainId: number;
+  payloadType: number;
+  nonce: string;
+  receiver: string;
+  amount: string;
+  vaultId: string;
+  token: string;
+  dexBrokerId: string;
+  domain: SignatureDomain;
+  timestamp?: number;
+}) {
+  const {
+    chainId,
+    payloadType,
+    nonce,
+    receiver,
+    amount,
+    vaultId,
+    token,
+    dexBrokerId,
+    domain,
+    timestamp = getTimestamp(),
+  } = inputs;
+
+  const primaryType = "DexRequest";
+
+  const typeDefinition = {
+    EIP712Domain: definedTypes.EIP712Domain,
+    [primaryType]: definedTypes[primaryType],
+  };
+
+  const message = {
+    payloadType,
+    nonce,
+    receiver,
+    amount,
+    vaultId,
+    token,
+    dexBrokerId,
+  };
+
+  const toSignatureMessage = {
+    domain,
+    message,
+    primaryType,
+    types: typeDefinition,
+  };
+
+  return [message, toSignatureMessage] as const;
+}

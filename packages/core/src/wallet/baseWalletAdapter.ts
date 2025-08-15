@@ -14,6 +14,7 @@ import {
   WalletAdapter,
   SettleInputs,
   AddOrderlyKeyInputs,
+  DexRequestInputs,
 } from "./walletAdapter";
 
 abstract class BaseWalletAdapter<Config> implements WalletAdapter<Config> {
@@ -34,6 +35,10 @@ abstract class BaseWalletAdapter<Config> implements WalletAdapter<Config> {
   abstract generateAddOrderlyKeyMessage(
     inputs: AddOrderlyKeyInputs,
   ): Promise<Message>;
+
+  abstract generateDexRequestMessage(
+    inputs: DexRequestInputs,
+  ): Promise<Message & { domain: SignatureDomain }>;
 
   abstract getBalance(): Promise<bigint>;
 

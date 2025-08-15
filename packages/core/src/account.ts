@@ -18,7 +18,13 @@ import { OrderlyKeyStore } from "./keyStore";
 import { LocalStorageRepository } from "./repository";
 import { BaseSigner, MessageFactor, Signer } from "./signer";
 import { SubAccount } from "./subAccount";
-import { getTimestamp, isHex, parseAccountId, parseBrokerHash } from "./utils";
+import {
+  getTimestamp,
+  isHex,
+  parseAccountId,
+  parseBrokerHash,
+  SignatureDomain,
+} from "./utils";
 import { WalletAdapter } from "./wallet/walletAdapter";
 import { WalletAdapterManager } from "./walletAdapterManager";
 
@@ -1344,6 +1350,15 @@ export class Account {
     return fetch(requestUrl, init).then((res) => res.json());
   }
 
+  private async _getVaultOperationNonce() {
+    const res = await this._simpleFetch(`/v1/public/sv_nonce`);
+    if (res.success) {
+      return res.data?.nonce;
+    } else {
+      throw new Error(res.message);
+    }
+  }
+
   // getDomain(onChainDomain?: boolean): SignatureDomain {
   //   if (!this.walletClient) {
   //     throw new Error("walletClient is undefined");
@@ -1377,6 +1392,45 @@ export class Account {
 
   get off() {
     return this._ee.off.bind(this._ee);
+  }
+
+  /**
+   * Generate DexRequest message for DEX operations
+   * @param inputs DexRequest parameters
+   * @returns Signed message and domain
+   */
+  async generateDexRequest(inputs: {
+    payloadType: number;
+    // nonce: string;
+    // receiver: string;
+    amount: string;
+    vaultId: string;
+    token: string;
+    domain: SignatureDomain;
+    // dexBrokerId: string;
+  }) {
+    if (!this.walletAdapter || !this.stateValue.address) {
+      throw new Error("walletAdapter is undefined");
+    }
+    const nonce = await this._getVaultOperationNonce();
+    const receiver = this.stateValue.address;
+    const dexBrokerId = this.configStore.get("brokerId");
+
+    const { message, signatured, domain } =
+      await this.walletAdapter.generateDexRequestMessage({
+        ...inputs,
+        nonce,
+        receiver,
+        dexBrokerId,
+        timestamp: getTimestamp(),
+        domain: inputs.domain,
+      });
+
+    return {
+      message,
+      signatured,
+      domain,
+    };
   }
 
   /**

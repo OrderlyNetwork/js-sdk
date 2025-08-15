@@ -1,11 +1,10 @@
 import type {
   AddOrderlyKeyInputs,
-  Message,
-  ChainType,
   RegisterAccountInputs,
   SettleInputs,
   SignatureDomain,
   WithdrawInputs,
+  DexRequestInputs,
 } from "@orderly.network/core";
 import { DEFAUL_ORDERLY_KEY_SCOPE, definedTypes } from "@orderly.network/types";
 
@@ -152,6 +151,50 @@ export async function settleMessage(
     chainId: chainId,
     timestamp: timestamp,
     settleNonce: settlePnlNonce,
+  };
+
+  const toSignatureMessage = {
+    domain,
+    message,
+    primaryType,
+    types: typeDefinition,
+  };
+
+  return [message, toSignatureMessage] as const;
+}
+
+export async function dexRequestMessage(
+  inputs: DexRequestInputs & {
+    domain: SignatureDomain;
+    chainId: number;
+  },
+) {
+  const {
+    payloadType,
+    nonce,
+    receiver,
+    amount,
+    vaultId,
+    token,
+    dexBrokerId,
+    domain,
+  } = inputs;
+
+  const primaryType = "DexRequest";
+
+  const typeDefinition = {
+    EIP712Domain: definedTypes.EIP712Domain,
+    [primaryType]: definedTypes[primaryType],
+  };
+
+  const message = {
+    payloadType,
+    nonce,
+    receiver,
+    amount,
+    vaultId,
+    token,
+    dexBrokerId,
   };
 
   const toSignatureMessage = {

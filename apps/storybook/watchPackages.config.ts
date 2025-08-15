@@ -165,6 +165,11 @@ const page: Package[] = [
     path: "../../packages/trading-rewards/src",
     watch: true,
   },
+  {
+    package: "@orderly.network/vaults",
+    path: "../../packages/vaults/src",
+    watch: true,
+  },
 ];
 
 const walletConnect: Package[] = [
