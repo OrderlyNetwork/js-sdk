@@ -1,5 +1,13 @@
 # @orderly.network/web3-modal
 
+## 2.5.4-internal-sub-account-limit.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.5.4-internal-sub-account-limit.0
+
 ## 2.5.3
 
 ### Patch Changes

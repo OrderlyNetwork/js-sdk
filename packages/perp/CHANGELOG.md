@@ -1,5 +1,14 @@
 # @orderly.network/futures
 
+## 4.5.4-internal-sub-account-limit.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@2.5.4-internal-sub-account-limit.0
+  - @orderly.network/utils@2.5.4-internal-sub-account-limit.0
+
 ## 4.5.3
 
 ### Patch Changes
