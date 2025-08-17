@@ -13,7 +13,7 @@ import {
 import { AddIcon } from "../icons";
 import { NickNameTextField } from "./common";
 
-const MAX_SUB_ACCOUNT_COUNT = 30;
+const MAX_SUB_ACCOUNT_COUNT = 9999;
 type CreateSubAccountProps = {
   create: (nickName: string) => Promise<void>;
 };
