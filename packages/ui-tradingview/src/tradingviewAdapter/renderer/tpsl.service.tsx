@@ -147,54 +147,26 @@ export class TPSLService {
 
       if (this.interactiveMode === MouseInteractiveMode.TP_SL_DRAGGING) {
         console.log("current position", this.currentPosition);
-        modal.show("TPSLSimpleSheetId", {
-          title: "ytytytyttytyyt",
-        });
-        // modal
-        //   .dialog({
-        //     size: "sm",
-        //     title: pnl.gt(0)
-        //       ? i18n.t("tpsl.TPOrderConfirm")
-        //       : i18n.t("tpsl.SLOrderConfirm"),
-        //     content: (
-        //       <TPSLDialogWidget
-        //         triggerPrice={this.lastArgs?.price}
-        //         type={pnl.gt(0) ? "tp" : "sl"}
-        //       />
-        //     ),
-        //     actions: {
-        //       primary: {
-        //         label: i18n.t("common.confirm"),
-        //         onClick: () => {},
-        //       },
-        //       secondary: {
-        //         label: i18n.t("common.cancel"),
-        //         onClick: () => {},
-        //       },
-        //     },
-        //   })
-        //   .then(
-        //     () => {
-        //       console.log("completate");
-        //     },
-        //     (err) => {
-        //       console.log(err);
-        //     },
-        //   )
-        //   .finally(() => {
-        //     this.clearTPSLElements();
-        //     // this.removeMaskLayer();
-
-        //     this.chart.setScrollEnabled(true);
-        //     this.chart.setZoomEnabled(true);
-
-        //     // this.instance.applyOverrides({
-        //     //   "paneProperties.crossHairProperties.color":
-        //     //     "rgba(255, 255, 255, 1)",
-        //     // });
-
-        //     this.interactiveMode = MouseInteractiveMode.NONE;
-        //   });
+        modal
+          .show("TPSLSimpleSheetId", {
+            title: pnl.gt(0)
+              ? i18n.t("tpsl.TPOrderConfirm")
+              : i18n.t("tpsl.SLOrderConfirm"),
+          })
+          .then(
+            () => {
+              console.log("completate");
+            },
+            (err) => {
+              console.log(err);
+            },
+          )
+          .finally(() => {
+            this.clearTPSLElements();
+            this.chart.setScrollEnabled(true);
+            this.chart.setZoomEnabled(true);
+            this.interactiveMode = MouseInteractiveMode.NONE;
+          });
       }
     });
   }
