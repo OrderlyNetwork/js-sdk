@@ -153,16 +153,17 @@ const TPSLQuantity: React.FC<{
 export const TPSLSimpleDialogUI: React.FC<{
   type: "tp" | "sl";
   triggerPrice?: number;
+  errors?: any;
+  isEditing?: boolean;
+  isPosition?: boolean;
 }> = (props) => {
-  const { type, triggerPrice, errors, setQuantity, isEditing, isPosition } =
-    props;
-  const { parseErrorMsg } = useOrderEntryFormErrorMsg(errors);
+  const { type, triggerPrice, errors, isEditing, isPosition } = props;
   const { t } = useTranslation();
+  const { parseErrorMsg } = useOrderEntryFormErrorMsg(errors);
   const pnlLabelMap = {
     tp: t("tpsl.totalEstTpPnl"),
     sl: t("tpsl.totalEstSlPnl"),
   };
-
   const footer = (
     <Flex width="100%" itemAlign="center" gap={3} mt={4}>
       <Button
@@ -194,7 +195,6 @@ export const TPSLSimpleDialogUI: React.FC<{
         quantity={0}
         baseTick={0}
         dp={0}
-        onQuantityChange={setQuantity}
         quote={"0"}
         isEditing={isEditing}
         isPosition={isPosition}
