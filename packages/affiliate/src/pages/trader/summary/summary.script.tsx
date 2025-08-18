@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
+import { useTranslation } from "@orderly.network/i18n";
+import { Decimal } from "@orderly.network/utils";
 import { useReferralContext } from "../../../hooks";
 import { SummaryFilter } from "../../../utils/types";
-import { Decimal } from "@orderly.network/utils";
-import { useTranslation } from "@orderly.network/i18n";
 
 export type SummaryReturns = {
   period: string;
@@ -59,8 +59,8 @@ export const useSummaryScript = (): SummaryReturns => {
     }
   }, [userVolume, period]);
 
-  const code = referralInfo?.referee_info.referer_code;
-  const rebate = referralInfo?.referee_info.referee_rebate_rate;
+  const code = referralInfo?.referee_info?.referer_code;
+  const rebate = referralInfo?.referee_info?.referee_rebate_rate;
 
   const rebateText = useMemo(() => {
     if (!!rebate) {

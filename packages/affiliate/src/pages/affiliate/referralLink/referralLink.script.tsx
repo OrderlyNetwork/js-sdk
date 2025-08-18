@@ -1,10 +1,10 @@
 import { useMemo } from "react";
-import { useReferralContext } from "../../../hooks";
-import { addQueryParam } from "../../../utils/utils";
-import { Decimal } from "@orderly.network/utils";
-import { toast } from "@orderly.network/ui";
 import { RefferalAPI, useLocalStorage } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
+import { toast } from "@orderly.network/ui";
+import { Decimal } from "@orderly.network/utils";
+import { useReferralContext } from "../../../hooks";
+import { addQueryParam } from "../../../utils/utils";
 
 export type ReferralLinkReturns = {
   onCopy?: (value: string) => void;
@@ -25,13 +25,13 @@ export const useReferralLinkScript = (): ReferralLinkReturns => {
   const { referralInfo, referralLinkUrl, overwrite } = useReferralContext();
   const [pinCodes, setPinCodes] = useLocalStorage<string[]>(
     "orderly_referral_codes",
-    [] as string[]
+    [] as string[],
   );
 
   const codes = useMemo((): RefferalAPI.ReferralCode[] => {
-    if (!referralInfo?.referrer_info.referral_codes)
+    if (!referralInfo?.referrer_info?.referral_codes)
       return [] as RefferalAPI.ReferralCode[];
-    const referralCodes = [...referralInfo?.referrer_info.referral_codes];
+    const referralCodes = [...referralInfo?.referrer_info?.referral_codes];
 
     const pinedItems: RefferalAPI.ReferralCode[] = [];
 
@@ -46,7 +46,7 @@ export const useReferralLinkScript = (): ReferralLinkReturns => {
     }
 
     return [...pinedItems, ...referralCodes];
-  }, [referralInfo?.referrer_info.referral_codes, pinCodes]);
+  }, [referralInfo?.referrer_info?.referral_codes, pinCodes]);
 
   const firstCode = useMemo(() => {
     if (codes.length === 0) {

@@ -90,7 +90,7 @@ export const TradingLeaderboardProvider: React.FC<
       errorRetryCount: 2,
       formatter: (data) => {
         return {
-          code: data.referee_info.referer_code || "",
+          code: data?.referee_info?.referer_code || "",
         };
       },
     },
@@ -108,23 +108,23 @@ export const TradingLeaderboardProvider: React.FC<
   }, [campaigns, campaignId]);
 
   const filteredCampaigns = useMemo(() => {
-    const filtered = campaigns?.filter((campaign) => {
-      // return true;
-      // Campaign without referral_codes is visible to all users
-      if (!campaign.referral_codes) {
-        return true;
-      }
-      return campaign.referral_codes?.includes(userData?.referral_code || "");
-    });
+    // const filtered = campaigns?.filter((campaign) => {
+    //   // return true;
+    //   // Campaign without referral_codes is visible to all users
+    //   if (!campaign.referral_codes) {
+    //     return true;
+    //   }
+    //   return campaign.referral_codes?.includes(userData?.referral_code || "");
+    // });
 
     // Using date-fns to parse date strings and sort by end_time in descending order
-    return filtered
+    return campaigns
       ? sortWith(
           [descend((campaign: CampaignConfig) => parseISO(campaign.end_time))],
-          filtered,
+          campaigns,
         )
-      : filtered;
-  }, [campaigns, userData?.referral_code]);
+      : campaigns;
+  }, [campaigns]);
 
   const memoCampaignChange = useMemoizedFn((id: string | number) => {
     onCampaignChange?.(id);
