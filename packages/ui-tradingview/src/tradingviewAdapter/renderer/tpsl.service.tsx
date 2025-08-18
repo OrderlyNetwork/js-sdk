@@ -153,6 +153,14 @@ export class TPSLService {
               ? i18n.t("tpsl.TPOrderConfirm")
               : i18n.t("tpsl.SLOrderConfirm"),
             triggerPrice: this.lastArgs?.price,
+            type: pnl.gt(0) ? "tp" : "sl",
+            symbol: this.currentPosition!.symbol,
+            onComplete: () => {
+              this.clearTPSLElements();
+              this.chart.setScrollEnabled(true);
+              this.chart.setZoomEnabled(true);
+              this.interactiveMode = MouseInteractiveMode.NONE;
+            },
           })
           .then(
             () => {

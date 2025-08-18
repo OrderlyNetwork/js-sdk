@@ -1,12 +1,20 @@
 import React from "react";
 import { registerSimpleDialog, registerSimpleSheet } from "@orderly.network/ui";
-import { TPSLSimpleDialogUI } from "./simpleDialog.ui";
+import { useTPSLSimpleDialog } from "./tpslSimpleDialog.script";
+import { TPSLSimpleDialogUI } from "./tpslSimpleDialog.ui";
 
 export const TPSLSimpleDialogWidget: React.FC<{
   type: "tp" | "sl";
   triggerPrice?: number;
+  symbol: string;
+  close?: () => void;
+  onComplete?: () => void;
 }> = (props) => {
-  return <TPSLSimpleDialogUI {...props} />;
+  const { close, onComplete } = props;
+  const state = useTPSLSimpleDialog(props);
+  return (
+    <TPSLSimpleDialogUI {...state} close={close} onComplete={onComplete} />
+  );
 };
 
 export const TPSLSimpleSheetId = "TPSLSimpleSheetId";

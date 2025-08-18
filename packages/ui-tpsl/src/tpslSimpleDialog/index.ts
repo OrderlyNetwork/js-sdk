@@ -2,6 +2,6 @@ export {
   TPSLSimpleDialogWidget,
   TPSLSimpleSheetId,
   TPSLSimpleDialogId,
-} from "./simpleDialog.widget";
-export { TPSLSimpleDialogUI } from "./simpleDialog.ui";
-export { useTPSLBuilder } from "./simpleDialog.script";
+} from "./tpslSimpleDialog.widget";
+export { TPSLSimpleDialogUI } from "./tpslSimpleDialog.ui";
+export { useTPSLSimpleDialog } from "./tpslSimpleDialog.script";
