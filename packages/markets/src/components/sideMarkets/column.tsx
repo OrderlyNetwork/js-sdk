@@ -8,7 +8,7 @@ import {
   TopIcon,
   UnFavoritesIcon2,
 } from "../../icons";
-import { FavoriteInstance } from "../../type";
+import type { FavoriteInstance } from "../../type";
 import { FavoritesDropdownMenuWidget } from "../favoritesDropdownMenu";
 
 export const useSideMarketsColumns = (

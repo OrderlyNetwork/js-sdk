@@ -10,7 +10,7 @@ export type MarketsListProps = MarketsListScriiptReturn &
   Pick<
     MarketsListWidgetProps,
     | "getColumns"
-    | "collapsed"
+    | "panelSize"
     | "tableClassNames"
     | "rowClassName"
     | "initialSort"
@@ -26,7 +26,7 @@ export const MarketsList: FC<MarketsListProps> = (props) => {
     onSort,
     initialSort,
     getColumns,
-    collapsed,
+    panelSize,
     isFavoritesList,
     renderHeader,
     emptyView,
@@ -41,7 +41,11 @@ export const MarketsList: FC<MarketsListProps> = (props) => {
       ? getColumns(favorite, isFavoritesList)
       : sideColumns;
 
-  if (collapsed) {
+  if (panelSize === "small") {
+    return null;
+  }
+
+  if (panelSize === "middle") {
     return <CollapseMarkets dataSource={dataSource} />;
   }
 
@@ -59,7 +63,7 @@ export const MarketsList: FC<MarketsListProps> = (props) => {
         columns={columns}
         loading={loading}
         dataSource={dataSource}
-        onRow={(record, index) => {
+        onRow={(record) => {
           return {
             className: cn("oui-h-[53px]", props.rowClassName),
             onClick: () => {
@@ -73,10 +77,7 @@ export const MarketsList: FC<MarketsListProps> = (props) => {
         onSort={onSort}
         initialSort={
           initialSort
-            ? {
-                sortKey: initialSort.sortKey,
-                sort: initialSort.sortOrder,
-              }
+            ? { sortKey: initialSort.sortKey, sort: initialSort.sortOrder }
             : undefined
         }
         manualSorting
