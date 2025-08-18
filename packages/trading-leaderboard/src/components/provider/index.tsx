@@ -90,7 +90,7 @@ export const TradingLeaderboardProvider: React.FC<
       errorRetryCount: 2,
       formatter: (data) => {
         return {
-          code: data.referee_info.referer_code || "",
+          code: data?.referee_info?.referer_code || "",
         };
       },
     },
