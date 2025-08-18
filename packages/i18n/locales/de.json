@@ -378,7 +378,7 @@
   "tpsl.advanced.pnl": "G&V",
   "tpsl.advanced.offset": "Versatz",
   "tpsl.advanced.offsetPercentage": "Versatz%",
-  "tpsl.positionType.full.tips.market": "Vollständige Positions-TP/SL unterstützt nur Marktpreis für Auftragsplatzierung",
+  "tpsl.positionType.full.tips.market": "TP/SL-Aufträge für die Gesamtposition sind nur Market-Orders",
   "tpsl.advanced.TP.label": "Gewinnmitnahme",
   "tpsl.advanced.SL.label": "Stop-Loss",
   "tpsl.advanced.limit": "Limit",
@@ -653,6 +653,7 @@
   "transfer.withdraw.crossChain.process": "Ihre Cross-Chain-Auszahlung wird verarbeitet...",
   "transfer.withdraw.crossChain.warning": "Auszahlungen, die Cross-Chain-Neugewichtung erfordern, können nicht storniert oder mit weiteren Auszahlungen verfolgt werden, bis sie verarbeitet wurden.",
   "transfer.withdraw.crossChain.vaultWarning": "Die Auszahlung übersteigt den Saldo des {{networkName}}-Tresors ({{chainVaultBalance}} USDC). Für die Auszahlung nach {{networkName}} wird eine Cross-Chain-Neugewichtungsgebühr erhoben.",
+  "transfer.withdraw.vaultWarning": "Das Guthaben von {{tokenName}} auf {{chainName}} beträgt {{balance}} und ist nicht ausreichend, um deine Auszahlungsanfrage zu erfüllen. Bitte versuche es später erneut oder wechsle für die Auszahlung zu einer anderen Chain.",
   "transfer.withdraw.minAmount.error": "Menge muss größer als {{minAmount}} sein",
   "transfer.withdraw.requested": "Auszahlung angefordert",
   "transfer.withdraw.completed": "Auszahlung abgeschlossen",
@@ -884,6 +885,5 @@
   "funding.paymentType": "Zahlungsart",
   "funding.paymentType.paid": "Bezahlt",
   "funding.paymentType.received": "Erhalten",
-  "leftNav.feedback": "Ihr Feedback teilen",
-  "transfer.withdraw.vaultWarning": "Das Guthaben von {{tokenName}} auf {{chainName}} beträgt {{balance}} und ist nicht ausreichend, um deine Auszahlungsanfrage zu erfüllen. Bitte versuche es später erneut oder wechsle für die Auszahlung zu einer anderen Chain."
+  "leftNav.feedback": "Ihr Feedback teilen"
 }

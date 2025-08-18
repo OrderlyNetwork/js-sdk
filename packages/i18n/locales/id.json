@@ -378,7 +378,7 @@
   "tpsl.advanced.pnl": "P&L",
   "tpsl.advanced.offset": "Offset",
   "tpsl.advanced.offsetPercentage": "Offset%",
-  "tpsl.positionType.full.tips.market": "TP/SL posisi penuh hanya mendukung harga pasar untuk menempatkan pesanan",
+  "tpsl.positionType.full.tips.market": "Order TP/SL seluruh posisi hanya tersedia pasar",
   "tpsl.advanced.TP.label": "Ambil untung",
   "tpsl.advanced.SL.label": "Hentikan rugi",
   "tpsl.advanced.limit": "Limit",
@@ -653,6 +653,7 @@
   "transfer.withdraw.crossChain.process": "Penarikan lintas chain Anda sedang diproses...",
   "transfer.withdraw.crossChain.warning": "Penarikan yang memerlukan rebalancing lintas chain tidak dapat dibatalkan atau diikuti dengan penarikan lebih lanjut sampai diproses.",
   "transfer.withdraw.crossChain.vaultWarning": "Penarikan melebihi saldo vault {{networkName}} ( {{chainVaultBalance}} USDC ). Biaya rebalancing lintas chain akan dikenakan untuk penarikan ke {{networkName}}.",
+  "transfer.withdraw.vaultWarning": "Saldo {{tokenName}} di {{chainName}} adalah {{balance}}, yang tidak cukup untuk memenuhi permintaan penarikan Anda. Silakan coba lagi nanti atau beralih ke chain lain untuk penarikan.",
   "transfer.withdraw.minAmount.error": "jumlah harus lebih besar dari {{minAmount}}",
   "transfer.withdraw.requested": "Penarikan diminta",
   "transfer.withdraw.completed": "Penarikan selesai",
@@ -884,6 +885,5 @@
   "funding.paymentType": "Jenis pembayaran",
   "funding.paymentType.paid": "Dibayar",
   "funding.paymentType.received": "Diterima",
-  "leftNav.feedback": "Bagikan umpan balik Anda",
-  "transfer.withdraw.vaultWarning": "Saldo {{tokenName}} di {{chainName}} adalah {{balance}}, yang tidak cukup untuk memenuhi permintaan penarikan Anda. Silakan coba lagi nanti atau beralih ke chain lain untuk penarikan."
+  "leftNav.feedback": "Bagikan umpan balik Anda"
 }

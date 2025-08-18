@@ -378,7 +378,7 @@
   "tpsl.advanced.pnl": "K&Z",
   "tpsl.advanced.offset": "Ofset",
   "tpsl.advanced.offsetPercentage": "Ofset%",
-  "tpsl.positionType.full.tips.market": "Tam pozisyon TP/SL sadece sipariş yerleştirmek için piyasa fiyatını destekler",
+  "tpsl.positionType.full.tips.market": "Tüm pozisyon TP/SL emirleri yalnızca piyasa emridir",
   "tpsl.advanced.TP.label": "Kar al",
   "tpsl.advanced.SL.label": "Zarar durdur",
   "tpsl.advanced.limit": "Limit",
@@ -653,6 +653,7 @@
   "transfer.withdraw.crossChain.process": "Çapraz zincir para çekme işleminiz işleniyor...",
   "transfer.withdraw.crossChain.warning": "Çapraz zincir yeniden dengelemesi gerektiren para çekme işlemleri işlenene kadar iptal edilemez veya başka para çekme işlemleri yapılamaz.",
   "transfer.withdraw.crossChain.vaultWarning": "Para çekme işlemi {{networkName}} kasasının bakiyesini ( {{chainVaultBalance}} USDC ) aşıyor. {{networkName}}'e para çekme işlemi için çapraz zincir yeniden dengeleme ücreti alınacaktır.",
+  "transfer.withdraw.vaultWarning": "{{chainName}} üzerindeki {{tokenName}} bakiyesi {{balance}} olup, çekim talebinizi karşılamak için yetersizdir. Lütfen daha sonra tekrar deneyin veya çekim için başka bir ağa geçin.",
   "transfer.withdraw.minAmount.error": "miktar {{minAmount}}'dan büyük olmalıdır",
   "transfer.withdraw.requested": "Para çekme talep edildi",
   "transfer.withdraw.completed": "Para çekme tamamlandı",
@@ -884,6 +885,5 @@
   "funding.paymentType": "Ödeme türü",
   "funding.paymentType.paid": "Ödendi",
   "funding.paymentType.received": "Alındı",
-  "leftNav.feedback": "Geri bildiriminizi paylaşın",
-  "transfer.withdraw.vaultWarning": "{{chainName}} üzerindeki {{tokenName}} bakiyesi {{balance}} olup, çekim talebinizi karşılamak için yetersizdir. Lütfen daha sonra tekrar deneyin veya çekim için başka bir ağa geçin."
+  "leftNav.feedback": "Geri bildiriminizi paylaşın"
 }

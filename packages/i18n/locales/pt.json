@@ -378,7 +378,7 @@
   "tpsl.advanced.pnl": "P&L",
   "tpsl.advanced.offset": "Deslocamento",
   "tpsl.advanced.offsetPercentage": "Deslocamento%",
-  "tpsl.positionType.full.tips.market": "TP/SL de posição completa suporta apenas preço de mercado para colocar pedidos",
+  "tpsl.positionType.full.tips.market": "Os pedidos de TP/SL de posição total são apenas a mercado",
   "tpsl.advanced.TP.label": "Tomar lucro",
   "tpsl.advanced.SL.label": "Parar perda",
   "tpsl.advanced.limit": "Limite",
@@ -653,6 +653,7 @@
   "transfer.withdraw.crossChain.process": "Seu saque entre redes está sendo processado...",
   "transfer.withdraw.crossChain.warning": "Saques que requerem rebalanceamento entre redes não podem ser cancelados ou seguidos de mais saques até que tenham sido processados.",
   "transfer.withdraw.crossChain.vaultWarning": "O saque excede o saldo do cofre {{networkName}} ( {{chainVaultBalance}} USDC ). Taxa de rebalanceamento entre redes será cobrada para saque para {{networkName}}.",
+  "transfer.withdraw.vaultWarning": "O saldo de {{tokenName}} na {{chainName}} é {{balance}}, o que é insuficiente para atender ao seu pedido de retirada. Tente novamente mais tarde ou mude para outra chain para retirar.",
   "transfer.withdraw.minAmount.error": "quantidade deve ser maior que {{minAmount}}",
   "transfer.withdraw.requested": "Saque solicitado",
   "transfer.withdraw.completed": "Saque concluído",
@@ -884,6 +885,5 @@
   "funding.paymentType": "Tipo de pagamento",
   "funding.paymentType.paid": "Pago",
   "funding.paymentType.received": "Recebido",
-  "leftNav.feedback": "Compartilhar seu feedback",
-  "transfer.withdraw.vaultWarning": "O saldo de {{tokenName}} na {{chainName}} é {{balance}}, o que é insuficiente para atender ao seu pedido de retirada. Tente novamente mais tarde ou mude para outra chain para retirar."
+  "leftNav.feedback": "Compartilhar seu feedback"
 }

@@ -45,7 +45,7 @@ export const tpsl = {
   "tpsl.advanced.offset": "Offset",
   "tpsl.advanced.offsetPercentage": "Offset%",
   "tpsl.positionType.full.tips.market":
-    "Full positions TP/SL only support market price to place the orders",
+    "Full-position TP/SL orders are market only",
   "tpsl.advanced.TP.label": "Take profit",
   "tpsl.advanced.SL.label": "Stop loss",
   "tpsl.advanced.limit": "Limit",

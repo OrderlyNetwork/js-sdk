@@ -378,7 +378,7 @@
   "tpsl.advanced.pnl": "P&L",
   "tpsl.advanced.offset": "Offset",
   "tpsl.advanced.offsetPercentage": "Offset%",
-  "tpsl.positionType.full.tips.market": "TP/SL posizione completa supporta solo prezzo di mercato per piazzare ordini",
+  "tpsl.positionType.full.tips.market": "Gli ordini TP/SL a posizione totale sono solo a mercato",
   "tpsl.advanced.TP.label": "Prendi profitto",
   "tpsl.advanced.SL.label": "Ferma perdita",
   "tpsl.advanced.limit": "Limite",
@@ -653,6 +653,7 @@
   "transfer.withdraw.crossChain.process": "Il tuo prelievo cross-chain è in elaborazione...",
   "transfer.withdraw.crossChain.warning": "I prelievi che richiedono il ribilanciamento cross-chain non possono essere annullati o seguiti da altri prelievi fino a quando non sono stati elaborati.",
   "transfer.withdraw.crossChain.vaultWarning": "Il prelievo supera il saldo del vault {{networkName}} ( {{chainVaultBalance}} USDC ). Verrà addebitata una commissione di ribilanciamento cross-chain per il prelievo su {{networkName}}.",
+  "transfer.withdraw.vaultWarning": "Il saldo di {{tokenName}} su {{chainName}} è {{balance}}, insufficiente a soddisfare la tua richiesta di prelievo. Riprova più tardi o passa a un'altra chain per il prelievo.",
   "transfer.withdraw.minAmount.error": "la quantità deve essere maggiore di {{minAmount}}",
   "transfer.withdraw.requested": "Prelievo richiesto",
   "transfer.withdraw.completed": "Prelievo completato",
@@ -884,6 +885,5 @@
   "funding.paymentType": "Tipo di pagamento",
   "funding.paymentType.paid": "Pagato",
   "funding.paymentType.received": "Ricevuto",
-  "leftNav.feedback": "Condividi il tuo feedback",
-  "transfer.withdraw.vaultWarning": "Il saldo di {{tokenName}} su {{chainName}} è {{balance}}, insufficiente a soddisfare la tua richiesta di prelievo. Riprova più tardi o passa a un'altra chain per il prelievo."
+  "leftNav.feedback": "Condividi il tuo feedback"
 }

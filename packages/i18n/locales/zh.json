@@ -378,7 +378,7 @@
   "tpsl.advanced.pnl": "盈亏",
   "tpsl.advanced.offset": "偏移",
   "tpsl.advanced.offsetPercentage": "偏移%",
-  "tpsl.positionType.full.tips.market": "全部持仓止盈止损仅支持市价下单",
+  "tpsl.positionType.full.tips.market": "全仓止盈/止损订单仅为市价单",
   "tpsl.advanced.TP.label": "止盈",
   "tpsl.advanced.SL.label": "止损",
   "tpsl.advanced.limit": "限价",
@@ -653,6 +653,7 @@
   "transfer.withdraw.crossChain.process": "您的跨链提款正在处理中...",
   "transfer.withdraw.crossChain.warning": "需要跨链重新平衡的提款无法取消或在处理完成之前进行更多提款。",
   "transfer.withdraw.crossChain.vaultWarning": "提款超过{{networkName}}金库的余额（{{chainVaultBalance}} USDC）。跨链重新平衡费用将被收取以提款到{{networkName}}。",
+  "transfer.withdraw.vaultWarning": "{{chainName}} 上的 {{tokenName}} 余额为 {{balance}}，不能满足您的提现请求，请稍后再试或切换到其他链进行提现。",
   "transfer.withdraw.minAmount.error": "数量必须大于{{minAmount}}",
   "transfer.withdraw.requested": "提款请求",
   "transfer.withdraw.completed": "提款完成",
@@ -884,6 +885,5 @@
   "funding.paymentType": "支付类型",
   "funding.paymentType.paid": "已支付",
   "funding.paymentType.received": "已收到",
-  "leftNav.feedback": "分享您的反馈",
-  "transfer.withdraw.vaultWarning": "{{chainName}} 上的 {{tokenName}} 余额为 {{balance}}，不能满足您的提现请求，请稍后再试或切换到其他链进行提现。"
+  "leftNav.feedback": "分享您的反馈"
 }

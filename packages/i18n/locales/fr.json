@@ -378,7 +378,7 @@
   "tpsl.advanced.pnl": "P&L",
   "tpsl.advanced.offset": "Décalage",
   "tpsl.advanced.offsetPercentage": "Décalage%",
-  "tpsl.positionType.full.tips.market": "TP/SL de position complète ne prend en charge que le prix du marché pour placer les ordres",
+  "tpsl.positionType.full.tips.market": "Les ordres TP/SL en position totale sont uniquement au marché",
   "tpsl.advanced.TP.label": "Prise de bénéfice",
   "tpsl.advanced.SL.label": "Stop de perte",
   "tpsl.advanced.limit": "Limite",
@@ -653,6 +653,7 @@
   "transfer.withdraw.crossChain.process": "Votre retrait cross-chain est en cours de traitement...",
   "transfer.withdraw.crossChain.warning": "Les retraits nécessitant un rééquilibrage cross-chain ne peuvent pas être annulés ou suivis d'autres retraits jusqu'à ce qu'ils aient été traités.",
   "transfer.withdraw.crossChain.vaultWarning": "Le retrait dépasse le solde du coffre {{networkName}} ( {{chainVaultBalance}} USDC ). Des frais de rééquilibrage cross-chain seront facturés pour le retrait vers {{networkName}}.",
+  "transfer.withdraw.vaultWarning": "Le solde de {{tokenName}} sur {{chainName}} est de {{balance}}, ce qui est insuffisant pour satisfaire votre demande de retrait. Veuillez réessayer plus tard ou passer à une autre chaîne pour le retrait.",
   "transfer.withdraw.minAmount.error": "la quantité doit être supérieure à {{minAmount}}",
   "transfer.withdraw.requested": "Retrait demandé",
   "transfer.withdraw.completed": "Retrait terminé",
@@ -884,6 +885,5 @@
   "funding.paymentType": "Type de paiement",
   "funding.paymentType.paid": "Payé",
   "funding.paymentType.received": "Reçu",
-  "leftNav.feedback": "Partager votre avis",
-  "transfer.withdraw.vaultWarning": "Le solde de {{tokenName}} sur {{chainName}} est de {{balance}}, ce qui est insuffisant pour satisfaire votre demande de retrait. Veuillez réessayer plus tard ou passer à une autre chaîne pour le retrait."
+  "leftNav.feedback": "Partager votre avis"
 }
