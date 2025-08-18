@@ -57,13 +57,13 @@ export const VaultWithdrawForm: FC<VaultWithdrawFormScript> = (props) => {
       />
 
       <WithdrawKVItem
-        label="Est. price per Share"
+        label={t("vaults.withdraw.estPricePerShare")}
         currency="$"
         value={sharePrice || "-"}
         className="oui-mb-1 oui-mt-5"
       />
       <WithdrawKVItem
-        label="Est. receiving amount"
+        label={t("vaults.withdraw.estReceivingAmount")}
         value={receivingAmount}
         suffix={
           <span className="oui-ml-1 oui-text-base-contrast-36">USDC</span>
@@ -74,7 +74,7 @@ export const VaultWithdrawForm: FC<VaultWithdrawFormScript> = (props) => {
       <Button
         fullWidth
         color="primary"
-        disabled={!quantity}
+        disabled={!quantity || quantity === "0"}
         className="oui-mt-8"
         onClick={handleInitialWithdraw}
       >
@@ -131,22 +131,23 @@ const WithdrawInitialDialog = modal.create(
     handleWithdraw: () => void;
   }) => {
     const { visible, hide, onOpenChange } = useModal();
+    const { t } = useTranslation();
     return (
       <SimpleDialog
-        title="Confirm withdrawal details"
+        title={t("vaults.withdraw.dialog.title")}
         open={visible}
         onOpenChange={onOpenChange}
       >
         <div className="oui-flex oui-flex-col">
           <WithdrawKVItem
-            label="Withdrawal amount"
+            label={t("vaults.withdraw.dialog.withdrawalAmount")}
             value={quantity}
             suffix={
               <span className="oui-ml-1 oui-text-base-contrast-36">Shares</span>
             }
           />
           <WithdrawKVItem
-            label="Estimated receiving"
+            label={t("vaults.withdraw.dialog.estimatedReceiving")}
             value={receivingAmount}
             suffix={
               <span className="oui-ml-1 oui-text-base-contrast-36">USDC</span>
@@ -157,9 +158,7 @@ const WithdrawInitialDialog = modal.create(
             color="warning"
             className="oui-my-5 oui-text-sm oui-font-semibold"
           >
-            Please note that the estimated USDC is based on the current price
-            per share, and the final amount you receive will be determined at
-            the end of the vault period.
+            {t("vaults.withdraw.dialog.note")}
           </Text>
           <WithdrawProcessWidget />
           <Button
@@ -171,7 +170,7 @@ const WithdrawInitialDialog = modal.create(
               hide();
             }}
           >
-            Initiate withdrawal
+            {t("vaults.withdraw.dialog.initiateWithdrawal")}
           </Button>
         </div>
       </SimpleDialog>

@@ -16,6 +16,7 @@ export const useLatestOperationScript = (props: LatestOperationScriptProps) => {
         formatter: (response: { rows: VaultOperation[] }) => {
           return response?.rows || [];
         },
+        revalidateOnFocus: false,
       },
     );
 

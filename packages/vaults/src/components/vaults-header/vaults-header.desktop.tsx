@@ -1,8 +1,12 @@
 import { FC, useMemo } from "react";
+import { useConfig } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 import { VaultsHeaderScript } from "./vaults-header.script";
 
 export const VaultsHeaderDesktop: FC<VaultsHeaderScript> = (props) => {
-  const { supportVaults } = props;
+  const { supportVaults, headerImage } = props;
+  const { t } = useTranslation();
+  const brokerName = useConfig("brokerName");
 
   const supportVaultsList = useMemo(() => {
     return (
@@ -23,28 +27,33 @@ export const VaultsHeaderDesktop: FC<VaultsHeaderScript> = (props) => {
     );
   }, [supportVaults]);
 
+  const headerImageElement = useMemo(() => {
+    if (typeof headerImage === "string") {
+      return (
+        <img
+          src={headerImage}
+          alt="header"
+          className="oui-bg-contain oui-bg-center oui-bg-no-repeat"
+        />
+      );
+    }
+    return headerImage;
+  }, [headerImage]);
+
   return (
     <div className="oui-flex oui-items-center oui-justify-between">
       <div className="oui-flex oui-max-w-[726px] oui-flex-col">
         <div className="oui-flex oui-items-center oui-gap-1 oui-text-[18px] oui-font-normal oui-text-base-contrast-54">
-          Available on {supportVaultsList}
+          {t("vaults.availableOn")} {supportVaultsList}
         </div>
         <div className="oui-mb-6 oui-mt-8 oui-text-5xl oui-font-bold oui-leading-[44px] oui-text-base-contrast">
-          Earn passive yield with vault strategies
+          {t("vaults.header.title")}
         </div>
         <div className="oui-text-xl oui-font-normal oui-text-base-contrast-54">
-          Put your idle or extra assets to work effortlessly. Deposit into
-          curated vault strategies directly from WOOFi Pro - using USDC from any
-          supported blockchain or your WOOFi Pro account, with no gas fees.
+          {t("vaults.header.description", { brokerName })}
         </div>
       </div>
-      <div className="oui-h-[238px] oui-w-[360px]">
-        <img
-          src="/vaults/vaults_img.png"
-          alt="logo"
-          className="oui-bg-contain oui-bg-center oui-bg-no-repeat"
-        />
-      </div>
+      <div className="oui-h-[238px] oui-w-[360px]">{headerImageElement}</div>
     </div>
   );
 };

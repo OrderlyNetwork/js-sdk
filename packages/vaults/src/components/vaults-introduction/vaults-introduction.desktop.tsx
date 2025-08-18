@@ -1,10 +1,12 @@
 import { FC } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import { Text, Divider, cn, TextProps } from "@orderly.network/ui";
 import { VaultsIntroductionScript } from "./vaults-introduction.script";
 
 export const VaultsIntroductionDesktop: FC<VaultsIntroductionScript> = (
   props,
 ) => {
+  const { t } = useTranslation();
   const { vaultsInfo } = props;
 
   return (
@@ -19,7 +21,7 @@ export const VaultsIntroductionDesktop: FC<VaultsIntroductionScript> = (
       }}
     >
       <VaultsIntroductionItem
-        title="Total TVL"
+        title={t("vaults.introduction.tvl")}
         value={vaultsInfo.tvl}
         textProps={{ currency: "$" } as any}
       />
@@ -27,12 +29,18 @@ export const VaultsIntroductionDesktop: FC<VaultsIntroductionScript> = (
         direction="vertical"
         className="oui-h-[64px] oui-bg-white/[0.12]"
       />
-      <VaultsIntroductionItem title="Vaults" value={vaultsInfo.vaultsCount} />
+      <VaultsIntroductionItem
+        title={t("common.vaults")}
+        value={vaultsInfo.vaultsCount}
+      />
       <Divider
         direction="vertical"
         className="oui-h-[64px] oui-bg-white/[0.12]"
       />
-      <VaultsIntroductionItem title="Depositors" value={vaultsInfo.lpCount} />
+      <VaultsIntroductionItem
+        title={t("vaults.introduction.depositors")}
+        value={vaultsInfo.lpCount}
+      />
     </div>
   );
 };

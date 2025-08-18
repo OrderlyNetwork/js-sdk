@@ -1,6 +1,11 @@
 import { FC, useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { Text, cn, Button } from "@orderly.network/ui";
+import {
+  Text,
+  cn,
+  Button,
+  ArrowRightUpSquareFillIcon,
+} from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
 import { VaultCardScript } from "./vaultCard.script";
 
@@ -13,7 +18,10 @@ export const VaultCard: FC<VaultCardScript> = (props) => {
     isEVMConnected,
     openDepositAndWithdraw,
     availableBalance,
+    openVaultWebsite,
   } = props;
+
+  const { t } = useTranslation();
 
   const supportVaultsList = useMemo(() => {
     return (
@@ -78,6 +86,17 @@ export const VaultCard: FC<VaultCardScript> = (props) => {
             {title}
           </div>
           {supportVaultsList}
+          <div
+            className="oui-z-50 oui-ml-auto oui-cursor-pointer"
+            onClick={openVaultWebsite}
+          >
+            <ArrowRightUpSquareFillIcon
+              color="white"
+              width={18}
+              height={18}
+              viewBox="0 0 18 18"
+            />
+          </div>
         </div>
 
         <div className="oui-text-2xs oui-font-normal oui-leading-[18px] oui-text-base-contrast-54">
@@ -86,7 +105,7 @@ export const VaultCard: FC<VaultCardScript> = (props) => {
 
         <div className="oui-flex oui-items-center oui-gap-2">
           <VaultInfoItem
-            label="TVL"
+            label={t("vaults.card.tvl")}
             value={vaultInfo.tvl}
             textProps={{
               currency: "$",
@@ -95,7 +114,7 @@ export const VaultCard: FC<VaultCardScript> = (props) => {
             }}
           />
           <VaultInfoItem
-            label="30D APY"
+            label={t("vaults.card.apy")}
             value={(vaultInfo["30d_apy"] * 100).toFixed(2) + "%"}
             textProps={{
               color: "brand",
@@ -105,11 +124,20 @@ export const VaultCard: FC<VaultCardScript> = (props) => {
         </div>
 
         <div className="oui-mt-3 oui-flex oui-flex-col oui-items-center oui-gap-2 oui-rounded-lg oui-bg-white/[0.06] oui-p-3">
-          <LpInfoItem label="My deposits" value={lpInfo.deposits} />
-          <LpInfoItem label="My earnings" value={lpInfo.earnings} />
+          <LpInfoItem
+            label={t("vaults.card.myDeposits")}
+            value={lpInfo.deposits}
+          />
+          <LpInfoItem
+            label={t("vaults.card.myEarnings")}
+            value={lpInfo.earnings}
+          />
         </div>
 
-        <LpInfoItem label="Account balance:" value={availableBalance} />
+        <LpInfoItem
+          label={t("vaults.card.accountBalance")}
+          value={availableBalance}
+        />
 
         <VaultCardOperation
           isEVMConnected={isEVMConnected}

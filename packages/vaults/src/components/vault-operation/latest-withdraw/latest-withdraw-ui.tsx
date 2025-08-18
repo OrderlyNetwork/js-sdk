@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import { cn, Text, TokenIcon } from "@orderly.network/ui";
 import { VaultOperation } from "../../../types/vault";
 import { getOperationStatusColor } from "../../../utils/getOperationStatusColor";
@@ -10,7 +11,7 @@ export type LatestWithdrawUIProps = {
 
 export const LatestWithdrawUI: FC<LatestWithdrawUIProps> = (props) => {
   const { latestOperation } = props;
-
+  const { t } = useTranslation();
   if (!latestOperation) {
     return <WithdrawProcessWidget />;
   }
@@ -18,7 +19,7 @@ export const LatestWithdrawUI: FC<LatestWithdrawUIProps> = (props) => {
   return (
     <div className="oui-mt-3 oui-flex oui-flex-col oui-gap-2">
       <div className="oui-text-xs oui-font-normal oui-text-base-contrast-54">
-        Latest withdrawal request
+        {t("vaults.withdraw.latestWithdraw")}
       </div>
       <div className="oui-h-[44px] oui-rounded-lg oui-border oui-border-white/[0.12] oui-p-3">
         <div className="oui-flex oui-items-center">

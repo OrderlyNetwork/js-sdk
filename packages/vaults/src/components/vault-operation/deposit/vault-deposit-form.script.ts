@@ -12,12 +12,16 @@ export type VaultDepositWidgetProps = {
 export const useVaultDepositFormScript = (props: VaultDepositWidgetProps) => {
   const { vaultId } = props;
   const [quantity, setQuantity] = useState<string>("");
-  const { availableBalance } = useCollateral();
   const { vaultInfo } = useVaultsStore();
   const { handleOperation } = useOperationScript({
     type: OperationType.DEPOSIT,
     vaultId,
   });
+  const { holding } = useCollateral();
+
+  const availableBalance = useMemo(() => {
+    return holding?.find((h) => h.token === "USDC")?.holding || 0;
+  }, [holding]);
 
   const sharePrice = useMemo(() => {
     const vault = vaultInfo.data.find((v) => v.vault_id === vaultId);

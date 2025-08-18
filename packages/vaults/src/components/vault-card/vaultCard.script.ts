@@ -1,23 +1,26 @@
 import { useEffect, useMemo } from "react";
 import { useAccount, useCollateral } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 import { modal } from "@orderly.network/ui";
 import { useSVApiUrl } from "../../hooks/useSVAPIUrl";
 import { useVaultLpInfoById, useVaultsStore } from "../../store/vaultsStore";
 import { VaultInfo } from "../../types/vault";
 import { VaultDepositAndWithdrawWithDialogId } from "../vault-operation/depositAndWithdraw";
-import {
-  ORDERLY_ICON,
-  ORDERLY_VAULT_TITLE,
-  ORDERLY_VAULT_DESCRIPTION,
-} from "./constants";
+import { ORDERLY_ICON } from "./constants";
 
 export const useVaultCardScript = (vault: VaultInfo) => {
+  const { t } = useTranslation();
   const vaultLpInfo = useVaultLpInfoById(vault.vault_id);
   const { fetchVaultLpInfo } = useVaultsStore();
-  const { availableBalance } = useCollateral();
 
   const { state } = useAccount();
   const svApiUrl = useSVApiUrl();
+
+  const { holding } = useCollateral();
+
+  const availableBalance = useMemo(() => {
+    return holding?.find((h) => h.token === "USDC")?.holding || 0;
+  }, [holding]);
 
   useEffect(() => {
     if (!state.address || !svApiUrl || !vault.vault_id) {
@@ -60,15 +63,20 @@ export const useVaultCardScript = (vault: VaultInfo) => {
     });
   };
 
+  const openVaultWebsite = () => {
+    window.open("https://app.orderly.network/vaults", "_blank");
+  };
+
   return {
-    title: ORDERLY_VAULT_TITLE,
-    description: ORDERLY_VAULT_DESCRIPTION,
+    title: t("vaults.card.orderly.title"),
+    description: t("vaults.card.orderly.description"),
     icon: ORDERLY_ICON,
     vaultInfo: vault,
     lpInfo,
     isEVMConnected,
     openDepositAndWithdraw,
     availableBalance: memoizedAvailableBalance,
+    openVaultWebsite,
   };
 };
 

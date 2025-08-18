@@ -15,6 +15,7 @@ import type {
   VaultInfo,
   VaultLpPerformance,
   VaultLpInfo,
+  VaultsPageConfig,
 } from "../types/vault";
 
 // Store state interface
@@ -48,6 +49,9 @@ interface VaultsState {
     params: VaultLpInfoParams | null;
   };
 
+  // Vaults page config state
+  vaultsPageConfig: VaultsPageConfig | null;
+
   // Actions
   setBaseUrl: (baseUrl: string) => void;
   fetchVaultInfo: (baseUrl?: string) => Promise<void>;
@@ -64,6 +68,8 @@ interface VaultsState {
     baseUrl?: string,
   ) => Promise<void>;
   refreshVaultLpInfo: () => Promise<void>;
+
+  setVaultsPageConfig: (config: VaultsPageConfig) => void;
 }
 
 // Create the store
@@ -93,6 +99,8 @@ export const useVaultsStore = create<VaultsState>((set, get) => ({
     lastUpdated: null,
     params: null,
   },
+
+  vaultsPageConfig: null,
 
   // Set base URL
   setBaseUrl: (baseUrl: string) => {
@@ -294,6 +302,10 @@ export const useVaultsStore = create<VaultsState>((set, get) => ({
     ) {
       await state.fetchVaultLpInfo(state.vaultLpInfo.params);
     }
+  },
+
+  setVaultsPageConfig: (config: VaultsPageConfig) => {
+    set({ vaultsPageConfig: config });
   },
 }));
 

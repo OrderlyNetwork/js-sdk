@@ -58,3 +58,7 @@ export enum OperationType {
   DEPOSIT = "deposit",
   WITHDRAWAL = "withdrawal",
 }
+
+export type VaultsPageConfig = {
+  headerImage?: string | React.ReactNode;
+};

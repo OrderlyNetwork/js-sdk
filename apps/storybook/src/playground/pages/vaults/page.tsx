@@ -6,7 +6,11 @@ export default function Vaults() {
   return (
     <div className="orderly-sdk-layout">
       <BaseLayout initialMenu={PathEnum.Vaults}>
-        <VaultsPage />
+        <VaultsPage
+          config={{
+            headerImage: "/vaults/vaults_img.png",
+          }}
+        />
       </BaseLayout>
     </div>
   );

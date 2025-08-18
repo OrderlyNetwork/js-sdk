@@ -43,12 +43,14 @@ export const VaultDepositForm: FC<VaultDepositFormScript> = (props) => {
         mb={1}
         className="oui-flex oui-items-center oui-justify-between oui-text-sm oui-font-semibold oui-text-base-contrast-54"
       >
-        <div>Est. shares</div>
+        <div>{t("vaults.deposit.estShares")}</div>
         <Text.numeral
           dp={6}
           padding={false}
           suffix={
-            <span className="oui-ml-1 oui-text-base-contrast-54">Shares</span>
+            <span className="oui-ml-1 oui-text-base-contrast-54">
+              {t("vaults.deposit.shares")}
+            </span>
           }
         >
           {shares}
@@ -58,7 +60,7 @@ export const VaultDepositForm: FC<VaultDepositFormScript> = (props) => {
         mb={1}
         className="oui-flex oui-items-center oui-justify-between oui-text-sm oui-font-semibold oui-text-base-contrast-54"
       >
-        <div>Lock up duration</div>
+        <div>{t("vaults.deposit.lockupDuration")}</div>
         <Text.numeral
           suffix={
             <span className="oui-ml-1 oui-text-base-contrast-54">hrs</span>
@@ -70,7 +72,7 @@ export const VaultDepositForm: FC<VaultDepositFormScript> = (props) => {
       <Button
         fullWidth
         color="primary"
-        disabled={!quantity}
+        disabled={!quantity || quantity === "0"}
         className="oui-mt-8"
         onClick={handleDeposit}
       >

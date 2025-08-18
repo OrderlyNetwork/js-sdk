@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import { cn, Text, TokenIcon } from "@orderly.network/ui";
 import { VaultOperation } from "../../../types/vault";
 import { getOperationStatusColor } from "../../../utils/getOperationStatusColor";
@@ -9,6 +10,7 @@ export type LatestDepositUIProps = {
 
 export const LatestDepositUI: FC<LatestDepositUIProps> = (props) => {
   const { latestOperation } = props;
+  const { t } = useTranslation();
 
   if (!latestOperation) {
     return null;
@@ -17,7 +19,7 @@ export const LatestDepositUI: FC<LatestDepositUIProps> = (props) => {
   return (
     <div className="oui-mt-3 oui-flex oui-flex-col oui-gap-2">
       <div className="oui-text-xs oui-font-normal oui-text-base-contrast-54">
-        Latest deposit
+        {t("vaults.deposit.latestDeposit")}
       </div>
       <div className="oui-h-[44px] oui-rounded-lg oui-border oui-border-white/[0.12] oui-p-3">
         <div className="oui-flex oui-items-center">
