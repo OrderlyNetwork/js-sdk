@@ -148,10 +148,11 @@ export class TPSLService {
       if (this.interactiveMode === MouseInteractiveMode.TP_SL_DRAGGING) {
         console.log("current position", this.currentPosition);
         modal
-          .show("TPSLSimpleSheetId", {
+          .show("TPSLSimpleDialogId", {
             title: pnl.gt(0)
               ? i18n.t("tpsl.TPOrderConfirm")
               : i18n.t("tpsl.SLOrderConfirm"),
+            triggerPrice: this.lastArgs?.price,
           })
           .then(
             () => {

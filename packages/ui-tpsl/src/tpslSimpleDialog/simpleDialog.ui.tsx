@@ -4,6 +4,7 @@ import { useTranslation } from "@orderly.network/i18n";
 import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
 import {
   Box,
+  Button,
   cn,
   convertValueToPercentage,
   Divider,
@@ -13,7 +14,6 @@ import {
   Slider,
   Text,
 } from "@orderly.network/ui";
-import { TPSLBuilderState } from "./simpleDialog.script";
 
 // ------------- Quantity input start------------
 const TPSLQuantity: React.FC<{
@@ -162,15 +162,40 @@ export const TPSLSimpleDialogUI: React.FC<{
     tp: t("tpsl.totalEstTpPnl"),
     sl: t("tpsl.totalEstSlPnl"),
   };
+
+  const footer = (
+    <Flex width="100%" itemAlign="center" gap={3} mt={4}>
+      <Button
+        key="secondary"
+        color="gray"
+        onClick={() => {}}
+        fullWidth
+        className="oui-text-sm"
+        size="md"
+      >
+        {t("common.cancel")}
+      </Button>
+      <Button
+        key="primary"
+        onClick={() => {}}
+        fullWidth
+        className="oui-text-sm"
+        size="md"
+      >
+        {t("common.confirm")}
+      </Button>
+    </Flex>
+  );
+
   return (
     <Box className="oui-w-full oui-px-0.5">
       <TPSLQuantity
-        maxQty={6}
-        quantity={6}
-        baseTick={5}
-        dp={4}
+        maxQty={0}
+        quantity={0}
+        baseTick={0}
+        dp={0}
         onQuantityChange={setQuantity}
-        quote={"2"}
+        quote={"0"}
         isEditing={isEditing}
         isPosition={isPosition}
         errorMsg={parseErrorMsg("quantity")}
@@ -194,11 +219,12 @@ export const TPSLSimpleDialogUI: React.FC<{
         </Flex>
       </Flex>
       <Divider className="oui-my-3 oui-w-full" />
-      <Flex itemAlign={"center"}>
+      <Flex itemAlign={"center"} onClick={() => {}}>
         <Text color="primary" className="oui-cursor-pointer oui-text-sm">
           {t("tpsl.advancedSetting")}
         </Text>
       </Flex>
+      {footer}
     </Box>
   );
 };
