@@ -1,9 +1,12 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { subDays, format } from "date-fns";
 import {
+  useAccount,
   useAssetsHistory,
   useCollateral,
+  useIndexPricesStream,
   useLocalStorage,
+  usePrivateQuery,
   useStatisticsDaily,
 } from "@orderly.network/hooks";
 import { API } from "@orderly.network/types";
@@ -15,6 +18,31 @@ export enum PeriodType {
   QUARTER = "90D",
 }
 
+function convertToUSDCAndOperate({
+  token,
+  amount,
+  indexPrices,
+  value,
+  op = "sub",
+}: {
+  token: string;
+  amount: string | number;
+  indexPrices: Record<string, number>;
+  value: Decimal;
+  op?: "add" | "sub";
+}): Decimal {
+  if (token.toUpperCase() === "USDC") {
+    return op === "add" ? value.add(amount) : value.sub(amount);
+  } else {
+    const indexPrice = indexPrices[token];
+    if (indexPrice) {
+      const delta = new Decimal(amount).mul(indexPrice);
+      return op === "add" ? value.add(delta) : value.sub(delta);
+    }
+    return value;
+  }
+}
+
 export const useAssetsHistoryData = (
   localKey: string,
   options?: {
@@ -22,6 +50,9 @@ export const useAssetsHistoryData = (
   },
 ) => {
   const [today] = useState(() => new Date());
+
+  const { data: indexPrices } = useIndexPricesStream();
+  const { account } = useAccount();
 
   const { isRealtime = false } = options || {};
   const periodTypes = Object.values(PeriodType);
@@ -63,6 +94,22 @@ export const useAssetsHistoryData = (
   // const endDate = useMemo(() => addDays(today, 1), [today]);
   const endDate = today;
 
+  const totalDeposit = useRef<Decimal>(zero);
+
+  // get transfer history
+  const { data: transferOutHistory } = usePrivateQuery<API.TransferHistory>(
+    `/v1/internal_transfer_history?page=1&size=50&side=OUT&main_sub_only=true&start_t=${startDate.getTime()}&end_t=${endDate.getTime()}`,
+    {
+      revalidateOnFocus: false,
+    },
+  );
+  const { data: transferInHistory } = usePrivateQuery<API.TransferHistory>(
+    `/v1/internal_transfer_history?page=1&size=50&side=IN&main_sub_only=true&start_t=${startDate.getTime()}&end_t=${endDate.getTime()}`,
+    {
+      revalidateOnFocus: false,
+    },
+  );
+
   const [data] = useStatisticsDaily(
     {
       startDate: startDate.toISOString().split("T")[0],
@@ -86,9 +133,67 @@ export const useAssetsHistoryData = (
 
   // const lastItem = data[data.length - 1];
 
+  const lastItem = useMemo(() => {
+    return data.length > 0 ? data[data.length - 1] : null;
+  }, [data]);
+
+  const totalTransferIn = useMemo(() => {
+    if (
+      lastItem == null ||
+      !Array.isArray(transferInHistory?.rows) ||
+      transferInHistory?.rows?.length === 0 ||
+      typeof lastItem.snapshot_time === "undefined"
+    ) {
+      return zero;
+    }
+    const list = transferInHistory?.rows?.filter((item) => {
+      return item.created_time > lastItem?.snapshot_time;
+    });
+    return list?.reduce((acc, item) => {
+      return acc.add(
+        convertToUSDCAndOperate({
+          token: item.token,
+          amount: item.amount,
+          indexPrices,
+          value: zero,
+          op: "add",
+        }),
+      );
+    }, zero);
+  }, [transferInHistory, lastItem, indexPrices]);
+
+  const totalTransferOut = useMemo(() => {
+    if (
+      lastItem == null ||
+      !Array.isArray(transferOutHistory?.rows) ||
+      transferOutHistory?.rows?.length === 0 ||
+      typeof lastItem.snapshot_time === "undefined"
+    ) {
+      return zero;
+    }
+    const list = transferOutHistory?.rows?.filter((item) => {
+      return item.created_time > lastItem?.snapshot_time;
+    });
+    return list?.reduce((acc, item) => {
+      return acc.add(
+        convertToUSDCAndOperate({
+          token: item.token,
+          amount: item.amount,
+          indexPrices,
+          value: zero,
+          op: "add",
+        }),
+      );
+    }, zero);
+  }, [transferOutHistory, lastItem]);
+
   const calculateLastPnl = (inputs: {
     lastItem: API.DailyRow;
     assetHistory: ReadonlyArray<API.AssetHistoryRow> | API.AssetHistoryRow[];
+    transferHistory: {
+      OUT: Decimal;
+      IN: Decimal;
+    };
     totalValue: number | null;
   }) => {
     if (totalValue == null) {
@@ -117,22 +222,50 @@ export const useAssetsHistoryData = (
       for (let i = 0; i < list.length; i++) {
         const item = list[i];
         if (item.side === "DEPOSIT") {
-          // value -= item.amount;
           if (item.trans_status === "COMPLETED") {
-            value = value.sub(item.amount);
+            value = convertToUSDCAndOperate({
+              token: item.token,
+              amount: item.amount,
+              indexPrices,
+              value,
+              op: "sub",
+            });
+
+            totalDeposit.current = convertToUSDCAndOperate({
+              token: item.token,
+              amount: item.amount,
+              indexPrices,
+              value: totalDeposit.current,
+              op: "add",
+            });
           }
         } else if (item.side === "WITHDRAW") {
           if (item.trans_status !== "FAILED") {
-            value = value.add(item.amount);
+            value = convertToUSDCAndOperate({
+              token: item.token,
+              amount: item.amount,
+              indexPrices,
+              value,
+              op: "add",
+            });
           }
         }
       }
     }
 
+    value = value
+      .sub(inputs.transferHistory.IN)
+      .add(inputs.transferHistory.OUT);
+
     return value.toNumber();
   };
 
-  const calculate = (data: API.DailyRow[], totalValue: number | null) => {
+  const calculate = (
+    data: API.DailyRow[],
+    totalValue: number | null,
+    totalTransferIn: Decimal,
+    totalTransferOut: Decimal,
+  ) => {
     const lastItem = data[data.length - 1];
 
     return {
@@ -141,13 +274,25 @@ export const useAssetsHistoryData = (
       perp_volume: 0,
       account_value:
         totalValue !== null ? totalValue : (lastItem?.account_value ?? 0),
-      pnl: calculateLastPnl({ lastItem, assetHistory, totalValue }) ?? 0,
+      pnl:
+        calculateLastPnl({
+          lastItem,
+          assetHistory,
+          totalValue,
+          transferHistory: {
+            OUT: totalTransferOut,
+            IN: totalTransferIn,
+          },
+        }) ?? 0,
+      __isCalculated: true,
     };
   };
 
   const mergeData = (
     data: ReadonlyArray<API.DailyRow> | API.DailyRow[],
     totalValue: number | null,
+    totalTransferIn: Decimal,
+    totalTransferOut: Decimal,
   ) => {
     if (!Array.isArray(data) || data.length === 0) {
       return data;
@@ -157,14 +302,21 @@ export const useAssetsHistoryData = (
       return data;
     }
 
-    return data.concat([calculate(data, totalValue)]);
+    return data.concat([
+      calculate(data, totalValue, totalTransferIn, totalTransferOut),
+    ]);
   };
 
   const calculateData = (
     data: ReadonlyArray<API.DailyRow> | API.DailyRow[],
     realtime: boolean,
+    totalValue: number | null,
+    totalTransferIn: Decimal,
+    totalTransferOut: Decimal,
   ) => {
-    const _data = !realtime ? data : mergeData(data, totalValue);
+    const _data = !realtime
+      ? data
+      : mergeData(data, totalValue, totalTransferIn, totalTransferOut);
 
     return _data.slice(Math.max(0, _data.length - periodValue));
   };
@@ -173,11 +325,30 @@ export const useAssetsHistoryData = (
     /**
      * need the totalValue and data are all ready, else return null;
      */
-    if (totalValue == null) {
+    if (totalValue === null) {
       return [];
     }
-    return calculateData(data, isRealtime);
-  }, [data, totalValue, assetHistory, isRealtime]);
+    // if the transferOutHistory or transferInHistory is not ready, return null;
+
+    if (transferOutHistory === null || transferInHistory === null) {
+      return [];
+    }
+    return calculateData(
+      data,
+      isRealtime,
+      totalValue,
+      totalTransferIn,
+      totalTransferOut,
+    );
+  }, [
+    data,
+    totalValue,
+    assetHistory,
+    isRealtime,
+    indexPrices,
+    transferOutHistory,
+    transferInHistory,
+  ]);
 
   const aggregateValue = useMemo(() => {
     let vol = zero;
@@ -201,7 +372,9 @@ export const useAssetsHistoryData = (
       if (typeof lastAccountValue === "undefined" || lastAccountValue === 0) {
         roi = zero;
       } else {
-        roi = pnl.div(lastAccountValue);
+        roi = pnl.div(
+          totalTransferIn.add(lastAccountValue).add(totalDeposit.current),
+        );
       }
     }
 
@@ -218,7 +391,7 @@ export const useAssetsHistoryData = (
     // console.log("---------------------------");
 
     return { vol: vol.toNumber(), pnl: pnl.toNumber(), roi: roi.toNumber() };
-  }, [calculatedData, data, periodValue]);
+  }, [calculatedData, data, periodValue, totalTransferIn]);
 
   const createFakeData = (
     start: Partial<API.DailyRow>,
@@ -238,7 +411,8 @@ export const useAssetsHistoryData = (
     periodTypes,
     period,
     onPeriodChange,
-    data: calculatedData,
+    // data: calculatedDataUpdateByIndexPrice, // calculatedData,
+    data: calculatedData, // calculatedData,
     aggregateValue,
     createFakeData,
     volumeUpdateDate: data?.[data.length - 1]?.date ?? "",
