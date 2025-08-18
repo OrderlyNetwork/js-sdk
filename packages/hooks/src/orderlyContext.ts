@@ -1,12 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createContext, useContext } from "react";
-import {
-  type ConfigStore,
-  type OrderlyKeyStore,
-  type getWalletAdapterFunc,
+import type {
+  ConfigStore,
+  OrderlyKeyStore,
   WalletAdapter,
 } from "@orderly.network/core";
-import { API, Chain, NetworkId } from "@orderly.network/types";
-import { Chains } from "./orderly/useChains";
+import type { API, Chain, NetworkId } from "@orderly.network/types";
+import type { Chains } from "./orderly/useChains";
 
 export type filteredChains = {
   mainnet?: Chain[];
@@ -62,9 +62,14 @@ export interface OrderlyConfigContextState {
     orderFilled?: {
       /**
        * Sound to play when an order is successful.
-       * @default ""
+       * @default undefined
        */
       media?: string;
+      /**
+       * Whether to open the notification by default.
+       * @default false
+       */
+      defaultOpen?: boolean;
     };
   };
 }
