@@ -13,6 +13,8 @@ export const TPSLSimpleSheetId = "TPSLSimpleSheetId";
 
 export const TPSLSimpleDialogId = "TPSLSimpleDialogId";
 
+console.log("1111111");
+
 registerSimpleSheet(TPSLSimpleSheetId, TPSLSimpleDialogWidget);
 
 registerSimpleDialog(TPSLSimpleDialogId, TPSLSimpleDialogWidget, {
