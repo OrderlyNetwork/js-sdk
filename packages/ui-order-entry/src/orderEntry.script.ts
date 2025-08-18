@@ -7,7 +7,6 @@ import {
   useLocalStorage,
   useMarginRatio,
   useOrderEntry,
-  useOrderlyContext,
   utils,
 } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";

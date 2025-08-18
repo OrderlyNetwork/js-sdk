@@ -1,7 +1,7 @@
-import { Checkbox, cn, Divider, Flex, Grid, Switch } from "@orderly.network/ui";
-import { OrderlyOrder, OrderType } from "@orderly.network/types";
 import { useEffect } from "react";
 import { useTranslation } from "@orderly.network/i18n";
+import { OrderlyOrder, OrderType } from "@orderly.network/types";
+import { Checkbox, cn, Divider, Flex, Switch } from "@orderly.network/ui";
 
 export type AdditionalInfoProps = {
   pinned: boolean;
@@ -23,7 +23,7 @@ export const AdditionalInfo = (props: AdditionalInfoProps) => {
     if (props.onValueChange) {
       props.onValueChange(
         "order_type_ext" as keyof OrderlyOrder,
-        checked ? type : ""
+        checked ? type : "",
         // orderTypeExtra === type ? "" : type
       );
     }
@@ -35,11 +35,7 @@ export const AdditionalInfo = (props: AdditionalInfoProps) => {
 
   return (
     <div className={"oui-text-base-contrast-54"}>
-      {/* {props.showExtra && (
-
-      )} */}
       <Flex
-        // gapX={3}
         justify={pinned ? "start" : "between"}
         mb={3}
         width={pinned ? "unset" : "100%"}
@@ -61,8 +57,8 @@ export const AdditionalInfo = (props: AdditionalInfoProps) => {
           <label
             htmlFor={"toggle_order_post_only"}
             className={cn(
-              "oui-text-2xs oui-ml-1 peer-data-[disabled]:oui-text-base-contrast-20",
-              "oui-break-normal oui-whitespace-nowrap"
+              "oui-ml-1 oui-text-2xs peer-data-[disabled]:oui-text-base-contrast-20",
+              "oui-whitespace-nowrap oui-break-normal",
             )}
           >
             {t("orderEntry.orderType.postOnly")}
@@ -82,8 +78,8 @@ export const AdditionalInfo = (props: AdditionalInfoProps) => {
           <label
             htmlFor={"toggle_order_iov"}
             className={cn(
-              "oui-text-2xs oui-ml-1 peer-data-[disabled]:oui-text-base-contrast-20",
-              "oui-break-normal oui-whitespace-nowrap"
+              "oui-ml-1 oui-text-2xs peer-data-[disabled]:oui-text-base-contrast-20",
+              "oui-whitespace-nowrap oui-break-normal",
             )}
           >
             {t("orderEntry.orderType.ioc")}
@@ -103,8 +99,8 @@ export const AdditionalInfo = (props: AdditionalInfoProps) => {
           <label
             htmlFor={"toggle_order_fok"}
             className={cn(
-              "oui-text-2xs oui-ml-1 peer-data-[disabled]:oui-text-base-contrast-20",
-              "oui-break-normal oui-whitespace-nowrap"
+              "oui-ml-1 oui-text-2xs peer-data-[disabled]:oui-text-base-contrast-20",
+              "oui-whitespace-nowrap oui-break-normal",
             )}
           >
             {t("orderEntry.orderType.fok")}
@@ -125,7 +121,7 @@ export const AdditionalInfo = (props: AdditionalInfoProps) => {
           />
           <label
             htmlFor={"toggle_order_confirm"}
-            className={"oui-text-2xs oui-ml-1"}
+            className={"oui-ml-1 oui-text-2xs"}
           >
             {t("orderEntry.orderConfirm")}
           </label>
@@ -142,7 +138,7 @@ export const AdditionalInfo = (props: AdditionalInfoProps) => {
           />
           <label
             htmlFor={"toggle_order_hidden"}
-            className={"oui-text-2xs oui-ml-1"}
+            className={"oui-ml-1 oui-text-2xs"}
           >
             {t("orderEntry.hidden")}
           </label>
@@ -161,7 +157,7 @@ export const AdditionalInfo = (props: AdditionalInfoProps) => {
             />
             <label
               htmlFor={"toggle_order_keep_visible"}
-              className={"oui-text-2xs oui-ml-1"}
+              className={"oui-ml-1 oui-text-2xs"}
             >
               {t("orderEntry.keepVisible")}
             </label>

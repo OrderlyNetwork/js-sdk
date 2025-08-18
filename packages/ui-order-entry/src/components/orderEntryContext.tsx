@@ -5,7 +5,5 @@ export type OrderEntryContextState = {
 };
 
 export const OrderEntryContext = createContext<OrderEntryContextState>(
-  {} as OrderEntryContextState
+  {} as OrderEntryContextState,
 );
-
-export const OrderEntryProvider = OrderEntryContext.Provider;
