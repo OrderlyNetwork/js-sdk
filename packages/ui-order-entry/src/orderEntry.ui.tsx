@@ -340,7 +340,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
 
   const extraButton = !pinned ? (
     <AdditionalConfigButton
-      pinned={false}
+      pinned={pinned}
       setPinned={setPinned}
       needConfirm={needConfirm}
       setNeedConfirm={setNeedConfirm}
