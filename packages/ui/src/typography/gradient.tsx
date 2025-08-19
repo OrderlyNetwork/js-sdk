@@ -1,8 +1,8 @@
 import React, { CSSProperties } from "react";
-import { textVariants, type TextProps, Text } from "./text";
 import { VariantProps } from "tailwind-variants";
 import { parseAngleProps } from "../helpers/parse-props";
 import { tv } from "../utils/tv";
+import { textVariants, type TextProps, Text } from "./text";
 
 const gradientTextVariants = tv({
   //   extend: textVariants,
@@ -35,7 +35,6 @@ const GradientText = React.forwardRef<
 >((props, ref) => {
   const { color, className, angle, ...rest } = props;
   const style = parseAngleProps({ angle });
-
   return (
     // @ts-ignore
     <Text
