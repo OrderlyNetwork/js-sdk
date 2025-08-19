@@ -6,7 +6,7 @@ import {
   QuantityInput,
   AvailableQuantity,
 } from "@orderly.network/ui-transfer";
-import { LatestDepositWidget } from "../latest-deposit/latest-deposit-widget";
+import { LatestDepositWidget } from "../latest-deposit/latest-deposit.widget";
 import { VaultDepositFormScript } from "./vault-deposit-form.script";
 
 export const VaultDepositForm: FC<VaultDepositFormScript> = (props) => {

@@ -16,7 +16,7 @@ export const VaultsPage: FC<VaultsPageProps> = (props) => {
     <VaultsProvider {...props}>
       <div
         className={cn(
-          "oui-relative oui-min-h-screen oui-px-6 oui-pt-12",
+          "oui-relative oui-min-h-screen oui-px-6 oui-py-12",
           "oui-bg-base-10",
           props?.className,
         )}

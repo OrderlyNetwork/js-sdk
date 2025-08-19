@@ -1,1 +1,1 @@
-export * from "./latest-deposit-widget";
+export * from "./latest-deposit.widget";

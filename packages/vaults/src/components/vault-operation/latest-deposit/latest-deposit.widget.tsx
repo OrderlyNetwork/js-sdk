@@ -1,6 +1,6 @@
 import { FC } from "react";
-import { useLatestDepositScript } from "./latest-deposit-script";
-import { LatestDepositUI } from "./latest-deposit-ui";
+import { useLatestDepositScript } from "./latest-deposit.script";
+import { LatestDepositUI } from "./latest-deposit.ui";
 
 export type LatestDepositWidgetProps = {
   vaultId: string;

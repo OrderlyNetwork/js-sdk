@@ -1,7 +1,8 @@
 import { useEffect, useMemo } from "react";
-import { useAccount, useCollateral } from "@orderly.network/hooks";
+import { useAccount, useCollateral, useGetEnv } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { modal } from "@orderly.network/ui";
+import { VAULTS_WEBSITE_URLS } from "../../api/env";
 import { useSVApiUrl } from "../../hooks/useSVAPIUrl";
 import { useVaultLpInfoById, useVaultsStore } from "../../store/vaultsStore";
 import { VaultInfo } from "../../types/vault";
@@ -12,6 +13,7 @@ export const useVaultCardScript = (vault: VaultInfo) => {
   const { t } = useTranslation();
   const vaultLpInfo = useVaultLpInfoById(vault.vault_id);
   const { fetchVaultLpInfo } = useVaultsStore();
+  const env = useGetEnv();
 
   const { state } = useAccount();
   const svApiUrl = useSVApiUrl();
@@ -64,7 +66,8 @@ export const useVaultCardScript = (vault: VaultInfo) => {
   };
 
   const openVaultWebsite = () => {
-    window.open("https://app.orderly.network/vaults", "_blank");
+    const url = VAULTS_WEBSITE_URLS[env as keyof typeof VAULTS_WEBSITE_URLS];
+    window.open(`${url}/vaults`, "_blank");
   };
 
   return {

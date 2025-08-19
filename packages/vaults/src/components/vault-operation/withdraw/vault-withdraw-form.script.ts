@@ -1,5 +1,4 @@
 import { useMemo, useState } from "react";
-import { useTokenInfo } from "@orderly.network/hooks";
 import { Decimal } from "@orderly.network/utils";
 import { useVaultLpInfoById, useVaultsStore } from "../../../store";
 import { OperationType } from "../../../types/vault";
