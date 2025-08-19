@@ -54,11 +54,6 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     BBOOrderType | undefined
   >("orderly_order_bbo_type", undefined);
 
-  const [quantityUnit, setQuantityUnit] = useLocalStorage<"quote" | "base">(
-    "orderly_order_quantity_unit",
-    "quote",
-  );
-
   const [soundAlert, setSoundAlert] = useLocalStorage<boolean>(
     ORDERLY_SOUND_ALERT_KEY,
     false,
@@ -551,8 +546,6 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     priceInputContainerWidth,
     currentLtv,
     fillMiddleValue,
-    quantityUnit,
-    setQuantityUnit,
     symbol: inputs.symbol,
     soundAlert: soundAlert,
     setSoundAlert,

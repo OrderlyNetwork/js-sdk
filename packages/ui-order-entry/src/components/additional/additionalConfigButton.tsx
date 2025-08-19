@@ -1,23 +1,12 @@
 import { useState } from "react";
-import { OrderlyOrder, OrderType } from "@orderly.network/types";
 import {
   PopoverContent,
   PopoverRoot,
   PopoverTrigger,
 } from "@orderly.network/ui";
-import { AdditionalInfo } from "./additionalInfo";
+import { AdditionalInfo, AdditionalInfoProps } from "./additionalInfo";
 
-export function AdditionalConfigButton(props: {
-  pinned: boolean;
-  setPinned: (pinned: boolean) => void;
-  onValueChange?: (key: keyof OrderlyOrder, value: any) => void;
-  orderTypeExtra?: OrderType;
-  needConfirm: boolean;
-  setNeedConfirm: (value: boolean) => void;
-  showExtra: boolean;
-  hidden: boolean;
-  setHidden: (hidden: boolean) => void;
-}) {
+export function AdditionalConfigButton(props: AdditionalInfoProps) {
   const [open, setOpen] = useState(false);
 
   return (

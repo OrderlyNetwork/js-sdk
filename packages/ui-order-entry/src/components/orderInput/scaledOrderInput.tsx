@@ -1,66 +1,22 @@
-import { FocusEventHandler } from "react";
-import { OrderValidationResult } from "@orderly.network/hooks";
+import { useLocalStorage } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import {
-  API,
-  DistributionType,
-  OrderSide,
-  OrderType,
-} from "@orderly.network/types";
+import { DistributionType } from "@orderly.network/types";
 import { cn, Grid, inputFormatter } from "@orderly.network/ui";
+import { type BaseOrderInputProps } from ".";
 import { InputType } from "../../types";
 import { CustomInput } from "../customInput";
 import { QuantityDistributionInput } from "../quantityDistribution";
 import { QuantityUnit } from "../quantityUnit";
 
-export const ScaledOrderInput = (props: {
-  type: OrderType;
-  symbolInfo: API.SymbolExt;
-  values: {
-    order_quantity?: string;
-    total?: string;
-    side?: OrderSide;
-    end_price?: string;
-    start_price?: string;
-    total_orders?: string;
-    distribution_type?: DistributionType;
-    skew?: string;
-  };
-  onChange: (
-    key:
-      | "order_quantity"
-      | "total"
-      | "order_type"
-      | "start_price"
-      | "end_price"
-      | "total_orders"
-      | "distribution_type"
-      | "skew",
-    value: any,
-  ) => void;
-  onValuesChange: (value: any) => void;
-  onFocus: (type: InputType) => FocusEventHandler;
-  onBlur: (type: InputType, tick?: number) => FocusEventHandler;
-  parseErrorMsg: (
-    key: keyof OrderValidationResult,
-    customValue?: string,
-  ) => string;
-  quantityUnit: "quote" | "base";
-  setQuantityUnit: (unit: "quote" | "base") => void;
-  errors: OrderValidationResult | null;
-}) => {
-  const {
-    symbolInfo,
-    values,
-    onFocus,
-    onBlur,
-    parseErrorMsg,
-    quantityUnit,
-    setQuantityUnit,
-    errors,
-  } = props;
+export const ScaledOrderInput = (props: BaseOrderInputProps) => {
+  const { symbolInfo, values, onFocus, onBlur, parseErrorMsg, errors } = props;
   const { base, quote, base_dp, quote_dp } = symbolInfo;
   const { t } = useTranslation();
+
+  const [quantityUnit, setQuantityUnit] = useLocalStorage<"quote" | "base">(
+    "orderly_order_quantity_unit",
+    "quote",
+  );
 
   const isBase = quantityUnit === "base";
   const unit = isBase ? base : quote;

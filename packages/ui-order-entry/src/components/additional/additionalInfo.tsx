@@ -8,11 +8,11 @@ export type AdditionalInfoProps = {
   setPinned: (value: boolean) => void;
   needConfirm: boolean;
   setNeedConfirm: (value: boolean) => void;
-  orderTypeExtra?: OrderType;
-  onValueChange?: (key: keyof OrderlyOrder, value: any) => void;
-  showExtra?: boolean;
   hidden: boolean;
   setHidden: (value: boolean) => void;
+  onValueChange?: (key: keyof OrderlyOrder, value: any) => void;
+  orderTypeExtra?: OrderType;
+  showExtra?: boolean;
 };
 
 export const AdditionalInfo = (props: AdditionalInfoProps) => {

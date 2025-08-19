@@ -1,7 +1,5 @@
-import { FocusEventHandler } from "react";
-import { OrderValidationResult } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { API, OrderLevel, OrderSide, OrderType } from "@orderly.network/types";
+import { OrderType } from "@orderly.network/types";
 import {
   cn,
   Flex,
@@ -10,47 +8,13 @@ import {
   modal,
   Text,
 } from "@orderly.network/ui";
-import { OrderEntryScriptReturn } from "../../orderEntry.script";
+import { type OrderInputProps } from ".";
 import { InputType } from "../../types";
 import { BBOStatus } from "../../utils";
 import { BBOOrderTypeSelect } from "../bboOrderTypeSelect";
 import { CustomInput } from "../customInput";
 
-export const OrderQuantityInput = (props: {
-  type: OrderType;
-  symbolInfo: API.SymbolExt;
-  values: {
-    order_quantity?: string;
-    price?: string;
-    trigger_price?: string;
-    total?: string;
-    side?: OrderSide;
-    level?: OrderLevel;
-    order_type_ext?: OrderType;
-  };
-  onChange: (
-    key:
-      | "order_quantity"
-      | "order_price"
-      | "trigger_price"
-      | "total"
-      | "order_type"
-      | "order_type_ext"
-      | "level",
-    value: any,
-  ) => void;
-  onValuesChange: (value: any) => void;
-  refs: OrderEntryScriptReturn["refs"];
-  onFocus: (type: InputType) => FocusEventHandler;
-  onBlur: (type: InputType) => FocusEventHandler;
-  bbo: Pick<
-    OrderEntryScriptReturn,
-    "bboStatus" | "bboType" | "onBBOChange" | "toggleBBO"
-  >;
-  priceInputContainerWidth?: number;
-  parseErrorMsg: (key: keyof OrderValidationResult) => string;
-  fillMiddleValue: OrderEntryScriptReturn["fillMiddleValue"];
-}) => {
+export const CommonOrderInput = (props: OrderInputProps) => {
   const {
     type,
     symbolInfo,

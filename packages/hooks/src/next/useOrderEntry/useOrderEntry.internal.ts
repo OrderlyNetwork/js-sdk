@@ -144,7 +144,6 @@ const useOrderEntryNextInternal = (
     // console.log("newValues++++++", newValues);
 
     orderEntryActions.updateOrder(newValues);
-    console.log("newValues++++++", newValues);
 
     return newValues;
   };
