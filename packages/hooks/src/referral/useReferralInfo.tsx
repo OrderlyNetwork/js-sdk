@@ -40,8 +40,8 @@ export const useReferralInfo = (): {
   const getFirstRefCode = useCallback(():
     | RefferalAPI.ReferralCode
     | undefined => {
-    if (!data?.referrer_info.referral_codes) return undefined;
-    const referralCodes = [...data?.referrer_info.referral_codes];
+    if (!data?.referrer_info?.referral_codes) return undefined;
+    const referralCodes = [...data?.referrer_info?.referral_codes];
 
     const pinedItems: RefferalAPI.ReferralCode[] = [];
 

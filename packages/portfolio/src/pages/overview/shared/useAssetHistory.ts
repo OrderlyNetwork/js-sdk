@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { subDays, format, getYear, getMonth, getDate, addDays } from "date-fns";
+import { subDays, format } from "date-fns";
 import {
   useAssetsHistory,
   useCollateral,
@@ -21,15 +21,7 @@ export const useAssetsHistoryData = (
     isRealtime?: boolean;
   },
 ) => {
-  const [today] = useState(() => {
-    const d = new Date();
-
-    return d;
-
-    // return new Date(
-    //   Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), 0, 0, 0),
-    // );
-  });
+  const [today] = useState(() => new Date());
 
   const { isRealtime = false } = options || {};
   const periodTypes = Object.values(PeriodType);
@@ -44,7 +36,6 @@ export const useAssetsHistoryData = (
     switch (value) {
       case PeriodType.MONTH:
         return subDays(today, 35);
-
       case PeriodType.QUARTER:
         return subDays(today, 95);
       default:
@@ -143,11 +134,10 @@ export const useAssetsHistoryData = (
 
   const calculate = (data: API.DailyRow[], totalValue: number | null) => {
     const lastItem = data[data.length - 1];
-    const todayFormattedStr = format(today, "yyyy-MM-dd");
 
     return {
       ...lastItem,
-      date: todayFormattedStr,
+      date: getUTCStr(today),
       perp_volume: 0,
       account_value:
         totalValue !== null ? totalValue : (lastItem?.account_value ?? 0),
@@ -163,9 +153,7 @@ export const useAssetsHistoryData = (
       return data;
     }
 
-    const UTCStr = `${today.getUTCFullYear()}-${today.getUTCMonth() + 1}-${today.getUTCDate()}`;
-
-    if (data[data.length - 1].date === UTCStr) {
+    if (data[data.length - 1].date === getUTCStr(today)) {
       return data;
     }
 
@@ -260,3 +248,11 @@ export const useAssetsHistoryData = (
 export type useAssetsHistoryDataReturn = ReturnType<
   typeof useAssetsHistoryData
 >;
+
+function getUTCStr(date: Date) {
+  const year = date.getUTCFullYear();
+  const month = `0${date.getUTCMonth() + 1}`.slice(-2);
+  const day = `0${date.getUTCDate()}`.slice(-2);
+
+  return `${year}-${month}-${day}`;
+}
