@@ -133,6 +133,7 @@ export const FeeTierTable: React.FC<FeeTierTableProps> = (props) => {
     const parentRect = document
       .getElementById("oui-fee-tier-content")
       ?.getBoundingClientRect();
+
     const elementRect = document
       .getElementById("oui-fee-tier-current")
       ?.getBoundingClientRect();

@@ -31,16 +31,37 @@ export const widgetConfigs: OrderlyAppProviderProps["widgetConfigs"] = {
     },
   },
   feeTier: {
-    header: () => (
-      <Box className="oui-w-full oui-px-4 oui-py-3 oui-rounded-xl oui-text-center oui-bg-gradient-to-r oui-from-[rgb(var(--oui-gradient-brand-start))] oui-to-[rgb(var(--oui-gradient-brand-end))]">
-        <Text.gradient color={"primary"} angle={45}>
-          Special trading fees - valid until Aug 31.
-          <br />
-          New fee tier rules coming in September
-        </Text.gradient>
-      </Box>
-    ),
-    tag: () => <div>1234</div>,
-    table: () => null,
+    header: () => {
+      return (
+        <Box className="oui-w-full oui-px-4 oui-py-3 oui-rounded-xl oui-text-center oui-bg-gradient-to-r oui-from-[rgb(var(--oui-gradient-brand-start)_/_0.12)] oui-to-[rgb(var(--oui-gradient-brand-end)_/_0.12)]">
+          <Text.gradient color={"brand"}>
+            Special trading fees - valid until Aug 31.
+            <br />
+            New fee tier rules coming in September
+          </Text.gradient>
+        </Box>
+      );
+    },
+    tag: () => {
+      return (
+        <Flex
+          gap={1}
+          justify="center"
+          itemAlign="center"
+          className="oui-rounded oui-px-1 oui-bg-gradient-to-r oui-from-[rgb(var(--oui-gradient-brand-start)_/_0.12)] oui-to-[rgb(var(--oui-gradient-brand-end)_/_0.12)]"
+        >
+          <SpecialFee />
+          <Text.gradient
+            className="oui-select-none"
+            color={"brand"}
+            size="xs"
+            weight="regular"
+          >
+            Special fee promotion
+          </Text.gradient>
+        </Flex>
+      );
+    },
+    // table: () => null,
   },
 };

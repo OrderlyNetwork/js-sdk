@@ -28,8 +28,8 @@ export const SpecialFee = React.forwardRef<
           y2="6.99108"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#59B0FE" />
-          <stop stopColor="#26FEFE" offset={1} />
+          <stop stopColor="rgb(var(--oui-gradient-brand-end))" />
+          <stop stopColor="rgb(var(--oui-gradient-brand-start))" offset={1} />
         </linearGradient>
       </defs>
     </svg>
