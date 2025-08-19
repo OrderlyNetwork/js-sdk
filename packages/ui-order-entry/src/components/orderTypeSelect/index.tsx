@@ -27,6 +27,10 @@ export const OrderTypeSelect = (props: {
         label: t("orderEntry.orderType.scaledOrder"),
         value: OrderType.SCALED,
       },
+      {
+        label: t("orderEntry.orderType.trailingStop"),
+        value: OrderType.TRAILING_STOP,
+      },
     ];
   }, [t]);
 

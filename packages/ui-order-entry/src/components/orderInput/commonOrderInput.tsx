@@ -89,97 +89,106 @@ export const CommonOrderInput = (props: OrderInputProps) => {
       symbolInfo.quote
     );
 
+  const triggerPriceInput =
+    type === OrderType.STOP_LIMIT || type === OrderType.STOP_MARKET ? (
+      <div className={"oui-group"}>
+        <CustomInput
+          label={t("common.trigger")}
+          suffix={symbolInfo.quote}
+          error={parseErrorMsg("trigger_price")}
+          id={"trigger"}
+          ref={props.refs.triggerPriceInputRef}
+          value={values.trigger_price}
+          onChange={(e) => {
+            props.onChange("trigger_price", e);
+          }}
+          formatters={[inputFormatter.dpFormatter(symbolInfo.quote_dp)]}
+          onFocus={onFocus(InputType.TRIGGER_PRICE)}
+          onBlur={onBlur(InputType.TRIGGER_PRICE)}
+        />
+      </div>
+    ) : null;
+
+  const priceInput =
+    type === OrderType.LIMIT || type === OrderType.STOP_LIMIT ? (
+      <div
+        ref={props.refs.priceInputContainerRef}
+        className="oui-group oui-relative oui-w-full"
+      >
+        <CustomInput
+          label={t("common.price")}
+          suffix={priceSuffix}
+          id={"price"}
+          value={values.price}
+          error={parseErrorMsg("order_price")}
+          ref={props.refs.priceInputRef}
+          onChange={(e) => {
+            props.onChange("order_price", e);
+          }}
+          formatters={[inputFormatter.dpFormatter(symbolInfo.quote_dp)]}
+          onFocus={onFocus(InputType.PRICE)}
+          onBlur={onBlur(InputType.PRICE)}
+          readonly={readOnly}
+          classNames={{
+            root: cn(readOnly && "focus-within:oui-outline-transparent "),
+            input: cn(readOnly && "oui-cursor-auto"),
+          }}
+        />
+        {bbo.bboStatus === BBOStatus.ON && (
+          <div className={cn("oui-absolute oui-bottom-1 oui-left-0")}>
+            <BBOOrderTypeSelect
+              value={bbo.bboType}
+              onChange={bbo.onBBOChange}
+              contentStyle={{
+                width: props.priceInputContainerWidth,
+              }}
+            />
+          </div>
+        )}
+      </div>
+    ) : null;
+
+  const qtyAndTotalInput = (
+    <Grid cols={2} className={"oui-group oui-space-x-1"}>
+      <CustomInput
+        label={t("common.qty")}
+        suffix={symbolInfo.base}
+        id="order_quantity_input"
+        name="order_quantity_input"
+        className={"!oui-rounded-r"}
+        value={values.order_quantity}
+        error={parseErrorMsg("order_quantity")}
+        onChange={(e) => {
+          props.onChange("order_quantity", e);
+        }}
+        formatters={[inputFormatter.dpFormatter(symbolInfo.base_dp)]}
+        onFocus={onFocus(InputType.QUANTITY)}
+        onBlur={onBlur(InputType.QUANTITY)}
+      />
+      <CustomInput
+        label={`${t("common.total")}≈`}
+        suffix={symbolInfo.quote}
+        id={"total"}
+        className={"!oui-rounded-l"}
+        value={values.total}
+        error={parseErrorMsg("total")}
+        onChange={(e) => {
+          props.onChange("total", e);
+        }}
+        onFocus={onFocus(InputType.TOTAL)}
+        onBlur={onBlur(InputType.TOTAL)}
+        formatters={[inputFormatter.dpFormatter(symbolInfo.quote_dp)]}
+      />
+    </Grid>
+  );
+
   return (
     <div className={"oui-space-y-1"}>
-      {type === OrderType.STOP_LIMIT || type === OrderType.STOP_MARKET ? (
-        <div className={"oui-group"}>
-          <CustomInput
-            label={t("common.trigger")}
-            suffix={symbolInfo.quote}
-            error={parseErrorMsg("trigger_price")}
-            id={"trigger"}
-            ref={props.refs.triggerPriceInputRef}
-            value={values.trigger_price}
-            onChange={(e) => {
-              props.onChange("trigger_price", e);
-            }}
-            formatters={[inputFormatter.dpFormatter(symbolInfo.quote_dp)]}
-            onFocus={onFocus(InputType.TRIGGER_PRICE)}
-            onBlur={onBlur(InputType.TRIGGER_PRICE)}
-          />
-        </div>
-      ) : null}
+      {triggerPriceInput}
 
-      {type === OrderType.LIMIT || type === OrderType.STOP_LIMIT ? (
-        <div
-          ref={props.refs.priceInputContainerRef}
-          className="oui-group oui-relative oui-w-full"
-        >
-          <CustomInput
-            label={t("common.price")}
-            suffix={priceSuffix}
-            id={"price"}
-            value={values.price}
-            error={parseErrorMsg("order_price")}
-            ref={props.refs.priceInputRef}
-            // helperText="Price per unit"
-            onChange={(e) => {
-              props.onChange("order_price", e);
-            }}
-            formatters={[inputFormatter.dpFormatter(symbolInfo.quote_dp)]}
-            onFocus={onFocus(InputType.PRICE)}
-            onBlur={onBlur(InputType.PRICE)}
-            readonly={readOnly}
-            classNames={{
-              root: cn(readOnly && "focus-within:oui-outline-transparent "),
-              input: cn(readOnly && "oui-cursor-auto"),
-            }}
-          />
-          {bbo.bboStatus === BBOStatus.ON && (
-            <div className={cn("oui-absolute oui-bottom-1 oui-left-0")}>
-              <BBOOrderTypeSelect
-                value={bbo.bboType}
-                onChange={bbo.onBBOChange}
-                contentStyle={{
-                  width: props.priceInputContainerWidth,
-                }}
-              />
-            </div>
-          )}
-        </div>
-      ) : null}
+      {priceInput}
 
-      <Grid cols={2} className={"oui-group oui-space-x-1"}>
-        <CustomInput
-          label={t("common.qty")}
-          suffix={symbolInfo.base}
-          id="order_quantity_input"
-          name="order_quantity_input"
-          className={"!oui-rounded-r"}
-          value={values.order_quantity}
-          error={parseErrorMsg("order_quantity")}
-          onChange={(e) => {
-            props.onChange("order_quantity", e);
-          }}
-          formatters={[inputFormatter.dpFormatter(symbolInfo.base_dp)]}
-          onFocus={onFocus(InputType.QUANTITY)}
-          onBlur={onBlur(InputType.QUANTITY)}
-        />
-        <CustomInput
-          label={`${t("common.total")}≈`}
-          suffix={symbolInfo.quote}
-          id={"total"}
-          className={"!oui-rounded-l"}
-          value={values.total}
-          error={parseErrorMsg("total")}
-          onChange={(e) => {
-            props.onChange("total", e);
-          }}
-          onFocus={onFocus(InputType.TOTAL)}
-          onBlur={onBlur(InputType.TOTAL)}
-          formatters={[inputFormatter.dpFormatter(symbolInfo.quote_dp)]}
-        />
-      </Grid>
+      {qtyAndTotalInput}
     </div>
   );
 };

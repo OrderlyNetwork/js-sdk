@@ -33,8 +33,8 @@ export const ScaledOrderInput = (props: BaseOrderInputProps) => {
     />
   );
 
-  return (
-    <div className="oui-space-y-1">
+  const priceInput = (
+    <>
       <CustomInput
         label={t("orderEntry.startPrice")}
         suffix={quote}
@@ -64,94 +64,112 @@ export const ScaledOrderInput = (props: BaseOrderInputProps) => {
         onFocus={onFocus(InputType.END_PRICE)}
         onBlur={onBlur(InputType.END_PRICE)}
       />
+    </>
+  );
+
+  const qtyInput = isBase ? (
+    <CustomInput
+      label={t("common.qty")}
+      suffix={suffix}
+      id="order_quantity_input"
+      name="order_quantity_input"
+      className="!oui-rounded-r"
+      value={values.order_quantity}
+      error={parseErrorMsg(
+        "order_quantity",
+        `${errors?.order_quantity?.value} ${base}`,
+      )}
+      onChange={(val) => {
+        props.onChange("order_quantity", val);
+      }}
+      formatters={[inputFormatter.dpFormatter(base_dp)]}
+      onFocus={onFocus(InputType.QUANTITY)}
+      onBlur={onBlur(InputType.QUANTITY)}
+    />
+  ) : (
+    <CustomInput
+      label={t("common.qty")}
+      suffix={suffix}
+      id="order_total_input"
+      name="order_total_input"
+      className="!oui-rounded-r"
+      value={values.total}
+      error={parseErrorMsg(
+        "order_quantity",
+        `${errors?.total?.value} ${quote}`,
+      )}
+      onChange={(val) => {
+        props.onChange("total", val);
+      }}
+      formatters={[inputFormatter.dpFormatter(quote_dp)]}
+      onFocus={onFocus(InputType.TOTAL)}
+      onBlur={onBlur(InputType.TOTAL)}
+    />
+  );
+
+  const totalOrdersInput = (
+    <CustomInput
+      label={t("orderEntry.totalOrders")}
+      placeholder="2-20"
+      id="order_total_orders_input"
+      className={"!oui-rounded-l"}
+      value={values.total_orders}
+      error={parseErrorMsg("total_orders")}
+      onChange={(val) => {
+        props.onChange("total_orders", val);
+      }}
+      overrideFormatters={[
+        // inputFormatter.rangeFormatter({ min: 2, max: 20 }),
+        inputFormatter.numberFormatter,
+        inputFormatter.dpFormatter(0),
+      ]}
+      onFocus={onFocus(InputType.TOTAL_ORDERS)}
+      onBlur={onBlur(InputType.TOTAL_ORDERS)}
+    />
+  );
+
+  const distributionInput = (
+    <QuantityDistributionInput
+      value={values.distribution_type}
+      onValueChange={(value) => {
+        props.onChange("distribution_type", value);
+      }}
+      className={cn(!showSkewInput && "oui-rounded-b-xl")}
+    />
+  );
+
+  const skewInput = showSkewInput && (
+    <CustomInput
+      id="order_skew_input"
+      label={t("orderEntry.skew")}
+      value={values.skew}
+      error={parseErrorMsg("skew")}
+      onChange={(val) => {
+        props.onChange("skew", val);
+      }}
+      onFocus={onFocus(InputType.SKEW)}
+      onBlur={onBlur(InputType.SKEW)}
+      overrideFormatters={[
+        inputFormatter.rangeFormatter({ min: 0, max: 100, dp: 2 }),
+        inputFormatter.dpFormatter(2),
+      ]}
+      classNames={{
+        root: "oui-rounded-b-xl",
+      }}
+    />
+  );
+
+  return (
+    <div className="oui-space-y-1">
+      {priceInput}
 
       <Grid cols={2} className={"oui-group oui-space-x-1"}>
-        {isBase ? (
-          <CustomInput
-            label={t("common.qty")}
-            suffix={suffix}
-            id="order_quantity_input"
-            name="order_quantity_input"
-            className="!oui-rounded-r"
-            value={values.order_quantity}
-            error={parseErrorMsg(
-              "order_quantity",
-              `${errors?.order_quantity?.value} ${base}`,
-            )}
-            onChange={(val) => {
-              props.onChange("order_quantity", val);
-            }}
-            formatters={[inputFormatter.dpFormatter(base_dp)]}
-            onFocus={onFocus(InputType.QUANTITY)}
-            onBlur={onBlur(InputType.QUANTITY)}
-          />
-        ) : (
-          <CustomInput
-            label={t("common.qty")}
-            suffix={suffix}
-            id="order_total_input"
-            name="order_total_input"
-            className="!oui-rounded-r"
-            value={values.total}
-            error={parseErrorMsg(
-              "order_quantity",
-              `${errors?.total?.value} ${quote}`,
-            )}
-            onChange={(val) => {
-              props.onChange("total", val);
-            }}
-            formatters={[inputFormatter.dpFormatter(quote_dp)]}
-            onFocus={onFocus(InputType.TOTAL)}
-            onBlur={onBlur(InputType.TOTAL)}
-          />
-        )}
-        <CustomInput
-          label={t("orderEntry.totalOrders")}
-          placeholder="2-20"
-          id="order_total_orders_input"
-          className={"!oui-rounded-l"}
-          value={values.total_orders}
-          error={parseErrorMsg("total_orders")}
-          onChange={(val) => {
-            props.onChange("total_orders", val);
-          }}
-          overrideFormatters={[
-            // inputFormatter.rangeFormatter({ min: 2, max: 20 }),
-            inputFormatter.numberFormatter,
-            inputFormatter.dpFormatter(0),
-          ]}
-          onFocus={onFocus(InputType.TOTAL_ORDERS)}
-          onBlur={onBlur(InputType.TOTAL_ORDERS)}
-        />
+        {qtyInput}
+        {totalOrdersInput}
       </Grid>
-      <QuantityDistributionInput
-        value={values.distribution_type}
-        onValueChange={(value) => {
-          props.onChange("distribution_type", value);
-        }}
-        className={cn(!showSkewInput && "oui-rounded-b-xl")}
-      />
 
-      {showSkewInput && (
-        <CustomInput
-          id="order_skew_input"
-          label={t("orderEntry.skew")}
-          value={values.skew}
-          error={parseErrorMsg("skew")}
-          onChange={(val) => {
-            props.onChange("skew", val);
-          }}
-          onFocus={onFocus(InputType.SKEW)}
-          onBlur={onBlur(InputType.SKEW)}
-          overrideFormatters={[
-            inputFormatter.rangeFormatter({ min: 0, max: 100, dp: 2 }),
-            inputFormatter.dpFormatter(2),
-          ]}
-          classNames={{
-            root: "oui-rounded-b-xl",
-          }}
-        />
-      )}
+      {distributionInput}
+      {skewInput}
     </div>
   );
 };
