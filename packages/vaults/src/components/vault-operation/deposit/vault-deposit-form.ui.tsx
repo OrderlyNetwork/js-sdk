@@ -28,7 +28,7 @@ export const VaultDepositForm: FC<VaultDepositFormScript> = (props) => {
         <QuantityInput
           value={quantity}
           onValueChange={onQuantityChange}
-          token={sourceToken as any}
+          token={{ ...sourceToken, precision: 6 } as any}
           testId="oui-testid-vault-deposit-dialog-quantity-input"
         />
       </Box>

@@ -34,6 +34,20 @@ export const useOperationScript = (props: OperationScript) => {
     amount: string;
     vaultId: string;
   }) => {
+    if (props.type === OperationType.DEPOSIT) {
+      if (new Decimal(amount).lt(10)) {
+        toast.error("Deposit amount is less than the minimum 10 USDC.");
+        return;
+      }
+    }
+
+    // if (props.type === OperationType.WITHDRAWAL) {
+    //   if (new Decimal(amount).lt(0.000001)) {
+    //     toast.error("Withdrawal shares is less than minimum 0.000001.");
+    //     return;
+    //   }
+    // }
+
     const payloadType = getToAccountPayloadType(props.type, RoleType.LP);
     const requestParams = {
       payloadType,

@@ -57,7 +57,11 @@ const VaultsIntroductionItem: FC<{
       <div className="oui-text-base oui-font-normal oui-text-base-contrast-54">
         {title}
       </div>
-      <Text.numeral dp={0} {...textProps}>
+      <Text.numeral
+        className="oui-text-xl oui-font-semibold"
+        dp={0}
+        {...textProps}
+      >
         {value}
       </Text.numeral>
     </div>

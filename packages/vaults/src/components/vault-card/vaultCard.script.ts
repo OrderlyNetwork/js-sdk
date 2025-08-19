@@ -58,6 +58,12 @@ export const useVaultCardScript = (vault: VaultInfo) => {
     return state.chainNamespace === "EVM";
   }, [state.chainNamespace]);
 
+  const isWrongNetwork = useMemo(() => {
+    return (
+      state.chainNamespace !== "EVM" && state.accountId !== state.mainAccountId
+    );
+  }, [state.chainNamespace, state.accountId, state.mainAccountId]);
+
   const openDepositAndWithdraw = (activeTab: "deposit" | "withdraw") => {
     modal.show(VaultDepositAndWithdrawWithDialogId, {
       activeTab,
@@ -80,6 +86,7 @@ export const useVaultCardScript = (vault: VaultInfo) => {
     openDepositAndWithdraw,
     availableBalance: memoizedAvailableBalance,
     openVaultWebsite,
+    isWrongNetwork,
   };
 };
 

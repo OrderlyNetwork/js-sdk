@@ -25,7 +25,7 @@ export const useVaultWithdrawFormScript = (
     return vault?.est_main_share_price || 0;
   }, [vaultInfo.data, vaultId]);
 
-  const maxQuantity = vaultLpInfo?.[0]?.total_main_shares || 0;
+  const maxQuantity = vaultLpInfo?.[0]?.available_main_shares || 0;
 
   const receivingAmount = useMemo(() => {
     if (!quantity || !sharePrice) {
@@ -41,9 +41,17 @@ export const useVaultWithdrawFormScript = (
     });
   };
 
+  const onQuantityChange = (value: string) => {
+    if (value && new Decimal(value).gt(maxQuantity)) {
+      setQuantity(maxQuantity.toString());
+    } else {
+      setQuantity(value);
+    }
+  };
+
   return {
     quantity,
-    onQuantityChange: setQuantity,
+    onQuantityChange,
     maxQuantity,
     handleWithdraw,
     vaultId,
