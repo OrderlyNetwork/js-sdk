@@ -1,5 +1,5 @@
 import { FC } from "react";
-import isNumber from "lodash/isNumber";
+import { isNumber } from "lodash";
 import { RefferalAPI as API } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import {
