@@ -232,9 +232,14 @@ export class TPSLService {
       ? i18n.t("tpsl.takeProfit")
       : i18n.t("tpsl.stopLoss");
 
+    const color = pnl.gt(0)
+      ? this.broker.colorConfig.upColor
+      : this.broker.colorConfig.downColor;
     tpslOrderLine
       ?.setText(`${direction} ${pnl.toDecimalPlaces(2).toNumber()}`)
-      .setBodyTextColor(pnl.gt(0) ? "rgb(0,255,0)" : "rgb(255,0,0)");
+      .setBodyTextColor(color!)
+      .setBodyBorderColor(color!)
+      .setLineColor(color!);
 
     if (this.tpslVerticalLineTime) {
       verticalLine?.setPoints([
@@ -316,22 +321,25 @@ export class TPSLService {
         .createOrderLine()
         // .setEditable(false)
         .setCancellable(false)
+        .setExtendLeft(false)
+        .setTooltip(i18n.t("tpsl.dragToSet"))
         .setPrice(this.currentPosition!.open)
         .setLineLength(-200, "pixel")
-        .setText("TP/SL add")
+        .setText(i18n.t("tpsl.advanced.title"))
         .setQuantity("")
+        .setBodyTextColor(this.broker.colorConfig.textColor!)
+        .setBodyBackgroundColor(this.broker.colorConfig.chartBG!)
+        .setBodyBorderColor(this.broker.colorConfig.pnlZoreColor!)
+        .setQuantityTextColor(this.broker.colorConfig.qtyTextColor!)
+        .setBodyFont(this.broker.colorConfig.font!)
+        .setQuantityFont(this.broker.colorConfig.font!)
         .setLineStyle(1)
-        .setLineColor("rgba(255,255,255,0)")
-        .onMoving(() => {
-          console.log("aaa onMoving");
-          // this.drawTPSL(params);
-        })
+      // .setLineColor("rgba(255,255,255,0)")
     );
   }
 
   private verticalLineTime() {
     const range = this.chart.getVisibleRange();
-    console.log("xxx range", range);
 
     // const timeScaler = this.chart.getTimeScale();
     // // console.log(timeScaler.width());

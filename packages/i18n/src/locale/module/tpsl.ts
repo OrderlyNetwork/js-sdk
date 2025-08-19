@@ -14,6 +14,7 @@ export const tpsl = {
   "tpsl.offset": "Offset",
   "tpsl.add": "Add",
   "tpsl.cancelAll": "Cancel all",
+  "tpsl.dragToSet": "Drag to set TP/SL",
 
   "tpsl.tpOrderPrice": "TP order price",
   "tpsl.slOrderPrice": "SL order price",
