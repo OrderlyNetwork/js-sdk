@@ -1,5 +1,23 @@
 # @orderly.network/markets
 
+## 2.6.0
+
+### Minor Changes
+
+- publish
+- c4b5fbc: publish
+
+### Patch Changes
+
+- Updated dependencies
+- Updated dependencies [c4b5fbc]
+  - @orderly.network/hooks@2.6.0
+  - @orderly.network/i18n@2.6.0
+  - @orderly.network/types@2.6.0
+  - @orderly.network/ui@2.6.0
+  - @orderly.network/ui-scaffold@2.6.0
+  - @orderly.network/utils@2.6.0
+
 ## 2.6.0-alpha.0
 
 ### Minor Changes

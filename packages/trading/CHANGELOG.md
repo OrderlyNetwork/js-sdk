@@ -1,5 +1,34 @@
 # @orderly.network/trading
 
+## 2.6.0
+
+### Minor Changes
+
+- publish
+- c4b5fbc: publish
+
+### Patch Changes
+
+- Updated dependencies
+- Updated dependencies [c4b5fbc]
+  - @orderly.network/react-app@2.6.0
+  - @orderly.network/hooks@2.6.0
+  - @orderly.network/i18n@2.6.0
+  - @orderly.network/markets@2.6.0
+  - @orderly.network/types@2.6.0
+  - @orderly.network/ui@2.6.0
+  - @orderly.network/ui-chain-selector@2.6.0
+  - @orderly.network/ui-connector@2.6.0
+  - @orderly.network/ui-leverage@2.6.0
+  - @orderly.network/ui-order-entry@2.6.0
+  - @orderly.network/ui-orders@2.6.0
+  - @orderly.network/ui-positions@2.6.0
+  - @orderly.network/ui-scaffold@2.6.0
+  - @orderly.network/ui-share@2.6.0
+  - @orderly.network/ui-tradingview@2.6.0
+  - @orderly.network/ui-transfer@2.6.0
+  - @orderly.network/utils@2.6.0
+
 ## 2.6.0-alpha.0
 
 ### Minor Changes
