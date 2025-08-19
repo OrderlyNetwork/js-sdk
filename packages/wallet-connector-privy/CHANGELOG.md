@@ -1,5 +1,22 @@
 # @orderly.network/wallet-connector-privy
 
+## 2.6.0-alpha.0
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/core@2.6.0-alpha.0
+  - @orderly.network/hooks@2.6.0-alpha.0
+  - @orderly.network/i18n@2.6.0-alpha.0
+  - @orderly.network/types@2.6.0-alpha.0
+  - @orderly.network/ui@2.6.0-alpha.0
+  - @orderly.network/ui-connector@2.6.0-alpha.0
+  - @orderly.network/utils@2.6.0-alpha.0
+
 ## 2.5.3
 
 ### Patch Changes

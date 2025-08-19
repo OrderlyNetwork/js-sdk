@@ -1,5 +1,11 @@
 # @orderly.network/codemod
 
+## 1.6.0-alpha.0
+
+### Minor Changes
+
+- publish
+
 ## 1.5.3
 
 ### Patch Changes

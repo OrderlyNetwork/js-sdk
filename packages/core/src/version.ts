@@ -7,7 +7,7 @@ declare global {
 }
 if (typeof window !== "undefined") {
   window.__ORDERLY_VERSION__ = window.__ORDERLY_VERSION__ || {};
-  window.__ORDERLY_VERSION__["@orderly.network/core"] = "2.5.3";
+  window.__ORDERLY_VERSION__["@orderly.network/core"] = "2.6.0-alpha.0";
 }
 
-export default "2.5.3";
+export default "2.6.0-alpha.0";
