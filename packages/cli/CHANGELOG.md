@@ -1,5 +1,29 @@
 # @orderly.network/cli
 
+## 0.9.0
+
+### Minor Changes
+
+- publish
+- c4b5fbc: publish
+
+### Patch Changes
+
+- Updated dependencies
+- Updated dependencies [c4b5fbc]
+  - @orderly.network/core@2.6.0
+
+## 0.9.0-alpha.0
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/core@2.6.0-alpha.0
+
 ## 0.8.3
 
 ### Patch Changes

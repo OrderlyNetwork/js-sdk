@@ -1,5 +1,29 @@
 # @orderly.network/utils
 
+## 2.6.0
+
+### Minor Changes
+
+- publish
+- c4b5fbc: publish
+
+### Patch Changes
+
+- Updated dependencies
+- Updated dependencies [c4b5fbc]
+  - @orderly.network/types@2.6.0
+
+## 2.6.0-alpha.0
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/types@2.6.0-alpha.0
+
 ## 2.5.3
 
 ### Patch Changes
