@@ -10,6 +10,7 @@ import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext, useDataTap } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { modal } from "@orderly.network/ui";
+import type { LayoutPosition } from "../../components/desktop/layout/switchLayout";
 import { useSplitPersistent } from "../../components/desktop/layout/useSplitPersistent";
 import { PortfolioSheetWidget } from "../../components/mobile/portfolioSheet";
 import { useTradingLocalStorage } from "../../hooks/";
@@ -41,6 +42,11 @@ export const tradingViewMinWidth = 540;
 export const dataListMaxHeight = 800;
 export const dataListInitialHeight = 350;
 
+const ORDERLY_ORDER_ENTRY_SIDE_MARKETS_LAYOUT =
+  "orderly_order_entry_side_markets_layout";
+
+const ORDERLY_SIDE_MARKETS_MODE_KEY = "orderly_side_markets_mode";
+
 export const useTradingScript = () => {
   const [openMarketsSheet, setOpenMarketsSheet] = useState(false);
   const props = useTradingPageContext();
@@ -66,8 +72,8 @@ export const useTradingScript = () => {
   const max4XL = useMediaQuery("(max-width: 1680px)");
 
   // Order entry and side market list position, default Order entry in right
-  const [layout, setLayout] = useLocalStorage(
-    "orderly_order_entry_side_markets_layout",
+  const [layout, setLayout] = useLocalStorage<LayoutPosition>(
+    ORDERLY_ORDER_ENTRY_SIDE_MARKETS_LAYOUT,
     "right",
   );
 
@@ -160,8 +166,6 @@ export const useTradingScript = () => {
 
   return { ...props, ...map } as TradingPageState & typeof map;
 };
-
-const ORDERLY_SIDE_MARKETS_MODE_KEY = "orderly_side_markets_mode";
 
 const useMarketsCollapse = (options: { resizeable: boolean }) => {
   const { resizeable } = options;

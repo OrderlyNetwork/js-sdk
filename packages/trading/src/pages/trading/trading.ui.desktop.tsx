@@ -377,7 +377,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
           // height: props.extraHeight ? props.extraHeight : undefined,
         }}
         className={cn(
-          "oui-flex oui-flex-1 ",
+          "oui-flex oui-flex-1",
           "oui-size-full oui-min-w-[1018px]",
           "oui-px-3 oui-py-2",
           props.className,
@@ -410,7 +410,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
         >
           <Flex
             height="100%"
-            className="oui-flex-1 oui-w-[calc(100%_-_280px_-_12px)]"
+            className="oui-w-[calc(100%_-_280px_-_12px)] oui-flex-1"
             direction="column"
             gapY={2}
           >
@@ -444,9 +444,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
               <SplitLayout
                 ref={props.tradingviewAndOrderbookSplitRef}
                 mode="vertical"
-                style={{
-                  width: `calc(100% - ${marketsWidth}px)`,
-                }}
+                style={{ width: `calc(100% - ${marketsWidth}px)` }}
                 className="oui-flex-1"
                 onSizeChange={setOrderbookSplitHeightSM}
                 onDragging={props.onTradingviewAndOrderbookDragging}
