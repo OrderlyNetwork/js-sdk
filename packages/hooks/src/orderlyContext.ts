@@ -1,4 +1,4 @@
-import { createContext } from "react";
+import { createContext, useContext } from "react";
 import {
   type ConfigStore,
   type OrderlyKeyStore,
@@ -53,11 +53,28 @@ export interface OrderlyConfigContextState {
      * Custom `/v1/public/futures` response data.
      */
     symbolList?: (originalVal: API.MarketInfoExt[]) => any[];
+    /**
+     * custom `/v2/public/announcement` response data
+     */
+    announcementList?: (data: any[]) => any[];
+  };
+  notification?: {
+    orderFilled?: {
+      /**
+       * Sound to play when an order is successful.
+       * @default ""
+       */
+      media?: string;
+    };
   };
 }
 
 export const OrderlyContext = createContext<OrderlyConfigContextState>({
   // configStore: new MemoryConfigStore(),
 } as OrderlyConfigContextState);
+
+export const useOrderlyContext = () => {
+  return useContext(OrderlyContext);
+};
 
 export const OrderlyProvider = OrderlyContext.Provider;

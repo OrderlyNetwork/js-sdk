@@ -16,6 +16,7 @@ export interface PositionsRowContextState {
   onSubmit: () => Promise<any>;
   submitting: boolean;
   tpslOrder?: API.AlgoOrder;
+  partialTPSLOrder?: API.AlgoOrder;
   quoteDp?: number;
   baseDp?: number;
   baseTick?: number;

@@ -15,10 +15,14 @@ export class OrderValidation {
         return "TP price";
       case "sl_trigger_price":
         return "SL price";
-      case "max_price":
-        return "Upper price";
-      case "min_price":
-        return "Lower price";
+      case "tp_order_price":
+        return "TP order price";
+      case "sl_order_price":
+        return "SL order price";
+      case "start_price":
+        return "Start price";
+      case "end_price":
+        return "End price";
       case "total_orders":
         return "Total orders";
       case "skew":
@@ -32,6 +36,19 @@ export class OrderValidation {
     return {
       type: "required",
       message: `${this.getLabel(key)} is required`,
+    } as OrderValidationItem;
+  }
+
+  static priceErrorMin(key: keyof OrderlyOrder) {
+    return {
+      type: "priceErrorMin",
+      message: `Your ${this.getLabel(key)} should be set lower than your order price.`,
+    } as OrderValidationItem;
+  }
+  static priceErrorMax(key: keyof OrderlyOrder) {
+    return {
+      type: "priceErrorMax",
+      message: `Your ${this.getLabel(key)} should be set higher than your order price.`,
     } as OrderValidationItem;
   }
 

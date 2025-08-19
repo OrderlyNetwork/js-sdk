@@ -3,6 +3,7 @@ import type { Preview } from "@storybook/react-vite";
 import { withThemeBuilder } from "../src/addons/theme_tool/preview";
 import { OrderlyProvider } from "../src/components/orderlyProvider";
 import { customViewports } from "./screenSizes";
+import "../src/playground/styles/fonts.css";
 import "../src/tailwind.css";
 
 const preview: Preview = {
@@ -41,7 +42,10 @@ const preview: Preview = {
         color: /(background|color)$/i,
         date: /Date$/i,
       },
+      // disable: true,
     },
+    // actions: { disable: true },
+    // interactions: { disable: true },
 
     a11y: {
       // 'todo' - show a11y violations in the test UI only
@@ -58,7 +62,6 @@ const preview: Preview = {
         order: [
           "Overview",
           "Design Tokens",
-          "Base",
           "Package",
           [
             "trading",
@@ -81,6 +84,7 @@ const preview: Preview = {
             "ui-tradingview",
             "i18n",
           ],
+          "Base",
         ],
       },
     },

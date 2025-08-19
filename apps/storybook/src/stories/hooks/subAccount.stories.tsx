@@ -2,6 +2,7 @@ import { FC, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { SubAccount } from "@orderly.network/core";
 import { useAccount, useBoolean } from "@orderly.network/hooks";
+import { EMPTY_LIST } from "@orderly.network/types";
 import {
   Box,
   Button,
@@ -133,7 +134,10 @@ const SubAccountExample = () => {
         </Flex>
       </Box>
       <div>
-        <DataTable columns={columns} dataSource={state.subAccounts ?? []} />
+        <DataTable
+          columns={columns}
+          dataSource={state.subAccounts ?? EMPTY_LIST}
+        />
       </div>
     </AuthGuard>
   );

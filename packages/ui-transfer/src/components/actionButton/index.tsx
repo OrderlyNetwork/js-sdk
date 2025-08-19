@@ -1,9 +1,9 @@
 import React, { useMemo } from "react";
+import { useTranslation } from "@orderly.network/i18n";
+import { AccountStatusEnum, NetworkId } from "@orderly.network/types";
 import { Box, Button, ButtonProps } from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
-import { AccountStatusEnum, NetworkId } from "@orderly.network/types";
 import { DepositAction } from "../../types";
-import { useTranslation } from "@orderly.network/i18n";
 
 export type ActionButtonProps = {
   disabled?: boolean;
@@ -12,6 +12,7 @@ export type ActionButtonProps = {
   symbol?: string;
   onDeposit?: () => void;
   onApprove?: () => void;
+  onApproveAndDeposit?: () => void;
   networkId?: NetworkId;
 };
 
@@ -23,24 +24,32 @@ export const ActionButton: React.FC<ActionButtonProps> = (props) => {
     symbol = "USDC",
     onDeposit,
     onApprove,
+    onApproveAndDeposit,
     networkId,
   } = props;
   const { t } = useTranslation();
 
   const buttonParams = useMemo(() => {
-    const params: Record<DepositAction, ButtonProps> = {
-      [DepositAction.Approve]: {
-        children: t("transfer.deposit.approve.symbol", { symbol }),
-        onClick: onApprove,
+    const params: Partial<Record<DepositAction, ButtonProps>> = {
+      // [DepositAction.Approve]: {
+      //   // Approve & Deposit
+      //   children: t("transfer.deposit.approve"),
+      //   onClick: onApprove,
+      //   // approve not disabled button
+      //   disabled: false,
+      //   "data-testid": "oui-testid-deposit-dialog-approve-btn",
+      // },
+      [DepositAction.ApproveAndDeposit]: {
+        children: `${t("transfer.deposit.approve")} & ${t("common.deposit")}`,
+        onClick: onApproveAndDeposit,
         // approve not disabled button
-        disabled: false,
-        "data-testid": "oui-testid-deposit-dialog-approve-btn",
+        // disabled: false,
       },
-      [DepositAction.Increase]: {
-        children: t("transfer.deposit.increase.symbol", { symbol }),
-        onClick: onApprove,
-        "data-testid": "oui-testid-deposit-dialog-increase-btn",
-      },
+      // [DepositAction.Increase]: {
+      //   children: t("transfer.deposit.increase.symbol", { symbol }),
+      //   onClick: onApprove,
+      //   "data-testid": "oui-testid-deposit-dialog-increase-btn",
+      // },
       [DepositAction.Deposit]: {
         children: t("common.deposit"),
         onClick: onDeposit,

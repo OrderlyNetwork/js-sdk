@@ -35,12 +35,28 @@ export function useOrderEntryFormErrorMsg(
         max: t("orderEntry.triggerPrice.error.max", { value }),
       },
       tp_trigger_price: {
+        required: t("tpsl.validate.tpTriggerPrice.error.required"),
         min: t("orderEntry.tpTriggerPrice.error.min", { value }),
         max: t("orderEntry.tpTriggerPrice.error.max", { value }),
+        priceErrorMin: t("tpsl.validate.tpTriggerPrice.error.priceErrorMin"),
+        priceErrorMax: t("tpsl.validate.tpTriggerPrice.error.priceErrorMax"),
       },
       sl_trigger_price: {
+        required: t("tpsl.validate.slTriggerPrice.error.required"),
         min: t("orderEntry.slTriggerPrice.error.min", { value }),
         max: t("orderEntry.slTriggerPrice.error.max", { value }),
+        priceErrorMin: t("tpsl.validate.slTriggerPrice.error.priceErrorMin"),
+        priceErrorMax: t("tpsl.validate.slTriggerPrice.error.priceErrorMax"),
+      },
+      tp_order_price: {
+        required: t("tpsl.validate.tpOrderPrice.error.required"),
+        min: t("tpsl.validate.tpOrderPrice.error.min", { value }),
+        max: t("tpsl.validate.tpOrderPrice.error.max", { value }),
+      },
+      sl_order_price: {
+        required: t("tpsl.validate.slOrderPrice.error.required"),
+        min: t("tpsl.validate.slOrderPrice.error.min", { value }),
+        max: t("tpsl.validate.slOrderPrice.error.max", { value }),
       },
       total: {
         min: t("orderEntry.total.error.min", { value }),
@@ -49,16 +65,14 @@ export function useOrderEntryFormErrorMsg(
       // slippage: {
       //   max: t("orderEntry.slippage.error.max"),
       // },
-      max_price: {
-        required: t("orderEntry.upperPrice.error.required"),
-        min: t("orderEntry.upperPrice.error.min", { value }),
-        max: t("orderEntry.upperPrice.error.max", { value }),
+      start_price: {
+        required: t("orderEntry.startPrice.error.required"),
+        min: t("orderEntry.startPrice.error.min", { value }),
       },
-      min_price: {
-        required: t("orderEntry.lowerPrice.error.required"),
-        min: t("orderEntry.lowerPrice.error.min", { value }),
-        // not use value
-        max: t("orderEntry.lowerPrice.error.max"),
+      end_price: {
+        required: t("orderEntry.endPrice.error.required"),
+        min: t("orderEntry.endPrice.error.min", { value }),
+        max: t("orderEntry.endPrice.error.max", { value }),
       },
       total_orders: {
         required: t("orderEntry.totalOrders.error.required"),
@@ -74,10 +88,10 @@ export function useOrderEntryFormErrorMsg(
     return map[key]?.[type] || "";
   };
 
-  const parseErrorMsg = (key: Keys) => {
+  const parseErrorMsg = (key: Keys, formatValue?: string) => {
     const { type, value } = errors?.[key] || ({} as OrderValidationItem);
     if (type) {
-      return getMessage(key, type, value);
+      return getMessage(key, type, formatValue || value);
     }
     return "";
   };

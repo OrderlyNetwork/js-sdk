@@ -59,10 +59,6 @@ export const useAccount = () => {
     [account, state],
   );
 
-  // const subAccounts = useMemo(() => {
-  //   return state.subAccounts ?? [];
-  // }, [state]);
-
   const ws = useWS();
 
   const switchAccount = useCallback(

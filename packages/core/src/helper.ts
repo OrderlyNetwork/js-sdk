@@ -1,4 +1,4 @@
-import { definedTypes } from "@orderly.network/types";
+import { DEFAUL_ORDERLY_KEY_SCOPE, definedTypes } from "@orderly.network/types";
 import { LocalStorageStore, MockKeyStore } from "./keyStore";
 import { BaseSigner } from "./signer";
 import { getTimestamp, SignatureDomain } from "./utils";
@@ -106,7 +106,7 @@ export function generateAddOrderlyKeyMessage(inputs: {
   const message = {
     brokerId,
     orderlyKey: publicKey,
-    scope: scope || "read,trading,asset",
+    scope: scope || DEFAUL_ORDERLY_KEY_SCOPE,
     chainId,
     timestamp,
     expiration: timestamp + 1000 * 60 * 60 * 24 * expiration,

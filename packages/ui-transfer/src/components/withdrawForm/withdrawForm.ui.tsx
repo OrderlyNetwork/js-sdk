@@ -1,6 +1,6 @@
 import React from "react";
-import { useQuery } from "@orderly.network/hooks";
 import { Trans, useTranslation } from "@orderly.network/i18n";
+import { DEFAUL_ORDERLY_KEY_SCOPE } from "@orderly.network/types";
 import {
   Box,
   Flex,
@@ -24,6 +24,9 @@ import { WithdrawFormScriptReturn } from "./withdrawForm.script";
 
 export type WithdrawFormProps = WithdrawFormScriptReturn;
 
+// if default orderly key scope includes asset, then enable internal withdraw
+const enabledInternalWithdraw = DEFAUL_ORDERLY_KEY_SCOPE.includes("asset");
+
 export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
   const {
     address,
@@ -45,9 +48,33 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
     sourceTokens,
     onSourceTokenChange,
     vaultBalanceList,
+    qtyGreaterThanMaxAmount,
+    qtyGreaterThanVault,
   } = props;
 
   const { t } = useTranslation();
+
+  const internalWithdrawPanel = enabledInternalWithdraw ? (
+    <TabPanel
+      title={t("transfer.withdraw.otherAccount", {
+        brokerName: props.brokerName,
+      })}
+      value={WithdrawTo.Account}
+    >
+      <TextAreaInput
+        label={t("common.accountId")}
+        value={props.toAccountId}
+        onChange={props.setToAccountId}
+        status={props.toAccountIdInputStatus}
+        hintMessage={props.toAccountIdHintMessage}
+      />
+      <Box my={2}>
+        <Text size="xs" intensity={54}>
+          {t("transfer.withdraw.accountId.tips")}
+        </Text>
+      </Box>
+    </TabPanel>
+  ) : undefined;
 
   return (
     <Box
@@ -120,25 +147,7 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
               readOnly
             />
           </TabPanel>
-          <TabPanel
-            title={t("transfer.withdraw.otherAccount", {
-              brokerName: props.brokerName,
-            })}
-            value={WithdrawTo.Account}
-          >
-            <TextAreaInput
-              label={t("common.accountId")}
-              value={props.toAccountId}
-              onChange={props.setToAccountId}
-              status={props.toAccountIdInputStatus}
-              hintMessage={props.toAccountIdHintMessage}
-            />
-            <Box my={2}>
-              <Text size="xs" intensity={54}>
-                {t("transfer.withdraw.accountId.tips")}
-              </Text>
-            </Box>
-          </TabPanel>
+          {internalWithdrawPanel}
         </Tabs>
 
         <Flex direction="column" mt={1} gapY={1} itemAlign="start">
@@ -162,16 +171,15 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
           </Text>
         </Flex>
       </Box>
-
       <WithdrawWarningMessage
         checkIsBridgeless={checkIsBridgeless}
         chainVaultBalance={chainVaultBalance as number}
         currentChain={currentChain}
-        quantity={quantity}
-        maxAmount={maxQuantity}
         crossChainTrans={crossChainTrans}
+        tokenName={sourceToken?.symbol as string}
+        qtyGreaterThanVault={qtyGreaterThanVault}
+        qtyGreaterThanMaxAmount={qtyGreaterThanMaxAmount}
       />
-
       <Flex justify="center">
         <WithdrawAction
           checkIsBridgeless={checkIsBridgeless}

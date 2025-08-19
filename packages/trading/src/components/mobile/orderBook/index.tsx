@@ -1,5 +1,6 @@
 import { FC, useEffect } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
+import { EMPTY_LIST } from "@orderly.network/types";
 import { cn, Flex, Spinner } from "@orderly.network/ui";
 import { BasicSymbolInfo } from "../../../types/types";
 import {
@@ -41,22 +42,17 @@ export const OrderBook: FC<OrderBookProps> = (props) => {
 
   const symbol = `PERP_${props.symbolInfo.base}_${props.symbolInfo.quote}`;
 
-  const [coinTypeConfig, setCoinTypeConfig]: [string, React.Dispatch<string>] =
-    useLocalStorage(ORDERBOOK_MOBILE_COIN_TYPE_KEY, ["total", base].join("_"));
-
-  useEffect(() => {
-    const [prevMode] = (coinTypeConfig?.split("_") as [string, string]) ?? [];
-    if (!coinTypeConfig.includes(quote) && base) {
-      setCoinTypeConfig([prevMode, base].join("_"));
-    }
-  }, [quote, base, coinTypeConfig]);
+  const [coinUnit, setCoinUnit] = useLocalStorage<"qty" | "base" | "quote">(
+    ORDERBOOK_MOBILE_COIN_TYPE_KEY,
+    "qty",
+  );
 
   return (
     <OrderBookProvider
       cellHeight={props.cellHeight ?? 20}
       onItemClick={props.onItemClick}
       depth={props.activeDepth}
-      pendingOrders={[]}
+      pendingOrders={EMPTY_LIST}
       showTotal={false}
       symbolInfo={props.symbolInfo}
     >
@@ -74,7 +70,7 @@ export const OrderBook: FC<OrderBookProps> = (props) => {
         <MarkPrice lastPrice={lastPrice} markPrice={markPrice} />
         <Bids data={props.bids} />
         <DepthSelect
-          depth={props.depths || []}
+          depth={props.depths || EMPTY_LIST}
           value={props.activeDepth}
           onChange={onDepthChange}
         />

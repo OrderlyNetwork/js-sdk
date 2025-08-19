@@ -2,7 +2,7 @@ export const orderEntry = {
   "orderEntry.buyLong": "Buy / Long",
   "orderEntry.sellShort": "Sell / Short",
   "orderEntry.reduceOnly": "Reduce only",
-
+  "orderEntry.soundAlerts": "Sound alerts",
   "orderEntry.orderType.limit": "Limit",
   "orderEntry.orderType.market": "Market",
   // TODO：use orderEntry.orderType.limit
@@ -16,8 +16,8 @@ export const orderEntry = {
   "orderEntry.orderType.fok": "FOK",
   "orderEntry.orderType.scaledOrder": "Scaled",
 
-  "orderEntry.upperPrice": "Upper price",
-  "orderEntry.lowerPrice": "Lower price",
+  "orderEntry.startPrice": "Start price",
+  "orderEntry.endPrice": "End price",
   "orderEntry.skew": "Skew",
   "orderEntry.totalOrders": "Total orders",
   "orderEntry.totalQuantity": "Total quantity",
@@ -27,7 +27,7 @@ export const orderEntry = {
   "orderEntry.quantityDistribution.description":
     "Controls how order size is distributed across price levels. ",
   "orderEntry.quantityDistribution.formula":
-    "Size Skew = (Size at highest price) ÷ (Size at lowest price)",
+    "Size Skew = (Size at end price) ÷ (Size at start price)",
 
   "orderEntry.distributionType.flat": "Flat",
   "orderEntry.distributionType.ascending": "Ascending",
@@ -39,9 +39,9 @@ export const orderEntry = {
   "orderEntry.distributionType.flat.description":
     "Uniform order allocation across the range.",
   "orderEntry.distributionType.ascending.description":
-    "Greater size allocated to higher price levels.",
+    "Larger order sizes toward the end of the price range",
   "orderEntry.distributionType.descending.description":
-    "Greater size allocated to lower price levels.",
+    "Larger order sizes near the start of the price range",
 
   "orderEntry.bbo": "BBO",
   "orderEntry.bbo.counterparty1": "Counterparty 1",
@@ -99,16 +99,14 @@ export const orderEntry = {
   "orderEntry.total.error.min":
     "The order value should be greater or equal to {{value}} USDC",
 
-  "orderEntry.upperPrice.error.required": "Upper price is required",
-  "orderEntry.upperPrice.error.min":
-    "Upper price must be greater than {{value}}",
-  "orderEntry.upperPrice.error.max": "Upper price must be less than {{value}}",
+  "orderEntry.startPrice.error.required": "Start price is required",
+  "orderEntry.startPrice.error.min":
+    "Start price must be greater than {{value}}",
+  "orderEntry.startPrice.error.max": "Start price must be less than {{value}}",
 
-  "orderEntry.lowerPrice.error.required": "Lower price is required",
-  "orderEntry.lowerPrice.error.min":
-    "Lower price must be greater than {{value}}",
-  "orderEntry.lowerPrice.error.max":
-    "Lower price must be less than upper price",
+  "orderEntry.endPrice.error.required": "End price is required",
+  "orderEntry.endPrice.error.min": "End price must be greater than {{value}}",
+  "orderEntry.endPrice.error.max": "End price must be less than {{value}}",
 
   "orderEntry.totalOrders.error.required": "Total orders is required",
   "orderEntry.totalOrders.error.range":

@@ -12,12 +12,18 @@ import { useBootstrap } from "../hooks/useBootstrap";
 import { useExecutionReport } from "../hooks/useExecutionReport";
 import { useUILocale } from "../hooks/useUILocale";
 import { OrderlyAppConfig } from "../types";
-import { AppStateProvider, AppStateProviderProps } from "./appContext";
-import { AppConfigProvider } from "./configContext";
+import { AppConfigProvider } from "./appConfigProvider";
+import { AppStateProvider, AppStateProviderProps } from "./appStateProvider";
 
 export type OrderlyAppProviderProps = PropsWithChildren<
   OrderlyAppConfig & AppStateProviderProps & OrderlyThemeProviderProps
 >;
+
+// Cannot be called outside of Provider because useExecutionReport requires useOrderlyContext.
+const ExecutionReportListener: React.FC = () => {
+  useExecutionReport();
+  return null;
+};
 
 const OrderlyAppProvider: React.FC<OrderlyAppProviderProps> = (props) => {
   const {
@@ -26,12 +32,13 @@ const OrderlyAppProvider: React.FC<OrderlyAppProviderProps> = (props) => {
     appIcons,
     onChainChanged,
     defaultChain,
+    widgetConfigs,
     ...configProps
   } = props;
 
   useTrack();
   useBootstrap();
-  useExecutionReport();
+
   const uiLocale = useUILocale();
 
   return (
@@ -42,11 +49,13 @@ const OrderlyAppProvider: React.FC<OrderlyAppProviderProps> = (props) => {
         overrides={props.overrides}
       >
         <OrderlyConfigProvider {...configProps}>
+          <ExecutionReportListener />
           <AppStateProvider
             onChainChanged={onChainChanged}
             defaultChain={defaultChain}
             restrictedInfo={props.restrictedInfo}
             onRouteChange={props.onRouteChange}
+            widgetConfigs={widgetConfigs}
           >
             <UILocaleProvider locale={uiLocale}>
               <TooltipProvider delayDuration={300}>
@@ -61,6 +70,8 @@ const OrderlyAppProvider: React.FC<OrderlyAppProviderProps> = (props) => {
   );
 };
 
-OrderlyAppProvider.displayName = "OrderlyAppProvider";
+if (process.env.NODE_ENV !== "production") {
+  OrderlyAppProvider.displayName = "OrderlyAppProvider";
+}
 
 export { OrderlyAppProvider };

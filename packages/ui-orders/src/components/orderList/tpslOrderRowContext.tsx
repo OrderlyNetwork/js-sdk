@@ -10,19 +10,26 @@ import {
 import {
   unstable_serialize,
   useAccount,
+  useMemoizedFn,
   useMutation,
   useSWRConfig,
   utils,
 } from "@orderly.network/hooks";
-import { API } from "@orderly.network/types";
+import {
+  findTPSLOrderPriceFromOrder,
+  findTPSLFromOrder,
+} from "@orderly.network/hooks";
+import { API, OrderType } from "@orderly.network/types";
 import { OrderSide } from "@orderly.network/types";
 import { AlgoOrderType } from "@orderly.network/types";
-import { useSymbolContext } from "./symbolProvider";
+import { useSymbolContext } from "../provider/symbolContext";
 
 export type TPSLOrderRowContextState = {
   order: API.AlgoOrderExt;
   tp_trigger_price?: number;
   sl_trigger_price?: number;
+  sl_order_price?: number | OrderType;
+  tp_order_price?: number | OrderType;
   tpPnL?: number;
   slPnL?: number;
 
@@ -34,7 +41,7 @@ export type TPSLOrderRowContextState = {
   position?: API.PositionTPSLExt;
 };
 
-export const TPSLOrderRowContext = createContext(
+export const TPSLOrderRowContext = createContext<TPSLOrderRowContextState>(
   {} as TPSLOrderRowContextState,
 );
 
@@ -43,10 +50,9 @@ export const useTPSLOrderRowContext = () => {
 };
 
 export const TPSLOrderRowProvider: FC<
-  PropsWithChildren<{
-    order: API.AlgoOrderExt;
-  }>
+  PropsWithChildren<{ order: API.AlgoOrderExt }>
 > = (props) => {
+  const { order, children } = props;
   const { quote_dp } = useSymbolContext();
   const [position, setPosition] = useState<API.PositionTPSLExt>();
 
@@ -60,77 +66,87 @@ export const TPSLOrderRowProvider: FC<
     return unstable_serialize(() => ["/v1/positions", state.accountId]);
   }, [state.accountId]);
 
-  const onCancelOrder = async (order: API.AlgoOrderExt) => {
+  const onCancelOrder = useMemoizedFn(async (order: API.AlgoOrderExt) => {
     return doDeleteOrder(null, {
       order_id: order.algo_order_id,
       symbol: order.symbol,
     });
-  };
+  });
 
-  const onUpdateOrder = async (order: API.AlgoOrderExt, params: any) => {
-    console.log("onUpdateOrder", order, position);
-    return doUpdateOrder({
-      order_id: order.algo_order_id,
-      child_orders: order.child_orders.map((order) => ({
+  const onUpdateOrder = useMemoizedFn(
+    async (order: API.AlgoOrderExt, params: any) => {
+      return doUpdateOrder({
         order_id: order.algo_order_id,
-        quantity: params.order_quantity,
-      })),
-    });
-  };
+        child_orders: order.child_orders.map((order) => ({
+          order_id: order.algo_order_id,
+          quantity: params.order_quantity,
+        })),
+      });
+    },
+  );
 
-  const getRelatedPosition = (
-    symbol: string,
-  ): API.PositionTPSLExt | undefined => {
-    const positions = config.cache.get(positionKey);
+  const getRelatedPosition = useMemoizedFn(
+    (symbol: string): API.PositionTPSLExt => {
+      const positions = config.cache.get(positionKey);
+      return positions?.data.rows.find(
+        (p: API.PositionTPSLExt) => p.symbol === symbol,
+      );
+    },
+  );
 
-    return positions?.data.rows.find(
-      (p: API.PositionTPSLExt) => p.symbol === symbol,
-    );
-  };
-
-  // const { sl_trigger_price, tp_trigger_price } = useMemo(() => {
-  //   if (
-  //     !("algo_type" in props.order) ||
-  //     !Array.isArray(props.order.child_orders)
-  //   ) {
-  //     return {};
-  //   }
-  //   return utils.findTPSLFromOrder(props.order);
-  // }, [props.order]);
-
-  const { sl_trigger_price, tp_trigger_price, tpPnL, slPnL } = calcTPSLPnL({
-    order: props.order,
+  const {
+    sl_trigger_price,
+    tp_trigger_price,
+    tpPnL,
+    slPnL,
+    sl_order_price,
+    tp_order_price,
+  } = calcTPSLPnL({
+    order: order,
     position,
     quote_dp,
   });
 
   useEffect(() => {
-    if (
-      "algo_type" in props.order ||
-      ((props.order as any)?.reduce_only ?? false)
-    ) {
-      const position = getRelatedPosition(props.order.symbol);
+    if ("algo_type" in order || ((order as any)?.reduce_only ?? false)) {
+      const position = getRelatedPosition(order.symbol);
       if (position) {
         setPosition(position);
       }
     }
-  }, [props.order.symbol]);
+  }, [order.symbol]);
+
+  const memoizedValue = useMemo<TPSLOrderRowContextState>(() => {
+    return {
+      order: order,
+      sl_trigger_price,
+      tp_trigger_price,
+      sl_order_price,
+      tp_order_price,
+      tpPnL,
+      slPnL,
+      position,
+      onCancelOrder,
+      onUpdateOrder,
+      getRelatedPosition,
+    };
+  }, [
+    order,
+    sl_trigger_price,
+    tp_trigger_price,
+    sl_order_price,
+    tp_order_price,
+    tpPnL,
+    slPnL,
+    position,
+    onCancelOrder,
+    onUpdateOrder,
+    getRelatedPosition,
+  ]);
 
   return (
-    <TPSLOrderRowContext.Provider
-      value={{
-        order: props.order,
-        sl_trigger_price,
-        tp_trigger_price,
-        tpPnL,
-        slPnL,
-        onCancelOrder,
-        onUpdateOrder,
-        getRelatedPosition,
-        position,
-      }}
-    >
-      {props.children}
+    <TPSLOrderRowContext.Provider value={memoizedValue}>
+      {children}
     </TPSLOrderRowContext.Provider>
   );
 };
@@ -150,10 +166,20 @@ function calcTPSLPnL(props: {
       tpPnL: undefined,
     };
 
-  const { sl_trigger_price, tp_trigger_price } =
-    !("algo_type" in order) || !Array.isArray(order.child_orders)
-      ? {}
-      : utils.findTPSLFromOrder(order);
+  const isTPSLOrder = "algo_type" in order && Array.isArray(order.child_orders);
+
+  const { sl_trigger_price, tp_trigger_price } = isTPSLOrder
+    ? findTPSLFromOrder(order)
+    : {
+        sl_trigger_price: undefined,
+        tp_trigger_price: undefined,
+      };
+  const { sl_order_price, tp_order_price } = isTPSLOrder
+    ? findTPSLOrderPriceFromOrder(order)
+    : {
+        sl_order_price: undefined,
+        tp_order_price: undefined,
+      };
 
   let quantity = order.quantity;
 
@@ -199,6 +225,8 @@ function calcTPSLPnL(props: {
   return {
     sl_trigger_price,
     tp_trigger_price,
+    sl_order_price,
+    tp_order_price,
     slPnL,
     tpPnL,
   };

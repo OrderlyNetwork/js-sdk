@@ -1,4 +1,4 @@
-import { useColors } from "./useColors";
+import { useRef } from "react";
 import {
   BarChart,
   XAxis,
@@ -12,11 +12,11 @@ import {
   Cross,
 } from "recharts";
 import type { TooltipProps } from "recharts";
-import { OrderlyChartTooltip } from "./customTooltip";
-import { cn } from "@orderly.network/ui";
-import { useRef } from "react";
-import { tickFormatter } from "../utils/yTickFormatter";
 import { useTranslation } from "@orderly.network/i18n";
+import { cn } from "@orderly.network/ui";
+import { tickFormatter } from "../utils/yTickFormatter";
+import { OrderlyChartTooltip } from "./customTooltip";
+import { useColors } from "./useColors";
 
 export type PnLChartDataItem = {
   date: string;
@@ -28,7 +28,7 @@ export type PnLChartProps = {
     profit: string;
     loss: string;
   };
-  data: PnLChartDataItem[];
+  data: ReadonlyArray<PnLChartDataItem> | PnLChartDataItem[];
   invisible?: boolean;
 };
 
@@ -57,8 +57,8 @@ export const XAxisLabel = (props: any) => {
     index === 0
       ? 48
       : containerWidth > 0
-      ? containerWidth - 10
-      : width + payload.offset;
+        ? containerWidth - 10
+        : width + payload.offset;
 
   return (
     <g transform={`translate(${_x},${y - 6})`}>
@@ -129,7 +129,7 @@ export const PnLBarChart = (props: PnLChartProps) => {
     >
       {/* @ts-ignore */}
       <BarChart
-        data={props.data}
+        data={props.data as any[]}
         margin={{ left: -10, top: 10, right: 10, bottom: 30 }}
       >
         {!invisible && (

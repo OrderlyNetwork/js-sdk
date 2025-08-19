@@ -16,12 +16,12 @@ import { Chain, NetworkId } from "@orderly.network/types";
 import { SDKError } from "@orderly.network/types";
 import { EthersProvider } from "@orderly.network/web3-provider-ethers";
 import { DEFAULT_TICK_SIZES } from "./constants";
-// import { usePreLoadData } from "./usePreloadData";
-import { DataCenterProvider } from "./dataProvider";
 import { ProxyConfigStore } from "./dev/proxyConfigStore";
 import { ExtendedConfigStore } from "./extendedConfigStore";
 import { OrderlyConfigContextState, OrderlyProvider } from "./orderlyContext";
-import { StatusProvider } from "./statusProvider";
+// import { usePreLoadData } from "./usePreloadData";
+import { DataCenterProvider } from "./provider/dataCenter/dataCenterProvider";
+import { StatusProvider } from "./provider/status/statusProvider";
 
 // import { useParamsCheck } from "./useParamsCheck";
 
@@ -44,7 +44,11 @@ export type BaseConfigProviderProps = {
   orderbookDefaultTickSizes?: Record<string, string>;
 } & Pick<
   OrderlyConfigContextState,
-  "enableSwapDeposit" | "customChains" | "chainTransformer" | "dataAdapter"
+  | "enableSwapDeposit"
+  | "customChains"
+  | "chainTransformer"
+  | "dataAdapter"
+  | "notification"
 >;
 
 export type ExclusiveConfigProviderProps =
@@ -82,6 +86,7 @@ export const OrderlyConfigProvider: FC<
     enableSwapDeposit = false,
     chainTransformer,
     dataAdapter,
+    notification,
   } = props;
 
   if (!brokerId && typeof configStore === "undefined") {
@@ -186,6 +191,7 @@ export const OrderlyConfigProvider: FC<
       defaultOrderbookTickSizes,
       chainTransformer,
       dataAdapter,
+      notification: notification,
     };
   }, [
     innerConfigStore,
@@ -197,6 +203,7 @@ export const OrderlyConfigProvider: FC<
     enableSwapDeposit,
     defaultOrderbookTickSizes,
     dataAdapter,
+    notification,
     chainTransformer,
   ]);
 

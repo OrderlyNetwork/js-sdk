@@ -28,6 +28,7 @@ export const MobileOverview: FC = (props) => {
     toggleVisible,
     onTransfer,
     isMainAccount,
+    hasSubAccount,
   } = useAssetScript();
   const { t } = useTranslation();
   const rewardsData = useRewardsDataScript();
@@ -89,6 +90,7 @@ export const MobileOverview: FC = (props) => {
           onTransfer={onTransfer}
           isMainAccount={isMainAccount}
           routerAdapter={layoutContext?.routerAdapter}
+          hasSubAccount={hasSubAccount}
         />
         <Flex
           direction={"row"}

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useRef } from "react";
 
 type NotFunction<T> = T extends (...args: any[]) => any ? never : T;

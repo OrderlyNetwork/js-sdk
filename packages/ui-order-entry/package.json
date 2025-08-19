@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/ui-order-entry",
-  "version": "2.5.3",
+  "version": "2.6.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -24,7 +24,8 @@
     "@orderly.network/ui": "workspace:*",
     "@orderly.network/ui-connector": "workspace:*",
     "@orderly.network/ui-leverage": "workspace:*",
-    "@orderly.network/utils": "workspace:*"
+    "@orderly.network/utils": "workspace:*",
+    "@orderly.network/ui-tpsl": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "^18.3.2",

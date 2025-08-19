@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 export enum AccountStatusEnum {
   EnableTradingWithoutConnected = -1,
   NotConnected = 0,
@@ -53,6 +55,7 @@ export const MANTLE_TESTNET_CHAINID_HEX = "0x138b";
 
 // Mainnet
 export const ARBITRUM_MAINNET_CHAINID = 42161;
+export const ETHEREUM_MAINNET_CHAINID = 1;
 export const ARBITRUM_MAINNET_CHAINID_HEX = "0xa4b1";
 
 export const MEDIA_TABLET = "(max-width: 768px)";
@@ -137,6 +140,8 @@ export const TesntTokenFallback = (testnetTokens: any) => [
   },
 ];
 
-export const EMPTY_LIST: any[] = [];
+export const EMPTY_LIST: ReadonlyArray<any> = [];
 
-export const EMPTY_OBJECT = {};
+export const EMPTY_OBJECT: Readonly<Record<PropertyKey, any>> = {};
+
+export const EMPTY_OPERATION = () => {};

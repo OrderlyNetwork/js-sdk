@@ -50,7 +50,7 @@ export const PortfolioValueMobile: FC<Props> = (props) => {
     >
       <Flex direction="row" gapX={1} itemAlign={"center"}>
         <Text className="oui-text-sm oui-text-base-contrast-54">
-          Portfolio value
+          {t("portfolio.overview.handle.title")}
         </Text>
         <EyeIcon
           size={16}

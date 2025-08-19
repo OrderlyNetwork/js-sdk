@@ -1,7 +1,7 @@
 import React from "react";
 import { useAccount } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
+import { API, EMPTY_LIST } from "@orderly.network/types";
 import { Flex, TokenIcon, Text, toast, Badge } from "@orderly.network/ui";
 import type { Column } from "@orderly.network/ui";
 import { capitalizeString } from "@orderly.network/utils";

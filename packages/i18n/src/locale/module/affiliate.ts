@@ -8,18 +8,20 @@ export const affiliate = {
   "affiliate.connectWallet.tooltip":
     "Please connect your wallet to use this function",
 
-  "affiliate.page.title": "Earn more as a <0>{{shortBrokerName}}</0> affiliate",
+  "affiliate.page.title":
+    "Refer, earn, and grow - referral & affiliate program",
   "affiliate.page.subTitle":
-    "Grow your brand | Get 40% commission | Unlock exclusive perks",
+    "Earn up to 60% in commissions by sharing your referral code. Invite friends, grow your network, and earn more.",
   "affiliate.page.learnMore": "Learn how it works",
 
   "affiliate.asAffiliate.affilates": "Affiliates",
-  "affiliate.asAffiliate.title": "As an affiliate",
-  "affiliate.asAffiliate.description": "Onboard traders to earn passive income",
+  "affiliate.asAffiliate.title": "Referrer",
+  "affiliate.asAffiliate.description":
+    "Earn 10% commission from friends’ trades. Want higher commission rates? Submit an application to become an affiliate.",
   "affiliate.asAffiliate.button": "Become an affiliate",
-
-  "affiliate.asTrader.title": "As a trader",
-  "affiliate.asTrader.description": "Onboard traders to earn passive income",
+  "affiliate.asTrader.title": "Referee (Trader)",
+  "affiliate.asTrader.description":
+    "Get rebates by trading with a referral code.",
   "affiliate.asTrader.button": "Enter code",
 
   "affiliate.referralCode": "Referral code",
@@ -30,10 +32,10 @@ export const affiliate = {
   "affiliate.referralCode.bound": "Referral code bound",
   "affiliate.referralCode.notExist": "This referral code does not exist.",
 
-  "affiliate.process.title": "Becoming an affiliate is easy",
+  "affiliate.process.title": "How It Works",
   "affiliate.process.step1.title": "Trade $10,000+ or apply",
   "affiliate.process.step1.description":
-    "Earn a referral code automatically ($0 of $10,000 completed), or apply for a higher rate via form.",
+    "Unlock a referral code automatically ($0 of $10,000 completed - main account only), or apply for a higher rate via the form.",
   "affiliate.process.step1.volumeEq0.title": "Get auto referral code or apply",
   "affiliate.process.step1.volumeEq0.description":
     "Your referral code is ready to use after placing your first trade. you can apply for a higher rate via form.",
@@ -43,11 +45,10 @@ export const affiliate = {
     "Earn a referral code automatically (${{volume}} of ${{requireVolume}} completed), or apply for a higher rate via form.",
   "affiliate.process.step2.title": "Share",
   "affiliate.process.step2.description":
-    "Unlock your affiliate link and share it with your community",
+    "Share your personalized referral code with others to start earning.",
   "affiliate.process.step3.title": "Earn",
   "affiliate.process.step3.description":
-    "Get paid and receive special treatment 24/7, 365",
-
+    "Refer others to earn commission, or use a referral code to earn rebates on your trading",
   "affiliate.summary": "Summary",
   "affiliate.summary.refereesTraded": "Referees that traded",
 
@@ -67,7 +68,7 @@ export const affiliate = {
   "affiliate.referralCodes.column.traders": "Traders",
   "affiliate.referralCodes.column.referees&Traders": "Referees / Traders",
   "affiliate.referralCodes.copyLink": "Copy link",
-
+  "affiliate.upTo": "Up to 60%",
   "affiliate.commission": "Commission",
   "affiliate.commission.30d": "30d commission",
   "affiliate.commission.column.activeUsers": "Referral active users",
@@ -87,8 +88,8 @@ export const affiliate = {
   "affiliate.trader.myRebates": "My rebates",
   "affiliate.trader.tradingVol": "Trading vol.",
   "affiliate.referralCode.editCodeModal.title": "Settings",
-  "affiliate.referralCode.editCodeModal.description": "Edit your Referral Code",
-  "affiliate.referralCode.editCodeModal.label": "Referral Code",
+  "affiliate.referralCode.editCodeModal.description": "Edit your referral code",
+  "affiliate.referralCode.editCodeModal.label": "Referral code",
   "affiliate.referralCode.editCodeModal.helpText.length":
     "Must be 4–10 characters long",
   "affiliate.referralCode.editCodeModal.helpText.format":

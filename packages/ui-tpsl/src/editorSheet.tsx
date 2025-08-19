@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useLocalStorage, useMarkPrice } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { AlgoOrderRootType, API } from "@orderly.network/types";
+import { AlgoOrderRootType, API, PositionType } from "@orderly.network/types";
 import {
   Flex,
   modal,
@@ -50,17 +50,12 @@ export const PositionTPSLSheet = (props: TPSLWidgetProps & TPSLSheetProps) => {
 
   return (
     <>
-      <PositionInfo position={position} symbolInfo={symbolInfo} />
-
       <TPSLWidget
         {...props}
-        onTPSLTypeChange={(type) => {
-          updateSheetTitle(
-            type === AlgoOrderRootType.TP_SL
-              ? t("common.tpsl")
-              : t("tpsl.positionTpsl"),
-          );
-        }}
+        positionType={
+          props.positionType ??
+          (isPositionTPSL ? PositionType.FULL : PositionType.PARTIAL)
+        }
         onComplete={onCompleted}
         onConfirm={(order, options) => {
           if (!needConfirm) {
@@ -115,6 +110,7 @@ export const PositionTPSLSheet = (props: TPSLWidgetProps & TPSLSheetProps) => {
                   side={order.side!}
                   quoteDP={quote_dp ?? 2}
                   baseDP={base_dp ?? 2}
+                  orderInfo={order}
                 />
               ),
             })
@@ -138,88 +134,6 @@ export const PositionTPSLSheet = (props: TPSLWidgetProps & TPSLSheetProps) => {
           hide();
         }}
       />
-    </>
-  );
-};
-
-export const TPSLSheetTitle = () => {
-  const modal = useModal();
-  const { t } = useTranslation();
-
-  const title = useMemo<string>(() => {
-    return (modal.args?.title || t("common.tpsl")) as string;
-  }, [modal.args?.title, t]);
-
-  return <span>{title}</span>;
-};
-
-export const PositionInfo = (props: {
-  position: API.Position;
-  symbolInfo: API.SymbolExt;
-}) => {
-  const { position, symbolInfo } = props;
-  const { data: markPrice } = useMarkPrice(position.symbol);
-  const modal = useModal();
-  const { t } = useTranslation();
-
-  const isPositionTPSL = useMemo(() => {
-    return modal.args?.title === t("tpsl.positionTpsl");
-  }, [modal.args?.title, t]);
-  return (
-    <>
-      <Flex justify={"between"} pb={3} itemAlign={"center"}>
-        <Text.formatted rule="symbol" className="oui-text-xs" showIcon>
-          {position.symbol}
-        </Text.formatted>
-        <Flex gapX={1}>
-          {isPositionTPSL && (
-            <Badge size="xs" color="primary">
-              {t("common.position")}
-            </Badge>
-          )}
-          <Badge size="xs" color="neutral">
-            {t("common.tpsl")}
-          </Badge>
-          {position.position_qty < 0 ? (
-            <Badge size="xs" color="buy">
-              {t("common.buy")}
-            </Badge>
-          ) : (
-            <Badge size="xs" color="sell">
-              {t("common.sell")}
-            </Badge>
-          )}
-        </Flex>
-      </Flex>
-      <Divider intensity={8} />
-      <Box py={3} className="oui-space-y-1">
-        <Flex justify={"between"}>
-          <Text size="sm" intensity={54}>
-            {t("common.avgOpen")}
-          </Text>
-          <Text.numeral
-            className="oui-text-xs"
-            unit={symbolInfo.quote}
-            dp={symbolInfo.quote_dp}
-            unitClassName="oui-ml-1 oui-text-base-contrast-36"
-          >
-            {position.average_open_price}
-          </Text.numeral>
-        </Flex>
-        <Flex justify={"between"}>
-          <Text size="sm" intensity={54}>
-            {t("common.markPrice")}
-          </Text>
-          <Text.numeral
-            className="oui-text-xs"
-            unit={symbolInfo.quote}
-            dp={symbolInfo.quote_dp}
-            unitClassName="oui-ml-1 oui-text-base-contrast-36"
-          >
-            {markPrice}
-          </Text.numeral>
-        </Flex>
-      </Box>
     </>
   );
 };

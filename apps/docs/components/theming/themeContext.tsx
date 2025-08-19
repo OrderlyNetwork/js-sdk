@@ -1,8 +1,6 @@
 "use client";
 
-import { createContext, FC, PropsWithChildren } from "react";
-import { useParams } from "next/navigation";
-// import { trpc } from "@/utils/trpc";
+import React, { createContext, useMemo } from "react";
 
 interface ThemeContextState {
   theme: any;
@@ -14,11 +12,14 @@ interface ThemeProviderProps {
   theme: any;
 }
 
-export const ThemeProvider: FC<PropsWithChildren<ThemeProviderProps>> = ({
-  children,
-  theme,
-}) => {
+export const ThemeProvider: React.FC<
+  React.PropsWithChildren<ThemeProviderProps>
+> = (props) => {
+  const { children, theme } = props;
+  const memoizedValue = useMemo<ThemeContextState>(() => ({ theme }), [theme]);
   return (
-    <ThemeContext.Provider value={{ theme }}>{children}</ThemeContext.Provider>
+    <ThemeContext.Provider value={memoizedValue}>
+      {children}
+    </ThemeContext.Provider>
   );
 };

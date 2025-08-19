@@ -339,8 +339,17 @@ export declare namespace API {
   }
 
   export interface PositionTPSLExt extends PositionExt {
-    tp_trigger_price?: number;
-    sl_trigger_price?: number;
+    full_tp_sl?: {
+      tp_trigger_price?: number;
+      sl_trigger_price?: number;
+      algo_order?: AlgoOrder;
+    };
+    partial_tp_sl?: {
+      tp_trigger_price?: number;
+      sl_trigger_price?: number;
+      order_num?: number;
+      algo_order?: AlgoOrder;
+    };
 
     // has_position_tp_sl: boolean;
 
@@ -411,6 +420,7 @@ export declare namespace API {
     withdrawal_fee?: number;
     minimum_withdraw_amount?: number;
     vault_address: string;
+    currency_decimal?: number;
 
     cross_chain_router: string;
     depositor: string;
@@ -509,6 +519,9 @@ export declare namespace API {
     to_account_id: string;
     token: string;
     updated_time: number;
+    chain_id: string;
+    // timestamp
+    block_time: number;
   }
 
   export interface TransferHistory {

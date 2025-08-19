@@ -20,8 +20,8 @@ import {
   upperCaseFirstLetter,
 } from "../../../utils/util";
 import { TabType } from "../../orders.widget";
+import { useSymbolContext } from "../../provider/symbolContext";
 import { ShareButtonWidget } from "../../shareButton";
-import { useSymbolContext } from "../symbolProvider";
 import { BracketOrderPrice } from "./bracketOrderPrice";
 import { CancelButton } from "./cancelBtn";
 import { Price } from "./price";

@@ -1,29 +1,14 @@
-import { FC } from "react";
-import { TitleReturns } from "./title.script";
-import { Trans } from "@orderly.network/i18n";
+import React from "react";
+import { useTranslation } from "@orderly.network/i18n";
 
-export const Title: FC<TitleReturns> = (props) => {
+export const Title: React.FC = () => {
+  const { t } = useTranslation();
   return (
     <div
       id="oui-affiliate-home-title"
-      className="oui-text-3xl md:oui-text-3xl lg:oui-text-4xl xl:oui-text-5xl oui-font-bold oui-text-center"
+      className="oui-text-center oui-text-3xl oui-font-bold md:oui-text-3xl lg:oui-text-4xl xl:oui-text-5xl"
     >
-      {/* @ts-ignore */}
-      <Trans
-        i18nKey="affiliate.page.title"
-        values={{
-          shortBrokerName: props.shortBrokerName,
-        }}
-        components={[
-          <span
-            className="oui-gradient-brand oui-text-transparent oui-bg-clip-text"
-            style={{
-              // @ts-ignore
-              "--oui-gradient-angle": "270deg",
-            }}
-          />,
-        ]}
-      />
+      {t("affiliate.page.title")}
     </div>
   );
 };

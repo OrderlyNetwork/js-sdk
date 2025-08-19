@@ -1,6 +1,7 @@
 import { FC, useMemo, useState } from "react";
 import { useTranslation, Trans } from "@orderly.network/i18n";
 import { InfoCircleIcon, Tooltip, Text, Button, cn } from "@orderly.network/ui";
+import { commify } from "@orderly.network/utils";
 import { CampaignConfig, UserData } from "../campaigns/type";
 import {
   calculateEstimatedRewards,
@@ -20,6 +21,10 @@ interface RewardsDesktopUIProps {
   shouldShowJoinButton?: boolean;
   joinCampaign?: (data: { campaign_id: string | number }) => Promise<any>;
   isJoining?: boolean;
+  hideConfig?: {
+    estimatedRewards?: boolean;
+    estimatedTickets?: boolean;
+  };
 }
 
 export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
@@ -31,6 +36,7 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
   shouldShowJoinButton,
   joinCampaign,
   isJoining,
+  hideConfig,
 }) => {
   const { t } = useTranslation();
   // Use mock data for userdata if not provided
@@ -126,7 +132,7 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
         <div>
           {t("tradingLeaderboard.earnTickets", {
             ticket: ticketRules?.linear?.tickets,
-            amount: ticketRules?.linear?.every,
+            amount: commify(ticketRules?.linear?.every || 0),
           })}
         </div>
       );
@@ -199,13 +205,15 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
           isMobile ? "oui-px-3" : "",
         ])}
       >
-        <RewardItem
-          title={t("tradingLeaderboard.estimatedRewards")}
-          value={rewardText}
-          showTooltip
-          tooltip={tooltipContent}
-          isMobile={isMobile}
-        />
+        {!hideConfig?.estimatedRewards && (
+          <RewardItem
+            title={t("tradingLeaderboard.estimatedRewards")}
+            value={rewardText}
+            showTooltip
+            tooltip={tooltipContent}
+            isMobile={isMobile}
+          />
+        )}
         <RewardItem
           showTooltip={!!campaign?.ticket_rules}
           title={t("tradingLeaderboard.estimatedTicketsEarned")}
@@ -243,10 +251,10 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
             disabled={isJoining}
             className={cn([isMobile ? "oui-flex-1" : "oui-w-[140px]"])}
             onClick={() =>
-              joinCampaign?.({ campaign_id: campaign?.campaign_id as string })
+              joinCampaign?.({ campaign_id: Number(campaign?.campaign_id) })
             }
           >
-            Join now
+            {t("tradingLeaderboard.joinNow")}
           </Button>
         )}
         {!shouldShowJoinButton && canTrade && (

@@ -3,6 +3,7 @@ import React from "react";
 import { Trans, useTranslation } from "@orderly.network/i18n";
 import {
   ArrowDownShortIcon,
+  ArrowLeftRightIcon,
   ArrowUpShortIcon,
   Button,
   cn,
@@ -374,7 +375,7 @@ const Buttons: FC<PortfolioSheetState> = (props) => {
   if (props.isMainAccount) {
     return (
       <Grid
-        cols={2}
+        cols={props.hasSubAccount ? 3 : 2}
         rows={1}
         gap={3}
         className="oui-grid-row-[1fr,1fr]"
@@ -383,6 +384,25 @@ const Buttons: FC<PortfolioSheetState> = (props) => {
         pb={4}
       >
         <Button
+          icon={<ArrowDownShortIcon color="white" opacity={0.8} />}
+          size="md"
+          fullWidth
+          onClick={props.onDeposit}
+        >
+          {t("common.deposit")}
+        </Button>
+        {props.hasSubAccount && (
+          <Button
+            icon={<ArrowLeftRightIcon color="white" opacity={0.8} />}
+            color="gray"
+            size="md"
+            onClick={props.onTransfer}
+            data-testid="oui-testid-assetView-transfer-button"
+          >
+            <Text>{t("common.transfer")}</Text>
+          </Button>
+        )}
+        <Button
           icon={<ArrowUpShortIcon color="white" opacity={0.8} />}
           size="md"
           fullWidth
@@ -390,14 +410,6 @@ const Buttons: FC<PortfolioSheetState> = (props) => {
           onClick={props.onWithdraw}
         >
           {t("common.withdraw")}
-        </Button>
-        <Button
-          icon={<ArrowDownShortIcon color="white" opacity={0.8} />}
-          size="md"
-          fullWidth
-          onClick={props.onDeposit}
-        >
-          {t("common.deposit")}
         </Button>
       </Grid>
     );

@@ -1,16 +1,13 @@
-import useSWRMutation, {
-  TriggerWithOptionsArgs,
-  type SWRMutationConfiguration,
-  TriggerWithoutArgs,
-} from "swr/mutation";
-import { mutate } from "@orderly.network/net";
+import useSWRMutation, { type SWRMutationConfiguration } from "swr/mutation";
 import {
   type MessageFactor,
   type SignedMessagePayload,
 } from "@orderly.network/core";
+import { mutate } from "@orderly.network/net";
+import { getTimestamp } from "@orderly.network/utils";
+import { useMemoizedFn } from ".";
 import { useAccountInstance } from "./useAccountInstance";
 import { useConfig } from "./useConfig";
-import { getTimestamp } from "@orderly.network/utils";
 
 type HTTP_METHOD = "POST" | "PUT" | "DELETE" | "GET";
 
@@ -23,7 +20,7 @@ const fetcher = (
       method: HTTP_METHOD;
       signature: SignedMessagePayload;
     };
-  }
+  },
 ) => {
   const init: RequestInit = {
     method: options.arg.method,
@@ -40,7 +37,7 @@ const fetcher = (
     typeof options.arg.params === "object" &&
     Object.keys(options.arg.params).length
   ) {
-    let search = new URLSearchParams(options.arg.params);
+    const search = new URLSearchParams(options.arg.params);
     url = `${url}?${search.toString()}`;
   }
 
@@ -66,7 +63,7 @@ export const useMutation = <T, E>(
    *
    * @link https://swr.vercel.app/docs/mutation#api
    */
-  options?: SWRMutationConfiguration<T, E>
+  options?: SWRMutationConfiguration<T, E>,
 ) => {
   const apiBaseUrl = useConfig("apiBaseUrl");
 
@@ -81,7 +78,7 @@ export const useMutation = <T, E>(
     fullUrl,
     // method === "POST" ? fetcher : deleteFetcher,
     fetcher,
-    options
+    options,
   );
 
   const mutation = async (
@@ -93,11 +90,12 @@ export const useMutation = <T, E>(
      * The query parameters to send with the request.
      */
     params?: Record<string, any>,
-    options?: SWRMutationConfiguration<T, E>
+    options?: SWRMutationConfiguration<T, E>,
   ): Promise<any> => {
     let newUrl = url;
+
     if (typeof params === "object" && Object.keys(params).length) {
-      let search = new URLSearchParams(params);
+      const search = new URLSearchParams(params);
       newUrl = `${url}?${search.toString()}`;
     }
 
@@ -120,17 +118,9 @@ export const useMutation = <T, E>(
           "orderly-account-id": account.accountId,
         },
       },
-      options
+      options,
     );
   };
 
-  return [
-    mutation,
-    {
-      data,
-      error,
-      reset,
-      isMutating,
-    },
-  ] as const;
+  return [useMemoizedFn(mutation), { data, error, reset, isMutating }] as const;
 };

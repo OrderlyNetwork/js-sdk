@@ -2,7 +2,7 @@ import React from "react";
 import type { API } from "@orderly.network/types";
 import { Badge, formatAddress, ListView } from "@orderly.network/ui";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
-import { SymbolProvider } from "../../providers/symbolProvider";
+import { SymbolProvider } from "../../provider/symbolProvider";
 import type { PositionsProps } from "../../types/types";
 import type { CombinePositionsState } from "./combinePositions.script";
 import { useColumn } from "./desktop/useColumn";

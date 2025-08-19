@@ -1,4 +1,6 @@
 import { FC, ReactNode, useMemo } from "react";
+import { RefferalAPI, useMediaQuery } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 import {
   DatePicker,
   Divider,
@@ -11,16 +13,14 @@ import {
   Text,
   cn,
 } from "@orderly.network/ui";
-import { CommissionAndRefereesReturns } from "./commissionAndReferees.script";
-import { RefferalAPI, useMediaQuery } from "@orderly.network/hooks";
+import { AuthGuardDataTable } from "@orderly.network/ui-connector";
+import { commifyOptional } from "@orderly.network/utils";
 import { DateRange } from "../../../utils/types";
 import { formatYMDTime } from "../../../utils/utils";
-import { commifyOptional } from "@orderly.network/utils";
-import { AuthGuardDataTable } from "@orderly.network/ui-connector";
-import { useTranslation } from "@orderly.network/i18n";
+import { CommissionAndRefereesReturns } from "./commissionAndReferees.script";
 
 export const CommissionAndReferees: FC<CommissionAndRefereesReturns> = (
-  props
+  props,
 ) => {
   const { t } = useTranslation();
 
@@ -138,12 +138,11 @@ const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
           RefferalAPI.ReferralRebateSummary,
           RefferalAPI.ReferralRebateSummary[]
         >
-          className="oui-w-full oui-max-h-[200px]"
+          className="oui-max-h-[200px] oui-w-full"
           dataSource={props.commission.data}
-          // dataSource={[]}
           loadMore={props.commission.loadMore}
           isLoading={props.commission.isLoading}
-          renderItem={(e, index) => {
+          renderItem={(e) => {
             return (
               <div>
                 <Flex direction={"row"} width={"100%"}>
@@ -177,7 +176,7 @@ const CommissionList: FC<CommissionAndRefereesReturns> = (props) => {
                     align="end"
                   />
                 </Flex>
-                <Divider className="oui-w-full oui-mt-3" />
+                <Divider className="oui-mt-3 oui-w-full" />
               </div>
             );
           }}
@@ -299,7 +298,7 @@ const RefereesList: FC<CommissionAndRefereesReturns> = (props) => {
                   />
                   <MobileCellItem
                     title={`${t(
-                      "affiliate.referees.column.totalCommission"
+                      "affiliate.referees.column.totalCommission",
                     )} (USDC)`}
                     value={commifyOptional(e.referral_rebate, {
                       fix: 6,

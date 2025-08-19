@@ -9,6 +9,7 @@ import {
   OrderLevel,
   TrackerEventName,
   OrderSide,
+  EMPTY_OBJECT,
 } from "@orderly.network/types";
 import { Decimal, zero } from "@orderly.network/utils";
 import { useAccountInfo } from "../../orderly/appStore";
@@ -20,9 +21,11 @@ import {
 import { useMarkPriceActions } from "../../orderly/useMarkPrice/useMarkPriceStore";
 import { usePositions } from "../../orderly/usePositionStream/usePosition.store";
 import { OrderValidationResult } from "../../services/orderCreator/interface";
+import { useMemoizedFn } from "../../shared/useMemoizedFn";
 import { useEventEmitter } from "../../useEventEmitter";
 import { useMutation } from "../../useMutation";
 import { useTrack } from "../../useTrack";
+import { getScaledOrderSkew } from "../../utils/order/scaledOrder";
 import {
   calcEstLeverage,
   calcEstLiqPrice,
@@ -31,7 +34,6 @@ import {
   tpslFields,
   hasTPSL,
   isBBOOrder,
-  getScaledOrderSkew,
 } from "./helper";
 import type { FullOrderState } from "./orderEntry.store";
 import { useOrderEntryNextInternal } from "./useOrderEntry.internal";
@@ -487,7 +489,9 @@ const useOrderEntry = (
       async (resolve, reject) => {
         const creator = getOrderCreator(formattedOrder);
 
+        console.log("valudate order", creator);
         const errors = await validate(formattedOrder, creator, prepareData());
+        console.log("validate order errors", errors);
         const keys = Object.keys(errors);
         if (keys.length > 0) {
           // setErrors(errors);
@@ -625,6 +629,7 @@ const useOrderEntry = (
     }
 
     const order = generateOrder(creator, prepareData());
+    console.log("xxx -- order", order);
 
     const isScaledOrder = order.order_type === OrderType.SCALED;
 
@@ -689,9 +694,9 @@ const useOrderEntry = (
       validate: validateOrder,
     },
     freeCollateral,
-    setValue,
-    setValues,
-    symbolInfo: symbolInfo || {},
+    setValue: useMemoizedFn(setValue),
+    setValues: useMemoizedFn(setValues),
+    symbolInfo: symbolInfo || EMPTY_OBJECT,
     metaState: meta,
     isMutating,
     markPrice,

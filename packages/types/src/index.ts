@@ -7,6 +7,7 @@ export {
   OrderSide,
   OrderStatus,
   AlgoOrderRootType,
+  PositionType,
   AlgoOrderType,
   TriggerPriceType,
   BBOOrderType,
@@ -41,3 +42,4 @@ export { ApiError, SDKError } from "./errors";
 export { definedTypes } from "./sign";
 export * as superstruct from "superstruct";
 export * from "./assetHistory";
+export * from "./account";

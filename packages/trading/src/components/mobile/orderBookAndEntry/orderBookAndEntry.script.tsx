@@ -1,4 +1,4 @@
-import { useTradingPageContext } from "../../../provider/context";
+import { useTradingPageContext } from "../../../provider/tradingPageContext";
 
 export const useOrderBookAndEntryScript = () => {
   const { symbol } = useTradingPageContext();

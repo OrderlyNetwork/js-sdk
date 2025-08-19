@@ -8,6 +8,7 @@ import {
   Tooltip,
   ChevronRightIcon,
 } from "@orderly.network/ui";
+import { AuthGuard } from "@orderly.network/ui-connector";
 import { CampaignConfig, CampaignStatistics } from "./type";
 import {
   formatCampaignDateRange,
@@ -37,6 +38,7 @@ export const CampaignsContentDesktopUI: FC<{
   joinCampaign?: (data: { campaign_id: string | number }) => Promise<any>;
   isJoining?: boolean;
   joinError?: any;
+  canTrade?: boolean;
 }> = ({
   campaign,
   statistics,
@@ -48,6 +50,7 @@ export const CampaignsContentDesktopUI: FC<{
   shouldShowJoinButton,
   joinCampaign,
   isJoining,
+  canTrade,
 }) => {
   const { t } = useTranslation();
   const bgSrc = campaign?.image || backgroundSrc;
@@ -73,15 +76,23 @@ export const CampaignsContentDesktopUI: FC<{
   const totalPrizePool = getTotalPrizePool(campaign);
   const ticketPrizePool = getTicketPrizePool(campaign);
 
-  const canTrade = useMemo(() => {
+  const showTradeButton = useMemo(() => {
     return (
-      campaign.start_time < new Date().toISOString() &&
-      campaign.end_time > new Date().toISOString()
+      !shouldShowJoinButton && new Date().toISOString() < campaign.end_time
     );
-  }, [campaign]);
+  }, [shouldShowJoinButton, campaign.end_time]);
 
   const isCampaignStarted = useMemo(() => {
     return campaign.start_time < new Date().toISOString();
+  }, [campaign]);
+
+  const highlightPool = useMemo(() => {
+    if (!campaign?.highlight_pool_id) {
+      return null;
+    }
+    return campaign?.prize_pools?.find(
+      (pool) => pool.pool_id === campaign.highlight_pool_id,
+    );
   }, [campaign]);
 
   const tooltipContent = useMemo(() => {
@@ -191,7 +202,8 @@ export const CampaignsContentDesktopUI: FC<{
               weight="semibold"
               className="oui-text-base-contrast-54"
             >
-              {t("tradingLeaderboard.participants")}
+              {campaign?.user_account_label ||
+                t("tradingLeaderboard.participants")}
             </Text>
             <Text
               size="2xs"
@@ -272,7 +284,7 @@ export const CampaignsContentDesktopUI: FC<{
                 </Text.gradient>
               </div>
             </div>
-            {ticketPrizePool && (
+            {(ticketPrizePool || highlightPool) && (
               <div className="oui-flex oui-flex-col">
                 <div className="oui-flex oui-items-center oui-gap-1">
                   <Text
@@ -281,7 +293,7 @@ export const CampaignsContentDesktopUI: FC<{
                     className="oui-text-base-contrast-54"
                   >
                     {/* {t("tradingLeaderboard.ticketPrizePool")} */}
-                    {"Raffle prize"}
+                    {highlightPool?.label || "Raffle prize"}
                   </Text>
                 </div>
                 <div>
@@ -296,8 +308,12 @@ export const CampaignsContentDesktopUI: FC<{
                     ])}
                   >
                     {formatPrizeAmount(
-                      ticketPrizePool.amount,
-                      ticketPrizePool.currency,
+                      ticketPrizePool?.amount ||
+                        highlightPool?.total_prize ||
+                        0,
+                      ticketPrizePool?.currency ||
+                        highlightPool?.currency ||
+                        "USDC",
                     )}
                   </Text.gradient>
                 </div>
@@ -337,36 +353,46 @@ export const CampaignsContentDesktopUI: FC<{
                 {t("tradingLeaderboard.viewRules")}
               </Button>
             )}
-            {shouldShowJoinButton && (
-              <Button
-                size={isMobile ? "sm" : "md"}
-                variant="gradient"
-                color="primary"
-                className="oui-flex-1"
-                loading={isJoining}
-                disabled={isJoining}
-                onClick={async () => {
-                  try {
-                    await joinCampaign?.({ campaign_id: campaign.campaign_id });
-                  } catch (error) {
-                    console.error("Failed to join campaign:", error);
-                  }
-                }}
-              >
-                Join now
-              </Button>
-            )}
-            {!shouldShowJoinButton && canTrade && (
-              <Button
-                size={isMobile ? "sm" : "md"}
-                variant="gradient"
-                color="primary"
-                className="oui-flex-1"
-                onClick={onTradeNow}
-              >
-                {t("tradingLeaderboard.tradeNow")}
-              </Button>
-            )}
+            <AuthGuard
+              buttonProps={{
+                size: isMobile ? "sm" : "md",
+                className: "oui-px-5",
+              }}
+            >
+              {shouldShowJoinButton && (
+                <Button
+                  size={isMobile ? "sm" : "md"}
+                  variant="gradient"
+                  color="primary"
+                  className="oui-flex-1"
+                  loading={isJoining}
+                  disabled={isJoining}
+                  onClick={async () => {
+                    try {
+                      await joinCampaign?.({
+                        campaign_id: Number(campaign.campaign_id),
+                      });
+                    } catch (error) {
+                      console.error("Failed to join campaign:", error);
+                    }
+                  }}
+                >
+                  {t("tradingLeaderboard.joinNow")}
+                </Button>
+              )}
+              {showTradeButton && (
+                <Button
+                  size={isMobile ? "sm" : "md"}
+                  variant="gradient"
+                  color="primary"
+                  className="oui-flex-1"
+                  onClick={onTradeNow}
+                >
+                  {campaign?.trading_config?.format ||
+                    t("tradingLeaderboard.tradeNow")}
+                </Button>
+              )}
+            </AuthGuard>
           </div>
         </div>
       </div>

@@ -4,6 +4,7 @@ import {
   SelectItem,
   SelectItemText,
 } from "@radix-ui/react-select";
+import { AvatarSizeType } from "../avatar/avatar";
 import { Flex } from "../flex";
 import type { SizeType } from "../helpers/sizeType";
 import { TokenIcon } from "../icon";
@@ -21,10 +22,11 @@ export type TokenSelectProps = {
   tokens: TokenItem[];
   showIcon?: boolean;
   optionRenderer?: (option: SelectOption) => ReactElement;
+  iconSize?: AvatarSizeType;
 } & SelectProps<string>;
 
 export const TokenSelect: React.FC<TokenSelectProps> = (props) => {
-  const { tokens, showIcon = true, ...rest } = props;
+  const { tokens, showIcon = true, iconSize, ...rest } = props;
   const { icon } = selectVariants();
 
   const options = useMemo(() => {
@@ -45,7 +47,11 @@ export const TokenSelect: React.FC<TokenSelectProps> = (props) => {
     }
     return (
       <Flex gapX={1}>
-        <TokenIcon name={value} className={icon({ size: props.size })} />
+        <TokenIcon
+          name={value}
+          className={iconSize ? undefined : icon({ size: props.size })}
+          size={iconSize}
+        />
         <Text weight="semibold" intensity={54}>
           {value}
         </Text>
@@ -57,7 +63,7 @@ export const TokenSelect: React.FC<TokenSelectProps> = (props) => {
     if (typeof props.optionRenderer === "function") {
       return props.optionRenderer(option);
     }
-    return <Option {...option} />;
+    return <Option {...option} iconSize={iconSize} />;
   };
 
   return (
@@ -72,10 +78,14 @@ export const TokenSelect: React.FC<TokenSelectProps> = (props) => {
   );
 };
 
-const Option: React.FC<SelectOption & { size?: SizeType; index?: number }> = (
-  props,
-) => {
-  const { size, label, value } = props;
+type OptionProps = SelectOption & {
+  index?: number;
+  size?: SizeType;
+  iconSize?: AvatarSizeType;
+};
+
+const Option: React.FC<OptionProps> = (props) => {
+  const { size, label, value, iconSize } = props;
 
   const { item, icon } = selectVariants();
   return (
@@ -86,7 +96,11 @@ const Option: React.FC<SelectOption & { size?: SizeType; index?: number }> = (
         className: "oui-space-x-1 oui-flex oui-flex-row oui-items-center",
       })}
     >
-      <TokenIcon name={value} className={icon({ size })} />
+      <TokenIcon
+        name={value}
+        className={iconSize ? undefined : icon({ size })}
+        size={iconSize}
+      />
       <SelectItemText>{label}</SelectItemText>
       <ItemIndicator />
     </SelectItem>

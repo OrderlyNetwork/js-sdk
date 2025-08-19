@@ -2,13 +2,14 @@ import {
   createContext,
   FC,
   PropsWithChildren,
+  useCallback,
   useContext,
   useMemo,
   useState,
 } from "react";
-import { NamedColor, NamedColorGroup } from "@/types/theme";
 import { COLOR_PALETTE } from "@/components/theming/constants/colorPalette";
 import { ThemeContext } from "@/components/theming/themeContext";
+import { NamedColor, NamedColorGroup } from "@/types/theme";
 
 export type ActiveColor = {
   color: NamedColor;
@@ -30,30 +31,45 @@ export const PaletteProvider: FC<PropsWithChildren> = ({ children }) => {
   const [currentColorPalette, setCurrentColorPalette] =
     useState<ActiveColor | null>(null);
   const { theme } = useContext(ThemeContext);
-  const cleanCurrentColorPalette = () => {
+
+  const cleanCurrentColorPalette = useCallback(() => {
     setCurrentColorPalette(null);
-  };
+  }, [setCurrentColorPalette]);
 
   const updateCurrentColorPalette = (color: string, name: string) => {
-    if (currentColorPalette) return;
+    if (currentColorPalette) {
+      return;
+    }
   };
 
   const colorPalette = useMemo(() => {
-    if (!theme?.palette) return COLOR_PALETTE;
-    if (theme?.palette.length === 0) return COLOR_PALETTE;
+    if (!theme?.palette) {
+      return COLOR_PALETTE;
+    }
+    if (theme?.palette.length === 0) {
+      return COLOR_PALETTE;
+    }
     return theme.palette;
   }, [theme]);
 
+  const memoizedValue = useMemo<PaletteContextState>(() => {
+    return {
+      currentColorPalette,
+      colorPalette,
+      setCurrentColorPalette,
+      cleanCurrentColorPalette,
+      updateCurrentColorPalette,
+    };
+  }, [
+    currentColorPalette,
+    colorPalette,
+    setCurrentColorPalette,
+    cleanCurrentColorPalette,
+    updateCurrentColorPalette,
+  ]);
+
   return (
-    <PaletteContext.Provider
-      value={{
-        currentColorPalette,
-        colorPalette,
-        setCurrentColorPalette,
-        cleanCurrentColorPalette,
-        updateCurrentColorPalette,
-      }}
-    >
+    <PaletteContext.Provider value={memoizedValue}>
       {children}
     </PaletteContext.Provider>
   );

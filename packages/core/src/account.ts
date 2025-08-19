@@ -6,6 +6,7 @@ import {
   SDKError,
   ChainNamespace,
   API,
+  DEFAUL_ORDERLY_KEY_SCOPE,
 } from "@orderly.network/types";
 import { AdditionalInfoRepository } from "./additionalInfoRepository";
 import { Assets } from "./assets";
@@ -989,7 +990,7 @@ export class Account {
         expiration,
         timestamp: getTimestamp(),
         // domain: any;
-        scope: options?.scope || "read,trading,asset",
+        scope: options?.scope || DEFAUL_ORDERLY_KEY_SCOPE,
         tag: options?.tag,
         subAccountId: options?.subAccountId,
       });

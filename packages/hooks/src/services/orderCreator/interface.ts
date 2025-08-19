@@ -17,6 +17,11 @@ export type OrderValidationItem =
       value?: never;
       min: number | string;
       max: number | string;
+    }
+  | {
+      type: "priceErrorMin" | "priceErrorMax";
+      message: string;
+      value?: never;
     };
 
 export type OrderValidationResult = {

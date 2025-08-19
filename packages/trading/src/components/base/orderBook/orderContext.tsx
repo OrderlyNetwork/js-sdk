@@ -16,7 +16,7 @@ export interface OrderBookContextValue {
   onItemClick?: (item: number[]) => void;
   showTotal: boolean;
   totalMode: TotalMode;
-  pendingOrders: number[];
+  pendingOrders: ReadonlyArray<number> | number[];
   onTotalModeChange?: (mode: TotalMode) => void;
   symbolInfo: BasicSymbolInfo;
 }
@@ -29,13 +29,13 @@ export const useOrderBookContext = () => useContext(OrderBookContext);
 
 export const ORDERBOOK_COIN_TYPE_KEY = "orderbook_coin_type";
 
-export const ORDERBOOK_MOBILE_COIN_TYPE_KEY = "orderbook_mobile_coin_type";
+export const ORDERBOOK_MOBILE_COIN_TYPE_KEY = "orderbook_mobile_coin_unit";
 
 interface OrderBookProviderProps {
   cellHeight: number;
   depth?: string;
   showTotal: boolean;
-  pendingOrders: number[];
+  pendingOrders: ReadonlyArray<number> | number[];
   onItemClick?: (item: number[]) => void;
   symbolInfo: BasicSymbolInfo;
 }

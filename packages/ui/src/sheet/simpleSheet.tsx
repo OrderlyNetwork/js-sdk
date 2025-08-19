@@ -1,7 +1,7 @@
 import { FC, PropsWithChildren, ReactNode } from "react";
 import { Sheet, SheetContent, SheetHeader } from ".";
-import { SheetBody, SheetContentProps, SheetTitle } from "./sheet";
 import { Divider } from "../divider";
+import { SheetBody, SheetContentProps, SheetTitle } from "./sheet";
 
 export interface SimpleSheetProps {
   title?: ReactNode | (() => ReactNode);
@@ -12,6 +12,7 @@ export interface SimpleSheetProps {
     content?: string;
     body?: string;
     header?: string;
+    overlay?: string;
   };
   contentProps?: SheetContentProps;
   closable?: boolean;
@@ -33,6 +34,7 @@ export const SimpleSheet: FC<PropsWithChildren<SimpleSheetProps>> = (props) => {
       <SheetContent
         onOpenAutoFocus={(event) => event.preventDefault()}
         className={classNames?.content}
+        overlayClassName={classNames?.overlay}
         closeable={closable}
         {...contentProps}
       >

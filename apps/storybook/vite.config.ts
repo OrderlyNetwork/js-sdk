@@ -1,12 +1,14 @@
 /// <reference types="vitest/config" />
 import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
-import react from "@vitejs/plugin-react";
+// https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react
+// import react from "@vitejs/plugin-react";
+// https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react-swc
+import react from "@vitejs/plugin-react-swc";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { resolve } from "path";
 import { defineConfig } from "vite";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
-import { packageAlias } from "./packageAlias";
+import { getWatchPackages, getWatchIgnores } from "./watchPackages.config";
 
 const dirname =
   typeof __dirname !== "undefined"
@@ -16,43 +18,41 @@ const dirname =
 function getAliasConfig(): Record<string, string> {
   const isProd = process.env.NODE_ENV === "production";
 
-  const watchPackages = process.env.VITE_WATCH_PACKAGES?.split(",").map(
-    (item) => {
-      const packageName = item.trim();
-      if (packageName.startsWith("@orderly.network/")) {
-        return packageName;
-      }
-      return `${"@orderly.network/"}${packageName}`;
-    },
-  );
-
   if (!isProd) {
-    const alias: Record<string, string> = {};
-    packageAlias.forEach((item) => {
-      if (
-        !watchPackages ||
-        (watchPackages && watchPackages.includes(item.package))
-      ) {
-        alias[item.package] = resolve(dirname, item.path);
-      }
-    });
-    return alias;
+    const { watchs } = getWatchPackages();
+
+    return watchs.reduce(
+      (obj, item) => {
+        obj[item.package] = item.path;
+        return obj;
+      },
+      {} as Record<string, string>,
+    );
   }
 
   return {};
 }
 
-function getOptimizeDepsConfig(): string[] {
-  return packageAlias.map((item) => item.package);
+function getOptimizeDepsConfig() {
+  // const allPackages = getAllPackages();
+  // return allPackages.map((item) => item.package);
 }
 
 // https://vite.dev/config/
 export default defineConfig({
+  server: {
+    open: true,
+    host: true,
+    watch: {
+      // storybook has own watch config, need to use viteFinal to override this in main.ts
+      ignored: getWatchIgnores(),
+    },
+  },
   plugins: [
     react(),
     // https://github.com/davidmyersdev/vite-plugin-node-polyfills/issues/81
     nodePolyfills({
-      include: ["path", "stream", "util", "assert", "crypto"],
+      include: ["path", "stream", "util", "assert", "crypto", "buffer"],
       exclude: ["http"],
       globals: {
         Buffer: true,

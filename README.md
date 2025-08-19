@@ -18,8 +18,10 @@ Monorepo for all Orderly SDKs. Please check out our [documentation](https://orde
 
 Start building with Orderly SDKs using these ready-to-use templates:
 
-- [Next.js](https://github.com/OrderlyNetwork/orderly-js-sdk-nextjs-template)
+- [Vite Template](https://github.com/OrderlyNetwork/orderly-js-sdk-vite-template)
 
-- [Remix](https://github.com/OrderlyNetwork/orderly-js-sdk-remix-template)
+- [Next.js Template](https://github.com/OrderlyNetwork/orderly-js-sdk-nextjs-template)
 
-- [Create React App](https://github.com/OrderlyNetwork/orderly-js-sdk-nextjs-template)
+- [Remix Template](https://github.com/OrderlyNetwork/orderly-js-sdk-remix-template)
+
+- [Create React App Template](https://github.com/OrderlyNetwork/orderly-js-sdk-cra-template)

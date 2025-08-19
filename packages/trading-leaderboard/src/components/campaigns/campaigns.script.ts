@@ -5,13 +5,10 @@ import {
   useMutation,
   useAccount,
 } from "@orderly.network/hooks";
+import { AccountStatusEnum } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
 import { useTradingLeaderboardContext } from "../provider";
-import {
-  CampaignStatsDetailsResponse,
-  CampaignStatsResponse,
-  UserCampaignsResponse,
-} from "./type";
+import { CampaignStatsResponse, UserCampaignsResponse } from "./type";
 
 /**
  * Hook for managing campaigns data and statistics
@@ -33,13 +30,6 @@ export const useCampaignsScript = () => {
 
   const brokerId = useConfig("brokerId");
 
-  const isCampaignStarted = useMemo(() => {
-    return (
-      currentCampaign?.start_time &&
-      currentCampaign?.start_time < new Date().toISOString()
-    );
-  }, [currentCampaign]);
-
   const isCampaignEnded = useMemo(() => {
     return (
       currentCampaign?.end_time &&
@@ -49,23 +39,18 @@ export const useCampaignsScript = () => {
 
   const searchParams = useMemo(() => {
     return {
-      campaign_id: currentCampaignId,
+      campaign_id: currentCampaignId.toString(),
       symbols: symbols || "",
       broker_id: brokerId,
       group_by: "BROKER",
     };
   }, [currentCampaignId, symbols, brokerId]);
 
-  const { data } = useQuery<CampaignStatsDetailsResponse>(
-    isCampaignStarted && currentCampaignId !== "general"
-      ? `https://api.orderly.org/v1/public/campaign/stats/details?${new URLSearchParams(searchParams).toString()}`
-      : null,
-  );
-
   const { data: stats } = useQuery<CampaignStatsResponse>(
     currentCampaignId !== "general"
       ? `https://api.orderly.org/v1/public/campaign/stats?${new URLSearchParams(searchParams).toString()}`
       : null,
+    { revalidateOnFocus: false },
   );
 
   const { state } = useAccount();
@@ -75,6 +60,7 @@ export const useCampaignsScript = () => {
       currentCampaignId !== "general" && state.address
         ? `https://api.orderly.org/v1/public/campaigns?address=${state.address}`
         : null,
+      { revalidateOnFocus: false },
     );
 
   const isParticipated = useMemo(() => {
@@ -83,16 +69,23 @@ export const useCampaignsScript = () => {
   }, [userCampaigns, currentCampaignId]);
 
   const shouldShowJoinButton = useMemo(() => {
+    // return false;
     return !!state.address && !isCampaignEnded && !isParticipated;
   }, [state.address, isCampaignEnded, isParticipated]);
 
   const [doJoinCampaign, { isMutating: isJoining, error: joinError }] =
-    useMutation(`https://api.orderly.org/v1/client/campaign/sign_up`, "POST");
+    useMutation(`/v1/client/campaign/sign_up`, "POST");
 
   const joinCampaign = useCallback(
     async (data: { campaign_id: string | number }) => {
       try {
+        if (state.status < AccountStatusEnum.EnableTrading) {
+          toast.error("Please enable trading to proceed.");
+          return;
+        }
+        // console.log("data", data);
         const result = await doJoinCampaign(data);
+        // console.log("result", result);
 
         if (result?.success !== false) {
           // Refresh user campaigns data to update participation status
@@ -107,17 +100,23 @@ export const useCampaignsScript = () => {
         throw error;
       }
     },
-    [doJoinCampaign, refreshUserCampaigns],
+    [doJoinCampaign, refreshUserCampaigns, state.status],
   );
 
   const statistics = {
     total_participants: stats?.user_count,
-    total_volume: data?.[0]?.volume,
+    total_volume: stats?.volume,
   };
 
   const onLearnMore = () => {
     if (currentCampaign?.rule_url) {
-      window.open(currentCampaign.rule_url, "_blank");
+      if (currentCampaign.rule_config?.action === "scroll") {
+        document
+          .getElementById(currentCampaign.rule_url)
+          ?.scrollIntoView({ behavior: "smooth" });
+      } else {
+        window.open(currentCampaign.rule_url, "_blank");
+      }
     }
   };
 
@@ -126,6 +125,15 @@ export const useCampaignsScript = () => {
       window.open(currentCampaign.trading_url, "_self");
     }
   };
+
+  const canTrade = useMemo(() => {
+    if (!currentCampaign) return false;
+    return (
+      currentCampaign?.start_time < new Date().toISOString() &&
+      currentCampaign?.end_time > new Date().toISOString() &&
+      state.status >= AccountStatusEnum.EnableTrading
+    );
+  }, [currentCampaign, state.status]);
 
   return {
     campaigns,
@@ -142,5 +150,6 @@ export const useCampaignsScript = () => {
     isParticipated,
     shouldShowJoinButton,
     joinError,
+    canTrade,
   };
 };

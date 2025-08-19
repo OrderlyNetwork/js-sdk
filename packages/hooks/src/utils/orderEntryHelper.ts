@@ -68,8 +68,6 @@ export function baseInputHandle(inputs: orderEntryInputs): orderEntryInputs {
     markPrice,
     config,
   ];
-
-  //   return [values, input, value, markPrice];
 }
 
 export function orderTypeHandle(inputs: orderEntryInputs): orderEntryInputs {
@@ -85,9 +83,9 @@ export function orderTypeHandle(inputs: orderEntryInputs): orderEntryInputs {
     values.trigger_price = undefined;
   }
 
-  if (value === OrderType.MARKET || value === OrderType.STOP_MARKET) {
-    // if the type is market, price use markPrice
-  }
+  // if (value === OrderType.MARKET || value === OrderType.STOP_MARKET) {
+  //   // if the type is market, price use markPrice
+  // }
 
   // if (value === OrderType.STOP_MARKET || value === OrderType.STOP_LIMIT) {
   //   values.algo_type = AlgoOrderRootType.STOP;
@@ -210,10 +208,6 @@ function quantityInputHandle(inputs: orderEntryInputs): orderEntryInputs {
     values.order_quantity = quantity.toString();
   }
 
-  // if(values.type === OrderType.MARKET) {
-
-  // }
-
   if (
     values.order_type === OrderType.MARKET ||
     values.order_type === OrderType.STOP_MARKET
@@ -225,9 +219,7 @@ function quantityInputHandle(inputs: orderEntryInputs): orderEntryInputs {
     const price = markPrice;
     values.order_price = "";
     values.total = quantity.mul(price).todp(2).toString();
-  }
-
-  if (
+  } else if (
     values.order_type === OrderType.LIMIT ||
     values.order_type === OrderType.STOP_LIMIT
   ) {
@@ -238,10 +230,9 @@ function quantityInputHandle(inputs: orderEntryInputs): orderEntryInputs {
     } else {
       values.total = "";
     }
+  } else if (values.order_type === OrderType.SCALED && markPrice) {
+    values.total = quantity.mul(markPrice).todp(config.quote_dp).toString();
   }
-
-  // const totalDP = total.dp();
-  // total.todp(Math.min(config.quoteDP, totalDP));
 
   return [
     {
@@ -332,6 +323,7 @@ function tpslInputHandle(inputs: orderEntryInputs): orderEntryInputs {
           : Number(values.order_quantity) * -1,
       orderSide: values.side!,
       // values: newValues,
+      values,
     },
     {
       symbol: config,
@@ -365,6 +357,7 @@ export const getCalculateHandler = (
     case "total": {
       return totalInputHandle;
     }
+    case "tp_enable":
     case "tp_pnl":
     case "sl_pnl":
     case "tp_trigger_price":
@@ -373,6 +366,11 @@ export const getCalculateHandler = (
     case "sl_offset":
     case "tp_offset_percentage":
     case "sl_offset_percentage":
+    case "tp_order_price":
+    case "tp_order_type":
+    case "sl_enable":
+    case "sl_order_type":
+    case "sl_order_price":
       return tpslInputHandle;
 
     default:

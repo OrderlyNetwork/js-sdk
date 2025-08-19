@@ -5,8 +5,10 @@ interface ImportMetaEnv {
   VITE_BROKER_NAME: string;
   VITE_ENV: string;
   VITE_DEFAULT_THEME: string;
-  VITE_STORYBOOK_PAGES: string;
   VITE_WATCH_PACKAGES: string;
+  STORYBOOK: string;
+  STORYBOOK_DEFAULT_THEME: string;
+  STORYBOOK_DISABLED_ADDONS: string;
 }
 
 interface ImportMeta {

@@ -1,3 +1,9 @@
-export { WithdrawForm as WithdrawFormUI } from "./withdrawForm.ui";
-export { WithdrawFormWidget } from "./withdrawForm.widget";
-export { useWithdrawFormScript as useWithdrawForm } from "./withdrawForm.script";
+export { WithdrawForm } from "./withdrawForm.ui";
+export {
+  WithdrawFormWidget,
+  type WithdrawFormWidgetProps,
+} from "./withdrawForm.widget";
+export {
+  useWithdrawFormScript,
+  type WithdrawFormScriptOptions,
+} from "./withdrawForm.script";

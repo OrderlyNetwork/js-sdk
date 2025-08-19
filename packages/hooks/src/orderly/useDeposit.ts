@@ -7,6 +7,7 @@ import {
   AccountStatusEnum,
   ChainNamespace,
   DEPOSIT_FEE_RATE,
+  ETHEREUM_MAINNET_CHAINID,
   MaxUint256,
   NetworkId,
   SDKError,
@@ -106,17 +107,33 @@ export const useDeposit = (options: DepositOptions) => {
     async (address: string, decimals?: number) => {
       let balance: string;
 
-      if (address && isNativeTokenChecker(address)) {
-        balance = await account.assetsManager.getNativeBalance({
-          decimals,
-        });
-      } else {
-        balance = await account.assetsManager.getBalance(address, { decimals });
+      try {
+        if (address && isNativeTokenChecker(address)) {
+          balance = await account.assetsManager.getNativeBalance({
+            decimals,
+          });
+        } else {
+          balance = await account.assetsManager.getBalance(address, {
+            decimals,
+          });
+        }
+      } catch (err: any) {
+        if (
+          ignoreBalanceError({
+            token: options.srcToken!,
+            chainNamespace: account.walletAdapter?.chainNamespace!,
+            err,
+          })
+        ) {
+          console.log("ignore balance error: ", err);
+          return "0";
+        }
+        throw err;
       }
 
-      return balance;
+      return balance!;
     },
-    [],
+    [options.srcToken, account],
   );
 
   const fetchBalances = useCallback(async (tokens: API.TokenInfo[]) => {
@@ -162,6 +179,7 @@ export const useDeposit = (options: DepositOptions) => {
       vaultAddress,
       decimals,
     });
+    console.log("allowance", allowance);
 
     setAllowance(allowance);
     // setAllowanceRevalidating(false);
@@ -321,17 +339,74 @@ export const useDeposit = (options: DepositOptions) => {
     isNativeToken,
   ]);
 
+  const checkIfChainTokenNeedRestApprove = useCallback(
+    (chainId: number, token: string) => {
+      // check chain (except ethereum mainnet)
+      if (chainId !== ETHEREUM_MAINNET_CHAINID) {
+        return false;
+      }
+      if (token !== "USDT") {
+        return false;
+      }
+      return true;
+    },
+    [],
+  );
+
+  const resetApprove = useCallback(
+    async (tokenAddress: string, decimal: number, vaultAddress: string) => {
+      const result = await account.assetsManager.approve({
+        address: tokenAddress,
+        amount: "0",
+        vaultAddress,
+        decimals: decimal,
+      });
+
+      const txResult: any =
+        await account.walletAdapter?.pollTransactionReceiptWithBackoff(
+          result.hash,
+        );
+      if (txResult && txResult.status === 1) {
+        account.assetsManager
+          .getAllowance({
+            address: tokenAddress,
+            decimals: decimal,
+            vaultAddress,
+          })
+          .then((allowance) => {
+            setAllowance(allowance);
+          });
+      }
+    },
+    [],
+  );
+
   const approve = useCallback(
     async (amount?: string) => {
       if (!options.address) {
         throw new Error("address is required");
       }
 
+      let isSetMaxValue = false;
+
+      if (
+        checkIfChainTokenNeedRestApprove(options.srcChainId!, options.srcToken!)
+      ) {
+        isSetMaxValue = true;
+        if (allowance && new Decimal(allowance).gt(0)) {
+          await resetApprove(
+            options.address!,
+            options.decimals!,
+            vaultAddress!,
+          );
+        }
+      }
       return account.assetsManager
         .approve({
           address: options.address,
           amount,
           vaultAddress,
+          isSetMaxValue,
           decimals: options.decimals!,
         })
         .then((result: any) => {
@@ -340,10 +415,15 @@ export const useDeposit = (options: DepositOptions) => {
     },
     [
       account,
+      options.srcChainId,
+      options.srcToken,
+      allowance,
       options.address,
       options.decimals,
       vaultAddress,
       updateAllowanceWhenTxSuccess,
+      checkIfChainTokenNeedRestApprove,
+      resetApprove,
     ],
   );
 
@@ -425,10 +505,10 @@ export const useDeposit = (options: DepositOptions) => {
         setBalance(balance);
         balanceRef.current = balance;
         loopGetBalance();
-      } catch (err) {
+      } catch (err: any) {
+        console.log("get balance error", balanceRef.current, err);
         // when fetch balance failed, retry every 1s
         loopGetBalance(1000);
-        console.log("get balance error", balanceRef.current, err);
       } finally {
         if (balanceRef.current !== "") {
           setBalanceRevalidating(false);
@@ -519,3 +599,17 @@ export const useDeposit = (options: DepositOptions) => {
     setQuantity,
   };
 };
+
+// when solana account not USDC, get balance will throw TokenAccountNotFoundError
+function ignoreBalanceError(options: {
+  token: string;
+  chainNamespace: string;
+  err: any;
+}) {
+  const { token, chainNamespace, err } = options;
+  return (
+    chainNamespace === ChainNamespace.solana &&
+    token === "USDC" &&
+    err?.name === "TokenAccountNotFoundError"
+  );
+}

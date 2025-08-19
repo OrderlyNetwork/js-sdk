@@ -1,8 +1,7 @@
 import { API } from "@orderly.network/types";
-import { PositionHistoryExt } from "../positionHistory.script";
-import { SymbolInfo } from "../desktop/usePositionHistoryColumn";
-import { useSymbolContext } from "../../../providers/symbolProvider";
 import { SharePnLConfig } from "@orderly.network/ui-share";
+import { useSymbolContext } from "../../../provider/symbolContext";
+import { PositionHistoryExt } from "../positionHistory.script";
 
 export const usePositionHistoryCellScript = (props: {
   item: PositionHistoryExt;

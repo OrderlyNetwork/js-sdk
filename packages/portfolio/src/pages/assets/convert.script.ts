@@ -8,6 +8,7 @@ import {
   useQuery,
   useTokensInfo,
 } from "@orderly.network/hooks";
+import { EMPTY_LIST } from "@orderly.network/types";
 import { usePagination } from "@orderly.network/ui";
 import { subtractDaysFromCurrentDate } from "@orderly.network/utils";
 import { useAccountsData } from "../../hooks/useAccountsData";
@@ -187,7 +188,7 @@ export const useConvertScript = () => {
 
   return {
     // Data
-    dataSource: data?.rows || [],
+    dataSource: data?.rows || EMPTY_LIST,
     summary,
     pagination,
 

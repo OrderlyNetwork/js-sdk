@@ -11,10 +11,9 @@ export const transfer = {
   "transfer.insufficientAllowance": "Insufficient allowance",
   "transfer.rejectTransaction": "Rejected transaction",
 
-  "transfer.deposit.approve.symbol": "Approve {{symbol}}",
+  "transfer.deposit.approve": "Approve",
   "transfer.deposit.approve.success": "Approve success",
   "transfer.deposit.approve.failed": "Approve failed",
-  "transfer.deposit.increase.symbol": "Increase {{symbol}} authorized amount",
   "transfer.deposit.requested": "Deposit requested",
   "transfer.deposit.completed": "Deposit completed",
   "transfer.deposit.failed": "Deposit failed",
@@ -39,6 +38,9 @@ export const transfer = {
     "Withdrawals that require cross-chain rebalancing can't be cancelled or followed up with more withdrawals until they've been processed.",
   "transfer.withdraw.crossChain.vaultWarning":
     "Withdrawal exceeds the balance of the {{networkName}} vault ( {{chainVaultBalance}} USDC ). Cross-chain rebalancing fee will be charged for withdrawal to {{networkName}}.",
+
+  "transfer.withdraw.vaultWarning":
+    "The balance of {{tokenName}} on the {{chainName}} is {{balance}}, which is insufficient to meet your withdrawal request. Please try again later or switch to another chain for withdrawal.",
 
   "transfer.withdraw.minAmount.error": "quantity must large than {{minAmount}}",
 

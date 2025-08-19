@@ -22,6 +22,7 @@ import {
   renderQuantityInput,
 } from "./listElement";
 import { NumeralWithCtx } from "./numeralWithCtx";
+import { PartialTPSL } from "./partialTPSL";
 import { ShareButtonWidget } from "./shareButton";
 import { TriggerPrice } from "./triggerPrice";
 import { UnrealizedPnLPopoverCard } from "./unrealPnLHover";
@@ -210,17 +211,31 @@ export const useColumn = (config: ColumnConfig) => {
         },
       },
       {
-        title: t("common.tpsl"),
-        dataIndex: "__",
+        title: t("common.fullTPSL"),
+        dataIndex: "full_tpsl",
+        width: 150,
+        render: (_: string, record) => {
+          return (
+            <TriggerPrice
+              stopLossPrice={record.full_tp_sl?.sl_trigger_price}
+              takeProfitPrice={record.full_tp_sl?.tp_trigger_price}
+            />
+          );
+        },
+      },
+
+      {
+        title: t("common.partialTPSL"),
+        dataIndex: "partial_tpsl",
         width: 150,
         render: (_: string, record) => (
-          <TriggerPrice
-            stopLossPrice={record.sl_trigger_price}
-            takeProfitPrice={record.tp_trigger_price}
+          <PartialTPSL
+            orderNum={record.partial_tp_sl?.order_num}
+            tpTriggerPrice={record.partial_tp_sl?.tp_trigger_price}
+            slTriggerPrice={record.partial_tp_sl?.sl_trigger_price}
           />
         ),
       },
-
       {
         title: t("common.notional"),
         dataIndex: "notional",
@@ -269,32 +284,31 @@ export const useColumn = (config: ColumnConfig) => {
           />
         ),
       },
-      {
-        title: t("common.qty"),
-        dataIndex: "close_qty",
-        width: 100,
-        fixed: "right",
-        render: renderQuantityInput,
-      },
-      {
-        title: t("common.price"),
-        dataIndex: "close_price",
-        width: 100,
-        fixed: "right",
-        render: renderPriceInput,
-        // render: (value: string) => <PriceInput />,
-      },
+      // {
+      //   title: t("common.qty"),
+      //   dataIndex: "close_qty",
+      //   width: 100,
+      //   fixed: "right",
+      //   render: renderQuantityInput,
+      // },
+      // {
+      //   title: t("common.price"),
+      //   dataIndex: "close_price",
+      //   width: 100,
+      //   fixed: "right",
+      //   render: renderPriceInput,
+      //   // render: (value: string) => <PriceInput />,
+      // },
       {
         title: null,
         dataIndex: "close_position",
-        align: "left",
-        width: 136,
+        align: "right",
+        width: 70,
         fixed: "right",
         render() {
           return (
             <Flex gapX={2} justify={"end"}>
               <ClosePositionWidget />
-              <TPSLButton />
             </Flex>
           );
         },

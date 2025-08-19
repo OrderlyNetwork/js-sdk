@@ -4,7 +4,6 @@ import {
   PortfolioLeftSidebarPath,
 } from "@orderly.network/portfolio";
 import { Box, Card, Flex, Grid } from "@orderly.network/ui";
-import { DataViewer } from "../../../components/dataViewer";
 import { PortfolioLayout } from "../../../components/layout";
 
 const { usePerformanceScript } = OverviewModule;
@@ -121,19 +120,15 @@ export const PerformanceAndData: Story = {
         <div>
           <OverviewModule.PerformanceUI {...state} />
         </div>
-
-        <div>
-          <DataViewer data={state} />
-        </div>
       </Grid>
     );
   },
 
   decorators: [
     (Story) => (
-      <OverviewModule.OverviewContextProvider>
+      <OverviewModule.OverviewProvider>
         <Story />
-      </OverviewModule.OverviewContextProvider>
+      </OverviewModule.OverviewProvider>
     ),
   ],
 };
@@ -178,9 +173,9 @@ export const DistributionHistory: Story = {
   decorators: [
     (Story) => (
       <Box height={"550px"} className="oui-bg-base-9">
-        <OverviewModule.OverviewContextProvider>
+        <OverviewModule.OverviewProvider>
           <Story />
-        </OverviewModule.OverviewContextProvider>
+        </OverviewModule.OverviewProvider>
       </Box>
     ),
   ],

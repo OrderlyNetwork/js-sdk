@@ -1,10 +1,10 @@
-import useEmblaCarousel from "embla-carousel-react";
 import { FC, useCallback, useEffect } from "react";
-import { NextButton, PrevButton } from "./buttons";
+import useEmblaCarousel from "embla-carousel-react";
 import { Box, cn, Flex } from "@orderly.network/ui";
+import { NextButton, PrevButton } from "./buttons";
 
 export const CarouselBackgroundImage: FC<{
-  backgroundImages: string[];
+  backgroundImages: ReadonlyArray<string> | string[];
   selectedSnap: number;
   setSelectedSnap: any;
 }> = (props) => {
@@ -17,7 +17,9 @@ export const CarouselBackgroundImage: FC<{
   });
 
   const onPrevButtonClick = useCallback(() => {
-    if (!emblaApi) return;
+    if (!emblaApi) {
+      return;
+    }
     if (emblaApi?.canScrollPrev()) {
       emblaApi.scrollPrev();
     } else if (selectedSnap - 1 >= 0) {
@@ -26,7 +28,9 @@ export const CarouselBackgroundImage: FC<{
   }, [emblaApi, selectedSnap]);
 
   const onNextButtonClick = useCallback(() => {
-    if (!emblaApi) return;
+    if (!emblaApi) {
+      return;
+    }
     if (emblaApi?.canScrollNext()) {
       emblaApi.scrollNext();
     } else if (selectedSnap + 1 < backgroundImages.length) {
@@ -41,12 +45,17 @@ export const CarouselBackgroundImage: FC<{
   }, []);
 
   useEffect(() => {
-    if (!emblaApi) return;
-
+    if (!emblaApi) {
+      return;
+    }
     onSelect(emblaApi);
     emblaApi.on("reInit", onSelect);
     emblaApi.on("select", onSelect);
     emblaApi?.scrollTo(selectedSnap);
+    return () => {
+      emblaApi.off("reInit", onSelect);
+      emblaApi.off("select", onSelect);
+    };
   }, [emblaApi, onSelect]);
 
   return (
@@ -74,7 +83,7 @@ export const CarouselBackgroundImage: FC<{
               className={cn(
                 "oui-shrink-0 oui-w-[162px]",
                 selectedSnap === index &&
-                  "oui-outline oui-outline-1 oui-outline-primary-darken"
+                  "oui-outline oui-outline-1 oui-outline-primary-darken",
               )}
             >
               <img src={e} className="oui-rounded-sm" />

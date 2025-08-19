@@ -209,7 +209,6 @@ export function calculateTicketProgress(
 
   const userMetricValue = getUserMetricValue(userdata, ticketRules.metric);
 
-  console.log("userMetricValue", userMetricValue, ticketRules);
   if (!userMetricValue) {
     if (ticketRules.mode === "linear") {
       return {

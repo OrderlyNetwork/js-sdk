@@ -3,6 +3,27 @@ import { i18n } from "@orderly.network/i18n";
 import { TimelinePoint } from "./components/axis";
 import { CampaignConfig, CampaignTagEnum, CampaignStatistics } from "./type";
 
+// Default timezone display for campaigns
+const DEFAULT_TIMEZONE_DISPLAY = "UTC";
+
+/**
+ * Get user's current timezone display name
+ * @returns Display name for the user's timezone (e.g., 'UTC', 'EST', 'PST')
+ */
+export const getUserTimezoneDisplay = (): string => {
+  try {
+    const date = new Date();
+    const timeString = date.toLocaleTimeString("en-US", {
+      timeZoneName: "short",
+    });
+    const shortName = timeString.split(" ").pop();
+    return shortName || DEFAULT_TIMEZONE_DISPLAY;
+  } catch (error) {
+    console.warn("Failed to detect user timezone, using default:", error);
+    return DEFAULT_TIMEZONE_DISPLAY;
+  }
+};
+
 /**
  * Get the appropriate tag for a campaign based on its configuration and current conditions
  * @param campaign Campaign configuration object
@@ -73,17 +94,19 @@ export const isCampaignVisible = (
 };
 
 /**
- * Format campaign date range to display format like "Feb 28, 2025 - March 2, 2025 UTC"
- * @param startTime Start time string or timestamp
- * @param endTime End time string or timestamp
- * @returns Formatted date range string with UTC suffix
+ * Format campaign date range to display format like "Feb 28, 2025 - March 2, 2025 PST"
+ * @param startTime Start time string or timestamp (should be UTC)
+ * @param endTime End time string or timestamp (should be UTC)
+ * @param showTimezone Whether to show timezone suffix (defaults to true)
+ * @returns Formatted date range string with user's timezone
  */
 export const formatCampaignDateRange = (
   startTime: string | number | Date,
   endTime: string | number | Date,
+  showTimezone: boolean = true,
 ): string => {
   try {
-    // Convert to Date objects
+    // Convert to Date objects - JavaScript automatically handles UTC conversion to local time
     const startDate = new Date(startTime);
     const endDate = new Date(endTime);
 
@@ -96,12 +119,20 @@ export const formatCampaignDateRange = (
       return "Invalid date range";
     }
 
-    // Format dates using date-fns
+    // Format dates using date-fns (will display in user's local timezone)
     // MMM d, yyyy format gives us "Feb 28, 2025" style
     const startFormatted = format(startDate, "MMM d, yyyy");
     const endFormatted = format(endDate, "MMM d, yyyy");
 
-    return `${startFormatted} - ${endFormatted}`;
+    const dateRange = `${startFormatted} - ${endFormatted}`;
+
+    if (!showTimezone) {
+      return dateRange;
+    }
+
+    // Add user's timezone suffix
+    const timezoneDisplay = getUserTimezoneDisplay();
+    return `${dateRange} ${timezoneDisplay}`;
   } catch (error) {
     console.error("Error formatting campaign date range:", error, {
       startTime,
@@ -224,7 +255,7 @@ export const formatParticipantsCount = (count: number): string => {
 /**
  * Generate timeline data points for campaign visualization
  * @param campaign Campaign configuration object
- * @returns Array of TimelinePoint objects (max 4 points)
+ * @returns Array of TimelinePoint objects (max 4 points) in user's local timezone
  */
 export const generateCampaignTimeline = (
   campaign: CampaignConfig,
@@ -247,10 +278,13 @@ export const generateCampaignTimeline = (
     return currentTime >= time ? "past" : "future";
   };
 
-  // Helper function to format time for display
+  // Helper function to format time for display in user's local timezone
   const formatTimeDisplay = (time: Date): string => {
     try {
-      return format(time, "yyyy-MM-dd HH:mm");
+      // Format time using date-fns (displays in user's local timezone)
+      const formatted = format(time, "yyyy-MM-dd HH:mm");
+      const timezoneDisplay = getUserTimezoneDisplay();
+      return `${formatted} ${timezoneDisplay}`;
     } catch (error) {
       console.error("Error formatting time:", error);
       return time.toISOString();

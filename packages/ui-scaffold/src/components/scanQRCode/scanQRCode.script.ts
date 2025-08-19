@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
+import { useAppContext } from "@orderly.network/react-app";
 
 export type UseScanQRCodeScriptReturn = ReturnType<typeof useScanQRCodeScript>;
 
 export function useScanQRCodeScript() {
   const [open, setOpen] = useState(false);
-
+  const { widgetConfigs } = useAppContext();
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [showScanTooltip, setShowScanTooltip] = useLocalStorage(
@@ -22,7 +23,13 @@ export function useScanQRCodeScript() {
   };
 
   const onScanSuccess = (url: string) => {
-    if (isValidURL(url)) {
+    if (!isValidURL(url)) {
+      return;
+    }
+    const { onSuccess } = widgetConfigs?.scanQRCode || {};
+    if (typeof onSuccess === "function") {
+      onSuccess(url);
+    } else {
       window.location.href = url;
     }
   };

@@ -5,7 +5,7 @@ import {
 } from "@orderly.network/portfolio";
 import { Box } from "@orderly.network/ui";
 import { PortfolioLayout } from "../../../components/layout";
-import { useOrderlyConfig } from "../../../hooks/useOrderlyConfig";
+import { tradingPageConfig } from "../../../orderlyConfig";
 
 const meta: Meta<typeof OrdersModule.OrdersPage> = {
   title: "Package/portfolio/Orders",
@@ -52,12 +52,11 @@ export const LayoutPage: Story = {
     layout: "fullscreen",
   },
   render: () => {
-    const config = useOrderlyConfig();
     return (
       <PortfolioLayout currentPath={PortfolioLeftSidebarPath.Orders}>
         <Container>
           <OrdersModule.OrdersPage
-            sharePnLConfig={config.tradingPage.sharePnLConfig}
+            sharePnLConfig={tradingPageConfig.sharePnLConfig}
           />
         </Container>
       </PortfolioLayout>

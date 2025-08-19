@@ -8,7 +8,7 @@ import {
 } from "@orderly.network/types";
 import { SDKError } from "@orderly.network/types";
 import { AlgoOrderType } from "@orderly.network/types";
-import { useDataCenterContext } from "../../dataProvider";
+import { useDataCenterContext } from "../../provider/dataCenter/dataCenterContext";
 import { useEventEmitter } from "../../useEventEmitter";
 import { useMutation } from "../../useMutation";
 import { usePrivateInfiniteQuery } from "../../usePrivateInfiniteQuery";
@@ -288,6 +288,16 @@ export const useOrderStream = (
     ]);
   }, [normalOrdersResponse.data, algoOrdersResponse.data]);
 
+  const cancelPostionOrdersByTypes = useCallback(
+    (symbol: string, types: AlgoOrderRootType[]) => {
+      return doCancelAllAlgoOrders(null, {
+        symbol,
+        algo_type: types,
+      });
+    },
+    [algoOrdersResponse.data],
+  );
+
   const cancelAllTPSLOrders = useCallback(() => {
     return cancelAlgoOrdersByTypes([
       AlgoOrderRootType.POSITIONAL_TP_SL,
@@ -447,6 +457,7 @@ export const useOrderStream = (
       cancelAlgoOrder,
       cancelTPSLChildOrder,
       updateTPSLOrder,
+      cancelPostionOrdersByTypes,
       meta,
       errors: {
         cancelOrder: cancelOrderError,

@@ -1,10 +1,15 @@
 import { FC, useMemo } from "react";
 import { useSymbolsInfo, utils } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { AlgoOrderType, API, OrderSide } from "@orderly.network/types";
+import {
+  AlgoOrderType,
+  API,
+  OrderSide,
+  PositionType,
+} from "@orderly.network/types";
 import { cn, Flex, Text, Tooltip } from "@orderly.network/ui";
 import { usePositionsRowContext } from "../positionsRowContext";
-import { TPSLEditIcon } from "./components";
+import { TPSLEditIcon, AddIcon } from "./components";
 
 export const TriggerPrice: FC<{
   stopLossPrice?: number;
@@ -139,7 +144,7 @@ export const TPSLTriggerPrice: FC<{
   const child = useMemo(() => {
     const children = [];
 
-    if (!order?.symbol) return <span>-</span>;
+    if (!order?.symbol) return <AddIcon positionType={PositionType.FULL} />;
 
     const Label = ({ children }: { children?: string }) => {
       return !props.stopLossPrice || direction === "column" ? (
@@ -190,7 +195,8 @@ export const TPSLTriggerPrice: FC<{
       );
     }
 
-    if (children.length === 0) return <Text>-</Text>;
+    if (children.length === 0)
+      return <AddIcon positionType={PositionType.FULL} />;
 
     if (children.length === 2 && direction === "row") {
       children.splice(1, 0, <Text key={"split"}>/</Text>);

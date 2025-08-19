@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { subDays, format, getYear, getMonth, getDate, addDays } from "date-fns";
+import { subDays, format } from "date-fns";
 import {
   useAssetsHistory,
   useCollateral,
@@ -21,11 +21,7 @@ export const useAssetsHistoryData = (
     isRealtime?: boolean;
   },
 ) => {
-  const [today] = useState(() => {
-    const d = new Date();
-
-    return new Date(getYear(d), getMonth(d), getDate(d), 0, 0, 0);
-  });
+  const [today] = useState(() => new Date());
 
   const { isRealtime = false } = options || {};
   const periodTypes = Object.values(PeriodType);
@@ -40,7 +36,6 @@ export const useAssetsHistoryData = (
     switch (value) {
       case PeriodType.MONTH:
         return subDays(today, 35);
-
       case PeriodType.QUARTER:
         return subDays(today, 95);
       default:
@@ -65,7 +60,8 @@ export const useAssetsHistoryData = (
   // const nowStamp = useRef(new Date().getTime().toString());
   // const now = useRef(new Date());
 
-  const endDate = useMemo(() => addDays(today, 1), [today]);
+  // const endDate = useMemo(() => addDays(today, 1), [today]);
+  const endDate = today;
 
   const [data] = useStatisticsDaily(
     {
@@ -92,10 +88,12 @@ export const useAssetsHistoryData = (
 
   const calculateLastPnl = (inputs: {
     lastItem: API.DailyRow;
-    assetHistory: API.AssetHistoryRow[];
+    assetHistory: ReadonlyArray<API.AssetHistoryRow> | API.AssetHistoryRow[];
     totalValue: number | null;
   }) => {
-    if (totalValue == null) return null;
+    if (totalValue == null) {
+      return null;
+    }
     // today daily pnl = totalValue - lastItem.account_value - deposit + withdraw
     let value = new Decimal(totalValue).sub(inputs.lastItem.account_value);
 
@@ -114,8 +112,6 @@ export const useAssetsHistoryData = (
           list.push(item);
         }
       }
-
-      // console.log("--->>>>> list", list);
 
       // calculate the sum of deposit and withdraw
       for (let i = 0; i < list.length; i++) {
@@ -138,11 +134,10 @@ export const useAssetsHistoryData = (
 
   const calculate = (data: API.DailyRow[], totalValue: number | null) => {
     const lastItem = data[data.length - 1];
-    const todayFormattedStr = format(today, "yyyy-MM-dd");
 
     return {
       ...lastItem,
-      date: todayFormattedStr,
+      date: getUTCStr(today),
       perp_volume: 0,
       account_value:
         totalValue !== null ? totalValue : (lastItem?.account_value ?? 0),
@@ -150,19 +145,25 @@ export const useAssetsHistoryData = (
     };
   };
 
-  const mergeData = (data: API.DailyRow[], totalValue: number | null) => {
+  const mergeData = (
+    data: ReadonlyArray<API.DailyRow> | API.DailyRow[],
+    totalValue: number | null,
+  ) => {
     if (!Array.isArray(data) || data.length === 0) {
       return data;
     }
 
-    if (data[data.length - 1].date === format(today, "yyyy-MM-dd")) {
-      data;
+    if (data[data.length - 1].date === getUTCStr(today)) {
+      return data;
     }
 
     return data.concat([calculate(data, totalValue)]);
   };
 
-  const calculateData = (data: API.DailyRow[], realtime: boolean) => {
+  const calculateData = (
+    data: ReadonlyArray<API.DailyRow> | API.DailyRow[],
+    realtime: boolean,
+  ) => {
     const _data = !realtime ? data : mergeData(data, totalValue);
 
     return _data.slice(Math.max(0, _data.length - periodValue));
@@ -172,7 +173,9 @@ export const useAssetsHistoryData = (
     /**
      * need the totalValue and data are all ready, else return null;
      */
-    if (totalValue == null) return [];
+    if (totalValue == null) {
+      return [];
+    }
     return calculateData(data, isRealtime);
   }, [data, totalValue, assetHistory, isRealtime]);
 
@@ -245,3 +248,11 @@ export const useAssetsHistoryData = (
 export type useAssetsHistoryDataReturn = ReturnType<
   typeof useAssetsHistoryData
 >;
+
+function getUTCStr(date: Date) {
+  const year = date.getUTCFullYear();
+  const month = `0${date.getUTCMonth() + 1}`.slice(-2);
+  const day = `0${date.getUTCDate()}`.slice(-2);
+
+  return `${year}-${month}-${day}`;
+}
