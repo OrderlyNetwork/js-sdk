@@ -562,6 +562,156 @@ export async function deposit({
 
   const vaultDepositParams = getDepositParams(userAddress, depositData);
 
+  const buildSendRemainingAccounts = () => [
+    // ENDPOINT solana/programs/programs/uln/src/instructions/endpoint/send.rs
+    {
+      isSigner: false,
+      isWritable: false,
+      pubkey: ENDPOINT_PROGRAM_ID,
+    },
+    {
+      isSigner: false,
+      isWritable: false,
+      // 0
+      pubkey: oappConfigPDA,
+    },
+    {
+      isSigner: false,
+      isWritable: false,
+      pubkey: SEND_LIB_PROGRAM_ID,
+    },
+    {
+      isSigner: false,
+      isWritable: false,
+      // 7
+      pubkey: sendLibConfigPDA,
+    },
+    {
+      isSigner: false,
+      isWritable: false,
+      // 9
+      pubkey: defaultSendLibPDA,
+    },
+    {
+      isSigner: false,
+      isWritable: false,
+      // 8
+      pubkey: sendLibInfoPDA,
+    },
+    {
+      isSigner: false,
+      isWritable: false,
+      // 14
+      pubkey: endpointSettingPDA,
+    },
+    {
+      isSigner: false,
+      isWritable: true,
+      // 15
+      pubkey: noncePDA,
+    },
+    {
+      isSigner: false,
+      isWritable: false,
+      // 3
+      pubkey: eventAuthorityPDA,
+    },
+    // ULN solana/programs/programs/uln/src/instructions/endpoint/send.rs
+    {
+      isSigner: false,
+      isWritable: false,
+      pubkey: ENDPOINT_PROGRAM_ID,
+    },
+    {
+      isSigner: false,
+      isWritable: false,
+      // 13
+      pubkey: ulnSettingPDA,
+    },
+    {
+      isSigner: false,
+      isWritable: false,
+      // 10
+      pubkey: sendConfigPDA,
+    },
+    {
+      isSigner: false,
+      isWritable: false,
+      // 11
+      pubkey: defaultSendConfigPDA,
+    },
+    {
+      isSigner: true,
+      isWritable: false,
+      pubkey: userPublicKey,
+    },
+    {
+      isSigner: false,
+      isWritable: false,
+      pubkey: TREASURY_PROGRAM_ID,
+    },
+    {
+      isSigner: false,
+      isWritable: false,
+      pubkey: SystemProgram.programId,
+    },
+    {
+      isSigner: false,
+      isWritable: false,
+      // 12
+      pubkey: ulnEventAuthorityPDA,
+    },
+    {
+      isSigner: false,
+      isWritable: false,
+      pubkey: SEND_LIB_PROGRAM_ID,
+    },
+    {
+      isSigner: false,
+      isWritable: false,
+      pubkey: EXECUTOR_PROGRAM_ID,
+    },
+    {
+      isSigner: false,
+      isWritable: true,
+      // 16
+      pubkey: executorConfigPDA,
+    },
+    {
+      isSigner: false,
+      isWritable: false,
+      pubkey: PRICE_FEED_PROGRAM_ID,
+    },
+    {
+      isSigner: false,
+      isWritable: false,
+      // 17
+      pubkey: priceFeedPDA,
+    },
+    {
+      isSigner: false,
+      isWritable: false,
+      pubkey: DVN_PROGRAM_ID,
+    },
+    {
+      isSigner: false,
+      isWritable: true,
+      // 18
+      pubkey: dvnConfigPDA,
+    },
+    {
+      isSigner: false,
+      isWritable: false,
+      pubkey: PRICE_FEED_PROGRAM_ID,
+    },
+    {
+      isSigner: false,
+      isWritable: false,
+      // 17
+      pubkey: priceFeedPDA,
+    },
+  ];
+
   const fee = await getDepositQuoteFee({
     vaultAddress,
     userAddress,
@@ -596,155 +746,7 @@ export async function deposit({
           allowedBroker: allowedBrokerPDA,
           allowedToken: allowedTokenPDA,
         })
-        .remainingAccounts([
-          // ENDPOINT solana/programs/programs/uln/src/instructions/endpoint/send.rs
-          {
-            isSigner: false,
-            isWritable: false,
-            pubkey: ENDPOINT_PROGRAM_ID,
-          },
-          {
-            isSigner: false,
-            isWritable: false,
-            // 0
-            pubkey: oappConfigPDA,
-          },
-          {
-            isSigner: false,
-            isWritable: false,
-            pubkey: SEND_LIB_PROGRAM_ID,
-          },
-          {
-            isSigner: false,
-            isWritable: false,
-            // 7
-            pubkey: sendLibConfigPDA,
-          },
-          {
-            isSigner: false,
-            isWritable: false,
-            // 9
-            pubkey: defaultSendLibPDA,
-          },
-          {
-            isSigner: false,
-            isWritable: false,
-            // 8
-            pubkey: sendLibInfoPDA,
-          },
-          {
-            isSigner: false,
-            isWritable: false,
-            // 14
-            pubkey: endpointSettingPDA,
-          },
-          {
-            isSigner: false,
-            isWritable: true,
-            // 15
-            pubkey: noncePDA,
-          },
-          {
-            isSigner: false,
-            isWritable: false,
-            // 3
-            pubkey: eventAuthorityPDA,
-          },
-          // ULN solana/programs/programs/uln/src/instructions/endpoint/send.rs
-          {
-            isSigner: false,
-            isWritable: false,
-            pubkey: ENDPOINT_PROGRAM_ID,
-          },
-          {
-            isSigner: false,
-            isWritable: false,
-            // 13
-            pubkey: ulnSettingPDA,
-          },
-          {
-            isSigner: false,
-            isWritable: false,
-            // 10
-            pubkey: sendConfigPDA,
-          },
-          {
-            isSigner: false,
-            isWritable: false,
-            // 11
-            pubkey: defaultSendConfigPDA,
-          },
-          {
-            isSigner: true,
-            isWritable: false,
-            pubkey: userPublicKey,
-          },
-          {
-            isSigner: false,
-            isWritable: false,
-            pubkey: TREASURY_PROGRAM_ID,
-          },
-          {
-            isSigner: false,
-            isWritable: false,
-            pubkey: SystemProgram.programId,
-          },
-          {
-            isSigner: false,
-            isWritable: false,
-            // 12
-            pubkey: ulnEventAuthorityPDA,
-          },
-          {
-            isSigner: false,
-            isWritable: false,
-            pubkey: SEND_LIB_PROGRAM_ID,
-          },
-          {
-            isSigner: false,
-            isWritable: false,
-            pubkey: EXECUTOR_PROGRAM_ID,
-          },
-          {
-            isSigner: false,
-            isWritable: true,
-            // 16
-            pubkey: executorConfigPDA,
-          },
-          {
-            isSigner: false,
-            isWritable: false,
-            pubkey: PRICE_FEED_PROGRAM_ID,
-          },
-          {
-            isSigner: false,
-            isWritable: false,
-            // 17
-            pubkey: priceFeedPDA,
-          },
-          {
-            isSigner: false,
-            isWritable: false,
-            pubkey: DVN_PROGRAM_ID,
-          },
-          {
-            isSigner: false,
-            isWritable: true,
-            // 18
-            pubkey: dvnConfigPDA,
-          },
-          {
-            isSigner: false,
-            isWritable: false,
-            pubkey: PRICE_FEED_PROGRAM_ID,
-          },
-          {
-            isSigner: false,
-            isWritable: false,
-            // 17
-            pubkey: priceFeedPDA,
-          },
-        ])
+        .remainingAccounts(buildSendRemainingAccounts())
         .instruction()
     : await program.methods
         .deposit(vaultDepositParams, sendParam)
@@ -760,155 +762,7 @@ export async function deposit({
           allowedBroker: allowedBrokerPDA,
           allowedToken: allowedTokenPDA,
         })
-        .remainingAccounts([
-          // ENDPOINT solana/programs/programs/uln/src/instructions/endpoint/send.rs
-          {
-            isSigner: false,
-            isWritable: false,
-            pubkey: ENDPOINT_PROGRAM_ID,
-          },
-          {
-            isSigner: false,
-            isWritable: false,
-            // 0
-            pubkey: oappConfigPDA,
-          },
-          {
-            isSigner: false,
-            isWritable: false,
-            pubkey: SEND_LIB_PROGRAM_ID,
-          },
-          {
-            isSigner: false,
-            isWritable: false,
-            // 7
-            pubkey: sendLibConfigPDA,
-          },
-          {
-            isSigner: false,
-            isWritable: false,
-            // 9
-            pubkey: defaultSendLibPDA,
-          },
-          {
-            isSigner: false,
-            isWritable: false,
-            // 8
-            pubkey: sendLibInfoPDA,
-          },
-          {
-            isSigner: false,
-            isWritable: false,
-            // 14
-            pubkey: endpointSettingPDA,
-          },
-          {
-            isSigner: false,
-            isWritable: true,
-            // 15
-            pubkey: noncePDA,
-          },
-          {
-            isSigner: false,
-            isWritable: false,
-            // 3
-            pubkey: eventAuthorityPDA,
-          },
-          // ULN solana/programs/programs/uln/src/instructions/endpoint/send.rs
-          {
-            isSigner: false,
-            isWritable: false,
-            pubkey: ENDPOINT_PROGRAM_ID,
-          },
-          {
-            isSigner: false,
-            isWritable: false,
-            // 13
-            pubkey: ulnSettingPDA,
-          },
-          {
-            isSigner: false,
-            isWritable: false,
-            // 10
-            pubkey: sendConfigPDA,
-          },
-          {
-            isSigner: false,
-            isWritable: false,
-            // 11
-            pubkey: defaultSendConfigPDA,
-          },
-          {
-            isSigner: true,
-            isWritable: false,
-            pubkey: userPublicKey,
-          },
-          {
-            isSigner: false,
-            isWritable: false,
-            pubkey: TREASURY_PROGRAM_ID,
-          },
-          {
-            isSigner: false,
-            isWritable: false,
-            pubkey: SystemProgram.programId,
-          },
-          {
-            isSigner: false,
-            isWritable: false,
-            // 12
-            pubkey: ulnEventAuthorityPDA,
-          },
-          {
-            isSigner: false,
-            isWritable: false,
-            pubkey: SEND_LIB_PROGRAM_ID,
-          },
-          {
-            isSigner: false,
-            isWritable: false,
-            pubkey: EXECUTOR_PROGRAM_ID,
-          },
-          {
-            isSigner: false,
-            isWritable: true,
-            // 16
-            pubkey: executorConfigPDA,
-          },
-          {
-            isSigner: false,
-            isWritable: false,
-            pubkey: PRICE_FEED_PROGRAM_ID,
-          },
-          {
-            isSigner: false,
-            isWritable: false,
-            // 17
-            pubkey: priceFeedPDA,
-          },
-          {
-            isSigner: false,
-            isWritable: false,
-            pubkey: DVN_PROGRAM_ID,
-          },
-          {
-            isSigner: false,
-            isWritable: true,
-            // 18
-            pubkey: dvnConfigPDA,
-          },
-          {
-            isSigner: false,
-            isWritable: false,
-            pubkey: PRICE_FEED_PROGRAM_ID,
-          },
-          {
-            isSigner: false,
-            isWritable: false,
-            // 17
-            pubkey: priceFeedPDA,
-          },
-        ])
+        .remainingAccounts(buildSendRemainingAccounts())
         .instruction();
 
   const lookupTableAddress = getLookupTableAddress(appProgramId);
