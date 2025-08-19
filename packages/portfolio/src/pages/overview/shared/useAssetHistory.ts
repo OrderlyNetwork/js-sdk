@@ -138,15 +138,17 @@ export const useAssetsHistoryData = (
   }, [data]);
 
   const totalTransferIn = useMemo(() => {
+    if (!Array.isArray(transferInHistory)) {
+      return null;
+    }
     if (
       lastItem == null ||
-      !Array.isArray(transferInHistory?.rows) ||
-      transferInHistory?.rows?.length === 0 ||
+      transferInHistory?.length === 0 ||
       typeof lastItem.snapshot_time === "undefined"
     ) {
       return zero;
     }
-    const list = transferInHistory?.rows?.filter((item) => {
+    const list = transferInHistory?.filter((item) => {
       return item.created_time > lastItem?.snapshot_time;
     });
     return list?.reduce((acc, item) => {
@@ -163,15 +165,17 @@ export const useAssetsHistoryData = (
   }, [transferInHistory, lastItem, indexPrices]);
 
   const totalTransferOut = useMemo(() => {
+    if (!Array.isArray(transferOutHistory)) {
+      return null;
+    }
     if (
       lastItem == null ||
-      !Array.isArray(transferOutHistory?.rows) ||
-      transferOutHistory?.rows?.length === 0 ||
+      transferOutHistory?.length === 0 ||
       typeof lastItem.snapshot_time === "undefined"
     ) {
       return zero;
     }
-    const list = transferOutHistory?.rows?.filter((item) => {
+    const list = transferOutHistory?.filter((item) => {
       return item.created_time > lastItem?.snapshot_time;
     });
     return list?.reduce((acc, item) => {
@@ -330,7 +334,7 @@ export const useAssetsHistoryData = (
     }
     // if the transferOutHistory or transferInHistory is not ready, return null;
 
-    if (transferOutHistory === null || transferInHistory === null) {
+    if (totalTransferOut === null || totalTransferIn === null) {
       return [];
     }
     return calculateData(
@@ -346,8 +350,10 @@ export const useAssetsHistoryData = (
     assetHistory,
     isRealtime,
     indexPrices,
-    transferOutHistory,
-    transferInHistory,
+    // transferOutHistory,
+    // transferInHistory,
+    totalTransferIn,
+    totalTransferOut,
   ]);
 
   const aggregateValue = useMemo(() => {
