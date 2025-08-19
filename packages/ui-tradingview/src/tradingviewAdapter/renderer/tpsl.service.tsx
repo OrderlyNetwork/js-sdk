@@ -147,6 +147,7 @@ export class TPSLService {
 
       if (this.interactiveMode === MouseInteractiveMode.TP_SL_DRAGGING) {
         console.log("current position", this.currentPosition);
+
         modal
           .show("TPSLSimpleDialogId", {
             title: pnl.gt(0)
@@ -160,6 +161,13 @@ export class TPSLService {
               this.chart.setScrollEnabled(true);
               this.chart.setZoomEnabled(true);
               this.interactiveMode = MouseInteractiveMode.NONE;
+            },
+            showAdvancedTPSLDialog: (options: { qty: number }) => {
+              this.showAdvancedTPSLDialog({
+                type: pnl.gt(0) ? "tp" : "sl",
+                triggerPrice: this.lastArgs?.price ?? 0,
+                qty: options.qty,
+              });
             },
           })
           .then(
@@ -178,6 +186,46 @@ export class TPSLService {
           });
       }
     });
+  }
+
+  private showAdvancedTPSLDialog({
+    type,
+    triggerPrice,
+    qty,
+  }: {
+    type: "tp" | "sl";
+    triggerPrice: number;
+    qty: number;
+  }) {
+    console.log("showAdvancedTPSLDialog", type, triggerPrice);
+    modal
+      .show("TPSLDialogId", {
+        withTriggerPrice: true,
+        type,
+        triggerPrice,
+        symbol: this.currentPosition?.symbol,
+        qty,
+        onComplete: () => {
+          this.clearTPSLElements();
+          this.chart.setScrollEnabled(true);
+          this.chart.setZoomEnabled(true);
+          this.interactiveMode = MouseInteractiveMode.NONE;
+        },
+      })
+      .then(
+        () => {
+          console.log("completate");
+        },
+        (err) => {
+          console.log("show advanced tpsl dialog error", err);
+        },
+      )
+      .finally(() => {
+        this.clearTPSLElements();
+        this.chart.setScrollEnabled(true);
+        this.chart.setZoomEnabled(true);
+        this.interactiveMode = MouseInteractiveMode.NONE;
+      });
   }
 
   updatePositions(positions: ChartPosition[] | null) {

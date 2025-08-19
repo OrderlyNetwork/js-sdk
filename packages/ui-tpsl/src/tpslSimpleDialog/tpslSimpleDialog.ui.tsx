@@ -21,6 +21,7 @@ import { useTPSLSimpleDialog } from "./tpslSimpleDialog.script";
 type Props = ReturnType<typeof useTPSLSimpleDialog> & {
   close?: () => void;
   onComplete?: () => void;
+  showAdvancedTPSLDialog?: (options: { qty: number }) => void;
 };
 
 export const TPSLSimpleDialogUI: React.FC<Props> = (props) => {
@@ -163,7 +164,16 @@ export const TPSLSimpleDialogUI: React.FC<Props> = (props) => {
       )}
 
       <Divider className="oui-my-3 oui-w-full" />
-      <Flex itemAlign={"center"} onClick={() => {}} className="oui-pb-4">
+      <Flex
+        itemAlign={"center"}
+        onClick={() => {
+          props.close?.();
+          props.showAdvancedTPSLDialog?.({
+            qty: Number(TPSL_OrderEntity.quantity),
+          });
+        }}
+        className="oui-pb-4"
+      >
         <Text color="primary" className="oui-cursor-pointer oui-text-sm">
           {t("tpsl.advancedSetting")}
         </Text>

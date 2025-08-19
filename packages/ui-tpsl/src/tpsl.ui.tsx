@@ -46,6 +46,7 @@ export type TPSLProps = {
   onClose?: () => void;
   onCancel?: () => void;
   onComplete?: () => void;
+  withTriggerPrice?: boolean;
 };
 
 //------------- TPSL form start ---------------
