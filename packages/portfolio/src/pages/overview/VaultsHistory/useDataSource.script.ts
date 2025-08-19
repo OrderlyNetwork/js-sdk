@@ -41,7 +41,7 @@ export const useVaultsHistoryHook = () => {
     return data.map<API.StrategyVaultHistoryRow>((item) => ({
       ...item,
       token: "USDC", // need to hard code for now
-      vaultName: "Orderly Strategies", // need to hard code for now
+      vaultName: "Orderly OmniVault",
       amount_change:
         item.type === "withdrawal" ? -item.amount_change : item.amount_change,
     }));

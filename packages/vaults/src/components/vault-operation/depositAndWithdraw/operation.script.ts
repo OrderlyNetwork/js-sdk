@@ -34,6 +34,13 @@ export const useOperationScript = (props: OperationScript) => {
     amount: string;
     vaultId: string;
   }) => {
+    if (state.accountId !== state.mainAccountId) {
+      toast.error(
+        "Please switch to the main account to perform this operation.",
+      );
+      return;
+    }
+
     if (props.type === OperationType.DEPOSIT) {
       if (new Decimal(amount).lt(10)) {
         toast.error("Deposit amount is less than the minimum 10 USDC.");
