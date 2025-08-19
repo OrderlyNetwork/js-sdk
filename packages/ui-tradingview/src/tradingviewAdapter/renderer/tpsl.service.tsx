@@ -80,10 +80,10 @@ export class TPSLService {
     this.chart.crossHairMoved().subscribe(null, (args) => {
       this.lastArgs = args;
       if (this.interactiveMode === MouseInteractiveMode.TP_SL_DRAGGING) {
-        this.drawTPSL(args);
         return;
       }
       const position = this.getIntersectantPosition(args);
+      // console.log('xxx postion', position);
 
       //   console.log(position);
       if (
@@ -115,77 +115,48 @@ export class TPSLService {
 
       // this.hitTest();
     });
+  }
 
-    this.instance.subscribe("mouse_down", (params) => {
-      //   console.log(params);
-      if (!!this.currentPosition) {
-        this.chart.setScrollEnabled(false);
-        this.chart.setZoomEnabled(false);
-        // this.createOverlay();
-        // this.instance.applyOverrides({
-        //   "paneProperties.crossHairProperties.color": "rgba(0, 0, 0, 0)",
-        //   //   "paneProperties.background.crossHairProperties.transparency": 0,
-        // });
-        this.interactiveMode = MouseInteractiveMode.TP_SL_DRAGGING;
-
-        this.tpslOrderLine?.setLineColor("rgba(255,255,255,1)");
-
-        this.verticalLineTime();
-
-        // this.createMaskLayer();
-      }
-    });
-
-    this.instance.subscribe("mouse_up", (params) => {
-      console.log("this", params);
-      // open dialog;
-
-      // FIXME: need to get the quantity of the position
-      const pnl = new Decimal(this.lastArgs?.price ?? 0)
-        .minus(this.currentPosition!.open)
-        .mul(0.5);
-
-      if (this.interactiveMode === MouseInteractiveMode.TP_SL_DRAGGING) {
-        console.log("current position", this.currentPosition);
-
-        modal
-          .show("TPSLSimpleDialogId", {
-            title: pnl.gt(0)
-              ? i18n.t("tpsl.TPOrderConfirm")
-              : i18n.t("tpsl.SLOrderConfirm"),
-            triggerPrice: this.lastArgs?.price,
+  private showTPSLDialog(params: { price: number }) {
+    const pnl = new Decimal(params.price)
+      .minus(this.currentPosition!.open)
+      .mul(this.currentPosition?.balance ?? 0);
+    modal
+      .show("TPSLSimpleDialogId", {
+        title: pnl.gt(0)
+          ? i18n.t("tpsl.TPOrderConfirm")
+          : i18n.t("tpsl.SLOrderConfirm"),
+        triggerPrice: params.price,
+        type: pnl.gt(0) ? "tp" : "sl",
+        symbol: this.currentPosition!.symbol,
+        onComplete: () => {
+          this.clearTPSLElements();
+          this.chart.setScrollEnabled(true);
+          this.chart.setZoomEnabled(true);
+          this.interactiveMode = MouseInteractiveMode.NONE;
+        },
+        showAdvancedTPSLDialog: (options: { qty: number }) => {
+          this.showAdvancedTPSLDialog({
             type: pnl.gt(0) ? "tp" : "sl",
-            symbol: this.currentPosition!.symbol,
-            onComplete: () => {
-              this.clearTPSLElements();
-              this.chart.setScrollEnabled(true);
-              this.chart.setZoomEnabled(true);
-              this.interactiveMode = MouseInteractiveMode.NONE;
-            },
-            showAdvancedTPSLDialog: (options: { qty: number }) => {
-              this.showAdvancedTPSLDialog({
-                type: pnl.gt(0) ? "tp" : "sl",
-                triggerPrice: this.lastArgs?.price ?? 0,
-                qty: options.qty,
-              });
-            },
-          })
-          .then(
-            () => {
-              console.log("completate");
-            },
-            (err) => {
-              console.log(err);
-            },
-          )
-          .finally(() => {
-            this.clearTPSLElements();
-            this.chart.setScrollEnabled(true);
-            this.chart.setZoomEnabled(true);
-            this.interactiveMode = MouseInteractiveMode.NONE;
+            triggerPrice: params.price,
+            qty: options.qty,
           });
-      }
-    });
+        },
+      })
+      .then(
+        () => {
+          console.log("completate");
+        },
+        (err) => {
+          console.log(err);
+        },
+      )
+      .finally(() => {
+        this.clearTPSLElements();
+        this.chart.setScrollEnabled(true);
+        this.chart.setZoomEnabled(true);
+        this.interactiveMode = MouseInteractiveMode.NONE;
+      });
   }
 
   private showAdvancedTPSLDialog({
@@ -250,22 +221,19 @@ export class TPSLService {
     return 10;
   }
 
-  private drawTPSL(params: CrossHairMovedEventParams) {
-    const { price, time } = params;
-    const { tpslOrderLine, verticalLine } = this.ensureTPSLElements(params);
-
-    // tpslPnLLabel?.setPoints([{ price, time }]);
-
-    // FIXME: need to get the quantity of the position
-    const pnl = new Decimal(price).minus(this.currentPosition!.open).mul(0.5);
+  private drawTPSL(params: { price: number }) {
+    const { price } = params;
+    const { tpslOrderLine, verticalLine } = this.ensureTPSLElements({ price });
+    const pnl = new Decimal(price)
+      .minus(this.currentPosition!.open)
+      .mul(this.currentPosition?.balance ?? 0);
 
     const direction = pnl.gt(0)
       ? i18n.t("tpsl.takeProfit")
       : i18n.t("tpsl.stopLoss");
 
     tpslOrderLine
-      ?.setPrice(price)
-      .setText(`${direction} ${pnl.toDecimalPlaces(2).toNumber()}`)
+      ?.setText(`${direction} ${pnl.toDecimalPlaces(2).toNumber()}`)
       .setBodyTextColor(pnl.gt(0) ? "rgb(0,255,0)" : "rgb(255,0,0)");
 
     if (this.tpslVerticalLineTime) {
@@ -276,7 +244,7 @@ export class TPSLService {
     }
   }
 
-  private ensureTPSLElements(params: CrossHairMovedEventParams) {
+  private ensureTPSLElements(params: { price: number }) {
     const tpslOrderLine = this.tpslOrderLine;
     let verticalLine;
     let tpslStartCircle;
@@ -318,26 +286,6 @@ export class TPSLService {
       );
     }
 
-    // if (this.tpslStartCircleEntityId) {
-    //   tpslStartCircle = this.chart.getShapeById(this.tpslStartCircleEntityId);
-    // }
-    // if (!tpslStartCircle) {
-    //   this.tpslStartCircleEntityId = this.chart.createShape(
-    //     {price: this.currentPosition?.open, time: params.time },
-    //     {
-    //       shape: "circle",
-    //       lock: true,
-    //       disableSave: true,
-    //       disableSelection: true,
-    //       disableUndo: true,
-    //       zOrder: "top",
-    //       overrides: {
-
-    //       }
-    //     },
-    //   );
-    // }
-
     return {
       tpslOrderLine,
       verticalLine,
@@ -347,24 +295,43 @@ export class TPSLService {
   private createTPSLTriggerButton(params: CrossHairMovedEventParams) {
     if (!this.tpslOrderLine) {
       this.tpslOrderLine = this.createTPSLOrderLine();
+      this.tpslOrderLine.onMove(() => {
+        console.log("xxx onMove");
+        const price = this.tpslOrderLine?.getPrice();
+        this.showTPSLDialog({ price: price ?? 0 });
+      });
+      this.tpslOrderLine.onMoving(() => {
+        const price = this.tpslOrderLine?.getPrice();
+        this.interactiveMode = MouseInteractiveMode.TP_SL_DRAGGING;
+        this.verticalLineTime();
+        this.drawTPSL({ price: price ?? 0 });
+        console.log("xxx onMoving", price);
+      });
     }
   }
 
   private createTPSLOrderLine() {
-    return this.chart
-      .createOrderLine()
-      .setEditable(false)
-      .setCancellable(false)
-      .setPrice(this.currentPosition!.open)
-      .setLineLength(-200, "pixel")
-      .setText("TP/SL add")
-      .setQuantity("")
-      .setLineStyle(1)
-      .setLineColor("rgba(255,255,255,0)");
+    return (
+      this.chart
+        .createOrderLine()
+        // .setEditable(false)
+        .setCancellable(false)
+        .setPrice(this.currentPosition!.open)
+        .setLineLength(-200, "pixel")
+        .setText("TP/SL add")
+        .setQuantity("")
+        .setLineStyle(1)
+        .setLineColor("rgba(255,255,255,0)")
+        .onMoving(() => {
+          console.log("aaa onMoving");
+          // this.drawTPSL(params);
+        })
+    );
   }
 
   private verticalLineTime() {
     const range = this.chart.getVisibleRange();
+    console.log("xxx range", range);
 
     // const timeScaler = this.chart.getTimeScale();
     // // console.log(timeScaler.width());
@@ -412,6 +379,8 @@ export class TPSLService {
     const { price, time } = params;
     let intersectantPosition: ChartPosition | null = null;
 
+    // console.log('params', params);
+    // console.log('xxx lastPositions', this.lastPositions, this.threshold, price);
     for (const position of this.lastPositions) {
       if (position) {
         if (Math.abs(position.open - price) < this.threshold) {
