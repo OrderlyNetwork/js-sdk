@@ -1,5 +1,6 @@
 import { FC, useMemo, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
+import { AccountStatusEnum } from "@orderly.network/types";
 import {
   cn,
   Text,

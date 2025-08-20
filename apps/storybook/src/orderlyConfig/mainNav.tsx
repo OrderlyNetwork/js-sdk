@@ -59,6 +59,7 @@ function getMainMenus(): MainNavWidgetProps["mainMenus"] {
   return [
     { name: i18n.t("common.trading"), href: "/", isHomePageInMobile: true },
     { name: i18n.t("common.portfolio"), href: "/portfolio" },
+    { name: i18n.t("common.vaults"), href: "/vaults" },
     { name: i18n.t("common.markets"), href: "/markets" },
     {
       name: i18n.t("tradingLeaderboard.arena"),

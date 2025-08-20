@@ -60,6 +60,18 @@ export type AddOrderlyKeyInputs = {
   subAccountId?: string;
 };
 
+export type DexRequestInputs = {
+  payloadType: number;
+  nonce: string;
+  receiver: string;
+  amount: string;
+  vaultId: string;
+  token: string;
+  dexBrokerId: string;
+  timestamp: number;
+  domain: SignatureDomain;
+};
+
 export interface WalletAdapter<Config = any> {
   chainNamespace: ChainNamespace;
 
@@ -96,6 +108,10 @@ export interface WalletAdapter<Config = any> {
   ): Promise<Message & { domain: SignatureDomain }>;
 
   generateAddOrderlyKeyMessage(inputs: AddOrderlyKeyInputs): Promise<Message>;
+
+  generateDexRequestMessage(
+    inputs: DexRequestInputs,
+  ): Promise<Message & { domain: SignatureDomain }>;
 
   // withdraw(inputs: WithdrawInputs): Promise<Message>;
 

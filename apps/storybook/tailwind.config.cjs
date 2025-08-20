@@ -18,6 +18,7 @@ module.exports = withTV({
     "../../packages/ui-scaffold/src/**/*.{ts,js,tsx,jsx,mdx}",
     "../../packages/affiliate/src/**/*.{ts,js,tsx,jsx,mdx}",
     "../../packages/markets/src/**/*.{ts,js,tsx,jsx,mdx}",
+    "../../packages/vaults/src/**/*.{ts,js,tsx,jsx,mdx}",
     "../../packages/chart/src/**/*.{ts,js,tsx,jsx,mdx}",
     "../../packages/ui-transfer/src/**/*.{ts,js,tsx,jsx,mdx}",
     "../../packages/ui-share/src/**/*.{ts,js,tsx,jsx,mdx}",
