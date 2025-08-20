@@ -33,7 +33,7 @@ export const PositionTPSLPopover = (props: {
   const onEdit = () => {
     modal.show(TPSLDialogId, {
       order: order,
-      position: position,
+      symbol: position.symbol,
       baseDP: baseDP,
       quoteDP: quoteDP,
       positionType: isPositionTPSL ? PositionType.FULL : PositionType.PARTIAL,
