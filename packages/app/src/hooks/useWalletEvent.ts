@@ -1,12 +1,12 @@
 import { useRef } from "react";
-import { toast } from "@orderly.network/ui";
-import { capitalizeString } from "@orderly.network/utils";
 import {
   useEventEmitter,
   useSessionStorage,
   useWalletSubscription,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
+import { toast } from "@orderly.network/ui";
+import { capitalizeString } from "@orderly.network/utils";
 
 export function useWalletEvent() {
   const { t } = useTranslation();
@@ -16,7 +16,7 @@ export function useWalletEvent() {
 
   const [record, setRecord] = useSessionStorage(
     "orderly_wallet_change_id",
-    {} as Record<number, boolean>
+    {} as Record<number, boolean>,
   );
 
   recordRef.current = record;
@@ -32,13 +32,15 @@ export function useWalletEvent() {
         ["DEPOSIT", "WITHDRAW"].includes(side) &&
         ["COMPLETED", "FAILED"].includes(transStatus)
       ) {
-        const isPushOnce = recordRef.current[id];
-        setRecord({
-          ...record,
-          [id]: isPushOnce ? undefined : true,
-        });
-
-        showToast = !isPushOnce;
+        const isPushed = !!recordRef.current[id];
+        if (!isPushed) {
+          recordRef.current[id] = true;
+          setRecord((prev: Record<number, boolean>) => ({
+            ...prev,
+            [id]: true,
+          }));
+        }
+        showToast = !isPushed;
       }
 
       if (transStatus === "COMPLETED" && showToast) {
