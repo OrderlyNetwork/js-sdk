@@ -8,6 +8,7 @@ import {
   useLocalStorage,
   useOrderlyContext,
 } from "@orderly.network/hooks";
+import { OrderStatus } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
 import { getOrderExecutionReportMsg } from "./getOrderExecutionReportMsg";
 
@@ -32,17 +33,19 @@ export const useExecutionReport = () => {
     notification?.orderFilled?.defaultOpen ?? false,
   );
 
-  const [element] = useAudioPlayer(src, {
+  const [audioElement] = useAudioPlayer(src, {
     autoPlay: soundAutoPlay,
     volume: 1,
   });
 
   const handler = useDebouncedCallback((data: any) => {
     const showToast = (data: any) => {
-      const { title, msg } = getOrderExecutionReportMsg(
+      const { title, msg, status } = getOrderExecutionReportMsg(
         data,
         symbolsInfoRef.current,
       );
+      const isFilled =
+        status === OrderStatus.FILLED || status === OrderStatus.PARTIAL_FILLED;
       // only show latest msg for same order type
       const orderType = data.algo_type || data.type;
       if (title && msg) {
@@ -53,7 +56,7 @@ export const useExecutionReport = () => {
             <div className="orderly-text-white/[0.54] orderly-text-xs">
               {msg}
             </div>
-            {element}
+            {isFilled && audioElement}
           </div>,
           { id: orderType },
         );
