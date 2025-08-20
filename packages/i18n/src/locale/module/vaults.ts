@@ -18,7 +18,7 @@ export const vaults = {
   "vaults.deposit.shares": "Shares",
   "vaults.deposit.lockupDuration": "Lock up duration",
   "vaults.deposit.latestDeposit": "Latest deposit",
-  "vaults.withdraw.estPricePerShare": "Est. price per Share",
+  "vaults.withdraw.estPricePerShare": "Est. price per share",
   "vaults.withdraw.estReceivingAmount": "Est. receiving amount",
   "vaults.withdraw.latestWithdraw": "Latest withdrawal request",
   "vaults.withdraw.dialog.title": "Confirm withdrawal details",
