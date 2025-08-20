@@ -670,6 +670,96 @@ export class Assets {
     return result;
   }
 
+  async internalTransfer(inputs: {
+    token: string;
+    amount: string;
+    receiver: string;
+    /** orderly token decimals */
+    decimals: number;
+  }) {
+    if (!this.account.walletAdapter) {
+      throw new Error("walletAdapter is undefined");
+    }
+
+    const { token, amount, receiver, decimals } = inputs;
+
+    if (decimals === undefined || decimals === null) {
+      throw new Error("decimals is required");
+    }
+
+    const url = "/v2/internal_transfer";
+    const nonce = await this.getTransferNonce();
+    const messageData = {
+      receiver,
+      token,
+      amount: this.account.walletAdapter.parseUnits(amount, decimals),
+      nonce,
+      verifyContract:
+        this.contractManger.getContractInfoByEnv().verifyContractAddress,
+    };
+
+    const { message, signatured, domain } =
+      await this.account.walletAdapter.generateInternalTransferMessage(
+        messageData,
+      );
+
+    const data = {
+      signature: signatured,
+      message,
+      userAddress: this.account.stateValue.address,
+      verifyingContract: domain.verifyingContract,
+    };
+
+    const payload: MessageFactor = {
+      method: "POST",
+      url,
+      data,
+    };
+
+    const signature = await this.account.signer.sign(payload, getTimestamp());
+
+    const res = await this._simpleFetch(url, {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+        "orderly-account-id": this.account.stateValue.accountId!,
+        ...signature,
+      },
+    });
+
+    if (!res.success) {
+      throw new ApiError(res.message, res.code);
+    }
+
+    return res;
+  }
+
+  private async getTransferNonce(): Promise<number> {
+    const timestamp = getTimestamp().toString();
+    const url = "/v1/transfer_nonce";
+    const message = [timestamp, "GET", url].join("");
+
+    const signer = this.account.signer;
+
+    const { publicKey, signature } = await signer.signText(message);
+
+    const res = await this._simpleFetch(url, {
+      headers: {
+        "orderly-account-id": this.account.stateValue.accountId!,
+        "orderly-key": publicKey,
+        "orderly-timestamp": timestamp,
+        "orderly-signature": signature,
+      },
+    });
+
+    if (res.success) {
+      return res.data?.transfer_nonce;
+    } else {
+      throw new Error(res.message);
+    }
+  }
+
   private async _simpleFetch(url: string, init: RequestInit = {}) {
     const requestUrl = `${this.configStore.get<string>("apiBaseUrl")}${url}`;
 

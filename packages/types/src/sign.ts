@@ -43,4 +43,10 @@ export const definedTypes = {
     { name: "token", type: "string" },
     { name: "dexBrokerId", type: "string" },
   ],
+  InternalTransfer: [
+    { name: "receiver", type: "bytes32" },
+    { name: "token", type: "string" },
+    { name: "amount", type: "uint256" },
+    { name: "transferNonce", type: "uint64" },
+  ],
 } as const;

@@ -22,6 +22,7 @@ import {
   Account,
   MessageFactor,
   DexRequestInputs,
+  InternalTransferInputs,
 } from "@orderly.network/core";
 import { API, MaxUint256, ChainNamespace } from "@orderly.network/types";
 import {
@@ -33,6 +34,7 @@ import {
   MsgType,
   registerAccountMessage,
   settleMessage,
+  internalTransferMessage,
   withdrawMessage,
 } from "./helper";
 import { getTokenAccounts } from "./solana.util";
@@ -232,6 +234,30 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
     inputs: WithdrawInputs,
   ): Promise<Message & { domain: SignatureDomain }> {
     const [message, toSignatureMessage] = withdrawMessage({
+      ...inputs,
+      chainId: this.chainId,
+    });
+    const signature = await this.signMessage(toSignatureMessage as Uint8Array);
+
+    return {
+      message: {
+        ...message,
+        chainType: "SOL",
+      },
+      domain: {
+        name: "",
+        version: "",
+        chainId: this.chainId,
+        verifyingContract: inputs.verifyContract!,
+      },
+      signatured: signature,
+    };
+  }
+
+  async generateInternalTransferMessage(
+    inputs: InternalTransferInputs,
+  ): Promise<Message & { domain: SignatureDomain }> {
+    const [message, toSignatureMessage] = internalTransferMessage({
       ...inputs,
       chainId: this.chainId,
     });

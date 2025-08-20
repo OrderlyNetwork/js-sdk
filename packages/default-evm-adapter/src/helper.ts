@@ -5,6 +5,7 @@ import type {
   SignatureDomain,
   WithdrawInputs,
   DexRequestInputs,
+  InternalTransferInputs,
 } from "@orderly.network/core";
 import { DEFAUL_ORDERLY_KEY_SCOPE, definedTypes } from "@orderly.network/types";
 
@@ -33,6 +34,39 @@ export async function withdrawMessage(
     amount,
     timestamp,
     withdrawNonce: nonce,
+  };
+
+  const toSignatureMessage = {
+    domain,
+    message,
+    primaryType,
+    types: typeDefinition,
+  };
+
+  return [message, toSignatureMessage] as const;
+}
+
+export async function internalTransferMessage(
+  inputs: InternalTransferInputs & {
+    domain: SignatureDomain;
+    chainId: number;
+  },
+) {
+  const { chainId, receiver, token, amount, nonce, domain } = inputs;
+
+  const primaryType = "InternalTransfer";
+
+  const typeDefinition = {
+    EIP712Domain: definedTypes.EIP712Domain,
+    [primaryType]: definedTypes[primaryType],
+  };
+
+  const message = {
+    chainId,
+    receiver,
+    token,
+    amount,
+    transferNonce: nonce,
   };
 
   const toSignatureMessage = {

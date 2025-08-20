@@ -9,6 +9,7 @@ import {
   VersionedTransaction,
 } from "@solana/web3.js";
 import { decode as bs58Decode } from "bs58";
+import { Hash } from "crypto";
 import { keccak256 } from "ethereum-cryptography/keccak";
 import { bytesToHex, hexToBytes } from "ethereum-cryptography/utils";
 import { AbiCoder, solidityPackedKeccak256 } from "ethers";
@@ -19,6 +20,7 @@ import {
   type SettleInputs,
   type SignatureDomain,
   type WithdrawInputs,
+  InternalTransferInputs,
 } from "@orderly.network/core";
 import {
   DEFAUL_ORDERLY_KEY_SCOPE,
@@ -143,6 +145,52 @@ export function registerAccountMessage(
           message.chainId,
           message.timestamp,
           message.registrationNonce,
+        ],
+      ),
+    ),
+  );
+  const msgToSignHex = bytesToHex(msgToSign);
+  const msgToSignTextEncoded: Uint8Array = new TextEncoder().encode(
+    msgToSignHex,
+  );
+  return [message, msgToSignTextEncoded];
+}
+
+export function internalTransferMessage(
+  inputs: InternalTransferInputs & {
+    chainId: number;
+  },
+) {
+  const { chainId, receiver, token, amount, nonce } = inputs;
+  const message = {
+    chainId,
+    receiver,
+    token,
+    amount,
+    transferNonce: nonce,
+    chainType: "SOL",
+  };
+
+  const tokenSymbolHash = solidityPackedKeccak256(["string"], [message.token]);
+
+  const abicoder = AbiCoder.defaultAbiCoder();
+  // StaticStruct staticStruct = new StaticStruct(
+  //   new Bytes32(Numeric.hexStringToByteArray(receiver)),
+  //   new Bytes32(Numeric.hexStringToByteArray(Hash.sha3(TypeEncoder.encodePacked(new Utf8String(token))))),
+  //   new Uint256(amount),
+  //   new Uint64(transferNonce),
+  //   new Uint256(Long.parseLong(chainId))
+  // );
+  const msgToSign = keccak256(
+    hexToBytes(
+      abicoder.encode(
+        ["bytes32", "bytes32", "uint256", "uint64", "uint256"],
+        [
+          message.receiver,
+          tokenSymbolHash,
+          message.amount,
+          message.transferNonce,
+          chainId,
         ],
       ),
     ),
