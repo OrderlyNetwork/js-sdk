@@ -158,7 +158,7 @@ export const ReferralProvider: FC<
   }, [data?.referrer_info]);
 
   const isTrader = useMemo(() => {
-    return (data?.referee_info.referer_code?.length || 0) > 0;
+    return (data?.referee_info?.referer_code?.length || 0) > 0;
   }, [data?.referee_info]);
 
   const userVolume = useMemo<UserVolumeType>(() => {

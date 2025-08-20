@@ -102,7 +102,10 @@ export const TableBody: React.FC<TableBodyProps<any>> = (props) => {
                       "oui-table-tbody-td oui-relative",
                       "oui-px-1",
                       alignVariants({ align }),
-                      rowClassName,
+                      // rowClassName,
+                      typeof rowClassName === "function"
+                        ? rowClassName(row.original)
+                        : rowClassName,
                       pinClassNames.content,
                       props.showLeftShadow && pinClassNames.leftShadow,
                       props.showRightShadow && pinClassNames.rightShadow,

@@ -1,3 +1,5 @@
+import * as ed from "@noble/ed25519";
+import { encode as bs58encode, decode as bs58Decode } from "bs58";
 import {
   AddOrderlyKeyInputs,
   BaseWalletAdapter,
@@ -7,18 +9,18 @@ import {
   SettleInputs,
   SignatureDomain,
   WithdrawInputs,
+  DexRequestInputs,
 } from "@orderly.network/core";
-import { EVMAdapterOptions } from "./types";
-import * as ed from "@noble/ed25519";
-import { encode as bs58encode, decode as bs58Decode } from "bs58";
 import { API, ChainNamespace } from "@orderly.network/types";
 import {
   addOrderlyKeyMessage,
   registerAccountMessage,
   settleMessage,
   withdrawMessage,
+  dexRequestMessage,
 } from "./helper";
 import type { Web3Provider } from "./provider/web3Provider.interface";
+import { EVMAdapterOptions } from "./types";
 
 class DefaultEVMWalletAdapter extends BaseWalletAdapter<EVMAdapterOptions> {
   chainNamespace: ChainNamespace = ChainNamespace.evm;
@@ -91,12 +93,12 @@ class DefaultEVMWalletAdapter extends BaseWalletAdapter<EVMAdapterOptions> {
       // address,
       this.address,
       // toSignatureMessage
-      JSON.stringify(toSignatureMessage)
+      JSON.stringify(toSignatureMessage),
     );
   }
 
   async generateRegisterAccountMessage(
-    inputs: RegisterAccountInputs
+    inputs: RegisterAccountInputs,
   ): Promise<Message> {
     const [message, toSignatureMessage] = await registerAccountMessage({
       ...inputs,
@@ -117,7 +119,7 @@ class DefaultEVMWalletAdapter extends BaseWalletAdapter<EVMAdapterOptions> {
   }
 
   async generateAddOrderlyKeyMessage(
-    inputs: AddOrderlyKeyInputs
+    inputs: AddOrderlyKeyInputs,
   ): Promise<Message> {
     const [message, toSignatureMessage] = await addOrderlyKeyMessage({
       ...inputs,
@@ -186,6 +188,28 @@ class DefaultEVMWalletAdapter extends BaseWalletAdapter<EVMAdapterOptions> {
     };
   }
 
+  async generateDexRequestMessage(inputs: DexRequestInputs): Promise<
+    Message & {
+      domain: SignatureDomain;
+    }
+  > {
+    const [message, toSignatureMessage] = await dexRequestMessage({
+      ...inputs,
+      chainId: this.chainId,
+    });
+
+    const signedMessage = await this.signTypedData(toSignatureMessage);
+
+    return {
+      message: {
+        ...message,
+        chainType: "EVM",
+      },
+      signatured: signedMessage,
+      domain: inputs.domain,
+    };
+  }
+
   getBalance(): Promise<bigint> {
     return this.web3Provider.getBalance(this.address);
   }
@@ -194,7 +218,7 @@ class DefaultEVMWalletAdapter extends BaseWalletAdapter<EVMAdapterOptions> {
     address: string,
     method: string,
     params: any[],
-    options?: { abi: any }
+    options?: { abi: any },
   ): Promise<any> {
     return this.web3Provider.call(address, method, params, options);
   }
@@ -210,13 +234,13 @@ class DefaultEVMWalletAdapter extends BaseWalletAdapter<EVMAdapterOptions> {
     },
     options: {
       abi: any;
-    }
+    },
   ): Promise<any> {
     return this.web3Provider.sendTransaction(
       contractAddress,
       method,
       payload,
-      options
+      options,
     );
   }
 
@@ -225,14 +249,14 @@ class DefaultEVMWalletAdapter extends BaseWalletAdapter<EVMAdapterOptions> {
     address: string,
     method: string,
     params: any[],
-    options: { abi: any }
+    options: { abi: any },
   ): Promise<any> {
     return this.web3Provider.callOnChain(
       chain,
       address,
       method,
       params,
-      options
+      options,
     );
   }
 
@@ -257,13 +281,13 @@ class DefaultEVMWalletAdapter extends BaseWalletAdapter<EVMAdapterOptions> {
     txHash: string,
     baseInterval?: number,
     maxInterval?: number,
-    maxRetries?: number
+    maxRetries?: number,
   ): Promise<any> {
     return this.web3Provider.pollTransactionReceiptWithBackoff(
       txHash,
       baseInterval,
       maxInterval,
-      maxRetries
+      maxRetries,
     );
   }
 }

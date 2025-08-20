@@ -510,6 +510,21 @@ export declare namespace API {
     updated_time: number;
   }
 
+  export interface StrategyVaultHistoryRow {
+    vault_id: string;
+    created_time: number;
+    type: "withdrawal" | "deposit";
+    status: string;
+    amount_change: number;
+    token?: string; // need to hard code for now
+    vaultName?: string; // need to hard code for now
+  }
+
+  export interface StrategyVaultHistory {
+    rows: StrategyVaultHistoryRow[];
+    meta: RecordsMeta;
+  }
+
   export interface TransferHistoryRow {
     amount: number;
     created_time: number;

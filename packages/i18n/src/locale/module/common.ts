@@ -106,4 +106,5 @@ export const common = {
   "common.estTotal": "Est. Total",
   "common.fullTPSL": "Full TP/SL",
   "common.partialTPSL": "Partial TP/SL",
+  "common.vaults": "Vaults",
 };

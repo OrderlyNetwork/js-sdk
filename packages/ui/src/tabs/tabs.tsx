@@ -34,12 +34,12 @@ type tabConfig = {
   style?: React.CSSProperties;
 };
 
-type TabsContextState = {
-  // tabs:React.ReactNode[];
+interface TabsContextState {
   registerTab: (tab: tabConfig) => void;
-};
+  unregisterTab: (tab: tabConfig) => void;
+}
 
-const TabsContext = createContext({} as TabsContextState);
+const TabsContext = createContext<TabsContextState>({} as TabsContextState);
 
 type TabsProps<T = string> = {
   defaultValue?: T;
@@ -66,12 +66,11 @@ const Tabs: FC<TabsProps> = (props) => {
     contentVisible = true,
     variant,
     showScrollIndicator,
+    value,
     ...rest
   } = props;
 
-  const tabsOverrides = getComponentTheme("tabs", {
-    variant: "contained",
-  });
+  const tabsOverrides = getComponentTheme("tabs", { variant: "contained" });
 
   const tabsVariant = variant || tabsOverrides.variant;
 
@@ -84,9 +83,17 @@ const Tabs: FC<TabsProps> = (props) => {
     });
   }, []);
 
+  const unregisterTab = useCallback((config: tabConfig) => {
+    setTabList((prev) => {
+      const newTabList = { ...prev };
+      delete newTabList[config.value];
+      return newTabList;
+    });
+  }, []);
+
   const memoizedValue = useMemo<TabsContextState>(
-    () => ({ registerTab }),
-    [registerTab],
+    () => ({ registerTab, unregisterTab }),
+    [registerTab, unregisterTab],
   );
 
   const renderTabsList = () => {
@@ -129,7 +136,7 @@ const Tabs: FC<TabsProps> = (props) => {
   return (
     <TabsContext.Provider value={memoizedValue}>
       {props.children}
-      <TabsBase {...rest}>
+      <TabsBase value={value} {...rest}>
         <Flex
           justify="between"
           itemAlign="center"
@@ -175,7 +182,8 @@ type TabPanelProps = {
 
 const TabPanel: FC<PropsWithChildren<TabPanelProps>> = (props) => {
   const { title, value, icon, className, style, testid, children } = props;
-  const { registerTab } = useContext(TabsContext);
+
+  const { registerTab, unregisterTab } = useContext(TabsContext);
 
   useEffect(() => {
     const tabConfig = {
@@ -188,11 +196,16 @@ const TabPanel: FC<PropsWithChildren<TabPanelProps>> = (props) => {
       content: children,
     };
     registerTab(tabConfig);
+    return () => {
+      unregisterTab(tabConfig);
+    };
   }, [children, className, style, icon, testid, title, value]);
 
   return null;
 };
 
-TabPanel.displayName = "TabPanel";
+if (process.env.NODE_ENV !== "production") {
+  TabPanel.displayName = "TabPanel";
+}
 
 export { Tabs, TabPanel };

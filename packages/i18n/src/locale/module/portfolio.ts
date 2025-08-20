@@ -21,7 +21,8 @@ export const portfolio = {
 
   "portfolio.overview.distribution": "Distribution",
   "portfolio.overview.transferHistory": "Transfer history",
-
+  "portfolio.overview.vaults": "Vaults",
+  "portfolio.overview.vaultName": "Vault name",
   "portfolio.overview.column.txId": "TxID",
 
   "portfolio.overview.column.token": "Token",

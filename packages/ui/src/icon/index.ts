@@ -30,6 +30,7 @@ export { ArrowDownUpIcon } from "./arrowDownUp";
 export { ArrowUpSquareFillIcon } from "./arrowUpSquareFill";
 export { ArrowDownSquareFillIcon } from "./arrowDownSquareFill";
 export { ArrowLeftRightSquareFill } from "./arrowLeftRightSquareFill";
+export { ArrowRightUpSquareFillIcon } from "./arrowRightUpSquareFill";
 export { AssetIcon } from "./assetIcon";
 export { BarChartIcon } from "./barChartIcon";
 export { BattleIcon } from "./battleIcon";
@@ -78,6 +79,7 @@ export { PeopleIcon } from "./peopleIcon";
 export { PersonIcon } from "./personIcon";
 export { SettingFillIcon } from "./settingFill";
 export { TradingLeftNavIcon } from "./tradingLeftNavIcon";
+export { VaultsIcon } from "./vaultsIcon";
 
 type IconType = typeof BaseIcon & {
   combine: typeof CombineIcon;

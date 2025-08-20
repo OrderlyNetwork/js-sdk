@@ -1,3 +1,5 @@
+import React, { useEffect } from "react";
+import { useAccount } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { AssetHistorySideEnum } from "@orderly.network/types";
 import {
@@ -9,20 +11,27 @@ import {
   ServerFillIcon,
   TabPanel,
   Tabs,
+  VaultsIcon,
 } from "@orderly.network/ui";
 import { TransferHistoryWidget } from "../TransferHistory";
+import { VaultsHistoryWidget } from "../VaultsHistory";
 import { AssetHistoryWidget } from "../assetHistory";
 import { DistributionHistoryWidget } from "../distribution";
 import { FundingHistoryWidget } from "../funding";
-import { TabName } from "./historyDataGroup.script";
+import type { TabName } from "./historyDataGroup.script";
 
-export const HistoryDataGroupDesktop = (props: {
+export const HistoryDataGroupDesktop: React.FC<{
   active?: TabName;
   onTabChange: (tab: string) => void;
-}) => {
+}> = (props) => {
   const { active = "deposit", onTabChange } = props;
   const { t } = useTranslation();
-
+  const { isMainAccount } = useAccount();
+  useEffect(() => {
+    if (active === "vaults" && !isMainAccount) {
+      onTabChange("deposit");
+    }
+  }, [active, isMainAccount]);
   return (
     <Card>
       <Tabs
@@ -30,9 +39,6 @@ export const HistoryDataGroupDesktop = (props: {
         onValueChange={onTabChange}
         variant="contained"
         size="xl"
-        // classNames={{
-        //   tabsList: "oui-px-3",
-        // }}
       >
         <TabPanel
           title={t("common.deposits")}
@@ -69,6 +75,15 @@ export const HistoryDataGroupDesktop = (props: {
         >
           <TransferHistoryWidget />
         </TabPanel>
+        {isMainAccount && (
+          <TabPanel
+            value={"vaults"}
+            icon={<VaultsIcon />}
+            title={t("portfolio.overview.vaults")}
+          >
+            <VaultsHistoryWidget />
+          </TabPanel>
+        )}
       </Tabs>
     </Card>
   );
