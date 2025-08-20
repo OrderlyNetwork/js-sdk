@@ -2,10 +2,12 @@ import { useEffect, useMemo, useRef } from "react";
 import {
   type ComputedAlgoOrder,
   useLocalStorage,
+  usePositionStream,
   useSymbolsInfo,
   useTPSLOrder,
   utils,
 } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 import {
   AlgoOrderRootType,
   AlgoOrderType,
@@ -14,10 +16,19 @@ import {
   PositionType,
   SDKError,
 } from "@orderly.network/types";
-import { toast } from "@orderly.network/ui";
+import { modal, toast } from "@orderly.network/ui";
+import { PositionTPSLConfirm } from "./tpsl.ui";
+
+type PropsWithTriggerPrice = {
+  withTriggerPrice?: boolean;
+  triggerPrice?: number;
+  type?: "tp" | "sl";
+  qty?: number;
+};
 
 export type TPSLBuilderOptions = {
-  position: API.Position;
+  symbol: string;
+  position?: API.Position;
   order?: API.AlgoOrder;
   onTPSLTypeChange?: (type: AlgoOrderRootType) => void;
   isEditing?: boolean;
@@ -37,16 +48,34 @@ export type TPSLBuilderOptions = {
   close?: () => void;
 };
 
-export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
-  const { position, order, isEditing, positionType } = options;
+export const useTPSLBuilder = (
+  options: TPSLBuilderOptions & PropsWithTriggerPrice,
+) => {
+  const {
+    symbol,
+    order,
+    isEditing,
+    positionType,
+    triggerPrice,
+    type,
+    withTriggerPrice,
+  } = options;
+  const { t } = useTranslation();
   // const isEditing = !!order;
   if (isEditing && !order) {
     throw new SDKError("order is required when isEditing is true");
   }
-  const symbol = isEditing ? order!.symbol : position.symbol;
+  // const symbol = isEditing ? order!.symbol : position.symbol;
   const symbolInfo = useSymbolsInfo();
+
   const prevTPSLType = useRef<AlgoOrderRootType>(AlgoOrderRootType.TP_SL);
+  const [{ rows: positions }] = usePositionStream();
+
   const [needConfirm] = useLocalStorage("orderly_order_confirm", true);
+  const position = positions.find((item) => item.symbol === symbol);
+  if (!position) {
+    throw new SDKError("position not found");
+  }
 
   const [
     tpslOrder,
@@ -63,15 +92,15 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
   ] = useTPSLOrder(
     {
       symbol,
-      position_qty: position.position_qty,
-      average_open_price: position.average_open_price,
+      position_qty: position?.position_qty ?? 0,
+      average_open_price: position?.average_open_price ?? 0,
     },
     {
       defaultOrder: order,
-      positionType,
+      positionType: triggerPrice ? PositionType.PARTIAL : positionType,
       tpslEnable: {
-        tp_enable: true,
-        sl_enable: true,
+        tp_enable: !withTriggerPrice ? true : type === "tp",
+        sl_enable: !withTriggerPrice ? true : type === "sl",
       },
       isEditing,
     },
@@ -121,7 +150,6 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
         tp_trigger_price !== Number(tpslOrder.tp_trigger_price) &&
         typeof typeof tpslOrder.tp_trigger_price !== "undefined"
       ) {
-        // return true;
         diff = 2;
       }
 
@@ -222,6 +250,23 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
   //   prevTPSLType.current = type;
   // }, [tpslOrder.quantity, maxQty]);
 
+  useEffect(() => {
+    if (!withTriggerPrice) {
+      return;
+    }
+    if (!triggerPrice) {
+      return;
+    }
+    if (type === "tp") {
+      setValue("tp_trigger_price", triggerPrice);
+    } else {
+      setValue("sl_trigger_price", triggerPrice);
+    }
+    if (options.qty) {
+      setValue("quantity", options.qty);
+    }
+  }, [type, triggerPrice, options.qty]);
+
   const cancel = (): Promise<void> => {
     if (order?.algo_order_id && order?.symbol) {
       return deleteOrder(order?.algo_order_id, order?.symbol);
@@ -229,12 +274,102 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
     return Promise.reject("order id or symbol is invalid");
   };
 
+  const onConfirm = (
+    order: ComputedAlgoOrder,
+    options: {
+      position: API.Position;
+      submit: (params?: { accountId?: string }) => Promise<any>;
+      cancel: () => Promise<any>;
+    },
+  ) => {
+    if (!needConfirm) {
+      return Promise.resolve(true);
+    }
+
+    const maxQty = Math.abs(Number(position.position_qty));
+    if (
+      `${order.tp_trigger_price ?? ""}`.length === 0 &&
+      `${order.sl_trigger_price ?? ""}`.length === 0
+    ) {
+      return modal
+        .confirm({
+          title: t("orders.cancelOrder"),
+          content: t("tpsl.cancelOrder.description"),
+          onOk: () => {
+            return options.cancel();
+          },
+        })
+        .then(
+          () => {
+            return true;
+          },
+          () => {
+            return Promise.reject(false);
+          },
+        );
+    }
+
+    return modal
+      .confirm({
+        title: t("tpsl.confirmOrder"),
+        // bodyClassName: "lg:oui-py-0",
+        onOk: async () => {
+          try {
+            const res = await options.submit({
+              accountId: position.account_id,
+            });
+
+            if (res.success) {
+              return res;
+            }
+
+            if (res.message) {
+              toast.error(res.message);
+            }
+
+            return false;
+          } catch (err: any) {
+            if (err?.message) {
+              toast.error(err.message);
+            }
+            return false;
+          }
+        },
+        classNames: {
+          body: "!oui-pb-0",
+        },
+        content: (
+          <PositionTPSLConfirm
+            isPositionTPSL={positionType === PositionType.FULL}
+            isEditing={false}
+            symbol={order.symbol!}
+            qty={Number(order.quantity)}
+            maxQty={maxQty}
+            tpPrice={Number(order.tp_trigger_price)}
+            slPrice={Number(order.sl_trigger_price)}
+            side={order.side!}
+            orderInfo={order}
+            quoteDP={symbolInfo[symbol]("quote_dp") ?? 2}
+            baseDP={symbolInfo[symbol]("base_dp") ?? 2}
+          />
+        ),
+      })
+      .then(
+        () => {
+          return true;
+        },
+        () => {
+          return Promise.reject(false);
+        },
+      );
+  };
+
   const onSubmit = async () => {
     try {
       const validOrder = await validate();
       console.log("validOrder", validOrder);
       if (validOrder) {
-        if (typeof options.onConfirm !== "function" || !needConfirm) {
+        if (!needConfirm) {
           return submit({ accountId: position.account_id })
             .then(() => true)
             .catch((err) => {
@@ -245,7 +380,7 @@ export const useTPSLBuilder = (options: TPSLBuilderOptions) => {
             });
         }
 
-        return options.onConfirm(tpslOrder, {
+        return onConfirm(tpslOrder, {
           position,
           submit,
           cancel,
