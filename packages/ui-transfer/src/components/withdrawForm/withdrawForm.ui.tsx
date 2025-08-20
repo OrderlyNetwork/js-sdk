@@ -1,6 +1,5 @@
 import React from "react";
 import { Trans, useTranslation } from "@orderly.network/i18n";
-import { DEFAUL_ORDERLY_KEY_SCOPE } from "@orderly.network/types";
 import {
   Box,
   Flex,
@@ -23,9 +22,6 @@ import { WithdrawWarningMessage } from "../withdrawWarningMessage";
 import { WithdrawFormScriptReturn } from "./withdrawForm.script";
 
 export type WithdrawFormProps = WithdrawFormScriptReturn;
-
-// if default orderly key scope includes asset, then enable internal withdraw
-const enabledInternalWithdraw = DEFAUL_ORDERLY_KEY_SCOPE.includes("asset");
 
 export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
   const {
@@ -54,7 +50,7 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
 
   const { t } = useTranslation();
 
-  const internalWithdrawPanel = enabledInternalWithdraw ? (
+  const internalWithdrawPanel = (
     <TabPanel
       title={t("transfer.withdraw.otherAccount", {
         brokerName: props.brokerName,
@@ -74,7 +70,7 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
         </Text>
       </Box>
     </TabPanel>
-  ) : undefined;
+  );
 
   return (
     <Box

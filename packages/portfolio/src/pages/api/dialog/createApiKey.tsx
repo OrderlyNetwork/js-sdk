@@ -1,18 +1,13 @@
 import { FC, useEffect, useState } from "react";
 import { ScopeType } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { DEFAUL_ORDERLY_KEY_SCOPE } from "@orderly.network/types";
 import { cn, Flex, SimpleDialog, Statistic, Text } from "@orderly.network/ui";
 import { ApiManagerScriptReturns } from "../apiManager.script";
-
-// if default orderly key scope includes asset, then enable internal withdraw
-const enabledAssetPermission = DEFAUL_ORDERLY_KEY_SCOPE.includes("asset");
 
 export const CreateAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
   const [ipText, setIpText] = useState("");
   const [read, setRead] = useState(true);
   const [trade, setTrade] = useState(true);
-  const [asset, setAsset] = useState(enabledAssetPermission);
   const [hint, setHint] = useState("");
   const { t } = useTranslation();
 
@@ -58,12 +53,9 @@ export const CreateAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
             if (trade) {
               scopes.push("trading");
             }
-            if (enabledAssetPermission && asset) {
-              scopes.push("asset");
-            }
             await props.doCreate(ipText, scopes.join(",") as ScopeType);
           },
-          disabled: !trade && !read && !asset,
+          disabled: !trade && !read,
           size: "md",
         },
       }}
@@ -138,15 +130,6 @@ export const CreateAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {
               label={t("portfolio.apiKey.permissions.trading")}
               testid="oui-testid-apiKey-createApiKey-dialog-trading-checkbox"
             />
-            {enabledAssetPermission && (
-              <Checkbox
-                size={18}
-                checked={asset}
-                onCheckedChange={(e) => setAsset(e as boolean)}
-                label={t("portfolio.apiKey.permissions.asset")}
-                testid="oui-testid-apiKey-createApiKey-dialog-asset-checkbox"
-              />
-            )}
           </Flex>
         </Statistic>
       </Flex>

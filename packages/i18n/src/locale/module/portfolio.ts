@@ -68,7 +68,6 @@ export const portfolio = {
   "portfolio.apiKey.permissions": "Permissions",
   "portfolio.apiKey.permissions.read": "Read",
   "portfolio.apiKey.permissions.trading": "Trading",
-  "portfolio.apiKey.permissions.asset": "Asset",
 
   "portfolio.apiKey.description":
     "Create API keys to suit your trading needs. For your security, don't share your API keys with anyone.",

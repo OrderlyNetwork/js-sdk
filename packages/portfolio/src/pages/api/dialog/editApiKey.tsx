@@ -1,12 +1,8 @@
 import { FC, useEffect, useState } from "react";
 import { APIKeyItem } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { DEFAUL_ORDERLY_KEY_SCOPE } from "@orderly.network/types";
 import { cn, Flex, SimpleDialog, Statistic, Text } from "@orderly.network/ui";
 import { Checkbox } from "./createApiKey";
-
-// if default orderly key scope includes asset, then enable internal withdraw
-const enabledAssetPermission = DEFAUL_ORDERLY_KEY_SCOPE.includes("asset");
 
 export const EditAPIKeyDialog: FC<{
   item: APIKeyItem;
@@ -19,7 +15,6 @@ export const EditAPIKeyDialog: FC<{
   const [ipText, setIpText] = useState(item.ip_restriction_list?.join(","));
   const [read, setRead] = useState(true);
   const [trade, setTrade] = useState(true);
-  const [asset, setAsset] = useState(enabledAssetPermission);
   const [hint, setHint] = useState("");
   const { t } = useTranslation();
 
@@ -29,9 +24,6 @@ export const EditAPIKeyDialog: FC<{
 
     setRead(scope.includes("read"));
     setTrade(scope.includes("trading"));
-    if (enabledAssetPermission) {
-      setAsset(scope.includes("asset"));
-    }
   }, [item]);
 
   useEffect(() => {
@@ -140,15 +132,6 @@ export const EditAPIKeyDialog: FC<{
               onCheckedChange={(e) => setTrade(e as boolean)}
               label={t("portfolio.apiKey.permissions.trading")}
             />
-            {enabledAssetPermission && (
-              <Checkbox
-                disabled
-                size={18}
-                checked={asset}
-                onCheckedChange={(e) => setAsset(e as boolean)}
-                label={t("portfolio.apiKey.permissions.asset")}
-              />
-            )}
           </Flex>
         </Statistic>
       </Flex>
