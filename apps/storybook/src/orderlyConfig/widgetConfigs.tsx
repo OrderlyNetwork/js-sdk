@@ -1,6 +1,39 @@
+import React from "react";
 import type { OrderlyAppProviderProps } from "@orderly.network/react-app";
-import { Box, cn, Flex, Tooltip, Text } from "@orderly.network/ui";
+import {
+  Box,
+  cn,
+  Flex,
+  Tooltip,
+  Text,
+  useScreen,
+  modal,
+} from "@orderly.network/ui";
 import { SpecialFee } from "./icons";
+
+const SpecialFeeSection: React.FC = () => {
+  const { isMobile } = useScreen();
+  if (isMobile) {
+    return (
+      <SpecialFee
+        onClick={() => {
+          modal.dialog({
+            title: "Tips",
+            content: `Special trading fees - valid until Aug 31. New fee tier rules coming in September`,
+          });
+        }}
+      />
+    );
+  }
+  return (
+    <Tooltip
+      className="oui-w-72 oui-max-w-72 oui-p-1 oui-text-base-contrast-54"
+      content={`Special trading fees - valid until Aug 31. New fee tier rules coming in September`}
+    >
+      <SpecialFee className={"oui-cursor-pointer"} />
+    </Tooltip>
+  );
+};
 
 export const widgetConfigs: OrderlyAppProviderProps["widgetConfigs"] = {
   scanQRCode: {
@@ -19,12 +52,7 @@ export const widgetConfigs: OrderlyAppProviderProps["widgetConfigs"] = {
         return (
           <Flex itemAlign="center" justify="between" width={"100%"} gap={1}>
             {original}
-            <Tooltip
-              className="oui-w-72 oui-max-w-72 oui-p-1 oui-text-base-contrast-54"
-              content={`Special trading fees - valid until Aug 31. New fee tier rules coming in September`}
-            >
-              <SpecialFee className={cn("oui-cursor-pointer")} />
-            </Tooltip>
+            <SpecialFeeSection />
           </Flex>
         );
       },
