@@ -354,6 +354,7 @@
   "tpsl.offset": "Bù đắp",
   "tpsl.add": "Thêm",
   "tpsl.cancelAll": "Hủy tất cả",
+  "tpsl.dragToSet": "Kéo để đặt TP/SL",
   "tpsl.tpOrderPrice": "Giá lệnh TP",
   "tpsl.slOrderPrice": "Giá lệnh SL",
   "tpsl.tpTriggerPrice": "Giá kích hoạt TP",
@@ -656,6 +657,7 @@
   "transfer.withdraw.crossChain.process": "Giao dịch rút tiền xuyên chuỗi của bạn đang được xử lý...",
   "transfer.withdraw.crossChain.warning": "Các khoản rút tiền yêu cầu tái cân bằng xuyên chuỗi không thể hủy hoặc theo dõi thêm các khoản rút tiền cho đến khi chúng được xử lý.",
   "transfer.withdraw.crossChain.vaultWarning": "Số tiền rút vượt quá số dư của kho {{networkName}} ( {{chainVaultBalance}} USDC ). Phí tái cân bằng xuyên chuỗi sẽ được tính cho việc rút tiền đến {{networkName}}.",
+  "transfer.withdraw.vaultWarning": "Số dư {{tokenName}} trên {{chainName}} là {{balance}}, không đủ để đáp ứng yêu cầu rút của bạn. Vui lòng thử lại sau hoặc chuyển sang chuỗi khác để rút.",
   "transfer.withdraw.minAmount.error": "Số lượng phải lớn hơn {{minAmount}}",
   "transfer.withdraw.requested": "Đã yêu cầu rút tiền",
   "transfer.withdraw.completed": "Đã hoàn thành rút tiền",
@@ -887,6 +889,5 @@
   "funding.paymentType": "Loại thanh toán",
   "funding.paymentType.paid": "Đã thanh toán",
   "funding.paymentType.received": "Đã nhận",
-  "leftNav.feedback": "Chia sẻ phản hồi",
-  "transfer.withdraw.vaultWarning": "Số dư {{tokenName}} trên {{chainName}} là {{balance}}, không đủ để đáp ứng yêu cầu rút của bạn. Vui lòng thử lại sau hoặc chuyển sang chuỗi khác để rút."
+  "leftNav.feedback": "Chia sẻ phản hồi"
 }

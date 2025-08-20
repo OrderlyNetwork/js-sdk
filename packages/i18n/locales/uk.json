@@ -354,6 +354,7 @@
   "tpsl.offset": "Зсув",
   "tpsl.add": "Додати",
   "tpsl.cancelAll": "Скасувати все",
+  "tpsl.dragToSet": "Перетягніть, щоб встановити TP/SL",
   "tpsl.tpOrderPrice": "Ціна замовлення TP",
   "tpsl.slOrderPrice": "Ціна замовлення SL",
   "tpsl.tpTriggerPrice": "Ціна спрацьовування TP",
@@ -656,6 +657,7 @@
   "transfer.withdraw.crossChain.process": "Ваше міжмережеве виведення обробляється...",
   "transfer.withdraw.crossChain.warning": "Виведення, які вимагають міжмережевого ребалансу, не можуть бути скасовані або продовжені іншими виведеннями, поки вони не будуть оброблені.",
   "transfer.withdraw.crossChain.vaultWarning": "Виведення перевищує баланс сейфу {{networkName}} ( {{chainVaultBalance}} USDC ). Буде стягуватися комісія за міжмережевий ребаланс для виведення в {{networkName}}.",
+  "transfer.withdraw.vaultWarning": "Баланс {{tokenName}} у мережі {{chainName}} становить {{balance}}, чого недостатньо для виконання вашого запиту на виведення. Спробуйте пізніше або перейдіть на іншу мережу для виведення.",
   "transfer.withdraw.minAmount.error": "сума повинна бути більшою за {{minAmount}}",
   "transfer.withdraw.requested": "Запит на виведення",
   "transfer.withdraw.completed": "Виведення завершено",
@@ -887,6 +889,5 @@
   "funding.paymentType": "Тип платежу",
   "funding.paymentType.paid": "Сплачено",
   "funding.paymentType.received": "Отримано",
-  "leftNav.feedback": "Поділитися відгуком",
-  "transfer.withdraw.vaultWarning": "Баланс {{tokenName}} у мережі {{chainName}} становить {{balance}}, чого недостатньо для виконання вашого запиту на виведення. Спробуйте пізніше або перейдіть на іншу мережу для виведення."
+  "leftNav.feedback": "Поділитися відгуком"
 }

@@ -1,20 +1,7 @@
-import React, { useRef } from "react";
-import { utils } from "@orderly.network/hooks";
+import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
-import {
-  Box,
-  Button,
-  cn,
-  convertValueToPercentage,
-  Divider,
-  Flex,
-  Input,
-  inputFormatter,
-  Slider,
-  Text,
-} from "@orderly.network/ui";
-import { PnlInfo } from "../components/pnlInfo";
+import { Box, Button, cn, Divider, Flex, Text } from "@orderly.network/ui";
 import { TPSLQuantity } from "../components/tpslQty";
 import { useTPSLSimpleDialog } from "./tpslSimpleDialog.script";
 
@@ -25,7 +12,7 @@ type Props = ReturnType<typeof useTPSLSimpleDialog> & {
 };
 
 export const TPSLSimpleDialogUI: React.FC<Props> = (props) => {
-  const { type, triggerPrice, errors, isPosition, TPSL_OrderEntity } = props;
+  const { type, triggerPrice, errors, TPSL_OrderEntity } = props;
   const { t } = useTranslation();
   const { parseErrorMsg } = useOrderEntryFormErrorMsg(errors);
 
@@ -61,6 +48,32 @@ export const TPSLSimpleDialogUI: React.FC<Props> = (props) => {
     </Flex>
   );
 
+  const errorMessage = () => {
+    const tpError = parseErrorMsg("tp_trigger_price");
+    const slError = parseErrorMsg("sl_trigger_price");
+    let text = "";
+    if (tpError && type === "tp") {
+      text = tpError;
+    }
+    if (slError && type === "sl") {
+      text = slError;
+    }
+    if (!text) {
+      return null;
+    }
+    return (
+      <Flex
+        justify={"start"}
+        itemAlign={"start"}
+        gap={2}
+        className="oui-mt-2 oui-w-full"
+      >
+        <div className="oui-relative oui-top-[7px] oui-size-1 oui-rounded-full oui-bg-danger" />
+        <Text className="oui-text-danger">{text}</Text>
+      </Flex>
+    );
+  };
+
   const renderPnl = () => {
     const { tp_pnl, sl_pnl } = TPSL_OrderEntity;
     if (type === "sl") {
@@ -70,7 +83,7 @@ export const TPSLSimpleDialogUI: React.FC<Props> = (props) => {
           {sl_pnl ? (
             <Text.numeral
               suffix={
-                <Text className="oui-text-base-contrast-36 oui-ml-1">USDC</Text>
+                <Text className="oui-ml-1 oui-text-base-contrast-36">USDC</Text>
               }
               coloring
               visible={true}
@@ -120,7 +133,7 @@ export const TPSLSimpleDialogUI: React.FC<Props> = (props) => {
         direction={"column"}
         itemAlign={"start"}
         className={cn(
-          "oui-w-full oui-gap-1 oui-text-xs oui-text-base-contrast-36 oui-mt-4",
+          "oui-mt-4 oui-w-full oui-gap-1 oui-text-xs oui-text-base-contrast-36",
         )}
       >
         <Flex justify={"between"} className="oui-w-full">
@@ -128,7 +141,7 @@ export const TPSLSimpleDialogUI: React.FC<Props> = (props) => {
           <Text.numeral
             className="oui-text-base-contrast"
             suffix={
-              <Text className="oui-text-base-contrast-36 oui-ml-1 oui-text-xs">
+              <Text className="oui-ml-1 oui-text-xs oui-text-base-contrast-36">
                 USDC
               </Text>
             }
@@ -147,21 +160,7 @@ export const TPSLSimpleDialogUI: React.FC<Props> = (props) => {
         </Flex>
         {renderPnl()}
       </Flex>
-      {errors && (
-        <Flex
-          justify={"start"}
-          itemAlign={"start"}
-          gap={2}
-          className="oui-w-full"
-        >
-          <div className="oui-relative oui-top-[7px] oui-w-1 oui-h-1 oui-bg-danger oui-rounded-full" />
-          <Text className="oui-text-danger">
-            {type === "sl"
-              ? errors.sl_trigger_price?.message
-              : errors.tp_trigger_price?.message}
-          </Text>
-        </Flex>
-      )}
+      {errorMessage()}
 
       <Divider className="oui-my-3 oui-w-full" />
       <Flex

@@ -69,9 +69,13 @@ export const useTPSLBuilder = (
   const symbolInfo = useSymbolsInfo();
 
   const prevTPSLType = useRef<AlgoOrderRootType>(AlgoOrderRootType.TP_SL);
-  const [{ rows: positions }] = usePositionStream(symbol);
+  const [{ rows: positions }] = usePositionStream();
+
   const [needConfirm] = useLocalStorage("orderly_order_confirm", true);
-  const position = positions?.[0];
+  const position = positions.find((item) => item.symbol === symbol);
+  if (!position) {
+    throw new SDKError("position not found");
+  }
 
   const [
     tpslOrder,
@@ -88,8 +92,8 @@ export const useTPSLBuilder = (
   ] = useTPSLOrder(
     {
       symbol,
-      position_qty: position.position_qty,
-      average_open_price: position.average_open_price,
+      position_qty: position?.position_qty ?? 0,
+      average_open_price: position?.average_open_price ?? 0,
     },
     {
       defaultOrder: order,

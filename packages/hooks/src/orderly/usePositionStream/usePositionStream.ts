@@ -85,7 +85,7 @@ export const usePositionStream = (
   ] = usePositionStore((state) => {
     const positions = state.positions[symbol] ?? POSITION_EMPTY;
 
-    // console.log("******", symbol, state.positions);
+    // console.log("******", symbol, state.positions, positions);
 
     return [positions.rows, omit(["rows"], positions)];
   });

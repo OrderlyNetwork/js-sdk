@@ -354,6 +354,7 @@
   "tpsl.offset": "オフセット",
   "tpsl.add": "追加",
   "tpsl.cancelAll": "すべてキャンセル",
+  "tpsl.dragToSet": "ドラッグしてTP/SLを設定",
   "tpsl.tpOrderPrice": "TP注文価格",
   "tpsl.slOrderPrice": "SL注文価格",
   "tpsl.tpTriggerPrice": "TPトリガー価格",
@@ -656,6 +657,7 @@
   "transfer.withdraw.crossChain.process": "クロスチェーン出金を処理中...",
   "transfer.withdraw.crossChain.warning": "クロスチェーンリバランスが必要な出金は、処理が完了するまでキャンセルしたり、追加の出金を行ったりすることはできません。",
   "transfer.withdraw.crossChain.vaultWarning": "出金額が{{networkName}}のボールト残高（{{chainVaultBalance}} USDC）を超えています。{{networkName}}への出金にはクロスチェーンリバランス手数料がかかります。",
+  "transfer.withdraw.vaultWarning": "{{chainName}} 上の {{tokenName}} の残高は {{balance}} で、出金要求を満たすには不十分です。後でもう一度お試しいただくか、別のチェーンに切り替えて出金してください。",
   "transfer.withdraw.minAmount.error": "数量は{{minAmount}}より大きい必要があります",
   "transfer.withdraw.requested": "出金リクエスト済み",
   "transfer.withdraw.completed": "出金完了",
@@ -887,6 +889,5 @@
   "funding.paymentType": "支払いタイプ",
   "funding.paymentType.paid": "支払い済み",
   "funding.paymentType.received": "受け取り済み",
-  "leftNav.feedback": "フィードバックを共有",
-  "transfer.withdraw.vaultWarning": "{{chainName}} 上の {{tokenName}} の残高は {{balance}} で、出金要求を満たすには不十分です。後でもう一度お試しいただくか、別のチェーンに切り替えて出金してください。"
+  "leftNav.feedback": "フィードバックを共有"
 }

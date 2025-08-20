@@ -223,14 +223,15 @@ export class TPSLService {
 
   private drawTPSL(params: { price: number }) {
     const { price } = params;
-    const { tpslOrderLine, verticalLine } = this.ensureTPSLElements({ price });
     const pnl = new Decimal(price)
       .minus(this.currentPosition!.open)
       .mul(this.currentPosition?.balance ?? 0);
 
-    const direction = pnl.gt(0)
-      ? i18n.t("tpsl.takeProfit")
-      : i18n.t("tpsl.stopLoss");
+    const { tpslOrderLine, verticalLine } = this.ensureTPSLElements({
+      price,
+      pnl,
+    });
+    const direction = pnl.gt(0) ? i18n.t("tpsl.tp") : i18n.t("tpsl.sl");
 
     const color = pnl.gt(0)
       ? this.broker.colorConfig.upColor
@@ -249,7 +250,7 @@ export class TPSLService {
     }
   }
 
-  private ensureTPSLElements(params: { price: number }) {
+  private ensureTPSLElements(params: { price: number; pnl: Decimal }) {
     const tpslOrderLine = this.tpslOrderLine;
     let verticalLine;
     let tpslStartCircle;
@@ -277,19 +278,26 @@ export class TPSLService {
           { time: this.tpslVerticalLineTime, price: params.price },
         ],
         {
-          shape: "trend_line",
+          // shape: "trend_line",
+          shape: "arrow",
           lock: true,
           disableSave: true,
           disableSelection: true,
           disableUndo: true,
           zOrder: "top",
           overrides: {
-            linecolor: "rgb(255,255,255)",
+            linecolor: "rgba(255,255,255, 0.2)",
             linewidth: 1,
           },
         },
       );
     }
+    verticalLine?.setProperties({
+      linecolor: params.pnl.gt(0)
+        ? this.broker.colorConfig.upColor
+        : this.broker.colorConfig.downColor,
+      linewidth: 1,
+    });
 
     return {
       tpslOrderLine,
@@ -321,7 +329,7 @@ export class TPSLService {
         .createOrderLine()
         // .setEditable(false)
         .setCancellable(false)
-        .setExtendLeft(false)
+        .setExtendLeft(true)
         .setTooltip(i18n.t("tpsl.dragToSet"))
         .setPrice(this.currentPosition!.open)
         .setLineLength(-200, "pixel")
@@ -330,6 +338,8 @@ export class TPSLService {
         .setBodyTextColor(this.broker.colorConfig.textColor!)
         .setBodyBackgroundColor(this.broker.colorConfig.chartBG!)
         .setBodyBorderColor(this.broker.colorConfig.pnlZoreColor!)
+        .setQuantityBackgroundColor(this.broker.colorConfig.chartBG!)
+        .setQuantityBorderColor(this.broker.colorConfig.pnlZoreColor!)
         .setQuantityTextColor(this.broker.colorConfig.qtyTextColor!)
         .setBodyFont(this.broker.colorConfig.font!)
         .setQuantityFont(this.broker.colorConfig.font!)

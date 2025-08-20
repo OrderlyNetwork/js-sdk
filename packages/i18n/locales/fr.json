@@ -354,6 +354,7 @@
   "tpsl.offset": "Décalage",
   "tpsl.add": "Ajouter",
   "tpsl.cancelAll": "Tout annuler",
+  "tpsl.dragToSet": "Glissez pour définir TP/SL",
   "tpsl.tpOrderPrice": "Prix d'ordre TP",
   "tpsl.slOrderPrice": "Prix d'ordre SL",
   "tpsl.tpTriggerPrice": "Prix de déclenchement TP",
@@ -656,6 +657,7 @@
   "transfer.withdraw.crossChain.process": "Votre retrait cross-chain est en cours de traitement...",
   "transfer.withdraw.crossChain.warning": "Les retraits nécessitant un rééquilibrage cross-chain ne peuvent pas être annulés ou suivis d'autres retraits jusqu'à ce qu'ils aient été traités.",
   "transfer.withdraw.crossChain.vaultWarning": "Le retrait dépasse le solde du coffre {{networkName}} ( {{chainVaultBalance}} USDC ). Des frais de rééquilibrage cross-chain seront facturés pour le retrait vers {{networkName}}.",
+  "transfer.withdraw.vaultWarning": "Le solde de {{tokenName}} sur {{chainName}} est de {{balance}}, ce qui est insuffisant pour satisfaire votre demande de retrait. Veuillez réessayer plus tard ou passer à une autre chaîne pour le retrait.",
   "transfer.withdraw.minAmount.error": "la quantité doit être supérieure à {{minAmount}}",
   "transfer.withdraw.requested": "Retrait demandé",
   "transfer.withdraw.completed": "Retrait terminé",
@@ -887,6 +889,5 @@
   "funding.paymentType": "Type de paiement",
   "funding.paymentType.paid": "Payé",
   "funding.paymentType.received": "Reçu",
-  "leftNav.feedback": "Partager votre avis",
-  "transfer.withdraw.vaultWarning": "Le solde de {{tokenName}} sur {{chainName}} est de {{balance}}, ce qui est insuffisant pour satisfaire votre demande de retrait. Veuillez réessayer plus tard ou passer à une autre chaîne pour le retrait."
+  "leftNav.feedback": "Partager votre avis"
 }

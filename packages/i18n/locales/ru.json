@@ -354,6 +354,7 @@
   "tpsl.offset": "Смещение",
   "tpsl.add": "Добавить",
   "tpsl.cancelAll": "Отменить все",
+  "tpsl.dragToSet": "Перетащите, чтобы установить TP/SL",
   "tpsl.tpOrderPrice": "Цена заказа TP",
   "tpsl.slOrderPrice": "Цена заказа SL",
   "tpsl.tpTriggerPrice": "Цена срабатывания TP",
@@ -656,6 +657,7 @@
   "transfer.withdraw.crossChain.process": "Ваш кросс-чейн вывод обрабатывается...",
   "transfer.withdraw.crossChain.warning": "Выводы, требующие кросс-чейн ребалансировки, не могут быть отменены или сопровождаться дополнительными выводами до их обработки.",
   "transfer.withdraw.crossChain.vaultWarning": "Сумма вывода превышает баланс хранилища {{networkName}} ( {{chainVaultBalance}} USDC ). За кросс-чейн ребалансировку для вывода в {{networkName}} будет взиматься комиссия.",
+  "transfer.withdraw.vaultWarning": "Баланс {{tokenName}} в сети {{chainName}} составляет {{balance}}, чего недостаточно для выполнения вашего запроса на вывод. Повторите попытку позже или переключитесь на другую сеть для вывода.",
   "transfer.withdraw.minAmount.error": "количество должно быть больше {{minAmount}}",
   "transfer.withdraw.requested": "Запрошен вывод",
   "transfer.withdraw.completed": "Вывод завершен",
@@ -887,6 +889,5 @@
   "funding.paymentType": "Тип платежа",
   "funding.paymentType.paid": "Оплачено",
   "funding.paymentType.received": "Получено",
-  "leftNav.feedback": "Поделиться отзывом",
-  "transfer.withdraw.vaultWarning": "Баланс {{tokenName}} в сети {{chainName}} составляет {{balance}}, чего недостаточно для выполнения вашего запроса на вывод. Повторите попытку позже или переключитесь на другую сеть для вывода."
+  "leftNav.feedback": "Поделиться отзывом"
 }
