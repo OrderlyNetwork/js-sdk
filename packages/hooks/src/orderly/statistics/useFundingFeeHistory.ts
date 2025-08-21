@@ -70,7 +70,7 @@ export const useFundingFeeHistory = (
   }, [data, infos]);
 
   return useMemo(
-    () => [parsedData, { meta: data?.meta, isLoading, isValidating }],
+    () => [parsedData, { meta: data?.meta, isLoading, isValidating }] as const,
     [parsedData, data?.meta, isLoading, isValidating],
   );
 };

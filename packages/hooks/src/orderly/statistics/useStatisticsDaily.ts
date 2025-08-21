@@ -85,7 +85,7 @@ export const useStatisticsDaily = (
   }, [data]);
 
   return useMemo(
-    () => [data ?? EMPTY_LIST, { aggregateValue: aggregateValue }],
+    () => [data ?? EMPTY_LIST, { aggregateValue: aggregateValue }] as const,
     [data, aggregateValue],
   );
 };

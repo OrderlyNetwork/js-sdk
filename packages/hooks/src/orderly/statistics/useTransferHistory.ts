@@ -56,7 +56,11 @@ export const useTransferHistory = (parmas: TransferHistorySearchParams) => {
   }, [data, infos]);
 
   return useMemo(
-    () => [parsedData ?? EMPTY_LIST, { meta: data?.meta, isLoading, mutate }],
+    () =>
+      [
+        parsedData ?? EMPTY_LIST,
+        { meta: data?.meta, isLoading, mutate },
+      ] as const,
     [parsedData, data?.meta, isLoading, mutate],
   );
 };

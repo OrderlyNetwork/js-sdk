@@ -62,10 +62,11 @@ export const useDistributionHistory = (parmas: DistributionSearchParams) => {
   }, [data, infos]);
 
   return useMemo(
-    () => [
-      parsedData ?? EMPTY_LIST,
-      { meta: data?.meta, isLoading, isValidating },
-    ],
+    () =>
+      [
+        parsedData ?? EMPTY_LIST,
+        { meta: data?.meta, isLoading, isValidating },
+      ] as const,
     [parsedData, data?.meta, isLoading, isValidating],
   );
 };

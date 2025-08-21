@@ -109,7 +109,7 @@ export const useAssetsHistory = (
   }, []);
 
   return useMemo(
-    () => [data?.rows ?? EMPTY_LIST, { meta: data?.meta, isLoading }],
+    () => [data?.rows ?? EMPTY_LIST, { meta: data?.meta, isLoading }] as const,
     [data?.rows, data?.meta, isLoading],
   );
 };
