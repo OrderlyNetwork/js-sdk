@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { API } from "@orderly.network/types";
+import { API, EMPTY_LIST } from "@orderly.network/types";
 import { usePrivateQuery } from "../../usePrivateQuery";
 import { useSymbolsInfo } from "../useSymbolsInfo";
 
@@ -61,7 +61,13 @@ export const useDistributionHistory = (parmas: DistributionSearchParams) => {
     });
   }, [data, infos]);
 
-  return [parsedData, { meta: data?.meta, isLoading, isValidating }] as const;
+  return useMemo(
+    () => [
+      parsedData ?? EMPTY_LIST,
+      { meta: data?.meta, isLoading, isValidating },
+    ],
+    [parsedData, data?.meta, isLoading, isValidating],
+  );
 };
 
 export type UseDistributionHistoryReturn = ReturnType<

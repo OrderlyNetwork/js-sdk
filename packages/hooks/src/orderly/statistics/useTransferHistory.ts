@@ -1,5 +1,5 @@
-import React from "react";
-import { API } from "@orderly.network/types";
+import { useMemo } from "react";
+import { EMPTY_LIST, type API } from "@orderly.network/types";
 import { usePrivateQuery } from "../../usePrivateQuery";
 import { useSymbolsInfo } from "../useSymbolsInfo";
 
@@ -23,7 +23,7 @@ export const useTransferHistory = (parmas: TransferHistorySearchParams) => {
   const { dataRange, page, size, side, fromId, toId, main_sub_only } = parmas;
   const infos = useSymbolsInfo();
 
-  const memoizedQueryKey = React.useMemo<string>(() => {
+  const memoizedQueryKey = useMemo<string>(() => {
     const search = new URLSearchParams();
     search.set("page", page.toString());
     search.set("size", size.toString());
@@ -48,14 +48,17 @@ export const useTransferHistory = (parmas: TransferHistorySearchParams) => {
     },
   );
 
-  const parsedData = React.useMemo<API.TransferHistoryRow[]>(() => {
+  const parsedData = useMemo<API.TransferHistoryRow[]>(() => {
     if (!Array.isArray(data?.rows) || !data?.rows.length || infos.isNil) {
       return [];
     }
     return data.rows;
   }, [data, infos]);
 
-  return [parsedData, { meta: data?.meta, isLoading, mutate }] as const;
+  return useMemo(
+    () => [parsedData ?? EMPTY_LIST, { meta: data?.meta, isLoading, mutate }],
+    [parsedData, data?.meta, isLoading, mutate],
+  );
 };
 
 export type UseTransferHistoryReturn = ReturnType<typeof useTransferHistory>;

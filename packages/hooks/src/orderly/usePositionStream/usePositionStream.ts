@@ -220,11 +220,6 @@ export const usePositionStream = (
        */
       loading: positionStatus.loading,
       isLoading: positionStatus.loading,
-      // isValidating,
-      // // showSymbol,
-      // error,
-      // // loadMore: () => {},
-      // refresh: refreshPositions,
     },
   ] as const;
 };
