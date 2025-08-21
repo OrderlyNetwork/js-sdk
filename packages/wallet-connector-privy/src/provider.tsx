@@ -17,9 +17,12 @@ import {
   AbstractChains,
   AbstractTestnetChainInfo,
   ArbitrumSepoliaChainInfo,
+  ArbitrumSepoliaTokenInfo,
   ChainNamespace,
   SolanaChains,
   SolanaDevnetChainInfo,
+  SolanaDevnetTokenInfo,
+  TesntTokenFallback,
 } from "@orderly.network/types";
 import { TooltipProvider } from "@orderly.network/ui";
 import { Main } from "./main";
@@ -49,6 +52,12 @@ const commonSwrOpts = {
   // don't duplicate a request with the same key for 1hr
   dedupingInterval: 3_600_000,
 };
+const testnetTokenFallback = TesntTokenFallback([
+  ArbitrumSepoliaTokenInfo,
+  SolanaDevnetTokenInfo,
+]);
+
+const testnetChainFallback = [ArbitrumSepoliaChainInfo, SolanaDevnetChainInfo];
 
 const fetchChainInfo = async (url: string) => {
   const response = await fetch(url);
@@ -263,7 +272,10 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
   const { data: mainnetChainInfos } = useSWR(
     !props.customChains ? "https://api.orderly.org/v1/public/chain_info" : null,
     fetcher,
-    commonSwrOpts,
+    {
+      ...commonSwrOpts,
+      fallbackData: testnetTokenFallback,
+    },
   );
 
   const { data: testChainInfos } = useSWR(
@@ -271,7 +283,10 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
       ? "https://testnet-api.orderly.org/v1/public/chain_info"
       : null,
     fetcher,
-    commonSwrOpts,
+    {
+      ...commonSwrOpts,
+      fallbackData: testnetChainFallback,
+    },
   );
 
   const handleCustomerChains = () => {

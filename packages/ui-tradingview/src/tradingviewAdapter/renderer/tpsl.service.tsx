@@ -236,6 +236,7 @@ export class TPSLService {
     const color = pnl.gt(0)
       ? this.broker.colorConfig.upColor
       : this.broker.colorConfig.downColor;
+    console.log("xxx drage tpsl", tpslOrderLine);
     tpslOrderLine
       ?.setText(`${direction} ${pnl.toDecimalPlaces(2).toNumber()}`)
       .setBodyTextColor(color!)
@@ -308,19 +309,18 @@ export class TPSLService {
   private createTPSLTriggerButton(params: CrossHairMovedEventParams) {
     if (!this.tpslOrderLine) {
       this.tpslOrderLine = this.createTPSLOrderLine();
-      this.tpslOrderLine.onMove(() => {
-        console.log("xxx onMove");
-        const price = this.tpslOrderLine?.getPrice();
-        this.showTPSLDialog({ price: price ?? 0 });
-      });
-      this.tpslOrderLine.onMoving(() => {
-        const price = this.tpslOrderLine?.getPrice();
-        this.interactiveMode = MouseInteractiveMode.TP_SL_DRAGGING;
-        this.verticalLineTime();
-        this.drawTPSL({ price: price ?? 0 });
-        console.log("xxx onMoving", price);
-      });
     }
+    this.tpslOrderLine.onMove(() => {
+      const price = this.tpslOrderLine?.getPrice();
+      this.showTPSLDialog({ price: price ?? 0 });
+    });
+    this.tpslOrderLine.onMoving(() => {
+      console.log("xxx on moving", this.tpslOrderLine);
+      const price = this.tpslOrderLine?.getPrice();
+      this.interactiveMode = MouseInteractiveMode.TP_SL_DRAGGING;
+      this.verticalLineTime();
+      this.drawTPSL({ price: price ?? 0 });
+    });
   }
 
   private createTPSLOrderLine() {
