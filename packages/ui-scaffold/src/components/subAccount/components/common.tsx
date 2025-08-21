@@ -17,7 +17,8 @@ export const NickNameTextField = (props: {
       label={t("subAccount.modal.nickName.label")}
       value={props.nickName}
       onChange={(e) => {
-        props.setNickName(e.target.value);
+        const _value = e.target.value.replace(/[^a-zA-Z0-9@,\s_-]/g, "");
+        props.setNickName(_value);
       }}
       formatters={[
         inputFormatter.createRegexInputFormatter(/[^a-zA-Z0-9@,\s_-]/g),

@@ -1,8 +1,8 @@
-import { API } from "@orderly.network/types";
+import { useMemo } from "react";
+import type { SWRConfiguration } from "swr";
+import type { API } from "@orderly.network/types";
 import { usePrivateQuery } from "../../usePrivateQuery";
-import { useMemo, useRef } from "react";
 import { useSymbolsInfo } from "../useSymbolsInfo";
-import { SWRConfiguration } from "swr";
 
 type FundingSearchParams = {
   /**
@@ -19,9 +19,9 @@ type FundingSearchParams = {
 
 export const useFundingFeeHistory = (
   params: FundingSearchParams,
-  options?: SWRConfiguration
+  options?: SWRConfiguration,
 ) => {
-  let { symbol, dataRange, page = 1, pageSize = 10 } = params;
+  const { symbol, dataRange, page = 1, pageSize = 10 } = params;
 
   const infos = useSymbolsInfo();
 
@@ -54,10 +54,7 @@ export const useFundingFeeHistory = (
     });
 
   const parsedData = useMemo<
-    | (API.FundingFeeRow & {
-        annual_rate: number;
-      })[]
-    | null
+    (API.FundingFeeRow & { annual_rate: number })[] | null
   >(() => {
     if (!data || !Array.isArray(data?.rows) || infos.isNil) {
       return null;
@@ -72,14 +69,10 @@ export const useFundingFeeHistory = (
     });
   }, [data, infos]);
 
-  return [
-    parsedData,
-    {
-      meta: data?.meta,
-      isLoading,
-      isValidating,
-    },
-  ] as const;
+  return useMemo(
+    () => [parsedData, { meta: data?.meta, isLoading, isValidating }] as const,
+    [parsedData, data?.meta, isLoading, isValidating],
+  );
 };
 
 export type UseFundingFeeHistoryReturn = ReturnType<

@@ -29,7 +29,6 @@ export const RemovablePanel: React.FC<
         align="start"
         sideOffset={-4}
         alignOffset={-4}
-        // @ts-ignore
         content={
           <Flex direction="column" gapY={2}>
             {[TopIcon, MiddleIcon, BottomIcon].map((Icon, idx) => (
@@ -37,7 +36,7 @@ export const RemovablePanel: React.FC<
                 key={idx}
                 className={cn(
                   "oui-rounded oui-cursor-pointer hover:oui-bg-base-5",
-                  props.index === idx && "oui-bg-base-5"
+                  props.index === idx && "oui-bg-base-5",
                 )}
                 onClick={() => {
                   props.onLayout?.(props.index, idx);
@@ -51,7 +50,7 @@ export const RemovablePanel: React.FC<
         className={cn(
           "oui-bg-base-9 oui-rounded",
           "oui-border oui-border-line-12",
-          "oui-p-1"
+          "oui-p-1",
         )}
         arrow={{ className: "oui-fill-transparent" }}
       >
@@ -60,7 +59,7 @@ export const RemovablePanel: React.FC<
             <IndicatorIcon
               className={cn(
                 "oui-text-base-contrast-20 hover:oui-text-base-contrast-80",
-                "oui-cursor-pointer"
+                "oui-cursor-pointer",
               )}
             />
           </div>

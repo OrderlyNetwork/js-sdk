@@ -7,12 +7,12 @@ const APIS: Record<ENV_NAME, URLS> = {
   prod: API_URLS.mainnet,
   staging: API_URLS.testnet,
   dev: {
-    apiBaseUrl: "https://dev-api.orderly.org",
-    publicWsUrl: "wss://dev-ws-v2.orderly.org",
-    privateWsUrl: "wss://dev-ws-private-v2.orderly.org",
+    apiBaseUrl: "https://dev-api-aliyun.orderly.org",
+    publicWsUrl: "wss://dev-ws-aliyun.orderly.org",
+    privateWsUrl: "wss://dev-ws-private-aliyun.orderly.org",
     operatorUrl: {
-      EVM: "https://dev-operator-v2.orderly.network",
-      SOL: "https://qa-sol-operator.orderly.network",
+      EVM: "https://dev-operator-aliyun.orderly.network",
+      SOL: "https://dev-sol-operator-aliyun.orderly.network",
     },
   },
   qa: {

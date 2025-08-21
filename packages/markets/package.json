@@ -19,16 +19,18 @@
   "dependencies": {
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/i18n": "workspace:*",
-    "@orderly.network/ui": "workspace:*",
-    "@orderly.network/utils": "workspace:*",
     "@orderly.network/types": "workspace:*",
+    "@orderly.network/ui": "workspace:*",
     "@orderly.network/ui-scaffold": "workspace:*",
-    "embla-carousel-react": "^8.2.0"
+    "@orderly.network/utils": "workspace:*",
+    "embla-carousel-react": "^8.2.0",
+    "ramda": "^0.31.3"
   },
   "devDependencies": {
     "@babel/core": "^7.22.9",
     "@babel/preset-env": "^7.22.9",
     "@babel/preset-typescript": "^7.22.5",
+    "@types/ramda": "^0.29.3",
     "@types/react": "^18.3.2",
     "@types/react-dom": "^18.3.0",
     "react": "^18.2.0",

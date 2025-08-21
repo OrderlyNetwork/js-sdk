@@ -36,6 +36,14 @@ export type WithdrawInputs = {
   verifyContract?: string;
 };
 
+export type InternalTransferInputs = {
+  receiver: string;
+  token: string;
+  amount: string;
+  nonce: number;
+  verifyContract?: string;
+};
+
 export type SettleInputs = {
   // chainId: number;
   brokerId: string;
@@ -101,6 +109,10 @@ export interface WalletAdapter<Config = any> {
 
   generateWithdrawMessage(
     inputs: WithdrawInputs,
+  ): Promise<Message & { domain: SignatureDomain }>;
+
+  generateInternalTransferMessage(
+    inputs: InternalTransferInputs,
   ): Promise<Message & { domain: SignatureDomain }>;
 
   generateSettleMessage(

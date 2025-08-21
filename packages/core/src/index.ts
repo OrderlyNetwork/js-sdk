@@ -48,6 +48,7 @@ export type {
   Message,
   RegisterAccountInputs,
   WithdrawInputs,
+  InternalTransferInputs,
   SettleInputs,
   AddOrderlyKeyInputs,
   DexRequestInputs,

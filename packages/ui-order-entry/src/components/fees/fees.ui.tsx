@@ -1,5 +1,6 @@
 import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
+import { useAppContext } from "@orderly.network/react-app";
 import { Flex, Text } from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
 import { useFeesScript } from "./fees.script";
@@ -7,8 +8,11 @@ import { useFeesScript } from "./fees.script";
 export const FeesUI: React.FC<ReturnType<typeof useFeesScript>> = (props) => {
   const { t } = useTranslation();
   const { takerFeeRate, makerFeeRate } = props;
-  return (
-    <Flex justify={"between"}>
+
+  const { widgetConfigs } = useAppContext();
+
+  const originalTrailingFees = (
+    <Flex width={"100%"} itemAlign="center" justify={"between"}>
       <Text size="2xs">{t("common.fees")}</Text>
       <AuthGuard
         fallback={() => (
@@ -32,4 +36,10 @@ export const FeesUI: React.FC<ReturnType<typeof useFeesScript>> = (props) => {
       </AuthGuard>
     </Flex>
   );
+
+  const customTrailingFees = widgetConfigs?.orderEntry?.fees?.trailing;
+
+  return typeof customTrailingFees === "function"
+    ? customTrailingFees(originalTrailingFees)
+    : originalTrailingFees;
 };

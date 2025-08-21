@@ -1,5 +1,6 @@
-import React from "react";
-import { API } from "@orderly.network/types";
+import React, { useMemo } from "react";
+import type { API } from "@orderly.network/types";
+import { EMPTY_LIST } from "@orderly.network/types";
 import { usePrivateQuery } from "../../usePrivateQuery";
 import { useSymbolsInfo } from "../useSymbolsInfo";
 
@@ -41,14 +42,10 @@ export const useVaultsHistory = (parmas: TransferHistorySearchParams) => {
     return data.rows;
   }, [data, infos]);
 
-  return [
-    parsedData,
-    {
-      isLoading: isLoading,
-      meta: data?.meta,
-      mutate,
-    },
-  ] as const;
+  return useMemo(
+    () => [parsedData ?? EMPTY_LIST, { meta: data?.meta, isLoading, mutate }],
+    [parsedData, data?.meta, isLoading, mutate],
+  );
 };
 
 export type VaultsHistoryReturn = ReturnType<typeof useVaultsHistory>;

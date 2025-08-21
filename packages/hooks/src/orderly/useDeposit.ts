@@ -436,6 +436,7 @@ export const useDeposit = (options: DepositOptions) => {
       fee: depositFee,
       decimals: options.decimals!,
       token: options.srcToken,
+      address: options.address,
       vaultAddress,
     };
 

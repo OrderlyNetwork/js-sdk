@@ -1,4 +1,5 @@
-import { useEffect } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useEffect, useMemo } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import {
   API,
@@ -107,11 +108,8 @@ export const useAssetsHistory = (
     };
   }, []);
 
-  return [
-    data?.rows || EMPTY_LIST,
-    {
-      meta: data?.meta,
-      isLoading,
-    },
-  ] as const;
+  return useMemo(
+    () => [data?.rows ?? EMPTY_LIST, { meta: data?.meta, isLoading }] as const,
+    [data?.rows, data?.meta, isLoading],
+  );
 };

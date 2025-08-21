@@ -336,6 +336,24 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
     setHasAdvancedTPSLResult(false);
   }, [props.symbol]);
 
+  const showSoundSection = Boolean(notification?.orderFilled?.media);
+
+  const extraButton = !pinned ? (
+    <AdditionalConfigButton
+      pinned={pinned}
+      setPinned={setPinned}
+      needConfirm={needConfirm}
+      setNeedConfirm={setNeedConfirm}
+      onValueChange={setOrderValue}
+      orderTypeExtra={formattedOrder["order_type_ext"]}
+      showExtra={
+        formattedOrder["order_type"] === OrderType.LIMIT && !props.tpslSwitch
+      }
+      hidden={hidden}
+      setHidden={setHidden}
+    />
+  ) : null;
+
   const memoizedValue = useMemo<OrderEntryContextState>(() => {
     return { errorMsgVisible: errorMsgVisible };
   }, [errorMsgVisible]);
@@ -633,24 +651,9 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
             </label>
           </Flex>
           {/* Additional info （fok，ioc、post only， order confirm hidden） */}
-          {!pinned && (
-            <AdditionalConfigButton
-              pinned={pinned}
-              setPinned={setPinned}
-              needConfirm={needConfirm}
-              setNeedConfirm={setNeedConfirm}
-              onValueChange={setOrderValue}
-              orderTypeExtra={formattedOrder["order_type_ext"]}
-              showExtra={
-                formattedOrder["order_type"] === OrderType.LIMIT &&
-                !props.tpslSwitch
-              }
-              hidden={hidden}
-              setHidden={setHidden}
-            />
-          )}
+          {!showSoundSection && extraButton}
         </Flex>
-        {notification?.orderFilled?.media && (
+        {showSoundSection && (
           <Flex
             justify={"between"}
             itemAlign={"center"}
@@ -667,6 +670,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
                 {t("orderEntry.soundAlerts")}
               </label>
             </Flex>
+            {extraButton}
           </Flex>
         )}
         {/* Additional info （fok，ioc、post only， order confirm hidden） */}
@@ -1537,7 +1541,7 @@ function AssetInfo(props: {
   );
 }
 
-function AdditionalConfigButton(props: {
+const AdditionalConfigButton: React.FC<{
   pinned: boolean;
   setPinned: (pinned: boolean) => void;
   onValueChange?: (key: keyof OrderlyOrder, value: any) => void;
@@ -1547,7 +1551,7 @@ function AdditionalConfigButton(props: {
   showExtra: boolean;
   hidden: boolean;
   setHidden: (hidden: boolean) => void;
-}) {
+}> = (props) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -1580,7 +1584,7 @@ function AdditionalConfigButton(props: {
       </PopoverContent>
     </PopoverRoot>
   );
-}
+};
 
 // -----------BBO Select Component start ------------
 

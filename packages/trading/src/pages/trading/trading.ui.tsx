@@ -1,8 +1,8 @@
 import { FC } from "react";
-import { TradingState } from "./trading.script";
-import { MobileLayout } from "./trading.ui.mobile";
-import { DesktopLayout } from "./trading.ui.desktop";
 import { useScreen } from "@orderly.network/ui";
+import type { TradingState } from "./trading.script";
+import { DesktopLayout } from "./trading.ui.desktop";
+import { MobileLayout } from "./trading.ui.mobile";
 
 export const Trading: FC<TradingState> = (props) => {
   const { isMobile } = useScreen();

@@ -64,6 +64,7 @@ export { useWithdraw } from "./useWithdraw";
 export { useDeposit } from "./useDeposit";
 export { useConvert } from "./useConvert";
 export { useTransfer } from "./useTransfer";
+export { useInternalTransfer } from "./useInternalTransfer";
 
 export { useHoldingStream } from "./useHoldingStream";
 export { useWalletSubscription } from "./useWalletSubscription";

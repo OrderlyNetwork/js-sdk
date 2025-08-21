@@ -201,7 +201,7 @@ class RequestClient {
     }
 
     // Extract custom config options and pass only standard RequestInit options to fetch
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
     const {
       retry = 0,
       retryDelay = 1000,

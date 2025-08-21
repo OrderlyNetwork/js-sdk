@@ -8,6 +8,7 @@ import {
   RegisterAccountInputs,
   SettleInputs,
   SignatureDomain,
+  InternalTransferInputs,
   WithdrawInputs,
   DexRequestInputs,
 } from "@orderly.network/core";
@@ -16,6 +17,7 @@ import {
   addOrderlyKeyMessage,
   registerAccountMessage,
   settleMessage,
+  internalTransferMessage,
   withdrawMessage,
   dexRequestMessage,
 } from "./helper";
@@ -147,6 +149,33 @@ class DefaultEVMWalletAdapter extends BaseWalletAdapter<EVMAdapterOptions> {
     const domain = this.getDomain(true);
 
     const [message, toSignatureMessage] = await withdrawMessage({
+      ...inputs,
+      chainId: this.chainId,
+      domain,
+    });
+
+    const signedMessage = await this.signTypedData(toSignatureMessage);
+
+    return {
+      message: {
+        ...message,
+        chainType: "EVM",
+      },
+      signatured: signedMessage,
+      domain,
+    };
+  }
+
+  async generateInternalTransferMessage(
+    inputs: InternalTransferInputs,
+  ): Promise<
+    Message & {
+      domain: SignatureDomain;
+    }
+  > {
+    const domain = this.getDomain(true);
+
+    const [message, toSignatureMessage] = await internalTransferMessage({
       ...inputs,
       chainId: this.chainId,
       domain,
