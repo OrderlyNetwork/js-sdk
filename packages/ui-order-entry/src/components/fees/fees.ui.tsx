@@ -11,7 +11,7 @@ export const FeesUI: React.FC<ReturnType<typeof useFeesScript>> = (props) => {
 
   const { widgetConfigs } = useAppContext();
 
-  const originalTrailing = (
+  const originalTrailingFees = (
     <Flex width={"100%"} itemAlign="center" justify={"between"}>
       <Text size="2xs">{t("common.fees")}</Text>
       <AuthGuard
@@ -37,9 +37,9 @@ export const FeesUI: React.FC<ReturnType<typeof useFeesScript>> = (props) => {
     </Flex>
   );
 
-  const customTrailing = widgetConfigs?.orderEntry?.fees?.trailing;
+  const customTrailingFees = widgetConfigs?.orderEntry?.fees?.trailing;
 
-  return typeof customTrailing === "function"
-    ? customTrailing(originalTrailing)
-    : originalTrailing;
+  return typeof customTrailingFees === "function"
+    ? customTrailingFees(originalTrailingFees)
+    : originalTrailingFees;
 };
