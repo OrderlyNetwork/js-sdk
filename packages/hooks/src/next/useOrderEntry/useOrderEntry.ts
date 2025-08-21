@@ -41,7 +41,7 @@ import { useOrderEntryNextInternal } from "./useOrderEntry.internal";
 type OrderEntryParameters = Parameters<typeof useOrderEntryNextInternal>;
 type Options = Omit<OrderEntryParameters["1"], "symbolInfo">;
 
-type OrderEntryReturn = {
+export type OrderEntryReturn = {
   submit: (options?: { resetOnSuccess?: boolean }) => Promise<{
     success: boolean;
     data: Record<string, any>;

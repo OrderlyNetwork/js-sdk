@@ -1,4 +1,4 @@
-export { useOrderEntry } from "./useOrderEntry";
+export { useOrderEntry, type OrderEntryReturn } from "./useOrderEntry";
 export { useOrderStore } from "./orderEntry.store";
 export { useOrderEntity } from "./useOrderEntity";
 export type {

@@ -13,7 +13,7 @@ export type BaseOrderInputProps = {
   onChange: (key: keyof OrderlyOrder, value: any) => void;
   onValuesChange: (value: any) => void;
   onFocus: (type: InputType) => FocusEventHandler;
-  onBlur: (type: InputType, tick?: number) => FocusEventHandler;
+  onBlur: (type: InputType) => FocusEventHandler;
   parseErrorMsg: (
     key: keyof OrderValidationResult,
     customValue?: string,
