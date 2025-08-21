@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/i18n",
-  "version": "2.6.0",
+  "version": "2.6.1-internal-20250828.0",
   "description": "Internationalization for orderly sdk",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

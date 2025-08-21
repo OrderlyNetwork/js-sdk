@@ -1,5 +1,14 @@
 # @orderly.network/futures
 
+## 4.6.1-internal-20250828.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@2.6.1-internal-20250828.0
+  - @orderly.network/utils@2.6.1-internal-20250828.0
+
 ## 4.6.0
 
 ### Minor Changes
