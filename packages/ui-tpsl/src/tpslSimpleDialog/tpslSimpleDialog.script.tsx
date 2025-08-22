@@ -80,16 +80,18 @@ export const useTPSLSimpleDialog = (options: TPSLBuilderOptions) => {
   );
 
   useEffect(() => {
+    if (!maxQty) {
+      return;
+    }
+    setValue("quantity", maxQty);
     if (type === "tp") {
       setValue("tp_trigger_price", triggerPrice ?? "");
     } else {
       setValue("sl_trigger_price", triggerPrice ?? "");
     }
-  }, [type, triggerPrice]);
+  }, [type, triggerPrice, maxQty]);
 
-  useEffect(() => {
-    setValue("quantity", maxQty);
-  }, [maxQty]);
+  useEffect(() => {}, [maxQty]);
 
   const onSubmit = async () => {
     try {
