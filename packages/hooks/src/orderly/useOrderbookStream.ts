@@ -287,8 +287,8 @@ export const useOrderbookStream = (
   symbolRef.current = symbol;
 
   const {
-    defaultOrderbookTickSizes: DEFAULT_TICK_SIZES,
-    defaultOrderbookSymbolDepths: DEFAULT_SYMBOL_DEPTHS,
+    defaultOrderbookTickSizes: DEFAULT_TICK_SIZES = {},
+    defaultOrderbookSymbolDepths: DEFAULT_SYMBOL_DEPTHS = {},
   } = useContext(OrderlyContext);
 
   const [data, setData] = useState<OrderbookData>(initial);
