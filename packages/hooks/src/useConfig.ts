@@ -1,7 +1,7 @@
 import { useContext } from "react";
-import { OrderlyContext } from "./orderlyContext";
 import { ConfigStore, type ConfigKey } from "@orderly.network/core";
 import { SDKError } from "@orderly.network/types";
+import { OrderlyContext } from "./orderlyContext";
 
 export function useConfig(): ConfigStore;
 export function useConfig<T = string>(key: ConfigKey, defaultValue?: T): T;
@@ -11,7 +11,7 @@ export function useConfig(key?: ConfigKey, defaultValue?: any) {
 
   if (!configStore) {
     throw new SDKError(
-      "useConfig must be used within OrderlyConfigProvider or OrderlyAppProvider"
+      "useConfig must be used within OrderlyConfigProvider or OrderlyAppProvider",
     );
   }
 
