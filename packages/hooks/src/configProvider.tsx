@@ -15,7 +15,7 @@ import { DefaultSolanaWalletAdapter } from "@orderly.network/default-solana-adap
 import { Chain, NetworkId } from "@orderly.network/types";
 import { SDKError } from "@orderly.network/types";
 import { EthersProvider } from "@orderly.network/web3-provider-ethers";
-import { DEFAULT_TICK_SIZES } from "./constants";
+import { DEFAULT_SYMBOL_DEPTHS, DEFAULT_TICK_SIZES } from "./constants";
 import { ProxyConfigStore } from "./dev/proxyConfigStore";
 import { ExtendedConfigStore } from "./extendedConfigStore";
 import { OrderlyConfigContextState, OrderlyProvider } from "./orderlyContext";
@@ -42,6 +42,10 @@ export type BaseConfigProviderProps = {
    * Custom orderbook default tick sizes.
    */
   orderbookDefaultTickSizes?: Record<string, string>;
+  /**
+   * Custom orderbook default symbol depths.
+   */
+  orderbookDefaultSymbolDepths?: Record<PropertyKey, number[]>;
 } & Pick<
   OrderlyConfigContextState,
   | "enableSwapDeposit"
@@ -87,6 +91,8 @@ export const OrderlyConfigProvider: FC<
     chainTransformer,
     dataAdapter,
     notification,
+    orderbookDefaultTickSizes,
+    orderbookDefaultSymbolDepths,
   } = props;
 
   if (!brokerId && typeof configStore === "undefined") {
@@ -144,9 +150,13 @@ export const OrderlyConfigProvider: FC<
     );
   }, [walletAdapters]);
 
-  const defaultOrderbookTickSizes = useMemo<Record<string, string>>(() => {
-    return props.orderbookDefaultTickSizes || DEFAULT_TICK_SIZES;
-  }, [props.orderbookDefaultTickSizes]);
+  const defaultOrderbookTickSizes = useMemo(() => {
+    return orderbookDefaultTickSizes || DEFAULT_TICK_SIZES;
+  }, [orderbookDefaultTickSizes]);
+
+  const defaultOrderbookSymbolDepths = useMemo(() => {
+    return orderbookDefaultSymbolDepths || DEFAULT_SYMBOL_DEPTHS;
+  }, [orderbookDefaultTickSizes]);
 
   // check params, if has mismatch, throw warning message to console
   // useParamsCheck({ brokerId: innerConfigStore.get("brokerId") });
@@ -189,6 +199,7 @@ export const OrderlyConfigProvider: FC<
       customChains,
       enableSwapDeposit,
       defaultOrderbookTickSizes,
+      defaultOrderbookSymbolDepths,
       chainTransformer,
       dataAdapter,
       notification: notification,
@@ -202,6 +213,7 @@ export const OrderlyConfigProvider: FC<
     customChains,
     enableSwapDeposit,
     defaultOrderbookTickSizes,
+    defaultOrderbookSymbolDepths,
     dataAdapter,
     notification,
     chainTransformer,

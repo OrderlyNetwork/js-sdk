@@ -62,7 +62,9 @@ const reduceItems = (
     const prices = new Map<number, number[]>();
     for (let i = 0; i < data.length; i++) {
       const [price, quantity] = data[i];
-      if (isNaN(price) || isNaN(quantity)) continue;
+      if (isNaN(price) || isNaN(quantity)) {
+        continue;
+      }
       let priceKey;
 
       if (asks) {
@@ -103,7 +105,9 @@ const reduceItems = (
 
   for (let i = 0; i < newData.length; i++) {
     const [price, quantity] = newData[i];
-    if (isNaN(price) || isNaN(quantity)) continue;
+    if (isNaN(price) || isNaN(quantity)) {
+      continue;
+    }
 
     const newQuantity = new Decimal(quantity)
       .add(result.length > 0 ? result[result.length - 1][2] : 0)
@@ -218,7 +222,9 @@ const mergeItems = (data: OrderBookItem[], update: OrderBookItem[]) => {
       const index = data.findIndex(([p], index) => p === price);
       //
       if (index === -1) {
-        if (quantity === 0) continue;
+        if (quantity === 0) {
+          continue;
+        }
         data.push(item);
       } else {
         if (quantity === 0) {
@@ -280,8 +286,10 @@ export const useOrderbookStream = (
 
   symbolRef.current = symbol;
 
-  const { defaultOrderbookTickSizes: DEFAULT_TICK_SIZES } =
-    useContext(OrderlyContext);
+  const {
+    defaultOrderbookTickSizes: DEFAULT_TICK_SIZES,
+    defaultOrderbookSymbolDepths: DEFAULT_SYMBOL_DEPTHS,
+  } = useContext(OrderlyContext);
 
   const [data, setData] = useState<OrderbookData>(initial);
   const [isLoading, setIsLoading] = useState(true);
@@ -294,12 +302,15 @@ export const useOrderbookStream = (
   // markPrice, lastPrice
   const prevMiddlePrice = useRef<number>(0);
 
+  const tick = config("quote_tick");
+
   const depths = useMemo(() => {
-    const tick = config("quote_tick");
+    if (DEFAULT_SYMBOL_DEPTHS[symbol]) {
+      return DEFAULT_SYMBOL_DEPTHS[symbol];
+    }
     if (typeof tick === "undefined") {
       return [];
     }
-
     try {
       const base = new Decimal(tick);
       return [
@@ -308,17 +319,17 @@ export const useOrderbookStream = (
         base.mul(100).toNumber(),
         base.mul(1000).toNumber(),
       ];
-    } catch (e) {}
+    } catch {}
     return [tick];
-  }, [config("quote_tick")]);
+  }, [symbol, tick]);
 
   useEffect(() => {
     if (DEFAULT_TICK_SIZES[symbol]) {
       setDepth(Number(DEFAULT_TICK_SIZES[symbol]));
     } else {
-      setDepth(config("quote_tick"));
+      setDepth(tick);
     }
-  }, [config("quote_tick"), symbol, DEFAULT_TICK_SIZES]);
+  }, [tick, symbol, DEFAULT_TICK_SIZES]);
 
   const ws = useWS();
 
@@ -410,7 +421,6 @@ export const useOrderbookStream = (
   }, []);
 
   const onDepthChange = useCallback((depth: number) => {
-    //
     setDepth(() => depth);
   }, []);
 

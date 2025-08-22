@@ -48,6 +48,11 @@ export interface OrderlyConfigContextState {
    */
   defaultOrderbookTickSizes: Record<string, string>;
 
+  /**
+   * Custom orderbook default symbol depths.
+   */
+  defaultOrderbookSymbolDepths: Record<PropertyKey, number[]>;
+
   dataAdapter?: {
     /**
      * Custom `/v1/public/futures` response data.
