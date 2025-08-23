@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { max, min } from "ramda";
+import { min } from "ramda";
 import { SDKError } from "@orderly.network/types";
 import { Decimal, removeTrailingZeros } from "@orderly.network/utils";
 import { OrderlyContext } from "../orderlyContext";
@@ -56,16 +56,14 @@ const reduceItems = (
   let newData = [...data];
   const result: OrderBookItem[] = [];
 
-  //
-
   if (typeof depth !== "undefined") {
     const prices = new Map<number, number[]>();
     for (let i = 0; i < data.length; i++) {
       const [price, quantity] = data[i];
-      if (isNaN(price) || isNaN(quantity)) {
+      if (Number.isNaN(price) || Number.isNaN(quantity)) {
         continue;
       }
-      let priceKey;
+      let priceKey: number;
 
       if (asks) {
         priceKey = new Decimal(Math.ceil(price / depth)).mul(depth).toNumber();
@@ -105,7 +103,7 @@ const reduceItems = (
 
   for (let i = 0; i < newData.length; i++) {
     const [price, quantity] = newData[i];
-    if (isNaN(price) || isNaN(quantity)) {
+    if (Number.isNaN(price) || Number.isNaN(quantity)) {
       continue;
     }
 
@@ -211,7 +209,7 @@ const mergeItems = (data: OrderBookItem[], update: OrderBookItem[]) => {
     return update;
   }
 
-  data = data.filter(([price]) => !isNaN(price));
+  data = data.filter(([price]) => !Number.isNaN(price));
 
   while (update.length > 0) {
     const item = update.shift();
@@ -219,7 +217,7 @@ const mergeItems = (data: OrderBookItem[], update: OrderBookItem[]) => {
     if (item) {
       const [price, quantity] = item;
 
-      const index = data.findIndex(([p], index) => p === price);
+      const index = data.findIndex(([p]) => p === price);
       //
       if (index === -1) {
         if (quantity === 0) {
@@ -319,7 +317,9 @@ export const useOrderbookStream = (
         base.mul(100).toNumber(),
         base.mul(1000).toNumber(),
       ];
-    } catch {}
+    } catch {
+      //
+    }
     return [tick];
   }, [symbol, tick]);
 
@@ -342,10 +342,10 @@ export const useOrderbookStream = (
   useEffect(() => {
     let needRequestFullOrderbook = true;
     setIsLoading(true);
-    let orderBookUpdateSub: any;
+
     let fullOrderBookUpdateSub: any;
 
-    orderBookUpdateSub = ws.subscribe(
+    const orderBookUpdateSub = ws.subscribe(
       {
         event: "subscribe",
         topic: `${symbol}@orderbookupdate`,
@@ -434,8 +434,8 @@ export const useOrderbookStream = (
   }, [reducedData]);
 
   const middlePrice = useMemo(() => {
-    let asksFrist = 0,
-      bidsFirst = 0;
+    let asksFrist = 0;
+    let bidsFirst = 0;
 
     if (data.asks.length > 0) {
       asksFrist = reducedData.asks?.[reducedData.asks.length - 1]?.[0];
@@ -445,7 +445,7 @@ export const useOrderbookStream = (
       bidsFirst = data.bids[0][0];
     }
 
-    if (isNaN(asksFrist) || isNaN(bidsFirst) || !ticker) {
+    if (Number.isNaN(asksFrist) || Number.isNaN(bidsFirst) || !ticker) {
       return 0;
     }
 

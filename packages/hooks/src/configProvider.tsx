@@ -93,18 +93,12 @@ export const OrderlyConfigProvider: FC<
     notification,
     orderbookDefaultTickSizes,
     orderbookDefaultSymbolDepths,
+    children,
   } = props;
 
   if (!brokerId && typeof configStore === "undefined") {
     console.error("[OrderlyConfigProvider]: brokerId is required");
   }
-
-  // if (typeof walletAdapters === "undefined") {
-  //   console.error(
-  //     "[OrderlyConfigProvider]: walletAdapters is required, please provide at least one wallet adapter, " +
-  //       "you can install the `@orderly.network/default-evm-adapter` or `@orderly.network/default-solana-adapter` package"
-  //   );
-  // }
 
   if (typeof configStore !== "undefined" && !configStore.get("brokerId")) {
     // console.error("[OrderlyConfigProvider]: brokerId is required");
@@ -134,13 +128,6 @@ export const OrderlyConfigProvider: FC<
     return keyStore || new LocalStorageStore(networkId);
   }, [networkId, keyStore]);
 
-  // const innerGetWalletAdapter = useConstant<getWalletAdapterFunc>(() => {
-  //   return (
-  //     getWalletAdapter ||
-  //     ((options: WalletAdapterOptions) => new EtherAdapter(options))
-  //   );
-  // });
-
   const innerWalletAdapters = useMemo<WalletAdapter[]>(() => {
     return (
       walletAdapters || [
@@ -156,7 +143,7 @@ export const OrderlyConfigProvider: FC<
 
   const defaultOrderbookSymbolDepths = useMemo(() => {
     return orderbookDefaultSymbolDepths || DEFAULT_SYMBOL_DEPTHS;
-  }, [orderbookDefaultTickSizes]);
+  }, [orderbookDefaultSymbolDepths]);
 
   // check params, if has mismatch, throw warning message to console
   // useParamsCheck({ brokerId: innerConfigStore.get("brokerId") });
@@ -185,9 +172,8 @@ export const OrderlyConfigProvider: FC<
     if (typeof chainFilter === "function") {
       return chainFilter(innerConfigStore);
     }
-
     return chainFilter;
-  }, [props.chainFilter, innerConfigStore]);
+  }, [chainFilter, innerConfigStore]);
 
   const memoizedValue = useMemo<OrderlyConfigContextState>(() => {
     return {
@@ -226,7 +212,7 @@ export const OrderlyConfigProvider: FC<
   return (
     <OrderlyProvider value={memoizedValue}>
       <StatusProvider>
-        <DataCenterProvider>{props.children}</DataCenterProvider>
+        <DataCenterProvider>{children}</DataCenterProvider>
       </StatusProvider>
     </OrderlyProvider>
   );
