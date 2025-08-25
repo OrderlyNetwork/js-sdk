@@ -49,21 +49,6 @@ const CustomTooltip: React.FC<TooltipProps<any, any>> = (props) => {
 
 const AssetLineChart: React.FC<PnlLineChartProps> = (props) => {
   const colors = useColors(props.colors);
-
-  // const dataTransfer = (data: any[]) => {
-  //   const series: any[] = [];
-
-  //   data.reduce((acc, item) => {
-  //     acc += item.pnl;
-  //     series.push({ ...item, pnl: acc, _pnl: item.pnl });
-  //     return acc;
-  //   }, 0);
-
-  //   return series;
-  // };
-
-  // const data = useMemo(() => dataTransfer(props.data), [props.data]);
-
   return (
     <ResponsiveContainer className={props.invisible ? "chart-invisible" : ""}>
       <LineChart

@@ -22,7 +22,7 @@ import {
 import { useAssetsMultiFilter } from "../../hooks/useAssetsAccountFilter";
 import { useAssetsColumns } from "./column";
 
-const ORDERLY_ASSETS_VISIBLE_KEY = "orderly_assets_visible";
+export const ORDERLY_ASSETS_VISIBLE_KEY = "orderly_assets_visible";
 
 export const useAssetsScript = () => {
   const [visible, setVisible] = useLocalStorage<boolean>(
