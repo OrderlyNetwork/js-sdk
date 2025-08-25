@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   useOrderbookStream,
   useOrderStream,
@@ -10,6 +10,7 @@ import { removeTrailingZeros } from "@orderly.network/utils";
 import { getBasicSymbolInfo } from "../../../utils/utils";
 
 const CELL_MAX = 30;
+
 const DEFAULT_CELL_HEIGHT = 20;
 
 const SPACE = 104;
@@ -19,7 +20,7 @@ export const useOrderBookScript = (props: {
   height?: number;
 }) => {
   const { symbol, height } = props;
-  const symbolInfo = useSymbolsInfo()[props.symbol];
+  const symbolInfo = useSymbolsInfo()[symbol];
 
   const [cellHeight, setCellHeight] = useState(DEFAULT_CELL_HEIGHT);
 
@@ -28,9 +29,7 @@ export const useOrderBookScript = (props: {
   // const counter = useRef(0);
 
   const [data, { onDepthChange, isLoading, onItemClick, depth, allDepths }] =
-    useOrderbookStream(symbol, undefined, {
-      level,
-    });
+    useOrderbookStream(symbol, undefined, { level });
 
   // useEffect(() => {
   //   counter.current = 0;
