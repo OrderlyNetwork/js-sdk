@@ -58,7 +58,8 @@ export const TableBody: React.FC<TableBodyProps<any>> = (props) => {
               )}
               onClick={() => {
                 if (row.getCanExpand()) {
-                  row.getToggleExpandedHandler();
+                  const expandHandler = row.getToggleExpandedHandler();
+                  expandHandler?.();
                 }
                 onClick?.();
               }}
