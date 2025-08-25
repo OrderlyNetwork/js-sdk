@@ -1,6 +1,7 @@
 import { useMemo } from "react";
-import { useAccount, useGetEnv } from "@orderly.network/hooks";
+import { useAccount, useGetEnv, useTrack } from "@orderly.network/hooks";
 import { useMutation } from "@orderly.network/hooks";
+import { TrackerEventName } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { VAULTS_CONTRACT_ADDRESSES } from "../../../contract";
@@ -16,6 +17,7 @@ type OperationScript = {
 export const useOperationScript = (props: OperationScript) => {
   const { account, state } = useAccount();
   const env = useGetEnv();
+  const { track } = useTrack();
   const verifyingContract = useMemo(() => {
     return VAULTS_CONTRACT_ADDRESSES[
       env as keyof typeof VAULTS_CONTRACT_ADDRESSES
@@ -26,6 +28,10 @@ export const useOperationScript = (props: OperationScript) => {
     type: props.type,
     vaultId: props.vaultId,
   });
+
+  const disabledOperation = useMemo(() => {
+    return state?.accountId !== state?.mainAccountId;
+  }, [state?.accountId, state?.mainAccountId]);
 
   const handleOperation = async ({
     amount,
@@ -47,13 +53,6 @@ export const useOperationScript = (props: OperationScript) => {
         return;
       }
     }
-
-    // if (props.type === OperationType.WITHDRAWAL) {
-    //   if (new Decimal(amount).lt(0.000001)) {
-    //     toast.error("Withdrawal shares is less than minimum 0.000001.");
-    //     return;
-    //   }
-    // }
 
     const payloadType = getToAccountPayloadType(props.type, RoleType.LP);
     const requestParams = {
@@ -84,20 +83,57 @@ export const useOperationScript = (props: OperationScript) => {
       });
 
       if (!res.success) {
+        // Track failure event
+        if (props.type === OperationType.DEPOSIT) {
+          track(TrackerEventName.vaultDepositFailed, {
+            msg: res.message,
+          });
+        } else {
+          track(TrackerEventName.vaultWithdrawFailed, {
+            msg: res.message,
+          });
+        }
         toast.error(res.message);
         return;
       }
 
       await refetchOperationHistory();
 
+      // Track success event
+      if (props.type === OperationType.DEPOSIT) {
+        track(TrackerEventName.vaultDepositSuccess, {
+          quantity: amount,
+          vaultId,
+        });
+      } else {
+        track(TrackerEventName.vaultWithdrawSuccess, {
+          quantity: amount,
+          vaultId,
+        });
+      }
+
       toast.success(`${props.type} successful`);
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error: unknown) {
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+
+      // Track error event
+      if (props.type === OperationType.DEPOSIT) {
+        track(TrackerEventName.vaultDepositFailed, {
+          msg: errorMessage,
+        });
+      } else {
+        track(TrackerEventName.vaultWithdrawFailed, {
+          msg: errorMessage,
+        });
+      }
+      toast.error(errorMessage);
       console.error(error);
     }
   };
 
   return {
     handleOperation,
+    disabledOperation,
   };
 };

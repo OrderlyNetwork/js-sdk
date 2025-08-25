@@ -6,8 +6,10 @@ import {
   Button,
   modal,
   SimpleDialog,
+  SimpleSheet,
   useModal,
   cn,
+  useScreen,
 } from "@orderly.network/ui";
 import {
   BrokerWallet,
@@ -27,10 +29,13 @@ export const VaultWithdrawForm: FC<VaultWithdrawFormScript> = (props) => {
     vaultId,
     sharePrice,
     receivingAmount,
+    disabledWithdraw,
+    disabledOperation,
   } = props;
+  const { isMobile } = useScreen();
 
   const handleInitialWithdraw = () => {
-    modal.show(WithdrawInitialDialog, {
+    modal.show(isMobile ? WithdrawInitialSheet : WithdrawInitialDialog, {
       quantity,
       receivingAmount,
       handleWithdraw,
@@ -68,14 +73,22 @@ export const VaultWithdrawForm: FC<VaultWithdrawFormScript> = (props) => {
         suffix={
           <span className="oui-ml-1 oui-text-base-contrast-36">USDC</span>
         }
-        className="oui-mb-1"
+        className="oui-mb-5"
       />
+
+      {disabledOperation && (
+        <div className="oui-mt-3 oui-text-center">
+          <Text color="warning" className="oui-text-sm oui-font-semibold">
+            {t("vaults.operation.error.switchAccount")}
+          </Text>
+        </div>
+      )}
 
       <Button
         fullWidth
         color="primary"
-        disabled={!quantity || quantity === "0"}
-        className="oui-mt-8"
+        disabled={disabledWithdraw}
+        className="oui-mt-3"
         onClick={handleInitialWithdraw}
       >
         {t("common.withdraw")}
@@ -120,16 +133,58 @@ const WithdrawKVItem = ({
   );
 };
 
+type WithdrawInitialContentProps = {
+  quantity: string;
+  receivingAmount: string;
+  handleWithdraw: () => void;
+  hide?: () => void;
+};
+
+const WithdrawInitialContent = (props: WithdrawInitialContentProps) => {
+  const { quantity, receivingAmount, handleWithdraw, hide } = props;
+  const { t } = useTranslation();
+  return (
+    <div className="oui-flex oui-flex-col">
+      <WithdrawKVItem
+        label={t("vaults.withdraw.dialog.withdrawalAmount")}
+        value={quantity}
+        suffix={
+          <span className="oui-ml-1 oui-text-base-contrast-36">Shares</span>
+        }
+      />
+      <WithdrawKVItem
+        label={t("vaults.withdraw.dialog.estimatedReceiving")}
+        value={receivingAmount}
+        suffix={
+          <span className="oui-ml-1 oui-text-base-contrast-36">USDC</span>
+        }
+        className="oui-mt-1"
+      />
+      <Text color="warning" className="oui-my-5 oui-text-sm oui-font-semibold">
+        {t("vaults.withdraw.dialog.note")}
+      </Text>
+      <WithdrawProcessWidget />
+      <Button
+        fullWidth
+        color="primary"
+        className="oui-mt-5"
+        onClick={async () => {
+          await handleWithdraw();
+          hide?.();
+        }}
+      >
+        {t("vaults.withdraw.dialog.initiateWithdrawal")}
+      </Button>
+    </div>
+  );
+};
+
 const WithdrawInitialDialog = modal.create(
   ({
     quantity,
     receivingAmount,
     handleWithdraw,
-  }: {
-    quantity: string;
-    receivingAmount: string;
-    handleWithdraw: () => void;
-  }) => {
+  }: WithdrawInitialContentProps) => {
     const { visible, hide, onOpenChange } = useModal();
     const { t } = useTranslation();
     return (
@@ -138,42 +193,38 @@ const WithdrawInitialDialog = modal.create(
         open={visible}
         onOpenChange={onOpenChange}
       >
-        <div className="oui-flex oui-flex-col">
-          <WithdrawKVItem
-            label={t("vaults.withdraw.dialog.withdrawalAmount")}
-            value={quantity}
-            suffix={
-              <span className="oui-ml-1 oui-text-base-contrast-36">Shares</span>
-            }
-          />
-          <WithdrawKVItem
-            label={t("vaults.withdraw.dialog.estimatedReceiving")}
-            value={receivingAmount}
-            suffix={
-              <span className="oui-ml-1 oui-text-base-contrast-36">USDC</span>
-            }
-            className="oui-mt-1"
-          />
-          <Text
-            color="warning"
-            className="oui-my-5 oui-text-sm oui-font-semibold"
-          >
-            {t("vaults.withdraw.dialog.note")}
-          </Text>
-          <WithdrawProcessWidget />
-          <Button
-            fullWidth
-            color="primary"
-            className="oui-mt-5"
-            onClick={async () => {
-              await handleWithdraw();
-              hide();
-            }}
-          >
-            {t("vaults.withdraw.dialog.initiateWithdrawal")}
-          </Button>
-        </div>
+        <WithdrawInitialContent
+          quantity={quantity}
+          receivingAmount={receivingAmount}
+          handleWithdraw={handleWithdraw}
+          hide={hide}
+        />
       </SimpleDialog>
+    );
+  },
+);
+
+const WithdrawInitialSheet = modal.create(
+  ({
+    quantity,
+    receivingAmount,
+    handleWithdraw,
+  }: WithdrawInitialContentProps) => {
+    const { visible, hide, onOpenChange } = useModal();
+    const { t } = useTranslation();
+    return (
+      <SimpleSheet
+        title={t("vaults.withdraw.dialog.title")}
+        open={visible}
+        onOpenChange={onOpenChange}
+      >
+        <WithdrawInitialContent
+          quantity={quantity}
+          receivingAmount={receivingAmount}
+          handleWithdraw={handleWithdraw}
+          hide={hide}
+        />
+      </SimpleSheet>
     );
   },
 );

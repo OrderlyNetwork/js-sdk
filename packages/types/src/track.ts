@@ -23,4 +23,8 @@ export enum TrackerEventName {
   switchLanguage = "switch_language",
   leaderboardCampaignClickTradeNow = "leaderboard_campaign_click_trade_now",
   leaderboardCampaignClickLearnMore = "leaderboard_campaign_click_learn_more",
+  vaultDepositSuccess = "vault_deposit_success",
+  vaultDepositFailed = "vault_deposit_failed",
+  vaultWithdrawSuccess = "vault_withdraw_success",
+  vaultWithdrawFailed = "vault_withdraw_failed",
 }
