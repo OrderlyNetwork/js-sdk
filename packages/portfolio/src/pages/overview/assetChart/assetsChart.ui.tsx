@@ -1,3 +1,4 @@
+import React from "react";
 import { AssetLineChart } from "@orderly.network/chart";
 import { useTranslation } from "@orderly.network/i18n";
 import { Card } from "@orderly.network/ui";
@@ -6,7 +7,7 @@ import { useAssetsChartScriptReturn } from "./assetsChart.script";
 
 export type AssetsLineChartProps = {} & useAssetsChartScriptReturn;
 
-export const AssetsChart = (props: AssetsLineChartProps) => {
+export const AssetsChart: React.FC<AssetsLineChartProps> = (props) => {
   const { onPeriodChange, periodTypes, period } = props;
   const { t } = useTranslation();
 
