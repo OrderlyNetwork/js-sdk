@@ -84,12 +84,10 @@ export const useStatisticsDaily = (
     return { vol: vol.toNumber(), pnl: pnl.toNumber(), roi: roi.toNumber() };
   }, [data]);
 
-  return [
-    data || EMPTY_LIST,
-    {
-      aggregateValue,
-    },
-  ] as const;
+  return useMemo(
+    () => [data ?? EMPTY_LIST, { aggregateValue: aggregateValue }] as const,
+    [data, aggregateValue],
+  );
 };
 
 export type UseStatisticsDailyReturn = ReturnType<typeof useStatisticsDaily>;

@@ -145,7 +145,7 @@ export async function bracketOrderValidator<
       }
       if (Number(tp_trigger_price) > Number(tp_order_price)) {
         result.tp_trigger_price =
-          OrderValidation.priceErrorMin("tp_trigger_price");
+          OrderValidation.priceErrorMax("tp_trigger_price");
       }
     }
   }

@@ -31,7 +31,7 @@ export type OrderEntryScriptInputs = {
   symbol: string;
 };
 
-export const ORDERLY_SOUND_ALERT_KEY = "orderly_sound_alert";
+export const ORDERLY_ORDER_SOUND_ALERT_KEY = "orderly_order_sound_alert";
 
 export type OrderEntryScriptReturn = ReturnType<typeof useOrderEntryScript>;
 
@@ -45,9 +45,11 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     OrderSide.BUY,
   );
 
+  const { notification } = useOrderlyContext();
+
   const [soundAlert, setSoundAlert] = useLocalStorage<boolean>(
-    ORDERLY_SOUND_ALERT_KEY,
-    false,
+    ORDERLY_ORDER_SOUND_ALERT_KEY,
+    notification?.orderFilled?.defaultOpen ?? false,
   );
 
   const canTrade = useCanTrade();
@@ -380,6 +382,6 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     fillMiddleValue,
     symbol: inputs.symbol,
     soundAlert: soundAlert,
-    setSoundAlert,
+    setSoundAlert: setSoundAlert,
   };
 };

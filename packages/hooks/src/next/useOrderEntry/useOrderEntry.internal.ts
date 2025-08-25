@@ -141,8 +141,6 @@ const useOrderEntryNextInternal = (
 
     // calculateTPSL(newValues, markPrice);
 
-    // console.log("newValues++++++", newValues);
-
     orderEntryActions.updateOrder(newValues);
 
     return newValues;

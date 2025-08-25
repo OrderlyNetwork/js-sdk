@@ -1,3 +1,4 @@
+import { useRef, useCallback, useEffect } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   Box,
@@ -13,16 +14,31 @@ type SearchInputProps = Pick<InputProps, "classNames" | "suffix">;
 
 export const SearchInput = (props: SearchInputProps) => {
   const { classNames, suffix } = props;
+  const isComposingRef = useRef(false);
 
   const { t } = useTranslation();
 
   const { searchValue, onSearchValueChange, clearSearchValue } =
     useMarketsContext();
 
+  const handleCompositionStart = useCallback(() => {
+    isComposingRef.current = true;
+  }, []);
+
+  const handleCompositionEnd = useCallback(
+    (event: React.CompositionEvent<HTMLInputElement>) => {
+      isComposingRef.current = false;
+      onSearchValueChange?.(event.currentTarget.value);
+    },
+    [onSearchValueChange],
+  );
+
   return (
     <Input
       value={searchValue}
       onValueChange={onSearchValueChange}
+      onCompositionStart={handleCompositionStart}
+      onCompositionEnd={handleCompositionEnd}
       placeholder={t("markets.search.placeholder")}
       classNames={{
         ...classNames,

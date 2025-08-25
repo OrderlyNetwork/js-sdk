@@ -8,8 +8,6 @@ import {
   useLocalStorage,
   useMemoizedFn,
   useQuery,
-  useTokenInfo,
-  useTransfer,
   useWalletConnector,
   useWalletTopic,
   useWithdraw,
@@ -25,10 +23,11 @@ import {
 import { toast } from "@orderly.network/ui";
 import { Decimal, int2hex, praseChainIdToNumber } from "@orderly.network/utils";
 import { InputStatus, WithdrawTo } from "../../types";
-import { checkIsAccountId, getTransferErrorMessage } from "../../utils";
 import { CurrentChain } from "../depositForm/hooks";
 import { useToken } from "../depositForm/hooks/useToken";
 import { useSettlePnl } from "../unsettlePnlInfo/useSettlePnl";
+import { useInternalWithdraw } from "./hooks/useInternalWithdraw";
+import { useWithdrawFee } from "./hooks/useWithdrawFee";
 
 export type WithdrawFormScriptReturn = ReturnType<typeof useWithdrawFormScript>;
 
@@ -150,6 +149,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
 
   const internalWithdrawState = useInternalWithdraw({
     token: sourceToken?.symbol!,
+    decimals: sourceToken?.token_decimal!,
     quantity,
     setQuantity,
     close: options.close,
@@ -422,114 +422,3 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     ...internalWithdrawState,
   };
 };
-
-type InternalWithdrawOptions = {
-  token: string;
-  quantity: string;
-  setQuantity: (quantity: string) => void;
-  close?: () => void;
-  setLoading: (loading: boolean) => void;
-};
-
-function useInternalWithdraw(options: InternalWithdrawOptions) {
-  const { token, quantity, setQuantity, close, setLoading } = options;
-  const { t } = useTranslation();
-  const [withdrawTo, setWithdrawTo] = useState<WithdrawTo>(WithdrawTo.Wallet);
-  const [toAccountId, setToAccountId] = useState<string>("");
-  const [inputStatus, setInputStatus] = useState<InputStatus>("default");
-  const [hintMessage, setHintMessage] = useState<string>();
-
-  const { transfer, submitting } = useTransfer();
-
-  const onTransfer = useCallback(() => {
-    const num = Number(quantity);
-
-    if (Number.isNaN(num) || num <= 0) {
-      toast.error(t("transfer.quantity.invalid"));
-      return;
-    }
-
-    if (submitting || !toAccountId) {
-      return;
-    }
-    setLoading(true);
-
-    transfer(token, {
-      account_id: toAccountId,
-      amount: new Decimal(quantity).toNumber(),
-    })
-      .then(() => {
-        toast.success(t("transfer.internalTransfer.success"));
-        setQuantity("");
-        close?.();
-      })
-      .catch((err) => {
-        const errorMsg = getTransferErrorMessage(err.code);
-        toast.error(errorMsg);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [t, quantity, token, submitting, toAccountId, transfer]);
-
-  useEffect(() => {
-    if (!toAccountId) {
-      setInputStatus("default");
-      setHintMessage("");
-      return;
-    }
-
-    if (checkIsAccountId(toAccountId)) {
-      setInputStatus("default");
-      setHintMessage("");
-    } else {
-      setInputStatus("error");
-      setHintMessage(t("transfer.withdraw.accountId.invalid"));
-    }
-  }, [toAccountId]);
-
-  return {
-    withdrawTo,
-    setWithdrawTo,
-    toAccountId,
-    setToAccountId,
-    onTransfer,
-    internalWithdrawSubmitting: submitting,
-    toAccountIdInputStatus: inputStatus,
-    toAccountIdHintMessage: hintMessage,
-  };
-}
-
-export function useWithdrawFee(options: {
-  token: string;
-  currentChain?: CurrentChain | null;
-  crossChainWithdraw: boolean;
-}) {
-  const { crossChainWithdraw, currentChain, token } = options;
-
-  const tokenInfo = useTokenInfo(token);
-
-  const fee = useMemo(() => {
-    if (!currentChain) {
-      return 0;
-    }
-
-    const item = tokenInfo?.chain_details?.find(
-      (chain) => Number.parseInt(chain.chain_id) === currentChain.id,
-    );
-
-    if (!item) {
-      return 0;
-    }
-
-    if (crossChainWithdraw) {
-      return (
-        (item.withdrawal_fee || 0) + (item.cross_chain_withdrawal_fee || 0)
-      );
-    }
-
-    return item.withdrawal_fee || 0;
-  }, [tokenInfo, token, currentChain, crossChainWithdraw]);
-
-  return fee;
-}

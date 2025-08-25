@@ -376,7 +376,12 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
       chart.current.instance.onChartReady(() => {
         console.log("-- chart ready");
         if (isLoggedIn && chart.current.instance) {
-          createRenderer(chart.current.instance, undefined, broker);
+          createRenderer(
+            chart.current.instance,
+            undefined,
+            broker,
+            chartRef.current!,
+          );
         }
       });
     }

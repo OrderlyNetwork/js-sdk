@@ -7,12 +7,14 @@ import { ChartPosition } from "../type";
 import { ExecutionService } from "./execution.service";
 import { OrderLineService } from "./orderLine.service";
 import { PositionLineService } from "./positionLine.service";
+import { TPSLService } from "./tpsl.service";
 
 export class Renderer {
   private instance: IChartingLibraryWidget;
   private positionLineService: PositionLineService;
   private orderLineService: OrderLineService;
   private executionService: ExecutionService;
+  private tpslService: TPSLService;
 
   constructor(
     instance: IChartingLibraryWidget,
@@ -23,6 +25,7 @@ export class Renderer {
     this.positionLineService = new PositionLineService(instance, broker);
     this.orderLineService = new OrderLineService(instance, broker);
     this.executionService = new ExecutionService(instance, broker);
+    this.tpslService = new TPSLService(instance, broker);
   }
 
   async renderPositions(positions: ChartPosition[] | null) {
@@ -30,6 +33,7 @@ export class Renderer {
     await this.onDataLoaded();
     this.positionLineService.renderPositions(positions);
     this.orderLineService.updatePositions(positions);
+    this.tpslService.updatePositions(positions);
   }
 
   async renderPendingOrders(pendingOrders: any) {

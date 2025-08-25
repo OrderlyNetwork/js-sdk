@@ -44,9 +44,9 @@ export type DesktopLayoutProps = TradingState & {
 
 export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
   const {
-    collapsable,
-    collapsed,
-    onCollapse,
+    resizeable,
+    panelSize,
+    onPanelSizeChange,
     layout,
     onLayout,
     orderBookSplitSize,
@@ -85,6 +85,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
           dataListInitialHeight +
           space * 4;
   }, [tradingViewFullScreen]);
+
   const minScreenHeightSM =
     topBarHeight +
     bottomBarHeight +
@@ -96,9 +97,9 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
 
   const marketsWidget = (
     <SideMarketsWidget
-      collapsable={collapsable}
-      collapsed={collapsed}
-      onCollapse={onCollapse}
+      resizeable={resizeable}
+      panelSize={panelSize}
+      onPanelSizeChange={onPanelSizeChange as any}
       symbol={props.symbol}
       onSymbolChange={props.onSymbolChange}
     />
@@ -113,9 +114,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
       width={marketsWidth}
       style={{ minWidth: marketsWidth }}
       className="oui-transition-all oui-duration-150"
-      onTransitionEnd={() => {
-        setAnimating(false);
-      }}
+      onTransitionEnd={() => setAnimating(false)}
     >
       {!animating && marketsWidget}
     </Box>
@@ -285,9 +284,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
         <Flex
           gap={2}
           className="oui-flex-1 oui-overflow-hidden"
-          style={{
-            minWidth: marketsWidth + tradingViewMinWidth + space,
-          }}
+          style={{ minWidth: marketsWidth + tradingViewMinWidth + space }}
         >
           {marketsView}
           {tradingView}
@@ -380,7 +377,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
           // height: props.extraHeight ? props.extraHeight : undefined,
         }}
         className={cn(
-          "oui-flex oui-flex-1 ",
+          "oui-flex oui-flex-1",
           "oui-size-full oui-min-w-[1018px]",
           "oui-px-3 oui-py-2",
           props.className,
@@ -413,7 +410,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
         >
           <Flex
             height="100%"
-            className="oui-flex-1 oui-w-[calc(100%_-_280px_-_12px)]"
+            className="oui-w-[calc(100%_-_280px_-_12px)] oui-flex-1"
             direction="column"
             gapY={2}
           >
@@ -447,9 +444,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
               <SplitLayout
                 ref={props.tradingviewAndOrderbookSplitRef}
                 mode="vertical"
-                style={{
-                  width: `calc(100% - ${marketsWidth}px)`,
-                }}
+                style={{ width: `calc(100% - ${marketsWidth}px)` }}
                 className="oui-flex-1"
                 onSizeChange={setOrderbookSplitHeightSM}
                 onDragging={props.onTradingviewAndOrderbookDragging}

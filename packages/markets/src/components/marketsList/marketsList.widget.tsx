@@ -13,7 +13,7 @@ import { MarketsList } from "./marketsList.ui";
 export type MarketsListWidgetProps = {
   type: MarketsTabName;
   getColumns?: GetColumns;
-  collapsed?: boolean;
+  panelSize?: "small" | "middle" | "large";
   tableClassNames?: DataTableClassNames;
   rowClassName?: string;
   initialSort?: SortType;
@@ -28,13 +28,12 @@ export type MarketsListWidgetProps = {
 
 export const MarketsListWidget: React.FC<MarketsListWidgetProps> = (props) => {
   const state = useMarketsListScript(props);
-
   return (
     <MarketsList
       {...state}
       initialSort={props.initialSort}
       getColumns={props.getColumns}
-      collapsed={props.collapsed}
+      panelSize={props.panelSize}
       tableClassNames={props.tableClassNames}
       rowClassName={props.rowClassName}
       renderHeader={props.renderHeader}

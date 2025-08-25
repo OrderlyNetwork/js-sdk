@@ -6,3 +6,4 @@ export type { TPSLWidgetProps } from "./tpsl.widget";
 export { TPSLPositionTypeWidget } from "./components/tpslPostionType";
 export * from "./tpslAdvanced.widget";
 export * from "./tpslDetail";
+export * from "./tpslSimpleDialog";

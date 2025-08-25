@@ -1,5 +1,18 @@
 # @orderly.network/net
 
+## 2.6.0
+
+### Minor Changes
+
+- publish
+- c4b5fbc: publish
+
+## 2.6.0-alpha.0
+
+### Minor Changes
+
+- publish
+
 ## 2.5.3
 
 ### Patch Changes

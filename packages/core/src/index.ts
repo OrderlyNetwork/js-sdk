@@ -21,6 +21,7 @@ export {
   generateAddOrderlyKeyMessage,
   generateRegisterAccountMessage,
   generateSettleMessage,
+  generateDexRequestMessage,
 } from "./helper";
 
 export {
@@ -47,8 +48,10 @@ export type {
   Message,
   RegisterAccountInputs,
   WithdrawInputs,
+  InternalTransferInputs,
   SettleInputs,
   AddOrderlyKeyInputs,
+  DexRequestInputs,
 } from "./wallet/walletAdapter";
 export { BaseWalletAdapter } from "./wallet/baseWalletAdapter";
 export type { Ed25519Keypair } from "./types";

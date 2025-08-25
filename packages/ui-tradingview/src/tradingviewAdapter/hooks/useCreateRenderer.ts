@@ -37,13 +37,15 @@ export default function useCreateRenderer(
     size: 500,
   });
 
-  const createRenderer = useRef((instance: any, host: any, broker: any) => {
-    if (rendererRef.current) {
-      rendererRef.current.remove();
-    }
-    rendererRef.current = new Renderer(instance, host, broker);
-    setRenderer(rendererRef.current);
-  });
+  const createRenderer = useRef(
+    (instance: any, host: any, broker: any, container: HTMLDivElement) => {
+      if (rendererRef.current) {
+        rendererRef.current.remove();
+      }
+      rendererRef.current = new Renderer(instance, host, broker);
+      setRenderer(rendererRef.current);
+    },
+  );
   const removeRenderer = useRef(() => {
     rendererRef.current?.remove();
     rendererRef.current = undefined;

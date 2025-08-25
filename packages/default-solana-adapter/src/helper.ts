@@ -9,15 +9,18 @@ import {
   VersionedTransaction,
 } from "@solana/web3.js";
 import { decode as bs58Decode } from "bs58";
+import { Hash } from "crypto";
 import { keccak256 } from "ethereum-cryptography/keccak";
 import { bytesToHex, hexToBytes } from "ethereum-cryptography/utils";
 import { AbiCoder, solidityPackedKeccak256 } from "ethers";
 import {
+  utils as CoreUtils,
   AddOrderlyKeyInputs,
   RegisterAccountInputs,
   type SettleInputs,
   type SignatureDomain,
   type WithdrawInputs,
+  InternalTransferInputs,
 } from "@orderly.network/core";
 import {
   DEFAUL_ORDERLY_KEY_SCOPE,
@@ -58,8 +61,9 @@ import {
   getTokenPDA,
   getUlnEventAuthorityPda,
   getUlnSettingPda,
-  getUSDCAccounts,
+  getTokenAccounts,
   getVaultAuthorityPda,
+  getSolVaultPda,
 } from "./solana.util";
 
 export function addOrderlyKeyMessage(
@@ -141,6 +145,52 @@ export function registerAccountMessage(
           message.chainId,
           message.timestamp,
           message.registrationNonce,
+        ],
+      ),
+    ),
+  );
+  const msgToSignHex = bytesToHex(msgToSign);
+  const msgToSignTextEncoded: Uint8Array = new TextEncoder().encode(
+    msgToSignHex,
+  );
+  return [message, msgToSignTextEncoded];
+}
+
+export function internalTransferMessage(
+  inputs: InternalTransferInputs & {
+    chainId: number;
+  },
+) {
+  const { chainId, receiver, token, amount, nonce } = inputs;
+  const message = {
+    chainId,
+    receiver,
+    token,
+    amount,
+    transferNonce: nonce,
+    chainType: "SOL",
+  };
+
+  const tokenSymbolHash = solidityPackedKeccak256(["string"], [message.token]);
+
+  const abicoder = AbiCoder.defaultAbiCoder();
+  // StaticStruct staticStruct = new StaticStruct(
+  //   new Bytes32(Numeric.hexStringToByteArray(receiver)),
+  //   new Bytes32(Numeric.hexStringToByteArray(Hash.sha3(TypeEncoder.encodePacked(new Utf8String(token))))),
+  //   new Uint256(amount),
+  //   new Uint64(transferNonce),
+  //   new Uint256(Long.parseLong(chainId))
+  // );
+  const msgToSign = keccak256(
+    hexToBytes(
+      abicoder.encode(
+        ["bytes32", "bytes32", "uint256", "uint64", "uint256"],
+        [
+          message.receiver,
+          tokenSymbolHash,
+          message.amount,
+          message.transferNonce,
+          chainId,
         ],
       ),
     ),
@@ -270,7 +320,7 @@ export async function getDepositQuoteFee({
     tokenHash: string;
     brokerHash: string;
     accountId: string;
-    USDCAddress: string;
+    tokenAddress: string;
     tokenAmount: string;
   };
 }) {
@@ -470,7 +520,7 @@ const getDepositParams = (
     tokenHash: string;
     brokerHash: string;
     accountId: string;
-    USDCAddress: string;
+    tokenAddress: string;
     tokenAmount: string;
   },
 ) => {
@@ -508,23 +558,28 @@ export async function deposit({
     tokenHash: string;
     brokerHash: string;
     accountId: string;
-    USDCAddress: string;
+    tokenAddress: string;
     tokenAmount: string;
   };
 }) {
   const brokerHash = depositData.brokerHash;
   const tokenHash = depositData.tokenHash;
 
+  const SOL_HASH = CoreUtils.parseTokenHash("SOL");
+  const isSolDeposit = tokenHash.toLowerCase() === SOL_HASH.toLowerCase();
+
   console.log("-- vault address", vaultAddress);
   const appProgramId = new PublicKey(vaultAddress);
   const program = new Program<SolanaVault>(VaultIDL, appProgramId, {
     connection,
   });
-  const usdc = new PublicKey(depositData.USDCAddress);
+  // If is not SOL deposit, tokenAddress is the token address
+  // else, tokenAddress is the USDC address
+  const token = new PublicKey(depositData.tokenAddress);
   const userPublicKey = new PublicKey(userAddress);
-  const userUSDCAccount = getUSDCAccounts(usdc, userPublicKey);
+  const userTokenAccount = getTokenAccounts(token, userPublicKey);
   const vaultAuthorityPda = getVaultAuthorityPda(appProgramId);
-  const vaultUSDCAccount = getUSDCAccounts(usdc, vaultAuthorityPda);
+  const vaultTokenAccount = getTokenAccounts(token, vaultAuthorityPda);
   const allowedBrokerPDA = getBrokerPDA(appProgramId, brokerHash);
   const allowedTokenPDA = getTokenPDA(appProgramId, tokenHash);
   const oappConfigPDA = getOAppConfigPda(appProgramId);
@@ -555,6 +610,156 @@ export async function deposit({
 
   const vaultDepositParams = getDepositParams(userAddress, depositData);
 
+  const buildSendRemainingAccounts = () => [
+    // ENDPOINT solana/programs/programs/uln/src/instructions/endpoint/send.rs
+    {
+      isSigner: false,
+      isWritable: false,
+      pubkey: ENDPOINT_PROGRAM_ID,
+    },
+    {
+      isSigner: false,
+      isWritable: false,
+      // 0
+      pubkey: oappConfigPDA,
+    },
+    {
+      isSigner: false,
+      isWritable: false,
+      pubkey: SEND_LIB_PROGRAM_ID,
+    },
+    {
+      isSigner: false,
+      isWritable: false,
+      // 7
+      pubkey: sendLibConfigPDA,
+    },
+    {
+      isSigner: false,
+      isWritable: false,
+      // 9
+      pubkey: defaultSendLibPDA,
+    },
+    {
+      isSigner: false,
+      isWritable: false,
+      // 8
+      pubkey: sendLibInfoPDA,
+    },
+    {
+      isSigner: false,
+      isWritable: false,
+      // 14
+      pubkey: endpointSettingPDA,
+    },
+    {
+      isSigner: false,
+      isWritable: true,
+      // 15
+      pubkey: noncePDA,
+    },
+    {
+      isSigner: false,
+      isWritable: false,
+      // 3
+      pubkey: eventAuthorityPDA,
+    },
+    // ULN solana/programs/programs/uln/src/instructions/endpoint/send.rs
+    {
+      isSigner: false,
+      isWritable: false,
+      pubkey: ENDPOINT_PROGRAM_ID,
+    },
+    {
+      isSigner: false,
+      isWritable: false,
+      // 13
+      pubkey: ulnSettingPDA,
+    },
+    {
+      isSigner: false,
+      isWritable: false,
+      // 10
+      pubkey: sendConfigPDA,
+    },
+    {
+      isSigner: false,
+      isWritable: false,
+      // 11
+      pubkey: defaultSendConfigPDA,
+    },
+    {
+      isSigner: true,
+      isWritable: false,
+      pubkey: userPublicKey,
+    },
+    {
+      isSigner: false,
+      isWritable: false,
+      pubkey: TREASURY_PROGRAM_ID,
+    },
+    {
+      isSigner: false,
+      isWritable: false,
+      pubkey: SystemProgram.programId,
+    },
+    {
+      isSigner: false,
+      isWritable: false,
+      // 12
+      pubkey: ulnEventAuthorityPDA,
+    },
+    {
+      isSigner: false,
+      isWritable: false,
+      pubkey: SEND_LIB_PROGRAM_ID,
+    },
+    {
+      isSigner: false,
+      isWritable: false,
+      pubkey: EXECUTOR_PROGRAM_ID,
+    },
+    {
+      isSigner: false,
+      isWritable: true,
+      // 16
+      pubkey: executorConfigPDA,
+    },
+    {
+      isSigner: false,
+      isWritable: false,
+      pubkey: PRICE_FEED_PROGRAM_ID,
+    },
+    {
+      isSigner: false,
+      isWritable: false,
+      // 17
+      pubkey: priceFeedPDA,
+    },
+    {
+      isSigner: false,
+      isWritable: false,
+      pubkey: DVN_PROGRAM_ID,
+    },
+    {
+      isSigner: false,
+      isWritable: true,
+      // 18
+      pubkey: dvnConfigPDA,
+    },
+    {
+      isSigner: false,
+      isWritable: false,
+      pubkey: PRICE_FEED_PROGRAM_ID,
+    },
+    {
+      isSigner: false,
+      isWritable: false,
+      // 17
+      pubkey: priceFeedPDA,
+    },
+  ];
+
   const fee = await getDepositQuoteFee({
     vaultAddress,
     userAddress,
@@ -576,170 +781,37 @@ export async function deposit({
     vaultDepositParams,
     sendParam,
   });
-  const ixDepositEntry = await program.methods
-    .deposit(vaultDepositParams, sendParam)
-    .accounts({
-      userTokenAccount: userUSDCAccount,
-      vaultAuthority: vaultAuthorityPda,
-      vaultTokenAccount: vaultUSDCAccount,
-      depositToken: usdc,
-      user: userPublicKey,
-      peer: peerPDA,
-      enforcedOptions: endorcedPDA,
-      oappConfig: oappConfigPDA,
-      allowedBroker: allowedBrokerPDA,
-      allowedToken: allowedTokenPDA,
-    })
-    .remainingAccounts([
-      // ENDPOINT solana/programs/programs/uln/src/instructions/endpoint/send.rs
-      {
-        isSigner: false,
-        isWritable: false,
-        pubkey: ENDPOINT_PROGRAM_ID,
-      },
-      {
-        isSigner: false,
-        isWritable: false,
-        // 0
-        pubkey: oappConfigPDA,
-      },
-      {
-        isSigner: false,
-        isWritable: false,
-        pubkey: SEND_LIB_PROGRAM_ID,
-      },
-      {
-        isSigner: false,
-        isWritable: false,
-        // 7
-        pubkey: sendLibConfigPDA,
-      },
-      {
-        isSigner: false,
-        isWritable: false,
-        // 9
-        pubkey: defaultSendLibPDA,
-      },
-      {
-        isSigner: false,
-        isWritable: false,
-        // 8
-        pubkey: sendLibInfoPDA,
-      },
-      {
-        isSigner: false,
-        isWritable: false,
-        // 14
-        pubkey: endpointSettingPDA,
-      },
-      {
-        isSigner: false,
-        isWritable: true,
-        // 15
-        pubkey: noncePDA,
-      },
-      {
-        isSigner: false,
-        isWritable: false,
-        // 3
-        pubkey: eventAuthorityPDA,
-      },
-      // ULN solana/programs/programs/uln/src/instructions/endpoint/send.rs
-      {
-        isSigner: false,
-        isWritable: false,
-        pubkey: ENDPOINT_PROGRAM_ID,
-      },
-      {
-        isSigner: false,
-        isWritable: false,
-        // 13
-        pubkey: ulnSettingPDA,
-      },
-      {
-        isSigner: false,
-        isWritable: false,
-        // 10
-        pubkey: sendConfigPDA,
-      },
-      {
-        isSigner: false,
-        isWritable: false,
-        // 11
-        pubkey: defaultSendConfigPDA,
-      },
-      {
-        isSigner: true,
-        isWritable: false,
-        pubkey: userPublicKey,
-      },
-      {
-        isSigner: false,
-        isWritable: false,
-        pubkey: TREASURY_PROGRAM_ID,
-      },
-      {
-        isSigner: false,
-        isWritable: false,
-        pubkey: SystemProgram.programId,
-      },
-      {
-        isSigner: false,
-        isWritable: false,
-        // 12
-        pubkey: ulnEventAuthorityPDA,
-      },
-      {
-        isSigner: false,
-        isWritable: false,
-        pubkey: SEND_LIB_PROGRAM_ID,
-      },
-      {
-        isSigner: false,
-        isWritable: false,
-        pubkey: EXECUTOR_PROGRAM_ID,
-      },
-      {
-        isSigner: false,
-        isWritable: true,
-        // 16
-        pubkey: executorConfigPDA,
-      },
-      {
-        isSigner: false,
-        isWritable: false,
-        pubkey: PRICE_FEED_PROGRAM_ID,
-      },
-      {
-        isSigner: false,
-        isWritable: false,
-        // 17
-        pubkey: priceFeedPDA,
-      },
-      {
-        isSigner: false,
-        isWritable: false,
-        pubkey: DVN_PROGRAM_ID,
-      },
-      {
-        isSigner: false,
-        isWritable: true,
-        // 18
-        pubkey: dvnConfigPDA,
-      },
-      {
-        isSigner: false,
-        isWritable: false,
-        pubkey: PRICE_FEED_PROGRAM_ID,
-      },
-      {
-        isSigner: false,
-        isWritable: false,
-        // 17
-        pubkey: priceFeedPDA,
-      },
-    ])
-    .instruction();
+  const ixDepositEntry = isSolDeposit
+    ? await program.methods
+        .depositSol(vaultDepositParams, sendParam)
+        .accounts({
+          solVault: getSolVaultPda(appProgramId),
+          vaultAuthority: vaultAuthorityPda,
+          user: userPublicKey,
+          peer: peerPDA,
+          enforcedOptions: endorcedPDA,
+          oappConfig: oappConfigPDA,
+          allowedBroker: allowedBrokerPDA,
+          allowedToken: allowedTokenPDA,
+        })
+        .remainingAccounts(buildSendRemainingAccounts())
+        .instruction()
+    : await program.methods
+        .deposit(vaultDepositParams, sendParam)
+        .accounts({
+          userTokenAccount: userTokenAccount,
+          vaultAuthority: vaultAuthorityPda,
+          vaultTokenAccount: vaultTokenAccount,
+          depositToken: token,
+          user: userPublicKey,
+          peer: peerPDA,
+          enforcedOptions: endorcedPDA,
+          oappConfig: oappConfigPDA,
+          allowedBroker: allowedBrokerPDA,
+          allowedToken: allowedTokenPDA,
+        })
+        .remainingAccounts(buildSendRemainingAccounts())
+        .instruction();
 
   const lookupTableAddress = getLookupTableAddress(appProgramId);
   const lookupTableAccount = await getLookupTableAccount(

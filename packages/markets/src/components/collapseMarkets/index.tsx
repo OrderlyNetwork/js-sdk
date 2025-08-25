@@ -65,7 +65,6 @@ export const CollapseMarkets: React.FC<CollapseMarketsProps> = (props) => {
             <Tooltip
               side="right"
               sideOffset={6}
-              // @ts-ignore
               content={content}
               delayDuration={0}
               key={item.symbol}

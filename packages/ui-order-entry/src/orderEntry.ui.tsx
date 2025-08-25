@@ -291,6 +291,8 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
     setHasAdvancedTPSLResult(false);
   }, [props.symbol]);
 
+  const showSoundSection = Boolean(notification?.orderFilled?.media);
+
   const additionalInfoProps: AdditionalInfoProps = {
     pinned,
     setPinned,
@@ -303,6 +305,10 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
     showExtra:
       formattedOrder["order_type"] === OrderType.LIMIT && !props.tpslSwitch,
   };
+  // Additional info （fok，ioc、post only， order confirm hidden）
+  const extraButton = !pinned && (
+    <AdditionalConfigButton {...additionalInfoProps} />
+  );
 
   return (
     <OrderEntryProvider errorMsgVisible={errorMsgVisible}>
@@ -473,10 +479,9 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
               {t("orderEntry.reduceOnly")}
             </label>
           </Flex>
-          {/* Additional info （fok，ioc、post only， order confirm hidden） */}
-          {!pinned && <AdditionalConfigButton {...additionalInfoProps} />}
+          {!showSoundSection && extraButton}
         </Flex>
-        {notification?.orderFilled?.media && (
+        {showSoundSection && (
           <Flex
             justify={"between"}
             itemAlign={"center"}
@@ -493,6 +498,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
                 {t("orderEntry.soundAlerts")}
               </label>
             </Flex>
+            {extraButton}
           </Flex>
         )}
         {/* Additional info （fok，ioc、post only， order confirm hidden） */}

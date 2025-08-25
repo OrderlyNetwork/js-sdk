@@ -3,16 +3,21 @@
   "name": "solana_vault",
   "instructions": [
     {
-      "name": "initVault",
+      "name": "setVault",
       "accounts": [
         {
-          "name": "signer",
+          "name": "admin",
           "isMut": true,
           "isSigner": true
         },
         {
           "name": "vaultAuthority",
           "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "oappConfig",
+          "isMut": false,
           "isSigner": false
         },
         {
@@ -25,7 +30,7 @@
         {
           "name": "params",
           "type": {
-            "defined": "InitVaultParams"
+            "defined": "SetVaultParams"
           }
         }
       ]
@@ -118,6 +123,76 @@
       }
     },
     {
+      "name": "depositSol",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "vaultAuthority",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "solVault",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CHECKED: sol_vault is used for SOL deposit"
+          ]
+        },
+        {
+          "name": "peer",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "enforcedOptions",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "oappConfig",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "allowedBroker",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "allowedToken",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "depositParams",
+          "type": {
+            "defined": "DepositParams"
+          }
+        },
+        {
+          "name": "oappParams",
+          "type": {
+            "defined": "OAppSendParams"
+          }
+        }
+      ],
+      "returns": {
+        "defined": "MessagingReceipt"
+      }
+    },
+    {
       "name": "initOapp",
       "accounts": [
         {
@@ -132,6 +207,11 @@
         },
         {
           "name": "lzReceiveTypes",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "accountList",
           "isMut": true,
           "isSigner": false
         },
@@ -151,7 +231,7 @@
       ]
     },
     {
-      "name": "resetOapp",
+      "name": "setAccountList",
       "accounts": [
         {
           "name": "admin",
@@ -160,28 +240,17 @@
         },
         {
           "name": "oappConfig",
-          "isMut": true,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "reinitOapp",
-      "accounts": [
-        {
-          "name": "owner",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "oappConfig",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "vaultAuthority",
           "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "lzReceiveTypes",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "accountsList",
+          "isMut": true,
           "isSigner": false
         },
         {
@@ -194,13 +263,13 @@
         {
           "name": "params",
           "type": {
-            "defined": "ReinitOAppParams"
+            "defined": "SetAccountListParams"
           }
         }
       ]
     },
     {
-      "name": "resetVault",
+      "name": "setManagerRole",
       "accounts": [
         {
           "name": "owner",
@@ -211,26 +280,10 @@
           "name": "vaultAuthority",
           "isMut": true,
           "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "reinitVault",
-      "accounts": [
-        {
-          "name": "admin",
-          "isMut": true,
-          "isSigner": true
         },
         {
-          "name": "vaultAuthority",
+          "name": "managerRole",
           "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "oappConfig",
-          "isMut": false,
           "isSigner": false
         },
         {
@@ -243,7 +296,7 @@
         {
           "name": "params",
           "type": {
-            "defined": "ReinitVaultParams"
+            "defined": "SetManagerRoleParams"
           }
         }
       ]
@@ -252,7 +305,7 @@
       "name": "setBroker",
       "accounts": [
         {
-          "name": "admin",
+          "name": "brokerManager",
           "isMut": true,
           "isSigner": true
         },
@@ -262,7 +315,7 @@
           "isSigner": false
         },
         {
-          "name": "oappConfig",
+          "name": "managerRole",
           "isMut": false,
           "isSigner": false
         },
@@ -282,10 +335,43 @@
       ]
     },
     {
+      "name": "setWithdrawBroker",
+      "accounts": [
+        {
+          "name": "brokerManager",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "withdrawBroker",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "managerRole",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "SetWithdrawBrokerParams"
+          }
+        }
+      ]
+    },
+    {
       "name": "setToken",
       "accounts": [
         {
-          "name": "admin",
+          "name": "tokenManager",
           "isMut": true,
           "isSigner": true
         },
@@ -295,7 +381,7 @@
           "isSigner": false
         },
         {
-          "name": "oappConfig",
+          "name": "managerRole",
           "isMut": false,
           "isSigner": false
         },
@@ -315,6 +401,44 @@
           "name": "params",
           "type": {
             "defined": "SetTokenParams"
+          }
+        }
+      ]
+    },
+    {
+      "name": "setWithdrawToken",
+      "accounts": [
+        {
+          "name": "tokenManager",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "withdrawToken",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "managerRole",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mintAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "params",
+          "type": {
+            "defined": "SetWithdrawTokenParams"
           }
         }
       ]
@@ -397,7 +521,12 @@
           "isSigner": false
         },
         {
-          "name": "user",
+          "name": "withdrawBrokerPda",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "withdrawTokenPda",
           "isMut": false,
           "isSigner": false,
           "docs": [
@@ -405,9 +534,28 @@
           ]
         },
         {
-          "name": "userDepositWallet",
+          "name": "tokenMint",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "CHECK"
+          ]
+        },
+        {
+          "name": "receiver",
           "isMut": true,
-          "isSigner": false
+          "isSigner": false,
+          "docs": [
+            "CHECK"
+          ]
+        },
+        {
+          "name": "receiverTokenAccount",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "UNCHECKED"
+          ]
         },
         {
           "name": "vaultAuthority",
@@ -415,17 +563,20 @@
           "isSigner": false
         },
         {
-          "name": "vaultDepositWallet",
+          "name": "vaultTokenAccount",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "depositToken",
+          "name": "tokenProgram",
           "isMut": false,
-          "isSigner": false
+          "isSigner": false,
+          "docs": [
+            "CHECKED: sol_vault is used for SOL withdrawal"
+          ]
         },
         {
-          "name": "tokenProgram",
+          "name": "associatedTokenProgram",
           "isMut": false,
           "isSigner": false
         },
@@ -459,6 +610,11 @@
       "accounts": [
         {
           "name": "oappConfig",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "accountList",
           "isMut": false,
           "isSigner": false
         }
@@ -655,19 +811,6 @@
           {
             "name": "admin",
             "type": "publicKey"
-          },
-          {
-            "name": "usdcHash",
-            "type": {
-              "array": [
-                "u8",
-                32
-              ]
-            }
-          },
-          {
-            "name": "usdcMint",
-            "type": "publicKey"
           }
         ]
       }
@@ -679,6 +822,50 @@
         "fields": [
           {
             "name": "oappConfig",
+            "type": "publicKey"
+          },
+          {
+            "name": "accountList",
+            "type": "publicKey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "AccountList",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "woofiProPda",
+            "type": "publicKey"
+          },
+          {
+            "name": "withdrawUsdcPda",
+            "type": "publicKey"
+          },
+          {
+            "name": "usdcMint",
+            "type": "publicKey"
+          },
+          {
+            "name": "withdrawUsdtPda",
+            "type": "publicKey"
+          },
+          {
+            "name": "usdtMint",
+            "type": "publicKey"
+          },
+          {
+            "name": "withdrawWsolPda",
+            "type": "publicKey"
+          },
+          {
+            "name": "wsolMint",
             "type": "publicKey"
           }
         ]
@@ -772,6 +959,31 @@
       }
     },
     {
+      "name": "ManagerRole",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "roleHash",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "allowed",
+            "type": "bool"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
       "name": "VaultAuthority",
       "type": {
         "kind": "struct",
@@ -806,6 +1018,72 @@
           {
             "name": "solChainId",
             "type": "u128"
+          }
+        ]
+      }
+    },
+    {
+      "name": "WithdrawBroker",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "brokerHash",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "brokerIndex",
+            "type": "u16"
+          },
+          {
+            "name": "allowed",
+            "type": "bool"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "WithdrawToken",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "mintAccount",
+            "type": "publicKey"
+          },
+          {
+            "name": "tokenHash",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "tokenDecimals",
+            "type": "u8"
+          },
+          {
+            "name": "tokenIndex",
+            "type": "u8"
+          },
+          {
+            "name": "allowed",
+            "type": "bool"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
           }
         ]
       }
@@ -885,92 +1163,10 @@
       }
     },
     {
-      "name": "InitOAppParams",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "admin",
-            "type": "publicKey"
-          },
-          {
-            "name": "endpointProgram",
-            "type": {
-              "option": "publicKey"
-            }
-          },
-          {
-            "name": "usdcHash",
-            "type": {
-              "array": [
-                "u8",
-                32
-              ]
-            }
-          },
-          {
-            "name": "usdcMint",
-            "type": "publicKey"
-          }
-        ]
-      }
-    },
-    {
-      "name": "OAppLzReceiveParams",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "srcEid",
-            "type": "u32"
-          },
-          {
-            "name": "sender",
-            "type": {
-              "array": [
-                "u8",
-                32
-              ]
-            }
-          },
-          {
-            "name": "nonce",
-            "type": "u64"
-          },
-          {
-            "name": "guid",
-            "type": {
-              "array": [
-                "u8",
-                32
-              ]
-            }
-          },
-          {
-            "name": "message",
-            "type": "bytes"
-          },
-          {
-            "name": "extraData",
-            "type": "bytes"
-          }
-        ]
-      }
-    },
-    {
       "name": "AccountWithdrawSol",
       "type": {
         "kind": "struct",
         "fields": [
-          {
-            "name": "accountId",
-            "type": {
-              "array": [
-                "u8",
-                32
-              ]
-            }
-          },
           {
             "name": "sender",
             "type": {
@@ -990,22 +1186,12 @@
             }
           },
           {
-            "name": "brokerHash",
-            "type": {
-              "array": [
-                "u8",
-                32
-              ]
-            }
+            "name": "brokerIndex",
+            "type": "u16"
           },
           {
-            "name": "tokenHash",
-            "type": {
-              "array": [
-                "u8",
-                32
-              ]
-            }
+            "name": "tokenIndex",
+            "type": "u8"
           },
           {
             "name": "tokenAmount",
@@ -1096,6 +1282,70 @@
       }
     },
     {
+      "name": "InitOAppParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "publicKey"
+          },
+          {
+            "name": "accountList",
+            "type": "publicKey"
+          },
+          {
+            "name": "endpointProgram",
+            "type": {
+              "option": "publicKey"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "OAppLzReceiveParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "srcEid",
+            "type": "u32"
+          },
+          {
+            "name": "sender",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "nonce",
+            "type": "u64"
+          },
+          {
+            "name": "guid",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "message",
+            "type": "bytes"
+          },
+          {
+            "name": "extraData",
+            "type": "bytes"
+          }
+        ]
+      }
+    },
+    {
       "name": "MessagingFee",
       "type": {
         "kind": "struct",
@@ -1112,31 +1362,36 @@
       }
     },
     {
-      "name": "ReinitOAppParams",
+      "name": "SetAccountListParams",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "admin",
+            "name": "woofiProPda",
             "type": "publicKey"
           },
           {
-            "name": "endpointProgram",
-            "type": {
-              "option": "publicKey"
-            }
-          },
-          {
-            "name": "usdcHash",
-            "type": {
-              "array": [
-                "u8",
-                32
-              ]
-            }
+            "name": "withdrawUsdcPda",
+            "type": "publicKey"
           },
           {
             "name": "usdcMint",
+            "type": "publicKey"
+          },
+          {
+            "name": "withdrawUsdtPda",
+            "type": "publicKey"
+          },
+          {
+            "name": "usdtMint",
+            "type": "publicKey"
+          },
+          {
+            "name": "withdrawWsolPda",
+            "type": "publicKey"
+          },
+          {
+            "name": "wsolMint",
             "type": "publicKey"
           }
         ]
@@ -1300,66 +1555,19 @@
       }
     },
     {
-      "name": "InitVaultParams",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "owner",
-            "type": "publicKey"
-          },
-          {
-            "name": "orderDelivery",
-            "type": "bool"
-          },
-          {
-            "name": "dstEid",
-            "type": "u32"
-          },
-          {
-            "name": "solChainId",
-            "type": "u128"
-          }
-        ]
-      }
-    },
-    {
-      "name": "ReinitVaultParams",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "owner",
-            "type": "publicKey"
-          },
-          {
-            "name": "dstEid",
-            "type": "u32"
-          },
-          {
-            "name": "depositNonce",
-            "type": "u64"
-          },
-          {
-            "name": "orderDelivery",
-            "type": "bool"
-          },
-          {
-            "name": "inboundNonce",
-            "type": "u64"
-          },
-          {
-            "name": "solChainId",
-            "type": "u128"
-          }
-        ]
-      }
-    },
-    {
       "name": "SetBrokerParams",
       "type": {
         "kind": "struct",
         "fields": [
+          {
+            "name": "brokerManagerRole",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
           {
             "name": "brokerHash",
             "type": {
@@ -1368,6 +1576,31 @@
                 32
               ]
             }
+          },
+          {
+            "name": "allowed",
+            "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "SetManagerRoleParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "roleHash",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "managerAddress",
+            "type": "publicKey"
           },
           {
             "name": "allowed",
@@ -1398,6 +1631,15 @@
         "kind": "struct",
         "fields": [
           {
+            "name": "tokenManagerRole",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
             "name": "mintAccount",
             "type": "publicKey"
           },
@@ -1409,6 +1651,106 @@
                 32
               ]
             }
+          },
+          {
+            "name": "allowed",
+            "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "SetVaultParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "type": "publicKey"
+          },
+          {
+            "name": "depositNonce",
+            "type": "u64"
+          },
+          {
+            "name": "orderDelivery",
+            "type": "bool"
+          },
+          {
+            "name": "inboundNonce",
+            "type": "u64"
+          },
+          {
+            "name": "dstEid",
+            "type": "u32"
+          },
+          {
+            "name": "solChainId",
+            "type": "u128"
+          }
+        ]
+      }
+    },
+    {
+      "name": "SetWithdrawBrokerParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "brokerManagerRole",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "brokerHash",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "brokerIndex",
+            "type": "u16"
+          },
+          {
+            "name": "allowed",
+            "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "SetWithdrawTokenParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "tokenManagerRole",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "tokenHash",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "tokenIndex",
+            "type": "u8"
           },
           {
             "name": "allowed",
@@ -1453,6 +1795,9 @@
             "name": "InvalidSender"
           },
           {
+            "name": "InvalidReceiver"
+          },
+          {
             "name": "InvalidOptions"
           },
           {
@@ -1466,6 +1811,18 @@
           },
           {
             "name": "InvalidInboundNonce"
+          },
+          {
+            "name": "InvalidReceiverTokenAccount"
+          },
+          {
+            "name": "InvalidAdminTokenAccount"
+          },
+          {
+            "name": "InvalidMessageType"
+          },
+          {
+            "name": "InvalidTokenIndex"
           }
         ]
       }
@@ -1563,6 +1920,121 @@
       ]
     },
     {
+      "name": "SetWithdrawTokenIndex",
+      "fields": [
+        {
+          "name": "tokenIndex",
+          "type": "u8",
+          "index": false
+        },
+        {
+          "name": "tokenHash",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          },
+          "index": false
+        },
+        {
+          "name": "mintAccount",
+          "type": "publicKey",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "ResetWithdrawTokenIndex",
+      "fields": [
+        {
+          "name": "tokenIndex",
+          "type": "u8",
+          "index": false
+        },
+        {
+          "name": "tokenHash",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          },
+          "index": false
+        },
+        {
+          "name": "mintAccount",
+          "type": "publicKey",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "SetWithdrawBrokerEvent",
+      "fields": [
+        {
+          "name": "brokerHash",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          },
+          "index": false
+        },
+        {
+          "name": "brokerIndex",
+          "type": "u16",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "ResetWithdrawBrokerEvent",
+      "fields": [
+        {
+          "name": "brokerHash",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          },
+          "index": false
+        },
+        {
+          "name": "brokerIndex",
+          "type": "u16",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "SetManager",
+      "fields": [
+        {
+          "name": "roleHash",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          },
+          "index": false
+        },
+        {
+          "name": "managerAddress",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "allowed",
+          "type": "bool",
+          "index": false
+        }
+      ]
+    },
+    {
       "name": "Deposited",
       "fields": [
         {
@@ -1587,6 +2059,46 @@
         },
         {
           "name": "amount",
+          "type": "u64",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "CreatedATA",
+      "fields": [
+        {
+          "name": "accountId",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          },
+          "index": false
+        },
+        {
+          "name": "receiver",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          },
+          "index": false
+        },
+        {
+          "name": "receiverTokenAccount",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          },
+          "index": false
+        },
+        {
+          "name": "withdrawNonce",
           "type": "u64",
           "index": false
         }
@@ -1654,6 +2166,81 @@
     },
     {
       "name": "VaultWithdrawn",
+      "fields": [
+        {
+          "name": "accountId",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          },
+          "index": false
+        },
+        {
+          "name": "sender",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          },
+          "index": false
+        },
+        {
+          "name": "receiver",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          },
+          "index": false
+        },
+        {
+          "name": "brokerHash",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          },
+          "index": false
+        },
+        {
+          "name": "tokenHash",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          },
+          "index": false
+        },
+        {
+          "name": "tokenAmount",
+          "type": "u64",
+          "index": false
+        },
+        {
+          "name": "fee",
+          "type": "u128",
+          "index": false
+        },
+        {
+          "name": "chainId",
+          "type": "u128",
+          "index": false
+        },
+        {
+          "name": "withdrawNonce",
+          "type": "u64",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "FrozenWithdrawn",
       "fields": [
         {
           "name": "accountId",
@@ -1798,9 +2385,11 @@
       "code": 6005,
       "name": "InvalidVaultOwner",
       "msg": "Vault owner is not the same as the payer"
+    },
+    {
+      "code": 6006,
+      "name": "ManagerRoleNotAllowed",
+      "msg": "Manager role is not allowed"
     }
-  ],
-  "metadata": {
-    "address": "EYJq9eU4GMRUriUJBgGoZ8YLQBXcWaciXuSsEXE7ieQS"
-  }
+  ]
 }

@@ -6,7 +6,7 @@ import { Decimal } from "@orderly.network/utils";
 
 export type AvailableQuantityProps = {
   token?: Partial<API.TokenInfo>;
-  amount: number | string;
+  amount?: number | string;
   maxQuantity?: number | string;
   onClick?: () => void;
   loading?: boolean;
@@ -20,15 +20,17 @@ export const AvailableQuantity: FC<AvailableQuantityProps> = (props) => {
   const dp = token?.precision ?? token?.decimals ?? 2;
 
   return (
-    <Flex justify="between" px={2}>
-      <Text size="2xs" intensity={36}>
-        $
-        <Text.numeral dp={2} padding={false} rm={Decimal.ROUND_DOWN}>
-          {amount}
-        </Text.numeral>
-      </Text>
+    <Flex px={2}>
+      {amount !== undefined && (
+        <Text size="2xs" intensity={36}>
+          $
+          <Text.numeral dp={2} padding={false} rm={Decimal.ROUND_DOWN}>
+            {amount}
+          </Text.numeral>
+        </Text>
+      )}
 
-      <Flex gapX={2} itemAlign="center">
+      <Flex gapX={2} itemAlign="center" className="oui-ml-auto">
         <Flex gapX={1} itemAlign="center">
           <Text size="2xs" intensity={36}>
             {`${t("common.available")}: `}

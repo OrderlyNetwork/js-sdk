@@ -73,6 +73,6 @@ export const MarketsProvider: FC<PropsWithChildren<MarketsProviderProps>> = (
   );
 };
 
-export function useMarketsContext() {
+export const useMarketsContext = () => {
   return useContext<MarketsContextState>(MarketsContext);
-}
+};

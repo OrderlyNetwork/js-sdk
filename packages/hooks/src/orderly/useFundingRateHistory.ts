@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { API, EMPTY_LIST } from "@orderly.network/types";
 import { useQuery } from "../useQuery";
 
@@ -52,9 +52,11 @@ export const useFundingRateHistory = () => {
     [],
   );
 
-  return {
-    data: historyData ?? EMPTY_LIST,
-    isLoading,
-    getPositiveRates,
-  };
+  return useMemo(() => {
+    return {
+      data: historyData ?? EMPTY_LIST,
+      isLoading: isLoading,
+      getPositiveRates,
+    };
+  }, [historyData, isLoading, getPositiveRates]);
 };

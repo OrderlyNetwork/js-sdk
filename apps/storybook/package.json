@@ -1,7 +1,7 @@
 {
   "name": "@orderly.network/storybook",
   "private": true,
-  "version": "1.5.3",
+  "version": "1.6.0",
   "type": "module",
   "scripts": {
     "playground": "pnpm loadEnv vite",
@@ -45,6 +45,7 @@
     "@orderly.network/ui-tpsl": "workspace:*",
     "@orderly.network/ui-tradingview": "workspace:*",
     "@orderly.network/ui-transfer": "workspace:*",
+    "@orderly.network/vaults": "workspace:*",
     "@orderly.network/utils": "workspace:*",
     "@orderly.network/wallet-connector": "workspace:*",
     "@orderly.network/wallet-connector-privy": "workspace:*",
