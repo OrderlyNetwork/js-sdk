@@ -48,6 +48,7 @@
     "@orderly.network/web3-provider-ethers": "2.6.0"
   },
   "changesets": [
-    "ninety-eggs-watch"
+    "ninety-eggs-watch",
+    "seven-goats-help"
   ]
 }

@@ -1,5 +1,20 @@
 # @orderly.network/hooks
 
+## 2.6.1-internal-20250828.1
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.6.1-internal-20250828.1
+  - @orderly.network/default-evm-adapter@2.6.1-internal-20250828.1
+  - @orderly.network/default-solana-adapter@2.6.1-internal-20250828.1
+  - @orderly.network/net@2.6.1-internal-20250828.1
+  - @orderly.network/perp@4.6.1-internal-20250828.1
+  - @orderly.network/types@2.6.1-internal-20250828.1
+  - @orderly.network/utils@2.6.1-internal-20250828.1
+  - @orderly.network/web3-provider-ethers@2.6.1-internal-20250828.1
+
 ## 2.6.1-internal-20250828.0
 
 ### Patch Changes
