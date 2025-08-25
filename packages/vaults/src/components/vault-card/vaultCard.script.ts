@@ -1,12 +1,15 @@
 import { useEffect, useMemo } from "react";
 import { useAccount, useCollateral, useGetEnv } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { modal } from "@orderly.network/ui";
+import { modal, useScreen } from "@orderly.network/ui";
 import { VAULTS_WEBSITE_URLS } from "../../api/env";
 import { useSVApiUrl } from "../../hooks/useSVAPIUrl";
 import { useVaultLpInfoById, useVaultsStore } from "../../store/vaultsStore";
 import { VaultInfo } from "../../types/vault";
-import { VaultDepositAndWithdrawWithDialogId } from "../vault-operation/depositAndWithdraw";
+import {
+  VaultDepositAndWithdrawWithDialogId,
+  VaultDepositAndWithdrawWithSheetId,
+} from "../vault-operation/depositAndWithdraw";
 import { ORDERLY_ICON } from "./constants";
 
 export const useVaultCardScript = (vault: VaultInfo) => {
@@ -14,6 +17,7 @@ export const useVaultCardScript = (vault: VaultInfo) => {
   const vaultLpInfo = useVaultLpInfoById(vault.vault_id);
   const { fetchVaultLpInfo } = useVaultsStore();
   const env = useGetEnv();
+  const { isMobile } = useScreen();
 
   const { state } = useAccount();
   const svApiUrl = useSVApiUrl();
@@ -65,10 +69,15 @@ export const useVaultCardScript = (vault: VaultInfo) => {
   }, [state.chainNamespace, state.accountId, state.mainAccountId]);
 
   const openDepositAndWithdraw = (activeTab: "deposit" | "withdraw") => {
-    modal.show(VaultDepositAndWithdrawWithDialogId, {
-      activeTab,
-      vaultId: vault.vault_id,
-    });
+    modal.show(
+      isMobile
+        ? VaultDepositAndWithdrawWithSheetId
+        : VaultDepositAndWithdrawWithDialogId,
+      {
+        activeTab,
+        vaultId: vault.vault_id,
+      },
+    );
   };
 
   const openVaultWebsite = () => {

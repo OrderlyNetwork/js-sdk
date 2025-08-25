@@ -13,7 +13,7 @@ export const useVaultWithdrawFormScript = (
 ) => {
   const { vaultId } = props;
   const [quantity, setQuantity] = useState<string>("");
-  const { handleOperation } = useOperationScript({
+  const { handleOperation, disabledOperation } = useOperationScript({
     type: OperationType.WITHDRAWAL,
     vaultId,
   });
@@ -49,6 +49,10 @@ export const useVaultWithdrawFormScript = (
     }
   };
 
+  const disabledWithdraw = useMemo(() => {
+    return !quantity || quantity === "0" || disabledOperation;
+  }, [quantity, disabledOperation]);
+
   return {
     quantity,
     onQuantityChange,
@@ -57,6 +61,8 @@ export const useVaultWithdrawFormScript = (
     vaultId,
     sharePrice,
     receivingAmount,
+    disabledWithdraw,
+    disabledOperation,
   };
 };
 

@@ -198,7 +198,6 @@
   "portfolio.apiKey.permissions": "権限",
   "portfolio.apiKey.permissions.read": "読み取り",
   "portfolio.apiKey.permissions.trading": "取引",
-  "portfolio.apiKey.permissions.asset": "資産",
   "portfolio.apiKey.description": "取引ニーズに合わせてAPIキーを作成してください。セキュリティのため、APIキーを他人と共有しないでください。",
   "portfolio.apiKey.readApiGuide": "APIガイドを読む",
   "portfolio.apiKey.column.apiKey": "APIキー",
@@ -922,5 +921,7 @@
   "vaults.withdraw.process.vaultProcess": "ボールトプロセス",
   "vaults.withdraw.process.transferred": "転送済み",
   "vaults.withdraw.process.initiate": "開始",
-  "vaults.withdraw.process.upTo": "最大6時間"
+  "vaults.withdraw.process.upTo": "最大6時間",
+  "vaults.operation.error.switchAccount": "続行するにはメインアカウントに切り替えてください。",
+  "vaults.operation.error.minDeposit": "入金額が最低額 {{amount}} USDC を下回っています。"
 }
