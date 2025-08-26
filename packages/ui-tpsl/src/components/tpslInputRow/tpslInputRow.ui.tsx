@@ -77,8 +77,10 @@ export const TPSLInputRowUI: React.FC<TPSLInputRowProps> = (props) => {
         <label
           htmlFor={`enable_${props.type}`}
           className={cn(
-            "oui-cursor-pointer oui-text-sm oui-text-base-contrast-36",
-            props.disableEnableCheckbox ? "oui-ml-0" : "oui-ml-1",
+            "oui-cursor-pointer oui-text-sm",
+            props.disableEnableCheckbox
+              ? "oui-ml-0 oui-text-base-contrast"
+              : "oui-ml-1  oui-text-base-contrast-36",
           )}
         >
           {props.type === "tp"

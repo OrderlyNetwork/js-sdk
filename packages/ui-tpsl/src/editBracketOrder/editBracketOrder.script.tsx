@@ -82,8 +82,14 @@ function isTPSLPriceChanged(
   originPrice: string | number,
   newPrice: string | number,
 ) {
-  const originDeci = new Decimal(originPrice);
-  const newDeci = new Decimal(newPrice);
+  if (newPrice === undefined || newPrice === null) {
+    return true;
+  }
+  if (isNaN(Number(newPrice))) {
+    return false;
+  }
+  const originDeci = new Decimal(Number(originPrice));
+  const newDeci = new Decimal(Number(newPrice));
   return !newDeci.eq(originDeci);
 }
 
@@ -112,28 +118,30 @@ export const useEditBracketOrder = (props: { order: API.AlgoOrderExt }) => {
       sl_trigger_price,
     } = formattedOrder;
     if (tpslPriceInfo.tp_trigger_price) {
-      dirty = isTPSLPriceChanged(
-        tpslPriceInfo.tp_trigger_price,
-        tp_trigger_price ?? 0,
-      );
+      dirty =
+        dirty ||
+        isTPSLPriceChanged(
+          tpslPriceInfo.tp_trigger_price,
+          tp_trigger_price ?? 0,
+        );
     }
     if (tpslPriceInfo.tp_order_price) {
-      dirty = isTPSLPriceChanged(
-        tpslPriceInfo.tp_order_price,
-        tp_order_price ?? 0,
-      );
+      dirty =
+        dirty ||
+        isTPSLPriceChanged(tpslPriceInfo.tp_order_price, tp_order_price ?? 0);
     }
     if (tpslPriceInfo.sl_trigger_price) {
-      dirty = isTPSLPriceChanged(
-        tpslPriceInfo.sl_trigger_price,
-        sl_trigger_price ?? 0,
-      );
+      dirty =
+        dirty ||
+        isTPSLPriceChanged(
+          tpslPriceInfo.sl_trigger_price,
+          sl_trigger_price ?? 0,
+        );
     }
     if (tpslPriceInfo.sl_order_price) {
-      dirty = isTPSLPriceChanged(
-        tpslPriceInfo.sl_order_price,
-        sl_order_price ?? 0,
-      );
+      dirty =
+        dirty ||
+        isTPSLPriceChanged(tpslPriceInfo.sl_order_price, sl_order_price ?? 0);
     }
     return dirty;
   }, [

@@ -8,6 +8,7 @@ import {
 } from "@orderly.network/types";
 import {
   Button,
+  cn,
   DialogFooter,
   Divider,
   Flex,
@@ -15,6 +16,7 @@ import {
   ScrollArea,
   Text,
   ThrottledButton,
+  useScreen,
 } from "@orderly.network/ui";
 import { OrderInfo } from "../components/orderInfo";
 import { PnlInfo } from "../components/pnlInfo";
@@ -26,6 +28,7 @@ type Props = ReturnType<typeof useEditBracketOrder>;
 export const EditBracketOrderUI = (props: Props & { onClose?: () => void }) => {
   const { t } = useTranslation();
   const { errors, validated } = props.metaState;
+  const { isMobile } = useScreen();
   // console.log('errors', errors, validated);
 
   const {
@@ -106,7 +109,9 @@ export const EditBracketOrderUI = (props: Props & { onClose?: () => void }) => {
   }, [formattedOrder]);
   return (
     <div>
-      <ScrollArea className="oui-flex-1">
+      <ScrollArea
+        className={cn("oui-flex-1", isMobile && "oui-h-[calc(100vh-200px)]")}
+      >
         <div className="">
           <OrderInfo
             order={{
@@ -178,6 +183,9 @@ export const EditBracketOrderUI = (props: Props & { onClose?: () => void }) => {
                   formattedOrder.position_type ?? PositionType.PARTIAL
                 }
               />
+            )}
+            {formattedOrder.sl_enable && formattedOrder.tp_enable && (
+              <Divider className="oui-w-full" />
             )}
             {formattedOrder.sl_enable && (
               <TPSLInputRowWidget
