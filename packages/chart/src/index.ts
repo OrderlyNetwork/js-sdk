@@ -4,7 +4,7 @@
 // export { Axis } from "./common/axis";
 export { PnLBarChart } from "./orderly/pnlBar";
 export { PnlLineChart } from "./orderly/pnlLine";
-export { AssetLineChart } from "./orderly/assetLine";
+export { AssetLineChart, type PnlLineChartProps } from "./orderly/assetLine";
 export { VolBarChart } from "./orderly/volBar";
 export type { VolChartDataItem } from "./orderly/volBar";
 export { LineChart, Line, BarChart, Bar, Cell } from "recharts";

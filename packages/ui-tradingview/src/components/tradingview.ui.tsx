@@ -64,111 +64,109 @@ export const ZoomInIcon = (props: SVGProps<SVGSVGElement>) => {
   );
 };
 
-export const TradingviewUi = forwardRef(
-  (props: TradingviewUIPropsInterface, ref) => {
-    const {
-      chartRef,
-      interval,
-      changeDisplaySetting,
-      displayControlState,
-      tradingViewScriptSrc,
-      changeInterval,
-      lineType,
-      changeLineType,
-      openChartSetting,
-      openChartIndicators,
-      onFullScreenChange,
-    } = props;
-    const isMobile = useMediaQuery(MEDIA_TABLET);
+export const TradingviewUi = forwardRef<
+  HTMLDivElement,
+  TradingviewUIPropsInterface
+>((props, ref) => {
+  const {
+    chartRef,
+    interval,
+    changeDisplaySetting,
+    displayControlState,
+    tradingViewScriptSrc,
+    changeInterval,
+    lineType,
+    changeLineType,
+    openChartSetting,
+    openChartIndicators,
+    onFullScreenChange,
+  } = props;
 
-    return (
-      <div
-        className={cn(
-          "oui-h-full oui-w-full  oui-relative",
-          props.classNames?.root,
-        )}
-        ref={ref as React.Ref<HTMLDivElement>}
-      >
-        {!tradingViewScriptSrc ? (
-          <NoTradingview />
-        ) : (
-          <div
-            className={cn(
-              "oui-z-[1] oui-absolute oui-top-0 oui-bottom-0 oui-right-0 oui-left-0 oui-flex oui-flex-col",
-              props.classNames?.content,
-            )}
-          >
-            <TopBar>
-              {isMobile ? (
-                <Flex
-                  gapX={2}
-                  width="100%"
-                  justify="between"
-                  className="oui-overflow-x-scroll oui-hide-scrollbar"
-                >
+  const isMobile = useMediaQuery(MEDIA_TABLET);
+
+  return (
+    <div
+      ref={ref}
+      className={cn("oui-relative oui-size-full", props.classNames?.root)}
+    >
+      {!tradingViewScriptSrc ? (
+        <NoTradingview />
+      ) : (
+        <div
+          className={cn(
+            "oui-z-[1] oui-absolute oui-top-0 oui-bottom-0 oui-right-0 oui-left-0 oui-flex oui-flex-col",
+            props.classNames?.content,
+          )}
+        >
+          <TopBar>
+            {isMobile ? (
+              <Flex
+                gapX={2}
+                width="100%"
+                justify="between"
+                className="oui-hide-scrollbar oui-overflow-x-scroll"
+              >
+                <TimeInterval
+                  interval={interval ?? "15"}
+                  changeInterval={changeInterval}
+                />
+                <MobileDisplayControl
+                  displayControlState={displayControlState}
+                  changeDisplayControlState={changeDisplaySetting}
+                />
+              </Flex>
+            ) : (
+              <Flex justify={"between"} itemAlign={"center"} width={"100%"}>
+                <Flex>
                   <TimeInterval
-                    interval={interval ?? "15"}
+                    interval={interval ?? "1"}
                     changeInterval={changeInterval}
                   />
-
-                  <MobileDisplayControl
-                    displayControlState={displayControlState}
-                    changeDisplayControlState={changeDisplaySetting}
+                  <Divider
+                    direction="vertical"
+                    className="oui-h-4"
+                    mx={2}
+                    intensity={8}
                   />
-                </Flex>
-              ) : (
-                <Flex justify={"between"} itemAlign={"center"} width={"100%"}>
-                  <Flex>
-                    <TimeInterval
-                      interval={interval ?? "1"}
-                      changeInterval={changeInterval}
+                  <Flex justify="start" itemAlign="center" gap={2}>
+                    <DesktopDisplayControl
+                      displayControlState={displayControlState}
+                      changeDisplayControlState={changeDisplaySetting}
                     />
-                    <Divider
-                      direction="vertical"
-                      className="oui-h-4"
-                      mx={2}
-                      intensity={8}
+                    <OperateButton onClick={openChartIndicators}>
+                      <IndicatorsIcon />
+                    </OperateButton>
+                    <LineType
+                      lineType={lineType}
+                      changeLineType={changeLineType}
                     />
-                    <Flex justify="start" itemAlign="center" gap={2}>
-                      <DesktopDisplayControl
-                        displayControlState={displayControlState}
-                        changeDisplayControlState={changeDisplaySetting}
-                      />
-                      <OperateButton onClick={openChartIndicators}>
-                        <IndicatorsIcon />
-                      </OperateButton>
-                      <LineType
-                        lineType={lineType}
-                        changeLineType={changeLineType}
-                      />
-                      <OperateButton onClick={openChartSetting}>
-                        <SettingIcon />
-                      </OperateButton>
-                    </Flex>
-                  </Flex>
-                  <Flex>
-                    {props.fullscreen ? (
-                      <ZoomOutIcon
-                        className="oui-text-base-contrast-54 hover:oui-text-base-contrast oui-cursor-pointer"
-                        onClick={onFullScreenChange}
-                      />
-                    ) : (
-                      <ZoomInIcon
-                        className="oui-text-base-contrast-54 hover:oui-text-base-contrast oui-cursor-pointer"
-                        onClick={onFullScreenChange}
-                      />
-                    )}
+                    <OperateButton onClick={openChartSetting}>
+                      <SettingIcon />
+                    </OperateButton>
                   </Flex>
                 </Flex>
-              )}
-            </TopBar>
-            <div
-              className="oui-h-full oui-w-full oui-overflow-hidden"
-              ref={chartRef}
-            ></div>
-          </div>
-        )}
-      </div>
-    );
-  },
-);
+                <Flex>
+                  {props.fullscreen ? (
+                    <ZoomOutIcon
+                      className="oui-text-base-contrast-54 hover:oui-text-base-contrast oui-cursor-pointer"
+                      onClick={onFullScreenChange}
+                    />
+                  ) : (
+                    <ZoomInIcon
+                      className="oui-text-base-contrast-54 hover:oui-text-base-contrast oui-cursor-pointer"
+                      onClick={onFullScreenChange}
+                    />
+                  )}
+                </Flex>
+              </Flex>
+            )}
+          </TopBar>
+          <div
+            className="oui-h-full oui-w-full oui-overflow-hidden"
+            ref={chartRef}
+          />
+        </div>
+      )}
+    </div>
+  );
+});

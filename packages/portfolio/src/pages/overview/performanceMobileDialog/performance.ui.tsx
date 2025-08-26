@@ -1,21 +1,22 @@
 import React from "react";
 import {
   AssetLineChart,
-  Bar,
-  BarChart,
-  Cell,
-  Line,
-  LineChart,
   PnLBarChart,
   PnlLineChart,
+  PnlLineChartProps,
 } from "@orderly.network/chart";
 import { useTranslation } from "@orderly.network/i18n";
-import { EMPTY_LIST } from "@orderly.network/types";
-import { Tabs, TabPanel } from "@orderly.network/ui";
+import { Tabs, TabPanel, Flex, Text } from "@orderly.network/ui";
 import {
   PeriodType,
   useAssetsHistoryDataReturn,
 } from "../shared/useAssetHistory";
+
+const responsiveProps: PnlLineChartProps["responsiveContainerProps"] = {
+  width: "100%",
+  minHeight: 144,
+  aspect: 2.5,
+};
 
 export const PerformanceMobileUI: React.FC<useAssetsHistoryDataReturn> = (
   props,
@@ -26,10 +27,7 @@ export const PerformanceMobileUI: React.FC<useAssetsHistoryDataReturn> = (
     <div>
       <Tabs
         defaultValue={PeriodType.WEEK}
-        classNames={{
-          tabsList: "oui-justify-between",
-          trigger: "oui-max-w-full oui-w-full",
-        }}
+        classNames={{ tabsList: "oui-justify-between", trigger: "oui-w-1/3" }}
       >
         <TabPanel
           title={t("common.select.7d")}
@@ -38,11 +36,7 @@ export const PerformanceMobileUI: React.FC<useAssetsHistoryDataReturn> = (
         >
           <AssetLineChart
             data={data}
-            responsiveContainerProps={{
-              width: "100%",
-              minHeight: 144,
-              aspect: 2.5,
-            }}
+            responsiveContainerProps={responsiveProps}
           />
         </TabPanel>
         <TabPanel
@@ -52,11 +46,7 @@ export const PerformanceMobileUI: React.FC<useAssetsHistoryDataReturn> = (
         >
           <AssetLineChart
             data={data}
-            responsiveContainerProps={{
-              width: "100%",
-              minHeight: 144,
-              aspect: 2.5,
-            }}
+            responsiveContainerProps={responsiveProps}
           />
         </TabPanel>
         <TabPanel
@@ -66,14 +56,42 @@ export const PerformanceMobileUI: React.FC<useAssetsHistoryDataReturn> = (
         >
           <AssetLineChart
             data={data}
-            responsiveContainerProps={{
-              width: "100%",
-              minHeight: 144,
-              aspect: 2.5,
-            }}
+            responsiveContainerProps={responsiveProps}
           />
         </TabPanel>
       </Tabs>
+      <Flex justify="between" itemAlign="center" gap={2} my={4}>
+        <Flex
+          direction="column"
+          itemAlign="start"
+          className="oui-w-1/3 oui-rounded-lg oui-bg-base-7 oui-px-2 oui-py-1.5"
+        >
+          <div>{PeriodType.WEEK}</div>
+          <Text.numeral rule="percentages" visible coloring>
+            1
+          </Text.numeral>
+        </Flex>
+        <Flex
+          direction="column"
+          itemAlign="start"
+          className="oui-w-1/3 oui-rounded-lg oui-bg-base-7 oui-px-2 oui-py-1.5"
+        >
+          <div>{PeriodType.MONTH}</div>
+          <Text.numeral visible coloring showIdentifier>
+            2
+          </Text.numeral>
+        </Flex>
+        <Flex
+          direction="column"
+          itemAlign="start"
+          className="oui-w-1/3 oui-rounded-lg oui-bg-base-7 oui-px-2 oui-py-1.5"
+        >
+          <div>{PeriodType.QUARTER}</div>
+          <Text.numeral visible coloring={false}>
+            3
+          </Text.numeral>
+        </Flex>
+      </Flex>
       <Tabs defaultValue={"dailyPnl"}>
         <TabPanel
           value={"dailyPnl"}
@@ -83,11 +101,7 @@ export const PerformanceMobileUI: React.FC<useAssetsHistoryDataReturn> = (
           <PnLBarChart
             data={data}
             invisible={(data?.length ?? 0) <= 2}
-            responsiveContainerProps={{
-              width: "100%",
-              minHeight: 144,
-              aspect: 2.5,
-            }}
+            responsiveContainerProps={responsiveProps}
           />
         </TabPanel>
         <TabPanel
@@ -98,11 +112,7 @@ export const PerformanceMobileUI: React.FC<useAssetsHistoryDataReturn> = (
           <PnlLineChart
             data={data}
             invisible={(data?.length ?? 0) <= 2}
-            responsiveContainerProps={{
-              width: "100%",
-              minHeight: 144,
-              aspect: 2.5,
-            }}
+            responsiveContainerProps={responsiveProps}
           />
         </TabPanel>
       </Tabs>
