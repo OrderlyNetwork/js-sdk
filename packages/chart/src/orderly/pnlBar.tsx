@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import React, { useRef } from "react";
 import {
   BarChart,
   XAxis,
@@ -12,6 +12,7 @@ import {
   Cross,
 } from "recharts";
 import type { TooltipProps } from "recharts";
+import type { Props as ResponsiveContainerProps } from "recharts/types/component/ResponsiveContainer";
 import { useTranslation } from "@orderly.network/i18n";
 import { cn } from "@orderly.network/ui";
 import { tickFormatter } from "../utils/yTickFormatter";
@@ -30,9 +31,10 @@ export type PnLChartProps = {
   };
   data: ReadonlyArray<PnLChartDataItem> | PnLChartDataItem[];
   invisible?: boolean;
+  responsiveContainerProps?: Omit<ResponsiveContainerProps, "children">;
 };
 
-const RoundedRectangle = (props: any) => {
+const RoundedRectangle: React.FC<any> = (props) => {
   const { fill, x, y, width, height } = props;
 
   const absHeight = Math.abs(height);
@@ -50,7 +52,7 @@ const RoundedRectangle = (props: any) => {
   );
 };
 
-export const XAxisLabel = (props: any) => {
+export const XAxisLabel: React.FC<any> = (props) => {
   const { x, y, stroke, payload, index, width, containerWidth } = props;
   const { t } = useTranslation();
   const _x =
@@ -77,11 +79,9 @@ export const XAxisLabel = (props: any) => {
   );
 };
 
-const CustomizedCross = (props: any) => {
+const CustomizedCross: React.FC<any> = (props) => {
   const { width, height, stroke, fill } = props;
-
   return (
-    // @ts-ignore
     <Cross
       // y={props.y + props.top}
       x={props.x + props.width / 2}
@@ -95,7 +95,7 @@ const CustomizedCross = (props: any) => {
   );
 };
 
-const CustomTooltip = (props: TooltipProps<any, any>) => {
+const CustomTooltip: React.FC<TooltipProps<any, any>> = (props) => {
   const { active, payload, label } = props;
   const todayStr = useRef(new Date().toISOString().split("T")[0]);
   const { t } = useTranslation();
@@ -113,27 +113,23 @@ const CustomTooltip = (props: TooltipProps<any, any>) => {
   return null;
 };
 
-export const PnLBarChart = (props: PnLChartProps) => {
-  const { invisible } = props;
+export const PnLBarChart: React.FC<PnLChartProps> = (props) => {
+  const { invisible, data, responsiveContainerProps } = props;
   const colors = useColors(props.colors);
-  const widthRef = useRef(0);
-
+  const widthRef = useRef<number>(0);
   return (
-    // @ts-ignore
     <ResponsiveContainer
       className={cn(invisible && "chart-invisible")}
-      onResize={(width, height) => {
-        // console.log("width", width, height);
+      onResize={(width) => {
         widthRef.current = width;
       }}
+      {...responsiveContainerProps}
     >
-      {/* @ts-ignore */}
       <BarChart
-        data={props.data as any[]}
+        data={data as any[]}
         margin={{ left: -10, top: 10, right: 10, bottom: 30 }}
       >
         {!invisible && (
-          // @ts-ignore
           <Tooltip
             // cursor={{ fillOpacity: 0.1 }}
             cursor={<CustomizedCross />}
@@ -142,16 +138,13 @@ export const PnLBarChart = (props: PnLChartProps) => {
         )}
 
         <CartesianGrid vertical={false} stroke="#FFFFFF" strokeOpacity={0.04} />
-        {/* @ts-ignore */}
+
         <ReferenceLine y={0} stroke="rgba(0,0,0,0.04)" />
-        {/* @ts-ignore */}
 
         {!invisible && (
-          // @ts-ignore
           <Bar dataKey="pnl" shape={<RoundedRectangle />}>
-            {props.data.map((entry, index) => {
+            {data.map((entry, index) => {
               return (
-                // @ts-ignore
                 <Cell
                   key={`cell-${index}`}
                   fill={entry.pnl > 0 ? colors.profit : colors.loss}
@@ -160,7 +153,7 @@ export const PnLBarChart = (props: PnLChartProps) => {
             })}
           </Bar>
         )}
-        {/* @ts-ignore */}
+
         <YAxis
           tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
           tickFormatter={(value) => tickFormatter(value)}
@@ -168,12 +161,11 @@ export const PnLBarChart = (props: PnLChartProps) => {
           axisLine={false}
           dataKey={"pnl"}
         />
-        {/* @ts-ignore */}
         <XAxis
           dataKey="date"
           // axisLine={false}
           tickLine={false}
-          interval={props.data.length - 2}
+          interval={data.length - 2}
           // tick={renderQuarterTick}
           height={1}
           // scale="time"

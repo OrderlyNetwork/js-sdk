@@ -4,7 +4,7 @@ import { useRewardsData } from "../mobile/useRewardsData.script";
 import { useAssetsHistoryData } from "../shared/useAssetHistory";
 import { OverviewContext, OverviewContextState } from "./overviewContext";
 
-const localKey = "portfolio_performance_period";
+export const localKey = "portfolio_performance_period";
 
 export const OverviewProvider: FC<PropsWithChildren<{ type?: TWType }>> = (
   props,

@@ -8,7 +8,7 @@ import { usePortfolioChartsState } from ".";
 export const PortfolioChartsMobileUI: React.FC<
   { data: any[] } & ReturnType<typeof usePortfolioChartsState>
 > = (props) => {
-  const { data, unrealPnL, unrealROI, visible } = props;
+  const { data, unrealPnL, unrealROI, visible, onPerformanceClick } = props;
   return (
     <Flex
       p={4}
@@ -54,6 +54,7 @@ export const PortfolioChartsMobileUI: React.FC<
           size="xs"
           intensity={54}
           className="oui-flex oui-items-center oui-justify-start oui-gap-1"
+          onClick={onPerformanceClick}
         >
           Performance
           <ChevronRightIcon className="oui-text-base-contrast-54" />

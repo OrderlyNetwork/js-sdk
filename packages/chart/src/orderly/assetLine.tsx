@@ -10,6 +10,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import type { TooltipProps } from "recharts";
+import type { Props as ResponsiveContainerProps } from "recharts/types/component/ResponsiveContainer";
 import { useTranslation } from "@orderly.network/i18n";
 import { tickFormatter } from "../utils/yTickFormatter";
 import { OrderlyChartTooltip } from "./customTooltip";
@@ -28,6 +29,7 @@ export type PnlLineChartProps = {
   };
   data: AssetChartDataItem[];
   invisible?: boolean;
+  responsiveContainerProps?: Omit<ResponsiveContainerProps, "children">;
 };
 
 const CustomTooltip: React.FC<TooltipProps<any, any>> = (props) => {
@@ -48,9 +50,13 @@ const CustomTooltip: React.FC<TooltipProps<any, any>> = (props) => {
 };
 
 const AssetLineChart: React.FC<PnlLineChartProps> = (props) => {
+  const { responsiveContainerProps } = props;
   const colors = useColors(props.colors);
   return (
-    <ResponsiveContainer className={props.invisible ? "chart-invisible" : ""}>
+    <ResponsiveContainer
+      className={props.invisible ? "chart-invisible" : ""}
+      {...responsiveContainerProps}
+    >
       <LineChart
         width={530}
         height={180}
