@@ -1,5 +1,17 @@
 # @orderly.network/ui-chain-selector
 
+## 2.6.1-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.6.1-alpha.0
+  - @orderly.network/hooks@2.6.1-alpha.0
+  - @orderly.network/i18n@2.6.1-alpha.0
+  - @orderly.network/types@2.6.1-alpha.0
+  - @orderly.network/ui@2.6.1-alpha.0
+
 ## 2.6.0
 
 ### Minor Changes
