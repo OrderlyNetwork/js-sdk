@@ -12,6 +12,7 @@ import {
 import type { TooltipProps } from "recharts";
 import type { Props as ResponsiveContainerProps } from "recharts/types/component/ResponsiveContainer";
 import { useTranslation } from "@orderly.network/i18n";
+import { useScreen } from "@orderly.network/ui";
 import { tickFormatter } from "../utils/yTickFormatter";
 import { OrderlyChartTooltip } from "./customTooltip";
 import { useColors } from "./useColors";
@@ -52,6 +53,7 @@ const CustomTooltip: React.FC<TooltipProps<any, any>> = (props) => {
 const AssetLineChart: React.FC<PnlLineChartProps> = (props) => {
   const { responsiveContainerProps } = props;
   const colors = useColors(props.colors);
+  const { isMobile } = useScreen();
   return (
     <ResponsiveContainer
       className={props.invisible ? "chart-invisible" : ""}
@@ -91,7 +93,7 @@ const AssetLineChart: React.FC<PnlLineChartProps> = (props) => {
             type="natural"
             dataKey="account_value"
             stroke={colors.profit}
-            strokeWidth={2}
+            strokeWidth={isMobile ? 1.5 : 2}
             dot={false}
             isAnimationActive={false}
           />
