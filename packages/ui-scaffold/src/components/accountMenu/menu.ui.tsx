@@ -22,13 +22,34 @@ export type AccountMenuProps = {
   onCrateAccount: () => Promise<void>;
   onCreateOrderlyKey: () => Promise<void>;
   onOpenExplorer: () => void;
+  onSwitchNetwork: () => void;
+  wrongNetwork: boolean;
   disabledConnect?: boolean;
 };
 
 export const AccountMenu = (props: AccountMenuProps) => {
   const { t } = useTranslation();
-  const { accountState: state, onDisconnect, onOpenExplorer } = props;
+  const {
+    accountState: state,
+    onDisconnect,
+    onOpenExplorer,
+    wrongNetwork,
+    onSwitchNetwork,
+  } = props;
   const disabled = state.validating || props.disabledConnect;
+
+  if (!disabled && wrongNetwork) {
+    return (
+      <Button
+        data-testid="oui-testid-nav-bar-wrongNetwork-btn"
+        size="md"
+        color="warning"
+        onClick={onSwitchNetwork}
+      >
+        {t("connector.wrongNetwork")}
+      </Button>
+    );
+  }
 
   if (
     !disabled &&
