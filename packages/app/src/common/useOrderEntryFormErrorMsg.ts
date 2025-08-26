@@ -1,6 +1,8 @@
+import { useCallback } from "react";
 import {
   OrderValidationItem,
   OrderValidationResult,
+  useMemoizedFn,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 
@@ -12,7 +14,16 @@ export function useOrderEntryFormErrorMsg(
 ) {
   const { t } = useTranslation();
 
-  const getMessage = (key: Keys, type: ErrorType, value?: number | string) => {
+  const getMessage = (
+    key: Keys,
+    type: ErrorType,
+    params: {
+      value?: string | number;
+      min?: string | number;
+      max?: string | number;
+    },
+  ) => {
+    const { value, min, max } = params || {};
     const map: Partial<Record<Keys, Partial<Record<ErrorType, string>>>> = {
       quantity: {
         required: t("orderEntry.orderQuantity.error.required"),
@@ -83,20 +94,42 @@ export function useOrderEntryFormErrorMsg(
         min: t("orderEntry.skew.error.min", { value }),
         max: t("orderEntry.skew.error.max", { value }),
       },
+      activated_price: {
+        min: t("orderEntry.activatedPrice.error.min", { value }),
+        max: t("orderEntry.activatedPrice.error.max", { value }),
+      },
+      callback_value: {
+        required: t("orderEntry.callbackValue.error.required"),
+        range: t("orderEntry.callbackValue.error.range", {
+          min,
+          max,
+        }),
+      },
+      callback_rate: {
+        required: t("orderEntry.callbackRate.error.required"),
+        range: t("orderEntry.callbackRate.error.range", {
+          min,
+          max,
+        }),
+      },
     };
 
     return map[key]?.[type] || "";
   };
 
-  const parseErrorMsg = (key: Keys, formatValue?: string) => {
-    const { type, value } = errors?.[key] || ({} as OrderValidationItem);
-    if (type) {
-      return getMessage(key, type, formatValue || value);
-    }
-    return "";
-  };
+  const parseErrorMsg = useCallback(
+    (key: Keys, customValue?: string) => {
+      const { type, value, min, max } = errors?.[key] || ({} as any);
+      if (type) {
+        return getMessage(key, type, { value: customValue || value, min, max });
+      }
+      return "";
+    },
+    [errors],
+  );
 
   return {
     parseErrorMsg,
+    getErrorMsg: parseErrorMsg,
   };
 }

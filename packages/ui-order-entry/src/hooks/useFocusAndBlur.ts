@@ -1,5 +1,5 @@
 import { useRef, FocusEvent } from "react";
-import { OrderEntryReturn, utils } from "@orderly.network/hooks";
+import { OrderEntryReturn, useMemoizedFn, utils } from "@orderly.network/hooks";
 import { OrderType } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 import { InputType } from "../types";
@@ -71,7 +71,7 @@ export function useFocusAndBlur(props: FocusAndBlurProps) {
   return {
     currentFocusInput,
     lastScaledOrderPriceInput,
-    onFocus,
-    onBlur,
+    onFocus: useMemoizedFn(onFocus),
+    onBlur: useMemoizedFn(onBlur),
   };
 }

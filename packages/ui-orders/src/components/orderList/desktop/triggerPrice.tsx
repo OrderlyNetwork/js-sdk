@@ -1,10 +1,11 @@
 import { FC, useEffect, useMemo, useRef, useState } from "react";
-import { API } from "@orderly.network/types";
+import { API, OrderType } from "@orderly.network/types";
 import { cn, Flex, Popover, toast, Text } from "@orderly.network/ui";
+import { EditType } from "../../../type";
 import { grayCell } from "../../../utils/util";
 import { useSymbolContext } from "../../provider/symbolContext";
 import { useOrderListContext } from "../orderListContext";
-import { ConfirmContent, EditType } from "./editOrder/confirmContent";
+import { ConfirmContent } from "./editOrder/confirmContent";
 import { InnerInput } from "./editOrder/innerInput";
 
 export const TriggerPrice = (props: {
@@ -21,6 +22,8 @@ export const TriggerPrice = (props: {
 
   const isAlgoOrder = order?.algo_order_id !== undefined;
   const isBracketOrder = order?.algo_type === "BRACKET";
+  const isTrailingStopOrder = order?.algo_type === OrderType.TRAILING_STOP;
+
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState(false);
 
@@ -142,7 +145,7 @@ export const TriggerPrice = (props: {
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  if (!isAlgoOrder || isBracketOrder) {
+  if (!isAlgoOrder || isBracketOrder || isTrailingStopOrder) {
     return <Text>{`--`}</Text>;
   }
   const trigger = () => {

@@ -1,7 +1,7 @@
-import { forwardRef, PropsWithChildren, ReactNode, useContext } from "react";
+import { forwardRef, PropsWithChildren, ReactNode } from "react";
 import { EMPTY_LIST } from "@orderly.network/types";
 import { cn, inputFormatter, Input, InputProps } from "@orderly.network/ui";
-import { OrderEntryContext } from "../orderEntryContext";
+import { useOrderEntryContext } from "../orderEntryContext";
 
 export type CustomInputProps = {
   label: string;
@@ -25,7 +25,7 @@ export type CustomInputProps = {
 export const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
   (props, ref) => {
     const { placeholder = "0" } = props;
-    const { errorMsgVisible } = useContext(OrderEntryContext);
+    const { errorMsgVisible } = useOrderEntryContext();
 
     return (
       <Input.tooltip

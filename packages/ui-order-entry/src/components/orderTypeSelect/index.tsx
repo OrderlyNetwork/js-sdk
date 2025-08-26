@@ -41,6 +41,7 @@ export const OrderTypeSelect = (props: {
       [OrderType.STOP_LIMIT]: t("orderEntry.orderType.stopLimit"),
       [OrderType.STOP_MARKET]: t("orderEntry.orderType.stopMarket"),
       [OrderType.SCALED]: t("orderEntry.orderType.scaledOrder"),
+      [OrderType.TRAILING_STOP]: t("orderEntry.orderType.trailingStop"),
     };
   }, [t]);
 

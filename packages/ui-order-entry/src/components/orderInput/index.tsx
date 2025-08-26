@@ -4,6 +4,7 @@ import { API, OrderlyOrder, OrderType } from "@orderly.network/types";
 import { OrderEntryScriptReturn } from "../../orderEntry.script";
 import { InputType } from "../../types";
 import { CommonOrderInput } from "./commonOrderInput";
+import { PriceInputProps } from "./limit/priceInput";
 import { ScaledOrderInput } from "./scaledOrderInput";
 
 export type BaseOrderInputProps = {
@@ -21,15 +22,8 @@ export type BaseOrderInputProps = {
   errors: OrderValidationResult | null;
 };
 
-export type OrderInputProps = BaseOrderInputProps & {
-  bbo: Pick<
-    OrderEntryScriptReturn,
-    "bboStatus" | "bboType" | "onBBOChange" | "toggleBBO"
-  >;
-  refs: OrderEntryScriptReturn["refs"];
-  priceInputContainerWidth?: number;
-  fillMiddleValue: OrderEntryScriptReturn["fillMiddleValue"];
-};
+export type OrderInputProps = BaseOrderInputProps &
+  Omit<PriceInputProps, "order_price" | "order_type">;
 
 export function OrderInput(props: OrderInputProps) {
   const { bbo, refs, priceInputContainerWidth, fillMiddleValue, ...rest } =

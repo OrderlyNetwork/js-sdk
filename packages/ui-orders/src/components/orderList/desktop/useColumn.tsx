@@ -22,6 +22,7 @@ import {
 import { TabType } from "../../orders.widget";
 import { useSymbolContext } from "../../provider/symbolContext";
 import { ShareButtonWidget } from "../../shareButton";
+import { ActivedPrice } from "./activedPrice";
 import { BracketOrderPrice } from "./bracketOrderPrice";
 import { CancelButton } from "./cancelBtn";
 import { Price } from "./price";
@@ -30,6 +31,7 @@ import { Renew } from "./renew";
 import { TP_SLEditButton } from "./tpslEdit";
 import { TPSLOrderPrice, useTPSLOrderPrice } from "./tpslPrice";
 import { OrderTriggerPrice } from "./tpslTriggerPrice";
+import { TrailingCallback } from "./trailingCallback";
 import { TriggerPrice } from "./triggerPrice";
 
 export const useOrderColumn = (props: {
@@ -100,6 +102,7 @@ export const useOrderColumn = (props: {
           triggerPrice({ width: 162, className: "oui-pr-0" }),
           bracketOrderPrice({ width: 130 }),
           estTotal({ width: 162, isPending: true }),
+          trailingCallback({ width: 162 }),
           reduceOnly({ width: 162 }),
           hidden({ width: 162 }),
           orderTime({ width: 162, enableSort: false }),
@@ -275,7 +278,7 @@ function instrument(option?: {
         <Flex gap={2}>
           <div
             className={cn(
-              "oui-rounded-[1px] oui-w-1 oui-h-7 oui-shrink-0",
+              "oui-h-7 oui-w-1 oui-shrink-0 oui-rounded-[1px]",
               record.side === OrderSide.BUY
                 ? "oui-bg-trade-profit"
                 : "oui-bg-trade-loss",
@@ -308,7 +311,7 @@ function instrument(option?: {
                         : "neutral"
                     }
                     size="xs"
-                    className="oui-break-normal oui-whitespace-nowrap"
+                    className="oui-whitespace-nowrap oui-break-normal"
                   >
                     {e}
                   </Badge>
@@ -519,11 +522,20 @@ function price(option?: {
           }
         : undefined,
     renderPlantText: (value: string, record: any) => {
-      return commifyOptional(record.price?.toString(), {
+      const isTrailingStopOrder = record?.algo_type === OrderType.TRAILING_STOP;
+      const price = isTrailingStopOrder ? record.activated_price : record.price;
+      return commifyOptional(price?.toString(), {
         fallback: i18n.t("common.marketPrice"),
       });
     },
     render: (value: string, record: any) => {
+      const isTrailingStopOrder = record?.algo_type === OrderType.TRAILING_STOP;
+      if (isTrailingStopOrder) {
+        return (
+          <ActivedPrice order={record} disableEdit={option?.disableEdit} />
+        );
+      }
+
       return <Price order={record} disableEdit={option?.disableEdit} />;
     },
   };
@@ -587,7 +599,8 @@ function triggerPrice(option?: {
     renderPlantText: (value: string, record: any) => {
       const isAlgoOrder = record?.algo_order_id !== undefined;
       const isBracketOrder = record?.algo_type === "BRACKET";
-      if (!isAlgoOrder || isBracketOrder) {
+      const isTrailingStopOrder = record?.algo_type === OrderType.TRAILING_STOP;
+      if (!isAlgoOrder || isBracketOrder || isTrailingStopOrder) {
         return "--";
       }
       return commifyOptional(value);
@@ -1134,4 +1147,29 @@ function estTotalValue(record: any, isPending: boolean): string {
     record.average_executed_price === null
     ? "--"
     : `${record.total_executed_quantity * record.average_executed_price}`;
+}
+
+function trailingCallback(option?: {
+  title?: string;
+  width?: number;
+  className?: string;
+  disableEdit?: boolean;
+}): Column<API.Order> {
+  return {
+    title: option?.title ?? i18n.t("orderEntry.trailing"),
+    dataIndex: "callback_value",
+    className: option?.className,
+    width: option?.width,
+    renderPlantText: (value: string, record: any) => {
+      const { callback_value, callback_rate } = record;
+      const val =
+        callback_value || (callback_rate ? `${callback_rate * 100}%` : "--");
+      return val?.toString();
+    },
+    render: (value: string, record: any) => {
+      return (
+        <TrailingCallback order={record} disableEdit={option?.disableEdit} />
+      );
+    },
+  };
 }

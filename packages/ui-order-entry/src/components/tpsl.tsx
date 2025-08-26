@@ -28,7 +28,7 @@ import {
   TPSLAdvancedWidget,
   TPSLPositionTypeWidget,
 } from "@orderly.network/ui-tpsl";
-import { OrderEntryContext } from "./orderEntryContext";
+import { OrderEntryContext, useOrderEntryContext } from "./orderEntryContext";
 import { PnlInputWidget } from "./pnlInput/pnlInput.widget";
 import { usePnlInputContext } from "./pnlInput/pnlInputContext";
 import { PnlInputProvider } from "./pnlInput/pnlInputProvider";
@@ -238,7 +238,7 @@ const TPSLTriggerPriceInput = (props: {
   testId?: string;
 }) => {
   const { t } = useTranslation();
-  const { errorMsgVisible } = useContext(OrderEntryContext);
+  const { errorMsgVisible } = useOrderEntryContext();
   const { tipsEle } = usePnlInputContext();
   const [prefix, setPrefix] = useState<string>(`${props.type} Price`);
   const [placeholder, setPlaceholder] = useState<string>("USDC");

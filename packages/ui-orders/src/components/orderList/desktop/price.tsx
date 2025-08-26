@@ -5,10 +5,11 @@ import { API } from "@orderly.network/types";
 import { OrderType } from "@orderly.network/types";
 import { cn, Flex, Popover, toast, Text } from "@orderly.network/ui";
 import { commifyOptional } from "@orderly.network/utils";
+import { EditType } from "../../../type";
 import { grayCell } from "../../../utils/util";
 import { useSymbolContext } from "../../provider/symbolContext";
 import { useOrderListContext } from "../orderListContext";
-import { ConfirmContent, EditType } from "./editOrder/confirmContent";
+import { ConfirmContent } from "./editOrder/confirmContent";
 import { InnerInput } from "./editOrder/innerInput";
 
 export const Price = (props: {

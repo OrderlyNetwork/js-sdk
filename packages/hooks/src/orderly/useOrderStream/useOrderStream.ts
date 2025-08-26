@@ -311,9 +311,14 @@ export const useOrderStream = (
         case "algoOrder":
           return doUpdateAlgoOrder({
             order_id: orderId,
-            price: order["order_price"],
-            quantity: order["order_quantity"],
-            trigger_price: order["trigger_price"],
+            price: order.order_price,
+            quantity: order.order_quantity,
+            trigger_price: order.trigger_price,
+
+            // trailing stop order fields
+            activated_price: order.activated_price,
+            callback_value: order.callback_value,
+            callback_rate: order.callback_rate,
           });
         default:
           return doUpdateOrder({ ...order, order_id: orderId });

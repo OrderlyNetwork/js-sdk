@@ -106,7 +106,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
 
   const soundAlertId = useId();
 
-  const { parseErrorMsg } = useOrderEntryFormErrorMsg(
+  const { parseErrorMsg, getErrorMsg } = useOrderEntryFormErrorMsg(
     validated ? errors : null,
   );
 
@@ -311,7 +311,15 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
   );
 
   return (
-    <OrderEntryProvider errorMsgVisible={errorMsgVisible}>
+    <OrderEntryProvider
+      errorMsgVisible={errorMsgVisible}
+      symbolInfo={symbolInfo}
+      onFocus={props.onFocus}
+      onBlur={props.onBlur}
+      getErrorMsg={getErrorMsg}
+      setOrderValue={setOrderValue}
+      setOrderValues={setOrderValues}
+    >
       <div
         className={"oui-space-y-2 oui-text-base-contrast-54 xl:oui-space-y-3"}
         ref={props.containerRef}

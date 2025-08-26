@@ -15,12 +15,17 @@ export const orderEntry = {
   "orderEntry.orderType.ioc": "IOC",
   "orderEntry.orderType.fok": "FOK",
   "orderEntry.orderType.scaledOrder": "Scaled",
+  "orderEntry.orderType.trailingStop": "Trailing stop",
 
   "orderEntry.startPrice": "Start price",
   "orderEntry.endPrice": "End price",
   "orderEntry.skew": "Skew",
   "orderEntry.totalOrders": "Total orders",
   "orderEntry.totalQuantity": "Total quantity",
+  "orderEntry.activationPrice": "Activation price",
+  "orderEntry.trailingRate": "Trailing rate",
+  "orderEntry.trailingValue": "Trailing value",
+  "orderEntry.trailing": "Trailing",
 
   "orderEntry.quantityDistribution": "Qty distribution",
 
@@ -115,6 +120,17 @@ export const orderEntry = {
   "orderEntry.skew.error.required": "Skew is required",
   "orderEntry.skew.error.min": "Skew must be greater than {{value}}",
   "orderEntry.skew.error.max": "Skew must be less than {{value}}",
+
+  "orderEntry.activatedPrice.error.min":
+    "Activation price must be greater than {{value}}",
+  "orderEntry.activatedPrice.error.max":
+    "Activation price must be less than {{value}}",
+  "orderEntry.callbackValue.error.range":
+    "Trailing value needs to be greater than {{min}} and less than {{max}}",
+  "orderEntry.callbackRate.error.range":
+    "Trailing rate needs to be greater than or equal to {{min}} and less than or equal to {{max}}",
+  "orderEntry.callbackValue.error.required": "Trailing value is required",
+  "orderEntry.callbackRate.error.required": "Trailing rate is required",
 
   "orderEntry.slippage": "Slippage",
   "orderEntry.slippage.est": "Est",

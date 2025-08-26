@@ -107,4 +107,5 @@ export const common = {
   "common.fullTPSL": "Full TP/SL",
   "common.partialTPSL": "Partial TP/SL",
   "common.vaults": "Vaults",
+  "common.optional": "Optional",
 };

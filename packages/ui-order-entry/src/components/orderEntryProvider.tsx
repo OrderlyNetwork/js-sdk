@@ -4,11 +4,35 @@ import { OrderEntryContext, OrderEntryContextState } from "./orderEntryContext";
 export const OrderEntryProvider: FC<
   PropsWithChildren<OrderEntryContextState>
 > = (props) => {
-  const { errorMsgVisible } = props;
+  const {
+    errorMsgVisible,
+    symbolInfo,
+    onFocus,
+    onBlur,
+    getErrorMsg,
+    setOrderValue,
+    setOrderValues,
+  } = props;
 
   const memoizedValue = useMemo<OrderEntryContextState>(() => {
-    return { errorMsgVisible };
-  }, [errorMsgVisible]);
+    return {
+      errorMsgVisible,
+      symbolInfo,
+      onFocus,
+      onBlur,
+      getErrorMsg,
+      setOrderValue,
+      setOrderValues,
+    };
+  }, [
+    errorMsgVisible,
+    symbolInfo,
+    onFocus,
+    onBlur,
+    getErrorMsg,
+    setOrderValue,
+    setOrderValues,
+  ]);
 
   return (
     <OrderEntryContext.Provider value={memoizedValue}>

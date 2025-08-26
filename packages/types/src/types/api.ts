@@ -180,6 +180,11 @@ export declare namespace API {
     updated_time: number;
     order_tag?: string;
     client_order_id?: string;
+
+    // trailing stop order
+    activated_price?: number;
+    callback_value?: number;
+    callback_rate?: number;
   }
 
   export interface AlgoOrderExt extends AlgoOrder {

@@ -4,7 +4,9 @@ import {
   useEventEmitter,
   useLocalStorage,
   useMarginRatio,
+  useMemoizedFn,
   useOrderEntry,
+  useOrderlyContext,
 } from "@orderly.network/hooks";
 import {
   DistributionType,
@@ -73,6 +75,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   const ee = useEventEmitter();
   const triggerPriceInputRef = useRef<HTMLInputElement | null>(null);
   const priceInputRef = useRef<HTMLInputElement | null>(null);
+  const activatedPriceInputRef = useRef<HTMLInputElement | null>(null);
 
   const { bboStatus, bboType, setBBOType, onBBOChange, toggleBBO } =
     useBBOState({
@@ -292,6 +295,13 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
         return;
       }
 
+      // handle trailing stop order, set activated price and focus on activated price input
+      if (order_type === OrderType.TRAILING_STOP) {
+        setValue("activated_price", price);
+        focusInputElement(activatedPriceInputRef.current);
+        return;
+      }
+
       // default, set order price and focus on order price input
       setValue("order_price", price);
       focusInputElement(priceInputRef.current);
@@ -353,7 +363,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     side: formattedOrder.side as OrderSide,
     type: formattedOrder.order_type as OrderType,
     level: formattedOrder.level as OrderLevel,
-    setOrderValue,
+    setOrderValue: useMemoizedFn(setOrderValue),
     setOrderValues: setValues,
 
     currentLeverage,
@@ -371,6 +381,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       triggerPriceInputRef,
       priceInputRef,
       priceInputContainerRef,
+      activatedPriceInputRef,
     },
     canTrade,
     bboStatus,

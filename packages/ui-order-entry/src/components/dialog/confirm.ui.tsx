@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { FC, ReactNode, useMemo } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
 import { usePositionStream } from "@orderly.network/hooks";
 import { i18n, useTranslation } from "@orderly.network/i18n";
@@ -12,7 +12,6 @@ import {
 import { OrderlyOrder } from "@orderly.network/types";
 import {
   Badge,
-  Box,
   Button,
   Checkbox,
   cn,
@@ -35,7 +34,7 @@ type OrderConfirmDialogProps = {
 
 export const OrderConfirmDialog = (props: OrderConfirmDialogProps) => {
   const { symbolInfo, order, onConfirm, onCancel } = props;
-  const { quote_dp, base_dp } = symbolInfo;
+  const { quote, quote_dp, base_dp } = symbolInfo;
   const { side, order_type, order_type_ext, level, symbol } = order;
   const { t } = useTranslation();
   const [{ rows: positions }, positionsInfo] = usePositionStream(symbol);
@@ -77,10 +76,10 @@ export const OrderConfirmDialog = (props: OrderConfirmDialogProps) => {
 
     return (
       <Text.numeral
-        unit={"USDC"}
-        rule={"price"}
-        className={"oui-text-base-contrast"}
-        unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
+        unit={quote}
+        rule="price"
+        className="oui-text-base-contrast"
+        unitClassName="oui-text-base-contrast-36 oui-ml-1"
         dp={quote_dp}
         padding={false}
       >
@@ -130,9 +129,9 @@ export const OrderConfirmDialog = (props: OrderConfirmDialogProps) => {
   };
 
   const renderTPSLQty = useMemo(() => {
-    let qty = new Decimal(order.order_quantity);
+    let qty = new Decimal(order.order_quantity ?? 0);
     if (order.position_type === PositionType.FULL) {
-      qty = qty.plus(new Decimal(positionQty));
+      qty = qty.plus(new Decimal(positionQty ?? 0));
     }
     return (
       <Flex justify={"between"}>
@@ -152,6 +151,71 @@ export const OrderConfirmDialog = (props: OrderConfirmDialogProps) => {
       </Flex>
     );
   }, [order, positionQty, t]);
+
+  const renderPriceAndTotal = () => {
+    if (order_type === OrderType.TRAILING_STOP) {
+      const { activated_price, callback_unit, callback_value, callback_rate } =
+        order;
+
+      const callbackView =
+        callback_unit === "quote" ? (
+          <OrderItem
+            title={t("orderEntry.trailingValue")}
+            value={callback_value!}
+            unit={quote}
+            dp={quote_dp}
+          />
+        ) : (
+          <Flex justify={"between"}>
+            <Text>{t("orderEntry.trailingRate")}</Text>
+            <Text className="oui-text-base-contrast">{callback_rate}%</Text>
+          </Flex>
+        );
+
+      return (
+        <>
+          <OrderItem
+            title={t("orderEntry.activationPrice")}
+            value={activated_price!}
+            unit={quote}
+            dp={quote_dp}
+          />
+          {callbackView}
+        </>
+      );
+    }
+
+    return (
+      <>
+        <Flex justify={"between"}>
+          <Text>{t("common.price")}</Text>
+          {renderPrice()}
+        </Flex>
+        <OrderItem
+          title={t("common.estTotal")}
+          value={order.total}
+          unit={quote}
+          dp={quote_dp}
+        />
+      </>
+    );
+  };
+
+  const renderTriggerPrice = () => {
+    if (
+      order_type === OrderType.STOP_LIMIT ||
+      (order_type === OrderType.STOP_MARKET && order.trigger_price)
+    ) {
+      return (
+        <OrderItem
+          title={t("common.trigger")}
+          value={order.trigger_price}
+          unit={quote}
+          dp={quote_dp}
+        />
+      );
+    }
+  };
 
   return (
     <>
@@ -191,38 +255,9 @@ export const OrderConfirmDialog = (props: OrderConfirmDialogProps) => {
             {order.order_quantity}
           </Text.numeral>
         </Flex>
-        {!order.trigger_price ? null : (
-          <Flex justify={"between"}>
-            <Text>{t("common.trigger")}</Text>
-            <Text.numeral
-              unit={"USDC"}
-              rule={"price"}
-              className={"oui-text-base-contrast"}
-              unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
-              dp={quote_dp}
-              padding={false}
-            >
-              {order.trigger_price}
-            </Text.numeral>
-          </Flex>
-        )}
-        <Flex justify={"between"}>
-          <Text>{t("common.price")}</Text>
-          {renderPrice()}
-        </Flex>
-        <Flex justify={"between"}>
-          <Text>{t("common.estTotal")}</Text>
-          <Text.numeral
-            unit={"USDC"}
-            rule={"price"}
-            dp={quote_dp}
-            padding={false}
-            className={"oui-text-base-contrast"}
-            unitClassName={"oui-text-base-contrast-36 oui-ml-1"}
-          >
-            {order.total}
-          </Text.numeral>
-        </Flex>
+        {renderTriggerPrice()}
+
+        {renderPriceAndTotal()}
       </div>
       {order.tp_trigger_price || order.sl_trigger_price ? (
         <>
@@ -328,6 +363,32 @@ export const OrderConfirmDialog = (props: OrderConfirmDialogProps) => {
   );
 };
 
+type OrderItemProps = {
+  title: ReactNode;
+  value: string;
+  unit: string;
+  dp: number;
+};
+
+const OrderItem: FC<OrderItemProps> = (props) => {
+  const { title, value, unit, dp } = props;
+  return (
+    <Flex justify="between">
+      <Text>{title}</Text>
+      <Text.numeral
+        unit={unit}
+        rule="price"
+        dp={dp}
+        padding={false}
+        className="oui-text-base-contrast"
+        unitClassName="oui-text-base-contrast-36 oui-ml-1"
+      >
+        {value}
+      </Text.numeral>
+    </Flex>
+  );
+};
+
 OrderConfirmDialog.displayName = "OrderConfirmDialog";
 
 const OrderTypeTag = (props: { type: OrderType }) => {
@@ -342,6 +403,8 @@ const OrderTypeTag = (props: { type: OrderType }) => {
         return t("orderEntry.orderType.stopLimit");
       case OrderType.STOP_MARKET:
         return t("orderEntry.orderType.stopMarket");
+      case OrderType.TRAILING_STOP:
+        return t("orderEntry.orderType.trailingStop");
       default:
         return "";
     }
