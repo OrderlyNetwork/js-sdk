@@ -1,5 +1,12 @@
 # @orderly.network/eslint-config
 
+## 2.6.1
+
+### Patch Changes
+
+- 033ccf8: publish
+- publish
+
 ## 2.6.1-alpha.0
 
 ### Patch Changes

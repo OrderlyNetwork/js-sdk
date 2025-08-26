@@ -1,6 +1,6 @@
 {
   "name": "create-orderly-app",
-  "version": "1.11.1-alpha.0",
+  "version": "1.11.1",
   "bin": {
     "create-orderly-app": "./dist/index.js"
   },
@@ -52,7 +52,7 @@
   },
   "orderly": {
     "version": {
-      "@orderly.network/web3-onboard": "2.6.1-alpha.0"
+      "@orderly.network/web3-onboard": "2.6.1"
     }
   }
 }

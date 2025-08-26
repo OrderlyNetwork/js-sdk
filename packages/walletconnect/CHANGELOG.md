@@ -1,5 +1,15 @@
 # @orderly.network/web3-modal
 
+## 2.6.1
+
+### Patch Changes
+
+- 033ccf8: publish
+- publish
+- Updated dependencies [033ccf8]
+- Updated dependencies
+  - @orderly.network/hooks@2.6.1
+
 ## 2.6.1-alpha.0
 
 ### Patch Changes

@@ -1,5 +1,15 @@
 # @orderly.network/cli
 
+## 0.9.1
+
+### Patch Changes
+
+- 033ccf8: publish
+- publish
+- Updated dependencies [033ccf8]
+- Updated dependencies
+  - @orderly.network/core@2.6.1
+
 ## 0.9.1-alpha.0
 
 ### Patch Changes
