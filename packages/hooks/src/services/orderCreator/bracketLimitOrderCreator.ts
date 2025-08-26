@@ -1,9 +1,8 @@
 import { OrderEntity, OrderType, OrderlyOrder } from "@orderly.network/types";
-import { ValuesDepConfig, OrderValidationResult } from "./interface";
 import { BracketOrder } from "@orderly.network/types";
-
-import { LimitOrderCreator } from "./limitOrderCreator";
 import { bracketOrderValidator } from "./baseBracketOrderCreator";
+import { ValuesDepConfig, OrderValidationResult } from "./interface";
+import { LimitOrderCreator } from "./limitOrderCreator";
 
 export class BracketLimitOrderCreator extends LimitOrderCreator {
   // orderType: OrderType;
@@ -20,13 +19,11 @@ export class BracketLimitOrderCreator extends LimitOrderCreator {
 
   async validate(
     values: OrderlyOrder,
-    config: ValuesDepConfig
+    config: ValuesDepConfig,
   ): Promise<OrderValidationResult> {
     const value = await super.validate(values, config);
 
     const bracketData = await bracketOrderValidator(values as any, config);
-
-    console.log("bracket limit order creator", value, bracketData);
 
     return { ...value, ...bracketData };
   }
