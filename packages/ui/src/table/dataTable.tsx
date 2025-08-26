@@ -1,10 +1,4 @@
-import {
-  PropsWithChildren,
-  ReactNode,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { PropsWithChildren, ReactNode, useEffect, useMemo } from "react";
 import {
   getCoreRowModel,
   useReactTable,
@@ -33,7 +27,13 @@ import { TableHeader } from "./tableHeader";
 import { TablePagination } from "./tablePagination";
 import { TablePlaceholder } from "./tablePlaceholder";
 import { Transform } from "./transform";
-import { Column, PaginationMeta, TableSort, DataTableClassNames } from "./type";
+import {
+  Column,
+  PaginationMeta,
+  TableSort,
+  DataTableClassNames,
+  TableCellContext,
+} from "./type";
 
 export type DataTableProps<RecordType> = {
   columns: Column<RecordType>[];
@@ -69,13 +69,15 @@ export type DataTableProps<RecordType> = {
     record: RecordType,
     index: number,
     children: ReactNode,
+    context: Row<RecordType>,
   ) => ReactNode;
   generatedRowKey?: CoreOptions<any>["getRowId"];
-  onRow?: (record: RecordType, index: number) => any;
+  onRow?: (record: RecordType, index: number, context: Row<RecordType>) => any;
   onCell?: (
     column: TanstackColumn<any>,
     record: RecordType,
     index: number,
+    context: TableCellContext,
   ) => any;
   columnFilters?: ColumnFilter | ColumnFilter[];
   rowSelection?: RowSelectionState;

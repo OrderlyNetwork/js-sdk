@@ -133,6 +133,11 @@ export const Expandable: Story = {
         expanded={expanded}
         onExpandedChange={setExpanded}
         getRowCanExpand={() => true}
+        onRow={(record, index, row) => {
+          return {
+            // onClick: row.getToggleExpandedHandler(),
+          };
+        }}
         expandRowRender={(row) => {
           return (
             <pre style={{ fontSize: "10px" }} className="oui-bg-base-8">
