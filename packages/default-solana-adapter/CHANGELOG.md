@@ -1,5 +1,25 @@
 # @orderly.network/default-solana-adapter
 
+## 2.6.1
+
+### Patch Changes
+
+- 033ccf8: publish
+- publish
+- Updated dependencies [033ccf8]
+- Updated dependencies
+  - @orderly.network/core@2.6.1
+  - @orderly.network/types@2.6.1
+
+## 2.6.1-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.6.1-alpha.0
+  - @orderly.network/types@2.6.1-alpha.0
+
 ## 2.6.0
 
 ### Minor Changes
