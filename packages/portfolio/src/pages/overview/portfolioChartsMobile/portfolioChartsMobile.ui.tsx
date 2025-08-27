@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { Line, LineChart } from "@orderly.network/chart";
+import { useTranslation } from "@orderly.network/i18n";
 import { EMPTY_LIST } from "@orderly.network/types";
 import { ChevronRightIcon, cn, Flex, Text } from "@orderly.network/ui";
 import { usePortfolioChartsState } from ".";
@@ -9,6 +10,7 @@ export const PortfolioChartsMobileUI: React.FC<
   { data: any[] } & ReturnType<typeof usePortfolioChartsState>
 > = (props) => {
   const { data, unrealPnL, unrealROI, visible, onPerformanceClick } = props;
+  const { t } = useTranslation();
   return (
     <Flex
       p={4}
@@ -27,7 +29,7 @@ export const PortfolioChartsMobileUI: React.FC<
         gap={2}
       >
         <Text size="xs" intensity={54}>
-          Unreal. Pnl
+          {t("common.unrealizedPnl")}
         </Text>
         <Flex justify={"start"} itemAlign={"center"}>
           <Text.numeral
@@ -56,7 +58,7 @@ export const PortfolioChartsMobileUI: React.FC<
           className="oui-flex oui-items-center oui-justify-start oui-gap-1"
           onClick={onPerformanceClick}
         >
-          Performance
+          {t("portfolio.overview.performance")}
           <ChevronRightIcon className="oui-text-base-contrast-54" />
         </Text>
       </Flex>
