@@ -170,27 +170,17 @@ export const useWalletStateHandle = (options: {
       currentWalletAddress !== account.address &&
       !linkData
     ) {
-      account.setAddress(
-        currentWalletAddress,
-        {
-          provider: connectedWallet?.provider,
-          chain: {
-            id: praseChainIdToNumber(currentChain!.id),
-            namespace: currentChain!.namespace.toUpperCase() as ChainNamespace,
-          },
-          wallet: {
-            name: connectedWallet?.label ?? "",
-          },
-          additionalInfo: connectedWallet?.additionalInfo ?? {},
+      account.setAddress(currentWalletAddress, {
+        provider: connectedWallet?.provider,
+        chain: {
+          id: praseChainIdToNumber(currentChain!.id),
+          namespace: currentChain!.namespace.toUpperCase() as ChainNamespace,
         },
-        // {
-        //   // TODO: remove this when default orderly key scope includes asset
-        //   // if DEFAUL_ORDERLY_KEY_SCOPE includes asset, should validate orderly key scope, otherwise internal withdraw function will be error
-        //   validateOrderlyKeyScope: (scope: string) => {
-        //     return scope.includes("asset");
-        //   },
-        // },
-      );
+        wallet: {
+          name: connectedWallet?.label ?? "",
+        },
+        additionalInfo: connectedWallet?.additionalInfo ?? {},
+      });
       track(TrackerEventName.walletConnect, {
         wallet: connectedWallet?.label ?? "",
         network: currentChain!.namespace.toUpperCase() as ChainNamespace,

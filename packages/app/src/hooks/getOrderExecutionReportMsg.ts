@@ -78,5 +78,6 @@ export function getOrderExecutionReportMsg(
   return {
     title,
     msg,
+    status,
   };
 }

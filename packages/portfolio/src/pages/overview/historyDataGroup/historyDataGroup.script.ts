@@ -1,6 +1,12 @@
 import { useState } from "react";
 
-export type TabName = "deposit" | "funding" | "distribution";
+export type TabName =
+  | "deposit"
+  | "withdraw"
+  | "funding"
+  | "distribution"
+  | "transfer"
+  | "vaults";
 
 export const useHistoryDataGroupScript = () => {
   const [active, setActive] = useState<TabName>("deposit");

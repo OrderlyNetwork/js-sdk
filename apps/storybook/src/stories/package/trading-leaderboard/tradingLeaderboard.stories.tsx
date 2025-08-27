@@ -137,7 +137,7 @@ export function getCampaigns() {
       campaign_id: "121",
       referral_codes: ["CHIWEI"],
       title: "Fireant x WOOFi Pro Trading Celebration",
-      description: " Exclusively for the Fireant community.",
+      description: "Exclusively for the Fireant community.",
       prize_pools: [
         {
           pool_id: "trading_volume",

@@ -1,5 +1,7 @@
 import { FC, useMemo } from "react";
+import { useWalletConnector } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
+import { ChainNamespace } from "@orderly.network/types";
 import {
   Button,
   cn,
@@ -102,6 +104,7 @@ type AssetMobileItemProps = {
 
 const AssetMobileItem: FC<AssetMobileItemProps> = ({ item }) => {
   const { t } = useTranslation();
+  const { namespace } = useWalletConnector();
 
   return (
     <div className="oui-flex oui-flex-col oui-gap-3 oui-rounded-xl oui-bg-base-9 oui-p-4">
@@ -147,10 +150,12 @@ const AssetMobileItem: FC<AssetMobileItemProps> = ({ item }) => {
               token: item.token,
             })
           }
-          disabled={item.token === "USDC"}
+          disabled={
+            item.token === "USDC" || namespace === ChainNamespace.solana
+          }
           className={cn(
             "oui-flex-1 oui-border-white/[0.36] oui-text-base-contrast-54",
-            item.token === "USDC" &&
+            (item.token === "USDC" || namespace === ChainNamespace.solana) &&
               "hover:!oui-bg-transparent disabled:oui-border-white/[0.16] disabled:!oui-bg-transparent disabled:oui-text-base-contrast-20",
           )}
         >

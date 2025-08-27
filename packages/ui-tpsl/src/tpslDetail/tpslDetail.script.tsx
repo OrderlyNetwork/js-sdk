@@ -68,96 +68,9 @@ export const useTPSLDetail = (props: TPSLDetailProps) => {
     const dialogId = isMobile ? TPSLSheetId : TPSLDialogId;
     modal.show(dialogId, {
       order: order,
-      position: position,
+      symbol: position.symbol,
       positionType,
       isEditing,
-      onConfirm: (order: ComputedAlgoOrder, options: any) => {
-        if (!needConfirm) {
-          return Promise.resolve(true);
-        }
-
-        const maxQty = Math.abs(Number(position.position_qty));
-        if (
-          `${order.tp_trigger_price ?? ""}`.length === 0 &&
-          `${order.sl_trigger_price ?? ""}`.length === 0
-        ) {
-          return modal
-            .confirm({
-              title: t("orders.cancelOrder"),
-              content: t("tpsl.cancelOrder.description"),
-              onOk: () => {
-                return options.cancel();
-              },
-            })
-            .then(
-              () => {
-                return true;
-              },
-              () => {
-                return Promise.reject(false);
-              },
-            );
-        }
-
-        console.log("finalIsEditing", {
-          order,
-          positionType,
-          isEditing,
-        });
-        return modal
-          .confirm({
-            title: isEditing ? t("orders.editOrder") : t("tpsl.confirmOrder"),
-            // bodyClassName: "lg:oui-py-0",
-            onOk: async () => {
-              try {
-                const res = await options.submit({
-                  accountId: position.account_id,
-                });
-
-                if (res.success) {
-                  return res;
-                }
-
-                if (res.message) {
-                  toast.error(res.message);
-                }
-
-                return false;
-              } catch (err: any) {
-                if (err?.message) {
-                  toast.error(err.message);
-                }
-                return false;
-              }
-            },
-            classNames: {
-              body: "!oui-pb-0",
-            },
-            content: (
-              <PositionTPSLConfirm
-                isPositionTPSL={positionType === PositionType.FULL}
-                isEditing={isEditing}
-                symbol={order.symbol!}
-                qty={Number(order.quantity)}
-                maxQty={maxQty}
-                tpPrice={Number(order.tp_trigger_price)}
-                slPrice={Number(order.sl_trigger_price)}
-                side={order.side!}
-                orderInfo={order}
-                quoteDP={symbolInfo("quote_dp") ?? 2}
-                baseDP={symbolInfo("base_dp") ?? 2}
-              />
-            ),
-          })
-          .then(
-            () => {
-              return true;
-            },
-            () => {
-              return Promise.reject(false);
-            },
-          );
-      },
     });
   };
 

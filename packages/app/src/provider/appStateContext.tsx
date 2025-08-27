@@ -1,4 +1,4 @@
-import { createContext, useContext } from "react";
+import React, { createContext, useContext } from "react";
 import { RestrictedInfoReturns } from "@orderly.network/hooks";
 import { useWalletStateHandle } from "../hooks/useWalletStateHandle";
 
@@ -10,6 +10,16 @@ export type RouteOption = {
 export type WidgetConfigs = {
   scanQRCode?: {
     onSuccess?: (url: string) => void;
+  };
+  orderEntry?: {
+    fees?: {
+      trailing?: (original?: React.ReactNode) => React.ReactNode;
+    };
+  };
+  feeTier?: {
+    header?: (original?: React.ReactNode) => React.ReactNode;
+    tag?: (original?: React.ReactNode) => React.ReactNode;
+    table?: (original?: React.ReactNode) => React.ReactNode;
   };
 };
 

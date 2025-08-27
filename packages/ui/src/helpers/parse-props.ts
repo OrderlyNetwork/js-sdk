@@ -10,9 +10,9 @@ export const parseSizeProps = <
     top?: number | string;
     bottom?: number | string;
     [key: string]: any;
-  }
+  },
 >(
-  props: T
+  props: T,
 ) => {
   const { width, height, angle, left, top, bottom, right, ...rest } = props;
 
@@ -41,7 +41,7 @@ export const parseSizeProps = <
 function convertToStyle(
   key: string,
   value: string | number,
-  style: CSSProperties
+  style: CSSProperties,
 ) {
   if (typeof value !== "undefined") {
     style[key] = convertToPx(value);

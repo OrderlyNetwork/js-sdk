@@ -1,6 +1,8 @@
 import React from "react";
 import { useTokensInfo } from "@orderly.network/hooks";
+import { useWalletConnector } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
+import { ChainNamespace } from "@orderly.network/types";
 import { Button, cn, Flex, Text, TokenIcon } from "@orderly.network/ui";
 import type { Column } from "@orderly.network/ui";
 
@@ -23,6 +25,7 @@ interface EnhancedHolding {
 export const useAssetsColumns = (options: ColumnsOptions) => {
   const { t } = useTranslation();
   const tokensInfo = useTokensInfo();
+  const { namespace } = useWalletConnector();
   const { onTransfer, onConvert } = options;
   const columns = React.useMemo<Column[]>(() => {
     return [
@@ -122,7 +125,9 @@ export const useAssetsColumns = (options: ColumnsOptions) => {
                 color={"secondary"}
                 onClick={() => onConvert?.(id, record.token)}
                 className={cn(
-                  record.token === "USDC" ? "oui-invisible" : "oui-visible",
+                  record.token === "USDC" || namespace === ChainNamespace.solana
+                    ? "oui-invisible"
+                    : "oui-visible",
                 )}
               >
                 {t("transfer.convert")}
@@ -142,6 +147,6 @@ export const useAssetsColumns = (options: ColumnsOptions) => {
         },
       },
     ];
-  }, [t, tokensInfo, onTransfer, onConvert]);
+  }, [t, tokensInfo, onTransfer, onConvert, namespace]);
   return columns;
 };

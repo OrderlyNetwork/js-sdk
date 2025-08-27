@@ -4,30 +4,30 @@ import {
   useAccountInfo,
   usePrivateQuery,
 } from "@orderly.network/hooks";
-import { Decimal } from "@orderly.network/utils";
-import { dataSource as defaultDataSource } from "./dataSource";
-import { AccountStatusEnum, API } from "@orderly.network/types";
 import { useDataTap } from "@orderly.network/react-app";
-import { Column } from "@orderly.network/ui";
+import { AccountStatusEnum, API } from "@orderly.network/types";
+import type { Column } from "@orderly.network/ui";
+import { Decimal } from "@orderly.network/utils";
 import { useFeeTierColumns } from "./column";
+import { dataSource as defaultDataSource } from "./dataSource";
 
 export type useFeeTierScriptReturn = ReturnType<typeof useFeeTierScript>;
 
 export type UseFeeTierScriptOptions = {
   dataAdapter?: (
     columns: Column[],
-    dataSource: any[]
+    dataSource: any[],
   ) => { columns: Column[]; dataSource: any[] };
   onRow?: (
     record: any,
-    index: number
+    index: number,
   ) => {
     normal: any;
     active: any;
   };
 };
 
-export function useFeeTierScript(options?: UseFeeTierScriptOptions) {
+export const useFeeTierScript = (options?: UseFeeTierScriptOptions) => {
   const { dataAdapter } = options || {};
   const [tier, setTier] = useState<number>();
   const { data } = useAccountInfo();
@@ -36,24 +36,18 @@ export function useFeeTierScript(options?: UseFeeTierScriptOptions) {
   const cols = useFeeTierColumns();
 
   const { data: volumeStatistics } = usePrivateQuery<
-    | {
-        perp_volume_last_30_days: number;
-      }
-    | undefined
+    { perp_volume_last_30_days: number } | undefined
   >("/v1/volume/user/stats");
 
   const { columns, dataSource } = useMemo(() => {
     return typeof dataAdapter === "function"
       ? dataAdapter(cols, defaultDataSource)
-      : {
-          columns: cols,
-          dataSource: defaultDataSource,
-        };
+      : { columns: cols, dataSource: defaultDataSource };
   }, [dataAdapter, cols]);
 
   const getFuturesCurrentTier = (
     feeList: typeof defaultDataSource,
-    data: API.AccountInfo
+    data: API.AccountInfo,
   ) => {
     const { futures_taker_fee_rate = 0, futures_maker_fee_rate = 0 } = data;
     const takerRate = `${new Decimal(futures_taker_fee_rate)
@@ -81,13 +75,17 @@ export function useFeeTierScript(options?: UseFeeTierScriptOptions) {
 
   const futures_taker_fee_rate = useMemo(() => {
     const value = data?.futures_taker_fee_rate;
-    if (typeof value === "undefined") return undefined;
+    if (typeof value === "undefined") {
+      return undefined;
+    }
     return `${new Decimal(value).mul(0.01).toString()}%`;
   }, [data]);
 
   const futures_maker_fee_rate = useMemo(() => {
     const value = data?.futures_maker_fee_rate;
-    if (typeof value === "undefined") return undefined;
+    if (typeof value === "undefined") {
+      return undefined;
+    }
     return `${new Decimal(value).mul(0.01).toString()}%`;
   }, [data]);
 
@@ -103,7 +101,7 @@ export function useFeeTierScript(options?: UseFeeTierScriptOptions) {
         state.status === AccountStatusEnum.EnableTradingWithoutConnected
           ? AccountStatusEnum.EnableTradingWithoutConnected
           : AccountStatusEnum.EnableTrading,
-    }
+    },
   );
 
   return {
@@ -112,4 +110,4 @@ export function useFeeTierScript(options?: UseFeeTierScriptOptions) {
     dataSource,
     onRow: options?.onRow,
   };
-}
+};

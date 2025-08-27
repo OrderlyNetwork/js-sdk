@@ -1,12 +1,12 @@
 import { ReactNode } from "react";
 import { SimpleDialog, SimpleDialogProps } from "../../dialog/simpleDialog";
+import { modalActions } from "../modalContext";
 import { create } from "../modalHelper";
 import { useModal } from "../useModal";
-import { modalActions } from "../modalContext";
 
 export type DialogProps = {
   content: ReactNode;
-} & Pick<SimpleDialogProps, "title" | "closable" | "size">;
+} & Pick<SimpleDialogProps, "title" | "closable" | "size" | "actions">;
 
 const Dialog = create<DialogProps>((props) => {
   const { visible, hide, resolve, reject, onOpenChange } = useModal();
@@ -17,6 +17,7 @@ const Dialog = create<DialogProps>((props) => {
       onOpenChange={onOpenChange}
       size={props.size}
       closable={props.closable}
+      actions={props.actions}
       // // @ts-ignore
       // onOk={() => {
       //   resolve(true);

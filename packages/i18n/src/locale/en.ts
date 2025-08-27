@@ -17,6 +17,7 @@ import { tradingRewards } from "./module/tradingRewards";
 import { tradingView } from "./module/tradingView";
 import { transfer } from "./module/transfer";
 import { ui } from "./module/ui";
+import { vaults } from "./module/vaults";
 import { widget } from "./module/widget";
 
 export const en = {
@@ -40,4 +41,5 @@ export const en = {
   ...ui,
   ...tradingLeaderboard,
   ...widget,
+  ...vaults,
 };

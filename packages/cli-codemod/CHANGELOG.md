@@ -1,5 +1,18 @@
 # @orderly.network/codemod
 
+## 1.6.1
+
+### Patch Changes
+
+- 033ccf8: publish
+- publish
+
+## 1.6.1-alpha.0
+
+### Patch Changes
+
+- publish
+
 ## 1.6.0
 
 ### Minor Changes

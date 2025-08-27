@@ -64,6 +64,7 @@ export { useWithdraw } from "./useWithdraw";
 export { useDeposit } from "./useDeposit";
 export { useConvert } from "./useConvert";
 export { useTransfer } from "./useTransfer";
+export { useInternalTransfer } from "./useInternalTransfer";
 
 export { useHoldingStream } from "./useHoldingStream";
 export { useWalletSubscription } from "./useWalletSubscription";
@@ -88,6 +89,7 @@ export { useStatisticsDaily } from "./statistics/useStatisticsDaily";
 export { useFundingFeeHistory } from "./statistics/useFundingFeeHistory";
 export { useDistributionHistory } from "./statistics/useDistributionHistory";
 export { useTransferHistory } from "./statistics/useTransferHistory";
+export { useVaultsHistory } from "./statistics/useVaultsHistory";
 
 export {
   useMaintenanceStatus,

@@ -4,7 +4,7 @@ import { useAppContext } from "@orderly.network/react-app";
 
 export type UseScanQRCodeScriptReturn = ReturnType<typeof useScanQRCodeScript>;
 
-export function useScanQRCodeScript() {
+export const useScanQRCodeScript = () => {
   const [open, setOpen] = useState(false);
   const { widgetConfigs } = useAppContext();
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -55,13 +55,13 @@ export function useScanQRCodeScript() {
     onScanSuccess,
     showScanTooltip,
   };
-}
+};
 
 function isValidURL(str: string) {
   try {
     const url = new URL(str);
     return ["http:", "https:"].includes(url.protocol);
-  } catch (e) {
+  } catch {
     return false;
   }
 }

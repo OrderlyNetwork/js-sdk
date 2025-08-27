@@ -1,5 +1,23 @@
 # @orderly.network/utils
 
+## 2.6.1
+
+### Patch Changes
+
+- 033ccf8: publish
+- publish
+- Updated dependencies [033ccf8]
+- Updated dependencies
+  - @orderly.network/types@2.6.1
+
+## 2.6.1-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@2.6.1-alpha.0
+
 ## 2.6.0
 
 ### Minor Changes

@@ -5,17 +5,19 @@ import { MarketsTabName } from "../../type";
 import { useTabSort } from "../shared/hooks/useTabSort";
 
 export type SideMarketsScriptOptions = {
-  collapsable?: boolean;
-  collapsed?: boolean;
-  onCollapse?: (collapsed: boolean) => void;
+  resizeable?: boolean;
+  panelSize?: "small" | "middle" | "large";
+  onPanelSizeChange?: React.Dispatch<
+    React.SetStateAction<"small" | "middle" | "large">
+  >;
 };
 
 export type SideMarketsScriptReturn = ReturnType<typeof useSideMarketsScript>;
 
 const SIDE_MARKETS_SEL_TAB_KEY = "orderly_side_markets_sel_tab_key";
 
-export function useSideMarketsScript(options?: SideMarketsScriptOptions) {
-  const [collapsed, setCollapsed] = useState(options?.collapsed);
+export const useSideMarketsScript = (options?: SideMarketsScriptOptions) => {
+  const [panelSize, setPanelSize] = useState(options?.panelSize);
   const [activeTab, setActiveTab] = useLocalStorage(
     SIDE_MARKETS_SEL_TAB_KEY,
     MarketsTabName.All,
@@ -25,32 +27,29 @@ export function useSideMarketsScript(options?: SideMarketsScriptOptions) {
     storageKey: SIDE_MARKETS_TAB_SORT_STORAGE_KEY,
   });
 
-  const collapsable = useMemo(
-    () => options?.collapsable ?? true,
-    [options?.collapsable],
-  );
-
-  const onCollapse = useCallback(
-    (collapsed: boolean) => {
-      if (typeof options?.onCollapse === "function") {
-        options.onCollapse(collapsed);
+  const onPanelSizeChange = useCallback(
+    (size: "small" | "middle" | "large") => {
+      if (typeof options?.onPanelSizeChange === "function") {
+        options.onPanelSizeChange(size);
       } else {
-        setCollapsed(collapsed);
+        setPanelSize(size);
       }
     },
-    [options?.onCollapse],
+    [options?.onPanelSizeChange],
   );
 
   useEffect(() => {
-    setCollapsed(options?.collapsed);
-  }, [options?.collapsed]);
+    setPanelSize(options?.panelSize);
+  }, [options?.panelSize]);
 
   return {
-    collapsable,
-    collapsed,
-    onCollapse,
+    resizeable: options?.resizeable ?? true,
+    panelSize: panelSize,
+    onPanelSizeChange: onPanelSizeChange as React.Dispatch<
+      React.SetStateAction<"small" | "middle" | "large">
+    >,
     activeTab: activeTab as MarketsTabName,
     onTabChange: setActiveTab,
-    tabSort,
-  };
-}
+    tabSort: tabSort,
+  } as const;
+};

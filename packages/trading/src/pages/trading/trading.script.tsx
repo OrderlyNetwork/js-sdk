@@ -10,6 +10,7 @@ import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext, useDataTap } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { modal } from "@orderly.network/ui";
+import type { LayoutPosition } from "../../components/desktop/layout/switchLayout";
 import { useSplitPersistent } from "../../components/desktop/layout/useSplitPersistent";
 import { PortfolioSheetWidget } from "../../components/mobile/portfolioSheet";
 import { useTradingLocalStorage } from "../../hooks/";
@@ -41,6 +42,11 @@ export const tradingViewMinWidth = 540;
 export const dataListMaxHeight = 800;
 export const dataListInitialHeight = 350;
 
+const ORDERLY_ORDER_ENTRY_SIDE_MARKETS_LAYOUT =
+  "orderly_order_entry_side_markets_layout";
+
+const ORDERLY_SIDE_MARKETS_MODE_KEY = "orderly_side_markets_mode";
+
 export const useTradingScript = () => {
   const [openMarketsSheet, setOpenMarketsSheet] = useState(false);
   const props = useTradingPageContext();
@@ -58,14 +64,16 @@ export const useTradingScript = () => {
 
   /** max-width: 1279px */
   const max2XL = useMediaQuery("(max-width: 1279px)");
+
   /** min-width: 1440px */
   const min3XL = useMediaQuery("(min-width: 1440px)");
+
   /** max-width: 1680px */
   const max4XL = useMediaQuery("(max-width: 1680px)");
 
   // Order entry and side market list position, default Order entry in right
-  const [layout, setLayout] = useLocalStorage(
-    "orderly_order_entry_side_markets_layout",
+  const [layout, setLayout] = useLocalStorage<LayoutPosition>(
+    ORDERLY_ORDER_ENTRY_SIDE_MARKETS_LAYOUT,
     "right",
   );
 
@@ -95,12 +103,25 @@ export const useTradingScript = () => {
     isFirstTimeDeposit,
   });
 
-  const marketsCollapseState = useMarketsCollapse({ collapsable: min3XL });
+  const marketsCollapseState = useMarketsCollapse({ resizeable: min3XL });
 
   const observerState = useObserverOrderEntry({ max2XL });
 
-  const marketsWidth = marketsCollapseState.collapsed ? 70 : 280;
+  const marketsWidth = useMemo(() => {
+    switch (marketsCollapseState.panelSize) {
+      case "small":
+        return 0;
+      case "middle":
+        return 70;
+      case "large":
+        return 280;
+      default:
+        return 0;
+    }
+  }, [marketsCollapseState.panelSize]);
+
   const tradindviewMaxHeight = max2XL ? 1200 : 600;
+
   const dataListMinHeight = canTrade ? 379 : 277;
 
   const splitSizeState = useSplitSize({ dep: layout });
@@ -113,9 +134,7 @@ export const useTradingScript = () => {
 
   const navigateToPortfolio =
     typeof onRouteChange === "function"
-      ? () => {
-          onRouteChange({ href: "/portfolio", name: t("common.portfolio") });
-        }
+      ? () => onRouteChange({ href: "/portfolio", name: t("common.portfolio") })
       : undefined;
 
   const map = {
@@ -148,38 +167,37 @@ export const useTradingScript = () => {
   return { ...props, ...map } as TradingPageState & typeof map;
 };
 
-function useMarketsCollapse(options: { collapsable: boolean }) {
-  const { collapsable } = options;
+const useMarketsCollapse = (options: { resizeable: boolean }) => {
+  const { resizeable } = options;
   const [animating, setAnimating] = useState(false);
 
-  const [collapsed, setCollapsed] = useLocalStorage<boolean | undefined>(
-    "orderly_side_markets_collapsed",
-    true,
-  );
+  const [panelSize, setPanelSize] = useLocalStorage<
+    "small" | "middle" | "large"
+  >(ORDERLY_SIDE_MARKETS_MODE_KEY, "large");
 
-  const onCollapse = (collapsed: boolean) => {
-    setCollapsed(collapsed);
+  const onPanelSizeChange = (collapsed: "small" | "middle" | "large") => {
+    setPanelSize(collapsed);
     setAnimating(true);
   };
 
-  const _collapsed = useMemo(() => {
+  const memoizedPanelSize = useMemo<"small" | "middle" | "large">(() => {
     // under 1440px markets force collapsed
-    return collapsable ? collapsed : true;
-  }, [collapsable, collapsed]);
+    return resizeable ? panelSize : "middle";
+  }, [resizeable, panelSize]);
 
   return {
-    collapsable,
-    collapsed: _collapsed,
-    onCollapse,
-    animating,
-    setAnimating,
-  };
-}
+    resizeable: resizeable,
+    panelSize: memoizedPanelSize,
+    onPanelSizeChange: onPanelSizeChange,
+    animating: animating,
+    setAnimating: setAnimating,
+  } as const;
+};
 
-function useOrderEntryPositions(options: {
+const useOrderEntryPositions = (options: {
   canTrade: boolean;
   isFirstTimeDeposit: boolean;
-}) {
+}) => {
   const { canTrade, isFirstTimeDeposit } = options;
 
   const [positions, setPositions] = useLocalStorage(
@@ -223,9 +241,9 @@ function useOrderEntryPositions(options: {
     showPositionIcon,
     updatePositions,
   };
-}
+};
 
-function useSplitSize(options: { dep: any }) {
+const useSplitSize = (options: { dep: any }) => {
   const { dep } = options;
   const [mainSplitSize, setMainSplitSize] = useSplitPersistent(
     "orderly_main_split_size",
@@ -263,9 +281,9 @@ function useSplitSize(options: { dep: any }) {
     orderBookSplitHeightSM,
     setOrderbookSplitHeightSM,
   };
-}
+};
 
-function useObserverOrderEntry(options: { max2XL: boolean }) {
+const useObserverOrderEntry = (options: { max2XL: boolean }) => {
   const { max2XL } = options;
   const [orderEntryHeight, setOrderEntryHeight] = useState(0);
   const orderEntryViewRef = useRef<HTMLDivElement>(null);
@@ -273,7 +291,9 @@ function useObserverOrderEntry(options: { max2XL: boolean }) {
   useEffect(() => {
     const element = orderEntryViewRef.current;
 
-    if (!element || !max2XL) return;
+    if (!element || !max2XL) {
+      return;
+    }
 
     const resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {
@@ -295,7 +315,7 @@ function useObserverOrderEntry(options: { max2XL: boolean }) {
     orderEntryViewRef,
     orderEntryHeight,
   };
-}
+};
 
 export function getOffsetSizeNum(size: string | null) {
   if (size) {
@@ -330,7 +350,9 @@ function useExtraHeight(options: {
     nextSize: number,
   ) => {
     const boxHeight = tradingviewAndOrderbookSplitRef?.current?.boxHeight;
-    if (!boxHeight) return;
+    if (!boxHeight) {
+      return;
+    }
 
     const splitTradingviewHeight = (boxHeight * preSize) / 100;
     const splitOrderbookHeight = (boxHeight * nextSize) / 100;
@@ -370,7 +392,9 @@ function useExtraHeight(options: {
 
   const onDataListSplitHeightDragging = (preSize: number, nextSize: number) => {
     const boxHeight = max2XLSplitRef?.current?.boxHeight;
-    if (!boxHeight) return;
+    if (!boxHeight) {
+      return;
+    }
 
     // const splitTradingAndOrderbookHeight = (boxHeight * preSize) / 100;
     const splitDataListHeight = (boxHeight * nextSize) / 100;

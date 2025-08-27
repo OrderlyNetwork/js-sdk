@@ -36,6 +36,14 @@ export type WithdrawInputs = {
   verifyContract?: string;
 };
 
+export type InternalTransferInputs = {
+  receiver: string;
+  token: string;
+  amount: string;
+  nonce: number;
+  verifyContract?: string;
+};
+
 export type SettleInputs = {
   // chainId: number;
   brokerId: string;
@@ -58,6 +66,18 @@ export type AddOrderlyKeyInputs = {
   tag?: string;
   /** @since 2.3.0, when create orderly key for sub account, it's required */
   subAccountId?: string;
+};
+
+export type DexRequestInputs = {
+  payloadType: number;
+  nonce: string;
+  receiver: string;
+  amount: string;
+  vaultId: string;
+  token: string;
+  dexBrokerId: string;
+  timestamp: number;
+  domain: SignatureDomain;
 };
 
 export interface WalletAdapter<Config = any> {
@@ -91,11 +111,19 @@ export interface WalletAdapter<Config = any> {
     inputs: WithdrawInputs,
   ): Promise<Message & { domain: SignatureDomain }>;
 
+  generateInternalTransferMessage(
+    inputs: InternalTransferInputs,
+  ): Promise<Message & { domain: SignatureDomain }>;
+
   generateSettleMessage(
     inputs: SettleInputs,
   ): Promise<Message & { domain: SignatureDomain }>;
 
   generateAddOrderlyKeyMessage(inputs: AddOrderlyKeyInputs): Promise<Message>;
+
+  generateDexRequestMessage(
+    inputs: DexRequestInputs,
+  ): Promise<Message & { domain: SignatureDomain }>;
 
   // withdraw(inputs: WithdrawInputs): Promise<Message>;
 

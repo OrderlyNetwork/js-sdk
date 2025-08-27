@@ -21,6 +21,8 @@ import {
   WithdrawInputs,
   Account,
   MessageFactor,
+  DexRequestInputs,
+  InternalTransferInputs,
 } from "@orderly.network/core";
 import { API, MaxUint256, ChainNamespace } from "@orderly.network/types";
 import {
@@ -32,9 +34,10 @@ import {
   MsgType,
   registerAccountMessage,
   settleMessage,
+  internalTransferMessage,
   withdrawMessage,
 } from "./helper";
-import { getUSDCAccounts } from "./solana.util";
+import { getTokenAccounts } from "./solana.util";
 import { SolanaAdapterOption, SolanaWalletProvider } from "./types";
 
 class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> {
@@ -251,6 +254,30 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
     };
   }
 
+  async generateInternalTransferMessage(
+    inputs: InternalTransferInputs,
+  ): Promise<Message & { domain: SignatureDomain }> {
+    const [message, toSignatureMessage] = internalTransferMessage({
+      ...inputs,
+      chainId: this.chainId,
+    });
+    const signature = await this.signMessage(toSignatureMessage as Uint8Array);
+
+    return {
+      message: {
+        ...message,
+        chainType: "SOL",
+      },
+      domain: {
+        name: "",
+        version: "",
+        chainId: this.chainId,
+        verifyingContract: inputs.verifyContract!,
+      },
+      signatured: signature,
+    };
+  }
+
   async generateAddOrderlyKeyMessage(
     inputs: AddOrderlyKeyInputs,
   ): Promise<Message> {
@@ -292,6 +319,30 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
     };
   }
 
+  async generateDexRequestMessage(inputs: DexRequestInputs): Promise<
+    Message & {
+      domain: SignatureDomain;
+    }
+  > {
+    // TODO: not support dex request message for solana and will be supported in the future
+    // const [message, toSignatureMessage] = await dexRequestMessage({
+    //   ...inputs,
+    //   chainId: this.chainId,
+    //   domain: inputs.domain,
+    // });
+
+    // const signedMessage = await this.signTypedData(toSignatureMessage);
+
+    return {
+      message: {
+        ...inputs,
+        chainType: "SOL",
+      },
+      signatured: "",
+      domain: inputs.domain,
+    };
+  }
+
   async getBalance(): Promise<bigint> {
     const publicKey = new PublicKey(this.address);
     const lamports = await this.connection.getBalance(publicKey);
@@ -313,17 +364,17 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
     //   options,
     // })
     if (method === "balanceOf") {
-      const usdcPublicKey = new PublicKey(address);
+      const tokenPublicKey = new PublicKey(address);
       const userPublicKey = new PublicKey(this._address);
-      const userUSDCAccount = getUSDCAccounts(usdcPublicKey, userPublicKey);
+      const userTokenAccount = getTokenAccounts(tokenPublicKey, userPublicKey);
       const connection = this.connection;
 
-      const usdcamount = await getAccount(
+      const tokenAmount = await getAccount(
         connection,
-        userUSDCAccount,
+        userTokenAccount,
         "confirmed",
       );
-      return usdcamount.amount;
+      return tokenAmount.amount;
     }
     if (method === "allowance") {
       return MaxUint256;
