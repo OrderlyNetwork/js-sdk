@@ -198,7 +198,6 @@
   "portfolio.apiKey.permissions": "Rechten",
   "portfolio.apiKey.permissions.read": "Lezen",
   "portfolio.apiKey.permissions.trading": "Handelen",
-  "portfolio.apiKey.permissions.asset": "Activa",
   "portfolio.apiKey.description": "Maak API-sleutels aan voor uw handelsbehoeften. Voor uw veiligheid, deel uw API-sleutels met niemand.",
   "portfolio.apiKey.readApiGuide": "Lees API-handleiding",
   "portfolio.apiKey.column.apiKey": "API-sleutel",
@@ -922,5 +921,7 @@
   "vaults.withdraw.process.vaultProcess": "Kluisproces",
   "vaults.withdraw.process.transferred": "Overgedragen",
   "vaults.withdraw.process.initiate": "Starten",
-  "vaults.withdraw.process.upTo": "Tot 6 uur"
+  "vaults.withdraw.process.upTo": "Tot 6 uur",
+  "vaults.operation.error.switchAccount": "Schakel over naar uw hoofdaccount om door te gaan.",
+  "vaults.operation.error.minDeposit": "Het stortingsbedrag is lager dan het minimum van {{amount}} USDC."
 }

@@ -198,7 +198,6 @@
   "portfolio.apiKey.permissions": "Разрешения",
   "portfolio.apiKey.permissions.read": "Чтение",
   "portfolio.apiKey.permissions.trading": "Торговля",
-  "portfolio.apiKey.permissions.asset": "Актив",
   "portfolio.apiKey.description": "Создавайте API ключи в соответствии с вашими торговыми потребностями. В целях безопасности не делитесь своими API ключами ни с кем.",
   "portfolio.apiKey.readApiGuide": "Прочитать руководство по API",
   "portfolio.apiKey.column.apiKey": "API ключ",
@@ -922,5 +921,7 @@
   "vaults.withdraw.process.vaultProcess": "Процесс хранилища",
   "vaults.withdraw.process.transferred": "Переведено",
   "vaults.withdraw.process.initiate": "Инициировать",
-  "vaults.withdraw.process.upTo": "До 6 часов"
+  "vaults.withdraw.process.upTo": "До 6 часов",
+  "vaults.operation.error.switchAccount": "Пожалуйста, переключитесь на основной аккаунт для продолжения.",
+  "vaults.operation.error.minDeposit": "Сумма депозита меньше минимума {{amount}} USDC."
 }

@@ -80,21 +80,20 @@ export const useTPSLSimpleDialog = (options: TPSLBuilderOptions) => {
   );
 
   useEffect(() => {
+    if (!maxQty) {
+      return;
+    }
+    setValue("quantity", maxQty);
     if (type === "tp") {
       setValue("tp_trigger_price", triggerPrice ?? "");
     } else {
       setValue("sl_trigger_price", triggerPrice ?? "");
     }
-  }, [type, triggerPrice]);
-
-  useEffect(() => {
-    setValue("quantity", maxQty);
-  }, [maxQty]);
+  }, [type, triggerPrice, maxQty]);
 
   const onSubmit = async () => {
     try {
       const validOrder = await validate();
-      console.log("validOrder", validOrder);
       if (validOrder) {
         if (!needConfirm) {
           return submit({ accountId: position.account_id })

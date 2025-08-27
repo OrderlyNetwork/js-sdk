@@ -198,7 +198,6 @@
   "portfolio.apiKey.permissions": "İzinler",
   "portfolio.apiKey.permissions.read": "Okuma",
   "portfolio.apiKey.permissions.trading": "İşlem",
-  "portfolio.apiKey.permissions.asset": "Varlık",
   "portfolio.apiKey.description": "İşlem ihtiyaçlarınıza uygun API anahtarları oluşturun. Güvenliğiniz için API anahtarlarınızı kimseyle paylaşmayın.",
   "portfolio.apiKey.readApiGuide": "API kılavuzunu oku",
   "portfolio.apiKey.column.apiKey": "API anahtarı",
@@ -922,5 +921,7 @@
   "vaults.withdraw.process.vaultProcess": "Kasa süreci",
   "vaults.withdraw.process.transferred": "Transfer edildi",
   "vaults.withdraw.process.initiate": "Başlat",
-  "vaults.withdraw.process.upTo": "6 saate kadar"
+  "vaults.withdraw.process.upTo": "6 saate kadar",
+  "vaults.operation.error.switchAccount": "Devam etmek için lütfen ana hesabınıza geçin.",
+  "vaults.operation.error.minDeposit": "Yatırım tutarı minimum {{amount}} USDC'den az."
 }

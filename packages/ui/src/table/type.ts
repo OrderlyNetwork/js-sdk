@@ -1,4 +1,9 @@
 import { ReactNode } from "react";
+import {
+  Cell,
+  Row,
+  type Column as TanstackColumn,
+} from "@tanstack/react-table";
 import { FormattedTextProps, TextRule } from "../typography/formatted";
 import { NumeralProps, type NumeralRule } from "../typography/numeral";
 
@@ -19,6 +24,8 @@ export type MultiFieldSort = {
   sort: SortOrder;
 };
 
+export type TableCellContext = Cell<any, any>;
+
 type PlainText = number | string | null | undefined;
 
 export type TableCellFormatter<T> =
@@ -27,12 +34,18 @@ export type TableCellFormatter<T> =
 
 export type TableCellRenderer<T> =
   | string
-  | ((value: any, record: T, index: number) => React.ReactNode);
+  | ((
+      value: any,
+      record: T,
+      index: number,
+      context: TableCellContext,
+    ) => React.ReactNode);
 
 export type TableCellPlainTextRenderer<T> = (
   value: any,
   record: T,
   index: number,
+  context: TableCellContext,
 ) => PlainText;
 
 export type MultiSortField = {

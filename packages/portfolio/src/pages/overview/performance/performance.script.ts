@@ -10,40 +10,26 @@ export const usePerformanceScript = () => {
 
   const { wrongNetwork, disabledConnect } = useAppContext();
   const { state } = useAccount();
-  const filteredData = useDataTap(ctx.data, {
+  const filteredData = useDataTap(ctx?.data, {
     accountStatus:
       state.status === AccountStatusEnum.EnableTradingWithoutConnected
         ? AccountStatusEnum.EnableTradingWithoutConnected
         : AccountStatusEnum.EnableTrading,
-    fallbackData: ctx.createFakeData(
-      {
-        account_value: 0,
-        pnl: 0,
-      },
+    fallbackData: ctx?.createFakeData?.(
+      { account_value: 0, pnl: 0 },
       { account_value: 500, pnl: 500 },
     ),
-    // fallbackData:
-    //   ctx.data && ctx.data.length >= 2
-    //     ? [ctx.data[0], ctx.data[ctx.data.length - 1]]
-    //     : ctx.createFakeData(
-    //         {
-    //           account_value: 0,
-    //           pnl: 0,
-    //         },
-    //         { account_value: 1000, pnl: 1000 }
-    //       ),
   });
 
   const _data = useMemo(() => {
-    if (filteredData?.length ?? 0 > 0) return filteredData;
-    return ctx.createFakeData(
-      {
-        account_value: 0,
-        pnl: 0,
-      },
+    if (filteredData?.length) {
+      return filteredData;
+    }
+    return ctx?.createFakeData?.(
+      { account_value: 0, pnl: 0 },
       { account_value: 500, pnl: 500 },
     );
-  }, [filteredData]);
+  }, [ctx, filteredData]);
 
   const invisible =
     wrongNetwork ||
@@ -53,7 +39,7 @@ export const usePerformanceScript = () => {
 
   return {
     ...ctx,
-    data: _data,
+    data: _data as ReadonlyArray<any>,
     invisible,
     visible,
   };

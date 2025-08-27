@@ -5,6 +5,7 @@ import {
   cn,
   Button,
   ArrowRightUpSquareFillIcon,
+  useScreen,
 } from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
 import { VaultCardScript } from "./vaultCard.script";
@@ -22,6 +23,7 @@ export const VaultCard: FC<VaultCardScript> = (props) => {
   } = props;
 
   const { t } = useTranslation();
+  const { isMobile } = useScreen();
 
   const supportVaultsList = useMemo(() => {
     return (
@@ -31,7 +33,10 @@ export const VaultCard: FC<VaultCardScript> = (props) => {
             key={chain.chain_id}
             src={`https://oss.orderly.network/static/network_logo/${chain.chain_id}.png`}
             alt={chain.chain_id}
-            className="oui-relative oui-size-5"
+            className={cn(
+              "oui-relative",
+              isMobile ? "oui-size-[18px]" : "oui-size-5",
+            )}
             style={{
               marginLeft: index > 0 ? "-4px" : "0",
               zIndex: vaultInfo.supported_chains.length - index,
@@ -43,12 +48,7 @@ export const VaultCard: FC<VaultCardScript> = (props) => {
   }, [vaultInfo.supported_chains]);
 
   return (
-    <div
-      style={{
-        height: "388px",
-      }}
-      className="oui-relative oui-h-[388px] oui-overflow-hidden oui-rounded-2xl oui-bg-base-9"
-    >
+    <div className="oui-relative oui-h-[388px] oui-overflow-hidden oui-rounded-2xl oui-border oui-border-solid oui-border-white/[0.12] oui-bg-base-9">
       <div
         style={{
           position: "absolute",

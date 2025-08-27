@@ -79,15 +79,13 @@ const Statistic = React.forwardRef<
 
   const value = useMemo(() => {
     if (typeof children === "string" || typeof children === "number") {
-      const { className: valueClass, ...restValueProps } = valueProps ?? {};
+      const { className: valueClass, as, ...restValueProps } = valueProps ?? {};
       return (
-        // @ts-ignore
         <Numeral
           {...restValueProps}
+          as={as as any}
           className={cnBase(
-            valueClassName({
-              className: valueClass,
-            }),
+            valueClassName({ className: valueClass }),
             "oui-font-semibold",
             !valueProps?.coloring && "oui-text-base-contrast-80",
           )}
