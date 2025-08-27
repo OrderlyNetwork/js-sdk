@@ -9,25 +9,16 @@ import {
   PositionType,
 } from "@orderly.network/types";
 import {
-  Badge,
   Box,
   Button,
-  Divider,
   Flex,
   Grid,
-  Input,
-  Slider,
   Text,
-  textVariants,
   cn,
-  inputFormatter,
-  Checkbox,
-  convertValueToPercentage,
   ThrottledButton,
   ScrollArea,
   useScreen,
 } from "@orderly.network/ui";
-import { transSymbolformString } from "@orderly.network/utils";
 import { OrderInfo } from "../components/orderInfo";
 import { PnlInfo } from "../components/pnlInfo";
 import { TPSLInputRowWidget } from "../components/tpslInputRow";
@@ -51,13 +42,13 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
     onCancel,
     onComplete,
     status,
-    errors,
     position,
     setValues,
     onClose,
     isEditing,
   } = props;
 
+  const { errors, validated } = props.metaState;
   const { t } = useTranslation();
   const { isMobile } = useScreen();
 
@@ -78,7 +69,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
           onQuantityChange={props.setQuantity}
           quote={symbolInfo("base")}
           isEditing={props.isEditing}
-          errorMsg={parseErrorMsg("quantity")}
+          errorMsg={validated ? parseErrorMsg("quantity") : undefined}
         />
       </Box>
     );
@@ -171,7 +162,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
             hideOrderPrice={
               TPSL_OrderEntity.position_type === PositionType.FULL
             }
-            errors={errors}
+            errors={validated ? errors : null}
             disableOrderTypeSelector={isEditing}
             quote_dp={symbolInfo("quote_dp")}
             positionType={
@@ -202,7 +193,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
             hideOrderPrice={
               TPSL_OrderEntity.position_type === PositionType.FULL
             }
-            errors={errors}
+            errors={validated ? errors : null}
             quote_dp={symbolInfo("quote_dp")}
             positionType={
               TPSL_OrderEntity.position_type ?? PositionType.PARTIAL
