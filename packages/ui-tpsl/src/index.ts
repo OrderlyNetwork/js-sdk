@@ -1,10 +1,8 @@
-export { TPSLWidget, TPSLDialogId, TPSLSheetId } from "./tpsl.widget";
 export { PositionTPSLPopover } from "./editorPopover";
 export { PositionTPSLSheet } from "./editorSheet";
-export { PositionTPSLConfirm } from "./positionTpslConfirm";
-export type { TPSLWidgetProps } from "./tpsl.widget";
 export { TPSLPositionTypeWidget } from "./components/tpslPostionType";
-export * from "./tpslAdvanced.widget";
+export * from "./tpslAdvanced";
 export * from "./tpslDetail";
 export * from "./tpslSimpleDialog";
 export * from "./editBracketOrder";
+export * from "./positionTPSL";

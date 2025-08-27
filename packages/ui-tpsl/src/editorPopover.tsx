@@ -4,7 +4,7 @@ import { useTranslation } from "@orderly.network/i18n";
 import { AlgoOrderRootType, API, PositionType } from "@orderly.network/types";
 import { Box, Button, modal, toast } from "@orderly.network/ui";
 import { ButtonProps } from "@orderly.network/ui";
-import { TPSLDialogId } from "./tpsl.widget";
+import { TPSLDialogId } from "./positionTPSL";
 
 export const PositionTPSLPopover = (props: {
   position: API.Position;

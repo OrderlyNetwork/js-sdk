@@ -16,7 +16,7 @@ import {
   PositionType,
 } from "@orderly.network/types";
 import { modal, toast, useScreen } from "@orderly.network/ui";
-import { TPSLDialogId, TPSLSheetId } from "../tpsl.widget";
+import { TPSLDialogId, TPSLSheetId } from "../positionTPSL/tpsl.widget";
 import { TPSLDetailProps } from "./tpslDetail.widget";
 
 export const useTPSLDetail = (props: TPSLDetailProps) => {

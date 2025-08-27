@@ -28,11 +28,11 @@ import {
   useScreen,
 } from "@orderly.network/ui";
 import { transSymbolformString } from "@orderly.network/utils";
-import { OrderInfo } from "./components/orderInfo";
-import { PnlInfo } from "./components/pnlInfo";
-import { TPSLInputRowWidget } from "./components/tpslInputRow";
-import { TPSLPositionTypeWidget } from "./components/tpslPostionType";
-import { TPSLQuantity } from "./components/tpslQty";
+import { OrderInfo } from "../components/orderInfo";
+import { PnlInfo } from "../components/pnlInfo";
+import { TPSLInputRowWidget } from "../components/tpslInputRow";
+import { TPSLPositionTypeWidget } from "../components/tpslPostionType";
+import { TPSLQuantity } from "../components/tpslQty";
 import { TPSLBuilderState } from "./useTPSL.script";
 
 export type TPSLProps = {
