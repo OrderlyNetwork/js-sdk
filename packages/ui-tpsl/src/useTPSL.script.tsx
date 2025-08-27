@@ -341,7 +341,7 @@ export const useTPSLBuilder = (
         content: (
           <PositionTPSLConfirm
             isPositionTPSL={positionType === PositionType.FULL}
-            isEditing={false}
+            isEditing={isEditing}
             symbol={order.symbol!}
             qty={Number(order.quantity)}
             maxQty={maxQty}
