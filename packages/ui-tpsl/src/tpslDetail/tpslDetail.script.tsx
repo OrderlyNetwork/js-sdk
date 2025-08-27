@@ -16,16 +16,13 @@ import {
   PositionType,
 } from "@orderly.network/types";
 import { modal, toast, useScreen } from "@orderly.network/ui";
-import { PositionTPSLConfirm } from "../tpsl.ui";
-import { TPSLDialogId, TPSLSheetId } from "../tpsl.widget";
+import { TPSLDialogId, TPSLSheetId } from "../positionTPSL/tpsl.widget";
 import { TPSLDetailProps } from "./tpslDetail.widget";
 
 export const useTPSLDetail = (props: TPSLDetailProps) => {
   const { position } = props;
   const symbol = position.symbol;
   const symbolInfo = useSymbolsInfo()[symbol];
-
-  const [needConfirm] = useLocalStorage("orderly_order_confirm", true);
 
   const { isMobile } = useScreen();
   const { t } = useTranslation();

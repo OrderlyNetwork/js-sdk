@@ -220,3 +220,10 @@ export const todpIfNeed = (value: string | number, dp: number) => {
 
   return `${numbers[0]}.${numbers[1].substring(0, dp)}`;
 };
+
+export const checkIsNaN = (value: string | number | undefined | null) => {
+  if (value === undefined || value === "" || value === null) {
+    return true;
+  }
+  return isNaN(Number(value));
+};

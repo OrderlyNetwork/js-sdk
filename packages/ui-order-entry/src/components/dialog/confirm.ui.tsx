@@ -38,7 +38,7 @@ export const OrderConfirmDialog = (props: OrderConfirmDialogProps) => {
   const { quote_dp, base_dp } = symbolInfo;
   const { side, order_type, order_type_ext, level, symbol } = order;
   const { t } = useTranslation();
-  const [{ rows: positions }, positionsInfo] = usePositionStream(symbol);
+  const [{ rows: positions }] = usePositionStream(symbol);
   const position = positions?.[0];
   const positionQty = position?.position_qty;
 
@@ -130,6 +130,10 @@ export const OrderConfirmDialog = (props: OrderConfirmDialogProps) => {
   };
 
   const renderTPSLQty = useMemo(() => {
+    console.log("positionQty", positionQty);
+    if (!positionQty || !order.order_quantity) {
+      return null;
+    }
     let qty = new Decimal(order.order_quantity);
     if (order.position_type === PositionType.FULL) {
       qty = qty.plus(new Decimal(positionQty));

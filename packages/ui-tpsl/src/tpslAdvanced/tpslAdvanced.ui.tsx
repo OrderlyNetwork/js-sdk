@@ -14,10 +14,10 @@ import {
   ScrollArea,
   Text,
 } from "@orderly.network/ui";
-import { OrderInfo } from "./components/orderInfo";
-import { PnlInfo } from "./components/pnlInfo";
-import { TPSLInputRowWidget } from "./components/tpslInputRow";
-import { TPSLPositionTypeWidget } from "./components/tpslPostionType";
+import { OrderInfo } from "../components/orderInfo";
+import { PnlInfo } from "../components/pnlInfo";
+import { TPSLInputRowWidget } from "../components/tpslInputRow";
+import { TPSLPositionTypeWidget } from "../components/tpslPostionType";
 import { useTPSLAdvanced } from "./useTPSLAdvanced.script";
 
 type Props = ReturnType<typeof useTPSLAdvanced>;

@@ -5,7 +5,12 @@ import {
   useWalletConnector,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { ABSTRACT_CHAIN_ID_MAP, API } from "@orderly.network/types";
+import {
+  ABSTRACT_CHAIN_ID_MAP,
+  API,
+  EMPTY_LIST,
+  EMPTY_OBJECT,
+} from "@orderly.network/types";
 import { toast, useScreen } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { useAccountValue } from "./useAccountValue";
@@ -72,9 +77,7 @@ export const SubAccountScript = () => {
   }, [state.subAccounts, currentAccountId]);
 
   const _popup = useMemo(
-    () => ({
-      mode: isMobile ? "sheet" : "modal",
-    }),
+    () => ({ mode: isMobile ? "sheet" : "modal" }),
     [isMobile],
   );
 
@@ -110,7 +113,7 @@ export const SubAccountScript = () => {
             accountValue: calculateAccountValue(
               mainAccountHolding,
               mainAccountUnsettlePnl,
-              indexPrices || {},
+              indexPrices || EMPTY_OBJECT,
             ),
           }
         : undefined;
@@ -120,9 +123,9 @@ export const SubAccountScript = () => {
       return {
         ...subAccount,
         accountValue: calculateAccountValue(
-          subAccount.holding || [],
+          subAccount.holding || EMPTY_LIST,
           subAccountUnsettlePnl,
-          indexPrices || {},
+          indexPrices || EMPTY_OBJECT,
         ),
       };
     });
@@ -174,7 +177,9 @@ const calculateAccountValue = (
 ) => {
   const holding = holdings.reduce((acc, holding) => {
     const price = getTokenIndexPrice(holding.token, indexPrices);
-    if (!price) return acc;
+    if (!price) {
+      return acc;
+    }
     return acc + new Decimal(holding.holding).times(price).toNumber();
   }, 0);
   return holding + unsettlePnl;
@@ -184,7 +189,9 @@ const getTokenIndexPrice = (
   token: string,
   indexPrices: Record<string, number>,
 ) => {
-  if (token === "USDC") return 1;
+  if (token === "USDC") {
+    return 1;
+  }
   const symbol = `PERP_${token}_USDC`;
   return indexPrices[symbol] ?? 0;
 };

@@ -181,7 +181,7 @@ class PortfolioCalculator extends BaseCalculator<any> {
     data: { [K in keyof Portfolio]: number | Decimal } | null,
     scope: CalculatorScope,
   ) {
-    if (!!data) {
+    if (data) {
       useAppStore.getState().actions.batchUpdateForPortfolio({
         totalCollateral: data.totalCollateral as Decimal,
         totalValue: data.totalValue as Decimal,

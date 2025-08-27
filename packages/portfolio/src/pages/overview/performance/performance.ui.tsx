@@ -32,17 +32,9 @@ export const PerformanceUI: React.FC<PerformanceUIProps> = (props) => {
     invisible,
     visible,
     volumeUpdateDate,
+    curPeriod,
   } = props;
   const { t } = useTranslation();
-
-  const periodLabel = useMemo(() => {
-    return {
-      [PeriodType.WEEK]: t("common.select.7d"),
-      [PeriodType.MONTH]: t("common.select.30d"),
-      [PeriodType.QUARTER]: t("common.select.90d"),
-    };
-  }, [t]);
-
   return (
     <Card
       title={
@@ -69,7 +61,7 @@ export const PerformanceUI: React.FC<PerformanceUIProps> = (props) => {
             label={
               <LabelWithHint
                 label={t("portfolio.overview.performance.roi", {
-                  period: periodLabel[period as PeriodType],
+                  period: curPeriod,
                 })}
                 hint={t("portfolio.overview.performance.roi.tooltip")}
               />
@@ -92,7 +84,7 @@ export const PerformanceUI: React.FC<PerformanceUIProps> = (props) => {
             label={
               <LabelWithHint
                 label={t("portfolio.overview.performance.pnl", {
-                  period: periodLabel[period as PeriodType],
+                  period: curPeriod,
                 })}
                 hint={t("portfolio.overview.performance.pnl.tooltip")}
               />
@@ -120,7 +112,7 @@ export const PerformanceUI: React.FC<PerformanceUIProps> = (props) => {
                 <span>
                   <LabelWithHint
                     label={t("portfolio.overview.performance.volume", {
-                      period: periodLabel[period as PeriodType],
+                      period: curPeriod,
                     })}
                     hint={t("portfolio.overview.performance.volume.tooltip")}
                   />
@@ -128,6 +120,7 @@ export const PerformanceUI: React.FC<PerformanceUIProps> = (props) => {
                 <span>{volumeUpdateDate}</span>
               </Flex>
             }
+            valueProps={{ visible }}
           >
             {invisible ? "--" : aggregateValue.vol}
           </Statistic>

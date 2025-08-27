@@ -7,6 +7,7 @@ import {
 } from "@orderly.network/chart";
 import { useTranslation } from "@orderly.network/i18n";
 import { Tabs, TabPanel, Flex, Text } from "@orderly.network/ui";
+import type { UsePerformanceScriptReturn } from "../performance/performance.script";
 import {
   PeriodType,
   useAssetsHistoryDataReturn,
@@ -18,16 +19,32 @@ const responsiveProps: PnlLineChartProps["responsiveContainerProps"] = {
   aspect: 2.5,
 };
 
-export const PerformanceMobileUI: React.FC<useAssetsHistoryDataReturn> = (
-  props,
-) => {
+export const PerformanceMobileUI: React.FC<
+  Pick<
+    useAssetsHistoryDataReturn & UsePerformanceScriptReturn,
+    | "data"
+    | "curPeriod"
+    | "aggregateValue"
+    | "onPeriodChange"
+    | "invisible"
+    | "visible"
+  >
+> = (props) => {
   const { t } = useTranslation();
-  const { data } = props;
+  const {
+    data,
+    aggregateValue,
+    visible,
+    invisible,
+    curPeriod,
+    onPeriodChange,
+  } = props;
   return (
     <div>
       <Tabs
         defaultValue={PeriodType.WEEK}
         classNames={{ tabsList: "oui-justify-between", trigger: "oui-w-1/3" }}
+        onValueChange={(value) => onPeriodChange(value as PeriodType)}
       >
         <TabPanel
           title={t("common.select.7d")}
@@ -36,6 +53,7 @@ export const PerformanceMobileUI: React.FC<useAssetsHistoryDataReturn> = (
         >
           <AssetLineChart
             data={data}
+            invisible={invisible}
             responsiveContainerProps={responsiveProps}
           />
         </TabPanel>
@@ -46,6 +64,7 @@ export const PerformanceMobileUI: React.FC<useAssetsHistoryDataReturn> = (
         >
           <AssetLineChart
             data={data}
+            invisible={invisible}
             responsiveContainerProps={responsiveProps}
           />
         </TabPanel>
@@ -56,39 +75,49 @@ export const PerformanceMobileUI: React.FC<useAssetsHistoryDataReturn> = (
         >
           <AssetLineChart
             data={data}
+            invisible={invisible}
             responsiveContainerProps={responsiveProps}
           />
         </TabPanel>
       </Tabs>
       <Flex justify="between" itemAlign="center" gap={2} my={4}>
         <Flex
+          gap={1}
           direction="column"
           itemAlign="start"
           className="oui-w-1/3 oui-rounded-lg oui-bg-base-7 oui-px-2 oui-py-1.5"
         >
-          <div>{PeriodType.WEEK}</div>
-          <Text.numeral rule="percentages" visible coloring>
-            1
+          <Text className="oui-truncate" intensity={36} size="2xs">
+            {t("portfolio.overview.performance.roi", { period: curPeriod })}
+          </Text>
+          <Text.numeral size="sm" visible={visible} rule="percentages" coloring>
+            {invisible ? "--" : aggregateValue.roi}
           </Text.numeral>
         </Flex>
         <Flex
+          gap={1}
           direction="column"
           itemAlign="start"
           className="oui-w-1/3 oui-rounded-lg oui-bg-base-7 oui-px-2 oui-py-1.5"
         >
-          <div>{PeriodType.MONTH}</div>
-          <Text.numeral visible coloring showIdentifier>
-            2
+          <Text className="oui-truncate" intensity={36} size="2xs">
+            {t("portfolio.overview.performance.pnl", { period: curPeriod })}
+          </Text>
+          <Text.numeral size="sm" visible={visible} coloring showIdentifier>
+            {invisible ? "--" : aggregateValue.pnl}
           </Text.numeral>
         </Flex>
         <Flex
+          gap={1}
           direction="column"
           itemAlign="start"
           className="oui-w-1/3 oui-rounded-lg oui-bg-base-7 oui-px-2 oui-py-1.5"
         >
-          <div>{PeriodType.QUARTER}</div>
-          <Text.numeral visible coloring={false}>
-            3
+          <Text className="oui-truncate" intensity={36} size="2xs">
+            {t("portfolio.overview.performance.volume", { period: curPeriod })}
+          </Text>
+          <Text.numeral size="sm" visible={visible} coloring={false}>
+            {invisible ? "--" : aggregateValue.vol}
           </Text.numeral>
         </Flex>
       </Flex>
@@ -100,7 +129,7 @@ export const PerformanceMobileUI: React.FC<useAssetsHistoryDataReturn> = (
         >
           <PnLBarChart
             data={data}
-            invisible={(data?.length ?? 0) <= 2}
+            invisible={invisible || (data?.length ?? 0) <= 2}
             responsiveContainerProps={responsiveProps}
           />
         </TabPanel>
@@ -111,7 +140,7 @@ export const PerformanceMobileUI: React.FC<useAssetsHistoryDataReturn> = (
         >
           <PnlLineChart
             data={data}
-            invisible={(data?.length ?? 0) <= 2}
+            invisible={invisible || (data?.length ?? 0) <= 2}
             responsiveContainerProps={responsiveProps}
           />
         </TabPanel>

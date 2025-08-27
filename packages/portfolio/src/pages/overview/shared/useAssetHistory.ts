@@ -9,6 +9,7 @@ import {
   usePrivateQuery,
   useStatisticsDaily,
 } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
 import { Decimal, zero } from "@orderly.network/utils";
 
@@ -45,21 +46,30 @@ function convertToUSDCAndOperate({
 
 export const useAssetsHistoryData = (
   localKey: string,
-  options?: {
-    isRealtime?: boolean;
-  },
+  options?: { isRealtime?: boolean },
 ) => {
   const [today] = useState(() => new Date());
 
   const { data: indexPrices } = useIndexPricesStream();
   const { account } = useAccount();
 
+  const { t } = useTranslation();
+
   const { isRealtime = false } = options || {};
   const periodTypes = Object.values(PeriodType);
+
   const [period, setPeriod] = useLocalStorage<PeriodType>(
     localKey,
     PeriodType.WEEK,
   );
+
+  const periodLabel = useMemo<Record<PeriodType, string>>(() => {
+    return {
+      [PeriodType.WEEK]: t("common.select.7d"),
+      [PeriodType.MONTH]: t("common.select.30d"),
+      [PeriodType.QUARTER]: t("common.select.90d"),
+    };
+  }, [t]);
 
   const { totalValue } = useCollateral();
 
@@ -415,8 +425,10 @@ export const useAssetsHistoryData = (
 
   return {
     periodTypes,
-    period,
-    onPeriodChange,
+    period: period as PeriodType,
+    onPeriodChange: onPeriodChange,
+    periodLabel: periodLabel,
+    curPeriod: periodLabel[period as PeriodType],
     // data: calculatedDataUpdateByIndexPrice, // calculatedData,
     data: calculatedData, // calculatedData,
     aggregateValue,

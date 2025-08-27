@@ -6,8 +6,8 @@ import { OrderType, PositionType } from "@orderly.network/types";
 import { Flex, Text, Grid, Checkbox, cn } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { PnlInputWidget } from "../../pnlInput/pnlInput.widget";
-import { PriceInput } from "../../tpsl.ui";
 import { OrderPriceType } from "../orderPriceType";
+import { PriceInput } from "./priceInput";
 import { useTPSLInputRowScript } from "./tpslInputRow.script";
 
 type TPSLInputRowProps = ReturnType<typeof useTPSLInputRowScript>;
