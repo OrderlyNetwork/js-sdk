@@ -28,6 +28,7 @@ export const PerformanceMobileUI: React.FC<
     | "onPeriodChange"
     | "invisible"
     | "visible"
+    | "createFakeData"
   >
 > = (props) => {
   const { t } = useTranslation();
@@ -38,7 +39,16 @@ export const PerformanceMobileUI: React.FC<
     invisible,
     curPeriod,
     onPeriodChange,
+    createFakeData,
   } = props;
+
+  const mergedData = data.length
+    ? data
+    : (createFakeData?.(
+        { account_value: 0, pnl: 0 },
+        { account_value: 500, pnl: 500 },
+      ) as any[]);
+
   return (
     <div>
       <Tabs
@@ -52,8 +62,8 @@ export const PerformanceMobileUI: React.FC<
           className="oui-min-h-40"
         >
           <AssetLineChart
-            data={data}
-            invisible={invisible}
+            data={mergedData}
+            invisible={invisible || (mergedData?.length ?? 0) <= 2}
             responsiveContainerProps={responsiveProps}
           />
         </TabPanel>
@@ -63,8 +73,8 @@ export const PerformanceMobileUI: React.FC<
           className="oui-min-h-40"
         >
           <AssetLineChart
-            data={data}
-            invisible={invisible}
+            data={mergedData}
+            invisible={invisible || (mergedData?.length ?? 0) <= 2}
             responsiveContainerProps={responsiveProps}
           />
         </TabPanel>
@@ -74,8 +84,8 @@ export const PerformanceMobileUI: React.FC<
           className="oui-min-h-40"
         >
           <AssetLineChart
-            data={data}
-            invisible={invisible}
+            data={mergedData}
+            invisible={invisible || (mergedData?.length ?? 0) <= 2}
             responsiveContainerProps={responsiveProps}
           />
         </TabPanel>
@@ -128,8 +138,8 @@ export const PerformanceMobileUI: React.FC<
           className="oui-min-h-40"
         >
           <PnLBarChart
-            data={data}
-            invisible={invisible || (data?.length ?? 0) <= 2}
+            data={mergedData}
+            invisible={invisible || (mergedData?.length ?? 0) <= 2}
             responsiveContainerProps={responsiveProps}
           />
         </TabPanel>
@@ -139,8 +149,8 @@ export const PerformanceMobileUI: React.FC<
           className="oui-min-h-40"
         >
           <PnlLineChart
-            data={data}
-            invisible={invisible || (data?.length ?? 0) <= 2}
+            data={mergedData}
+            invisible={invisible || (mergedData?.length ?? 0) <= 2}
             responsiveContainerProps={responsiveProps}
           />
         </TabPanel>

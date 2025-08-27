@@ -415,11 +415,7 @@ export const useAssetsHistoryData = (
   ) => {
     return Array.from({ length: 2 }, (_, i) => {
       const date = format(i === 0 ? startDate : new Date(), "yyyy-MM-dd");
-
-      return {
-        date,
-        ...(i === 0 ? start : end),
-      };
+      return { date, ...(i === 0 ? start : end) };
     });
   };
 

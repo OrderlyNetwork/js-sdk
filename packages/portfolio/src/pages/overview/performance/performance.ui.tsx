@@ -35,6 +35,7 @@ export const PerformanceUI: React.FC<PerformanceUIProps> = (props) => {
     curPeriod,
   } = props;
   const { t } = useTranslation();
+
   return (
     <Card
       title={

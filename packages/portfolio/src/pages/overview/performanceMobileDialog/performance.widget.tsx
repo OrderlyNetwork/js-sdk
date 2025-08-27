@@ -13,7 +13,13 @@ export const PerformanceMobileWidget: React.FC = () => {
   return (
     <PerformanceMobileUI
       {...pick(
-        ["data", "curPeriod", "aggregateValue", "onPeriodChange"],
+        [
+          "data",
+          "curPeriod",
+          "aggregateValue",
+          "onPeriodChange",
+          "createFakeData",
+        ],
         state,
       )}
       visible={visible}
