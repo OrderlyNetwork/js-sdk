@@ -58,18 +58,18 @@ const reduceItems = (
 
   if (typeof depth !== "undefined") {
     const prices = new Map<number, number[]>();
-    for (let i = 0; i < data.length; i++) {
+    const len = data.length;
+    for (let i = 0; i < len; i++) {
       const [price, quantity] = data[i];
       if (Number.isNaN(price) || Number.isNaN(quantity)) {
         continue;
       }
-      let priceKey: number;
 
-      if (asks) {
-        priceKey = new Decimal(Math.ceil(price / depth)).mul(depth).toNumber();
-      } else {
-        priceKey = new Decimal(Math.floor(price / depth)).mul(depth).toNumber();
-      }
+      let priceKey = new Decimal(price)
+        .div(depth)
+        .toDecimalPlaces(0, asks ? Decimal.ROUND_CEIL : Decimal.ROUND_FLOOR)
+        .mul(depth)
+        .toNumber();
 
       if (depth < 1 && depth > 0 && priceKey.toString().indexOf(".") !== -1) {
         const priceStr = price.toString();
