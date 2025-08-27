@@ -1,5 +1,11 @@
 # @orderly.network/codemod
 
+## 1.6.1-internal-20250828.2
+
+### Patch Changes
+
+- publish
+
 ## 1.6.1-internal-20250828.1
 
 ### Patch Changes
