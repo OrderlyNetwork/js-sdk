@@ -12,7 +12,6 @@ import {
   Divider,
   toast,
 } from "@orderly.network/ui";
-import { PositionTPSLConfirm } from "./tpsl.ui";
 import { TPSLWidget, TPSLWidgetProps } from "./tpsl.widget";
 
 type TPSLSheetProps = {

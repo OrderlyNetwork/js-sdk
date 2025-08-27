@@ -16,7 +16,7 @@ import {
   SDKError,
 } from "@orderly.network/types";
 import { modal, toast } from "@orderly.network/ui";
-import { PositionTPSLConfirm } from "../tpsl.ui";
+import { PositionTPSLConfirm } from "../positionTpslConfirm";
 
 export type TPSLBuilderOptions = {
   type: "tp" | "sl";
