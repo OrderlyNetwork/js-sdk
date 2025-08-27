@@ -13,8 +13,14 @@ export const PnlInfo = (props: Props) => {
   const { t } = useTranslation();
   const { tp_pnl, sl_pnl } = props;
   const riskRatio = useMemo(() => {
+    const defaultNode = <Text className="oui-text-base-contrast-36">-- x</Text>;
     if (tp_pnl && sl_pnl) {
-      const ratio = new Decimal(tp_pnl).div(sl_pnl).abs().toNumber().toFixed(2);
+      const slDecimal = new Decimal(sl_pnl);
+      const tpDecimal = new Decimal(tp_pnl);
+      if (slDecimal.isZero() || tpDecimal.isZero()) {
+        return defaultNode;
+      }
+      const ratio = tpDecimal.div(slDecimal).abs().toNumber().toFixed(2);
       return (
         <Flex
           gap={1}
@@ -26,7 +32,7 @@ export const PnlInfo = (props: Props) => {
         </Flex>
       );
     }
-    return <Text className="oui-text-base-contrast-36">-- x</Text>;
+    return defaultNode;
   }, [tp_pnl, sl_pnl]);
   return (
     <Flex

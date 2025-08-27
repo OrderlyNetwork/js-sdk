@@ -2,7 +2,15 @@ import { useMemo } from "react";
 import { utils } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
-import { Flex, Tooltip, Text, cn } from "@orderly.network/ui";
+import {
+  Flex,
+  Tooltip,
+  Text,
+  cn,
+  EditIcon,
+  useModal,
+  modal,
+} from "@orderly.network/ui";
 import { calcBracketRoiAndPnL } from "../../../utils/util";
 import { useSymbolContext } from "../../provider/symbolContext";
 
@@ -60,16 +68,34 @@ export const BracketOrderPrice = (props: { order: API.AlgoOrderExt }) => {
       }
       className="oui-bg-base-6"
     >
-      <Flex
-        direction={"column"}
-        width={"100%"}
-        justify={"start"}
-        itemAlign={"start"}
-      >
-        <Price type="TP" value={tp_trigger_price} quote_dp={quote_dp} />
-        <Price type="SL" value={sl_trigger_price} quote_dp={quote_dp} />
+      <Flex itemAlign={"center"} justify={"start"} gap={2}>
+        <Flex direction={"column"} justify={"start"} itemAlign={"start"}>
+          <Price type="TP" value={tp_trigger_price} quote_dp={quote_dp} />
+          <Price type="SL" value={sl_trigger_price} quote_dp={quote_dp} />
+        </Flex>
+        <EditBracketOrder order={order} />
       </Flex>
     </Tooltip>
+  );
+};
+
+const EditBracketOrder = (props: { order: API.AlgoOrderExt }) => {
+  const { order } = props;
+
+  const onEdit = () => {
+    modal.show("EditBracketOrderDialogId", {
+      order,
+    });
+  };
+
+  return (
+    <EditIcon
+      size={16}
+      className="oui-text-base-contrast oui-cursor-pointer"
+      onClick={() => {
+        onEdit();
+      }}
+    />
   );
 };
 
