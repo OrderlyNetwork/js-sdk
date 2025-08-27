@@ -85,6 +85,7 @@ export const useTPSLBuilder = (
       setValue,
       setValues,
       validate,
+      metaState,
       errors,
       isCreateMutating,
       isUpdateMutating,
@@ -349,6 +350,7 @@ export const useTPSLBuilder = (
     setOrderPrice,
     // needConfirm,
     onSubmit,
+    metaState,
     errors,
     status: {
       isCreateMutating,
