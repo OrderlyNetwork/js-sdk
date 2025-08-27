@@ -12,8 +12,7 @@ import {
   Divider,
   toast,
 } from "@orderly.network/ui";
-import { PositionTPSLConfirm } from "./tpsl.ui";
-import { TPSLWidget, TPSLWidgetProps } from "./tpsl.widget";
+import { TPSLWidget, TPSLWidgetProps } from "./positionTPSL";
 
 type TPSLSheetProps = {
   order?: API.AlgoOrder;
