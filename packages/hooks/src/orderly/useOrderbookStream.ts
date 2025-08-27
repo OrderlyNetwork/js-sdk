@@ -42,7 +42,13 @@ const asksSortFn = (a: OrderBookItem, b: OrderBookItem) => a[0] - b[0];
 
 const bidsSortFn = (a: OrderBookItem, b: OrderBookItem) => b[0] - a[0];
 
-// const commonSortFn = (a: OrderBookItem, b: OrderBookItem) => b[0] - a[0];
+export const getPriceKey = (price: number, depth: number, asks: boolean) => {
+  return new Decimal(price)
+    .div(depth)
+    .toDecimalPlaces(0, asks ? Decimal.ROUND_CEIL : Decimal.ROUND_FLOOR)
+    .mul(depth)
+    .toNumber();
+};
 
 const reduceItems = (
   depth: number | undefined,
@@ -65,27 +71,20 @@ const reduceItems = (
         continue;
       }
 
-      let priceKey = new Decimal(price)
-        .div(depth)
-        .toDecimalPlaces(0, asks ? Decimal.ROUND_CEIL : Decimal.ROUND_FLOOR)
-        .mul(depth)
-        .toNumber();
+      const priceKey = getPriceKey(price, depth, asks);
 
-      if (depth < 1 && depth > 0 && priceKey.toString().indexOf(".") !== -1) {
-        const priceStr = price.toString();
-        const index = priceStr.indexOf(".");
-        const decimal = priceStr.slice(index + 1);
-        const decimalDepth = removeTrailingZeros(depth)
-          .toString()
-          .slice(2).length;
-        const decimalStr = decimal.slice(0, min(decimal.length, decimalDepth));
-        priceKey = new Decimal(
-          priceStr.slice(0, index) + "." + decimalStr,
-        ).toNumber();
-      }
-
-      // console.log(`reduce items price: ${price}, priceKey: ${priceKey}, depth: ${depth}, resetPriceKey: ${price.toString === priceKey.toString}`);
-      // console.log(`ask: ${asks} reduce items price: ${priceKey}`);
+      // if (depth < 1 && depth > 0 && priceKey.toString().indexOf(".") !== -1) {
+      //   const priceStr = price.toString();
+      //   const index = priceStr.indexOf(".");
+      //   const decimal = priceStr.slice(index + 1);
+      //   const decimalDepth = removeTrailingZeros(depth)
+      //     .toString()
+      //     .slice(2).length;
+      //   const decimalStr = decimal.slice(0, min(decimal.length, decimalDepth));
+      //   priceKey = new Decimal(
+      //     priceStr.slice(0, index) + "." + decimalStr,
+      //   ).toNumber();
+      // }
 
       if (prices.has(priceKey)) {
         const item = prices.get(priceKey)!;
