@@ -1,5 +1,19 @@
 # @orderly.network/trading-leaderboard
 
+## 2.6.1-internal-20250828.4
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.6.1-internal-20250828.4
+  - @orderly.network/hooks@2.6.1-internal-20250828.4
+  - @orderly.network/i18n@2.6.1-internal-20250828.4
+  - @orderly.network/types@2.6.1-internal-20250828.4
+  - @orderly.network/ui@2.6.1-internal-20250828.4
+  - @orderly.network/ui-connector@2.6.1-internal-20250828.4
+  - @orderly.network/utils@2.6.1-internal-20250828.4
+
 ## 2.6.1-internal-20250828.3
 
 ### Patch Changes
