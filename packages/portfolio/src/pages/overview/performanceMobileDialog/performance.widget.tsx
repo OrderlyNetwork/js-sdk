@@ -1,13 +1,25 @@
 import React from "react";
+import { pick } from "ramda";
 import { i18n } from "@orderly.network/i18n";
 import { registerSimpleDialog, registerSimpleSheet } from "@orderly.network/ui";
+import { usePerformanceScript } from "..";
 import { localKey } from "../provider/overviewProvider";
 import { useAssetsHistoryData } from "../shared/useAssetHistory";
 import { PerformanceMobileUI } from "./performance.ui";
 
 export const PerformanceMobileWidget: React.FC = () => {
   const state = useAssetsHistoryData(localKey, { isRealtime: true });
-  return <PerformanceMobileUI {...state} />;
+  const { visible, invisible } = usePerformanceScript();
+  return (
+    <PerformanceMobileUI
+      {...pick(
+        ["data", "curPeriod", "aggregateValue", "onPeriodChange"],
+        state,
+      )}
+      visible={visible}
+      invisible={invisible}
+    />
+  );
 };
 
 export const PerformanceMobileSheetId = "PerformanceMobileSheetId";

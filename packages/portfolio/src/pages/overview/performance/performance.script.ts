@@ -2,11 +2,15 @@ import { useMemo } from "react";
 import { useAccount, useLocalStorage } from "@orderly.network/hooks";
 import { useAppContext, useDataTap } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
+import { ORDERLY_ASSETS_VISIBLE_KEY } from "../../assets/assets.script";
 import { useOverviewContext } from "../provider/overviewContext";
 
 export const usePerformanceScript = () => {
   const ctx = useOverviewContext();
-  const [visible] = useLocalStorage("orderly_assets_visible", true);
+  const [visible, setVisible] = useLocalStorage<boolean>(
+    ORDERLY_ASSETS_VISIBLE_KEY,
+    true,
+  );
 
   const { wrongNetwork, disabledConnect } = useAppContext();
   const { state } = useAccount();
@@ -41,7 +45,8 @@ export const usePerformanceScript = () => {
     ...ctx,
     data: _data as ReadonlyArray<any>,
     invisible,
-    visible,
+    visible: visible as boolean,
+    setVisible: setVisible,
   };
 };
 

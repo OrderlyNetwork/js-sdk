@@ -74,9 +74,9 @@ class OrderbookService {
     rawOrderBook.ts = update.ts;
   }
   private applyBufferedUpdatesToRawOrderBooks(symbol: string) {
-    this.bufferedOrderBookUpdates[symbol]?.forEach((update) =>
-      this.applyUpdateToRawOrderBook(symbol, update),
-    );
+    this.bufferedOrderBookUpdates[symbol]?.forEach((update) => {
+      this.applyUpdateToRawOrderBook(symbol, update);
+    });
   }
 
   private deleteBufferedOrderBookUpdates(symbol: string) {
