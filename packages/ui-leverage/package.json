@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/ui-leverage",
-  "version": "2.6.1-internal-20250828.2",
+  "version": "2.6.1-internal-20250828.3",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
