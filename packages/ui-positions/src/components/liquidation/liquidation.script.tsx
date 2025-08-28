@@ -1,18 +1,19 @@
+import { useEffect, useMemo, useState } from "react";
+import { differenceInDays, subDays } from "date-fns";
 import {
   usePrivateInfiniteQuery,
   usePrivateQuery,
 } from "@orderly.network/hooks";
 import { useDataTap } from "@orderly.network/react-app";
 import { API } from "@orderly.network/types";
-import { useEffect, useMemo, useState } from "react";
+import { usePagination, useScreen } from "@orderly.network/ui";
+import { Decimal, zero } from "@orderly.network/utils";
 import {
   areDatesEqual,
   formatDatePickerRange,
   offsetEndOfDay,
   offsetStartOfDay,
 } from "../../utils";
-import { differenceInDays, subDays } from "date-fns";
-import { usePagination, useScreen } from "@orderly.network/ui";
 import { LiquidationProps } from "./liquidation.widget";
 
 export const useLiquidationScript = (props: LiquidationProps) => {
@@ -76,14 +77,11 @@ const useLiquidation = (props: {
   page?: number;
   size?: number;
 }) => {
-  const ordersResponse = usePrivateInfiniteQuery<API.Liquidation>(
-    generateKeyFun(props),
-    {
-      initialSize: 1,
-      formatter: (data) => data,
-      revalidateOnFocus: true,
-    }
-  );
+  const ordersResponse = usePrivateInfiniteQuery(generateKeyFun(props), {
+    initialSize: 1,
+    formatter: (data) => data,
+    revalidateOnFocus: true,
+  });
 
   const meta = useMemo(() => {
     // @ts-ignore
@@ -91,7 +89,29 @@ const useLiquidation = (props: {
   }, [ordersResponse.data?.[0]]);
 
   const data = useMemo(() => {
-    return ordersResponse.data?.map((item: any) => item.rows)?.flat();
+    return ordersResponse.data
+      ?.map((item) =>
+        // @ts-ignore
+        item.rows?.map((item) => {
+          let liquidationFeeRate = null;
+          const firstPosition = item.positions_by_perp[0];
+
+          if (firstPosition) {
+            liquidationFeeRate = new Decimal(firstPosition.liquidator_fee)
+              .add(firstPosition.insurance_fund_fee)
+              .toNumber();
+          }
+
+          return {
+            ...item,
+            formatted_account_mmr: isNaN(item.account_mmr)
+              ? null
+              : new Decimal(item.account_mmr).mul(100).toFixed(2).toString(),
+            liquidationFeeRate,
+          };
+        }),
+      )
+      ?.flat();
   }, [ordersResponse.data]);
 
   const isLoading = ordersResponse.isLoading;

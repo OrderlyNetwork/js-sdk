@@ -1,7 +1,15 @@
-import { FC } from "react";
+import { FC, SVGProps } from "react";
+import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { OrderStatus } from "@orderly.network/types";
-import { Box, Divider, Flex, TabPanel, Tabs } from "@orderly.network/ui";
+import {
+  Box,
+  Divider,
+  Flex,
+  TabPanel,
+  Tabs,
+  Tooltip,
+} from "@orderly.network/ui";
 import { DesktopOrderListWidget, TabType } from "@orderly.network/ui-orders";
 import {
   LiquidationWidget,
@@ -42,6 +50,7 @@ export const DataList: FC<DataListState> = (props) => {
       classNames={{
         // tabsList: "oui-px-3",
         tabsContent: "oui-h-[calc(100%_-_32px)]",
+        trigger: "oui-group",
       }}
     >
       <TabPanel
@@ -137,7 +146,7 @@ export const DataList: FC<DataListState> = (props) => {
       <TabPanel
         testid="oui-testid-dataList-liquidation-tab"
         value={DataListTabType.liquidation}
-        title={t("positions.liquidation")}
+        title={<LiquidationTab />}
       >
         <LiquidationWidget
           symbol={!!props.showAllSymbol ? undefined : props.symbol}
@@ -146,6 +155,46 @@ export const DataList: FC<DataListState> = (props) => {
     </Tabs>
   );
 };
+
+export const LiquidationTab = () => {
+  const { t } = useTranslation();
+  return (
+    <div className="oui-flex oui-space-x-1">
+      <span>{t("positions.liquidation")}</span>
+      <Tooltip
+        className="oui-max-w-[275px] oui-bg-base-6"
+        content={
+          "An account is subject to liquidation if its Account Margin Ratio falls below its Maintenance Margin Ratio."
+        }
+        arrow={{
+          className: "oui-fill-base-6",
+        }}
+      >
+        <button className="oui-hidden group-data-[state=active]:oui-block">
+          <TooltipIcon />
+        </button>
+      </Tooltip>
+    </div>
+  );
+};
+
+const TooltipIcon = React.forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
+  (props, ref) => {
+    return (
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 12 12"
+        fill="currentColor"
+        xmlns="http://www.w3.org/2000/svg"
+        ref={ref}
+        {...props}
+      >
+        <path d="M5.999 1.007a5 5 0 1 0 0 10 5 5 0 0 0 0-10m0 2.5a.5.5 0 1 1 0 1 .5.5 0 0 1 0-1m0 1.5a.5.5 0 0 1 .5.5v2.5a.5.5 0 0 1-1 0v-2.5a.5.5 0 0 1 .5-.5" />
+      </svg>
+    );
+  },
+);
 
 const PositionsView: FC<DataListState> = (props) => {
   return (
