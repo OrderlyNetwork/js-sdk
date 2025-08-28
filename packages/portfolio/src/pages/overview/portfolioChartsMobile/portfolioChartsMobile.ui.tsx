@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from "react";
-import { Line, LineChart } from "@orderly.network/chart";
+import React, { useId } from "react";
+import { Area, AreaChart } from "@orderly.network/chart";
 import { useTranslation } from "@orderly.network/i18n";
 import { EMPTY_LIST } from "@orderly.network/types";
 import { ChevronRightIcon, cn, Flex, Text } from "@orderly.network/ui";
@@ -15,6 +15,7 @@ export const PortfolioChartsMobileUI: React.FC<
   const { data, invisible, unrealPnL, unrealROI, visible, onPerformanceClick } =
     props;
   const { t } = useTranslation();
+  const colorId = useId();
   return (
     <Flex
       p={4}
@@ -72,18 +73,27 @@ export const PortfolioChartsMobileUI: React.FC<
         itemAlign={"center"}
         direction={"column"}
       >
-        <LineChart data={data || EMPTY_LIST} width={150} height={65}>
+        <AreaChart data={data || EMPTY_LIST} width={160} height={52}>
           {!invisible && (
-            <Line
-              type="natural"
-              dataKey="account_value"
-              stroke={"rgb(41, 233, 169)"}
-              strokeWidth={1.5}
-              dot={false}
-              isAnimationActive={false}
-            />
+            <>
+              <defs>
+                <linearGradient id={colorId} x1="0" y1="0" x2="0" y2="1">
+                  <stop stopColor="#00B49E" offset="0%" stopOpacity={0.5} />
+                  <stop stopColor="#00B49E" offset="100%" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <Area
+                type="natural"
+                dataKey="account_value"
+                stroke={"rgb(41, 233, 169)"}
+                strokeWidth={1.5}
+                dot={false}
+                isAnimationActive={false}
+                fill={`url(#${colorId})`}
+              />
+            </>
           )}
-        </LineChart>
+        </AreaChart>
       </Flex>
     </Flex>
   );

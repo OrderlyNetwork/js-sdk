@@ -7,7 +7,15 @@ export { PnlLineChart } from "./orderly/pnlLine";
 export { AssetLineChart, type PnlLineChartProps } from "./orderly/assetLine";
 export { VolBarChart } from "./orderly/volBar";
 export type { VolChartDataItem } from "./orderly/volBar";
-export { LineChart, Line, BarChart, Bar, Cell } from "recharts";
+export {
+  LineChart,
+  Line,
+  BarChart,
+  Bar,
+  Cell,
+  Area,
+  AreaChart,
+} from "recharts";
 // export { Legend } from "./common/legend";
 // export { Tooltip } from "./common/tooltip";
 

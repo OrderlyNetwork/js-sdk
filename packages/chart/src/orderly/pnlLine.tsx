@@ -1,4 +1,5 @@
-import React, { useMemo, useRef } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useId, useMemo, useRef } from "react";
 // import { Line } from "../line/line";
 import {
   LineChart,
@@ -6,7 +7,8 @@ import {
   YAxis,
   Line,
   CartesianGrid,
-  ReferenceLine,
+  AreaChart,
+  Area,
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
@@ -14,8 +16,6 @@ import type { TooltipProps } from "recharts";
 import type { Props as ResponsiveContainerProps } from "recharts/types/component/ResponsiveContainer";
 import { useTranslation } from "@orderly.network/i18n";
 import { useScreen } from "@orderly.network/ui";
-import { numberToHumanStyle } from "@orderly.network/utils";
-import { getThemeColors } from "../utils/theme";
 import { tickFormatter } from "../utils/yTickFormatter";
 import { OrderlyChartTooltip } from "./customTooltip";
 import { useColors } from "./useColors";
@@ -59,60 +59,104 @@ const dataTransfer = (data: any[]) => {
   return series;
 };
 
-const PnlLineChart: React.FC<PnlLineChartProps> = (props) => {
+export const PnlLineChart: React.FC<PnlLineChartProps> = (props) => {
   const { responsiveContainerProps } = props;
   const colors = useColors(props.colors);
 
   const { isMobile } = useScreen();
 
+  const colorId = useId();
+
   const data = useMemo(() => dataTransfer(props.data), [props.data]);
 
-  return (
-    <ResponsiveContainer
-      className={props.invisible ? "chart-invisible" : ""}
-      {...responsiveContainerProps}
+  const chartComponent = isMobile ? (
+    <AreaChart
+      data={data}
+      margin={{ top: 20, right: 10, left: -10, bottom: 0 }}
     >
-      <LineChart
-        data={data}
-        margin={{ top: 20, right: 10, left: -10, bottom: 0 }}
-      >
-        <CartesianGrid vertical={false} stroke="#FFFFFF" strokeOpacity={0.04} />
-        <XAxis
-          dataKey="date"
-          interval={props.data.length - 2}
-          tick={<XAxisLabel />}
-          stroke="#FFFFFF"
-          strokeOpacity={0.04}
-        />
-
-        <YAxis
-          dataKey="pnl"
-          tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
-          tickLine={false}
-          axisLine={false}
-          tickFormatter={(value) => tickFormatter(value)}
-        />
-
-        {!props.invisible && (
-          <Tooltip
-            cursor={{ strokeDasharray: "3 2", strokeOpacity: 0.16 }}
-            content={<CustomTooltip />}
-          />
-        )}
-
-        {!props.invisible && (
-          <Line
+      <CartesianGrid vertical={false} stroke="#FFFFFF" strokeOpacity={0.04} />
+      <XAxis
+        dataKey="date"
+        interval={props.data.length - 2}
+        tick={<XAxisLabel />}
+        stroke="#FFFFFF"
+        strokeOpacity={0.04}
+      />
+      <YAxis
+        dataKey="pnl"
+        tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
+        tickLine={false}
+        axisLine={false}
+        tickFormatter={(value) => tickFormatter(value)}
+      />
+      {!props.invisible && (
+        <>
+          <defs>
+            <linearGradient id={colorId} x1="0" y1="0" x2="0" y2="1">
+              <stop stopColor="#608CFF" offset="0%" stopOpacity={0.5} />
+              <stop stopColor="#608CFF" offset="100%" stopOpacity={0} />
+            </linearGradient>
+          </defs>
+          <Area
             type="natural"
             dataKey="pnl"
             stroke={colors.primary}
             strokeWidth={isMobile ? 1.5 : 2}
             dot={false}
             isAnimationActive={false}
+            fill={`url(#${colorId})`}
           />
-        )}
-      </LineChart>
+        </>
+      )}
+    </AreaChart>
+  ) : (
+    <LineChart
+      data={data}
+      margin={{ top: 20, right: 10, left: -10, bottom: 0 }}
+    >
+      <CartesianGrid vertical={false} stroke="#FFFFFF" strokeOpacity={0.04} />
+      <XAxis
+        dataKey="date"
+        interval={props.data.length - 2}
+        tick={<XAxisLabel />}
+        stroke="#FFFFFF"
+        strokeOpacity={0.04}
+      />
+
+      <YAxis
+        dataKey="pnl"
+        tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
+        tickLine={false}
+        axisLine={false}
+        tickFormatter={(value) => tickFormatter(value)}
+      />
+
+      {!props.invisible && (
+        <Tooltip
+          cursor={{ strokeDasharray: "3 2", strokeOpacity: 0.16 }}
+          content={<CustomTooltip />}
+        />
+      )}
+
+      {!props.invisible && (
+        <Line
+          type="natural"
+          dataKey="pnl"
+          stroke={colors.primary}
+          strokeWidth={isMobile ? 1.5 : 2}
+          dot={false}
+          isAnimationActive={false}
+        />
+      )}
+    </LineChart>
+  );
+
+  return (
+    <ResponsiveContainer
+      className={props.invisible ? "chart-invisible" : ""}
+      {...responsiveContainerProps}
+    >
+      {chartComponent}
     </ResponsiveContainer>
   );
 };
-
-export { PnlLineChart };

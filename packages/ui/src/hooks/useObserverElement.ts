@@ -1,17 +1,19 @@
 import { useEffect } from "react";
 
-/** 
- * observe the element and call the callback when the element is changed 
+/**
+ * observe the element and call the callback when the element is changed
  * */
 export function useObserverElement<T extends HTMLElement>(
   element: T | null,
-  callback: (entry: ResizeObserverEntry) => void
+  callback: (entry: ResizeObserverEntry) => void,
 ) {
   useEffect(() => {
-    if (!element) return;
+    if (!element) {
+      return;
+    }
 
     const resizeObserver = new ResizeObserver((entries) => {
-      for (let entry of entries) {
+      for (const entry of entries) {
         callback(entry);
       }
     });
