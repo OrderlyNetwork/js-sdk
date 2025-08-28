@@ -152,7 +152,10 @@ export const DataFilter: React.FC<DataFilterProps> = (props) => {
       gapX={3}
       py={3}
       width={"100%"}
-      className={cnBase("oui-data-filter-bar", props.className)}
+      className={cnBase(
+        "oui-data-filter-bar oui-border-b oui-border-line",
+        props.className,
+      )}
     >
       {props.items.filter(Boolean).map((item, index: number) => {
         if (item.type === "date") {
