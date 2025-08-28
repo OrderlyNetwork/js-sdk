@@ -1,10 +1,10 @@
 import { useContext, useMemo, useState } from "react";
-import { useMarketsStream } from "./useMarketsStream";
-import { OrderlyContext } from "../orderlyContext";
-import { API } from "@orderly.network/types";
-import { useSymbolsInfo } from "./useSymbolsInfo";
-import { useFundingRates } from "./useFundingRates";
+import { API, EMPTY_LIST } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
+import { OrderlyContext } from "../orderlyContext";
+import { useFundingRates } from "./useFundingRates";
+import { useMarketsStream } from "./useMarketsStream";
+import { useSymbolsInfo } from "./useSymbolsInfo";
 
 export enum MarketsType {
   FAVORITES,
@@ -105,13 +105,14 @@ export const useMarket = (type: MarketsType) => {
   const getFavorites = useMemo(() => {
     const curData = getStore<Favorite[]>("favorites", []);
     const tabs = getFavoriteTabs;
-    const result = [] as Favorite[];
-    for (let index = 0; index < curData.length; index++) {
+    const result: Favorite[] = [];
+    const len = curData.length;
+    for (let index = 0; index < len; index++) {
       const favData = curData[index];
-      var favTabs = favData.tabs.filter(
-        (tab) => tabs.findIndex((item) => tab.id === item.id) !== -1
+      const favTabs = favData.tabs.filter(
+        (tab) => tabs.findIndex((item) => tab.id === item.id) !== -1,
       );
-      if (favTabs.length > 0) {
+      if (favTabs.length) {
         result.push({ ...favData, tabs: favTabs });
       }
     }
@@ -124,10 +125,10 @@ export const useMarket = (type: MarketsType) => {
   const [favorites, setFavorites] = useState(getFavorites);
 
   const [recent, setRecent] = useState(
-    getStore<Recent[]>("recent", []).filter((e) => e)
+    getStore<Recent[]>("recent", []).filter((e) => e),
   );
   const [tabSort, setTabSort] = useState(
-    getStore<Record<string, TabSort>>("tabSort", {})
+    getStore<Record<string, TabSort>>("tabSort", {}),
   );
 
   const updateFavoriteTabs = (
@@ -136,7 +137,7 @@ export const useMarket = (type: MarketsType) => {
       add?: boolean;
       update?: boolean;
       delete?: boolean;
-    }
+    },
   ) => {
     const saveTabs = (tabs: FavoriteTab[]) => {
       setFavoriteTabs(tabs);
@@ -148,7 +149,7 @@ export const useMarket = (type: MarketsType) => {
       return;
     }
 
-    var tabs = [...favoriteTabs];
+    const tabs = [...favoriteTabs];
     const index = tabs.findIndex((item) => item.id === tab.id);
     if (operator?.add) {
       tabs.push(tab);
@@ -183,7 +184,7 @@ export const useMarket = (type: MarketsType) => {
   const updateSymbolFavoriteState = (
     symbol: API.MarketInfoExt,
     tab: FavoriteTab | FavoriteTab[],
-    remove: boolean = false
+    remove: boolean = false,
   ) => {
     const curData = [...favorites];
     const index = curData.findIndex((item) => item.name == symbol.symbol);
@@ -281,7 +282,7 @@ export const useMarket = (type: MarketsType) => {
             : favoriteKeys.includes(element.symbol);
 
         const fIndex = favoritesData.findIndex(
-          (item) => item.name === element.symbol
+          (item) => item.name === element.symbol,
         );
         const tabs = fIndex === -1 ? [] : favoritesData[fIndex].tabs;
 
@@ -325,7 +326,7 @@ export const useMarket = (type: MarketsType) => {
   const updateTabsSortState = (
     tabId: string,
     sortKey: string,
-    sortOrder: "desc" | "asc"
+    sortOrder: "desc" | "asc",
   ) => {
     const map = getStore<Record<string, TabSort>>("tabSort", {});
 
@@ -341,7 +342,7 @@ export const useMarket = (type: MarketsType) => {
   const markets = getData(type);
 
   return [
-    markets || [],
+    markets || EMPTY_LIST,
     {
       favoriteTabs,
       favorites,
