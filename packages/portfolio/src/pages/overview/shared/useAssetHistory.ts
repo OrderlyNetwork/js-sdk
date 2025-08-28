@@ -39,24 +39,17 @@ export const useAssetsHistoryData = (
   );
 
   const convertToUSDCAndOperate = useCallback(
-    ({
-      token,
-      amount,
-
-      value,
-      op = "sub",
-    }: {
+    (inputs: {
       token: string;
       amount: string | number;
-
       value: Decimal;
       op?: "add" | "sub";
     }): Decimal => {
+      const { token, amount, value, op = "sub" } = inputs;
       if (token.toUpperCase() === "USDC") {
         return op === "add" ? value.add(amount) : value.sub(amount);
       } else {
         const indexPrice = getIndexPrice(token);
-        // console.log("indexPrice--------------", indexPrice);
         if (indexPrice) {
           const delta = new Decimal(amount).mul(indexPrice);
           return op === "add" ? value.add(delta) : value.sub(delta);
@@ -158,13 +151,12 @@ export const useAssetsHistoryData = (
           convertToUSDCAndOperate({
             token: item.token,
             amount: item.amount,
-
             value: zero,
             op: "add",
           }),
         );
       }, zero);
-  }, [allDepositHistory, getIndexPrice]);
+  }, [allDepositHistory, convertToUSDCAndOperate]);
 
   const totalTransferInForROI = useMemo(() => {
     if (!Array.isArray(transferInHistory)) {
@@ -177,13 +169,12 @@ export const useAssetsHistoryData = (
           convertToUSDCAndOperate({
             token: item.token,
             amount: item.amount,
-
             value: zero,
             op: "add",
           }),
         );
       }, zero);
-  }, [transferInHistory, getIndexPrice]);
+  }, [transferInHistory, convertToUSDCAndOperate]);
 
   const onPeriodChange = (value: PeriodType) => {
     setStartDate(getStartDate(value));
@@ -218,13 +209,12 @@ export const useAssetsHistoryData = (
         convertToUSDCAndOperate({
           token: item.token,
           amount: item.amount,
-
           value: zero,
           op: "add",
         }),
       );
     }, zero);
-  }, [transferInHistory, lastItem, getIndexPrice]);
+  }, [transferInHistory, lastItem, convertToUSDCAndOperate]);
 
   const totalTransferOut = useMemo(() => {
     if (!Array.isArray(transferOutHistory)) {
@@ -248,13 +238,12 @@ export const useAssetsHistoryData = (
         convertToUSDCAndOperate({
           token: item.token,
           amount: item.amount,
-
           value: zero,
           op: "add",
         }),
       );
     }, zero);
-  }, [transferOutHistory, lastItem]);
+  }, [transferOutHistory, lastItem, convertToUSDCAndOperate]);
 
   const calculateLastPnl = (inputs: {
     lastItem: API.DailyRow;
@@ -302,7 +291,6 @@ export const useAssetsHistoryData = (
             totalDeposit.current = convertToUSDCAndOperate({
               token: item.token,
               amount: item.amount,
-
               value: totalDeposit.current,
               op: "add",
             });
@@ -312,7 +300,6 @@ export const useAssetsHistoryData = (
             value = convertToUSDCAndOperate({
               token: item.token,
               amount: item.amount,
-
               value,
               op: "add",
             });
