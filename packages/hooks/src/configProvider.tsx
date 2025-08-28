@@ -53,6 +53,7 @@ export type BaseConfigProviderProps = {
   | "chainTransformer"
   | "dataAdapter"
   | "notification"
+  | "amplitudeConfig"
 >;
 
 export type ExclusiveConfigProviderProps =
@@ -60,14 +61,12 @@ export type ExclusiveConfigProviderProps =
       brokerId: string;
       brokerName?: string;
       networkId: NetworkId;
-      amplitudeId?: string;
       configStore?: never;
     }
   | {
       brokerId?: never;
       brokerName?: never;
       networkId?: never;
-      amplitudeId?: never;
       configStore: ConfigStore;
     };
 
@@ -84,7 +83,6 @@ export const OrderlyConfigProvider: FC<
     // getWalletAdapter,
     walletAdapters,
     brokerId,
-    amplitudeId,
     brokerName,
     networkId,
     contracts,
@@ -94,6 +92,7 @@ export const OrderlyConfigProvider: FC<
     chainTransformer,
     dataAdapter,
     notification,
+    amplitudeConfig,
     orderbookDefaultTickSizes,
     orderbookDefaultSymbolDepths,
     children,
@@ -125,12 +124,11 @@ export const OrderlyConfigProvider: FC<
       configStore ||
         new ExtendedConfigStore({
           brokerId,
-          amplitudeId,
           brokerName,
           networkId,
         }),
     );
-  }, [configStore, brokerId, amplitudeId, brokerName, networkId]);
+  }, [configStore, brokerId, brokerName, networkId]);
 
   const innerKeyStore = useMemo<OrderlyKeyStore>(() => {
     return keyStore || new LocalStorageStore(networkId);
@@ -197,6 +195,7 @@ export const OrderlyConfigProvider: FC<
       chainTransformer,
       dataAdapter,
       notification: notification,
+      amplitudeConfig,
     };
   }, [
     innerConfigStore,
@@ -211,6 +210,7 @@ export const OrderlyConfigProvider: FC<
     dataAdapter,
     notification,
     chainTransformer,
+    amplitudeConfig,
   ]);
 
   if (!account) {

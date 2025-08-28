@@ -14,11 +14,10 @@ export type ConfigStoreOptions = {
   brokerId?: string;
   brokerName?: string;
   env?: string;
-  amplitudeId?: string;
 };
 
 export const useConfigStore = (params: ConfigStoreOptions) => {
-  const { networkId, brokerId, brokerName, env, amplitudeId } = params;
+  const { networkId, brokerId, brokerName, env } = params;
 
   const configStore = useMemo(() => {
     return new CustomConfigStore({
@@ -26,9 +25,8 @@ export const useConfigStore = (params: ConfigStoreOptions) => {
       brokerId: brokerId || VITE_BROKER_ID || "demo",
       brokerName: brokerName || VITE_BROKER_NAME || "Orderly",
       env: env || VITE_ENV || "staging",
-      amplitudeId: amplitudeId || VITE_AMPLITUDE_ID || "",
     });
-  }, [networkId, brokerId, brokerName, env, amplitudeId]);
+  }, [networkId, brokerId, brokerName, env]);
 
   return configStore;
 };

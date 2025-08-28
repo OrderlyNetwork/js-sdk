@@ -77,6 +77,11 @@ export interface OrderlyConfigContextState {
       defaultOpen?: boolean;
     };
   };
+
+  amplitudeConfig?: {
+    amplitudeId: string;
+    serverZone?: "EU" | "US";
+  };
 }
 
 export const OrderlyContext = createContext<OrderlyConfigContextState>({

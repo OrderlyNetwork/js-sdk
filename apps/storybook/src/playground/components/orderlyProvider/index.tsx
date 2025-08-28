@@ -12,14 +12,7 @@ export const OrderlyProvider = () => {
   const { onRouteChange } = useNav();
   usePageTitle();
   useTheme();
-  const {
-    networkId,
-    brokerId,
-    brokerName,
-    env,
-    usePrivy,
-    amplitudeId = "4463418c103f3a66c6d863357f951e25",
-  } = useEnvFormUrl();
+  const { networkId, brokerId, brokerName, env, usePrivy } = useEnvFormUrl();
 
   return (
     <RouteProvider onRouteChange={onRouteChange}>
@@ -30,7 +23,6 @@ export const OrderlyProvider = () => {
             brokerId={brokerId}
             brokerName={brokerName}
             env={env}
-            amplitudeId={amplitudeId}
           >
             {/* because the portfolio layout is used in route layout, we need to render the outlet */}
             <Outlet />

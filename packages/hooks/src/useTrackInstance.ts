@@ -5,7 +5,7 @@ import { OrderlyContext } from "./orderlyContext";
 import { ENVType, AmplitudeTracker } from "./services/amplitudeTracker";
 
 export const useTrackingInstance = () => {
-  const { configStore } = useContext(OrderlyContext);
+  const { configStore, amplitudeConfig } = useContext(OrderlyContext);
 
   if (!configStore) {
     throw new Error("configStore is not defined, please use OrderlyProvider");
@@ -13,12 +13,11 @@ export const useTrackingInstance = () => {
 
   const env = configStore.get("env") as ENVType;
   const brokerId = configStore.get("brokerId") as string;
-  const amplitudeId = configStore.get("amplitudeId") as string;
 
   const trackInstace = useConstant(() => {
     let instance = SimpleDI.get<AmplitudeTracker>("amplitudeTracker");
     if (!instance) {
-      instance = new AmplitudeTracker(env, amplitudeId, {
+      instance = new AmplitudeTracker(env, amplitudeConfig ?? undefined, {
         brokerId,
         sdk_version:
           window?.__ORDERLY_VERSION__?.["@orderly.network/net"] ?? "",
