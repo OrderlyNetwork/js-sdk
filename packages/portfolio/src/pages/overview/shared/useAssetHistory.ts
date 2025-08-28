@@ -51,7 +51,7 @@ export const useAssetsHistoryData = (
   const [today] = useState(() => new Date());
 
   const { data: indexPrices } = useIndexPricesStream();
-  const { account } = useAccount();
+  // const { account } = useAccount();
 
   const { t } = useTranslation();
 
@@ -130,11 +130,56 @@ export const useAssetsHistoryData = (
     },
   );
 
+  // get deposit & withdraw records to calculate the current PNL
   const [assetHistory] = useAssetsHistory({
     startTime: subDays(today, 2).getTime(),
     endTime: endDate.getTime(),
     pageSize: 50,
   });
+
+  // get all deposit records to calculate the ROI
+  const [allDepositHistory] = useAssetsHistory({
+    side: "DEPOSIT",
+    startTime: subDays(today, periodValue).getTime(),
+    endTime: endDate.getTime(),
+    pageSize: 50,
+  });
+
+  const totalDepositForROI = useMemo(() => {
+    return allDepositHistory
+      ?.filter((item) => item.trans_status === "COMPLETED")
+      .reduce((acc, item) => {
+        return acc.add(
+          // item.amount
+          convertToUSDCAndOperate({
+            token: item.token,
+            amount: item.amount,
+            indexPrices,
+            value: zero,
+            op: "add",
+          }),
+        );
+      }, zero);
+  }, [allDepositHistory, indexPrices]);
+
+  const totalTransferInForROI = useMemo(() => {
+    if (!Array.isArray(transferInHistory)) {
+      return zero;
+    }
+    return transferInHistory
+      ?.filter((item) => item.status === "COMPLETED")
+      .reduce((acc, item) => {
+        return acc.add(
+          convertToUSDCAndOperate({
+            token: item.token,
+            amount: item.amount,
+            indexPrices,
+            value: zero,
+            op: "add",
+          }),
+        );
+      }, zero);
+  }, [transferInHistory, indexPrices]);
 
   const onPeriodChange = (value: PeriodType) => {
     setStartDate(getStartDate(value));
@@ -159,7 +204,10 @@ export const useAssetsHistoryData = (
       return zero;
     }
     const list = transferInHistory?.filter((item) => {
-      return item.created_time > lastItem?.snapshot_time;
+      return (
+        item.status === "COMPLETED" &&
+        item.created_time > lastItem?.snapshot_time
+      );
     });
     return list?.reduce((acc, item) => {
       return acc.add(
@@ -186,7 +234,10 @@ export const useAssetsHistoryData = (
       return zero;
     }
     const list = transferOutHistory?.filter((item) => {
-      return item.created_time > lastItem?.snapshot_time;
+      return (
+        item.status === "COMPLETED" &&
+        item.created_time > lastItem?.snapshot_time
+      );
     });
     return list?.reduce((acc, item) => {
       return acc.add(
@@ -389,7 +440,7 @@ export const useAssetsHistoryData = (
         roi = zero;
       } else {
         roi = pnl.div(
-          totalTransferIn.add(lastAccountValue).add(totalDeposit.current),
+          totalTransferInForROI.add(lastAccountValue).add(totalDepositForROI),
         );
       }
     }
@@ -407,7 +458,13 @@ export const useAssetsHistoryData = (
     // console.log("---------------------------");
 
     return { vol: vol.toNumber(), pnl: pnl.toNumber(), roi: roi.toNumber() };
-  }, [calculatedData, data, periodValue, totalTransferIn]);
+  }, [
+    calculatedData,
+    data,
+    periodValue,
+    totalTransferInForROI,
+    totalDepositForROI,
+  ]);
 
   const createFakeData = (
     start: Partial<API.DailyRow>,
