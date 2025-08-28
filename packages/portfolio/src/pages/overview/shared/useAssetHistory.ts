@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { subDays, format } from "date-fns";
 import {
   useAccount,
@@ -19,38 +19,13 @@ export enum PeriodType {
   QUARTER = "90D",
 }
 
-function convertToUSDCAndOperate({
-  token,
-  amount,
-  indexPrices,
-  value,
-  op = "sub",
-}: {
-  token: string;
-  amount: string | number;
-  indexPrices: Record<string, number>;
-  value: Decimal;
-  op?: "add" | "sub";
-}): Decimal {
-  if (token.toUpperCase() === "USDC") {
-    return op === "add" ? value.add(amount) : value.sub(amount);
-  } else {
-    const indexPrice = indexPrices[token];
-    if (indexPrice) {
-      const delta = new Decimal(amount).mul(indexPrice);
-      return op === "add" ? value.add(delta) : value.sub(delta);
-    }
-    return value;
-  }
-}
-
 export const useAssetsHistoryData = (
   localKey: string,
   options?: { isRealtime?: boolean },
 ) => {
   const [today] = useState(() => new Date());
 
-  const { data: indexPrices } = useIndexPricesStream();
+  const { getIndexPrice } = useIndexPricesStream();
   // const { account } = useAccount();
 
   const { t } = useTranslation();
@@ -61,6 +36,35 @@ export const useAssetsHistoryData = (
   const [period, setPeriod] = useLocalStorage<PeriodType>(
     localKey,
     PeriodType.WEEK,
+  );
+
+  const convertToUSDCAndOperate = useCallback(
+    ({
+      token,
+      amount,
+
+      value,
+      op = "sub",
+    }: {
+      token: string;
+      amount: string | number;
+
+      value: Decimal;
+      op?: "add" | "sub";
+    }): Decimal => {
+      if (token.toUpperCase() === "USDC") {
+        return op === "add" ? value.add(amount) : value.sub(amount);
+      } else {
+        const indexPrice = getIndexPrice(token);
+        // console.log("indexPrice--------------", indexPrice);
+        if (indexPrice) {
+          const delta = new Decimal(amount).mul(indexPrice);
+          return op === "add" ? value.add(delta) : value.sub(delta);
+        }
+        return value;
+      }
+    },
+    [getIndexPrice],
   );
 
   const periodLabel = useMemo<Record<PeriodType, string>>(() => {
@@ -154,13 +158,13 @@ export const useAssetsHistoryData = (
           convertToUSDCAndOperate({
             token: item.token,
             amount: item.amount,
-            indexPrices,
+
             value: zero,
             op: "add",
           }),
         );
       }, zero);
-  }, [allDepositHistory, indexPrices]);
+  }, [allDepositHistory, getIndexPrice]);
 
   const totalTransferInForROI = useMemo(() => {
     if (!Array.isArray(transferInHistory)) {
@@ -173,13 +177,13 @@ export const useAssetsHistoryData = (
           convertToUSDCAndOperate({
             token: item.token,
             amount: item.amount,
-            indexPrices,
+
             value: zero,
             op: "add",
           }),
         );
       }, zero);
-  }, [transferInHistory, indexPrices]);
+  }, [transferInHistory, getIndexPrice]);
 
   const onPeriodChange = (value: PeriodType) => {
     setStartDate(getStartDate(value));
@@ -214,13 +218,13 @@ export const useAssetsHistoryData = (
         convertToUSDCAndOperate({
           token: item.token,
           amount: item.amount,
-          indexPrices,
+
           value: zero,
           op: "add",
         }),
       );
     }, zero);
-  }, [transferInHistory, lastItem, indexPrices]);
+  }, [transferInHistory, lastItem, getIndexPrice]);
 
   const totalTransferOut = useMemo(() => {
     if (!Array.isArray(transferOutHistory)) {
@@ -244,7 +248,7 @@ export const useAssetsHistoryData = (
         convertToUSDCAndOperate({
           token: item.token,
           amount: item.amount,
-          indexPrices,
+
           value: zero,
           op: "add",
         }),
@@ -291,7 +295,6 @@ export const useAssetsHistoryData = (
             value = convertToUSDCAndOperate({
               token: item.token,
               amount: item.amount,
-              indexPrices,
               value,
               op: "sub",
             });
@@ -299,7 +302,7 @@ export const useAssetsHistoryData = (
             totalDeposit.current = convertToUSDCAndOperate({
               token: item.token,
               amount: item.amount,
-              indexPrices,
+
               value: totalDeposit.current,
               op: "add",
             });
@@ -309,7 +312,7 @@ export const useAssetsHistoryData = (
             value = convertToUSDCAndOperate({
               token: item.token,
               amount: item.amount,
-              indexPrices,
+
               value,
               op: "add",
             });
@@ -410,7 +413,7 @@ export const useAssetsHistoryData = (
     totalValue,
     assetHistory,
     isRealtime,
-    indexPrices,
+    getIndexPrice,
     // transferOutHistory,
     // transferInHistory,
     totalTransferIn,
