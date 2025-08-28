@@ -11,9 +11,9 @@ type NonUSDCHolding = {
 };
 
 export const parseHolding = (
-  holding: API.Holding[],
+  holding: API.Holding[] | ReadonlyArray<API.Holding>,
   indexPrices: Record<string, number>,
-  tokensInfo: API.Chain[],
+  tokensInfo: API.Chain[] | ReadonlyArray<API.Chain>,
 ): [number, NonUSDCHolding[]] => {
   // if (!holding || !indexPrices) {
   //   return [zero, zero];

@@ -7,9 +7,13 @@ import { ChevronRightIcon, cn, Flex, Text } from "@orderly.network/ui";
 import { usePortfolioChartsState } from ".";
 
 export const PortfolioChartsMobileUI: React.FC<
-  { data: any[] } & ReturnType<typeof usePortfolioChartsState>
+  ReturnType<typeof usePortfolioChartsState> & {
+    data: any[];
+    invisible?: boolean;
+  }
 > = (props) => {
-  const { data, unrealPnL, unrealROI, visible, onPerformanceClick } = props;
+  const { data, invisible, unrealPnL, unrealROI, visible, onPerformanceClick } =
+    props;
   const { t } = useTranslation();
   return (
     <Flex
@@ -68,15 +72,17 @@ export const PortfolioChartsMobileUI: React.FC<
         itemAlign={"center"}
         direction={"column"}
       >
-        <LineChart data={data || EMPTY_LIST} width={150} height={60}>
-          <Line
-            type="natural"
-            dataKey="account_value"
-            stroke={"rgb(41, 233, 169)"}
-            strokeWidth={1.5}
-            dot={false}
-            isAnimationActive={false}
-          />
+        <LineChart data={data || EMPTY_LIST} width={150} height={65}>
+          {!invisible && (
+            <Line
+              type="natural"
+              dataKey="account_value"
+              stroke={"rgb(41, 233, 169)"}
+              strokeWidth={1.5}
+              dot={false}
+              isAnimationActive={false}
+            />
+          )}
         </LineChart>
       </Flex>
     </Flex>

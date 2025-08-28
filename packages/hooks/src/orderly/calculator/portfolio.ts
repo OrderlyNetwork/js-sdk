@@ -1,6 +1,6 @@
 import { pathOr } from "ramda";
 import { account } from "@orderly.network/perp";
-import { API } from "@orderly.network/types";
+import { API, EMPTY_LIST } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 import { CalculatorCtx, CalculatorScope } from "../../types";
 import { createGetter } from "../../utils/createGetter";
@@ -79,7 +79,7 @@ class PortfolioCalculator extends BaseCalculator<any> {
       accountInfo,
       symbolsInfo,
       indexPrices: indexPrices,
-      tokensInfo: tokensInfo ?? [],
+      tokensInfo: tokensInfo ?? EMPTY_LIST,
     });
   }
 
@@ -91,13 +91,13 @@ class PortfolioCalculator extends BaseCalculator<any> {
   }
 
   private format(inputs: {
-    holding?: API.Holding[];
+    holding?: API.Holding[] | ReadonlyArray<API.Holding>;
     positions: API.PositionsTPSLExt;
     markPrices: Record<string, number> | null;
     indexPrices: Record<string, number> | null;
     accountInfo: API.AccountInfo;
     symbolsInfo: Record<string, API.SymbolExt>;
-    tokensInfo: API.Chain[];
+    tokensInfo: API.Chain[] | ReadonlyArray<API.Chain>;
   }) {
     const {
       holding,

@@ -7,6 +7,7 @@ import {
   ChainNamespace,
   API,
   DEFAUL_ORDERLY_KEY_SCOPE,
+  EMPTY_LIST,
 } from "@orderly.network/types";
 import { AdditionalInfoRepository } from "./additionalInfoRepository";
 import { Assets } from "./assets";
@@ -783,14 +784,15 @@ export class Account {
       if (res.data.rows?.length > 0) {
         const subAccountBalances = await this.getSubAccountBalances();
         return res.data.rows.map((account: { sub_account_id: string }) => {
-          const holding = subAccountBalances[account.sub_account_id] ?? [];
+          const holding =
+            subAccountBalances[account.sub_account_id] ?? EMPTY_LIST;
           return {
             ...account,
             holding,
           };
         });
       }
-      return res.data.rows ?? [];
+      return res.data.rows ?? EMPTY_LIST;
     } else {
       throw new Error(res.message);
     }
@@ -838,7 +840,7 @@ export class Account {
     const nextState = {
       ...this.stateValue,
       subAccounts: this.stateValue.subAccounts?.map((subAccount) => {
-        const holding = subAccountBalances[subAccount.id] ?? [];
+        const holding = subAccountBalances[subAccount.id] ?? EMPTY_LIST;
         return { ...subAccount, holding };
       }),
     };

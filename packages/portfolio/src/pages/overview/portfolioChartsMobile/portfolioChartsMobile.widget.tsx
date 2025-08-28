@@ -5,7 +5,13 @@ import { usePortfolioChartsState } from "./portfolioChartsMobile.script";
 import { PortfolioChartsMobileUI } from "./portfolioChartsMobile.ui";
 
 export const PortfolioChartsMobileWidget: React.FC = () => {
-  const { data } = useAssetsChartScript();
+  const { data, invisible } = useAssetsChartScript();
   const state = usePortfolioChartsState();
-  return <PortfolioChartsMobileUI data={data || EMPTY_LIST} {...state} />;
+  return (
+    <PortfolioChartsMobileUI
+      data={data || EMPTY_LIST}
+      invisible={invisible}
+      {...state}
+    />
+  );
 };
