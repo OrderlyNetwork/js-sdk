@@ -146,18 +146,20 @@ export const useAccountSheetScript = (
 
 const useReferral = (_onClickReferral?: () => void) => {
   const { data, isLoading, isAffiliate, isTrader } = useReferralInfo();
+
   const affiliateCommission30D = useMemo(() => {
     if (isAffiliate) {
       return data?.referrer_info?.["30d_referrer_rebate"];
     }
     return undefined;
-  }, [data]);
+  }, [data, isAffiliate]);
+
   const traderCommission30D = useMemo(() => {
     if (isTrader) {
       return data?.referee_info?.["30d_referee_rebate"];
     }
     return undefined;
-  }, [data]);
+  }, [data, isTrader]);
 
   const onClickReferral = () => {
     _onClickReferral?.();
