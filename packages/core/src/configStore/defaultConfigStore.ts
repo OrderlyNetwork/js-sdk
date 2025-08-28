@@ -42,8 +42,6 @@ export class DefaultConfigStore implements ConfigStore {
     const brokerId = init?.brokerId || "orderly";
     const brokerName = init?.brokerName || "Orderly";
     const chainNamespace = init?.chainNamespace || ChainNamespace.evm;
-    const amplitudeId = init?.amplitudeId || "";
-    console.log("defaultConfigStore", init);
 
     this.map = new Map<ConfigKey, any>([
       ["env", env],
@@ -51,7 +49,6 @@ export class DefaultConfigStore implements ConfigStore {
       ["brokerName", brokerName],
       ["networkId", networkId],
       ["chainNamespace", chainNamespace],
-      ["amplitudeId", amplitudeId],
       ["apiBaseUrl", urls["apiBaseUrl"]],
       ["publicWsUrl", urls["publicWsUrl"]],
       ["privateWsUrl", urls["privateWsUrl"]],

@@ -25,6 +25,9 @@ export const OrderlyAppProvider: FC<
       widgetConfigs={widgetConfigs}
       notification={notification}
       dataAdapter={dataAdapter}
+      amplitudeConfig={{
+        amplitudeId: "4463418c103f3a66c6d863357f951e25",
+      }}
       // customChains={customChainsAbstarct}
       // defaultChain={{testnet: customChains.testnet[0], mainnet: customChains.mainnet[0]}}
     >
