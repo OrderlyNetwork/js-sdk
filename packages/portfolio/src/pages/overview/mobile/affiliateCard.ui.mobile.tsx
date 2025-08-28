@@ -60,14 +60,15 @@ export const AffiliateCardMobile: FC<AffiliateCardMobileProps> = (props) => {
           className={cn(
             "oui-text-xs oui-font-semibold",
             isNumber(
-              props?.referralInfo?.referrer_info["30d_referrer_rebate"],
-            ) && props?.referralInfo?.referrer_info["30d_referrer_rebate"] != 0
+              props?.referralInfo?.referrer_info?.["30d_referrer_rebate"],
+            ) &&
+              props?.referralInfo?.referrer_info?.["30d_referrer_rebate"] != 0
               ? "oui-text-base-contrast"
               : "oui-text-base-contrast-36",
           )}
         >
           {commifyOptional(
-            props?.referralInfo?.referrer_info["30d_referrer_rebate"],
+            props?.referralInfo?.referrer_info?.["30d_referrer_rebate"],
             { fix: 2, fallback: "--" },
           )}
         </Text>
