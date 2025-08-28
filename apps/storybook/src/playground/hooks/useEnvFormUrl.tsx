@@ -20,6 +20,7 @@ export function useEnvFormUrl() {
     const brokerId = searchParams.get("brokerId") || undefined;
     const brokerName = searchParams.get("brokerName") || undefined;
     const usePrivy = searchParams.get("usePrivy") || undefined;
+    const amplitudeId = searchParams.get("amplitudeId") || undefined;
 
     return {
       env,
@@ -28,6 +29,7 @@ export function useEnvFormUrl() {
       brokerName,
       theme,
       usePrivy: usePrivy !== "false",
+      amplitudeId,
     };
   }, [searchParams]);
 }

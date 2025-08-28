@@ -22,8 +22,8 @@ export class AmplitudeTracker {
   private _sdkInfoTag: string | undefined;
   private _ee = SimpleDI.get<EventEmitter>("EE");
 
-  constructor(env: ENVType, sdkInfo: any) {
-    amplitude.init(apiKeyMap[env], { serverZone: "EU" });
+  constructor(env: ENVType, amplitudeId: string, sdkInfo: any) {
+    amplitude.init(amplitudeId ?? apiKeyMap[env], { serverZone: "EU" });
     this.setSdkInfo(sdkInfo);
     this._bindEvents();
   }

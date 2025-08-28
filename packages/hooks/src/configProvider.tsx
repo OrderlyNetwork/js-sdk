@@ -60,12 +60,14 @@ export type ExclusiveConfigProviderProps =
       brokerId: string;
       brokerName?: string;
       networkId: NetworkId;
+      amplitudeId?: string;
       configStore?: never;
     }
   | {
       brokerId?: never;
       brokerName?: never;
       networkId?: never;
+      amplitudeId?: never;
       configStore: ConfigStore;
     };
 
@@ -82,6 +84,7 @@ export const OrderlyConfigProvider: FC<
     // getWalletAdapter,
     walletAdapters,
     brokerId,
+    amplitudeId,
     brokerName,
     networkId,
     contracts,
@@ -120,9 +123,14 @@ export const OrderlyConfigProvider: FC<
   const innerConfigStore = useMemo<ConfigStore>(() => {
     return new ProxyConfigStore(
       configStore ||
-        new ExtendedConfigStore({ brokerId, brokerName, networkId }),
+        new ExtendedConfigStore({
+          brokerId,
+          amplitudeId,
+          brokerName,
+          networkId,
+        }),
     );
-  }, [configStore, brokerId, brokerName, networkId]);
+  }, [configStore, brokerId, amplitudeId, brokerName, networkId]);
 
   const innerKeyStore = useMemo<OrderlyKeyStore>(() => {
     return keyStore || new LocalStorageStore(networkId);

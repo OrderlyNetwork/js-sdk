@@ -1,7 +1,8 @@
 import { ChainNamespace } from "@orderly.network/types";
-import { ConfigKey, ConfigStore } from "./configStore";
 import { NetworkId } from "@orderly.network/types";
-type ChainNamespaceType = typeof ChainNamespace[keyof typeof ChainNamespace];
+import { ConfigKey, ConfigStore } from "./configStore";
+
+type ChainNamespaceType = (typeof ChainNamespace)[keyof typeof ChainNamespace];
 
 export type URLS = {
   apiBaseUrl: string;
@@ -41,6 +42,8 @@ export class DefaultConfigStore implements ConfigStore {
     const brokerId = init?.brokerId || "orderly";
     const brokerName = init?.brokerName || "Orderly";
     const chainNamespace = init?.chainNamespace || ChainNamespace.evm;
+    const amplitudeId = init?.amplitudeId || "";
+    console.log("defaultConfigStore", init);
 
     this.map = new Map<ConfigKey, any>([
       ["env", env],
@@ -48,6 +51,7 @@ export class DefaultConfigStore implements ConfigStore {
       ["brokerName", brokerName],
       ["networkId", networkId],
       ["chainNamespace", chainNamespace],
+      ["amplitudeId", amplitudeId],
       ["apiBaseUrl", urls["apiBaseUrl"]],
       ["publicWsUrl", urls["publicWsUrl"]],
       ["privateWsUrl", urls["privateWsUrl"]],

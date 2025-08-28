@@ -9,6 +9,7 @@ export type ConfigKey =
   | "brokerName"
   | "networkId"
   | "env"
+  | "amplitudeId"
   | "chainNamespace"
   | "PROD_URL"
   | "orderly_markets"

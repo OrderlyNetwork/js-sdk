@@ -13,11 +13,12 @@ export const useTrackingInstance = () => {
 
   const env = configStore.get("env") as ENVType;
   const brokerId = configStore.get("brokerId") as string;
+  const amplitudeId = configStore.get("amplitudeId") as string;
 
   const trackInstace = useConstant(() => {
     let instance = SimpleDI.get<AmplitudeTracker>("amplitudeTracker");
     if (!instance) {
-      instance = new AmplitudeTracker(env, {
+      instance = new AmplitudeTracker(env, amplitudeId, {
         brokerId,
         sdk_version:
           window?.__ORDERLY_VERSION__?.["@orderly.network/net"] ?? "",
