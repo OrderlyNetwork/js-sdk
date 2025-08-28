@@ -112,13 +112,13 @@ export const useAssetsHistoryData = (
 
   // get transfer history
   const { data: transferOutHistory } = usePrivateQuery<API.TransferHistory>(
-    `/v1/internal_transfer_history?page=1&size=50&side=OUT&main_sub_only=true&start_t=${startDate.getTime()}&end_t=${endDate.getTime()}`,
+    `/v1/internal_transfer_history?page=1&size=200&side=OUT&main_sub_only=true&start_t=${startDate.getTime()}&end_t=${endDate.getTime()}`,
     {
       revalidateOnFocus: false,
     },
   );
   const { data: transferInHistory } = usePrivateQuery<API.TransferHistory>(
-    `/v1/internal_transfer_history?page=1&size=50&side=IN&main_sub_only=true&start_t=${startDate.getTime()}&end_t=${endDate.getTime()}`,
+    `/v1/internal_transfer_history?page=1&size=200&side=IN&main_sub_only=true&start_t=${startDate.getTime()}&end_t=${endDate.getTime()}`,
     {
       revalidateOnFocus: false,
     },
@@ -146,7 +146,7 @@ export const useAssetsHistoryData = (
     side: "DEPOSIT",
     startTime: subDays(today, periodValue).getTime(),
     endTime: endDate.getTime(),
-    pageSize: 50,
+    pageSize: 200,
   });
 
   const totalDepositForROI = useMemo(() => {
