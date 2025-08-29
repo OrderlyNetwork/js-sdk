@@ -8,6 +8,7 @@ import {
   OrderStatus,
   OrderType,
 } from "@orderly.network/types";
+import { Decimal } from "@orderly.network/utils";
 
 export const upperCaseFirstLetter = (str: string) => {
   if (str === undefined) return str;
@@ -240,4 +241,34 @@ export function areDatesEqual(date1?: Date, date2?: Date): boolean {
     date1.getMonth() === date2.getMonth() &&
     date1.getDate() === date2.getDate()
   );
+}
+
+export function isTrailingStopOrder(order: API.AlgoOrderExt) {
+  return order.algo_type === OrderType.TRAILING_STOP;
+}
+
+export function getNotional(order: API.AlgoOrderExt, dp = 2) {
+  if (order.price && order.quantity) {
+    return new Decimal(order.price)
+      .mul(order.quantity)
+      .toFixed(dp, Decimal.ROUND_DOWN);
+  }
+
+  return 0;
+}
+/**
+ * api order type ==> orderEntry type
+ */
+export function convertApiOrderTypeToOrderEntryType(order: API.AlgoOrderExt) {
+  if (order.algo_type === OrderType.TRAILING_STOP) {
+    return order.algo_type;
+  }
+
+  const isAlgoOrder = order.algo_order_id !== undefined;
+
+  if (isAlgoOrder && order.algo_type !== AlgoOrderRootType.BRACKET) {
+    return `STOP_${order.type}` as OrderType;
+  }
+
+  return order.type;
 }

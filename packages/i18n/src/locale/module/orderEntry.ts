@@ -22,7 +22,6 @@ export const orderEntry = {
   "orderEntry.skew": "Skew",
   "orderEntry.totalOrders": "Total orders",
   "orderEntry.totalQuantity": "Total quantity",
-  "orderEntry.activationPrice": "Activation price",
   "orderEntry.trailingRate": "Trailing rate",
   "orderEntry.trailingValue": "Trailing value",
   "orderEntry.trailing": "Trailing",
@@ -121,10 +120,8 @@ export const orderEntry = {
   "orderEntry.skew.error.min": "Skew must be greater than {{value}}",
   "orderEntry.skew.error.max": "Skew must be less than {{value}}",
 
-  "orderEntry.activatedPrice.error.min":
-    "Activation price must be greater than {{value}}",
-  "orderEntry.activatedPrice.error.max":
-    "Activation price must be less than {{value}}",
+  "orderEntry.callbackValue.error.min":
+    "Trailing value must be greater than {{value}}",
   "orderEntry.callbackValue.error.range":
     "Trailing value needs to be greater than {{min}} and less than {{max}}",
   "orderEntry.callbackRate.error.range":

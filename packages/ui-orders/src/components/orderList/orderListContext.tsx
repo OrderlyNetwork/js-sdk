@@ -3,10 +3,6 @@ import { API, OrderEntity } from "@orderly.network/types";
 
 export interface OrderListContextState {
   onCancelOrder: (order: API.Order | API.AlgoOrder) => Promise<any>;
-  onEditOrder: (
-    order: API.Order | API.AlgoOrder,
-    position?: API.Position,
-  ) => Promise<any>;
   editOrder: (id: string, order: OrderEntity) => Promise<any>;
   editAlgoOrder: (id: string, order: OrderEntity) => Promise<any>;
   checkMinNotional: (

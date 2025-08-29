@@ -2,7 +2,6 @@ import { useCallback } from "react";
 import {
   OrderValidationItem,
   OrderValidationResult,
-  useMemoizedFn,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 
@@ -95,11 +94,12 @@ export function useOrderEntryFormErrorMsg(
         max: t("orderEntry.skew.error.max", { value }),
       },
       activated_price: {
-        min: t("orderEntry.activatedPrice.error.min", { value }),
-        max: t("orderEntry.activatedPrice.error.max", { value }),
+        min: t("orderEntry.triggerPrice.error.min", { value }),
+        max: t("orderEntry.triggerPrice.error.max", { value }),
       },
       callback_value: {
         required: t("orderEntry.callbackValue.error.required"),
+        min: t("orderEntry.callbackValue.error.min", { value }),
         range: t("orderEntry.callbackValue.error.range", {
           min,
           max,

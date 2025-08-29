@@ -18,13 +18,13 @@ export function useBBOState({
   order_type,
   order_type_ext,
   side,
-  setValues,
+  setOrderValues,
 }: {
   tpslSwitch: boolean;
   order_type?: OrderType;
   order_type_ext?: OrderType;
   side?: OrderSide;
-  setValues: (values: Partial<OrderlyOrder>) => void;
+  setOrderValues: (values: Partial<OrderlyOrder>) => void;
 }) {
   const [localBBOType, setLocalBBOType] = useLocalStorage<
     BBOOrderType | undefined
@@ -52,7 +52,7 @@ export function useBBOState({
       // unselect bbo
       setLocalBBOType(undefined);
       // update formattedOrder values immediately instead of via useEffect
-      setValues({
+      setOrderValues({
         order_type_ext: undefined,
         level: undefined,
       });
@@ -68,7 +68,7 @@ export function useBBOState({
 
   useEffect(() => {
     if (bboStatus === BBOStatus.DISABLED) {
-      setValues({
+      setOrderValues({
         // if order_type_ext is not bbo(ask, bid), keep previous value
         order_type_ext: isBBOOrder({ order_type_ext })
           ? undefined
@@ -82,7 +82,7 @@ export function useBBOState({
     if (bboStatus === BBOStatus.ON) {
       const orderType = getOrderTypeByBBO(localBBOType, side!);
       const orderLevel = getOrderLevelByBBO(localBBOType)!;
-      setValues({
+      setOrderValues({
         order_type_ext: orderType,
         level: orderLevel,
       });

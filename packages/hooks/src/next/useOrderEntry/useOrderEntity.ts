@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { OrderSide, SDKError } from "@orderly.network/types";
+import { OrderSide, OrderType, SDKError } from "@orderly.network/types";
 import { useMarkPriceBySymbol } from "../../orderly/useMarkPrice/useMarkPriceStore";
 import { useSymbolsInfo } from "../../orderly/useSymbolsInfo";
 import { OrderValidationResult } from "../../services/orderCreator/interface";
@@ -9,6 +9,7 @@ import { getOrderCreator } from "./helper";
 export const useOrderEntity = (
   order: {
     symbol: string;
+    order_type: OrderType;
     side: OrderSide;
     reduce_only?: boolean;
     [key: string]: any;

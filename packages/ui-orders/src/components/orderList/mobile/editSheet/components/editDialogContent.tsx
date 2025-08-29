@@ -3,13 +3,23 @@ import { useTranslation } from "@orderly.network/i18n";
 import { OrderSide } from "@orderly.network/types";
 import { Badge, Checkbox, Divider, Flex, Text } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
-import { parseBadgesFor } from "../../../../utils/util";
-import { EditSheetState } from "./editSheet.script";
+import { parseBadgesFor } from "../../../../../utils/util";
+import { EditSheetState } from "../editSheet.script";
 
 export const ConfirmDialogContent: FC<EditSheetState> = (props) => {
   const { item } = props;
-  const { formattedOrder, symbolInfo, isStopMarket, showTriggerPrice } = props;
+  const {
+    formattedOrder,
+    symbolInfo,
+    isStopMarket,
+    showTriggerPrice,
+    isTrailingStop,
+  } = props;
   const { t } = useTranslation();
+
+  const showPrice = !isTrailingStop;
+  const showActivatedPrice = isTrailingStop && formattedOrder.activated_price;
+  const showTrailingCallback = isTrailingStop;
 
   const header = (
     <>
@@ -53,7 +63,7 @@ export const ConfirmDialogContent: FC<EditSheetState> = (props) => {
 
   const triggerPriceItem = showTriggerPrice && (
     <Flex justify={"between"} width={"100%"} gap={1}>
-      <Text>{t("orders.column.triggerPrice")}</Text>
+      <Text>{t("common.triggerPrice")}</Text>
       <Text.numeral
         intensity={80}
         dp={symbolInfo.quote_dp}
@@ -66,7 +76,7 @@ export const ConfirmDialogContent: FC<EditSheetState> = (props) => {
     </Flex>
   );
 
-  const priceItem = (
+  const priceItem = showPrice && (
     <Flex justify={"between"} width={"100%"} gap={1}>
       <Text>{t("common.price")}</Text>
       <Text.numeral
@@ -84,6 +94,50 @@ export const ConfirmDialogContent: FC<EditSheetState> = (props) => {
     </Flex>
   );
 
+  const activatedPriceItem = showActivatedPrice && (
+    <Flex justify={"between"} width={"100%"} gap={1}>
+      <Text>{t("common.triggerPrice")}</Text>
+      {formattedOrder.activated_price ? (
+        <Text.numeral
+          intensity={80}
+          dp={symbolInfo.quote_dp}
+          padding={false}
+          rm={Decimal.ROUND_DOWN}
+          suffix={<Text intensity={54}>{" USDC"}</Text>}
+        >
+          {formattedOrder.activated_price}
+        </Text.numeral>
+      ) : (
+        t("common.marketPrice")
+      )}
+    </Flex>
+  );
+
+  const trailingCallbackItem = showTrailingCallback && (
+    <>
+      {formattedOrder.callback_value && (
+        <Flex justify={"between"} width={"100%"} gap={1}>
+          <Text>{t("orderEntry.trailingValue")}</Text>
+          <Text.numeral
+            dp={symbolInfo.quote_dp}
+            padding={false}
+            rm={Decimal.ROUND_DOWN}
+          >
+            {formattedOrder.callback_value}
+          </Text.numeral>
+        </Flex>
+      )}
+      {formattedOrder.callback_rate && (
+        <Flex justify={"between"} width={"100%"} gap={1}>
+          <Text>{t("orderEntry.trailingRate")}</Text>
+          <Text className="oui-text-base-contrast">
+            {formattedOrder.callback_rate}%
+          </Text>
+        </Flex>
+      )}
+    </>
+  );
+
   const quantityItem = (
     <Flex justify={"between"} width={"100%"} gap={1}>
       <Text>{t("common.qty")}</Text>
@@ -93,7 +147,7 @@ export const ConfirmDialogContent: FC<EditSheetState> = (props) => {
         padding={false}
         rm={Decimal.ROUND_DOWN}
       >
-        {formattedOrder.order_quantity ?? "--"}
+        {formattedOrder.order_quantity}
       </Text.numeral>
     </Flex>
   );
@@ -131,6 +185,8 @@ export const ConfirmDialogContent: FC<EditSheetState> = (props) => {
         {triggerPriceItem}
         {priceItem}
         {quantityItem}
+        {activatedPriceItem}
+        {trailingCallbackItem}
       </Flex>
 
       {orderConfirmCheckbox}

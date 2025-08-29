@@ -19,7 +19,7 @@ export const TriggerPriceInput = memo((props: TriggerPriceInputProps) => {
     <Input.tooltip
       prefix={
         <Text intensity={54} className="oui-px-3">
-          {t("orders.column.triggerPrice")}
+          {t("common.triggerPrice")}
         </Text>
       }
       suffix={

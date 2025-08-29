@@ -1,8 +1,9 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
 import { API, OrderEntity, OrderType } from "@orderly.network/types";
 import { AlgoOrderRootType } from "@orderly.network/types";
 import { toast, useModal } from "@orderly.network/ui";
+import { convertApiOrderTypeToOrderEntryType } from "../../../../utils/util";
 import { OrderCellState } from "../orderCell.script";
 import { useEditOrderEntry } from "./hooks/useEditOrderEntry";
 import { useEditOrderMaxQty } from "./hooks/useEditOrderMaxQty";
@@ -28,18 +29,10 @@ export const useEditSheetScript = (props: {
 
   const showTriggerPrice = isAlgoOrder && !isTrailingStop;
 
-  // order api type ==> order entry type
-  const orderType = useMemo(() => {
-    if (isTrailingStop) {
-      return OrderType.TRAILING_STOP;
-    }
-
-    if (isAlgoOrder && order.algo_type !== AlgoOrderRootType.BRACKET) {
-      return `STOP_${order.type}`;
-    }
-
-    return order.type;
-  }, [order, isAlgoOrder, isTrailingStop]);
+  const orderType = useMemo(
+    () => convertApiOrderTypeToOrderEntryType(order),
+    [order],
+  );
 
   const [orderConfirm, setOrderConfirm] = useLocalStorage(
     "orderly_order_confirm",
@@ -61,12 +54,18 @@ export const useEditSheetScript = (props: {
     maxQty,
   });
 
+  useEffect(() => {
+    console.log("formattedOrder", order.price, formattedOrder.order_price);
+  }, [order.price, formattedOrder.order_price]);
+
   const onCloseDialog = useCallback(() => {
     setDialogOpen(false);
   }, []);
 
   const onSubmit = useCallback(
     async (values: OrderEntity) => {
+      console.log("formattedOrder", formattedOrder);
+
       let future;
       const isHidden =
         order.visible_quantity !== undefined
@@ -76,10 +75,18 @@ export const useEditSheetScript = (props: {
             : false;
 
       if (order.algo_order_id !== undefined) {
-        if (isStopMarket && "order_price" in values) {
-          const { order_price, ...rest } = values;
-          values = rest;
+        if (isTrailingStop) {
+          if (values.callback_rate) {
+            values = {
+              ...values,
+              callback_rate: (Number(values.callback_rate) / 100).toString(),
+            };
+          } else if (isStopMarket && "order_price" in values) {
+            const { order_price, ...rest } = values;
+            values = rest;
+          }
         }
+
         future = editAlgoOrder(order.algo_order_id.toString(), {
           ...values,
         });
@@ -100,7 +107,7 @@ export const useEditSheetScript = (props: {
         setSubmitting(false);
       }
     },
-    [editAlgoOrder, editOrder],
+    [editAlgoOrder, editOrder, isTrailingStop],
   );
 
   const onDialogConfirm = () => {

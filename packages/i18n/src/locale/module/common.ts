@@ -62,6 +62,7 @@ export const common = {
   "common.marketPrice": "Market",
   "common.market": "Market",
   "common.limit": "Limit",
+  "common.triggerPrice": "Trigger price",
 
   "common.unrealizedPnl": "Unrealized PnL",
   "common.realizedPnl": "Realized PnL",

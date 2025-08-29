@@ -1,7 +1,6 @@
 import { FocusEventHandler } from "react";
 import { OrderValidationResult } from "@orderly.network/hooks";
 import { API, OrderlyOrder, OrderType } from "@orderly.network/types";
-import { OrderEntryScriptReturn } from "../../orderEntry.script";
 import { InputType } from "../../types";
 import { CommonOrderInput } from "./commonOrderInput";
 import { PriceInputProps } from "./limit/priceInput";

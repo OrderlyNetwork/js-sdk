@@ -71,6 +71,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
     fillMiddleValue,
     soundAlert,
     setSoundAlert,
+    currentFocusInput,
   } = props;
 
   const { curLeverage } = useLeverage();
@@ -319,6 +320,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
       getErrorMsg={getErrorMsg}
       setOrderValue={setOrderValue}
       setOrderValues={setOrderValues}
+      currentFocusInput={currentFocusInput.current}
     >
       <div
         className={"oui-space-y-2 oui-text-base-contrast-54 xl:oui-space-y-3"}
@@ -366,12 +368,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
         <QuantitySlider
           canTrade={props.canTrade}
           maxQty={maxQty}
-          currentQtyPercentage={props.currentQtyPercentage}
-          value={
-            !formattedOrder.order_quantity
-              ? 0
-              : Number(formattedOrder.order_quantity)
-          }
+          order_quantity={formattedOrder.order_quantity}
           tick={symbolInfo.base_tick}
           dp={symbolInfo.base_dp}
           setMaxQty={props.setMaxQty}

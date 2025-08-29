@@ -14,6 +14,7 @@ export type OrderEntryContextState = {
   ) => string;
   setOrderValue: (key: keyof OrderlyOrder, value: any) => void;
   setOrderValues: (values: Partial<OrderlyOrder>) => void;
+  currentFocusInput: InputType;
 };
 
 export const OrderEntryContext = createContext<OrderEntryContextState>(

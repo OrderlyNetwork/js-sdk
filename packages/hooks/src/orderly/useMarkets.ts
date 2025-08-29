@@ -5,7 +5,7 @@ import { OrderlyContext } from "../orderlyContext";
 import { useEventEmitter } from "../useEventEmitter";
 import { MarketStoreKey } from "./useMarket";
 import { useMarketsStream } from "./useMarketsStream";
-import { SymbolInfo, useSymbolsInfo } from "./useSymbolsInfo";
+import { SymbolsInfo, useSymbolsInfo } from "./useSymbolsInfo";
 
 export enum MarketsType {
   FAVORITES,
@@ -323,7 +323,7 @@ export const useMarkets = (
  */
 const addFieldToMarkets = (
   futures: WSMessage.Ticker[] | null,
-  symbolsInfo: SymbolInfo,
+  symbolsInfo: SymbolsInfo,
 ) => {
   return (futures || [])?.map((item: any) => {
     const info = symbolsInfo[item.symbol];

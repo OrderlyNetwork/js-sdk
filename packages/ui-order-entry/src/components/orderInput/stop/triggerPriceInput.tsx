@@ -17,7 +17,7 @@ export const TriggerPriceInput: FC<TriggerPriceInputProps> = memo((props) => {
 
   return (
     <div className="oui-group">
-      <div className={"oui-group"}>
+      <div className="oui-group">
         <CustomInput
           ref={props.triggerPriceInputRef}
           id="order_trigger_price_input"

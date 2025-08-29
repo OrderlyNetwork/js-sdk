@@ -16,32 +16,26 @@ import {
   PopoverContent,
 } from "@orderly.network/ui";
 import { commifyOptional, Decimal } from "@orderly.network/utils";
-import { EditType } from "../../../type";
-import { grayCell } from "../../../utils/util";
-import { useSymbolContext } from "../../provider/symbolContext";
-import { useOrderListContext } from "../orderListContext";
-import { useTPSLOrderRowContext } from "../tpslOrderRowContext";
-import { ConfirmContent } from "./editOrder/confirmContent";
-import { InnerInput } from "./editOrder/innerInput";
+import { EditType } from "../../../../type";
+import { grayCell } from "../../../../utils/util";
+import { useSymbolContext } from "../../../provider/symbolContext";
+import { useOrderListContext } from "../../orderListContext";
+import { useTPSLOrderRowContext } from "../../tpslOrderRowContext";
+import { ConfirmContent } from "../editOrder/confirmContent";
+import { InnerInput } from "../editOrder/innerInput";
 
 export const OrderQuantity = (props: {
   order: API.OrderExt | API.AlgoOrder;
   disableEdit?: boolean;
-  otherOrderQuantity?: (order: any) => number | undefined;
 }) => {
-  const { order, otherOrderQuantity } = props;
+  const { order } = props;
   const { reduce_only } = order;
-  const [quantity, originSetQuantity] = useState<string>(
-    order.quantity.toString(),
-  );
+  const originValue = order.quantity.toString();
+  const [value, setValue] = useState(originValue);
 
   const [editing, setEditing] = useState(false);
 
   const { t } = useTranslation();
-
-  useEffect(() => {
-    setQuantity(order.quantity.toString());
-  }, [props.order.quantity]);
 
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string>();
@@ -53,7 +47,7 @@ export const OrderQuantity = (props: {
   const { base_dp, base, base_tick } = useSymbolContext();
 
   const setQuantity = async (qty: string, maxQty?: number): Promise<void> => {
-    originSetQuantity(qty);
+    setValue(qty);
     const positionQty = Math.abs(position?.position_qty || 0);
 
     if (position && reduce_only && Number(qty) > positionQty) {
@@ -79,6 +73,10 @@ export const OrderQuantity = (props: {
     return Promise.resolve();
   };
 
+  useEffect(() => {
+    setQuantity(order.quantity.toString());
+  }, [props.order.quantity]);
+
   const closePopover = () => {
     setOpen(false);
     setEditing(false);
@@ -93,19 +91,11 @@ export const OrderQuantity = (props: {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const clickHandler = () => {
-    // console.log(
-    //   "xxxxx click handler",
-    //   checkMinNotional,
-    //   quantity,
-    //   error,
-    //   quantity
-    // );
-
     if (!!error) {
       return;
     }
 
-    if (Number(quantity) === Number(order.quantity)) {
+    if (Number(value) === Number(order.quantity)) {
       setEditing(false);
       return;
     }
@@ -113,7 +103,7 @@ export const OrderQuantity = (props: {
     const price =
       order.algo_order_id !== undefined ? order.trigger_price : order.price;
     if (price !== null && order.reduce_only !== true) {
-      const notionalText = checkMinNotional(order.symbol, price, quantity);
+      const notionalText = checkMinNotional(order.symbol, price, value);
       if (notionalText) {
         toast.error(notionalText);
         setIsSubmitting(false);
@@ -148,7 +138,7 @@ export const OrderQuantity = (props: {
       order_type: order.type,
       side: order.side,
       order_price: order.price,
-      order_quantity: quantity,
+      order_quantity: value,
       // reduce_only: Boolean(order.reduce_only),
       algo_order_id: order.algo_order_id,
     };
@@ -196,7 +186,7 @@ export const OrderQuantity = (props: {
       .then(
         (result: any) => {
           closePopover();
-          setQuantity(quantity.toString());
+          setQuantity(value.toString());
           // setTimeout(() => inputRef.current?.blur(), 300);
         },
         (err: any) => {
@@ -206,7 +196,7 @@ export const OrderQuantity = (props: {
         },
       )
       .finally(() => setIsSubmitting(false));
-  }, [quantity]);
+  }, [value]);
 
   const componentRef = useRef<HTMLDivElement | null>(null);
   const quantitySliderRef = useRef<HTMLDivElement | null>(null);
@@ -231,14 +221,14 @@ export const OrderQuantity = (props: {
     };
   }, [open, order.quantity]);
 
-  const trigger = () => {
+  const renderContent = () => {
     if (!editing || props.disableEdit) {
       return (
         <NormalState
           order={order}
-          quantity={quantity}
+          value={value}
           setEditing={setEditing}
-          disableEdit={props.disableEdit}
+          disable={props.disableEdit}
         />
       );
     }
@@ -249,7 +239,7 @@ export const OrderQuantity = (props: {
         quantitySliderRef={quantitySliderRef}
         base_dp={base_dp}
         base_tick={base_tick}
-        quantity={quantity}
+        quantity={value}
         setQuantity={setQuantity}
         editing={editing}
         setEditing={setEditing}
@@ -266,19 +256,6 @@ export const OrderQuantity = (props: {
         setError={setError}
       />
     );
-
-    // return (
-    //   <InnerInput
-    //       inputRef={inputRef}
-    //       dp={base_dp}
-    //       value={quantity}
-    //       setValue={setQuantity}
-    //       setEditing={setEditing}
-    //       handleKeyDown={handleKeyDown}
-    //       onClick={onClick}
-    //       onClose={cancelPopover}
-    //       hintInfo={error} />
-    // );
   };
 
   return (
@@ -289,7 +266,7 @@ export const OrderQuantity = (props: {
         <ConfirmContent
           type={EditType.quantity}
           base={base}
-          value={quantity}
+          value={value}
           cancelPopover={cancelPopover}
           isSubmitting={isSubmitting}
           onConfirm={onConfirm}
@@ -309,7 +286,7 @@ export const OrderQuantity = (props: {
         }}
         ref={componentRef}
       >
-        {trigger()}
+        {renderContent()}
       </div>
     </Popover>
   );
@@ -317,12 +294,12 @@ export const OrderQuantity = (props: {
 
 const NormalState: FC<{
   order: API.AlgoOrder | API.OrderExt;
-  quantity: string;
+  value: string;
   setEditing: any;
   partial?: boolean;
-  disableEdit?: boolean;
+  disable?: boolean;
 }> = (props) => {
-  const { order, quantity } = props;
+  const { order, value } = props;
 
   const executed = (order as API.OrderExt).total_executed_quantity;
 
@@ -332,8 +309,7 @@ const NormalState: FC<{
       justify={"start"}
       gap={1}
       className={cn(
-        "oui-max-w-[110px] oui-relative",
-
+        "oui-relative oui-max-w-[110px]",
         order.side === OrderSide.BUY && "oui-text-trade-profit",
         order.side === OrderSide.SELL && "oui-text-trade-loss",
         grayCell(order) && "oui-text-base-contrast-20",
@@ -355,13 +331,12 @@ const NormalState: FC<{
       <Flex
         r="base"
         className={cn(
-          "oui-min-w-[70px] oui-h-[28px]",
-
-          !props.disableEdit &&
-            "oui-bg-base-7 oui-px-2 oui-border oui-border-line-12",
+          "oui-h-[28px] oui-min-w-[70px]",
+          !props.disable &&
+            "oui-border oui-border-line-12 oui-bg-base-7 oui-px-2",
         )}
       >
-        <Text size="2xs">{quantity}</Text>
+        <Text size="2xs">{value}</Text>
       </Flex>
     </Flex>
   );
@@ -395,7 +370,6 @@ const EditState: FC<{
     base_tick,
     quantity,
     setQuantity,
-    editing,
     setEditing,
     handleKeyDown,
     onClick,
@@ -405,15 +379,8 @@ const EditState: FC<{
     reduce_only,
     positionQty,
     confirmOpen,
-    side,
     order,
   } = props;
-
-  // const { maxQty } = useOrderEntry(symbol, {
-  //   initialOrder: {
-  //     side,
-  //   },
-  // });
 
   const maxQty = useMaxQty(symbol, order.side, order.reduce_only);
 
@@ -557,55 +524,6 @@ const EditState: FC<{
       </PopoverContent>
     </PopoverRoot>
   );
-
-  // return (
-  //   <Popover
-  //     open={editing}
-  //     onOpenChange={setSliderOpen}
-  //     content={
-  //       <Flex p={1} gap={2} width={"100%"} itemAlign={"start"}>
-  //         <Text size="xs" intensity={98} className="oui-min-w-[30px]">
-  //           {`${sliderValue}%`}
-  //         </Text>
-  //         <Flex direction={"column"} width={"100%"} gap={2}>
-  //           <Slider
-  //             markCount={4}
-  //             value={[sliderValue]}
-  //             onValueChange={(e) => {
-  //               const values = Array.from(e.values());
-  //               setSliderValue(values[0]);
-  //               // resetQuantity(values[0]);
-  //             }}
-  //           />
-  //           <Buttons
-  //             onClick={(value) => {
-  //               setSliderValue(value * 100);
-  //               // resetQuantity(value * 100);
-  //             }}
-  //           />
-  //         </Flex>
-  //       </Flex>
-  //     }
-  //   >
-  //     <InnerInput
-  //       inputRef={inputRef}
-  //       dp={base_dp}
-  //       value={quantity}
-  //       setValue={setQuantity}
-  //       setEditing={setEditing}
-  //       handleKeyDown={handleKeyDown}
-  //       onClick={onClick}
-  //       onClose={onClose}
-  //       hintInfo={error}
-  //       onFocus={(e) => {
-  //         setSliderOpen(true);
-  //       }}
-  //       onBlur={(e) => {
-  //         setSliderOpen(false);
-  //       }}
-  //     />
-  //   </Popover>
-  // );
 };
 
 const Buttons = (props: { onClick: (value: number) => void }) => {

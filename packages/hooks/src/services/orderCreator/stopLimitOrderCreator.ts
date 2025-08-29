@@ -1,20 +1,19 @@
+import { pick } from "ramda";
+import { order as orderUntil } from "@orderly.network/perp";
 import {
   AlgoOrderEntity,
   AlgoOrderRootType,
-  OrderEntity,
   TriggerPriceType,
   OrderlyOrder,
 } from "@orderly.network/types";
+import { OrderType } from "@orderly.network/types";
+import { Decimal } from "@orderly.network/utils";
+import { BaseOrderCreator } from "./baseCreator";
 import {
   OrderFormEntity,
   ValuesDepConfig,
   OrderValidationResult,
 } from "./interface";
-import { Decimal } from "@orderly.network/utils";
-import { order as orderUntil } from "@orderly.network/perp";
-import { BaseOrderCreator } from "./baseCreator";
-import { OrderType } from "@orderly.network/types";
-import { pick, values } from "ramda";
 import { OrderValidation } from "./orderValidation";
 
 const { maxPrice, minPrice, scopePrice: scopePrice } = orderUntil;
@@ -25,7 +24,7 @@ export class StopLimitOrderCreator extends BaseOrderCreator<AlgoOrderEntity> {
       order_quantity: number;
       order_price: number;
     },
-    config?: ValuesDepConfig
+    config?: ValuesDepConfig,
   ): AlgoOrderEntity<AlgoOrderRootType.STOP> {
     this.totalToQuantity(values, config!);
 
@@ -53,13 +52,13 @@ export class StopLimitOrderCreator extends BaseOrderCreator<AlgoOrderEntity> {
         "reduce_only",
         "visible_quantity",
       ],
-      order
+      order,
     );
   }
 
   validate(
     values: OrderFormEntity,
-    config: ValuesDepConfig
+    config: ValuesDepConfig,
   ): Promise<OrderValidationResult> {
     return this.baseValidate(values, config).then((errors) => {
       // const errors = this.baseValidate(values, config);
@@ -68,21 +67,25 @@ export class StopLimitOrderCreator extends BaseOrderCreator<AlgoOrderEntity> {
       const { symbol } = config;
       const { price_range, price_scope, quote_max, quote_min } = symbol;
 
-      if (!trigger_price) {
-        errors.trigger_price = OrderValidation.required("trigger_price");
-      }
-
       if (!order_price) {
         errors.order_price = OrderValidation.required("order_price");
       }
 
-      // validate trigger price
-      if (trigger_price > quote_max) {
-        errors.trigger_price = OrderValidation.max("trigger_price", quote_max);
-      } else if (trigger_price < quote_min) {
-        errors.trigger_price = OrderValidation.min("trigger_price", quote_min);
+      if (!trigger_price) {
+        errors.trigger_price = OrderValidation.required("trigger_price");
       } else {
-        if (trigger_price && order_price) {
+        // validate trigger price
+        if (trigger_price > quote_max) {
+          errors.trigger_price = OrderValidation.max(
+            "trigger_price",
+            quote_max,
+          );
+        } else if (trigger_price < quote_min || trigger_price == 0) {
+          errors.trigger_price = OrderValidation.min(
+            "trigger_price",
+            quote_min,
+          );
+        } else if (order_price) {
           const price = new Decimal(order_price);
 
           const maxPriceNumber = maxPrice(trigger_price, price_range);
@@ -90,7 +93,7 @@ export class StopLimitOrderCreator extends BaseOrderCreator<AlgoOrderEntity> {
           const scropePriceNumbere = scopePrice(
             trigger_price,
             price_scope,
-            side
+            side,
           );
 
           const priceRange =
@@ -112,7 +115,7 @@ export class StopLimitOrderCreator extends BaseOrderCreator<AlgoOrderEntity> {
             if (price.gt(priceRange?.max)) {
               errors.order_price = OrderValidation.max(
                 "order_price",
-                new Decimal(priceRange.max).todp(symbol.quote_dp).toString()
+                new Decimal(priceRange.max).todp(symbol.quote_dp).toString(),
               );
             }
           }
@@ -123,7 +126,7 @@ export class StopLimitOrderCreator extends BaseOrderCreator<AlgoOrderEntity> {
             if (price.lt(priceRange?.min)) {
               errors.order_price = OrderValidation.min(
                 "order_price",
-                new Decimal(priceRange.min).todp(symbol.quote_dp).toString()
+                new Decimal(priceRange.min).todp(symbol.quote_dp).toString(),
               );
             }
           }

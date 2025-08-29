@@ -7,7 +7,9 @@ export function useAskAndBid() {
   const [askAndBid, setAskAndBid] = useState<[number, number]>([0, 0]);
 
   const onOrderBookUpdate = useDebouncedCallback((data: any) => {
-    setAskAndBid([data.asks?.[data.asks.length - 1]?.[0], data.bids?.[0]?.[0]]);
+    const ask0 = data.asks?.[data.asks.length - 1]?.[0];
+    const bid0 = data.bids?.[0]?.[0];
+    setAskAndBid([ask0, bid0]);
   }, 200);
 
   useEffect(() => {

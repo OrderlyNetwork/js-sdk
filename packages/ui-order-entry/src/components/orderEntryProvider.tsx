@@ -12,6 +12,7 @@ export const OrderEntryProvider: FC<
     getErrorMsg,
     setOrderValue,
     setOrderValues,
+    currentFocusInput,
   } = props;
 
   const memoizedValue = useMemo<OrderEntryContextState>(() => {
@@ -23,6 +24,7 @@ export const OrderEntryProvider: FC<
       getErrorMsg,
       setOrderValue,
       setOrderValues,
+      currentFocusInput,
     };
   }, [
     errorMsgVisible,
@@ -32,6 +34,7 @@ export const OrderEntryProvider: FC<
     getErrorMsg,
     setOrderValue,
     setOrderValues,
+    currentFocusInput,
   ]);
 
   return (

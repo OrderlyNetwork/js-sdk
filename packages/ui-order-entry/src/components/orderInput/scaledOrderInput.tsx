@@ -163,7 +163,7 @@ export const ScaledOrderInput = (props: BaseOrderInputProps) => {
     <div className="oui-space-y-1">
       {priceInput}
 
-      <Grid cols={2} className={"oui-group oui-space-x-1"}>
+      <Grid cols={2} className="oui-group oui-space-x-1">
         {qtyInput}
         {totalOrdersInput}
       </Grid>

@@ -19,7 +19,6 @@ export const orders = {
     "Scale order: sub-order opened",
 
   "orders.column.fill&Quantity": "Filled / Quantity",
-  "orders.column.triggerPrice": "Trigger price",
   "orders.column.orderTime": "Order time",
   "orders.column.hidden": "Hidden",
 

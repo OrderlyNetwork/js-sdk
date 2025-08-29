@@ -1,4 +1,4 @@
-import { useEffect, useRef, useMemo } from "react";
+import { useEffect, useRef } from "react";
 import {
   useComputedLTV,
   useEventEmitter,
@@ -15,7 +15,6 @@ import {
   OrderType,
   PositionType,
 } from "@orderly.network/types";
-import { convertValueToPercentage } from "@orderly.network/ui";
 import { Decimal, removeTrailingZeros } from "@orderly.network/utils";
 import { useAskAndBid } from "./hooks/useAskAndBid";
 import { useBBOState } from "./hooks/useBBOState";
@@ -23,11 +22,7 @@ import { useCanTrade } from "./hooks/useCanTrade";
 import { useFocusAndBlur } from "./hooks/useFocusAndBlur";
 import { usePriceInputContainer } from "./hooks/usePriceInputContainer";
 import { InputType } from "./types";
-import { BBOStatus, isBBOOrder } from "./utils";
-
-const safeNumber = (val: number | string) => {
-  return Number.isNaN(Number(val)) ? 0 : Number(val);
-};
+import { BBOStatus, isBBOOrder, safeNumber } from "./utils";
 
 export type OrderEntryScriptInputs = {
   symbol: string;
@@ -56,15 +51,20 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
 
   const canTrade = useCanTrade();
 
-  const { formattedOrder, setValue, setValues, symbolInfo, ...state } =
-    useOrderEntry(inputs.symbol, {
-      initialOrder: {
-        symbol: inputs.symbol,
-        order_type: localOrderType,
-        position_type: PositionType.PARTIAL,
-        side: localOrderSide,
-      },
-    });
+  const {
+    formattedOrder,
+    setValue,
+    setValues: setOrderValues,
+    symbolInfo,
+    ...state
+  } = useOrderEntry(inputs.symbol, {
+    initialOrder: {
+      symbol: inputs.symbol,
+      order_type: localOrderType,
+      position_type: PositionType.PARTIAL,
+      side: localOrderSide,
+    },
+  });
 
   const [tpslSwitch, setTpslSwitch] = useLocalStorage(
     "orderly-order-entry-tp_sl-switch",
@@ -83,21 +83,8 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       order_type: formattedOrder.order_type,
       order_type_ext: formattedOrder.order_type_ext,
       side: formattedOrder.side,
-      setValues,
+      setOrderValues,
     });
-
-  const currentQtyPercentage = useMemo(() => {
-    if (Number(formattedOrder.order_quantity) >= Number(state.maxQty)) {
-      return 1;
-    }
-    return (
-      convertValueToPercentage(
-        Number(formattedOrder.order_quantity ?? 0),
-        0,
-        state.maxQty,
-      ) / 100
-    );
-  }, [formattedOrder.order_quantity, state.maxQty]);
 
   const { currentFocusInput, lastScaledOrderPriceInput, onFocus, onBlur } =
     useFocusAndBlur({
@@ -110,7 +97,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   // cancel TP/SL
   const cancelTP_SL = () => {
     // if(formattedOrder.)
-    setValues({
+    setOrderValues({
       tp_trigger_price: "",
       sl_trigger_price: "",
       position_type: PositionType.FULL,
@@ -118,7 +105,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   };
 
   const enableTP_SL = () => {
-    setValues({
+    setOrderValues({
       order_type_ext: undefined,
       position_type: PositionType.FULL,
     });
@@ -128,64 +115,66 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     setValue("order_quantity", state.maxQty);
   };
 
-  const setOrderValue = (
-    key: any,
-    value: any,
-    options?: {
-      shouldUpdateLastChangedField?: boolean;
-    },
-  ) => {
-    if (key === "order_type") {
-      setLocalOrderType(value);
-    }
-    if (key === "side") {
-      setLocalOrderSide(value);
-    }
-
-    if (
-      (key === "reduce_only" && value) ||
-      (key === "order_type" &&
-        (value === OrderType.STOP_LIMIT || value === OrderType.STOP_MARKET))
-    ) {
-      // cancelTP_SL();
-
-      const data = {
-        tp_trigger_price: "",
-        sl_trigger_price: "",
-        [key]: value,
-      };
-
+  const setOrderValue = useMemoizedFn(
+    (
+      key: any,
+      value: any,
+      options?: {
+        shouldUpdateLastChangedField?: boolean;
+      },
+    ) => {
       if (key === "order_type") {
-        data["order_type_ext" as any] = "";
+        setLocalOrderType(value);
+      }
+      if (key === "side") {
+        setLocalOrderSide(value);
       }
 
-      setValues(data);
+      if (
+        (key === "reduce_only" && value) ||
+        (key === "order_type" &&
+          (value === OrderType.STOP_LIMIT || value === OrderType.STOP_MARKET))
+      ) {
+        // cancelTP_SL();
 
-      return;
-    }
+        const data = {
+          tp_trigger_price: "",
+          sl_trigger_price: "",
+          [key]: value,
+        };
 
-    if (key === "order_type" && value !== OrderType.LIMIT) {
-      const data = {
-        level: undefined,
-        order_type_ext: undefined,
-        [key]: value,
-      };
+        if (key === "order_type") {
+          data["order_type_ext" as any] = "";
+        }
 
-      setValues(data);
+        setOrderValues(data);
 
-      return;
-    }
+        return;
+      }
 
-    if (key === "order_type" && value === OrderType.SCALED) {
-      setValues({
-        distribution_type: DistributionType.FLAT,
-        [key]: value,
-      });
-      return;
-    }
+      if (key === "order_type" && value !== OrderType.LIMIT) {
+        const data = {
+          level: undefined,
+          order_type_ext: undefined,
+          [key]: value,
+        };
 
-    setValue(key, value, options);
-  };
+        setOrderValues(data);
+
+        return;
+      }
+
+      if (key === "order_type" && value === OrderType.SCALED) {
+        setOrderValues({
+          distribution_type: DistributionType.FLAT,
+          [key]: value,
+        });
+        return;
+      }
+
+      setValue(key, value, options);
+    },
+  );
 
   const onTPSLSwitchChanged = (state: boolean) => {
     setTpslSwitch(state);
@@ -234,7 +223,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       if (isBBOOrder({ order_type, order_type_ext })) {
         setBBOType(undefined);
 
-        setValues({
+        setOrderValues({
           order_type_ext: undefined,
           level: undefined,
         });
@@ -273,7 +262,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
         setBBOType(undefined);
 
         // You can't call setValue twice here , the second value will override the first, so you need to combine them into a single setValues call
-        setValues({
+        setOrderValues({
           order_type: OrderType.LIMIT,
           order_price: price,
         });
@@ -359,16 +348,14 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
 
   return {
     ...state,
-    currentQtyPercentage,
     side: formattedOrder.side as OrderSide,
     type: formattedOrder.order_type as OrderType,
     level: formattedOrder.level as OrderLevel,
-    setOrderValue: useMemoizedFn(setOrderValue),
-    setOrderValues: setValues,
-
+    formattedOrder,
+    setOrderValue,
+    setOrderValues,
     currentLeverage,
 
-    formattedOrder,
     // cancelTP_SL,
     // enableTP_SL,
     tpslSwitch,
@@ -392,7 +379,8 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     currentLtv,
     fillMiddleValue,
     symbol: inputs.symbol,
-    soundAlert: soundAlert,
-    setSoundAlert: setSoundAlert,
+    soundAlert,
+    setSoundAlert,
+    currentFocusInput,
   };
 };

@@ -29,17 +29,19 @@ export const PriceInput: FC<PriceInputProps> = (props) => {
   const { symbolInfo, onFocus, onBlur, getErrorMsg, setOrderValue } =
     useOrderEntryContext();
 
+  const { quote, quote_dp } = symbolInfo;
+
   const readOnly = bbo.bboStatus === BBOStatus.ON;
 
   const suffix =
     props.order_type === OrderType.LIMIT ? (
       <LimitPriceSuffix
-        quote={symbolInfo.quote}
+        quote={quote}
         bbo={bbo}
         fillMiddleValue={props.fillMiddleValue}
       />
     ) : (
-      symbolInfo.quote
+      quote
     );
 
   return (
@@ -57,7 +59,7 @@ export const PriceInput: FC<PriceInputProps> = (props) => {
           setOrderValue("order_price", e);
         }}
         error={getErrorMsg("order_price")}
-        formatters={[inputFormatter.dpFormatter(symbolInfo.quote_dp)]}
+        formatters={[inputFormatter.dpFormatter(quote_dp)]}
         onFocus={onFocus(InputType.PRICE)}
         onBlur={onBlur(InputType.PRICE)}
         readonly={readOnly}

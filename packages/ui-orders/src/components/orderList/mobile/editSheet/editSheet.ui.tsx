@@ -10,6 +10,7 @@ import {
   ThrottledButton,
 } from "@orderly.network/ui";
 import { ActivitedPriceInput } from "./components/activitedPriceInput";
+import { ConfirmDialogContent } from "./components/editDialogContent";
 import { EditSheetContext } from "./components/editSheetContext";
 import { EditSheetHeader } from "./components/editSheetHeader";
 import { PriceInput } from "./components/priceInput";
@@ -17,7 +18,6 @@ import { QuantityInput } from "./components/quantityInput";
 import { QuantitySlider } from "./components/quantitySlider";
 import { TrailingCallbackInput } from "./components/trailingCallbackInput";
 import { TriggerPriceInput } from "./components/triggerPriceInput";
-import { ConfirmDialogContent } from "./editDialogContent";
 import { EditSheetState } from "./editSheet.script";
 
 export const EditSheet: FC<EditSheetState> = (props) => {
@@ -51,18 +51,26 @@ export const EditSheet: FC<EditSheetState> = (props) => {
     <TriggerPriceInput value={formattedOrder.trigger_price} />
   );
 
-  const priceInput = isTrailingStop ? (
-    <ActivitedPriceInput value={formattedOrder.activated_price} />
-  ) : (
-    <PriceInput
-      value={
-        isStopMarket
-          ? t("orderEntry.orderType.market")
-          : formattedOrder.order_price
-      }
-      disabled={!isStopMarket}
-    />
-  );
+  const renderPriceInput = () => {
+    if (isTrailingStop) {
+      return (
+        formattedOrder.activated_price && (
+          <ActivitedPriceInput value={formattedOrder.activated_price} />
+        )
+      );
+    }
+
+    return (
+      <PriceInput
+        value={
+          isStopMarket
+            ? t("orderEntry.orderType.market")
+            : formattedOrder.order_price
+        }
+        disabled={isStopMarket}
+      />
+    );
+  };
 
   const trailingCallbackInput = isTrailingStop && (
     <TrailingCallbackInput
@@ -128,7 +136,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
         {lastPrice}
         <Flex width={"100%"} direction={"column"} itemAlign={"stretch"} gap={2}>
           {triggerPriceInput}
-          {priceInput}
+          {renderPriceInput()}
           {trailingCallbackInput}
           {quantityInput}
           {quantitySlider}

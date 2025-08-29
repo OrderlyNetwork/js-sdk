@@ -1,20 +1,25 @@
 import { useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { OrderSide } from "@orderly.network/types";
-import { Flex, Slider, textVariants, Text } from "@orderly.network/ui";
+import {
+  Flex,
+  Slider,
+  textVariants,
+  Text,
+  convertValueToPercentage,
+} from "@orderly.network/ui";
 
 export const QuantitySlider = (props: {
   canTrade: boolean;
   side: OrderSide;
-  value: number;
+  order_quantity?: string;
   maxQty: number;
-  currentQtyPercentage: number;
   tick: number;
   dp: number;
   setMaxQty: () => void;
   onValueChange: (value: number) => void;
 }) => {
-  const { canTrade } = props;
+  const { canTrade, order_quantity, maxQty } = props;
   const { t } = useTranslation();
 
   const color = useMemo(
@@ -29,15 +34,34 @@ export const QuantitySlider = (props: {
       : t("orderEntry.maxSell");
   }, [props.side, t]);
 
+  const sliderValue = useMemo(() => {
+    if (!order_quantity) {
+      return 0;
+    }
+    return Number(order_quantity);
+  }, [order_quantity]);
+
+  const quantityToPercentage = useMemo(() => {
+    if (!order_quantity) {
+      return 0;
+    }
+    if (Number(order_quantity) >= Number(maxQty)) {
+      return 1;
+    }
+    return (
+      convertValueToPercentage(Number(order_quantity ?? 0), 0, maxQty) / 100
+    );
+  }, [order_quantity, maxQty]);
+
   return (
     <div>
       <Slider.single
-        disabled={props.maxQty === 0 || !canTrade}
-        value={props.value}
+        disabled={maxQty === 0 || !canTrade}
+        value={sliderValue}
         color={color}
         markCount={4}
         showTip
-        max={props.maxQty}
+        max={maxQty}
         step={props.tick}
         onValueChange={props.onValueChange}
       />
@@ -49,7 +73,7 @@ export const QuantitySlider = (props: {
           dp={2}
           padding={false}
         >
-          {canTrade ? props.currentQtyPercentage : 0}
+          {canTrade ? quantityToPercentage : 0}
         </Text.numeral>
         <Flex>
           <button
@@ -69,7 +93,7 @@ export const QuantitySlider = (props: {
             padding={false}
             data-testid="oui-testid-orderEntry-maxQty-value"
           >
-            {canTrade ? props.maxQty : 0}
+            {canTrade ? maxQty : 0}
           </Text.numeral>
         </Flex>
       </Flex>

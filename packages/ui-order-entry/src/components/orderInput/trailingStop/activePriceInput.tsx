@@ -21,7 +21,7 @@ export const ActivePriceInput = memo<ActivePriceInputProps>((props) => {
         ref={props.activatedPriceInputRef}
         id="order_activated_price_input"
         name="order_activated_price_input"
-        label={t("orderEntry.activationPrice")}
+        label={t("common.triggerPrice")}
         placeholder={`0 (${t("common.optional")})`}
         suffix={symbolInfo.quote}
         error={getErrorMsg("activated_price")}

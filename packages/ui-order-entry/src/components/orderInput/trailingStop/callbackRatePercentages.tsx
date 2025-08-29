@@ -7,6 +7,7 @@ const percentages = [1, 2, 3, 5];
 type CallbackRatePercentagesProps = {
   className?: string;
   callback_rate?: string;
+  onClick?: (value: string) => void;
 };
 
 export const CallbackRatePercentages: FC<CallbackRatePercentagesProps> = memo(
@@ -16,7 +17,8 @@ export const CallbackRatePercentages: FC<CallbackRatePercentagesProps> = memo(
     return (
       <Flex gapX={2} className={props.className}>
         {percentages.map((item) => {
-          const isActive = props.callback_rate === item.toString();
+          const value = item.toString();
+          const isActive = props.callback_rate === value;
 
           return (
             <Flex
@@ -31,7 +33,8 @@ export const CallbackRatePercentages: FC<CallbackRatePercentagesProps> = memo(
                 isActive ? "oui-border-base-contrast-36" : "oui-border-line-12",
               )}
               onClick={() => {
-                setOrderValue("callback_rate", item.toString());
+                setOrderValue("callback_rate", value);
+                props.onClick?.(value);
               }}
             >
               <Text size="2xs" intensity={isActive ? 80 : 36} weight="semibold">

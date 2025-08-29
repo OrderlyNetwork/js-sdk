@@ -122,6 +122,11 @@ export interface ScaledOrder {
   skew?: string;
 }
 
+export enum TrailingCallbackType {
+  VALUE = "value",
+  RATE = "rate",
+}
+
 /**
  * Trailing Stop that allows users to set an activation price and a trailing amount (value / rate).
  * The order is only activated when the market reaches the activation price,
@@ -132,10 +137,6 @@ export interface TrailingStopOrder {
    * activated price
    */
   activated_price?: string;
-  /**
-   * callback unit
-   */
-  callback_unit?: "quote" | "percentage";
   /**
    * i.e. the value = 100
    */
@@ -217,7 +218,6 @@ export interface ChildOrder {
 
 export interface TrailingStopOrder {
   activated_price?: string;
-  callback_unit?: "quote" | "percentage";
   callback_value?: string;
   callback_rate?: string;
 }

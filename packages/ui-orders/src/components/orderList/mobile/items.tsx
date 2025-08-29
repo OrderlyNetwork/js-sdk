@@ -14,10 +14,14 @@ import {
   OrderType,
 } from "@orderly.network/types";
 import { OrderSide } from "@orderly.network/types";
-import { Badge, cn, Flex, Statistic, Text, Tooltip } from "@orderly.network/ui";
+import { Badge, Flex, Statistic, Text, Tooltip } from "@orderly.network/ui";
 import { SharePnLBottomSheetId } from "@orderly.network/ui-share";
-import { Decimal } from "@orderly.network/utils";
-import { parseBadgesFor, upperCaseFirstLetter } from "../../../utils/util";
+import { Decimal, getTrailingStopPrice } from "@orderly.network/utils";
+import {
+  getNotional,
+  parseBadgesFor,
+  upperCaseFirstLetter,
+} from "../../../utils/util";
 import { ShareButtonWidget } from "../../shareButton";
 import { useTPSLOrderRowContext } from "../tpslOrderRowContext";
 import { OrderCellState } from "./orderCell.script";
@@ -212,14 +216,25 @@ export const EstTotal: FC<OrderCellState> = (props) => {
   const { item } = props;
   const { t } = useTranslation();
 
-  const value = useMemo(() => {
-    if (item.price && item.quantity) {
-      return new Decimal(item.price)
-        .mul(item.quantity)
-        .toFixed(props.quote_dp, Decimal.ROUND_DOWN);
+  const value = useMemo(() => getNotional(item), [item.price, item.quantity]);
+
+  const rendrerContent = () => {
+    if (value) {
+      return (
+        <Text.numeral
+          dp={props.quote_dp}
+          coloring
+          intensity={80}
+          padding={false}
+          rm={Decimal.ROUND_DOWN}
+        >
+          {value}
+        </Text.numeral>
+      );
     }
+
     return "--";
-  }, [item.price, item.quantity]);
+  };
 
   return (
     <Statistic
@@ -235,15 +250,7 @@ export const EstTotal: FC<OrderCellState> = (props) => {
         label: "oui-text-2xs",
       }}
     >
-      <Text.numeral
-        dp={props.quote_dp}
-        coloring
-        intensity={80}
-        padding={false}
-        rm={Decimal.ROUND_DOWN}
-      >
-        {value}
-      </Text.numeral>
+      {rendrerContent()}
     </Statistic>
   );
 };
@@ -251,28 +258,54 @@ export const EstTotal: FC<OrderCellState> = (props) => {
 export const TriggerPrice: FC<
   OrderCellState & {
     align?: "start" | "end";
+    isPending?: boolean;
   }
 > = (props) => {
-  const { item } = props;
+  const { item, isPending } = props;
   const { t } = useTranslation();
+
+  const isTrailingStop = item?.algo_type === AlgoOrderRootType.TRAILING_STOP;
+
+  const rendrerContent = () => {
+    if (isTrailingStop && isPending && item.activated_price) {
+      return (
+        <Text.numeral
+          dp={props.quote_dp}
+          intensity={80}
+          padding={false}
+          rm={Decimal.ROUND_DOWN}
+        >
+          {item.activated_price}
+        </Text.numeral>
+      );
+    }
+
+    if (item.trigger_price) {
+      return (
+        <Text.numeral
+          dp={props.quote_dp}
+          intensity={80}
+          padding={false}
+          rm={Decimal.ROUND_DOWN}
+        >
+          {item.trigger_price}
+        </Text.numeral>
+      );
+    }
+
+    return "--";
+  };
 
   return (
     <Statistic
-      label={t("orders.column.triggerPrice")}
+      label={isTrailingStop ? t("common.trigger") : t("common.triggerPrice")}
       classNames={{
         root: "oui-text-xs",
         label: "oui-text-2xs",
       }}
       align={props.align}
     >
-      <Text.numeral
-        dp={props.quote_dp}
-        intensity={80}
-        padding={false}
-        rm={Decimal.ROUND_DOWN}
-      >
-        {item.trigger_price ?? "--"}
-      </Text.numeral>
+      {rendrerContent()}
     </Statistic>
   );
 };
@@ -307,7 +340,28 @@ export const LimitPrice: FC<OrderCellState> = (props) => {
   const { t } = useTranslation();
 
   const isAlgoOrder = item?.algo_order_id !== undefined;
+  const isTrailingStop = item?.algo_type === AlgoOrderRootType.TRAILING_STOP;
   const isStopMarket = item?.type === "MARKET" && isAlgoOrder;
+
+  const rendrerContent = () => {
+    if (isTrailingStop) {
+      return "--";
+    }
+    if (isStopMarket) {
+      return <Text>{t("common.marketPrice")}</Text>;
+    }
+
+    return (
+      <Text.numeral
+        dp={props.quote_dp}
+        rm={Decimal.ROUND_DOWN}
+        intensity={80}
+        padding={false}
+      >
+        {item.price ?? "--"}
+      </Text.numeral>
+    );
+  };
 
   return (
     <Statistic
@@ -317,18 +371,7 @@ export const LimitPrice: FC<OrderCellState> = (props) => {
         label: "oui-text-2xs",
       }}
     >
-      {isStopMarket ? (
-        <Text>{t("common.marketPrice")}</Text>
-      ) : (
-        <Text.numeral
-          dp={props.quote_dp}
-          rm={Decimal.ROUND_DOWN}
-          intensity={80}
-          padding={false}
-        >
-          {item.price ?? "--"}
-        </Text.numeral>
-      )}
+      {rendrerContent()}
     </Statistic>
   );
 };
@@ -679,5 +722,69 @@ export const Fee: FC<OrderCellState> = (props) => {
         {props.item?.total_fee ?? "--"}
       </Text>
     </Flex>
+  );
+};
+
+export const TrailingCallback: FC<OrderCellState> = (props) => {
+  const { item } = props;
+  const { t } = useTranslation();
+
+  const { callback_value, callback_rate } = item;
+
+  return (
+    <Statistic
+      label={t("orderEntry.trailing")}
+      align="end"
+      classNames={{
+        root: "oui-text-xs",
+        label: "oui-text-2xs",
+      }}
+    >
+      {callback_rate ? (
+        <Text intensity={80}>{`${callback_rate * 100}%`}</Text>
+      ) : (
+        <Text.numeral
+          dp={props.quote_dp}
+          rm={Decimal.ROUND_DOWN}
+          intensity={80}
+          padding={false}
+        >
+          {callback_value ?? "--"}
+        </Text.numeral>
+      )}
+    </Statistic>
+  );
+};
+
+export const TrailingPrice: FC<OrderCellState> = (props) => {
+  const { item } = props;
+  const { t } = useTranslation();
+
+  const value = useMemo(() => {
+    return getTrailingStopPrice(item);
+  }, [item]);
+
+  return (
+    <Statistic
+      label={t("common.price")}
+      align="start"
+      classNames={{
+        root: "oui-text-xs",
+        label: "oui-text-2xs",
+      }}
+    >
+      {value ? (
+        <Text.numeral
+          dp={props.quote_dp}
+          rm={Decimal.ROUND_DOWN}
+          intensity={80}
+          padding={false}
+        >
+          {value}
+        </Text.numeral>
+      ) : (
+        "--"
+      )}
+    </Statistic>
   );
 };

@@ -488,10 +488,7 @@ const useOrderEntry = (
     return new Promise<OrderValidationResult | null>(
       async (resolve, reject) => {
         const creator = getOrderCreator(formattedOrder);
-
-        console.log("valudate order", creator);
         const errors = await validate(formattedOrder, creator, prepareData());
-        console.log("validate order errors", errors);
         const keys = Object.keys(errors);
         if (keys.length > 0) {
           // setErrors(errors);

@@ -185,6 +185,7 @@ export declare namespace API {
     activated_price?: number;
     callback_value?: number;
     callback_rate?: number;
+    extreme_price?: number;
   }
 
   export interface AlgoOrderExt extends AlgoOrder {

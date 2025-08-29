@@ -35,7 +35,6 @@ const initialOrderState = {
 
   // trailing stop order
   activated_price: "",
-  callback_unit: "",
   callback_value: "",
   callback_rate: "",
 };

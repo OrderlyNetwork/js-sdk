@@ -3,7 +3,6 @@ import { getMinNotional, useSymbolsInfo } from "@orderly.network/hooks";
 import { useMemoizedFn } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { API, OrderEntity } from "@orderly.network/types";
-import { modal } from "@orderly.network/ui";
 import { OrderListContext, OrderListContextState } from "./orderListContext";
 
 export interface OrderListProviderProps {
@@ -16,15 +15,9 @@ export interface OrderListProviderProps {
 export const OrderListProvider: FC<
   PropsWithChildren<OrderListProviderProps>
 > = (props) => {
-  const {
-    cancelOrder,
-    editOrder,
-    cancelAlgoOrder,
-    editAlgoOrder,
-    // cancelTPSLOrder,
-  } = props;
+  const { cancelOrder, editOrder, cancelAlgoOrder, editAlgoOrder } = props;
   const { t } = useTranslation();
-  const symbolInfo = useSymbolsInfo();
+  const symbolsInfo = useSymbolsInfo();
 
   const onCancelOrder = useMemoizedFn(
     async (order: API.Order | API.AlgoOrder) => {
@@ -47,27 +40,9 @@ export const OrderListProvider: FC<
     },
   );
 
-  const onEditOrder = useMemoizedFn(
-    async (order: API.Order | API.AlgoOrder, position?: API.Position) => {
-      const isHidden =
-        order.visible_quantity !== undefined
-          ? order.visible_quantity === 0
-          : (order as any).visible !== undefined
-            ? (order as any).visible === 0
-            : false;
-      const orderEntry = await modal.sheet({
-        title: t("orders.editOrder"),
-        classNames: {
-          content: "oui-edit-order-sheet-content",
-        },
-        content: <>Content</>,
-      });
-    },
-  );
-
   const checkMinNotional = useMemoizedFn(
     (symbol: string, price?: string | number, qty?: string | number) => {
-      const { min_notional } = symbolInfo[symbol]();
+      const { min_notional } = symbolsInfo[symbol]();
       const minNotional = getMinNotional({ price, qty, min_notional });
       if (minNotional !== undefined) {
         return t("orderEntry.total.error.min", { value: minNotional });
@@ -78,12 +53,11 @@ export const OrderListProvider: FC<
   const memoizedValue = useMemo<OrderListContextState>(() => {
     return {
       onCancelOrder,
-      onEditOrder,
       editOrder,
       editAlgoOrder,
       checkMinNotional,
     };
-  }, [onCancelOrder, onEditOrder, editOrder, editAlgoOrder, checkMinNotional]);
+  }, [onCancelOrder, editOrder, editAlgoOrder, checkMinNotional]);
 
   return (
     <OrderListContext.Provider value={memoizedValue}>
