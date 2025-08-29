@@ -38,7 +38,7 @@ const MaybeEqual: React.FC = () => {
 export const MobileLayout: FC<TradingState> = (props) => {
   const { t } = useTranslation();
   const topBar = (
-    <Box intensity={900} px={3} height={54}>
+    <Box intensity={900} mx={1} className="oui-rounded-xl" px={3} height={54}>
       <SymbolInfoBarWidget
         symbol={props.symbol}
         onSymbol={() => props.onOpenMarketsSheetChange(true)}
