@@ -57,6 +57,7 @@ export const portfolio = {
   "portfolio.feeTier.column.tier": "Tier",
   "portfolio.feeTier.column.30dVolume": "30 day volume",
   "portfolio.feeTier.column.30dVolume.above": "Above {{volume}}",
+  "portfolio.feeTier.column.stakingLevel": "Staking Level",
   "portfolio.feeTier.column.maker": "Maker",
   "portfolio.feeTier.column.taker": "Taker",
   "portfolio.apiKey.accountId.copied": "Account id copied",

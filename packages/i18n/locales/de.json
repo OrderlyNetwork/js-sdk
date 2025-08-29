@@ -188,6 +188,7 @@
   "portfolio.feeTier.column.tier": "Stufe",
   "portfolio.feeTier.column.30dVolume": "30-Tage-Volumen",
   "portfolio.feeTier.column.30dVolume.above": "Über {{volume}}",
+  "portfolio.feeTier.column.stakingLevel": "Staking-Stufe",
   "portfolio.feeTier.column.maker": "Maker",
   "portfolio.feeTier.column.taker": "Taker",
   "portfolio.apiKey.accountId.copied": "Konto-ID kopiert",

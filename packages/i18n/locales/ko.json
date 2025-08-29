@@ -188,6 +188,7 @@
   "portfolio.feeTier.column.tier": "등급",
   "portfolio.feeTier.column.30dVolume": "30일 거래량",
   "portfolio.feeTier.column.30dVolume.above": "{{volume}} 이상",
+  "portfolio.feeTier.column.stakingLevel": "스테이킹 레벨",
   "portfolio.feeTier.column.maker": "메이커",
   "portfolio.feeTier.column.taker": "테이커",
   "portfolio.apiKey.accountId.copied": "계정 ID 복사됨",

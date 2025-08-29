@@ -105,16 +105,10 @@ export function numberToHumanStyle(
     index++;
   }
 
-  // const roundedNumber = number.toFixed(decimalPlaces);
-  let roundedNumber = new Decimal(number)
+  const roundedNumber = new Decimal(number)
     .toFixed(decimalPlaces, Decimal.ROUND_DOWN)
-    .toString();
-
-  // const roundedNumber = padding
-  //   ? number.toFixed(decimalPlaces)
-  //   : number.toString();
-
-  roundedNumber = roundedNumber.replace(/\.0+$/, "");
+    .toString()
+    .replace(/\.0+$/, "");
 
   return `${roundedNumber}${abbreviations[index]}`;
 }

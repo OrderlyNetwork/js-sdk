@@ -188,6 +188,7 @@
   "portfolio.feeTier.column.tier": "Уровень",
   "portfolio.feeTier.column.30dVolume": "30-дневный объем",
   "portfolio.feeTier.column.30dVolume.above": "Выше {{volume}}",
+  "portfolio.feeTier.column.stakingLevel": "Уровень стейкинга",
   "portfolio.feeTier.column.maker": "Мейкер",
   "portfolio.feeTier.column.taker": "Тейкер",
   "portfolio.apiKey.accountId.copied": "ID аккаунта скопирован",

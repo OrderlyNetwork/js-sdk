@@ -188,6 +188,7 @@
   "portfolio.feeTier.column.tier": "Tingkat",
   "portfolio.feeTier.column.30dVolume": "Volume 30 hari",
   "portfolio.feeTier.column.30dVolume.above": "Di atas {{volume}}",
+  "portfolio.feeTier.column.stakingLevel": "Tingkat staking",
   "portfolio.feeTier.column.maker": "Maker",
   "portfolio.feeTier.column.taker": "Taker",
   "portfolio.apiKey.accountId.copied": "ID akun disalin",

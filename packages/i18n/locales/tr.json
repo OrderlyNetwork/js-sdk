@@ -188,6 +188,7 @@
   "portfolio.feeTier.column.tier": "Seviye",
   "portfolio.feeTier.column.30dVolume": "30 günlük hacim",
   "portfolio.feeTier.column.30dVolume.above": "{{volume}} üzeri",
+  "portfolio.feeTier.column.stakingLevel": "Stake seviyesi",
   "portfolio.feeTier.column.maker": "Veren",
   "portfolio.feeTier.column.taker": "Alıcı",
   "portfolio.apiKey.accountId.copied": "Hesap ID kopyalandı",

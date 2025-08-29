@@ -28,6 +28,15 @@ export type UseFeeTierScriptOptions = {
   };
 };
 
+export interface FeeDataType {
+  tier: number;
+  volume_min?: number | null;
+  volume_max?: number | null;
+  staking?: string | null;
+  maker_fee: string;
+  taker_fee: string;
+}
+
 export const useFeeTierScript = (options?: UseFeeTierScriptOptions) => {
   const { dataAdapter } = options || {};
   const [tier, setTier] = useState<number>();
@@ -69,9 +78,7 @@ export const useFeeTierScript = (options?: UseFeeTierScriptOptions) => {
     if (!data) {
       return;
     }
-
-    const tier = getFuturesCurrentTier(dataSource, data);
-    setTier(tier!);
+    setTier(getFuturesCurrentTier(dataSource, data));
   }, [data, dataSource]);
 
   const futures_taker_fee_rate = useMemo(() => {
@@ -107,7 +114,7 @@ export const useFeeTierScript = (options?: UseFeeTierScriptOptions) => {
 
   return {
     ...authData,
-    columns,
+    columns: columns,
     dataSource: dataSource,
     onRow: options?.onRow,
   };

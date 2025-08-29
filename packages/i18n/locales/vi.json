@@ -188,6 +188,7 @@
   "portfolio.feeTier.column.tier": "Cấp",
   "portfolio.feeTier.column.30dVolume": "Khối lượng 30 ngày",
   "portfolio.feeTier.column.30dVolume.above": "Trên {{volume}}",
+  "portfolio.feeTier.column.stakingLevel": "Cấp độ staking",
   "portfolio.feeTier.column.maker": "Maker",
   "portfolio.feeTier.column.taker": "Taker",
   "portfolio.apiKey.accountId.copied": "Đã sao chép ID tài khoản",
