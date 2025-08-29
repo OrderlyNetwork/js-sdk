@@ -8,15 +8,9 @@
       "@orderly.network/hooks": [
         "../../packages/hooks/src"
       ],
-      "@orderly.network/web3-onboard": [
-        "../../packages/onboard/src"
-      ],
       "@orderly.network/types": [
         "../../packages/types/src"
       ],
-      "@orderly.network/web3-modal": [
-        "../../packages/walletconnect/src"
-      ]
     },
     "strictNullChecks": true
   }
