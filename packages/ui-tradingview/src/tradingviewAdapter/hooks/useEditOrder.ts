@@ -40,7 +40,7 @@ export default function useEditOrder(onToast: any) {
                 onToast.error(e.message);
               }
             });
-        }  else {
+        } else {
           const values: any = {
             quantity: order.quantity,
             trigger_price: order.trigger_price,
@@ -53,6 +53,9 @@ export default function useEditOrder(onToast: any) {
           };
           if (order.order_tag) {
             values.order_tag = order.order_tag;
+          }
+          if (order.client_order_id) {
+            values.client_order_id = order.client_order_id;
           }
           if (lineValue.type === "price") {
             values.price = new Decimal(lineValue.value).toString();
@@ -82,7 +85,7 @@ export default function useEditOrder(onToast: any) {
       };
       if (
         new Decimal(order.visible_quantity ?? order.visible ?? 0).eq(
-          order.quantity
+          order.quantity,
         )
       ) {
         delete values.visible_quantity;
@@ -93,6 +96,9 @@ export default function useEditOrder(onToast: any) {
       if (order.order_tag) {
         values.order_tag = order.order_tag;
       }
+      if (order.client_order_id) {
+        values.client_order_id = order.client_order_id;
+      }
       if (lineValue.type === "price") {
         values.order_price = new Decimal(lineValue.value).toString();
       }
@@ -102,6 +108,6 @@ export default function useEditOrder(onToast: any) {
           onToast.error(e.message);
         });
     },
-    [updateOrder]
+    [updateOrder],
   );
 }

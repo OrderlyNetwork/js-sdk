@@ -165,8 +165,12 @@ export const OrderQuantity = (props: {
       params.reduce_only = order.reduce_only;
     }
 
-    if (order.order_tag !== undefined) {
-      params = { ...params, order_tag: order.order_tag };
+    if (order.order_tag) {
+      params.order_tag = order.order_tag;
+    }
+
+    if (order.client_order_id) {
+      params.client_order_id = order.client_order_id;
     }
 
     if (order?.visible_quantity === 0) {
