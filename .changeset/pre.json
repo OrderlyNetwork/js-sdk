@@ -1,5 +1,5 @@
 {
-  "mode": "pre",
+  "mode": "exit",
   "tag": "internal-20250828",
   "initialVersions": {
     "@orderly/docs": "1.6.0",
