@@ -30,23 +30,26 @@ export const useRewardsData = ({ type = TWType.normal }: { type?: TWType }) => {
 
   const epochList = useEpochInfo(type as TWType);
   const brokerId = useConfig("brokerId");
+
   const brokerName = useMemo(() => {
     return brokers?.[brokerId];
   }, [brokerId, brokers]);
 
   const lastStete = useRef<AccountStatusEnum>(AccountStatusEnum.NotConnected);
 
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   useEffect(() => {
-    let timerId: any;
     if (lastStete.current !== state.status) {
       lastStete.current = state.status;
-      timerId = setTimeout(() => {
+      timerRef.current = setTimeout(() => {
         mutate();
       }, 1000);
     }
-
     return () => {
-      if (timerId) clearTimeout(timerId);
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
     };
   }, [state.status]);
 

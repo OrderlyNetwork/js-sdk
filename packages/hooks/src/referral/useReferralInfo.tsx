@@ -21,26 +21,25 @@ export const useReferralInfo = (): {
     });
 
   const isTrader = useMemo(() => {
-    if (typeof data?.referee_info?.referer_code === "undefined")
+    if (typeof data?.referee_info?.referer_code === "undefined") {
       return undefined;
+    }
     return (data?.referee_info?.referer_code?.length || 0) > 0;
   }, [data?.referee_info]);
 
   const isAffiliate = useMemo(() => {
-    if (typeof data?.referrer_info?.referral_codes === "undefined")
+    if (typeof data?.referrer_info?.referral_codes === "undefined") {
       return undefined;
+    }
     return (data?.referrer_info?.referral_codes?.length || 0) > 0;
   }, [data?.referrer_info]);
 
-  const [pinCodes] = useLocalStorage<string[]>(
-    "orderly_referral_codes",
-    [] as string[],
-  );
+  const [pinCodes] = useLocalStorage<string[]>("orderly_referral_codes", []);
 
-  const getFirstRefCode = useCallback(():
-    | RefferalAPI.ReferralCode
-    | undefined => {
-    if (!data?.referrer_info?.referral_codes) return undefined;
+  const getFirstRefCode = useCallback(() => {
+    if (!data?.referrer_info?.referral_codes) {
+      return undefined;
+    }
     const referralCodes = [...data?.referrer_info?.referral_codes];
 
     const pinedItems: RefferalAPI.ReferralCode[] = [];
