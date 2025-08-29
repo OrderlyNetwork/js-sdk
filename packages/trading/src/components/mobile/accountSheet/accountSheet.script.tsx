@@ -11,14 +11,14 @@ import {
   useReferralInfo,
   useWalletConnector,
 } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 import { AccountStatusEnum, ChainNamespace } from "@orderly.network/types";
 import { modal, toast, useModal } from "@orderly.network/ui";
 import { isTestnet } from "@orderly.network/utils";
 import { ReferralProps, TradingRewardsProps } from "../../../types/types";
-import { useTranslation } from "@orderly.network/i18n";
 
 export const useAccountSheetScript = (
-  props: ReferralProps & TradingRewardsProps
+  props: ReferralProps & TradingRewardsProps,
 ) => {
   const { t } = useTranslation();
   const [linkDeviceStorage] = useLocalStorage("orderly_link_device", {});
@@ -65,7 +65,7 @@ export const useAccountSheetScript = (
   } = useReferral(props.onClickReferral);
 
   const { curEpochId, estRewards, onClickTradingRewards } = useTradingRewards(
-    props.onClickTradingRewards
+    props.onClickTradingRewards,
   );
 
   const onDisconnect = async () => {
@@ -79,7 +79,7 @@ export const useAccountSheetScript = (
   };
 
   const [getTestUSDC, { isMutating: gettingTestUSDC }] = useMutation(
-    `${operatorUrl}/v1/faucet/usdc`
+    `${operatorUrl}/v1/faucet/usdc`,
   );
 
   const onGetTestUSDC = () => {
@@ -117,7 +117,7 @@ export const useAccountSheetScript = (
       },
       (error: Error) => {
         toast.error(error.message);
-      }
+      },
     );
   };
   return {
@@ -146,18 +146,20 @@ export const useAccountSheetScript = (
 
 const useReferral = (_onClickReferral?: () => void) => {
   const { data, isLoading, isAffiliate, isTrader } = useReferralInfo();
+
   const affiliateCommission30D = useMemo(() => {
     if (isAffiliate) {
-      return data?.referrer_info["30d_referrer_rebate"];
+      return data?.referrer_info?.["30d_referrer_rebate"];
     }
     return undefined;
-  }, [data]);
+  }, [data, isAffiliate]);
+
   const traderCommission30D = useMemo(() => {
     if (isTrader) {
-      return data?.referee_info["30d_referee_rebate"];
+      return data?.referee_info?.["30d_referee_rebate"];
     }
     return undefined;
-  }, [data]);
+  }, [data, isTrader]);
 
   const onClickReferral = () => {
     _onClickReferral?.();

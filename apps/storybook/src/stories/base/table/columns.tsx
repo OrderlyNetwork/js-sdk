@@ -1,4 +1,4 @@
-import { Column, Flex, Text } from "@orderly.network/ui";
+import { Button, Column, Flex, Text } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 
 export const Columns: Column[] = [
@@ -120,6 +120,7 @@ export const Columns: Column[] = [
       );
     },
   },
+
   {
     title: "Time",
     dataIndex: "created_time",
@@ -132,6 +133,24 @@ export const Columns: Column[] = [
     //     </Text.formatted>
     //   );
     // },
+  },
+  {
+    title: "Action",
+    dataIndex: "action",
+    width: 100,
+    align: "right",
+    render: (value, record, index, context) => {
+      return (
+        <Button
+          variant="outlined"
+          color="gray"
+          size="sm"
+          onClick={context.row.getToggleExpandedHandler()}
+        >
+          Action
+        </Button>
+      );
+    },
     fixed: "right",
   },
 ];

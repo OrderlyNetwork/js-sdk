@@ -32,6 +32,10 @@ export const vaults = {
   "vaults.withdraw.process.transferred": "Transferred",
   "vaults.withdraw.process.initiate": "Initiate",
   "vaults.withdraw.process.upTo": "Up to 6 hours",
+  "vaults.operation.error.switchAccount":
+    "Please switch to your main account to continue.",
+  "vaults.operation.error.minDeposit":
+    "Deposit amount is less than the minimum {{amount}} USDC.",
 };
 
 export type Vaults = typeof vaults;

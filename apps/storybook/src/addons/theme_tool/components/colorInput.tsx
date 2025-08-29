@@ -1,4 +1,4 @@
-import React, { FC, memo } from "react";
+import React from "react";
 import { styled } from "storybook/theming";
 import "./style.css";
 
@@ -43,44 +43,36 @@ export const ColorInputContainer = styled.div`
   gap: 3px;
 `;
 
-export const ColorInput = memo(
-  ({
-    name,
-    color,
-    onChange,
-  }: {
-    name?: string;
-    color: string;
-    onChange: (color: string) => void;
-  }) => {
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      onChange(e.target.value);
-    };
-    return (
-      <ColorInputContainer>
-        <ColorNativeInput type="color" value={color} onChange={handleChange} />
-        <div>
-          <ColorTextInput type="text" value={color} onChange={handleChange} />
-          {!!name && <StyledLabel>{name}</StyledLabel>}
-        </div>
-      </ColorInputContainer>
-    );
-  },
-);
+export const ColorInput = React.memo<{
+  name?: string;
+  color: string;
+  onChange: (color: string) => void;
+}>((props) => {
+  const { name, color, onChange } = props;
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onChange(e.target.value);
+  };
+  return (
+    <ColorInputContainer>
+      <ColorNativeInput type="color" value={color} onChange={handleChange} />
+      <div>
+        <ColorTextInput type="text" value={color} onChange={handleChange} />
+        {!!name && <StyledLabel>{name}</StyledLabel>}
+      </div>
+    </ColorInputContainer>
+  );
+});
 
 const ColorGradientGroup = styled.div`
   display: flex;
 `;
 
-const ColorGradientItemInput = ({
-  name,
-  color,
-  onChange,
-}: {
+const ColorGradientItemInput: React.FC<{
   name: string;
   color: string;
   onChange: (color: string) => void;
-}) => {
+}> = (props) => {
+  const { name, color, onChange } = props;
   return (
     <ColorInputContainer style={{ width: "5em" }}>
       <ColorNativeInput
@@ -95,7 +87,7 @@ const ColorGradientItemInput = ({
         <ColorTextInput
           type="text"
           value={color}
-          onChange={onChange}
+          onChange={onChange as any}
           style={{ borderRadius: "100%", textAlign: "center", width: "100%" }}
         />
       </div>
@@ -103,17 +95,13 @@ const ColorGradientItemInput = ({
   );
 };
 
-export const ColorGradientInput = ({
-  name,
-  start,
-  end,
-  onChange,
-}: {
+export const ColorGradientInput: React.FC<{
   name: string;
   start: string;
   end: string;
   onChange: (start: string, end: string) => void;
-}) => {
+}> = (props) => {
+  const { name, start, end, onChange } = props;
   return (
     <ColorGradientGroup>
       <ColorGradientItemInput

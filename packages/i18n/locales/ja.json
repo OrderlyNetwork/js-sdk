@@ -933,5 +933,7 @@
   "vaults.withdraw.process.vaultProcess": "ボールトプロセス",
   "vaults.withdraw.process.transferred": "転送済み",
   "vaults.withdraw.process.initiate": "開始",
-  "vaults.withdraw.process.upTo": "最大6時間"
+  "vaults.withdraw.process.upTo": "最大6時間",
+  "vaults.operation.error.switchAccount": "続行するにはメインアカウントに切り替えてください。",
+  "vaults.operation.error.minDeposit": "入金額が最低額 {{amount}} USDC を下回っています。"
 }

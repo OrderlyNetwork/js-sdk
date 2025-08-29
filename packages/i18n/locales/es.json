@@ -933,5 +933,7 @@
   "vaults.withdraw.process.vaultProcess": "Proceso de bóveda",
   "vaults.withdraw.process.transferred": "Transferido",
   "vaults.withdraw.process.initiate": "Iniciar",
-  "vaults.withdraw.process.upTo": "Hasta 6 horas"
+  "vaults.withdraw.process.upTo": "Hasta 6 horas",
+  "vaults.operation.error.switchAccount": "Por favor, cambie a su cuenta principal para continuar.",
+  "vaults.operation.error.minDeposit": "El monto del depósito es menor que el mínimo de {{amount}} USDC."
 }

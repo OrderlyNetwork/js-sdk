@@ -38,35 +38,20 @@ export const getCampaignTag = (
   const startTime = new Date(campaign.start_time);
   const endTime = new Date(campaign.end_time);
 
-  // Check if campaign is exclusive to specific referral codes
-  if (campaign.referral_codes && campaign.referral_codes.length > 0) {
-    // If user doesn't have a referral code or it's not in the allowed list
-    if (
-      !userReferralCode ||
-      !campaign.referral_codes.includes(userReferralCode)
-    ) {
-      // Don't show the campaign at all, or return a special status
-      // For now, we'll treat it as if the campaign doesn't exist for this user
-      // You might want to handle this differently based on your UI requirements
-      return CampaignTagEnum.EXCLUSIVE;
-    }
-
-    // If user has valid referral code, check the time-based status
-    if (currentTime < startTime) {
-      return CampaignTagEnum.COMING;
-    } else if (currentTime > endTime) {
-      return CampaignTagEnum.ENDED;
-    } else {
-      return CampaignTagEnum.EXCLUSIVE; // Show as exclusive during the active period
-    }
-  }
-
   // For non-exclusive campaigns, check time-based status
   if (currentTime < startTime) {
     return CampaignTagEnum.COMING;
   } else if (currentTime > endTime) {
     return CampaignTagEnum.ENDED;
   } else {
+    if (campaign.referral_codes && campaign.referral_codes.length > 0) {
+      if (
+        !userReferralCode ||
+        !campaign.referral_codes.includes(userReferralCode)
+      ) {
+        return CampaignTagEnum.EXCLUSIVE;
+      }
+    }
     return CampaignTagEnum.ONGOING;
   }
 };

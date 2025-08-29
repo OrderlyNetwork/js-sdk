@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useMemo, useState } from "react";
 import {
   useAccount,
@@ -107,7 +108,7 @@ export const useFeeTierScript = (options?: UseFeeTierScriptOptions) => {
   return {
     ...authData,
     columns,
-    dataSource,
+    dataSource: dataSource,
     onRow: options?.onRow,
   };
 };

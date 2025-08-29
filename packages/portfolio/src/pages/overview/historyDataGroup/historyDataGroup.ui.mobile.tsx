@@ -2,6 +2,7 @@ import { useTranslation } from "@orderly.network/i18n";
 import { AssetHistorySideEnum } from "@orderly.network/types";
 import { TabPanel, Tabs } from "@orderly.network/ui";
 import { ConvertHistoryWidget } from "../../assets/convert.widget";
+import { VaultsHistoryWidget } from "../VaultsHistory/transfer.widget";
 import { AssetHistoryWidget } from "../assetHistory";
 import { DistributionHistoryWidget } from "../distribution";
 import { FundingHistoryWidget } from "../funding";
@@ -46,6 +47,9 @@ export const HistoryDataGroupMobile = (props: {
         value={"convert"}
       >
         <ConvertHistoryWidget />
+      </TabPanel>
+      <TabPanel title={t("common.vaults")} value={"vaults"}>
+        <VaultsHistoryWidget />
       </TabPanel>
     </Tabs>
   );

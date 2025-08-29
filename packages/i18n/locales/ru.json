@@ -933,5 +933,7 @@
   "vaults.withdraw.process.vaultProcess": "Процесс хранилища",
   "vaults.withdraw.process.transferred": "Переведено",
   "vaults.withdraw.process.initiate": "Инициировать",
-  "vaults.withdraw.process.upTo": "До 6 часов"
+  "vaults.withdraw.process.upTo": "До 6 часов",
+  "vaults.operation.error.switchAccount": "Пожалуйста, переключитесь на основной аккаунт для продолжения.",
+  "vaults.operation.error.minDeposit": "Сумма депозита меньше минимума {{amount}} USDC."
 }

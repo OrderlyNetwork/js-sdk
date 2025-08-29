@@ -1,3 +1,4 @@
+import React from "react";
 import { Grid, useScreen } from "@orderly.network/ui";
 import { AssetsChartWidget } from "./assetChart";
 import { AssetWidget } from "./assets";
@@ -6,7 +7,7 @@ import { MobileOverview } from "./mobile";
 import { PerformanceWidget } from "./performance";
 import { OverviewProvider } from "./provider/overviewProvider";
 
-export const OverviewPage = () => {
+export const OverviewPage: React.FC = () => {
   const { isMobile } = useScreen();
   return (
     <OverviewProvider>

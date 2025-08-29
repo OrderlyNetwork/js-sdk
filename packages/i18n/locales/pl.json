@@ -933,5 +933,7 @@
   "vaults.withdraw.process.vaultProcess": "Proces skarbca",
   "vaults.withdraw.process.transferred": "Przeniesione",
   "vaults.withdraw.process.initiate": "Rozpocznij",
-  "vaults.withdraw.process.upTo": "Do 6 godzin"
+  "vaults.withdraw.process.upTo": "Do 6 godzin",
+  "vaults.operation.error.switchAccount": "Przełącz się na swoje główne konto, aby kontynuować.",
+  "vaults.operation.error.minDeposit": "Kwota depozytu jest niższa niż minimum {{amount}} USDC."
 }

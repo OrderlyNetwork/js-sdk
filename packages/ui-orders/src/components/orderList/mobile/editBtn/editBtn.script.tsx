@@ -23,10 +23,10 @@ export const useEditBtnScript = (props: { state: OrderCellState }) => {
         .sheet({
           content: (
             <PositionTPSLSheet
+              symbol={props.state.item.symbol}
               symbolInfo={symbolInfo}
               isEditing
               order={props.state.item}
-              position={position!}
             />
           ),
         })

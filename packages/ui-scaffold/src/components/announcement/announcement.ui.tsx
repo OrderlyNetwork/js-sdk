@@ -24,7 +24,9 @@ export type AnnouncementProps = AnnouncementScriptReturn & {
   hideTips?: boolean;
 };
 
-export const Announcement: React.FC<Readonly<AnnouncementProps>> = (props) => {
+export const AnnouncementUI: React.FC<Readonly<AnnouncementProps>> = (
+  props,
+) => {
   const { maintenanceDialogInfo, showAnnouncement, currentTip } = props;
   const { t } = useTranslation();
   const { isMobile } = useScreen();
@@ -150,15 +152,8 @@ const DeskTopTips: React.FC<Readonly<AnnouncementScriptReturn>> = (props) => {
 };
 
 const MobileTips: React.FC<Readonly<AnnouncementScriptReturn>> = (props) => {
-  const {
-    currentTip,
-    currentIndex,
-    tips,
-    prevTips,
-    nextTips,
-    closeTips,
-    isAnimating,
-  } = props;
+  const { currentTip, currentIndex, tips, prevTips, nextTips, closeTips } =
+    props;
 
   const len = tips.length;
 
@@ -175,7 +170,7 @@ const MobileTips: React.FC<Readonly<AnnouncementScriptReturn>> = (props) => {
       <Flex
         gapY={2}
         direction="column"
-        className={cn("oui-items-start oui-justify-start oui-w-full")}
+        className={cn("oui-w-full oui-items-start oui-justify-start")}
       >
         <div
           // className={cn(
@@ -195,12 +190,7 @@ const MobileTips: React.FC<Readonly<AnnouncementScriptReturn>> = (props) => {
         </div>
 
         <Flex width="100%" justify="between">
-          <div
-          // className={cn(
-          //   "oui-transition-transform oui-duration-200 oui-ease-in-out oui-opacity-100",
-          //   isAnimating && "oui-translate-y-full oui-opacity-0"
-          // )}
-          >
+          <div>
             <RenderTipsType type={currentTip?.type} />
           </div>
           <SwitchTips
@@ -227,16 +217,16 @@ const SwitchTips: React.FC<Readonly<SwitchTipsProps>> = (props) => {
       <ChevronLeftIcon
         size={20}
         opacity={1}
-        className=" oui-text-base-contrast-54 hover:oui-text-base-contrast-80 oui-flex-shrink-0 oui-w-4 lg:oui-w-5 oui-h-4 lg:oui-h-5 oui-cursor-pointer "
+        className="oui-text-base-contrast-54 hover:oui-text-base-contrast-80 oui-flex-shrink-0 oui-w-4 lg:oui-w-5 oui-h-4 lg:oui-h-5 oui-cursor-pointer"
         onClick={prevTips}
       />
-      <div className="oui-text-base-contrast-54 oui-text-sm">
+      <div className="oui-text-sm oui-text-base-contrast-54">
         {currentIndex + 1}/{tipsCount}
       </div>
       <ChevronRightIcon
         size={20}
         opacity={1}
-        className="oui-text-base-contrast-54 hover:oui-text-base-contrast-80 oui-flex-shrink-0 oui-w-4 lg:oui-w-5 oui-h-4 lg:oui-h-5 oui-cursor-pointer "
+        className="oui-text-base-contrast-54 hover:oui-text-base-contrast-80 oui-flex-shrink-0 oui-w-4 lg:oui-w-5 oui-h-4 lg:oui-h-5 oui-cursor-pointer"
         onClick={nextTips}
       />
     </div>
@@ -282,8 +272,8 @@ const RenderTipsType: React.FC<{ type?: AnnouncementType | null }> = ({
       px={2}
       r="base"
       className={cn(
-        "oui-text-2xs oui-leading-[18px] oui-font-medium",
-        "oui-break-normal oui-whitespace-nowrap",
+        "oui-text-2xs oui-font-medium oui-leading-[18px]",
+        "oui-whitespace-nowrap oui-break-normal",
         className,
       )}
     >

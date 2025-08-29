@@ -1,4 +1,4 @@
-import React, { FC, memo, SVGProps } from "react";
+import React from "react";
 import {
   Box,
   Flex,
@@ -64,14 +64,14 @@ const menuItemVariants = tv({
   },
 });
 
-const MenuItem: FC<
+const MenuItem = React.memo<
   {
     item: SideMenuItem;
     active?: boolean;
     open?: boolean;
     onClick?: (item: SideMenuItem) => void;
   } & VariantProps<typeof menuItemVariants>
-> = memo((props) => {
+>((props) => {
   const { item, mode, open, onClick, active, ...rest } = props;
   const { button } = menuItemVariants({
     mode,
@@ -118,7 +118,7 @@ const MenuItem: FC<
 
 MenuItem.displayName = "LeftMenuItem";
 
-const SideMenus: FC<{
+const SideMenus: React.FC<{
   menus?: SideMenuItem[];
   current?: string;
   open?: boolean;
@@ -144,13 +144,15 @@ const SideMenus: FC<{
             gradientUnits="userSpaceOnUse"
           >
             <stop stopColor="rgb(var(--oui-gradient-brand-end))" />
-            <stop offset="1" stopColor="rgb(var(--oui-gradient-brand-start))" />
+            <stop stopColor="rgb(var(--oui-gradient-brand-start))" offset="1" />
           </linearGradient>
         </defs>
       </svg>
       <ul className="oui-space-y-4">
         {props.menus?.map((item, index) => {
-          if (item?.hide) return null;
+          if (item?.hide) {
+            return null;
+          }
           return (
             <MenuItem
               key={index}
@@ -172,7 +174,7 @@ type SideBarHeaderProps = {
   title?: React.ReactNode;
 };
 
-const SideBarHeader: FC<SideBarHeaderProps> = (props) => {
+const SideBarHeader: React.FC<SideBarHeaderProps> = (props) => {
   const { title } = props;
 
   const titleElemet =
@@ -220,7 +222,7 @@ type SideBarProps = {
   style?: React.CSSProperties;
 };
 
-const SideBar = (props: SideBarProps) => {
+const SideBar: React.FC<SideBarProps> = (props) => {
   const { open = true, items, current, onItemSelect } = props;
 
   return (
@@ -248,7 +250,7 @@ const SideBar = (props: SideBarProps) => {
 
 SideBar.displayName = "SideBar";
 
-const ExpandIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
+const ExpandIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
   <svg
     width="16"
     height="16"
@@ -261,7 +263,7 @@ const ExpandIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
   </svg>
 );
 
-const CollapseIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
+const CollapseIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
   <svg
     width="16"
     height="16"

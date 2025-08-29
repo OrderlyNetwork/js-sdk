@@ -129,7 +129,10 @@ export const OrderConfirmDialog = (props: OrderConfirmDialogProps) => {
   };
 
   const renderTPSLQty = () => {
-    let qty = new Decimal(order.order_quantity ?? 0);
+    if (!positionQty || !order.order_quantity) {
+      return null;
+    }
+    let qty = new Decimal(order.order_quantity);
     if (order.position_type === PositionType.FULL) {
       qty = qty.plus(new Decimal(positionQty ?? 0));
     }

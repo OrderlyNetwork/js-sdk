@@ -1,4 +1,5 @@
-import { useMemo, ReactNode } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useMemo } from "react";
 import { PnLBarChart, PnlLineChart } from "@orderly.network/chart";
 import { useTranslation } from "@orderly.network/i18n";
 import { EMPTY_LIST } from "@orderly.network/types";
@@ -22,7 +23,7 @@ export type PerformanceUIProps = {
   // onPeriodChange: (period: string) => void;
 } & UsePerformanceScriptReturn;
 
-export const PerformanceUI = (props: PerformanceUIProps) => {
+export const PerformanceUI: React.FC<PerformanceUIProps> = (props) => {
   const {
     periodTypes,
     period,
@@ -31,19 +32,12 @@ export const PerformanceUI = (props: PerformanceUIProps) => {
     invisible,
     visible,
     volumeUpdateDate,
+    curPeriod,
   } = props;
   const { t } = useTranslation();
 
-  const periodLabel = useMemo(() => {
-    return {
-      [PeriodType.WEEK]: t("common.select.7d"),
-      [PeriodType.MONTH]: t("common.select.30d"),
-      [PeriodType.QUARTER]: t("common.select.90d"),
-    };
-  }, [t]);
   return (
     <Card
-      // @ts-ignore
       title={
         <PeriodTitle
           onPeriodChange={onPeriodChange}
@@ -68,17 +62,12 @@ export const PerformanceUI = (props: PerformanceUIProps) => {
             label={
               <LabelWithHint
                 label={t("portfolio.overview.performance.roi", {
-                  period: periodLabel[period as PeriodType],
+                  period: curPeriod,
                 })}
                 hint={t("portfolio.overview.performance.roi.tooltip")}
               />
             }
-            // @ts-ignore
-            valueProps={{
-              rule: "percentages",
-              coloring: true,
-              visible,
-            }}
+            valueProps={{ rule: "percentages", coloring: true, visible }}
           >
             {invisible ? "--" : aggregateValue.roi}
           </Statistic>
@@ -96,17 +85,12 @@ export const PerformanceUI = (props: PerformanceUIProps) => {
             label={
               <LabelWithHint
                 label={t("portfolio.overview.performance.pnl", {
-                  period: periodLabel[period as PeriodType],
+                  period: curPeriod,
                 })}
                 hint={t("portfolio.overview.performance.pnl.tooltip")}
               />
             }
-            // @ts-ignore
-            valueProps={{
-              coloring: true,
-              showIdentifier: true,
-              visible,
-            }}
+            valueProps={{ coloring: true, showIdentifier: true, visible }}
           >
             {invisible ? "--" : aggregateValue.pnl}
           </Statistic>
@@ -129,7 +113,7 @@ export const PerformanceUI = (props: PerformanceUIProps) => {
                 <span>
                   <LabelWithHint
                     label={t("portfolio.overview.performance.volume", {
-                      period: periodLabel[period as PeriodType],
+                      period: curPeriod,
                     })}
                     hint={t("portfolio.overview.performance.volume.tooltip")}
                   />
@@ -137,6 +121,7 @@ export const PerformanceUI = (props: PerformanceUIProps) => {
                 <span>{volumeUpdateDate}</span>
               </Flex>
             }
+            valueProps={{ visible }}
           >
             {invisible ? "--" : aggregateValue.vol}
           </Statistic>
@@ -158,7 +143,7 @@ export const PerformanceUI = (props: PerformanceUIProps) => {
 
 type LabelWithHintProps = {
   label: string;
-  hint?: ReactNode;
+  hint?: React.ReactNode;
 };
 
 const LabelWithHint: React.FC<LabelWithHintProps> = (props) => {
@@ -185,22 +170,17 @@ const LabelWithHint: React.FC<LabelWithHintProps> = (props) => {
   );
 };
 
-export const PerformancePnL = (props: {
+export const PerformancePnL: React.FC<{
   data: ReadonlyArray<any> | any[];
   invisible: boolean;
-}) => {
-  // console.log(props.data);
-  // const tickValues = useMemo(() => {
-  //   if (!Array.isArray(props.data) || !props.data.length) return;
-  //   return [props.data[0].date, props.data[props.data?.length - 1].date];
-  // }, [props.data]);
+}> = (props) => {
   const { t } = useTranslation();
   return (
     <Box mt={4} height={"188px"}>
       <Text as="div" size="sm" className="oui-mb-3">
         {t("portfolio.overview.performance.dailyPnl")}
       </Text>
-      <Box r="md" className="oui-border oui-border-line-4 oui-h-[188px]">
+      <Box r="md" className="oui-h-[188px] oui-border oui-border-line-4">
         <PnLBarChart
           data={props.data}
           invisible={props.invisible || (props.data?.length ?? 0) <= 2}
@@ -210,25 +190,21 @@ export const PerformancePnL = (props: {
   );
 };
 
-export const CumulativePnlChart = (props: {
+export const CumulativePnlChart: React.FC<{
   data: ReadonlyArray<any> | any[];
   invisible: boolean;
-}) => {
+}> = (props) => {
   const { t } = useTranslation();
-
   return (
     <Box mt={4}>
       <Text as="div" size="sm" className="oui-mb-3">
         {t("portfolio.overview.performance.cumulativePnl")}
       </Text>
-      <Box r="md" className="oui-border oui-border-line-4 oui-h-[188px]">
+      <Box r="md" className="oui-h-[188px] oui-border oui-border-line-4">
         <PnlLineChart
           data={props.data}
           invisible={props.invisible || (props.data?.length ?? 0) <= 2}
         />
-        {/* <Chart data={props.data} x={"date"} y={"pnl"}>
-          <Axis orientation="left" />
-        </Chart> */}
       </Box>
     </Box>
   );

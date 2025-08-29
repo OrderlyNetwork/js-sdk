@@ -933,5 +933,7 @@
   "vaults.withdraw.process.vaultProcess": "Processus du coffre",
   "vaults.withdraw.process.transferred": "Transféré",
   "vaults.withdraw.process.initiate": "Initier",
-  "vaults.withdraw.process.upTo": "Jusqu'à 6 heures"
+  "vaults.withdraw.process.upTo": "Jusqu'à 6 heures",
+  "vaults.operation.error.switchAccount": "Veuillez basculer vers votre compte principal pour continuer.",
+  "vaults.operation.error.minDeposit": "Le montant du dépôt est inférieur au minimum de {{amount}} USDC."
 }

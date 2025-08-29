@@ -133,6 +133,7 @@ const BlockList: React.FC<BlockListProps> = (props) => {
       },
     ];
   }, [total24Amount, totalOpenInterest, tvl]);
+
   return (
     <Flex
       direction="column"
@@ -142,7 +143,7 @@ const BlockList: React.FC<BlockListProps> = (props) => {
       className={props.className}
     >
       {list?.map((item, index) => (
-        <BlockItem key={index} {...item} />
+        <BlockItem key={`item-${index}`} {...item} />
       ))}
     </Flex>
   );

@@ -933,5 +933,7 @@
   "vaults.withdraw.process.vaultProcess": "Tresorprozess",
   "vaults.withdraw.process.transferred": "Übertragen",
   "vaults.withdraw.process.initiate": "Einleiten",
-  "vaults.withdraw.process.upTo": "Bis zu 6 Stunden"
+  "vaults.withdraw.process.upTo": "Bis zu 6 Stunden",
+  "vaults.operation.error.switchAccount": "Bitte wechseln Sie zu Ihrem Hauptkonto, um fortzufahren.",
+  "vaults.operation.error.minDeposit": "Der Einzahlungsbetrag liegt unter dem Minimum von {{amount}} USDC."
 }

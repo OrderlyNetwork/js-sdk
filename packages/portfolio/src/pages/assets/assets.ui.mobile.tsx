@@ -1,4 +1,4 @@
-import { FC, useMemo } from "react";
+import React, { useMemo } from "react";
 import { useWalletConnector } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { ChainNamespace } from "@orderly.network/types";
@@ -82,8 +82,8 @@ export const AssetsTableMobile = (props: useAssetsScriptReturn) => {
         )}
       </div>
       <div className="oui-flex oui-flex-col oui-gap-1">
-        {props.dataSource.map((assets) => (
-          <>
+        {props.dataSource.map((assets, index) => (
+          <React.Fragment key={`item-${index}`}>
             <AccountTag name={assets.description ?? "sub account"} />
             {assets.children.map((child: any) => (
               <AssetMobileItem
@@ -91,7 +91,7 @@ export const AssetsTableMobile = (props: useAssetsScriptReturn) => {
                 key={`${child.token}-${child.account_id}`}
               />
             ))}
-          </>
+          </React.Fragment>
         ))}
       </div>
     </div>
@@ -102,7 +102,7 @@ type AssetMobileItemProps = {
   item: any;
 };
 
-const AssetMobileItem: FC<AssetMobileItemProps> = ({ item }) => {
+const AssetMobileItem: React.FC<AssetMobileItemProps> = ({ item }) => {
   const { t } = useTranslation();
   const { namespace } = useWalletConnector();
 
@@ -182,7 +182,7 @@ const AssetMobileItem: FC<AssetMobileItemProps> = ({ item }) => {
   );
 };
 
-const AccountTag: FC<{ name: string }> = ({ name }) => {
+const AccountTag: React.FC<{ name: string }> = ({ name }) => {
   return (
     <div className="oui-mt-2 oui-flex oui-h-[18px] oui-w-fit oui-items-center oui-rounded oui-bg-white/[0.06] oui-px-2 oui-text-2xs oui-font-semibold oui-text-base-contrast-36">
       {name}

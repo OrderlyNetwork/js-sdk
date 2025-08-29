@@ -1,11 +1,11 @@
 import { useMemo } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import { type Column, Text } from "@orderly.network/ui";
 import { numberToHumanStyle } from "@orderly.network/utils";
-import { useTranslation } from "@orderly.network/i18n";
 
 export const useFeeTierColumns = () => {
   const { t } = useTranslation();
-  const columns = useMemo(() => {
+  const columns = useMemo<Column[]>(() => {
     return [
       {
         title: t("portfolio.feeTier.column.tier"),
@@ -32,7 +32,7 @@ export const useFeeTierColumns = () => {
                 {t("portfolio.feeTier.column.30dVolume.above", {
                   volume: numberToHumanStyle(
                     volume_min,
-                    volume_min === 2500000 ? 1 : 0
+                    volume_min === 2500000 ? 1 : 0,
                   ),
                 })}
               </div>
@@ -67,7 +67,7 @@ export const useFeeTierColumns = () => {
           return <Text>{value}</Text>;
         },
       },
-    ] as Column[];
+    ];
   }, [t]);
 
   return columns;

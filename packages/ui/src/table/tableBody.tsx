@@ -31,7 +31,7 @@ export const TableBody: React.FC<TableBodyProps<any>> = (props) => {
       {props.rows.map((row) => {
         const { className, onClick, ...rest } =
           typeof props.onRow === "function"
-            ? props.onRow(row.original, row.index) || {}
+            ? props.onRow(row.original, row.index, row) || {}
             : {};
 
         const expandView = row.getIsExpanded() && (
@@ -56,12 +56,7 @@ export const TableBody: React.FC<TableBodyProps<any>> = (props) => {
                 props.bordered && "oui-border-b oui-border-b-line-4",
                 className,
               )}
-              onClick={() => {
-                if (row.getCanExpand()) {
-                  row.getToggleExpandedHandler();
-                }
-                onClick?.();
-              }}
+              onClick={onClick}
               {...rest}
             >
               {row.getVisibleCells().map((cell) => {
@@ -77,7 +72,8 @@ export const TableBody: React.FC<TableBodyProps<any>> = (props) => {
                   children,
                   ...rest
                 } = typeof props.onCell === "function"
-                  ? props.onCell(cell.column, row.original, row.index) || {}
+                  ? props.onCell(cell.column, row.original, row.index, cell) ||
+                    {}
                   : {};
 
                 const cellView =
@@ -126,7 +122,7 @@ export const TableBody: React.FC<TableBodyProps<any>> = (props) => {
         if (typeof props.renderRowContainer === "function") {
           return (
             <Fragment key={row.id}>
-              {props.renderRowContainer(row.original, row.index, rowView)}
+              {props.renderRowContainer(row.original, row.index, rowView, row)}
             </Fragment>
           );
         }

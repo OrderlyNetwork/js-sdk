@@ -1,7 +1,8 @@
 import { ChainNamespace } from "@orderly.network/types";
-import { ConfigKey, ConfigStore } from "./configStore";
 import { NetworkId } from "@orderly.network/types";
-type ChainNamespaceType = typeof ChainNamespace[keyof typeof ChainNamespace];
+import { ConfigKey, ConfigStore } from "./configStore";
+
+type ChainNamespaceType = (typeof ChainNamespace)[keyof typeof ChainNamespace];
 
 export type URLS = {
   apiBaseUrl: string;

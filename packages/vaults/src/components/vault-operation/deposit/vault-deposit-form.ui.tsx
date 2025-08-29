@@ -18,6 +18,9 @@ export const VaultDepositForm: FC<VaultDepositFormScript> = (props) => {
     shares,
     handleDeposit,
     vaultId,
+    disabledDeposit,
+    disabledOperation,
+    inputHint,
   } = props;
 
   const { t } = useTranslation();
@@ -30,6 +33,8 @@ export const VaultDepositForm: FC<VaultDepositFormScript> = (props) => {
           onValueChange={onQuantityChange}
           token={{ ...sourceToken, precision: 6 } as any}
           testId="oui-testid-vault-deposit-dialog-quantity-input"
+          hintMessage={inputHint.hintMessage}
+          status={inputHint.status as any}
         />
       </Box>
       <AvailableQuantity
@@ -57,7 +62,7 @@ export const VaultDepositForm: FC<VaultDepositFormScript> = (props) => {
         </Text.numeral>
       </Box>
       <Box
-        mb={1}
+        mb={5}
         className="oui-flex oui-items-center oui-justify-between oui-text-sm oui-font-semibold oui-text-base-contrast-54"
       >
         <div>{t("vaults.deposit.lockupDuration")}</div>
@@ -69,11 +74,18 @@ export const VaultDepositForm: FC<VaultDepositFormScript> = (props) => {
           48
         </Text.numeral>
       </Box>
+      {disabledOperation && (
+        <div className="oui-mt-3 oui-text-center">
+          <Text color="warning" className="oui-text-sm oui-font-semibold">
+            {t("vaults.operation.error.switchAccount")}
+          </Text>
+        </div>
+      )}
       <Button
         fullWidth
         color="primary"
-        disabled={!quantity || quantity === "0"}
-        className="oui-mt-8"
+        disabled={disabledDeposit}
+        className="oui-mt-3"
         onClick={handleDeposit}
       >
         {t("common.deposit")}

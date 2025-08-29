@@ -933,5 +933,7 @@
   "vaults.withdraw.process.vaultProcess": "Kluisproces",
   "vaults.withdraw.process.transferred": "Overgedragen",
   "vaults.withdraw.process.initiate": "Starten",
-  "vaults.withdraw.process.upTo": "Tot 6 uur"
+  "vaults.withdraw.process.upTo": "Tot 6 uur",
+  "vaults.operation.error.switchAccount": "Schakel over naar uw hoofdaccount om door te gaan.",
+  "vaults.operation.error.minDeposit": "Het stortingsbedrag is lager dan het minimum van {{amount}} USDC."
 }

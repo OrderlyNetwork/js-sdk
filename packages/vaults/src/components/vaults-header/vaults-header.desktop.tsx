@@ -1,12 +1,10 @@
 import { FC, useMemo } from "react";
-import { useConfig } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { VaultsHeaderScript } from "./vaults-header.script";
 
 export const VaultsHeaderDesktop: FC<VaultsHeaderScript> = (props) => {
-  const { supportVaults, headerImage } = props;
+  const { supportVaults, headerImage, brokerName } = props;
   const { t } = useTranslation();
-  const brokerName = useConfig("brokerName");
 
   const supportVaultsList = useMemo(() => {
     return (

@@ -933,5 +933,7 @@
   "vaults.withdraw.process.vaultProcess": "金库流程",
   "vaults.withdraw.process.transferred": "已转账",
   "vaults.withdraw.process.initiate": "发起",
-  "vaults.withdraw.process.upTo": "最多6小时"
+  "vaults.withdraw.process.upTo": "最多6小时",
+  "vaults.operation.error.switchAccount": "请切换到您的主账户以继续操作。",
+  "vaults.operation.error.minDeposit": "存款金额低于最低要求 {{amount}} USDC。"
 }
