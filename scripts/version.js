@@ -42,24 +42,21 @@ async function wirteVersionFile(path, content) {
 
 async function updateCreateOrderlyPkg() {
   //=========== update create-orderly-app package.json version ===========
-  const web3OnboardPakageJson = await PackageJson.load(
-    path.resolve(packageSrc, "onboard"),
-  );
-  const createOrderlyAppJson = await PackageJson.load(
-    path.resolve(packageSrc, "create-orderly-app"),
-  );
+  // const createOrderlyAppJson = await PackageJson.load(
+  //   path.resolve(packageSrc, "create-orderly-app"),
+  // );
 
   // wirte create-orderly-app package.json version
-  createOrderlyAppJson.update({
-    ...createOrderlyAppJson.content,
-    orderly: {
-      version: {
-        "@orderly.network/web3-onboard": web3OnboardPakageJson.content.version,
-      },
-    },
-  });
+  // createOrderlyAppJson.update({
+  //   ...createOrderlyAppJson.content,
+  //   orderly: {
+  //     version: {
+  //       // "@orderly.network/web3-onboard": web3OnboardPakageJson.content.version,
+  //     },
+  //   },
+  // });
 
-  await createOrderlyAppJson.save();
+  // await createOrderlyAppJson.save();
 
   //==========================
 

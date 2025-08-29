@@ -49,10 +49,5 @@
   },
   "publishConfig": {
     "access": "public"
-  },
-  "orderly": {
-    "version": {
-      "@orderly.network/web3-onboard": "2.6.1"
-    }
   }
 }
