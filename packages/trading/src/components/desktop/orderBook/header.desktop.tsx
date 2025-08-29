@@ -66,7 +66,7 @@ const Option: React.FC<{
 };
 
 export const DesktopHeader: FC<DesktopHeaderProps> = (props) => {
-  const { base, quote } = props;
+  const { base, quote = "USDC" } = props;
   const { showTotal } = useOrderBookContext();
   const { t } = useTranslation();
   const [popoverOpen, setOpen] = React.useState<boolean>(false);

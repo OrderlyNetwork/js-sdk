@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React from "react";
 import { AssetLineChart } from "@orderly.network/chart";
 import { useTranslation } from "@orderly.network/i18n";
 import { Card } from "@orderly.network/ui";
@@ -6,10 +8,9 @@ import { useAssetsChartScriptReturn } from "./assetsChart.script";
 
 export type AssetsLineChartProps = {} & useAssetsChartScriptReturn;
 
-export const AssetsChart = (props: AssetsLineChartProps) => {
-  const { onPeriodChange, periodTypes, period } = props;
+export const AssetsChart: React.FC<AssetsLineChartProps> = (props) => {
+  const { onPeriodChange, data, periodTypes, period } = props;
   const { t } = useTranslation();
-
   return (
     <Card
       title={
@@ -21,11 +22,9 @@ export const AssetsChart = (props: AssetsLineChartProps) => {
         />
       }
       id="portfolio-overview-assets-chart"
-      classNames={{
-        content: "oui-h-[168px] oui-pb-0",
-      }}
+      classNames={{ content: "oui-h-[168px] oui-pb-0" }}
     >
-      <AssetLineChart data={props.data as any} invisible={props.invisible} />
+      <AssetLineChart data={data as any} invisible={props.invisible} />
       {/* <PnlLineChart data={data} /> */}
       {/* <LineChart data={data} /> */}
     </Card>

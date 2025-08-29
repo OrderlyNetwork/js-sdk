@@ -198,7 +198,6 @@
   "portfolio.apiKey.permissions": "Permessi",
   "portfolio.apiKey.permissions.read": "Lettura",
   "portfolio.apiKey.permissions.trading": "Trading",
-  "portfolio.apiKey.permissions.asset": "Asset",
   "portfolio.apiKey.description": "Crea chiavi API per soddisfare le tue esigenze di trading. Per la tua sicurezza, non condividere le tue chiavi API con nessuno.",
   "portfolio.apiKey.readApiGuide": "Leggi la guida API",
   "portfolio.apiKey.column.apiKey": "Chiave API",
@@ -922,5 +921,7 @@
   "vaults.withdraw.process.vaultProcess": "Processo del caveau",
   "vaults.withdraw.process.transferred": "Trasferito",
   "vaults.withdraw.process.initiate": "Avvia",
-  "vaults.withdraw.process.upTo": "Fino a 6 ore"
+  "vaults.withdraw.process.upTo": "Fino a 6 ore",
+  "vaults.operation.error.switchAccount": "Passa al tuo account principale per continuare.",
+  "vaults.operation.error.minDeposit": "L'importo del deposito è inferiore al minimo di {{amount}} USDC."
 }

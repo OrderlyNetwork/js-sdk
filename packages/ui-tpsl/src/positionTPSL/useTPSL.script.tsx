@@ -17,7 +17,7 @@ import {
   SDKError,
 } from "@orderly.network/types";
 import { modal, toast } from "@orderly.network/ui";
-import { PositionTPSLConfirm } from "./tpsl.ui";
+import { PositionTPSLConfirm } from "./positionTpslConfirm";
 
 type PropsWithTriggerPrice = {
   withTriggerPrice?: boolean;
@@ -85,6 +85,7 @@ export const useTPSLBuilder = (
       setValue,
       setValues,
       validate,
+      metaState,
       errors,
       isCreateMutating,
       isUpdateMutating,
@@ -194,62 +195,6 @@ export const useTPSLBuilder = (
     isEditing,
   ]);
 
-  const valid = useMemo(() => {
-    /**
-     * if the order is a POSITIONAL_TP_SL and the quantity is less than the maxQty,
-     * and the tp/sl trigger price is not set, then the order is not valid
-     */
-    if (
-      order?.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL &&
-      Number(tpslOrder.quantity) < maxQty &&
-      !tpslOrder.tp_trigger_price &&
-      !tpslOrder.sl_trigger_price
-    ) {
-      return false;
-    }
-
-    return dirty > 0 && !!tpslOrder.quantity && !errors;
-  }, [tpslOrder.quantity, maxQty, dirty, errors]);
-
-  // const isPositionTPSL = useMemo(() => {
-  //   if (!isEditing) return Number(tpslOrder.quantity) >= maxQty;
-  //   /**
-  //    * if current order is not a POSITIONAL_TP_SL, then it's always a general TP/SL
-  //    */
-  //   if (!!order && order.algo_type !== AlgoOrderRootType.POSITIONAL_TP_SL) {
-  //     return false;
-  //   }
-  //   if (tpslOrder.algo_order_id && tpslOrder.quantity == 0) return true;
-  //   return Number(tpslOrder.quantity) >= maxQty;
-  // }, [tpslOrder.quantity, maxQty, order?.algo_type, isEditing]);
-
-  // useEffect(() => {
-  //   if (!isEditing && isPositionTPSL) {
-  //     const trigger_prices = utils.findTPSLFromOrder(order!);
-  //     if (!tpslOrder.tp_trigger_price && trigger_prices.tp_trigger_price) {
-  //       setOrderPrice("tp_trigger_price", trigger_prices.tp_trigger_price);
-  //     }
-  //     if (!tpslOrder.sl_trigger_price && trigger_prices.sl_trigger_price) {
-  //       setOrderPrice("sl_trigger_price", trigger_prices.sl_trigger_price);
-  //     }
-  //   }
-  // }, [isEditing, isPositionTPSL, tpslOrder]);
-
-  // useEffect(() => {
-  //   const type =
-  //     Number(tpslOrder.quantity) < maxQty
-  //       ? AlgoOrderRootType.TP_SL
-  //       : AlgoOrderRootType.POSITIONAL_TP_SL;
-  //   if (
-  //     typeof options.onTPSLTypeChange === "function" &&
-  //     prevTPSLType.current !== type
-  //   ) {
-  //     options.onTPSLTypeChange(type);
-  //   }
-
-  //   prevTPSLType.current = type;
-  // }, [tpslOrder.quantity, maxQty]);
-
   useEffect(() => {
     if (!withTriggerPrice) {
       return;
@@ -341,7 +286,7 @@ export const useTPSLBuilder = (
         content: (
           <PositionTPSLConfirm
             isPositionTPSL={positionType === PositionType.FULL}
-            isEditing={false}
+            isEditing={isEditing}
             symbol={order.symbol!}
             qty={Number(order.quantity)}
             maxQty={maxQty}
@@ -405,7 +350,7 @@ export const useTPSLBuilder = (
     setOrderPrice,
     // needConfirm,
     onSubmit,
-    valid,
+    metaState,
     errors,
     status: {
       isCreateMutating,

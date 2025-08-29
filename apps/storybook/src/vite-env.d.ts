@@ -9,6 +9,7 @@ interface ImportMetaEnv {
   STORYBOOK: string;
   STORYBOOK_DEFAULT_THEME: string;
   STORYBOOK_DISABLED_ADDONS: string;
+  VITE_AMPLITUDE_ID: string;
 }
 
 interface ImportMeta {

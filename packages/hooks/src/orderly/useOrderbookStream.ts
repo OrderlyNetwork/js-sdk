@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { max, min } from "ramda";
+import { min } from "ramda";
 import { SDKError } from "@orderly.network/types";
 import { Decimal, removeTrailingZeros } from "@orderly.network/utils";
 import { OrderlyContext } from "../orderlyContext";
@@ -42,7 +42,13 @@ const asksSortFn = (a: OrderBookItem, b: OrderBookItem) => a[0] - b[0];
 
 const bidsSortFn = (a: OrderBookItem, b: OrderBookItem) => b[0] - a[0];
 
-// const commonSortFn = (a: OrderBookItem, b: OrderBookItem) => b[0] - a[0];
+export const getPriceKey = (price: number, depth: number, asks: boolean) => {
+  return new Decimal(price)
+    .div(depth)
+    .toDecimalPlaces(0, asks ? Decimal.ROUND_CEIL : Decimal.ROUND_FLOOR)
+    .mul(depth)
+    .toNumber();
+};
 
 const reduceItems = (
   depth: number | undefined,
@@ -56,36 +62,29 @@ const reduceItems = (
   let newData = [...data];
   const result: OrderBookItem[] = [];
 
-  //
-
   if (typeof depth !== "undefined") {
     const prices = new Map<number, number[]>();
-    for (let i = 0; i < data.length; i++) {
+    const len = data.length;
+    for (let i = 0; i < len; i++) {
       const [price, quantity] = data[i];
-      if (isNaN(price) || isNaN(quantity)) continue;
-      let priceKey;
-
-      if (asks) {
-        priceKey = new Decimal(Math.ceil(price / depth)).mul(depth).toNumber();
-      } else {
-        priceKey = new Decimal(Math.floor(price / depth)).mul(depth).toNumber();
+      if (Number.isNaN(price) || Number.isNaN(quantity)) {
+        continue;
       }
 
-      if (depth < 1 && depth > 0 && priceKey.toString().indexOf(".") !== -1) {
-        const priceStr = price.toString();
-        const index = priceStr.indexOf(".");
-        const decimal = priceStr.slice(index + 1);
-        const decimalDepth = removeTrailingZeros(depth)
-          .toString()
-          .slice(2).length;
-        const decimalStr = decimal.slice(0, min(decimal.length, decimalDepth));
-        priceKey = new Decimal(
-          priceStr.slice(0, index) + "." + decimalStr,
-        ).toNumber();
-      }
+      const priceKey = getPriceKey(price, depth, asks);
 
-      // console.log(`reduce items price: ${price}, priceKey: ${priceKey}, depth: ${depth}, resetPriceKey: ${price.toString === priceKey.toString}`);
-      // console.log(`ask: ${asks} reduce items price: ${priceKey}`);
+      // if (depth < 1 && depth > 0 && priceKey.toString().indexOf(".") !== -1) {
+      //   const priceStr = price.toString();
+      //   const index = priceStr.indexOf(".");
+      //   const decimal = priceStr.slice(index + 1);
+      //   const decimalDepth = removeTrailingZeros(depth)
+      //     .toString()
+      //     .slice(2).length;
+      //   const decimalStr = decimal.slice(0, min(decimal.length, decimalDepth));
+      //   priceKey = new Decimal(
+      //     priceStr.slice(0, index) + "." + decimalStr,
+      //   ).toNumber();
+      // }
 
       if (prices.has(priceKey)) {
         const item = prices.get(priceKey)!;
@@ -103,7 +102,9 @@ const reduceItems = (
 
   for (let i = 0; i < newData.length; i++) {
     const [price, quantity] = newData[i];
-    if (isNaN(price) || isNaN(quantity)) continue;
+    if (Number.isNaN(price) || Number.isNaN(quantity)) {
+      continue;
+    }
 
     const newQuantity = new Decimal(quantity)
       .add(result.length > 0 ? result[result.length - 1][2] : 0)
@@ -207,7 +208,7 @@ const mergeItems = (data: OrderBookItem[], update: OrderBookItem[]) => {
     return update;
   }
 
-  data = data.filter(([price]) => !isNaN(price));
+  data = data.filter(([price]) => !Number.isNaN(price));
 
   while (update.length > 0) {
     const item = update.shift();
@@ -215,10 +216,12 @@ const mergeItems = (data: OrderBookItem[], update: OrderBookItem[]) => {
     if (item) {
       const [price, quantity] = item;
 
-      const index = data.findIndex(([p], index) => p === price);
+      const index = data.findIndex(([p]) => p === price);
       //
       if (index === -1) {
-        if (quantity === 0) continue;
+        if (quantity === 0) {
+          continue;
+        }
         data.push(item);
       } else {
         if (quantity === 0) {
@@ -280,8 +283,10 @@ export const useOrderbookStream = (
 
   symbolRef.current = symbol;
 
-  const { defaultOrderbookTickSizes: DEFAULT_TICK_SIZES } =
-    useContext(OrderlyContext);
+  const {
+    defaultOrderbookTickSizes: DEFAULT_TICK_SIZES = {},
+    defaultOrderbookSymbolDepths: DEFAULT_SYMBOL_DEPTHS = {},
+  } = useContext(OrderlyContext);
 
   const [data, setData] = useState<OrderbookData>(initial);
   const [isLoading, setIsLoading] = useState(true);
@@ -294,12 +299,15 @@ export const useOrderbookStream = (
   // markPrice, lastPrice
   const prevMiddlePrice = useRef<number>(0);
 
+  const tick = config("quote_tick");
+
   const depths = useMemo(() => {
-    const tick = config("quote_tick");
+    if (DEFAULT_SYMBOL_DEPTHS[symbol]) {
+      return DEFAULT_SYMBOL_DEPTHS[symbol];
+    }
     if (typeof tick === "undefined") {
       return [];
     }
-
     try {
       const base = new Decimal(tick);
       return [
@@ -308,17 +316,19 @@ export const useOrderbookStream = (
         base.mul(100).toNumber(),
         base.mul(1000).toNumber(),
       ];
-    } catch (e) {}
+    } catch {
+      //
+    }
     return [tick];
-  }, [config("quote_tick")]);
+  }, [symbol, tick]);
 
   useEffect(() => {
     if (DEFAULT_TICK_SIZES[symbol]) {
       setDepth(Number(DEFAULT_TICK_SIZES[symbol]));
     } else {
-      setDepth(config("quote_tick"));
+      setDepth(tick);
     }
-  }, [config("quote_tick"), symbol, DEFAULT_TICK_SIZES]);
+  }, [tick, symbol, DEFAULT_TICK_SIZES]);
 
   const ws = useWS();
 
@@ -331,10 +341,10 @@ export const useOrderbookStream = (
   useEffect(() => {
     let needRequestFullOrderbook = true;
     setIsLoading(true);
-    let orderBookUpdateSub: any;
+
     let fullOrderBookUpdateSub: any;
 
-    orderBookUpdateSub = ws.subscribe(
+    const orderBookUpdateSub = ws.subscribe(
       {
         event: "subscribe",
         topic: `${symbol}@orderbookupdate`,
@@ -410,7 +420,6 @@ export const useOrderbookStream = (
   }, []);
 
   const onDepthChange = useCallback((depth: number) => {
-    //
     setDepth(() => depth);
   }, []);
 
@@ -424,8 +433,8 @@ export const useOrderbookStream = (
   }, [reducedData]);
 
   const middlePrice = useMemo(() => {
-    let asksFrist = 0,
-      bidsFirst = 0;
+    let asksFrist = 0;
+    let bidsFirst = 0;
 
     if (data.asks.length > 0) {
       asksFrist = reducedData.asks?.[reducedData.asks.length - 1]?.[0];
@@ -435,7 +444,7 @@ export const useOrderbookStream = (
       bidsFirst = data.bids[0][0];
     }
 
-    if (isNaN(asksFrist) || isNaN(bidsFirst) || !ticker) {
+    if (Number.isNaN(asksFrist) || Number.isNaN(bidsFirst) || !ticker) {
       return 0;
     }
 

@@ -30,7 +30,7 @@ export const DownloadFeature: TableFeature<any> = {
         row
           .getVisibleCells()
           .filter(
-            (cell) => (cell.column.columnDef.meta as any).type !== "action"
+            (cell) => (cell.column.columnDef.meta as any).type !== "action",
           )
           .map((cell) => {
             const { original: record, index } = cell.row;
@@ -40,11 +40,11 @@ export const DownloadFeature: TableFeature<any> = {
             let value = cell.getValue();
 
             if (typeof renderPlantText === "function") {
-              value = renderPlantText(value, record, index);
+              value = renderPlantText(value, record, index, cell);
             }
 
             return `"${value}"`;
-          })
+          }),
       );
 
       const data = [header, ...rows];

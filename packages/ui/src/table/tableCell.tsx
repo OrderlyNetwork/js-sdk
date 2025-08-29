@@ -22,7 +22,7 @@ export const TableCell: React.FC<TableCellProps> = (props) => {
   }
 
   if (typeof render === "function") {
-    return render(value, record, index);
+    return render(value, record, index, cell);
   }
 
   if (typeof rule !== "undefined") {

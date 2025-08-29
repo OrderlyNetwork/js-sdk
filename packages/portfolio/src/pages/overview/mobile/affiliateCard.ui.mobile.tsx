@@ -1,5 +1,4 @@
 import { FC } from "react";
-import { isNumber } from "lodash";
 import { RefferalAPI as API } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import {
@@ -12,6 +11,10 @@ import {
 import { RouterAdapter } from "@orderly.network/ui-scaffold";
 import { commifyOptional } from "@orderly.network/utils";
 
+const isNumber = (val: unknown): val is number => {
+  return typeof val === "number" && !Number.isNaN(val);
+};
+
 type AffiliateCardMobileProps = {
   referralInfo?: API.ReferralInfo;
   routerAdapter?: RouterAdapter;
@@ -19,6 +22,8 @@ type AffiliateCardMobileProps = {
 
 export const AffiliateCardMobile: FC<AffiliateCardMobileProps> = (props) => {
   const { t } = useTranslation();
+  const { referralInfo, routerAdapter } = props;
+  const rebate = referralInfo?.referrer_info?.["30d_referrer_rebate"];
   return (
     <Flex
       className="
@@ -59,17 +64,12 @@ export const AffiliateCardMobile: FC<AffiliateCardMobileProps> = (props) => {
         <Text
           className={cn(
             "oui-text-xs oui-font-semibold",
-            isNumber(
-              props?.referralInfo?.referrer_info["30d_referrer_rebate"],
-            ) && props?.referralInfo?.referrer_info["30d_referrer_rebate"] != 0
+            isNumber(rebate) && rebate !== 0
               ? "oui-text-base-contrast"
               : "oui-text-base-contrast-36",
           )}
         >
-          {commifyOptional(
-            props?.referralInfo?.referrer_info["30d_referrer_rebate"],
-            { fix: 2, fallback: "--" },
-          )}
+          {commifyOptional(rebate, { fix: 2, fallback: "--" })}
         </Text>
         <Text className="oui-text-xs oui-font-semibold oui-text-base-contrast-36">
           (30D)
@@ -78,12 +78,12 @@ export const AffiliateCardMobile: FC<AffiliateCardMobileProps> = (props) => {
           size={18}
           color="white"
           className="oui-ml-auto"
-          onClick={() =>
-            props?.routerAdapter?.onRouteChange({
+          onClick={() => {
+            routerAdapter?.onRouteChange({
               href: "/rewards/affiliate?tab=affiliate",
               name: t("tradingRewards.rewards"),
-            })
-          }
+            });
+          }}
         />
       </Flex>
     </Flex>

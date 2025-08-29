@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
-import { OrderCellState } from "../orderCell.script";
 import { utils } from "@orderly.network/hooks";
 import { calcBracketRoiAndPnL } from "../../../../utils/util";
+import { OrderCellState } from "../orderCell.script";
 
 export const useBracketOrderPriceScript = (props: OrderCellState) => {
   const { item: order, quote_dp, base_dp } = props;
@@ -19,6 +19,7 @@ export const useBracketOrderPriceScript = (props: OrderCellState) => {
 
   return {
     sl_trigger_price,
+    order,
     tp_trigger_price,
     pnl,
     roi,

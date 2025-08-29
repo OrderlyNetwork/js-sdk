@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { cn, Flex, Text } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { Decimal, checkIsNaN } from "@orderly.network/utils";
 
 type Props = {
   tp_pnl?: string | number;
@@ -13,20 +13,26 @@ export const PnlInfo = (props: Props) => {
   const { t } = useTranslation();
   const { tp_pnl, sl_pnl } = props;
   const riskRatio = useMemo(() => {
-    if (tp_pnl && sl_pnl) {
-      const ratio = new Decimal(tp_pnl).div(sl_pnl).abs().toNumber().toFixed(2);
-      return (
-        <Flex
-          gap={1}
-          itemAlign={"center"}
-          className="oui-text-base-contrast-80"
-        >
-          <Text>{ratio}</Text>
-          <Text className="oui-text-base-contrast-36">x</Text>
-        </Flex>
-      );
+    const defaultNode = <Text className="oui-text-base-contrast-36">-- x</Text>;
+    if (tp_pnl === undefined || sl_pnl === undefined) {
+      return defaultNode;
     }
-    return <Text className="oui-text-base-contrast-36">-- x</Text>;
+    if (checkIsNaN(tp_pnl) || checkIsNaN(sl_pnl)) {
+      return defaultNode;
+    }
+    const tpDecimal = new Decimal(tp_pnl);
+    const slDecimal = new Decimal(sl_pnl);
+    if (slDecimal.isZero() || tpDecimal.isZero()) {
+      return defaultNode;
+    }
+    const ratio = tpDecimal.div(slDecimal).abs().toNumber().toFixed(2);
+    return (
+      <Flex gap={1} itemAlign={"center"} className="oui-text-base-contrast-80">
+        <Text>{ratio}</Text>
+        <Text className="oui-text-base-contrast-36">x</Text>
+      </Flex>
+    );
+    return defaultNode;
   }, [tp_pnl, sl_pnl]);
   return (
     <Flex

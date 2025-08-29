@@ -132,7 +132,7 @@ export const AssetStatistic = (props: AssetStatisticProps) => {
             size="sm"
             weight="semibold"
             prefix={"("}
-            suffix=")"
+            suffix={")"}
             visible={props.visible}
           >
             {props.unrealROI}

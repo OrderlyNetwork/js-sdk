@@ -6,7 +6,6 @@ import { PositionType } from "@orderly.network/types";
 import { cn, EditIcon, Text, toast, useScreen } from "@orderly.network/ui";
 import { modal } from "@orderly.network/ui";
 import {
-  PositionTPSLConfirm,
   PositionTPSLPopover,
   TPSLDetailDialogId,
   TPSLDialogId,

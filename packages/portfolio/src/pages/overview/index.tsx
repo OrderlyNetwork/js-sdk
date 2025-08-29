@@ -9,6 +9,9 @@ export {
   PerformanceWidget,
   usePerformanceScript,
 } from "./performance";
+
+export * from "./performanceMobileDialog";
+
 export {
   FundingHistoryWidget,
   useFundingHistoryColumns,

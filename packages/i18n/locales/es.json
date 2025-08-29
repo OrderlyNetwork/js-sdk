@@ -198,7 +198,6 @@
   "portfolio.apiKey.permissions": "Permisos",
   "portfolio.apiKey.permissions.read": "Lectura",
   "portfolio.apiKey.permissions.trading": "Trading",
-  "portfolio.apiKey.permissions.asset": "Activo",
   "portfolio.apiKey.description": "Crea claves API según tus necesidades de trading. Por seguridad, no compartas tus claves API con nadie.",
   "portfolio.apiKey.readApiGuide": "Leer guía de API",
   "portfolio.apiKey.column.apiKey": "Clave API",
@@ -661,7 +660,6 @@
   "transfer.withdraw.crossChain.warning": "Los retiros que requieren reequilibrio entre cadenas no pueden ser cancelados o seguidos con más retiros hasta que hayan sido procesados.",
   "transfer.withdraw.crossChain.vaultWarning": "El retiro excede el saldo de la bóveda de {{networkName}} ( {{chainVaultBalance}} USDC ). Se cobrará una tarifa de reequilibrio entre cadenas para el retiro a {{networkName}}.",
   "transfer.withdraw.vaultWarning": "El saldo de {{tokenName}} en {{chainName}} es {{balance}}, lo cual es insuficiente para satisfacer tu solicitud de retiro. Inténtalo de nuevo más tarde o cambia a otra cadena para retirar.",
-  "transfer.withdraw.vaultWarning": "El saldo de {{tokenName}} en {{chainName}} es {{balance}}, lo cual es insuficiente para satisfacer tu solicitud de retiro. Inténtalo de nuevo más tarde o cambia a otra cadena para retirar.",
   "transfer.withdraw.minAmount.error": "La cantidad debe ser mayor que {{minAmount}}",
   "transfer.withdraw.requested": "Retiro solicitado",
   "transfer.withdraw.completed": "Retiro completado",
@@ -923,5 +921,7 @@
   "vaults.withdraw.process.vaultProcess": "Proceso de bóveda",
   "vaults.withdraw.process.transferred": "Transferido",
   "vaults.withdraw.process.initiate": "Iniciar",
-  "vaults.withdraw.process.upTo": "Hasta 6 horas"
+  "vaults.withdraw.process.upTo": "Hasta 6 horas",
+  "vaults.operation.error.switchAccount": "Por favor, cambie a su cuenta principal para continuar.",
+  "vaults.operation.error.minDeposit": "El monto del depósito es menor que el mínimo de {{amount}} USDC."
 }

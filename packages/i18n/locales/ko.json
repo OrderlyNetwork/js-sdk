@@ -198,7 +198,6 @@
   "portfolio.apiKey.permissions": "권한",
   "portfolio.apiKey.permissions.read": "읽기",
   "portfolio.apiKey.permissions.trading": "트레이딩",
-  "portfolio.apiKey.permissions.asset": "자산",
   "portfolio.apiKey.description": "거래 요구에 맞는 API 키를 생성하세요. 보안을 위해 API 키를 타인과 공유하지 마세요.",
   "portfolio.apiKey.readApiGuide": "API 가이드 읽기",
   "portfolio.apiKey.column.apiKey": "API 키",
@@ -922,5 +921,7 @@
   "vaults.withdraw.process.vaultProcess": "볼트 프로세스",
   "vaults.withdraw.process.transferred": "전송됨",
   "vaults.withdraw.process.initiate": "시작",
-  "vaults.withdraw.process.upTo": "최대 6시간"
+  "vaults.withdraw.process.upTo": "최대 6시간",
+  "vaults.operation.error.switchAccount": "계속하려면 메인 계정으로 전환해 주세요.",
+  "vaults.operation.error.minDeposit": "입금액이 최소 {{amount}} USDC보다 적습니다."
 }

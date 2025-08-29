@@ -1,4 +1,5 @@
-import { FC, useCallback, useMemo, useState } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   TooltipContent,
@@ -19,24 +20,38 @@ interface DesktopListBoxProps {
   countQty: number;
 }
 
-export const DesktopListBox: FC<DesktopListBoxProps> = (props) => {
+const calcHintInfo = (item: number[] | null) => {
+  if (!item) {
+    return { sumQty: 0, sumQtyAmount: 0, avgPrice: 0 };
+  }
+  const [, , qty, amount] = item;
+  const sumQty = !Number.isNaN(qty) ? qty : 0;
+  const sumQtyAmount = !Number.isNaN(amount) ? amount : 0;
+  return {
+    sumQty: sumQty,
+    sumQtyAmount: sumQtyAmount,
+    avgPrice: sumQty === 0 ? 0 : sumQtyAmount / sumQty,
+  };
+};
+
+export const DesktopListBox: React.FC<DesktopListBoxProps> = (props) => {
   const { data, type, countQty } = props;
   const { symbolInfo, depth } = useOrderBookContext();
 
   const findMaxItem = useCallback(() => {
-    if ((data?.length || 0) === 0) {
+    if (!data?.length) {
       return null;
     }
     if (type === OrderBookCellType.ASK) {
       const index = data.findIndex((item) => !Number.isNaN(item[0]));
-      if (index != -1) {
+      if (index !== -1) {
         return data[index];
       }
       return null;
     } else {
-      for (let index = data.length - 1; index >= 0; index--) {
+      const len = data.length;
+      for (let index = len - 1; index >= 0; index--) {
         const item = data[index];
-
         if (!Number.isNaN(item[0])) {
           return item;
         }
@@ -81,7 +96,7 @@ export const DesktopListBox: FC<DesktopListBoxProps> = (props) => {
   );
 };
 
-const Tip: FC<{
+const Tip: React.FC<{
   index: number;
   item: any;
   countQty: number;
@@ -107,6 +122,7 @@ const Tip: FC<{
     priceDp,
     countQty,
     symbolInfo,
+    findMaxItem,
   } = props;
 
   const { base, quote, base_dp: baseDp, quote_dp: quoteDp } = symbolInfo;
@@ -121,41 +137,10 @@ const Tip: FC<{
 
   const [open, setOpen] = useState(false);
 
-  const calcHintInfo = (
-    item: any,
-  ): {
-    avgPrice: number;
-    sumQty: number;
-    sumQtyAmount: number;
-  } => {
-    if (item === null) {
-      return {
-        sumQty: 0,
-        sumQtyAmount: 0,
-        avgPrice: 0,
-      };
-    }
-    let totalInfo = { sumQty: 0, sumQtyAmount: 0 };
-    if (!Number.isNaN(item[2])) {
-      totalInfo = {
-        sumQty: item[2],
-        sumQtyAmount: item[3],
-      };
-    }
-
-    return {
-      ...totalInfo,
-      avgPrice:
-        totalInfo.sumQtyAmount == 0
-          ? 0
-          : totalInfo.sumQtyAmount / totalInfo.sumQty,
-    };
-  };
-
   const hintInfo = useMemo(() => {
     const info = calcHintInfo(item);
-    return info.avgPrice === 0 ? calcHintInfo(props.findMaxItem()) : info;
-  }, [item, props]);
+    return info.avgPrice === 0 ? calcHintInfo(findMaxItem()) : info;
+  }, [item, findMaxItem]);
 
   return (
     <TooltipRoot open={open} onOpenChange={setOpen}>
@@ -210,7 +195,6 @@ const Tip: FC<{
           content={hintInfo.sumQtyAmount}
           contentDp={quoteDp}
         />
-
         <TooltipArrow
           className="oui-fill-base-6"
           style={{
@@ -225,14 +209,14 @@ const Tip: FC<{
   );
 };
 
-const Row: FC<{ title: string; content: number; contentDp: number }> = (
+const Row: React.FC<{ title: string; content: number; contentDp: number }> = (
   props,
 ) => {
   const { title, content, contentDp } = props;
   return (
     <div className="oui-flex oui-flex-row oui-justify-between oui-gap-4">
-      <div className="oui-text-base-contrast-36">{title}</div>
-      <div className="oui-text-right">
+      <div className="oui-select-none oui-text-base-contrast-36">{title}</div>
+      <div className="oui-text-end">
         <Text.numeral dp={contentDp}>{content}</Text.numeral>
       </div>
     </div>

@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
-import { SummaryFilter } from "../../../utils/types";
-import { useReferralContext } from "../../../hooks";
 import { useTranslation } from "@orderly.network/i18n";
+import { useReferralContext } from "../../../hooks";
+import { SummaryFilter } from "../../../utils/types";
 
 export type SummaryReturns = {
   period: string;
@@ -17,10 +17,7 @@ export const useSummaryScript = (): SummaryReturns => {
   const { t } = useTranslation();
   const [period, setPeriod] = useState<SummaryFilter>("All");
 
-  const periodTypes: {
-    label: SummaryFilter;
-    value: SummaryFilter;
-  }[] = [
+  const periodTypes: { label: string; value: SummaryFilter }[] = [
     { label: t("common.all"), value: "All" },
     { label: t("common.select.1d"), value: "1D" },
     { label: t("common.select.7d"), value: "7D" },
@@ -30,8 +27,9 @@ export const useSummaryScript = (): SummaryReturns => {
   const { referralInfo } = useReferralContext();
 
   const commission = useMemo(() => {
-    if (!referralInfo) return 0;
-    //
+    if (!referralInfo || !referralInfo.referrer_info) {
+      return 0;
+    }
     switch (period) {
       case "All":
         return referralInfo.referrer_info.total_referrer_rebate;
@@ -45,7 +43,9 @@ export const useSummaryScript = (): SummaryReturns => {
   }, [referralInfo, period]);
 
   const referralVol = useMemo(() => {
-    if (!referralInfo) return 0;
+    if (!referralInfo || !referralInfo.referrer_info) {
+      return 0;
+    }
     switch (period) {
       case "All":
         return referralInfo.referrer_info.total_referee_volume;
@@ -56,9 +56,12 @@ export const useSummaryScript = (): SummaryReturns => {
       case "30D":
         return referralInfo.referrer_info["30d_referee_volume"];
     }
-  }, [referralInfo, , period]);
+  }, [referralInfo, period]);
+
   const referees = useMemo(() => {
-    if (!referralInfo) return 0;
+    if (!referralInfo || !referralInfo.referrer_info) {
+      return 0;
+    }
     switch (period) {
       case "All":
         return referralInfo.referrer_info.total_invites;
@@ -69,10 +72,12 @@ export const useSummaryScript = (): SummaryReturns => {
       case "30D":
         return referralInfo.referrer_info["30d_invites"];
     }
-  }, [referralInfo, , period]);
+  }, [referralInfo, period]);
 
   const refereesTades = useMemo(() => {
-    if (!referralInfo) return 0;
+    if (!referralInfo || !referralInfo.referrer_info) {
+      return 0;
+    }
     switch (period) {
       case "All":
         return referralInfo.referrer_info.total_traded;
@@ -83,7 +88,7 @@ export const useSummaryScript = (): SummaryReturns => {
       case "30D":
         return referralInfo.referrer_info["30d_traded"];
     }
-  }, [referralInfo, , period]);
+  }, [referralInfo, period]);
 
   const onPeriodChange = (item: string) => {
     setPeriod(item as SummaryFilter);

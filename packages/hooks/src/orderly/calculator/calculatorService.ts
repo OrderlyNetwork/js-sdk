@@ -158,7 +158,9 @@ class CalculatorService {
   }
 
   private get windowIsVisible() {
-    if (typeof document === "undefined") return true;
+    if (typeof document === "undefined") {
+      return true;
+    }
     return document.visibilityState === "visible";
   }
 }

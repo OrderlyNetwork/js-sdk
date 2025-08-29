@@ -1,15 +1,15 @@
 import { useMemo } from "react";
-import { useTradingRewardsContext } from "../provider";
 import {
   EpochInfoItem,
   useAccount,
   useAccountRewardsHistory,
   WalletRewardsItem,
 } from "@orderly.network/hooks";
-import { usePagination } from "@orderly.network/ui";
 import { useAppContext } from "@orderly.network/react-app";
-import { RewardsTooltipProps } from "../curEpoch/rewardsTooltip";
+import { usePagination } from "@orderly.network/ui";
 import { getTimestamp } from "@orderly.network/utils";
+import { RewardsTooltipProps } from "../curEpoch/rewardsTooltip";
+import { useTradingRewardsContext } from "../provider";
 
 export type ListType = EpochInfoItem & {
   info?: WalletRewardsItem;
@@ -36,7 +36,9 @@ export const useRewardsHistoryScript = () => {
   const { data: accountHistory } = useAccountRewardsHistory(account.address);
 
   const data = useMemo(() => {
-    if (isNotStared || disabledConnect) return [];
+    if (isNotStared || disabledConnect) {
+      return [];
+    }
     const list = [...(epochInfos || [])];
 
     const combineData = list.map((e): ListType => {
@@ -59,7 +61,7 @@ export const useRewardsHistoryScript = () => {
           // get broker
           const brokerList = accountHistory[_findIndex].broker;
           const curBrokerIndex = brokerList.findIndex(
-            (item) => item.broker_id === brokerId
+            (item) => item.broker_id === brokerId,
           );
           const curBroker =
             curBrokerIndex !== -1 ? brokerList[curBrokerIndex] : undefined;

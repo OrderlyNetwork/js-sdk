@@ -28,6 +28,7 @@ export const LatestWithdrawUI: FC<LatestWithdrawUIProps> = (props) => {
               "oui-mr-1 oui-size-1 oui-rounded-full",
               latestOperation.status === "completed" && "oui-bg-success",
               latestOperation.status === "rejected" && "oui-bg-danger",
+              latestOperation.status === "failed" && "oui-bg-danger",
               (latestOperation.status === "pending" ||
                 latestOperation.status === "new") &&
                 "oui-bg-primary",

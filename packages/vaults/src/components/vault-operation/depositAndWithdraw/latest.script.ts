@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { usePrivateQuery } from "@orderly.network/hooks";
+import { EMPTY_LIST } from "@orderly.network/types";
 import { OperationType, VaultOperation } from "../../../types/vault";
 
 type LatestOperationScriptProps = {
@@ -14,7 +15,7 @@ export const useLatestOperationScript = (props: LatestOperationScriptProps) => {
       `/v1/account_sv_transaction_history?type=${type}&vault_id=${vaultId}&size=1`,
       {
         formatter: (response: { rows: VaultOperation[] }) => {
-          return response?.rows || [];
+          return response?.rows || EMPTY_LIST;
         },
         revalidateOnFocus: false,
       },

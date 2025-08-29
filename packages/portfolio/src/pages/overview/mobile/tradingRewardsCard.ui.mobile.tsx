@@ -1,5 +1,4 @@
 import { FC, useState, useEffect } from "react";
-import { isNumber } from "lodash";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   Flex,
@@ -11,7 +10,11 @@ import {
   cn,
   modal,
 } from "@orderly.network/ui";
-import { UseRewardsDataReturn } from "./useRewardsData.script";
+import type { UseRewardsDataReturn } from "./useRewardsData.script";
+
+const isNumber = (val: unknown): val is number => {
+  return typeof val === "number" && !Number.isNaN(val);
+};
 
 type TradingRewardsCardMobileProps = UseRewardsDataReturn & {
   isSignIn: boolean;

@@ -9,6 +9,7 @@ import {
   BattleIcon,
   AssetIcon,
   TradingLeftNavIcon,
+  LeftNavVaultsIcon,
 } from "@orderly.network/ui";
 import { LeftNavProps, MainNavWidgetProps } from "@orderly.network/ui-scaffold";
 import { CustomProductNav } from "../components/customProductNav";
@@ -59,7 +60,12 @@ function getMainMenus(): MainNavWidgetProps["mainMenus"] {
   return [
     { name: i18n.t("common.trading"), href: "/", isHomePageInMobile: true },
     { name: i18n.t("common.portfolio"), href: "/portfolio" },
-    { name: i18n.t("common.vaults"), href: "/vaults" },
+    {
+      name: i18n.t("common.vaults"),
+      href: "/vaults",
+      isSubMenuInMobile: true,
+      subMenuBackNav: { href: "/", name: i18n.t("common.trading") },
+    },
     { name: i18n.t("common.markets"), href: "/markets" },
     {
       name: i18n.t("tradingLeaderboard.arena"),
@@ -121,6 +127,11 @@ function getLeftNavMenus(): LeftNavProps {
         name: i18n.t("common.assets"),
         href: "/portfolio/assets",
         icon: <AssetIcon />,
+      },
+      {
+        name: i18n.t("common.vaults"),
+        href: "/vaults",
+        icon: <LeftNavVaultsIcon />,
       },
       {
         name: i18n.t("tradingLeaderboard.arena"),
