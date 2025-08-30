@@ -37,6 +37,23 @@ export interface FeeDataType {
   taker_fee: string;
 }
 
+const getFuturesCurrentTier = (
+  feeList: FeeDataType[],
+  data: API.AccountInfo,
+) => {
+  const { futures_taker_fee_rate = 0, futures_maker_fee_rate = 0 } = data;
+  const takerRate = `${new Decimal(futures_taker_fee_rate)
+    .mul(0.01)
+    .toString()}%`;
+  const makerRate = `${new Decimal(futures_maker_fee_rate)
+    .mul(0.01)
+    .toString()}%`;
+  const findItem = feeList.find(
+    (item) => item.taker_fee === takerRate && item.maker_fee === makerRate,
+  );
+  return findItem?.tier;
+};
+
 export const useFeeTierScript = (options?: UseFeeTierScriptOptions) => {
   const { dataAdapter } = options || {};
   const [tier, setTier] = useState<number>();
@@ -54,25 +71,6 @@ export const useFeeTierScript = (options?: UseFeeTierScriptOptions) => {
       ? dataAdapter(cols, defaultDataSource)
       : { columns: cols, dataSource: defaultDataSource };
   }, [dataAdapter, cols]);
-
-  const getFuturesCurrentTier = (
-    feeList: typeof defaultDataSource,
-    data: API.AccountInfo,
-  ) => {
-    const { futures_taker_fee_rate = 0, futures_maker_fee_rate = 0 } = data;
-    const takerRate = `${new Decimal(futures_taker_fee_rate)
-      .mul(0.01)
-      .toString()}%`;
-    const makerRate = `${new Decimal(futures_maker_fee_rate)
-      .mul(0.01)
-      .toString()}%`;
-
-    for (const item of feeList) {
-      if (takerRate === item.taker_fee && makerRate === item.maker_fee) {
-        return item.tier;
-      }
-    }
-  };
 
   useEffect(() => {
     if (!data) {
