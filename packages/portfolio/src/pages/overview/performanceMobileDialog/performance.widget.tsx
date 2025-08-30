@@ -19,6 +19,7 @@ export const PerformanceMobileWidget: React.FC = () => {
           "aggregateValue",
           "onPeriodChange",
           "createFakeData",
+          "period",
         ],
         state,
       )}
