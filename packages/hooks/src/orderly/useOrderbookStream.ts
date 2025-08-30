@@ -6,9 +6,8 @@ import {
   useRef,
   useState,
 } from "react";
-import { min } from "ramda";
 import { SDKError } from "@orderly.network/types";
-import { Decimal, removeTrailingZeros } from "@orderly.network/utils";
+import { Decimal } from "@orderly.network/utils";
 import { OrderlyContext } from "../orderlyContext";
 import { useEventEmitter } from "../useEventEmitter";
 import { useWS } from "../useWS";
@@ -19,42 +18,30 @@ import { useTickerStream } from "./useTickerStream";
 
 export type OrderBookItem = number[];
 
-// const DEFAULT_DEPTH: Record<string, string> = {
-//   PERP_BTC_USDC: "1",
-//   PERP_ETH_USDC: "0.1",
-//   PERP_SOL_USDC: "0.01",
-// };
-
 export type OrderbookData = {
   asks: OrderBookItem[];
   bids: OrderBookItem[];
 };
 
 const paddingFn = (len: number) =>
-  Array(len).fill([
-    Number.NaN,
-    Number.NaN,
-    Number.NaN,
-    Number.NaN,
-  ] as OrderBookItem);
+  Array(len).fill([Number.NaN, Number.NaN, Number.NaN, Number.NaN]);
 
 const asksSortFn = (a: OrderBookItem, b: OrderBookItem) => a[0] - b[0];
 
 const bidsSortFn = (a: OrderBookItem, b: OrderBookItem) => b[0] - a[0];
 
-export const getPriceKey = (price: number, depth: number, asks: boolean) => {
+export const getPriceKey = (price: number, depth: number, isAsks: boolean) => {
   return new Decimal(price)
     .div(depth)
-    .toDecimalPlaces(0, asks ? Decimal.ROUND_CEIL : Decimal.ROUND_FLOOR)
+    .toDecimalPlaces(0, isAsks ? Decimal.ROUND_CEIL : Decimal.ROUND_FLOOR)
     .mul(depth)
     .toNumber();
 };
 
 const reduceItems = (
   depth: number | undefined,
-  level: number,
   data: OrderBookItem[],
-  asks = false,
+  isAsks = false,
 ) => {
   if (!Array.isArray(data) || data.length === 0) {
     return [];
@@ -63,7 +50,7 @@ const reduceItems = (
   const result: OrderBookItem[] = [];
 
   if (typeof depth !== "undefined") {
-    const prices = new Map<number, number[]>();
+    const pricesMap = new Map<number, number[]>();
     const len = data.length;
     for (let i = 0; i < len; i++) {
       const [price, quantity] = data[i];
@@ -71,33 +58,18 @@ const reduceItems = (
         continue;
       }
 
-      const priceKey = getPriceKey(price, depth, asks);
+      const priceKey = getPriceKey(price, depth, isAsks);
 
-      // if (depth < 1 && depth > 0 && priceKey.toString().indexOf(".") !== -1) {
-      //   const priceStr = price.toString();
-      //   const index = priceStr.indexOf(".");
-      //   const decimal = priceStr.slice(index + 1);
-      //   const decimalDepth = removeTrailingZeros(depth)
-      //     .toString()
-      //     .slice(2).length;
-      //   const decimalStr = decimal.slice(0, min(decimal.length, decimalDepth));
-      //   priceKey = new Decimal(
-      //     priceStr.slice(0, index) + "." + decimalStr,
-      //   ).toNumber();
-      // }
-
-      if (prices.has(priceKey)) {
-        const item = prices.get(priceKey)!;
+      if (pricesMap.has(priceKey)) {
+        const item = pricesMap.get(priceKey)!;
         const itemPrice = new Decimal(item[1]).add(quantity).toNumber();
-
-        // prices.push([price, quantity]);
-        prices.set(priceKey, [priceKey, itemPrice]);
+        pricesMap.set(priceKey, [priceKey, itemPrice]);
       } else {
-        prices.set(priceKey, [priceKey, quantity]);
+        pricesMap.set(priceKey, [priceKey, quantity]);
       }
     }
 
-    newData = Array.from(prices.values());
+    newData = Array.from(pricesMap.values());
   }
 
   for (let i = 0; i < newData.length; i++) {
@@ -106,48 +78,37 @@ const reduceItems = (
       continue;
     }
 
+    const resLen = result.length;
+
     const newQuantity = new Decimal(quantity)
-      .add(result.length > 0 ? result[result.length - 1][2] : 0)
+      .add(resLen ? result[resLen - 1][2] : 0)
       .toNumber();
 
-    const newAmount = new Decimal(quantity * price)
-      .add(result.length > 0 ? result[result.length - 1][3] : 0)
+    const newAmount = new Decimal(quantity)
+      .mul(price)
+      .add(resLen ? result[resLen - 1][3] : 0)
       .toNumber();
 
     result.push([price, quantity, newQuantity, newAmount]);
-    // if the total is greater than the level, break
-    // TODO:
-    // if (i + 1 >= level) {
-    //   break;
-    // }
   }
 
   return result;
 };
 
-/**
- * @name reduceOrderbook
- * @param depth
- * @param level
- * @param data
- */
 export const reduceOrderbook = (
   depth: number | undefined,
   level: number,
   padding: boolean,
   data: OrderbookData,
 ): OrderbookData => {
-  let asks = reduceItems(depth, level, data.asks, true);
-
-  let bids = reduceItems(depth, level, data.bids);
+  let asks = reduceItems(depth, data.asks, true);
+  let bids = reduceItems(depth, data.bids);
 
   /// not empty and asks.price <= bids.price
   if (asks.length !== 0 && bids.length !== 0 && asks[0][0] <= bids[0][0]) {
-    //  TODO: add asks[0][0] === bids[0][0] condition?
     if (asks.length === 1) {
       const [price, qty, newQuantity, newAmount] = asks[0];
       asks.shift();
-
       asks.push([
         price + (depth === undefined ? 0 : Number(depth)),
         qty,
@@ -158,28 +119,18 @@ export const reduceOrderbook = (
       const [bidPrice] = bids[0];
       while (asks.length > 0) {
         const [askPrice, askQty, newQuantity, newAmount] = asks[0];
-
         if (askPrice <= bidPrice) {
-          // console.log("xxxxxxxxxxx reset ask list begin", [...asks], { ...asks[0] });
           asks.shift();
-          // let logStr = "";
-          for (let index = 0; index < asks.length; index++) {
-            if (index === 0) {
-              const quantity = asks[index][1] + askQty;
-              asks[index][1] = quantity;
-              asks[index][2] = quantity;
-              // asks[index][3] += newAmount;
-              // FIXME: fix this code later
-              asks[index][3] = Math.ceil(quantity) * asks[index][0];
+          for (let i = 0; i < asks.length; i++) {
+            if (i === 0) {
+              const quantity = asks[i][1] + askQty;
+              asks[i][1] = quantity;
+              asks[i][2] = quantity;
+              asks[i][3] = Math.ceil(quantity) * asks[i][0];
             } else {
-              // asks[index][3] += newAmount;
-              // FIXME: fix this code later
-              asks[index][3] =
-                asks[index][0] * asks[index][1] + asks[index - 1][3];
+              asks[i][3] = asks[i][0] * asks[i][1] + asks[i - 1][3];
             }
-            // logStr += `index: ${index} ${asks[index]}\n`;
           }
-          // console.log("xxxxxxxxxxx reset ask list end", logStr);
         } else {
           break;
         }
@@ -279,7 +230,8 @@ export const useOrderbookStream = (
 
   const level = options?.level ?? 10;
   const padding = options?.padding ?? true;
-  const symbolRef = useRef(symbol);
+
+  const symbolRef = useRef<string>(symbol);
 
   symbolRef.current = symbol;
 
@@ -362,7 +314,9 @@ export const useOrderbookStream = (
           orderbooksService.updateOrderbook(
             symbol,
             { asks, bids, ts, prevTs },
-            () => (needRequestFullOrderbook = true),
+            () => {
+              needRequestFullOrderbook = true;
+            },
           );
 
           const data = orderbooksService.getRawOrderbook(symbol);
