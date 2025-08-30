@@ -94,7 +94,7 @@ export const TradingviewUi = forwardRef<
       ) : (
         <div
           className={cn(
-            "oui-z-[1] oui-absolute oui-top-0 oui-bottom-0 oui-right-0 oui-left-0 oui-flex oui-flex-col",
+            "oui-absolute oui-inset-0 oui-z-[1] oui-flex oui-flex-col",
             props.classNames?.content,
           )}
         >
