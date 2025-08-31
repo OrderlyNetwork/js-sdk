@@ -30,6 +30,10 @@ const asksSortFn = (a: OrderBookItem, b: OrderBookItem) => a[0] - b[0];
 
 const bidsSortFn = (a: OrderBookItem, b: OrderBookItem) => b[0] - a[0];
 
+const isNumber = (val: unknown): val is number => {
+  return typeof val === "number" && !Number.isNaN(val);
+};
+
 export const getPriceKey = (
   rawPrice: number,
   depth: number,
@@ -58,7 +62,7 @@ const reduceItems = (
     const len = data.length;
     for (let i = 0; i < len; i++) {
       const [rawPrice, quantity] = data[i];
-      if (Number.isNaN(rawPrice) || Number.isNaN(quantity)) {
+      if (!isNumber(rawPrice) || !isNumber(quantity)) {
         continue;
       }
 
@@ -78,7 +82,7 @@ const reduceItems = (
 
   for (let i = 0; i < newData.length; i++) {
     const [price, quantity] = newData[i];
-    if (Number.isNaN(price) || Number.isNaN(quantity)) {
+    if (!isNumber(price) || !isNumber(quantity)) {
       continue;
     }
 
@@ -127,12 +131,18 @@ export const reduceOrderbook = (
           asks.shift();
           for (let i = 0; i < asks.length; i++) {
             if (i === 0) {
-              const quantity = asks[i][1] + askQty;
-              asks[i][1] = quantity;
-              asks[i][2] = quantity;
-              asks[i][3] = Math.ceil(quantity) * asks[i][0];
+              const quantity = new Decimal(asks[i][1]).add(askQty);
+              asks[i][1] = quantity.toNumber();
+              asks[i][2] = quantity.toNumber();
+              asks[i][3] = quantity
+                .toDecimalPlaces(0, Decimal.ROUND_CEIL)
+                .mul(asks[i][0])
+                .toNumber();
             } else {
-              asks[i][3] = asks[i][0] * asks[i][1] + asks[i - 1][3];
+              asks[i][3] = new Decimal(asks[i][0])
+                .mul(asks[i][1])
+                .add(asks[i - 1][3])
+                .toNumber();
             }
           }
         } else {
@@ -163,16 +173,16 @@ const mergeItems = (data: OrderBookItem[], update: OrderBookItem[]) => {
     return update;
   }
 
-  data = data.filter(([price]) => !Number.isNaN(price));
+  data = data.filter(([price]) => isNumber(price));
 
   while (update.length > 0) {
     const item = update.shift();
-    //
+
     if (item) {
       const [price, quantity] = item;
 
       const index = data.findIndex(([p]) => p === price);
-      //
+
       if (index === -1) {
         if (quantity === 0) {
           continue;
@@ -402,7 +412,7 @@ export const useOrderbookStream = (
       bidsFirst = data.bids[0][0];
     }
 
-    if (Number.isNaN(asksFrist) || Number.isNaN(bidsFirst) || !ticker) {
+    if (!isNumber(asksFrist) || !isNumber(bidsFirst) || !ticker) {
       return 0;
     }
 
