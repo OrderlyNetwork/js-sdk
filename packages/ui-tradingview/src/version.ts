@@ -8,7 +8,7 @@ declare global {
 if (typeof window !== "undefined") {
   window.__ORDERLY_VERSION__ = window.__ORDERLY_VERSION__ || {};
   window.__ORDERLY_VERSION__["@orderly.network/ui-tradingview"] =
-    "2.6.2-internal-hotfix-avgPrice.0";
+    "2.6.2-internal-hotfix-avgPrice.1";
 }
 
-export default "2.6.2-internal-hotfix-avgPrice.0";
+export default "2.6.2-internal-hotfix-avgPrice.1";

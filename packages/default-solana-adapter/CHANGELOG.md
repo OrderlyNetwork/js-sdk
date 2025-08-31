@@ -1,5 +1,14 @@
 # @orderly.network/default-solana-adapter
 
+## 2.6.2-internal-hotfix-avgPrice.1
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.6.2-internal-hotfix-avgPrice.1
+  - @orderly.network/types@2.6.2-internal-hotfix-avgPrice.1
+
 ## 2.6.2-internal-hotfix-avgPrice.0
 
 ### Patch Changes

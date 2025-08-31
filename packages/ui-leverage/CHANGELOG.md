@@ -1,5 +1,16 @@
 # @orderly.network/ui-leverage
 
+## 2.6.2-internal-hotfix-avgPrice.1
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.6.2-internal-hotfix-avgPrice.1
+  - @orderly.network/i18n@2.6.2-internal-hotfix-avgPrice.1
+  - @orderly.network/types@2.6.2-internal-hotfix-avgPrice.1
+  - @orderly.network/ui@2.6.2-internal-hotfix-avgPrice.1
+
 ## 2.6.2-internal-hotfix-avgPrice.0
 
 ### Patch Changes

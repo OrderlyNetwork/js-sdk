@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/ui-leverage",
-  "version": "2.6.2-internal-hotfix-avgPrice.0",
+  "version": "2.6.2-internal-hotfix-avgPrice.1",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
