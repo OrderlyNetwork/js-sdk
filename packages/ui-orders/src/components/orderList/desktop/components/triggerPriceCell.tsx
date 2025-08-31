@@ -11,7 +11,7 @@ import { useValidateField } from "../hooks/useValidateField";
 import { EditableCellInput } from "./editableCellInput";
 import { PreviewCell } from "./previewCell";
 
-export const TriggerPrice = (props: {
+export const TriggerPriceCell = (props: {
   order: API.AlgoOrderExt;
   disabled?: boolean;
 }) => {

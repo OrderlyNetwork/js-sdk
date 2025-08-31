@@ -12,7 +12,7 @@ import { useValidateField } from "../hooks/useValidateField";
 import { EditableCellInput } from "./editableCellInput";
 import { PreviewCell } from "./previewCell";
 
-export const ActivedPrice = (props: {
+export const ActivedPriceCell = (props: {
   order: API.AlgoOrderExt;
   disabled?: boolean;
 }) => {

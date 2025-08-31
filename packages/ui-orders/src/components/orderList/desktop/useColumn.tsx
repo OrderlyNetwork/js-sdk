@@ -31,11 +31,11 @@ import { ShareButtonWidget } from "../../shareButton";
 import { AvgPrice } from "./avgPrice";
 import { BracketOrderPrice } from "./bracketOrderPrice";
 import { CancelButton } from "./cancelBtn";
-import { ActivedPrice } from "./components/activedPrice";
-import { Price } from "./components/price";
-import { OrderQuantity } from "./components/quantity";
-import { TrailingCallback } from "./components/trailingCallback";
-import { TriggerPrice } from "./components/triggerPrice";
+import { ActivedPriceCell } from "./components/activedPriceCell";
+import { PriceCell } from "./components/priceCell";
+import { QuantityCell } from "./components/quantityCell";
+import { TrailingCallbackCell } from "./components/trailingCallbackCell";
+import { TriggerPriceCell } from "./components/triggerPriceCell";
 import { Renew } from "./renew";
 import { TP_SLEditButton } from "./tpslEdit";
 import { TPSLOrderPrice, useTPSLOrderPrice } from "./tpslPrice";
@@ -464,7 +464,7 @@ function fillAndQuantity(option?: {
       ) {
         return i18n.t("tpsl.entirePosition");
       }
-      return <OrderQuantity order={record} disableEdit={option?.disableEdit} />;
+      return <QuantityCell order={record} disabled={option?.disableEdit} />;
       // return value;
     },
   };
@@ -514,7 +514,7 @@ function quantity(option?: {
       if (record.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL) {
         return i18n.t("tpsl.entirePosition");
       }
-      return <OrderQuantity order={record} />;
+      return <QuantityCell order={record} />;
       // return value;
     },
   };
@@ -560,7 +560,7 @@ function price(option?: {
           : getTrailingStopPrice(record) || "--";
       }
 
-      return <Price order={record} disabled={option?.disableEdit} />;
+      return <PriceCell order={record} disabled={option?.disableEdit} />;
     },
   };
 }
@@ -651,9 +651,11 @@ function triggerPrice(option?: {
       }
 
       if (isTrailingStopOrder(record) && isPending) {
-        return <ActivedPrice order={record} disabled={option?.disableEdit} />;
+        return (
+          <ActivedPriceCell order={record} disabled={option?.disableEdit} />
+        );
       }
-      return <TriggerPrice order={record} disabled={option?.disableEdit} />;
+      return <TriggerPriceCell order={record} disabled={option?.disableEdit} />;
     },
   };
 }
@@ -1205,7 +1207,7 @@ function trailingCallback(option?: {
     render: (value: string, record: any) => {
       if (isTrailingStopOrder(record)) {
         return (
-          <TrailingCallback order={record} disabled={option?.disableEdit} />
+          <TrailingCallbackCell order={record} disabled={option?.disableEdit} />
         );
       }
 

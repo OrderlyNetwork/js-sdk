@@ -13,7 +13,10 @@ import { useValidateField } from "../hooks/useValidateField";
 import { EditableCellInput } from "./editableCellInput";
 import { PreviewCell } from "./previewCell";
 
-export const Price = (props: { order: API.OrderExt; disabled?: boolean }) => {
+export const PriceCell = (props: {
+  order: API.OrderExt;
+  disabled?: boolean;
+}) => {
   const { order } = props;
   const { t } = useTranslation();
 

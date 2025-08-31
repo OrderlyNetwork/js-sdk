@@ -24,9 +24,9 @@ import { useTPSLOrderRowContext } from "../../tpslOrderRowContext";
 import { ConfirmContent } from "../editOrder/confirmContent";
 import { InnerInput } from "../editOrder/innerInput";
 
-export const OrderQuantity = (props: {
+export const QuantityCell = (props: {
   order: API.OrderExt | API.AlgoOrder;
-  disableEdit?: boolean;
+  disabled?: boolean;
 }) => {
   const { order } = props;
   const { reduce_only } = order;
@@ -187,7 +187,6 @@ export const OrderQuantity = (props: {
         (result: any) => {
           closePopover();
           setQuantity(value.toString());
-          // setTimeout(() => inputRef.current?.blur(), 300);
         },
         (err: any) => {
           toast.error(err.message);
@@ -222,13 +221,13 @@ export const OrderQuantity = (props: {
   }, [open, order.quantity]);
 
   const renderContent = () => {
-    if (!editing || props.disableEdit) {
+    if (!editing || props.disabled) {
       return (
-        <NormalState
+        <PreviewCell
           order={order}
           value={value}
           setEditing={setEditing}
-          disable={props.disableEdit}
+          disable={props.disabled}
         />
       );
     }
@@ -292,11 +291,10 @@ export const OrderQuantity = (props: {
   );
 };
 
-const NormalState: FC<{
+const PreviewCell: FC<{
   order: API.AlgoOrder | API.OrderExt;
   value: string;
   setEditing: any;
-  partial?: boolean;
   disable?: boolean;
 }> = (props) => {
   const { order, value } = props;
@@ -382,33 +380,33 @@ const EditState: FC<{
     order,
   } = props;
 
-  const maxQty = useMaxQty(symbol, order.side, order.reduce_only);
+  const maxBuyQty = useMaxQty(symbol, order.side, order.reduce_only);
 
-  const qty = useMemo(() => {
+  const maxQty = useMemo(() => {
     if (reduce_only) {
       return Math.abs(positionQty ?? 0);
     }
-    return order.quantity + Math.abs(maxQty);
-  }, [order.quantity, maxQty, reduce_only, positionQty]);
+    return order.quantity + Math.abs(maxBuyQty);
+  }, [order.quantity, maxBuyQty, reduce_only, positionQty]);
 
   const [sliderValue, setSliderValue] = useState<number | undefined>(undefined);
 
   useEffect(() => {
     if (sliderValue === undefined) {
       const sliderValue = new Decimal(quantity)
-        .div(qty)
+        .div(maxQty)
         .abs()
         .mul(100)
         .toNumber();
       setSliderValue(sliderValue);
     }
-  }, [sliderValue, qty, quantity]);
+  }, [sliderValue, maxQty, quantity]);
 
   const formatQuantity = async (_qty: string | number): Promise<void> => {
     if (base_tick > 0) {
       _qty = utils.formatNumber(_qty, base_tick) ?? _qty;
     }
-    return setQuantity(`${_qty}`, qty);
+    return setQuantity(`${_qty}`, maxQty);
   };
 
   return (
@@ -419,15 +417,15 @@ const EditState: FC<{
           dp={base_dp}
           value={quantity}
           setValue={(e: string) => {
-            const quantity = Math.abs(Math.min(Number(e), qty)).toString();
-            setQuantity(e, qty);
+            const quantity = Math.abs(Math.min(Number(e), maxQty)).toString();
+            setQuantity(e, maxQty);
             if (e.endsWith(".")) return;
             if (Number(quantity) === 0) {
               setSliderValue(0);
               return;
             }
             const sliderValue = new Decimal(e)
-              .div(qty)
+              .div(maxQty)
               .mul(100)
               .toDecimalPlaces(2, Decimal.ROUND_DOWN)
               .toNumber();
@@ -484,15 +482,15 @@ const EditState: FC<{
                 setSliderValue(values[0]);
                 const quantity = new Decimal(values[0])
                   .div(100)
-                  .mul(qty)
+                  .mul(maxQty)
                   .abs()
                   .toFixed(base_dp, Decimal.ROUND_DOWN);
-                setQuantity(quantity, qty);
+                setQuantity(quantity, maxQty);
               }}
               onValueCommit={(values) => {
                 const quantity = new Decimal(values[0])
                   .div(100)
-                  .mul(qty)
+                  .mul(maxQty)
                   .abs()
                   .toFixed(base_dp, Decimal.ROUND_DOWN);
                 formatQuantity(quantity).finally(() => {
@@ -504,12 +502,12 @@ const EditState: FC<{
               onClick={(value) => {
                 setSliderValue(value * 100);
                 let quantity = new Decimal(value)
-                  .mul(qty)
+                  .mul(maxQty)
                   .abs()
                   .toFixed(base_dp, Decimal.ROUND_DOWN);
                 quantity = utils.formatNumber(quantity, base_tick) ?? quantity;
 
-                setQuantity(quantity, qty);
+                setQuantity(quantity, maxQty);
                 setTimeout(() => {
                   inputRef.current.focus();
                   inputRef.current.setSelectionRange(

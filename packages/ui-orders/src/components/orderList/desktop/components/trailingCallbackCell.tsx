@@ -11,7 +11,7 @@ import { useValidateField } from "../hooks/useValidateField";
 import { EditableCellInput } from "./editableCellInput";
 import { PreviewCell } from "./previewCell";
 
-export const TrailingCallback = (props: {
+export const TrailingCallbackCell = (props: {
   order: API.AlgoOrderExt;
   disabled?: boolean;
 }) => {
