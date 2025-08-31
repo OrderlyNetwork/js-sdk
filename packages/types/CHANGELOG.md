@@ -1,5 +1,11 @@
 # @orderly.network/types
 
+## 2.6.2-internal-hotfix-avgPrice.0
+
+### Patch Changes
+
+- publish
+
 ## 2.6.1
 
 ### Patch Changes
