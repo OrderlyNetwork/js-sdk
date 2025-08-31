@@ -7,19 +7,24 @@ import { useOrderEntryContext } from "../../orderEntryContext";
 
 type TriggerPriceInputProps = {
   trigger_price?: string;
-  triggerPriceInputRef: React.RefObject<HTMLInputElement>;
 };
 
 export const TriggerPriceInput: FC<TriggerPriceInputProps> = memo((props) => {
   const { t } = useTranslation();
-  const { symbolInfo, onFocus, onBlur, getErrorMsg, setOrderValue } =
-    useOrderEntryContext();
+  const {
+    symbolInfo,
+    onFocus,
+    onBlur,
+    getErrorMsg,
+    setOrderValue,
+    triggerPriceInputRef,
+  } = useOrderEntryContext();
 
   return (
     <div className="oui-group">
       <div className="oui-group">
         <CustomInput
-          ref={props.triggerPriceInputRef}
+          ref={triggerPriceInputRef}
           id="order_trigger_price_input"
           name="order_trigger_price_input"
           label={t("common.trigger")}

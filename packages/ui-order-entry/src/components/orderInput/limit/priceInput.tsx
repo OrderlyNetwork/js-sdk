@@ -5,9 +5,9 @@ import { cn, inputFormatter } from "@orderly.network/ui";
 import { OrderEntryScriptReturn } from "../../../orderEntry.script";
 import { InputType } from "../../../types";
 import { BBOStatus } from "../../../utils";
-import { BBOOrderTypeSelect } from "../../bboOrderTypeSelect";
 import { CustomInput } from "../../customInput";
 import { useOrderEntryContext } from "../../orderEntryContext";
+import { BBOOrderTypeSelect } from "./bboOrderTypeSelect";
 import { LimitPriceSuffix } from "./limitPriceSuffix";
 
 export type PriceInputProps = {
@@ -17,7 +17,6 @@ export type PriceInputProps = {
     OrderEntryScriptReturn,
     "bboStatus" | "bboType" | "onBBOChange" | "toggleBBO"
   >;
-  refs: OrderEntryScriptReturn["refs"];
   priceInputContainerWidth?: number;
   fillMiddleValue: OrderEntryScriptReturn["fillMiddleValue"];
 };
@@ -26,8 +25,15 @@ export type PriceInputProps = {
 export const PriceInput: FC<PriceInputProps> = (props) => {
   const { bbo } = props;
   const { t } = useTranslation();
-  const { symbolInfo, onFocus, onBlur, getErrorMsg, setOrderValue } =
-    useOrderEntryContext();
+  const {
+    symbolInfo,
+    onFocus,
+    onBlur,
+    getErrorMsg,
+    setOrderValue,
+    priceInputRef,
+    priceInputContainerRef,
+  } = useOrderEntryContext();
 
   const { quote, quote_dp } = symbolInfo;
 
@@ -46,7 +52,7 @@ export const PriceInput: FC<PriceInputProps> = (props) => {
 
   return (
     <div
-      ref={props.refs.priceInputContainerRef}
+      ref={priceInputContainerRef}
       className="oui-group oui-relative oui-w-full"
     >
       <CustomInput
@@ -63,7 +69,7 @@ export const PriceInput: FC<PriceInputProps> = (props) => {
         onFocus={onFocus(InputType.PRICE)}
         onBlur={onBlur(InputType.PRICE)}
         readonly={readOnly}
-        ref={props.refs.priceInputRef}
+        ref={priceInputRef}
         classNames={{
           root: cn(readOnly && "focus-within:oui-outline-transparent "),
           input: cn(readOnly && "oui-cursor-auto"),

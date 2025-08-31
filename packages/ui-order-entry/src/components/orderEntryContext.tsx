@@ -4,6 +4,7 @@ import { API, OrderlyOrder } from "@orderly.network/types";
 import { InputType } from "../types";
 
 export type OrderEntryContextState = {
+  errors: OrderValidationResult | null;
   errorMsgVisible: boolean;
   symbolInfo: API.SymbolExt;
   onFocus: (type: InputType) => FocusEventHandler;
@@ -15,6 +16,11 @@ export type OrderEntryContextState = {
   setOrderValue: (key: keyof OrderlyOrder, value: any) => void;
   setOrderValues: (values: Partial<OrderlyOrder>) => void;
   currentFocusInput: InputType;
+  // refs
+  priceInputRef: React.RefObject<HTMLInputElement>;
+  priceInputContainerRef: React.RefObject<HTMLDivElement>;
+  triggerPriceInputRef: React.RefObject<HTMLInputElement>;
+  activatedPriceInputRef: React.RefObject<HTMLInputElement>;
 };
 
 export const OrderEntryContext = createContext<OrderEntryContextState>(

@@ -183,7 +183,7 @@ const TPSLInputForm = React.forwardRef<
     quote_dp: number | undefined;
   }
 >((props, ref) => {
-  const { parseErrorMsg } = useOrderEntryFormErrorMsg(props.errors);
+  const { getErrorMsg } = useOrderEntryFormErrorMsg(props.errors);
 
   return (
     <div
@@ -197,7 +197,7 @@ const TPSLInputForm = React.forwardRef<
       <PnlInputProvider values={props.values.tp} type={"TP"}>
         <TPSLInputRow
           type={"TP"}
-          error={parseErrorMsg("tp_trigger_price")}
+          error={getErrorMsg("tp_trigger_price")}
           onChange={props.onChange}
           values={props.values.tp}
           quote_dp={props.quote_dp}
@@ -211,7 +211,7 @@ const TPSLInputForm = React.forwardRef<
       <PnlInputProvider values={props.values.sl} type={"SL"}>
         <TPSLInputRow
           type={"SL"}
-          error={parseErrorMsg("sl_trigger_price")}
+          error={getErrorMsg("sl_trigger_price")}
           onChange={props.onChange}
           values={props.values.sl}
           quote_dp={props.quote_dp}

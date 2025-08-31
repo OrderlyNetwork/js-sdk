@@ -78,6 +78,7 @@ export function useOrderEntryFormErrorMsg(
       start_price: {
         required: t("orderEntry.startPrice.error.required"),
         min: t("orderEntry.startPrice.error.min", { value }),
+        max: t("orderEntry.startPrice.error.max", { value }),
       },
       end_price: {
         required: t("orderEntry.endPrice.error.required"),
@@ -117,7 +118,7 @@ export function useOrderEntryFormErrorMsg(
     return map[key]?.[type] || "";
   };
 
-  const parseErrorMsg = useCallback(
+  const getErrorMsg = useCallback(
     (key: Keys, customValue?: string) => {
       const { type, value, min, max } = errors?.[key] || ({} as any);
       if (type) {
@@ -129,7 +130,6 @@ export function useOrderEntryFormErrorMsg(
   );
 
   return {
-    parseErrorMsg,
-    getErrorMsg: parseErrorMsg,
+    getErrorMsg,
   };
 }

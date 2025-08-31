@@ -107,9 +107,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
 
   const soundAlertId = useId();
 
-  const { parseErrorMsg, getErrorMsg } = useOrderEntryFormErrorMsg(
-    validated ? errors : null,
-  );
+  const { getErrorMsg } = useOrderEntryFormErrorMsg(validated ? errors : null);
 
   const buttonLabel = useMemo(() => {
     return side === OrderSide.BUY
@@ -313,6 +311,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
 
   return (
     <OrderEntryProvider
+      errors={errors}
       errorMsgVisible={errorMsgVisible}
       symbolInfo={symbolInfo}
       onFocus={props.onFocus}
@@ -321,6 +320,10 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
       setOrderValue={setOrderValue}
       setOrderValues={setOrderValues}
       currentFocusInput={currentFocusInput.current}
+      priceInputRef={props.priceInputRef}
+      priceInputContainerRef={props.priceInputContainerRef}
+      triggerPriceInputRef={props.triggerPriceInputRef}
+      activatedPriceInputRef={props.activatedPriceInputRef}
     >
       <div
         className={"oui-space-y-2 oui-text-base-contrast-54 xl:oui-space-y-3"}
@@ -342,26 +345,16 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           freeCollateral={freeCollateral}
         />
 
-        {/* Inputs (quantity,price,triggerPrice) */}
         <OrderInput
-          type={props.type}
-          symbolInfo={symbolInfo}
           values={formattedOrder}
-          onChange={props.setOrderValue}
-          onValuesChange={props.setOrderValues}
-          onBlur={props.onBlur}
-          onFocus={props.onFocus}
-          parseErrorMsg={parseErrorMsg}
-          errors={errors}
+          priceInputContainerWidth={props.priceInputContainerWidth}
+          fillMiddleValue={fillMiddleValue}
           bbo={{
             bboStatus,
             bboType,
             onBBOChange,
             toggleBBO,
           }}
-          refs={props.refs}
-          priceInputContainerWidth={props.priceInputContainerWidth}
-          fillMiddleValue={fillMiddleValue}
         />
 
         {/* Slider */}

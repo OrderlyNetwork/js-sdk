@@ -1,44 +1,54 @@
-import { FocusEventHandler } from "react";
-import { OrderValidationResult } from "@orderly.network/hooks";
-import { API, OrderlyOrder, OrderType } from "@orderly.network/types";
-import { InputType } from "../../types";
-import { CommonOrderInput } from "./commonOrderInput";
-import { PriceInputProps } from "./limit/priceInput";
-import { ScaledOrderInput } from "./scaledOrderInput";
+import { OrderlyOrder, OrderType } from "@orderly.network/types";
+import { PriceInput, PriceInputProps } from "./limit/priceInput";
+import { QtyAndTotalInput } from "./qtyAndTotalInput";
+import { ScaledOrderInput } from "./scaledOrder";
+import { TriggerPriceInput } from "./stop/triggerPriceInput";
+import { TrailingStopInput } from "./trailingStop";
 
-export type BaseOrderInputProps = {
-  type: OrderType;
-  symbolInfo: API.SymbolExt;
+export type OrderInputProps = {
   values: Partial<OrderlyOrder>;
-  onChange: (key: keyof OrderlyOrder, value: any) => void;
-  onValuesChange: (value: any) => void;
-  onFocus: (type: InputType) => FocusEventHandler;
-  onBlur: (type: InputType) => FocusEventHandler;
-  parseErrorMsg: (
-    key: keyof OrderValidationResult,
-    customValue?: string,
-  ) => string;
-  errors: OrderValidationResult | null;
-};
-
-export type OrderInputProps = BaseOrderInputProps &
-  Omit<PriceInputProps, "order_price" | "order_type">;
+} & Omit<PriceInputProps, "order_price" | "order_type">;
 
 export function OrderInput(props: OrderInputProps) {
-  const { bbo, refs, priceInputContainerWidth, fillMiddleValue, ...rest } =
-    props;
+  const { values } = props;
 
-  if (props.values.order_type === OrderType.SCALED) {
-    return <ScaledOrderInput {...rest} />;
+  const type = values.order_type;
+
+  if (type === OrderType.SCALED) {
+    return <ScaledOrderInput values={values} />;
   }
 
-  return (
-    <CommonOrderInput
-      {...rest}
-      bbo={bbo}
-      refs={refs}
-      priceInputContainerWidth={priceInputContainerWidth}
-      fillMiddleValue={fillMiddleValue}
+  if (type === OrderType.TRAILING_STOP) {
+    return <TrailingStopInput values={values} />;
+  }
+
+  const showTriggerPrice =
+    type === OrderType.STOP_LIMIT || type === OrderType.STOP_MARKET;
+
+  const showPrice = type === OrderType.LIMIT || type === OrderType.STOP_LIMIT;
+
+  const triggerPriceInput = showTriggerPrice && (
+    <TriggerPriceInput trigger_price={values.trigger_price} />
+  );
+
+  const priceInput = showPrice && (
+    <PriceInput
+      order_type={values.order_type!}
+      order_price={values.order_price}
+      bbo={props.bbo}
+      fillMiddleValue={props.fillMiddleValue}
+      priceInputContainerWidth={props.priceInputContainerWidth}
     />
+  );
+
+  return (
+    <div className={"oui-space-y-1"}>
+      {triggerPriceInput}
+      {priceInput}
+      <QtyAndTotalInput
+        order_quantity={values.order_quantity}
+        total={values.total}
+      />
+    </div>
   );
 }

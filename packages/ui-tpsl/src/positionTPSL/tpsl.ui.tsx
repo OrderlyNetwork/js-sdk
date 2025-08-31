@@ -52,7 +52,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
   const { t } = useTranslation();
   const { isMobile } = useScreen();
 
-  const { parseErrorMsg } = useOrderEntryFormErrorMsg(errors);
+  const { getErrorMsg } = useOrderEntryFormErrorMsg(errors);
 
   const renderQtyInput = () => {
     if (TPSL_OrderEntity.position_type === PositionType.FULL) {
@@ -69,7 +69,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
           onQuantityChange={props.setQuantity}
           quote={symbolInfo("base")}
           isEditing={props.isEditing}
-          errorMsg={validated ? parseErrorMsg("quantity") : undefined}
+          errorMsg={validated ? getErrorMsg("quantity") : undefined}
         />
       </Box>
     );

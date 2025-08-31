@@ -19,11 +19,11 @@ export function AdvancedTPSLResult(props: {
 }) {
   const { order: formattedOrder, symbolInfo, onEdit, onDelete, errors } = props;
 
-  const { parseErrorMsg } = useOrderEntryFormErrorMsg(errors);
+  const { getErrorMsg } = useOrderEntryFormErrorMsg(errors);
   const { t } = useTranslation();
 
   const renderTp = () => {
-    const error = parseErrorMsg("tp_trigger_price");
+    const error = getErrorMsg("tp_trigger_price");
     if (formattedOrder.tp_trigger_price || formattedOrder.tp_order_price) {
       return (
         <Flex
@@ -105,7 +105,7 @@ export function AdvancedTPSLResult(props: {
 
   const renderSl = () => {
     if (formattedOrder.sl_trigger_price || formattedOrder.sl_order_price) {
-      const error = parseErrorMsg("sl_trigger_price");
+      const error = getErrorMsg("sl_trigger_price");
       return (
         <Flex
           direction={"column"}
