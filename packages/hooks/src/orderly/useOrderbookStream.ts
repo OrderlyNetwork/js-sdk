@@ -30,8 +30,12 @@ const asksSortFn = (a: OrderBookItem, b: OrderBookItem) => a[0] - b[0];
 
 const bidsSortFn = (a: OrderBookItem, b: OrderBookItem) => b[0] - a[0];
 
-export const getPriceKey = (price: number, depth: number, isAsks: boolean) => {
-  return new Decimal(price)
+export const getPriceKey = (
+  rawPrice: number,
+  depth: number,
+  isAsks: boolean,
+) => {
+  return new Decimal(rawPrice)
     .div(depth)
     .toDecimalPlaces(0, isAsks ? Decimal.ROUND_CEIL : Decimal.ROUND_FLOOR)
     .mul(depth)
@@ -41,7 +45,7 @@ export const getPriceKey = (price: number, depth: number, isAsks: boolean) => {
 const reduceItems = (
   depth: number | undefined,
   data: OrderBookItem[],
-  isAsks = false,
+  isAsks: boolean,
 ) => {
   if (!Array.isArray(data) || data.length === 0) {
     return [];
@@ -50,15 +54,15 @@ const reduceItems = (
   const result: OrderBookItem[] = [];
 
   if (typeof depth !== "undefined") {
-    const pricesMap = new Map<number, number[]>();
+    const pricesMap = new Map<number, [number, number]>();
     const len = data.length;
     for (let i = 0; i < len; i++) {
-      const [price, quantity] = data[i];
-      if (Number.isNaN(price) || Number.isNaN(quantity)) {
+      const [rawPrice, quantity] = data[i];
+      if (Number.isNaN(rawPrice) || Number.isNaN(quantity)) {
         continue;
       }
 
-      const priceKey = getPriceKey(price, depth, isAsks);
+      const priceKey = getPriceKey(rawPrice, depth, isAsks);
 
       if (pricesMap.has(priceKey)) {
         const item = pricesMap.get(priceKey)!;
@@ -102,7 +106,7 @@ export const reduceOrderbook = (
   data: OrderbookData,
 ): OrderbookData => {
   let asks = reduceItems(depth, data.asks, true);
-  let bids = reduceItems(depth, data.bids);
+  let bids = reduceItems(depth, data.bids, false);
 
   /// not empty and asks.price <= bids.price
   if (asks.length !== 0 && bids.length !== 0 && asks[0][0] <= bids[0][0]) {
