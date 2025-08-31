@@ -58,7 +58,7 @@ const reduceItems = (
   const result: OrderBookItem[] = [];
 
   if (typeof depth !== "undefined") {
-    const pricesMap = new Map<number, [number, number]>();
+    const pricesMap = new Map<number, [number, number, number]>();
     const len = data.length;
     for (let i = 0; i < len; i++) {
       const [rawPrice, quantity] = data[i];
@@ -67,21 +67,24 @@ const reduceItems = (
       }
 
       const priceKey = getPriceKey(rawPrice, depth, isAsks);
+      const amtByRaw = new Decimal(rawPrice).mul(quantity).toNumber();
 
       if (pricesMap.has(priceKey)) {
         const item = pricesMap.get(priceKey)!;
-        const itemPrice = new Decimal(item[1]).add(quantity).toNumber();
-        pricesMap.set(priceKey, [priceKey, itemPrice]);
+        const sumQty = new Decimal(item[1]).add(quantity).toNumber();
+        const sumAmtByRaw = new Decimal(item[2] ?? 0).add(amtByRaw).toNumber();
+        pricesMap.set(priceKey, [priceKey, sumQty, sumAmtByRaw]);
       } else {
-        pricesMap.set(priceKey, [priceKey, quantity]);
+        pricesMap.set(priceKey, [priceKey, quantity, amtByRaw]);
       }
     }
 
-    newData = Array.from(pricesMap.values());
+    newData = Array.from<[number, number, number]>(pricesMap.values());
   }
 
   for (let i = 0; i < newData.length; i++) {
-    const [price, quantity] = newData[i];
+    const [price, quantity, sumAmtByRaw] = newData[i];
+
     if (!isNumber(price) || !isNumber(quantity)) {
       continue;
     }
@@ -92,8 +95,11 @@ const reduceItems = (
       .add(resLen ? result[resLen - 1][2] : 0)
       .toNumber();
 
-    const newAmount = new Decimal(quantity)
-      .mul(price)
+    const pieceAmount = isNumber(sumAmtByRaw)
+      ? sumAmtByRaw
+      : new Decimal(quantity).mul(price).toNumber();
+
+    const newAmount = new Decimal(pieceAmount)
       .add(resLen ? result[resLen - 1][3] : 0)
       .toNumber();
 
