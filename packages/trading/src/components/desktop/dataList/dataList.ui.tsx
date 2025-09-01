@@ -1,4 +1,4 @@
-import { FC } from "react";
+import React, { FC } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { OrderStatus } from "@orderly.network/types";
 import { Box, Divider, Flex, TabPanel, Tabs } from "@orderly.network/ui";
@@ -8,34 +8,41 @@ import {
   PositionHistoryWidget,
   PositionsWidget,
 } from "@orderly.network/ui-positions";
-import { PositionHeaderWidget } from "../../base/positionHeader";
 import { DataListState, DataListTabType } from "./dataList.script";
-import { SettingWidget } from "./setting";
+
+const LazySettingWidget = React.lazy(() =>
+  import("./setting").then((mod) => {
+    return { default: mod.SettingWidget };
+  }),
+);
+
+const LazyPositionHeaderWidget = React.lazy(() =>
+  import("../../base/positionHeader").then((mod) => {
+    return { default: mod.PositionHeaderWidget };
+  }),
+);
 
 export const DataList: FC<DataListState> = (props) => {
   const { t } = useTranslation();
-
-  // return (
-  //   <DesktopOrderListWidget
-  //     type={TabType.orderHistory}
-  //     onSymbolChange={props.onSymbolChange}
-  //   />
-  // );
   return (
     <Tabs
       defaultValue={props.current || DataListTabType.positions}
       variant="contained"
       trailing={
-        <SettingWidget
-          pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
-          setPnlNotionalDecimalPrecision={props.setPnlNotionalDecimalPrecision}
-          unPnlPriceBasis={props.unPnlPriceBasis}
-          setUnPnlPriceBasic={props.setUnPnlPriceBasic}
-          hideOtherSymbols={!props.showAllSymbol}
-          setHideOtherSymbols={(value: boolean) =>
-            props.setShowAllSymbol(!value)
-          }
-        />
+        <React.Suspense fallback={null}>
+          <LazySettingWidget
+            pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
+            setPnlNotionalDecimalPrecision={
+              props.setPnlNotionalDecimalPrecision
+            }
+            unPnlPriceBasis={props.unPnlPriceBasis}
+            setUnPnlPriceBasic={props.setUnPnlPriceBasic}
+            hideOtherSymbols={!props.showAllSymbol}
+            setHideOtherSymbols={(value: boolean) =>
+              props.setShowAllSymbol(!value)
+            }
+          />
+        </React.Suspense>
       }
       size="lg"
       className="oui-h-full"
@@ -150,11 +157,13 @@ export const DataList: FC<DataListState> = (props) => {
 const PositionsView: FC<DataListState> = (props) => {
   return (
     <Flex direction="column" width="100%" height="100%">
-      <PositionHeaderWidget
-        pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
-        symbol={!!props.showAllSymbol ? undefined : props.symbol}
-        unPnlPriceBasis={props.unPnlPriceBasis}
-      />
+      <React.Suspense fallback={null}>
+        <LazyPositionHeaderWidget
+          pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
+          symbol={!!props.showAllSymbol ? undefined : props.symbol}
+          unPnlPriceBasis={props.unPnlPriceBasis}
+        />
+      </React.Suspense>
       <Divider className="oui-w-full" />
       <Box className="oui-h-[calc(100%_-_60px)]" width="100%">
         <PositionsWidget
