@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { DisplayControlSettingInterface } from "../../type";
+import React, { useMemo, useState } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import {
   DropdownMenuContent,
   DropdownMenuPortal,
@@ -16,7 +16,7 @@ import {
   SelectedIcon,
   UnSelectIcon,
 } from "../../icons";
-import { i18n, useTranslation } from "@orderly.network/i18n";
+import type { DisplayControlSettingInterface } from "../../type";
 
 type DisplayControl = {
   label: string;
@@ -28,14 +28,12 @@ interface IProps {
   changeDisplayControlState: (state: DisplayControlSettingInterface) => void;
 }
 
-export function DesktopDisplayControl({
-  displayControlState,
-  changeDisplayControlState,
-}: IProps) {
+export const DesktopDisplayControl: React.FC<IProps> = (props) => {
+  const { displayControlState, changeDisplayControlState } = props;
   const [open, setOpen] = useState(false);
   const { t } = useTranslation();
 
-  const DisplayControlMap = useMemo<DisplayControl[]>(() => {
+  const displayControlMap = useMemo<DisplayControl[]>(() => {
     return [
       {
         label: t("common.position"),
@@ -76,13 +74,13 @@ export function DesktopDisplayControl({
             <DisplaySettingIcon
               className={cn(
                 "oui-w-[18px] oui-h-[18px] ",
-                open && "oui-text-base-contrast-80"
+                open && "oui-text-base-contrast-80",
               )}
             />
             <CaretIcon
               className={cn(
                 "oui-w-3 oui-h-3",
-                open && "oui-text-base-contrast-80 oui-rotate-180"
+                open && "oui-text-base-contrast-80 oui-rotate-180",
               )}
             />
           </Flex>
@@ -103,7 +101,7 @@ export function DesktopDisplayControl({
               justify="start"
               itemAlign="start"
             >
-              {DisplayControlMap.map((item) => (
+              {displayControlMap.map((item) => (
                 <Flex
                   key={item.id}
                   justify={"between"}
@@ -114,7 +112,7 @@ export function DesktopDisplayControl({
                     className={cn(
                       "oui-text-sm oui-text-base-contrast-80",
                       !displayControlState[item.id] &&
-                        "oui-text-base-contrast-36"
+                        "oui-text-base-contrast-36",
                     )}
                   >
                     {item.label}
@@ -137,13 +135,13 @@ export function DesktopDisplayControl({
       </DropdownMenuRoot>
     </>
   );
-}
+};
 
-export function MobileDisplayControl(props: IProps) {
+export const MobileDisplayControl: React.FC<IProps> = (props) => {
   const [open, setOpen] = useState(false);
   const { t } = useTranslation();
 
-  const MobileDisplayControlMap = useMemo<DisplayControl[][]>(() => {
+  const mobileDisplayControlMap = useMemo<DisplayControl[][]>(() => {
     return [
       [
         {
@@ -185,19 +183,19 @@ export function MobileDisplayControl(props: IProps) {
         <div
           className={cn(
             "oui-flex oui-gap-0.5 oui-justify-center oui-text-base-contrast-36 oui-items-center",
-            open && "oui-text-base-contrast-8"
+            open && "oui-text-base-contrast-8",
           )}
         >
           <DisplaySettingIcon
             className={cn(
               "oui-w-[18px] oui-h-[18px] ",
-              open && "oui-text-base-contrast-80"
+              open && "oui-text-base-contrast-80",
             )}
           />
           <CaretIcon
             className={cn(
               "oui-w-3 oui-h-3",
-              open && "oui-text-base-contrast-80 oui-rotate-180"
+              open && "oui-text-base-contrast-80 oui-rotate-180",
             )}
           />
         </div>
@@ -210,10 +208,10 @@ export function MobileDisplayControl(props: IProps) {
           alignOffset={0}
           sideOffset={0}
           className={cn(
-            "oui-tradingview-display-control-dropdown-menu-content oui-bg-base-9 oui-w-screen oui-flex oui-flex-col oui-gap-2 oui-p-3"
+            "oui-tradingview-display-control-dropdown-menu-content oui-bg-base-9 oui-w-screen oui-flex oui-flex-col oui-gap-2 oui-p-3",
           )}
         >
-          {MobileDisplayControlMap.map((row, id) => (
+          {mobileDisplayControlMap.map((row, id) => (
             <div className="oui-flex oui-gap-2" key={id}>
               {row.map((item) => (
                 <div
@@ -221,7 +219,7 @@ export function MobileDisplayControl(props: IProps) {
                     "oui-w-full oui-bg-base-5  oui-text-2xs oui-flex oui-items-center oui-justify-between oui-h-6  oui-rounded oui-px-2",
                     props.displayControlState[item.id]
                       ? "oui-text-base-contrast"
-                      : "oui-text-base-contrast-36 "
+                      : "oui-text-base-contrast-36 ",
                   )}
                   key={item.id}
                   onClick={() => {
@@ -233,9 +231,9 @@ export function MobileDisplayControl(props: IProps) {
                 >
                   <div>{item.label}</div>
                   {props.displayControlState[item.id] ? (
-                    <SelectedIcon className="oui-h-3 oui-w-3" />
+                    <SelectedIcon className="oui-size-3" />
                   ) : (
-                    <UnSelectIcon className="oui-h-3 oui-w-3" />
+                    <UnSelectIcon className="oui-size-3" />
                   )}
                 </div>
               ))}
@@ -245,4 +243,4 @@ export function MobileDisplayControl(props: IProps) {
       </DropdownMenuPortal>
     </DropdownMenuRoot>
   );
-}
+};

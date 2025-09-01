@@ -1,4 +1,4 @@
-import { FC } from "react";
+import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { OrderStatus } from "@orderly.network/types";
 import {
@@ -16,18 +16,21 @@ import {
   MobilePositionHistoryWidget,
   MobilePositionsWidget,
 } from "@orderly.network/ui-positions";
-import { PositionHeaderWidget } from "../../base/positionHeader";
 import {
   DataListState,
   DataListTabSubType,
   DataListTabType,
 } from "./dataList.script";
 
-export const DataList: FC<
-  DataListState & {
-    className?: string;
-  }
-> = (props) => {
+const LazyPositionHeaderWidget = React.lazy(() =>
+  import("../../base/positionHeader").then((module) => {
+    return { default: module.PositionHeaderWidget };
+  }),
+);
+
+export const DataList: React.FC<DataListState & { className?: string }> = (
+  props,
+) => {
   const { t } = useTranslation();
 
   return (
@@ -92,14 +95,16 @@ export const DataList: FC<
   );
 };
 
-const PositionsView: FC<DataListState> = (props) => {
+const PositionsView: React.FC<DataListState> = (props) => {
   return (
     <Flex direction={"column"} gap={2}>
-      <PositionHeaderWidget
-        pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
-        symbol={props.showAllSymbol ? undefined : props.symbol}
-        unPnlPriceBasis={props.unPnlPriceBasis}
-      />
+      <React.Suspense fallback={null}>
+        <LazyPositionHeaderWidget
+          pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
+          symbol={props.showAllSymbol ? undefined : props.symbol}
+          unPnlPriceBasis={props.unPnlPriceBasis}
+        />
+      </React.Suspense>
       <MobilePositionsWidget
         symbol={props.showAllSymbol ? undefined : props.symbol}
         onSymbolChange={props.onSymbolChange}
@@ -110,11 +115,8 @@ const PositionsView: FC<DataListState> = (props) => {
   );
 };
 
-const OrdersView: FC<
-  DataListState & {
-    type: TabType;
-    ordersStatus?: OrderStatus;
-  }
+const OrdersView: React.FC<
+  DataListState & { type: TabType; ordersStatus?: OrderStatus }
 > = (props) => {
   return (
     <Flex direction={"column"} pb={2} width={"100%"}>
@@ -134,22 +136,14 @@ const OrdersView: FC<
         }}
         sharePnLConfig={props.sharePnLConfig}
         showFilter={props.type === TabType.orderHistory}
-        filterConfig={{
-          range: {
-            from: undefined,
-            to: undefined,
-          },
-        }}
+        filterConfig={{ range: { from: undefined, to: undefined } }}
       />
     </Flex>
   );
 };
 
-const SymbolControlHeader: FC<
-  DataListState & {
-    type: TabType;
-    ordersStatus?: OrderStatus;
-  }
+const SymbolControlHeader: React.FC<
+  DataListState & { type: TabType; ordersStatus?: OrderStatus }
 > = (props) => {
   const { t } = useTranslation();
 
@@ -194,7 +188,7 @@ const SymbolControlHeader: FC<
   );
 };
 
-const HistoryTab: FC<DataListState> = (props) => {
+const HistoryTab: React.FC<DataListState> = (props) => {
   const { t } = useTranslation();
 
   return (

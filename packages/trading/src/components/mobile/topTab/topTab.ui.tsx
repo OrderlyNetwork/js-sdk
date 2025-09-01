@@ -1,17 +1,30 @@
-import { FC } from "react";
+import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Box, cn, TabPanel, Tabs } from "@orderly.network/ui";
 import { useTradingPageContext } from "../../../provider/tradingPageContext";
-import { MWebLastTrades } from "../lastTrades/lastTrades.widget";
-import { TradeDataWidget } from "../tradeData";
-import { TradingviewWidget } from "../tradingview/tradingview.widget";
 import { TopTabState, TopTabType } from "./topTab.script";
 
-export const TopTab: FC<
-  TopTabState & {
-    className?: string;
-  }
-> = (props) => {
+const LazyTradingviewWidget = React.lazy(() =>
+  import("../tradingview/tradingview.widget").then((mod) => {
+    return { default: mod.TradingviewWidget };
+  }),
+);
+
+const LazyMWebLastTrades = React.lazy(() =>
+  import("../lastTrades/lastTrades.widget").then((mod) => {
+    return { default: mod.MWebLastTrades };
+  }),
+);
+
+const LazyTradeDataWidget = React.lazy(() =>
+  import("../tradeData").then((mod) => {
+    return { default: mod.TradeDataWidget };
+  }),
+);
+
+export const TopTab: React.FC<TopTabState & { className?: string }> = (
+  props,
+) => {
   const { t } = useTranslation();
   const { tradingViewConfig } = useTradingPageContext();
 
@@ -21,7 +34,7 @@ export const TopTab: FC<
       value={props.tab}
       contentVisible={props.visible}
       onValueChange={(e) => {
-        props.setTab(e as any);
+        props.setTab(e as TopTabType);
         props.setVisible(true);
       }}
       className={props.className}
@@ -41,24 +54,30 @@ export const TopTab: FC<
       }
     >
       <TabPanel title={t("trading.tabs.chart")} value={TopTabType.chart}>
-        <TradingviewWidget
-          symbol={props.symbol}
-          tradingViewConfig={tradingViewConfig}
-        />
+        <React.Suspense fallback={null}>
+          <LazyTradingviewWidget
+            symbol={props.symbol}
+            tradingViewConfig={tradingViewConfig}
+          />
+        </React.Suspense>
       </TabPanel>
       <TabPanel title={t("trading.tabs.trades")} value={TopTabType.trades}>
-        <MWebLastTrades symbol={props.symbol} />
+        <React.Suspense fallback={null}>
+          <LazyMWebLastTrades symbol={props.symbol} />
+        </React.Suspense>
       </TabPanel>
       <TabPanel title={t("trading.tabs.data")} value={TopTabType.data}>
         <Box px={3}>
-          <TradeDataWidget symbol={props.symbol} />
+          <React.Suspense fallback={null}>
+            <LazyTradeDataWidget symbol={props.symbol} />
+          </React.Suspense>
         </Box>
       </TabPanel>
     </Tabs>
   );
 };
 
-const ChevronIcon = (props: { className?: string }) => {
+const ChevronIcon: React.FC<{ className?: string }> = (props) => {
   return (
     <svg
       width="12"

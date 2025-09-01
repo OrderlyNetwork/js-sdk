@@ -1,12 +1,12 @@
 import { forwardRef } from "react";
-import { TradingviewWidgetPropsInterface } from "../type";
+import type { TradingviewWidgetPropsInterface } from "../type";
 import { useTradingviewScript } from "./tradingview.script";
-import { TradingviewUi } from "./tradingview.ui";
+import { TradingviewUI } from "./tradingview.ui";
 
 export const TradingviewWidget = forwardRef<
   HTMLDivElement,
   TradingviewWidgetPropsInterface
->((widgetProps, ref) => {
-  const state = useTradingviewScript(widgetProps);
-  return <TradingviewUi {...state} ref={ref} />;
+>((props, ref) => {
+  const state = useTradingviewScript(props);
+  return <TradingviewUI {...state} ref={ref} />;
 });
