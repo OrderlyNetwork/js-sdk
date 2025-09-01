@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   useCallback,
   useContext,
@@ -10,6 +12,7 @@ import { SDKError } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 import { OrderlyContext } from "../orderlyContext";
 import { useEventEmitter } from "../useEventEmitter";
+import { useLocalStorage } from "../useLocalStorage";
 import { useWS } from "../useWS";
 import orderbooksService from "./orderbook.service";
 import { useMarkPrice } from "./useMarkPrice";
@@ -230,13 +233,14 @@ export type OrderbookOptions = {
   padding?: boolean;
 };
 
+export const ORDERLY_ORDERBOOK_DEPTH_KEY = "orderly_orderbook_depth_key";
+
 const INIT_DATA: OrderbookData = {
   asks: [],
   bids: [],
 };
 
 /**
- * @name useOrderbookStream
  * @description React hook that returns the current orderbook for a given market
  */
 export const useOrderbookStream = (
@@ -266,7 +270,10 @@ export const useOrderbookStream = (
 
   const config = useSymbolsInfo()[symbol];
 
-  const [depth, setDepth] = useState<number | undefined>();
+  const [depth, setDepth] = useLocalStorage<number | undefined>(
+    ORDERLY_ORDERBOOK_DEPTH_KEY,
+    undefined,
+  );
 
   // markPrice, lastPrice
   const prevMiddlePrice = useRef<number>(0);
@@ -295,6 +302,9 @@ export const useOrderbookStream = (
   }, [symbol, tick]);
 
   useEffect(() => {
+    if (!depth) {
+      return;
+    }
     if (DEFAULT_TICK_SIZES[symbol]) {
       setDepth(Number(DEFAULT_TICK_SIZES[symbol]));
     } else {
@@ -393,13 +403,9 @@ export const useOrderbookStream = (
     eventEmitter.emit("orderbook:item:click", item);
   }, []);
 
-  const onDepthChange = useCallback((depth: number) => {
-    setDepth(() => depth);
-  }, []);
-
   const reducedData = reduceOrderbook(depth, level, padding, {
-    asks: [...data.asks],
-    bids: [...data.bids],
+    asks: data.asks,
+    bids: data.bids,
   });
 
   useEffect(() => {
@@ -436,7 +442,13 @@ export const useOrderbookStream = (
       markPrice: markPrice,
       middlePrice: [prevMiddlePrice.current, middlePrice],
     },
-    { onDepthChange, depth, allDepths: depths, isLoading, onItemClick },
+    {
+      onDepthChange: setDepth,
+      depth: depth as number,
+      allDepths: depths,
+      isLoading,
+      onItemClick,
+    },
   ];
 };
 
