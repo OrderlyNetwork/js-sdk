@@ -1,5 +1,15 @@
 # @orderly.network/referral
 
+## 2.6.2-internal-hotfix-avgPrice.2
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.6.2-internal-hotfix-avgPrice.2
+  - @orderly.network/types@2.6.2-internal-hotfix-avgPrice.2
+  - @orderly.network/utils@2.6.2-internal-hotfix-avgPrice.2
+
 ## 2.6.2-internal-hotfix-avgPrice.1
 
 ### Patch Changes

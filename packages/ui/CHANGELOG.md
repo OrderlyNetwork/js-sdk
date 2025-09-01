@@ -1,5 +1,13 @@
 # @orderly.network/ui
 
+## 2.6.2-internal-hotfix-avgPrice.2
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/utils@2.6.2-internal-hotfix-avgPrice.2
+
 ## 2.6.2-internal-hotfix-avgPrice.1
 
 ### Patch Changes

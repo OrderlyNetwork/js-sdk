@@ -1,5 +1,11 @@
 # @orderly.network/codemod
 
+## 1.6.2-internal-hotfix-avgPrice.2
+
+### Patch Changes
+
+- publish
+
 ## 1.6.2-internal-hotfix-avgPrice.1
 
 ### Patch Changes

@@ -1,5 +1,21 @@
 # @orderly.network/ui-orders
 
+## 2.6.2-internal-hotfix-avgPrice.2
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.6.2-internal-hotfix-avgPrice.2
+  - @orderly.network/hooks@2.6.2-internal-hotfix-avgPrice.2
+  - @orderly.network/i18n@2.6.2-internal-hotfix-avgPrice.2
+  - @orderly.network/types@2.6.2-internal-hotfix-avgPrice.2
+  - @orderly.network/ui@2.6.2-internal-hotfix-avgPrice.2
+  - @orderly.network/ui-connector@2.6.2-internal-hotfix-avgPrice.2
+  - @orderly.network/ui-share@2.6.2-internal-hotfix-avgPrice.2
+  - @orderly.network/ui-tpsl@2.6.2-internal-hotfix-avgPrice.2
+  - @orderly.network/utils@2.6.2-internal-hotfix-avgPrice.2
+
 ## 2.6.2-internal-hotfix-avgPrice.1
 
 ### Patch Changes
