@@ -270,9 +270,9 @@ export const useOrderbookStream = (
 
   const config = useSymbolsInfo()[symbol];
 
-  const [depth, setDepth] = useLocalStorage<number | undefined>(
+  const [depthObject, setDepthObject] = useLocalStorage(
     ORDERLY_ORDERBOOK_DEPTH_KEY,
-    undefined,
+    {},
   );
 
   // markPrice, lastPrice
@@ -302,15 +302,31 @@ export const useOrderbookStream = (
   }, [symbol, tick]);
 
   useEffect(() => {
-    if (!depth) {
+    if (depthObject[symbol]) {
       return;
     }
     if (DEFAULT_TICK_SIZES[symbol]) {
-      setDepth(Number(DEFAULT_TICK_SIZES[symbol]));
+      // @ts-ignore
+      setDepthObject((prev) => ({
+        ...prev,
+        [symbol]: Number(DEFAULT_TICK_SIZES[symbol]),
+      }));
     } else {
-      setDepth(tick);
+      // @ts-ignore
+      setDepthObject((prev) => ({
+        ...prev,
+        [symbol]: tick,
+      }));
     }
-  }, [tick, symbol, DEFAULT_TICK_SIZES]);
+  }, [depthObject, tick, symbol, DEFAULT_TICK_SIZES]);
+
+  const onDepthChange = useCallback(
+    (val: number) => {
+      // @ts-ignore
+      setDepthObject((prev) => ({ ...prev, [symbol]: val }));
+    },
+    [symbol],
+  );
 
   const ws = useWS();
 
@@ -403,7 +419,7 @@ export const useOrderbookStream = (
     eventEmitter.emit("orderbook:item:click", item);
   }, []);
 
-  const reducedData = reduceOrderbook(depth, level, padding, {
+  const reducedData = reduceOrderbook(depthObject[symbol], level, padding, {
     asks: data.asks,
     bids: data.bids,
   });
@@ -443,8 +459,8 @@ export const useOrderbookStream = (
       middlePrice: [prevMiddlePrice.current, middlePrice],
     },
     {
-      onDepthChange: setDepth,
-      depth: depth as number,
+      onDepthChange: onDepthChange,
+      depth: depthObject[symbol] as number,
       allDepths: depths,
       isLoading,
       onItemClick,
