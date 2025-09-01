@@ -48,14 +48,6 @@ export const useFeeTierColumns = () => {
         },
       },
       {
-        title: t("portfolio.feeTier.column.stakingLevel"),
-        dataIndex: "staking",
-        align: "center",
-        render: (val) => {
-          return val ?? <div style={textStyle}>--</div>;
-        },
-      },
-      {
         title: t("portfolio.feeTier.column.maker"),
         dataIndex: "maker_fee",
         align: "right",

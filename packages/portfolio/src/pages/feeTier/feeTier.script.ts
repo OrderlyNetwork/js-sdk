@@ -32,7 +32,7 @@ export interface FeeDataType {
   tier: number;
   volume_min?: number | null;
   volume_max?: number | null;
-  staking?: string | null;
+  or?: string | null;
   maker_fee: string;
   taker_fee: string;
 }
