@@ -30,7 +30,7 @@ const calcHintInfo = (item: number[] | null) => {
   return {
     sumQty: sumQty,
     sumQtyAmount: sumQtyAmount,
-    avgPrice: sumQty === 0 ? 0 : sumQtyAmount / sumQty,
+    avgPrice: sumQtyAmount === 0 || sumQty === 0 ? 0 : sumQtyAmount / sumQty,
   };
 };
 
