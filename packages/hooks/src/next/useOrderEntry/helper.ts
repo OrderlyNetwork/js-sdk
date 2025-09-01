@@ -222,7 +222,7 @@ export function isBBOOrder(options: {
 }
 
 export function appendOrderMetadata(
-  order: OrderlyOrder | OrderlyOrder[],
+  order: Partial<OrderlyOrder> | Partial<OrderlyOrder>[],
   orderMetadata?: OrderMetadataConfig,
 ) {
   if (Array.isArray(order)) {

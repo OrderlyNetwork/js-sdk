@@ -12,6 +12,8 @@ import {
 } from "@orderly.network/types";
 import { AlgoOrderRootType } from "@orderly.network/types";
 import { AlgoOrderType } from "@orderly.network/types";
+import { appendOrderMetadata } from "../../next/useOrderEntry/helper";
+import { useOrderlyContext } from "../../orderlyContext";
 import { OrderFactory } from "../../services/orderCreator/factory";
 import { OrderValidationItem } from "../../services/orderCreator/interface";
 import { TPSLPositionOrderCreator } from "../../services/orderCreator/tpslPositionOrderCreator";
@@ -197,6 +199,8 @@ export const useTaskProfitAndStopLossInternal = (
     validated: false,
     errors: null,
   });
+
+  const { orderMetadata } = useOrderlyContext();
 
   useEffect(() => {
     if (!isEditing || !options?.defaultOrder) return;
@@ -497,7 +501,8 @@ export const useTaskProfitAndStopLossInternal = (
       (order: API.AlgoOrderExt) => order.is_activated,
     );
 
-    return doCreateOrder(orderBody, {}, params);
+    const body = appendOrderMetadata(orderBody, orderMetadata);
+    return doCreateOrder(body, {}, params);
   };
 
   const deleteOrder = (orderId: number, symbol: string): Promise<any> => {

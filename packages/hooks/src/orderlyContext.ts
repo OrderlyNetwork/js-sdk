@@ -97,7 +97,7 @@ export type OrderMetadata = {
 
 export type OrderMetadataConfig =
   | OrderMetadata
-  | ((order: OrderlyOrder) => OrderMetadata);
+  | ((order: Partial<OrderlyOrder>) => OrderMetadata);
 
 export const OrderlyContext = createContext<OrderlyConfigContextState>({
   // configStore: new MemoryConfigStore(),
