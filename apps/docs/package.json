@@ -1,6 +1,6 @@
 {
   "name": "@orderly/docs",
-  "version": "1.6.2-internal-hotfix-avgPrice.1",
+  "version": "1.6.2-internal-hotfix-avgPrice.2",
   "private": true,
   "scripts": {
     "dev": "next dev -p 4000",

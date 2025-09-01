@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/react-app",
-  "version": "2.6.2-internal-hotfix-avgPrice.1",
+  "version": "2.6.2-internal-hotfix-avgPrice.2",
   "description": "Create React App with Orderly Network components",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
