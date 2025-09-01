@@ -11,11 +11,11 @@ export const useOrderBookAndTradesScript = (symbol: string) => {
 
   const [tab, setTab] = useState<"orderBook" | "lastTrades">("orderBook");
 
-  const containerRef = useRef<HTMLDivElement>();
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const resizeObserver = new ResizeObserver((entries) => {
-      for (let entry of entries) {
+      for (const entry of entries) {
         const { width, height } = entry.contentRect;
         setContainerSize({
           width,
@@ -40,7 +40,7 @@ export const useOrderBookAndTradesScript = (symbol: string) => {
   return {
     symbol,
     containerSize,
-    containerRef: containerRef as any,
+    containerRef: containerRef,
     tab,
     setTab,
   };
