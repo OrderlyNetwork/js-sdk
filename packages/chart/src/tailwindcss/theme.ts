@@ -1,6 +1,5 @@
 import plugin from "tailwindcss/plugin";
-
-import { PluginCreator } from "tailwindcss/types/config";
+import type { PluginCreator } from "tailwindcss/types/config";
 
 export const chartPlugin: PluginCreator = () =>
   plugin(function ({ addComponents, addBase }) {
@@ -17,6 +16,6 @@ export const chartPlugin: PluginCreator = () =>
       },
       {
         respectPrefix: false,
-      }
+      },
     );
   });
