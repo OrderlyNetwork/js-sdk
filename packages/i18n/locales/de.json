@@ -45,6 +45,7 @@
   "common.notional": "Nominalwert",
   "common.fee": "Gebühr",
   "common.fees": "Gebühren",
+  "common.effectiveFee": "Effektive Gebühr",
   "common.orderPrice": "Orderpreis",
   "common.avgPrice": "Durchschnittspreis",
   "common.avgOpen": "Durchschnittlicher Eröffnungspreis",

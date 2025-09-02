@@ -45,6 +45,7 @@
   "common.notional": "Giá trị danh nghĩa",
   "common.fee": "Phí",
   "common.fees": "Phí",
+  "common.effectiveFee": "Phí hiệu quả",
   "common.orderPrice": "Giá đặt lệnh",
   "common.avgPrice": "Giá trung bình",
   "common.avgOpen": "Giá mở trung bình",

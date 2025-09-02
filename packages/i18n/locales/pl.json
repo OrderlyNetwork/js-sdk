@@ -45,6 +45,7 @@
   "common.notional": "Nominał",
   "common.fee": "Opłata",
   "common.fees": "Opłaty",
+  "common.effectiveFee": "Efektywna opłata",
   "common.orderPrice": "Cena zlecenia",
   "common.avgPrice": "Śr. cena",
   "common.avgOpen": "Śr. otwarcie",

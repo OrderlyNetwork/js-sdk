@@ -14,22 +14,28 @@ export const FeesUI: React.FC<ReturnType<typeof useFeesScript>> = (props) => {
   const originalTrailingFees = (
     <Flex itemAlign="center" justify="between" width={"100%"} gap={1}>
       <Flex width={"100%"} itemAlign="center" justify={"between"}>
-        <Text size="2xs">{t("common.fees")}</Text>
+        <Text className="oui-truncate" size="2xs">
+          {t("common.fees")}
+        </Text>
         <AuthGuard
           fallback={() => (
-            <Text size="2xs">
+            <Text className="oui-truncate" size="2xs">
               {t("portfolio.feeTier.column.taker")}: --% /{" "}
               {t("portfolio.feeTier.column.maker")}: --%
             </Text>
           )}
         >
           <Flex gap={1}>
-            <Text size="2xs">{t("portfolio.feeTier.column.taker")}:</Text>
+            <Text className="oui-truncate" size="2xs">
+              {t("portfolio.feeTier.column.taker")}:
+            </Text>
             <Text size="2xs" className="oui-text-base-contrast-80">
               {takerFeeRate}
             </Text>
             <Text size="2xs">/</Text>
-            <Text size="2xs">{t("portfolio.feeTier.column.maker")}:</Text>
+            <Text className="oui-truncate" size="2xs">
+              {t("portfolio.feeTier.column.maker")}:
+            </Text>
             <Text size="2xs" className="oui-text-base-contrast-80">
               {makerFeeRate}
             </Text>

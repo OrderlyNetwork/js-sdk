@@ -45,6 +45,7 @@
   "common.notional": "名目",
   "common.fee": "手数料",
   "common.fees": "手数料",
+  "common.effectiveFee": "実効手数料",
   "common.orderPrice": "注文価格",
   "common.avgPrice": "平均価格",
   "common.avgOpen": "平均オープン",

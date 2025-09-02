@@ -45,6 +45,7 @@
   "common.notional": "Notional",
   "common.fee": "Biaya",
   "common.fees": "Biaya",
+  "common.effectiveFee": "Biaya efektif",
   "common.orderPrice": "Harga order",
   "common.avgPrice": "Harga rata-rata",
   "common.avgOpen": "Rata-rata buka",

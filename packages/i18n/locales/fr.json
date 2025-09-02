@@ -45,6 +45,7 @@
   "common.notional": "Notionnel",
   "common.fee": "Frais",
   "common.fees": "Frais",
+  "common.effectiveFee": "Frais effectifs",
   "common.orderPrice": "Prix de l'ordre",
   "common.avgPrice": "Prix moyen",
   "common.avgOpen": "Moy. ouverture",

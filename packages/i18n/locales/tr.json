@@ -45,6 +45,7 @@
   "common.notional": "Nominal",
   "common.fee": "Ücret",
   "common.fees": "Ücretler",
+  "common.effectiveFee": "Etkili ücret",
   "common.orderPrice": "Emir fiyatı",
   "common.avgPrice": "Ort. fiyat",
   "common.avgOpen": "Ort. açılış",

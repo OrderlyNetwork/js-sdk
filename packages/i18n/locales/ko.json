@@ -45,6 +45,7 @@
   "common.notional": "명목 가치",
   "common.fee": "수수료",
   "common.fees": "수수료",
+  "common.effectiveFee": "유효 수수료",
   "common.orderPrice": "주문 가격",
   "common.avgPrice": "평균 가격",
   "common.avgOpen": "평균 오픈",

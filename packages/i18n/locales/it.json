@@ -45,6 +45,7 @@
   "common.notional": "Nozionale",
   "common.fee": "Commissione",
   "common.fees": "Commissioni",
+  "common.effectiveFee": "Commissione effettiva",
   "common.orderPrice": "Prezzo dell'ordine",
   "common.avgPrice": "Prezzo medio",
   "common.avgOpen": "Apertura media",

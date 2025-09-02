@@ -45,6 +45,7 @@
   "common.notional": "Номінал",
   "common.fee": "Комісія",
   "common.fees": "Комісії",
+  "common.effectiveFee": "Ефективна комісія",
   "common.orderPrice": "Ціна ордера",
   "common.avgPrice": "Серед. ціна",
   "common.avgOpen": "Серед. відкриття",

@@ -45,6 +45,7 @@
   "common.notional": "Nominaal",
   "common.fee": "Kosten",
   "common.fees": "Kosten",
+  "common.effectiveFee": "Effectieve vergoeding",
   "common.orderPrice": "Orderprijs",
   "common.avgPrice": "Gem. prijs",
   "common.avgOpen": "Gem. opening",
