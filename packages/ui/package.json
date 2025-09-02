@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/ui",
-  "version": "2.6.1",
+  "version": "2.6.2-internal-hotfix-avgPrice.2",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

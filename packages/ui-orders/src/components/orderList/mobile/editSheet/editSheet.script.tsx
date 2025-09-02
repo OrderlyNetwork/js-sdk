@@ -112,6 +112,15 @@ export const useEditSheetScript = (props: {
           : (order as any).visible !== undefined
             ? (order as any).visible === 0
             : false;
+
+      if (order.order_tag) {
+        values.order_tag = order.order_tag;
+      }
+
+      if (order.client_order_id) {
+        values.client_order_id = order.client_order_id;
+      }
+
       if (order.algo_order_id !== undefined) {
         if (isStopMarket && "order_price" in values) {
           const { order_price, ...rest } = values;
