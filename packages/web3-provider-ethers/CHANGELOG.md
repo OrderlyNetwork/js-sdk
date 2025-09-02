@@ -1,32 +1,5 @@
 # @orderly.network/web3-provider-ethers
 
-## 2.6.2-internal-hotfix-avgPrice.2
-
-### Patch Changes
-
-- publish
-- Updated dependencies
-  - @orderly.network/default-evm-adapter@2.6.2-internal-hotfix-avgPrice.2
-  - @orderly.network/types@2.6.2-internal-hotfix-avgPrice.2
-
-## 2.6.2-internal-hotfix-avgPrice.1
-
-### Patch Changes
-
-- publish
-- Updated dependencies
-  - @orderly.network/default-evm-adapter@2.6.2-internal-hotfix-avgPrice.1
-  - @orderly.network/types@2.6.2-internal-hotfix-avgPrice.1
-
-## 2.6.2-internal-hotfix-avgPrice.0
-
-### Patch Changes
-
-- publish
-- Updated dependencies
-  - @orderly.network/default-evm-adapter@2.6.2-internal-hotfix-avgPrice.0
-  - @orderly.network/types@2.6.2-internal-hotfix-avgPrice.0
-
 ## 2.6.1
 
 ### Patch Changes
