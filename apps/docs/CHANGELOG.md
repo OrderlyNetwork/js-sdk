@@ -1,35 +1,5 @@
 # @orderly/docs
 
-## 1.6.2-internal-hotfix-avgPrice.2
-
-### Patch Changes
-
-- publish
-- Updated dependencies
-  - @orderly.network/hooks@2.6.2-internal-hotfix-avgPrice.2
-  - @orderly.network/web3-onboard@2.6.2-internal-hotfix-avgPrice.2
-  - @orderly.network/types@2.6.2-internal-hotfix-avgPrice.2
-
-## 1.6.2-internal-hotfix-avgPrice.1
-
-### Patch Changes
-
-- publish
-- Updated dependencies
-  - @orderly.network/hooks@2.6.2-internal-hotfix-avgPrice.1
-  - @orderly.network/web3-onboard@2.6.2-internal-hotfix-avgPrice.1
-  - @orderly.network/types@2.6.2-internal-hotfix-avgPrice.1
-
-## 1.6.2-internal-hotfix-avgPrice.0
-
-### Patch Changes
-
-- publish
-- Updated dependencies
-  - @orderly.network/hooks@2.6.2-internal-hotfix-avgPrice.0
-  - @orderly.network/web3-onboard@2.6.2-internal-hotfix-avgPrice.0
-  - @orderly.network/types@2.6.2-internal-hotfix-avgPrice.0
-
 ## 1.6.1
 
 ### Patch Changes
