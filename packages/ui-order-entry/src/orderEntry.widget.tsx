@@ -7,7 +7,7 @@ import { OrderEntry } from "./orderEntry.ui";
 
 export const OrderEntryWidget: React.FC<
   OrderEntryScriptInputs & {
-    containerRef?: any;
+    containerRef?: React.RefObject<HTMLDivElement>;
     disableFeatures?: ("slippageSetting" | "feesInfo")[];
   }
 > = (props) => {

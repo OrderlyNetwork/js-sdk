@@ -65,6 +65,7 @@ import { LTVRiskTooltipWidget } from "./components/LTVRiskTooltip";
 import { AdditionalInfoWidget } from "./components/additional/additionnalInfo.widget";
 import { orderConfirmDialogId } from "./components/dialog/confirm.ui";
 import { scaledOrderConfirmDialogId } from "./components/dialog/scaledOrderConfirm";
+import { EffectiveFeeWidget } from "./components/effectiveFee";
 import { FeesWidget } from "./components/fees";
 import {
   OrderEntryContext,
@@ -84,7 +85,7 @@ const EMPTY_LIST: ReadonlyArray<any> = [];
 type Refs = OrderEntryScriptReturn["refs"];
 
 type OrderEntryProps = OrderEntryScriptReturn & {
-  containerRef: any;
+  containerRef?: React.RefObject<HTMLDivElement>;
   disableFeatures?: ("slippageSetting" | "feesInfo")[];
 };
 
@@ -162,16 +163,15 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
 
   // set slippage
   useEffect(() => {
-    if (props.disableFeatures?.includes("slippageSetting")) {
+    if (disableFeatures?.includes("slippageSetting")) {
       return;
     }
-
     if (slippage) {
       setOrderValue("slippage", Number(slippage));
     } else {
       setOrderValue("slippage", undefined);
     }
-  }, [slippage, props.disableFeatures]);
+  }, [slippage, disableFeatures]);
 
   useEffect(() => {
     const clickHandler = (event: MouseEvent) => {
@@ -732,7 +732,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
 const defaultPath =
   "M10.007 1.302a.74.74 0 0 0-.486.214c-1.033.989-1.349 1.815-.972 2.948-.88.675-1.437.84-2.536.84-1.503 0-2.484.182-3.152.85v.02a1.583 1.583 0 0 0 0 2.248l1.867 1.882-3.181 3.18c-.26.26-.28.696-.02.956.261.26.699.26.959 0l3.193-3.194 1.87 1.861a1.585 1.585 0 0 0 2.25 0h.02c.668-.667.854-1.523.854-3.144 0-1.03.212-1.758.852-2.523 1.233.361 1.95.015 2.961-.995a.68.68 0 0 0 .188-.48c0-.234-.06-.593-.209-1.04a5.34 5.34 0 0 0-1.312-2.103 5.35 5.35 0 0 0-2.104-1.312c-.448-.15-.808-.208-1.042-.208";
 
-const PinButton = (props: HTMLAttributes<HTMLButtonElement>) => {
+const PinButton: React.FC<HTMLAttributes<HTMLButtonElement>> = (props) => {
   const [path, setPath] = useState(defaultPath);
   return (
     <button {...props}>
@@ -742,6 +742,7 @@ const PinButton = (props: HTMLAttributes<HTMLButtonElement>) => {
         viewBox="0 0 16 16"
         fill="currentColor"
         xmlns="http://www.w3.org/2000/svg"
+        focusable={false}
         onMouseEnter={() => {
           setPath(
             'M10.008 1.302a.74.74 0 0 0-.486.214c-1.033.989-1.349 1.815-.972 2.948-.88.675-1.437.84-2.536.84-1.503 0-2.484.182-3.152.85v.02a1.583 1.583 0 0 0 0 2.248l1.867 1.882-3.181 3.18c-.26.26-.28.696-.02.956.261.26.699.26.959 0l3.193-3.194 1.87 1.861a1.585 1.585 0 0 0 2.25 0h.02c.668-.667.854-1.523.854-3.144 0-1.03.212-1.758.853-2.523 1.232.361 1.95.015 2.96-.995a.68.68 0 0 0 .188-.48c0-.234-.06-.593-.209-1.04a5.34 5.34 0 0 0-1.312-2.103A5.35 5.35 0 0 0 11.05 1.51c-.448-.15-.808-.208-1.042-.208m.258 1.37c.708.131 1.421.6 1.93 1.107.507.508.94 1.13 1.119 1.945-.636.61-1.026.658-1.662.323a.67.67 0 0 0-.779.117c-1.214 1.213-1.533 2.314-1.533 3.8 0 1.292-.076 1.773-.48 2.206-.113.123-.27.104-.374 0L3.799 7.486a.24.24 0 0 1-.017-.34c.239-.29.769-.515 2.226-.514 1.742.001 2.668-.448 3.812-1.52a.67.67 0 0 0 .125-.77c-.343-.686-.29-1.047.321-1.67"',
@@ -750,7 +751,7 @@ const PinButton = (props: HTMLAttributes<HTMLButtonElement>) => {
         onMouseLeave={() => {
           setPath(defaultPath);
         }}
-        className="oui-text-primary-darken "
+        className="oui-text-primary-darken"
       >
         <path d={path} />
       </svg>
@@ -759,7 +760,7 @@ const PinButton = (props: HTMLAttributes<HTMLButtonElement>) => {
 };
 
 //----------------- Order Quantity Input Component start -----------------
-const OrderQuantityInput = (props: {
+const OrderQuantityInput: React.FC<{
   type: OrderType;
   symbolInfo: API.SymbolExt;
   values: {
@@ -793,7 +794,7 @@ const OrderQuantityInput = (props: {
   priceInputContainerWidth?: number;
   parseErrorMsg: (key: keyof OrderValidationResult) => string;
   fillMiddleValue: OrderEntryScriptReturn["fillMiddleValue"];
-}) => {
+}> = (props) => {
   const {
     type,
     symbolInfo,
@@ -892,7 +893,7 @@ const OrderQuantityInput = (props: {
       {type === OrderType.LIMIT || type === OrderType.STOP_LIMIT ? (
         <div
           ref={props.refs.priceInputContainerRef}
-          className="oui-relative oui-w-full oui-group"
+          className="oui-group oui-relative oui-w-full"
         >
           <CustomInput
             label={t("common.price")}
@@ -1043,9 +1044,9 @@ const CustomInput = forwardRef<
 
 CustomInput.displayName = "CustomInput";
 
-const InputLabel = (
-  props: PropsWithChildren<{ id: string; className?: string }>,
-) => {
+const InputLabel: React.FC<
+  PropsWithChildren<{ id: string; className?: string }>
+> = (props) => {
   return (
     <label
       htmlFor={props.id}
@@ -1061,7 +1062,7 @@ const InputLabel = (
 
 // ----------- Custom Input Component end ------------
 
-const QuantitySlider = (props: {
+const QuantitySlider: React.FC<{
   canTrade: boolean;
   side: OrderSide;
   value: number;
@@ -1071,7 +1072,7 @@ const QuantitySlider = (props: {
   dp: number;
   setMaxQty: () => void;
   onValueChange: (value: number) => void;
-}) => {
+}> = (props) => {
   const { canTrade } = props;
   const { t } = useTranslation();
 
@@ -1137,12 +1138,12 @@ const QuantitySlider = (props: {
 
 // -----------Order type Select Component start ------------
 
-const OrderTypeSelect = (props: {
+const OrderTypeSelect: React.FC<{
   type: OrderType;
   onChange: (type: OrderType) => void;
   side: OrderSide;
   canTrade: boolean;
-}) => {
+}> = (props) => {
   const { t } = useTranslation();
 
   const options = useMemo(() => {
@@ -1217,6 +1218,7 @@ const OrderTypeSelect = (props: {
 interface IconProps extends SVGProps<SVGSVGElement> {
   size: number;
 }
+
 const DeleteIcon: React.FC<IconProps> = (props) => {
   return (
     <svg
@@ -1473,7 +1475,7 @@ const AssetInfo: React.FC<{
   orderType: OrderType;
   disableFeatures?: ("slippageSetting" | "feesInfo")[];
 }> = (props) => {
-  const { canTrade } = props;
+  const { canTrade, disableFeatures, orderType } = props;
   const { t } = useTranslation();
 
   return (
@@ -1519,16 +1521,16 @@ const AssetInfo: React.FC<{
           {props.estLeverage ?? "--"}
         </Text.numeral> */}
       </Flex>
-      {props.orderType === OrderType.MARKET &&
-        !props.disableFeatures?.includes("slippageSetting") && (
+      {orderType === OrderType.MARKET &&
+        !disableFeatures?.includes("slippageSetting") && (
           <SlippageUI
             slippage={props.slippage}
             setSlippage={props.setSlippage}
             estSlippage={props.estSlippage}
           />
         )}
-
-      {!props.disableFeatures?.includes("feesInfo") && <FeesWidget />}
+      {!disableFeatures?.includes("feesInfo") && <FeesWidget />}
+      {!disableFeatures?.includes("feesInfo") && <EffectiveFeeWidget />}
     </div>
   );
 };
