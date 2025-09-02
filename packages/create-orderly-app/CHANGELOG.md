@@ -1,23 +1,5 @@
 # create-orderly-app
 
-## 1.11.2-internal-hotfix-avgPrice.2
-
-### Patch Changes
-
-- publish
-
-## 1.11.2-internal-hotfix-avgPrice.1
-
-### Patch Changes
-
-- publish
-
-## 1.11.2-internal-hotfix-avgPrice.0
-
-### Patch Changes
-
-- publish
-
 ## 1.11.1
 
 ### Patch Changes
