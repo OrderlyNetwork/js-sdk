@@ -1,7 +1,7 @@
-import { Checkbox, cn, Divider, Flex, Grid, Switch } from "@orderly.network/ui";
-import { OrderlyOrder, OrderType } from "@orderly.network/types";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useTranslation } from "@orderly.network/i18n";
+import { OrderlyOrder, OrderType } from "@orderly.network/types";
+import { Checkbox, cn, Divider, Flex, Grid, Switch } from "@orderly.network/ui";
 
 export type AdditionalInfoProps = {
   pinned: boolean;
@@ -15,7 +15,7 @@ export type AdditionalInfoProps = {
   setHidden: (value: boolean) => void;
 };
 
-export const AdditionalInfo = (props: AdditionalInfoProps) => {
+export const AdditionalInfo: React.FC<AdditionalInfoProps> = (props) => {
   const { pinned, orderTypeExtra } = props;
   const { t } = useTranslation();
 
@@ -23,7 +23,7 @@ export const AdditionalInfo = (props: AdditionalInfoProps) => {
     if (props.onValueChange) {
       props.onValueChange(
         "order_type_ext" as keyof OrderlyOrder,
-        checked ? type : ""
+        checked ? type : "",
         // orderTypeExtra === type ? "" : type
       );
     }
@@ -62,7 +62,7 @@ export const AdditionalInfo = (props: AdditionalInfoProps) => {
             htmlFor={"toggle_order_post_only"}
             className={cn(
               "oui-text-2xs oui-ml-1 peer-data-[disabled]:oui-text-base-contrast-20",
-              "oui-break-normal oui-whitespace-nowrap"
+              "oui-break-normal oui-whitespace-nowrap",
             )}
           >
             {t("orderEntry.orderType.postOnly")}
@@ -83,7 +83,7 @@ export const AdditionalInfo = (props: AdditionalInfoProps) => {
             htmlFor={"toggle_order_iov"}
             className={cn(
               "oui-text-2xs oui-ml-1 peer-data-[disabled]:oui-text-base-contrast-20",
-              "oui-break-normal oui-whitespace-nowrap"
+              "oui-break-normal oui-whitespace-nowrap",
             )}
           >
             {t("orderEntry.orderType.ioc")}
@@ -104,7 +104,7 @@ export const AdditionalInfo = (props: AdditionalInfoProps) => {
             htmlFor={"toggle_order_fok"}
             className={cn(
               "oui-text-2xs oui-ml-1 peer-data-[disabled]:oui-text-base-contrast-20",
-              "oui-break-normal oui-whitespace-nowrap"
+              "oui-break-normal oui-whitespace-nowrap",
             )}
           >
             {t("orderEntry.orderType.fok")}

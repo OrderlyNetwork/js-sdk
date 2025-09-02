@@ -1,15 +1,16 @@
+import React from "react";
 import {
   OrderEntryScriptInputs,
   useOrderEntryScript,
 } from "./orderEntry.script";
 import { OrderEntry } from "./orderEntry.ui";
 
-export const OrderEntryWidget = (
-  props: OrderEntryScriptInputs & {
+export const OrderEntryWidget: React.FC<
+  OrderEntryScriptInputs & {
     containerRef?: any;
     disableFeatures?: ("slippageSetting" | "feesInfo")[];
-  },
-) => {
+  }
+> = (props) => {
   const state = useOrderEntryScript(props);
   return (
     <OrderEntry

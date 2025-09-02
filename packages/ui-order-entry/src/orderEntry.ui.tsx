@@ -1455,13 +1455,12 @@ function AdvancedTPSLResult(props: {
       </Flex>
       {renderTp()}
       {renderSl()}
-
-      <Divider className="oui-w-full oui-mb-2" />
+      <Divider className="oui-mb-2 oui-w-full" />
     </Flex>
   );
 }
 
-function AssetInfo(props: {
+const AssetInfo: React.FC<{
   canTrade: boolean;
   quote: string;
   estLiqPrice: number | null;
@@ -1473,7 +1472,7 @@ function AssetInfo(props: {
   setSlippage: (slippage: string) => void;
   orderType: OrderType;
   disableFeatures?: ("slippageSetting" | "feesInfo")[];
-}) {
+}> = (props) => {
   const { canTrade } = props;
   const { t } = useTranslation();
 
@@ -1493,13 +1492,7 @@ function AssetInfo(props: {
       </Flex>
       <Flex justify={"between"}>
         <Text size={"2xs"}>{t("leverage.accountLeverage")}</Text>
-        <Flex
-          gapX={1}
-          className={textVariants({
-            size: "2xs",
-            intensity: 80,
-          })}
-        >
+        <Flex gapX={1} className={textVariants({ size: "2xs", intensity: 80 })}>
           <Text.numeral unit={canTrade ? "x" : undefined}>
             {canTrade ? (props.currentLeverage ?? "--") : "--"}
           </Text.numeral>
@@ -1518,7 +1511,6 @@ function AssetInfo(props: {
                   fillOpacity=".54"
                 />
               </svg>
-
               <span>{`${props.estLeverage}x`}</span>
             </>
           )}
@@ -1539,7 +1531,7 @@ function AssetInfo(props: {
       {!props.disableFeatures?.includes("feesInfo") && <FeesWidget />}
     </div>
   );
-}
+};
 
 const AdditionalConfigButton: React.FC<{
   pinned: boolean;
