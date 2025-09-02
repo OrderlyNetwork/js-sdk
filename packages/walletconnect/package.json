@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/web3-modal",
-  "version": "2.6.1",
+  "version": "2.6.2-internal-hotfix-avgPrice.2",
   "description": "",
   "private": true,
   "main": "dist/index.mjs",

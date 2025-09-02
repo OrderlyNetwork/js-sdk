@@ -54,9 +54,7 @@ export const useEditSheetScript = (props: {
     maxQty,
   });
 
-  useEffect(() => {
-    console.log("formattedOrder", order.price, formattedOrder.order_price);
-  }, [order.price, formattedOrder.order_price]);
+  useEffect(() => {}, [order.price, formattedOrder.order_price]);
 
   const onCloseDialog = useCallback(() => {
     setDialogOpen(false);
@@ -64,8 +62,6 @@ export const useEditSheetScript = (props: {
 
   const onSubmit = useCallback(
     async (values: OrderEntity) => {
-      console.log("formattedOrder", formattedOrder);
-
       let future;
       const isHidden =
         order.visible_quantity !== undefined
@@ -73,6 +69,14 @@ export const useEditSheetScript = (props: {
           : (order as any).visible !== undefined
             ? (order as any).visible === 0
             : false;
+
+      if (order.order_tag) {
+        values.order_tag = order.order_tag;
+      }
+
+      if (order.client_order_id) {
+        values.client_order_id = order.client_order_id;
+      }
 
       if (order.algo_order_id !== undefined) {
         if (isTrailingStop) {

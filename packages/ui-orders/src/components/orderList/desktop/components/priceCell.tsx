@@ -85,6 +85,10 @@ export const PriceCell = (props: {
       data.order_tag = order.order_tag;
     }
 
+    if (order.client_order_id) {
+      data.client_order_id = order.client_order_id;
+    }
+
     if (isAlgoOrder) {
       order_id = order.algo_order_id as number;
       data = {

@@ -7,10 +7,11 @@ import {
 } from "@orderly.network/types";
 import { useMarkPricesStream } from "../../orderly/useMarkPricesStream";
 import { useSymbolsInfo } from "../../orderly/useSymbolsInfo";
+import { useOrderlyContext } from "../../orderlyContext";
 import { useSubAccountMutation } from "../../subAccount";
 import { calculate } from "../../utils/orderEntryHelper";
 import { OrderValidationResult } from "../useOrderEntry";
-import { getOrderCreator } from "../useOrderEntry/helper";
+import { appendOrderMetadata, getOrderCreator } from "../useOrderEntry/helper";
 
 type PositionCloseOptions = {
   position: API.PositionExt;
@@ -32,6 +33,8 @@ export const usePositionClose = (options: PositionCloseOptions) => {
   const { data: markPrices } = useMarkPricesStream();
 
   const markPricesRef = useRef(markPrices);
+
+  const { orderMetadata } = useOrderlyContext();
 
   useEffect(() => {
     markPricesRef.current = markPrices;
@@ -127,7 +130,9 @@ export const usePositionClose = (options: PositionCloseOptions) => {
       throw errors;
     }
 
-    return doCreateOrder(closeOrderData)
+    const body = appendOrderMetadata(closeOrderData, orderMetadata);
+
+    return doCreateOrder(body)
       .then((res) => {
         if (res.success) {
           return res;
@@ -138,7 +143,7 @@ export const usePositionClose = (options: PositionCloseOptions) => {
       .catch((err) => {
         throw err;
       });
-  }, [validate, doCreateOrder, closeOrderData]);
+  }, [validate, doCreateOrder, closeOrderData, orderMetadata]);
 
   return {
     submit,

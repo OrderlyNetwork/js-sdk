@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   useCallback,
   useContext,
@@ -6,11 +8,11 @@ import {
   useRef,
   useState,
 } from "react";
-import { min } from "ramda";
 import { SDKError } from "@orderly.network/types";
-import { Decimal, removeTrailingZeros } from "@orderly.network/utils";
+import { Decimal } from "@orderly.network/utils";
 import { OrderlyContext } from "../orderlyContext";
 import { useEventEmitter } from "../useEventEmitter";
+import { useLocalStorage } from "../useLocalStorage";
 import { useWS } from "../useWS";
 import orderbooksService from "./orderbook.service";
 import { useMarkPrice } from "./useMarkPrice";
@@ -19,42 +21,38 @@ import { useTickerStream } from "./useTickerStream";
 
 export type OrderBookItem = number[];
 
-// const DEFAULT_DEPTH: Record<string, string> = {
-//   PERP_BTC_USDC: "1",
-//   PERP_ETH_USDC: "0.1",
-//   PERP_SOL_USDC: "0.01",
-// };
-
 export type OrderbookData = {
   asks: OrderBookItem[];
   bids: OrderBookItem[];
 };
 
 const paddingFn = (len: number) =>
-  Array(len).fill([
-    Number.NaN,
-    Number.NaN,
-    Number.NaN,
-    Number.NaN,
-  ] as OrderBookItem);
+  Array(len).fill([Number.NaN, Number.NaN, Number.NaN, Number.NaN]);
 
 const asksSortFn = (a: OrderBookItem, b: OrderBookItem) => a[0] - b[0];
 
 const bidsSortFn = (a: OrderBookItem, b: OrderBookItem) => b[0] - a[0];
 
-export const getPriceKey = (price: number, depth: number, asks: boolean) => {
-  return new Decimal(price)
+const isNumber = (val: unknown): val is number => {
+  return typeof val === "number" && !Number.isNaN(val);
+};
+
+export const getPriceKey = (
+  rawPrice: number,
+  depth: number,
+  isAsks: boolean,
+) => {
+  return new Decimal(rawPrice)
     .div(depth)
-    .toDecimalPlaces(0, asks ? Decimal.ROUND_CEIL : Decimal.ROUND_FLOOR)
+    .toDecimalPlaces(0, isAsks ? Decimal.ROUND_CEIL : Decimal.ROUND_FLOOR)
     .mul(depth)
     .toNumber();
 };
 
 const reduceItems = (
   depth: number | undefined,
-  level: number,
   data: OrderBookItem[],
-  asks = false,
+  isAsks: boolean,
 ) => {
   if (!Array.isArray(data) || data.length === 0) {
     return [];
@@ -63,91 +61,71 @@ const reduceItems = (
   const result: OrderBookItem[] = [];
 
   if (typeof depth !== "undefined") {
-    const prices = new Map<number, number[]>();
+    const pricesMap = new Map<number, [number, number, number]>();
     const len = data.length;
     for (let i = 0; i < len; i++) {
-      const [price, quantity] = data[i];
-      if (Number.isNaN(price) || Number.isNaN(quantity)) {
+      const [rawPrice, quantity] = data[i];
+      if (!isNumber(rawPrice) || !isNumber(quantity)) {
         continue;
       }
 
-      const priceKey = getPriceKey(price, depth, asks);
+      const priceKey = getPriceKey(rawPrice, depth, isAsks);
+      const amtByRaw = new Decimal(rawPrice).mul(quantity).toNumber();
 
-      // if (depth < 1 && depth > 0 && priceKey.toString().indexOf(".") !== -1) {
-      //   const priceStr = price.toString();
-      //   const index = priceStr.indexOf(".");
-      //   const decimal = priceStr.slice(index + 1);
-      //   const decimalDepth = removeTrailingZeros(depth)
-      //     .toString()
-      //     .slice(2).length;
-      //   const decimalStr = decimal.slice(0, min(decimal.length, decimalDepth));
-      //   priceKey = new Decimal(
-      //     priceStr.slice(0, index) + "." + decimalStr,
-      //   ).toNumber();
-      // }
-
-      if (prices.has(priceKey)) {
-        const item = prices.get(priceKey)!;
-        const itemPrice = new Decimal(item[1]).add(quantity).toNumber();
-
-        // prices.push([price, quantity]);
-        prices.set(priceKey, [priceKey, itemPrice]);
+      if (pricesMap.has(priceKey)) {
+        const item = pricesMap.get(priceKey)!;
+        const sumQty = new Decimal(item[1]).add(quantity).toNumber();
+        const sumAmtByRaw = new Decimal(item[2] ?? 0).add(amtByRaw).toNumber();
+        pricesMap.set(priceKey, [priceKey, sumQty, sumAmtByRaw]);
       } else {
-        prices.set(priceKey, [priceKey, quantity]);
+        pricesMap.set(priceKey, [priceKey, quantity, amtByRaw]);
       }
     }
 
-    newData = Array.from(prices.values());
+    newData = Array.from<[number, number, number]>(pricesMap.values());
   }
 
   for (let i = 0; i < newData.length; i++) {
-    const [price, quantity] = newData[i];
-    if (Number.isNaN(price) || Number.isNaN(quantity)) {
+    const [price, quantity, sumAmtByRaw] = newData[i];
+
+    if (!isNumber(price) || !isNumber(quantity)) {
       continue;
     }
 
+    const resLen = result.length;
+
     const newQuantity = new Decimal(quantity)
-      .add(result.length > 0 ? result[result.length - 1][2] : 0)
+      .add(resLen ? result[resLen - 1][2] : 0)
       .toNumber();
 
-    const newAmount = new Decimal(quantity * price)
-      .add(result.length > 0 ? result[result.length - 1][3] : 0)
+    const pieceAmount = isNumber(sumAmtByRaw)
+      ? sumAmtByRaw
+      : new Decimal(quantity).mul(price).toNumber();
+
+    const newAmount = new Decimal(pieceAmount)
+      .add(resLen ? result[resLen - 1][3] : 0)
       .toNumber();
 
     result.push([price, quantity, newQuantity, newAmount]);
-    // if the total is greater than the level, break
-    // TODO:
-    // if (i + 1 >= level) {
-    //   break;
-    // }
   }
 
   return result;
 };
 
-/**
- * @name reduceOrderbook
- * @param depth
- * @param level
- * @param data
- */
 export const reduceOrderbook = (
   depth: number | undefined,
   level: number,
   padding: boolean,
   data: OrderbookData,
 ): OrderbookData => {
-  let asks = reduceItems(depth, level, data.asks, true);
-
-  let bids = reduceItems(depth, level, data.bids);
+  let asks = reduceItems(depth, data.asks, true);
+  let bids = reduceItems(depth, data.bids, false);
 
   /// not empty and asks.price <= bids.price
   if (asks.length !== 0 && bids.length !== 0 && asks[0][0] <= bids[0][0]) {
-    //  TODO: add asks[0][0] === bids[0][0] condition?
     if (asks.length === 1) {
       const [price, qty, newQuantity, newAmount] = asks[0];
       asks.shift();
-
       asks.push([
         price + (depth === undefined ? 0 : Number(depth)),
         qty,
@@ -158,28 +136,24 @@ export const reduceOrderbook = (
       const [bidPrice] = bids[0];
       while (asks.length > 0) {
         const [askPrice, askQty, newQuantity, newAmount] = asks[0];
-
         if (askPrice <= bidPrice) {
-          // console.log("xxxxxxxxxxx reset ask list begin", [...asks], { ...asks[0] });
           asks.shift();
-          // let logStr = "";
-          for (let index = 0; index < asks.length; index++) {
-            if (index === 0) {
-              const quantity = asks[index][1] + askQty;
-              asks[index][1] = quantity;
-              asks[index][2] = quantity;
-              // asks[index][3] += newAmount;
-              // FIXME: fix this code later
-              asks[index][3] = Math.ceil(quantity) * asks[index][0];
+          for (let i = 0; i < asks.length; i++) {
+            if (i === 0) {
+              const quantity = new Decimal(asks[i][1]).add(askQty);
+              asks[i][1] = quantity.toNumber();
+              asks[i][2] = quantity.toNumber();
+              asks[i][3] = quantity
+                .toDecimalPlaces(0, Decimal.ROUND_CEIL)
+                .mul(asks[i][0])
+                .toNumber();
             } else {
-              // asks[index][3] += newAmount;
-              // FIXME: fix this code later
-              asks[index][3] =
-                asks[index][0] * asks[index][1] + asks[index - 1][3];
+              asks[i][3] = new Decimal(asks[i][0])
+                .mul(asks[i][1])
+                .add(asks[i - 1][3])
+                .toNumber();
             }
-            // logStr += `index: ${index} ${asks[index]}\n`;
           }
-          // console.log("xxxxxxxxxxx reset ask list end", logStr);
         } else {
           break;
         }
@@ -208,16 +182,16 @@ const mergeItems = (data: OrderBookItem[], update: OrderBookItem[]) => {
     return update;
   }
 
-  data = data.filter(([price]) => !Number.isNaN(price));
+  data = data.filter(([price]) => isNumber(price));
 
   while (update.length > 0) {
     const item = update.shift();
-    //
+
     if (item) {
       const [price, quantity] = item;
 
       const index = data.findIndex(([p]) => p === price);
-      //
+
       if (index === -1) {
         if (quantity === 0) {
           continue;
@@ -259,13 +233,14 @@ export type OrderbookOptions = {
   padding?: boolean;
 };
 
+export const ORDERLY_ORDERBOOK_DEPTH_KEY = "orderly_orderbook_depth_key";
+
 const INIT_DATA: OrderbookData = {
   asks: [],
   bids: [],
 };
 
 /**
- * @name useOrderbookStream
  * @description React hook that returns the current orderbook for a given market
  */
 export const useOrderbookStream = (
@@ -279,7 +254,8 @@ export const useOrderbookStream = (
 
   const level = options?.level ?? 10;
   const padding = options?.padding ?? true;
-  const symbolRef = useRef(symbol);
+
+  const symbolRef = useRef<string>(symbol);
 
   symbolRef.current = symbol;
 
@@ -294,7 +270,10 @@ export const useOrderbookStream = (
 
   const config = useSymbolsInfo()[symbol];
 
-  const [depth, setDepth] = useState<number | undefined>();
+  const [depthObject, setDepthObject] = useLocalStorage(
+    ORDERLY_ORDERBOOK_DEPTH_KEY,
+    {},
+  );
 
   // markPrice, lastPrice
   const prevMiddlePrice = useRef<number>(0);
@@ -323,12 +302,31 @@ export const useOrderbookStream = (
   }, [symbol, tick]);
 
   useEffect(() => {
-    if (DEFAULT_TICK_SIZES[symbol]) {
-      setDepth(Number(DEFAULT_TICK_SIZES[symbol]));
-    } else {
-      setDepth(tick);
+    if (depthObject[symbol]) {
+      return;
     }
-  }, [tick, symbol, DEFAULT_TICK_SIZES]);
+    if (DEFAULT_TICK_SIZES[symbol]) {
+      // @ts-ignore
+      setDepthObject((prev) => ({
+        ...prev,
+        [symbol]: Number(DEFAULT_TICK_SIZES[symbol]),
+      }));
+    } else {
+      // @ts-ignore
+      setDepthObject((prev) => ({
+        ...prev,
+        [symbol]: tick,
+      }));
+    }
+  }, [depthObject, tick, symbol, DEFAULT_TICK_SIZES]);
+
+  const onDepthChange = useCallback(
+    (val: number) => {
+      // @ts-ignore
+      setDepthObject((prev) => ({ ...prev, [symbol]: val }));
+    },
+    [symbol],
+  );
 
   const ws = useWS();
 
@@ -362,7 +360,9 @@ export const useOrderbookStream = (
           orderbooksService.updateOrderbook(
             symbol,
             { asks, bids, ts, prevTs },
-            () => (needRequestFullOrderbook = true),
+            () => {
+              needRequestFullOrderbook = true;
+            },
           );
 
           const data = orderbooksService.getRawOrderbook(symbol);
@@ -419,13 +419,9 @@ export const useOrderbookStream = (
     eventEmitter.emit("orderbook:item:click", item);
   }, []);
 
-  const onDepthChange = useCallback((depth: number) => {
-    setDepth(() => depth);
-  }, []);
-
-  const reducedData = reduceOrderbook(depth, level, padding, {
-    asks: [...data.asks],
-    bids: [...data.bids],
+  const reducedData = reduceOrderbook(depthObject[symbol], level, padding, {
+    asks: data.asks,
+    bids: data.bids,
   });
 
   useEffect(() => {
@@ -444,7 +440,7 @@ export const useOrderbookStream = (
       bidsFirst = data.bids[0][0];
     }
 
-    if (Number.isNaN(asksFrist) || Number.isNaN(bidsFirst) || !ticker) {
+    if (!isNumber(asksFrist) || !isNumber(bidsFirst) || !ticker) {
       return 0;
     }
 
@@ -462,7 +458,13 @@ export const useOrderbookStream = (
       markPrice: markPrice,
       middlePrice: [prevMiddlePrice.current, middlePrice],
     },
-    { onDepthChange, depth, allDepths: depths, isLoading, onItemClick },
+    {
+      onDepthChange: onDepthChange,
+      depth: depthObject[symbol] as number,
+      allDepths: depths,
+      isLoading,
+      onItemClick,
+    },
   ];
 };
 

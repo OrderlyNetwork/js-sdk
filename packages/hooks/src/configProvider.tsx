@@ -54,6 +54,7 @@ export type BaseConfigProviderProps = {
   | "dataAdapter"
   | "notification"
   | "amplitudeConfig"
+  | "orderMetadata"
 >;
 
 export type ExclusiveConfigProviderProps =
@@ -96,6 +97,7 @@ export const OrderlyConfigProvider: FC<
     orderbookDefaultTickSizes,
     orderbookDefaultSymbolDepths,
     children,
+    orderMetadata,
   } = props;
 
   if (!brokerId && typeof configStore === "undefined") {
@@ -196,6 +198,7 @@ export const OrderlyConfigProvider: FC<
       dataAdapter,
       notification: notification,
       amplitudeConfig,
+      orderMetadata,
     };
   }, [
     innerConfigStore,
@@ -211,6 +214,7 @@ export const OrderlyConfigProvider: FC<
     notification,
     chainTransformer,
     amplitudeConfig,
+    orderMetadata,
   ]);
 
   if (!account) {

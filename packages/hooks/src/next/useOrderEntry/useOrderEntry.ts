@@ -20,6 +20,7 @@ import {
 } from "../../orderly/orderlyHooks";
 import { useMarkPriceActions } from "../../orderly/useMarkPrice/useMarkPriceStore";
 import { usePositions } from "../../orderly/usePositionStream/usePosition.store";
+import { useOrderlyContext } from "../../orderlyContext";
 import { OrderValidationResult } from "../../services/orderCreator/interface";
 import { useMemoizedFn } from "../../shared/useMemoizedFn";
 import { useEventEmitter } from "../../useEventEmitter";
@@ -34,6 +35,7 @@ import {
   tpslFields,
   hasTPSL,
   isBBOOrder,
+  appendOrderMetadata,
 } from "./helper";
 import type { FullOrderState } from "./orderEntry.store";
 import { useOrderEntryNextInternal } from "./useOrderEntry.internal";
@@ -191,6 +193,8 @@ const useOrderEntry = (
 
   const symbolInfo: API.SymbolExt = symbolConfig[symbol]();
   const markPrice = actions.getMarkPriceBySymbol(symbol);
+
+  const { orderMetadata } = useOrderlyContext();
 
   const {
     formattedOrder,
@@ -626,11 +630,14 @@ const useOrderEntry = (
     }
 
     const order = generateOrder(creator, prepareData());
-    console.log("xxx -- order", order);
 
     const isScaledOrder = order.order_type === OrderType.SCALED;
 
-    const params = isScaledOrder ? { orders: order.orders } : order;
+    const params = isScaledOrder
+      ? {
+          orders: appendOrderMetadata(order.orders, orderMetadata),
+        }
+      : appendOrderMetadata(order, orderMetadata);
 
     const result = await doCreateOrder(params);
 

@@ -1,5 +1,116 @@
 # storybook
 
+## 1.6.2-internal-hotfix-avgPrice.2
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/affiliate@2.6.2-internal-hotfix-avgPrice.2
+  - @orderly.network/react-app@2.6.2-internal-hotfix-avgPrice.2
+  - @orderly.network/chart@2.6.2-internal-hotfix-avgPrice.2
+  - @orderly.network/core@2.6.2-internal-hotfix-avgPrice.2
+  - @orderly.network/default-evm-adapter@2.6.2-internal-hotfix-avgPrice.2
+  - @orderly.network/default-solana-adapter@2.6.2-internal-hotfix-avgPrice.2
+  - @orderly.network/hooks@2.6.2-internal-hotfix-avgPrice.2
+  - @orderly.network/i18n@2.6.2-internal-hotfix-avgPrice.2
+  - @orderly.network/markets@2.6.2-internal-hotfix-avgPrice.2
+  - @orderly.network/portfolio@2.6.2-internal-hotfix-avgPrice.2
+  - @orderly.network/trading@2.6.2-internal-hotfix-avgPrice.2
+  - @orderly.network/trading-leaderboard@2.6.2-internal-hotfix-avgPrice.2
+  - @orderly.network/trading-rewards@2.6.2-internal-hotfix-avgPrice.2
+  - @orderly.network/types@2.6.2-internal-hotfix-avgPrice.2
+  - @orderly.network/ui@2.6.2-internal-hotfix-avgPrice.2
+  - @orderly.network/ui-chain-selector@2.6.2-internal-hotfix-avgPrice.2
+  - @orderly.network/ui-connector@2.6.2-internal-hotfix-avgPrice.2
+  - @orderly.network/ui-leverage@2.6.2-internal-hotfix-avgPrice.2
+  - @orderly.network/ui-order-entry@2.6.2-internal-hotfix-avgPrice.2
+  - @orderly.network/ui-orders@2.6.2-internal-hotfix-avgPrice.2
+  - @orderly.network/ui-positions@2.6.2-internal-hotfix-avgPrice.2
+  - @orderly.network/ui-scaffold@2.6.2-internal-hotfix-avgPrice.2
+  - @orderly.network/ui-share@2.6.2-internal-hotfix-avgPrice.2
+  - @orderly.network/ui-tpsl@2.6.2-internal-hotfix-avgPrice.2
+  - @orderly.network/ui-tradingview@2.6.2-internal-hotfix-avgPrice.2
+  - @orderly.network/ui-transfer@2.6.2-internal-hotfix-avgPrice.2
+  - @orderly.network/utils@2.6.2-internal-hotfix-avgPrice.2
+  - @orderly.network/vaults@2.6.2-internal-hotfix-avgPrice.2
+  - @orderly.network/wallet-connector@2.6.2-internal-hotfix-avgPrice.2
+  - @orderly.network/wallet-connector-privy@2.6.2-internal-hotfix-avgPrice.2
+
+## 1.6.2-internal-hotfix-avgPrice.1
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/affiliate@2.6.2-internal-hotfix-avgPrice.1
+  - @orderly.network/react-app@2.6.2-internal-hotfix-avgPrice.1
+  - @orderly.network/chart@2.6.2-internal-hotfix-avgPrice.1
+  - @orderly.network/core@2.6.2-internal-hotfix-avgPrice.1
+  - @orderly.network/default-evm-adapter@2.6.2-internal-hotfix-avgPrice.1
+  - @orderly.network/default-solana-adapter@2.6.2-internal-hotfix-avgPrice.1
+  - @orderly.network/hooks@2.6.2-internal-hotfix-avgPrice.1
+  - @orderly.network/i18n@2.6.2-internal-hotfix-avgPrice.1
+  - @orderly.network/markets@2.6.2-internal-hotfix-avgPrice.1
+  - @orderly.network/portfolio@2.6.2-internal-hotfix-avgPrice.1
+  - @orderly.network/trading@2.6.2-internal-hotfix-avgPrice.1
+  - @orderly.network/trading-leaderboard@2.6.2-internal-hotfix-avgPrice.1
+  - @orderly.network/trading-rewards@2.6.2-internal-hotfix-avgPrice.1
+  - @orderly.network/types@2.6.2-internal-hotfix-avgPrice.1
+  - @orderly.network/ui@2.6.2-internal-hotfix-avgPrice.1
+  - @orderly.network/ui-chain-selector@2.6.2-internal-hotfix-avgPrice.1
+  - @orderly.network/ui-connector@2.6.2-internal-hotfix-avgPrice.1
+  - @orderly.network/ui-leverage@2.6.2-internal-hotfix-avgPrice.1
+  - @orderly.network/ui-order-entry@2.6.2-internal-hotfix-avgPrice.1
+  - @orderly.network/ui-orders@2.6.2-internal-hotfix-avgPrice.1
+  - @orderly.network/ui-positions@2.6.2-internal-hotfix-avgPrice.1
+  - @orderly.network/ui-scaffold@2.6.2-internal-hotfix-avgPrice.1
+  - @orderly.network/ui-share@2.6.2-internal-hotfix-avgPrice.1
+  - @orderly.network/ui-tpsl@2.6.2-internal-hotfix-avgPrice.1
+  - @orderly.network/ui-tradingview@2.6.2-internal-hotfix-avgPrice.1
+  - @orderly.network/ui-transfer@2.6.2-internal-hotfix-avgPrice.1
+  - @orderly.network/utils@2.6.2-internal-hotfix-avgPrice.1
+  - @orderly.network/vaults@2.6.2-internal-hotfix-avgPrice.1
+  - @orderly.network/wallet-connector@2.6.2-internal-hotfix-avgPrice.1
+  - @orderly.network/wallet-connector-privy@2.6.2-internal-hotfix-avgPrice.1
+
+## 1.6.2-internal-hotfix-avgPrice.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/affiliate@2.6.2-internal-hotfix-avgPrice.0
+  - @orderly.network/react-app@2.6.2-internal-hotfix-avgPrice.0
+  - @orderly.network/chart@2.6.2-internal-hotfix-avgPrice.0
+  - @orderly.network/core@2.6.2-internal-hotfix-avgPrice.0
+  - @orderly.network/default-evm-adapter@2.6.2-internal-hotfix-avgPrice.0
+  - @orderly.network/default-solana-adapter@2.6.2-internal-hotfix-avgPrice.0
+  - @orderly.network/hooks@2.6.2-internal-hotfix-avgPrice.0
+  - @orderly.network/i18n@2.6.2-internal-hotfix-avgPrice.0
+  - @orderly.network/markets@2.6.2-internal-hotfix-avgPrice.0
+  - @orderly.network/portfolio@2.6.2-internal-hotfix-avgPrice.0
+  - @orderly.network/trading@2.6.2-internal-hotfix-avgPrice.0
+  - @orderly.network/trading-leaderboard@2.6.2-internal-hotfix-avgPrice.0
+  - @orderly.network/trading-rewards@2.6.2-internal-hotfix-avgPrice.0
+  - @orderly.network/types@2.6.2-internal-hotfix-avgPrice.0
+  - @orderly.network/ui@2.6.2-internal-hotfix-avgPrice.0
+  - @orderly.network/ui-chain-selector@2.6.2-internal-hotfix-avgPrice.0
+  - @orderly.network/ui-connector@2.6.2-internal-hotfix-avgPrice.0
+  - @orderly.network/ui-leverage@2.6.2-internal-hotfix-avgPrice.0
+  - @orderly.network/ui-order-entry@2.6.2-internal-hotfix-avgPrice.0
+  - @orderly.network/ui-orders@2.6.2-internal-hotfix-avgPrice.0
+  - @orderly.network/ui-positions@2.6.2-internal-hotfix-avgPrice.0
+  - @orderly.network/ui-scaffold@2.6.2-internal-hotfix-avgPrice.0
+  - @orderly.network/ui-share@2.6.2-internal-hotfix-avgPrice.0
+  - @orderly.network/ui-tpsl@2.6.2-internal-hotfix-avgPrice.0
+  - @orderly.network/ui-tradingview@2.6.2-internal-hotfix-avgPrice.0
+  - @orderly.network/ui-transfer@2.6.2-internal-hotfix-avgPrice.0
+  - @orderly.network/utils@2.6.2-internal-hotfix-avgPrice.0
+  - @orderly.network/vaults@2.6.2-internal-hotfix-avgPrice.0
+  - @orderly.network/wallet-connector@2.6.2-internal-hotfix-avgPrice.0
+  - @orderly.network/wallet-connector-privy@2.6.2-internal-hotfix-avgPrice.0
+
 ## 1.6.1
 
 ### Patch Changes

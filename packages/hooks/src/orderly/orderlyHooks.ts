@@ -1,4 +1,8 @@
-export { useOrderbookStream, getPriceKey } from "./useOrderbookStream";
+export {
+  useOrderbookStream,
+  getPriceKey,
+  ORDERLY_ORDERBOOK_DEPTH_KEY,
+} from "./useOrderbookStream";
 export type {
   OrderbookData,
   OrderBookItem,

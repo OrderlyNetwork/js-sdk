@@ -243,6 +243,7 @@ export interface OrderEntity extends ScaledOrder, TrailingStopOrder {
   isStopOrder?: boolean;
   trigger_price?: string;
   order_tag?: string;
+  client_order_id?: string;
   level?: OrderLevel;
 }
 
