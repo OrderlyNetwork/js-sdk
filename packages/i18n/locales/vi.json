@@ -191,6 +191,7 @@
   "portfolio.feeTier.column.stakingLevel": "Cấp độ staking",
   "portfolio.feeTier.column.maker": "Maker",
   "portfolio.feeTier.column.taker": "Taker",
+  "portfolio.feeTier.effectiveFee.tooltip": "Tỷ lệ phí hiệu dụng sau khi áp dụng khoản giảm phí giới thiệu của bạn",
   "portfolio.apiKey.accountId.copied": "Đã sao chép ID tài khoản",
   "portfolio.apiKey.uid": "UID",
   "portfolio.apiKey.secretKey": "Khóa bí mật",

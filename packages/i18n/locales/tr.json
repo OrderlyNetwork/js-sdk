@@ -191,6 +191,7 @@
   "portfolio.feeTier.column.stakingLevel": "Stake seviyesi",
   "portfolio.feeTier.column.maker": "Veren",
   "portfolio.feeTier.column.taker": "Alıcı",
+  "portfolio.feeTier.effectiveFee.tooltip": "Yönlendirme iadeniz uygulandıktan sonraki efektif komisyon oranı",
   "portfolio.apiKey.accountId.copied": "Hesap ID kopyalandı",
   "portfolio.apiKey.uid": "UID",
   "portfolio.apiKey.secretKey": "Gizli anahtar",

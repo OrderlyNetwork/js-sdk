@@ -191,6 +191,7 @@
   "portfolio.feeTier.column.stakingLevel": "스테이킹 레벨",
   "portfolio.feeTier.column.maker": "메이커",
   "portfolio.feeTier.column.taker": "테이커",
+  "portfolio.feeTier.effectiveFee.tooltip": "추천 리베이트 적용 후의 실효 수수료율",
   "portfolio.apiKey.accountId.copied": "계정 ID 복사됨",
   "portfolio.apiKey.uid": "UID",
   "portfolio.apiKey.secretKey": "비밀 키",

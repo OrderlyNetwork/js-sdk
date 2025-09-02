@@ -191,6 +191,7 @@
   "portfolio.feeTier.column.stakingLevel": "ステーキングレベル",
   "portfolio.feeTier.column.maker": "メイカー",
   "portfolio.feeTier.column.taker": "テイカー",
+  "portfolio.feeTier.effectiveFee.tooltip": "紹介リベート適用後の実効手数料率",
   "portfolio.apiKey.accountId.copied": "アカウントIDをコピーしました",
   "portfolio.apiKey.uid": "UID",
   "portfolio.apiKey.secretKey": "シークレットキー",

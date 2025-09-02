@@ -191,6 +191,7 @@
   "portfolio.feeTier.column.stakingLevel": "质押等级",
   "portfolio.feeTier.column.maker": "挂单",
   "portfolio.feeTier.column.taker": "吃单",
+  "portfolio.feeTier.effectiveFee.tooltip": "应用推荐返佣后的有效费率",
   "portfolio.apiKey.accountId.copied": "账户ID已复制",
   "portfolio.apiKey.uid": "用户ID",
   "portfolio.apiKey.secretKey": "密钥",

@@ -191,6 +191,7 @@
   "portfolio.feeTier.column.stakingLevel": "Nível de staking",
   "portfolio.feeTier.column.maker": "Maker",
   "portfolio.feeTier.column.taker": "Taker",
+  "portfolio.feeTier.effectiveFee.tooltip": "Taxa de comissão efetiva após aplicar seu desconto de indicação",
   "portfolio.apiKey.accountId.copied": "ID da conta copiado",
   "portfolio.apiKey.uid": "UID",
   "portfolio.apiKey.secretKey": "Chave secreta",

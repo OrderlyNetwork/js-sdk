@@ -191,6 +191,7 @@
   "portfolio.feeTier.column.stakingLevel": "Уровень стейкинга",
   "portfolio.feeTier.column.maker": "Мейкер",
   "portfolio.feeTier.column.taker": "Тейкер",
+  "portfolio.feeTier.effectiveFee.tooltip": "Эффективная ставка комиссии после применения вашей реферальной скидки",
   "portfolio.apiKey.accountId.copied": "ID аккаунта скопирован",
   "portfolio.apiKey.uid": "UID",
   "portfolio.apiKey.secretKey": "Секретный ключ",

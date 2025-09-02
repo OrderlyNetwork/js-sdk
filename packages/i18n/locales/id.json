@@ -191,6 +191,7 @@
   "portfolio.feeTier.column.stakingLevel": "Tingkat staking",
   "portfolio.feeTier.column.maker": "Maker",
   "portfolio.feeTier.column.taker": "Taker",
+  "portfolio.feeTier.effectiveFee.tooltip": "Tarif biaya efektif setelah menerapkan diskon referral Anda",
   "portfolio.apiKey.accountId.copied": "ID akun disalin",
   "portfolio.apiKey.uid": "UID",
   "portfolio.apiKey.secretKey": "Kunci rahasia",

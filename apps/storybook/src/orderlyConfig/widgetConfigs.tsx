@@ -11,28 +11,7 @@ import {
 } from "@orderly.network/ui";
 import { SpecialFee } from "./icons";
 
-const info = `GODMODE ACTIVATED. ENJOY 0% MAKER AND 0.01% TAKER FEES ACROSS ALL TIERS UNTIL AUGUST 31.`;
-
-const SpecialFeeSection: React.FC = () => {
-  const { isMobile } = useScreen();
-  if (isMobile) {
-    return (
-      <SpecialFee
-        onClick={() => modal.dialog({ title: "Tips", content: info })}
-      />
-    );
-  }
-  return (
-    <Tooltip
-      content={info}
-      className="oui-w-72 oui-max-w-72 oui-p-1 oui-text-base-contrast-54"
-    >
-      <SpecialFee className={"oui-cursor-pointer"} />
-    </Tooltip>
-  );
-};
-
-const specialFeeIsActive = true; // mock for sdk
+const specialFeeIsActive = false; // mock for sdk
 
 export const widgetConfigs: OrderlyAppProviderProps["widgetConfigs"] = {
   scanQRCode: {
@@ -48,14 +27,7 @@ export const widgetConfigs: OrderlyAppProviderProps["widgetConfigs"] = {
   orderEntry: specialFeeIsActive
     ? {
         fees: {
-          trailing: (original) => {
-            return (
-              <Flex itemAlign="center" justify="between" width={"100%"} gap={1}>
-                {original}
-                <SpecialFeeSection />
-              </Flex>
-            );
-          },
+          // trailing: (original) => original,
         },
       }
     : undefined,

@@ -191,6 +191,7 @@
   "portfolio.feeTier.column.stakingLevel": "Livello di staking",
   "portfolio.feeTier.column.maker": "Maker",
   "portfolio.feeTier.column.taker": "Taker",
+  "portfolio.feeTier.effectiveFee.tooltip": "Aliquota di commissione effettiva dopo l'applicazione del tuo sconto referral",
   "portfolio.apiKey.accountId.copied": "ID account copiato",
   "portfolio.apiKey.uid": "UID",
   "portfolio.apiKey.secretKey": "Chiave segreta",

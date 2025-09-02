@@ -191,6 +191,7 @@
   "portfolio.feeTier.column.stakingLevel": "Niveau de staking",
   "portfolio.feeTier.column.maker": "Maker",
   "portfolio.feeTier.column.taker": "Taker",
+  "portfolio.feeTier.effectiveFee.tooltip": "Taux de frais effectif après application de votre remise de parrainage",
   "portfolio.apiKey.accountId.copied": "ID de compte copié",
   "portfolio.apiKey.uid": "UID",
   "portfolio.apiKey.secretKey": "Clé secrète",

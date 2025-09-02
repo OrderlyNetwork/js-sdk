@@ -191,6 +191,7 @@
   "portfolio.feeTier.column.stakingLevel": "Рівень стейкінгу",
   "portfolio.feeTier.column.maker": "Мейкер",
   "portfolio.feeTier.column.taker": "Тейкер",
+  "portfolio.feeTier.effectiveFee.tooltip": "Ефективна ставка комісії після застосування вашої реферальної знижки",
   "portfolio.apiKey.accountId.copied": "ID рахунку скопійовано",
   "portfolio.apiKey.uid": "UID",
   "portfolio.apiKey.secretKey": "Секретний ключ",
