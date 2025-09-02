@@ -1,25 +1,40 @@
 import { useMemo } from "react";
-import { useAccountInfo } from "@orderly.network/hooks";
+import { usePrivateQuery } from "@orderly.network/hooks";
+import type { RefferalAPI } from "@orderly.network/hooks";
 import { Decimal } from "@orderly.network/utils";
 
+const ORDERLY_TAKER_FEE = 0.0001; // (0.01%)
+const ORDERLY_MAKER_FEE = 0; // (0%)
+
 export const useFeesScript = () => {
-  const { data } = useAccountInfo();
+  const { data, isLoading } = usePrivateQuery<RefferalAPI.ReferralInfo>(
+    "/v1/referral/info",
+    {
+      revalidateOnFocus: true,
+    },
+  );
+
+  const rebateRate = data?.referee_info?.referee_rebate_rate;
 
   const takerFeeRate = useMemo(() => {
-    const value = data?.futures_taker_fee_rate;
-    if (typeof value === "undefined") {
+    if (isLoading) {
       return undefined;
     }
-    return `${new Decimal(value).mul(0.01).toString()}%`;
-  }, [data]);
+    if (typeof rebateRate === "undefined" || rebateRate === null) {
+      return undefined;
+    }
+    // return `${new Decimal(rebateRate).mul(0.01).toString()}%`;
+  }, [rebateRate, isLoading]);
 
   const makerFeeRate = useMemo(() => {
-    const value = data?.futures_maker_fee_rate;
-    if (typeof value === "undefined") {
+    if (isLoading) {
       return undefined;
     }
-    return `${new Decimal(value).mul(0.01).toString()}%`;
-  }, [data]);
+    if (typeof rebateRate === "undefined" || rebateRate === null) {
+      return undefined;
+    }
+    // return `${new Decimal(rebateRate).mul(0.01).toString()}%`;
+  }, [rebateRate, isLoading]);
 
   return { takerFeeRate, makerFeeRate } as const;
 };

@@ -12,6 +12,7 @@ export { useBoolean } from "./useBoolean";
 export { useUpdatedRef } from "./shared/useUpdatedRef";
 export { useMemoizedFn } from "./shared/useMemoizedFn";
 export { useAudioPlayer } from "./shared/useAudio";
+export { useReferralInfo, type RefferalAPI } from "./referral";
 
 export { useAccount } from "./useAccount";
 export { type SubAccount } from "@orderly.network/core";

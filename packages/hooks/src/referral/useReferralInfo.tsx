@@ -2,7 +2,7 @@ import { useCallback, useMemo } from "react";
 import { useSubAccountQuery } from "../subAccount/useSubAccountQuery";
 import { useAccount } from "../useAccount";
 import { useLocalStorage } from "../useLocalStorage";
-import { RefferalAPI } from "./api";
+import type { RefferalAPI } from "./api";
 
 export const useReferralInfo = (): {
   data?: RefferalAPI.ReferralInfo;

@@ -48,14 +48,6 @@ export const dataSource: FeeDataType[] = [
   {
     tier: 7,
     volume_min: 100000000,
-    volume_max: 275000000,
-    or: "/",
-    maker_fee: "0.000%",
-    taker_fee: "0.015%",
-  },
-  {
-    tier: 8,
-    volume_min: 275000000,
     volume_max: undefined,
     or: "/",
     maker_fee: "0.000%",
