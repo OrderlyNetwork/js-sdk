@@ -534,7 +534,10 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
     >
       {!max4XL && marketsView}
       <SplitLayout
-        className="oui-flex oui-flex-1 oui-overflow-hidden"
+        className={cn(
+          "oui-flex oui-flex-1 oui-overflow-hidden",
+          // layout === "left" ? "oui-flex-row-reverse" : "oui-flex-row",
+        )}
         onSizeChange={onSizeChange}
         disable={!horizontalDraggable}
       >

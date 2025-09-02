@@ -1,4 +1,4 @@
-import { useContext, useRef } from "react";
+import { useContext } from "react";
 import useConstant from "use-constant";
 import { Account, AccountState, SimpleDI } from "@orderly.network/core";
 import { WS } from "@orderly.network/net";
@@ -21,11 +21,10 @@ export const useWS = () => {
         networkId: configStore.get("networkId"),
         publicUrl: configStore.get("publicWsUrl"),
         privateUrl: configStore.get("privateWsUrl"),
-        onSigntureRequest: async (accountId: string) => {
+        onSigntureRequest: async () => {
           const signer = account.signer;
           const timestamp = getTimestamp();
           const result = await signer.signText(timestamp.toString());
-
           return { ...result, timestamp };
         },
       });

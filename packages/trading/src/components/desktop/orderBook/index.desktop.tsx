@@ -98,15 +98,15 @@ export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
           onChange={onDepthChange}
         />
         <DesktopHeader quote={quote} base={base} />
-        <DesktopAsks data={[...props.asks]} />
+        <DesktopAsks data={props.asks ?? EMPTY_LIST} />
         <DesktopMarkPrice
           lastPrice={lastPrice}
           markPrice={markPrice}
-          asks={[...props.asks]}
-          bids={[...props.bids]}
+          asks={props.asks ?? EMPTY_LIST}
+          bids={props.bids ?? EMPTY_LIST}
           symbolInfo={props.symbolInfo}
         />
-        <DesktopBids data={[...props.bids]} />
+        <DesktopBids data={props.bids ?? EMPTY_LIST} />
         {isLoading && (
           <div className="oui-bg-bg-8/70 oui-absolute oui-inset-0 oui-z-10 oui-flex oui-items-center oui-justify-center">
             <Spinner />

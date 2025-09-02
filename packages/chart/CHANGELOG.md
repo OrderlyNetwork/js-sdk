@@ -1,5 +1,35 @@
 # @orderly.network/chart
 
+## 2.6.2-internal-hotfix-avgPrice.2
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/i18n@2.6.2-internal-hotfix-avgPrice.2
+  - @orderly.network/ui@2.6.2-internal-hotfix-avgPrice.2
+  - @orderly.network/utils@2.6.2-internal-hotfix-avgPrice.2
+
+## 2.6.2-internal-hotfix-avgPrice.1
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/i18n@2.6.2-internal-hotfix-avgPrice.1
+  - @orderly.network/ui@2.6.2-internal-hotfix-avgPrice.1
+  - @orderly.network/utils@2.6.2-internal-hotfix-avgPrice.1
+
+## 2.6.2-internal-hotfix-avgPrice.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/i18n@2.6.2-internal-hotfix-avgPrice.0
+  - @orderly.network/ui@2.6.2-internal-hotfix-avgPrice.0
+  - @orderly.network/utils@2.6.2-internal-hotfix-avgPrice.0
+
 ## 2.6.1
 
 ### Patch Changes
