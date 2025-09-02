@@ -77,7 +77,7 @@ export const useColumn = (config: ColumnConfig) => {
               >
                 {`${value.split("_")[1]}-PERP`}
               </Text.formatted>
-              <LeverageBadge symbol={value} />
+              <LeverageBadge symbol={value} leverage={record.leverage} />
             </Flex>
           </Flex>
         ),

@@ -81,7 +81,7 @@ export const AddIcon = (props: { positionType: PositionType }) => {
   return (
     <Text
       className={cn(
-        "oui-text-base-contrast oui-cursor-pointer",
+        "oui-cursor-pointer oui-text-base-contrast",
         isMobile && "oui-text-base-contrast-80",
       )}
       onClick={onAdd}
@@ -91,12 +91,25 @@ export const AddIcon = (props: { positionType: PositionType }) => {
   );
 };
 
-export const LeverageBadge = ({ symbol }: { symbol: string }) => {
+export const LeverageBadge = ({
+  symbol,
+  leverage,
+}: {
+  symbol: string;
+  leverage: number;
+}) => {
   if (!symbol) return null;
+
   return (
     <div className="oui-flex oui-h-[18px] oui-items-center oui-gap-1 oui-rounded oui-bg-white/[0.06] oui-px-2 oui-text-2xs oui-font-semibold oui-text-base-contrast-36">
       <Text>Cross</Text>
-      <LeverageDisplay symbol={symbol} />
+      {leverage ? (
+        <Text.numeral dp={0} size="2xs" unit="X">
+          {leverage}
+        </Text.numeral>
+      ) : (
+        <LeverageDisplay symbol={symbol} />
+      )}
     </div>
   );
 };
