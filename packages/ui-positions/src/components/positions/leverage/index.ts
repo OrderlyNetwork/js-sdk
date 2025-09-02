@@ -1,6 +1,6 @@
 export {
-  LeverageDialogWidget,
+  SymbolLeverageWidget,
   AdjustLeverageSheetId,
   AdjustLeverageDialogId,
-  type LeverageDialogProps,
+  type SymbolLeverageWidgetProps,
 } from "./leverage.widget";

@@ -7,11 +7,13 @@ import {
   useSymbolLeverageScript,
 } from "./leverage.script";
 
-export type LeverageDialogProps = {
+export type SymbolLeverageWidgetProps = {
   close?: () => void;
 } & SymbolLeverageScriptOptions;
 
-export const LeverageDialogWidget: React.FC<LeverageDialogProps> = (props) => {
+export const SymbolLeverageWidget: React.FC<SymbolLeverageWidgetProps> = (
+  props,
+) => {
   const state = useSymbolLeverageScript({
     close: props?.close,
     leverageLevers: props?.leverageLevers,
@@ -27,7 +29,7 @@ export const AdjustLeverageSheetId = "AdjustLeverageSheetId";
 export const AdjustLeverageDialogId = "AdjustLeverageDialogId";
 
 // Register sheet version for mobile
-registerSimpleSheet(AdjustLeverageSheetId, LeverageDialogWidget, {
+registerSimpleSheet(AdjustLeverageSheetId, SymbolLeverageWidget, {
   title: () => i18n.t("leverage.maxAccountLeverage"),
   classNames: {
     content: "oui-p-4",
@@ -35,7 +37,7 @@ registerSimpleSheet(AdjustLeverageSheetId, LeverageDialogWidget, {
 });
 
 // Register dialog version for desktop
-registerSimpleDialog(AdjustLeverageDialogId, LeverageDialogWidget, {
+registerSimpleDialog(AdjustLeverageDialogId, SymbolLeverageWidget, {
   title: () => i18n.t("leverage.maxAccountLeverage"),
   size: "md",
   classNames: {
