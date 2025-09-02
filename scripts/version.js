@@ -40,28 +40,8 @@ async function wirteVersionFile(path, content) {
   });
 }
 
-async function updateCreateOrderlyPkg() {
-  //=========== update create-orderly-app package.json version ===========
-  // const createOrderlyAppJson = await PackageJson.load(
-  //   path.resolve(packageSrc, "create-orderly-app"),
-  // );
-
-  // wirte create-orderly-app package.json version
-  // createOrderlyAppJson.update({
-  //   ...createOrderlyAppJson.content,
-  //   orderly: {
-  //     version: {
-  //       // "@orderly.network/web3-onboard": web3OnboardPakageJson.content.version,
-  //     },
-  //   },
-  // });
-
-  // await createOrderlyAppJson.save();
-
-  //==========================
-
+async function updatePackageVersion() {
   // update all orderly packages version
-
   const packagePathMap = {
     "@orderly.network/default-evm-adapter": "default-evm-adapter",
     "@orderly.network/default-solana-adapter": "default-solana-adapter",
@@ -109,9 +89,7 @@ async function updateCreateOrderlyPkg() {
 }
 
 const main = async () => {
-  await updateCreateOrderlyPkg();
-
-  // await updateOrderlyPakageVersion()
+  await updatePackageVersion();
 };
 
 main();
