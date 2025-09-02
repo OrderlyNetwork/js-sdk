@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
+import { useSymbolLeverages } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { SliderMarks, toast } from "@orderly.network/ui";
 
@@ -8,39 +9,43 @@ type UseLeverageScriptOptions = {
 
 export type SymbolLeverageScriptOptions = {
   leverageLevers?: number[];
-  maxLeverage?: number;
-  update?: (data: { leverage: number }) => Promise<void>;
-  isLoading?: boolean;
   curLeverage: number;
+  symbol: string;
+  positionQty?: number;
 };
 
-const DEFAULT_MAX_LEVERAGE = 100;
 const DEFAULT_LEVERAGE_LEVERS = [5, 10, 20, 50, 100];
 
-export type LeverageScriptReturns = ReturnType<typeof useSymbolLeverageScript>;
+export type SymbolLeverageScriptReturns = ReturnType<
+  typeof useSymbolLeverageScript
+>;
 
 export const useSymbolLeverageScript = (
   options?: SymbolLeverageScriptOptions & UseLeverageScriptOptions,
 ) => {
-  const [showSliderTip, setShowSliderTip] = useState(false);
-  const { t } = useTranslation();
-
   const {
     curLeverage = 1,
-    maxLeverage = DEFAULT_MAX_LEVERAGE,
-    isLoading = false,
     leverageLevers = DEFAULT_LEVERAGE_LEVERS,
-    update,
+    symbol,
   } = options || {};
+  const [showSliderTip, setShowSliderTip] = useState(false);
+  const { t } = useTranslation();
+  const { maxSymbolLeverage, update, isLoading } = useSymbolLeverages(
+    symbol || "",
+  );
+
+  const filteredLeverageLevers = useMemo(() => {
+    return leverageLevers.filter((e) => e <= maxSymbolLeverage);
+  }, [leverageLevers, maxSymbolLeverage]);
 
   const marks = useMemo<SliderMarks>(() => {
     return (
-      leverageLevers?.map((e) => ({
+      filteredLeverageLevers.map((e) => ({
         label: `${e}x`,
         value: e,
       })) || []
     );
-  }, [leverageLevers]);
+  }, [filteredLeverageLevers]);
 
   const [leverage, setLeverage] = useState<number>(curLeverage ?? 0);
 
@@ -64,12 +69,12 @@ export const useSymbolLeverageScript = (
       const value = Number.isNaN(parsed) ? "" : parsed;
       setLeverage(value as number);
     },
-    [maxLeverage],
+    [maxSymbolLeverage],
   );
 
   const onSave = async () => {
     try {
-      update?.({ leverage }).then(
+      update?.({ leverage, symbol }).then(
         () => {
           options?.close?.();
           toast.success(t("leverage.updated"));
@@ -84,15 +89,11 @@ export const useSymbolLeverageScript = (
   };
 
   const isReduceDisabled = leverage <= 1;
-  const isIncreaseDisabled = leverage >= maxLeverage;
-  const disabled = !leverage || leverage < 1 || leverage > maxLeverage;
-
-  const toggles = useMemo(() => {
-    return [5, 10, 20, 50, 100].filter((e) => e <= maxLeverage);
-  }, [maxLeverage]);
+  const isIncreaseDisabled = leverage >= maxSymbolLeverage;
+  const disabled = !leverage || leverage < 1 || leverage > maxSymbolLeverage;
 
   return {
-    leverageLevers,
+    leverageLevers: filteredLeverageLevers,
     currentLeverage: curLeverage,
     value: leverage,
     marks,
@@ -109,7 +110,8 @@ export const useSymbolLeverageScript = (
     isLoading: isLoading,
     showSliderTip,
     setShowSliderTip,
-    maxLeverage,
-    toggles,
+    maxLeverage: maxSymbolLeverage,
+    toggles: filteredLeverageLevers,
+    symbol,
   };
 };

@@ -82,6 +82,7 @@ export {
 } from "./useTakeProfitAndStopLoss";
 
 export { useSymbolLeverage } from "./useSymbolLeverage";
+export { useSymbolLeverages } from "./useSymbolLeverages";
 
 export { useAssetsHistory } from "./statistics/useAssetHistory";
 

@@ -1,11 +1,10 @@
 import React from "react";
-import { i18n } from "@orderly.network/i18n";
 import { registerSimpleDialog, registerSimpleSheet } from "@orderly.network/ui";
-import { Leverage } from "@orderly.network/ui-leverage";
 import {
   SymbolLeverageScriptOptions,
   useSymbolLeverageScript,
 } from "./leverage.script";
+import { SymbolLeverageUI } from "./leverage.ui";
 
 export type SymbolLeverageWidgetProps = {
   close?: () => void;
@@ -17,12 +16,10 @@ export const SymbolLeverageWidget: React.FC<SymbolLeverageWidgetProps> = (
   const state = useSymbolLeverageScript({
     close: props?.close,
     leverageLevers: props?.leverageLevers,
-    maxLeverage: props?.maxLeverage,
-    update: props?.update,
-    isLoading: props?.isLoading,
     curLeverage: props?.curLeverage,
+    symbol: props?.symbol,
   });
-  return <Leverage {...state} />;
+  return <SymbolLeverageUI {...state} />;
 };
 
 export const AdjustLeverageSheetId = "AdjustLeverageSheetId";
@@ -30,17 +27,18 @@ export const AdjustLeverageDialogId = "AdjustLeverageDialogId";
 
 // Register sheet version for mobile
 registerSimpleSheet(AdjustLeverageSheetId, SymbolLeverageWidget, {
-  title: () => i18n.t("leverage.maxAccountLeverage"),
+  title: null,
   classNames: {
-    content: "oui-p-4",
+    content: "oui-p-5 oui-pt-3",
+    body: "!oui-pt-0",
   },
 });
 
 // Register dialog version for desktop
 registerSimpleDialog(AdjustLeverageDialogId, SymbolLeverageWidget, {
-  title: () => i18n.t("leverage.maxAccountLeverage"),
-  size: "md",
+  title: null,
   classNames: {
-    content: "oui-p-6",
+    content: "oui-p-5 oui-pt-3",
+    body: "!oui-pt-0",
   },
 });
