@@ -1,23 +1,5 @@
 # tsconfig
 
-## 0.9.2-internal-hotfix-avgPrice.2
-
-### Patch Changes
-
-- publish
-
-## 0.9.2-internal-hotfix-avgPrice.1
-
-### Patch Changes
-
-- publish
-
-## 0.9.2-internal-hotfix-avgPrice.0
-
-### Patch Changes
-
-- publish
-
 ## 0.9.1
 
 ### Patch Changes

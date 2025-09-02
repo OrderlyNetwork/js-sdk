@@ -1,29 +1,5 @@
 # @orderly.network/cli
 
-## 0.9.2-internal-hotfix-avgPrice.2
-
-### Patch Changes
-
-- publish
-- Updated dependencies
-  - @orderly.network/core@2.6.2-internal-hotfix-avgPrice.2
-
-## 0.9.2-internal-hotfix-avgPrice.1
-
-### Patch Changes
-
-- publish
-- Updated dependencies
-  - @orderly.network/core@2.6.2-internal-hotfix-avgPrice.1
-
-## 0.9.2-internal-hotfix-avgPrice.0
-
-### Patch Changes
-
-- publish
-- Updated dependencies
-  - @orderly.network/core@2.6.2-internal-hotfix-avgPrice.0
-
 ## 0.9.1
 
 ### Patch Changes
