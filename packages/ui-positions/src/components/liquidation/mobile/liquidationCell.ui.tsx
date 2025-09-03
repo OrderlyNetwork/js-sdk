@@ -1,10 +1,8 @@
 import { FC } from "react";
-import { cn, Flex, Grid, Text } from "@orderly.network/ui";
-import { LiquidationCellState } from "./liquidationCell.script";
-import { LiquidationFee, Price, Quantity } from "./items";
-import { API } from "@orderly.network/types";
-import { commifyOptional } from "@orderly.network/utils";
 import { useTranslation } from "@orderly.network/i18n";
+import { cn, Flex, Text, Divider, Badge } from "@orderly.network/ui";
+import { commifyOptional, Decimal } from "@orderly.network/utils";
+import { LiquidationCellState } from "./liquidationCell.script";
 
 export const LiquidationCell: FC<
   LiquidationCellState & {
@@ -20,9 +18,13 @@ export const LiquidationCell: FC<
       width={"100%"}
       gap={2}
       itemAlign={"start"}
-      className={props.classNames?.root}
+      className={cn(
+        "oui-rounded-xl oui-bg-base-9 oui-p-2",
+        props.classNames?.root,
+      )}
     >
       <Header {...props} />
+      <Divider />
       <Body {...props} />
     </Flex>
   );
@@ -30,39 +32,36 @@ export const LiquidationCell: FC<
 
 export const Header: FC<LiquidationCellState> = (props) => {
   const { t } = useTranslation();
-
   return (
-    <Flex gap={1} width={"100%"}>
-      <Flex
-        direction={"column"}
-        itemAlign={"start"}
-        className="oui-flex-1"
-        gap={1}
-      >
-        <Text.formatted
-          size="2xs"
-          intensity={36}
-          rule={"date"}
-          formatString="yyyy-MM-dd HH:mm:ss"
-        >
-          {props.item.timestamp}
-        </Text.formatted>
-        <Flex gap={1}>
-          <Text size="2xs" intensity={36}>
-            {`${t("positions.Liquidation.column.liquidationId")}:`}
-          </Text>
-          <Text
-            size="2xs"
-            intensity={80}
-          >{` ${props.item.liquidation_id}`}</Text>
+    <Flex width={"100%"} justify={"between"} itemAlign={"start"}>
+      <Flex direction={"column"} itemAlign={"start"} gap={1}>
+        <Flex gap={2} itemAlign={"center"}>
+          <Flex direction={"column"} gap={1} itemAlign={"start"}>
+            <Text.formatted
+              rule={"symbol"}
+              formatString="base-quote"
+              size="xs"
+              intensity={80}
+            >
+              {props.item.positions_by_perp?.[0]?.symbol || ""}
+            </Text.formatted>
+            <Badge size="sm" color="neutral">
+              Cross 10X
+            </Badge>
+          </Flex>
         </Flex>
       </Flex>
-      <Flex direction={"column"} itemAlign={"end"} className="oui-flex-1">
+      <Flex direction={"column"} itemAlign={"end"}>
         <Text size="2xs" intensity={36}>
-          {`${t("positions.Liquidation.column.insFundTransfer")}:`}
+          <Text.formatted rule={"date"} formatString="yyyy-MM-dd HH:mm:ss">
+            {props.item.timestamp}
+          </Text.formatted>
         </Text>
-        <Text intensity={80} size="xs">
-          {commifyOptional(props.item.transfer_amount_to_insurance_fund)}
+        <Text size="2xs" intensity={36}>
+          {`${t("positions.Liquidation.column.liquidationId")}: `}
+          <Text as="span" intensity={80}>
+            {props.item.liquidation_id}
+          </Text>
         </Text>
       </Flex>
     </Flex>
@@ -70,51 +69,84 @@ export const Header: FC<LiquidationCellState> = (props) => {
 };
 
 export const Body: FC<LiquidationCellState> = (props) => {
+  const position = props.item.positions_by_perp?.[0];
+  const { t } = useTranslation();
+  if (!position) return null;
+
   return (
-    <Flex direction={"column"} width={"100%"}>
-      {props.item.positions_by_perp?.map((item, index) => {
-        return (
-          <Cell
-            key={`${index}-${item.symbol}`}
-            isLast={index === props.item.positions_by_perp.length - 1}
-            {...item}
-          />
-        );
-      })}
+    <Flex direction={"column"} width={"100%"} gap={1}>
+      {/* First row */}
+      <Flex gap={2} width={"100%"}>
+        <DataItem
+          label={`${t("common.price")} (USDC)`}
+          value={commifyOptional(position.transfer_price)}
+          className="oui-flex-1"
+        />
+        <DataItem
+          label={t("common.quantity")}
+          value={commifyOptional(position.position_qty)}
+          className="oui-flex-1"
+        />
+        <DataItem
+          label="Liquidation fee rate"
+          value={props.item.liquidationFeeRate}
+          className="oui-flex-1"
+          align="end"
+        />
+      </Flex>
+
+      {/* Second row */}
+      <Flex gap={2} width={"100%"}>
+        <DataItem
+          label="Liquidation fee"
+          value={commifyOptional(position.abs_liquidation_fee)}
+          className="oui-flex-1"
+        />
+        <DataItem label="Margin ratio" value="1.23%" className="oui-flex-1" />
+        <DataItem
+          label="Maint. margin ratio"
+          value={
+            props.item.formatted_account_mmr
+              ? `${props.item.formatted_account_mmr}%`
+              : "--"
+          }
+          className="oui-flex-1"
+          align="end"
+        />
+      </Flex>
+
+      {/* Third row */}
+      <Flex gap={2} width={"100%"}>
+        <DataItem
+          label="Collateral value"
+          value={commifyOptional(props.item.collateral_value)}
+          className="oui-flex-1"
+        />
+        <DataItem
+          label="Position notional"
+          value={commifyOptional(props.item.position_notional)}
+          className="oui-flex-1"
+        />
+        <div className="oui-flex-1 oui-opacity-0" /> {/* Empty placeholder */}
+      </Flex>
     </Flex>
   );
 };
 
-const Cell: FC<
-  API.LiquidationPositionByPerp & {
-    isLast: boolean;
-    key: string;
-  }
-> = (props) => {
+const DataItem: FC<{
+  label: string;
+  value: string;
+  className?: string;
+  align?: "start" | "end";
+}> = ({ label, value, className, align = "start" }) => {
   return (
-    <Flex
-      key={props.key}
-      width={"100%"}
-      itemAlign={"start"}
-      className={cn(
-        "oui-border-t-[1px] oui-border-line-6 oui-pt-2",
-        !props.isLast && "oui-pb-2"
-      )}
-    >
-      <Text.formatted
-        rule={"symbol"}
-        formatString="base-quote"
-        size="xs"
-        intensity={80}
-        className="oui-flex-1"
-      >
-        {props.symbol}
-      </Text.formatted>
-      <Grid cols={1} rows={3} width={"100%"} gap={1} className="oui-flex-1">
-        <Price {...props} />
-        <Quantity {...props} />
-        <LiquidationFee {...props} />
-      </Grid>
+    <Flex direction={"column"} itemAlign={align} className={className}>
+      <Text size="2xs" intensity={36}>
+        {label}
+      </Text>
+      <Text size="xs" intensity={80}>
+        {value}
+      </Text>
     </Flex>
   );
 };

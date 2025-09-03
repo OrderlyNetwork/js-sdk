@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { API } from "@orderly.network/types";
 import {
   cn,
@@ -7,13 +7,16 @@ import {
   Grid,
   ListView,
   Text,
+  Tooltip,
 } from "@orderly.network/ui";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
+import { commifyOptional } from "@orderly.network/utils";
 import { useLiquidationColumn } from "./desktop/useLiquidationColumn";
 import { LiquidationState } from "./liquidation.script";
 import { LiquidationCellWidget } from "./mobile";
 
 export const Liquidation: FC<LiquidationState> = (props) => {
+  const [expanded, setExpanded] = useState({});
   const column = useLiquidationColumn({});
 
   return (
@@ -74,8 +77,96 @@ export const Liquidation: FC<LiquidationState> = (props) => {
         classNames={{
           root: "!oui-h-[calc(100%_-_49px)]",
         }}
+        // onRow={(record, index, row) => {
+        //   return {
+        //     className: "[&>td:first-child]:oui-pl-0 [&>td:last-child]:oui-pr-0",
+        //   };
+        // }}
+        expanded={expanded}
+        onExpandedChange={setExpanded}
+        getRowCanExpand={() => true}
+        expandRowRender={(record) => {
+          return <LiquidationDetails record={record.original} />;
+        }}
       />
     </Flex>
+  );
+};
+
+const TooltipHeaderCell: FC<{
+  tooltip: string;
+  label: string;
+  side?: "left";
+}> = (props) => {
+  return (
+    <th className="oui-h-10 oui-border-b oui-border-line oui-text-left oui-text-base-contrast-36">
+      <Tooltip
+        content={props.tooltip}
+        className="oui-w-[275px] oui-bg-base-6"
+        side={props.side}
+        arrow={{
+          className: "oui-fill-base-6",
+        }}
+      >
+        <button className="oui-border-b oui-border-dashed oui-border-line-12">
+          {props.label}
+        </button>
+      </Tooltip>
+    </th>
+  );
+};
+
+const LiquidationDetails: FC<{
+  record: API.Liquidation;
+}> = (props) => {
+  const {
+    margin_ratio,
+    maint_margin_ratio,
+    account_mmr,
+    collateral_value,
+    position_notional,
+  } = props.record as any;
+
+  return (
+    <div className="oui-w-full oui-bg-base-8 oui-px-6">
+      {/* <pre>{JSON.stringify(props.record, null, 2)}</pre> */}
+
+      <table className="oui-w-full">
+        <thead>
+          <tr>
+            <TooltipHeaderCell
+              tooltip="The ratio of collateral to position size at the time of liquidation."
+              label="Margin ratio"
+              side="left"
+            />
+            <TooltipHeaderCell
+              tooltip="The minimum margin required to keep the position open."
+              label="Maint. margin ratio"
+            />
+            <TooltipHeaderCell
+              tooltip="Total collateral value in the account when liquidation occurred."
+              label="Collateral value"
+            />
+            <TooltipHeaderCell
+              tooltip="The total notional value of positions in the account at liquidation."
+              label="Position notional"
+            />
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td className="oui-h-10">
+              <Text.numeral rule="percentages">{margin_ratio}</Text.numeral>
+            </td>
+            <td className="oui-h-10">
+              <Text.numeral>{account_mmr}</Text.numeral>
+            </td>
+            <td className="oui-h-10">{commifyOptional(collateral_value)}</td>
+            <td className="oui-h-10">{commifyOptional(position_notional)}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   );
 };
 
