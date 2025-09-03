@@ -108,6 +108,14 @@ type LeverageBadgeProps = {
 export const LeverageBadge = (props: LeverageBadgeProps) => {
   const { symbol, leverage, positionQty } = props;
 
+  const showModal = () => {
+    modal.show(props.modalId, {
+      symbol,
+      curLeverage: leverage,
+      positionQty,
+    });
+  };
+
   return (
     <div
       className={cn(
@@ -115,13 +123,7 @@ export const LeverageBadge = (props: LeverageBadgeProps) => {
         "oui-cursor-pointer oui-rounded oui-bg-line-6 oui-pl-2 oui-pr-1",
         "oui-text-2xs oui-font-semibold oui-text-base-contrast-36",
       )}
-      onClick={() => {
-        modal.show(props.modalId, {
-          symbol,
-          curLeverage: leverage,
-          positionQty,
-        });
-      }}
+      onClick={showModal}
     >
       <Text>Cross</Text>
       {leverage ? (

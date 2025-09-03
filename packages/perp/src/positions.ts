@@ -297,3 +297,44 @@ export function estPnLForSL(inputs: {
 }): number {
   return 0;
 }
+
+/**
+ * calculate the max position notional
+ * max_notional = ( (1/ (leverage * imr_factor) ) ^ (1/0.8)
+ */
+export function maxPositionNotional(inputs: {
+  /** symbol leverage */
+  leverage: number;
+  IMRFactor: number;
+}) {
+  const { leverage, IMRFactor } = inputs;
+  return new Decimal(1)
+    .div(new Decimal(leverage).mul(IMRFactor))
+    .toPower(1 / 0.8)
+    .toNumber();
+}
+
+/**
+ * symbol_leverage_max = 1 / ( imr_factor * notional ^ 0.8 )
+ */
+export function maxPositionLeverage(inputs: {
+  IMRFactor: number;
+  notional: number;
+}) {
+  const { IMRFactor, notional } = inputs;
+  return new Decimal(1)
+    .div(new Decimal(IMRFactor).mul(notional).toPower(1 / 0.8))
+    .toNumber();
+}
+
+/**
+ * required_margin = max_notional / leverage
+ */
+export function requiredMargin(inputs: {
+  maxNotional: number;
+  /** symbol leverage */
+  leverage: number;
+}) {
+  const { maxNotional, leverage } = inputs;
+  return new Decimal(maxNotional).div(leverage).toNumber();
+}

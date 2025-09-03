@@ -1,6 +1,11 @@
 import { useCallback, useMemo, useState } from "react";
-import { useSymbolLeverages } from "@orderly.network/hooks";
+import {
+  useMarkPrice,
+  useMarkPriceBySymbol,
+  useSymbolLeverages,
+} from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
+import { positions } from "@orderly.network/perp";
 import { SliderMarks, toast } from "@orderly.network/ui";
 
 type UseLeverageScriptOptions = {
@@ -27,12 +32,14 @@ export const useSymbolLeverageScript = (
     curLeverage = 1,
     leverageLevers = DEFAULT_LEVERAGE_LEVERS,
     symbol,
+    positionQty,
   } = options || {};
   const [showSliderTip, setShowSliderTip] = useState(false);
   const { t } = useTranslation();
-  const { maxSymbolLeverage, update, isLoading } = useSymbolLeverages(
-    symbol || "",
-  );
+  const markPrice = useMarkPriceBySymbol(symbol!);
+
+  const { maxSymbolLeverage, update, isLoading, symbolInfo } =
+    useSymbolLeverages(symbol || "");
 
   const filteredLeverageLevers = useMemo(() => {
     return leverageLevers.filter((e) => e <= maxSymbolLeverage);
@@ -92,10 +99,34 @@ export const useSymbolLeverageScript = (
   const isIncreaseDisabled = leverage >= maxSymbolLeverage;
   const disabled = !leverage || leverage < 1 || leverage > maxSymbolLeverage;
 
-  // todo: need to calculate max position leverage
-  const maxAvailableLeverage = 48;
-  // todo: need to calculate max position amount
-  const maxmiumPositionAmount = 100000;
+  /** the highest allowable leverage. Block users from setting leverage above this limit. */
+  const maxPositionLeverage = useMemo(() => {
+    if (positionQty && markPrice) {
+      const notional = positions.notional(positionQty, markPrice);
+      const imr_factor = symbolInfo("imr_factor");
+      return positions.maxPositionLeverage({
+        IMRFactor: imr_factor,
+        notional,
+      });
+    }
+
+    return 1;
+  }, [leverage, symbolInfo, positionQty, markPrice]);
+
+  /** calculate maximum position at current leverage */
+  const maxPositionNotional = useMemo(() => {
+    return positions.maxPositionNotional({
+      leverage,
+      IMRFactor: symbolInfo("imr_factor"),
+    });
+  }, [leverage, symbolInfo]);
+
+  const requiredMargin = useMemo(() => {
+    return positions.requiredMargin({
+      maxNotional: maxPositionNotional,
+      leverage,
+    });
+  }, [maxPositionNotional, leverage]);
 
   return {
     leverageLevers: filteredLeverageLevers,
@@ -118,7 +149,8 @@ export const useSymbolLeverageScript = (
     maxLeverage: maxSymbolLeverage,
     toggles: filteredLeverageLevers,
     symbol,
-    maxAvailableLeverage,
-    maxmiumPositionAmount,
+    maxPositionNotional,
+    maxPositionLeverage,
+    requiredMargin,
   };
 };
