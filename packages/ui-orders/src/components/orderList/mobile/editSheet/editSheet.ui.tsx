@@ -55,7 +55,10 @@ export const EditSheet: FC<EditSheetState> = (props) => {
     if (isTrailingStop) {
       return (
         formattedOrder.activated_price && (
-          <ActivitedPriceInput value={formattedOrder.activated_price} />
+          <ActivitedPriceInput
+            value={formattedOrder.activated_price}
+            disabled={item.is_activated}
+          />
         )
       );
     }

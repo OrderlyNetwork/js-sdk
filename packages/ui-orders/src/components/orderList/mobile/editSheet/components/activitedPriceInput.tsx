@@ -5,6 +5,7 @@ import { useEditSheetContext } from "./editSheetContext";
 
 type ActivitedPriceInputProps = {
   value?: string | number;
+  disabled?: boolean;
 };
 
 export const ActivitedPriceInput = memo((props: ActivitedPriceInputProps) => {
@@ -36,6 +37,7 @@ export const ActivitedPriceInput = memo((props: ActivitedPriceInputProps) => {
       ]}
       value={props.value}
       onValueChange={(val) => setOrderValue("activated_price", val)}
+      disabled={props.disabled}
       tooltip={error}
       tooltipProps={{
         content: {
