@@ -264,6 +264,53 @@ export const usePrivateDataObserver = (options: {
     return () => unsubscribe?.();
   }, [state.accountId, subOrder]);
 
+  useEffect(() => {
+    if (!state.accountId) return;
+    // {
+    //     "accountDetail": {
+    //       "marginMode": "SPOT_FUTURES",
+    //       "futuresLeverage": 10,
+    //       "takerFeeRate": 10,
+    //       "makerFeeRate": 10,
+    //       "futuresTakerFeeRate": 8,
+    //       "futuresMakerFeeRate": 4,
+    //       "maintenanceCancelFlag": false
+    //       "symbolLeverage":{
+    //           "leverage":20
+    //           "symbol":"PERP_BTC_USDC"
+    //       }
+    //   }
+    // }
+    const key = ["/v1/positions", state.accountId];
+    const unsubscribe = ws.privateSubscribe("account", {
+      onMessage: (data: any) => {
+        const { symbol, leverage } = data?.accountDetail?.symbolLeverage || {};
+        if (symbol && leverage) {
+          mutate(
+            key,
+            (prevPositions: any) => {
+              if (prevPositions?.rows?.length) {
+                return {
+                  ...prevPositions,
+                  rows: prevPositions.rows.map((row: any) => {
+                    // update position leverage when symbol leverage changed
+                    return row.symbol === symbol ? { ...row, leverage } : row;
+                  }),
+                };
+              }
+              return prevPositions;
+            },
+            {
+              revalidate: false,
+            },
+          );
+        }
+      },
+    });
+
+    return () => unsubscribe?.();
+  }, [state.accountId]);
+
   // positions
   useEffect(() => {
     if (!state.accountId) {

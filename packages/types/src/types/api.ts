@@ -331,6 +331,7 @@ export declare namespace API {
     pnl_24_h: number;
     fee_24_h: number;
     fundingFee?: number;
+    leverage: number;
   }
 
   export interface PositionExt extends Position {

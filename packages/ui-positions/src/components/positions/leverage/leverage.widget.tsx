@@ -1,4 +1,5 @@
 import React from "react";
+import { i18n } from "@orderly.network/i18n";
 import { registerSimpleDialog, registerSimpleSheet } from "@orderly.network/ui";
 import {
   SymbolLeverageScriptOptions,
@@ -22,12 +23,12 @@ export const SymbolLeverageWidget: React.FC<SymbolLeverageWidgetProps> = (
   return <SymbolLeverageUI {...state} />;
 };
 
-export const AdjustLeverageSheetId = "AdjustLeverageSheetId";
-export const AdjustLeverageDialogId = "AdjustLeverageDialogId";
+export const SymbolLeverageSheetId = "SymbolLeverageSheetId";
+export const SymbolLeverageDialogId = "SymbolLeverageDialogId";
 
 // Register sheet version for mobile
-registerSimpleSheet(AdjustLeverageSheetId, SymbolLeverageWidget, {
-  title: null,
+registerSimpleSheet(SymbolLeverageSheetId, SymbolLeverageWidget, {
+  title: () => i18n.t("leverage.maxAccountLeverage"),
   classNames: {
     content: "oui-p-5 oui-pt-3",
     body: "!oui-pt-0",
@@ -35,8 +36,9 @@ registerSimpleSheet(AdjustLeverageSheetId, SymbolLeverageWidget, {
 });
 
 // Register dialog version for desktop
-registerSimpleDialog(AdjustLeverageDialogId, SymbolLeverageWidget, {
-  title: null,
+registerSimpleDialog(SymbolLeverageDialogId, SymbolLeverageWidget, {
+  title: () => i18n.t("leverage.maxAccountLeverage"),
+  size: "md",
   classNames: {
     content: "oui-p-5 oui-pt-3",
     body: "!oui-pt-0",

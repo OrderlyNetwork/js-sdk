@@ -102,4 +102,5 @@ export type ShareEntity = {
   closeTime?: number;
   markPrice?: number;
   quantity?: number;
+  leverage?: number;
 };

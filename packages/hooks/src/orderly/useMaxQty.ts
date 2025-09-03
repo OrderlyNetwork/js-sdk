@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { account } from "@orderly.network/perp";
-import { type API, OrderSide, OrderStatus } from "@orderly.network/types";
+import { type API, OrderSide } from "@orderly.network/types";
 import { useAccountInfo } from "./appStore";
 import { useCollateral } from "./useCollateral";
 import { useMarkPricesStream } from "./useMarkPricesStream";
@@ -110,12 +110,17 @@ export const useMaxQty = (
       ? []
       : positions.filter((item: API.Position) => item.symbol !== symbol);
 
+    const maxLeverage = account.maxLeverage({
+      symbolLeverage: currentSymbolPosition?.leverage,
+      accountLeverage: accountInfo.max_leverage,
+    });
+
     const otherIMs = account.otherIMs({
       positions: otherPositions,
       symbolInfo,
       markPrices,
       IMR_Factors: accountInfo.imr_factor,
-      maxLeverage: accountInfo.max_leverage,
+      maxLeverage,
     });
 
     return account.maxQty(side, {
@@ -123,7 +128,7 @@ export const useMaxQty = (
       symbol,
       baseMaxQty: getSymbolInfo("base_max"),
       totalCollateral,
-      maxLeverage: accountInfo.max_leverage,
+      maxLeverage,
       takerFeeRate: accountInfo.futures_taker_fee_rate,
       baseIMR: getSymbolInfo("base_imr"),
       otherIMs,

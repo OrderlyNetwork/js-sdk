@@ -15,6 +15,7 @@ import { SharePnLOptions, SharePnLDialogId } from "@orderly.network/ui-share";
 import { Decimal } from "@orderly.network/utils";
 import { FundingFeeButton } from "../../fundingFeeHistory/fundingFeeButton";
 import { ClosePositionWidget } from "../closePosition";
+import { SymbolLeverageDialogId } from "../leverage";
 import { TPSLButton, LeverageBadge } from "./components";
 import {
   renderPriceInput,
@@ -77,7 +78,12 @@ export const useColumn = (config: ColumnConfig) => {
               >
                 {`${value.split("_")[1]}-PERP`}
               </Text.formatted>
-              <LeverageBadge symbol={value} leverage={record.leverage} />
+              <LeverageBadge
+                symbol={value}
+                leverage={record.leverage}
+                positionQty={record.position_qty}
+                modalId={SymbolLeverageDialogId}
+              />
             </Flex>
           </Flex>
         ),

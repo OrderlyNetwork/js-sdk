@@ -16,6 +16,7 @@ import { FundingFeeButton } from "../../../fundingFeeHistory/fundingFeeButton";
 import { LeverageBadge } from "../../desktop/components";
 import { AddIcon, TPSLEditIcon } from "../../desktop/components";
 import { ShareButtonWidget } from "../../desktop/shareButton";
+import { SymbolLeverageSheetId } from "../../leverage";
 import { PositionCellState } from "./positionCell.script";
 
 export const SymbolToken: FC<PositionCellState> = (props) => {
@@ -32,7 +33,12 @@ export const SymbolToken: FC<PositionCellState> = (props) => {
           <Badge color={isBuy ? "success" : "danger"} size="xs">
             {isBuy ? t("common.long") : t("common.short")}
           </Badge>
-          <LeverageBadge symbol={item.symbol} />
+          <LeverageBadge
+            symbol={item.symbol}
+            leverage={item.leverage}
+            positionQty={item.position_qty}
+            modalId={SymbolLeverageSheetId}
+          />
         </div>
       }
       showIcon
