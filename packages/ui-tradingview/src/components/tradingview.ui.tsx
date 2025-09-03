@@ -10,21 +10,19 @@ import TopBar from "./topBar";
 const LazyLineType = React.lazy(() => import("./lineType"));
 
 const LazyTimeInterval = React.lazy(() =>
-  import("./timeInterval").then((mod) => {
-    return { default: mod.TimeInterval };
-  }),
+  import("./timeInterval").then((mod) => ({ default: mod.TimeInterval })),
 );
 
 const LazyMobileDisplayControl = React.lazy(() =>
-  import("./displayControl").then((mod) => {
-    return { default: mod.MobileDisplayControl };
-  }),
+  import("./displayControl").then((mod) => ({
+    default: mod.MobileDisplayControl,
+  })),
 );
 
 const LazyDesktopDisplayControl = React.lazy(() =>
-  import("./displayControl").then((mod) => {
-    return { default: mod.DesktopDisplayControl };
-  }),
+  import("./displayControl").then((mod) => ({
+    default: mod.DesktopDisplayControl,
+  })),
 );
 
 const OperateButton: React.FC<
@@ -118,6 +116,9 @@ export const TradingviewUI = forwardRef<
                     changeInterval={changeInterval}
                   />
                 </React.Suspense>
+                <OperateButton onClick={openChartIndicators}>
+                  <IndicatorsIcon />
+                </OperateButton>
                 <React.Suspense fallback={null}>
                   <LazyMobileDisplayControl
                     displayControlState={displayControlState}
