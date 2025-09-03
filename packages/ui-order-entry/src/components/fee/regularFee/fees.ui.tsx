@@ -1,12 +1,12 @@
 import React from "react";
+import { useFeeState } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext } from "@orderly.network/react-app";
 import { Flex, Text } from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
-import { useFeeScript } from "../fees.script";
 
 export const RegularFeesUI: React.FC<
-  Pick<ReturnType<typeof useFeeScript>, "takerFee" | "makerFee">
+  Pick<ReturnType<typeof useFeeState>, "takerFee" | "makerFee">
 > = (props) => {
   const { t } = useTranslation();
   const { takerFee, makerFee } = props;

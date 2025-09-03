@@ -1,10 +1,10 @@
 import React from "react";
-import { useFeeScript } from "../fees.script";
+import { useFeeState } from "@orderly.network/hooks";
 import { EffectiveFeeUI } from "./effectiveFee.ui";
 
 export const EffectiveFeesWidget: React.FC<
   Pick<
-    ReturnType<typeof useFeeScript>,
+    ReturnType<typeof useFeeState>,
     "effectiveTakerFee" | "effectiveMakerFee"
   >
 > = (props) => {

@@ -1,9 +1,9 @@
 import React from "react";
-import { useFeeScript } from "../fees.script";
+import { useFeeState } from "@orderly.network/hooks";
 import { RegularFeesUI } from "./fees.ui";
 
 export const RegularFeesWidget: React.FC<
-  Pick<ReturnType<typeof useFeeScript>, "takerFee" | "makerFee">
+  Pick<ReturnType<typeof useFeeState>, "takerFee" | "makerFee">
 > = (props) => {
   return <RegularFeesUI {...props} />;
 };

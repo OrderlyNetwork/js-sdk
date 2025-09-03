@@ -1,9 +1,9 @@
 import React from "react";
+import { useFeeState } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext } from "@orderly.network/react-app";
 import { Flex, modal, Text, Tooltip, useScreen } from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
-import { useFeeScript } from "../fees.script";
 import { EffectiveFee } from "./icons";
 
 const EffectiveFeeSection: React.FC<{ content: string }> = (props) => {
@@ -28,7 +28,7 @@ const EffectiveFeeSection: React.FC<{ content: string }> = (props) => {
 
 export const EffectiveFeeUI: React.FC<
   Pick<
-    ReturnType<typeof useFeeScript>,
+    ReturnType<typeof useFeeState>,
     "effectiveTakerFee" | "effectiveMakerFee"
   >
 > = (props) => {

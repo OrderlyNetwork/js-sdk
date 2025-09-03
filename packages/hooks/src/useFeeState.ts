@@ -1,12 +1,13 @@
 import { useMemo } from "react";
-import { useAccountInfo, usePrivateQuery } from "@orderly.network/hooks";
-import type { RefferalAPI } from "@orderly.network/hooks";
 import { Decimal } from "@orderly.network/utils";
+import { useAccountInfo } from "./orderly/useAccountInfo";
+import type { RefferalAPI } from "./referral";
+import { usePrivateQuery } from "./usePrivateQuery";
 
 const ORDERLY_TAKER_FEE = 0.0001; // (0.01%)
 const ORDERLY_MAKER_FEE = 0; // (0%)
 
-export const useFeeScript = () => {
+export const useFeeState = () => {
   const { data: accountInfo, isLoading: isAccountLoading } = useAccountInfo();
 
   const { data: referralData, isLoading: isReferralLoading } =

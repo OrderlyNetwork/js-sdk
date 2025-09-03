@@ -75,28 +75,10 @@ export const useFeeTierScript = (options?: UseFeeTierScriptOptions) => {
     setTier(findCurrentTier(dataSource, data));
   }, [data, isLoading, dataSource]);
 
-  const futures_taker_fee_rate = useMemo(() => {
-    const value = data?.futures_taker_fee_rate;
-    if (typeof value === "undefined") {
-      return undefined;
-    }
-    return `${new Decimal(value).mul(0.01).toString()}%`;
-  }, [data]);
-
-  const futures_maker_fee_rate = useMemo(() => {
-    const value = data?.futures_maker_fee_rate;
-    if (typeof value === "undefined") {
-      return undefined;
-    }
-    return `${new Decimal(value).mul(0.01).toString()}%`;
-  }, [data]);
-
   const authData = useDataTap(
     {
-      tier,
+      tier: tier,
       vol: volumeStatistics?.perp_volume_last_30_days,
-      takerFeeRate: futures_taker_fee_rate,
-      makerFeeRate: futures_maker_fee_rate,
     },
     {
       accountStatus:

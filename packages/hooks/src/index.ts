@@ -25,6 +25,7 @@ export { useEventEmitter } from "./useEventEmitter";
 export { useSessionStorage } from "./useSessionStorage";
 export { useLocalStorage } from "./useLocalStorage";
 export { useNetworkInfo } from "./useNetworkInfo";
+export { useFeeState } from "./useFeeState";
 export { useTrack } from "./useTrack";
 export { useTrackingInstance } from "./useTrackInstance";
 export { parseJSON } from "./utils/json";
