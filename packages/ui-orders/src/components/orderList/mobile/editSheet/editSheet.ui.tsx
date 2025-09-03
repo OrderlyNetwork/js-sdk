@@ -34,7 +34,11 @@ export const EditSheet: FC<EditSheetState> = (props) => {
 
   const { getErrorMsg } = useOrderEntryFormErrorMsg(errors!);
 
-  const disabled = !props.isChanged || Object.keys(errors!).length > 0;
+  const disabled =
+    !props.isChanged ||
+    Object.keys(errors!).length > 0 ||
+    // when activated price is not empty, the activated price input should not be empty
+    (item.activated_price && !formattedOrder.activated_price);
 
   const header = <EditSheetHeader item={item} />;
 
@@ -54,9 +58,9 @@ export const EditSheet: FC<EditSheetState> = (props) => {
   const renderPriceInput = () => {
     if (isTrailingStop) {
       return (
-        formattedOrder.activated_price && (
+        item.activated_price && (
           <ActivitedPriceInput
-            value={formattedOrder.activated_price}
+            activated_price={formattedOrder.activated_price}
             disabled={item.is_activated}
           />
         )
@@ -65,7 +69,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
 
     return (
       <PriceInput
-        value={
+        order_price={
           isStopMarket
             ? t("orderEntry.orderType.market")
             : formattedOrder.order_price

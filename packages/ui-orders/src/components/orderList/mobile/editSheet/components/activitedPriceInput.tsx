@@ -4,16 +4,19 @@ import { cn, Input, inputFormatter, Text } from "@orderly.network/ui";
 import { useEditSheetContext } from "./editSheetContext";
 
 type ActivitedPriceInputProps = {
-  value?: string | number;
+  activated_price?: string | number;
   disabled?: boolean;
 };
 
 export const ActivitedPriceInput = memo((props: ActivitedPriceInputProps) => {
+  const { activated_price } = props;
   const { t } = useTranslation();
   const { symbolInfo, setOrderValue, getErrorMsg } = useEditSheetContext();
   const { quote, quote_dp } = symbolInfo;
 
-  const error = getErrorMsg("activated_price");
+  const error = activated_price
+    ? getErrorMsg("activated_price")
+    : t("orderEntry.triggerPrice.error.required");
 
   return (
     <Input.tooltip
@@ -35,7 +38,7 @@ export const ActivitedPriceInput = memo((props: ActivitedPriceInputProps) => {
         inputFormatter.numberFormatter,
         inputFormatter.dpFormatter(quote_dp),
       ]}
-      value={props.value}
+      value={activated_price}
       onValueChange={(val) => setOrderValue("activated_price", val)}
       disabled={props.disabled}
       tooltip={error}

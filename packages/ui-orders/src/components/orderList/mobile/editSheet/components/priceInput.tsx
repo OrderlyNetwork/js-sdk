@@ -4,7 +4,7 @@ import { cn, Input, inputFormatter, Text } from "@orderly.network/ui";
 import { useEditSheetContext } from "./editSheetContext";
 
 type PriceInputProps = {
-  value?: string | number;
+  order_price?: string | number;
   disabled?: boolean;
 };
 
@@ -36,7 +36,7 @@ export const PriceInput = memo((props: PriceInputProps) => {
         inputFormatter.dpFormatter(quote_dp),
       ]}
       disabled={props.disabled}
-      value={props.value}
+      value={props.order_price}
       onValueChange={(val) => setOrderValue("order_price", val)}
       tooltip={error}
       tooltipProps={{
