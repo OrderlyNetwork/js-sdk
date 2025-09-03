@@ -65,8 +65,7 @@ import { LTVRiskTooltipWidget } from "./components/LTVRiskTooltip";
 import { AdditionalInfoWidget } from "./components/additional/additionnalInfo.widget";
 import { orderConfirmDialogId } from "./components/dialog/confirm.ui";
 import { scaledOrderConfirmDialogId } from "./components/dialog/scaledOrderConfirm";
-import { EffectiveFeeWidget } from "./components/effectiveFee";
-import { FeesWidget } from "./components/fees";
+import { FeesWidget } from "./components/fee";
 import {
   OrderEntryContext,
   OrderEntryProvider,
@@ -1530,7 +1529,6 @@ const AssetInfo: React.FC<{
           />
         )}
       {!disableFeatures?.includes("feesInfo") && <FeesWidget />}
-      {!disableFeatures?.includes("feesInfo") && <EffectiveFeeWidget />}
     </div>
   );
 };

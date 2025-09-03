@@ -1,36 +1,15 @@
 import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext } from "@orderly.network/react-app";
-import { Flex, modal, Text, Tooltip, useScreen } from "@orderly.network/ui";
+import { Flex, Text } from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
-import { useEffectiveFeeScript } from "./effectiveFee.script";
-import { EffectiveFee } from "./icons";
+import { useFeeScript } from "../fees.script";
 
-const EffectiveFeeSection: React.FC<{ content: string }> = (props) => {
-  const { content } = props;
-  const { isMobile } = useScreen();
-  const { t } = useTranslation();
-  if (isMobile) {
-    return (
-      <EffectiveFee
-        onClick={() => {
-          modal.dialog({ title: t("common.tips"), content: content });
-        }}
-      />
-    );
-  }
-  return (
-    <Tooltip content={content} className="oui-p-1.5 oui-text-base-contrast-54">
-      <EffectiveFee className={"oui-cursor-pointer"} />
-    </Tooltip>
-  );
-};
-
-export const EffectiveFeeUI: React.FC<
-  ReturnType<typeof useEffectiveFeeScript>
+export const RegularFeesUI: React.FC<
+  Pick<ReturnType<typeof useFeeScript>, "takerFee" | "makerFee">
 > = (props) => {
   const { t } = useTranslation();
-  const { effectiveTakerFee, effectiveMakerFee } = props;
+  const { takerFee, makerFee } = props;
 
   const { widgetConfigs } = useAppContext();
 
@@ -38,7 +17,7 @@ export const EffectiveFeeUI: React.FC<
     <Flex itemAlign="center" justify="between" width={"100%"} gap={1}>
       <Flex width={"100%"} itemAlign="center" justify={"between"}>
         <Text className="oui-truncate" size="2xs">
-          {t("common.effectiveFee")}
+          {t("common.fees")}
         </Text>
         <AuthGuard
           fallback={() => (
@@ -53,21 +32,18 @@ export const EffectiveFeeUI: React.FC<
               {t("portfolio.feeTier.column.taker")}:
             </Text>
             <Text size="2xs" className="oui-text-base-contrast-80">
-              {effectiveTakerFee}
+              {takerFee}
             </Text>
             <Text size="2xs">/</Text>
             <Text className="oui-truncate" size="2xs">
               {t("portfolio.feeTier.column.maker")}:
             </Text>
             <Text size="2xs" className="oui-text-base-contrast-80">
-              {effectiveMakerFee}
+              {makerFee}
             </Text>
           </Flex>
         </AuthGuard>
       </Flex>
-      <EffectiveFeeSection
-        content={t("portfolio.feeTier.effectiveFee.tooltip")}
-      />
     </Flex>
   );
 
