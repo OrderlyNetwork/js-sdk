@@ -8,5 +8,6 @@ export const useFundingDetails = (symbol: string) => {
   }
   return useQuery<API.FundingDetails>(`/v1/public/info/${symbol}`, {
     errorRetryCount: 3,
+    revalidateOnFocus: false,
   });
 };

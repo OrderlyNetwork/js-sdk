@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { useQuery } from "../useQuery";
 import { useAccountInfo } from "./useAccountInfo";
+import { useSymbolsInfo } from "./useSymbolsInfo";
 
 /**
  * A custom hook that calculates the maximum allowed leverage for a given trading pair symbol.
@@ -22,20 +22,16 @@ export const useSymbolLeverage = (symbol: string): number | "-" => {
 
   const maxAccountLeverage = info?.max_leverage;
 
-  const res = useQuery<any>(`/v1/public/info/${symbol}`, {
-    dedupingInterval: 1000 * 60 * 60 * 24, // 24 hours
-    revalidateOnFocus: false,
-    errorRetryCount: 2,
-    errorRetryInterval: 200,
-  });
+  const symbolsInfo = useSymbolsInfo();
+  const symbolInfo = useMemo(() => symbolsInfo[symbol], [symbolsInfo, symbol]);
 
   /**
    * Calculates the maximum leverage for the symbol based on its base initial margin requirement (IMR)
    */
   const maxSymbolLeverage = useMemo(() => {
-    const base = res?.data?.base_imr;
-    if (base) return 1 / base;
-  }, [res]);
+    const baseIMR = symbolInfo("base_imr");
+    return baseIMR ? 1 / baseIMR : 1;
+  }, [symbolInfo]);
 
   /**
    * Determines the final maximum leverage by taking the minimum between
