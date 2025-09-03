@@ -22,17 +22,17 @@ export function getTrailingStopPrice(order: API.AlgoOrderExt) {
 
   if (callback_value) {
     return isBuy
-      ? new Decimal(extreme_price).minus(callback_value).toNumber()
-      : new Decimal(extreme_price).plus(callback_value).toNumber();
+      ? new Decimal(extreme_price).plus(callback_value).toNumber()
+      : new Decimal(extreme_price).minus(callback_value).toNumber();
   }
 
   if (callback_rate) {
     return isBuy
       ? new Decimal(extreme_price)
-          .mul(new Decimal(1).minus(callback_rate))
+          .mul(new Decimal(1).plus(callback_rate))
           .toNumber()
       : new Decimal(extreme_price)
-          .mul(new Decimal(1).plus(callback_rate))
+          .mul(new Decimal(1).minus(callback_rate))
           .toNumber();
   }
 
