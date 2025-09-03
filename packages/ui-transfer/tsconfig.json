@@ -31,6 +31,9 @@
       ],
       "@orderly.network/core": [
         "../core/src"
+      ],
+      "@orderly.network/default-solana-adapter": [
+        "../default-solana-adapter/src"
       ]
     }
   }
