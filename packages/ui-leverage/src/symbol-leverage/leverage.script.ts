@@ -1,6 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
 import {
-  useMarkPrice,
   useMarkPriceBySymbol,
   useSymbolLeverages,
 } from "@orderly.network/hooks";
@@ -97,7 +96,6 @@ export const useSymbolLeverageScript = (
 
   const isReduceDisabled = leverage <= 1;
   const isIncreaseDisabled = leverage >= maxSymbolLeverage;
-  const disabled = !leverage || leverage < 1 || leverage > maxSymbolLeverage;
 
   /** the highest allowable leverage. Block users from setting leverage above this limit. */
   const maxPositionLeverage = useMemo(() => {
@@ -128,6 +126,22 @@ export const useSymbolLeverageScript = (
     });
   }, [maxPositionNotional, leverage]);
 
+  const overMaxPositionLeverage = useMemo(() => {
+    return leverage > maxPositionLeverage;
+  }, [leverage, maxPositionLeverage]);
+
+  // todo: add required margin check
+  const overRequiredMargin = useMemo(() => {
+    return false;
+  }, [requiredMargin]);
+
+  const disabled =
+    !leverage ||
+    leverage < 1 ||
+    leverage > maxSymbolLeverage ||
+    overRequiredMargin ||
+    overMaxPositionLeverage;
+
   return {
     leverageLevers: filteredLeverageLevers,
     currentLeverage: curLeverage,
@@ -152,5 +166,7 @@ export const useSymbolLeverageScript = (
     maxPositionNotional,
     maxPositionLeverage,
     requiredMargin,
+    overMaxPositionLeverage,
+    overRequiredMargin,
   };
 };

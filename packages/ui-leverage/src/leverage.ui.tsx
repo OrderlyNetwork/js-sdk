@@ -34,7 +34,7 @@ const IconButton: React.FC<{
   );
 };
 
-const LeverageInput: React.FC<LeverageProps> = (props) => {
+export const LeverageInput: React.FC<LeverageProps> = (props) => {
   const formatters = React.useMemo<InputFormatter[]>(
     () => [inputFormatter.numberFormatter, inputFormatter.dpFormatter(0)],
     [],
@@ -106,26 +106,33 @@ export const Leverage: FC<LeverageProps> = (props) => {
       <LeverageInput {...props} />
       <LeverageSelector {...props} />
       <LeverageSlider {...props} />
-      <Flex direction={"row"} gap={2} width={"100%"} mt={0} pt={5}>
-        <Button
-          variant="contained"
-          color="gray"
-          fullWidth
-          onClick={props.onCancel}
-          data-testid="oui-testid-leverage-cancel-btn"
-        >
-          {t("common.cancel")}
-        </Button>
-        <Button
-          fullWidth
-          loading={props.isLoading}
-          onClick={props.onSave}
-          data-testid="oui-testid-leverage-save-btn"
-          disabled={props.disabled}
-        >
-          {t("common.save")}
-        </Button>
-      </Flex>
+      <LeverageFooter {...props} />
+    </Flex>
+  );
+};
+
+export const LeverageFooter: FC<LeverageProps> = (props) => {
+  const { t } = useTranslation();
+  return (
+    <Flex direction={"row"} gap={2} width={"100%"} mt={0} pt={5}>
+      <Button
+        variant="contained"
+        color="gray"
+        fullWidth
+        onClick={props.onCancel}
+        data-testid="oui-testid-leverage-cancel-btn"
+      >
+        {t("common.cancel")}
+      </Button>
+      <Button
+        fullWidth
+        loading={props.isLoading}
+        onClick={props.onSave}
+        data-testid="oui-testid-leverage-save-btn"
+        disabled={props.disabled}
+      >
+        {t("common.save")}
+      </Button>
     </Flex>
   );
 };
