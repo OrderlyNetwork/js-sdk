@@ -77,6 +77,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
 
   const trailingCallbackInput = isTrailingStop && (
     <TrailingCallbackInput
+      isCallbackValue={!!item.callback_value}
       callback_value={formattedOrder.callback_value}
       callback_rate={formattedOrder.callback_rate}
     />

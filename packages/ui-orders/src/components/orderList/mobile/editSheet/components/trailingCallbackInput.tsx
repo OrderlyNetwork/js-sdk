@@ -4,17 +4,17 @@ import { cn, Input, inputFormatter, Text } from "@orderly.network/ui";
 import { useEditSheetContext } from "./editSheetContext";
 
 type TrailingCallbackInputProps = {
+  isCallbackValue?: boolean;
   callback_value?: number;
   callback_rate?: number;
 };
 
 export const TrailingCallbackInput = memo(
   (props: TrailingCallbackInputProps) => {
+    const { isCallbackValue, callback_value, callback_rate } = props;
     const { t } = useTranslation();
     const { symbolInfo, setOrderValue, getErrorMsg } = useEditSheetContext();
     const { quote, quote_dp } = symbolInfo;
-
-    const isCallbackValue = !!props.callback_value;
 
     const label = isCallbackValue
       ? t("orderEntry.trailingValue")
@@ -58,7 +58,7 @@ export const TrailingCallbackInput = memo(
               ]
             : [...formatters, inputFormatter.dpFormatter(1)]
         }
-        value={isCallbackValue ? props.callback_value : props.callback_rate}
+        value={isCallbackValue ? callback_value : callback_rate}
         onValueChange={(val) => setOrderValue(field, val)}
         tooltip={error}
         tooltipProps={{
