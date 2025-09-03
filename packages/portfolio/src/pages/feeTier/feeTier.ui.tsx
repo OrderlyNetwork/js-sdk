@@ -94,8 +94,8 @@ export const FeeTierHeaderItem: React.FC<FeeTierHeaderItemProps> = (props) => {
 
 export const FeeTierHeader: React.FC<FeeTierHeaderProps> = (props) => {
   const { t } = useTranslation();
-  const { rebateRate, ...others } = useFeeState();
-  const isEffectiveFee = isEffective(rebateRate);
+  const { refereeRebate, ...others } = useFeeState();
+  const isEffectiveFee = isEffective(refereeRebate);
   return (
     <Flex direction="row" gapX={4} my={4} itemAlign={"stretch"}>
       <FeeTierHeaderItem

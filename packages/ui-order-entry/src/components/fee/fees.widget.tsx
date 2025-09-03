@@ -7,8 +7,8 @@ const isEffective = (val?: unknown) =>
   typeof val !== "undefined" && val !== null;
 
 export const FeesWidget: React.FC = () => {
-  const { rebateRate, ...others } = useFeeState();
-  return isEffective(rebateRate) ? (
+  const { refereeRebate, ...others } = useFeeState();
+  return isEffective(refereeRebate) ? (
     <EffectiveFeesWidget {...others} />
   ) : (
     <RegularFeesWidget {...others} />
