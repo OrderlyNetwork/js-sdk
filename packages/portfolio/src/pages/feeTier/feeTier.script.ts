@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   useAccount,
   useAccountInfo,
@@ -32,6 +32,7 @@ export interface FeeDataType {
   tier: number;
   volume_min?: number | null;
   volume_max?: number | null;
+  volume_node?: React.ReactNode;
   or?: string | null;
   maker_fee: string;
   taker_fee: string;

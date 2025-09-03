@@ -24,7 +24,10 @@ export const useFeeTierColumns = () => {
         align: "center",
         width: 180,
         render: (val, record) => {
-          const { volume_min, volume_max } = record;
+          const { volume_min, volume_max, volume_node } = record;
+          if (volume_node) {
+            return volume_node;
+          }
           if (!volume_min && !volume_max) {
             return <div style={textStyle}>--</div>;
           }

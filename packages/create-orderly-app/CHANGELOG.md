@@ -1,5 +1,24 @@
 # create-orderly-app
 
+## 1.11.2
+
+### Patch Changes
+
+- publish
+- 7f81015: publish
+- 17613f1: publish
+- ea9c8dc: publish
+- 8afbe01: publish
+- 45b6806: publish
+- 2f90f1d: publish
+- 12d3b9f: publish
+
+## 1.11.2-alpha.0
+
+### Patch Changes
+
+- publish
+
 ## 1.11.1
 
 ### Patch Changes
