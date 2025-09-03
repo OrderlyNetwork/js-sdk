@@ -12,7 +12,7 @@ import {
   Column,
 } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
-import type { useFeeTierScriptReturn } from "./feeTier.script";
+import type { FeeDataType, useFeeTierScriptReturn } from "./feeTier.script";
 
 export type FeeTierProps = useFeeTierScriptReturn;
 
@@ -148,7 +148,7 @@ export const FeeTierTable: React.FC<FeeTierTableProps> = (props) => {
   }, [props.tier]);
 
   const onRow = useCallback(
-    (record: any, index: number) => {
+    (record: FeeDataType, index: number) => {
       const config = props?.onRow?.(record, index) ?? {
         normal: undefined,
         active: undefined,

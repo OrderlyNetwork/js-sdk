@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   useAccount,
   useAccountInfo,
@@ -28,6 +28,33 @@ export type UseFeeTierScriptOptions = {
   };
 };
 
+export interface FeeDataType {
+  tier: number;
+  volume_min?: number | null;
+  volume_max?: number | null;
+  volume_node?: React.ReactNode;
+  or?: string | null;
+  maker_fee: string;
+  taker_fee: string;
+}
+
+const getFuturesCurrentTier = (
+  feeList: FeeDataType[],
+  data: API.AccountInfo,
+) => {
+  const { futures_taker_fee_rate = 0, futures_maker_fee_rate = 0 } = data;
+  const takerRate = `${new Decimal(futures_taker_fee_rate)
+    .mul(0.01)
+    .toString()}%`;
+  const makerRate = `${new Decimal(futures_maker_fee_rate)
+    .mul(0.01)
+    .toString()}%`;
+  const findItem = feeList.find(
+    (item) => item.taker_fee === takerRate && item.maker_fee === makerRate,
+  );
+  return findItem?.tier;
+};
+
 export const useFeeTierScript = (options?: UseFeeTierScriptOptions) => {
   const { dataAdapter } = options || {};
   const [tier, setTier] = useState<number>();
@@ -46,32 +73,11 @@ export const useFeeTierScript = (options?: UseFeeTierScriptOptions) => {
       : { columns: cols, dataSource: defaultDataSource };
   }, [dataAdapter, cols]);
 
-  const getFuturesCurrentTier = (
-    feeList: typeof defaultDataSource,
-    data: API.AccountInfo,
-  ) => {
-    const { futures_taker_fee_rate = 0, futures_maker_fee_rate = 0 } = data;
-    const takerRate = `${new Decimal(futures_taker_fee_rate)
-      .mul(0.01)
-      .toString()}%`;
-    const makerRate = `${new Decimal(futures_maker_fee_rate)
-      .mul(0.01)
-      .toString()}%`;
-
-    for (const item of feeList) {
-      if (takerRate === item.taker_fee && makerRate === item.maker_fee) {
-        return item.tier;
-      }
-    }
-  };
-
   useEffect(() => {
     if (!data) {
       return;
     }
-
-    const tier = getFuturesCurrentTier(dataSource, data);
-    setTier(tier!);
+    setTier(getFuturesCurrentTier(dataSource, data));
   }, [data, dataSource]);
 
   const futures_taker_fee_rate = useMemo(() => {
@@ -107,7 +113,7 @@ export const useFeeTierScript = (options?: UseFeeTierScriptOptions) => {
 
   return {
     ...authData,
-    columns,
+    columns: columns,
     dataSource: dataSource,
     onRow: options?.onRow,
   };
