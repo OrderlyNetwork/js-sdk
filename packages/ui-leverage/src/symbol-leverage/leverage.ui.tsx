@@ -1,7 +1,6 @@
 import { useTranslation } from "@orderly.network/i18n";
 import { TokenIcon, Text, Badge, Divider } from "@orderly.network/ui";
-import { Leverage } from "@orderly.network/ui-leverage";
-import { LeverageBadge } from "../desktop/components";
+import { Leverage } from "../index";
 import { SymbolLeverageScriptReturns } from "./leverage.script";
 
 export const SymbolLeverageUI = (props: SymbolLeverageScriptReturns) => {
@@ -29,13 +28,23 @@ export const SymbolLeverageUI = (props: SymbolLeverageScriptReturns) => {
           <Badge color={isBuy ? "success" : "danger"} size="xs">
             {isBuy ? t("common.long") : t("common.short")}
           </Badge>
-          <LeverageBadge
+          {/* <LeverageBadge
             symbol={props.symbol || ""}
             leverage={props.currentLeverage}
-          />
+          /> */}
         </div>
       </div>
       <Leverage {...props} />
     </div>
   );
 };
+
+// const LeverageDisplay = ({ symbol }: { symbol: string }) => {
+//   const leverage = useSymbolLeverage(symbol);
+
+//   return (
+//     <Text.numeral dp={0} rm={Decimal.ROUND_DOWN} size="2xs" unit="X">
+//       {leverage !== "-" ? leverage : "--"}
+//     </Text.numeral>
+//   );
+// };

@@ -10,6 +10,7 @@ import {
   useScreen,
 } from "@orderly.network/ui";
 import { modal } from "@orderly.network/ui";
+import { SymbolLeverageDialogId } from "@orderly.network/ui-leverage";
 import {
   PositionTPSLPopover,
   TPSLDetailDialogId,
@@ -18,7 +19,6 @@ import {
   TPSLDetailSheetId,
 } from "@orderly.network/ui-tpsl";
 import { Decimal } from "@orderly.network/utils";
-import { SymbolLeverageDialogId } from "../leverage/leverage.widget";
 import { usePositionsRowContext } from "../positionsRowContext";
 
 // ------------ TP/SL Price input end------------

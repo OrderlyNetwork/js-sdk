@@ -23,4 +23,3 @@ registerSimpleDialog(MarketCloseConfirmID, MarketCloseConfirm, {
 
 export * from "./components/positionHistory";
 export * from "./components/liquidation";
-export * from "./components/positions/leverage";

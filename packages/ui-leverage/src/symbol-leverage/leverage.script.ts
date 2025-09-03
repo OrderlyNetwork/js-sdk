@@ -92,6 +92,11 @@ export const useSymbolLeverageScript = (
   const isIncreaseDisabled = leverage >= maxSymbolLeverage;
   const disabled = !leverage || leverage < 1 || leverage > maxSymbolLeverage;
 
+  // todo: need to calculate max position leverage
+  const maxAvailableLeverage = 48;
+  // todo: need to calculate max position amount
+  const maxmiumPositionAmount = 100000;
+
   return {
     leverageLevers: filteredLeverageLevers,
     currentLeverage: curLeverage,
@@ -113,5 +118,7 @@ export const useSymbolLeverageScript = (
     maxLeverage: maxSymbolLeverage,
     toggles: filteredLeverageLevers,
     symbol,
+    maxAvailableLeverage,
+    maxmiumPositionAmount,
   };
 };
