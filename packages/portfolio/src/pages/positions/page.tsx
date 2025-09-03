@@ -155,7 +155,7 @@ const LiquidationTab = () => {
                 rel="noopener noreferrer"
                 className="oui-text-primary"
               >
-                View More
+                {t("positions.Liquidation.tooltip.viewMore")}
               </a>
             </div>
           </div>

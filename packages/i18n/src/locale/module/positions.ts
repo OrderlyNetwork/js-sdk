@@ -51,6 +51,7 @@ export const positions = {
 
   "positions.Liquidation.tooltip.liquidation":
     "An account is subject to liquidation if its Account Margin Ratio falls below its Maintenance Margin Ratio.",
+  "positions.Liquidation.tooltip.viewMore": "View more",
   "positions.Liquidation.col.tooltip.feeRate":
     "The percentage charged for this liquidation, covering both the liquidator’s fee and the insurance fund contribution. This rate varies by symbol.",
   "positions.Liquidation.col.tooltip.fee":
