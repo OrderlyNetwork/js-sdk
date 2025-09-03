@@ -33,11 +33,10 @@ export type PosterLayoutConfig = {
 };
 
 export type SharePnLConfig = SharePnLOptions &
-  Partial<Omit<SharePnLParams, "refCode" | "leverage">>;
+  Partial<Omit<SharePnLParams, "refCode">>;
 
 export type SharePnLParams = {
   entity: ShareEntity;
-  leverage?: number;
   refCode?: string;
   refSlogan?: string;
   refLink?: string;

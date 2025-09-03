@@ -16,12 +16,8 @@ import { SharePnLOptions, SharePnLDialogId } from "@orderly.network/ui-share";
 import { Decimal } from "@orderly.network/utils";
 import { FundingFeeButton } from "../../fundingFeeHistory/fundingFeeButton";
 import { ClosePositionWidget } from "../closePosition";
-import { TPSLButton, LeverageBadge } from "./components";
-import {
-  renderPriceInput,
-  renderQuantity,
-  renderQuantityInput,
-} from "./listElement";
+import { LeverageBadge } from "./components";
+import { renderQuantity } from "./listElement";
 import { NumeralWithCtx } from "./numeralWithCtx";
 import { PartialTPSL } from "./partialTPSL";
 import { ShareButtonWidget } from "./shareButton";

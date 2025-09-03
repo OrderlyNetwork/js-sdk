@@ -24,11 +24,10 @@
       }
     }
 */
-
-import { Decimal } from "@orderly.network/utils";
-import { PnLDisplayFormat, ShareEntity, ShareOptions } from "../../types/types";
 // import { PnLDisplayFormat, ShareOptions } from "./type";
 import { useTranslation } from "@orderly.network/i18n";
+import { Decimal } from "@orderly.network/utils";
+import { PnLDisplayFormat, ShareEntity, ShareOptions } from "../../types/types";
 
 export type ReferralType = {
   code?: string;
@@ -38,14 +37,13 @@ export type ReferralType = {
 
 export function getPnLPosterData(
   position: ShareEntity,
-  leverage: number | string,
   message: string,
   domain: string,
   pnlType: PnLDisplayFormat,
   options: Set<ShareOptions>,
   baseDp?: number,
   quoteDp?: number,
-  referral?: ReferralType
+  referral?: ReferralType,
 ) {
   const { t } = useTranslation();
   const { symbol, currency } = processSymbol(position.symbol);
@@ -60,7 +58,7 @@ export function getPnLPosterData(
       if (position.pnl != null) {
         positionData["pnl"] = new Decimal(position.pnl).toFixed(
           2,
-          Decimal.ROUND_DOWN
+          Decimal.ROUND_DOWN,
         );
       }
       break;
@@ -69,7 +67,7 @@ export function getPnLPosterData(
       if (position.roi != null) {
         positionData["ROI"] = new Decimal(position.roi).toFixed(
           2,
-          Decimal.ROUND_DOWN
+          Decimal.ROUND_DOWN,
         );
       }
       break;
@@ -78,13 +76,13 @@ export function getPnLPosterData(
       if (position.pnl != null) {
         positionData["pnl"] = new Decimal(position.pnl).toFixed(
           2,
-          Decimal.ROUND_DOWN
+          Decimal.ROUND_DOWN,
         );
       }
       if (position.roi != null) {
         positionData["ROI"] = new Decimal(position.roi).toFixed(
           2,
-          Decimal.ROUND_DOWN
+          Decimal.ROUND_DOWN,
         );
       }
       break;
@@ -94,7 +92,7 @@ export function getPnLPosterData(
   const informations: { title: string; value: any }[] = [];
 
   if (options.has("leverage")) {
-    positionData["leverage"] = leverage;
+    positionData["leverage"] = position.leverage;
   }
   const array: ShareOptions[] = [
     "openPrice",
@@ -229,19 +227,19 @@ function formatShareTime(input: number | Date): string {
   // console.log("formattedParts", formattedParts);
 
   const year = formattedParts.find((part) =>
-    part.type === "year" ? part.value : ""
+    part.type === "year" ? part.value : "",
   )?.value;
   const month = formattedParts.find((part) =>
-    part.type === "month" ? part.value : ""
+    part.type === "month" ? part.value : "",
   )?.value;
   const day = formattedParts.find((part) =>
-    part.type === "day" ? part.value : ""
+    part.type === "day" ? part.value : "",
   )?.value;
   const hour = formattedParts.find((part) =>
-    part.type === "hour" ? part.value : ""
+    part.type === "hour" ? part.value : "",
   )?.value;
   const minute = formattedParts.find((part) =>
-    part.type === "minute" ? part.value : ""
+    part.type === "minute" ? part.value : "",
   )?.value;
 
   return `${year}-${month}-${day} ${hour}:${minute}`;
@@ -264,16 +262,16 @@ function formatOpenTime(input: number | Date): string {
   // console.log("formattedParts", formattedParts);
 
   const month = formattedParts.find((part) =>
-    part.type === "month" ? part.value : ""
+    part.type === "month" ? part.value : "",
   )?.value;
   const day = formattedParts.find((part) =>
-    part.type === "day" ? part.value : ""
+    part.type === "day" ? part.value : "",
   )?.value;
   const hour = formattedParts.find((part) =>
-    part.type === "hour" ? part.value : ""
+    part.type === "hour" ? part.value : "",
   )?.value;
   const minute = formattedParts.find((part) =>
-    part.type === "minute" ? part.value : ""
+    part.type === "minute" ? part.value : "",
   )?.value;
 
   return `${month}-${day} ${hour}:${minute}`;
@@ -287,7 +285,7 @@ export function savePnlInfo(
   format: PnLDisplayFormat,
   options: Set<ShareOptions>,
   bgIndex: number,
-  message: string
+  message: string,
 ) {
   localStorage.setItem(
     "pnl_config_key",
@@ -296,7 +294,7 @@ export function savePnlInfo(
       pnlFormat: format,
       options: Array.from(options),
       message: message,
-    })
+    }),
   );
 }
 
