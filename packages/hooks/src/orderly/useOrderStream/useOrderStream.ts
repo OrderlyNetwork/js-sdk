@@ -284,7 +284,10 @@ export const useOrderStream = (
   const cancelAllOrders = useCallback(() => {
     return Promise.all([
       doCancelAllOrders(null),
-      doCancelAllAlgoOrders(null, { algo_type: "STOP" }),
+      doCancelAllAlgoOrders(null, { algo_type: AlgoOrderRootType.STOP }),
+      doCancelAllAlgoOrders(null, {
+        algo_type: AlgoOrderRootType.TRAILING_STOP,
+      }),
     ]);
   }, [normalOrdersResponse.data, algoOrdersResponse.data]);
 
