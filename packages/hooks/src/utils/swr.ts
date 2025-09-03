@@ -218,9 +218,11 @@ export function updateAlgoOrdersHandler(
 
   const mergeHandler = new AlgoOrderMergeHandler(message);
 
-  const result = mergeHandler.merge(key, message, orders);
+  const mergedOrders = mergeHandler.merge(key, message, orders);
 
-  return result;
+  const isExtremePriceUpdated = mergeHandler.isExtremePriceUpdated(orders);
+
+  return { mergedOrders, isExtremePriceUpdated };
 }
 
 function updateOrders(

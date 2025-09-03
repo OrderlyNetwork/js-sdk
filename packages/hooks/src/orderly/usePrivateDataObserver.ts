@@ -188,6 +188,8 @@ export const usePrivateDataObserver = (options: {
       }
     }
 
+    let skipEmitOrderEvent = false;
+
     filteredKeys.forEach((getKey, key) => {
       mutate(
         unstable_serialize((index, prevData) => [
@@ -197,13 +199,13 @@ export const usePrivateDataObserver = (options: {
         (prevData?: any[]) => {
           try {
             if (isAlgoOrder) {
-              const result = updateAlgoOrdersHandler(
+              const res = updateAlgoOrdersHandler(
                 key,
                 data as WSMessage.AlgoOrder[],
                 prevData!,
               );
-
-              return result;
+              skipEmitOrderEvent = !!res?.isExtremePriceUpdated;
+              return res?.mergedOrders;
             }
             return updateOrdersHandler(key, data as WSMessage.Order, prevData);
           } catch (error) {
@@ -221,6 +223,10 @@ export const usePrivateDataObserver = (options: {
     //   ...data,
     //   status: data.status || (data as WSMessage.AlgoOrder).algoStatus,
     // });
+
+    if (skipEmitOrderEvent) {
+      return;
+    }
 
     const formattedData = isAlgoOrder
       ? AlgoOrderMergeHandler.groupOrders(data as WSMessage.AlgoOrder[])

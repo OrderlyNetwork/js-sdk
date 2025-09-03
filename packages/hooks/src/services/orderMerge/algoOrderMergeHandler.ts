@@ -2,11 +2,12 @@ import {
   AlgoOrderRootType,
   AlgoOrderType,
   API,
+  OrderStatus,
   SDKError,
   WSMessage,
 } from "@orderly.network/types";
-import { BaseMergeHandler } from "./baseMergeHandler";
 import { object2underscore } from "../../utils/ws";
+import { BaseMergeHandler } from "./baseMergeHandler";
 
 export class AlgoOrderMergeHandler extends BaseMergeHandler<
   WSMessage.AlgoOrder[],
@@ -35,7 +36,7 @@ export class AlgoOrderMergeHandler extends BaseMergeHandler<
 
   pre(
     message: WSMessage.AlgoOrder[],
-    prevData?: API.OrderResponse[]
+    prevData?: API.OrderResponse[],
   ): API.AlgoOrder {
     return AlgoOrderMergeHandler.groupOrders(message);
   }
@@ -62,14 +63,14 @@ export class AlgoOrderMergeHandler extends BaseMergeHandler<
     const rootOrderIndex = orders.findIndex(
       (order) =>
         order.parentAlgoOrderId === 0 &&
-        order.algoOrderId === order.rootAlgoOrderId
+        order.algoOrderId === order.rootAlgoOrderId,
     );
     if (rootOrderIndex === -1) {
       throw new SDKError("Root order not found");
     }
 
     const rootOrder_ = object2underscore(
-      orders[rootOrderIndex]
+      orders[rootOrderIndex],
     ) as unknown as API.AlgoOrder;
 
     rootOrder_.child_orders = orders
@@ -97,7 +98,7 @@ export class AlgoOrderMergeHandler extends BaseMergeHandler<
     const rootOrderIndex = innerOrders.findIndex(
       (order) =>
         order.algoType !== AlgoOrderType.STOP_LOSS &&
-        order.algoType !== AlgoOrderType.TAKE_PROFIT
+        order.algoType !== AlgoOrderType.TAKE_PROFIT,
     );
     if (rootOrderIndex === -1) {
       throw new SDKError("Root order not found");
@@ -105,9 +106,49 @@ export class AlgoOrderMergeHandler extends BaseMergeHandler<
 
     const rootOrder = innerOrders.splice(
       rootOrderIndex,
-      1
+      1,
     )[0] as unknown as API.AlgoOrder;
     rootOrder.child_orders = innerOrders as unknown as API.AlgoOrder[];
     return rootOrder;
+  }
+
+  isExtremePriceUpdated(prevData?: API.OrderResponse[]) {
+    const {
+      algo_order_id,
+      algo_status,
+      is_activated,
+      extreme_price,
+      algo_type,
+      quantity,
+      activated_price,
+      callback_value,
+      callback_rate,
+    } = this.data || {};
+    if (
+      algo_status === OrderStatus.REPLACED &&
+      algo_type === AlgoOrderRootType.TRAILING_STOP &&
+      is_activated &&
+      extreme_price &&
+      prevData?.length
+    ) {
+      for (const item of prevData) {
+        const algoOrders = item.rows as API.AlgoOrder[];
+        for (const order of algoOrders) {
+          if (
+            order.algo_order_id === algo_order_id &&
+            order.quantity === quantity &&
+            order.callback_value === callback_value &&
+            order.callback_rate === callback_rate &&
+            order.activated_price === activated_price &&
+            // only check if the extreme price is different
+            order.extreme_price !== extreme_price
+          ) {
+            return true;
+          }
+        }
+      }
+    }
+
+    return false;
   }
 }
