@@ -598,6 +598,10 @@ export declare namespace API {
     liquidation_id: number;
     timestamp: number;
     transfer_amount_to_insurance_fund: number;
+    margin_ratio: number;
+    account_mmr: number;
+    collateral_value: number;
+    position_notional: number;
     positions_by_perp: LiquidationPositionByPerp[];
   }
 

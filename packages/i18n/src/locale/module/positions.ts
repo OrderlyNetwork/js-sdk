@@ -46,6 +46,28 @@ export const positions = {
   "positions.Liquidation.column.liquidationId": "Liquidation id",
   "positions.Liquidation.column.insFundTransfer": "Ins. fund transfer",
   "positions.Liquidation.column.liquidationFee": "Liquidation fee",
+  "positions.Liquidation.column.liquidationFeeRate": "Liquidation fee rate",
+  "positions.Liquidation.column.markPrice": "Liq. mark price",
+
+  "positions.Liquidation.tooltip.liquidation":
+    "An account is subject to liquidation if its Account Margin Ratio falls below its Maintenance Margin Ratio.",
+  "positions.Liquidation.col.tooltip.feeRate":
+    "The percentage charged for this liquidation, covering both the liquidator’s fee and the insurance fund contribution. This rate varies by symbol.",
+  "positions.Liquidation.col.tooltip.fee":
+    "The total fee charged for this liquidation, including both the liquidator’s fee and the insurance fund contribution.",
+
+  "positions.Liquidation.expand.label.mr": "Margin ratio",
+  "positions.Liquidation.expand.label.mmr": "Maint. margin ratio",
+  "positions.Liquidation.expand.label.collateral": "Collateral value",
+  "positions.Liquidation.expand.label.notional": "Position notional",
+  "positions.Liquidation.expand.tooltip.mr":
+    "The ratio of collateral to position size at the time of liquidation.",
+  "positions.Liquidation.expand.tooltip.mmr":
+    "The minimum margin required to keep the position open.",
+  "positions.Liquidation.expand.tooltip.collateral":
+    "Total collateral value in the account when liquidation occurred.",
+  "positions.Liquidation.expand.tooltip.notional":
+    "The total notional value of positions in the account at liquidation.",
 };
 
 export type Positions = typeof positions;

@@ -6,6 +6,7 @@ import {
   Box,
   Divider,
   Flex,
+  InfoCircleIcon,
   TabPanel,
   Tabs,
   Tooltip,
@@ -171,37 +172,33 @@ export const LiquidationTab = () => {
       <Tooltip
         className="oui-max-w-[275px] oui-bg-base-6"
         content={
-          "An account is subject to liquidation if its Account Margin Ratio falls below its Maintenance Margin Ratio."
+          <div>
+            <div className="oui-text-pretty">
+              {t("positions.Liquidation.tooltip.liquidation")}
+            </div>
+            <div>
+              <a
+                href="https://orderly.network/docs/introduction/trade-on-orderly/perpetual-futures/liquidations"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="oui-text-primary"
+              >
+                View More
+              </a>
+            </div>
+          </div>
         }
         arrow={{
           className: "oui-fill-base-6",
         }}
       >
         <button className="oui-hidden group-data-[state=active]:oui-block">
-          <TooltipIcon />
+          <InfoCircleIcon />
         </button>
       </Tooltip>
     </div>
   );
 };
-
-const TooltipIcon = React.forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
-  (props, ref) => {
-    return (
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 12 12"
-        fill="currentColor"
-        xmlns="http://www.w3.org/2000/svg"
-        ref={ref}
-        {...props}
-      >
-        <path d="M5.999 1.007a5 5 0 1 0 0 10 5 5 0 0 0 0-10m0 2.5a.5.5 0 1 1 0 1 .5.5 0 0 1 0-1m0 1.5a.5.5 0 0 1 .5.5v2.5a.5.5 0 0 1-1 0v-2.5a.5.5 0 0 1 .5-.5" />
-      </svg>
-    );
-  },
-);
 
 const PositionsView: FC<DataListState> = (props) => {
   return (

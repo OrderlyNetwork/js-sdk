@@ -1,4 +1,5 @@
 import { FC, useState } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
 import {
   cn,
@@ -119,13 +120,10 @@ const TooltipHeaderCell: FC<{
 const LiquidationDetails: FC<{
   record: API.Liquidation;
 }> = (props) => {
-  const {
-    margin_ratio,
-    maint_margin_ratio,
-    account_mmr,
-    collateral_value,
-    position_notional,
-  } = props.record as any;
+  const { margin_ratio, account_mmr, collateral_value, position_notional } =
+    props.record as any;
+
+  const { t } = useTranslation();
 
   return (
     <div className="oui-w-full oui-bg-base-8 oui-px-6">
@@ -135,21 +133,21 @@ const LiquidationDetails: FC<{
         <thead>
           <tr>
             <TooltipHeaderCell
-              tooltip="The ratio of collateral to position size at the time of liquidation."
-              label="Margin ratio"
+              tooltip={t("positions.Liquidation.expand.tooltip.mr")}
+              label={t("positions.Liquidation.expand.label.mr")}
               side="left"
             />
             <TooltipHeaderCell
-              tooltip="The minimum margin required to keep the position open."
-              label="Maint. margin ratio"
+              tooltip={t("positions.Liquidation.expand.tooltip.mmr")}
+              label={t("positions.Liquidation.expand.label.mmr")}
             />
             <TooltipHeaderCell
-              tooltip="Total collateral value in the account when liquidation occurred."
-              label="Collateral value"
+              tooltip={t("positions.Liquidation.expand.tooltip.collateral")}
+              label={t("positions.Liquidation.expand.label.collateral")}
             />
             <TooltipHeaderCell
-              tooltip="The total notional value of positions in the account at liquidation."
-              label="Position notional"
+              tooltip={t("positions.Liquidation.expand.tooltip.notional")}
+              label={t("positions.Liquidation.expand.label.notional")}
             />
           </tr>
         </thead>
@@ -159,7 +157,7 @@ const LiquidationDetails: FC<{
               <Text.numeral rule="percentages">{margin_ratio}</Text.numeral>
             </td>
             <td className="oui-h-10">
-              <Text.numeral>{account_mmr}</Text.numeral>
+              <Text.numeral rule="percentages">{account_mmr}</Text.numeral>
             </td>
             <td className="oui-h-10">{commifyOptional(collateral_value)}</td>
             <td className="oui-h-10">{commifyOptional(position_notional)}</td>

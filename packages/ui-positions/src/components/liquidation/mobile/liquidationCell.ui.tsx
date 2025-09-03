@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { cn, Flex, Text, Divider, Badge } from "@orderly.network/ui";
 import { commifyOptional, Decimal } from "@orderly.network/utils";
@@ -45,9 +45,9 @@ export const Header: FC<LiquidationCellState> = (props) => {
             >
               {props.item.positions_by_perp?.[0]?.symbol || ""}
             </Text.formatted>
-            <Badge size="sm" color="neutral">
+            {/* <Badge size="sm" color="neutral">
               Cross 10X
-            </Badge>
+            </Badge> */}
           </Flex>
         </Flex>
       </Flex>
@@ -71,6 +71,11 @@ export const Header: FC<LiquidationCellState> = (props) => {
 export const Body: FC<LiquidationCellState> = (props) => {
   const position = props.item.positions_by_perp?.[0];
   const { t } = useTranslation();
+  const mr = useMemo(() => {
+    if (isNaN(props.item?.margin_ratio)) return "--";
+    return `${new Decimal(props.item.margin_ratio).mul(100).todp(2, Decimal.ROUND_DOWN).toNumber()}%`;
+  }, [props.item?.margin_ratio]);
+
   if (!position) return null;
 
   return (
@@ -78,7 +83,7 @@ export const Body: FC<LiquidationCellState> = (props) => {
       {/* First row */}
       <Flex gap={2} width={"100%"}>
         <DataItem
-          label={`${t("common.price")} (USDC)`}
+          label={t("positions.Liquidation.column.markPrice")}
           value={commifyOptional(position.transfer_price)}
           className="oui-flex-1"
         />
@@ -88,7 +93,7 @@ export const Body: FC<LiquidationCellState> = (props) => {
           className="oui-flex-1"
         />
         <DataItem
-          label="Liquidation fee rate"
+          label={t("positions.Liquidation.column.liquidationFeeRate")}
           value={props.item.liquidationFeeRate}
           className="oui-flex-1"
           align="end"
@@ -98,13 +103,17 @@ export const Body: FC<LiquidationCellState> = (props) => {
       {/* Second row */}
       <Flex gap={2} width={"100%"}>
         <DataItem
-          label="Liquidation fee"
+          label={t("positions.Liquidation.column.liquidationFee")}
           value={commifyOptional(position.abs_liquidation_fee)}
           className="oui-flex-1"
         />
-        <DataItem label="Margin ratio" value="1.23%" className="oui-flex-1" />
         <DataItem
-          label="Maint. margin ratio"
+          label={t("positions.Liquidation.expand.label.mr")}
+          value={mr}
+          className="oui-flex-1"
+        />
+        <DataItem
+          label={t("positions.Liquidation.expand.label.mmr")}
           value={
             props.item.formatted_account_mmr
               ? `${props.item.formatted_account_mmr}%`
@@ -118,12 +127,12 @@ export const Body: FC<LiquidationCellState> = (props) => {
       {/* Third row */}
       <Flex gap={2} width={"100%"}>
         <DataItem
-          label="Collateral value"
+          label={t("positions.Liquidation.expand.label.collateral")}
           value={commifyOptional(props.item.collateral_value)}
           className="oui-flex-1"
         />
         <DataItem
-          label="Position notional"
+          label={t("positions.Liquidation.expand.label.notional")}
           value={commifyOptional(props.item.position_notional)}
           className="oui-flex-1"
         />
@@ -135,7 +144,7 @@ export const Body: FC<LiquidationCellState> = (props) => {
 
 const DataItem: FC<{
   label: string;
-  value: string;
+  value: string | number;
   className?: string;
   align?: "start" | "end";
 }> = ({ label, value, className, align = "start" }) => {

@@ -44,18 +44,22 @@ export const useLiquidationColumn = (props: {}) => {
         {
           title: t("positions.Liquidation.column.liquidationId"),
           dataIndex: "liquidation_id",
-          width: 202,
+          width: 120,
           render: (value) => <Text>{value}</Text>,
         },
         // Symbol
         {
           title: t("common.symbol"),
           dataIndex: "Symbol",
-          width: 202,
+          // width: 202,
           render: (_: any, record) => (
             <Flex direction={"column"} itemAlign={"start"}>
               {record.positions_by_perp?.map((item) => (
-                <Text.formatted rule={"symbol"} formatString="base-quote">
+                <Text.formatted
+                  rule={"symbol"}
+                  formatString="base-quote"
+                  key={item.symbol}
+                >
                   {item.symbol}
                 </Text.formatted>
               ))}
@@ -64,16 +68,20 @@ export const useLiquidationColumn = (props: {}) => {
         },
         // Price (USDC)
         {
-          title: `${t("common.price")} (USDC)`,
+          title: t("positions.Liquidation.column.markPrice"),
           dataIndex: "Price_(USDC)",
-          width: 202,
+          // width: 202,
           render: (_: any, record) => {
             return (
               <Flex direction={"column"} itemAlign={"start"}>
                 {record.positions_by_perp?.map((item) => (
                   // <SymbolProvider symbol={item.symbol}>
                   // </SymbolProvider>
-                  <FormattedText value={item.transfer_price} type="quote" />
+                  <FormattedText
+                    value={item.transfer_price}
+                    type="quote"
+                    key={item.symbol}
+                  />
                 ))}
               </Flex>
             );
@@ -83,14 +91,18 @@ export const useLiquidationColumn = (props: {}) => {
         {
           title: t("common.quantity"),
           dataIndex: "Quantity",
-          width: 202,
+          // width: 202,
           render: (_: any, record) => {
             return (
               <Flex direction={"column"} itemAlign={"start"}>
                 {record.positions_by_perp?.map((item) => (
                   // <SymbolProvider symbol={item.symbol}>
                   // </SymbolProvider>
-                  <FormattedText value={item.position_qty} type="base" />
+                  <FormattedText
+                    value={item.position_qty}
+                    type="base"
+                    key={item.symbol}
+                  />
                 ))}
               </Flex>
             );
@@ -111,12 +123,12 @@ export const useLiquidationColumn = (props: {}) => {
         {
           title: (
             <TooltipButton
-              tooltip="The percentage charged for this liquidation, covering both the liquidator’s fee and the insurance fund contribution. This rate varies by symbol."
-              label="Liquidation fee rate"
+              tooltip={t("positions.Liquidation.col.tooltip.feeRate")}
+              label={t("positions.Liquidation.column.liquidationFeeRate")}
             />
           ),
           dataIndex: "liquidationFeeRate",
-          width: 202,
+          // width: 202,
           render: (value) => {
             return <Text.numeral rule="percentages">{value}</Text.numeral>;
             // return <Text>{commifyOptional(value)}</Text>;
@@ -127,7 +139,7 @@ export const useLiquidationColumn = (props: {}) => {
         {
           title: (
             <TooltipButton
-              tooltip="The total fee charged for this liquidation, including both the liquidator’s fee and the insurance fund contribution."
+              tooltip={t("positions.Liquidation.col.tooltip.fee")}
               label={t("positions.Liquidation.column.liquidationFee")}
             />
           ),

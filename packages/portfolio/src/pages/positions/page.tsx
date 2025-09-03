@@ -11,6 +11,8 @@ import {
   TabPanel,
   DataFilter,
   formatAddress,
+  Tooltip,
+  InfoCircleIcon,
 } from "@orderly.network/ui";
 import {
   LiquidationWidget,
@@ -92,6 +94,7 @@ export const PositionsPage: React.FC<PositionsProps> = (props) => {
           classNames={{
             tabsList: "!oui-border-none oui-pb-1",
             tabsContent: "oui-h-[calc(100%_-_28px)]",
+            trigger: "oui-group",
           }}
           className="oui-h-full"
         >
@@ -124,14 +127,47 @@ export const PositionsPage: React.FC<PositionsProps> = (props) => {
           >
             <PositionHistoryWidget {...props} />
           </TabPanel>
-          <TabPanel
-            value={TabsType.liquidation}
-            title={t("positions.liquidation")}
-          >
+          <TabPanel value={TabsType.liquidation} title={<LiquidationTab />}>
             <LiquidationWidget />
           </TabPanel>
         </Tabs>
       </Box>
     </Flex>
+  );
+};
+
+const LiquidationTab = () => {
+  const { t } = useTranslation();
+  return (
+    <div className="oui-flex oui-space-x-1">
+      <span>{t("positions.liquidation")}</span>
+      <Tooltip
+        className="oui-max-w-[275px] oui-bg-base-6"
+        content={
+          <div>
+            <div className="oui-text-pretty">
+              {t("positions.Liquidation.tooltip.liquidation")}
+            </div>
+            <div>
+              <a
+                href="https://orderly.network/docs/introduction/trade-on-orderly/perpetual-futures/liquidations"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="oui-text-primary"
+              >
+                View More
+              </a>
+            </div>
+          </div>
+        }
+        arrow={{
+          className: "oui-fill-base-6",
+        }}
+      >
+        <button className="oui-hidden group-data-[state=active]:oui-block">
+          <InfoCircleIcon />
+        </button>
+      </Tooltip>
+    </div>
   );
 };
