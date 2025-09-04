@@ -27,7 +27,7 @@ export const useFeeState = () => {
   const { data: accountInfo, isLoading: isAccountLoading } = useAccountInfo();
 
   const { data: referralData, isLoading: isReferralLoading } =
-    usePrivateQuery<RefferalAPI.ReferralInfo>("/v1/referral/info?a=1", {
+    usePrivateQuery<RefferalAPI.ReferralInfo>("/v1/referral/info", {
       revalidateOnFocus: true,
     });
 
