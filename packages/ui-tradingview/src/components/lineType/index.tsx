@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import {
   Box,
   cn,
@@ -17,13 +18,13 @@ import {
   HollowCandlesIcon,
   LineIcon,
 } from "../../icons";
-import { useTranslation } from "@orderly.network/i18n";
 
 interface IProps {
   lineType: string;
   changeLineType: (type: string) => void;
 }
-export default function LineType(props: IProps) {
+
+const LineType: React.FC<IProps> = (props) => {
   const [open, setOpen] = useState(false);
   const { t } = useTranslation();
   const lineTypeList = useMemo(() => {
@@ -70,13 +71,14 @@ export default function LineType(props: IProps) {
     }
     return lineTypeList[1].icon;
   }, [props.lineType]);
+
   return (
     <DropdownMenuRoot open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
         <Box
           className={cn(
             "oui-w-[18px] oui-h-[18px] oui-cursor-pointer oui-text-base-contrast-36 hover:oui-text-base-contrast-80",
-            open && "oui-text-base-contrast-80"
+            open && "oui-text-base-contrast-80",
           )}
         >
           {currentLineTypeIcon}
@@ -107,7 +109,7 @@ export default function LineType(props: IProps) {
                 gap={2}
                 className={cn(
                   "oui-text-base-contrast-36 oui-cursor-pointer oui-w-full hover:oui-text-base-contrast",
-                  props.lineType === item.value && "oui-text-base-contrast"
+                  props.lineType === item.value && "oui-text-base-contrast",
                 )}
                 onClick={() => props.changeLineType(item.value)}
               >
@@ -120,4 +122,6 @@ export default function LineType(props: IProps) {
       </DropdownMenuPortal>
     </DropdownMenuRoot>
   );
-}
+};
+
+export default LineType;

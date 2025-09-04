@@ -1,12 +1,13 @@
+import React from "react";
+import { i18n } from "@orderly.network/i18n";
 import { registerSimpleDialog, registerSimpleSheet } from "@orderly.network/ui";
 import { useWalletConnectorBuilder } from "./useWalletConnectorBuilder";
 import { WalletConnectContent } from "./walletConnectorContent";
-import { i18n } from "@orderly.network/i18n";
 
 export const WalletConnectorModalId = "walletConnector" as const;
 export const WalletConnectorSheetId = "walletConnectorSheet" as const;
 
-export const WalletConnectorWidget = (props: any) => {
+export const WalletConnectorWidget: React.FC<any> = (props) => {
   const state = useWalletConnectorBuilder();
   return <WalletConnectContent {...state} {...props} />;
 };

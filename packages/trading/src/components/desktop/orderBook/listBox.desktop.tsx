@@ -9,6 +9,7 @@ import {
   TooltipArrow,
   cn,
 } from "@orderly.network/ui";
+import { Decimal } from "@orderly.network/utils";
 import { BasicSymbolInfo } from "../../../types/types";
 import { useOrderBookContext } from "../../base/orderBook/orderContext";
 import { OrderBookCellType } from "../../base/orderBook/types";
@@ -30,7 +31,10 @@ const calcHintInfo = (item: number[] | null) => {
   return {
     sumQty: sumQty,
     sumQtyAmount: sumQtyAmount,
-    avgPrice: sumQty === 0 ? 0 : sumQtyAmount / sumQty,
+    avgPrice:
+      sumQtyAmount === 0 || sumQty === 0
+        ? 0
+        : new Decimal(sumQtyAmount).div(sumQty).toNumber(),
   };
 };
 
@@ -183,7 +187,8 @@ const Tip: React.FC<{
         <Row
           title={`${t("common.avgPrice")}≈`}
           content={hintInfo.avgPrice}
-          contentDp={priceDp}
+          // contentDp={priceDp}
+          contentDp={quoteDp}
         />
         <Row
           title={`${t("trading.orderBook.sum")} (${base})`}

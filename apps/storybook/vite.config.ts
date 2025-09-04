@@ -4,6 +4,7 @@ import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
 // import react from "@vitejs/plugin-react";
 // https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react-swc
 import react from "@vitejs/plugin-react-swc";
+import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vite";
@@ -33,6 +34,16 @@ function getAliasConfig(): Record<string, string> {
   return {};
 }
 
+function getSSLHttpsConfig() {
+  if (!process.env.VITE_SSL_KEY_PATH || !process.env.VITE_SSL_CERT_PATH) {
+    return undefined;
+  }
+  return {
+    key: fs.readFileSync(process.env.VITE_SSL_KEY_PATH),
+    cert: fs.readFileSync(process.env.VITE_SSL_CERT_PATH),
+  };
+}
+
 function getOptimizeDepsConfig() {
   // const allPackages = getAllPackages();
   // return allPackages.map((item) => item.package);
@@ -47,6 +58,7 @@ export default defineConfig({
       // storybook has own watch config, need to use viteFinal to override this in main.ts
       ignored: getWatchIgnores(),
     },
+    https: getSSLHttpsConfig(),
   },
   plugins: [
     react(),

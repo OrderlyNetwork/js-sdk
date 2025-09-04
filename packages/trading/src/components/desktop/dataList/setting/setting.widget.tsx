@@ -1,3 +1,4 @@
+import React from "react";
 import { useSettingScript } from "./setting.script";
 import { Setting } from "./setting.ui";
 
@@ -8,9 +9,9 @@ export type SettingWidgetProps = {
   setUnPnlPriceBasic: (value: string) => void;
   hideOtherSymbols: any;
   setHideOtherSymbols: (value: boolean) => void;
-}
+};
 
-export const SettingWidget = (props: SettingWidgetProps) => {
+export const SettingWidget: React.FC<SettingWidgetProps> = (props) => {
   const state = useSettingScript(props);
   return <Setting {...state} />;
 };

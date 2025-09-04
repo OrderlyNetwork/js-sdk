@@ -1,6 +1,7 @@
+import React from "react";
 import { LastTradesWidget } from "../../base/lastTrades";
 
-export const MWebLastTrades = (props: { symbol: string }) => {
+export const MWebLastTrades: React.FC<{ symbol: string }> = (props) => {
   return (
     <LastTradesWidget
       symbol={props.symbol}

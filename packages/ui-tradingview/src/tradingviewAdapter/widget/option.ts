@@ -28,6 +28,7 @@ const getDisabledFeatures = (mode: ChartMode) => {
       "timeframes_toolbar",
       "go_to_date",
       "timezone_menu",
+      // add volume back
       "create_volume_indicator_by_default",
       "buy_sell_buttons",
     ];
@@ -54,7 +55,7 @@ const getDisabledFeatures = (mode: ChartMode) => {
 
 export default function getOptions(
   options: any,
-  mode: any
+  mode: any,
 ): TradingTerminalWidgetOptions {
   return {
     ...options,

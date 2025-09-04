@@ -260,12 +260,12 @@ export class OrderLineService {
       .setQuantity(quantity ?? "")
       .setPrice(price);
 
-    if (this.broker.mode !== ChartMode.MOBILE) {
-      orderLine.onCancel(null, () => this.broker.cancelOrder(pendingOrder));
-      this.applyEditOnMove(orderLine, pendingOrder);
-    } else {
-      orderLine.setEditable(false).setCancellable(false);
-    }
+    // if (this.broker.mode !== ChartMode.MOBILE) {
+    // } else {
+    //   orderLine.setEditable(false).setCancellable(false);
+    // }
+    orderLine.onCancel(null, () => this.broker.cancelOrder(pendingOrder));
+    this.applyEditOnMove(orderLine, pendingOrder);
 
     return orderLine;
   }

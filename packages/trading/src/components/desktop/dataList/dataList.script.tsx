@@ -17,9 +17,7 @@ export enum DataListTabType {
 }
 
 export const useDataListScript = (
-  props: {
-    current?: DataListTabType;
-  } & PositionsProps,
+  props: { current?: DataListTabType } & PositionsProps,
 ) => {
   const {
     current,

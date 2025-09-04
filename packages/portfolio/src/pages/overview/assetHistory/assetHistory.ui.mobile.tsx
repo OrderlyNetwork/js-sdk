@@ -71,7 +71,9 @@ export const AssetHistoryMobile: FC<AssetHistoryMobileProps> = (props) => {
 
     // Get tx link
     const getTxLink = () => {
-      if (!item.tx_id) return undefined;
+      if (!item.tx_id) {
+        return undefined;
+      }
 
       const chainInfo =
         chainsInfo && Array.isArray(chainsInfo)

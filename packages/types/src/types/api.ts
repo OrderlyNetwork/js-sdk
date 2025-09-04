@@ -592,12 +592,17 @@ export declare namespace API {
     position_qty: number;
     symbol: string;
     transfer_price: number;
+    mark_price: number;
   }
 
   export interface Liquidation {
     liquidation_id: number;
     timestamp: number;
     transfer_amount_to_insurance_fund: number;
+    margin_ratio: number;
+    account_mmr: number;
+    collateral_value: number;
+    position_notional: number;
     positions_by_perp: LiquidationPositionByPerp[];
   }
 

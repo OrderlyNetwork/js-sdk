@@ -1,4 +1,4 @@
-import { PropsWithChildren, ReactNode } from "react";
+import React, { PropsWithChildren, ReactNode } from "react";
 import { LeftNavProps } from "../leftNav/leftNav.type";
 import { MainNavClassNames } from "./mainMenus/mainNavMenus.ui";
 import { MainNavItem } from "./mainMenus/navItem";
@@ -70,7 +70,9 @@ export type MainNavWidgetProps = {
   }) => ReactNode;
 };
 
-export const MainNavWidget = (props: PropsWithChildren<MainNavWidgetProps>) => {
+export const MainNavWidget: React.FC<PropsWithChildren<MainNavWidgetProps>> = (
+  props,
+) => {
   const { children, classNames, ...rest } = props;
   const state = useMainNavScript(rest);
   return (

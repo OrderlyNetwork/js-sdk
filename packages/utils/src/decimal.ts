@@ -1,5 +1,7 @@
 import Decimal from "decimal.js-light";
 
+export type { Numeric } from "decimal.js-light";
+
 Decimal.set({
   rounding: Decimal.ROUND_DOWN,
 });
@@ -23,7 +25,7 @@ export const commifyOptional = (
   },
 ): string => {
   // if num convert to num failed, return fallback
-  if (typeof num === "string" && isNaN(Number(num))) {
+  if (typeof num === "string" && Number.isNaN(Number(num))) {
     return options?.fallback || "--";
   }
 
@@ -105,16 +107,10 @@ export function numberToHumanStyle(
     index++;
   }
 
-  // const roundedNumber = number.toFixed(decimalPlaces);
-  let roundedNumber = new Decimal(number)
+  const roundedNumber = new Decimal(number)
     .toFixed(decimalPlaces, Decimal.ROUND_DOWN)
-    .toString();
-
-  // const roundedNumber = padding
-  //   ? number.toFixed(decimalPlaces)
-  //   : number.toString();
-
-  roundedNumber = roundedNumber.replace(/\.0+$/, "");
+    .toString()
+    .replace(/\.0+$/, "");
 
   return `${roundedNumber}${abbreviations[index]}`;
 }
@@ -148,7 +144,7 @@ export function parseNumStr(str: string | number): Decimal | undefined {
   const numberPart = new Decimal(cleanedStr);
   const unitPart = cleanedStr.slice(-1);
 
-  if (isNaN(numberPart.toNumber())) {
+  if (Number.isNaN(numberPart.toNumber())) {
     return undefined; // invalid data
   }
 
@@ -225,5 +221,5 @@ export const checkIsNaN = (value: string | number | undefined | null) => {
   if (value === undefined || value === "" || value === null) {
     return true;
   }
-  return isNaN(Number(value));
+  return Number.isNaN(Number(value));
 };

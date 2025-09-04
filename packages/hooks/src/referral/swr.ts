@@ -12,7 +12,9 @@ export const generateKeyFun =
   }) =>
   (pageIndex: number, previousPageData: any): string | null => {
     // reached the end
-    if (previousPageData && !previousPageData.rows?.length) return null;
+    if (previousPageData && !previousPageData.rows?.length) {
+      return null;
+    }
 
     const { path, startDate, endDate, size = 100, page, sort } = args;
 

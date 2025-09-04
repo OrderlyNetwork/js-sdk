@@ -1,6 +1,6 @@
 import { LocaleEnum } from "./constant";
 import i18n from "./i18n";
-import { LocaleCode } from "./types";
+import type { LocaleCode } from "./types";
 
 /**
  * transform browser language to you given i18n locale codes
@@ -24,7 +24,9 @@ export function parseI18nLang(
   const regex = /^([a-z]{2})/i;
   const match = lang?.match(regex);
 
-  if (!match) return defaultLang;
+  if (!match) {
+    return defaultLang;
+  }
 
   const matchLang = match[1];
 

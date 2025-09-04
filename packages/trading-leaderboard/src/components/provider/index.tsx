@@ -9,8 +9,9 @@ import { parseISO } from "date-fns";
 import { sortWith, descend } from "ramda";
 import {
   usePrivateQuery,
-  RefferalAPI as API,
+  RefferalAPI,
   useMemoizedFn,
+  noCacheConfig,
 } from "@orderly.network/hooks";
 import { CampaignConfig, UserData } from "../campaigns/type";
 
@@ -83,25 +84,21 @@ export const TradingLeaderboardProvider: React.FC<
   const [userData, setUserData] = useState<UserData>();
   const [updatedTime, setUpdatedTime] = useState<number>();
 
-  const { data: generateCode, mutate: generateCodeMutate } = usePrivateQuery(
-    "/v1/referral/info",
-    {
-      revalidateOnFocus: false,
-      errorRetryCount: 2,
-      formatter: (data) => {
-        return {
-          code: data?.referee_info?.referer_code || "",
-        };
-      },
-    },
-  );
+  const { data: generateCode, mutate: generateCodeMutate } =
+    usePrivateQuery<RefferalAPI.ReferralInfo>("/v1/referral/info", {
+      revalidateOnFocus: true,
+      errorRetryCount: 3,
+      ...noCacheConfig,
+    });
+
+  const refererCode = generateCode?.referee_info?.referer_code ?? "";
 
   useEffect(() => {
-    if (generateCode?.code && userData?.referral_code != generateCode.code) {
-      setUserData({ ...userData!, referral_code: generateCode.code });
+    if (refererCode && userData?.referral_code != refererCode) {
+      setUserData({ ...userData!, referral_code: refererCode });
       generateCodeMutate();
     }
-  }, [userData, generateCode, generateCodeMutate]);
+  }, [userData, refererCode, generateCodeMutate]);
 
   const currentCampaign = useMemo(() => {
     return campaigns?.find((campaign) => campaign.campaign_id == campaignId);
