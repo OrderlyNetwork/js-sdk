@@ -592,6 +592,7 @@ export declare namespace API {
     position_qty: number;
     symbol: string;
     transfer_price: number;
+    mark_price: number;
   }
 
   export interface Liquidation {

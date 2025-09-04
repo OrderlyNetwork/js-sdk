@@ -78,7 +78,7 @@ export const useLiquidationColumn = (props: {}) => {
                   // <SymbolProvider symbol={item.symbol}>
                   // </SymbolProvider>
                   <FormattedText
-                    value={item.transfer_price}
+                    value={item.mark_price}
                     type="quote"
                     key={item.symbol}
                   />

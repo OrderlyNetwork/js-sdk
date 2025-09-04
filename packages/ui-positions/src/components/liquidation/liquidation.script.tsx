@@ -102,8 +102,6 @@ const useLiquidation = (props: {
               .toNumber();
           }
 
-          console.log(item.account_mmr);
-
           return {
             ...item,
             formatted_account_mmr: isNaN(item.account_mmr)
