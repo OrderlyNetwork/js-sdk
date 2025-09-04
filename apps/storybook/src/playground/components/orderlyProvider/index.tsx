@@ -1,3 +1,4 @@
+import React from "react";
 import { Outlet } from "react-router";
 import { OrderlyAppProvider } from "../../../components/orderlyProvider/orderlyAppProvider";
 import { RouteProvider } from "../../../components/orderlyProvider/rounteProvider";
@@ -8,7 +9,7 @@ import { usePageTitle } from "../../hooks/usePageTitle";
 import { useTheme } from "../../hooks/useTheme";
 import { LocaleProvider } from "./localeProvider";
 
-export const OrderlyProvider = () => {
+export const OrderlyProvider: React.FC = () => {
   const { onRouteChange } = useNav();
   usePageTitle();
   useTheme();

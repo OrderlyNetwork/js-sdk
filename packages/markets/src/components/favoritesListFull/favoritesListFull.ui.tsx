@@ -30,8 +30,6 @@ export const FavoritesListFull: FC<FavoritesListFullProps> = (props) => {
     </Flex>
   );
 
-  console.log("🏗️ onSort", onSort);
-
   return (
     <div>
       <FavoritesTabWidget favorite={favorite} className="oui-my-3" />

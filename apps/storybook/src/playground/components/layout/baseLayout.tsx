@@ -1,12 +1,15 @@
-import { FC } from "react";
-import { ScaffoldProps } from "@orderly.network/ui-scaffold";
+import React from "react";
+import type { ScaffoldProps } from "@orderly.network/ui-scaffold";
 import { BaseLayout as CommonBaseLayout } from "../../../components/layout";
 
 export type BaseLayoutProps = {
-  children: React.ReactNode;
   initialMenu?: string;
   classNames?: ScaffoldProps["classNames"];
 };
-export const BaseLayout: FC<BaseLayoutProps> = (props) => {
-  return <CommonBaseLayout {...props}>{props.children}</CommonBaseLayout>;
+
+export const BaseLayout: React.FC<React.PropsWithChildren<BaseLayoutProps>> = (
+  props,
+) => {
+  const { children, ...rest } = props;
+  return <CommonBaseLayout {...rest}>{children}</CommonBaseLayout>;
 };

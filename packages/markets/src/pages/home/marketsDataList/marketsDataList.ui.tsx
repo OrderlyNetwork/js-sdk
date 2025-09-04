@@ -1,17 +1,33 @@
+import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Box, TabPanel, Tabs } from "@orderly.network/ui";
 import { FavoritesEmpty } from "../../../components/favoritesEmpty";
-import { FavoritesListFullWidget } from "../../../components/favoritesListFull";
-import { MarketsListFullWidget } from "../../../components/marketsListFull";
-import { SearchInput } from "../../../components/searchInput";
 import { AllMarketsIcon, FavoritesIcon, NewListingsIcon } from "../../../icons";
 import { MarketsTabName } from "../../../type";
 import { UseMarketsDataListScript } from "./marketsDataList.script";
 
+const LazySearchInput = React.lazy(() =>
+  import("../../../components/searchInput").then((mod) => {
+    return { default: mod.SearchInput };
+  }),
+);
+
+const LazyFavoritesListFullWidget = React.lazy(() =>
+  import("../../../components/favoritesListFull").then((mod) => {
+    return { default: mod.FavoritesListFullWidget };
+  }),
+);
+
+const LazyMarketsListFullWidget = React.lazy(() =>
+  import("../../../components/marketsListFull").then((mod) => {
+    return { default: mod.MarketsListFullWidget };
+  }),
+);
+
 export type MarketsDataListProps = UseMarketsDataListScript;
 
 export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
-  const { activeTab, onTabChange } = props;
+  const { searchValue, activeTab, onTabChange } = props;
   const { t } = useTranslation();
 
   return (
@@ -22,7 +38,9 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
         value={activeTab}
         onValueChange={onTabChange}
         trailing={
-          <SearchInput classNames={{ root: "oui-my-1 oui-w-[240px]" }} />
+          <React.Suspense fallback={null}>
+            <LazySearchInput classNames={{ root: "oui-my-1 oui-w-[240px]" }} />
+          </React.Suspense>
         }
       >
         <TabPanel
@@ -31,17 +49,17 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
           value="favorites"
           testid="oui-testid-markets-favorites-tab"
         >
-          <FavoritesListFullWidget
-            emptyView={
-              !props.searchValue && (
-                <FavoritesEmpty
-                  onClick={() => {
-                    onTabChange(MarketsTabName.All);
-                  }}
-                />
-              )
-            }
-          />
+          <React.Suspense fallback={null}>
+            <LazyFavoritesListFullWidget
+              emptyView={
+                !searchValue && (
+                  <FavoritesEmpty
+                    onClick={() => onTabChange(MarketsTabName.All)}
+                  />
+                )
+              }
+            />
+          </React.Suspense>
         </TabPanel>
         <TabPanel
           title={t("markets.allMarkets")}
@@ -49,13 +67,12 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
           value="all"
           testid="oui-testid-markets-all-tab"
         >
-          <MarketsListFullWidget
-            type="all"
-            initialSort={{
-              sortKey: "24h_amount",
-              sortOrder: "desc",
-            }}
-          />
+          <React.Suspense fallback={null}>
+            <LazyMarketsListFullWidget
+              type="all"
+              initialSort={{ sortKey: "24h_amount", sortOrder: "desc" }}
+            />
+          </React.Suspense>
         </TabPanel>
         <TabPanel
           title={t("markets.newListings")}
@@ -63,13 +80,12 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
           value="new"
           testid="oui-testid-markets-newListings-tab"
         >
-          <MarketsListFullWidget
-            type="new"
-            initialSort={{
-              sortKey: "created_time",
-              sortOrder: "desc",
-            }}
-          />
+          <React.Suspense fallback={null}>
+            <LazyMarketsListFullWidget
+              type="new"
+              initialSort={{ sortKey: "created_time", sortOrder: "desc" }}
+            />
+          </React.Suspense>
         </TabPanel>
       </Tabs>
     </Box>

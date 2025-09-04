@@ -1,13 +1,14 @@
+import React from "react";
+import { SharePnLConfig } from "@orderly.network/ui-share";
 import { useShareButtonScript } from "./shareButton.script";
 import { ShareButton } from "./shareButton.ui";
-import { SharePnLConfig } from "@orderly.network/ui-share";
 
-export const ShareButtonWidget = (props: {
+export const ShareButtonWidget: React.FC<{
   order: any;
   sharePnLConfig?: SharePnLConfig;
   modalId: string;
   iconSize?: number;
-}) => {
+}> = (props) => {
   const state = useShareButtonScript(props);
   return <ShareButton {...state} />;
 };

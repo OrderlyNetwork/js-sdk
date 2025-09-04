@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Navigate,
   createBrowserRouter,
@@ -28,7 +29,7 @@ import TradingRewardsPage from "./pages/rewards/trading/page";
 import VaultsPage from "./pages/vaults/page";
 import { getSymbol } from "./storage";
 
-const AppRoute = () => {
+const AppRoute: React.FC = () => {
   // console.log("browser language", i18n?.language);
   let currentLocale = parseI18nLang(i18n?.language);
 

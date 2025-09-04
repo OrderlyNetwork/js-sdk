@@ -99,24 +99,24 @@ export const PositionsPage: React.FC<PositionsProps> = (props) => {
           className="oui-h-full"
         >
           <TabPanel value={TabsType.positions} title={t("common.positions")}>
-            {isMainAccount && (
-              <DataFilter
-                onFilter={onAccountFilter}
-                items={[
-                  {
-                    type: "select",
-                    name: "account",
-                    value: selectedAccount,
-                    options: memoizedOptions,
-                  },
-                ]}
-              />
-            )}
             {isMainAccount ? (
-              <CombinePositionsWidget
-                selectedAccount={selectedAccount}
-                {...props}
-              />
+              <>
+                <DataFilter
+                  onFilter={onAccountFilter}
+                  items={[
+                    {
+                      type: "select",
+                      name: "account",
+                      value: selectedAccount,
+                      options: memoizedOptions,
+                    },
+                  ]}
+                />
+                <CombinePositionsWidget
+                  selectedAccount={selectedAccount}
+                  {...props}
+                />
+              </>
             ) : (
               <PositionsWidget {...props} />
             )}
@@ -136,7 +136,7 @@ export const PositionsPage: React.FC<PositionsProps> = (props) => {
   );
 };
 
-const LiquidationTab = () => {
+const LiquidationTab: React.FC = () => {
   const { t } = useTranslation();
   return (
     <div className="oui-flex oui-space-x-1">

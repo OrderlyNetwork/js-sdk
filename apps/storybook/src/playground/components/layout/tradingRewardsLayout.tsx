@@ -1,11 +1,11 @@
+import React from "react";
 import { Outlet } from "react-router";
 import { TradingRewardsLeftSidebarPath } from "@orderly.network/trading-rewards";
 import { TradingRewardsLayout as CommonTradingRewardsLayout } from "../../../components/layout";
 import { usePathWithoutLang } from "../../hooks/usePathWithoutLang";
 
-export const TradingRewardsLayout = () => {
+export const TradingRewardsLayout: React.FC = () => {
   const path = usePathWithoutLang();
-
   return (
     <CommonTradingRewardsLayout
       currentPath={path as TradingRewardsLeftSidebarPath}

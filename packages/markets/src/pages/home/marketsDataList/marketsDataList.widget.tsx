@@ -1,13 +1,12 @@
+import React from "react";
 import { useScreen } from "@orderly.network/ui";
 import { MobileMarketsDataList } from "./marketsDataList.mobile.ui";
 import { useMarketsDataListScript } from "./marketsDataList.script";
 import { MarketsDataList } from "./marketsDataList.ui";
 
-export const MarketsDataListWidget = () => {
+export const MarketsDataListWidget: React.FC = () => {
   const { isMobile } = useScreen();
-
   const state = useMarketsDataListScript();
-
   return isMobile ? (
     <MobileMarketsDataList {...state} />
   ) : (
