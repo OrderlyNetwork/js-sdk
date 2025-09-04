@@ -155,6 +155,9 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
     isLoading,
   } = usePrivateQuery<API.ReferralInfo>("/v1/referral/info", {
     revalidateOnFocus: true,
+    revalidateOnMount: true,
+    dedupingInterval: 0,
+    errorRetryCount: 3,
   });
 
   const { data: generateCode, mutate: generateCodeMutate } =

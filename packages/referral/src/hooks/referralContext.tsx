@@ -144,6 +144,9 @@ export const ReferralProvider: FC<
     isLoading,
   } = usePrivateQuery<API.ReferralInfo>("/v1/referral/info", {
     revalidateOnFocus: true,
+    revalidateOnMount: true,
+    dedupingInterval: 0,
+    errorRetryCount: 3,
   });
 
   const { data: dailyVolume, mutate: dailyVolumeMutate } = useDaily();

@@ -25,6 +25,9 @@ export const useRewardsData = ({ type = TWType.normal }: { type?: TWType }) => {
     "/v1/referral/info",
     {
       revalidateOnFocus: true,
+      revalidateOnMount: true,
+      dedupingInterval: 0,
+      errorRetryCount: 3,
     },
   );
 

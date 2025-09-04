@@ -18,6 +18,9 @@ export const useReferralInfo = (): {
     useSubAccountQuery<RefferalAPI.ReferralInfo>("/v1/referral/info", {
       accountId: state?.mainAccountId,
       revalidateOnFocus: true,
+      revalidateOnMount: true,
+      dedupingInterval: 0,
+      errorRetryCount: 3,
     });
 
   const isTrader = useMemo(() => {

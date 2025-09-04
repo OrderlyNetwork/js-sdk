@@ -29,6 +29,9 @@ export const useFeeState = () => {
   const { data: referralData, isLoading: isReferralLoading } =
     usePrivateQuery<RefferalAPI.ReferralInfo>("/v1/referral/info", {
       revalidateOnFocus: true,
+      revalidateOnMount: true,
+      dedupingInterval: 0,
+      errorRetryCount: 3,
     });
 
   // 来自 API：单位 = bps（例：6 表示 0.06%）

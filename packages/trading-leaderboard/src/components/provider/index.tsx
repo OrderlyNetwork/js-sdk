@@ -85,8 +85,10 @@ export const TradingLeaderboardProvider: React.FC<
 
   const { data: generateCode, mutate: generateCodeMutate } =
     usePrivateQuery<API.ReferralInfo>("/v1/referral/info", {
-      revalidateOnFocus: false,
-      errorRetryCount: 2,
+      revalidateOnFocus: true,
+      revalidateOnMount: true,
+      dedupingInterval: 0,
+      errorRetryCount: 3,
     });
 
   const refererCode = generateCode?.referee_info?.referer_code ?? "";
