@@ -1,16 +1,16 @@
 {
-  "name": "orderly-web",
+  "name": "orderly-js-sdk",
   "private": true,
   "scripts": {
-    "dev": "pnpm --filter @orderly.network/storybook playground",
+    "dev": "pnpm --filter @orderly.network/storybook dev",
     "build": "cross-env NODE_OPTIONS=--max_old_space_size=4096 turbo run build",
-    "build-storybook": "pnpm --filter @orderly.network/storybook build-storybook",
     "storybook": "pnpm --filter @orderly.network/storybook storybook",
     "storybook:tradingPage": "pnpm --filter @orderly.network/storybook storybook:tradingPage",
+    "build-storybook": "pnpm --filter @orderly.network/storybook build-storybook",
     "dev:watch": "turbo run dev --concurrency=21",
     "docs": "typedoc",
     "version:add": "pnpm build && changeset add",
-    "version:g": "node ./scripts/version.js",
+    "version:g": "ts-node ./scripts/version.ts",
     "preinstall": "npx only-allow pnpm",
     "prepublishOnly": "pnpm build",
     "prepare": "husky",
@@ -59,9 +59,6 @@
     "zx": "^8.3.0"
   },
   "packageManager": "pnpm@9.0.6",
-  "resolutions": {
-    "@storybook/node-logger": "7.6.16"
-  },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,html,css,md}": [
       "eslint --fix --config eslint.config.fix.mjs",

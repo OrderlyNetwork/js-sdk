@@ -3,6 +3,9 @@ import path from "path";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 
+/**
+ * copy locales from packages/i18n/locales to public/locales
+ */
 async function copyLocales() {
   const __dirname = getDirname();
 
