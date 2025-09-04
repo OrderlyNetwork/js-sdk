@@ -5,7 +5,7 @@ import {
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { positions } from "@orderly.network/perp";
-import { SliderMarks, toast } from "@orderly.network/ui";
+import { Checkbox, modal, SliderMarks, toast, Text } from "@orderly.network/ui";
 
 type UseLeverageScriptOptions = {
   close?: () => void;
@@ -29,7 +29,7 @@ export const useSymbolLeverageScript = (
 ) => {
   const {
     curLeverage = 1,
-    leverageLevers = DEFAULT_LEVERAGE_LEVERS,
+    // leverageLevers = DEFAULT_LEVERAGE_LEVERS,
     symbol,
     positionQty,
   } = options || {};
@@ -40,18 +40,20 @@ export const useSymbolLeverageScript = (
   const { maxSymbolLeverage, update, isLoading, symbolInfo } =
     useSymbolLeverages(symbol || "");
 
-  const filteredLeverageLevers = useMemo(() => {
-    return leverageLevers.filter((e) => e <= maxSymbolLeverage);
-  }, [leverageLevers, maxSymbolLeverage]);
+  const formattedLeverageLevers = generateLeverageLevers(maxSymbolLeverage);
+
+  // const filteredLeverageLevers = useMemo(() => {
+  //   return leverageLevers.filter((e) => e <= maxSymbolLeverage);
+  // }, [leverageLevers, maxSymbolLeverage]);
 
   const marks = useMemo<SliderMarks>(() => {
     return (
-      filteredLeverageLevers.map((e) => ({
+      formattedLeverageLevers.map((e) => ({
         label: `${e}x`,
         value: e,
       })) || []
     );
-  }, [filteredLeverageLevers]);
+  }, [formattedLeverageLevers]);
 
   const [leverage, setLeverage] = useState<number>(curLeverage ?? 0);
 
@@ -78,7 +80,7 @@ export const useSymbolLeverageScript = (
     [maxSymbolLeverage],
   );
 
-  const onSave = async () => {
+  const onConfirmSave = async () => {
     try {
       update?.({ leverage, symbol }).then(
         () => {
@@ -92,6 +94,51 @@ export const useSymbolLeverageScript = (
     } catch (err) {
       console.log("update leverage error", err);
     }
+  };
+
+  const onCheckedChange = (checked: boolean) => {
+    localStorage.setItem(
+      "symbol_leverage_disable_confirmation",
+      checked ? "true" : "false",
+    );
+  };
+
+  const onSave = async () => {
+    // localStorage.setItem("symbol_leverage_disable_confirmation", "false");
+    const localDisableConfirmation = localStorage.getItem(
+      "symbol_leverage_disable_confirmation",
+    );
+    if (localDisableConfirmation === "true") {
+      return onConfirmSave();
+    }
+
+    modal.confirm({
+      title: t("leverage.confirm"),
+      classNames: {
+        body: "!oui-pb-0",
+      },
+      content: (
+        <div>
+          {t("leverage.confirm.content")}
+          <div className="oui-mt-8 oui-flex oui-items-center oui-gap-1">
+            <Checkbox
+              className="oui-border-base-contrast-80"
+              onCheckedChange={onCheckedChange}
+            />
+            <Text size="xs" intensity={54}>
+              {t("leverage.confirm.disable.confirmation")}
+            </Text>
+          </div>
+        </div>
+      ),
+      onOk: () => {
+        return onConfirmSave();
+      },
+      onCancel: () => {
+        localStorage.setItem("symbol_leverage_disable_confirmation", "false");
+        return Promise.resolve();
+      },
+    });
   };
 
   const isReduceDisabled = leverage <= 1;
@@ -135,6 +182,8 @@ export const useSymbolLeverageScript = (
     return false;
   }, [requiredMargin]);
 
+  const isBuy = positionQty && positionQty > 0;
+
   const disabled =
     !leverage ||
     leverage < 1 ||
@@ -143,7 +192,7 @@ export const useSymbolLeverageScript = (
     overMaxPositionLeverage;
 
   return {
-    leverageLevers: filteredLeverageLevers,
+    leverageLevers: formattedLeverageLevers,
     currentLeverage: curLeverage,
     value: leverage,
     marks,
@@ -161,12 +210,24 @@ export const useSymbolLeverageScript = (
     showSliderTip,
     setShowSliderTip,
     maxLeverage: maxSymbolLeverage,
-    toggles: filteredLeverageLevers,
+    toggles: formattedLeverageLevers,
     symbol,
     maxPositionNotional,
     maxPositionLeverage,
     requiredMargin,
     overMaxPositionLeverage,
     overRequiredMargin,
+    isBuy,
   };
+};
+
+const generateLeverageLevers = (max: number) => {
+  const min = 1;
+  const parts = 5;
+  const step = (max - min) / (parts - 1);
+  const result: number[] = [];
+  for (let i = 0; i < parts; i++) {
+    result.push(Math.floor(min + step * i));
+  }
+  return result;
 };

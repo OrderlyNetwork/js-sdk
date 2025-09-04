@@ -11,14 +11,13 @@ import { SymbolLeverageScriptReturns } from "./leverage.script";
 
 export const SymbolLeverageUI = (props: SymbolLeverageScriptReturns) => {
   const { t } = useTranslation();
-  const isBuy = true;
 
   return (
     <div className="oui-flex oui-flex-col oui-gap-4">
-      <Text size="base" weight="semibold" intensity={98}>
+      {/* <Text size="base" weight="semibold" intensity={98}>
         Adjust Leverage
       </Text>
-      <Divider className="-oui-mt-[6px] oui-mb-1" />
+      <Divider className="-oui-mt-[6px] oui-mb-1" /> */}
       <div className="oui-flex oui-items-center oui-gap-2">
         <TokenIcon symbol={props.symbol} className="oui-size-5" />
         <Text.formatted
@@ -31,13 +30,10 @@ export const SymbolLeverageUI = (props: SymbolLeverageScriptReturns) => {
           {props.symbol}
         </Text.formatted>
         <div className="oui-ml-auto oui-flex oui-items-center oui-gap-1">
-          <Badge color={isBuy ? "success" : "danger"} size="xs">
-            {isBuy ? t("common.long") : t("common.short")}
+          <Badge color={props.isBuy ? "success" : "danger"} size="xs">
+            {props.isBuy ? t("common.long") : t("common.short")}
           </Badge>
-          {/* <LeverageBadge
-            symbol={props.symbol || ""}
-            leverage={props.currentLeverage}
-          /> */}
+          <LeverageBadge leverage={props.currentLeverage} />
         </div>
       </div>
       <Divider />
@@ -52,8 +48,8 @@ export const SymbolLeverageUI = (props: SymbolLeverageScriptReturns) => {
             <Trans
               i18nKey="leverage.maxPositionLeverage.tips"
               values={{ amount: props.maxPositionNotional }}
-              // @ts-ignore
               components={[
+                // @ts-ignore
                 <Text.numeral
                   as="span"
                   key="0"
@@ -67,8 +63,8 @@ export const SymbolLeverageUI = (props: SymbolLeverageScriptReturns) => {
             <Trans
               i18nKey="leverage.maxAvailableLeverage.tips"
               values={{ leverage: props.maxPositionLeverage }}
-              // @ts-ignore
               components={[
+                // @ts-ignore
                 <Text.numeral
                   dp={0}
                   suffix="X"
@@ -101,8 +97,8 @@ export const SymbolLeverageUI = (props: SymbolLeverageScriptReturns) => {
                 <Trans
                   i18nKey="leverage.overMaxPositionLeverage.tips"
                   values={{ leverage: props.maxPositionLeverage }}
-                  // @ts-ignore
                   components={[
+                    // @ts-ignore
                     <Text.numeral dp={0} suffix="X" as="span" key="0" />,
                   ]}
                 />
@@ -116,12 +112,19 @@ export const SymbolLeverageUI = (props: SymbolLeverageScriptReturns) => {
   );
 };
 
-// const LeverageDisplay = ({ symbol }: { symbol: string }) => {
-//   const leverage = useSymbolLeverage(symbol);
-
-//   return (
-//     <Text.numeral dp={0} rm={Decimal.ROUND_DOWN} size="2xs" unit="X">
-//       {leverage !== "-" ? leverage : "--"}
-//     </Text.numeral>
-//   );
-// };
+const LeverageBadge = ({ leverage }: { leverage: number }) => {
+  return (
+    <div
+      className={cn(
+        "oui-flex oui-h-[18px] oui-items-center oui-gap-1",
+        "oui-cursor-pointer oui-rounded oui-bg-line-6 oui-px-2",
+        "oui-text-2xs oui-font-semibold oui-text-base-contrast-36",
+      )}
+    >
+      <Text>Cross</Text>
+      <Text.numeral dp={0} size="2xs" unit="X">
+        {leverage}
+      </Text.numeral>
+    </div>
+  );
+};

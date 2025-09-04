@@ -1,4 +1,5 @@
 import React from "react";
+import { i18n } from "@orderly.network/i18n";
 import { registerSimpleDialog, registerSimpleSheet } from "@orderly.network/ui";
 import {
   SymbolLeverageScriptOptions,
@@ -28,18 +29,16 @@ export const SymbolLeverageDialogId = "SymbolLeverageDialogId";
 
 // Register sheet version for mobile
 registerSimpleSheet(SymbolLeverageSheetId, SymbolLeverageWidget, {
-  title: null,
+  title: () => i18n.t("leverage.adjustedLeverage"),
   classNames: {
-    content: "oui-p-5 oui-pt-3",
-    body: "!oui-pt-0",
+    // content: "oui-p-5",
   },
 });
 
 // Register dialog version for desktop
 registerSimpleDialog(SymbolLeverageDialogId, SymbolLeverageWidget, {
-  title: null,
+  title: () => i18n.t("leverage.adjustedLeverage"),
   classNames: {
-    content: "oui-p-5 oui-pt-3",
-    body: "!oui-pt-0",
+    // content: "oui-p-5",
   },
 });
