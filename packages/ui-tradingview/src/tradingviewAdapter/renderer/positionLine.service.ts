@@ -122,13 +122,13 @@ export class PositionLineService {
         ),
       );
 
-    // if (this.broker.mode !== ChartMode.MOBILE) {
-    //   this.positionLines[idx].onClose(null, () => {
-    //     this.broker.closePosition(position);
-    //   });
-    // }
-    this.positionLines[idx].onClose(null, () => {
-      this.broker.closePosition(position);
-    });
+    if (this.broker.mode !== ChartMode.MOBILE) {
+      this.positionLines[idx].onClose(null, () => {
+        this.broker.closePosition(position);
+      });
+    }
+    // this.positionLines[idx].onClose(null, () => {
+    //   this.broker.closePosition(position);
+    // });
   }
 }
