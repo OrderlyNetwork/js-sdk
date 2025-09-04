@@ -8,9 +8,9 @@ import { noCacheConfig } from "./utils";
 const ORDERLY_TAKER_FEE_BPS = 1; // 0.01%
 const ORDERLY_MAKER_FEE_BPS = 0; // 0%
 
-const bpsToFrac = (bps?: number) => new Decimal(bps ?? 0).mul(0.0001); // 1 bps -> 0.0001
+const bpsToFraction = (bps?: number) => new Decimal(bps ?? 0).mul(0.0001); // 1 bps -> 0.0001
 
-const formatFracAsPercent = (val: Decimal) => `${val.mul(100).toNumber()}%`;
+const formatFractionAsPercent = (val: Decimal) => `${val.mul(100).toNumber()}%`;
 
 // Formula: effective = user - (user - orderly) * rebate
 const computeEffectiveFromBps = (
@@ -18,8 +18,8 @@ const computeEffectiveFromBps = (
   orderlyBps?: number,
   rebate?: number,
 ) => {
-  const user = bpsToFrac(userBps);
-  const orderly = bpsToFrac(orderlyBps);
+  const user = bpsToFraction(userBps);
+  const orderly = bpsToFraction(orderlyBps);
   const effective = user.sub(user.sub(orderly).mul(rebate ?? 0));
   return effective;
 };
@@ -45,14 +45,14 @@ export const useFeeState = () => {
     if (isAccountLoading || takerFeeBps == null) {
       return "-";
     }
-    return formatFracAsPercent(bpsToFrac(takerFeeBps));
+    return formatFractionAsPercent(bpsToFraction(takerFeeBps));
   }, [isAccountLoading, takerFeeBps]);
 
   const makerFee = useMemo(() => {
     if (isAccountLoading || makerFeeBps == null) {
       return "-";
     }
-    return formatFracAsPercent(bpsToFrac(makerFeeBps));
+    return formatFractionAsPercent(bpsToFraction(makerFeeBps));
   }, [isAccountLoading, makerFeeBps]);
 
   const effectiveTakerFee = useMemo(() => {
@@ -64,7 +64,7 @@ export const useFeeState = () => {
       ORDERLY_TAKER_FEE_BPS,
       refereeRebate,
     );
-    return formatFracAsPercent(effective);
+    return formatFractionAsPercent(effective);
   }, [takerFeeBps, refereeRebate, isReferralLoading]);
 
   const effectiveMakerFee = useMemo(() => {
@@ -76,7 +76,7 @@ export const useFeeState = () => {
       ORDERLY_MAKER_FEE_BPS,
       refereeRebate,
     );
-    return formatFracAsPercent(effective);
+    return formatFractionAsPercent(effective);
   }, [makerFeeBps, refereeRebate, isReferralLoading]);
 
   return {
