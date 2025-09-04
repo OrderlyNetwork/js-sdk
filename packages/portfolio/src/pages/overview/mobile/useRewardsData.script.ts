@@ -6,8 +6,9 @@ import {
   useEpochInfo,
   useGetClaimed,
   useAccount,
-  RefferalAPI as API,
+  RefferalAPI,
   usePrivateQuery,
+  noCacheConfig,
 } from "@orderly.network/hooks";
 import { DistributionId, TWType } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
@@ -21,14 +22,9 @@ export const useRewardsData = ({ type = TWType.normal }: { type?: TWType }) => {
   const [curEpochEstimate] = useCurEpochEstimate(type);
   const [brokers] = useAllBrokers();
   const { state } = useAccount();
-  const { data, mutate } = usePrivateQuery<API.ReferralInfo>(
+  const { data, mutate } = usePrivateQuery<RefferalAPI.ReferralInfo>(
     "/v1/referral/info",
-    {
-      revalidateOnFocus: true,
-      revalidateOnMount: true,
-      dedupingInterval: 0,
-      errorRetryCount: 3,
-    },
+    { revalidateOnFocus: true, errorRetryCount: 3, ...noCacheConfig },
   );
 
   const epochList = useEpochInfo(type as TWType);

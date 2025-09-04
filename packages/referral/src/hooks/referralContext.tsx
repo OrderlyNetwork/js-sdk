@@ -14,6 +14,7 @@ import {
   usePrivateQuery,
   useDaily,
   useMemoizedFn,
+  noCacheConfig,
 } from "@orderly.network/hooks";
 import { EMPTY_OPERATION } from "@orderly.network/types";
 import { XAxis, YAxis, BarStyle } from "../components";
@@ -144,9 +145,8 @@ export const ReferralProvider: FC<
     isLoading,
   } = usePrivateQuery<API.ReferralInfo>("/v1/referral/info", {
     revalidateOnFocus: true,
-    revalidateOnMount: true,
-    dedupingInterval: 0,
     errorRetryCount: 3,
+    ...noCacheConfig,
   });
 
   const { data: dailyVolume, mutate: dailyVolumeMutate } = useDaily();

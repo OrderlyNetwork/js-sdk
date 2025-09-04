@@ -9,8 +9,9 @@ import { parseISO } from "date-fns";
 import { sortWith, descend } from "ramda";
 import {
   usePrivateQuery,
-  RefferalAPI as API,
+  RefferalAPI,
   useMemoizedFn,
+  noCacheConfig,
 } from "@orderly.network/hooks";
 import { CampaignConfig, UserData } from "../campaigns/type";
 
@@ -84,11 +85,10 @@ export const TradingLeaderboardProvider: React.FC<
   const [updatedTime, setUpdatedTime] = useState<number>();
 
   const { data: generateCode, mutate: generateCodeMutate } =
-    usePrivateQuery<API.ReferralInfo>("/v1/referral/info", {
+    usePrivateQuery<RefferalAPI.ReferralInfo>("/v1/referral/info", {
       revalidateOnFocus: true,
-      revalidateOnMount: true,
-      dedupingInterval: 0,
       errorRetryCount: 3,
+      ...noCacheConfig,
     });
 
   const refererCode = generateCode?.referee_info?.referer_code ?? "";

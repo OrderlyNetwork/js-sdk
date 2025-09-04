@@ -1,7 +1,7 @@
 // import "./utils/dev";
 
 export { default as version } from "./version";
-export { fetcher } from "./utils/fetcher";
+export { fetcher, noCacheConfig, type useQueryOptions } from "./utils/fetcher";
 export { useQuery } from "./useQuery";
 export { useLazyQuery } from "./useLazyQuery";
 export { useMutation } from "./useMutation";

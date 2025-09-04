@@ -3,6 +3,7 @@ import { Decimal } from "@orderly.network/utils";
 import { useAccountInfo } from "./orderly/useAccountInfo";
 import type { RefferalAPI } from "./referral";
 import { usePrivateQuery } from "./usePrivateQuery";
+import { noCacheConfig } from "./utils";
 
 const ORDERLY_TAKER_FEE_BPS = 1; // 0.01%
 const ORDERLY_MAKER_FEE_BPS = 0; // 0%
@@ -29,9 +30,8 @@ export const useFeeState = () => {
   const { data: referralData, isLoading: isReferralLoading } =
     usePrivateQuery<RefferalAPI.ReferralInfo>("/v1/referral/info", {
       revalidateOnFocus: true,
-      revalidateOnMount: true,
-      dedupingInterval: 0,
       errorRetryCount: 3,
+      ...noCacheConfig,
     });
 
   // 来自 API：单位 = bps（例：6 表示 0.06%）

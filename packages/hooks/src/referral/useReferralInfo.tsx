@@ -2,6 +2,7 @@ import { useCallback, useMemo } from "react";
 import { useSubAccountQuery } from "../subAccount/useSubAccountQuery";
 import { useAccount } from "../useAccount";
 import { useLocalStorage } from "../useLocalStorage";
+import { noCacheConfig } from "../utils";
 import type { RefferalAPI } from "./api";
 
 export const useReferralInfo = (): {
@@ -18,9 +19,8 @@ export const useReferralInfo = (): {
     useSubAccountQuery<RefferalAPI.ReferralInfo>("/v1/referral/info", {
       accountId: state?.mainAccountId,
       revalidateOnFocus: true,
-      revalidateOnMount: true,
-      dedupingInterval: 0,
       errorRetryCount: 3,
+      ...noCacheConfig,
     });
 
   const isTrader = useMemo(() => {
