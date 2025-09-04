@@ -4,7 +4,7 @@
   "version": "1.6.1",
   "type": "module",
   "scripts": {
-    "playground": "pnpm loadEnv vite",
+    "dev": "pnpm loadEnv vite",
     "build:vite": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
