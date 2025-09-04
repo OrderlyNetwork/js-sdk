@@ -438,9 +438,9 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     }
   }, [props.customChains]);
 
-  // if (!initRef.current) {
-  //   return null;
-  // }
+  if (!initRef.current) {
+    return null;
+  }
 
   return (
     <WalletConnectorPrivyContext.Provider value={value}>
