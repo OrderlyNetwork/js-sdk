@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { produce } from "immer";
 import { OrderlyOrder, OrderType, RequireKeys } from "@orderly.network/types";
 
@@ -24,12 +24,19 @@ const initialOrderState = {
   sl_offset: "",
   sl_order_type: OrderType.MARKET,
   total: "",
+
+  // scaled order
   start_price: "",
   end_price: "",
   totalOrders: "",
   distribution_type: "",
   skew: "",
   // symbol: "",
+
+  // trailing stop order
+  activated_price: "",
+  callback_value: "",
+  callback_rate: "",
 };
 
 export const useOrderStore = (initialOrder: OrderEntryStateEntity) => {
@@ -45,8 +52,9 @@ export const useOrderStore = (initialOrder: OrderEntryStateEntity) => {
   const updateOrder = (order: Partial<FullOrderState>) => {
     // setEntry((prev) => ({ ...prev, ...order }));
     setEntry(
+      // if use {...draft, ...order} will cause extra updated when object it not changed
       produce((draft) => {
-        return { ...draft, ...order };
+        Object.assign(draft, order);
       }),
       // (prev) => ({ ...prev, ...order })
     );

@@ -37,7 +37,7 @@ export const useClosePositionScript = (props: ClosePositionScriptProps) => {
     type,
   } = usePositionsRowContext();
   const { quote_dp, base_dp, base, quote } = useSymbolContext();
-  const { parseErrorMsg } = useOrderEntryFormErrorMsg(errors);
+  const { getErrorMsg } = useOrderEntryFormErrorMsg(errors);
 
   // buy position quantity is positive, sell position quantity is negative
   const isBuy = position.position_qty > 0;
@@ -69,10 +69,10 @@ export const useClosePositionScript = (props: ClosePositionScriptProps) => {
 
   const { priceErrorMsg, quantityErrorMsg } = useMemo(() => {
     return {
-      priceErrorMsg: parseErrorMsg("order_price"),
-      quantityErrorMsg: parseErrorMsg("order_quantity"),
+      priceErrorMsg: getErrorMsg("order_price"),
+      quantityErrorMsg: getErrorMsg("order_quantity"),
     };
-    // parseErrorMsg is changed when errors is changed
+    // getErrorMsg is changed when errors is changed
   }, [errors]);
 
   const disabled = !!(priceErrorMsg || quantityErrorMsg);

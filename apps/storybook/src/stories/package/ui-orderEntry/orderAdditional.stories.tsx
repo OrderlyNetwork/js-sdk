@@ -1,11 +1,11 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Box } from "@orderly.network/ui";
-import { AdditionalInfoWidget } from "@orderly.network/ui-order-entry";
+import { AdditionalInfo } from "@orderly.network/ui-order-entry";
 
-const meta: Meta<typeof AdditionalInfoWidget> = {
+const meta: Meta<typeof AdditionalInfo> = {
   title: "Package/ui-order-entry/additional",
-  component: AdditionalInfoWidget,
+  component: AdditionalInfo,
   decorators: [
     (Story) => (
       <Box width={"215px"} r={"lg"} intensity={700} p={3}>
@@ -26,7 +26,7 @@ export const Basic: Story = {
     const [needConfirm, setNeedConfirm] = useState(false);
     const [hidden, setHidden] = useState(false);
     return (
-      <AdditionalInfoWidget
+      <AdditionalInfo
         pinned={pinned}
         setPinned={setPinned}
         needConfirm={needConfirm}

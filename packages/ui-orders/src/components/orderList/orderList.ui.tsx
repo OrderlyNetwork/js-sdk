@@ -17,7 +17,7 @@ import { SymbolProvider } from "../provider/symbolProvider";
 import { useOrderColumn } from "./desktop/useColumn";
 import { OrderCellWidget } from "./mobile";
 import { OrdersBuilderState } from "./orderList.script";
-import { OrderListProvider } from "./orderListContext";
+import { OrderListProvider } from "./orderListProvider";
 import { TPSLOrderRowProvider } from "./tpslOrderRowContext";
 
 export const DesktopOrderList: FC<

@@ -1,57 +1,62 @@
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, memo, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { DistributionType } from "@orderly.network/types";
 import { Box, Checkbox, cn, Flex, modal, Text } from "@orderly.network/ui";
+import { useOrderEntryContext } from "../../orderEntryContext";
 
-export type QuantityDistributionInputProps = QuantityDistributionProps & {
+export type QuantityDistributionInputProps = {
+  distribution_type?: DistributionType;
   className?: string;
 };
 
-export const QuantityDistributionInput: FC<QuantityDistributionInputProps> = (
-  props,
-) => {
-  const { t } = useTranslation();
+export const QuantityDistributionInput: FC<QuantityDistributionInputProps> =
+  memo((props) => {
+    const { t } = useTranslation();
+    const { setOrderValue } = useOrderEntryContext();
 
-  const { className, ...rest } = props;
+    const showHint = () => {
+      modal.dialog({
+        title: t("common.tips"),
+        size: "sm",
+        content: <QuantityDistributionHint value={props.distribution_type} />,
+        // classNames: {
+        //   content: "oui-bg-base-6",
+        // },
+      });
+    };
 
-  const showHint = () => {
-    modal.dialog({
-      title: t("common.tips"),
-      size: "sm",
-      content: <QuantityDistributionHint value={props.value} />,
-      // classNames: {
-      //   content: "oui-bg-base-6",
-      // },
-    });
-  };
-
-  return (
-    <Flex
-      direction="column"
-      itemAlign="start"
-      justify="center"
-      p={2}
-      r="base"
-      // gapY={1}
-      width="100%"
-      intensity={600}
-      className={cn(
-        "oui-t-rounded oui-text-base-contrast-36",
-        "oui-border oui-border-solid oui-border-line",
-        className,
-      )}
-    >
-      <Text
-        size="2xs"
-        className="oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12"
-        onClick={showHint}
+    return (
+      <Flex
+        direction="column"
+        itemAlign="start"
+        justify="center"
+        p={2}
+        r="base"
+        // gapY={1}
+        width="100%"
+        intensity={600}
+        className={cn(
+          "oui-t-rounded oui-text-base-contrast-36",
+          "oui-border oui-border-solid oui-border-line",
+          props.className,
+        )}
       >
-        {t("orderEntry.quantityDistribution")}
-      </Text>
-      <QuantityDistribution {...rest} />
-    </Flex>
-  );
-};
+        <Text
+          size="2xs"
+          className="oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12"
+          onClick={showHint}
+        >
+          {t("orderEntry.quantityDistribution")}
+        </Text>
+        <QuantityDistribution
+          value={props.distribution_type}
+          onValueChange={(value) => {
+            setOrderValue("distribution_type", value);
+          }}
+        />
+      </Flex>
+    );
+  });
 
 type QuantityDistributionHintProps = {
   value?: DistributionType;
