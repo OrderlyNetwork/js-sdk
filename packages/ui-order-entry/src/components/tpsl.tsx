@@ -339,7 +339,7 @@ const TPSLTriggerPriceInput = (props: {
 
 //------- TPSLTriggerPriceInput end -------
 
-const TPSLInputRow = (props: {
+const TPSLInputRow: React.FC<{
   type: "TP" | "SL";
   values: Est_Values;
   error?: string;
@@ -350,10 +350,7 @@ const TPSLInputRow = (props: {
     second?: string;
     dropDown?: string;
   };
-}) => {
-  const priceKey =
-    props.type === "SL" ? "sl_trigger_price" : "tp_trigger_price";
-
+}> = (props) => {
   return (
     <Grid cols={2} gapX={1}>
       <TPSLTriggerPriceInput
@@ -362,7 +359,10 @@ const TPSLInputRow = (props: {
         error={props.error}
         values={props.values ?? ""}
         onChange={(event) => {
-          props.onChange(priceKey, event);
+          props.onChange(
+            props.type === "SL" ? "sl_trigger_price" : "tp_trigger_price",
+            event,
+          );
         }}
         quote_dp={props.quote_dp}
       />

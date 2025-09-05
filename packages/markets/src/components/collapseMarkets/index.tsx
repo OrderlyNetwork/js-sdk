@@ -10,6 +10,9 @@ export type CollapseMarketsProps = {
 export const CollapseMarkets: React.FC<CollapseMarketsProps> = (props) => {
   const { symbol, onSymbolChange } = useMarketsContext();
   const { t } = useTranslation();
+  if (props.dataSource?.length === 0) {
+    return null;
+  }
   return (
     <div className="oui-custom-scrollbar oui-h-full oui-overflow-y-auto">
       <Flex direction="column" px={2} gapY={1}>

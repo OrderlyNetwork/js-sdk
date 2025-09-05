@@ -22,7 +22,12 @@ import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import type { SelectOption } from "@orderly.network/ui/src/select/withOptions";
 import type { useAssetsScriptReturn } from "./assets.script";
 import type { AssetsWidgetProps } from "./assets.widget";
-import { ConvertHistoryWidget } from "./convert.widget";
+
+const LazyConvertHistoryWidget = React.lazy(() =>
+  import("./convert.widget").then((mod) => {
+    return { default: mod.ConvertHistoryWidget };
+  }),
+);
 
 export type AssetsProps = useAssetsScriptReturn;
 
@@ -255,7 +260,9 @@ export const AssetsTable: React.FC<Readonly<AssetsWidgetProps>> = (props) => {
           value="convertHistory"
           title={t("portfolio.overview.tab.convert.history")}
         >
-          <ConvertHistoryWidget />
+          <React.Suspense fallback={null}>
+            <LazyConvertHistoryWidget />
+          </React.Suspense>
         </TabPanel>
       </Tabs>
     </Card>

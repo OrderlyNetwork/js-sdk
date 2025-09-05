@@ -21,11 +21,7 @@ import { OrderListProvider } from "./orderListProvider";
 import { TPSLOrderRowProvider } from "./tpslOrderRowContext";
 
 export const DesktopOrderList: FC<
-  OrdersBuilderState & {
-    testIds?: {
-      tableBody?: string;
-    };
-  }
+  OrdersBuilderState & { testIds?: { tableBody?: string } }
 > = (props) => {
   const { sharePnLConfig, ...rest } = props;
   const columns = useOrderColumn({
@@ -116,11 +112,7 @@ export const DesktopOrderList: FC<
 
 export const MobileOrderList: FC<
   OrdersBuilderState & {
-    classNames?: {
-      root?: string;
-      cell?: string;
-      content?: string;
-    };
+    classNames?: { root?: string; cell?: string; content?: string };
     showFilter?: boolean;
   }
 > = (props) => {

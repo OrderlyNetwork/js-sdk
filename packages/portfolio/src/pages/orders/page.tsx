@@ -5,7 +5,9 @@ import { Box, Button, Divider, Flex, Text, Tooltip } from "@orderly.network/ui";
 import { OrderListInstance, OrdersWidget } from "@orderly.network/ui-orders";
 import { SharePnLConfig } from "@orderly.network/ui-share";
 
-export const OrdersPage = (props: { sharePnLConfig?: SharePnLConfig }) => {
+export const OrdersPage: React.FC<{ sharePnLConfig?: SharePnLConfig }> = (
+  props,
+) => {
   const { sharePnLConfig } = props;
   const { t } = useTranslation();
 

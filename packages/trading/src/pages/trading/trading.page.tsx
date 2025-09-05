@@ -1,8 +1,9 @@
+import React from "react";
 import { TradingPageProvider } from "../../provider/tradingPageProvider";
 import { TradingPageProps } from "../../types/types";
 import { TradingWidget } from "./trading.widget";
 
-export const TradingPage = (props: TradingPageProps) => {
+export const TradingPage: React.FC<TradingPageProps> = (props) => {
   return (
     <TradingPageProvider
       symbol={props.symbol}

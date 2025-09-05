@@ -81,13 +81,7 @@ const AuthGuardTooltip = (props: PropsWithChildren<AuthGuardProps>) => {
       side={props.side}
       sideOffset={props.sideOffset}
     >
-      <div
-        style={{
-          opacity: newOpacity,
-        }}
-      >
-        {props.children}
-      </div>
+      <div style={{ opacity: newOpacity }}>{props.children}</div>
     </Tooltip>
   );
 };

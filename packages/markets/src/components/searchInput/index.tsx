@@ -1,4 +1,4 @@
-import { useRef, useCallback, useEffect } from "react";
+import React, { useRef, useCallback } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   Box,
@@ -12,9 +12,9 @@ import { useMarketsContext } from "../marketsProvider";
 
 type SearchInputProps = Pick<InputProps, "classNames" | "suffix">;
 
-export const SearchInput = (props: SearchInputProps) => {
+export const SearchInput: React.FC<SearchInputProps> = (props) => {
   const { classNames, suffix } = props;
-  const isComposingRef = useRef(false);
+  const isComposingRef = useRef<boolean>(false);
 
   const { t } = useTranslation();
 

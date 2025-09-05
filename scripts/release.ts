@@ -9,61 +9,92 @@ import { $, retry, expBackoff } from "zx";
 
 const simpleGit = SimpleGit();
 
-// show command exection log
+// Enable verbose logging for shell commands executed via zx
 $.verbose = true;
 
-// ci env
+// Current branch in CI environment
 const ciBranch = process.env.CI_COMMIT_BRANCH;
+
+// Truthy if running in CI environment
 const isCI = ciBranch;
+
+// Whether release was manually triggered
 const manualTrigger = process.env.MANUAL_TRIGGER === "true";
 
+// NPM registry and authentication token
 const npm = {
+  /**  Custom npm registry URL */
   registry: process.env.NPM_REGISTRY,
+  /** NPM authentication token */
   token: process.env.NPM_TOKEN,
 };
 
+// Git user info and commit message for automated commits
 const git = {
+  /** Git authentication token */
   token: process.env.GIT_TOKEN,
+  /** Git username */
   username: process.env.GIT_USERNAME,
+  /** Git user name for commits */
   name: process.env.GIT_NAME,
+  /** Git user email for commits */
   email: process.env.GIT_EMAIL,
+  /** Commit message for release commits */
   commitMessage: process.env.GIT_COMMIT_MESSAGE,
 };
 
+// Telegram bot token and chat ID for sending notifications
 const telegram = {
+  /** Telegram bot token */
   token: process.env.TELEGRAM_TOKEN,
-  // get chat id by https://api.telegram.org/bot<YOUR_BOT_TOKEN>/getUpdates
+  /** Chat ID to send messages to (get it via https://api.telegram.org/bot<YOUR_BOT_TOKEN>/getUpdates) */
   chatId: process.env.TELEGRAM_CHAT_ID,
 };
 
-// custom release version type
+// Custom release version type (major, minor, patch)
 const releaseVersionType = process.env.RELEASE_VERSION_TYPE as VersionType;
-// custom pre tag
+
+// Custom pre-release tag to use during pre-release
 const customPreTag = process.env.CUSTOM_PRE_TAG;
-// exit pre tag, if true, will exit pre mode
+
+// Flag to indicate if pre-release mode should be exited
 const exitPreTag = process.env.EXIT_PRE_TAG === "true";
 
-// set publish npm registry
+// NPM registry environment variable for publishing commands
 const npmRegistry = npm.registry ? `npm_config_registry=${npm.registry}` : "";
 
-// if not provide registry, use public npm
+// Flag indicating if publishing to public npm registry
 const isPublicNpm =
   !npm.registry || npm.registry === "https://registry.npmjs.org";
 
-/** release patch version */
+/**
+ * Main entry point for the release script.
+ * Performs git checks, branch validation, tag handling, release, and notifications.
+ * Handles errors and sends failure notifications via Telegram.
+ */
 async function main() {
   try {
+    // Ensure working directory is clean before releasing
     await checkGitStatus();
-    // Verify that the tag is correct only in the ci environment
-    // when manual trigger, skip check branch
+
+    // In CI environment, verify branch naming unless manually triggered
     if (isCI && !manualTrigger) {
       await checkBranch();
     }
+
+    // Handle pre-release tag logic
     await checkTag();
+
+    // Perform the release process: version bump, build, publish, and git commit/push
     await release();
+
+    // Get list of successfully published packages
     const successfulPackages = await getSuccessfulPackages();
+
+    // Notify success on Telegram
     await notifyTelegram(successfulPackages, true);
   } catch (err: any) {
+    // Log error and notify failure on Telegram
     const msg = `release error: ${
       err.message || err.stderr || JSON.stringify(err)
     }`;
@@ -72,6 +103,10 @@ async function main() {
   }
 }
 
+/**
+ * Check and manage pre-release tags.
+ * Handles entering, exiting, or switching pre-release modes based on environment variables and current state.
+ */
 async function checkTag() {
   const cwd = process.cwd();
   const preState = await readPreState(cwd);
@@ -80,19 +115,19 @@ async function checkTag() {
   console.log("customPreTag: ", customPreTag);
   console.log("exitPreTag: ", exitPreTag);
 
-  // when pre tag exists and exitPreTag is true, exit pre tag
+  // If pre tag exists and exit flag is true, exit pre mode
   if (currentPreTag && exitPreTag) {
     await exitPre(cwd);
     console.log(`exit ${currentPreTag} pre tag success`);
     return;
   }
 
-  // when exitPreTag is true, no need to enter pre tag
+  // If exit flag is true but, no need to enter pre tag
   if (exitPreTag) {
     return;
   }
 
-  // when pre tag and customPreTag exists and pre tag is not equal to customPreTag, switch pre tag to customPreTag
+  // If pre tag exists and custom pre tag is different, switch pre tag
   if (currentPreTag && customPreTag && currentPreTag !== customPreTag) {
     await exitPre(cwd);
     await enterPre(cwd, customPreTag);
@@ -100,12 +135,12 @@ async function checkTag() {
     return;
   }
 
-  // when pre tag exists
+  // If pre tag exists, do nothing
   if (currentPreTag) {
     return;
   }
 
-  // when pre tag not exists, enter custom pre tag or get pre tag from current branch
+  // If no pre tag exists, enter pre mode with custom tag or derive from branch name
   const preTag = customPreTag || (await getPreTagFromCurrentBranch());
   if (preTag) {
     await enterPre(cwd, preTag);
@@ -114,10 +149,12 @@ async function checkTag() {
 }
 
 /**
- * get pre tag from current branch
- * alpha => alpha
- * release/alpha => release-alpha
- * internal-20250410 => internal-20250410
+ * Derive pre-release tag name from the current git branch name.
+ * Converts slashes to dashes for tag compatibility.
+ * Examples:
+ *  alpha => alpha
+ *  release/alpha => release-alpha
+ *  internal-20250410 => internal-20250410
  */
 async function getPreTagFromCurrentBranch() {
   const branch = await getCurrentBranch();
@@ -126,38 +163,49 @@ async function getPreTagFromCurrentBranch() {
   }
 }
 
+/**
+ * Main release workflow.
+ * Installs dependencies, generates changesets, versions packages, builds, authenticates, publishes, and pushes git commits.
+ */
 async function release() {
-  // update dependencies in local environment
+  // Install dependencies with frozen lockfile locally (skip in CI)
   if (!isCI) {
     await $`pnpm install --frozen-lockfile`;
   }
 
+  // Generate a changeset file for versioning based on releaseVersionType
   await generateChangeset(releaseVersionType);
 
+  // Apply version changes to package.json files
   await $`pnpm changeset version`;
 
-  // update the version file for each package
+  // Update version files for each package (custom script)
   await $`pnpm version:g`;
 
+  // Build the project after version bump
   await $`pnpm build`;
 
+  // Authenticate with npm registry if token provided
   if (npm.token) {
     await authNPM();
   }
 
+  // Publish packages, retrying if publishing to private/internal registry
   if (isPublicNpm) {
-    // release public npm don't need to retry
+    // Public npm publishes do not retry
     await publishNpm();
   } else {
+    // Retry publishing with exponential backoff on failures
     await retryPublishNpm();
   }
 
-  // restore .npmrc file change when publish success
+  // Restore .npmrc to original state after publishing
   if (npm.token) {
     await $`git restore .npmrc`;
   }
 
-  // if not provide, use local user config
+  // Configure git user name and email for commits if provided
+  // If not provide, use local user config
   if (git.name) {
     await $`git config user.name ${git.name}`;
   }
@@ -166,25 +214,29 @@ async function release() {
     await $`git config user.email ${git.email}`;
   }
 
-  // add all file to stash
+  // Stage all changes for commit
   await $`git add .`;
 
   if (git.commitMessage) {
-    // commit code
+    // Commit changes with specified message
     await $`git commit -m ${git.commitMessage}`;
 
-    // if in ci, it should push to remote
+    // Push commits to remote repository in CI environment
     if (isCI) {
       const remoteUrl = await getRemoteUrl();
-      // use --no-verify to ignore push hook
+      // Use --no-verify to skip git hooks during push
       await $`git push --no-verify ${remoteUrl}`;
     } else {
-      // use local origin and git token
+      // Push to local origin with local git token authentication
       await $`git push --no-verify`;
     }
   }
 }
 
+/**
+ * Publish packages to npm using pnpm changeset publish command.
+ * Uses custom npm registry if specified.
+ */
 async function publishNpm() {
   if (npmRegistry) {
     return $`${npmRegistry} pnpm changeset publish`;
@@ -193,11 +245,18 @@ async function publishNpm() {
   }
 }
 
+/**
+ * Retry publishing to npm up to 10 times with exponential backoff delays.
+ */
 async function retryPublishNpm() {
-  // retry 10 times, start with 5 seconds, and increase the delay time, max 20 seconds
+  // Retry 10 times, starting with 10 seconds delay, increasing by 2 seconds, max 10 seconds delay
   await retry(10, expBackoff("10s", "2s"), publishNpm);
 }
 
+/**
+ * Ensure git working directory is clean before releasing.
+ * Throws error if uncommitted changes are present.
+ */
 async function checkGitStatus() {
   const status = await simpleGit.status();
   if (status.isClean()) {
@@ -208,15 +267,23 @@ async function checkGitStatus() {
   );
 }
 
+/**
+ * Validate that the current branch name matches allowed patterns for releasing.
+ * Only branches starting with "internal/" are allowed.
+ */
 async function checkBranch() {
   const currentBranch = await getCurrentBranch();
-  if (!/^((internal|npm)\/)/.test(currentBranch!)) {
+  if (!/^(internal\/)/.test(currentBranch!)) {
     throw new Error(
-      'Release versions can only operate on branches prefixed with "internal/" or npm/',
+      'Release versions can only operate on branches prefixed with "internal/"',
     );
   }
 }
 
+/**
+ * Retrieve the current git branch name.
+ * Uses CI branch environment variable if available.
+ */
 async function getCurrentBranch() {
   const status = await simpleGit.status();
   const currentBranch = ciBranch || status.current;
@@ -225,14 +292,14 @@ async function getCurrentBranch() {
 }
 
 /**
- * if not provide, use local config
+ * Construct the remote git repository URL with authentication token if provided.
+ * Supports GitLab personal access token authentication format.
  */
 async function getRemoteUrl() {
   const repoPath = await getRepoPath();
 
   if (git.token && git.username && repoPath) {
-    // https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html#clone-repository-using-personal-access-token
-    // git clone https://<username>:<personal_token>@gitlab.com/gitlab-org/gitlab.git
+    // Format: https://<username>:<token>@gitlab.com/<repoPath>.git
     return `https://${git.username}:${git.token}@gitlab.com/${repoPath}.git`;
   }
 
@@ -240,6 +307,9 @@ async function getRemoteUrl() {
 }
 
 /**
+ * Extract the repository path (owner/name) from the git remote origin URL.
+ * Supports HTTPS and SSH URLs for GitHub and GitLab.
+ * Examples:
  * https://github.com/OrderlyNetwork/orderly-sdk-js.git => OrderlyNetwork/orderly-sdk-js
  * git@github.com:OrderlyNetwork/orderly-sdk-js.git => OrderlyNetwork/orderly-sdk-js
  */
@@ -254,11 +324,11 @@ async function getRepoPath() {
 }
 
 /**
- * In the CI, create a temporary .npmrc file to access npm
- * if not provide token, if will use ~/.npmrc file config
- * */
+ * Authenticate npm by appending an auth token to the local ~/.npmrc file.
+ * Uses custom registry if provided, defaults to public npm registry.
+ */
 async function authNPM() {
-  // if not provide registry, use npmjs.org
+  // Remove protocol from registry URL for .npmrc syntax
   const registry = (npm.registry || "https://registry.npmjs.org")
     .replace("http://", "")
     .replace("https://", "");
@@ -266,10 +336,14 @@ async function authNPM() {
   await $`echo ${content} >> .npmrc`;
 }
 
+/**
+ * Retrieve a formatted string listing all successfully published public packages.
+ */
 async function getSuccessfulPackages() {
   const cwd = process.cwd();
   const packages = await getPackages(cwd);
 
+  // Filter out private packages and format as name@version strings
   const publicPackages = packages.packages
     .filter((pkg) => !pkg.packageJson.private)
     .map((pkg) => `${pkg.packageJson.name}@${pkg.packageJson.version}`);
@@ -280,14 +354,15 @@ async function getSuccessfulPackages() {
 }
 
 /**
- * generate changeset file
- * Now only patch versions need to be updated automatically
+ * Generate a changeset file for versioning packages.
+ * Only patch, minor, or major version types are allowed; defaults to patch.
  */
 async function generateChangeset(versionType?: VersionType) {
   const cwd = process.cwd();
   const config = await read(cwd);
   const packages = await getPackages(cwd);
 
+  // Filter packages that should be versioned (exclude skipped and private if configured)
   const versionablePackages = packages.packages.filter(
     (pkg) =>
       !shouldSkipPackage(pkg, {
@@ -300,17 +375,20 @@ async function generateChangeset(versionType?: VersionType) {
     (pkg) => pkg.packageJson.name,
   );
 
+  // Validate version type or default to patch
   const type = ["major", "minor", "patch"].includes(versionType!)
     ? versionType!
     : "patch";
 
   console.log("release version type: ", type);
 
+  // Create release objects for all changed packages
   const releases: Release[] = changedPackagesNames.map((name) => ({
     name,
     type,
   }));
 
+  // Write the changeset file to disk
   const changesetID = await writeChangeset(
     {
       releases,
@@ -323,21 +401,23 @@ async function generateChangeset(versionType?: VersionType) {
   console.log("generate changeset successfully:", changesetID);
 }
 
+/**
+ * Send a formatted message to a Telegram chat using bot API.
+ * Throws error if notification fails and success flag is false.
+ */
 async function notifyTelegram(message: string, success: boolean) {
   if (!telegram.chatId || !telegram.token) {
     console.error("Not provider telegram chat id and token");
     return;
   }
-  // max message length
+  // Telegram message max length limit
   const maxLength = 4096;
 
   let sendMessage = message.substring(0, maxLength);
 
   if (message.length > maxLength) {
-    // send first maxLength data
+    // Truncate message to max length
     sendMessage = message.substring(0, maxLength);
-    // message = message.substring(maxLength);
-    // await notifyTelegram(message);
   }
 
   const url = `https://api.telegram.org/bot${telegram.token}/sendMessage`;
@@ -374,6 +454,9 @@ async function notifyTelegram(message: string, success: boolean) {
   }
 }
 
+/**
+ * Format a message string as preformatted HTML for Telegram.
+ */
 function formatCodeMessage(message: string) {
   return `<pre>${message}</pre>`;
 }

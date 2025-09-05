@@ -5,8 +5,8 @@ import {
   useLazyQuery,
   useMutation,
 } from "@orderly.network/hooks";
-import { toast } from "@orderly.network/ui";
 import { useTranslation } from "@orderly.network/i18n";
+import { toast } from "@orderly.network/ui";
 
 export const useWalletConnectorBuilder = () => {
   const { account, state, createOrderlyKey, createAccount } = useAccount();
@@ -15,7 +15,7 @@ export const useWalletConnectorBuilder = () => {
   const { t } = useTranslation();
 
   const { trigger: verifyRefCode } = useLazyQuery(
-    `/v1/public/referral/verify_ref_code?referral_code=${refCode}`
+    `/v1/public/referral/verify_ref_code?referral_code=${refCode}`,
   );
 
   useEffect(() => {
@@ -45,8 +45,10 @@ export const useWalletConnectorBuilder = () => {
       });
   };
 
-  const checkRefCode = async (): Promise<string | undefined> => {
-    if (refCode.length === 0) return Promise.resolve(undefined);
+  const checkRefCode = async () => {
+    if (refCode.length === 0) {
+      return Promise.resolve(undefined);
+    }
 
     if (refCode.length > 0 && (refCode.length < 4 || refCode.length > 10)) {
       return Promise.resolve(t("connector.referralCode.invalid"));

@@ -46,7 +46,7 @@ import { type OrderEntryScriptReturn } from "./orderEntry.script";
 import { getScaledPlaceOrderMessage } from "./utils";
 
 type OrderEntryProps = OrderEntryScriptReturn & {
-  containerRef: any;
+  containerRef?: React.RefObject<HTMLDivElement>;
   disableFeatures?: ("slippageSetting" | "feesInfo")[];
 };
 
@@ -123,16 +123,15 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
 
   // set slippage
   useEffect(() => {
-    if (props.disableFeatures?.includes("slippageSetting")) {
+    if (disableFeatures?.includes("slippageSetting")) {
       return;
     }
-
     if (slippage) {
       setOrderValue("slippage", Number(slippage));
     } else {
       setOrderValue("slippage", undefined);
     }
-  }, [slippage, props.disableFeatures]);
+  }, [slippage, disableFeatures]);
 
   useEffect(() => {
     const clickHandler = (event: MouseEvent) => {

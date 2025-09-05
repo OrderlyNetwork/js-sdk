@@ -1,7 +1,7 @@
 import { useTranslation } from "@orderly.network/i18n";
 import { OrderType } from "@orderly.network/types";
 import { Flex, Text, textVariants } from "@orderly.network/ui";
-import { FeesWidget } from "../fees";
+import { FeesWidget } from "../fee";
 import { SlippageUI } from "../slippage/slippage.ui";
 
 export function AssetInfo(props: {
@@ -17,7 +17,7 @@ export function AssetInfo(props: {
   orderType: OrderType;
   disableFeatures?: ("slippageSetting" | "feesInfo")[];
 }) {
-  const { canTrade } = props;
+  const { canTrade, disableFeatures, orderType } = props;
   const { t } = useTranslation();
 
   return (
@@ -70,8 +70,8 @@ export function AssetInfo(props: {
           {props.estLeverage ?? "--"}
         </Text.numeral> */}
       </Flex>
-      {props.orderType === OrderType.MARKET &&
-        !props.disableFeatures?.includes("slippageSetting") && (
+      {orderType === OrderType.MARKET &&
+        !disableFeatures?.includes("slippageSetting") && (
           <SlippageUI
             slippage={props.slippage}
             setSlippage={props.setSlippage}
@@ -79,7 +79,7 @@ export function AssetInfo(props: {
           />
         )}
 
-      {!props.disableFeatures?.includes("feesInfo") && <FeesWidget />}
+      {!disableFeatures?.includes("feesInfo") && <FeesWidget />}
     </div>
   );
 }

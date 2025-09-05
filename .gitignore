@@ -39,7 +39,6 @@ esm/
 docs/
 
 dev-tool
-#create-orderly-app
 
 !apps/docs
 !apps/docs/**/*
@@ -50,3 +49,7 @@ apps/docs/_doc_meta_
 hooks-example/
 
 .vscode
+
+
+*storybook.log
+storybook-static/

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { ReactNode, useCallback, useEffect, useState } from "react";
+import { useFeeState } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext } from "@orderly.network/react-app";
 import {
@@ -10,29 +11,31 @@ import {
   Divider,
   DataTable,
   Column,
+  Tooltip,
 } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
-import type { useFeeTierScriptReturn } from "./feeTier.script";
+import type { FeeDataType, useFeeTierScriptReturn } from "./feeTier.script";
+import { EffectiveFee } from "./icons";
+
+const isEffective = (val?: unknown) =>
+  typeof val !== "undefined" && val !== null;
 
 export type FeeTierProps = useFeeTierScriptReturn;
 
 export type FeeTierHeaderProps = {
   tier?: number;
   vol?: number;
-  takerFeeRate?: string;
-  makerFeeRate?: string;
 };
 
 export type FeeTierHeaderItemProps = {
   label: string;
   value: ReactNode;
-  needCustom?: boolean;
+  needShowTooltip?: boolean;
 };
 
 export const FeeTierHeaderItem: React.FC<FeeTierHeaderItemProps> = (props) => {
-  const { label, value, needCustom } = props;
-  const { widgetConfigs } = useAppContext();
-  const customTag = widgetConfigs?.feeTier?.tag;
+  const { label, value, needShowTooltip } = props;
+  const { t } = useTranslation();
   return (
     <Box
       gradient="neutral"
@@ -61,7 +64,29 @@ export const FeeTierHeaderItem: React.FC<FeeTierHeaderItemProps> = (props) => {
         <Text size="base" intensity={80} className="oui-leading-[24px]">
           {value}
         </Text>
-        {needCustom && typeof customTag === "function" ? customTag() : null}
+        {needShowTooltip && (
+          <Tooltip
+            content={t("portfolio.feeTier.effectiveFee.tooltip")}
+            className="oui-p-1.5 oui-text-base-contrast-54"
+          >
+            <Flex
+              gap={1}
+              justify="center"
+              itemAlign="center"
+              className="oui-cursor-pointer oui-rounded oui-bg-gradient-to-r oui-from-[rgb(var(--oui-gradient-brand-start)_/_0.12)] oui-to-[rgb(var(--oui-gradient-brand-end)_/_0.12)] oui-px-1"
+            >
+              <EffectiveFee />
+              <Text.gradient
+                className="oui-select-none"
+                color={"brand"}
+                size="xs"
+                weight="regular"
+              >
+                {t("common.effectiveFee")}
+              </Text.gradient>
+            </Flex>
+          </Tooltip>
+        )}
       </Flex>
     </Box>
   );
@@ -69,6 +94,8 @@ export const FeeTierHeaderItem: React.FC<FeeTierHeaderItemProps> = (props) => {
 
 export const FeeTierHeader: React.FC<FeeTierHeaderProps> = (props) => {
   const { t } = useTranslation();
+  const { refereeRebate, ...others } = useFeeState();
+  const isEffectiveFee = isEffective(refereeRebate);
   return (
     <Flex direction="row" gapX={4} my={4} itemAlign={"stretch"}>
       <FeeTierHeaderItem
@@ -88,20 +115,24 @@ export const FeeTierHeader: React.FC<FeeTierHeaderProps> = (props) => {
         }
       />
       <FeeTierHeaderItem
-        needCustom
+        needShowTooltip={isEffectiveFee}
         label={t("portfolio.feeTier.header.takerFeeRate")}
         value={
           <Text.gradient color={"brand"} angle={270} size="base">
-            {props.takerFeeRate || "--"}
+            {isEffectiveFee
+              ? others.effectiveTakerFee || "--"
+              : others.takerFee || "--"}
           </Text.gradient>
         }
       />
       <FeeTierHeaderItem
-        needCustom
+        needShowTooltip={isEffectiveFee}
         label={t("portfolio.feeTier.header.makerFeeRate")}
         value={
           <Text.gradient color={"brand"} angle={270} size="base">
-            {props.makerFeeRate || "--"}
+            {isEffectiveFee
+              ? others.effectiveMakerFee || "--"
+              : others.makerFee || "--"}
           </Text.gradient>
         }
       />
@@ -148,7 +179,7 @@ export const FeeTierTable: React.FC<FeeTierTableProps> = (props) => {
   }, [props.tier]);
 
   const onRow = useCallback(
-    (record: any, index: number) => {
+    (record: FeeDataType, index: number) => {
       const config = props?.onRow?.(record, index) ?? {
         normal: undefined,
         active: undefined,
@@ -206,7 +237,7 @@ export const FeeTierTable: React.FC<FeeTierTableProps> = (props) => {
 };
 
 export const FeeTier: React.FC<FeeTierProps> = (props) => {
-  const { columns, dataSource, tier, vol, takerFeeRate, makerFeeRate } = props;
+  const { columns, dataSource, tier, vol } = props;
   const { widgetConfigs } = useAppContext();
   const { t } = useTranslation();
   const customHeader = widgetConfigs?.feeTier?.header;
@@ -230,12 +261,7 @@ export const FeeTier: React.FC<FeeTierProps> = (props) => {
     >
       <Divider />
       {typeof customHeader === "function" ? customHeader() : null}
-      <FeeTierHeader
-        tier={tier!}
-        vol={vol!}
-        takerFeeRate={takerFeeRate!}
-        makerFeeRate={makerFeeRate!}
-      />
+      <FeeTierHeader tier={tier!} vol={vol!} />
       <FeeTierTable
         dataSource={dataSource}
         columns={columns}

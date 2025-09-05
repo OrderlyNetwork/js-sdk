@@ -1,12 +1,27 @@
-import type { FC } from "react";
+import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Box, TabPanel, Tabs } from "@orderly.network/ui";
-import { FundingComparisonWidget } from "../../../components/fundingComparison";
-import { FundingOverviewWidget } from "../../../components/fundingOverview";
-import { SearchInput } from "../../../components/searchInput";
-import { FundingScriptReturn } from "./funding.script";
+import type { FundingScriptReturn } from "./funding.script";
 
-export const Funding: FC<FundingScriptReturn> = (props) => {
+const LazySearchInput = React.lazy(() =>
+  import("../../../components/searchInput").then((mod) => {
+    return { default: mod.SearchInput };
+  }),
+);
+
+const LazyFundingOverviewWidget = React.lazy(() =>
+  import("../../../components/fundingOverview").then((mod) => {
+    return { default: mod.FundingOverviewWidget };
+  }),
+);
+
+const LazyFundingComparisonWidget = React.lazy(() =>
+  import("../../../components/fundingComparison").then((mod) => {
+    return { default: mod.FundingComparisonWidget };
+  }),
+);
+
+export const Funding: React.FC<FundingScriptReturn> = (props) => {
   const { t } = useTranslation();
 
   return (
@@ -23,7 +38,9 @@ export const Funding: FC<FundingScriptReturn> = (props) => {
         value={props.activeTab}
         onValueChange={props.onTabChange as (value: string) => void}
         trailing={
-          <SearchInput classNames={{ root: "oui-my-1 oui-w-[240px]" }} />
+          <React.Suspense fallback={null}>
+            <LazySearchInput classNames={{ root: "oui-my-1 oui-w-[240px]" }} />
+          </React.Suspense>
         }
       >
         <TabPanel
@@ -31,14 +48,18 @@ export const Funding: FC<FundingScriptReturn> = (props) => {
           value="overview"
           testid="oui-testid-funding-overview-tab"
         >
-          <FundingOverviewWidget />
+          <React.Suspense fallback={null}>
+            <LazyFundingOverviewWidget />
+          </React.Suspense>
         </TabPanel>
         <TabPanel
           title={t("markets.funding.comparison")}
           value="comparison"
           testid="oui-testid-funding-comparison-tab"
         >
-          <FundingComparisonWidget />
+          <React.Suspense fallback={null}>
+            <LazyFundingComparisonWidget />
+          </React.Suspense>
         </TabPanel>
       </Tabs>
     </Box>

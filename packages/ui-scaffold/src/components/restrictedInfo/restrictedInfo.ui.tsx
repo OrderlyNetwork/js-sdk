@@ -2,7 +2,7 @@ import { FC } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Checkbox, cn, Flex, SimpleDialog } from "@orderly.network/ui";
 import { InfoIcon } from "../icons";
-import { UseRestrictedInfoScriptReturn } from "./restrictedInfo.script";
+import type { UseRestrictedInfoScriptReturn } from "./restrictedInfo.script";
 
 export type RestrictedInfoProps = UseRestrictedInfoScriptReturn & {
   className?: string;

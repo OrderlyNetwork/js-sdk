@@ -6,8 +6,9 @@ import {
   useEpochInfo,
   useGetClaimed,
   useAccount,
-  RefferalAPI as API,
+  RefferalAPI,
   usePrivateQuery,
+  noCacheConfig,
 } from "@orderly.network/hooks";
 import { DistributionId, TWType } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
@@ -21,32 +22,33 @@ export const useRewardsData = ({ type = TWType.normal }: { type?: TWType }) => {
   const [curEpochEstimate] = useCurEpochEstimate(type);
   const [brokers] = useAllBrokers();
   const { state } = useAccount();
-  const { data, mutate } = usePrivateQuery<API.ReferralInfo>(
+  const { data, mutate } = usePrivateQuery<RefferalAPI.ReferralInfo>(
     "/v1/referral/info",
-    {
-      revalidateOnFocus: true,
-    },
+    { revalidateOnFocus: true, errorRetryCount: 3, ...noCacheConfig },
   );
 
   const epochList = useEpochInfo(type as TWType);
   const brokerId = useConfig("brokerId");
+
   const brokerName = useMemo(() => {
     return brokers?.[brokerId];
   }, [brokerId, brokers]);
 
   const lastStete = useRef<AccountStatusEnum>(AccountStatusEnum.NotConnected);
 
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   useEffect(() => {
-    let timerId: any;
     if (lastStete.current !== state.status) {
       lastStete.current = state.status;
-      timerId = setTimeout(() => {
+      timerRef.current = setTimeout(() => {
         mutate();
       }, 1000);
     }
-
     return () => {
-      if (timerId) clearTimeout(timerId);
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
     };
   }, [state.status]);
 

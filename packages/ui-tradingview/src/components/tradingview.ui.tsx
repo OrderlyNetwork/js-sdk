@@ -1,29 +1,33 @@
-import React, {
-  FC,
-  forwardRef,
-  PropsWithChildren,
-  ReactNode,
-  SVGProps,
-  useRef,
-} from "react";
+import React, { forwardRef } from "react";
 import { useMediaQuery } from "@orderly.network/hooks";
 import { MEDIA_TABLET } from "@orderly.network/types";
-import { Box, Button, cn, Divider, Flex, Text } from "@orderly.network/ui";
-import { IndicatorsIcon, LineTypeIcon, SettingIcon } from "../icons";
-import { TradingviewUIPropsInterface } from "../type";
-import { MobileDisplayControl, DesktopDisplayControl } from "./displayControl";
-import LineType from "./lineType";
+import { Box, cn, Divider, Flex } from "@orderly.network/ui";
+import { IndicatorsIcon, SettingIcon } from "../icons";
+import type { TradingviewUIPropsInterface } from "../type";
 import { NoTradingview } from "./noTradingview";
-import { TimeInterval } from "./timeInterval";
 import TopBar from "./topBar";
 
-const OperateButton = ({
-  children,
-  onClick,
-}: {
-  children: ReactNode;
-  onClick?: () => void;
-}) => {
+const LazyLineType = React.lazy(() => import("./lineType"));
+
+const LazyTimeInterval = React.lazy(() =>
+  import("./timeInterval").then((mod) => ({ default: mod.TimeInterval })),
+);
+
+const LazyMobileDisplayControl = React.lazy(() =>
+  import("./displayControl").then((mod) => ({
+    default: mod.MobileDisplayControl,
+  })),
+);
+
+const LazyDesktopDisplayControl = React.lazy(() =>
+  import("./displayControl").then((mod) => ({
+    default: mod.DesktopDisplayControl,
+  })),
+);
+
+const OperateButton: React.FC<
+  React.PropsWithChildren<{ onClick?: React.MouseEventHandler<HTMLElement> }>
+> = ({ children, onClick }) => {
   return (
     <Box
       onClick={onClick}
@@ -34,7 +38,7 @@ const OperateButton = ({
   );
 };
 
-export const ZoomOutIcon = (props: SVGProps<SVGSVGElement>) => {
+export const ZoomOutIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -49,7 +53,7 @@ export const ZoomOutIcon = (props: SVGProps<SVGSVGElement>) => {
   );
 };
 
-export const ZoomInIcon = (props: SVGProps<SVGSVGElement>) => {
+export const ZoomInIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -64,7 +68,7 @@ export const ZoomInIcon = (props: SVGProps<SVGSVGElement>) => {
   );
 };
 
-export const TradingviewUi = forwardRef<
+export const TradingviewUI = forwardRef<
   HTMLDivElement,
   TradingviewUIPropsInterface
 >((props, ref) => {
@@ -94,7 +98,7 @@ export const TradingviewUi = forwardRef<
       ) : (
         <div
           className={cn(
-            "oui-z-[1] oui-absolute oui-top-0 oui-bottom-0 oui-right-0 oui-left-0 oui-flex oui-flex-col",
+            "oui-absolute oui-inset-0 oui-z-[1] oui-flex oui-flex-col",
             props.classNames?.content,
           )}
         >
@@ -106,22 +110,31 @@ export const TradingviewUi = forwardRef<
                 justify="between"
                 className="oui-hide-scrollbar oui-overflow-x-scroll"
               >
-                <TimeInterval
-                  interval={interval ?? "15"}
-                  changeInterval={changeInterval}
-                />
-                <MobileDisplayControl
-                  displayControlState={displayControlState}
-                  changeDisplayControlState={changeDisplaySetting}
-                />
+                <React.Suspense fallback={null}>
+                  <LazyTimeInterval
+                    interval={interval ?? "15"}
+                    changeInterval={changeInterval}
+                  />
+                </React.Suspense>
+                <OperateButton onClick={openChartIndicators}>
+                  <IndicatorsIcon />
+                </OperateButton>
+                <React.Suspense fallback={null}>
+                  <LazyMobileDisplayControl
+                    displayControlState={displayControlState}
+                    changeDisplayControlState={changeDisplaySetting}
+                  />
+                </React.Suspense>
               </Flex>
             ) : (
               <Flex justify={"between"} itemAlign={"center"} width={"100%"}>
                 <Flex>
-                  <TimeInterval
-                    interval={interval ?? "1"}
-                    changeInterval={changeInterval}
-                  />
+                  <React.Suspense fallback={null}>
+                    <LazyTimeInterval
+                      interval={interval ?? "1"}
+                      changeInterval={changeInterval}
+                    />
+                  </React.Suspense>
                   <Divider
                     direction="vertical"
                     className="oui-h-4"
@@ -129,17 +142,21 @@ export const TradingviewUi = forwardRef<
                     intensity={8}
                   />
                   <Flex justify="start" itemAlign="center" gap={2}>
-                    <DesktopDisplayControl
-                      displayControlState={displayControlState}
-                      changeDisplayControlState={changeDisplaySetting}
-                    />
+                    <React.Suspense fallback={null}>
+                      <LazyDesktopDisplayControl
+                        displayControlState={displayControlState}
+                        changeDisplayControlState={changeDisplaySetting}
+                      />
+                    </React.Suspense>
                     <OperateButton onClick={openChartIndicators}>
                       <IndicatorsIcon />
                     </OperateButton>
-                    <LineType
-                      lineType={lineType}
-                      changeLineType={changeLineType}
-                    />
+                    <React.Suspense fallback={null}>
+                      <LazyLineType
+                        lineType={lineType}
+                        changeLineType={changeLineType}
+                      />
+                    </React.Suspense>
                     <OperateButton onClick={openChartSetting}>
                       <SettingIcon />
                     </OperateButton>
@@ -161,10 +178,7 @@ export const TradingviewUi = forwardRef<
               </Flex>
             )}
           </TopBar>
-          <div
-            className="oui-h-full oui-w-full oui-overflow-hidden"
-            ref={chartRef}
-          />
+          <div ref={chartRef} className="oui-size-full oui-overflow-hidden" />
         </div>
       )}
     </div>

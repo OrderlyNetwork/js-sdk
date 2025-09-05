@@ -2,7 +2,7 @@ import { FC } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Card, Flex, Switch, Text } from "@orderly.network/ui";
 import { AuthGuardTooltip } from "@orderly.network/ui-connector";
-import { SettingScriptReturns } from "./setting.script";
+import type { SettingScriptReturns } from "./setting.script";
 
 export const SettingDesktop: FC<SettingScriptReturns> = (props) => {
   const { t } = useTranslation();

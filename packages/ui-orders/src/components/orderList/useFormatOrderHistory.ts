@@ -3,7 +3,7 @@ import { API, AlgoOrderRootType, OrderStatus } from "@orderly.network/types";
 
 export const useFormatOrderHistory = (data: API.AlgoOrderExt[]) => {
   const formattedData = useMemo(() => {
-    const _data = [];
+    const _data: API.AlgoOrder[] = [];
 
     for (let index = 0; index < data.length; index++) {
       const element = data[index];

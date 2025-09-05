@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import {
   AssetLineChart,
@@ -29,6 +30,7 @@ export const PerformanceMobileUI: React.FC<
     | "invisible"
     | "visible"
     | "createFakeData"
+    | "period"
   >
 > = (props) => {
   const { t } = useTranslation();
@@ -38,6 +40,7 @@ export const PerformanceMobileUI: React.FC<
     visible,
     invisible,
     curPeriod,
+    period,
     onPeriodChange,
     createFakeData,
   } = props;
@@ -52,6 +55,7 @@ export const PerformanceMobileUI: React.FC<
   return (
     <div>
       <Tabs
+        value={period}
         defaultValue={PeriodType.WEEK}
         classNames={{ tabsList: "oui-justify-between", trigger: "oui-w-1/3" }}
         onValueChange={(value) => onPeriodChange(value as PeriodType)}

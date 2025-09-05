@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { FC, useEffect } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { OrderlyOrder, OrderType } from "@orderly.network/types";
 import { Checkbox, cn, Divider, Flex, Switch } from "@orderly.network/ui";
@@ -15,7 +15,7 @@ export type AdditionalInfoProps = {
   showExtra?: boolean;
 };
 
-export const AdditionalInfo = (props: AdditionalInfoProps) => {
+export const AdditionalInfo: FC<AdditionalInfoProps> = (props) => {
   const { pinned, orderTypeExtra } = props;
   const { t } = useTranslation();
 
