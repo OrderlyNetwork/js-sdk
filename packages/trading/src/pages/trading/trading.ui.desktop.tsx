@@ -1,4 +1,4 @@
-import { FC, useMemo } from "react";
+import React, { useMemo } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
 import {
   SideMarketsWidget,
@@ -9,13 +9,8 @@ import { Box, cn, Flex } from "@orderly.network/ui";
 import { OrderEntryWidget } from "@orderly.network/ui-order-entry";
 import { TradingviewWidget } from "@orderly.network/ui-tradingview";
 import { DepositStatusWidget } from "@orderly.network/ui-transfer";
-import { AssetViewWidget } from "../../components/desktop/assetView";
-import { DataListWidget } from "../../components/desktop/dataList";
 import { RemovablePanel } from "../../components/desktop/layout/removablePanel";
 import { SplitLayout } from "../../components/desktop/layout/splitLayout";
-import { SwitchLayout } from "../../components/desktop/layout/switchLayout";
-import { OrderBookAndTradesWidget } from "../../components/desktop/orderBookAndTrades";
-import { RiskRateWidget } from "../../components/desktop/riskRate";
 import {
   dataListInitialHeight,
   getOffsetSizeNum,
@@ -38,11 +33,51 @@ import {
   dataListMaxHeight,
 } from "./trading.script";
 
+const LazyRiskRateWidget = React.lazy(() =>
+  import("../../components/desktop/riskRate").then((mod) => {
+    return {
+      default: mod.RiskRateWidget,
+    };
+  }),
+);
+
+const LazyAssetViewWidget = React.lazy(() =>
+  import("../../components/desktop/assetView").then((mod) => {
+    return {
+      default: mod.AssetViewWidget,
+    };
+  }),
+);
+
+const LazyDataListWidget = React.lazy(() =>
+  import("../../components/desktop/dataList").then((mod) => {
+    return {
+      default: mod.DataListWidget,
+    };
+  }),
+);
+
+const LazySwitchLayout = React.lazy(() =>
+  import("../../components/desktop/layout/switchLayout").then((mod) => {
+    return {
+      default: mod.SwitchLayout,
+    };
+  }),
+);
+
+const LazyOrderBookAndTradesWidget = React.lazy(() =>
+  import("../../components/desktop/orderBookAndTrades").then((mod) => {
+    return {
+      default: mod.OrderBookAndTradesWidget,
+    };
+  }),
+);
+
 export type DesktopLayoutProps = TradingState & {
   className?: string;
 };
 
-export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
+export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
   const {
     resizeable,
     panelSize,
@@ -120,10 +155,6 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
     </Box>
   );
 
-  const trailing = useMemo(() => {
-    return <SwitchLayout layout={layout} onLayout={onLayout} />;
-  }, [layout, onLayout]);
-
   const symbolInfoBarView = (
     <Box
       intensity={900}
@@ -138,7 +169,11 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
       <SymbolInfoBarFullWidget
         symbol={props.symbol}
         onSymbolChange={props.onSymbolChange}
-        trailing={trailing}
+        trailing={
+          <React.Suspense fallback={null}>
+            <LazySwitchLayout layout={layout} onLayout={onLayout} />
+          </React.Suspense>
+        }
       />
     </Box>
   );
@@ -178,7 +213,11 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
     </Box>
   );
 
-  const orderbookWidget = <OrderBookAndTradesWidget symbol={props.symbol} />;
+  const orderbookWidget = (
+    <React.Suspense fallback={null}>
+      <LazyOrderBookAndTradesWidget symbol={props.symbol} />
+    </React.Suspense>
+  );
 
   const orderbookView = (
     <Box
@@ -196,11 +235,13 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
   );
 
   const dataListWidget = (
-    <DataListWidget
-      current={undefined}
-      symbol={props.symbol}
-      sharePnLConfig={props.sharePnLConfig}
-    />
+    <React.Suspense fallback={null}>
+      <LazyDataListWidget
+        current={undefined}
+        symbol={props.symbol}
+        sharePnLConfig={props.sharePnLConfig}
+      />
+    </React.Suspense>
   );
 
   const dataListView = (
@@ -227,7 +268,9 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
       onLayout={updatePositions}
       showIndicator={showPositionIcon}
     >
-      <RiskRateWidget />
+      <React.Suspense fallback={null}>
+        <LazyRiskRateWidget />
+      </React.Suspense>
     </RemovablePanel>,
     <RemovablePanel
       key="assets"
@@ -237,7 +280,9 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
       showIndicator={showPositionIcon}
     >
       <>
-        <AssetViewWidget isFirstTimeDeposit={props.isFirstTimeDeposit} />
+        <React.Suspense fallback={null}>
+          <LazyAssetViewWidget isFirstTimeDeposit={props.isFirstTimeDeposit} />
+        </React.Suspense>
         <DepositStatusWidget
           className="oui-mt-3 oui-gap-y-2"
           onClick={props.navigateToPortfolio}
@@ -314,19 +359,7 @@ export const DesktopLayout: FC<DesktopLayoutProps> = (props) => {
   const renderTradingViewAndOrderbookView = () => {
     if (max4XL && layout === "left") {
       return (
-        <Flex
-          gapX={2}
-          style={{
-            minHeight: orderbookMinHeight,
-            // maxHeight: orderbookMaxHeight,
-            // minWidth:
-            //   marketsWidth +
-            //   tradingViewMinWidth +
-            //   orderbookMinWidth +
-            //   space * 2,
-          }}
-          height="100%"
-        >
+        <Flex gapX={2} style={{ minHeight: orderbookMinHeight }} height="100%">
           {tradingViewAndOrderbookView}
           {marketsView}
         </Flex>

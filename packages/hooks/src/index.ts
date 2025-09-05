@@ -1,7 +1,7 @@
 // import "./utils/dev";
 
 export { default as version } from "./version";
-export { fetcher } from "./utils/fetcher";
+export { fetcher, noCacheConfig, type useQueryOptions } from "./utils/fetcher";
 export { useQuery } from "./useQuery";
 export { useLazyQuery } from "./useLazyQuery";
 export { useMutation } from "./useMutation";
@@ -12,6 +12,7 @@ export { useBoolean } from "./useBoolean";
 export { useUpdatedRef } from "./shared/useUpdatedRef";
 export { useMemoizedFn } from "./shared/useMemoizedFn";
 export { useAudioPlayer } from "./shared/useAudio";
+export { useReferralInfo, type RefferalAPI } from "./referral";
 
 export { useAccount } from "./useAccount";
 export { type SubAccount } from "@orderly.network/core";
@@ -24,6 +25,7 @@ export { useEventEmitter } from "./useEventEmitter";
 export { useSessionStorage } from "./useSessionStorage";
 export { useLocalStorage } from "./useLocalStorage";
 export { useNetworkInfo } from "./useNetworkInfo";
+export { useFeeState } from "./useFeeState";
 export { useTrack } from "./useTrack";
 export { useTrackingInstance } from "./useTrackInstance";
 export { parseJSON } from "./utils/json";

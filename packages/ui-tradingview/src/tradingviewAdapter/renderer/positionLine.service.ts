@@ -1,3 +1,5 @@
+import { i18n } from "@orderly.network/i18n";
+import { Decimal, commify } from "@orderly.network/utils";
 import {
   IChartingLibraryWidget,
   IOrderLineAdapter,
@@ -5,8 +7,6 @@ import {
 } from "../charting_library";
 import useBroker from "../hooks/useBroker";
 import { ChartMode, ChartPosition } from "../type";
-import { Decimal, commify } from "@orderly.network/utils";
-import { i18n } from "@orderly.network/i18n";
 
 export class PositionLineService {
   private instance: IChartingLibraryWidget;
@@ -17,7 +17,7 @@ export class PositionLineService {
 
   constructor(
     instance: IChartingLibraryWidget,
-    broker: ReturnType<typeof useBroker>
+    broker: ReturnType<typeof useBroker>,
   ) {
     this.instance = instance;
     this.currentSymbol = "";
@@ -65,7 +65,7 @@ export class PositionLineService {
   }
 
   static getPositionPnL(unrealPnl: number, decimal: number) {
-    let text = i18n.t("tpsl.pnl");
+    const text = i18n.t("tpsl.pnl");
     const pnl = new Decimal(unrealPnl).toFixed(decimal, Decimal.ROUND_DOWN);
     if (new Decimal(unrealPnl).eq(0)) {
       return `${text} 0`;
@@ -118,8 +118,8 @@ export class PositionLineService {
       .setText(
         PositionLineService.getPositionPnL(
           position.unrealPnl,
-          position.unrealPnlDecimal
-        )
+          position.unrealPnlDecimal,
+        ),
       );
 
     if (this.broker.mode !== ChartMode.MOBILE) {
@@ -127,5 +127,8 @@ export class PositionLineService {
         this.broker.closePosition(position);
       });
     }
+    // this.positionLines[idx].onClose(null, () => {
+    //   this.broker.closePosition(position);
+    // });
   }
 }

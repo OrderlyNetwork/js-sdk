@@ -4,7 +4,7 @@
   "version": "1.6.2",
   "type": "module",
   "scripts": {
-    "playground": "pnpm loadEnv vite",
+    "dev": "pnpm loadEnv vite",
     "build:vite": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
@@ -14,7 +14,6 @@
     "storybook:tradingPage": "storybook dev -p 6006 --initial-path=/story/package-trading-tradingpage--page",
     "build-storybook": "cross-env NODE_ENV=production NODE_OPTIONS=--max_old_space_size=4500 storybook build",
     "build-storybook:test": "cross-env NODE_ENV=production NODE_OPTIONS=--max_old_space_size=4096 storybook build --test",
-    "chromatic": "npx chromatic --project-token=chpt_0917a801a16d9f2",
     "copyLocales": "node ./scripts/copyLocales.js"
   },
   "dependencies": {

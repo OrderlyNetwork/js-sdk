@@ -38,19 +38,14 @@ export interface FeeDataType {
   taker_fee: string;
 }
 
-const getFuturesCurrentTier = (
-  feeList: FeeDataType[],
-  data: API.AccountInfo,
-) => {
+const findCurrentTier = (feeList: FeeDataType[], data: API.AccountInfo) => {
   const { futures_taker_fee_rate = 0, futures_maker_fee_rate = 0 } = data;
-  const takerRate = `${new Decimal(futures_taker_fee_rate)
-    .mul(0.01)
-    .toString()}%`;
-  const makerRate = `${new Decimal(futures_maker_fee_rate)
-    .mul(0.01)
-    .toString()}%`;
+  const takerRate = new Decimal(futures_taker_fee_rate).mul(0.01);
+  const makerRate = new Decimal(futures_maker_fee_rate).mul(0.01);
   const findItem = feeList.find(
-    (item) => item.taker_fee === takerRate && item.maker_fee === makerRate,
+    (item) =>
+      item.taker_fee === `${takerRate.toNumber()}%` &&
+      item.maker_fee === `${makerRate.toNumber()}%`,
   );
   return findItem?.tier;
 };
@@ -58,14 +53,14 @@ const getFuturesCurrentTier = (
 export const useFeeTierScript = (options?: UseFeeTierScriptOptions) => {
   const { dataAdapter } = options || {};
   const [tier, setTier] = useState<number>();
-  const { data } = useAccountInfo();
+  const { data, isLoading } = useAccountInfo();
   const { state } = useAccount();
 
   const cols = useFeeTierColumns();
 
-  const { data: volumeStatistics } = usePrivateQuery<
-    { perp_volume_last_30_days: number } | undefined
-  >("/v1/volume/user/stats");
+  const { data: volumeStatistics } = usePrivateQuery<{
+    perp_volume_last_30_days: number;
+  }>("/v1/volume/user/stats");
 
   const { columns, dataSource } = useMemo(() => {
     return typeof dataAdapter === "function"
@@ -74,34 +69,16 @@ export const useFeeTierScript = (options?: UseFeeTierScriptOptions) => {
   }, [dataAdapter, cols]);
 
   useEffect(() => {
-    if (!data) {
+    if (!data || isLoading) {
       return;
     }
-    setTier(getFuturesCurrentTier(dataSource, data));
-  }, [data, dataSource]);
-
-  const futures_taker_fee_rate = useMemo(() => {
-    const value = data?.futures_taker_fee_rate;
-    if (typeof value === "undefined") {
-      return undefined;
-    }
-    return `${new Decimal(value).mul(0.01).toString()}%`;
-  }, [data]);
-
-  const futures_maker_fee_rate = useMemo(() => {
-    const value = data?.futures_maker_fee_rate;
-    if (typeof value === "undefined") {
-      return undefined;
-    }
-    return `${new Decimal(value).mul(0.01).toString()}%`;
-  }, [data]);
+    setTier(findCurrentTier(dataSource, data));
+  }, [data, isLoading, dataSource]);
 
   const authData = useDataTap(
     {
-      tier,
+      tier: tier,
       vol: volumeStatistics?.perp_volume_last_30_days,
-      takerFeeRate: futures_taker_fee_rate,
-      makerFeeRate: futures_maker_fee_rate,
     },
     {
       accountStatus:

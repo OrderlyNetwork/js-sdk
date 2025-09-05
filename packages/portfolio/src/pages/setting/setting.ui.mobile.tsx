@@ -9,7 +9,7 @@ import {
 } from "@orderly.network/ui";
 import { AuthGuardTooltip } from "@orderly.network/ui-connector";
 import { LanguageSwitcherWidget } from "@orderly.network/ui-scaffold";
-import { SettingScriptReturns } from "./setting.script";
+import type { SettingScriptReturns } from "./setting.script";
 
 export const SettingMobile: FC<SettingScriptReturns> = (props) => {
   const { t } = useTranslation();

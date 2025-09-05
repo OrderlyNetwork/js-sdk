@@ -1,4 +1,4 @@
-import { FC } from "react";
+import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   MarketsSheetWidget,
@@ -12,10 +12,25 @@ import {
   Flex,
   Text,
 } from "@orderly.network/ui";
-import { DataListWidget } from "../../components/mobile/dataList";
-import { OrderBookAndEntryWidget } from "../../components/mobile/orderBookAndEntry";
-import { TopTabWidget } from "../../components/mobile/topTab";
-import { TradingState } from "./trading.script";
+import type { TradingState } from "./trading.script";
+
+const LazyTopTabWidget = React.lazy(() =>
+  import("../../components/mobile/topTab").then((mod) => {
+    return { default: mod.TopTabWidget };
+  }),
+);
+
+const LazyOrderBookAndEntryWidget = React.lazy(() =>
+  import("../../components/mobile/orderBookAndEntry").then((mod) => {
+    return { default: mod.OrderBookAndEntryWidget };
+  }),
+);
+
+const LazyDataListWidget = React.lazy(() =>
+  import("../../components/mobile/dataList").then((mod) => {
+    return { default: mod.DataListWidget };
+  }),
+);
 
 const MaybeEqual: React.FC = () => {
   return (
@@ -35,10 +50,10 @@ const MaybeEqual: React.FC = () => {
   );
 };
 
-export const MobileLayout: FC<TradingState> = (props) => {
+export const MobileLayout: React.FC<TradingState> = (props) => {
   const { t } = useTranslation();
   const topBar = (
-    <Box intensity={900} px={3} height={54}>
+    <Box intensity={900} className="oui-rounded-xl" mx={1} px={3} height={54}>
       <SymbolInfoBarWidget
         symbol={props.symbol}
         onSymbol={() => props.onOpenMarketsSheetChange(true)}
@@ -111,13 +126,19 @@ export const MobileLayout: FC<TradingState> = (props) => {
     <div className="oui-relative oui-grid oui-gap-1 oui-bg-base-10">
       <main className="oui-hide-scrollbar oui-space-y-1 oui-overflow-y-auto">
         {topBar}
-        <TopTabWidget className="oui-mx-1 oui-rounded-xl oui-bg-base-9" />
-        <OrderBookAndEntryWidget />
-        <DataListWidget
-          symbol={props.symbol}
-          className="oui-mx-1 oui-rounded-xl"
-          sharePnLConfig={props.sharePnLConfig}
-        />
+        <React.Suspense fallback={null}>
+          <LazyTopTabWidget className="oui-mx-1 oui-rounded-xl oui-bg-base-9" />
+        </React.Suspense>
+        <React.Suspense fallback={null}>
+          <LazyOrderBookAndEntryWidget />
+        </React.Suspense>
+        <React.Suspense fallback={null}>
+          <LazyDataListWidget
+            symbol={props.symbol}
+            className="oui-mx-1 oui-rounded-xl"
+            sharePnLConfig={props.sharePnLConfig}
+          />
+        </React.Suspense>
       </main>
     </div>
   );

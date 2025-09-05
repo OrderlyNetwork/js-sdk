@@ -1,7 +1,8 @@
+import React from "react";
 import { useAssetScript } from "./assets.script";
 import { AssetsUI } from "./assets.ui";
 
-export const AssetWidget = () => {
+export const AssetWidget: React.FC = () => {
   const { connect: connectWallet, ...rest } = useAssetScript();
   return (
     <AssetsUI

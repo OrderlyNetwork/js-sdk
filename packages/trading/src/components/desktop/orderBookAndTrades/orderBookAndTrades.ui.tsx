@@ -1,25 +1,26 @@
-import { FC } from "react";
-import { Box, cn, Flex, Grid, TabPanel, Tabs, Text } from "@orderly.network/ui";
-import { OrderBookAndTradesState } from "./orderBookAndTrades.script";
-import { OrderBookWidget } from "../../base/orderBook";
-import { LastTradesWidget } from "../../base/lastTrades";
+import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
+import { Box, cn, Flex, Grid, TabPanel, Tabs, Text } from "@orderly.network/ui";
+import type { OrderBookAndTradesState } from "./orderBookAndTrades.script";
 
-export const OrderBookAndTrades: FC<OrderBookAndTradesState> = (props) => {
-  return (
-    <div ref={props.containerRef} className="oui-h-full">
-      {(props.containerSize?.width || 0) >= 572 ? (
-        <TwoColLayout {...props} />
-      ) : (
-        <TabLayout {...props} />
-      )}
-    </div>
-  );
-};
+const LazyLastTradesWidget = React.lazy(() =>
+  import("../../base/lastTrades").then((mod) => {
+    return {
+      default: mod.LastTradesWidget,
+    };
+  }),
+);
 
-const TwoColLayout: FC<OrderBookAndTradesState> = (props) => {
+const LazyOrderBookWidget = React.lazy(() =>
+  import("../../base/orderBook").then((mod) => {
+    return {
+      default: mod.OrderBookWidget,
+    };
+  }),
+);
+
+const TwoColLayout: React.FC<OrderBookAndTradesState> = (props) => {
   const { t } = useTranslation();
-
   return (
     <Grid
       cols={2}
@@ -43,14 +44,16 @@ const TwoColLayout: FC<OrderBookAndTradesState> = (props) => {
           title={t("trading.orderBook")}
           className="oui-pl-3 oui-text-sm"
         />
-        <OrderBookWidget
-          symbol={props.symbol}
-          height={
-            props.containerSize
-              ? props.containerSize.height - 29 - 24
-              : undefined
-          }
-        />
+        <React.Suspense fallback={null}>
+          <LazyOrderBookWidget
+            symbol={props.symbol}
+            height={
+              props.containerSize
+                ? props.containerSize.height - 29 - 24
+                : undefined
+            }
+          />
+        </React.Suspense>
       </Flex>
       <Flex
         direction={"column"}
@@ -63,21 +66,22 @@ const TwoColLayout: FC<OrderBookAndTradesState> = (props) => {
           title={t("trading.lastTrades")}
           className="oui-text-sm oui-px-3"
         />
-        <LastTradesWidget
-          symbol={props.symbol}
-          style={{
-            height: props.containerSize && props.containerSize.height - 29 - 24,
-          }}
-          classNames={{
-            listHeader: "oui-px-3",
-            list: "oui-px-3",
-          }}
-        />
+        <React.Suspense fallback={null}>
+          <LazyLastTradesWidget
+            symbol={props.symbol}
+            style={{
+              height:
+                props.containerSize && props.containerSize.height - 29 - 24,
+            }}
+            classNames={{ listHeader: "oui-px-3", list: "oui-px-3" }}
+          />
+        </React.Suspense>
       </Flex>
     </Grid>
   );
 };
-const TabLayout: FC<OrderBookAndTradesState & {}> = (props) => {
+
+const TabLayout: React.FC<OrderBookAndTradesState> = (props) => {
   const { t } = useTranslation();
 
   return (
@@ -88,9 +92,7 @@ const TabLayout: FC<OrderBookAndTradesState & {}> = (props) => {
       pr={0}
       r="2xl"
       className="oui-bg-base-9"
-      style={{
-        maxHeight: props.containerSize?.height,
-      }}
+      style={{ maxHeight: props.containerSize?.height }}
     >
       <Tabs
         value={props.tab}
@@ -105,35 +107,39 @@ const TabLayout: FC<OrderBookAndTradesState & {}> = (props) => {
         size="lg"
       >
         <TabPanel value="orderBook" title={t("trading.orderBook")}>
-          <OrderBookWidget
-            symbol={props.symbol}
-            height={
-              props.containerSize
-                ? props.containerSize.height - 29 - 18
-                : undefined
-            }
-          />
+          <React.Suspense fallback={null}>
+            <LazyOrderBookWidget
+              symbol={props.symbol}
+              height={
+                props.containerSize
+                  ? props.containerSize.height - 29 - 18
+                  : undefined
+              }
+            />
+          </React.Suspense>
         </TabPanel>
         <TabPanel value="lastTrades" title={t("trading.lastTrades")}>
-          <LastTradesWidget
-            symbol={props.symbol}
-            style={{
-              height:
-                props.containerSize && props.containerSize.height - 29 - 18,
-            }}
-            classNames={{
-              root: "oui-pt-[6px]",
-              listHeader: "oui-px-3",
-              list: "oui-px-3",
-            }}
-          />
+          <React.Suspense fallback={null}>
+            <LazyLastTradesWidget
+              symbol={props.symbol}
+              style={{
+                height:
+                  props.containerSize && props.containerSize.height - 29 - 18,
+              }}
+              classNames={{
+                root: "oui-pt-[6px]",
+                listHeader: "oui-px-3",
+                list: "oui-px-3",
+              }}
+            />
+          </React.Suspense>
         </TabPanel>
       </Tabs>
     </Box>
   );
 };
 
-const Title = (props: { title: string; className?: string }) => {
+const Title: React.FC<{ title: string; className?: string }> = (props) => {
   return (
     <Text
       size="base"
@@ -142,5 +148,20 @@ const Title = (props: { title: string; className?: string }) => {
     >
       {props.title}
     </Text>
+  );
+};
+
+export const OrderBookAndTrades: React.FC<OrderBookAndTradesState> = (
+  props,
+) => {
+  const { containerRef, containerSize } = props;
+  return (
+    <div ref={containerRef} className="oui-h-full">
+      {(containerSize?.width ?? 0) >= 572 ? (
+        <TwoColLayout {...props} />
+      ) : (
+        <TabLayout {...props} />
+      )}
+    </div>
   );
 };

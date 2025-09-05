@@ -12,7 +12,9 @@ export const PortfolioLayout = () => {
     if (path.endsWith(PathEnum.FeeTier))
       return PortfolioLeftSidebarPath.FeeTier;
 
-    if (path.endsWith(PathEnum.ApiKey)) return PortfolioLeftSidebarPath.ApiKey;
+    if (path.endsWith(PathEnum.ApiKey)) {
+      return PortfolioLeftSidebarPath.ApiKey;
+    }
 
     return path;
   }, [path]);

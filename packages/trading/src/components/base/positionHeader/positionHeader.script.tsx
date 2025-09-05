@@ -2,12 +2,12 @@ import { usePositionStream } from "@orderly.network/hooks";
 import { useDataTap } from "@orderly.network/react-app";
 import { useTradingLocalStorage } from "../../../hooks";
 
-export const usePositionHeaderScript = (props: {
+export const usePositionHeaderScript = (inputs: {
   pnlNotionalDecimalPrecision?: number;
   unPnlPriceBasis: "markPrice" | "lastPrice";
   symbol?: string;
 }) => {
-  const { pnlNotionalDecimalPrecision, unPnlPriceBasis, symbol } = props;
+  const { pnlNotionalDecimalPrecision, unPnlPriceBasis, symbol } = inputs;
   const calcMode = unPnlPriceBasis;
 
   const [data] = usePositionStream(symbol, {

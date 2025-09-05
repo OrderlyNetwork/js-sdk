@@ -10,3 +10,9 @@ export const fetcher = (
 export type useQueryOptions<T> = SWRConfiguration & {
   formatter?: (data: any) => T;
 };
+
+export const noCacheConfig: SWRConfiguration = {
+  dedupingInterval: 0,
+  revalidateOnMount: true,
+  revalidateIfStale: true,
+};

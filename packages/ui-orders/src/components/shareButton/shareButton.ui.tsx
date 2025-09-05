@@ -1,12 +1,14 @@
 import { FC } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import { modal, ShareIcon } from "@orderly.network/ui";
 import { ShareButtonState } from "./shareButton.script";
-import { useTranslation } from "@orderly.network/i18n";
 
 export const ShareButton: FC<ShareButtonState> = (props) => {
   const { t } = useTranslation();
 
-  if (props.sharePnLConfig == null) return <></>;
+  if (props.sharePnLConfig == null) {
+    return null;
+  }
 
   return (
     <button

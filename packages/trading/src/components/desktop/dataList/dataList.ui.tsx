@@ -1,47 +1,64 @@
-import { FC } from "react";
+import { FC, SVGProps } from "react";
+import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { OrderStatus } from "@orderly.network/types";
-import { Box, Divider, Flex, TabPanel, Tabs } from "@orderly.network/ui";
+import {
+  Box,
+  Divider,
+  Flex,
+  InfoCircleIcon,
+  TabPanel,
+  Tabs,
+  Tooltip,
+} from "@orderly.network/ui";
 import { DesktopOrderListWidget, TabType } from "@orderly.network/ui-orders";
 import {
   LiquidationWidget,
   PositionHistoryWidget,
   PositionsWidget,
 } from "@orderly.network/ui-positions";
-import { PositionHeaderWidget } from "../../base/positionHeader";
 import { DataListState, DataListTabType } from "./dataList.script";
-import { SettingWidget } from "./setting";
+
+const LazySettingWidget = React.lazy(() =>
+  import("./setting").then((mod) => {
+    return { default: mod.SettingWidget };
+  }),
+);
+
+const LazyPositionHeaderWidget = React.lazy(() =>
+  import("../../base/positionHeader").then((mod) => {
+    return { default: mod.PositionHeaderWidget };
+  }),
+);
 
 export const DataList: FC<DataListState> = (props) => {
   const { t } = useTranslation();
-
-  // return (
-  //   <DesktopOrderListWidget
-  //     type={TabType.orderHistory}
-  //     onSymbolChange={props.onSymbolChange}
-  //   />
-  // );
   return (
     <Tabs
       defaultValue={props.current || DataListTabType.positions}
       variant="contained"
       trailing={
-        <SettingWidget
-          pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
-          setPnlNotionalDecimalPrecision={props.setPnlNotionalDecimalPrecision}
-          unPnlPriceBasis={props.unPnlPriceBasis}
-          setUnPnlPriceBasic={props.setUnPnlPriceBasic}
-          hideOtherSymbols={!props.showAllSymbol}
-          setHideOtherSymbols={(value: boolean) =>
-            props.setShowAllSymbol(!value)
-          }
-        />
+        <React.Suspense fallback={null}>
+          <LazySettingWidget
+            pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
+            setPnlNotionalDecimalPrecision={
+              props.setPnlNotionalDecimalPrecision
+            }
+            unPnlPriceBasis={props.unPnlPriceBasis}
+            setUnPnlPriceBasic={props.setUnPnlPriceBasic}
+            hideOtherSymbols={!props.showAllSymbol}
+            setHideOtherSymbols={(value: boolean) =>
+              props.setShowAllSymbol(!value)
+            }
+          />
+        </React.Suspense>
       }
       size="lg"
       className="oui-h-full"
       classNames={{
         // tabsList: "oui-px-3",
         tabsContent: "oui-h-[calc(100%_-_32px)]",
+        trigger: "oui-group",
       }}
     >
       <TabPanel
@@ -137,7 +154,7 @@ export const DataList: FC<DataListState> = (props) => {
       <TabPanel
         testid="oui-testid-dataList-liquidation-tab"
         value={DataListTabType.liquidation}
-        title={t("positions.liquidation")}
+        title={<LiquidationTab />}
       >
         <LiquidationWidget
           symbol={!!props.showAllSymbol ? undefined : props.symbol}
@@ -147,14 +164,52 @@ export const DataList: FC<DataListState> = (props) => {
   );
 };
 
+export const LiquidationTab = () => {
+  const { t } = useTranslation();
+  return (
+    <div className="oui-flex oui-space-x-1">
+      <span>{t("positions.liquidation")}</span>
+      <Tooltip
+        className="oui-max-w-[275px] oui-bg-base-6"
+        content={
+          <div>
+            <div className="oui-text-pretty">
+              {t("positions.Liquidation.tooltip.liquidation")}
+            </div>
+            <div>
+              <a
+                href="https://orderly.network/docs/introduction/trade-on-orderly/perpetual-futures/liquidations"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="oui-text-primary"
+              >
+                {t("positions.Liquidation.tooltip.viewMore")}
+              </a>
+            </div>
+          </div>
+        }
+        arrow={{
+          className: "oui-fill-base-6",
+        }}
+      >
+        <button className="oui-hidden group-data-[state=active]:oui-block">
+          <InfoCircleIcon />
+        </button>
+      </Tooltip>
+    </div>
+  );
+};
+
 const PositionsView: FC<DataListState> = (props) => {
   return (
     <Flex direction="column" width="100%" height="100%">
-      <PositionHeaderWidget
-        pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
-        symbol={!!props.showAllSymbol ? undefined : props.symbol}
-        unPnlPriceBasis={props.unPnlPriceBasis}
-      />
+      <React.Suspense fallback={null}>
+        <LazyPositionHeaderWidget
+          pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
+          symbol={!!props.showAllSymbol ? undefined : props.symbol}
+          unPnlPriceBasis={props.unPnlPriceBasis}
+        />
+      </React.Suspense>
       <Divider className="oui-w-full" />
       <Box className="oui-h-[calc(100%_-_60px)]" width="100%">
         <PositionsWidget

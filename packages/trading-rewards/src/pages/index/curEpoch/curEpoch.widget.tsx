@@ -1,8 +1,8 @@
 import { FC } from "react";
-import { CurEpoch } from "./curEpoch.ui";
 import { useCurEpochScript } from "./curEpoch.script";
+import { CurEpoch } from "./curEpoch.ui";
 
-export const CurEpochWidget: FC = (props) => {
+export const CurEpochWidget: FC = () => {
   const state = useCurEpochScript();
-  return <CurEpoch {...state}/>;
+  return <CurEpoch {...state} />;
 };
