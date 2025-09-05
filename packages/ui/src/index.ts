@@ -28,6 +28,7 @@ export * from "./slider";
 export * from "./toast";
 export * from "./listView";
 export * from "./collapsible";
+export * from "./marquee";
 
 export * from "./dropdown";
 
