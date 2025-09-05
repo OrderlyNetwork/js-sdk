@@ -2,7 +2,7 @@ import { pathOr } from "ramda";
 import { account } from "@orderly.network/perp";
 import { API } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
-import { SymbolInfo } from "../../orderly/useSymbolsInfo";
+import { SymbolsInfo } from "../../orderly/useSymbolsInfo";
 import { parseHolding } from "../../utils/parseHolding";
 
 export type Portfolio = {
@@ -21,7 +21,7 @@ export function formatPortfolio(inputs: {
   markPrices: Record<string, number> | null;
   indexPrices?: Record<string, number> | null;
   accountInfo?: API.AccountInfo;
-  symbolsInfo?: SymbolInfo;
+  symbolsInfo?: SymbolsInfo;
   tokensInfo?: API.Chain[];
 }) {
   const {

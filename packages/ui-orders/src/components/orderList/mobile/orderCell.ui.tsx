@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+import { AlgoOrderRootType } from "@orderly.network/types";
 import { Divider, Flex, Grid, Text } from "@orderly.network/ui";
 import { TabType } from "../../orders.widget";
 import { BracketOrderPriceWidget } from "./bracketOrderPrice";
@@ -24,6 +25,8 @@ import {
   RealizedPnL,
   OrderState,
   Fee,
+  TrailingCallback,
+  TrailingPrice,
 } from "./items";
 import { OrderCellState } from "./orderCell.script";
 
@@ -87,12 +90,28 @@ function itemsWithType(props: OrderCellState) {
     case TabType.all:
       return <></>;
     case TabType.pending:
+      const isTrailingStop =
+        props.item?.algo_type === AlgoOrderRootType.TRAILING_STOP;
+
+      if (isTrailingStop) {
+        return (
+          <>
+            <Qty {...props} />
+            <Filled {...props} />
+            <EstTotal {...props} />
+            <TriggerPrice {...props} isPending={true} />
+            <TrailingPrice {...props} />
+            <TrailingCallback {...props} />
+          </>
+        );
+      }
+
       return (
         <>
           <Qty {...props} />
           <Filled {...props} />
           <EstTotal {...props} />
-          <TriggerPrice {...props} />
+          <TriggerPrice {...props} isPending={true} />
           <LimitPrice {...props} />
           <MarkPrice {...props} />
         </>

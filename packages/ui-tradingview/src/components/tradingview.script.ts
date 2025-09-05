@@ -102,6 +102,7 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
         stopOrders: true,
         tpsl: true,
         positionTpsl: true,
+        trailingStop: true,
       };
     });
 

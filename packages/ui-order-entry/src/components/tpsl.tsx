@@ -28,7 +28,7 @@ import {
   TPSLAdvancedWidget,
   TPSLPositionTypeWidget,
 } from "@orderly.network/ui-tpsl";
-import { OrderEntryContext } from "./orderEntryContext";
+import { OrderEntryContext, useOrderEntryContext } from "./orderEntryContext";
 import { PnlInputWidget } from "./pnlInput/pnlInput.widget";
 import { usePnlInputContext } from "./pnlInput/pnlInputContext";
 import { PnlInputProvider } from "./pnlInput/pnlInputProvider";
@@ -183,7 +183,7 @@ const TPSLInputForm = React.forwardRef<
     quote_dp: number | undefined;
   }
 >((props, ref) => {
-  const { parseErrorMsg } = useOrderEntryFormErrorMsg(props.errors);
+  const { getErrorMsg } = useOrderEntryFormErrorMsg(props.errors);
 
   return (
     <div
@@ -197,7 +197,7 @@ const TPSLInputForm = React.forwardRef<
       <PnlInputProvider values={props.values.tp} type={"TP"}>
         <TPSLInputRow
           type={"TP"}
-          error={parseErrorMsg("tp_trigger_price")}
+          error={getErrorMsg("tp_trigger_price")}
           onChange={props.onChange}
           values={props.values.tp}
           quote_dp={props.quote_dp}
@@ -211,7 +211,7 @@ const TPSLInputForm = React.forwardRef<
       <PnlInputProvider values={props.values.sl} type={"SL"}>
         <TPSLInputRow
           type={"SL"}
-          error={parseErrorMsg("sl_trigger_price")}
+          error={getErrorMsg("sl_trigger_price")}
           onChange={props.onChange}
           values={props.values.sl}
           quote_dp={props.quote_dp}
@@ -238,7 +238,7 @@ const TPSLTriggerPriceInput = (props: {
   testId?: string;
 }) => {
   const { t } = useTranslation();
-  const { errorMsgVisible } = useContext(OrderEntryContext);
+  const { errorMsgVisible } = useOrderEntryContext();
   const { tipsEle } = usePnlInputContext();
   const [prefix, setPrefix] = useState<string>(`${props.type} Price`);
   const [placeholder, setPlaceholder] = useState<string>("USDC");

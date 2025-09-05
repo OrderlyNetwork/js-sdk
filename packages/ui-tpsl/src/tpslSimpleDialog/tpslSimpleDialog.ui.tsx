@@ -14,7 +14,7 @@ type Props = ReturnType<typeof useTPSLSimpleDialog> & {
 export const TPSLSimpleDialogUI: React.FC<Props> = (props) => {
   const { type, triggerPrice, errors, TPSL_OrderEntity } = props;
   const { t } = useTranslation();
-  const { parseErrorMsg } = useOrderEntryFormErrorMsg(errors);
+  const { getErrorMsg } = useOrderEntryFormErrorMsg(errors);
 
   const footer = (
     <Flex width="100%" itemAlign="center" gap={3} mt={4}>
@@ -49,8 +49,8 @@ export const TPSLSimpleDialogUI: React.FC<Props> = (props) => {
   );
 
   const errorMessage = () => {
-    const tpError = parseErrorMsg("tp_trigger_price");
-    const slError = parseErrorMsg("sl_trigger_price");
+    const tpError = getErrorMsg("tp_trigger_price");
+    const slError = getErrorMsg("sl_trigger_price");
     let text = "";
     if (tpError && type === "tp") {
       text = tpError;
@@ -126,7 +126,7 @@ export const TPSLSimpleDialogUI: React.FC<Props> = (props) => {
         dp={props.symbolInfo("base_dp")}
         quote={props.symbolInfo("base")}
         isEditing={false}
-        errorMsg={parseErrorMsg("quantity")}
+        errorMsg={getErrorMsg("quantity")}
         onQuantityChange={props.setQuantity}
       />
       <Flex

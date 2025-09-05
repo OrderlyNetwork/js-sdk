@@ -44,6 +44,7 @@ export type {
   TextFieldProps,
   InputFormatter,
   InputFormatterOptions,
+  InputWithTooltipProps,
 } from "./input";
 export type { SpinnerProps } from "./spinner";
 export type { ChainSelectProps, SelectProps } from "./select";

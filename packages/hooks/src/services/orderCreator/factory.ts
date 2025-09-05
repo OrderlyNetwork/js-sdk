@@ -15,6 +15,7 @@ import { StopLimitOrderCreator } from "./stopLimitOrderCreator";
 import { StopMarketOrderCreator } from "./stopMarketOrderCreator";
 import { TPSLOrderCreator } from "./tpslOrderCreator";
 import { TPSLPositionOrderCreator } from "./tpslPositionOrderCreator";
+import { TrailingStopOrderCreator } from "./trailingStopOrderCreator";
 
 export class OrderFactory {
   static create(
@@ -44,6 +45,8 @@ export class OrderFactory {
         return new StopMarketOrderCreator();
       case OrderType.SCALED:
         return new ScaledOrderCreator();
+      case OrderType.TRAILING_STOP:
+        return new TrailingStopOrderCreator();
 
       // algo order
       case AlgoOrderRootType.TP_SL:

@@ -1,21 +1,21 @@
-import React, { useEffect } from "react";
+import { FC, useEffect } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { OrderlyOrder, OrderType } from "@orderly.network/types";
-import { Checkbox, cn, Divider, Flex, Grid, Switch } from "@orderly.network/ui";
+import { Checkbox, cn, Divider, Flex, Switch } from "@orderly.network/ui";
 
 export type AdditionalInfoProps = {
   pinned: boolean;
   setPinned: (value: boolean) => void;
   needConfirm: boolean;
   setNeedConfirm: (value: boolean) => void;
-  orderTypeExtra?: OrderType;
-  onValueChange?: (key: keyof OrderlyOrder, value: any) => void;
-  showExtra?: boolean;
   hidden: boolean;
   setHidden: (value: boolean) => void;
+  onValueChange?: (key: keyof OrderlyOrder, value: any) => void;
+  orderTypeExtra?: OrderType;
+  showExtra?: boolean;
 };
 
-export const AdditionalInfo: React.FC<AdditionalInfoProps> = (props) => {
+export const AdditionalInfo: FC<AdditionalInfoProps> = (props) => {
   const { pinned, orderTypeExtra } = props;
   const { t } = useTranslation();
 
@@ -35,11 +35,7 @@ export const AdditionalInfo: React.FC<AdditionalInfoProps> = (props) => {
 
   return (
     <div className={"oui-text-base-contrast-54"}>
-      {/* {props.showExtra && (
-
-      )} */}
       <Flex
-        // gapX={3}
         justify={pinned ? "start" : "between"}
         mb={3}
         width={pinned ? "unset" : "100%"}
@@ -61,8 +57,8 @@ export const AdditionalInfo: React.FC<AdditionalInfoProps> = (props) => {
           <label
             htmlFor={"toggle_order_post_only"}
             className={cn(
-              "oui-text-2xs oui-ml-1 peer-data-[disabled]:oui-text-base-contrast-20",
-              "oui-break-normal oui-whitespace-nowrap",
+              "oui-ml-1 oui-text-2xs peer-data-[disabled]:oui-text-base-contrast-20",
+              "oui-whitespace-nowrap oui-break-normal",
             )}
           >
             {t("orderEntry.orderType.postOnly")}
@@ -82,8 +78,8 @@ export const AdditionalInfo: React.FC<AdditionalInfoProps> = (props) => {
           <label
             htmlFor={"toggle_order_iov"}
             className={cn(
-              "oui-text-2xs oui-ml-1 peer-data-[disabled]:oui-text-base-contrast-20",
-              "oui-break-normal oui-whitespace-nowrap",
+              "oui-ml-1 oui-text-2xs peer-data-[disabled]:oui-text-base-contrast-20",
+              "oui-whitespace-nowrap oui-break-normal",
             )}
           >
             {t("orderEntry.orderType.ioc")}
@@ -103,8 +99,8 @@ export const AdditionalInfo: React.FC<AdditionalInfoProps> = (props) => {
           <label
             htmlFor={"toggle_order_fok"}
             className={cn(
-              "oui-text-2xs oui-ml-1 peer-data-[disabled]:oui-text-base-contrast-20",
-              "oui-break-normal oui-whitespace-nowrap",
+              "oui-ml-1 oui-text-2xs peer-data-[disabled]:oui-text-base-contrast-20",
+              "oui-whitespace-nowrap oui-break-normal",
             )}
           >
             {t("orderEntry.orderType.fok")}
@@ -125,7 +121,7 @@ export const AdditionalInfo: React.FC<AdditionalInfoProps> = (props) => {
           />
           <label
             htmlFor={"toggle_order_confirm"}
-            className={"oui-text-2xs oui-ml-1"}
+            className={"oui-ml-1 oui-text-2xs"}
           >
             {t("orderEntry.orderConfirm")}
           </label>
@@ -142,7 +138,7 @@ export const AdditionalInfo: React.FC<AdditionalInfoProps> = (props) => {
           />
           <label
             htmlFor={"toggle_order_hidden"}
-            className={"oui-text-2xs oui-ml-1"}
+            className={"oui-ml-1 oui-text-2xs"}
           >
             {t("orderEntry.hidden")}
           </label>
@@ -161,7 +157,7 @@ export const AdditionalInfo: React.FC<AdditionalInfoProps> = (props) => {
             />
             <label
               htmlFor={"toggle_order_keep_visible"}
-              className={"oui-text-2xs oui-ml-1"}
+              className={"oui-ml-1 oui-text-2xs"}
             >
               {t("orderEntry.keepVisible")}
             </label>

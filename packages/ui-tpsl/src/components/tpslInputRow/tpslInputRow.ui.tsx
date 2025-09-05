@@ -14,7 +14,7 @@ type TPSLInputRowProps = ReturnType<typeof useTPSLInputRowScript>;
 
 export const TPSLInputRowUI: React.FC<TPSLInputRowProps> = (props) => {
   const { t } = useTranslation();
-  const { parseErrorMsg } = useOrderEntryFormErrorMsg(props.errors);
+  const { getErrorMsg } = useOrderEntryFormErrorMsg(props.errors);
   const { values, positionType } = props;
   const symbolLeverage = useSymbolLeverage(props.symbol);
 
@@ -106,7 +106,7 @@ export const TPSLInputRowUI: React.FC<TPSLInputRowProps> = (props) => {
             <PriceInput
               type={`${props.type} price`}
               value={values.trigger_price}
-              error={parseErrorMsg(`${props.type}_trigger_price`)}
+              error={getErrorMsg(`${props.type}_trigger_price`)}
               onValueChange={(value) => {
                 props.onChange(`${props.type}_trigger_price`, value);
               }}
@@ -147,7 +147,7 @@ export const TPSLInputRowUI: React.FC<TPSLInputRowProps> = (props) => {
                   : t("tpsl.advanced.market")
               }
               value={values.order_price}
-              error={parseErrorMsg(`${props.type}_order_price`)}
+              error={getErrorMsg(`${props.type}_order_price`)}
               onValueChange={(value) => {
                 props.onChange(`${props.type}_order_price`, value);
               }}

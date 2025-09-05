@@ -16,7 +16,7 @@ const valueRenderer = (value: string) => {
   );
 };
 
-export const QuantityUnit: FC<QuantityUnitProps> = (props) => {
+export const ScaledQuantityUnit: FC<QuantityUnitProps> = (props) => {
   const { base, quote } = props;
 
   const options = useMemo(() => {

@@ -1,5 +1,5 @@
-import { CheckIcon, Input, inputFormatter, Tooltip } from "@orderly.network/ui";
 import { FC, useEffect } from "react";
+import { CheckIcon, Input, inputFormatter, Tooltip } from "@orderly.network/ui";
 
 export const InnerInput: FC<{
   inputRef: any;
