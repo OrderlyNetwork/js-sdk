@@ -17,7 +17,7 @@ import { useSymbolsInfo } from "./useSymbolsInfo";
  * console.log(`Maximum leverage for PERP_BTC_USDC: ${leverage}x`);
  * ```
  */
-export const useSymbolLeverage = (symbol: string): number | "-" => {
+export const useSymbolLeverage = (symbol: string): number => {
   const { data: info } = useAccountInfo();
 
   const maxAccountLeverage = info?.max_leverage;
@@ -39,7 +39,7 @@ export const useSymbolLeverage = (symbol: string): number | "-" => {
    */
   const maxLeverage = useMemo(() => {
     if (!maxAccountLeverage || !maxSymbolLeverage) {
-      return "-";
+      return 1;
     }
 
     return Math.min(maxAccountLeverage, maxSymbolLeverage);

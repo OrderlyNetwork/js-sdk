@@ -74,8 +74,6 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
     currentFocusInput,
   } = props;
 
-  const { curLeverage } = useLeverage();
-
   const { t } = useTranslation();
 
   const { isMobile } = useScreen();
@@ -329,11 +327,10 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
         ref={props.containerRef}
       >
         <OrderEntryHeader
-          isMobile={isMobile}
+          symbol={props.symbol}
           canTrade={props.canTrade}
           side={side}
           order_type={formattedOrder.order_type!}
-          curLeverage={curLeverage}
           setOrderValue={setOrderValue}
         />
 
@@ -535,6 +532,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           onClose={() => {
             setShowTPSLAdvanced(false);
           }}
+          symbolLeverage={props.symbolLeverage}
         />
       </SimpleSheet>
     </OrderEntryProvider>

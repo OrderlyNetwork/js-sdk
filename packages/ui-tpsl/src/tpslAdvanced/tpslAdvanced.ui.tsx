@@ -120,6 +120,7 @@ export const TPSLAdvancedUI = (props: Props) => {
             order={formattedOrder as OrderlyOrder}
             baseDP={symbolInfo.base_dp}
             quoteDP={symbolInfo.quote_dp}
+            symbolLeverage={props.symbolLeverage}
           />
         </div>
         <Divider className="oui-my-3" />

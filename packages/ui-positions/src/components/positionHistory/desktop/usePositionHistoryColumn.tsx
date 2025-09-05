@@ -268,6 +268,16 @@ export const SymbolInfo = (props: {
       );
     }
 
+    if (record.leverage) {
+      list.push(
+        <Badge color="neutral" size="xs">
+          <Text.numeral dp={0} size="2xs" unit="X">
+            {record.leverage}
+          </Text.numeral>
+        </Badge>,
+      );
+    }
+
     return list;
   }, [record, t]);
 

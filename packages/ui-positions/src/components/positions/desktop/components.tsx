@@ -10,7 +10,6 @@ import {
   useScreen,
 } from "@orderly.network/ui";
 import { modal } from "@orderly.network/ui";
-import { SymbolLeverageDialogId } from "@orderly.network/ui-leverage";
 import {
   PositionTPSLPopover,
   TPSLDetailDialogId,
@@ -101,18 +100,16 @@ export const AddIcon = (props: { positionType: PositionType }) => {
 type LeverageBadgeProps = {
   symbol: string;
   leverage: number;
-  positionQty: number;
   modalId: string;
 };
 
 export const LeverageBadge = (props: LeverageBadgeProps) => {
-  const { symbol, leverage, positionQty } = props;
+  const { symbol, leverage } = props;
 
   const showModal = () => {
     modal.show(props.modalId, {
       symbol,
       curLeverage: leverage,
-      positionQty,
     });
   };
 
@@ -147,7 +144,7 @@ export const LeverageDisplay = ({ symbol }: { symbol: string }) => {
 
   return (
     <Text.numeral dp={0} rm={Decimal.ROUND_DOWN} size="2xs" unit="X">
-      {leverage !== "-" ? leverage : "--"}
+      {leverage}
     </Text.numeral>
   );
 };

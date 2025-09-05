@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import {
   useComputedLTV,
   useEventEmitter,
+  useLeverageBySymbol,
   useLocalStorage,
   useMarginRatio,
   useMemoizedFn,
@@ -33,6 +34,7 @@ export const ORDERLY_ORDER_SOUND_ALERT_KEY = "orderly_order_sound_alert";
 export type OrderEntryScriptReturn = ReturnType<typeof useOrderEntryScript>;
 
 export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
+  const { symbol } = inputs;
   const [localOrderType, setLocalOrderType] = useLocalStorage(
     "orderly-order-entry-order-type",
     OrderType.LIMIT,
@@ -41,6 +43,8 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     "orderly-order-entry-order-side",
     OrderSide.BUY,
   );
+
+  const symbolLeverage = useLeverageBySymbol(symbol);
 
   const { notification } = useOrderlyContext();
 
@@ -57,9 +61,9 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     setValues: setOrderValues,
     symbolInfo,
     ...state
-  } = useOrderEntry(inputs.symbol, {
+  } = useOrderEntry(symbol, {
     initialOrder: {
-      symbol: inputs.symbol,
+      symbol,
       order_type: localOrderType,
       position_type: PositionType.PARTIAL,
       side: localOrderSide,
@@ -308,7 +312,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     // after switching symbol, all the input number should be cleared (price, qty, TP/SL, etc)
     state.reset();
     state.resetMetaState();
-  }, [inputs.symbol]);
+  }, [symbol]);
 
   // if scaled order, and distribution_type is not set, set it to flat
   useEffect(() => {
@@ -378,9 +382,10 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     toggleBBO,
     currentLtv,
     fillMiddleValue,
-    symbol: inputs.symbol,
+    symbol,
     soundAlert,
     setSoundAlert,
     currentFocusInput,
+    symbolLeverage,
   };
 };

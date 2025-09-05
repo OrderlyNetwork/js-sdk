@@ -1,5 +1,5 @@
 import React, { Fragment, useMemo } from "react";
-import { useSymbolLeverage } from "@orderly.network/hooks";
+import { useLeverageBySymbol } from "@orderly.network/hooks";
 import { useTranslation, Trans } from "@orderly.network/i18n";
 import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
 import { OrderType, PositionType } from "@orderly.network/types";
@@ -16,7 +16,7 @@ export const TPSLInputRowUI: React.FC<TPSLInputRowProps> = (props) => {
   const { t } = useTranslation();
   const { getErrorMsg } = useOrderEntryFormErrorMsg(props.errors);
   const { values, positionType } = props;
-  const symbolLeverage = useSymbolLeverage(props.symbol);
+  const symbolLeverage = useLeverageBySymbol(props.symbol);
 
   const roi = useMemo(() => {
     if (isNaN(Number(symbolLeverage))) {

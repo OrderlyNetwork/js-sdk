@@ -36,7 +36,6 @@ export const SymbolToken: FC<PositionCellState> = (props) => {
           <LeverageBadge
             symbol={item.symbol}
             leverage={item.leverage}
-            positionQty={item.position_qty}
             modalId={SymbolLeverageSheetId}
           />
         </div>

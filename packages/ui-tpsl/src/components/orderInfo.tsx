@@ -1,7 +1,7 @@
 import {
   useIndexPrice,
+  useLeverageBySymbol,
   useMarkPrice,
-  useSymbolLeverage,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { OrderlyOrder } from "@orderly.network/types";
@@ -17,14 +17,19 @@ type Props = {
     symbol?: string;
     container?: string;
   };
+  symbolLeverage?: number;
 };
 export const OrderInfo = (props: Props) => {
   const { t } = useTranslation();
-  const { order } = props;
-  const { symbol, side } = order;
+  const { order, symbolLeverage } = props;
+  const { symbol } = order;
   const markPrice = useMarkPrice(symbol!);
   const indexPrice = useIndexPrice(symbol!);
-  const symbolLeverage = useSymbolLeverage(symbol!);
+
+  const leverage = useLeverageBySymbol(symbolLeverage ? symbol : undefined);
+
+  const currentLeverage = symbolLeverage || leverage;
+
   return (
     <Flex
       direction={"column"}
@@ -39,9 +44,9 @@ export const OrderInfo = (props: Props) => {
         className={cn("oui-gap-2 ", props.classNames?.symbol)}
       >
         <Flex gap={1} itemAlign={"center"}>
-          <TokenIcon symbol={symbol} className="oui-w-5 oui-h-5" />
+          <TokenIcon symbol={symbol} className="oui-size-5" />
           <Text.formatted
-            className="oui-break-normal oui-whitespace-nowrap"
+            className="oui-whitespace-nowrap oui-break-normal"
             rule="symbol"
             formatString="base-type"
             size="sm"
@@ -53,9 +58,9 @@ export const OrderInfo = (props: Props) => {
         </Flex>
         <Text
           size="2xs"
-          className="oui-text-base-contrast-36 oui-h-[18px] oui-px-2 oui-bg-base-7 oui-rounded oui-font-semibold"
+          className="oui-h-[18px] oui-rounded oui-bg-base-7 oui-px-2 oui-font-semibold oui-text-base-contrast-36"
         >
-          {symbolLeverage}x
+          {currentLeverage}x
         </Text>
       </Flex>
       <Grid

@@ -77,7 +77,6 @@ export const useColumn = (config: ColumnConfig) => {
               <LeverageBadge
                 symbol={value}
                 leverage={record.leverage}
-                positionQty={record.position_qty}
                 modalId={SymbolLeverageDialogId}
               />
             </Flex>

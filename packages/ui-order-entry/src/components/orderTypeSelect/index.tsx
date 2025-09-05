@@ -55,6 +55,9 @@ export const OrderTypeSelect = (props: {
       contentProps={{
         className: "oui-bg-base-8 oui-w-full",
       }}
+      classNames={{
+        trigger: "oui-bg-base-6 oui-border-line",
+      }}
       valueFormatter={(value, option) => {
         const item = options.find((o) => o.value === value);
         if (!item) {

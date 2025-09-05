@@ -90,6 +90,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
             order_quantity: position.position_qty.toString(),
             order_price: position.average_open_price.toString(),
           }}
+          symbolLeverage={position.leverage}
         />
         <Flex
           direction="column"

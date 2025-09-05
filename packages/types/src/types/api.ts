@@ -590,6 +590,7 @@ export declare namespace API {
     open_timestamp: number; // Timestamp when the position was opened
     close_timestamp: number; // Timestamp when the position was closed
     last_update_time: number; // Timestamp of the last update to the position
+    leverage: number; // Leverage of the position
   }
 
   export interface LiquidationPositionByPerp {
@@ -630,6 +631,11 @@ export declare namespace API {
     city: string;
     region: string;
     checked: boolean;
+  }
+
+  export interface LeverageInfo {
+    symbol: string;
+    leverage: number;
   }
 }
 

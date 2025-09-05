@@ -1,32 +1,28 @@
 import { useTranslation } from "@orderly.network/i18n";
 import { OrderlyOrder, OrderSide, OrderType } from "@orderly.network/types";
-import { Button, CaretRightIcon, cn, Flex, modal } from "@orderly.network/ui";
-import { LeverageWidgetWithSheetId } from "@orderly.network/ui-leverage";
-import { commifyOptional } from "@orderly.network/utils";
+import { Button, cn, Flex } from "@orderly.network/ui";
 import { OrderTypeSelect } from "../orderTypeSelect";
+import { LeverageBadge } from "./LeverageBadge";
 
 type OrderEntryHeaderProps = {
-  isMobile: boolean;
-  canTrade: boolean;
-  curLeverage: number;
+  symbol: string;
   side: OrderSide;
+  canTrade: boolean;
   order_type: OrderType;
   setOrderValue: (key: keyof OrderlyOrder, value: any) => void;
 };
 
 export function OrderEntryHeader(props: OrderEntryHeaderProps) {
-  const { isMobile, canTrade, side, order_type, curLeverage, setOrderValue } =
-    props;
+  const { canTrade, side, order_type, setOrderValue } = props;
   const { t } = useTranslation();
 
-  const showSheet = isMobile && canTrade;
-
   return (
-    <Flex gapX={2} className="oui-flex-col oui-gap-y-3 lg:oui-flex-row">
+    <>
       <div
         className={cn(
           "oui-grid oui-w-full oui-flex-1 oui-gap-x-2 lg:oui-flex lg:oui-gap-x-[6px]",
-          showSheet ? "oui-grid-cols-3" : "oui-grid-cols-2",
+          "oui-grid-cols-2",
+          // showSheet ? "oui-grid-cols-3" : "oui-grid-cols-2",
         )}
       >
         <Button
@@ -36,7 +32,6 @@ export function OrderEntryHeader(props: OrderEntryHeaderProps) {
           size={"md"}
           fullWidth
           data-type={OrderSide.BUY}
-          // color={side === OrderSide.BUY ? "buy" : "secondary"}
           className={cn(
             side === OrderSide.BUY && canTrade
               ? "oui-bg-success-darken hover:oui-bg-success-darken/80 active:oui-bg-success-darken/80"
@@ -53,7 +48,6 @@ export function OrderEntryHeader(props: OrderEntryHeaderProps) {
           data-type={OrderSide.SELL}
           fullWidth
           size={"md"}
-          // color={side === OrderSide.SELL ? "sell" : "secondary"}
           className={cn(
             side === OrderSide.SELL && props.canTrade
               ? "oui-bg-danger-darken hover:oui-bg-danger-darken/80 active:oui-bg-danger-darken/80"
@@ -63,27 +57,13 @@ export function OrderEntryHeader(props: OrderEntryHeaderProps) {
         >
           {t("common.sell")}
         </Button>
-        {showSheet && (
-          <Button
-            size={"md"}
-            fullWidth
-            trailing={
-              <CaretRightIcon size={12} className="oui-text-base-contrast-36" />
-            }
-            onClick={() => {
-              modal.show(LeverageWidgetWithSheetId, {
-                currentLeverage: curLeverage,
-              });
-            }}
-            className={cn(
-              "oui-bg-base-7 oui-text-primary-light hover:oui-bg-base-6 active:oui-bg-base-6",
-            )}
-          >
-            {commifyOptional(curLeverage, { fix: 2 }) + "x"}
-          </Button>
-        )}
       </div>
-      <div className={"oui-w-full lg:oui-flex-1"}>
+      <div
+        className={cn(
+          "oui-grid oui-w-full oui-gap-x-2 lg:oui-flex lg:oui-gap-x-[6px]",
+          "oui-grid-cols-2",
+        )}
+      >
         <OrderTypeSelect
           type={order_type!}
           side={side}
@@ -92,7 +72,8 @@ export function OrderEntryHeader(props: OrderEntryHeaderProps) {
             setOrderValue("order_type", type);
           }}
         />
+        <LeverageBadge symbol={props.symbol} side={props.side} />
       </div>
-    </Flex>
+    </>
   );
 }

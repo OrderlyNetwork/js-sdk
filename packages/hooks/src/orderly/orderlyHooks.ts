@@ -87,6 +87,7 @@ export {
 
 export { useSymbolLeverage } from "./useSymbolLeverage";
 export { useSymbolLeverages } from "./useSymbolLeverages";
+export { useLeverageBySymbol } from "./useLeverageBySymbol";
 
 export { useAssetsHistory } from "./statistics/useAssetHistory";
 

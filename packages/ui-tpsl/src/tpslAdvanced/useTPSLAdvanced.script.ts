@@ -7,6 +7,7 @@ type Props = {
   setOrderValue: (key: string, value: any) => void;
   onSubmit: (formattedOrder: OrderlyOrder) => void;
   onClose: () => void;
+  symbolLeverage?: number;
 };
 
 const isTPSLEnable = (order: OrderlyOrder, type: "tp" | "sl") => {
@@ -81,5 +82,6 @@ export const useTPSLAdvanced = (props: Props) => {
     onSubmit,
     onClose,
     metaState,
+    symbolLeverage: props.symbolLeverage,
   };
 };

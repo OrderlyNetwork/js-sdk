@@ -1,10 +1,12 @@
 import { useCallback, useMemo, useState } from "react";
 import {
-  useMarkPriceBySymbol,
+  useLocalStorage,
+  usePositionStream,
   useSymbolLeverages,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { positions } from "@orderly.network/perp";
+import { OrderSide } from "@orderly.network/types";
 import {
   Checkbox,
   modal,
@@ -20,13 +22,10 @@ type UseLeverageScriptOptions = {
 
 export type SymbolLeverageScriptOptions = {
   leverageLevers?: number[];
-  curLeverage: number;
   symbol: string;
-  positionQty?: number;
-  orderSide?: "buy" | "sell";
+  side?: OrderSide;
+  curLeverage: number;
 };
-
-const DEFAULT_LEVERAGE_LEVERS = [5, 10, 20, 50, 100];
 
 export type SymbolLeverageScriptReturns = ReturnType<
   typeof useSymbolLeverageScript
@@ -35,26 +34,17 @@ export type SymbolLeverageScriptReturns = ReturnType<
 export const useSymbolLeverageScript = (
   options?: SymbolLeverageScriptOptions & UseLeverageScriptOptions,
 ) => {
-  const {
-    curLeverage = 1,
-    // leverageLevers = DEFAULT_LEVERAGE_LEVERS,
-    symbol,
-    positionQty,
-    orderSide,
-  } = options || {};
+  const { curLeverage = 1, symbol, side } = options || {};
   const [showSliderTip, setShowSliderTip] = useState(false);
   const { t } = useTranslation();
-  const markPrice = useMarkPriceBySymbol(symbol!);
+  const position = usePositionBySymbol(symbol!);
+  const { notional, position_qty, mm: currentMargin } = position || {};
   const { isMobile } = useScreen();
 
   const { maxSymbolLeverage, update, isLoading, symbolInfo } =
     useSymbolLeverages(symbol || "");
 
   const formattedLeverageLevers = generateLeverageLevers(maxSymbolLeverage);
-
-  // const filteredLeverageLevers = useMemo(() => {
-  //   return leverageLevers.filter((e) => e <= maxSymbolLeverage);
-  // }, [leverageLevers, maxSymbolLeverage]);
 
   const marks = useMemo<SliderMarks>(() => {
     return (
@@ -118,7 +108,6 @@ export const useSymbolLeverageScript = (
   };
 
   const onSave = async () => {
-    // localStorage.setItem("symbol_leverage_disable_confirmation", "false");
     const localDisableConfirmation = localStorage.getItem(
       "symbol_leverage_disable_confirmation",
     );
@@ -160,45 +149,55 @@ export const useSymbolLeverageScript = (
 
   /** the highest allowable leverage. Block users from setting leverage above this limit. */
   const maxPositionLeverage = useMemo(() => {
-    if (positionQty && markPrice) {
-      const notional = positions.notional(positionQty, markPrice);
-      const imr_factor = symbolInfo("imr_factor");
+    const IMRFactor = symbolInfo("imr_factor");
+    if (notional && IMRFactor) {
       return positions.maxPositionLeverage({
-        IMRFactor: imr_factor,
+        IMRFactor,
         notional,
       });
     }
 
     return 1;
-  }, [leverage, symbolInfo, positionQty, markPrice]);
+  }, [leverage, symbolInfo, notional]);
 
   /** calculate maximum position at current leverage */
   const maxPositionNotional = useMemo(() => {
-    return positions.maxPositionNotional({
-      leverage,
-      IMRFactor: symbolInfo("imr_factor"),
-    });
+    const IMRFactor = symbolInfo("imr_factor");
+    if (leverage && IMRFactor) {
+      return positions.maxPositionNotional({
+        leverage,
+        IMRFactor,
+      });
+    }
   }, [leverage, symbolInfo]);
 
   const requiredMargin = useMemo(() => {
-    return positions.requiredMargin({
-      maxNotional: maxPositionNotional,
-      leverage,
-    });
+    if (maxPositionNotional && leverage) {
+      return positions.requiredMargin({
+        maxNotional: maxPositionNotional,
+        leverage,
+      });
+    }
   }, [maxPositionNotional, leverage]);
 
   const overMaxPositionLeverage = useMemo(() => {
     return leverage > maxPositionLeverage;
   }, [leverage, maxPositionLeverage]);
 
-  // todo: add required margin check
+  /**
+   * If current_margin < required_margin, disable confirm button and display error message:
+   * Margin is not enough. Please try adjusting to another leverage level.
+   */
   const overRequiredMargin = useMemo(() => {
+    // if (currentMargin && currentMargin < requiredMargin) {
+    //   return true;
+    // }
     return false;
-  }, [requiredMargin]);
+  }, [requiredMargin, currentMargin]);
 
-  const isBuy = orderSide
-    ? orderSide === "buy"
-    : positionQty && positionQty > 0;
+  const isBuy = side
+    ? side === OrderSide.BUY
+    : position_qty && position_qty > 0;
 
   const disabled =
     !leverage ||
@@ -248,3 +247,19 @@ const generateLeverageLevers = (max: number) => {
   }
   return result;
 };
+
+function usePositionBySymbol(symbol: string) {
+  const [unPnlPriceBasis, setUnPnlPriceBasic] = useLocalStorage(
+    "unPnlPriceBasis",
+    "markPrice",
+  );
+  const [data] = usePositionStream(symbol, {
+    calcMode: unPnlPriceBasis,
+  });
+
+  return useMemo(() => {
+    if (symbol && data?.rows?.length) {
+      return data.rows.find((item) => item.symbol === symbol);
+    }
+  }, [data, symbol]);
+}
