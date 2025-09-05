@@ -14,13 +14,7 @@ export type SymbolLeverageWidgetProps = {
 export const SymbolLeverageWidget: React.FC<SymbolLeverageWidgetProps> = (
   props,
 ) => {
-  const state = useSymbolLeverageScript({
-    close: props.close,
-    leverageLevers: props.leverageLevers,
-    curLeverage: props.curLeverage,
-    symbol: props.symbol,
-    positionQty: props.positionQty,
-  });
+  const state = useSymbolLeverageScript(props);
   return <SymbolLeverageUI {...state} />;
 };
 
