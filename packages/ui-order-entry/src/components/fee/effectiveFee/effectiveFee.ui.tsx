@@ -41,7 +41,7 @@ export const EffectiveFeeUI: React.FC<
     <Flex itemAlign="center" justify="between" width={"100%"} gap={1}>
       <Flex width={"100%"} itemAlign="center" justify={"between"}>
         <Text className="oui-truncate" size="2xs">
-          {t("common.effectiveFee")}
+          {t("common.fees")}
         </Text>
         <AuthGuard
           fallback={() => (

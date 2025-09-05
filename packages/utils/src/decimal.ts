@@ -2,9 +2,7 @@ import Decimal from "decimal.js-light";
 
 export type { Numeric } from "decimal.js-light";
 
-Decimal.set({
-  rounding: Decimal.ROUND_DOWN,
-});
+Decimal.set({ rounding: Decimal.ROUND_DOWN });
 
 export default Decimal;
 
