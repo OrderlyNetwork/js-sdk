@@ -21,6 +21,8 @@ export const TriggerPriceCell = (props: {
   const [value, setValue] = useState<string>(originValue);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const disabled = props.disabled || order.is_triggered;
+
   const { editAlgoOrder } = useOrderListContext();
   const { base, quote_dp } = useSymbolContext();
 
@@ -67,13 +69,13 @@ export const TriggerPriceCell = (props: {
   }, [order.algo_order_id, value, cancelPopover]);
 
   const renderContent = () => {
-    if (!editing || props.disabled) {
+    if (!editing || disabled) {
       return (
         <PreviewCell
           value={value}
           status={getOrderStatus(order)}
           setEditing={setEditing}
-          disabled={props.disabled}
+          disabled={disabled}
         />
       );
     }

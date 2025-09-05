@@ -52,7 +52,10 @@ export const EditSheet: FC<EditSheetState> = (props) => {
   );
 
   const triggerPriceInput = props.showTriggerPrice && (
-    <TriggerPriceInput value={formattedOrder.trigger_price} />
+    <TriggerPriceInput
+      trigger_price={formattedOrder.trigger_price}
+      disabled={!!item.is_triggered}
+    />
   );
 
   const renderPriceInput = () => {

@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { cn, Input, inputFormatter, Text } from "@orderly.network/ui";
 import { useEditSheetContext } from "./editSheetContext";
@@ -9,11 +9,13 @@ type PriceInputProps = {
 };
 
 export const PriceInput = memo((props: PriceInputProps) => {
+  const [focus, setFocus] = useState(false);
   const { t } = useTranslation();
   const { symbolInfo, setOrderValue, getErrorMsg } = useEditSheetContext();
   const { quote, quote_dp } = symbolInfo;
 
-  const error = getErrorMsg("order_price");
+  const error =
+    getErrorMsg("order_price") || (focus ? getErrorMsg("total") : "");
 
   return (
     <Input.tooltip
@@ -38,6 +40,12 @@ export const PriceInput = memo((props: PriceInputProps) => {
       disabled={props.disabled}
       value={props.order_price}
       onValueChange={(val) => setOrderValue("order_price", val)}
+      onBlur={() => {
+        setFocus(false);
+      }}
+      onFocus={() => {
+        setFocus(true);
+      }}
       tooltip={error}
       tooltipProps={{
         content: {

@@ -39,24 +39,26 @@ export const ScaledQuantityInput = memo((props: ScaledQuantityInputProps) => {
   );
 
   if (isBase) {
-    <CustomInput
-      label={t("common.qty")}
-      suffix={suffix}
-      id="order_quantity_input"
-      name="order_quantity_input"
-      className="!oui-rounded-r"
-      value={props.order_quantity}
-      error={getErrorMsg(
-        "order_quantity",
-        `${errors?.order_quantity?.value} ${base}`,
-      )}
-      onChange={(val) => {
-        setOrderValue("order_quantity", val);
-      }}
-      formatters={[inputFormatter.dpFormatter(base_dp)]}
-      onFocus={onFocus(InputType.QUANTITY)}
-      onBlur={onBlur(InputType.QUANTITY)}
-    />;
+    return (
+      <CustomInput
+        label={t("common.qty")}
+        suffix={suffix}
+        id="order_quantity_input"
+        name="order_quantity_input"
+        className="!oui-rounded-r"
+        value={props.order_quantity}
+        error={getErrorMsg(
+          "order_quantity",
+          `${errors?.order_quantity?.value} ${base}`,
+        )}
+        onChange={(val) => {
+          setOrderValue("order_quantity", val);
+        }}
+        formatters={[inputFormatter.dpFormatter(base_dp)]}
+        onFocus={onFocus(InputType.QUANTITY)}
+        onBlur={onBlur(InputType.QUANTITY)}
+      />
+    );
   }
 
   return (

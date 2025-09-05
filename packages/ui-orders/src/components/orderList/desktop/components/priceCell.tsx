@@ -61,6 +61,8 @@ export const PriceCell = (props: {
       order_price: value,
       // add order quantity to validate total
       order_quantity: order.quantity?.toString(),
+      // need to pass trigger_price to validate order_price, because order_price is depend on trigger_price when type is stop limit
+      trigger_price: order.trigger_price?.toString(),
     },
   });
 
