@@ -36,8 +36,8 @@ export const defaultOptionRenderer = (
       value={option.value}
       className={cn("oui-relative oui-cursor-pointer")}
       data-testid={`oui-testid-selectItem-${option.value
-        .toLowerCase()
-        .replace(" ", "_")}`}
+        ?.toLowerCase()
+        ?.replace(" ", "_")}`}
     >
       {option.label}
       {currentValue == option.value && (

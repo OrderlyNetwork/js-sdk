@@ -1,5 +1,5 @@
 import { i18n } from "@orderly.network/i18n";
-import { API, OrderStatus } from "@orderly.network/types";
+import { API, OrderStatus, OrderType } from "@orderly.network/types";
 import { AlgoOrderRootType } from "@orderly.network/types";
 import { parseNumber } from "@orderly.network/ui";
 import {
@@ -16,16 +16,23 @@ function getDisplaySide(side: string) {
   return capitalizeString(side);
 }
 
+type AlgoOrderFieldChanges = Partial<
+  Record<OrderType, Partial<Record<keyof API.AlgoOrder, boolean>>>
+>;
+
 export function getOrderExecutionReportMsg(
-  data: API.AlgoOrder | API.Order,
+  data: (API.AlgoOrder | API.Order) & {
+    fieldChanges?: AlgoOrderFieldChanges;
+  },
   symbolsInfo: any,
 ) {
-  const { symbol, side, quantity, client_order_id } = data;
+  const { symbol, side, quantity, client_order_id, fieldChanges } = data;
   const total_executed_quantity =
     "total_executed_quantity" in data ? data.total_executed_quantity : 0;
   const status = "status" in data ? data.status : data.algo_status;
   const getSymbolInfo = symbolsInfo[symbol];
   const base_dp = getSymbolInfo("base_dp");
+  const quote_dp = getSymbolInfo("quote_dp");
   const displaySide = getDisplaySide(side);
   const displaySymbol = transSymbolformString(symbol);
   const displayQuantity =
@@ -68,8 +75,28 @@ export function getOrderExecutionReportMsg(
       msg = `${displaySide} ${displaySymbol} ${displayQuantity}`;
       break;
     case OrderStatus.REPLACED:
-      title = i18n.t("orders.status.replaced.toast.title");
-      msg = `${side} ${displaySymbol} ${total_executed_quantity} / ${displayQuantity}`;
+      const { algo_type, activated_price } = data as API.AlgoOrder;
+      if (algo_type === AlgoOrderRootType.TRAILING_STOP) {
+        const fieldChange =
+          fieldChanges?.[AlgoOrderRootType.TRAILING_STOP] || {};
+        // when trailing stop order is activated, and extreme_price will also changed
+        if (
+          fieldChange.is_activated &&
+          fieldChange.extreme_price &&
+          activated_price
+        ) {
+          title = i18n.t("orders.trailingStop.activated");
+          msg = `${displaySymbol} @${activated_price}`;
+        } else if (fieldChange.extreme_price) {
+          //  if extreme_price is changed, skip show the message
+          title = "";
+          msg = "";
+        }
+      } else {
+        title = i18n.t("orders.status.replaced.toast.title");
+        msg = `${side} ${displaySymbol} ${total_executed_quantity} / ${displayQuantity}`;
+      }
+
       break;
     default:
       break;

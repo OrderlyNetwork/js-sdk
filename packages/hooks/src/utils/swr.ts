@@ -220,9 +220,11 @@ export function updateAlgoOrdersHandler(
 
   const mergeHandler = new AlgoOrderMergeHandler(message);
 
-  const result = mergeHandler.merge(key, message, orders);
+  const mergedOrders = mergeHandler.merge(key, message, orders);
 
-  return result;
+  const fieldChanges = mergeHandler.getFieldChanges(orders);
+
+  return { mergedOrders, fieldChanges };
 }
 
 function updateOrders(

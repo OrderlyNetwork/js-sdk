@@ -2,11 +2,17 @@ import {
   AlgoOrderRootType,
   AlgoOrderType,
   API,
+  OrderStatus,
   SDKError,
   WSMessage,
 } from "@orderly.network/types";
-import { BaseMergeHandler } from "./baseMergeHandler";
+import { OrderType } from "@orderly.network/types";
 import { object2underscore } from "../../utils/ws";
+import { BaseMergeHandler } from "./baseMergeHandler";
+
+export type AlgoOrderFieldChanges = Partial<
+  Record<OrderType, Partial<Record<keyof API.AlgoOrder, boolean>>>
+>;
 
 export class AlgoOrderMergeHandler extends BaseMergeHandler<
   WSMessage.AlgoOrder[],
@@ -35,7 +41,7 @@ export class AlgoOrderMergeHandler extends BaseMergeHandler<
 
   pre(
     message: WSMessage.AlgoOrder[],
-    prevData?: API.OrderResponse[]
+    prevData?: API.OrderResponse[],
   ): API.AlgoOrder {
     return AlgoOrderMergeHandler.groupOrders(message);
   }
@@ -62,14 +68,14 @@ export class AlgoOrderMergeHandler extends BaseMergeHandler<
     const rootOrderIndex = orders.findIndex(
       (order) =>
         order.parentAlgoOrderId === 0 &&
-        order.algoOrderId === order.rootAlgoOrderId
+        order.algoOrderId === order.rootAlgoOrderId,
     );
     if (rootOrderIndex === -1) {
       throw new SDKError("Root order not found");
     }
 
     const rootOrder_ = object2underscore(
-      orders[rootOrderIndex]
+      orders[rootOrderIndex],
     ) as unknown as API.AlgoOrder;
 
     rootOrder_.child_orders = orders
@@ -97,7 +103,7 @@ export class AlgoOrderMergeHandler extends BaseMergeHandler<
     const rootOrderIndex = innerOrders.findIndex(
       (order) =>
         order.algoType !== AlgoOrderType.STOP_LOSS &&
-        order.algoType !== AlgoOrderType.TAKE_PROFIT
+        order.algoType !== AlgoOrderType.TAKE_PROFIT,
     );
     if (rootOrderIndex === -1) {
       throw new SDKError("Root order not found");
@@ -105,9 +111,46 @@ export class AlgoOrderMergeHandler extends BaseMergeHandler<
 
     const rootOrder = innerOrders.splice(
       rootOrderIndex,
-      1
+      1,
     )[0] as unknown as API.AlgoOrder;
     rootOrder.child_orders = innerOrders as unknown as API.AlgoOrder[];
     return rootOrder;
+  }
+
+  /**
+   * get the field changes compared to the previous data
+   * now only record the field changes for trailing stop REPLACED status order
+   */
+  getFieldChanges(prevData?: API.OrderResponse[]) {
+    const {
+      algo_order_id,
+      algo_type,
+      algo_status,
+      is_activated,
+      extreme_price,
+    } = this.data || {};
+
+    const fieldChanges: AlgoOrderFieldChanges = {};
+    if (
+      algo_type === AlgoOrderRootType.TRAILING_STOP &&
+      algo_status === OrderStatus.REPLACED &&
+      prevData?.length
+    ) {
+      for (const item of prevData) {
+        const algoOrders = item.rows as API.AlgoOrder[];
+        for (const order of algoOrders) {
+          if (order.algo_order_id === algo_order_id) {
+            fieldChanges[AlgoOrderRootType.TRAILING_STOP] = {
+              extreme_price: order.extreme_price !== extreme_price,
+              is_activated: order.is_activated !== is_activated,
+            };
+
+            return fieldChanges;
+          }
+        }
+      }
+    }
+
+    return fieldChanges;
   }
 }

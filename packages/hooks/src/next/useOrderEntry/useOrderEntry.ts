@@ -43,7 +43,7 @@ import { useOrderEntryNextInternal } from "./useOrderEntry.internal";
 type OrderEntryParameters = Parameters<typeof useOrderEntryNextInternal>;
 type Options = Omit<OrderEntryParameters["1"], "symbolInfo">;
 
-type OrderEntryReturn = {
+export type OrderEntryReturn = {
   submit: (options?: { resetOnSuccess?: boolean }) => Promise<{
     success: boolean;
     data: Record<string, any>;
@@ -492,10 +492,7 @@ const useOrderEntry = (
     return new Promise<OrderValidationResult | null>(
       async (resolve, reject) => {
         const creator = getOrderCreator(formattedOrder);
-
-        console.log("valudate order", creator);
         const errors = await validate(formattedOrder, creator, prepareData());
-        console.log("validate order errors", errors);
         const keys = Object.keys(errors);
         if (keys.length > 0) {
           // setErrors(errors);

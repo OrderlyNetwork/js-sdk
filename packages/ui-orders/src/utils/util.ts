@@ -1,4 +1,5 @@
 import { utils } from "@orderly.network/hooks";
+import { i18n } from "@orderly.network/i18n";
 import { OrderSide } from "@orderly.network/types";
 import {
   AlgoOrderRootType,
@@ -7,7 +8,7 @@ import {
   OrderStatus,
   OrderType,
 } from "@orderly.network/types";
-import { i18n } from "@orderly.network/i18n";
+import { Decimal } from "@orderly.network/utils";
 
 export const upperCaseFirstLetter = (str: string) => {
   if (str === undefined) return str;
@@ -71,6 +72,10 @@ export function parseBadgesFor(record: any): undefined | string[] {
       ];
     }
 
+    if (algoType === AlgoOrderRootType.TRAILING_STOP) {
+      return [i18n.t("orderEntry.orderType.trailingStop")];
+    }
+
     // stop limit, stop market
     if (type) {
       const typeMap = {
@@ -90,12 +95,12 @@ export function parseBadgesFor(record: any): undefined | string[] {
 
     const tpOrder = record?.child_orders?.find(
       (order: any) =>
-        order.algo_type === AlgoOrderType.TAKE_PROFIT && !!order.trigger_price
+        order.algo_type === AlgoOrderType.TAKE_PROFIT && !!order.trigger_price,
     );
 
     const slOrder = record?.child_orders?.find(
       (order: any) =>
-        order.algo_type === AlgoOrderType.STOP_LOSS && !!order.trigger_price
+        order.algo_type === AlgoOrderType.STOP_LOSS && !!order.trigger_price,
     );
 
     if (tpOrder || slOrder) {
@@ -103,8 +108,8 @@ export function parseBadgesFor(record: any): undefined | string[] {
         tpOrder && slOrder
           ? i18n.t("common.tpsl")
           : tpOrder
-          ? i18n.t("tpsl.tp")
-          : i18n.t("tpsl.sl")
+            ? i18n.t("tpsl.tp")
+            : i18n.t("tpsl.sl"),
       );
     }
 
@@ -119,6 +124,14 @@ export function grayCell(record: any): boolean {
     (record as API.Order).status === OrderStatus.CANCELLED ||
     (record as API.AlgoOrder).algo_status === OrderStatus.CANCELLED
   );
+}
+
+export function getOrderStatus(record: any) {
+  return (record as API.Order).status || (record as API.AlgoOrder).algo_status;
+}
+
+export function isGrayCell(status?: string): boolean {
+  return status === OrderStatus.CANCELLED;
 }
 
 function findBracketTPSLOrder(order: API.AlgoOrderExt) {
@@ -137,11 +150,11 @@ function findBracketTPSLOrder(order: API.AlgoOrderExt) {
     };
 
   const tpOrder = innerOrder?.child_orders?.find(
-    (item) => item.algo_type === AlgoOrderType.TAKE_PROFIT
+    (item) => item.algo_type === AlgoOrderType.TAKE_PROFIT,
   );
 
   const slOrder = innerOrder?.child_orders?.find(
-    (item) => item.algo_type === AlgoOrderType.STOP_LOSS
+    (item) => item.algo_type === AlgoOrderType.STOP_LOSS,
   );
 
   return {
@@ -228,4 +241,34 @@ export function areDatesEqual(date1?: Date, date2?: Date): boolean {
     date1.getMonth() === date2.getMonth() &&
     date1.getDate() === date2.getDate()
   );
+}
+
+export function isTrailingStopOrder(order: API.AlgoOrderExt) {
+  return order.algo_type === OrderType.TRAILING_STOP;
+}
+
+export function getNotional(order: API.AlgoOrderExt, dp = 2) {
+  if (order.price && order.quantity) {
+    return new Decimal(order.price)
+      .mul(order.quantity)
+      .toFixed(dp, Decimal.ROUND_DOWN);
+  }
+
+  return 0;
+}
+/**
+ * api order type ==> orderEntry type
+ */
+export function convertApiOrderTypeToOrderEntryType(order: API.AlgoOrderExt) {
+  if (order.algo_type === OrderType.TRAILING_STOP) {
+    return order.algo_type;
+  }
+
+  const isAlgoOrder = order.algo_order_id !== undefined;
+
+  if (isAlgoOrder && order.algo_type !== AlgoOrderRootType.BRACKET) {
+    return `STOP_${order.type}` as OrderType;
+  }
+
+  return order.type;
 }

@@ -5,7 +5,7 @@ import { InputWithTooltip } from "./input.tooltip";
 export { InputAdditional } from "./inputAdditional";
 
 export type { InputProps } from "./input";
-
+export type { InputWithTooltipProps } from "./input.tooltip";
 export * as inputFormatter from "./formatter";
 
 export type {

@@ -1,24 +1,24 @@
+import { pick } from "ramda";
+import { order as orderUntil } from "@orderly.network/perp";
 import {
   OrderEntity,
   OrderSide,
   OrderType,
   OrderlyOrder,
 } from "@orderly.network/types";
+import { Decimal } from "@orderly.network/utils";
 import { BaseOrderCreator } from "./baseCreator";
 import {
   OrderFormEntity,
   ValuesDepConfig,
   OrderValidationResult,
 } from "./interface";
-import { Decimal } from "@orderly.network/utils";
-import { order as orderUntil } from "@orderly.network/perp";
-import { pick } from "ramda";
 import { OrderValidation } from "./orderValidation";
 
 const { maxPrice, minPrice, scopePrice } = orderUntil;
 
 export class LimitOrderCreator<
-  T extends OrderEntity = OrderlyOrder
+  T extends OrderEntity = OrderlyOrder,
 > extends BaseOrderCreator<T> {
   create(values: OrderlyOrder, config?: ValuesDepConfig): T {
     const order = {
@@ -40,7 +40,7 @@ export class LimitOrderCreator<
         "algo_type",
         "child_orders",
       ],
-      order
+      order,
     );
 
     // return order;
@@ -48,7 +48,7 @@ export class LimitOrderCreator<
 
   validate(
     values: OrderlyOrder,
-    config: ValuesDepConfig
+    config: ValuesDepConfig,
   ): Promise<OrderValidationResult> {
     return this.baseValidate(values, config).then((errors) => {
       // const errors = this.baseValidate(values, config);
@@ -66,7 +66,7 @@ export class LimitOrderCreator<
         const scopePriceNumber = scopePrice(
           config.markPrice,
           price_scope,
-          side
+          side,
         );
 
         const priceRange =
@@ -88,7 +88,7 @@ export class LimitOrderCreator<
           if (price.gt(priceRange?.max)) {
             errors.order_price = OrderValidation.max(
               "order_price",
-              new Decimal(priceRange.max).todp(symbol.quote_dp).toString()
+              new Decimal(priceRange.max).todp(symbol.quote_dp).toString(),
             );
           }
         }
@@ -99,7 +99,7 @@ export class LimitOrderCreator<
           if (price.lt(priceRange?.min)) {
             errors.order_price = OrderValidation.min(
               "order_price",
-              new Decimal(priceRange.min).todp(symbol.quote_dp).toString()
+              new Decimal(priceRange.min).todp(symbol.quote_dp).toString(),
             );
           }
         }

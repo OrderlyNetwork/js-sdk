@@ -19,6 +19,7 @@ export const getCreateOrderUrl = (order: Partial<OrderlyOrder>): string => {
   const isAlgoOrder =
     order?.order_type === OrderType.STOP_LIMIT ||
     order?.order_type === OrderType.STOP_MARKET ||
+    order?.order_type === OrderType.TRAILING_STOP ||
     order?.order_type === OrderType.CLOSE_POSITION ||
     (order.algo_type && order.algo_type === AlgoOrderRootType.BRACKET) ||
     isBracketOrder(order);

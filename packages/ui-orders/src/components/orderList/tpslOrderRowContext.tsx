@@ -88,7 +88,7 @@ export const TPSLOrderRowProvider: FC<
   const getRelatedPosition = useMemoizedFn(
     (symbol: string): API.PositionTPSLExt => {
       const positions = config.cache.get(positionKey);
-      return positions?.data.rows.find(
+      return positions?.data?.rows?.find(
         (p: API.PositionTPSLExt) => p.symbol === symbol,
       );
     },

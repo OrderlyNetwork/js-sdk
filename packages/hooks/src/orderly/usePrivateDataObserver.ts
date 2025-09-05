@@ -6,7 +6,10 @@ import { API, WSMessage } from "@orderly.network/types";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { useApiStatusActions } from "../next/apiStatus/apiStatus.store";
 import { getKeyFunction } from "../provider/dataCenter/dataCenterContext";
-import { AlgoOrderMergeHandler } from "../services/orderMerge/algoOrderMergeHandler";
+import {
+  AlgoOrderFieldChanges,
+  AlgoOrderMergeHandler,
+} from "../services/orderMerge/algoOrderMergeHandler";
 import { CalculatorScope } from "../types";
 import { useAccount } from "../useAccount";
 import { useCalculatorService } from "../useCalculatorService";
@@ -188,6 +191,8 @@ export const usePrivateDataObserver = (options: {
       }
     }
 
+    let fieldChanges: AlgoOrderFieldChanges = {};
+
     filteredKeys.forEach((getKey, key) => {
       mutate(
         unstable_serialize((index, prevData) => [
@@ -197,13 +202,13 @@ export const usePrivateDataObserver = (options: {
         (prevData?: any[]) => {
           try {
             if (isAlgoOrder) {
-              const result = updateAlgoOrdersHandler(
+              const res = updateAlgoOrdersHandler(
                 key,
                 data as WSMessage.AlgoOrder[],
                 prevData!,
               );
-
-              return result;
+              fieldChanges = res?.fieldChanges || {};
+              return res?.mergedOrders;
             }
             return updateOrdersHandler(key, data as WSMessage.Order, prevData);
           } catch (error) {
@@ -231,6 +236,8 @@ export const usePrivateDataObserver = (options: {
       status: isAlgoOrder
         ? formattedData.algo_status
         : (data as WSMessage.Order).status,
+      // custom field name
+      fieldChanges,
     });
   };
 

@@ -5,7 +5,7 @@ import { useAppStore } from "./appStore";
 /**
  * Type alias for the return type of useSymbolsInfo hook
  */
-export type SymbolInfo = ReturnType<typeof useSymbolsInfo>;
+export type SymbolsInfo = ReturnType<typeof useSymbolsInfo>;
 
 /**
  * A hook that provides access to symbol information.

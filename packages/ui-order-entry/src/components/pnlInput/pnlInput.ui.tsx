@@ -1,8 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   CaretDownIcon,
-  cn,
-  Flex,
   Input,
   MenuItem,
   Text,
