@@ -157,7 +157,7 @@ const MarketsMobileContent: React.FC<MarketsContentProps> = (props) => {
           <LazyMarketsHeaderWidget className="oui-mt-2" />
         </React.Suspense>
         <React.Suspense fallback={null}>
-          <LazyMarketsHeaderWidget />
+          <LazyMarketsDataListWidget />
         </React.Suspense>
       </TabPanel>
       <TabPanel
