@@ -36,16 +36,13 @@ export const useLTVTooltipScript = () => {
 
   const tokensInfo = useTokensInfo();
 
-  const { data: indexPrices } = useIndexPricesStream();
+  const { getIndexPrice } = useIndexPricesStream();
 
   const holdingData = holdingList.map((item) => {
     const tokenInfo = tokensInfo?.find(({ token }) => token === item.token);
 
     // Use extracted function for index price calculation
-    const indexPrice =
-      item.token === "USDC"
-        ? 1
-        : (indexPrices?.[`PERP_${item.token}_USDC`] ?? 0);
+    const indexPrice = getIndexPrice(item.token);
 
     // Calculate collateral ratio for this token
     const collateralRatio = tokenInfo

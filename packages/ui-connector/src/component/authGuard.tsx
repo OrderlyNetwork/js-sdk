@@ -1,4 +1,4 @@
-import { PropsWithChildren, ReactElement, useMemo } from "react";
+import React, { ReactElement, useMemo } from "react";
 import { useAccount, useMediaQuery } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext } from "@orderly.network/react-app";
@@ -71,7 +71,9 @@ export type AuthGuardProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   // validatingIndicator?: ReactElement;
 };
 
-const AuthGuard = (props: PropsWithChildren<AuthGuardProps>) => {
+export const AuthGuard: React.FC<React.PropsWithChildren<AuthGuardProps>> = (
+  props,
+) => {
   const {
     status,
     buttonProps,
@@ -166,7 +168,7 @@ const AuthGuard = (props: PropsWithChildren<AuthGuardProps>) => {
   );
 };
 
-const ModalTitle = () => {
+const ModalTitle: React.FC = () => {
   const { t } = useTranslation();
   const { state } = useAccount();
   if (state.status < AccountStatusEnum.SignedIn) {
@@ -178,7 +180,7 @@ const ModalTitle = () => {
   return <Text>{t("connector.connectWallet")}</Text>;
 };
 
-const DefaultFallback = (props: {
+const DefaultFallback: React.FC<{
   status: AccountStatusEnum;
   wrongNetwork: boolean;
   buttonProps?: ButtonProps;
@@ -187,7 +189,7 @@ const DefaultFallback = (props: {
   bridgeLessOnly?: boolean;
   descriptions?: alertMessages;
   disabledConnect?: boolean;
-}) => {
+}> = (props) => {
   const { buttonProps, labels, descriptions } = props;
   const { t } = useTranslation();
   const { connectWallet } = useAppContext();
@@ -209,7 +211,9 @@ const DefaultFallback = (props: {
   const onConnectWallet = async () => {
     const res = await connectWallet();
 
-    if (!res) return;
+    if (!res) {
+      return;
+    }
 
     if (res.wrongNetwork) {
       switchChain();
@@ -233,12 +237,13 @@ const DefaultFallback = (props: {
     });
 
     modal
-      .show<{
-        wrongNetwork: boolean;
-      }>(isMobile ? ChainSelectorSheetId : ChainSelectorDialogId, {
-        networkId: props.networkId,
-        bridgeLessOnly: props.bridgeLessOnly,
-      })
+      .show<{ wrongNetwork: boolean }>(
+        isMobile ? ChainSelectorSheetId : ChainSelectorDialogId,
+        {
+          networkId: props.networkId,
+          bridgeLessOnly: props.bridgeLessOnly,
+        },
+      )
       .then(
         (r) => {
           if (!r.wrongNetwork) {
@@ -376,10 +381,8 @@ const DefaultFallback = (props: {
 
 AuthGuard.displayName = "AuthGuard";
 
-const StatusInfo = (
-  props: ButtonProps & {
-    description?: string;
-  },
+const StatusInfo: React.FC<ButtonProps & { description?: string }> = (
+  props,
 ) => {
   const { description, ...buttonProps } = props;
   return (
@@ -395,5 +398,3 @@ const StatusInfo = (
     </Flex>
   );
 };
-
-export { AuthGuard };

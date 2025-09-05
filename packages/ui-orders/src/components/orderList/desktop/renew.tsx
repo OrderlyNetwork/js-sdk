@@ -1,8 +1,8 @@
 import { FC, useCallback, useState } from "react";
 import { useConfig, useMutation } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 import { OrderEntity } from "@orderly.network/types";
 import { Button } from "@orderly.network/ui";
-import { useTranslation } from "@orderly.network/i18n";
 
 export const Renew: FC<{ record: any }> = (props) => {
   const { record } = props;
@@ -23,9 +23,7 @@ export const Renew: FC<{ record: any }> = (props) => {
       order_price: record.price,
       order_quantity: record.quantity,
       order_amount: record.amount,
-      // visible_quantity: record.visible,
       side: record.side,
-      // reduce_only: record.reduce_only,
       broker_id: brokerId,
     };
 
@@ -35,6 +33,14 @@ export const Renew: FC<{ record: any }> = (props) => {
 
     if (typeof record.reduce_only !== "undefined") {
       data.reduce_only = record.reduce_only;
+    }
+
+    if (record.order_tag) {
+      data.order_tag = record.order_tag;
+    }
+
+    if (record.client_order_id) {
+      data.client_order_id = record.client_order_id;
     }
 
     doCreateOrder(data);

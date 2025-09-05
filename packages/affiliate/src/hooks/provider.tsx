@@ -16,6 +16,7 @@ import {
   useDaily,
   useAccount,
   useMemoizedFn,
+  noCacheConfig,
 } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
 import { AccountStatusEnum, EMPTY_OPERATION } from "@orderly.network/types";
@@ -155,6 +156,8 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
     isLoading,
   } = usePrivateQuery<API.ReferralInfo>("/v1/referral/info", {
     revalidateOnFocus: true,
+    errorRetryCount: 3,
+    ...noCacheConfig,
   });
 
   const { data: generateCode, mutate: generateCodeMutate } =

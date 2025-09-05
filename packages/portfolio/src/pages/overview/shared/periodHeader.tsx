@@ -1,14 +1,14 @@
-import { useMemo } from "react";
-import { CardTitle, Flex, Select, Text } from "@orderly.network/ui";
+import React, { useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
+import { CardTitle, Flex, Select } from "@orderly.network/ui";
 import { PeriodType } from "./useAssetHistory";
 
-export const PeriodTitle = (props: {
+export const PeriodTitle: React.FC<{
   onPeriodChange: (period: PeriodType) => void;
   periodTypes: string[];
   period: PeriodType;
   title: string;
-}) => {
+}> = (props) => {
   const { t } = useTranslation();
 
   const periodLabel = useMemo(() => {

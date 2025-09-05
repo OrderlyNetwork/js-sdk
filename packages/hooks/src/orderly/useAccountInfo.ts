@@ -1,4 +1,4 @@
-import { API } from "@orderly.network/types";
+import type { API } from "@orderly.network/types";
 import { usePrivateQuery } from "../usePrivateQuery";
 
 export const useAccountInfo = () => {

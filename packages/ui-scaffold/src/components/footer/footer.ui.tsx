@@ -9,8 +9,8 @@ import {
   OrderlyTextIcon,
   SignalIcon,
 } from "../icons/index";
-import { FooterReturns } from "./footer.script";
-import { FooterProps } from "./footer.widget";
+import type { FooterReturns } from "./footer.script";
+import type { FooterProps } from "./footer.widget";
 
 export const Footer: FC<FooterReturns & FooterProps> = (props) => {
   const { t } = useTranslation();

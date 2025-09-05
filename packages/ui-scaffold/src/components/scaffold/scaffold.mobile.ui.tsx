@@ -1,4 +1,4 @@
-import { PropsWithChildren } from "react";
+import React, { PropsWithChildren } from "react";
 import { Box, cn } from "@orderly.network/ui";
 import { AnnouncementWidget } from "../announcement";
 import { BottomNav } from "../bottomNav/bottomNav.ui.mobile";
@@ -11,7 +11,7 @@ type MobileScaffoldProps = PropsWithChildren<
   ScaffoldScriptReturn & ScaffoldProps
 >;
 
-export const MobileScaffold = (props: MobileScaffoldProps) => {
+export const MobileScaffold: React.FC<MobileScaffoldProps> = (props) => {
   const { classNames } = props;
   return (
     <div

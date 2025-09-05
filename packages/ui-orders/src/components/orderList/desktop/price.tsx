@@ -119,8 +119,12 @@ export const Price = (props: {
       data.reduce_only = order.reduce_only;
     }
 
-    if (order.order_tag !== undefined) {
-      data = { ...data, order_tag: order.order_tag };
+    if (order.order_tag) {
+      data.order_tag = order.order_tag;
+    }
+
+    if (order.client_order_id) {
+      data.client_order_id = order.client_order_id;
     }
 
     if (isAlgoOrder) {

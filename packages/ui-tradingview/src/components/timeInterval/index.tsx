@@ -1,4 +1,7 @@
 import React, { ReactNode, useMemo } from "react";
+import { useMediaQuery } from "@orderly.network/hooks";
+import { useTranslation, i18n } from "@orderly.network/i18n";
+import { MEDIA_TABLET } from "@orderly.network/types";
 import {
   Box,
   cn,
@@ -9,10 +12,8 @@ import {
   Flex,
   Text,
 } from "@orderly.network/ui";
-import { useMediaQuery } from "@orderly.network/hooks";
-import { MEDIA_TABLET } from "@orderly.network/types";
 import { CaretIcon } from "../../icons";
-import { useTranslation, i18n } from "@orderly.network/i18n";
+
 interface IProps {
   changeInterval: (interval: string) => void;
   interval: string;
@@ -20,7 +21,6 @@ interface IProps {
 
 const useMobileTimeIntervalMoreMap = () => {
   const { t } = useTranslation();
-
   const mobileTimeIntervalMoreMap = useMemo(() => {
     return [
       [
@@ -67,15 +67,15 @@ const useMobileTimeIntervalMoreMap = () => {
   return { mobileTimeIntervalMoreMap };
 };
 
-export function TimeInterval(props: IProps) {
+export const TimeInterval: React.FC<IProps> = (props) => {
   const isMobile = useMediaQuery(MEDIA_TABLET);
   if (isMobile) {
     return <MobileTimeInterval {...props} />;
   }
   return <DesktopTimeInterval {...props} />;
-}
+};
 
-function DesktopTimeInterval(props: IProps) {
+const DesktopTimeInterval: React.FC<IProps> = (props) => {
   const { t } = useTranslation();
   const timeIntervalMap = useMemo(() => {
     return [
@@ -134,7 +134,7 @@ function DesktopTimeInterval(props: IProps) {
     <div
       className={cn(
         "oui-text-2xs oui-text-base-contrast-36 oui-flex oui-gap-[2px] oui-items-center oui-mr-3 oui-font-semibold",
-        "oui-overflow-hidden"
+        "oui-overflow-hidden",
       )}
     >
       {timeIntervalMap.map((item) => (
@@ -145,7 +145,7 @@ function DesktopTimeInterval(props: IProps) {
             "hover:oui-text-base-contrast-80",
             "oui-break-normal oui-whitespace-nowrap",
             props.interval === item.value &&
-              "oui-text-base-contrast-80 oui-bg-white/[.06] oui-rounded"
+              "oui-text-base-contrast-80 oui-bg-white/[.06] oui-rounded",
           )}
           id={item.value}
           onClick={() => props.changeInterval(item.value)}
@@ -155,9 +155,9 @@ function DesktopTimeInterval(props: IProps) {
       ))}
     </div>
   );
-}
+};
 
-export function MobileTimeInterval(props: IProps) {
+export const MobileTimeInterval: React.FC<IProps> = (props) => {
   const { t } = useTranslation();
 
   const mobileTimeIntervalDefaultMap = useMemo(() => {
@@ -210,7 +210,7 @@ export function MobileTimeInterval(props: IProps) {
       gap={3}
       className={cn(
         "oui-text-2xs oui-text-base-contrast-36",
-        "oui-overflow-hidden"
+        "oui-overflow-hidden",
       )}
     >
       <div className=" oui-flex oui-gap-1 oui-items-center oui-mr-3 oui-font-semibold">
@@ -220,7 +220,7 @@ export function MobileTimeInterval(props: IProps) {
               "oui-px-2",
               "oui-break-normal oui-whitespace-nowrap",
               props.interval === item.value &&
-                "oui-text-base-contrast-80 oui-bg-white/[.06] oui-rounded"
+                "oui-text-base-contrast-80 oui-bg-white/[.06] oui-rounded",
             )}
             key={item.value}
             onClick={() => props.changeInterval(item.value)}
@@ -229,7 +229,6 @@ export function MobileTimeInterval(props: IProps) {
           </div>
         ))}
       </div>
-
       <DropDownTimeInterval {...props}>
         {currentIntervalIsInExpand ? (
           <div className="oui-text-base-contrast-80">
@@ -243,9 +242,11 @@ export function MobileTimeInterval(props: IProps) {
       </DropDownTimeInterval>
     </Flex>
   );
-}
+};
 
-function DropDownTimeInterval(props: IProps & { children: ReactNode }) {
+const DropDownTimeInterval: React.FC<React.PropsWithChildren<IProps>> = (
+  props,
+) => {
   const [open, setOpen] = React.useState(false);
   const { mobileTimeIntervalMoreMap } = useMobileTimeIntervalMoreMap();
 
@@ -257,7 +258,7 @@ function DropDownTimeInterval(props: IProps & { children: ReactNode }) {
           <CaretIcon
             className={cn(
               "oui-w-3 oui-h-3",
-              open && "oui-text-base-contrast-80 oui-rotate-180"
+              open && "oui-text-base-contrast-80 oui-rotate-180",
             )}
           />
         </div>
@@ -270,7 +271,7 @@ function DropDownTimeInterval(props: IProps & { children: ReactNode }) {
           alignOffset={0}
           sideOffset={0}
           className={cn(
-            "oui-markets-dropdown-menu-content oui-bg-base-9 oui-w-screen oui-flex oui-flex-col oui-gap-2 oui-p-3"
+            "oui-markets-dropdown-menu-content oui-bg-base-9 oui-w-screen oui-flex oui-flex-col oui-gap-2 oui-p-3",
           )}
         >
           {mobileTimeIntervalMoreMap.map((row, id) => (
@@ -281,7 +282,7 @@ function DropDownTimeInterval(props: IProps & { children: ReactNode }) {
                     "oui-w-full  oui-text-2xs oui-flex oui-items-center oui-justify-center oui-h-6  oui-rounded",
                     item.value === props.interval
                       ? "oui-text-base-contrast oui-bg-primary-darken"
-                      : "oui-text-base-contrast-36 oui-bg-base-5"
+                      : "oui-text-base-contrast-36 oui-bg-base-5",
                   )}
                   key={item.value}
                   onClick={() => {
@@ -297,4 +298,4 @@ function DropDownTimeInterval(props: IProps & { children: ReactNode }) {
       </DropdownMenuPortal>
     </DropdownMenuRoot>
   );
-}
+};

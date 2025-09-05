@@ -266,6 +266,8 @@ export class OrderLineService {
     } else {
       orderLine.setEditable(false).setCancellable(false);
     }
+    // orderLine.onCancel(null, () => this.broker.cancelOrder(pendingOrder));
+    // this.applyEditOnMove(orderLine, pendingOrder);
 
     return orderLine;
   }

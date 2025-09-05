@@ -1,9 +1,0 @@
-{
-  "extends": "tsconfig/base.json",
-  "compilerOptions": {
-    "jsx": "react-jsx",
-    "declarationDir": "types",
-    "resolveJsonModule": true,
-  },
-  "include": ["./src/**/*.ts", "./src/**/*.tsx"],
-}

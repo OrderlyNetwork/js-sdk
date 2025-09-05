@@ -1,11 +1,22 @@
 import React from "react";
+import { Connector } from "wagmi";
 import { useScreen, cn } from "@orderly.network/ui";
+import { useWalletConnectorPrivy } from "../../provider";
 import { useWagmiWallet } from "../../providers/wagmi/wagmiWalletProvider";
 import { RenderWalletIcon } from "../common";
 
 export function EVMConnectArea({ connect }: { connect: (type: any) => void }) {
   const { connectors } = useWagmiWallet();
+  const { setOpenConnectDrawer } = useWalletConnectorPrivy();
   const { isMobile } = useScreen();
+  const onConnect = (item: Connector) => {
+    if (isMobile) {
+      if (item.id === "walletConnect") {
+        setOpenConnectDrawer(false);
+      }
+    }
+    connect(connect(item));
+  };
   return (
     <div className="">
       <div className="oui-mb-2 oui-text-sm oui-font-semibold oui-text-base-contrast-80">
@@ -19,7 +30,7 @@ export function EVMConnectArea({ connect }: { connect: (type: any) => void }) {
               " oui-flex oui-flex-1 oui-cursor-pointer oui-items-center oui-justify-start oui-gap-1 oui-rounded-[6px]  oui-px-2 oui-py-[11px]",
               isMobile ? "oui-bg-base-5" : "oui-bg-[#07080A]",
             )}
-            onClick={() => connect(item)}
+            onClick={() => onConnect(item)}
           >
             <RenderWalletIcon connector={item} />
             <div className="oui-text-2xs oui-text-base-contrast">

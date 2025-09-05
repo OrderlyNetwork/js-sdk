@@ -4,9 +4,8 @@ import ReactDOM from "react-dom/client";
 import AppRoute from "./routes";
 import "./styles/index.css";
 
-const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement,
-);
+const root = ReactDOM.createRoot(document.querySelector<HTMLElement>("#root")!);
+
 root.render(
   <React.StrictMode>
     <AppRoute />

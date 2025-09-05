@@ -7,7 +7,7 @@ export type CurrentChain = {
 };
 
 export const useNetworkInfo = (networkId: NetworkId) => {
-  const [allChains, { findByChainId }] = useChains(networkId, {
+  const [, { findByChainId }] = useChains(networkId, {
     pick: "network_infos",
     filter: (chain: any) =>
       chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,

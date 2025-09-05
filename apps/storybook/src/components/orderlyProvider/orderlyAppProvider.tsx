@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from "react";
+import React, { FC } from "react";
 import { OrderlyAppProvider as OrderlyAppProviderBase } from "@orderly.network/react-app";
 import { orderlyAppProviderConfig } from "../../orderlyConfig";
 import { dataAdapter } from "../../orderlyConfig/dataAdapter";
@@ -28,6 +28,16 @@ export const OrderlyAppProvider: FC<
       amplitudeConfig={{
         amplitudeId: "4463418c103f3a66c6d863357f951e25",
       }}
+      // orderMetadata={(order) => {
+      //   return {
+      //     order_tag: "test_tag",
+      //     client_order_id: "test_client_id",
+      //   };
+      // }}
+      // orderMetadata={{
+      //   order_tag: "test_tag",
+      //   client_order_id: "test_client_id",
+      // }}
       // customChains={customChainsAbstarct}
       // defaultChain={{testnet: customChains.testnet[0], mainnet: customChains.mainnet[0]}}
     >

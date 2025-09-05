@@ -1,4 +1,4 @@
-import { PropsWithChildren, ReactNode } from "react";
+import React, { PropsWithChildren, ReactNode } from "react";
 import { BottomNavProps } from "../bottomNav/bottomNav.widget";
 import { FooterProps } from "../footer";
 import { LeftNavProps } from "../leftNav";
@@ -63,7 +63,7 @@ export type ScaffoldProps = {
   };
 };
 
-export const Scaffold = (props: PropsWithChildren<ScaffoldProps>) => {
+export const Scaffold: React.FC<PropsWithChildren<ScaffoldProps>> = (props) => {
   const state = useScaffoldScript(props);
 
   const renderContent = () => {
