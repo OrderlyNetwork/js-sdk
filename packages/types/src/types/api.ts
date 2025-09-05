@@ -403,6 +403,7 @@ export declare namespace API {
     nativeToken?: TokenInfo;
     address?: string;
     symbol?: string;
+    on_chain_swap?: boolean;
     // nativeToken
   }
 
