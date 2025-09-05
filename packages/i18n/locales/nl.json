@@ -322,6 +322,7 @@
   "orders.status.rejected.toast.title": "Order afgewezen",
   "orders.status.replaced.toast.title": "Order bewerkt",
   "orders.status.scaledSubOrderOpened.toast.title": "Geschaalde order: suborder geopend",
+  "orders.trailingStop.activated": "Trailing stop order geactiveerd",
   "orders.column.fill&Quantity": "Gevuld / Hoeveelheid",
   "orders.column.orderTime": "Ordertijd",
   "orders.column.hidden": "Verborgen",

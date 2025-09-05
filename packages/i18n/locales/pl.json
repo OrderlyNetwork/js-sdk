@@ -322,6 +322,7 @@
   "orders.status.rejected.toast.title": "Zlecenie odrzucone",
   "orders.status.replaced.toast.title": "Zlecenie edytowane",
   "orders.status.scaledSubOrderOpened.toast.title": "Zlecenie skalowane: podzlecenie otwarte",
+  "orders.trailingStop.activated": "Zlecenie trailing stop zostało aktywowane",
   "orders.column.fill&Quantity": "Wypełnione / Ilość",
   "orders.column.orderTime": "Czas zlecenia",
   "orders.column.hidden": "Ukryte",

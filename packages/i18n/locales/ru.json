@@ -322,6 +322,7 @@
   "orders.status.rejected.toast.title": "Ордер отклонен",
   "orders.status.replaced.toast.title": "Ордер отредактирован",
   "orders.status.scaledSubOrderOpened.toast.title": "Масштабный ордер: открыт подордер",
+  "orders.trailingStop.activated": "Трейлинг-стоп ордер активирован",
   "orders.column.fill&Quantity": "Исполнено / Количество",
   "orders.column.orderTime": "Время ордера",
   "orders.column.hidden": "Скрытый",

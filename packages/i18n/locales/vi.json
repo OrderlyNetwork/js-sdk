@@ -322,6 +322,7 @@
   "orders.status.rejected.toast.title": "Lệnh đã từ chối",
   "orders.status.replaced.toast.title": "Lệnh đã chỉnh sửa",
   "orders.status.scaledSubOrderOpened.toast.title": "Lệnh theo tỷ lệ: đã mở lệnh con",
+  "orders.trailingStop.activated": "Lệnh trailing stop đã được kích hoạt",
   "orders.column.fill&Quantity": "Đã khớp / Số lượng",
   "orders.column.orderTime": "Thời gian lệnh",
   "orders.column.hidden": "Ẩn",

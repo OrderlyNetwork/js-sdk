@@ -322,6 +322,7 @@
   "orders.status.rejected.toast.title": "Orden rechazada",
   "orders.status.replaced.toast.title": "Orden editada",
   "orders.status.scaledSubOrderOpened.toast.title": "Orden escalonada: suborden abierta",
+  "orders.trailingStop.activated": "Orden de stop trailing activada",
   "orders.column.fill&Quantity": "Ejecutada / Cantidad",
   "orders.column.orderTime": "Hora de orden",
   "orders.column.hidden": "Oculta",

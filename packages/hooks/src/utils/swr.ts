@@ -220,9 +220,9 @@ export function updateAlgoOrdersHandler(
 
   const mergedOrders = mergeHandler.merge(key, message, orders);
 
-  const isExtremePriceUpdated = mergeHandler.isExtremePriceUpdated(orders);
+  const fieldChanges = mergeHandler.getFieldChanges(orders);
 
-  return { mergedOrders, isExtremePriceUpdated };
+  return { mergedOrders, fieldChanges };
 }
 
 function updateOrders(

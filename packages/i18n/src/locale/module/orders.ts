@@ -17,6 +17,7 @@ export const orders = {
 
   "orders.status.scaledSubOrderOpened.toast.title":
     "Scale order: sub-order opened",
+  "orders.trailingStop.activated": "Trailing order activated",
 
   "orders.column.fill&Quantity": "Filled / Quantity",
   "orders.column.orderTime": "Order time",

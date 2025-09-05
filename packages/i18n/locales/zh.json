@@ -322,6 +322,7 @@
   "orders.status.rejected.toast.title": "订单已拒绝",
   "orders.status.replaced.toast.title": "订单已编辑",
   "orders.status.scaledSubOrderOpened.toast.title": "分批订单：子订单已开启",
+  "orders.trailingStop.activated": "追踪止损订单已激活",
   "orders.column.fill&Quantity": "已成交/数量",
   "orders.column.orderTime": "订单时间",
   "orders.column.hidden": "隐藏",

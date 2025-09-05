@@ -322,6 +322,7 @@
   "orders.status.rejected.toast.title": "注文拒否",
   "orders.status.replaced.toast.title": "注文編集",
   "orders.status.scaledSubOrderOpened.toast.title": "スケール注文：サブオーダーが開始されました",
+  "orders.trailingStop.activated": "トレーリングストップ注文が有効になりました",
   "orders.column.fill&Quantity": "約定 / 数量",
   "orders.column.orderTime": "注文時間",
   "orders.column.hidden": "非表示",

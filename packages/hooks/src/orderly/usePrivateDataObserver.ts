@@ -6,7 +6,10 @@ import { API, WSMessage } from "@orderly.network/types";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { useApiStatusActions } from "../next/apiStatus/apiStatus.store";
 import { getKeyFunction } from "../provider/dataCenter/dataCenterContext";
-import { AlgoOrderMergeHandler } from "../services/orderMerge/algoOrderMergeHandler";
+import {
+  AlgoOrderFieldChanges,
+  AlgoOrderMergeHandler,
+} from "../services/orderMerge/algoOrderMergeHandler";
 import { CalculatorScope } from "../types";
 import { useAccount } from "../useAccount";
 import { useCalculatorService } from "../useCalculatorService";
@@ -188,7 +191,7 @@ export const usePrivateDataObserver = (options: {
       }
     }
 
-    let skipEmitOrderEvent = false;
+    let fieldChanges: AlgoOrderFieldChanges = {};
 
     filteredKeys.forEach((getKey, key) => {
       mutate(
@@ -204,7 +207,7 @@ export const usePrivateDataObserver = (options: {
                 data as WSMessage.AlgoOrder[],
                 prevData!,
               );
-              skipEmitOrderEvent = !!res?.isExtremePriceUpdated;
+              fieldChanges = res?.fieldChanges || {};
               return res?.mergedOrders;
             }
             return updateOrdersHandler(key, data as WSMessage.Order, prevData);
@@ -224,10 +227,6 @@ export const usePrivateDataObserver = (options: {
     //   status: data.status || (data as WSMessage.AlgoOrder).algoStatus,
     // });
 
-    if (skipEmitOrderEvent) {
-      return;
-    }
-
     const formattedData = isAlgoOrder
       ? AlgoOrderMergeHandler.groupOrders(data as WSMessage.AlgoOrder[])
       : object2underscore(data);
@@ -237,6 +236,8 @@ export const usePrivateDataObserver = (options: {
       status: isAlgoOrder
         ? formattedData.algo_status
         : (data as WSMessage.Order).status,
+      // custom field name
+      fieldChanges,
     });
   };
 

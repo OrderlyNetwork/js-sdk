@@ -322,6 +322,7 @@
   "orders.status.rejected.toast.title": "Pesanan ditolak",
   "orders.status.replaced.toast.title": "Pesanan diedit",
   "orders.status.scaledSubOrderOpened.toast.title": "Order berskala: sub-order dibuka",
+  "orders.trailingStop.activated": "Order trailing stop telah diaktifkan",
   "orders.column.fill&Quantity": "Terisi / Jumlah",
   "orders.column.orderTime": "Waktu pesanan",
   "orders.column.hidden": "Tersembunyi",

@@ -322,6 +322,7 @@
   "orders.status.rejected.toast.title": "Ордер відхилено",
   "orders.status.replaced.toast.title": "Ордер відредаговано",
   "orders.status.scaledSubOrderOpened.toast.title": "Масштабований ордер: відкрито підордер",
+  "orders.trailingStop.activated": "Трейлінг-стоп ордер активовано",
   "orders.column.fill&Quantity": "Виконано / Кількість",
   "orders.column.orderTime": "Час ордера",
   "orders.column.hidden": "Приховано",

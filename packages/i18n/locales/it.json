@@ -322,6 +322,7 @@
   "orders.status.rejected.toast.title": "Ordine rifiutato",
   "orders.status.replaced.toast.title": "Ordine modificato",
   "orders.status.scaledSubOrderOpened.toast.title": "Ordine scalato: sotto-ordine aperto",
+  "orders.trailingStop.activated": "Ordine trailing stop attivato",
   "orders.column.fill&Quantity": "Eseguito / Quantità",
   "orders.column.orderTime": "Ora ordine",
   "orders.column.hidden": "Nascosto",

@@ -322,6 +322,7 @@
   "orders.status.rejected.toast.title": "Emir reddedildi",
   "orders.status.replaced.toast.title": "Emir düzenlendi",
   "orders.status.scaledSubOrderOpened.toast.title": "Ölçekli emir: alt emir açıldı",
+  "orders.trailingStop.activated": "Trailing stop emri etkinleştirildi",
   "orders.column.fill&Quantity": "Doldurulan / Miktar",
   "orders.column.orderTime": "Emir zamanı",
   "orders.column.hidden": "Gizli",

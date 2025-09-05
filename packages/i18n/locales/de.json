@@ -322,6 +322,7 @@
   "orders.status.rejected.toast.title": "Auftrag abgelehnt",
   "orders.status.replaced.toast.title": "Auftrag bearbeitet",
   "orders.status.scaledSubOrderOpened.toast.title": "Skalierte Order: Unterorder geöffnet",
+  "orders.trailingStop.activated": "Trailing-Stop-Order aktiviert",
   "orders.column.fill&Quantity": "Ausgeführt / Menge",
   "orders.column.orderTime": "Auftragszeit",
   "orders.column.hidden": "Versteckt",

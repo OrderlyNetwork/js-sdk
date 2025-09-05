@@ -6,8 +6,13 @@ import {
   SDKError,
   WSMessage,
 } from "@orderly.network/types";
+import { OrderType } from "@orderly.network/types";
 import { object2underscore } from "../../utils/ws";
 import { BaseMergeHandler } from "./baseMergeHandler";
+
+export type AlgoOrderFieldChanges = Partial<
+  Record<OrderType, Partial<Record<keyof API.AlgoOrder, boolean>>>
+>;
 
 export class AlgoOrderMergeHandler extends BaseMergeHandler<
   WSMessage.AlgoOrder[],
@@ -112,43 +117,40 @@ export class AlgoOrderMergeHandler extends BaseMergeHandler<
     return rootOrder;
   }
 
-  isExtremePriceUpdated(prevData?: API.OrderResponse[]) {
+  /**
+   * get the field changes compared to the previous data
+   * now only record the field changes for trailing stop REPLACED status order
+   */
+  getFieldChanges(prevData?: API.OrderResponse[]) {
     const {
       algo_order_id,
+      algo_type,
       algo_status,
       is_activated,
       extreme_price,
-      algo_type,
-      quantity,
-      activated_price,
-      callback_value,
-      callback_rate,
     } = this.data || {};
+
+    const fieldChanges: AlgoOrderFieldChanges = {};
     if (
-      algo_status === OrderStatus.REPLACED &&
       algo_type === AlgoOrderRootType.TRAILING_STOP &&
-      is_activated &&
-      extreme_price &&
+      algo_status === OrderStatus.REPLACED &&
       prevData?.length
     ) {
       for (const item of prevData) {
         const algoOrders = item.rows as API.AlgoOrder[];
         for (const order of algoOrders) {
-          if (
-            order.algo_order_id === algo_order_id &&
-            order.quantity === quantity &&
-            order.callback_value === callback_value &&
-            order.callback_rate === callback_rate &&
-            order.activated_price === activated_price &&
-            // only check if the extreme price is different
-            order.extreme_price !== extreme_price
-          ) {
-            return true;
+          if (order.algo_order_id === algo_order_id) {
+            fieldChanges[AlgoOrderRootType.TRAILING_STOP] = {
+              extreme_price: order.extreme_price !== extreme_price,
+              is_activated: order.is_activated !== is_activated,
+            };
+
+            return fieldChanges;
           }
         }
       }
     }
 
-    return false;
+    return fieldChanges;
   }
 }

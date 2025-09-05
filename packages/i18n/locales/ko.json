@@ -322,6 +322,7 @@
   "orders.status.rejected.toast.title": "주문 거부됨",
   "orders.status.replaced.toast.title": "주문 수정됨",
   "orders.status.scaledSubOrderOpened.toast.title": "스케일 주문: 하위 주문 시작됨",
+  "orders.trailingStop.activated": "트레일링 스톱 주문이 활성화되었습니다",
   "orders.column.fill&Quantity": "체결 / 수량",
   "orders.column.orderTime": "주문 시간",
   "orders.column.hidden": "숨김",
