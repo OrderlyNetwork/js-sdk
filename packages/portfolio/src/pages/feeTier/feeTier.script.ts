@@ -19,6 +19,7 @@ export type UseFeeTierScriptOptions = {
     columns: Column[],
     dataSource: any[],
   ) => { columns: Column[]; dataSource: any[] };
+  headerDataAdapter?: (original?: any[]) => any[];
   onRow?: (
     record: any,
     index: number,
@@ -51,7 +52,7 @@ const findCurrentTier = (feeList: FeeDataType[], data: API.AccountInfo) => {
 };
 
 export const useFeeTierScript = (options?: UseFeeTierScriptOptions) => {
-  const { dataAdapter } = options || {};
+  const { dataAdapter, headerDataAdapter, onRow } = options || {};
   const [tier, setTier] = useState<number>();
   const { data, isLoading } = useAccountInfo();
   const { state } = useAccount();
@@ -92,6 +93,7 @@ export const useFeeTierScript = (options?: UseFeeTierScriptOptions) => {
     ...authData,
     columns: columns,
     dataSource: dataSource,
-    onRow: options?.onRow,
+    onRow: onRow,
+    headerDataAdapter: headerDataAdapter,
   };
 };

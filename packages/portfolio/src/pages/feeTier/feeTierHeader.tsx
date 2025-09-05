@@ -1,18 +1,20 @@
+import { useMemo } from "react";
 import { useFeeState } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { Box, Flex, Text, Tooltip } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { EffectiveFee } from "./icons";
 
-export type FeeTierHeaderProps = {
-  tier?: number;
-  vol?: number;
-};
-
 export type FeeTierHeaderItemProps = {
   label: string;
   value: React.ReactNode;
   needShowTooltip?: boolean;
+};
+
+export type FeeTierHeaderProps = {
+  tier?: number;
+  vol?: number;
+  headerDataAdapter?: (original?: any[]) => any[];
 };
 
 const isEffective = (val?: unknown) =>
@@ -79,6 +81,7 @@ export const FeeTierHeaderItem: React.FC<FeeTierHeaderItemProps> = (props) => {
 
 export const FeeTierHeader: React.FC<FeeTierHeaderProps> = (props) => {
   const { t } = useTranslation();
+  const { tier, vol, headerDataAdapter } = props;
   const { refereeRebate, ...others } = useFeeState();
   const isEffectiveFee = isEffective(refereeRebate);
   const items: FeeTierHeaderItemProps[] = [
@@ -87,7 +90,7 @@ export const FeeTierHeader: React.FC<FeeTierHeaderProps> = (props) => {
       needShowTooltip: false,
       value: (
         <Text.gradient color={"brand"} angle={270} size="base">
-          {props.tier || "--"}
+          {tier || "--"}
         </Text.gradient>
       ),
     },
@@ -96,7 +99,7 @@ export const FeeTierHeader: React.FC<FeeTierHeaderProps> = (props) => {
       needShowTooltip: false,
       value: (
         <Text.numeral rule="price" dp={2} rm={Decimal.ROUND_DOWN}>
-          {props.vol !== undefined ? `${props.vol}` : "-"}
+          {vol !== undefined && vol !== null ? `${vol}` : "-"}
         </Text.numeral>
       ),
     },
@@ -123,9 +126,20 @@ export const FeeTierHeader: React.FC<FeeTierHeaderProps> = (props) => {
       ),
     },
   ];
+  const mergedData = useMemo<FeeTierHeaderItemProps[]>(() => {
+    if (typeof headerDataAdapter === "function") {
+      return headerDataAdapter(items);
+    }
+    return items;
+  }, [headerDataAdapter, items]);
+
+  if (!Array.isArray(mergedData)) {
+    return null;
+  }
+
   return (
     <Flex direction="row" gapX={4} my={4} itemAlign={"stretch"}>
-      {items.map((item, index) => (
+      {mergedData.map((item, index) => (
         <FeeTierHeaderItem {...item} key={`item-${index}`} />
       ))}
     </Flex>

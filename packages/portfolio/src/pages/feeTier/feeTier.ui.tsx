@@ -33,6 +33,7 @@ type FeeTierTableProps = {
   pageSize?: number;
   dataCount?: number;
   tier?: number | null;
+  vol?: number | null;
   onRow?: (
     record: any,
     index: number,
@@ -145,11 +146,16 @@ export const FeeTier: React.FC<FeeTierProps> = (props) => {
       <Divider />
       {typeof customHeader === "function" ? customHeader() : null}
       <React.Suspense fallback={null}>
-        <LazyFeeTierHeader tier={tier} vol={vol} />
+        <LazyFeeTierHeader
+          vol={vol}
+          tier={tier}
+          headerDataAdapter={props.headerDataAdapter}
+        />
       </React.Suspense>
       <FeeTierTable
         dataSource={dataSource}
         columns={columns}
+        vol={vol}
         tier={tier}
         onRow={props.onRow}
       />
