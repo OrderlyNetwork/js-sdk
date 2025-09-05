@@ -13,23 +13,21 @@ export const SymbolLeverageUI = (props: SymbolLeverageScriptReturns) => {
   const { t } = useTranslation();
 
   return (
-    <div className="oui-flex oui-flex-col oui-gap-4">
-      {/* <Text size="base" weight="semibold" intensity={98}>
-        Adjust Leverage
-      </Text>
-      <Divider className="-oui-mt-[6px] oui-mb-1" /> */}
+    <div className="oui-flex oui-flex-col oui-gap-3 lg:oui-gap-4">
       <div className="oui-flex oui-items-center oui-gap-2">
         <TokenIcon symbol={props.symbol} className="oui-size-5" />
         <Text.formatted
           rule="symbol"
           formatString="base-type"
-          size="base"
+          size={props.isMobile ? "xs" : "base"}
           weight="semibold"
           intensity={98}
         >
           {props.symbol}
         </Text.formatted>
-        <div className="oui-ml-auto oui-flex oui-items-center oui-gap-1">
+        <div
+          className={cn(["oui-ml-auto oui-flex oui-items-center oui-gap-1"])}
+        >
           <Badge color={props.isBuy ? "success" : "danger"} size="xs">
             {props.isBuy ? t("common.long") : t("common.short")}
           </Badge>

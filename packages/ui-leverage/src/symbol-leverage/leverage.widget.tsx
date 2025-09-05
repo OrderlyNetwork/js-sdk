@@ -39,6 +39,6 @@ registerSimpleSheet(SymbolLeverageSheetId, SymbolLeverageWidget, {
 registerSimpleDialog(SymbolLeverageDialogId, SymbolLeverageWidget, {
   title: () => i18n.t("leverage.adjustedLeverage"),
   classNames: {
-    // content: "oui-p-5",
+    content: "oui-w-[420px]",
   },
 });

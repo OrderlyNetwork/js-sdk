@@ -111,7 +111,9 @@ export const Leverage: FC<LeverageProps> = (props) => {
   );
 };
 
-export const LeverageFooter: FC<LeverageProps> = (props) => {
+export const LeverageFooter: FC<LeverageProps & { isMobile?: boolean }> = (
+  props,
+) => {
   const { t } = useTranslation();
   return (
     <Flex direction={"row"} gap={2} width={"100%"} mt={0} pt={5}>
@@ -121,6 +123,7 @@ export const LeverageFooter: FC<LeverageProps> = (props) => {
         fullWidth
         onClick={props.onCancel}
         data-testid="oui-testid-leverage-cancel-btn"
+        size={props.isMobile ? "md" : "lg"}
       >
         {t("common.cancel")}
       </Button>
@@ -130,6 +133,7 @@ export const LeverageFooter: FC<LeverageProps> = (props) => {
         onClick={props.onSave}
         data-testid="oui-testid-leverage-save-btn"
         disabled={props.disabled}
+        size={props.isMobile ? "md" : "lg"}
       >
         {t("common.save")}
       </Button>

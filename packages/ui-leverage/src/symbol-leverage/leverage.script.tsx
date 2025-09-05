@@ -5,7 +5,14 @@ import {
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { positions } from "@orderly.network/perp";
-import { Checkbox, modal, SliderMarks, toast, Text } from "@orderly.network/ui";
+import {
+  Checkbox,
+  modal,
+  SliderMarks,
+  toast,
+  Text,
+  useScreen,
+} from "@orderly.network/ui";
 
 type UseLeverageScriptOptions = {
   close?: () => void;
@@ -16,6 +23,7 @@ export type SymbolLeverageScriptOptions = {
   curLeverage: number;
   symbol: string;
   positionQty?: number;
+  orderSide?: "buy" | "sell";
 };
 
 const DEFAULT_LEVERAGE_LEVERS = [5, 10, 20, 50, 100];
@@ -32,10 +40,12 @@ export const useSymbolLeverageScript = (
     // leverageLevers = DEFAULT_LEVERAGE_LEVERS,
     symbol,
     positionQty,
+    orderSide,
   } = options || {};
   const [showSliderTip, setShowSliderTip] = useState(false);
   const { t } = useTranslation();
   const markPrice = useMarkPriceBySymbol(symbol!);
+  const { isMobile } = useScreen();
 
   const { maxSymbolLeverage, update, isLoading, symbolInfo } =
     useSymbolLeverages(symbol || "");
@@ -83,9 +93,13 @@ export const useSymbolLeverageScript = (
   const onConfirmSave = async () => {
     try {
       update?.({ leverage, symbol }).then(
-        () => {
-          options?.close?.();
-          toast.success(t("leverage.updated"));
+        (res) => {
+          if (res.success) {
+            options?.close?.();
+            toast.success(t("leverage.updated"));
+          } else {
+            toast.error(res.message);
+          }
         },
         (err: Error) => {
           toast.error(err.message);
@@ -182,7 +196,9 @@ export const useSymbolLeverageScript = (
     return false;
   }, [requiredMargin]);
 
-  const isBuy = positionQty && positionQty > 0;
+  const isBuy = orderSide
+    ? orderSide === "buy"
+    : positionQty && positionQty > 0;
 
   const disabled =
     !leverage ||
@@ -218,6 +234,7 @@ export const useSymbolLeverageScript = (
     overMaxPositionLeverage,
     overRequiredMargin,
     isBuy,
+    isMobile,
   };
 };
 
