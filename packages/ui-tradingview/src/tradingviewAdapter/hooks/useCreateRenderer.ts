@@ -99,6 +99,7 @@ export default function useCreateRenderer(
     let limitOrder: any = [];
     let stopOrder: any = [];
     let bracketOrder: any = [];
+    let trailingStopOrder: any = [];
 
     if (
       state.status < AccountStatusEnum.EnableTrading &&
@@ -148,6 +149,10 @@ export default function useCreateRenderer(
           stopOrder.push(order);
         } else if (order.algo_type === AlgoType.BRACKET) {
           bracketOrder.push(order);
+        } else if (order.algo_type === AlgoType.TRAILING_STOP) {
+          if (order.is_activated && order.extreme_price) {
+            trailingStopOrder.push(order);
+          }
         }
       }
     });
@@ -165,6 +170,9 @@ export default function useCreateRenderer(
       if (!displayControlSetting.stopOrders) {
         stopOrder = [];
       }
+      if (!displayControlSetting.trailingStop) {
+        trailingStopOrder = [];
+      }
     }
 
     renderer?.renderPendingOrders(
@@ -172,7 +180,8 @@ export default function useCreateRenderer(
         .concat(positionTpsl)
         .concat(limitOrder)
         .concat(stopOrder)
-        .concat(bracketOrder),
+        .concat(bracketOrder)
+        .concat(trailingStopOrder),
     );
   }, [
     renderer,

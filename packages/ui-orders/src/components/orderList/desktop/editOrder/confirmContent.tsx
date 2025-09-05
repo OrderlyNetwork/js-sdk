@@ -1,29 +1,26 @@
-import { FC } from "react";
+import { memo } from "react";
+import { useTranslation, Trans } from "@orderly.network/i18n";
 import { Button, CloseIcon, ThrottledButton } from "@orderly.network/ui";
 import { commify } from "@orderly.network/utils";
-import { useTranslation, Trans } from "@orderly.network/i18n";
+import { EditType } from "../../../../type";
 
-export enum EditType {
-  quantity,
-  price,
-  triggerPrice,
-}
-
-export const ConfirmContent: FC<{
+type ConfirmContentProps = {
   type: EditType;
   base: string;
   value: string;
   cancelPopover: () => void;
   isSubmitting: boolean;
   onConfirm: (e: any) => void;
-}> = (props) => {
+};
+
+export const ConfirmContent = memo((props: ConfirmContentProps) => {
   const { type, base, value, cancelPopover, isSubmitting, onConfirm } = props;
   const { t } = useTranslation();
 
   const renderLabel = () => {
     const common = {
       values: { base, value: commify(value) },
-      components: [<span className="oui-text-warning-darken" />],
+      components: [<span key="0" className="oui-text-warning-darken" />],
     };
 
     switch (type) {
@@ -42,15 +39,25 @@ export const ConfirmContent: FC<{
           // @ts-ignore
           <Trans i18nKey="order.edit.confirm.triggerPrice" {...common} />
         );
+      case EditType.callbackValue:
+        return (
+          // @ts-ignore
+          <Trans i18nKey="order.edit.confirm.callbackValue" {...common} />
+        );
+      case EditType.callbackRate:
+        return (
+          // @ts-ignore
+          <Trans i18nKey="order.edit.confirm.callbackRate" {...common} />
+        );
     }
   };
 
   return (
-    <div className="oui-pt-5 oui-relative">
-      <div className="oui-text-base-contrast-54 oui-text-2xs desktop:oui-text-sm">
+    <div className="oui-relative oui-pt-5">
+      <div className="desktop:oui-text-sm oui-text-2xs oui-text-base-contrast-54">
         {renderLabel()}
       </div>
-      <div className="oui-grid oui-grid-cols-2 oui-gap-2 oui-mt-5">
+      <div className="oui-mt-5 oui-grid oui-grid-cols-2 oui-gap-2">
         <Button
           color="secondary"
           size={"md"}
@@ -71,4 +78,6 @@ export const ConfirmContent: FC<{
       </button>
     </div>
   );
-};
+});
+
+ConfirmContent.displayName = "ConfirmContent";

@@ -49,6 +49,10 @@ export const DesktopDisplayControl: React.FC<IProps> = (props) => {
         label: t("tpsl.positionTpsl"),
         id: "positionTpsl",
       },
+      {
+        label: t("orderEntry.orderType.trailingStop"),
+        id: "trailingStop",
+      },
     ];
   }, [t]);
 

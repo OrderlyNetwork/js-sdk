@@ -17,9 +17,9 @@ export const orders = {
 
   "orders.status.scaledSubOrderOpened.toast.title":
     "Scale order: sub-order opened",
+  "orders.trailingStop.activated": "Trailing order activated",
 
   "orders.column.fill&Quantity": "Filled / Quantity",
-  "orders.column.triggerPrice": "Trigger price",
   "orders.column.orderTime": "Order time",
   "orders.column.hidden": "Hidden",
 
@@ -30,6 +30,10 @@ export const orders = {
     "You agree changing the price of {{base}}-PERP order to <0>{{value}}</0>.",
   "order.edit.confirm.triggerPrice":
     "You agree changing the trigger price of {{base}}-PERP order to <0>{{value}}</0>.",
+  "order.edit.confirm.callbackValue":
+    "You agree changing the callback value of {{base}}-PERP order to <0>{{value}}</0>.",
+  "order.edit.confirm.callbackRate":
+    "You agree changing the callback rate of {{base}}-PERP order to <0>{{value}}</0>.",
 
   "orders.cancelOrder": "Cancel order",
   "orders.cancelOrder.description":

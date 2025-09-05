@@ -5,10 +5,7 @@ import {
   DropdownMenuPortal,
   DropdownMenuRoot,
   DropdownMenuTrigger,
-  Flex,
-  Text,
   cn,
-  Switch,
 } from "@orderly.network/ui";
 import {
   CaretIcon,
@@ -55,6 +52,14 @@ export const MobileDisplayControl: React.FC<IProps> = (props) => {
           id: "buySell",
         },
       ],
+      [
+        {
+          label: t("orderEntry.orderType.trailingStop"),
+          id: "trailingStop",
+        },
+        // placeholder
+        {} as DisplayControl,
+      ],
     ];
   }, [t]);
 
@@ -94,30 +99,41 @@ export const MobileDisplayControl: React.FC<IProps> = (props) => {
         >
           {mobileDisplayControlMap.map((row, id) => (
             <div className="oui-flex oui-gap-2" key={id}>
-              {row.map((item) => (
-                <div
-                  className={cn(
-                    "oui-flex oui-h-6  oui-w-full oui-items-center oui-justify-between oui-rounded oui-bg-base-5  oui-px-2 oui-text-2xs",
-                    props.displayControlState[item.id]
-                      ? "oui-text-base-contrast"
-                      : "oui-text-base-contrast-36 ",
-                  )}
-                  key={item.id}
-                  onClick={() => {
-                    props.changeDisplayControlState({
-                      ...props.displayControlState,
-                      [item.id]: !props.displayControlState[item.id],
-                    });
-                  }}
-                >
-                  <div>{item.label}</div>
-                  {props.displayControlState[item.id] ? (
-                    <SelectedIcon className="oui-size-3" />
-                  ) : (
-                    <UnSelectIcon className="oui-size-3" />
-                  )}
-                </div>
-              ))}
+              {row.map((item, index) => {
+                return (
+                  <div
+                    className={cn(
+                      "oui-flex oui-h-6 oui-w-full oui-items-center oui-justify-between",
+                      "oui-rounded oui-px-2 oui-text-2xs",
+                      item.id && "oui-bg-base-5",
+                      props.displayControlState[item.id]
+                        ? "oui-text-base-contrast"
+                        : "oui-text-base-contrast-36",
+                    )}
+                    key={item.id || index}
+                    onClick={() => {
+                      if (!item.id) {
+                        return;
+                      }
+                      props.changeDisplayControlState({
+                        ...props.displayControlState,
+                        [item.id]: !props.displayControlState[item.id],
+                      });
+                    }}
+                  >
+                    {item.id && (
+                      <>
+                        <div>{item.label}</div>
+                        {props.displayControlState[item.id] ? (
+                          <SelectedIcon className="oui-size-3" />
+                        ) : (
+                          <UnSelectIcon className="oui-size-3" />
+                        )}
+                      </>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           ))}
         </DropdownMenuContent>

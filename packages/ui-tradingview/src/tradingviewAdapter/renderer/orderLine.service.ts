@@ -1,5 +1,5 @@
 import { i18n } from "@orderly.network/i18n";
-import { Decimal, commify } from "@orderly.network/utils";
+import { Decimal, commify, getTrailingStopPrice } from "@orderly.network/utils";
 import { IChartingLibraryWidget, IOrderLineAdapter } from "../charting_library";
 import useBroker from "../hooks/useBroker";
 import {
@@ -137,6 +137,11 @@ export class OrderLineService {
         return OrderCombinationType.BRACKET_MARKET;
       }
     }
+
+    if (algoType === AlgoType.TRAILING_STOP) {
+      return OrderCombinationType.TRAILING_STOP;
+    }
+
     return OrderCombinationType.LIMIT;
   }
 
@@ -156,10 +161,17 @@ export class OrderLineService {
       }
       return i18n.t("orderEntry.orderType.stopMarket");
     }
+    if (orderCombinationType === OrderCombinationType.TRAILING_STOP) {
+      return i18n.t("orderEntry.trailing");
+    }
     return i18n.t("orderEntry.orderType.limit");
   }
 
   static getOrderPrice(pendingOrder: any) {
+    if (pendingOrder.algo_type === AlgoType.TRAILING_STOP) {
+      return getTrailingStopPrice(pendingOrder);
+    }
+
     return pendingOrder.trigger_price || pendingOrder.price;
   }
 
@@ -297,6 +309,9 @@ export class OrderLineService {
 
   applyEditOnMove(orderLine: IOrderLineAdapter, pendingOrder: any) {
     const editKey = OrderLineService.getOrderEditKey(pendingOrder);
+    if (!editKey) {
+      return;
+    }
     orderLine.onMove(() => {
       this.broker
         .editOrder(pendingOrder, {

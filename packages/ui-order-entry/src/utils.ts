@@ -113,3 +113,7 @@ export function getScaledPlaceOrderMessage(result: any) {
     });
   }
 }
+
+export const safeNumber = (val: number | string) => {
+  return Number.isNaN(Number(val)) ? 0 : Number(val);
+};

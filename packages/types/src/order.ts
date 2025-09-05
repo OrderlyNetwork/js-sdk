@@ -19,6 +19,10 @@ export enum OrderType {
    * Scaled order
    */
   SCALED = "SCALED",
+  /**
+   * trailing stop
+   */
+  TRAILING_STOP = "TRAILING_STOP",
 }
 
 export enum BBOOrderType {
@@ -41,6 +45,7 @@ export enum AlgoOrderRootType {
   POSITIONAL_TP_SL = "POSITIONAL_TP_SL",
   STOP = "STOP",
   BRACKET = "BRACKET",
+  TRAILING_STOP = "TRAILING_STOP",
 }
 
 export enum TriggerPriceType {
@@ -117,7 +122,36 @@ export interface ScaledOrder {
   skew?: string;
 }
 
-export interface RegularOrder extends BaseOrder, OrderExt, ScaledOrder {
+export enum TrailingCallbackType {
+  VALUE = "value",
+  RATE = "rate",
+}
+
+/**
+ * Trailing Stop that allows users to set an activation price and a trailing amount (value / rate).
+ * The order is only activated when the market reaches the activation price,
+ * after which the trailing stop logic tracks the extreme price and triggers when the price retraces by the specified trailing amount.
+ */
+export interface TrailingStopOrder {
+  /**
+   * activated price
+   */
+  activated_price?: string;
+  /**
+   * i.e. the value = 100
+   */
+  callback_value?: string;
+  /**
+   * i.e. the value = 0.1 represent to 10%
+   */
+  callback_rate?: string;
+}
+
+export interface RegularOrder
+  extends BaseOrder,
+    OrderExt,
+    ScaledOrder,
+    TrailingStopOrder {
   // symbol:           string;
   // client_order_id:  string;
   // type:       OrderType;
@@ -182,7 +216,13 @@ export interface ChildOrder {
   trigger_price_type?: string;
 }
 
-export interface OrderEntity extends ScaledOrder {
+export interface TrailingStopOrder {
+  activated_price?: string;
+  callback_value?: string;
+  callback_rate?: string;
+}
+
+export interface OrderEntity extends ScaledOrder, TrailingStopOrder {
   symbol: string;
   order_type: OrderType;
   algo_type?: AlgoOrderRootType;

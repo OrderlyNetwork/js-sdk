@@ -13,6 +13,7 @@ export {
   BBOOrderType,
   OrderLevel,
   DistributionType,
+  TrailingCallbackType,
 } from "./order";
 export type {
   OrderEntity,
