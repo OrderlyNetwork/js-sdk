@@ -1,7 +1,7 @@
 import {
   useIndexPrice,
-  useLeverageBySymbol,
   useMarkPrice,
+  useLeverageBySymbol,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { OrderlyOrder } from "@orderly.network/types";
@@ -26,7 +26,7 @@ export const OrderInfo = (props: Props) => {
   const markPrice = useMarkPrice(symbol!);
   const indexPrice = useIndexPrice(symbol!);
 
-  const leverage = useLeverageBySymbol(symbolLeverage ? symbol : undefined);
+  const leverage = useLeverageBySymbol(symbolLeverage ? undefined : symbol);
 
   const currentLeverage = symbolLeverage || leverage;
 

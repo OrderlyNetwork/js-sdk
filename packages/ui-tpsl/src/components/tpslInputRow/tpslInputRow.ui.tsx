@@ -16,10 +16,14 @@ export const TPSLInputRowUI: React.FC<TPSLInputRowProps> = (props) => {
   const { t } = useTranslation();
   const { getErrorMsg } = useOrderEntryFormErrorMsg(props.errors);
   const { values, positionType } = props;
-  const symbolLeverage = useLeverageBySymbol(props.symbol);
+
+  // if symbolLeverage is not provided, get it from useLeverageBySymbol
+  const symbolLeverage = useLeverageBySymbol(
+    props.symbolLeverage ? undefined : props.symbol,
+  );
 
   const roi = useMemo(() => {
-    if (isNaN(Number(symbolLeverage))) {
+    if (!symbolLeverage || isNaN(Number(symbolLeverage))) {
       return null;
     }
     let _roi = null;

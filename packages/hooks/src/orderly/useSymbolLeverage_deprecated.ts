@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useMutation } from "../useMutation";
+import { useAccountInfo } from "./useAccountInfo";
 import { useSymbolsInfo } from "./useSymbolsInfo";
 
 /**
@@ -13,28 +13,38 @@ import { useSymbolsInfo } from "./useSymbolsInfo";
  *
  * @example
  * ```typescript
- * const leverage = useMaxSymbolLeverage("PERP_BTC_USDC");
+ * const leverage = useSymbolLeverage("PERP_BTC_USDC");
  * console.log(`Maximum leverage for PERP_BTC_USDC: ${leverage}x`);
+ * @deprecated will be removed in the future, use useLeverageBySymbol instead
  * ```
  */
-export const useSymbolLeverages = (symbol: string) => {
-  const symbolsInfo = useSymbolsInfo();
-  const symbolInfo = useMemo(() => symbolsInfo[symbol], [symbolsInfo, symbol]);
+export const useSymbolLeverage_deprecated = (symbol: string): number => {
+  const { data: info } = useAccountInfo();
 
-  const [update, { isMutating }] = useMutation("/v1/client/leverage");
+  const maxAccountLeverage = info?.max_leverage;
+
+  const symbolsInfo = useSymbolsInfo();
 
   /**
    * Calculates the maximum leverage for the symbol based on its base initial margin requirement (IMR)
    */
   const maxSymbolLeverage = useMemo(() => {
+    const symbolInfo = symbolsInfo[symbol];
     const baseIMR = symbolInfo("base_imr");
     return baseIMR ? 1 / baseIMR : 1;
-  }, [symbolInfo]);
+  }, [symbolsInfo, symbol]);
 
-  return {
-    maxSymbolLeverage,
-    update,
-    isLoading: isMutating,
-    symbolInfo,
-  };
+  /**
+   * Determines the final maximum leverage by taking the minimum between
+   * account leverage limit and symbol leverage limit
+   */
+  const maxLeverage = useMemo(() => {
+    if (!maxAccountLeverage || !maxSymbolLeverage) {
+      return 1;
+    }
+
+    return Math.min(maxAccountLeverage, maxSymbolLeverage);
+  }, [maxAccountLeverage, maxSymbolLeverage]);
+
+  return maxLeverage;
 };

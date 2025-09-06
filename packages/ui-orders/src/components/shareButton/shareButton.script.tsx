@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useLeverageBySymbol, useReferralInfo } from "@orderly.network/hooks";
+import { useReferralInfo, useLeverageBySymbol } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { modal } from "@orderly.network/ui";
 import { SharePnLConfig } from "@orderly.network/ui-share";

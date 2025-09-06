@@ -214,6 +214,7 @@ export const TPSLAdvancedUI = (props: Props) => {
               positionType={
                 formattedOrder.position_type ?? PositionType.PARTIAL
               }
+              symbolLeverage={props.symbolLeverage}
             />
             <TPSLInputRowWidget
               rootOrderPrice={formattedOrder.order_price}
@@ -231,6 +232,7 @@ export const TPSLAdvancedUI = (props: Props) => {
               onChange={(key, value) => {
                 setOrderValue(key as keyof OrderlyOrder, value);
               }}
+              symbolLeverage={props.symbolLeverage}
             />
           </Flex>
 

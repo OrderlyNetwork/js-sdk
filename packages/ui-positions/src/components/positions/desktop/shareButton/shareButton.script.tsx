@@ -1,8 +1,8 @@
 import { useMemo } from "react";
 import {
   useAccountInfo,
-  useLeverageBySymbol,
   useReferralInfo,
+  useLeverageBySymbol,
   useSymbolsInfo,
 } from "@orderly.network/hooks";
 import { account, positions } from "@orderly.network/perp";
@@ -30,7 +30,7 @@ export const useShareButtonScript = (props: ShareButtonScriptOptions) => {
     return getFirstRefCode()?.code;
   }, [getFirstRefCode]);
 
-  const leverage = useLeverageBySymbol(position.symbol);
+  const symbolLeverage = useLeverageBySymbol(position.symbol);
 
   const getHistoryEntity = () => {
     const netPnL = position.netPnL || 0;
@@ -113,7 +113,7 @@ export const useShareButtonScript = (props: ShareButtonScriptOptions) => {
         entity: {
           symbol: position.symbol,
           // when position.leverage is empty, use leverage from useSymbolLeverage
-          leverage: position.leverage || leverage,
+          leverage: position.leverage || symbolLeverage,
           ...entity,
         },
         refCode,

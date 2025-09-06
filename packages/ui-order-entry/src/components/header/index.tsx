@@ -1,6 +1,6 @@
 import { useTranslation } from "@orderly.network/i18n";
 import { OrderlyOrder, OrderSide, OrderType } from "@orderly.network/types";
-import { Button, cn, Flex } from "@orderly.network/ui";
+import { Button, cn } from "@orderly.network/ui";
 import { OrderTypeSelect } from "../orderTypeSelect";
 import { LeverageBadge } from "./LeverageBadge";
 
@@ -10,6 +10,7 @@ type OrderEntryHeaderProps = {
   canTrade: boolean;
   order_type: OrderType;
   setOrderValue: (key: keyof OrderlyOrder, value: any) => void;
+  symbolLeverage?: number;
 };
 
 export function OrderEntryHeader(props: OrderEntryHeaderProps) {
@@ -72,7 +73,11 @@ export function OrderEntryHeader(props: OrderEntryHeaderProps) {
             setOrderValue("order_type", type);
           }}
         />
-        <LeverageBadge symbol={props.symbol} side={props.side} />
+        <LeverageBadge
+          symbol={props.symbol}
+          side={props.side}
+          symbolLeverage={props.symbolLeverage}
+        />
       </div>
     </>
   );

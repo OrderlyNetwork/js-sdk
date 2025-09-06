@@ -173,6 +173,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
               console.log("key", key, "value", value);
               props.setOrderValue(key as keyof OrderlyOrder, value);
             }}
+            symbolLeverage={position.leverage}
           />
 
           <TPSLInputRowWidget
@@ -204,6 +205,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
               console.log("key", key, "value", value);
               props.setOrderValue(key as keyof OrderlyOrder, value);
             }}
+            symbolLeverage={position.leverage}
           />
         </Flex>
 

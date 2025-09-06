@@ -1,8 +1,4 @@
-import { useMemo } from "react";
-import {
-  useLeverageBySymbol,
-  useSymbolLeverages,
-} from "@orderly.network/hooks";
+import { useSymbolLeverage } from "@orderly.network/hooks";
 import { OrderSide } from "@orderly.network/types";
 import { cn, Flex, modal, Text, useScreen } from "@orderly.network/ui";
 import {
@@ -10,30 +6,26 @@ import {
   SymbolLeverageSheetId,
 } from "@orderly.network/ui-leverage";
 import { Decimal } from "@orderly.network/utils";
-import { useCanTrade } from "../../hooks/useCanTrade";
 
 type LeverageBadgeProps = {
   symbol: string;
   side: OrderSide;
+  symbolLeverage?: number;
 };
 
 export const LeverageBadge = (props: LeverageBadgeProps) => {
-  const { symbol, side } = props;
+  const { symbol, side, symbolLeverage } = props;
   const { isMobile } = useScreen();
-  const symbolLeverage = useLeverageBySymbol(symbol);
-  const { maxSymbolLeverage } = useSymbolLeverages(symbol);
-  const canTrade = useCanTrade();
+  const { maxLeverage } = useSymbolLeverage(symbol);
 
-  const leverage = useMemo(() => {
-    return symbolLeverage || maxSymbolLeverage;
-  }, [canTrade, symbolLeverage, maxSymbolLeverage]);
+  const curLeverage = symbolLeverage || maxLeverage;
 
   const showModal = () => {
     const modalId = isMobile ? SymbolLeverageSheetId : SymbolLeverageDialogId;
     modal.show(modalId, {
       symbol,
       side,
-      curLeverage: leverage,
+      curLeverage,
     });
   };
 
@@ -53,7 +45,7 @@ export const LeverageBadge = (props: LeverageBadgeProps) => {
       <Text>Cross</Text>
 
       <Text.numeral dp={0} rm={Decimal.ROUND_DOWN} unit="X">
-        {leverage}
+        {curLeverage}
       </Text.numeral>
     </Flex>
   );

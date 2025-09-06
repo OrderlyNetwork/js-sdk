@@ -2,12 +2,12 @@ import { useEffect, useRef } from "react";
 import {
   useComputedLTV,
   useEventEmitter,
-  useLeverageBySymbol,
   useLocalStorage,
   useMarginRatio,
   useMemoizedFn,
   useOrderEntry,
   useOrderlyContext,
+  useLeverageBySymbol,
 } from "@orderly.network/hooks";
 import {
   DistributionType,

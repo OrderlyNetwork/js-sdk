@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from "react";
 import {
   useLocalStorage,
   usePositionStream,
-  useSymbolLeverages,
+  useSymbolLeverage,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { positions } from "@orderly.network/perp";
@@ -32,19 +32,19 @@ export type SymbolLeverageScriptReturns = ReturnType<
 >;
 
 export const useSymbolLeverageScript = (
-  options?: SymbolLeverageScriptOptions & UseLeverageScriptOptions,
+  options: SymbolLeverageScriptOptions & UseLeverageScriptOptions,
 ) => {
-  const { curLeverage = 1, symbol, side } = options || {};
+  const { curLeverage = 1, symbol, side } = options;
   const [showSliderTip, setShowSliderTip] = useState(false);
   const { t } = useTranslation();
   const position = usePositionBySymbol(symbol!);
   const { notional, position_qty, mm: currentMargin } = position || {};
   const { isMobile } = useScreen();
 
-  const { maxSymbolLeverage, update, isLoading, symbolInfo } =
-    useSymbolLeverages(symbol || "");
+  const { maxLeverage, update, isLoading, symbolInfo } =
+    useSymbolLeverage(symbol);
 
-  const formattedLeverageLevers = generateLeverageLevers(maxSymbolLeverage);
+  const formattedLeverageLevers = generateLeverageLevers(maxLeverage);
 
   const marks = useMemo<SliderMarks>(() => {
     return (
@@ -55,7 +55,7 @@ export const useSymbolLeverageScript = (
     );
   }, [formattedLeverageLevers]);
 
-  const [leverage, setLeverage] = useState<number>(curLeverage ?? 0);
+  const [leverage, setLeverage] = useState<number>(curLeverage);
 
   const step = 100 / ((marks?.length || 0) - 1);
 
@@ -77,7 +77,7 @@ export const useSymbolLeverageScript = (
       const value = Number.isNaN(parsed) ? "" : parsed;
       setLeverage(value as number);
     },
-    [maxSymbolLeverage],
+    [maxLeverage],
   );
 
   const onConfirmSave = async () => {
@@ -145,11 +145,11 @@ export const useSymbolLeverageScript = (
   };
 
   const isReduceDisabled = leverage <= 1;
-  const isIncreaseDisabled = leverage >= maxSymbolLeverage;
+  const isIncreaseDisabled = leverage >= maxLeverage;
 
   /** the highest allowable leverage. Block users from setting leverage above this limit. */
   const maxPositionLeverage = useMemo(() => {
-    const IMRFactor = symbolInfo("imr_factor");
+    const IMRFactor = symbolInfo?.("imr_factor");
     if (notional && IMRFactor) {
       return positions.maxPositionLeverage({
         IMRFactor,
@@ -162,7 +162,7 @@ export const useSymbolLeverageScript = (
 
   /** calculate maximum position at current leverage */
   const maxPositionNotional = useMemo(() => {
-    const IMRFactor = symbolInfo("imr_factor");
+    const IMRFactor = symbolInfo?.("imr_factor");
     if (leverage && IMRFactor) {
       return positions.maxPositionNotional({
         leverage,
@@ -202,7 +202,7 @@ export const useSymbolLeverageScript = (
   const disabled =
     !leverage ||
     leverage < 1 ||
-    leverage > maxSymbolLeverage ||
+    leverage > maxLeverage ||
     overRequiredMargin ||
     overMaxPositionLeverage;
 
@@ -221,10 +221,10 @@ export const useSymbolLeverageScript = (
     step,
     onCancel: options?.close,
     onSave,
-    isLoading: isLoading,
+    isLoading,
     showSliderTip,
     setShowSliderTip,
-    maxLeverage: maxSymbolLeverage,
+    maxLeverage,
     toggles: formattedLeverageLevers,
     symbol,
     maxPositionNotional,

@@ -1,7 +1,6 @@
 import React, { useEffect, useId, useMemo, useState } from "react";
 import {
   OrderValidationResult,
-  useLeverage,
   useLocalStorage,
   useOrderlyContext,
 } from "@orderly.network/hooks";
@@ -332,6 +331,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           side={side}
           order_type={formattedOrder.order_type!}
           setOrderValue={setOrderValue}
+          symbolLeverage={props.symbolLeverage}
         />
 
         <Available

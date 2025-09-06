@@ -1,5 +1,4 @@
-import { useLocalStorage } from "@orderly.network/hooks";
-import { useSymbolLeverage } from "@orderly.network/hooks";
+import { useLocalStorage, useLeverageBySymbol } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { PositionType } from "@orderly.network/types";
 import {
@@ -139,12 +138,13 @@ export const LeverageBadge = (props: LeverageBadgeProps) => {
   );
 };
 
+/** TODO: remove this */
 export const LeverageDisplay = ({ symbol }: { symbol: string }) => {
-  const leverage = useSymbolLeverage(symbol);
+  const leverage = useLeverageBySymbol(symbol);
 
   return (
     <Text.numeral dp={0} rm={Decimal.ROUND_DOWN} size="2xs" unit="X">
-      {leverage}
+      {leverage || 1}
     </Text.numeral>
   );
 };
