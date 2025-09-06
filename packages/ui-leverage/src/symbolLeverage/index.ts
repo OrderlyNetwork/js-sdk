@@ -1,22 +1,11 @@
-import React from "react";
 import { i18n } from "@orderly.network/i18n";
 import { registerSimpleDialog, registerSimpleSheet } from "@orderly.network/ui";
-import {
-  SymbolLeverageScriptOptions,
-  useSymbolLeverageScript,
-} from "./leverage.script";
-import { SymbolLeverageUI } from "./leverage.ui";
+import { SymbolLeverageWidget } from "./symbolLeverage.widget";
 
-export type SymbolLeverageWidgetProps = {
-  close?: () => void;
-} & SymbolLeverageScriptOptions;
-
-export const SymbolLeverageWidget: React.FC<SymbolLeverageWidgetProps> = (
-  props,
-) => {
-  const state = useSymbolLeverageScript(props);
-  return <SymbolLeverageUI {...state} />;
-};
+export {
+  SymbolLeverageWidget,
+  type SymbolLeverageWidgetProps,
+} from "./symbolLeverage.widget";
 
 export const SymbolLeverageSheetId = "SymbolLeverageSheetId";
 export const SymbolLeverageDialogId = "SymbolLeverageDialogId";

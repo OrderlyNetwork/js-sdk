@@ -7,9 +7,9 @@ import {
   LeverageSlider,
   LeverageFooter,
 } from "../leverage.ui";
-import { SymbolLeverageScriptReturns } from "./leverage.script";
+import { SymbolLeverageScriptReturns } from "./symbolLeverage.script";
 
-export const SymbolLeverageUI = (props: SymbolLeverageScriptReturns) => {
+export const SymbolLeverage = (props: SymbolLeverageScriptReturns) => {
   const { t } = useTranslation();
 
   return (

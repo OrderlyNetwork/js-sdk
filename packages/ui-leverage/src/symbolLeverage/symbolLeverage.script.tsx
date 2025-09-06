@@ -21,7 +21,6 @@ type UseLeverageScriptOptions = {
 };
 
 export type SymbolLeverageScriptOptions = {
-  leverageLevers?: number[];
   symbol: string;
   side?: OrderSide;
   curLeverage: number;
