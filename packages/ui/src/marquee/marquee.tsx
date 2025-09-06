@@ -8,10 +8,11 @@ import React, {
 import { cnBase } from "tailwind-variants";
 
 // Type definitions
-type Direction = "left" | "right" | "up" | "down";
-type Mode = "continuous" | "screen";
+export type Direction = "left" | "right" | "up" | "down";
 
-interface MarqueeProps<T = unknown> {
+export type Mode = "continuous" | "screen";
+
+export interface MarqueeProps<T = unknown> {
   data: T[];
   renderItem: (item: T, index: number) => React.ReactNode;
   direction?: Direction;
@@ -22,21 +23,17 @@ interface MarqueeProps<T = unknown> {
   className?: string;
 }
 
-interface TransformStyle {
-  transform?: string;
-  transition?: string;
-}
-
-export const Marquee = <T = unknown,>({
-  data,
-  renderItem,
-  direction = "left",
-  mode = "continuous",
-  speed = 50,
-  delay = 0,
-  pauseOnHover = true,
-  className = "",
-}: MarqueeProps<T>) => {
+export const Marquee = <T,>(props: MarqueeProps<T>) => {
+  const {
+    data,
+    renderItem,
+    direction = "left",
+    mode = "continuous",
+    speed = 50,
+    delay = 0,
+    pauseOnHover = true,
+    className = "",
+  } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const [shouldScroll, setShouldScroll] = useState(false);
@@ -45,11 +42,11 @@ export const Marquee = <T = unknown,>({
   const [isPaused, setIsPaused] = useState(false);
   const [isResetting, setIsResetting] = useState(false); // Track reset state for animation control
   const animationFrameId = useRef<number | null>(null);
-  const timeoutId = useRef<NodeJS.Timeout | null>(null);
-  const resetTimeoutId = useRef<NodeJS.Timeout | null>(null); // Track reset timeout for cleanup
+  const timeoutId = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const resetTimeoutId = useRef<ReturnType<typeof setTimeout> | null>(null); // Track reset timeout for cleanup
   const resizeObserverRef = useRef<ResizeObserver | null>(null);
   const lastResizeTimeRef = useRef<number>(0);
-  const isMountedRef = useRef(true); // Track component mount state
+  const isMountedRef = useRef<boolean>(true); // Track component mount state
 
   const isHorizontal = useMemo(
     () => direction === "left" || direction === "right",
@@ -58,8 +55,9 @@ export const Marquee = <T = unknown,>({
 
   // Calculate whether scrolling is needed and related dimensions
   const calculateScrollState = useCallback(() => {
-    if (!containerRef.current || !contentRef.current) return;
-
+    if (!containerRef.current || !contentRef.current) {
+      return;
+    }
     const containerSize = isHorizontal
       ? containerRef.current.offsetWidth
       : containerRef.current.offsetHeight;
@@ -144,8 +142,9 @@ export const Marquee = <T = unknown,>({
       isPaused ||
       !contentRef.current ||
       !containerRef.current
-    )
+    ) {
       return;
+    }
 
     const contentSize = isHorizontal
       ? contentRef.current.scrollWidth / 2
@@ -154,10 +153,12 @@ export const Marquee = <T = unknown,>({
     const step = speed / 60; // Distance moved per frame (assuming 60fps)
 
     const animate = () => {
-      if (!isMountedRef.current) return; // Safety check
+      if (!isMountedRef.current) {
+        return; // Safety check
+      }
 
       setCurrentPosition((prev) => {
-        let newPos;
+        let newPos: number;
         if (direction === "left" || direction === "up") {
           newPos = prev - step;
           if (Math.abs(newPos) >= contentSize) {
@@ -182,15 +183,16 @@ export const Marquee = <T = unknown,>({
 
   // Screen-by-screen scrolling logic
   const startScreenScroll = useCallback(() => {
-    if (!shouldScroll || isPaused || !containerRef.current || itemSize === 0)
+    if (!shouldScroll || isPaused || !containerRef.current || itemSize === 0) {
       return;
+    }
 
     const contentTotalItems = data.length; // Number of items in original data
     const totalContentSize = contentTotalItems * itemSize; // Total size of original content
 
     const scrollNext = () => {
       setCurrentPosition((prev) => {
-        let nextIndex;
+        let nextIndex: number;
         if (direction === "left" || direction === "up") {
           // Calculate the item index corresponding to current position
           const currentIndex = Math.round(Math.abs(prev) / itemSize);
@@ -343,16 +345,16 @@ export const Marquee = <T = unknown,>({
     );
   }, [data, renderItem, shouldScroll]);
 
-  const transformStyle: TransformStyle = useMemo(() => {
-    const style: TransformStyle = {};
+  const transformStyle = useMemo<React.CSSProperties>(() => {
+    const style: React.CSSProperties = {};
     if (isHorizontal) {
-      style.transform = `translateX(${currentPosition}px)`;
+      style.transform = `translate3d(${currentPosition}px, 0, 0)`;
       style.transition =
         mode === "screen" && !isResetting
           ? `transform ${itemSize / speed}s linear`
           : "none";
     } else {
-      style.transform = `translateY(${currentPosition}px)`;
+      style.transform = `translate3d(0, ${currentPosition}px, 0)`;
       style.transition =
         mode === "screen" && !isResetting
           ? `transform ${itemSize / speed}s linear`
@@ -380,12 +382,10 @@ export const Marquee = <T = unknown,>({
           shouldScroll ? "" : "oui-items-center oui-justify-center",
           // className,
         )}
-        style={shouldScroll ? transformStyle : {}}
+        style={shouldScroll ? transformStyle : undefined}
       >
         {renderContent}
       </div>
     </div>
   );
 };
-
-export type { MarqueeProps, Direction, Mode };
