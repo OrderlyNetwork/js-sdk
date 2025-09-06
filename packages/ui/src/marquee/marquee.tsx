@@ -13,7 +13,7 @@ export type Direction = "left" | "right" | "up" | "down";
 export type Mode = "continuous" | "screen";
 
 export interface MarqueeProps<T = unknown> {
-  data: T[];
+  data: T[] | ReadonlyArray<T>;
   renderItem: (item: T, index: number) => React.ReactNode;
   direction?: Direction;
   mode?: Mode;
@@ -32,7 +32,7 @@ export const Marquee = <T,>(props: MarqueeProps<T>) => {
     speed = 50,
     delay = 0,
     pauseOnHover = true,
-    className = "",
+    className,
   } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -69,7 +69,7 @@ export const Marquee = <T,>(props: MarqueeProps<T>) => {
     const needToScroll = contentSize > containerSize;
     setShouldScroll(needToScroll);
 
-    if (needToScroll && data.length > 0) {
+    if (needToScroll && data?.length > 0) {
       // Try to get the size of the first item as itemSize
       const firstItem = contentRef.current.children[0] as HTMLElement;
       if (firstItem) {
@@ -187,7 +187,7 @@ export const Marquee = <T,>(props: MarqueeProps<T>) => {
       return;
     }
 
-    const contentTotalItems = data.length; // Number of items in original data
+    const contentTotalItems = data?.length; // Number of items in original data
     const totalContentSize = contentTotalItems * itemSize; // Total size of original content
 
     const scrollNext = () => {
@@ -264,7 +264,7 @@ export const Marquee = <T,>(props: MarqueeProps<T>) => {
   }, [
     shouldScroll,
     isPaused,
-    data.length,
+    data?.length,
     itemSize,
     delay,
     speed,
@@ -319,6 +319,9 @@ export const Marquee = <T,>(props: MarqueeProps<T>) => {
 
   // Render content, duplicate for seamless scrolling in both modes
   const renderContent = useMemo(() => {
+    if (!Array.isArray(data)) {
+      return null;
+    }
     if (!shouldScroll) {
       // Only render original content when not scrolling
       return data.map((item, index) => (
@@ -379,7 +382,7 @@ export const Marquee = <T,>(props: MarqueeProps<T>) => {
         className={cnBase(
           "oui-flex",
           isHorizontal ? "oui-flex-row" : "oui-flex-col",
-          shouldScroll ? "" : "oui-items-center oui-justify-center",
+          shouldScroll ? undefined : "oui-items-center oui-justify-center",
           // className,
         )}
         style={shouldScroll ? transformStyle : undefined}

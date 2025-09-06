@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { AnnouncementType } from "@orderly.network/types";
+import { AnnouncementType, type API } from "@orderly.network/types";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -14,6 +14,7 @@ import {
   Flex,
   useScreen,
   Text,
+  Marquee,
 } from "@orderly.network/ui";
 import { CloseIcon } from "../icons";
 import { AnnouncementScriptReturn } from "./announcement.script";
@@ -27,9 +28,38 @@ export type AnnouncementProps = AnnouncementScriptReturn & {
 export const AnnouncementUI: React.FC<Readonly<AnnouncementProps>> = (
   props,
 ) => {
-  const { maintenanceDialogInfo, showAnnouncement, currentTip } = props;
-  const { t } = useTranslation();
+  const {
+    maintenanceDialogInfo,
+    showAnnouncement,
+    tips,
+    currentTip,
+    contentRef,
+  } = props;
+  const { t, i18n } = useTranslation();
   const { isMobile } = useScreen();
+
+  // return (
+  //   <Marquee<API.AnnouncementRow>
+  //     direction="up"
+  //     mode="screen"
+  //     data={tips}
+  //     renderItem={(item, index) => {
+  //       return (
+  //         <Flex key={`item-${index}`}>
+  //           <RenderTipsType type={item?.type} />
+  //           <Text
+  //             size="xs"
+  //             intensity={80}
+  //             ref={contentRef}
+  //             className="oui-leading-[18px]"
+  //           >
+  //             {item?.i18n?.[i18n.language] || item?.message?.trim()}
+  //           </Text>
+  //         </Flex>
+  //       );
+  //     }}
+  //   />
+  // );
 
   const contentNode = React.useMemo<React.ReactNode>(() => {
     if (!currentTip) {
@@ -107,9 +137,9 @@ const DeskTopTips: React.FC<Readonly<AnnouncementScriptReturn>> = (props) => {
         gapX={2}
         itemAlign={mutiLine ? "start" : "center"}
         className={cn(
-          "oui-mr-[125px] oui-relative oui-overflow-hidden",
+          "oui-relative oui-mr-[125px] oui-overflow-hidden",
           currentTip?.url && "oui-cursor-pointer",
-          "oui-transition-transform oui-duration-200 oui-ease-in-out oui-opacity-100",
+          "oui-opacity-100 oui-transition-transform oui-duration-200 oui-ease-in-out",
           isAnimating && "oui-translate-y-1/2 oui-opacity-0",
         )}
         onClick={() => {
@@ -173,14 +203,10 @@ const MobileTips: React.FC<Readonly<AnnouncementScriptReturn>> = (props) => {
         className={cn("oui-w-full oui-items-start oui-justify-start")}
       >
         <div
-          // className={cn(
-          //   "oui-transition-transform oui-duration-200 oui-ease-in-out oui-opacity-100",
-          //   isAnimating && "oui-translate-y-full oui-opacity-0"
-          // )}
           className={cn("oui-w-full", currentTip?.url && "oui-cursor-pointer")}
           onClick={() => {
             if (currentTip?.url) {
-              window.open(currentTip?.url, "_blank");
+              window.open(currentTip.url, "_blank");
             }
           }}
         >
@@ -188,7 +214,6 @@ const MobileTips: React.FC<Readonly<AnnouncementScriptReturn>> = (props) => {
             {currentTip?.i18n?.[i18n.language] || currentTip?.message}
           </Text>
         </div>
-
         <Flex width="100%" justify="between">
           <div>
             <RenderTipsType type={currentTip?.type} />
@@ -217,7 +242,7 @@ const SwitchTips: React.FC<Readonly<SwitchTipsProps>> = (props) => {
       <ChevronLeftIcon
         size={20}
         opacity={1}
-        className="oui-text-base-contrast-54 hover:oui-text-base-contrast-80 oui-flex-shrink-0 oui-w-4 lg:oui-w-5 oui-h-4 lg:oui-h-5 oui-cursor-pointer"
+        className="oui-size-4 oui-shrink-0 oui-cursor-pointer oui-text-base-contrast-54 hover:oui-text-base-contrast-80 lg:oui-size-5"
         onClick={prevTips}
       />
       <div className="oui-text-sm oui-text-base-contrast-54">
@@ -226,7 +251,7 @@ const SwitchTips: React.FC<Readonly<SwitchTipsProps>> = (props) => {
       <ChevronRightIcon
         size={20}
         opacity={1}
-        className="oui-text-base-contrast-54 hover:oui-text-base-contrast-80 oui-flex-shrink-0 oui-w-4 lg:oui-w-5 oui-h-4 lg:oui-h-5 oui-cursor-pointer"
+        className="oui-size-4 oui-shrink-0 oui-cursor-pointer oui-text-base-contrast-54 hover:oui-text-base-contrast-80 lg:oui-size-5"
         onClick={nextTips}
       />
     </div>

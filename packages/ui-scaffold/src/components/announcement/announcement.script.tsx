@@ -12,7 +12,12 @@ import {
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext } from "@orderly.network/react-app";
-import { AnnouncementType, API, WSMessage } from "@orderly.network/types";
+import {
+  AnnouncementType,
+  API,
+  EMPTY_LIST,
+  WSMessage,
+} from "@orderly.network/types";
 import { useObserverElement } from "@orderly.network/ui";
 import { getTimestamp } from "@orderly.network/utils";
 
@@ -57,9 +62,9 @@ export const useAnnouncementScript = (options?: AnnouncementScriptOptions) => {
 
   const memoizedTips = useMemo(() => {
     if (typeof dataAdapter?.announcementList === "function") {
-      return dataAdapter.announcementList(tips.rows || []);
+      return dataAdapter.announcementList(tips?.rows ?? EMPTY_LIST);
     }
-    return tips.rows || [];
+    return tips?.rows ?? EMPTY_LIST;
   }, [dataAdapter?.announcementList, tips?.rows]);
 
   const [announcementStore, setStore] = useLocalStorage<AnnouncementStore>(
