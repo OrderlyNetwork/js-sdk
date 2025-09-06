@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext } from "@orderly.network/react-app";
 import {
@@ -48,16 +48,13 @@ export const FeeTierTable: React.FC<FeeTierTableProps> = (props) => {
 
   const { widgetConfigs } = useAppContext();
 
+  const parentRef = useRef<HTMLDivElement>(null);
+  const activeRowRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
-    const parentRect = document
-      .getElementById("oui-fee-tier-content")
-      ?.getBoundingClientRect();
-
-    const elementRect = document
-      .getElementById("oui-fee-tier-current")
-      ?.getBoundingClientRect();
-
-    if (elementRect && parentRect && !!props.tier) {
+    const parentRect = parentRef.current?.getBoundingClientRect();
+    const elementRect = activeRowRef.current?.getBoundingClientRect();
+    if (elementRect && parentRect && props.tier) {
       const offsetTop = elementRect.top - parentRect.top;
       setTop(offsetTop);
     } else {
@@ -72,13 +69,13 @@ export const FeeTierTable: React.FC<FeeTierTableProps> = (props) => {
         active: undefined,
       };
       if (index + 1 == props.tier) {
-        const innerConfig = {
-          id: "oui-fee-tier-current",
+        return {
+          ref: activeRowRef,
           "data-state": "active",
           className:
             "group oui-h-12 oui-text-[rgba(0,0,0,0.88)] oui-pointer-events-none",
+          ...config.active,
         };
-        return { ...innerConfig, ...config.active };
       }
       return {
         "data-state": "none",
@@ -91,15 +88,15 @@ export const FeeTierTable: React.FC<FeeTierTableProps> = (props) => {
 
   const originalTable = (
     <Box
-      id="oui-fee-tier-content"
+      ref={parentRef}
       className="oui-relative oui-border-b oui-border-line-4"
     >
-      {top && (
+      {top !== undefined && top !== null && (
         <Box
           angle={90}
           gradient="brand"
           className="oui-absolute oui-w-full oui-rounded-md"
-          style={{ top: `${top}px`, height: "48px" }}
+          style={{ transform: `translate3d(0, ${top}px, 0)`, height: 48 }}
         />
       )}
       <DataTable
