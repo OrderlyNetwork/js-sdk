@@ -14,7 +14,7 @@ export type FeeTierHeaderItemProps = {
 export type FeeTierHeaderProps = {
   tier?: number;
   vol?: number;
-  headerDataAdapter?: (original?: any[]) => any[];
+  headerDataAdapter?: (original: any[]) => any[];
 };
 
 const isEffective = (val?: unknown) =>

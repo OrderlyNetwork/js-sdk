@@ -19,7 +19,7 @@ export type UseFeeTierScriptOptions = {
     columns: Column[],
     dataSource: any[],
   ) => { columns: Column[]; dataSource: any[] };
-  headerDataAdapter?: (original?: any[]) => any[];
+  headerDataAdapter?: (original: any[]) => any[];
   onRow?: (
     record: any,
     index: number,
