@@ -12,8 +12,23 @@ export const dataAdapter: OrderlyAppProviderProps["dataAdapter"] = {
   announcementList(data) {
     return [
       {
-        announcement_id: "leaderboard",
-        message: "DAWN OF DOMINANCE: $25,000 Trading Campaign is live!",
+        announcement_id: "111",
+        message:
+          "DAWN OF DOMINANCE: $25,000 Trading Campaign is live Trading Campaign is live 111",
+        url: "https://app.orderly.network/tradingRewards",
+        type: "Campaign",
+      },
+      {
+        announcement_id: "222",
+        message:
+          "DAWN OF DOMINANCE: $25,000 Trading Campaign is live Trading Campaign is live 222",
+        url: "https://app.orderly.network/tradingRewards",
+        type: "Campaign",
+      },
+      {
+        announcement_id: "333",
+        message:
+          "DAWN OF DOMINANCE: $25,000 Trading Campaign is live Trading Campaign is live 333",
         url: "https://app.orderly.network/tradingRewards",
         type: "Campaign",
       },

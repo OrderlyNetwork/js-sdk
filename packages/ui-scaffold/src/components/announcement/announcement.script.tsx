@@ -53,14 +53,14 @@ export const useAnnouncementScript = (options?: AnnouncementScriptOptions) => {
   const { showAnnouncement, setShowAnnouncement } = useAppContext();
   const { dataAdapter } = useOrderlyContext();
 
-  const { tips: _tips, maintenanceDialogInfo } = useAnnouncementData();
+  const { tips, maintenanceDialogInfo } = useAnnouncementData();
 
-  const tips = useMemo(() => {
+  const memoizedTips = useMemo(() => {
     if (typeof dataAdapter?.announcementList === "function") {
-      return dataAdapter.announcementList(_tips.rows || []);
+      return dataAdapter.announcementList(tips.rows || []);
     }
-    return _tips.rows || [];
-  }, [_tips, dataAdapter]);
+    return tips.rows || [];
+  }, [dataAdapter?.announcementList, tips?.rows]);
 
   const [announcementStore, setStore] = useLocalStorage<AnnouncementStore>(
     ORDERLY_ANNOUNCEMENT_KEY,
@@ -78,28 +78,28 @@ export const useAnnouncementScript = (options?: AnnouncementScriptOptions) => {
     if (isAnimating) {
       return;
     }
-    const len = tips.length;
+    const len = memoizedTips.length;
     setIsAnimating(true);
     setCurrentIndex((prevIndex) => (prevIndex - 1 + len) % len);
     setTimeout(() => {
       setIsAnimating(false);
     }, 200);
-  }, [isAnimating, tips]);
+  }, [isAnimating, memoizedTips]);
 
   const nextTips = React.useCallback(() => {
     if (isAnimating) {
       return;
     }
-    const len = tips.length;
+    const len = memoizedTips.length;
     setIsAnimating(true);
     setCurrentIndex((prevIndex) => (prevIndex + 1) % len);
     setTimeout(() => {
       setIsAnimating(false);
     }, 200);
-  }, [isAnimating, tips]);
+  }, [isAnimating, memoizedTips]);
 
   useEffect(() => {
-    const len = tips.length;
+    const len = memoizedTips.length;
     if (!showAnnouncement || len <= 1) {
       return;
     }
@@ -112,22 +112,22 @@ export const useAnnouncementScript = (options?: AnnouncementScriptOptions) => {
         clearTimeout(intervalRef.current);
       }
     };
-  }, [tips, showAnnouncement, nextTips]);
+  }, [memoizedTips, showAnnouncement, nextTips]);
 
   useEffect(() => {
-    const len = tips.length;
+    const len = memoizedTips.length;
     setShowAnnouncement(
       Boolean(len) && announcementStore.show && !options?.hideTips,
     );
-  }, [tips, announcementStore, options?.hideTips, setShowAnnouncement]);
+  }, [memoizedTips, announcementStore, options?.hideTips, setShowAnnouncement]);
 
   const multiLineState = useMultiLine();
 
   return {
     maintenanceDialogInfo,
-    tips,
+    tips: memoizedTips,
     currentIndex,
-    currentTip: tips?.[currentIndex],
+    currentTip: memoizedTips?.[currentIndex],
     closeTips,
     nextTips,
     prevTips,
@@ -137,7 +137,7 @@ export const useAnnouncementScript = (options?: AnnouncementScriptOptions) => {
   };
 };
 
-function useAnnouncementData() {
+const useAnnouncementData = () => {
   const ws = useWS();
 
   const [announcementStore, setStore] = useLocalStorage<AnnouncementStore>(
@@ -319,7 +319,7 @@ function useAnnouncementData() {
     tips: sortDataByUpdatedTime(tips),
     maintenanceDialogInfo,
   };
-}
+};
 
 function useMultiLine() {
   const [mutiLine, setMutiLine] = useState(false);
