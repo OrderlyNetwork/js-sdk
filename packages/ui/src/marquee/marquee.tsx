@@ -48,7 +48,7 @@ export const Marquee = <T,>(props: MarqueeProps<T>) => {
   const lastResizeTimeRef = useRef<number>(0);
   const isMountedRef = useRef<boolean>(true); // Track component mount state
 
-  const isHorizontal = useMemo(
+  const isHorizontal = useMemo<boolean>(
     () => direction === "left" || direction === "right",
     [direction],
   );
