@@ -1,5 +1,5 @@
 import React from "react";
-import { PositionsProps } from "@orderly.network/ui-positions";
+import type { PositionsProps } from "@orderly.network/ui-positions";
 import { DataListTabType, useDataListScript } from "./dataList.script";
 import { DataList } from "./dataList.ui";
 

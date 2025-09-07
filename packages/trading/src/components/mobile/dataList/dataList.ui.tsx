@@ -105,12 +105,14 @@ const PositionsView: React.FC<DataListState> = (props) => {
           unPnlPriceBasis={props.unPnlPriceBasis}
         />
       </React.Suspense>
-      <MobilePositionsWidget
-        symbol={props.showAllSymbol ? undefined : props.symbol}
-        onSymbolChange={props.onSymbolChange}
-        sharePnLConfig={props.sharePnLConfig}
-        pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
-      />
+      <React.Suspense fallback={null}>
+        <MobilePositionsWidget
+          symbol={props.showAllSymbol ? undefined : props.symbol}
+          onSymbolChange={props.onSymbolChange}
+          sharePnLConfig={props.sharePnLConfig}
+          pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
+        />
+      </React.Suspense>
     </Flex>
   );
 };

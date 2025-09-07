@@ -71,7 +71,7 @@ export const LinkDeviceMobile: FC<LinkDeviceProps> = (props) => {
 
 const Dot = () => {
   return (
-    <Flex className="oui-gap-x-[1px] oui-px-[1px]">
+    <Flex className="oui-gap-x-px oui-px-px">
       <DotIcon />
       <DotIcon />
       <DotIcon />

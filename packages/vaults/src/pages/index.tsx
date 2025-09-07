@@ -1,10 +1,25 @@
-import { FC } from "react";
+import React, { FC } from "react";
 import { cn, useScreen } from "@orderly.network/ui";
-import { AllVaultsWidget } from "../components/all-vaults/all-vaults.widget";
 import { VaultsProvider } from "../components/provider/vaults-provider";
-import { VaultsHeaderWidget } from "../components/vaults-header";
-import { VaultsIntroductionWidget } from "../components/vaults-introduction";
-import { VaultsPageConfig } from "../types/vault";
+import type { VaultsPageConfig } from "../types/vault";
+
+const LazyVaultsHeaderWidget = React.lazy(() =>
+  import("../components/vaults-header").then((mod) => {
+    return { default: mod.VaultsHeaderWidget };
+  }),
+);
+
+const LazyVaultsIntroductionWidget = React.lazy(() =>
+  import("../components/vaults-introduction").then((mod) => {
+    return { default: mod.VaultsIntroductionWidget };
+  }),
+);
+
+const LazyAllVaultsWidget = React.lazy(() =>
+  import("../components/all-vaults").then((mod) => {
+    return { default: mod.AllVaultsWidget };
+  }),
+);
 
 export type VaultsPageProps = {
   className?: string;
@@ -30,9 +45,15 @@ export const VaultsPage: FC<VaultsPageProps> = (props) => {
             isMobile ? "oui-gap-6" : "oui-gap-12",
           )}
         >
-          <VaultsHeaderWidget />
-          <VaultsIntroductionWidget />
-          <AllVaultsWidget />
+          <React.Suspense fallback={null}>
+            <LazyVaultsHeaderWidget />
+          </React.Suspense>
+          <React.Suspense fallback={null}>
+            <LazyVaultsIntroductionWidget />
+          </React.Suspense>
+          <React.Suspense fallback={null}>
+            <LazyAllVaultsWidget />
+          </React.Suspense>
         </div>
       </div>
     </VaultsProvider>
