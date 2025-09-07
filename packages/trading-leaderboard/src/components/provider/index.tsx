@@ -51,6 +51,10 @@ export type TradingLeaderboardState = {
       records_per_page: number;
     };
   };
+  campaignDateRange?: {
+    start_time: Date | string;
+    end_time: Date | string;
+  };
 };
 
 /**
@@ -105,15 +109,6 @@ export const TradingLeaderboardProvider: React.FC<
   }, [campaigns, campaignId]);
 
   const filteredCampaigns = useMemo(() => {
-    // const filtered = campaigns?.filter((campaign) => {
-    //   // return true;
-    //   // Campaign without referral_codes is visible to all users
-    //   if (!campaign.referral_codes) {
-    //     return true;
-    //   }
-    //   return campaign.referral_codes?.includes(userData?.referral_code || "");
-    // });
-
     // Using date-fns to parse date strings and sort by end_time in descending order
     return campaigns
       ? sortWith(
@@ -126,6 +121,15 @@ export const TradingLeaderboardProvider: React.FC<
   const memoCampaignChange = useMemoizedFn((id: string | number) => {
     onCampaignChange?.(id);
   });
+
+  const campaignDateRange = useMemo(() => {
+    return currentCampaign?.start_time && currentCampaign?.end_time
+      ? {
+          start_time: currentCampaign.start_time,
+          end_time: currentCampaign.end_time,
+        }
+      : undefined;
+  }, [currentCampaign]);
 
   const memoizedValue = useMemo<TradingLeaderboardState>(() => {
     return {
@@ -140,6 +144,7 @@ export const TradingLeaderboardProvider: React.FC<
       onCampaignChange: memoCampaignChange,
       setUpdatedTime: setUpdatedTime,
       dataAdapter: dataAdapter,
+      campaignDateRange,
     };
   }, [
     backgroundSrc,
@@ -151,6 +156,7 @@ export const TradingLeaderboardProvider: React.FC<
     userData,
     dataAdapter,
     memoCampaignChange,
+    campaignDateRange,
   ]);
 
   return (

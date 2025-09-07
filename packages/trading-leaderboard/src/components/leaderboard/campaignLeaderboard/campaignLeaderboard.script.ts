@@ -13,7 +13,9 @@ export function useCampaignLeaderboardScript() {
   const { currentCampaign } = useTradingLeaderboardContext();
 
   const excludeColumns = useMemo(() => {
-    return currentCampaign?.exclude_leaderboard_columns || [];
+    return (
+      currentCampaign?.leaderboard_config?.exclude_leaderboard_columns || []
+    );
   }, [currentCampaign]);
 
   return {

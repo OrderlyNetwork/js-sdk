@@ -8,7 +8,9 @@ import {
 import { AccountStatusEnum } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
 import { useTradingLeaderboardContext } from "../provider";
+import { getCurrentTierIndex } from "./pricePool/utils";
 import { CampaignStatsResponse, UserCampaignsResponse } from "./type";
+import { getTotalPrizePool } from "./utils";
 
 /**
  * Hook for managing campaigns data and statistics
@@ -83,9 +85,7 @@ export const useCampaignsScript = () => {
           toast.error("Please enable trading to proceed.");
           return;
         }
-        // console.log("data", data);
         const result = await doJoinCampaign(data);
-        // console.log("result", result);
 
         if (result?.success !== false) {
           // Refresh user campaigns data to update participation status
@@ -135,6 +135,18 @@ export const useCampaignsScript = () => {
     );
   }, [currentCampaign, state.status]);
 
+  const tieredIndex = useMemo(() => {
+    if (!currentCampaign?.tiered_prize_pools) return 0;
+    return getCurrentTierIndex(
+      statistics.total_volume || 0,
+      currentCampaign?.tiered_prize_pools,
+    );
+  }, [statistics.total_volume, currentCampaign?.tiered_prize_pools]);
+
+  const totalPrizePool = useMemo(() => {
+    return getTotalPrizePool(currentCampaign, tieredIndex ?? undefined);
+  }, [currentCampaign, tieredIndex]);
+
   return {
     campaigns,
     currentCampaignId,
@@ -151,5 +163,8 @@ export const useCampaignsScript = () => {
     shouldShowJoinButton,
     joinError,
     canTrade,
+    totalPrizePool,
   };
 };
+
+export type CampaignsScriptReturn = ReturnType<typeof useCampaignsScript>;

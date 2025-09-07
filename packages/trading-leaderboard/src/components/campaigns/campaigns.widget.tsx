@@ -38,19 +38,10 @@ export const CampaignsWidget: FC<CampaignsWidgetProps> = (props) => {
       />
       {state.currentCampaign && (
         <CampaignsContentDesktopUI
-          campaign={state.currentCampaign}
-          statistics={state.statistics}
-          onLearnMore={state.onLearnMore}
-          onTradeNow={state.onTradeNow}
-          backgroundSrc={state.backgroundSrc}
+          {...state}
           classNames={contentClassNames}
           isMobile={isMobile}
-          isParticipated={state.isParticipated}
-          shouldShowJoinButton={state.shouldShowJoinButton}
-          joinCampaign={state.joinCampaign}
-          isJoining={state.isJoining}
-          joinError={state.joinError}
-          canTrade={state.canTrade}
+          campaign={state.currentCampaign}
         />
       )}
       {state.currentCampaign && (
