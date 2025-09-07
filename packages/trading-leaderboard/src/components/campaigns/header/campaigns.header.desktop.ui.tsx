@@ -84,20 +84,20 @@ export const CampaignsHeaderUI: FC<{
   // For 2 items: (100% - 1 * gap) / 2
   // For 3 items: (100% - 2 * gap) / 3
   const slideStyle = isLargeScreen
-    ? { flexBasis: "calc((100% - 1rem) / 3)", width: "calc((100% - 1rem) / 3)" }
+    ? { flexBasis: "calc((100% - 2rem) / 4)", width: "calc((100% - 2rem) / 4)" }
     : {
-        flexBasis: "calc((100% - 0.5rem) / 2)",
-        width: "calc((100% - 0.5rem) / 2)",
+        flexBasis: "calc((100% - 1rem) / 3)",
+        width: "calc((100% - 1rem) / 3)",
       };
 
   // Check if scroll buttons should be hidden based on screen size and campaign count
   const shouldHideScrollButtons = isLargeScreen
-    ? campaigns.length <= 3
-    : campaigns.length <= 2;
+    ? campaigns.length <= 4
+    : campaigns.length <= 3;
 
   return (
-    <div className="oui-flex oui-gap-2 oui-w-full oui-items-center oui-px-6">
-      <div className="oui-flex-shrink-0">
+    <div className="oui-flex oui-w-full oui-items-center oui-gap-2 oui-px-6">
+      <div className="oui-shrink-0">
         <DefaultCampaign
           currentCampaignId={currentCampaignId}
           onCampaignChange={onCampaignChange}
@@ -105,12 +105,12 @@ export const CampaignsHeaderUI: FC<{
         />
       </div>
 
-      <div className="oui-w-[1px] oui-h-[78px] oui-bg-white/[0.16]" />
+      <div className="oui-h-[78px] oui-w-px oui-bg-white/[0.16]" />
 
       <button
         onClick={scrollPrev}
         disabled={!canScrollPrev}
-        className={`oui-group oui-flex oui-items-center oui-justify-center oui-shrink-0 oui-w-6 oui-h-[78px] oui-rounded-lg oui-transition-colors hover:oui-bg-base-7 disabled:oui-opacity-30 disabled:oui-cursor-not-allowed disabled:hover:oui-bg-transparent ${shouldHideScrollButtons ? "oui-hidden" : ""}`}
+        className={`oui-group oui-flex oui-h-[78px] oui-w-6 oui-shrink-0 oui-items-center oui-justify-center oui-rounded-lg oui-transition-colors hover:oui-bg-base-7 disabled:oui-cursor-not-allowed disabled:oui-opacity-30 disabled:hover:oui-bg-transparent ${shouldHideScrollButtons ? "oui-hidden" : ""}`}
         aria-label="Previous campaigns"
       >
         <ChevronLeftIcon
@@ -119,13 +119,13 @@ export const CampaignsHeaderUI: FC<{
         />
       </button>
 
-      <div className="oui-flex-1 oui-min-w-0 oui-overflow-hidden">
+      <div className="oui-min-w-0 oui-flex-1 oui-overflow-hidden">
         <div ref={emblaRef}>
           <div className="oui-flex oui-gap-2">
             {campaigns?.map((campaign) => (
               <div
                 key={campaign.campaign_id}
-                className="oui-flex-shrink-0"
+                className="oui-shrink-0"
                 style={slideStyle}
               >
                 <CampaignItemUI
@@ -148,7 +148,7 @@ export const CampaignsHeaderUI: FC<{
       <button
         onClick={scrollNext}
         disabled={!canScrollNext}
-        className={`oui-group oui-flex oui-items-center oui-justify-center oui-shrink-0 oui-w-6 oui-h-[78px] oui-rounded-lg oui-transition-colors hover:oui-bg-base-7 disabled:oui-opacity-30 disabled:oui-cursor-not-allowed disabled:hover:oui-bg-transparent ${shouldHideScrollButtons ? "oui-hidden" : ""}`}
+        className={`oui-group oui-flex oui-h-[78px] oui-w-6 oui-shrink-0 oui-items-center oui-justify-center oui-rounded-lg oui-transition-colors hover:oui-bg-base-7 disabled:oui-cursor-not-allowed disabled:oui-opacity-30 disabled:hover:oui-bg-transparent ${shouldHideScrollButtons ? "oui-hidden" : ""}`}
         aria-label="Next campaigns"
       >
         <ChevronRightIcon

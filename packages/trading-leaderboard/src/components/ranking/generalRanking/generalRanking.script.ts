@@ -39,7 +39,7 @@ export type GeneralRankingScriptReturn = ReturnType<
 >;
 
 export type GeneralRankingScriptOptions = {
-  dateRange?: DateRange;
+  dateRange?: DateRange | null;
   address?: string;
   sortKey?: "perp_volume" | "realized_pnl";
 };

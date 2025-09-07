@@ -10,6 +10,10 @@ import { GeneralLeaderboardScriptReturn } from "./generalLeaderboard.script";
 export type GeneralLeaderboardProps = {
   style?: React.CSSProperties;
   className?: string;
+  campaignDateRange?: {
+    start_time: Date | string;
+    end_time: Date | string;
+  };
 } & GeneralLeaderboardScriptReturn;
 
 export const GeneralLeaderboard: FC<GeneralLeaderboardProps> = (props) => {
