@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { OrderType } from "@orderly.network/types";
 
 export function usePriceInputContainer({
@@ -9,7 +9,7 @@ export function usePriceInputContainer({
   const [priceInputContainerWidth, setPriceInputContainerWidth] = useState(0);
   const priceInputContainerRef = useRef<HTMLDivElement | null>(null);
 
-  // useEffect(() => {
+  // useLayoutEffect(() => {
   //   if (
   //     priceInputContainerRef.current &&
   //     // update BBO select width when is BBO order
@@ -26,7 +26,9 @@ export function usePriceInputContainer({
   useEffect(() => {
     const element = priceInputContainerRef.current;
 
-    if (!element) return;
+    if (!element) {
+      return;
+    }
 
     const resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {

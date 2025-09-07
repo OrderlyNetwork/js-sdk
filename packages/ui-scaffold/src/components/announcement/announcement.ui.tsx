@@ -17,7 +17,7 @@ import {
   Marquee,
 } from "@orderly.network/ui";
 import { CloseIcon } from "../icons";
-import { AnnouncementScriptReturn } from "./announcement.script";
+import type { AnnouncementScriptReturn } from "./announcement.script";
 
 export type AnnouncementProps = AnnouncementScriptReturn & {
   style?: React.CSSProperties;

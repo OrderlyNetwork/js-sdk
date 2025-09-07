@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { FavoriteInstance } from "../../type";
 
 export type UseFavoritesTabScriptOptions = {
@@ -10,7 +10,9 @@ export type UseFavoritesTabScriptReturn = ReturnType<
   typeof useFavoritesTabScript
 >;
 
-export function useFavoritesTabScript(options: UseFavoritesTabScriptOptions) {
+export const useFavoritesTabScript = (
+  options: UseFavoritesTabScriptOptions,
+) => {
   const { favorite, size = "default" } = options;
   const {
     favorites,
@@ -36,7 +38,6 @@ export function useFavoritesTabScript(options: UseFavoritesTabScriptOptions) {
     const addIconWidth = size === "sm" ? 28 : 36;
     setTimeout(() => {
       const { scrollWidth, clientWidth } = scrollView.current || {};
-
       if (scrollWidth! > clientWidth!) {
         setScrollable(true);
       }
@@ -104,11 +105,11 @@ export function useFavoritesTabScript(options: UseFavoritesTabScriptOptions) {
     }, 0);
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (value) {
       const rect = spanRef.current?.getBoundingClientRect();
       const offset = size === "sm" ? 0 : 14;
-      setInputWidth(Math.max((rect?.width || 0) + offset, 50));
+      setInputWidth(Math.max((rect?.width ?? 0) + offset, 50));
     }
   }, [value]);
 
@@ -133,4 +134,4 @@ export function useFavoritesTabScript(options: UseFavoritesTabScriptOptions) {
     delTab,
     scrollable,
   };
-}
+};
