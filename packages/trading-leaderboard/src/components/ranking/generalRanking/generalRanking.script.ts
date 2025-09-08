@@ -67,6 +67,8 @@ export function useGeneralRankingScript(options?: GeneralRankingScriptOptions) {
     pageSize: isMobile ? 100 : 20,
   });
 
+  const { campaignRankingList } = useCampaignRankingList({ dateRange });
+
   const getUrl = (args: {
     page: number;
     pageSize: number;
@@ -227,6 +229,11 @@ export function useGeneralRankingScript(options?: GeneralRankingScriptOptions) {
 
   const dataSource = useMemo(() => {
     let list = data?.rows || [];
+    // hardcode for 128 campaign
+    if (campaignRankingList && campaignRankingList.length >= 0) {
+      list = list.filter((item) => campaignRankingList.includes(item.address));
+    }
+
     if (page === 1) {
       list = list.slice(0, pageSize);
     }
@@ -252,7 +259,13 @@ export function useGeneralRankingScript(options?: GeneralRankingScriptOptions) {
       return formatData([...userDataList, ...rankList]);
     }
     return formatData(rankList);
-  }, [infiniteData, userDataList, searchValue, addRankForList]);
+  }, [
+    infiniteData,
+    userDataList,
+    searchValue,
+    addRankForList,
+    campaignRankingList,
+  ]);
 
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
@@ -325,3 +338,38 @@ function formatData(data: any[]) {
     pnl: item.realized_pnl,
   }));
 }
+
+// for 128 campaign hardcode
+const useCampaignRankingList = ({
+  dateRange,
+}: {
+  dateRange: DateRange | null;
+}) => {
+  const brokerId = useConfig("brokerId");
+  const getUrl = () => {
+    if (!dateRange?.label) {
+      return null;
+    }
+    const campaignId = dateRange?.label === "Week 1" ? "129" : "128";
+
+    const searchParams = new URLSearchParams();
+    searchParams.set("campaign_id", campaignId);
+    searchParams.set("broker_id", brokerId);
+    searchParams.set("page", "1");
+    searchParams.set("size", "2000");
+    return `https://api.orderly.org/v1/public/campaign/ranking?${searchParams.toString()}`;
+  };
+
+  const { data } = useQuery<GeneralRankingResponse["rows"]>(getUrl(), {
+    revalidateOnFocus: false,
+  });
+
+  const campaignRankingList = useMemo(() => {
+    if (!dateRange?.label) {
+      return undefined;
+    }
+    return data?.map((item) => item.address) || [];
+  }, [data, dateRange]);
+
+  return { campaignRankingList };
+};

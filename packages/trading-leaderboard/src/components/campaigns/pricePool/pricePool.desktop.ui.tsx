@@ -139,7 +139,8 @@ export const PricePoolDesktopUI: FC<PricePoolDesktopUIProps> = ({
         <AuthGuard
           buttonProps={{
             size: "md",
-            className: "oui-px-5",
+            fullWidth: true,
+            className: cn(["oui-px-5", !isMobile && "oui-w-[590px]"]),
           }}
         >
           {shouldShowJoinButton && (

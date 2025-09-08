@@ -12,8 +12,16 @@ import {
   RefferalAPI,
   useMemoizedFn,
   noCacheConfig,
+  useConfig,
+  useQuery,
 } from "@orderly.network/hooks";
-import { CampaignConfig, UserData } from "../campaigns/type";
+import { getCurrentTierIndex } from "../campaigns/pricePool/utils";
+import {
+  CampaignConfig,
+  UserData,
+  CampaignStatsResponse,
+  CampaignStatistics,
+} from "../campaigns/type";
 
 /**
  * Trading leaderboard provider state
@@ -55,6 +63,7 @@ export type TradingLeaderboardState = {
     start_time: Date | string;
     end_time: Date | string;
   };
+  statistics?: CampaignStatistics;
 };
 
 /**
@@ -122,6 +131,51 @@ export const TradingLeaderboardProvider: React.FC<
     onCampaignChange?.(id);
   });
 
+  const symbols = Array.isArray(currentCampaign?.volume_scope)
+    ? currentCampaign?.volume_scope.join(",")
+    : currentCampaign?.volume_scope;
+
+  const brokerId = useConfig("brokerId");
+
+  const searchParams = useMemo(() => {
+    return {
+      campaign_id: campaignId?.toString() || "",
+      symbols: symbols || "",
+      broker_id: brokerId,
+      group_by: "BROKER",
+    };
+  }, [campaignId, symbols, brokerId]);
+
+  const { data: stats } = useQuery<CampaignStatsResponse>(
+    campaignId !== "general"
+      ? `https://api.orderly.org/v1/public/campaign/stats?${new URLSearchParams(searchParams).toString()}`
+      : null,
+    { revalidateOnFocus: false },
+  );
+
+  const statistics = {
+    total_participants: stats?.user_count,
+    total_volume: stats?.volume,
+  };
+
+  const tieredIndex = useMemo(() => {
+    if (!currentCampaign?.tiered_prize_pools) return 0;
+    return getCurrentTierIndex(
+      statistics?.total_volume || 0,
+      currentCampaign?.tiered_prize_pools,
+    );
+  }, [statistics?.total_volume, currentCampaign?.tiered_prize_pools]);
+
+  const _currentCampaign = useMemo(() => {
+    if (currentCampaign?.tiered_prize_pools) {
+      return {
+        ...currentCampaign,
+        prize_pools: currentCampaign?.tiered_prize_pools[tieredIndex],
+      };
+    }
+    return currentCampaign;
+  }, [currentCampaign, tieredIndex]);
+
   const campaignDateRange = useMemo(() => {
     return currentCampaign?.start_time && currentCampaign?.end_time
       ? {
@@ -137,7 +191,7 @@ export const TradingLeaderboardProvider: React.FC<
       href: href,
       backgroundSrc: backgroundSrc,
       currentCampaignId: campaignId || "general",
-      currentCampaign,
+      currentCampaign: _currentCampaign,
       updatedTime,
       userData,
       setUserData,
@@ -145,6 +199,7 @@ export const TradingLeaderboardProvider: React.FC<
       setUpdatedTime: setUpdatedTime,
       dataAdapter: dataAdapter,
       campaignDateRange,
+      statistics,
     };
   }, [
     backgroundSrc,
@@ -157,6 +212,7 @@ export const TradingLeaderboardProvider: React.FC<
     dataAdapter,
     memoCampaignChange,
     campaignDateRange,
+    statistics,
   ]);
 
   return (
