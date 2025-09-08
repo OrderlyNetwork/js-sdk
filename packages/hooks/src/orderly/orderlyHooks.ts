@@ -86,7 +86,7 @@ export {
   type ComputedAlgoOrder,
 } from "./useTakeProfitAndStopLoss";
 
-export { useSymbolLeverage_deprecated } from "./useSymbolLeverage_deprecated";
+export { useMaxLeverage } from "./useMaxLeverage";
 export { useSymbolLeverage } from "./useSymbolLeverage";
 export { useLeverageBySymbol } from "./useLeverageBySymbol";
 

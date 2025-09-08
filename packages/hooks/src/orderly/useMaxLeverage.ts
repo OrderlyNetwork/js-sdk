@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useAccountInfo } from "./useAccountInfo";
+import { useAccountInfo } from "./appStore";
 import { useSymbolsInfo } from "./useSymbolsInfo";
 
 /**
@@ -13,17 +13,14 @@ import { useSymbolsInfo } from "./useSymbolsInfo";
  *
  * @example
  * ```typescript
- * const leverage = useSymbolLeverage("PERP_BTC_USDC");
+ * const leverage = useMaxLeverage("PERP_BTC_USDC");
  * console.log(`Maximum leverage for PERP_BTC_USDC: ${leverage}x`);
- * @deprecated will be removed in the future, use useLeverageBySymbol instead
  * ```
  */
-export const useSymbolLeverage_deprecated = (symbol: string): number => {
-  const { data: info } = useAccountInfo();
-
-  const maxAccountLeverage = info?.max_leverage;
-
+export const useMaxLeverage = (symbol: string): number => {
   const symbolsInfo = useSymbolsInfo();
+  const accountInfo = useAccountInfo();
+  const maxAccountLeverage = accountInfo?.max_leverage;
 
   /**
    * Calculates the maximum leverage for the symbol based on its base initial margin requirement (IMR)
