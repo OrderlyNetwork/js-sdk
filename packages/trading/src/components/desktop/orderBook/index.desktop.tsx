@@ -98,15 +98,17 @@ export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
           onChange={onDepthChange}
         />
         <DesktopHeader quote={quote} base={base} />
-        <DesktopAsks data={props.asks ?? EMPTY_LIST} />
+        <DesktopAsks data={[...props.asks]} />
         <DesktopMarkPrice
           lastPrice={lastPrice}
           markPrice={markPrice}
-          asks={props.asks ?? EMPTY_LIST}
-          bids={props.bids ?? EMPTY_LIST}
+          // Use shallow copy here to avoid mutating the original props array when sorting or modifying inside the component.
+          // Note: This only clones the array itself, not the element objects.
+          asks={[...props.asks]}
+          bids={[...props.bids]}
           symbolInfo={props.symbolInfo}
         />
-        <DesktopBids data={props.bids ?? EMPTY_LIST} />
+        <DesktopBids data={[...props.bids]} />
         {isLoading && (
           <div className="oui-bg-bg-8/70 oui-absolute oui-inset-0 oui-z-10 oui-flex oui-items-center oui-justify-center">
             <Spinner />
