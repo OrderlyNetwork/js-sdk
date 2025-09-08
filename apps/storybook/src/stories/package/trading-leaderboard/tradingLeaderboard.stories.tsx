@@ -18,7 +18,7 @@ export function getCampaigns() {
   // Different campaign configurations
   return [
     {
-      campaign_id: "116",
+      campaign_id: "115",
       title: "DAWN OF DOMINANCE",
       description:
         "A new era begins. Outtrade the competition. Climb the ranks. Secure your legacy.",
@@ -325,6 +325,7 @@ export function getCampaigns() {
     } as CampaignConfig,
     {
       campaign_id: "127",
+      // campaign_id: "116",
       title: "The Haven Trading Competition",
       description: "Exclusively for the Haven users",
       // register_time: new Date("2025-09-08T09:00:00Z").toISOString(),
@@ -333,6 +334,7 @@ export function getCampaigns() {
       start_time: new Date("2025-09-08T09:00:00Z").toISOString(),
       end_time: new Date("2025-10-03T00:00:00Z").toISOString(),
       hide_rewards: true,
+      // hide_estimated_rewards: true,
       rule_url: "127_campaign_rule",
       rule_config: {
         action: "scroll",
@@ -348,22 +350,61 @@ export function getCampaigns() {
             currency: "USDC",
             metric: "volume",
             volume_limit: 0,
+            tiers: [
+              { position: 1, amount: 2000 },
+              { position: 2, amount: 1500 },
+              { position: 3, amount: 1000 },
+              { position_range: [4, 10], amount: 500 },
+              { position_range: [11, 20], amount: 200 },
+            ],
+          },
+          {
+            pool_id: "127_pool_2",
+            label: "Trading pnl",
+            total_prize: 10000,
+            currency: "USDC",
+            metric: "pnl",
+            tiers: [
+              { position: 1, amount: 2000 },
+              { position: 2, amount: 1500 },
+              { position: 3, amount: 1000 },
+              { position_range: [4, 10], amount: 500 },
+              { position_range: [11, 20], amount: 200 },
+            ],
           },
         ],
         [
           {
-            pool_id: "127_pool_2",
+            pool_id: "127_pool_3",
             label: "Trading volume",
             total_prize: 40000,
             currency: "USDC",
             metric: "volume",
             volume_limit: 500000000,
+            tiers: [
+              { position: 1, amount: 4000 },
+              { position: 2, amount: 3000 },
+              { position: 3, amount: 2000 },
+              { position_range: [4, 10], amount: 1000 },
+              { position_range: [11, 20], amount: 400 },
+            ],
+          },
+          {
+            pool_id: "127_pool_4",
+            label: "Trading pnl",
+            total_prize: 20000,
+            currency: "USDC",
+            metric: "pnl",
+            tiers: [
+              { position: 1, amount: 4000 },
+              { position: 2, amount: 3000 },
+              { position: 3, amount: 2000 },
+              { position_range: [4, 10], amount: 1000 },
+              { position_range: [11, 20], amount: 400 },
+            ],
           },
         ],
       ],
-      leaderboard_config: {
-        use_general_leaderboard: true,
-      },
     } as CampaignConfig,
   ];
 }

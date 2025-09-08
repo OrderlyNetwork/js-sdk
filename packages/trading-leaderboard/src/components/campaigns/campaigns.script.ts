@@ -24,13 +24,8 @@ export const useCampaignsScript = () => {
     currentCampaign,
     userData,
     backgroundSrc,
+    statistics,
   } = useTradingLeaderboardContext();
-
-  const symbols = Array.isArray(currentCampaign?.volume_scope)
-    ? currentCampaign?.volume_scope.join(",")
-    : currentCampaign?.volume_scope;
-
-  const brokerId = useConfig("brokerId");
 
   const isCampaignEnded = useMemo(() => {
     return (
@@ -38,22 +33,6 @@ export const useCampaignsScript = () => {
       currentCampaign?.end_time < new Date().toISOString()
     );
   }, [currentCampaign]);
-
-  const searchParams = useMemo(() => {
-    return {
-      campaign_id: currentCampaignId.toString(),
-      symbols: symbols || "",
-      broker_id: brokerId,
-      group_by: "BROKER",
-    };
-  }, [currentCampaignId, symbols, brokerId]);
-
-  const { data: stats } = useQuery<CampaignStatsResponse>(
-    currentCampaignId !== "general"
-      ? `https://api.orderly.org/v1/public/campaign/stats?${new URLSearchParams(searchParams).toString()}`
-      : null,
-    { revalidateOnFocus: false },
-  );
 
   const { state } = useAccount();
 
@@ -103,11 +82,6 @@ export const useCampaignsScript = () => {
     [doJoinCampaign, refreshUserCampaigns, state.status],
   );
 
-  const statistics = {
-    total_participants: stats?.user_count,
-    total_volume: stats?.volume,
-  };
-
   const onLearnMore = () => {
     if (currentCampaign?.rule_url) {
       if (currentCampaign.rule_config?.action === "scroll") {
@@ -138,10 +112,10 @@ export const useCampaignsScript = () => {
   const tieredIndex = useMemo(() => {
     if (!currentCampaign?.tiered_prize_pools) return 0;
     return getCurrentTierIndex(
-      statistics.total_volume || 0,
+      statistics?.total_volume || 0,
       currentCampaign?.tiered_prize_pools,
     );
-  }, [statistics.total_volume, currentCampaign?.tiered_prize_pools]);
+  }, [statistics?.total_volume, currentCampaign?.tiered_prize_pools]);
 
   const totalPrizePool = useMemo(() => {
     return getTotalPrizePool(currentCampaign, tieredIndex ?? undefined);
