@@ -8,6 +8,7 @@ export const CampaignsHeaderWidget = (props: {
   currentCampaignId: string;
   onCampaignChange: (campaignId: string) => void;
   backgroundSrc?: string;
+  totalPrizePool?: { amount: number; currency: string };
 }) => {
   const { isMobile } = useScreen();
   return isMobile ? (

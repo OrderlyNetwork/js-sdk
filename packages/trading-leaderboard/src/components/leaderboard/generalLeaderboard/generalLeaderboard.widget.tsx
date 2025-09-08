@@ -7,13 +7,15 @@ import {
 
 export type GeneralLeaderboardWidgetProps = Pick<
   GeneralLeaderboardProps,
-  "style" | "className"
+  "style" | "className" | "campaignDateRange"
 >;
 
 export const GeneralLeaderboardWidget: FC<GeneralLeaderboardWidgetProps> = (
   props,
 ) => {
-  const state = useGeneralLeaderboardScript();
+  const state = useGeneralLeaderboardScript({
+    campaignDateRange: props.campaignDateRange,
+  });
 
   return (
     <GeneralLeaderboard

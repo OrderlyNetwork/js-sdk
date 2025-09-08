@@ -28,6 +28,7 @@ export interface PrizePool {
   currency: string;
   metric: "volume" | "pnl";
   tiers: PrizePoolTier[];
+  volume_limit?: number;
 }
 
 // Ticket prize configuration types
@@ -55,12 +56,14 @@ export interface CampaignConfig {
   campaign_id: number | string;
   title: string;
   description: string;
+  register_time?: string;
   start_time: string;
   end_time: string;
   reward_distribution_time?: string;
   volume_scope?: string | string[];
   referral_codes?: string[] | string;
   prize_pools?: PrizePool[];
+  tiered_prize_pools?: Array<PrizePool[]>;
   ticket_rules?: TicketRules;
   image?: string;
   rule_url?: string;
@@ -82,6 +85,11 @@ export interface CampaignConfig {
     terms: DescriptionItem[];
     ruleConfig?: DescriptionConfig;
   };
+  leaderboard_config?: LeaderboardConfig;
+}
+
+export interface LeaderboardConfig {
+  use_general_leaderboard?: boolean;
   exclude_leaderboard_columns?: RankingColumnFields[];
 }
 

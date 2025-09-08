@@ -53,14 +53,34 @@ type LeaderboardSectionProps = {
 export const LeaderboardSection: FC<LeaderboardSectionProps> = (props) => {
   const { t } = useTranslation();
   const { isMobile } = useScreen();
-  const { currentCampaignId, currentCampaign, backgroundSrc } =
-    useTradingLeaderboardContext();
+  const {
+    currentCampaignId,
+    currentCampaign,
+    backgroundSrc,
+    campaignDateRange,
+  } = useTradingLeaderboardContext();
 
   if (currentCampaignId === "general") {
     return (
       <Box px={3} className={cn("oui-mix-blend-screen")}>
         <Background backgroundSrc={backgroundSrc} />
         <GeneralLeaderboardWidget {...props} className="oui-mt-10" />
+      </Box>
+    );
+  }
+
+  if (currentCampaign?.leaderboard_config?.use_general_leaderboard) {
+    return (
+      <Box px={3}>
+        <LeaderboardTitle
+          title={t("tradingLeaderboard.arena")}
+          isMobile={isMobile}
+        />
+        <GeneralLeaderboardWidget
+          {...props}
+          className="oui-mt-10"
+          campaignDateRange={campaignDateRange}
+        />
       </Box>
     );
   }
