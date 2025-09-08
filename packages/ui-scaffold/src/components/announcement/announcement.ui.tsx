@@ -1,4 +1,6 @@
 import React, { useMemo } from "react";
+import Autoplay from "embla-carousel-autoplay";
+import useEmblaCarousel from "embla-carousel-react";
 import { useTranslation } from "@orderly.network/i18n";
 import { AnnouncementType, type API } from "@orderly.network/types";
 import {
@@ -38,27 +40,43 @@ export const AnnouncementUI: React.FC<Readonly<AnnouncementProps>> = (
   const { t, i18n } = useTranslation();
   const { isMobile } = useScreen();
 
+  const [emblaRef, emblaApi] = useEmblaCarousel(
+    {
+      loop: true,
+      axis: "y",
+    },
+    [Autoplay({ delay: 2000, stopOnInteraction: false })],
+  );
+
   // return (
-  //   <Marquee<API.AnnouncementRow>
-  //     direction="up"
-  //     mode="screen"
-  //     data={tips}
-  //     renderItem={(item, index) => {
-  //       return (
-  //         <Flex key={`item-${index}`}>
-  //           <RenderTipsType type={item?.type} />
-  //           <Text
-  //             size="xs"
-  //             intensity={80}
-  //             ref={contentRef}
-  //             className="oui-leading-[18px]"
+  //   <div className="oui-mx-auto oui-w-full oui-transform-gpu">
+  //     <div
+  //       ref={emblaRef}
+  //       className="oui-h-5 oui-transform-gpu oui-overflow-hidden oui-rounded-xl"
+  //     >
+  //       <div className="oui-flex oui-h-full oui-transform-gpu oui-flex-col">
+  //         {tips.map((item) => (
+  //           <Flex
+  //             height={"100%"}
+  //             justify="center"
+  //             itemAlign="center"
+  //             className="oui-flex-none oui-basis-full oui-transform-gpu"
+  //             key={item.id}
   //           >
-  //             {item?.i18n?.[i18n.language] || item?.message?.trim()}
-  //           </Text>
-  //         </Flex>
-  //       );
-  //     }}
-  //   />
+  //             <RenderTipsType type={item?.type} />
+  //             <Text
+  //               size="xs"
+  //               intensity={80}
+  //               ref={contentRef}
+  //               className="oui-h-5 oui-transform-gpu oui-leading-5"
+  //             >
+  //               {item?.i18n?.[i18n.language] || item?.message}
+  //             </Text>
+  //           </Flex>
+  //         ))}
+  //       </div>
+  //     </div>
+  //   </div>
   // );
 
   const contentNode = React.useMemo<React.ReactNode>(() => {
