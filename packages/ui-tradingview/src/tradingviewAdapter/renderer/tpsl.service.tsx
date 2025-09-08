@@ -206,7 +206,7 @@ export class TPSLService {
     // return new Decimal(position.open).mul(0.01).abs().toNumber();
     // const priceRange = this.chart.get
     const priceScale = this.chart.getPanes()[0].getRightPriceScales()[0];
-    const priceRange = priceScale.getVisiblePriceRange();
+    const priceRange = priceScale?.getVisiblePriceRange();
 
     // console.log(priceRange);
     if (priceRange) {
