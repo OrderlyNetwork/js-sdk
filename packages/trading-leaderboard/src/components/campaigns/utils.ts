@@ -260,6 +260,9 @@ export const generateCampaignTimeline = (
   campaign: CampaignConfig,
 ): TimelinePoint[] => {
   const currentTime = new Date();
+  const registerTime = campaign.register_time
+    ? new Date(campaign.register_time)
+    : null;
   const startTime = new Date(campaign.start_time);
   const endTime = new Date(campaign.end_time);
   const rewardTime = campaign.reward_distribution_time
@@ -289,6 +292,24 @@ export const generateCampaignTimeline = (
       return time.toISOString();
     }
   };
+
+  if (registerTime) {
+    timeline.push({
+      title: "Battle Registration",
+      type: getTimelineType(registerTime),
+      time: formatTimeDisplay(registerTime),
+    });
+
+    const isInRegisterTime =
+      currentTime >= registerTime && currentTime <= startTime;
+    if (isInRegisterTime) {
+      timeline.push({
+        title: i18n.t("chart.now"),
+        type: "active",
+        time: formatTimeDisplay(currentTime),
+      });
+    }
+  }
 
   // Battle starts point
   timeline.push({
