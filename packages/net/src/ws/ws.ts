@@ -271,16 +271,22 @@ export class WS extends EventEmitter {
 
   private onPrivateOpen(event: Event) {
     // auth
-    this.authenticate(this.options.accountId!);
-    this.privateIsReconnecting = false;
+    this.authenticate(this.options.accountId!)
+      .then(() => {
+        console.log("onPrivateOpen, success");
+        this.privateIsReconnecting = false;
 
-    this.emit("status:change", {
-      type: WebSocketEvent.OPEN,
-      isPrivate: true,
-      isReconnect: this._privateRetryCount > 0,
-    });
+        this.emit("status:change", {
+          type: WebSocketEvent.OPEN,
+          isPrivate: true,
+          isReconnect: this._privateRetryCount > 0,
+        });
 
-    this._privateRetryCount = 0;
+        this._privateRetryCount = 0;
+      })
+      .catch((e) => {
+        console.log("ws authenticate failed", e);
+      });
   }
 
   private onMessage(
