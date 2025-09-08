@@ -310,7 +310,7 @@ export function maxPositionNotional(inputs: {
   const { leverage, IMRFactor } = inputs;
   return new Decimal(1)
     .div(new Decimal(leverage).mul(IMRFactor))
-    .toPower(1 / 0.8)
+    .pow(1 / 0.8)
     .toNumber();
 }
 
@@ -323,18 +323,6 @@ export function maxPositionLeverage(inputs: {
 }) {
   const { IMRFactor, notional } = inputs;
   return new Decimal(1)
-    .div(new Decimal(IMRFactor).mul(notional).toPower(1 / 0.8))
+    .div(new Decimal(IMRFactor).mul(new Decimal(notional).pow(0.8)))
     .toNumber();
-}
-
-/**
- * required_margin = max_notional / leverage
- */
-export function requiredMargin(inputs: {
-  maxNotional: number;
-  /** symbol leverage */
-  leverage: number;
-}) {
-  const { maxNotional, leverage } = inputs;
-  return new Decimal(maxNotional).div(leverage).toNumber();
 }

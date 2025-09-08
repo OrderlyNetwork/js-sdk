@@ -51,6 +51,13 @@ export const useMaxQty = (
 
   const maxQty = useMemo(() => {
     if (!symbol) return 0;
+    console.log(
+      "positions",
+      positions?.map((item) => ({
+        symbol: item.symbol,
+        leverage: item.leverage,
+      })),
+    );
 
     // const positions = positionsPath(positionsData);
 
@@ -110,17 +117,12 @@ export const useMaxQty = (
       ? []
       : positions.filter((item: API.Position) => item.symbol !== symbol);
 
-    const maxLeverage = account.maxLeverage({
-      symbolLeverage: currentSymbolPosition?.leverage,
-      accountLeverage: accountInfo.max_leverage,
-    });
-
     const otherIMs = account.otherIMs({
       positions: otherPositions,
       symbolInfo,
       markPrices,
       IMR_Factors: accountInfo.imr_factor,
-      maxLeverage,
+      maxLeverage: accountInfo.max_leverage,
     });
 
     return account.maxQty(side, {
@@ -128,7 +130,10 @@ export const useMaxQty = (
       symbol,
       baseMaxQty: getSymbolInfo("base_max"),
       totalCollateral,
-      maxLeverage,
+      maxLeverage: account.maxLeverage({
+        symbolLeverage: currentSymbolPosition?.leverage,
+        accountLeverage: accountInfo.max_leverage,
+      }),
       takerFeeRate: accountInfo.futures_taker_fee_rate,
       baseIMR: getSymbolInfo("base_imr"),
       otherIMs,

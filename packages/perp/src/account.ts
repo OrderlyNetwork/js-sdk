@@ -396,6 +396,9 @@ export type OtherIMsInputs = {
   // the position list for other symbols except the current symbol
   positions: API.Position[];
   markPrices: { [key: string]: number };
+  /**
+   * account max leverage
+   */
   maxLeverage: number;
   symbolInfo: any;
   IMR_Factors: { [key: string]: number };
@@ -407,7 +410,6 @@ export function otherIMs(inputs: OtherIMsInputs): number {
   const {
     // orders,
     positions,
-    maxLeverage,
     IMR_Factors,
     symbolInfo,
     markPrices,
@@ -446,7 +448,10 @@ export function otherIMs(inputs: OtherIMsInputs): number {
       }
 
       const imr = IMR({
-        maxLeverage,
+        maxLeverage: maxLeverage({
+          symbolLeverage: position?.leverage,
+          accountLeverage: inputs.maxLeverage,
+        }),
         IMR_Factor,
         baseIMR: symbolInfo[symbol]("base_imr", 0),
         positionNotional,

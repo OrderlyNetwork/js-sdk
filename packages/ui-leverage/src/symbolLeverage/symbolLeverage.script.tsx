@@ -1,11 +1,18 @@
 import { useCallback, useMemo, useState } from "react";
 import {
+  useAccountInfo,
   useLocalStorage,
+  useMarkPricesStream,
+  usePortfolio,
   usePositionStream,
   useSymbolLeverage,
+  useSymbolsInfo,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { positions } from "@orderly.network/perp";
+import {
+  account as accountPerp,
+  positions as positionsPerp,
+} from "@orderly.network/perp";
 import { OrderSide } from "@orderly.network/types";
 import {
   Checkbox,
@@ -15,6 +22,7 @@ import {
   Text,
   useScreen,
 } from "@orderly.network/ui";
+import { zero } from "@orderly.network/utils";
 
 type UseLeverageScriptOptions = {
   close?: () => void;
@@ -35,13 +43,21 @@ export const useSymbolLeverageScript = (
 ) => {
   const { curLeverage = 1, symbol, side } = options;
   const [showSliderTip, setShowSliderTip] = useState(false);
+  const [leverage, setLeverage] = useState<number>(curLeverage);
+
   const { t } = useTranslation();
-  const position = usePositionBySymbol(symbol!);
-  const { notional, position_qty, mm: currentMargin } = position || {};
+
   const { isMobile } = useScreen();
 
-  const { maxLeverage, update, isLoading, symbolInfo } =
-    useSymbolLeverage(symbol);
+  const { maxLeverage, update, isLoading } = useSymbolLeverage(symbol);
+
+  const {
+    position,
+    maxPositionNotional,
+    maxPositionLeverage,
+    overMaxPositionLeverage,
+    overRequiredMargin,
+  } = useCalc({ symbol: symbol!, leverage, maxLeverage });
 
   const formattedLeverageLevers = generateLeverageLevers(maxLeverage);
 
@@ -53,8 +69,6 @@ export const useSymbolLeverageScript = (
       })) || []
     );
   }, [formattedLeverageLevers]);
-
-  const [leverage, setLeverage] = useState<number>(curLeverage);
 
   const step = 100 / ((marks?.length || 0) - 1);
 
@@ -146,57 +160,9 @@ export const useSymbolLeverageScript = (
   const isReduceDisabled = leverage <= 1;
   const isIncreaseDisabled = leverage >= maxLeverage;
 
-  /** the highest allowable leverage. Block users from setting leverage above this limit. */
-  const maxPositionLeverage = useMemo(() => {
-    const IMRFactor = symbolInfo?.("imr_factor");
-    if (notional && IMRFactor) {
-      return positions.maxPositionLeverage({
-        IMRFactor,
-        notional,
-      });
-    }
-
-    return 1;
-  }, [leverage, symbolInfo, notional]);
-
-  /** calculate maximum position at current leverage */
-  const maxPositionNotional = useMemo(() => {
-    const IMRFactor = symbolInfo?.("imr_factor");
-    if (leverage && IMRFactor) {
-      return positions.maxPositionNotional({
-        leverage,
-        IMRFactor,
-      });
-    }
-  }, [leverage, symbolInfo]);
-
-  const requiredMargin = useMemo(() => {
-    if (maxPositionNotional && leverage) {
-      return positions.requiredMargin({
-        maxNotional: maxPositionNotional,
-        leverage,
-      });
-    }
-  }, [maxPositionNotional, leverage]);
-
-  const overMaxPositionLeverage = useMemo(() => {
-    return leverage > maxPositionLeverage;
-  }, [leverage, maxPositionLeverage]);
-
-  /**
-   * If current_margin < required_margin, disable confirm button and display error message:
-   * Margin is not enough. Please try adjusting to another leverage level.
-   */
-  const overRequiredMargin = useMemo(() => {
-    // if (currentMargin && currentMargin < requiredMargin) {
-    //   return true;
-    // }
-    return false;
-  }, [requiredMargin, currentMargin]);
-
   const isBuy = side
     ? side === OrderSide.BUY
-    : position_qty && position_qty > 0;
+    : position?.position_qty && position.position_qty > 0;
 
   const disabled =
     !leverage ||
@@ -228,7 +194,6 @@ export const useSymbolLeverageScript = (
     symbol,
     maxPositionNotional,
     maxPositionLeverage,
-    requiredMargin,
     overMaxPositionLeverage,
     overRequiredMargin,
     isBuy,
@@ -247,18 +212,114 @@ const generateLeverageLevers = (max: number) => {
   return result;
 };
 
-function usePositionBySymbol(symbol: string) {
+function useCalc(inputs: {
+  symbol: string;
+  leverage: number;
+  maxLeverage: number;
+}) {
+  const { symbol, leverage, maxLeverage } = inputs;
+
+  const symbolsInfo = useSymbolsInfo();
+  const { data: accountInfo } = useAccountInfo();
+  const { data: markPrices } = useMarkPricesStream();
+  const { totalCollateral } = usePortfolio();
+
   const [unPnlPriceBasis, setUnPnlPriceBasic] = useLocalStorage(
     "unPnlPriceBasis",
     "markPrice",
   );
-  const [data] = usePositionStream(symbol, {
+  const [positions] = usePositionStream("all", {
     calcMode: unPnlPriceBasis,
   });
 
-  return useMemo(() => {
-    if (symbol && data?.rows?.length) {
-      return data.rows.find((item) => item.symbol === symbol);
+  const position = useMemo(() => {
+    if (symbol && positions?.rows?.length) {
+      return positions.rows.find((item) => item.symbol === symbol);
     }
-  }, [data, symbol]);
+  }, [positions, symbol]);
+
+  /** the highest allowable leverage. Block users from setting leverage above this limit. */
+  const maxPositionLeverage = useMemo(() => {
+    const IMRFactor = accountInfo?.imr_factor?.[symbol];
+    const notional = position?.notional;
+    // when user has existing position
+    if (IMRFactor && notional) {
+      const maxPositionLeverage = positionsPerp.maxPositionLeverage({
+        IMRFactor,
+        notional,
+      });
+      return Math.min(maxPositionLeverage, maxLeverage);
+    }
+
+    // when user has no existing position
+    return maxLeverage;
+  }, [position, maxLeverage, symbol]);
+
+  /** calculate maximum position at current leverage */
+  const maxPositionNotional = useMemo(() => {
+    const IMRFactor = accountInfo?.imr_factor?.[symbol];
+    if (leverage && IMRFactor) {
+      return positionsPerp.maxPositionNotional({
+        leverage,
+        IMRFactor,
+      });
+    }
+  }, [leverage, symbol]);
+
+  const overMaxPositionLeverage = useMemo(() => {
+    return leverage > maxPositionLeverage;
+  }, [leverage, maxPositionLeverage]);
+
+  // calc free collateral with new leverage
+  const freeCollateral = useMemo(() => {
+    if (!accountInfo || !markPrices || !symbolsInfo) {
+      return zero;
+    }
+
+    const positionList = positions?.rows.map((item) => {
+      if (item.symbol === symbol) {
+        return {
+          ...item,
+          leverage,
+        };
+      }
+      return item;
+    });
+
+    const totalInitialMarginWithOrders = accountPerp.totalInitialMarginWithQty({
+      positions: positionList,
+      markPrices,
+      IMR_Factors: accountInfo.imr_factor,
+      maxLeverage: accountInfo.max_leverage,
+      symbolInfo: symbolsInfo,
+    });
+
+    const freeCollateral = accountPerp.freeCollateral({
+      totalCollateral,
+      totalInitialMarginWithOrders,
+    });
+
+    return freeCollateral;
+  }, [
+    positions,
+    symbolsInfo,
+    accountInfo,
+    markPrices,
+    totalCollateral,
+    leverage,
+    symbol,
+  ]);
+
+  const overRequiredMargin = useMemo(() => {
+    return freeCollateral.eq(0) || freeCollateral.isNegative();
+  }, [freeCollateral]);
+
+  return {
+    position,
+    freeCollateral,
+    maxPositionNotional,
+    maxPositionLeverage,
+    overMaxPositionLeverage,
+    overRequiredMargin,
+  };
 }

@@ -1636,6 +1636,9 @@ importers:
       '@orderly.network/ui':
         specifier: workspace:*
         version: link:../ui
+      '@orderly.network/utils':
+        specifier: workspace:*
+        version: link:../utils
     devDependencies:
       '@swc/cli':
         specifier: ^0.3.12

@@ -38,6 +38,5 @@ export const useSymbolLeverage = (symbol?: string) => {
     maxLeverage,
     update,
     isLoading: isMutating,
-    symbolInfo,
   };
 };
