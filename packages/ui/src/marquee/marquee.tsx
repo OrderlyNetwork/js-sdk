@@ -383,7 +383,6 @@ export const Marquee = <T,>(props: MarqueeProps<T>) => {
           "oui-flex",
           isHorizontal ? "oui-flex-row" : "oui-flex-col",
           shouldScroll ? undefined : "oui-items-center oui-justify-center",
-          // className,
         )}
         style={shouldScroll ? transformStyle : undefined}
       >
