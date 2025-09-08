@@ -102,6 +102,9 @@ export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
         <DesktopMarkPrice
           lastPrice={lastPrice}
           markPrice={markPrice}
+          // ======================================================================
+          // ==         🔥🔥🔥🔥🔥🔥🔥 DO NOT MODIFY THIS 🔥🔥🔥🔥🔥🔥🔥              ==
+          // ======================================================================
           // Use shallow copy here to avoid mutating the original props array when sorting or modifying inside the component.
           // Note: This only clones the array itself, not the element objects.
           asks={[...props.asks]}
