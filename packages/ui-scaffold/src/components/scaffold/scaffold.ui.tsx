@@ -91,14 +91,6 @@ export const DesktopScaffold: React.FC<DesktopScaffoldProps> = (props) => {
           </React.Suspense>
           <React.Suspense fallback={null}>
             <LazyAnnouncementWidget
-              className={cn(
-                "oui-scaffold-maintenance-tips",
-                "oui-mt-2",
-                "oui-relative oui-z-[1]",
-                "oui-bg-base-9",
-                // 1024px - 6px (scrollbar widt) - 12 * 2px (padding) = 994px
-                "oui-min-w-[994px]",
-              )}
               hideTips={props.restrictedInfo?.restrictedOpen}
             />
           </React.Suspense>

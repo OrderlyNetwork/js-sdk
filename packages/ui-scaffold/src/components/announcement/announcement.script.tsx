@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { UTCDateMini } from "@date-fns/utc";
 import { format } from "date-fns";
 import { produce } from "immer";
@@ -52,9 +52,6 @@ const sortDataByUpdatedTime = (ori: API.Announcement) => {
 export type AnnouncementScriptReturn = ReturnType<typeof useAnnouncementScript>;
 
 export const useAnnouncementScript = (options?: AnnouncementScriptOptions) => {
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const [isAnimating, setIsAnimating] = useState(false);
-
   const { showAnnouncement, setShowAnnouncement } = useAppContext();
   const { dataAdapter } = useOrderlyContext();
 
@@ -77,48 +74,6 @@ export const useAnnouncementScript = (options?: AnnouncementScriptOptions) => {
     setStore((prev) => ({ ...prev, show: false }));
   };
 
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  const prevTips = React.useCallback(() => {
-    if (isAnimating) {
-      return;
-    }
-    const len = memoizedTips.length;
-    setIsAnimating(true);
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + len) % len);
-    setTimeout(() => {
-      setIsAnimating(false);
-    }, 200);
-  }, [isAnimating, memoizedTips]);
-
-  const nextTips = React.useCallback(() => {
-    if (isAnimating) {
-      return;
-    }
-    const len = memoizedTips.length;
-    setIsAnimating(true);
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % len);
-    setTimeout(() => {
-      setIsAnimating(false);
-    }, 200);
-  }, [isAnimating, memoizedTips]);
-
-  useEffect(() => {
-    const len = memoizedTips.length;
-    if (!showAnnouncement || len <= 1) {
-      return;
-    }
-
-    // rolling announcement, every 3 seconds
-    intervalRef.current = setInterval(nextTips, 3000);
-
-    return () => {
-      if (intervalRef.current) {
-        clearTimeout(intervalRef.current);
-      }
-    };
-  }, [memoizedTips, showAnnouncement, nextTips]);
-
   useEffect(() => {
     const len = memoizedTips.length;
     setShowAnnouncement(
@@ -131,13 +86,8 @@ export const useAnnouncementScript = (options?: AnnouncementScriptOptions) => {
   return {
     maintenanceDialogInfo,
     tips: memoizedTips,
-    currentIndex,
-    currentTip: memoizedTips?.[currentIndex],
-    closeTips,
-    nextTips,
-    prevTips,
+    closeTips: closeTips,
     showAnnouncement,
-    isAnimating,
     ...multiLineState,
   };
 };
@@ -171,18 +121,10 @@ const useAnnouncementData = () => {
     brokerName: string,
     startDate: string,
     endDate: string,
-  ) =>
-    t("maintenance.tips.description", {
-      brokerName,
-      startDate,
-      endDate,
-    });
+  ) => t("maintenance.tips.description", { brokerName, startDate, endDate });
 
   const getMaintentDialogContent = (brokerName: string, endDate: string) =>
-    t("maintenance.dialog.description", {
-      brokerName,
-      endDate,
-    });
+    t("maintenance.dialog.description", { brokerName, endDate });
 
   useEffect(() => {
     const unsubscribe = ws.subscribe("announcement", {
@@ -326,7 +268,7 @@ const useAnnouncementData = () => {
   };
 };
 
-function useMultiLine() {
+const useMultiLine = () => {
   const [mutiLine, setMutiLine] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -338,10 +280,10 @@ function useMultiLine() {
     mutiLine,
     contentRef,
   };
-}
+};
 
-function getTimeString(timestamp: number) {
+const getTimeString = (timestamp: number) => {
   const date = format(new UTCDateMini(timestamp), "MMM dd");
   const time = format(new UTCDateMini(timestamp), "h:mm aa");
   return `${time} (UTC) on ${date}`;
-}
+};

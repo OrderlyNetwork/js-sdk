@@ -1,8 +1,9 @@
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
+import type { EmblaCarouselType } from "embla-carousel";
 import Autoplay from "embla-carousel-autoplay";
 import useEmblaCarousel from "embla-carousel-react";
 import { useTranslation } from "@orderly.network/i18n";
-import { AnnouncementType, type API } from "@orderly.network/types";
+import { AnnouncementType } from "@orderly.network/types";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -16,10 +17,52 @@ import {
   Flex,
   useScreen,
   Text,
-  Marquee,
 } from "@orderly.network/ui";
 import { CloseIcon } from "../icons";
 import type { AnnouncementScriptReturn } from "./announcement.script";
+import { SoundIcon } from "./icons";
+import {
+  usePrevNextButtons,
+  useSelectedSnapDisplay,
+} from "./usePrevNextButtons";
+
+const Controls: React.FC<{
+  selectedSnap: number;
+  snapCount: number;
+  prevDisabled: boolean;
+  nextDisabled: boolean;
+  prevTips: () => void;
+  nextTips: () => void;
+  closeTips: () => void;
+}> = (props) => {
+  const {
+    selectedSnap,
+    snapCount,
+    prevDisabled,
+    nextDisabled,
+    prevTips,
+    nextTips,
+    closeTips,
+  } = props;
+  const { isMobile } = useScreen();
+  return (
+    <Flex gap={isMobile ? 1 : 2} justify={"center"} itemAlign={"center"}>
+      <SwitchTips
+        prevDisabled={prevDisabled}
+        nextDisabled={nextDisabled}
+        selectedSnap={selectedSnap}
+        snapCount={snapCount}
+        prevTips={prevTips}
+        nextTips={nextTips}
+      />
+      <CloseIcon
+        size={18}
+        onClick={closeTips}
+        className="oui-cursor-pointer oui-text-base-contrast-80 hover:oui-text-base-contrast"
+      />
+    </Flex>
+  );
+};
 
 export type AnnouncementProps = AnnouncementScriptReturn & {
   style?: React.CSSProperties;
@@ -34,11 +77,13 @@ export const AnnouncementUI: React.FC<Readonly<AnnouncementProps>> = (
     maintenanceDialogInfo,
     showAnnouncement,
     tips,
-    currentTip,
+    closeTips,
     contentRef,
+    // mutiLine,
+    className,
   } = props;
+
   const { t, i18n } = useTranslation();
-  const { isMobile } = useScreen();
 
   const [emblaRef, emblaApi] = useEmblaCarousel(
     {
@@ -48,46 +93,26 @@ export const AnnouncementUI: React.FC<Readonly<AnnouncementProps>> = (
     [Autoplay({ delay: 2000, stopOnInteraction: false })],
   );
 
-  // return (
-  //   <div className="oui-mx-auto oui-w-full oui-transform-gpu">
-  //     <div
-  //       ref={emblaRef}
-  //       className="oui-h-5 oui-transform-gpu oui-overflow-hidden oui-rounded-xl"
-  //     >
-  //       <div className="oui-flex oui-h-full oui-transform-gpu oui-flex-col">
-  //         {tips.map((item) => (
-  //           <Flex
-  //             height={"100%"}
-  //             justify="center"
-  //             itemAlign="center"
-  //             className="oui-flex-none oui-basis-full oui-transform-gpu"
-  //             key={item.id}
-  //           >
-  //             <RenderTipsType type={item?.type} />
-  //             <Text
-  //               size="xs"
-  //               intensity={80}
-  //               ref={contentRef}
-  //               className="oui-h-5 oui-transform-gpu oui-leading-5"
-  //             >
-  //               {item?.i18n?.[i18n.language] || item?.message}
-  //             </Text>
-  //           </Flex>
-  //         ))}
-  //       </div>
-  //     </div>
-  //   </div>
-  // );
+  const onNavButtonClick = useCallback((emblaApi?: EmblaCarouselType) => {
+    const { autoplay } = emblaApi?.plugins() ?? {};
+    if (!autoplay) {
+      return;
+    }
+    const resetOrStop =
+      autoplay.options.stopOnInteraction === false
+        ? autoplay.reset
+        : autoplay.stop;
+    resetOrStop();
+  }, []);
 
-  const contentNode = React.useMemo<React.ReactNode>(() => {
-    if (!currentTip) {
-      return null;
-    }
-    if (isMobile) {
-      return <MobileTips {...props} />;
-    }
-    return <DeskTopTips {...props} />;
-  }, [currentTip, isMobile, props]);
+  const {
+    prevBtnDisabled,
+    nextBtnDisabled,
+    onPrevButtonClick,
+    onNextButtonClick,
+  } = usePrevNextButtons(emblaApi, onNavButtonClick);
+
+  const { selectedSnap, snapCount } = useSelectedSnapDisplay(emblaApi);
 
   if (maintenanceDialogInfo) {
     return (
@@ -114,163 +139,108 @@ export const AnnouncementUI: React.FC<Readonly<AnnouncementProps>> = (
   }
 
   return (
-    <Flex
-      key={currentTip?.announcement_id}
-      style={props.style}
+    <div
       className={cn(
-        "oui-announcement",
-        "oui-overflow-hidden oui-rounded-xl oui-font-semibold",
-        props.className,
+        "oui-relative oui-z-[1] oui-mt-2 oui-flex oui-transform-gpu oui-flex-row oui-flex-nowrap oui-items-center oui-justify-between oui-overflow-hidden oui-rounded-xl oui-bg-base-9 oui-px-4 oui-font-semibold",
+        className,
       )}
     >
-      {contentNode}
-    </Flex>
-  );
-};
-
-const DeskTopTips: React.FC<Readonly<AnnouncementScriptReturn>> = (props) => {
-  const {
-    currentTip,
-    currentIndex,
-    tips,
-    prevTips,
-    nextTips,
-    closeTips,
-    mutiLine,
-    contentRef,
-    isAnimating,
-  } = props;
-
-  const len = tips.length;
-
-  const { i18n } = useTranslation();
-
-  return (
-    <>
-      <Flex
-        justify="center"
-        width="100%"
-        py={2}
-        pl={4}
-        gapX={2}
-        itemAlign={mutiLine ? "start" : "center"}
+      <div className="oui-size-[18px]">
+        <SoundIcon />
+      </div>
+      <div
+        ref={emblaRef}
         className={cn(
-          "oui-relative oui-mr-[125px] oui-overflow-hidden",
-          currentTip?.url && "oui-cursor-pointer",
-          "oui-opacity-100 oui-transition-transform oui-duration-200 oui-ease-in-out",
-          isAnimating && "oui-translate-y-1/2 oui-opacity-0",
-        )}
-        onClick={() => {
-          if (currentTip?.url) {
-            window.open(currentTip?.url, "_blank");
-          }
-        }}
-      >
-        <RenderTipsType type={currentTip?.type} />
-        <Text
-          size="xs"
-          intensity={80}
-          ref={contentRef}
-          className="oui-leading-[18px]"
-        >
-          {currentTip?.i18n?.[i18n.language] || currentTip?.message}
-        </Text>
-      </Flex>
-      <Flex
-        gapX={4}
-        justify="center"
-        className={cn(
-          "oui-absolute oui-right-4 oui-top-2/4 -oui-translate-y-2/4",
+          "oui-relative oui-h-[34px] oui-transform-gpu oui-overflow-hidden oui-rounded-xl",
         )}
       >
-        <SwitchTips
-          currentIndex={currentIndex}
-          tipsCount={len}
-          prevTips={prevTips}
-          nextTips={nextTips}
-        />
-        <CloseIcon
-          onClick={closeTips}
-          size={20}
-          className="oui-text-base-contrast-80 hover:oui-text-base-contrast"
-        />
-      </Flex>
-    </>
-  );
-};
-
-const MobileTips: React.FC<Readonly<AnnouncementScriptReturn>> = (props) => {
-  const { currentTip, currentIndex, tips, prevTips, nextTips, closeTips } =
-    props;
-
-  const len = tips.length;
-
-  const { i18n } = useTranslation();
-
-  return (
-    <Flex
-      p={3}
-      gapX={2}
-      itemAlign="start"
-      width="100%"
-      className="oui-relative oui-overflow-hidden"
-    >
-      <Flex
-        gapY={2}
-        direction="column"
-        className={cn("oui-w-full oui-items-start oui-justify-start")}
-      >
-        <div
-          className={cn("oui-w-full", currentTip?.url && "oui-cursor-pointer")}
-          onClick={() => {
-            if (currentTip?.url) {
-              window.open(currentTip.url, "_blank");
-            }
-          }}
-        >
-          <Text size="xs" className="oui-leading-5" intensity={80}>
-            {currentTip?.i18n?.[i18n.language] || currentTip?.message}
-          </Text>
+        <div className="oui-flex oui-h-full oui-transform-gpu oui-flex-col">
+          {tips.map((item, index) => (
+            <Flex
+              gap={2}
+              height={"100%"}
+              justify="center"
+              itemAlign="center"
+              className="oui-flex-none oui-basis-full oui-transform-gpu"
+              key={`item-${item.announcement_id ?? index}`}
+            >
+              <RenderTipsType type={item?.type} />
+              <Text
+                size="xs"
+                intensity={80}
+                ref={contentRef}
+                className="oui-h-[34px] oui-transform-gpu oui-leading-[34px]"
+              >
+                {item?.i18n?.[i18n.language] || item?.message?.trim()}
+              </Text>
+            </Flex>
+          ))}
         </div>
-        <Flex width="100%" justify="between">
-          <div>
-            <RenderTipsType type={currentTip?.type} />
-          </div>
-          <SwitchTips
-            currentIndex={currentIndex}
-            tipsCount={len}
-            prevTips={prevTips}
-            nextTips={nextTips}
-          />
-        </Flex>
-      </Flex>
-      <CloseIcon onClick={closeTips} size={18} className="oui-mt-[2px]" />
-    </Flex>
+      </div>
+      <Controls
+        selectedSnap={selectedSnap}
+        snapCount={snapCount}
+        closeTips={closeTips}
+        prevTips={onPrevButtonClick}
+        nextTips={onNextButtonClick}
+        prevDisabled={prevBtnDisabled}
+        nextDisabled={nextBtnDisabled}
+      />
+    </div>
   );
 };
 
 type SwitchTipsProps = {
-  tipsCount: number;
-} & Pick<AnnouncementScriptReturn, "currentIndex" | "prevTips" | "nextTips">;
+  selectedSnap: number;
+  snapCount: number;
+  prevDisabled: boolean;
+  nextDisabled: boolean;
+  nextTips: () => void;
+  prevTips: () => void;
+};
 
 const SwitchTips: React.FC<Readonly<SwitchTipsProps>> = (props) => {
-  const { currentIndex, tipsCount, prevTips, nextTips } = props;
+  const {
+    selectedSnap,
+    snapCount,
+    prevDisabled,
+    nextDisabled,
+    prevTips,
+    nextTips,
+  } = props;
+  const { isMobile } = useScreen();
+  const display = (
+    <div className="oui-text-sm oui-text-base-contrast-54">
+      {selectedSnap + 1}/{snapCount}
+    </div>
+  );
+  if (isMobile) {
+    return display;
+  }
   return (
-    <div className="oui-flex oui-items-center oui-justify-center oui-gap-1 oui-text-base-contrast-54">
+    <div className="oui-flex oui-items-center oui-justify-center oui-gap-0 oui-text-base-contrast-54">
       <ChevronLeftIcon
-        size={20}
+        size={16}
         opacity={1}
-        className="oui-size-4 oui-shrink-0 oui-cursor-pointer oui-text-base-contrast-54 hover:oui-text-base-contrast-80 lg:oui-size-5"
-        onClick={prevTips}
+        className={cn(
+          "oui-size-4 oui-shrink-0 oui-text-base-contrast-54 hover:oui-text-base-contrast-80 lg:oui-size-5",
+          isMobile || prevDisabled
+            ? "oui-cursor-not-allowed"
+            : "oui-cursor-pointer",
+        )}
+        onClick={isMobile || prevDisabled ? undefined : prevTips}
       />
-      <div className="oui-text-sm oui-text-base-contrast-54">
-        {currentIndex + 1}/{tipsCount}
-      </div>
+      <div className="oui-text-sm oui-text-base-contrast-54">{display}</div>
       <ChevronRightIcon
-        size={20}
+        size={16}
         opacity={1}
-        className="oui-size-4 oui-shrink-0 oui-cursor-pointer oui-text-base-contrast-54 hover:oui-text-base-contrast-80 lg:oui-size-5"
-        onClick={nextTips}
+        className={cn(
+          "oui-size-4 oui-shrink-0 oui-text-base-contrast-54 hover:oui-text-base-contrast-80 lg:oui-size-5",
+          isMobile || nextDisabled
+            ? "oui-cursor-not-allowed"
+            : "oui-cursor-pointer",
+        )}
+        onClick={isMobile || nextDisabled ? undefined : nextTips}
       />
     </div>
   );
