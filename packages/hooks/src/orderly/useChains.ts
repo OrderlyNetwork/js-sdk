@@ -136,6 +136,14 @@ export function useChains(
 
   const chainsMap = useRef(new Map<number, Chain>());
 
+  const brokerId = configStore.get("brokerId");
+  const env = configStore.get("env");
+  const brokerIdQuery = brokerId !== "orderly" ? `?broker_id=${brokerId}` : "";
+
+  const urlPrefix = env === "prod" ? "https://testnet-api.orderly.org" : "";
+
+  const needFetchFromAPI = options.forceAPI || !customChains;
+
   const commonSwrOpts = {
     revalidateIfStale: false,
     revalidateOnFocus: false,
@@ -153,20 +161,14 @@ export function useChains(
     { ...commonSwrOpts },
   );
 
-  // TODO: get testnet token info from env
+  // testnet token info
   const { data: testTokenChainsRes } = useQuery<API.Chain[]>(
-    "https://testnet-api.orderly.org/v1/public/token",
+    `${urlPrefix}/v1/public/token`,
     {
       ...commonSwrOpts,
       fallbackData: testnetTokenFallback,
     },
   );
-
-  const brokerId = configStore.get("brokerId");
-  const env = configStore.get("env");
-  const brokerIdQuery = brokerId !== "orderly" ? `?broker_id=${brokerId}` : "";
-
-  const needFetchFromAPI = options.forceAPI || !customChains;
 
   // only prod env return mainnet chains info
   const { data: chainInfos, error: chainInfoErr } = useQuery(
@@ -176,10 +178,10 @@ export function useChains(
     { ...commonSwrOpts },
   );
 
-  // test chains info
+  // testnet chains info
   const { data: testChainInfos, error: testChainInfoError } = useQuery(
     needFetchFromAPI
-      ? `https://testnet-api.orderly.org/v1/public/chain_info${brokerIdQuery}`
+      ? `${urlPrefix}/v1/public/chain_info${brokerIdQuery}`
       : null,
     {
       ...commonSwrOpts,
@@ -188,13 +190,6 @@ export function useChains(
         console.error("Failed to fetch testnet chain info:", error);
       },
     },
-  );
-
-  const { data: envChainInfos, error: envChainInfoError } = useQuery(
-    needFetchFromAPI && env !== "prod"
-      ? `/v1/public/chain_info${brokerIdQuery}`
-      : null,
-    commonSwrOpts,
   );
 
   const { swapChains, swapChainsError } = useSwapChains();
@@ -211,7 +206,7 @@ export function useChains(
 
     const testnetChains = formatChains({
       tokenChains: testTokenChainsRes,
-      chainInfos: formatTestnetChainInfos(testChainInfos, envChainInfos),
+      chainInfos: testChainInfos,
       swapChains,
       mainnet: false,
       chainTransformer,
@@ -265,7 +260,6 @@ export function useChains(
     allowedChains,
     swapChains,
     chainTransformer,
-    envChainInfos,
   ]);
 
   const findByChainId = useCallback(
@@ -535,27 +529,6 @@ export function formatChains({
   }
 
   return chains;
-}
-
-/** fill env vault_address to testnet chain info */
-function formatTestnetChainInfos(chainInfos?: any, envChainInfos?: any) {
-  if (
-    !chainInfos ||
-    !envChainInfos ||
-    !Array.isArray(chainInfos) ||
-    !Array.isArray(envChainInfos)
-  ) {
-    return chainInfos;
-  }
-
-  return chainInfos.map((chain) => {
-    const info = envChainInfos.find((item) => item.chain_id === chain.chain_id);
-    if (info) {
-      chain.vault_address = info.vault_address;
-    }
-
-    return chain;
-  });
 }
 
 /** orderly chains array form (/v1/public/token) api */

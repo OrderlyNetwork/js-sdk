@@ -273,7 +273,6 @@ export class WS extends EventEmitter {
     // auth
     this.authenticate(this.options.accountId!)
       .then(() => {
-        console.log("onPrivateOpen, success");
         this.privateIsReconnecting = false;
 
         this.emit("status:change", {
