@@ -53,7 +53,7 @@ export const OrderTypeSelect = (props: {
       options={options}
       onValueChange={props.onChange}
       contentProps={{
-        className: "oui-bg-base-8 oui-w-full",
+        className: "oui-bg-base-8",
       }}
       classNames={{
         trigger: "oui-bg-base-6 oui-border-line",

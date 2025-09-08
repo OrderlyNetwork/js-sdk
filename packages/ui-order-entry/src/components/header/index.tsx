@@ -23,7 +23,6 @@ export function OrderEntryHeader(props: OrderEntryHeaderProps) {
         className={cn(
           "oui-grid oui-w-full oui-flex-1 oui-gap-x-2 lg:oui-flex lg:oui-gap-x-[6px]",
           "oui-grid-cols-2",
-          // showSheet ? "oui-grid-cols-3" : "oui-grid-cols-2",
         )}
       >
         <Button
@@ -61,23 +60,27 @@ export function OrderEntryHeader(props: OrderEntryHeaderProps) {
       </div>
       <div
         className={cn(
-          "oui-grid oui-w-full oui-gap-x-2 lg:oui-flex lg:oui-gap-x-[6px]",
+          "oui-grid oui-gap-x-2 lg:oui-flex lg:oui-gap-x-[6px]",
           "oui-grid-cols-2",
         )}
       >
-        <OrderTypeSelect
-          type={order_type!}
-          side={side}
-          canTrade={canTrade}
-          onChange={(type) => {
-            setOrderValue("order_type", type);
-          }}
-        />
-        <LeverageBadge
-          symbol={props.symbol}
-          side={props.side}
-          symbolLeverage={props.symbolLeverage}
-        />
+        <div className="oui-w-full">
+          <OrderTypeSelect
+            type={order_type!}
+            side={side}
+            canTrade={canTrade}
+            onChange={(type) => {
+              setOrderValue("order_type", type);
+            }}
+          />
+        </div>
+        <div className="oui-w-full">
+          <LeverageBadge
+            symbol={props.symbol}
+            side={props.side}
+            symbolLeverage={props.symbolLeverage}
+          />
+        </div>
       </div>
     </>
   );
