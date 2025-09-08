@@ -22,8 +22,10 @@ export const TPSLInputRowUI: React.FC<TPSLInputRowProps> = (props) => {
     props.symbolLeverage ? undefined : props.symbol,
   );
 
+  const leverage = props.symbolLeverage || symbolLeverage;
+
   const roi = useMemo(() => {
-    if (!symbolLeverage || isNaN(Number(symbolLeverage))) {
+    if (!leverage || isNaN(Number(leverage))) {
       return null;
     }
     let _roi = null;
@@ -51,13 +53,13 @@ export const TPSLInputRowUI: React.FC<TPSLInputRowProps> = (props) => {
     _roi = _entryPrice
       .minus(rootOrderPrice)
       .div(rootOrderPrice)
-      .mul(symbolLeverage)
+      .mul(leverage)
       .abs()
       .mul(100)
       .mul(props.type === "tp" ? 1 : -1)
       .toNumber();
     return _roi;
-  }, [values, props.rootOrderPrice, symbolLeverage, props.type]);
+  }, [values, props.rootOrderPrice, leverage, props.type]);
 
   return (
     <Flex

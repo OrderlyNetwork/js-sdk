@@ -175,8 +175,6 @@ export const EditBracketOrderUI = (props: Props & { onClose?: () => void }) => {
                   formattedOrder.position_type === PositionType.FULL
                 }
                 onChange={(key, value) => {
-                  console.log("key", key, "value", value);
-                  // setTpValuse((prev) => ({ ...prev, [key]: value }));
                   setOrderValue(key as keyof OrderlyOrder, value);
                 }}
                 positionType={
