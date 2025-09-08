@@ -3,8 +3,10 @@ import { account } from "@orderly.network/perp";
 import { type API, OrderSide } from "@orderly.network/types";
 import { useAccountInfo } from "./appStore";
 import { useCollateral } from "./useCollateral";
+import { useLeverageBySymbol } from "./useLeverageBySymbol";
 import { useMarkPricesStream } from "./useMarkPricesStream";
 import { usePositions } from "./usePositionStream/usePosition.store";
+import { useSymbolLeverage } from "./useSymbolLeverage";
 import { useSymbolsInfo } from "./useSymbolsInfo";
 
 // const positionsPath = pathOr([], [0, "rows"]);
@@ -47,17 +49,12 @@ export const useMaxQty = (
 
   const { data: markPrices } = useMarkPricesStream();
 
+  const symbolLeverage = useLeverageBySymbol(symbol);
+
   // const [orders] = useOrderStream({ status: OrderStatus.NEW });
 
   const maxQty = useMemo(() => {
     if (!symbol) return 0;
-    console.log(
-      "positions",
-      positions?.map((item) => ({
-        symbol: item.symbol,
-        leverage: item.leverage,
-      })),
-    );
 
     // const positions = positionsPath(positionsData);
 
@@ -131,7 +128,7 @@ export const useMaxQty = (
       baseMaxQty: getSymbolInfo("base_max"),
       totalCollateral,
       maxLeverage: account.maxLeverage({
-        symbolLeverage: currentSymbolPosition?.leverage,
+        symbolLeverage: symbolLeverage || currentSymbolPosition?.leverage,
         accountLeverage: accountInfo.max_leverage,
       }),
       takerFeeRate: accountInfo.futures_taker_fee_rate,

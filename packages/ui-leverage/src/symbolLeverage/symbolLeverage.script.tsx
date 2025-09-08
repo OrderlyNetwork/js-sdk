@@ -276,15 +276,17 @@ function useCalc(inputs: {
       return zero;
     }
 
-    const positionList = positions?.rows.map((item) => {
-      if (item.symbol === symbol) {
-        return {
-          ...item,
-          leverage,
-        };
-      }
-      return item;
-    });
+    const positionList = leverage
+      ? positions?.rows.map((item) => {
+          if (item.symbol === symbol) {
+            return {
+              ...item,
+              leverage,
+            };
+          }
+          return item;
+        })
+      : positions?.rows;
 
     const totalInitialMarginWithOrders = accountPerp.totalInitialMarginWithQty({
       positions: positionList,

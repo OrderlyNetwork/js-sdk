@@ -449,7 +449,7 @@ export function otherIMs(inputs: OtherIMsInputs): number {
 
       const imr = IMR({
         maxLeverage: maxLeverage({
-          symbolLeverage: position?.leverage,
+          symbolLeverage: position!.leverage,
           accountLeverage: inputs.maxLeverage,
         }),
         IMR_Factor,
