@@ -126,11 +126,11 @@ export function splitCampaignByWeeks(campaignDateRange: {
   }
 
   // Add "All time" option covering the entire campaign period
-  result.push({
-    from: new Date(startDate),
-    to: new Date(endDate),
-    label: "All time",
-  });
+  // result.push({
+  //   from: new Date(startDate),
+  //   to: new Date(endDate),
+  //   label: "All time",
+  // });
 
   return result;
 }
@@ -176,5 +176,8 @@ export function getCurrentOrAllTimeRange(
   }
 
   // If not in any weekly range, return "All time" range
-  return weeklyRanges.find((range) => range.label === "All time") || undefined;
+  return (
+    weeklyRanges.find((range) => range.label === "All time") ||
+    weeklyRanges[weeklyRanges.length - 1]
+  );
 }
