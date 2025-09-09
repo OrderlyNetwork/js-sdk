@@ -20,21 +20,20 @@ import {
 } from "@orderly.network/ui";
 import { CloseIcon } from "../icons";
 import type { AnnouncementScriptReturn } from "./announcement.script";
+import { usePrevNextButtons, useSelectedSnapDisplay } from "./hooks";
 import { SoundIcon } from "./icons";
-import {
-  usePrevNextButtons,
-  useSelectedSnapDisplay,
-} from "./usePrevNextButtons";
 
-const Controls: React.FC<{
+interface ControlsProps {
   selectedSnap: number;
   snapCount: number;
   prevDisabled: boolean;
   nextDisabled: boolean;
-  prevTips: () => void;
-  nextTips: () => void;
-  closeTips: () => void;
-}> = (props) => {
+  nextTips: React.MouseEventHandler<SVGSVGElement>;
+  prevTips: React.MouseEventHandler<SVGSVGElement>;
+  closeTips: React.MouseEventHandler<SVGSVGElement>;
+}
+
+const Controls: React.FC<ControlsProps> = (props) => {
   const {
     selectedSnap,
     snapCount,
@@ -195,8 +194,8 @@ type SwitchTipsProps = {
   snapCount: number;
   prevDisabled: boolean;
   nextDisabled: boolean;
-  nextTips: () => void;
-  prevTips: () => void;
+  nextTips: React.MouseEventHandler<SVGSVGElement>;
+  prevTips: React.MouseEventHandler<SVGSVGElement>;
 };
 
 const SwitchTips: React.FC<Readonly<SwitchTipsProps>> = (props) => {
