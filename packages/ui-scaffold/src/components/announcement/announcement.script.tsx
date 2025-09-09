@@ -54,48 +54,6 @@ const sortDataByUpdatedTime = (ori: API.Announcement) => {
   });
 };
 
-export type AnnouncementScriptReturn = ReturnType<typeof useAnnouncementScript>;
-
-export const useAnnouncementScript = (options?: AnnouncementScriptOptions) => {
-  const { showAnnouncement, setShowAnnouncement } = useAppContext();
-  const { dataAdapter } = useOrderlyContext();
-
-  const { tips, maintenanceDialogInfo } = useAnnouncementData();
-
-  const memoizedTips = useMemo<API.AnnouncementRow[]>(() => {
-    if (typeof dataAdapter?.announcementList === "function") {
-      return dataAdapter.announcementList(
-        tips?.rows ?? (EMPTY_LIST as API.AnnouncementRow[]),
-      );
-    }
-    return tips?.rows ?? (EMPTY_LIST as API.AnnouncementRow[]);
-  }, [dataAdapter?.announcementList, tips?.rows]);
-
-  const [announcementStore, setStore] = useLocalStorage<AnnouncementStore>(
-    ORDERLY_ANNOUNCEMENT_KEY,
-    {},
-  );
-
-  const closeTips = () => {
-    // @ts-ignore
-    setStore((prev) => ({ ...prev, show: false }));
-  };
-
-  useEffect(() => {
-    const len = memoizedTips.length;
-    setShowAnnouncement(
-      Boolean(len) && announcementStore.show && !options?.hideTips,
-    );
-  }, [memoizedTips, announcementStore, options?.hideTips, setShowAnnouncement]);
-
-  return {
-    maintenanceDialogInfo,
-    tips: memoizedTips,
-    closeTips: closeTips,
-    showAnnouncement: showAnnouncement,
-  };
-};
-
 const useAnnouncementData = () => {
   const ws = useWS();
 
@@ -269,5 +227,52 @@ const useAnnouncementData = () => {
   return {
     tips: sortDataByUpdatedTime(tips),
     maintenanceDialogInfo: maintenanceDialogInfo,
+  };
+};
+
+export type AnnouncementScriptReturn = ReturnType<typeof useAnnouncementScript>;
+
+export const useAnnouncementScript = (options?: AnnouncementScriptOptions) => {
+  const { showAnnouncement, setShowAnnouncement } = useAppContext();
+  const { dataAdapter } = useOrderlyContext();
+
+  const { tips, maintenanceDialogInfo } = useAnnouncementData();
+
+  const memoizedTips = useMemo<API.AnnouncementRow[]>(() => {
+    if (typeof dataAdapter?.announcementList === "function") {
+      return dataAdapter.announcementList(
+        tips?.rows ?? (EMPTY_LIST as API.AnnouncementRow[]),
+      );
+    }
+    return tips?.rows ?? (EMPTY_LIST as API.AnnouncementRow[]);
+  }, [dataAdapter?.announcementList, tips?.rows]);
+
+  const [announcementStore, setStore] = useLocalStorage<AnnouncementStore>(
+    ORDERLY_ANNOUNCEMENT_KEY,
+    {},
+  );
+
+  const closeTips = () => {
+    // @ts-ignore
+    setStore((prev) => ({ ...prev, show: false }));
+  };
+
+  useEffect(() => {
+    const len = memoizedTips.length;
+    setShowAnnouncement(
+      Boolean(len) && announcementStore.show && !options?.hideTips,
+    );
+  }, [
+    memoizedTips,
+    announcementStore.show,
+    options?.hideTips,
+    setShowAnnouncement,
+  ]);
+
+  return {
+    maintenanceDialogInfo,
+    tips: memoizedTips,
+    closeTips: closeTips,
+    showAnnouncement: showAnnouncement,
   };
 };
