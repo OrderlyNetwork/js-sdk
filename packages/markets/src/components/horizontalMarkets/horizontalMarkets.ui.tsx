@@ -121,11 +121,17 @@ export const HorizontalMarkets: React.FC<HorizontalMarketsProps> = (props) => {
         <Marquee
           data={symbols}
           renderItem={renderMarketItem}
-          // direction="left"
-          mode="continuous"
-          speed={100}
-          // pauseOnHover={true}
-          className="oui-h-full oui-w-full"
+          carouselOptions={{
+            loop: true,
+            align: "start",
+            axis: "x",
+          }}
+          autoScrollOptions={{
+            speed: 1,
+            direction: "forward",
+            stopOnMouseEnter: true,
+          }}
+          className="oui-h-full oui-w-[500px]"
         />
         {/* <div style={{ height: '20px', minWidth: '400px'}}> */}
         {/* <Marquee

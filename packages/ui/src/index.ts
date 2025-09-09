@@ -72,6 +72,8 @@ export * from "./utils";
 export { tv } from "./utils/tv";
 export { default as toast } from "react-hot-toast";
 
+export * from "embla-carousel-react";
+
 //===== tailwind
 export * as OUITailwind from "./tailwind";
 export * from "./hooks";

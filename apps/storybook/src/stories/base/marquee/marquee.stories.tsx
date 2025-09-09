@@ -17,11 +17,12 @@ const meta: Meta<typeof Marquee> = {
     docs: {
       description: {
         component: `
-A flexible marquee component that supports both continuous and screen-by-screen scrolling modes.
+A flexible marquee component built on top of Embla Carousel with auto-scroll functionality.
 
 ## Features
-- **Multiple directions**: left, right, up, down
-- **Two modes**: continuous (seamless loop) and screen (item-by-item)
+- **Embla Carousel integration**: Full access to embla carousel options
+- **Auto-scroll plugin**: Configurable auto-scrolling behavior
+- **Multiple directions**: forward/backward with axis control (x/y)
 - **Customizable speed**: Control scrolling speed in pixels per second
 - **Hover pause**: Optional pause on mouse hover
 - **TypeScript support**: Full type safety with generics
@@ -32,10 +33,16 @@ A flexible marquee component that supports both continuous and screen-by-screen 
 <Marquee
   data={yourData}
   renderItem={(item, index) => <YourComponent key={index} item={item} />}
-  direction="left"
-  mode="continuous"
-  speed={50}
-  pauseOnHover={true}
+  carouselOptions={{
+    loop: true,
+    align: "start",
+    axis: "x"
+  }}
+  autoScrollOptions={{
+    speed: 1,
+    direction: "forward",
+    stopOnMouseEnter: true
+  }}
 />
 \`\`\`
         `,
@@ -51,28 +58,13 @@ A flexible marquee component that supports both continuous and screen-by-screen 
       description: "Function to render each item",
       control: false,
     },
-    direction: {
-      description: "Scroll direction",
-      control: { type: "select" },
-      options: ["left", "right", "up", "down"],
+    carouselOptions: {
+      description: "Embla carousel configuration options",
+      control: false,
     },
-    mode: {
-      description:
-        "Scroll mode - continuous for seamless loop, screen for item-by-item",
-      control: { type: "select" },
-      options: ["continuous", "screen"],
-    },
-    speed: {
-      description: "Scroll speed in pixels per second",
-      control: { type: "range", min: 10, max: 200, step: 10 },
-    },
-    delay: {
-      description: "Delay between scrolls in milliseconds (screen mode only)",
-      control: { type: "range", min: 0, max: 3000, step: 100 },
-    },
-    pauseOnHover: {
-      description: "Pause scrolling when mouse hovers over the marquee",
-      control: { type: "boolean" },
+    autoScrollOptions: {
+      description: "Auto-scroll plugin configuration options",
+      control: false,
     },
     className: {
       description: "Additional CSS classes",
@@ -80,11 +72,16 @@ A flexible marquee component that supports both continuous and screen-by-screen 
     },
   },
   args: {
-    direction: "left",
-    mode: "continuous",
-    speed: 50,
-    delay: 1000,
-    pauseOnHover: true,
+    carouselOptions: {
+      loop: true,
+      align: "start",
+      axis: "x",
+    },
+    autoScrollOptions: {
+      speed: 1,
+      direction: "forward",
+      stopOnMouseEnter: true,
+    },
     className: "",
   },
 };
@@ -99,6 +96,16 @@ export const CustomStyling: StringStory = {
     data: stringData,
     className:
       "oui-border-2 oui-border-dashed oui-border-gray-300 oui-rounded-lg !oui-h-[54px]",
+    carouselOptions: {
+      loop: true,
+      align: "start",
+      axis: "x",
+    },
+    autoScrollOptions: {
+      speed: 1,
+      direction: "forward",
+      stopOnMouseEnter: true,
+    },
     renderItem: (item: string, index: number) => (
       <div
         key={index}
@@ -121,6 +128,16 @@ export const CustomStyling: StringStory = {
 export const Interactive: StringStory = {
   args: {
     data: stringData,
+    carouselOptions: {
+      loop: true,
+      align: "start",
+      axis: "x",
+    },
+    autoScrollOptions: {
+      speed: 1,
+      direction: "forward",
+      stopOnMouseEnter: true,
+    },
     renderItem: (item: string, index: number) => (
       <div
         key={index}
