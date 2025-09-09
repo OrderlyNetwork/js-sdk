@@ -398,7 +398,7 @@ const useCampaignRankingList = ({
 
     const searchParams = new URLSearchParams();
     searchParams.set("campaign_id", campaignId);
-    searchParams.set("broker_id", brokerId);
+    // searchParams.set("broker_id", brokerId);
     searchParams.set("page", "1");
     searchParams.set("size", "2000");
     searchParams.set("aggregate_by", "address");
