@@ -121,7 +121,7 @@ const Controls: React.FC<ControlsProps> = (props) => {
   );
 };
 
-const TipsType: React.FC<{ type?: AnnouncementType }> = (props) => {
+const TipsType: React.FC<{ type?: AnnouncementType | null }> = (props) => {
   const { type } = props;
 
   const { t } = useTranslation();
@@ -171,7 +171,7 @@ const TipsType: React.FC<{ type?: AnnouncementType }> = (props) => {
 };
 
 interface ItemProps {
-  type?: AnnouncementType;
+  type?: AnnouncementType | null;
   text: string;
   isActive: boolean;
   onItemFinish: () => void;
@@ -303,7 +303,7 @@ export const AnnouncementUI: React.FC<Readonly<AnnouncementProps>> = (
         <div className="oui-flex oui-h-full oui-transform-gpu oui-flex-col">
           {tips.map((item, index) => (
             <AnnouncementItem
-              key={`item-${index}`}
+              key={`item-${item.announcement_id}-${index}`}
               type={item?.type}
               text={item?.i18n?.[i18n.language] || item?.message?.trim()}
               isActive={index === selectedSnap}

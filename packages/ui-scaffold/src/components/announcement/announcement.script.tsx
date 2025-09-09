@@ -62,11 +62,13 @@ export const useAnnouncementScript = (options?: AnnouncementScriptOptions) => {
 
   const { tips, maintenanceDialogInfo } = useAnnouncementData();
 
-  const memoizedTips = useMemo(() => {
+  const memoizedTips = useMemo<API.AnnouncementRow[]>(() => {
     if (typeof dataAdapter?.announcementList === "function") {
-      return dataAdapter.announcementList(tips?.rows ?? EMPTY_LIST);
+      return dataAdapter.announcementList(
+        tips?.rows ?? (EMPTY_LIST as API.AnnouncementRow[]),
+      );
     }
-    return tips?.rows ?? EMPTY_LIST;
+    return tips?.rows ?? (EMPTY_LIST as API.AnnouncementRow[]);
   }, [dataAdapter?.announcementList, tips?.rows]);
 
   const [announcementStore, setStore] = useLocalStorage<AnnouncementStore>(
