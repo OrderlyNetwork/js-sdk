@@ -1,5 +1,12 @@
 # @orderly.network/net
 
+## 2.6.3
+
+### Patch Changes
+
+- 05c00a2: publish
+- publish
+
 ## 2.6.3-alpha.0
 
 ### Patch Changes
