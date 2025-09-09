@@ -131,7 +131,7 @@ export const HorizontalMarkets: React.FC<HorizontalMarketsProps> = (props) => {
             direction: "forward",
             stopOnMouseEnter: true,
           }}
-          className="oui-h-full oui-w-[500px]"
+          className="oui-h-full"
         />
         {/* <div style={{ height: '20px', minWidth: '400px'}}> */}
         {/* <Marquee
