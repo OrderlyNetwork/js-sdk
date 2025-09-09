@@ -23,6 +23,62 @@ import type { AnnouncementScriptReturn } from "./announcement.script";
 import { usePrevNextButtons, useSelectedSnapDisplay } from "./hooks";
 import { SoundIcon } from "./icons";
 
+interface SwitchTipsProps {
+  selectedSnap: number;
+  snapCount: number;
+  prevDisabled: boolean;
+  nextDisabled: boolean;
+  nextTips: React.MouseEventHandler<SVGSVGElement>;
+  prevTips: React.MouseEventHandler<SVGSVGElement>;
+}
+
+const SwitchTips: React.FC<Readonly<SwitchTipsProps>> = (props) => {
+  const {
+    selectedSnap,
+    snapCount,
+    prevDisabled,
+    nextDisabled,
+    prevTips,
+    nextTips,
+  } = props;
+  const { isMobile } = useScreen();
+  const display = (
+    <div className="oui-text-sm oui-tabular-nums oui-text-base-contrast-54">
+      {selectedSnap + 1}/{snapCount}
+    </div>
+  );
+  if (isMobile) {
+    return display;
+  }
+  return (
+    <div className="oui-flex oui-items-center oui-justify-center oui-gap-0 oui-text-base-contrast-54">
+      <ChevronLeftIcon
+        size={16}
+        opacity={1}
+        className={cn(
+          "oui-size-4 oui-shrink-0 oui-text-base-contrast-54 hover:oui-text-base-contrast-80 lg:oui-size-5",
+          isMobile || prevDisabled
+            ? "oui-cursor-not-allowed"
+            : "oui-cursor-pointer",
+        )}
+        onClick={isMobile || prevDisabled ? undefined : prevTips}
+      />
+      <div className="oui-text-sm oui-text-base-contrast-54">{display}</div>
+      <ChevronRightIcon
+        size={16}
+        opacity={1}
+        className={cn(
+          "oui-size-4 oui-shrink-0 oui-text-base-contrast-54 hover:oui-text-base-contrast-80 lg:oui-size-5",
+          isMobile || nextDisabled
+            ? "oui-cursor-not-allowed"
+            : "oui-cursor-pointer",
+        )}
+        onClick={isMobile || nextDisabled ? undefined : nextTips}
+      />
+    </div>
+  );
+};
+
 interface ControlsProps {
   selectedSnap: number;
   snapCount: number;
@@ -63,6 +119,79 @@ const Controls: React.FC<ControlsProps> = (props) => {
   );
 };
 
+const TipsType: React.FC<{ type?: AnnouncementType }> = (props) => {
+  const { type } = props;
+
+  const { t } = useTranslation();
+
+  const { label, className } = useMemo(() => {
+    const map: Record<AnnouncementType, { label: string; className: string }> =
+      {
+        [AnnouncementType.Listing]: {
+          label: t("announcement.type.listing"),
+          className: "oui-bg-primary/15 oui-text-primary",
+        },
+        [AnnouncementType.Maintenance]: {
+          label: t("announcement.type.maintenance"),
+          className: "oui-bg-[rgba(232,136,0,0.15)] oui-text-warning-darken",
+        },
+        [AnnouncementType.Delisting]: {
+          label: t("announcement.type.delisting"),
+          className: "oui-bg-[rgba(232,136,0,0.15)] oui-text-warning-darken",
+        },
+      };
+    return (
+      map[type!] || {
+        label: type,
+        className: map[AnnouncementType.Listing].className,
+      }
+    );
+  }, [type, t]);
+
+  if (!label) {
+    return null;
+  }
+
+  return (
+    <Flex
+      justify="center"
+      px={2}
+      r="base"
+      className={cn(
+        "oui-text-2xs oui-font-medium oui-leading-[18px]",
+        "oui-whitespace-nowrap oui-break-normal",
+        className,
+      )}
+    >
+      {label}
+    </Flex>
+  );
+};
+
+const AnnouncementItem: React.FC<{ type?: AnnouncementType; text: string }> = (
+  props,
+) => {
+  const { type, text } = props;
+  return (
+    <Flex
+      gap={2}
+      height={"100%"}
+      justify="center"
+      itemAlign="center"
+      className="oui-flex-none oui-basis-full oui-transform-gpu"
+    >
+      <TipsType type={type} />
+      <Text
+        size="xs"
+        intensity={80}
+        className="oui-h-[34px] oui-transform-gpu oui-leading-[34px]"
+      >
+        {text}
+      </Text>
+    </Flex>
+  );
+};
+
 export type AnnouncementProps = AnnouncementScriptReturn & {
   style?: React.CSSProperties;
   className?: string;
@@ -77,8 +206,6 @@ export const AnnouncementUI: React.FC<Readonly<AnnouncementProps>> = (
     showAnnouncement,
     tips,
     closeTips,
-    contentRef,
-    // mutiLine,
     className,
   } = props;
 
@@ -159,29 +286,16 @@ export const AnnouncementUI: React.FC<Readonly<AnnouncementProps>> = (
       <div
         ref={emblaRef}
         className={cn(
-          "oui-relative oui-h-[34px] oui-transform-gpu oui-overflow-hidden oui-rounded-xl",
+          "oui-relative oui-h-[34px] oui-w-full oui-max-w-full oui-transform-gpu oui-overflow-hidden",
         )}
       >
         <div className="oui-flex oui-h-full oui-transform-gpu oui-flex-col">
           {tips.map((item, index) => (
-            <Flex
-              gap={2}
-              height={"100%"}
-              justify="center"
-              itemAlign="center"
-              className="oui-flex-none oui-basis-full oui-transform-gpu"
-              key={`item-${item.announcement_id ?? index}`}
-            >
-              <RenderTipsType type={item?.type} />
-              <Text
-                size="xs"
-                intensity={80}
-                ref={contentRef}
-                className="oui-h-[34px] oui-transform-gpu oui-leading-[34px]"
-              >
-                {item?.i18n?.[i18n.language] || item?.message?.trim()}
-              </Text>
-            </Flex>
+            <AnnouncementItem
+              key={`item-${index}`}
+              type={item?.type}
+              text={item?.i18n?.[i18n.language] || item?.message?.trim()}
+            />
           ))}
         </div>
       </div>
@@ -195,110 +309,5 @@ export const AnnouncementUI: React.FC<Readonly<AnnouncementProps>> = (
         nextDisabled={nextBtnDisabled}
       />
     </div>
-  );
-};
-
-type SwitchTipsProps = {
-  selectedSnap: number;
-  snapCount: number;
-  prevDisabled: boolean;
-  nextDisabled: boolean;
-  nextTips: React.MouseEventHandler<SVGSVGElement>;
-  prevTips: React.MouseEventHandler<SVGSVGElement>;
-};
-
-const SwitchTips: React.FC<Readonly<SwitchTipsProps>> = (props) => {
-  const {
-    selectedSnap,
-    snapCount,
-    prevDisabled,
-    nextDisabled,
-    prevTips,
-    nextTips,
-  } = props;
-  const { isMobile } = useScreen();
-  const display = (
-    <div className="oui-text-sm oui-tabular-nums oui-text-base-contrast-54">
-      {selectedSnap + 1}/{snapCount}
-    </div>
-  );
-  if (isMobile) {
-    return display;
-  }
-  return (
-    <div className="oui-flex oui-items-center oui-justify-center oui-gap-0 oui-text-base-contrast-54">
-      <ChevronLeftIcon
-        size={16}
-        opacity={1}
-        className={cn(
-          "oui-size-4 oui-shrink-0 oui-text-base-contrast-54 hover:oui-text-base-contrast-80 lg:oui-size-5",
-          isMobile || prevDisabled
-            ? "oui-cursor-not-allowed"
-            : "oui-cursor-pointer",
-        )}
-        onClick={isMobile || prevDisabled ? undefined : prevTips}
-      />
-      <div className="oui-text-sm oui-text-base-contrast-54">{display}</div>
-      <ChevronRightIcon
-        size={16}
-        opacity={1}
-        className={cn(
-          "oui-size-4 oui-shrink-0 oui-text-base-contrast-54 hover:oui-text-base-contrast-80 lg:oui-size-5",
-          isMobile || nextDisabled
-            ? "oui-cursor-not-allowed"
-            : "oui-cursor-pointer",
-        )}
-        onClick={isMobile || nextDisabled ? undefined : nextTips}
-      />
-    </div>
-  );
-};
-
-const RenderTipsType: React.FC<{ type?: AnnouncementType | null }> = ({
-  type,
-}) => {
-  const { t } = useTranslation();
-
-  const { label, className } = useMemo(() => {
-    const map: Record<AnnouncementType, { label: string; className: string }> =
-      {
-        [AnnouncementType.Listing]: {
-          label: t("announcement.type.listing"),
-          className: "oui-bg-primary/15 oui-text-primary",
-        },
-        [AnnouncementType.Maintenance]: {
-          label: t("announcement.type.maintenance"),
-          className: "oui-bg-[rgba(232,136,0,0.15)] oui-text-warning-darken",
-        },
-        [AnnouncementType.Delisting]: {
-          label: t("announcement.type.delisting"),
-          className: "oui-bg-[rgba(232,136,0,0.15)] oui-text-warning-darken",
-        },
-      };
-    return (
-      map[type!] || {
-        label: type,
-        className: map[AnnouncementType.Listing].className,
-      }
-    );
-  }, [type, t]);
-
-  if (!label) {
-    return null;
-  }
-
-  return (
-    <Flex
-      justify="center"
-      px={2}
-      r="base"
-      className={cn(
-        "oui-text-2xs oui-font-medium oui-leading-[18px]",
-        "oui-whitespace-nowrap oui-break-normal",
-        className,
-      )}
-    >
-      {label}
-    </Flex>
   );
 };

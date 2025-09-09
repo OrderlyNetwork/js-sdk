@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { UTCDateMini } from "@date-fns/utc";
 import { format } from "date-fns";
 import { produce } from "immer";
@@ -18,7 +18,6 @@ import {
   EMPTY_LIST,
   WSMessage,
 } from "@orderly.network/types";
-import { useObserverElement } from "@orderly.network/ui";
 import { getTimestamp } from "@orderly.network/utils";
 
 const oneDay = 1000 * 60 * 60 * 24;
@@ -35,6 +34,12 @@ interface AnnouncementStore {
 }
 
 const ORDERLY_ANNOUNCEMENT_KEY = "orderly_announcement";
+
+const getTimeString = (timestamp: number) => {
+  const date = format(new UTCDateMini(timestamp), "MMM dd");
+  const time = format(new UTCDateMini(timestamp), "h:mm aa");
+  return `${time} (UTC) on ${date}`;
+};
 
 const sortDataByUpdatedTime = (ori: API.Announcement) => {
   return produce<API.Announcement>(ori, (draft) => {
@@ -81,14 +86,11 @@ export const useAnnouncementScript = (options?: AnnouncementScriptOptions) => {
     );
   }, [memoizedTips, announcementStore, options?.hideTips, setShowAnnouncement]);
 
-  const multiLineState = useMultiLine();
-
   return {
     maintenanceDialogInfo,
     tips: memoizedTips,
     closeTips: closeTips,
-    showAnnouncement,
-    ...multiLineState,
+    showAnnouncement: showAnnouncement,
   };
 };
 
@@ -264,26 +266,6 @@ const useAnnouncementData = () => {
 
   return {
     tips: sortDataByUpdatedTime(tips),
-    maintenanceDialogInfo,
+    maintenanceDialogInfo: maintenanceDialogInfo,
   };
-};
-
-const useMultiLine = () => {
-  const [mutiLine, setMutiLine] = useState(false);
-  const contentRef = useRef<HTMLDivElement>(null);
-
-  useObserverElement(contentRef.current, (entry) => {
-    setMutiLine(entry.contentRect.height > 20);
-  });
-
-  return {
-    mutiLine,
-    contentRef,
-  };
-};
-
-const getTimeString = (timestamp: number) => {
-  const date = format(new UTCDateMini(timestamp), "MMM dd");
-  const time = format(new UTCDateMini(timestamp), "h:mm aa");
-  return `${time} (UTC) on ${date}`;
 };
