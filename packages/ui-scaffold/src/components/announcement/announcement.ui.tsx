@@ -90,7 +90,7 @@ export const AnnouncementUI: React.FC<Readonly<AnnouncementProps>> = (
       loop: true,
       axis: "y",
     },
-    [Autoplay({ delay: 2000, stopOnInteraction: false })],
+    [Autoplay({ delay: 2000, stopOnFocusIn: true, stopOnMouseEnter: true })],
   );
 
   const onNavButtonClick = useCallback((emblaApi?: EmblaCarouselType) => {
