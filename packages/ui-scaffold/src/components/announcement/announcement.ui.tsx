@@ -88,8 +88,17 @@ export const AnnouncementUI: React.FC<Readonly<AnnouncementProps>> = (
     {
       loop: true,
       axis: "y",
+      align: "center",
+      duration: 30,
     },
-    [Autoplay({ delay: 2000, stopOnFocusIn: true, stopOnMouseEnter: true })],
+    [
+      Autoplay({
+        delay: 2500,
+        stopOnInteraction: false,
+        stopOnFocusIn: true,
+        stopOnMouseEnter: true,
+      }),
+    ],
   );
 
   const onNavButtonClick = useCallback((emblaApi?: EmblaCarouselType) => {
@@ -209,7 +218,7 @@ const SwitchTips: React.FC<Readonly<SwitchTipsProps>> = (props) => {
   } = props;
   const { isMobile } = useScreen();
   const display = (
-    <div className="oui-text-sm oui-text-base-contrast-54">
+    <div className="oui-text-sm oui-tabular-nums oui-text-base-contrast-54">
       {selectedSnap + 1}/{snapCount}
     </div>
   );
