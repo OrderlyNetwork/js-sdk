@@ -88,6 +88,7 @@ export const CampaignsContentDesktopUI: FC<CampaignsContentDesktopUIProps> = ({
       className={cn([
         "oui-flex oui-h-[500px] oui-w-full oui-flex-col oui-items-center oui-justify-center oui-gap-10",
         `oui-bg-cover oui-bg-center oui-bg-no-repeat`,
+        campaign?.tiered_prize_pools?.length && !isMobile && "oui-h-[634px]",
         classNames?.container,
       ])}
       style={{
