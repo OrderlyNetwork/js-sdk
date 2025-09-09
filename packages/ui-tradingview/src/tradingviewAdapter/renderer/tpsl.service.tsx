@@ -26,6 +26,8 @@ import type {
 import useBroker from "../hooks/useBroker";
 import type { ChartPosition } from "../type";
 
+const DEFAULT_THRESHOLD = 10;
+
 enum MouseInteractiveMode {
   NONE,
   START_TP_SL,
@@ -205,18 +207,19 @@ export class TPSLService {
   private generateThreshold() {
     // return new Decimal(position.open).mul(0.01).abs().toNumber();
     // const priceRange = this.chart.get
-    const priceScale = this.chart.getPanes()[0].getRightPriceScales()[0];
-    const priceRange = priceScale?.getVisiblePriceRange();
-
-    // console.log(priceRange);
-    if (priceRange) {
-      const priceWidth = priceRange.to - priceRange.from;
-      const threshold = priceWidth * 0.02;
-      // console.log(threshold);
-      return threshold;
+    const priceScale = this.chart.getPanes()[0]?.getRightPriceScales()[0];
+    if (!priceScale) {
+      return DEFAULT_THRESHOLD;
+    }
+    const priceRange = priceScale.getVisiblePriceRange();
+    if (!priceRange) {
+      return DEFAULT_THRESHOLD;
     }
 
-    return 10;
+    const priceWidth = priceRange.to - priceRange.from;
+    const threshold = priceWidth * 0.02;
+    // console.log(threshold);
+    return threshold;
   }
 
   private drawTPSL(params: { price: number }) {
