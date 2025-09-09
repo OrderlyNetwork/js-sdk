@@ -1,5 +1,37 @@
 # @orderly.network/trading-rewards
 
+## 2.6.3
+
+### Patch Changes
+
+- 05c00a2: publish
+- publish
+- Updated dependencies [05c00a2]
+- Updated dependencies
+  - @orderly.network/react-app@2.6.3
+  - @orderly.network/hooks@2.6.3
+  - @orderly.network/i18n@2.6.3
+  - @orderly.network/types@2.6.3
+  - @orderly.network/ui@2.6.3
+  - @orderly.network/ui-connector@2.6.3
+  - @orderly.network/ui-scaffold@2.6.3
+  - @orderly.network/utils@2.6.3
+
+## 2.6.3-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.6.3-alpha.0
+  - @orderly.network/hooks@2.6.3-alpha.0
+  - @orderly.network/i18n@2.6.3-alpha.0
+  - @orderly.network/types@2.6.3-alpha.0
+  - @orderly.network/ui@2.6.3-alpha.0
+  - @orderly.network/ui-connector@2.6.3-alpha.0
+  - @orderly.network/ui-scaffold@2.6.3-alpha.0
+  - @orderly.network/utils@2.6.3-alpha.0
+
 ## 2.6.2
 
 ### Patch Changes

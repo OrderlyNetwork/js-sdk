@@ -292,6 +292,13 @@ export function getCampaigns() {
             metric: "volume",
             volume_limit: 0,
           },
+          {
+            pool_id: "pnl",
+            label: "Trading pnl",
+            total_prize: 0,
+            currency: "USDC",
+            metric: "pnl",
+          },
         ],
         [
           {
@@ -302,6 +309,13 @@ export function getCampaigns() {
             metric: "volume",
             volume_limit: 300000000,
           },
+          {
+            pool_id: "pnl",
+            label: "Trading pnl",
+            total_prize: 0,
+            currency: "USDC",
+            metric: "pnl",
+          },
         ],
         [
           {
@@ -311,6 +325,13 @@ export function getCampaigns() {
             currency: "USDC",
             metric: "volume",
             volume_limit: 500000000,
+          },
+          {
+            pool_id: "pnl",
+            label: "Trading pnl",
+            total_prize: 0,
+            currency: "USDC",
+            metric: "pnl",
           },
         ],
       ],

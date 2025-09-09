@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ca } from "date-fns/locale";
 import {
   useAccount,
   useConfig,
@@ -65,11 +64,13 @@ export function useGeneralRankingScript(options?: GeneralRankingScriptOptions) {
   const { isMobile } = useScreen();
 
   const { page, pageSize, setPage, parsePagination } = usePagination({
-    pageSize: isMobile ? 100 : 20,
+    pageSize: 100,
   });
 
   const { campaignRankingList, filteredCampaignData } = useCampaignRankingList({
     dateRange,
+    sort,
+    searchValue,
   });
 
   const getUrl = (args: {
@@ -246,7 +247,10 @@ export function useGeneralRankingScript(options?: GeneralRankingScriptOptions) {
     if (page === 1) {
       list = list.slice(0, pageSize);
     }
-    const total = data?.meta.total || 0;
+    let total = data?.meta.total || 0;
+    if (campaignRankingList) {
+      total = list.length;
+    }
     const rankList = addRankForList(list, total);
 
     if (page === 1 && !searchValue) {
@@ -269,8 +273,19 @@ export function useGeneralRankingScript(options?: GeneralRankingScriptOptions) {
       return [];
     }
 
-    const total = infiniteData[0]?.meta.total || 0;
-    const flatList = infiniteData?.map((item) => item.rows)?.flat();
+    let total = infiniteData[0]?.meta.total || 0;
+    let flatList = infiniteData?.map((item) => item.rows)?.flat();
+    if (campaignRankingList && campaignRankingList.length > 0) {
+      if (filteredCampaignData) {
+        flatList = filteredCampaignData as GeneralRankingData[];
+        total = filteredCampaignData.length;
+      } else {
+        flatList = flatList.filter((item) =>
+          campaignRankingList.includes(item.address),
+        );
+        total = flatList.length;
+      }
+    }
     const rankList = addRankForList(flatList, total);
 
     if (!searchValue) {
@@ -283,6 +298,7 @@ export function useGeneralRankingScript(options?: GeneralRankingScriptOptions) {
     searchValue,
     addRankForList,
     campaignRankingList,
+    filteredCampaignData,
   ]);
 
   const sentinelRef = useRef<HTMLDivElement | null>(null);
@@ -290,11 +306,19 @@ export function useGeneralRankingScript(options?: GeneralRankingScriptOptions) {
   const pagination = useMemo(
     () =>
       parsePagination({
-        total: data?.meta?.total || 0,
+        total: campaignRankingList
+          ? dataSource?.length
+          : data?.meta?.total || 0,
         current_page: data?.meta?.current_page || 1,
         records_per_page: pageSize,
       }),
-    [data?.meta?.total, data?.meta?.current_page, pageSize],
+    [
+      data?.meta?.total,
+      data?.meta?.current_page,
+      pageSize,
+      campaignRankingList,
+      dataSource,
+    ],
   );
 
   useEndReached(sentinelRef, () => {
@@ -311,9 +335,15 @@ export function useGeneralRankingScript(options?: GeneralRankingScriptOptions) {
       } else if (sort?.sortKey === "pnl") {
         sort.sortKey = "realized_pnl";
       }
-      setSort(sort || initialSort);
+      // fix for mobile sort
+      setSort((_sort) => {
+        if (sort) return sort;
+        return isMobile
+          ? { sortKey: _sort?.sortKey || "", sort: "desc" }
+          : initialSort;
+      });
     },
-    [initialSort],
+    [initialSort, isMobile],
   );
 
   useEffect(() => {
@@ -360,10 +390,13 @@ function formatData(data: any[]) {
 // for 128 campaign hardcode
 const useCampaignRankingList = ({
   dateRange,
+  sort,
+  searchValue,
 }: {
   dateRange: DateRange | null;
+  sort?: TableSort;
+  searchValue?: string;
 }) => {
-  const brokerId = useConfig("brokerId");
   const getUrl = (label?: string) => {
     if (!label) {
       return null;
@@ -372,14 +405,15 @@ const useCampaignRankingList = ({
 
     const searchParams = new URLSearchParams();
     searchParams.set("campaign_id", campaignId);
-    searchParams.set("broker_id", brokerId);
     searchParams.set("page", "1");
     searchParams.set("size", "2000");
+    searchParams.set("aggregate_by", "address");
+
     return `https://api.orderly.org/v1/public/campaign/ranking?${searchParams.toString()}`;
   };
 
   const { data: campaignData } = useQuery<GeneralRankingResponse["rows"]>(
-    getUrl("All time"),
+    getUrl("Week 2"),
     {
       revalidateOnFocus: false,
     },
@@ -402,16 +436,31 @@ const useCampaignRankingList = ({
   const filteredCampaignData = useMemo(() => {
     if (campaignRankingList && dateRange?.label === "Week 1") {
       const list =
-        data?.filter((item) => campaignRankingList.includes(item.address)) ||
-        [];
-      return list.map((item) => ({
+        data?.filter(
+          (item) =>
+            campaignRankingList.includes(item.address) &&
+            (searchValue ? isSameAddress(item.address, searchValue) : true),
+        ) || [];
+      const newList = list.map((item) => ({
         address: item.address,
         perp_volume: item.volume,
         realized_pnl: item.pnl,
       }));
+
+      if (sort) {
+        newList.sort((a: any, b: any) => {
+          if (sort?.sort === "asc") {
+            return a?.[sort?.sortKey] - b?.[sort?.sortKey];
+          } else if (sort?.sort === "desc") {
+            return b?.[sort?.sortKey] - a?.[sort?.sortKey];
+          }
+          return 0;
+        });
+      }
+      return newList;
     }
     return undefined;
-  }, [data, campaignRankingList]);
+  }, [data, campaignRankingList, sort, dateRange, searchValue]);
 
   return { campaignRankingList, filteredCampaignData };
 };

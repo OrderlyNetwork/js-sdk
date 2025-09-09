@@ -157,7 +157,7 @@ export const Ranking: FC<RankingProps> = (props) => {
           "oui-trading-leaderboard-ranking-table",
           "!oui-h-[calc(100%_-_53px_-_8px)]",
         ),
-        scroll: "oui-min-h-[600px]",
+        scroll: "oui-min-h-[600px] oui-max-h-[1250px]",
       }}
       onRow={onRow}
       onCell={onCell}
