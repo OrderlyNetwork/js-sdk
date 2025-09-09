@@ -1,5 +1,11 @@
 # @orderly.network/eslint-config
 
+## 2.6.3-alpha.0
+
+### Patch Changes
+
+- publish
+
 ## 2.6.2
 
 ### Patch Changes
