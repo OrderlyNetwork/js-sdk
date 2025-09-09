@@ -1,5 +1,13 @@
 # @orderly.network/core
 
+## 2.6.3-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@2.6.3-alpha.0
+
 ## 2.6.2
 
 ### Patch Changes

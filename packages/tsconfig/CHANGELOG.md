@@ -1,5 +1,11 @@
 # tsconfig
 
+## 0.9.3-alpha.0
+
+### Patch Changes
+
+- publish
+
 ## 0.9.2
 
 ### Patch Changes
