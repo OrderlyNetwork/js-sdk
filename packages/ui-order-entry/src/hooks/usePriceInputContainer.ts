@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { OrderType } from "@orderly.network/types";
 
 export function usePriceInputContainer({

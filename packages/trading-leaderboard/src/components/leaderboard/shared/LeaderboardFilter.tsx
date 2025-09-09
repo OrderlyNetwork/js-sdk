@@ -21,6 +21,39 @@ export type LeaderboardFilterProps = GeneralLeaderboardScriptReturn;
 export const LeaderboardFilter: FC<LeaderboardFilterProps> = (props) => {
   const { t } = useTranslation();
   const { isMobile } = useScreen();
+  const { useCampaignDateRange, weeklyRanges, setDateRange } = props;
+
+  const weeklyView = (
+    <Flex gap={3} className={cn(isMobile ? "oui-h-[24px]" : "oui-h-[53px]")}>
+      {weeklyRanges.map((range) => (
+        <button
+          className="oui-relative oui-w-fit oui-whitespace-nowrap oui-px-2 oui-py-[2px] oui-text-sm"
+          key={range.label}
+        >
+          <div className="oui-z-10">
+            <Text.gradient
+              color={
+                props.dateRange?.label === range.label ? "brand" : undefined
+              }
+              className={
+                props.dateRange?.label !== range.label
+                  ? "oui-text-base-contrast-54"
+                  : ""
+              }
+            >
+              {`${range.label}`}
+            </Text.gradient>
+          </div>
+          <div
+            className="oui-absolute oui-inset-0 oui-rounded oui-opacity-[.12] oui-gradient-primary"
+            onClick={() => {
+              setDateRange(range);
+            }}
+          ></div>
+        </button>
+      ))}
+    </Flex>
+  );
 
   const input = (
     <Input
@@ -99,12 +132,21 @@ export const LeaderboardFilter: FC<LeaderboardFilterProps> = (props) => {
         className={cn("oui-mobile-trading-leaderboard-ranking-filter")}
       >
         {input}
-        <Flex gap={3} className="oui-w-full">
-          {dateRangeView}
-          <ScrollIndicator className="oui-w-full">
-            <Flex gap={3}>{filterDayView}</Flex>
-          </ScrollIndicator>
-        </Flex>
+
+        {useCampaignDateRange ? (
+          <Flex gap={3} className="oui-w-full oui-py-3">
+            <ScrollIndicator className="oui-w-full">
+              {weeklyView}
+            </ScrollIndicator>
+          </Flex>
+        ) : (
+          <Flex gap={3} className="oui-w-full">
+            {dateRangeView}
+            <ScrollIndicator className="oui-w-full">
+              <Flex gap={3}>{filterDayView}</Flex>
+            </ScrollIndicator>
+          </Flex>
+        )}
       </Flex>
     );
   }
@@ -117,8 +159,9 @@ export const LeaderboardFilter: FC<LeaderboardFilterProps> = (props) => {
       className={cn("oui-trading-leaderboard-ranking-filter")}
     >
       <Flex gap={3}>
-        {dateRangeView}
-        {filterDayView}
+        {useCampaignDateRange && weeklyView}
+        {!useCampaignDateRange && dateRangeView}
+        {!useCampaignDateRange && filterDayView}
       </Flex>
       <Box width={240}>{input}</Box>
     </Flex>

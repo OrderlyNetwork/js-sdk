@@ -1,7 +1,14 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { differenceInDays } from "date-fns";
 import { DateRange, LeaderboardTab } from "../../../type";
-import { formatDateRange, getDateRange } from "../../../utils";
+import {
+  formatDateRange,
+  getDateRange,
+  splitCampaignByWeeks,
+  WeeklyDateRange,
+  getCurrentWeeklyRange,
+  getCurrentOrAllTimeRange,
+} from "../../../utils";
 
 export type GeneralLeaderboardScriptReturn = ReturnType<
   typeof useGeneralLeaderboardScript
@@ -10,22 +17,49 @@ export type GeneralLeaderboardScriptReturn = ReturnType<
 export const FilterDays = [7, 14, 30, 90] as const;
 export type TFilterDays = (typeof FilterDays)[number];
 
-export function useGeneralLeaderboardScript() {
+export type GeneralLeaderboardScriptOptions = {
+  campaignDateRange?: {
+    start_time: Date | string;
+    end_time: Date | string;
+  };
+};
+
+export function useGeneralLeaderboardScript(
+  options?: GeneralLeaderboardScriptOptions,
+) {
+  const { campaignDateRange } = options || {};
+
+  const weeklyRanges = useMemo(() => {
+    if (!campaignDateRange) return [];
+    return splitCampaignByWeeks(campaignDateRange);
+  }, [campaignDateRange]);
+
+  const currentOrAllTimeRange = useMemo(() => {
+    return getCurrentOrAllTimeRange(weeklyRanges);
+  }, [weeklyRanges]);
+
   const [activeTab, setActiveTab] = useState<LeaderboardTab>(
     LeaderboardTab.Volume,
   );
-  const filterState = useFilter();
+  const filterState = useFilter({ defaultRange: currentOrAllTimeRange });
   const searchState = useSearch();
+
+  const useCampaignDateRange = useMemo(() => {
+    return !!campaignDateRange;
+  }, [campaignDateRange]);
 
   return {
     ...filterState,
     ...searchState,
     activeTab,
     onTabChange: setActiveTab,
+    useCampaignDateRange,
+    weeklyRanges,
+    currentOrAllTimeRange,
   };
 }
 
-function useFilter() {
+function useFilter({ defaultRange }: { defaultRange?: DateRange }) {
   // default is 90d
   const [filterDay, setFilterDay] = useState<TFilterDays | null>(90);
 
@@ -35,6 +69,10 @@ function useFilter() {
     setFilterDay(day);
     setDateRange(getDateRange(day));
   };
+
+  useEffect(() => {
+    setDateRange(defaultRange ?? getDateRange(90));
+  }, [defaultRange]);
 
   const onFilter = (filter: { name: string; value: any }) => {
     if (filter.name === "dateRange") {
@@ -76,6 +114,7 @@ function useFilter() {
     dateRange,
     filterDay,
     updateFilterDay,
+    setDateRange,
   };
 }
 
@@ -93,5 +132,58 @@ function useSearch() {
     searchValue,
     onSearchValueChange,
     clearSearchValue,
+  };
+}
+
+/**
+ * Example function demonstrating how to use splitCampaignByWeeks
+ * @param campaignDateRange Campaign date range with start_time and end_time
+ * @returns Array of weekly date ranges plus "All time" option
+ */
+export function useCampaignWeeklyRanges(campaignDateRange: {
+  start_time: Date | string;
+  end_time: Date | string;
+}): WeeklyDateRange[] {
+  return useMemo(() => {
+    return splitCampaignByWeeks(campaignDateRange);
+  }, [campaignDateRange]);
+}
+
+/**
+ * Hook to get current weekly range information
+ * @param campaignDateRange Campaign date range with start_time and end_time
+ * @returns Object containing current weekly range and related functions
+ */
+export function useCurrentWeeklyRange(campaignDateRange: {
+  start_time: Date | string;
+  end_time: Date | string;
+}) {
+  const weeklyRanges = useCampaignWeeklyRanges(campaignDateRange);
+
+  const currentRange = useMemo(() => {
+    return getCurrentWeeklyRange(weeklyRanges);
+  }, [weeklyRanges]);
+
+  const currentOrAllTime = useMemo(() => {
+    return getCurrentOrAllTimeRange(weeklyRanges);
+  }, [weeklyRanges]);
+
+  const isInCurrentWeek = useMemo(() => {
+    return currentRange !== null;
+  }, [currentRange]);
+
+  const getCurrentRangeForDate = useCallback(
+    (date: Date) => {
+      return getCurrentWeeklyRange(weeklyRanges, date);
+    },
+    [weeklyRanges],
+  );
+
+  return {
+    weeklyRanges,
+    currentRange,
+    currentOrAllTime,
+    isInCurrentWeek,
+    getCurrentRangeForDate,
   };
 }
