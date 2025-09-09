@@ -136,9 +136,8 @@ export const LeaderboardFilter: FC<LeaderboardFilterProps> = (props) => {
         {useCampaignDateRange ? (
           <Flex gap={3} className="oui-w-full oui-py-3">
             <ScrollIndicator className="oui-w-full">
-              {" "}
-              {weeklyView}{" "}
-            </ScrollIndicator>{" "}
+              {weeklyView}
+            </ScrollIndicator>
           </Flex>
         ) : (
           <Flex gap={3} className="oui-w-full">
