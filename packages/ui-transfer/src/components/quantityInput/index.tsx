@@ -1,4 +1,4 @@
-import { FC, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { FC, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
 import {
@@ -75,9 +75,9 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
     });
   }, [tokens, value, vaultBalanceList]);
 
-  useLayoutEffect(() => {
-    const rect = inputRef.current?.getBoundingClientRect();
-    setWidth(rect?.width ?? 0);
+  useEffect(() => {
+    const rect = inputRef?.current?.getBoundingClientRect();
+    setWidth(rect?.width || 0);
   }, [inputRef]);
 
   const _onTokenChange = (value: string) => {

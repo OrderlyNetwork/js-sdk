@@ -9,7 +9,7 @@ export function usePriceInputContainer({
   const [priceInputContainerWidth, setPriceInputContainerWidth] = useState(0);
   const priceInputContainerRef = useRef<HTMLDivElement | null>(null);
 
-  // useLayoutEffect(() => {
+  // useEffect(() => {
   //   if (
   //     priceInputContainerRef.current &&
   //     // update BBO select width when is BBO order

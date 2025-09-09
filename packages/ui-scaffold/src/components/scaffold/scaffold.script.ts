@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
 import { useObserverElement, useScreen } from "@orderly.network/ui";
@@ -63,12 +63,12 @@ const useRefAndHeight = (
     setHeight(entry.contentRect.height);
   });
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!ref.current) {
       return;
     }
     const rect = ref.current?.getBoundingClientRect();
-    setHeight(rect.height ?? 0);
+    setHeight(rect.height);
   }, [ref, ...deps]);
 
   return [ref, height] as const;

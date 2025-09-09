@@ -1,11 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext } from "@orderly.network/react-app";
 import {
@@ -57,7 +51,7 @@ export const FeeTierTable: React.FC<FeeTierTableProps> = (props) => {
   const parentRef = useRef<HTMLDivElement>(null);
   const activeRowRef = useRef<HTMLDivElement>(null);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const parentRect = parentRef.current?.getBoundingClientRect();
     const elementRect = activeRowRef.current?.getBoundingClientRect();
     if (elementRect && parentRect && props.tier) {
