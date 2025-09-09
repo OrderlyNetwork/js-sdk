@@ -607,6 +607,7 @@
   "tradingView.noScriptSrc.2": "2. <0>orderly.network</0>의 지침에 따라 설정하세요.",
   "connector.testnet": "테스트넷",
   "connector.mainnet": "메인넷",
+  "connector.connect": "연결",
   "connector.disconnect": "연결 해제",
   "connector.connectWallet": "지갑 연결",
   "connector.createAccount": "계정 생성",

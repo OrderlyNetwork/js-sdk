@@ -607,6 +607,7 @@
   "tradingView.noScriptSrc.2": "2. Làm theo hướng dẫn trên <0>orderly.network</0> để thiết lập.",
   "connector.testnet": "Testnet",
   "connector.mainnet": "Mainnet",
+  "connector.connect": "Kết nối",
   "connector.disconnect": "Ngắt kết nối",
   "connector.connectWallet": "Kết nối ví",
   "connector.createAccount": "Tạo tài khoản",

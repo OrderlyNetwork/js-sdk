@@ -607,6 +607,7 @@
   "tradingView.noScriptSrc.2": "2. Folgen Sie den Anweisungen auf <0>orderly.network</0> für die Einrichtung.",
   "connector.testnet": "Testnetz",
   "connector.mainnet": "Hauptnetz",
+  "connector.connect": "Verbinden",
   "connector.disconnect": "Trennen",
   "connector.connectWallet": "Wallet verbinden",
   "connector.createAccount": "Konto erstellen",

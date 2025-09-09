@@ -607,6 +607,7 @@
   "tradingView.noScriptSrc.2": "2. Следуйте инструкциям на <0>orderly.network</0> для настройки.",
   "connector.testnet": "Тестовая сеть",
   "connector.mainnet": "Основная сеть",
+  "connector.connect": "Подключить",
   "connector.disconnect": "Отключить",
   "connector.connectWallet": "Подключить кошелек",
   "connector.createAccount": "Создать учетную запись",

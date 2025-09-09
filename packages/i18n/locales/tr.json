@@ -607,6 +607,7 @@
   "tradingView.noScriptSrc.2": "2. Kurulum için <0>orderly.network</0> üzerindeki talimatları takip edin.",
   "connector.testnet": "Testnet",
   "connector.mainnet": "Mainnet",
+  "connector.connect": "Bağlan",
   "connector.disconnect": "Bağlantıyı kes",
   "connector.connectWallet": "Cüzdanı bağla",
   "connector.createAccount": "Hesap oluştur",

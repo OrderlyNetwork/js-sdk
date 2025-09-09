@@ -80,17 +80,7 @@ export const MainNavMobile: FC<MainNavMobileProps> = (props) => {
 
   const showChainMenu = !showLinkDevice && !wrongNetwork;
 
-  const showQrcode = useMemo(() => {
-    if (
-      state.status === AccountStatusEnum.EnableTradingWithoutConnected ||
-      state.status === AccountStatusEnum.EnableTrading ||
-      disabledConnect
-    ) {
-      return false;
-    }
-
-    return true;
-  }, [state.status, disabledConnect]);
+  const showQrcode = state.status === AccountStatusEnum.NotConnected;
 
   const showSubAccount = useMemo(
     () => state.status >= AccountStatusEnum.EnableTrading,

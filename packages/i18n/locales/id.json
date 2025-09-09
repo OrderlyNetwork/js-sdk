@@ -607,6 +607,7 @@
   "tradingView.noScriptSrc.2": "2. Ikuti petunjuk di <0>orderly.network</0> untuk menyiapkan.",
   "connector.testnet": "Testnet",
   "connector.mainnet": "Mainnet",
+  "connector.connect": "Hubungkan",
   "connector.disconnect": "Putuskan",
   "connector.connectWallet": "Hubungkan wallet",
   "connector.createAccount": "Buat akun",

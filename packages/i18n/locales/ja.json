@@ -607,6 +607,7 @@
   "tradingView.noScriptSrc.2": "2. <0>orderly.network</0>の指示に従って設定してください。",
   "connector.testnet": "テストネット",
   "connector.mainnet": "メインネット",
+  "connector.connect": "接続",
   "connector.disconnect": "切断",
   "connector.connectWallet": "ウォレットを接続",
   "connector.createAccount": "アカウントを作成",

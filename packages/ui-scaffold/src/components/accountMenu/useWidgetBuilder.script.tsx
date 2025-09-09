@@ -181,6 +181,7 @@ export const useAccountMenu = (): any => {
     onSwitchNetwork,
     wrongNetwork,
     disabledConnect,
+    isMobile,
   } as const;
 };
 
