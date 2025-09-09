@@ -364,7 +364,9 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
             typeof (window as any).onResetCacheNeededCallback === "function"
           ) {
             (window as any).onResetCacheNeededCallback();
-            chart.current?.instance?.activeChart()?.resetData();
+            if (chart.current?.instance) {
+              chart.current?.instance.activeChart()?.resetData();
+            }
           }
         }
       },
