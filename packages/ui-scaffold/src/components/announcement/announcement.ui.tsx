@@ -1,6 +1,4 @@
 import React, { useCallback, useMemo } from "react";
-import type { EmblaCarouselType } from "embla-carousel";
-import Autoplay from "embla-carousel-autoplay";
 import useEmblaCarousel from "embla-carousel-react";
 import { useTranslation } from "@orderly.network/i18n";
 import { AnnouncementType } from "@orderly.network/types";
@@ -20,7 +18,11 @@ import {
 } from "@orderly.network/ui";
 import { CloseIcon } from "../icons";
 import type { AnnouncementScriptReturn } from "./announcement.script";
-import { usePrevNextButtons, useSelectedSnapDisplay } from "./hooks";
+import {
+  useMarqueeOnce,
+  usePrevNextButtons,
+  useSelectedSnapDisplay,
+} from "./hooks";
 import { SoundIcon } from "./icons";
 
 interface SwitchTipsProps {
@@ -168,26 +170,52 @@ const TipsType: React.FC<{ type?: AnnouncementType }> = (props) => {
   );
 };
 
-const AnnouncementItem: React.FC<{ type?: AnnouncementType; text: string }> = (
-  props,
-) => {
-  const { type, text } = props;
+interface ItemProps {
+  type?: AnnouncementType;
+  text: string;
+  isActive: boolean;
+  onItemFinish: () => void;
+}
+
+const AnnouncementItem: React.FC<ItemProps> = (props) => {
+  const { type, text, isActive, onItemFinish } = props;
+
+  const { containerRef, contentRef, overflow } = useMarqueeOnce({
+    isActive: isActive,
+    pxPerSec: 90,
+    startDelayMs: 1000,
+    endDelayMs: 1000,
+    fallbackStayMs: 2500,
+    onFinish: onItemFinish,
+  });
+
   return (
     <Flex
-      gap={2}
       height={"100%"}
-      justify="center"
       itemAlign="center"
       className="oui-flex-none oui-basis-full oui-transform-gpu"
     >
-      <TipsType type={type} />
-      <Text
-        size="xs"
-        intensity={80}
-        className="oui-h-[34px] oui-transform-gpu oui-leading-[34px]"
+      <div
+        ref={containerRef}
+        className={cn(
+          "oui-relative oui-flex oui-h-[34px] oui-w-full oui-transform-gpu oui-items-center oui-overflow-hidden",
+          overflow ? "oui-justify-start" : "oui-justify-center",
+        )}
       >
-        {text}
-      </Text>
+        <div
+          ref={contentRef}
+          className={cn(
+            "oui-inline-flex oui-items-center oui-gap-2",
+            "oui-h-[34px] oui-whitespace-nowrap oui-leading-[34px]",
+            "oui-w-fit oui-transform-gpu oui-will-change-transform",
+          )}
+        >
+          <TipsType type={type} />
+          <Text size="xs" intensity={80} className="oui-transform-gpu">
+            {text}
+          </Text>
+        </div>
+      </div>
     </Flex>
   );
 };
@@ -211,43 +239,28 @@ export const AnnouncementUI: React.FC<Readonly<AnnouncementProps>> = (
 
   const { t, i18n } = useTranslation();
 
-  const [emblaRef, emblaApi] = useEmblaCarousel(
-    {
-      loop: true,
-      axis: "y",
-      align: "center",
-      duration: 30,
-    },
-    [
-      Autoplay({
-        delay: 2500,
-        stopOnInteraction: false,
-        stopOnFocusIn: true,
-        stopOnMouseEnter: true,
-      }),
-    ],
-  );
-
-  const onNavButtonClick = useCallback((emblaApi?: EmblaCarouselType) => {
-    const { autoplay } = emblaApi?.plugins() ?? {};
-    if (!autoplay) {
-      return;
-    }
-    const resetOrStop =
-      autoplay.options.stopOnInteraction === false
-        ? autoplay.reset
-        : autoplay.stop;
-    resetOrStop();
-  }, []);
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    loop: true,
+    axis: "y",
+    align: "center",
+    duration: 30,
+  });
 
   const {
     prevBtnDisabled,
     nextBtnDisabled,
     onPrevButtonClick,
     onNextButtonClick,
-  } = usePrevNextButtons(emblaApi, onNavButtonClick);
+  } = usePrevNextButtons(emblaApi);
 
   const { selectedSnap, snapCount } = useSelectedSnapDisplay(emblaApi);
+
+  const goNext = useCallback(() => {
+    if (!emblaApi) {
+      return;
+    }
+    emblaApi.scrollNext();
+  }, [emblaApi]);
 
   if (maintenanceDialogInfo) {
     return (
@@ -276,7 +289,7 @@ export const AnnouncementUI: React.FC<Readonly<AnnouncementProps>> = (
   return (
     <div
       className={cn(
-        "oui-relative oui-z-[1] oui-mt-2 oui-flex oui-transform-gpu oui-flex-row oui-flex-nowrap oui-items-center oui-justify-between oui-overflow-hidden oui-rounded-xl oui-bg-base-9 oui-px-4 oui-font-semibold",
+        "oui-relative oui-z-[1] oui-mt-2 oui-flex oui-transform-gpu oui-flex-row oui-flex-nowrap oui-items-center oui-justify-between oui-gap-x-1.5 oui-overflow-hidden oui-rounded-xl oui-bg-base-9 oui-px-4 oui-font-semibold",
         className,
       )}
     >
@@ -285,9 +298,7 @@ export const AnnouncementUI: React.FC<Readonly<AnnouncementProps>> = (
       </div>
       <div
         ref={emblaRef}
-        className={cn(
-          "oui-relative oui-h-[34px] oui-w-full oui-max-w-full oui-transform-gpu oui-overflow-hidden",
-        )}
+        className="oui-relative oui-h-[34px] oui-w-full oui-max-w-full oui-transform-gpu oui-overflow-hidden"
       >
         <div className="oui-flex oui-h-full oui-transform-gpu oui-flex-col">
           {tips.map((item, index) => (
@@ -295,6 +306,8 @@ export const AnnouncementUI: React.FC<Readonly<AnnouncementProps>> = (
               key={`item-${index}`}
               type={item?.type}
               text={item?.i18n?.[i18n.language] || item?.message?.trim()}
+              isActive={index === selectedSnap}
+              onItemFinish={goNext}
             />
           ))}
         </div>
