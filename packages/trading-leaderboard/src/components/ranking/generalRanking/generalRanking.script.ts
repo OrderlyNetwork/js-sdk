@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ca } from "date-fns/locale";
 import {
   useAccount,
   useConfig,
@@ -70,6 +69,7 @@ export function useGeneralRankingScript(options?: GeneralRankingScriptOptions) {
 
   const { campaignRankingList, filteredCampaignData } = useCampaignRankingList({
     dateRange,
+    sortKey,
   });
 
   const getUrl = (args: {
@@ -246,7 +246,10 @@ export function useGeneralRankingScript(options?: GeneralRankingScriptOptions) {
     if (page === 1) {
       list = list.slice(0, pageSize);
     }
-    const total = data?.meta.total || 0;
+    let total = data?.meta.total || 0;
+    if (campaignRankingList) {
+      total = list.length;
+    }
     const rankList = addRankForList(list, total);
 
     if (page === 1 && !searchValue) {
@@ -269,8 +272,19 @@ export function useGeneralRankingScript(options?: GeneralRankingScriptOptions) {
       return [];
     }
 
-    const total = infiniteData[0]?.meta.total || 0;
-    const flatList = infiniteData?.map((item) => item.rows)?.flat();
+    let total = infiniteData[0]?.meta.total || 0;
+    let flatList = infiniteData?.map((item) => item.rows)?.flat();
+    if (campaignRankingList && campaignRankingList.length > 0) {
+      if (filteredCampaignData) {
+        flatList = filteredCampaignData as GeneralRankingData[];
+        total = filteredCampaignData.length;
+      } else {
+        flatList = flatList.filter((item) =>
+          campaignRankingList.includes(item.address),
+        );
+        total = flatList.length;
+      }
+    }
     const rankList = addRankForList(flatList, total);
 
     if (!searchValue) {
@@ -283,6 +297,7 @@ export function useGeneralRankingScript(options?: GeneralRankingScriptOptions) {
     searchValue,
     addRankForList,
     campaignRankingList,
+    filteredCampaignData,
   ]);
 
   const sentinelRef = useRef<HTMLDivElement | null>(null);
@@ -290,11 +305,19 @@ export function useGeneralRankingScript(options?: GeneralRankingScriptOptions) {
   const pagination = useMemo(
     () =>
       parsePagination({
-        total: data?.meta?.total || 0,
+        total: campaignRankingList
+          ? dataSource?.length
+          : data?.meta?.total || 0,
         current_page: data?.meta?.current_page || 1,
         records_per_page: pageSize,
       }),
-    [data?.meta?.total, data?.meta?.current_page, pageSize],
+    [
+      data?.meta?.total,
+      data?.meta?.current_page,
+      pageSize,
+      campaignRankingList,
+      dataSource,
+    ],
   );
 
   useEndReached(sentinelRef, () => {
@@ -360,10 +383,13 @@ function formatData(data: any[]) {
 // for 128 campaign hardcode
 const useCampaignRankingList = ({
   dateRange,
+  sortKey,
 }: {
   dateRange: DateRange | null;
+  sortKey: "perp_volume" | "realized_pnl";
 }) => {
   const brokerId = useConfig("brokerId");
+
   const getUrl = (label?: string) => {
     if (!label) {
       return null;
@@ -375,6 +401,8 @@ const useCampaignRankingList = ({
     searchParams.set("broker_id", brokerId);
     searchParams.set("page", "1");
     searchParams.set("size", "2000");
+    searchParams.set("aggregate_by", "address");
+    searchParams.set("sort_by", sortKey?.split("_")?.[1]);
     return `https://api.orderly.org/v1/public/campaign/ranking?${searchParams.toString()}`;
   };
 
