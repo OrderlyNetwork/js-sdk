@@ -44,13 +44,15 @@ const SwitchTips: React.FC<Readonly<SwitchTipsProps>> = (props) => {
     nextTips,
   } = props;
   const { isMobile } = useScreen();
-  const display = (
-    <div className="oui-text-sm oui-tabular-nums oui-text-base-contrast-54">
-      {selectedSnap + 1}/{snapCount}
-    </div>
-  );
   if (isMobile) {
-    return display;
+    return (
+      <div
+        aria-live="polite"
+        className="oui-text-sm oui-tabular-nums oui-text-base-contrast-54"
+      >
+        {selectedSnap + 1}/{snapCount}
+      </div>
+    );
   }
   return (
     <div className="oui-flex oui-items-center oui-justify-center oui-gap-0 oui-text-base-contrast-54">
@@ -59,23 +61,24 @@ const SwitchTips: React.FC<Readonly<SwitchTipsProps>> = (props) => {
         opacity={1}
         className={cn(
           "oui-size-4 oui-shrink-0 oui-text-base-contrast-54 hover:oui-text-base-contrast-80 lg:oui-size-5",
-          isMobile || prevDisabled
-            ? "oui-cursor-not-allowed"
-            : "oui-cursor-pointer",
+          prevDisabled ? "oui-cursor-not-allowed" : "oui-cursor-pointer",
         )}
-        onClick={isMobile || prevDisabled ? undefined : prevTips}
+        onClick={prevDisabled ? undefined : prevTips}
       />
-      <div className="oui-text-sm oui-text-base-contrast-54">{display}</div>
+      <div
+        aria-live="polite"
+        className="oui-text-sm oui-tabular-nums oui-text-base-contrast-54"
+      >
+        {selectedSnap + 1}/{snapCount}
+      </div>
       <ChevronRightIcon
         size={16}
         opacity={1}
         className={cn(
           "oui-size-4 oui-shrink-0 oui-text-base-contrast-54 hover:oui-text-base-contrast-80 lg:oui-size-5",
-          isMobile || nextDisabled
-            ? "oui-cursor-not-allowed"
-            : "oui-cursor-pointer",
+          nextDisabled ? "oui-cursor-not-allowed" : "oui-cursor-pointer",
         )}
-        onClick={isMobile || nextDisabled ? undefined : nextTips}
+        onClick={nextDisabled ? undefined : nextTips}
       />
     </div>
   );
@@ -235,6 +238,7 @@ export const AnnouncementUI: React.FC<Readonly<AnnouncementProps>> = (
     tips,
     closeTips,
     className,
+    hideTips,
   } = props;
 
   const { t, i18n } = useTranslation();
@@ -264,7 +268,7 @@ export const AnnouncementUI: React.FC<Readonly<AnnouncementProps>> = (
 
   if (maintenanceDialogInfo) {
     return (
-      <Dialog open={true}>
+      <Dialog open>
         <DialogContent
           closable={false}
           onOpenAutoFocus={(event) => event.preventDefault()}
