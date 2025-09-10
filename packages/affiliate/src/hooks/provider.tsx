@@ -19,7 +19,7 @@ import {
   noCacheConfig,
 } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
-import { AccountStatusEnum, EMPTY_OPERATION } from "@orderly.network/types";
+import { AccountStatusEnum } from "@orderly.network/types";
 
 export enum TabTypes {
   affiliate = "affiliate",
@@ -141,11 +141,11 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
     chartConfig,
     overwrite,
     children,
-    splashPage = EMPTY_OPERATION as () => React.ReactNode,
-    onBecomeAnAffiliate = EMPTY_OPERATION,
-    bindReferralCodeState = EMPTY_OPERATION,
-    onLearnAffiliate = EMPTY_OPERATION,
-    showReferralPage = EMPTY_OPERATION,
+    splashPage,
+    onBecomeAnAffiliate,
+    bindReferralCodeState,
+    onLearnAffiliate,
+    showReferralPage,
   } = props;
 
   const { state } = useAccount();
