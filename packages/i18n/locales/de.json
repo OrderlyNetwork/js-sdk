@@ -558,6 +558,7 @@
   "leverage.confirm": "Hebelwirkung bestätigen",
   "leverage.confirm.content": "Wenn Sie die Hebelwirkung ändern, wirkt sich dies auch auf Ihre laufenden Positionen für dieses Symbol aus.",
   "leverage.confirm.disable.confirmation": "Bestätigung deaktivieren",
+  "leverage.actualPositionLeverage.tips": "* Der tatsächliche Positionshebel passt sich an Änderungen des Nominalwerts an und kann unter den gewählten Hebel fallen.",
   "scaffold.footer.operational": "Betriebsbereit",
   "scaffold.footer.joinCommunity": "Treten Sie unserer Community bei",
   "scaffold.footer.poweredBy": "Unterstützt von",

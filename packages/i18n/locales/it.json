@@ -558,6 +558,7 @@
   "leverage.confirm": "Conferma leva",
   "leverage.confirm.content": "Se modifichi la leva, ciò influenzerà anche le tue posizioni in corso su questo simbolo.",
   "leverage.confirm.disable.confirmation": "Disabilita conferma",
+  "leverage.actualPositionLeverage.tips": "* La leva effettiva della posizione si adatta alle variazioni del valore nozionale e può scendere al di sotto della leva selezionata.",
   "scaffold.footer.operational": "Operativo",
   "scaffold.footer.joinCommunity": "Unisciti alla nostra community",
   "scaffold.footer.poweredBy": "Powered by",

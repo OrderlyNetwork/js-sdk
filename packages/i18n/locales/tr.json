@@ -558,6 +558,7 @@
   "leverage.confirm": "Kaldıracı onayla",
   "leverage.confirm.content": "Kaldıracı değiştirirseniz, bu sembol üzerindeki devam eden pozisyonlarınızı da etkileyecektir.",
   "leverage.confirm.disable.confirmation": "Onayı devre dışı bırak",
+  "leverage.actualPositionLeverage.tips": "* Gerçek pozisyon kaldıracı nominal değer değişiklikleriyle ayarlanır ve seçilen kaldıracın altına düşebilir.",
   "scaffold.footer.operational": "Operasyonel",
   "scaffold.footer.joinCommunity": "Topluluğumuza katılın",
   "scaffold.footer.poweredBy": "Destekleyen",

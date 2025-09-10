@@ -558,6 +558,7 @@
   "leverage.confirm": "Konfirmasi leverage",
   "leverage.confirm.content": "Jika Anda mengubah leverage, ini juga akan mempengaruhi posisi yang sedang berlangsung pada simbol ini.",
   "leverage.confirm.disable.confirmation": "Nonaktifkan konfirmasi",
+  "leverage.actualPositionLeverage.tips": "* Leverage posisi aktual menyesuaikan dengan perubahan nilai nominal dan mungkin turun di bawah leverage yang dipilih.",
   "scaffold.footer.operational": "Operasional",
   "scaffold.footer.joinCommunity": "Bergabung dengan komunitas kami",
   "scaffold.footer.poweredBy": "Didukung oleh",

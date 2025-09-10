@@ -558,6 +558,7 @@
   "leverage.confirm": "Confirmar apalancamiento",
   "leverage.confirm.content": "Si modifica el apalancamiento, también afectará sus posiciones en curso en este símbolo.",
   "leverage.confirm.disable.confirmation": "Desactivar confirmación",
+  "leverage.actualPositionLeverage.tips": "* El apalancamiento real de la posición se ajusta con los cambios del valor nocional y puede caer por debajo del apalancamiento seleccionado.",
   "scaffold.footer.operational": "Operativo",
   "scaffold.footer.joinCommunity": "Únete a nuestra comunidad",
   "scaffold.footer.poweredBy": "Desarrollado por",

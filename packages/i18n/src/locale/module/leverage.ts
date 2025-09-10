@@ -17,6 +17,8 @@ export const leverage = {
   "leverage.confirm.content":
     "If you modify the leverage, it will also affect your ongoing positions on this symbol.",
   "leverage.confirm.disable.confirmation": "Disable confirmation",
+  "leverage.actualPositionLeverage.tips":
+    "* Actual position leverage adjusts with notional changes and may fall below your selected leverage.",
 };
 
 export type Leverage = typeof leverage;

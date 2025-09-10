@@ -73,6 +73,7 @@ export const SymbolLeverage = (props: SymbolLeverageScriptReturns) => {
               ]}
             />
           </div>
+          <div>{t("leverage.actualPositionLeverage.tips")}</div>
         </div>
         <div
           className={cn([

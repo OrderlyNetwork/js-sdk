@@ -558,6 +558,7 @@
   "leverage.confirm": "杠杆确认",
   "leverage.confirm.content": "如果您修改杠杆，这也会影响您在此品种上的持仓。",
   "leverage.confirm.disable.confirmation": "禁用确认",
+  "leverage.actualPositionLeverage.tips": "* 实际仓位杠杆会随着名义价值变化而调整，可能会低于您选择的杠杆。",
   "scaffold.footer.operational": "运营中",
   "scaffold.footer.joinCommunity": "加入我们的社区",
   "scaffold.footer.poweredBy": "技术支持",

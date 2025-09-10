@@ -558,6 +558,7 @@
   "leverage.confirm": "Підтвердити кредитне плече",
   "leverage.confirm.content": "Якщо ви зміните кредитне плече, це також вплине на ваші поточні позиції за цим символом.",
   "leverage.confirm.disable.confirmation": "Вимкнути підтвердження",
+  "leverage.actualPositionLeverage.tips": "* Фактичне плече позиції коригується зі змінами номінальної вартості та може впасти нижче обраного плеча.",
   "scaffold.footer.operational": "Операційний",
   "scaffold.footer.joinCommunity": "Приєднатися до нашої спільноти",
   "scaffold.footer.poweredBy": "Надано",

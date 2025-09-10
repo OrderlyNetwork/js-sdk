@@ -558,6 +558,7 @@
   "leverage.confirm": "Xác nhận đòn bẩy",
   "leverage.confirm.content": "Nếu bạn thay đổi đòn bẩy, điều này cũng sẽ ảnh hưởng đến các vị thế đang diễn ra của bạn trên biểu tượng này.",
   "leverage.confirm.disable.confirmation": "Tắt xác nhận",
+  "leverage.actualPositionLeverage.tips": "* Đòn bẩy vị thế thực tế sẽ điều chỉnh theo thay đổi giá trị danh nghĩa và có thể giảm xuống dưới đòn bẩy bạn đã chọn.",
   "scaffold.footer.operational": "Hoạt động",
   "scaffold.footer.joinCommunity": "Tham gia cộng đồng của chúng tôi",
   "scaffold.footer.poweredBy": "Được cung cấp bởi",

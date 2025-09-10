@@ -558,6 +558,7 @@
   "leverage.confirm": "레버리지 확인",
   "leverage.confirm.content": "레버리지를 수정하면 이 심볼의 진행 중인 포지션에도 영향을 미칩니다.",
   "leverage.confirm.disable.confirmation": "확인 비활성화",
+  "leverage.actualPositionLeverage.tips": "* 실제 포지션 레버리지는 명목 가치 변화에 따라 조정되며, 선택한 레버리지보다 낮아질 수 있습니다.",
   "scaffold.footer.operational": "운영 중",
   "scaffold.footer.joinCommunity": "커뮤니티 참여하기",
   "scaffold.footer.poweredBy": "제공:",

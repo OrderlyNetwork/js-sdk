@@ -558,6 +558,7 @@
   "leverage.confirm": "Confirmer l'effet de levier",
   "leverage.confirm.content": "Si vous modifiez l'effet de levier, cela affectera également vos positions en cours sur ce symbole.",
   "leverage.confirm.disable.confirmation": "Désactiver la confirmation",
+  "leverage.actualPositionLeverage.tips": "* L'effet de levier réel de la position s'ajuste avec les changements de valeur notionnelle et peut tomber en dessous de l'effet de levier sélectionné.",
   "scaffold.footer.operational": "Opérationnel",
   "scaffold.footer.joinCommunity": "Rejoignez notre communauté",
   "scaffold.footer.poweredBy": "Propulsé par",

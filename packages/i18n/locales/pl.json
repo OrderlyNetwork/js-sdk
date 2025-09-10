@@ -558,6 +558,7 @@
   "leverage.confirm": "Potwierdź dźwignię",
   "leverage.confirm.content": "Jeśli zmodyfikujesz dźwignię, wpłynie to również na twoje bieżące pozycje na tym symbolu.",
   "leverage.confirm.disable.confirmation": "Wyłącz potwierdzenie",
+  "leverage.actualPositionLeverage.tips": "* Rzeczywiste dźwignia pozycji dostosowuje się do zmian wartości nominalnej i może spaść poniżej wybranej dźwigni.",
   "scaffold.footer.operational": "Operacyjne",
   "scaffold.footer.joinCommunity": "Dołącz do naszej społeczności",
   "scaffold.footer.poweredBy": "Wspierane przez",

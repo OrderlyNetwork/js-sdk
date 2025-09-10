@@ -558,6 +558,7 @@
   "leverage.confirm": "Подтвердить кредитное плечо",
   "leverage.confirm.content": "Если вы измените кредитное плечо, это также повлияет на ваши текущие позиции по этому символу.",
   "leverage.confirm.disable.confirmation": "Отключить подтверждение",
+  "leverage.actualPositionLeverage.tips": "* Фактическое плечо позиции корректируется с изменениями номинальной стоимости и может упасть ниже выбранного плеча.",
   "scaffold.footer.operational": "Работоспособен",
   "scaffold.footer.joinCommunity": "Присоединяйтесь к нашему сообществу",
   "scaffold.footer.poweredBy": "Работает на",

@@ -558,6 +558,7 @@
   "leverage.confirm": "レバレッジ確認",
   "leverage.confirm.content": "レバレッジを変更すると、このシンボルでの進行中のポジションにも影響します。",
   "leverage.confirm.disable.confirmation": "確認を無効にする",
+  "leverage.actualPositionLeverage.tips": "* 実際のポジションレバレッジは名目価値の変動に応じて調整され、選択したレバレッジを下回る場合があります。",
   "scaffold.footer.operational": "運用中",
   "scaffold.footer.joinCommunity": "コミュニティに参加",
   "scaffold.footer.poweredBy": "提供",
