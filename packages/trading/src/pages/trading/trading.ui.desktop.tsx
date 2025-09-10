@@ -85,6 +85,8 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
     onPanelSizeChange,
     layout,
     onLayout,
+    marketLayout,
+    onMarketLayout,
     orderBookSplitSize,
     setOrderbookSplitSize,
     dataListSplitSize,
@@ -131,6 +133,14 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
     dataListMinHeight +
     space * 4;
 
+  const horizontalMarketsView = (
+    <HorizontalMarketsWidget
+      symbol={props.symbol}
+      onSymbolChange={props.onSymbolChange}
+      maxItems={8}
+    />
+  );
+
   const marketsWidget = (
     <SideMarketsWidget
       resizeable={resizeable}
@@ -152,17 +162,8 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
       className="oui-transition-all oui-duration-150"
       onTransitionEnd={() => setAnimating(false)}
     >
-      {!animating && marketsWidget}
+      {!animating && marketLayout === "left" && marketsWidget}
     </Box>
-  );
-
-  const horizontalMarketsView = (
-    <HorizontalMarketsWidget
-      symbol={props.symbol}
-      onSymbolChange={props.onSymbolChange}
-      maxItems={8}
-      className="oui-mb-2"
-    />
   );
 
   const symbolInfoBarView = (
@@ -181,7 +182,12 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
         onSymbolChange={props.onSymbolChange}
         trailing={
           <React.Suspense fallback={null}>
-            <LazySwitchLayout layout={layout} onLayout={onLayout} />
+            <LazySwitchLayout
+              layout={layout}
+              onLayout={onLayout}
+              marketLayout={marketLayout}
+              onMarketLayout={onMarketLayout}
+            />
           </React.Suspense>
         }
       />
@@ -341,7 +347,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
           className="oui-flex-1 oui-overflow-hidden"
           style={{ minWidth: marketsWidth + tradingViewMinWidth + space }}
         >
-          {marketsView}
+          {marketLayout === "left" && marketsView}
           {tradingView}
         </Flex>
       );
@@ -371,7 +377,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
       return (
         <Flex gapX={2} style={{ minHeight: orderbookMinHeight }} height="100%">
           {tradingViewAndOrderbookView}
-          {marketsView}
+          {marketLayout === "left" && marketsView}
         </Flex>
       );
     }
@@ -412,50 +418,51 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
 
   if (max2XL) {
     return (
-      <SplitLayout
-        ref={props.max2XLSplitRef}
-        style={{
-          minHeight: minScreenHeightSM,
-          minWidth: 1024 - scrollBarWidth,
-          // height: props.extraHeight ? props.extraHeight : undefined,
-        }}
-        className={cn(
-          "oui-flex oui-flex-1",
-          "oui-size-full oui-min-w-[1018px]",
-          "oui-px-3 oui-py-2",
-          props.className,
+      <Box>
+        {marketLayout === "top" && (
+          <Box className={cn("oui-max-h-8 oui-px-3 oui-mt-2", props.className)}>
+            {horizontalMarketsView}
+          </Box>
         )}
-        onSizeChange={setDataListSplitHeightSM}
-        onDragging={props.onDataListSplitHeightDragging}
-        mode="vertical"
-      >
-        <Flex
-          gapX={2}
-          itemAlign="stretch"
-          className="oui-flex-1"
+
+        <SplitLayout
+          ref={props.max2XLSplitRef}
           style={{
-            minHeight: Math.max(
-              symbolInfoBarHeight +
-                tradindviewMinHeight +
-                orderbookMinHeight +
-                space * 2,
-              props.orderEntryHeight,
-            ),
-            maxHeight:
-              symbolInfoBarHeight +
-              tradindviewMaxHeight +
-              orderbookMaxHeight +
-              space * 2,
+            minHeight: minScreenHeightSM,
+            minWidth: 1024 - scrollBarWidth,
+            // height: props.extraHeight ? props.extraHeight : undefined,
           }}
-          direction="column"
+          className={cn(
+            "oui-flex oui-flex-1",
+            "oui-size-full oui-min-w-[1018px]",
+            "oui-px-3 oui-py-2",
+            props.className,
+          )}
+          onSizeChange={setDataListSplitHeightSM}
+          onDragging={props.onDataListSplitHeightDragging}
+          mode="vertical"
         >
-          {horizontalMarketsView}
           <Flex
-            height="100%"
-            width="100%"
             gapX={2}
             itemAlign="stretch"
-            className={cn(layout === "left" && "oui-flex-row-reverse")}
+            className={cn(
+              "oui-flex-1",
+              layout === "left" && "oui-flex-row-reverse",
+            )}
+            style={{
+              minHeight: Math.max(
+                symbolInfoBarHeight +
+                  tradindviewMinHeight +
+                  orderbookMinHeight +
+                  space * 2,
+                props.orderEntryHeight,
+              ),
+              maxHeight:
+                symbolInfoBarHeight +
+                tradindviewMaxHeight +
+                orderbookMaxHeight +
+                space * 2,
+            }}
           >
             <Flex
               height="100%"
@@ -473,22 +480,27 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
                   minHeight: tradindviewMinHeight + orderbookMinHeight + space,
                   maxHeight: tradindviewMaxHeight + orderbookMaxHeight + space,
                 }}
-                className="oui-flex-1"
+                className={cn(
+                  "oui-flex-1",
+                  layout === "left" && "oui-flex-row-reverse",
+                )}
               >
-                <Box
-                  intensity={900}
-                  pt={3}
-                  r="2xl"
-                  width={marketsWidth}
-                  style={{
-                    minHeight:
-                      tradindviewMinHeight + orderbookMinHeight + space,
-                    maxHeight:
-                      tradindviewMaxHeight + orderbookMaxHeight + space,
-                  }}
-                >
-                  {marketsWidget}
-                </Box>
+                {marketLayout === "left" && (
+                  <Box
+                    intensity={900}
+                    pt={3}
+                    r="2xl"
+                    width={marketsWidth}
+                    style={{
+                      minHeight:
+                        tradindviewMinHeight + orderbookMinHeight + space,
+                      maxHeight:
+                        tradindviewMaxHeight + orderbookMaxHeight + space,
+                    }}
+                  >
+                    {marketsWidget}
+                  </Box>
+                )}
                 <SplitLayout
                   ref={props.tradingviewAndOrderbookSplitRef}
                   mode="vertical"
@@ -546,26 +558,26 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
               <Box height={props.extraHeight} />
             </Flex>
           </Flex>
-        </Flex>
 
-        <Box
-          intensity={900}
-          r="2xl"
-          p={2}
-          style={{
-            height: dataListSplitHeightSM,
-            minHeight: Math.max(dataListMinHeight, props.dataListHeight),
-            maxHeight: dataListMaxHeight,
-          }}
-          className="oui-overflow-hidden"
-        >
-          {dataListWidget}
-        </Box>
+          <Box
+            intensity={900}
+            r="2xl"
+            p={2}
+            style={{
+              height: dataListSplitHeightSM,
+              minHeight: Math.max(dataListMinHeight, props.dataListHeight),
+              maxHeight: dataListMaxHeight,
+            }}
+            className="oui-overflow-hidden"
+          >
+            {dataListWidget}
+          </Box>
 
-        {/* <Box pb={2}>
-          {horizontalMarketsView}
-        </Box> */}
-      </SplitLayout>
+          {marketLayout === "bottom" && (
+            <Box className="oui-pb-2">{horizontalMarketsView}</Box>
+          )}
+        </SplitLayout>
+      </Box>
     );
   }
 
@@ -585,7 +597,8 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
       gap={2}
       direction="column"
     >
-      {horizontalMarketsView}
+      {/* Horizontal Markets View on top for !=2xl screens */}
+      {marketLayout === "top" && horizontalMarketsView}
 
       {/* Main Content Group */}
       <Flex
@@ -595,12 +608,9 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
         )}
         gap={2}
       >
-        {!max4XL && marketsView}
+        {!max4XL && marketLayout === "left" && marketsView}
         <SplitLayout
-          className={cn(
-            "oui-flex oui-flex-1 oui-overflow-hidden",
-            // layout === "left" ? "oui-flex-row-reverse" : "oui-flex-row",
-          )}
+          className={cn("oui-flex oui-flex-1 oui-overflow-hidden")}
           onSizeChange={onSizeChange}
           disable={!horizontalDraggable}
         >
@@ -610,8 +620,8 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
         </SplitLayout>
       </Flex>
 
-      {/* Horizontal Markets View for !=2xl screens */}
-      {/* {horizontalMarketsView} */}
+      {/* Horizontal Markets View on bottom for !=2xl screens */}
+      {marketLayout === "bottom" && horizontalMarketsView}
     </Flex>
   );
 };
