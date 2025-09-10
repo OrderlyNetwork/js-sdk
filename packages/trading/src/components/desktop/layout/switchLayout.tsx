@@ -91,7 +91,7 @@ export const SwitchLayoutDropDown: FC<PropsWithChildren<SwitchLayoutProps>> = (
         >
           {String(
             position === "right"
-              ? t("trading.layout.advanced")
+              ? t("trading.layout.advanced.right")
               : t("trading.layout.advanced.left"),
           )}
         </Text>

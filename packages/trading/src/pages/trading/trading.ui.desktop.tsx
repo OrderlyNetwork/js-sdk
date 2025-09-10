@@ -429,12 +429,12 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
           ref={props.max2XLSplitRef}
           style={{
             minHeight: minScreenHeightSM,
-            minWidth: 1024,
+            minWidth: 1024 - scrollBarWidth,
             // height: props.extraHeight ? props.extraHeight : undefined,
           }}
           className={cn(
             "oui-flex oui-flex-1",
-            "oui-size-full oui-min-w-[1024px]",
+            "oui-size-full oui-min-w-[1018px]",
             "oui-px-3 oui-py-2",
             props.className,
           )}
@@ -585,16 +585,18 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
     <Flex
       style={{
         minHeight: minScreenHeight,
-        minWidth: 1440,
+        minWidth: 1440 - scrollBarWidth,
       }}
       className={cn(
         props.className,
+        "oui-justify-start",
         tradingViewFullScreen &&
           "oui-relative oui-w-screen oui-h-[calc(100vh-80px)] !oui-p-0 oui-overflow-hidden",
       )}
       width="100%"
       p={2}
       gap={2}
+      itemAlign="stretch"
       direction="column"
     >
       {/* Horizontal Markets View on top for !=2xl screens */}
