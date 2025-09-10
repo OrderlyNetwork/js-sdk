@@ -176,12 +176,13 @@ const TipsType: React.FC<{ type?: AnnouncementType | null }> = (props) => {
 interface ItemProps {
   type?: AnnouncementType | null;
   text: string;
+  url?: string | null;
   isActive: boolean;
   onItemFinish: () => void;
 }
 
 const AnnouncementItem: React.FC<ItemProps> = (props) => {
-  const { type, text, isActive, onItemFinish } = props;
+  const { type, text, url, isActive, onItemFinish } = props;
 
   const { containerRef, contentRef, overflow } = useMarqueeOnce({
     isActive: isActive,
@@ -191,6 +192,12 @@ const AnnouncementItem: React.FC<ItemProps> = (props) => {
     fallbackStayMs: 2500,
     onFinish: onItemFinish,
   });
+
+  const onClick = () => {
+    if (url) {
+      window.open(url, "_blank");
+    }
+  };
 
   return (
     <Flex
@@ -214,7 +221,15 @@ const AnnouncementItem: React.FC<ItemProps> = (props) => {
           )}
         >
           <TipsType type={type} />
-          <Text size="xs" intensity={80} className="oui-transform-gpu">
+          <Text
+            size="xs"
+            intensity={80}
+            className={cn(
+              "oui-transform-gpu",
+              url ? "oui-cursor-pointer" : undefined,
+            )}
+            onClick={url ? onClick : undefined}
+          >
             {text}
           </Text>
         </div>
@@ -238,7 +253,6 @@ export const AnnouncementUI: React.FC<Readonly<AnnouncementProps>> = (
     tips,
     closeTips,
     className,
-    hideTips,
   } = props;
 
   const { t, i18n } = useTranslation();
@@ -310,6 +324,7 @@ export const AnnouncementUI: React.FC<Readonly<AnnouncementProps>> = (
               key={`item-${item.announcement_id}-${index}`}
               type={item?.type}
               text={item?.i18n?.[i18n.language] || item?.message?.trim()}
+              url={item?.url}
               isActive={index === selectedSnap}
               onItemFinish={goNext}
             />

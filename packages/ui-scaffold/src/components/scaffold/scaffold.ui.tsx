@@ -39,11 +39,29 @@ export type DesktopScaffoldProps = React.PropsWithChildren<
 >;
 
 export const DesktopScaffold: React.FC<DesktopScaffoldProps> = (props) => {
-  const { classNames } = props;
+  const {
+    classNames,
+    footerHeight,
+    topNavbarRef,
+    mainNavProps,
+    topBar,
+    announcementRef,
+    restrictedInfo,
+    hasLeftSidebar,
+    expand,
+    leftSideProps,
+    leftSidebar,
+    footer,
+    footerRef,
+    sideBarCollaspedWidth,
+    sideBarExpandWidth,
+    footerProps,
+    children,
+  } = props;
   return (
     <div
       style={{
-        height: `calc(100vh - ${props.footerHeight}px)`,
+        height: `calc(100vh - ${footerHeight}px)`,
       }}
       className={cn(
         "oui-scaffold-root oui-font-semibold",
@@ -56,15 +74,15 @@ export const DesktopScaffold: React.FC<DesktopScaffoldProps> = (props) => {
     >
       {/* topNavbar */}
       <Box
-        ref={props.topNavbarRef}
+        ref={topNavbarRef}
         className={cn(
           "oui-scaffold-topNavbar oui-bg-base-9",
           classNames?.topNavbar,
         )}
       >
-        {props.topBar ?? (
+        {topBar ?? (
           <React.Suspense fallback={null}>
-            <LazyMainNavWidget {...props.mainNavProps} />
+            <LazyMainNavWidget {...mainNavProps} />
           </React.Suspense>
         )}
       </Box>
@@ -77,7 +95,7 @@ export const DesktopScaffold: React.FC<DesktopScaffoldProps> = (props) => {
           classNames?.container,
         )}
       >
-        <Box px={2} ref={props.announcementRef}>
+        <Box px={2} ref={announcementRef}>
           <React.Suspense fallback={null}>
             <LazyRestrictedInfoWidget
               className={cn(
@@ -90,16 +108,14 @@ export const DesktopScaffold: React.FC<DesktopScaffoldProps> = (props) => {
             />
           </React.Suspense>
           <React.Suspense fallback={null}>
-            <LazyAnnouncementWidget
-              hideTips={props.restrictedInfo?.restrictedOpen}
-            />
+            <LazyAnnouncementWidget hideTips={restrictedInfo?.restrictedOpen} />
           </React.Suspense>
         </Box>
         {/*--------- body start ------ */}
-        {!props.hasLeftSidebar ? (
+        {!hasLeftSidebar ? (
           // ----------No leftSidebar layout start ---------
           <Box height="100%" className={cn(classNames?.content)}>
-            {props.children}
+            {children}
           </Box>
         ) : (
           // ----------No leftSidebar layout end ---------
@@ -112,21 +128,20 @@ export const DesktopScaffold: React.FC<DesktopScaffoldProps> = (props) => {
             )}
             style={{
               gridTemplateColumns: `${
-                props.expand
-                  ? `${props.sideBarExpandWidth}px`
-                  : `${props.sideBarCollaspedWidth}px`
+                expand
+                  ? `${sideBarExpandWidth}px`
+                  : `${sideBarCollaspedWidth}px`
               } 1fr`,
               // gridTemplateRows: "auto 1fr",
               // gridTemplateAreas: `"left main" "left main"`,
             }}
           >
             <div className={cn(classNames?.leftSidebar)}>
-              {/* {typeof props.leftSidebar !== "undefined" ? ( */}
-              {isValidElement(props.leftSidebar) ? (
-                props.leftSidebar
+              {isValidElement<any>(leftSidebar) ? (
+                leftSidebar
               ) : (
                 <React.Suspense fallback={null}>
-                  <LazySideNavbarWidget {...props.leftSideProps} />
+                  <LazySideNavbarWidget {...leftSideProps} />
                 </React.Suspense>
               )}
             </div>
@@ -134,7 +149,7 @@ export const DesktopScaffold: React.FC<DesktopScaffoldProps> = (props) => {
               width={"100%"}
               className={cn("oui-overflow-hidden", classNames?.content)}
             >
-              {props.children}
+              {children}
             </Box>
           </Grid>
           // ---------- left & body layout end ---------
@@ -143,7 +158,7 @@ export const DesktopScaffold: React.FC<DesktopScaffoldProps> = (props) => {
 
       {/* footer */}
       <Box
-        ref={props.footerRef}
+        ref={footerRef}
         className={cn(
           "oui-scaffold-footer oui-w-full oui-bg-base-10",
           "oui-fixed oui-bottom-0 oui-z-50",
@@ -151,9 +166,9 @@ export const DesktopScaffold: React.FC<DesktopScaffoldProps> = (props) => {
           classNames?.footer,
         )}
       >
-        {props.footer || (
+        {footer || (
           <React.Suspense fallback={null}>
-            <LazyFooterWidget {...props.footerProps} />
+            <LazyFooterWidget {...footerProps} />
           </React.Suspense>
         )}
       </Box>
