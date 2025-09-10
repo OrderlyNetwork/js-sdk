@@ -263,12 +263,6 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
     };
   }, [memoMutate, state.status]);
 
-  const memoBecomeAnAffiliate = useMemoizedFn(onBecomeAnAffiliate);
-  const memoBindReferralCodeState = useMemoizedFn(bindReferralCodeState);
-  const memoLearnAffiliate = useMemoizedFn(onLearnAffiliate);
-  const memoShowReferralPage = useMemoizedFn(showReferralPage);
-  const memoSplashPage = useMemoizedFn(splashPage);
-
   const memoizedValue = useMemo<ReferralContextReturns>(() => {
     return {
       generateCode,
@@ -290,11 +284,11 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
       setShowHome,
       setTab: setTab,
       mutate: memoMutate,
-      onBecomeAnAffiliate: memoBecomeAnAffiliate,
-      bindReferralCodeState: memoBindReferralCodeState,
-      onLearnAffiliate: memoLearnAffiliate,
-      showReferralPage: memoShowReferralPage,
-      splashPage: memoSplashPage,
+      onBecomeAnAffiliate,
+      bindReferralCodeState,
+      onLearnAffiliate,
+      showReferralPage,
+      splashPage,
     };
   }, [
     becomeAnAffiliateUrl,
@@ -313,11 +307,11 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
     tab,
     userVolume,
     wrongNetwork,
-    memoBecomeAnAffiliate,
-    memoBindReferralCodeState,
-    memoLearnAffiliate,
-    memoShowReferralPage,
-    memoSplashPage,
+    onBecomeAnAffiliate,
+    bindReferralCodeState,
+    onLearnAffiliate,
+    showReferralPage,
+    splashPage,
     memoMutate,
   ]);
 
