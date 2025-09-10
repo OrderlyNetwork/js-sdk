@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef } from "react";
 import {
   type ComputedAlgoOrder,
   useLocalStorage,
+  useMemoizedFn,
   usePositionStream,
   useSymbolsInfo,
   useTPSLOrder,
@@ -168,7 +169,7 @@ export const useTPSLSimpleDialog = (options: TPSLBuilderOptions) => {
   return {
     symbolInfo: symbolInfo[symbol!],
     maxQty,
-    setQuantity,
+    setQuantity: useMemoizedFn(setQuantity),
     orderQuantity: tpslOrder.quantity,
     isPosition: false,
     TPSL_OrderEntity: tpslOrder,

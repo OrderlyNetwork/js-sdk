@@ -123,8 +123,8 @@ export const TPSLSimpleDialogUI: React.FC<Props> = (props) => {
         maxQty={props.maxQty}
         quantity={Number(props.orderQuantity ?? props.maxQty)}
         baseTick={props.symbolInfo("base_tick")}
-        dp={props.symbolInfo("base_dp")}
-        quote={props.symbolInfo("base")}
+        base_dp={props.symbolInfo("base_dp")}
+        base={props.symbolInfo("base")}
         isEditing={false}
         errorMsg={getErrorMsg("quantity")}
         onQuantityChange={props.setQuantity}

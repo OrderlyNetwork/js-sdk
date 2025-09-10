@@ -65,9 +65,9 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
           maxQty={props.maxQty}
           quantity={(props.orderQuantity ?? props.maxQty) as number}
           baseTick={symbolInfo("base_tick")}
-          dp={symbolInfo("base_dp")}
+          base_dp={symbolInfo("base_dp")}
           onQuantityChange={props.setQuantity}
-          quote={symbolInfo("base")}
+          base={symbolInfo("base")}
           isEditing={props.isEditing}
           errorMsg={validated ? getErrorMsg("quantity") : undefined}
         />
