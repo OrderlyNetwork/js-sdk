@@ -3,6 +3,7 @@ import { useLocalStorage } from "@orderly.network/hooks";
 import {
   SideMarketsWidget,
   SymbolInfoBarFullWidget,
+  HorizontalMarketsWidget,
 } from "@orderly.network/markets";
 import { TradingviewFullscreenKey } from "@orderly.network/types";
 import { Box, cn, Flex } from "@orderly.network/ui";
@@ -84,6 +85,8 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
     onPanelSizeChange,
     layout,
     onLayout,
+    marketLayout,
+    onMarketLayout,
     orderBookSplitSize,
     setOrderbookSplitSize,
     dataListSplitSize,
@@ -130,6 +133,14 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
     dataListMinHeight +
     space * 4;
 
+  const horizontalMarketsView = (
+    <HorizontalMarketsWidget
+      symbol={props.symbol}
+      onSymbolChange={props.onSymbolChange}
+      maxItems={8}
+    />
+  );
+
   const marketsWidget = (
     <SideMarketsWidget
       resizeable={resizeable}
@@ -151,7 +162,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
       className="oui-transition-all oui-duration-150"
       onTransitionEnd={() => setAnimating(false)}
     >
-      {!animating && marketsWidget}
+      {!animating && marketLayout === "left" && marketsWidget}
     </Box>
   );
 
@@ -171,7 +182,12 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
         onSymbolChange={props.onSymbolChange}
         trailing={
           <React.Suspense fallback={null}>
-            <LazySwitchLayout layout={layout} onLayout={onLayout} />
+            <LazySwitchLayout
+              layout={layout}
+              onLayout={onLayout}
+              marketLayout={marketLayout}
+              onMarketLayout={onMarketLayout}
+            />
           </React.Suspense>
         }
       />
@@ -331,7 +347,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
           className="oui-flex-1 oui-overflow-hidden"
           style={{ minWidth: marketsWidth + tradingViewMinWidth + space }}
         >
-          {marketsView}
+          {marketLayout === "left" && marketsView}
           {tradingView}
         </Flex>
       );
@@ -361,7 +377,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
       return (
         <Flex gapX={2} style={{ minHeight: orderbookMinHeight }} height="100%">
           {tradingViewAndOrderbookView}
-          {marketsView}
+          {marketLayout === "left" && marketsView}
         </Flex>
       );
     }
@@ -402,150 +418,166 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
 
   if (max2XL) {
     return (
-      <SplitLayout
-        ref={props.max2XLSplitRef}
-        style={{
-          minHeight: minScreenHeightSM,
-          minWidth: 1024 - scrollBarWidth,
-          // height: props.extraHeight ? props.extraHeight : undefined,
-        }}
-        className={cn(
-          "oui-flex oui-flex-1",
-          "oui-size-full oui-min-w-[1018px]",
-          "oui-px-3 oui-py-2",
-          props.className,
+      <Box>
+        {marketLayout === "top" && (
+          <Box className={cn("oui-max-h-8 oui-px-3 oui-mt-2", props.className)}>
+            {horizontalMarketsView}
+          </Box>
         )}
-        onSizeChange={setDataListSplitHeightSM}
-        onDragging={props.onDataListSplitHeightDragging}
-        mode="vertical"
-      >
-        <Flex
-          gapX={2}
-          itemAlign="stretch"
-          className={cn(
-            "oui-flex-1",
-            layout === "left" && "oui-flex-row-reverse",
-          )}
+
+        <SplitLayout
+          ref={props.max2XLSplitRef}
           style={{
-            minHeight: Math.max(
-              symbolInfoBarHeight +
-                tradindviewMinHeight +
-                orderbookMinHeight +
-                space * 2,
-              props.orderEntryHeight,
-            ),
-            maxHeight:
-              symbolInfoBarHeight +
-              tradindviewMaxHeight +
-              orderbookMaxHeight +
-              space * 2,
+            minHeight: minScreenHeightSM,
+            minWidth: 1024,
+            // height: props.extraHeight ? props.extraHeight : undefined,
           }}
+          className={cn(
+            "oui-flex oui-flex-1",
+            "oui-size-full oui-min-w-[1024px]",
+            "oui-px-3 oui-py-2",
+            props.className,
+          )}
+          onSizeChange={setDataListSplitHeightSM}
+          onDragging={props.onDataListSplitHeightDragging}
+          mode="vertical"
         >
           <Flex
-            height="100%"
-            className="oui-w-[calc(100%_-_280px_-_12px)] oui-flex-1"
-            direction="column"
-            gapY={2}
+            gapX={2}
+            itemAlign="stretch"
+            className={cn(
+              "oui-flex-1",
+              layout === "left" && "oui-flex-row-reverse",
+            )}
+            style={{
+              minHeight: Math.max(
+                symbolInfoBarHeight +
+                  tradindviewMinHeight +
+                  orderbookMinHeight +
+                  space * 2,
+                props.orderEntryHeight,
+              ),
+              maxHeight:
+                symbolInfoBarHeight +
+                tradindviewMaxHeight +
+                orderbookMaxHeight +
+                space * 2,
+            }}
           >
-            {symbolInfoBarView}
             <Flex
-              width="100%"
               height="100%"
-              gapX={2}
-              itemAlign="stretch"
-              style={{
-                minHeight: tradindviewMinHeight + orderbookMinHeight + space,
-                maxHeight: tradindviewMaxHeight + orderbookMaxHeight + space,
-              }}
-              className={cn(
-                "oui-flex-1",
-                layout === "left" && "oui-flex-row-reverse",
-              )}
+              className="oui-w-[calc(100%_-_280px_-_12px)] oui-flex-1"
+              direction="column"
+              gapY={2}
             >
-              <Box
-                intensity={900}
-                pt={3}
-                r="2xl"
-                width={marketsWidth}
+              {symbolInfoBarView}
+              <Flex
+                width="100%"
+                height="100%"
+                gapX={2}
+                itemAlign="stretch"
                 style={{
                   minHeight: tradindviewMinHeight + orderbookMinHeight + space,
                   maxHeight: tradindviewMaxHeight + orderbookMaxHeight + space,
                 }}
+                className={cn(
+                  "oui-flex-1",
+                  layout === "left" && "oui-flex-row-reverse",
+                )}
               >
-                {marketsWidget}
-              </Box>
-              <SplitLayout
-                ref={props.tradingviewAndOrderbookSplitRef}
-                mode="vertical"
-                style={{ width: `calc(100% - ${marketsWidth}px)` }}
-                className="oui-flex-1"
-                onSizeChange={setOrderbookSplitHeightSM}
-                onDragging={props.onTradingviewAndOrderbookDragging}
-              >
-                <Box
-                  width="100%"
-                  intensity={900}
-                  r="2xl"
-                  style={{
-                    minHeight: tradindviewMinHeight,
-                    maxHeight: tradindviewMaxHeight,
-                    height: 1200,
-                  }}
-                >
-                  {tradingviewWidget}
-                </Box>
-
-                <Box
-                  r="2xl"
-                  height="100%"
-                  width="100%"
-                  style={{
-                    minHeight: orderbookMinHeight,
-                    maxHeight: orderbookMaxHeight,
-                    height: orderBookSplitHeightSM,
-                  }}
+                {marketLayout === "left" && (
+                  <Box
+                    intensity={900}
+                    pt={3}
+                    r="2xl"
+                    width={marketsWidth}
+                    style={{
+                      minHeight:
+                        tradindviewMinHeight + orderbookMinHeight + space,
+                      maxHeight:
+                        tradindviewMaxHeight + orderbookMaxHeight + space,
+                    }}
+                  >
+                    {marketsWidget}
+                  </Box>
+                )}
+                <SplitLayout
+                  ref={props.tradingviewAndOrderbookSplitRef}
+                  mode="vertical"
+                  style={{ width: `calc(100% - ${marketsWidth}px)` }}
                   className="oui-flex-1"
+                  onSizeChange={setOrderbookSplitHeightSM}
+                  onDragging={props.onTradingviewAndOrderbookDragging}
                 >
-                  {orderbookWidget}
-                </Box>
-              </SplitLayout>
+                  <Box
+                    width="100%"
+                    intensity={900}
+                    r="2xl"
+                    style={{
+                      minHeight: tradindviewMinHeight,
+                      maxHeight: tradindviewMaxHeight,
+                      height: 1200,
+                    }}
+                  >
+                    {tradingviewWidget}
+                  </Box>
+
+                  <Box
+                    r="2xl"
+                    height="100%"
+                    width="100%"
+                    style={{
+                      minHeight: orderbookMinHeight,
+                      maxHeight: orderbookMaxHeight,
+                      height: orderBookSplitHeightSM,
+                    }}
+                    className="oui-flex-1"
+                  >
+                    {orderbookWidget}
+                  </Box>
+                </SplitLayout>
+              </Flex>
+            </Flex>
+            <Flex
+              ref={props.orderEntryViewRef}
+              id="orderEntryView"
+              gapY={3}
+              direction="column"
+              className="oui-relative"
+              style={{
+                width: orderEntryMinWidth,
+                // force order entry render actual content height
+                height: "max-content",
+                // height:
+                //   props.extraHeight && props.extraHeight > 100
+                //     ? undefined
+                // : "max-content",
+              }}
+            >
+              {orderEntryWidget}
+              <Box height={props.extraHeight} />
             </Flex>
           </Flex>
-          <Flex
-            ref={props.orderEntryViewRef}
-            id="orderEntryView"
-            gapY={3}
-            direction="column"
-            className="oui-relative"
-            style={{
-              width: orderEntryMinWidth,
-              // force order entry render actual content height
-              height: "max-content",
-              // height:
-              //   props.extraHeight && props.extraHeight > 100
-              //     ? undefined
-              // : "max-content",
-            }}
-          >
-            {orderEntryWidget}
-            <Box height={props.extraHeight} />
-          </Flex>
-        </Flex>
 
-        <Box
-          intensity={900}
-          r="2xl"
-          p={2}
-          style={{
-            height: dataListSplitHeightSM,
-            minHeight: Math.max(dataListMinHeight, props.dataListHeight),
-            maxHeight: dataListMaxHeight,
-          }}
-          className="oui-overflow-hidden"
-        >
-          {dataListWidget}
-        </Box>
-      </SplitLayout>
+          <Box
+            intensity={900}
+            r="2xl"
+            p={2}
+            style={{
+              height: dataListSplitHeightSM,
+              minHeight: Math.max(dataListMinHeight, props.dataListHeight),
+              maxHeight: dataListMaxHeight,
+            }}
+            className="oui-overflow-hidden"
+          >
+            {dataListWidget}
+          </Box>
+
+          {marketLayout === "bottom" && (
+            <Box className="oui-pb-2">{horizontalMarketsView}</Box>
+          )}
+        </SplitLayout>
+      </Box>
     );
   }
 
@@ -553,31 +585,43 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
     <Flex
       style={{
         minHeight: minScreenHeight,
-        minWidth: 1440 - scrollBarWidth,
+        minWidth: 1440,
       }}
       className={cn(
         props.className,
-        layout === "left" && "oui-flex-row-reverse",
         tradingViewFullScreen &&
           "oui-relative oui-w-screen oui-h-[calc(100vh-80px)] !oui-p-0 oui-overflow-hidden",
       )}
       width="100%"
       p={2}
       gap={2}
+      direction="column"
     >
-      {!max4XL && marketsView}
-      <SplitLayout
+      {/* Horizontal Markets View on top for !=2xl screens */}
+      {marketLayout === "top" && horizontalMarketsView}
+
+      {/* Main Content Group */}
+      <Flex
         className={cn(
-          "oui-flex oui-flex-1 oui-overflow-hidden",
-          // layout === "left" ? "oui-flex-row-reverse" : "oui-flex-row",
+          "oui-flex-1 oui-overflow-hidden",
+          layout === "left" && "oui-flex-row-reverse",
         )}
-        onSizeChange={onSizeChange}
-        disable={!horizontalDraggable}
+        gap={2}
       >
-        {layout === "left" && orderEntryView}
-        {mainView}
-        {layout === "right" && orderEntryView}
-      </SplitLayout>
+        {!max4XL && marketLayout === "left" && marketsView}
+        <SplitLayout
+          className={cn("oui-flex oui-flex-1 oui-overflow-hidden")}
+          onSizeChange={onSizeChange}
+          disable={!horizontalDraggable}
+        >
+          {layout === "left" && orderEntryView}
+          {mainView}
+          {layout === "right" && orderEntryView}
+        </SplitLayout>
+      </Flex>
+
+      {/* Horizontal Markets View on bottom for !=2xl screens */}
+      {marketLayout === "bottom" && horizontalMarketsView}
     </Flex>
   );
 };

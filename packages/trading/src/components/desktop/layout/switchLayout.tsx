@@ -1,4 +1,5 @@
 import { FC, PropsWithChildren, SVGProps, useState } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import {
   Box,
   CloseIcon,
@@ -11,13 +12,15 @@ import {
   Flex,
   Text,
 } from "@orderly.network/ui";
-import { useTranslation } from "@orderly.network/i18n";
+import type { MarketLayoutPosition } from "../../../pages/trading/trading.script";
 
 export type LayoutPosition = "left" | "right";
 
 export type SwitchLayoutProps = {
   layout?: LayoutPosition;
   onLayout?: (layout: LayoutPosition) => void;
+  marketLayout?: MarketLayoutPosition;
+  onMarketLayout?: (layout: MarketLayoutPosition) => void;
 };
 
 export const SwitchLayout: FC<SwitchLayoutProps> = (props) => {
@@ -31,7 +34,7 @@ export const SwitchLayout: FC<SwitchLayoutProps> = (props) => {
           "oui-h-[28px]",
           "oui-cursor-pointer oui-transition-all",
           "oui-bg-base-6 hover:oui-bg-base-4",
-          "oui-text-base-contrast-54 hover:oui-text-base-contrast-80"
+          "oui-text-base-contrast-54 hover:oui-text-base-contrast-80",
         )}
         gapX={1}
         ml={3}
@@ -48,9 +51,11 @@ export const SwitchLayout: FC<SwitchLayoutProps> = (props) => {
 };
 
 export const SwitchLayoutDropDown: FC<PropsWithChildren<SwitchLayoutProps>> = (
-  props
+  props,
 ) => {
   const [open, setOpen] = useState(false);
+  const [hoveredMarket, setHoveredMarket] =
+    useState<MarketLayoutPosition | null>(null);
   const { t } = useTranslation();
   const renderItem = (position: LayoutPosition) => {
     return (
@@ -69,7 +74,7 @@ export const SwitchLayoutDropDown: FC<PropsWithChildren<SwitchLayoutProps>> = (
             "oui-w-[148px] oui-h-[100px]",
             "oui-bg-base-10 oui-rounded-[10px]",
             "oui-border-[4px] oui-border-base-5 group-hover:oui-border-primary-light",
-            props.layout === position && "!oui-border-primary-light"
+            props.layout === position && "!oui-border-primary-light",
           )}
         >
           <Box p={1}>
@@ -81,12 +86,85 @@ export const SwitchLayoutDropDown: FC<PropsWithChildren<SwitchLayoutProps>> = (
           intensity={54}
           className={cn(
             "oui-text-base-contrast-54 group-hover:oui-text-base-contrast-80",
-            props.layout === position && "oui-text-base-contrast-80"
+            props.layout === position && "oui-text-base-contrast-80",
           )}
         >
-          {position === "right"
-            ? t("trading.layout.right")
-            : t("trading.layout.left")}
+          {String(
+            position === "right"
+              ? t("trading.layout.advanced")
+              : t("trading.layout.advanced.left"),
+          )}
+        </Text>
+      </Flex>
+    );
+  };
+
+  const renderMarketItem = (position: MarketLayoutPosition) => {
+    const getIcon = (isHovered: boolean) => {
+      const isSelected = props.marketLayout === position;
+      switch (position) {
+        case "left":
+          return (
+            <MarketLeftIcon isSelected={isSelected} isHovered={isHovered} />
+          );
+        case "top":
+          return (
+            <MarketTopIcon isSelected={isSelected} isHovered={isHovered} />
+          );
+        case "bottom":
+          return (
+            <MarketBottomIcon isSelected={isSelected} isHovered={isHovered} />
+          );
+        case "hide":
+          return (
+            <MarketHideIcon isSelected={isSelected} isHovered={isHovered} />
+          );
+        default:
+          return (
+            <MarketLeftIcon isSelected={isSelected} isHovered={isHovered} />
+          );
+      }
+    };
+
+    const getLabel = () => {
+      switch (position) {
+        case "left":
+          return t("trading.layout.markets.left");
+        case "top":
+          return t("trading.layout.markets.top");
+        case "bottom":
+          return t("trading.layout.markets.bottom");
+        case "hide":
+          return t("trading.layout.markets.hide");
+        default:
+          return t("trading.layout.markets.left");
+      }
+    };
+
+    return (
+      <Flex
+        direction="column"
+        gapY={2}
+        onClick={() => {
+          props.onMarketLayout?.(position);
+          setOpen(false);
+        }}
+        onMouseEnter={() => setHoveredMarket(position)}
+        onMouseLeave={() => setHoveredMarket(null)}
+        className="oui-group"
+      >
+        <Flex justify="center" className="oui-w-[148px] oui-h-[100px]">
+          {getIcon(hoveredMarket === position)}
+        </Flex>
+        <Text
+          size="2xs"
+          intensity={54}
+          className={cn(
+            "oui-text-base-contrast-54 group-hover:oui-text-base-contrast-80",
+            props.marketLayout === position && "oui-text-base-contrast-80",
+          )}
+        >
+          {String(getLabel())}
         </Text>
       </Flex>
     );
@@ -98,7 +176,7 @@ export const SwitchLayoutDropDown: FC<PropsWithChildren<SwitchLayoutProps>> = (
         itemAlign="center"
         justify="between"
         mt={3}
-        className="oui-mb-[10px]"
+        className="oui-mb-[10px] oui-min-w-[500px]"
       >
         <Text size="base" intensity={98}>
           {t("trading.layout")}
@@ -113,9 +191,25 @@ export const SwitchLayoutDropDown: FC<PropsWithChildren<SwitchLayoutProps>> = (
         />
       </Flex>
       <Divider />
-      <Flex gapX={6} mt={5}>
-        {renderItem("right")}
-        {renderItem("left")}
+      <Flex direction="column" gapY={2} mt={5} itemAlign="start">
+        <Text size="xs" intensity={98}>
+          {String(t("trading.layout.advanced"))}
+        </Text>
+        <Flex gapX={6}>
+          {renderItem("right")}
+          {renderItem("left")}
+        </Flex>
+      </Flex>
+      <Flex direction="column" gapY={2} mt={5} itemAlign="start">
+        <Text size="xs" intensity={98}>
+          {String(t("trading.layout.markets"))}
+        </Text>
+        <Flex gapX={6}>
+          {renderMarketItem("left")}
+          {renderMarketItem("top")}
+          {renderMarketItem("bottom")}
+          {renderMarketItem("hide")}
+        </Flex>
       </Flex>
     </>
   );
@@ -128,9 +222,7 @@ export const SwitchLayoutDropDown: FC<PropsWithChildren<SwitchLayoutProps>> = (
           onCloseAutoFocus={(e) => e.preventDefault()}
           onClick={(e) => e.stopPropagation()}
           align="end"
-          className={cn(
-            "oui-bg-base-8 oui-p-5 oui-pt-0 oui-w-[360px] oui-font-semibold"
-          )}
+          className={cn("oui-bg-base-8 oui-p-5 oui-pt-0 oui-font-semibold")}
         >
           {content}
         </DropdownMenuContent>
@@ -185,9 +277,378 @@ export const OrderEntryIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
         y2="79.5"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stopColor="#59B0FE" />
+        <stop stopColor="#779eff" />
         <stop offset="1" stopColor="#26FEFE" />
       </linearGradient>
     </defs>
   </svg>
 );
+
+export const MarketLeftIcon: FC<
+  SVGProps<SVGSVGElement> & { isSelected?: boolean; isHovered?: boolean }
+> = ({ isSelected, isHovered, ...props }) => {
+  const getStrokeColor = () => {
+    if (isSelected) return "#779eff"; // primary-light color
+    if (isHovered) return "#779eff"; // primary-light color
+    return "#333948"; // base-5 color
+  };
+
+  return (
+    <svg
+      width="148"
+      height="100"
+      viewBox="0 0 148 100"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <rect
+        x="2"
+        y="2"
+        width="144"
+        height="96"
+        rx="10"
+        fill="#07080A"
+        stroke={getStrokeColor()}
+        strokeWidth="4"
+      />
+      <rect x="8" y="8" width="24" height="84" rx="2" fill="#181C23" />
+      <rect x="16" y="10" width="4" height="2" rx="1" fill="#333948" />
+      <rect x="21" y="10" width="4" height="2" rx="1" fill="#333948" />
+      <rect x="26" y="10" width="4" height="2" rx="1" fill="#333948" />
+      <rect x="10" y="10" width="5" height="2" rx="1" fill="#335FFC" />
+      <rect x="10" y="14" width="20" height="76" rx="2" fill="#282E3A" />
+    </svg>
+  );
+};
+
+export const MarketTopIcon: FC<
+  SVGProps<SVGSVGElement> & { isSelected?: boolean; isHovered?: boolean }
+> = ({ isSelected, isHovered, ...props }) => {
+  const getStrokeColor = () => {
+    if (isSelected) return "#779eff"; // primary-light color
+    if (isHovered) return "#779eff"; // primary-light color
+    return "#333948"; // base-5 color
+  };
+
+  return (
+    <svg
+      width="148"
+      height="100"
+      viewBox="0 0 148 100"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <rect
+        x="2"
+        y="2"
+        width="144"
+        height="96"
+        rx="10"
+        fill="#07080A"
+        stroke={getStrokeColor()}
+        strokeWidth="4"
+      />
+      <rect x="8" y="8" width="132" height="8" rx="2" fill="#181C23" />
+      <g clipPath="url(#clip0_31319_74729)">
+        <rect x="10" y="10" width="16" height="4" rx="2" fill="#335FFC" />
+        <rect x="28" y="10" width="16" height="4" rx="2" fill="#333948" />
+        <rect x="46" y="10" width="16" height="4" rx="2" fill="#333948" />
+        <rect x="64" y="10" width="16" height="4" rx="2" fill="#333948" />
+        <rect x="82" y="10" width="16" height="4" rx="2" fill="#333948" />
+        <rect x="100" y="10" width="16" height="4" rx="2" fill="#333948" />
+        <rect x="118" y="10" width="16" height="4" rx="2" fill="#333948" />
+        <rect x="136" y="10" width="16" height="4" rx="2" fill="#333948" />
+      </g>
+      <defs>
+        <clipPath id="clip0_31319_74729">
+          <rect
+            width="130"
+            height="4"
+            fill="white"
+            transform="translate(10 10)"
+          />
+        </clipPath>
+      </defs>
+    </svg>
+  );
+};
+
+export const MarketBottomIcon: FC<
+  SVGProps<SVGSVGElement> & { isSelected?: boolean; isHovered?: boolean }
+> = ({ isSelected, isHovered, ...props }) => {
+  const getStrokeColor = () => {
+    if (isSelected) return "#779eff"; // primary-light color
+    if (isHovered) return "#779eff"; // primary-light color
+    return "#333948"; // base-5 color
+  };
+
+  return (
+    <svg
+      width="148"
+      height="100"
+      viewBox="0 0 148 100"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <rect
+        x="2"
+        y="2"
+        width="144"
+        height="96"
+        rx="10"
+        fill="#07080A"
+        stroke={getStrokeColor()}
+        strokeWidth="4"
+      />
+      <rect x="8" y="84" width="132" height="8" rx="2" fill="#181C23" />
+      <g clipPath="url(#clip0_31319_74743)">
+        <rect x="10" y="86" width="16" height="4" rx="2" fill="#335FFC" />
+        <rect x="28" y="86" width="16" height="4" rx="2" fill="#333948" />
+        <rect x="46" y="86" width="16" height="4" rx="2" fill="#333948" />
+        <rect x="64" y="86" width="16" height="4" rx="2" fill="#333948" />
+        <rect x="82" y="86" width="16" height="4" rx="2" fill="#333948" />
+        <rect x="100" y="86" width="16" height="4" rx="2" fill="#333948" />
+        <rect x="118" y="86" width="16" height="4" rx="2" fill="#333948" />
+        <rect x="136" y="86" width="16" height="4" rx="2" fill="#333948" />
+      </g>
+      <defs>
+        <clipPath id="clip0_31319_74743">
+          <rect
+            width="130"
+            height="4"
+            fill="white"
+            transform="translate(10 86)"
+          />
+        </clipPath>
+      </defs>
+    </svg>
+  );
+};
+
+export const MarketHideIcon: FC<
+  SVGProps<SVGSVGElement> & { isSelected?: boolean; isHovered?: boolean }
+> = ({ isSelected, isHovered, ...props }) => {
+  const getStrokeColor = () => {
+    if (isSelected) return "#779eff"; // primary-light color
+    if (isHovered) return "#779eff"; // primary-light color
+    return "#333948"; // base-5 color
+  };
+
+  return (
+    <svg
+      width="148"
+      height="100"
+      viewBox="0 0 148 100"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <rect
+        x="2"
+        y="2"
+        width="144"
+        height="96"
+        rx="10"
+        fill="#07080A"
+        stroke={getStrokeColor()}
+        strokeWidth="4"
+      />
+      <g clipPath="url(#clip0_31319_74757)">
+        <rect x="8" y="8" width="132" height="84" rx="2" fill="#181C23" />
+        <rect
+          x="66.8789"
+          y="-76"
+          width="4"
+          height="188"
+          rx="2"
+          transform="rotate(45 66.8789 -76)"
+          fill="#20252F"
+        />
+        <rect
+          x="73.9492"
+          y="-68.929"
+          width="4"
+          height="188"
+          rx="2"
+          transform="rotate(45 73.9492 -68.929)"
+          fill="#20252F"
+        />
+        <rect
+          x="81.0195"
+          y="-61.8579"
+          width="4"
+          height="188"
+          rx="2"
+          transform="rotate(45 81.0195 -61.8579)"
+          fill="#20252F"
+        />
+        <rect
+          x="88.0938"
+          y="-54.7867"
+          width="4"
+          height="188"
+          rx="2"
+          transform="rotate(45 88.0938 -54.7867)"
+          fill="#20252F"
+        />
+        <rect
+          x="95.1641"
+          y="-47.7157"
+          width="4"
+          height="188"
+          rx="2"
+          transform="rotate(45 95.1641 -47.7157)"
+          fill="#20252F"
+        />
+        <rect
+          x="102.234"
+          y="-40.6447"
+          width="4"
+          height="188"
+          rx="2"
+          transform="rotate(45 102.234 -40.6447)"
+          fill="#20252F"
+        />
+        <rect
+          x="109.305"
+          y="-33.5736"
+          width="4"
+          height="188"
+          rx="2"
+          transform="rotate(45 109.305 -33.5736)"
+          fill="#20252F"
+        />
+        <rect
+          x="116.375"
+          y="-26.5026"
+          width="4"
+          height="188"
+          rx="2"
+          transform="rotate(45 116.375 -26.5026)"
+          fill="#20252F"
+        />
+        <rect
+          x="123.449"
+          y="-19.4315"
+          width="4"
+          height="188"
+          rx="2"
+          transform="rotate(45 123.449 -19.4315)"
+          fill="#20252F"
+        />
+        <rect
+          x="130.52"
+          y="-12.3604"
+          width="4"
+          height="188"
+          rx="2"
+          transform="rotate(45 130.52 -12.3604)"
+          fill="#20252F"
+        />
+        <rect
+          x="137.59"
+          y="-5.28931"
+          width="4"
+          height="188"
+          rx="2"
+          transform="rotate(45 137.59 -5.28931)"
+          fill="#20252F"
+        />
+        <rect
+          x="144.66"
+          y="1.78174"
+          width="4"
+          height="188"
+          rx="2"
+          transform="rotate(45 144.66 1.78174)"
+          fill="#20252F"
+        />
+        <rect
+          x="151.73"
+          y="8.85278"
+          width="4"
+          height="188"
+          rx="2"
+          transform="rotate(45 151.73 8.85278)"
+          fill="#20252F"
+        />
+        <rect
+          x="158.805"
+          y="15.9238"
+          width="4"
+          height="188"
+          rx="2"
+          transform="rotate(45 158.805 15.9238)"
+          fill="#20252F"
+        />
+        <rect
+          x="165.875"
+          y="22.995"
+          width="4"
+          height="188"
+          rx="2"
+          transform="rotate(45 165.875 22.995)"
+          fill="#20252F"
+        />
+        <rect
+          x="172.945"
+          y="30.066"
+          width="4"
+          height="188"
+          rx="2"
+          transform="rotate(45 172.945 30.066)"
+          fill="#20252F"
+        />
+        <rect
+          x="180.016"
+          y="37.1371"
+          width="4"
+          height="188"
+          rx="2"
+          transform="rotate(45 180.016 37.1371)"
+          fill="#20252F"
+        />
+        <rect
+          x="187.086"
+          y="44.2081"
+          width="4"
+          height="188"
+          rx="2"
+          transform="rotate(45 187.086 44.2081)"
+          fill="#20252F"
+        />
+        <rect
+          x="194.156"
+          y="51.2792"
+          width="4"
+          height="188"
+          rx="2"
+          transform="rotate(45 194.156 51.2792)"
+          fill="#20252F"
+        />
+        <rect
+          x="201.23"
+          y="58.3503"
+          width="4"
+          height="188"
+          rx="2"
+          transform="rotate(45 201.23 58.3503)"
+          fill="#20252F"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_31319_74757">
+          <rect
+            width="132"
+            height="84"
+            fill="white"
+            transform="translate(8 8)"
+          />
+        </clipPath>
+      </defs>
+    </svg>
+  );
+};
