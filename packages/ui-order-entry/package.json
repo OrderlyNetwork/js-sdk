@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/ui-order-entry",
-  "version": "2.6.1",
+  "version": "2.6.3",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -24,10 +24,12 @@
     "@orderly.network/ui": "workspace:*",
     "@orderly.network/ui-connector": "workspace:*",
     "@orderly.network/ui-leverage": "workspace:*",
+    "@orderly.network/ui-tpsl": "workspace:*",
     "@orderly.network/utils": "workspace:*",
-    "@orderly.network/ui-tpsl": "workspace:*"
+    "ramda": "^0.31.3"
   },
   "devDependencies": {
+    "@types/ramda": "^0.29.3",
     "@types/react": "^18.3.2",
     "@types/react-dom": "^18.3.0",
     "react": "^18.2.0",

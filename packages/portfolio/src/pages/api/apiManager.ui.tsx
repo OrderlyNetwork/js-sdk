@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import React, { useState } from "react";
 import { APIKeyItem } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import {
@@ -18,15 +18,35 @@ import {
   AuthGuardTooltip,
 } from "@orderly.network/ui-connector";
 import {
-  ApiManagerScriptReturns,
+  type ApiManagerScriptReturns,
   capitalizeFirstChar,
 } from "./apiManager.script";
-import { CreateAPIKeyDialog } from "./dialog/createApiKey";
-import { CreatedAPIKeyDialog } from "./dialog/createdApiKey";
-import { DeleteAPIKeyDialog } from "./dialog/deleteApiKey";
-import { EditAPIKeyDialog } from "./dialog/editApiKey";
 
-export const APIManager: FC<ApiManagerScriptReturns> = (props) => {
+const LazyCreateAPIKeyDialog = React.lazy(() =>
+  import("./dialog/createApiKey").then((mod) => {
+    return { default: mod.CreateAPIKeyDialog };
+  }),
+);
+
+const LazyCreatedAPIKeyDialog = React.lazy(() =>
+  import("./dialog/createdApiKey").then((mod) => {
+    return { default: mod.CreatedAPIKeyDialog };
+  }),
+);
+
+const LazyDeleteAPIKeyDialog = React.lazy(() =>
+  import("./dialog/deleteApiKey").then((mod) => {
+    return { default: mod.DeleteAPIKeyDialog };
+  }),
+);
+
+const LazyEditAPIKeyDialog = React.lazy(() =>
+  import("./dialog/editApiKey").then((mod) => {
+    return { default: mod.EditAPIKeyDialog };
+  }),
+);
+
+export const APIManager: React.FC<ApiManagerScriptReturns> = (props) => {
   const { t } = useTranslation();
   return (
     <Card
@@ -45,14 +65,18 @@ export const APIManager: FC<ApiManagerScriptReturns> = (props) => {
       </Flex>
       <div>
         <KeyList {...props} />
-        <CreateAPIKeyDialog {...props} />
-        <CreatedAPIKeyDialog {...props} />
+        <React.Suspense fallback={null}>
+          <LazyCreateAPIKeyDialog {...props} />
+        </React.Suspense>
+        <React.Suspense fallback={null}>
+          <LazyCreatedAPIKeyDialog {...props} />
+        </React.Suspense>
       </div>
     </Card>
   );
 };
 
-const AccountInfo: FC<ApiManagerScriptReturns> = (props) => {
+const AccountInfo: React.FC<ApiManagerScriptReturns> = (props) => {
   const { t } = useTranslation();
   return (
     <Flex
@@ -108,7 +132,7 @@ const AccountInfo: FC<ApiManagerScriptReturns> = (props) => {
   );
 };
 
-const Subtitle: FC<ApiManagerScriptReturns> = (props) => {
+const Subtitle: React.FC<ApiManagerScriptReturns> = (props) => {
   const { t } = useTranslation();
   return (
     <Flex
@@ -161,7 +185,7 @@ const Subtitle: FC<ApiManagerScriptReturns> = (props) => {
   );
 };
 
-const KeyList: FC<ApiManagerScriptReturns> = (props) => {
+const KeyList: React.FC<ApiManagerScriptReturns> = (props) => {
   const { t } = useTranslation();
   const columns: Column<APIKeyItem>[] = [
     {
@@ -265,7 +289,7 @@ const KeyList: FC<ApiManagerScriptReturns> = (props) => {
   );
 };
 
-const EditButton: FC<{
+const EditButton: React.FC<{
   item: APIKeyItem;
   onUpdate: (item: APIKeyItem, ip?: string) => Promise<void>;
   verifyIP: (ip: string) => string;
@@ -288,21 +312,22 @@ const EditButton: FC<{
       >
         {t("common.edit")}
       </Button>
-
       {open && (
-        <EditAPIKeyDialog
-          item={item}
-          open={open}
-          setOpen={setOpen}
-          onUpdate={onUpdate}
-          verifyIP={verifyIP}
-        />
+        <React.Suspense fallback={null}>
+          <LazyEditAPIKeyDialog
+            item={item}
+            open={open}
+            setOpen={setOpen}
+            onUpdate={onUpdate}
+            verifyIP={verifyIP}
+          />
+        </React.Suspense>
       )}
     </>
   );
 };
 
-const DeleteButton: FC<{
+const DeleteButton: React.FC<{
   item: APIKeyItem;
   onDelete: (item: APIKeyItem) => Promise<void>;
 }> = (props) => {
@@ -323,21 +348,24 @@ const DeleteButton: FC<{
       >
         {t("common.delete")}
       </Button>
-
       {open && (
-        <DeleteAPIKeyDialog
-          item={item}
-          open={open}
-          setOpen={setOpen}
-          onDelete={onDelete}
-        />
+        <React.Suspense fallback={null}>
+          <LazyDeleteAPIKeyDialog
+            item={item}
+            open={open}
+            setOpen={setOpen}
+            onDelete={onDelete}
+          />
+        </React.Suspense>
       )}
     </>
   );
 };
 
 export function formatKey(value: string): string {
-  if (typeof value === "undefined") return "-";
+  if (typeof value === "undefined") {
+    return "-";
+  }
   const key = `${value}`.replace("ed25519:", "").slice(0, 6);
   return `${key}*****`;
 }

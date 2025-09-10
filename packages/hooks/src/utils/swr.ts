@@ -24,7 +24,9 @@ export const generateKeyFun =
   ) =>
   (pageIndex: number, previousPageData: any): string | null => {
     // reached the end
-    if (previousPageData && !previousPageData.rows?.length) return null;
+    if (previousPageData && !previousPageData.rows?.length) {
+      return null;
+    }
 
     const { status, symbol, side, size = 100, page, dateRange } = args;
 
@@ -218,9 +220,11 @@ export function updateAlgoOrdersHandler(
 
   const mergeHandler = new AlgoOrderMergeHandler(message);
 
-  const result = mergeHandler.merge(key, message, orders);
+  const mergedOrders = mergeHandler.merge(key, message, orders);
 
-  return result;
+  const fieldChanges = mergeHandler.getFieldChanges(orders);
+
+  return { mergedOrders, fieldChanges };
 }
 
 function updateOrders(
@@ -274,7 +278,9 @@ function removeOrderIfExisting(
   orderId: number,
 ): API.OrderResponse[] {
   const isExisting = orderIsExisting(orders, orderId);
-  if (!isExisting) return orders;
+  if (!isExisting) {
+    return orders;
+  }
   return orders.map((item) => {
     return {
       meta: { ...item.meta, total: item.meta.total - 1 },

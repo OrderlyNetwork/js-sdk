@@ -193,18 +193,20 @@ function priceInputHandle(inputs: orderEntryInputs): orderEntryInputs {
  * @returns
  */
 function quantityInputHandle(inputs: orderEntryInputs): orderEntryInputs {
-  const [values, input, value, markPrice, config] = inputs;
+  const [values, input, value, markPrice, symbolInfo] = inputs;
 
   if (value === "") {
-    return [{ ...values, total: "" }, input, value, markPrice, config];
+    return [{ ...values, total: "" }, input, value, markPrice, symbolInfo];
   }
+
+  const { base_dp, quote_dp } = symbolInfo;
 
   let quantity = new Decimal(value);
   const quantityDP = quantity.dp();
 
   // check the length for precision and recalculate
-  if (quantityDP > config.base_dp) {
-    quantity = quantity.toDecimalPlaces(config.base_dp);
+  if (quantityDP > base_dp) {
+    quantity = quantity.toDecimalPlaces(base_dp);
     values.order_quantity = quantity.toString();
   }
 
@@ -214,7 +216,7 @@ function quantityInputHandle(inputs: orderEntryInputs): orderEntryInputs {
   ) {
     if (!markPrice) {
       console.warn("[ORDERLY]markPrice is required for market order");
-      return [values, input, value, markPrice, config];
+      return [values, input, value, markPrice, symbolInfo];
     }
     const price = markPrice;
     values.order_price = "";
@@ -226,12 +228,15 @@ function quantityInputHandle(inputs: orderEntryInputs): orderEntryInputs {
     if (values.order_price) {
       const price = Number(values.order_price);
       const total = quantity.mul(price);
-      values.total = total.todp(config.quote_dp).toString();
+      values.total = total.todp(quote_dp).toString();
     } else {
       values.total = "";
     }
   } else if (values.order_type === OrderType.SCALED && markPrice) {
-    values.total = quantity.mul(markPrice).todp(config.quote_dp).toString();
+    values.total = quantity.mul(markPrice).todp(quote_dp).toString();
+  } else if (values.order_type === OrderType.TRAILING_STOP && markPrice) {
+    // const price = values.activated_price || markPrice;
+    values.total = quantity.mul(markPrice).todp(quote_dp).toString();
   }
 
   return [
@@ -241,7 +246,7 @@ function quantityInputHandle(inputs: orderEntryInputs): orderEntryInputs {
     input,
     value,
     markPrice,
-    config,
+    symbolInfo,
   ];
 }
 

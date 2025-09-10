@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import React, { ReactNode } from "react";
 import { useFooterScript } from "./footer.script";
 import { Footer } from "./footer.ui";
 
@@ -9,7 +9,7 @@ export type FooterProps = {
   trailing?: ReactNode;
 };
 
-export const FooterWidget = (props: FooterProps) => {
+export const FooterWidget: React.FC<FooterProps> = (props) => {
   const state = useFooterScript();
   return <Footer {...state} {...props} />;
 };

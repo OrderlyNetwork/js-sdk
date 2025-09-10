@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { useSymbolsInfo } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { modal } from "@orderly.network/ui";
-import { PositionTPSLSheet, TPSLSheetId } from "@orderly.network/ui-tpsl";
+import { PositionTPSLSheet } from "@orderly.network/ui-tpsl";
 import { TabType } from "../../../orders.widget";
 import { useOrderListContext } from "../../orderListContext";
 import { useTPSLOrderRowContext } from "../../tpslOrderRowContext";
@@ -15,7 +15,7 @@ export const useEditBtnScript = (props: { state: OrderCellState }) => {
   const symbolInfo = useSymbolsInfo()[props.state.item.symbol]();
 
   const { editAlgoOrder, editOrder } = useOrderListContext();
-  const { order, position } = useTPSLOrderRowContext();
+  const { position } = useTPSLOrderRowContext();
 
   const onShowEditSheet = useCallback(() => {
     if (props.state.type === TabType.tp_sl) {
@@ -23,10 +23,10 @@ export const useEditBtnScript = (props: { state: OrderCellState }) => {
         .sheet({
           content: (
             <PositionTPSLSheet
+              symbol={props.state.item.symbol}
               symbolInfo={symbolInfo}
               isEditing
               order={props.state.item}
-              position={position!}
             />
           ),
         })
@@ -43,8 +43,8 @@ export const useEditBtnScript = (props: { state: OrderCellState }) => {
           },
           content: (
             <EditSheetWidget
-              position={position}
               state={state}
+              position={position}
               editAlgoOrder={editAlgoOrder}
               editOrder={editOrder}
             />

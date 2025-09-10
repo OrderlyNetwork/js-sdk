@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { produce } from "immer";
 import { omit } from "ramda";
 import {
   API,
@@ -11,6 +12,8 @@ import {
 } from "@orderly.network/types";
 import { AlgoOrderRootType } from "@orderly.network/types";
 import { AlgoOrderType } from "@orderly.network/types";
+import { appendOrderMetadata } from "../../next/useOrderEntry/helper";
+import { useOrderlyContext } from "../../orderlyContext";
 import { OrderFactory } from "../../services/orderCreator/factory";
 import { OrderValidationItem } from "../../services/orderCreator/interface";
 import { TPSLPositionOrderCreator } from "../../services/orderCreator/tpslPositionOrderCreator";
@@ -128,6 +131,12 @@ export const useTaskProfitAndStopLossInternal = (
         AlgoOrderRootType.POSITIONAL_TP_SL | AlgoOrderRootType.TP_SL
       >
     >;
+    metaState: {
+      dirty: { [K in keyof OrderlyOrder]?: boolean };
+      submitted: boolean;
+      validated: boolean;
+      errors: ValidateError | null;
+    };
     isCreateMutating: boolean;
     isUpdateMutating: boolean;
   },
@@ -179,6 +188,20 @@ export const useTaskProfitAndStopLossInternal = (
 
   const [errors, setErrors] = useState<ValidateError | null>(null);
 
+  const [meta, setMeta] = useState<{
+    dirty: { [K in keyof OrderlyOrder]?: boolean };
+    submitted: boolean;
+    validated: boolean;
+    errors: ValidateError | null;
+  }>({
+    dirty: {},
+    submitted: false,
+    validated: false,
+    errors: null,
+  });
+
+  const { orderMetadata } = useOrderlyContext();
+
   useEffect(() => {
     if (!isEditing || !options?.defaultOrder) return;
     const trigger_prices = findTPSLFromOrder(options.defaultOrder!);
@@ -223,17 +246,6 @@ export const useTaskProfitAndStopLossInternal = (
       //   value = value ? `-${value}` : "";
       // }
 
-      console.log("setorder value", {
-        key,
-        value,
-        entryPrice: position.average_open_price!,
-        qty:
-          side === OrderSide.BUY
-            ? Number(prev.quantity)!
-            : -Number(prev.quantity)!,
-        orderSide: side,
-        values: prev as Partial<OrderlyOrder>,
-      });
       const newValue = tpslCalculateHelper(
         key,
         {
@@ -252,6 +264,14 @@ export const useTaskProfitAndStopLossInternal = (
         },
       );
 
+      const newValueAll = {
+        ...prev,
+        ...newValue,
+        ignoreValidate: options?.ignoreValidate,
+      };
+      interactiveValidate(
+        newValueAll as AlgoOrderEntity<AlgoOrderRootType.TP_SL>,
+      );
       return {
         ...prev,
         ...newValue,
@@ -312,20 +332,48 @@ export const useTaskProfitAndStopLossInternal = (
   };
 
   // auto validate when order changed
-  useEffect(() => {
-    requestAnimationFrame(() => {
-      if (order.ignoreValidate) return;
-      if (!order.quantity) {
-        return;
+  // useEffect(() => {
+  //   requestAnimationFrame(() => {
+  //     if (order.ignoreValidate) return;
+  //     if (!order.quantity) {
+  //       return;
+  //     }
+  //     const orderCreator = getOrderCreator();
+  //     orderCreator
+  //       .validate(order as AlgoOrderEntity, valueConfig)
+  //       .then((errors) => {
+  //         setErrors(errors);
+  //       });
+  //   });
+  // }, [order, valueConfig.markPrice, order.quantity]);
+
+  const interactiveValidate = (
+    order: AlgoOrderEntity<AlgoOrderRootType.TP_SL>,
+  ) => {
+    validateFunc(order).then((errors) => {
+      const keys = Object.keys(errors ?? {});
+      if (keys.length > 0) {
+        setMeta(
+          produce((draft) => {
+            draft.errors = errors;
+          }),
+        );
+      } else {
+        setMeta(
+          produce((draft) => {
+            draft.errors = null;
+          }),
+        );
       }
-      const orderCreator = getOrderCreator();
-      orderCreator
-        .validate(order as AlgoOrderEntity, valueConfig)
-        .then((errors) => {
-          setErrors(errors);
-        });
     });
-  }, [order, valueConfig.markPrice, order.quantity]);
+  };
+
+  const validateFunc = async (
+    order: AlgoOrderEntity<AlgoOrderRootType.TP_SL>,
+  ) => {
+    const creator = getOrderCreator();
+    return creator.validate(order, valueConfig);
+  };
 
   const setValues = (values: Partial<ComputedAlgoOrder>) => {
     const keys = Object.keys(values);
@@ -351,9 +399,24 @@ export const useTaskProfitAndStopLossInternal = (
           valueConfig,
         )
         .then((errors) => {
-          console.log("errors::", errors);
-
           if (errors) {
+            const keys = Object.keys(errors);
+            if (keys.length > 0) {
+              // setErrors(errors);
+              setMeta(
+                produce((draft) => {
+                  draft.errors = errors;
+                }),
+              );
+              if (!meta.validated) {
+                // setMeta((prev) => ({ ...prev, validated: true }));
+                setMeta(
+                  produce((draft) => {
+                    draft.validated = true;
+                  }),
+                );
+              }
+            }
             setErrors(errors);
             return reject(errors);
           }
@@ -438,7 +501,8 @@ export const useTaskProfitAndStopLossInternal = (
       (order: API.AlgoOrderExt) => order.is_activated,
     );
 
-    return doCreateOrder(orderBody, {}, params);
+    const body = appendOrderMetadata(orderBody, orderMetadata);
+    return doCreateOrder(body, {}, params);
   };
 
   const deleteOrder = (orderId: number, symbol: string): Promise<any> => {
@@ -499,6 +563,7 @@ export const useTaskProfitAndStopLossInternal = (
       // createPositionTPSL: submit,
       // createTPSL: submit,
       validate,
+      metaState: meta,
       errors,
       isCreateMutating,
       isUpdateMutating,

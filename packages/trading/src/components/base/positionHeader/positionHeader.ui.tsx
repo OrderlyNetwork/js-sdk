@@ -1,4 +1,5 @@
-import { FC } from "react";
+import React from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import {
   Checkbox,
   Divider,
@@ -7,17 +8,15 @@ import {
   Text,
   useScreen,
 } from "@orderly.network/ui";
-import { PositionHeaderState } from "./positionHeader.script";
 import { Decimal } from "@orderly.network/utils";
-import { useTranslation } from "@orderly.network/i18n";
+import type { PositionHeaderState } from "./positionHeader.script";
 
-export const PositionHeader: FC<PositionHeaderState> = (props) => {
+export const PositionHeader: React.FC<PositionHeaderState> = (props) => {
   const { isMobile } = useScreen();
-
   return isMobile ? <MobileLayout {...props} /> : <DesktopLayout {...props} />;
 };
 
-const MobileLayout: FC<PositionHeaderState> = (props) => {
+const MobileLayout: React.FC<PositionHeaderState> = (props) => {
   const { t } = useTranslation();
 
   return (
@@ -27,7 +26,7 @@ const MobileLayout: FC<PositionHeaderState> = (props) => {
       width={"100%"}
       itemAlign={"start"}
       p={2}
-      className="oui-bg-base-9 oui-rounded-b-xl"
+      className="oui-rounded-b-xl oui-bg-base-9"
     >
       <Flex width={"100%"} justify={"between"}>
         <UnrealPnL
@@ -46,7 +45,7 @@ const MobileLayout: FC<PositionHeaderState> = (props) => {
         />
       </Flex>
       <Divider className="oui-w-full" />
-      <Flex className="oui-gap-[2px] oui-cursor-pointer">
+      <Flex className="oui-cursor-pointer oui-gap-[2px]">
         <Checkbox
           id="oui-checkbox-hideOtherSymbols"
           color="white"
@@ -66,7 +65,8 @@ const MobileLayout: FC<PositionHeaderState> = (props) => {
     </Flex>
   );
 };
-const DesktopLayout: FC<PositionHeaderState> = (props) => {
+
+const DesktopLayout: React.FC<PositionHeaderState> = (props) => {
   return (
     <Flex py={2} px={3} gap={6} width={"100%"} justify={"start"}>
       <UnrealPnL
@@ -81,15 +81,9 @@ const DesktopLayout: FC<PositionHeaderState> = (props) => {
   );
 };
 
-const UnrealPnL: FC<
+const UnrealPnL: React.FC<
   PositionHeaderState & {
-    classNames?:
-      | {
-          root?: string;
-          label?: string;
-          value?: string;
-        }
-      | undefined;
+    classNames?: { root?: string; label?: string; value?: string };
   }
 > = (props) => {
   const { t } = useTranslation();
@@ -137,19 +131,12 @@ const UnrealPnL: FC<
   );
 };
 
-const Notional: FC<
+const Notional: React.FC<
   PositionHeaderState & {
-    classNames?:
-      | {
-          root?: string;
-          label?: string;
-          value?: string;
-        }
-      | undefined;
+    classNames?: { root?: string; label?: string; value?: string };
   }
 > = (props) => {
   const { t } = useTranslation();
-
   return (
     <Statistic label={t("common.notional")} classNames={props.classNames}>
       <Text.numeral

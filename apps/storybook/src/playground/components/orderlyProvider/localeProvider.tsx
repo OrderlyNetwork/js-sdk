@@ -1,3 +1,4 @@
+import React from "react";
 import {
   LocaleProvider as I18nLocaleProvider,
   LocaleCode,
@@ -6,7 +7,7 @@ import {
 } from "@orderly.network/i18n";
 import { resources } from "../../../components/orderlyProvider/localeProvider";
 
-export const LocaleProvider = (props: { children: React.ReactNode }) => {
+export const LocaleProvider: React.FC<React.PropsWithChildren> = (props) => {
   const onLanguageChanged = async (lang: LocaleCode) => {
     const path = removeLangPrefix(window.location.pathname);
     window.history.replaceState({}, "", `/${lang}${path}`);

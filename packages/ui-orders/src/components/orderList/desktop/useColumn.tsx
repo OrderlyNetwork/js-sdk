@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { format } from "date-fns";
-import { SymbolInfo, utils } from "@orderly.network/hooks";
+import { SymbolsInfo, utils } from "@orderly.network/hooks";
 import { useTranslation, i18n } from "@orderly.network/i18n";
 import {
   AlgoOrderRootType,
@@ -13,34 +13,48 @@ import {
 import { cn, Column, Flex, Text } from "@orderly.network/ui";
 import { Badge } from "@orderly.network/ui";
 import { SharePnLConfig, SharePnLDialogId } from "@orderly.network/ui-share";
-import { commifyOptional, Decimal } from "@orderly.network/utils";
+import {
+  commifyOptional,
+  Decimal,
+  getTrailingStopPrice,
+} from "@orderly.network/utils";
 import {
   grayCell,
   parseBadgesFor,
   upperCaseFirstLetter,
+  isTrailingStopOrder,
+  getNotional,
 } from "../../../utils/util";
 import { TabType } from "../../orders.widget";
 import { useSymbolContext } from "../../provider/symbolContext";
 import { ShareButtonWidget } from "../../shareButton";
+import { AvgPrice } from "./avgPrice";
 import { BracketOrderPrice } from "./bracketOrderPrice";
 import { CancelButton } from "./cancelBtn";
-import { Price } from "./price";
-import { OrderQuantity } from "./quantity";
+import { ActivedPriceCell } from "./components/activedPriceCell";
+import { PriceCell } from "./components/priceCell";
+import { QuantityCell } from "./components/quantityCell";
+import { TrailingCallbackCell } from "./components/trailingCallbackCell";
+import { TriggerPriceCell } from "./components/triggerPriceCell";
 import { Renew } from "./renew";
 import { TP_SLEditButton } from "./tpslEdit";
 import { TPSLOrderPrice, useTPSLOrderPrice } from "./tpslPrice";
 import { OrderTriggerPrice } from "./tpslTriggerPrice";
-import { TriggerPrice } from "./triggerPrice";
 
 export const useOrderColumn = (props: {
   _type: TabType;
   onSymbolChange?: (symbol: API.Symbol) => void;
   pnlNotionalDecimalPrecision?: number;
   sharePnLConfig?: SharePnLConfig;
-  symbolsInfo?: SymbolInfo;
+  symbolsInfo?: SymbolsInfo;
 }) => {
-  const { _type, onSymbolChange, pnlNotionalDecimalPrecision, sharePnLConfig } =
-    props;
+  const {
+    _type,
+    onSymbolChange,
+    pnlNotionalDecimalPrecision,
+    sharePnLConfig,
+    symbolsInfo,
+  } = props;
   const { t } = useTranslation();
 
   const columns = useMemo(() => {
@@ -66,7 +80,7 @@ export const useOrderColumn = (props: {
             disableEdit: true,
             enableSort: false,
           }),
-          avgOpen({ width: 130, enableSort: false }),
+          avgOpen({ width: 130, enableSort: false, symbolsInfo }),
           tpslTriggerPrice({ width: 130, symbolsInfo: props.symbolsInfo }),
           realizedPnL({
             width: 124,
@@ -97,13 +111,14 @@ export const useOrderColumn = (props: {
             enableSort: false,
           }),
           price({ width: 162, className: "oui-pr-0", enableSort: false }),
-          triggerPrice({ width: 162, className: "oui-pr-0" }),
+          trailingCallback({ width: 162 }),
+          triggerPrice({ width: 162, className: "oui-pr-0", isPending: true }),
           bracketOrderPrice({ width: 130 }),
           estTotal({ width: 162, isPending: true }),
           reduceOnly({ width: 162 }),
           hidden({ width: 162 }),
           orderTime({ width: 162, enableSort: false }),
-          pendingTabCancelBtn({ width: 162 }),
+          pendingTabCancelBtn({ width: 80 }),
         ];
       case TabType.tp_sl:
         return [
@@ -115,7 +130,7 @@ export const useOrderColumn = (props: {
           }),
           // side({ width: 176 }),
           quantity({ width: 176 }),
-          tpslTriggerPrice({ width: 176, symbolsInfo: props.symbolsInfo }),
+          tpslTriggerPrice({ width: 176, symbolsInfo }),
           tpslPrice({ width: 176, disableEdit: true }),
           tpslNotional({ width: 176 }),
           reduceOnly({ width: 176 }),
@@ -147,7 +162,7 @@ export const useOrderColumn = (props: {
             width: 124,
             pnlNotionalDecimalPrecision: pnlNotionalDecimalPrecision,
             sharePnLConfig: sharePnLConfig,
-            symbolsInfo: props.symbolsInfo,
+            symbolsInfo,
             hideShare: true,
           }),
           estTotal({ width: 124 }),
@@ -217,7 +232,11 @@ export const useOrderColumn = (props: {
             disableEdit: true,
             className: "oui-pl-6 oui-pr-0",
           }),
-          price({ width: 124, disableEdit: true }),
+          price({
+            width: 124,
+            disableEdit: true,
+            tabType: TabType.orderHistory,
+          }),
           avgOpen({ width: 124 }),
           triggerPrice({ width: 124, disableEdit: true }),
           realizedPnL({
@@ -227,6 +246,7 @@ export const useOrderColumn = (props: {
             symbolsInfo: props.symbolsInfo,
           }),
           estTotal({ width: 124 }),
+          trailingCallback({ width: 124, disableEdit: true }),
           fee({ width: 124 }),
           status({ width: 124 }),
           reduceOnly({ width: 124 }),
@@ -275,7 +295,7 @@ function instrument(option?: {
         <Flex gap={2}>
           <div
             className={cn(
-              "oui-rounded-[1px] oui-w-1 oui-h-7 oui-shrink-0",
+              "oui-h-7 oui-w-1 oui-shrink-0 oui-rounded-[1px]",
               record.side === OrderSide.BUY
                 ? "oui-bg-trade-profit"
                 : "oui-bg-trade-loss",
@@ -308,7 +328,7 @@ function instrument(option?: {
                         : "neutral"
                     }
                     size="xs"
-                    className="oui-break-normal oui-whitespace-nowrap"
+                    className="oui-whitespace-nowrap oui-break-normal"
                   >
                     {e}
                   </Badge>
@@ -444,7 +464,7 @@ function fillAndQuantity(option?: {
       ) {
         return i18n.t("tpsl.entirePosition");
       }
-      return <OrderQuantity order={record} disableEdit={option?.disableEdit} />;
+      return <QuantityCell order={record} disabled={option?.disableEdit} />;
       // return value;
     },
   };
@@ -494,7 +514,7 @@ function quantity(option?: {
       if (record.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL) {
         return i18n.t("tpsl.entirePosition");
       }
-      return <OrderQuantity order={record} />;
+      return <QuantityCell order={record} />;
       // return value;
     },
   };
@@ -506,6 +526,7 @@ function price(option?: {
   width?: number;
   className?: string;
   disableEdit?: boolean;
+  tabType?: TabType;
 }): Column<API.Order> {
   return {
     title: option?.title ?? i18n.t("common.price"),
@@ -519,12 +540,27 @@ function price(option?: {
           }
         : undefined,
     renderPlantText: (value: string, record: any) => {
-      return commifyOptional(record.price?.toString(), {
+      const isTrailingStop = isTrailingStopOrder(record);
+      if (isTrailingStop) {
+        // TODO: fix precision
+        return option?.tabType === TabType.orderHistory
+          ? i18n.t("common.marketPrice")
+          : getTrailingStopPrice(record) || "--";
+      }
+      return commifyOptional(record.price, {
         fallback: i18n.t("common.marketPrice"),
       });
     },
     render: (value: string, record: any) => {
-      return <Price order={record} disableEdit={option?.disableEdit} />;
+      const isTrailingStop = isTrailingStopOrder(record);
+      if (isTrailingStop) {
+        // TODO: fix precision
+        return option?.tabType === TabType.orderHistory
+          ? i18n.t("common.marketPrice")
+          : getTrailingStopPrice(record) || "--";
+      }
+
+      return <PriceCell order={record} disabled={option?.disableEdit} />;
     },
   };
 }
@@ -561,6 +597,7 @@ function avgPrice(option?: {
   width?: number;
   className?: string;
   disableEdit?: boolean;
+  symbolsInfo?: SymbolsInfo;
 }): Column<API.Order> {
   return {
     title: i18n.t("common.avgPrice"),
@@ -568,7 +605,12 @@ function avgPrice(option?: {
     className: option?.className,
     width: option?.width,
     onSort: option?.enableSort,
-    render: (value: string, record: any) => commifyOptional(value),
+    renderPlantText: (value: string, record: any) => {
+      return commifyOptional(value);
+    },
+    render: (value: string, record: any) => {
+      return <AvgPrice symbol={record.symbol} value={value} />;
+    },
   };
 }
 
@@ -577,7 +619,15 @@ function triggerPrice(option?: {
   width?: number;
   className?: string;
   disableEdit?: boolean;
+  isPending?: boolean;
 }): Column<API.Order> {
+  const { isPending } = option || {};
+  const checkOrderType = (record: any) => {
+    const isAlgoOrder = record?.algo_order_id !== undefined;
+    const isBracketOrder = record?.algo_type === "BRACKET";
+    return isAlgoOrder && !isBracketOrder;
+  };
+
   return {
     title: i18n.t("common.trigger"),
     className: option?.className,
@@ -585,16 +635,28 @@ function triggerPrice(option?: {
     width: option?.width,
     onSort: option?.enableSort,
     renderPlantText: (value: string, record: any) => {
-      const isAlgoOrder = record?.algo_order_id !== undefined;
-      const isBracketOrder = record?.algo_type === "BRACKET";
-      if (!isAlgoOrder || isBracketOrder) {
+      if (!checkOrderType(record)) {
         return "--";
+      }
+      if (isTrailingStopOrder(record) && isPending) {
+        return record.activated_price
+          ? commifyOptional(record.activated_price)
+          : "--";
       }
       return commifyOptional(value);
     },
-    render: (value: string, record: any) => (
-      <TriggerPrice order={record} disableEdit={option?.disableEdit} />
-    ),
+    render: (value: string, record: any) => {
+      if (!checkOrderType(record)) {
+        return "--";
+      }
+
+      if (isTrailingStopOrder(record) && isPending) {
+        return (
+          <ActivedPriceCell order={record} disabled={option?.disableEdit} />
+        );
+      }
+      return <TriggerPriceCell order={record} disabled={option?.disableEdit} />;
+    },
   };
 }
 
@@ -603,7 +665,7 @@ function tpslTriggerPrice(option?: {
   width?: number;
   className?: string;
   title?: string;
-  symbolsInfo?: SymbolInfo;
+  symbolsInfo?: SymbolsInfo;
 }): Column<API.Order> {
   return {
     title: option?.title ?? i18n.t("common.trigger"),
@@ -755,7 +817,7 @@ function realizedPnL(option?: {
   className?: string;
   pnlNotionalDecimalPrecision?: number;
   sharePnLConfig?: SharePnLConfig;
-  symbolsInfo?: SymbolInfo;
+  symbolsInfo?: SymbolsInfo;
   hideShare?: boolean;
 }): Column<API.Order> {
   return {
@@ -1000,6 +1062,7 @@ function avgOpen(option?: {
   enableSort?: boolean;
   width?: number;
   className?: string;
+  symbolsInfo?: SymbolsInfo;
 }): Column<API.Order> {
   return {
     title: i18n.t("common.avgPrice"),
@@ -1019,14 +1082,11 @@ function avgOpen(option?: {
       if (record.type === OrderType.MARKET && !value) {
         return "--";
       }
-      return (
-        <Text className="oui-break-normal oui-whitespace-nowrap oui-font-semibold">
-          {value}
-        </Text>
-      );
+
+      return <AvgPrice symbol={record.symbol} value={value} />;
     },
     renderPlantText: (value: string, record: any) => {
-      return commifyOptional(value, { fix: 2 });
+      return value ? commifyOptional(value) : "--";
     },
   };
 }
@@ -1110,16 +1170,7 @@ function compareNumbers(a: number, b: number): number {
 // estTotal
 function estTotalValue(record: any, isPending: boolean): string {
   if (isPending) {
-    const value = () => {
-      if (record.price && record.quantity) {
-        return new Decimal(record.price)
-          .mul(record.quantity)
-          .toFixed(2, Decimal.ROUND_DOWN);
-      }
-      return "--";
-    };
-
-    return value();
+    return getNotional(record) || "--";
   }
 
   if (
@@ -1134,4 +1185,33 @@ function estTotalValue(record: any, isPending: boolean): string {
     record.average_executed_price === null
     ? "--"
     : `${record.total_executed_quantity * record.average_executed_price}`;
+}
+
+function trailingCallback(option?: {
+  title?: string;
+  width?: number;
+  className?: string;
+  disableEdit?: boolean;
+}): Column<API.Order> {
+  return {
+    title: option?.title ?? i18n.t("orderEntry.trailing"),
+    dataIndex: "callback_value",
+    className: option?.className,
+    width: option?.width,
+    renderPlantText: (value: string, record: any) => {
+      const { callback_value, callback_rate } = record;
+      const val =
+        callback_value || (callback_rate ? `${callback_rate * 100}%` : "--");
+      return val?.toString();
+    },
+    render: (value: string, record: any) => {
+      if (isTrailingStopOrder(record)) {
+        return (
+          <TrailingCallbackCell order={record} disabled={option?.disableEdit} />
+        );
+      }
+
+      return "--";
+    },
+  };
 }

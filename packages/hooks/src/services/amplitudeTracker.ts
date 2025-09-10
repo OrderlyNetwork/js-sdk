@@ -16,14 +16,47 @@ const apiKeyMap = {
   prod: "3ab9ae56ed16cc57bc2ac97ffc1098c2",
 };
 
+function getAmplitudeConfig(
+  env: ENVType,
+  amplitudeConfig?: {
+    amplitudeId?: string;
+    serverZone?: amplitude.Types.ServerZoneType;
+  },
+): { amplitudeId: string; options: amplitude.Types.BrowserOptions } {
+  if (!amplitudeConfig) {
+    return {
+      amplitudeId: apiKeyMap[env],
+      options: {
+        serverZone: "EU",
+      },
+    };
+  }
+  const { amplitudeId, serverZone } = amplitudeConfig;
+  return {
+    amplitudeId: amplitudeId!,
+    options: serverZone
+      ? {
+          serverZone: serverZone as amplitude.Types.ServerZoneType,
+        }
+      : {},
+  };
+}
+
 export class AmplitudeTracker {
   static instanceName = "amplitudeTracker";
   private _userId: string | undefined;
   private _sdkInfoTag: string | undefined;
   private _ee = SimpleDI.get<EventEmitter>("EE");
 
-  constructor(env: ENVType, sdkInfo: any) {
-    amplitude.init(apiKeyMap[env], { serverZone: "EU" });
+  constructor(
+    env: ENVType,
+    amplitudeConfig:
+      | { amplitudeId: string; serverZone?: amplitude.Types.ServerZoneType }
+      | undefined,
+    sdkInfo: any,
+  ) {
+    const { amplitudeId, options } = getAmplitudeConfig(env, amplitudeConfig);
+    amplitude.init(amplitudeId!, options);
     this.setSdkInfo(sdkInfo);
     this._bindEvents();
   }

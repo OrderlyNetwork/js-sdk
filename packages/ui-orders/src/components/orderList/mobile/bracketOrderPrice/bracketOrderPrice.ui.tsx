@@ -1,17 +1,23 @@
 import { FC } from "react";
-import { cn, Flex, Text } from "@orderly.network/ui";
-import { BracketOrderPriceState } from "./bracketOrderPrice.script";
+import { useTranslation } from "@orderly.network/i18n";
+import { cn, EditIcon, Flex, Text, modal } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { MobileTooltip } from "../items";
-import { useTranslation } from "@orderly.network/i18n";
+import { BracketOrderPriceState } from "./bracketOrderPrice.script";
 
 export const BracketOrderPrice: FC<BracketOrderPriceState> = (props) => {
   const { t } = useTranslation();
 
+  const onEdit = () => {
+    modal.show("EditBracketOrderSheetId", {
+      order: props.order,
+    });
+  };
+
   if (!props.sl_trigger_price && !props.tp_trigger_price) return <></>;
 
   return (
-    <>
+    <Flex gap={1} itemAlign={"center"} justify={"start"}>
       <MobileTooltip
         classNames={{
           content: "oui-bg-base-6 oui-ml-2",
@@ -72,7 +78,13 @@ export const BracketOrderPrice: FC<BracketOrderPriceState> = (props) => {
           </Flex>
         </button>
       </MobileTooltip>
-    </>
+      <EditIcon
+        onClick={onEdit}
+        opacity={1}
+        className="oui-cursor-pointer oui-text-base-contrast-54"
+        size={16}
+      />
+    </Flex>
   );
 };
 
@@ -88,7 +100,7 @@ const Price = (props: {
       size="2xs"
       className={cn(
         "oui-border-b oui-border-dashed oui-border-base-contrast-12",
-        type === "TP" ? "oui-text-trade-profit" : "oui-text-trade-loss"
+        type === "TP" ? "oui-text-trade-profit" : "oui-text-trade-loss",
       )}
       key={"tp"}
       rule="price"

@@ -1,12 +1,13 @@
+import React from "react";
+import type { SharePnLConfig } from "@orderly.network/ui-share";
 import { useDataListScript } from "./dataList.script";
 import { DataList } from "./dataList.ui";
-import { SharePnLConfig } from "@orderly.network/ui-share";
 
-export const DataListWidget = (props: {
+export const DataListWidget: React.FC<{
   symbol: string;
   className?: string;
   sharePnLConfig?: SharePnLConfig;
-}) => {
+}> = (props) => {
   const state = useDataListScript(props);
   return <DataList {...state} className={props.className} />;
 };

@@ -15,7 +15,7 @@ import { DefaultSolanaWalletAdapter } from "@orderly.network/default-solana-adap
 import { Chain, NetworkId } from "@orderly.network/types";
 import { SDKError } from "@orderly.network/types";
 import { EthersProvider } from "@orderly.network/web3-provider-ethers";
-import { DEFAULT_TICK_SIZES } from "./constants";
+import { DEFAULT_SYMBOL_DEPTHS, DEFAULT_TICK_SIZES } from "./constants";
 import { ProxyConfigStore } from "./dev/proxyConfigStore";
 import { ExtendedConfigStore } from "./extendedConfigStore";
 import { OrderlyConfigContextState, OrderlyProvider } from "./orderlyContext";
@@ -42,6 +42,10 @@ export type BaseConfigProviderProps = {
    * Custom orderbook default tick sizes.
    */
   orderbookDefaultTickSizes?: Record<string, string>;
+  /**
+   * Custom orderbook default symbol depths.
+   */
+  orderbookDefaultSymbolDepths?: Record<PropertyKey, number[]>;
 } & Pick<
   OrderlyConfigContextState,
   | "enableSwapDeposit"
@@ -49,6 +53,8 @@ export type BaseConfigProviderProps = {
   | "chainTransformer"
   | "dataAdapter"
   | "notification"
+  | "amplitudeConfig"
+  | "orderMetadata"
 >;
 
 export type ExclusiveConfigProviderProps =
@@ -87,18 +93,16 @@ export const OrderlyConfigProvider: FC<
     chainTransformer,
     dataAdapter,
     notification,
+    amplitudeConfig,
+    orderbookDefaultTickSizes,
+    orderbookDefaultSymbolDepths,
+    children,
+    orderMetadata,
   } = props;
 
   if (!brokerId && typeof configStore === "undefined") {
     console.error("[OrderlyConfigProvider]: brokerId is required");
   }
-
-  // if (typeof walletAdapters === "undefined") {
-  //   console.error(
-  //     "[OrderlyConfigProvider]: walletAdapters is required, please provide at least one wallet adapter, " +
-  //       "you can install the `@orderly.network/default-evm-adapter` or `@orderly.network/default-solana-adapter` package"
-  //   );
-  // }
 
   if (typeof configStore !== "undefined" && !configStore.get("brokerId")) {
     // console.error("[OrderlyConfigProvider]: brokerId is required");
@@ -120,20 +124,17 @@ export const OrderlyConfigProvider: FC<
   const innerConfigStore = useMemo<ConfigStore>(() => {
     return new ProxyConfigStore(
       configStore ||
-        new ExtendedConfigStore({ brokerId, brokerName, networkId }),
+        new ExtendedConfigStore({
+          brokerId,
+          brokerName,
+          networkId,
+        }),
     );
   }, [configStore, brokerId, brokerName, networkId]);
 
   const innerKeyStore = useMemo<OrderlyKeyStore>(() => {
     return keyStore || new LocalStorageStore(networkId);
   }, [networkId, keyStore]);
-
-  // const innerGetWalletAdapter = useConstant<getWalletAdapterFunc>(() => {
-  //   return (
-  //     getWalletAdapter ||
-  //     ((options: WalletAdapterOptions) => new EtherAdapter(options))
-  //   );
-  // });
 
   const innerWalletAdapters = useMemo<WalletAdapter[]>(() => {
     return (
@@ -144,9 +145,13 @@ export const OrderlyConfigProvider: FC<
     );
   }, [walletAdapters]);
 
-  const defaultOrderbookTickSizes = useMemo<Record<string, string>>(() => {
-    return props.orderbookDefaultTickSizes || DEFAULT_TICK_SIZES;
-  }, [props.orderbookDefaultTickSizes]);
+  const defaultOrderbookTickSizes = useMemo(() => {
+    return orderbookDefaultTickSizes || DEFAULT_TICK_SIZES;
+  }, [orderbookDefaultTickSizes]);
+
+  const defaultOrderbookSymbolDepths = useMemo(() => {
+    return orderbookDefaultSymbolDepths || DEFAULT_SYMBOL_DEPTHS;
+  }, [orderbookDefaultSymbolDepths]);
 
   // check params, if has mismatch, throw warning message to console
   // useParamsCheck({ brokerId: innerConfigStore.get("brokerId") });
@@ -175,9 +180,8 @@ export const OrderlyConfigProvider: FC<
     if (typeof chainFilter === "function") {
       return chainFilter(innerConfigStore);
     }
-
     return chainFilter;
-  }, [props.chainFilter, innerConfigStore]);
+  }, [chainFilter, innerConfigStore]);
 
   const memoizedValue = useMemo<OrderlyConfigContextState>(() => {
     return {
@@ -189,9 +193,12 @@ export const OrderlyConfigProvider: FC<
       customChains,
       enableSwapDeposit,
       defaultOrderbookTickSizes,
+      defaultOrderbookSymbolDepths,
       chainTransformer,
       dataAdapter,
       notification: notification,
+      amplitudeConfig,
+      orderMetadata,
     };
   }, [
     innerConfigStore,
@@ -202,9 +209,12 @@ export const OrderlyConfigProvider: FC<
     customChains,
     enableSwapDeposit,
     defaultOrderbookTickSizes,
+    defaultOrderbookSymbolDepths,
     dataAdapter,
     notification,
     chainTransformer,
+    amplitudeConfig,
+    orderMetadata,
   ]);
 
   if (!account) {
@@ -214,7 +224,7 @@ export const OrderlyConfigProvider: FC<
   return (
     <OrderlyProvider value={memoizedValue}>
       <StatusProvider>
-        <DataCenterProvider>{props.children}</DataCenterProvider>
+        <DataCenterProvider>{children}</DataCenterProvider>
       </StatusProvider>
     </OrderlyProvider>
   );

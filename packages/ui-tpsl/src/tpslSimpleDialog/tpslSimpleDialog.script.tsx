@@ -16,7 +16,7 @@ import {
   SDKError,
 } from "@orderly.network/types";
 import { modal, toast } from "@orderly.network/ui";
-import { PositionTPSLConfirm } from "../tpsl.ui";
+import { PositionTPSLConfirm } from "../positionTPSL";
 
 export type TPSLBuilderOptions = {
   type: "tp" | "sl";
@@ -91,12 +91,9 @@ export const useTPSLSimpleDialog = (options: TPSLBuilderOptions) => {
     }
   }, [type, triggerPrice, maxQty]);
 
-  useEffect(() => {}, [maxQty]);
-
   const onSubmit = async () => {
     try {
       const validOrder = await validate();
-      console.log("validOrder", validOrder);
       if (validOrder) {
         if (!needConfirm) {
           return submit({ accountId: position.account_id })

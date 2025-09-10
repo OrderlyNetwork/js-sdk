@@ -21,6 +21,7 @@ export type Props = {
   onChange: (key: string, value: string | boolean | number) => void;
   rootOrderPrice: string | undefined;
   symbol: string;
+  disableEnableCheckbox?: boolean;
 };
 export const useTPSLInputRowScript = (props: Props) => {
   return {
@@ -34,5 +35,6 @@ export const useTPSLInputRowScript = (props: Props) => {
     hideOrderPrice: props.hideOrderPrice,
     rootOrderPrice: props.rootOrderPrice,
     symbol: props.symbol,
+    disableEnableCheckbox: props.disableEnableCheckbox,
   };
 };

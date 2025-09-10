@@ -1,4 +1,4 @@
-import { PropsWithChildren } from "react";
+import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { Box, EmptyDataState } from "@orderly.network/ui";
@@ -14,7 +14,9 @@ type AuthGuardProps = {
   status?: AccountStatusEnum;
 };
 
-const AuthGuardEmpty = (props: PropsWithChildren<AuthGuardProps>) => {
+export const AuthGuardEmpty: React.FC<
+  React.PropsWithChildren<AuthGuardProps>
+> = (props) => {
   const { t } = useTranslation();
   const {
     hint = {
@@ -39,5 +41,3 @@ const AuthGuardEmpty = (props: PropsWithChildren<AuthGuardProps>) => {
 };
 
 AuthGuardEmpty.displayName = "AuthGuardEmpty";
-
-export { AuthGuardEmpty };

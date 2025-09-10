@@ -49,6 +49,7 @@ export const common = {
   "common.notional": "Notional",
   "common.fee": "Fee",
   "common.fees": "Fees",
+  "common.effectiveFee": "Effective Fees",
 
   "common.orderPrice": "Order price",
   "common.avgPrice": "Avg. price",
@@ -62,6 +63,7 @@ export const common = {
   "common.marketPrice": "Market",
   "common.market": "Market",
   "common.limit": "Limit",
+  "common.triggerPrice": "Trigger price",
 
   "common.unrealizedPnl": "Unrealized PnL",
   "common.realizedPnl": "Realized PnL",
@@ -107,4 +109,5 @@ export const common = {
   "common.fullTPSL": "Full TP/SL",
   "common.partialTPSL": "Partial TP/SL",
   "common.vaults": "Vaults",
+  "common.optional": "Optional",
 };

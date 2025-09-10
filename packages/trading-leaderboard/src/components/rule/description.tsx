@@ -145,10 +145,13 @@ const parseRichText = (text: string): JSX.Element[] => {
 
 // Custom rich text implementation (recommended for lightweight needs)
 export const DescriptionContent: FC<{
-  description: DescriptionItem[];
+  description: DescriptionItem[] | ReadonlyArray<DescriptionItem>;
   config?: DescriptionConfig;
 }> = ({ description, config }) => {
-  const renderContent = (contents: DescriptionItem[], level: number = 0) => {
+  const renderContent = (
+    contents: DescriptionItem[] | ReadonlyArray<DescriptionItem>,
+    level: number = 0,
+  ) => {
     // Determine list style - item level overrides global config
     const defaultListStyle = config?.listStyle || "disc";
     const hasListItems = contents.some((item) => item.children?.length);
@@ -234,9 +237,11 @@ export const DescriptionContent: FC<{
 
 // Alternative: React-markdown implementation (requires additional dependencies)
 export const MarkdownDescriptionContent: FC<{
-  description: DescriptionItem[];
+  description: DescriptionItem[] | ReadonlyArray<DescriptionItem>;
 }> = ({ description }) => {
-  const renderContent = (contents: DescriptionItem[]) => {
+  const renderContent = (
+    contents: DescriptionItem[] | ReadonlyArray<DescriptionItem>,
+  ) => {
     return (
       <ul className="oui-list-inside oui-list-disc">
         {contents.map((content, index) => (
@@ -250,9 +255,12 @@ export const MarkdownDescriptionContent: FC<{
             ) : (
               <div>{content.content}</div>
             )}
-            {content?.children?.length && (
-              <div className="oui-ml-4">{renderContent(content.children)}</div>
-            )}
+            {Array.isArray(content?.children) &&
+              content?.children.length > 0 && (
+                <div className="oui-ml-4">
+                  {renderContent(content.children)}
+                </div>
+              )}
           </li>
         ))}
       </ul>

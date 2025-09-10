@@ -11,7 +11,7 @@ import {
   Text,
 } from "@orderly.network/ui";
 import { Columns } from "./columns";
-import { DataSource } from "./dataSource";
+import { DataSource, DataSourceWithChildren } from "./dataSource";
 
 const meta: Meta<typeof DataTable> = {
   title: "Base/Table/Table",
@@ -39,7 +39,7 @@ export const Default: Story = {
 
     useEffect(() => {
       setTimeout(() => {
-        setDataSource(DataSource);
+        setDataSource(DataSourceWithChildren);
         setLoading(false);
       }, 2000);
     }, []);
@@ -122,6 +122,34 @@ export const Default: Story = {
   },
 };
 
+export const Expandable: Story = {
+  render: () => {
+    const [expanded, setExpanded] = useState({});
+    return (
+      <DataTable
+        columns={Columns}
+        dataSource={DataSource}
+        generatedRowKey={(record) => record.symbol}
+        expanded={expanded}
+        onExpandedChange={setExpanded}
+        getRowCanExpand={() => true}
+        onRow={(record, index, row) => {
+          return {
+            // onClick: row.getToggleExpandedHandler(),
+          };
+        }}
+        expandRowRender={(row) => {
+          return (
+            <pre style={{ fontSize: "10px" }} className="oui-bg-base-8">
+              <code>{JSON.stringify(row.original, null, 2)}</code>
+            </pre>
+          );
+        }}
+      />
+    );
+  },
+};
+
 export const MultiFieldSorting: Story = {
   render: () => {
     const [dataSource, setDataSource] = useState([] as any);
@@ -133,7 +161,7 @@ export const MultiFieldSorting: Story = {
 
     useEffect(() => {
       setTimeout(() => {
-        const filteredDataSource = DataSource.filter(
+        const filteredDataSource = DataSourceWithChildren.filter(
           (item) =>
             item.symbol !== "main_account" && item.symbol !== "sub_account",
         );

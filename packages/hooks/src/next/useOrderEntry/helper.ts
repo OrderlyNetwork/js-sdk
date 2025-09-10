@@ -7,6 +7,7 @@ import {
   OrderType,
 } from "@orderly.network/types";
 import { Decimal, zero } from "@orderly.network/utils";
+import { OrderMetadataConfig } from "../../orderlyContext";
 import { OrderFactory } from "../../services/orderCreator/factory";
 import { getOrderPrice } from "../../utils/order/orderPrice";
 import {
@@ -18,6 +19,7 @@ export const getCreateOrderUrl = (order: Partial<OrderlyOrder>): string => {
   const isAlgoOrder =
     order?.order_type === OrderType.STOP_LIMIT ||
     order?.order_type === OrderType.STOP_MARKET ||
+    order?.order_type === OrderType.TRAILING_STOP ||
     order?.order_type === OrderType.CLOSE_POSITION ||
     (order.algo_type && order.algo_type === AlgoOrderRootType.BRACKET) ||
     isBracketOrder(order);
@@ -218,4 +220,25 @@ export function isBBOOrder(options: {
     order_type === OrderType.LIMIT &&
     [OrderType.ASK, OrderType.BID].includes(order_type_ext!)
   );
+}
+
+export function appendOrderMetadata(
+  order: Partial<OrderlyOrder> | Partial<OrderlyOrder>[],
+  orderMetadata?: OrderMetadataConfig,
+) {
+  if (Array.isArray(order)) {
+    return order.map((item) => ({
+      ...item,
+      ...(typeof orderMetadata === "function"
+        ? orderMetadata(item)
+        : orderMetadata),
+    }));
+  }
+
+  return {
+    ...order,
+    ...(typeof orderMetadata === "function"
+      ? orderMetadata(order)
+      : orderMetadata),
+  };
 }

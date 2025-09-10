@@ -1,49 +1,48 @@
-import { ReactNode } from "react";
+import React from "react";
 import { Trans, useTranslation } from "@orderly.network/i18n";
 
-const Link = ({ url, children }: { url: string; children: ReactNode }) => {
+const Link: React.FC<React.PropsWithChildren<{ url: string }>> = (props) => {
+  const { url, children } = props;
   return (
     <span
-      onClick={() => {
-        window.open(url);
-      }}
-      className="oui-text-primary-light oui-underline oui-cursor-pointer"
+      onClick={() => window.open(url)}
+      className="oui-cursor-pointer oui-px-0.5 oui-text-primary-light oui-underline"
     >
       {children}
     </span>
   );
 };
 
-export function NoTradingview() {
+export const NoTradingview: React.FC = () => {
   const { t } = useTranslation();
-
   return (
-    <div className="oui-z-0 oui-text-base-contrast-80 oui-absolute oui-top-0 oui-left-0 oui-right-0 oui-bottom-0 oui-flex oui-flex-col oui-justify-start md:oui-justify-center oui-items-center oui-p-2 md:oui-p-10">
+    <div className="oui-absolute oui-inset-0 oui-z-0 oui-flex oui-flex-col oui-items-center oui-justify-start oui-p-2 oui-text-base-contrast-80 md:oui-justify-center md:oui-p-10">
       <div>
         <p className="oui-mb-6 oui-text-xs">{t("tradingView.noScriptSrc")}</p>
 
-        <p className="oui-mb-3 oui-text-2xs md:oui-text-xs oui-text-base-contrast-54 md:oui-text-base-contrast-80 md:oui-text-base oui-pl-0 md:oui-pl-2">
-          {/* @ts-ignore */}
+        <p className="oui-mb-3 oui-pl-0 oui-text-2xs oui-text-base-contrast-54 md:oui-pl-2 md:oui-text-base md:oui-text-base-contrast-80">
           <Trans
             i18nKey="tradingView.noScriptSrc.1"
             components={[
-              // @ts-ignore
-              <Link url="https://www.tradingview.com/advanced-charts" />,
+              <Link
+                key={"tradingview-advanced-charts"}
+                url="https://www.tradingview.com/advanced-charts"
+              />,
             ]}
           />
         </p>
-
-        <p className="oui-text-2xs md:oui-text-xs oui-text-base-contrast-54 md:oui-text-base-contrast-80 md:oui-text-base oui-pl-0 md:oui-pl-2">
-          {/* @ts-ignore */}
+        <p className="oui-pl-0 oui-text-2xs oui-text-base-contrast-54 md:oui-pl-2 md:oui-text-base md:oui-text-base-contrast-80">
           <Trans
             i18nKey="tradingView.noScriptSrc.2"
             components={[
-              // @ts-ignore
-              <Link url="https://orderly.network/docs/sdks/react/components/trading#tradingviewconfig" />,
+              <Link
+                key={"tradingview-config"}
+                url="https://orderly.network/docs/sdks/react/components/trading#tradingviewconfig"
+              />,
             ]}
           />
         </p>
       </div>
     </div>
   );
-}
+};

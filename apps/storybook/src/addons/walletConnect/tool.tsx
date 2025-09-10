@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React from "react";
 import { IconButton } from "storybook/internal/components";
 import { useChannel, useGlobals } from "storybook/manager-api";
 
@@ -6,7 +6,7 @@ export const WalletConnectAddonId = "walletConnectAddon";
 export const WalletConnectToolId = "walletConnectToolId";
 export const WalletConnectPanelId = "walletConnectPanelId";
 
-export const WalletConnectTool = memo(function WalletConnector() {
+export const WalletConnectTool = React.memo(() => {
   const emit = useChannel({
     walletConnected: (args) => {
       console.log("wallet connected:", args);

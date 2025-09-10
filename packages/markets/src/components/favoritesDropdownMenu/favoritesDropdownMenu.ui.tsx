@@ -19,7 +19,7 @@ import {
   CloseCircleFillIcon,
   Tooltip,
 } from "@orderly.network/ui";
-import { UseFavoritesDropdownMenuScriptReturn } from "./favoritesDropdownMenu.script";
+import type { UseFavoritesDropdownMenuScriptReturn } from "./favoritesDropdownMenu.script";
 
 export type FavoritesDropdownMenuProps =
   PropsWithChildren<UseFavoritesDropdownMenuScriptReturn>;
@@ -106,7 +106,6 @@ export const FavoritesDropdownMenu: React.FC<FavoritesDropdownMenuProps> = (
     return (
       <Tooltip
         open={overTabs ? undefined : false}
-        // @ts-ignore
         content={
           <Text size="2xs" intensity={80}>
             {t("markets.favorites.tabs.maxList")}

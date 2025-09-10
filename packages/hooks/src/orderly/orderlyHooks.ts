@@ -1,4 +1,8 @@
-export { useOrderbookStream } from "./useOrderbookStream";
+export {
+  useOrderbookStream,
+  getPriceKey,
+  ORDERLY_ORDERBOOK_DEPTH_KEY,
+} from "./useOrderbookStream";
 export type {
   OrderbookData,
   OrderBookItem,
@@ -6,7 +10,7 @@ export type {
 } from "./useOrderbookStream";
 
 export { useSymbolsInfo } from "./useSymbolsInfo";
-export type { SymbolInfo } from "./useSymbolsInfo";
+export type { SymbolsInfo } from "./useSymbolsInfo";
 export { useAccountInfo } from "./useAccountInfo";
 
 export { useMarketsStream } from "./useMarketsStream";

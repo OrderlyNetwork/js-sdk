@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+import React, { forwardRef } from "react";
 import { OrderSide, OrderStatus, API } from "@orderly.network/types";
 import { SharePnLConfig } from "@orderly.network/ui-share";
 import { TabType } from "../orders.widget";
@@ -27,31 +27,21 @@ export const DesktopOrderListWidget = forwardRef<
   return <DesktopOrderList {...state} testIds={testIds} />;
 });
 
-export const MobileOrderListWidget = (props: {
+export const MobileOrderListWidget: React.FC<{
   type: TabType;
   ordersStatus?: OrderStatus;
   /** if has value, will be fetch current symbol orders*/
   symbol?: string;
   onSymbolChange?: (symbol: API.Symbol) => void;
   sharePnLConfig?: SharePnLConfig;
-  classNames?: {
-    root?: string;
-    cell?: string;
-    content?: string;
-  };
+  classNames?: { root?: string; cell?: string; content?: string };
   showFilter?: boolean;
   filterConfig?: {
     side?: OrderSide | "all";
-    range?: {
-      from?: Date;
-      to?: Date;
-    };
+    range?: { from?: Date; to?: Date };
   };
-}) => {
-  const state = useOrderListScript({
-    ...props,
-    enableLoadMore: true,
-  });
+}> = (props) => {
+  const state = useOrderListScript({ ...props, enableLoadMore: true });
   return (
     <MobileOrderList
       {...state}

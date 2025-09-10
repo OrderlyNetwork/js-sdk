@@ -60,5 +60,5 @@ export enum OperationType {
 }
 
 export type VaultsPageConfig = {
-  headerImage?: string | React.ReactNode;
+  headerImage?: React.ReactNode;
 };

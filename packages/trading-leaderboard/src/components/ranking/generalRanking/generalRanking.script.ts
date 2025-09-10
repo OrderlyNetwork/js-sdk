@@ -39,7 +39,7 @@ export type GeneralRankingScriptReturn = ReturnType<
 >;
 
 export type GeneralRankingScriptOptions = {
-  dateRange?: DateRange;
+  dateRange?: DateRange | null;
   address?: string;
   sortKey?: "perp_volume" | "realized_pnl";
 };
@@ -64,7 +64,13 @@ export function useGeneralRankingScript(options?: GeneralRankingScriptOptions) {
   const { isMobile } = useScreen();
 
   const { page, pageSize, setPage, parsePagination } = usePagination({
-    pageSize: isMobile ? 100 : 20,
+    pageSize: 100,
+  });
+
+  const { campaignRankingList, filteredCampaignData } = useCampaignRankingList({
+    dateRange,
+    sort,
+    searchValue,
   });
 
   const getUrl = (args: {
@@ -227,43 +233,92 @@ export function useGeneralRankingScript(options?: GeneralRankingScriptOptions) {
 
   const dataSource = useMemo(() => {
     let list = data?.rows || [];
+    // hardcode for 128 campaign
+    if (campaignRankingList && campaignRankingList.length >= 0) {
+      if (filteredCampaignData) {
+        list = filteredCampaignData as GeneralRankingData[];
+      } else {
+        list = list.filter((item) =>
+          campaignRankingList.includes(item.address),
+        );
+      }
+    }
+
     if (page === 1) {
       list = list.slice(0, pageSize);
     }
-    const total = data?.meta.total || 0;
+    let total = data?.meta.total || 0;
+    if (campaignRankingList) {
+      total = list.length;
+    }
     const rankList = addRankForList(list, total);
 
     if (page === 1 && !searchValue) {
       return formatData([...userDataList, ...rankList]);
     }
     return formatData(rankList);
-  }, [data, page, pageSize, userDataList, searchValue, addRankForList]);
+  }, [
+    data,
+    page,
+    pageSize,
+    userDataList,
+    searchValue,
+    addRankForList,
+    campaignRankingList,
+    filteredCampaignData,
+  ]);
 
   const dataList = useMemo(() => {
     if (!infiniteData?.length) {
       return [];
     }
 
-    const total = infiniteData[0]?.meta.total || 0;
-    const flatList = infiniteData?.map((item) => item.rows)?.flat();
+    let total = infiniteData[0]?.meta.total || 0;
+    let flatList = infiniteData?.map((item) => item.rows)?.flat();
+    if (campaignRankingList && campaignRankingList.length > 0) {
+      if (filteredCampaignData) {
+        flatList = filteredCampaignData as GeneralRankingData[];
+        total = filteredCampaignData.length;
+      } else {
+        flatList = flatList.filter((item) =>
+          campaignRankingList.includes(item.address),
+        );
+        total = flatList.length;
+      }
+    }
     const rankList = addRankForList(flatList, total);
 
     if (!searchValue) {
       return formatData([...userDataList, ...rankList]);
     }
     return formatData(rankList);
-  }, [infiniteData, userDataList, searchValue, addRankForList]);
+  }, [
+    infiniteData,
+    userDataList,
+    searchValue,
+    addRankForList,
+    campaignRankingList,
+    filteredCampaignData,
+  ]);
 
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
   const pagination = useMemo(
     () =>
       parsePagination({
-        total: data?.meta?.total || 0,
+        total: campaignRankingList
+          ? dataSource?.length
+          : data?.meta?.total || 0,
         current_page: data?.meta?.current_page || 1,
         records_per_page: pageSize,
       }),
-    [data?.meta?.total, data?.meta?.current_page, pageSize],
+    [
+      data?.meta?.total,
+      data?.meta?.current_page,
+      pageSize,
+      campaignRankingList,
+      dataSource,
+    ],
   );
 
   useEndReached(sentinelRef, () => {
@@ -280,9 +335,15 @@ export function useGeneralRankingScript(options?: GeneralRankingScriptOptions) {
       } else if (sort?.sortKey === "pnl") {
         sort.sortKey = "realized_pnl";
       }
-      setSort(sort || initialSort);
+      // fix for mobile sort
+      setSort((_sort) => {
+        if (sort) return sort;
+        return isMobile
+          ? { sortKey: _sort?.sortKey || "", sort: "desc" }
+          : initialSort;
+      });
     },
-    [initialSort],
+    [initialSort, isMobile],
   );
 
   useEffect(() => {
@@ -325,3 +386,81 @@ function formatData(data: any[]) {
     pnl: item.realized_pnl,
   }));
 }
+
+// for 128 campaign hardcode
+const useCampaignRankingList = ({
+  dateRange,
+  sort,
+  searchValue,
+}: {
+  dateRange: DateRange | null;
+  sort?: TableSort;
+  searchValue?: string;
+}) => {
+  const getUrl = (label?: string) => {
+    if (!label) {
+      return null;
+    }
+    const campaignId = label === "Week 1" ? "129" : "128";
+
+    const searchParams = new URLSearchParams();
+    searchParams.set("campaign_id", campaignId);
+    searchParams.set("page", "1");
+    searchParams.set("size", "2000");
+    searchParams.set("aggregate_by", "address");
+
+    return `https://api.orderly.org/v1/public/campaign/ranking?${searchParams.toString()}`;
+  };
+
+  const { data: campaignData } = useQuery<GeneralRankingResponse["rows"]>(
+    getUrl("Week 2"),
+    {
+      revalidateOnFocus: false,
+    },
+  );
+
+  const { data } = useQuery<GeneralRankingResponse["rows"]>(
+    getUrl(dateRange?.label),
+    {
+      revalidateOnFocus: false,
+    },
+  );
+
+  const campaignRankingList = useMemo(() => {
+    if (!dateRange?.label) {
+      return undefined;
+    }
+    return campaignData?.map((item) => item.address) || [];
+  }, [campaignData, dateRange]);
+
+  const filteredCampaignData = useMemo(() => {
+    if (campaignRankingList && dateRange?.label === "Week 1") {
+      const list =
+        data?.filter(
+          (item) =>
+            campaignRankingList.includes(item.address) &&
+            (searchValue ? isSameAddress(item.address, searchValue) : true),
+        ) || [];
+      const newList = list.map((item) => ({
+        address: item.address,
+        perp_volume: item.volume,
+        realized_pnl: item.pnl,
+      }));
+
+      if (sort) {
+        newList.sort((a: any, b: any) => {
+          if (sort?.sort === "asc") {
+            return a?.[sort?.sortKey] - b?.[sort?.sortKey];
+          } else if (sort?.sort === "desc") {
+            return b?.[sort?.sortKey] - a?.[sort?.sortKey];
+          }
+          return 0;
+        });
+      }
+      return newList;
+    }
+    return undefined;
+  }, [data, campaignRankingList, sort, dateRange, searchValue]);
+
+  return { campaignRankingList, filteredCampaignData };
+};

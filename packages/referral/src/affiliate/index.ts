@@ -1,1 +1,0 @@
-export { Affiliate } from "./affiliate";

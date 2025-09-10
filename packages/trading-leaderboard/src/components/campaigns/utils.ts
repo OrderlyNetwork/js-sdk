@@ -38,35 +38,20 @@ export const getCampaignTag = (
   const startTime = new Date(campaign.start_time);
   const endTime = new Date(campaign.end_time);
 
-  // Check if campaign is exclusive to specific referral codes
-  if (campaign.referral_codes && campaign.referral_codes.length > 0) {
-    // If user doesn't have a referral code or it's not in the allowed list
-    if (
-      !userReferralCode ||
-      !campaign.referral_codes.includes(userReferralCode)
-    ) {
-      // Don't show the campaign at all, or return a special status
-      // For now, we'll treat it as if the campaign doesn't exist for this user
-      // You might want to handle this differently based on your UI requirements
-      return CampaignTagEnum.EXCLUSIVE;
-    }
-
-    // If user has valid referral code, check the time-based status
-    if (currentTime < startTime) {
-      return CampaignTagEnum.COMING;
-    } else if (currentTime > endTime) {
-      return CampaignTagEnum.ENDED;
-    } else {
-      return CampaignTagEnum.EXCLUSIVE; // Show as exclusive during the active period
-    }
-  }
-
   // For non-exclusive campaigns, check time-based status
   if (currentTime < startTime) {
     return CampaignTagEnum.COMING;
   } else if (currentTime > endTime) {
     return CampaignTagEnum.ENDED;
   } else {
+    if (campaign.referral_codes && campaign.referral_codes.length > 0) {
+      if (
+        !userReferralCode ||
+        !campaign.referral_codes.includes(userReferralCode)
+      ) {
+        return CampaignTagEnum.EXCLUSIVE;
+      }
+    }
     return CampaignTagEnum.ONGOING;
   }
 };
@@ -169,7 +154,15 @@ export const getTradingVolume = (statistics?: CampaignStatistics): number => {
  */
 export const getTotalPrizePool = (
   campaign?: CampaignConfig,
+  tieredIndex?: number,
 ): { amount: number; currency: string } | null => {
+  if (campaign?.tiered_prize_pools && campaign.tiered_prize_pools.length > 0) {
+    return {
+      amount: campaign.tiered_prize_pools[tieredIndex || 0]?.[0]?.total_prize,
+      currency: campaign.tiered_prize_pools[tieredIndex || 0]?.[0]?.currency,
+    };
+  }
+
   if (!campaign?.prize_pools || campaign.prize_pools.length === 0) {
     return null;
   }
@@ -219,7 +212,7 @@ export const getTicketPrizePool = (
  * @returns Formatted string like "15,000 USDC"
  */
 export const formatPrizeAmount = (amount: number, currency: string): string => {
-  return `${amount.toLocaleString()} ${currency}`;
+  return `${amount?.toLocaleString()} ${currency}`;
 };
 
 /**
@@ -227,13 +220,16 @@ export const formatPrizeAmount = (amount: number, currency: string): string => {
  * @param volume Trading volume amount
  * @returns Formatted string with $ prefix
  */
-export const formatTradingVolume = (volume: number): string => {
+export const formatTradingVolume = (
+  volume: number,
+  decimalPlaces: number = 1,
+): string => {
   if (volume >= 1_000_000) {
-    return `$${(volume / 1_000_000).toFixed(1)}M`;
+    return `$${(volume / 1_000_000).toFixed(decimalPlaces)}M`;
   } else if (volume >= 1_000) {
-    return `$${(volume / 1_000).toFixed(1)}K`;
+    return `$${(volume / 1_000).toFixed(decimalPlaces)}K`;
   } else {
-    return `$${volume.toFixed(0)}`;
+    return `$${volume.toFixed(decimalPlaces)}`;
   }
 };
 
@@ -242,11 +238,14 @@ export const formatTradingVolume = (volume: number): string => {
  * @param count Participants count
  * @returns Formatted string with proper formatting
  */
-export const formatParticipantsCount = (count: number): string => {
+export const formatParticipantsCount = (
+  count: number,
+  decimalPlaces: number = 1,
+): string => {
   if (count >= 1_000_000) {
-    return `${(count / 1_000_000).toFixed(1)}M`;
+    return `${(count / 1_000_000).toFixed(decimalPlaces)}M`;
   } else if (count >= 1_000) {
-    return `${(count / 1_000).toFixed(1)}K`;
+    return `${(count / 1_000).toFixed(decimalPlaces)}K`;
   } else {
     return count.toLocaleString();
   }
@@ -261,6 +260,9 @@ export const generateCampaignTimeline = (
   campaign: CampaignConfig,
 ): TimelinePoint[] => {
   const currentTime = new Date();
+  const registerTime = campaign.register_time
+    ? new Date(campaign.register_time)
+    : null;
   const startTime = new Date(campaign.start_time);
   const endTime = new Date(campaign.end_time);
   const rewardTime = campaign.reward_distribution_time
@@ -290,6 +292,24 @@ export const generateCampaignTimeline = (
       return time.toISOString();
     }
   };
+
+  if (registerTime) {
+    timeline.push({
+      title: "Battle Registration",
+      type: getTimelineType(registerTime),
+      time: formatTimeDisplay(registerTime),
+    });
+
+    const isInRegisterTime =
+      currentTime >= registerTime && currentTime <= startTime;
+    if (isInRegisterTime) {
+      timeline.push({
+        title: i18n.t("chart.now"),
+        type: "active",
+        time: formatTimeDisplay(currentTime),
+      });
+    }
+  }
 
   // Battle starts point
   timeline.push({

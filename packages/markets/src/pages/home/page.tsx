@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import React, { FC, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Box, cn, TabPanel, Tabs, useScreen } from "@orderly.network/ui";
 import {
@@ -8,12 +8,27 @@ import {
 } from "@orderly.network/ui-scaffold";
 import {
   MarketsProvider,
-  MarketsProviderProps,
+  type MarketsProviderProps,
 } from "../../components/marketsProvider";
 import { MarketsPageTab } from "../../type";
-import { FundingWidget } from "./funding/funding.widget";
-import { MarketsDataListWidget } from "./marketsDataList";
-import { MarketsHeaderWidget } from "./marketsHeader/marketsHeader.widget";
+
+const LazyMarketsHeaderWidget = React.lazy(() =>
+  import("./marketsHeader/marketsHeader.widget").then((mod) => {
+    return { default: mod.MarketsHeaderWidget };
+  }),
+);
+
+const LazyMarketsDataListWidget = React.lazy(() =>
+  import("./marketsDataList").then((mod) => {
+    return { default: mod.MarketsDataListWidget };
+  }),
+);
+
+const LazyFundingWidget = React.lazy(() =>
+  import("./funding/funding.widget").then((mod) => {
+    return { default: mod.FundingWidget };
+  }),
+);
 
 export type MarketsHomePageProps = MarketsProviderProps & {
   className?: string;
@@ -68,7 +83,7 @@ type MarketsContentProps = {
   };
 };
 
-const MarketsDesktopContent = (props: MarketsContentProps) => {
+const MarketsDesktopContent: React.FC<MarketsContentProps> = (props) => {
   const { t } = useTranslation();
 
   return (
@@ -83,22 +98,28 @@ const MarketsDesktopContent = (props: MarketsContentProps) => {
           value={MarketsPageTab.Markets}
           testid="oui-testid-markets-tab"
         >
-          <MarketsHeaderWidget className="oui-mt-4" />
-          <MarketsDataListWidget />
+          <React.Suspense fallback={null}>
+            <LazyMarketsHeaderWidget className="oui-mt-4" />
+          </React.Suspense>
+          <React.Suspense fallback={null}>
+            <LazyMarketsDataListWidget />
+          </React.Suspense>
         </TabPanel>
         <TabPanel
           title={t("common.funding")}
           value={MarketsPageTab.Funding}
           testid="oui-testid-funding-tab"
         >
-          <FundingWidget />
+          <React.Suspense fallback={null}>
+            <LazyFundingWidget />
+          </React.Suspense>
         </TabPanel>
       </Tabs>
     </Box>
   );
 };
 
-const MarketsMobileContent = (props: MarketsContentProps) => {
+const MarketsMobileContent: React.FC<MarketsContentProps> = (props) => {
   const { t } = useTranslation();
 
   return (
@@ -119,7 +140,7 @@ const MarketsMobileContent = (props: MarketsContentProps) => {
       leading={
         props.navProps?.leftNav && (
           <LeftNavUI
-            className="oui-ml-3 -oui-mr-4"
+            className="-oui-mr-4 oui-ml-3"
             {...props?.navProps?.leftNav}
             logo={props?.navProps?.logo}
             routerAdapter={props?.navProps?.routerAdapter}
@@ -132,15 +153,21 @@ const MarketsMobileContent = (props: MarketsContentProps) => {
         value="markets"
         testid="oui-testid-markets-tab"
       >
-        <MarketsHeaderWidget className="oui-mt-2" />
-        <MarketsDataListWidget />
+        <React.Suspense fallback={null}>
+          <LazyMarketsHeaderWidget className="oui-mt-2" />
+        </React.Suspense>
+        <React.Suspense fallback={null}>
+          <LazyMarketsDataListWidget />
+        </React.Suspense>
       </TabPanel>
       <TabPanel
         title={t("common.funding")}
         value="funding"
         testid="oui-testid-funding-tab"
       >
-        <FundingWidget />
+        <React.Suspense fallback={null}>
+          <LazyFundingWidget />
+        </React.Suspense>
       </TabPanel>
     </Tabs>
   );

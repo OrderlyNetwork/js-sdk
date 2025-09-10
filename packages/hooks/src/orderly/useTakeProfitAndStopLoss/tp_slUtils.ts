@@ -346,7 +346,7 @@ export function tpslCalculateHelper(
 
   const qty = Number(key === "quantity" ? inputs.value : inputs.qty);
 
-  console.log("key", key, inputs.value, inputs.values, inputs.qty);
+  // console.log("key", key, inputs.value, inputs.values, inputs.qty);
 
   if (
     qty === 0 &&

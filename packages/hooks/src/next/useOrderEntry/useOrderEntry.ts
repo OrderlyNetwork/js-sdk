@@ -20,6 +20,7 @@ import {
 } from "../../orderly/orderlyHooks";
 import { useMarkPriceActions } from "../../orderly/useMarkPrice/useMarkPriceStore";
 import { usePositions } from "../../orderly/usePositionStream/usePosition.store";
+import { useOrderlyContext } from "../../orderlyContext";
 import { OrderValidationResult } from "../../services/orderCreator/interface";
 import { useMemoizedFn } from "../../shared/useMemoizedFn";
 import { useEventEmitter } from "../../useEventEmitter";
@@ -34,6 +35,7 @@ import {
   tpslFields,
   hasTPSL,
   isBBOOrder,
+  appendOrderMetadata,
 } from "./helper";
 import type { FullOrderState } from "./orderEntry.store";
 import { useOrderEntryNextInternal } from "./useOrderEntry.internal";
@@ -41,7 +43,7 @@ import { useOrderEntryNextInternal } from "./useOrderEntry.internal";
 type OrderEntryParameters = Parameters<typeof useOrderEntryNextInternal>;
 type Options = Omit<OrderEntryParameters["1"], "symbolInfo">;
 
-type OrderEntryReturn = {
+export type OrderEntryReturn = {
   submit: (options?: { resetOnSuccess?: boolean }) => Promise<{
     success: boolean;
     data: Record<string, any>;
@@ -191,6 +193,8 @@ const useOrderEntry = (
 
   const symbolInfo: API.SymbolExt = symbolConfig[symbol]();
   const markPrice = actions.getMarkPriceBySymbol(symbol);
+
+  const { orderMetadata } = useOrderlyContext();
 
   const {
     formattedOrder,
@@ -488,10 +492,7 @@ const useOrderEntry = (
     return new Promise<OrderValidationResult | null>(
       async (resolve, reject) => {
         const creator = getOrderCreator(formattedOrder);
-
-        console.log("valudate order", creator);
         const errors = await validate(formattedOrder, creator, prepareData());
-        console.log("validate order errors", errors);
         const keys = Object.keys(errors);
         if (keys.length > 0) {
           // setErrors(errors);
@@ -629,11 +630,14 @@ const useOrderEntry = (
     }
 
     const order = generateOrder(creator, prepareData());
-    console.log("xxx -- order", order);
 
     const isScaledOrder = order.order_type === OrderType.SCALED;
 
-    const params = isScaledOrder ? { orders: order.orders } : order;
+    const params = isScaledOrder
+      ? {
+          orders: appendOrderMetadata(order.orders, orderMetadata),
+        }
+      : appendOrderMetadata(order, orderMetadata);
 
     const result = await doCreateOrder(params);
 

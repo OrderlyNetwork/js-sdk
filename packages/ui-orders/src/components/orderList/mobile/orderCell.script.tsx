@@ -14,6 +14,8 @@ export const useOrderCellScript = (props: {
   return {
     ...props,
     ...symbolInfo,
+    // use symbolInfo replace ...symbolInfo
+    symbolInfo,
   };
 };
 

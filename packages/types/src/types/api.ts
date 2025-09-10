@@ -180,6 +180,12 @@ export declare namespace API {
     updated_time: number;
     order_tag?: string;
     client_order_id?: string;
+
+    // trailing stop order
+    activated_price?: number;
+    callback_value?: number;
+    callback_rate?: number;
+    extreme_price?: number;
   }
 
   export interface AlgoOrderExt extends AlgoOrder {
@@ -592,12 +598,17 @@ export declare namespace API {
     position_qty: number;
     symbol: string;
     transfer_price: number;
+    mark_price: number;
   }
 
   export interface Liquidation {
     liquidation_id: number;
     timestamp: number;
     transfer_amount_to_insurance_fund: number;
+    margin_ratio: number;
+    account_mmr: number;
+    collateral_value: number;
+    position_notional: number;
     positions_by_perp: LiquidationPositionByPerp[];
   }
 

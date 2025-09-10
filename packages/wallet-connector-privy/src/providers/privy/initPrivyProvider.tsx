@@ -38,6 +38,11 @@ export function InitPrivyProvider({
           createOnLogin: "all-users",
         },
       },
+      externalWallets: {
+        walletConnect: {
+          enabled: false,
+        },
+      },
 
       defaultChain: chains[0],
       supportedChains: chains,

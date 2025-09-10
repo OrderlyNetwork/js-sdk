@@ -1,94 +1,72 @@
-import { useCallback, useEffect, useState } from "react";
-import {
-  OrderValidationItem,
-  OrderValidationResult,
-} from "../../services/orderCreator/interface";
-import { getOrderCreator } from "./helper";
-import { useMarkPriceActions } from "../../orderly/useMarkPrice/useMarkPriceStore";
-import { OrderSide, SDKError } from "@orderly.network/types";
-import { useMaxQty } from "../../orderly/useMaxQty";
+import { useCallback, useState } from "react";
+import { OrderSide, OrderType, SDKError } from "@orderly.network/types";
+import { useMarkPriceBySymbol } from "../../orderly/useMarkPrice/useMarkPriceStore";
 import { useSymbolsInfo } from "../../orderly/useSymbolsInfo";
-import { useThrottledCallback } from "use-debounce";
+import { OrderValidationResult } from "../../services/orderCreator/interface";
+import { useMemoizedFn } from "../../shared/useMemoizedFn";
+import { getOrderCreator } from "./helper";
 
 export const useOrderEntity = (
   order: {
     symbol: string;
+    order_type: OrderType;
     side: OrderSide;
     reduce_only?: boolean;
     [key: string]: any;
   },
   options?: {
     maxQty?: number;
-  }
+  },
 ) => {
-  if (!order.symbol) {
+  const { symbol } = order;
+  const { maxQty } = options || {};
+
+  if (!symbol) {
     throw new SDKError("Symbol is required");
   }
-  const [errors, setErrors] =
-    useState<Partial<Record<keyof typeof order, OrderValidationItem>>>();
 
-  const maxQty = useMaxQty(order.symbol, order.side, order.reduce_only);
-  const finalMaxQty = options?.maxQty ?? maxQty;
+  const [errors, setErrors] = useState<OrderValidationResult>({});
 
-  const actions = useMarkPriceActions();
-  const markPrice = actions.getMarkPriceBySymbol(order.symbol);
+  const markPrice = useMarkPriceBySymbol(symbol);
+  const symbolsInfo = useSymbolsInfo();
+
   const prepareData = useCallback(() => {
     return {
-      markPrice: actions.getMarkPriceBySymbol(order.symbol),
-      maxQty: finalMaxQty,
+      markPrice,
+      maxQty: maxQty || 0,
+      symbol: symbolsInfo[symbol](),
     };
-  }, [finalMaxQty, order.symbol, order]);
+  }, [maxQty, markPrice, symbolsInfo, symbol]);
 
-  const symbolInfo = useSymbolsInfo();
-
-  const validate = () => {
+  const validate = useMemoizedFn(async () => {
     return new Promise<OrderValidationResult | null>(
       async (resolve, reject) => {
         const creator = getOrderCreator(order);
-        const _symbol = symbolInfo[order.symbol]();
+        const errors = await creator?.validate(order, prepareData());
 
-        const errors = await creator?.validate(order, {
-          symbol: _symbol,
-          maxQty: finalMaxQty,
-          markPrice,
-        });
         const keys = Object.keys(errors);
         if (keys.length > 0) {
           setErrors(errors);
-
           reject(errors);
         } else {
           setErrors({});
         }
         // create order
-        const orderEntity = creator.create(order, {
-          ...prepareData(),
-          symbol: _symbol,
-        });
+        const orderEntity = creator.create(order, prepareData());
         resolve(orderEntity);
-      }
+      },
     );
-  };
+  });
 
-  const autoCheck = useThrottledCallback(
-    () => {
-      validate().then(
-        () => {},
-        (reject) => {}
-      );
-    },
-    50,
-    {}
-  );
-
-  useEffect(() => {
-    autoCheck();
-  }, [order.order_price, order.order_quantity, order.trigger_price]);
+  const clearErrors = useCallback(() => {
+    setErrors({});
+  }, []);
 
   return {
-    validate,
     errors,
     markPrice,
-    symbolInfo,
+    symbolsInfo,
+    validate,
+    clearErrors,
   };
 };

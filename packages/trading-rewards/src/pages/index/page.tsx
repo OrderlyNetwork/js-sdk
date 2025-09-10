@@ -1,15 +1,52 @@
-import { FC, useMemo } from "react";
+import React, { useMemo } from "react";
 import { useTradingRewardsStatus, EpochStatus } from "@orderly.network/hooks";
 import { Flex, Box, cn } from "@orderly.network/ui";
-import { AvailableToClaimWidget } from "./availableToClaim";
-import { CurEpochWidget } from "./curEpoch";
 import { TradingRewardsProvider } from "./provider";
-import { RewardsHistoryWidget } from "./rewardHistory";
-import { StakeBoosterWidget } from "./stakeBooster";
-import { TitleConfig } from "./title/title.script";
-import { TitleWidget } from "./title/title.widget";
+import type { TitleConfig } from "./title/title.script";
 
-export const HomePage: FC<{
+const LazyTitleWidget = React.lazy(() =>
+  import("./title/title.widget").then((mod) => {
+    return { default: mod.TitleWidget };
+  }),
+);
+
+const LazyCurEpochWidget = React.lazy(() =>
+  import("./curEpoch").then((mod) => {
+    return { default: mod.CurEpochWidget };
+  }),
+);
+
+const LazyAvailableToClaimWidget = React.lazy(() =>
+  import("./availableToClaim").then((mod) => {
+    return { default: mod.AvailableToClaimWidget };
+  }),
+);
+
+const LazyStakeBoosterWidget = React.lazy(() =>
+  import("./stakeBooster").then((mod) => {
+    return { default: mod.StakeBoosterWidget };
+  }),
+);
+
+const LazyRewardsHistoryWidget = React.lazy(() =>
+  import("./rewardHistory").then((mod) => {
+    return { default: mod.RewardsHistoryWidget };
+  }),
+);
+
+const StakeBooster: React.FC = () => {
+  const { statusInfo } = useTradingRewardsStatus(false);
+  const isStakeBoosterVisible = useMemo(() => {
+    return statusInfo?.epochStatus === EpochStatus.active;
+  }, [statusInfo?.epochStatus]);
+  return isStakeBoosterVisible ? (
+    <React.Suspense fallback={null}>
+      <LazyStakeBoosterWidget />
+    </React.Suspense>
+  ) : null;
+};
+
+export const HomePage: React.FC<{
   titleConfig?: TitleConfig;
   className?: string;
   showEpochPauseCountdown?: boolean;
@@ -25,26 +62,26 @@ export const HomePage: FC<{
         direction={"column"}
         gap={4}
       >
-        <TitleWidget />
+        <React.Suspense fallback={null}>
+          <LazyTitleWidget />
+        </React.Suspense>
         <Flex className="oui-flex oui-size-full oui-flex-col oui-gap-4 2xl:oui-flex-row 2xl:oui-items-stretch">
           <Box className="oui-w-full 2xl:oui-size-auto 2xl:oui-flex-1">
-            <CurEpochWidget />
+            <React.Suspense fallback={null}>
+              <LazyCurEpochWidget />
+            </React.Suspense>
           </Box>
           <Flex className="oui-flex oui-w-full oui-flex-col oui-gap-4 lg:oui-flex-row 2xl:oui-flex-1 2xl:oui-flex-col">
-            <AvailableToClaimWidget />
+            <React.Suspense fallback={null}>
+              <LazyAvailableToClaimWidget />
+            </React.Suspense>
             <StakeBooster />
           </Flex>
         </Flex>
-        <RewardsHistoryWidget />
+        <React.Suspense fallback={null}>
+          <LazyRewardsHistoryWidget />
+        </React.Suspense>
       </Flex>
     </TradingRewardsProvider>
   );
-};
-
-const StakeBooster = () => {
-  const { statusInfo } = useTradingRewardsStatus(false);
-  const isStakeBoosterVisible = useMemo(() => {
-    return statusInfo?.epochStatus === EpochStatus.active;
-  }, [statusInfo]);
-  return isStakeBoosterVisible ? <StakeBoosterWidget /> : null;
 };

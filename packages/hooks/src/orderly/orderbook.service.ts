@@ -54,8 +54,13 @@ class OrderbookService {
     const askMap = new Map<number, number>();
     const bidMap = new Map<number, number>();
 
-    rawOrderBook.asks.forEach((ask) => askMap.set(ask[0], ask[1]));
-    rawOrderBook.bids.forEach((bid) => bidMap.set(bid[0], bid[1]));
+    rawOrderBook.asks.forEach((ask) => {
+      askMap.set(ask[0], ask[1]);
+    });
+
+    rawOrderBook.bids.forEach((bid) => {
+      bidMap.set(bid[0], bid[1]);
+    });
 
     update.asks.forEach((ask) =>
       ask[1] === 0 ? askMap.delete(ask[0]) : askMap.set(ask[0], ask[1]),
@@ -74,9 +79,9 @@ class OrderbookService {
     rawOrderBook.ts = update.ts;
   }
   private applyBufferedUpdatesToRawOrderBooks(symbol: string) {
-    this.bufferedOrderBookUpdates[symbol]?.forEach((update) =>
-      this.applyUpdateToRawOrderBook(symbol, update),
-    );
+    this.bufferedOrderBookUpdates[symbol]?.forEach((update) => {
+      this.applyUpdateToRawOrderBook(symbol, update);
+    });
   }
 
   private deleteBufferedOrderBookUpdates(symbol: string) {

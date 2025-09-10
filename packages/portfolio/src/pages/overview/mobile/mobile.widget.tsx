@@ -1,4 +1,4 @@
-import { FC } from "react";
+import React from "react";
 import { ENVType, useGetEnv } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext } from "@orderly.network/react-app";
@@ -6,6 +6,7 @@ import { Flex } from "@orderly.network/ui";
 import { DepositStatusWidget } from "@orderly.network/ui-transfer";
 import { useLayoutContext } from "../../../layout/context";
 import { useAssetScript } from "../assets";
+import { PortfolioChartsMobileWidget } from "../portfolioChartsMobile";
 import { AccountStatusMobile } from "./accountStatus.ui.mobile";
 import { AffiliateCardMobile } from "./affiliateCard.ui.mobile";
 import { PortfolioHandleMobile } from "./portfolioHandle.ui.mobile";
@@ -15,7 +16,7 @@ import { TraderCardMobile } from "./traderCard.ui.mobile";
 import { TradingRewardsCardMobile } from "./tradingRewardsCard.ui.mobile";
 import { useRewardsDataScript } from "./useRewardsData.script";
 
-export const MobileOverview: FC = (props) => {
+export const MobileOverview: React.FC = () => {
   const {
     canTrade,
     onWithdraw,
@@ -77,12 +78,9 @@ export const MobileOverview: FC = (props) => {
             namespace={namespace}
             routerAdapter={layoutContext?.routerAdapter}
           />
-          <DepositStatusWidget
-            className="oui-mb-2"
-            onClick={navigateToPortfolioHistory}
-          />
+          <DepositStatusWidget onClick={navigateToPortfolioHistory} />
         </Flex>
-
+        <PortfolioChartsMobileWidget />
         <PortfolioHandleMobile
           disabled={!canTrade}
           onWithdraw={onWithdraw}

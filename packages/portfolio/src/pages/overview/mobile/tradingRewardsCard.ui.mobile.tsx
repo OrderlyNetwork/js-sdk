@@ -1,5 +1,4 @@
-import { FC, useState, useEffect } from "react";
-import { isNumber } from "lodash";
+import React, { FC, useState, useEffect } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   Flex,
@@ -11,7 +10,11 @@ import {
   cn,
   modal,
 } from "@orderly.network/ui";
-import { UseRewardsDataReturn } from "./useRewardsData.script";
+import type { UseRewardsDataReturn } from "./useRewardsData.script";
+
+const isNumber = (val: unknown): val is number => {
+  return typeof val === "number" && !Number.isNaN(val);
+};
 
 type TradingRewardsCardMobileProps = UseRewardsDataReturn & {
   isSignIn: boolean;
@@ -126,9 +129,7 @@ export const TradingRewardsCardMobile: FC<TradingRewardsCardMobileProps> = (
   );
 };
 
-const Countdown: FC<{
-  targetTimestamp?: number;
-}> = ({ targetTimestamp }) => {
+const Countdown: FC<{ targetTimestamp?: number }> = ({ targetTimestamp }) => {
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
@@ -138,7 +139,9 @@ const Countdown: FC<{
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      if (typeof targetTimestamp === "undefined") return;
+      if (typeof targetTimestamp === "undefined") {
+        return;
+      }
       const now = new Date().getTime();
       const distance = targetTimestamp - now;
 
@@ -179,14 +182,15 @@ const Countdown: FC<{
   );
 };
 
-const CountDownItem = ({ type, value }: { type: string; value: number }) => {
+const CountDownItem: React.FC<{ type: string; value: number }> = (props) => {
+  const { type, value } = props;
   return (
     <Flex
       direction="column"
       itemAlign={"center"}
       className="oui-h-11 oui-w-8 oui-rounded-[6px] oui-bg-white/[0.08]"
     >
-      <Text className="oui-text-base-contrast oui-text-base oui-font-bold">
+      <Text className="oui-text-base oui-font-bold oui-text-base-contrast">
         {value}
       </Text>
       <Text className="oui-text-2xs oui-font-normal oui-text-base-contrast-36">

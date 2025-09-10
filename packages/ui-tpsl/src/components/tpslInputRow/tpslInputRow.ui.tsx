@@ -6,18 +6,22 @@ import { OrderType, PositionType } from "@orderly.network/types";
 import { Flex, Text, Grid, Checkbox, cn } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { PnlInputWidget } from "../../pnlInput/pnlInput.widget";
-import { PriceInput } from "../../tpsl.ui";
 import { OrderPriceType } from "../orderPriceType";
+import { PriceInput } from "./priceInput";
 import { useTPSLInputRowScript } from "./tpslInputRow.script";
 
 type TPSLInputRowProps = ReturnType<typeof useTPSLInputRowScript>;
 
 export const TPSLInputRowUI: React.FC<TPSLInputRowProps> = (props) => {
   const { t } = useTranslation();
-  const { parseErrorMsg } = useOrderEntryFormErrorMsg(props.errors);
+  const { getErrorMsg } = useOrderEntryFormErrorMsg(props.errors);
   const { values, positionType } = props;
   const symbolLeverage = useSymbolLeverage(props.symbol);
+
   const roi = useMemo(() => {
+    if (isNaN(Number(symbolLeverage))) {
+      return null;
+    }
     let _roi = null;
     if (!props.rootOrderPrice) {
       return null;
@@ -39,6 +43,7 @@ export const TPSLInputRowUI: React.FC<TPSLInputRowProps> = (props) => {
       _entryPrice = new Decimal(values.order_price);
     }
     const rootOrderPrice = new Decimal(props.rootOrderPrice);
+
     _roi = _entryPrice
       .minus(rootOrderPrice)
       .div(rootOrderPrice)
@@ -58,20 +63,25 @@ export const TPSLInputRowUI: React.FC<TPSLInputRowProps> = (props) => {
       className="oui-w-full"
     >
       <Flex className="oui-w-full" itemAlign={"center"} justify={"start"}>
-        <Checkbox
-          data-testid={`oui-testid-orderEntry-${props.type}-enable-checkBox`}
-          id={`enable_${props.type}`}
-          color={"white"}
-          checked={values.enable}
-          onCheckedChange={(checked: boolean) => {
-            props.onChange(`${props.type}_enable`, !!checked);
-          }}
-        />
+        {!props.disableEnableCheckbox && (
+          <Checkbox
+            data-testid={`oui-testid-orderEntry-${props.type}-enable-checkBox`}
+            id={`enable_${props.type}`}
+            color={"white"}
+            checked={values.enable}
+            onCheckedChange={(checked: boolean) => {
+              props.onChange(`${props.type}_enable`, !!checked);
+            }}
+          />
+        )}
         <label
           htmlFor={`enable_${props.type}`}
-          className={
-            "oui-ml-1 oui-cursor-pointer oui-text-sm oui-text-base-contrast-36"
-          }
+          className={cn(
+            "oui-cursor-pointer oui-text-sm",
+            props.disableEnableCheckbox
+              ? "oui-ml-0 oui-text-base-contrast"
+              : "oui-ml-1  oui-text-base-contrast-36",
+          )}
         >
           {props.type === "tp"
             ? t("tpsl.advanced.TP.label")
@@ -96,7 +106,7 @@ export const TPSLInputRowUI: React.FC<TPSLInputRowProps> = (props) => {
             <PriceInput
               type={`${props.type} price`}
               value={values.trigger_price}
-              error={parseErrorMsg(`${props.type}_trigger_price`)}
+              error={getErrorMsg(`${props.type}_trigger_price`)}
               onValueChange={(value) => {
                 props.onChange(`${props.type}_trigger_price`, value);
               }}
@@ -137,7 +147,7 @@ export const TPSLInputRowUI: React.FC<TPSLInputRowProps> = (props) => {
                   : t("tpsl.advanced.market")
               }
               value={values.order_price}
-              error={parseErrorMsg(`${props.type}_order_price`)}
+              error={getErrorMsg(`${props.type}_order_price`)}
               onValueChange={(value) => {
                 props.onChange(`${props.type}_order_price`, value);
               }}

@@ -261,7 +261,6 @@ export function getWatchIgnores() {
     "**/packages/cli/**",
     "**/packages/cli-codemod/**",
     "**/packages/eslint-config/**",
-    "**/packages/onboard/**",
     "**/packages/create-orderly-app/**",
   ];
 

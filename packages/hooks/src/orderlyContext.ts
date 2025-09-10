@@ -5,7 +5,12 @@ import type {
   OrderlyKeyStore,
   WalletAdapter,
 } from "@orderly.network/core";
-import type { API, Chain, NetworkId } from "@orderly.network/types";
+import type {
+  API,
+  Chain,
+  NetworkId,
+  OrderlyOrder,
+} from "@orderly.network/types";
 import type { Chains } from "./orderly/useChains";
 
 export type filteredChains = {
@@ -46,7 +51,12 @@ export interface OrderlyConfigContextState {
   /**
    * Custom orderbook default tick sizes.
    */
-  defaultOrderbookTickSizes: Record<string, string>;
+  defaultOrderbookTickSizes?: Record<PropertyKey, string>;
+
+  /**
+   * Custom orderbook default symbol depths.
+   */
+  defaultOrderbookSymbolDepths?: Record<PropertyKey, number[]>;
 
   dataAdapter?: {
     /**
@@ -72,7 +82,22 @@ export interface OrderlyConfigContextState {
       defaultOpen?: boolean;
     };
   };
+
+  amplitudeConfig?: {
+    amplitudeId: string;
+    serverZone?: "EU" | "US";
+  };
+  orderMetadata?: OrderMetadataConfig;
 }
+
+export type OrderMetadata = {
+  order_tag?: string;
+  client_order_id?: string;
+};
+
+export type OrderMetadataConfig =
+  | OrderMetadata
+  | ((order: Partial<OrderlyOrder>) => OrderMetadata);
 
 export const OrderlyContext = createContext<OrderlyConfigContextState>({
   // configStore: new MemoryConfigStore(),

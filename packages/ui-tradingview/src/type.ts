@@ -62,4 +62,5 @@ export interface DisplayControlSettingInterface {
   stopOrders: boolean;
   tpsl: boolean;
   positionTpsl: boolean;
+  trailingStop: boolean;
 }

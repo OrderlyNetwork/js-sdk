@@ -16,24 +16,20 @@ export const useAssetsChartScript = () => {
         ? AccountStatusEnum.EnableTradingWithoutConnected
         : AccountStatusEnum.EnableTrading,
     fallbackData: assetHistory.createFakeData(
-      {
-        account_value: 0,
-        // pnl: 0,
-      },
+      { account_value: 0 },
       { account_value: 500 },
     ),
   });
 
   const _data = useMemo(() => {
-    if (filteredData?.length ?? 0 > 0) return filteredData;
+    if (filteredData?.length) {
+      return filteredData;
+    }
     return assetHistory.createFakeData(
-      {
-        account_value: 0,
-        // pnl: 0,
-      },
+      { account_value: 0 },
       { account_value: 500 },
     );
-  }, [filteredData]);
+  }, [filteredData, assetHistory]);
 
   const invisible =
     wrongNetwork || disabledConnect || !assetHistory.data.length;

@@ -2,14 +2,14 @@ import useSWRInfinite, {
   type SWRInfiniteKeyLoader,
   type SWRInfiniteConfiguration,
 } from "swr/infinite";
-import { fetcher } from "./utils/fetcher";
 import { useConfig } from "./useConfig";
+import { fetcher } from "./utils/fetcher";
 
 export const useInfiniteQuery = <T>(
   getKey: SWRInfiniteKeyLoader,
   options?: SWRInfiniteConfiguration & {
     formatter?: (data: any) => any;
-  }
+  },
 ) => {
   const { formatter, ...swrOptions } = options || {};
   const apiBaseUrl = useConfig("apiBaseUrl");
@@ -22,7 +22,7 @@ export const useInfiniteQuery = <T>(
       const _url = url.startsWith("http") ? url : `${apiBaseUrl}${url}`;
       return fetcher(_url, init, { formatter });
     },
-    swrOptions
+    swrOptions,
   );
 
   return result;

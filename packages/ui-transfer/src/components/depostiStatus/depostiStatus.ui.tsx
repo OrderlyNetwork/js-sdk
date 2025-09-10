@@ -1,4 +1,4 @@
-import { FC, ReactNode, useMemo } from "react";
+import React, { FC, ReactNode, useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { AssetHistoryStatusEnum } from "@orderly.network/types";
 import { Flex, cn, Text, ChevronRightIcon } from "@orderly.network/ui";
@@ -13,8 +13,8 @@ export type DepositStatusProps = {
   onClick?: () => void;
 } & DepositStatusScriptReturn;
 
-export const DepositStatus = (props: DepositStatusProps) => {
-  const { canTrade, classNames } = props;
+export const DepositStatus: React.FC<DepositStatusProps> = (props) => {
+  const { canTrade, className, classNames } = props;
 
   if (!canTrade) {
     return null;
@@ -25,7 +25,7 @@ export const DepositStatus = (props: DepositStatusProps) => {
       direction="column"
       gapY={1}
       width="100%"
-      className={cn(props.className, classNames?.root)}
+      className={cn(className, classNames?.root)}
     >
       <DepositStatusContent
         count={props.pendingCount}

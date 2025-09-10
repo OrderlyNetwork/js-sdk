@@ -130,7 +130,9 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
         },
         (reject) => {
           setLoading(false);
-          if (reject === -1) return;
+          if (reject === -1) {
+            return;
+          }
 
           if (
             reject.message.indexOf(
@@ -176,7 +178,9 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
         (reject) => {
           setLoading(false);
 
-          if (reject === -1) return;
+          if (reject === -1) {
+            return;
+          }
           if (
             reject.message.indexOf(
               "Signing off chain messages with Ledger is not yet supported",
@@ -410,7 +414,9 @@ const WithLedgerButton = ({
   const { state } = useAccount();
   const address = state.address;
   const { setLedgerAddress } = useStorageLedgerAddress();
-  if (!address) return null;
+  if (!address) {
+    return null;
+  }
   return (
     <Button
       variant="outlined"
@@ -468,7 +474,9 @@ const RememberMe = () => {
   const { t } = useTranslation();
 
   const showRememberHint = () => {
-    if (window.innerWidth > 768) return;
+    if (window.innerWidth > 768) {
+      return;
+    }
     modal.alert({
       title: t("connector.rememberMe"),
       message: (

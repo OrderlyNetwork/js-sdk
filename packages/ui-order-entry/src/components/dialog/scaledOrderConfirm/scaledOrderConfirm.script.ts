@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
-import { useEventEmitter } from "@orderly.network/hooks";
+import { useMemo } from "react";
 import { API, OrderlyOrder } from "@orderly.network/types";
 import { Decimal, zero } from "@orderly.network/utils";
+import { useAskAndBid } from "../../../hooks/useAskAndBid";
 
 export type ScaledOrderConfirmScriptOptions = {
   order: OrderlyOrder & {
@@ -20,9 +20,7 @@ export function useScaledOrderConfirmScript(
   const { order, symbolInfo } = options;
   const orders = order.orders;
 
-  const [askAndBid, setAskAndBid] = useState<number[]>();
-
-  const ee = useEventEmitter();
+  const askAndBid = useAskAndBid();
 
   const national = useMemo(() => {
     const national = orders.reduce((acc, order) => {
@@ -39,19 +37,6 @@ export function useScaledOrderConfirmScript(
 
     return totalQuantity.toString();
   }, [orders, symbolInfo.base_dp]);
-
-  useEffect(() => {
-    const onOrderBookUpdate = (data: any) => {
-      const ask0 = data.asks?.[data.asks.length - 1]?.[0];
-      const bid0 = data.bids?.[0]?.[0];
-      setAskAndBid([ask0, bid0]);
-    };
-    ee.on("orderbook:update", onOrderBookUpdate);
-
-    return () => {
-      ee.off("orderbook:update", onOrderBookUpdate);
-    };
-  }, []);
 
   return { dataSource: orders, national, askAndBid, totalQuantity };
 }

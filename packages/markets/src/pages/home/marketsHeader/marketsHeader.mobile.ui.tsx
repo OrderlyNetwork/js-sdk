@@ -118,15 +118,13 @@ const BlockList: React.FC<BlockListProps> = (props) => {
       className={props.className}
     >
       {list?.map((item, index) => (
-        <>
-          <BlockItem
-            key={index}
-            {...item}
-            className={cn(
-              index !== list.length - 1 && "oui-border-r oui-border-line-6",
-            )}
-          />
-        </>
+        <BlockItem
+          key={`item-${index}`}
+          {...item}
+          className={cn(
+            index !== list.length - 1 && "oui-border-r oui-border-line-6",
+          )}
+        />
       ))}
     </Flex>
   );
@@ -169,7 +167,7 @@ type CardItemProps = {
 const CardItem: React.FC<CardItemProps> = (props) => {
   return (
     <Flex direction="column" itemAlign="start" mt={3}>
-      {props.data?.map((item, index) => (
+      {props.data?.map((item) => (
         <ListItem
           key={item.symbol}
           item={item}

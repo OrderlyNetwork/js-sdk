@@ -13,12 +13,37 @@ import {
   Tabs,
   VaultsIcon,
 } from "@orderly.network/ui";
-import { TransferHistoryWidget } from "../TransferHistory";
-import { VaultsHistoryWidget } from "../VaultsHistory";
-import { AssetHistoryWidget } from "../assetHistory";
-import { DistributionHistoryWidget } from "../distribution";
-import { FundingHistoryWidget } from "../funding";
 import type { TabName } from "./historyDataGroup.script";
+
+const LazyAssetHistoryWidget = React.lazy(() =>
+  import("../assetHistory").then((mod) => {
+    return { default: mod.AssetHistoryWidget };
+  }),
+);
+
+const LazyFundingHistoryWidget = React.lazy(() =>
+  import("../funding").then((mod) => {
+    return { default: mod.FundingHistoryWidget };
+  }),
+);
+
+const LazyDistributionHistoryWidget = React.lazy(() =>
+  import("../distribution").then((mod) => {
+    return { default: mod.DistributionHistoryWidget };
+  }),
+);
+
+const LazyTransferHistoryWidget = React.lazy(() =>
+  import("../TransferHistory").then((mod) => {
+    return { default: mod.TransferHistoryWidget };
+  }),
+);
+
+const LazyVaultsHistoryWidget = React.lazy(() =>
+  import("../VaultsHistory").then((mod) => {
+    return { default: mod.VaultsHistoryWidget };
+  }),
+);
 
 export const HistoryDataGroupDesktop: React.FC<{
   active?: TabName;
@@ -45,35 +70,45 @@ export const HistoryDataGroupDesktop: React.FC<{
           icon={<ArrowDownSquareFillIcon />}
           value={"deposit"}
         >
-          <AssetHistoryWidget side={AssetHistorySideEnum.DEPOSIT} />
+          <React.Suspense fallback={null}>
+            <LazyAssetHistoryWidget side={AssetHistorySideEnum.DEPOSIT} />
+          </React.Suspense>
         </TabPanel>
         <TabPanel
           title={t("common.withdrawals")}
           icon={<ArrowUpSquareFillIcon />}
           value={"withdraw"}
         >
-          <AssetHistoryWidget side={AssetHistorySideEnum.WITHDRAW} />
+          <React.Suspense fallback={null}>
+            <LazyAssetHistoryWidget side={AssetHistorySideEnum.WITHDRAW} />
+          </React.Suspense>
         </TabPanel>
         <TabPanel
           title={t("common.funding")}
           icon={<FeeTierIcon />}
           value={"funding"}
         >
-          <FundingHistoryWidget />
+          <React.Suspense fallback={null}>
+            <LazyFundingHistoryWidget />
+          </React.Suspense>
         </TabPanel>
         <TabPanel
           title={t("portfolio.overview.distribution")}
           icon={<ServerFillIcon />}
           value={"distribution"}
         >
-          <DistributionHistoryWidget />
+          <React.Suspense fallback={null}>
+            <LazyDistributionHistoryWidget />
+          </React.Suspense>
         </TabPanel>
         <TabPanel
           title={t("portfolio.overview.transferHistory")}
           icon={<ArrowLeftRightSquareFill />}
           value={"transfer"}
         >
-          <TransferHistoryWidget />
+          <React.Suspense fallback={null}>
+            <LazyTransferHistoryWidget />
+          </React.Suspense>
         </TabPanel>
         {isMainAccount && (
           <TabPanel
@@ -81,7 +116,9 @@ export const HistoryDataGroupDesktop: React.FC<{
             icon={<VaultsIcon />}
             title={t("portfolio.overview.vaults")}
           >
-            <VaultsHistoryWidget />
+            <React.Suspense fallback={null}>
+              <LazyVaultsHistoryWidget />
+            </React.Suspense>
           </TabPanel>
         )}
       </Tabs>

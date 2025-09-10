@@ -1,19 +1,44 @@
-import { FC, PropsWithChildren } from "react";
+import React from "react";
 import { isValidElement } from "react";
 import { Box, cn, Grid } from "@orderly.network/ui";
-import { AnnouncementWidget } from "../announcement";
-import { FooterWidget } from "../footer";
-import { MainNavWidget } from "../main/mainNav.widget";
-import { RestrictedInfoWidget } from "../restrictedInfo";
-import { SideNavbarWidget } from "../sidebar";
-import { ScaffoldScriptReturn } from "./scaffold.script";
-import { ScaffoldProps } from "./scaffold.widget";
+import type { ScaffoldScriptReturn } from "./scaffold.script";
+import type { ScaffoldProps } from "./scaffold.widget";
 
-export type DesktopScaffoldProps = PropsWithChildren<
+const LazyMainNavWidget = React.lazy(() =>
+  import("../main/mainNav.widget").then((mod) => {
+    return { default: mod.MainNavWidget };
+  }),
+);
+
+const LazyRestrictedInfoWidget = React.lazy(() =>
+  import("../restrictedInfo").then((mod) => {
+    return { default: mod.RestrictedInfoWidget };
+  }),
+);
+
+const LazyAnnouncementWidget = React.lazy(() =>
+  import("../announcement").then((mod) => {
+    return { default: mod.AnnouncementWidget };
+  }),
+);
+
+const LazyFooterWidget = React.lazy(() =>
+  import("../footer").then((mod) => {
+    return { default: mod.FooterWidget };
+  }),
+);
+
+const LazySideNavbarWidget = React.lazy(() =>
+  import("../sidebar").then((mod) => {
+    return { default: mod.SideNavbarWidget };
+  }),
+);
+
+export type DesktopScaffoldProps = React.PropsWithChildren<
   ScaffoldProps & ScaffoldScriptReturn
 >;
 
-export const DesktopScaffold: FC<DesktopScaffoldProps> = (props) => {
+export const DesktopScaffold: React.FC<DesktopScaffoldProps> = (props) => {
   const { classNames } = props;
   return (
     <div
@@ -37,7 +62,11 @@ export const DesktopScaffold: FC<DesktopScaffoldProps> = (props) => {
           classNames?.topNavbar,
         )}
       >
-        {props.topBar ?? <MainNavWidget {...props.mainNavProps} />}
+        {props.topBar ?? (
+          <React.Suspense fallback={null}>
+            <LazyMainNavWidget {...props.mainNavProps} />
+          </React.Suspense>
+        )}
       </Box>
       <div
         className={cn(
@@ -49,29 +78,31 @@ export const DesktopScaffold: FC<DesktopScaffoldProps> = (props) => {
         )}
       >
         <Box px={2} ref={props.announcementRef}>
-          <RestrictedInfoWidget
-            className={cn(
-              "oui-scaffold-restricted-info",
-              "oui-relative oui-z-[1]",
-              "oui-mt-2",
-              "oui-bg-base-9",
-              // 1024px - 6px (scrollbar widt) - 12 * 2px (padding) = 994px
-              "oui-min-w-[994px]",
-            )}
-          />
-          <AnnouncementWidget
-            className={cn(
-              "oui-scaffold-maintenance-tips",
-              "oui-mt-2",
-              "oui-relative oui-z-[1]",
-              "oui-bg-base-9",
-              // 1024px - 6px (scrollbar widt) - 12 * 2px (padding) = 994px
-              "oui-min-w-[994px]",
-            )}
-            hideTips={props.restrictedInfo?.restrictedOpen}
-          />
+          <React.Suspense fallback={null}>
+            <LazyRestrictedInfoWidget
+              className={cn(
+                "oui-scaffold-restricted-info",
+                "oui-relative oui-z-[1]",
+                "oui-mt-2",
+                "oui-bg-base-9",
+                "oui-min-w-[994px]",
+              )}
+            />
+          </React.Suspense>
+          <React.Suspense fallback={null}>
+            <LazyAnnouncementWidget
+              className={cn(
+                "oui-scaffold-maintenance-tips",
+                "oui-mt-2",
+                "oui-relative oui-z-[1]",
+                "oui-bg-base-9",
+                // 1024px - 6px (scrollbar widt) - 12 * 2px (padding) = 994px
+                "oui-min-w-[994px]",
+              )}
+              hideTips={props.restrictedInfo?.restrictedOpen}
+            />
+          </React.Suspense>
         </Box>
-
         {/*--------- body start ------ */}
         {!props.hasLeftSidebar ? (
           // ----------No leftSidebar layout start ---------
@@ -102,7 +133,9 @@ export const DesktopScaffold: FC<DesktopScaffoldProps> = (props) => {
               {isValidElement(props.leftSidebar) ? (
                 props.leftSidebar
               ) : (
-                <SideNavbarWidget {...props.leftSideProps} />
+                <React.Suspense fallback={null}>
+                  <LazySideNavbarWidget {...props.leftSideProps} />
+                </React.Suspense>
               )}
             </div>
             <Box
@@ -126,7 +159,11 @@ export const DesktopScaffold: FC<DesktopScaffoldProps> = (props) => {
           classNames?.footer,
         )}
       >
-        {props.footer || <FooterWidget {...props.footerProps} />}
+        {props.footer || (
+          <React.Suspense fallback={null}>
+            <LazyFooterWidget {...props.footerProps} />
+          </React.Suspense>
+        )}
       </Box>
     </div>
   );

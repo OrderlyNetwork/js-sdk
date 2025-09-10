@@ -1,4 +1,4 @@
-import { FC } from "react";
+import React, { FC } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   Card,
@@ -17,16 +17,13 @@ import { AuthGuard } from "@orderly.network/ui-connector";
 import { AssetScriptReturn } from "./assets.script";
 import { AssetsHeader } from "./assetsHeader";
 
-export const AssetsUI = (
-  props: AssetScriptReturn & { onConnectWallet?: () => void },
-) => {
+export const AssetsUI: React.FC<
+  AssetScriptReturn & { onConnectWallet?: () => void }
+> = (props) => {
   const { t } = useTranslation();
   return (
     <Card
-      classNames={{
-        footer: "oui-h-[48px]",
-        root: "oui-h-[240px]",
-      }}
+      classNames={{ footer: "oui-h-[48px]", root: "oui-h-[240px]" }}
       title={
         <AssetsHeader
           disabled={!props.canTrade}
@@ -132,7 +129,7 @@ export const AssetStatistic = (props: AssetStatisticProps) => {
             size="sm"
             weight="semibold"
             prefix={"("}
-            suffix=")"
+            suffix={")"}
             visible={props.visible}
           >
             {props.unrealROI}

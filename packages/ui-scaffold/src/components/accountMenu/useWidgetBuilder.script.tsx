@@ -8,7 +8,10 @@ import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { modal, toast, useScreen, Text } from "@orderly.network/ui";
-import { ChainSelectorDialogId } from "@orderly.network/ui-chain-selector";
+import {
+  ChainSelectorDialogId,
+  ChainSelectorSheetId,
+} from "@orderly.network/ui-chain-selector";
 import {
   WalletConnectorModalId,
   WalletConnectorSheetId,
@@ -30,7 +33,8 @@ export const useAccountMenu = (): any => {
   const { t } = useTranslation();
   const { disconnect, connectedChain } = useWalletConnector();
   const { account, state } = useAccount();
-  const { connectWallet, disabledConnect } = useAppContext();
+  const { connectWallet, disabledConnect, wrongNetwork, setCurrentChainId } =
+    useAppContext();
 
   const [_, { findByChainId }] = useChains();
 
@@ -141,6 +145,27 @@ export const useAccountMenu = (): any => {
     await account.disconnect();
   };
 
+  const onSwitchNetwork = () => {
+    const modalId = isMobile ? ChainSelectorSheetId : ChainSelectorDialogId;
+    modal
+      .show<{
+        wrongNetwork: boolean;
+      }>(modalId, {
+        bridgeLessOnly: false,
+        isWrongNetwork: wrongNetwork,
+      })
+      .then(
+        (r: any) => {
+          console.log(r?.chainId);
+          if (r?.chainId) {
+            setCurrentChainId(r?.chainId);
+          }
+          toast.success(t("connector.networkSwitched"));
+        },
+        (error) => console.log("[switchChain error]", error),
+      );
+  };
+
   return {
     address: state.address,
     accountState: state,
@@ -149,6 +174,8 @@ export const useAccountMenu = (): any => {
     onCreateOrderlyKey,
     onOpenExplorer,
     onDisconnect,
+    onSwitchNetwork,
+    wrongNetwork,
     disabledConnect,
   } as const;
 };

@@ -1,38 +1,28 @@
-import { useEffect, useRef, FocusEvent, useMemo, useState } from "react";
+import { useEffect, useRef } from "react";
 import {
-  useAccount,
   useComputedLTV,
-  useDebouncedCallback,
   useEventEmitter,
   useLocalStorage,
   useMarginRatio,
+  useMemoizedFn,
   useOrderEntry,
   useOrderlyContext,
-  utils,
 } from "@orderly.network/hooks";
-import { useAppContext } from "@orderly.network/react-app";
 import {
-  BBOOrderType,
   DistributionType,
   OrderLevel,
   OrderSide,
   OrderType,
   PositionType,
 } from "@orderly.network/types";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { convertValueToPercentage } from "@orderly.network/ui";
 import { Decimal, removeTrailingZeros } from "@orderly.network/utils";
+import { useAskAndBid } from "./hooks/useAskAndBid";
+import { useBBOState } from "./hooks/useBBOState";
+import { useCanTrade } from "./hooks/useCanTrade";
+import { useFocusAndBlur } from "./hooks/useFocusAndBlur";
+import { usePriceInputContainer } from "./hooks/usePriceInputContainer";
 import { InputType } from "./types";
-import {
-  BBOStatus,
-  getOrderLevelByBBO,
-  getOrderTypeByBBO,
-  isBBOOrder,
-} from "./utils";
-
-const safeNumber = (val: number | string) => {
-  return Number.isNaN(Number(val)) ? 0 : Number(val);
-};
+import { BBOStatus, isBBOOrder, safeNumber } from "./utils";
 
 export type OrderEntryScriptInputs = {
   symbol: string;
@@ -51,14 +41,6 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     "orderly-order-entry-order-side",
     OrderSide.BUY,
   );
-  const [localBBOType, setLocalBBOType] = useLocalStorage<
-    BBOOrderType | undefined
-  >("orderly_order_bbo_type", undefined);
-
-  const [quantityUnit, setQuantityUnit] = useLocalStorage<"quote" | "base">(
-    "orderly_order_quantity_unit",
-    "quote",
-  );
 
   const { notification } = useOrderlyContext();
 
@@ -67,114 +49,55 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     notification?.orderFilled?.defaultOpen ?? false,
   );
 
-  const lastBBOType = useRef<BBOOrderType>(localBBOType);
+  const canTrade = useCanTrade();
 
-  const { formattedOrder, setValue, setValues, symbolInfo, ...state } =
-    useOrderEntry(inputs.symbol, {
-      initialOrder: {
-        symbol: inputs.symbol,
-        order_type: localOrderType,
-        position_type: PositionType.PARTIAL,
-        side: localOrderSide,
-      },
-    });
+  const {
+    formattedOrder,
+    setValue,
+    setValues: setOrderValues,
+    symbolInfo,
+    ...state
+  } = useOrderEntry(inputs.symbol, {
+    initialOrder: {
+      symbol: inputs.symbol,
+      order_type: localOrderType,
+      position_type: PositionType.PARTIAL,
+      side: localOrderSide,
+    },
+  });
 
   const [tpslSwitch, setTpslSwitch] = useLocalStorage(
     "orderly-order-entry-tp_sl-switch",
     false,
   );
 
-  const { state: accountState } = useAccount();
-  const { wrongNetwork, disabledConnect } = useAppContext();
-
-  const canTrade = useMemo(() => {
-    return (
-      !wrongNetwork &&
-      !disabledConnect &&
-      (accountState.status === AccountStatusEnum.EnableTrading ||
-        accountState.status === AccountStatusEnum.EnableTradingWithoutConnected)
-    );
-  }, [accountState.status, wrongNetwork, disabledConnect]);
-
   const { currentLeverage } = useMarginRatio();
   const ee = useEventEmitter();
-
-  const currentFocusInput = useRef<InputType>(InputType.NONE);
-  const lastScaledOrderPriceInput = useRef<InputType>(InputType.END_PRICE);
   const triggerPriceInputRef = useRef<HTMLInputElement | null>(null);
   const priceInputRef = useRef<HTMLInputElement | null>(null);
-  const priceInputContainerRef = useRef<HTMLDivElement | null>(null);
-  const [priceInputContainerWidth, setPriceInputContainerWidth] = useState(0);
+  const activatedPriceInputRef = useRef<HTMLInputElement | null>(null);
 
-  const currentQtyPercentage = useMemo(() => {
-    if (Number(formattedOrder.order_quantity) >= Number(state.maxQty)) {
-      return 1;
-    }
-    return (
-      convertValueToPercentage(
-        Number(formattedOrder.order_quantity ?? 0),
-        0,
-        state.maxQty,
-      ) / 100
-    );
-  }, [formattedOrder.order_quantity, state.maxQty]);
-
-  const formatQty = () => {
-    if (
-      symbolInfo.base_tick < 1 ||
-      // scaled order should not format quantity, because it is total quantity
-      formattedOrder.order_type === OrderType.SCALED ||
-      !formattedOrder.order_quantity
-    ) {
-      return;
-    }
-
-    // TODO: use this to format quantity instead of utils.formatNumber, need time to test
-    // const formatQty = new Decimal(formattedOrder.order_quantity)
-    //   .todp(0, Decimal.ROUND_DOWN)
-    //   .div(symbolInfo.base_tick)
-    //   .toString();
-
-    const quantity = utils.formatNumber(
-      formattedOrder?.order_quantity,
-      new Decimal(symbolInfo?.base_tick || "0").toNumber(),
-    );
-
-    setValue("order_quantity", quantity, {
-      shouldUpdateLastChangedField: false,
+  const { bboStatus, bboType, setBBOType, onBBOChange, toggleBBO } =
+    useBBOState({
+      tpslSwitch,
+      order_type: formattedOrder.order_type,
+      order_type_ext: formattedOrder.order_type_ext,
+      side: formattedOrder.side,
+      setOrderValues,
     });
-  };
 
-  const onFocus = (type: InputType) => (_: FocusEvent) => {
-    currentFocusInput.current = type;
-
-    // set last scaled order price input
-    if (
-      [InputType.START_PRICE, InputType.END_PRICE].includes(
-        currentFocusInput.current!,
-      )
-    ) {
-      lastScaledOrderPriceInput.current = type;
-    }
-  };
-
-  const onBlur = (type: InputType) => (_: FocusEvent) => {
-    setTimeout(() => {
-      if (currentFocusInput.current !== type) {
-        return;
-      }
-      currentFocusInput.current = InputType.NONE;
-    }, 300);
-
-    if (type === InputType.QUANTITY) {
-      formatQty();
-    }
-  };
+  const { currentFocusInput, lastScaledOrderPriceInput, onFocus, onBlur } =
+    useFocusAndBlur({
+      base_tick: symbolInfo?.base_tick,
+      order_type: formattedOrder.order_type,
+      order_quantity: formattedOrder.order_quantity,
+      setValue,
+    });
 
   // cancel TP/SL
   const cancelTP_SL = () => {
     // if(formattedOrder.)
-    setValues({
+    setOrderValues({
       tp_trigger_price: "",
       sl_trigger_price: "",
       position_type: PositionType.FULL,
@@ -182,7 +105,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   };
 
   const enableTP_SL = () => {
-    setValues({
+    setOrderValues({
       order_type_ext: undefined,
       position_type: PositionType.FULL,
     });
@@ -192,64 +115,66 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     setValue("order_quantity", state.maxQty);
   };
 
-  const setOrderValue = (
-    key: any,
-    value: any,
-    options?: {
-      shouldUpdateLastChangedField?: boolean;
-    },
-  ) => {
-    if (key === "order_type") {
-      setLocalOrderType(value);
-    }
-    if (key === "side") {
-      setLocalOrderSide(value);
-    }
-
-    if (
-      (key === "reduce_only" && value) ||
-      (key === "order_type" &&
-        (value === OrderType.STOP_LIMIT || value === OrderType.STOP_MARKET))
-    ) {
-      // cancelTP_SL();
-
-      const data = {
-        tp_trigger_price: "",
-        sl_trigger_price: "",
-        [key]: value,
-      };
-
+  const setOrderValue = useMemoizedFn(
+    (
+      key: any,
+      value: any,
+      options?: {
+        shouldUpdateLastChangedField?: boolean;
+      },
+    ) => {
       if (key === "order_type") {
-        data["order_type_ext" as any] = "";
+        setLocalOrderType(value);
+      }
+      if (key === "side") {
+        setLocalOrderSide(value);
       }
 
-      setValues(data);
+      if (
+        (key === "reduce_only" && value) ||
+        (key === "order_type" &&
+          (value === OrderType.STOP_LIMIT || value === OrderType.STOP_MARKET))
+      ) {
+        // cancelTP_SL();
 
-      return;
-    }
+        const data = {
+          tp_trigger_price: "",
+          sl_trigger_price: "",
+          [key]: value,
+        };
 
-    if (key === "order_type" && value !== OrderType.LIMIT) {
-      const data = {
-        level: undefined,
-        order_type_ext: undefined,
-        [key]: value,
-      };
+        if (key === "order_type") {
+          data["order_type_ext" as any] = "";
+        }
 
-      setValues(data);
+        setOrderValues(data);
 
-      return;
-    }
+        return;
+      }
 
-    if (key === "order_type" && value === OrderType.SCALED) {
-      setValues({
-        distribution_type: DistributionType.FLAT,
-        [key]: value,
-      });
-      return;
-    }
+      if (key === "order_type" && value !== OrderType.LIMIT) {
+        const data = {
+          level: undefined,
+          order_type_ext: undefined,
+          [key]: value,
+        };
 
-    setValue(key, value, options);
-  };
+        setOrderValues(data);
+
+        return;
+      }
+
+      if (key === "order_type" && value === OrderType.SCALED) {
+        setOrderValues({
+          distribution_type: DistributionType.FLAT,
+          [key]: value,
+        });
+        return;
+      }
+
+      setValue(key, value, options);
+    },
+  );
 
   const onTPSLSwitchChanged = (state: boolean) => {
     setTpslSwitch(state);
@@ -259,83 +184,6 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       cancelTP_SL();
     }
   };
-
-  const bboStatus = useMemo(() => {
-    if (
-      tpslSwitch ||
-      [OrderType.POST_ONLY, OrderType.IOC, OrderType.FOK].includes(
-        formattedOrder.order_type_ext!,
-      )
-    ) {
-      return BBOStatus.DISABLED;
-    }
-
-    return localBBOType && formattedOrder.order_type === OrderType.LIMIT
-      ? BBOStatus.ON
-      : BBOStatus.OFF;
-  }, [
-    tpslSwitch,
-    formattedOrder.order_type_ext,
-    formattedOrder.order_type,
-    localBBOType,
-  ]);
-
-  const toggleBBO = () => {
-    if (localBBOType) {
-      // unselect bbo
-      setLocalBBOType(undefined);
-      // update formattedOrder values immediately instead of via useEffect
-      setValues({
-        order_type_ext: undefined,
-        level: undefined,
-      });
-    } else {
-      setLocalBBOType(lastBBOType.current || BBOOrderType.COUNTERPARTY1);
-    }
-  };
-
-  const onBBOChange = (value: BBOOrderType) => {
-    setLocalBBOType(value);
-    lastBBOType.current = value;
-  };
-
-  useEffect(() => {
-    if (bboStatus === BBOStatus.DISABLED) {
-      const { order_type_ext } = formattedOrder;
-      setValues({
-        // if order_type_ext is not bbo(ask, bid), keep previous value
-        order_type_ext: isBBOOrder({ order_type_ext })
-          ? undefined
-          : order_type_ext,
-        level: undefined,
-      });
-    }
-  }, [bboStatus, formattedOrder.order_type_ext]);
-
-  useEffect(() => {
-    if (bboStatus === BBOStatus.ON) {
-      const orderType = getOrderTypeByBBO(localBBOType, formattedOrder.side!);
-      const orderLevel = getOrderLevelByBBO(localBBOType)!;
-      setValues({
-        order_type_ext: orderType,
-        level: orderLevel,
-      });
-    }
-  }, [localBBOType, bboStatus, formattedOrder.side]);
-
-  // useEffect(() => {
-  //   if (
-  //     priceInputContainerRef.current &&
-  //     // update BBO select width when is BBO order
-  //     isBBOOrder({ order_type_ext: formattedOrder.order_type_ext })
-  //   ) {
-  //     const width =
-  //       priceInputContainerRef.current.getBoundingClientRect()?.width;
-  //     if (width) {
-  //       setPriceInputContainerWidth(width);
-  //     }
-  //   }
-  // }, [priceInputContainerRef, formattedOrder.order_type_ext]);
 
   useEffect(() => {
     const updateOrderPrice = (price: string) => {
@@ -373,9 +221,9 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
 
       // handle bbo order, unselect bbo and set order price, focus on order price input
       if (isBBOOrder({ order_type, order_type_ext })) {
-        setLocalBBOType(undefined);
+        setBBOType(undefined);
 
-        setValues({
+        setOrderValues({
           order_type_ext: undefined,
           level: undefined,
         });
@@ -411,10 +259,10 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       // handle market order, set order type to limit
       if (order_type === OrderType.MARKET) {
         // unselect bbo
-        setLocalBBOType(undefined);
+        setBBOType(undefined);
 
         // You can't call setValue twice here , the second value will override the first, so you need to combine them into a single setValues call
-        setValues({
+        setOrderValues({
           order_type: OrderType.LIMIT,
           order_price: price,
         });
@@ -436,6 +284,13 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
         return;
       }
 
+      // handle trailing stop order, set activated price and focus on activated price input
+      if (order_type === OrderType.TRAILING_STOP) {
+        setValue("activated_price", price);
+        focusInputElement(activatedPriceInputRef.current);
+        return;
+      }
+
       // default, set order price and focus on order price input
       setValue("order_price", price);
       focusInputElement(priceInputRef.current);
@@ -448,28 +303,6 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     };
     // Please do not modify this deps lightly, because `setValue` also relies on these state internally
   }, [formattedOrder, symbolInfo]);
-
-  useEffect(() => {
-    const element = priceInputContainerRef.current;
-
-    if (!element) return;
-
-    const resizeObserver = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        const width = entry.contentRect.width;
-        if (width) {
-          // update BBO order select dropdown width when priceInputContainerRef width changed
-          setPriceInputContainerWidth(width);
-        }
-      }
-    });
-
-    resizeObserver.observe(element);
-
-    return () => {
-      resizeObserver.unobserve(element);
-    };
-  }, [priceInputContainerRef, formattedOrder.order_type_ext]);
 
   useEffect(() => {
     // after switching symbol, all the input number should be cleared (price, qty, TP/SL, etc)
@@ -488,20 +321,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   }, [formattedOrder.order_type, formattedOrder.distribution_type]);
 
   const currentLtv = useComputedLTV();
-
-  const [askAndBid, setAskAndBid] = useState<[number, number]>([0, 0]);
-
-  const onOrderBookUpdate = useDebouncedCallback((data: any) => {
-    setAskAndBid([data.asks?.[data.asks.length - 1]?.[0], data.bids?.[0]?.[0]]);
-  }, 200);
-
-  useEffect(() => {
-    ee.on("orderbook:update", onOrderBookUpdate);
-    return () => {
-      ee.off("orderbook:update", onOrderBookUpdate);
-      onOrderBookUpdate.cancel();
-    };
-  }, [onOrderBookUpdate]);
+  const askAndBid = useAskAndBid();
 
   const fillMiddleValue = () => {
     if (bboStatus === BBOStatus.ON) {
@@ -521,18 +341,21 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     }
   };
 
+  const { priceInputContainerRef, priceInputContainerWidth } =
+    usePriceInputContainer({
+      order_type_ext: formattedOrder.order_type_ext,
+    });
+
   return {
     ...state,
-    currentQtyPercentage,
     side: formattedOrder.side as OrderSide,
     type: formattedOrder.order_type as OrderType,
     level: formattedOrder.level as OrderLevel,
+    formattedOrder,
     setOrderValue,
-    setOrderValues: setValues,
-
+    setOrderValues,
     currentLeverage,
 
-    formattedOrder,
     // cancelTP_SL,
     // enableTP_SL,
     tpslSwitch,
@@ -541,23 +364,23 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     symbolInfo,
     onFocus,
     onBlur,
-    refs: {
-      triggerPriceInputRef,
-      priceInputRef,
-      priceInputContainerRef,
-    },
+
+    priceInputRef,
+    priceInputContainerRef,
+    priceInputContainerWidth,
+    triggerPriceInputRef,
+    activatedPriceInputRef,
+
     canTrade,
     bboStatus,
-    bboType: localBBOType,
+    bboType,
     onBBOChange,
     toggleBBO,
-    priceInputContainerWidth,
     currentLtv,
     fillMiddleValue,
-    quantityUnit,
-    setQuantityUnit,
     symbol: inputs.symbol,
-    soundAlert: soundAlert,
-    setSoundAlert: setSoundAlert,
+    soundAlert,
+    setSoundAlert,
+    currentFocusInput,
   };
 };

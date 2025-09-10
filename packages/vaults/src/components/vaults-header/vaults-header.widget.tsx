@@ -1,9 +1,16 @@
 import { FC } from "react";
+import { useScreen } from "@orderly.network/ui";
 import { VaultsHeaderDesktop } from "./vaults-header.desktop";
+import { VaultsHeaderMobile } from "./vaults-header.mobile";
 import { useVaultsHeaderScript } from "./vaults-header.script";
 
 export const VaultsHeaderWidget: FC = () => {
   const state = useVaultsHeaderScript();
+  const { isMobile } = useScreen();
 
-  return <VaultsHeaderDesktop {...state} />;
+  return isMobile ? (
+    <VaultsHeaderMobile {...state} />
+  ) : (
+    <VaultsHeaderDesktop {...state} />
+  );
 };
