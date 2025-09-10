@@ -1,5 +1,4 @@
 import React, { useCallback, useMemo } from "react";
-import useEmblaCarousel from "embla-carousel-react";
 import { useTranslation } from "@orderly.network/i18n";
 import { AnnouncementType } from "@orderly.network/types";
 import {
@@ -15,6 +14,7 @@ import {
   Flex,
   useScreen,
   Text,
+  useEmblaCarousel,
 } from "@orderly.network/ui";
 import { CloseIcon } from "../icons";
 import type { AnnouncementScriptReturn } from "./announcement.script";

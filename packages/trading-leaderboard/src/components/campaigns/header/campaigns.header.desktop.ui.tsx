@@ -1,6 +1,9 @@
 import { FC, useCallback, useState, useEffect } from "react";
-import useEmblaCarousel from "embla-carousel-react";
-import { ChevronLeftIcon, ChevronRightIcon } from "@orderly.network/ui";
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  useEmblaCarousel,
+} from "@orderly.network/ui";
 import { DefaultCampaign } from "../DefaultCampaign";
 import { CampaignItemUI } from "../campaign.item.ui";
 import { CampaignConfig } from "../type";
@@ -42,7 +45,9 @@ export const CampaignsHeaderUI: FC<{
 
   // Update scroll availability
   const updateScrollAvailability = useCallback(() => {
-    if (!emblaApi || !campaigns?.length) return;
+    if (!emblaApi || !campaigns?.length) {
+      return;
+    }
 
     setCanScrollPrev(emblaApi.canScrollPrev());
 
@@ -55,7 +60,9 @@ export const CampaignsHeaderUI: FC<{
   }, [emblaApi, campaigns]);
 
   useEffect(() => {
-    if (!emblaApi) return;
+    if (!emblaApi) {
+      return;
+    }
 
     // Initial check
     updateScrollAvailability();

@@ -1,14 +1,13 @@
 "use client";
 
 import React from "react";
-import useEmblaCarousel, {
-  type UseEmblaCarouselType,
-} from "embla-carousel-react";
 import {
   Button,
   ChevronLeftIcon,
   ChevronRightIcon,
   cn,
+  useEmblaCarousel,
+  type UseEmblaCarouselType,
 } from "@orderly.network/ui";
 
 type CarouselApi = UseEmblaCarouselType[1];
@@ -264,6 +263,7 @@ const CarouselPrevious = React.forwardRef<
     </Button>
   );
 });
+
 CarouselPrevious.displayName = "CarouselPrevious";
 
 const CarouselNext = React.forwardRef<

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import useEmblaCarousel from "embla-carousel-react";
 import { useMarkets, useQuery, MarketsType } from "@orderly.network/hooks";
+import { useEmblaCarousel } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { sortList, useSize } from "../../../utils";
 
