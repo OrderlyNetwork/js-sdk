@@ -42,7 +42,7 @@ export const SymbolLeverage = (props: SymbolLeverageScriptReturns) => {
         <LeverageSlider {...props} />
         <Divider className="oui-mb-3 oui-w-full" />
         <div className="oui-flex oui-flex-col oui-gap-1 oui-pb-4 oui-text-xs oui-font-normal oui-text-base-contrast-54">
-          <div>
+          {/* <div>
             <Trans
               i18nKey="leverage.maxPositionLeverage.tips"
               values={{ amount: props.maxPositionNotional }}
@@ -56,7 +56,7 @@ export const SymbolLeverage = (props: SymbolLeverageScriptReturns) => {
                 />,
               ]}
             />
-          </div>
+          </div> */}
           <div>
             <Trans
               i18nKey="leverage.maxAvailableLeverage.tips"
@@ -65,7 +65,7 @@ export const SymbolLeverage = (props: SymbolLeverageScriptReturns) => {
                 // @ts-ignore
                 <Text.numeral
                   dp={0}
-                  suffix="X"
+                  suffix="x"
                   as="span"
                   key="0"
                   className="oui-text-base-contrast"
