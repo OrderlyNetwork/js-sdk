@@ -1,3 +1,4 @@
+import React from "react";
 import { type AlgoOrderRootType } from "@orderly.network/types";
 import { registerSimpleDialog, registerSimpleSheet } from "@orderly.network/ui";
 import { TPSL, TPSLProps } from "./tpsl.ui";
@@ -8,10 +9,9 @@ export type TPSLWidgetProps = {
 } & TPSLBuilderOptions &
   TPSLProps;
 
-export const TPSLWidget = (props: TPSLWidgetProps) => {
+export const TPSLWidget: React.FC<TPSLWidgetProps> = (props) => {
   const { onCancel, onComplete, close, ...rest } = props;
   const state = useTPSLBuilder(rest);
-
   return (
     <TPSL
       {...state}
@@ -29,6 +29,6 @@ registerSimpleSheet(TPSLSheetId, TPSLWidget);
 
 registerSimpleDialog(TPSLDialogId, TPSLWidget, {
   classNames: {
-    content: "oui-w-[420px]",
+    content: "oui-w-[436px]",
   },
 });

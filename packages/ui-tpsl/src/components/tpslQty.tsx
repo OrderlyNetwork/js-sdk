@@ -17,8 +17,7 @@ export type TPSLQuantityProps = {
   errorMsg?: string;
 };
 
-export const TPSLQuantity = memo((props: TPSLQuantityProps) => {
-  console.log("TPSLQuantity", props);
+export const TPSLQuantity = memo<TPSLQuantityProps>((props) => {
   const { maxQty, base_dp, baseTick, quantity } = props;
   const inputRef = useRef<HTMLInputElement>(null);
 
