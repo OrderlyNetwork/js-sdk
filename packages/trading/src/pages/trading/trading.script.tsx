@@ -193,8 +193,10 @@ const useMarketsCollapse = (options: { resizeable: boolean }) => {
   };
 
   const memoizedPanelSize = useMemo<"small" | "middle" | "large">(() => {
+    // Force only two states
+    const normalized = panelSize === "large" ? "large" : "middle";
     // under 1440px markets force collapsed
-    return resizeable ? panelSize : "middle";
+    return resizeable ? normalized : "middle";
   }, [resizeable, panelSize]);
 
   return {

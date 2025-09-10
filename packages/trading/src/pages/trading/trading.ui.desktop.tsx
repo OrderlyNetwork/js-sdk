@@ -137,7 +137,8 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
     <HorizontalMarketsWidget
       symbol={props.symbol}
       onSymbolChange={props.onSymbolChange}
-      maxItems={8}
+      maxItems={-1} // show all markets
+      dropdownPos={marketLayout === "bottom" ? "top" : "bottom"}
     />
   );
 

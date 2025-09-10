@@ -1,14 +1,17 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
+import { useMarkets, MarketsType } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { Box, Flex, Text, cn, Checkbox, Divider } from "@orderly.network/ui";
 import { FilterIcon } from "../../icons";
 import type { MarketType } from "./horizontalMarkets.script";
 
+export type DropdownPos = "top" | "bottom";
+
 export type MarketTypeFilterProps = {
   selectedMarketType: MarketType;
   onMarketTypeChange: (marketType: MarketType) => void;
   className?: string;
-  position?: "top" | "bottom";
+  position?: DropdownPos;
 };
 
 const marketTypeBase: Array<{
@@ -25,21 +28,21 @@ const marketTypeFavorites: Array<{
   value: MarketType;
   label: string;
   translationKey: string;
-}> = [
-  { value: "favorites", label: "Favorites", translationKey: "Favorites" },
-  { value: "trending", label: "Trending", translationKey: "Trending" },
-];
+}> = [{ value: "favorites", label: "Favorites", translationKey: "Favorites" }];
 
 export const MarketTypeFilter: React.FC<MarketTypeFilterProps> = (props) => {
   const {
     selectedMarketType,
     onMarketTypeChange,
     className,
-    position = "bottom",
+    position = "bottom" as DropdownPos,
   } = props;
-  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Access shared favorites store for tabs rendering
+  const [, favorite] = useMarkets(MarketsType.FAVORITES);
+  const hasFavorites = (favorite?.favorites?.length || 0) > 0;
 
   // Handle click outside to close dropdown
   useEffect(() => {
@@ -62,15 +65,18 @@ export const MarketTypeFilter: React.FC<MarketTypeFilterProps> = (props) => {
   }, [isOpen]);
 
   // Open dropdown
-  const handleFilterClick = () => {
-    setIsOpen(!isOpen);
-  };
+  const handleFilterClick = useCallback(() => {
+    setIsOpen((prev) => !prev);
+  }, []);
 
   // Handle option click
-  const handleOptionClick = (marketType: MarketType) => {
-    onMarketTypeChange(marketType);
-    setIsOpen(false);
-  };
+  const handleOptionClick = useCallback(
+    (marketType: MarketType) => {
+      onMarketTypeChange(marketType);
+      setIsOpen(false);
+    },
+    [onMarketTypeChange],
+  );
 
   return (
     <Box
@@ -98,9 +104,11 @@ export const MarketTypeFilter: React.FC<MarketTypeFilterProps> = (props) => {
               "oui-absolute oui-left-0 oui-z-50",
               "oui-bg-base-9 oui-border oui-border-line-6 oui-rounded-[12px]",
               "oui-shadow-lg oui-w-[320px] oui-p-5",
+              // animation
+              "oui-animate-in oui-fade-in-0 oui-zoom-in-95",
               position === "top"
-                ? "oui-bottom-full oui-mb-1"
-                : "oui-top-full oui-mt-1",
+                ? "oui-bottom-full oui-mb-1 oui-slide-in-from-bottom-2"
+                : "oui-top-full oui-mt-1 oui-slide-in-from-top-2",
             )}
           >
             <Flex direction="column" gapY={3} itemAlign="start">
@@ -126,7 +134,6 @@ export const MarketTypeFilter: React.FC<MarketTypeFilterProps> = (props) => {
                       className="oui-peer"
                       color="white"
                       checked={selectedMarketType === option.value}
-                      onCheckedChange={() => handleOptionClick(option.value)}
                     />
 
                     <label
@@ -142,55 +149,67 @@ export const MarketTypeFilter: React.FC<MarketTypeFilterProps> = (props) => {
                 ))}
               </Flex>
 
-              {/* Divider */}
-              <Divider
-                className="oui-w-full"
-                direction="horizontal"
-                intensity={16}
-              />
+              {hasFavorites && (
+                <>
+                  {/* Divider */}
+                  <Divider
+                    className="oui-w-full"
+                    direction="horizontal"
+                    intensity={16}
+                  />
 
-              {/* Favorites Title */}
-              <Text className="oui-text-xs oui-text-base-contrast-54 oui-font-medium">
-                Favorites
-              </Text>
+                  {/* Favorites Title */}
+                  <Text className="oui-text-xs oui-text-base-contrast-54 oui-font-medium">
+                    Favorites
+                  </Text>
 
-              {/* Favorites Market Types */}
-              <Flex
-                direction="row"
-                gapX={3}
-                wrap="wrap"
-                gapY={1}
-                className="oui-gap-x-2 md:oui-gap-x-3"
-              >
-                {marketTypeFavorites.map((option) => (
+                  {/* Favorites Tabs as checkbox list */}
                   <Flex
-                    key={option.value}
-                    className={cn("oui-cursor-pointer")}
-                    itemAlign="center"
-                    onClick={() => handleOptionClick(option.value)}
+                    direction="row"
+                    gapX={3}
+                    wrap="wrap"
+                    gapY={1}
+                    className="oui-gap-x-2 md:oui-gap-x-3"
                   >
-                    {/* Checkbox */}
-                    <Checkbox
-                      data-testid={`oui-testid-marketType-${option.value}-checkBox`}
-                      id={`toggle_market_type_${option.value}`}
-                      className="oui-peer"
-                      color="white"
-                      checked={selectedMarketType === option.value}
-                      onCheckedChange={() => handleOptionClick(option.value)}
-                    />
+                    {favorite.favoriteTabs?.slice(0, 10)?.map((tab) => {
+                      const isActiveTab =
+                        selectedMarketType === "favorites" &&
+                        favorite.selectedFavoriteTab?.id === tab.id;
+                      const htmlId = `toggle_market_type_favorites_${tab.id}`;
+                      return (
+                        <Flex
+                          key={tab.id}
+                          className={cn("oui-cursor-pointer")}
+                          itemAlign="center"
+                          onClick={() => {
+                            favorite.updateSelectedFavoriteTab(tab);
+                            onMarketTypeChange("favorites");
+                            setIsOpen(false);
+                          }}
+                        >
+                          <Checkbox
+                            data-testid={`oui-testid-marketType-favorites-${tab.id}-checkBox`}
+                            id={htmlId}
+                            className="oui-peer"
+                            color="white"
+                            checked={isActiveTab}
+                          />
 
-                    <label
-                      htmlFor={`toggle_market_type_${option.value}`}
-                      className={cn(
-                        "oui-text-2xs oui-ml-1",
-                        "oui-break-normal oui-whitespace-nowrap oui-cursor-pointer",
-                      )}
-                    >
-                      {option.translationKey}
-                    </label>
+                          <label
+                            htmlFor={htmlId}
+                            className={cn(
+                              "oui-text-2xs oui-ml-1",
+                              "oui-break-normal oui-whitespace-nowrap oui-cursor-pointer",
+                            )}
+                          >
+                            {tab.name}
+                          </label>
+                        </Flex>
+                      );
+                    })}
                   </Flex>
-                ))}
-              </Flex>
+                </>
+              )}
             </Flex>
           </Box>
         </div>

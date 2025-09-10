@@ -3,9 +3,11 @@ import { Box, cn, Flex, Marquee } from "@orderly.network/ui";
 import type { HorizontalMarketsScriptReturn } from "./horizontalMarkets.script";
 import { MarketItem } from "./marketItem.ui";
 import { MarketTypeFilter } from "./marketTypeFilter.ui";
+import type { DropdownPos } from "./marketTypeFilter.ui";
 
 export type HorizontalMarketsProps = HorizontalMarketsScriptReturn & {
   className?: string;
+  dropdownPos?: DropdownPos;
 };
 
 export const HorizontalMarkets = React.memo<HorizontalMarketsProps>((props) => {
@@ -17,6 +19,7 @@ export const HorizontalMarkets = React.memo<HorizontalMarketsProps>((props) => {
     selectedMarketType,
     onMarketTypeChange,
     className,
+    dropdownPos,
   } = props;
 
   // Memoize the render function to prevent unnecessary re-renders
@@ -29,20 +32,17 @@ export const HorizontalMarkets = React.memo<HorizontalMarketsProps>((props) => {
         return null;
       }
 
-      const isLastItem = index === symbols.length - 1;
-
       return (
         <MarketItem
-          key={`${symbol}-${index}`}
+          key={symbol}
           symbol={symbol}
           tickerData={data}
           isActive={isActive}
           onSymbolClick={onSymbolClick}
-          showDivider={!isLastItem}
         />
       );
     },
-    [tickerData, currentSymbol, onSymbolClick, symbols.length],
+    [tickerData, currentSymbol, onSymbolClick],
   );
 
   const carouselOptions = React.useMemo(
@@ -82,6 +82,7 @@ export const HorizontalMarkets = React.memo<HorizontalMarketsProps>((props) => {
         <MarketTypeFilter
           selectedMarketType={selectedMarketType}
           onMarketTypeChange={onMarketTypeChange}
+          position={dropdownPos}
         />
 
         {/* Markets List */}

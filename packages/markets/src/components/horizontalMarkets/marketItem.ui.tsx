@@ -10,17 +10,10 @@ export interface MarketItemProps {
   };
   isActive: boolean;
   onSymbolClick: (symbol: string) => void;
-  showDivider?: boolean;
 }
 
 const MarketItemComponent: React.FC<MarketItemProps> = (props) => {
-  const {
-    symbol,
-    tickerData,
-    isActive,
-    onSymbolClick,
-    showDivider = true,
-  } = props;
+  const { symbol, tickerData, isActive, onSymbolClick } = props;
 
   const handleClick = React.useCallback(() => {
     onSymbolClick(symbol);
@@ -32,9 +25,6 @@ const MarketItemComponent: React.FC<MarketItemProps> = (props) => {
       className={cn(
         "oui-cursor-pointer oui-rounded oui-h-[18px] oui-items-center oui-mr-3 oui-flex-shrink-0",
         "oui-transition-all oui-duration-200",
-        isActive
-          ? "oui-bg-primary-darken oui-text-primary"
-          : "hover:oui-bg-base-6",
       )}
       onClick={handleClick}
     >
@@ -46,9 +36,7 @@ const MarketItemComponent: React.FC<MarketItemProps> = (props) => {
           formatString="base"
           size="xs"
           weight="semibold"
-          className={cn(
-            isActive ? "oui-text-primary" : "oui-text-base-contrast",
-          )}
+          className="oui-text-base-contrast-80"
         >
           {symbol}
         </Text.formatted>
@@ -56,13 +44,7 @@ const MarketItemComponent: React.FC<MarketItemProps> = (props) => {
 
       {/* Price */}
       <Flex gapX={1} className="oui-mr-[6px]">
-        <Text.numeral
-          dp={2}
-          size="xs"
-          className={cn(
-            isActive ? "oui-text-primary" : "oui-text-base-contrast-80",
-          )}
-        >
+        <Text.numeral dp={2} size="xs" className="oui-text-base-contrast-80">
           {tickerData["24h_close"]}
         </Text.numeral>
       </Flex>
@@ -80,8 +62,8 @@ const MarketItemComponent: React.FC<MarketItemProps> = (props) => {
         </Text.numeral>
       </Flex>
 
-      {/* Divider - separates each market item */}
-      {showDivider && <Divider direction="vertical" className="oui-h-[18px]" />}
+      {/* Divider */}
+      <Divider direction="vertical" className="oui-h-[18px] oui-border-line" />
     </Flex>
   );
 };
@@ -93,7 +75,6 @@ export const MarketItem = React.memo<MarketItemProps>(
     return (
       prevProps.symbol === nextProps.symbol &&
       prevProps.isActive === nextProps.isActive &&
-      prevProps.showDivider === nextProps.showDivider &&
       prevProps.tickerData["24h_close"] === nextProps.tickerData["24h_close"] &&
       prevProps.tickerData.change === nextProps.tickerData.change &&
       prevProps.onSymbolClick === nextProps.onSymbolClick
