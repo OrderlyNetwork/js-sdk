@@ -34,7 +34,9 @@ export async function copyText(content: string) {
 }
 
 export function parseTime(time?: number | string): Date | null {
-  if (!time) return null;
+  if (!time) {
+    return null;
+  }
   const timestamp = typeof time === "number" ? time : Date.parse(time);
 
   if (!isNaN(timestamp)) {
@@ -46,7 +48,9 @@ export function parseTime(time?: number | string): Date | null {
 
 //** will be return YYYY-MM-ddThh:mm:ssZ */
 export function formatDateTimeToUTC(input?: number | string): string {
-  if (input === undefined) return "";
+  if (input === undefined) {
+    return "";
+  }
   const date = toDate(input);
   const utcDate = toUTCDate(date);
   return format(utcDate, "yyyy-MM-dd HH:mm:ss 'UTC'");
@@ -54,7 +58,9 @@ export function formatDateTimeToUTC(input?: number | string): string {
 
 //** will return yyyy-MM-dd */
 export function formatYMDTime(time?: number | string): string | undefined {
-  if (time === undefined) return undefined;
+  if (time === undefined) {
+    return undefined;
+  }
   const date = toDate(time);
   const utcDate = toUTCDate(date);
   return format(utcDate, "yyyy-MM-dd");
@@ -62,7 +68,9 @@ export function formatYMDTime(time?: number | string): string | undefined {
 
 //** will return hh:mm */
 export function formatHMTime(time?: number | string): string | undefined {
-  if (time === undefined) return undefined;
+  if (time === undefined) {
+    return undefined;
+  }
   const date = toDate(time);
   const utcDate = toUTCDate(date);
   return format(utcDate, "hh:mm");
@@ -70,7 +78,9 @@ export function formatHMTime(time?: number | string): string | undefined {
 
 //** will return MM-dd */
 export function formatMdTime(time?: number | string): string | undefined {
-  if (time === undefined) return undefined;
+  if (time === undefined) {
+    return undefined;
+  }
   const date = toDate(time);
   const utcDate = toUTCDate(date);
   return format(utcDate, "MM-dd");
@@ -101,7 +111,9 @@ export function generateData(
 
     const matchedData = data?.find((item) => {
       const itemDate = parseTime(item[timeKey]);
-      if (!itemDate) return false;
+      if (!itemDate) {
+        return false;
+      }
       return itemDate.toISOString().substring(0, 10) === currentDateStr;
     });
 

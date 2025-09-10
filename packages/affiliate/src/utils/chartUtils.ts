@@ -1,28 +1,29 @@
-import { VolChartDataItem } from "@orderly.network/chart";
 import { format, subDays } from "date-fns";
+import type { VolChartDataItem } from "@orderly.network/chart";
 
 export function fillData(
   days: number,
-  origin?: VolChartDataItem[]
+  origin?: VolChartDataItem[],
 ): VolChartDataItem[] {
   const now = Date();
-  const result: VolChartDataItem[] = new Array(days).fill(0).map(
-    (_, index): VolChartDataItem => {
+  const result = new Array(days)
+    .fill(0)
+    .map<VolChartDataItem>((_, index) => {
       return {
         date: format(subDays(now, index + 1), "yyyy-MM-dd"),
         volume: 0,
         opacity: 0,
       };
-    }
-  ).reverse();
+    })
+    .reverse();
 
-  console.log("fill data", result, origin);
-  
-
-  const dataObject = origin?.reduce((acc, curr) => {
-    acc[curr.date] = curr;
-    return acc;
-  }, {} as { [key: string]: VolChartDataItem });
+  const dataObject = origin?.reduce<{ [key: string]: VolChartDataItem }>(
+    (acc, curr) => {
+      acc[curr.date] = curr;
+      return acc;
+    },
+    {},
+  );
 
   for (let index = 0; index < result.length; index++) {
     const element = result[index];
