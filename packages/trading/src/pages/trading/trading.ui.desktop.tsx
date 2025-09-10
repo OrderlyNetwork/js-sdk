@@ -429,12 +429,12 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
           ref={props.max2XLSplitRef}
           style={{
             minHeight: minScreenHeightSM,
-            minWidth: 1024 - scrollBarWidth,
+            minWidth: 1024,
             // height: props.extraHeight ? props.extraHeight : undefined,
           }}
           className={cn(
             "oui-flex oui-flex-1",
-            "oui-size-full oui-min-w-[1018px]",
+            "oui-size-full oui-min-w-[1024px]",
             "oui-px-3 oui-py-2",
             props.className,
           )}
@@ -585,7 +585,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
     <Flex
       style={{
         minHeight: minScreenHeight,
-        minWidth: 1440 - scrollBarWidth,
+        minWidth: 1440,
       }}
       className={cn(
         props.className,
