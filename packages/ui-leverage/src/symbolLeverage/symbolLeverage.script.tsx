@@ -14,14 +14,7 @@ import {
   positions as positionsPerp,
 } from "@orderly.network/perp";
 import { OrderSide } from "@orderly.network/types";
-import {
-  Checkbox,
-  modal,
-  SliderMarks,
-  toast,
-  Text,
-  useScreen,
-} from "@orderly.network/ui";
+import { modal, SliderMarks, toast, useScreen } from "@orderly.network/ui";
 import { zero } from "@orderly.network/utils";
 
 type UseLeverageScriptOptions = {
@@ -113,45 +106,12 @@ export const useSymbolLeverageScript = (
     }
   };
 
-  const onCheckedChange = (checked: boolean) => {
-    localStorage.setItem(
-      "symbol_leverage_disable_confirmation",
-      checked ? "true" : "false",
-    );
-  };
-
   const onSave = async () => {
-    const localDisableConfirmation = localStorage.getItem(
-      "symbol_leverage_disable_confirmation",
-    );
-    if (localDisableConfirmation === "true") {
-      return onConfirmSave();
-    }
-
     modal.confirm({
       title: t("leverage.confirm"),
-      classNames: {
-        body: "!oui-pb-0",
-      },
-      content: (
-        <div>
-          {t("leverage.confirm.content")}
-          <div className="oui-mt-8 oui-flex oui-items-center oui-gap-1">
-            <Checkbox
-              className="oui-border-base-contrast-80"
-              onCheckedChange={onCheckedChange}
-            />
-            <Text size="xs" intensity={54}>
-              {t("leverage.confirm.disable.confirmation")}
-            </Text>
-          </div>
-        </div>
-      ),
-      onOk: () => {
-        return onConfirmSave();
-      },
+      content: t("leverage.confirm.content"),
+      onOk: onConfirmSave,
       onCancel: () => {
-        localStorage.setItem("symbol_leverage_disable_confirmation", "false");
         return Promise.resolve();
       },
     });
