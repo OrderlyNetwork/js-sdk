@@ -52,11 +52,11 @@ export const TPSLQuantity = memo<TPSLQuantityProps>((props) => {
     const slider = new Decimal(qty)
       .div(maxQty)
       .mul(100)
-      .toDecimalPlaces(4, Decimal.ROUND_DOWN)
+      .toDecimalPlaces(2, Decimal.ROUND_DOWN)
       .toNumber();
 
     setSliderValue(slider);
-  }, [quantity]);
+  }, [quantity, maxQty]);
 
   const errorMsg =
     props.quantity.toString().length > 0 ? props.errorMsg : undefined;
