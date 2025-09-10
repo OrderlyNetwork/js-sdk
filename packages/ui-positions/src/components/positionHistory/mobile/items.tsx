@@ -47,7 +47,7 @@ export const Time: FC<PositionHistoryCellState> = (props) => {
   return (
     <Text.formatted
       rule={"date"}
-      formatString="yyyy-MM-dd hh:mm:ss"
+      formatString="yyyy-MM-dd HH:mm:ss"
       intensity={36}
       size="2xs"
     >
