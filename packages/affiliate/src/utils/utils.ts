@@ -1,22 +1,27 @@
+import { format, toDate } from "date-fns";
 import { i18n } from "@orderly.network/i18n";
 import { toast } from "@orderly.network/ui";
-import { format, toDate } from "date-fns";
+
 // import { toZonedTime } from "date-fns-tz";
 // const { toZonedTime } = require("date-fns-tz");
 
 export function addQueryParam(
   url: string,
   paramName: string,
-  paramValue: string
+  paramValue: string,
 ): string {
-  const urlObj = new URL(url);
-  const searchParams = new URLSearchParams(urlObj.search);
+  try {
+    const urlObj = new URL(url);
+    const searchParams = new URLSearchParams(urlObj.search);
 
-  searchParams.set(paramName, paramValue);
+    searchParams.set(paramName, paramValue);
 
-  urlObj.search = searchParams.toString();
+    urlObj.search = searchParams.toString();
 
-  return urlObj.toString();
+    return urlObj.toString();
+  } catch (error) {
+    return url;
+  }
 }
 
 export async function copyText(content: string) {
@@ -85,7 +90,7 @@ export function generateData(
   itemCount: number,
   data: any[] | null | undefined,
   timeKey: string,
-  valueKey: string
+  valueKey: string,
 ): [string, number][] {
   const result: [string, number][] = [];
 
