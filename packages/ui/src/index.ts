@@ -73,6 +73,9 @@ export { tv } from "./utils/tv";
 export { default as toast } from "react-hot-toast";
 
 export * from "embla-carousel-react";
+export * from "embla-carousel-auto-scroll";
+export * from "embla-carousel-autoplay";
+export type { EmblaOptionsType } from "embla-carousel";
 
 //===== tailwind
 export * as OUITailwind from "./tailwind";
