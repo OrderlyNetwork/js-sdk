@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { useAppContext } from "@orderly.network/react-app";
 import {
   Box,
   Flex,
@@ -45,8 +44,6 @@ type FeeTierTableProps = {
 
 export const FeeTierTable: React.FC<FeeTierTableProps> = (props) => {
   const [top, setTop] = useState<undefined | number>(undefined);
-
-  const { widgetConfigs } = useAppContext();
 
   const parentRef = useRef<HTMLDivElement>(null);
   const activeRowRef = useRef<HTMLDivElement>(null);
@@ -110,18 +107,12 @@ export const FeeTierTable: React.FC<FeeTierTableProps> = (props) => {
     </Box>
   );
 
-  const customTable = widgetConfigs?.feeTier?.table;
-
-  return typeof customTable === "function"
-    ? customTable(originalTable)
-    : originalTable;
+  return originalTable;
 };
 
 export const FeeTier: React.FC<FeeTierProps> = (props) => {
   const { columns, dataSource, tier, vol } = props;
-  const { widgetConfigs } = useAppContext();
   const { t } = useTranslation();
-  const customHeader = widgetConfigs?.feeTier?.header;
   return (
     <Card
       title={
@@ -141,7 +132,6 @@ export const FeeTier: React.FC<FeeTierProps> = (props) => {
       id="oui-portfolio-fee-tier"
     >
       <Divider />
-      {typeof customHeader === "function" ? customHeader() : null}
       <React.Suspense fallback={null}>
         <LazyFeeTierHeader
           vol={vol}
