@@ -419,7 +419,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
 
   if (max2XL) {
     return (
-      <Box>
+      <Box height="100%">
         {marketLayout === "top" && (
           <Box className={cn("oui-max-h-8 oui-px-3 oui-mt-2", props.className)}>
             {horizontalMarketsView}
