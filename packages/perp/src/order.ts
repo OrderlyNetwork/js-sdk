@@ -145,12 +145,18 @@ export function estLiqPrice(inputs: EstimatedLiquidationPriceInputs): number {
     return 0;
   }
 
+  const denominator = newQty.abs().mul(newMMR).sub(newQty);
+
+  if (denominator.eq(zero)) {
+    return 0;
+  }
+
   const price = new Decimal(basePrice)
     .add(
       new Decimal(totalCollateral)
         .sub(newTotalMM)
         .sub(orderFee)
-        .div(newQty.abs().mul(newMMR).sub(newQty)),
+        .div(denominator),
     )
     .toNumber();
 
