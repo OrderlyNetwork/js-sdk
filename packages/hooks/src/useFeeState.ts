@@ -40,14 +40,14 @@ export const useFeeState = () => {
   const refereeRebate = referralData?.referee_info?.referee_rebate_rate;
 
   const takerFee = useMemo(() => {
-    if (isAccountLoading || takerFeeBps == null) {
+    if (isAccountLoading || takerFeeBps === null || takerFeeBps === undefined) {
       return "-";
     }
     return formatFractionAsPercent(bpsToFraction(takerFeeBps));
   }, [isAccountLoading, takerFeeBps]);
 
   const makerFee = useMemo(() => {
-    if (isAccountLoading || makerFeeBps == null) {
+    if (isAccountLoading || makerFeeBps === null || makerFeeBps === undefined) {
       return "-";
     }
     return formatFractionAsPercent(bpsToFraction(makerFeeBps));
