@@ -14,7 +14,13 @@ import {
   positions as positionsPerp,
 } from "@orderly.network/perp";
 import { OrderSide } from "@orderly.network/types";
-import { modal, SliderMarks, toast, useScreen } from "@orderly.network/ui";
+import {
+  modal,
+  SliderMarks,
+  toast,
+  useScreen,
+  Text,
+} from "@orderly.network/ui";
 import { zero } from "@orderly.network/utils";
 
 type UseLeverageScriptOptions = {
@@ -109,7 +115,7 @@ export const useSymbolLeverageScript = (
   const onSave = async () => {
     modal.confirm({
       title: t("leverage.confirm"),
-      content: t("leverage.confirm.content"),
+      content: <Text intensity={54}>{t("leverage.confirm.content")}</Text>,
       onOk: onConfirmSave,
       onCancel: () => {
         return Promise.resolve();
