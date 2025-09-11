@@ -79,7 +79,7 @@ export const QRCodeScanner: FC<ScannerProps> = (props) => {
 
     // Use facingMode: environment to attemt to get the front camera on phones
     navigator?.mediaDevices
-      .getUserMedia({
+      ?.getUserMedia({
         video: {
           facingMode: "environment",
           width: { ideal: QRCODE_WIDTH * RATIO },

@@ -19,7 +19,7 @@ import {
   noCacheConfig,
 } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
-import { AccountStatusEnum, EMPTY_OPERATION } from "@orderly.network/types";
+import { AccountStatusEnum } from "@orderly.network/types";
 
 export enum TabTypes {
   affiliate = "affiliate",
@@ -141,11 +141,11 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
     chartConfig,
     overwrite,
     children,
-    splashPage = EMPTY_OPERATION as () => React.ReactNode,
-    onBecomeAnAffiliate = EMPTY_OPERATION,
-    bindReferralCodeState = EMPTY_OPERATION,
-    onLearnAffiliate = EMPTY_OPERATION,
-    showReferralPage = EMPTY_OPERATION,
+    splashPage,
+    onBecomeAnAffiliate,
+    bindReferralCodeState,
+    onLearnAffiliate,
+    showReferralPage,
   } = props;
 
   const { state } = useAccount();
@@ -263,12 +263,6 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
     };
   }, [memoMutate, state.status]);
 
-  const memoBecomeAnAffiliate = useMemoizedFn(onBecomeAnAffiliate);
-  const memoBindReferralCodeState = useMemoizedFn(bindReferralCodeState);
-  const memoLearnAffiliate = useMemoizedFn(onLearnAffiliate);
-  const memoShowReferralPage = useMemoizedFn(showReferralPage);
-  const memoSplashPage = useMemoizedFn(splashPage);
-
   const memoizedValue = useMemo<ReferralContextReturns>(() => {
     return {
       generateCode,
@@ -290,11 +284,11 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
       setShowHome,
       setTab: setTab,
       mutate: memoMutate,
-      onBecomeAnAffiliate: memoBecomeAnAffiliate,
-      bindReferralCodeState: memoBindReferralCodeState,
-      onLearnAffiliate: memoLearnAffiliate,
-      showReferralPage: memoShowReferralPage,
-      splashPage: memoSplashPage,
+      onBecomeAnAffiliate,
+      bindReferralCodeState,
+      onLearnAffiliate,
+      showReferralPage,
+      splashPage,
     };
   }, [
     becomeAnAffiliateUrl,
@@ -313,11 +307,11 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
     tab,
     userVolume,
     wrongNetwork,
-    memoBecomeAnAffiliate,
-    memoBindReferralCodeState,
-    memoLearnAffiliate,
-    memoShowReferralPage,
-    memoSplashPage,
+    onBecomeAnAffiliate,
+    bindReferralCodeState,
+    onLearnAffiliate,
+    showReferralPage,
+    splashPage,
     memoMutate,
   ]);
 

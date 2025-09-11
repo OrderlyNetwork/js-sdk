@@ -45,18 +45,20 @@ export const useToken = (options: Options) => {
   const chainId = chain?.network_infos?.chain_id;
 
   const newTokensInfo = useMemo(() => {
-    return tokensInfo.map<API.Chain>((item) => {
-      const findToken = chain?.token_infos?.find(
-        ({ symbol }) => symbol === item.token,
-      );
-      return {
-        ...item,
-        symbol: item.token,
-        address: findToken?.address,
-        decimals: item.chain_details[0]?.decimals,
-        precision: item.decimals,
-      };
-    });
+    return tokensInfo
+      .filter((item) => item.on_chain_swap)
+      .map<API.Chain>((item) => {
+        const findToken = chain?.token_infos?.find(
+          ({ symbol }) => symbol === item.token,
+        );
+        return {
+          ...item,
+          symbol: item.token,
+          address: findToken?.address,
+          decimals: item.chain_details[0]?.decimals,
+          precision: item.decimals,
+        };
+      });
   }, [chain?.token_infos, tokensInfo]);
 
   useEffect(() => {

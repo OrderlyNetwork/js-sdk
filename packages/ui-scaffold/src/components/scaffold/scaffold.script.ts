@@ -52,7 +52,10 @@ export const useScaffoldScript = (options: ScaffoldScriptOptions) => {
   };
 };
 
-const useRefAndHeight = (defaultHeight: number, deps: any[] = []) => {
+const useRefAndHeight = (
+  defaultHeight: number,
+  deps: React.DependencyList = [],
+) => {
   const ref = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState(defaultHeight);
 
@@ -64,9 +67,8 @@ const useRefAndHeight = (defaultHeight: number, deps: any[] = []) => {
     if (!ref.current) {
       return;
     }
-
-    const height = ref.current?.getBoundingClientRect().height;
-    setHeight(height!);
+    const rect = ref.current?.getBoundingClientRect();
+    setHeight(rect.height);
   }, [ref, ...deps]);
 
   return [ref, height] as const;

@@ -7,7 +7,6 @@ import { useVaultsHeaderScript } from "./vaults-header.script";
 export const VaultsHeaderWidget: FC = () => {
   const state = useVaultsHeaderScript();
   const { isMobile } = useScreen();
-
   return isMobile ? (
     <VaultsHeaderMobile {...state} />
   ) : (

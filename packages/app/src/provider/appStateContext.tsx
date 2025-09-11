@@ -11,16 +11,6 @@ export type WidgetConfigs = {
   scanQRCode?: {
     onSuccess?: (url: string) => void;
   };
-  orderEntry?: {
-    fees?: {
-      trailing?: (original?: React.ReactNode) => React.ReactNode;
-    };
-  };
-  feeTier?: {
-    header?: (original?: React.ReactNode) => React.ReactNode;
-    tag?: (original?: React.ReactNode) => React.ReactNode;
-    table?: (original?: React.ReactNode) => React.ReactNode;
-  };
 };
 
 export type AppContextState = {

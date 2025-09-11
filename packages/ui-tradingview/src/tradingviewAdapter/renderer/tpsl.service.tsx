@@ -26,6 +26,8 @@ import type {
 import useBroker from "../hooks/useBroker";
 import type { ChartPosition } from "../type";
 
+const DEFAULT_THRESHOLD = 10;
+
 enum MouseInteractiveMode {
   NONE,
   START_TP_SL,
@@ -45,7 +47,7 @@ export class TPSLService {
 
   private interactiveMode: MouseInteractiveMode = MouseInteractiveMode.NONE;
 
-  private timer: ReturnType<typeof setTimeout> | null = null;
+  private tpslElRemoveTimer: ReturnType<typeof setTimeout> | null = null;
 
   private currentPosition: ChartPosition | null = null;
   private tpslOrderLine: IOrderLineAdapter | null = null;
@@ -65,7 +67,7 @@ export class TPSLService {
     this.broker = broker;
     this.lastPositions = null;
     // this.positionLineService = positionLineService;
-    this.timer = null;
+    this.tpslElRemoveTimer = null;
     this.currentPosition = null;
 
     this.bindEvent();
@@ -79,13 +81,13 @@ export class TPSLService {
 
     this.chart.crossHairMoved().subscribe(null, (args) => {
       this.lastArgs = args;
+
       if (this.interactiveMode === MouseInteractiveMode.TP_SL_DRAGGING) {
+        this.clearTpslElRemoveTimer();
         return;
       }
       const position = this.getIntersectantPosition(args);
-      // console.log('xxx postion', position);
 
-      //   console.log(position);
       if (
         this.currentPosition &&
         position &&
@@ -94,27 +96,25 @@ export class TPSLService {
         // console.log("no change");
         return;
       }
-      if (this.currentPosition && !position) {
-        // console.log("remove current position", position);
-        // this.timer = setTimeout(() => {
-        this.removeTPSLTriggerButton();
-        this.currentPosition = null;
-        // }, 1000);
+      if (!position) {
+        this.clearTPSLElements();
         return;
       }
 
       if (position) {
+        this.clearTpslElRemoveTimer();
         this.currentPosition = position;
 
         this.createTPSLTriggerButton(args);
-
-        // console.log("-->>>set current position", this.currentPosition);
       }
-
-      //   this.lastCrossHairTime = args.time;
-
-      // this.hitTest();
     });
+  }
+
+  private clearTpslElRemoveTimer() {
+    if (this.tpslElRemoveTimer) {
+      clearTimeout(this.tpslElRemoveTimer);
+      this.tpslElRemoveTimer = null;
+    }
   }
 
   private showTPSLDialog(params: { price: number }) {
@@ -207,18 +207,19 @@ export class TPSLService {
   private generateThreshold() {
     // return new Decimal(position.open).mul(0.01).abs().toNumber();
     // const priceRange = this.chart.get
-    const priceScale = this.chart.getPanes()[0].getRightPriceScales()[0];
+    const priceScale = this.chart.getPanes()[0]?.getRightPriceScales()[0];
+    if (!priceScale) {
+      return DEFAULT_THRESHOLD;
+    }
     const priceRange = priceScale.getVisiblePriceRange();
-
-    // console.log(priceRange);
-    if (priceRange) {
-      const priceWidth = priceRange.to - priceRange.from;
-      const threshold = priceWidth * 0.02;
-      // console.log(threshold);
-      return threshold;
+    if (!priceRange) {
+      return DEFAULT_THRESHOLD;
     }
 
-    return 10;
+    const priceWidth = priceRange.to - priceRange.from;
+    const threshold = priceWidth * 0.02;
+    // console.log(threshold);
+    return threshold;
   }
 
   private drawTPSL(params: { price: number }) {
@@ -236,7 +237,6 @@ export class TPSLService {
     const color = pnl.gt(0)
       ? this.broker.colorConfig.upColor
       : this.broker.colorConfig.downColor;
-    console.log("xxx drage tpsl", tpslOrderLine);
     tpslOrderLine
       ?.setText(`${direction} ${pnl.toDecimalPlaces(2).toNumber()}`)
       .setBodyTextColor(color!)
@@ -266,10 +266,12 @@ export class TPSLService {
     if (this.tpslPnLVerticalLineEntityId) {
       verticalLine = this.chart.getShapeById(this.tpslPnLVerticalLineEntityId);
     }
+
     if (!verticalLine) {
       if (!this.currentPosition || !this.tpslVerticalLineTime) {
         return {};
       }
+
       this.tpslPnLVerticalLineEntityId = this.chart.createMultipointShape(
         [
           {
@@ -279,8 +281,8 @@ export class TPSLService {
           { time: this.tpslVerticalLineTime, price: params.price },
         ],
         {
-          // shape: "trend_line",
-          shape: "arrow",
+          shape: "trend_line",
+          // shape: "parallel_channel",
           lock: true,
           disableSave: true,
           disableSelection: true,
@@ -289,6 +291,8 @@ export class TPSLService {
           overrides: {
             linecolor: "rgba(255,255,255, 0.2)",
             linewidth: 1,
+            rightEnd: 1,
+            leftEnd: 1,
           },
         },
       );
@@ -315,9 +319,8 @@ export class TPSLService {
       this.showTPSLDialog({ price: price ?? 0 });
     });
     this.tpslOrderLine.onMoving(() => {
-      console.log("xxx on moving", this.tpslOrderLine);
-      const price = this.tpslOrderLine?.getPrice();
       this.interactiveMode = MouseInteractiveMode.TP_SL_DRAGGING;
+      const price = this.tpslOrderLine?.getPrice();
       this.verticalLineTime();
       this.drawTPSL({ price: price ?? 0 });
     });
@@ -343,7 +346,7 @@ export class TPSLService {
         .setQuantityTextColor(this.broker.colorConfig.qtyTextColor!)
         .setBodyFont(this.broker.colorConfig.font!)
         .setQuantityFont(this.broker.colorConfig.font!)
-        .setLineStyle(1)
+        .setLineStyle(3)
       // .setLineColor("rgba(255,255,255,0)")
     );
   }
@@ -364,25 +367,24 @@ export class TPSLService {
     );
   }
 
-  private removeTPSLTriggerButton() {
-    if (this.tpslOrderLine) {
-      this.tpslOrderLine.remove();
-      this.tpslOrderLine = null;
-    }
-  }
-
   private clearTPSLElements() {
+    if (this.tpslElRemoveTimer) {
+      return;
+    }
     // check area
+    this.tpslElRemoveTimer = setTimeout(() => {
+      this.currentPosition = null;
+      if (this.tpslOrderLine) {
+        this.tpslOrderLine.remove();
+        this.tpslOrderLine = null;
+      }
 
-    if (this.tpslOrderLine) {
-      this.tpslOrderLine.remove();
-      this.tpslOrderLine = null;
-    }
-
-    if (this.tpslPnLVerticalLineEntityId) {
-      this.chart.removeEntity(this.tpslPnLVerticalLineEntityId);
-      this.tpslPnLVerticalLineEntityId = null;
-    }
+      if (this.tpslPnLVerticalLineEntityId) {
+        this.chart.removeEntity(this.tpslPnLVerticalLineEntityId);
+        this.tpslPnLVerticalLineEntityId = null;
+      }
+      this.tpslElRemoveTimer = null;
+    }, 100);
     // this.tpslVerticalLineTime = null;
   }
 

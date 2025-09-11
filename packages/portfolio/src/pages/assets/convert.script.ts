@@ -5,8 +5,8 @@ import {
   useCollateral,
   useIndexPricesStream,
   useSubAccountQuery,
-  useQuery,
   useTokensInfo,
+  useChainInfo,
 } from "@orderly.network/hooks";
 import { EMPTY_LIST } from "@orderly.network/types";
 import { usePagination } from "@orderly.network/ui";
@@ -21,9 +21,7 @@ export const useConvertScript = () => {
   const { holding = [] } = useCollateral();
   const { data: indexPrices } = useIndexPricesStream();
 
-  const { data: chainsInfo } = useQuery("/v1/public/chain_info", {
-    revalidateOnFocus: false,
-  });
+  const { data: chainsInfo } = useChainInfo();
 
   // Pagination
   const { page, pageSize, setPage, parsePagination } = usePagination({

@@ -36,7 +36,7 @@ export const useAccountMenu = (): any => {
   const { connectWallet, disabledConnect, wrongNetwork, setCurrentChainId } =
     useAppContext();
 
-  const [_, { findByChainId }] = useChains();
+  const [, { findByChainId }] = useChains();
 
   const { isMobile } = useScreen();
 
@@ -67,36 +67,34 @@ export const useAccountMenu = (): any => {
   const switchChain = () => {
     account.once("validate:end", (status) => {
       if (status < AccountStatusEnum.EnableTrading) {
-        statusChangeHandler({
-          status,
-        });
+        statusChangeHandler({ status });
       } else {
         toast.success(t("connector.walletConnected"));
       }
     });
 
-    modal
-      .show<{
-        wrongNetwork: boolean;
-      }>(ChainSelectorDialogId)
-      .then(
-        (r) => {
-          if (!r.wrongNetwork) {
-            if (state.status < AccountStatusEnum.EnableTrading) {
-              statusChangeHandler(state);
-            } else {
-              toast.success(t("connector.walletConnected"));
-            }
+    modal.show<{ wrongNetwork: boolean }>(ChainSelectorDialogId).then(
+      (r) => {
+        if (!r.wrongNetwork) {
+          if (state.status < AccountStatusEnum.EnableTrading) {
+            statusChangeHandler(state);
+          } else {
+            toast.success(t("connector.walletConnected"));
           }
-        },
-        (error) => console.log("[switchChain error]", error),
-      );
+        }
+      },
+      (error) => {
+        console.log("[switchChain error]", error);
+      },
+    );
   };
 
   const connect = async () => {
     const res = await connectWallet();
 
-    if (!res) return;
+    if (!res) {
+      return;
+    }
 
     if (res.wrongNetwork) {
       switchChain();
@@ -106,8 +104,12 @@ export const useAccountMenu = (): any => {
   };
 
   const statusChangeHandler = (nextState: any) => {
-    if (nextState.validating || nextState.status <= AccountStatusEnum.Connected)
+    if (
+      nextState.validating ||
+      nextState.status <= AccountStatusEnum.Connected
+    ) {
       return;
+    }
 
     if (nextState.status < AccountStatusEnum.SignedIn) {
       onCrateAccount();
@@ -118,7 +120,9 @@ export const useAccountMenu = (): any => {
   };
 
   const onOpenExplorer = useCallback(() => {
-    if (!connectedChain) return;
+    if (!connectedChain) {
+      return;
+    }
     const chainInfo = findByChainId(
       connectedChain!.id as number,
       "network_infos",
@@ -177,6 +181,7 @@ export const useAccountMenu = (): any => {
     onSwitchNetwork,
     wrongNetwork,
     disabledConnect,
+    isMobile,
   } as const;
 };
 

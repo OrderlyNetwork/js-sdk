@@ -1,3 +1,4 @@
+import React from "react";
 import { OrderValidationResult } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
@@ -35,7 +36,7 @@ export type TPSLProps = {
 };
 
 //------------- TPSL form start ---------------
-export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
+export const TPSL: React.FC<TPSLBuilderState & TPSLProps> = (props) => {
   const {
     TPSL_OrderEntity,
     symbolInfo,
@@ -65,9 +66,9 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
           maxQty={props.maxQty}
           quantity={(props.orderQuantity ?? props.maxQty) as number}
           baseTick={symbolInfo("base_tick")}
-          dp={symbolInfo("base_dp")}
+          base_dp={symbolInfo("base_dp")}
           onQuantityChange={props.setQuantity}
-          quote={symbolInfo("base")}
+          base={symbolInfo("base")}
           isEditing={props.isEditing}
           errorMsg={validated ? getErrorMsg("quantity") : undefined}
         />
@@ -97,41 +98,19 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
           justify="start"
           itemAlign={"start"}
           gap={3}
-          className="oui-w-full oui-mb-3"
+          className="oui-mb-3 oui-w-full"
         >
           {!isEditing && (
             <TPSLPositionTypeWidget
               disableSelector
               value={TPSL_OrderEntity.position_type ?? PositionType.PARTIAL}
               onChange={(key, value) => {
-                if (value === PositionType.FULL) {
-                  setValues({
-                    position_type: value,
-                    quantity: Math.abs(position.position_qty).toString(),
-                    tp_order_price: "",
-                    tp_order_type: OrderType.MARKET,
-                    tp_trigger_price: "",
-                    sl_order_price: "",
-                    sl_order_type: OrderType.MARKET,
-                    sl_trigger_price: "",
-                  });
-                } else {
-                  setValues({
-                    position_type: value,
-                    quantity: "",
-                    tp_order_price: "",
-                    tp_order_type: OrderType.MARKET,
-                    tp_trigger_price: "",
-                    sl_order_price: "",
-                    sl_order_type: OrderType.MARKET,
-                    sl_trigger_price: "",
-                  });
-                }
+                props.setOrderValue(key as keyof OrderlyOrder, value);
               }}
             />
           )}
           {TPSL_OrderEntity.position_type === PositionType.FULL && (
-            <Text className="oui-text-warning oui-text-2xs">
+            <Text className="oui-text-2xs oui-text-warning">
               {t("tpsl.positionType.full.tips.market")}
             </Text>
           )}
@@ -142,7 +121,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
           itemAlign={"start"}
           justify={"start"}
           gap={6}
-          className="oui-w-full oui-mt-3"
+          className="oui-mt-3 oui-w-full"
         >
           <TPSLInputRowWidget
             symbol={position.symbol}
@@ -213,7 +192,7 @@ export const TPSL = (props: TPSLBuilderState & TPSLProps) => {
           className="oui-my-3"
         />
       </ScrollArea>
-      <Grid cols={2} gap={3} mt={4}>
+      <Grid px={2} cols={2} gap={3} mt={4}>
         <Button
           size={"md"}
           color={"secondary"}

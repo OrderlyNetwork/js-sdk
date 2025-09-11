@@ -67,7 +67,7 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
 
   const localeCode = useLocaleCode();
 
-  const chart = useRef<any>();
+  const chart = useRef<Widget | null>(null);
   const apiBaseUrl: string = useConfig("apiBaseUrl") as string;
   const { state: accountState } = useAccount();
   const [side, setSide] = useState<OrderSide>(OrderSide.SELL);
@@ -216,7 +216,7 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
     }
     localStorage.setItem(TradingViewSDKLocalstorageKey.interval, newInterval);
     setInterval(newInterval);
-    chart.current.setSymbol(symbol, newInterval);
+    chart.current?.setSymbol(symbol ?? "", newInterval as any);
   };
 
   const changeLineType = (newLineType: string) => {
@@ -225,7 +225,7 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
     }
     localStorage.setItem(TradingViewSDKLocalstorageKey.lineType, newLineType);
     setLineType(newLineType);
-    chart.current.changeLineType(Number(newLineType));
+    chart.current?.changeLineType(Number(newLineType));
   };
 
   const changeDisplaySetting = (newSetting: DisplayControlSettingInterface) => {
@@ -364,7 +364,9 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
             typeof (window as any).onResetCacheNeededCallback === "function"
           ) {
             (window as any).onResetCacheNeededCallback();
-            chart.current?.instance.activeChart()?.resetData();
+            if (chart.current?.instance) {
+              chart.current?.instance.activeChart()?.resetData();
+            }
           }
         }
       },
@@ -373,10 +375,9 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
   }, [ws]);
 
   useEffect(() => {
-    if (chart.current && chart.current.instance) {
-      chart.current.instance.onChartReady(() => {
-        console.log("-- chart ready");
-        if (isLoggedIn && chart.current.instance) {
+    if (chart.current && chart.current?.instance) {
+      chart.current?.instance?.onChartReady(() => {
+        if (isLoggedIn && chart.current?.instance) {
           createRenderer(
             chart.current.instance,
             undefined,

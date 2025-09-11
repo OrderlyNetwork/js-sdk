@@ -91,7 +91,7 @@ const RenderUserCenter = (props: any) => {
             .catch((e: any) => console.error(e));
         }}
       >
-        {t("connector.connectWallet")}
+        {isMobile ? t("connector.connect") : t("connector.connectWallet")}
       </Button>
     );
   }

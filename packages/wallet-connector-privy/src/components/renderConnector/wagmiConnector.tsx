@@ -5,7 +5,11 @@ import { useWalletConnectorPrivy } from "../../provider";
 import { useWagmiWallet } from "../../providers/wagmi/wagmiWalletProvider";
 import { RenderWalletIcon } from "../common";
 
-export function EVMConnectArea({ connect }: { connect: (type: any) => void }) {
+export function EVMConnectArea({
+  connect,
+}: {
+  connect: (type: Connector) => void;
+}) {
   const { connectors } = useWagmiWallet();
   const { setOpenConnectDrawer } = useWalletConnectorPrivy();
   const { isMobile } = useScreen();
@@ -15,7 +19,7 @@ export function EVMConnectArea({ connect }: { connect: (type: any) => void }) {
         setOpenConnectDrawer(false);
       }
     }
-    connect(connect(item));
+    connect(item);
   };
   return (
     <div className="">

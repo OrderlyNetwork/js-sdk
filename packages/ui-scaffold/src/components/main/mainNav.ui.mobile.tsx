@@ -51,12 +51,13 @@ export const MainNavMobile: FC<MainNavMobileProps> = (props) => {
   }, [currentMenu, props?.logo]);
 
   const isSub = useMemo(() => {
-    if (!currentMenu || currentMenu.isSubMenuInMobile) return true;
-    return false;
+    return Boolean(!currentMenu || currentMenu.isSubMenuInMobile);
   }, [currentMenu]);
 
   const subTitle = useMemo(() => {
-    if (currentMenu?.isSubMenuInMobile) return currentMenu?.name;
+    if (currentMenu?.isSubMenuInMobile) {
+      return currentMenu?.name;
+    }
     if (props?.subItems?.some((item) => item.href === props?.current)) {
       return props?.subItems?.find((item) => item.href === props?.current)
         ?.name;
@@ -79,17 +80,7 @@ export const MainNavMobile: FC<MainNavMobileProps> = (props) => {
 
   const showChainMenu = !showLinkDevice && !wrongNetwork;
 
-  const showQrcode = useMemo(() => {
-    if (
-      state.status === AccountStatusEnum.EnableTradingWithoutConnected ||
-      state.status === AccountStatusEnum.EnableTrading ||
-      disabledConnect
-    ) {
-      return false;
-    }
-
-    return true;
-  }, [state.status, disabledConnect]);
+  const showQrcode = state.status === AccountStatusEnum.NotConnected;
 
   const showSubAccount = useMemo(
     () => state.status >= AccountStatusEnum.EnableTrading,

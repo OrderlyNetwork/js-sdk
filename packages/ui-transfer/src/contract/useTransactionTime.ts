@@ -9,14 +9,14 @@ export const useTransactionTime = (chainId?: number | string) => {
   const timeMap = useRef<Record<string, number>>({});
   const confirmationsMap = useRef<Record<string, number>>({});
 
-  const [_, { findByChainId }] = useChains();
+  const [, { findByChainId }] = useChains();
   const { wallet } = useWalletConnector();
 
   const chain = useMemo(() => {
     if (!chainId) {
       return;
     }
-    const id = typeof chainId === "number" ? chainId : parseInt(chainId);
+    const id = typeof chainId === "number" ? chainId : Number.parseInt(chainId);
     return findByChainId(id);
   }, [chainId, findByChainId]);
 

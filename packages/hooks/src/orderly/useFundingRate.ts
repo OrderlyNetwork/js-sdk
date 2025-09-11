@@ -36,6 +36,16 @@ export const useFundingRate = (symbol: string) => {
     }
     timerRef.current = setInterval(() => {
       const diff = new Date(next_funding_time).getTime() - getTimestamp();
+
+      // if diff is less than 0, set count down to 00:00:00
+      if (diff <= 0) {
+        setCountDown("00:00:00");
+        if (timerRef.current) {
+          clearInterval(timerRef.current);
+        }
+        return;
+      }
+
       const result = timeConvertString(diff);
       if (result.length === 3) {
         setCountDown(

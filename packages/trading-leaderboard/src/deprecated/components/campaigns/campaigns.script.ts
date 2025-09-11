@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
-import useEmblaCarousel from "embla-carousel-react";
 import { useTrack } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { TrackerEventName } from "@orderly.network/types";
+import { useEmblaCarousel } from "@orderly.network/ui";
 import { formatCampaignDate } from "../../../utils";
 import { useTradingLeaderboardContext, Campaign } from "../provider";
 
