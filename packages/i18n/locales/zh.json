@@ -146,7 +146,7 @@
   "markets.symbolInfoBar.24hVolume.tooltip": "Orderly Network上的24小时总交易量。",
   "markets.symbolInfoBar.predFundingRate": "预计资金利率",
   "markets.symbolInfoBar.predFundingRate.tooltip": "资金利率是多头和空头交易者之间的支付。当为正时，多头支付空头资金。当为负时，空头支付多头资金。",
-  "portfolio.feeTier": "费用等级",
+  "portfolio.feeTier": "费率等级",
   "portfolio.apiKeys": "API密钥",
   "portfolio.setting": "设置",
   "portfolio.overview.availableWithdraw": "可提取",
