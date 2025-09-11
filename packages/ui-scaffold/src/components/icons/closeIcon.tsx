@@ -1,11 +1,11 @@
-import React, { FC } from "react";
+import React from "react";
 import { SVGProps } from "react";
 
 export interface IconProps extends SVGProps<SVGSVGElement> {
   size: number;
 }
 
-export const CloseIcon: FC<IconProps> = (props) => {
+export const CloseIcon: React.FC<IconProps> = (props) => {
   const { size = 16, ...rest } = props;
   return (
     <svg

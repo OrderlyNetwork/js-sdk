@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useMemo } from "react";
-import { PnLBarChart, PnlLineChart } from "@orderly.network/chart";
+import React from "react";
+import { PnlAreaChart, PnLBarChart } from "@orderly.network/chart";
 import { useTranslation } from "@orderly.network/i18n";
 import { EMPTY_LIST } from "@orderly.network/types";
 import {
@@ -13,9 +13,13 @@ import {
   Tooltip,
   cn,
 } from "@orderly.network/ui";
-import { PeriodTitle } from "../shared/periodHeader";
-import { PeriodType } from "../shared/useAssetHistory";
-import { UsePerformanceScriptReturn } from "./performance.script";
+import type { UsePerformanceScriptReturn } from "./performance.script";
+
+const LazyPeriodTitle = React.lazy(() =>
+  import("../shared/periodHeader").then((mod) => {
+    return { default: mod.PeriodTitle };
+  }),
+);
 
 export type PerformanceUIProps = {
   // periodTypes: string[];
@@ -39,12 +43,14 @@ export const PerformanceUI: React.FC<PerformanceUIProps> = (props) => {
   return (
     <Card
       title={
-        <PeriodTitle
-          onPeriodChange={onPeriodChange}
-          periodTypes={periodTypes}
-          period={period}
-          title={t("portfolio.overview.performance")}
-        />
+        <React.Suspense fallback={null}>
+          <LazyPeriodTitle
+            onPeriodChange={onPeriodChange}
+            periodTypes={periodTypes}
+            period={period}
+            title={t("portfolio.overview.performance")}
+          />
+        </React.Suspense>
       }
       id="portfolio-overview-performance"
     >
@@ -201,7 +207,7 @@ export const CumulativePnlChart: React.FC<{
         {t("portfolio.overview.performance.cumulativePnl")}
       </Text>
       <Box r="md" className="oui-h-[188px] oui-border oui-border-line-4">
-        <PnlLineChart
+        <PnlAreaChart
           data={props.data}
           invisible={props.invisible || (props.data?.length ?? 0) <= 2}
         />

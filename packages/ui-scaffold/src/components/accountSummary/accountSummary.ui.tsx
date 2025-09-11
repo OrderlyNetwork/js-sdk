@@ -487,7 +487,7 @@ const AccountSummaryItems: Record<SummaryKey, JSX.ElementType> = {
   maxLeverage: MaxLeverage,
 };
 
-export const AccountSummary = (props: AccountSummaryUi) => {
+export const AccountSummary: React.FC<AccountSummaryUi> = (props) => {
   const { keys, ...rest } = props;
   let canToggleIndex = 0;
   const sizeRef = React.useRef(0);

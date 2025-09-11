@@ -26,7 +26,9 @@ export function usePriceInputContainer({
   useEffect(() => {
     const element = priceInputContainerRef.current;
 
-    if (!element) return;
+    if (!element) {
+      return;
+    }
 
     const resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {

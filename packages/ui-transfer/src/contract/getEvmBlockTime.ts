@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { API } from "@orderly.network/types";
+import type { API } from "@orderly.network/types";
 
 const blockCount = 5;
 
@@ -16,7 +16,7 @@ export async function getEvmBlockTime(chain: API.Chain) {
 
   const timestamps = blocks
     .filter((b) => b?.timestamp != null)
-    .map((b) => Number(b.timestamp));
+    .map((b) => Number(b?.timestamp));
 
   if (timestamps.length < 2) {
     return 0;

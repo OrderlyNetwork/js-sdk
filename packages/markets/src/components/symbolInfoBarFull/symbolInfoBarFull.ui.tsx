@@ -14,25 +14,19 @@ import type { UseSymbolInfoBarFullScriptReturn } from "./symbolInfoBarFull.scrip
 
 const LazyDropDownMarketsWidget = React.lazy(() =>
   import("../dropDownMarkets").then((mod) => {
-    return {
-      default: mod.DropDownMarketsWidget,
-    };
+    return { default: mod.DropDownMarketsWidget };
   }),
 );
 
 const LazyFavoritesDropdownMenuWidget = React.lazy(() =>
   import("../favoritesDropdownMenu").then((mod) => {
-    return {
-      default: mod.FavoritesDropdownMenuWidget,
-    };
+    return { default: mod.FavoritesDropdownMenuWidget };
   }),
 );
 
 const LazyDataItem = React.lazy(() =>
   import("./dataItem.ui").then((mod) => {
-    return {
-      default: mod.DataItem,
-    };
+    return { default: mod.DataItem };
   }),
 );
 

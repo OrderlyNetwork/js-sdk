@@ -47,7 +47,7 @@ export const Time: FC<PositionHistoryCellState> = (props) => {
   return (
     <Text.formatted
       rule={"date"}
-      formatString="yyyy-MM-dd hh:mm:ss"
+      formatString="yyyy-MM-dd HH:mm:ss"
       intensity={36}
       size="2xs"
     >
@@ -111,27 +111,31 @@ export const PositionHistoryType: FC<PositionHistoryCellState> = (props) => {
     };
 
     list.push(
-      <Badge color={status !== "closed" ? "primaryLight" : "neutral"} size="xs">
+      <Badge
+        key={1}
+        color={status !== "closed" ? "primaryLight" : "neutral"}
+        size="xs"
+      >
         {renderStatus()}
       </Badge>,
     );
 
     if (record.type === "adl") {
       list.push(
-        <Badge color={"danger"} size="xs">
-          {/* {capitalizeFirstLetter(record.type)} */}
+        <Badge key={2} color={"danger"} size="xs">
           {t("positions.history.type.adl")}
         </Badge>,
       );
     } else if (record.type === "liquidated") {
       list.push(
         <Badge
+          key={3}
           size="xs"
           color="danger"
           className="oui-cursor-pointer"
           onClick={showAlert}
         >
-          <span className="oui-underline oui-decoration-dashed oui-decoration-[1px]">
+          <span className="oui-underline oui-decoration-dashed oui-decoration-1">
             {/* {capitalizeFirstLetter(record.type)} */}
             {t("positions.history.type.liquidated")}
           </span>

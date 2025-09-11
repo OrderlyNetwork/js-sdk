@@ -2,6 +2,9 @@ import { useMemo } from "react";
 import { API, chainsInfoMap } from "@orderly.network/types";
 import { useQuery } from "../useQuery";
 
+/**
+ * @param token @deprecated, use useTokenInfo instead
+ */
 export const useChain = (token: string) => {
   const { data, isLoading } = useQuery<API.Chain[]>("/v1/public/token");
 

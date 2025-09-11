@@ -10,22 +10,6 @@
     "build:css": "npx tailwindcss -o ./dist/styles.css --minify",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "peerDependencies": {
-    "react": ">=18",
-    "react-dom": ">=18"
-  },
-  "devDependencies": {
-    "@types/node": "^22.15.21",
-    "@types/react": "^18.2.38",
-    "@types/react-dom": "^18.2.17",
-    "autoprefixer": "^10.4.19",
-    "postcss": "^8.4.38",
-    "tailwindcss": "^3.4.3",
-    "tailwindcss-animate": "^1.0.6",
-    "tsconfig": "workspace:*",
-    "tsup": "^7.1.0",
-    "typescript": "^5.1.6"
-  },
   "keywords": [],
   "author": "orderly.network",
   "files": [
@@ -53,11 +37,31 @@
     "@radix-ui/react-tooltip": "^1.0.6",
     "@tanstack/react-table": "^8.20.5",
     "date-fns": "^3.6.0",
+    "embla-carousel-auto-scroll": "^8.6.0",
+    "embla-carousel-autoplay": "^8.6.0",
+    "embla-carousel-react": "^8.6.0",
     "ethereum-blockies-base64": "^1.0.2",
     "ramda": "^0.29.0",
     "react-day-picker": "^8.10.1",
     "react-error-boundary": "^4.0.13",
     "react-hot-toast": "^2.4.1",
     "tailwind-variants": "^0.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.21",
+    "@types/react": "^18.2.38",
+    "@types/react-dom": "^18.2.17",
+    "autoprefixer": "^10.4.19",
+    "embla-carousel": "^8.6.0",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.3",
+    "tailwindcss-animate": "^1.0.6",
+    "tsconfig": "workspace:*",
+    "tsup": "^7.1.0",
+    "typescript": "^5.1.6"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
   }
 }

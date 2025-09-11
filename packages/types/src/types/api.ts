@@ -58,16 +58,18 @@ export declare namespace API {
     "24h_volume": number;
   }
 
+  export interface AnnouncementRow {
+    announcement_id: number | string;
+    message: string;
+    i18n?: Record<PropertyKey, string | null>;
+    url?: string | null;
+    type?: AnnouncementType | null;
+    updated_time?: number | null;
+  }
+
   export interface Announcement {
     last_updated_time?: number | null;
-    rows?: Array<{
-      announcement_id: number | string;
-      message: string;
-      i18n?: Record<PropertyKey, string | null>;
-      url?: string | null;
-      type?: AnnouncementType | null;
-      updated_time?: number | null;
-    }>;
+    rows?: AnnouncementRow[];
   }
 
   /**
@@ -409,6 +411,7 @@ export declare namespace API {
     nativeToken?: TokenInfo;
     address?: string;
     symbol?: string;
+    on_chain_swap?: boolean;
     // nativeToken
   }
 

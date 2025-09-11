@@ -36,7 +36,7 @@ const ScrollArea = React.forwardRef<
   React.ElementRef<typeof ScrollAreaPrimitive.Root>,
   ScrollAreaProps
 >(({ className, children, orientation = "vertical", ...props }, ref) => {
-  const { root, viewport, bar } = scrollAreaVariants({
+  const { root, viewport } = scrollAreaVariants({
     // className,
     orientation,
   });
@@ -55,6 +55,7 @@ const ScrollArea = React.forwardRef<
     </ScrollAreaPrimitive.Root>
   );
 });
+
 ScrollArea.displayName = ScrollAreaPrimitive.Root.displayName;
 
 const ScrollBar = React.forwardRef<

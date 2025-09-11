@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from "react";
 import { getDate, getMonth, getYear, set } from "date-fns";
 import {
   useAssetsHistory,
-  useQuery,
+  useChainInfo,
   useTokensInfo,
   useTransferHistory,
 } from "@orderly.network/hooks";
@@ -77,9 +77,7 @@ export const useAssetHistoryScript = (options: AssetHistoryScriptOptions) => {
       main_sub_only: false,
     });
 
-  const { data: chainsInfo } = useQuery("/v1/public/chain_info", {
-    revalidateOnFocus: false,
-  });
+  const { data: chainsInfo } = useChainInfo();
 
   const onFilter = (filter: { name: string; value: any }) => {
     if (filter.name === "dateRange") {

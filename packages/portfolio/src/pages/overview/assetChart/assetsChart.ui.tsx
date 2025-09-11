@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
-import { AssetLineChart } from "@orderly.network/chart";
+import { AssetAreaChart } from "@orderly.network/chart";
 import { useTranslation } from "@orderly.network/i18n";
 import { Card } from "@orderly.network/ui";
 import { useAssetsChartScriptReturn } from "./assetsChart.script";
@@ -32,7 +32,7 @@ export const AssetsChart: React.FC<AssetsLineChartProps> = (props) => {
       classNames={{ content: "oui-h-[168px] oui-pb-0" }}
     >
       <React.Suspense fallback={null}>
-        <AssetLineChart data={data as any} invisible={props.invisible} />
+        <AssetAreaChart data={data as any} invisible={props.invisible} />
       </React.Suspense>
     </Card>
   );

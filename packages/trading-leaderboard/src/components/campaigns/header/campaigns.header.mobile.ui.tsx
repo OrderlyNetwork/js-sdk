@@ -1,6 +1,9 @@
-import { FC, useCallback, useState, useEffect, memo, useRef } from "react";
-import useEmblaCarousel from "embla-carousel-react";
-import { ChevronLeftIcon, ChevronRightIcon } from "@orderly.network/ui";
+import { useCallback, useState, useEffect, memo, useRef } from "react";
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  useEmblaCarousel,
+} from "@orderly.network/ui";
 import { DefaultCampaign } from "../DefaultCampaign";
 import { CampaignItemUI } from "../campaign.item.ui";
 import { CampaignConfig } from "../type";
@@ -64,7 +67,9 @@ export const CampaignsHeaderMobileUI = memo<{
 
   // Auto scroll to current campaign on initial load
   const scrollToCurrentCampaign = useCallback(() => {
-    if (!emblaApi || !campaigns?.length) return;
+    if (!emblaApi || !campaigns?.length) {
+      return;
+    }
 
     const targetIndex = allCampaignItems.findIndex((item) => {
       const campaignId = item.isDefault ? "general" : String(item.campaign_id);
@@ -84,7 +89,9 @@ export const CampaignsHeaderMobileUI = memo<{
   }, [emblaApi, campaigns, currentCampaignId, allCampaignItems]);
 
   useEffect(() => {
-    if (!emblaApi) return;
+    if (!emblaApi) {
+      return;
+    }
 
     // Initial check
     updateScrollAvailability();

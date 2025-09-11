@@ -7,9 +7,9 @@ import "./styles/index.css";
 const root = ReactDOM.createRoot(document.querySelector<HTMLElement>("#root")!);
 
 root.render(
-  <React.StrictMode>
-    <AppRoute />
-  </React.StrictMode>,
+  // <React.StrictMode>
+  <AppRoute />,
+  // </React.StrictMode>,
 );
 
 // If you want to start measuring performance in your app, pass a function

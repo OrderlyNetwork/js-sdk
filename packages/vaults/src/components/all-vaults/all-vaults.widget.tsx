@@ -5,12 +5,11 @@ import { AllVaultsDesktop } from "./all-vaults.desktop";
 import { AllVaultsMobile } from "./all-vaults.mobile";
 
 export const AllVaultsWidget: FC = () => {
-  const vaultsInfo = useVaultInfoState().data;
+  const { data } = useVaultInfoState();
   const { isMobile } = useScreen();
-
   return isMobile ? (
-    <AllVaultsMobile vaults={vaultsInfo} />
+    <AllVaultsMobile vaults={data} />
   ) : (
-    <AllVaultsDesktop vaults={vaultsInfo} />
+    <AllVaultsDesktop vaults={data} />
   );
 };

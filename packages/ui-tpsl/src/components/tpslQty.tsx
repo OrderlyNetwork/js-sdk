@@ -1,41 +1,62 @@
-import { useRef } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { utils } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import {
-  convertValueToPercentage,
-  Flex,
-  Input,
-  Slider,
-  Text,
-} from "@orderly.network/ui";
+import { Flex, Input, Slider, Text } from "@orderly.network/ui";
 import { inputFormatter } from "@orderly.network/ui";
 import { cn } from "@orderly.network/ui";
+import { Decimal } from "@orderly.network/utils";
 
-export const TPSLQuantity = (props: {
+export type TPSLQuantityProps = {
   maxQty: number;
   baseTick: number;
-  dp: number;
-  quote: string;
+  base_dp: number;
+  base: string;
   onQuantityChange?: (value: number | string) => void;
   quantity: number;
   isEditing?: boolean;
-  setOrderValue?: (key: string, value: number | string) => void;
   errorMsg?: string;
-}) => {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const currentQtyPercentage =
-    convertValueToPercentage(props.quantity, 0, props.maxQty) / 100;
-  const { t } = useTranslation();
+};
 
-  const formatQuantity = (qty: string) => {
-    let _qty = qty;
-    if (Number(qty) > props.maxQty) {
-      _qty = props.maxQty.toString();
+export const TPSLQuantity = memo<TPSLQuantityProps>((props) => {
+  const { maxQty, base_dp, baseTick, quantity } = props;
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const { t } = useTranslation();
+  const [sliderValue, setSliderValue] = useState(0);
+
+  // format quantity to base tick
+  const formatQuantity = (value: string) => {
+    let _qty = value;
+    if (Number(value) > maxQty) {
+      _qty = maxQty.toString();
     }
-    if (props.baseTick > 0) {
-      props.onQuantityChange?.(utils.formatNumber(_qty, props.baseTick) ?? qty);
+    if (baseTick > 0) {
+      props.onQuantityChange?.(utils.formatNumber(_qty, baseTick) ?? value);
     }
   };
+
+  const onSliderValueChange = (value: number) => {
+    setSliderValue(value);
+    // transform slider value to quantity
+    const qty = new Decimal(value)
+      .div(100)
+      .mul(maxQty)
+      .toFixed(base_dp, Decimal.ROUND_DOWN);
+
+    formatQuantity(qty);
+  };
+
+  useEffect(() => {
+    const qty = Math.min(Number(quantity || 0), maxQty);
+    // transform quantity to slider value
+    const slider = new Decimal(qty)
+      .div(maxQty)
+      .mul(100)
+      .toDecimalPlaces(2, Decimal.ROUND_DOWN)
+      .toNumber();
+
+    setSliderValue(slider);
+  }, [quantity, maxQty]);
 
   const errorMsg =
     props.quantity.toString().length > 0 ? props.errorMsg : undefined;
@@ -73,15 +94,15 @@ export const TPSLQuantity = (props: {
             tooltip={errorMsg}
             color={errorMsg ? "danger" : undefined}
             formatters={[
-              inputFormatter.dpFormatter(props.dp),
+              inputFormatter.dpFormatter(props.base_dp),
               inputFormatter.numberFormatter,
               inputFormatter.currencyFormatter,
               inputFormatter.decimalPointFormatter,
             ]}
             onValueChange={(value) => {
               props.onQuantityChange?.(value);
+              // TODO: optimize this
               const qty = Number(value);
-              console.log("qty", value, Number(value), qty);
               if (qty && qty > props.maxQty) {
                 const qty = props.maxQty;
                 props.onQuantityChange?.(qty);
@@ -90,33 +111,29 @@ export const TPSLQuantity = (props: {
             }}
             onBlur={(e) => formatQuantity(e.target.value)}
             suffix={
-              <span className="oui-text-2xs oui-text-base-contrast-54 oui-px-3">
-                {props.quote}
+              <span className="oui-px-3 oui-text-2xs oui-text-base-contrast-54">
+                {props.base}
               </span>
             }
           />
         </div>
       </Flex>
       <Flex mt={2} itemAlign={"center"} height={"15px"}>
-        <Slider.single
-          markCount={5}
-          color="primary"
-          max={props.maxQty}
+        <Slider
           min={0}
+          max={100}
+          markCount={5}
           showTip
-          step={props.baseTick}
-          value={props.quantity}
-          onValueCommit={(value) => {
-            formatQuantity(`${value}`);
-          }}
+          value={[sliderValue]}
+          color="primary"
           onValueChange={(value) => {
-            props.onQuantityChange?.(value);
+            onSliderValueChange(value[0]);
           }}
         />
       </Flex>
       <Flex justify={"between"}>
-        <Text.numeral rule={"percentages"} color={"primary"} size={"2xs"}>
-          {currentQtyPercentage}
+        <Text.numeral color={"primary"} size={"2xs"} suffix="%">
+          {sliderValue}
         </Text.numeral>
         <Flex itemAlign={"center"} gap={1}>
           <button
@@ -143,4 +160,4 @@ export const TPSLQuantity = (props: {
       </Flex>
     </>
   );
-};
+});

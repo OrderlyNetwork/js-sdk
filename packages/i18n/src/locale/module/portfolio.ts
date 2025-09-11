@@ -54,10 +54,12 @@ export const portfolio = {
   "portfolio.feeTier.header.30dVolume": "30D trading volume",
   "portfolio.feeTier.header.takerFeeRate": "Taker fee rate",
   "portfolio.feeTier.header.makerFeeRate": "Maker fee rate",
+  "portfolio.feeTier.header.myStake": "My stake",
   "portfolio.feeTier.column.tier": "Tier",
   "portfolio.feeTier.column.30dVolume": "30 day volume",
   "portfolio.feeTier.column.30dVolume.above": "Above {{volume}}",
   "portfolio.feeTier.column.stakingLevel": "Staking Level",
+  "portfolio.feeTier.column.or": "or",
   "portfolio.feeTier.column.maker": "Maker",
   "portfolio.feeTier.column.taker": "Taker",
   "portfolio.feeTier.effectiveFee.tooltip":
