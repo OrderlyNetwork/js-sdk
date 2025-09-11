@@ -1,10 +1,10 @@
-import {
+import type {
   FooterProps,
   MainNavWidgetProps,
   BottomNavProps,
 } from "@orderly.network/ui-scaffold";
-import { OrderlyAppProviderConfigProps } from "./orderlyAppProvider";
-import { TradingPageConfigProps } from "./tradingPage";
+import type { OrderlyAppProviderConfigProps } from "./orderlyAppProvider";
+import type { TradingPageConfigProps } from "./tradingPage";
 
 export { orderlyAppProviderConfig } from "./orderlyAppProvider";
 export { tradingPageConfig } from "./tradingPage";
