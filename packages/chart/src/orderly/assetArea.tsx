@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useMemo, useRef } from "react";
+import React, { useId, useRef } from "react";
 import {
-  LineChart,
   XAxis,
   YAxis,
-  Line,
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  AreaChart,
+  Area,
 } from "recharts";
 import type { TooltipProps } from "recharts";
 import type { Props as ResponsiveContainerProps } from "recharts/types/component/ResponsiveContainer";
@@ -18,12 +18,17 @@ import { OrderlyChartTooltip } from "./customTooltip";
 import { useColors } from "./useColors";
 import { XAxisLabel } from "./xAxisLabel";
 
-export type PnlLineChartProps = {
+export type AssetChartDataItem = {
+  date: string;
+  account_value: number;
+};
+
+export type PnlAreaChartProps = {
   colors?: {
     profit: string;
     loss: string;
   };
-  data: any;
+  data: AssetChartDataItem[];
   invisible?: boolean;
   responsiveContainerProps?: Omit<ResponsiveContainerProps, "children">;
 };
@@ -32,13 +37,11 @@ const CustomTooltip: React.FC<TooltipProps<any, any>> = (props) => {
   const { active, payload, label } = props;
   const todayStr = useRef(new Date().toISOString().split("T")[0]);
   const { t } = useTranslation();
-
   if (active && payload && payload.length) {
     return (
       <OrderlyChartTooltip
         label={label === todayStr.current ? t("chart.now") : label}
         value={payload[0].value}
-        coloring
       />
     );
   }
@@ -46,39 +49,29 @@ const CustomTooltip: React.FC<TooltipProps<any, any>> = (props) => {
   return null;
 };
 
-const dataTransfer = (data: any[]) => {
-  const series: any[] = [];
-  data?.reduce<any>((acc, item) => {
-    acc += item.pnl;
-    series.push({ ...item, pnl: acc, _pnl: item.pnl });
-    return acc;
-  }, 0);
-  return series;
-};
-
-export const PnlLineChart: React.FC<PnlLineChartProps> = (props) => {
+export const AssetAreaChart: React.FC<PnlAreaChartProps> = (props) => {
   const { responsiveContainerProps } = props;
   const colors = useColors(props.colors);
-
+  const colorId = useId();
   const { isMobile } = useScreen();
-
-  const data = useMemo(() => dataTransfer(props.data), [props.data]);
-
   const chartComponent = (
-    <LineChart
-      data={data}
-      margin={{ top: 20, right: 10, left: -10, bottom: 0 }}
+    <AreaChart
+      width={530}
+      height={180}
+      data={props.data}
+      margin={{ top: 20, right: 10, left: -20, bottom: -10 }}
     >
       <CartesianGrid vertical={false} stroke="#FFFFFF" strokeOpacity={0.04} />
       <XAxis
         dataKey="date"
         interval={props.data.length - 2}
+        // tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
         tick={<XAxisLabel />}
         stroke="#FFFFFF"
         strokeOpacity={0.04}
       />
       <YAxis
-        dataKey="pnl"
+        dataKey="account_value"
         tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
         tickLine={false}
         axisLine={false}
@@ -91,16 +84,25 @@ export const PnlLineChart: React.FC<PnlLineChartProps> = (props) => {
         />
       )}
       {!props.invisible && (
-        <Line
-          type="natural"
-          dataKey="pnl"
-          stroke={colors.primary}
-          strokeWidth={isMobile ? 1.5 : 2}
-          dot={false}
-          isAnimationActive={false}
-        />
+        <>
+          <defs>
+            <linearGradient id={colorId} x1="0" y1="0" x2="0" y2="1">
+              <stop stopColor="#00B49E" offset="0%" stopOpacity={0.5} />
+              <stop stopColor="#00B49E" offset="100%" stopOpacity={0} />
+            </linearGradient>
+          </defs>
+          <Area
+            type="natural"
+            dataKey="account_value"
+            stroke={colors.profit}
+            strokeWidth={isMobile ? 1.5 : 2}
+            dot={false}
+            isAnimationActive={false}
+            fill={`url(#${colorId})`}
+          />
+        </>
       )}
-    </LineChart>
+    </AreaChart>
   );
 
   return (

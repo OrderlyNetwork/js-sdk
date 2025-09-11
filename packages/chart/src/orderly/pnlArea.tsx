@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useMemo, useRef } from "react";
+import React, { useId, useMemo, useRef } from "react";
 import {
-  LineChart,
   XAxis,
   YAxis,
-  Line,
   CartesianGrid,
+  AreaChart,
+  Area,
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
@@ -18,7 +18,7 @@ import { OrderlyChartTooltip } from "./customTooltip";
 import { useColors } from "./useColors";
 import { XAxisLabel } from "./xAxisLabel";
 
-export type PnlLineChartProps = {
+export type PnlAreaChartProps = {
   colors?: {
     profit: string;
     loss: string;
@@ -56,16 +56,18 @@ const dataTransfer = (data: any[]) => {
   return series;
 };
 
-export const PnlLineChart: React.FC<PnlLineChartProps> = (props) => {
+export const PnlAreaChart: React.FC<PnlAreaChartProps> = (props) => {
   const { responsiveContainerProps } = props;
   const colors = useColors(props.colors);
 
   const { isMobile } = useScreen();
 
+  const colorId = useId();
+
   const data = useMemo(() => dataTransfer(props.data), [props.data]);
 
   const chartComponent = (
-    <LineChart
+    <AreaChart
       data={data}
       margin={{ top: 20, right: 10, left: -10, bottom: 0 }}
     >
@@ -91,16 +93,25 @@ export const PnlLineChart: React.FC<PnlLineChartProps> = (props) => {
         />
       )}
       {!props.invisible && (
-        <Line
-          type="natural"
-          dataKey="pnl"
-          stroke={colors.primary}
-          strokeWidth={isMobile ? 1.5 : 2}
-          dot={false}
-          isAnimationActive={false}
-        />
+        <>
+          <defs>
+            <linearGradient id={colorId} x1="0" y1="0" x2="0" y2="1">
+              <stop stopColor="#608CFF" offset="0%" stopOpacity={0.5} />
+              <stop stopColor="#608CFF" offset="100%" stopOpacity={0} />
+            </linearGradient>
+          </defs>
+          <Area
+            type="natural"
+            dataKey="pnl"
+            stroke={colors.primary}
+            strokeWidth={isMobile ? 1.5 : 2}
+            dot={false}
+            isAnimationActive={false}
+            fill={`url(#${colorId})`}
+          />
+        </>
       )}
-    </LineChart>
+    </AreaChart>
   );
 
   return (

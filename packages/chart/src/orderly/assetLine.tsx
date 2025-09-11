@@ -121,7 +121,7 @@ export const AssetLineChart: React.FC<PnlLineChartProps> = (props) => {
         tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
         tickLine={false}
         axisLine={false}
-        tickFormatter={(value) => tickFormatter(value)}
+        tickFormatter={tickFormatter}
       />
       {!props.invisible && (
         <Tooltip
@@ -145,7 +145,7 @@ export const AssetLineChart: React.FC<PnlLineChartProps> = (props) => {
 
   return (
     <ResponsiveContainer
-      className={props.invisible ? "chart-invisible" : ""}
+      className={props.invisible ? "chart-invisible" : undefined}
       {...responsiveContainerProps}
     >
       {chartComponent}
