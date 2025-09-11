@@ -34,11 +34,9 @@ export const useFeeState = () => {
       ...noCacheConfig,
     });
 
-  // 来自 API：单位 = bps（例：6 表示 0.06%）
   const takerFeeBps = accountInfo?.futures_taker_fee_rate;
   const makerFeeBps = accountInfo?.futures_maker_fee_rate;
 
-  // 来自 API：单位 = fraction（例：0.2 表示 20%）
   const refereeRebate = referralData?.referee_info?.referee_rebate_rate;
 
   const takerFee = useMemo(() => {
@@ -80,10 +78,10 @@ export const useFeeState = () => {
   }, [makerFeeBps, refereeRebate, isReferralLoading]);
 
   return {
-    takerFee, // 原始 taker 费率（百分比字符串）
-    makerFee, // 原始 maker 费率（百分比字符串）
-    refereeRebate, // 返佣（fraction），例如 0.2
-    effectiveTakerFee, // 有效 taker 费率（百分比字符串）
-    effectiveMakerFee, // 有效 maker 费率（百分比字符串）
+    takerFee,
+    makerFee,
+    refereeRebate,
+    effectiveTakerFee,
+    effectiveMakerFee,
   } as const;
 };
