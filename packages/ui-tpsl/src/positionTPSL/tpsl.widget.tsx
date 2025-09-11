@@ -29,6 +29,6 @@ registerSimpleSheet(TPSLSheetId, TPSLWidget);
 
 registerSimpleDialog(TPSLDialogId, TPSLWidget, {
   classNames: {
-    content: "oui-w-[436px]",
+    content: "oui-w-[420px]",
   },
 });

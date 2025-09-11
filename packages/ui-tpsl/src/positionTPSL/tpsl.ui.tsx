@@ -79,118 +79,121 @@ export const TPSL: React.FC<TPSLBuilderState & TPSLProps> = (props) => {
   return (
     <div id="orderly-tp_sl-order-edit-content">
       <ScrollArea className={cn(isMobile && "oui-h-[calc(100vh-200px)]")}>
-        <OrderInfo
-          baseDP={symbolInfo("base_dp")}
-          quoteDP={symbolInfo("quote_dp")}
-          classNames={{
-            root: "oui-mb-3",
-            container: "oui-gap-x-[30px]",
-          }}
-          order={{
-            symbol: position.symbol,
-            order_quantity: position.position_qty.toString(),
-            order_price: position.average_open_price.toString(),
-          }}
-          symbolLeverage={position.leverage}
-        />
-        <Flex
-          direction="column"
-          justify="start"
-          itemAlign={"start"}
-          gap={3}
-          className="oui-mb-3 oui-w-full"
-        >
-          {!isEditing && (
-            <TPSLPositionTypeWidget
-              disableSelector
-              value={TPSL_OrderEntity.position_type ?? PositionType.PARTIAL}
+        <div className="oui-px-2">
+          <OrderInfo
+            baseDP={symbolInfo("base_dp")}
+            quoteDP={symbolInfo("quote_dp")}
+            classNames={{
+              root: "oui-mb-3",
+              container: "oui-gap-x-[30px]",
+            }}
+            order={{
+              symbol: position.symbol,
+              order_quantity: position.position_qty.toString(),
+              order_price: position.average_open_price.toString(),
+            }}
+            symbolLeverage={position.leverage}
+          />
+          <Flex
+            direction="column"
+            justify="start"
+            itemAlign={"start"}
+            gap={3}
+            className="oui-mb-3 oui-w-full"
+          >
+            {!isEditing && (
+              <TPSLPositionTypeWidget
+                disableSelector
+                value={TPSL_OrderEntity.position_type ?? PositionType.PARTIAL}
+                onChange={(key, value) => {
+                  props.setOrderValue(key as keyof OrderlyOrder, value);
+                }}
+              />
+            )}
+            {TPSL_OrderEntity.position_type === PositionType.FULL && (
+              <Text className="oui-text-2xs oui-text-warning">
+                {t("tpsl.positionType.full.tips.market")}
+              </Text>
+            )}
+          </Flex>
+          {renderQtyInput()}
+          <Flex
+            direction="column"
+            itemAlign={"start"}
+            justify={"start"}
+            gap={6}
+            className="oui-mt-3 oui-w-full"
+          >
+            <TPSLInputRowWidget
+              symbol={position.symbol}
+              rootOrderPrice={position.average_open_price.toString()}
+              type="tp"
+              values={{
+                enable: TPSL_OrderEntity.tp_enable ?? true,
+                trigger_price:
+                  TPSL_OrderEntity.tp_trigger_price?.toString() ?? undefined,
+                PnL: TPSL_OrderEntity.tp_pnl?.toString() ?? undefined,
+                Offset: TPSL_OrderEntity.tp_offset?.toString() ?? undefined,
+                "Offset%":
+                  TPSL_OrderEntity.tp_offset_percentage?.toString() ??
+                  undefined,
+                order_price:
+                  TPSL_OrderEntity.tp_order_price?.toString() ?? undefined,
+                order_type: TPSL_OrderEntity.tp_order_type ?? OrderType.MARKET,
+              }}
+              hideOrderPrice={
+                TPSL_OrderEntity.position_type === PositionType.FULL
+              }
+              errors={validated ? errors : null}
+              disableOrderTypeSelector={isEditing}
+              quote_dp={symbolInfo("quote_dp")}
+              positionType={
+                TPSL_OrderEntity.position_type ?? PositionType.PARTIAL
+              }
               onChange={(key, value) => {
                 props.setOrderValue(key as keyof OrderlyOrder, value);
               }}
+              symbolLeverage={position.leverage}
             />
-          )}
-          {TPSL_OrderEntity.position_type === PositionType.FULL && (
-            <Text className="oui-text-2xs oui-text-warning">
-              {t("tpsl.positionType.full.tips.market")}
-            </Text>
-          )}
-        </Flex>
-        {renderQtyInput()}
-        <Flex
-          direction="column"
-          itemAlign={"start"}
-          justify={"start"}
-          gap={6}
-          className="oui-mt-3 oui-w-full"
-        >
-          <TPSLInputRowWidget
-            symbol={position.symbol}
-            rootOrderPrice={position.average_open_price.toString()}
-            type="tp"
-            values={{
-              enable: TPSL_OrderEntity.tp_enable ?? true,
-              trigger_price:
-                TPSL_OrderEntity.tp_trigger_price?.toString() ?? undefined,
-              PnL: TPSL_OrderEntity.tp_pnl?.toString() ?? undefined,
-              Offset: TPSL_OrderEntity.tp_offset?.toString() ?? undefined,
-              "Offset%":
-                TPSL_OrderEntity.tp_offset_percentage?.toString() ?? undefined,
-              order_price:
-                TPSL_OrderEntity.tp_order_price?.toString() ?? undefined,
-              order_type: TPSL_OrderEntity.tp_order_type ?? OrderType.MARKET,
-            }}
-            hideOrderPrice={
-              TPSL_OrderEntity.position_type === PositionType.FULL
-            }
-            errors={validated ? errors : null}
-            disableOrderTypeSelector={isEditing}
-            quote_dp={symbolInfo("quote_dp")}
-            positionType={
-              TPSL_OrderEntity.position_type ?? PositionType.PARTIAL
-            }
-            onChange={(key, value) => {
-              props.setOrderValue(key as keyof OrderlyOrder, value);
-            }}
-            symbolLeverage={position.leverage}
-          />
 
-          <TPSLInputRowWidget
-            symbol={position.symbol}
-            rootOrderPrice={position.average_open_price.toString()}
-            type="sl"
-            values={{
-              enable: TPSL_OrderEntity.sl_enable ?? true,
-              trigger_price:
-                TPSL_OrderEntity.sl_trigger_price?.toString() ?? undefined,
-              PnL: TPSL_OrderEntity.sl_pnl?.toString() ?? undefined,
-              Offset: TPSL_OrderEntity.sl_offset?.toString() ?? undefined,
-              "Offset%":
-                TPSL_OrderEntity.sl_offset_percentage?.toString() ?? undefined,
-              order_price:
-                TPSL_OrderEntity.sl_order_price?.toString() ?? undefined,
-              order_type: TPSL_OrderEntity.sl_order_type ?? OrderType.MARKET,
-            }}
-            hideOrderPrice={
-              TPSL_OrderEntity.position_type === PositionType.FULL
-            }
-            errors={validated ? errors : null}
-            quote_dp={symbolInfo("quote_dp")}
-            positionType={
-              TPSL_OrderEntity.position_type ?? PositionType.PARTIAL
-            }
-            disableOrderTypeSelector={isEditing}
-            onChange={(key, value) => {
-              props.setOrderValue(key as keyof OrderlyOrder, value);
-            }}
-            symbolLeverage={position.leverage}
+            <TPSLInputRowWidget
+              symbol={position.symbol}
+              rootOrderPrice={position.average_open_price.toString()}
+              type="sl"
+              values={{
+                enable: TPSL_OrderEntity.sl_enable ?? true,
+                trigger_price:
+                  TPSL_OrderEntity.sl_trigger_price?.toString() ?? undefined,
+                PnL: TPSL_OrderEntity.sl_pnl?.toString() ?? undefined,
+                Offset: TPSL_OrderEntity.sl_offset?.toString() ?? undefined,
+                "Offset%":
+                  TPSL_OrderEntity.sl_offset_percentage?.toString() ??
+                  undefined,
+                order_price:
+                  TPSL_OrderEntity.sl_order_price?.toString() ?? undefined,
+                order_type: TPSL_OrderEntity.sl_order_type ?? OrderType.MARKET,
+              }}
+              hideOrderPrice={
+                TPSL_OrderEntity.position_type === PositionType.FULL
+              }
+              errors={validated ? errors : null}
+              quote_dp={symbolInfo("quote_dp")}
+              positionType={
+                TPSL_OrderEntity.position_type ?? PositionType.PARTIAL
+              }
+              disableOrderTypeSelector={isEditing}
+              onChange={(key, value) => {
+                props.setOrderValue(key as keyof OrderlyOrder, value);
+              }}
+              symbolLeverage={position.leverage}
+            />
+          </Flex>
+          <PnlInfo
+            tp_pnl={TPSL_OrderEntity.tp_pnl}
+            sl_pnl={TPSL_OrderEntity.sl_pnl}
+            className="oui-my-3"
           />
-        </Flex>
-
-        <PnlInfo
-          tp_pnl={TPSL_OrderEntity.tp_pnl}
-          sl_pnl={TPSL_OrderEntity.sl_pnl}
-          className="oui-my-3"
-        />
+        </div>
       </ScrollArea>
       <Grid px={2} cols={2} gap={3} mt={4}>
         <Button
