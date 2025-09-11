@@ -1,6 +1,6 @@
 import { ReactNode, useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { Text, Column, Box, useScreen, cn } from "@orderly.network/ui";
+import { Text, Column, Box, useScreen, cn, toast } from "@orderly.network/ui";
 import firstBadge from "../../../img/first_badge.png";
 import secondBadge from "../../../img/second_badge.png";
 import thirdBadge from "../../../img/third_badge.png";
@@ -98,23 +98,38 @@ export const useRankingColumns = (
 
           return (
             <>
-              <Text.formatted
-                rule="address"
-                key={record.rank}
-                style={
-                  linearGradientText
-                    ? {
-                        background: linearGradientText,
-                        WebkitBackgroundClip: "text",
-                        WebkitTextFillColor: "transparent",
-                        backgroundClip: "text",
-                      }
-                    : {}
-                }
+              <a
+                className="oui-flex oui-items-start oui-gap-1"
+                href={`https://orderly-dashboard.orderly.network/address/${value}?broker_id=woofi_pro`}
+                target="_blank"
+                rel="noreferrer"
               >
-                {value}
-              </Text.formatted>
-              {isYou && <Text> (You)</Text>}
+                <Text.formatted
+                  rule="address"
+                  key={record.rank}
+                  copyable
+                  onCopy={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    navigator.clipboard.writeText(value);
+                    toast.success(t("common.copy.copied"));
+                  }}
+                  // style={
+                  //   linearGradientText
+                  //     ? {
+                  //         background: linearGradientText,
+                  //         WebkitBackgroundClip: "text",
+                  //         WebkitTextFillColor: "transparent",
+                  //         backgroundClip: "text",
+                  //       }
+                  //     : {}
+                  // }
+                  className="oui-cursor-pointer oui-underline oui-decoration-line-16 oui-decoration-dashed oui-underline-offset-4"
+                >
+                  {value}
+                </Text.formatted>
+                {isYou && <Text> (You)</Text>}
+              </a>
             </>
           );
         },
