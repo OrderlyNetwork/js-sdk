@@ -8,6 +8,7 @@ export const useLtvScript = () => {
     "/v1/public/auto_convert_threshold",
     {
       errorRetryCount: 3,
+      revalidateOnFocus: false,
     },
   );
   const ltvThreshold = useMemo(() => {

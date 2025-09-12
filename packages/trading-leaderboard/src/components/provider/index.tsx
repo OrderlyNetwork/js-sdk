@@ -64,6 +64,7 @@ export type TradingLeaderboardState = {
     end_time: Date | string;
   };
   statistics?: CampaignStatistics;
+  setStatistics?: (statistics: CampaignStatistics) => void;
 };
 
 /**
@@ -96,6 +97,10 @@ export const TradingLeaderboardProvider: React.FC<
 
   const [userData, setUserData] = useState<UserData>();
   const [updatedTime, setUpdatedTime] = useState<number>();
+  const [statistics, setStatistics] = useState<CampaignStatistics>({
+    total_participants: 0,
+    total_volume: 0,
+  });
 
   const { data: generateCode, mutate: generateCodeMutate } =
     usePrivateQuery<RefferalAPI.ReferralInfo>("/v1/referral/info", {
@@ -153,10 +158,12 @@ export const TradingLeaderboardProvider: React.FC<
     { revalidateOnFocus: false },
   );
 
-  const statistics = {
-    total_participants: stats?.user_count,
-    total_volume: stats?.volume,
-  };
+  useEffect(() => {
+    setStatistics({
+      total_participants: stats?.user_count,
+      total_volume: stats?.volume,
+    });
+  }, [stats?.user_count, stats?.volume]);
 
   const tieredIndex = useMemo(() => {
     if (!currentCampaign?.tiered_prize_pools) return 0;
@@ -200,6 +207,7 @@ export const TradingLeaderboardProvider: React.FC<
       dataAdapter: dataAdapter,
       campaignDateRange,
       statistics,
+      setStatistics,
     };
   }, [
     backgroundSrc,
@@ -213,6 +221,7 @@ export const TradingLeaderboardProvider: React.FC<
     memoCampaignChange,
     campaignDateRange,
     statistics,
+    setStatistics,
   ]);
 
   return (

@@ -342,6 +342,7 @@ export function getCampaigns() {
       trading_url: "https://woofi.com/en/trade/ETH_PERP",
       leaderboard_config: {
         use_general_leaderboard: true,
+        // week_one_addresses: ["0xfba31dfa3c6612abca9a27f65af77d9fed7e2db7"],
       },
     } as CampaignConfig,
     {
