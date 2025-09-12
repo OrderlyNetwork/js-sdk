@@ -9,6 +9,8 @@ import {
   Divider,
   DataTable,
   Column,
+  useScreen,
+  cn,
 } from "@orderly.network/ui";
 import type { FeeDataType, useFeeTierScriptReturn } from "./feeTier.script";
 
@@ -45,6 +47,8 @@ type FeeTierTableProps = {
 export const FeeTierTable: React.FC<FeeTierTableProps> = (props) => {
   const [top, setTop] = useState<undefined | number>(undefined);
 
+  const { isMobile } = useScreen();
+
   const parentRef = useRef<HTMLDivElement>(null);
   const activeRowRef = useRef<HTMLDivElement>(null);
 
@@ -65,7 +69,8 @@ export const FeeTierTable: React.FC<FeeTierTableProps> = (props) => {
         normal: undefined,
         active: undefined,
       };
-      if (index + 1 == props.tier) {
+      const isActive = props.tier !== null && props.tier === index + 1;
+      if (isActive) {
         return {
           ref: activeRowRef,
           "data-state": "active",
@@ -76,7 +81,7 @@ export const FeeTierTable: React.FC<FeeTierTableProps> = (props) => {
       }
       return {
         "data-state": "none",
-        ...{ className: "oui-h-12" },
+        className: "oui-h-12",
         ...config.normal,
       };
     },
@@ -86,13 +91,16 @@ export const FeeTierTable: React.FC<FeeTierTableProps> = (props) => {
   const originalTable = (
     <Box
       ref={parentRef}
-      className="oui-relative oui-border-b oui-border-line-4"
+      className={cn(
+        "oui-relative oui-border-b oui-border-line-4",
+        isMobile ? "oui-mt-2 oui-rounded-xl oui-bg-base-9" : undefined,
+      )}
     >
       {top !== undefined && top !== null && (
         <Box
           angle={90}
           gradient="brand"
-          className="oui-absolute oui-w-full oui-rounded-md"
+          className={cn("oui-absolute oui-w-full oui-rounded")}
           style={{ transform: `translate3d(0, ${top}px, 0)`, height: 48 }}
         />
       )}
@@ -113,6 +121,7 @@ export const FeeTierTable: React.FC<FeeTierTableProps> = (props) => {
 export const FeeTier: React.FC<FeeTierProps> = (props) => {
   const { columns, dataSource, tier, vol } = props;
   const { t } = useTranslation();
+  const { isMobile } = useScreen();
   return (
     <Card
       title={
@@ -128,8 +137,11 @@ export const FeeTier: React.FC<FeeTierProps> = (props) => {
           </Flex>
         </Flex>
       }
-      className="w-full"
       id="oui-portfolio-fee-tier"
+      className="w-full"
+      classNames={{
+        root: isMobile ? "oui-bg-transparent oui-p-2" : "oui-bg-base-9",
+      }}
     >
       <Divider />
       <React.Suspense fallback={null}>
