@@ -10,6 +10,7 @@ import {
   WalletIcon,
 } from "@orderly.network/ui";
 import { WithdrawTo } from "../../types";
+import { LtvWidget } from "../LTV";
 import { TextAreaInput } from "../accountIdInput";
 import { AvailableQuantity } from "../availableQuantity";
 import { BrokerWallet } from "../brokerWallet";
@@ -145,7 +146,13 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
           </TabPanel>
           {internalWithdrawPanel}
         </Tabs>
-
+        <Box mt={2}>
+          <LtvWidget
+            showDiff={typeof quantity !== "undefined" && Number(quantity) > 0}
+            currentLtv={props.currentLTV}
+            nextLTV={props.nextLTV}
+          />
+        </Box>
         <Flex direction="column" mt={1} gapY={1} itemAlign="start">
           <Text size="xs" intensity={36}>
             {t("common.fee")}
@@ -175,6 +182,7 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
         tokenName={sourceToken?.symbol as string}
         qtyGreaterThanVault={qtyGreaterThanVault}
         qtyGreaterThanMaxAmount={qtyGreaterThanMaxAmount}
+        message={props.ltvWarningMessage}
       />
       <Flex justify="center">
         <WithdrawAction

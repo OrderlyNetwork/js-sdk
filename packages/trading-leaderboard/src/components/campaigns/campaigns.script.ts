@@ -1,15 +1,10 @@
 import { useMemo, useCallback } from "react";
-import {
-  useQuery,
-  useConfig,
-  useMutation,
-  useAccount,
-} from "@orderly.network/hooks";
+import { useQuery, useMutation, useAccount } from "@orderly.network/hooks";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
 import { useTradingLeaderboardContext } from "../provider";
 import { getCurrentTierIndex } from "./pricePool/utils";
-import { CampaignStatsResponse, UserCampaignsResponse } from "./type";
+import { UserCampaignsResponse } from "./type";
 import { getTotalPrizePool } from "./utils";
 
 /**
@@ -65,6 +60,15 @@ export const useCampaignsScript = () => {
           return;
         }
         const result = await doJoinCampaign(data);
+
+        // hardcode for 128 campaign
+        if (String(data.campaign_id) === "128") {
+          Promise.all(
+            ["130", "131", "132", "133", "134"].map(async (campaignId) => {
+              await doJoinCampaign({ campaign_id: campaignId });
+            }),
+          );
+        }
 
         if (result?.success !== false) {
           // Refresh user campaigns data to update participation status

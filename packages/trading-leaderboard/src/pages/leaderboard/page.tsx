@@ -3,6 +3,7 @@ import { useTranslation } from "@orderly.network/i18n";
 import { Box, cn, Flex, Text, useScreen } from "@orderly.network/ui";
 import { Background } from "../../components/background";
 import { CampaignsWidget } from "../../components/campaigns/campaigns.widget";
+import { GeneralLeaderboardIWidget } from "../../components/leaderboard128/generalLeaderboard";
 import { CampaignLeaderboardWidget } from "../../components/leaderboard/campaignLeaderboard";
 import {
   GeneralLeaderboardWidget,
@@ -76,10 +77,13 @@ export const LeaderboardSection: FC<LeaderboardSectionProps> = (props) => {
           title={t("tradingLeaderboard.arena")}
           isMobile={isMobile}
         />
-        <GeneralLeaderboardWidget
+        <GeneralLeaderboardIWidget
           {...props}
           className="oui-mt-10"
           campaignDateRange={campaignDateRange}
+          weekOneAddresses={
+            currentCampaign?.leaderboard_config?.week_one_addresses
+          }
         />
       </Box>
     );

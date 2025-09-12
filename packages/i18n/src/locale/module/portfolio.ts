@@ -9,10 +9,10 @@ export const portfolio = {
   "portfolio.overview.performance": "Performance",
   "portfolio.overview.performance.roi": "{{period}} ROI",
   "portfolio.overview.performance.roi.tooltip":
-    "Return over the selected period, includes deposits/withdrawals.",
+    "ROI = PnL / (Start account value + Total deposits + Total transfer-in)",
   "portfolio.overview.performance.pnl": "{{period}} PnL",
   "portfolio.overview.performance.pnl.tooltip":
-    "Profit/loss over the selected period, includes deposits/withdrawals.",
+    "PnL = Current account value − Start account value − Total deposits + Total withdrawals − Total transfer-in + Total transfer-out",
   "portfolio.overview.performance.volume": "{{period}} Volume (USDC)",
   "portfolio.overview.performance.volume.tooltip":
     "Trading volume over the selected period.",

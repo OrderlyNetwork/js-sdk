@@ -28,6 +28,7 @@ import { useToken } from "../depositForm/hooks/useToken";
 import { useSettlePnl } from "../unsettlePnlInfo/useSettlePnl";
 import { useInternalWithdraw } from "./hooks/useInternalWithdraw";
 import { useWithdrawFee } from "./hooks/useWithdrawFee";
+import { useWithdrawLTV } from "./hooks/useWithdrawLTV";
 
 export type WithdrawFormScriptReturn = ReturnType<typeof useWithdrawFormScript>;
 
@@ -382,6 +383,11 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
 
   const { hasPositions, onSettlePnl } = useSettlePnl();
 
+  const { currentLTV, nextLTV, ltvWarningMessage } = useWithdrawLTV({
+    token: sourceToken?.symbol!,
+    quantity,
+  });
+
   return {
     walletName,
     address,
@@ -420,5 +426,8 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
       (item) => Number.parseInt(item.chain_id) === currentChain?.id,
     ),
     ...internalWithdrawState,
+    currentLTV,
+    nextLTV,
+    ltvWarningMessage,
   };
 };
