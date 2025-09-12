@@ -123,6 +123,7 @@ const FeeTierPage: React.FC = () => {
     },
     [t, isLoading, formattedData],
   );
+
   return (
     <FeeTierModule.FeeTierPage
       dataAdapter={dataAdapter}
@@ -134,7 +135,17 @@ const FeeTierPage: React.FC = () => {
           },
           active: {
             className:
-              "box oui-h-[54px] oui-text-[rgba(0,0,0,0.88)] oui-pointer-events-none",
+              "oui-pointer-events-none oui-h-[54px] oui-text-[rgba(0,0,0,0.88)] oui-gradient-primary",
+          },
+        };
+      }}
+      onCell={() => {
+        return {
+          normal: {
+            //
+          },
+          active: {
+            //
           },
         };
       }}

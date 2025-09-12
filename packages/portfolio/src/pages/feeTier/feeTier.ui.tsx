@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   Box,
@@ -11,6 +11,7 @@ import {
   Column,
   useScreen,
   cn,
+  TanstackColumn,
 } from "@orderly.network/ui";
 import type { FeeDataType, useFeeTierScriptReturn } from "./feeTier.script";
 
@@ -28,7 +29,7 @@ export type FeeTierHeaderProps = {
 };
 
 type FeeTierTableProps = {
-  columns: Column[];
+  columns: Column<any>[];
   dataSource?: any[];
   page?: number;
   pageSize?: number;
@@ -39,87 +40,104 @@ type FeeTierTableProps = {
     record: any,
     index: number,
   ) => {
-    normal: any;
-    active: any;
+    normal?: any;
+    active?: any;
+  };
+  onCell?: (
+    column: TanstackColumn<any>,
+    record: any,
+    index: number,
+  ) => {
+    normal?: any;
+    active?: any;
   };
 };
 
 export const FeeTierTable: React.FC<FeeTierTableProps> = (props) => {
-  const [top, setTop] = useState<undefined | number>(undefined);
-
   const { isMobile } = useScreen();
 
-  const parentRef = useRef<HTMLDivElement>(null);
-  const activeRowRef = useRef<HTMLDivElement>(null);
+  const { tier, columns, dataSource, onRow, onCell } = props;
 
-  useEffect(() => {
-    const parentRect = parentRef.current?.getBoundingClientRect();
-    const elementRect = activeRowRef.current?.getBoundingClientRect();
-    if (elementRect && parentRect && props.tier) {
-      const offsetTop = elementRect.top - parentRect.top;
-      setTop(offsetTop);
-    } else {
-      setTop(undefined);
-    }
-  }, [props.tier]);
-
-  const onRow = useCallback(
+  const internalOnRow = useCallback(
     (record: FeeDataType, index: number) => {
-      const config = props?.onRow?.(record, index) ?? {
-        normal: undefined,
-        active: undefined,
-      };
-      const isActive = props.tier !== null && props.tier === index + 1;
-      if (isActive) {
+      const config =
+        typeof onRow === "function"
+          ? onRow(record, index)
+          : { normal: undefined, active: undefined };
+      const active = tier !== undefined && tier !== null && tier === index + 1;
+      if (active) {
         return {
-          ref: activeRowRef,
           "data-state": "active",
-          className:
-            "group oui-h-12 oui-text-[rgba(0,0,0,0.88)] oui-pointer-events-none",
+          className: cn(
+            "oui-pointer-events-none oui-h-[54px] oui-text-[rgba(0,0,0,0.88)] oui-gradient-primary",
+          ),
           ...config.active,
         };
+      } else {
+        return {
+          "data-state": "none",
+          className: cn("oui-h-[54px]"),
+          ...config.normal,
+        };
       }
-      return {
-        "data-state": "none",
-        className: "oui-h-12",
-        ...config.normal,
-      };
     },
-    [props.tier, props.onRow],
+    [tier, onRow],
   );
 
-  const originalTable = (
+  const internalOnCell = useCallback(
+    (
+      column: TanstackColumn<FeeDataType>,
+      record: FeeDataType,
+      index: number,
+    ) => {
+      const config =
+        typeof onCell === "function"
+          ? onCell(column, record, index)
+          : { normal: undefined, active: undefined };
+      const active = tier !== undefined && tier !== null && tier === index + 1;
+      const isFirstColumn = column.getIsFirstColumn();
+      const isLastColumn = column.getIsLastColumn();
+      if (active) {
+        return {
+          className: cn(
+            isFirstColumn && "oui-rounded-l-lg",
+            isLastColumn && "oui-rounded-r-lg",
+          ),
+          ...config.active,
+        };
+      } else {
+        return {
+          className: "",
+          ...config.normal,
+        };
+      }
+    },
+    [tier, onCell],
+  );
+
+  return (
     <Box
-      ref={parentRef}
       className={cn(
         "oui-relative oui-border-b oui-border-line-4",
         isMobile ? "oui-mt-2 oui-rounded-xl oui-bg-base-9" : undefined,
       )}
     >
-      {top !== undefined && top !== null && (
-        <Box
-          angle={90}
-          gradient="brand"
-          className={cn("oui-absolute oui-w-full oui-rounded")}
-          style={{ transform: `translate3d(0, ${top}px, 0)`, height: 48 }}
-        />
-      )}
       <DataTable
         bordered
         className="oui-font-semibold"
         classNames={{ root: "oui-bg-transparent" }}
-        onRow={onRow}
-        columns={props.columns}
-        dataSource={props.dataSource}
+        onRow={internalOnRow}
+        onCell={internalOnCell}
+        columns={columns}
+        dataSource={dataSource}
       />
     </Box>
   );
-
-  return originalTable;
 };
 
 export const FeeTier: React.FC<FeeTierProps> = (props) => {
-  const { columns, dataSource, tier, vol } = props;
+  const { columns, dataSource, tier, vol, headerDataAdapter, onRow, onCell } =
+    props;
   const { t } = useTranslation();
   const { isMobile } = useScreen();
   return (
@@ -148,7 +166,7 @@ export const FeeTier: React.FC<FeeTierProps> = (props) => {
         <LazyFeeTierHeader
           vol={vol}
           tier={tier}
-          headerDataAdapter={props.headerDataAdapter}
+          headerDataAdapter={headerDataAdapter}
         />
       </React.Suspense>
       <FeeTierTable
@@ -156,7 +174,8 @@ export const FeeTier: React.FC<FeeTierProps> = (props) => {
         columns={columns}
         vol={vol}
         tier={tier}
-        onRow={props.onRow}
+        onRow={onRow}
+        onCell={onCell}
       />
     </Card>
   );
