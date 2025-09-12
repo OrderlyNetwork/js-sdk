@@ -142,6 +142,27 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
     />
   );
 
+  const containerPaddingX = useMemo(() => (max2XL ? 12 : 8), [max2XL]);
+
+  const stickyHorizontalMarketsView = (
+    <Box
+      className={cn(
+        "oui-bg-base-10",
+        // -8 is for reducing the container's padding
+        "oui-sticky oui-z-[30] oui-py-2 oui-mb-[-8px]",
+        // Split line disabled for > 2xl screens
+        !max2XL && "oui-mt-[-8px]",
+      )}
+      style={{
+        bottom: 0,
+        minWidth:
+          (max2XL ? 1024 : 1440) - scrollBarWidth - containerPaddingX * 2,
+      }}
+    >
+      {horizontalMarketsView}
+    </Box>
+  );
+
   const marketsWidget = (
     <SideMarketsWidget
       resizeable={resizeable}
@@ -574,9 +595,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
             {dataListWidget}
           </Box>
 
-          {marketLayout === "bottom" && (
-            <Box className="oui-pb-2">{horizontalMarketsView}</Box>
-          )}
+          {marketLayout === "bottom" && stickyHorizontalMarketsView}
         </SplitLayout>
       </Box>
     );
@@ -623,8 +642,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
         </SplitLayout>
       </Flex>
 
-      {/* Horizontal Markets View on bottom for !=2xl screens */}
-      {marketLayout === "bottom" && horizontalMarketsView}
+      {marketLayout === "bottom" && stickyHorizontalMarketsView}
     </Flex>
   );
 };
