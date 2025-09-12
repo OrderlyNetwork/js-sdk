@@ -700,6 +700,7 @@
   "transfer.withdraw.crossChain.vaultWarning": "Para çekme işlemi {{networkName}} kasasının bakiyesini ( {{chainVaultBalance}} USDC ) aşıyor. {{networkName}}'e para çekme işlemi için çapraz zincir yeniden dengeleme ücreti alınacaktır.",
   "transfer.withdraw.vaultWarning": "{{chainName}} üzerindeki {{tokenName}} bakiyesi {{balance}} olup, çekim talebinizi karşılamak için yetersizdir. Lütfen daha sonra tekrar deneyin veya çekim için başka bir ağa geçin.",
   "transfer.withdraw.minAmount.error": "miktar {{minAmount}}'dan büyük olmalıdır",
+  "transfer.withdraw.LTV.error": "Bu çekim, LTV'nizi {{threshold}}%'nin üzerine itebilir ve hemen otomatik dönüşümü tetikleyebilir.",
   "transfer.withdraw.requested": "Para çekme talep edildi",
   "transfer.withdraw.completed": "Para çekme tamamlandı",
   "transfer.withdraw.failed": "Para çekme başarısız oldu",

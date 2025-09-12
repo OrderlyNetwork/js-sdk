@@ -700,6 +700,7 @@
   "transfer.withdraw.crossChain.vaultWarning": "Сумма вывода превышает баланс хранилища {{networkName}} ( {{chainVaultBalance}} USDC ). За кросс-чейн ребалансировку для вывода в {{networkName}} будет взиматься комиссия.",
   "transfer.withdraw.vaultWarning": "Баланс {{tokenName}} в сети {{chainName}} составляет {{balance}}, чего недостаточно для выполнения вашего запроса на вывод. Повторите попытку позже или переключитесь на другую сеть для вывода.",
   "transfer.withdraw.minAmount.error": "количество должно быть больше {{minAmount}}",
+  "transfer.withdraw.LTV.error": "Этот вывод может подтолкнуть ваш LTV выше {{threshold}}%, немедленно запустив автоматическое преобразование.",
   "transfer.withdraw.requested": "Запрошен вывод",
   "transfer.withdraw.completed": "Вывод завершен",
   "transfer.withdraw.failed": "Ошибка вывода",

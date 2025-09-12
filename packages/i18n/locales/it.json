@@ -700,6 +700,7 @@
   "transfer.withdraw.crossChain.vaultWarning": "Il prelievo supera il saldo del vault {{networkName}} ( {{chainVaultBalance}} USDC ). Verrà addebitata una commissione di ribilanciamento cross-chain per il prelievo su {{networkName}}.",
   "transfer.withdraw.vaultWarning": "Il saldo di {{tokenName}} su {{chainName}} è {{balance}}, insufficiente a soddisfare la tua richiesta di prelievo. Riprova più tardi o passa a un'altra chain per il prelievo.",
   "transfer.withdraw.minAmount.error": "la quantità deve essere maggiore di {{minAmount}}",
+  "transfer.withdraw.LTV.error": "Questo prelievo potrebbe spingere il tuo LTV oltre il {{threshold}}%, attivando immediatamente una conversione automatica.",
   "transfer.withdraw.requested": "Prelievo richiesto",
   "transfer.withdraw.completed": "Prelievo completato",
   "transfer.withdraw.failed": "Prelievo fallito",

@@ -700,6 +700,7 @@
   "transfer.withdraw.crossChain.vaultWarning": "Le retrait dépasse le solde du coffre {{networkName}} ( {{chainVaultBalance}} USDC ). Des frais de rééquilibrage cross-chain seront facturés pour le retrait vers {{networkName}}.",
   "transfer.withdraw.vaultWarning": "Le solde de {{tokenName}} sur {{chainName}} est de {{balance}}, ce qui est insuffisant pour satisfaire votre demande de retrait. Veuillez réessayer plus tard ou passer à une autre chaîne pour le retrait.",
   "transfer.withdraw.minAmount.error": "la quantité doit être supérieure à {{minAmount}}",
+  "transfer.withdraw.LTV.error": "Ce retrait pourrait pousser votre LTV au-dessus de {{threshold}}%, déclenchant immédiatement une conversion automatique.",
   "transfer.withdraw.requested": "Retrait demandé",
   "transfer.withdraw.completed": "Retrait terminé",
   "transfer.withdraw.failed": "Échec du retrait",

@@ -700,6 +700,7 @@
   "transfer.withdraw.crossChain.vaultWarning": "Виведення перевищує баланс сейфу {{networkName}} ( {{chainVaultBalance}} USDC ). Буде стягуватися комісія за міжмережевий ребаланс для виведення в {{networkName}}.",
   "transfer.withdraw.vaultWarning": "Баланс {{tokenName}} у мережі {{chainName}} становить {{balance}}, чого недостатньо для виконання вашого запиту на виведення. Спробуйте пізніше або перейдіть на іншу мережу для виведення.",
   "transfer.withdraw.minAmount.error": "сума повинна бути більшою за {{minAmount}}",
+  "transfer.withdraw.LTV.error": "Цей вивід може підштовхнути ваш LTV вище {{threshold}}%, негайно запустивши автоматичне перетворення.",
   "transfer.withdraw.requested": "Запит на виведення",
   "transfer.withdraw.completed": "Виведення завершено",
   "transfer.withdraw.failed": "Помилка виведення",

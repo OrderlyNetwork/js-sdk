@@ -700,6 +700,7 @@
   "transfer.withdraw.crossChain.vaultWarning": "Die Auszahlung übersteigt den Saldo des {{networkName}}-Tresors ({{chainVaultBalance}} USDC). Für die Auszahlung nach {{networkName}} wird eine Cross-Chain-Neugewichtungsgebühr erhoben.",
   "transfer.withdraw.vaultWarning": "Das Guthaben von {{tokenName}} auf {{chainName}} beträgt {{balance}} und ist nicht ausreichend, um deine Auszahlungsanfrage zu erfüllen. Bitte versuche es später erneut oder wechsle für die Auszahlung zu einer anderen Chain.",
   "transfer.withdraw.minAmount.error": "Menge muss größer als {{minAmount}} sein",
+  "transfer.withdraw.LTV.error": "Diese Auszahlung könnte Ihr LTV über {{threshold}}% drücken und sofort eine automatische Konvertierung auslösen.",
   "transfer.withdraw.requested": "Auszahlung angefordert",
   "transfer.withdraw.completed": "Auszahlung abgeschlossen",
   "transfer.withdraw.failed": "Auszahlung fehlgeschlagen",

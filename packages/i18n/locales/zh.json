@@ -700,6 +700,7 @@
   "transfer.withdraw.crossChain.vaultWarning": "提款超过{{networkName}}金库的余额（{{chainVaultBalance}} USDC）。跨链重新平衡费用将被收取以提款到{{networkName}}。",
   "transfer.withdraw.vaultWarning": "{{chainName}} 上的 {{tokenName}} 余额为 {{balance}}，不能满足您的提现请求，请稍后再试或切换到其他链进行提现。",
   "transfer.withdraw.minAmount.error": "数量必须大于{{minAmount}}",
+  "transfer.withdraw.LTV.error": "此提款可能会将您的LTV推高至{{threshold}}%以上，立即触发自动转换。",
   "transfer.withdraw.requested": "提款请求",
   "transfer.withdraw.completed": "提款完成",
   "transfer.withdraw.failed": "提款失败",
