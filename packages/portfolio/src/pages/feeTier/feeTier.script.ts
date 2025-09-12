@@ -42,7 +42,7 @@ export type UseFeeTierScriptOptions = {
 };
 
 export interface FeeDataType {
-  tier: number;
+  tier: number | null;
   volume_min?: number | null;
   volume_max?: number | null;
   volume_node?: React.ReactNode;
@@ -65,7 +65,7 @@ const findCurrentTier = (feeList: FeeDataType[], data: API.AccountInfo) => {
 
 export const useFeeTierScript = (options?: UseFeeTierScriptOptions) => {
   const { dataAdapter, headerDataAdapter, onRow, onCell } = options || {};
-  const [tier, setTier] = useState<number>();
+  const [tier, setTier] = useState<number | null>();
   const { data, isLoading } = useAccountInfo();
   const { state } = useAccount();
 

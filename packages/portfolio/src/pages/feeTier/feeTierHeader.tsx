@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMemo } from "react";
 import { useFeeState } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
@@ -19,8 +20,8 @@ export type FeeTierHeaderItemProps = {
 };
 
 export type FeeTierHeaderProps = {
-  tier?: number;
-  vol?: number;
+  tier?: number | null;
+  vol?: number | null;
   headerDataAdapter?: (original: any[]) => any[];
 };
 
@@ -35,14 +36,14 @@ export const MobileHeaderItem: React.FC<FeeTierHeaderItemProps> = (props) => {
       <Text
         as="div"
         intensity={36}
-        size="2xs"
+        size="xs"
         weight="semibold"
         className="oui-leading-[18px]"
       >
         {label}
       </Text>
       <Flex className="oui-gap-1.5" itemAlign="center" justify="between">
-        <Text size="base" intensity={80} className="oui-leading-[24px]">
+        <Text size="xs" intensity={80} className="oui-leading-[24px]">
           {value}
         </Text>
         {interactive && (
@@ -62,7 +63,7 @@ export const MobileHeaderItem: React.FC<FeeTierHeaderItemProps> = (props) => {
             <Text.gradient
               className="oui-select-none"
               color={"brand"}
-              size="xs"
+              size="3xs"
               weight="regular"
             >
               {t("common.effectiveFee")}
@@ -144,7 +145,11 @@ export const FeeTierHeader: React.FC<FeeTierHeaderProps> = (props) => {
       label: t("portfolio.feeTier.header.yourTier"),
       interactive: false,
       value: (
-        <Text.gradient color={"brand"} angle={270} size="base">
+        <Text.gradient
+          color={"brand"}
+          angle={270}
+          size={isMobile ? "xs" : "base"}
+        >
           {tier || "--"}
         </Text.gradient>
       ),
@@ -153,7 +158,12 @@ export const FeeTierHeader: React.FC<FeeTierHeaderProps> = (props) => {
       label: `${t("portfolio.feeTier.header.30dVolume")} (USDC)`,
       interactive: false,
       value: (
-        <Text.numeral rule="price" dp={2} rm={Decimal.ROUND_DOWN}>
+        <Text.numeral
+          rule="price"
+          dp={2}
+          rm={Decimal.ROUND_DOWN}
+          size={isMobile ? "xs" : "base"}
+        >
           {vol !== undefined && vol !== null ? `${vol}` : "-"}
         </Text.numeral>
       ),
@@ -162,7 +172,11 @@ export const FeeTierHeader: React.FC<FeeTierHeaderProps> = (props) => {
       label: t("portfolio.feeTier.header.takerFeeRate"),
       interactive: isEffectiveFee,
       value: (
-        <Text.gradient color={"brand"} angle={270} size="base">
+        <Text.gradient
+          color={"brand"}
+          angle={270}
+          size={isMobile ? "xs" : "base"}
+        >
           {isEffectiveFee
             ? others.effectiveTakerFee || "--"
             : others.takerFee || "--"}
@@ -173,7 +187,11 @@ export const FeeTierHeader: React.FC<FeeTierHeaderProps> = (props) => {
       label: t("portfolio.feeTier.header.makerFeeRate"),
       interactive: isEffectiveFee,
       value: (
-        <Text.gradient color={"brand"} angle={270} size="base">
+        <Text.gradient
+          color={"brand"}
+          angle={270}
+          size={isMobile ? "xs" : "base"}
+        >
           {isEffectiveFee
             ? others.effectiveMakerFee || "--"
             : others.makerFee || "--"}

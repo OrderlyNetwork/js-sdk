@@ -2,7 +2,7 @@ import React, { useCallback, useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { FeeTierModule } from "@orderly.network/portfolio";
 import { ARBITRUM_MAINNET_CHAINID } from "@orderly.network/types";
-import { Flex, Text } from "@orderly.network/ui";
+import { Flex, Text, useScreen } from "@orderly.network/ui";
 import type { Column } from "@orderly.network/ui";
 
 const useWooStaking = (inputs: { decimals: number; chainId: number }) => {
@@ -15,6 +15,8 @@ const useWooStaking = (inputs: { decimals: number; chainId: number }) => {
 
 const FeeTierPage: React.FC = () => {
   const { t } = useTranslation();
+  const { isMobile } = useScreen();
+
   const customDataSource = useMemo(() => {
     return [
       {
@@ -61,6 +63,7 @@ const FeeTierPage: React.FC = () => {
       },
     ];
   }, [t]);
+
   const dataAdapter = useCallback(
     (columns: Column[], dataSource: any[]) => {
       const cols: Column[] = [
@@ -116,7 +119,11 @@ const FeeTierPage: React.FC = () => {
         {
           label: `${t("portfolio.feeTier.header.myStake")} (WOO)`,
           needShowTooltip: false,
-          value: <Text size="base">{isLoading ? "--" : formattedData}</Text>,
+          value: (
+            <Text size={isMobile ? "xs" : "base"}>
+              {isLoading ? "--" : formattedData}
+            </Text>
+          ),
         },
         ...original.slice(2),
       ];

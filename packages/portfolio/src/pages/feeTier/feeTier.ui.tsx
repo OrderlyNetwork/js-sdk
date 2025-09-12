@@ -143,9 +143,9 @@ export const FeeTier: React.FC<FeeTierProps> = (props) => {
   return (
     <Card
       title={
-        <Flex justify={"between"}>
-          <Text size="lg">{t("portfolio.feeTier")}</Text>
-          <Flex gap={1}>
+        <Flex itemAlign={"center"} justify={"between"}>
+          <Text size={isMobile ? "xs" : "lg"}>{t("portfolio.feeTier")}</Text>
+          <Flex itemAlign={"center"} justify={"center"} gap={1}>
             <Text size="xs" intensity={54}>
               {t("portfolio.feeTier.updatedDailyBy")}
             </Text>
@@ -161,7 +161,7 @@ export const FeeTier: React.FC<FeeTierProps> = (props) => {
         root: isMobile ? "oui-bg-transparent oui-p-2" : "oui-bg-base-9",
       }}
     >
-      <Divider />
+      {!isMobile && <Divider />}
       <React.Suspense fallback={null}>
         <LazyFeeTierHeader
           vol={vol}
