@@ -13,6 +13,7 @@ interface WarningMessageProps {
   tokenName: string;
   qtyGreaterThanMaxAmount: boolean;
   qtyGreaterThanVault: boolean;
+  message?: string;
 }
 
 export const WithdrawWarningMessage: React.FC<WarningMessageProps> = (
@@ -53,7 +54,8 @@ export const WithdrawWarningMessage: React.FC<WarningMessageProps> = (
         balance: chainVaultBalance,
       });
     }
-    return null;
+
+    return props.message;
   };
 
   const content = renderContent();

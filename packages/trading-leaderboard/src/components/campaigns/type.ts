@@ -91,6 +91,8 @@ export interface CampaignConfig {
 export interface LeaderboardConfig {
   use_general_leaderboard?: boolean;
   exclude_leaderboard_columns?: RankingColumnFields[];
+  // for 128 campaign
+  week_one_addresses?: string[];
 }
 
 // User data for calculations

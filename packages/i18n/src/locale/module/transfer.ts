@@ -43,6 +43,8 @@ export const transfer = {
     "The balance of {{tokenName}} on the {{chainName}} is {{balance}}, which is insufficient to meet your withdrawal request. Please try again later or switch to another chain for withdrawal.",
 
   "transfer.withdraw.minAmount.error": "quantity must large than {{minAmount}}",
+  "transfer.withdraw.LTV.error":
+    "This withdrawal may push your LTV over {{threshold}}%, immediately triggering an auto-convert.",
 
   "transfer.withdraw.requested": "Withdraw requested",
   "transfer.withdraw.completed": "Withdraw completed",
