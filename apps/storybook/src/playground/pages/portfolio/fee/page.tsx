@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from "react";
-import { useTrack } from "@orderly.network/hooks";
+import { produce } from "immer";
 import { useTranslation } from "@orderly.network/i18n";
 import { FeeTierModule } from "@orderly.network/portfolio";
 import { ARBITRUM_MAINNET_CHAINID } from "@orderly.network/types";
@@ -157,27 +157,31 @@ const FeeTierPage: React.FC = () => {
         ...columns.slice(2),
       ];
 
-      if (dataSource.length === 7 && !isMobile) {
-        dataSource.push({
-          tier: "",
-          maker_fee: "",
-          taker_fee: "",
-          volume_min: null,
-          volume_max: null,
-          volume_node: <TradingBtn size={"sm"} />,
-          or: "",
-          staking: null,
-          staking_min: null,
-          staking_max: null,
-        });
-      }
+      const rows = produce(dataSource, (draft) => {
+        if (!isMobile) {
+          draft?.push({
+            tier: "",
+            maker_fee: "",
+            taker_fee: "",
+            volume_min: null,
+            volume_max: null,
+            volume_node: <TradingBtn size="sm" />,
+            or: "",
+            staking: null,
+            staking_min: null,
+            staking_max: null,
+          });
+        }
+      });
+
+      const mergedDataSource = rows?.map((item, index) => ({
+        ...item,
+        ...customDataSource[index],
+      }));
 
       return {
         columns: cols,
-        dataSource: dataSource?.map((item, index) => ({
-          ...item,
-          ...customDataSource[index],
-        })),
+        dataSource: mergedDataSource,
       };
     },
     [t, customDataSource, isMobile],
