@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { OrderStatus } from "@orderly.network/types";
@@ -10,6 +11,7 @@ import {
   Tabs,
   Text,
 } from "@orderly.network/ui";
+import type { TabPanelProps } from "@orderly.network/ui";
 import { MobileOrderListWidget, TabType } from "@orderly.network/ui-orders";
 import {
   MobileLiquidationWidget,
@@ -63,9 +65,7 @@ const SymbolControlHeader: React.FC<
         variant="outlined"
         size="xs"
         color="secondary"
-        onClick={(e) => {
-          props.onCloseAll(props.type);
-        }}
+        onClick={() => props.onCloseAll(props.type)}
       >
         {t("trading.orders.closeAll")}
       </Button>
@@ -158,71 +158,88 @@ export const DataList: React.FC<DataListState & { className?: string }> = (
   props,
 ) => {
   const { t } = useTranslation();
-  return (
-    <Tabs
-      value={props.tab}
-      onValueChange={(e: any) => props.setTab(e)}
-      size="lg"
-      className={props.className}
-      classNames={{
-        tabsList:
-          "oui-bg-base-9 oui-rounded-t-xl oui-p-2 oui-overflow-x-scroll oui-hide-scrollbar",
-      }}
-    >
-      <TabPanel
-        title={`${t("common.positions")} ${
-          (props.positionCount ?? 0) > 0 ? `(${props.positionCount})` : ""
-        }`}
-        value={DataListTabType.position}
-      >
-        <PositionsView {...props} />
-      </TabPanel>
-      <TabPanel
-        title={`${t("orders.status.pending")} ${
-          (props.pendingOrderCount ?? 0) > 0
-            ? `(${props.pendingOrderCount})`
-            : ""
-        }`}
-        value={DataListTabType.pending}
-      >
+  const {
+    positionCount = 0,
+    pendingOrderCount = 0,
+    tpSlOrderCount = 0,
+    showAllSymbol,
+    symbol,
+    tab,
+    setTab,
+    className,
+  } = props;
+
+  const tabPanelItems: React.PropsWithChildren<TabPanelProps>[] = [
+    {
+      title: `${t("common.positions")} ${positionCount > 0 ? `(${positionCount})` : ""}`,
+      value: DataListTabType.position,
+      children: <PositionsView {...props} />,
+    },
+    {
+      title: `${t("orders.status.pending")} ${pendingOrderCount > 0 ? `(${pendingOrderCount})` : ""}`,
+      value: DataListTabType.pending,
+      children: (
         <OrdersView
           type={TabType.pending}
           ordersStatus={OrderStatus.INCOMPLETE}
           {...props}
         />
-      </TabPanel>
-      <TabPanel
-        title={`${t("common.tpsl")} ${
-          (props.tpSlOrderCount ?? 0) > 0 ? `(${props.tpSlOrderCount})` : ""
-        }`}
-        value={DataListTabType.tp_sl}
-      >
+      ),
+    },
+    {
+      title: `${t("common.tpsl")} ${tpSlOrderCount > 0 ? `(${tpSlOrderCount})` : ""}`,
+      value: DataListTabType.tp_sl,
+      children: (
         <OrdersView
           type={TabType.tp_sl}
           ordersStatus={OrderStatus.INCOMPLETE}
           {...props}
         />
-      </TabPanel>
-      <TabPanel title={t("trading.history")} value={DataListTabType.history}>
-        <HistoryTab {...props} />
-      </TabPanel>
-      <TabPanel
-        title={t("positions.liquidation")}
-        value={DataListTabType.liquidation}
-      >
+      ),
+    },
+    {
+      title: t("trading.history"),
+      value: DataListTabType.history,
+      children: <HistoryTab {...props} />,
+    },
+    {
+      title: t("positions.liquidation"),
+      value: DataListTabType.liquidation,
+      children: (
         <MobileLiquidationWidget
-          enableLoadMore={true}
-          symbol={props.showAllSymbol ? undefined : props.symbol}
+          enableLoadMore
+          symbol={showAllSymbol ? undefined : symbol}
           classNames={{ cell: "oui-p-2 oui-bg-base-9 oui-rounded-xl" }}
         />
-      </TabPanel>
-      {/* <TabPanel
-        testid="oui-testid-dataList-assets-tab"
-        value={DataListTabType.assets}
-        title={t("common.assets")}
-      >
-        assets
-      </TabPanel> */}
+      ),
+    },
+    // {
+    //   title: t("common.assets"),
+    //   value: DataListTabType.assets,
+    //   children: <div>assets</div>,
+    // },
+  ];
+
+  return (
+    <Tabs
+      value={tab}
+      defaultValue={DataListTabType.position}
+      onValueChange={(e) => setTab(e as DataListTabType)}
+      size="lg"
+      className={className}
+      classNames={{
+        tabsList:
+          "oui-bg-base-9 oui-rounded-t-xl oui-p-2 oui-overflow-x-scroll oui-hide-scrollbar",
+      }}
+    >
+      {tabPanelItems.map((item) => {
+        const { children, ...rest } = item;
+        return (
+          <TabPanel {...rest} key={`item-${rest.value}`}>
+            {children}
+          </TabPanel>
+        );
+      })}
     </Tabs>
   );
 };

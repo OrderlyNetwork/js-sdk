@@ -170,14 +170,14 @@ const Tabs: FC<TabsProps> = (props) => {
 
 Tabs.displayName = "Tabs";
 
-type TabPanelProps = {
+export interface TabPanelProps {
   value: any;
   title: string | React.ReactNode;
   icon?: React.ReactElement;
   testid?: string;
   className?: string;
   style?: React.CSSProperties;
-};
+}
 
 const TabPanel: FC<PropsWithChildren<TabPanelProps>> = (props) => {
   const { title, value, icon, className, style, testid, children } = props;
