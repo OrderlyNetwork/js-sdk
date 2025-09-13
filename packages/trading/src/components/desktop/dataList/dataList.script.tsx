@@ -1,4 +1,4 @@
-import { PositionsProps } from "@orderly.network/ui-positions";
+import type { PositionsProps } from "@orderly.network/ui-positions";
 import {
   usePendingOrderCount,
   usePositionsCount,
@@ -14,10 +14,11 @@ export enum DataListTabType {
   positionHistory = "Position history",
   orderHistory = "Order history",
   liquidation = "Liquidation",
+  assets = "Assets",
 }
 
 export const useDataListScript = (
-  props: { current?: DataListTabType } & PositionsProps,
+  inputs: { current?: DataListTabType } & PositionsProps,
 ) => {
   const {
     current,
@@ -25,16 +26,15 @@ export const useDataListScript = (
     sharePnLConfig,
     symbol,
     includedPendingOrder,
-  } = props;
-  const localStorage = useTradingLocalStorage({
-    pnlNotionalDecimalPrecision,
-  });
+  } = inputs;
+
+  const localStorage = useTradingLocalStorage({ pnlNotionalDecimalPrecision });
+
   const { onSymbolChange } = useTradingPageContext();
 
-  const { positionCount } = usePositionsCount(props.symbol);
-  const { pendingOrderCount, tpSlOrderCount } = usePendingOrderCount(
-    props.symbol,
-  );
+  const { positionCount } = usePositionsCount(symbol);
+
+  const { pendingOrderCount, tpSlOrderCount } = usePendingOrderCount(symbol);
 
   return {
     current,

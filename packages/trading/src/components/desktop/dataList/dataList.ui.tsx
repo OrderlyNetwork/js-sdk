@@ -1,4 +1,3 @@
-import { FC, SVGProps } from "react";
 import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { OrderStatus } from "@orderly.network/types";
@@ -31,7 +30,66 @@ const LazyPositionHeaderWidget = React.lazy(() =>
   }),
 );
 
-export const DataList: FC<DataListState> = (props) => {
+const PositionsView: React.FC<DataListState> = (props) => {
+  return (
+    <Flex direction="column" width="100%" height="100%">
+      <React.Suspense fallback={null}>
+        <LazyPositionHeaderWidget
+          pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
+          symbol={!!props.showAllSymbol ? undefined : props.symbol}
+          unPnlPriceBasis={props.unPnlPriceBasis}
+        />
+      </React.Suspense>
+      <Divider className="oui-w-full" />
+      <Box className="oui-h-[calc(100%_-_60px)]" width="100%">
+        <PositionsWidget
+          symbol={!!props.showAllSymbol ? undefined : props.symbol}
+          pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
+          sharePnLConfig={props.sharePnLConfig}
+          calcMode={props.calcMode}
+          includedPendingOrder={props.includedPendingOrder}
+          onSymbolChange={props.onSymbolChange}
+        />
+      </Box>
+    </Flex>
+  );
+};
+
+export const LiquidationTab: React.FC = () => {
+  const { t } = useTranslation();
+  return (
+    <div className="oui-flex oui-space-x-1">
+      <span>{t("positions.liquidation")}</span>
+      <Tooltip
+        className="oui-max-w-[275px] oui-bg-base-6"
+        content={
+          <div>
+            <div className="oui-text-pretty">
+              {t("positions.Liquidation.tooltip.liquidation")}
+            </div>
+            <div>
+              <a
+                href="https://orderly.network/docs/introduction/trade-on-orderly/perpetual-futures/liquidations"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="oui-text-primary"
+              >
+                {t("positions.Liquidation.tooltip.viewMore")}
+              </a>
+            </div>
+          </div>
+        }
+        arrow={{ className: "oui-fill-base-6" }}
+      >
+        <button className="oui-hidden group-data-[state=active]:oui-block">
+          <InfoCircleIcon />
+        </button>
+      </Tooltip>
+    </div>
+  );
+};
+
+export const DataList: React.FC<DataListState> = (props) => {
   const { t } = useTranslation();
   return (
     <Tabs
@@ -56,7 +114,6 @@ export const DataList: FC<DataListState> = (props) => {
       size="lg"
       className="oui-h-full"
       classNames={{
-        // tabsList: "oui-px-3",
         tabsContent: "oui-h-[calc(100%_-_32px)]",
         trigger: "oui-group",
       }}
@@ -160,67 +217,13 @@ export const DataList: FC<DataListState> = (props) => {
           symbol={!!props.showAllSymbol ? undefined : props.symbol}
         />
       </TabPanel>
-    </Tabs>
-  );
-};
-
-export const LiquidationTab = () => {
-  const { t } = useTranslation();
-  return (
-    <div className="oui-flex oui-space-x-1">
-      <span>{t("positions.liquidation")}</span>
-      <Tooltip
-        className="oui-max-w-[275px] oui-bg-base-6"
-        content={
-          <div>
-            <div className="oui-text-pretty">
-              {t("positions.Liquidation.tooltip.liquidation")}
-            </div>
-            <div>
-              <a
-                href="https://orderly.network/docs/introduction/trade-on-orderly/perpetual-futures/liquidations"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="oui-text-primary"
-              >
-                {t("positions.Liquidation.tooltip.viewMore")}
-              </a>
-            </div>
-          </div>
-        }
-        arrow={{
-          className: "oui-fill-base-6",
-        }}
+      {/* <TabPanel
+        testid="oui-testid-dataList-assets-tab"
+        value={DataListTabType.assets}
+        title={t("common.assets")}
       >
-        <button className="oui-hidden group-data-[state=active]:oui-block">
-          <InfoCircleIcon />
-        </button>
-      </Tooltip>
-    </div>
-  );
-};
-
-const PositionsView: FC<DataListState> = (props) => {
-  return (
-    <Flex direction="column" width="100%" height="100%">
-      <React.Suspense fallback={null}>
-        <LazyPositionHeaderWidget
-          pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
-          symbol={!!props.showAllSymbol ? undefined : props.symbol}
-          unPnlPriceBasis={props.unPnlPriceBasis}
-        />
-      </React.Suspense>
-      <Divider className="oui-w-full" />
-      <Box className="oui-h-[calc(100%_-_60px)]" width="100%">
-        <PositionsWidget
-          symbol={!!props.showAllSymbol ? undefined : props.symbol}
-          pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
-          sharePnLConfig={props.sharePnLConfig}
-          calcMode={props.calcMode}
-          includedPendingOrder={props.includedPendingOrder}
-          onSymbolChange={props.onSymbolChange}
-        />
-      </Box>
-    </Flex>
+        assets
+      </TabPanel> */}
+    </Tabs>
   );
 };

@@ -74,7 +74,6 @@ const Tabs: FC<TabsProps> = (props) => {
 
   const tabsVariant = variant || tabsOverrides.variant;
 
-  // const { value, onChange, defaultValue } = props;
   const [tabList, setTabList] = useState<{ [key: string]: tabConfig }>({});
 
   const registerTab = useCallback((config: tabConfig) => {
