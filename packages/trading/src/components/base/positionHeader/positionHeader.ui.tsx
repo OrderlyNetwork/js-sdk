@@ -56,7 +56,7 @@ const MobileLayout: React.FC<PositionHeaderState> = (props) => {
         />
 
         <label
-          className="oui-text-2xs oui-text-base-contrast-54 oui-cursor-pointer"
+          className="oui-cursor-pointer oui-text-2xs oui-text-base-contrast-54"
           htmlFor="oui-checkbox-hideOtherSymbols"
         >
           {t("trading.hideOtherSymbols")}

@@ -25,8 +25,8 @@ import {
 } from "./dataList.script";
 
 const LazyPositionHeaderWidget = React.lazy(() =>
-  import("../../base/positionHeader").then((module) => {
-    return { default: module.PositionHeaderWidget };
+  import("../../base/positionHeader").then((mod) => {
+    return { default: mod.PositionHeaderWidget };
   }),
 );
 

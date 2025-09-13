@@ -12,10 +12,18 @@ import {
   modal,
 } from "@orderly.network/ui";
 import { SelectOption } from "@orderly.network/ui/src/select/withOptions";
-import { useAssetsScriptReturn } from "./assets.script";
+import type { useAssetsScriptReturn } from "./assets.script";
 import { AccountType } from "./assets.ui";
 
-export const AssetsTableMobile = (props: useAssetsScriptReturn) => {
+const AccountTag: React.FC<{ name: string }> = ({ name }) => {
+  return (
+    <div className="oui-mt-2 oui-flex oui-h-[18px] oui-w-fit oui-items-center oui-rounded oui-bg-white/[0.06] oui-px-2 oui-text-2xs oui-font-semibold oui-text-base-contrast-36">
+      {name}
+    </div>
+  );
+};
+
+export const AssetsTableMobile: React.FC<useAssetsScriptReturn> = (props) => {
   // console.log(props);
   const { t } = useTranslation();
 
@@ -178,14 +186,6 @@ const AssetMobileItem: React.FC<AssetMobileItemProps> = ({ item }) => {
           {t("common.transfer")}
         </Button>
       </div>
-    </div>
-  );
-};
-
-const AccountTag: React.FC<{ name: string }> = ({ name }) => {
-  return (
-    <div className="oui-mt-2 oui-flex oui-h-[18px] oui-w-fit oui-items-center oui-rounded oui-bg-white/[0.06] oui-px-2 oui-text-2xs oui-font-semibold oui-text-base-contrast-36">
-      {name}
     </div>
   );
 };
