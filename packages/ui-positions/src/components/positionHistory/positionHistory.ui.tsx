@@ -110,11 +110,7 @@ export const PositionHistory: FC<PositionHistoryProps> = (props) => {
 
 export const MobilePositionHistory: FC<
   PositionHistoryState & {
-    classNames?: {
-      root?: string;
-      content?: string;
-      cell?: string;
-    };
+    classNames?: { root?: string; content?: string; cell?: string };
     sharePnLConfig?: SharePnLConfig;
   }
 > = (props) => {

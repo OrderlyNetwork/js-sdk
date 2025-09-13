@@ -1,3 +1,4 @@
+import React from "react";
 import { API } from "@orderly.network/types";
 import { SharePnLConfig } from "@orderly.network/ui-share";
 import { usePositionHistoryScript } from "./positionHistory.script";
@@ -10,7 +11,9 @@ export type PositionHistoryProps = {
   sharePnLConfig?: SharePnLConfig;
 };
 
-export const PositionHistoryWidget = (props: PositionHistoryProps) => {
+export const PositionHistoryWidget: React.FC<PositionHistoryProps> = (
+  props,
+) => {
   const state = usePositionHistoryScript(props);
   return <PositionHistory {...state} sharePnLConfig={props.sharePnLConfig} />;
 };

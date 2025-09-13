@@ -199,9 +199,10 @@ export const SymbolInfo = (props: {
 
     list.push(
       <Badge
+        key={`status-${status}`}
         color={status !== "closed" ? "primaryLight" : "neutral"}
         size="xs"
-        className="oui-break-normal oui-whitespace-nowrap"
+        className="oui-whitespace-nowrap oui-break-normal"
       >
         {renderStatus()}
       </Badge>,
@@ -209,19 +210,16 @@ export const SymbolInfo = (props: {
 
     if (record.type === "adl") {
       list.push(
-        <Badge color={"danger"} size="xs">
-          {/* {capitalizeFirstLetter(record.type)} */}
+        <Badge key={`type-${record.type}`} color={"danger"} size="xs">
           {t("positions.history.type.adl")}
         </Badge>,
       );
     } else if (record.type === "liquidated") {
       list.push(
         <Tooltip
+          key={`type-${record.type}`}
           className="oui-min-w-[204px] oui-bg-base-5"
-          arrow={{
-            className: "oui-fill-base-5",
-          }}
-          // @ts-ignore
+          arrow={{ className: "oui-fill-base-5" }}
           content={
             <Flex
               direction={"column"}
