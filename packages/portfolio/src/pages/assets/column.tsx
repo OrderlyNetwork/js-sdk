@@ -114,23 +114,25 @@ export const useAssetsColumns = (options: ColumnsOptions) => {
       {
         title: null,
         dataIndex: "account_id",
-        align: "right",
+        align: "center",
         width: 180,
         render(id: string, record: EnhancedHolding) {
           const { token } = record;
           return (
-            <Flex itemAlign="center" gap={3}>
-              {token !== "USDC" && namespace !== ChainNamespace.solana && (
-                <Button
-                  size={"sm"}
-                  variant={"outlined"}
-                  color={"secondary"}
-                  onClick={() => onConvert?.(id, token)}
-                >
-                  {t("transfer.convert")}
-                </Button>
-              )}
-              {onTransfer && (
+            <Flex itemAlign="center" justify="end" gap={3}>
+              {token !== "USDC" &&
+                namespace !== ChainNamespace.solana &&
+                typeof onConvert === "function" && (
+                  <Button
+                    size={"sm"}
+                    variant={"outlined"}
+                    color={"secondary"}
+                    onClick={() => onConvert?.(id, token)}
+                  >
+                    {t("transfer.convert")}
+                  </Button>
+                )}
+              {typeof onTransfer === "function" && (
                 <Button
                   size={"sm"}
                   variant={"outlined"}

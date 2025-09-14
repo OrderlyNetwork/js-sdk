@@ -1,5 +1,6 @@
 import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
+import { AssetsModule } from "@orderly.network/portfolio";
 import { OrderStatus } from "@orderly.network/types";
 import {
   Box,
@@ -109,16 +110,16 @@ export const DataList: React.FC<DataListState> = (props) => {
     setPnlNotionalDecimalPrecision,
   } = props;
 
-  const tabPanelItems: React.PropsWithChildren<TabPanelProps>[] = [
+  const tabPanelItems: (TabPanelProps & { content?: React.ReactNode })[] = [
     {
       value: DataListTabType.positions,
       title: `${t("common.positions")} ${positionCount > 0 ? `(${positionCount})` : ""}`,
-      children: <PositionsView {...props} />,
+      content: <PositionsView {...props} />,
     },
     {
       value: DataListTabType.pending,
       title: `${t("orders.status.pending")} ${pendingOrderCount > 0 ? `(${pendingOrderCount})` : ""}`,
-      children: (
+      content: (
         <DesktopOrderListWidget
           type={TabType.pending}
           ordersStatus={OrderStatus.INCOMPLETE}
@@ -131,7 +132,7 @@ export const DataList: React.FC<DataListState> = (props) => {
     {
       value: DataListTabType.tp_sl,
       title: `${t("common.tpsl")} ${tpSlOrderCount > 0 ? `(${tpSlOrderCount})` : ""}`,
-      children: (
+      content: (
         <DesktopOrderListWidget
           type={TabType.tp_sl}
           ordersStatus={OrderStatus.INCOMPLETE}
@@ -144,7 +145,7 @@ export const DataList: React.FC<DataListState> = (props) => {
     {
       value: DataListTabType.filled,
       title: t("orders.status.filled"),
-      children: (
+      content: (
         <DesktopOrderListWidget
           type={TabType.filled}
           symbol={showAllSymbol ? undefined : symbol}
@@ -159,7 +160,7 @@ export const DataList: React.FC<DataListState> = (props) => {
     {
       value: DataListTabType.positionHistory,
       title: t("positions.positionHistory"),
-      children: (
+      content: (
         <PositionHistoryWidget
           pnlNotionalDecimalPrecision={pnlNotionalDecimalPrecision}
           symbol={showAllSymbol ? undefined : symbol}
@@ -171,7 +172,7 @@ export const DataList: React.FC<DataListState> = (props) => {
     {
       value: DataListTabType.orderHistory,
       title: t("orders.orderHistory"),
-      children: (
+      content: (
         <DesktopOrderListWidget
           type={TabType.orderHistory}
           pnlNotionalDecimalPrecision={pnlNotionalDecimalPrecision}
@@ -185,14 +186,14 @@ export const DataList: React.FC<DataListState> = (props) => {
     {
       value: DataListTabType.liquidation,
       title: <LiquidationTab />,
-      children: (
+      content: (
         <LiquidationWidget symbol={showAllSymbol ? undefined : symbol} />
       ),
     },
     // {
     //   value: DataListTabType.assets,
     //   title: t("common.assets"),
-    //   children: <div>assets</div>,
+    //   content: <AssetsModule.AssetsDataTable />,
     // },
   ];
 
@@ -220,10 +221,10 @@ export const DataList: React.FC<DataListState> = (props) => {
       }}
     >
       {tabPanelItems.map((item) => {
-        const { children, ...rest } = item;
+        const { content, ...rest } = item;
         return (
           <TabPanel {...rest} key={`item-${rest.value}`}>
-            {children}
+            {content}
           </TabPanel>
         );
       })}

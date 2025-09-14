@@ -152,12 +152,12 @@ const AssetMobileItem: React.FC<AssetMobileItemProps> = ({ item }) => {
           variant="outlined"
           size="sm"
           color="gray"
-          onClick={() =>
-            modal.show("ConverSheetId", {
+          onClick={() => {
+            modal.show("ConvertSheetId", {
               accountId: item.account_id,
               token: item.token,
-            })
-          }
+            });
+          }}
           disabled={
             item.token === "USDC" || namespace === ChainNamespace.solana
           }
@@ -173,12 +173,12 @@ const AssetMobileItem: React.FC<AssetMobileItemProps> = ({ item }) => {
           variant="outlined"
           size="sm"
           color="gray"
-          onClick={() =>
+          onClick={() => {
             modal.show("TransferSheetId", {
               accountId: item.account_id,
               token: item.token,
-            })
-          }
+            });
+          }}
           className={cn(
             "oui-flex-1 oui-border-white/[0.36] oui-text-base-contrast-54",
           )}

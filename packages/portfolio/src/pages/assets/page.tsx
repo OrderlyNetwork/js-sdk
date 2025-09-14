@@ -1,5 +1,6 @@
 import React from "react";
-import { AssetsWidget, AssetsWidgetProps } from "./assets.widget";
+import { AssetsWidget } from "./assets.widget";
+import type { AssetsWidgetProps } from "./assets.widget";
 
 export type AssetsPageProps = AssetsWidgetProps;
 

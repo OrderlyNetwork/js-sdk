@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
+import { AssetsModule } from "@orderly.network/portfolio";
 import { OrderStatus } from "@orderly.network/types";
 import {
   Button,
@@ -169,16 +170,16 @@ export const DataList: React.FC<DataListState & { className?: string }> = (
     className,
   } = props;
 
-  const tabPanelItems: React.PropsWithChildren<TabPanelProps>[] = [
+  const tabPanelItems: (TabPanelProps & { content?: React.ReactNode })[] = [
     {
       title: `${t("common.positions")} ${positionCount > 0 ? `(${positionCount})` : ""}`,
       value: DataListTabType.position,
-      children: <PositionsView {...props} />,
+      content: <PositionsView {...props} />,
     },
     {
       title: `${t("orders.status.pending")} ${pendingOrderCount > 0 ? `(${pendingOrderCount})` : ""}`,
       value: DataListTabType.pending,
-      children: (
+      content: (
         <OrdersView
           type={TabType.pending}
           ordersStatus={OrderStatus.INCOMPLETE}
@@ -189,7 +190,7 @@ export const DataList: React.FC<DataListState & { className?: string }> = (
     {
       title: `${t("common.tpsl")} ${tpSlOrderCount > 0 ? `(${tpSlOrderCount})` : ""}`,
       value: DataListTabType.tp_sl,
-      children: (
+      content: (
         <OrdersView
           type={TabType.tp_sl}
           ordersStatus={OrderStatus.INCOMPLETE}
@@ -200,12 +201,12 @@ export const DataList: React.FC<DataListState & { className?: string }> = (
     {
       title: t("trading.history"),
       value: DataListTabType.history,
-      children: <HistoryTab {...props} />,
+      content: <HistoryTab {...props} />,
     },
     {
       title: t("positions.liquidation"),
       value: DataListTabType.liquidation,
-      children: (
+      content: (
         <MobileLiquidationWidget
           enableLoadMore
           symbol={showAllSymbol ? undefined : symbol}
@@ -216,7 +217,7 @@ export const DataList: React.FC<DataListState & { className?: string }> = (
     // {
     //   title: t("common.assets"),
     //   value: DataListTabType.assets,
-    //   children: <div>assets</div>,
+    //   content: <AssetsModule.AssetsPage />,
     // },
   ];
 
@@ -233,10 +234,10 @@ export const DataList: React.FC<DataListState & { className?: string }> = (
       }}
     >
       {tabPanelItems.map((item) => {
-        const { children, ...rest } = item;
+        const { content, ...rest } = item;
         return (
           <TabPanel {...rest} key={`item-${rest.value}`}>
-            {children}
+            {content}
           </TabPanel>
         );
       })}
