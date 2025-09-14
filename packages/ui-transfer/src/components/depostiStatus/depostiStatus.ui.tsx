@@ -1,7 +1,7 @@
 import React, { FC, ReactNode, useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { AssetHistoryStatusEnum } from "@orderly.network/types";
-import { Flex, cn, Text, ChevronRightIcon } from "@orderly.network/ui";
+import { Flex, cn, Text, CloseIcon } from "@orderly.network/ui";
 import { DepositStatusScriptReturn } from "./depostiStatus.script";
 
 export type DepositStatusProps = {
@@ -14,9 +14,10 @@ export type DepositStatusProps = {
 } & DepositStatusScriptReturn;
 
 export const DepositStatus: React.FC<DepositStatusProps> = (props) => {
-  const { canTrade, className, classNames } = props;
+  const { canTrade, className, classNames, pendingCount, completedCount } =
+    props;
 
-  if (!canTrade) {
+  if (!canTrade || (pendingCount === 0 && completedCount === 0)) {
     return null;
   }
 
@@ -28,17 +29,19 @@ export const DepositStatus: React.FC<DepositStatusProps> = (props) => {
       className={cn(className, classNames?.root)}
     >
       <DepositStatusContent
-        count={props.pendingCount}
+        className={classNames?.items}
+        count={pendingCount}
         status={AssetHistoryStatusEnum.PENDING}
         onClick={props.onClick}
-        className={classNames?.items}
         estimatedTime={props.estimatedTime}
+        onClose={props.onClose}
       />
       <DepositStatusContent
-        count={props.completedCount}
+        className={classNames?.items}
+        count={completedCount}
         status={AssetHistoryStatusEnum.COMPLETED}
         onClick={props.onClick}
-        className={classNames?.items}
+        onClose={props.onClose}
       />
     </Flex>
   );
@@ -50,6 +53,7 @@ type DepositStatusContentProps = {
   onClick?: () => void;
   className?: string;
   estimatedTime?: string | number;
+  onClose: (status: AssetHistoryStatusEnum) => void;
 };
 
 export const DepositStatusContent = (props: DepositStatusContentProps) => {
@@ -92,42 +96,49 @@ export const DepositStatusContent = (props: DepositStatusContentProps) => {
 
   return (
     <Flex
-      justify="between"
-      itemAlign="center"
       intensity={900}
-      className={cn(
-        "oui-font-normal",
-        "oui-px-3 lg:oui-px-0",
-        "oui-py-2 lg:oui-py-0",
-        clickable && "oui-cursor-pointer",
-        props.className,
-      )}
+      gapX={1}
       width="100%"
       r="full"
-      onClick={props.onClick}
+      className={cn(
+        "oui-px-3 lg:oui-px-0",
+        "oui-py-2 lg:oui-py-0",
+        props.className,
+      )}
     >
-      <Flex gapX={1} width="100%">
-        <Dot
-          className={
-            status === AssetHistoryStatusEnum.COMPLETED
-              ? "oui-bg-success"
-              : "oui-bg-primary"
-          }
-        />
-        <Text size="2xs" intensity={80}>
-          {content}
-        </Text>
-      </Flex>
-      <Flex gapX={1} itemAlign="center" className="oui-shrink-0">
-        {renderContent()}
-        {clickable && (
-          <ChevronRightIcon
-            size={14}
-            opacity={1}
-            className="oui-text-base-contrast-54"
-          />
+      <Flex
+        justify="between"
+        itemAlign="center"
+        className={cn(
+          "oui-font-normal",
+          "oui-text-base-contrast-80 hover:oui-text-base-contrast",
+          clickable && "oui-cursor-pointer",
         )}
+        width="100%"
+        onClick={props.onClick}
+      >
+        <Flex gapX={1}>
+          <Dot
+            className={
+              status === AssetHistoryStatusEnum.COMPLETED
+                ? "oui-bg-success"
+                : "oui-bg-primary"
+            }
+          />
+          <Text size="2xs">{content}</Text>
+        </Flex>
+        {renderContent()}
       </Flex>
+      <CloseIcon
+        size={14}
+        opacity={1}
+        className="oui-text-base-contrast-54 hover:oui-text-base-contrast"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          props.onClose(status);
+        }}
+      />
     </Flex>
   );
 };
