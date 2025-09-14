@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   useAccount,
   useAssetsHistory,
   useBalanceTopic,
   useDebouncedCallback,
+  useLocalStorage,
   useTransferHistory,
   useWalletTopic,
 } from "@orderly.network/hooks";
@@ -35,6 +36,14 @@ export function useDepositStatusScript() {
   const [depositCompleted, setDepositCompleted] = useState(0);
   const [transferCompleted, setTransferCompleted] = useState(0);
   const [pendingList, setPendingList] = useState<API.TransferHistoryRow[]>([]);
+
+  const [hideNotificationTimeMap, setHideNotificationTimeMap] = useLocalStorage(
+    "orderly_deposit_status_hide_notification_time",
+    {
+      [AssetHistoryStatusEnum.PENDING]: 0,
+      [AssetHistoryStatusEnum.COMPLETED]: 0,
+    },
+  );
 
   const { state } = useAccount();
 
@@ -82,18 +91,19 @@ export function useDepositStatusScript() {
     },
   );
 
-  // pending and completed use one request to reduce api request
-  const [_, { meta: transferMeta }] = useTransferHistory({
+  // pending and completed use one request to reduce api request， because assets history api limit 10 per 60s
+  const [transferHistory] = useTransferHistory({
     dataRange: transferDataRange,
     side: "IN",
-    size: 100,
+    size: 200,
     page: 1,
     main_sub_only: false,
   });
 
   // update time range when wallet and balance changed
   // because DEPOSIT and WITHDRAW will push twice COMPLETED event in a shorttime, so we need to debounce it
-  const updateDepositTimeRange = useDebouncedCallback(() => {
+  // TODO: refresh one when push more than twice again
+  const updateDepositTimeRange = useDebouncedCallback((data: any) => {
     setDepositDataRange(getTimeRange());
   }, 300);
 
@@ -106,67 +116,94 @@ export function useDepositStatusScript() {
           transStatus === AssetHistoryStatusEnum.COMPLETED)
       ) {
         console.log("deposit status updated", data);
-        updateDepositTimeRange();
+        updateDepositTimeRange(data);
       }
     },
   });
 
+  // update transfer time range when balance changed
+  const updateTransferTimeRange = useDebouncedCallback((data: any) => {
+    setTransferDataRange(getTimeRange());
+  }, 300);
+
   useBalanceTopic({
     onMessage(data) {
       console.log("balance updated", data);
-      // update transfer time range when balance changed
-      setTransferDataRange(getTimeRange());
+      updateTransferTimeRange(data);
     },
   });
-
-  // useEffect(() => {
-  //   // update deposit time range when deposit requested
-  //   const handler = (data: any) => {
-  //     updateDepositTimeRange();
-  //   };
-
-  //   ee.on("deposit:requested", handler);
-
-  //   return () => {
-  //     ee.off("deposit:requested");
-  //   };
-  // }, []);
 
   useEffect(() => {
     if (!assetHistory || isLoading) {
       return;
     }
+    const hidePendingNotificationTime =
+      hideNotificationTimeMap[AssetHistoryStatusEnum.PENDING];
 
-    const pendingList = assetHistory?.filter(
+    const hideCompletedNotificationTime =
+      hideNotificationTimeMap[AssetHistoryStatusEnum.COMPLETED];
+
+    let pendingList = assetHistory.filter(
       (item) => item.trans_status === AssetHistoryStatusEnum.PENDING,
     );
 
-    const completedList = assetHistory?.filter(
+    if (hidePendingNotificationTime) {
+      pendingList = pendingList.filter(
+        (item) => item.created_time > hidePendingNotificationTime,
+      );
+    }
+
+    let completedList = assetHistory.filter(
       (item) => item.trans_status === AssetHistoryStatusEnum.COMPLETED,
     );
+
+    if (hideCompletedNotificationTime) {
+      completedList = completedList.filter(
+        (item) => item.created_time > hideCompletedNotificationTime,
+      );
+    }
 
     setDepositPending(pendingList?.length || 0);
     setDepositCompleted(completedList?.length || 0);
     setPendingList(pendingList || []);
-  }, [assetHistory, isLoading]);
+  }, [assetHistory, isLoading, hideNotificationTimeMap]);
 
   useEffect(() => {
-    if (!transferMeta) {
+    if (!transferHistory) {
       return;
     }
+    const hideCompletedNotificationTime =
+      hideNotificationTimeMap[AssetHistoryStatusEnum.COMPLETED];
 
-    setTransferCompleted(transferMeta.total || 0);
-  }, [transferMeta]);
+    const completedList = hideCompletedNotificationTime
+      ? transferHistory.filter(
+          (item) => item.created_time > hideCompletedNotificationTime,
+        )
+      : transferHistory;
+
+    setTransferCompleted(completedList.length);
+  }, [transferHistory, hideNotificationTimeMap]);
 
   const completedCount = useMemo(() => {
     return depositCompleted + transferCompleted;
   }, [depositCompleted, transferCompleted]);
+
+  const onClose = useCallback(
+    (status: AssetHistoryStatusEnum) => {
+      setHideNotificationTimeMap({
+        ...hideNotificationTimeMap,
+        [status]: Date.now(),
+      });
+    },
+    [hideNotificationTimeMap],
+  );
 
   return {
     pendingCount: depositPending,
     completedCount,
     canTrade,
     estimatedTime,
+    onClose,
   };
 }
 

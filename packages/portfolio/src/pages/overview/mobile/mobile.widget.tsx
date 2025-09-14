@@ -79,8 +79,8 @@ export const MobileOverview: React.FC = () => {
             routerAdapter={layoutContext?.routerAdapter}
           />
           <DepositStatusWidget onClick={navigateToPortfolioHistory} />
+          <PortfolioChartsMobileWidget />
         </Flex>
-        <PortfolioChartsMobileWidget />
         <PortfolioHandleMobile
           disabled={!canTrade}
           onWithdraw={onWithdraw}
