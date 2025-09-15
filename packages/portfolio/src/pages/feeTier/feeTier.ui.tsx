@@ -135,26 +135,43 @@ export const FeeTierTable: React.FC<FeeTierTableProps> = (props) => {
   );
 };
 
+const CardTitle: React.FC = () => {
+  const { t } = useTranslation();
+  const { isMobile } = useScreen();
+  if (isMobile) {
+    return (
+      <Flex itemAlign={"center"} justify={"center"} gap={2}>
+        <Text size="xs" intensity={54}>
+          {t("portfolio.feeTier.updatedDailyBy")}
+        </Text>
+        <Text size="xs" intensity={80}>
+          ~2:15 UTC
+        </Text>
+      </Flex>
+    );
+  }
+  return (
+    <Flex itemAlign={"center"} justify={"between"}>
+      <Text size={"lg"}>{t("portfolio.feeTier")}</Text>
+      <Flex itemAlign={"center"} justify={"center"} gap={1}>
+        <Text size="xs" intensity={54}>
+          {t("portfolio.feeTier.updatedDailyBy")}
+        </Text>
+        <Text size="xs" intensity={80}>
+          ~2:15 UTC
+        </Text>
+      </Flex>
+    </Flex>
+  );
+};
+
 export const FeeTier: React.FC<FeeTierProps> = (props) => {
   const { columns, dataSource, tier, vol, headerDataAdapter, onRow, onCell } =
     props;
-  const { t } = useTranslation();
   const { isMobile } = useScreen();
   return (
     <Card
-      title={
-        <Flex itemAlign={"center"} justify={"between"}>
-          <Text size={isMobile ? "xs" : "lg"}>{t("portfolio.feeTier")}</Text>
-          <Flex itemAlign={"center"} justify={"center"} gap={1}>
-            <Text size="xs" intensity={54}>
-              {t("portfolio.feeTier.updatedDailyBy")}
-            </Text>
-            <Text size="xs" intensity={80}>
-              2:00 UTC
-            </Text>
-          </Flex>
-        </Flex>
-      }
+      title={<CardTitle />}
       id="oui-portfolio-fee-tier"
       className="w-full"
       classNames={{
