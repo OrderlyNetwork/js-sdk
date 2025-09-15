@@ -253,6 +253,7 @@ export const AnnouncementUI: React.FC<Readonly<AnnouncementProps>> = (
     tips,
     closeTips,
     className,
+    style,
   } = props;
 
   const { t, i18n } = useTranslation();
@@ -306,8 +307,9 @@ export const AnnouncementUI: React.FC<Readonly<AnnouncementProps>> = (
 
   return (
     <div
+      style={style}
       className={cn(
-        "oui-relative oui-z-[1] oui-mt-2 oui-flex oui-transform-gpu oui-flex-row oui-flex-nowrap oui-items-center oui-justify-between oui-gap-x-1.5 oui-overflow-hidden oui-rounded-xl oui-bg-base-9 oui-px-4 oui-font-semibold",
+        "oui-relative oui-z-[1] oui-flex oui-transform-gpu oui-flex-row oui-flex-nowrap oui-items-center oui-justify-between oui-gap-x-1.5 oui-overflow-hidden oui-rounded-xl oui-bg-base-9 oui-px-4 oui-font-semibold",
         className,
       )}
     >

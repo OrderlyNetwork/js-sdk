@@ -108,7 +108,10 @@ export const DesktopScaffold: React.FC<DesktopScaffoldProps> = (props) => {
             />
           </React.Suspense>
           <React.Suspense fallback={null}>
-            <LazyAnnouncementWidget hideTips={restrictedInfo?.restrictedOpen} />
+            <LazyAnnouncementWidget
+              className={"oui-mx-auto oui-mt-2"}
+              hideTips={restrictedInfo?.restrictedOpen}
+            />
           </React.Suspense>
         </Box>
         {/*--------- body start ------ */}
