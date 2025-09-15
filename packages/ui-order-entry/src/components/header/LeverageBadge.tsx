@@ -37,7 +37,7 @@ export const LeverageBadge = (props: LeverageBadgeProps) => {
       className={cn(
         "oui-h-8",
         "oui-rounded oui-border oui-border-line oui-bg-base-6",
-        "oui-text-xs oui-font-semibold oui-text-base-contrast-54",
+        "oui-cursor-pointer oui-select-none oui-text-xs oui-font-semibold oui-text-base-contrast-54",
       )}
       onClick={showModal}
     >
