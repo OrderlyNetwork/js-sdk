@@ -24,7 +24,7 @@ import type { useAssetsScriptReturn } from "./assets.script";
 import type { AssetsWidgetProps } from "./assets.widget";
 
 const LazyConvertHistoryWidget = React.lazy(() =>
-  import("./convert.widget").then((mod) => {
+  import("../convertPage/convert.widget").then((mod) => {
     return { default: mod.ConvertHistoryWidget };
   }),
 );

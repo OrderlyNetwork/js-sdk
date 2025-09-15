@@ -30,5 +30,9 @@ export interface ConvertRecord {
 
 // Additional utility types
 export type ConvertType = "auto" | "manual";
+
 export type ConvertStatus = "completed" | "pending" | "failed" | "cancelled";
+
 export type VenueType = "on_chain" | "internal_fund";
+
+export const ORDERLY_ASSETS_VISIBLE_KEY = "orderly_assets_visible";

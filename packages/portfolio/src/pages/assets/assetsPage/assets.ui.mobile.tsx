@@ -15,7 +15,7 @@ import {
 } from "@orderly.network/ui";
 import { SelectOption } from "@orderly.network/ui/src/select/withOptions";
 import type { useAssetsScriptReturn } from "./assets.script";
-import { AccountType } from "./assets.ui";
+import { AccountType } from "./assets.ui.desktop";
 
 const AccountTag: React.FC<{ name: string }> = ({ name }) => {
   return (

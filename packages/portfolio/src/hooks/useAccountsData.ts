@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMemo } from "react";
 import { produce } from "immer";
-import { SubAccount, useAccount, useCollateral } from "@orderly.network/hooks";
+import { useAccount, useCollateral } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import type { API } from "@orderly.network/types";
 

@@ -1,5 +1,5 @@
 export { AssetsPage } from "./page";
-export { AssetsWidget } from "./assets.widget";
-export type { AssetsWidgetProps } from "./assets.widget";
-export { AssetsTable, AssetsDataTable } from "./assets.ui";
-export { AssetsTableMobile } from "./assets.ui.mobile";
+export { AssetsWidget } from "./assetsPage/assets.widget";
+export type { AssetsWidgetProps } from "./assetsPage/assets.widget";
+export { AssetsTable, AssetsDataTable } from "./assetsPage/assets.ui.desktop";
+export { AssetsTableMobile } from "./assetsPage/assets.ui.mobile";

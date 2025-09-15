@@ -22,7 +22,7 @@ import {
   PositionsWidget,
 } from "@orderly.network/ui-positions";
 import type { SelectOption } from "@orderly.network/ui/src/select/withOptions";
-import { AccountType } from "../assets/assets.ui";
+import { AccountType } from "../assets/assetsPage/assets.ui.desktop";
 
 enum TabsType {
   positions = "Positions",

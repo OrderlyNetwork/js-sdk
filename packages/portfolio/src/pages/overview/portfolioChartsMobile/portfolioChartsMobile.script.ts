@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { useLocalStorage, usePositionStream } from "@orderly.network/hooks";
 import { modal } from "@orderly.network/ui";
-import { ORDERLY_ASSETS_VISIBLE_KEY } from "../../assets/assets.script";
+import { ORDERLY_ASSETS_VISIBLE_KEY } from "../../assets/type";
 import { PerformanceMobileSheetId } from "../performanceMobileDialog";
 
 export const usePortfolioChartsState = () => {

@@ -11,10 +11,9 @@ import {
 import { EMPTY_LIST } from "@orderly.network/types";
 import { usePagination } from "@orderly.network/ui";
 import { subtractDaysFromCurrentDate } from "@orderly.network/utils";
-import { useAccountsData } from "../../hooks/useAccountsData";
-import { useAssetsAccountFilter } from "../../hooks/useAssetsAccountFilter";
-import { parseDateRangeForFilter } from "../overview/helper/date";
-import { ConvertRecord } from "./type";
+import { useAccountsData, useAssetsAccountFilter } from "../../../hooks";
+import { parseDateRangeForFilter } from "../../overview/helper/date";
+import type { ConvertRecord } from "../type";
 
 export const useConvertScript = () => {
   const { isMainAccount, state } = useAccount();
@@ -58,7 +57,7 @@ export const useConvertScript = () => {
   const convertedAssetOptions = useMemo(() => {
     // Create options array
     const assetOptions =
-      tokensInfo?.map((item: any) => ({
+      tokensInfo?.map((item) => ({
         value: item.token,
         label: item.token,
       })) || [];
@@ -152,7 +151,7 @@ export const useConvertScript = () => {
       page,
       pageSize,
       onPageChange: setPage,
-      onPageSizeChange: (size: number) => {
+      onPageSizeChange: () => {
         // Handle page size change if needed
       },
     };

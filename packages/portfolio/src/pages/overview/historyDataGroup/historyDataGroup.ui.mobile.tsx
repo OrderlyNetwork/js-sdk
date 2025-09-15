@@ -2,7 +2,7 @@ import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { AssetHistorySideEnum } from "@orderly.network/types";
 import { TabPanel, Tabs } from "@orderly.network/ui";
-import { ConvertHistoryWidget } from "../../assets/convert.widget";
+import { ConvertHistoryWidget } from "../../assets/convertPage/convert.widget";
 import { VaultsHistoryWidget } from "../VaultsHistory/transfer.widget";
 import { AssetHistoryWidget } from "../assetHistory";
 import { DistributionHistoryWidget } from "../distribution";
