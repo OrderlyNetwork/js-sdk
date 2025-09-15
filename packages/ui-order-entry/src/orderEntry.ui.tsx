@@ -2,6 +2,7 @@ import React, { useEffect, useId, useMemo, useState } from "react";
 import {
   OrderValidationResult,
   useLocalStorage,
+  useMemoizedFn,
   useOrderlyContext,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
@@ -23,6 +24,7 @@ import {
   ThrottledButton,
   toast,
   useScreen,
+  Text,
 } from "@orderly.network/ui";
 import { TPSLAdvancedWidget } from "@orderly.network/ui-tpsl";
 import { AdditionalConfigButton } from "./components/additional/additionalConfigButton";
@@ -158,7 +160,8 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
     };
   }, [errorMsgVisible]);
 
-  const onSubmit = () => {
+  const onSubmit = useMemoizedFn(async () => {
+    console.log("onSubmit", formattedOrder);
     const isScaledOrder = formattedOrder.order_type === OrderType.SCALED;
 
     helper
@@ -221,6 +224,31 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           // toast.error(error.message);
         }
       });
+  });
+
+  const validateSubmit = async () => {
+    // show a prompt reminding the user. If the user confirms, automatically disable Reduce Only and proceed with the action.
+    if (formattedOrder.reduce_only && maxQty === 0) {
+      return modal.confirm({
+        title: t("orderEntry.reduceOnly.reminder"),
+        content: t("orderEntry.reduceOnly.reminder.content"),
+        okLabel: t("orderEntry.placeOrderNow"),
+        onOk: async () => {
+          setOrderValue("reduce_only", false);
+          // submit order when reduce only updated
+          requestAnimationFrame(() => {
+            props.resetMetaState();
+            onSubmit();
+          });
+          return Promise.resolve(true);
+        },
+        onCancel: async () => {
+          return Promise.resolve(false);
+        },
+      });
+    } else {
+      onSubmit();
+    }
   };
 
   const onShowTPSLAdvanced = () => {
@@ -378,9 +406,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
               ? "orderly-order-entry-submit-button-buy oui-bg-success-darken hover:oui-bg-success-darken/80 active:oui-bg-success-darken/80"
               : "orderly-order-entry-submit-button-sell oui-bg-danger-darken hover:oui-bg-danger-darken/80 active:oui-bg-danger-darken/80",
           )}
-          onClick={() => {
-            onSubmit();
-          }}
+          onClick={validateSubmit}
           loading={props.isMutating}
           disabled={!props.canTrade}
         >
@@ -427,7 +453,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
             orderType={formattedOrder.order_type!}
             errors={validated ? errors : null}
             isReduceOnly={formattedOrder.reduce_only}
-            setOrderValue={props.setOrderValue}
+            setOrderValue={setOrderValue}
             values={{
               position_type:
                 formattedOrder.position_type ?? PositionType.PARTIAL,
@@ -448,7 +474,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
             }}
             showTPSLAdvanced={onShowTPSLAdvanced}
             onChange={(key, value) => {
-              props.setOrderValue(key, value);
+              setOrderValue(key, value);
             }}
           />
         )}
@@ -466,7 +492,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
               id={"reduceOnly"}
               checked={formattedOrder.reduce_only}
               onCheckedChange={(checked) => {
-                props.setOrderValue("reduce_only", checked);
+                setOrderValue("reduce_only", checked);
               }}
             />
             <label htmlFor={"reduceOnly"} className={"oui-text-xs"}>
