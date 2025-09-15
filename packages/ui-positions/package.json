@@ -28,6 +28,7 @@
     "@orderly.network/types": "workspace:*",
     "@orderly.network/ui": "workspace:*",
     "@orderly.network/ui-connector": "workspace:*",
+    "@orderly.network/ui-leverage": "workspace:*",
     "@orderly.network/ui-share": "workspace:*",
     "@orderly.network/ui-tpsl": "workspace:*",
     "@orderly.network/utils": "workspace:*",

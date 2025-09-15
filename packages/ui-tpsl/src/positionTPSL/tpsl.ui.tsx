@@ -77,18 +77,22 @@ export const TPSL: React.FC<TPSLBuilderState & TPSLProps> = (props) => {
   };
 
   return (
-    <div id="orderly-tp_sl-order-edit-content" className="">
+    <div id="orderly-tp_sl-order-edit-content">
       <ScrollArea className={cn(isMobile && "oui-h-[calc(100vh-200px)]")}>
         <div className="oui-px-2">
           <OrderInfo
             baseDP={symbolInfo("base_dp")}
             quoteDP={symbolInfo("quote_dp")}
-            classNames={{ root: "oui-mb-3", container: "oui-gap-x-[30px]" }}
+            classNames={{
+              root: "oui-mb-3",
+              container: "oui-gap-x-[30px]",
+            }}
             order={{
               symbol: position.symbol,
               order_quantity: position.position_qty.toString(),
               order_price: position.average_open_price.toString(),
             }}
+            symbolLeverage={position.leverage}
           />
           <Flex
             direction="column"
@@ -102,34 +106,12 @@ export const TPSL: React.FC<TPSLBuilderState & TPSLProps> = (props) => {
                 disableSelector
                 value={TPSL_OrderEntity.position_type ?? PositionType.PARTIAL}
                 onChange={(key, value) => {
-                  if (value === PositionType.FULL) {
-                    setValues({
-                      position_type: value,
-                      quantity: Math.abs(position.position_qty).toString(),
-                      tp_order_price: "",
-                      tp_order_type: OrderType.MARKET,
-                      tp_trigger_price: "",
-                      sl_order_price: "",
-                      sl_order_type: OrderType.MARKET,
-                      sl_trigger_price: "",
-                    });
-                  } else {
-                    setValues({
-                      position_type: value,
-                      quantity: "",
-                      tp_order_price: "",
-                      tp_order_type: OrderType.MARKET,
-                      tp_trigger_price: "",
-                      sl_order_price: "",
-                      sl_order_type: OrderType.MARKET,
-                      sl_trigger_price: "",
-                    });
-                  }
+                  props.setOrderValue(key as keyof OrderlyOrder, value);
                 }}
               />
             )}
             {TPSL_OrderEntity.position_type === PositionType.FULL && (
-              <Text className="oui-text-warning oui-text-2xs">
+              <Text className="oui-text-2xs oui-text-warning">
                 {t("tpsl.positionType.full.tips.market")}
               </Text>
             )}
@@ -171,7 +153,9 @@ export const TPSL: React.FC<TPSLBuilderState & TPSLProps> = (props) => {
               onChange={(key, value) => {
                 props.setOrderValue(key as keyof OrderlyOrder, value);
               }}
+              symbolLeverage={position.leverage}
             />
+
             <TPSLInputRowWidget
               symbol={position.symbol}
               rootOrderPrice={position.average_open_price.toString()}
@@ -201,6 +185,7 @@ export const TPSL: React.FC<TPSLBuilderState & TPSLProps> = (props) => {
               onChange={(key, value) => {
                 props.setOrderValue(key as keyof OrderlyOrder, value);
               }}
+              symbolLeverage={position.leverage}
             />
           </Flex>
           <PnlInfo

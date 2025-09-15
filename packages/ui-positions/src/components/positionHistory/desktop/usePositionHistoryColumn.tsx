@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { useMemo } from "react";
+import { useLeverageBySymbol, useMaxLeverage } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
 import {
@@ -268,6 +269,10 @@ export const SymbolInfo = (props: {
       );
     }
 
+    list.push(
+      <LeverageBadge symbol={record.symbol} leverage={record.leverage} />,
+    );
+
     return list;
   }, [record, t]);
 
@@ -400,5 +405,31 @@ export const NetPnL = (props: {
     >
       <div>{text()}</div>
     </Tooltip>
+  );
+};
+
+const LeverageBadge = (props: { symbol: string; leverage: number }) => {
+  const { symbol, leverage } = props;
+
+  return (
+    <Badge color="neutral" size="xs">
+      {leverage ? (
+        <Text.numeral dp={0} size="2xs" unit="X">
+          {leverage}
+        </Text.numeral>
+      ) : (
+        <LeverageDisplay symbol={symbol} />
+      )}
+    </Badge>
+  );
+};
+
+const LeverageDisplay = ({ symbol }: { symbol: string }) => {
+  const leverage = useMaxLeverage(symbol);
+
+  return (
+    <Text.numeral dp={0} size="2xs" unit="X">
+      {leverage}
+    </Text.numeral>
   );
 };

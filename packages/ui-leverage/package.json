@@ -23,7 +23,9 @@
     "@orderly.network/i18n": "workspace:*",
     "@orderly.network/hooks": "workspace:*",
     "@orderly.network/types": "workspace:*",
-    "@orderly.network/ui": "workspace:*"
+    "@orderly.network/ui": "workspace:*",
+    "@orderly.network/perp": "workspace:*",
+    "@orderly.network/utils": "workspace:*"
   },
   "devDependencies": {
     "@swc/cli": "^0.3.12",

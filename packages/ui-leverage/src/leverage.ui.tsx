@@ -34,7 +34,14 @@ const IconButton: React.FC<{
   );
 };
 
-const LeverageInput: React.FC<LeverageProps> = (props) => {
+type LeverageInputProps = LeverageProps & {
+  classNames?: {
+    input?: string;
+    unit?: string;
+  };
+};
+
+export const LeverageInput: React.FC<LeverageInputProps> = (props) => {
   const formatters = React.useMemo<InputFormatter[]>(
     () => [inputFormatter.numberFormatter, inputFormatter.dpFormatter(0)],
     [],
@@ -63,16 +70,15 @@ const LeverageInput: React.FC<LeverageProps> = (props) => {
         onClick={props.onLeverageReduce}
         disabled={props.isReduceDisabled}
       />
-      <Flex itemAlign="center" justify="center">
+      <Flex itemAlign="center" justify="center" className="oui-mr-4">
         <Input
           value={props.value}
           id={id}
           autoComplete="off"
           classNames={{
-            input: cn("oui-text-center"),
+            input: cn("oui-text-right oui-text-[24px]"),
             root: cn(
-              "oui-text-center",
-              "oui-w-7",
+              "oui-w-12",
               "oui-px-0",
               "oui-outline",
               "oui-outline-offset-0",
@@ -84,7 +90,14 @@ const LeverageInput: React.FC<LeverageProps> = (props) => {
           formatters={formatters}
           onChange={props.onInputChange}
         />
-        <div className="oui-select-none">x</div>
+        <div
+          className={cn(
+            "oui-ml-1 oui-mt-1 oui-select-none",
+            "oui-text-base oui-text-base-contrast-36",
+          )}
+        >
+          x
+        </div>
       </Flex>
       <IconButton
         Icon={PlusIcon}
@@ -106,26 +119,37 @@ export const Leverage: FC<LeverageProps> = (props) => {
       <LeverageInput {...props} />
       <LeverageSelector {...props} />
       <LeverageSlider {...props} />
-      <Flex direction={"row"} gap={2} width={"100%"} mt={0} pt={5}>
-        <Button
-          variant="contained"
-          color="gray"
-          fullWidth
-          onClick={props.onCancel}
-          data-testid="oui-testid-leverage-cancel-btn"
-        >
-          {t("common.cancel")}
-        </Button>
-        <Button
-          fullWidth
-          loading={props.isLoading}
-          onClick={props.onSave}
-          data-testid="oui-testid-leverage-save-btn"
-          disabled={props.disabled}
-        >
-          {t("common.save")}
-        </Button>
-      </Flex>
+      <LeverageFooter {...props} />
+    </Flex>
+  );
+};
+
+export const LeverageFooter: FC<LeverageProps & { isMobile?: boolean }> = (
+  props,
+) => {
+  const { t } = useTranslation();
+  return (
+    <Flex direction={"row"} gap={2} width={"100%"} mt={0} pt={5}>
+      <Button
+        variant="contained"
+        color="gray"
+        fullWidth
+        onClick={props.onCancel}
+        data-testid="oui-testid-leverage-cancel-btn"
+        size={props.isMobile ? "md" : "lg"}
+      >
+        {t("common.cancel")}
+      </Button>
+      <Button
+        fullWidth
+        loading={props.isLoading}
+        onClick={props.onSave}
+        data-testid="oui-testid-leverage-save-btn"
+        disabled={props.disabled}
+        size={props.isMobile ? "md" : "lg"}
+      >
+        {t("common.save")}
+      </Button>
     </Flex>
   );
 };
@@ -156,7 +180,13 @@ interface LeverageSelectorProps {
 export const LeverageSelector: React.FC<LeverageSelectorProps> = (props) => {
   const { value, onLeverageChange } = props;
   return (
-    <Flex itemAlign="center" justify="between" width={"100%"} mt={2}>
+    <Flex
+      itemAlign="center"
+      justify="between"
+      width={"100%"}
+      mt={4}
+      className="oui-text-base-contrast-80"
+    >
       {props.toggles.map((option) => (
         <Flex
           key={option}

@@ -1,9 +1,13 @@
-import React from "react";
-import { ComputedAlgoOrder, useLocalStorage } from "@orderly.network/hooks";
-import { useSymbolLeverage } from "@orderly.network/hooks";
+import { useLocalStorage, useLeverageBySymbol } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { PositionType } from "@orderly.network/types";
-import { cn, EditIcon, Text, toast, useScreen } from "@orderly.network/ui";
+import {
+  ChevronRightIcon,
+  cn,
+  EditIcon,
+  Text,
+  useScreen,
+} from "@orderly.network/ui";
 import { modal } from "@orderly.network/ui";
 import {
   PositionTPSLPopover,
@@ -12,6 +16,7 @@ import {
   TPSLSheetId,
   TPSLDetailSheetId,
 } from "@orderly.network/ui-tpsl";
+import { Decimal } from "@orderly.network/utils";
 import { usePositionsRowContext } from "../positionsRowContext";
 
 // ------------ TP/SL Price input end------------
@@ -81,7 +86,7 @@ export const AddIcon = (props: { positionType: PositionType }) => {
   return (
     <Text
       className={cn(
-        "oui-text-base-contrast oui-cursor-pointer",
+        "oui-cursor-pointer oui-text-base-contrast",
         isMobile && "oui-text-base-contrast-80",
       )}
       onClick={onAdd}
@@ -91,22 +96,55 @@ export const AddIcon = (props: { positionType: PositionType }) => {
   );
 };
 
-export const LeverageBadge = ({ symbol }: { symbol: string }) => {
-  if (!symbol) return null;
+type LeverageBadgeProps = {
+  symbol: string;
+  leverage: number;
+  modalId: string;
+};
+
+export const LeverageBadge = (props: LeverageBadgeProps) => {
+  const { symbol, leverage } = props;
+
+  const showModal = () => {
+    modal.show(props.modalId, {
+      symbol,
+      curLeverage: leverage,
+    });
+  };
+
   return (
-    <div className="oui-flex oui-h-[18px] oui-items-center oui-gap-1 oui-rounded oui-bg-white/[0.06] oui-px-2 oui-text-2xs oui-font-semibold oui-text-base-contrast-36">
+    <div
+      className={cn(
+        "oui-flex oui-h-[18px] oui-items-center oui-gap-1",
+        "oui-cursor-pointer oui-rounded oui-bg-line-6 oui-pl-2 oui-pr-1",
+        "oui-text-2xs oui-font-semibold oui-text-base-contrast-36",
+      )}
+      onClick={showModal}
+    >
       <Text>Cross</Text>
-      <LeverageDisplay symbol={symbol} />
+      {leverage ? (
+        <Text.numeral dp={0} rm={Decimal.ROUND_DOWN} size="2xs" unit="X">
+          {leverage}
+        </Text.numeral>
+      ) : (
+        <LeverageDisplay symbol={symbol} />
+      )}
+      <ChevronRightIcon
+        size={14}
+        opacity={1}
+        className="oui-text-base-contrast-36"
+      />
     </div>
   );
 };
 
+/** TODO: remove this */
 export const LeverageDisplay = ({ symbol }: { symbol: string }) => {
-  const leverage = useSymbolLeverage(symbol);
+  const leverage = useLeverageBySymbol(symbol);
 
   return (
-    <Text.numeral dp={0} size="2xs" unit="X">
-      {leverage !== "-" ? leverage : "--"}
+    <Text.numeral dp={0} rm={Decimal.ROUND_DOWN} size="2xs" unit="X">
+      {leverage || 1}
     </Text.numeral>
   );
 };

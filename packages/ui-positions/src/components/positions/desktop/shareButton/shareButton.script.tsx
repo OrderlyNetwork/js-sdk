@@ -1,8 +1,16 @@
 import { useMemo } from "react";
-import { useReferralInfo, useSymbolLeverage } from "@orderly.network/hooks";
+import {
+  useAccountInfo,
+  useReferralInfo,
+  useLeverageBySymbol,
+  useSymbolsInfo,
+} from "@orderly.network/hooks";
+import { account, positions } from "@orderly.network/perp";
+import { modal } from "@orderly.network/ui";
 import { SharePnLConfig } from "@orderly.network/ui-share";
+import { Decimal } from "@orderly.network/utils";
 
-export type UseShareButtonScriptOptions = {
+export type ShareButtonScriptOptions = {
   position: any;
   sharePnLConfig?: SharePnLConfig;
   modalId: string;
@@ -10,23 +18,113 @@ export type UseShareButtonScriptOptions = {
   isPositionHistory?: boolean;
 };
 
-export const useShareButtonScript = (props: UseShareButtonScriptOptions) => {
-  const { sharePnLConfig, position, modalId, iconSize, isPositionHistory } =
-    props;
+export type ShareButtonScriptReturn = ReturnType<typeof useShareButtonScript>;
+
+export const useShareButtonScript = (props: ShareButtonScriptOptions) => {
+  const { position, sharePnLConfig, iconSize } = props;
   const { getFirstRefCode } = useReferralInfo();
+  const symbolsInfo = useSymbolsInfo();
+  const { data: accountInfo } = useAccountInfo();
+
   const refCode = useMemo(() => {
     return getFirstRefCode()?.code;
   }, [getFirstRefCode]);
-  const leverage = useSymbolLeverage(props.position.symbol);
+
+  const symbolLeverage = useLeverageBySymbol(position.symbol);
+
+  const getHistoryEntity = () => {
+    const netPnL = position.netPnL || 0;
+    const openPrice = Math.abs(position.avg_open_price);
+    const quantity = Math.abs(position.closed_position_qty);
+
+    let roi;
+
+    const symbolInfo = symbolsInfo[position.symbol];
+    const baseIMR = symbolInfo("base_imr");
+    const IMR_Factor = symbolInfo("imr_factor");
+
+    // calculate unrealized pnl ROI for position history
+    if (
+      netPnL !== 0 &&
+      quantity !== 0 &&
+      openPrice !== 0 &&
+      accountInfo?.max_leverage &&
+      baseIMR &&
+      IMR_Factor
+    ) {
+      const notional = positions.notional(quantity, openPrice);
+
+      const maxLeverage = position.leverage
+        ? account.maxLeverage({
+            symbolLeverage: position.leverage,
+            accountLeverage: accountInfo.max_leverage,
+          })
+        : accountInfo.max_leverage;
+
+      const imr = account.IMR({
+        maxLeverage,
+        baseIMR: baseIMR,
+        IMR_Factor: IMR_Factor,
+        positionNotional: notional,
+        ordersNotional: 0,
+        IMR_factor_power: 4 / 5,
+      });
+
+      const unrealizedPnLROI = positions.unrealizedPnLROI({
+        positionQty: quantity,
+        openPrice: openPrice,
+        IMR: imr,
+        unrealizedPnL: netPnL,
+      });
+
+      roi = new Decimal(unrealizedPnLROI * 100).toFixed(2, Decimal.ROUND_DOWN);
+    }
+
+    return {
+      side: position.side,
+      pnl: netPnL,
+      roi: roi,
+      openPrice: openPrice,
+      closePrice: Math.abs(position.avg_close_price),
+      openTime: position.open_timestamp,
+      closeTime: position.close_timestamp,
+      quantity: position.closed_position_qty,
+    };
+  };
+
+  const showModal = () => {
+    const entity = props.isPositionHistory
+      ? getHistoryEntity()
+      : {
+          side: position.position_qty > 0 ? "LONG" : "SHORT",
+          pnl: position.unrealized_pnl,
+          roi: new Decimal(position.unrealized_pnl_ROI * 100).toFixed(
+            2,
+            Decimal.ROUND_DOWN,
+          ),
+          openPrice: Math.abs(position.average_open_price),
+          markPrice: position.mark_price,
+          openTime: position.timestamp,
+          quantity: position.position_qty,
+        };
+
+    modal.show(props.modalId, {
+      pnl: {
+        entity: {
+          symbol: position.symbol,
+          // when position.leverage is empty, use leverage from useSymbolLeverage
+          leverage: position.leverage || symbolLeverage,
+          ...entity,
+        },
+        refCode,
+        ...sharePnLConfig,
+      },
+    });
+  };
+
   return {
     iconSize,
-    position,
-    refCode,
-    leverage,
     sharePnLConfig,
-    modalId,
-    isPositionHistory,
+    showModal,
   };
 };
-
-export type ShareButtonState = ReturnType<typeof useShareButtonScript>;

@@ -1,5 +1,5 @@
 import React, { Fragment, useMemo } from "react";
-import { useSymbolLeverage } from "@orderly.network/hooks";
+import { useLeverageBySymbol } from "@orderly.network/hooks";
 import { useTranslation, Trans } from "@orderly.network/i18n";
 import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
 import { OrderType, PositionType } from "@orderly.network/types";
@@ -16,10 +16,16 @@ export const TPSLInputRowUI: React.FC<TPSLInputRowProps> = (props) => {
   const { t } = useTranslation();
   const { getErrorMsg } = useOrderEntryFormErrorMsg(props.errors);
   const { values, positionType } = props;
-  const symbolLeverage = useSymbolLeverage(props.symbol);
+
+  // if symbolLeverage is not provided, get it from useLeverageBySymbol
+  const symbolLeverage = useLeverageBySymbol(
+    props.symbolLeverage ? undefined : props.symbol,
+  );
+
+  const leverage = props.symbolLeverage || symbolLeverage;
 
   const roi = useMemo(() => {
-    if (isNaN(Number(symbolLeverage))) {
+    if (!leverage || isNaN(Number(leverage))) {
       return null;
     }
     let _roi = null;
@@ -47,13 +53,13 @@ export const TPSLInputRowUI: React.FC<TPSLInputRowProps> = (props) => {
     _roi = _entryPrice
       .minus(rootOrderPrice)
       .div(rootOrderPrice)
-      .mul(symbolLeverage)
+      .mul(leverage)
       .abs()
       .mul(100)
       .mul(props.type === "tp" ? 1 : -1)
       .toNumber();
     return _roi;
-  }, [values, props.rootOrderPrice, symbolLeverage, props.type]);
+  }, [values, props.rootOrderPrice, leverage, props.type]);
 
   return (
     <Flex

@@ -1,11 +1,8 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { modal, ShareIcon } from "@orderly.network/ui";
-import { ShareButtonState } from "./shareButton.script";
+import { ShareIcon } from "@orderly.network/ui";
+import { ShareButtonScriptReturn } from "./shareButton.script";
 
-export const ShareButton: FC<ShareButtonState> = (props) => {
-  const { t } = useTranslation();
-
+export const ShareButton: FC<ShareButtonScriptReturn> = (props) => {
   if (props.sharePnLConfig == null) {
     return null;
   }
@@ -15,24 +12,7 @@ export const ShareButton: FC<ShareButtonState> = (props) => {
       type="button"
       onClick={(e: any) => {
         e.stopPropagation();
-        modal.show(props.modalId, {
-          pnl: {
-            entity: {
-              symbol: props.order.symbol,
-              pnl: props.order.realized_pnl,
-              side:
-                props.order.side == "BUY"
-                  ? t("share.pnl.share.long")
-                  : t("share.pnl.share.short"),
-              openPrice: props.order.average_executed_price,
-              openTime: props.order.updated_time,
-              quantity: props.order.quantity,
-            },
-            refCode: props.refCode,
-            leverage: props.leverage,
-            ...props.sharePnLConfig,
-          },
-        });
+        props.showModal();
       }}
     >
       <ShareIcon color="white" opacity={0.54} size={props.iconSize ?? 16} />

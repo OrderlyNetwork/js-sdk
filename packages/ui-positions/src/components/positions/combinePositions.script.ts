@@ -72,6 +72,7 @@ export const useCombinePositionsScript = (props: PositionsProps) => {
         const account = accountInfo.find(
           (acc) => acc.account_id === item.account_id,
         );
+
         const MMR = positions.MMR({
           baseMMR: info?.("base_mmr"),
           baseIMR: info?.("base_imr"),
@@ -79,31 +80,42 @@ export const useCombinePositionsScript = (props: PositionsProps) => {
           positionNotional: notional,
           IMR_factor_power: 4 / 5,
         });
+
         const mm = positions.maintenanceMargin({
           positionQty: item.position_qty,
           markPrice: item.mark_price,
           MMR: MMR,
         });
+
         const unrealPnl = positions.unrealizedPnL({
           qty: item.position_qty,
           openPrice: item?.average_open_price,
           // markPrice: unRealizedPrice,
           markPrice: item.mark_price,
         });
+
+        const maxLeverage = _account.maxLeverage({
+          symbolLeverage: item.leverage,
+          // leverage must be between 1x to max.
+          accountLeverage: account?.max_leverage ?? 1,
+        });
+
         const imr = _account.IMR({
-          maxLeverage: account?.max_leverage ?? 1,
+          maxLeverage,
           baseIMR: info?.("base_imr"),
           IMR_Factor: account?.imr_factor[item.symbol] ?? 0,
           positionNotional: notional,
           ordersNotional: 0,
           IMR_factor_power: 4 / 5,
         });
+
         const unrealPnlROI = positions.unrealizedPnLROI({
           positionQty: item.position_qty,
           openPrice: item.average_open_price,
           IMR: imr,
           unrealizedPnL: unrealPnl,
         });
+
         let unrealPnl_index = 0;
         let unrealPnlROI_index = 0;
         if (item.index_price) {

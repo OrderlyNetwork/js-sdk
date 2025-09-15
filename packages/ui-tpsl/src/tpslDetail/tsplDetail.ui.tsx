@@ -41,6 +41,7 @@ export const TPSLDetailUI = (props: TPSLDetailState) => {
             order_quantity: position.position_qty.toString(),
             order_price: position.average_open_price.toString(),
           }}
+          symbolLeverage={position.leverage}
           baseDP={symbolInfo("base_dp")}
           quoteDP={symbolInfo("quote_dp")}
           classNames={{
