@@ -22,8 +22,8 @@ import {
   Text,
   textVariants,
 } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
-import { getBBOType, isBBOOrder } from "../../utils";
+import { Decimal, getBBOType } from "@orderly.network/utils";
+import { isBBOOrder } from "../../utils";
 
 type OrderConfirmDialogProps = {
   order: OrderlyOrder;
