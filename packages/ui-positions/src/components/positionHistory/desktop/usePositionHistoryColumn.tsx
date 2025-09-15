@@ -38,7 +38,7 @@ export const usePositionHistoryColumn = (props: {
           fixed: "left",
           width: 200,
           onSort: (r1: any, r2: any) => {
-            return r1.symbol.localeCompare(r2.symbol);
+            return r1.symbol?.localeCompare(r2.symbol || "");
           },
           render: (value: string, record) => (
             <SymbolInfo record={record} onSymbolChange={onSymbolChange} />

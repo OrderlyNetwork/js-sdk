@@ -9,6 +9,7 @@ export type PositionHistoryProps = {
   symbol?: string;
   pnlNotionalDecimalPrecision?: number;
   sharePnLConfig?: SharePnLConfig;
+  enableSortingStorage?: boolean; // Controls whether to persist sorting preferences
 };
 
 export const PositionHistoryWidget: React.FC<PositionHistoryProps> = (

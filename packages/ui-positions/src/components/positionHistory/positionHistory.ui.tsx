@@ -97,6 +97,16 @@ export const PositionHistory: FC<PositionHistoryProps> = (props) => {
         )}
         manualPagination={false}
         pagination={pagination}
+        manualSorting={true}
+        onSort={props.onSort}
+        initialSort={
+          props.initialSort
+            ? {
+                sortKey: props.initialSort.sortKey,
+                sort: props.initialSort.sortOrder,
+              }
+            : undefined
+        }
         testIds={{
           body: "oui-testid-dataList-positionHistory-tab-body",
         }}

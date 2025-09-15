@@ -118,14 +118,14 @@ export const PositionsPage: React.FC<PositionsProps> = (props) => {
                 />
               </>
             ) : (
-              <PositionsWidget {...props} />
+              <PositionsWidget {...props} enableSortingStorage={false} />
             )}
           </TabPanel>
           <TabPanel
             value={TabsType.positionHistory}
             title={t("positions.positionHistory")}
           >
-            <PositionHistoryWidget {...props} />
+            <PositionHistoryWidget {...props} enableSortingStorage={false} />
           </TabPanel>
           <TabPanel value={TabsType.liquidation} title={<LiquidationTab />}>
             <LiquidationWidget />

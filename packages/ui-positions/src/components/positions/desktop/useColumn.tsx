@@ -43,7 +43,7 @@ export const useColumn = (config: ColumnConfig) => {
         fixed: "left",
         width: 140,
         onSort: (r1, r2) => {
-          return r1.symbol.localeCompare(r2.symbol);
+          return r1.symbol?.localeCompare(r2.symbol || "");
           // if (sortOrder === "asc") {
           //   return r1.symbol.localeCompare(r2.symbol);
           // }
