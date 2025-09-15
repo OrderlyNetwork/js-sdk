@@ -20,7 +20,6 @@ import { PnlFormatView } from "./pnlFormat";
 
 export const DesktopSharePnLContent: FC<{
   entity: ShareEntity;
-  leverage?: number | string;
   hide: any;
   baseDp?: number;
   quoteDp?: number;
@@ -43,14 +42,12 @@ export const DesktopSharePnLContent: FC<{
   const [pnlFormat, setPnlFormat] = useState<PnLDisplayFormat>(
     formats.length == 1 ? formats[0] : localPnlConfig.pnlFormat,
   );
-  console.log("pnl format", props.entity);
   const [shareOption, setShareOption] = useState<Set<ShareOptions>>(
     new Set(localPnlConfig.options),
   );
   const [selectedSnap, setSelectedSnap] = useState(localPnlConfig.bgIndex);
   const [message, setMessage] = useState(localPnlConfig.message);
   const [check, setCheck] = useState(false);
-  // const { shareOptions } = useTradingPageContext();
   const { backgroundImages, ...resetOptions } = shareOptions ?? {
     backgroundImages: [],
   };
@@ -70,7 +67,6 @@ export const DesktopSharePnLContent: FC<{
 
   const posterData = getPnLPosterData(
     props.entity,
-    props.leverage!,
     check ? message : "",
     domain,
     pnlFormat,
@@ -106,15 +102,19 @@ export const DesktopSharePnLContent: FC<{
   };
 
   // check if the entity has the option, like formats
-  const options: ShareOptions[] = [
-    ...(props.entity.openPrice ? (["openPrice"] as ShareOptions[]) : []),
-    ...(props.entity.closePrice ? (["closePrice"] as ShareOptions[]) : []),
-    ...(props.entity.markPrice ? (["markPrice"] as ShareOptions[]) : []),
-    ...(props.entity.openTime ? (["openTime"] as ShareOptions[]) : []),
-    ...(props.entity.closeTime ? (["closeTime"] as ShareOptions[]) : []),
-    ...(props.leverage ? (["leverage"] as ShareOptions[]) : []),
-    ...(props.entity.quantity ? (["quantity"] as ShareOptions[]) : []),
-  ];
+  const options: ShareOptions[] = useMemo(() => {
+    const mapping: ShareOptions[] = [
+      "openPrice",
+      "closePrice",
+      "markPrice",
+      "openTime",
+      "closeTime",
+      "leverage",
+      "quantity",
+    ];
+
+    return mapping.filter((key) => !!props.entity[key]);
+  }, [props.entity]);
 
   savePnlInfo(pnlFormat, shareOption, selectedSnap, message);
 
@@ -198,15 +198,6 @@ export const DesktopSharePnLContent: FC<{
       </div>
 
       <BottomButtons onClickCopy={onCopy} onClickDownload={onDownload} />
-
-      {/* <button
-        onClick={() => {
-          props.hide();
-        }}
-        className="oui-absolute oui-top-0 oui-right-0 oui-w-[40px] oui-h-[40px] oui-flex oui-justify-center oui-items-center"
-      >
-        <CloseIcon size={12} className="oui-fill-base-contrast-54" />
-      </button> */}
     </div>
   );
 };

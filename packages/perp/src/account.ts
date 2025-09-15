@@ -111,6 +111,9 @@ export function positionQtyWithOrders_by_symbol(
 }
 
 export type IMRInputs = {
+  /**
+   * effective max leverage
+   */
   maxLeverage: number;
   baseIMR: number;
   IMR_Factor: number;
@@ -225,6 +228,7 @@ export type TotalInitialMarginWithOrdersInputs = {
 } & Pick<IMRInputs, "maxLeverage">;
 
 /**
+ * @deprecated
  * Calculate the total initial margin used by the user (including positions and orders).
  */
 export function totalInitialMarginWithOrders(
@@ -291,10 +295,12 @@ export function totalInitialMarginWithQty(inputs: {
   markPrices: { [key: string]: number };
   symbolInfo: any;
   IMR_Factors: { [key: string]: number };
+  /**
+   * account max leverage
+   */
   maxLeverage: number;
 }) {
-  const { positions, markPrices, IMR_Factors, symbolInfo, maxLeverage } =
-    inputs;
+  const { positions, markPrices, IMR_Factors, symbolInfo } = inputs;
   const symbols = positions.map((item) => item.symbol);
 
   const total_initial_margin_with_orders = symbols.reduce((acc, cur) => {
@@ -328,7 +334,10 @@ export function totalInitialMarginWithQty(inputs: {
       ordersNotional: markPriceDecimal
         .mul(new Decimal(buyOrdersQty).add(sellOrdersQty))
         .toNumber(),
-      maxLeverage,
+      maxLeverage: maxLeverage({
+        symbolLeverage: position?.leverage ?? inputs.maxLeverage,
+        accountLeverage: inputs.maxLeverage,
+      }),
       IMR_Factor: IMR_Factors[symbol],
       baseIMR: symbolInfo[symbol]("base_imr", 0),
     });
@@ -386,8 +395,10 @@ export function extractSymbols(
 export type OtherIMsInputs = {
   // the position list for other symbols except the current symbol
   positions: API.Position[];
-
   markPrices: { [key: string]: number };
+  /**
+   * account max leverage
+   */
   maxLeverage: number;
   symbolInfo: any;
   IMR_Factors: { [key: string]: number };
@@ -399,7 +410,6 @@ export function otherIMs(inputs: OtherIMsInputs): number {
   const {
     // orders,
     positions,
-    maxLeverage,
     IMR_Factors,
     symbolInfo,
     markPrices,
@@ -438,8 +448,10 @@ export function otherIMs(inputs: OtherIMsInputs): number {
       }
 
       const imr = IMR({
-        maxLeverage,
-
+        maxLeverage: maxLeverage({
+          symbolLeverage: position!.leverage,
+          accountLeverage: inputs.maxLeverage,
+        }),
         IMR_Factor,
         baseIMR: symbolInfo[symbol]("base_imr", 0),
         positionNotional,
@@ -842,4 +854,13 @@ export const calcMinimumReceived = (inputs: {
   return new Decimal(amount)
     .mul(new Decimal(1).minus(slippageRatio))
     .toNumber();
+};
+
+export const maxLeverage = (inputs: {
+  symbolLeverage?: number;
+  accountLeverage: number;
+}) => {
+  const { symbolLeverage, accountLeverage } = inputs;
+
+  return Math.min(symbolLeverage ?? accountLeverage, accountLeverage);
 };

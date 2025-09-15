@@ -1,7 +1,6 @@
 import React, { useEffect, useId, useMemo, useState } from "react";
 import {
   OrderValidationResult,
-  useLeverage,
   useLocalStorage,
   useOrderlyContext,
 } from "@orderly.network/hooks";
@@ -73,8 +72,6 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
     setSoundAlert,
     currentFocusInput,
   } = props;
-
-  const { curLeverage } = useLeverage();
 
   const { t } = useTranslation();
 
@@ -329,12 +326,12 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
         ref={props.containerRef}
       >
         <OrderEntryHeader
-          isMobile={isMobile}
+          symbol={props.symbol}
           canTrade={props.canTrade}
           side={side}
           order_type={formattedOrder.order_type!}
-          curLeverage={curLeverage}
           setOrderValue={setOrderValue}
+          symbolLeverage={props.symbolLeverage}
         />
 
         <Available
@@ -535,6 +532,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           onClose={() => {
             setShowTPSLAdvanced(false);
           }}
+          symbolLeverage={props.symbolLeverage}
         />
       </SimpleSheet>
     </OrderEntryProvider>

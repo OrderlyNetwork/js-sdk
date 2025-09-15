@@ -11,6 +11,7 @@ export type {
 
 export { useSymbolsInfo } from "./useSymbolsInfo";
 export type { SymbolsInfo } from "./useSymbolsInfo";
+export { useSymbolInfo } from "./useSymbolInfo";
 export { useAccountInfo } from "./useAccountInfo";
 
 export { useMarketsStream } from "./useMarketsStream";
@@ -86,7 +87,9 @@ export {
   type ComputedAlgoOrder,
 } from "./useTakeProfitAndStopLoss";
 
+export { useMaxLeverage } from "./useMaxLeverage";
 export { useSymbolLeverage } from "./useSymbolLeverage";
+export { useLeverageBySymbol } from "./useLeverageBySymbol";
 
 export { useAssetsHistory } from "./statistics/useAssetHistory";
 
@@ -112,3 +115,4 @@ export { useTokensInfo, useTokenInfo } from "./useTokensInfo/tokensInfo.store";
 
 export { useSymbolsInfoStore } from "./useSymbolsInfo";
 export { useFundingRatesStore } from "./useFundingRates";
+export { usePortfolio } from "./appStore";

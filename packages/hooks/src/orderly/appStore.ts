@@ -193,3 +193,5 @@ export const useAppStore = create<
 );
 
 export const useAccountInfo = () => useAppStore((state) => state.accountInfo);
+
+export const usePortfolio = () => useAppStore((state) => state.portfolio);

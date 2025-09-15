@@ -32,8 +32,13 @@ export function formatPositions(
     let unrealPnl_index = 0,
       unrealPnlROI_index = 0;
 
+    const maxLeverage = account.maxLeverage({
+      symbolLeverage: item.leverage,
+      accountLeverage: accountInfo.max_leverage,
+    });
+
     const imr = account.IMR({
-      maxLeverage: accountInfo.max_leverage,
+      maxLeverage,
       baseIMR: info?.("base_imr"),
       IMR_Factor: accountInfo.imr_factor[item.symbol] as number,
       positionNotional: notional,

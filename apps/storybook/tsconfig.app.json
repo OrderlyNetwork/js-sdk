@@ -109,6 +109,9 @@
       "@orderly.network/ui-transfer": [
         "../../packages/ui-transfer/src"
       ],
+      "@orderly.network/vaults": [
+        "../../packages/vaults/src"
+      ],
       "@orderly.network/utils": [
         "../../packages/utils/src"
       ],

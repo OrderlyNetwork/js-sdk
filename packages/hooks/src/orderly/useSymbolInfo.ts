@@ -1,12 +1,10 @@
-import { SDKError } from "@orderly.network/types";
+import { useMemo } from "react";
 import { useSymbolsInfo } from "./orderlyHooks";
 
-export const useSymbolInfo = (symbol: string) => {
-  if (!symbol) {
-    throw new SDKError("Symbol is required");
-  }
-
+export const useSymbolInfo = (symbol?: string) => {
   const infos = useSymbolsInfo();
 
-  return infos.isNil ? null : infos[symbol];
+  return useMemo(() => {
+    return !symbol || infos.isNil ? null : infos[symbol];
+  }, [infos, symbol]);
 };

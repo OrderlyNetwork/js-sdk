@@ -1,15 +1,8 @@
 import { FC, useMemo, useRef } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { API, PositionType } from "@orderly.network/types";
-import {
-  Badge,
-  cn,
-  EditIcon,
-  Flex,
-  Grid,
-  Statistic,
-  Text,
-} from "@orderly.network/ui";
+import { Badge, cn, Flex, Grid, Statistic, Text } from "@orderly.network/ui";
+import { SymbolLeverageSheetId } from "@orderly.network/ui-leverage";
 import { SharePnLBottomSheetId } from "@orderly.network/ui-share";
 import { Decimal } from "@orderly.network/utils";
 import { FundingFeeButton } from "../../../fundingFeeHistory/fundingFeeButton";
@@ -32,7 +25,11 @@ export const SymbolToken: FC<PositionCellState> = (props) => {
           <Badge color={isBuy ? "success" : "danger"} size="xs">
             {isBuy ? t("common.long") : t("common.short")}
           </Badge>
-          <LeverageBadge symbol={item.symbol} />
+          <LeverageBadge
+            symbol={item.symbol}
+            leverage={item.leverage}
+            modalId={SymbolLeverageSheetId}
+          />
         </div>
       }
       showIcon

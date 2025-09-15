@@ -120,6 +120,7 @@ export const TPSLAdvancedUI = (props: Props) => {
             order={formattedOrder as OrderlyOrder}
             baseDP={symbolInfo.base_dp}
             quoteDP={symbolInfo.quote_dp}
+            symbolLeverage={props.symbolLeverage}
           />
         </div>
         <Divider className="oui-my-3" />
@@ -206,13 +207,13 @@ export const TPSLAdvancedUI = (props: Props) => {
                 formattedOrder.position_type === PositionType.FULL
               }
               onChange={(key, value) => {
-                console.log("key", key, "value", value);
                 // setTpValuse((prev) => ({ ...prev, [key]: value }));
                 setOrderValue(key as keyof OrderlyOrder, value);
               }}
               positionType={
                 formattedOrder.position_type ?? PositionType.PARTIAL
               }
+              symbolLeverage={props.symbolLeverage}
             />
             <TPSLInputRowWidget
               rootOrderPrice={formattedOrder.order_price}
@@ -230,6 +231,7 @@ export const TPSLAdvancedUI = (props: Props) => {
               onChange={(key, value) => {
                 setOrderValue(key as keyof OrderlyOrder, value);
               }}
+              symbolLeverage={props.symbolLeverage}
             />
           </Flex>
 
