@@ -10,6 +10,7 @@ import {
   formatAddress,
   DataFilter,
   modal,
+  Flex,
 } from "@orderly.network/ui";
 import { SelectOption } from "@orderly.network/ui/src/select/withOptions";
 import type { useAssetsScriptReturn } from "./assets.script";
@@ -23,11 +24,104 @@ const AccountTag: React.FC<{ name: string }> = ({ name }) => {
   );
 };
 
+type AssetMobileItemProps = {
+  item: any;
+};
+
+const AssetMobileItem: React.FC<AssetMobileItemProps> = (props) => {
+  const { t } = useTranslation();
+  const { item } = props;
+  const { namespace } = useWalletConnector();
+  return (
+    <div className="oui-flex oui-flex-col oui-gap-3 oui-rounded-xl oui-bg-base-9 oui-p-4">
+      <Flex justify={"between"} itemAlign={"center"}>
+        <div className="oui-flex oui-flex-col">
+          <div className="oui-text-2xs oui-font-semibold oui-text-base-contrast-36">
+            {t("common.token")}
+          </div>
+          <div className="oui-flex oui-items-center oui-gap-1 oui-text-xs oui-font-semibold oui-text-base-contrast-80">
+            <TokenIcon name={item.token} className="oui-size-4" />
+            {item.token}
+          </div>
+        </div>
+        <div className="oui-flex oui-flex-col">
+          <div className="oui-text-2xs oui-font-semibold oui-text-base-contrast-36">
+            {t("common.quantity")}
+          </div>
+          <div>
+            <Text.numeral dp={6} padding={false}>
+              {item.holding}
+            </Text.numeral>
+          </div>
+        </div>
+        <div className="oui-flex oui-flex-col">
+          <div className="oui-text-2xs oui-font-semibold oui-text-base-contrast-36">
+            {t("transfer.deposit.collateralContribution")}
+          </div>
+          <div className="oui-flex oui-items-center oui-gap-1 oui-self-end oui-text-xs oui-font-semibold oui-text-base-contrast-80">
+            <Text.numeral dp={6} padding={false}>
+              {item.collateralContribution}
+            </Text.numeral>
+            <div className="oui-text-base-contrast-36">USDC</div>
+          </div>
+        </div>
+      </Flex>
+      <Flex justify={"between"} itemAlign={"center"} gap={2}>
+        {item.token !== "USDC" && namespace !== ChainNamespace.solana && (
+          <Button
+            fullWidth
+            variant="outlined"
+            size="sm"
+            color="gray"
+            onClick={() => {
+              modal.show("ConvertSheetId", {
+                accountId: item.account_id,
+                token: item.token,
+              });
+            }}
+            className={cn(
+              "oui-flex-1 oui-border-white/[0.36] oui-text-base-contrast-54",
+            )}
+          >
+            {t("transfer.convert")}
+          </Button>
+        )}
+        <Button
+          fullWidth
+          variant="outlined"
+          size="sm"
+          color="gray"
+          onClick={() => {
+            modal.show("TransferSheetId", {
+              accountId: item.account_id,
+              token: item.token,
+            });
+          }}
+          className={cn(
+            "oui-flex-1 oui-border-white/[0.36] oui-text-base-contrast-54",
+          )}
+        >
+          {t("common.transfer")}
+        </Button>
+      </Flex>
+    </div>
+  );
+};
+
 export const AssetsTableMobile: React.FC<useAssetsScriptReturn> = (props) => {
-  // console.log(props);
   const { t } = useTranslation();
 
-  const subAccounts = props.state.subAccounts ?? [];
+  const {
+    assetsOptions,
+    state,
+    isMainAccount,
+    dataSource,
+    selectedAccount,
+    selectedAsset,
+    onFilter,
+  } = props;
+
+  const subAccounts = state.subAccounts ?? [];
 
   const ALL_ACCOUNTS: SelectOption = {
     label: t("common.allAccount"),
@@ -60,29 +154,29 @@ export const AssetsTableMobile: React.FC<useAssetsScriptReturn> = (props) => {
 
   // Create asset options from holding data - optimized and consistent with desktop
   const memoizedAssets = useMemo(() => {
-    return [ALL_ASSETS, ...props.assetsOptions];
-  }, [props.assetsOptions]);
+    return [ALL_ASSETS, ...assetsOptions];
+  }, [assetsOptions]);
 
   return (
     <div className="oui-flex oui-flex-col oui-gap-1 oui-px-3 oui-pb-4">
       <div>
-        {props.isMainAccount && (
+        {isMainAccount && (
           <DataFilter
-            onFilter={props.onFilter}
+            onFilter={onFilter}
             className="oui-border-none oui-py-2"
             items={[
               {
                 size: "sm",
                 type: "picker",
                 name: "account",
-                value: props.selectedAccount,
+                value: selectedAccount,
                 options: memoizedOptions,
               },
               {
                 size: "sm",
                 type: "picker",
                 name: "asset",
-                value: props.selectedAsset,
+                value: selectedAsset,
                 options: memoizedAssets,
               },
             ]}
@@ -90,10 +184,10 @@ export const AssetsTableMobile: React.FC<useAssetsScriptReturn> = (props) => {
         )}
       </div>
       <div className="oui-flex oui-flex-col oui-gap-1">
-        {props.dataSource.map((assets, index) => (
+        {dataSource.map((assets, index) => (
           <React.Fragment key={`item-${index}`}>
             <AccountTag name={assets.description ?? "sub account"} />
-            {assets.children.map((child: any) => (
+            {assets.children.map((child) => (
               <AssetMobileItem
                 item={child}
                 key={`${child.token}-${child.account_id}`}
@@ -101,90 +195,6 @@ export const AssetsTableMobile: React.FC<useAssetsScriptReturn> = (props) => {
             ))}
           </React.Fragment>
         ))}
-      </div>
-    </div>
-  );
-};
-
-type AssetMobileItemProps = {
-  item: any;
-};
-
-const AssetMobileItem: React.FC<AssetMobileItemProps> = ({ item }) => {
-  const { t } = useTranslation();
-  const { namespace } = useWalletConnector();
-
-  return (
-    <div className="oui-flex oui-flex-col oui-gap-3 oui-rounded-xl oui-bg-base-9 oui-p-4">
-      <div className="oui-flex oui-items-center oui-justify-between">
-        <div className="oui-flex oui-flex-col">
-          <div className="oui-text-2xs oui-font-semibold oui-text-base-contrast-36">
-            {t("common.token")}
-          </div>
-          <div className="oui-flex oui-items-center oui-gap-1 oui-text-xs oui-font-semibold oui-text-base-contrast-80">
-            <TokenIcon name={item.token} className="oui-size-4" /> {item.token}
-          </div>
-        </div>
-        <div className="oui-flex oui-flex-col">
-          <div className="oui-text-2xs oui-font-semibold oui-text-base-contrast-36">
-            {t("common.quantity")}
-          </div>
-          <div>
-            <Text.numeral dp={6} padding={false}>
-              {item.holding}
-            </Text.numeral>
-          </div>
-        </div>
-        <div className="oui-flex oui-flex-col">
-          <div className="oui-text-2xs oui-font-semibold oui-text-base-contrast-36">
-            {t("transfer.deposit.collateralContribution")}
-          </div>
-          <div className="oui-flex oui-items-center oui-gap-1 oui-self-end oui-text-xs oui-font-semibold oui-text-base-contrast-80">
-            <Text.numeral dp={6} padding={false}>
-              {item.collateralContribution}
-            </Text.numeral>
-            <div className="oui-text-base-contrast-36">USDC</div>
-          </div>
-        </div>
-      </div>
-      <div className="oui-flex oui-gap-2">
-        <Button
-          variant="outlined"
-          size="sm"
-          color="gray"
-          onClick={() => {
-            modal.show("ConvertSheetId", {
-              accountId: item.account_id,
-              token: item.token,
-            });
-          }}
-          disabled={
-            item.token === "USDC" || namespace === ChainNamespace.solana
-          }
-          className={cn(
-            "oui-flex-1 oui-border-white/[0.36] oui-text-base-contrast-54",
-            (item.token === "USDC" || namespace === ChainNamespace.solana) &&
-              "hover:!oui-bg-transparent disabled:oui-border-white/[0.16] disabled:!oui-bg-transparent disabled:oui-text-base-contrast-20",
-          )}
-        >
-          {t("transfer.convert")}
-        </Button>
-        <Button
-          variant="outlined"
-          size="sm"
-          color="gray"
-          onClick={() => {
-            modal.show("TransferSheetId", {
-              accountId: item.account_id,
-              token: item.token,
-            });
-          }}
-          className={cn(
-            "oui-flex-1 oui-border-white/[0.36] oui-text-base-contrast-54",
-          )}
-        >
-          {t("common.transfer")}
-        </Button>
       </div>
     </div>
   );
