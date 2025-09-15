@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useMemo } from "react";
 import { useWalletConnector } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
@@ -29,42 +30,149 @@ type AssetMobileItemProps = {
 };
 
 const AssetMobileItem: React.FC<AssetMobileItemProps> = (props) => {
-  const { t } = useTranslation();
   const { item } = props;
+  const { t } = useTranslation();
   const { namespace } = useWalletConnector();
   return (
-    <div className="oui-flex oui-flex-col oui-gap-3 oui-rounded-xl oui-bg-base-9 oui-p-4">
-      <Flex justify={"between"} itemAlign={"center"}>
-        <div className="oui-flex oui-flex-col">
+    <div className="oui-flex oui-flex-col oui-gap-2 oui-rounded-xl oui-bg-base-9 oui-p-2">
+      <Flex
+        width={"100%"}
+        justify={"between"}
+        itemAlign={"center"}
+        className="oui-gap-x-0.5"
+      >
+        <Flex
+          className="oui-w-1/3 oui-truncate"
+          itemAlign={"start"}
+          direction={"column"}
+        >
           <div className="oui-text-2xs oui-font-semibold oui-text-base-contrast-36">
             {t("common.token")}
           </div>
-          <div className="oui-flex oui-items-center oui-gap-1 oui-text-xs oui-font-semibold oui-text-base-contrast-80">
-            <TokenIcon name={item.token} className="oui-size-4" />
+          <Flex
+            gap={1}
+            justify={"start"}
+            itemAlign={"center"}
+            className="oui-text-xs oui-font-semibold oui-text-base-contrast-80"
+          >
+            <TokenIcon name={item.token} size="2xs" />
             {item.token}
-          </div>
-        </div>
-        <div className="oui-flex oui-flex-col">
+          </Flex>
+        </Flex>
+        <Flex
+          className="oui-w-1/3 oui-truncate"
+          itemAlign={"start"}
+          direction={"column"}
+        >
           <div className="oui-text-2xs oui-font-semibold oui-text-base-contrast-36">
-            {t("common.quantity")}
+            {t("common.qty")}
           </div>
-          <div>
-            <Text.numeral dp={6} padding={false}>
-              {item.holding}
+          <Text.numeral
+            className="oui-truncate"
+            size="xs"
+            dp={6}
+            padding={false}
+          >
+            {item.holding}
+          </Text.numeral>
+        </Flex>
+        <Flex
+          className="oui-w-1/3 oui-truncate"
+          itemAlign={"start"}
+          direction={"column"}
+        >
+          <div className="oui-w-full oui-text-end oui-text-2xs oui-font-semibold oui-text-base-contrast-36">
+            {t("common.indexPrice")}
+          </div>
+          <Flex
+            gap={1}
+            width={"100%"}
+            justify={"end"}
+            itemAlign={"center"}
+            className="oui-text-end oui-font-semibold oui-text-base-contrast-80"
+          >
+            <Text.numeral
+              size="xs"
+              rule="price"
+              dp={6}
+              currency="$"
+              padding={false}
+            >
+              {item.indexPrice}
             </Text.numeral>
-          </div>
-        </div>
-        <div className="oui-flex oui-flex-col">
+            <div className="oui-text-end oui-text-2xs oui-text-base-contrast-36">
+              USDC
+            </div>
+          </Flex>
+        </Flex>
+      </Flex>
+      <Flex
+        width={"100%"}
+        justify={"between"}
+        itemAlign={"center"}
+        className="oui-gap-x-0.5"
+      >
+        <Flex
+          className="oui-w-1/3 oui-truncate"
+          itemAlign={"start"}
+          direction={"column"}
+        >
           <div className="oui-text-2xs oui-font-semibold oui-text-base-contrast-36">
+            {t("portfolio.overview.column.assetValue")}
+          </div>
+          <Text.numeral
+            size="xs"
+            intensity={80}
+            className="oui-truncate oui-font-semibold"
+            rule="price"
+            dp={6}
+            currency="$"
+            padding={false}
+          >
+            {item.assetValue}
+          </Text.numeral>
+        </Flex>
+        <Flex
+          className="oui-w-1/3 oui-truncate"
+          itemAlign={"start"}
+          direction={"column"}
+        >
+          <div className="oui-text-2xs oui-font-semibold oui-text-base-contrast-36">
+            {t("portfolio.overview.column.collateralRatio")}
+          </div>
+          <Text.numeral size="xs" dp={2} suffix="%">
+            {item.collateralRatio * 100}
+          </Text.numeral>
+        </Flex>
+        <Flex
+          className="oui-w-1/3 oui-truncate"
+          itemAlign={"start"}
+          direction={"column"}
+        >
+          <div className="oui-w-full oui-text-end oui-text-2xs oui-font-semibold oui-text-base-contrast-36">
             {t("transfer.deposit.collateralContribution")}
           </div>
-          <div className="oui-flex oui-items-center oui-gap-1 oui-self-end oui-text-xs oui-font-semibold oui-text-base-contrast-80">
-            <Text.numeral dp={6} padding={false}>
+          <Flex
+            gap={1}
+            width={"100%"}
+            justify={"end"}
+            itemAlign={"center"}
+            className="oui-text-end oui-font-semibold oui-text-base-contrast-80"
+          >
+            <Text.numeral
+              size="xs"
+              rule="price"
+              dp={6}
+              currency="$"
+              padding={false}
+            >
               {item.collateralContribution}
             </Text.numeral>
-            <div className="oui-text-base-contrast-36">USDC</div>
-          </div>
-        </div>
+            <div className="oui-text-end oui-text-2xs oui-text-base-contrast-36">
+              USDC
+            </div>
+          </Flex>
+        </Flex>
       </Flex>
       <Flex justify={"between"} itemAlign={"center"} gap={2}>
         {item.token !== "USDC" && namespace !== ChainNamespace.solana && (
@@ -158,43 +266,44 @@ export const AssetsTableMobile: React.FC<useAssetsScriptReturn> = (props) => {
   }, [assetsOptions]);
 
   return (
-    <div className="oui-flex oui-flex-col oui-gap-1 oui-px-3 oui-pb-4">
-      <div>
-        {isMainAccount && (
-          <DataFilter
-            onFilter={onFilter}
-            className="oui-border-none oui-py-2"
-            items={[
-              {
-                size: "sm",
-                type: "picker",
-                name: "account",
-                value: selectedAccount,
-                options: memoizedOptions,
-              },
-              {
-                size: "sm",
-                type: "picker",
-                name: "asset",
-                value: selectedAsset,
-                options: memoizedAssets,
-              },
-            ]}
-          />
-        )}
-      </div>
+    <div className={cn("oui-flex oui-flex-col oui-gap-1 oui-px-1 oui-pb-4")}>
+      {isMainAccount && (
+        <DataFilter
+          onFilter={onFilter}
+          className="oui-border-none oui-py-2"
+          items={[
+            {
+              size: "sm",
+              type: "picker",
+              name: "account",
+              value: selectedAccount,
+              options: memoizedOptions,
+            },
+            {
+              size: "sm",
+              type: "picker",
+              name: "asset",
+              value: selectedAsset,
+              options: memoizedAssets,
+            },
+          ]}
+        />
+      )}
       <div className="oui-flex oui-flex-col oui-gap-1">
-        {dataSource.map((assets, index) => (
-          <React.Fragment key={`item-${index}`}>
-            <AccountTag name={assets.description ?? "sub account"} />
-            {assets.children.map((child) => (
-              <AssetMobileItem
-                item={child}
-                key={`${child.token}-${child.account_id}`}
-              />
-            ))}
-          </React.Fragment>
-        ))}
+        {dataSource.map((assets, index) => {
+          return (
+            <React.Fragment key={`item-${index}`}>
+              <AccountTag name={assets.description ?? "sub account"} />
+              {Array.isArray(assets.children) &&
+                assets.children.map((child) => (
+                  <AssetMobileItem
+                    item={child}
+                    key={`${child.token}-${child.account_id}`}
+                  />
+                ))}
+            </React.Fragment>
+          );
+        })}
       </div>
     </div>
   );
