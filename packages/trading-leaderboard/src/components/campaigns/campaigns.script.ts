@@ -64,9 +64,11 @@ export const useCampaignsScript = () => {
         // hardcode for 128 campaign
         if (String(data.campaign_id) === "128") {
           Promise.all(
-            ["130", "131", "132", "133", "134"].map(async (campaignId) => {
-              await doJoinCampaign({ campaign_id: campaignId });
-            }),
+            ["130", "131", "132", "133", "134", "136"].map(
+              async (campaignId) => {
+                await doJoinCampaign({ campaign_id: campaignId });
+              },
+            ),
           );
         }
 
@@ -142,6 +144,7 @@ export const useCampaignsScript = () => {
     joinError,
     canTrade,
     totalPrizePool,
+    status: state.status,
   };
 };
 

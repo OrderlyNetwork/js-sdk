@@ -2,6 +2,7 @@ import { FC } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { cn, Text, ChevronRightIcon, Button } from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
+import { useCanTrade } from "../../../hooks/useCanTrade";
 import { CampaignConfig, PrizePool } from "../type";
 import { formatPrizeAmount, formatTradingVolume } from "../utils";
 import { PricePoolScriptReturn } from "./pricePool.script";
@@ -37,8 +38,67 @@ export const PricePoolDesktopUI: FC<PricePoolDesktopUIProps> = ({
   isJoining,
   showTradeButton,
   onTradeNow,
+  status,
 }) => {
   const { t } = useTranslation();
+  const canTrade = useCanTrade();
+
+  const renderButton = () => {
+    if (campaign?.emphasisConfig?.hideConnectWallet && !canTrade) {
+      return null;
+    }
+
+    if (shouldShowJoinButton || showTradeButton) {
+      return (
+        <div className="oui-w-full">
+          <AuthGuard
+            buttonProps={{
+              size: "md",
+              fullWidth: true,
+              className: cn(["oui-px-5", !isMobile && "oui-w-[590px]"]),
+            }}
+          >
+            {shouldShowJoinButton && (
+              <Button
+                size={"md"}
+                variant="gradient"
+                color="primary"
+                className="oui-flex-1"
+                loading={isJoining}
+                disabled={isJoining}
+                onClick={async () => {
+                  try {
+                    await joinCampaign?.({
+                      campaign_id: Number(campaign.campaign_id),
+                    });
+                  } catch (error) {
+                    console.error("Failed to join campaign:", error);
+                  }
+                }}
+                fullWidth
+              >
+                {t("tradingLeaderboard.joinNow")}
+              </Button>
+            )}
+            {showTradeButton && (
+              <Button
+                size={"md"}
+                variant="gradient"
+                color="primary"
+                className="oui-flex-1"
+                onClick={onTradeNow}
+                fullWidth
+              >
+                {campaign?.trading_config?.format ||
+                  t("tradingLeaderboard.tradeNow")}
+              </Button>
+            )}
+          </AuthGuard>
+        </div>
+      );
+    }
+    return null;
+  };
 
   return (
     <div
@@ -118,65 +178,28 @@ export const PricePoolDesktopUI: FC<PricePoolDesktopUIProps> = ({
       <div
         className={cn([
           "oui-flex oui-gap-4",
-          isMobile ? "oui-mt-3" : "oui-mt-6",
+          isMobile ? "oui-mt-3" : canTrade && "oui-mt-6",
         ])}
       >
         {isMobile && campaign?.rule_url && (
-          <Button
-            size="md"
-            variant="outlined"
-            className="oui-flex-1 
-        oui-border-[rgb(var(--oui-gradient-brand-start))] 
-        oui-text-[rgb(var(--oui-gradient-brand-start))] 
-        hover:oui-bg-[rgb(var(--oui-gradient-brand-start))]/[0.08]
-        active:oui-bg-[rgb(var(--oui-gradient-brand-start))]/[0.08]
-        "
-            onClick={onLearnMore}
-          >
-            {t("tradingLeaderboard.viewRules")}
-          </Button>
+          <div className="oui-w-full">
+            <Button
+              fullWidth
+              size="md"
+              variant="outlined"
+              className="oui-flex-1 
+      oui-border-[rgb(var(--oui-gradient-brand-start))] 
+      oui-text-[rgb(var(--oui-gradient-brand-start))] 
+      hover:oui-bg-[rgb(var(--oui-gradient-brand-start))]/[0.08]
+      active:oui-bg-[rgb(var(--oui-gradient-brand-start))]/[0.08]
+      "
+              onClick={onLearnMore}
+            >
+              {t("tradingLeaderboard.viewRules")}
+            </Button>
+          </div>
         )}
-        <AuthGuard
-          buttonProps={{
-            size: "md",
-            fullWidth: true,
-            className: cn(["oui-px-5", !isMobile && "oui-w-[590px]"]),
-          }}
-        >
-          {shouldShowJoinButton && (
-            <Button
-              size={"md"}
-              variant="gradient"
-              color="primary"
-              className="oui-flex-1"
-              loading={isJoining}
-              disabled={isJoining}
-              onClick={async () => {
-                try {
-                  await joinCampaign?.({
-                    campaign_id: Number(campaign.campaign_id),
-                  });
-                } catch (error) {
-                  console.error("Failed to join campaign:", error);
-                }
-              }}
-            >
-              {t("tradingLeaderboard.joinNow")}
-            </Button>
-          )}
-          {showTradeButton && (
-            <Button
-              size={"md"}
-              variant="gradient"
-              color="primary"
-              className="oui-flex-1"
-              onClick={onTradeNow}
-            >
-              {campaign?.trading_config?.format ||
-                t("tradingLeaderboard.tradeNow")}
-            </Button>
-          )}
-        </AuthGuard>
+        {renderButton()}
       </div>
     </div>
   );
