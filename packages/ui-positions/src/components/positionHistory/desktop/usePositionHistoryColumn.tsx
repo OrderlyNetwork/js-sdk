@@ -258,7 +258,7 @@ export const SymbolInfo = (props: {
         >
           <div>
             <Badge size="xs" color="danger" className="oui-cursor-pointer">
-              <span className="oui-underline oui-decoration-dashed oui-decoration-[1px]">
+              <span className="oui-underline oui-decoration-dashed oui-decoration-1">
                 {t("positions.history.type.liquidated")}
               </span>
             </Badge>
@@ -268,7 +268,11 @@ export const SymbolInfo = (props: {
     }
 
     list.push(
-      <LeverageBadge symbol={record.symbol} leverage={record.leverage} />,
+      <LeverageBadge
+        key={`leverage-${record.symbol}`}
+        symbol={record.symbol}
+        leverage={record.leverage}
+      />,
     );
 
     return list;
@@ -280,7 +284,7 @@ export const SymbolInfo = (props: {
         width={4}
         height={38}
         className={cn(
-          "oui-rounded-[1px] oui-shrink-0",
+          "oui-shrink-0 oui-rounded-[1px]",
           record.side === "LONG" ? "oui-bg-trade-profit" : "oui-bg-trade-loss",
         )}
       />
@@ -314,7 +318,7 @@ export const Quantity = (props: { record: PositionHistoryExt }) => {
       gap={1}
       direction={"column"}
       itemAlign={"start"}
-      className="oui-overflow-hidden oui-whitespace-nowrap oui-text-ellipsis"
+      className="oui-truncate"
     >
       <Text.numeral dp={base_dp} padding={false}>
         {Math.abs(record.closed_position_qty)}
