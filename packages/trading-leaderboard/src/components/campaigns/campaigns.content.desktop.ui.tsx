@@ -1,5 +1,5 @@
 import { FC, useMemo, useState } from "react";
-import { cn, Text } from "@orderly.network/ui";
+import { cn, Flex, Text } from "@orderly.network/ui";
 import { CampaignsScriptReturn } from "./campaigns.script";
 import { NormalPricePoolUI } from "./pricePool/normalPricePool.ui";
 import { PricePoolWidget } from "./pricePool/pricePool.widget";
@@ -83,31 +83,46 @@ export const CampaignsContentDesktopUI: FC<CampaignsContentDesktopUIProps> = ({
     );
   }, [campaign]);
 
-  return (
-    <div
-      className={cn([
-        "oui-flex oui-h-[500px] oui-w-full oui-flex-col oui-items-center oui-justify-center oui-gap-10",
-        `oui-bg-cover oui-bg-center oui-bg-no-repeat`,
-        campaign?.tiered_prize_pools?.length && !isMobile && "oui-h-[634px]",
-        classNames?.container,
-      ])}
-      style={{
-        backgroundImage: `linear-gradient(180deg, rgba(var(--oui-color-base-10) / 1) 0%, rgba(var(--oui-color-base-10) / 0.8) 15%, rgba(var(--oui-color-base-10) / 0.4) 40%, rgba(var(--oui-color-base-10) / 0.4) 60%, rgba(var(--oui-color-base-10) / 0.8) 85%, rgba(var(--oui-color-base-10) / 1) 100%), url(${bgSrc})`,
-      }}
-    >
-      <div
-        className={cn([
-          "oui-flex oui-flex-col oui-items-center oui-justify-center oui-gap-[10px]",
-          classNames?.topContainer,
-        ])}
-      >
-        <Text
-          size="sm"
-          weight="semibold"
-          className={cn(["oui-text-base-contrast-54", classNames?.time])}
+  const renderContent = () => {
+    if (campaign?.emphasisConfig) {
+      return (
+        <Flex
+          id="oui-trading-leaderboard-emphasis-campaign-content"
+          direction="column"
+          itemAlign="center"
+          className="oui-gap-y-1 lg:oui-gap-y-2"
         >
-          {dateRange}
-        </Text>
+          <Text
+            className={cn([
+              "oui-trading-leaderboard-title oui-text-[56px]oui-font-bold oui-text-center  oui-text-base-contrast",
+              "oui-text-[32px] oui-leading-[32px] lg:oui-text-[56px] lg:oui-leading-[56px]",
+            ])}
+          >
+            {campaign?.title}
+          </Text>
+          <Text.gradient
+            color="brand"
+            className={cn([
+              "oui-text-center oui-font-bold",
+              "oui-text-[28px] oui-leading-[36px] lg:oui-text-[48px] lg:oui-leading-[56px]",
+              "oui-w-[85%] lg:oui-w-full",
+            ])}
+          >
+            {campaign?.emphasisConfig?.subtitle}
+          </Text.gradient>
+          <Text
+            className={cn([
+              "oui-text-center oui-font-semibold oui-text-base-contrast-80",
+              "oui-text-[16px] oui-leading-[24px] lg:oui-text-[24px] lg:oui-leading-[32px]",
+            ])}
+          >
+            {campaign?.description}
+          </Text>
+        </Flex>
+      );
+    }
+    return (
+      <>
         <Text
           className={cn([
             "oui-trading-leaderboard-title oui-text-center oui-text-[48px] oui-font-bold oui-leading-[56px] oui-text-base-contrast",
@@ -133,6 +148,36 @@ export const CampaignsContentDesktopUI: FC<CampaignsContentDesktopUIProps> = ({
             {campaign.description}
           </Text>
         </div>
+      </>
+    );
+  };
+
+  return (
+    <div
+      className={cn([
+        "oui-flex oui-h-[500px] oui-w-full oui-flex-col oui-items-center oui-justify-center oui-gap-10",
+        `oui-bg-cover oui-bg-center oui-bg-no-repeat`,
+        campaign?.tiered_prize_pools?.length && !isMobile && "oui-h-[634px]",
+        classNames?.container,
+      ])}
+      style={{
+        backgroundImage: `linear-gradient(180deg, rgba(var(--oui-color-base-10) / 1) 0%, rgba(var(--oui-color-base-10) / 0.8) 15%, rgba(var(--oui-color-base-10) / 0.4) 40%, rgba(var(--oui-color-base-10) / 0.4) 60%, rgba(var(--oui-color-base-10) / 0.8) 85%, rgba(var(--oui-color-base-10) / 1) 100%), url(${bgSrc})`,
+      }}
+    >
+      <div
+        className={cn([
+          "oui-flex oui-flex-col oui-items-center oui-justify-center oui-gap-[10px]",
+          classNames?.topContainer,
+        ])}
+      >
+        <Text
+          size="sm"
+          weight="semibold"
+          className={cn(["oui-text-base-contrast-54", classNames?.time])}
+        >
+          {dateRange}
+        </Text>
+        {renderContent()}
       </div>
       {showTieredPricePool ? (
         <PricePoolWidget

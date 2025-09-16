@@ -21,7 +21,7 @@ export const PortfolioLayoutMobile: FC<
         height={"100%"}
         className="oui-h-full-screen oui-bg-base-10"
       >
-        <header className="oui-sticky oui-top-0 oui-z-10 oui-w-full oui-bg-base-10">
+        <header className="oui-scaffold-topNavbar oui-sticky oui-top-0 oui-z-10 oui-w-full oui-bg-base-10">
           <MainNavMobile
             {...props.mainNavProps}
             current={props?.current}
@@ -29,10 +29,10 @@ export const PortfolioLayoutMobile: FC<
             routerAdapter={props.routerAdapter}
           />
         </header>
-        <Box className="oui-min-h-[calc(100vh-44px-64px-env(safe-area-inset-bottom))] oui-w-full">
+        <Box className="oui-scaffold-container oui-min-h-[calc(100vh-44px-64px-env(safe-area-inset-bottom))] oui-w-full">
           {props.children}
         </Box>
-        <footer className="oui-sticky oui-bottom-0 oui-z-10 oui-w-full oui-bg-base-9 oui-pb-[calc(env(safe-area-inset-bottom))]">
+        <footer className="oui-scaffold-bottomNav oui-fixed oui-bottom-0 oui-z-10 oui-w-full oui-bg-base-9 oui-pb-[calc(env(safe-area-inset-bottom))]">
           <BottomNav
             mainMenus={props.bottomNavProps?.mainMenus}
             current={props?.current}

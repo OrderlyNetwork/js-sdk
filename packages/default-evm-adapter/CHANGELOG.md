@@ -1,5 +1,31 @@
 # @orderly.network/default-evm-adapter
 
+## 2.7.0
+
+### Minor Changes
+
+- publish
+- 9b0dc27: publish
+
+### Patch Changes
+
+- Updated dependencies
+- Updated dependencies [9b0dc27]
+  - @orderly.network/core@2.7.0
+  - @orderly.network/types@2.7.0
+
+## 2.7.0-alpha.0
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/core@2.7.0-alpha.0
+  - @orderly.network/types@2.7.0-alpha.0
+
 ## 2.6.3
 
 ### Patch Changes

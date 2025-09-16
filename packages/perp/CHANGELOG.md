@@ -1,5 +1,31 @@
 # @orderly.network/futures
 
+## 4.7.0
+
+### Minor Changes
+
+- publish
+- 9b0dc27: publish
+
+### Patch Changes
+
+- Updated dependencies
+- Updated dependencies [9b0dc27]
+  - @orderly.network/types@2.7.0
+  - @orderly.network/utils@2.7.0
+
+## 4.7.0-alpha.0
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/types@2.7.0-alpha.0
+  - @orderly.network/utils@2.7.0-alpha.0
+
 ## 4.6.3
 
 ### Patch Changes

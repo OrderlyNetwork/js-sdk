@@ -9,7 +9,7 @@ import { CampaignStatistics } from "../../campaigns/type";
 import { useTradingLeaderboardContext } from "../../provider";
 import { getCurrentAddressRowKey, isSameAddress } from "../shared/util";
 
-const CAMPAIGN_IDS = ["129", "130", "131", "132", "133", "134"];
+const CAMPAIGN_IDS = ["129", "136", "131", "132", "133", "134"];
 
 export type GeneralRankingData = {
   account_id: string;
