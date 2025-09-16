@@ -1,5 +1,12 @@
 # @orderly.network/types
 
+## 2.7.0
+
+### Minor Changes
+
+- publish
+- 9b0dc27: publish
+
 ## 2.7.0-alpha.0
 
 ### Minor Changes

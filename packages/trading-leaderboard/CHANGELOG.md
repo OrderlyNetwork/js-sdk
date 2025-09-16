@@ -1,5 +1,24 @@
 # @orderly.network/trading-leaderboard
 
+## 2.7.0
+
+### Minor Changes
+
+- publish
+- 9b0dc27: publish
+
+### Patch Changes
+
+- Updated dependencies
+- Updated dependencies [9b0dc27]
+  - @orderly.network/react-app@2.7.0
+  - @orderly.network/hooks@2.7.0
+  - @orderly.network/i18n@2.7.0
+  - @orderly.network/types@2.7.0
+  - @orderly.network/ui@2.7.0
+  - @orderly.network/ui-connector@2.7.0
+  - @orderly.network/utils@2.7.0
+
 ## 2.7.0-alpha.0
 
 ### Minor Changes
