@@ -24,10 +24,6 @@ export const SortablePanel: FC<PropsWithChildren<SortablePanelProps>> = (
   // useSortable hook with custom configuration to prevent dimension changes
   const sortableResult = useSortable({
     id: props.id,
-    // Disable the default transform behavior to prevent deformation
-    data: {
-      type: "SortablePanel",
-    },
   });
 
   const {

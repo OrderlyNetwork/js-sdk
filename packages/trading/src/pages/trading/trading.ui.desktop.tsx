@@ -809,19 +809,17 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
             </SplitLayout>
           </Box>
         </SortableContext>
-        <DragOverlay
-          dropAnimation={dropAnimationConfig}
-          modifiers={[scaleModifier]}
-        >
+        <DragOverlay dropAnimation={dropAnimationConfig}>
           {activeId ? (
             <SortablePanel
               id={activeId}
               showIndicator={showPositionIcon}
+              dragOverlay
               className={`${
                 orderInteractionWidgets[
                   activeId as keyof typeof orderInteractionWidgets
                 ].className
-              } oui-shadow-lg oui-shadow-base-9 oui-p-5 oui-box-content -oui-translate-x-2 -oui-translate-y-2`}
+              } oui-shadow-lg oui-shadow-base-9`}
             >
               {
                 orderInteractionWidgets[
@@ -892,7 +890,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
       </SortableContext>
       <DragOverlay
         dropAnimation={dropAnimationConfig}
-        modifiers={[scaleModifier]}
+
         // style={{
         //   transform: "scale(1.05)",
         // }}
