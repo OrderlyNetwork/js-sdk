@@ -7,7 +7,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsup && pnpm run build:css",
-    "build:css": "npx tailwindcss -o ./dist/styles.css --minify",
+    "build:css": "npx tailwindcss -i ./src/tailwind.css -o ./dist/styles.css --minify",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

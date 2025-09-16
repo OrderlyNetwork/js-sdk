@@ -1,16 +1,40 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragOverlay,
+  DragStartEvent,
+  DragEndEvent,
+  Modifier,
+  type ClientRect,
+} from "@dnd-kit/core";
+import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS, Transform } from "@dnd-kit/utilities";
 import { useLocalStorage } from "@orderly.network/hooks";
 import {
   SideMarketsWidget,
   SymbolInfoBarFullWidget,
   HorizontalMarketsWidget,
 } from "@orderly.network/markets";
-import { TradingviewFullscreenKey } from "@orderly.network/types";
+import {
+  OrderEntrySortKeys,
+  TradingviewFullscreenKey,
+} from "@orderly.network/types";
 import { Box, cn, Flex } from "@orderly.network/ui";
 import { OrderEntryWidget } from "@orderly.network/ui-order-entry";
 import { TradingviewWidget } from "@orderly.network/ui-tradingview";
 import { DepositStatusWidget } from "@orderly.network/ui-transfer";
-import { RemovablePanel } from "../../components/desktop/layout/removablePanel";
+import { SortablePanel } from "../../components/desktop/layout/sortablePanel";
 import { SplitLayout } from "../../components/desktop/layout/splitLayout";
 import {
   dataListInitialHeight,
@@ -78,6 +102,23 @@ export type DesktopLayoutProps = TradingState & {
   className?: string;
 };
 
+const scaleModifier: Modifier = ({
+  transform,
+  draggingNodeRect,
+}: {
+  transform: Transform;
+  draggingNodeRect: ClientRect | null;
+}) => {
+  if (draggingNodeRect) {
+    return {
+      ...transform,
+      scaleX: 2.05,
+      scaleY: 2.05,
+    };
+  }
+  return transform;
+};
+
 export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
   const {
     resizeable,
@@ -101,7 +142,6 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
     max4XL,
     animating,
     setAnimating,
-    positions,
     updatePositions,
     showPositionIcon,
     horizontalDraggable,
@@ -114,6 +154,109 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
     TradingviewFullscreenKey,
     false,
   );
+
+  const [sortableItems, setSortableItems] = useLocalStorage<string[]>(
+    OrderEntrySortKeys,
+    ["margin", "assets", "orderEntry"],
+  );
+
+  const dropAnimationConfig = useMemo(() => {
+    return {
+      keyframes({
+        transform,
+      }: {
+        transform: {
+          initial: Transform;
+          final: Transform;
+        };
+      }) {
+        return [
+          {
+            transform: CSS.Transform.toString({
+              ...transform.initial,
+              scaleX: 1.05,
+              scaleY: 1.05,
+            }),
+          },
+          {
+            transform: CSS.Transform.toString({
+              ...transform.final,
+              scaleX: 1,
+              scaleY: 1,
+              // scaleX: 0.85,
+              // scaleY: 0.85,
+            }),
+          },
+        ];
+      },
+      sideEffects: ({ active, dragOverlay }) => {
+        // console.log(active.node);
+        active.node.style.opacity = "0";
+        const innerElement = dragOverlay.node.querySelector(".inner-content");
+        if (innerElement) {
+          // innerElement.animate(
+          //   [{ transform: "scale(1.05)" }, { transform: "scale(1)" }],
+          //   {
+          //     duration: 200,
+          //     easing: "ease-out",
+          //   },
+          // );
+          innerElement.classList.add("oui-animate-shake");
+        }
+        return () => {
+          active.node.style.opacity = "";
+        };
+      },
+    };
+  }, []);
+
+  // Configure sensors for drag and drop interactions
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 5,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  );
+
+  // State for drag overlay management
+  const [activeId, setActiveId] = useState<string | null>(null);
+
+  /**
+   * Handle drag start event for sortable panels
+   * Sets the active dragging item for overlay rendering
+   */
+  function handleDragStart(event: DragStartEvent) {
+    setActiveId(event.active.id as string);
+  }
+
+  /**
+   * Handle drag end event for sortable panels
+   * Updates the order of sortable items and corresponding positions
+   */
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+
+    if (active.id !== over?.id && over) {
+      const oldIndex = sortableItems.indexOf(active.id as string);
+      const newIndex = sortableItems.indexOf(over.id as string);
+
+      if (oldIndex !== -1 && newIndex !== -1) {
+        // Update sortableItems order
+        const newItems = arrayMove(sortableItems, oldIndex, newIndex);
+        setSortableItems(newItems as string[]);
+
+        // Also update positions to keep them in sync
+        // updatePositions(oldIndex, newIndex);
+      }
+    }
+
+    // Reset active id after drag ends
+    setActiveId(null);
+  }
 
   const minScreenHeight = useMemo(() => {
     return tradingViewFullScreen
@@ -149,7 +292,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
       className={cn(
         "oui-bg-base-10",
         // -8 is for reducing the container's padding
-        "oui-sticky oui-z-[30] oui-py-2 oui-mb-[-8px]",
+        "oui-sticky oui-z-30 oui-mb-[-8px] oui-py-2",
         // Split line disabled for > 2xl screens
         !max2XL && "oui-mt-[-8px]",
       )}
@@ -299,52 +442,53 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
     </Box>
   );
 
-  const assetsOrderEntryMargin = [
-    <RemovablePanel
-      key="margin"
-      index={positions.findIndex((item) => item === 0)}
-      onLayout={updatePositions}
-      showIndicator={showPositionIcon}
-    >
-      <React.Suspense fallback={null}>
-        <LazyRiskRateWidget />
-      </React.Suspense>
-    </RemovablePanel>,
-    <RemovablePanel
-      key="assets"
-      className="oui-border oui-border-line-12"
-      index={positions.findIndex((item) => item === 1)}
-      onLayout={updatePositions}
-      showIndicator={showPositionIcon}
-    >
-      <>
-        <React.Suspense fallback={null}>
-          <LazyAssetViewWidget isFirstTimeDeposit={props.isFirstTimeDeposit} />
-        </React.Suspense>
-        <DepositStatusWidget
-          className="oui-mt-3 oui-gap-y-2"
-          onClick={props.navigateToPortfolio}
-        />
-      </>
-    </RemovablePanel>,
-    <RemovablePanel
-      key="orderEntry"
-      index={positions.findIndex((item) => item === 2)}
-      onLayout={updatePositions}
-      showIndicator={showPositionIcon}
-    >
-      <OrderEntryWidget
-        symbol={props.symbol}
-        disableFeatures={
-          props.disableFeatures as unknown as ("slippageSetting" | "feesInfo")[]
-        }
-      />
-    </RemovablePanel>,
-  ];
-
-  const orderEntryWidget = positions.map(
-    (index) => assetsOrderEntryMargin[index],
-  );
+  const orderInteractionWidgets = useMemo(() => {
+    return {
+      margin: {
+        className: "",
+        element: (
+          <React.Suspense fallback={null}>
+            <LazyRiskRateWidget />
+          </React.Suspense>
+        ),
+      },
+      assets: {
+        className: "oui-border oui-border-line-12",
+        element: (
+          <>
+            <React.Suspense fallback={null}>
+              <LazyAssetViewWidget
+                isFirstTimeDeposit={props.isFirstTimeDeposit}
+              />
+            </React.Suspense>
+            <DepositStatusWidget
+              className="oui-mt-3 oui-gap-y-2"
+              onClick={props.navigateToPortfolio}
+            />
+          </>
+        ),
+      },
+      orderEntry: {
+        className: "",
+        element: (
+          <OrderEntryWidget
+            symbol={props.symbol}
+            disableFeatures={
+              props.disableFeatures as unknown as (
+                | "slippageSetting"
+                | "feesInfo"
+              )[]
+            }
+          />
+        ),
+      },
+    };
+  }, [
+    props.isFirstTimeDeposit,
+    props.disableFeatures,
+    props.navigateToPortfolio,
+    props.symbol,
+  ]);
 
   const orderEntryView = (
     <Flex
@@ -357,7 +501,26 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
         width: mainSplitSize,
       }}
     >
-      {orderEntryWidget}
+      {sortableItems.map((key: string) => {
+        return (
+          <SortablePanel
+            key={key}
+            id={key}
+            showIndicator={showPositionIcon}
+            className={
+              orderInteractionWidgets[
+                key as keyof typeof orderInteractionWidgets
+              ].className
+            }
+          >
+            {
+              orderInteractionWidgets[
+                key as keyof typeof orderInteractionWidgets
+              ].element
+            }
+          </SortablePanel>
+        );
+      })}
     </Flex>
   );
 
@@ -440,209 +603,321 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
 
   if (max2XL) {
     return (
-      <Box height="100%">
-        {marketLayout === "top" && (
-          <Box className={cn("oui-max-h-8 oui-px-3 oui-mt-2", props.className)}>
-            {horizontalMarketsView}
-          </Box>
-        )}
-
-        <SplitLayout
-          ref={props.max2XLSplitRef}
-          style={{
-            minHeight: minScreenHeightSM,
-            minWidth: 1024 - scrollBarWidth,
-            // height: props.extraHeight ? props.extraHeight : undefined,
-          }}
-          className={cn(
-            "oui-flex oui-flex-1",
-            "oui-size-full oui-min-w-[1018px]",
-            "oui-px-3 oui-py-2",
-            props.className,
-          )}
-          onSizeChange={setDataListSplitHeightSM}
-          onDragging={props.onDataListSplitHeightDragging}
-          mode="vertical"
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+        modifiers={[restrictToVerticalAxis]}
+      >
+        <SortableContext
+          items={sortableItems}
+          strategy={verticalListSortingStrategy}
         >
-          <Flex
-            gapX={2}
-            itemAlign="stretch"
-            className={cn(
-              "oui-flex-1",
-              layout === "left" && "oui-flex-row-reverse",
+          <Box height="100%">
+            {marketLayout === "top" && (
+              <Box
+                className={cn("oui-mt-2 oui-max-h-8 oui-px-3", props.className)}
+              >
+                {horizontalMarketsView}
+              </Box>
             )}
-            style={{
-              minHeight: Math.max(
-                symbolInfoBarHeight +
-                  tradindviewMinHeight +
-                  orderbookMinHeight +
-                  space * 2,
-                props.orderEntryHeight,
-              ),
-              maxHeight:
-                symbolInfoBarHeight +
-                tradindviewMaxHeight +
-                orderbookMaxHeight +
-                space * 2,
-            }}
-          >
-            <Flex
-              height="100%"
-              className="oui-w-[calc(100%_-_280px_-_12px)] oui-flex-1"
-              direction="column"
-              gapY={2}
+
+            <SplitLayout
+              ref={props.max2XLSplitRef}
+              style={{
+                minHeight: minScreenHeightSM,
+                minWidth: 1024 - scrollBarWidth,
+                // height: props.extraHeight ? props.extraHeight : undefined,
+              }}
+              className={cn(
+                "oui-flex oui-flex-1",
+                "oui-size-full oui-min-w-[1018px]",
+                "oui-px-3 oui-py-2",
+                props.className,
+              )}
+              onSizeChange={setDataListSplitHeightSM}
+              onDragging={props.onDataListSplitHeightDragging}
+              mode="vertical"
             >
-              {symbolInfoBarView}
               <Flex
-                width="100%"
-                height="100%"
                 gapX={2}
                 itemAlign="stretch"
-                style={{
-                  minHeight: tradindviewMinHeight + orderbookMinHeight + space,
-                  maxHeight: tradindviewMaxHeight + orderbookMaxHeight + space,
-                }}
                 className={cn(
                   "oui-flex-1",
                   layout === "left" && "oui-flex-row-reverse",
                 )}
+                style={{
+                  minHeight: Math.max(
+                    symbolInfoBarHeight +
+                      tradindviewMinHeight +
+                      orderbookMinHeight +
+                      space * 2,
+                    props.orderEntryHeight,
+                  ),
+                  maxHeight:
+                    symbolInfoBarHeight +
+                    tradindviewMaxHeight +
+                    orderbookMaxHeight +
+                    space * 2,
+                }}
               >
-                {marketLayout === "left" && (
-                  <Box
-                    intensity={900}
-                    pt={3}
-                    r="2xl"
-                    width={marketsWidth}
+                <Flex
+                  height="100%"
+                  className="oui-w-[calc(100%_-_280px_-_12px)] oui-flex-1"
+                  direction="column"
+                  gapY={2}
+                >
+                  {symbolInfoBarView}
+                  <Flex
+                    width="100%"
+                    height="100%"
+                    gapX={2}
+                    itemAlign="stretch"
                     style={{
                       minHeight:
                         tradindviewMinHeight + orderbookMinHeight + space,
                       maxHeight:
                         tradindviewMaxHeight + orderbookMaxHeight + space,
                     }}
+                    className={cn(
+                      "oui-flex-1",
+                      layout === "left" && "oui-flex-row-reverse",
+                    )}
                   >
-                    {marketsWidget}
-                  </Box>
-                )}
-                <SplitLayout
-                  ref={props.tradingviewAndOrderbookSplitRef}
-                  mode="vertical"
-                  style={{ width: `calc(100% - ${marketsWidth}px)` }}
-                  className="oui-flex-1"
-                  onSizeChange={setOrderbookSplitHeightSM}
-                  onDragging={props.onTradingviewAndOrderbookDragging}
+                    {marketLayout === "left" && (
+                      <Box
+                        intensity={900}
+                        pt={3}
+                        r="2xl"
+                        width={marketsWidth}
+                        style={{
+                          minHeight:
+                            tradindviewMinHeight + orderbookMinHeight + space,
+                          maxHeight:
+                            tradindviewMaxHeight + orderbookMaxHeight + space,
+                        }}
+                      >
+                        {marketsWidget}
+                      </Box>
+                    )}
+                    <SplitLayout
+                      ref={props.tradingviewAndOrderbookSplitRef}
+                      mode="vertical"
+                      style={{ width: `calc(100% - ${marketsWidth}px)` }}
+                      className="oui-flex-1"
+                      onSizeChange={setOrderbookSplitHeightSM}
+                      onDragging={props.onTradingviewAndOrderbookDragging}
+                    >
+                      <Box
+                        width="100%"
+                        intensity={900}
+                        r="2xl"
+                        style={{
+                          minHeight: tradindviewMinHeight,
+                          maxHeight: tradindviewMaxHeight,
+                          height: 1200,
+                        }}
+                      >
+                        {tradingviewWidget}
+                      </Box>
+
+                      <Box
+                        r="2xl"
+                        height="100%"
+                        width="100%"
+                        style={{
+                          minHeight: orderbookMinHeight,
+                          maxHeight: orderbookMaxHeight,
+                          height: orderBookSplitHeightSM,
+                        }}
+                        className="oui-flex-1"
+                      >
+                        {orderbookWidget}
+                      </Box>
+                    </SplitLayout>
+                  </Flex>
+                </Flex>
+                <Flex
+                  ref={props.orderEntryViewRef}
+                  id="orderEntryView"
+                  gapY={3}
+                  direction="column"
+                  className="oui-relative"
+                  style={{
+                    width: orderEntryMinWidth,
+                    // force order entry render actual content height
+                    height: "max-content",
+                    // height:
+                    //   props.extraHeight && props.extraHeight > 100
+                    //     ? undefined
+                    // : "max-content",
+                  }}
                 >
-                  <Box
-                    width="100%"
-                    intensity={900}
-                    r="2xl"
-                    style={{
-                      minHeight: tradindviewMinHeight,
-                      maxHeight: tradindviewMaxHeight,
-                      height: 1200,
-                    }}
-                  >
-                    {tradingviewWidget}
-                  </Box>
-
-                  <Box
-                    r="2xl"
+                  <Flex
+                    gapY={2}
+                    direction="column"
                     height="100%"
-                    width="100%"
                     style={{
-                      minHeight: orderbookMinHeight,
-                      maxHeight: orderbookMaxHeight,
-                      height: orderBookSplitHeightSM,
+                      minWidth: orderEntryMinWidth,
+                      maxWidth: horizontalDraggable
+                        ? orderEntryMaxWidth
+                        : orderEntryMinWidth,
+                      width: mainSplitSize,
                     }}
-                    className="oui-flex-1"
                   >
-                    {orderbookWidget}
-                  </Box>
-                </SplitLayout>
+                    {sortableItems.map((key: string) => {
+                      return (
+                        <SortablePanel
+                          key={key}
+                          id={key}
+                          showIndicator={showPositionIcon}
+                          className={
+                            orderInteractionWidgets[
+                              key as keyof typeof orderInteractionWidgets
+                            ].className
+                          }
+                        >
+                          {
+                            orderInteractionWidgets[
+                              key as keyof typeof orderInteractionWidgets
+                            ].element
+                          }
+                        </SortablePanel>
+                      );
+                    })}
+                  </Flex>
+                  <Box height={props.extraHeight} />
+                </Flex>
               </Flex>
-            </Flex>
-            <Flex
-              ref={props.orderEntryViewRef}
-              id="orderEntryView"
-              gapY={3}
-              direction="column"
-              className="oui-relative"
-              style={{
-                width: orderEntryMinWidth,
-                // force order entry render actual content height
-                height: "max-content",
-                // height:
-                //   props.extraHeight && props.extraHeight > 100
-                //     ? undefined
-                // : "max-content",
-              }}
-            >
-              {orderEntryWidget}
-              <Box height={props.extraHeight} />
-            </Flex>
-          </Flex>
 
-          <Box
-            intensity={900}
-            r="2xl"
-            p={2}
-            style={{
-              height: dataListSplitHeightSM,
-              minHeight: Math.max(dataListMinHeight, props.dataListHeight),
-              maxHeight: dataListMaxHeight,
-            }}
-            className="oui-overflow-hidden"
-          >
-            {dataListWidget}
+              <Box
+                intensity={900}
+                r="2xl"
+                p={2}
+                style={{
+                  height: dataListSplitHeightSM,
+                  minHeight: Math.max(dataListMinHeight, props.dataListHeight),
+                  maxHeight: dataListMaxHeight,
+                }}
+                className="oui-overflow-hidden"
+              >
+                {dataListWidget}
+              </Box>
+
+              {marketLayout === "bottom" && stickyHorizontalMarketsView}
+            </SplitLayout>
           </Box>
-
-          {marketLayout === "bottom" && stickyHorizontalMarketsView}
-        </SplitLayout>
-      </Box>
+        </SortableContext>
+        <DragOverlay
+          dropAnimation={dropAnimationConfig}
+          modifiers={[scaleModifier]}
+        >
+          {activeId ? (
+            <SortablePanel
+              id={activeId}
+              showIndicator={showPositionIcon}
+              className={`${
+                orderInteractionWidgets[
+                  activeId as keyof typeof orderInteractionWidgets
+                ].className
+              } oui-shadow-lg oui-shadow-base-9 oui-p-5 oui-box-content -oui-translate-x-2 -oui-translate-y-2`}
+            >
+              {
+                orderInteractionWidgets[
+                  activeId as keyof typeof orderInteractionWidgets
+                ].element
+              }
+            </SortablePanel>
+          ) : null}
+        </DragOverlay>
+      </DndContext>
     );
   }
 
   return (
-    <Flex
-      style={{
-        minHeight: minScreenHeight,
-        minWidth: 1440 - scrollBarWidth,
-      }}
-      className={cn(
-        props.className,
-        "oui-justify-start",
-        tradingViewFullScreen &&
-          "oui-relative oui-w-screen oui-h-[calc(100vh-80px)] !oui-p-0 oui-overflow-hidden",
-      )}
-      width="100%"
-      p={2}
-      gap={2}
-      itemAlign="stretch"
-      direction="column"
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+      modifiers={[restrictToVerticalAxis]}
     >
-      {/* Horizontal Markets View on top for !=2xl screens */}
-      {marketLayout === "top" && horizontalMarketsView}
-
-      {/* Main Content Group */}
-      <Flex
-        className={cn(
-          "oui-flex-1 oui-overflow-hidden",
-          layout === "left" && "oui-flex-row-reverse",
-        )}
-        gap={2}
+      <SortableContext
+        items={sortableItems}
+        strategy={verticalListSortingStrategy}
       >
-        {!max4XL && marketLayout === "left" && marketsView}
-        <SplitLayout
-          className={cn("oui-flex oui-flex-1 oui-overflow-hidden")}
-          onSizeChange={onSizeChange}
-          disable={!horizontalDraggable}
+        <Flex
+          style={{
+            minHeight: minScreenHeight,
+            minWidth: 1440 - scrollBarWidth,
+          }}
+          className={cn(
+            props.className,
+            "oui-justify-start",
+            tradingViewFullScreen &&
+              "oui-relative oui-h-[calc(100vh-80px)] oui-w-screen oui-overflow-hidden !oui-p-0",
+          )}
+          width="100%"
+          p={2}
+          gap={2}
+          itemAlign="stretch"
+          direction="column"
         >
-          {layout === "left" && orderEntryView}
-          {mainView}
-          {layout === "right" && orderEntryView}
-        </SplitLayout>
-      </Flex>
+          {/* Horizontal Markets View on top for !=2xl screens */}
+          {marketLayout === "top" && horizontalMarketsView}
 
-      {marketLayout === "bottom" && stickyHorizontalMarketsView}
-    </Flex>
+          {/* Main Content Group */}
+          <Flex
+            className={cn(
+              "oui-flex-1 oui-overflow-hidden",
+              layout === "left" && "oui-flex-row-reverse",
+            )}
+            gap={2}
+          >
+            {!max4XL && marketLayout === "left" && marketsView}
+            <SplitLayout
+              className={cn("oui-flex oui-flex-1 oui-overflow-hidden")}
+              onSizeChange={onSizeChange}
+              disable={!horizontalDraggable}
+            >
+              {layout === "left" && orderEntryView}
+              {mainView}
+              {layout === "right" && orderEntryView}
+            </SplitLayout>
+          </Flex>
+
+          {marketLayout === "bottom" && stickyHorizontalMarketsView}
+        </Flex>
+      </SortableContext>
+      <DragOverlay
+        dropAnimation={dropAnimationConfig}
+        modifiers={[scaleModifier]}
+        // style={{
+        //   transform: "scale(1.05)",
+        // }}
+        // transition="transform 200ms ease"
+        // className="oui-animate-pop"
+      >
+        {activeId ? (
+          <SortablePanel
+            id={activeId}
+            showIndicator={showPositionIcon}
+            dragOverlay
+            className={`${
+              orderInteractionWidgets[
+                activeId as keyof typeof orderInteractionWidgets
+              ].className
+            } oui-shadow-lg oui-shadow-base-9`}
+          >
+            {
+              orderInteractionWidgets[
+                activeId as keyof typeof orderInteractionWidgets
+              ].element
+            }
+          </SortablePanel>
+        ) : null}
+      </DragOverlay>
+    </DndContext>
   );
 };
