@@ -42,7 +42,6 @@ export const LeverageBadge = (props: LeverageBadgeProps) => {
       onClick={showModal}
     >
       <Text>Cross</Text>
-
       <Text.numeral dp={0} rm={Decimal.ROUND_DOWN} unit="X">
         {curLeverage}
       </Text.numeral>
