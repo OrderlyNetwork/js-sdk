@@ -86,7 +86,7 @@ export const AccountMenu = (props: AccountMenuProps) => {
             .catch((e) => console.error(e));
         }}
       >
-        {isMobile ? t("connector.connect") : t("connector.connectWallet")}123
+        {isMobile ? t("connector.connect") : t("connector.connectWallet")}
       </Button>
     );
     // return (
