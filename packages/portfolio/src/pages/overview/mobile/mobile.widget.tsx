@@ -13,7 +13,7 @@ import { PortfolioHandleMobile } from "./portfolioHandle.ui.mobile";
 import { PortfolioValueMobile } from "./portfolioVaule.ui.mobile";
 import { SettingRouterMobile } from "./settingRouter.ui.mobile";
 import { TraderCardMobile } from "./traderCard.ui.mobile";
-import { TradingRewardsCardMobile } from "./tradingRewardsCard.ui.mobile";
+// import { TradingRewardsCardMobile } from "./tradingRewardsCard.ui.mobile";
 import { useRewardsDataScript } from "./useRewardsData.script";
 
 export const MobileOverview: React.FC = () => {
@@ -96,7 +96,8 @@ export const MobileOverview: React.FC = () => {
           height={"100%"}
           className="oui-gap-3"
         >
-          <Flex direction="column" className="oui-flex-1 oui-gap-3">
+          {/* Disable trading rewards card for now. Set to row */}
+          <Flex direction="row" className="oui-flex-1 oui-gap-3">
             <AffiliateCardMobile
               referralInfo={rewardsData.referralInfo}
               routerAdapter={layoutContext?.routerAdapter}
@@ -106,9 +107,9 @@ export const MobileOverview: React.FC = () => {
               routerAdapter={layoutContext?.routerAdapter}
             />
           </Flex>
-          <Flex direction="column" className="oui-flex-1">
+          {/* <Flex direction="column" className="oui-flex-1">
             <TradingRewardsCardMobile {...rewardsData} goToClaim={goToClaim} />
-          </Flex>
+          </Flex> */}
         </Flex>
         <SettingRouterMobile routerAdapter={layoutContext?.routerAdapter} />
       </Flex>
