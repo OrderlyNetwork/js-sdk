@@ -190,15 +190,15 @@ export const DataList: React.FC<DataListState> = (props) => {
         <LiquidationWidget symbol={showAllSymbol ? undefined : symbol} />
       ),
     },
-    {
-      value: DataListTabType.assets,
-      title: t("common.assets"),
-      content: (
-        <Flex direction="column" width="100%" height="100%" itemAlign="start">
-          <AssetsModule.AssetsDataTableWidget />
-        </Flex>
-      ),
-    },
+    // {
+    //   value: DataListTabType.assets,
+    //   title: t("common.assets"),
+    //   content: (
+    //     <Flex direction="column" width="100%" height="100%" itemAlign="start">
+    //       <AssetsModule.AssetsDataTableWidget />
+    //     </Flex>
+    //   ),
+    // },
   ];
 
   return (
