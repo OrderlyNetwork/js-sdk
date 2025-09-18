@@ -36,6 +36,7 @@ import {
   settleMessage,
   internalTransferMessage,
   withdrawMessage,
+  dexRequestMessage,
 } from "./helper";
 import { getTokenAccounts } from "./solana.util";
 import { SolanaAdapterOption, SolanaWalletProvider } from "./types";
@@ -324,21 +325,20 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
       domain: SignatureDomain;
     }
   > {
-    // TODO: not support dex request message for solana and will be supported in the future
-    // const [message, toSignatureMessage] = await dexRequestMessage({
-    //   ...inputs,
-    //   chainId: this.chainId,
-    //   domain: inputs.domain,
-    // });
+    const [message, toSignatureMessage] = await dexRequestMessage({
+      ...inputs,
+      chainId: this.chainId,
+    });
 
-    // const signedMessage = await this.signTypedData(toSignatureMessage);
+    // 使用 signMessage 方法签名，而不是 signTypedData
+    const signature = await this.signMessage(toSignatureMessage as Uint8Array);
 
     return {
       message: {
         ...inputs,
         chainType: "SOL",
       },
-      signatured: "",
+      signatured: signature,
       domain: inputs.domain,
     };
   }
