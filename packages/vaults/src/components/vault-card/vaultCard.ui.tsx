@@ -17,6 +17,7 @@ export const VaultCard: FC<VaultCardScript> = (props) => {
     lpInfo,
     description,
     isEVMConnected,
+    isSOLConnected,
     openDepositAndWithdraw,
     availableBalance,
     openVaultWebsite,
@@ -46,6 +47,7 @@ export const VaultCard: FC<VaultCardScript> = (props) => {
       </div>
     );
   }, [vaultInfo.supported_chains]);
+  console.log("supportVaultsList", supportVaultsList);
 
   return (
     <div className="oui-relative oui-h-[388px] oui-overflow-hidden oui-rounded-2xl oui-border oui-border-solid oui-border-white/[0.12] oui-bg-base-9">
@@ -141,6 +143,7 @@ export const VaultCard: FC<VaultCardScript> = (props) => {
 
         <VaultCardOperation
           isEVMConnected={isEVMConnected}
+          isSOLConnected={isSOLConnected}
           openDepositAndWithdraw={openDepositAndWithdraw}
         />
       </div>
@@ -210,16 +213,17 @@ const LpInfoItem: FC<{
 
 type VaultCardOperationProps = {
   isEVMConnected: boolean;
+  isSOLConnected: boolean;
   openDepositAndWithdraw: (activeTab: "deposit" | "withdraw") => void;
 };
 
 const VaultCardOperation: FC<VaultCardOperationProps> = (props) => {
-  const { isEVMConnected, openDepositAndWithdraw } = props;
+  const { isEVMConnected, isSOLConnected, openDepositAndWithdraw } = props;
   const { t } = useTranslation();
 
   return (
     <AuthGuard buttonProps={{ size: "md", fullWidth: true }}>
-      {isEVMConnected ? (
+      {isEVMConnected || isSOLConnected ? (
         <div className="oui-flex oui-items-center oui-gap-2">
           <Button
             className="oui-flex-1"
