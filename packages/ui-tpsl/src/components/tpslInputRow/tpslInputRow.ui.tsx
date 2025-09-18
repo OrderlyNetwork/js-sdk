@@ -4,9 +4,8 @@ import { useTranslation, Trans } from "@orderly.network/i18n";
 import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
 import { OrderType, PositionType } from "@orderly.network/types";
 import { Flex, Text, Grid, Checkbox, cn } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { Decimal, getTPSLDirection } from "@orderly.network/utils";
 import { PnlInputWidget } from "../../pnlInput/pnlInput.widget";
-import { getDirection } from "../../utils";
 import { OrderPriceType } from "../orderPriceType";
 import { PriceInput } from "./priceInput";
 import { useTPSLInputRowScript } from "./tpslInputRow.script";
@@ -54,7 +53,7 @@ export const TPSLInputRowUI: React.FC<TPSLInputRowProps> = (props) => {
     // ROI = (close price - order_price) / order_price × leverage × direction
     // direction: long: +1 / short: -1
     // leverage = MIN( current_account_leverage, symbol_leverage)
-    const direction = getDirection({
+    const direction = getTPSLDirection({
       side: props.side,
       type: props.type,
       closePrice: _entryPrice.toNumber(),

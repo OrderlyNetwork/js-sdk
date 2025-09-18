@@ -38,3 +38,35 @@ export function getTrailingStopPrice(order: API.AlgoOrderExt) {
 
   return 0;
 }
+
+export function getTPSLDirection(inputs: {
+  side: OrderSide;
+  type: "tp" | "sl";
+  closePrice: number;
+  orderPrice: number;
+}) {
+  const { side, type, closePrice, orderPrice } = inputs;
+
+  let direction = 1;
+  if (side === OrderSide.BUY) {
+    if (type === "tp") {
+      // close price >= order price
+      direction = closePrice >= orderPrice ? 1 : -1;
+    } else {
+      // close price < order price
+      direction = closePrice < orderPrice ? -1 : 1;
+    }
+  }
+
+  if (side === OrderSide.SELL) {
+    if (type === "tp") {
+      // close price <= order price
+      direction = closePrice <= orderPrice ? 1 : -1;
+    } else {
+      // close price > order price
+      direction = closePrice > orderPrice ? -1 : 1;
+    }
+  }
+
+  return direction;
+}

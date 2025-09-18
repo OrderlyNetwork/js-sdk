@@ -93,9 +93,10 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
         value = `${value}`; // convert to string
 
         if (focus) {
-          if (type === "SL" && mode === PnLMode.PnL) {
-            value = value.startsWith("-") ? value : "-" + value;
-          }
+          // not need to add "-", because the value is already negative
+          // if (type === "SL" && mode === PnLMode.PnL) {
+          //   value = value.startsWith("-") ? value : "-" + value;
+          // }
         }
 
         if (value === "" || value === "-") return "";
@@ -141,7 +142,8 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
             value = `${value}${percentageSuffix.current}`;
           }
         } else if (mode === PnLMode.PnL && type === "SL" && focus) {
-          value = value.startsWith("-") ? value : "-" + value;
+          // not need to add "-", because the value is already negative
+          // value = value.startsWith("-") ? value : "-" + value;
         } else {
           value = todpIfNeed(value, dp);
         }

@@ -25,7 +25,6 @@ export class TPSLOrderCreator extends BaseAlgoOrderCreator<
       values.side! === OrderSide.BUY ? OrderSide.SELL : OrderSide.BUY;
 
     const child_orders = [];
-    console.log("tp_sl values", values);
 
     if (values.tp_trigger_price) {
       const tp_trigger_price = !!values.tp_trigger_price

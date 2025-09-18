@@ -2,8 +2,7 @@ import { findTPSLFromOrder } from "@orderly.network/hooks";
 import { positions as perpPositions } from "@orderly.network/perp";
 import { API, OrderSide } from "@orderly.network/types";
 import { Flex, Text } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
-import { getDirection } from "../../utils";
+import { Decimal, getTPSLDirection } from "@orderly.network/utils";
 import { FlexCell } from "../components/common";
 import { useTPSLDetailContext } from "../tpslDetailProvider";
 
@@ -21,7 +20,7 @@ export const EstPnlRender = ({ order }: { order: API.AlgoOrder }) => {
   const openPrice = position?.average_open_price;
 
   if (tp_trigger_price) {
-    const direction = getDirection({
+    const direction = getTPSLDirection({
       side,
       type: "tp",
       closePrice: tp_trigger_price,
@@ -41,7 +40,7 @@ export const EstPnlRender = ({ order }: { order: API.AlgoOrder }) => {
   }
 
   if (sl_trigger_price) {
-    const direction = getDirection({
+    const direction = getTPSLDirection({
       side,
       type: "sl",
       closePrice: sl_trigger_price,
