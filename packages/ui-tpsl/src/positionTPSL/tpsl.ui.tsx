@@ -128,6 +128,7 @@ export const TPSL: React.FC<TPSLBuilderState & TPSLProps> = (props) => {
               symbol={position.symbol}
               rootOrderPrice={position.average_open_price.toString()}
               type="tp"
+              side={position.position_qty > 0 ? OrderSide.BUY : OrderSide.SELL}
               values={{
                 enable: TPSL_OrderEntity.tp_enable ?? true,
                 trigger_price:
@@ -160,6 +161,7 @@ export const TPSL: React.FC<TPSLBuilderState & TPSLProps> = (props) => {
               symbol={position.symbol}
               rootOrderPrice={position.average_open_price.toString()}
               type="sl"
+              side={position.position_qty > 0 ? OrderSide.BUY : OrderSide.SELL}
               values={{
                 enable: TPSL_OrderEntity.sl_enable ?? true,
                 trigger_price:

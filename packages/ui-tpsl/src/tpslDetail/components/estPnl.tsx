@@ -1,8 +1,8 @@
 import { findTPSLFromOrder } from "@orderly.network/hooks";
 import { positions as perpPositions } from "@orderly.network/perp";
-import { API } from "@orderly.network/types";
+import { API, OrderSide } from "@orderly.network/types";
 import { Flex, Text } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { Decimal, getTPSLDirection } from "@orderly.network/utils";
 import { FlexCell } from "../components/common";
 import { useTPSLDetailContext } from "../tpslDetailProvider";
 
@@ -15,30 +15,48 @@ export const EstPnlRender = ({ order }: { order: API.AlgoOrder }) => {
   const qty = new Decimal(order.quantity).eq(0)
     ? position.position_qty
     : order.quantity;
+
+  const side = position.position_qty > 0 ? OrderSide.BUY : OrderSide.SELL;
+  const openPrice = position?.average_open_price;
+
   if (tp_trigger_price) {
+    const direction = getTPSLDirection({
+      side,
+      type: "tp",
+      closePrice: tp_trigger_price,
+      orderPrice: openPrice,
+    });
     tp_unrealPnl = new Decimal(
       perpPositions.unrealizedPnL({
         qty,
-        openPrice: position?.average_open_price,
+        openPrice,
         // markPrice: unRealizedPrice,
         markPrice: tp_trigger_price,
       }),
     )
       .abs()
+      .mul(direction)
       .toNumber();
   }
 
   if (sl_trigger_price) {
+    const direction = getTPSLDirection({
+      side,
+      type: "sl",
+      closePrice: sl_trigger_price,
+      orderPrice: openPrice,
+    });
     sl_unrealPnl = new Decimal(
       perpPositions.unrealizedPnL({
         qty: qty,
-        openPrice: position?.average_open_price,
+        openPrice,
         // markPrice: unRealizedPrice,
         markPrice: sl_trigger_price,
       }),
     )
       .abs()
-      .mul(-1)
+      .mul(direction)
+      // .mul(-1)
       .toNumber();
   }
   return (
