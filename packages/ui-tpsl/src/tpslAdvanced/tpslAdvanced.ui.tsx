@@ -200,6 +200,7 @@ export const TPSLAdvancedUI = (props: Props) => {
               rootOrderPrice={formattedOrder.order_price}
               symbol={symbolInfo.symbol}
               type="tp"
+              side={formattedOrder.side as OrderSide}
               values={tpValues}
               errors={validated ? errors : null}
               quote_dp={symbolInfo.quote_dp}
@@ -219,6 +220,7 @@ export const TPSLAdvancedUI = (props: Props) => {
               rootOrderPrice={formattedOrder.order_price}
               symbol={symbolInfo.symbol}
               type="sl"
+              side={formattedOrder.side as OrderSide}
               values={slValues}
               hideOrderPrice={
                 formattedOrder.position_type === PositionType.FULL

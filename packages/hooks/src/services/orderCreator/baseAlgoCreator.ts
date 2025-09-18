@@ -141,7 +141,7 @@ export abstract class BaseAlgoOrderCreator<
           );
         }
 
-        if (!!sl_trigger_price && Number(sl_trigger_price) > mark_price) {
+        if (!!sl_trigger_price && Number(sl_trigger_price) >= mark_price) {
           result.sl_trigger_price = OrderValidation.max(
             "sl_trigger_price",
             formatPrice(mark_price, quote_dp),
@@ -218,7 +218,7 @@ export abstract class BaseAlgoOrderCreator<
           );
         }
 
-        if (!!sl_trigger_price && Number(sl_trigger_price) < mark_price) {
+        if (!!sl_trigger_price && Number(sl_trigger_price) <= mark_price) {
           result.sl_trigger_price = OrderValidation.min(
             "sl_trigger_price",
             formatPrice(mark_price, quote_dp),
