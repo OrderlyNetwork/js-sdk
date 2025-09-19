@@ -214,11 +214,11 @@ export const DataList: React.FC<DataListState & { className?: string }> = (
         />
       ),
     },
-    // {
-    //   title: t("common.assets"),
-    //   value: DataListTabType.assets,
-    //   content: <AssetsModule.AssetsWidget />,
-    // },
+    {
+      title: t("common.assets"),
+      value: DataListTabType.assets,
+      content: <AssetsModule.AssetsWidget />,
+    },
   ];
 
   return (
