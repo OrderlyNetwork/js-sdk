@@ -69,7 +69,7 @@ export const FeeTierTable: React.FC<FeeTierTableProps> = (props) => {
         return {
           "data-state": "active",
           className: cn(
-            "oui-pointer-events-none oui-h-[54px] oui-text-[rgba(0,0,0,0.88)] oui-gradient-primary",
+            "oui-pointer-events-none oui-h-[54px] oui-text-[rgba(0,0,0,0.88)] oui-gradient-brand",
           ),
           ...config.active,
         };

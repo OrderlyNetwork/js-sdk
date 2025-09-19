@@ -19,6 +19,9 @@ export type UseFeeTierScriptOptions = {
   dataAdapter?: (
     columns: Column<any>[],
     dataSource: any[],
+    context?: {
+      tier?: number;
+    },
   ) => {
     columns: Column<any>[];
     dataSource: any[];
@@ -77,9 +80,9 @@ export const useFeeTierScript = (options?: UseFeeTierScriptOptions) => {
 
   const { columns, dataSource } = useMemo(() => {
     return typeof dataAdapter === "function"
-      ? dataAdapter(cols, defaultDataSource)
+      ? dataAdapter(cols, defaultDataSource, { tier: tier! })
       : { columns: cols, dataSource: defaultDataSource };
-  }, [dataAdapter, cols]);
+  }, [dataAdapter, cols, tier]);
 
   useEffect(() => {
     if (!data || isLoading) {

@@ -54,6 +54,7 @@ export const MobileHeaderItem: React.FC<FeeTierHeaderItemProps> = (props) => {
             className="oui-cursor-pointer oui-rounded oui-bg-gradient-to-r oui-from-[rgb(var(--oui-gradient-brand-start)_/_0.12)] oui-to-[rgb(var(--oui-gradient-brand-end)_/_0.12)] oui-px-1"
             onClick={() => {
               modal.dialog({
+                size: "sm",
                 title: t("common.tips"),
                 content: t("portfolio.feeTier.effectiveFee.tooltip"),
               });

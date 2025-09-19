@@ -3,8 +3,10 @@ import { produce } from "immer";
 import { useTranslation } from "@orderly.network/i18n";
 import { FeeTierModule } from "@orderly.network/portfolio";
 import { ARBITRUM_MAINNET_CHAINID } from "@orderly.network/types";
-import { Button, Flex, Text, useScreen } from "@orderly.network/ui";
+import { Button, cn, Flex, Text, useScreen } from "@orderly.network/ui";
 import type { ButtonProps, Column } from "@orderly.network/ui";
+import { PathEnum } from "../../../constant";
+import { useNav } from "../../../hooks/useNav";
 
 const useWooStaking = (inputs: { decimals: number; chainId: number }) => {
   return {
@@ -36,8 +38,17 @@ const TopRightIcon: React.FC<React.SVGAttributes<SVGSVGElement>> = (props) => {
 
 const TradingBtn: React.FC<ButtonProps> = (props) => {
   const { t } = useTranslation();
+  const { onRouteChange } = useNav();
   return (
-    <Button {...props}>
+    <Button
+      {...props}
+      onClick={() => {
+        onRouteChange({
+          href: PathEnum.Perp,
+          name: t("common.trading"),
+        });
+      }}
+    >
       <Flex gap={1}>
         <Text>{t("common.trading")}</Text>
         <TopRightIcon />
@@ -50,11 +61,13 @@ const StakeBtn: React.FC<ButtonProps> = (props) => {
   const { t } = useTranslation();
   return (
     <Button
-      onClick={() => window.open("https://woofi.com/swap/stake", "_blank")}
+      onClick={() =>
+        window.open("https://app.orderly.network/staking", "_blank")
+      }
       {...props}
     >
       <Flex gap={1}>
-        <Text>{t("tradingRewards.stake")} WOO</Text>
+        <Text>{t("tradingRewards.stake")} ORDER</Text>
         <TopRightIcon />
       </Flex>
     </Button>
@@ -82,37 +95,37 @@ const FeeTierPage: React.FC = () => {
         tier: 2,
         or: "/",
         staking_level: `${t("portfolio.feeTier.column.tier")} 1 - 2`,
-        description: "(1.8K - 15.1K WOO)",
+        description: "(1.8K - 15.1K ORDER)",
       },
       {
         tier: 3,
         or: "/",
         staking_level: `${t("portfolio.feeTier.column.tier")} 3 - 4`,
-        description: "(15.1K - 83K WOO)",
+        description: "(15.1K - 83K ORDER)",
       },
       {
         tier: 4,
         or: "/",
         staking_level: `${t("portfolio.feeTier.column.tier")} 5`,
-        description: "(83K - 189.6K WOO)",
+        description: "(83K - 189.6K ORDER)",
       },
       {
         tier: 5,
         or: "/",
         staking_level: `${t("portfolio.feeTier.column.tier")} 6`,
-        description: "(189.6K - 430.7K WOO)",
+        description: "(189.6K - 430.7K ORDER)",
       },
       {
         tier: 6,
         or: "/",
         staking_level: `${t("portfolio.feeTier.column.tier")} 7 - 8`,
-        description: `(430.7K - 2209.7K WOO)`,
+        description: `(430.7K - 2209.7K ORDER)`,
       },
       {
         tier: 7,
         or: "/",
         staking_level: `${t("portfolio.feeTier.column.tier")} 9 - 10`,
-        description: `above 2209.7K WOO`,
+        description: `above 2209.7K ORDER`,
       },
     ];
     if (!isMobile) {
@@ -126,7 +139,7 @@ const FeeTierPage: React.FC = () => {
   }, [t, isMobile]);
 
   const dataAdapter = useCallback(
-    (columns: Column[], dataSource: any[]) => {
+    (columns: Column[], dataSource: any[], ctx?: { tier?: number }) => {
       const cols: Column[] = [
         ...columns.slice(0, 2),
         {
@@ -136,7 +149,7 @@ const FeeTierPage: React.FC = () => {
           align: "center",
         },
         {
-          title: `WOO ${t("portfolio.feeTier.column.stakingLevel")}`,
+          title: `ORDER ${t("portfolio.feeTier.column.stakingLevel")}`,
           dataIndex: "staking",
           align: "center",
           width: 150,
@@ -146,7 +159,13 @@ const FeeTierPage: React.FC = () => {
               <Flex direction={"column"}>
                 {staking_level}
                 {description && (
-                  <div className="oui-text-white/[.36] state-text">
+                  <div
+                    className={cn(
+                      ctx?.tier === row.tier
+                        ? "oui-text-black/[.66]"
+                        : "oui-text-base-contrast-36",
+                    )}
+                  >
                     {description}
                   </div>
                 )}
@@ -208,34 +227,40 @@ const FeeTierPage: React.FC = () => {
 
   return (
     <>
-      <FeeTierModule.FeeTierPage
-        key={isMobile ? "mobile" : "desktop"}
-        dataAdapter={dataAdapter}
-        headerDataAdapter={headerDataAdapter}
-        onRow={() => {
-          return {
-            normal: {
-              className: "oui-h-[54px]",
-            },
-            active: {
-              className:
-                "oui-pointer-events-none oui-h-[54px] oui-text-[rgba(0,0,0,0.88)] oui-gradient-primary",
-            },
-          };
-        }}
-        onCell={() => {
-          return {
-            normal: {
-              //
-            },
-            active: {
-              //
-            },
-          };
-        }}
-      />
+      <div className="oui-overflow-y-auto oui-pb-16">
+        <FeeTierModule.FeeTierPage
+          key={isMobile ? "mobile" : "desktop"}
+          dataAdapter={dataAdapter}
+          headerDataAdapter={headerDataAdapter}
+          // onRow={() => {
+          //   return {
+          //     normal: {
+          //       className: "oui-h-[54px]",
+          //     },
+          //     active: {
+          //       className:
+          //         "oui-pointer-events-none oui-h-[54px] oui-text-[rgba(0,0,0,0.88)] oui-gradient-brand",
+          //     },
+          //   };
+          // }}
+          onCell={() => {
+            return {
+              normal: {},
+              active: {
+                // className: "oui-text-white",
+              },
+            };
+          }}
+        />
+      </div>
       {isMobile && (
-        <Flex m={4} gapX={3} itemAlign={"center"} justify={"between"}>
+        <Flex
+          m={4}
+          gapX={3}
+          itemAlign={"center"}
+          justify={"between"}
+          className="oui-fixed oui-bottom-0 oui-left-0 oui-right-0"
+        >
           <TradingBtn size="md" fullWidth />
           <StakeBtn size="md" fullWidth />
         </Flex>
