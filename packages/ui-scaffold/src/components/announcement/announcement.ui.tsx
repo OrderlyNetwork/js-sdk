@@ -305,6 +305,22 @@ export const AnnouncementUI: React.FC<Readonly<AnnouncementProps>> = (
     return null;
   }
 
+  const renderSlider = () => {
+    // if tips length is 1, loop is not effective, so we need to duplicate the tips
+    const list = tips.length === 1 ? [...tips, ...tips] : tips;
+
+    return list.map((item, index) => (
+      <AnnouncementItem
+        key={`item-${item.announcement_id}-${index}`}
+        type={item?.type}
+        text={item?.i18n?.[i18n.language] || item?.message?.trim()}
+        url={item?.url}
+        isActive={index === selectedSnap}
+        onItemFinish={goNext}
+      />
+    ));
+  };
+
   return (
     <div
       style={style}
@@ -321,21 +337,12 @@ export const AnnouncementUI: React.FC<Readonly<AnnouncementProps>> = (
         className="oui-relative oui-h-[34px] oui-w-full oui-max-w-full oui-transform-gpu oui-overflow-hidden"
       >
         <div className="oui-flex oui-h-full oui-transform-gpu oui-flex-col">
-          {tips.map((item, index) => (
-            <AnnouncementItem
-              key={`item-${item.announcement_id}-${index}`}
-              type={item?.type}
-              text={item?.i18n?.[i18n.language] || item?.message?.trim()}
-              url={item?.url}
-              isActive={index === selectedSnap}
-              onItemFinish={goNext}
-            />
-          ))}
+          {renderSlider()}
         </div>
       </div>
       <Controls
-        selectedSnap={selectedSnap}
-        snapCount={snapCount}
+        selectedSnap={tips.length === 1 ? 0 : selectedSnap}
+        snapCount={tips.length === 1 ? 1 : snapCount}
         closeTips={closeTips}
         prevTips={onPrevButtonClick}
         nextTips={onNextButtonClick}
