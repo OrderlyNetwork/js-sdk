@@ -1,5 +1,12 @@
 # tsconfig
 
+## 0.10.1
+
+### Patch Changes
+
+- publish
+- bb587ea: publish
+
 ## 0.10.1-alpha.0
 
 ### Patch Changes

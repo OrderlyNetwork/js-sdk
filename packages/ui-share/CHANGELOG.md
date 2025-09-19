@@ -1,5 +1,19 @@
 # @orderly.network/ui-share
 
+## 2.7.1
+
+### Patch Changes
+
+- publish
+- bb587ea: publish
+- Updated dependencies
+- Updated dependencies [bb587ea]
+  - @orderly.network/hooks@2.7.1
+  - @orderly.network/i18n@2.7.1
+  - @orderly.network/types@2.7.1
+  - @orderly.network/ui@2.7.1
+  - @orderly.network/utils@2.7.1
+
 ## 2.7.1-alpha.0
 
 ### Patch Changes
