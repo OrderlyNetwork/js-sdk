@@ -151,6 +151,8 @@ export const orderEntry = {
   "orderEntry.reduceOnly.reminder.content":
     "Your account is in reduce-only and cannot open new positions. Would you like to turn off reduce-only mode and proceed with the order?",
   "orderEntry.placeOrderNow": "Place order now",
+  "orderEntry.maxQty.reminder.content":
+    "Order qty reduced to max available: {{maxQty}}",
 };
 
 export type OrderEntry = typeof orderEntry;

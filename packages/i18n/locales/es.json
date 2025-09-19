@@ -556,6 +556,7 @@
   "orderEntry.reduceOnly.reminder": "Recordatorio de solo reducción",
   "orderEntry.reduceOnly.reminder.content": "Su cuenta está en modo de solo reducción y no puede abrir nuevas posiciones. ¿Desea desactivar el modo de solo reducción y proceder con la orden?",
   "orderEntry.placeOrderNow": "Realizar orden ahora",
+  "orderEntry.maxQty.reminder.content": "Cantidad de orden reducida al máximo disponible: {{maxQty}}",
   "leverage.maxAccountLeverage": "Apalancamiento máximo de cuenta",
   "leverage.accountLeverage": "Apalancamiento de cuenta",
   "leverage.currentLeverage": "Apalancamiento actual",

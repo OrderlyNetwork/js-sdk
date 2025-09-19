@@ -1,4 +1,4 @@
-import React, { useEffect, useId, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useId, useMemo, useState } from "react";
 import {
   OrderValidationResult,
   useLocalStorage,
@@ -27,6 +27,7 @@ import {
   Text,
 } from "@orderly.network/ui";
 import { TPSLAdvancedWidget } from "@orderly.network/ui-tpsl";
+import { Decimal } from "@orderly.network/utils";
 import { AdditionalConfigButton } from "./components/additional/additionalConfigButton";
 import {
   AdditionalInfo,
@@ -37,6 +38,7 @@ import { AdvancedTPSLResult } from "./components/advancedTPSLResult";
 import { AssetInfo } from "./components/assetInfo";
 import { Available } from "./components/available";
 import { orderConfirmDialogId } from "./components/dialog/confirm.ui";
+import { MaxQtyConfirm } from "./components/dialog/maxQtyConfirm";
 import { scaledOrderConfirmDialogId } from "./components/dialog/scaledOrderConfirm";
 import { OrderEntryHeader } from "./components/header";
 import { OrderEntryProvider } from "./components/orderEntryProvider";
@@ -74,6 +76,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
     setSoundAlert,
     currentFocusInput,
   } = props;
+  const [maxQtyConfirmOpen, setMaxQtyConfirmOpen] = useState(false);
 
   const { t } = useTranslation();
 
@@ -161,7 +164,6 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
   }, [errorMsgVisible]);
 
   const onSubmit = useMemoizedFn(async () => {
-    console.log("onSubmit", formattedOrder);
     const isScaledOrder = formattedOrder.order_type === OrderType.SCALED;
 
     helper
@@ -226,6 +228,21 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
       });
   });
 
+  const formattedMaxQty = useMemo(() => {
+    return new Decimal(maxQty)
+      .todp(symbolInfo.base_dp, Decimal.ROUND_DOWN)
+      .toString();
+  }, [maxQty, symbolInfo.base_dp]);
+
+  const onMaxQtyConfirm = useCallback(() => {
+    setOrderValue("order_quantity", formattedMaxQty);
+    // submit order when order_quantity updated
+    requestAnimationFrame(() => {
+      onSubmit();
+    });
+    setMaxQtyConfirmOpen(false);
+  }, [setOrderValue, formattedMaxQty]);
+
   const validateSubmit = async () => {
     // show a prompt reminding the user. If the user confirms, automatically disable Reduce Only and proceed with the action.
     if (formattedOrder.reduce_only && maxQty === 0) {
@@ -246,6 +263,8 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           return Promise.resolve(false);
         },
       });
+    } else if (maxQty > 0 && Number(formattedOrder.order_quantity) > maxQty) {
+      setMaxQtyConfirmOpen(true);
     } else {
       onSubmit();
     }
@@ -349,6 +368,13 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
       triggerPriceInputRef={props.triggerPriceInputRef}
       activatedPriceInputRef={props.activatedPriceInputRef}
     >
+      <MaxQtyConfirm
+        open={maxQtyConfirmOpen}
+        onOpenChange={setMaxQtyConfirmOpen}
+        maxQty={formattedMaxQty}
+        onConfirm={onMaxQtyConfirm}
+        base={symbolInfo.base}
+      />
       <div
         className={"oui-space-y-2 oui-text-base-contrast-54 xl:oui-space-y-3"}
         ref={props.containerRef}

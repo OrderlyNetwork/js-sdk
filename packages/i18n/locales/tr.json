@@ -556,6 +556,7 @@
   "orderEntry.reduceOnly.reminder": "Sadece azaltma hatırlatması",
   "orderEntry.reduceOnly.reminder.content": "Hesabınız sadece azaltma modunda ve yeni pozisyon açamıyor. Sadece azaltma modunu kapatıp emirle devam etmek ister misiniz?",
   "orderEntry.placeOrderNow": "Şimdi emir ver",
+  "orderEntry.maxQty.reminder.content": "Sipariş miktarı mevcut maksimuma düşürüldü: {{maxQty}}",
   "leverage.maxAccountLeverage": "Maks hesap kaldıracı",
   "leverage.accountLeverage": "Hesap kaldıracı",
   "leverage.currentLeverage": "Mevcut kaldıraç",

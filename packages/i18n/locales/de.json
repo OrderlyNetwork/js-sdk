@@ -556,6 +556,7 @@
   "orderEntry.reduceOnly.reminder": "Nur-Reduzierung Erinnerung",
   "orderEntry.reduceOnly.reminder.content": "Ihr Konto befindet sich im Nur-Reduzierung-Modus und kann keine neuen Positionen eröffnen. Möchten Sie den Nur-Reduzierung-Modus deaktivieren und mit der Bestellung fortfahren?",
   "orderEntry.placeOrderNow": "Jetzt bestellen",
+  "orderEntry.maxQty.reminder.content": "Bestellmenge auf maximal verfügbare Menge reduziert: {{maxQty}}",
   "leverage.maxAccountLeverage": "Maximaler Kontoleverage",
   "leverage.accountLeverage": "Kontoleverage",
   "leverage.currentLeverage": "Aktueller Leverage",

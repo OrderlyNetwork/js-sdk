@@ -556,6 +556,7 @@
   "orderEntry.reduceOnly.reminder": "Alleen vermindering herinnering",
   "orderEntry.reduceOnly.reminder.content": "Uw account staat in alleen vermindering modus en kan geen nieuwe posities openen. Wilt u de alleen vermindering modus uitschakelen en doorgaan met de order?",
   "orderEntry.placeOrderNow": "Plaats order nu",
+  "orderEntry.maxQty.reminder.content": "Bestelhoeveelheid verlaagd naar maximaal beschikbaar: {{maxQty}}",
   "leverage.maxAccountLeverage": "Max account hefboom",
   "leverage.accountLeverage": "Account hefboom",
   "leverage.currentLeverage": "Huidige hefboom",

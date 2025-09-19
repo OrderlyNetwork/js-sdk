@@ -556,6 +556,7 @@
   "orderEntry.reduceOnly.reminder": "Напоминание о режиме только сокращения",
   "orderEntry.reduceOnly.reminder.content": "Ваш аккаунт находится в режиме только сокращения и не может открывать новые позиции. Хотите ли вы отключить режим только сокращения и продолжить с заказом?",
   "orderEntry.placeOrderNow": "Разместить заказ сейчас",
+  "orderEntry.maxQty.reminder.content": "Количество заказа уменьшено до максимально доступного: {{maxQty}}",
   "leverage.maxAccountLeverage": "Макс. кредитное плечо аккаунта",
   "leverage.accountLeverage": "Кредитное плечо аккаунта",
   "leverage.currentLeverage": "Текущее кредитное плечо",

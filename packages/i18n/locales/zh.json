@@ -556,6 +556,7 @@
   "orderEntry.reduceOnly.reminder": "仅减仓提醒",
   "orderEntry.reduceOnly.reminder.content": "您的账户处于仅减仓模式，无法开新仓位。您是否要关闭仅减仓模式并继续下单？",
   "orderEntry.placeOrderNow": "立即下单",
+  "orderEntry.maxQty.reminder.content": "订单数量已减少至最大可用数量：{{maxQty}}",
   "leverage.maxAccountLeverage": "最大账户杠杆",
   "leverage.accountLeverage": "账户杠杆",
   "leverage.currentLeverage": "当前杠杆",

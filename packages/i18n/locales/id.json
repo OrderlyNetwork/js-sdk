@@ -556,6 +556,7 @@
   "orderEntry.reduceOnly.reminder": "Pengingat hanya pengurangan",
   "orderEntry.reduceOnly.reminder.content": "Akun Anda berada dalam mode hanya pengurangan dan tidak dapat membuka posisi baru. Apakah Anda ingin mematikan mode hanya pengurangan dan melanjutkan dengan pesanan?",
   "orderEntry.placeOrderNow": "Buat pesanan sekarang",
+  "orderEntry.maxQty.reminder.content": "Jumlah pesanan dikurangi ke maksimum yang tersedia: {{maxQty}}",
   "leverage.maxAccountLeverage": "Leverage akun maksimum",
   "leverage.accountLeverage": "Leverage akun",
   "leverage.currentLeverage": "Leverage saat ini",

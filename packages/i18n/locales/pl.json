@@ -556,6 +556,7 @@
   "orderEntry.reduceOnly.reminder": "Przypomnienie o trybie tylko redukcji",
   "orderEntry.reduceOnly.reminder.content": "Twoje konto jest w trybie tylko redukcji i nie może otwierać nowych pozycji. Czy chcesz wyłączyć tryb tylko redukcji i kontynuować z zamówieniem?",
   "orderEntry.placeOrderNow": "Złóż zamówienie teraz",
+  "orderEntry.maxQty.reminder.content": "Ilość zamówienia zmniejszona do maksymalnej dostępnej: {{maxQty}}",
   "leverage.maxAccountLeverage": "Maks. dźwignia konta",
   "leverage.accountLeverage": "Dźwignia konta",
   "leverage.currentLeverage": "Aktualna dźwignia",

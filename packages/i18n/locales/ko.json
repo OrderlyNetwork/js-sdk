@@ -556,6 +556,7 @@
   "orderEntry.reduceOnly.reminder": "감소 전용 알림",
   "orderEntry.reduceOnly.reminder.content": "귀하의 계정이 감소 전용 모드에 있어 새로운 포지션을 열 수 없습니다. 감소 전용 모드를 해제하고 주문을 진행하시겠습니까?",
   "orderEntry.placeOrderNow": "지금 주문하기",
+  "orderEntry.maxQty.reminder.content": "주문 수량이 최대 사용 가능 수량으로 감소되었습니다: {{maxQty}}",
   "leverage.maxAccountLeverage": "최대 계정 레버리지",
   "leverage.accountLeverage": "계정 레버리지",
   "leverage.currentLeverage": "현재 레버리지",
