@@ -140,7 +140,7 @@ npm_patch_alpha:
     # Run this job if:
     # 1. Branch name is "pre-release"
     # 2. Commit message does not contain "publish"
-    - if: '$CI_COMMIT_BRANCH == "pre-release" && $CI_COMMIT_MESSAGE !~ /publish/'
+    - if: '($CI_COMMIT_BRANCH =~ /^pre-release/ || $CI_COMMIT_BRANCH =~ /^npm\//) && $CI_COMMIT_MESSAGE !~ /publish/'
       when: manual
     - when: never
 
@@ -155,7 +155,7 @@ npm_patch_stable:
   environment:
     name: npm_patch_stable
   rules:
-    - if: '$CI_COMMIT_BRANCH == "pre-release" && $CI_COMMIT_MESSAGE !~ /publish/'
+    - if: '($CI_COMMIT_BRANCH =~ /^pre-release/ || $CI_COMMIT_BRANCH =~ /^npm\//) && $CI_COMMIT_MESSAGE !~ /publish/'
       when: manual
     - when: never
 
@@ -168,7 +168,7 @@ npm_minor_alpha:
   environment:
     name: npm_minor_alpha
   rules:
-    - if: '$CI_COMMIT_BRANCH == "pre-release" && $CI_COMMIT_MESSAGE !~ /publish/'
+    - if: '($CI_COMMIT_BRANCH =~ /^pre-release/ || $CI_COMMIT_BRANCH =~ /^npm\//) && $CI_COMMIT_MESSAGE !~ /publish/'
       when: manual
     - when: never
 
@@ -183,7 +183,7 @@ npm_minor_stable:
   environment:
     name: npm_minor_stable
   rules:
-    - if: '$CI_COMMIT_BRANCH == "pre-release" && $CI_COMMIT_MESSAGE !~ /publish/'
+    - if: '($CI_COMMIT_BRANCH =~ /^pre-release/ || $CI_COMMIT_BRANCH =~ /^npm\//) && $CI_COMMIT_MESSAGE !~ /publish/'
       when: manual
     - when: never
 
@@ -196,7 +196,7 @@ npm_minor_stable:
 #   environment:
 #     name: npm_major_alpha
 #   rules:
-#     - if: '$CI_COMMIT_BRANCH == "pre-release" && $CI_COMMIT_MESSAGE !~ /publish/'
+#     - if: '($CI_COMMIT_BRANCH =~ /^pre-release/ || $CI_COMMIT_BRANCH =~ /^npm\//) && $CI_COMMIT_MESSAGE !~ /publish/'
 #       when: manual
 #     - when: never
 
