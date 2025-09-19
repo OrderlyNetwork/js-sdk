@@ -1,5 +1,8 @@
+import React from "react";
 import { AssetsModule } from "@orderly.network/portfolio";
 
-export default function AssetsPage() {
+const AssetsPage: React.FC = () => {
   return <AssetsModule.AssetsPage />;
-}
+};
+
+export default AssetsPage;

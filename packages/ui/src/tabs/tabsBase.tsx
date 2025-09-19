@@ -166,12 +166,14 @@ const TabsList = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.List>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.List> &
     VariantProps<typeof tabsVariants>
->(({ className, size, variant, ...props }, ref) => {
+>((originProps, ref) => {
+  const { className, size, variant, ...props } = originProps;
   const { list } = tabsVariants({ size, variant });
   return (
     <TabsPrimitive.List ref={ref} className={list({ className })} {...props} />
   );
 });
+
 TabsList.displayName = TabsPrimitive.List.displayName;
 
 const TabsTrigger = React.forwardRef<
@@ -181,11 +183,9 @@ const TabsTrigger = React.forwardRef<
       icon?: React.ReactElement;
       "data-testid"?: string;
     }
->(({ className, size, children, icon, variant, ...props }, ref) => {
-  const { trigger, icon: iconClassName } = tabsVariants({
-    size,
-    variant,
-  });
+>((originProps, ref) => {
+  const { className, size, children, icon, variant, ...props } = originProps;
+  const { trigger, icon: iconClassName } = tabsVariants({ size, variant });
   return (
     <TabsPrimitive.Trigger
       ref={ref}

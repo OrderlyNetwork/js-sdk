@@ -12,10 +12,10 @@ import {
   toast,
   ScrollIndicator,
 } from "@orderly.network/ui";
+import { ConvertRecord, ConvertTransaction } from "../type";
 import { ConvertedAssetColumn } from "./convert.column";
 import { useConvertScript } from "./convert.script";
 import { CONVERT_STATUS_OPTIONS } from "./convert.ui.desktop";
-import { ConvertRecord, ConvertTransaction } from "./type";
 
 type ConvertMobileUIProps = {
   convertState: ReturnType<typeof useConvertScript>;

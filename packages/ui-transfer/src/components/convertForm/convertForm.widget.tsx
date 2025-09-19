@@ -7,7 +7,7 @@ import { useConvertFormScript } from "./convertForm.script";
 import { ConvertFormUI } from "./convertForm.ui";
 
 export const ConvertDialogId = "ConvertDialogId";
-export const ConverSheetId = "ConverSheetId";
+export const ConvertSheetId = "ConvertSheetId";
 
 export const ConvertFormWidget: React.FC<ConvertFormScriptOptions> = (
   props,
@@ -22,6 +22,6 @@ registerSimpleDialog(ConvertDialogId, ConvertFormWidget, {
   title: () => i18n.t("transfer.convert"),
 });
 
-registerSimpleSheet(ConverSheetId, ConvertFormWidget, {
+registerSimpleSheet(ConvertSheetId, ConvertFormWidget, {
   title: () => i18n.t("transfer.convert"),
 });

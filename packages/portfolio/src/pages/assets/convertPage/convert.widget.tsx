@@ -7,10 +7,8 @@ import { ConvertMobileUI } from "./convert.ui.mobile";
 export const ConvertHistoryWidget: React.FC = () => {
   const convertState = useConvertScript();
   const { isMobile } = useScreen();
-
   if (isMobile) {
     return <ConvertMobileUI convertState={convertState} />;
   }
-
   return <ConvertDesktopUI convertState={convertState} />;
 };

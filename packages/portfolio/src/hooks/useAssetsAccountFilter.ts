@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { useAccount } from "@orderly.network/hooks";
-import { AccountType } from "../pages/assets/assets.ui";
+import { AccountType } from "../pages/assets/assetsPage/assets.ui.desktop";
 
 // Account filter hook for assets-like data structures
 export const useAssetsAccountFilter = <T extends { account_id?: string }>(

@@ -24,7 +24,7 @@ import type { useAssetsScriptReturn } from "./assets.script";
 import type { AssetsWidgetProps } from "./assets.widget";
 
 const LazyConvertHistoryWidget = React.lazy(() =>
-  import("./convert.widget").then((mod) => {
+  import("../convertPage/convert.widget").then((mod) => {
     return { default: mod.ConvertHistoryWidget };
   }),
 );
@@ -36,7 +36,7 @@ export enum AccountType {
   MAIN = "Main accounts",
 }
 
-const TotalValue: React.FC<
+const TotalValueInfo: React.FC<
   Readonly<
     Pick<AssetsWidgetProps, "totalValue" | "visible" | "onToggleVisibility">
   >
@@ -125,19 +125,26 @@ const DepositAndWithdrawButton: React.FC<
   );
 };
 
-export const AssetsTable: React.FC<Readonly<AssetsWidgetProps>> = (props) => {
+const DataFilterSection: React.FC<
+  Pick<
+    AssetsWidgetProps,
+    | "isMainAccount"
+    | "onFilter"
+    | "selectedAccount"
+    | "selectedAsset"
+    | "assetsOptions"
+    | "state"
+  >
+> = (props) => {
+  const { t } = useTranslation();
   const {
-    state,
     isMainAccount,
+    onFilter,
     selectedAccount,
     selectedAsset,
-    columns,
-    dataSource,
-    onFilter,
     assetsOptions,
+    state,
   } = props;
-
-  const { t } = useTranslation();
 
   const ALL_ACCOUNTS: SelectOption = {
     label: t("common.allAccount"),
@@ -164,7 +171,7 @@ export const AssetsTable: React.FC<Readonly<AssetsWidgetProps>> = (props) => {
         ALL_ACCOUNTS,
         MAIN_ACCOUNT,
         ...subAccounts.map<SelectOption>((value) => ({
-          value: value.id,
+          value: value?.id,
           label: value?.description || formatAddress(value?.id),
         })),
       ];
@@ -172,11 +179,102 @@ export const AssetsTable: React.FC<Readonly<AssetsWidgetProps>> = (props) => {
     return [ALL_ACCOUNTS, MAIN_ACCOUNT];
   }, [ALL_ACCOUNTS, MAIN_ACCOUNT, subAccounts]);
 
-  // Create asset options from holding data - optimized and simplified
   const memoizedAssetOptions = useMemo(() => {
     return [ALL_ASSETS, ...assetsOptions];
   }, [ALL_ASSETS, assetsOptions]);
 
+  if (!isMainAccount) {
+    return null;
+  }
+
+  return (
+    <DataFilter
+      className="oui-border-none oui-py-0"
+      onFilter={onFilter}
+      items={[
+        {
+          type: "select",
+          name: "account",
+          value: selectedAccount,
+          options: memoizedOptions,
+        },
+        {
+          type: "select",
+          name: "asset",
+          value: selectedAsset,
+          options: memoizedAssetOptions,
+        },
+      ]}
+    />
+  );
+};
+
+export const AssetsDataTable: React.FC<
+  Pick<
+    AssetsWidgetProps,
+    | "columns"
+    | "dataSource"
+    | "isMainAccount"
+    | "onFilter"
+    | "selectedAccount"
+    | "selectedAsset"
+    | "assetsOptions"
+    | "state"
+  >
+> = (props) => {
+  const { columns, dataSource } = props;
+  return (
+    <Flex width="100%" direction={"column"}>
+      <DataFilterSection
+        {...pick(
+          [
+            "isMainAccount",
+            "onFilter",
+            "selectedAccount",
+            "selectedAsset",
+            "assetsOptions",
+            "state",
+          ],
+          props,
+        )}
+      />
+      {dataSource.map((item, index) => {
+        return (
+          <Flex
+            key={`item-${index}`}
+            className="oui-rounded-xl oui-bg-base-9 oui-p-6"
+            direction={"column"}
+            itemAlign={"start"}
+            justify={"between"}
+            my={4}
+          >
+            <Text
+              className="oui-mb-4"
+              intensity={98}
+              weight="semibold"
+              size="lg"
+            >
+              {item?.description || formatAddress(item?.id ?? "")}
+            </Text>
+            <AuthGuardDataTable
+              bordered
+              className="oui-font-semibold"
+              classNames={{
+                root: "oui-bg-transparent",
+                scroll: "oui-min-h-0",
+              }}
+              columns={columns}
+              dataSource={item.children}
+            />
+          </Flex>
+        );
+      })}
+    </Flex>
+  );
+};
+
+export const AssetsTable: React.FC<AssetsWidgetProps> = (props) => {
+  const { t } = useTranslation();
   return (
     <Card
       className={"oui-bg-transparent oui-p-0"}
@@ -196,68 +294,32 @@ export const AssetsTable: React.FC<Readonly<AssetsWidgetProps>> = (props) => {
             justify={"between"}
             my={4}
           >
-            <TotalValue
+            <TotalValueInfo
               {...pick(["totalValue", "visible", "onToggleVisibility"], props)}
             />
             <DepositAndWithdrawButton
               {...pick(["isMainAccount", "onDeposit", "onWithdraw"], props)}
             />
           </Flex>
-          {isMainAccount && (
-            <DataFilter
-              className="oui-border-none oui-py-0"
-              onFilter={onFilter}
-              items={[
-                {
-                  type: "select",
-                  name: "account",
-                  value: selectedAccount,
-                  options: memoizedOptions,
-                },
-                {
-                  type: "select",
-                  name: "asset",
-                  value: selectedAsset,
-                  options: memoizedAssetOptions,
-                },
-              ]}
-            />
-          )}
-          {dataSource.map((item, index) => {
-            return (
-              <Flex
-                key={`item-${index}`}
-                className="oui-rounded-xl oui-bg-base-9 oui-p-6"
-                direction={"column"}
-                itemAlign={"start"}
-                justify={"between"}
-                my={4}
-              >
-                <Text
-                  className="oui-mb-4"
-                  intensity={98}
-                  weight="semibold"
-                  size="lg"
-                >
-                  {item?.description || formatAddress(item?.id ?? "")}
-                </Text>
-                <AuthGuardDataTable
-                  bordered
-                  className="oui-font-semibold"
-                  classNames={{
-                    root: "oui-bg-transparent",
-                    scroll: "oui-min-h-0",
-                  }}
-                  columns={columns}
-                  dataSource={item.children}
-                />
-              </Flex>
-            );
-          })}
+          <AssetsDataTable
+            {...pick(
+              [
+                "columns",
+                "dataSource",
+                "isMainAccount",
+                "onFilter",
+                "selectedAccount",
+                "selectedAsset",
+                "assetsOptions",
+                "state",
+              ],
+              props,
+            )}
+          />
         </TabPanel>
         <TabPanel
-          className="oui-rounded-xl oui-bg-base-9 oui-px-6"
           value="convertHistory"
+          className="oui-rounded-xl oui-bg-base-9 oui-px-6"
           title={t("portfolio.overview.tab.convert.history")}
         >
           <React.Suspense fallback={null}>

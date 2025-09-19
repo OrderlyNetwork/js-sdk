@@ -55,6 +55,10 @@ export const TPSL: React.FC<TPSLBuilderState & TPSLProps> = (props) => {
 
   const { getErrorMsg } = useOrderEntryFormErrorMsg(errors);
 
+  if (!position) {
+    return null;
+  }
+
   const renderQtyInput = () => {
     if (TPSL_OrderEntity.position_type === PositionType.FULL) {
       return null;

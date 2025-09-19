@@ -22,7 +22,7 @@ import {
   PositionsWidget,
 } from "@orderly.network/ui-positions";
 import type { SelectOption } from "@orderly.network/ui/src/select/withOptions";
-import { AccountType } from "../assets/assets.ui";
+import { AccountType } from "../assets/assetsPage/assets.ui.desktop";
 
 enum TabsType {
   positions = "Positions",
@@ -118,14 +118,14 @@ export const PositionsPage: React.FC<PositionsProps> = (props) => {
                 />
               </>
             ) : (
-              <PositionsWidget {...props} />
+              <PositionsWidget {...props} enableSortingStorage={false} />
             )}
           </TabPanel>
           <TabPanel
             value={TabsType.positionHistory}
             title={t("positions.positionHistory")}
           >
-            <PositionHistoryWidget {...props} />
+            <PositionHistoryWidget {...props} enableSortingStorage={false} />
           </TabPanel>
           <TabPanel value={TabsType.liquidation} title={<LiquidationTab />}>
             <LiquidationWidget />

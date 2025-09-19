@@ -52,41 +52,6 @@ export function getOrderLevelByBBO(value: BBOOrderType) {
   }
 }
 
-export function getBBOType(options: {
-  type: OrderType;
-  side: OrderSide;
-  level: OrderLevel;
-}) {
-  const { type, side, level } = options;
-  if (type === OrderType.ASK) {
-    if (level === OrderLevel.ONE) {
-      return side === OrderSide.BUY
-        ? BBOOrderType.COUNTERPARTY1
-        : BBOOrderType.QUEUE1;
-    }
-
-    if (level === OrderLevel.FIVE) {
-      return side === OrderSide.BUY
-        ? BBOOrderType.COUNTERPARTY5
-        : BBOOrderType.QUEUE5;
-    }
-  }
-
-  if (type === OrderType.BID) {
-    if (level === OrderLevel.ONE) {
-      return side === OrderSide.BUY
-        ? BBOOrderType.QUEUE1
-        : BBOOrderType.COUNTERPARTY1;
-    }
-
-    if (level === OrderLevel.FIVE) {
-      return side === OrderSide.BUY
-        ? BBOOrderType.QUEUE5
-        : BBOOrderType.COUNTERPARTY5;
-    }
-  }
-}
-
 export function getScaledPlaceOrderMessage(result: any) {
   const rows = result?.data?.rows || [];
 

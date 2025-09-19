@@ -1,5 +1,5 @@
-import { RestrictedInfoOptions } from "@orderly.network/hooks";
-import { AppLogos } from "@orderly.network/react-app";
+import type { RestrictedInfoOptions } from "@orderly.network/hooks";
+import type { AppLogos } from "@orderly.network/react-app";
 
 export type OrderlyAppProviderConfigProps = {
   appIcons: AppLogos;

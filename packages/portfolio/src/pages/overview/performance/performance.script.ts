@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useAccount, useLocalStorage } from "@orderly.network/hooks";
 import { useAppContext, useDataTap } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
-import { ORDERLY_ASSETS_VISIBLE_KEY } from "../../assets/assets.script";
+import { ORDERLY_ASSETS_VISIBLE_KEY } from "../../assets/type";
 import { useOverviewContext } from "../provider/overviewContext";
 
 export const usePerformanceScript = () => {

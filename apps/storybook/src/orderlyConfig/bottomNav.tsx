@@ -10,14 +10,9 @@ import {
   MarketsActiveIcon,
   MarketsInactiveIcon,
 } from "@orderly.network/ui";
-import { BottomNavProps } from "@orderly.network/ui-scaffold";
+import type { BottomNavProps } from "@orderly.network/ui-scaffold";
 
-export function useBottomNav() {
-  const { t } = useTranslation();
-  return useMemo(() => getBottomNavProp(), [t]);
-}
-
-function getBottomNavProp(): BottomNavProps {
+const getBottomNavProp = (): BottomNavProps => {
   return {
     mainMenus: [
       {
@@ -46,4 +41,9 @@ function getBottomNavProp(): BottomNavProps {
       },
     ],
   };
-}
+};
+
+export const useBottomNav = () => {
+  const { t } = useTranslation();
+  return useMemo(() => getBottomNavProp(), [t]);
+};

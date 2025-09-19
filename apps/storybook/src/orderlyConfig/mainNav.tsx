@@ -19,31 +19,16 @@ import {
   TradingRewardsActiveIcon,
   TradingRewardsIcon,
 } from "../components/icons";
+import { PathEnum } from "../playground/constant";
 import {
   CustomArenButton,
   MainNavCustomRenderOptions,
 } from "./components/customArenButton";
 import { Tag } from "./components/tag";
 
-export function useMainNav() {
-  const { t } = useTranslation();
-  return useMemo(() => getMainNavProp(), [t]);
-}
+const isOnGoing = true; // mock isOnGoing status for storybook
 
-function getMainNavProp(): MainNavWidgetProps {
-  return {
-    // leading: <CustomProductNav />,
-    trailing: null,
-    mainMenus: getMainMenus(),
-    initialMenu: "/",
-    leftNav: getLeftNavMenus(),
-  };
-}
-
-// fake ongoing status for demo
-const isOnGoing = true;
-
-export function customArenRender() {
+export const customArenRender = () => {
   if (isOnGoing) {
     return (options: MainNavCustomRenderOptions) => {
       return (
@@ -54,9 +39,9 @@ export function customArenRender() {
       );
     };
   }
-}
+};
 
-function getMainMenus(): MainNavWidgetProps["mainMenus"] {
+const getMainMenus = (): MainNavWidgetProps["mainMenus"] => {
   return [
     { name: i18n.t("common.trading"), href: "/", isHomePageInMobile: true },
     { name: i18n.t("common.portfolio"), href: "/portfolio" },
@@ -107,9 +92,9 @@ function getMainMenus(): MainNavWidgetProps["mainMenus"] {
       ],
     },
   ];
-}
+};
 
-function getLeftNavMenus(): LeftNavProps {
+const getLeftNavMenus = (): LeftNavProps => {
   return {
     menus: [
       { name: i18n.t("common.trading"), href: "/", icon: <TradingIcon /> },
@@ -122,6 +107,11 @@ function getLeftNavMenus(): LeftNavProps {
         name: i18n.t("common.portfolio"),
         href: "/portfolio",
         icon: <PersonIcon />,
+      },
+      {
+        name: i18n.t("portfolio.feeTier"),
+        href: PathEnum.FeeTier,
+        icon: <FeeTier opacity={0.8} size={24} />,
       },
       {
         name: i18n.t("common.assets"),
@@ -175,4 +165,19 @@ function getLeftNavMenus(): LeftNavProps {
     duneUrl: "https://dune.com/orderlynetwork",
     feedbackUrl: "https://orderly.network/feedback",
   };
-}
+};
+
+const getMainNavProp = (): MainNavWidgetProps => {
+  return {
+    // leading: <CustomProductNav />,
+    trailing: null,
+    initialMenu: "/",
+    mainMenus: getMainMenus(),
+    leftNav: getLeftNavMenus(),
+  };
+};
+
+export const useMainNav = () => {
+  const { t } = useTranslation();
+  return useMemo(() => getMainNavProp(), [t]);
+};

@@ -1,22 +1,25 @@
+import { useEffect, useMemo, useState } from "react";
+import { differenceInDays, setDate, setHours, subDays } from "date-fns";
 import {
   useAccount,
   usePrivateQuery,
   useSymbolsInfo,
 } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 import { useDataTap } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
-import { PositionHistoryProps } from "./positionHistory.widget";
 import { API } from "@orderly.network/types";
 import { usePagination, useScreen } from "@orderly.network/ui";
-import { useEffect, useMemo, useState } from "react";
-import { differenceInDays, setDate, setHours, subDays } from "date-fns";
+import { TRADING_POSITIONS_SORT_STORAGE_KEY } from "../../constants";
 import {
   areDatesEqual,
   formatDatePickerRange,
   offsetEndOfDay,
   offsetStartOfDay,
 } from "../../utils";
-import { useTranslation } from "@orderly.network/i18n";
+import { useSort } from "../../utils/sorting";
+import { useTabSort, PositionsTabName } from "../shared/hooks/useTabSort";
+import { PositionHistoryProps } from "./positionHistory.widget";
 
 export type PositionHistoryExt = API.PositionHistory & {
   netPnL?: number;
@@ -34,8 +37,27 @@ export enum PositionHistoryStatus {
 }
 
 export const usePositionHistoryScript = (props: PositionHistoryProps) => {
-  const { onSymbolChange, symbol, pnlNotionalDecimalPrecision } = props;
+  const {
+    onSymbolChange,
+    symbol,
+    pnlNotionalDecimalPrecision,
+    enableSortingStorage = true,
+  } = props;
   const { state } = useAccount();
+
+  // Sorting functionality
+  const { tabSort, onTabSort } = useTabSort({
+    storageKey: TRADING_POSITIONS_SORT_STORAGE_KEY,
+  });
+
+  const { onSort, getSortedList } = useSort(
+    enableSortingStorage
+      ? tabSort?.[PositionsTabName.PositionHistory]
+      : undefined,
+    enableSortingStorage
+      ? onTabSort(PositionsTabName.PositionHistory)
+      : undefined,
+  );
 
   const { data, isLoading } = usePrivateQuery<PositionHistoryExt[]>(
     symbol
@@ -60,11 +82,11 @@ export const usePositionHistoryScript = (props: PositionHistoryProps) => {
               };
             }
             return item;
-          }
+          },
         );
       },
       revalidateOnFocus: true,
-    }
+    },
   );
 
   const { pagination, setPage } = usePagination({
@@ -111,13 +133,15 @@ export const usePositionHistoryScript = (props: PositionHistoryProps) => {
     });
   }, [status, side, dateRange, data, symbol]);
 
-  const dataSource = useDataTap(filterData, {
+  const rawDataSource = useDataTap(filterData, {
     accountStatus:
       state.status === AccountStatusEnum.EnableTradingWithoutConnected
         ? AccountStatusEnum.EnableTradingWithoutConnected
         : AccountStatusEnum.EnableTrading,
     fallbackData: [],
   });
+
+  const dataSource = getSortedList(rawDataSource || []);
 
   return {
     dataSource,
@@ -130,6 +154,10 @@ export const usePositionHistoryScript = (props: PositionHistoryProps) => {
     filterDays,
     updateFilterDays,
     pnlNotionalDecimalPrecision,
+    onSort,
+    initialSort: enableSortingStorage
+      ? tabSort?.[PositionsTabName.PositionHistory]
+      : undefined,
   };
 };
 
@@ -137,10 +165,10 @@ const useFilter = () => {
   const { t } = useTranslation();
 
   const [status, setStatus] = useState<PositionHistoryStatus>(
-    PositionHistoryStatus.all
+    PositionHistoryStatus.all,
   );
   const [side, setSide] = useState<PositionHistorySide>(
-    PositionHistorySide.all
+    PositionHistorySide.all,
   );
   const defaultRange = formatDatePickerRange({
     to: offsetEndOfDay(new Date()),

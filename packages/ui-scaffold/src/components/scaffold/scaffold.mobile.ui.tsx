@@ -45,14 +45,13 @@ export const MobileScaffold: React.FC<
         paddingBottom: `calc(${bottomNavHeight}px + 12px + env(safe-area-inset-bottom))`,
       }}
       className={cn(
-        "oui-scaffold-root oui-w-full oui-bg-base-10",
-        // "oui-custom-scrollbar oui-overflow-y-auto",
+        "oui-scaffold-root oui-w-full oui-bg-base-10 oui-pt-2",
         classNames?.root,
       )}
     >
       <React.Suspense fallback={null}>
         <LazyAnnouncementWidget
-          className={"oui-m-1 oui-bg-base-6"}
+          className={"oui-mx-1 oui-mb-1 oui-bg-base-6"}
           hideTips={restrictedInfo?.restrictedOpen}
         />
       </React.Suspense>

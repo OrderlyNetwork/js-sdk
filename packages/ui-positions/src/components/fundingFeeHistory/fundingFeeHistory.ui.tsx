@@ -26,6 +26,8 @@ type FundingFeeHistory = {
   updated_time: number;
 };
 
+const PAGE_SIZE = 60;
+
 export const FundingFeeHistoryUI: FC<{
   total: number;
   symbol: string;
@@ -38,8 +40,12 @@ export const FundingFeeHistoryUI: FC<{
   const { isLoading, data, setSize } =
     usePrivateInfiniteQuery<FundingFeeHistory>(
       (pageIndex, previousPageData) => {
-        if (previousPageData && !previousPageData.length) return null;
-        return `/v1/funding_fee/history?page=${pageIndex}&symbol=${symbol}&start_t=${start_t}&end_t=${end_t}`;
+        if (
+          (!previousPageData || (previousPageData.length ?? 0) < PAGE_SIZE) &&
+          pageIndex > 0
+        )
+          return null;
+        return `/v1/funding_fee/history?page=${pageIndex + 1}&size=${PAGE_SIZE}&symbol=${symbol}&start_t=${start_t}&end_t=${end_t}`;
       },
       {
         revalidateFirstPage: false,
@@ -48,7 +54,6 @@ export const FundingFeeHistoryUI: FC<{
 
   const loadMore = useCallback(() => {
     setSize((prev) => {
-      // console.log(">>>>>>>>loadMore", prev);
       return prev + 1;
     });
   }, [setSize]);

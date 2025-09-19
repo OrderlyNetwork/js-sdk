@@ -10,14 +10,14 @@ export type TPSLWidgetProps = {
   TPSLProps;
 
 export const TPSLWidget: React.FC<TPSLWidgetProps> = (props) => {
-  const { onCancel, onComplete, close, ...rest } = props;
+  const { onCancel, onComplete, ...rest } = props;
   const state = useTPSLBuilder(rest);
   return (
     <TPSL
       {...state}
       onCancel={onCancel}
       onComplete={onComplete}
-      close={close}
+      close={rest.close}
     />
   );
 };

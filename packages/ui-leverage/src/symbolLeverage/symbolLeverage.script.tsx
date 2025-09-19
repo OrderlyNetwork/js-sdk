@@ -58,7 +58,9 @@ export const useSymbolLeverageScript = (
     overRequiredMargin,
   } = useCalc({ symbol: symbol!, leverage, maxLeverage });
 
-  const formattedLeverageLevers = generateLeverageLevers(maxLeverage);
+  const formattedLeverageLevers = useMemo(() => {
+    return generateLeverageLevers(maxLeverage);
+  }, [maxLeverage]);
 
   const marks = useMemo<SliderMarks>(() => {
     return (
@@ -69,7 +71,9 @@ export const useSymbolLeverageScript = (
     );
   }, [formattedLeverageLevers]);
 
-  const step = 100 / ((marks?.length || 0) - 1);
+  const step = useMemo(() => {
+    return 100 / ((marks?.length || 0) - 1);
+  }, [marks]);
 
   const onLeverageChange = (leverage: number) => {
     setLeverage(leverage);
@@ -167,7 +171,18 @@ export const useSymbolLeverageScript = (
   };
 };
 
+// 5x: 1x, 2x, 3x, 4x, 5x
+// 10x: 1x, 3x, 5x, 8x, 10x
+// 20x: 1x, 5x, 10x, 15x, 20x
+// 50x: 1x, 10x, 20x, 35x, 50x
+// 100x: 1x, 20x, 50x, 75x, 100x
 const generateLeverageLevers = (max: number) => {
+  if (max === 10) {
+    return [1, 3, 5, 8, 10];
+  } else if (max === 50) {
+    return [1, 10, 20, 35, 50];
+  }
+
   const min = 1;
   const parts = 5;
   const step = (max - min) / (parts - 1);

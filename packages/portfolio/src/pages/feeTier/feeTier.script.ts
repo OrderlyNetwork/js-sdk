@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useMemo, useState } from "react";
+import { on } from "events";
 import {
   useAccount,
   useAccountInfo,
@@ -7,7 +8,7 @@ import {
 } from "@orderly.network/hooks";
 import { useDataTap } from "@orderly.network/react-app";
 import { AccountStatusEnum, API } from "@orderly.network/types";
-import type { Column } from "@orderly.network/ui";
+import type { Column, TanstackColumn } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { useFeeTierColumns } from "./column";
 import { dataSource as defaultDataSource } from "./dataSource";
@@ -16,21 +17,35 @@ export type useFeeTierScriptReturn = ReturnType<typeof useFeeTierScript>;
 
 export type UseFeeTierScriptOptions = {
   dataAdapter?: (
-    columns: Column[],
+    columns: Column<any>[],
     dataSource: any[],
-  ) => { columns: Column[]; dataSource: any[] };
+    context?: {
+      tier?: number;
+    },
+  ) => {
+    columns: Column<any>[];
+    dataSource: any[];
+  };
   headerDataAdapter?: (original: any[]) => any[];
   onRow?: (
     record: any,
     index: number,
   ) => {
-    normal: any;
-    active: any;
+    normal?: any;
+    active?: any;
+  };
+  onCell?: (
+    column: TanstackColumn<any>,
+    record: any,
+    index: number,
+  ) => {
+    normal?: any;
+    active?: any;
   };
 };
 
 export interface FeeDataType {
-  tier: number;
+  tier: number | null;
   volume_min?: number | null;
   volume_max?: number | null;
   volume_node?: React.ReactNode;
@@ -52,8 +67,8 @@ const findCurrentTier = (feeList: FeeDataType[], data: API.AccountInfo) => {
 };
 
 export const useFeeTierScript = (options?: UseFeeTierScriptOptions) => {
-  const { dataAdapter, headerDataAdapter, onRow } = options || {};
-  const [tier, setTier] = useState<number>();
+  const { dataAdapter, headerDataAdapter, onRow, onCell } = options || {};
+  const [tier, setTier] = useState<number | null>();
   const { data, isLoading } = useAccountInfo();
   const { state } = useAccount();
 
@@ -65,9 +80,9 @@ export const useFeeTierScript = (options?: UseFeeTierScriptOptions) => {
 
   const { columns, dataSource } = useMemo(() => {
     return typeof dataAdapter === "function"
-      ? dataAdapter(cols, defaultDataSource)
+      ? dataAdapter(cols, defaultDataSource, { tier: tier! })
       : { columns: cols, dataSource: defaultDataSource };
-  }, [dataAdapter, cols]);
+  }, [dataAdapter, cols, tier]);
 
   useEffect(() => {
     if (!data || isLoading) {
@@ -94,6 +109,7 @@ export const useFeeTierScript = (options?: UseFeeTierScriptOptions) => {
     columns: columns,
     dataSource: dataSource,
     onRow: onRow,
+    onCell: onCell,
     headerDataAdapter: headerDataAdapter,
   };
 };

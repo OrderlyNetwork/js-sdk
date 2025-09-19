@@ -74,9 +74,12 @@ export const useTPSLBuilder = (
 
   const [needConfirm] = useLocalStorage("orderly_order_confirm", true);
   const position = positions.find((item) => item.symbol === symbol);
-  if (!position) {
-    throw new SDKError("position not found");
-  }
+
+  useEffect(() => {
+    if (!position) {
+      options.close?.();
+    }
+  }, [position]);
 
   const [
     tpslOrder,
@@ -124,8 +127,8 @@ export const useTPSLBuilder = (
   };
 
   const maxQty = useMemo(
-    () => Math.abs(Number(position.position_qty)),
-    [position.position_qty],
+    () => Math.abs(Number(position?.position_qty)),
+    [position?.position_qty],
   );
 
   const dirty = useMemo(() => {
@@ -232,7 +235,7 @@ export const useTPSLBuilder = (
       return Promise.resolve(true);
     }
 
-    const maxQty = Math.abs(Number(position.position_qty));
+    const maxQty = Math.abs(Number(position?.position_qty));
     if (
       `${order.tp_trigger_price ?? ""}`.length === 0 &&
       `${order.sl_trigger_price ?? ""}`.length === 0
@@ -262,7 +265,7 @@ export const useTPSLBuilder = (
         onOk: async () => {
           try {
             const res = await options.submit({
-              accountId: position.account_id,
+              accountId: position?.account_id,
             });
 
             if (res.success) {
@@ -316,7 +319,7 @@ export const useTPSLBuilder = (
       console.log("validOrder", validOrder);
       if (validOrder) {
         if (!needConfirm) {
-          return submit({ accountId: position.account_id })
+          return submit({ accountId: position?.account_id })
             .then(() => true)
             .catch((err) => {
               if (err?.message) {
@@ -327,7 +330,7 @@ export const useTPSLBuilder = (
         }
 
         return onConfirm(tpslOrder, {
-          position,
+          position: position!,
           submit,
           cancel,
         });

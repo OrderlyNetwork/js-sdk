@@ -1,4 +1,4 @@
-import { FooterProps } from "@orderly.network/ui-scaffold";
+import type { FooterProps } from "@orderly.network/ui-scaffold";
 
 export const footerConfig: FooterProps = {
   telegramUrl: "https://orderly.network",

@@ -12,7 +12,7 @@ const routeMap: Record<PropertyKey, PathEnum> = {
   [PortfolioLeftSidebarPath.ApiKey]: PathEnum.ApiKey,
 };
 
-export function useNav() {
+export const useNav = () => {
   const navigate = useNavigate();
 
   const onRouteChange = useCallback(
@@ -36,4 +36,4 @@ export function useNav() {
   );
 
   return { onRouteChange };
-}
+};

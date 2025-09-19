@@ -2,7 +2,10 @@ import React from "react";
 import { usePositionStream } from "@orderly.network/hooks";
 import { useDataTap } from "@orderly.network/react-app";
 import { usePagination } from "@orderly.network/ui";
+import { TRADING_POSITIONS_SORT_STORAGE_KEY } from "../../constants";
 import type { PositionsProps } from "../../types/types";
+import { useSort } from "../../utils/sorting";
+import { useTabSort, PositionsTabName } from "../shared/hooks/useTabSort";
 
 export const usePositionsScript = (props: PositionsProps) => {
   const {
@@ -12,12 +15,23 @@ export const usePositionsScript = (props: PositionsProps) => {
     pnlNotionalDecimalPrecision,
     sharePnLConfig,
     onSymbolChange,
+    enableSortingStorage = true, // Default to true for backward compatibility
   } = props;
   // const [showAllSymbol] = useLocalStorage(
   //   "showAllSymbol",
   //   true
   // );
   const { pagination, setPage } = usePagination({ pageSize: 50 });
+
+  // Sorting functionality
+  const { tabSort, onTabSort } = useTabSort({
+    storageKey: TRADING_POSITIONS_SORT_STORAGE_KEY,
+  });
+
+  const { onSort, getSortedList, sort } = useSort(
+    enableSortingStorage ? tabSort?.[PositionsTabName.Positions] : undefined,
+    enableSortingStorage ? onTabSort(PositionsTabName.Positions) : undefined,
+  );
 
   React.useEffect(() => {
     setPage(1);
@@ -28,7 +42,9 @@ export const usePositionsScript = (props: PositionsProps) => {
     includedPendingOrder,
   });
 
-  const dataSource = useDataTap(data?.rows, { fallbackData: [] }) ?? undefined;
+  const rawDataSource =
+    useDataTap(data?.rows, { fallbackData: [] }) ?? undefined;
+  const dataSource = getSortedList(rawDataSource || []);
 
   return {
     dataSource,
@@ -38,6 +54,10 @@ export const usePositionsScript = (props: PositionsProps) => {
     symbol,
     onSymbolChange,
     pagination,
+    onSort,
+    initialSort: enableSortingStorage
+      ? tabSort?.[PositionsTabName.Positions]
+      : undefined,
   };
 };
 

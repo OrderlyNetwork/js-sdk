@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import {
@@ -9,7 +10,7 @@ import {
   toast,
 } from "@orderly.network/ui";
 import type { Column } from "@orderly.network/ui";
-import type { ConvertRecord, ConvertTransaction } from "./type";
+import type { ConvertRecord, ConvertTransaction } from "../type";
 
 export interface ConvertColumnsOptions {
   onDetailsClick?: (convertId: number) => void;
@@ -118,7 +119,7 @@ export const useConvertColumns = (options: ConvertColumnsOptions) => {
         dataIndex: "received_qty",
         align: "left",
         width: 150,
-        render(qty: number, record: ConvertRecord) {
+        render(qty: number) {
           return (
             <Text.numeral dp={6} padding={false}>
               {qty}
@@ -238,7 +239,7 @@ export const useConvertDetailColumns = (
         dataIndex: "converted_qty",
         align: "left",
         width: 100,
-        render(qty: number, record: ConvertTransaction) {
+        render(qty: number) {
           return (
             <Text.numeral dp={6} padding={false}>
               {qty}
@@ -251,7 +252,7 @@ export const useConvertDetailColumns = (
         dataIndex: "received_qty",
         align: "left",
         width: 100,
-        render(qty: number, record: ConvertTransaction) {
+        render(qty: number) {
           return (
             <Text.numeral dp={6} padding={false}>
               {qty}

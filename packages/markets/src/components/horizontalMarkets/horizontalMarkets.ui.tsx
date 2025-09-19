@@ -68,7 +68,7 @@ export const HorizontalMarkets = React.memo<HorizontalMarketsProps>((props) => {
       className={cn(
         "oui-horizontal-markets",
         "oui-bg-base-9 oui-rounded-[12px]",
-        "oui-w-full oui-px-3 oui-py-[7px]",
+        "oui-w-full oui-px-3 oui-py-2",
         className,
       )}
     >
