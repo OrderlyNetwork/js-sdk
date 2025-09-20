@@ -1,5 +1,5 @@
-import { API as orderUtils } from "@orderly.network/types";
-import { Decimal, zero } from "@orderly.network/utils";
+import { OrderSide, API as orderUtils } from "@orderly.network/types";
+import { Decimal, getTPSLDirection, zero } from "@orderly.network/utils";
 import { notional } from "./positions";
 
 /**
@@ -220,5 +220,31 @@ export function estLeverage(inputs: EstimatedLeverageInputs): number | null {
   return new Decimal(1)
     .div(totalMarginRatio)
     .toDecimalPlaces(2, Decimal.ROUND_HALF_EVEN)
+    .toNumber();
+}
+
+// ROI = (close price - order_price) / order_price × leverage × direction
+// leverage = MIN( current_account_leverage, symbol_leverage)
+export function tpslROI(inputs: {
+  side: OrderSide;
+  type: "tp" | "sl";
+  closePrice: number;
+  orderPrice: number;
+  leverage: number;
+}) {
+  const direction = getTPSLDirection({
+    side: inputs.side,
+    type: inputs.type,
+    closePrice: inputs.closePrice,
+    orderPrice: inputs.orderPrice,
+  });
+
+  const { closePrice, orderPrice, leverage } = inputs;
+  return new Decimal(closePrice)
+    .minus(orderPrice)
+    .div(orderPrice)
+    .mul(leverage)
+    .abs()
+    .mul(direction)
     .toNumber();
 }

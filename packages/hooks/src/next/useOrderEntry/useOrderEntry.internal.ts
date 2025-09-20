@@ -6,17 +6,14 @@ import {
   OrderSide,
   OrderType,
 } from "@orderly.network/types";
-import { calcTPSL_ROI } from "../../orderly/useTakeProfitAndStopLoss/tp_slUtils";
+import { priceToROI } from "../../orderly/useTakeProfitAndStopLoss/tp_slUtils";
 import { OrderCreator } from "../../services/orderCreator/interface";
 import {
   baseInputHandle,
   getCalculateHandler,
 } from "../../utils/orderEntryHelper";
 import { hasTPSL } from "./helper";
-import {
-  type FullOrderState,
-  // useOrderStore,
-} from "./orderEntry.store";
+import { type FullOrderState } from "./orderEntry.store";
 import { useOrderStore } from "./useOrderStore";
 
 const useOrderEntryNextInternal = (
@@ -28,11 +25,12 @@ const useOrderEntryNextInternal = (
      */
     initialOrder?: Omit<Partial<FullOrderState>, "symbol">;
     symbolInfo?: API.SymbolExt;
+    symbolLeverage?: number;
   } = {},
 ) => {
   // const orderEntity = useOrderEntryFromStore();
 
-  const { symbolInfo } = options;
+  const { symbolInfo, symbolLeverage } = options;
   const initialOrder = {
     side: OrderSide.BUY,
     order_type: OrderType.LIMIT,
@@ -120,26 +118,17 @@ const useOrderEntryNextInternal = (
       newValues = calculateTPSL(key, newValues, markPrice, symbolInfo);
     }
 
-    {
-      // whether it is necessary to calculate tpsl ROI;
-      if (newValues.tp_pnl && newValues.order_quantity) {
-        newValues.tp_ROI = calcTPSL_ROI({
-          qty: newValues.order_quantity,
-          price: newValues.order_price || markPrice,
-          pnl: newValues.tp_pnl,
-        });
-      }
-
-      if (newValues.sl_pnl && newValues.order_quantity) {
-        newValues.sl_ROI = calcTPSL_ROI({
-          qty: newValues.order_quantity,
-          price: newValues.order_price || markPrice,
-          pnl: newValues.sl_pnl,
-        });
-      }
+    const { tp_ROI, sl_ROI } = priceToROI({
+      values: newValues,
+      symbolLeverage,
+      markPrice,
+    });
+    if (tp_ROI) {
+      newValues.tp_ROI = tp_ROI;
     }
-
-    // calculateTPSL(newValues, markPrice);
+    if (sl_ROI) {
+      newValues.sl_ROI = sl_ROI;
+    }
 
     orderEntryActions.updateOrder(newValues);
 
@@ -192,24 +181,6 @@ const useOrderEntryNextInternal = (
         );
       }
     }
-
-    // whether it is necessary to calculate tpsl ROI;
-    // if (newValues.tp_pnl && newValues.order_quantity) {
-
-    //   newValues.tp_ROI = calcTPSL_ROI({
-    //     qty: newValues.order_quantity,
-    //     price: newValues.order_price || markPrice,
-    //     pnl: newValues.tp_pnl,
-    //   });
-    // }
-
-    // if (newValues.sl_pnl && newValues.order_quantity) {
-    //   newValues.sl_ROI = calcTPSL_ROI({
-    //     qty: newValues.order_quantity,
-    //     price: newValues.order_price || markPrice,
-    //     pnl: newValues.sl_pnl,
-    //   });
-    // }
 
     return newValues;
   };
@@ -273,40 +244,17 @@ const useOrderEntryNextInternal = (
         });
       }
 
-      // if (typeof baseOn === "undefined") {
-      //   newValues = calculate(
-      //     { ...orderEntity },
-      //     "order_price",
-      //     markPrice,
-      //     markPrice,
-      //     options.symbolInfo
-      //   );
-      // } else {
-      //   newValues = calculate(
-      //     { ...orderEntity },
-      //     baseOn,
-      //     orderEntity[baseOn],
-      //     markPrice,
-      //     options.symbolInfo
-      //   );
-      // }
-
       if (hasTPSL(newValues)) {
-        // whether it is necessary to calculate tpsl ROI;
-        if (newValues.tp_pnl && newValues.order_quantity) {
-          newValues.tp_ROI = calcTPSL_ROI({
-            qty: newValues.order_quantity,
-            price: newValues.order_price || markPrice,
-            pnl: newValues.tp_pnl,
-          });
+        const { tp_ROI, sl_ROI } = priceToROI({
+          values: newValues,
+          symbolLeverage,
+          markPrice,
+        });
+        if (tp_ROI) {
+          newValues.tp_ROI = tp_ROI;
         }
-
-        if (newValues.sl_pnl && newValues.order_quantity) {
-          newValues.sl_ROI = calcTPSL_ROI({
-            qty: newValues.order_quantity,
-            price: newValues.order_price || markPrice,
-            pnl: newValues.sl_pnl,
-          });
+        if (sl_ROI) {
+          newValues.sl_ROI = sl_ROI;
         }
       }
 
