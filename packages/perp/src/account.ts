@@ -865,11 +865,15 @@ export const calcMinimumReceived = (inputs: {
     .toNumber();
 };
 
+/**
+ * @deprecated This method will be removed soon. Please update your code to use symbolLeverage directly.
+ */
+// Warning: The maxLeverage method will be deprecated soon. Please use symbolLeverage directly and update all related calls as soon as possible.
 export const maxLeverage = (inputs: {
   symbolLeverage?: number;
   accountLeverage: number;
 }) => {
   const { symbolLeverage, accountLeverage } = inputs;
 
-  return Math.min(symbolLeverage ?? accountLeverage, accountLeverage);
+  return symbolLeverage ?? 1;
 };
