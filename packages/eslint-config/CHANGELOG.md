@@ -1,5 +1,12 @@
 # @orderly.network/eslint-config
 
+## 2.7.2
+
+### Patch Changes
+
+- 360c563: publish
+- publish
+
 ## 2.7.2-alpha.0
 
 ### Patch Changes

@@ -1,5 +1,17 @@
 # @orderly.network/chart
 
+## 2.7.2
+
+### Patch Changes
+
+- 360c563: publish
+- publish
+- Updated dependencies [360c563]
+- Updated dependencies
+  - @orderly.network/i18n@2.7.2
+  - @orderly.network/ui@2.7.2
+  - @orderly.network/utils@2.7.2
+
 ## 2.7.2-alpha.0
 
 ### Patch Changes
