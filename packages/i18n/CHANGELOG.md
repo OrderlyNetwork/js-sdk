@@ -1,5 +1,18 @@
 # @orderly.network/i18n
 
+## 2.7.1
+
+### Patch Changes
+
+- publish
+- bb587ea: publish
+
+## 2.7.1-alpha.0
+
+### Patch Changes
+
+- publish
+
 ## 2.7.0
 
 ### Minor Changes

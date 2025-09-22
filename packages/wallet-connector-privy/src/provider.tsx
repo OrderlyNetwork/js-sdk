@@ -272,10 +272,7 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
   const { data: mainnetChainInfos } = useSWR(
     !props.customChains ? "https://api.orderly.org/v1/public/chain_info" : null,
     fetcher,
-    {
-      ...commonSwrOpts,
-      fallbackData: testnetTokenFallback,
-    },
+    commonSwrOpts,
   );
 
   const { data: testChainInfos } = useSWR(
@@ -395,9 +392,6 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     let mainnetChainsList = [];
     try {
       testChainsList = testChainInfos;
-      // TODO only for test, need remove this code
-      testChainsList.push(AbstractTestnetChainInfo);
-
       mainnetChainsList = mainnetChainInfos;
 
       const testChains = processChainInfo(testChainsList);

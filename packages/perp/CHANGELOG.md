@@ -1,5 +1,25 @@
 # @orderly.network/futures
 
+## 4.7.1
+
+### Patch Changes
+
+- publish
+- bb587ea: publish
+- Updated dependencies
+- Updated dependencies [bb587ea]
+  - @orderly.network/types@2.7.1
+  - @orderly.network/utils@2.7.1
+
+## 4.7.1-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@2.7.1-alpha.0
+  - @orderly.network/utils@2.7.1-alpha.0
+
 ## 4.7.0
 
 ### Minor Changes
