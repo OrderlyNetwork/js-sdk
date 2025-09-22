@@ -1,5 +1,39 @@
 # @orderly.network/ui-tradingview
 
+## 2.7.2
+
+### Patch Changes
+
+- 360c563: publish
+- publish
+- Updated dependencies [360c563]
+- Updated dependencies
+  - @orderly.network/react-app@2.7.2
+  - @orderly.network/hooks@2.7.2
+  - @orderly.network/i18n@2.7.2
+  - @orderly.network/net@2.7.2
+  - @orderly.network/types@2.7.2
+  - @orderly.network/ui@2.7.2
+  - @orderly.network/ui-connector@2.7.2
+  - @orderly.network/ui-positions@2.7.2
+  - @orderly.network/utils@2.7.2
+
+## 2.7.2-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.7.2-alpha.0
+  - @orderly.network/hooks@2.7.2-alpha.0
+  - @orderly.network/i18n@2.7.2-alpha.0
+  - @orderly.network/net@2.7.2-alpha.0
+  - @orderly.network/types@2.7.2-alpha.0
+  - @orderly.network/ui@2.7.2-alpha.0
+  - @orderly.network/ui-connector@2.7.2-alpha.0
+  - @orderly.network/ui-positions@2.7.2-alpha.0
+  - @orderly.network/utils@2.7.2-alpha.0
+
 ## 2.7.1
 
 ### Patch Changes

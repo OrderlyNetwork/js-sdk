@@ -1,5 +1,18 @@
 # tsconfig
 
+## 0.10.2
+
+### Patch Changes
+
+- 360c563: publish
+- publish
+
+## 0.10.2-alpha.0
+
+### Patch Changes
+
+- publish
+
 ## 0.10.1
 
 ### Patch Changes
