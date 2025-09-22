@@ -58,84 +58,35 @@ export const RiskRate: FC<RiskRateState> = (props) => {
         />
       </Flex>
 
-      <Flex className="oui-gap-2" justify="between">
-        <Flex direction="column">
-          <Tooltip
-            content={
-              <TooltipContent
-                description={t("trading.riskRate.tooltip")}
-                formula={t("trading.riskRate.formula")}
-              />
-            }
-          >
-            <Text
-              size="2xs"
-              color="neutral"
-              weight="semibold"
-              className={cn(
-                "oui-cursor-pointer",
-                "oui-border-b oui-border-dashed oui-border-b-white/10",
-              )}
-            >
-              {t("trading.riskRate")}
-            </Text>
-          </Tooltip>
-          <Text
-            size="xs"
-            color="neutral"
-            weight="semibold"
-            className={cn(textColor)}
-          >
-            {riskRate ?? "--"}
-          </Text>
-        </Flex>
-
-        <Flex direction="column">
+      <Flex direction="row" justify="between">
+        <Tooltip
+          content={
+            <TooltipContent
+              description={t("trading.riskRate.tooltip")}
+              formula={t("trading.riskRate.formula")}
+            />
+          }
+        >
           <Text
             size="2xs"
             color="neutral"
             weight="semibold"
             className={cn(
               "oui-cursor-pointer",
-              // add extra bottom border to make height same as risk rate text
-              "oui-border-b oui-border-b-transparent",
+              "oui-border-b oui-border-dashed oui-border-b-white/10",
             )}
           >
-            {t("leverage.maxAccountLeverage")}
+            {t("trading.riskRate")}
           </Text>
-          <Flex className="oui-gap-1">
-            <Text.numeral
-              dp={2}
-              padding={false}
-              suffix={currentLeverage ? "x" : undefined}
-            >
-              {currentLeverage ?? "--"}
-            </Text.numeral>
-
-            <span className={"oui-text-base-contrast-54"}>/</span>
-
-            <button
-              className="oui-flex oui-items-center oui-gap-1"
-              onClick={() => {
-                modal.show(LeverageWidgetWithDialogId, { currentLeverage: 5 });
-              }}
-              data-testid="oui-testid-riskRate-leverage-button"
-            >
-              <Text.numeral
-                dp={2}
-                padding={false}
-                suffix={maxLeverage ? "x" : undefined}
-                data-testid="oui-testid-riskRate-leverage-value"
-              >
-                {maxLeverage ?? "--"}
-              </Text.numeral>
-
-              {typeof maxLeverage !== "undefined" && maxLeverage !== null && (
-                <EditIcon size={12} color="white" />
-              )}
-            </button>
-          </Flex>
-        </Flex>
+        </Tooltip>
+        <Text
+          size="xs"
+          color="neutral"
+          weight="semibold"
+          className={cn(textColor)}
+        >
+          {riskRate ?? "--"}
+        </Text>
       </Flex>
     </Box>
   );

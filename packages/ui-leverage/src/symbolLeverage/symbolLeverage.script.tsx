@@ -273,6 +273,7 @@ function useCalc(inputs: {
       positions: positionList,
       markPrices,
       IMR_Factors: accountInfo.imr_factor,
+      // not used
       maxLeverage: accountInfo.max_leverage,
       symbolInfo: symbolsInfo,
     });
