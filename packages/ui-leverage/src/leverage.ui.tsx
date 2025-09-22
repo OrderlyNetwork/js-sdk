@@ -180,20 +180,14 @@ interface LeverageSelectorProps {
 export const LeverageSelector: React.FC<LeverageSelectorProps> = (props) => {
   const { value, onLeverageChange } = props;
   return (
-    <Flex
-      itemAlign="center"
-      justify="between"
-      width={"100%"}
-      mt={4}
-      className="oui-text-base-contrast-80"
-    >
+    <div className="oui-mt-4 oui-flex oui-flex-wrap oui-gap-2 oui-text-base-contrast-80">
       {props.toggles.map((option) => (
         <Flex
           key={option}
           itemAlign="center"
           justify="center"
           className={cn(
-            `oui-box-border oui-cursor-pointer oui-rounded-md oui-border oui-border-solid oui-bg-clip-padding oui-px-3 oui-py-2.5 oui-transition-all`,
+            `oui-box-border oui-cursor-pointer oui-rounded-md oui-border oui-border-solid oui-bg-clip-padding oui-px-3 oui-py-2.5 oui-transition-all oui-shrink-0`,
             value === option
               ? "oui-border-primary oui-bg-base-6"
               : "oui-border-line-12",
@@ -209,7 +203,7 @@ export const LeverageSelector: React.FC<LeverageSelectorProps> = (props) => {
           </Flex>
         </Flex>
       ))}
-    </Flex>
+    </div>
   );
 };
 
@@ -222,6 +216,7 @@ export type LeverageSliderProps = {
   className?: string;
   onValueCommit?: (value: number[]) => void;
   leverageLevers: number[];
+  marks?: { label: string; value: number }[];
 };
 
 export const LeverageSlider: FC<LeverageSliderProps> = (props) => {
@@ -232,15 +227,22 @@ export const LeverageSlider: FC<LeverageSliderProps> = (props) => {
     value,
     showSliderTip,
   } = props;
+
+  // 使用leverageLevers数组的最大值作为slider的最大值
+  const sliderMax =
+    leverageLevers.length > 0 ? Math.max(...leverageLevers) : maxLeverage;
+  // 根据leverageLevers的长度设置刻度点数量
+  const markCount = leverageLevers.length - 1;
+
   return (
     <Box pt={4} width={"100%"} className={className}>
       <Slider
         // step={1.04}
-        max={maxLeverage}
+        max={sliderMax}
         min={1}
-        // markLabelVisible={true}
-        // marks={props.marks}
-        markCount={5}
+        //markLabelVisible={true}
+        marks={props.marks}
+        // markCount={markCount}
         value={[value]}
         onValueChange={(e) => {
           props.onLeverageChange(e[0]);
@@ -256,8 +258,25 @@ export const LeverageSlider: FC<LeverageSliderProps> = (props) => {
           return `${value}x`;
         }}
       />
-      <Flex justify={"between"} width={"100%"} pt={3}>
+      <div className="oui-relative oui-w-full oui-pt-3">
         {leverageLevers?.map((item, index) => {
+          // 使用与slider相同的convertValueToPercentage计算方式
+          const convertValueToPercentage = (
+            value: number,
+            min: number,
+            max: number,
+          ) => {
+            const maxSteps = max - min;
+            if (maxSteps === 0) {
+              return 0;
+            }
+            const percentPerStep = 100 / maxSteps;
+            const percentage = percentPerStep * (value - min);
+            return Math.min(100, Math.max(0, percentage));
+          };
+
+          const position = convertValueToPercentage(item, 1, sliderMax);
+
           return (
             <button
               key={item}
@@ -266,21 +285,19 @@ export const LeverageSlider: FC<LeverageSliderProps> = (props) => {
                 props.onValueCommit?.([item]);
               }}
               className={cn(
-                "oui-pb-3 oui-text-2xs",
-                index === 0
-                  ? "oui-pr-2"
-                  : index === 5
-                    ? "oui-pl-0"
-                    : "oui-ml-2 oui-px-0",
+                "oui-absolute oui-pb-3 oui-text-2xs oui-transform oui--translate-x-1/2",
                 props.value >= item && "oui-text-primary-light",
               )}
+              style={{
+                left: `${position}%`,
+              }}
               data-testid={`oui-testid-leverage-${item}-btn`}
             >
               {`${item}x`}
             </button>
           );
         })}
-      </Flex>
+      </div>
     </Box>
   );
 };
