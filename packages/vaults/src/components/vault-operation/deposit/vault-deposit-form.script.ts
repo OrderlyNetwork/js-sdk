@@ -1,5 +1,9 @@
 import { useMemo, useState } from "react";
-import { useTokenInfo, useCollateral } from "@orderly.network/hooks";
+import {
+  useTokenInfo,
+  useCollateral,
+  useMaxWithdrawal,
+} from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { Decimal } from "@orderly.network/utils";
 import { useVaultsStore } from "../../../store/vaultsStore";
@@ -23,9 +27,13 @@ export const useVaultDepositFormScript = (props: VaultDepositWidgetProps) => {
   const { holding } = useCollateral();
   const { t } = useTranslation();
 
+  const maxWithdrawalAmount = useMaxWithdrawal("USDC");
   const availableBalance = useMemo(() => {
     return holding?.find((h) => h.token === "USDC")?.holding || 0;
   }, [holding]);
+  const maxQuantity = useMemo(() => {
+    return Math.min(maxWithdrawalAmount, availableBalance);
+  }, [maxWithdrawalAmount, availableBalance]);
 
   const sharePrice = useMemo(() => {
     const vault = vaultInfo.data.find((v) => v.vault_id === vaultId);
@@ -61,8 +69,8 @@ export const useVaultDepositFormScript = (props: VaultDepositWidgetProps) => {
   }, [token]);
 
   const onQuantityChange = (value: string) => {
-    if (value && new Decimal(value).gt(availableBalance)) {
-      setQuantity(availableBalance.toString());
+    if (value && new Decimal(value).gt(maxQuantity)) {
+      setQuantity(maxQuantity.toString());
       return;
     }
     setQuantity(value);
@@ -90,13 +98,13 @@ export const useVaultDepositFormScript = (props: VaultDepositWidgetProps) => {
       hintMessage: "",
       status: "",
     };
-  }, [quantity, t]);
+  }, [quantity, t, maxWithdrawalAmount, availableBalance]);
 
   return {
     quantity,
     onQuantityChange,
     sourceToken,
-    maxQuantity: availableBalance,
+    maxQuantity,
     sharePrice,
     shares,
     handleDeposit,
