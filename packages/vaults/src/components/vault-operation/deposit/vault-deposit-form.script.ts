@@ -14,8 +14,6 @@ export type VaultDepositWidgetProps = {
   vaultId: string;
 };
 
-const MIN_DEPOSIT_AMOUNT = 10;
-
 export const useVaultDepositFormScript = (props: VaultDepositWidgetProps) => {
   const { vaultId } = props;
   const [quantity, setQuantity] = useState<string>("");
@@ -26,6 +24,8 @@ export const useVaultDepositFormScript = (props: VaultDepositWidgetProps) => {
   });
   const { holding } = useCollateral();
   const { t } = useTranslation();
+
+  const minDepositAmount = vaultInfo.data[0]?.min_deposit_amount || 0;
 
   const maxWithdrawalAmount = useMaxWithdrawal("USDC");
   const availableBalance = useMemo(() => {
@@ -81,15 +81,15 @@ export const useVaultDepositFormScript = (props: VaultDepositWidgetProps) => {
       !quantity ||
       quantity === "0" ||
       disabledOperation ||
-      (!!quantity && new Decimal(quantity).lt(MIN_DEPOSIT_AMOUNT))
+      (!!quantity && new Decimal(quantity).lt(minDepositAmount))
     );
   }, [quantity, disabledOperation]);
 
   const inputHint = useMemo(() => {
-    if (quantity && new Decimal(quantity).lt(MIN_DEPOSIT_AMOUNT)) {
+    if (quantity && new Decimal(quantity).lt(minDepositAmount)) {
       return {
         hintMessage: t("vaults.operation.error.minDeposit", {
-          amount: MIN_DEPOSIT_AMOUNT,
+          amount: minDepositAmount,
         }),
         status: "error",
       };

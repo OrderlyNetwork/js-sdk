@@ -36,6 +36,8 @@ export const vaults = {
     "Please switch to your main account to continue.",
   "vaults.operation.error.minDeposit":
     "Deposit amount is less than the minimum {{amount}} USDC.",
+  "vaults.operation.error.minWithdrawal":
+    "Withdraw amount is less than the minimum {{amount}} USDC.",
 };
 
 export type Vaults = typeof vaults;

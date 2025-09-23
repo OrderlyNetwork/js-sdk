@@ -975,5 +975,6 @@
   "vaults.withdraw.process.initiate": "Bắt đầu",
   "vaults.withdraw.process.upTo": "Tối đa 6 giờ",
   "vaults.operation.error.switchAccount": "Vui lòng chuyển sang tài khoản chính của bạn để tiếp tục.",
-  "vaults.operation.error.minDeposit": "Số tiền gửi ít hơn mức tối thiểu {{amount}} USDC."
+  "vaults.operation.error.minDeposit": "Số tiền gửi ít hơn mức tối thiểu {{amount}} USDC.",
+  "vaults.operation.error.minWithdrawal": "Số tiền rút ít hơn mức tối thiểu {{amount}} USDC."
 }

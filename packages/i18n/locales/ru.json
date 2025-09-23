@@ -975,5 +975,6 @@
   "vaults.withdraw.process.initiate": "Инициировать",
   "vaults.withdraw.process.upTo": "До 6 часов",
   "vaults.operation.error.switchAccount": "Пожалуйста, переключитесь на основной аккаунт для продолжения.",
-  "vaults.operation.error.minDeposit": "Сумма депозита меньше минимума {{amount}} USDC."
+  "vaults.operation.error.minDeposit": "Сумма депозита меньше минимума {{amount}} USDC.",
+  "vaults.operation.error.minWithdrawal": "Сумма вывода меньше минимума {{amount}} USDC."
 }

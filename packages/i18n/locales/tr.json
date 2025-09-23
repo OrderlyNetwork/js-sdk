@@ -975,5 +975,6 @@
   "vaults.withdraw.process.initiate": "Başlat",
   "vaults.withdraw.process.upTo": "6 saate kadar",
   "vaults.operation.error.switchAccount": "Devam etmek için lütfen ana hesabınıza geçin.",
-  "vaults.operation.error.minDeposit": "Yatırım tutarı minimum {{amount}} USDC'den az."
+  "vaults.operation.error.minDeposit": "Yatırım tutarı minimum {{amount}} USDC'den az.",
+  "vaults.operation.error.minWithdrawal": "Çekim tutarı minimum {{amount}} USDC'den az."
 }

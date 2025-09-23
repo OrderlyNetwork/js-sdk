@@ -1,6 +1,11 @@
 import { useMemo, useState } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import { Decimal } from "@orderly.network/utils";
-import { useVaultLpInfoById, useVaultsStore } from "../../../store";
+import {
+  useVaultInfoState,
+  useVaultLpInfoById,
+  useVaultsStore,
+} from "../../../store";
 import { OperationType } from "../../../types/vault";
 import { useOperationScript } from "../depositAndWithdraw/operation.script";
 
@@ -19,6 +24,7 @@ export const useVaultWithdrawFormScript = (
   });
   const vaultLpInfo = useVaultLpInfoById(vaultId);
   const { vaultInfo } = useVaultsStore();
+  const { t } = useTranslation();
 
   const sharePrice = useMemo(() => {
     const vault = vaultInfo.data.find((v) => v.vault_id === vaultId);
@@ -49,9 +55,48 @@ export const useVaultWithdrawFormScript = (
     }
   };
 
+  const isMinAmount = useMemo(() => {
+    if (
+      !quantity ||
+      !vaultInfo.data[0]?.est_main_share_price ||
+      !vaultInfo.data[0]?.min_withdrawal_amount
+    )
+      return false;
+    const isAll = quantity === maxQuantity.toString();
+
+    if (isAll) {
+      return false;
+    }
+
+    const receiving = new Decimal(quantity).mul(
+      vaultInfo.data[0]?.est_main_share_price,
+    );
+    return receiving.lt(vaultInfo.data[0]?.min_withdrawal_amount);
+  }, [quantity, vaultInfo, maxQuantity]);
+
   const disabledWithdraw = useMemo(() => {
-    return !quantity || quantity === "0" || disabledOperation;
+    return (
+      !quantity ||
+      quantity === "0" ||
+      disabledOperation ||
+      (!!quantity && isMinAmount)
+    );
   }, [quantity, disabledOperation]);
+
+  const inputHint = useMemo(() => {
+    if (quantity && isMinAmount) {
+      return {
+        hintMessage: t("vaults.operation.error.minWithdrawal", {
+          amount: vaultInfo.data[0]?.min_withdrawal_amount,
+        }),
+        status: "error",
+      };
+    }
+    return {
+      hintMessage: "",
+      status: "",
+    };
+  }, [quantity, t]);
 
   return {
     quantity,
@@ -63,6 +108,7 @@ export const useVaultWithdrawFormScript = (
     receivingAmount,
     disabledWithdraw,
     disabledOperation,
+    inputHint,
   };
 };
 
