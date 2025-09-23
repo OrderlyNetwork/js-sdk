@@ -1,7 +1,6 @@
 import type { StorybookConfig } from "@storybook/react-vite";
-import { mergeConfig } from "vite";
-import type { UserConfig } from "vite";
-import { getWatchIgnores } from "../watchPackages.config.ts";
+import { mergeConfig, UserConfig } from "vite";
+import { getWatchIgnores } from "../watchPackages.config";
 
 /**
  * This function is used to resolve the absolute path of a package.

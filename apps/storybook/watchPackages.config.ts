@@ -1,4 +1,3 @@
-import { fileURLToPath } from "node:url";
 import { resolve } from "path";
 
 type Package = {
@@ -221,9 +220,6 @@ export function getWatchPackages() {
 
   const watchs: Package[] = [];
   const unwatchs: Package[] = [];
-
-  // Get __dirname equivalent for ES modules
-  const __dirname = resolve(fileURLToPath(import.meta.url), "..");
 
   packages.forEach((item) => {
     // fill full path

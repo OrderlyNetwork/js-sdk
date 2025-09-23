@@ -59,8 +59,8 @@ export const useSymbolLeverageScript = (
   } = useCalc({ symbol: symbol!, leverage, maxLeverage });
 
   const formattedLeverageLevers = useMemo(() => {
-    return generateLeverageLevers(curLeverage);
-  }, [curLeverage]);
+    return generateLeverageLevers(maxLeverage);
+  }, [maxLeverage]);
 
   const marks = useMemo<SliderMarks>(() => {
     return (
@@ -70,6 +70,10 @@ export const useSymbolLeverageScript = (
       })) || []
     );
   }, [formattedLeverageLevers]);
+
+  const step = useMemo(() => {
+    return 100 / ((marks?.length || 0) - 1);
+  }, [marks]);
 
   const onLeverageChange = (leverage: number) => {
     setLeverage(leverage);
@@ -124,8 +128,7 @@ export const useSymbolLeverageScript = (
   };
 
   const isReduceDisabled = leverage <= 1;
-  const isIncreaseDisabled =
-    leverage >= maxLeverage || leverage === curLeverage;
+  const isIncreaseDisabled = leverage >= maxLeverage;
 
   const isBuy = side
     ? side === OrderSide.BUY
@@ -150,6 +153,7 @@ export const useSymbolLeverageScript = (
     isReduceDisabled,
     isIncreaseDisabled,
     disabled,
+    step,
     onCancel: options?.close,
     onSave,
     isLoading,
@@ -167,48 +171,25 @@ export const useSymbolLeverageScript = (
   };
 };
 
-// 5x: 1, 2, 3, 4, 5
-// 10x: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
-// 20x: 1, 5, 10, 15, 20
-// 50x: 1, 10, 20, 30, 40, 50
-// 100x: 1, 20, 40, 60, 80, 100
+// 5x: 1x, 2x, 3x, 4x, 5x
+// 10x: 1x, 3x, 5x, 8x, 10x
+// 20x: 1x, 5x, 10x, 15x, 20x
+// 50x: 1x, 10x, 20x, 35x, 50x
+// 100x: 1x, 20x, 50x, 75x, 100x
 const generateLeverageLevers = (max: number) => {
   if (max === 10) {
-    return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  } else if (max === 20) {
-    return [1, 5, 10, 15, 20];
+    return [1, 3, 5, 8, 10];
   } else if (max === 50) {
-    return [1, 10, 20, 30, 40, 50];
-  } else if (max === 100) {
-    return [1, 20, 40, 60, 80, 100];
+    return [1, 10, 20, 35, 50];
   }
 
-  // 兜底策略：均分刻度点距离，1x当成0处理
+  const min = 1;
+  const parts = 5;
+  const step = (max - min) / (parts - 1);
   const result: number[] = [];
-
-  if (max <= 10) {
-    // 对于10x及以下，使用均分逻辑
-    const step = max / 5;
-    for (let i = 0; i < 6; i++) {
-      const value = step * i;
-      // UI显示时，只有0显示为1，其他值保持不变
-      const displayValue = value === 0 ? 1 : value;
-      // 避免重复值
-      if (!result.includes(displayValue)) {
-        result.push(displayValue);
-      }
-    }
-  } else {
-    // 均分成5个区间（6个刻度点）
-    // 1x就是0，从0到max，总共max个单位
-    const step = max / 5;
-    for (let i = 0; i < 6; i++) {
-      const value = step * i;
-      // UI显示时，只有0显示为1，其他值保持不变
-      result.push(value === 0 ? 1 : value);
-    }
+  for (let i = 0; i < parts; i++) {
+    result.push(Math.floor(min + step * i));
   }
-
   return result;
 };
 

@@ -25,6 +25,8 @@ export const useLeverageScript = (options?: UseLeverageScriptOptions) => {
 
   const [leverage, setLeverage] = useState<number>(curLeverage ?? 0);
 
+  const step = 100 / ((marks?.length || 0) - 1);
+
   const onLeverageChange = (leverage: number) => {
     setLeverage(leverage);
   };
@@ -63,13 +65,12 @@ export const useLeverageScript = (options?: UseLeverageScriptOptions) => {
   };
 
   const isReduceDisabled = leverage <= 1;
-  const isIncreaseDisabled =
-    leverage >= maxLeverage || leverage === curLeverage;
+  const isIncreaseDisabled = leverage >= maxLeverage;
   const disabled = !leverage || leverage < 1 || leverage > maxLeverage;
 
   const toggles = useMemo(() => {
-    return leverageLevers;
-  }, [leverageLevers]);
+    return [5, 10, 20, 50, 100].filter((e) => e <= maxLeverage);
+  }, [maxLeverage]);
 
   return {
     leverageLevers,
@@ -83,6 +84,7 @@ export const useLeverageScript = (options?: UseLeverageScriptOptions) => {
     isReduceDisabled,
     isIncreaseDisabled,
     disabled,
+    step,
     onCancel: options?.close,
     onSave,
     isLoading: isLoading,

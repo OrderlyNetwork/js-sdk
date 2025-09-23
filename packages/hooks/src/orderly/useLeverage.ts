@@ -3,48 +3,14 @@ import { useMutation } from "../useMutation";
 import { usePrivateQuery } from "../usePrivateQuery";
 import { useQuery } from "../useQuery";
 
-// 5x: 1, 2, 3, 4, 5
-// 10x: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
-// 20x: 1, 5, 10, 15, 20
-// 50x: 1, 10, 20, 30, 40, 50
-// 100x: 1, 20, 40, 60, 80, 100
 const generateLeverageLevers = (max: number) => {
-  if (max === 10) {
-    return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  } else if (max === 20) {
-    return [1, 5, 10, 15, 20];
-  } else if (max === 50) {
-    return [1, 10, 20, 30, 40, 50];
-  } else if (max === 100) {
-    return [1, 20, 40, 60, 80, 100];
-  }
-
-  // 兜底策略：均分刻度点距离，1x当成0处理
+  const min = 1;
+  const parts = 5;
+  const step = (max - min) / (parts - 1);
   const result: number[] = [];
-
-  if (max <= 10) {
-    // 对于10x及以下，使用均分逻辑
-    const step = max / 5;
-    for (let i = 0; i < 6; i++) {
-      const value = step * i;
-      // UI显示时，只有0显示为1，其他值保持不变
-      const displayValue = value === 0 ? 1 : value;
-      // 避免重复值
-      if (!result.includes(displayValue)) {
-        result.push(displayValue);
-      }
-    }
-  } else {
-    // 均分成5个区间（6个刻度点）
-    // 1x就是0，从0到max，总共max个单位
-    const step = max / 5;
-    for (let i = 0; i < 6; i++) {
-      const value = step * i;
-      // UI显示时，只有0显示为1，其他值保持不变
-      result.push(value === 0 ? 1 : value);
-    }
+  for (let i = 0; i < parts; i++) {
+    result.push(Math.floor(min + step * i));
   }
-
   return result;
 };
 
@@ -122,8 +88,8 @@ export const useLeverage = () => {
   }, [leverageConfig?.max_futures_leverage]);
 
   const memoizedLeverageLevers = useMemo<number[]>(() => {
-    return generateLeverageLevers(memoizedCurLeverage);
-  }, [memoizedCurLeverage]);
+    return generateLeverageLevers(memoizedMaxLeverage);
+  }, [memoizedMaxLeverage]);
 
   return {
     update: updateLeverage,
