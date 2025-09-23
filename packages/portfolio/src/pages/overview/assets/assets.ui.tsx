@@ -112,7 +112,7 @@ export const AssetStatistic = (props: AssetStatisticProps) => {
   const { t } = useTranslation();
 
   return (
-    <Grid cols={3} className="oui-h-12">
+    <Grid cols={2} className="oui-h-12">
       <Statistic label={t("common.unrealizedPnl")}>
         <Flex>
           <Text.numeral
@@ -134,24 +134,6 @@ export const AssetStatistic = (props: AssetStatisticProps) => {
           >
             {props.unrealROI}
           </Text.numeral>
-        </Flex>
-      </Statistic>
-      <Statistic label={t("leverage.maxAccountLeverage")}>
-        <Flex itemAlign={"center"}>
-          <span
-            data-testid="oui-testid-portfolio-assets-maxAccountLeverage-value"
-            className="oui-text-lg"
-          >
-            {props.currentLeverage}
-          </span>
-          <span>x</span>
-          <button
-            className="oui-ml-1"
-            onClick={() => props.onLeverageEdit?.()}
-            data-testid="oui-testid-portfolio-assets-maxAccountLeverage-edit-btn"
-          >
-            <EditIcon color={"white"} size={18} />
-          </button>
         </Flex>
       </Statistic>
       <Statistic
