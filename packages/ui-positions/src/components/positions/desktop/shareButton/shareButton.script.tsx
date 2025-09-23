@@ -55,10 +55,7 @@ export const useShareButtonScript = (props: ShareButtonScriptOptions) => {
       const notional = positions.notional(quantity, openPrice);
 
       const maxLeverage = position.leverage
-        ? account.maxLeverage({
-            symbolLeverage: position.leverage,
-            accountLeverage: accountInfo.max_leverage,
-          })
+        ? position.leverage
         : accountInfo.max_leverage;
 
       const imr = account.IMR({

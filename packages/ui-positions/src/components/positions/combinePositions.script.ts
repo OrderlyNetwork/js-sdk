@@ -94,11 +94,7 @@ export const useCombinePositionsScript = (props: PositionsProps) => {
           markPrice: item.mark_price,
         });
 
-        const maxLeverage = _account.maxLeverage({
-          symbolLeverage: item.leverage,
-          // leverage must be between 1x to max.
-          accountLeverage: account?.max_leverage ?? 1,
-        });
+        const maxLeverage = item.leverage || 1;
 
         const imr = _account.IMR({
           maxLeverage,
