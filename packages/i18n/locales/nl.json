@@ -197,6 +197,7 @@
   "portfolio.feeTier.column.maker": "Maker",
   "portfolio.feeTier.column.taker": "Taker",
   "portfolio.feeTier.effectiveFee.tooltip": "Effectief vergoedingstarief na toepassing van je referral-korting",
+  "portfolio.feeTier.effectiveFee.tooltipLink": "Bekijk rebategeschiedenis",
   "portfolio.apiKey.accountId.copied": "Account-id gekopieerd",
   "portfolio.apiKey.uid": "UID",
   "portfolio.apiKey.secretKey": "Geheime sleutel",

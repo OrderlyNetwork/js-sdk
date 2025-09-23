@@ -24,6 +24,7 @@
     "@orderly.network/ui": "workspace:*",
     "@orderly.network/ui-connector": "workspace:*",
     "@orderly.network/ui-leverage": "workspace:*",
+    "@orderly.network/ui-scaffold": "workspace:*",
     "@orderly.network/ui-tpsl": "workspace:*",
     "@orderly.network/utils": "workspace:*",
     "ramda": "^0.31.3"

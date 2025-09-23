@@ -197,6 +197,7 @@
   "portfolio.feeTier.column.maker": "Мейкер",
   "portfolio.feeTier.column.taker": "Тейкер",
   "portfolio.feeTier.effectiveFee.tooltip": "Ефективна ставка комісії після застосування вашої реферальної знижки",
+  "portfolio.feeTier.effectiveFee.tooltipLink": "Перевірити історію ребейтів",
   "portfolio.apiKey.accountId.copied": "ID рахунку скопійовано",
   "portfolio.apiKey.uid": "UID",
   "portfolio.apiKey.secretKey": "Секретний ключ",

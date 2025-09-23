@@ -197,6 +197,7 @@
   "portfolio.feeTier.column.maker": "Maker",
   "portfolio.feeTier.column.taker": "Taker",
   "portfolio.feeTier.effectiveFee.tooltip": "Effektiver Gebührensatz nach Anwendung deines Referral-Rabatts",
+  "portfolio.feeTier.effectiveFee.tooltipLink": "Rabatthistorie prüfen",
   "portfolio.apiKey.accountId.copied": "Konto-ID kopiert",
   "portfolio.apiKey.uid": "UID",
   "portfolio.apiKey.secretKey": "Geheimer Schlüssel",

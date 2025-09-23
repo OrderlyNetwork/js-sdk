@@ -64,6 +64,7 @@ export const portfolio = {
   "portfolio.feeTier.column.taker": "Taker",
   "portfolio.feeTier.effectiveFee.tooltip":
     "Effective fee rate after applying your referee rebate.",
+  "portfolio.feeTier.effectiveFee.tooltipLink": "Check rebate history",
   "portfolio.apiKey.accountId.copied": "Account id copied",
   "portfolio.apiKey.uid": "UID",
   "portfolio.apiKey.secretKey": "Secret key",

@@ -197,6 +197,7 @@
   "portfolio.feeTier.column.maker": "Veren",
   "portfolio.feeTier.column.taker": "Alıcı",
   "portfolio.feeTier.effectiveFee.tooltip": "Yönlendirme iadeniz uygulandıktan sonraki efektif komisyon oranı",
+  "portfolio.feeTier.effectiveFee.tooltipLink": "İade geçmişini kontrol et",
   "portfolio.apiKey.accountId.copied": "Hesap ID kopyalandı",
   "portfolio.apiKey.uid": "UID",
   "portfolio.apiKey.secretKey": "Gizli anahtar",

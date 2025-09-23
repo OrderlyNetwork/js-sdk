@@ -197,6 +197,7 @@
   "portfolio.feeTier.column.maker": "Maker",
   "portfolio.feeTier.column.taker": "Taker",
   "portfolio.feeTier.effectiveFee.tooltip": "Efektywna stawka opłaty po zastosowaniu twojej zniżki za polecenie",
+  "portfolio.feeTier.effectiveFee.tooltipLink": "Sprawdź historię rabatów",
   "portfolio.apiKey.accountId.copied": "ID konta skopiowane",
   "portfolio.apiKey.uid": "UID",
   "portfolio.apiKey.secretKey": "Klucz tajny",
