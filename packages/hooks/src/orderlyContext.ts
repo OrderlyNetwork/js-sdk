@@ -80,6 +80,11 @@ export interface OrderlyConfigContextState {
        * @default false
        */
       defaultOpen?: boolean;
+      /**
+       * Whether to display the notification in the order entry.
+       * @default true
+       */
+      displayInOrderEntry?: boolean;
     };
   };
 

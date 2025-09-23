@@ -333,7 +333,9 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
     setHasAdvancedTPSLResult(false);
   }, [props.symbol]);
 
-  const showSoundSection = Boolean(notification?.orderFilled?.media);
+  const showSoundSection =
+    Boolean(notification?.orderFilled?.media) &&
+    (notification?.orderFilled?.displayInOrderEntry ?? true);
 
   const additionalInfoProps: AdditionalInfoProps = {
     pinned,
@@ -541,7 +543,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
                 onCheckedChange={(checked) => setSoundAlert(checked)}
               />
               <label htmlFor={soundAlertId} className={"oui-text-xs"}>
-                {t("orderEntry.soundAlerts")}
+                {t("portfolio.setting.soundAlerts")}
               </label>
             </Flex>
             {extraButton}

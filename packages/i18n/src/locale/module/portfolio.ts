@@ -122,6 +122,9 @@ export const portfolio = {
     "Cancel open orders during system upgrade",
   "portfolio.setting.cancelOpenOrders.description":
     "During the upgrade period, all open orders will be cancelled to manage your risk in case of high market volatility.",
+  "portfolio.setting.soundAlerts": "Sound notification",
+  "portfolio.setting.soundAlerts.description":
+    "Play a notification sound when an order is filled or canceled.",
 };
 
 export type Portfolio = typeof portfolio;

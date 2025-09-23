@@ -16,6 +16,7 @@ import { CustomProductNav } from "../components/customProductNav";
 import {
   ApiKeys,
   FeeTier,
+  Setting,
   TradingRewardsActiveIcon,
   TradingRewardsIcon,
 } from "../components/icons";
@@ -88,6 +89,12 @@ const getMainMenus = (): MainNavWidgetProps["mainMenus"] => {
           href: PortfolioLeftSidebarPath.ApiKey,
           icon: <ApiKeys size={14} />,
           activeIcon: <ApiKeys size={14} />,
+        },
+        {
+          name: i18n.t("portfolio.setting"),
+          href: PortfolioLeftSidebarPath.Setting,
+          icon: <Setting size={14} />,
+          activeIcon: <Setting size={14} />,
         },
       ],
     },
