@@ -78,6 +78,7 @@ export function formatPortfolio(inputs: {
     positions: positions.rows,
     markPrices,
     IMR_Factors: accountInfo.imr_factor,
+    // Not used
     maxLeverage: accountInfo.max_leverage,
     symbolInfo: symbolsInfo,
   });

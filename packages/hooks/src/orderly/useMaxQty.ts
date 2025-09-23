@@ -119,6 +119,7 @@ export const useMaxQty = (
       symbolInfo,
       markPrices,
       IMR_Factors: accountInfo.imr_factor,
+      // Not used
       maxLeverage: accountInfo.max_leverage,
     });
 
@@ -127,10 +128,7 @@ export const useMaxQty = (
       symbol,
       baseMaxQty: getSymbolInfo("base_max"),
       totalCollateral,
-      maxLeverage: account.maxLeverage({
-        symbolLeverage: symbolLeverage || currentSymbolPosition?.leverage,
-        accountLeverage: accountInfo.max_leverage,
-      }),
+      maxLeverage: symbolLeverage || currentSymbolPosition?.leverage || 1,
       takerFeeRate: accountInfo.futures_taker_fee_rate,
       baseIMR: getSymbolInfo("base_imr"),
       otherIMs,
