@@ -9,7 +9,6 @@ export const tradingLeaderboard = {
   "tradingLeaderboard.tradeNow": "Trade now",
   "tradingLeaderboard.joinNow": "Join now",
   "tradingLeaderboard.tradingVolume": "Trading volume",
-  "tradingLeaderboard.realizedPnl": "Realized PnL",
   "tradingLeaderboard.rank": "Rank",
   "tradingLeaderboard.estimatedRewards": "Estimated rewards",
   "tradingLeaderboard.lastUpdate": "Last update",

@@ -56,7 +56,7 @@ export const useTradingListColumns = (address?: string) => {
         width: 105,
       },
       {
-        title: t("common.realizedPnl"),
+        title: t("common.pnl"),
         dataIndex: "realized_pnl",
         onSort: true,
         align: isMobile ? "right" : "left",
