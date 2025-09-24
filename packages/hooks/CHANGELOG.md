@@ -1,5 +1,37 @@
 # @orderly.network/hooks
 
+## 2.7.3
+
+### Patch Changes
+
+- publish
+- a8254c1: publish
+- Updated dependencies
+- Updated dependencies [a8254c1]
+  - @orderly.network/core@2.7.3
+  - @orderly.network/default-evm-adapter@2.7.3
+  - @orderly.network/default-solana-adapter@2.7.3
+  - @orderly.network/net@2.7.3
+  - @orderly.network/perp@4.7.3
+  - @orderly.network/types@2.7.3
+  - @orderly.network/utils@2.7.3
+  - @orderly.network/web3-provider-ethers@2.7.3
+
+## 2.7.3-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.7.3-alpha.0
+  - @orderly.network/default-evm-adapter@2.7.3-alpha.0
+  - @orderly.network/default-solana-adapter@2.7.3-alpha.0
+  - @orderly.network/net@2.7.3-alpha.0
+  - @orderly.network/perp@4.7.3-alpha.0
+  - @orderly.network/types@2.7.3-alpha.0
+  - @orderly.network/utils@2.7.3-alpha.0
+  - @orderly.network/web3-provider-ethers@2.7.3-alpha.0
+
 ## 2.7.2
 
 ### Patch Changes

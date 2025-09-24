@@ -65,7 +65,7 @@ export const LeaderboardTabs: FC<LeaderboardTabsProps> = (props) => {
             value={LeaderboardTab.Volume}
           ></TabPanel>
           <TabPanel
-            title={t("tradingLeaderboard.realizedPnl")}
+            title={t("common.pnl")}
             value={LeaderboardTab.Pnl}
           ></TabPanel>
         </Tabs>
@@ -99,7 +99,7 @@ export const LeaderboardTabs: FC<LeaderboardTabsProps> = (props) => {
           key={currentCampaign?.campaign_id}
         >
           <TabPanel
-            title={t("tradingLeaderboard.realizedPnl")}
+            title={t("common.pnl")}
             value={LeaderboardTab.Pnl}
           ></TabPanel>
         </Tabs>

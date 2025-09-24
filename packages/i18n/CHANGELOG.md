@@ -1,5 +1,18 @@
 # @orderly.network/i18n
 
+## 2.7.3
+
+### Patch Changes
+
+- publish
+- a8254c1: publish
+
+## 2.7.3-alpha.0
+
+### Patch Changes
+
+- publish
+
 ## 2.7.2
 
 ### Patch Changes

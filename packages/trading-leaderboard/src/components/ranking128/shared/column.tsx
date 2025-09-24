@@ -153,7 +153,7 @@ export const useRankingColumns = (
         width: 105,
       },
       {
-        title: t("common.realizedPnl"),
+        title: t("common.pnl"),
         dataIndex: "pnl",
         onSort: enableSort,
         align: isMobile ? "right" : "left",

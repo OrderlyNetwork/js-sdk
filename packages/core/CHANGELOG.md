@@ -1,5 +1,23 @@
 # @orderly.network/core
 
+## 2.7.3
+
+### Patch Changes
+
+- publish
+- a8254c1: publish
+- Updated dependencies
+- Updated dependencies [a8254c1]
+  - @orderly.network/types@2.7.3
+
+## 2.7.3-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@2.7.3-alpha.0
+
 ## 2.7.2
 
 ### Patch Changes
