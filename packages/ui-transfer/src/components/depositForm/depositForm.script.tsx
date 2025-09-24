@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   useAccount,
   useConfig,
@@ -40,6 +40,8 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
   const { t } = useTranslation();
 
   const networkId = useConfig("networkId") as NetworkId;
+
+  const [feeWarningMessage, setFeeWarningMessage] = useState("");
 
   const { chains, currentChain, settingChain, onChainChange } =
     useChainSelect();
@@ -176,7 +178,8 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     depositFeeRevalidating! ||
     swapRevalidating ||
     // if exceed collateral cap, disable deposit
-    !!userMaxQtyMessage;
+    !!userMaxQtyMessage ||
+    !!feeWarningMessage;
 
   const amount = useMemo(() => {
     const markPrice = 1;
@@ -226,8 +229,24 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     }
   }, [maxQuantity, quantity, sourceToken?.symbol, t]);
 
+  useEffect(() => {
+    if (
+      quantity &&
+      Number(quantity) > 0 &&
+      depositFee === 0n &&
+      !depositFeeRevalidating
+    ) {
+      setFeeWarningMessage(t("transfer.deposit.failed.fee"));
+    } else {
+      setFeeWarningMessage("");
+    }
+  }, [quantity, depositFee, depositFeeRevalidating, t]);
+
   const warningMessage =
-    swapWarningMessage || userMaxQtyMessage || gasFeeMessage;
+    swapWarningMessage ||
+    userMaxQtyMessage ||
+    gasFeeMessage ||
+    feeWarningMessage;
 
   // const isCollateralNativeToken = useMemo(() => {
   //   return (

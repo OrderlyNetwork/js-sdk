@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 import { useEventEmitter } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { toast } from "@orderly.network/ui";
+import { getDepositKnownErrorMessage } from "../../../utils";
 
 type Options = {
   quantity: string;
@@ -35,7 +36,21 @@ export function useDepositAction(options: Options) {
       onSuccess?.();
     } catch (err: any) {
       console.error("deposit error", err);
-      toast.error(err.message || t("transfer.deposit.failed"));
+
+      const knownErrorMessage = getDepositKnownErrorMessage(err.message);
+      if (knownErrorMessage) {
+        toast.error(
+          <div>
+            {t("common.somethingWentWrong")}
+            <br />
+            <div className="orderly-text-white/[0.54] orderly-text-xs">
+              {t("common.details")}: {knownErrorMessage}
+            </div>
+          </div>,
+        );
+      } else {
+        toast.error(err.message || t("common.somethingWentWrong"));
+      }
     }
   }, [deposit, onSuccess, t]);
 
