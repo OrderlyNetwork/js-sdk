@@ -1,5 +1,12 @@
 # @orderly.network/eslint-config
 
+## 2.7.3
+
+### Patch Changes
+
+- publish
+- a8254c1: publish
+
 ## 2.7.3-alpha.0
 
 ### Patch Changes

@@ -1,5 +1,24 @@
 # @orderly.network/ui-order-entry
 
+## 2.7.3
+
+### Patch Changes
+
+- publish
+- a8254c1: publish
+- Updated dependencies
+- Updated dependencies [a8254c1]
+  - @orderly.network/react-app@2.7.3
+  - @orderly.network/hooks@2.7.3
+  - @orderly.network/i18n@2.7.3
+  - @orderly.network/perp@4.7.3
+  - @orderly.network/types@2.7.3
+  - @orderly.network/ui@2.7.3
+  - @orderly.network/ui-connector@2.7.3
+  - @orderly.network/ui-leverage@2.7.3
+  - @orderly.network/ui-tpsl@2.7.3
+  - @orderly.network/utils@2.7.3
+
 ## 2.7.3-alpha.0
 
 ### Patch Changes

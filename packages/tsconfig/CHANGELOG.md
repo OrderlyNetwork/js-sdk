@@ -1,5 +1,12 @@
 # tsconfig
 
+## 0.10.3
+
+### Patch Changes
+
+- publish
+- a8254c1: publish
+
 ## 0.10.3-alpha.0
 
 ### Patch Changes
