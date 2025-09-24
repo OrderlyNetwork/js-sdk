@@ -47,6 +47,7 @@ export interface VaultOperation {
   type: OperationType;
   vault_id: string;
   amount_change: number;
+  shares_change?: number;
   created_time: string;
   status: string;
 }
