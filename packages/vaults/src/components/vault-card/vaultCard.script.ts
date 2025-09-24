@@ -62,9 +62,15 @@ export const useVaultCardScript = (vault: VaultInfo) => {
     return state.chainNamespace === "EVM";
   }, [state.chainNamespace]);
 
+  const isSOLConnected = useMemo(() => {
+    return state.chainNamespace === "SOL";
+  }, [state.chainNamespace]);
+
   const isWrongNetwork = useMemo(() => {
     return (
-      state.chainNamespace !== "EVM" && state.accountId !== state.mainAccountId
+      state.chainNamespace !== "EVM" &&
+      state.chainNamespace !== "SOL" &&
+      state.accountId !== state.mainAccountId
     );
   }, [state.chainNamespace, state.accountId, state.mainAccountId]);
 
@@ -92,6 +98,7 @@ export const useVaultCardScript = (vault: VaultInfo) => {
     vaultInfo: vault,
     lpInfo,
     isEVMConnected,
+    isSOLConnected,
     openDepositAndWithdraw,
     availableBalance: memoizedAvailableBalance,
     openVaultWebsite,

@@ -71,6 +71,7 @@ export { useDeposit } from "./useDeposit";
 export { useConvert } from "./useConvert";
 export { useTransfer } from "./useTransfer";
 export { useInternalTransfer } from "./useInternalTransfer";
+export { useMaxWithdrawal } from "./useMaxWithdrawal";
 
 export { useHoldingStream } from "./useHoldingStream";
 export { useWalletSubscription } from "./useWalletSubscription";

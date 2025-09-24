@@ -975,5 +975,6 @@
   "vaults.withdraw.process.initiate": "시작",
   "vaults.withdraw.process.upTo": "최대 6시간",
   "vaults.operation.error.switchAccount": "계속하려면 메인 계정으로 전환해 주세요.",
-  "vaults.operation.error.minDeposit": "입금액이 최소 {{amount}} USDC보다 적습니다."
+  "vaults.operation.error.minDeposit": "입금액이 최소 {{amount}} USDC보다 적습니다.",
+  "vaults.operation.error.minWithdrawal": "출금액이 최소 {{amount}} USDC보다 적습니다."
 }

@@ -31,6 +31,7 @@ export const VaultWithdrawForm: FC<VaultWithdrawFormScript> = (props) => {
     receivingAmount,
     disabledWithdraw,
     disabledOperation,
+    inputHint,
   } = props;
   const { isMobile } = useScreen();
 
@@ -52,6 +53,8 @@ export const VaultWithdrawForm: FC<VaultWithdrawFormScript> = (props) => {
           onValueChange={onQuantityChange}
           token={{ display_name: "Shares", precision: 6 } as any}
           testId="oui-testid-vault-withdraw-dialog-quantity-input"
+          hintMessage={inputHint.hintMessage}
+          status={inputHint.status as any}
         />
       </Box>
       <AvailableQuantity

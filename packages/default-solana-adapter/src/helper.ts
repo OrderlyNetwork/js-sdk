@@ -22,6 +22,7 @@ import {
   type WithdrawInputs,
   InternalTransferInputs,
 } from "@orderly.network/core";
+import { DexRequestInputs } from "@orderly.network/core";
 import {
   DEFAUL_ORDERLY_KEY_SCOPE,
   LedgerWalletKey,
@@ -199,6 +200,80 @@ export function internalTransferMessage(
   const msgToSignTextEncoded: Uint8Array = new TextEncoder().encode(
     msgToSignHex,
   );
+  return [message, msgToSignTextEncoded];
+}
+
+export async function dexRequestMessage(
+  inputs: DexRequestInputs & {
+    domain: SignatureDomain;
+    chainId: number;
+  },
+) {
+  const {
+    payloadType,
+    nonce,
+    receiver,
+    amount,
+    vaultId,
+    token,
+    dexBrokerId,
+    chainId,
+  } = inputs;
+
+  const message = {
+    payloadType,
+    nonce,
+    receiver,
+    amount,
+    vaultId,
+    token,
+    dexBrokerId,
+    chainId,
+  };
+
+  let receiverBytes: Uint8Array;
+  receiverBytes = bs58Decode(receiver);
+  const receiverBytes32 = new Uint8Array(32);
+  receiverBytes32.set(receiverBytes);
+
+  const vaultIdHex = vaultId;
+  const vaultIdBytes = hexToBytes(vaultIdHex);
+
+  const tokenHash = keccak256(new TextEncoder().encode(token));
+  const dexBrokerIdHash = keccak256(new TextEncoder().encode(dexBrokerId));
+  const abicoder = AbiCoder.defaultAbiCoder();
+  const msgToSign = keccak256(
+    hexToBytes(
+      abicoder.encode(
+        [
+          "uint8", // payloadType
+          "uint256", // nonce
+          "bytes32", // receiver (Base58 decoded)
+          "uint256", // amount
+          "bytes32", // vaultId
+          "bytes32", // token hash
+          "bytes32", // dexBrokerId hash
+          "uint256", // chainId
+        ],
+        [
+          payloadType,
+          nonce,
+          receiverBytes,
+          amount,
+          vaultIdBytes,
+          tokenHash,
+          dexBrokerIdHash,
+          chainId,
+        ],
+      ),
+    ),
+  );
+
+  const msgToSignHex = bytesToHex(msgToSign);
+  const msgToSignTextEncoded: Uint8Array = new TextEncoder().encode(
+    msgToSignHex,
+  );
+
   return [message, msgToSignTextEncoded];
 }
 

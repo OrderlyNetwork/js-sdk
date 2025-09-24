@@ -975,5 +975,6 @@
   "vaults.withdraw.process.initiate": "Avvia",
   "vaults.withdraw.process.upTo": "Fino a 6 ore",
   "vaults.operation.error.switchAccount": "Passa al tuo account principale per continuare.",
-  "vaults.operation.error.minDeposit": "L'importo del deposito è inferiore al minimo di {{amount}} USDC."
+  "vaults.operation.error.minDeposit": "L'importo del deposito è inferiore al minimo di {{amount}} USDC.",
+  "vaults.operation.error.minWithdrawal": "L'importo del prelievo è inferiore al minimo di {{amount}} USDC."
 }

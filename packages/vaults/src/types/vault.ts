@@ -15,6 +15,8 @@ export interface VaultInfo {
   apr30_d: number;
   vault_lifetime_net_pnl: number;
   lp_counts: number;
+  min_deposit_amount: number;
+  min_withdrawal_amount: number;
   total_main_shares: number;
   est_main_share_price: number;
   gate_threshold_pct: number;
