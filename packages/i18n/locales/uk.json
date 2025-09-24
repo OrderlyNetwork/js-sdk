@@ -978,5 +978,6 @@
   "vaults.withdraw.process.initiate": "Ініціювати",
   "vaults.withdraw.process.upTo": "До 6 годин",
   "vaults.operation.error.switchAccount": "Будь ласка, переключіться на основний обліковий запис, щоб продовжити.",
-  "vaults.operation.error.minDeposit": "Сума депозиту менша за мінімум {{amount}} USDC."
+  "vaults.operation.error.minDeposit": "Сума депозиту менша за мінімум {{amount}} USDC.",
+  "vaults.operation.error.minWithdrawal": "Сума виведення менша за мінімум {{amount}} USDC."
 }

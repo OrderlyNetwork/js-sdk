@@ -978,5 +978,6 @@
   "vaults.withdraw.process.initiate": "Rozpocznij",
   "vaults.withdraw.process.upTo": "Do 6 godzin",
   "vaults.operation.error.switchAccount": "Przełącz się na swoje główne konto, aby kontynuować.",
-  "vaults.operation.error.minDeposit": "Kwota depozytu jest niższa niż minimum {{amount}} USDC."
+  "vaults.operation.error.minDeposit": "Kwota depozytu jest niższa niż minimum {{amount}} USDC.",
+  "vaults.operation.error.minWithdrawal": "Kwota wypłaty jest niższa niż minimum {{amount}} USDC."
 }

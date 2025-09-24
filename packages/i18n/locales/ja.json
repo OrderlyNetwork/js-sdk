@@ -978,5 +978,6 @@
   "vaults.withdraw.process.initiate": "開始",
   "vaults.withdraw.process.upTo": "最大6時間",
   "vaults.operation.error.switchAccount": "続行するにはメインアカウントに切り替えてください。",
-  "vaults.operation.error.minDeposit": "入金額が最低額 {{amount}} USDC を下回っています。"
+  "vaults.operation.error.minDeposit": "入金額が最低額 {{amount}} USDC を下回っています。",
+  "vaults.operation.error.minWithdrawal": "出金額が最低額 {{amount}} USDC を下回っています。"
 }
