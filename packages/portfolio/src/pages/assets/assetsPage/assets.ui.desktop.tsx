@@ -324,7 +324,7 @@ export const AssetsTable: React.FC<AssetsWidgetProps> = (props) => {
             )}
             classNames={{
               scrollRoot:
-                "oui-max-h-[700px] oui-overflow-y-auto oui-custom-scrollbar",
+                "oui-max-h-[700px] oui-overflow-y-auto oui-custom-scrollbar oui-w-full",
             }}
           />
         </TabPanel>
