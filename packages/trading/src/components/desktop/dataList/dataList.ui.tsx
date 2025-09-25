@@ -198,7 +198,7 @@ export const DataList: React.FC<DataListState> = (props) => {
         <Flex
           width="100%"
           height="100%"
-          className="oui-overflow-y-auto oui-hide-scrollbar"
+          className="oui-overflow-y-auto oui-hide-scrollbar oui-pt-3"
         >
           <AssetsModule.AssetsDataTableWidget
             classNames={{
