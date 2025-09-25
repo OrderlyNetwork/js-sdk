@@ -231,13 +231,13 @@ const getMarkPosition = (
   max: number,
   total: number,
 ) => {
-  // 使用与Slider组件marks数组相同的计算逻辑
+  // Use the same calculation logic as Slider component marks array
   const min = 1;
   const maxSteps = max - min;
   const percentPerStep = 100 / maxSteps;
   const position = percentPerStep * (item - min);
 
-  // 保留边界调整
+  // Keep boundary adjustments
   if (index === 0) return Math.min(position + 2, 100);
   if (index === total - 1) return Math.max(position - 3, 0);
   return position;
@@ -250,21 +250,12 @@ export const LeverageSlider: FC<LeverageSliderProps> = (props) => {
     className,
     value,
     showSliderTip,
+    marks,
   } = props;
 
-  // 使用leverageLevers数组的最大值作为slider的最大值
+  // Use the maximum value of leverageLevers array as slider maximum
   const sliderMax =
     leverageLevers.length > 0 ? Math.max(...leverageLevers) : maxLeverage;
-
-  // 动态创建marks数组：从1到maxLeverage的所有刻度点
-  const customMarks = Array.from({ length: maxLeverage }, (_, index) => {
-    const value = index + 1;
-    const label = leverageLevers.includes(value) ? `${value}x` : "";
-    return {
-      value,
-      label,
-    };
-  });
 
   return (
     <Box pt={4} pb={7} width={"100%"} className={className}>
@@ -273,7 +264,7 @@ export const LeverageSlider: FC<LeverageSliderProps> = (props) => {
         max={maxLeverage}
         min={1}
         // markLabelVisible={true}
-        marks={customMarks}
+        marks={marks}
         // markCount={markCount}
         value={[value]}
         onValueChange={(e) => {

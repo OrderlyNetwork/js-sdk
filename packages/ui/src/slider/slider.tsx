@@ -319,8 +319,8 @@ const Marks: React.FC<SliderMarksProps> = (props) => {
 
         return (
           <Fragment key={index}>
-            {/* 只有当label不为空时才绘制刻度点 */}
-            {mark.label && (
+            {/* Only draw mark dots when label is not empty (for external marks) or always draw (for internal marks) */}
+            {(!isInnerMask ? mark.label : true) && (
               <span
                 className={cnBase(className, classNames)}
                 style={{ left: `calc(${percent}% + ${thumbInBoundsOffset}px)` }}
