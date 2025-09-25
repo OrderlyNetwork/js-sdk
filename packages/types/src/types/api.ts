@@ -526,6 +526,7 @@ export declare namespace API {
     type: "withdrawal" | "deposit";
     status: string;
     amount_change: number;
+    shares_change?: number;
     token?: string; // need to hard code for now
     vaultName?: string; // need to hard code for now
   }
