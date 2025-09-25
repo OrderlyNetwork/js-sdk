@@ -1,8 +1,11 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Decimal } from "@orderly.network/utils";
-import { usePendingWithdrawals } from "../../../hooks/usePendingWithdrawals";
-import { useVaultLpInfoById, useVaultsStore } from "../../../store";
+import {
+  useVaultInfoState,
+  useVaultLpInfoById,
+  useVaultsStore,
+} from "../../../store";
 import { OperationType } from "../../../types/vault";
 import { useOperationScript } from "../depositAndWithdraw/operation.script";
 
@@ -22,20 +25,13 @@ export const useVaultWithdrawFormScript = (
   const vaultLpInfo = useVaultLpInfoById(vaultId);
   const { vaultInfo } = useVaultsStore();
   const { t } = useTranslation();
-  const { totalPendingShares } = usePendingWithdrawals({ vaultId });
 
   const sharePrice = useMemo(() => {
     const vault = vaultInfo.data.find((v) => v.vault_id === vaultId);
     return vault?.est_main_share_price || 0;
   }, [vaultInfo.data, vaultId]);
 
-  const maxQuantity = useMemo(() => {
-    const availableMainShares = vaultLpInfo?.[0]?.available_main_shares || 0;
-    const pendingShares = totalPendingShares || 0;
-
-    const result = Math.max(0, availableMainShares - pendingShares);
-    return result;
-  }, [vaultLpInfo, totalPendingShares]);
+  const maxQuantity = vaultLpInfo?.[0]?.available_main_shares || 0;
 
   const receivingAmount = useMemo(() => {
     if (!quantity || !sharePrice) {
