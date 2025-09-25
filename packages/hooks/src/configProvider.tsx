@@ -12,32 +12,33 @@ import {
 } from "@orderly.network/core";
 import { DefaultEVMWalletAdapter } from "@orderly.network/default-evm-adapter";
 import { DefaultSolanaWalletAdapter } from "@orderly.network/default-solana-adapter";
-import { Chain, NetworkId } from "@orderly.network/types";
+import { NetworkId } from "@orderly.network/types";
 import { SDKError } from "@orderly.network/types";
 import { EthersProvider } from "@orderly.network/web3-provider-ethers";
 import { DEFAULT_SYMBOL_DEPTHS, DEFAULT_TICK_SIZES } from "./constants";
 import { ProxyConfigStore } from "./dev/proxyConfigStore";
 import { ExtendedConfigStore } from "./extendedConfigStore";
-import { OrderlyConfigContextState, OrderlyProvider } from "./orderlyContext";
+import {
+  FilteredChains,
+  OrderlyConfigContextState,
+  OrderlyProvider,
+} from "./orderlyContext";
 // import { usePreLoadData } from "./usePreloadData";
 import { DataCenterProvider } from "./provider/dataCenter/dataCenterProvider";
 import { StatusProvider } from "./provider/status/statusProvider";
 
 // import { useParamsCheck } from "./useParamsCheck";
 
-type filteredChains = {
-  mainnet?: Chain[];
-  testnet?: Chain[];
-};
+export type ChainFilterFunc = (config: ConfigStore) => FilteredChains;
 
-type filterChainsFunc = (config: ConfigStore) => filteredChains;
+export type ChainFilter = FilteredChains | ChainFilterFunc;
 
 export type BaseConfigProviderProps = {
   keyStore?: OrderlyKeyStore;
   contracts?: IContract;
   // getWalletAdapter?: getWalletAdapterFunc;
   walletAdapters?: WalletAdapter[];
-  chainFilter?: filteredChains | filterChainsFunc;
+  chainFilter?: ChainFilter;
   /**
    * Custom orderbook default tick sizes.
    */

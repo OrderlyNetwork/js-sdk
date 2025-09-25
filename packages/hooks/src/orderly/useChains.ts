@@ -314,7 +314,7 @@ function _checkChainSupport(chainId: number | string, chains: API.Chain[]) {
 
 export function filterByAllowedChains(
   chains: API.Chain[],
-  allowedChains?: FlatChain[],
+  allowedChains?: Partial<FlatChain>[],
 ) {
   if (!allowedChains) {
     return chains;
