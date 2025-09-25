@@ -311,7 +311,7 @@ const Marks: React.FC<SliderMarksProps> = (props) => {
         // console.log("_ value", isInnerMask, _value, selIndex, mark, __value, percent);
 
         const active =
-          (isInnerMask ? _value >= __value : (selIndex ?? 0) >= __value) &&
+          (isInnerMask ? _value >= __value : _value >= mark.value) &&
           _value >= 0 &&
           !props.disabled;
 
@@ -319,11 +319,14 @@ const Marks: React.FC<SliderMarksProps> = (props) => {
 
         return (
           <Fragment key={index}>
-            <span
-              className={cnBase(className, classNames)}
-              style={{ left: `calc(${percent}% + ${thumbInBoundsOffset}px)` }}
-            />
-            {!props.disabled && markLabelVisible && (
+            {/* Only draw mark dots when label is not empty (for external marks) or always draw (for internal marks) */}
+            {(!isInnerMask ? mark.label : true) && (
+              <span
+                className={cnBase(className, classNames)}
+                style={{ left: `calc(${percent}% + ${thumbInBoundsOffset}px)` }}
+              />
+            )}
+            {!props.disabled && markLabelVisible && mark.label && (
               <span
                 data-testid={`oui-testid-slider-mark-label-${mark.label}`}
                 key={index}
