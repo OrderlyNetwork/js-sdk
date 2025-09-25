@@ -14,8 +14,8 @@ import type {
 import type { Chains } from "./orderly/useChains";
 
 export type FilteredChains = {
-  mainnet?: Partial<Chain>[];
-  testnet?: Partial<Chain>[];
+  mainnet?: { id: number }[];
+  testnet?: { id: number }[];
 };
 
 export interface OrderlyConfigContextState {
