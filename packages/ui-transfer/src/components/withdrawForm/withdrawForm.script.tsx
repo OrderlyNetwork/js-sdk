@@ -260,10 +260,6 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     return false;
   }, [quantity, maxAmount, chainVaultBalance]);
 
-  const minAmount = useMemo(() => {
-    return sourceToken?.minimum_withdraw_amount ?? 0;
-  }, [sourceToken]);
-
   const onWithdraw = async () => {
     if (loading) {
       return;
@@ -271,14 +267,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     if (inputStatus !== "default") {
       return;
     }
-    if (new Decimal(quantity).lt(minAmount)) {
-      toast.error(
-        t("transfer.withdraw.minAmount.error", {
-          minAmount,
-        }),
-      );
-      return;
-    }
+
     setLoading(true);
     return withdraw({
       amount: quantity,
@@ -322,6 +311,15 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     token: sourceToken?.symbol!,
   });
 
+  const minAmountWarningMessage = useMemo(() => {
+    const minAmount = (sourceToken?.minimum_withdraw_amount ?? 0) + fee;
+    if (quantity && new Decimal(quantity).lt(minAmount)) {
+      return t("transfer.withdraw.minAmount.error", {
+        minAmount,
+      });
+    }
+  }, [quantity, sourceToken?.minimum_withdraw_amount, fee, t]);
+
   const showQty = useMemo(() => {
     if (!quantity) {
       return "";
@@ -359,7 +357,8 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     ["error", "warning"].includes(inputStatus) ||
     (withdrawTo === WithdrawTo.Account && !toAccountId) ||
     qtyGreaterThanMaxAmount ||
-    qtyGreaterThanVault;
+    qtyGreaterThanVault ||
+    !!minAmountWarningMessage;
 
   useEffect(() => {
     setCrossChainTrans(!!assetHistory?.length);
@@ -387,6 +386,8 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     token: sourceToken?.symbol!,
     quantity,
   });
+
+  const warningMessage = ltvWarningMessage || minAmountWarningMessage;
 
   return {
     walletName,
@@ -428,6 +429,6 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     ...internalWithdrawState,
     currentLTV,
     nextLTV,
-    ltvWarningMessage,
+    warningMessage,
   };
 };
