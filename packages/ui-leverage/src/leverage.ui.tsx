@@ -222,6 +222,25 @@ export type LeverageSliderProps = {
   className?: string;
   onValueCommit?: (value: number[]) => void;
   leverageLevers: number[];
+  marks?: { label: string; value: number }[];
+};
+
+const getMarkPosition = (
+  item: number,
+  index: number,
+  max: number,
+  total: number,
+) => {
+  // 使用与Slider组件marks数组相同的计算逻辑
+  const min = 1;
+  const maxSteps = max - min;
+  const percentPerStep = 100 / maxSteps;
+  const position = percentPerStep * (item - min);
+
+  // 保留边界调整
+  if (index === 0) return Math.min(position + 2, 100);
+  if (index === total - 1) return Math.max(position - 3, 0);
+  return position;
 };
 
 export const LeverageSlider: FC<LeverageSliderProps> = (props) => {
@@ -232,15 +251,30 @@ export const LeverageSlider: FC<LeverageSliderProps> = (props) => {
     value,
     showSliderTip,
   } = props;
+
+  // 使用leverageLevers数组的最大值作为slider的最大值
+  const sliderMax =
+    leverageLevers.length > 0 ? Math.max(...leverageLevers) : maxLeverage;
+
+  // 动态创建marks数组：从1到maxLeverage的所有刻度点
+  const customMarks = Array.from({ length: maxLeverage }, (_, index) => {
+    const value = index + 1;
+    const label = leverageLevers.includes(value) ? `${value}x` : "";
+    return {
+      value,
+      label,
+    };
+  });
+
   return (
-    <Box pt={4} width={"100%"} className={className}>
+    <Box pt={4} pb={7} width={"100%"} className={className}>
       <Slider
-        // step={1.04}
+        step={1}
         max={maxLeverage}
         min={1}
         // markLabelVisible={true}
-        // marks={props.marks}
-        markCount={5}
+        marks={customMarks}
+        // markCount={markCount}
         value={[value]}
         onValueChange={(e) => {
           props.onLeverageChange(e[0]);
@@ -256,8 +290,15 @@ export const LeverageSlider: FC<LeverageSliderProps> = (props) => {
           return `${value}x`;
         }}
       />
-      <Flex justify={"between"} width={"100%"} pt={3}>
+      <div className="oui-relative oui-w-full oui-pt-3">
         {leverageLevers?.map((item, index) => {
+          const position = getMarkPosition(
+            item,
+            index,
+            sliderMax,
+            leverageLevers.length,
+          );
+
           return (
             <button
               key={item}
@@ -266,21 +307,21 @@ export const LeverageSlider: FC<LeverageSliderProps> = (props) => {
                 props.onValueCommit?.([item]);
               }}
               className={cn(
-                "oui-pb-3 oui-text-2xs",
-                index === 0
-                  ? "oui-pr-2"
-                  : index === 5
-                    ? "oui-pl-0"
-                    : "oui-ml-2 oui-px-0",
-                props.value >= item && "oui-text-primary-light",
+                "oui-absolute oui-pb-3 oui-text-2xs oui-transform oui--translate-x-1/2",
+                Number(props.value) >= Number(item)
+                  ? "oui-text-primary-light"
+                  : "oui-text-base-contrast-54",
               )}
+              style={{
+                left: `${position}%`,
+              }}
               data-testid={`oui-testid-leverage-${item}-btn`}
             >
               {`${item}x`}
             </button>
           );
         })}
-      </Flex>
+      </div>
     </Box>
   );
 };
