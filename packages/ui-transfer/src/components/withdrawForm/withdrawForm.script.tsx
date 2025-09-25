@@ -21,7 +21,12 @@ import {
   NetworkId,
 } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
-import { Decimal, int2hex, praseChainIdToNumber } from "@orderly.network/utils";
+import {
+  Decimal,
+  int2hex,
+  praseChainIdToNumber,
+  toNonExponential,
+} from "@orderly.network/utils";
 import { InputStatus, WithdrawTo } from "../../types";
 import { CurrentChain } from "../depositForm/hooks";
 import { useToken } from "../depositForm/hooks/useToken";
@@ -312,10 +317,13 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
   });
 
   const minAmountWarningMessage = useMemo(() => {
-    const minAmount = (sourceToken?.minimum_withdraw_amount ?? 0) + fee;
+    const minAmount = new Decimal(
+      sourceToken?.minimum_withdraw_amount ?? 0,
+    ).add(fee);
+
     if (quantity && new Decimal(quantity).lt(minAmount)) {
       return t("transfer.withdraw.minAmount.error", {
-        minAmount,
+        minAmount: minAmount.toString(),
       });
     }
   }, [quantity, sourceToken?.minimum_withdraw_amount, fee, t]);
@@ -329,7 +337,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     if (value.isNegative()) {
       return "";
     }
-    return value.toNumber();
+    return toNonExponential(value.toNumber());
   }, [fee, quantity]);
 
   useEffect(() => {
