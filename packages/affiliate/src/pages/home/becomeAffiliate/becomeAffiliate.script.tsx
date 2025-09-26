@@ -1,19 +1,19 @@
 import {
-    BuildNode,
-    ReferralContextReturns,
-    useReferralContext,
-  } from "../../../hooks";
+  BuildNode,
+  ReferralContextReturns,
+  useReferralContext,
+} from "../../../provider";
 
 export type BecomeAffiliateReturns = {
-    state: ReferralContextReturns;
-    overwrite?: BuildNode;
+  state: ReferralContextReturns;
+  overwrite?: BuildNode;
 };
 
 export const useBecomeAffiliateScript = (): BecomeAffiliateReturns => {
-    const state = useReferralContext();
+  const state = useReferralContext();
 
-    return {
-      overwrite: state.overwrite?.ref?.step,
-      state,
-    };
+  return {
+    overwrite: state.overwrite?.ref?.step,
+    state,
+  };
 };

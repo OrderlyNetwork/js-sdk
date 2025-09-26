@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { RefferalAPI, useLocalStorage } from "@orderly.network/hooks";
 import { modal } from "@orderly.network/ui";
-import { useReferralContext } from "../../../hooks";
+import { useReferralContext } from "../../../provider";
 import { addQueryParam, copyText } from "../../../utils/utils";
 import { EditCodeModal } from "./editCodeModal";
 import { EditReferralRate } from "./editReferralRate";

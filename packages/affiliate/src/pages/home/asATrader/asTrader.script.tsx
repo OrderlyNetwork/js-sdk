@@ -1,13 +1,14 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   useAccount,
   useCheckReferralCode,
   useMutation,
 } from "@orderly.network/hooks";
-import { TabTypes, useReferralContext } from "../../../hooks";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { toast, useScreen } from "@orderly.network/ui";
 import { useTranslation } from "@orderly.network/i18n";
+import { useAppContext } from "@orderly.network/react-app";
+import { toast, useScreen } from "@orderly.network/ui";
+import { AuthStatusEnum, useAuthStatus } from "@orderly.network/ui-connector";
+import { TabTypes, useReferralContext } from "../../../provider";
 
 export const useAsTraderScript = () => {
   const { t } = useTranslation();
@@ -19,16 +20,11 @@ export const useAsTraderScript = () => {
     bindReferralCodeState,
     setTab,
     mutate,
-    wrongNetwork,
-    disabledConnect,
   } = useReferralContext();
 
-  const { state } = useAccount();
+  const { wrongNetwork, disabledConnect } = useAppContext();
 
-  const isSignIn =
-    !disabledConnect &&
-    (state.status === AccountStatusEnum.EnableTrading ||
-      state.status === AccountStatusEnum.EnableTradingWithoutConnected);
+  const { state } = useAccount();
 
   const onEnterTraderPage = () => {
     setTab(TabTypes.trader);
@@ -50,7 +46,7 @@ export const useAsTraderScript = () => {
 
   const [bindCode, { error, isMutating }] = useMutation(
     "/v1/referral/bind",
-    "POST"
+    "POST",
   );
 
   const onClickConfirm = async () => {
@@ -84,14 +80,21 @@ export const useAsTraderScript = () => {
 
   const { isMobile } = useScreen();
 
+  const authStatus = useAuthStatus();
+
+  const warningMessage = useMemo(() => {
+    const message: { [key in AuthStatusEnum]?: string } = {
+      [AuthStatusEnum.ConnectWallet]: t("affiliate.connectWallet.tooltip"),
+      [AuthStatusEnum.CreateAccount]: t("affiliate.createAccount.tooltip"),
+      [AuthStatusEnum.WrongNetwork]: t("connector.wrongNetwork.tooltip"),
+    };
+    return message[authStatus];
+  }, [authStatus]);
+
   return {
-    isSignIn,
     isTrader,
     isLoading,
     referralInfo,
-    // isTrader: true,
-    // isLoading: false,
-    // referralInfo: MockData.referralInfo,
     onEnterTraderPage,
     code,
     setCode,
@@ -101,6 +104,7 @@ export const useAsTraderScript = () => {
     isExist,
     wrongNetwork,
     isMobile,
+    warningMessage,
   };
 };
 

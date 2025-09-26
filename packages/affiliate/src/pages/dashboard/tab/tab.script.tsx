@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useState } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
-import { TabTypes, useReferralContext } from "../../../hooks";
+import { TabTypes, useReferralContext } from "../../../provider";
 
 export type TabReturns = {
   tab: string;
