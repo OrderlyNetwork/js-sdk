@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/ui-share",
-  "version": "2.6.3",
+  "version": "2.7.3",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -24,8 +24,7 @@
     "@orderly.network/i18n": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@orderly.network/ui": "workspace:*",
-    "@orderly.network/utils": "workspace:*",
-    "embla-carousel-react": "^8.2.0"
+    "@orderly.network/utils": "workspace:*"
   },
   "devDependencies": {
     "@swc/cli": "^0.3.12",

@@ -1,2 +1,2 @@
-export { RegularFeesUI } from "./fees.ui";
-export { RegularFeesWidget } from "./fees.widget";
+export { RegularFeesUI } from "./regularFees.ui";
+export { RegularFeesWidget } from "./regularFees.widget";

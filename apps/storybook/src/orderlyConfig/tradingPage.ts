@@ -1,4 +1,4 @@
-import { TradingPageProps } from "@orderly.network/trading";
+import type { TradingPageProps } from "@orderly.network/trading";
 
 export type TradingPageConfigProps = {
   tradingViewConfig: TradingPageProps["tradingViewConfig"];

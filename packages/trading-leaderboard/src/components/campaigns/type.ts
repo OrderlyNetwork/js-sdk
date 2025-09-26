@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import { RankingColumnFields } from "../ranking/shared/column";
 import { DescriptionConfig, DescriptionItem } from "../rule/description";
 
@@ -55,7 +56,16 @@ export interface TicketRules {
 export interface CampaignConfig {
   campaign_id: number | string;
   title: string;
+  subtitle?: string;
   description: string;
+  content?: ReactNode;
+  classNames?: {
+    container?: string;
+    topContainer?: string;
+    title?: string;
+    description?: string;
+    descriptionContainer?: string;
+  };
   register_time?: string;
   start_time: string;
   end_time: string;
@@ -86,11 +96,22 @@ export interface CampaignConfig {
     ruleConfig?: DescriptionConfig;
   };
   leaderboard_config?: LeaderboardConfig;
+  // template config, will be remove when campaign is ended
+  emphasisConfig?: {
+    subtitle: string;
+    walletConnect: {
+      title: string;
+      description: string;
+    };
+    hideConnectWallet: boolean;
+  };
 }
 
 export interface LeaderboardConfig {
   use_general_leaderboard?: boolean;
   exclude_leaderboard_columns?: RankingColumnFields[];
+  // for 128 campaign
+  week_one_addresses?: string[];
 }
 
 // User data for calculations

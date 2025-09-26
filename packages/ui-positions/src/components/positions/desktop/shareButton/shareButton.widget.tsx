@@ -1,10 +1,10 @@
 import {
   useShareButtonScript,
-  UseShareButtonScriptOptions,
+  ShareButtonScriptOptions,
 } from "./shareButton.script";
 import { ShareButton } from "./shareButton.ui";
 
-export type ShareButtonWidgetProps = UseShareButtonScriptOptions;
+export type ShareButtonWidgetProps = ShareButtonScriptOptions;
 
 export const ShareButtonWidget = (props: ShareButtonWidgetProps) => {
   const state = useShareButtonScript(props);

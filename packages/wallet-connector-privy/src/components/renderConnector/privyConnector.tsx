@@ -114,25 +114,10 @@ const PrivyConnectAreaDesktop = ({
   const { connectorWalletType, privyConfig } = useWalletConnectorPrivy();
   const loginMethods = privyConfig.loginMethods;
   return (
-    <Flex direction="column" gap={2} itemAlign={"start"} className="oui-w-full">
-      <div
-        className={cn(
-          "oui-flex oui-items-center oui-justify-between",
-          "oui-mb-3 oui-text-sm oui-font-semibold oui-text-base-contrast-80",
-        )}
-      >
-        {t("connector.privy.loginIn")}
-      </div>
-
+    <Flex direction="column" itemAlign={"start"} className="oui-w-full">
       <Grid cols={1} gap={2} className="oui-w-full">
         <RenderLoginMethodsDom connect={connect} loginMethods={loginMethods} />
       </Grid>
-      <div className="oui-mt-4 oui-flex oui-h-3 oui-justify-center">
-        <img
-          src="https://oss.orderly.network/static/sdk/privy/privy-logo.png"
-          className=" oui-h-[10px]"
-        />
-      </div>
       {(!connectorWalletType.disableWagmi ||
         !connectorWalletType.disableSolana) && (
         <div className="oui-mt-4 oui-h-px oui-w-full oui-bg-line md:oui-mt-5"></div>

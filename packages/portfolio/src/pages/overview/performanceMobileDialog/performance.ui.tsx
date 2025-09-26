@@ -2,8 +2,8 @@
 import React from "react";
 import {
   AssetLineChart,
+  PnlAreaChart,
   PnLBarChart,
-  PnlLineChart,
   PnlLineChartProps,
 } from "@orderly.network/chart";
 import { useTranslation } from "@orderly.network/i18n";
@@ -152,7 +152,7 @@ export const PerformanceMobileUI: React.FC<
           title={t("portfolio.overview.performance.cumulativePnl")}
           className="oui-min-h-40"
         >
-          <PnlLineChart
+          <PnlAreaChart
             data={mergedData}
             invisible={invisible || (mergedData?.length ?? 0) <= 2}
             responsiveContainerProps={responsiveProps}

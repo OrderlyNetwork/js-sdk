@@ -1,6 +1,6 @@
-import { FC, SVGProps } from "react";
 import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
+import { AssetsModule } from "@orderly.network/portfolio";
 import { OrderStatus } from "@orderly.network/types";
 import {
   Box,
@@ -11,6 +11,7 @@ import {
   Tabs,
   Tooltip,
 } from "@orderly.network/ui";
+import type { TabPanelProps } from "@orderly.network/ui";
 import { DesktopOrderListWidget, TabType } from "@orderly.network/ui-orders";
 import {
   LiquidationWidget,
@@ -31,140 +32,32 @@ const LazyPositionHeaderWidget = React.lazy(() =>
   }),
 );
 
-export const DataList: FC<DataListState> = (props) => {
-  const { t } = useTranslation();
+const PositionsView: React.FC<DataListState> = (props) => {
   return (
-    <Tabs
-      defaultValue={props.current || DataListTabType.positions}
-      variant="contained"
-      trailing={
-        <React.Suspense fallback={null}>
-          <LazySettingWidget
-            pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
-            setPnlNotionalDecimalPrecision={
-              props.setPnlNotionalDecimalPrecision
-            }
-            unPnlPriceBasis={props.unPnlPriceBasis}
-            setUnPnlPriceBasic={props.setUnPnlPriceBasic}
-            hideOtherSymbols={!props.showAllSymbol}
-            setHideOtherSymbols={(value: boolean) =>
-              props.setShowAllSymbol(!value)
-            }
-          />
-        </React.Suspense>
-      }
-      size="lg"
-      className="oui-h-full"
-      classNames={{
-        // tabsList: "oui-px-3",
-        tabsContent: "oui-h-[calc(100%_-_32px)]",
-        trigger: "oui-group",
-      }}
-    >
-      <TabPanel
-        testid="oui-testid-dataList-position-tab"
-        value={DataListTabType.positions}
-        title={`${t("common.positions")} ${
-          (props.positionCount ?? 0) > 0 ? `(${props.positionCount})` : ""
-        }`}
-      >
-        <PositionsView {...props} />
-      </TabPanel>
-      <TabPanel
-        testid="oui-testid-dataList-pending-tab"
-        value={DataListTabType.pending}
-        title={`${t("orders.status.pending")} ${
-          (props.pendingOrderCount ?? 0) > 0
-            ? `(${props.pendingOrderCount})`
-            : ""
-        }`}
-      >
-        <DesktopOrderListWidget
-          type={TabType.pending}
-          ordersStatus={OrderStatus.INCOMPLETE}
-          symbol={!!props.showAllSymbol ? undefined : props.symbol}
-          onSymbolChange={props.onSymbolChange}
-          testIds={{
-            tableBody: "oui-testid-dataList-pending-table-body",
-          }}
-        />
-      </TabPanel>
-      <TabPanel
-        testid="oui-testid-dataList-tpsl-tab"
-        value={DataListTabType.tp_sl}
-        title={`${t("common.tpsl")} ${
-          (props.tpSlOrderCount ?? 0) > 0 ? `(${props.tpSlOrderCount})` : ""
-        }`}
-      >
-        <DesktopOrderListWidget
-          type={TabType.tp_sl}
-          ordersStatus={OrderStatus.INCOMPLETE}
-          symbol={!!props.showAllSymbol ? undefined : props.symbol}
-          onSymbolChange={props.onSymbolChange}
-          testIds={{
-            tableBody: "oui-testid-dataList-tpsl-table-body",
-          }}
-        />
-      </TabPanel>
-      <TabPanel
-        testid="oui-testid-dataList-filled-tab"
-        value={DataListTabType.filled}
-        title={t("orders.status.filled")}
-      >
-        <DesktopOrderListWidget
-          type={TabType.filled}
-          symbol={!!props.showAllSymbol ? undefined : props.symbol}
-          pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
-          ordersStatus={OrderStatus.FILLED}
-          onSymbolChange={props.onSymbolChange}
-          testIds={{
-            tableBody: "oui-testid-dataList-filled-table-body",
-          }}
-          sharePnLConfig={props.sharePnLConfig}
-        />
-      </TabPanel>
-      <TabPanel
-        testid="oui-testid-dataList-positionHistory-tab"
-        value={DataListTabType.positionHistory}
-        title={t("positions.positionHistory")}
-      >
-        <PositionHistoryWidget
+    <Flex direction="column" width="100%" height="100%">
+      <React.Suspense fallback={null}>
+        <LazyPositionHeaderWidget
           pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
           symbol={!!props.showAllSymbol ? undefined : props.symbol}
-          onSymbolChange={props.onSymbolChange}
-          sharePnLConfig={props.sharePnLConfig}
+          unPnlPriceBasis={props.unPnlPriceBasis}
         />
-      </TabPanel>
-      <TabPanel
-        testid="oui-testid-dataList-orderHistory-tab"
-        value={DataListTabType.orderHistory}
-        title={t("orders.orderHistory")}
-      >
-        <DesktopOrderListWidget
-          type={TabType.orderHistory}
+      </React.Suspense>
+      <Divider className="oui-w-full" />
+      <Box className="oui-h-[calc(100%_-_60px)]" width="100%">
+        <PositionsWidget
+          symbol={!!props.showAllSymbol ? undefined : props.symbol}
           pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
-          symbol={!!props.showAllSymbol ? undefined : props.symbol}
-          onSymbolChange={props.onSymbolChange}
-          testIds={{
-            tableBody: "oui-testid-dataList-orderHistory-table-body",
-          }}
           sharePnLConfig={props.sharePnLConfig}
+          calcMode={props.calcMode}
+          includedPendingOrder={props.includedPendingOrder}
+          onSymbolChange={props.onSymbolChange}
         />
-      </TabPanel>
-      <TabPanel
-        testid="oui-testid-dataList-liquidation-tab"
-        value={DataListTabType.liquidation}
-        title={<LiquidationTab />}
-      >
-        <LiquidationWidget
-          symbol={!!props.showAllSymbol ? undefined : props.symbol}
-        />
-      </TabPanel>
-    </Tabs>
+      </Box>
+    </Flex>
   );
 };
 
-export const LiquidationTab = () => {
+export const LiquidationTab: React.FC = () => {
   const { t } = useTranslation();
   return (
     <div className="oui-flex oui-space-x-1">
@@ -188,9 +81,7 @@ export const LiquidationTab = () => {
             </div>
           </div>
         }
-        arrow={{
-          className: "oui-fill-base-6",
-        }}
+        arrow={{ className: "oui-fill-base-6" }}
       >
         <button className="oui-hidden group-data-[state=active]:oui-block">
           <InfoCircleIcon />
@@ -200,27 +91,147 @@ export const LiquidationTab = () => {
   );
 };
 
-const PositionsView: FC<DataListState> = (props) => {
+export const DataList: React.FC<DataListState> = (props) => {
+  const { t } = useTranslation();
+
+  const {
+    positionCount = 0,
+    pendingOrderCount = 0,
+    tpSlOrderCount = 0,
+    showAllSymbol,
+    symbol,
+    onSymbolChange,
+    pnlNotionalDecimalPrecision,
+    sharePnLConfig,
+    setShowAllSymbol,
+    current,
+    unPnlPriceBasis,
+    setUnPnlPriceBasic,
+    setPnlNotionalDecimalPrecision,
+  } = props;
+
+  const tabPanelItems: (TabPanelProps & { content?: React.ReactNode })[] = [
+    {
+      value: DataListTabType.positions,
+      title: `${t("common.positions")} ${positionCount > 0 ? `(${positionCount})` : ""}`,
+      content: <PositionsView {...props} />,
+    },
+    {
+      value: DataListTabType.pending,
+      title: `${t("orders.status.pending")} ${pendingOrderCount > 0 ? `(${pendingOrderCount})` : ""}`,
+      content: (
+        <DesktopOrderListWidget
+          type={TabType.pending}
+          ordersStatus={OrderStatus.INCOMPLETE}
+          symbol={showAllSymbol ? undefined : symbol}
+          onSymbolChange={onSymbolChange}
+          testIds={{ tableBody: "oui-testid-dataList-pending-table-body" }}
+        />
+      ),
+    },
+    {
+      value: DataListTabType.tp_sl,
+      title: `${t("common.tpsl")} ${tpSlOrderCount > 0 ? `(${tpSlOrderCount})` : ""}`,
+      content: (
+        <DesktopOrderListWidget
+          type={TabType.tp_sl}
+          ordersStatus={OrderStatus.INCOMPLETE}
+          symbol={showAllSymbol ? undefined : symbol}
+          onSymbolChange={onSymbolChange}
+          testIds={{ tableBody: "oui-testid-dataList-tpsl-table-body" }}
+        />
+      ),
+    },
+    {
+      value: DataListTabType.filled,
+      title: t("orders.status.filled"),
+      content: (
+        <DesktopOrderListWidget
+          type={TabType.filled}
+          symbol={showAllSymbol ? undefined : symbol}
+          pnlNotionalDecimalPrecision={pnlNotionalDecimalPrecision}
+          ordersStatus={OrderStatus.FILLED}
+          onSymbolChange={onSymbolChange}
+          testIds={{ tableBody: "oui-testid-dataList-filled-table-body" }}
+          sharePnLConfig={sharePnLConfig}
+        />
+      ),
+    },
+    {
+      value: DataListTabType.positionHistory,
+      title: t("positions.positionHistory"),
+      content: (
+        <PositionHistoryWidget
+          pnlNotionalDecimalPrecision={pnlNotionalDecimalPrecision}
+          symbol={showAllSymbol ? undefined : symbol}
+          onSymbolChange={onSymbolChange}
+          sharePnLConfig={sharePnLConfig}
+        />
+      ),
+    },
+    {
+      value: DataListTabType.orderHistory,
+      title: t("orders.orderHistory"),
+      content: (
+        <DesktopOrderListWidget
+          type={TabType.orderHistory}
+          pnlNotionalDecimalPrecision={pnlNotionalDecimalPrecision}
+          symbol={showAllSymbol ? undefined : symbol}
+          onSymbolChange={onSymbolChange}
+          testIds={{ tableBody: "oui-testid-dataList-orderHistory-table-body" }}
+          sharePnLConfig={sharePnLConfig}
+        />
+      ),
+    },
+    {
+      value: DataListTabType.liquidation,
+      title: <LiquidationTab />,
+      content: (
+        <LiquidationWidget symbol={showAllSymbol ? undefined : symbol} />
+      ),
+    },
+    // {
+    //   value: DataListTabType.assets,
+    //   title: t("common.assets"),
+    //   content: (
+    //     <Flex direction="column" width="100%" height="100%" itemAlign="start">
+    //       <AssetsModule.AssetsDataTableWidget />
+    //     </Flex>
+    //   ),
+    // },
+  ];
+
   return (
-    <Flex direction="column" width="100%" height="100%">
-      <React.Suspense fallback={null}>
-        <LazyPositionHeaderWidget
-          pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
-          symbol={!!props.showAllSymbol ? undefined : props.symbol}
-          unPnlPriceBasis={props.unPnlPriceBasis}
-        />
-      </React.Suspense>
-      <Divider className="oui-w-full" />
-      <Box className="oui-h-[calc(100%_-_60px)]" width="100%">
-        <PositionsWidget
-          symbol={!!props.showAllSymbol ? undefined : props.symbol}
-          pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
-          sharePnLConfig={props.sharePnLConfig}
-          calcMode={props.calcMode}
-          includedPendingOrder={props.includedPendingOrder}
-          onSymbolChange={props.onSymbolChange}
-        />
-      </Box>
-    </Flex>
+    <Tabs
+      defaultValue={current || DataListTabType.positions}
+      variant="contained"
+      trailing={
+        <React.Suspense fallback={null}>
+          <LazySettingWidget
+            pnlNotionalDecimalPrecision={pnlNotionalDecimalPrecision}
+            setPnlNotionalDecimalPrecision={setPnlNotionalDecimalPrecision}
+            unPnlPriceBasis={unPnlPriceBasis}
+            setUnPnlPriceBasic={setUnPnlPriceBasic}
+            hideOtherSymbols={!showAllSymbol}
+            setHideOtherSymbols={(value) => setShowAllSymbol(!value)}
+          />
+        </React.Suspense>
+      }
+      size="lg"
+      className="oui-h-full"
+      classNames={{
+        trigger: "oui-group",
+        tabsContent: "oui-h-[calc(100%_-_32px)]",
+      }}
+    >
+      {tabPanelItems.map((item) => {
+        const { content, ...rest } = item;
+        return (
+          <TabPanel {...rest} key={`item-${rest.value}`}>
+            {content}
+          </TabPanel>
+        );
+      })}
+    </Tabs>
   );
 };

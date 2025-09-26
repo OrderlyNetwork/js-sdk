@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/ui-positions",
-  "version": "2.6.3",
+  "version": "2.7.3",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -28,6 +28,7 @@
     "@orderly.network/types": "workspace:*",
     "@orderly.network/ui": "workspace:*",
     "@orderly.network/ui-connector": "workspace:*",
+    "@orderly.network/ui-leverage": "workspace:*",
     "@orderly.network/ui-share": "workspace:*",
     "@orderly.network/ui-tpsl": "workspace:*",
     "@orderly.network/utils": "workspace:*",

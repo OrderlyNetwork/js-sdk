@@ -9,10 +9,10 @@ export const portfolio = {
   "portfolio.overview.performance": "Performance",
   "portfolio.overview.performance.roi": "{{period}} ROI",
   "portfolio.overview.performance.roi.tooltip":
-    "Return over the selected period, includes deposits/withdrawals.",
+    "ROI = PnL / (Start account value + Total deposits + Total transfer-in)",
   "portfolio.overview.performance.pnl": "{{period}} PnL",
   "portfolio.overview.performance.pnl.tooltip":
-    "Profit/loss over the selected period, includes deposits/withdrawals.",
+    "PnL = Current account value − Start account value − Total deposits + Total withdrawals − Total transfer-in + Total transfer-out",
   "portfolio.overview.performance.volume": "{{period}} Volume (USDC)",
   "portfolio.overview.performance.volume.tooltip":
     "Trading volume over the selected period.",
@@ -54,10 +54,12 @@ export const portfolio = {
   "portfolio.feeTier.header.30dVolume": "30D trading volume",
   "portfolio.feeTier.header.takerFeeRate": "Taker fee rate",
   "portfolio.feeTier.header.makerFeeRate": "Maker fee rate",
+  "portfolio.feeTier.header.myStake": "My stake",
   "portfolio.feeTier.column.tier": "Tier",
   "portfolio.feeTier.column.30dVolume": "30 day volume",
   "portfolio.feeTier.column.30dVolume.above": "Above {{volume}}",
   "portfolio.feeTier.column.stakingLevel": "Staking Level",
+  "portfolio.feeTier.column.or": "or",
   "portfolio.feeTier.column.maker": "Maker",
   "portfolio.feeTier.column.taker": "Taker",
   "portfolio.feeTier.effectiveFee.tooltip":

@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import { Flex, Text } from "@orderly.network/ui";
 import { RouterAdapter } from "../scaffold";
 import { BottomNavItem } from "./bottomNav.widget";
@@ -9,7 +9,7 @@ export type BottomNavProps = {
   onRouteChange?: RouterAdapter["onRouteChange"];
 };
 
-export const BottomNav = (props: BottomNavProps) => {
+export const BottomNav: React.FC<BottomNavProps> = (props) => {
   const { mainMenus, current, onRouteChange } = props;
 
   const isSubmenu = useMemo(() => {

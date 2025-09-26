@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { UTCDateMini } from "@date-fns/utc";
 import { format } from "date-fns";
 import { produce } from "immer";
@@ -12,8 +12,12 @@ import {
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext } from "@orderly.network/react-app";
-import { AnnouncementType, API, WSMessage } from "@orderly.network/types";
-import { useObserverElement } from "@orderly.network/ui";
+import {
+  AnnouncementType,
+  API,
+  EMPTY_LIST,
+  WSMessage,
+} from "@orderly.network/types";
 import { getTimestamp } from "@orderly.network/utils";
 
 const oneDay = 1000 * 60 * 60 * 24;
@@ -31,6 +35,12 @@ interface AnnouncementStore {
 
 const ORDERLY_ANNOUNCEMENT_KEY = "orderly_announcement";
 
+const getTimeString = (timestamp: number) => {
+  const date = format(new UTCDateMini(timestamp), "MMM dd");
+  const time = format(new UTCDateMini(timestamp), "h:mm aa");
+  return `${time} (UTC) on ${date}`;
+};
+
 const sortDataByUpdatedTime = (ori: API.Announcement) => {
   return produce<API.Announcement>(ori, (draft) => {
     if (Array.isArray(draft.rows)) {
@@ -44,100 +54,7 @@ const sortDataByUpdatedTime = (ori: API.Announcement) => {
   });
 };
 
-export type AnnouncementScriptReturn = ReturnType<typeof useAnnouncementScript>;
-
-export const useAnnouncementScript = (options?: AnnouncementScriptOptions) => {
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const [isAnimating, setIsAnimating] = useState(false);
-
-  const { showAnnouncement, setShowAnnouncement } = useAppContext();
-  const { dataAdapter } = useOrderlyContext();
-
-  const { tips: _tips, maintenanceDialogInfo } = useAnnouncementData();
-
-  const tips = useMemo(() => {
-    if (typeof dataAdapter?.announcementList === "function") {
-      return dataAdapter.announcementList(_tips.rows || []);
-    }
-    return _tips.rows || [];
-  }, [_tips, dataAdapter]);
-
-  const [announcementStore, setStore] = useLocalStorage<AnnouncementStore>(
-    ORDERLY_ANNOUNCEMENT_KEY,
-    {},
-  );
-
-  const closeTips = () => {
-    // @ts-ignore
-    setStore((prev) => ({ ...prev, show: false }));
-  };
-
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  const prevTips = React.useCallback(() => {
-    if (isAnimating) {
-      return;
-    }
-    const len = tips.length;
-    setIsAnimating(true);
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + len) % len);
-    setTimeout(() => {
-      setIsAnimating(false);
-    }, 200);
-  }, [isAnimating, tips]);
-
-  const nextTips = React.useCallback(() => {
-    if (isAnimating) {
-      return;
-    }
-    const len = tips.length;
-    setIsAnimating(true);
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % len);
-    setTimeout(() => {
-      setIsAnimating(false);
-    }, 200);
-  }, [isAnimating, tips]);
-
-  useEffect(() => {
-    const len = tips.length;
-    if (!showAnnouncement || len <= 1) {
-      return;
-    }
-
-    // rolling announcement, every 3 seconds
-    intervalRef.current = setInterval(nextTips, 3000);
-
-    return () => {
-      if (intervalRef.current) {
-        clearTimeout(intervalRef.current);
-      }
-    };
-  }, [tips, showAnnouncement, nextTips]);
-
-  useEffect(() => {
-    const len = tips.length;
-    setShowAnnouncement(
-      Boolean(len) && announcementStore.show && !options?.hideTips,
-    );
-  }, [tips, announcementStore, options?.hideTips, setShowAnnouncement]);
-
-  const multiLineState = useMultiLine();
-
-  return {
-    maintenanceDialogInfo,
-    tips,
-    currentIndex,
-    currentTip: tips?.[currentIndex],
-    closeTips,
-    nextTips,
-    prevTips,
-    showAnnouncement,
-    isAnimating,
-    ...multiLineState,
-  };
-};
-
-function useAnnouncementData() {
+const useAnnouncementData = () => {
   const ws = useWS();
 
   const [announcementStore, setStore] = useLocalStorage<AnnouncementStore>(
@@ -166,18 +83,10 @@ function useAnnouncementData() {
     brokerName: string,
     startDate: string,
     endDate: string,
-  ) =>
-    t("maintenance.tips.description", {
-      brokerName,
-      startDate,
-      endDate,
-    });
+  ) => t("maintenance.tips.description", { brokerName, startDate, endDate });
 
   const getMaintentDialogContent = (brokerName: string, endDate: string) =>
-    t("maintenance.dialog.description", {
-      brokerName,
-      endDate,
-    });
+    t("maintenance.dialog.description", { brokerName, endDate });
 
   useEffect(() => {
     const unsubscribe = ws.subscribe("announcement", {
@@ -317,26 +226,53 @@ function useAnnouncementData() {
 
   return {
     tips: sortDataByUpdatedTime(tips),
-    maintenanceDialogInfo,
+    maintenanceDialogInfo: maintenanceDialogInfo,
   };
-}
+};
 
-function useMultiLine() {
-  const [mutiLine, setMutiLine] = useState(false);
-  const contentRef = useRef<HTMLDivElement>(null);
+export type AnnouncementScriptReturn = ReturnType<typeof useAnnouncementScript>;
 
-  useObserverElement(contentRef.current, (entry) => {
-    setMutiLine(entry.contentRect.height > 20);
-  });
+export const useAnnouncementScript = (options?: AnnouncementScriptOptions) => {
+  const { showAnnouncement, setShowAnnouncement } = useAppContext();
+  const { dataAdapter } = useOrderlyContext();
+
+  const { tips, maintenanceDialogInfo } = useAnnouncementData();
+
+  const memoizedTips = useMemo<API.AnnouncementRow[]>(() => {
+    if (typeof dataAdapter?.announcementList === "function") {
+      return dataAdapter.announcementList(
+        tips?.rows ?? (EMPTY_LIST as API.AnnouncementRow[]),
+      );
+    }
+    return tips?.rows ?? (EMPTY_LIST as API.AnnouncementRow[]);
+  }, [dataAdapter?.announcementList, tips?.rows]);
+
+  const [announcementStore, setStore] = useLocalStorage<AnnouncementStore>(
+    ORDERLY_ANNOUNCEMENT_KEY,
+    {},
+  );
+
+  const closeTips = () => {
+    // @ts-ignore
+    setStore((prev) => ({ ...prev, show: false }));
+  };
+
+  useEffect(() => {
+    const len = memoizedTips.length;
+    setShowAnnouncement(
+      Boolean(len) && announcementStore.show && !options?.hideTips,
+    );
+  }, [
+    memoizedTips,
+    announcementStore.show,
+    options?.hideTips,
+    setShowAnnouncement,
+  ]);
 
   return {
-    mutiLine,
-    contentRef,
+    maintenanceDialogInfo,
+    tips: memoizedTips,
+    closeTips: closeTips,
+    showAnnouncement: showAnnouncement,
   };
-}
-
-function getTimeString(timestamp: number) {
-  const date = format(new UTCDateMini(timestamp), "MMM dd");
-  const time = format(new UTCDateMini(timestamp), "h:mm aa");
-  return `${time} (UTC) on ${date}`;
-}
+};

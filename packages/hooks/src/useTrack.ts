@@ -11,7 +11,7 @@ export const useTrack = () => {
 
   /** immediately track event */
   const tracking = useCallback(
-    (eventName: TrackerEventName, params: any) => {
+    (eventName: TrackerEventName, params: any = {}) => {
       windowGuard(() => {
         const location = window.location;
         const origin = location.origin;

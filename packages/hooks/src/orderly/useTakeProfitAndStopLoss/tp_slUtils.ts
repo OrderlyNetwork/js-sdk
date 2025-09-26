@@ -7,7 +7,12 @@ import {
 } from "@orderly.network/types";
 import { OrderType } from "@orderly.network/types";
 import { AlgoOrderType } from "@orderly.network/types";
-import { Decimal, todpIfNeed, zero } from "@orderly.network/utils";
+import {
+  Decimal,
+  getTPSLDirection,
+  todpIfNeed,
+  zero,
+} from "@orderly.network/utils";
 
 export type UpdateOrderKey =
   | "tp_trigger_price"
@@ -137,28 +142,41 @@ export function priceToOffsetPercentage(inputs: {
 }) {
   const { qty, price, entryPrice, orderType, orderSide } = inputs;
 
+  const direction = getTPSLDirection({
+    side: orderSide,
+    type: orderType === AlgoOrderType.TAKE_PROFIT ? "tp" : "sl",
+    closePrice: price,
+    orderPrice: entryPrice,
+  });
+
   if (orderSide === OrderSide.BUY) {
     if (entryPrice === 0) return 0;
     if (orderType === AlgoOrderType.TAKE_PROFIT) {
       return new Decimal(price)
         .div(new Decimal(entryPrice))
         .minus(1)
+        .abs()
+        .mul(direction)
         .toDecimalPlaces(4, Decimal.ROUND_DOWN)
         .toNumber();
     }
 
     return new Decimal(1)
       .minus(new Decimal(price).div(new Decimal(entryPrice)))
+      .abs()
+      .mul(direction)
       .toDecimalPlaces(4, Decimal.ROUND_DOWN)
       .toNumber();
   }
 
   if (orderSide === OrderSide.SELL) {
     if (entryPrice === 0) return 0;
+
     if (orderType === AlgoOrderType.TAKE_PROFIT) {
       return new Decimal(1)
         .minus(new Decimal(price).div(new Decimal(entryPrice)))
         .abs()
+        .mul(direction)
         .toDecimalPlaces(4, Decimal.ROUND_DOWN)
         .toNumber();
     }
@@ -166,6 +184,8 @@ export function priceToOffsetPercentage(inputs: {
     return new Decimal(price)
       .div(new Decimal(entryPrice))
       .minus(1)
+      .abs()
+      .mul(direction)
       .toDecimalPlaces(4, Decimal.ROUND_DOWN)
       .toNumber();
   }

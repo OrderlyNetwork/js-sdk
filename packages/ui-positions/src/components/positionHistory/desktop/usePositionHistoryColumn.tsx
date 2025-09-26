@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { useMemo } from "react";
+import { useLeverageBySymbol, useMaxLeverage } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
 import {
@@ -37,7 +38,7 @@ export const usePositionHistoryColumn = (props: {
           fixed: "left",
           width: 200,
           onSort: (r1: any, r2: any) => {
-            return r1.symbol.localeCompare(r2.symbol);
+            return r1.symbol?.localeCompare(r2.symbol || "");
           },
           render: (value: string, record) => (
             <SymbolInfo record={record} onSymbolChange={onSymbolChange} />
@@ -199,9 +200,10 @@ export const SymbolInfo = (props: {
 
     list.push(
       <Badge
+        key={`status-${status}`}
         color={status !== "closed" ? "primaryLight" : "neutral"}
         size="xs"
-        className="oui-break-normal oui-whitespace-nowrap"
+        className="oui-whitespace-nowrap oui-break-normal"
       >
         {renderStatus()}
       </Badge>,
@@ -209,19 +211,16 @@ export const SymbolInfo = (props: {
 
     if (record.type === "adl") {
       list.push(
-        <Badge color={"danger"} size="xs">
-          {/* {capitalizeFirstLetter(record.type)} */}
+        <Badge key={`type-${record.type}`} color={"danger"} size="xs">
           {t("positions.history.type.adl")}
         </Badge>,
       );
     } else if (record.type === "liquidated") {
       list.push(
         <Tooltip
+          key={`type-${record.type}`}
           className="oui-min-w-[204px] oui-bg-base-5"
-          arrow={{
-            className: "oui-fill-base-5",
-          }}
-          // @ts-ignore
+          arrow={{ className: "oui-fill-base-5" }}
           content={
             <Flex
               direction={"column"}
@@ -259,7 +258,7 @@ export const SymbolInfo = (props: {
         >
           <div>
             <Badge size="xs" color="danger" className="oui-cursor-pointer">
-              <span className="oui-underline oui-decoration-dashed oui-decoration-[1px]">
+              <span className="oui-underline oui-decoration-dashed oui-decoration-1">
                 {t("positions.history.type.liquidated")}
               </span>
             </Badge>
@@ -267,6 +266,14 @@ export const SymbolInfo = (props: {
         </Tooltip>,
       );
     }
+
+    list.push(
+      <LeverageBadge
+        key={`leverage-${record.symbol}`}
+        symbol={record.symbol}
+        leverage={record.leverage}
+      />,
+    );
 
     return list;
   }, [record, t]);
@@ -277,7 +284,7 @@ export const SymbolInfo = (props: {
         width={4}
         height={38}
         className={cn(
-          "oui-rounded-[1px] oui-shrink-0",
+          "oui-shrink-0 oui-rounded-[1px]",
           record.side === "LONG" ? "oui-bg-trade-profit" : "oui-bg-trade-loss",
         )}
       />
@@ -311,7 +318,7 @@ export const Quantity = (props: { record: PositionHistoryExt }) => {
       gap={1}
       direction={"column"}
       itemAlign={"start"}
-      className="oui-overflow-hidden oui-whitespace-nowrap oui-text-ellipsis"
+      className="oui-truncate"
     >
       <Text.numeral dp={base_dp} padding={false}>
         {Math.abs(record.closed_position_qty)}
@@ -400,5 +407,31 @@ export const NetPnL = (props: {
     >
       <div>{text()}</div>
     </Tooltip>
+  );
+};
+
+const LeverageBadge = (props: { symbol: string; leverage: number }) => {
+  const { symbol, leverage } = props;
+
+  return (
+    <Badge color="neutral" size="xs">
+      {leverage ? (
+        <Text.numeral dp={0} size="2xs" unit="X">
+          {leverage}
+        </Text.numeral>
+      ) : (
+        <LeverageDisplay symbol={symbol} />
+      )}
+    </Badge>
+  );
+};
+
+const LeverageDisplay = ({ symbol }: { symbol: string }) => {
+  const leverage = useMaxLeverage(symbol);
+
+  return (
+    <Text.numeral dp={0} size="2xs" unit="X">
+      {leverage}
+    </Text.numeral>
   );
 };

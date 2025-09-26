@@ -9,7 +9,8 @@ import {
   LeaderboardPage,
   TradingLeaderboardProvider,
 } from "@orderly.network/trading-leaderboard";
-import { Box } from "@orderly.network/ui";
+import { Box, Button, cn, Flex, Text } from "@orderly.network/ui";
+import { AuthGuard } from "@orderly.network/ui-connector";
 import { BaseLayout } from "../../../components/layout";
 import { campaignRuleMap } from "./rules/constants";
 import { useCustomRanking } from "./useCustomRanking";
@@ -24,8 +25,8 @@ export function getCampaigns() {
         "A new era begins. Outtrade the competition. Climb the ranks. Secure your legacy.",
       image: "/leaderboard/campaign_116.jpg",
       // href: 'https://orderly.network/',
-      start_time: new Date("2025-08-18T00:00:00Z").toISOString(),
-      end_time: new Date("2025-10-04T23:59:59Z").toISOString(),
+      start_time: new Date("2025-06-18T00:00:00Z").toISOString(),
+      end_time: new Date("2025-07-04T23:59:59Z").toISOString(),
       reward_distribution_time: undefined,
       volume_scope: undefined,
       tiered_prize_pools: [
@@ -275,8 +276,16 @@ export function getCampaigns() {
     } as CampaignConfig,
     {
       campaign_id: "128",
-      title: "Ascension Campaign",
-      description: "Up to 156,000 USDC in rewards!",
+      title: "Ascension",
+      description: "6 weeks. 3 challenges. Pool grows with every trade.",
+      emphasisConfig: {
+        hideConnectWallet: true,
+        subtitle: " Win your share of $156,000 USDC!",
+        walletConnect: {
+          title: "Connect wallet to join",
+          description: "*Battle is live. Don”t start at the bottom.",
+        },
+      },
       image: "",
       start_time: new Date("2025-09-08T10:00:00Z").toISOString(),
       end_time: new Date("2025-10-20T00:00:00Z").toISOString(),
@@ -342,6 +351,7 @@ export function getCampaigns() {
       trading_url: "https://woofi.com/en/trade/ETH_PERP",
       leaderboard_config: {
         use_general_leaderboard: true,
+        // week_one_addresses: ["0xfba31dfa3c6612abca9a27f65af77d9fed7e2db7"],
       },
     } as CampaignConfig,
     {

@@ -168,6 +168,7 @@ export const EditBracketOrderUI = (props: Props & { onClose?: () => void }) => {
                 rootOrderPrice={formattedOrder.order_price}
                 symbol={symbolInfo.symbol}
                 type="tp"
+                side={formattedOrder.side as OrderSide}
                 values={tpValues}
                 errors={validated ? errors : null}
                 quote_dp={symbolInfo.quote_dp}
@@ -175,8 +176,6 @@ export const EditBracketOrderUI = (props: Props & { onClose?: () => void }) => {
                   formattedOrder.position_type === PositionType.FULL
                 }
                 onChange={(key, value) => {
-                  console.log("key", key, "value", value);
-                  // setTpValuse((prev) => ({ ...prev, [key]: value }));
                   setOrderValue(key as keyof OrderlyOrder, value);
                 }}
                 positionType={
@@ -194,6 +193,7 @@ export const EditBracketOrderUI = (props: Props & { onClose?: () => void }) => {
                 rootOrderPrice={formattedOrder.order_price}
                 symbol={symbolInfo.symbol}
                 type="sl"
+                side={formattedOrder.side as OrderSide}
                 values={slValues}
                 hideOrderPrice={
                   formattedOrder.position_type === PositionType.FULL

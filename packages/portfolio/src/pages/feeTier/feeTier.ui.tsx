@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { ReactNode, useCallback, useEffect, useState } from "react";
-import { useFeeState } from "@orderly.network/hooks";
+import React, { useCallback } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { useAppContext } from "@orderly.network/react-app";
 import {
   Box,
   Flex,
@@ -11,14 +9,17 @@ import {
   Divider,
   DataTable,
   Column,
-  Tooltip,
+  useScreen,
+  cn,
+  TanstackColumn,
 } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
 import type { FeeDataType, useFeeTierScriptReturn } from "./feeTier.script";
-import { EffectiveFee } from "./icons";
 
-const isEffective = (val?: unknown) =>
-  typeof val !== "undefined" && val !== null;
+const LazyFeeTierHeader = React.lazy(() =>
+  import("./feeTierHeader").then((mod) => {
+    return { default: mod.FeeTierHeader };
+  }),
+);
 
 export type FeeTierProps = useFeeTierScriptReturn;
 
@@ -27,246 +28,171 @@ export type FeeTierHeaderProps = {
   vol?: number;
 };
 
-export type FeeTierHeaderItemProps = {
-  label: string;
-  value: ReactNode;
-  needShowTooltip?: boolean;
-};
-
-export const FeeTierHeaderItem: React.FC<FeeTierHeaderItemProps> = (props) => {
-  const { label, value, needShowTooltip } = props;
-  const { t } = useTranslation();
-  return (
-    <Box
-      gradient="neutral"
-      r="lg"
-      px={4}
-      py={2}
-      angle={184}
-      width="100%"
-      border
-      borderColor={6}
-    >
-      <Text
-        as="div"
-        intensity={36}
-        size="2xs"
-        weight="semibold"
-        className="oui-leading-[18px]"
-      >
-        {label}
-      </Text>
-      <Flex
-        className="oui-mt-1 oui-w-full"
-        itemAlign="center"
-        justify="between"
-      >
-        <Text size="base" intensity={80} className="oui-leading-[24px]">
-          {value}
-        </Text>
-        {needShowTooltip && (
-          <Tooltip
-            content={t("portfolio.feeTier.effectiveFee.tooltip")}
-            className="oui-p-1.5 oui-text-base-contrast-54"
-          >
-            <Flex
-              gap={1}
-              justify="center"
-              itemAlign="center"
-              className="oui-cursor-pointer oui-rounded oui-bg-gradient-to-r oui-from-[rgb(var(--oui-gradient-brand-start)_/_0.12)] oui-to-[rgb(var(--oui-gradient-brand-end)_/_0.12)] oui-px-1"
-            >
-              <EffectiveFee />
-              <Text.gradient
-                className="oui-select-none"
-                color={"brand"}
-                size="xs"
-                weight="regular"
-              >
-                {t("common.effectiveFee")}
-              </Text.gradient>
-            </Flex>
-          </Tooltip>
-        )}
-      </Flex>
-    </Box>
-  );
-};
-
-export const FeeTierHeader: React.FC<FeeTierHeaderProps> = (props) => {
-  const { t } = useTranslation();
-  const { refereeRebate, ...others } = useFeeState();
-  const isEffectiveFee = isEffective(refereeRebate);
-  return (
-    <Flex direction="row" gapX={4} my={4} itemAlign={"stretch"}>
-      <FeeTierHeaderItem
-        label={t("portfolio.feeTier.header.yourTier")}
-        value={
-          <Text.gradient color={"brand"} angle={270} size="base">
-            {props.tier || "--"}
-          </Text.gradient>
-        }
-      />
-      <FeeTierHeaderItem
-        label={`${t("portfolio.feeTier.header.30dVolume")} (USDC)`}
-        value={
-          <Text.numeral rule="price" dp={2} rm={Decimal.ROUND_DOWN}>
-            {typeof props.vol !== undefined ? `${props.vol}` : "-"}
-          </Text.numeral>
-        }
-      />
-      <FeeTierHeaderItem
-        needShowTooltip={isEffectiveFee}
-        label={t("portfolio.feeTier.header.takerFeeRate")}
-        value={
-          <Text.gradient color={"brand"} angle={270} size="base">
-            {isEffectiveFee
-              ? others.effectiveTakerFee || "--"
-              : others.takerFee || "--"}
-          </Text.gradient>
-        }
-      />
-      <FeeTierHeaderItem
-        needShowTooltip={isEffectiveFee}
-        label={t("portfolio.feeTier.header.makerFeeRate")}
-        value={
-          <Text.gradient color={"brand"} angle={270} size="base">
-            {isEffectiveFee
-              ? others.effectiveMakerFee || "--"
-              : others.makerFee || "--"}
-          </Text.gradient>
-        }
-      />
-    </Flex>
-  );
-};
-
 type FeeTierTableProps = {
-  columns: Column[];
+  columns: Column<any>[];
   dataSource?: any[];
   page?: number;
   pageSize?: number;
   dataCount?: number;
   tier?: number | null;
+  vol?: number | null;
   onRow?: (
     record: any,
     index: number,
   ) => {
-    normal: any;
-    active: any;
+    normal?: any;
+    active?: any;
+  };
+  onCell?: (
+    column: TanstackColumn<any>,
+    record: any,
+    index: number,
+  ) => {
+    normal?: any;
+    active?: any;
   };
 };
 
 export const FeeTierTable: React.FC<FeeTierTableProps> = (props) => {
-  const [top, setTop] = useState<undefined | number>(undefined);
+  const { isMobile } = useScreen();
 
-  const { widgetConfigs } = useAppContext();
+  const { tier, columns, dataSource, onRow, onCell } = props;
 
-  useEffect(() => {
-    const parentRect = document
-      .getElementById("oui-fee-tier-content")
-      ?.getBoundingClientRect();
-
-    const elementRect = document
-      .getElementById("oui-fee-tier-current")
-      ?.getBoundingClientRect();
-
-    if (elementRect && parentRect && !!props.tier) {
-      const offsetTop = elementRect.top - parentRect.top;
-      setTop(offsetTop);
-    } else {
-      setTop(undefined);
-    }
-  }, [props.tier]);
-
-  const onRow = useCallback(
+  const internalOnRow = useCallback(
     (record: FeeDataType, index: number) => {
-      const config = props?.onRow?.(record, index) ?? {
-        normal: undefined,
-        active: undefined,
-      };
-      if (index + 1 == props.tier) {
-        const innerConfig = {
-          id: "oui-fee-tier-current",
-          "data-state": "active",
-          className:
-            "group oui-h-12 oui-text-[rgba(0,0,0,0.88)] oui-pointer-events-none",
-        };
+      const config =
+        typeof onRow === "function"
+          ? onRow(record, index)
+          : { normal: undefined, active: undefined };
+      const active = tier !== undefined && tier !== null && tier === index + 1;
+      if (active) {
         return {
-          ...innerConfig,
+          "data-state": "active",
+          className: cn(
+            "oui-pointer-events-none oui-h-[54px] oui-text-[rgba(0,0,0,0.88)] oui-gradient-brand",
+          ),
           ...config.active,
         };
+      } else {
+        return {
+          "data-state": "none",
+          className: cn("oui-h-[54px]"),
+          ...config.normal,
+        };
       }
-      return {
-        "data-state": "none",
-        ...{ className: "oui-h-12" },
-        ...config.normal,
-      };
     },
-    [props.tier, props.onRow],
+    [tier, onRow],
   );
 
-  const originalTable = (
+  const internalOnCell = useCallback(
+    (
+      column: TanstackColumn<FeeDataType>,
+      record: FeeDataType,
+      index: number,
+    ) => {
+      const config =
+        typeof onCell === "function"
+          ? onCell(column, record, index)
+          : { normal: undefined, active: undefined };
+      const active = tier !== undefined && tier !== null && tier === index + 1;
+      const isFirstColumn = column.getIsFirstColumn();
+      const isLastColumn = column.getIsLastColumn();
+      if (active) {
+        return {
+          className: cn(
+            isFirstColumn && "oui-rounded-l-lg",
+            isLastColumn && "oui-rounded-r-lg",
+          ),
+          ...config.active,
+        };
+      } else {
+        return {
+          className: "",
+          ...config.normal,
+        };
+      }
+    },
+    [tier, onCell],
+  );
+
+  return (
     <Box
-      id="oui-fee-tier-content"
-      className="oui-relative oui-border-b oui-border-line-4"
-    >
-      {top && (
-        <Box
-          angle={90}
-          gradient="brand"
-          className="oui-absolute oui-w-full oui-rounded-md"
-          style={{ top: `${top}px`, height: "48px" }}
-        />
+      className={cn(
+        "oui-relative oui-border-b oui-border-line-4",
+        isMobile ? "oui-mt-2 oui-rounded-xl oui-bg-base-9" : undefined,
       )}
+    >
       <DataTable
         bordered
         className="oui-font-semibold"
         classNames={{ root: "oui-bg-transparent" }}
-        onRow={onRow}
-        columns={props.columns}
-        dataSource={props.dataSource}
+        onRow={internalOnRow}
+        onCell={internalOnCell}
+        columns={columns}
+        dataSource={dataSource}
       />
     </Box>
   );
+};
 
-  const customTable = widgetConfigs?.feeTier?.table;
-
-  return typeof customTable === "function"
-    ? customTable(originalTable)
-    : originalTable;
+const CardTitle: React.FC = () => {
+  const { t } = useTranslation();
+  const { isMobile } = useScreen();
+  if (isMobile) {
+    return (
+      <Flex itemAlign={"center"} justify={"center"} gap={2}>
+        <Text size="xs" intensity={54}>
+          {t("portfolio.feeTier.updatedDailyBy")}
+        </Text>
+        <Text size="xs" intensity={80}>
+          ~2:15 UTC
+        </Text>
+      </Flex>
+    );
+  }
+  return (
+    <Flex itemAlign={"center"} justify={"between"}>
+      <Text size={"lg"}>{t("portfolio.feeTier")}</Text>
+      <Flex itemAlign={"center"} justify={"center"} gap={1}>
+        <Text size="xs" intensity={54}>
+          {t("portfolio.feeTier.updatedDailyBy")}
+        </Text>
+        <Text size="xs" intensity={80}>
+          ~2:15 UTC
+        </Text>
+      </Flex>
+    </Flex>
+  );
 };
 
 export const FeeTier: React.FC<FeeTierProps> = (props) => {
-  const { columns, dataSource, tier, vol } = props;
-  const { widgetConfigs } = useAppContext();
-  const { t } = useTranslation();
-  const customHeader = widgetConfigs?.feeTier?.header;
+  const { columns, dataSource, tier, vol, headerDataAdapter, onRow, onCell } =
+    props;
+  const { isMobile } = useScreen();
   return (
     <Card
-      title={
-        <Flex justify={"between"}>
-          <Text size="lg">{t("portfolio.feeTier")}</Text>
-          <Flex gap={1}>
-            <Text size="xs" intensity={54}>
-              {t("portfolio.feeTier.updatedDailyBy")}
-            </Text>
-            <Text size="xs" intensity={80}>
-              2:00 UTC
-            </Text>
-          </Flex>
-        </Flex>
-      }
-      className="w-full"
+      title={<CardTitle />}
       id="oui-portfolio-fee-tier"
+      className="w-full"
+      classNames={{
+        root: isMobile ? "oui-bg-transparent oui-p-2" : "oui-bg-base-9",
+      }}
     >
-      <Divider />
-      {typeof customHeader === "function" ? customHeader() : null}
-      <FeeTierHeader tier={tier!} vol={vol!} />
+      {!isMobile && <Divider />}
+      <React.Suspense fallback={null}>
+        <LazyFeeTierHeader
+          vol={vol}
+          tier={tier}
+          headerDataAdapter={headerDataAdapter}
+        />
+      </React.Suspense>
       <FeeTierTable
         dataSource={dataSource}
         columns={columns}
+        vol={vol}
         tier={tier}
-        onRow={props.onRow}
+        onRow={onRow}
+        onCell={onCell}
       />
     </Card>
   );

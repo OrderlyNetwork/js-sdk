@@ -1,7 +1,6 @@
 import React from "react";
 import { useFeeState } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { useAppContext } from "@orderly.network/react-app";
 import { Flex, modal, Text, Tooltip, useScreen } from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
 import { EffectiveFee } from "./icons";
@@ -34,8 +33,6 @@ export const EffectiveFeeUI: React.FC<
 > = (props) => {
   const { t } = useTranslation();
   const { effectiveTakerFee, effectiveMakerFee } = props;
-
-  const { widgetConfigs } = useAppContext();
 
   const originalTrailingFees = (
     <Flex itemAlign="center" justify="between" width={"100%"} gap={1}>
@@ -74,9 +71,5 @@ export const EffectiveFeeUI: React.FC<
     </Flex>
   );
 
-  const customTrailingFees = widgetConfigs?.orderEntry?.fees?.trailing;
-
-  return typeof customTrailingFees === "function"
-    ? customTrailingFees(originalTrailingFees)
-    : originalTrailingFees;
+  return originalTrailingFees;
 };

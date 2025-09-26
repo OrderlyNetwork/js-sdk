@@ -18,6 +18,7 @@ export * from "./components/dropDownMarkets";
 export * from "./components/marketsSheet";
 export * from "./components/symbolInfoBar";
 export * from "./components/symbolInfoBarFull";
+export * from "./components/horizontalMarkets";
 
 export * from "./deprecated/newListingList";
 export * from "./deprecated/favoritesList";

@@ -3,7 +3,7 @@ import { useTokensInfo } from "@orderly.network/hooks";
 import { useWalletConnector } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { ChainNamespace } from "@orderly.network/types";
-import { Button, cn, Flex, Text, TokenIcon } from "@orderly.network/ui";
+import { Button, Flex, Text, TokenIcon } from "@orderly.network/ui";
 import type { Column } from "@orderly.network/ui";
 
 export interface ColumnsOptions {
@@ -114,30 +114,30 @@ export const useAssetsColumns = (options: ColumnsOptions) => {
       {
         title: null,
         dataIndex: "account_id",
-        align: "right",
+        align: "center",
         width: 180,
         render(id: string, record: EnhancedHolding) {
+          const { token } = record;
           return (
-            <Flex itemAlign="center" gap={3}>
-              <Button
-                size={"sm"}
-                variant={"outlined"}
-                color={"secondary"}
-                onClick={() => onConvert?.(id, record.token)}
-                className={cn(
-                  record.token === "USDC" || namespace === ChainNamespace.solana
-                    ? "oui-invisible"
-                    : "oui-visible",
+            <Flex itemAlign="center" justify="end" gap={3}>
+              {token !== "USDC" &&
+                namespace !== ChainNamespace.solana &&
+                typeof onConvert === "function" && (
+                  <Button
+                    size={"sm"}
+                    variant={"outlined"}
+                    color={"secondary"}
+                    onClick={() => onConvert?.(id, token)}
+                  >
+                    {t("transfer.convert")}
+                  </Button>
                 )}
-              >
-                {t("transfer.convert")}
-              </Button>
-              {onTransfer && (
+              {typeof onTransfer === "function" && (
                 <Button
                   size={"sm"}
                   variant={"outlined"}
                   color={"secondary"}
-                  onClick={() => onTransfer?.(id, record.token)}
+                  onClick={() => onTransfer?.(id, token)}
                 >
                   {t("common.transfer")}
                 </Button>

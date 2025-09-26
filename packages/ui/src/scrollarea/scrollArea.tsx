@@ -1,6 +1,6 @@
 import React from "react";
 import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
-import { type VariantProps } from "tailwind-variants";
+import type { VariantProps } from "tailwind-variants";
 import { tv } from "../utils/tv";
 
 const scrollAreaVariants = tv({
@@ -20,7 +20,6 @@ const scrollAreaVariants = tv({
       vertical: {
         bar: "oui-h-full oui-w-2 oui-border-l oui-border-l-transparent oui-p-[1px]",
       },
-
       horizontal: {
         bar: "oui-h-2 oui-flex-col oui-border-t oui-border-t-transparent oui-p-[1px]",
       },
@@ -30,24 +29,33 @@ const scrollAreaVariants = tv({
 
 interface ScrollAreaProps
   extends React.ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.Root>,
-    VariantProps<typeof scrollAreaVariants> {}
+    VariantProps<typeof scrollAreaVariants> {
+  classNames?: {
+    viewport?: string;
+  };
+}
 
 const ScrollArea = React.forwardRef<
   React.ElementRef<typeof ScrollAreaPrimitive.Root>,
   ScrollAreaProps
->(({ className, children, orientation = "vertical", ...props }, ref) => {
-  const { root, viewport, bar } = scrollAreaVariants({
-    // className,
-    orientation,
-  });
-
+>((oriProps, ref) => {
+  const {
+    className,
+    classNames,
+    children,
+    orientation = "vertical",
+    ...props
+  } = oriProps;
+  const { root, viewport } = scrollAreaVariants({ orientation });
   return (
     <ScrollAreaPrimitive.Root
       ref={ref}
-      className={root({ className })}
+      className={root({ className: className })}
       {...props}
     >
-      <ScrollAreaPrimitive.Viewport className={viewport()}>
+      <ScrollAreaPrimitive.Viewport
+        className={viewport({ className: classNames?.viewport })}
+      >
         {children}
       </ScrollAreaPrimitive.Viewport>
       <ScrollBar orientation={orientation} />
@@ -55,12 +63,14 @@ const ScrollArea = React.forwardRef<
     </ScrollAreaPrimitive.Root>
   );
 });
+
 ScrollArea.displayName = ScrollAreaPrimitive.Root.displayName;
 
 const ScrollBar = React.forwardRef<
   React.ElementRef<typeof ScrollAreaPrimitive.ScrollAreaScrollbar>,
   React.ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.ScrollAreaScrollbar>
->(({ className, orientation = "vertical", ...props }, ref) => {
+>((oriProps, ref) => {
+  const { className, orientation = "vertical", ...props } = oriProps;
   const { bar, tumb } = scrollAreaVariants({ className, orientation });
   return (
     <ScrollAreaPrimitive.ScrollAreaScrollbar
@@ -73,6 +83,7 @@ const ScrollBar = React.forwardRef<
     </ScrollAreaPrimitive.ScrollAreaScrollbar>
   );
 });
+
 ScrollBar.displayName = ScrollAreaPrimitive.ScrollAreaScrollbar.displayName;
 
 export { ScrollArea, ScrollBar, scrollAreaVariants };

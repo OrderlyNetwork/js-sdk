@@ -11,6 +11,7 @@ export type {
 
 export { useSymbolsInfo } from "./useSymbolsInfo";
 export type { SymbolsInfo } from "./useSymbolsInfo";
+export { useSymbolInfo } from "./useSymbolInfo";
 export { useAccountInfo } from "./useAccountInfo";
 
 export { useMarketsStream } from "./useMarketsStream";
@@ -64,11 +65,13 @@ export type {
   UseChainsReturnObject,
 } from "./useChains";
 export { useChain } from "./useChain";
+export { useChainInfo } from "./useChainInfo";
 export { useWithdraw } from "./useWithdraw";
 export { useDeposit } from "./useDeposit";
 export { useConvert } from "./useConvert";
 export { useTransfer } from "./useTransfer";
 export { useInternalTransfer } from "./useInternalTransfer";
+export { useMaxWithdrawal } from "./useMaxWithdrawal";
 
 export { useHoldingStream } from "./useHoldingStream";
 export { useWalletSubscription } from "./useWalletSubscription";
@@ -85,7 +88,9 @@ export {
   type ComputedAlgoOrder,
 } from "./useTakeProfitAndStopLoss";
 
+export { useMaxLeverage } from "./useMaxLeverage";
 export { useSymbolLeverage } from "./useSymbolLeverage";
+export { useLeverageBySymbol } from "./useLeverageBySymbol";
 
 export { useAssetsHistory } from "./statistics/useAssetHistory";
 
@@ -111,3 +116,4 @@ export { useTokensInfo, useTokenInfo } from "./useTokensInfo/tokensInfo.store";
 
 export { useSymbolsInfoStore } from "./useSymbolsInfo";
 export { useFundingRatesStore } from "./useFundingRates";
+export { usePortfolio } from "./appStore";

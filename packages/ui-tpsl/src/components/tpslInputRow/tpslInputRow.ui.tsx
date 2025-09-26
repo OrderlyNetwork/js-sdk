@@ -1,10 +1,10 @@
 import React, { Fragment, useMemo } from "react";
-import { useSymbolLeverage } from "@orderly.network/hooks";
+import { useLeverageBySymbol } from "@orderly.network/hooks";
 import { useTranslation, Trans } from "@orderly.network/i18n";
 import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
 import { OrderType, PositionType } from "@orderly.network/types";
 import { Flex, Text, Grid, Checkbox, cn } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { Decimal, getTPSLDirection } from "@orderly.network/utils";
 import { PnlInputWidget } from "../../pnlInput/pnlInput.widget";
 import { OrderPriceType } from "../orderPriceType";
 import { PriceInput } from "./priceInput";
@@ -16,10 +16,16 @@ export const TPSLInputRowUI: React.FC<TPSLInputRowProps> = (props) => {
   const { t } = useTranslation();
   const { getErrorMsg } = useOrderEntryFormErrorMsg(props.errors);
   const { values, positionType } = props;
-  const symbolLeverage = useSymbolLeverage(props.symbol);
+
+  // if symbolLeverage is not provided, get it from useLeverageBySymbol
+  const symbolLeverage = useLeverageBySymbol(
+    props.symbolLeverage ? undefined : props.symbol,
+  );
+
+  const leverage = props.symbolLeverage || symbolLeverage;
 
   const roi = useMemo(() => {
-    if (isNaN(Number(symbolLeverage))) {
+    if (!leverage || isNaN(Number(leverage))) {
       return null;
     }
     let _roi = null;
@@ -44,16 +50,27 @@ export const TPSLInputRowUI: React.FC<TPSLInputRowProps> = (props) => {
     }
     const rootOrderPrice = new Decimal(props.rootOrderPrice);
 
+    // ROI = (close price - order_price) / order_price × leverage × direction
+    // direction: long: +1 / short: -1
+    // leverage = MIN( current_account_leverage, symbol_leverage)
+    const direction = getTPSLDirection({
+      side: props.side,
+      type: props.type,
+      closePrice: _entryPrice.toNumber(),
+      orderPrice: rootOrderPrice.toNumber(),
+    });
+
     _roi = _entryPrice
       .minus(rootOrderPrice)
       .div(rootOrderPrice)
-      .mul(symbolLeverage)
+      .mul(leverage)
       .abs()
       .mul(100)
-      .mul(props.type === "tp" ? 1 : -1)
+      .mul(direction)
+      // .mul(props.type === "tp" ? 1 : -1)
       .toNumber();
     return _roi;
-  }, [values, props.rootOrderPrice, symbolLeverage, props.type]);
+  }, [values, props.rootOrderPrice, symbolLeverage, props.type, props.side]);
 
   return (
     <Flex

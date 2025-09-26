@@ -1,5 +1,6 @@
 # Orderly SDKs
 
+[![DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/OrderlyNetwork/js-sdk)
 [![Hooks NPM Version](https://img.shields.io/npm/v/@orderly.network/hooks?label=@orderly.network/hooks&color=blue)](https://www.npmjs.com/package/@orderly.network/hooks)
 [![Core NPM Version](https://img.shields.io/npm/v/@orderly.network/core?label=@orderly.network/core&color=blue)](https://www.npmjs.com/package/@orderly.network/core)
 [![Perp NPM Version](https://img.shields.io/npm/v/@orderly.network/perp?label=@orderly.network/perp&color=blue)](https://www.npmjs.com/package/@orderly.network/perp)
@@ -11,6 +12,8 @@
 [![I18n NPM Version](https://img.shields.io/npm/v/@orderly.network/i18n?label=@orderly.network/i18n&color=blue)](https://www.npmjs.com/package/@orderly.network/i18n)
 
 Monorepo for all Orderly SDKs. Please check out our [documentation](https://orderly.network/docs/sdks).
+
+If you have any questions about the code in this repository, you can also ask [deepwiki](https://deepwiki.com/OrderlyNetwork/js-sdk).
 
 ## Getting Started
 

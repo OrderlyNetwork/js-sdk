@@ -1,6 +1,5 @@
 import { FC, useCallback, useEffect } from "react";
-import useEmblaCarousel from "embla-carousel-react";
-import { Box, cn, Flex } from "@orderly.network/ui";
+import { Box, cn, Flex, useEmblaCarousel } from "@orderly.network/ui";
 import { NextButton, PrevButton } from "./buttons";
 
 export const CarouselBackgroundImage: FC<{

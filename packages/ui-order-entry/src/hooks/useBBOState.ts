@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useRef } from "react";
-import { useLocalStorage } from "@orderly.network/hooks";
+import { useLocalStorage, useTrack } from "@orderly.network/hooks";
 import {
   BBOOrderType,
   OrderlyOrder,
   OrderSide,
   OrderType,
+  TrackerEventName,
 } from "@orderly.network/types";
 import {
   BBOStatus,
@@ -32,6 +33,8 @@ export function useBBOState({
 
   const lastBBOType = useRef<BBOOrderType>(localBBOType);
 
+  const { track } = useTrack();
+
   const bboStatus = useMemo(() => {
     if (
       tpslSwitch ||
@@ -48,6 +51,7 @@ export function useBBOState({
   }, [tpslSwitch, order_type_ext, order_type, localBBOType]);
 
   const toggleBBO = () => {
+    track(TrackerEventName.clickBBOButton);
     if (localBBOType) {
       // unselect bbo
       setLocalBBOType(undefined);

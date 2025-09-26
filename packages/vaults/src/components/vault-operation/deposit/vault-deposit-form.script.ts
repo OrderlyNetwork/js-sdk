@@ -1,5 +1,9 @@
 import { useMemo, useState } from "react";
-import { useTokenInfo, useCollateral } from "@orderly.network/hooks";
+import {
+  useTokenInfo,
+  useCollateral,
+  useMaxWithdrawal,
+} from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { Decimal } from "@orderly.network/utils";
 import { useVaultsStore } from "../../../store/vaultsStore";
@@ -9,8 +13,6 @@ import { useOperationScript } from "../depositAndWithdraw/operation.script";
 export type VaultDepositWidgetProps = {
   vaultId: string;
 };
-
-const MIN_DEPOSIT_AMOUNT = 10;
 
 export const useVaultDepositFormScript = (props: VaultDepositWidgetProps) => {
   const { vaultId } = props;
@@ -23,9 +25,15 @@ export const useVaultDepositFormScript = (props: VaultDepositWidgetProps) => {
   const { holding } = useCollateral();
   const { t } = useTranslation();
 
+  const minDepositAmount = vaultInfo.data[0]?.min_deposit_amount || 0;
+
+  const maxWithdrawalAmount = useMaxWithdrawal("USDC");
   const availableBalance = useMemo(() => {
     return holding?.find((h) => h.token === "USDC")?.holding || 0;
   }, [holding]);
+  const maxQuantity = useMemo(() => {
+    return Math.min(maxWithdrawalAmount, availableBalance);
+  }, [maxWithdrawalAmount, availableBalance]);
 
   const sharePrice = useMemo(() => {
     const vault = vaultInfo.data.find((v) => v.vault_id === vaultId);
@@ -61,8 +69,8 @@ export const useVaultDepositFormScript = (props: VaultDepositWidgetProps) => {
   }, [token]);
 
   const onQuantityChange = (value: string) => {
-    if (value && new Decimal(value).gt(availableBalance)) {
-      setQuantity(availableBalance.toString());
+    if (value && new Decimal(value).gt(maxQuantity)) {
+      setQuantity(maxQuantity.toString());
       return;
     }
     setQuantity(value);
@@ -73,15 +81,15 @@ export const useVaultDepositFormScript = (props: VaultDepositWidgetProps) => {
       !quantity ||
       quantity === "0" ||
       disabledOperation ||
-      (!!quantity && new Decimal(quantity).lt(MIN_DEPOSIT_AMOUNT))
+      (!!quantity && new Decimal(quantity).lt(minDepositAmount))
     );
   }, [quantity, disabledOperation]);
 
   const inputHint = useMemo(() => {
-    if (quantity && new Decimal(quantity).lt(MIN_DEPOSIT_AMOUNT)) {
+    if (quantity && new Decimal(quantity).lt(minDepositAmount)) {
       return {
         hintMessage: t("vaults.operation.error.minDeposit", {
-          amount: MIN_DEPOSIT_AMOUNT,
+          amount: minDepositAmount,
         }),
         status: "error",
       };
@@ -90,13 +98,13 @@ export const useVaultDepositFormScript = (props: VaultDepositWidgetProps) => {
       hintMessage: "",
       status: "",
     };
-  }, [quantity, t]);
+  }, [quantity, t, maxWithdrawalAmount, availableBalance]);
 
   return {
     quantity,
     onQuantityChange,
     sourceToken,
-    maxQuantity: availableBalance,
+    maxQuantity,
     sharePrice,
     shares,
     handleDeposit,

@@ -1,5 +1,83 @@
 # @orderly.network/utils
 
+## 2.7.3
+
+### Patch Changes
+
+- publish
+- a8254c1: publish
+- Updated dependencies
+- Updated dependencies [a8254c1]
+  - @orderly.network/types@2.7.3
+
+## 2.7.3-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@2.7.3-alpha.0
+
+## 2.7.2
+
+### Patch Changes
+
+- 360c563: publish
+- publish
+- Updated dependencies [360c563]
+- Updated dependencies
+  - @orderly.network/types@2.7.2
+
+## 2.7.2-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@2.7.2-alpha.0
+
+## 2.7.1
+
+### Patch Changes
+
+- publish
+- bb587ea: publish
+- Updated dependencies
+- Updated dependencies [bb587ea]
+  - @orderly.network/types@2.7.1
+
+## 2.7.1-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@2.7.1-alpha.0
+
+## 2.7.0
+
+### Minor Changes
+
+- publish
+- 9b0dc27: publish
+
+### Patch Changes
+
+- Updated dependencies
+- Updated dependencies [9b0dc27]
+  - @orderly.network/types@2.7.0
+
+## 2.7.0-alpha.0
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/types@2.7.0-alpha.0
+
 ## 2.6.3
 
 ### Patch Changes

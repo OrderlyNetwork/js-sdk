@@ -47,6 +47,10 @@ const ORDERLY_ORDER_ENTRY_SIDE_MARKETS_LAYOUT =
 
 const ORDERLY_SIDE_MARKETS_MODE_KEY = "orderly_side_markets_mode";
 
+const ORDERLY_HORIZONTAL_MARKETS_LAYOUT = "orderly_horizontal_markets_layout";
+
+export type MarketLayoutPosition = "left" | "top" | "bottom" | "hide";
+
 export const useTradingScript = () => {
   const [openMarketsSheet, setOpenMarketsSheet] = useState(false);
   const props = useTradingPageContext();
@@ -75,6 +79,12 @@ export const useTradingScript = () => {
   const [layout, setLayout] = useLocalStorage<LayoutPosition>(
     ORDERLY_ORDER_ENTRY_SIDE_MARKETS_LAYOUT,
     "right",
+  );
+
+  // Horizontal markets layout position, default left
+  const [marketLayout, setMarketLayout] = useLocalStorage<MarketLayoutPosition>(
+    ORDERLY_HORIZONTAL_MARKETS_LAYOUT,
+    "left",
   );
 
   const canTrade = useMemo<boolean>(() => {
@@ -140,6 +150,8 @@ export const useTradingScript = () => {
   const map = {
     layout,
     onLayout: setLayout,
+    marketLayout,
+    onMarketLayout: setMarketLayout,
     max2XL,
     min3XL,
     max4XL,
@@ -181,8 +193,10 @@ const useMarketsCollapse = (options: { resizeable: boolean }) => {
   };
 
   const memoizedPanelSize = useMemo<"small" | "middle" | "large">(() => {
+    // Force only two states
+    const normalized = panelSize === "large" ? "large" : "middle";
     // under 1440px markets force collapsed
-    return resizeable ? panelSize : "middle";
+    return resizeable ? normalized : "middle";
   }, [resizeable, panelSize]);
 
   return {

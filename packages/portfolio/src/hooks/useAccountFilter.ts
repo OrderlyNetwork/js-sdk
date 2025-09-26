@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useAccount } from "@orderly.network/hooks";
-import { AccountType } from "../pages/assets/assets.ui";
+import { AccountType } from "../pages/assets/assetsPage/assets.ui.desktop";
 
 // Account filter function type
 export type AccountFilterFunction<T = any> = (

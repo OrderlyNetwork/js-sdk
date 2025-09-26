@@ -1,5 +1,5 @@
 import { OrderValidationResult } from "@orderly.network/hooks";
-import { OrderType, PositionType } from "@orderly.network/types";
+import { OrderSide, OrderType, PositionType } from "@orderly.network/types";
 
 export type Props = {
   disableOrderTypeSelector?: boolean;
@@ -22,6 +22,8 @@ export type Props = {
   rootOrderPrice: string | undefined;
   symbol: string;
   disableEnableCheckbox?: boolean;
+  symbolLeverage?: number;
+  side: OrderSide;
 };
 export const useTPSLInputRowScript = (props: Props) => {
   return {
@@ -36,5 +38,7 @@ export const useTPSLInputRowScript = (props: Props) => {
     rootOrderPrice: props.rootOrderPrice,
     symbol: props.symbol,
     disableEnableCheckbox: props.disableEnableCheckbox,
+    symbolLeverage: props.symbolLeverage,
+    side: props.side,
   };
 };

@@ -1,4 +1,5 @@
-import { API } from "@orderly.network/types";
+import React from "react";
+import type { API } from "@orderly.network/types";
 import { SharePnLConfig } from "@orderly.network/ui-share";
 import { usePositionHistoryScript } from "./positionHistory.script";
 import { MobilePositionHistory, PositionHistory } from "./positionHistory.ui";
@@ -8,22 +9,21 @@ export type PositionHistoryProps = {
   symbol?: string;
   pnlNotionalDecimalPrecision?: number;
   sharePnLConfig?: SharePnLConfig;
+  enableSortingStorage?: boolean; // Controls whether to persist sorting preferences
 };
 
-export const PositionHistoryWidget = (props: PositionHistoryProps) => {
+export const PositionHistoryWidget: React.FC<PositionHistoryProps> = (
+  props,
+) => {
   const state = usePositionHistoryScript(props);
   return <PositionHistory {...state} sharePnLConfig={props.sharePnLConfig} />;
 };
 
-export const MobilePositionHistoryWidget = (
-  props: PositionHistoryProps & {
-    classNames?: {
-      root?: string;
-      content?: string;
-      cell?: string;
-    };
-  },
-) => {
+export const MobilePositionHistoryWidget: React.FC<
+  PositionHistoryProps & {
+    classNames?: { root?: string; content?: string; cell?: string };
+  }
+> = (props) => {
   const { classNames, ...rest } = props;
   const state = usePositionHistoryScript(rest);
   return (

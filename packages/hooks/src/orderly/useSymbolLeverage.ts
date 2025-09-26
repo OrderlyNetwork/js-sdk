@@ -1,6 +1,10 @@
-import { useMemo } from "react";
-import { useQuery } from "../useQuery";
-import { useAccountInfo } from "./useAccountInfo";
+import { useEffect, useMemo, useState } from "react";
+import { API } from "@orderly.network/types";
+import { useAccount } from "../useAccount";
+import { useMutation } from "../useMutation";
+import { usePrivateQuery } from "../usePrivateQuery";
+import { useWS } from "../useWS";
+import { useSymbolInfo } from "./useSymbolInfo";
 
 /**
  * A custom hook that calculates the maximum allowed leverage for a given trading pair symbol.
@@ -13,41 +17,26 @@ import { useAccountInfo } from "./useAccountInfo";
  *
  * @example
  * ```typescript
- * const leverage = useSymbolLeverage("PERP_BTC_USDC");
+ * const leverage = useMaxSymbolLeverage("PERP_BTC_USDC");
  * console.log(`Maximum leverage for PERP_BTC_USDC: ${leverage}x`);
  * ```
  */
-export const useSymbolLeverage = (symbol: string): number | "-" => {
-  const { data: info } = useAccountInfo();
+export const useSymbolLeverage = (symbol?: string) => {
+  const symbolInfo = useSymbolInfo(symbol);
 
-  const maxAccountLeverage = info?.max_leverage;
-
-  const res = useQuery<any>(`/v1/public/info/${symbol}`, {
-    dedupingInterval: 1000 * 60 * 60 * 24, // 24 hours
-    revalidateOnFocus: false,
-    errorRetryCount: 2,
-    errorRetryInterval: 200,
-  });
+  const [update, { isMutating }] = useMutation("/v1/client/leverage");
 
   /**
    * Calculates the maximum leverage for the symbol based on its base initial margin requirement (IMR)
    */
-  const maxSymbolLeverage = useMemo(() => {
-    const base = res?.data?.base_imr;
-    if (base) return 1 / base;
-  }, [res]);
-
-  /**
-   * Determines the final maximum leverage by taking the minimum between
-   * account leverage limit and symbol leverage limit
-   */
   const maxLeverage = useMemo(() => {
-    if (!maxAccountLeverage || !maxSymbolLeverage) {
-      return "-";
-    }
+    const baseIMR = symbolInfo?.("base_imr");
+    return baseIMR ? 1 / baseIMR : 1;
+  }, [symbolInfo]);
 
-    return Math.min(maxAccountLeverage, maxSymbolLeverage);
-  }, [maxAccountLeverage, maxSymbolLeverage]);
-
-  return maxLeverage;
+  return {
+    maxLeverage,
+    update,
+    isLoading: isMutating,
+  };
 };

@@ -66,7 +66,7 @@ export interface OrderlyConfigContextState {
     /**
      * custom `/v2/public/announcement` response data
      */
-    announcementList?: (data: any[]) => any[];
+    announcementList?: (data: any[] | ReadonlyArray<any>) => any[];
   };
   notification?: {
     orderFilled?: {

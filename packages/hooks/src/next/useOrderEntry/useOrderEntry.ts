@@ -11,7 +11,7 @@ import {
   OrderSide,
   EMPTY_OBJECT,
 } from "@orderly.network/types";
-import { Decimal, zero } from "@orderly.network/utils";
+import { Decimal, getBBOType, zero } from "@orderly.network/utils";
 import { useAccountInfo } from "../../orderly/appStore";
 import {
   useCollateral,
@@ -648,6 +648,18 @@ const useOrderEntry = (
         tp_sl: hasTPSL(formattedOrder),
         symbol: order.symbol,
       };
+
+      if ([OrderType.ASK, OrderType.BID].includes(order.order_type)) {
+        trackParams = {
+          ...trackParams,
+          bbo: true,
+          bbo_setting: getBBOType({
+            type: order.order_type,
+            side: order.side,
+            level: order.level,
+          }),
+        };
+      }
 
       if (isScaledOrder) {
         const skew = getScaledOrderSkew({

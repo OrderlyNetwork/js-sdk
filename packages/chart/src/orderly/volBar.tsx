@@ -1,3 +1,4 @@
+import React from "react";
 import {
   BarChart,
   XAxis,
@@ -98,7 +99,7 @@ const CustomTooltip = (
   return null;
 };
 
-export const VolBarChart = (props: VolChartProps) => {
+export const VolBarChart: React.FC<VolChartProps> = (props) => {
   const colors = useColors(
     props.colors?.fill
       ? { profit: props.colors?.fill, loss: props.colors?.fill }

@@ -28,7 +28,6 @@ import { getPnlInfo, getPnLPosterData, savePnlInfo } from "../utils/utils";
 
 export const MobileSharePnLContent: FC<{
   entity: ShareEntity;
-  leverage: any;
   hide: any;
   baseDp?: number;
   quoteDp?: number;
@@ -74,7 +73,6 @@ export const MobileSharePnLContent: FC<{
 
   const posterData = getPnLPosterData(
     props.entity,
-    props.leverage,
     message,
     domain,
     pnlFormat,
@@ -127,11 +125,25 @@ export const MobileSharePnLContent: FC<{
     }
   };
 
+  // check if the entity has the option, like formats
+  const options: ShareOptions[] = useMemo(() => {
+    const mapping: ShareOptions[] = [
+      "openPrice",
+      "closePrice",
+      "openTime",
+      "closeTime",
+      "leverage",
+      "markPrice",
+      "quantity",
+    ];
+
+    return mapping.filter((key) => !!props.entity[key]);
+  }, [props.entity]);
+
   savePnlInfo(pnlFormat, shareOption, selectIndex, message);
 
   return (
     <div className="oui-w-full">
-      {/* <div>{`leverage: ${props.leverage}x`}</div> */}
       <div
         ref={carouselRef}
         className="oui-mt-4 oui-w-full oui-overflow-hidden"
@@ -194,55 +206,14 @@ export const MobileSharePnLContent: FC<{
             {t("share.pnl.optionalInfo")}
           </div>
           <div className="oui-mt-3 oui-flex oui-flex-wrap oui-gap-3">
-            {props.entity.openPrice && (
+            {options.map((item, index) => (
               <ShareOption
+                key={index}
                 setShareOption={setShareOption}
-                type="openPrice"
+                type={item}
                 curType={shareOption}
               />
-            )}
-            {props.entity.closePrice && (
-              <ShareOption
-                setShareOption={setShareOption}
-                type="closePrice"
-                curType={shareOption}
-              />
-            )}
-            {props.entity.openTime && (
-              <ShareOption
-                setShareOption={setShareOption}
-                type="openTime"
-                curType={shareOption}
-              />
-            )}
-            {props.entity.closeTime && (
-              <ShareOption
-                setShareOption={setShareOption}
-                type="closeTime"
-                curType={shareOption}
-              />
-            )}
-            {props.leverage && (
-              <ShareOption
-                setShareOption={setShareOption}
-                type="leverage"
-                curType={shareOption}
-              />
-            )}
-            {props.entity.markPrice && (
-              <ShareOption
-                setShareOption={setShareOption}
-                type="markPrice"
-                curType={shareOption}
-              />
-            )}
-            {props.entity.quantity && (
-              <ShareOption
-                setShareOption={setShareOption}
-                type="quantity"
-                curType={shareOption}
-              />
-            )}
+            ))}
           </div>
         </div>
 
@@ -325,8 +296,6 @@ const PnlFormatView: FC<{
         return t("share.pnl.displayFormat.pnl");
     }
   }, [type]);
-
-  console.log("pnl format", type, curType);
 
   const isSelected = type === curType;
 
@@ -422,8 +391,6 @@ const MyIdentifier: FC<{
   useEffect(() => {
     props.setSelectIndex(selectedIndex);
   }, [selectedIndex]);
-
-  console.log("setSelectIndex is", selectedIndex);
 
   return (
     <div className={cn("oui-flex oui-gap-1")}>

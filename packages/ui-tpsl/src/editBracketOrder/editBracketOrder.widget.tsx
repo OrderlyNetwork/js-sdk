@@ -1,4 +1,4 @@
-import { API, OrderlyOrder } from "@orderly.network/types";
+import { API } from "@orderly.network/types";
 import { registerSimpleDialog, registerSimpleSheet } from "@orderly.network/ui";
 import { useEditBracketOrder } from "./editBracketOrder.script";
 import { EditBracketOrderUI } from "./editBracketOrder.ui";

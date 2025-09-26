@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import { useLeverage, useMarginRatio } from "@orderly.network/hooks";
+import { useLeverage } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { SliderMarks, toast } from "@orderly.network/ui";
 

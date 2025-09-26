@@ -1,13 +1,7 @@
-import { ReactNode } from "react";
+import React, { ReactNode } from "react";
 import { useScreen } from "@orderly.network/ui";
 import { RouterAdapter } from "../scaffold";
 import { BottomNav } from "./bottomNav.ui.mobile";
-
-export type BottomNavProps = {
-  mainMenus?: BottomNavItem[];
-  current?: string;
-  onRouteChange?: RouterAdapter["onRouteChange"];
-};
 
 export type BottomNavItem = {
   name: string;
@@ -16,7 +10,13 @@ export type BottomNavItem = {
   inactiveIcon: ReactNode;
 };
 
-export const BottomNavWidget = (props: BottomNavProps) => {
+export type BottomNavProps = {
+  mainMenus?: BottomNavItem[];
+  current?: string;
+  onRouteChange?: RouterAdapter["onRouteChange"];
+};
+
+export const BottomNavWidget: React.FC<BottomNavProps> = (props) => {
   const { isMobile } = useScreen();
   const { mainMenus, ...rest } = props;
   return isMobile ? <BottomNav mainMenus={mainMenus} {...rest} /> : null;

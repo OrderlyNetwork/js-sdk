@@ -1,14 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useId, useMemo, useRef } from "react";
-// import { Line } from "../line/line";
+import React, { useMemo, useRef } from "react";
 import {
   LineChart,
   XAxis,
   YAxis,
   Line,
   CartesianGrid,
-  AreaChart,
-  Area,
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
@@ -51,7 +48,7 @@ const CustomTooltip: React.FC<TooltipProps<any, any>> = (props) => {
 
 const dataTransfer = (data: any[]) => {
   const series: any[] = [];
-  data?.reduce((acc, item) => {
+  data?.reduce<any>((acc, item) => {
     acc += item.pnl;
     series.push({ ...item, pnl: acc, _pnl: item.pnl });
     return acc;
@@ -65,51 +62,9 @@ export const PnlLineChart: React.FC<PnlLineChartProps> = (props) => {
 
   const { isMobile } = useScreen();
 
-  const colorId = useId();
-
   const data = useMemo(() => dataTransfer(props.data), [props.data]);
 
-  const chartComponent = isMobile ? (
-    <AreaChart
-      data={data}
-      margin={{ top: 20, right: 10, left: -10, bottom: 0 }}
-    >
-      <CartesianGrid vertical={false} stroke="#FFFFFF" strokeOpacity={0.04} />
-      <XAxis
-        dataKey="date"
-        interval={props.data.length - 2}
-        tick={<XAxisLabel />}
-        stroke="#FFFFFF"
-        strokeOpacity={0.04}
-      />
-      <YAxis
-        dataKey="pnl"
-        tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
-        tickLine={false}
-        axisLine={false}
-        tickFormatter={(value) => tickFormatter(value)}
-      />
-      {!props.invisible && (
-        <>
-          <defs>
-            <linearGradient id={colorId} x1="0" y1="0" x2="0" y2="1">
-              <stop stopColor="#608CFF" offset="0%" stopOpacity={0.5} />
-              <stop stopColor="#608CFF" offset="100%" stopOpacity={0} />
-            </linearGradient>
-          </defs>
-          <Area
-            type="natural"
-            dataKey="pnl"
-            stroke={colors.primary}
-            strokeWidth={isMobile ? 1.5 : 2}
-            dot={false}
-            isAnimationActive={false}
-            fill={`url(#${colorId})`}
-          />
-        </>
-      )}
-    </AreaChart>
-  ) : (
+  const chartComponent = (
     <LineChart
       data={data}
       margin={{ top: 20, right: 10, left: -10, bottom: 0 }}
@@ -122,22 +77,19 @@ export const PnlLineChart: React.FC<PnlLineChartProps> = (props) => {
         stroke="#FFFFFF"
         strokeOpacity={0.04}
       />
-
       <YAxis
         dataKey="pnl"
         tick={{ fontSize: 10, fill: "rgba(255,255,255,0.54)" }}
         tickLine={false}
         axisLine={false}
-        tickFormatter={(value) => tickFormatter(value)}
+        tickFormatter={tickFormatter}
       />
-
       {!props.invisible && (
         <Tooltip
           cursor={{ strokeDasharray: "3 2", strokeOpacity: 0.16 }}
           content={<CustomTooltip />}
         />
       )}
-
       {!props.invisible && (
         <Line
           type="natural"
@@ -153,7 +105,7 @@ export const PnlLineChart: React.FC<PnlLineChartProps> = (props) => {
 
   return (
     <ResponsiveContainer
-      className={props.invisible ? "chart-invisible" : ""}
+      className={props.invisible ? "chart-invisible" : undefined}
       {...responsiveContainerProps}
     >
       {chartComponent}

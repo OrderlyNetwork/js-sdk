@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/trading",
-  "version": "2.6.3",
+  "version": "2.7.3",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -23,11 +23,16 @@
     "access": "public"
   },
   "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/modifiers": "^9.0.0",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
     "@orderly.network/hooks": "workspace:*",
+    "@orderly.network/i18n": "workspace:*",
     "@orderly.network/markets": "workspace:*",
+    "@orderly.network/portfolio": "workspace:*",
     "@orderly.network/react-app": "workspace:*",
     "@orderly.network/types": "workspace:*",
-    "@orderly.network/i18n": "workspace:*",
     "@orderly.network/ui": "workspace:*",
     "@orderly.network/ui-chain-selector": "workspace:*",
     "@orderly.network/ui-connector": "workspace:*",
@@ -43,13 +48,13 @@
     "@uiw/react-split": "^5.9.3"
   },
   "devDependencies": {
+    "@orderly.network/core": "workspace:*",
     "@types/react": "^18.3.2",
     "@types/react-dom": "^18.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "tailwindcss": "^3.4.4",
     "tsconfig": "workspace:*",
-    "@orderly.network/core": "workspace:*",
     "tsup": "^7.1.0",
     "typescript": "^5.1.6"
   },

@@ -109,8 +109,14 @@
       "@orderly.network/ui-transfer": [
         "../../packages/ui-transfer/src"
       ],
+      "@orderly.network/vaults": [
+        "../../packages/vaults/src"
+      ],
       "@orderly.network/utils": [
         "../../packages/utils/src"
+      ],
+      "@orderly.network/vaults": [
+        "../../packages/vaults/src"
       ],
       "@orderly.network/wallet-connector": [
         "../../packages/wallet-connector/src"

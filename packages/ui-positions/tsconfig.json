@@ -31,6 +31,9 @@
       ],
       "@orderly.network/perp": [
         "../perp/src"
+      ],
+      "@orderly.network/ui-leverage": [
+        "../ui-leverage/src"
       ]
     }
   }

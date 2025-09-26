@@ -24,7 +24,10 @@ export const RemovablePanel: React.FC<
       {props.children}
       <Tooltip
         open={open}
-        onOpenChange={setOpen}
+        onOpenChange={(next) => {
+          // controlled by click
+          if (!next) setOpen(false);
+        }}
         side="left"
         align="start"
         sideOffset={-4}
@@ -55,7 +58,10 @@ export const RemovablePanel: React.FC<
         arrow={{ className: "oui-fill-transparent" }}
       >
         {showIndicator && (
-          <div className="oui-absolute oui-right-[1px] oui-top-[18px]">
+          <div
+            className="oui-absolute oui-right-[1px] oui-top-[18px]"
+            onClick={() => setOpen((v) => !v)}
+          >
             <IndicatorIcon
               className={cn(
                 "oui-text-base-contrast-20 hover:oui-text-base-contrast-80",

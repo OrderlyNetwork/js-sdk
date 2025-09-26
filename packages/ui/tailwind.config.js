@@ -190,6 +190,7 @@ module.exports = withTV({
         "collapsible-down": "collapsible-down 0.2s ease-out",
         "collapsible-up": "collapsible-up 0.2s ease-out",
         "scan-qr-code": "scan-qr-code 6s infinite linear",
+        pop: "pop 0.2s ease-out",
       },
       keyframes: {
         rotate: {
@@ -222,6 +223,14 @@ module.exports = withTV({
           },
           "100%": {
             transform: "translateY(0)",
+          },
+        },
+        pop: {
+          "0%": {
+            transform: "scale(1)",
+          },
+          "100%": {
+            transform: "scale(1.05)",
           },
         },
       },

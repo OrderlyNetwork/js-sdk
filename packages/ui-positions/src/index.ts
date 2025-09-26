@@ -12,7 +12,12 @@ export {
   CombinePositionsWidget,
 } from "./components/positions/positions.widget";
 
-export type { PositionsProps } from "./types/types";
+export type { PositionsProps, SortType } from "./types/types";
+export {
+  useTabSort,
+  PositionsTabName,
+} from "./components/shared/hooks/useTabSort";
+export { useSort, sortList } from "./utils/sorting";
 
 export const MarketCloseConfirmID = "MarketCloseConfirmID";
 

@@ -2,6 +2,7 @@ export const connector = {
   "connector.testnet": "Testnet",
   "connector.mainnet": "Mainnet",
 
+  "connector.connect": "Connect",
   "connector.disconnect": "Disconnect",
   "connector.connectWallet": "Connect wallet",
   // "connector.signIn": "Sign in",

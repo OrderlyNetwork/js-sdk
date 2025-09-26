@@ -28,6 +28,7 @@ export * from "./slider";
 export * from "./toast";
 export * from "./listView";
 export * from "./collapsible";
+export * from "./marquee";
 
 export * from "./dropdown";
 
@@ -70,6 +71,14 @@ export type { VariantProps } from "tailwind-variants";
 export * from "./utils";
 export { tv } from "./utils/tv";
 export { default as toast } from "react-hot-toast";
+
+export * from "embla-carousel-react";
+export { default as useEmblaCarousel } from "embla-carousel-react";
+export * from "embla-carousel-auto-scroll";
+export { default as AutoScroll } from "embla-carousel-auto-scroll";
+export * from "embla-carousel-autoplay";
+export { default as Autoplay } from "embla-carousel-autoplay";
+export * from "embla-carousel";
 
 //===== tailwind
 export * as OUITailwind from "./tailwind";

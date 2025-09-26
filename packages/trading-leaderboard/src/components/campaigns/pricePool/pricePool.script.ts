@@ -1,8 +1,10 @@
 import { useMemo } from "react";
+import { useAccount } from "@orderly.network/hooks";
 import { CampaignConfig } from "../type";
 import { getTicketPrizePool } from "../utils";
 
 export const usePricePoolScript = (campaign: CampaignConfig) => {
+  const { state } = useAccount();
   const ticketPrizePool = useMemo(
     () => getTicketPrizePool(campaign),
     [campaign],
@@ -20,6 +22,7 @@ export const usePricePoolScript = (campaign: CampaignConfig) => {
   return {
     ticketPrizePool,
     highlightPool,
+    status: state.status,
   };
 };
 

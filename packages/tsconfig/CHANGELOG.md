@@ -1,5 +1,57 @@
 # tsconfig
 
+## 0.10.3
+
+### Patch Changes
+
+- publish
+- a8254c1: publish
+
+## 0.10.3-alpha.0
+
+### Patch Changes
+
+- publish
+
+## 0.10.2
+
+### Patch Changes
+
+- 360c563: publish
+- publish
+
+## 0.10.2-alpha.0
+
+### Patch Changes
+
+- publish
+
+## 0.10.1
+
+### Patch Changes
+
+- publish
+- bb587ea: publish
+
+## 0.10.1-alpha.0
+
+### Patch Changes
+
+- publish
+
+## 0.10.0
+
+### Minor Changes
+
+- publish
+- 9b0dc27: publish
+
+## 0.10.0-alpha.0
+
+### Minor Changes
+
+- publish
+
 ## 0.9.3
 
 ### Patch Changes

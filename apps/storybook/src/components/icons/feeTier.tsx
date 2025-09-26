@@ -1,7 +1,7 @@
 import React from "react";
 
 interface IconProps extends React.SVGProps<SVGSVGElement> {
-  size: number;
+  size?: number;
 }
 
 export const FeeTier = React.forwardRef<SVGSVGElement, IconProps>(
@@ -26,3 +26,7 @@ export const FeeTier = React.forwardRef<SVGSVGElement, IconProps>(
     );
   },
 );
+
+if (process.env.NODE_ENV !== "production") {
+  FeeTier.displayName = "FeeTier";
+}

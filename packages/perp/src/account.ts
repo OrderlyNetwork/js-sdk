@@ -111,6 +111,9 @@ export function positionQtyWithOrders_by_symbol(
 }
 
 export type IMRInputs = {
+  /**
+   * effective max leverage
+   */
   maxLeverage: number;
   baseIMR: number;
   IMR_Factor: number;
@@ -225,6 +228,7 @@ export type TotalInitialMarginWithOrdersInputs = {
 } & Pick<IMRInputs, "maxLeverage">;
 
 /**
+ * @deprecated
  * Calculate the total initial margin used by the user (including positions and orders).
  */
 export function totalInitialMarginWithOrders(
@@ -291,10 +295,12 @@ export function totalInitialMarginWithQty(inputs: {
   markPrices: { [key: string]: number };
   symbolInfo: any;
   IMR_Factors: { [key: string]: number };
+  /**
+   * account max leverage
+   */
   maxLeverage: number;
 }) {
-  const { positions, markPrices, IMR_Factors, symbolInfo, maxLeverage } =
-    inputs;
+  const { positions, markPrices, IMR_Factors, symbolInfo } = inputs;
   const symbols = positions.map((item) => item.symbol);
 
   const total_initial_margin_with_orders = symbols.reduce((acc, cur) => {
@@ -328,7 +334,10 @@ export function totalInitialMarginWithQty(inputs: {
       ordersNotional: markPriceDecimal
         .mul(new Decimal(buyOrdersQty).add(sellOrdersQty))
         .toNumber(),
-      maxLeverage,
+      maxLeverage: maxLeverage({
+        symbolLeverage: position?.leverage ?? inputs.maxLeverage,
+        accountLeverage: inputs.maxLeverage,
+      }),
       IMR_Factor: IMR_Factors[symbol],
       baseIMR: symbolInfo[symbol]("base_imr", 0),
     });
@@ -386,8 +395,10 @@ export function extractSymbols(
 export type OtherIMsInputs = {
   // the position list for other symbols except the current symbol
   positions: API.Position[];
-
   markPrices: { [key: string]: number };
+  /**
+   * account max leverage
+   */
   maxLeverage: number;
   symbolInfo: any;
   IMR_Factors: { [key: string]: number };
@@ -399,7 +410,6 @@ export function otherIMs(inputs: OtherIMsInputs): number {
   const {
     // orders,
     positions,
-    maxLeverage,
     IMR_Factors,
     symbolInfo,
     markPrices,
@@ -438,8 +448,10 @@ export function otherIMs(inputs: OtherIMsInputs): number {
       }
 
       const imr = IMR({
-        maxLeverage,
-
+        maxLeverage: maxLeverage({
+          symbolLeverage: position!.leverage,
+          accountLeverage: inputs.maxLeverage,
+        }),
         IMR_Factor,
         baseIMR: symbolInfo[symbol]("base_imr", 0),
         positionNotional,
@@ -799,6 +811,9 @@ export const LTV = (params: {
   return numerator.div(denominator).toNumber();
 };
 
+/**
+ * max(0, min(USDC_balance, free_collateral - max(upnl, 0)))
+ */
 export const maxWithdrawalUSDC = (inputs: {
   USDCBalance: number;
   freeCollateral: Decimal;
@@ -812,6 +827,12 @@ export const maxWithdrawalUSDC = (inputs: {
   return Math.max(0, value);
 };
 
+/**
+ *
+ * Other collateral: min(collateral_qty_i, free_collateral / (index_price_i × weight_i)
+ * Other collateral with negative USDC: min(collateral_qty_i, free_collateral / (index_price_i × (1 + buffer) × weight_i)
+ * buffer: 0.2%
+ */
 export const maxWithdrawalOtherCollateral = (inputs: {
   USDCBalance: number;
   collateralQty: number;
@@ -823,7 +844,7 @@ export const maxWithdrawalOtherCollateral = (inputs: {
     inputs;
   const usdcBalance = new Decimal(USDCBalance);
   const denominator = usdcBalance.isNegative()
-    ? new Decimal(indexPrice).mul(weight).mul(new Decimal(1).add(0.001))
+    ? new Decimal(indexPrice).mul(weight).mul(new Decimal(1).add(0.002))
     : new Decimal(indexPrice).mul(weight);
   if (denominator.isZero()) {
     return zero;
@@ -842,4 +863,17 @@ export const calcMinimumReceived = (inputs: {
   return new Decimal(amount)
     .mul(new Decimal(1).minus(slippageRatio))
     .toNumber();
+};
+
+/**
+ * @deprecated This method will be removed soon. Please update your code to use symbolLeverage directly.
+ */
+// Warning: The maxLeverage method will be deprecated soon. Please use symbolLeverage directly and update all related calls as soon as possible.
+export const maxLeverage = (inputs: {
+  symbolLeverage?: number;
+  accountLeverage: number;
+}) => {
+  const { symbolLeverage, accountLeverage } = inputs;
+
+  return symbolLeverage ?? 1;
 };
