@@ -182,7 +182,7 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
         tokenName={sourceToken?.symbol as string}
         qtyGreaterThanVault={qtyGreaterThanVault}
         qtyGreaterThanMaxAmount={qtyGreaterThanMaxAmount}
-        message={props.ltvWarningMessage}
+        message={props.warningMessage}
       />
       <Flex justify="center">
         <WithdrawAction

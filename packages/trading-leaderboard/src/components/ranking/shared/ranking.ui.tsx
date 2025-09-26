@@ -1,4 +1,5 @@
 import { FC, useCallback } from "react";
+import { useConfig } from "@orderly.network/hooks";
 import {
   cn,
   DataTable,
@@ -27,10 +28,12 @@ export type RankingProps = {
   };
 
 export const Ranking: FC<RankingProps> = (props) => {
+  const brokerId = useConfig("brokerId");
   const column = useRankingColumns(
     props.fields,
     props.address,
     typeof props.onSort === "function",
+    brokerId,
   );
   const { isMobile } = useScreen();
 

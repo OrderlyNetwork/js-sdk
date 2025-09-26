@@ -43,7 +43,7 @@ export type {
   ConfigProviderProps,
   ExclusiveConfigProviderProps,
 } from "./configProvider";
-export { OrderlyConfigProvider } from "./configProvider";
+export { OrderlyConfigProvider, type ChainFilter } from "./configProvider";
 export { ExtendedConfigStore } from "./extendedConfigStore";
 
 export {

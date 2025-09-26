@@ -111,4 +111,7 @@ export const common = {
   "common.partialTPSL": "Partial TP/SL",
   "common.vaults": "Vaults",
   "common.optional": "Optional",
+
+  "common.details": "Details",
+  "common.somethingWentWrong": "Something went wrong. Please try again later.",
 };

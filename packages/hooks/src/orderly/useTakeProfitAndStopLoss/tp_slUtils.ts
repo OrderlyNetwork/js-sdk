@@ -1,10 +1,5 @@
-import {
-  API,
-  OrderlyOrder,
-  OrderSide,
-  PositionSide,
-  PositionType,
-} from "@orderly.network/types";
+import { order as orderPerp } from "@orderly.network/perp";
+import { API, OrderlyOrder, OrderSide } from "@orderly.network/types";
 import { OrderType } from "@orderly.network/types";
 import { AlgoOrderType } from "@orderly.network/types";
 import {
@@ -286,6 +281,58 @@ export function priceToPnl(
   return decimal.toNumber();
 }
 
+export function priceToROI(inputs: {
+  values: Partial<OrderlyOrder>;
+  markPrice?: number;
+  symbolLeverage?: number;
+}) {
+  const { values, markPrice, symbolLeverage } = inputs;
+
+  const orderPrice =
+    values.order_type === OrderType.MARKET
+      ? markPrice
+      : Number(values.order_price);
+
+  if (symbolLeverage && orderPrice) {
+    let tp_ROI: number | undefined;
+    let sl_ROI: number | undefined;
+    const tpTriggerPrice = Number(values.tp_trigger_price);
+
+    if (values.tp_pnl && values.tp_trigger_price && tpTriggerPrice > 0) {
+      tp_ROI = orderPerp.tpslROI({
+        side: values.side!,
+        type: "tp",
+        closePrice: tpTriggerPrice,
+        orderPrice,
+        leverage: symbolLeverage,
+      });
+    }
+
+    const slTriggerPrice = Number(values.sl_trigger_price);
+
+    if (values.sl_pnl && values.sl_trigger_price && slTriggerPrice > 0) {
+      sl_ROI = orderPerp.tpslROI({
+        side: values.side!,
+        type: "sl",
+        closePrice: slTriggerPrice,
+        orderPrice,
+        leverage: symbolLeverage,
+      });
+    }
+
+    return {
+      tp_ROI: tp_ROI?.toString(),
+      sl_ROI: sl_ROI?.toString(),
+    };
+  }
+
+  return {
+    tp_ROI: undefined,
+    sl_ROI: undefined,
+  };
+}
+
+/** @deprecated use priceToROI instead */
 export function calcTPSL_ROI(inputs: {
   pnl: number | string;
   qty: number | string;
@@ -294,6 +341,7 @@ export function calcTPSL_ROI(inputs: {
   const qtyNum = Number(inputs.qty);
   const priceNum = Number(inputs.price);
   if (qtyNum === 0 || priceNum === 0) return "0";
+  // ROI = pnl / (abs(quantity) * price)
   return new Decimal(inputs.pnl)
     .div(new Decimal(qtyNum).abs().mul(new Decimal(priceNum)))
     .toString();

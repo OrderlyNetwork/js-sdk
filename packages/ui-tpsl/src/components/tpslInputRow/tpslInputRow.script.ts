@@ -1,4 +1,9 @@
-import { OrderValidationResult } from "@orderly.network/hooks";
+import { useMemo } from "react";
+import {
+  OrderValidationResult,
+  useLeverageBySymbol,
+} from "@orderly.network/hooks";
+import { order } from "@orderly.network/perp";
 import { OrderSide, OrderType, PositionType } from "@orderly.network/types";
 
 export type Props = {
@@ -26,19 +31,46 @@ export type Props = {
   side: OrderSide;
 };
 export const useTPSLInputRowScript = (props: Props) => {
+  const { values, side, type, rootOrderPrice } = props;
+  // if symbolLeverage is not provided, get it from useLeverageBySymbol
+  const symbolLeverage = useLeverageBySymbol(
+    props.symbolLeverage ? undefined : props.symbol,
+  );
+
+  const leverage = props.symbolLeverage || symbolLeverage;
+
+  const roi = useMemo(() => {
+    if (!leverage || !rootOrderPrice || Number(rootOrderPrice) === 0) {
+      return null;
+    }
+
+    let closePrice: string | undefined;
+    if (values.order_type === OrderType.MARKET) {
+      closePrice = values.trigger_price;
+    } else if (values.order_type === OrderType.LIMIT) {
+      closePrice = values.order_price;
+    }
+    if (!closePrice) {
+      return null;
+    }
+
+    try {
+      const roi = order.tpslROI({
+        side,
+        type,
+        closePrice: Number(closePrice),
+        orderPrice: Number(rootOrderPrice),
+        leverage,
+      });
+      return roi * 100;
+    } catch (error) {
+      console.error("error", error);
+      return null;
+    }
+  }, [values, leverage, rootOrderPrice, type, side]);
+
   return {
-    disableOrderTypeSelector: props.disableOrderTypeSelector,
-    values: props.values,
-    onChange: props.onChange,
-    type: props.type,
-    quote_dp: props.quote_dp,
-    positionType: props.positionType,
-    errors: props.errors,
-    hideOrderPrice: props.hideOrderPrice,
-    rootOrderPrice: props.rootOrderPrice,
-    symbol: props.symbol,
-    disableEnableCheckbox: props.disableEnableCheckbox,
-    symbolLeverage: props.symbolLeverage,
-    side: props.side,
+    ...props,
+    roi,
   };
 };

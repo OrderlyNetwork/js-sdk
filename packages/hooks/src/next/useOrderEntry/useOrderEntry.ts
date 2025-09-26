@@ -15,6 +15,7 @@ import { Decimal, getBBOType, zero } from "@orderly.network/utils";
 import { useAccountInfo } from "../../orderly/appStore";
 import {
   useCollateral,
+  useLeverageBySymbol,
   useMaxQty,
   useSymbolsInfo,
 } from "../../orderly/orderlyHooks";
@@ -104,7 +105,8 @@ export type OrderEntryReturn = {
    */
   isMutating: boolean;
 
-  markPrice: number | undefined;
+  markPrice?: number;
+  symbolLeverage?: number;
 };
 
 /**
@@ -190,6 +192,7 @@ const useOrderEntry = (
   const symbolConfig = useSymbolsInfo();
   const accountInfo = useAccountInfo();
   const positions = usePositions();
+  const symbolLeverage = useLeverageBySymbol(symbol);
 
   const symbolInfo: API.SymbolExt = symbolConfig[symbol]();
   const markPrice = actions.getMarkPriceBySymbol(symbol);
@@ -208,6 +211,7 @@ const useOrderEntry = (
   } = useOrderEntryNextInternal(symbol, {
     ...options,
     symbolInfo,
+    symbolLeverage,
   });
 
   const [estSlippage, setEstSlippage] = useState<number | null>(null);
@@ -310,8 +314,8 @@ const useOrderEntry = (
       avgExecutionPrice = sumPrice.div(order_quantity);
     }
 
-    if (avgExecutionPrice) {
-      const bestPrice = book[0][0];
+    const bestPrice = book[0][0];
+    if (avgExecutionPrice && bestPrice) {
       const estSlippage = avgExecutionPrice
         .minus(bestPrice)
         .abs()
@@ -716,6 +720,7 @@ const useOrderEntry = (
     metaState: meta,
     isMutating,
     markPrice,
+    symbolLeverage,
   };
 };
 

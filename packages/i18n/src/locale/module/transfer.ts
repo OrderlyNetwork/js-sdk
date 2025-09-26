@@ -17,6 +17,8 @@ export const transfer = {
   "transfer.deposit.requested": "Deposit requested",
   "transfer.deposit.completed": "Deposit completed",
   "transfer.deposit.failed": "Deposit failed",
+  "transfer.deposit.failed.fee":
+    "Fee data is currently unavailable. Please try again later.",
 
   "transfer.deposit.destinationGasFee": "Destination gas fee",
   "transfer.deposit.destinationGasFee.description":

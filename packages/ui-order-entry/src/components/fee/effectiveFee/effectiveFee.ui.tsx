@@ -1,25 +1,80 @@
 import React from "react";
 import { useFeeState } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { Flex, modal, Text, Tooltip, useScreen } from "@orderly.network/ui";
+import {
+  Flex,
+  modal,
+  Text,
+  Tooltip,
+  useModal,
+  useScreen,
+} from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
+import {
+  RouterAdapter,
+  useScaffoldContext,
+} from "@orderly.network/ui-scaffold";
 import { EffectiveFee } from "./icons";
 
-const EffectiveFeeSection: React.FC<{ content: string }> = (props) => {
-  const { content } = props;
+const EffectiveFeeBody: React.FC<{
+  routerAdapter: RouterAdapter | undefined;
+  onClose?: () => void;
+}> = ({ routerAdapter, onClose }) => {
+  const { t } = useTranslation();
+  return (
+    <Text size="2xs" className="oui-whitespace-normal oui-break-words">
+      {t("portfolio.feeTier.effectiveFee.tooltip")}{" "}
+      <a
+        href="/rewards/affiliate"
+        onClick={(e) => {
+          e.preventDefault();
+          routerAdapter?.onRouteChange({
+            href: "/rewards/affiliate",
+            name: t("portfolio.feeTier.effectiveFee.tooltipLink"),
+          });
+          onClose?.();
+        }}
+        className="oui-cursor-pointer oui-border-none oui-bg-transparent oui-p-0 oui-text-2xs oui-underline hover:oui-text-base-contrast-80"
+      >
+        {t("portfolio.feeTier.effectiveFee.tooltipLink")}
+      </a>
+    </Text>
+  );
+};
+
+const EffectiveFeeMobileContent: React.FC<{
+  routerAdapter: RouterAdapter | undefined;
+}> = ({ routerAdapter }) => {
+  const { hide } = useModal();
+  return <EffectiveFeeBody routerAdapter={routerAdapter} onClose={hide} />;
+};
+
+const EffectiveFeeSection: React.FC<{
+  routerAdapter: RouterAdapter | undefined;
+}> = (props) => {
+  const { routerAdapter } = props;
   const { isMobile } = useScreen();
   const { t } = useTranslation();
   if (isMobile) {
     return (
       <EffectiveFee
         onClick={() => {
-          modal.dialog({ title: t("common.tips"), content: content });
+          modal.dialog({
+            size: "sm",
+            title: t("common.tips"),
+            content: (
+              <EffectiveFeeMobileContent routerAdapter={routerAdapter} />
+            ),
+          });
         }}
       />
     );
   }
   return (
-    <Tooltip content={content} className="oui-p-1.5 oui-text-base-contrast-54">
+    <Tooltip
+      content={<EffectiveFeeBody routerAdapter={routerAdapter} />}
+      className="oui-p-1.5 oui-text-base-contrast-54"
+    >
       <EffectiveFee className={"oui-cursor-pointer"} />
     </Tooltip>
   );
@@ -32,6 +87,7 @@ export const EffectiveFeeUI: React.FC<
   >
 > = (props) => {
   const { t } = useTranslation();
+  const { routerAdapter } = useScaffoldContext();
   const { effectiveTakerFee, effectiveMakerFee } = props;
 
   const originalTrailingFees = (
@@ -65,9 +121,7 @@ export const EffectiveFeeUI: React.FC<
           </Flex>
         </AuthGuard>
       </Flex>
-      <EffectiveFeeSection
-        content={t("portfolio.feeTier.effectiveFee.tooltip")}
-      />
+      <EffectiveFeeSection routerAdapter={routerAdapter} />
     </Flex>
   );
 

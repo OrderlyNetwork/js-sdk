@@ -7,7 +7,6 @@ import {
   useMemoizedFn,
   useOrderEntry,
   useOrderlyContext,
-  useLeverageBySymbol,
 } from "@orderly.network/hooks";
 import {
   DistributionType,
@@ -43,8 +42,6 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     "orderly-order-entry-order-side",
     OrderSide.BUY,
   );
-
-  const symbolLeverage = useLeverageBySymbol(symbol);
 
   const { notification } = useOrderlyContext();
 
@@ -386,6 +383,5 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     soundAlert,
     setSoundAlert,
     currentFocusInput,
-    symbolLeverage,
   };
 };

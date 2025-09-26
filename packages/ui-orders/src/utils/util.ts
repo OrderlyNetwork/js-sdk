@@ -169,10 +169,10 @@ export function calcBracketRoiAndPnL(order: API.AlgoOrderExt) {
       tpPnL: undefined,
       slPnL: undefined,
     },
-    roi: {
-      tpRoi: undefined,
-      slRoi: undefined,
-    },
+    // roi: {
+    //   tpRoi: undefined,
+    //   slRoi: undefined,
+    // },
   };
   const { tpOrder, slOrder } = findBracketTPSLOrder(order);
   if (!tpOrder && !slOrder) return defaultCallback;
@@ -207,30 +207,31 @@ export function calcBracketRoiAndPnL(order: API.AlgoOrderExt) {
       orderType: slOrder.algo_type,
     });
 
-  const tpRoi = tpPnL
-    ? utils.calcTPSL_ROI({
-        pnl: tpPnL,
-        qty: order.quantity,
-        price: order.price,
-      })
-    : undefined;
-  const slRoi = slPnL
-    ? utils.calcTPSL_ROI({
-        pnl: slPnL,
-        qty: order.quantity,
-        price: order.price,
-      })
-    : undefined;
+  // UI not show ROI, so we don't need to calculate ROI
+  // const tpRoi = tpPnL
+  //   ? utils.calcTPSL_ROI({
+  //       pnl: tpPnL,
+  //       qty: order.quantity,
+  //       price: order.price,
+  //     })
+  //   : undefined;
+  // const slRoi = slPnL
+  //   ? utils.calcTPSL_ROI({
+  //       pnl: slPnL,
+  //       qty: order.quantity,
+  //       price: order.price,
+  //     })
+  //   : undefined;
 
   return {
     pnl: {
       tpPnL,
       slPnL,
     },
-    roi: {
-      tpRoi,
-      slRoi,
-    },
+    // roi: {
+    //   tpRoi,
+    //   slRoi,
+    // },
   };
 }
 

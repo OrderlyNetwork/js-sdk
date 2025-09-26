@@ -1,9 +1,7 @@
 import React from "react";
-import { OrderValidationResult } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
 import {
-  API,
   OrderlyOrder,
   OrderSide,
   OrderType,
@@ -29,7 +27,6 @@ import { TPSLBuilderState } from "./useTPSL.script";
 
 export type TPSLProps = {
   close?: () => void;
-  onClose?: () => void;
   onCancel?: () => void;
   onComplete?: () => void;
   withTriggerPrice?: boolean;
@@ -45,7 +42,6 @@ export const TPSL: React.FC<TPSLBuilderState & TPSLProps> = (props) => {
     status,
     position,
     setValues,
-    onClose,
     isEditing,
   } = props;
 
@@ -208,6 +204,7 @@ export const TPSL: React.FC<TPSLBuilderState & TPSLProps> = (props) => {
           data-testid={"tpsl-cancel"}
           onClick={() => {
             props.close?.();
+            onCancel?.();
           }}
         >
           {t("common.cancel")}

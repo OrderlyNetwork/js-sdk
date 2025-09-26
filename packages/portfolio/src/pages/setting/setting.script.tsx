@@ -4,16 +4,23 @@ import {
   useAccountInfo,
   useDebouncedCallback,
   useMutation,
+  useLocalStorage,
+  useOrderlyContext,
 } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
+
+const ORDERLY_ORDER_SOUND_ALERT_KEY = "orderly_order_sound_alert";
 
 export type SettingScriptReturns = {
   maintenance_cancel_orders?: boolean;
   setMaintainConfig: (maintenance_cancel_order_flag: boolean) => void;
   isSetting: boolean;
   canTouch: boolean;
+  soundAlert: boolean;
+  setSoundAlert: (value: boolean) => void;
+  hasOrderFilledMedia: boolean;
 };
 
 export const useSettingScript = (): SettingScriptReturns => {
@@ -21,6 +28,12 @@ export const useSettingScript = (): SettingScriptReturns => {
   const { wrongNetwork, disabledConnect } = useAppContext();
   const [update, { isMutating }] = useMutation("/v1/client/maintenance_config");
   const [checked, setChecked] = useState(false);
+  const { notification } = useOrderlyContext();
+
+  const [soundAlert, setSoundAlert] = useLocalStorage<boolean>(
+    ORDERLY_ORDER_SOUND_ALERT_KEY,
+    notification?.orderFilled?.defaultOpen ?? false,
+  );
 
   useEffect(() => {
     setChecked(data?.maintenance_cancel_orders || false);
@@ -56,5 +69,8 @@ export const useSettingScript = (): SettingScriptReturns => {
     setMaintainConfig,
     isSetting: false,
     canTouch,
+    soundAlert,
+    setSoundAlert,
+    hasOrderFilledMedia: Boolean(notification?.orderFilled?.media),
   };
 };

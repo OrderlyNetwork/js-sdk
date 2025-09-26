@@ -21,8 +21,9 @@ export const usePrivateQuery = <T>(
 
   return useSWR<T>(
     () =>
-      state.status >= AccountStatusEnum.EnableTrading ||
-      state.status === AccountStatusEnum.EnableTradingWithoutConnected
+      query &&
+      (state.status >= AccountStatusEnum.EnableTrading ||
+        state.status === AccountStatusEnum.EnableTradingWithoutConnected)
         ? [query, state.accountId]
         : null,
     (url: string, init: RequestInit) => {

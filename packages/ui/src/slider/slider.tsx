@@ -158,39 +158,29 @@ const BaseSlider = React.forwardRef<
       return marks;
     }
 
-    let _max = props.max;
-    if (!_max) {
-      _max = 100;
-    }
+    const _max = props.max ?? 100;
+    const _min = props.min ?? 0;
 
     if (typeof markCount !== "undefined") {
       const marks: SliderMarks = [];
 
-      // if(max === 0){
+      // calculate the range from min to max
+      const range = _max - _min;
+      const piece = range / markCount;
 
-      // }
-
-      const piece = _max / markCount;
-      const len = markCount - 1;
-
-      for (let i = 0; i <= len; i++) {
-        const value = i * piece;
+      for (let i = 0; i <= markCount; i++) {
+        const value = _min + i * piece;
         marks.push({
           value,
           label: `${value}`,
         });
       }
 
-      marks.push({
-        value: _max,
-        label: `100`,
-      });
-
       return marks;
     }
 
     return [];
-  }, [marks, markCount, props.max]);
+  }, [marks, markCount, props.max, props.min]);
 
   const onValueChangeInner = (value: number[]) => {
     setInvalue(value);
@@ -321,7 +311,7 @@ const Marks: React.FC<SliderMarksProps> = (props) => {
         // console.log("_ value", isInnerMask, _value, selIndex, mark, __value, percent);
 
         const active =
-          (isInnerMask ? _value >= __value : (selIndex ?? 0) >= __value) &&
+          (isInnerMask ? _value >= __value : _value >= mark.value) &&
           _value >= 0 &&
           !props.disabled;
 
@@ -329,11 +319,14 @@ const Marks: React.FC<SliderMarksProps> = (props) => {
 
         return (
           <Fragment key={index}>
-            <span
-              className={cnBase(className, classNames)}
-              style={{ left: `calc(${percent}% + ${thumbInBoundsOffset}px)` }}
-            />
-            {!props.disabled && markLabelVisible && (
+            {/* Only draw mark dots when label is not empty (for external marks) or always draw (for internal marks) */}
+            {(!isInnerMask ? mark.label : true) && (
+              <span
+                className={cnBase(className, classNames)}
+                style={{ left: `calc(${percent}% + ${thumbInBoundsOffset}px)` }}
+              />
+            )}
+            {!props.disabled && markLabelVisible && mark.label && (
               <span
                 data-testid={`oui-testid-slider-mark-label-${mark.label}`}
                 key={index}

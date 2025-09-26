@@ -17,11 +17,15 @@ import {
   TabPanel,
   ArrowDownShortIcon,
   Button,
+  DataTableClassNames,
 } from "@orderly.network/ui";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import type { SelectOption } from "@orderly.network/ui/src/select/withOptions";
 import type { useAssetsScriptReturn } from "./assets.script";
-import type { AssetsWidgetProps } from "./assets.widget";
+import type {
+  AssetsDataTableWidgetProps,
+  AssetsWidgetProps,
+} from "./assets.widget";
 
 const LazyConvertHistoryWidget = React.lazy(() =>
   import("../convertPage/convert.widget").then((mod) => {
@@ -220,11 +224,13 @@ export const AssetsDataTable: React.FC<
     | "selectedAsset"
     | "assetsOptions"
     | "state"
-  >
+  > &
+    AssetsDataTableWidgetProps
 > = (props) => {
-  const { columns, dataSource } = props;
+  const { columns, dataSource, dataTableClassNames, classNames } = props;
+  const { root, scrollRoot, desc } = classNames ?? {};
   return (
-    <Flex width="100%" direction={"column"}>
+    <Flex width="100%" height="100%" direction={"column"} className={root}>
       <DataFilterSection
         {...pick(
           [
@@ -242,14 +248,14 @@ export const AssetsDataTable: React.FC<
         return (
           <Flex
             key={`item-${index}`}
-            className="oui-rounded-xl oui-bg-base-9 oui-p-6"
+            className={cn("oui-rounded-xl oui-bg-base-9 oui-p-6", scrollRoot)}
             direction={"column"}
             itemAlign={"start"}
             justify={"between"}
             my={4}
           >
             <Text
-              className="oui-mb-4"
+              className={cn("oui-mb-4", desc)}
               intensity={98}
               weight="semibold"
               size="lg"
@@ -262,6 +268,7 @@ export const AssetsDataTable: React.FC<
               classNames={{
                 root: "oui-bg-transparent",
                 scroll: "oui-min-h-0",
+                ...dataTableClassNames,
               }}
               columns={columns}
               dataSource={item.children}
@@ -315,6 +322,10 @@ export const AssetsTable: React.FC<AssetsWidgetProps> = (props) => {
               ],
               props,
             )}
+            classNames={{
+              scrollRoot:
+                "oui-max-h-[700px] oui-overflow-y-auto oui-custom-scrollbar oui-w-full",
+            }}
           />
         </TabPanel>
         <TabPanel

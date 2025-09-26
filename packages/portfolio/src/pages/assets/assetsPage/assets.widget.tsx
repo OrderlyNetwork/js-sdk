@@ -1,6 +1,6 @@
 import React from "react";
 import { useAccount } from "@orderly.network/hooks";
-import { useScreen } from "@orderly.network/ui";
+import { DataTableClassNames, useScreen } from "@orderly.network/ui";
 import { useAssetsScript } from "./assets.script";
 import type { useAssetsScriptReturn } from "./assets.script";
 import { AssetsDataTable, AssetsTable } from "./assets.ui.desktop";
@@ -8,10 +8,22 @@ import { AssetsTableMobile } from "./assets.ui.mobile";
 
 export type AssetsWidgetProps = useAssetsScriptReturn;
 
-export const AssetsDataTableWidget: React.FC = () => {
+export type AssetsDataTableWidgetProps = {
+  classNames?: {
+    root?: string;
+    desc?: string;
+    scrollRoot?: string;
+  };
+  tbClassName?: string;
+  dataTableClassNames?: DataTableClassNames;
+};
+
+export const AssetsDataTableWidget: React.FC<AssetsDataTableWidgetProps> = (
+  props,
+) => {
   const assetsState = useAssetsScript();
   const accountState = useAccount();
-  return <AssetsDataTable {...assetsState} {...accountState} />;
+  return <AssetsDataTable {...assetsState} {...accountState} {...props} />;
 };
 
 export const AssetsWidget: React.FC = () => {

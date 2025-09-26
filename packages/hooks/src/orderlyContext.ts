@@ -13,14 +13,10 @@ import type {
 } from "@orderly.network/types";
 import type { Chains } from "./orderly/useChains";
 
-export type filteredChains = {
-  mainnet?: Chain[];
-  testnet?: Chain[];
+export type FilteredChains = {
+  mainnet?: { id: number }[];
+  testnet?: { id: number }[];
 };
-
-export type chainFilterFunc = (config: ConfigStore) => filteredChains;
-
-export type chainFilter = filteredChains | chainFilterFunc;
 
 export interface OrderlyConfigContextState {
   fetcher?: (url: string, init: RequestInit) => Promise<any>;
@@ -37,7 +33,7 @@ export interface OrderlyConfigContextState {
    */
   onlyTestnet?: boolean;
   // extraApis:ExtraAPIs
-  filteredChains?: filteredChains | null;
+  filteredChains?: FilteredChains;
   customChains?: Chains<undefined, undefined>;
   chainTransformer?: (params: {
     chains: API.Chain[];
@@ -80,6 +76,11 @@ export interface OrderlyConfigContextState {
        * @default false
        */
       defaultOpen?: boolean;
+      /**
+       * Whether to display the notification in the order entry.
+       * @default true
+       */
+      displayInOrderEntry?: boolean;
     };
   };
 

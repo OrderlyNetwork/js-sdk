@@ -152,6 +152,7 @@ export const QuantityCell = (props: {
       params = rest;
     }
 
+    // if reduce_only is not undefined, request body must have reduce_only value
     if (typeof order.reduce_only !== "undefined") {
       params.reduce_only = order.reduce_only;
     }

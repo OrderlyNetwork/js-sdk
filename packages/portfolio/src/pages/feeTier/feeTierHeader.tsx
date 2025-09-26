@@ -8,9 +8,15 @@ import {
   modal,
   Text,
   Tooltip,
+  useModal,
   useScreen,
 } from "@orderly.network/ui";
+import {
+  RouterAdapter,
+  useScaffoldContext,
+} from "@orderly.network/ui-scaffold";
 import { Decimal } from "@orderly.network/utils";
+import { useLayoutContext } from "../../layout/context";
 import { EffectiveFee } from "./icons";
 
 export type FeeTierHeaderItemProps = {
@@ -28,9 +34,37 @@ export type FeeTierHeaderProps = {
 const isEffective = (val?: unknown) =>
   typeof val !== "undefined" && val !== null;
 
+const EffectiveFeeDialog: React.FC<{
+  routerAdapter: RouterAdapter | undefined;
+}> = (props) => {
+  const { routerAdapter } = props;
+  const { t } = useTranslation();
+  const { hide } = useModal();
+  return (
+    <Text size="2xs" className="oui-whitespace-normal oui-break-words">
+      {t("portfolio.feeTier.effectiveFee.tooltip")}{" "}
+      <a
+        href="/rewards/affiliate"
+        onClick={(e) => {
+          e.preventDefault();
+          routerAdapter?.onRouteChange({
+            href: "/rewards/affiliate",
+            name: t("portfolio.feeTier.effectiveFee.tooltipLink"),
+          });
+          hide();
+        }}
+        className="oui-cursor-pointer oui-border-none oui-bg-transparent oui-p-0 oui-text-2xs oui-underline hover:oui-text-base-contrast-80"
+      >
+        {t("portfolio.feeTier.effectiveFee.tooltipLink")}
+      </a>
+    </Text>
+  );
+};
+
 export const MobileHeaderItem: React.FC<FeeTierHeaderItemProps> = (props) => {
   const { label, value, interactive } = props;
   const { t } = useTranslation();
+  const { routerAdapter } = useLayoutContext();
   return (
     <Flex justify="between" itemAlign="center" width="100%">
       <Text
@@ -56,7 +90,7 @@ export const MobileHeaderItem: React.FC<FeeTierHeaderItemProps> = (props) => {
               modal.dialog({
                 size: "sm",
                 title: t("common.tips"),
-                content: t("portfolio.feeTier.effectiveFee.tooltip"),
+                content: <EffectiveFeeDialog routerAdapter={routerAdapter} />,
               });
             }}
           >
@@ -79,6 +113,7 @@ export const MobileHeaderItem: React.FC<FeeTierHeaderItemProps> = (props) => {
 export const DesktopHeaderItem: React.FC<FeeTierHeaderItemProps> = (props) => {
   const { label, value, interactive } = props;
   const { t } = useTranslation();
+  const { routerAdapter } = useScaffoldContext();
   return (
     <Box
       gradient="neutral"
@@ -109,7 +144,27 @@ export const DesktopHeaderItem: React.FC<FeeTierHeaderItemProps> = (props) => {
         </Text>
         {interactive && (
           <Tooltip
-            content={t("portfolio.feeTier.effectiveFee.tooltip")}
+            content={
+              <Text
+                size="2xs"
+                className="oui-whitespace-normal oui-break-words"
+              >
+                {t("portfolio.feeTier.effectiveFee.tooltip")}{" "}
+                <a
+                  href="/rewards/affiliate"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    routerAdapter?.onRouteChange({
+                      href: "/rewards/affiliate",
+                      name: t("portfolio.feeTier.effectiveFee.tooltipLink"),
+                    });
+                  }}
+                  className="oui-cursor-pointer oui-border-none oui-bg-transparent oui-p-0 oui-text-2xs oui-underline hover:oui-text-base-contrast-80"
+                >
+                  {t("portfolio.feeTier.effectiveFee.tooltipLink")}
+                </a>
+              </Text>
+            }
             className="oui-p-1.5 oui-text-base-contrast-54"
           >
             <Flex
