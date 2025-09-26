@@ -783,6 +783,7 @@
   "affiliate.enter": "Enter",
   "affiliate.statistics": "Statistics",
   "affiliate.connectWallet.tooltip": "Please connect your wallet to use this function",
+  "affiliate.createAccount.tooltip": "Create your account first to bind a referral code.",
   "affiliate.page.title": "Refer, earn, and grow - referral & affiliate program",
   "affiliate.page.subTitle": "Earn up to 60% in commissions by sharing your referral code. Invite friends, grow your network, and earn more.",
   "affiliate.page.learnMore": "Learn how it works",

@@ -783,6 +783,7 @@
   "affiliate.enter": "输入",
   "affiliate.statistics": "统计",
   "affiliate.connectWallet.tooltip": "请连接您的钱包以使用此功能",
+  "affiliate.createAccount.tooltip": "请先创建账户以绑定推荐码。",
   "affiliate.page.title": "推荐、赚取、成长 - 推荐和联盟计划",
   "affiliate.page.subTitle": "通过分享您的推荐码赚取高达60%的佣金。邀请朋友，扩大您的网络，赚取更多。",
   "affiliate.page.learnMore": "了解运作方式",

@@ -783,6 +783,7 @@
   "affiliate.enter": "入力",
   "affiliate.statistics": "統計",
   "affiliate.connectWallet.tooltip": "この機能を使用するにはウォレットを接続してください",
+  "affiliate.createAccount.tooltip": "紹介コードをバインドするには、まずアカウントを作成してください。",
   "affiliate.page.title": "紹介、獲得、成長 - 紹介・アフィリエイトプログラム",
   "affiliate.page.subTitle": "紹介コードを共有して最大60%のコミッションを獲得。友達を招待し、ネットワークを拡大し、より多く稼ぎましょう。",
   "affiliate.page.learnMore": "仕組みを学ぶ",

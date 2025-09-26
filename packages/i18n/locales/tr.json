@@ -783,6 +783,7 @@
   "affiliate.enter": "Gir",
   "affiliate.statistics": "İstatistikler",
   "affiliate.connectWallet.tooltip": "Bu işlevi kullanmak için lütfen cüzdanınızı bağlayın",
+  "affiliate.createAccount.tooltip": "Bir yönlendirme kodunu bağlamak için önce hesabınızı oluşturun.",
   "affiliate.page.title": "Yönlendir, kazan ve büyü - yönlendirme ve ortaklık programı",
   "affiliate.page.subTitle": "Referans kodunuzu paylaşarak %60'a kadar komisyon kazanın. Arkadaşları davet edin, ağınızı büyütün ve daha fazla kazanın.",
   "affiliate.page.learnMore": "Nasıl çalıştığını öğrenin",
