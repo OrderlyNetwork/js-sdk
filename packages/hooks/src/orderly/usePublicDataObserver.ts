@@ -1,10 +1,13 @@
+import { useEffect } from "react";
 import { type API } from "@orderly.network/types";
 import { getPrecisionByNumber } from "@orderly.network/utils";
 import { useOrderlyContext } from "../orderlyContext";
+import { useSymbolStore } from "../provider/store/symbolStore";
 import { useQuery } from "../useQuery";
 import { useAppStore } from "./appStore";
 import { useMarketStore } from "./useMarket/market.store";
-import { useTokensInfoStore } from "./useTokensInfo/tokensInfo.store";
+
+// import { useTokensInfoStore } from "./useTokensInfo/tokensInfo.store";
 
 const publicQueryOptions = {
   focusThrottleInterval: 1000 * 60 * 60 * 24,
@@ -19,7 +22,9 @@ export const usePublicDataObserver = () => {
 
   const { updateMarket } = useMarketStore((state) => state.actions);
 
-  const setTokensInfo = useTokensInfoStore((state) => state.setTokensInfo);
+  // const setTokensInfo = useTokensInfoStore((state) => state.setTokensInfo);
+
+  const symbols = useSymbolStore((state) => state.data);
 
   const { dataAdapter } = useOrderlyContext();
 
@@ -31,32 +36,39 @@ export const usePublicDataObserver = () => {
   /**
    * symbol config
    */
-  useQuery<Record<string, API.SymbolExt>>(`/v1/public/info`, {
-    ...publicQueryOptions,
-    onSuccess(data: API.Symbol[]) {
-      if (!data || !data?.length) {
-        return {};
-      }
-      const obj: Record<string, API.SymbolExt> = {};
+  // useQuery<Record<string, API.SymbolExt>>(`/v1/public/info`, {
+  //   ...publicQueryOptions,
+  //   onSuccess(data: API.Symbol[]) {
+  //     if (!data || !data?.length) {
+  //       return {};
+  //     }
 
-      for (let index = 0; index < data.length; index++) {
-        const item = data[index];
-        const arr = item.symbol.split("_");
-        const base_dp = getPrecisionByNumber(item.base_tick);
-        const quote_dp = getPrecisionByNumber(item.quote_tick);
-        obj[item.symbol] = {
-          ...item,
-          base_dp,
-          quote_dp,
-          base: arr[1],
-          quote: arr[2],
-          type: arr[0],
-          name: `${arr[1]}-${arr[0]}`,
-        };
-      }
-      setSymbolsInfo(obj);
-    },
-  });
+  //   },
+  // });
+
+  useEffect(() => {
+    if (!symbols || !symbols?.length) {
+      return;
+    }
+    const obj: Record<string, API.SymbolExt> = {};
+
+    for (let index = 0; index < symbols.length; index++) {
+      const item = symbols[index];
+      const arr = item.symbol.split("_");
+      const base_dp = getPrecisionByNumber(item.base_tick);
+      const quote_dp = getPrecisionByNumber(item.quote_tick);
+      obj[item.symbol] = {
+        ...item,
+        base_dp,
+        quote_dp,
+        base: arr[1],
+        quote: arr[2],
+        type: arr[0],
+        name: `${arr[1]}-${arr[0]}`,
+      };
+    }
+    setSymbolsInfo(obj);
+  }, [symbols]);
 
   /**
    * funding rates
@@ -107,16 +119,16 @@ export const usePublicDataObserver = () => {
   /**
    * token info
    */
-  useQuery<API.Chain[]>(`/v1/public/token`, {
-    // revalidateOnFocus: false,
-    ...publicQueryOptions,
-    onSuccess(data: API.Chain[]) {
-      if (!data || !data.length) {
-        return [];
-      }
-      setTokensInfo(data);
-    },
-  });
+  // useQuery<API.Chain[]>(`/v1/public/token`, {
+  //   // revalidateOnFocus: false,
+  //   ...publicQueryOptions,
+  //   onSuccess(data: API.Chain[]) {
+  //     if (!data || !data.length) {
+  //       return [];
+  //     }
+  //     setTokensInfo(data);
+  //   },
+  // });
 };
 
 function getEstFundingRate(data: API.FundingRate) {

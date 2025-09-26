@@ -1,5 +1,5 @@
 import React from "react";
-import { useTokensInfo } from "@orderly.network/hooks";
+import { useAppStore } from "@orderly.network/hooks";
 import { useWalletConnector } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { ChainNamespace } from "@orderly.network/types";
@@ -24,7 +24,7 @@ interface EnhancedHolding {
 
 export const useAssetsColumns = (options: ColumnsOptions) => {
   const { t } = useTranslation();
-  const tokensInfo = useTokensInfo();
+  const tokensInfo = useAppStore((state) => state.tokensInfo);
   const { namespace } = useWalletConnector();
   const { onTransfer, onConvert } = options;
   const columns = React.useMemo<Column[]>(() => {

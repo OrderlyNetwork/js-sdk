@@ -27,6 +27,7 @@ export type AppState = {
   accountInfo?: API.AccountInfo;
   // positions: API.PositionExt[];
   symbolsInfo?: Record<string, API.SymbolExt>;
+  tokensInfo?: API.Token[];
   fundingRates?: Record<string, API.FundingRate>;
   portfolio: Portfolio;
   appState: AppStatus;
@@ -35,6 +36,7 @@ export type AppState = {
 export type AppActions = {
   cleanAll: () => void;
   setAccountInfo: (accountInfo: API.AccountInfo) => void;
+  setTokensInfo: (tokensInfo: API.Token[]) => void;
   // setPositions: (positions: API.PositionExt[]) => void;
   setSymbolsInfo: (symbolsInfo: Record<string, API.SymbolExt>) => void;
   setFundingRates: (fundingRates: Record<string, API.FundingRate>) => void;
@@ -83,6 +85,11 @@ export const useAppStore = create<
       ready: false,
     } as AppStatus,
     actions: {
+      setTokensInfo: (tokensInfo: API.Token[]) => {
+        set((state) => {
+          state.tokensInfo = tokensInfo;
+        }, false);
+      },
       cleanAll: () => {
         set((state) => {
           state.accountInfo = undefined;

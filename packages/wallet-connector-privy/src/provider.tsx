@@ -12,7 +12,14 @@ import { PrivyClientConfig } from "@privy-io/react-auth";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import { type Chain, defineChain } from "viem";
 import { mainnet } from "viem/chains";
-import { Chains, fetcher, useSWR } from "@orderly.network/hooks";
+import {
+  Chains,
+  fetcher,
+  useMainnetChainsStore,
+  useSwapSupportStore,
+  useSWR,
+  useTestnetChainsStore,
+} from "@orderly.network/hooks";
 import {
   AbstractChains,
   AbstractTestnetChainInfo,
@@ -22,7 +29,7 @@ import {
   SolanaChains,
   SolanaDevnetChainInfo,
   SolanaDevnetTokenInfo,
-  TesntTokenFallback,
+  TesnetTokenFallback,
 } from "@orderly.network/types";
 import { TooltipProvider } from "@orderly.network/ui";
 import { Main } from "./main";
@@ -52,7 +59,7 @@ const commonSwrOpts = {
   // don't duplicate a request with the same key for 1hr
   dedupingInterval: 3_600_000,
 };
-const testnetTokenFallback = TesntTokenFallback([
+const testnetTokenFallback = TesnetTokenFallback([
   ArbitrumSepoliaTokenInfo,
   SolanaDevnetTokenInfo,
 ]);
@@ -206,6 +213,11 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
   const [mainnetChains, setMainnetChains] = useState<Chain[]>([]);
   const [testnetChains, setTestnetChains] = useState<Chain[]>([]);
 
+  const mainnetChainInfosFromStore = useMainnetChainsStore(
+    (state) => state.data,
+  );
+  const testChainInfosFromStore = useTestnetChainsStore((state) => state.data);
+
   const initRef = useRef(false);
   const [openConnectDrawer, setOpenConnectDrawer] = useState(false);
   const [targetWalletType, setTargetWalletType] = useState<
@@ -261,13 +273,24 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     return chainTypeObj;
   }, [initChains]);
 
-  const { data: swapChainInfoRes, isLoading: swapLoading } = useSWR(
-    !props.customChains && props.enableSwapDeposit
-      ? "https://fi-api.woo.org/swap_support"
-      : null,
-    fetcher,
-    commonSwrOpts,
-  );
+  const {
+    data: swapChainInfoRes,
+    // loading: swapLoading,
+    fetchData: fetchSwapData,
+  } = useSwapSupportStore();
+
+  // const { data: swapChainInfoRes, isLoading: swapLoading } = useSWR(
+  //   !props.customChains && props.enableSwapDeposit
+  //     ? "https://fi-api.woo.org/swap_support"
+  //     : null,
+  //   fetcher,
+  //   commonSwrOpts,
+  // );
+
+  useEffect(() => {
+    if (!props.enableSwapDeposit || !!props.customChains) return;
+    fetchSwapData();
+  }, [props.enableSwapDeposit, props.customChains]);
 
   const { data: mainnetChainInfos } = useSWR(
     !props.customChains ? "https://api.orderly.org/v1/public/chain_info" : null,
@@ -380,19 +403,39 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
   );
 
   useEffect(() => {
+    if (initRef.current) return;
     if (props.customChains) {
       return;
     }
 
-    if (!mainnetChainInfos || !testChainInfos || swapLoading) {
+    // Check which data source is available first (store or API)
+    const hasStoreData = mainnetChainInfosFromStore && testChainInfosFromStore;
+    const hasApiData = mainnetChainInfos && testChainInfos;
+
+    // If neither store nor API data is ready, wait
+    if (!hasStoreData && !hasApiData) {
+      return;
+    }
+
+    // Always wait for swap loading to complete when swap is enabled
+    if (!swapChainInfoRes) {
       return;
     }
 
     let testChainsList = [];
     let mainnetChainsList = [];
     try {
-      testChainsList = testChainInfos;
-      mainnetChainsList = mainnetChainInfos;
+      // Use data in pairs: either both from store or both from API
+      // Priority: if store data is available, use store; otherwise use API
+      if (hasStoreData) {
+        testChainsList = testChainInfosFromStore;
+        mainnetChainsList = mainnetChainInfosFromStore;
+        console.log("!!!use store data");
+      } else {
+        testChainsList = testChainInfos || testnetChainFallback;
+        mainnetChainsList = mainnetChainInfos;
+        console.log("!!!use api data");
+      }
 
       const testChains = processChainInfo(testChainsList);
       const mainnetChains = processChainInfo(mainnetChainsList);
@@ -422,8 +465,10 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     props.customChains,
     mainnetChainInfos,
     testChainInfos,
+    mainnetChainInfosFromStore,
+    testChainInfosFromStore,
     swapChainInfoRes,
-    swapLoading,
+    // swapLoading,
   ]);
 
   useEffect(() => {

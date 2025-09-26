@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useMemo, useState } from "react";
-import { useChains, useConfig, useTokensInfo } from "@orderly.network/hooks";
+import { useChains, useConfig, useAppStore } from "@orderly.network/hooks";
 import { Arbitrum, type API, type NetworkId } from "@orderly.network/types";
 
 const splitTokenBySymbol = <T extends API.Chain>(items: T[]) => {
@@ -38,13 +38,16 @@ export const useToken = (options: Options) => {
   const [targetToken, setTargetToken] = useState<API.Chain>();
   const [sourceTokens, setSourceTokens] = useState<API.Chain[]>([]);
 
-  const tokensInfo = useTokensInfo();
+  const tokensInfo = useAppStore((state) => state.tokensInfo);
 
   const chain = findByChainId(Arbitrum.id);
 
   const chainId = chain?.network_infos?.chain_id;
 
   const newTokensInfo = useMemo(() => {
+    if (!tokensInfo) {
+      return [];
+    }
     return tokensInfo
       .filter((item) => item.on_chain_swap)
       .map<API.Chain>((item) => {

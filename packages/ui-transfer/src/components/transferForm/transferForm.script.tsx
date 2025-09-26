@@ -7,7 +7,7 @@ import {
   useSubAccountMaxWithdrawal,
   useTransfer,
 } from "@orderly.network/hooks";
-import { useTokensInfo } from "@orderly.network/hooks";
+import { useAppStore } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { API, NetworkId } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
@@ -45,7 +45,7 @@ export const useTransferFormScript = (options: TransferFormScriptOptions) => {
 
   const { state, isMainAccount, subAccount } = useAccount();
 
-  const tokensInfo = useTokensInfo();
+  const tokensInfo = useAppStore((state) => state.tokensInfo);
 
   const {
     transfer,
