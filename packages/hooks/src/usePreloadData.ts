@@ -40,8 +40,8 @@ export const usePreLoadData = () => {
 
   useEffect(() => {
     fetchMainTokens();
-    fetchSymbols(urlPrefix).then((symbols) => {
-      console.warn("Symbols loaded:", symbols);
+    fetchSymbols(apiBaseUrl).then((symbols) => {
+      // console.info("Symbols loaded:", symbols);
     });
     fetchMainChains(undefined, {
       brokerId: configStore.get("brokerId"),

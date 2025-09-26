@@ -5,7 +5,6 @@ import React, {
   useState,
   createContext,
   useContext,
-  type RefObject,
   useMemo,
 } from "react";
 import { PrivyClientConfig } from "@privy-io/react-auth";
@@ -14,21 +13,19 @@ import { type Chain, defineChain } from "viem";
 import { mainnet } from "viem/chains";
 import {
   Chains,
-  fetcher,
   useMainnetChainsStore,
   useSwapSupportStore,
-  useSWR,
   useTestnetChainsStore,
 } from "@orderly.network/hooks";
 import {
   AbstractChains,
-  AbstractTestnetChainInfo,
+  API,
   ArbitrumSepoliaChainInfo,
   ArbitrumSepoliaTokenInfo,
-  ChainNamespace,
   SolanaChains,
   SolanaDevnetChainInfo,
   SolanaDevnetTokenInfo,
+  TesnetTokenFallback,
   TesnetTokenFallback,
 } from "@orderly.network/types";
 import { TooltipProvider } from "@orderly.network/ui";
@@ -50,29 +47,7 @@ import {
   WalletType,
 } from "./types";
 
-const commonSwrOpts = {
-  revalidateIfStale: false,
-  revalidateOnFocus: false,
-  revalidateOnReconnect: false,
-  // If false, undefined data gets cached against the key.
-  revalidateOnMount: true,
-  // don't duplicate a request with the same key for 1hr
-  dedupingInterval: 3_600_000,
-};
-const testnetTokenFallback = TesnetTokenFallback([
-  ArbitrumSepoliaTokenInfo,
-  SolanaDevnetTokenInfo,
-]);
-
 const testnetChainFallback = [ArbitrumSepoliaChainInfo, SolanaDevnetChainInfo];
-
-const fetchChainInfo = async (url: string) => {
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(`Failed to fetch data from ${url}`);
-  }
-  return response.json();
-};
 
 // const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -212,6 +187,15 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
   const [initChains, setInitChains] = useState<Chain[]>([]);
   const [mainnetChains, setMainnetChains] = useState<Chain[]>([]);
   const [testnetChains, setTestnetChains] = useState<Chain[]>([]);
+  const [mainnetChainInfos, setMainnetChainInfos] = useState<
+    API.Chain[] | null
+  >(null);
+  const [testChainInfos, setTestChainInfos] = useState<API.Chain[] | null>(
+    null,
+  );
+
+  const fetchMainChains = useMainnetChainsStore((state) => state.fetchData);
+  const fetchTestChains = useTestnetChainsStore((state) => state.fetchData);
 
   const mainnetChainInfosFromStore = useMainnetChainsStore(
     (state) => state.data,
@@ -292,22 +276,14 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     fetchSwapData();
   }, [props.enableSwapDeposit, props.customChains]);
 
-  const { data: mainnetChainInfos } = useSWR(
-    !props.customChains ? "https://api.orderly.org/v1/public/chain_info" : null,
-    fetcher,
-    commonSwrOpts,
-  );
-
-  const { data: testChainInfos } = useSWR(
-    !props.customChains
-      ? "https://testnet-api.orderly.org/v1/public/chain_info"
-      : null,
-    fetcher,
-    {
-      ...commonSwrOpts,
-      fallbackData: testnetChainFallback,
-    },
-  );
+  useEffect(() => {
+    fetchMainChains().then((data) => {
+      setMainnetChainInfos(data);
+    });
+    fetchTestChains().then((data) => {
+      setTestChainInfos(data);
+    });
+  }, []);
 
   const handleCustomerChains = () => {
     const testChains = processChainInfo(
@@ -404,10 +380,22 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
 
   useEffect(() => {
     if (initRef.current) return;
+    if (initRef.current) return;
     if (props.customChains) {
       return;
     }
 
+    // Check which data source is available first (store or API)
+    const hasStoreData = mainnetChainInfosFromStore && testChainInfosFromStore;
+    const hasApiData = mainnetChainInfos && testChainInfos;
+
+    // If neither store nor API data is ready, wait
+    if (!hasStoreData && !hasApiData) {
+      return;
+    }
+
+    // Always wait for swap loading to complete when swap is enabled
+    if (!swapChainInfoRes) {
     // Check which data source is available first (store or API)
     const hasStoreData = mainnetChainInfosFromStore && testChainInfosFromStore;
     const hasApiData = mainnetChainInfos && testChainInfos;
@@ -433,7 +421,7 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
         console.log("!!!use store data");
       } else {
         testChainsList = testChainInfos || testnetChainFallback;
-        mainnetChainsList = mainnetChainInfos;
+        mainnetChainsList = mainnetChainInfos || [];
         console.log("!!!use api data");
       }
 
@@ -467,7 +455,10 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     testChainInfos,
     mainnetChainInfosFromStore,
     testChainInfosFromStore,
+    mainnetChainInfosFromStore,
+    testChainInfosFromStore,
     swapChainInfoRes,
+    // swapLoading,
     // swapLoading,
   ]);
 

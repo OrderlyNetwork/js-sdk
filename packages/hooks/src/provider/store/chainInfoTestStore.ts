@@ -14,5 +14,6 @@ export const useTestnetChainsStore = createDataStore<API.Chain>({
   storeName: ORDERLY_TEST_CHAIN_INFO.name,
   keyPath: ORDERLY_TEST_CHAIN_INFO.keyPath,
   endpoint: "/v1/public/chain_info",
+  baseUrl: "https://testnet-api.orderly.org",
   initData: testnetChainFallback as unknown as API.Chain[],
 });
