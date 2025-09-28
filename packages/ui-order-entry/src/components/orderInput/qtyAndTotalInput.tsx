@@ -1,6 +1,7 @@
-import { FC, memo } from "react";
+import { FC, memo, useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Grid, inputFormatter } from "@orderly.network/ui";
+import { optimizeSymbolDisplay } from "@orderly.network/utils";
 import { InputType } from "../../types";
 import { CustomInput } from "../customInput";
 import { useOrderEntryContext } from "../orderEntryContext";
@@ -18,13 +19,17 @@ export const QtyAndTotalInput: FC<QtyAndTotalInputProps> = memo((props) => {
 
   const { base, quote, base_dp, quote_dp } = symbolInfo;
 
+  const optimizedBase = useMemo(() => {
+    return optimizeSymbolDisplay(base);
+  }, [base]);
+
   return (
     <Grid cols={2} className="oui-group oui-space-x-1">
       <CustomInput
         id="order_quantity_input"
         name="order_quantity_input"
         label={t("common.qty")}
-        suffix={base}
+        suffix={optimizedBase}
         error={getErrorMsg("order_quantity")}
         value={props.order_quantity}
         onChange={(e) => {
