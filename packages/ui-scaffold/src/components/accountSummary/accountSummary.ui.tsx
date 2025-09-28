@@ -404,7 +404,7 @@ const DropdownMenu: FC<
   }>
 > = (props) => {
   return (
-    <div className="oui-w-full oui-relative oui-group hover:oui-bg-base-6 oui-px-[6px] oui-py-1 oui-rounded">
+    <div className="oui-group oui-relative oui-w-full oui-rounded oui-px-[6px] oui-py-1 hover:oui-bg-base-6">
       <Flex justify={"between"} width={"100%"}>
         {props.children}
       </Flex>
@@ -413,7 +413,7 @@ const DropdownMenu: FC<
         onClick={props.onSetTop}
       >
         <svg
-          className="group-hover:oui-opacity-100 group-hover:oui-translate-x-0 oui-opacity-0 oui-translate-x-3 oui-transition-all oui-cursor-pointer oui-fill-base-contrast-54 hover:oui-fill-base-contrast"
+          className="oui-translate-x-3 oui-cursor-pointer oui-fill-base-contrast-54 oui-opacity-0 oui-transition-all hover:oui-fill-base-contrast group-hover:oui-translate-x-0 group-hover:oui-opacity-100"
           width="16"
           height="16"
           viewBox="0 0 16 16"
@@ -426,7 +426,10 @@ const DropdownMenu: FC<
             rx="2"
             fill="rgb(var(--oui-color-primary-darken))"
           />
-          <path d="M3.507 3.999a.5.5 0 1 0 0 1h9a.5.5 0 0 0 0-1zm4 8.006a.5.5 0 0 0 1 0V7.724l1.5 1.484.703-.703-2.343-2.36a.515.515 0 0 0-.72 0l-2.343 2.36.703.703 1.5-1.484z" />
+          <path
+            fill="rgb(var(--oui-color-base-contrast-80))"
+            d="M3.507 3.999a.5.5 0 1 0 0 1h9a.5.5 0 0 0 0-1zm4 8.006a.5.5 0 0 0 1 0V7.724l1.5 1.484.703-.703-2.343-2.36a.515.515 0 0 0-.72 0l-2.343 2.36.703.703 1.5-1.484z"
+          />
         </svg>
       </button>
     </div>

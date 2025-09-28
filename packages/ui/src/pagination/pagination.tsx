@@ -1,11 +1,11 @@
 import React, { useMemo } from "react";
-import { Text } from "../typography/text";
-import { ChevronLeftIcon, ChevronRightIcon } from "../icon";
-import { ButtonProps, buttonVariants } from "../button";
 import { cnBase } from "tailwind-variants";
-import { Select } from "../select";
+import { ButtonProps, buttonVariants } from "../button";
 import { Flex } from "../flex";
+import { ChevronLeftIcon, ChevronRightIcon } from "../icon";
 import { useLocale } from "../locale";
+import { Select } from "../select";
+import { Text } from "../typography/text";
 
 const Pagination = ({ className, ...props }: React.ComponentProps<"nav">) => (
   <nav
@@ -13,7 +13,7 @@ const Pagination = ({ className, ...props }: React.ComponentProps<"nav">) => (
     aria-label="pagination"
     className={cnBase(
       "oui-flex oui-justify-between oui-items-center oui-w-full oui-text-xs",
-      className
+      className,
     )}
     {...props}
   />
@@ -28,7 +28,7 @@ const PaginationContent = React.forwardRef<
     ref={ref}
     className={cnBase(
       "oui-flex oui-flex-row oui-items-center oui-gap-x-2",
-      className
+      className,
     )}
     {...props}
   />
@@ -62,7 +62,7 @@ const PaginationLink = ({
       // color:'white',
       variant: isActive ? "contained" : "text",
       className:
-        "oui-min-w-6 oui-text-base-contrast-80 oui-font-semibold data-[active=false]:hover:oui-bg-base-6 disabled:oui-bg-transparent disabled:hover:oui-bg-transparent",
+        "oui-min-w-6 oui-text-primary-contrast oui-font-semibold data-[active=false]:hover:oui-bg-base-6 disabled:oui-bg-transparent disabled:hover:oui-bg-transparent",
       // size,
     })}
     {...props}
@@ -109,7 +109,7 @@ const PaginationEllipsis = ({
       aria-hidden
       className={cnBase(
         "oui-flex oui-h-9 oui-w-9 oui-items-center oui-justify-center",
-        className
+        className,
       )}
       {...props}
     >
@@ -181,7 +181,7 @@ const Paginations = (props: PaginationProps) => {
 
 function generatePagination(
   currentPage: number,
-  totalPages: number
+  totalPages: number,
 ): (number | string)[] {
   const pagination: (number | string)[] = [];
   const ellipsis = "...";
@@ -201,7 +201,7 @@ function generatePagination(
         totalPages - 3,
         totalPages - 2,
         totalPages - 1,
-        totalPages
+        totalPages,
       );
     } else {
       pagination.push(
@@ -211,7 +211,7 @@ function generatePagination(
         currentPage,
         currentPage + 1,
         ellipsis,
-        totalPages
+        totalPages,
       );
     }
   }
@@ -258,7 +258,7 @@ const PaginationItems = (props: Omit<PaginationProps, "onPageSizeChange">) => {
                   props.onPageChange?.(Number(page));
                 } else {
                   props.onPageChange?.(
-                    Number((pageNumbers[index + 1] as number) - 1)
+                    Number((pageNumbers[index + 1] as number) - 1),
                   );
                 }
               }}
