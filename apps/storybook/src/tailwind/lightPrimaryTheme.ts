@@ -1,9 +1,9 @@
 import plugin from "tailwindcss/plugin";
 
-export const lightThemePlugin = () =>
+export const lightPrimaryThemePlugin = () =>
   plugin(function ({ addBase }) {
     addBase({
-      '[data-oui-theme="light"]': {
+      '[data-oui-theme="lightPrimary"]': {
         "--oui-font-family":
           '"DIN2014", "PingFang SC", "Noto Sans CJK SC", "Noto Sans", sans-serif',
 
@@ -11,7 +11,7 @@ export const lightThemePlugin = () =>
         "--oui-color-primary": "255 243 227",
         "--oui-color-primary-light": "255 243 227",
         "--oui-color-primary-darken": "255 243 227",
-        "--oui-color-primary-contrast": "255 243 227",
+        "--oui-color-primary-contrast": "0 0 0",
 
         "--oui-color-link": "182 79 255",
         "--oui-color-link-light": "208 140 255",

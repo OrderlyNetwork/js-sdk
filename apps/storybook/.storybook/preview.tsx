@@ -22,7 +22,7 @@ const preview: Preview = {
         orderly: "orderly",
         custom: "custom",
         roundless: "roundless",
-        light: "light",
+        lightPrimary: "lightPrimary",
       },
       defaultTheme: import.meta.env.VITE_DEFAULT_THEME || "orderly",
       attributeName: "data-oui-theme",

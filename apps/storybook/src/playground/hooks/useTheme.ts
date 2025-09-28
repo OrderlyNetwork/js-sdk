@@ -5,7 +5,7 @@ const themes = {
   orderly: "orderly",
   custom: "custom",
   roundless: "roundless",
-  light: "light",
+  lightPrimary: "lightPrimary",
 };
 
 /** set custom theme */
