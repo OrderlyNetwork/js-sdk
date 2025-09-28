@@ -413,7 +413,7 @@ const DropdownMenu: FC<
         onClick={props.onSetTop}
       >
         <svg
-          className="oui-translate-x-3 oui-cursor-pointer oui-fill-base-contrast-54 oui-opacity-0 oui-transition-all hover:oui-fill-base-contrast group-hover:oui-translate-x-0 group-hover:oui-opacity-100"
+          className="oui-translate-x-3 oui-cursor-pointer oui-opacity-0 oui-transition-all group-hover:oui-translate-x-0 group-hover:oui-opacity-100 oui-group/icon"
           width="16"
           height="16"
           viewBox="0 0 16 16"
@@ -424,10 +424,12 @@ const DropdownMenu: FC<
             width="16"
             height="16"
             rx="2"
-            fill="rgb(var(--oui-color-primary-darken))"
+            // fill="rgb(var(--oui-color-primary-darken))"
+            className="oui-fill-primary-darken"
           />
           <path
-            fill="rgb(var(--oui-color-base-contrast-80))"
+            // fill="rgb(var(--oui-color-primary-contrast))"
+            className="oui-fill-primary-contrast/50 group-hover/icon:oui-fill-primary-contrast"
             d="M3.507 3.999a.5.5 0 1 0 0 1h9a.5.5 0 0 0 0-1zm4 8.006a.5.5 0 0 0 1 0V7.724l1.5 1.484.703-.703-2.343-2.36a.515.515 0 0 0-.72 0l-2.343 2.36.703.703 1.5-1.484z"
           />
         </svg>
