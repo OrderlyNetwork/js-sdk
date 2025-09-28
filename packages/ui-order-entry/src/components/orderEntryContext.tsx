@@ -21,6 +21,7 @@ export type OrderEntryContextState = {
   priceInputContainerRef: React.RefObject<HTMLDivElement>;
   triggerPriceInputRef: React.RefObject<HTMLInputElement>;
   activatedPriceInputRef: React.RefObject<HTMLInputElement>;
+  leverage?: number;
 };
 
 export const OrderEntryContext = createContext<OrderEntryContextState>(

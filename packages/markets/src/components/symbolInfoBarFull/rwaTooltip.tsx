@@ -1,0 +1,156 @@
+import { useMemo, useState } from "react";
+import React from "react";
+import { Trans, useTranslation } from "@orderly.network/i18n";
+import {
+  Flex,
+  Tooltip,
+  Text,
+  cn,
+  ArrowRightShortIcon,
+  modal,
+} from "@orderly.network/ui";
+import { useScreen } from "@orderly.network/ui";
+
+export type RwaTooltipProps = {
+  isRwa: boolean;
+  open?: boolean;
+  closeTimeInterval?: number;
+  openTimeInterval?: number;
+};
+
+export const RwaTooltip = (props: RwaTooltipProps) => {
+  const { isRwa, open, closeTimeInterval, openTimeInterval } = props;
+  const { isMobile } = useScreen();
+  const { t } = useTranslation();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const timeInterval = open ? closeTimeInterval : openTimeInterval;
+  const tooltipContent = useMemo(() => {
+    return (
+      <Flex
+        direction="column"
+        gapY={1}
+        className="oui-text-2xs oui-max-w-[275px]"
+        itemAlign="start"
+        py={1}
+      >
+        {open
+          ? t("trading.rwa.tooltip.description.open")
+          : t("trading.rwa.tooltip.description.close")}
+
+        <div className="oui-text-base-contrast-54">
+          {timeInterval && (
+            <Trans
+              i18nKey={
+                !open
+                  ? "trading.rwa.tooltip.openIn"
+                  : "trading.rwa.tooltip.closeIn"
+              }
+              values={{ timeFormat: timeInterval }}
+              components={[
+                // @ts-ignore
+                <CountdownText />,
+              ]}
+            />
+          )}
+        </div>
+        <a
+          href="https://orderly.network/rwa"
+          target="_blank"
+          className="oui-flex oui-items-center oui-gap-x-1 oui-text-primary-darken oui-cursor-pointer"
+          onClick={(e) => {
+            e.stopPropagation();
+            console.log("Link clicked in tooltip");
+          }}
+        >
+          {t("trading.rwa.tooltip.checkDetailRules")}
+          <ArrowRightShortIcon color="primary" opacity={1} />
+        </a>
+      </Flex>
+    );
+  }, [open, t, closeTimeInterval]);
+
+  const triggerView = (
+    <Flex
+      r="base"
+      px={2}
+      className={cn(open ? "oui-bg-success/15" : "oui-bg-danger/15")}
+    >
+      <Text size="2xs" color={open ? "success" : "danger"}>
+        {open
+          ? t("trading.rwa.marketHours")
+          : t("trading.rwa.outsideMarketHours")}
+      </Text>
+    </Flex>
+  );
+
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+    modal.alert({
+      title: open
+        ? t("trading.rwa.marketHours")
+        : t("trading.rwa.outsideMarketHours"),
+      message: tooltipContent,
+    });
+  };
+
+  if (!isRwa) {
+    return null;
+  }
+
+  if (isMobile) {
+    return <button onClick={handleClick}>{triggerView}</button>;
+  }
+
+  return (
+    <Tooltip 
+      content={tooltipContent} 
+      open={isOpen} 
+      onOpenChange={setIsOpen}
+      disableHoverableContent={false}
+    >
+      <button
+        onMouseEnter={() => {
+          setIsOpen(true);
+        }}
+       
+        onClick={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+        }}
+      >
+        {triggerView}
+      </button>
+    </Tooltip>
+  );
+};
+
+const CountdownText: React.FC<React.PropsWithChildren> = (props) => {
+  const { children } = props;
+  const timeInterval = Number(children);
+
+  // calculate days
+  const days = Math.floor(timeInterval / (60 * 60 * 24));
+  const daysStr = days.toString().padStart(2, "0");
+
+  // calculate hours
+  const hours = Math.floor((timeInterval % (60 * 60 * 24)) / (60 * 60));
+  const hoursStr = hours.toString().padStart(2, "0");
+
+  // calculate minutes
+  const minutes = Math.floor((timeInterval % (60 * 60)) / 60);
+  const minutesStr = minutes.toString().padStart(2, "0");
+
+  // calculate seconds
+  const seconds = timeInterval % 60;
+  const secondsStr = seconds.toString().padStart(2, "0");
+
+  return (
+    <span className="oui-text-base-contrast">
+      {days > 0 ? `${daysStr}:` : ""}
+      {hoursStr}:{minutesStr}
+    </span>
+  );
+};

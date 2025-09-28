@@ -48,6 +48,39 @@ import {
   CaretLeftIcon,
   PlusIcon,
   CaretRightIcon,
+  // 新增的图标
+  CalendarMinusIcon,
+  ReduceIcon,
+  ArrowLeftRightSquareFill,
+  ArrowRightUpSquareFillIcon,
+  AssetIcon,
+  BarChartIcon,
+  BattleIcon,
+  OrderlyIcon,
+  EsOrderlyIcon,
+  InfoCircleIcon,
+  WalletIcon,
+  TraderMobileIcon,
+  AffiliateIcon,
+  TradingRewardsIcon,
+  PortfolioActiveIcon,
+  PortfolioInactiveIcon,
+  TradingActiveIcon,
+  TradingIcon,
+  TradingInactiveIcon,
+  LeaderboardActiveIcon,
+  LeaderboardInactiveIcon,
+  MarketsActiveIcon,
+  MarketsInactiveIcon,
+  EmptyStateIcon,
+  VectorIcon,
+  SwapHorizIcon,
+  PeopleIcon,
+  PersonIcon,
+  TradingLeftNavIcon,
+  VaultsIcon,
+  LeftNavVaultsIcon,
+  NewsFillIcon,
 } from "@orderly.network/ui";
 
 const meta: Meta<typeof Icon> = {
@@ -94,53 +127,122 @@ const meta: Meta<typeof Icon> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+// 图标配置数组，包含图标组件和名称
+const iconConfigs = [
+  // 基础图标
+  { component: CloseIcon, name: "CloseIcon" },
+  { component: CheckIcon, name: "CheckIcon" },
+  { component: ChevronDownIcon, name: "ChevronDownIcon" },
+  { component: ChevronUpIcon, name: "ChevronUpIcon" },
+  { component: ChevronLeftIcon, name: "ChevronLeftIcon" },
+  { component: ChevronRightIcon, name: "ChevronRightIcon" },
+  { component: CaretUpIcon, name: "CaretUpIcon" },
+  { component: CaretDownIcon, name: "CaretDownIcon" },
+  { component: CaretLeftIcon, name: "CaretLeftIcon" },
+  { component: CaretRightIcon, name: "CaretRightIcon" },
+  { component: SettingIcon, name: "SettingIcon" },
+  { component: SettingFillIcon, name: "SettingFillIcon" },
+  { component: PlusIcon, name: "PlusIcon" },
+  { component: ReduceIcon, name: "ReduceIcon" },
+  
+  // 填充图标
+  { component: CloseSquareFillIcon, name: "CloseSquareFillIcon" },
+  { component: CloseCircleFillIcon, name: "CloseCircleFillIcon" },
+  { component: CheckedCircleFillIcon, name: "CheckedCircleFillIcon" },
+  { component: CheckedSquareFillIcon, name: "CheckedSquareFillIcon" },
+  { component: CheckSquareEmptyIcon, name: "CheckSquareEmptyIcon" },
+  { component: CircleOutlinedIcon, name: "CircleOutlinedIcon" },
+  { component: SquareOutlinedIcon, name: "SquareOutlinedIcon" },
+  { component: ExclamationFillIcon, name: "ExclamationFillIcon" },
+  { component: QuestionFillIcon, name: "QuestionFillIcon" },
+  { component: InfoCircleIcon, name: "InfoCircleIcon" },
+  
+  // 箭头图标
+  { component: ArrowLeftRightIcon, name: "ArrowLeftRightIcon" },
+  { component: ArrowDownUpIcon, name: "ArrowDownUpIcon" },
+  { component: ArrowUpSquareFillIcon, name: "ArrowUpSquareFillIcon" },
+  { component: ArrowDownSquareFillIcon, name: "ArrowDownSquareFillIcon" },
+  { component: ArrowLeftRightSquareFill, name: "ArrowLeftRightSquareFill" },
+  { component: ArrowRightUpSquareFillIcon, name: "ArrowRightUpSquareFillIcon" },
+  { component: ArrowUpShortIcon, name: "ArrowUpShortIcon" },
+  { component: ArrowDownShortIcon, name: "ArrowDownShortIcon" },
+  { component: ArrowLeftShortIcon, name: "ArrowLeftShortIcon" },
+  { component: ArrowRightShortIcon, name: "ArrowRightShortIcon" },
+  
+  // 功能图标
+  { component: FeeTierIcon, name: "FeeTierIcon" },
+  { component: EditIcon, name: "EditIcon" },
+  { component: EyeIcon, name: "EyeIcon" },
+  { component: EyeCloseIcon, name: "EyeCloseIcon" },
+  { component: ShareIcon, name: "ShareIcon" },
+  { component: RefreshIcon, name: "RefreshIcon" },
+  { component: CopyIcon, name: "CopyIcon" },
+  { component: CalendarIcon, name: "CalendarIcon" },
+  { component: CalendarMinusIcon, name: "CalendarMinusIcon" },
+  { component: ServerFillIcon, name: "ServerFillIcon" },
+  { component: TokenIcon, name: "TokenIcon" },
+  { component: ChainIcon, name: "ChainIcon" },
+  { component: WalletIcon, name: "WalletIcon" },
+  
+  // 排序图标
+  { component: SortingAscIcon, name: "SortingAscIcon" },
+  { component: SortingDescIcon, name: "SortingDescIcon" },
+  { component: SortingIcon, name: "SortingIcon" },
+  
+  // 应用图标
+  { component: OrderlyIcon, name: "OrderlyIcon" },
+  { component: EsOrderlyIcon, name: "EsOrderlyIcon" },
+  { component: AssetIcon, name: "AssetIcon" },
+  { component: BarChartIcon, name: "BarChartIcon" },
+  { component: BattleIcon, name: "BattleIcon" },
+  { component: TraderMobileIcon, name: "TraderMobileIcon" },
+  { component: AffiliateIcon, name: "AffiliateIcon" },
+  { component: TradingRewardsIcon, name: "TradingRewardsIcon" },
+  
+  // 导航图标
+  { component: PortfolioActiveIcon, name: "PortfolioActiveIcon" },
+  { component: PortfolioInactiveIcon, name: "PortfolioInactiveIcon" },
+  { component: TradingActiveIcon, name: "TradingActiveIcon" },
+  { component: TradingIcon, name: "TradingIcon" },
+  { component: TradingInactiveIcon, name: "TradingInactiveIcon" },
+  { component: TradingLeftNavIcon, name: "TradingLeftNavIcon" },
+  { component: LeaderboardActiveIcon, name: "LeaderboardActiveIcon" },
+  { component: LeaderboardInactiveIcon, name: "LeaderboardInactiveIcon" },
+  { component: MarketsActiveIcon, name: "MarketsActiveIcon" },
+  { component: MarketsInactiveIcon, name: "MarketsInactiveIcon" },
+  { component: VaultsIcon, name: "VaultsIcon" },
+  { component: LeftNavVaultsIcon, name: "LeftNavVaultsIcon" },
+  
+  // 其他图标
+  { component: EmptyStateIcon, name: "EmptyStateIcon" },
+  { component: VectorIcon, name: "VectorIcon" },
+  { component: SwapHorizIcon, name: "SwapHorizIcon" },
+  { component: PeopleIcon, name: "PeopleIcon" },
+  { component: PersonIcon, name: "PersonIcon" },
+  { component: NewsFillIcon, name: "NewsFillIcon" },
+];
+
 export const Icons: Story = {
   render: (args) => {
     return (
-      <Box width={"800px"} height={"600px"}>
-        <Flex gap={3} wrap={"wrap"}>
-          <CloseIcon {...args} />
-          <CheckIcon {...args} />
-          <ChevronDownIcon {...args} />
-          <ChevronUpIcon {...args} />
-          <CaretUpIcon {...args} />
-          <CaretDownIcon {...args} />
-          <CaretLeftIcon {...args} />
-          <CaretRightIcon {...args} />
-          <ChevronLeftIcon {...args} />
-          <ChevronRightIcon {...args} />
-          <SettingIcon {...args} />
-          <SettingFillIcon {...args} />
-          <CloseSquareFillIcon {...args} />
-          <CloseCircleFillIcon {...args} />
-          <CheckedCircleFillIcon {...args} />
-          <CheckedSquareFillIcon {...args} />
-          <CheckSquareEmptyIcon {...args} />
-          <PlusIcon {...args} />
-          <CircleOutlinedIcon {...args} />
-          <SquareOutlinedIcon {...args} />
-          <ExclamationFillIcon {...args} />
-          <QuestionFillIcon {...args} />
-          <ArrowLeftRightIcon {...args} />
-          <ArrowDownUpIcon {...args} />
-          <ArrowUpSquareFillIcon {...args} />
-          <ArrowDownSquareFillIcon {...args} />
-          <FeeTierIcon {...args} />
-          <EditIcon {...args} />
-          <EyeIcon {...args} />
-          <ShareIcon {...args} />
-          <EyeCloseIcon {...args} />
-          <RefreshIcon {...args} />
-          <CalendarIcon {...args} />
-          <CopyIcon {...args} />
-          <ServerFillIcon {...args} />
-          <SortingAscIcon {...args} />
-          <SortingDescIcon {...args} />
-          <ArrowUpShortIcon {...args} />
-          <ArrowDownShortIcon {...args} />
-          <ArrowLeftShortIcon {...args} />
-          <ArrowRightShortIcon {...args} />
-          <SortingIcon {...args} />
+      <Box width={"100%"} height={"800px"} style={{ overflow: "auto" }}>
+        <Flex gap={4} wrap={"wrap"} p={4}>
+          {iconConfigs.map(({ component: IconComponent, name }) => (
+            <Flex
+              key={name}
+              direction={"column"}
+              itemAlign={"center"}
+              gap={2}
+              p={3}
+              className="oui-bg-base-9 oui-rounded-md"
+              style={{
+                minWidth: "120px",
+              }}
+            >
+              <IconComponent {...(args as any)} />
+              {name}
+            </Flex>
+          ))}
         </Flex>
       </Box>
     );

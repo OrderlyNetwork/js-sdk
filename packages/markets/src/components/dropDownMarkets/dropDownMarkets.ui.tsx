@@ -19,6 +19,7 @@ import { SearchInput } from "../searchInput";
 import { useFavoritesProps } from "../shared/hooks/useFavoritesExtraProps";
 import { useDropDownMarketsColumns } from "./column";
 import { DropDownMarketsScriptReturn } from "./dropDownMarkets.script";
+import { RwaTab } from "../rwaTab";
 
 export type DropDownMarketsProps = DropDownMarketsScriptReturn & {
   contentClassName?: string;
@@ -134,6 +135,9 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
         </TabPanel>
         <TabPanel title={t("common.all")} value={MarketsTabName.All}>
           {renderTab(MarketsTabName.All)}
+        </TabPanel>
+        <TabPanel title={<RwaTab />} value={MarketsTabName.Rwa}>
+          {renderTab(MarketsTabName.Rwa)}
         </TabPanel>
         <TabPanel
           title={t("markets.newListings")}

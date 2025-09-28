@@ -125,6 +125,18 @@ export declare namespace API {
     name: string;
   }
 
+  export interface RwaSymbol {
+    symbol: string;
+    status: "open" | "close";
+    next_open: number;
+    next_close: number;
+
+    base: string;
+    quote: string;
+    type: string;
+    name: string;
+  }
+
   export interface Order {
     symbol: string;
     status: string;

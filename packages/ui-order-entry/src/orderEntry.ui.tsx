@@ -24,7 +24,6 @@ import {
   ThrottledButton,
   toast,
   useScreen,
-  Text,
 } from "@orderly.network/ui";
 import { TPSLAdvancedWidget } from "@orderly.network/ui-tpsl";
 import { Decimal } from "@orderly.network/utils";
@@ -369,6 +368,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
       priceInputContainerRef={props.priceInputContainerRef}
       triggerPriceInputRef={props.triggerPriceInputRef}
       activatedPriceInputRef={props.activatedPriceInputRef}
+      leverage={props.symbolLeverage}
     >
       <MaxQtyConfirm
         open={maxQtyConfirmOpen}
