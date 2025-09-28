@@ -26,7 +26,6 @@ import {
   SolanaDevnetChainInfo,
   SolanaDevnetTokenInfo,
   TesnetTokenFallback,
-  TesnetTokenFallback,
 } from "@orderly.network/types";
 import { TooltipProvider } from "@orderly.network/ui";
 import { Main } from "./main";
@@ -380,22 +379,10 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
 
   useEffect(() => {
     if (initRef.current) return;
-    if (initRef.current) return;
     if (props.customChains) {
       return;
     }
 
-    // Check which data source is available first (store or API)
-    const hasStoreData = mainnetChainInfosFromStore && testChainInfosFromStore;
-    const hasApiData = mainnetChainInfos && testChainInfos;
-
-    // If neither store nor API data is ready, wait
-    if (!hasStoreData && !hasApiData) {
-      return;
-    }
-
-    // Always wait for swap loading to complete when swap is enabled
-    if (!swapChainInfoRes) {
     // Check which data source is available first (store or API)
     const hasStoreData = mainnetChainInfosFromStore && testChainInfosFromStore;
     const hasApiData = mainnetChainInfos && testChainInfos;
@@ -429,7 +416,7 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
       const mainnetChains = processChainInfo(mainnetChainsList);
 
       const swapChains = processChainInfo(
-        formatSwapChainInfo(swapChainInfoRes?.data || {}),
+        formatSwapChainInfo(swapChainInfoRes || {}),
       );
 
       const chains = [...testChains, ...mainnetChains];
@@ -455,10 +442,7 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     testChainInfos,
     mainnetChainInfosFromStore,
     testChainInfosFromStore,
-    mainnetChainInfosFromStore,
-    testChainInfosFromStore,
     swapChainInfoRes,
-    // swapLoading,
     // swapLoading,
   ]);
 
