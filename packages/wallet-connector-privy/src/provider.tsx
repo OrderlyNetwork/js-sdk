@@ -201,7 +201,10 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
   );
   const testChainInfosFromStore = useTestnetChainsStore((state) => state.data);
 
-  const initRef = useRef(false);
+  const hasCustomChains =
+    Array.isArray(props.customChains) && props.customChains.length > 0;
+
+  const initRef = useRef(hasCustomChains);
   const [openConnectDrawer, setOpenConnectDrawer] = useState(false);
   const [targetWalletType, setTargetWalletType] = useState<
     WalletType | undefined
@@ -379,7 +382,7 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
 
   useEffect(() => {
     if (initRef.current) return;
-    if (props.customChains) {
+    if (hasCustomChains) {
       return;
     }
 
@@ -391,6 +394,9 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     if (!hasStoreData && !hasApiData) {
       return;
     }
+
+    console.log("!!!hasStoreData", hasStoreData);
+    console.log("!!!hasApiData", hasApiData);
 
     // Always wait for swap loading to complete when swap is enabled
     if (!swapChainInfoRes) {

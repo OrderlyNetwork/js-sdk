@@ -10,6 +10,7 @@ export interface DataStoreState<T> {
   data: T[] | null;
   loading: boolean;
   error: Error | null;
+  name: string;
 }
 
 /**
@@ -80,6 +81,7 @@ export const createDataStore = <T>(config: DataStoreConfig<T>) => {
   return create(
     persistIndexedDB<DataStoreState<T> & DataStoreActions<T>>(
       (set) => ({
+        name: storeName,
         data: typeof initData === "undefined" ? [] : initData,
         loading: false,
         error: null,

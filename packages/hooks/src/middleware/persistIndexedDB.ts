@@ -158,7 +158,7 @@ const adaptToStateStorage = <T>(
     try {
       const result = await indexedDBStorage.getItem();
 
-      return result
+      return result && Array.isArray(result) && result.length > 0
         ? JSON.stringify({
             state: result,
             version: 0,
@@ -174,7 +174,10 @@ const adaptToStateStorage = <T>(
     try {
       const parsed = JSON.parse(value);
       const stateData = pathOr([], ["state"], parsed) as Array<T>;
-      await indexedDBStorage.setItem(stateData);
+
+      if (Array.isArray(stateData) && stateData.length > 0) {
+        await indexedDBStorage.setItem(stateData);
+      }
     } catch (error) {
       console.error("Failed to set item in IndexedDB storage:", error);
       console.warn("Raw value that failed to parse:", _name, value);
