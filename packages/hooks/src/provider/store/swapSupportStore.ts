@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { fetcher } from "../../utils/fetcher";
 
 export type SwapSupport = {
   data: Record<string, any> | null;
@@ -21,17 +20,19 @@ export const useSwapSupportStore = create<SwapSupport & SwapSupportActions>()(
 
       fetchData: async () => {
         try {
-          set({ loading: true });
+          set({ loading: true, error: null });
           const res = await fetch("https://fi-api.woo.org/swap_support");
           const data = await res.json();
           if (data.status === "ok") {
             set({ data: data.data, loading: false, error: null });
             return data.data;
           }
+          // When API returns error status, preserve existing data by not updating it
           set({ error: new Error(data.message), loading: false });
           return null;
         } catch (error) {
           console.log("!!!swap support error", error);
+          // When fetch fails, preserve existing data by not updating it
           set({ error: error as Error, loading: false });
           return null;
         }
@@ -39,7 +40,7 @@ export const useSwapSupportStore = create<SwapSupport & SwapSupportActions>()(
     }),
     {
       name: "orderly-swap-support", // Key for localStorage persistence
-      partialize: (state) => state.data,
+      partialize: (state) => ({ data: state.data }), // Only persist data field
     },
   ),
 );
