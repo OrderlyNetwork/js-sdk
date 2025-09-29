@@ -106,7 +106,7 @@ const DepositAndWithdrawButton: React.FC<
         <ArrowDownShortIcon
           color="white"
           opacity={mergedDisabled ? 0.4 : 1}
-          className="oui-rotate-0 oui-text-base-contrast"
+          className="oui-rotate-0 oui-text-primary-contrast"
         />
         <Text>{t("common.deposit")}</Text>
       </Button>
