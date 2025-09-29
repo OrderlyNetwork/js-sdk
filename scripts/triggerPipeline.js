@@ -4,6 +4,7 @@ const { notifyTelegram } = require("./notifyTelegram");
 
 // Current branch in CI environment
 const ciBranch = process.env.CI_COMMIT_BRANCH;
+const gitToken = process.env.GIT_TOKEN;
 
 const trigger = {
   projectId: process.env.TRIGGER_PIPELINE_PROJECT_ID,
@@ -21,18 +22,53 @@ async function main() {
 
     await triggerPipeline(packageVersion);
   } catch (error) {
-    const msg = `Error triggering pipeline: ${error.message}`;
-    console.error(msg);
-    await notifyTelegram(msg);
+    console.error("Error triggering pipeline:", error);
+    await notifyTelegram(`Error triggering pipeline: ${error.message}`);
     throw error;
+  }
+}
+
+async function checkBranchIsExist(branch) {
+  // https://docs.gitlab.com/api/branches/#get-single-repository-branch
+  const url = `https://gitlab.com/api/v4/projects/${trigger.projectId}/repository/branches/${encodeURIComponent(branch)}`;
+  console.log("url: ", url, gitToken);
+  try {
+    const response = await fetch(url, {
+      headers: {
+        "PRIVATE-TOKEN": gitToken,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`404 Branch Not Found: ${branch}`);
+    }
+
+    const result = await response.json();
+    console.log(`The ${branch} branch is exist: `, result);
+    // if branch is exist, return true
+    return !!result;
+  } catch (error) {
+    console.log(error);
+    return false;
   }
 }
 
 async function triggerPipeline(packageVersion) {
   const ref = getTriggerBranch();
 
+  const branchIsExist = await checkBranchIsExist(ref);
+  if (!branchIsExist) {
+    // It’s possible that having no branch is expected, so don't throw an error.
+    await notifyTelegram(
+      `The ${ref} branch not found, pipeline will not be triggered`,
+    );
+    return;
+  }
+
   if (!trigger.projectId || !trigger.token || !ref) {
-    throw new Error("Trigger URL, token, or trigger branch not found");
+    throw new Error(
+      "Trigger pipeline failed: Trigger URL, token, or trigger branch not found",
+    );
   }
 
   const formData = new FormData();
@@ -59,9 +95,12 @@ async function triggerPipeline(packageVersion) {
 
     const result = await response.json();
     console.log("Pipeline triggered successfully:", result);
+    await notifyTelegram(
+      `Pipeline on the ${ref} branch was triggered successfully`,
+    );
     return result;
   } catch (error) {
-    console.error("Error triggering pipeline:", error);
+    // console.error("Error triggering pipeline:", error);
     throw error;
   }
 }
