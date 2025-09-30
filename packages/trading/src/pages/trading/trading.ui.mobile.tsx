@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useMemo } from "react";
+import { useGetRwaSymbolInfo } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   MarketsSheetWidget,
@@ -11,7 +12,10 @@ import {
   EyeIcon,
   Flex,
   Text,
+  NewsFillIcon,
 } from "@orderly.network/ui";
+import { Countdown } from "../../components/base/countdown";
+import { showRwaOutsideMarketHoursNotify } from "../../components/desktop/notify/rwaNotification";
 import type { TradingState } from "./trading.script";
 
 const LazyTopTabWidget = React.lazy(() =>
@@ -52,56 +56,108 @@ const MaybeEqual: React.FC = () => {
 
 export const MobileLayout: React.FC<TradingState> = (props) => {
   const { t } = useTranslation();
-  const topBar = (
-    <Box intensity={900} className="oui-rounded-xl" mx={1} px={3} height={54}>
-      <SymbolInfoBarWidget
-        symbol={props.symbol}
-        onSymbol={() => props.onOpenMarketsSheetChange(true)}
-        trailing={
-          <Flex
-            direction={"column"}
-            itemAlign={"end"}
-            className="oui-cursor-pointer oui-text-[11px]"
-            onClick={props.onShowPortfolioSheet}
-          >
-            <Flex>
-              <Text intensity={54}>{t("common.totalValue")}</Text>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  e.preventDefault();
-                  props.setHideAssets(!props.hideAssets);
-                }}
-                className="oui-px-1"
-              >
-                {props.hideAssets ? (
-                  <EyeIcon
-                    color="primary"
-                    opacity={1}
-                    size={16}
-                    className="oui-text-primary-light"
-                  />
-                ) : (
-                  <EyeCloseIcon
-                    color="primary"
-                    opacity={1}
-                    size={16}
-                    className="oui-text-primary-light"
-                  />
-                )}
-              </button>
-              <MaybeEqual />
-            </Flex>
-            <Text.numeral
-              suffix={<Text intensity={20}>&nbsp;USDC</Text>}
-              dp={2}
-              visible={!props.hideAssets}
+
+  const { isRwa, open, closeTimeInterval, openTimeInterval } =
+    useGetRwaSymbolInfo(props.symbol);
+
+  useEffect(() => {
+    if (isRwa && !open) {
+      console.log("showRwaOutsideMarketHoursNotify");
+      showRwaOutsideMarketHoursNotify();
+    }
+  }, [isRwa, open, props.symbol]);
+
+  const rwaStatusBar = useMemo(() => {
+    if (!isRwa) {
+      return null;
+    }
+
+    const thresholdTime = 30 * 60;
+
+    if (
+      (closeTimeInterval ?? 0) > thresholdTime &&
+      (openTimeInterval ?? 0) > thresholdTime
+    ) {
+      return null;
+    }
+
+    return (
+      <Flex
+        gap={1}
+        p={2}
+        justify="start"
+        itemAlign="center"
+        r="lg"
+        mt={2}
+        className="oui-bg-success/15 oui-text-xs oui-text-base-contrast-54"
+      >
+        <NewsFillIcon color="success" size={16} className="oui-flex-shrink-0" />
+        <Flex className="oui-flex-1 oui-text-success">
+          <Text>
+            {open
+              ? t("trading.rwa.mWeb.outsideMarketHours.desc")
+              : t("trading.rwa.mWeb.insideMarketHours.desc")}
+          </Text>
+        </Flex>
+        <Countdown timeInterval={open ? closeTimeInterval : openTimeInterval} />
+      </Flex>
+    );
+  }, [isRwa, open, closeTimeInterval]);
+
+  const symbolInfoBar = (
+    <SymbolInfoBarWidget
+      symbol={props.symbol}
+      onSymbol={() => props.onOpenMarketsSheetChange(true)}
+      trailing={
+        <Flex
+          direction={"column"}
+          itemAlign={"end"}
+          className="oui-cursor-pointer oui-text-[11px]"
+          onClick={props.onShowPortfolioSheet}
+        >
+          <Flex>
+            <Text intensity={54}>{t("common.totalValue")}</Text>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                props.setHideAssets(!props.hideAssets);
+              }}
+              className="oui-px-1"
             >
-              {props.canTrade ? (props.total ?? "--") : "--"}
-            </Text.numeral>
+              {props.hideAssets ? (
+                <EyeIcon
+                  color="primary"
+                  opacity={1}
+                  size={16}
+                  className="oui-text-primary-light"
+                />
+              ) : (
+                <EyeCloseIcon
+                  color="primary"
+                  opacity={1}
+                  size={16}
+                  className="oui-text-primary-light"
+                />
+              )}
+            </button>
+            <MaybeEqual />
           </Flex>
-        }
-      />
+          <Text.numeral
+            suffix={<Text intensity={20}>&nbsp;USDC</Text>}
+            dp={2}
+            visible={!props.hideAssets}
+          >
+            {props.canTrade ? (props.total ?? "--") : "--"}
+          </Text.numeral>
+        </Flex>
+      }
+    />
+  );
+
+  const topBar = (
+    <Box intensity={900} className="oui-rounded-xl" mx={1} px={3}>
+      {symbolInfoBar}
       <SimpleSheet
         open={props.openMarketsSheet}
         onOpenChange={props.onOpenMarketsSheetChange}
@@ -119,6 +175,7 @@ export const MobileLayout: React.FC<TradingState> = (props) => {
           }}
         />
       </SimpleSheet>
+      {rwaStatusBar}
     </Box>
   );
 
@@ -126,6 +183,7 @@ export const MobileLayout: React.FC<TradingState> = (props) => {
     <div className="oui-relative oui-grid oui-gap-1 oui-bg-base-10">
       <main className="oui-hide-scrollbar oui-space-y-1 oui-overflow-y-auto">
         {topBar}
+
         <React.Suspense fallback={null}>
           <LazyTopTabWidget className="oui-mx-1 oui-rounded-xl oui-bg-base-9" />
         </React.Suspense>

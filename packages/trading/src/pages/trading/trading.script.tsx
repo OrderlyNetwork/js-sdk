@@ -174,6 +174,7 @@ export const useTradingScript = () => {
     onShowPortfolioSheet,
     navigateToPortfolio,
     isFirstTimeDeposit,
+    symbolInfoBarHeight,
   };
 
   return { ...props, ...map } as TradingPageState & typeof map;

@@ -15,6 +15,7 @@ import { SymbolLeverageDialogId } from "@orderly.network/ui-leverage";
 import { SharePnLOptions, SharePnLDialogId } from "@orderly.network/ui-share";
 import { Decimal } from "@orderly.network/utils";
 import { FundingFeeButton } from "../../fundingFeeHistory/fundingFeeButton";
+import { RwaStatusTag } from "../../rwaStatus/rwaStatus";
 import { ClosePositionWidget } from "../closePosition";
 import { LeverageBadge } from "./components";
 import { renderQuantity } from "./listElement";
@@ -41,7 +42,7 @@ export const useColumn = (config: ColumnConfig) => {
         title: t("common.symbol"),
         dataIndex: "symbol",
         fixed: "left",
-        width: 140,
+        width: 195,
         onSort: (r1, r2) => {
           return r1.symbol?.localeCompare(r2.symbol || "");
           // if (sortOrder === "asc") {
@@ -74,11 +75,14 @@ export const useColumn = (config: ColumnConfig) => {
               >
                 {`${value.split("_")[1]}-PERP`}
               </Text.formatted>
-              <LeverageBadge
-                symbol={value}
-                leverage={record.leverage}
-                modalId={SymbolLeverageDialogId}
-              />
+              <Flex gap={1}>
+                <LeverageBadge
+                  symbol={value}
+                  leverage={record.leverage}
+                  modalId={SymbolLeverageDialogId}
+                />
+                <RwaStatusTag symbol={value} />
+              </Flex>
             </Flex>
           </Flex>
         ),
