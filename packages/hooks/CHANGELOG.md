@@ -1,5 +1,20 @@
 # @orderly.network/hooks
 
+## 2.7.4-alpha.1
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.7.4-alpha.1
+  - @orderly.network/default-evm-adapter@2.7.4-alpha.1
+  - @orderly.network/default-solana-adapter@2.7.4-alpha.1
+  - @orderly.network/net@2.7.4-alpha.1
+  - @orderly.network/perp@4.7.4-alpha.1
+  - @orderly.network/types@2.7.4-alpha.1
+  - @orderly.network/utils@2.7.4-alpha.1
+  - @orderly.network/web3-provider-ethers@2.7.4-alpha.1
+
 ## 2.7.4-alpha.0
 
 ### Patch Changes

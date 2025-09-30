@@ -1,5 +1,23 @@
 # @orderly.network/ui-positions
 
+## 2.7.4-alpha.1
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.7.4-alpha.1
+  - @orderly.network/hooks@2.7.4-alpha.1
+  - @orderly.network/i18n@2.7.4-alpha.1
+  - @orderly.network/perp@4.7.4-alpha.1
+  - @orderly.network/types@2.7.4-alpha.1
+  - @orderly.network/ui@2.7.4-alpha.1
+  - @orderly.network/ui-connector@2.7.4-alpha.1
+  - @orderly.network/ui-leverage@2.7.4-alpha.1
+  - @orderly.network/ui-share@2.7.4-alpha.1
+  - @orderly.network/ui-tpsl@2.7.4-alpha.1
+  - @orderly.network/utils@2.7.4-alpha.1
+
 ## 2.7.4-alpha.0
 
 ### Patch Changes
