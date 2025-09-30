@@ -73,9 +73,9 @@ export const SymbolInfoBarFull: React.FC<SymbolInfoBarFullProps> = (props) => {
           className="oui-mr-1 oui-cursor-pointer"
         >
           {isFavorite ? (
-            <FavoritesIcon2 className="oui-size-3 oui-text-[rgba(255,154,46,1)]" />
+            <FavoritesIcon2 className="oui-size-3 oui-text-warning-darken" />
           ) : (
-            <UnFavoritesIcon2 className="oui-size-3 oui-text-base-contrast-36 hover:oui-text-[rgba(255,154,46,1)]" />
+            <UnFavoritesIcon2 className="oui-size-3 oui-text-base-contrast-36 hover:oui-text-warning-darken" />
           )}
         </Flex>
       </LazyFavoritesDropdownMenuWidget>
@@ -317,7 +317,7 @@ const FundingRate: React.FC<{ symbol: string }> = ({ symbol }) => {
 
   return (
     <div>
-      <Text.numeral unit="%" dp={4} className="oui-text-[#FF9A2E]">
+      <Text.numeral unit="%" dp={4} className="oui-text-warning-darken">
         {data.est_funding_rate!}
       </Text.numeral>
       <Text intensity={36} className="oui-tabular-nums">

@@ -403,7 +403,9 @@ export const AssetView: FC<
       size="md"
       onClick={onDeposit}
     >
-      {!hasSubAccount && <ArrowDownShortIcon color="white" opacity={1} />}
+      {!hasSubAccount && (
+        <ArrowDownShortIcon opacity={1} className="oui-text-primary-contrast" />
+      )}
       <Text>{t("common.deposit")}</Text>
     </Button>
   );
@@ -471,7 +473,10 @@ export const AssetView: FC<
               size="md"
               onClick={onDeposit}
             >
-              <ArrowDownShortIcon color="white" opacity={1} />
+              <ArrowDownShortIcon
+                opacity={1}
+                className="oui-text-primary-contrast"
+              />
               <Text>{t("common.deposit")}</Text>
             </Button>
 
