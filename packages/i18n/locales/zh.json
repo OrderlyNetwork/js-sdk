@@ -668,6 +668,7 @@
   "connector.privy.email": "电子邮件",
   "connector.privy.google": "谷歌",
   "connector.privy.twitter": "X / 推特",
+  "connector.privy.telegram": "电报",
   "connector.privy.myWallet": "我的钱包",
   "connector.privy.addEvmWallet": "添加Evm钱包",
   "connector.privy.addSolanaWallet": "添加Solana钱包",

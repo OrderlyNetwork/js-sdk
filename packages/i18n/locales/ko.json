@@ -668,6 +668,7 @@
   "connector.privy.email": "이메일",
   "connector.privy.google": "구글",
   "connector.privy.twitter": "X / 트위터",
+  "connector.privy.telegram": "텔레그램",
   "connector.privy.myWallet": "내 지갑",
   "connector.privy.addEvmWallet": "EVM 지갑 추가",
   "connector.privy.addSolanaWallet": "솔라나 지갑 추가",

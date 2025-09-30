@@ -668,6 +668,7 @@
   "connector.privy.email": "E-posta",
   "connector.privy.google": "Google",
   "connector.privy.twitter": "X / Twitter",
+  "connector.privy.telegram": "Telegram",
   "connector.privy.myWallet": "Cüzdanım",
   "connector.privy.addEvmWallet": "EVM cüzdanı ekle",
   "connector.privy.addSolanaWallet": "Solana cüzdanı ekle",

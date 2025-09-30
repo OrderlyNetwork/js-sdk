@@ -668,6 +668,7 @@
   "connector.privy.email": "Email",
   "connector.privy.google": "Google",
   "connector.privy.twitter": "X / Twitter",
+  "connector.privy.telegram": "Telegram",
   "connector.privy.myWallet": "Wallet saya",
   "connector.privy.addEvmWallet": "Tambahkan wallet Evm",
   "connector.privy.addSolanaWallet": "Tambahkan wallet Solana",

@@ -104,6 +104,8 @@ export const PrivyWalletProvider: React.FC<{ children: React.ReactNode }> = ({
         address = `@${account.username}`;
       } else if (account.type === "google_oauth") {
         address = `@${account.name}`;
+      } else if (account.type === "telegram") {
+        address = `@${account.username}`;
       }
       return {
         type: account.type,

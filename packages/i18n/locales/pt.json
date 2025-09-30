@@ -668,6 +668,7 @@
   "connector.privy.email": "Email",
   "connector.privy.google": "Google",
   "connector.privy.twitter": "X / Twitter",
+  "connector.privy.telegram": "Telegram",
   "connector.privy.myWallet": "Minha carteira",
   "connector.privy.addEvmWallet": "Adicionar carteira EVM",
   "connector.privy.addSolanaWallet": "Adicionar carteira Solana",
