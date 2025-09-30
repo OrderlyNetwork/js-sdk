@@ -1,5 +1,32 @@
 # @orderly.network/portfolio
 
+## 2.7.4
+
+### Patch Changes
+
+- a2b2381: publish
+- publish
+- a5e6829: publish
+- Updated dependencies [a2b2381]
+- Updated dependencies
+- Updated dependencies [a5e6829]
+  - @orderly.network/react-app@2.7.4
+  - @orderly.network/chart@2.7.4
+  - @orderly.network/hooks@2.7.4
+  - @orderly.network/i18n@2.7.4
+  - @orderly.network/perp@4.7.4
+  - @orderly.network/types@2.7.4
+  - @orderly.network/ui@2.7.4
+  - @orderly.network/ui-chain-selector@2.7.4
+  - @orderly.network/ui-connector@2.7.4
+  - @orderly.network/ui-leverage@2.7.4
+  - @orderly.network/ui-orders@2.7.4
+  - @orderly.network/ui-positions@2.7.4
+  - @orderly.network/ui-scaffold@2.7.4
+  - @orderly.network/ui-share@2.7.4
+  - @orderly.network/ui-transfer@2.7.4
+  - @orderly.network/utils@2.7.4
+
 ## 2.7.4-alpha.1
 
 ### Patch Changes

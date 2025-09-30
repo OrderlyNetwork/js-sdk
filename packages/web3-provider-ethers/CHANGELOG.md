@@ -1,5 +1,18 @@
 # @orderly.network/web3-provider-ethers
 
+## 2.7.4
+
+### Patch Changes
+
+- a2b2381: publish
+- publish
+- a5e6829: publish
+- Updated dependencies [a2b2381]
+- Updated dependencies
+- Updated dependencies [a5e6829]
+  - @orderly.network/default-evm-adapter@2.7.4
+  - @orderly.network/types@2.7.4
+
 ## 2.7.4-alpha.1
 
 ### Patch Changes
