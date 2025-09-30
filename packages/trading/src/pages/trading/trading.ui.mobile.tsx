@@ -15,8 +15,8 @@ import {
   NewsFillIcon,
 } from "@orderly.network/ui";
 import { Countdown } from "../../components/base/countdown";
-import type { TradingState } from "./trading.script";
 import { showRwaOutsideMarketHoursNotify } from "../../components/desktop/notify/rwaNotification";
+import type { TradingState } from "./trading.script";
 
 const LazyTopTabWidget = React.lazy(() =>
   import("../../components/mobile/topTab").then((mod) => {
@@ -57,9 +57,8 @@ const MaybeEqual: React.FC = () => {
 export const MobileLayout: React.FC<TradingState> = (props) => {
   const { t } = useTranslation();
 
-  const { isRwa, open, closeTimeInterval, openTimeInterval } = useGetRwaSymbolInfo(
-    props.symbol,
-  );
+  const { isRwa, open, closeTimeInterval, openTimeInterval } =
+    useGetRwaSymbolInfo(props.symbol);
 
   useEffect(() => {
     if (isRwa && !open) {
@@ -75,7 +74,10 @@ export const MobileLayout: React.FC<TradingState> = (props) => {
 
     const thresholdTime = 30 * 60;
 
-    if ((closeTimeInterval ?? 0) > thresholdTime || (openTimeInterval ?? 0) > thresholdTime) {
+    if (
+      (closeTimeInterval ?? 0) > thresholdTime &&
+      (openTimeInterval ?? 0) > thresholdTime
+    ) {
       return null;
     }
 
@@ -91,7 +93,11 @@ export const MobileLayout: React.FC<TradingState> = (props) => {
       >
         <NewsFillIcon color="success" size={16} className="oui-flex-shrink-0" />
         <Flex className="oui-flex-1 oui-text-success">
-          <Text>{open ? t("trading.rwa.mWeb.outsideMarketHours.desc") : t("trading.rwa.mWeb.insideMarketHours.desc")}</Text>
+          <Text>
+            {open
+              ? t("trading.rwa.mWeb.outsideMarketHours.desc")
+              : t("trading.rwa.mWeb.insideMarketHours.desc")}
+          </Text>
         </Flex>
         <Countdown timeInterval={open ? closeTimeInterval : openTimeInterval} />
       </Flex>
