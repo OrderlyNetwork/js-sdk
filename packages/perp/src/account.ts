@@ -442,7 +442,8 @@ export function otherIMs(inputs: OtherIMsInputs): number {
 
       const IMR_Factor = IMR_Factors[symbol];
 
-      if (!IMR_Factor) {
+      // IMR_Factor is possible to be 0
+      if (typeof IMR_Factor === "undefined") {
         console.warn("IMR_Factor is not found:", symbol);
         return acc;
       }
@@ -558,6 +559,10 @@ export function maxQtyByLong(
       return Math.min(baseMaxQty, factor_1);
     }
 
+    if (IMR_Factor === 0) {
+      return Math.min(baseMaxQty, factor_1);
+    }
+
     const factor_2 = totalCollateralDecimal
       .sub(otherIMs)
       .div(IMR_Factor)
@@ -615,6 +620,10 @@ export function maxQtyByShort(
       .toNumber();
 
     if (positionQty === 0 && sellOrdersQty === 0) {
+      return Math.min(baseMaxQty, factor_1);
+    }
+
+    if (IMR_Factor === 0) {
       return Math.min(baseMaxQty, factor_1);
     }
 
