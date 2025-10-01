@@ -1,16 +1,16 @@
 import type { TradingPageProps } from "@orderly.network/trading";
 
 export type TradingPageConfigProps = {
-  tradingViewConfig: TradingPageProps["tradingViewConfig"];
+  tradingViewConfig: Partial<TradingPageProps["tradingViewConfig"]>;
   sharePnLConfig: TradingPageProps["sharePnLConfig"];
   referral?: any;
 };
 
 export const tradingPageConfig: TradingPageConfigProps = {
   tradingViewConfig: {
-    scriptSRC: "/tradingview/charting_library/charting_library.js",
-    library_path: "/tradingview/charting_library/",
-    customCssUrl: "/tradingview/chart.css",
+    // scriptSRC: "/tradingview/charting_library/charting_library.js",
+    // library_path: "/tradingview/charting_library/",
+    // customCssUrl: "/tradingview/chart.css",
     // broker config tradingview bg
     // colorConfig: {
     //   downColor: '#BE1630',
