@@ -276,6 +276,7 @@ const KeyList: React.FC<ApiManagerScriptReturns> = (props) => {
       },
     },
   ];
+
   return (
     <AuthGuardDataTable
       bordered
@@ -283,7 +284,6 @@ const KeyList: React.FC<ApiManagerScriptReturns> = (props) => {
       loading={props.isLoading}
       dataSource={props.keys}
       emptyView={<AuthGuardEmpty />}
-      classNames={{}}
       pagination={props.pagination}
       manualPagination={false}
     />

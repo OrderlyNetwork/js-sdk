@@ -8,6 +8,7 @@ import {
   useOrderEntry,
   useOrderlyContext,
 } from "@orderly.network/hooks";
+import { useCanTrade } from "@orderly.network/react-app";
 import {
   DistributionType,
   OrderLevel,
@@ -18,7 +19,6 @@ import {
 import { Decimal, removeTrailingZeros } from "@orderly.network/utils";
 import { useAskAndBid } from "./hooks/useAskAndBid";
 import { useBBOState } from "./hooks/useBBOState";
-import { useCanTrade } from "./hooks/useCanTrade";
 import { useFocusAndBlur } from "./hooks/useFocusAndBlur";
 import { usePriceInputContainer } from "./hooks/usePriceInputContainer";
 import { InputType } from "./types";
