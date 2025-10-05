@@ -369,6 +369,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
       priceInputContainerRef={props.priceInputContainerRef}
       triggerPriceInputRef={props.triggerPriceInputRef}
       activatedPriceInputRef={props.activatedPriceInputRef}
+      lastQuantityInputType={props.lastQuantityInputType}
       leverage={props.symbolLeverage}
     >
       <MaxQtyConfirm
@@ -410,18 +411,11 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           }}
         />
 
-        {/* Slider */}
         <QuantitySlider
           canTrade={props.canTrade}
-          maxQty={maxQty}
-          order_quantity={formattedOrder.order_quantity}
-          tick={symbolInfo.base_tick}
-          dp={symbolInfo.base_dp}
-          setMaxQty={props.setMaxQty}
-          onValueChange={(value) => {
-            setOrderValue("order_quantity", value);
-          }}
           side={props.side}
+          order_quantity={formattedOrder.order_quantity}
+          maxQty={maxQty}
         />
 
         {/* Submit button */}

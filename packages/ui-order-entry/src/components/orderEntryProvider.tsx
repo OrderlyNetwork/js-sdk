@@ -18,6 +18,7 @@ export const OrderEntryProvider: FC<
     priceInputContainerRef,
     triggerPriceInputRef,
     activatedPriceInputRef,
+    lastQuantityInputType,
     leverage,
   } = props;
 
@@ -37,6 +38,7 @@ export const OrderEntryProvider: FC<
       priceInputContainerRef,
       triggerPriceInputRef,
       activatedPriceInputRef,
+      lastQuantityInputType,
       leverage,
     };
   }, [
@@ -54,6 +56,7 @@ export const OrderEntryProvider: FC<
     priceInputContainerRef,
     triggerPriceInputRef,
     activatedPriceInputRef,
+    lastQuantityInputType,
     leverage,
   ]);
 
