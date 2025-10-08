@@ -144,8 +144,8 @@ const CountdownText: React.FC<React.PropsWithChildren> = (props) => {
   const minutesStr = minutes.toString().padStart(2, "0");
 
   // calculate seconds
-  const seconds = timeInterval % 60;
-  const secondsStr = seconds.toString().padStart(2, "0");
+  // const seconds = timeInterval % 60;
+  // const secondsStr = seconds.toString().padStart(2, "0");
 
   return (
     <span className="oui-text-base-contrast">

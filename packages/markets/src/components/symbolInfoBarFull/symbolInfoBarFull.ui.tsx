@@ -392,17 +392,19 @@ const RwaCountdown: React.FC<{
   }
 
   const minutes = closeTimeInterval ? Math.floor(closeTimeInterval / 60) : 0;
+  const minutesStr = minutes.toString().padStart(2, "0");
   const seconds = closeTimeInterval ? closeTimeInterval % 60 : 0;
+  const secondsStr = seconds.toString().padStart(2, "0");
 
   return (
     <Flex
       itemAlign="center"
       px={2}
       r="lg"
-      className="oui-w-full oui-text-warning-darken oui-bg-warning-darken/15 oui-flex-1 oui-my-2"
+      className="oui-w-full oui-text-warning-darken oui-bg-warning-darken/15 oui-flex-1 oui-my-2 oui-text-sm"
     >
       <Flex className="oui-w-full oui-pr-2">
-        <NewsFillIcon className="oui-text-warning-darken" />
+        <NewsFillIcon className="oui-text-warning-darken" size={16}/>
         <Flex>
           {t("trading.rwa.countdown.title")}
           <Flex className="oui-text-base-contrast-54 oui-text-xs oui-font-normal">
@@ -410,7 +412,7 @@ const RwaCountdown: React.FC<{
               ml={2}
               className="oui-bg-base-7 oui-px-1 oui-rounded-md oui-text-base-contrast oui-min-w-[22px] oui-text-center oui-text-xs"
             >
-              {minutes}
+              {minutesStr}
             </Box>
             {t("common.minuteShort")}
             {" : "}
@@ -418,7 +420,7 @@ const RwaCountdown: React.FC<{
               ml={1}
               className="oui-bg-base-7 oui-px-1 oui-rounded-md oui-text-base-contrast oui-min-w-[22px] oui-text-center oui-text-xs"
             >
-              {seconds}
+              {secondsStr}
             </Box>
             {t("common.secondShort")}
           </Flex>

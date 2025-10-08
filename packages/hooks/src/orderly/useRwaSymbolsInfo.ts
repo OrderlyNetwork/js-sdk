@@ -1,6 +1,8 @@
-import { useMemo, useState, useEffect, useRef } from "react";
+import { useMemo, useEffect } from "react";
+import { create } from "zustand";
 import { createGetter } from "../utils/createGetter";
 import { useAppStore } from "./appStore";
+import { API } from "@orderly.network/types";
 
 /**
  * Check if currently trading based on next_open/next_close timestamps
@@ -14,7 +16,6 @@ export const isCurrentlyTrading = (
   nextClose?: number,
   currentTime: number = Date.now(),
 ): boolean => {
-
   if (nextOpen === undefined || nextClose === undefined) {
     return false;
   }
@@ -71,6 +72,175 @@ export interface RwaSymbolResult {
 }
 
 /**
+ * Computed RWA symbol state
+ */
+interface ComputedRwaSymbolState {
+  isRwa: boolean;
+  open?: boolean;
+  nextOpen?: number;
+  nextClose?: number;
+  closeTimeInterval?: number;
+  openTimeInterval?: number;
+}
+
+/**
+ * RWA symbols runtime store state
+ */
+interface RwaSymbolsRuntimeState {
+  // Computed states for all symbols
+  computedStates: Record<string, ComputedRwaSymbolState>;
+  // Current timestamp
+  currentTime: number;
+  // Timer reference
+  timerId?: NodeJS.Timeout;
+  // Start the timer
+  startTimer: () => void;
+  // Stop the timer
+  stopTimer: () => void;
+  // Update computed states
+  updateComputedStates: (rwaSymbolsInfo: Record<string, API.RwaSymbol>) => void;
+}
+
+/**
+ * Compute the state for a single symbol
+ */
+const computeSymbolState = (
+  rwaSymbol: API.RwaSymbol,
+  currentTime: number,
+): ComputedRwaSymbolState => {
+  const { next_close, next_open } = rwaSymbol;
+
+  // Use isCurrentlyTrading function to determine if currently tradeable
+  const isOpen = isCurrentlyTrading(next_open, next_close, currentTime);
+
+  let closeTimeInterval: number | undefined;
+  let openTimeInterval: number | undefined;
+
+  // Calculate countdown to closing time
+  if (next_close && typeof next_close === "number" && next_close > currentTime) {
+    closeTimeInterval = Math.max(0, Math.floor((next_close - currentTime) / 1000));
+  }
+
+  // Calculate countdown to opening time
+  if (next_open && typeof next_open === "number" && next_open > currentTime) {
+    openTimeInterval = Math.max(0, Math.floor((next_open - currentTime) / 1000));
+  }
+
+  return {
+    isRwa: true,
+    open: isOpen,
+    nextOpen: next_open || undefined,
+    nextClose: next_close || undefined,
+    closeTimeInterval,
+    openTimeInterval,
+  };
+};
+
+/**
+ * Centralized RWA symbols runtime state management
+ * Uses a single timer to compute all symbol states, avoiding performance waste from multiple timers
+ */
+const useRwaSymbolsRuntimeStore = create<RwaSymbolsRuntimeState>((set, get) => ({
+  computedStates: {},
+  currentTime: Date.now(),
+  timerId: undefined,
+
+  startTimer: () => {
+    const state = get();
+    
+    // Clear existing timer if present
+    if (state.timerId) {
+      clearInterval(state.timerId);
+    }
+
+    // Start new timer, update every second
+    const timerId = setInterval(() => {
+      const currentTime = Date.now();
+      const rwaSymbolsInfo = useAppStore.getState().rwaSymbolsInfo;
+
+      if (!rwaSymbolsInfo) {
+        set({ currentTime });
+        return;
+      }
+
+      // Compute states for all RWA symbols
+      const computedStates: Record<string, ComputedRwaSymbolState> = {};
+      
+      Object.entries(rwaSymbolsInfo).forEach(([symbol, rwaSymbol]) => {
+        computedStates[symbol] = computeSymbolState(rwaSymbol, currentTime);
+      });
+
+      set({ computedStates, currentTime });
+    }, 1000);
+
+    set({ timerId });
+  },
+
+  stopTimer: () => {
+    const state = get();
+    if (state.timerId) {
+      clearInterval(state.timerId);
+      set({ timerId: undefined });
+    }
+  },
+
+  updateComputedStates: (rwaSymbolsInfo: Record<string, API.RwaSymbol>) => {
+    const currentTime = get().currentTime;
+    const computedStates: Record<string, ComputedRwaSymbolState> = {};
+
+    Object.entries(rwaSymbolsInfo).forEach(([symbol, rwaSymbol]) => {
+      computedStates[symbol] = computeSymbolState(rwaSymbol, currentTime);
+    });
+
+    set({ computedStates });
+  },
+}));
+
+/**
+ * Hook to initialize and manage the global timer
+ * This hook should be called once at the top level of the application to start and manage the global timer
+ */
+export const useInitRwaSymbolsRuntime = () => {
+  const rwaSymbolsInfo = useRwaSymbolsInfoStore();
+  const { startTimer, stopTimer, updateComputedStates } = useRwaSymbolsRuntimeStore();
+
+  useEffect(() => {
+    // Start timer when rwaSymbolsInfo exists
+    if (rwaSymbolsInfo && Object.keys(rwaSymbolsInfo).length > 0) {
+      // Update state immediately on first run
+      updateComputedStates(rwaSymbolsInfo);
+      // Start the timer
+      startTimer();
+    }
+
+    // Cleanup: stop the timer
+    return () => {
+      stopTimer();
+    };
+  }, [rwaSymbolsInfo, startTimer, stopTimer, updateComputedStates]);
+};
+
+/**
+ * Hook to get current RWA symbol information with real-time updates
+ * Retrieves the state of a specific symbol from the centralized store
+ * @param symbol - The symbol to query
+ * @returns RwaSymbolResult containing RWA status and countdown information
+ */
+export const useGetRwaSymbolInfo = (symbol: string): RwaSymbolResult => {
+  // Subscribe to the computed state of a specific symbol
+  const computedState = useRwaSymbolsRuntimeStore(
+    (state) => state.computedStates[symbol]
+  );
+
+  return useMemo(() => {
+    if (!computedState) {
+      return { isRwa: false };
+    }
+    return computedState;
+  }, [computedState]);
+};
+
+/**
  * Simplified hook to get RWA symbol open status with real-time updates
  * @param symbol - The symbol to query
  * @returns Object containing isRwa and open status
@@ -83,95 +253,6 @@ export const useGetRwaSymbolOpenStatus = (
   return useMemo(() => {
     return { isRwa, open };
   }, [isRwa, open]);
-};
-
-/**
- * Hook to get current RWA symbol information with real-time updates
- * @param symbol - The symbol to query
- * @returns RwaSymbolResult containing RWA status and countdown information
- */
-export const useGetRwaSymbolInfo = (symbol: string): RwaSymbolResult => {
-  const rwaSymbolsInfo = useRwaSymbolsInfoStore();
-  const [currentTime, setCurrentTime] = useState(Date.now());
-
-  const intervalRef = useRef<NodeJS.Timeout>();
-
-  // Get RWA symbol information
-  const rwaSymbol = rwaSymbolsInfo?.[symbol] || null;
-
-  useEffect(() => {
-    // Clear any existing timer first
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = undefined;
-    }
-
-    // Reset time when symbol changes or no RWA symbol
-    if (!rwaSymbol) {
-      setCurrentTime(Date.now());
-      return;
-    }
-
-    // Only start timer if we have valid time data
-    if (!rwaSymbol.next_close && !rwaSymbol.next_open) {
-      setCurrentTime(Date.now());
-      return;
-    }
-
-    // Update time every second
-    const updateTime = () => {
-      setCurrentTime(Date.now());
-    };
-
-    // Start timer immediately and then every second
-    updateTime();
-    intervalRef.current = setInterval(updateTime, 1000);
-
-    // Cleanup function
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = undefined;
-      }
-    };
-  }, [symbol, !!rwaSymbol]); // Optimized dependencies to avoid frequent rebuilds
-
-  // Memoize result to avoid unnecessary re-renders
-  return useMemo(() => {
-    if (!rwaSymbol) {
-      return { isRwa: false };
-    }
-
-    // Use correct logic to determine current trading status
-    const { next_close, next_open } = rwaSymbol;
-
-    // Safe time calculation with boundary checks
-    const now = currentTime;
-    let closeTimeInterval: number | undefined;
-    let openTimeInterval: number | undefined;
-
-    // Use isCurrentlyTrading function to determine current trading status
-    const isOpen = isCurrentlyTrading(next_open, next_close, now);
-
-    // Calculate countdown to close time
-    if (next_close && typeof next_close === "number" && next_close > now) {
-      closeTimeInterval = Math.max(0, Math.floor((next_close - now) / 1000));
-    }
-
-    // Calculate countdown to open time
-    if (next_open && typeof next_open === "number" && next_open > now) {
-      openTimeInterval = Math.max(0, Math.floor((next_open - now) / 1000));
-    }
-
-    return {
-      isRwa: true,
-      open: isOpen,
-      nextOpen: next_open || undefined,
-      nextClose: next_close || undefined,
-      closeTimeInterval,
-      openTimeInterval,
-    };
-  }, [rwaSymbol, currentTime]);
 };
 
 /**

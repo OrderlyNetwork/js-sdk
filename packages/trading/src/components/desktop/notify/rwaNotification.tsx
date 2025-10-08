@@ -15,8 +15,7 @@ const RwaOutsideMarketHoursNotify = () => {
   const { t } = useTranslation();
 
   const closeNotify = () => {
-    toast.dismiss(toastId);
-    console.log("closeNotify");
+    toast.remove(toastId);
   };
 
   const { isMobile } = useScreen();
@@ -59,12 +58,10 @@ const RwaOutsideMarketHoursNotify = () => {
 };
 
 const showRwaOutsideMarketHoursNotify = () => {
-  const id = toast.custom(<RwaOutsideMarketHoursNotify />, {
+  toast.custom(<RwaOutsideMarketHoursNotify />, {
     id: toastId,
     duration: 3000,
   });
-
-  console.log("id", id);
 };
 
 RwaOutsideMarketHoursNotify.displayName = "RwaOutsideMarketHoursNotify";
