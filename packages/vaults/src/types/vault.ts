@@ -5,6 +5,13 @@ export interface VaultSupportedChain {
 
 export type VaultTimeRange = "24h" | "7d" | "30d" | "all_time";
 
+export enum VaultStatus {
+  PRE_LAUNCH = "pre_launch",
+  LIVE = "live",
+  CLOSING = "closing",
+  CLOSED = "closed",
+}
+
 export interface VaultInfo {
   vault_id: string;
   vault_address: string;
@@ -25,6 +32,7 @@ export interface VaultInfo {
   broker_id: string;
   "30d_apr": number;
   "30d_apy": number;
+  status: VaultStatus;
 }
 
 export interface VaultLpPerformance {
