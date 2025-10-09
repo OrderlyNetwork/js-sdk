@@ -16,6 +16,12 @@ const LazyRestrictedInfoWidget = React.lazy(() =>
   }),
 );
 
+const LazyOfflineInfoWidget = React.lazy(() =>
+  import("../offlineInfo").then((mod) => {
+    return { default: mod.OfflineInfoWidget };
+  }),
+);
+
 const LazyAnnouncementWidget = React.lazy(() =>
   import("../announcement").then((mod) => {
     return { default: mod.AnnouncementWidget };
@@ -112,6 +118,9 @@ export const DesktopScaffold: React.FC<DesktopScaffoldProps> = (props) => {
               className={"oui-mx-auto oui-mt-2"}
               hideTips={restrictedInfo?.restrictedOpen}
             />
+          </React.Suspense>
+          <React.Suspense fallback={null}>
+            <LazyOfflineInfoWidget className={"oui-mt-2"} />
           </React.Suspense>
         </Box>
         {/*--------- body start ------ */}
