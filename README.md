@@ -46,3 +46,33 @@ Start building with Orderly SDKs using these ready-to-use templates:
 - [Remix Template](https://github.com/OrderlyNetwork/orderly-js-sdk-remix-template)
 
 - [Create React App Template](https://github.com/OrderlyNetwork/orderly-js-sdk-cra-template)
+
+## Env config
+
+- env
+
+  config env: dev, qa, staging, prod
+
+- networkId
+
+  mainnet/testnet
+
+- brokerId
+
+  set your broker id
+
+- brokerName
+
+  set broker name
+
+- theme
+
+  orderly/custom
+
+- usePrivy
+
+  true/false
+
+```
+http://localhost:5173/en/perp/PERP_ETH_USDC?env=prod&networkId=mainnet&brokerId=demo&broderName=Orderly&theme=orderly&usePrivy=false
+```

@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { Button, cn, Flex, modal, Text, Tooltip } from "@orderly.network/ui";
+import { Button, cn, Flex, Text } from "@orderly.network/ui";
 import { commifyOptional } from "@orderly.network/utils";
 import { ArrowRightIcon } from "../../../components/arrowRightIcon";
 import { USDCIcon } from "../../../components/usdcIcon";
@@ -64,7 +64,7 @@ const Icon = () => {
       viewBox="0 0 72 72"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="xl:oui-w-[90px] xl:oui-h-[90px]"
+      className="xl:oui-size-[90px]"
     >
       <path
         d="M35.997 5.86c-16.569 0-29.944 13.43-30 30-.056 16.545 13.445 30.06 30 30.093s30.03-13.665 30-30.093c-.03-16.57-13.432-30-30-30m0 6c13.255 0 24 10.746 24 24 0 6.75-2.812 12.834-7.297 17.196-2.209-4.78-6.955-8.196-12.39-8.196h-8.626c-5.432 0-10.164 3.375-12.375 8.157-4.485-4.362-7.312-10.407-7.312-17.157 0-13.254 10.745-24 24-24m0 6c-6.628 0-12 5.373-12 12s5.372 12 12 12c6.627 0 12-5.373 12-12s-5.373-12-12-12"
@@ -114,14 +114,12 @@ const Bottom: FC<AsAnAffiliateReturns> = (props) => {
             justify={"end"}
             itemAlign={"center"}
             className="oui-cursor-pointer"
-            onClick={(e) => {
-              props.onEnterAffiliatePage?.(props.referralInfo);
-            }}
+            onClick={props.onEnterAffiliatePage}
           >
             <Text className="oui-text-sm md:oui-text-base xl:oui-text-lg">
               {t("affiliate.enter")}
             </Text>
-            <ArrowRightIcon className="md:oui-w-[18px] md:oui-h-[18px] lg:oui-w-[20px] lg:oui-h-[20px] xl:oui-w-[24px] xl:oui-h-[24px]" />
+            <ArrowRightIcon className="md:oui-size-[18px] lg:oui-size-[20px] xl:oui-size-[24px]" />
           </Flex>
         </>
       );
@@ -129,54 +127,13 @@ const Bottom: FC<AsAnAffiliateReturns> = (props) => {
 
     return (
       <>
-        <Tooltip
-          content={
-            props.wrongNetwork
-              ? t("connector.wrongNetwork.tooltip")
-              : t("affiliate.connectWallet.tooltip")
-          }
+        <Button
+          variant="contained"
+          color="light"
+          onClick={props.becomeAnAffiliate}
         >
-          {props.isMobile ? (
-            <Button
-              variant="contained"
-              color="light"
-              onClick={(event) => {
-                if (!props.isSignIn || props.wrongNetwork) {
-                  event.stopPropagation();
-                  event.preventDefault();
-                  modal.alert({
-                    title: t("common.tips"),
-                    message: (
-                      <Text intensity={54}>
-                        {props.wrongNetwork
-                          ? t("connector.wrongNetwork.tooltip")
-                          : t("affiliate.connectWallet.tooltip")}
-                      </Text>
-                    ),
-                  });
-                } else {
-                  props.becomeAnAffiliate?.();
-                }
-              }}
-              className={
-                !props.isSignIn || props.wrongNetwork
-                  ? "oui-bg-white/[.54] oui-text-black/[.36] hover:oui-bg-white/[.54]"
-                  : undefined
-              }
-            >
-              {t("affiliate.asAffiliate.button")}
-            </Button>
-          ) : (
-            <Button
-              variant="contained"
-              color="light"
-              onClick={props.becomeAnAffiliate}
-              disabled={!props.isSignIn || props.wrongNetwork}
-            >
-              {t("affiliate.asAffiliate.button")}
-            </Button>
-          )}
-        </Tooltip>
+          {t("affiliate.asAffiliate.button")}
+        </Button>
         <Flex
           direction={"column"}
           justify={"between"}

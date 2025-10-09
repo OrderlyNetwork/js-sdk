@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   useFundingDetails,
   useFundingRate,
+  useGetRwaSymbolInfo,
   useMarketsStore,
   useSymbolsInfo,
   useTickerStream,
@@ -25,6 +26,8 @@ export function useSymbolInfoBarFullScript(
   const fundingRate = useFundingRate(symbol);
 
   const favorite = useMarketsStore();
+
+  const { isRwa, open, closeTimeInterval, openTimeInterval } = useGetRwaSymbolInfo(symbol);
 
   const { data: fundingDetails, isLoading: isFundingLoading } =
     useFundingDetails(symbol);
@@ -125,5 +128,9 @@ export function useSymbolInfoBarFullScript(
     fundingPeriod,
     capFunding,
     floorFunding,
+    isRwa,
+    open,
+    closeTimeInterval,
+    openTimeInterval,
   };
 }

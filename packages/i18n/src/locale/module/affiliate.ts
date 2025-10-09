@@ -7,6 +7,8 @@ export const affiliate = {
 
   "affiliate.connectWallet.tooltip":
     "Please connect your wallet to use this function",
+  "affiliate.createAccount.tooltip":
+    "Create your account first to bind a referral code.",
 
   "affiliate.page.title":
     "Refer, earn, and grow - referral & affiliate program",

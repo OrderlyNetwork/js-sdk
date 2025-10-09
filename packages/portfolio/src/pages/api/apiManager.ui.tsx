@@ -191,6 +191,7 @@ const KeyList: React.FC<ApiManagerScriptReturns> = (props) => {
     {
       title: t("portfolio.apiKey.column.apiKey"),
       dataIndex: "orderly_key",
+      width: 150,
       render: (value) => {
         return (
           <Text.formatted
@@ -275,6 +276,7 @@ const KeyList: React.FC<ApiManagerScriptReturns> = (props) => {
       },
     },
   ];
+
   return (
     <AuthGuardDataTable
       bordered
@@ -282,7 +284,6 @@ const KeyList: React.FC<ApiManagerScriptReturns> = (props) => {
       loading={props.isLoading}
       dataSource={props.keys}
       emptyView={<AuthGuardEmpty />}
-      classNames={{}}
       pagination={props.pagination}
       manualPagination={false}
     />
@@ -366,6 +367,6 @@ export function formatKey(value: string): string {
   if (typeof value === "undefined") {
     return "-";
   }
-  const key = `${value}`.replace("ed25519:", "").slice(0, 6);
-  return `${key}*****`;
+  const key = `${value}`.slice(0, Math.min(value.length, 12));
+  return `${key}***`;
 }

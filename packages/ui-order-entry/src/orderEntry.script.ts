@@ -8,6 +8,7 @@ import {
   useOrderEntry,
   useOrderlyContext,
 } from "@orderly.network/hooks";
+import { useCanTrade } from "@orderly.network/react-app";
 import {
   DistributionType,
   OrderLevel,
@@ -18,7 +19,6 @@ import {
 import { Decimal, removeTrailingZeros } from "@orderly.network/utils";
 import { useAskAndBid } from "./hooks/useAskAndBid";
 import { useBBOState } from "./hooks/useBBOState";
-import { useCanTrade } from "./hooks/useCanTrade";
 import { useFocusAndBlur } from "./hooks/useFocusAndBlur";
 import { usePriceInputContainer } from "./hooks/usePriceInputContainer";
 import { InputType } from "./types";
@@ -87,13 +87,18 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       setOrderValues,
     });
 
-  const { currentFocusInput, lastScaledOrderPriceInput, onFocus, onBlur } =
-    useFocusAndBlur({
-      base_tick: symbolInfo?.base_tick,
-      order_type: formattedOrder.order_type,
-      order_quantity: formattedOrder.order_quantity,
-      setValue,
-    });
+  const {
+    currentFocusInput,
+    lastScaledOrderPriceInput,
+    lastQuantityInputType,
+    onFocus,
+    onBlur,
+  } = useFocusAndBlur({
+    base_tick: symbolInfo?.base_tick,
+    order_type: formattedOrder.order_type,
+    order_quantity: formattedOrder.order_quantity,
+    setValue,
+  });
 
   // cancel TP/SL
   const cancelTP_SL = () => {
@@ -110,10 +115,6 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       order_type_ext: undefined,
       position_type: PositionType.FULL,
     });
-  };
-
-  const setMaxQty = () => {
-    setValue("order_quantity", state.maxQty);
   };
 
   const setOrderValue = useMemoizedFn(
@@ -309,6 +310,8 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     // after switching symbol, all the input number should be cleared (price, qty, TP/SL, etc)
     state.reset();
     state.resetMetaState();
+    // reset last quantity input type
+    lastQuantityInputType.current = InputType.NONE;
   }, [symbol]);
 
   // if scaled order, and distribution_type is not set, set it to flat
@@ -361,7 +364,6 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     // enableTP_SL,
     tpslSwitch,
     setTpslSwitch: onTPSLSwitchChanged,
-    setMaxQty,
     symbolInfo,
     onFocus,
     onBlur,
@@ -371,6 +373,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     priceInputContainerWidth,
     triggerPriceInputRef,
     activatedPriceInputRef,
+    lastQuantityInputType,
 
     canTrade,
     bboStatus,

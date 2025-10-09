@@ -11,6 +11,7 @@ export type MarketsListScriiptReturn = ReturnType<typeof useMarketsListScript>;
 
 const MarketsTypeMap = {
   [MarketsTabName.All]: MarketsType.ALL,
+  [MarketsTabName.Rwa]: MarketsType.RWA,
   [MarketsTabName.Favorites]: MarketsType.FAVORITES,
   [MarketsTabName.Recent]: MarketsType.RECENT,
   [MarketsTabName.NewListing]: MarketsType.NEW_LISTING,

@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Box, cn, Column, TabPanel, Tabs } from "@orderly.network/ui";
 import { MarketsListWidget } from "../../../components/marketsList";
+import { RwaTab } from "../../../components/rwaTab";
 import { SearchInput } from "../../../components/searchInput";
 import {
   get24hPercentageColumn,
@@ -82,6 +83,9 @@ export const MobileMarketsDataList: React.FC<MobileMarketsDataListProps> = (
           value="all"
         >
           {renderTab(MarketsTabName.All)}
+        </TabPanel>
+        <TabPanel title={<RwaTab />} value="rwa">
+          {renderTab(MarketsTabName.Rwa)}
         </TabPanel>
         <TabPanel
           title={t("markets.newListings")}

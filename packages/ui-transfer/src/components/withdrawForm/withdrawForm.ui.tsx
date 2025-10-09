@@ -92,6 +92,7 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
             vaultBalanceList={vaultBalanceList}
             testId="oui-testid-withdraw-dialog-quantity-input"
             displayType="vaultBalance"
+            checkVaultBalance={withdrawTo === WithdrawTo.Wallet}
           />
         </Box>
         <AvailableQuantity

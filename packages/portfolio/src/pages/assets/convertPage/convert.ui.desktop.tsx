@@ -9,6 +9,7 @@ import {
   Divider,
 } from "@orderly.network/ui";
 import { useModal } from "@orderly.network/ui";
+import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import type { ConvertRecord } from "../type";
 import { useConvertColumns, useConvertDetailColumns } from "./convert.column";
 import { useConvertScript } from "./convert.script";
@@ -156,7 +157,7 @@ export const ConvertDesktopUI: React.FC<ConvertDesktopUIProps> = ({
       <Flex direction="row" className="oui-w-full">
         {dataFilter}
       </Flex>
-      <DataTable
+      <AuthGuardDataTable
         columns={columns}
         dataSource={convertState.dataSource}
         loading={convertState.isLoading}

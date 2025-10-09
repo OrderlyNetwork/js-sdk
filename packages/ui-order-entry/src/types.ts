@@ -3,7 +3,9 @@ export enum InputType {
   PRICE, // price input focus
   TRIGGER_PRICE, // trigger price input focus
   QUANTITY, // quantity input focus
+  QUANTITY_SLIDER, // quantity slider input focus
   TOTAL, // total input focus
+  MARGIN, // margin input focus
 
   /**
    * Scaled order

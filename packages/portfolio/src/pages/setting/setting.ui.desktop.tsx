@@ -72,6 +72,7 @@ export const SettingDesktop: FC<SettingScriptReturns> = (props) => {
               <Switch
                 checked={props.soundAlert}
                 onCheckedChange={(checked) => props.setSoundAlert(checked)}
+                disabled={!props.canTouch}
                 data-testid="oui-testid-setting-sound-switch-btn"
               />
             </AuthGuardTooltip>

@@ -16,7 +16,7 @@ const publicQueryOptions = {
 };
 
 export const usePublicDataObserver = () => {
-  const { setSymbolsInfo, setFundingRates } = useAppStore(
+  const { setSymbolsInfo, setFundingRates, setRwaSymbolsInfo } = useAppStore(
     (state) => state.actions,
   );
 
@@ -69,6 +69,32 @@ export const usePublicDataObserver = () => {
     }
     setSymbolsInfo(obj);
   }, [symbols]);
+
+  /**
+   * symbol config
+   */
+  useQuery<Record<string, API.RwaSymbol>>(`/v1/public/rwa/info`, {
+    ...publicQueryOptions,
+    onSuccess(data: API.RwaSymbol[]) {
+      if (!data || !data?.length) {
+        return {};
+      }
+      const obj: Record<string, API.RwaSymbol> = {};
+
+      for (let index = 0; index < data.length; index++) {
+        const item = data[index];
+        const arr = item.symbol.split("_");
+        obj[item.symbol] = {
+          ...item,
+          base: arr[1],
+          quote: arr[2],
+          type: arr[0],
+          name: `${arr[1]}-${arr[0]}`,
+        };
+      }
+      setRwaSymbolsInfo(obj);
+    },
+  });
 
   /**
    * funding rates
