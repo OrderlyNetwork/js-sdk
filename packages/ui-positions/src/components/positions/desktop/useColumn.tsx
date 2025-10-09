@@ -42,7 +42,7 @@ export const useColumn = (config: ColumnConfig) => {
         title: t("common.symbol"),
         dataIndex: "symbol",
         fixed: "left",
-        width: 195,
+        width: 200,
         onSort: (r1, r2) => {
           return r1.symbol?.localeCompare(r2.symbol || "");
           // if (sortOrder === "asc") {

@@ -102,7 +102,7 @@ export const SymbolInfoBarFull: React.FC<SymbolInfoBarFullProps> = (props) => {
 
   const symbolView = (
     <React.Suspense fallback={null}>
-      <Flex direction="column" itemAlign="start" className="oui-gap-y-[2px]">
+      <Flex direction="column" itemAlign="start" className="oui-gap-y-[2px] oui-shrink-0">
         <LazyDropDownMarketsWidget
           contentClassName="oui-w-[429px] oui-h-[496px]"
           symbol={props.symbol}

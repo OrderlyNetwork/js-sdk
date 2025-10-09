@@ -12,15 +12,20 @@ import { API } from "@orderly.network/types";
  * @returns boolean - true if currently trading
  */
 export const isCurrentlyTrading = (
-  nextOpen?: number,
-  nextClose?: number,
+  nextClose: number,
+  status: "open" | "close",
   currentTime: number = Date.now(),
 ): boolean => {
-  if (nextOpen === undefined || nextClose === undefined) {
-    return false;
-  }
 
-  return currentTime >= nextOpen && currentTime <= nextClose;
+  return currentTime < nextClose && status === "open";
+};
+
+export const isCurrentlyClosed = (
+  nextOpen: number,
+  status: "open" | "close",
+  currentTime: number = Date.now(),
+): boolean => {
+  return currentTime < nextOpen && status === "close";
 };
 
 /**
@@ -108,10 +113,10 @@ const computeSymbolState = (
   rwaSymbol: API.RwaSymbol,
   currentTime: number,
 ): ComputedRwaSymbolState => {
-  const { next_close, next_open } = rwaSymbol;
+  const { status, next_close, next_open } = rwaSymbol;
 
   // Use isCurrentlyTrading function to determine if currently tradeable
-  const isOpen = isCurrentlyTrading(next_open, next_close, currentTime);
+  const isOpen = isCurrentlyTrading(next_close, status, currentTime);
 
   let closeTimeInterval: number | undefined;
   let openTimeInterval: number | undefined;

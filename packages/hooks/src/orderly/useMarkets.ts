@@ -98,6 +98,7 @@ export type MarketsItem = {
   isRwa: boolean;
   rwaNextOpen?: number;
   rwaNextClose?: number;
+  rwaStatus?: "open" | "close";
 };
 
 export type MarketsStore = ReturnType<typeof useMarketsStore>;
@@ -353,6 +354,7 @@ const addFieldToMarkets = (
       isRwa: !!rwaInfo,
       rwaNextOpen: rwaInfo?.next_open,
       rwaNextClose: rwaInfo?.next_close,
+      rwaStatus: rwaInfo?.status,
     } as MarketsItem;
   });
 };

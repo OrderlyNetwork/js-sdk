@@ -57,8 +57,7 @@ const MaybeEqual: React.FC = () => {
 export const MobileLayout: React.FC<TradingState> = (props) => {
   const { t } = useTranslation();
 
-  const { isRwa, open, closeTimeInterval, openTimeInterval } =
-    useGetRwaSymbolInfo(props.symbol);
+  const { isRwa, open, closeTimeInterval } = useGetRwaSymbolInfo(props.symbol);
 
   useEffect(() => {
     if (isRwa && !open) {
@@ -74,10 +73,7 @@ export const MobileLayout: React.FC<TradingState> = (props) => {
 
     const thresholdTime = 30 * 60;
 
-    if (
-      (closeTimeInterval ?? 0) > thresholdTime &&
-      (openTimeInterval ?? 0) > thresholdTime
-    ) {
+    if ((closeTimeInterval ?? 0) > thresholdTime) {
       return null;
     }
 
@@ -99,7 +95,7 @@ export const MobileLayout: React.FC<TradingState> = (props) => {
               : t("trading.rwa.mWeb.insideMarketHours.desc")}
           </Text>
         </Flex>
-        <Countdown timeInterval={open ? closeTimeInterval : openTimeInterval} />
+        <Countdown timeInterval={closeTimeInterval} />
       </Flex>
     );
   }, [isRwa, open, closeTimeInterval]);
@@ -156,7 +152,7 @@ export const MobileLayout: React.FC<TradingState> = (props) => {
   );
 
   const topBar = (
-    <Box intensity={900} className="oui-rounded-xl" mx={1} px={3}>
+    <Box intensity={900} className="oui-rounded-xl" mx={1} px={3} py={2}>
       {symbolInfoBar}
       <SimpleSheet
         open={props.openMarketsSheet}

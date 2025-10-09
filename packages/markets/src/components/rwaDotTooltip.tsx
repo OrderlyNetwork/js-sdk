@@ -10,8 +10,8 @@ export const RwaDotTooltip = ({ record }: RwaDotTooltipProps) => {
   const { t } = useTranslation();
 
   const isInTradingHours = isCurrentlyTrading(
-    record.rwaNextOpen,
     record.rwaNextClose,
+    record.rwaStatus,
   );
 
   if (!record.isRwa) {

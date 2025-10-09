@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import React from "react";
 import { Trans, useTranslation } from "@orderly.network/i18n";
 import {
@@ -27,54 +27,18 @@ export const RwaTooltip = (props: RwaTooltipProps) => {
   const timeInterval = open ? closeTimeInterval : openTimeInterval;
   const tooltipContent = useMemo(() => {
     return (
-      <Flex
-        direction="column"
-        gapY={1}
-        className="oui-text-2xs oui-max-w-[275px]"
-        itemAlign="start"
-        py={1}
-      >
-        {open
-          ? t("trading.rwa.tooltip.description.open")
-          : t("trading.rwa.tooltip.description.close")}
-
-        <div className="oui-text-base-contrast-54">
-          {timeInterval && (
-            <Trans
-              i18nKey={
-                !open
-                  ? "trading.rwa.tooltip.openIn"
-                  : "trading.rwa.tooltip.closeIn"
-              }
-              values={{ timeFormat: timeInterval }}
-              components={[
-                // @ts-ignore
-                <CountdownText />,
-              ]}
-            />
-          )}
-        </div>
-        <a
-          href="https://orderly.network/rwa"
-          target="_blank"
-          className="oui-flex oui-items-center oui-gap-x-1 oui-text-primary-darken oui-cursor-pointer"
-          onClick={(e) => {
-            e.stopPropagation();
-            console.log("Link clicked in tooltip");
-          }}
-        >
-          {t("trading.rwa.tooltip.checkDetailRules")}
-          <ArrowRightShortIcon color="primary" opacity={1} />
-        </a>
-      </Flex>
+      <Content open={open} timeInterval={timeInterval} />
     );
-  }, [open, t, closeTimeInterval]);
+  }, [open, t, timeInterval]);
 
   const triggerView = (
     <Flex
       r="base"
       px={2}
-      className={cn(open ? "oui-bg-success/15" : "oui-bg-danger/15")}
+      className={cn(
+        open ? "oui-bg-success/15" : "oui-bg-danger/15",
+        "oui-shrink-0",
+      )}
     >
       <Text size="2xs" color={open ? "success" : "danger"}>
         {open
@@ -92,7 +56,7 @@ export const RwaTooltip = (props: RwaTooltipProps) => {
       title: open
         ? t("trading.rwa.marketHours")
         : t("trading.rwa.outsideMarketHours"),
-      message: tooltipContent,
+      message: <AlertContent open={open} timeInterval={timeInterval} />,
     });
   };
 
@@ -105,9 +69,9 @@ export const RwaTooltip = (props: RwaTooltipProps) => {
   }
 
   return (
-    <Tooltip 
-      content={tooltipContent} 
-      open={isOpen} 
+    <Tooltip
+      content={tooltipContent}
+      open={isOpen}
       onOpenChange={setIsOpen}
       disableHoverableContent={false}
     >
@@ -115,7 +79,6 @@ export const RwaTooltip = (props: RwaTooltipProps) => {
         onMouseEnter={() => {
           setIsOpen(true);
         }}
-       
         onClick={(e) => {
           e.stopPropagation();
           e.preventDefault();
@@ -124,6 +87,88 @@ export const RwaTooltip = (props: RwaTooltipProps) => {
         {triggerView}
       </button>
     </Tooltip>
+  );
+};
+
+const AlertContent = ({open, timeInterval}: {open?: boolean, timeInterval?: number}) => {
+  const [innerTimeInterval, setInnerTimeInterval] = useState(timeInterval);
+  
+  useEffect(() => {
+    setInnerTimeInterval(timeInterval);
+  }, [timeInterval]);
+  
+  useEffect(() => {
+    if (!innerTimeInterval || innerTimeInterval <= 0) {
+      return;
+    }
+    
+    const id = setInterval(() => {
+      setInnerTimeInterval((prev) => {
+        if (!prev || prev <= 1) {
+          return 0; 
+        }
+        return prev - 1; 
+      });
+    }, 1000);
+        return () => {
+      clearInterval(id);
+    };
+  }, [innerTimeInterval]);
+  
+  return (
+    <Content open={open} timeInterval={innerTimeInterval} />
+  );
+};
+
+const Content = ({
+  open,
+  timeInterval,
+}: {
+  open?: boolean;
+  timeInterval?: number;
+}) => {
+  const { t } = useTranslation();
+  return (
+    <Flex
+      direction="column"
+      gapY={1}
+      className="oui-text-2xs oui-max-w-[275px]"
+      itemAlign="start"
+      py={1}
+    >
+      {open
+        ? t("trading.rwa.tooltip.description.open")
+        : t("trading.rwa.tooltip.description.close")}
+
+      <div className="oui-text-base-contrast-54">
+        {timeInterval && (
+          <Trans
+            i18nKey={
+              !open
+                ? "trading.rwa.tooltip.openIn"
+                : "trading.rwa.tooltip.closeIn"
+            }
+            values={{ timeFormat: timeInterval }}
+            components={[
+              // @ts-ignore
+              <CountdownText />,
+            ]}
+          />
+        )}
+      </div>
+      <a
+        href="https://orderly.network/rwa"
+        target="_blank"
+        className="oui-flex oui-items-center oui-gap-x-1 oui-text-primary-darken oui-cursor-pointer"
+        onClick={(e) => {
+          e.stopPropagation();
+          console.log("Link clicked in tooltip");
+        }}
+      >
+        {t("trading.rwa.tooltip.checkDetailRules")}
+        <ArrowRightShortIcon color="primary" opacity={1} />
+      </a>
+    </Flex>
   );
 };
 
