@@ -123,6 +123,7 @@ export const SettingMobile: FC<SettingScriptReturns> = (props) => {
                   onCheckedChange={(e) => {
                     props.setSoundAlert(e);
                   }}
+                  disabled={!props.canTouch}
                   data-testid="oui-testid-setting-sound-switch-btn"
                 />
               </AuthGuardTooltip>

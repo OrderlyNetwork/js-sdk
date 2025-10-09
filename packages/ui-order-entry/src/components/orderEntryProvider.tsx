@@ -18,6 +18,8 @@ export const OrderEntryProvider: FC<
     priceInputContainerRef,
     triggerPriceInputRef,
     activatedPriceInputRef,
+    lastQuantityInputType,
+    leverage,
   } = props;
 
   const memoizedValue = useMemo<OrderEntryContextState>(() => {
@@ -36,6 +38,8 @@ export const OrderEntryProvider: FC<
       priceInputContainerRef,
       triggerPriceInputRef,
       activatedPriceInputRef,
+      lastQuantityInputType,
+      leverage,
     };
   }, [
     errorMsgVisible,
@@ -52,6 +56,8 @@ export const OrderEntryProvider: FC<
     priceInputContainerRef,
     triggerPriceInputRef,
     activatedPriceInputRef,
+    lastQuantityInputType,
+    leverage,
   ]);
 
   return (

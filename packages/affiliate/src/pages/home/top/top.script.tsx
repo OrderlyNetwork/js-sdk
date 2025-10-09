@@ -2,7 +2,7 @@ import {
   BuildNode,
   ReferralContextReturns,
   useReferralContext,
-} from "../../../hooks";
+} from "../../../provider";
 
 export type TopReturns = {
   state: ReferralContextReturns;

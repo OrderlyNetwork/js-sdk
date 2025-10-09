@@ -11,7 +11,10 @@ import {
 
 export type SymbolInfoBarFullWidgetPros = UseSymbolInfoBarFullScriptOptions &
   Pick<SymbolInfoBarFullProps, "className" | "trailing"> &
-  Pick<MarketsProviderProps, "onSymbolChange">;
+  Pick<MarketsProviderProps, "onSymbolChange"> & {
+    closeCountdown?: () => void;
+    showCountdown?: boolean;
+  };
 
 export const SymbolInfoBarFullWidget: FC<SymbolInfoBarFullWidgetPros> = (
   props,

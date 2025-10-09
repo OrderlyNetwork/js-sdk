@@ -10,6 +10,7 @@ import {
   DataCenterContextState,
   getKeyFunction,
 } from "./dataCenterContext";
+import { useInitRwaSymbolsRuntime } from "../../orderly/orderlyHooks";
 
 export const DataCenterProvider: React.FC<PropsWithChildren> = ({
   children,
@@ -20,6 +21,8 @@ export const DataCenterProvider: React.FC<PropsWithChildren> = ({
    */
   useDatabaseInitialization();
   const { error, done } = usePreLoadData();
+
+  useInitRwaSymbolsRuntime();
 
   const calculatorService = useCalculatorService();
 

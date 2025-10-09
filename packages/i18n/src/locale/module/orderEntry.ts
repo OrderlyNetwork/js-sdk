@@ -15,6 +15,8 @@ export const orderEntry = {
   "orderEntry.orderType.fok": "FOK",
   "orderEntry.orderType.scaledOrder": "Scaled",
   "orderEntry.orderType.trailingStop": "Trailing stop",
+  "orderEntry.orderSize": "Order size",
+  "orderEntry.initialMargin": "Initial margin",
 
   "orderEntry.startPrice": "Start price",
   "orderEntry.endPrice": "End price",
@@ -101,6 +103,8 @@ export const orderEntry = {
 
   "orderEntry.total.error.min":
     "The order value should be greater or equal to {{value}} USDC",
+  "orderEntry.initialMarginTotal.error.min":
+    "The initial margin should be greater or equal to {{value}} USDC",
 
   "orderEntry.startPrice.error.required": "Start price is required",
   "orderEntry.startPrice.error.min":

@@ -20,6 +20,7 @@ export type CustomInputProps = {
   overrideFormatters?: InputProps["formatters"];
   classNames?: InputProps["classNames"];
   readonly?: boolean;
+  prefix?: ReactNode;
 };
 
 export const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
@@ -39,9 +40,11 @@ export const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
         name={props.name}
         color={props.error ? "danger" : undefined}
         prefix={
-          <InputLabel id={props.id} className={props.classNames?.prefix}>
-            {props.label}
-          </InputLabel>
+          props.prefix || (
+            <InputLabel id={props.id} className={props.classNames?.prefix}>
+              {props.label}
+            </InputLabel>
+          )
         }
         suffix={props.suffix}
         value={props.readonly ? "" : props.value || ""}

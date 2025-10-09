@@ -28,6 +28,7 @@ export type AppState = {
   // positions: API.PositionExt[];
   symbolsInfo?: Record<string, API.SymbolExt>;
   tokensInfo?: API.Token[];
+  rwaSymbolsInfo?: Record<string, API.RwaSymbol>;
   fundingRates?: Record<string, API.FundingRate>;
   portfolio: Portfolio;
   appState: AppStatus;
@@ -39,6 +40,7 @@ export type AppActions = {
   setTokensInfo: (tokensInfo: API.Token[]) => void;
   // setPositions: (positions: API.PositionExt[]) => void;
   setSymbolsInfo: (symbolsInfo: Record<string, API.SymbolExt>) => void;
+  setRwaSymbolsInfo: (rwaSymbolsInfo: Record<string, API.RwaSymbol>) => void;
   setFundingRates: (fundingRates: Record<string, API.FundingRate>) => void;
   updateAppStatus: (key: keyof AppStatus, value: boolean) => void;
   updatePortfolio: (
@@ -119,6 +121,15 @@ export const useAppStore = create<
           },
           false,
           // "setSymbolsInfo"
+        );
+      },
+      setRwaSymbolsInfo: (rwaSymbolsInfo: Record<string, API.RwaSymbol>) => {
+        set(
+          (state) => {
+            state.rwaSymbolsInfo = rwaSymbolsInfo;
+          },
+          false,
+          // "setRwaSymbolsInfo"
         );
       },
       setFundingRates: (fundingRates: Record<string, API.FundingRate>) => {

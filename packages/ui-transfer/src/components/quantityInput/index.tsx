@@ -31,6 +31,7 @@ export type QuantityInputProps = {
   formatters?: InputFormatter[];
   vaultBalanceList?: API.VaultBalance[];
   displayType?: "balance" | "vaultBalance";
+  checkVaultBalance?: boolean;
 } & Omit<InputProps, "onClear" | "suffix" | "onValueChange">;
 
 export const QuantityInput: FC<QuantityInputProps> = (props) => {
@@ -50,6 +51,7 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
     formatters,
     vaultBalanceList,
     displayType,
+    checkVaultBalance = true,
     ...rest
   } = props;
 
@@ -64,16 +66,16 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
       const currentToken = vaultBalanceList?.find(
         (item) => item.token === token.symbol,
       );
-      const insufficientBalance = new Decimal(currentToken?.balance ?? 0).lt(
-        value ? Number(value) : 0,
-      );
+      const insufficientBalance = checkVaultBalance
+        ? new Decimal(currentToken?.balance ?? 0).lt(value ? Number(value) : 0)
+        : false;
       return {
         ...token,
         name: token.display_name || token.symbol!,
         insufficientBalance: insufficientBalance,
       };
     });
-  }, [tokens, value, vaultBalanceList]);
+  }, [tokens, value, vaultBalanceList, checkVaultBalance]);
 
   useEffect(() => {
     const rect = inputRef?.current?.getBoundingClientRect();

@@ -16,11 +16,11 @@ export const TPSLPositionTypeUI = (props: TPSLPositionTypeUIProps) => {
   const { t } = useTranslation();
   const options = [
     {
-      label: t("tpsl.positionType.partial"),
+      label: t("tpsl.partialPosition"),
       value: PositionType.PARTIAL,
     },
     {
-      label: t("tpsl.positionType.full"),
+      label: t("tpsl.fullPosition"),
       value: PositionType.FULL,
     },
   ];
@@ -42,11 +42,11 @@ export const TPSLPositionTypeUI = (props: TPSLPositionTypeUIProps) => {
       </Tooltip>
       {props.disableSelector ? (
         props.value === PositionType.FULL ? (
-          <Text className="oui-text-2xs oui-font-semibold oui-text-base-contrast-54">
+          <Text className="oui-text-2xs oui-font-normal oui-text-base-contrast-54">
             {t("tpsl.positionType.full")}
           </Text>
         ) : (
-          <Text className="oui-text-2xs oui-font-semibold oui-text-base-contrast-54">
+          <Text className="oui-text-2xs oui-font-normal oui-text-base-contrast-54">
             {t("tpsl.positionType.partial")}
           </Text>
         )
@@ -59,7 +59,8 @@ export const TPSLPositionTypeUI = (props: TPSLPositionTypeUIProps) => {
           }}
           size={"xs"}
           classNames={{
-            trigger: " oui-bg-transparent oui-border-0 oui-w-auto oui-px-0",
+            trigger:
+              " oui-bg-transparent oui-border-0 oui-w-auto oui-px-0 oui-font-normal",
           }}
           contentProps={{
             className: " oui-bg-base-8 oui-border-0",

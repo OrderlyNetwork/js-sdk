@@ -53,6 +53,14 @@ export const Toaster: FC<ToastProps> = (props) => {
             background: 'rgba(40, 46, 58, 1)'
           },
         },
+        custom: {
+          duration: 5000,
+          removeDelay: 0,
+          position: "top-right",
+          style: {
+            background: 'rgba(40, 46, 58, 1)'
+          },
+        }
       }}
       {...props}
       containerClassName={cn("!top-[62px] md:!top-[80px] oui-font-semibold", props.className)}
@@ -87,6 +95,8 @@ export const Toaster: FC<ToastProps> = (props) => {
                   <ToastLoadingIcon className="w-[16px] h-[16px] md:w-[24px] md:h-[24px]" />
                 </div>
               );
+            } else if (t.type === "custom") {
+              customIcon =<></>;
             }
             return (
               <div className="oui-flex oui-items-center oui-padding-[12px] md:oui-padding-[16px]">

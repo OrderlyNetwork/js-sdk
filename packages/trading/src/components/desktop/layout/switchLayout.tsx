@@ -288,9 +288,9 @@ export const MarketLeftIcon: FC<
   SVGProps<SVGSVGElement> & { isSelected?: boolean; isHovered?: boolean }
 > = ({ isSelected, isHovered, ...props }) => {
   const getStrokeColor = () => {
-    if (isSelected) return "#779eff"; // primary-light color
-    if (isHovered) return "#779eff"; // primary-light color
-    return "#333948"; // base-5 color
+    if (isSelected) return "rgb(var(--oui-color-primary-light))"; // primary-light color
+    if (isHovered) return "rgb(var(--oui-color-primary-light))"; // primary-light color
+    return "rgb(var(--oui-color-base-5))"; // base-5 color
   };
 
   return (
@@ -326,9 +326,9 @@ export const MarketTopIcon: FC<
   SVGProps<SVGSVGElement> & { isSelected?: boolean; isHovered?: boolean }
 > = ({ isSelected, isHovered, ...props }) => {
   const getStrokeColor = () => {
-    if (isSelected) return "#779eff"; // primary-light color
-    if (isHovered) return "#779eff"; // primary-light color
-    return "#333948"; // base-5 color
+    if (isSelected) return "rgb(var(--oui-color-primary-light))"; // primary-light color
+    if (isHovered) return "rgb(var(--oui-color-primary-light))"; // primary-light color
+    return "rgb(var(--oui-color-base-5))"; // base-5 color
   };
 
   return (
@@ -379,9 +379,9 @@ export const MarketBottomIcon: FC<
   SVGProps<SVGSVGElement> & { isSelected?: boolean; isHovered?: boolean }
 > = ({ isSelected, isHovered, ...props }) => {
   const getStrokeColor = () => {
-    if (isSelected) return "#779eff"; // primary-light color
-    if (isHovered) return "#779eff"; // primary-light color
-    return "#333948"; // base-5 color
+    if (isSelected) return "rgb(var(--oui-color-primary-light))"; // primary-light color
+    if (isHovered) return "rgb(var(--oui-color-primary-light))"; // primary-light color
+    return "rgb(var(--oui-color-base-5))"; // base-5 color
   };
 
   return (
@@ -432,9 +432,9 @@ export const MarketHideIcon: FC<
   SVGProps<SVGSVGElement> & { isSelected?: boolean; isHovered?: boolean }
 > = ({ isSelected, isHovered, ...props }) => {
   const getStrokeColor = () => {
-    if (isSelected) return "#779eff"; // primary-light color
-    if (isHovered) return "#779eff"; // primary-light color
-    return "#333948"; // base-5 color
+    if (isSelected) return "rgb(var(--oui-color-primary-light))"; // primary-light color
+    if (isHovered) return "rgb(var(--oui-color-primary-light))"; // primary-light color
+    return "rgb(var(--oui-color-base-5))"; // base-5 color
   };
 
   return (

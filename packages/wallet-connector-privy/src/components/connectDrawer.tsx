@@ -11,6 +11,7 @@ import {
   Flex,
   Text,
   modal,
+  CloseSquareFillIcon,
 } from "@orderly.network/ui";
 import { useWalletConnectorPrivy } from "../provider";
 import { useAbstractWallet } from "../providers/abstractWallet/abstractWalletProvider";
@@ -127,7 +128,7 @@ export function ConnectDrawer(props: {
       <div className="oui-relative oui-z-10 oui-flex oui-h-full oui-flex-col oui-gap-4 md:oui-gap-5">
         <div className="oui-flex oui-flex-none oui-items-center oui-justify-between">
           {renderHeader()}
-          <CloseIcon
+          <CloseSquareFillIcon
             className="oui-size-5 oui-cursor-pointer oui-text-base-contrast-20 hover:oui-text-base-contrast-80"
             onClick={() => props.onChangeOpen(false)}
           />
