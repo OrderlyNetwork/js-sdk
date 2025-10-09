@@ -111,6 +111,8 @@
   "common.hourShort": "J",
   "common.minuteShort": "M",
   "common.secondShort": "D",
+  "common.offlineDescription": "Saat ini terputus, silakan segarkan halaman",
+  "common.refresh": "Segarkan",
   "markets.favorites": "Favorit",
   "markets.recent": "Terbaru",
   "markets.newListings": "Listing baru",

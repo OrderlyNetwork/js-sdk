@@ -16,6 +16,12 @@ const LazyAnnouncementWidget = React.lazy(() =>
   }),
 );
 
+const LazyOfflineInfoWidget = React.lazy(() =>
+  import("../offlineInfo").then((mod) => {
+    return { default: mod.OfflineInfoWidget };
+  }),
+);
+
 const LazyBottomNav = React.lazy(() =>
   import("../bottomNav").then((mod) => {
     return { default: mod.BottomNav };
@@ -54,6 +60,9 @@ export const MobileScaffold: React.FC<
           className={"oui-mx-1 oui-mb-1 oui-bg-base-6"}
           hideTips={restrictedInfo?.restrictedOpen}
         />
+      </React.Suspense>
+      <React.Suspense fallback={null}>
+        <LazyOfflineInfoWidget className="oui-mx-1 oui-mb-1" />
       </React.Suspense>
       <header
         ref={topNavbarRef}
