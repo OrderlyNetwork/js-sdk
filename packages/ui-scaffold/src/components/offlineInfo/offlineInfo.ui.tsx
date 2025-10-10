@@ -8,6 +8,7 @@ export type OfflineInfoProps = OfflineInfoState & {
   style?: React.CSSProperties;
   className?: string;
   onRefresh?: () => void;
+  onStatusChange?: (last: boolean, next: boolean) => void;
 };
 
 export const OfflineInfo: FC<OfflineInfoProps> = (props) => {
