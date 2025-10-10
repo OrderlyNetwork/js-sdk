@@ -1,6 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 
-export const useOfflineInfoScript = () => {
+export const useOfflineInfoScript = ({
+  onStatusChange,
+}: {
+  onStatusChange?: (last: boolean, next: boolean) => void;
+}) => {
   const [offline, setOffline] = useState<boolean>(() => {
     // init check network status
     if (typeof window !== "undefined" && typeof navigator !== "undefined") {
@@ -9,14 +13,27 @@ export const useOfflineInfoScript = () => {
     return false;
   });
 
+  // use ref to store the latest callback
+  const onStatusChangeRef = useRef(onStatusChange);
+
   useEffect(() => {
-    // define handle function
+    onStatusChangeRef.current = onStatusChange;
+  }, [onStatusChange]);
+
+  useEffect(() => {
+    // define handle function inside useEffect to avoid stale closure
     const handleOnline = () => {
-      setOffline(false);
+      setOffline((prev) => {
+        onStatusChangeRef.current?.(prev, false);
+        return false;
+      });
     };
 
     const handleOffline = () => {
-      setOffline(true);
+      setOffline((prev) => {
+        onStatusChangeRef.current?.(prev, true);
+        return true;
+      });
     };
 
     // add event listener
@@ -28,9 +45,11 @@ export const useOfflineInfoScript = () => {
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
     };
-  }, []);
+  }, []); // empty dependencies since we use ref
 
-  return { offline };
+  return useMemo(() => {
+    return { offline };
+  }, [offline]);
 };
 
 export type OfflineInfoState = ReturnType<typeof useOfflineInfoScript>;
