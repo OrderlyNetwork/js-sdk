@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/eslint-config",
-  "version": "2.7.3",
+  "version": "2.7.4",
   "main": "index.mjs",
   "module": "index.mjs",
   "license": "MIT",

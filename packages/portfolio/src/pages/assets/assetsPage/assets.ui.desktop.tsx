@@ -105,7 +105,7 @@ const DepositAndWithdrawButton: React.FC<
         <ArrowDownShortIcon
           color="white"
           opacity={mergedDisabled ? 0.4 : 1}
-          className="oui-rotate-0"
+          className="oui-rotate-0 oui-text-primary-contrast"
         />
         <Text>{t("common.deposit")}</Text>
       </Button>
@@ -120,7 +120,7 @@ const DepositAndWithdrawButton: React.FC<
         <ArrowDownShortIcon
           color="white"
           opacity={mergedDisabled ? 0.4 : 1}
-          className="oui-rotate-180"
+          className="oui-rotate-180 oui-text-base-contrast"
         />
         <Text>{t("common.withdraw")}</Text>
       </Button>

@@ -6,6 +6,7 @@ import {
   useLocalStorage,
   useOdosQuote,
   useWalletConnector,
+  useIndexPricesStream,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { account } from "@orderly.network/perp";
@@ -51,6 +52,8 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
   const { wrongNetwork } = useAppContext();
 
   const { wallet } = useWalletConnector();
+
+  const { getIndexPrice } = useIndexPricesStream();
 
   const {
     sourceToken,
@@ -182,6 +185,21 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
 
   const { hasPositions, onSettlePnl } = useSettlePnl();
 
+  const amount = useMemo(() => {
+    if (
+      quantity &&
+      sourceToken?.token &&
+      sourceToken?.token !== "USDC" &&
+      getIndexPrice(sourceToken?.token)
+    ) {
+      return new Decimal(quantity)
+        .mul(getIndexPrice(sourceToken?.token))
+        .toNumber();
+    }
+
+    return quantity;
+  }, [quantity, sourceToken?.token]);
+
   return {
     walletName,
     address,
@@ -208,5 +226,6 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     isQuoteLoading,
     currentLTV: currentLtv,
     nextLTV: nextLTV,
+    amount,
   };
 };

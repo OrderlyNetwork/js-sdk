@@ -91,9 +91,9 @@ export const SymbolInfoBarFull: React.FC<SymbolInfoBarFullProps> = (props) => {
           className="oui-mr-1 oui-cursor-pointer"
         >
           {isFavorite ? (
-            <FavoritesIcon2 className="oui-size-3 oui-text-[rgba(255,154,46,1)]" />
+            <FavoritesIcon2 className="oui-size-3 oui-text-warning-darken" />
           ) : (
-            <UnFavoritesIcon2 className="oui-size-3 oui-text-base-contrast-36 hover:oui-text-[rgba(255,154,46,1)]" />
+            <UnFavoritesIcon2 className="oui-size-3 oui-text-base-contrast-36 hover:oui-text-warning-darken" />
           )}
         </Flex>
       </LazyFavoritesDropdownMenuWidget>
@@ -102,7 +102,11 @@ export const SymbolInfoBarFull: React.FC<SymbolInfoBarFullProps> = (props) => {
 
   const symbolView = (
     <React.Suspense fallback={null}>
-      <Flex direction="column" itemAlign="start" className="oui-gap-y-[2px] oui-shrink-0">
+      <Flex
+        direction="column"
+        itemAlign="start"
+        className="oui-gap-y-[2px] oui-shrink-0"
+      >
         <LazyDropDownMarketsWidget
           contentClassName="oui-w-[429px] oui-h-[496px]"
           symbol={props.symbol}
@@ -313,12 +317,14 @@ export const SymbolInfoBarFull: React.FC<SymbolInfoBarFullProps> = (props) => {
         </Flex>
         {props.trailing}
       </Flex>
-      {showCountdown && <RwaCountdown
-        closeCountdown={closeCountdown}
-        isRwa={isRwa}
-        open={open}
-        closeTimeInterval={closeTimeInterval}
-      />}
+      {showCountdown && (
+        <RwaCountdown
+          closeCountdown={closeCountdown}
+          isRwa={isRwa}
+          open={open}
+          closeTimeInterval={closeTimeInterval}
+        />
+      )}
     </Flex>
   );
 };
@@ -366,7 +372,7 @@ const FundingRate: React.FC<{ symbol: string }> = ({ symbol }) => {
 
   return (
     <div>
-      <Text.numeral unit="%" dp={4} className="oui-text-[#FF9A2E]">
+      <Text.numeral unit="%" dp={4} className="oui-text-warning-darken">
         {data.est_funding_rate!}
       </Text.numeral>
       <Text intensity={36} className="oui-tabular-nums">
@@ -384,7 +390,12 @@ const RwaCountdown: React.FC<{
   closeTimeInterval: number | undefined;
 }> = ({ closeCountdown, isRwa, open, closeTimeInterval }) => {
   const { t } = useTranslation();
-  if (!isRwa || closeTimeInterval === undefined || open === undefined || closeTimeInterval > 30 * 60) {
+  if (
+    !isRwa ||
+    closeTimeInterval === undefined ||
+    open === undefined ||
+    closeTimeInterval > 30 * 60
+  ) {
     return null;
   }
   if (!open) {
@@ -404,7 +415,7 @@ const RwaCountdown: React.FC<{
       className="oui-w-full oui-text-warning-darken oui-bg-warning-darken/15 oui-flex-1 oui-my-2 oui-text-sm"
     >
       <Flex className="oui-w-full oui-pr-2">
-        <NewsFillIcon className="oui-text-warning-darken" size={16}/>
+        <NewsFillIcon className="oui-text-warning-darken" size={16} />
         <Flex>
           {t("trading.rwa.countdown.title")}
           <Flex className="oui-text-base-contrast-54 oui-text-xs oui-font-normal">

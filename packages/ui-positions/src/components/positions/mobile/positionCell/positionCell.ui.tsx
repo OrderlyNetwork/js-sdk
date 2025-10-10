@@ -63,7 +63,7 @@ export const PositionCell: FC<
       <Divider intensity={6} className="oui-w-full" />
       {body}
       <TPSLPrice {...rest} />
-      <FundingFee {...rest} />
+      {/* <FundingFee {...rest} /> */}
       {buttons}
     </Flex>
   );
