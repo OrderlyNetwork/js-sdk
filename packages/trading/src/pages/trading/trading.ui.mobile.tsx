@@ -61,13 +61,16 @@ export const MobileLayout: React.FC<TradingState> = (props) => {
 
   useEffect(() => {
     if (isRwa && !open) {
-      console.log("showRwaOutsideMarketHoursNotify");
       showRwaOutsideMarketHoursNotify();
     }
   }, [isRwa, open, props.symbol]);
 
   const rwaStatusBar = useMemo(() => {
     if (!isRwa) {
+      return null;
+    }
+
+    if (closeTimeInterval === undefined) {
       return null;
     }
 

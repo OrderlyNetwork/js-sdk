@@ -6,7 +6,6 @@ import {
   Tooltip,
   Text,
   cn,
-  ArrowRightShortIcon,
   modal,
 } from "@orderly.network/ui";
 import { useScreen } from "@orderly.network/ui";
@@ -156,7 +155,8 @@ const Content = ({
           />
         )}
       </div>
-      <a
+      {/* TODO: wait for rwa detail page to be ready */}
+      {/* <a
         href="https://orderly.network/rwa"
         target="_blank"
         className="oui-flex oui-items-center oui-gap-x-1 oui-text-primary-darken oui-cursor-pointer"
@@ -167,7 +167,7 @@ const Content = ({
       >
         {t("trading.rwa.tooltip.checkDetailRules")}
         <ArrowRightShortIcon color="primary" opacity={1} />
-      </a>
+      </a> */}
     </Flex>
   );
 };
