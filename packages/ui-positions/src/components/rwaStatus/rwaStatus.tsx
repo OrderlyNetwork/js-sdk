@@ -15,7 +15,10 @@ export const RwaStatusTag = ({ symbol }: { symbol: string }) => {
       r="base"
       px={2}
       height={18}
-      className={cn(open ? "oui-bg-success/15" : "oui-bg-danger/15")}
+      className={cn(
+        "oui-shrink-0",
+        open ? "oui-bg-success/15" : "oui-bg-danger/15",
+      )}
     >
       <Text size="2xs" color={open ? "success" : "danger"}>
         {open
