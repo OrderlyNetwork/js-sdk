@@ -453,6 +453,7 @@ export const useDeposit = (options: DepositOptions) => {
           wallet: state?.connectWallet?.name,
           network: targetChain?.network_infos.name,
           quantity,
+          currency: options.srcToken,
         });
         return result;
       })

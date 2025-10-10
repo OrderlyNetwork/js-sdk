@@ -72,12 +72,12 @@ const getMainMenus = (): MainNavWidgetProps["mainMenus"] => {
       name: i18n.t("tradingView.timeInterval.more"),
       href: "",
       children: [
-        {
-          name: i18n.t("common.tradingRewards"),
-          href: "/rewards/trading",
-          icon: <TradingRewardsIcon size={14} />,
-          activeIcon: <TradingRewardsActiveIcon size={14} />,
-        },
+        // {
+        //   name: i18n.t("common.tradingRewards"),
+        //   href: "/rewards/trading",
+        //   icon: <TradingRewardsIcon size={14} />,
+        //   activeIcon: <TradingRewardsActiveIcon size={14} />,
+        // },
         {
           name: i18n.t("portfolio.feeTier"),
           href: PortfolioLeftSidebarPath.FeeTier,
@@ -150,11 +150,11 @@ const getLeftNavMenus = (): LeftNavProps => {
         trailing: <Tag text="Unlock @ $10K volume" />,
         onlyInMainAccount: true,
       },
-      {
-        name: i18n.t("common.tradingRewards"),
-        href: "/rewards/trading",
-        icon: <TradingLeftNavIcon width={24} height={24} opacity={0.8} />,
-      },
+      // {
+      //   name: i18n.t("common.tradingRewards"),
+      //   href: "/rewards/trading",
+      //   icon: <TradingLeftNavIcon width={24} height={24} opacity={0.8} />,
+      // },
       {
         name: i18n.t("common.settings"),
         href: "/portfolio/setting",
