@@ -6,7 +6,11 @@ import { useCanTrade } from "../../../hooks/useCanTrade";
 import { CampaignConfig, PrizePool } from "../type";
 import { formatPrizeAmount, formatTradingVolume } from "../utils";
 import { PricePoolScriptReturn } from "./pricePool.script";
-import { calculateProgressWidth, getCurrentTierIndex } from "./utils";
+import {
+  calculateProgressWidth,
+  getCurrentTierIndex,
+  getProgressLeft,
+} from "./utils";
 
 type PricePoolDesktopUIProps = PricePoolScriptReturn & {
   isMobile?: boolean;
@@ -251,20 +255,24 @@ const PricePoolProgress: FC<PricePoolProgressProps> = ({
   tieredPrizePools,
   tradingVolume,
 }) => {
-  // Calculate the progress bar width based on current trading volume
-  const progressWidth = calculateProgressWidth(tradingVolume, tieredPrizePools);
+  // Calculate the progress bar width b ased on current trading volume
+  const progressWidth = calculateProgressWidth(
+    tradingVolume,
+    tieredPrizePools,
+    isMobile ? 6 : 2,
+  );
   const currentTierIndex = getCurrentTierIndex(tradingVolume, tieredPrizePools);
 
   return (
     <div
       className={cn([
-        "oui-relative oui-flex oui-items-center oui-p-4 oui-font-medium",
+        "oui-relative oui-flex oui-items-center oui-p-4 oui-pr-12 oui-font-medium",
         "oui-rounded-[10px] oui-border oui-border-solid oui-border-base-contrast/[0.12]",
         "oui-trading-leaderboard-title",
         isMobile ? "oui-h-[88px] oui-text-3xs" : "oui-h-[114px] oui-text-sm",
       ])}
     >
-      <div className="oui-top-[calc(50%-12px) oui-left-0] oui-absolute oui-flex oui-h-6 oui-w-[84%] oui-items-center">
+      <div className="oui-absolute oui-flex oui-h-6 oui-w-[calc(100%-64px)] oui-items-center">
         <div
           className={cn([
             "oui-relative oui-flex oui-flex-1 oui-flex-col oui-rounded-[14px] oui-bg-base-5 oui-p-0.5",
@@ -279,7 +287,7 @@ const PricePoolProgress: FC<PricePoolProgressProps> = ({
             style={{
               position: "absolute",
               left: `${progressWidth}%`,
-              transform: `translate(-50%, ${isMobile ? "-44" : "-25"}%)`,
+              transform: `translate(-90%, ${isMobile ? "-44" : "-25"}%)`,
               scale: isMobile ? "0.8" : "1",
               zIndex: 50,
             }}
@@ -288,51 +296,70 @@ const PricePoolProgress: FC<PricePoolProgressProps> = ({
           </div>
         </div>
       </div>
-      {tieredPrizePools?.map((prizePool: PrizePool[], index: number) => {
-        const isReached = index <= currentTierIndex;
-        const isCurrentTier = index === currentTierIndex;
-        return (
-          <div
-            key={prizePool[0].pool_id}
-            className="oui-z-10 oui-flex oui-h-full oui-flex-1 oui-flex-col oui-items-center oui-justify-between"
-          >
+      <div
+        className={cn(
+          "oui-absolute oui-left-1 oui-flex oui-w-[calc(100%-64px)] oui-items-center",
+          "oui-p-4 oui-pr-12",
+        )}
+      >
+        {tieredPrizePools?.map((prizePool: PrizePool[], index: number) => {
+          const isReached = index <= currentTierIndex;
+          const isCurrentTier = index === currentTierIndex;
+
+          const left = getProgressLeft(tieredPrizePools.length, index);
+
+          return (
             <div
-              className={cn([
-                isReached
-                  ? "oui-text-base-contrast"
-                  : "oui-text-base-contrast-36",
-              ])}
-            >{`>${formatTradingVolume(prizePool[0].volume_limit || 0, 0)}`}</div>
-            <div
-              className={cn([
-                "oui-size-[6px] oui-rounded-full",
-                isReached ? "oui-bg-white/[0.8]" : "oui-bg-[#00A9DE]",
-              ])}
-            />
-            <div>
-              {isCurrentTier ? (
-                <Text.gradient color="brand" weight="bold">
-                  <Text.numeral dp={0} prefix={"$"}>
+              key={prizePool[0].pool_id}
+              className="oui-flex oui-items-center"
+            >
+              <div
+                className={cn(
+                  "oui-absolute oui-top-[-12px] lg:oui-top-[-24px]",
+                  "-oui-translate-x-1/2",
+                  isReached
+                    ? "oui-text-base-contrast"
+                    : "oui-text-base-contrast-36",
+                )}
+                style={{ left }}
+              >{`>${formatTradingVolume(prizePool[0].volume_limit || 0, 0)}`}</div>
+              <div
+                className={cn(
+                  "oui-absolute",
+                  " oui-rounded-full",
+                  isMobile ? "oui-size-[4px]" : "oui-size-[6px]",
+                  isReached ? "oui-bg-white/[0.8]" : "oui-bg-[#00A9DE]",
+                )}
+                style={{ left }}
+              />
+              <div
+                className="oui-absolute oui-bottom-[-12px] -oui-translate-x-1/2 lg:oui-bottom-[-24px]"
+                style={{ left }}
+              >
+                {isCurrentTier ? (
+                  <Text.gradient color="brand" weight="bold">
+                    <Text.numeral dp={0} prefix={"$"}>
+                      {prizePool[0].total_prize}
+                    </Text.numeral>
+                  </Text.gradient>
+                ) : (
+                  <Text.numeral
+                    dp={0}
+                    prefix={"$"}
+                    className={cn([
+                      isReached
+                        ? "oui-text-base-contrast"
+                        : "oui-text-base-contrast-36",
+                    ])}
+                  >
                     {prizePool[0].total_prize}
                   </Text.numeral>
-                </Text.gradient>
-              ) : (
-                <Text.numeral
-                  dp={0}
-                  prefix={"$"}
-                  className={cn([
-                    isReached
-                      ? "oui-text-base-contrast"
-                      : "oui-text-base-contrast-36",
-                  ])}
-                >
-                  {prizePool[0].total_prize}
-                </Text.numeral>
-              )}
+                )}
+              </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 };
