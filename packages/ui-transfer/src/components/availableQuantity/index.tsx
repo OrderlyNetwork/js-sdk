@@ -1,4 +1,5 @@
-import { FC } from "react";
+import { FC, useMemo } from "react";
+import { useIndexPricesStream } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
 import { Flex, Spinner, Text } from "@orderly.network/ui";
@@ -16,19 +17,28 @@ export const AvailableQuantity: FC<AvailableQuantityProps> = (props) => {
   const { amount, maxQuantity, token, loading } = props;
   const { t } = useTranslation();
 
+  const { getIndexPrice } = useIndexPricesStream();
+
   const name = token?.display_name || token?.symbol || "";
   const dp = token?.precision ?? token?.decimals ?? 2;
 
+  const notional = useMemo(() => {
+    if (amount && token?.symbol && getIndexPrice(token?.symbol)) {
+      return new Decimal(amount)
+        .mul(getIndexPrice(token?.symbol) || 1)
+        .toNumber();
+    }
+    return 0;
+  }, [amount, token?.symbol]);
+
   return (
     <Flex px={2}>
-      {amount !== undefined && (
-        <Text size="2xs" intensity={36}>
-          $
-          <Text.numeral dp={2} padding={false} rm={Decimal.ROUND_DOWN}>
-            {amount}
-          </Text.numeral>
-        </Text>
-      )}
+      <Text size="2xs" intensity={36}>
+        $
+        <Text.numeral dp={2} padding={false} rm={Decimal.ROUND_DOWN}>
+          {notional}
+        </Text.numeral>
+      </Text>
 
       <Flex gapX={2} itemAlign="center" className="oui-ml-auto">
         <Flex gapX={1} itemAlign="center">
