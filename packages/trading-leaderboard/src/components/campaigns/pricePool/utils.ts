@@ -53,6 +53,7 @@ export const getCurrentTierIndex = (
 export const calculateProgressWidth = (
   tradingVolume: number,
   tieredPrizePools: Array<Array<{ volume_limit?: number }>>,
+  offset: number = 0,
 ): number => {
   if (!tieredPrizePools || tieredPrizePools.length === 0) {
     return 0;
@@ -68,18 +69,12 @@ export const calculateProgressWidth = (
     return 0;
   }
 
-  // If trading volume is 0 or negative, return 0%
-  if (tradingVolume === 0) {
-    if (volumeLimits.length === 3) {
-      return 19;
-    }
-    if (volumeLimits.length === 2) {
-      return 29;
-    }
-    return (1 / volumeLimits.length) * 100 - 15;
-  }
+  const firstSegmentWidth = getFirstSegmentWidth(volumeLimits.length);
+
+  const segmentWidth = (100 - firstSegmentWidth) / (volumeLimits.length - 1);
+
   // Calculate the width of each segment (equally distributed)
-  const segmentWidth = 100 / volumeLimits.length;
+  // const segmentWidth = 100 / volumeLimits.length;
 
   // If trading volume exceeds the highest limit, return 100%
   const maxLimit = volumeLimits[volumeLimits.length - 1];
@@ -106,10 +101,37 @@ export const calculateProgressWidth = (
   const progressInSegment =
     segmentRange > 0 ? volumeInSegment / segmentRange : 0;
 
-  // Total width = completed segments + progress in current segment
-  const totalWidth =
-    segmentIndex * segmentWidth + progressInSegment * segmentWidth;
+  let totalWidth = firstSegmentWidth;
+  for (let i = 1; i <= segmentIndex; i++) {
+    if (i === segmentIndex) {
+      const limitWidth = totalWidth + segmentWidth;
+      const progressWidth = totalWidth + progressInSegment * segmentWidth;
 
-  // Ensure the result is between 0 and 100
+      if (limitWidth - progressWidth < offset) {
+        totalWidth = limitWidth - offset;
+      } else {
+        totalWidth = progressWidth;
+      }
+    } else {
+      totalWidth += segmentWidth;
+    }
+  }
+
   return Math.min(Math.max(totalWidth, 0), 100);
+};
+
+const getFirstSegmentWidth = (totalTiers: number) => {
+  return Math.floor(100 / (totalTiers * 2));
+};
+
+export const getProgressLeft = (totalTiers: number, index: number) => {
+  const firstSegmentWidth = getFirstSegmentWidth(totalTiers);
+
+  if (totalTiers === 1) {
+    return `${firstSegmentWidth}%`;
+  }
+
+  const left =
+    firstSegmentWidth + (index * (100 - firstSegmentWidth)) / (totalTiers - 1);
+  return `${Math.min(left, 100)}%`;
 };

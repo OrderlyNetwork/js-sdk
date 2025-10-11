@@ -48,6 +48,7 @@ export const QtyAndTotalInput: FC<QtyAndTotalInputProps> = memo((props) => {
         formatters={[inputFormatter.dpFormatter(quote_dp)]}
         onFocus={onFocus(InputType.TOTAL)}
         onBlur={onBlur(InputType.TOTAL)}
+        className="!oui-rounded-l"
       />
     </Grid>
   );
