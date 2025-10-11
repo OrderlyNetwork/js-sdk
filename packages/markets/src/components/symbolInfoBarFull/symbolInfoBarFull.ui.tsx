@@ -9,6 +9,7 @@ import {
   TriangleDownIcon,
   UnFavoritesIcon2,
 } from "../../icons";
+import { FundingRateHintWidget } from "../fundingRateHint";
 import type { MarketsProviderProps } from "../marketsProvider";
 import type { UseSymbolInfoBarFullScriptReturn } from "./symbolInfoBarFull.script";
 
@@ -210,40 +211,7 @@ export const SymbolInfoBarFull: React.FC<SymbolInfoBarFullProps> = (props) => {
                 <LazyDataItem
                   label={t("markets.symbolInfoBar.predFundingRate")}
                   value={<FundingRate symbol={symbol} />}
-                  hint={
-                    <Flex
-                      width={"100%"}
-                      itemAlign={"center"}
-                      direction="column"
-                      gap={1}
-                    >
-                      <Flex
-                        justify="between"
-                        itemAlign={"center"}
-                        width={"100%"}
-                      >
-                        <Text intensity={54}>
-                          {t("trading.fundingRate.predFundingRate.interval")}
-                        </Text>
-                        <Text intensity={80}>{fundingPeriod}</Text>
-                      </Flex>
-                      <Flex
-                        justify="between"
-                        itemAlign={"center"}
-                        width={"100%"}
-                      >
-                        <Text intensity={54}>
-                          {t("trading.fundingRate.predFundingRate.cap")} /
-                          {t("trading.fundingRate.predFundingRate.floor")}
-                        </Text>
-                        <Text intensity={80}>
-                          {capFunding} / {floorFunding}
-                        </Text>
-                      </Flex>
-                      <Divider className="oui-w-full" intensity={8} />
-                      {t("markets.symbolInfoBar.predFundingRate.tooltip")}
-                    </Flex>
-                  }
+                  hint={<FundingRateHintWidget symbol={symbol} />}
                 />
               </React.Suspense>
 
