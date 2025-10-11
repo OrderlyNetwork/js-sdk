@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { useAccount } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
+import { useAppContext } from "@orderly.network/react-app";
 import {
   Flex,
   SimpleDialog,
@@ -26,11 +27,21 @@ export const CreateSubAccount = (props: CreateSubAccountProps) => {
   const { state } = useAccount();
   const [invalid, setInvalid] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const { widgetConfigs } = useAppContext();
+
+  const maxSubAccountCount = useMemo(() => {
+    return (
+      widgetConfigs?.subAccount?.maxSubAccountCount ?? MAX_SUB_ACCOUNT_COUNT
+    );
+  }, [widgetConfigs]);
+
   const subAccountCount = useMemo(() => {
     return state.subAccounts?.length ?? 0;
   }, [state]);
+
   const trigger = useMemo(() => {
-    return subAccountCount >= MAX_SUB_ACCOUNT_COUNT ? (
+    return subAccountCount >= maxSubAccountCount ? (
       <Tooltip
         className="oui-max-w-[188px]"
         content={t("subAccount.modal.create.max.description")}
@@ -49,7 +60,7 @@ export const CreateSubAccount = (props: CreateSubAccountProps) => {
         }}
       />
     );
-  }, [subAccountCount]);
+  }, [subAccountCount, maxSubAccountCount]);
 
   const header = (
     <Flex
@@ -63,7 +74,7 @@ export const CreateSubAccount = (props: CreateSubAccountProps) => {
       <Text className="oui-text-2xs oui-text-base-contrast-36">
         {t("subAccount.modal.create.description", {
           subAccountCount,
-          remainingCount: MAX_SUB_ACCOUNT_COUNT - subAccountCount,
+          remainingCount: maxSubAccountCount - subAccountCount,
         })}
       </Text>
     </Flex>
