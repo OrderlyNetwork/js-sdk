@@ -55,6 +55,12 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     onTargetTokenChange,
   } = useToken(currentChain);
 
+  const { data: indexPrices, getIndexPrice } = useIndexPricesStream();
+
+  const indexPrice = useMemo(() => {
+    return getIndexPrice(sourceToken?.symbol ?? "") ?? 0;
+  }, [sourceToken?.symbol, indexPrices]);
+
   const usdcToken = useMemo(() => {
     return sourceTokens?.find((item) => item.symbol === "USDC");
   }, [sourceTokens]);
@@ -203,12 +209,12 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     collateralContributionQuantity,
     currentLTV,
     nextLTV,
-    indexPrice,
   } = useCollateralValue({
     tokens: sourceTokens,
     sourceToken,
     targetToken,
     qty: quantity,
+    indexPrice,
   });
 
   const {
@@ -383,20 +389,11 @@ const useCollateralValue = (params: {
   sourceToken?: API.TokenInfo;
   targetToken?: API.TokenInfo;
   qty: string;
+  indexPrice: number;
 }) => {
-  const { sourceToken, targetToken } = params;
+  const { sourceToken, targetToken, indexPrice } = params;
 
   const quantity = Number(params.qty);
-
-  const { data: indexPrices } = useIndexPricesStream();
-
-  const indexPrice = useMemo(() => {
-    if (sourceToken?.symbol === "USDC") {
-      return 1;
-    }
-    const symbol = `PERP_${sourceToken?.symbol}_USDC`;
-    return indexPrices[symbol] ?? 0;
-  }, [sourceToken?.symbol, indexPrices]);
 
   const memoizedCollateralRatio = useMemo(() => {
     return collateralRatio({
@@ -404,7 +401,7 @@ const useCollateralValue = (params: {
       discountFactor: targetToken?.discount_factor ?? 0,
       collateralQty: quantity,
       collateralCap: sourceToken?.user_max_qty ?? quantity,
-      indexPrice: indexPrice,
+      indexPrice,
     });
   }, [targetToken, quantity, sourceToken?.user_max_qty, indexPrice]);
 
@@ -412,7 +409,7 @@ const useCollateralValue = (params: {
     collateralQty: quantity,
     collateralCap: sourceToken?.user_max_qty ?? quantity,
     collateralRatio: memoizedCollateralRatio.toNumber(),
-    indexPrice: indexPrice,
+    indexPrice,
   });
 
   const currentLtv = useComputedLTV();
