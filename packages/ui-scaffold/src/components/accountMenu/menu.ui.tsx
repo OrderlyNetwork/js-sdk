@@ -1,5 +1,5 @@
-import { useTranslation } from "@orderly.network/i18n";
-import { AccountStatusEnum } from "@orderly.network/types";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { AccountStatusEnum } from "@kodiak-finance/orderly-types";
 import {
   Button,
   Divider,
@@ -12,7 +12,7 @@ import {
   EVMAvatar,
   Flex,
   Text,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 
 export type AccountMenuProps = {
   accountState: AccountState;

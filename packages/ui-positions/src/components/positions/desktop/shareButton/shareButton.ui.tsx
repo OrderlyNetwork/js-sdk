@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { ShareIcon } from "@orderly.network/ui";
+import { ShareIcon } from "@kodiak-finance/orderly-ui";
 import { ShareButtonScriptReturn } from "./shareButton.script";
 
 export const ShareButton: FC<ShareButtonScriptReturn> = (props) => {

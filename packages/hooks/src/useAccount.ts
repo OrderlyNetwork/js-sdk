@@ -1,10 +1,10 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { AccountState } from "@orderly.network/core";
+import { AccountState } from "@kodiak-finance/orderly-core";
 import {
   AccountStatusEnum,
   SDKError,
   TrackerEventName,
-} from "@orderly.network/types";
+} from "@kodiak-finance/orderly-types";
 import { OrderlyContext } from "./orderlyContext";
 import { useAccountInstance } from "./useAccountInstance";
 import { useEventEmitter } from "./useEventEmitter";

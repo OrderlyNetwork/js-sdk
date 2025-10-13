@@ -1,6 +1,6 @@
 import React from "react";
 import { WalletAdapter } from "@solana/wallet-adapter-base";
-import { cn, useScreen } from "@orderly.network/ui";
+import { cn, useScreen } from "@kodiak-finance/orderly-ui";
 import { useSolanaWallet } from "../../providers/solana/solanaWalletProvider";
 import { RenderWalletIcon } from "../common";
 

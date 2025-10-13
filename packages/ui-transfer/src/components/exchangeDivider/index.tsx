@@ -1,5 +1,5 @@
 import { FC, ReactNode } from "react";
-import { Flex } from "@orderly.network/ui";
+import { Flex } from "@kodiak-finance/orderly-ui";
 import { ArrowDownIcon } from "../../icons";
 
 type ExchangeDividerProps = {

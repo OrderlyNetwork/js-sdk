@@ -1,12 +1,12 @@
-import { order as orderUtils } from "@orderly.network/perp";
+import { order as orderUtils } from "@kodiak-finance/orderly-perp";
 import {
   AlgoOrderRootType,
   API,
   OrderlyOrder,
   OrderSide,
   OrderType,
-} from "@orderly.network/types";
-import { Decimal, zero } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-types";
+import { Decimal, zero } from "@kodiak-finance/orderly-utils";
 import { OrderMetadataConfig } from "../../orderlyContext";
 import { OrderFactory } from "../../services/orderCreator/factory";
 import { getOrderPrice } from "../../utils/order/orderPrice";

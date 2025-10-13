@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
-import { useAccount, useConfig, useQuery } from "@orderly.network/hooks";
-import { useScreen } from "@orderly.network/ui";
+import { useAccount, useConfig, useQuery } from "@kodiak-finance/orderly-hooks";
+import { useScreen } from "@kodiak-finance/orderly-ui";
 
 export function useCustomRanking(campaignId?: string) {
   const { state } = useAccount();

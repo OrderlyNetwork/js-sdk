@@ -1,7 +1,7 @@
+import { PortfolioLayoutWidget } from "@kodiak-finance/orderly-portfolio";
+import { Divider, Flex, Text } from "@kodiak-finance/orderly-ui";
+import { OrdersWidget, TabType } from "@kodiak-finance/orderly-ui-orders";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { PortfolioLayoutWidget } from "@orderly.network/portfolio";
-import { Flex, Text, Divider } from "@orderly.network/ui";
-import { OrdersWidget, TabType } from "@orderly.network/ui-orders";
 
 const meta: Meta<typeof OrdersWidget> = {
   title: "Package/ui-orders/Orders",

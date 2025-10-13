@@ -1,6 +1,6 @@
 import React from "react";
 import { isValidElement } from "react";
-import { Box, cn, Grid } from "@orderly.network/ui";
+import { Box, cn, Grid } from "@kodiak-finance/orderly-ui";
 import type { ScaffoldScriptReturn } from "./scaffold.script";
 import type { ScaffoldProps } from "./scaffold.widget";
 

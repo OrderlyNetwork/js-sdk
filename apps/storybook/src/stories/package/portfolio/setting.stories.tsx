@@ -1,12 +1,11 @@
 import { useState } from "react";
-import type { Meta, StoryObj } from "@storybook/react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   PortfolioLeftSidebarPath,
   SettingModule,
-} from "@orderly.network/portfolio";
-import { ChevronRightIcon, Flex, Text, useScreen } from "@orderly.network/ui";
-import { LanguageSwitcherWidget } from "@orderly.network/ui-scaffold";
+} from "@kodiak-finance/orderly-portfolio";
+import { useScreen } from "@kodiak-finance/orderly-ui";
+import type { Meta, StoryObj } from "@storybook/react";
 import { PortfolioLayout } from "../../../components/layout";
 
 const meta: Meta<typeof SettingModule.SettingPage> = {

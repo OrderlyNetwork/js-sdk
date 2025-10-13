@@ -3,7 +3,7 @@ import {
   OrderlyContext,
   useChains,
   useMemoizedFn,
-} from "@orderly.network/hooks";
+} from "@kodiak-finance/orderly-hooks";
 import { checkChainSupport } from "../../utils/chain";
 import { ScaffoldContext, ScaffoldState } from "./scaffoldContext";
 

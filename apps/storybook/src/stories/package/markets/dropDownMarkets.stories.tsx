@@ -1,13 +1,13 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
+  DropDownMarketsWidget,
   ExpandMarketsWidget,
   FavoritesListWidget,
   MarketsListWidget,
   RecentListWidget,
-  DropDownMarketsWidget,
   useDropDownMarketsColumns,
-} from "@orderly.network/markets";
-import { Box, Button } from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-markets";
+import { Box, Button } from "@kodiak-finance/orderly-ui";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 const decorators = [
   (Story: any) => (

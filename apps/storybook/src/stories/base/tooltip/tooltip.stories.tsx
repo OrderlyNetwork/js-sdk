@@ -1,5 +1,5 @@
+import { Tooltip } from "@kodiak-finance/orderly-ui";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Tooltip } from "@orderly.network/ui";
 
 const meta: Meta<typeof Tooltip> = {
   title: "Base/Tooltip",

@@ -1,5 +1,5 @@
 import { FC, useMemo, useState } from "react";
-import { cn, Flex, Text } from "@orderly.network/ui";
+import { cn, Flex, Text } from "@kodiak-finance/orderly-ui";
 import { CampaignsScriptReturn } from "./campaigns.script";
 import { NormalPricePoolUI } from "./pricePool/normalPricePool.ui";
 import { PricePoolWidget } from "./pricePool/pricePool.widget";

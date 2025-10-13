@@ -1,6 +1,6 @@
 import { memo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { cn, Input, inputFormatter, Text } from "@orderly.network/ui";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { cn, Input, inputFormatter, Text } from "@kodiak-finance/orderly-ui";
 import { useEditSheetContext } from "./editSheetContext";
 
 type ActivitedPriceInputProps = {

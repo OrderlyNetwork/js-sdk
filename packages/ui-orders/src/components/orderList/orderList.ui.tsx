@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   Flex,
   ListView,
@@ -9,8 +9,8 @@ import {
   DataFilter,
   cn,
   TableFeatures,
-} from "@orderly.network/ui";
-import { AuthGuardDataTable } from "@orderly.network/ui-connector";
+} from "@kodiak-finance/orderly-ui";
+import { AuthGuardDataTable } from "@kodiak-finance/orderly-ui-connector";
 import { grayCell } from "../../utils/util";
 import { TabType } from "../orders.widget";
 import { SymbolProvider } from "../provider/symbolProvider";

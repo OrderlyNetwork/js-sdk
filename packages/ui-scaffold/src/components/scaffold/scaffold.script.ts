@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { useLocalStorage } from "@orderly.network/hooks";
-import { useAppContext } from "@orderly.network/react-app";
-import { useObserverElement, useScreen } from "@orderly.network/ui";
+import { useLocalStorage } from "@kodiak-finance/orderly-hooks";
+import { useAppContext } from "@kodiak-finance/orderly-react-app";
+import { useObserverElement, useScreen } from "@kodiak-finance/orderly-ui";
 import { type ScaffoldProps } from "./scaffold.widget";
 
 export type ScaffoldScriptReturn = ReturnType<typeof useScaffoldScript>;

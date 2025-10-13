@@ -1,7 +1,7 @@
-import { useOrderEntry_deprecated } from "@orderly.network/hooks";
-import { OrderSide, OrderType } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
-import { toast } from "@orderly.network/ui";
+import { useOrderEntry_deprecated } from "@kodiak-finance/orderly-hooks";
+import { OrderSide, OrderType } from "@kodiak-finance/orderly-types";
+import { Decimal } from "@kodiak-finance/orderly-utils";
+import { toast } from "@kodiak-finance/orderly-ui";
 
 export default function useSendOrder(symbol: string) {
   const { onSubmit: _sendMarketOrder } = useOrderEntry_deprecated(

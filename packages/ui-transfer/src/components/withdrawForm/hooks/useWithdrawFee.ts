@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useTokenInfo } from "@orderly.network/hooks";
+import { useTokenInfo } from "@kodiak-finance/orderly-hooks";
 import { CurrentChain } from "../../depositForm/hooks";
 
 export function useWithdrawFee(options: {

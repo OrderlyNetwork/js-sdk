@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { useOrderStream } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { modal, Text } from "@orderly.network/ui";
-import { TabType } from "@orderly.network/ui-orders";
-import { SharePnLConfig } from "@orderly.network/ui-share";
+import { useOrderStream } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { modal, Text } from "@kodiak-finance/orderly-ui";
+import { TabType } from "@kodiak-finance/orderly-ui-orders";
+import { SharePnLConfig } from "@kodiak-finance/orderly-ui-share";
 import {
   usePendingOrderCount,
   usePositionsCount,

@@ -3,7 +3,7 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   useEmblaCarousel,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import { DefaultCampaign } from "../DefaultCampaign";
 import { CampaignItemUI } from "../campaign.item.ui";
 import { CampaignConfig } from "../type";

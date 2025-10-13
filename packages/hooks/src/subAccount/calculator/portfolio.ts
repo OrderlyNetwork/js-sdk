@@ -1,7 +1,7 @@
 import { pathOr } from "ramda";
-import { account } from "@orderly.network/perp";
-import { API } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+import { account } from "@kodiak-finance/orderly-perp";
+import { API } from "@kodiak-finance/orderly-types";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { SymbolsInfo } from "../../orderly/useSymbolsInfo";
 import { parseHolding } from "../../utils/parseHolding";
 

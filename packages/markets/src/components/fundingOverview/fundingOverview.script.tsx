@@ -4,8 +4,8 @@ import {
   useFundingRateHistory,
   useFundingRates,
   useMarkets,
-} from "@orderly.network/hooks";
-import { usePagination } from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-hooks";
+import { usePagination } from "@kodiak-finance/orderly-ui";
 import { useMarketsContext } from "../../components/marketsProvider";
 import { useSort, searchBySymbol } from "../../utils";
 

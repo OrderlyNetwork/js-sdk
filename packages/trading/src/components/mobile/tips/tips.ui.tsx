@@ -1,4 +1,4 @@
-import { MaintenanceTipsWidget } from "@orderly.network/ui-scaffold";
+import { MaintenanceTipsWidget } from "@kodiak-finance/orderly-ui-scaffold";
 import React from "react";
 
 export function TipsUi() {

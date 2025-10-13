@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { useMutation } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import { useMutation } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   inputFormatter,
   modal,
@@ -11,7 +11,7 @@ import {
   Flex,
   cn,
   toast,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import { ReferralCodeType } from "./referralCodes.script";
 
 export const EditCodeModal = modal.create<{

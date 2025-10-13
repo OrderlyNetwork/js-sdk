@@ -6,10 +6,10 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { OrderValidationResult } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
-import { OrderlyOrder, OrderType, PositionType } from "@orderly.network/types";
+import { OrderValidationResult } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { useOrderEntryFormErrorMsg } from "@kodiak-finance/orderly-react-app";
+import { OrderlyOrder, OrderType, PositionType } from "@kodiak-finance/orderly-types";
 import {
   cn,
   Flex,
@@ -20,14 +20,14 @@ import {
   Switch,
   SettingFillIcon,
   Box,
-} from "@orderly.network/ui";
-import { Grid } from "@orderly.network/ui";
-import { ExclamationFillIcon } from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
+import { Grid } from "@kodiak-finance/orderly-ui";
+import { ExclamationFillIcon } from "@kodiak-finance/orderly-ui";
 import {
   TPSLAdvancedDialogId,
   TPSLAdvancedWidget,
   TPSLPositionTypeWidget,
-} from "@orderly.network/ui-tpsl";
+} from "@kodiak-finance/orderly-ui-tpsl";
 import { OrderEntryContext, useOrderEntryContext } from "./orderEntryContext";
 import { PnlInputWidget } from "./pnlInput/pnlInput.widget";
 import { usePnlInputContext } from "./pnlInput/pnlInputContext";

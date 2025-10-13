@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { API, EMPTY_LIST, SDKError } from "@orderly.network/types";
-import { zero } from "@orderly.network/utils";
+import { API, EMPTY_LIST, SDKError } from "@kodiak-finance/orderly-types";
+import { zero } from "@kodiak-finance/orderly-utils";
 import { usePrivateQuery } from "../../usePrivateQuery";
 
 type QueryParams = {

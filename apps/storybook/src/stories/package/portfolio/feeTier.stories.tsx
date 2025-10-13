@@ -1,10 +1,10 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   FeeTierModule,
   PortfolioLeftSidebarPath,
-} from "@orderly.network/portfolio";
-import { Column } from "@orderly.network/ui";
-import { numberToHumanStyle } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-portfolio";
+import { Column } from "@kodiak-finance/orderly-ui";
+import { numberToHumanStyle } from "@kodiak-finance/orderly-utils";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { PortfolioLayout } from "../../../components/layout";
 
 const meta: Meta<typeof FeeTierModule.FeeTierPage> = {

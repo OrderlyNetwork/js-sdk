@@ -1,9 +1,9 @@
 import { useContext } from "react";
 import useConstant from "use-constant";
-import { Account, AccountState, SimpleDI } from "@orderly.network/core";
-import { WS } from "@orderly.network/net";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { getGlobalObject, getTimestamp } from "@orderly.network/utils";
+import { Account, AccountState, SimpleDI } from "@kodiak-finance/orderly-core";
+import { WS } from "@kodiak-finance/orderly-net";
+import { AccountStatusEnum } from "@kodiak-finance/orderly-types";
+import { getGlobalObject, getTimestamp } from "@kodiak-finance/orderly-utils";
 import { OrderlyContext } from "./orderlyContext";
 
 const WS_NAME = "nativeWebsocketClient";

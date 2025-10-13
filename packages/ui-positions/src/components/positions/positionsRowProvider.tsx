@@ -12,10 +12,10 @@ import {
   KeyedMutator,
   usePositionClose,
   useSymbolsInfo,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { API, OrderSide, OrderType } from "@orderly.network/types";
-import { toast } from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { API, OrderSide, OrderType } from "@kodiak-finance/orderly-types";
+import { toast } from "@kodiak-finance/orderly-ui";
 import { PositionsRowContext } from "./positionsRowContext";
 import type { PositionsRowContextState } from "./positionsRowContext";
 

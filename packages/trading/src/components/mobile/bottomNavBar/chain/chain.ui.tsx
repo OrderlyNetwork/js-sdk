@@ -1,8 +1,8 @@
 import { FC } from "react";
-import { Box, ChainIcon, modal, toast } from "@orderly.network/ui";
+import { Box, ChainIcon, modal, toast } from "@kodiak-finance/orderly-ui";
 import { ChainState } from "./chain.script";
-import { ChainSelectorSheetId } from "@orderly.network/ui-chain-selector";
-import { useTranslation } from "@orderly.network/i18n";
+import { ChainSelectorSheetId } from "@kodiak-finance/orderly-ui-chain-selector";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 
 export const Chain: FC<ChainState> = (props) => {
   const { t } = useTranslation();

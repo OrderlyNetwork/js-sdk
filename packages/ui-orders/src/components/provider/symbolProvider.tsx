@@ -1,5 +1,5 @@
 import { FC, PropsWithChildren, useMemo } from "react";
-import { useSymbolsInfo } from "@orderly.network/hooks";
+import { useSymbolsInfo } from "@kodiak-finance/orderly-hooks";
 import { SymbolContext, SymbolContextState } from "./symbolContext";
 
 interface FormatterProviderProps {

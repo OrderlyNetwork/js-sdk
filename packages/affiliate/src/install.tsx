@@ -1,4 +1,4 @@
-import { ExtensionPositionEnum, installExtension } from "@orderly.network/ui";
+import { ExtensionPositionEnum, installExtension } from "@kodiak-finance/orderly-ui";
 import { AffiliateLayout, AffiliateLayoutProps } from "./layout/layout.ui";
 import { layoutBuilder } from "./layout/layoutBuilder";
 

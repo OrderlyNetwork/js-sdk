@@ -1,5 +1,5 @@
 {
-  "name": "@orderly.network/core",
+  "name": "@kodiak-finance/orderly-core",
   "version": "2.7.3",
   "description": "",
   "main": "dist/index.js",
@@ -17,7 +17,7 @@
   ],
   "dependencies": {
     "@noble/ed25519": "^2.0.0",
-    "@orderly.network/types": "workspace:*",
+    "@kodiak-finance/orderly-types": "workspace:*",
     "@solana/web3.js": "^1.95.3",
     "bs58": "^5.0.0",
     "ethers": "^6.15.0",

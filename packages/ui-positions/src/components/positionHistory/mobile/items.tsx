@@ -1,6 +1,6 @@
 import { FC, ReactNode, useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { API } from "@kodiak-finance/orderly-types";
 import {
   Badge,
   capitalizeFirstLetter,
@@ -8,8 +8,8 @@ import {
   modal,
   Statistic,
   Text,
-} from "@orderly.network/ui";
-import { commifyOptional } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-ui";
+import { commifyOptional } from "@kodiak-finance/orderly-utils";
 import { FundingFeeButton } from "../../fundingFeeHistory/fundingFeeButton";
 import { PositionHistorySide } from "../positionHistory.script";
 import { PositionHistoryCellState } from "./positionHistoryCell.script";

@@ -1,7 +1,7 @@
 import { useMemo } from "react";
-import { account } from "@orderly.network/perp";
-import { AccountStatusEnum, EMPTY_LIST } from "@orderly.network/types";
-import { zero } from "@orderly.network/utils";
+import { account } from "@kodiak-finance/orderly-perp";
+import { AccountStatusEnum, EMPTY_LIST } from "@kodiak-finance/orderly-types";
+import { zero } from "@kodiak-finance/orderly-utils";
 import { useAccount } from "../useAccount";
 import { useCollateral } from "./useCollateral";
 import { useMarkPricesStream } from "./useMarkPricesStream";

@@ -4,7 +4,7 @@ import {
   getPrecisionByNumber,
   numberToHumanStyle,
   todpIfNeed,
-} from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-utils";
 
 export type RoundingMode = number | "truncate";
 

@@ -1,10 +1,10 @@
 import { FC, useMemo } from "react";
-import { useSymbolsInfo, utils } from "@orderly.network/hooks";
-import { API, AlgoOrderType } from "@orderly.network/types";
-import { OrderSide } from "@orderly.network/types";
-import { cn, Text, Tooltip } from "@orderly.network/ui";
+import { useSymbolsInfo, utils } from "@kodiak-finance/orderly-hooks";
+import { API, AlgoOrderType } from "@kodiak-finance/orderly-types";
+import { OrderSide } from "@kodiak-finance/orderly-types";
+import { cn, Text, Tooltip } from "@kodiak-finance/orderly-ui";
 import { useTPSLOrderRowContext } from "../tpslOrderRowContext";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 export const OrderTriggerPrice = () => {
   const { sl_trigger_price, tp_trigger_price, order, position } =
     useTPSLOrderRowContext();

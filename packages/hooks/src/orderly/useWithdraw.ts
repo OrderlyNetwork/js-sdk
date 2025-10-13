@@ -4,8 +4,8 @@ import {
   ARBITRUM_MAINNET_CHAINID,
   ARBITRUM_TESTNET_CHAINID,
   TrackerEventName,
-} from "@orderly.network/types";
-import { isTestnet } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-types";
+import { isTestnet } from "@kodiak-finance/orderly-utils";
 import { useAccount } from "../useAccount";
 import { useConfig } from "../useConfig";
 import { useTrack } from "../useTrack";

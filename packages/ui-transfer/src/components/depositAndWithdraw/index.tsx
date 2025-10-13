@@ -1,5 +1,5 @@
 import { FC, useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   ArrowDownSquareFillIcon,
   ArrowUpSquareFillIcon,
@@ -7,7 +7,7 @@ import {
   registerSimpleSheet,
   TabPanel,
   Tabs,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import { DepositSlot } from "./depositSlot";
 import { WithdrawSlot } from "./withdrawSlot";
 

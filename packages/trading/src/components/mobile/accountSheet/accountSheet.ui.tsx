@@ -1,7 +1,7 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { ArrowRightShortIcon, Button, Flex, Text } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { ArrowRightShortIcon, Button, Flex, Text } from "@kodiak-finance/orderly-ui";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { AccountSheetState } from "./accountSheet.script";
 import { CopyIcon, HeadIcon, OrderlyIcon, USDCIcon } from "./icons";
 

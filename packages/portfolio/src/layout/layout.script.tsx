@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { useMediaQuery } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { SideMenuItem, useScaffoldContext } from "@orderly.network/ui-scaffold";
+import { useMediaQuery } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { SideMenuItem, useScaffoldContext } from "@kodiak-finance/orderly-ui-scaffold";
 
 export enum PortfolioLeftSidebarPath {
   Overview = "/portfolio",

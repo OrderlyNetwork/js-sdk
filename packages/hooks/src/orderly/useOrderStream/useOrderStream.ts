@@ -5,9 +5,9 @@ import {
   OrderStatus,
   API,
   AlgoOrderRootType,
-} from "@orderly.network/types";
-import { SDKError } from "@orderly.network/types";
-import { AlgoOrderType } from "@orderly.network/types";
+} from "@kodiak-finance/orderly-types";
+import { SDKError } from "@kodiak-finance/orderly-types";
+import { AlgoOrderType } from "@kodiak-finance/orderly-types";
 import { useDataCenterContext } from "../../provider/dataCenter/dataCenterContext";
 import { useEventEmitter } from "../../useEventEmitter";
 import { useMutation } from "../../useMutation";

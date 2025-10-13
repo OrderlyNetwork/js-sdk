@@ -1,6 +1,6 @@
 import { FC, useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { OrderEntity, OrderSide } from "@orderly.network/types";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { OrderEntity, OrderSide } from "@kodiak-finance/orderly-types";
 import {
   Button,
   Text,
@@ -10,8 +10,8 @@ import {
   Badge,
   ThrottledButton,
   Box,
-} from "@orderly.network/ui";
-import { commify, commifyOptional, Decimal } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-ui";
+import { commify, commifyOptional, Decimal } from "@kodiak-finance/orderly-utils";
 
 export const ConfirmHeader: FC<{
   onClose?: () => void;

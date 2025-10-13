@@ -1,7 +1,7 @@
 import { FC, ReactNode, useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Flex, Text, cn } from "@orderly.network/ui";
-import { commify } from "@orderly.network/utils";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { Flex, Text, cn } from "@kodiak-finance/orderly-ui";
+import { commify } from "@kodiak-finance/orderly-utils";
 import { useReferralContext } from "../../../hooks/provider";
 import { BecomeAffiliateReturns } from "./becomeAffiliate.script";
 

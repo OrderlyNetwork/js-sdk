@@ -1,6 +1,6 @@
+import { Box } from "@kodiak-finance/orderly-ui";
+import { SideNavbarWidget } from "@kodiak-finance/orderly-ui-scaffold";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Box } from "@orderly.network/ui";
-import { SideNavbarWidget } from "@orderly.network/ui-scaffold";
 import { leftSidebarMenus } from "./data";
 
 const meta: Meta<typeof SideNavbarWidget> = {

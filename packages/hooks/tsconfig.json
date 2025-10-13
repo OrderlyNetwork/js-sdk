@@ -2,28 +2,28 @@
   "extends": "./tsconfig.build.json",
   "compilerOptions": {
     "paths": {
-      "@orderly.network/core": [
+      "@kodiak-finance/orderly-core": [
         "../core/src"
       ],
-      "@orderly.network/net": [
+      "@kodiak-finance/orderly-net": [
         "../net/src"
       ],
-      "@orderly.network/perp": [
+      "@kodiak-finance/orderly-perp": [
         "../perp/src"
       ],
-      "@orderly.network/types": [
+      "@kodiak-finance/orderly-types": [
         "../types/src"
       ],
-      "@orderly.network/utils": [
+      "@kodiak-finance/orderly-utils": [
         "../utils/src"
       ],
-      "@orderly.network/default-evm-adapter": [
+      "@kodiak-finance/orderly-default-evm-adapter": [
         "../default-evm-adapter/src"
       ],
-      "@orderly.network/default-solana-adapter": [
+      "@kodiak-finance/orderly-default-solana-adapter": [
         "../default-solana-adapter/src"
       ],
-      "@orderly.network/web3-provider-ethers": [
+      "@kodiak-finance/orderly-web3-provider-ethers": [
         "../web3-provider-ethers/src"
       ]
     }

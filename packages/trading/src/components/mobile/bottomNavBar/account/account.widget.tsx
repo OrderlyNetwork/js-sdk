@@ -1,4 +1,4 @@
-import { ExtensionPositionEnum, ExtensionSlot, installExtension } from "@orderly.network/ui";
+import { ExtensionPositionEnum, ExtensionSlot, installExtension } from "@kodiak-finance/orderly-ui";
 import { useAccountScript } from "./account.script";
 import { Account } from "./account.ui";
 

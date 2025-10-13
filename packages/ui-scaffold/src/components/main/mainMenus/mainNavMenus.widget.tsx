@@ -3,7 +3,7 @@ import {
   ExtensionPositionEnum,
   ExtensionSlot,
   installExtension,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import { MainNavMenus, type MainNavItemsProps } from "./mainNavMenus.ui";
 
 export const MainNavMenusWidget: FC<MainNavItemsProps> = (props) => {

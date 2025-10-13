@@ -2,8 +2,8 @@ import useSWRInfinite, {
   type SWRInfiniteKeyLoader,
   type SWRInfiniteConfiguration,
 } from "swr/infinite";
-import { get } from "@orderly.network/net";
-import { AccountStatusEnum } from "@orderly.network/types";
+import { get } from "@kodiak-finance/orderly-net";
+import { AccountStatusEnum } from "@kodiak-finance/orderly-types";
 import { signatureMiddleware } from "./middleware/signatureMiddleware";
 import { useAccount } from "./useAccount";
 

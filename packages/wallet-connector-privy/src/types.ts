@@ -8,14 +8,14 @@ import {
 } from "@solana/wallet-adapter-base";
 import { QueryClient } from "@tanstack/react-query";
 import { Connector, CreateConnectorFn, Storage } from "wagmi";
-import { WalletState } from "@orderly.network/hooks";
+import { WalletState } from "@kodiak-finance/orderly-hooks";
 import {
   ABSTRACT_MAINNET_CHAINID,
   ABSTRACT_TESTNET_CHAINID,
   ChainNamespace,
   SOLANA_MAINNET_CHAINID,
   SOLANA_TESTNET_CHAINID,
-} from "@orderly.network/types";
+} from "@kodiak-finance/orderly-types";
 
 export type SolanaInitialProps = PropsWithChildren<{
   network?: WalletAdapterNetwork;

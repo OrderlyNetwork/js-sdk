@@ -1,5 +1,5 @@
 import React from "react";
-import { AssetsModule } from "@orderly.network/portfolio";
+import { AssetsModule } from "@kodiak-finance/orderly-portfolio";
 
 const AssetsPage: React.FC = () => {
   return <AssetsModule.AssetsPage />;

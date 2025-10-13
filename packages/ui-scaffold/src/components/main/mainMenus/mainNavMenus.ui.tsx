@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { cn, Flex } from "@orderly.network/ui";
+import { cn, Flex } from "@kodiak-finance/orderly-ui";
 import { MainNavItem, NavItem } from "./navItem";
 
 export type MainNavClassNames = {

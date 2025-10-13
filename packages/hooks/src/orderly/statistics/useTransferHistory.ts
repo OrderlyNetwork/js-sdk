@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { EMPTY_LIST, type API } from "@orderly.network/types";
+import { EMPTY_LIST, type API } from "@kodiak-finance/orderly-types";
 import { usePrivateQuery } from "../../usePrivateQuery";
 import { useSymbolsInfo } from "../useSymbolsInfo";
 

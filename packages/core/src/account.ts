@@ -8,7 +8,7 @@ import {
   API,
   DEFAUL_ORDERLY_KEY_SCOPE,
   EMPTY_LIST,
-} from "@orderly.network/types";
+} from "@kodiak-finance/orderly-types";
 import { AdditionalInfoRepository } from "./additionalInfoRepository";
 import { Assets } from "./assets";
 import { ConfigStore } from "./configStore/configStore";

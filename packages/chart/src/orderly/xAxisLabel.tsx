@@ -1,4 +1,4 @@
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 
 export const XAxisLabel = (props: any) => {
   const { x, y, stroke, payload, index } = props;

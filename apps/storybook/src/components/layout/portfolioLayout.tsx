@@ -1,8 +1,8 @@
 import { FC, ReactNode } from "react";
 import {
-  PortfolioLeftSidebarPath,
   PortfolioLayoutWidget,
-} from "@orderly.network/portfolio";
+  PortfolioLeftSidebarPath,
+} from "@kodiak-finance/orderly-portfolio";
 import { footerConfig, useBottomNav, useMainNav } from "../../orderlyConfig";
 import { PathEnum } from "../../playground/constant";
 import { useRouteContext } from "../orderlyProvider/rounteProvider";

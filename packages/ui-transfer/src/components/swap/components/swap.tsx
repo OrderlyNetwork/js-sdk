@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { API } from "@orderly.network/types";
+import { API } from "@kodiak-finance/orderly-types";
 import { SwapMode, SymbolInfo } from "../types";
 import { CrossSwap } from "./crossSwap";
 import { SingleSwap } from "./singleSwap";

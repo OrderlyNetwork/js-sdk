@@ -1,4 +1,4 @@
-import type { TradingPageProps } from "@orderly.network/trading";
+import type { TradingPageProps } from "@kodiak-finance/orderly-trading";
 
 export type TradingPageConfigProps = {
   tradingViewConfig: Partial<TradingPageProps["tradingViewConfig"]>;

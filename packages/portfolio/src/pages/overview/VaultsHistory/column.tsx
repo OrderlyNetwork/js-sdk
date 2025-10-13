@@ -1,9 +1,9 @@
 import React from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import type { API } from "@orderly.network/types";
-import { Flex, TokenIcon, Text, cn } from "@orderly.network/ui";
-import type { Column } from "@orderly.network/ui";
-import { capitalizeString } from "@orderly.network/utils";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import type { API } from "@kodiak-finance/orderly-types";
+import { Flex, TokenIcon, Text, cn } from "@kodiak-finance/orderly-ui";
+import type { Column } from "@kodiak-finance/orderly-ui";
+import { capitalizeString } from "@kodiak-finance/orderly-utils";
 
 export const useColumns = () => {
   const { t } = useTranslation();

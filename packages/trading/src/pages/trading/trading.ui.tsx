@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { useScreen } from "@orderly.network/ui";
+import { useScreen } from "@kodiak-finance/orderly-ui";
 import type { TradingState } from "./trading.script";
 import { DesktopLayout } from "./trading.ui.desktop";
 import { MobileLayout } from "./trading.ui.mobile";

@@ -1,5 +1,5 @@
 import React from "react";
-import type { SharePnLConfig } from "@orderly.network/ui-share";
+import type { SharePnLConfig } from "@kodiak-finance/orderly-ui-share";
 import { useDataListScript } from "./dataList.script";
 import { DataList } from "./dataList.ui";
 

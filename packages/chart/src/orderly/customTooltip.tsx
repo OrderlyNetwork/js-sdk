@@ -1,4 +1,4 @@
-import { Box, Flex, Text } from "@orderly.network/ui";
+import { Box, Flex, Text } from "@kodiak-finance/orderly-ui";
 
 export const OrderlyChartTooltip = (props: {
   label: string;

@@ -1,7 +1,5 @@
-import {
-  AbstractTestnetChainInfo,
-  AbstractTestnetTokenInfo,
-} from "@orderly.network/types";
+import { AbstractTestnetChainInfo, AbstractTestnetTokenInfo } from "@kodiak-finance/orderly-types";
+
 
 // test only evm chains
 export const customChainsEvm: any = {

@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
 // import { fn } from 'storybook/test';
-import { TokenIcon, Icon, Flex } from "@orderly.network/ui";
+import { Flex, Icon, TokenIcon } from "@kodiak-finance/orderly-ui";
+import type { StoryObj } from "@storybook/react-vite";
 
 const meta = {
   title: "Base/Icon/CoinIcon",

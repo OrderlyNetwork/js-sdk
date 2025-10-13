@@ -1,13 +1,13 @@
 import { FC, useMemo } from "react";
-import { useSymbolsInfo, utils } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import { useSymbolsInfo, utils } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   AlgoOrderType,
   API,
   OrderSide,
   PositionType,
-} from "@orderly.network/types";
-import { cn, Flex, Text, Tooltip } from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-types";
+import { cn, Flex, Text, Tooltip } from "@kodiak-finance/orderly-ui";
 import { usePositionsRowContext } from "../positionsRowContext";
 import { TPSLEditIcon, AddIcon } from "./components";
 

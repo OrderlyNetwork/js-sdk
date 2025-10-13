@@ -1,14 +1,13 @@
 import { useState } from "react";
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import { fn, userEvent, within, expect } from "storybook/test";
 import {
   Box,
   CheckedCircleFillIcon,
   Flex,
   Input,
   InputAdditional,
-  inputFormatter,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
+import type { StoryObj } from "@storybook/react-vite";
+import { fn } from "storybook/test";
 
 const meta = {
   title: "Base/Input/Input",

@@ -1,7 +1,7 @@
 import React from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { Box, EmptyDataState } from "@orderly.network/ui";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { AccountStatusEnum } from "@kodiak-finance/orderly-types";
+import { Box, EmptyDataState } from "@kodiak-finance/orderly-ui";
 import { AuthGuard } from "./authGuard";
 
 type AuthGuardProps = {

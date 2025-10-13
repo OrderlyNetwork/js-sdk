@@ -7,12 +7,12 @@ import {
   Statistic,
   Column,
   Text,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import { RebatesItem, RebatesReturns } from "./rebates.script";
-import { commifyOptional } from "@orderly.network/utils";
-import { useMediaQuery } from "@orderly.network/hooks";
-import { AuthGuardDataTable } from "@orderly.network/ui-connector";
-import { useTranslation } from "@orderly.network/i18n";
+import { commifyOptional } from "@kodiak-finance/orderly-utils";
+import { useMediaQuery } from "@kodiak-finance/orderly-hooks";
+import { AuthGuardDataTable } from "@kodiak-finance/orderly-ui-connector";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 
 export const Rebates: FC<RebatesReturns> = (props) => {
   return (

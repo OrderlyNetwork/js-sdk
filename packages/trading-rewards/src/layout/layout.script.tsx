@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { useMediaQuery } from "@orderly.network/hooks";
-import type { SideBarProps } from "@orderly.network/ui-scaffold";
-import { useTranslation } from "@orderly.network/i18n";
+import { useMediaQuery } from "@kodiak-finance/orderly-hooks";
+import type { SideBarProps } from "@kodiak-finance/orderly-ui-scaffold";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 
 export enum TradingRewardsLeftSidebarPath {
   Trading = "/rewards/trading",

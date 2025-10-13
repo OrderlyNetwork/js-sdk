@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
 // import { fn } from 'storybook/test';
-import { ChainIcon, Flex } from "@orderly.network/ui";
+import { ChainIcon, Flex } from "@kodiak-finance/orderly-ui";
+import type { StoryObj } from "@storybook/react-vite";
 
 const meta = {
   title: "Base/Icon/ChainIcon",

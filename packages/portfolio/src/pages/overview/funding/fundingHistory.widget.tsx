@@ -1,5 +1,5 @@
 import React from "react";
-import { useScreen } from "@orderly.network/ui";
+import { useScreen } from "@kodiak-finance/orderly-ui";
 import { FundingHistoryDesktop } from "./fundingHistory.ui";
 import { FundingHistoryMobile } from "./fundingHistory.ui.mobile";
 import { useFundingHistoryHook } from "./useDataSource.script";

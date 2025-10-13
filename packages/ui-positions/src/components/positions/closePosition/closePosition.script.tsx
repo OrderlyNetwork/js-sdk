@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useLocalStorage, utils } from "@orderly.network/hooks";
-import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
-import { OrderType } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+import { useLocalStorage, utils } from "@kodiak-finance/orderly-hooks";
+import { useOrderEntryFormErrorMsg } from "@kodiak-finance/orderly-react-app";
+import { OrderType } from "@kodiak-finance/orderly-types";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { useSymbolContext } from "../../../provider/symbolContext";
 import { usePositionsRowContext } from "../positionsRowContext";
 

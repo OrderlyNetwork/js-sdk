@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Flex, Tooltip, Text, InfoCircleIcon } from "@orderly.network/ui";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { Flex, Tooltip, Text, InfoCircleIcon } from "@kodiak-finance/orderly-ui";
 import { LTVRiskTooltipWidget } from "../LTVRiskTooltip";
 
 type AvailableProps = {

@@ -2,31 +2,31 @@
   "extends": "./tsconfig.build.json",
   "compilerOptions": {
     "paths": {
-      "@orderly.network/ui": [
+      "@kodiak-finance/orderly-ui": [
         "../ui/src"
       ],
-      "@orderly.network/ui-connector": [
+      "@kodiak-finance/orderly-ui-connector": [
         "../ui-connector/src"
       ],
-      "@orderly.network/ui-scaffold": [
+      "@kodiak-finance/orderly-ui-scaffold": [
         "../ui-scaffold/src"
       ],
-      "@orderly.network/hooks": [
+      "@kodiak-finance/orderly-hooks": [
         "../hooks/src"
       ],
-      "@orderly.network/chart": [
+      "@kodiak-finance/orderly-chart": [
         "../chart/src"
       ],
-      "@orderly.network/utils": [
+      "@kodiak-finance/orderly-utils": [
         "../utils/src"
       ],
-      "@orderly.network/react-app": [
+      "@kodiak-finance/orderly-react-app": [
         "../app/src"
       ],
-      "@orderly.network/types": [
+      "@kodiak-finance/orderly-types": [
         "../types/src"
       ],
-      "@orderly.network/i18n": [
+      "@kodiak-finance/orderly-i18n": [
         "../i18n/src"
       ]
     }

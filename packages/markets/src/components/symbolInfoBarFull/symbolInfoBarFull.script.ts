@@ -5,8 +5,8 @@ import {
   useMarketsStore,
   useSymbolsInfo,
   useTickerStream,
-} from "@orderly.network/hooks";
-import { Decimal } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-hooks";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 
 export type UseSymbolInfoBarFullScriptOptions = {
   symbol: string;

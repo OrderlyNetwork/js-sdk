@@ -1,9 +1,9 @@
 import { useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { AccountStatusEnum, NetworkId } from "@orderly.network/types";
-import { Box, Button, modal } from "@orderly.network/ui";
-import { AuthGuard } from "@orderly.network/ui-connector";
-import { Decimal } from "@orderly.network/utils";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { AccountStatusEnum, NetworkId } from "@kodiak-finance/orderly-types";
+import { Box, Button, modal } from "@kodiak-finance/orderly-ui";
+import { AuthGuard } from "@kodiak-finance/orderly-ui-connector";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { WithdrawTo } from "../../types";
 import { CrossWithdrawConfirm } from "../crossWithdrawConfirm";
 import SwitchChainButton from "./SwitchChainButton";

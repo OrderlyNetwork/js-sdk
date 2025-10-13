@@ -1,11 +1,11 @@
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   modal,
   SimpleDialog,
   SimpleSheet,
   useModal,
   useScreen,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import { Swap, SwapProps } from "./swap";
 
 export const SwapDialog = modal.create<SwapProps>((props) => {

@@ -1,11 +1,11 @@
-import { Flex, Text } from "@orderly.network/ui";
+import { Flex, Text } from "@kodiak-finance/orderly-ui";
 import { JumpIcon } from "../components/jumpIcon";
 import { FC } from "react";
 import { EsOrderlyIcon } from "../components/esOrderlyIcon";
 import { OrderlyIcon } from "../components/orderlyIcon";
 import { AvailableReturns } from "./availableToClaim.script";
-import { commifyOptional } from "@orderly.network/utils";
-import { useTranslation } from "@orderly.network/i18n";
+import { commifyOptional } from "@kodiak-finance/orderly-utils";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 
 export const AvailableToClaim: FC<AvailableReturns> = (props) => {
   const { t } = useTranslation();

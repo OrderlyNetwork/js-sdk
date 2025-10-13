@@ -1,7 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import { useArgs } from "storybook/preview-api";
 // import { fn } from 'storybook/test';
-import { PaginationItems } from "@orderly.network/ui";
+import { PaginationItems } from "@kodiak-finance/orderly-ui";
+import type { StoryObj } from "@storybook/react-vite";
 
 const meta = {
   title: "Base/Pagination",

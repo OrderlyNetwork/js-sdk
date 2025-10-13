@@ -1,5 +1,5 @@
-import { OrderValidationResult } from "@orderly.network/hooks";
-import { OrderSide, OrderType, PositionType } from "@orderly.network/types";
+import { OrderValidationResult } from "@kodiak-finance/orderly-hooks";
+import { OrderSide, OrderType, PositionType } from "@kodiak-finance/orderly-types";
 
 export type Props = {
   disableOrderTypeSelector?: boolean;

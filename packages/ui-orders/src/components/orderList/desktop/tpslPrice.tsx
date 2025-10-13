@@ -2,10 +2,10 @@ import {
   findTPSLOrderPriceFromOrder,
   findTPSLFromOrder,
   useSymbolsInfo,
-} from "@orderly.network/hooks";
-import { i18n, useTranslation } from "@orderly.network/i18n";
-import { OrderType } from "@orderly.network/types";
-import { Text } from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-hooks";
+import { i18n, useTranslation } from "@kodiak-finance/orderly-i18n";
+import { OrderType } from "@kodiak-finance/orderly-types";
+import { Text } from "@kodiak-finance/orderly-ui";
 import { useTPSLOrderRowContext } from "../tpslOrderRowContext";
 
 export const TPSLOrderPrice = () => {

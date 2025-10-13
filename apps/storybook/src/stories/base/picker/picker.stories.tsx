@@ -1,14 +1,7 @@
 import { useState } from "react";
-import type { Meta, StoryObj } from "@storybook/react-vite";
 // import { fn } from 'storybook/test';
-import {
-  ActionSheet,
-  ActionSheetItem,
-  BaseActionSheetItem,
-  Button,
-  DatePicker,
-  Picker,
-} from "@orderly.network/ui";
+import { DatePicker, Picker } from "@kodiak-finance/orderly-ui";
+import type { StoryObj } from "@storybook/react-vite";
 
 const meta = {
   title: "Base/Picker/Picker",

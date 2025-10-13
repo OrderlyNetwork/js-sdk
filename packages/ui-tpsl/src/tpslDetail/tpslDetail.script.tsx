@@ -6,16 +6,16 @@ import {
   useLocalStorage,
   useOrderStream,
   useSymbolsInfo,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+} from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   AlgoOrder,
   AlgoOrderRootType,
   API,
   OrderStatus,
   PositionType,
-} from "@orderly.network/types";
-import { modal, toast, useScreen } from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-types";
+import { modal, toast, useScreen } from "@kodiak-finance/orderly-ui";
 import { TPSLDialogId, TPSLSheetId } from "../positionTPSL/tpsl.widget";
 import { TPSLDetailProps } from "./tpslDetail.widget";
 

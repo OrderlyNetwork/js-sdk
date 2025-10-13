@@ -5,8 +5,8 @@ import {
   OrderStatus,
   SDKError,
   WSMessage,
-} from "@orderly.network/types";
-import { OrderType } from "@orderly.network/types";
+} from "@kodiak-finance/orderly-types";
+import { OrderType } from "@kodiak-finance/orderly-types";
 import { object2underscore } from "../../utils/ws";
 import { BaseMergeHandler } from "./baseMergeHandler";
 

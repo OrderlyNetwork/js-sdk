@@ -23,8 +23,8 @@ import {
   MessageFactor,
   DexRequestInputs,
   InternalTransferInputs,
-} from "@orderly.network/core";
-import { API, MaxUint256, ChainNamespace } from "@orderly.network/types";
+} from "@kodiak-finance/orderly-core";
+import { API, MaxUint256, ChainNamespace } from "@kodiak-finance/orderly-types";
 import {
   addOrderlyKeyMessage,
   checkIsLedgerWallet,

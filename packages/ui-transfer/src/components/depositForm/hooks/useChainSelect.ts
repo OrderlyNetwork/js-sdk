@@ -6,11 +6,11 @@ import {
   useConfig,
   useLocalStorage,
   useWalletConnector,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { API, NetworkId } from "@orderly.network/types";
-import { toast } from "@orderly.network/ui";
-import { int2hex, praseChainIdToNumber } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { API, NetworkId } from "@kodiak-finance/orderly-types";
+import { toast } from "@kodiak-finance/orderly-ui";
+import { int2hex, praseChainIdToNumber } from "@kodiak-finance/orderly-utils";
 
 export type CurrentChain = Pick<ConnectedChain, "namespace"> & {
   id: number;

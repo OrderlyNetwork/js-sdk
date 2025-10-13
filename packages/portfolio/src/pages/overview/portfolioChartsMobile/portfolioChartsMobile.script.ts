@@ -1,6 +1,6 @@
 import { useCallback } from "react";
-import { useLocalStorage, usePositionStream } from "@orderly.network/hooks";
-import { modal } from "@orderly.network/ui";
+import { useLocalStorage, usePositionStream } from "@kodiak-finance/orderly-hooks";
+import { modal } from "@kodiak-finance/orderly-ui";
 import { ORDERLY_ASSETS_VISIBLE_KEY } from "../../assets/type";
 import { PerformanceMobileSheetId } from "../performanceMobileDialog";
 

@@ -1,5 +1,5 @@
 import type { Order } from './charting_library';
-import { OrderStatus } from "@orderly.network/types";
+import { OrderStatus } from "@kodiak-finance/orderly-types";
 
 export type {
     IBrokerConnectionAdapterHost,

@@ -6,10 +6,10 @@ import {
   modal,
   Text,
   Tooltip,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import { ReferralLinkReturns } from "./referralLink.script";
 import { AutoHideText } from "../../../components/autoHideText";
-import { Trans, useTranslation } from "@orderly.network/i18n";
+import { Trans, useTranslation } from "@kodiak-finance/orderly-i18n";
 
 export const ReferralLink: FC<ReferralLinkReturns> = (props) => {
   const { t } = useTranslation();

@@ -1,5 +1,5 @@
 import { ReactNode, useEffect, useState } from "react";
-import { API } from "@orderly.network/types";
+import { API } from "@kodiak-finance/orderly-types";
 import { useLocalStorage } from "./useLocalStorage";
 import { useQuery } from "./useQuery";
 

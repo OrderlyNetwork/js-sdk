@@ -1,9 +1,9 @@
 import { useCallback, useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { cn, Flex, TokenIcon, useScreen } from "@orderly.network/ui";
-import type { Column } from "@orderly.network/ui";
-import { Text } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { cn, Flex, TokenIcon, useScreen } from "@kodiak-finance/orderly-ui";
+import type { Column } from "@kodiak-finance/orderly-ui";
+import { Text } from "@kodiak-finance/orderly-ui";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { OrderlyIcon } from "../../icons";
 import { useEXchanges } from "./useEXchanges";
 

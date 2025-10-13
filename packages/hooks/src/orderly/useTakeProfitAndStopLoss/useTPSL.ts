@@ -9,9 +9,9 @@ import {
   OrderlyOrder,
   PositionType,
   SDKError,
-} from "@orderly.network/types";
-import { AlgoOrderRootType } from "@orderly.network/types";
-import { AlgoOrderType } from "@orderly.network/types";
+} from "@kodiak-finance/orderly-types";
+import { AlgoOrderRootType } from "@kodiak-finance/orderly-types";
+import { AlgoOrderType } from "@kodiak-finance/orderly-types";
 import { appendOrderMetadata } from "../../next/useOrderEntry/helper";
 import { useOrderlyContext } from "../../orderlyContext";
 import { OrderFactory } from "../../services/orderCreator/factory";

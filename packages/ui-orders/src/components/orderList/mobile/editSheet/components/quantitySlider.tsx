@@ -1,8 +1,8 @@
 import { memo, useMemo } from "react";
-import { useThrottledCallback, utils } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { Flex, Slider, Text } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { useThrottledCallback, utils } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { Flex, Slider, Text } from "@kodiak-finance/orderly-ui";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { useEditSheetContext } from "./editSheetContext";
 
 type QuantitySliderProps = {

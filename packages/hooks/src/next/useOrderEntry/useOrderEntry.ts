@@ -10,8 +10,8 @@ import {
   TrackerEventName,
   OrderSide,
   EMPTY_OBJECT,
-} from "@orderly.network/types";
-import { Decimal, getBBOType, zero } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-types";
+import { Decimal, getBBOType, zero } from "@kodiak-finance/orderly-utils";
 import { useAccountInfo } from "../../orderly/appStore";
 import {
   useCollateral,

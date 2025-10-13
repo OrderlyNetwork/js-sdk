@@ -1,7 +1,7 @@
-import { AccountState as AccountStateType } from "@orderly.network/core";
-import { useAccount } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { modal } from "@orderly.network/ui";
+import { AccountState as AccountStateType } from "@kodiak-finance/orderly-core";
+import { useAccount } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { modal } from "@kodiak-finance/orderly-ui";
 import { useTradingPageContext } from "../../../../provider/tradingPageContext";
 import { AccountSheetWidget } from "../../accountSheet";
 

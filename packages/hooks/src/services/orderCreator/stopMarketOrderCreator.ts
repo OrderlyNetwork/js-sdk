@@ -5,7 +5,7 @@ import {
   OrderEntity,
   OrderType,
   TriggerPriceType,
-} from "@orderly.network/types";
+} from "@kodiak-finance/orderly-types";
 import { BaseOrderCreator } from "./baseCreator";
 import {
   OrderFormEntity,

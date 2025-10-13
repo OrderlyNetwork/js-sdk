@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
-import { OrderValidationResult } from "@orderly.network/hooks";
-import { OrderlyOrder } from "@orderly.network/types";
+import { OrderValidationResult } from "@kodiak-finance/orderly-hooks";
+import { OrderlyOrder } from "@kodiak-finance/orderly-types";
 import { SymbolContextState } from "../../../../provider/symbolContext";
 
 export type EditSheetContextState = {

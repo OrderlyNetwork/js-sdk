@@ -7,7 +7,7 @@ import {
   Text,
   cn,
   Tooltip,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 
 type SideMenuItem = {
   name: string;

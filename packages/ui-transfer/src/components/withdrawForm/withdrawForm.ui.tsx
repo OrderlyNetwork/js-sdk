@@ -1,5 +1,5 @@
 import React from "react";
-import { Trans, useTranslation } from "@orderly.network/i18n";
+import { Trans, useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   Box,
   Flex,
@@ -8,7 +8,7 @@ import {
   Tabs,
   TabPanel,
   WalletIcon,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import { WithdrawTo } from "../../types";
 import { LtvWidget } from "../LTV";
 import { TextAreaInput } from "../accountIdInput";

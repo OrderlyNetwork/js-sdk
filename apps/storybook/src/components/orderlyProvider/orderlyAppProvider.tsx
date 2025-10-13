@@ -1,10 +1,10 @@
 import React, { FC } from "react";
-import { OrderlyAppProvider as OrderlyAppProviderBase } from "@orderly.network/react-app";
+import { OrderlyAppProvider as OrderlyAppProviderBase } from "@kodiak-finance/orderly-react-app";
 import { orderlyAppProviderConfig } from "../../orderlyConfig";
 import { dataAdapter } from "../../orderlyConfig/dataAdapter";
 import { notification } from "../../orderlyConfig/notification";
 import { widgetConfigs } from "../../orderlyConfig/widgetConfigs";
-import { useConfigStore, ConfigStoreOptions } from "./configStore";
+import { ConfigStoreOptions, useConfigStore } from "./configStore";
 import { useRouteContext } from "./rounteProvider";
 
 export type OrderlyAppProviderProps = ConfigStoreOptions;

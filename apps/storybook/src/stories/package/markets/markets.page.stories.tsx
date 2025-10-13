@@ -1,25 +1,15 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import { i18n } from "@orderly.network/i18n";
 import {
-  MarketsHomePage,
-  MarketsHeaderWidget,
-  MarketsListFullWidget,
   FavoritesListFullWidget,
+  FundingComparisonWidget,
   FundingOverviewWidget,
   MarketsDataListWidget,
+  MarketsHeaderWidget,
+  MarketsHomePage,
+  MarketsListFullWidget,
   MarketsProvider,
-  FundingComparisonWidget,
-} from "@orderly.network/markets";
-import {
-  useScreen,
-  TradingIcon,
-  BarChartIcon,
-  PersonIcon,
-  AssetIcon,
-  BattleIcon,
-  SettingFillIcon,
-  TradingLeftNavIcon,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-markets";
+import { useScreen } from "@kodiak-finance/orderly-ui";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { BaseLayout } from "../../../components/layout";
 
 const meta: Meta<typeof MarketsHomePage> = {

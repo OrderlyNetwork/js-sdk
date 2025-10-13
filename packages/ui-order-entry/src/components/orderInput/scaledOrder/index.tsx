@@ -1,5 +1,5 @@
-import { DistributionType, OrderlyOrder } from "@orderly.network/types";
-import { cn, Grid } from "@orderly.network/ui";
+import { DistributionType, OrderlyOrder } from "@kodiak-finance/orderly-types";
+import { cn, Grid } from "@kodiak-finance/orderly-ui";
 import { QuantityDistributionInput } from "./quantityDistributionInput";
 import { ScaledPriceInput } from "./scaledPriceInput";
 import { ScaledQuantityInput } from "./scaledQuantityInput";

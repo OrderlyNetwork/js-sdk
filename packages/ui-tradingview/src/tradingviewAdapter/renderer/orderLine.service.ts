@@ -1,5 +1,5 @@
-import { i18n } from "@orderly.network/i18n";
-import { Decimal, commify, getTrailingStopPrice } from "@orderly.network/utils";
+import { i18n } from "@kodiak-finance/orderly-i18n";
+import { Decimal, commify, getTrailingStopPrice } from "@kodiak-finance/orderly-utils";
 import { IChartingLibraryWidget, IOrderLineAdapter } from "../charting_library";
 import useBroker from "../hooks/useBroker";
 import {

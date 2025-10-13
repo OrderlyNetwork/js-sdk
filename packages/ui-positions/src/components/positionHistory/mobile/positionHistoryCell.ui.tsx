@@ -1,8 +1,8 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Divider, Flex, Grid, modal, Text } from "@orderly.network/ui";
-import { SharePnLBottomSheetId } from "@orderly.network/ui-share";
-import { commifyOptional } from "@orderly.network/utils";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { Divider, Flex, Grid, modal, Text } from "@kodiak-finance/orderly-ui";
+import { SharePnLBottomSheetId } from "@kodiak-finance/orderly-ui-share";
+import { commifyOptional } from "@kodiak-finance/orderly-utils";
 import { ShareButtonWidget } from "../../positions/desktop/shareButton";
 import {
   PositionHistoryType,

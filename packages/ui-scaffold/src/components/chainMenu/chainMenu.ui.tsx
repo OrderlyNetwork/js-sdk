@@ -1,6 +1,6 @@
-import { useAccount } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { AccountStatusEnum } from "@orderly.network/types";
+import { useAccount } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { AccountStatusEnum } from "@kodiak-finance/orderly-types";
 import {
   Button,
   ChainIcon,
@@ -14,12 +14,12 @@ import {
   DropdownMenuTrigger,
   Spinner,
   Text,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import {
   ChainSelectorDialogId,
   ChainSelectorWidget,
-} from "@orderly.network/ui-chain-selector";
-import { WalletConnectorModalId } from "@orderly.network/ui-connector";
+} from "@kodiak-finance/orderly-ui-chain-selector";
+import { WalletConnectorModalId } from "@kodiak-finance/orderly-ui-connector";
 import { UseChainMenuScriptReturn } from "./chainMenu.script";
 
 const ModalTitle = () => {

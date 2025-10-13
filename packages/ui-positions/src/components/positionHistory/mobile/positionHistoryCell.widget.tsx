@@ -1,8 +1,8 @@
-import { API } from "@orderly.network/types";
+import { API } from "@kodiak-finance/orderly-types";
 import { PositionHistoryExt } from "../positionHistory.script";
 import { usePositionHistoryCellScript } from "./positionHistoryCell.script";
 import { PositionHistoryCell } from "./positionHistoryCell.ui";
-import { SharePnLConfig } from "@orderly.network/ui-share";
+import { SharePnLConfig } from "@kodiak-finance/orderly-ui-share";
 
 export const PositionHistoryCellWidget = (props: {
   item: PositionHistoryExt;

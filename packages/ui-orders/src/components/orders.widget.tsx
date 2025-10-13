@@ -1,5 +1,5 @@
 import { forwardRef } from "react";
-import { SharePnLConfig } from "@orderly.network/ui-share";
+import { SharePnLConfig } from "@kodiak-finance/orderly-ui-share";
 import { OrderListInstance } from "./orderList/orderList.script";
 import { useOrdersScript } from "./orders.script";
 import { Orders } from "./orders.ui";

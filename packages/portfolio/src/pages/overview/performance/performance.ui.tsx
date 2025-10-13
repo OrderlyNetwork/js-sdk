@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
-import { PnlAreaChart, PnLBarChart } from "@orderly.network/chart";
-import { useTranslation } from "@orderly.network/i18n";
-import { EMPTY_LIST } from "@orderly.network/types";
+import { PnlAreaChart, PnLBarChart } from "@kodiak-finance/orderly-chart";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { EMPTY_LIST } from "@kodiak-finance/orderly-types";
 import {
   Card,
   Grid,
@@ -12,7 +12,7 @@ import {
   Flex,
   Tooltip,
   cn,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import type { UsePerformanceScriptReturn } from "./performance.script";
 
 const LazyPeriodTitle = React.lazy(() =>

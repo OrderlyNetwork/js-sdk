@@ -1,7 +1,7 @@
+import { Box } from "@kodiak-finance/orderly-ui";
+import { AccountMenuWidget } from "@kodiak-finance/orderly-ui-scaffold";
+import { TradingviewWidget } from "@kodiak-finance/orderly-ui-tradingview";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Box } from "@orderly.network/ui";
-import { AccountMenuWidget } from "@orderly.network/ui-scaffold";
-import { TradingviewWidget } from "@orderly.network/ui-tradingview";
 
 const meta: Meta<typeof TradingviewWidget> = {
   title: "Package/ui-tradingview/buySellOnTradingview",

@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import type { SWRConfiguration } from "swr";
-import type { API } from "@orderly.network/types";
+import type { API } from "@kodiak-finance/orderly-types";
 import { usePrivateQuery } from "../../usePrivateQuery";
 import { useSymbolsInfo } from "../useSymbolsInfo";
 

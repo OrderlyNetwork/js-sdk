@@ -1,5 +1,5 @@
-import type { API } from "@orderly.network/types";
-import { SDKError } from "@orderly.network/types";
+import type { API } from "@kodiak-finance/orderly-types";
+import { SDKError } from "@kodiak-finance/orderly-types";
 import { useQuery } from "../useQuery";
 
 export const useFundingDetails = (symbol: string) => {

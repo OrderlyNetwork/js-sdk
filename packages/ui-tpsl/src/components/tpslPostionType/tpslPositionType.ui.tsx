@@ -1,12 +1,12 @@
-import { useTranslation } from "@orderly.network/i18n";
-import { PositionType } from "@orderly.network/types";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { PositionType } from "@kodiak-finance/orderly-types";
 import {
   ExclamationFillIcon,
   Flex,
   Select,
   Text,
   Tooltip,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import { useTPSLPositionTypeScript } from "./tpslPositionType.script";
 
 type TPSLPositionTypeUIProps = ReturnType<typeof useTPSLPositionTypeScript>;

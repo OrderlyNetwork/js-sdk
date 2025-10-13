@@ -1,5 +1,5 @@
 {
-  "name": "@orderly.network/utils",
+  "name": "@kodiak-finance/orderly-utils",
   "version": "2.7.3",
   "description": "",
   "main": "dist/index.js",
@@ -26,7 +26,7 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
-    "@orderly.network/types": "workspace:*",
+    "@kodiak-finance/orderly-types": "workspace:*",
     "dayjs": "^1.11.9",
     "decimal.js-light": "^2.5.1"
   },

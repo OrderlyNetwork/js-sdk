@@ -1,10 +1,10 @@
 import { useCallback } from "react";
-import { utils } from "@orderly.network/core";
+import { utils } from "@kodiak-finance/orderly-core";
 import {
   useAccountInstance,
   useBoolean,
   useConfig,
-} from "@orderly.network/hooks";
+} from "@kodiak-finance/orderly-hooks";
 import {
   swapSupportApiUrl,
   woofiDexCrossSwapChainRouterAbi,

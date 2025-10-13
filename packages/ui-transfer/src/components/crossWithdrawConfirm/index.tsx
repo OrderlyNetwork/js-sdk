@@ -1,6 +1,6 @@
-import { Box, ChainIcon, Flex, Text } from "@orderly.network/ui";
+import { Box, ChainIcon, Flex, Text } from "@kodiak-finance/orderly-ui";
 import { useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 interface IProps {
   currentChain: any;
   amount: number;

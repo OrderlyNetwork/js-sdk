@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import { VaultInfo } from "../../types/vault";
 import { VaultCardWidget } from "../vault-card";
 

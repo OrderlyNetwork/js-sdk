@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { API } from "@orderly.network/types";
+import { API } from "@kodiak-finance/orderly-types";
 
 const retryInterval = 1000;
 

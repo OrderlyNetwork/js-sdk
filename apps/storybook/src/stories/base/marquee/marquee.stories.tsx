@@ -1,5 +1,5 @@
+import { Marquee } from "@kodiak-finance/orderly-ui";
 import type { Meta, StoryObj } from "@storybook/react";
-import { Marquee } from "@orderly.network/ui";
 
 const stringData = [
   "Welcome to Orderly Network",

@@ -1,6 +1,7 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
 // import { fn } from 'storybook/test';
-import { Box, Grid } from "@orderly.network/ui";
+import { Box, Grid } from "@kodiak-finance/orderly-ui";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+
 
 const meta: Meta<typeof Grid> = {
   title: "Base/Layout/Grid",

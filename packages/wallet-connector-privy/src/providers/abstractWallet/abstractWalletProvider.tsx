@@ -7,9 +7,9 @@ import {
   useLoginWithAbstract,
 } from "@abstract-foundation/agw-react";
 import { useAccount, useWalletClient } from "wagmi";
-import { ConnectedChain, WalletState } from "@orderly.network/hooks";
-import { ABSTRACT_CHAIN_ID_MAP, ChainNamespace } from "@orderly.network/types";
-import { windowGuard } from "@orderly.network/utils";
+import { ConnectedChain, WalletState } from "@kodiak-finance/orderly-hooks";
+import { ABSTRACT_CHAIN_ID_MAP, ChainNamespace } from "@kodiak-finance/orderly-types";
+import { windowGuard } from "@kodiak-finance/orderly-utils";
 import { useWalletConnectorPrivy } from "../../provider";
 import { AbstractChainsMap, IWalletState } from "../../types";
 

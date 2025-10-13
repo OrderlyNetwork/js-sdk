@@ -1,10 +1,10 @@
 import { FC, useMemo, useRef } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { API, PositionType } from "@orderly.network/types";
-import { Badge, cn, Flex, Grid, Statistic, Text } from "@orderly.network/ui";
-import { SymbolLeverageSheetId } from "@orderly.network/ui-leverage";
-import { SharePnLBottomSheetId } from "@orderly.network/ui-share";
-import { Decimal } from "@orderly.network/utils";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { API, PositionType } from "@kodiak-finance/orderly-types";
+import { Badge, cn, Flex, Grid, Statistic, Text } from "@kodiak-finance/orderly-ui";
+import { SymbolLeverageSheetId } from "@kodiak-finance/orderly-ui-leverage";
+import { SharePnLBottomSheetId } from "@kodiak-finance/orderly-ui-share";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { FundingFeeButton } from "../../../fundingFeeHistory/fundingFeeButton";
 import { LeverageBadge } from "../../desktop/components";
 import { AddIcon, TPSLEditIcon } from "../../desktop/components";

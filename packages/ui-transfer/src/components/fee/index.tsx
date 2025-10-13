@@ -1,7 +1,7 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Box, Flex, modal, Text } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { Box, Flex, modal, Text } from "@kodiak-finance/orderly-ui";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { type UseDepositFeeReturn } from "../depositForm/depositForm.script";
 
 export const Fee: FC<Partial<UseDepositFeeReturn>> = (props) => {

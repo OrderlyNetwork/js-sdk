@@ -1,8 +1,8 @@
 import { useMemo } from "react";
-import { useReferralInfo, useLeverageBySymbol } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { modal } from "@orderly.network/ui";
-import { SharePnLConfig } from "@orderly.network/ui-share";
+import { useReferralInfo, useLeverageBySymbol } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { modal } from "@kodiak-finance/orderly-ui";
+import { SharePnLConfig } from "@kodiak-finance/orderly-ui-share";
 
 export type ShareButtonScriptReturn = ReturnType<typeof useShareButtonScript>;
 

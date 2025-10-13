@@ -1,5 +1,5 @@
-import { type API } from "@orderly.network/types";
-import { getTimestamp } from "@orderly.network/utils";
+import { type API } from "@kodiak-finance/orderly-types";
+import { getTimestamp } from "@kodiak-finance/orderly-utils";
 import { createGetter } from "../utils/createGetter";
 import { useAppStore } from "./appStore";
 

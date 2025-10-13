@@ -1,6 +1,6 @@
 import { FC, useEffect, useMemo, useRef, useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { API } from "@kodiak-finance/orderly-types";
 import {
   Input,
   Select,
@@ -12,8 +12,8 @@ import {
   inputFormatter,
   Spinner,
   InputFormatter,
-} from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-ui";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { InputStatus } from "../../types";
 import { TokenOption } from "./tokenOption";
 

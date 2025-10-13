@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Box } from "@orderly.network/ui";
+import { Box } from "@kodiak-finance/orderly-ui";
 import { useOrderBookContext } from "../../base/orderBook/orderContext";
 import { OrderBookCellType } from "../../base/orderBook/types";
 import { OrderBookCell } from "./cell";

@@ -1,4 +1,4 @@
-import { numberToHumanStyle } from "@orderly.network/utils";
+import { numberToHumanStyle } from "@kodiak-finance/orderly-utils";
 
 export const tickFormatter = (value: number) => {
   const absValue = Math.abs(value);

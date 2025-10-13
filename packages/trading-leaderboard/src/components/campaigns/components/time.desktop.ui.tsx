@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { cn } from "@orderly.network/ui";
+import { cn } from "@kodiak-finance/orderly-ui";
 import { CampaignConfig } from "../type";
 import { generateCampaignTimeline } from "../utils";
 import { CampaignsAxis, CampaignsAxisMobile } from "./axis";

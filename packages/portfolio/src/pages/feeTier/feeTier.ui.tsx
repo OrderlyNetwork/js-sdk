@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useCallback } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   Box,
   Flex,
@@ -12,7 +12,7 @@ import {
   useScreen,
   cn,
   TanstackColumn,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import type { FeeDataType, useFeeTierScriptReturn } from "./feeTier.script";
 
 const LazyFeeTierHeader = React.lazy(() =>

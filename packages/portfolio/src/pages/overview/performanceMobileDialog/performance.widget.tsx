@@ -1,7 +1,7 @@
 import React from "react";
 import { pick } from "ramda";
-import { i18n } from "@orderly.network/i18n";
-import { registerSimpleDialog, registerSimpleSheet } from "@orderly.network/ui";
+import { i18n } from "@kodiak-finance/orderly-i18n";
+import { registerSimpleDialog, registerSimpleSheet } from "@kodiak-finance/orderly-ui";
 import { usePerformanceScript } from "..";
 import { localKey } from "../provider/overviewProvider";
 import { useAssetsHistoryData } from "../shared/useAssetHistory";

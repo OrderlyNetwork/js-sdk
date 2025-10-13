@@ -1,6 +1,6 @@
-import { useFundingFeeHistory } from "@orderly.network/hooks";
-import { usePagination } from "@orderly.network/ui";
-import { subtractDaysFromCurrentDate } from "@orderly.network/utils";
+import { useFundingFeeHistory } from "@kodiak-finance/orderly-hooks";
+import { usePagination } from "@kodiak-finance/orderly-ui";
+import { subtractDaysFromCurrentDate } from "@kodiak-finance/orderly-utils";
 import { useMemo, useState } from "react";
 import { parseDateRangeForFilter } from "../helper/date";
 import { getDate, getMonth, getYear, set } from "date-fns";

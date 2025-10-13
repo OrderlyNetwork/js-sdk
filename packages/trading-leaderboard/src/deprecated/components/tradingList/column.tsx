@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Text, Column, Box, useScreen } from "@orderly.network/ui";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { Text, Column, Box, useScreen } from "@kodiak-finance/orderly-ui";
 import { getRowKey } from "./tradingList.script";
 
 export const useTradingListColumns = (address?: string) => {

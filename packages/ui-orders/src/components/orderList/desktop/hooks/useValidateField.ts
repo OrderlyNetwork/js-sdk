@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from "react";
-import { OrderValidationResult, useOrderEntity } from "@orderly.network/hooks";
-import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
-import { API, OrderlyOrder, OrderSide } from "@orderly.network/types";
+import { OrderValidationResult, useOrderEntity } from "@kodiak-finance/orderly-hooks";
+import { useOrderEntryFormErrorMsg } from "@kodiak-finance/orderly-react-app";
+import { API, OrderlyOrder, OrderSide } from "@kodiak-finance/orderly-types";
 import { convertApiOrderTypeToOrderEntryType } from "../../../../utils/util";
 
 export function useValidateField(props: {

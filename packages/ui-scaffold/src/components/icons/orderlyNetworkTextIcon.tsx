@@ -1,5 +1,5 @@
 import React from "react";
-import { BaseIconProps } from "@orderly.network/ui";
+import { BaseIconProps } from "@kodiak-finance/orderly-ui";
 
 export const OrderlyTextIcon = React.forwardRef<SVGSVGElement, BaseIconProps>(
   (props, ref) => {

@@ -1,11 +1,11 @@
-import { useRefereeRebateSummary } from "@orderly.network/hooks";
+import { useRefereeRebateSummary } from "@kodiak-finance/orderly-hooks";
 import { format, subDays } from "date-fns";
 import { useMemo, useState } from "react";
 import { useReferralContext } from "../../../hooks";
 import { BarDayFilter } from "../../../utils/types";
-import { VolChartDataItem } from "@orderly.network/chart";
+import { VolChartDataItem } from "@kodiak-finance/orderly-chart";
 import { fillData } from "../../../utils/chartUtils";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 
 export type TitleStatisticReturns = {
   period: string;

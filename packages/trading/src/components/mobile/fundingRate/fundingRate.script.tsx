@@ -1,6 +1,6 @@
 import { useCallback } from "react";
-import { useFundingRate } from "@orderly.network/hooks";
-import { modal } from "@orderly.network/ui";
+import { useFundingRate } from "@kodiak-finance/orderly-hooks";
+import { modal } from "@kodiak-finance/orderly-ui";
 import { FundingRateDialogId } from "../fundingRateModal/fundingRateModal.widget";
 
 export const useFundingRateScript = (symbol: string) => {

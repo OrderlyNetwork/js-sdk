@@ -2,8 +2,8 @@ import { ComponentType, ReactNode } from "react";
 import {
   ExclusiveConfigProviderProps,
   ConfigProviderProps,
-} from "@orderly.network/hooks";
-import { ExtensionPosition } from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-hooks";
+import { ExtensionPosition } from "@kodiak-finance/orderly-ui";
 
 type Logo = {
   // the logo image url

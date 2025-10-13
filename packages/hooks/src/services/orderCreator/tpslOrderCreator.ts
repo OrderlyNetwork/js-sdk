@@ -3,12 +3,12 @@ import {
   OrderType,
   API,
   ChildOrder,
-} from "@orderly.network/types";
-import { TriggerPriceType } from "@orderly.network/types";
-import { AlgoOrderType } from "@orderly.network/types";
-import { AlgoOrderRootType } from "@orderly.network/types";
-import { OrderSide } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-types";
+import { TriggerPriceType } from "@kodiak-finance/orderly-types";
+import { AlgoOrderType } from "@kodiak-finance/orderly-types";
+import { AlgoOrderRootType } from "@kodiak-finance/orderly-types";
+import { OrderSide } from "@kodiak-finance/orderly-types";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { AlgoOrderUpdateEntity, BaseAlgoOrderCreator } from "./baseAlgoCreator";
 import { ValuesDepConfig } from "./interface";
 

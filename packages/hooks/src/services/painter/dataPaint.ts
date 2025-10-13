@@ -1,4 +1,4 @@
-import { commify } from "@orderly.network/utils";
+import { commify } from "@kodiak-finance/orderly-utils";
 import { BasePaint, DrawOptions, layoutInfo } from "./basePaint";
 import { path } from "ramda";
 import { qrPaint } from "./qrPaint";

@@ -1,5 +1,5 @@
+import { Checkbox } from "@kodiak-finance/orderly-ui";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Checkbox } from "@orderly.network/ui";
 
 const meta: Meta<typeof Checkbox> = {
   title: "Base/Checkbox/Radio",

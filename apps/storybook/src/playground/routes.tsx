@@ -1,15 +1,15 @@
 import React from "react";
 import {
-  Navigate,
   createBrowserRouter,
-  RouterProvider,
+  Navigate,
   RouteObject,
+  RouterProvider,
 } from "react-router";
 import {
   getLocalePathFromPathname,
   i18n,
   parseI18nLang,
-} from "@orderly.network/i18n";
+} from "@kodiak-finance/orderly-i18n";
 import { PortfolioLayout, TradingRewardsLayout } from "./components/layout";
 import { OrderlyProvider } from "./components/orderlyProvider";
 import { PathEnum } from "./constant";

@@ -1,4 +1,4 @@
-import { Decimal } from "@orderly.network/utils";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { useSymbolsInfo } from "./useSymbolsInfo";
 import { useMarkPricesStream } from "./useMarkPricesStream";
 import { useEffect, useMemo, useState } from "react";

@@ -3,7 +3,7 @@ import {
   PopoverContent,
   PopoverRoot,
   PopoverTrigger,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import { AdditionalInfo, AdditionalInfoProps } from "./additionalInfo";
 
 export function AdditionalConfigButton(props: AdditionalInfoProps) {

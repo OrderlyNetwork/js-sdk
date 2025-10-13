@@ -1,9 +1,9 @@
 import { useMemo } from "react";
-import { useAccount, useGetEnv, useTrack } from "@orderly.network/hooks";
-import { useMutation } from "@orderly.network/hooks";
-import { TrackerEventName } from "@orderly.network/types";
-import { toast } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { useAccount, useGetEnv, useTrack } from "@kodiak-finance/orderly-hooks";
+import { useMutation } from "@kodiak-finance/orderly-hooks";
+import { TrackerEventName } from "@kodiak-finance/orderly-types";
+import { toast } from "@kodiak-finance/orderly-ui";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { VAULTS_CONTRACT_ADDRESSES } from "../../../contract";
 import { OperationType, RoleType } from "../../../types/vault";
 import { getToAccountPayloadType } from "../../../utils/operationPayload";

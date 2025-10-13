@@ -1,8 +1,8 @@
 import { useMemo } from "react";
-import { useIndexPrice } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
-import { Decimal, toNonExponential } from "@orderly.network/utils";
+import { useIndexPrice } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { API } from "@kodiak-finance/orderly-types";
+import { Decimal, toNonExponential } from "@kodiak-finance/orderly-utils";
 import { feeDecimalsOffset } from "../../../utils";
 import { TransactionInfo } from "./useSwapEnquiry";
 

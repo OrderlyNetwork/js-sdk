@@ -3,8 +3,8 @@ import {
   useMarkets,
   MarketsType,
   useLocalStorage,
-} from "@orderly.network/hooks";
-import { API } from "@orderly.network/types";
+} from "@kodiak-finance/orderly-hooks";
+import { API } from "@kodiak-finance/orderly-types";
 import {
   SIDE_MARKETS_TAB_SORT_STORAGE_KEY,
   SIDE_MARKETS_SEL_TAB_KEY,

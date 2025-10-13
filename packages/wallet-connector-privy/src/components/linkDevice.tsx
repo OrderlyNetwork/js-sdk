@@ -5,9 +5,9 @@ import React, {
   SVGProps,
   useState,
 } from "react";
-import { useAccount } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { Flex, SimpleDialog, Text } from "@orderly.network/ui";
+import { useAccount } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { Flex, SimpleDialog, Text } from "@kodiak-finance/orderly-ui";
 
 export const LinkDeviceMobile = (props: PropsWithChildren) => {
   const [open, setOpen] = useState(false);

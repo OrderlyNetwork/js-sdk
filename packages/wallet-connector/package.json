@@ -1,5 +1,5 @@
 {
-  "name": "@orderly.network/wallet-connector",
+  "name": "@kodiak-finance/orderly-wallet-connector",
   "version": "2.7.3",
   "description": "",
   "main": "dist/index.mjs",
@@ -16,11 +16,11 @@
   "license": "ISC",
   "dependencies": {
     "@binance/w3w-blocknative-connector": "^1.1.7",
-    "@orderly.network/hooks": "workspace:*",
-    "@orderly.network/types": "workspace:*",
-    "@orderly.network/core": "workspace:*",
-    "@orderly.network/utils": "workspace:*",
-    "@orderly.network/ui": "workspace:*",
+    "@kodiak-finance/orderly-hooks": "workspace:*",
+    "@kodiak-finance/orderly-types": "workspace:*",
+    "@kodiak-finance/orderly-core": "workspace:*",
+    "@kodiak-finance/orderly-utils": "workspace:*",
+    "@kodiak-finance/orderly-ui": "workspace:*",
     "@types/lodash": "^4.17.7",
     "@web3-onboard/bitget": "^2.1.1",
     "@web3-onboard/core": "^2.22.2",

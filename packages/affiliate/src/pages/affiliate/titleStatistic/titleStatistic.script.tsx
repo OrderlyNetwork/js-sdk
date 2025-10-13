@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
 import { fillData } from "../../../utils/chartUtils";
-import { RefferalAPI, useReferralRebateSummary } from "@orderly.network/hooks";
+import { RefferalAPI, useReferralRebateSummary } from "@kodiak-finance/orderly-hooks";
 import { format, subDays } from "date-fns";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 
 export type TitleStatisticReturns = {
   period: string;

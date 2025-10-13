@@ -2,9 +2,9 @@ import {
   AlgoOrderEntity,
   AlgoOrderRootType,
   OrderSide,
-} from "@orderly.network/types";
-import { OrderType } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-types";
+import { OrderType } from "@kodiak-finance/orderly-types";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import {
   getPriceRange,
   getTPSLTriggerPriceRange,

@@ -1,4 +1,4 @@
-import { SettingModule } from "@orderly.network/portfolio";
+import { SettingModule } from "@kodiak-finance/orderly-portfolio";
 
 export default function SettingsPage() {
   return <SettingModule.SettingPage />;

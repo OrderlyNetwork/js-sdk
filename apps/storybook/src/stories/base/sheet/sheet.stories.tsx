@@ -1,13 +1,11 @@
 import { useState } from "react";
-import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   Button,
-  modal,
-  Sheet,
   ModalProvider,
-  registerSimpleSheet,
+  Sheet,
   SimpleSheet,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
+import type { StoryObj } from "@storybook/react-vite";
 
 const meta = {
   title: "Base/Sheet",

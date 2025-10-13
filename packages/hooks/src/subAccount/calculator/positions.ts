@@ -1,7 +1,7 @@
 import { propOr } from "ramda";
-import { account, positions } from "@orderly.network/perp";
-import { API } from "@orderly.network/types";
-import { zero } from "@orderly.network/utils";
+import { account, positions } from "@kodiak-finance/orderly-perp";
+import { API } from "@kodiak-finance/orderly-types";
+import { zero } from "@kodiak-finance/orderly-utils";
 import { SymbolsInfo } from "../../orderly/useSymbolsInfo";
 
 export function formatPositions(

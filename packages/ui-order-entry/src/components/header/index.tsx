@@ -1,6 +1,6 @@
-import { useTranslation } from "@orderly.network/i18n";
-import { OrderlyOrder, OrderSide, OrderType } from "@orderly.network/types";
-import { Button, cn } from "@orderly.network/ui";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { OrderlyOrder, OrderSide, OrderType } from "@kodiak-finance/orderly-types";
+import { Button, cn } from "@kodiak-finance/orderly-ui";
 import { OrderTypeSelect } from "../orderTypeSelect";
 import { LeverageBadge } from "./LeverageBadge";
 

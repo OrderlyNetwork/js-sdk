@@ -1,5 +1,5 @@
-import { useTranslation, Trans } from "@orderly.network/i18n";
-import { TokenIcon, Text, Badge, Divider, Flex, cn } from "@orderly.network/ui";
+import { useTranslation, Trans } from "@kodiak-finance/orderly-i18n";
+import { TokenIcon, Text, Badge, Divider, Flex, cn } from "@kodiak-finance/orderly-ui";
 import { LeverageHeader } from "../index";
 import {
   LeverageInput,

@@ -1,9 +1,9 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   OverviewModule,
   PortfolioLeftSidebarPath,
-} from "@orderly.network/portfolio";
-import { Box, Card, Flex, Grid } from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-portfolio";
+import { Box, Card, Flex, Grid } from "@kodiak-finance/orderly-ui";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { PortfolioLayout } from "../../../components/layout";
 
 const { usePerformanceScript } = OverviewModule;

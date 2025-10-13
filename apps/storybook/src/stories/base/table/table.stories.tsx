@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
-import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
+  Badge,
   Box,
   DataTable,
-  Input,
   Flex,
+  Input,
+  Text,
   cn,
   usePagination,
-  Badge,
-  Text,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Columns } from "./columns";
 import { DataSource, DataSourceWithChildren } from "./dataSource";
 

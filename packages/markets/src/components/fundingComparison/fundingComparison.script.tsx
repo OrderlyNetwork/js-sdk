@@ -3,9 +3,9 @@ import {
   useFundingRates,
   useMarketsStream,
   useQuery,
-} from "@orderly.network/hooks";
-import { usePagination } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-hooks";
+import { usePagination } from "@kodiak-finance/orderly-ui";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { useMarketsContext } from "../../components/marketsProvider";
 import { useSort, searchBySymbol } from "../../utils";
 import { useEXchanges } from "./useEXchanges";

@@ -1,6 +1,6 @@
 import { FC, useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { AssetHistoryStatusEnum } from "@orderly.network/types";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { AssetHistoryStatusEnum } from "@kodiak-finance/orderly-types";
 import {
   Badge,
   DataFilter,
@@ -11,7 +11,7 @@ import {
   toast,
   ArrowRightShortIcon,
   EmptyDataState,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import {
   AssetTarget,
   type AssetHistoryScriptReturn,

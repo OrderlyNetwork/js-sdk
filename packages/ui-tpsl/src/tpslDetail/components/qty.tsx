@@ -1,8 +1,8 @@
 import { useMemo } from "react";
-import { findTPSLFromOrder } from "@orderly.network/hooks";
-import { API } from "@orderly.network/types";
-import { Flex, Text } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { findTPSLFromOrder } from "@kodiak-finance/orderly-hooks";
+import { API } from "@kodiak-finance/orderly-types";
+import { Flex, Text } from "@kodiak-finance/orderly-ui";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { FlexCell } from "../components/common";
 import { useTPSLDetailContext } from "../tpslDetailProvider";
 

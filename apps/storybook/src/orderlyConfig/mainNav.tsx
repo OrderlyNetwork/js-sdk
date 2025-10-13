@@ -1,18 +1,20 @@
 import { useMemo } from "react";
-import { i18n, useTranslation } from "@orderly.network/i18n";
-import { PortfolioLeftSidebarPath } from "@orderly.network/portfolio";
+import { i18n, useTranslation } from "@kodiak-finance/orderly-i18n";
+import { PortfolioLeftSidebarPath } from "@kodiak-finance/orderly-portfolio";
 import {
-  TradingIcon,
-  SettingFillIcon,
-  BarChartIcon,
-  PersonIcon,
-  BattleIcon,
   AssetIcon,
-  TradingLeftNavIcon,
+  BarChartIcon,
+  BattleIcon,
   LeftNavVaultsIcon,
-} from "@orderly.network/ui";
-import { LeftNavProps, MainNavWidgetProps } from "@orderly.network/ui-scaffold";
-import { CustomProductNav } from "../components/customProductNav";
+  PersonIcon,
+  SettingFillIcon,
+  TradingIcon,
+  TradingLeftNavIcon,
+} from "@kodiak-finance/orderly-ui";
+import {
+  LeftNavProps,
+  MainNavWidgetProps,
+} from "@kodiak-finance/orderly-ui-scaffold";
 import {
   ApiKeys,
   FeeTier,

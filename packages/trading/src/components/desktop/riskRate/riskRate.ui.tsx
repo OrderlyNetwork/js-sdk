@@ -1,6 +1,6 @@
 import React, { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { useAppContext } from "@orderly.network/react-app";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { useAppContext } from "@kodiak-finance/orderly-react-app";
 import {
   Flex,
   Text,
@@ -10,8 +10,8 @@ import {
   gradientTextVariants,
   cn,
   EditIcon,
-} from "@orderly.network/ui";
-import { LeverageWidgetWithDialogId } from "@orderly.network/ui-leverage";
+} from "@kodiak-finance/orderly-ui";
+import { LeverageWidgetWithDialogId } from "@kodiak-finance/orderly-ui-leverage";
 import { TooltipContent } from "../assetView/assetView.ui";
 import { RiskRateState } from "./riskRate.script";
 

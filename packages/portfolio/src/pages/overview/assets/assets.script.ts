@@ -6,17 +6,17 @@ import {
   useLocalStorage,
   usePositionStream,
   useWalletConnector,
-} from "@orderly.network/hooks";
-import { useAppContext } from "@orderly.network/react-app";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { modal, useScreen } from "@orderly.network/ui";
-import { LeverageWidgetWithDialogId } from "@orderly.network/ui-leverage";
+} from "@kodiak-finance/orderly-hooks";
+import { useAppContext } from "@kodiak-finance/orderly-react-app";
+import { AccountStatusEnum } from "@kodiak-finance/orderly-types";
+import { modal, useScreen } from "@kodiak-finance/orderly-ui";
+import { LeverageWidgetWithDialogId } from "@kodiak-finance/orderly-ui-leverage";
 import {
   DepositAndWithdrawWithDialogId,
   DepositAndWithdrawWithSheetId,
   TransferDialogId,
   TransferSheetId,
-} from "@orderly.network/ui-transfer";
+} from "@kodiak-finance/orderly-ui-transfer";
 
 export const useAssetScript = () => {
   const { connect, namespace } = useWalletConnector();

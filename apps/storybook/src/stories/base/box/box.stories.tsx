@@ -1,5 +1,5 @@
+import { Box, Flex } from "@kodiak-finance/orderly-ui";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Box, Flex } from "@orderly.network/ui";
 
 const meta: Meta<typeof Box> = {
   title: "Base/Layout/Box",

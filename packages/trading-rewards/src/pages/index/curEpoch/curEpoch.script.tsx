@@ -1,7 +1,7 @@
 import { useMemo } from "react";
-import { useAccount, useWalletConnector } from "@orderly.network/hooks";
-import { useAppContext } from "@orderly.network/react-app";
-import { AccountStatusEnum } from "@orderly.network/types";
+import { useAccount, useWalletConnector } from "@kodiak-finance/orderly-hooks";
+import { useAppContext } from "@kodiak-finance/orderly-react-app";
+import { AccountStatusEnum } from "@kodiak-finance/orderly-types";
 import { useTradingRewardsContext } from "../provider";
 import { RewardsTooltipProps } from "./rewardsTooltip";
 

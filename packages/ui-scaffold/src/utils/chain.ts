@@ -1,4 +1,4 @@
-import { API } from "@orderly.network/types";
+import { API } from "@kodiak-finance/orderly-types";
 
 export function checkChainSupport(
   chainId: number | string,

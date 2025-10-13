@@ -1,5 +1,5 @@
 import { FC, useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   cn,
   DataFilter,
@@ -7,9 +7,9 @@ import {
   Grid,
   ListView,
   Text,
-} from "@orderly.network/ui";
-import { AuthGuardDataTable } from "@orderly.network/ui-connector";
-import { SharePnLConfig } from "@orderly.network/ui-share";
+} from "@kodiak-finance/orderly-ui";
+import { AuthGuardDataTable } from "@kodiak-finance/orderly-ui-connector";
+import { SharePnLConfig } from "@kodiak-finance/orderly-ui-share";
 import { SymbolProvider } from "../../provider/symbolProvider";
 import { usePositionHistoryColumn } from "./desktop/usePositionHistoryColumn";
 import { PositionHistoryCellWidget } from "./mobile";

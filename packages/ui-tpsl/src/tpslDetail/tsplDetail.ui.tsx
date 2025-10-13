@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { API, PositionType } from "@orderly.network/types";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { API, PositionType } from "@kodiak-finance/orderly-types";
 import {
   Box,
   ChevronDownIcon,
@@ -13,7 +13,7 @@ import {
   ThrottledButton,
   useScreen,
   ScrollArea,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import { OrderInfo } from "../components/orderInfo";
 import { OrdersTable } from "./ordersTable";
 import { OrdersTableMobile } from "./ordersTable.mobile";

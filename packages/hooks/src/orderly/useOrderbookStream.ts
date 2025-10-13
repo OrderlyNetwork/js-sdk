@@ -8,8 +8,8 @@ import {
   useRef,
   useState,
 } from "react";
-import { SDKError } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+import { SDKError } from "@kodiak-finance/orderly-types";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { OrderlyContext } from "../orderlyContext";
 import { useEventEmitter } from "../useEventEmitter";
 import { useLocalStorage } from "../useLocalStorage";

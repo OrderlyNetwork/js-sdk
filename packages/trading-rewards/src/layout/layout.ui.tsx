@@ -1,8 +1,8 @@
 import React, { PropsWithChildren } from "react";
 import omit from "ramda/es/omit";
-import { cn } from "@orderly.network/ui";
-import { Scaffold, SideBarProps } from "@orderly.network/ui-scaffold";
-import { ScaffoldProps } from "@orderly.network/ui-scaffold";
+import { cn } from "@kodiak-finance/orderly-ui";
+import { Scaffold, SideBarProps } from "@kodiak-finance/orderly-ui-scaffold";
+import { ScaffoldProps } from "@kodiak-finance/orderly-ui-scaffold";
 
 export type TradingRewardsLayoutProps = ScaffoldProps & {
   hideSideBar?: boolean;

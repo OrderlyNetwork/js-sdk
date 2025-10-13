@@ -1,8 +1,8 @@
 import { FC, memo, useCallback, useRef } from "react";
-import { useLocalStorage } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { TrailingCallbackType } from "@orderly.network/types";
-import { inputFormatter } from "@orderly.network/ui";
+import { useLocalStorage } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { TrailingCallbackType } from "@kodiak-finance/orderly-types";
+import { inputFormatter } from "@kodiak-finance/orderly-ui";
 import { InputType } from "../../../types";
 import { CustomInput } from "../../customInput";
 import { useOrderEntryContext } from "../../orderEntryContext";

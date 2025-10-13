@@ -1,5 +1,5 @@
-import { OrderStatus } from "@orderly.network/types";
-import type { API } from "@orderly.network/types";
+import { OrderStatus } from "@kodiak-finance/orderly-types";
+import type { API } from "@kodiak-finance/orderly-types";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 

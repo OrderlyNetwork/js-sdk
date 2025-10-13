@@ -6,12 +6,12 @@ import {
   useSubAccountDataObserver,
   useSubAccountMaxWithdrawal,
   useTransfer,
-} from "@orderly.network/hooks";
-import { useTokensInfo } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { API, NetworkId } from "@orderly.network/types";
-import { toast } from "@orderly.network/ui";
-import { Decimal, zero } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-hooks";
+import { useTokensInfo } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { API, NetworkId } from "@kodiak-finance/orderly-types";
+import { toast } from "@kodiak-finance/orderly-ui";
+import { Decimal, zero } from "@kodiak-finance/orderly-utils";
 import { InputStatus } from "../../types";
 import { getTransferErrorMessage } from "../../utils";
 import { useSettlePnl } from "../unsettlePnlInfo/useSettlePnl";

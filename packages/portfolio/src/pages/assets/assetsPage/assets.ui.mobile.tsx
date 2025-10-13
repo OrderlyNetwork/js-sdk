@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useMemo } from "react";
-import { useWalletConnector } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { ChainNamespace } from "@orderly.network/types";
+import { useWalletConnector } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { ChainNamespace } from "@kodiak-finance/orderly-types";
 import {
   Button,
   cn,
@@ -12,8 +12,8 @@ import {
   DataFilter,
   modal,
   Flex,
-} from "@orderly.network/ui";
-import { SelectOption } from "@orderly.network/ui/src/select/withOptions";
+} from "@kodiak-finance/orderly-ui";
+import { SelectOption } from "@kodiak-finance/orderly-ui/src/select/withOptions";
 import type { useAssetsScriptReturn } from "./assets.script";
 import { AccountType } from "./assets.ui.desktop";
 

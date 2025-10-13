@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { account } from "@orderly.network/perp";
-import { type API, OrderSide } from "@orderly.network/types";
+import { account } from "@kodiak-finance/orderly-perp";
+import { type API, OrderSide } from "@kodiak-finance/orderly-types";
 import { useAccountInfo } from "./appStore";
 import { useCollateral } from "./useCollateral";
 import { useLeverageBySymbol } from "./useLeverageBySymbol";

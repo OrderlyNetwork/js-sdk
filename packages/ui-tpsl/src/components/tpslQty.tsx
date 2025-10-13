@@ -1,10 +1,10 @@
 import { memo, useEffect, useRef, useState } from "react";
-import { utils } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { Flex, Input, Slider, Text } from "@orderly.network/ui";
-import { inputFormatter } from "@orderly.network/ui";
-import { cn } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { utils } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { Flex, Input, Slider, Text } from "@kodiak-finance/orderly-ui";
+import { inputFormatter } from "@kodiak-finance/orderly-ui";
+import { cn } from "@kodiak-finance/orderly-ui";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 
 export type TPSLQuantityProps = {
   maxQty: number;

@@ -1,4 +1,4 @@
-import { RefferalAPI } from "@orderly.network/hooks";
+import { RefferalAPI } from "@kodiak-finance/orderly-hooks";
 import { BuildNode, useReferralContext } from "../../../hooks";
 import { ReactNode } from "react";
 

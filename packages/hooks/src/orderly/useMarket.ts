@@ -1,6 +1,6 @@
 import { useContext, useMemo, useState } from "react";
-import { API, EMPTY_LIST } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+import { API, EMPTY_LIST } from "@kodiak-finance/orderly-types";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { OrderlyContext } from "../orderlyContext";
 import { useFundingRates } from "./useFundingRates";
 import { useMarketsStream } from "./useMarketsStream";

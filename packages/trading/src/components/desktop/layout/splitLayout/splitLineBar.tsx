@@ -1,6 +1,6 @@
 import React, { HTMLAttributes, useMemo } from "react";
 import { SplitProps } from "@uiw/react-split";
-import { cn } from "@orderly.network/ui";
+import { cn } from "@kodiak-finance/orderly-ui";
 
 export type SplitLineBarProps = Pick<SplitProps, "mode"> &
   HTMLAttributes<HTMLDivElement>;

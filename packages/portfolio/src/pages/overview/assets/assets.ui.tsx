@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   Card,
   Divider,
@@ -12,8 +12,8 @@ import {
   gradientTextVariants,
   EditIcon,
   EyeCloseIcon,
-} from "@orderly.network/ui";
-import { AuthGuard } from "@orderly.network/ui-connector";
+} from "@kodiak-finance/orderly-ui";
+import { AuthGuard } from "@kodiak-finance/orderly-ui-connector";
 import { AssetScriptReturn } from "./assets.script";
 import { AssetsHeader } from "./assetsHeader";
 

@@ -1,7 +1,7 @@
-import { API, SDKError } from "@orderly.network/types";
+import { API, SDKError } from "@kodiak-finance/orderly-types";
 import { useWS } from "../useWS";
 import { useEffect, useState } from "react";
-import { getTimestamp } from "@orderly.network/utils";
+import { getTimestamp } from "@kodiak-finance/orderly-utils";
 
 export interface MarketTradeStreamOptions {
   limit?: number;

@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { format } from "date-fns";
-import { SymbolsInfo, utils } from "@orderly.network/hooks";
-import { useTranslation, i18n } from "@orderly.network/i18n";
+import { SymbolsInfo, utils } from "@kodiak-finance/orderly-hooks";
+import { useTranslation, i18n } from "@kodiak-finance/orderly-i18n";
 import {
   AlgoOrderRootType,
   AlgoOrderType,
@@ -9,15 +9,15 @@ import {
   OrderSide,
   OrderStatus,
   OrderType,
-} from "@orderly.network/types";
-import { cn, Column, Flex, Text } from "@orderly.network/ui";
-import { Badge } from "@orderly.network/ui";
-import { SharePnLConfig, SharePnLDialogId } from "@orderly.network/ui-share";
+} from "@kodiak-finance/orderly-types";
+import { cn, Column, Flex, Text } from "@kodiak-finance/orderly-ui";
+import { Badge } from "@kodiak-finance/orderly-ui";
+import { SharePnLConfig, SharePnLDialogId } from "@kodiak-finance/orderly-ui-share";
 import {
   commifyOptional,
   Decimal,
   getTrailingStopPrice,
-} from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-utils";
 import {
   grayCell,
   parseBadgesFor,

@@ -1,10 +1,10 @@
 import React from "react";
-import { useAccount } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { API, EMPTY_LIST } from "@orderly.network/types";
-import { Flex, TokenIcon, Text, toast, Badge } from "@orderly.network/ui";
-import type { Column } from "@orderly.network/ui";
-import { capitalizeString } from "@orderly.network/utils";
+import { useAccount } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { API, EMPTY_LIST } from "@kodiak-finance/orderly-types";
+import { Flex, TokenIcon, Text, toast, Badge } from "@kodiak-finance/orderly-ui";
+import type { Column } from "@kodiak-finance/orderly-ui";
+import { capitalizeString } from "@kodiak-finance/orderly-utils";
 
 export const useColumns = () => {
   const { t } = useTranslation();

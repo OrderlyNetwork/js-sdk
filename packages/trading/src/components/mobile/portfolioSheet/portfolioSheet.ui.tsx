@@ -1,6 +1,6 @@
 import { FC, useCallback, useId } from "react";
 import React from "react";
-import { Trans, useTranslation } from "@orderly.network/i18n";
+import { Trans, useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   ArrowDownShortIcon,
   ArrowLeftRightIcon,
@@ -21,8 +21,8 @@ import {
   RefreshIcon,
   Statistic,
   Text,
-} from "@orderly.network/ui";
-import { LeverageProps, LeverageSlider } from "@orderly.network/ui-leverage";
+} from "@kodiak-finance/orderly-ui";
+import { LeverageProps, LeverageSlider } from "@kodiak-finance/orderly-ui-leverage";
 import { USDCIcon } from "../accountSheet/icons";
 import {
   getMarginRatioColor,

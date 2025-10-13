@@ -1,12 +1,12 @@
 import React, { useRef, useCallback } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   Box,
   CloseCircleFillIcon,
   cn,
   Input,
   InputProps,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import { SearchIcon } from "../../icons";
 import { useMarketsContext } from "../marketsProvider";
 

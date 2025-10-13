@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useConfig, useQuery, useSWR } from ".";
-import { getGlobalObject } from "@orderly.network/utils";
+import { getGlobalObject } from "@kodiak-finance/orderly-utils";
 
 export const usePreLoadData = () => {
   const [timestampOffsetInitialized, setTimestampOffsetInitialized] =

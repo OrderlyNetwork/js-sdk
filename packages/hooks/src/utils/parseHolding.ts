@@ -1,6 +1,6 @@
-import { account } from "@orderly.network/perp";
-import type { API } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+import { account } from "@kodiak-finance/orderly-perp";
+import type { API } from "@kodiak-finance/orderly-types";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 
 type NonUSDCHolding = {
   holding: number;

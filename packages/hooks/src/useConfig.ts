@@ -1,6 +1,6 @@
 import { useContext } from "react";
-import { ConfigStore, type ConfigKey } from "@orderly.network/core";
-import { SDKError } from "@orderly.network/types";
+import { ConfigStore, type ConfigKey } from "@kodiak-finance/orderly-core";
+import { SDKError } from "@kodiak-finance/orderly-types";
 import { OrderlyContext } from "./orderlyContext";
 
 export function useConfig(): ConfigStore;

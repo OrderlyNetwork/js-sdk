@@ -1,5 +1,5 @@
+import { Switch } from "@kodiak-finance/orderly-ui";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Switch } from "@orderly.network/ui";
 
 const meta: Meta<typeof Switch> = {
   title: "Base/Switch",

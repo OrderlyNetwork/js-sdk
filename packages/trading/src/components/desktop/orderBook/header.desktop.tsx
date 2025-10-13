@@ -1,6 +1,6 @@
 import React, { FC, ReactNode } from "react";
-import { useLocalStorage } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import { useLocalStorage } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   Box,
   CaretDownIcon,
@@ -8,7 +8,7 @@ import {
   cn,
   Flex,
   Popover,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import {
   ORDERBOOK_COIN_TYPE_KEY,
   useOrderBookContext,

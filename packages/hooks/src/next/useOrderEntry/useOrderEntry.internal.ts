@@ -5,7 +5,7 @@ import {
   OrderlyOrder,
   OrderSide,
   OrderType,
-} from "@orderly.network/types";
+} from "@kodiak-finance/orderly-types";
 import { calcTPSL_ROI } from "../../orderly/useTakeProfitAndStopLoss/tp_slUtils";
 import { OrderCreator } from "../../services/orderCreator/interface";
 import {

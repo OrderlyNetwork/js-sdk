@@ -1,6 +1,6 @@
 import React from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Box, cn, TabPanel, Tabs } from "@orderly.network/ui";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { Box, cn, TabPanel, Tabs } from "@kodiak-finance/orderly-ui";
 import { FavoritesIcon } from "../../icons";
 import { MarketsTabName } from "../../type";
 import { useFavoritesProps } from "../shared/hooks/useFavoritesExtraProps";

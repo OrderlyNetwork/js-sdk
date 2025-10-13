@@ -1,7 +1,7 @@
 import { useMemo, useCallback } from "react";
-import { useQuery, useMutation, useAccount } from "@orderly.network/hooks";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { toast } from "@orderly.network/ui";
+import { useQuery, useMutation, useAccount } from "@kodiak-finance/orderly-hooks";
+import { AccountStatusEnum } from "@kodiak-finance/orderly-types";
+import { toast } from "@kodiak-finance/orderly-ui";
 import { useTradingLeaderboardContext } from "../provider";
 import { getCurrentTierIndex } from "./pricePool/utils";
 import { UserCampaignsResponse } from "./type";

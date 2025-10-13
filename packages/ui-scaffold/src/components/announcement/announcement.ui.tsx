@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { AnnouncementType } from "@orderly.network/types";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { AnnouncementType } from "@kodiak-finance/orderly-types";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -15,7 +15,7 @@ import {
   useScreen,
   Text,
   useEmblaCarousel,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import { CloseIcon } from "../icons";
 import type { AnnouncementScriptReturn } from "./announcement.script";
 import {

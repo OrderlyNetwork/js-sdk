@@ -1,7 +1,7 @@
-import { PriceMode } from "@orderly.network/hooks";
-import { API } from "@orderly.network/types";
-import { SortOrder } from "@orderly.network/ui";
-import { SharePnLConfig } from "@orderly.network/ui-share";
+import { PriceMode } from "@kodiak-finance/orderly-hooks";
+import { API } from "@kodiak-finance/orderly-types";
+import { SortOrder } from "@kodiak-finance/orderly-ui";
+import { SharePnLConfig } from "@kodiak-finance/orderly-ui-share";
 
 export type SortType = {
   sortKey: string;

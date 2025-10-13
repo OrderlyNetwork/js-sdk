@@ -1,7 +1,7 @@
 import { memo } from "react";
-import { useSymbolsInfo } from "@orderly.network/hooks";
-import { Text } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { useSymbolsInfo } from "@kodiak-finance/orderly-hooks";
+import { Text } from "@kodiak-finance/orderly-ui";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 
 type AvgPriceProps = {
   symbol: string;

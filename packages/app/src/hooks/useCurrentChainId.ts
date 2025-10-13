@@ -5,8 +5,8 @@ import {
   useConfig,
   useStorageChain,
   useWalletConnector,
-} from "@orderly.network/hooks";
-import { Chain, NetworkId } from "@orderly.network/types";
+} from "@kodiak-finance/orderly-hooks";
+import { Chain, NetworkId } from "@kodiak-finance/orderly-types";
 type ReturnChain = Pick<Chain, "id"> & Partial<Omit<Chain, "id">>;
 
 export type DefaultChain =

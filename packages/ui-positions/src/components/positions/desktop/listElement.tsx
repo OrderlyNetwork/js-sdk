@@ -1,5 +1,5 @@
-import { Text } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { Text } from "@kodiak-finance/orderly-ui";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { useSymbolContext } from "../../../provider/symbolContext";
 import { PriceInput } from "./priceInput";
 import { QuantityInput } from "./quantityInput";

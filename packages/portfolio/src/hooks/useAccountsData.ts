@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMemo } from "react";
 import { produce } from "immer";
-import { useAccount, useCollateral } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import type { API } from "@orderly.network/types";
+import { useAccount, useCollateral } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import type { API } from "@kodiak-finance/orderly-types";
 
 const EMPTY_HOLDING: Partial<API.Holding> = {
   token: "USDC",

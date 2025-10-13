@@ -1,4 +1,4 @@
-import { NetworkId } from "@orderly.network/types";
+import { NetworkId } from "@kodiak-finance/orderly-types";
 import { Chain, useChains } from "./";
 
 export type CurrentChain = {

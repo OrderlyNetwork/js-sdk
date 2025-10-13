@@ -1,11 +1,11 @@
-import { i18n } from "@orderly.network/i18n";
-import { API, OrderStatus, OrderType } from "@orderly.network/types";
-import { AlgoOrderRootType } from "@orderly.network/types";
-import { parseNumber } from "@orderly.network/ui";
+import { i18n } from "@kodiak-finance/orderly-i18n";
+import { API, OrderStatus, OrderType } from "@kodiak-finance/orderly-types";
+import { AlgoOrderRootType } from "@kodiak-finance/orderly-types";
+import { parseNumber } from "@kodiak-finance/orderly-ui";
 import {
   capitalizeString,
   transSymbolformString,
-} from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-utils";
 
 function getDisplaySide(side: string) {
   if (side === "BUY") {

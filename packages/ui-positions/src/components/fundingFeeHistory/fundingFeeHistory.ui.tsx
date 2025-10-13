@@ -1,7 +1,7 @@
 import { FC, useCallback, useMemo } from "react";
-import { usePrivateInfiniteQuery } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { EMPTY_LIST } from "@orderly.network/types";
+import { usePrivateInfiniteQuery } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { EMPTY_LIST } from "@kodiak-finance/orderly-types";
 import {
   Grid,
   Statistic,
@@ -11,8 +11,8 @@ import {
   Flex,
   useScreen,
   cn,
-} from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-ui";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { EndReachedBox } from "./endReachedBox";
 
 type FundingFeeHistory = {

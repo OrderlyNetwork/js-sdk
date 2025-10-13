@@ -1,7 +1,7 @@
 import { FC } from "react";
-import { i18n } from "@orderly.network/i18n";
-import { registerSimpleDialog } from "@orderly.network/ui";
-import { registerSimpleSheet } from "@orderly.network/ui";
+import { i18n } from "@kodiak-finance/orderly-i18n";
+import { registerSimpleDialog } from "@kodiak-finance/orderly-ui";
+import { registerSimpleSheet } from "@kodiak-finance/orderly-ui";
 import {
   TransferFormScriptOptions,
   useTransferFormScript,

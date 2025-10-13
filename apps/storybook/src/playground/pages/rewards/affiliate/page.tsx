@@ -1,4 +1,4 @@
-import { Dashboard, ReferralProvider } from "@orderly.network/affiliate";
+import { Dashboard, ReferralProvider } from "@kodiak-finance/orderly-affiliate";
 
 export default function AffiliatePage() {
   return (

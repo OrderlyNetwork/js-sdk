@@ -1,6 +1,6 @@
-import { API } from "@orderly.network/types";
-import { cn, ScrollArea } from "@orderly.network/ui";
-import { AuthGuardDataTable } from "@orderly.network/ui-connector";
+import { API } from "@kodiak-finance/orderly-types";
+import { cn, ScrollArea } from "@kodiak-finance/orderly-ui";
+import { AuthGuardDataTable } from "@kodiak-finance/orderly-ui-connector";
 import { useColumn } from "./useColum";
 
 export const OrdersTable = (props: {

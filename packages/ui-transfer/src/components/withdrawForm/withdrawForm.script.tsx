@@ -11,17 +11,17 @@ import {
   useWalletConnector,
   useWalletTopic,
   useWithdraw,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { useAppContext } from "@orderly.network/react-app";
+} from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { useAppContext } from "@kodiak-finance/orderly-react-app";
 import {
   API,
   AssetHistorySideEnum,
   AssetHistoryStatusEnum,
   NetworkId,
-} from "@orderly.network/types";
-import { toast } from "@orderly.network/ui";
-import { Decimal, int2hex, praseChainIdToNumber } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-types";
+import { toast } from "@kodiak-finance/orderly-ui";
+import { Decimal, int2hex, praseChainIdToNumber } from "@kodiak-finance/orderly-utils";
 import { InputStatus, WithdrawTo } from "../../types";
 import { CurrentChain } from "../depositForm/hooks";
 import { useToken } from "../depositForm/hooks/useToken";

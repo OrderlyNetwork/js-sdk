@@ -1,6 +1,6 @@
 import { lensIndex, over } from "ramda";
-import { API } from "@orderly.network/types";
-import { WSMessage } from "@orderly.network/types";
+import { API } from "@kodiak-finance/orderly-types";
+import { WSMessage } from "@kodiak-finance/orderly-types";
 import { AlgoOrderMergeHandler } from "../services/orderMerge/algoOrderMergeHandler";
 import { RegularOrderMergeHandler } from "../services/orderMerge/regularOrderMergeHandler";
 

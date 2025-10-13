@@ -1,19 +1,19 @@
 import { FC, useState } from "react";
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import type { SubAccount } from "@orderly.network/core";
-import { useAccount, useBoolean } from "@orderly.network/hooks";
-import { EMPTY_LIST } from "@orderly.network/types";
+import type { SubAccount } from "@kodiak-finance/orderly-core";
+import { useAccount, useBoolean } from "@kodiak-finance/orderly-hooks";
+import { EMPTY_LIST } from "@kodiak-finance/orderly-types";
 import {
   Box,
   Button,
+  Column,
   DataTable,
   Flex,
-  TriggerDialog,
   Input,
   toast,
-  Column,
-} from "@orderly.network/ui";
-import { AuthGuard } from "@orderly.network/ui-connector";
+  TriggerDialog,
+} from "@kodiak-finance/orderly-ui";
+import { AuthGuard } from "@kodiak-finance/orderly-ui-connector";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 const UpdateSubAccountDialog: FC<{
   subAccountId: string;

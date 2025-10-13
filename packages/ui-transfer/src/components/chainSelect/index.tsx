@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { API } from "@kodiak-finance/orderly-types";
 import {
   Box,
   ChainIcon,
@@ -13,7 +13,7 @@ import {
   Spinner,
   Text,
   cn,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import { ExchangeIcon } from "../../icons";
 import { CurrentChain } from "../depositForm/hooks";
 

@@ -1,16 +1,15 @@
 import { useState } from "react";
-import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   CampaignConfig,
-  GeneralRankingWidget,
+  CampaignLeaderboardWidget,
   CampaignRankingWidget,
   GeneralLeaderboardWidget,
-  CampaignLeaderboardWidget,
+  GeneralRankingWidget,
   LeaderboardPage,
   TradingLeaderboardProvider,
-} from "@orderly.network/trading-leaderboard";
-import { Box, Button, cn, Flex, Text } from "@orderly.network/ui";
-import { AuthGuard } from "@orderly.network/ui-connector";
+} from "@kodiak-finance/orderly-trading-leaderboard";
+import { Box } from "@kodiak-finance/orderly-ui";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { BaseLayout } from "../../../components/layout";
 import { campaignRuleMap } from "./rules/constants";
 import { useCustomRanking } from "./useCustomRanking";

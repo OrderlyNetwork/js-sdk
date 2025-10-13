@@ -1,8 +1,8 @@
 import { FC, useMemo } from "react";
-import { useAccount, useWalletConnector } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { ABSTRACT_CHAIN_ID_MAP } from "@orderly.network/types";
-import { Flex, Text, WalletIcon } from "@orderly.network/ui";
+import { useAccount, useWalletConnector } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { ABSTRACT_CHAIN_ID_MAP } from "@kodiak-finance/orderly-types";
+import { Flex, Text, WalletIcon } from "@kodiak-finance/orderly-ui";
 
 export const Web3Wallet: FC = () => {
   const { t } = useTranslation();

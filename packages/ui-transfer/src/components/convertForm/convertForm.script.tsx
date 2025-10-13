@@ -6,14 +6,14 @@ import {
   useLocalStorage,
   useOdosQuote,
   useWalletConnector,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { account } from "@orderly.network/perp";
-import { useAppContext } from "@orderly.network/react-app";
-import { nativeETHAddress, nativeTokenAddress } from "@orderly.network/types";
-import type { API, NetworkId } from "@orderly.network/types";
-import { toast } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { account } from "@kodiak-finance/orderly-perp";
+import { useAppContext } from "@kodiak-finance/orderly-react-app";
+import { nativeETHAddress, nativeTokenAddress } from "@kodiak-finance/orderly-types";
+import type { API, NetworkId } from "@kodiak-finance/orderly-types";
+import { toast } from "@kodiak-finance/orderly-ui";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { useSettlePnl } from "../unsettlePnlInfo/useSettlePnl";
 import { useToken } from "./hooks/useToken";
 

@@ -1,6 +1,6 @@
+import { ScrollArea } from "@kodiak-finance/orderly-ui";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { fn } from "storybook/test";
-import { ScrollArea } from "@orderly.network/ui";
 
 const meta: Meta<typeof ScrollArea> = {
   title: "Base/ScrollArea",

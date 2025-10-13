@@ -1,5 +1,5 @@
 import { FC, SVGProps } from "react";
-import { useTranslation, Trans } from "@orderly.network/i18n";
+import { useTranslation, Trans } from "@kodiak-finance/orderly-i18n";
 import {
   Box,
   cn,
@@ -7,7 +7,7 @@ import {
   SimpleDialog,
   Text,
   Tooltip,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import { MainLogo } from "../main/mainLogo";
 import { UseScanQRCodeScriptReturn } from "./scanQRCode.script";
 import { QRCodeScanner, QRCODE_WIDTH, QRCODE_HEIGHT } from "./scanner";

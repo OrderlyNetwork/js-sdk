@@ -1,7 +1,7 @@
 import React from "react";
 // import pick from "ramda/es/pick";
-import { i18n } from "@orderly.network/i18n";
-import { registerSimpleDialog, registerSimpleSheet } from "@orderly.network/ui";
+import { i18n } from "@kodiak-finance/orderly-i18n";
+import { registerSimpleDialog, registerSimpleSheet } from "@kodiak-finance/orderly-ui";
 import type { ConvertFormScriptOptions } from "./convertForm.script";
 import { useConvertFormScript } from "./convertForm.script";
 import { ConvertFormUI } from "./convertForm.ui";

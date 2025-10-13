@@ -1,15 +1,15 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import { useAccount } from "@orderly.network/hooks";
-import { Box, Flex, Button, modal, toast } from "@orderly.network/ui";
+import { useAccount } from "@kodiak-finance/orderly-hooks";
+import { Box, Button, Flex, modal, toast } from "@kodiak-finance/orderly-ui";
 import {
-  DepositFormWidget,
-  WithdrawFormWidget,
   DepositAndWithdrawWithDialogId,
   DepositAndWithdrawWithSheetId,
-  TransferFormWidget,
+  DepositFormWidget,
   TransferDialogId,
+  TransferFormWidget,
   TransferSheetId,
-} from "@orderly.network/ui-transfer";
+  WithdrawFormWidget,
+} from "@kodiak-finance/orderly-ui-transfer";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 const meta: Meta<typeof DepositFormWidget> = {
   title: "Package/ui-transfer",

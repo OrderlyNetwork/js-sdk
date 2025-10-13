@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { TableSort } from "@orderly.network/ui";
-import { formatSymbol } from "@orderly.network/utils";
+import { TableSort } from "@kodiak-finance/orderly-ui";
+import { formatSymbol } from "@kodiak-finance/orderly-utils";
 import { SortType } from "./type";
 
 /**

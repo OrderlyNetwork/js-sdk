@@ -1,8 +1,8 @@
 import { FC, ReactNode } from "react";
-import { Flex, Text, cn, Divider, Badge } from "@orderly.network/ui";
+import { Flex, Text, cn, Divider, Badge } from "@kodiak-finance/orderly-ui";
 import { UseSymbolInfoBarScriptReturn } from "./symbolInfoBar.script";
 import { TriangleDownIcon } from "../../icons";
-import { Decimal } from "@orderly.network/utils";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { MarketsProviderProps } from "../marketsProvider";
 
 export type Layout = "left" | "right";

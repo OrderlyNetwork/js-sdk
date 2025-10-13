@@ -1,5 +1,5 @@
+import { Text } from "@kodiak-finance/orderly-ui";
 import type { StoryObj } from "@storybook/react-vite";
-import { Text } from "@orderly.network/ui";
 
 const { numeral: Numeral } = Text;
 

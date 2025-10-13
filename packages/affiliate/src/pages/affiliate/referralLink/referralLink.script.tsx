@@ -1,8 +1,8 @@
 import { useMemo } from "react";
-import { RefferalAPI, useLocalStorage } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { toast } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { RefferalAPI, useLocalStorage } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { toast } from "@kodiak-finance/orderly-ui";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { useReferralContext } from "../../../hooks";
 import { addQueryParam } from "../../../utils/utils";
 

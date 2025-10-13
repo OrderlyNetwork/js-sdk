@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useAccount, useQuery } from "@orderly.network/hooks";
-import { API } from "@orderly.network/types";
-import { TableSort, usePagination, useScreen } from "@orderly.network/ui";
+import { useAccount, useQuery } from "@kodiak-finance/orderly-hooks";
+import { API } from "@kodiak-finance/orderly-types";
+import { TableSort, usePagination, useScreen } from "@kodiak-finance/orderly-ui";
 import { useEndReached } from "../../../hooks/useEndReached";
 import { DateRange } from "../../../type";
 import { getDateRange } from "../../../utils";

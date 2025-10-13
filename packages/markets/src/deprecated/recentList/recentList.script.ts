@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { MarketsType, useMarkets } from "@orderly.network/hooks";
+import { MarketsType, useMarkets } from "@kodiak-finance/orderly-hooks";
 import { useMarketsContext } from "../../components/marketsProvider";
 import { searchBySymbol, useSort } from "../../utils";
 

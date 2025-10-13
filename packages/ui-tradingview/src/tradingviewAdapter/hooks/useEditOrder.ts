@@ -1,7 +1,7 @@
 import { useCallback } from "react";
-import { useEventEmitter, useOrderStream } from "@orderly.network/hooks";
-import { OrderStatus } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+import { useEventEmitter, useOrderStream } from "@kodiak-finance/orderly-hooks";
+import { OrderStatus } from "@kodiak-finance/orderly-types";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { BracketAlgoType, TpslAlgoType } from "../renderer/tpsl.util";
 
 export default function useEditOrder(onToast: any) {

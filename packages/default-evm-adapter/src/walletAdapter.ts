@@ -11,8 +11,8 @@ import {
   InternalTransferInputs,
   WithdrawInputs,
   DexRequestInputs,
-} from "@orderly.network/core";
-import { API, ChainNamespace } from "@orderly.network/types";
+} from "@kodiak-finance/orderly-core";
+import { API, ChainNamespace } from "@kodiak-finance/orderly-types";
 import {
   addOrderlyKeyMessage,
   registerAccountMessage,

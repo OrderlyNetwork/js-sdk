@@ -1,7 +1,7 @@
 import { FC, useCallback, useMemo } from "react";
-import { useAccount } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { AccountStatusEnum } from "@orderly.network/types";
+import { useAccount } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { AccountStatusEnum } from "@kodiak-finance/orderly-types";
 import {
   Sheet,
   SheetContent,
@@ -11,7 +11,7 @@ import {
   SwapHorizIcon,
   PeopleIcon,
   Text,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import { MainLogo } from "../main/mainLogo";
 import { RouterAdapter, RouteOption } from "../scaffold";
 import { SubAccountWidget } from "../subAccount";

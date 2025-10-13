@@ -1,6 +1,6 @@
 import { createContext, PropsWithChildren, useContext } from "react";
-import { useSymbolsInfo } from "@orderly.network/hooks";
-import { API } from "@orderly.network/types";
+import { useSymbolsInfo } from "@kodiak-finance/orderly-hooks";
+import { API } from "@kodiak-finance/orderly-types";
 
 export interface TPSLDetailContextState {
   base_dp: number;

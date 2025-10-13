@@ -1,5 +1,5 @@
 {
-  "name": "@orderly.network/web3-provider-ethers",
+  "name": "@kodiak-finance/orderly-web3-provider-ethers",
   "version": "2.7.3",
   "description": "",
   "main": "dist/index.js",
@@ -17,8 +17,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@orderly.network/default-evm-adapter": "workspace:*",
-    "@orderly.network/types": "workspace:*",
+    "@kodiak-finance/orderly-default-evm-adapter": "workspace:*",
+    "@kodiak-finance/orderly-types": "workspace:*",
     "ethers": "^6.15.0",
     "ethers-decode-error": "^2.1.3"
   },

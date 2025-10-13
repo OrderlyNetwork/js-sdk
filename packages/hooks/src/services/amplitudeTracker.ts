@@ -1,7 +1,7 @@
 import * as amplitude from "@amplitude/analytics-browser";
-import { SimpleDI } from "@orderly.network/core";
-import { EventEmitter } from "@orderly.network/core";
-import { TrackerEventName } from "@orderly.network/types";
+import { SimpleDI } from "@kodiak-finance/orderly-core";
+import { EventEmitter } from "@kodiak-finance/orderly-core";
+import { TrackerEventName } from "@kodiak-finance/orderly-types";
 
 export enum ENVType {
   prod = "prod",

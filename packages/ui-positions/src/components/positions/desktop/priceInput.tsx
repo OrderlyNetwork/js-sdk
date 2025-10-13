@@ -1,5 +1,5 @@
-import { useTranslation } from "@orderly.network/i18n";
-import { OrderType } from "@orderly.network/types";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { OrderType } from "@kodiak-finance/orderly-types";
 import {
   CaretDownIcon,
   cn,
@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
   Input,
   inputFormatter,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import { usePositionsRowContext } from "../positionsRowContext";
 
 export const PriceInput = () => {

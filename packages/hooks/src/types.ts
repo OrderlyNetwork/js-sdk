@@ -1,5 +1,5 @@
 import { StateCreator } from "zustand";
-import { API } from "@orderly.network/types";
+import { API } from "@kodiak-finance/orderly-types";
 import { Portfolio } from "./orderly/appStore";
 
 // export type ImmerStateCreator<T> = StateCreator<CommonState, [["zustand/immer", never], never], [], T>;

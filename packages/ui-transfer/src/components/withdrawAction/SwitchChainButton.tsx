@@ -1,7 +1,7 @@
-import { Button, ButtonProps, Flex, modal, toast } from "@orderly.network/ui";
-import { ChainSelectorDialogId } from "@orderly.network/ui-chain-selector";
-import { NetworkId } from "@orderly.network/types";
-import { useTranslation } from "@orderly.network/i18n";
+import { Button, ButtonProps, Flex, modal, toast } from "@kodiak-finance/orderly-ui";
+import { ChainSelectorDialogId } from "@kodiak-finance/orderly-ui-chain-selector";
+import { NetworkId } from "@kodiak-finance/orderly-types";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 interface IProps {
   networkId?: NetworkId;
   size: ButtonProps["size"];

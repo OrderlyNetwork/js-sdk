@@ -1,7 +1,7 @@
 import React from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { AssetsModule } from "@orderly.network/portfolio";
-import { OrderStatus } from "@orderly.network/types";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { AssetsModule } from "@kodiak-finance/orderly-portfolio";
+import { OrderStatus } from "@kodiak-finance/orderly-types";
 import {
   Box,
   Divider,
@@ -10,14 +10,14 @@ import {
   TabPanel,
   Tabs,
   Tooltip,
-} from "@orderly.network/ui";
-import type { TabPanelProps } from "@orderly.network/ui";
-import { DesktopOrderListWidget, TabType } from "@orderly.network/ui-orders";
+} from "@kodiak-finance/orderly-ui";
+import type { TabPanelProps } from "@kodiak-finance/orderly-ui";
+import { DesktopOrderListWidget, TabType } from "@kodiak-finance/orderly-ui-orders";
 import {
   LiquidationWidget,
   PositionHistoryWidget,
   PositionsWidget,
-} from "@orderly.network/ui-positions";
+} from "@kodiak-finance/orderly-ui-positions";
 import { DataListState, DataListTabType } from "./dataList.script";
 
 const LazySettingWidget = React.lazy(() =>

@@ -6,8 +6,8 @@ import {
   Text,
   SimpleDialog,
   useScreen,
-} from "@orderly.network/ui";
-import { useTranslation } from "@orderly.network/i18n";
+} from "@kodiak-finance/orderly-ui";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 
 /**
  * default style is desktop effect

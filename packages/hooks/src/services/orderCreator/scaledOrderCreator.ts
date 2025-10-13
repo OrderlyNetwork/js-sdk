@@ -4,8 +4,8 @@ import {
   OrderEntity,
   OrderlyOrder,
   OrderType,
-} from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-types";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { getPriceRange } from "../../utils/order/orderPrice";
 import {
   calcScaledOrderBatchBody,

@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   Badge,
   Button,
@@ -12,7 +12,7 @@ import {
   SimpleSheet,
   Text,
   ThrottledButton,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import { ClosePositionScriptReturn } from "./closePosition.script";
 import {
   LimitConfirmDialog,

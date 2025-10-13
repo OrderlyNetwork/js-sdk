@@ -1,4 +1,4 @@
-import { OrderlyOrder } from "@orderly.network/types";
+import { OrderlyOrder } from "@kodiak-finance/orderly-types";
 import { QtyAndTotalInput } from "../qtyAndTotalInput";
 import { ActivePriceInput } from "./activePriceInput";
 import { TrailingCallbackInput } from "./trailingCallbackInput";

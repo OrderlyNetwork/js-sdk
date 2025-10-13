@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { utils } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import { utils } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   PopoverRoot,
   PopoverContent,
@@ -10,9 +10,9 @@ import {
   Slider,
   Button,
   inputFormatter,
-} from "@orderly.network/ui";
-import { Input } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-ui";
+import { Input } from "@kodiak-finance/orderly-ui";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { usePositionsRowContext } from "../positionsRowContext";
 
 export const QuantityInput = (props: { value: number }) => {

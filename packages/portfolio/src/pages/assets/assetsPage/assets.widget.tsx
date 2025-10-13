@@ -1,6 +1,6 @@
 import React from "react";
-import { useAccount } from "@orderly.network/hooks";
-import { useScreen } from "@orderly.network/ui";
+import { useAccount } from "@kodiak-finance/orderly-hooks";
+import { useScreen } from "@kodiak-finance/orderly-ui";
 import { useAssetsScript } from "./assets.script";
 import type { useAssetsScriptReturn } from "./assets.script";
 import { AssetsDataTable, AssetsTable } from "./assets.ui.desktop";

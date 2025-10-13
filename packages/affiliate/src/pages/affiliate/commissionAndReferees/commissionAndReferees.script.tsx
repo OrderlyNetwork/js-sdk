@@ -6,8 +6,8 @@ import {
   useMediaQuery,
   useRefereeInfo,
   useReferralRebateSummary,
-} from "@orderly.network/hooks";
-import { PaginationMeta, usePagination } from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-hooks";
+import { PaginationMeta, usePagination } from "@kodiak-finance/orderly-ui";
 
 export type ListReturns<T> = {
   data: T;

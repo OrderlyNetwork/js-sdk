@@ -1,6 +1,6 @@
-import { WalletState } from "@orderly.network/hooks";
-import { API } from "@orderly.network/types";
-import { isSolana } from "@orderly.network/utils";
+import { WalletState } from "@kodiak-finance/orderly-hooks";
+import { API } from "@kodiak-finance/orderly-types";
+import { isSolana } from "@kodiak-finance/orderly-utils";
 import { getEvmBlockTime } from "./getEvmBlockTime";
 import { getSolanaBlockTime } from "./getSolanaBlockTime";
 

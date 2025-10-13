@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { useAppConfig } from "@orderly.network/react-app";
+import { useAppConfig } from "@kodiak-finance/orderly-react-app";
 
 export const SecondaryLogo: FC = () => {
   const { appIcons } = useAppConfig();

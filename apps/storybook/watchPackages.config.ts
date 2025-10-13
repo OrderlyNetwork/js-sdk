@@ -1,5 +1,6 @@
 import { resolve } from "path";
 
+
 type Package = {
   package: string;
   path: string;
@@ -9,52 +10,52 @@ type Package = {
 
 const base: Package[] = [
   {
-    package: "@orderly.network/react-app",
+    package: "@kodiak-finance/orderly-react-app",
     path: "../../packages/app/src",
     watch: true,
   },
   {
-    package: "@orderly.network/hooks",
+    package: "@kodiak-finance/orderly-hooks",
     path: "../../packages/hooks/src",
     watch: true,
   },
   {
-    package: "@orderly.network/core",
+    package: "@kodiak-finance/orderly-core",
     path: "../../packages/core/src",
     watch: false,
   },
   {
-    package: "@orderly.network/net",
+    package: "@kodiak-finance/orderly-net",
     path: "../../packages/net/src",
     watch: false,
   },
   {
-    package: "@orderly.network/perp",
+    package: "@kodiak-finance/orderly-perp",
     path: "../../packages/perp/src",
     watch: false,
   },
   {
-    package: "@orderly.network/utils",
+    package: "@kodiak-finance/orderly-utils",
     path: "../../packages/utils/src",
     watch: false,
   },
   {
-    package: "@orderly.network/types",
+    package: "@kodiak-finance/orderly-types",
     path: "../../packages/types/src",
     watch: false,
   },
   {
-    package: "@orderly.network/default-evm-adapter",
+    package: "@kodiak-finance/orderly-default-evm-adapter",
     path: "../../packages/default-evm-adapter/src",
     watch: false,
   },
   {
-    package: "@orderly.network/default-solana-adapter",
+    package: "@kodiak-finance/orderly-default-solana-adapter",
     path: "../../packages/default-solana-adapter/src",
     watch: false,
   },
   {
-    package: "@orderly.network/web3-provider-ethers",
+    package: "@kodiak-finance/orderly-web3-provider-ethers",
     path: "../../packages/web3-provider-ethers/src",
     watch: false,
   },
@@ -62,73 +63,73 @@ const base: Package[] = [
 
 const ui: Package[] = [
   {
-    package: "@orderly.network/ui/dist",
+    package: "@kodiak-finance/orderly-ui/dist",
     path: "../../packages/ui/dist",
     watch: true,
     alwaysWatch: true,
   },
   {
-    package: "@orderly.network/ui",
+    package: "@kodiak-finance/orderly-ui",
     path: "../../packages/ui/src",
     watch: true,
   },
   {
-    package: "@orderly.network/ui-chain-selector",
+    package: "@kodiak-finance/orderly-ui-chain-selector",
     path: "../../packages/ui-chain-selector/src",
     watch: true,
   },
   {
-    package: "@orderly.network/ui-connector",
+    package: "@kodiak-finance/orderly-ui-connector",
     path: "../../packages/ui-connector/src",
     watch: true,
   },
   {
-    package: "@orderly.network/ui-leverage",
+    package: "@kodiak-finance/orderly-ui-leverage",
     path: "../../packages/ui-leverage/src",
     watch: true,
   },
   {
-    package: "@orderly.network/ui-order-entry",
+    package: "@kodiak-finance/orderly-ui-order-entry",
     path: "../../packages/ui-order-entry/src",
     watch: true,
   },
   {
-    package: "@orderly.network/ui-orders",
+    package: "@kodiak-finance/orderly-ui-orders",
     path: "../../packages/ui-orders/src",
     watch: true,
   },
   {
-    package: "@orderly.network/ui-positions",
+    package: "@kodiak-finance/orderly-ui-positions",
     path: "../../packages/ui-positions/src",
     watch: true,
   },
   {
-    package: "@orderly.network/ui-scaffold",
+    package: "@kodiak-finance/orderly-ui-scaffold",
     path: "../../packages/ui-scaffold/src",
     watch: true,
   },
   {
-    package: "@orderly.network/ui-share",
+    package: "@kodiak-finance/orderly-ui-share",
     path: "../../packages/ui-share/src",
     watch: true,
   },
   {
-    package: "@orderly.network/ui-tpsl",
+    package: "@kodiak-finance/orderly-ui-tpsl",
     path: "../../packages/ui-tpsl/src",
     watch: true,
   },
   {
-    package: "@orderly.network/ui-tradingview",
+    package: "@kodiak-finance/orderly-ui-tradingview",
     path: "../../packages/ui-tradingview/src",
     watch: true,
   },
   {
-    package: "@orderly.network/ui-transfer",
+    package: "@kodiak-finance/orderly-ui-transfer",
     path: "../../packages/ui-transfer/src",
     watch: true,
   },
   {
-    package: "@orderly.network/chart",
+    package: "@kodiak-finance/orderly-chart",
     path: "../../packages/chart/src",
     watch: true,
   },
@@ -136,37 +137,37 @@ const ui: Package[] = [
 
 const page: Package[] = [
   {
-    package: "@orderly.network/affiliate",
+    package: "@kodiak-finance/orderly-affiliate",
     path: "../../packages/affiliate/src",
     watch: true,
   },
   {
-    package: "@orderly.network/markets",
+    package: "@kodiak-finance/orderly-markets",
     path: "../../packages/markets/src",
     watch: true,
   },
   {
-    package: "@orderly.network/portfolio",
+    package: "@kodiak-finance/orderly-portfolio",
     path: "../../packages/portfolio/src",
     watch: true,
   },
   {
-    package: "@orderly.network/trading",
+    package: "@kodiak-finance/orderly-trading",
     path: "../../packages/trading/src",
     watch: true,
   },
   {
-    package: "@orderly.network/trading-leaderboard",
+    package: "@kodiak-finance/orderly-trading-leaderboard",
     path: "../../packages/trading-leaderboard/src",
     watch: true,
   },
   {
-    package: "@orderly.network/trading-rewards",
+    package: "@kodiak-finance/orderly-trading-rewards",
     path: "../../packages/trading-rewards/src",
     watch: true,
   },
   {
-    package: "@orderly.network/vaults",
+    package: "@kodiak-finance/orderly-vaults",
     path: "../../packages/vaults/src",
     watch: true,
   },
@@ -174,26 +175,26 @@ const page: Package[] = [
 
 const walletConnect: Package[] = [
   {
-    package: "@orderly.network/wallet-connector",
+    package: "@kodiak-finance/orderly-wallet-connector",
     path: "../../packages/wallet-connector/src",
     watch: true,
   },
   {
-    package: "@orderly.network/wallet-connector-privy",
+    package: "@kodiak-finance/orderly-wallet-connector-privy",
     path: "../../packages/wallet-connector-privy/src",
     watch: true,
   },
 ];
 
 const i18n: Package[] = [
-  // need to before @orderly.network/i18n
+  // need to before @kodiak-finance/orderly-i18n
   {
-    package: "@orderly.network/i18n/locales",
+    package: "@kodiak-finance/orderly-i18n/locales",
     path: "../../packages/i18n/locales",
     watch: true,
   },
   {
-    package: "@orderly.network/i18n",
+    package: "@kodiak-finance/orderly-i18n",
     path: "../../packages/i18n/src",
     watch: true,
   },
@@ -211,10 +212,10 @@ export function getWatchPackages() {
   const watchPackages = process.env.VITE_WATCH_PACKAGES?.split(",").map(
     (item) => {
       const packageName = item.trim();
-      if (packageName.startsWith("@orderly.network/")) {
+      if (packageName.startsWith("@kodiak-finance/orderly-")) {
         return packageName;
       }
-      return `${"@orderly.network/"}${packageName}`;
+      return `${"@kodiak-finance/orderly-"}${packageName}`;
     },
   );
 

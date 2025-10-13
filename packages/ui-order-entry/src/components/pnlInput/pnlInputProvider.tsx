@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
-import { useLocalStorage } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { cn, Flex, Text } from "@orderly.network/ui";
+import { useLocalStorage } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { cn, Flex, Text } from "@kodiak-finance/orderly-ui";
 import { PnlInputContext, PnlInputContextState } from "./pnlInputContext";
 import { PNL_Values, PnLMode } from "./useBuilder.script";
 

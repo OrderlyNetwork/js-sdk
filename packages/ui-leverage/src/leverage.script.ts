@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
-import { useLeverage } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { SliderMarks, toast } from "@orderly.network/ui";
+import { useLeverage } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { SliderMarks, toast } from "@kodiak-finance/orderly-ui";
 
 type UseLeverageScriptOptions = {
   close?: () => void;

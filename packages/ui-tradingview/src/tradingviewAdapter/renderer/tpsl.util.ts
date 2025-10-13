@@ -1,6 +1,6 @@
-import { Decimal } from "@orderly.network/utils";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { AlgoType, OrderInterface, OrderType, SideType } from "../type";
-import { i18n } from "@orderly.network/i18n";
+import { i18n } from "@kodiak-finance/orderly-i18n";
 
 export const EST_TPSL_PNL_DECIMAL = 2;
 

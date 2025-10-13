@@ -7,16 +7,16 @@ import {
   useSymbolsInfo,
   useTPSLOrder,
   utils,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+} from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   AlgoOrderRootType,
   API,
   OrderType,
   PositionType,
   SDKError,
-} from "@orderly.network/types";
-import { modal, toast } from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-types";
+import { modal, toast } from "@kodiak-finance/orderly-ui";
 import { PositionTPSLConfirm } from "../positionTPSL";
 
 export type TPSLBuilderOptions = {

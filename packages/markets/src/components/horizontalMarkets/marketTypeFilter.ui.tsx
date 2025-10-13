@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import { useMarkets, MarketsType } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { Box, Flex, Text, cn, Checkbox, Divider } from "@orderly.network/ui";
+import { useMarkets, MarketsType } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { Box, Flex, Text, cn, Checkbox, Divider } from "@kodiak-finance/orderly-ui";
 import { FilterIcon } from "../../icons";
 import type { MarketType } from "./horizontalMarkets.script";
 

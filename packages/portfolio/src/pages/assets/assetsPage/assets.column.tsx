@@ -1,10 +1,10 @@
 import React from "react";
-import { useTokensInfo } from "@orderly.network/hooks";
-import { useWalletConnector } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { ChainNamespace } from "@orderly.network/types";
-import { Button, Flex, Text, TokenIcon } from "@orderly.network/ui";
-import type { Column } from "@orderly.network/ui";
+import { useTokensInfo } from "@kodiak-finance/orderly-hooks";
+import { useWalletConnector } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { ChainNamespace } from "@kodiak-finance/orderly-types";
+import { Button, Flex, Text, TokenIcon } from "@kodiak-finance/orderly-ui";
+import type { Column } from "@kodiak-finance/orderly-ui";
 
 export interface ColumnsOptions {
   onTransfer?: (accountId: string, token: string) => void;

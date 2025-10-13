@@ -1,8 +1,8 @@
 import { FC, useMemo } from "react";
-import { useSymbolsInfo } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { PositionType } from "@orderly.network/types";
-import { cn, Flex, Text } from "@orderly.network/ui";
+import { useSymbolsInfo } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { PositionType } from "@kodiak-finance/orderly-types";
+import { cn, Flex, Text } from "@kodiak-finance/orderly-ui";
 import { usePositionsRowContext } from "../positionsRowContext";
 import { AddIcon, TPSLEditIcon } from "./components";
 

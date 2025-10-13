@@ -1,5 +1,5 @@
 {
-  "name": "@orderly.network/ui-leverage",
+  "name": "@kodiak-finance/orderly-ui-leverage",
   "version": "2.7.3",
   "description": "",
   "main": "dist/index.js",
@@ -20,12 +20,12 @@
     "access": "public"
   },
   "dependencies": {
-    "@orderly.network/i18n": "workspace:*",
-    "@orderly.network/hooks": "workspace:*",
-    "@orderly.network/types": "workspace:*",
-    "@orderly.network/ui": "workspace:*",
-    "@orderly.network/perp": "workspace:*",
-    "@orderly.network/utils": "workspace:*"
+    "@kodiak-finance/orderly-i18n": "workspace:*",
+    "@kodiak-finance/orderly-hooks": "workspace:*",
+    "@kodiak-finance/orderly-types": "workspace:*",
+    "@kodiak-finance/orderly-ui": "workspace:*",
+    "@kodiak-finance/orderly-perp": "workspace:*",
+    "@kodiak-finance/orderly-utils": "workspace:*"
   },
   "devDependencies": {
     "@swc/cli": "^0.3.12",

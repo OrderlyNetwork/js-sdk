@@ -1,6 +1,6 @@
 import useSWR from "swr";
 import type { SWRHook, SWRResponse } from "swr";
-import { AccountStatusEnum } from "@orderly.network/types";
+import { AccountStatusEnum } from "@kodiak-finance/orderly-types";
 import { signatureMiddleware } from "./middleware/signatureMiddleware";
 import { useAccount } from "./useAccount";
 import { fetcher, useQueryOptions } from "./utils/fetcher";

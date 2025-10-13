@@ -1,6 +1,6 @@
-import { i18n } from "@orderly.network/i18n";
-import { OrderlyOrder } from "@orderly.network/types";
-import { registerSimpleDialog, registerSimpleSheet } from "@orderly.network/ui";
+import { i18n } from "@kodiak-finance/orderly-i18n";
+import { OrderlyOrder } from "@kodiak-finance/orderly-types";
+import { registerSimpleDialog, registerSimpleSheet } from "@kodiak-finance/orderly-ui";
 import { TPSLAdvancedUI } from "./tpslAdvanced.ui";
 import { useTPSLAdvanced } from "./useTPSLAdvanced.script";
 

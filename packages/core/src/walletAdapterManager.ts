@@ -1,5 +1,5 @@
 import { WalletAdapter } from "./wallet/walletAdapter";
-import { ChainNamespace} from "@orderly.network/types";
+import { ChainNamespace} from "@kodiak-finance/orderly-types";
 import { Eip1193Provider } from "ethers";
 import { IContract } from "./contract";
 

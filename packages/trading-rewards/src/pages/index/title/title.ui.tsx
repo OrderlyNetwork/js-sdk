@@ -1,7 +1,7 @@
-import { Divider, Flex, Text } from "@orderly.network/ui";
+import { Divider, Flex, Text } from "@kodiak-finance/orderly-ui";
 import { FC } from "react";
 import { TitleConfig } from "./title.script";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 
 export const Title: FC<TitleConfig> = (props) => {
   const { title, subtitle, content, docOpenOptions } = props;

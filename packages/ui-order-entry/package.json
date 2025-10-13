@@ -1,5 +1,5 @@
 {
-  "name": "@orderly.network/ui-order-entry",
+  "name": "@kodiak-finance/orderly-ui-order-entry",
   "version": "2.7.3",
   "description": "",
   "main": "dist/index.js",
@@ -16,16 +16,16 @@
     "access": "public"
   },
   "dependencies": {
-    "@orderly.network/hooks": "workspace:*",
-    "@orderly.network/i18n": "workspace:*",
-    "@orderly.network/perp": "workspace:*",
-    "@orderly.network/react-app": "workspace:*",
-    "@orderly.network/types": "workspace:*",
-    "@orderly.network/ui": "workspace:*",
-    "@orderly.network/ui-connector": "workspace:*",
-    "@orderly.network/ui-leverage": "workspace:*",
-    "@orderly.network/ui-tpsl": "workspace:*",
-    "@orderly.network/utils": "workspace:*",
+    "@kodiak-finance/orderly-hooks": "workspace:*",
+    "@kodiak-finance/orderly-i18n": "workspace:*",
+    "@kodiak-finance/orderly-perp": "workspace:*",
+    "@kodiak-finance/orderly-react-app": "workspace:*",
+    "@kodiak-finance/orderly-types": "workspace:*",
+    "@kodiak-finance/orderly-ui": "workspace:*",
+    "@kodiak-finance/orderly-ui-connector": "workspace:*",
+    "@kodiak-finance/orderly-ui-leverage": "workspace:*",
+    "@kodiak-finance/orderly-ui-tpsl": "workspace:*",
+    "@kodiak-finance/orderly-utils": "workspace:*",
     "ramda": "^0.31.3"
   },
   "devDependencies": {

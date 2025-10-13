@@ -1,5 +1,5 @@
-import { useConfig } from "@orderly.network/hooks";
-import { useAppContext } from "@orderly.network/react-app";
+import { useConfig } from "@kodiak-finance/orderly-hooks";
+import { useAppContext } from "@kodiak-finance/orderly-react-app";
 
 export const useChainScript = () => {
   const config = useConfig();

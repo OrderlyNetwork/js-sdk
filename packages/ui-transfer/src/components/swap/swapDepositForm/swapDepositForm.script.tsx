@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo } from "react";
-import { useConfig, useDeposit, useLocalStorage } from "@orderly.network/hooks";
-import { useAppContext } from "@orderly.network/react-app";
-import { API, NetworkId } from "@orderly.network/types";
-import { modal } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { useConfig, useDeposit, useLocalStorage } from "@kodiak-finance/orderly-hooks";
+import { useAppContext } from "@kodiak-finance/orderly-react-app";
+import { API, NetworkId } from "@kodiak-finance/orderly-types";
+import { modal } from "@kodiak-finance/orderly-ui";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import {
   useActionType,
   useChainSelect,

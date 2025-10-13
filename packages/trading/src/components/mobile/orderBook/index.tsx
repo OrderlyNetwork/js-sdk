@@ -1,7 +1,7 @@
 import { FC, useEffect } from "react";
-import { useLocalStorage } from "@orderly.network/hooks";
-import { EMPTY_LIST } from "@orderly.network/types";
-import { cn, Flex, Spinner } from "@orderly.network/ui";
+import { useLocalStorage } from "@kodiak-finance/orderly-hooks";
+import { EMPTY_LIST } from "@kodiak-finance/orderly-types";
+import { cn, Flex, Spinner } from "@kodiak-finance/orderly-ui";
 import { BasicSymbolInfo } from "../../../types/types";
 import {
   ORDERBOOK_MOBILE_COIN_TYPE_KEY,

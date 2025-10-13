@@ -1,5 +1,5 @@
 {
-  "name": "@orderly.network/chart",
+  "name": "@kodiak-finance/orderly-chart",
   "version": "2.7.3",
   "description": "Charting library for Orderly Network",
   "main": "dist/index.js",
@@ -35,9 +35,9 @@
     "react-dom": ">=18"
   },
   "dependencies": {
-    "@orderly.network/i18n": "workspace:*",
-    "@orderly.network/utils": "workspace:*",
-    "@orderly.network/ui": "workspace:*",
+    "@kodiak-finance/orderly-i18n": "workspace:*",
+    "@kodiak-finance/orderly-utils": "workspace:*",
+    "@kodiak-finance/orderly-ui": "workspace:*",
     "d3-array": "^3.2.4",
     "d3-axis": "^3.0.0",
     "d3-scale": "^4.0.2",

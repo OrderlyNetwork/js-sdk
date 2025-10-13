@@ -1,8 +1,8 @@
 describe("limitOrderCreator", () => {});
-import { OrderSide } from "@orderly.network/types";
+import { OrderSide } from "@kodiak-finance/orderly-types";
 import { LimitOrderCreator } from "../limitOrderCreator";
-import { OrderType } from "@orderly.network/types";
-import { OrderEntity } from "@orderly.network/types";
+import { OrderType } from "@kodiak-finance/orderly-types";
+import { OrderEntity } from "@kodiak-finance/orderly-types";
 import { ValuesDepConfig } from "../interface";
 
 describe("LimitOrderCreator", () => {

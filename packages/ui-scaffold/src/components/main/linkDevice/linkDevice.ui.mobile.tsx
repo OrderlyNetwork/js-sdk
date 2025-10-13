@@ -1,8 +1,8 @@
 import { FC, SVGProps, useState } from "react";
-import { useAccount } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { SimpleDialog } from "@orderly.network/ui";
-import { Flex, Text } from "@orderly.network/ui";
+import { useAccount } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { SimpleDialog } from "@kodiak-finance/orderly-ui";
+import { Flex, Text } from "@kodiak-finance/orderly-ui";
 import { LinkDeviceProps } from "./linkDevice.ui";
 
 export const LinkDeviceMobile: FC<LinkDeviceProps> = (props) => {

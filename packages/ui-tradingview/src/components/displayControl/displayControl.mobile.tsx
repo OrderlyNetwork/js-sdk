@@ -1,12 +1,12 @@
 import { useMemo, useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   DropdownMenuContent,
   DropdownMenuPortal,
   DropdownMenuRoot,
   DropdownMenuTrigger,
   cn,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import {
   CaretIcon,
   DisplaySettingIcon,

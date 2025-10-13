@@ -1,6 +1,6 @@
 import { FC, memo, useMemo } from "react";
-import { TrailingCallbackType } from "@orderly.network/types";
-import { Select, cn } from "@orderly.network/ui";
+import { TrailingCallbackType } from "@kodiak-finance/orderly-types";
+import { Select, cn } from "@kodiak-finance/orderly-ui";
 
 type TrailingCallbackSelectProps = {
   quote: string;

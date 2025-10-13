@@ -1,11 +1,11 @@
 import { useState } from "react";
-import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
-  SymbolInfoBarWidget,
-  SymbolInfoBarFullWidget,
   MarketsSheetWidget,
-} from "@orderly.network/markets";
-import { Box, Flex, SimpleSheet } from "@orderly.network/ui";
+  SymbolInfoBarFullWidget,
+  SymbolInfoBarWidget,
+} from "@kodiak-finance/orderly-markets";
+import { Box, Flex, SimpleSheet } from "@kodiak-finance/orderly-ui";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 const meta: Meta<typeof SymbolInfoBarFullWidget> = {
   title: "Package/markets/SymbolInfoBar",

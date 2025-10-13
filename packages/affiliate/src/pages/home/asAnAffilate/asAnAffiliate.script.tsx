@@ -1,8 +1,8 @@
-import { RefferalAPI as API, useAccount } from "@orderly.network/hooks";
+import { RefferalAPI as API, useAccount } from "@kodiak-finance/orderly-hooks";
 import { TabTypes, useReferralContext } from "../../../hooks";
 import { MockData } from "../../../utils/mockData";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { useScreen } from "@orderly.network/ui";
+import { AccountStatusEnum } from "@kodiak-finance/orderly-types";
+import { useScreen } from "@kodiak-finance/orderly-ui";
 
 export type AsAnAffiliateReturns = {
   isAffiliate: boolean;

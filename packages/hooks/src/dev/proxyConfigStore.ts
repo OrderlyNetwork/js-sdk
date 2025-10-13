@@ -1,6 +1,6 @@
-import { ConfigKey, ConfigStore } from "@orderly.network/core";
-import { SDKError } from "@orderly.network/types";
-import { windowGuard } from "@orderly.network/utils";
+import { ConfigKey, ConfigStore } from "@kodiak-finance/orderly-core";
+import { SDKError } from "@kodiak-finance/orderly-types";
+import { windowGuard } from "@kodiak-finance/orderly-utils";
 
 export class ProxyConfigStore implements ConfigStore {
   private _proxyConfigStore?: ConfigStore;

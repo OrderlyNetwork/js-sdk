@@ -1,5 +1,5 @@
 import React from "react";
-import { Text } from "@orderly.network/ui";
+import { Text } from "@kodiak-finance/orderly-ui";
 
 export const Tag: React.FC<{ text: string }> = (props) => {
   return (

@@ -1,12 +1,18 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import { fn } from "storybook/test";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { Box, Button, Card, modal, SimpleDialog } from "@orderly.network/ui";
+import { AccountStatusEnum } from "@kodiak-finance/orderly-types";
+import {
+  Box,
+  Button,
+  Card,
+  modal,
+  SimpleDialog,
+} from "@kodiak-finance/orderly-ui";
 import {
   WalletConnectContent,
-  WalletConnectorWidget,
   WalletConnectorModalId,
-} from "@orderly.network/ui-connector";
+  WalletConnectorWidget,
+} from "@kodiak-finance/orderly-ui-connector";
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { fn } from "storybook/test";
 
 const meta: Meta<typeof WalletConnectContent> = {
   title: "Package/ui-connector",

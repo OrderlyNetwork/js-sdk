@@ -1,6 +1,6 @@
 import React from "react";
-import { AssetHistorySideEnum } from "@orderly.network/types";
-import { useScreen } from "@orderly.network/ui";
+import { AssetHistorySideEnum } from "@kodiak-finance/orderly-types";
+import { useScreen } from "@kodiak-finance/orderly-ui";
 import { useAssetHistoryScript } from "./assetHistory.script";
 import { AssetHistory } from "./assetHistory.ui";
 import { AssetHistoryMobile } from "./assetHistory.ui.mobile";

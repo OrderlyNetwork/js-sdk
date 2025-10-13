@@ -1,7 +1,7 @@
 import { FC } from "react";
-import { useSymbolsInfo } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { DataFilter, Flex, ListView, Text, Badge } from "@orderly.network/ui";
+import { useSymbolsInfo } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { DataFilter, Flex, ListView, Text, Badge } from "@kodiak-finance/orderly-ui";
 import { type UseFundingHistoryReturn } from "./useDataSource.script";
 
 type FundingHistoryProps = {} & UseFundingHistoryReturn;

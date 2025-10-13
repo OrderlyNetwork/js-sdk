@@ -1,13 +1,13 @@
 import { useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { OrderSide } from "@orderly.network/types";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { OrderSide } from "@kodiak-finance/orderly-types";
 import {
   Flex,
   Slider,
   textVariants,
   Text,
   convertValueToPercentage,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 
 export const QuantitySlider = (props: {
   canTrade: boolean;

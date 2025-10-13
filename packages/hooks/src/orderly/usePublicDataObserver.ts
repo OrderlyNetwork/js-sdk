@@ -1,5 +1,5 @@
-import { type API } from "@orderly.network/types";
-import { getPrecisionByNumber } from "@orderly.network/utils";
+import { type API } from "@kodiak-finance/orderly-types";
+import { getPrecisionByNumber } from "@kodiak-finance/orderly-utils";
 import { useOrderlyContext } from "../orderlyContext";
 import { useQuery } from "../useQuery";
 import { useAppStore } from "./appStore";

@@ -1,6 +1,6 @@
+import { Dashboard, ReferralProvider } from "@kodiak-finance/orderly-affiliate";
+import { TradingRewardsLeftSidebarPath } from "@kodiak-finance/orderly-trading-rewards";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Dashboard, ReferralProvider } from "@orderly.network/affiliate";
-import { TradingRewardsLeftSidebarPath } from "@orderly.network/trading-rewards";
 import { TradingRewardsLayout } from "../../../components/layout";
 
 const meta: Meta<typeof Dashboard.DashboardPage> = {

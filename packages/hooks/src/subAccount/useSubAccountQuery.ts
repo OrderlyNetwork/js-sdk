@@ -4,9 +4,9 @@ import useSWR, {
   SWRHook,
   SWRResponse,
 } from "swr";
-import { Account, MessageFactor } from "@orderly.network/core";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { getTimestamp } from "@orderly.network/utils";
+import { Account, MessageFactor } from "@kodiak-finance/orderly-core";
+import { AccountStatusEnum } from "@kodiak-finance/orderly-types";
+import { getTimestamp } from "@kodiak-finance/orderly-utils";
 import { useAccount } from "../useAccount";
 import { useConfig } from "../useConfig";
 import { fetcher } from "../utils/fetcher";

@@ -1,7 +1,7 @@
 import React, { FC, useState } from "react";
-import { Flex, Text, Tooltip } from "@orderly.network/ui";
-import { commifyOptional } from "@orderly.network/utils";
-import { useTranslation } from "@orderly.network/i18n";
+import { Flex, Text, Tooltip } from "@kodiak-finance/orderly-ui";
+import { commifyOptional } from "@kodiak-finance/orderly-utils";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 
 export type RewardsTooltipProps = {
   brokerName: string | undefined;

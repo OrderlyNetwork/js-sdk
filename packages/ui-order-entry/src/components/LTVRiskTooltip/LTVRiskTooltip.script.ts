@@ -5,11 +5,11 @@ import {
   useIndexPricesStream,
   useQuery,
   useTokensInfo,
-} from "@orderly.network/hooks";
-import { account } from "@orderly.network/perp";
-import type { API } from "@orderly.network/types";
-import { modal } from "@orderly.network/ui";
-import { Decimal, zero } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-hooks";
+import { account } from "@kodiak-finance/orderly-perp";
+import type { API } from "@kodiak-finance/orderly-types";
+import { modal } from "@kodiak-finance/orderly-ui";
+import { Decimal, zero } from "@kodiak-finance/orderly-utils";
 
 const useConvertThreshold = () => {
   const { data, error, isLoading } = useQuery<API.ConvertThreshold>(

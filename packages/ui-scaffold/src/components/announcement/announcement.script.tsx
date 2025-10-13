@@ -9,16 +9,16 @@ import {
   useOrderlyContext,
   useQuery,
   useWS,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { useAppContext } from "@orderly.network/react-app";
+} from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { useAppContext } from "@kodiak-finance/orderly-react-app";
 import {
   AnnouncementType,
   API,
   EMPTY_LIST,
   WSMessage,
-} from "@orderly.network/types";
-import { getTimestamp } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-types";
+import { getTimestamp } from "@kodiak-finance/orderly-utils";
 
 const oneDay = 1000 * 60 * 60 * 24;
 

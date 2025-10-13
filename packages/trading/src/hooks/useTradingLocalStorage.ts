@@ -1,4 +1,4 @@
-import { useLocalStorage } from "@orderly.network/hooks";
+import { useLocalStorage } from "@kodiak-finance/orderly-hooks";
 
 export const useTradingLocalStorage = (props?: {
   pnlNotionalDecimalPrecision?: number;

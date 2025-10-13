@@ -6,12 +6,12 @@ import {
   usePositionStream,
   usePrivateQuery,
   useSymbolsInfo,
-} from "@orderly.network/hooks";
-import { i18n } from "@orderly.network/i18n";
-import { positions, account as _account } from "@orderly.network/perp";
-import { useDataTap } from "@orderly.network/react-app";
-import type { API } from "@orderly.network/types";
-import { formatAddress, usePagination } from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-hooks";
+import { i18n } from "@kodiak-finance/orderly-i18n";
+import { positions, account as _account } from "@kodiak-finance/orderly-perp";
+import { useDataTap } from "@kodiak-finance/orderly-react-app";
+import type { API } from "@kodiak-finance/orderly-types";
+import { formatAddress, usePagination } from "@kodiak-finance/orderly-ui";
 import type { PositionsProps } from "../../types/types";
 import { useSubAccountQuery } from "./hooks/useSubAccountQuery";
 

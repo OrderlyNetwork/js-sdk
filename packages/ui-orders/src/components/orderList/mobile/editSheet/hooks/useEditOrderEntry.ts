@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
-import { useOrderEntity } from "@orderly.network/hooks";
+import { useOrderEntity } from "@kodiak-finance/orderly-hooks";
 import {
   API,
   OrderlyOrder,
   OrderSide,
   OrderType,
-} from "@orderly.network/types";
+} from "@kodiak-finance/orderly-types";
 
 export const useEditOrderEntry = (props: {
   order: API.AlgoOrderExt;

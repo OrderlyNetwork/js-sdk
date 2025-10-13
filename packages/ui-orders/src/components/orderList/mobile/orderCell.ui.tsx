@@ -1,6 +1,6 @@
 import React, { FC } from "react";
-import { AlgoOrderRootType } from "@orderly.network/types";
-import { Divider, Flex, Grid, Text } from "@orderly.network/ui";
+import { AlgoOrderRootType } from "@kodiak-finance/orderly-types";
+import { Divider, Flex, Grid, Text } from "@kodiak-finance/orderly-ui";
 import { TabType } from "../../orders.widget";
 import { BracketOrderPriceWidget } from "./bracketOrderPrice";
 import { CancelBtnWidget } from "./cancelBtn";

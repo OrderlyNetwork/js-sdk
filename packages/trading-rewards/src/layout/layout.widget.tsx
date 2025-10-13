@@ -1,5 +1,5 @@
 import { FC, PropsWithChildren } from "react";
-import { ScaffoldProps } from "@orderly.network/ui-scaffold";
+import { ScaffoldProps } from "@kodiak-finance/orderly-ui-scaffold";
 import { useTradingRewardsLayoutScript } from "./layout.script";
 import { TradingRewardsLayout } from "./layout.ui";
 

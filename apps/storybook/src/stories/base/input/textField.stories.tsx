@@ -1,6 +1,6 @@
+import { TextField } from "@kodiak-finance/orderly-ui";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { fn } from "storybook/test";
-import { TextField } from "@orderly.network/ui";
 
 const meta: Meta<typeof TextField> = {
   title: "Base/Input/TextField",

@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { useFundingDetails } from "@orderly.network/hooks";
-import { Decimal } from "@orderly.network/utils";
+import { useFundingDetails } from "@kodiak-finance/orderly-hooks";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 
 interface FundingRateOptions {
   symbol: string;

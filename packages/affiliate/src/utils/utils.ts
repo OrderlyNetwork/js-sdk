@@ -1,6 +1,6 @@
 import { format, toDate } from "date-fns";
-import { i18n } from "@orderly.network/i18n";
-import { toast } from "@orderly.network/ui";
+import { i18n } from "@kodiak-finance/orderly-i18n";
+import { toast } from "@kodiak-finance/orderly-ui";
 
 // import { toZonedTime } from "date-fns-tz";
 // const { toZonedTime } = require("date-fns-tz");

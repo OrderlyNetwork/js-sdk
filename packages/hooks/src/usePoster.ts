@@ -3,7 +3,7 @@ import { mergeDeepRight } from "ramda";
 import { PosterPainter } from "./services/painter/painter";
 import { type DrawOptions } from "./services/painter/basePaint";
 import { DefaultLayoutConfig } from "./services/painter/layout.config";
-import { SDKError } from "@orderly.network/types";
+import { SDKError } from "@kodiak-finance/orderly-types";
 
 /**
  * Generates a poster image based on position information. You can set the size, background color, font color, font size, and content position of the poster.

@@ -1,7 +1,7 @@
 import React from "react";
-import type { API } from "@orderly.network/types";
-import { Badge, formatAddress, ListView } from "@orderly.network/ui";
-import { AuthGuardDataTable } from "@orderly.network/ui-connector";
+import type { API } from "@kodiak-finance/orderly-types";
+import { Badge, formatAddress, ListView } from "@kodiak-finance/orderly-ui";
+import { AuthGuardDataTable } from "@kodiak-finance/orderly-ui-connector";
 import { SymbolProvider } from "../../provider/symbolProvider";
 import type { PositionsProps } from "../../types/types";
 import type { CombinePositionsState } from "./combinePositions.script";

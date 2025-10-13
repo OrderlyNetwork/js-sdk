@@ -1,5 +1,5 @@
-import { EventEmitter, SimpleDI } from "@orderly.network/core";
-import { getGlobalObject } from "@orderly.network/utils";
+import { EventEmitter, SimpleDI } from "@kodiak-finance/orderly-core";
+import { getGlobalObject } from "@kodiak-finance/orderly-utils";
 
 const __ORDERLY__DEBUGER_TAG = "__ORDERLY__DEBUGER";
 

@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
-import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   AssetViewWidget,
+  BottomNavBarWidget,
   DataListWidget,
   LastTradesWidget,
+  OrderBookAndTradesWidget,
+  OrderBookWidget,
   RiskRateWidget,
   TradingPage,
-  OrderBookWidget,
-  OrderBookAndTradesWidget,
-  BottomNavBarWidget,
-} from "@orderly.network/trading";
-import { Box, Flex } from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-trading";
+import { Box, Flex } from "@kodiak-finance/orderly-ui";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { BaseLayout } from "../../../components/layout";
 import { tradingPageConfig } from "../../../orderlyConfig";
 import { getSymbol, updateSymbol } from "../../../utils/storage";

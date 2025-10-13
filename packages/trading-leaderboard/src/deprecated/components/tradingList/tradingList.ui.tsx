@@ -1,5 +1,5 @@
 import { FC, SVGProps } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   Box,
   CloseCircleFillIcon,
@@ -9,7 +9,7 @@ import {
   Flex,
   Input,
   Text,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import { useTradingListColumns } from "./column";
 import {
   FilterDays,

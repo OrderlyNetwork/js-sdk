@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useLocalStorage } from "@orderly.network/hooks";
-import { API, OrderEntity, OrderType } from "@orderly.network/types";
-import { AlgoOrderRootType } from "@orderly.network/types";
-import { toast, useModal } from "@orderly.network/ui";
+import { useLocalStorage } from "@kodiak-finance/orderly-hooks";
+import { API, OrderEntity, OrderType } from "@kodiak-finance/orderly-types";
+import { AlgoOrderRootType } from "@kodiak-finance/orderly-types";
+import { toast, useModal } from "@kodiak-finance/orderly-ui";
 import { convertApiOrderTypeToOrderEntryType } from "../../../../utils/util";
 import { OrderCellState } from "../orderCell.script";
 import { useEditOrderEntry } from "./hooks/useEditOrderEntry";

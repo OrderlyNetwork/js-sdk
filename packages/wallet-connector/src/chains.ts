@@ -1,4 +1,4 @@
-import { chainsInfoMap } from "@orderly.network/types";
+import { chainsInfoMap } from "@kodiak-finance/orderly-types";
 
 export interface NetworkInterface {
   name: string;

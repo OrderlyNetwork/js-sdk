@@ -2,7 +2,7 @@ import { max, min } from "ramda";
 import { usePrivateQuery } from "../usePrivateQuery";
 import { RefferalAPI } from "./api";
 import { formatDate } from "./format";
-import { getTimestamp } from "@orderly.network/utils";
+import { getTimestamp } from "@kodiak-finance/orderly-utils";
 export const useDaily = (options?: {
   //** default Date() - 30d */
   startDate?: Date;

@@ -1,7 +1,7 @@
 import { useMemo } from "react";
-import { useQuery } from "@orderly.network/hooks";
-import type { API } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+import { useQuery } from "@kodiak-finance/orderly-hooks";
+import type { API } from "@kodiak-finance/orderly-types";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 
 export const useLtvScript = () => {
   const { data, error, isLoading } = useQuery<API.ConvertThreshold>(

@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import { InputHTMLAttributes } from "react";
 import { InputFormatter } from "./formatter/inputFormatter";
-import { findLongestCommonSubString } from "@orderly.network/utils";
+import { findLongestCommonSubString } from "@kodiak-finance/orderly-utils";
 
 export interface BaseInputProps<T = string>
   extends Omit<

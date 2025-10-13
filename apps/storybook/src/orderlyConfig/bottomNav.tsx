@@ -1,16 +1,16 @@
 import { useMemo } from "react";
-import { i18n, useTranslation } from "@orderly.network/i18n";
+import { i18n, useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
-  TradingActiveIcon,
-  TradingInactiveIcon,
-  PortfolioActiveIcon,
-  PortfolioInactiveIcon,
   LeaderboardActiveIcon,
   LeaderboardInactiveIcon,
   MarketsActiveIcon,
   MarketsInactiveIcon,
-} from "@orderly.network/ui";
-import type { BottomNavProps } from "@orderly.network/ui-scaffold";
+  PortfolioActiveIcon,
+  PortfolioInactiveIcon,
+  TradingActiveIcon,
+  TradingInactiveIcon,
+} from "@kodiak-finance/orderly-ui";
+import type { BottomNavProps } from "@kodiak-finance/orderly-ui-scaffold";
 
 const getBottomNavProp = (): BottomNavProps => {
   return {

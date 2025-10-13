@@ -1,9 +1,9 @@
 import {
   DefaultSolanaWalletAdapter,
   SolanaWalletProvider,
-} from "@orderly.network/default-solana-adapter";
-import { WalletState } from "@orderly.network/hooks";
-import { API } from "@orderly.network/types";
+} from "@kodiak-finance/orderly-default-solana-adapter";
+import { WalletState } from "@kodiak-finance/orderly-hooks";
+import { API } from "@kodiak-finance/orderly-types";
 
 export async function getSolanaBlockTime(
   chain: API.Chain,

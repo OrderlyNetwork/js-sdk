@@ -1,5 +1,5 @@
-import { i18n } from "@orderly.network/i18n";
-import { Decimal, commify } from "@orderly.network/utils";
+import { i18n } from "@kodiak-finance/orderly-i18n";
+import { Decimal, commify } from "@kodiak-finance/orderly-utils";
 import {
   IChartingLibraryWidget,
   IOrderLineAdapter,

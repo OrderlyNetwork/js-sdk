@@ -1,5 +1,5 @@
 import { FC, PropsWithChildren, useMemo } from "react";
-import { useSymbolsInfo } from "@orderly.network/hooks";
+import { useSymbolsInfo } from "@kodiak-finance/orderly-hooks";
 import { TradingPageState, TradingPageProps } from "../types/types";
 import { getBasicSymbolInfo } from "../utils/utils";
 import { TradingPageContext } from "./tradingPageContext";

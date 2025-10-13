@@ -1,4 +1,4 @@
-import { useScreen } from "@orderly.network/ui";
+import { useScreen } from "@kodiak-finance/orderly-ui";
 import { CampaignConfig } from "../type";
 import { CampaignsHeaderUI } from "./campaigns.header.desktop.ui";
 import { CampaignsHeaderMobileUI } from "./campaigns.header.mobile.ui";

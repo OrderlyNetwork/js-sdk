@@ -1,7 +1,7 @@
 import { FC } from "react";
-import { useAppConfig } from "@orderly.network/react-app";
+import { useAppConfig } from "@kodiak-finance/orderly-react-app";
 import { OrderlyLogo } from "../icons";
-import { Logo } from "@orderly.network/ui";
+import { Logo } from "@kodiak-finance/orderly-ui";
 
 type MainLogoProps = {
   src?: string;

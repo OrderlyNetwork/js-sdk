@@ -1,10 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useStorageChain } from "@orderly.network/hooks";
+import { useStorageChain } from "@kodiak-finance/orderly-hooks";
 import {
   AbstractChains,
   ChainNamespace,
   SolanaChains,
-} from "@orderly.network/types";
+} from "@kodiak-finance/orderly-types";
 import { useWallet } from "../../hooks/useWallet";
 import { useWalletConnectorPrivy } from "../../provider";
 import { useAbstractWallet } from "../../providers/abstractWallet/abstractWalletProvider";

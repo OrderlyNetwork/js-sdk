@@ -1,5 +1,5 @@
 import { FC, useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import { VaultsHeaderScript } from "./vaults-header.script";
 
 export const VaultsHeaderDesktop: FC<VaultsHeaderScript> = (props) => {

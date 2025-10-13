@@ -9,15 +9,15 @@ import {
   useMarginRatio,
   usePositionStream,
   useComputedLTV,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { useDataTap } from "@orderly.network/react-app";
-import { AccountStatusEnum, NetworkId } from "@orderly.network/types";
-import { modal, toast } from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { useDataTap } from "@kodiak-finance/orderly-react-app";
+import { AccountStatusEnum, NetworkId } from "@kodiak-finance/orderly-types";
+import { modal, toast } from "@kodiak-finance/orderly-ui";
 import {
   DepositAndWithdrawWithDialogId,
   TransferDialogId,
-} from "@orderly.network/ui-transfer";
+} from "@kodiak-finance/orderly-ui-transfer";
 
 export const useAssetViewScript = () => {
   const { t } = useTranslation();

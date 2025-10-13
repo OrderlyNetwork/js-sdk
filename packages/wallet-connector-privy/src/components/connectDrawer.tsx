@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo } from "react";
-import { useLocalStorage } from "@orderly.network/hooks";
-import { useTranslation, Trans } from "@orderly.network/i18n";
-import { ConnectorKey } from "@orderly.network/types";
+import { useLocalStorage } from "@kodiak-finance/orderly-hooks";
+import { useTranslation, Trans } from "@kodiak-finance/orderly-i18n";
+import { ConnectorKey } from "@kodiak-finance/orderly-types";
 import {
   useScreen,
   cn,
@@ -11,7 +11,7 @@ import {
   Flex,
   Text,
   modal,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import { useWalletConnectorPrivy } from "../provider";
 import { useAbstractWallet } from "../providers/abstractWallet/abstractWalletProvider";
 import { usePrivyWallet } from "../providers/privy/privyWalletProvider";

@@ -1,5 +1,5 @@
+import { Spinner } from "@kodiak-finance/orderly-ui";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Spinner } from "@orderly.network/ui";
 
 const meta: Meta<typeof Spinner> = {
   title: "Base/Spinner",

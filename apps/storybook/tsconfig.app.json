@@ -31,97 +31,57 @@
 
     /* Path mapping */
     "paths": {
-      "@orderly.network/affiliate": [
-        "../../packages/affiliate/src"
-      ],
-      "@orderly.network/chart": [
-        "../../packages/chart/src"
-      ],
-      "@orderly.network/core": [
-        "../../packages/core/src"
-      ],
-      "@orderly.network/default-evm-adapter": [
+      "@kodiak-finance/orderly-affiliate": ["../../packages/affiliate/src"],
+      "@kodiak-finance/orderly-chart": ["../../packages/chart/src"],
+      "@kodiak-finance/orderly-core": ["../../packages/core/src"],
+      "@kodiak-finance/orderly-default-evm-adapter": [
         "../../packages/default-evm-adapter/src"
       ],
-      "@orderly.network/default-solana-adapter": [
+      "@kodiak-finance/orderly-default-solana-adapter": [
         "../../packages/default-solana-adapter/src"
       ],
-      "@orderly.network/hooks": [
-        "../../packages/hooks/src"
-      ],
-      "@orderly.network/i18n": [
-        "../../packages/i18n/src"
-      ],
-      "@orderly.network/markets": [
-        "../../packages/markets/src"
-      ],
-      "@orderly.network/portfolio": [
-        "../../packages/portfolio/src"
-      ],
-      "@orderly.network/react-app": [
-        "../../packages/app/src"
-      ],
-      "@orderly.network/trading": [
-        "../../packages/trading/src"
-      ],
-      "@orderly.network/trading-leaderboard": [
+      "@kodiak-finance/orderly-hooks": ["../../packages/hooks/src"],
+      "@kodiak-finance/orderly-i18n": ["../../packages/i18n/src"],
+      "@kodiak-finance/orderly-markets": ["../../packages/markets/src"],
+      "@kodiak-finance/orderly-portfolio": ["../../packages/portfolio/src"],
+      "@kodiak-finance/orderly-react-app": ["../../packages/app/src"],
+      "@kodiak-finance/orderly-trading": ["../../packages/trading/src"],
+      "@kodiak-finance/orderly-trading-leaderboard": [
         "../../packages/trading-leaderboard/src"
       ],
-      "@orderly.network/trading-rewards": [
+      "@kodiak-finance/orderly-trading-rewards": [
         "../../packages/trading-rewards/src"
       ],
-      "@orderly.network/types": [
-        "../../packages/types/src"
-      ],
-      "@orderly.network/ui": [
-        "../../packages/ui/src"
-      ],
-      "@orderly.network/ui-chain-selector": [
+      "@kodiak-finance/orderly-types": ["../../packages/types/src"],
+      "@kodiak-finance/orderly-ui": ["../../packages/ui/src"],
+      "@kodiak-finance/orderly-ui-chain-selector": [
         "../../packages/ui-chain-selector/src"
       ],
-      "@orderly.network/ui-connector": [
+      "@kodiak-finance/orderly-ui-connector": [
         "../../packages/ui-connector/src"
       ],
-      "@orderly.network/ui-leverage": [
-        "../../packages/ui-leverage/src"
-      ],
-      "@orderly.network/ui-order-entry": [
+      "@kodiak-finance/orderly-ui-leverage": ["../../packages/ui-leverage/src"],
+      "@kodiak-finance/orderly-ui-order-entry": [
         "../../packages/ui-order-entry/src"
       ],
-      "@orderly.network/ui-orders": [
-        "../../packages/ui-orders/src"
-      ],
-      "@orderly.network/ui-positions": [
+      "@kodiak-finance/orderly-ui-orders": ["../../packages/ui-orders/src"],
+      "@kodiak-finance/orderly-ui-positions": [
         "../../packages/ui-positions/src"
       ],
-      "@orderly.network/ui-scaffold": [
-        "../../packages/ui-scaffold/src"
-      ],
-      "@orderly.network/ui-share": [
-        "../../packages/ui-share/src"
-      ],
-      "@orderly.network/ui-tpsl": [
-        "../../packages/ui-tpsl/src"
-      ],
-      "@orderly.network/ui-tradingview": [
+      "@kodiak-finance/orderly-ui-scaffold": ["../../packages/ui-scaffold/src"],
+      "@kodiak-finance/orderly-ui-share": ["../../packages/ui-share/src"],
+      "@kodiak-finance/orderly-ui-tpsl": ["../../packages/ui-tpsl/src"],
+      "@kodiak-finance/orderly-ui-tradingview": [
         "../../packages/ui-tradingview/src"
       ],
-      "@orderly.network/ui-transfer": [
-        "../../packages/ui-transfer/src"
-      ],
-      "@orderly.network/vaults": [
-        "../../packages/vaults/src"
-      ],
-      "@orderly.network/utils": [
-        "../../packages/utils/src"
-      ],
-      "@orderly.network/vaults": [
-        "../../packages/vaults/src"
-      ],
-      "@orderly.network/wallet-connector": [
+      "@kodiak-finance/orderly-ui-transfer": ["../../packages/ui-transfer/src"],
+      "@kodiak-finance/orderly-vaults": ["../../packages/vaults/src"],
+      "@kodiak-finance/orderly-utils": ["../../packages/utils/src"],
+      "@kodiak-finance/orderly-vaults": ["../../packages/vaults/src"],
+      "@kodiak-finance/orderly-wallet-connector": [
         "../../packages/wallet-connector/src"
       ],
-      "@orderly.network/wallet-connector-privy": [
+      "@kodiak-finance/orderly-wallet-connector-privy": [
         "../../packages/wallet-connector-privy/src"
       ]
     }

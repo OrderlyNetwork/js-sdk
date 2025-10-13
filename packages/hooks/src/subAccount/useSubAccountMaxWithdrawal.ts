@@ -1,7 +1,7 @@
 import { useMemo } from "react";
-import { account as accountPerp } from "@orderly.network/perp";
-import { API } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+import { account as accountPerp } from "@kodiak-finance/orderly-perp";
+import { API } from "@kodiak-finance/orderly-types";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { useIndexPricesStream } from "../orderly/useIndexPricesStream";
 import { useTokenInfo } from "../orderly/useTokensInfo/tokensInfo.store";
 

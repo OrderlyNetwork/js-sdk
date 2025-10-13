@@ -13,7 +13,7 @@ import {
   useDisconnect,
   useSwitchChain,
 } from "wagmi";
-import { ChainNamespace } from "@orderly.network/types";
+import { ChainNamespace } from "@kodiak-finance/orderly-types";
 import { useWalletConnectorPrivy } from "../../provider";
 
 interface WagmiWalletContextValue {

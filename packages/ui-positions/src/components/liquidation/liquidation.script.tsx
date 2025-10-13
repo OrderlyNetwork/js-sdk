@@ -3,11 +3,11 @@ import { differenceInDays, subDays } from "date-fns";
 import {
   usePrivateInfiniteQuery,
   usePrivateQuery,
-} from "@orderly.network/hooks";
-import { useDataTap } from "@orderly.network/react-app";
-import { API } from "@orderly.network/types";
-import { usePagination, useScreen } from "@orderly.network/ui";
-import { Decimal, zero } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-hooks";
+import { useDataTap } from "@kodiak-finance/orderly-react-app";
+import { API } from "@kodiak-finance/orderly-types";
+import { usePagination, useScreen } from "@kodiak-finance/orderly-ui";
+import { Decimal, zero } from "@kodiak-finance/orderly-utils";
 import {
   areDatesEqual,
   formatDatePickerRange,

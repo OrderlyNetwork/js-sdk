@@ -1,9 +1,9 @@
 import { PropsWithChildren, useMemo, useState } from "react";
-import { useAccount } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { useAppContext } from "@orderly.network/react-app";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { Tooltip } from "@orderly.network/ui";
+import { useAccount } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { useAppContext } from "@kodiak-finance/orderly-react-app";
+import { AccountStatusEnum } from "@kodiak-finance/orderly-types";
+import { Tooltip } from "@kodiak-finance/orderly-ui";
 
 type AuthGuardProps = {
   content?: string;

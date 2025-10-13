@@ -1,5 +1,5 @@
 import React from "react";
-import { useScreen } from "@orderly.network/ui";
+import { useScreen } from "@kodiak-finance/orderly-ui";
 import { MobileMarketsDataList } from "./marketsDataList.mobile.ui";
 import { useMarketsDataListScript } from "./marketsDataList.script";
 import { MarketsDataList } from "./marketsDataList.ui";

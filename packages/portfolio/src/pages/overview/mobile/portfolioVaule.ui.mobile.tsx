@@ -1,15 +1,15 @@
 import { FC, useMemo } from "react";
-import { parseJSON, useAccount } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { AccountStatusEnum, ChainNamespace } from "@orderly.network/types";
+import { parseJSON, useAccount } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { AccountStatusEnum, ChainNamespace } from "@kodiak-finance/orderly-types";
 import {
   Flex,
   Text,
   cn,
   ArrowRightShortIcon,
   EyeIcon,
-} from "@orderly.network/ui";
-import { RouterAdapter } from "@orderly.network/ui-scaffold";
+} from "@kodiak-finance/orderly-ui";
+import { RouterAdapter } from "@kodiak-finance/orderly-ui-scaffold";
 import { PortfolioLeftSidebarPath } from "../../../layout";
 
 type Props = {

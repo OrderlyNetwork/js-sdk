@@ -1,5 +1,5 @@
 import { createContext, FC, ReactNode, useContext, useMemo } from "react";
-import { RouteOption } from "@orderly.network/ui-scaffold";
+import { RouteOption } from "@kodiak-finance/orderly-ui-scaffold";
 
 export type RouteContextState = {
   onRouteChange: (option: RouteOption) => void;

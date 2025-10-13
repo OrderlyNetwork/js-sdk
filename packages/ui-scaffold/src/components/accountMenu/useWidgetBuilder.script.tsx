@@ -3,19 +3,19 @@ import {
   useAccount,
   useChains,
   useWalletConnector,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { useAppContext } from "@orderly.network/react-app";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { modal, toast, useScreen, Text } from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { useAppContext } from "@kodiak-finance/orderly-react-app";
+import { AccountStatusEnum } from "@kodiak-finance/orderly-types";
+import { modal, toast, useScreen, Text } from "@kodiak-finance/orderly-ui";
 import {
   ChainSelectorDialogId,
   ChainSelectorSheetId,
-} from "@orderly.network/ui-chain-selector";
+} from "@kodiak-finance/orderly-ui-chain-selector";
 import {
   WalletConnectorModalId,
   WalletConnectorSheetId,
-} from "@orderly.network/ui-connector";
+} from "@kodiak-finance/orderly-ui-connector";
 
 const ModalTitle = () => {
   const { t } = useTranslation();

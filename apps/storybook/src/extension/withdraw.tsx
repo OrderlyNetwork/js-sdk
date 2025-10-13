@@ -1,5 +1,8 @@
-import { ExtensionPositionEnum, installExtension } from "@orderly.network/ui";
-import { WithdrawFormWidgetProps } from "@orderly.network/ui-transfer";
+import {
+  ExtensionPositionEnum,
+  installExtension,
+} from "@kodiak-finance/orderly-ui";
+import { WithdrawFormWidgetProps } from "@kodiak-finance/orderly-ui-transfer";
 
 const CustomWithdrawForm = (props: WithdrawFormWidgetProps) => {
   return <div>custom withdraw form</div>;

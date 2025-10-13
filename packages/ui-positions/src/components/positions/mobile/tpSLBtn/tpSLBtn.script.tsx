@@ -1,8 +1,8 @@
-import { useSymbolsInfo } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
-import { modal } from "@orderly.network/ui";
-import { PositionTPSLSheet } from "@orderly.network/ui-tpsl";
+import { useSymbolsInfo } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { API } from "@kodiak-finance/orderly-types";
+import { modal } from "@kodiak-finance/orderly-ui";
+import { PositionTPSLSheet } from "@kodiak-finance/orderly-ui-tpsl";
 import { usePositionsRowContext } from "../../positionsRowContext";
 import { PositionCellState } from "../positionCell/positionCell.script";
 

@@ -12,17 +12,17 @@ import {
   useLocalStorage,
   useOrderStream,
   useSymbolsInfo,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { useDataTap } from "@orderly.network/react-app";
+} from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { useDataTap } from "@kodiak-finance/orderly-react-app";
 import {
   AlgoOrderRootType,
   OrderStatus,
   OrderSide,
   API,
-} from "@orderly.network/types";
-import { modal, usePagination, Text, Table } from "@orderly.network/ui";
-import { SharePnLConfig } from "@orderly.network/ui-share";
+} from "@kodiak-finance/orderly-types";
+import { modal, usePagination, Text, Table } from "@kodiak-finance/orderly-ui";
+import { SharePnLConfig } from "@kodiak-finance/orderly-ui-share";
 import { areDatesEqual } from "../../utils/util";
 import { TabType } from "../orders.widget";
 import { useFormatOrderHistory } from "./useFormatOrderHistory";

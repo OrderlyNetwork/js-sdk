@@ -1,6 +1,6 @@
 import React from "react";
-import { cn } from "@orderly.network/ui";
-import { TradingviewWidget } from "@orderly.network/ui-tradingview";
+import { cn } from "@kodiak-finance/orderly-ui";
+import { TradingviewWidget } from "@kodiak-finance/orderly-ui-tradingview";
 import { KlineDragIcon } from "../../base/icons";
 import type { TradingviewState } from "./tradingview.script";
 

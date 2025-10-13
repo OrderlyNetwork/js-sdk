@@ -1,11 +1,11 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
+  Campaign,
   LeaderboardWidget,
   TradingListWidget,
-  Campaign,
-} from "@orderly.network/trading-leaderboard";
-import { Box, useScreen } from "@orderly.network/ui";
-import { useScaffoldContext } from "@orderly.network/ui-scaffold";
+} from "@kodiak-finance/orderly-trading-leaderboard";
+import { Box, useScreen } from "@kodiak-finance/orderly-ui";
+import { useScaffoldContext } from "@kodiak-finance/orderly-ui-scaffold";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { BaseLayout } from "../../../components/layout";
 
 function getCampaigns() {

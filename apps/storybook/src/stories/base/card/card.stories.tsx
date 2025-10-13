@@ -1,12 +1,12 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   CardBase,
-  CardTitle,
-  CardHeader,
-  CardDescription,
   CardContent,
+  CardDescription,
   CardFooter,
-} from "@orderly.network/ui";
+  CardHeader,
+  CardTitle,
+} from "@kodiak-finance/orderly-ui";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 const meta: Meta<typeof CardBase> = {
   title: "Base/Layout/Card",

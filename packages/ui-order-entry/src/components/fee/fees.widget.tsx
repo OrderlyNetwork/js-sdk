@@ -1,6 +1,6 @@
 import React from "react";
 import { pick } from "ramda";
-import { useFeeState } from "@orderly.network/hooks";
+import { useFeeState } from "@kodiak-finance/orderly-hooks";
 import { EffectiveFeesWidget } from "./effectiveFee";
 import { RegularFeesWidget } from "./regularFee";
 

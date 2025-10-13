@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from "react";
-import { API, EMPTY_LIST } from "@orderly.network/types";
+import { API, EMPTY_LIST } from "@kodiak-finance/orderly-types";
 import { useQuery } from "../useQuery";
 
 export type PeriodKey = "1d" | "3d" | "7d" | "14d" | "30d" | "90d";

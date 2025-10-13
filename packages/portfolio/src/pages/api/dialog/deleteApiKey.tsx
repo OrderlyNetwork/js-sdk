@@ -1,8 +1,8 @@
 import { FC } from "react";
-import { Flex, SimpleDialog, Text } from "@orderly.network/ui";
-import { APIKeyItem } from "@orderly.network/hooks";
+import { Flex, SimpleDialog, Text } from "@kodiak-finance/orderly-ui";
+import { APIKeyItem } from "@kodiak-finance/orderly-hooks";
 import { formatKey } from "../apiManager.ui";
-import { useTranslation, Trans } from "@orderly.network/i18n";
+import { useTranslation, Trans } from "@kodiak-finance/orderly-i18n";
 
 export const DeleteAPIKeyDialog: FC<{
   item: APIKeyItem;

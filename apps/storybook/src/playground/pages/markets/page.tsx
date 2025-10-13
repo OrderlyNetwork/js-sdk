@@ -1,4 +1,4 @@
-import { MarketsHomePage } from "@orderly.network/markets";
+import { MarketsHomePage } from "@kodiak-finance/orderly-markets";
 import { BaseLayout } from "../../components/layout/baseLayout";
 import { PathEnum } from "../../constant";
 

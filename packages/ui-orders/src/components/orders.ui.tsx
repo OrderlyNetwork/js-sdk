@@ -1,7 +1,7 @@
 import React from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { OrderStatus } from "@orderly.network/types";
-import { TabPanel, Tabs } from "@orderly.network/ui";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { OrderStatus } from "@kodiak-finance/orderly-types";
+import { TabPanel, Tabs } from "@kodiak-finance/orderly-ui";
 import type { DesktopOrderListWidgetProps } from "./orderList/orderList.widget";
 import { OrdersBuilderState } from "./orders.script";
 import { TabType } from "./orders.widget";

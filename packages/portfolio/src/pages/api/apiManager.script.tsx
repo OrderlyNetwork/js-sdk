@@ -4,11 +4,11 @@ import {
   ScopeType,
   useAccount,
   useApiKeyManager,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { useAppContext, useDataTap } from "@orderly.network/react-app";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { toast, usePagination } from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { useAppContext, useDataTap } from "@kodiak-finance/orderly-react-app";
+import { AccountStatusEnum } from "@kodiak-finance/orderly-types";
+import { toast, usePagination } from "@kodiak-finance/orderly-ui";
 
 export type GenerateKeyInfo = {
   key: string;

@@ -1,5 +1,5 @@
 import React from "react";
-import { useScreen } from "@orderly.network/ui";
+import { useScreen } from "@kodiak-finance/orderly-ui";
 import { useConvertScript } from "./convert.script";
 import { ConvertDesktopUI } from "./convert.ui.desktop";
 import { ConvertMobileUI } from "./convert.ui.mobile";

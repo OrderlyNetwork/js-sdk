@@ -1,7 +1,7 @@
 import { FC, useContext, useMemo } from "react";
-import { useLocalStorage } from "@orderly.network/hooks";
-import { Box, cn, Flex, Text } from "@orderly.network/ui";
-import { getPrecisionByNumber } from "@orderly.network/utils";
+import { useLocalStorage } from "@kodiak-finance/orderly-hooks";
+import { Box, cn, Flex, Text } from "@kodiak-finance/orderly-ui";
+import { getPrecisionByNumber } from "@kodiak-finance/orderly-utils";
 import { CellBar } from "../../base/orderBook/cellBar";
 import {
   ORDERBOOK_MOBILE_COIN_TYPE_KEY,

@@ -1,8 +1,8 @@
-import { findTPSLOrderPriceFromOrder } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { API, OrderType } from "@orderly.network/types";
-import { Flex, Text } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { findTPSLOrderPriceFromOrder } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { API, OrderType } from "@kodiak-finance/orderly-types";
+import { Flex, Text } from "@kodiak-finance/orderly-ui";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { FlexCell } from "../components/common";
 import { useTPSLDetailContext } from "../tpslDetailProvider";
 

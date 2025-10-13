@@ -1,7 +1,7 @@
 import { FC } from "react";
-import { Button, formatAddress } from "@orderly.network/ui";
+import { Button, formatAddress } from "@kodiak-finance/orderly-ui";
 import { AccountState } from "./account.script";
-import { AuthGuard } from "@orderly.network/ui-connector";
+import { AuthGuard } from "@kodiak-finance/orderly-ui-connector";
 
 export const Account: FC<AccountState> = (props) => {
   return (

@@ -5,9 +5,9 @@ import {
   useConfig,
   useLocalStorage,
   useWalletConnector,
-} from "@orderly.network/hooks";
-import { ChainNamespace } from "@orderly.network/types";
-import { useScreen } from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-hooks";
+import { ChainNamespace } from "@kodiak-finance/orderly-types";
+import { useScreen } from "@kodiak-finance/orderly-ui";
 
 type DecodedData = {
   /** secret key */

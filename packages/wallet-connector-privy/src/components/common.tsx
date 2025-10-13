@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { WalletAdapter } from "@solana/wallet-adapter-base";
 import { Connector } from "wagmi";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   ChainIcon,
   cn,
   Popover,
   SimpleDialog,
   useScreen,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import { useWalletConnectorPrivy } from "../provider";
 import { getWalletIcon } from "../util";
 

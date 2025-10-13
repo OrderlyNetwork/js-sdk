@@ -1,4 +1,4 @@
-import { Decimal } from "@orderly.network/utils";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 
 /**
  * get the min notional for the order

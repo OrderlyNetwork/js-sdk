@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { useSubAccountQuery } from "@orderly.network/hooks";
-import { API } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+import { useSubAccountQuery } from "@kodiak-finance/orderly-hooks";
+import { API } from "@kodiak-finance/orderly-types";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 
 export const useAccountValue = (mainAccountId?: string) => {
   const [accountValue, setAccountValue] = useState<Record<string, number>>({});

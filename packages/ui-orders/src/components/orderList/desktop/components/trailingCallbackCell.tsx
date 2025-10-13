@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
-import { API } from "@orderly.network/types";
-import { Popover, toast, inputFormatter } from "@orderly.network/ui";
+import { API } from "@kodiak-finance/orderly-types";
+import { Popover, toast, inputFormatter } from "@kodiak-finance/orderly-ui";
 import { EditType } from "../../../../type";
 import { getOrderStatus } from "../../../../utils/util";
 import { useSymbolContext } from "../../../provider/symbolContext";

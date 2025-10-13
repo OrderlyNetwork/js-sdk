@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { API, OrderType } from "@orderly.network/types";
-import { inputFormatter, Popover, toast } from "@orderly.network/ui";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { API, OrderType } from "@kodiak-finance/orderly-types";
+import { inputFormatter, Popover, toast } from "@kodiak-finance/orderly-ui";
 import { EditType } from "../../../../type";
 import { getOrderStatus } from "../../../../utils/util";
 import { useSymbolContext } from "../../../provider/symbolContext";

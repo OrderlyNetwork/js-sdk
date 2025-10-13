@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useMemo } from "react";
-import type { RouterAdapter } from "@orderly.network/ui-scaffold";
+import type { RouterAdapter } from "@kodiak-finance/orderly-ui-scaffold";
 
 type LayoutContextValue = {
   sideOpen: boolean;

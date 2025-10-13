@@ -4,11 +4,11 @@ import {
   useConfig,
   useMutation,
   useWalletConnector,
-} from "@orderly.network/hooks";
-import { AccountStatusEnum, ChainNamespace } from "@orderly.network/types";
-import { isTestnet } from "@orderly.network/utils";
-import { modal, toast } from "@orderly.network/ui";
-import { useTranslation } from "@orderly.network/i18n";
+} from "@kodiak-finance/orderly-hooks";
+import { AccountStatusEnum, ChainNamespace } from "@kodiak-finance/orderly-types";
+import { isTestnet } from "@kodiak-finance/orderly-utils";
+import { modal, toast } from "@kodiak-finance/orderly-ui";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 
 export function useFaucetScript() {
   const { t } = useTranslation();

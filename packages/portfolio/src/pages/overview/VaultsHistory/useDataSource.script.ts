@@ -1,10 +1,10 @@
 import React from "react";
 import { getDate, getMonth, getYear, set } from "date-fns";
-import { useVaultsHistory } from "@orderly.network/hooks";
-import type { API } from "@orderly.network/types";
-import { usePagination } from "@orderly.network/ui";
-import type { PaginationMeta } from "@orderly.network/ui";
-import { subtractDaysFromCurrentDate } from "@orderly.network/utils";
+import { useVaultsHistory } from "@kodiak-finance/orderly-hooks";
+import type { API } from "@kodiak-finance/orderly-types";
+import { usePagination } from "@kodiak-finance/orderly-ui";
+import type { PaginationMeta } from "@kodiak-finance/orderly-ui";
+import { subtractDaysFromCurrentDate } from "@kodiak-finance/orderly-utils";
 import { parseDateRangeForFilter } from "../helper/date";
 
 export const useVaultsHistoryHook = () => {

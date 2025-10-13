@@ -1,4 +1,4 @@
-import { useMarketTradeStream, useSymbolsInfo } from "@orderly.network/hooks";
+import { useMarketTradeStream, useSymbolsInfo } from "@kodiak-finance/orderly-hooks";
 
 export const useLastTradesScript = (symbol: string) => {
   const { data, isLoading } = useMarketTradeStream(symbol);

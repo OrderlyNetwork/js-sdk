@@ -5,13 +5,13 @@ import {
   useLocalStorage,
   useStorageLedgerAddress,
   useWalletConnector,
-} from "@orderly.network/hooks";
-import { i18n, useTranslation } from "@orderly.network/i18n";
+} from "@kodiak-finance/orderly-hooks";
+import { i18n, useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   AccountStatusEnum,
   ChainNamespace,
   LedgerWalletKey,
-} from "@orderly.network/types";
+} from "@kodiak-finance/orderly-types";
 import {
   Box,
   Button,
@@ -25,7 +25,7 @@ import {
   TextField,
   toast,
   Tooltip,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import { StepItem } from "./step";
 
 export type WalletConnectContentProps = {

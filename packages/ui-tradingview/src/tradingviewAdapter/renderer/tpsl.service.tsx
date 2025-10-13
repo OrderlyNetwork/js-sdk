@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-console */
 import React, { useRef } from "react";
-import { useSymbolsInfo, utils } from "@orderly.network/hooks";
-import { i18n, useTranslation } from "@orderly.network/i18n";
-import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
+import { useSymbolsInfo, utils } from "@kodiak-finance/orderly-hooks";
+import { i18n, useTranslation } from "@kodiak-finance/orderly-i18n";
+import { useOrderEntryFormErrorMsg } from "@kodiak-finance/orderly-react-app";
 import {
   Box,
   cn,
@@ -14,8 +14,8 @@ import {
   modal,
   Slider,
   Text,
-} from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-ui";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import type {
   CrossHairMovedEventParams,
   EntityId,

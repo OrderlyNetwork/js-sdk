@@ -1,7 +1,7 @@
 import { FC } from "react";
-import { useLocalStorage } from "@orderly.network/hooks";
-import { Divider, Flex, Text } from "@orderly.network/ui";
-import { useTranslation } from "@orderly.network/i18n";
+import { useLocalStorage } from "@kodiak-finance/orderly-hooks";
+import { Divider, Flex, Text } from "@kodiak-finance/orderly-ui";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 
 export const UnrealizedPnLPopoverCard: FC<{}> = (props) => {
   const [unPnlPriceBasis, setUnPnlPriceBasic] = useLocalStorage(

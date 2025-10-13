@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { useConfig } from "@orderly.network/hooks";
-import { NetworkId, type API } from "@orderly.network/types";
+import { useConfig } from "@kodiak-finance/orderly-hooks";
+import { NetworkId, type API } from "@kodiak-finance/orderly-types";
 import { getTokenByTokenList } from "../../../utils";
 import type { CurrentChain } from "./useChainSelect";
 

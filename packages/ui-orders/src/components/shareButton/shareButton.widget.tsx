@@ -1,5 +1,5 @@
 import React from "react";
-import { SharePnLConfig } from "@orderly.network/ui-share";
+import { SharePnLConfig } from "@kodiak-finance/orderly-ui-share";
 import { useShareButtonScript } from "./shareButton.script";
 import { ShareButton } from "./shareButton.ui";
 

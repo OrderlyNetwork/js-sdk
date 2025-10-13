@@ -7,21 +7,21 @@ import {
   usePositionStream,
   useSymbolLeverage,
   useSymbolsInfo,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+} from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   account as accountPerp,
   positions as positionsPerp,
-} from "@orderly.network/perp";
-import { OrderSide } from "@orderly.network/types";
+} from "@kodiak-finance/orderly-perp";
+import { OrderSide } from "@kodiak-finance/orderly-types";
 import {
   modal,
   SliderMarks,
   toast,
   useScreen,
   Text,
-} from "@orderly.network/ui";
-import { zero } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-ui";
+import { zero } from "@kodiak-finance/orderly-utils";
 
 type UseLeverageScriptOptions = {
   close?: () => void;

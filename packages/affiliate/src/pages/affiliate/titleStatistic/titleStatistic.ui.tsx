@@ -1,9 +1,9 @@
 import { FC } from "react";
-import { VolBarChart } from "@orderly.network/chart";
-import { useTranslation } from "@orderly.network/i18n";
-import { EMPTY_LIST } from "@orderly.network/types";
-import { Flex, Select, Text } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { VolBarChart } from "@kodiak-finance/orderly-chart";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { EMPTY_LIST } from "@kodiak-finance/orderly-types";
+import { Flex, Select, Text } from "@kodiak-finance/orderly-ui";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { TitleStatisticReturns } from "./titleStatistic.script";
 
 export const TitleStatistic: FC<TitleStatisticReturns> = (props) => {

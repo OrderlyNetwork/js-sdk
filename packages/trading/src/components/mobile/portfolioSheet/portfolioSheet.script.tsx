@@ -7,13 +7,13 @@ import {
   useLeverage,
   useMarginRatio,
   usePositionStream,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { modal, SliderMarks, toast } from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { modal, SliderMarks, toast } from "@kodiak-finance/orderly-ui";
 import {
   DepositAndWithdrawWithSheetId,
   TransferSheetId,
-} from "@orderly.network/ui-transfer";
+} from "@kodiak-finance/orderly-ui-transfer";
 import { useTradingLocalStorage } from "../../../hooks";
 
 export const usePortfolioSheetScript = () => {

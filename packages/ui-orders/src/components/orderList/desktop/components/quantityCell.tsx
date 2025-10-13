@@ -1,8 +1,8 @@
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useMaxQty, utils } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { API, OrderSide } from "@orderly.network/types";
-import { AlgoOrderRootType } from "@orderly.network/types";
+import { useMaxQty, utils } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { API, OrderSide } from "@kodiak-finance/orderly-types";
+import { AlgoOrderRootType } from "@kodiak-finance/orderly-types";
 import {
   cn,
   Flex,
@@ -14,8 +14,8 @@ import {
   PopoverTrigger,
   PopoverRoot,
   PopoverContent,
-} from "@orderly.network/ui";
-import { commifyOptional, Decimal } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-ui";
+import { commifyOptional, Decimal } from "@kodiak-finance/orderly-utils";
 import { EditType } from "../../../../type";
 import { grayCell } from "../../../../utils/util";
 import { useSymbolContext } from "../../../provider/symbolContext";

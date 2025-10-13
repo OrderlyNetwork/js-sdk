@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   Box,
   CopyIcon,
@@ -7,7 +7,7 @@ import {
   SimpleDialog,
   Statistic,
   Text,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import { ApiManagerScriptReturns } from "../apiManager.script";
 
 export const CreatedAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {

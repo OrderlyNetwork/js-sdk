@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
-import type { SideBarProps } from "@orderly.network/ui-scaffold";
-import { useTranslation } from "@orderly.network/i18n";
+import type { SideBarProps } from "@kodiak-finance/orderly-ui-scaffold";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 
 export const useLayoutBuilder = (): SideBarProps => {
   const [current, setCurrent] = useState("/");

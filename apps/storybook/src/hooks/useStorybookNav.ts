@@ -1,9 +1,10 @@
 // https://github.com/storybookjs/storybook/tree/next/code/addons/links
 // linkTo is not working, so use navigate instead
+import { PortfolioLeftSidebarPath } from "@kodiak-finance/orderly-portfolio";
+import { TradingRewardsLeftSidebarPath } from "@kodiak-finance/orderly-trading-rewards";
+import { type RouteOption } from "@kodiak-finance/orderly-ui-scaffold";
 import { navigate } from "@storybook/addon-links";
-import { PortfolioLeftSidebarPath } from "@orderly.network/portfolio";
-import { TradingRewardsLeftSidebarPath } from "@orderly.network/trading-rewards";
-import { type RouteOption } from "@orderly.network/ui-scaffold";
+
 
 export enum RoutePath {
   Root = "/",

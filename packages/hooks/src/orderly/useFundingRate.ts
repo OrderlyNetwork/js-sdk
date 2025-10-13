@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { API, SDKError } from "@orderly.network/types";
+import { API, SDKError } from "@kodiak-finance/orderly-types";
 import {
   Decimal,
   getTimestamp,
   timeConvertString,
-} from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-utils";
 import { useQuery } from "../useQuery";
 
 export const useFundingRate = (symbol: string) => {

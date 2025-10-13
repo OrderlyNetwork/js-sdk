@@ -1,10 +1,10 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import { MarketsType, useMarkets } from "@orderly.network/hooks";
+import { MarketsType, useMarkets } from "@kodiak-finance/orderly-hooks";
 import {
   FavoritesDropdownMenuWidget,
   FavoritesTabWidget,
-} from "@orderly.network/markets";
-import { Box, Button, Flex } from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-markets";
+import { Box, Button, Flex } from "@kodiak-finance/orderly-ui";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 const meta: Meta<typeof FavoritesDropdownMenuWidget> = {
   title: "Package/markets/Favorites",

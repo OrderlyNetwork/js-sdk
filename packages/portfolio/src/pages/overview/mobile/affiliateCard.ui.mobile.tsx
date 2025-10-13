@@ -1,15 +1,15 @@
 import { FC } from "react";
-import { RefferalAPI as API } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import { RefferalAPI as API } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   Flex,
   Text,
   AffiliateIcon,
   ChevronRightIcon,
   cn,
-} from "@orderly.network/ui";
-import { RouterAdapter } from "@orderly.network/ui-scaffold";
-import { commifyOptional } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-ui";
+import { RouterAdapter } from "@kodiak-finance/orderly-ui-scaffold";
+import { commifyOptional } from "@kodiak-finance/orderly-utils";
 
 const isNumber = (val: unknown): val is number => {
   return typeof val === "number" && !Number.isNaN(val);

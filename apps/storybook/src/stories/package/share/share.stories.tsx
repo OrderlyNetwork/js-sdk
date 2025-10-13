@@ -1,11 +1,11 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Button, Flex, modal } from "@orderly.network/ui";
+import { Button, Flex, modal } from "@kodiak-finance/orderly-ui";
 import {
-  SharePnLDialogWidget,
-  SharePnLDialogId,
   SharePnLBottomSheetId,
   SharePnLBottomSheetWidget,
-} from "@orderly.network/ui-share";
+  SharePnLDialogId,
+  SharePnLDialogWidget,
+} from "@kodiak-finance/orderly-ui-share";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 const meta: Meta<typeof SharePnLDialogWidget> = {
   title: "Package/ui-share/SharePnL",

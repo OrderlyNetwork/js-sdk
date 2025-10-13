@@ -1,6 +1,6 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Text, Divider, cn, TextProps, useScreen } from "@orderly.network/ui";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { Text, Divider, cn, TextProps, useScreen } from "@kodiak-finance/orderly-ui";
 import { VaultsIntroductionScript } from "./vaults-introduction.script";
 
 export const VaultsIntroductionDesktop: FC<VaultsIntroductionScript> = (

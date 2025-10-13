@@ -1,7 +1,7 @@
 import { FC, useEffect, useMemo, useRef, useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { EMPTY_LIST } from "@orderly.network/types";
-import { Divider, Flex, toast, Text, Box } from "@orderly.network/ui";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { EMPTY_LIST } from "@kodiak-finance/orderly-types";
+import { Divider, Flex, toast, Text, Box } from "@kodiak-finance/orderly-ui";
 import {
   PnLDisplayFormat,
   ReferralType,

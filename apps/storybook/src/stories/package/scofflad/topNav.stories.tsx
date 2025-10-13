@@ -1,18 +1,18 @@
 import { useMemo } from "react";
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import { fn } from "storybook/test";
-import { useChains } from "@orderly.network/hooks";
-import { OrderlyAppProvider } from "@orderly.network/react-app";
-import { Box, Flex, Text } from "@orderly.network/ui";
+import { useChains } from "@kodiak-finance/orderly-hooks";
+import { OrderlyAppProvider } from "@kodiak-finance/orderly-react-app";
+import { Box, Flex } from "@kodiak-finance/orderly-ui";
 import {
   AccountMenuWidget,
-  MainNavWidget,
   AccountSummaryWidget,
-  ChainMenuWidget,
-  ChainMenu,
   CampaignPositionEnum,
+  ChainMenu,
+  ChainMenuWidget,
   LanguageSwitcherWidget,
-} from "@orderly.network/ui-scaffold";
+  MainNavWidget,
+} from "@kodiak-finance/orderly-ui-scaffold";
+import type { StoryObj } from "@storybook/react-vite";
+import { fn } from "storybook/test";
 import {
   ARBActiveIcon,
   ARBIcon,

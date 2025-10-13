@@ -1,12 +1,12 @@
 import { FC } from "react";
-import { useBoolean } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import { useBoolean } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   SimpleDialog,
   SimpleSheet,
   Text,
   useScreen,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import { FundingFeeHistoryUI } from "./fundingFeeHistory.ui";
 
 export const FundingFeeButton: FC<{

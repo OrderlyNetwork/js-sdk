@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   Button,
   Flex,
@@ -8,8 +8,8 @@ import {
   TokenIcon,
   Tooltip,
   toast,
-} from "@orderly.network/ui";
-import type { Column } from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
+import type { Column } from "@kodiak-finance/orderly-ui";
 import type { ConvertRecord, ConvertTransaction } from "../type";
 
 export interface ConvertColumnsOptions {

@@ -1,9 +1,9 @@
 import { FC, useCallback, useEffect, useMemo, useState } from "react";
-import { useEventEmitter } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { WS_WalletStatusEnum } from "@orderly.network/types";
-import { Box, toast } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { useEventEmitter } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { WS_WalletStatusEnum } from "@kodiak-finance/orderly-types";
+import { Box, toast } from "@kodiak-finance/orderly-ui";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { useSwap } from "../hooks/useSwap";
 import { SwapMode, SwapProcessStatus } from "../types";
 import { ProcessStatus } from "./processStatus";

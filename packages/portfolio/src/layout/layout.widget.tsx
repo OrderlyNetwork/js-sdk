@@ -1,5 +1,5 @@
 import { FC, PropsWithChildren } from "react";
-import { useScreen } from "@orderly.network/ui";
+import { useScreen } from "@kodiak-finance/orderly-ui";
 import { usePortfolioLayoutScript } from "./layout.script";
 import { PortfolioLayout, PortfolioLayoutProps } from "./layout.ui";
 import { PortfolioLayoutMobile } from "./layout.ui.mobile";

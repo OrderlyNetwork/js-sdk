@@ -1,6 +1,6 @@
-import { useTranslation } from "@orderly.network/i18n";
-import { Box, ChainIcon, modal, toast } from "@orderly.network/ui";
-import { ChainSelectorSheetId } from "@orderly.network/ui-chain-selector";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { Box, ChainIcon, modal, toast } from "@kodiak-finance/orderly-ui";
+import { ChainSelectorSheetId } from "@kodiak-finance/orderly-ui-chain-selector";
 import { UseChainMenuScriptReturn } from "./chainMenu.script";
 
 export const ChainMenuUiMobile = (props: UseChainMenuScriptReturn) => {

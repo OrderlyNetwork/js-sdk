@@ -1,4 +1,4 @@
-import { useLocalStorage } from "@orderly.network/hooks";
+import { useLocalStorage } from "@kodiak-finance/orderly-hooks";
 import { SIDE_MARKETS_TAB_SORT_STORAGE_KEY } from "../../constant";
 import { MarketsTabName } from "../../type";
 import { useTabSort } from "../shared/hooks/useTabSort";

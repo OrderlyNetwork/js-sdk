@@ -1,7 +1,7 @@
 import { FC, useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { DataFilter } from "@orderly.network/ui";
-import { AuthGuardDataTable } from "@orderly.network/ui-connector";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { DataFilter } from "@kodiak-finance/orderly-ui";
+import { AuthGuardDataTable } from "@kodiak-finance/orderly-ui-connector";
 import { useColumns } from "./column";
 import { type useDistributionHistoryHookReturn } from "./useDataSource.script";
 

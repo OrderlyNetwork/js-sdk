@@ -5,7 +5,7 @@ import {
   cn,
   Flex,
   Text,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import { FC } from "react";
 
 /**

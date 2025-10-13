@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import type { EmblaCarouselType } from "@orderly.network/ui";
+import type { EmblaCarouselType } from "@kodiak-finance/orderly-ui";
 
 export const useSelectedSnapDisplay = (emblaApi?: EmblaCarouselType) => {
   const [selectedSnap, setSelectedSnap] = useState<number>(0);

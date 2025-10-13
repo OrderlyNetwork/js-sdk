@@ -3,13 +3,13 @@ import {
   useAccount,
   useAssetsHistory,
   useCollateral,
-} from "@orderly.network/hooks";
-import { useAppContext } from "@orderly.network/react-app";
+} from "@kodiak-finance/orderly-hooks";
+import { useAppContext } from "@kodiak-finance/orderly-react-app";
 import {
   AccountStatusEnum,
   AssetHistorySideEnum,
   AssetHistoryStatusEnum,
-} from "@orderly.network/types";
+} from "@kodiak-finance/orderly-types";
 
 export const useFirstTimeDeposit = () => {
   const { state } = useAccount();

@@ -1,5 +1,5 @@
-import { API } from "@orderly.network/types";
-import { SharePnLConfig } from "@orderly.network/ui-share";
+import { API } from "@kodiak-finance/orderly-types";
+import { SharePnLConfig } from "@kodiak-finance/orderly-ui-share";
 import { TabType } from "../../orders.widget";
 import { useSymbolContext } from "../../provider/symbolContext";
 

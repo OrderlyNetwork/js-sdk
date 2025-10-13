@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   Column,
   Flex,
@@ -8,8 +8,8 @@ import {
   Text,
   TokenIcon,
   useScreen,
-} from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-ui";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { ProcessedFundingData } from "./fundingOverview.script";
 
 const createFundingRenderer =

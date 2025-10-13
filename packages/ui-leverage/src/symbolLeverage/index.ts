@@ -1,5 +1,5 @@
-import { i18n } from "@orderly.network/i18n";
-import { registerSimpleDialog, registerSimpleSheet } from "@orderly.network/ui";
+import { i18n } from "@kodiak-finance/orderly-i18n";
+import { registerSimpleDialog, registerSimpleSheet } from "@kodiak-finance/orderly-ui";
 import { SymbolLeverageWidget } from "./symbolLeverage.widget";
 
 export {

@@ -1,7 +1,7 @@
 import { useMemo } from "react";
-import { useAccount, useLocalStorage } from "@orderly.network/hooks";
-import { useAppContext, useDataTap } from "@orderly.network/react-app";
-import { AccountStatusEnum } from "@orderly.network/types";
+import { useAccount, useLocalStorage } from "@kodiak-finance/orderly-hooks";
+import { useAppContext, useDataTap } from "@kodiak-finance/orderly-react-app";
+import { AccountStatusEnum } from "@kodiak-finance/orderly-types";
 import { ORDERLY_ASSETS_VISIBLE_KEY } from "../../assets/type";
 import { useOverviewContext } from "../provider/overviewContext";
 

@@ -7,13 +7,13 @@ import {
   useLocalStorage,
   useTransferHistory,
   useWalletTopic,
-} from "@orderly.network/hooks";
+} from "@kodiak-finance/orderly-hooks";
 import {
   AccountStatusEnum,
   API,
   AssetHistorySideEnum,
   AssetHistoryStatusEnum,
-} from "@orderly.network/types";
+} from "@kodiak-finance/orderly-types";
 import { useTransactionTime } from "../../contract/useTransactionTime";
 
 export type DepositStatusScriptReturn = ReturnType<

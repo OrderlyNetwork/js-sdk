@@ -1,11 +1,11 @@
-import { useSymbolLeverage } from "@orderly.network/hooks";
-import { OrderSide } from "@orderly.network/types";
-import { cn, Flex, modal, Text, useScreen } from "@orderly.network/ui";
+import { useSymbolLeverage } from "@kodiak-finance/orderly-hooks";
+import { OrderSide } from "@kodiak-finance/orderly-types";
+import { cn, Flex, modal, Text, useScreen } from "@kodiak-finance/orderly-ui";
 import {
   SymbolLeverageDialogId,
   SymbolLeverageSheetId,
-} from "@orderly.network/ui-leverage";
-import { Decimal } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-ui-leverage";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 
 type LeverageBadgeProps = {
   symbol: string;

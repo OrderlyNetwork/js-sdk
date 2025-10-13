@@ -1,6 +1,6 @@
 import { FC, useMemo } from "react";
 import { difference } from "ramda";
-import { cn, Box, useScreen } from "@orderly.network/ui";
+import { cn, Box, useScreen } from "@kodiak-finance/orderly-ui";
 import { LeaderboardTab } from "../../../type";
 import { CampaignRankingWidget } from "../../ranking/campaignRanking";
 import { RankingColumnFields } from "../../ranking/shared/column";

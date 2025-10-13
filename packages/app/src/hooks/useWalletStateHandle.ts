@@ -4,13 +4,13 @@ import {
   useEventEmitter,
   useTrack,
   WalletState,
-} from "@orderly.network/hooks";
+} from "@kodiak-finance/orderly-hooks";
 import {
   useAccount,
   useChains,
   useKeyStore,
   useWalletConnector,
-} from "@orderly.network/hooks";
+} from "@kodiak-finance/orderly-hooks";
 import {
   AccountStatusEnum,
   SDKError,
@@ -18,12 +18,12 @@ import {
   NetworkId,
   TrackerEventName,
   ABSTRACT_CHAIN_ID_MAP,
-} from "@orderly.network/types";
+} from "@kodiak-finance/orderly-types";
 import {
   parseChainIdToNumber,
   praseChainIdToNumber,
   windowGuard,
-} from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-utils";
 import { getLinkDeviceData } from "./useLinkDevice";
 
 const WALLET_KEY = "orderly:wallet-info";

@@ -1,6 +1,6 @@
 import { FC, SVGProps, useMemo, useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { API } from "@kodiak-finance/orderly-types";
 import {
   cn,
   Flex,
@@ -9,7 +9,7 @@ import {
   toast,
   Tooltip,
   useScreen,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import { EstPnlRender } from "./components/estPnl";
 import { OrderPriceRender } from "./components/orderPrice";
 import { QtyRender } from "./components/qty";

@@ -4,12 +4,12 @@ import {
   useAccount,
   usePrivateQuery,
   useSymbolsInfo,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { useDataTap } from "@orderly.network/react-app";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { API } from "@orderly.network/types";
-import { usePagination, useScreen } from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { useDataTap } from "@kodiak-finance/orderly-react-app";
+import { AccountStatusEnum } from "@kodiak-finance/orderly-types";
+import { API } from "@kodiak-finance/orderly-types";
+import { usePagination, useScreen } from "@kodiak-finance/orderly-ui";
 import { TRADING_POSITIONS_SORT_STORAGE_KEY } from "../../constants";
 import {
   areDatesEqual,

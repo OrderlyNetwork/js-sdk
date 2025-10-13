@@ -1,12 +1,12 @@
 import React, { ReactElement, useMemo } from "react";
-import { useAccount, useMediaQuery } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { useAppContext } from "@orderly.network/react-app";
+import { useAccount, useMediaQuery } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { useAppContext } from "@kodiak-finance/orderly-react-app";
 import {
   AccountStatusEnum,
   MEDIA_TABLET,
   NetworkId,
-} from "@orderly.network/types";
+} from "@kodiak-finance/orderly-types";
 import {
   Button,
   Either,
@@ -15,13 +15,13 @@ import {
   toast,
   useScreen,
   type ButtonProps,
-} from "@orderly.network/ui";
-import { Flex } from "@orderly.network/ui";
-import { Box } from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
+import { Flex } from "@kodiak-finance/orderly-ui";
+import { Box } from "@kodiak-finance/orderly-ui";
 import {
   ChainSelectorDialogId,
   ChainSelectorSheetId,
-} from "@orderly.network/ui-chain-selector";
+} from "@kodiak-finance/orderly-ui-chain-selector";
 import {
   WalletConnectorModalId,
   WalletConnectorSheetId,

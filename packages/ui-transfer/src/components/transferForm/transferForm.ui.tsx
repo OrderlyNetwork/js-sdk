@@ -1,7 +1,7 @@
 import { FC } from "react";
-import { Trans, useTranslation } from "@orderly.network/i18n";
-import { Box, Button, Flex, textVariants, Text, cn } from "@orderly.network/ui";
-import { AuthGuard } from "@orderly.network/ui-connector";
+import { Trans, useTranslation } from "@kodiak-finance/orderly-i18n";
+import { Box, Button, Flex, textVariants, Text, cn } from "@kodiak-finance/orderly-ui";
+import { AuthGuard } from "@kodiak-finance/orderly-ui-connector";
 import { TransferVerticalIcon } from "../../icons";
 import { AccountSelect } from "../accountSelect";
 import { AvailableQuantity } from "../availableQuantity";

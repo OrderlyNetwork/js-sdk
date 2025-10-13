@@ -5,8 +5,8 @@ import {
   useOrderStream,
   usePositionStream,
   useSymbolsInfo,
-} from "@orderly.network/hooks";
-import { AccountStatusEnum, OrderStatus } from "@orderly.network/types";
+} from "@kodiak-finance/orderly-hooks";
+import { AccountStatusEnum, OrderStatus } from "@kodiak-finance/orderly-types";
 import { DisplayControlSettingInterface } from "../../type";
 import { Renderer } from "../renderer/renderer";
 import { AlgoType } from "../type";

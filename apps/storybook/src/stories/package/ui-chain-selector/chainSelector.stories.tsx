@@ -1,10 +1,10 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Box, Button, Flex, modal } from "@orderly.network/ui";
+import { Box, Button, Flex, modal } from "@kodiak-finance/orderly-ui";
 import {
-  ChainSelectorWidget,
   ChainSelectorDialogId,
   ChainSelectorSheetId,
-} from "@orderly.network/ui-chain-selector";
+  ChainSelectorWidget,
+} from "@kodiak-finance/orderly-ui-chain-selector";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 const meta: Meta<typeof ChainSelectorWidget> = {
   title: "Package/ui-chain-selector/ChainSelector",

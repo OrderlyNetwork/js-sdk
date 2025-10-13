@@ -1,6 +1,6 @@
 import { useCallback } from "react";
-import { Favorite, FavoriteTab } from "@orderly.network/hooks";
-import { Box } from "@orderly.network/ui";
+import { Favorite, FavoriteTab } from "@kodiak-finance/orderly-hooks";
+import { Box } from "@kodiak-finance/orderly-ui";
 import { FavoriteInstance, MarketsTabName } from "../../../type";
 import { FavoritesEmpty } from "../../favoritesEmpty";
 import { FavoritesTabWidget } from "../../favoritesTabs";

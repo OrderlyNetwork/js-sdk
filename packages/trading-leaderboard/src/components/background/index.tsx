@@ -1,5 +1,5 @@
 import { FC, useMemo } from "react";
-import { cn, useScreen } from "@orderly.network/ui";
+import { cn, useScreen } from "@kodiak-finance/orderly-ui";
 
 type BackgroundProps = {
   backgroundSrc?: string;

@@ -2,10 +2,10 @@ import {
   useIndexPrice,
   useMarkPrice,
   useLeverageBySymbol,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { OrderlyOrder } from "@orderly.network/types";
-import { cn, Flex, Grid, Text, TokenIcon } from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { OrderlyOrder } from "@kodiak-finance/orderly-types";
+import { cn, Flex, Grid, Text, TokenIcon } from "@kodiak-finance/orderly-ui";
 
 type Props = {
   order: Partial<OrderlyOrder>;

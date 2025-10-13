@@ -1,6 +1,6 @@
 import { createContext, FocusEventHandler, useContext } from "react";
-import { OrderValidationResult } from "@orderly.network/hooks";
-import { API, OrderlyOrder } from "@orderly.network/types";
+import { OrderValidationResult } from "@kodiak-finance/orderly-hooks";
+import { API, OrderlyOrder } from "@kodiak-finance/orderly-types";
 import { InputType } from "../types";
 
 export type OrderEntryContextState = {

@@ -7,8 +7,8 @@ import {
   useCallback,
   useMemo,
 } from "react";
-import { API } from "@orderly.network/types";
-import { LeftNavProps, RouterAdapter } from "@orderly.network/ui-scaffold";
+import { API } from "@kodiak-finance/orderly-types";
+import { LeftNavProps, RouterAdapter } from "@kodiak-finance/orderly-ui-scaffold";
 
 type MarketsContextState = {
   symbol?: string;

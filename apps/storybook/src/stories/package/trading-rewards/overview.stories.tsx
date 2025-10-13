@@ -1,8 +1,8 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   TradingRewards,
   TradingRewardsLeftSidebarPath,
-} from "@orderly.network/trading-rewards";
+} from "@kodiak-finance/orderly-trading-rewards";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { TradingRewardsLayout } from "../../../components/layout";
 
 const meta: Meta<typeof TradingRewards.HomePage> = {

@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   DataFilter,
   Flex,
@@ -7,8 +7,8 @@ import {
   modal,
   SimpleDialog,
   Divider,
-} from "@orderly.network/ui";
-import { useModal } from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
+import { useModal } from "@kodiak-finance/orderly-ui";
 import type { ConvertRecord } from "../type";
 import { useConvertColumns, useConvertDetailColumns } from "./convert.column";
 import { useConvertScript } from "./convert.script";

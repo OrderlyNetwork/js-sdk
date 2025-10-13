@@ -1,5 +1,5 @@
-import { OrdersModule } from "@orderly.network/portfolio";
-import { Box } from "@orderly.network/ui";
+import { OrdersModule } from "@kodiak-finance/orderly-portfolio";
+import { Box } from "@kodiak-finance/orderly-ui";
 
 export default function OrdersPage() {
   return (

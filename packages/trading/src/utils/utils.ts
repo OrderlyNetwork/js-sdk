@@ -1,4 +1,4 @@
-import type { API } from "@orderly.network/types";
+import type { API } from "@kodiak-finance/orderly-types";
 import type { BasicSymbolInfo } from "../types/types";
 
 type ValueOf<T> = T[keyof T];

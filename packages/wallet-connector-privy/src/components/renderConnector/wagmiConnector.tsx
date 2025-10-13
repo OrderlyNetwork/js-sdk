@@ -1,6 +1,6 @@
 import React from "react";
 import { Connector } from "wagmi";
-import { useScreen, cn } from "@orderly.network/ui";
+import { useScreen, cn } from "@kodiak-finance/orderly-ui";
 import { useWalletConnectorPrivy } from "../../provider";
 import { useWagmiWallet } from "../../providers/wagmi/wagmiWalletProvider";
 import { RenderWalletIcon } from "../common";

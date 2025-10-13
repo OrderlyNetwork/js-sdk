@@ -1,5 +1,5 @@
 import { FC, useMemo } from "react";
-import { Box, Picker } from "@orderly.network/ui";
+import { Box, Picker } from "@kodiak-finance/orderly-ui";
 
 interface DepthSelectProps {
   depth: ReadonlyArray<string> | string[];

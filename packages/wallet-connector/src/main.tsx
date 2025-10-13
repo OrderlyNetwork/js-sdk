@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
-import { WalletConnectorContext } from "@orderly.network/hooks";
-import type { WalletConnectorContextState } from "@orderly.network/hooks";
-import { ChainNamespace } from "@orderly.network/types";
-import { hex2int } from "@orderly.network/utils";
+import { WalletConnectorContext } from "@kodiak-finance/orderly-hooks";
+import type { WalletConnectorContextState } from "@kodiak-finance/orderly-hooks";
+import { ChainNamespace } from "@kodiak-finance/orderly-types";
+import { hex2int } from "@kodiak-finance/orderly-utils";
 import { SolanaChains } from "./config";
 import { useEvm } from "./useEvm";
 import { useSOL } from "./useSOL";

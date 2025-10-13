@@ -5,11 +5,11 @@ import {
   useCollateral,
   useLocalStorage,
   useMediaQuery,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { useAppContext, useDataTap } from "@orderly.network/react-app";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { modal } from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { useAppContext, useDataTap } from "@kodiak-finance/orderly-react-app";
+import { AccountStatusEnum } from "@kodiak-finance/orderly-types";
+import { modal } from "@kodiak-finance/orderly-ui";
 import type { LayoutPosition } from "../../components/desktop/layout/switchLayout";
 import { useSplitPersistent } from "../../components/desktop/layout/useSplitPersistent";
 import { PortfolioSheetWidget } from "../../components/mobile/portfolioSheet";

@@ -1,7 +1,7 @@
 import React from "react";
-import { usePositionStream } from "@orderly.network/hooks";
-import { useDataTap } from "@orderly.network/react-app";
-import { usePagination } from "@orderly.network/ui";
+import { usePositionStream } from "@kodiak-finance/orderly-hooks";
+import { useDataTap } from "@kodiak-finance/orderly-react-app";
+import { usePagination } from "@kodiak-finance/orderly-ui";
 import { TRADING_POSITIONS_SORT_STORAGE_KEY } from "../../constants";
 import type { PositionsProps } from "../../types/types";
 import { useSort } from "../../utils/sorting";

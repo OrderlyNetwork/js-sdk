@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import { generatePath } from "@orderly.network/i18n";
-import { TradingPage, TradingPageProps } from "@orderly.network/trading";
-import { API } from "@orderly.network/types";
+import { generatePath } from "@kodiak-finance/orderly-i18n";
+import { TradingPage, TradingPageProps } from "@kodiak-finance/orderly-trading";
+import { API } from "@kodiak-finance/orderly-types";
 import { tradingPageConfig } from "../../../orderlyConfig";
 import { BaseLayout } from "../../components/layout/baseLayout";
 import { PathEnum } from "../../constant";

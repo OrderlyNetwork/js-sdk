@@ -4,10 +4,10 @@ import {
   useAccount,
   useAccountRewardsHistory,
   WalletRewardsItem,
-} from "@orderly.network/hooks";
-import { useAppContext } from "@orderly.network/react-app";
-import { usePagination } from "@orderly.network/ui";
-import { getTimestamp } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-hooks";
+import { useAppContext } from "@kodiak-finance/orderly-react-app";
+import { usePagination } from "@kodiak-finance/orderly-ui";
+import { getTimestamp } from "@kodiak-finance/orderly-utils";
 import { RewardsTooltipProps } from "../curEpoch/rewardsTooltip";
 import { useTradingRewardsContext } from "../provider";
 

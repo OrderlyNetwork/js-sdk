@@ -1,5 +1,5 @@
-import { useTranslation } from "@orderly.network/i18n";
-import { Button } from "@orderly.network/ui";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { Button } from "@kodiak-finance/orderly-ui";
 import { FaucetState } from "./faucet.script";
 
 export function FaucetUi(props: FaucetState) {

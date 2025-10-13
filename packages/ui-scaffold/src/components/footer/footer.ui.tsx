@@ -1,7 +1,7 @@
 import { FC, useMemo } from "react";
-import { WsNetworkStatus } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { Divider, Flex, Text } from "@orderly.network/ui";
+import { WsNetworkStatus } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { Divider, Flex, Text } from "@kodiak-finance/orderly-ui";
 import {
   CommuntiyDiscordIcon,
   CommuntiyTelegramIcon,

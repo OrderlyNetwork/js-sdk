@@ -1,10 +1,10 @@
-import { registerSimpleDialog, registerSimpleSheet } from "@orderly.network/ui";
+import { registerSimpleDialog, registerSimpleSheet } from "@kodiak-finance/orderly-ui";
 import {
   useChainSelectorScript,
   UseChainSelectorScriptOptions,
 } from "./chainSelector.script";
 import { ChainSelector, ChainSelectorProps } from "./chainSelector.ui";
-import { i18n } from "@orderly.network/i18n";
+import { i18n } from "@kodiak-finance/orderly-i18n";
 
 export type ChainSelectorWidgetProps = UseChainSelectorScriptOptions &
   Pick<ChainSelectorProps, "isWrongNetwork" | "variant" | "className">;

@@ -1,4 +1,4 @@
-import type { PositionsProps } from "@orderly.network/ui-positions";
+import type { PositionsProps } from "@kodiak-finance/orderly-ui-positions";
 import {
   usePendingOrderCount,
   usePositionsCount,

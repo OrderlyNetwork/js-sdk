@@ -1,5 +1,5 @@
-import { Button, Column, Flex, Text } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { Button, Column, Flex, Text } from "@kodiak-finance/orderly-ui";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 
 export const Columns: Column[] = [
   {

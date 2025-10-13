@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { MarketsType, useMarkets } from "@orderly.network/hooks";
-import { usePagination } from "@orderly.network/ui";
+import { MarketsType, useMarkets } from "@kodiak-finance/orderly-hooks";
+import { usePagination } from "@kodiak-finance/orderly-ui";
 import { useMarketsContext } from "../../components/marketsProvider";
 import { searchBySymbol, useSort } from "../../utils";
 

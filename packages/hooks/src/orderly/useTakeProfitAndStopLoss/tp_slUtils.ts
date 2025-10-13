@@ -4,15 +4,15 @@ import {
   OrderSide,
   PositionSide,
   PositionType,
-} from "@orderly.network/types";
-import { OrderType } from "@orderly.network/types";
-import { AlgoOrderType } from "@orderly.network/types";
+} from "@kodiak-finance/orderly-types";
+import { OrderType } from "@kodiak-finance/orderly-types";
+import { AlgoOrderType } from "@kodiak-finance/orderly-types";
 import {
   Decimal,
   getTPSLDirection,
   todpIfNeed,
   zero,
-} from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-utils";
 
 export type UpdateOrderKey =
   | "tp_trigger_price"

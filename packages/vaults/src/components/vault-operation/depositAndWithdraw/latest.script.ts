@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { usePrivateQuery } from "@orderly.network/hooks";
-import { EMPTY_LIST } from "@orderly.network/types";
+import { usePrivateQuery } from "@kodiak-finance/orderly-hooks";
+import { EMPTY_LIST } from "@kodiak-finance/orderly-types";
 import { OperationType, VaultOperation } from "../../../types/vault";
 
 type LatestOperationScriptProps = {

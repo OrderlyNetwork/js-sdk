@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
-import { useAccount } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import { useAccount } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   Flex,
   SimpleDialog,
@@ -9,7 +9,7 @@ import {
   useScreen,
   cn,
   Tooltip,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import { AddIcon } from "../icons";
 import { NickNameTextField } from "./common";
 

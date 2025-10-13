@@ -1,4 +1,4 @@
-import { AbstractChains, SolanaChains } from "@orderly.network/types";
+import { AbstractChains, SolanaChains } from "@kodiak-finance/orderly-types";
 import { WalletType } from "./types";
 
 export const OrderlyOSS = "https://oss.orderly.network";

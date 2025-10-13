@@ -1,6 +1,6 @@
-import { useSettleSubscription } from "@orderly.network/hooks";
-import { toast } from "@orderly.network/ui";
-import { useTranslation } from "@orderly.network/i18n";
+import { useSettleSubscription } from "@kodiak-finance/orderly-hooks";
+import { toast } from "@kodiak-finance/orderly-ui";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 
 export function useSettleEvent() {
   const { t } = useTranslation();

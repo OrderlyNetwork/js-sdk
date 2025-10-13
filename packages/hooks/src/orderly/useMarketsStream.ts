@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import useSWRSubscription from "swr/subscription";
-import { WSMessage } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+import { WSMessage } from "@kodiak-finance/orderly-types";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { useQuery } from "../useQuery";
 import { useWS } from "../useWS";
 import { useMarketStore } from "./useMarket/market.store";

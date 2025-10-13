@@ -7,7 +7,7 @@ declare global {
 }
 if (typeof window !== "undefined") {
   window.__ORDERLY_VERSION__ = window.__ORDERLY_VERSION__ || {};
-  window.__ORDERLY_VERSION__["@orderly.network/wallet-connector-privy"] =
+  window.__ORDERLY_VERSION__["@kodiak-finance/orderly-wallet-connector-privy"] =
     "2.7.3";
 }
 

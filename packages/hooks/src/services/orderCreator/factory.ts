@@ -1,5 +1,5 @@
-import { OrderType } from "@orderly.network/types";
-import { AlgoOrderRootType } from "@orderly.network/types";
+import { OrderType } from "@kodiak-finance/orderly-types";
+import { AlgoOrderRootType } from "@kodiak-finance/orderly-types";
 import { BBOOrderCreator } from "./bboOrderCreator";
 import { BracketLimitOrderCreator } from "./bracketLimitOrderCreator";
 import { BracketMarketOrderCreator } from "./bracketMarketOrderCreator";

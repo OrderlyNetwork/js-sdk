@@ -1,5 +1,10 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import { AlertDialog, Button, modal, ModalProvider } from "@orderly.network/ui";
+import {
+  AlertDialog,
+  Button,
+  modal,
+  ModalProvider,
+} from "@kodiak-finance/orderly-ui";
+import type { StoryObj } from "@storybook/react-vite";
 
 const meta = {
   title: "Base/Dialog/CommandStyle",

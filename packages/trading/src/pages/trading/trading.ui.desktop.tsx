@@ -20,20 +20,20 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS, Transform } from "@dnd-kit/utilities";
-import { useLocalStorage } from "@orderly.network/hooks";
+import { useLocalStorage } from "@kodiak-finance/orderly-hooks";
 import {
   SideMarketsWidget,
   SymbolInfoBarFullWidget,
   HorizontalMarketsWidget,
-} from "@orderly.network/markets";
+} from "@kodiak-finance/orderly-markets";
 import {
   OrderEntrySortKeys,
   TradingviewFullscreenKey,
-} from "@orderly.network/types";
-import { Box, cn, Flex } from "@orderly.network/ui";
-import { OrderEntryWidget } from "@orderly.network/ui-order-entry";
-import { TradingviewWidget } from "@orderly.network/ui-tradingview";
-import { DepositStatusWidget } from "@orderly.network/ui-transfer";
+} from "@kodiak-finance/orderly-types";
+import { Box, cn, Flex } from "@kodiak-finance/orderly-ui";
+import { OrderEntryWidget } from "@kodiak-finance/orderly-ui-order-entry";
+import { TradingviewWidget } from "@kodiak-finance/orderly-ui-tradingview";
+import { DepositStatusWidget } from "@kodiak-finance/orderly-ui-transfer";
 import { SortablePanel } from "../../components/desktop/layout/sortablePanel";
 import { SplitLayout } from "../../components/desktop/layout/splitLayout";
 import {

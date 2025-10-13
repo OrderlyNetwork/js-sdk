@@ -13,8 +13,8 @@ import {
   SDKError,
   TrackerEventName,
   isNativeTokenChecker,
-} from "@orderly.network/types";
-import { Decimal, isTestnet } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-types";
+import { Decimal, isTestnet } from "@kodiak-finance/orderly-utils";
 import { useAccount } from "../useAccount";
 import { useConfig } from "../useConfig";
 import { useTrack } from "../useTrack";

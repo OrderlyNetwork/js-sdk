@@ -7,10 +7,10 @@ import {
   useSubAccountQuery,
   useTokensInfo,
   useChainInfo,
-} from "@orderly.network/hooks";
-import { EMPTY_LIST } from "@orderly.network/types";
-import { usePagination } from "@orderly.network/ui";
-import { subtractDaysFromCurrentDate } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-hooks";
+import { EMPTY_LIST } from "@kodiak-finance/orderly-types";
+import { usePagination } from "@kodiak-finance/orderly-ui";
+import { subtractDaysFromCurrentDate } from "@kodiak-finance/orderly-utils";
 import { useAccountsData, useAssetsAccountFilter } from "../../../hooks";
 import { parseDateRangeForFilter } from "../../overview/helper/date";
 import type { ConvertRecord } from "../type";

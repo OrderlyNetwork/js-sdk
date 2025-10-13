@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { OrderSide, OrderType, SDKError } from "@orderly.network/types";
+import { OrderSide, OrderType, SDKError } from "@kodiak-finance/orderly-types";
 import { useMarkPriceBySymbol } from "../../orderly/useMarkPrice/useMarkPriceStore";
 import { useSymbolsInfo } from "../../orderly/useSymbolsInfo";
 import { OrderValidationResult } from "../../services/orderCreator/interface";

@@ -4,13 +4,13 @@ import type {
   ConfigStore,
   OrderlyKeyStore,
   WalletAdapter,
-} from "@orderly.network/core";
+} from "@kodiak-finance/orderly-core";
 import type {
   API,
   Chain,
   NetworkId,
   OrderlyOrder,
-} from "@orderly.network/types";
+} from "@kodiak-finance/orderly-types";
 import type { Chains } from "./orderly/useChains";
 
 export type filteredChains = {

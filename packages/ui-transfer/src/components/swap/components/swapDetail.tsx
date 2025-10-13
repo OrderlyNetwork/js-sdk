@@ -1,6 +1,6 @@
 import { FC, ReactNode } from "react";
-import { useTranslation, Trans } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
+import { useTranslation, Trans } from "@kodiak-finance/orderly-i18n";
+import { API } from "@kodiak-finance/orderly-types";
 import {
   Box,
   Flex,
@@ -9,8 +9,8 @@ import {
   Icon,
   Divider,
   Button,
-} from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-ui";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { feeDecimalsOffset } from "../../../utils";
 import { ArrowRightIcon, GasFeeIcon, WoofiIcon } from "../icons";
 import { SwapMode, SymbolInfo } from "../types";

@@ -6,7 +6,7 @@ import {
   Divider,
   Spinner,
   Text,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 
 type StepItemProps = {
   active?: boolean;

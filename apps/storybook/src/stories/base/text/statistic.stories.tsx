@@ -1,5 +1,5 @@
+import { EditIcon, Statistic } from "@kodiak-finance/orderly-ui";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { EditIcon, Statistic } from "@orderly.network/ui";
 
 const meta: Meta<typeof Statistic> = {
   title: "Base/Typography/Statistic",

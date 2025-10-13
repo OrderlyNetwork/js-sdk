@@ -3,9 +3,9 @@ import {
   useTokenInfo,
   useCollateral,
   useMaxWithdrawal,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { Decimal } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { useVaultsStore } from "../../../store/vaultsStore";
 import { OperationType } from "../../../types/vault";
 import { useOperationScript } from "../depositAndWithdraw/operation.script";

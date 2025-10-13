@@ -4,10 +4,10 @@ import {
   useAccountInfo,
   useDebouncedCallback,
   useMutation,
-} from "@orderly.network/hooks";
-import { useAppContext } from "@orderly.network/react-app";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { toast } from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-hooks";
+import { useAppContext } from "@kodiak-finance/orderly-react-app";
+import { AccountStatusEnum } from "@kodiak-finance/orderly-types";
+import { toast } from "@kodiak-finance/orderly-ui";
 
 export type SettingScriptReturns = {
   maintenance_cancel_orders?: boolean;

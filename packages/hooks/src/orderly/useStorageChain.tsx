@@ -1,4 +1,4 @@
-import { ChainKey, ChainNamespace, SolanaChains } from "@orderly.network/types";
+import { ChainKey, ChainNamespace, SolanaChains } from "@kodiak-finance/orderly-types";
 import { useLocalStorage } from "../useLocalStorage";
 
 export function useStorageChain() {

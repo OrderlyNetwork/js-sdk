@@ -1,5 +1,10 @@
 import { FC, ReactNode } from "react";
 import {
+  Network,
+  wagmiConnectors,
+  WalletConnectorPrivyProvider,
+} from "@kodiak-finance/orderly-wallet-connector-privy";
+import {
   createDefaultAddressSelector,
   createDefaultAuthorizationResultCache,
   SolanaMobileWalletAdapter,
@@ -15,11 +20,6 @@ import {
   PhantomWalletAdapter,
   SolflareWalletAdapter,
 } from "@solana/wallet-adapter-wallets";
-import {
-  Network,
-  WalletConnectorPrivyProvider,
-  wagmiConnectors,
-} from "@orderly.network/wallet-connector-privy";
 import { CustomProductNav } from "../customProductNav";
 
 const mobileWalletNotFoundHanlder = (adapter: SolanaMobileWalletAdapter) => {

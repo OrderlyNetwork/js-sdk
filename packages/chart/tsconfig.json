@@ -2,13 +2,13 @@
   "extends": "./tsconfig.build.json",
   "compilerOptions": {
     "paths": {
-      "@orderly.network/ui": [
+      "@kodiak-finance/orderly-ui": [
         "../ui/src"
       ],
-      "@orderly.network/utils": [
+      "@kodiak-finance/orderly-utils": [
         "../utils/src"
       ],
-      "@orderly.network/i18n": [
+      "@kodiak-finance/orderly-i18n": [
         "../i18n/src"
       ]
     }

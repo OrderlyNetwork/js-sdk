@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { useMaxQty } from "@orderly.network/hooks";
-import { API, OrderSide } from "@orderly.network/types";
+import { useMaxQty } from "@kodiak-finance/orderly-hooks";
+import { API, OrderSide } from "@kodiak-finance/orderly-types";
 
 export function useEditOrderMaxQty(
   order: API.AlgoOrderExt,

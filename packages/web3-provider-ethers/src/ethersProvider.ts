@@ -1,6 +1,6 @@
 import { BrowserProvider, Eip1193Provider, ethers } from "ethers";
-import { Web3Provider } from "@orderly.network/default-evm-adapter";
-import { API } from "@orderly.network/types";
+import { Web3Provider } from "@kodiak-finance/orderly-default-evm-adapter";
+import { API } from "@kodiak-finance/orderly-types";
 import { parseError } from "./parseError";
 
 class EthersProvider implements Web3Provider {

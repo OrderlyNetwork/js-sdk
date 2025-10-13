@@ -4,7 +4,7 @@ import {
   LocaleCode,
   LocaleEnum,
   removeLangPrefix,
-} from "@orderly.network/i18n";
+} from "@kodiak-finance/orderly-i18n";
 import { resources } from "../../../components/orderlyProvider/localeProvider";
 
 export const LocaleProvider: React.FC<React.PropsWithChildren> = (props) => {

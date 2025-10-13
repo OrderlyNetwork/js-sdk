@@ -1,5 +1,5 @@
 {
-  "name": "@orderly.network/perp",
+  "name": "@kodiak-finance/orderly-perp",
   "version": "4.7.3",
   "description": "",
   "main": "dist/index.js",
@@ -30,8 +30,8 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
-    "@orderly.network/types": "workspace:*",
-    "@orderly.network/utils": "workspace:*"
+    "@kodiak-finance/orderly-types": "workspace:*",
+    "@kodiak-finance/orderly-utils": "workspace:*"
   },
   "publishConfig": {
     "access": "public"

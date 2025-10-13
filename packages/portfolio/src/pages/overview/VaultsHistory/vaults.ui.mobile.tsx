@@ -1,6 +1,6 @@
-import { useTranslation } from "@orderly.network/i18n";
-import { Divider } from "@orderly.network/ui";
-import { DataFilter, TokenIcon, ListView, Text } from "@orderly.network/ui";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { Divider } from "@kodiak-finance/orderly-ui";
+import { DataFilter, TokenIcon, ListView, Text } from "@kodiak-finance/orderly-ui";
 import { useVaultsHistoryHookReturn } from "./useDataSource.script";
 
 export const VaultsHistoryMobile = (props: useVaultsHistoryHookReturn) => {

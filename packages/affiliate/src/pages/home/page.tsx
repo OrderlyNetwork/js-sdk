@@ -1,4 +1,4 @@
-import { Flex, Box, cn } from "@orderly.network/ui";
+import { Flex, Box, cn } from "@kodiak-finance/orderly-ui";
 import { BecomeAffiliateWidget } from "./becomeAffiliate";
 import { TopWidget } from "./top";
 import { CardWidget } from "./card";

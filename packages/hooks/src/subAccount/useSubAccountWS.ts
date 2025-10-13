@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef } from "react";
-import { WS } from "@orderly.network/net";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { getTimestamp } from "@orderly.network/utils";
+import { WS } from "@kodiak-finance/orderly-net";
+import { AccountStatusEnum } from "@kodiak-finance/orderly-types";
+import { getTimestamp } from "@kodiak-finance/orderly-utils";
 import { OrderlyContext } from "../orderlyContext";
 import { useAccount } from "../useAccount";
 

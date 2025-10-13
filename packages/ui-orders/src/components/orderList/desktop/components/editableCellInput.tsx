@@ -1,5 +1,5 @@
 import { FC, useCallback, useEffect, useRef, MouseEvent } from "react";
-import { EMPTY_LIST } from "@orderly.network/types";
+import { EMPTY_LIST } from "@kodiak-finance/orderly-types";
 import {
   inputFormatter,
   Input,
@@ -7,7 +7,7 @@ import {
   CheckIcon,
   cn,
   Flex,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 
 export type EditableCellInputProps = {
   id?: string;

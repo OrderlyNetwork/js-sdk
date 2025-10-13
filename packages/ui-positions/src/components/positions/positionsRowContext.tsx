@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { API, OrderSide, OrderType } from "@orderly.network/types";
+import { API, OrderSide, OrderType } from "@kodiak-finance/orderly-types";
 
 export interface PositionsRowContextState {
   quantity: string;

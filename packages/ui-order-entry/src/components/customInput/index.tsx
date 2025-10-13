@@ -1,6 +1,6 @@
 import { forwardRef, PropsWithChildren, ReactNode } from "react";
-import { EMPTY_LIST } from "@orderly.network/types";
-import { cn, inputFormatter, Input, InputProps } from "@orderly.network/ui";
+import { EMPTY_LIST } from "@kodiak-finance/orderly-types";
+import { cn, inputFormatter, Input, InputProps } from "@kodiak-finance/orderly-ui";
 import { useOrderEntryContext } from "../orderEntryContext";
 
 export type CustomInputProps = {

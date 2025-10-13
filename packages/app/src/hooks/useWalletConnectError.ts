@@ -1,9 +1,9 @@
-import { useEventEmitter } from "@orderly.network/hooks";
+import { useEventEmitter } from "@kodiak-finance/orderly-hooks";
 import { useEffect } from "react";
-import { modal, toast } from "@orderly.network/ui";
-import { LedgerWalletKey } from "@orderly.network/types";
-import { useStorageLedgerAddress } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import { modal, toast } from "@kodiak-finance/orderly-ui";
+import { LedgerWalletKey } from "@kodiak-finance/orderly-types";
+import { useStorageLedgerAddress } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 
 export function useWalletConnectError() {
   const { t } = useTranslation();

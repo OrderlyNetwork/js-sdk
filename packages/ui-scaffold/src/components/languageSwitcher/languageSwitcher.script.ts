@@ -1,12 +1,12 @@
 import { useCallback, useMemo, useState } from "react";
-import { useTrack } from "@orderly.network/hooks";
+import { useTrack } from "@kodiak-finance/orderly-hooks";
 import {
   i18n,
   LocaleContextState,
   useLocaleContext,
-} from "@orderly.network/i18n";
-import { TrackerEventName } from "@orderly.network/types";
-import { useScreen } from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-i18n";
+import { TrackerEventName } from "@kodiak-finance/orderly-types";
+import { useScreen } from "@kodiak-finance/orderly-ui";
 
 export type LanguageSwitcherScriptReturn = ReturnType<
   typeof useLanguageSwitcherScript

@@ -5,9 +5,9 @@ import {
   PnlAreaChart,
   PnLBarChart,
   PnlLineChartProps,
-} from "@orderly.network/chart";
-import { useTranslation } from "@orderly.network/i18n";
-import { Tabs, TabPanel, Flex, Text } from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-chart";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { Tabs, TabPanel, Flex, Text } from "@kodiak-finance/orderly-ui";
 import type { UsePerformanceScriptReturn } from "../performance/performance.script";
 import {
   PeriodType,

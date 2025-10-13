@@ -1,13 +1,13 @@
 import { FC, useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   Text,
   cn,
   Button,
   ArrowRightUpSquareFillIcon,
   useScreen,
-} from "@orderly.network/ui";
-import { AuthGuard } from "@orderly.network/ui-connector";
+} from "@kodiak-finance/orderly-ui";
+import { AuthGuard } from "@kodiak-finance/orderly-ui-connector";
 import { VaultCardScript } from "./vaultCard.script";
 
 export const VaultCard: FC<VaultCardScript> = (props) => {

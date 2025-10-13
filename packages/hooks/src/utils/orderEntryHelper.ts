@@ -4,8 +4,8 @@ import {
   OrderlyOrder,
   OrderSide,
   OrderType,
-} from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-types";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { FullOrderState } from "../next/useOrderEntry/useOrderStore";
 import { tpslCalculateHelper } from "../orderly/useTakeProfitAndStopLoss/tp_slUtils";
 

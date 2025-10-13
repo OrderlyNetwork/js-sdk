@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { useAccount } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { SimpleDialog, toast, Text, TextField } from "@orderly.network/ui";
+import { useAccount } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { SimpleDialog, toast, Text, TextField } from "@kodiak-finance/orderly-ui";
 import { NickNameDescriptionText, NickNameTextField } from "./common";
 
 export const EditNickNameDialog = (props: {

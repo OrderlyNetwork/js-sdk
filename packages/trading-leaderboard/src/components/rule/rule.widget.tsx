@@ -1,4 +1,4 @@
-import { useScreen } from "@orderly.network/ui";
+import { useScreen } from "@kodiak-finance/orderly-ui";
 import { useCampaignsScript } from "../campaigns/campaigns.script";
 import { CampaignRuleUI } from "./rule";
 import { CampaignTermsUI } from "./terms";

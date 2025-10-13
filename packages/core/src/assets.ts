@@ -4,7 +4,7 @@ import {
   ApiError,
   ChainNamespace,
   MaxUint256,
-} from "@orderly.network/types";
+} from "@kodiak-finance/orderly-types";
 import { Account } from "./account";
 import { ConfigStore } from "./configStore/configStore";
 import { getContractInfoByChainId, IContract } from "./contract";

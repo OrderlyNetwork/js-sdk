@@ -5,10 +5,10 @@ import {
   useChains,
   useLocalStorage,
   useWalletConnector,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { useAppContext } from "@orderly.network/react-app";
-import { AccountStatusEnum, ChainNamespace } from "@orderly.network/types";
+} from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { useAppContext } from "@kodiak-finance/orderly-react-app";
+import { AccountStatusEnum, ChainNamespace } from "@kodiak-finance/orderly-types";
 import {
   cn,
   modal,
@@ -17,7 +17,7 @@ import {
   Flex,
   CopyIcon,
   ChainIcon,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 
 interface StatusInfo {
   title: string;

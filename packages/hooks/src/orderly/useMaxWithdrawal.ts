@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { account as accountPerp } from "@orderly.network/perp";
-import { Decimal } from "@orderly.network/utils";
+import { account as accountPerp } from "@kodiak-finance/orderly-perp";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import {
   useCollateral,
   useIndexPricesStream,

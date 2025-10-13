@@ -1,5 +1,5 @@
-import { CardTitle, Flex } from "@orderly.network/ui";
-import { useTranslation } from "@orderly.network/i18n";
+import { CardTitle, Flex } from "@kodiak-finance/orderly-ui";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 
 export const AssetsChartHeader = () => {
   const { t } = useTranslation();

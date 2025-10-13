@@ -1,4 +1,4 @@
-import { OrderEntity } from "@orderly.network/types";
+import { OrderEntity } from "@kodiak-finance/orderly-types";
 import { StopLimitOrderCreator } from "../stopLimitOrderCreator";
 
 describe("StopLimitOrderCreator", () => {

@@ -1,12 +1,12 @@
 import { FC, ReactNode } from "react";
-import { Flex, Text } from "@orderly.network/ui";
+import { Flex, Text } from "@kodiak-finance/orderly-ui";
 import { JumpIcon } from "../components/jumpIcon";
 import { EsOrderlyIcon } from "../components/esOrderlyIcon";
 import { OrderlyIcon } from "../components/orderlyIcon";
 import { RocketIcon } from "../components/rocket";
 import { StakeBoosterReturns } from "./stakeBooster.script";
-import { commify, commifyOptional } from "@orderly.network/utils";
-import { useTranslation } from "@orderly.network/i18n";
+import { commify, commifyOptional } from "@kodiak-finance/orderly-utils";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 
 export const StakeBooster: FC<StakeBoosterReturns> = (props) => {
   const { t } = useTranslation();

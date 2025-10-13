@@ -1,5 +1,5 @@
 import useSWRSubscription from "swr/subscription";
-import { getTimestamp } from "@orderly.network/utils";
+import { getTimestamp } from "@kodiak-finance/orderly-utils";
 import { useAccount } from "../useAccount";
 import { useWS } from "../useWS";
 

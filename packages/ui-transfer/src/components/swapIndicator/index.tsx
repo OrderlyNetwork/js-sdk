@@ -1,5 +1,5 @@
 import React from "react";
-import { Flex, Text, TokenIcon } from "@orderly.network/ui";
+import { Flex, Text, TokenIcon } from "@kodiak-finance/orderly-ui";
 import { ArrowRightIcon } from "../swap/icons";
 
 export const SwapIndicator: React.FC<{

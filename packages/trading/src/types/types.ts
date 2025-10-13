@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
-import { API } from "@orderly.network/types";
-import { SharePnLConfig } from "@orderly.network/ui-share";
-import { TradingviewWidgetPropsInterface } from "@orderly.network/ui-tradingview";
+import { API } from "@kodiak-finance/orderly-types";
+import { SharePnLConfig } from "@kodiak-finance/orderly-ui-share";
+import { TradingviewWidgetPropsInterface } from "@kodiak-finance/orderly-ui-tradingview";
 
 export type layoutInfo = {
   width?: number;

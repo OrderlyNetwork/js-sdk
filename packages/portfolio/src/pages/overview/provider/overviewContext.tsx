@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { TWType } from "@orderly.network/hooks";
+import { TWType } from "@kodiak-finance/orderly-hooks";
 import { UseRewardsDataReturn } from "../mobile/useRewardsData.script";
 import { useAssetsHistoryDataReturn } from "../shared/useAssetHistory";
 

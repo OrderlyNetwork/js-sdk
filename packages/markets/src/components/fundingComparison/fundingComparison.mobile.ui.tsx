@@ -1,6 +1,6 @@
 import type { FC } from "react";
-import { cn } from "@orderly.network/ui";
-import { DataTable } from "@orderly.network/ui";
+import { cn } from "@kodiak-finance/orderly-ui";
+import { DataTable } from "@kodiak-finance/orderly-ui";
 import { useFundingColumns } from "./columns";
 import { FundingComparisonReturn } from "./fundingComparison.script";
 

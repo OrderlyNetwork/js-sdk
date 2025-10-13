@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { cn, Flex } from "@orderly.network/ui";
+import { cn, Flex } from "@kodiak-finance/orderly-ui";
 import { CampaignsWidget } from "../../components/campaigns";
 import { TradingListWidget } from "../../components/tradingList";
 import { LeaderboardScriptReturn } from "./leaderboard.script";

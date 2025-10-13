@@ -1,6 +1,6 @@
 import React from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Box, TabPanel, Tabs } from "@orderly.network/ui";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { Box, TabPanel, Tabs } from "@kodiak-finance/orderly-ui";
 import type { FundingScriptReturn } from "./funding.script";
 
 const LazySearchInput = React.lazy(() =>

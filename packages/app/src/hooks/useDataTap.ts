@@ -1,5 +1,5 @@
-import { useAccount } from "@orderly.network/hooks";
-import { AccountStatusEnum } from "@orderly.network/types";
+import { useAccount } from "@kodiak-finance/orderly-hooks";
+import { AccountStatusEnum } from "@kodiak-finance/orderly-types";
 import { useAppContext } from "../provider/appStateContext";
 
 export const useDataTap = <T = any>(

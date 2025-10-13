@@ -1,8 +1,8 @@
 import { useCallback, useMemo } from "react";
-import { useConfig, useLocalStorage } from "@orderly.network/hooks";
-import { API } from "@orderly.network/types";
-import { modal } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { useConfig, useLocalStorage } from "@kodiak-finance/orderly-hooks";
+import { API } from "@kodiak-finance/orderly-types";
+import { modal } from "@kodiak-finance/orderly-ui";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { CurrentChain } from "../../depositForm/hooks/useChainSelect";
 import { SwapDialog } from "../components/swapDialog";
 import { DST, SwapMode } from "../types";

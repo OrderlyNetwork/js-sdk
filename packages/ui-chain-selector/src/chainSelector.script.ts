@@ -1,14 +1,14 @@
 import { useMemo, useCallback, useState, useEffect } from "react";
-import { useConfig, useStorageChain } from "@orderly.network/hooks";
+import { useConfig, useStorageChain } from "@kodiak-finance/orderly-hooks";
 import {
   useChains,
   useWalletConnector,
   useLocalStorage,
-} from "@orderly.network/hooks";
-import { NetworkId } from "@orderly.network/types";
-import { useAppContext } from "@orderly.network/react-app";
+} from "@kodiak-finance/orderly-hooks";
+import { NetworkId } from "@kodiak-finance/orderly-types";
+import { useAppContext } from "@kodiak-finance/orderly-react-app";
 import { ChainType, TChainItem } from "./type";
-import { useOrderlyTheme } from "@orderly.network/ui";
+import { useOrderlyTheme } from "@kodiak-finance/orderly-ui";
 
 const KEY = "orderly_selected_chains";
 const MAX_RECENT_CHAINS = 6;

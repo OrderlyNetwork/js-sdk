@@ -1,12 +1,12 @@
 import { useMemo, useRef, useState } from "react";
-import { useLocalStorage } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { MenuItem } from "@orderly.network/ui";
+import { useLocalStorage } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { MenuItem } from "@kodiak-finance/orderly-ui";
 import type {
   InputFormatter,
   InputFormatterOptions,
-} from "@orderly.network/ui";
-import { Decimal, todpIfNeed } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-ui";
+import { Decimal, todpIfNeed } from "@kodiak-finance/orderly-utils";
 
 export enum PnLMode {
   PnL = "PnL",

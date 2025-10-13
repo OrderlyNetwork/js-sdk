@@ -1,7 +1,7 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { cn, Text, ChevronRightIcon, Button } from "@orderly.network/ui";
-import { AuthGuard } from "@orderly.network/ui-connector";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { cn, Text, ChevronRightIcon, Button } from "@kodiak-finance/orderly-ui";
+import { AuthGuard } from "@kodiak-finance/orderly-ui-connector";
 import { useCanTrade } from "../../../hooks/useCanTrade";
 import { CampaignConfig, PrizePool } from "../type";
 import { formatPrizeAmount, formatTradingVolume } from "../utils";

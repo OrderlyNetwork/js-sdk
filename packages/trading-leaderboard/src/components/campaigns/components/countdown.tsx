@@ -1,6 +1,6 @@
 import { FC, useState, useEffect } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { cn } from "@orderly.network/ui";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { cn } from "@kodiak-finance/orderly-ui";
 import { CampaignConfig } from "../type";
 
 const Circle = () => (

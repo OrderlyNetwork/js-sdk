@@ -1,8 +1,8 @@
 import { useCallback, useMemo } from "react";
-import { useDataTap } from "@orderly.network/react-app";
-import { Decimal } from "@orderly.network/utils";
-import { ChainNamespace } from "@orderly.network/types";
-import { ENVType, useGetEnv, useWalletConnector } from "@orderly.network/hooks";
+import { useDataTap } from "@kodiak-finance/orderly-react-app";
+import { Decimal } from "@kodiak-finance/orderly-utils";
+import { ChainNamespace } from "@kodiak-finance/orderly-types";
+import { ENVType, useGetEnv, useWalletConnector } from "@kodiak-finance/orderly-hooks";
 import { useTradingRewardsContext } from "../provider";
 
 export type AvailableReturns = {

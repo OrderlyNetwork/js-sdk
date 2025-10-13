@@ -1,9 +1,9 @@
 import { useEffect, useRef } from "react";
 import { mutate } from "swr";
 import { unstable_serialize } from "swr/infinite";
-import { AccountState, EVENT_NAMES } from "@orderly.network/core";
-import { API, WSMessage } from "@orderly.network/types";
-import { AccountStatusEnum } from "@orderly.network/types";
+import { AccountState, EVENT_NAMES } from "@kodiak-finance/orderly-core";
+import { API, WSMessage } from "@kodiak-finance/orderly-types";
+import { AccountStatusEnum } from "@kodiak-finance/orderly-types";
 import { useApiStatusActions } from "../next/apiStatus/apiStatus.store";
 import { getKeyFunction } from "../provider/dataCenter/dataCenterContext";
 import {

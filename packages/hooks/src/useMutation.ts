@@ -2,9 +2,9 @@ import useSWRMutation, { type SWRMutationConfiguration } from "swr/mutation";
 import {
   type MessageFactor,
   type SignedMessagePayload,
-} from "@orderly.network/core";
-import { mutate } from "@orderly.network/net";
-import { getTimestamp } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-core";
+import { mutate } from "@kodiak-finance/orderly-net";
+import { getTimestamp } from "@kodiak-finance/orderly-utils";
 import { useMemoizedFn } from ".";
 import { useAccountInstance } from "./useAccountInstance";
 import { useConfig } from "./useConfig";

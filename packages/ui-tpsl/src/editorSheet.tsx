@@ -1,7 +1,7 @@
 import { useMemo } from "react";
-import { useLocalStorage, useMarkPrice } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { AlgoOrderRootType, API, PositionType } from "@orderly.network/types";
+import { useLocalStorage, useMarkPrice } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { AlgoOrderRootType, API, PositionType } from "@kodiak-finance/orderly-types";
 import {
   Flex,
   modal,
@@ -11,7 +11,7 @@ import {
   Badge,
   Divider,
   toast,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import { TPSLWidget, TPSLWidgetProps } from "./positionTPSL";
 
 type TPSLSheetProps = {

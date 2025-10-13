@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Flex, Text } from "@orderly.network/ui";
+import { Flex, Text } from "@kodiak-finance/orderly-ui";
 import { RouterAdapter } from "../scaffold";
 import { BottomNavItem } from "./bottomNav.widget";
 

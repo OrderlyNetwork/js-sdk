@@ -2,7 +2,7 @@ import { FC, ReactNode } from "react";
 import {
   TradingRewardsLayoutWidget,
   TradingRewardsLeftSidebarPath,
-} from "@orderly.network/trading-rewards";
+} from "@kodiak-finance/orderly-trading-rewards";
 import { footerConfig, useMainNav } from "../../orderlyConfig";
 import { PathEnum } from "../../playground/constant";
 import { useRouteContext } from "../orderlyProvider/rounteProvider";

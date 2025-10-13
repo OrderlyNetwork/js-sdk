@@ -2,9 +2,9 @@ import {
   ComputedAlgoOrder,
   useLocalStorage,
   utils,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { OrderSide, PositionType } from "@orderly.network/types";
+} from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { OrderSide, PositionType } from "@kodiak-finance/orderly-types";
 import {
   Badge,
   Box,
@@ -14,8 +14,8 @@ import {
   Flex,
   Text,
   textVariants,
-} from "@orderly.network/ui";
-import { transSymbolformString } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-ui";
+import { transSymbolformString } from "@kodiak-finance/orderly-utils";
 
 export type PositionTPSLConfirmProps = {
   symbol: string;

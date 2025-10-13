@@ -1,5 +1,5 @@
-import { ConfigKey, API_URLS, type URLS } from "@orderly.network/core";
-import { ExtendedConfigStore } from "@orderly.network/hooks";
+import { API_URLS, ConfigKey, type URLS } from "@kodiak-finance/orderly-core";
+import { ExtendedConfigStore } from "@kodiak-finance/orderly-hooks";
 
 type ENV_NAME = "prod" | "staging" | "qa" | "dev";
 

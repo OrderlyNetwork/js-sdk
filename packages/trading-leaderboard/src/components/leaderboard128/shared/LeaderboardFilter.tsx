@@ -1,5 +1,5 @@
 import { FC, SVGProps } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   Box,
   CloseCircleFillIcon,
@@ -9,8 +9,8 @@ import {
   Input,
   Text,
   useScreen,
-} from "@orderly.network/ui";
-import { ScrollIndicator } from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
+import { ScrollIndicator } from "@kodiak-finance/orderly-ui";
 import {
   FilterDays,
   GeneralLeaderboardIScriptReturn,

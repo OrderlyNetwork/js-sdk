@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react";
-import { account } from "@orderly.network/perp";
-import type { API } from "@orderly.network/types";
-import { Decimal, zero } from "@orderly.network/utils";
+import { account } from "@kodiak-finance/orderly-perp";
+import type { API } from "@kodiak-finance/orderly-types";
+import { Decimal, zero } from "@kodiak-finance/orderly-utils";
 import { useCollateral, useHoldingStream, useIndexPricesStream } from "..";
 import { useTokensInfo } from "./useTokensInfo/tokensInfo.store";
 

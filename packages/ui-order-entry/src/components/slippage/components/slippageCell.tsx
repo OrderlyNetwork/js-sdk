@@ -1,14 +1,14 @@
 import { useRef } from "react";
-import { useBoolean } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import { useBoolean } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   EditIcon,
   Flex,
   Text,
   SimpleDialog,
   useScreen,
-} from "@orderly.network/ui";
-import { AuthGuard } from "@orderly.network/ui-connector";
+} from "@kodiak-finance/orderly-ui";
+import { AuthGuard } from "@kodiak-finance/orderly-ui-connector";
 import { SlippageEditor } from "./slippageEditor";
 
 export const SlippageCell = (props: {

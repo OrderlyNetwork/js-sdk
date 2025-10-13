@@ -1,5 +1,5 @@
 import { InputFormatter, InputFormatterOptions } from "./inputFormatter";
-import { commify } from "@orderly.network/utils";
+import { commify } from "@kodiak-finance/orderly-utils";
 
 export const currencyFormatter: InputFormatter = {
   onRenderBefore: function (

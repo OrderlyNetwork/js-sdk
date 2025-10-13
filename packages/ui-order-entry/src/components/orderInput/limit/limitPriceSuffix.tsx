@@ -1,5 +1,5 @@
-import { useTranslation } from "@orderly.network/i18n";
-import { Flex, cn, modal, Text } from "@orderly.network/ui";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { Flex, cn, modal, Text } from "@kodiak-finance/orderly-ui";
 import { OrderEntryScriptReturn } from "../../../orderEntry.script";
 import { BBOStatus } from "../../../utils";
 

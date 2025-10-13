@@ -1,5 +1,5 @@
 import { FC, useMemo } from "react";
-import { Select, Text, cn } from "@orderly.network/ui";
+import { Select, Text, cn } from "@kodiak-finance/orderly-ui";
 
 export type QuantityUnitProps = {
   base: string;

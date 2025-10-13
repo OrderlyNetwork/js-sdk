@@ -4,10 +4,10 @@ import {
   useRefereeRebateSummary,
   RefferalAPI,
   useDaily,
-} from "@orderly.network/hooks";
+} from "@kodiak-finance/orderly-hooks";
 import { compareDate, formatDateTimeToUTC } from "../../../utils/utils";
 import { subDays, toDate } from "date-fns";
-import { usePagination } from "@orderly.network/ui";
+import { usePagination } from "@kodiak-finance/orderly-ui";
 
 export type RebatesItem = RefferalAPI.RefereeRebateSummary & {
   vol?: number;

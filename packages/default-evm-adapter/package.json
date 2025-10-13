@@ -1,5 +1,5 @@
 {
-  "name": "@orderly.network/default-evm-adapter",
+  "name": "@kodiak-finance/orderly-default-evm-adapter",
   "version": "2.7.3",
   "description": "",
   "scripts": {
@@ -18,8 +18,8 @@
   },
   "dependencies": {
     "@noble/ed25519": "^2.0.0",
-    "@orderly.network/core": "workspace:*",
-    "@orderly.network/types": "workspace:*",
+    "@kodiak-finance/orderly-core": "workspace:*",
+    "@kodiak-finance/orderly-types": "workspace:*",
     "bs58": "^5.0.0"
   },
   "devDependencies": {

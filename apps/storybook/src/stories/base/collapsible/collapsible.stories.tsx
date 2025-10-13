@@ -1,13 +1,13 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
 // import { fn } from 'storybook/test';
 import {
+  Box,
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
   Flex,
   Text,
-  Box,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 const meta: Meta<typeof Collapsible> = {
   title: "Base/Layout/Collapsible",

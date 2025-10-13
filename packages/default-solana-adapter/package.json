@@ -1,5 +1,5 @@
 {
-  "name": "@orderly.network/default-solana-adapter",
+  "name": "@kodiak-finance/orderly-default-solana-adapter",
   "version": "2.7.3",
   "description": "",
   "scripts": {
@@ -17,8 +17,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@orderly.network/core": "workspace:*",
-    "@orderly.network/types": "workspace:*",
+    "@kodiak-finance/orderly-core": "workspace:*",
+    "@kodiak-finance/orderly-types": "workspace:*",
     "@solana/web3.js": "^1.95.3",
     "@coral-xyz/anchor": "0.29.0",
     "@layerzerolabs/lz-solana-sdk-v2": "2.3.45-oft-rc.0",

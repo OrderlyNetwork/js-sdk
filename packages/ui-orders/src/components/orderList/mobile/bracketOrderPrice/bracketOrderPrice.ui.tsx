@@ -1,7 +1,7 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { cn, EditIcon, Flex, Text, modal } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { cn, EditIcon, Flex, Text, modal } from "@kodiak-finance/orderly-ui";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { MobileTooltip } from "../items";
 import { BracketOrderPriceState } from "./bracketOrderPrice.script";
 

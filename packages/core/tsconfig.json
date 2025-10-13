@@ -2,7 +2,7 @@
   "extends": "./tsconfig.build.json",  
   "compilerOptions": {
     "paths": {
-      "@orderly.network/types": [
+      "@kodiak-finance/orderly-types": [
         "../types/src"
       ]
     },

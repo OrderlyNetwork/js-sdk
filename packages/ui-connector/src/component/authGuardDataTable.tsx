@@ -1,15 +1,15 @@
 import React, { PropsWithChildren, useMemo } from "react";
-import { useAccount } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { useAppContext, useDataTap } from "@orderly.network/react-app";
-import { AccountStatusEnum } from "@orderly.network/types";
+import { useAccount } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { useAppContext, useDataTap } from "@kodiak-finance/orderly-react-app";
+import { AccountStatusEnum } from "@kodiak-finance/orderly-types";
 import {
   ExtensionPositionEnum,
   ExtensionSlot,
   DataTable,
   DataTableProps,
-} from "@orderly.network/ui";
-import { Flex } from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
+import { Flex } from "@kodiak-finance/orderly-ui";
 import { alertMessages, AuthGuard } from "./authGuard";
 
 export const AuthGuardDataTable = <RecordType,>(

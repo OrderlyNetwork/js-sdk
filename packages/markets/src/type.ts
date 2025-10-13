@@ -1,5 +1,5 @@
-import { useMarkets } from "@orderly.network/hooks";
-import { SortOrder, Column } from "@orderly.network/ui";
+import { useMarkets } from "@kodiak-finance/orderly-hooks";
+import { SortOrder, Column } from "@kodiak-finance/orderly-ui";
 
 export type FavoriteInstance = ReturnType<typeof useMarkets>[1];
 

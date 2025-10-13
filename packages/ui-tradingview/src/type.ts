@@ -1,4 +1,4 @@
-import { LocaleCode } from "@orderly.network/i18n";
+import { LocaleCode } from "@kodiak-finance/orderly-i18n";
 import {
   LanguageCode,
   LoadingScreenOptions,

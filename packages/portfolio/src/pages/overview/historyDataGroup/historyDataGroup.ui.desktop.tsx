@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
-import { useAccount } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { AssetHistorySideEnum } from "@orderly.network/types";
+import { useAccount } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { AssetHistorySideEnum } from "@kodiak-finance/orderly-types";
 import {
   ArrowDownSquareFillIcon,
   ArrowLeftRightSquareFill,
@@ -12,7 +12,7 @@ import {
   TabPanel,
   Tabs,
   VaultsIcon,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import type { TabName } from "./historyDataGroup.script";
 
 const LazyAssetHistoryWidget = React.lazy(() =>

@@ -1,6 +1,6 @@
 import { FC, ReactNode } from "react";
-import { Trans } from "@orderly.network/i18n";
-import { cn, Flex, DataTable } from "@orderly.network/ui";
+import { Trans } from "@kodiak-finance/orderly-i18n";
+import { cn, Flex, DataTable } from "@kodiak-finance/orderly-ui";
 import { FavoritesTabWidget } from "../../components/favoritesTabs";
 import { useMarketsContext } from "../../components/marketsProvider";
 import { UnFavoritesIcon } from "../../icons";

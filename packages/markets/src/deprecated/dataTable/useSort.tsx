@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { SortOrder } from "@orderly.network/ui";
+import { SortOrder } from "@kodiak-finance/orderly-ui";
 import type { TableProps } from ".";
 import { AscendingIcon, DescendingIcon, SortingIcon } from "../../icons";
 

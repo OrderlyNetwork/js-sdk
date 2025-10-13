@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Decimal } from "@orderly.network/utils";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { useAccountInfo } from "./orderly/useAccountInfo";
 import type { RefferalAPI } from "./referral";
 import { usePrivateQuery } from "./usePrivateQuery";

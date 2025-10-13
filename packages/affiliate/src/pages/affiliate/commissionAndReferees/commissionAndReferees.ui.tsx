@@ -1,6 +1,6 @@
 import { FC, ReactNode, useMemo } from "react";
-import { RefferalAPI, useMediaQuery } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import { RefferalAPI, useMediaQuery } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   DatePicker,
   Divider,
@@ -12,9 +12,9 @@ import {
   Tabs,
   Text,
   cn,
-} from "@orderly.network/ui";
-import { AuthGuardDataTable } from "@orderly.network/ui-connector";
-import { commifyOptional } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-ui";
+import { AuthGuardDataTable } from "@kodiak-finance/orderly-ui-connector";
+import { commifyOptional } from "@kodiak-finance/orderly-utils";
 import { DateRange } from "../../../utils/types";
 import { formatYMDTime } from "../../../utils/utils";
 import { CommissionAndRefereesReturns } from "./commissionAndReferees.script";

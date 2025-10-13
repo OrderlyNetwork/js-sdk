@@ -6,17 +6,17 @@ import {
   useMemo,
   useState,
 } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   AlgoOrderRootType,
   API,
   OrderStatus,
   OrderType,
-} from "@orderly.network/types";
-import { OrderSide } from "@orderly.network/types";
-import { Badge, Flex, Statistic, Text, Tooltip } from "@orderly.network/ui";
-import { SharePnLBottomSheetId } from "@orderly.network/ui-share";
-import { Decimal, getTrailingStopPrice } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-types";
+import { OrderSide } from "@kodiak-finance/orderly-types";
+import { Badge, Flex, Statistic, Text, Tooltip } from "@kodiak-finance/orderly-ui";
+import { SharePnLBottomSheetId } from "@kodiak-finance/orderly-ui-share";
+import { Decimal, getTrailingStopPrice } from "@kodiak-finance/orderly-utils";
 import {
   getNotional,
   parseBadgesFor,

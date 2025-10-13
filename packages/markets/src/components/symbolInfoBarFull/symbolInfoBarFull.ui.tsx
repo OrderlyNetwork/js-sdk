@@ -1,8 +1,8 @@
 import React, { ReactNode } from "react";
-import { useFundingRate } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { TokenIcon, Flex, Text, cn, Divider } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { useFundingRate } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { TokenIcon, Flex, Text, cn, Divider } from "@kodiak-finance/orderly-ui";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import {
   ArrowLeftIcon,
   FavoritesIcon2,

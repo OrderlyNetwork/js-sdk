@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useParams } from "react-router";
-import { formatSymbol } from "@orderly.network/utils";
+import { formatSymbol } from "@kodiak-finance/orderly-utils";
 import { PageTitleMap, PathEnum } from "../constant";
 import { generatePageTitle } from "../utils";
 import { usePathWithoutLang } from "./usePathWithoutLang";

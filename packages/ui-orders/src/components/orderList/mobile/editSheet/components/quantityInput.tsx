@@ -1,7 +1,7 @@
 import { memo, useState } from "react";
-import { utils } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { cn, Input, inputFormatter, Text } from "@orderly.network/ui";
+import { utils } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { cn, Input, inputFormatter, Text } from "@kodiak-finance/orderly-ui";
 import { useEditSheetContext } from "./editSheetContext";
 
 type QuantityInputProps = {

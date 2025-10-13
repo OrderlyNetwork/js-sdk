@@ -1,8 +1,8 @@
 import { ReactNode, useState } from "react";
 // @ts-ignore
-import React from "react";
+import { Box, Flex, ListView } from "@kodiak-finance/orderly-ui";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Box, Flex, ListView } from "@orderly.network/ui";
+
 
 const meta: Meta<typeof ListView> = {
   title: "Base/ListView",

@@ -7,10 +7,10 @@ import {
   TabPanel,
   cn,
   tv,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import { ChainType, TChainItem } from "./type";
 import { UseChainSelectorScriptReturn } from "./chainSelector.script";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 
 export type ChainSelectorProps = {
   isWrongNetwork?: boolean;

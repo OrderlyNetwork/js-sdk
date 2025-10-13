@@ -1,12 +1,12 @@
-import type { StoryObj } from "@storybook/react-vite";
-import { Box } from "@orderly.network/ui";
+import { Box } from "@kodiak-finance/orderly-ui";
 import {
-  MaintenanceTipsUI,
   AccountMenuWidget,
   AccountSummaryWidget,
   ChainMenuWidget,
+  MaintenanceTipsUI,
   Scaffold,
-} from "@orderly.network/ui-scaffold";
+} from "@kodiak-finance/orderly-ui-scaffold";
+import type { StoryObj } from "@storybook/react-vite";
 
 const meta = {
   title: "Package/ui-scaffold/maintenanceTips",

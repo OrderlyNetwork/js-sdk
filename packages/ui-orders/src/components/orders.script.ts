@@ -1,7 +1,7 @@
 import { ForwardedRef, useImperativeHandle, useRef } from "react";
 import { TabType } from "./orders.widget";
 import { OrderListInstance } from "./orderList/orderList.script";
-import { SharePnLConfig } from "@orderly.network/ui-share";
+import { SharePnLConfig } from "@kodiak-finance/orderly-ui-share";
 
 type UseOrdersScriptOptions = {
   current?: TabType;

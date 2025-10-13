@@ -1,7 +1,7 @@
 import { CSSProperties, useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { BBOOrderType } from "@orderly.network/types";
-import { Box, Select, Text } from "@orderly.network/ui";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { BBOOrderType } from "@kodiak-finance/orderly-types";
+import { Box, Select, Text } from "@kodiak-finance/orderly-ui";
 
 export const BBOOrderTypeSelect = (props: {
   value?: BBOOrderType;

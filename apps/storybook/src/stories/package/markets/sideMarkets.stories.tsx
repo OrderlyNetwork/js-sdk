@@ -1,15 +1,15 @@
 import { useState } from "react";
-import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   ExpandMarketsWidget,
   FavoritesListWidget,
   MarketsListWidget,
+  MarketsTabName,
+  NewListingListWidget,
   RecentListWidget,
   SideMarketsWidget,
-  NewListingListWidget,
-  MarketsTabName,
-} from "@orderly.network/markets";
-import { Box } from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-markets";
+import { Box } from "@kodiak-finance/orderly-ui";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 const decorators = [
   (Story: any) => (

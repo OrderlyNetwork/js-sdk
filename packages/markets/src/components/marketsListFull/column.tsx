@@ -1,7 +1,7 @@
 import { MouseEventHandler, useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Flex, Text, Box, Tooltip, Column } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { Flex, Text, Box, Tooltip, Column } from "@kodiak-finance/orderly-ui";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import {
   FavoritesIcon,
   MoveToTopIcon,

@@ -5,7 +5,7 @@ import {
   API,
   AssetHistoryStatusEnum,
   EMPTY_LIST,
-} from "@orderly.network/types";
+} from "@kodiak-finance/orderly-types";
 import { useEventEmitter } from "../../useEventEmitter";
 import { usePrivateQuery } from "../../usePrivateQuery";
 

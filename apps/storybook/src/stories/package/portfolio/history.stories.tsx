@@ -1,8 +1,8 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
-  PortfolioLeftSidebarPath,
   HistoryModule,
-} from "@orderly.network/portfolio";
+  PortfolioLeftSidebarPath,
+} from "@kodiak-finance/orderly-portfolio";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { PortfolioLayout } from "../../../components/layout/portfolioLayout";
 
 const meta: Meta<typeof HistoryModule.HistoryPage> = {

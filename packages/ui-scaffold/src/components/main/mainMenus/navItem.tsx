@@ -10,10 +10,10 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { useAccount, useLocalStorage } from "@orderly.network/hooks";
-import { ChevronDownIcon, PopoverContent, Tooltip } from "@orderly.network/ui";
-import { Flex } from "@orderly.network/ui";
-import { Box, cn, PopoverAnchor, PopoverRoot, Text } from "@orderly.network/ui";
+import { useAccount, useLocalStorage } from "@kodiak-finance/orderly-hooks";
+import { ChevronDownIcon, PopoverContent, Tooltip } from "@kodiak-finance/orderly-ui";
+import { Flex } from "@kodiak-finance/orderly-ui";
+import { Box, cn, PopoverAnchor, PopoverRoot, Text } from "@kodiak-finance/orderly-ui";
 
 const ActiveIcon: React.FC = () => (
   <svg

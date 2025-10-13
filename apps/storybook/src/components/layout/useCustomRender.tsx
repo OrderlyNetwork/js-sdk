@@ -1,6 +1,6 @@
 import { useCallback } from "react";
-import { Flex, useScreen } from "@orderly.network/ui";
-import { MainNavWidgetProps } from "@orderly.network/ui-scaffold";
+import { Flex, useScreen } from "@kodiak-finance/orderly-ui";
+import { MainNavWidgetProps } from "@kodiak-finance/orderly-ui-scaffold";
 
 export function useCustomRender() {
   const { isMobile } = useScreen();

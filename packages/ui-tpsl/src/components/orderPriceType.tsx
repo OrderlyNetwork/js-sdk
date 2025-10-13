@@ -1,6 +1,6 @@
-import { useTranslation } from "@orderly.network/i18n";
-import { OrderType } from "@orderly.network/types";
-import { Select, Text } from "@orderly.network/ui";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { OrderType } from "@kodiak-finance/orderly-types";
+import { Select, Text } from "@kodiak-finance/orderly-ui";
 
 type Props = {
   type: OrderType;

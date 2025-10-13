@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, cn } from "@orderly.network/ui";
+import { Box, cn } from "@kodiak-finance/orderly-ui";
 import { MainNavMobile } from "../main/mainNav.ui.mobile";
 import type { ScaffoldScriptReturn } from "./scaffold.script";
 import type { ScaffoldProps } from "./scaffold.widget";

@@ -1,6 +1,6 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Checkbox, cn, Flex, SimpleDialog } from "@orderly.network/ui";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { Checkbox, cn, Flex, SimpleDialog } from "@kodiak-finance/orderly-ui";
 import { InfoIcon } from "../icons";
 import type { UseRestrictedInfoScriptReturn } from "./restrictedInfo.script";
 

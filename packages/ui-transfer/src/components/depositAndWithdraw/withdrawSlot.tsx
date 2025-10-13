@@ -1,4 +1,4 @@
-import { ExtensionPositionEnum, ExtensionSlot } from "@orderly.network/ui";
+import { ExtensionPositionEnum, ExtensionSlot } from "@kodiak-finance/orderly-ui";
 import { WithdrawFormWidget } from "../withdrawForm";
 import { WithdrawFormWidgetProps } from "../withdrawForm/withdrawForm.widget";
 

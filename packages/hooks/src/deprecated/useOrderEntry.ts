@@ -6,9 +6,9 @@ import {
   OrderSide,
   OrderType,
   SDKError,
-} from "@orderly.network/types";
+} from "@kodiak-finance/orderly-types";
 import { useSymbolsInfo } from "../orderly/useSymbolsInfo";
-import { Decimal, getPrecisionByNumber } from "@orderly.network/utils";
+import { Decimal, getPrecisionByNumber } from "@kodiak-finance/orderly-utils";
 import { useMutation } from "../useMutation";
 import { compose, head, includes, omit, pick } from "ramda";
 import {
@@ -20,7 +20,7 @@ import { useCollateral } from "../orderly/useCollateral";
 import { useMaxQty } from "../orderly/useMaxQty";
 // import { availableOrderTypes } from "../utils/createOrder";
 import { useMarkPrice } from "../orderly/useMarkPrice";
-import { order as orderUtils } from "@orderly.network/perp";
+import { order as orderUtils } from "@kodiak-finance/orderly-perp";
 import { useEventEmitter } from "../useEventEmitter";
 import { useDebouncedCallback } from "use-debounce";
 import { OrderFactory } from "../services/orderCreator/factory";
@@ -81,8 +81,8 @@ export type OrderParams = Required<
  * Create Order
  * @example
  * ```tsx
- * import { useOrderEntry } from "@orderly.network/hooks";
- * import {OrderSide, OrderType} from '@orderly.network/types';
+ * import { useOrderEntry } from "@kodiak-finance/orderly-hooks";
+ * import {OrderSide, OrderType} from '@kodiak-finance/orderly-types';
  *
  * const { formattedOrder, onSubmit, helper } = useOrderEntry({
  *  symbol: "PERP_ETH_USDC",

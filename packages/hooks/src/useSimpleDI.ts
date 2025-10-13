@@ -1,4 +1,4 @@
-import { SimpleDI } from "@orderly.network/core";
+import { SimpleDI } from "@kodiak-finance/orderly-core";
 
 export const useSimpleDI = <T>() => {
   return {

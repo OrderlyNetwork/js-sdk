@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { cn, DataTable } from "@orderly.network/ui";
+import { cn, DataTable } from "@kodiak-finance/orderly-ui";
 import { CollapseMarkets } from "../../components/collapseMarkets";
 import { useMarketsContext } from "../../components/marketsProvider";
 import { useSideMarketsColumns } from "../../components/sideMarkets/column";

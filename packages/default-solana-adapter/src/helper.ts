@@ -21,12 +21,12 @@ import {
   type SignatureDomain,
   type WithdrawInputs,
   InternalTransferInputs,
-} from "@orderly.network/core";
-import { DexRequestInputs } from "@orderly.network/core";
+} from "@kodiak-finance/orderly-core";
+import { DexRequestInputs } from "@kodiak-finance/orderly-core";
 import {
   DEFAUL_ORDERLY_KEY_SCOPE,
   LedgerWalletKey,
-} from "@orderly.network/types";
+} from "@kodiak-finance/orderly-types";
 import {
   DVN_PROGRAM_ID,
   ENDPOINT_PROGRAM_ID,

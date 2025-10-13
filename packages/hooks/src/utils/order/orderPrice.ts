@@ -1,10 +1,10 @@
-import { order as orderUtils } from "@orderly.network/perp";
+import { order as orderUtils } from "@kodiak-finance/orderly-perp";
 import {
   API,
   OrderlyOrder,
   OrderSide,
   OrderType,
-} from "@orderly.network/types";
+} from "@kodiak-finance/orderly-types";
 
 /**
  * if order_type = market order,

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocalStorage } from "@orderly.network/hooks";
+import { useLocalStorage } from "@kodiak-finance/orderly-hooks";
 import { MarketsTabName } from "../../type";
 import { useMarketsContext } from "../marketsProvider";
 import { useTabSort } from "../shared/hooks/useTabSort";

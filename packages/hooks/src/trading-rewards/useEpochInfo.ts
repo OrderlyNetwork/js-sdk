@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { TWType } from "./types";
 import { useQuery } from "../useQuery";
-import { getTimestamp } from "@orderly.network/utils";
+import { getTimestamp } from "@kodiak-finance/orderly-utils";
 
 export type EpochInfoItem = {
   epoch_id: number;

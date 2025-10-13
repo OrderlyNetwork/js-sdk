@@ -1,5 +1,5 @@
 {
-  "name": "@orderly.network/types",
+  "name": "@kodiak-finance/orderly-types",
   "version": "2.7.3",
   "description": "",
   "main": "dist/index.js",

@@ -3,9 +3,9 @@ import {
   useAccount,
   useEventEmitter,
   usePositionStream,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { toast } from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { toast } from "@kodiak-finance/orderly-ui";
 
 export type SettlePnlOptions = {
   accountId?: string;

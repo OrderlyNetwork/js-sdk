@@ -1,5 +1,5 @@
 import React from "react";
-import { useAccount } from "@orderly.network/hooks";
+import { useAccount } from "@kodiak-finance/orderly-hooks";
 import { TransferHistoryUI } from "./transfer.ui";
 import { useTransferHistoryHook } from "./useDataSource.script";
 

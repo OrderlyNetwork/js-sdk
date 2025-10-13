@@ -1,8 +1,12 @@
+import { OverviewModule } from "@kodiak-finance/orderly-portfolio";
+import { AccountStatusEnum } from "@kodiak-finance/orderly-types";
+import { Column, Flex, Text } from "@kodiak-finance/orderly-ui";
+import {
+  AuthGuard,
+  AuthGuardDataTable,
+} from "@kodiak-finance/orderly-ui-connector";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { OverviewModule } from "@orderly.network/portfolio";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { Text, Flex, Column } from "@orderly.network/ui";
-import { AuthGuard, AuthGuardDataTable } from "@orderly.network/ui-connector";
+
 
 const meta: Meta<typeof AuthGuard> = {
   title: "Package/ui-connector/AuthGuard",

@@ -1,5 +1,5 @@
 import React, { FC, useId } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   Box,
   Button,
@@ -12,7 +12,7 @@ import {
   ReduceIcon,
   inputFormatter,
   InputFormatter,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import { LeverageScriptReturns } from "./leverage.script";
 
 const IconButton: React.FC<{

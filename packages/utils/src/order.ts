@@ -4,7 +4,7 @@ import {
   OrderLevel,
   OrderSide,
   OrderType,
-} from "@orderly.network/types";
+} from "@kodiak-finance/orderly-types";
 import Decimal from "./decimal";
 
 /**

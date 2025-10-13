@@ -1,9 +1,9 @@
 import React, { FC, ReactNode } from "react";
-import { Box, cn, Grid, ListView, Text } from "@orderly.network/ui";
+import { Box, cn, Grid, ListView, Text } from "@kodiak-finance/orderly-ui";
 import { LastTradesState } from "./lastTrades.script";
-import { OrderSide } from "@orderly.network/types";
-import { commifyOptional } from "@orderly.network/utils";
-import { useTranslation } from "@orderly.network/i18n";
+import { OrderSide } from "@kodiak-finance/orderly-types";
+import { commifyOptional } from "@kodiak-finance/orderly-utils";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 
 export const LastTrades: FC<
   LastTradesState & {

@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useSymbolsInfo, useTickerStream } from "@orderly.network/hooks";
+import { useSymbolsInfo, useTickerStream } from "@kodiak-finance/orderly-hooks";
 
 export type UseSymbolInfoBarScriptOptions = {
   symbol: string;

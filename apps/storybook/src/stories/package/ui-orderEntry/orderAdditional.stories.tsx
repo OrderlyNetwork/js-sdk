@@ -1,7 +1,7 @@
 import { useState } from "react";
+import { Box } from "@kodiak-finance/orderly-ui";
+import { AdditionalInfo } from "@kodiak-finance/orderly-ui-order-entry";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Box } from "@orderly.network/ui";
-import { AdditionalInfo } from "@orderly.network/ui-order-entry";
 
 const meta: Meta<typeof AdditionalInfo> = {
   title: "Package/ui-order-entry/additional",

@@ -3,11 +3,11 @@ import {
   useAccount,
   useCheckReferralCode,
   useMutation,
-} from "@orderly.network/hooks";
+} from "@kodiak-finance/orderly-hooks";
 import { TabTypes, useReferralContext } from "../../../hooks";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { toast, useScreen } from "@orderly.network/ui";
-import { useTranslation } from "@orderly.network/i18n";
+import { AccountStatusEnum } from "@kodiak-finance/orderly-types";
+import { toast, useScreen } from "@kodiak-finance/orderly-ui";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 
 export const useAsTraderScript = () => {
   const { t } = useTranslation();

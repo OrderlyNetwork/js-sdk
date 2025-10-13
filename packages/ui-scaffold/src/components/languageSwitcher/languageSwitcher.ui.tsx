@@ -1,5 +1,5 @@
 import { FC, SVGProps, forwardRef } from "react";
-import { useTranslation, Language } from "@orderly.network/i18n";
+import { useTranslation, Language } from "@kodiak-finance/orderly-i18n";
 import {
   cn,
   Flex,
@@ -14,7 +14,7 @@ import {
   useScreen,
   SimpleSheet,
   Tooltip,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import { LanguageSwitcherScriptReturn } from "./languageSwitcher.script";
 
 export type LanguageSwitcherProps = LanguageSwitcherScriptReturn;

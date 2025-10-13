@@ -12,7 +12,7 @@ import { PrivyClientConfig } from "@privy-io/react-auth";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import { type Chain, defineChain } from "viem";
 import { mainnet } from "viem/chains";
-import { Chains, fetcher, useSWR } from "@orderly.network/hooks";
+import { Chains, fetcher, useSWR } from "@kodiak-finance/orderly-hooks";
 import {
   AbstractChains,
   AbstractTestnetChainInfo,
@@ -23,8 +23,8 @@ import {
   SolanaDevnetChainInfo,
   SolanaDevnetTokenInfo,
   TesntTokenFallback,
-} from "@orderly.network/types";
-import { TooltipProvider } from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-types";
+import { TooltipProvider } from "@kodiak-finance/orderly-ui";
 import { Main } from "./main";
 import { AbstractWallet } from "./providers/abstractWallet";
 import { PrivyWallet } from "./providers/privy";

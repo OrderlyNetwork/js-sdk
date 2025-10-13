@@ -1,6 +1,6 @@
 import { FC, PropsWithChildren } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { cn } from "@orderly.network/ui";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { cn } from "@kodiak-finance/orderly-ui";
 import {
   ScaffoldProps,
   RouterAdapter,
@@ -8,7 +8,7 @@ import {
   SideBar,
   SideBarProps,
   useScaffoldContext,
-} from "@orderly.network/ui-scaffold";
+} from "@kodiak-finance/orderly-ui-scaffold";
 
 export type PortfolioLayoutProps = ScaffoldProps & {
   hideSideBar?: boolean;

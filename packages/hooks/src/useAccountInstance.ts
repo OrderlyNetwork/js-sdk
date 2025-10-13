@@ -1,8 +1,8 @@
 import useConstant from "use-constant";
-import { Account, SimpleDI } from "@orderly.network/core";
+import { Account, SimpleDI } from "@kodiak-finance/orderly-core";
 import { useContext } from "react";
 import { OrderlyContext } from "./orderlyContext";
-import { SDKError } from "@orderly.network/types";
+import { SDKError } from "@kodiak-finance/orderly-types";
 
 export const useAccountInstance = (): Account => {
   const { configStore, keyStore, walletAdapters } = useContext(OrderlyContext);

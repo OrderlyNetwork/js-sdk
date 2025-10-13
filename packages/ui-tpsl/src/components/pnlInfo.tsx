@@ -1,7 +1,7 @@
 import { useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { cn, Flex, Text } from "@orderly.network/ui";
-import { Decimal, checkIsNaN } from "@orderly.network/utils";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { cn, Flex, Text } from "@kodiak-finance/orderly-ui";
+import { Decimal, checkIsNaN } from "@kodiak-finance/orderly-utils";
 
 type Props = {
   tp_pnl?: string | number;

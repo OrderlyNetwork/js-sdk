@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { useStorageChain } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { AbstractChains, ChainNamespace } from "@orderly.network/types";
-import { cn, ExclamationFillIcon } from "@orderly.network/ui";
-import { windowGuard } from "@orderly.network/utils";
+import { useStorageChain } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { AbstractChains, ChainNamespace } from "@kodiak-finance/orderly-types";
+import { cn, ExclamationFillIcon } from "@kodiak-finance/orderly-ui";
+import { windowGuard } from "@kodiak-finance/orderly-utils";
 import { useWallet } from "../hooks/useWallet";
 import { useWalletConnectorPrivy } from "../provider";
 import { usePrivyWallet } from "../providers/privy/privyWalletProvider";

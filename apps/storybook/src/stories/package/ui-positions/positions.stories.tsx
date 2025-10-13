@@ -1,14 +1,13 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Box, Button, modal, useScreen } from "@orderly.network/ui";
+import { Box, Button, modal, useScreen } from "@kodiak-finance/orderly-ui";
 import {
+  FundingFeeHistoryUI,
   LiquidationWidget,
   MobileLiquidationWidget,
   MobilePositionHistoryWidget,
-  MobilePositionsWidget,
   PositionHistoryWidget,
   PositionsWidget,
-  FundingFeeHistoryUI,
-} from "@orderly.network/ui-positions";
+} from "@kodiak-finance/orderly-ui-positions";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 const meta: Meta<typeof PositionsWidget> = {
   title: "Package/ui-positions/Positions",

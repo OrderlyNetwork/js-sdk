@@ -1,7 +1,7 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { EMPTY_LIST } from "@orderly.network/types";
-import { cn } from "@orderly.network/ui";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { EMPTY_LIST } from "@kodiak-finance/orderly-types";
+import { cn } from "@kodiak-finance/orderly-ui";
 import { LeaderboardTitle } from "../../pages/leaderboard/page";
 import { DescriptionContent, DescriptionItem } from "./description";
 

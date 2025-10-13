@@ -1,8 +1,8 @@
 import { FC, PropsWithChildren, useMemo } from "react";
-import { getMinNotional, useSymbolsInfo } from "@orderly.network/hooks";
-import { useMemoizedFn } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { API, OrderEntity } from "@orderly.network/types";
+import { getMinNotional, useSymbolsInfo } from "@kodiak-finance/orderly-hooks";
+import { useMemoizedFn } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { API, OrderEntity } from "@kodiak-finance/orderly-types";
 import { OrderListContext, OrderListContextState } from "./orderListContext";
 
 export interface OrderListProviderProps {

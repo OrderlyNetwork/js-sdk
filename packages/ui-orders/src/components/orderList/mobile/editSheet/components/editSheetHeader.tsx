@@ -1,6 +1,6 @@
-import { useTranslation } from "@orderly.network/i18n";
-import { API, OrderSide } from "@orderly.network/types";
-import { Badge, Flex, Text } from "@orderly.network/ui";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { API, OrderSide } from "@kodiak-finance/orderly-types";
+import { Badge, Flex, Text } from "@kodiak-finance/orderly-ui";
 import { parseBadgesFor } from "../../../../../utils/util";
 
 type EditSheetHeaderProps = {

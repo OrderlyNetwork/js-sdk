@@ -1,22 +1,22 @@
-import { useLocalStorage, useLeverageBySymbol } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { PositionType } from "@orderly.network/types";
+import { useLocalStorage, useLeverageBySymbol } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { PositionType } from "@kodiak-finance/orderly-types";
 import {
   ChevronRightIcon,
   cn,
   EditIcon,
   Text,
   useScreen,
-} from "@orderly.network/ui";
-import { modal } from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
+import { modal } from "@kodiak-finance/orderly-ui";
 import {
   PositionTPSLPopover,
   TPSLDetailDialogId,
   TPSLDialogId,
   TPSLSheetId,
   TPSLDetailSheetId,
-} from "@orderly.network/ui-tpsl";
-import { Decimal } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-ui-tpsl";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { usePositionsRowContext } from "../positionsRowContext";
 
 // ------------ TP/SL Price input end------------

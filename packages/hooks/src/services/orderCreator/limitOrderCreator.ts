@@ -1,12 +1,12 @@
 import { pick } from "ramda";
-import { order as orderUntil } from "@orderly.network/perp";
+import { order as orderUntil } from "@kodiak-finance/orderly-perp";
 import {
   OrderEntity,
   OrderSide,
   OrderType,
   OrderlyOrder,
-} from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-types";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { BaseOrderCreator } from "./baseCreator";
 import {
   OrderFormEntity,

@@ -7,9 +7,9 @@ import {
   useAudioPlayer,
   useLocalStorage,
   useOrderlyContext,
-} from "@orderly.network/hooks";
-import { OrderStatus } from "@orderly.network/types";
-import { toast } from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-hooks";
+import { OrderStatus } from "@kodiak-finance/orderly-types";
+import { toast } from "@kodiak-finance/orderly-ui";
 import { getOrderExecutionReportMsg } from "./getOrderExecutionReportMsg";
 
 export const ORDERLY_ORDER_SOUND_ALERT_KEY = "orderly_order_sound_alert";

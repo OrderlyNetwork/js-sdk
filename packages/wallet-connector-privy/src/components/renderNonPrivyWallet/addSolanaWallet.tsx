@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { ChainNamespace } from "@orderly.network/types";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { ChainNamespace } from "@kodiak-finance/orderly-types";
 import {
   ChevronDownIcon,
   ChevronUpIcon,
   cn,
   Tooltip,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import { useWallet } from "../../hooks/useWallet";
 import { useWalletConnectorPrivy } from "../../provider";
 import { useSolanaWallet } from "../../providers/solana/solanaWalletProvider";

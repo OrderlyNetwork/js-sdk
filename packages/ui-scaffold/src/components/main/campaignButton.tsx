@@ -1,4 +1,4 @@
-import { cn } from "@orderly.network/ui";
+import { cn } from "@kodiak-finance/orderly-ui";
 import { MainNavItem, NavItem } from "./mainMenus/navItem";
 
 export type CampaignProps = {

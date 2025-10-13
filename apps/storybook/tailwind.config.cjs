@@ -1,5 +1,5 @@
+import { chartPlugin } from "@kodiak-finance/orderly-chart";
 import { withTV } from "tailwind-variants/transformer";
-import { chartPlugin } from "@orderly.network/chart";
 import { customThemePlugin } from "./src/tailwind/customTheme";
 import { roundlessThemePlugin } from "./src/tailwind/roundlessTheme";
 

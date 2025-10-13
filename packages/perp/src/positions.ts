@@ -1,5 +1,5 @@
-import { API } from "@orderly.network/types";
-import { Decimal, zero } from "@orderly.network/utils";
+import { API } from "@kodiak-finance/orderly-types";
+import { Decimal, zero } from "@kodiak-finance/orderly-utils";
 import { IMRFactorPower } from "./constants";
 
 /**

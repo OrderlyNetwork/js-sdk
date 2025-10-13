@@ -5,11 +5,11 @@ import {
   useAccount,
   useAccountInfo,
   usePrivateQuery,
-} from "@orderly.network/hooks";
-import { useDataTap } from "@orderly.network/react-app";
-import { AccountStatusEnum, API } from "@orderly.network/types";
-import type { Column, TanstackColumn } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-hooks";
+import { useDataTap } from "@kodiak-finance/orderly-react-app";
+import { AccountStatusEnum, API } from "@kodiak-finance/orderly-types";
+import type { Column, TanstackColumn } from "@kodiak-finance/orderly-ui";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { useFeeTierColumns } from "./column";
 import { dataSource as defaultDataSource } from "./dataSource";
 

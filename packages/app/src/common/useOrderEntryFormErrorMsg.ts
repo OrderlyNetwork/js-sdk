@@ -2,8 +2,8 @@ import { useCallback } from "react";
 import {
   OrderValidationItem,
   OrderValidationResult,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+} from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 
 type Keys = keyof OrderValidationResult;
 type ErrorType = Partial<OrderValidationItem["type"]>;

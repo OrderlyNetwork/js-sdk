@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
-import { AssetAreaChart } from "@orderly.network/chart";
-import { useTranslation } from "@orderly.network/i18n";
-import { Card } from "@orderly.network/ui";
+import { AssetAreaChart } from "@kodiak-finance/orderly-chart";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { Card } from "@kodiak-finance/orderly-ui";
 import { useAssetsChartScriptReturn } from "./assetsChart.script";
 
 const LazyPeriodTitle = React.lazy(() =>

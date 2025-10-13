@@ -4,10 +4,10 @@ import {
   useLocalStorage,
   useMarginRatio,
   usePositionStream,
-} from "@orderly.network/hooks";
-import { useCollateral, useAccount } from "@orderly.network/hooks";
-import { useAppContext } from "@orderly.network/react-app";
-import { AccountStatusEnum } from "@orderly.network/types";
+} from "@kodiak-finance/orderly-hooks";
+import { useCollateral, useAccount } from "@kodiak-finance/orderly-hooks";
+import { useAppContext } from "@kodiak-finance/orderly-react-app";
+import { AccountStatusEnum } from "@kodiak-finance/orderly-types";
 
 export type AccountSummaryType =
   | "totalValue"

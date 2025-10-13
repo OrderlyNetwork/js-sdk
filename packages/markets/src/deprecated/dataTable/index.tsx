@@ -4,7 +4,7 @@ import {
   ExtensionPositionEnum,
   ExtensionSlot,
   SortOrder,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import { useSort } from "./useSort";
 
 export type Column = {

@@ -1,9 +1,9 @@
+import { OrderlyAppProvider } from "@kodiak-finance/orderly-react-app";
+import { ExtensionPositionEnum, Flex, Text } from "@kodiak-finance/orderly-ui";
+import { Scaffold } from "@kodiak-finance/orderly-ui-scaffold";
+import { WalletConnectorProvider } from "@kodiak-finance/orderly-wallet-connector";
 import type { StoryObj } from "@storybook/react-vite";
 import { fn } from "storybook/test";
-import { OrderlyAppProvider } from "@orderly.network/react-app";
-import { Flex, Text, ExtensionPositionEnum } from "@orderly.network/ui";
-import { Scaffold } from "@orderly.network/ui-scaffold";
-import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
 
 const meta = {
   title: "Customize/Scaffold/components",

@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { API, chainsInfoMap } from "@orderly.network/types";
+import { API, chainsInfoMap } from "@kodiak-finance/orderly-types";
 import { useQuery } from "../useQuery";
 
 /**

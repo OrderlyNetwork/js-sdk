@@ -1,7 +1,11 @@
+import { OrderSide, OrderType } from "@kodiak-finance/orderly-types";
+import { Box } from "@kodiak-finance/orderly-ui";
+import {
+  OrderEntry,
+  OrderEntryWidget,
+} from "@kodiak-finance/orderly-ui-order-entry";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { OrderSide, OrderType } from "@orderly.network/types";
-import { Box } from "@orderly.network/ui";
-import { OrderEntryWidget, OrderEntry } from "@orderly.network/ui-order-entry";
+
 
 const meta: Meta<typeof OrderEntry> = {
   title: "Package/ui-order-entry/form",

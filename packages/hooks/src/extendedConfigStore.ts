@@ -1,4 +1,4 @@
-import { ConfigKey, DefaultConfigStore } from "@orderly.network/core";
+import { ConfigKey, DefaultConfigStore } from "@kodiak-finance/orderly-core";
 import { MarketsStorageKey } from "./orderly/useMarkets";
 
 export class ExtendedConfigStore extends DefaultConfigStore {

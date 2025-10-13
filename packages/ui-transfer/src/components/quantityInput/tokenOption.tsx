@@ -1,8 +1,8 @@
 import React from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
-import { Badge, cn, Flex, Spinner, Text, TokenIcon } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { API } from "@kodiak-finance/orderly-types";
+import { Badge, cn, Flex, Spinner, Text, TokenIcon } from "@kodiak-finance/orderly-ui";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { useBalance } from "./useBalance";
 
 interface TokenOptionProps {

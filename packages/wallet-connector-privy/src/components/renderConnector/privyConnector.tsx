@@ -1,8 +1,8 @@
 import React, { useMemo } from "react";
 import { PrivyClientConfig } from "@privy-io/react-auth";
-import { useTranslation } from "@orderly.network/i18n";
-import { cn, Flex, Grid } from "@orderly.network/ui";
-import { useScreen } from "@orderly.network/ui";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { cn, Flex, Grid } from "@kodiak-finance/orderly-ui";
+import { useScreen } from "@kodiak-finance/orderly-ui";
 import { useWalletConnectorPrivy } from "../../provider";
 
 const RenderLoginMethodsDom = ({

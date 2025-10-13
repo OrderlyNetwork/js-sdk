@@ -1,7 +1,7 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Card, Flex, Switch, Text } from "@orderly.network/ui";
-import { AuthGuardTooltip } from "@orderly.network/ui-connector";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { Card, Flex, Switch, Text } from "@kodiak-finance/orderly-ui";
+import { AuthGuardTooltip } from "@kodiak-finance/orderly-ui-connector";
 import type { SettingScriptReturns } from "./setting.script";
 
 export const SettingDesktop: FC<SettingScriptReturns> = (props) => {

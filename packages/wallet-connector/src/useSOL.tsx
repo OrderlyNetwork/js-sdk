@@ -11,9 +11,9 @@ import {
   useLocalStorage,
   useStorageLedgerAddress,
   WalletState,
-} from "@orderly.network/hooks";
-import { ChainNamespace, LedgerWalletKey } from "@orderly.network/types";
-import { useScreen } from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-hooks";
+import { ChainNamespace, LedgerWalletKey } from "@kodiak-finance/orderly-types";
+import { useScreen } from "@kodiak-finance/orderly-ui";
 import { useSolanaContext } from "./SolanaProvider";
 import { SolanaChainIdEnum, SolanaChains } from "./config";
 

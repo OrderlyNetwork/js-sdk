@@ -1,16 +1,8 @@
 import { useState } from "react";
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import { useArgs } from "storybook/preview-api";
-import { fn, userEvent, within, expect } from "storybook/test";
-import {
-  Box,
-  CheckedCircleFillIcon,
-  Flex,
-  Input,
-  InputAdditional,
-  inputFormatter,
-} from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { Input, inputFormatter } from "@kodiak-finance/orderly-ui";
+import { Decimal } from "@kodiak-finance/orderly-utils";
+import type { StoryObj } from "@storybook/react-vite";
+import { fn, userEvent, within } from "storybook/test";
 
 const meta = {
   title: "Base/Input/formatter",

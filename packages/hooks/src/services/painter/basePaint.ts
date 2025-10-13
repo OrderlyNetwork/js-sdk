@@ -1,4 +1,4 @@
-import { OrderSide } from "@orderly.network/types";
+import { OrderSide } from "@kodiak-finance/orderly-types";
 import { PosterPainter } from "./painter";
 
 export type posterDataSource = {

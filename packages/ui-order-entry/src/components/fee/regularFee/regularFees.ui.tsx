@@ -1,8 +1,8 @@
 import React from "react";
-import { useFeeState } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { Flex, Text } from "@orderly.network/ui";
-import { AuthGuard } from "@orderly.network/ui-connector";
+import { useFeeState } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { Flex, Text } from "@kodiak-finance/orderly-ui";
+import { AuthGuard } from "@kodiak-finance/orderly-ui-connector";
 
 export const RegularFeesUI: React.FC<
   Pick<ReturnType<typeof useFeeState>, "takerFee" | "makerFee">

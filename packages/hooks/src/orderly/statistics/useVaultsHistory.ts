@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
-import type { API } from "@orderly.network/types";
-import { EMPTY_LIST } from "@orderly.network/types";
+import type { API } from "@kodiak-finance/orderly-types";
+import { EMPTY_LIST } from "@kodiak-finance/orderly-types";
 import { usePrivateQuery } from "../../usePrivateQuery";
 import { useSymbolsInfo } from "../useSymbolsInfo";
 

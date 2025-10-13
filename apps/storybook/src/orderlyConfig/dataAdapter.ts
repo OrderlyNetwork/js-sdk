@@ -1,4 +1,4 @@
-import type { OrderlyAppProviderProps } from "@orderly.network/react-app";
+import type { OrderlyAppProviderProps } from "@kodiak-finance/orderly-react-app";
 
 export const dataAdapter: OrderlyAppProviderProps["dataAdapter"] = {
   // symbolList(original) {

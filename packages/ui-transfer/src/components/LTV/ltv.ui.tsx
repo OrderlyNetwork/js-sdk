@@ -1,6 +1,6 @@
 import React from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { cn, Flex, Tooltip, Text, Box } from "@orderly.network/ui";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { cn, Flex, Tooltip, Text, Box } from "@kodiak-finance/orderly-ui";
 import type { LtvScriptReturns } from "./ltv.script";
 
 const TooltipIcon = React.forwardRef<

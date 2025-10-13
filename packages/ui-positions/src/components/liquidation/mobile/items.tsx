@@ -1,8 +1,8 @@
 import { FC } from "react";
-import { Flex, Text } from "@orderly.network/ui";
-import { API } from "@orderly.network/types";
-import { commifyOptional } from "@orderly.network/utils";
-import { useTranslation } from "@orderly.network/i18n";
+import { Flex, Text } from "@kodiak-finance/orderly-ui";
+import { API } from "@kodiak-finance/orderly-types";
+import { commifyOptional } from "@kodiak-finance/orderly-utils";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 
 export const Price: FC<API.LiquidationPositionByPerp> = (props) => {
   // const { quote_dp } = useSymbolContext();

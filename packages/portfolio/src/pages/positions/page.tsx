@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import React from "react";
-import { useAccount } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import { useAccount } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   Flex,
   Text,
@@ -13,15 +13,15 @@ import {
   formatAddress,
   Tooltip,
   InfoCircleIcon,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import {
   LiquidationWidget,
   PositionHistoryWidget,
   PositionsProps,
   CombinePositionsWidget,
   PositionsWidget,
-} from "@orderly.network/ui-positions";
-import type { SelectOption } from "@orderly.network/ui/src/select/withOptions";
+} from "@kodiak-finance/orderly-ui-positions";
+import type { SelectOption } from "@kodiak-finance/orderly-ui/src/select/withOptions";
 import { AccountType } from "../assets/assetsPage/assets.ui.desktop";
 
 enum TabsType {

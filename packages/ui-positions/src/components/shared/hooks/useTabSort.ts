@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { useSessionStorage } from "@orderly.network/hooks";
+import { useSessionStorage } from "@kodiak-finance/orderly-hooks";
 import { SortType } from "../../../types/types";
 
 export enum PositionsTabName {

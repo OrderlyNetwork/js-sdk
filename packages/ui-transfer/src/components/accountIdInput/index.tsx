@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { Box, cn, Flex, Text } from "@orderly.network/ui";
+import { Box, cn, Flex, Text } from "@kodiak-finance/orderly-ui";
 import { InputStatus } from "../../types";
 
 export type TextAreaInputProps = {

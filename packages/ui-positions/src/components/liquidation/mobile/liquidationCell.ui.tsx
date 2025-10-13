@@ -1,7 +1,7 @@
 import { FC, useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { cn, Flex, Text, Divider, Badge } from "@orderly.network/ui";
-import { commifyOptional, Decimal } from "@orderly.network/utils";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { cn, Flex, Text, Divider, Badge } from "@kodiak-finance/orderly-ui";
+import { commifyOptional, Decimal } from "@kodiak-finance/orderly-utils";
 import { LiquidationCellState } from "./liquidationCell.script";
 
 export const LiquidationCell: FC<

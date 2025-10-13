@@ -1,8 +1,8 @@
-import { CurrentEpochEstimate } from "@orderly.network/hooks";
+import { CurrentEpochEstimate } from "@kodiak-finance/orderly-hooks";
 import { useTradingRewardsContext } from "../provider";
-import { ENVType, useGetEnv } from "@orderly.network/hooks";
-import { useDataTap } from "@orderly.network/react-app";
-import { Decimal } from "@orderly.network/utils";
+import { ENVType, useGetEnv } from "@kodiak-finance/orderly-hooks";
+import { useDataTap } from "@kodiak-finance/orderly-react-app";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { useMemo } from "react";
 
 export const useStakeBoosterScript = () => {

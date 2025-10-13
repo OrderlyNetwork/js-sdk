@@ -3,9 +3,9 @@ import {
   useAccount,
   useCollateral,
   useIndexPricesStream,
-} from "@orderly.network/hooks";
-import { SubAccount } from "@orderly.network/hooks";
-import { Decimal } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-hooks";
+import { SubAccount } from "@kodiak-finance/orderly-hooks";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { useAccountsData } from "./useAccountsData";
 
 const isNumber = (val: unknown): val is number => {

@@ -1,6 +1,6 @@
 import { BrowserProvider, ethers, toNumber } from "ethers";
 import { DecodedError, ErrorDecoder } from "ethers-decode-error";
-import { API } from "@orderly.network/types";
+import { API } from "@kodiak-finance/orderly-types";
 import { IWalletAdapter, WalletAdapterOptions } from "./adapter";
 
 const errorDecoder = ErrorDecoder.create();

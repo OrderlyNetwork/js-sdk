@@ -1,6 +1,6 @@
 import { forwardRef, SVGProps, useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { OrderSide } from "@orderly.network/types";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { OrderSide } from "@kodiak-finance/orderly-types";
 import {
   Button,
   Flex,
@@ -11,7 +11,7 @@ import {
   TokenIcon,
   Tooltip,
   Text,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import {
   ScaledOrderConfirmScriptOptions,
   ScaledOrderConfirmScriptReturns,

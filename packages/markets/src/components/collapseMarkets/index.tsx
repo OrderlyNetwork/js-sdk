@@ -1,6 +1,6 @@
-import { useTranslation } from "@orderly.network/i18n";
-import { TokenIcon, Flex, Text, cn, Tooltip, Badge } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { TokenIcon, Flex, Text, cn, Tooltip, Badge } from "@kodiak-finance/orderly-ui";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { useMarketsContext } from "../marketsProvider";
 
 export type CollapseMarketsProps = {

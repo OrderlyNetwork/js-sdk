@@ -3,10 +3,10 @@ import {
   useOrderbookStream,
   useOrderStream,
   useSymbolsInfo,
-} from "@orderly.network/hooks";
-import { OrderStatus } from "@orderly.network/types";
-import { useScreen } from "@orderly.network/ui";
-import { removeTrailingZeros } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-hooks";
+import { OrderStatus } from "@kodiak-finance/orderly-types";
+import { useScreen } from "@kodiak-finance/orderly-ui";
+import { removeTrailingZeros } from "@kodiak-finance/orderly-utils";
 import { getBasicSymbolInfo } from "../../../utils/utils";
 
 const CELL_MAX = 30;

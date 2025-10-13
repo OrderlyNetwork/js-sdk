@@ -1,9 +1,9 @@
 import React, { useMemo } from "react";
-import { WalletConnectorContext } from "@orderly.network/hooks";
+import { WalletConnectorContext } from "@kodiak-finance/orderly-hooks";
 import type {
   WalletConnectorContextState,
   WalletState,
-} from "@orderly.network/hooks";
+} from "@kodiak-finance/orderly-hooks";
 import { ConnectDrawer } from "./components/connectDrawer";
 import { useWallet } from "./hooks/useWallet";
 import "./injectUsercenter";

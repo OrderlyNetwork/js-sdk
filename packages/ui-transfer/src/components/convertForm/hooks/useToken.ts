@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useMemo, useState } from "react";
-import { useChains, useConfig, useTokensInfo } from "@orderly.network/hooks";
-import { Arbitrum, type API, type NetworkId } from "@orderly.network/types";
+import { useChains, useConfig, useTokensInfo } from "@kodiak-finance/orderly-hooks";
+import { Arbitrum, type API, type NetworkId } from "@kodiak-finance/orderly-types";
 
 const splitTokenBySymbol = <T extends API.Chain>(items: T[]) => {
   return items.reduce<Record<"usdc" | "others", T[]>>(

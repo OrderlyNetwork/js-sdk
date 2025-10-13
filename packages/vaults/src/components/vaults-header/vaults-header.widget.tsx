@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { useScreen } from "@orderly.network/ui";
+import { useScreen } from "@kodiak-finance/orderly-ui";
 import { VaultsHeaderDesktop } from "./vaults-header.desktop";
 import { VaultsHeaderMobile } from "./vaults-header.mobile";
 import { useVaultsHeaderScript } from "./vaults-header.script";

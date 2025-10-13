@@ -1,6 +1,6 @@
 import { useMemo, useRef } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { API } from "@kodiak-finance/orderly-types";
 import {
   Box,
   cn,
@@ -10,10 +10,10 @@ import {
   Column,
   Text,
   Tooltip,
-} from "@orderly.network/ui";
-import { SymbolLeverageDialogId } from "@orderly.network/ui-leverage";
-import { SharePnLOptions, SharePnLDialogId } from "@orderly.network/ui-share";
-import { Decimal } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-ui";
+import { SymbolLeverageDialogId } from "@kodiak-finance/orderly-ui-leverage";
+import { SharePnLOptions, SharePnLDialogId } from "@kodiak-finance/orderly-ui-share";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { FundingFeeButton } from "../../fundingFeeHistory/fundingFeeButton";
 import { ClosePositionWidget } from "../closePosition";
 import { LeverageBadge } from "./components";

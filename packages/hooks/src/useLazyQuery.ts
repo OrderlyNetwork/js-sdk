@@ -5,7 +5,7 @@ import type {
   SWRMutationConfiguration,
 } from "swr/mutation";
 import useSWRMutation from "swr/mutation";
-import { SDKError } from "@orderly.network/types";
+import { SDKError } from "@kodiak-finance/orderly-types";
 import { useConfig } from "./useConfig";
 import { fetcher } from "./utils/fetcher";
 

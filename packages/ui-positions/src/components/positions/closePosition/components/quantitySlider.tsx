@@ -1,5 +1,5 @@
-import { useTranslation } from "@orderly.network/i18n";
-import { Flex, Slider, Text } from "@orderly.network/ui";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { Flex, Slider, Text } from "@kodiak-finance/orderly-ui";
 
 type QuantitySliderProps = {
   value: number;

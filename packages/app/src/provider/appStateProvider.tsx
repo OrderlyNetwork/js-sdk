@@ -3,7 +3,7 @@ import {
   RestrictedInfoOptions,
   useRestrictedInfo,
   useTrackingInstance,
-} from "@orderly.network/hooks";
+} from "@kodiak-finance/orderly-hooks";
 import { useAssetconvertEvent } from "../hooks/useAssetconvertEvent";
 import { DefaultChain, useCurrentChainId } from "../hooks/useCurrentChainId";
 import { useLinkDevice } from "../hooks/useLinkDevice";

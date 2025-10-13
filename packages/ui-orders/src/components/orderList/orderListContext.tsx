@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { API, OrderEntity } from "@orderly.network/types";
+import { API, OrderEntity } from "@kodiak-finance/orderly-types";
 
 export interface OrderListContextState {
   onCancelOrder: (order: API.Order | API.AlgoOrder) => Promise<any>;

@@ -1,5 +1,5 @@
 import { FC, PropsWithChildren, SVGProps, useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   Box,
   CloseIcon,
@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
   Flex,
   Text,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import type { MarketLayoutPosition } from "../../../pages/trading/trading.script";
 
 export type LayoutPosition = "left" | "right";

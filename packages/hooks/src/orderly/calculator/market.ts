@@ -1,8 +1,8 @@
-import { WSMessage } from "@orderly.network/types";
+import { WSMessage } from "@kodiak-finance/orderly-types";
 import { Calculator, CalculatorCtx, CalculatorScope } from "../../types";
 import { BaseCalculator } from "./baseCalculator";
 import { useMarketStore } from "../useMarket/market.store";
-import { Decimal } from "@orderly.network/utils";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 
 class MarketCalculator extends BaseCalculator<any> {
   name: string = "marketCalculator";

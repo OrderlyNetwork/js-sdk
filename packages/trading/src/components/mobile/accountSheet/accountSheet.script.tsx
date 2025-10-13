@@ -10,11 +10,11 @@ import {
   useMutation,
   useReferralInfo,
   useWalletConnector,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { AccountStatusEnum, ChainNamespace } from "@orderly.network/types";
-import { modal, toast, useModal } from "@orderly.network/ui";
-import { isTestnet } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { AccountStatusEnum, ChainNamespace } from "@kodiak-finance/orderly-types";
+import { modal, toast, useModal } from "@kodiak-finance/orderly-ui";
+import { isTestnet } from "@kodiak-finance/orderly-utils";
 import { ReferralProps, TradingRewardsProps } from "../../../types/types";
 
 export const useAccountSheetScript = (

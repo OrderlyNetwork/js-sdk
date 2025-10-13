@@ -1,5 +1,5 @@
-import { OrderEntity, OrderType, OrderlyOrder } from "@orderly.network/types";
-import { BracketOrder } from "@orderly.network/types";
+import { OrderEntity, OrderType, OrderlyOrder } from "@kodiak-finance/orderly-types";
+import { BracketOrder } from "@kodiak-finance/orderly-types";
 import { bracketOrderValidator } from "./baseBracketOrderCreator";
 import { ValuesDepConfig, OrderValidationResult } from "./interface";
 import { LimitOrderCreator } from "./limitOrderCreator";

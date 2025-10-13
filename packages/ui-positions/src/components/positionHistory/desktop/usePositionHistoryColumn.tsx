@@ -1,8 +1,8 @@
 import { ReactNode } from "react";
 import { useMemo } from "react";
-import { useLeverageBySymbol, useMaxLeverage } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
+import { useLeverageBySymbol, useMaxLeverage } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { API } from "@kodiak-finance/orderly-types";
 import {
   Badge,
   Box,
@@ -12,9 +12,9 @@ import {
   Flex,
   Text,
   Tooltip,
-} from "@orderly.network/ui";
-import { SharePnLConfig, SharePnLDialogId } from "@orderly.network/ui-share";
-import { commifyOptional } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-ui";
+import { SharePnLConfig, SharePnLDialogId } from "@kodiak-finance/orderly-ui-share";
+import { commifyOptional } from "@kodiak-finance/orderly-utils";
 import { useSymbolContext } from "../../../provider/symbolContext";
 import { FundingFeeButton } from "../../fundingFeeHistory/fundingFeeButton";
 import { ShareButtonWidget } from "../../positions/desktop/shareButton";

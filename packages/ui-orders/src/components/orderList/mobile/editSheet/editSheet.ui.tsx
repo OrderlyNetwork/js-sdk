@@ -1,6 +1,6 @@
 import { FC, useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { useOrderEntryFormErrorMsg } from "@kodiak-finance/orderly-react-app";
 import {
   Button,
   Divider,
@@ -8,7 +8,7 @@ import {
   SimpleDialog,
   Text,
   ThrottledButton,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import { ActivitedPriceInput } from "./components/activitedPriceInput";
 import { ConfirmDialogContent } from "./components/editDialogContent";
 import { EditSheetContext } from "./components/editSheetContext";

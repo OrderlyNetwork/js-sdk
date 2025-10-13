@@ -1,6 +1,6 @@
 import React from "react";
-import { type AlgoOrderRootType } from "@orderly.network/types";
-import { registerSimpleDialog, registerSimpleSheet } from "@orderly.network/ui";
+import { type AlgoOrderRootType } from "@kodiak-finance/orderly-types";
+import { registerSimpleDialog, registerSimpleSheet } from "@kodiak-finance/orderly-ui";
 import { TPSL, TPSLProps } from "./tpsl.ui";
 import { TPSLBuilderOptions, useTPSLBuilder } from "./useTPSL.script";
 

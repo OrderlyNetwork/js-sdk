@@ -1,12 +1,12 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Box, Button, modal } from "@orderly.network/ui";
+import { Box, Button, modal } from "@kodiak-finance/orderly-ui";
 import {
-  LeverageWidgetWithDialogId,
   LeverageEditor,
   LeverageHeader,
   LeverageSlider,
+  LeverageWidgetWithDialogId,
   useLeverageScript,
-} from "@orderly.network/ui-leverage";
+} from "@kodiak-finance/orderly-ui-leverage";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 
 const meta: Meta<typeof LeverageEditor> = {
   title: "Package/ui-leverage/LeverageEditor",

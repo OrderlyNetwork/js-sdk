@@ -1,7 +1,7 @@
 import { useState } from "react";
-import type { Meta, StoryObj } from "@storybook/react-vite";
+import { Button, SimpleDialog, Text } from "@kodiak-finance/orderly-ui";
+import type { StoryObj } from "@storybook/react-vite";
 import { fn } from "storybook/test";
-import { Button, SimpleDialog, Text } from "@orderly.network/ui";
 
 const meta = {
   title: "Base/Dialog/SimpleDialog",

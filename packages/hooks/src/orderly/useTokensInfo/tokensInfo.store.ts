@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { create } from "zustand";
-import type { API } from "@orderly.network/types";
+import type { API } from "@kodiak-finance/orderly-types";
 
 interface TokensInfoStore {
   tokensInfo: API.Chain[];

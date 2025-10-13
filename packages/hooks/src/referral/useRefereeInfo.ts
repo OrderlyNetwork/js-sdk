@@ -2,7 +2,7 @@ import { generateKeyFun } from "./swr";
 import { useMemo } from "react";
 import { RefferalAPI } from "./api";
 import { usePrivateInfiniteQuery } from "../usePrivateInfiniteQuery";
-import { API } from "@orderly.network/types";
+import { API } from "@kodiak-finance/orderly-types";
 
 type Params = {
   //** default is 10 */

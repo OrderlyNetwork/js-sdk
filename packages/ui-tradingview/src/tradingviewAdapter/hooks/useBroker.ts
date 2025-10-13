@@ -2,7 +2,7 @@ import { useRef, useEffect, useCallback, useMemo } from "react";
 import useCancelOrder from "../hooks/useCancelOrder";
 import useEditOrder from "./useEditOrder";
 import useSenderOrder from "./useSendOrder";
-import { useSymbolsInfo } from "@orderly.network/hooks";
+import { useSymbolsInfo } from "@kodiak-finance/orderly-hooks";
 import { ChartMode, ColorConfigInterface } from "../type";
 
 const createBrokerMethod = <T extends (...args: any) => any>(method: T) => {

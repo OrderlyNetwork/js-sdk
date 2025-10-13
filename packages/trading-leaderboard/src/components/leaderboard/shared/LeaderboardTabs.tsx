@@ -1,6 +1,6 @@
 import { FC, useEffect, useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { cn, Flex, TabPanel, Tabs } from "@orderly.network/ui";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { cn, Flex, TabPanel, Tabs } from "@kodiak-finance/orderly-ui";
 import { LeaderboardTab } from "../../../type";
 import { formatUpdateDate } from "../../../utils";
 import { useTradingLeaderboardContext } from "../../provider";

@@ -1,10 +1,10 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   PortfolioLeftSidebarPath,
   PositionsModule,
-} from "@orderly.network/portfolio";
-import { useTradingLocalStorage } from "@orderly.network/trading";
-import { Box } from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-portfolio";
+import { useTradingLocalStorage } from "@kodiak-finance/orderly-trading";
+import { Box } from "@kodiak-finance/orderly-ui";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { PortfolioLayout } from "../../../components/layout";
 import { tradingPageConfig } from "../../../orderlyConfig";
 

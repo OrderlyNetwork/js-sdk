@@ -1,9 +1,9 @@
 import { FC } from "react";
-import { Button, Flex, Select, Text } from "@orderly.network/ui";
+import { Button, Flex, Select, Text } from "@kodiak-finance/orderly-ui";
 import { SummaryReturns } from "./summary.script";
 import { USDCIcon } from "../../../components/usdcIcon";
-import { commifyOptional } from "@orderly.network/utils";
-import { useTranslation } from "@orderly.network/i18n";
+import { commifyOptional } from "@kodiak-finance/orderly-utils";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 
 export const Summary: FC<SummaryReturns> = (props) => {
   const { t } = useTranslation();

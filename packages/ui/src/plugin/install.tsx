@@ -14,7 +14,7 @@ export type ExtensionOptions<Props> = {
    */
   scope?: string[];
   /**
-   * @description define the extension require @orderly.network/hook version, optional
+   * @description define the extension require @kodiak-finance/orderly-hook version, optional
    * @default "*"
    */
   engines?: string; //

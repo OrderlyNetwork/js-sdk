@@ -8,12 +8,12 @@ import {
   useIndexPricesStream,
   useQuery,
   useTokenInfo,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { account as accountPerp } from "@orderly.network/perp";
-import { useAppContext } from "@orderly.network/react-app";
-import { API, NetworkId, ChainNamespace } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { account as accountPerp } from "@kodiak-finance/orderly-perp";
+import { useAppContext } from "@kodiak-finance/orderly-react-app";
+import { API, NetworkId, ChainNamespace } from "@kodiak-finance/orderly-types";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { useNeedSwapAndCross } from "../swap/hooks/useNeedSwapAndCross";
 import { useSwapDeposit } from "../swap/hooks/useSwapDeposit";
 import {

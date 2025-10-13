@@ -13,8 +13,8 @@ import {
   WalletWithMetadata,
 } from "@privy-io/react-auth";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
-import { useTrack, WalletState } from "@orderly.network/hooks";
-import { ChainNamespace, TrackerEventName } from "@orderly.network/types";
+import { useTrack, WalletState } from "@kodiak-finance/orderly-hooks";
+import { ChainNamespace, TrackerEventName } from "@kodiak-finance/orderly-types";
 import { useWalletConnectorPrivy } from "../../provider";
 import { SolanaChainsMap } from "../../types";
 

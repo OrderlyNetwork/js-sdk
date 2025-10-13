@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { useScreen } from "@orderly.network/ui";
+import { useScreen } from "@kodiak-finance/orderly-ui";
 import { RouterAdapter } from "../scaffold";
 import { BottomNav } from "./bottomNav.ui.mobile";
 

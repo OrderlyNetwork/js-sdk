@@ -1,8 +1,8 @@
 import { FC, useCallback, useState } from "react";
-import { useConfig, useMutation } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { OrderEntity } from "@orderly.network/types";
-import { Button } from "@orderly.network/ui";
+import { useConfig, useMutation } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { OrderEntity } from "@kodiak-finance/orderly-types";
+import { Button } from "@kodiak-finance/orderly-ui";
 
 export const Renew: FC<{ record: any }> = (props) => {
   const { record } = props;

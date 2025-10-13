@@ -1,5 +1,5 @@
 import { TransactionResponse } from "ethers";
-import { API } from "@orderly.network/types";
+import { API } from "@kodiak-finance/orderly-types";
 
 export interface IWalletAdapter {
   //   get address(): string;

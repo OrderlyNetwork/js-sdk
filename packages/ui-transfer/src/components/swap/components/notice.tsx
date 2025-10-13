@@ -1,9 +1,9 @@
 import { FC, useMemo } from "react";
-import { useTranslation, Trans } from "@orderly.network/i18n";
-import { NetworkId } from "@orderly.network/types";
-import { Box, Text } from "@orderly.network/ui";
-import { modal } from "@orderly.network/ui";
-import { ChainSelectorDialogId } from "@orderly.network/ui-chain-selector";
+import { useTranslation, Trans } from "@kodiak-finance/orderly-i18n";
+import { NetworkId } from "@kodiak-finance/orderly-types";
+import { Box, Text } from "@kodiak-finance/orderly-ui";
+import { modal } from "@kodiak-finance/orderly-ui";
+import { ChainSelectorDialogId } from "@kodiak-finance/orderly-ui-chain-selector";
 
 type NoticeProps = {
   message?: string;

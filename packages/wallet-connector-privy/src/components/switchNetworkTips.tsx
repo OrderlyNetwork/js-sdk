@@ -1,17 +1,17 @@
 import React, { useMemo } from "react";
-import { useStorageChain } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import { useStorageChain } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   AbstractChains,
   ChainNamespace,
   SolanaChains,
-} from "@orderly.network/types";
+} from "@kodiak-finance/orderly-types";
 import {
   ExclamationFillIcon,
   Flex,
   modal,
   useScreen,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import { useWalletConnectorPrivy } from "../provider";
 import { WalletType } from "../types";
 import { ArrowRightIcon } from "./icons";

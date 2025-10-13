@@ -1,7 +1,7 @@
 import { useMemo } from "react";
-import { utils } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
+import { utils } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { API } from "@kodiak-finance/orderly-types";
 import {
   Flex,
   Tooltip,
@@ -10,7 +10,7 @@ import {
   EditIcon,
   useModal,
   modal,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import { calcBracketRoiAndPnL } from "../../../utils/util";
 import { useSymbolContext } from "../../provider/symbolContext";
 

@@ -4,15 +4,15 @@ import {
   useLocalStorage,
   useMemoizedFn,
   useOrderlyContext,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
+} from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { useOrderEntryFormErrorMsg } from "@kodiak-finance/orderly-react-app";
 import {
   OrderlyOrder,
   OrderSide,
   OrderType,
   PositionType,
-} from "@orderly.network/types";
+} from "@kodiak-finance/orderly-types";
 import {
   Box,
   cn,
@@ -25,8 +25,8 @@ import {
   toast,
   useScreen,
   Text,
-} from "@orderly.network/ui";
-import { TPSLAdvancedWidget } from "@orderly.network/ui-tpsl";
+} from "@kodiak-finance/orderly-ui";
+import { TPSLAdvancedWidget } from "@kodiak-finance/orderly-ui-tpsl";
 import { AdditionalConfigButton } from "./components/additional/additionalConfigButton";
 import {
   AdditionalInfo,

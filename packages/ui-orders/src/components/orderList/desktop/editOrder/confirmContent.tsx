@@ -1,7 +1,7 @@
 import { memo } from "react";
-import { useTranslation, Trans } from "@orderly.network/i18n";
-import { Button, CloseIcon, ThrottledButton } from "@orderly.network/ui";
-import { commify } from "@orderly.network/utils";
+import { useTranslation, Trans } from "@kodiak-finance/orderly-i18n";
+import { Button, CloseIcon, ThrottledButton } from "@kodiak-finance/orderly-ui";
+import { commify } from "@kodiak-finance/orderly-utils";
 import { EditType } from "../../../../type";
 
 type ConfirmContentProps = {

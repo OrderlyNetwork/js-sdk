@@ -3,7 +3,7 @@ import {
   useMutation,
   useOrderEntry,
   useSymbolsInfo,
-} from "@orderly.network/hooks";
+} from "@kodiak-finance/orderly-hooks";
 import {
   AlgoOrderRootType,
   AlgoOrderType,
@@ -12,8 +12,8 @@ import {
   OrderType,
   PositionType,
   SDKError,
-} from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-types";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 
 function getInitialOrder(order: API.AlgoOrderExt) {
   const childOrder = order.child_orders[0];

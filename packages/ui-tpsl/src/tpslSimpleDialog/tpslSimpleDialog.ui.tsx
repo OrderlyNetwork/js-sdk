@@ -1,7 +1,7 @@
 import React from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
-import { Box, Button, cn, Divider, Flex, Text } from "@orderly.network/ui";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { useOrderEntryFormErrorMsg } from "@kodiak-finance/orderly-react-app";
+import { Box, Button, cn, Divider, Flex, Text } from "@kodiak-finance/orderly-ui";
 import { TPSLQuantity } from "../components/tpslQty";
 import { useTPSLSimpleDialog } from "./tpslSimpleDialog.script";
 

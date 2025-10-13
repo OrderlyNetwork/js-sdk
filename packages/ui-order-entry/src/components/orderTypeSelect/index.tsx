@@ -1,7 +1,7 @@
 import { useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { OrderSide, OrderType } from "@orderly.network/types";
-import { Select, Text } from "@orderly.network/ui";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { OrderSide, OrderType } from "@kodiak-finance/orderly-types";
+import { Select, Text } from "@kodiak-finance/orderly-ui";
 
 export const OrderTypeSelect = (props: {
   type: OrderType;

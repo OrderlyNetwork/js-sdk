@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { CardTitle, Flex, Select } from "@orderly.network/ui";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { CardTitle, Flex, Select } from "@kodiak-finance/orderly-ui";
 import { PeriodType } from "./useAssetHistory";
 
 export const PeriodTitle: React.FC<{

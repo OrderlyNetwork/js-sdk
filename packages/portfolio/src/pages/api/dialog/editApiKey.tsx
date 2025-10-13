@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
-import { APIKeyItem } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { cn, Flex, SimpleDialog, Statistic, Text } from "@orderly.network/ui";
+import { APIKeyItem } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { cn, Flex, SimpleDialog, Statistic, Text } from "@kodiak-finance/orderly-ui";
 import { Checkbox } from "./createApiKey";
 
 export const EditAPIKeyDialog: FC<{

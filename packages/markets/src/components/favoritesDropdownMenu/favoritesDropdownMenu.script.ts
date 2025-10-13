@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FavoriteTab } from "@orderly.network/hooks";
+import { FavoriteTab } from "@kodiak-finance/orderly-hooks";
 import { FavoriteInstance } from "../../type";
 
 export type UseFavoritesDropdownMenuScriptOptions = {

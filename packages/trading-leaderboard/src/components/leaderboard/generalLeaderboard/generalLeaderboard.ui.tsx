@@ -1,5 +1,5 @@
 import { FC, useMemo } from "react";
-import { cn, Box, useScreen, Divider } from "@orderly.network/ui";
+import { cn, Box, useScreen, Divider } from "@kodiak-finance/orderly-ui";
 import { LeaderboardTab } from "../../../type";
 import { GeneralRankingWidget } from "../../ranking/generalRanking";
 import { RankingColumnFields } from "../../ranking/shared/column";

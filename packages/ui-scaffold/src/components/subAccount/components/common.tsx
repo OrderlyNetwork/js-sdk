@@ -1,5 +1,5 @@
-import { useTranslation } from "@orderly.network/i18n";
-import { inputFormatter, TextField } from "@orderly.network/ui";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { inputFormatter, TextField } from "@kodiak-finance/orderly-ui";
 
 export const NickNameDescriptionText = "";
 

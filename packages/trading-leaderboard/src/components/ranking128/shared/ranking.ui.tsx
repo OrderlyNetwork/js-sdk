@@ -6,7 +6,7 @@ import {
   Spinner,
   TanstackColumn,
   useScreen,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import { type CampaignRankingData } from "../campaignRanking/campaignRanking.script";
 import {
   type GeneralRankingData,

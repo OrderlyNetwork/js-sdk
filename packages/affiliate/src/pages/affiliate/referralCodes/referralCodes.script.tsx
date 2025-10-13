@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { RefferalAPI, useLocalStorage } from "@orderly.network/hooks";
-import { modal } from "@orderly.network/ui";
+import { RefferalAPI, useLocalStorage } from "@kodiak-finance/orderly-hooks";
+import { modal } from "@kodiak-finance/orderly-ui";
 import { useReferralContext } from "../../../hooks";
 import { addQueryParam, copyText } from "../../../utils/utils";
 import { EditCodeModal } from "./editCodeModal";

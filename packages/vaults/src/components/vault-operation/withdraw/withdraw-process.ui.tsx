@@ -1,6 +1,6 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Text, cn } from "@orderly.network/ui";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { Text, cn } from "@kodiak-finance/orderly-ui";
 
 const ProcessDot = () => {
   return <div className="oui-size-2 oui-rounded-full oui-bg-white/[0.54]" />;

@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
-import { useTrack } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { TrackerEventName } from "@orderly.network/types";
-import { useEmblaCarousel } from "@orderly.network/ui";
+import { useTrack } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { TrackerEventName } from "@kodiak-finance/orderly-types";
+import { useEmblaCarousel } from "@kodiak-finance/orderly-ui";
 import { formatCampaignDate } from "../../../utils";
 import { useTradingLeaderboardContext, Campaign } from "../provider";
 

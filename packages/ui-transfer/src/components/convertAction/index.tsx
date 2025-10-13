@@ -1,8 +1,8 @@
 import React from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { AccountStatusEnum, NetworkId } from "@orderly.network/types";
-import { Box, Button } from "@orderly.network/ui";
-import { AuthGuard } from "@orderly.network/ui-connector";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { AccountStatusEnum, NetworkId } from "@kodiak-finance/orderly-types";
+import { Box, Button } from "@kodiak-finance/orderly-ui";
+import { AuthGuard } from "@kodiak-finance/orderly-ui-connector";
 
 export interface ConvertActionButtonProps {
   disabled?: boolean;

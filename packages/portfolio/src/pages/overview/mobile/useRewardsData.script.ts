@@ -9,10 +9,10 @@ import {
   RefferalAPI,
   usePrivateQuery,
   noCacheConfig,
-} from "@orderly.network/hooks";
-import { DistributionId, TWType } from "@orderly.network/hooks";
-import { useAppContext } from "@orderly.network/react-app";
-import { AccountStatusEnum } from "@orderly.network/types";
+} from "@kodiak-finance/orderly-hooks";
+import { DistributionId, TWType } from "@kodiak-finance/orderly-hooks";
+import { useAppContext } from "@kodiak-finance/orderly-react-app";
+import { AccountStatusEnum } from "@kodiak-finance/orderly-types";
 import { useOverviewContext } from "../provider/overviewContext";
 
 export const useRewardsData = ({ type = TWType.normal }: { type?: TWType }) => {

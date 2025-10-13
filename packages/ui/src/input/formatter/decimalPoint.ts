@@ -1,4 +1,4 @@
-import { commify } from "@orderly.network/utils";
+import { commify } from "@kodiak-finance/orderly-utils";
 import { InputFormatter, InputFormatterOptions } from "./inputFormatter";
 
 export const decimalPointFormatter: InputFormatter = {

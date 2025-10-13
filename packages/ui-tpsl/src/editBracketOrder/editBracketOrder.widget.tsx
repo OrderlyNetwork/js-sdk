@@ -1,5 +1,5 @@
-import { API } from "@orderly.network/types";
-import { registerSimpleDialog, registerSimpleSheet } from "@orderly.network/ui";
+import { API } from "@kodiak-finance/orderly-types";
+import { registerSimpleDialog, registerSimpleSheet } from "@kodiak-finance/orderly-ui";
 import { useEditBracketOrder } from "./editBracketOrder.script";
 import { EditBracketOrderUI } from "./editBracketOrder.ui";
 

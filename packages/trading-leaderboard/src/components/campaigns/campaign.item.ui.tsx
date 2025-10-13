@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { cn, Text } from "@orderly.network/ui";
+import { cn, Text } from "@kodiak-finance/orderly-ui";
 import { CampaignConfig, CampaignTagEnum } from "./type";
 import { formatParticipantsCount, getTotalPrizePool } from "./utils";
 

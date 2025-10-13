@@ -1,6 +1,6 @@
 import { produce } from "immer";
 import { create } from "zustand";
-import { API } from "@orderly.network/types";
+import { API } from "@kodiak-finance/orderly-types";
 
 type MarketStore = {
   market: API.MarketInfoExt[];

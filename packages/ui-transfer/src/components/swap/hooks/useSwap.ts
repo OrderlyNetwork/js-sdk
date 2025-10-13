@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { pick } from "ramda";
-import { utils } from "@orderly.network/core";
+import { utils } from "@kodiak-finance/orderly-core";
 import {
   useAccountInstance,
   useBoolean,
   useConfig,
   useEventEmitter,
-} from "@orderly.network/hooks";
-import { WS_WalletStatusEnum } from "@orderly.network/types";
+} from "@kodiak-finance/orderly-hooks";
+import { WS_WalletStatusEnum } from "@kodiak-finance/orderly-types";
 import { isNativeTokenChecker, woofiDexSwapDepositorAbi } from "../constants";
 
 /**

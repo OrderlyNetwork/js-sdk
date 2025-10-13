@@ -1,6 +1,6 @@
+import { Select, SelectItem } from "@kodiak-finance/orderly-ui";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { fn } from "storybook/test";
-import { Select, SelectItem } from "@orderly.network/ui";
 
 const meta: Meta<typeof Select> = {
   title: "Base/Select",

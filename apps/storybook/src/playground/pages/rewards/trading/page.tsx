@@ -1,4 +1,4 @@
-import { TradingRewards } from "@orderly.network/trading-rewards";
+import { TradingRewards } from "@kodiak-finance/orderly-trading-rewards";
 
 export default function TradingRewardsPage() {
   return (

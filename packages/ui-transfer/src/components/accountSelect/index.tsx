@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { SubAccount } from "@orderly.network/hooks";
+import { SubAccount } from "@kodiak-finance/orderly-hooks";
 import {
   Box,
   DropdownMenuContent,
@@ -10,7 +10,7 @@ import {
   ScrollArea,
   Text,
   cn,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import { ExchangeIcon } from "../../icons";
 
 type AccountSelectProps = {

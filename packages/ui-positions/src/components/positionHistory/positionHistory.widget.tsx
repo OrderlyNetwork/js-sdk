@@ -1,6 +1,6 @@
 import React from "react";
-import type { API } from "@orderly.network/types";
-import { SharePnLConfig } from "@orderly.network/ui-share";
+import type { API } from "@kodiak-finance/orderly-types";
+import { SharePnLConfig } from "@kodiak-finance/orderly-ui-share";
 import { usePositionHistoryScript } from "./positionHistory.script";
 import { MobilePositionHistory, PositionHistory } from "./positionHistory.ui";
 

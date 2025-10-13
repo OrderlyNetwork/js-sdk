@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { cn, useScreen } from "@orderly.network/ui";
+import { cn, useScreen } from "@kodiak-finance/orderly-ui";
 import { VaultsProvider } from "../components/provider/vaults-provider";
 import type { VaultsPageConfig } from "../types/vault";
 

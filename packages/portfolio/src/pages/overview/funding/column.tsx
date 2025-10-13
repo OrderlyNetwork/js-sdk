@@ -1,7 +1,7 @@
 import { useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
-import { Flex, Text, type Column } from "@orderly.network/ui";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { API } from "@kodiak-finance/orderly-types";
+import { Flex, Text, type Column } from "@kodiak-finance/orderly-ui";
 
 export const useFundingHistoryColumns = () => {
   const { t } = useTranslation();

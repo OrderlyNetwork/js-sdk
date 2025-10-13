@@ -1,5 +1,5 @@
+import { Flex, Text } from "@kodiak-finance/orderly-ui";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Flex, Text } from "@orderly.network/ui";
 
 const meta: Meta<typeof Text> = {
   title: "Base/Typography/Text",

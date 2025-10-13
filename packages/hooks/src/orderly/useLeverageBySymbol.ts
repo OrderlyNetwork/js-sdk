@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { API } from "@orderly.network/types";
+import { API } from "@kodiak-finance/orderly-types";
 import { useAccount } from "../useAccount";
 import { usePrivateQuery } from "../usePrivateQuery";
 import { useWS } from "../useWS";

@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { useTickerStream } from "@orderly.network/hooks";
-import { Decimal } from "@orderly.network/utils";
+import { useTickerStream } from "@kodiak-finance/orderly-hooks";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { useTradingPageContext } from "../../../provider/tradingPageContext";
 
 export const useTradeDataScript = (props: { symbol: string }) => {

@@ -3,16 +3,16 @@ import {
   useAccount,
   useIndexPricesStream,
   useWalletConnector,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+} from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   ABSTRACT_CHAIN_ID_MAP,
   API,
   EMPTY_LIST,
   EMPTY_OBJECT,
-} from "@orderly.network/types";
-import { toast, useScreen } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-types";
+import { toast, useScreen } from "@kodiak-finance/orderly-ui";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { useAccountValue } from "./useAccountValue";
 
 export type SubAccountScriptReturn = ReturnType<typeof SubAccountScript>;

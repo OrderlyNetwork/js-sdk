@@ -6,9 +6,9 @@ import {
   useInfiniteQuery,
   useQuery,
   usePrivateQuery,
-} from "@orderly.network/hooks";
-import { API } from "@orderly.network/types";
-import { TableSort, usePagination, useScreen } from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-hooks";
+import { API } from "@kodiak-finance/orderly-types";
+import { TableSort, usePagination, useScreen } from "@kodiak-finance/orderly-ui";
 import { useEndReached } from "../../../hooks/useEndReached";
 import { getDateRange, formatDateRange } from "../../../utils";
 

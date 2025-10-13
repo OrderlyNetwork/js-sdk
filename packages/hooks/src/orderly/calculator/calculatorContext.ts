@@ -1,4 +1,4 @@
-import { API } from "@orderly.network/types";
+import { API } from "@kodiak-finance/orderly-types";
 import { CalculatorCtx, CalculatorScope } from "../../types";
 import { Portfolio, useAppStore } from "../appStore";
 import { useMarketStore } from "../useMarket/market.store";

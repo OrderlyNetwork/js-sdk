@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { useAccountInstance, useBoolean } from "@orderly.network/hooks";
+import { useAccountInstance, useBoolean } from "@kodiak-finance/orderly-hooks";
 import { swapSupportApiUrl } from "../constants";
 
 export const useWooSwapQuery = () => {

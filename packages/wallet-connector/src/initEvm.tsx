@@ -1,7 +1,7 @@
 import React, { PropsWithChildren, useEffect, useState } from "react";
-import { useSimpleDI } from "@orderly.network/hooks";
+import { useSimpleDI } from "@kodiak-finance/orderly-hooks";
 import type { InitOptions, OnboardAPI } from "@web3-onboard/core";
-import { Optional } from "@orderly.network/types";
+import { Optional } from "@kodiak-finance/orderly-types";
 import { initConfig } from "./config";
 import { merge } from "lodash";
 

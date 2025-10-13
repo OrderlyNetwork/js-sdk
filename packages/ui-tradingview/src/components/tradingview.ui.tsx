@@ -1,7 +1,7 @@
 import React, { forwardRef } from "react";
-import { useMediaQuery } from "@orderly.network/hooks";
-import { MEDIA_TABLET } from "@orderly.network/types";
-import { Box, cn, Divider, Flex } from "@orderly.network/ui";
+import { useMediaQuery } from "@kodiak-finance/orderly-hooks";
+import { MEDIA_TABLET } from "@kodiak-finance/orderly-types";
+import { Box, cn, Divider, Flex } from "@kodiak-finance/orderly-ui";
 import { IndicatorsIcon, SettingIcon } from "../icons";
 import type { TradingviewUIPropsInterface } from "../type";
 import { NoTradingview } from "./noTradingview";

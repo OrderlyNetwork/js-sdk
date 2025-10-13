@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { AssetsModule } from "@orderly.network/portfolio";
-import { OrderStatus } from "@orderly.network/types";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { AssetsModule } from "@kodiak-finance/orderly-portfolio";
+import { OrderStatus } from "@kodiak-finance/orderly-types";
 import {
   Button,
   Checkbox,
@@ -11,14 +11,14 @@ import {
   TabPanel,
   Tabs,
   Text,
-} from "@orderly.network/ui";
-import type { TabPanelProps } from "@orderly.network/ui";
-import { MobileOrderListWidget, TabType } from "@orderly.network/ui-orders";
+} from "@kodiak-finance/orderly-ui";
+import type { TabPanelProps } from "@kodiak-finance/orderly-ui";
+import { MobileOrderListWidget, TabType } from "@kodiak-finance/orderly-ui-orders";
 import {
   MobileLiquidationWidget,
   MobilePositionHistoryWidget,
   MobilePositionsWidget,
-} from "@orderly.network/ui-positions";
+} from "@kodiak-finance/orderly-ui-positions";
 import {
   type DataListState,
   DataListTabSubType,

@@ -5,15 +5,15 @@ import {
   useLocalStorage,
   useIndexPricesStream,
   useTokensInfo,
-} from "@orderly.network/hooks";
-import { account } from "@orderly.network/perp";
-import { EMPTY_LIST } from "@orderly.network/types";
-import { modal } from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-hooks";
+import { account } from "@kodiak-finance/orderly-perp";
+import { EMPTY_LIST } from "@kodiak-finance/orderly-types";
+import { modal } from "@kodiak-finance/orderly-ui";
 import {
   DepositAndWithdrawWithDialogId,
   TransferDialogId,
-} from "@orderly.network/ui-transfer";
-import { Decimal, zero } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-ui-transfer";
+import { Decimal, zero } from "@kodiak-finance/orderly-utils";
 import { useAccountsData, useAssetsMultiFilter } from "../../../hooks";
 import { useAssetTotalValue } from "../../../hooks/useAssetTotalValue";
 import { ORDERLY_ASSETS_VISIBLE_KEY } from "../type";

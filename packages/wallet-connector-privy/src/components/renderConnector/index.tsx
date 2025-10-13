@@ -1,5 +1,5 @@
 import React from "react";
-import { cn, Flex, ScrollArea } from "@orderly.network/ui";
+import { cn, Flex, ScrollArea } from "@kodiak-finance/orderly-ui";
 import { useWallet } from "../../hooks/useWallet";
 import { useWalletConnectorPrivy } from "../../provider";
 import { WalletConnectType, WalletType } from "../../types";

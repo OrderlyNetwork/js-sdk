@@ -1,6 +1,6 @@
 import { FC, useMemo } from "react";
-import { useConfig } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import { useConfig } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import { VaultsHeaderScript } from "./vaults-header.script";
 
 export const VaultsHeaderMobile: FC<VaultsHeaderScript> = (props) => {

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "../useQuery";
-import { API, SDKError } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+import { API, SDKError } from "@kodiak-finance/orderly-types";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { useWS } from "../useWS";
 import { useMarkPrice } from "./useMarkPrice";
 import { useIndexPrice } from "./useIndexPrice";

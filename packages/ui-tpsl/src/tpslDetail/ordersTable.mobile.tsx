@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
-import { Flex, Button, cn, ThrottledButton, toast } from "@orderly.network/ui";
-import { AuthGuardDataTable } from "@orderly.network/ui-connector";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { API } from "@kodiak-finance/orderly-types";
+import { Flex, Button, cn, ThrottledButton, toast } from "@kodiak-finance/orderly-ui";
+import { AuthGuardDataTable } from "@kodiak-finance/orderly-ui-connector";
 import { useColumn } from "./useColum";
 
 export const OrdersTableMobile = (props: {

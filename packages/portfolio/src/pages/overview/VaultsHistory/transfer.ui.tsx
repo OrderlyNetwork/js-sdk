@@ -1,7 +1,7 @@
 import React from "react";
-import type { API } from "@orderly.network/types";
-import { DataFilter } from "@orderly.network/ui";
-import { AuthGuardDataTable } from "@orderly.network/ui-connector";
+import type { API } from "@kodiak-finance/orderly-types";
+import { DataFilter } from "@kodiak-finance/orderly-ui";
+import { AuthGuardDataTable } from "@kodiak-finance/orderly-ui-connector";
 import { useColumns } from "./column";
 import type { useVaultsHistoryHookReturn } from "./useDataSource.script";
 

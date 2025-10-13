@@ -1,5 +1,5 @@
 import { mapResolution } from "../../utils/common.util";
-import { WS } from "@orderly.network/net";
+import { WS } from "@kodiak-finance/orderly-net";
 
 const getKlineKey = (symbol: string, type: string) => `${symbol}kline_${type}`;
 

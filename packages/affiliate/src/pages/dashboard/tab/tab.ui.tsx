@@ -8,7 +8,7 @@ import {
   TabsList,
   TabsTrigger,
   Text,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import { TabReturns } from "./tab.script";
 import { AffiliateIcon } from "../../../components/affiliateIcon";
 import { TraderIcon } from "../../../components/traderIcon";
@@ -16,7 +16,7 @@ import { AffiliatePage } from "../../affiliate";
 import { TraderPage } from "../../trader";
 import { HomePage } from "../../home";
 import { TabTypes } from "../../../hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 
 export const Tab: FC<
   TabReturns & {

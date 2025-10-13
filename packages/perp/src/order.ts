@@ -1,5 +1,5 @@
-import { API as orderUtils } from "@orderly.network/types";
-import { Decimal, zero } from "@orderly.network/utils";
+import { API as orderUtils } from "@kodiak-finance/orderly-types";
+import { Decimal, zero } from "@kodiak-finance/orderly-utils";
 import { notional } from "./positions";
 
 /**

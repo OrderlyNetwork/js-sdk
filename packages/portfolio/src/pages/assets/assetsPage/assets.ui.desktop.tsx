@@ -1,8 +1,8 @@
 import React, { useMemo } from "react";
 import pick from "ramda/es/pick";
-import { SubAccount } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { useAppContext } from "@orderly.network/react-app";
+import { SubAccount } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { useAppContext } from "@kodiak-finance/orderly-react-app";
 import {
   Text,
   Card,
@@ -17,9 +17,9 @@ import {
   TabPanel,
   ArrowDownShortIcon,
   Button,
-} from "@orderly.network/ui";
-import { AuthGuardDataTable } from "@orderly.network/ui-connector";
-import type { SelectOption } from "@orderly.network/ui/src/select/withOptions";
+} from "@kodiak-finance/orderly-ui";
+import { AuthGuardDataTable } from "@kodiak-finance/orderly-ui-connector";
+import type { SelectOption } from "@kodiak-finance/orderly-ui/src/select/withOptions";
 import type { useAssetsScriptReturn } from "./assets.script";
 import type { AssetsWidgetProps } from "./assets.widget";
 

@@ -2,7 +2,7 @@ import { createContext, useContext } from "react";
 import { createStore, StateCreator, useStore } from "zustand";
 import { devtools } from "zustand/middleware/devtools";
 import { immer } from "zustand/middleware/immer";
-import { SDKError } from "@orderly.network/types";
+import { SDKError } from "@kodiak-finance/orderly-types";
 
 type OrderlyStoreState = {
   // positions: PositionSlice;

@@ -8,15 +8,15 @@ import {
   useOrderEntry,
   useOrderlyContext,
   useLeverageBySymbol,
-} from "@orderly.network/hooks";
+} from "@kodiak-finance/orderly-hooks";
 import {
   DistributionType,
   OrderLevel,
   OrderSide,
   OrderType,
   PositionType,
-} from "@orderly.network/types";
-import { Decimal, removeTrailingZeros } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-types";
+import { Decimal, removeTrailingZeros } from "@kodiak-finance/orderly-utils";
 import { useAskAndBid } from "./hooks/useAskAndBid";
 import { useBBOState } from "./hooks/useBBOState";
 import { useCanTrade } from "./hooks/useCanTrade";

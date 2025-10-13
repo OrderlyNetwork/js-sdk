@@ -4,8 +4,8 @@ import {
   useChains,
   useEventEmitter,
   useTrack,
-} from "@orderly.network/hooks";
-import { TrackerEventName } from "@orderly.network/types";
+} from "@kodiak-finance/orderly-hooks";
+import { TrackerEventName } from "@kodiak-finance/orderly-types";
 
 export type UseLinkDeviceScriptReturn = ReturnType<typeof useLinkDeviceScript>;
 

@@ -1,4 +1,4 @@
-import { IContract } from "@orderly.network/core";
+import { IContract } from "@kodiak-finance/orderly-core";
 import {
   Eip1193Provider,
   Web3Provider,

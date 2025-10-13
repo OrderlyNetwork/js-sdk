@@ -1,6 +1,6 @@
 import React from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Flex, Text, Divider } from "@orderly.network/ui";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { Flex, Text, Divider } from "@kodiak-finance/orderly-ui";
 import type { FundingRateModalState } from "./fundingRateModal.script";
 
 export const FundingRateModal: React.FC<FundingRateModalState> = (props) => {

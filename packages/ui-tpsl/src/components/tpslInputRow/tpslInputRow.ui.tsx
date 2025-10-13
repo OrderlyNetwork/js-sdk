@@ -1,10 +1,10 @@
 import React, { Fragment, useMemo } from "react";
-import { useLeverageBySymbol } from "@orderly.network/hooks";
-import { useTranslation, Trans } from "@orderly.network/i18n";
-import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
-import { OrderType, PositionType } from "@orderly.network/types";
-import { Flex, Text, Grid, Checkbox, cn } from "@orderly.network/ui";
-import { Decimal, getTPSLDirection } from "@orderly.network/utils";
+import { useLeverageBySymbol } from "@kodiak-finance/orderly-hooks";
+import { useTranslation, Trans } from "@kodiak-finance/orderly-i18n";
+import { useOrderEntryFormErrorMsg } from "@kodiak-finance/orderly-react-app";
+import { OrderType, PositionType } from "@kodiak-finance/orderly-types";
+import { Flex, Text, Grid, Checkbox, cn } from "@kodiak-finance/orderly-ui";
+import { Decimal, getTPSLDirection } from "@kodiak-finance/orderly-utils";
 import { PnlInputWidget } from "../../pnlInput/pnlInput.widget";
 import { OrderPriceType } from "../orderPriceType";
 import { PriceInput } from "./priceInput";

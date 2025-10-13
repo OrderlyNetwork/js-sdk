@@ -1,6 +1,11 @@
+import {
+  PnLBarChart,
+  PnlLineChart,
+  VolBarChart,
+} from "@kodiak-finance/orderly-chart";
+import { Box } from "@kodiak-finance/orderly-ui";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { PnlLineChart, VolBarChart, PnLBarChart } from "@orderly.network/chart";
-import { Box } from "@orderly.network/ui";
+
 
 const pnlBarData = [
   {

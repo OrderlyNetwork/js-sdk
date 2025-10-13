@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { useScreen } from "@orderly.network/ui";
+import { useScreen } from "@kodiak-finance/orderly-ui";
 import { useVaultInfoState } from "../../store/vaultsStore";
 import { AllVaultsDesktop } from "./all-vaults.desktop";
 import { AllVaultsMobile } from "./all-vaults.mobile";

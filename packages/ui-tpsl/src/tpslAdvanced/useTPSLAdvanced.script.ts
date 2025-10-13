@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { OrderValidationResult, useOrderEntry } from "@orderly.network/hooks";
-import { OrderlyOrder, OrderType, PositionType } from "@orderly.network/types";
+import { OrderValidationResult, useOrderEntry } from "@kodiak-finance/orderly-hooks";
+import { OrderlyOrder, OrderType, PositionType } from "@kodiak-finance/orderly-types";
 
 type Props = {
   order: OrderlyOrder;

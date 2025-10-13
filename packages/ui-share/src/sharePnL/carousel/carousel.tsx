@@ -8,7 +8,7 @@ import {
   cn,
   useEmblaCarousel,
   type UseEmblaCarouselType,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 
 type CarouselApi = UseEmblaCarouselType[1];
 type UseCarouselParameters = Parameters<typeof useEmblaCarousel>;

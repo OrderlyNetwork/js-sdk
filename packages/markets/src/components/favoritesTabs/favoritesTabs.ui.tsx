@@ -1,6 +1,6 @@
 import { KeyboardEventHandler } from "react";
-import { FavoriteTab } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import { FavoriteTab } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   Box,
   cn,
@@ -9,7 +9,7 @@ import {
   Tooltip,
   Input,
   modal,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import { AddIcon, ActiveAddIcon, EditIcon, TrashIcon } from "../../icons";
 import {
   UseFavoritesTabScriptOptions,

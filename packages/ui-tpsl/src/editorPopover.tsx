@@ -1,9 +1,9 @@
 import { ReactNode } from "react";
-import { ComputedAlgoOrder, useLocalStorage } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { AlgoOrderRootType, API, PositionType } from "@orderly.network/types";
-import { Box, Button, modal, toast } from "@orderly.network/ui";
-import { ButtonProps } from "@orderly.network/ui";
+import { ComputedAlgoOrder, useLocalStorage } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { AlgoOrderRootType, API, PositionType } from "@kodiak-finance/orderly-types";
+import { Box, Button, modal, toast } from "@kodiak-finance/orderly-ui";
+import { ButtonProps } from "@kodiak-finance/orderly-ui";
 import { TPSLDialogId } from "./positionTPSL";
 
 export const PositionTPSLPopover = (props: {

@@ -1,7 +1,7 @@
 import { MouseEventHandler, ReactNode } from "react";
-import { i18n } from "@orderly.network/i18n";
-import { Flex, TokenIcon, Text, Badge, cn, Column } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { i18n } from "@kodiak-finance/orderly-i18n";
+import { Flex, TokenIcon, Text, Badge, cn, Column } from "@kodiak-finance/orderly-ui";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import {
   DeleteIcon,
   FavoritesIcon2,

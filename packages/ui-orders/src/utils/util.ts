@@ -1,14 +1,14 @@
-import { utils } from "@orderly.network/hooks";
-import { i18n } from "@orderly.network/i18n";
-import { OrderSide } from "@orderly.network/types";
+import { utils } from "@kodiak-finance/orderly-hooks";
+import { i18n } from "@kodiak-finance/orderly-i18n";
+import { OrderSide } from "@kodiak-finance/orderly-types";
 import {
   AlgoOrderRootType,
   AlgoOrderType,
   API,
   OrderStatus,
   OrderType,
-} from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-types";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 
 export const upperCaseFirstLetter = (str: string) => {
   if (str === undefined) return str;

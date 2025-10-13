@@ -1,6 +1,6 @@
-import { useTranslation } from "@orderly.network/i18n";
-import { Text, cn } from "@orderly.network/ui";
-import { useScaffoldContext } from "@orderly.network/ui-scaffold";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { Text, cn } from "@kodiak-finance/orderly-ui";
+import { useScaffoldContext } from "@kodiak-finance/orderly-ui-scaffold";
 
 export type MainNavCustomRenderOptions = {
   name: string;

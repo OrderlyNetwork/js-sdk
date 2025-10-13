@@ -1,10 +1,10 @@
 import { useState, useEffect, FC, ReactNode, SVGProps, useMemo } from "react";
-import { EpochStatus } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { Box, Flex, Text, cn } from "@orderly.network/ui";
-import { AuthGuard } from "@orderly.network/ui-connector";
-import { commifyOptional } from "@orderly.network/utils";
+import { EpochStatus } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { AccountStatusEnum } from "@kodiak-finance/orderly-types";
+import { Box, Flex, Text, cn } from "@kodiak-finance/orderly-ui";
+import { AuthGuard } from "@kodiak-finance/orderly-ui-connector";
+import { commifyOptional } from "@kodiak-finance/orderly-utils";
 import { EsOrderlyIcon } from "../components/esOrderlyIcon";
 import { OrderlyIcon } from "../components/orderlyIcon";
 import { CurEpochReturns } from "./curEpoch.script";

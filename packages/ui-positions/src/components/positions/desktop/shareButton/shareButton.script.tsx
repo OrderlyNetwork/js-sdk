@@ -4,11 +4,11 @@ import {
   useReferralInfo,
   useLeverageBySymbol,
   useSymbolsInfo,
-} from "@orderly.network/hooks";
-import { account, positions } from "@orderly.network/perp";
-import { modal } from "@orderly.network/ui";
-import { SharePnLConfig } from "@orderly.network/ui-share";
-import { Decimal } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-hooks";
+import { account, positions } from "@kodiak-finance/orderly-perp";
+import { modal } from "@kodiak-finance/orderly-ui";
+import { SharePnLConfig } from "@kodiak-finance/orderly-ui-share";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 
 export type ShareButtonScriptOptions = {
   position: any;

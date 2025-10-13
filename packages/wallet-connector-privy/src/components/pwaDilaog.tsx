@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   cn,
   Divider,
@@ -11,7 +11,7 @@ import {
   SimpleSheet,
   Text,
   useModal,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 
 export const PwaDialog = modal.create((props) => {
   const { visible, hide, resolve, reject, onOpenChange } = useModal();

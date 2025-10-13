@@ -1,9 +1,9 @@
 import React from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   MarketsSheetWidget,
   SymbolInfoBarWidget,
-} from "@orderly.network/markets";
+} from "@kodiak-finance/orderly-markets";
 import {
   Box,
   SimpleSheet,
@@ -11,7 +11,7 @@ import {
   EyeIcon,
   Flex,
   Text,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import type { TradingState } from "./trading.script";
 
 const LazyTopTabWidget = React.lazy(() =>

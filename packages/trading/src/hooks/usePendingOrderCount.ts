@@ -1,7 +1,7 @@
-import { useOrderStream } from "@orderly.network/hooks";
-import { useDataTap } from "@orderly.network/react-app";
-import { AlgoOrderRootType, OrderStatus } from "@orderly.network/types";
-import { TabType } from "@orderly.network/ui-orders";
+import { useOrderStream } from "@kodiak-finance/orderly-hooks";
+import { useDataTap } from "@kodiak-finance/orderly-react-app";
+import { AlgoOrderRootType, OrderStatus } from "@kodiak-finance/orderly-types";
+import { TabType } from "@kodiak-finance/orderly-ui-orders";
 import { useTradingLocalStorage } from "./useTradingLocalStorage";
 
 export const usePendingOrderCount = (symbol?: string) => {

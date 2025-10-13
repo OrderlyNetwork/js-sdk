@@ -1,4 +1,4 @@
-import { OrderlyOrder } from "@orderly.network/types";
+import { OrderlyOrder } from "@kodiak-finance/orderly-types";
 import { OrderValidationItem } from "./interface";
 
 export class OrderValidation {

@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { API, AlgoOrderRootType, OrderStatus } from "@orderly.network/types";
+import { API, AlgoOrderRootType, OrderStatus } from "@kodiak-finance/orderly-types";
 
 export const useFormatOrderHistory = (data: API.AlgoOrderExt[]) => {
   const formattedData = useMemo(() => {

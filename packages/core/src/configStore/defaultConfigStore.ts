@@ -1,5 +1,5 @@
-import { ChainNamespace } from "@orderly.network/types";
-import { NetworkId } from "@orderly.network/types";
+import { ChainNamespace } from "@kodiak-finance/orderly-types";
+import { NetworkId } from "@kodiak-finance/orderly-types";
 import { ConfigKey, ConfigStore } from "./configStore";
 
 type ChainNamespaceType = (typeof ChainNamespace)[keyof typeof ChainNamespace];

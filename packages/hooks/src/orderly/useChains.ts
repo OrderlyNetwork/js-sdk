@@ -15,8 +15,8 @@ import {
   ARBITRUM_TESTNET_CHAINID,
   ABSTRACT_TESTNET_CHAINID,
   BSC_TESTNET_CHAINID,
-} from "@orderly.network/types";
-import { nativeTokenAddress } from "@orderly.network/types";
+} from "@kodiak-finance/orderly-types";
+import { nativeTokenAddress } from "@kodiak-finance/orderly-types";
 import { OrderlyContext } from "../orderlyContext";
 import { useQuery } from "../useQuery";
 

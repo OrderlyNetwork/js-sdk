@@ -1,6 +1,6 @@
 import { SWRHook, Middleware } from "swr";
-import { SimpleDI, Account, MessageFactor } from "@orderly.network/core";
-import { getTimestamp } from "@orderly.network/utils";
+import { SimpleDI, Account, MessageFactor } from "@kodiak-finance/orderly-core";
+import { getTimestamp } from "@kodiak-finance/orderly-utils";
 import { useConfig } from "../useConfig";
 
 export const signatureMiddleware: Middleware = (useSWRNext: SWRHook) => {

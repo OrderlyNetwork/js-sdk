@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useBoolean, useDebouncedCallback } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { toast } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { useBoolean, useDebouncedCallback } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { toast } from "@kodiak-finance/orderly-ui";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 import { DST, MarkPrices } from "../types";
 import { useWooCrossSwapQuery } from "./useCrossSwapQuery";
 import { useWooSwapQuery } from "./useSwapQuery";

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { AssetHistoryStatusEnum } from "@orderly.network/types";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { AssetHistoryStatusEnum } from "@kodiak-finance/orderly-types";
 import {
   capitalizeFirstLetter,
   Text,
@@ -9,8 +9,8 @@ import {
   TokenIcon,
   toast,
   type Column,
-} from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-ui";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 
 type Options = {
   chainsInfo: any[];

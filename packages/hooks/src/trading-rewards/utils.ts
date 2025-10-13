@@ -1,4 +1,4 @@
-import { Decimal } from "@orderly.network/utils";
+import { Decimal } from "@kodiak-finance/orderly-utils";
 
 // input a bigint, return value/(10^18) number
 export function toOrder(value?: bigint): number | undefined {

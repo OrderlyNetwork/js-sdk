@@ -1,5 +1,5 @@
 import { format, subDays } from "date-fns";
-import type { VolChartDataItem } from "@orderly.network/chart";
+import type { VolChartDataItem } from "@kodiak-finance/orderly-chart";
 
 export function fillData(
   days: number,

@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   Button,
   cn,
@@ -16,8 +16,8 @@ import {
   Text,
   TextField,
   Tooltip,
-} from "@orderly.network/ui";
-import { commifyOptional } from "@orderly.network/utils";
+} from "@kodiak-finance/orderly-ui";
+import { commifyOptional } from "@kodiak-finance/orderly-utils";
 import { ArrowRightIcon } from "../../../components/arrowRightIcon";
 import { USDCIcon } from "../../../components/usdcIcon";
 import { AsTraderReturns } from "./asTrader.script";

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { APIKeyItem } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import { APIKeyItem } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   Box,
   Button,
@@ -11,12 +11,12 @@ import {
   Column,
   Text,
   Tooltip,
-} from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-ui";
 import {
   AuthGuardEmpty,
   AuthGuardDataTable,
   AuthGuardTooltip,
-} from "@orderly.network/ui-connector";
+} from "@kodiak-finance/orderly-ui-connector";
 import {
   type ApiManagerScriptReturns,
   capitalizeFirstChar,

@@ -1,7 +1,7 @@
 import { useMemo } from "react";
-import { useComputedLTV, useQuery } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
+import { useComputedLTV, useQuery } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { API } from "@kodiak-finance/orderly-types";
 
 export const useWithdrawLTV = (params: { token: string; quantity: string }) => {
   const { token, quantity } = params;

@@ -1,4 +1,4 @@
-import { Box, Select } from "@orderly.network/ui";
+import { Box, Select } from "@kodiak-finance/orderly-ui";
 import { FC, useMemo } from "react";
 
 interface DesktopDepthSelectProps {

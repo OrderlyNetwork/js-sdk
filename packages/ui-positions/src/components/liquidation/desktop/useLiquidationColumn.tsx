@@ -1,8 +1,8 @@
 import { FC, useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
-import { Column, Flex, Text, Tooltip } from "@orderly.network/ui";
-import { commifyOptional } from "@orderly.network/utils";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { API } from "@kodiak-finance/orderly-types";
+import { Column, Flex, Text, Tooltip } from "@kodiak-finance/orderly-ui";
+import { commifyOptional } from "@kodiak-finance/orderly-utils";
 
 const TooltipButton: FC<{
   tooltip: string;

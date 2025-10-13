@@ -1,8 +1,8 @@
 import { useCallback } from "react";
 import { useNavigate } from "react-router";
-import { generatePath } from "@orderly.network/i18n";
-import { PortfolioLeftSidebarPath } from "@orderly.network/portfolio";
-import { RouteOption } from "@orderly.network/ui-scaffold";
+import { generatePath } from "@kodiak-finance/orderly-i18n";
+import { PortfolioLeftSidebarPath } from "@kodiak-finance/orderly-portfolio";
+import { RouteOption } from "@kodiak-finance/orderly-ui-scaffold";
 import { PathEnum } from "../constant";
 import { getSymbol } from "../storage";
 

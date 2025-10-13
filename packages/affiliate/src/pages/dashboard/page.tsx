@@ -1,4 +1,4 @@
-import { Flex, Box, cn } from "@orderly.network/ui";
+import { Flex, Box, cn } from "@kodiak-finance/orderly-ui";
 import { TabWidget } from "./tab";
 
 export const DashboardPage = (props: {

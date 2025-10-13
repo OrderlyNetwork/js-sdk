@@ -1,8 +1,8 @@
 import { FC, useMemo, useState, useCallback, ReactNode } from "react";
-import { useAccount, useLocalStorage } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { useAppContext } from "@orderly.network/react-app";
-import { AccountStatusEnum } from "@orderly.network/types";
+import { useAccount, useLocalStorage } from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { useAppContext } from "@kodiak-finance/orderly-react-app";
+import { AccountStatusEnum } from "@kodiak-finance/orderly-types";
 import {
   Flex,
   Text,
@@ -16,9 +16,9 @@ import {
   Divider,
   gradientTextVariants,
   cn,
-} from "@orderly.network/ui";
-import { AuthGuard } from "@orderly.network/ui-connector";
-import { LTVRiskTooltipWidget } from "@orderly.network/ui-order-entry";
+} from "@kodiak-finance/orderly-ui";
+import { AuthGuard } from "@kodiak-finance/orderly-ui-connector";
+import { LTVRiskTooltipWidget } from "@kodiak-finance/orderly-ui-order-entry";
 import { AssetViewState } from "./assetView.script";
 import { FaucetWidget } from "./faucet/faucet.widget";
 

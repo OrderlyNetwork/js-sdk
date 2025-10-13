@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { useTrack } from "@orderly.network/hooks";
-import { TrackerEventName } from "@orderly.network/types";
-import { cn } from "@orderly.network/ui";
-import { Flex } from "@orderly.network/ui";
+import { useTrack } from "@kodiak-finance/orderly-hooks";
+import { TrackerEventName } from "@kodiak-finance/orderly-types";
+import { cn, Flex } from "@kodiak-finance/orderly-ui";
 import { ProductItem } from "./productItem";
 
 export function CustomProductNav() {

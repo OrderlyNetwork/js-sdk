@@ -1,5 +1,5 @@
-import { i18n } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
+import { i18n } from "@kodiak-finance/orderly-i18n";
+import { API } from "@kodiak-finance/orderly-types";
 
 export const getTokenByTokenList = (tokens: API.TokenInfo[] = []) => {
   const tokenObj = tokens.reduce<Record<string, API.TokenInfo>>((acc, item) => {

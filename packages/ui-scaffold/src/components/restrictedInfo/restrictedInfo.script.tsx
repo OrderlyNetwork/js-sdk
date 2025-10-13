@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
-import { useConfig, useLocalStorage } from "@orderly.network/hooks";
-import { useAppContext } from "@orderly.network/react-app";
-import { useObserverElement } from "@orderly.network/ui";
+import { useConfig, useLocalStorage } from "@kodiak-finance/orderly-hooks";
+import { useAppContext } from "@kodiak-finance/orderly-react-app";
+import { useObserverElement } from "@kodiak-finance/orderly-ui";
 
 export type UseRestrictedInfoScriptReturn = ReturnType<
   typeof useRestrictedInfoScript

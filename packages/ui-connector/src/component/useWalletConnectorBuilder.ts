@@ -4,9 +4,9 @@ import {
   useGetReferralCode,
   useLazyQuery,
   useMutation,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { toast } from "@orderly.network/ui";
+} from "@kodiak-finance/orderly-hooks";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
+import { toast } from "@kodiak-finance/orderly-ui";
 
 export const useWalletConnectorBuilder = () => {
   const { account, state, createOrderlyKey, createAccount } = useAccount();

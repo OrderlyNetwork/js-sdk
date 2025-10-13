@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import { useScreen } from "@orderly.network/ui";
+import { useScreen } from "@kodiak-finance/orderly-ui";
 import { MobileFundingComparison } from "./fundingComparison.mobile.ui";
 import { useFundingComparisonScript } from "./fundingComparison.script";
 import { FundingComparison } from "./fundingComparison.ui";

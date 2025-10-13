@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useDebouncedCallback, useEventEmitter } from "@orderly.network/hooks";
+import { useDebouncedCallback, useEventEmitter } from "@kodiak-finance/orderly-hooks";
 
 export function useAskAndBid() {
   const ee = useEventEmitter();

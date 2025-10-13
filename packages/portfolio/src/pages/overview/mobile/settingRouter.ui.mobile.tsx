@@ -1,12 +1,12 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@kodiak-finance/orderly-i18n";
 import {
   Flex,
   Text,
   SettingFillIcon,
   ChevronRightIcon,
-} from "@orderly.network/ui";
-import { RouterAdapter } from "@orderly.network/ui-scaffold";
+} from "@kodiak-finance/orderly-ui";
+import { RouterAdapter } from "@kodiak-finance/orderly-ui-scaffold";
 import { PortfolioLeftSidebarPath } from "../../../layout";
 
 type Props = {

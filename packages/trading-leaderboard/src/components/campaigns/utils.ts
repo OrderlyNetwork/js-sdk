@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import { i18n } from "@orderly.network/i18n";
+import { i18n } from "@kodiak-finance/orderly-i18n";
 import { TimelinePoint } from "./components/axis";
 import { CampaignConfig, CampaignTagEnum, CampaignStatistics } from "./type";
 
