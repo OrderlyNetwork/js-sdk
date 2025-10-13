@@ -19,21 +19,20 @@ export const RegularFeesUI: React.FC<{ taker: string; maker: string }> = (
         <AuthGuard
           fallback={() => (
             <Text className="oui-truncate" size="2xs">
-              {t("portfolio.feeTier.column.taker")}: --% /{" "}
-              {t("portfolio.feeTier.column.maker")}: --%
+              {t("dmm.taker")}: --% / {t("dmm.maker")}: --%
             </Text>
           )}
         >
           <Flex gap={1}>
             <Text className="oui-truncate" size="2xs">
-              {t("portfolio.feeTier.column.taker")}:
+              {t("dmm.taker")}:
             </Text>
             <Text size="2xs" className="oui-text-base-contrast-80">
               {taker}
             </Text>
             <Text size="2xs">/</Text>
             <Text className="oui-truncate" size="2xs">
-              {t("portfolio.feeTier.column.maker")}:
+              {t("dmm.maker")}:
             </Text>
             <Text size="2xs" className="oui-text-base-contrast-80">
               {maker}

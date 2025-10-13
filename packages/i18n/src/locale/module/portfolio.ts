@@ -60,8 +60,8 @@ export const portfolio = {
   "portfolio.feeTier.column.30dVolume.above": "Above {{volume}}",
   "portfolio.feeTier.column.stakingLevel": "Staking Level",
   "portfolio.feeTier.column.or": "or",
-  "portfolio.feeTier.column.maker": "Maker",
-  "portfolio.feeTier.column.taker": "Taker",
+  "portfolio.feeTier.column.maker": "Maker / RWA Maker",
+  "portfolio.feeTier.column.taker": "Taker / RWA Taker",
   "portfolio.feeTier.effectiveFee.tooltip":
     "Effective fee rate after applying your referee rebate.",
   "portfolio.feeTier.effectiveFee.tooltipLink": "Check rebate history",
