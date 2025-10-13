@@ -1,5 +1,11 @@
 # @orderly.network/types
 
+## 2.7.4
+
+### Patch Changes
+
+- publish
+
 ## 2.7.3
 
 ### Patch Changes

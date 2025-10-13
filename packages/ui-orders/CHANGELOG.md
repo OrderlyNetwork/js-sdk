@@ -1,5 +1,21 @@
 # @orderly.network/ui-orders
 
+## 2.7.4
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @kodiak-finance/orderly-react-app@2.7.4
+  - @kodiak-finance/orderly-hooks@2.7.4
+  - @kodiak-finance/orderly-i18n@2.7.4
+  - @kodiak-finance/orderly-types@2.7.4
+  - @kodiak-finance/orderly-ui@2.7.4
+  - @kodiak-finance/orderly-ui-connector@2.7.4
+  - @kodiak-finance/orderly-ui-share@2.7.4
+  - @kodiak-finance/orderly-ui-tpsl@2.7.4
+  - @kodiak-finance/orderly-utils@2.7.4
+
 ## 2.7.3
 
 ### Patch Changes

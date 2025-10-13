@@ -7,7 +7,7 @@ declare global {
 }
 if (typeof window !== "undefined") {
   window.__ORDERLY_VERSION__ = window.__ORDERLY_VERSION__ || {};
-  window.__ORDERLY_VERSION__["@kodiak-finance/orderly-perp"] = "4.7.3";
+  window.__ORDERLY_VERSION__["@kodiak-finance/orderly-perp"] = "4.7.4";
 }
 
-export default "4.7.3";
+export default "4.7.4";

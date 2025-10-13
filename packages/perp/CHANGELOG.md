@@ -1,5 +1,14 @@
 # @orderly.network/futures
 
+## 4.7.4
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @kodiak-finance/orderly-types@2.7.4
+  - @kodiak-finance/orderly-utils@2.7.4
+
 ## 4.7.3
 
 ### Patch Changes

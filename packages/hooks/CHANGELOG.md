@@ -1,5 +1,20 @@
 # @orderly.network/hooks
 
+## 2.7.4
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @kodiak-finance/orderly-core@2.7.4
+  - @kodiak-finance/orderly-default-evm-adapter@2.7.4
+  - @kodiak-finance/orderly-default-solana-adapter@2.7.4
+  - @kodiak-finance/orderly-net@2.7.4
+  - @kodiak-finance/orderly-perp@4.7.4
+  - @kodiak-finance/orderly-types@2.7.4
+  - @kodiak-finance/orderly-utils@2.7.4
+  - @kodiak-finance/orderly-web3-provider-ethers@2.7.4
+
 ## 2.7.3
 
 ### Patch Changes

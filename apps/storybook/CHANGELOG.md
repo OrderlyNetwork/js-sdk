@@ -1,5 +1,42 @@
 # storybook
 
+## 1.7.4
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @kodiak-finance/orderly-affiliate@2.7.4
+  - @kodiak-finance/orderly-react-app@2.7.4
+  - @kodiak-finance/orderly-chart@2.7.4
+  - @kodiak-finance/orderly-core@2.7.4
+  - @kodiak-finance/orderly-default-evm-adapter@2.7.4
+  - @kodiak-finance/orderly-default-solana-adapter@2.7.4
+  - @kodiak-finance/orderly-hooks@2.7.4
+  - @kodiak-finance/orderly-i18n@2.7.4
+  - @kodiak-finance/orderly-markets@2.7.4
+  - @kodiak-finance/orderly-portfolio@2.7.4
+  - @kodiak-finance/orderly-trading@2.7.4
+  - @kodiak-finance/orderly-trading-leaderboard@2.7.4
+  - @kodiak-finance/orderly-trading-rewards@2.7.4
+  - @kodiak-finance/orderly-types@2.7.4
+  - @kodiak-finance/orderly-ui@2.7.4
+  - @kodiak-finance/orderly-ui-chain-selector@2.7.4
+  - @kodiak-finance/orderly-ui-connector@2.7.4
+  - @kodiak-finance/orderly-ui-leverage@2.7.4
+  - @kodiak-finance/orderly-ui-order-entry@2.7.4
+  - @kodiak-finance/orderly-ui-orders@2.7.4
+  - @kodiak-finance/orderly-ui-positions@2.7.4
+  - @kodiak-finance/orderly-ui-scaffold@2.7.4
+  - @kodiak-finance/orderly-ui-share@2.7.4
+  - @kodiak-finance/orderly-ui-tpsl@2.7.4
+  - @kodiak-finance/orderly-ui-tradingview@2.7.4
+  - @kodiak-finance/orderly-ui-transfer@2.7.4
+  - @kodiak-finance/orderly-utils@2.7.4
+  - @kodiak-finance/orderly-vaults@2.7.4
+  - @kodiak-finance/orderly-wallet-connector@2.7.4
+  - @kodiak-finance/orderly-wallet-connector-privy@2.7.4
+
 ## 1.7.3
 
 ### Patch Changes

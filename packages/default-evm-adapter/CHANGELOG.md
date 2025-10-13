@@ -1,5 +1,14 @@
 # @orderly.network/default-evm-adapter
 
+## 2.7.4
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @kodiak-finance/orderly-core@2.7.4
+  - @kodiak-finance/orderly-types@2.7.4
+
 ## 2.7.3
 
 ### Patch Changes

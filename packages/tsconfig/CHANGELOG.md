@@ -1,5 +1,11 @@
 # tsconfig
 
+## 0.10.4
+
+### Patch Changes
+
+- publish
+
 ## 0.10.3
 
 ### Patch Changes
