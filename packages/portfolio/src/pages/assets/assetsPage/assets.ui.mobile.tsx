@@ -120,7 +120,7 @@ const AssetMobileItem: React.FC<AssetMobileItemProps> = (props) => {
           <div className="oui-text-2xs oui-font-semibold oui-text-base-contrast-36">
             {t("portfolio.overview.column.assetValue")}
           </div>
-          <Text.numeral
+          <Text.assetValue
             size="xs"
             intensity={80}
             className="oui-truncate oui-font-semibold"
@@ -130,7 +130,7 @@ const AssetMobileItem: React.FC<AssetMobileItemProps> = (props) => {
             padding={false}
           >
             {item.assetValue}
-          </Text.numeral>
+          </Text.assetValue>
         </Flex>
         <Flex
           className="oui-w-1/3 oui-truncate"
@@ -159,7 +159,7 @@ const AssetMobileItem: React.FC<AssetMobileItemProps> = (props) => {
             itemAlign={"center"}
             className="oui-text-end oui-font-semibold oui-text-base-contrast-80"
           >
-            <Text.numeral
+            <Text.collateral
               size="xs"
               rule="price"
               dp={6}
@@ -167,7 +167,7 @@ const AssetMobileItem: React.FC<AssetMobileItemProps> = (props) => {
               padding={false}
             >
               {item.collateralContribution}
-            </Text.numeral>
+            </Text.collateral>
             <div className="oui-text-end oui-text-2xs oui-text-base-contrast-36">
               USDC
             </div>

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Flex, Text } from "@orderly.network/ui";
+import { Flex, Grid, Text } from "@orderly.network/ui";
 
 const meta: Meta<typeof Text> = {
   title: "Base/Typography/Text",
@@ -160,4 +160,39 @@ export const Gradient: Story = {
       },
     },
   },
+};
+
+export const NumType: Story = {
+  render: (args) => {
+    const numList = [
+      123, 1234, 123.123, 1234.567, -123, -1234, -123.123, -1234.567,
+    ];
+    const numTypes = [
+      { key: "roi", label: "ROI:", Component: Text.roi },
+      { key: "pnl", label: "PNL:", Component: Text.pnl },
+      { key: "notional", label: "Notional:", Component: Text.notional },
+      { key: "assetValue", label: "Asset Value:", Component: Text.assetValue },
+      { key: "collateral", label: "Collateral:", Component: Text.collateral },
+    ];
+
+    return (
+      <Flex direction={"column"} gapY={2} width={300} itemAlign={"start"}>
+        {numTypes.map(({ key, label, Component }) => (
+          <>
+            <Text weight="semibold" size="lg" color="primary">
+              {label}
+            </Text>
+            {numList.map((data, index) => (
+              <Grid key={`${key}-${index}`} cols={3} gapX={2} width={"100%"}>
+                <Text>{data}</Text>
+                {">>"}
+                <Component color="primary">{data}</Component>
+              </Grid>
+            ))}
+          </>
+        ))}
+      </Flex>
+    );
+  },
+  args: {},
 };

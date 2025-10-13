@@ -664,16 +664,15 @@ export const RealizedPnL: FC<OrderCellState> = (props) => {
       align="end"
     >
       <Flex gap={1}>
-        <Text.numeral
+        <Text.pnl
           dp={props.quote_dp}
-          rm={Decimal.ROUND_DOWN}
           padding={false}
           intensity={(value ?? 0) == 0 ? 80 : undefined}
           showIdentifier={(value ?? 0) > 0}
           coloring={(value ?? 0) != 0}
         >
           {value ?? "--"}
-        </Text.numeral>
+        </Text.pnl>
         <ShareButtonWidget
           order={props.item}
           sharePnLConfig={props.sharePnLConfig}
