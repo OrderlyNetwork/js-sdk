@@ -768,7 +768,7 @@ export const collateralRatio = (params: {
   const qty = new Decimal(Math.min(collateralQty, cap));
 
   const notionalAbs = qty.mul(indexPrice).abs();
-  const dynamicWeight = DCF.mul(notionalAbs).toPower(IMRFactorPower);
+  const dynamicWeight = DCF.mul(notionalAbs.toPower(IMRFactorPower));
   const result = K.div(new Decimal(1).add(dynamicWeight));
 
   return result.lt(baseWeight) ? result : new Decimal(baseWeight);
