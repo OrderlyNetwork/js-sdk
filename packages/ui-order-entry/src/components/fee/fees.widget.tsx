@@ -1,19 +1,26 @@
 import React from "react";
 import { pick } from "ramda";
-import { useFeeState } from "@orderly.network/hooks";
+import { useFeeState, useRwaSymbolsInfoStore } from "@orderly.network/hooks";
 import { EffectiveFeesWidget } from "./effectiveFee";
 import { RegularFeesWidget } from "./regularFee";
 
 const isEffective = (val?: unknown) =>
   typeof val !== "undefined" && val !== null;
 
-export const FeesWidget: React.FC = () => {
+export const FeesWidget: React.FC<{ symbol: string }> = ({ symbol }) => {
   const { refereeRebate, ...others } = useFeeState();
-  return isEffective(refereeRebate) ? (
+  const info = useRwaSymbolsInfoStore();
+  const isRwa = info?.[symbol] !== undefined;
+  const isEffectiveFee = isEffective(refereeRebate);
+  return isEffectiveFee ? (
     <EffectiveFeesWidget
-      {...pick(["effectiveTakerFee", "effectiveMakerFee"], others)}
+      taker={isRwa ? others.rwaEffectiveTakerFee : others.effectiveTakerFee}
+      maker={isRwa ? others.rwaEffectiveMakerFee : others.effectiveMakerFee}
     />
   ) : (
-    <RegularFeesWidget {...pick(["takerFee", "makerFee"], others)} />
+    <RegularFeesWidget
+      taker={isRwa ? others.rwaTakerFee : others.takerFee}
+      maker={isRwa ? others.rwaMakerFee : others.makerFee}
+    />
   );
 };
