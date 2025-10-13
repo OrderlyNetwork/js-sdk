@@ -15,11 +15,11 @@ import {
 import { FavoritesIcon } from "../../icons";
 import { MarketsTabName } from "../../type";
 import { MarketsListWidget } from "../marketsList";
+import { RwaTab } from "../rwaTab";
 import { SearchInput } from "../searchInput";
 import { useFavoritesProps } from "../shared/hooks/useFavoritesExtraProps";
 import { useDropDownMarketsColumns } from "./column";
 import { DropDownMarketsScriptReturn } from "./dropDownMarkets.script";
-import { RwaTab } from "../rwaTab";
 
 export type DropDownMarketsProps = DropDownMarketsScriptReturn & {
   contentClassName?: string;
@@ -130,9 +130,6 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
         >
           {renderTab(MarketsTabName.Favorites)}
         </TabPanel>
-        <TabPanel title={t("markets.recent")} value={MarketsTabName.Recent}>
-          {renderTab(MarketsTabName.Recent)}
-        </TabPanel>
         <TabPanel title={t("common.all")} value={MarketsTabName.All}>
           {renderTab(MarketsTabName.All)}
         </TabPanel>
@@ -144,6 +141,9 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
           value={MarketsTabName.NewListing}
         >
           {renderTab(MarketsTabName.NewListing)}
+        </TabPanel>
+        <TabPanel title={t("markets.recent")} value={MarketsTabName.Recent}>
+          {renderTab(MarketsTabName.Recent)}
         </TabPanel>
       </Tabs>
     </Box>

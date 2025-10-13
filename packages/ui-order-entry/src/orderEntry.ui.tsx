@@ -449,6 +449,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           estSlippage={props.estSlippage}
           orderType={formattedOrder.order_type!}
           disableFeatures={disableFeatures}
+          symbol={props.symbol}
         />
 
         <Divider className="oui-w-full" />

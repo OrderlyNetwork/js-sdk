@@ -1,12 +1,12 @@
 import React, { useMemo } from "react";
+import { Slot } from "@radix-ui/react-slot";
+import { Flex } from "../flex";
 import {
   ComponentPropsWithout,
   RemovedProps,
 } from "../helpers/component-props";
-import { Slot } from "@radix-ui/react-slot";
-import { Flex } from "../flex";
-import { Spinner } from "../spinner/spinner";
 import { SizeType } from "../helpers/sizeType";
+import { Spinner } from "../spinner/spinner";
 
 type BaseButtonElement = React.ElementRef<"button">;
 
@@ -45,14 +45,14 @@ export const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>(
               size === "xs"
                 ? 12
                 : size === "sm"
-                ? 12
-                : size === "md"
-                ? 14
-                : size === "lg"
-                ? 16
-                : size === "xl"
-                ? 18
-                : 12,
+                  ? 12
+                  : size === "md"
+                    ? 14
+                    : size === "lg"
+                      ? 16
+                      : size === "xl"
+                        ? 18
+                        : 12,
             className: "oui-text-inherit",
             opacity: loading ? 0 : 1,
           })
@@ -99,7 +99,7 @@ export const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>(
               position={"absolute"}
               as="span"
             >
-              <Spinner size={spinnerSize} color="white" />
+              <Spinner size={spinnerSize} color="primaryContrast" />
             </Flex>
           </>
         ) : (
@@ -107,7 +107,7 @@ export const BaseButton = React.forwardRef<BaseButtonElement, BaseButtonProps>(
         )}
       </Comp>
     );
-  }
+  },
 );
 
 BaseButton.displayName = "BaseButton";

@@ -122,7 +122,11 @@ export const AccountItem = (props: AccountItemProps) => {
             </Text>
           </Tooltip>
         </Flex>
-        <Flex className="oui-text-xs" itemAlign="end" gap={1}>
+        <Flex
+          className="oui-text-xs oui-text-base-contrast"
+          itemAlign="end"
+          gap={1}
+        >
           <Text.numeral rule="price" dp={2}>
             {props.accountValue ?? 0}
           </Text.numeral>

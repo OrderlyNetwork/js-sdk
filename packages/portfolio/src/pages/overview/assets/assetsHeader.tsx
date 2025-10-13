@@ -30,7 +30,9 @@ export const AssetsHeader: FC<Props> = (props) => {
             disabled={props.disabled}
             size="md"
             onClick={() => props.onDeposit?.()}
-            icon={<ArrowDownSquareFillIcon />}
+            icon={
+              <ArrowDownSquareFillIcon className="oui-text-primary-contrast" />
+            }
             data-testid="oui-testid-portfolio-assets-deposit-btn"
           >
             {t("common.deposit")}
@@ -42,7 +44,7 @@ export const AssetsHeader: FC<Props> = (props) => {
             size="md"
             color="secondary"
             onClick={() => props.onTransfer?.()}
-            icon={<ArrowLeftRightIcon />}
+            icon={<ArrowLeftRightIcon className="oui-text-base-contrast" />}
           >
             {t("common.transfer")}
           </Button>
@@ -53,7 +55,7 @@ export const AssetsHeader: FC<Props> = (props) => {
             size="md"
             color="secondary"
             onClick={() => props.onWithdraw?.()}
-            icon={<ArrowUpSquareFillIcon />}
+            icon={<ArrowUpSquareFillIcon className="oui-text-base-contrast" />}
             data-testid="oui-testid-portfolio-assets-withdraw-btn"
           >
             {t("common.withdraw")}

@@ -1,16 +1,11 @@
 import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import {
-  Box,
-  cn,
-  TabPanel,
-  Tabs,
-} from "@orderly.network/ui";
+import { Box, cn, TabPanel, Tabs } from "@orderly.network/ui";
 import { FavoritesIcon } from "../../icons";
 import { MarketsTabName } from "../../type";
+import { RwaTab } from "../rwaTab";
 import { useFavoritesProps } from "../shared/hooks/useFavoritesExtraProps";
 import type { ExpandMarketsScriptReturn } from "./expandMarkets.script";
-import { RwaTab } from "../rwaTab";
 
 const LazySearchInput = React.lazy(() =>
   import("../searchInput").then((mod) => {
@@ -62,8 +57,6 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
     );
   };
 
-
-
   return (
     <Box className={cn("oui-overflow-hidden oui-font-semibold")} height="100%">
       <Box px={3} pb={2}>
@@ -91,9 +84,6 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
         >
           {renderTab(MarketsTabName.Favorites)}
         </TabPanel>
-        <TabPanel title={t("markets.recent")} value={MarketsTabName.Recent}>
-          {renderTab(MarketsTabName.Recent)}
-        </TabPanel>
         <TabPanel title={t("common.all")} value={MarketsTabName.All}>
           {renderTab(MarketsTabName.All)}
         </TabPanel>
@@ -105,6 +95,9 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
           value={MarketsTabName.NewListing}
         >
           {renderTab(MarketsTabName.NewListing)}
+        </TabPanel>
+        <TabPanel title={t("markets.recent")} value={MarketsTabName.Recent}>
+          {renderTab(MarketsTabName.Recent)}
         </TabPanel>
       </Tabs>
     </Box>

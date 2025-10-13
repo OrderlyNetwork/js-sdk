@@ -1,9 +1,9 @@
 import React, { PropsWithChildren } from "react";
 import { tv, type VariantProps } from "tailwind-variants";
-import { BaseButton, BaseButtonProps } from "./base";
-import { shadowVariants } from "../layout/shadow";
 import { parseAngleProps } from "../helpers/parse-props";
 import { SizeType } from "../helpers/sizeType";
+import { shadowVariants } from "../layout/shadow";
+import { BaseButton, BaseButtonProps } from "./base";
 
 const buttonVariants = tv(
   {
@@ -66,7 +66,7 @@ const buttonVariants = tv(
       {
         variant: "contained",
         color: "secondary",
-        className: ["oui-bg-base-4", "oui-text-primary-contrast"],
+        className: ["oui-bg-base-4", "oui-text-secondary-contrast"],
       },
       {
         variant: "contained",
@@ -205,7 +205,7 @@ const buttonVariants = tv(
   },
   {
     responsiveVariants: ["md", "lg"],
-  }
+  },
 );
 
 interface ButtonProps
@@ -231,7 +231,7 @@ const Button = React.forwardRef<
       style,
       ...props
     },
-    ref
+    ref,
   ) => {
     // const Comp = asChild ? Slot : "button";
     const angleStyle = parseAngleProps({ angle });
@@ -251,7 +251,7 @@ const Button = React.forwardRef<
         {...props}
       />
     );
-  }
+  },
 );
 Button.displayName = "Button";
 

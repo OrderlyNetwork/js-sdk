@@ -96,8 +96,8 @@ export const PnlAreaChart: React.FC<PnlAreaChartProps> = (props) => {
         <>
           <defs>
             <linearGradient id={colorId} x1="0" y1="0" x2="0" y2="1">
-              <stop stopColor="#608CFF" offset="0%" stopOpacity={0.5} />
-              <stop stopColor="#608CFF" offset="100%" stopOpacity={0} />
+              <stop stopColor={colors.primary} offset="0%" stopOpacity={0.5} />
+              <stop stopColor={colors.primary} offset="100%" stopOpacity={0} />
             </linearGradient>
           </defs>
           <Area

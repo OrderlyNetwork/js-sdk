@@ -11,6 +11,10 @@ export type WidgetConfigs = {
   scanQRCode?: {
     onSuccess?: (url: string) => void;
   };
+  subAccount?: {
+    /** @deprecated The number of custom sub-accounts needs to be configured in sync with the backend. If you’re not sure about it, please don’t set this value. */
+    maxSubAccountCount: number;
+  };
 };
 
 export type AppContextState = {

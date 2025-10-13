@@ -120,7 +120,9 @@ export const usePositionHistoryColumn = (props: {
                 fee={-value}
                 symbol={record.symbol}
                 start_t={record.open_timestamp.toString()}
-                end_t={record.close_timestamp?.toString()}
+                end_t={(
+                  record.close_timestamp || record.last_update_time
+                )?.toString()}
               />
             );
           },
