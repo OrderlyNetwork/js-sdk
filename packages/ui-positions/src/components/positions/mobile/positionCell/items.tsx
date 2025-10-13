@@ -48,7 +48,7 @@ export const UnrealPnL: FC<PositionCellState> = (props) => {
   return (
     <Flex gap={3}>
       <Flex direction={"column"} className="oui-text-2xs" itemAlign={"end"}>
-        <div>
+        <div className="oui-text-right">
           <Text intensity={36}>{t("common.unrealizedPnl")}</Text>
           <Text intensity={20}>(USDC)</Text>
         </div>
