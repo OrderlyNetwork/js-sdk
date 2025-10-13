@@ -14,7 +14,7 @@ import {
   Tooltip,
 } from "@orderly.network/ui";
 import { SharePnLConfig, SharePnLDialogId } from "@orderly.network/ui-share";
-import { commifyOptional } from "@orderly.network/utils";
+import { commifyOptional, formatNum } from "@orderly.network/utils";
 import { useSymbolContext } from "../../../provider/symbolContext";
 import { FundingFeeButton } from "../../fundingFeeHistory/fundingFeeButton";
 import { ShareButtonWidget } from "../../positions/desktop/shareButton";
@@ -340,7 +340,7 @@ export const NetPnL = (props: {
   const netPnl = record.netPnL != null ? record.netPnL : undefined;
 
   const text = () => (
-    <Text.numeral
+    <Text.pnl
       dp={pnlNotionalDecimalPrecision}
       color={
         record.netPnL != null
@@ -356,7 +356,7 @@ export const NetPnL = (props: {
       }
     >
       {netPnl ?? "--"}
-    </Text.numeral>
+    </Text.pnl>
   );
 
   if (record.netPnL == null) return text();
@@ -375,7 +375,7 @@ export const NetPnL = (props: {
               color={record.realized_pnl >= 0 ? "profit" : "lose"}
               className="oui-cursor-pointer"
             >
-              {commifyOptional(record.realized_pnl)}
+              {commifyOptional(formatNum.pnl(record.realized_pnl)?.toString())}
             </Text>
           </Flex>
           <Flex justify={"between"} width={"100%"} gap={2}>

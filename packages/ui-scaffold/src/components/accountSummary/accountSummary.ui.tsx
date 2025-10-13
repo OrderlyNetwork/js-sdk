@@ -327,13 +327,13 @@ const AccountInfoPopover = (props: {
               />
               <span>{t("common.unrealizedPnl")}</span>
             </Flex>
-            <Text.numeral
+            <Text.pnl
               coloring
               showIdentifier
               visible={props.visible}
               className="group-hover:-oui-translate-x-5 oui-transition-transform"
               suffix={
-                <Text.numeral
+                <Text.roi
                   coloring
                   prefix={"("}
                   visible={props.visible}
@@ -341,11 +341,11 @@ const AccountInfoPopover = (props: {
                   rule={"percentages"}
                 >
                   {props.unrealized_pnl_ROI ?? "-"}
-                </Text.numeral>
+                </Text.roi>
               }
             >
               {props.unrealPnL ?? "-"}
-            </Text.numeral>
+            </Text.pnl>
           </DropdownMenu>
         );
       case "currentLeverage":

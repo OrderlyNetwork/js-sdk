@@ -163,9 +163,9 @@ export const useRankingColumns = (
             return "-";
           }
           return (
-            <Text.numeral prefix="$" rule="price" dp={2} coloring>
+            <Text.pnl prefix="$" rule="price" dp={2} coloring>
               {value}
-            </Text.numeral>
+            </Text.pnl>
           );
         },
         width: 90,

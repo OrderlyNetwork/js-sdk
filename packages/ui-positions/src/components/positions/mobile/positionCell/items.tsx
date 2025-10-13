@@ -53,17 +53,15 @@ export const UnrealPnL: FC<PositionCellState> = (props) => {
           <Text intensity={20}>(USDC)</Text>
         </div>
 
-        <Text.numeral
+        <Text.pnl
           size="xs"
           dp={props.pnlNotionalDecimalPrecision}
-          rm={Decimal.ROUND_DOWN}
           coloring
           className="orderly-font-semibold"
           suffix={
-            <Text.numeral
+            <Text.roi
               rule="percentages"
               dp={props.pnlNotionalDecimalPrecision}
-              rm={Decimal.ROUND_DOWN}
               prefix="("
               suffix=")"
               className={cn(
@@ -74,11 +72,11 @@ export const UnrealPnL: FC<PositionCellState> = (props) => {
               )}
             >
               {item.unrealized_pnl_ROI}
-            </Text.numeral>
+            </Text.roi>
           }
         >
           {item.unrealized_pnl}
-        </Text.numeral>
+        </Text.pnl>
       </Flex>
       <ShareButtonWidget
         position={item}
