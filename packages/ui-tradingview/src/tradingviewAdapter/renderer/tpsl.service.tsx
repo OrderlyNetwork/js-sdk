@@ -360,7 +360,7 @@ export class TPSLService {
         .setTooltip(i18n.t("tpsl.dragToSet"))
         .setPrice(this.currentPosition!.open)
         .setLineLength(-200, "pixel")
-        .setText(i18n.t("tpsl.advanced.title"))
+        .setText(i18n.t("common.tpsl"))
         .setQuantity("")
         .setBodyTextColor(this.broker.colorConfig.textColor!)
         .setBodyBackgroundColor(this.broker.colorConfig.chartBG!)

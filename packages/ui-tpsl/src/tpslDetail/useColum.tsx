@@ -35,7 +35,7 @@ export const useColumn = (props: {
         ),
       },
       {
-        title: t("tpsl.tpslDetail.type"),
+        title: t("common.type"),
         dataIndex: "type",
         width: 35,
         className: "oui-pl-1 oui-py-2",
@@ -44,7 +44,7 @@ export const useColumn = (props: {
         ),
       },
       {
-        title: t("tpsl.tpslDetail.trigger"),
+        title: t("common.trigger"),
         dataIndex: "trigger",
         width: 70,
         className: "oui-pl-1 oui-py-2",
@@ -53,7 +53,7 @@ export const useColumn = (props: {
         },
       },
       {
-        title: t("tpsl.tpslDetail.price"),
+        title: t("common.price"),
         dataIndex: "price",
         width: 70,
         className: "oui-py-2",
@@ -92,7 +92,7 @@ export const useColumn = (props: {
         ),
       },
       {
-        title: t("tpsl.tpslDetail.type"),
+        title: t("common.type"),
         dataIndex: "type",
         width: 35,
         className: "oui-pl-1 oui-py-2",
@@ -101,7 +101,7 @@ export const useColumn = (props: {
         ),
       },
       {
-        title: t("tpsl.tpslDetail.trigger"),
+        title: t("common.trigger"),
         dataIndex: "trigger",
         width: 70,
         className: "oui-pl-1 oui-py-2",
@@ -110,7 +110,7 @@ export const useColumn = (props: {
         },
       },
       {
-        title: t("tpsl.tpslDetail.price"),
+        title: t("common.price"),
         dataIndex: "price",
         width: 70,
         className: "oui-pl-1 oui-py-2",

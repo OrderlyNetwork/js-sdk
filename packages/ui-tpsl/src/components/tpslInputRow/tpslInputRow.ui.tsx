@@ -43,9 +43,7 @@ export const TPSLInputRowUI: FC<TPSLInputRowProps> = (props) => {
               : "oui-ml-1  oui-text-base-contrast-36",
           )}
         >
-          {props.type === "tp"
-            ? t("tpsl.advanced.TP.label")
-            : t("tpsl.advanced.SL.label")}
+          {props.type === "tp" ? t("tpsl.takeProfit") : t("tpsl.stopLoss")}
         </label>
       </Flex>
       <Flex
@@ -60,7 +58,7 @@ export const TPSLInputRowUI: FC<TPSLInputRowProps> = (props) => {
           className="oui-w-full oui-gap-0.5"
         >
           <Text className="oui-text-2xs oui-text-base-contrast-54">
-            {t("tpsl.advanced.triggerPrice")}
+            {t("common.triggerPrice")}
           </Text>
           <Grid cols={2} gap={2} className="oui-w-full oui-px-0.5">
             <PriceInput
@@ -92,7 +90,7 @@ export const TPSLInputRowUI: FC<TPSLInputRowProps> = (props) => {
           itemAlign={"start"}
         >
           <Text className="oui-text-2xs oui-text-base-contrast-54">
-            {t("tpsl.advanced.orderPrice")}
+            {t("common.orderPrice")}
           </Text>
           <Grid cols={2} gap={2} className="oui-w-full oui-px-0.5">
             <PriceInput
@@ -103,8 +101,8 @@ export const TPSLInputRowUI: FC<TPSLInputRowProps> = (props) => {
               type={"order price"}
               label={
                 values.order_type === OrderType.LIMIT
-                  ? t("tpsl.advanced.limit")
-                  : t("tpsl.advanced.market")
+                  ? t("common.limit")
+                  : t("common.market")
               }
               value={values.order_price}
               error={getErrorMsg(`${props.type}_order_price`)}

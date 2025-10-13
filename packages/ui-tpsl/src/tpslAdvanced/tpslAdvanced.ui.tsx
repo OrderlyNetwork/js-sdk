@@ -111,7 +111,7 @@ export const TPSLAdvancedUI = (props: Props) => {
           onClick={props.onClose}
         >
           <ArrowRightIcon className=" oui-text-base-contrast-80" />
-          <Text>{t("tpsl.advanced.title")}</Text>
+          <Text>{t("common.tpsl")}</Text>
         </Flex>
       </div>
       <ScrollArea className="oui-flex-1">
