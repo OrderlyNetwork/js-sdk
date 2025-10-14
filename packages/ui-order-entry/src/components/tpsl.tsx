@@ -23,11 +23,7 @@ import {
 } from "@orderly.network/ui";
 import { Grid } from "@orderly.network/ui";
 import { ExclamationFillIcon } from "@orderly.network/ui";
-import {
-  TPSLAdvancedDialogId,
-  TPSLAdvancedWidget,
-  TPSLPositionTypeWidget,
-} from "@orderly.network/ui-tpsl";
+import { TPSLPositionTypeWidget } from "@orderly.network/ui-tpsl";
 import { OrderEntryContext, useOrderEntryContext } from "./orderEntryContext";
 import { PnlInputWidget } from "./pnlInput/pnlInput.widget";
 import { usePnlInputContext } from "./pnlInput/pnlInputContext";

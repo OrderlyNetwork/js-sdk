@@ -103,10 +103,10 @@ export const useTPSLBuilder = (
     {
       defaultOrder: order,
       positionType: triggerPrice ? PositionType.PARTIAL : positionType,
-      tpslEnable: {
-        tp_enable: !withTriggerPrice ? true : type === "tp",
-        sl_enable: !withTriggerPrice ? true : type === "sl",
-      },
+      // tpslEnable: {
+      //   tp_enable: !withTriggerPrice ? true : type === "tp",
+      //   sl_enable: !withTriggerPrice ? true : type === "sl",
+      // },
       isEditing,
     },
   );

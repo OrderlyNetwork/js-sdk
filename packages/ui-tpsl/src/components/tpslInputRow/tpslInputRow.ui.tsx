@@ -1,4 +1,5 @@
-import { FC, Fragment } from "react";
+import { FC, Fragment, useEffect } from "react";
+import { useMemoizedFn } from "@orderly.network/hooks";
 import { useTranslation, Trans } from "@orderly.network/i18n";
 import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
 import { OrderType, PositionType } from "@orderly.network/types";
@@ -22,7 +23,7 @@ export const TPSLInputRowUI: FC<TPSLInputRowProps> = (props) => {
       justify={"start"}
       className="oui-w-full"
     >
-      <Flex className="oui-w-full" itemAlign={"center"} justify={"start"}>
+      {/* <Flex className="oui-w-full" itemAlign={"center"} justify={"start"}>
         {!props.disableEnableCheckbox && (
           <Checkbox
             data-testid={`oui-testid-orderEntry-${props.type}-enable-checkBox`}
@@ -37,7 +38,7 @@ export const TPSLInputRowUI: FC<TPSLInputRowProps> = (props) => {
         <label
           htmlFor={`enable_${props.type}`}
           className={cn(
-            "oui-cursor-pointer oui-text-sm",
+            "oui-text-sm",
             props.disableEnableCheckbox
               ? "oui-ml-0 oui-text-base-contrast"
               : "oui-ml-1  oui-text-base-contrast-36",
@@ -45,12 +46,15 @@ export const TPSLInputRowUI: FC<TPSLInputRowProps> = (props) => {
         >
           {props.type === "tp" ? t("tpsl.takeProfit") : t("tpsl.stopLoss")}
         </label>
-      </Flex>
+      </Flex> */}
+      <Text size="sm" intensity={98}>
+        {props.type === "tp" ? t("tpsl.takeProfit") : t("tpsl.stopLoss")}
+      </Text>
       <Flex
         direction={"column"}
         gap={2}
         itemAlign={"start"}
-        className={cn("oui-w-full oui-pt-2", values.enable ? "" : "oui-hidden")}
+        className={"oui-w-full oui-pt-2"}
       >
         <Flex
           direction={"column"}

@@ -42,7 +42,7 @@ export const TPSLAdvancedUI = (props: Props) => {
     order_price: string;
     order_type: OrderType;
   }>({
-    enable: true,
+    enable: false,
     order_type: formattedOrder.tp_order_type ?? OrderType.MARKET,
     order_price: formattedOrder.tp_order_price ?? "",
     trigger_price: formattedOrder.tp_trigger_price ?? "",
@@ -62,7 +62,7 @@ export const TPSLAdvancedUI = (props: Props) => {
     order_price: string;
     order_type: OrderType;
   }>({
-    enable: true,
+    enable: false,
     order_type: formattedOrder.sl_order_type ?? OrderType.MARKET,
     order_price: formattedOrder.sl_order_price ?? "",
     trigger_price: formattedOrder.sl_trigger_price ?? "",
@@ -76,7 +76,7 @@ export const TPSLAdvancedUI = (props: Props) => {
   useEffect(() => {
     setTpValuse((prev) => ({
       ...prev,
-      enable: formattedOrder.tp_enable ?? true,
+      // enable: formattedOrder.tp_enable ?? false,
       order_type: formattedOrder.tp_order_type ?? OrderType.MARKET,
       order_price: formattedOrder.tp_order_price ?? "",
       trigger_price: formattedOrder.tp_trigger_price ?? "",
@@ -90,7 +90,7 @@ export const TPSLAdvancedUI = (props: Props) => {
   useEffect(() => {
     setSlValues((prev) => ({
       ...prev,
-      enable: formattedOrder.sl_enable ?? true,
+      // enable: formattedOrder.sl_enable ?? false,
       order_type: formattedOrder.sl_order_type ?? OrderType.MARKET,
       order_price: formattedOrder.sl_order_price ?? "",
       trigger_price: formattedOrder.sl_trigger_price ?? "",
@@ -101,8 +101,11 @@ export const TPSLAdvancedUI = (props: Props) => {
     }));
   }, [formattedOrder]);
 
+  const tpslEnable =
+    formattedOrder.tp_trigger_price || formattedOrder.sl_trigger_price;
+
   return (
-    <div className="oui-rounded-[16px] oui-py-3 oui-flex oui-flex-col oui-justify-between oui-h-full">
+    <div className="oui-flex oui-h-full oui-flex-col oui-justify-between oui-rounded-[16px] oui-py-3">
       <div className="oui-px-3">
         <Flex
           className="oui-mb-5 oui-cursor-pointer  oui-text-base oui-text-base-contrast-80"
@@ -265,6 +268,7 @@ export const TPSLAdvancedUI = (props: Props) => {
               : "oui-bg-success-darken hover:oui-bg-success-darken/80 active:oui-bg-success-darken/80",
           )}
           onClick={props.onSubmit}
+          disabled={!tpslEnable}
         >
           {t("tpsl.advanced.submit")}
         </Button>

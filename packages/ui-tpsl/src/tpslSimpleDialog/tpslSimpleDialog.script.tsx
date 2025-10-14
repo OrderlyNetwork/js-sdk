@@ -55,7 +55,7 @@ export const useTPSLSimpleDialog = (options: TPSLBuilderOptions) => {
     {
       defaultOrder: undefined,
       positionType: PositionType.PARTIAL,
-      tpslEnable: { tp_enable: type === "tp", sl_enable: type === "sl" },
+      // tpslEnable: { tp_enable: type === "tp", sl_enable: type === "sl" },
       isEditing: false,
     },
   );
