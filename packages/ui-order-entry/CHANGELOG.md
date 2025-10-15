@@ -1,5 +1,25 @@
 # @orderly.network/ui-order-entry
 
+## 2.8.0
+
+### Minor Changes
+
+- 7fb352e: - Add annualized funding rate display in funding rate tooltip
+
+### Patch Changes
+
+- Updated dependencies [7fb352e]
+  - @kodiak-finance/orderly-i18n@2.8.0
+  - @kodiak-finance/orderly-react-app@2.8.0
+  - @kodiak-finance/orderly-hooks@2.8.0
+  - @kodiak-finance/orderly-perp@4.8.0
+  - @kodiak-finance/orderly-types@2.8.0
+  - @kodiak-finance/orderly-ui@2.8.0
+  - @kodiak-finance/orderly-ui-connector@2.8.0
+  - @kodiak-finance/orderly-ui-leverage@2.8.0
+  - @kodiak-finance/orderly-ui-tpsl@2.8.0
+  - @kodiak-finance/orderly-utils@2.8.0
+
 ## 2.7.4
 
 ### Patch Changes

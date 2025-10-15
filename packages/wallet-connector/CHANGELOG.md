@@ -1,5 +1,20 @@
 # @orderly.network/wallet-connector
 
+## 2.8.0
+
+### Minor Changes
+
+- 7fb352e: - Add annualized funding rate display in funding rate tooltip
+
+### Patch Changes
+
+- Updated dependencies [7fb352e]
+  - @kodiak-finance/orderly-core@2.8.0
+  - @kodiak-finance/orderly-hooks@2.8.0
+  - @kodiak-finance/orderly-types@2.8.0
+  - @kodiak-finance/orderly-ui@2.8.0
+  - @kodiak-finance/orderly-utils@2.8.0
+
 ## 2.7.4
 
 ### Patch Changes

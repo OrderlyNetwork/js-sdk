@@ -1,5 +1,11 @@
 # @orderly.network/net
 
+## 2.8.0
+
+### Minor Changes
+
+- 7fb352e: - Add annualized funding rate display in funding rate tooltip
+
 ## 2.7.4
 
 ### Patch Changes
