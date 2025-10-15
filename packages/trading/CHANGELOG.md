@@ -1,5 +1,33 @@
 # @orderly.network/trading
 
+## 2.8.0
+
+### Minor Changes
+
+- 7fb352e: - Add annualized funding rate display in funding rate tooltip
+
+### Patch Changes
+
+- Updated dependencies [7fb352e]
+  - @kodiak-finance/orderly-ui-tradingview@2.8.0
+  - @kodiak-finance/orderly-markets@2.8.0
+  - @kodiak-finance/orderly-i18n@2.8.0
+  - @kodiak-finance/orderly-react-app@2.8.0
+  - @kodiak-finance/orderly-hooks@2.8.0
+  - @kodiak-finance/orderly-portfolio@2.8.0
+  - @kodiak-finance/orderly-types@2.8.0
+  - @kodiak-finance/orderly-ui@2.8.0
+  - @kodiak-finance/orderly-ui-chain-selector@2.8.0
+  - @kodiak-finance/orderly-ui-connector@2.8.0
+  - @kodiak-finance/orderly-ui-leverage@2.8.0
+  - @kodiak-finance/orderly-ui-order-entry@2.8.0
+  - @kodiak-finance/orderly-ui-orders@2.8.0
+  - @kodiak-finance/orderly-ui-positions@2.8.0
+  - @kodiak-finance/orderly-ui-scaffold@2.8.0
+  - @kodiak-finance/orderly-ui-share@2.8.0
+  - @kodiak-finance/orderly-ui-transfer@2.8.0
+  - @kodiak-finance/orderly-utils@2.8.0
+
 ## 2.7.4
 
 ### Patch Changes

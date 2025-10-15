@@ -1,5 +1,23 @@
 # @orderly.network/hooks
 
+## 2.8.0
+
+### Minor Changes
+
+- 7fb352e: - Add annualized funding rate display in funding rate tooltip
+
+### Patch Changes
+
+- Updated dependencies [7fb352e]
+  - @kodiak-finance/orderly-core@2.8.0
+  - @kodiak-finance/orderly-default-evm-adapter@2.8.0
+  - @kodiak-finance/orderly-default-solana-adapter@2.8.0
+  - @kodiak-finance/orderly-net@2.8.0
+  - @kodiak-finance/orderly-perp@4.8.0
+  - @kodiak-finance/orderly-types@2.8.0
+  - @kodiak-finance/orderly-utils@2.8.0
+  - @kodiak-finance/orderly-web3-provider-ethers@2.8.0
+
 ## 2.7.4
 
 ### Patch Changes
