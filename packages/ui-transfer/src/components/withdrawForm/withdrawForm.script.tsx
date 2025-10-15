@@ -324,6 +324,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     if (quantity && new Decimal(quantity).lt(minAmount)) {
       return t("transfer.withdraw.minAmount.error", {
         minAmount: minAmount.toString(),
+        currency: sourceToken?.symbol,
       });
     }
   }, [quantity, sourceToken?.minimum_withdraw_amount, fee, t]);

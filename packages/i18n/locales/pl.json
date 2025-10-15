@@ -706,7 +706,7 @@
   "transfer.withdraw.crossChain.warning": "Wypłaty wymagające rebalansu międzyłańcuchowego nie mogą być anulowane ani kontynuowane kolejnymi wypłatami, dopóki nie zostaną przetworzone.",
   "transfer.withdraw.crossChain.vaultWarning": "Wypłata przekracza saldo skarbca {{networkName}} ( {{chainVaultBalance}} USDC ). Opłata za rebalans międzyłańcuchowy zostanie naliczona za wypłatę do {{networkName}}.",
   "transfer.withdraw.vaultWarning": "Saldo {{tokenName}} w sieci {{chainName}} wynosi {{balance}}, co jest niewystarczające, aby zrealizować Twoje żądanie wypłaty. Spróbuj ponownie później lub przełącz się na inną sieć, aby dokonać wypłaty.",
-  "transfer.withdraw.minAmount.error": "ilość musi być większa niż {{minAmount}}",
+  "transfer.withdraw.minAmount.error": "Nie możesz wypłacić mniej niż {{minAmount}} {{currency}}. Proszę dostosować kwotę.",
   "transfer.withdraw.LTV.error": "Ta wypłata może wypchnąć Twój LTV powyżej {{threshold}}%, natychmiast wyzwalając automatyczną konwersję.",
   "transfer.withdraw.requested": "Wypłata zażądana",
   "transfer.withdraw.completed": "Wypłata zakończona",

@@ -706,7 +706,7 @@
   "transfer.withdraw.crossChain.warning": "クロスチェーンリバランスが必要な出金は、処理が完了するまでキャンセルしたり、追加の出金を行ったりすることはできません。",
   "transfer.withdraw.crossChain.vaultWarning": "出金額が{{networkName}}のボールト残高（{{chainVaultBalance}} USDC）を超えています。{{networkName}}への出金にはクロスチェーンリバランス手数料がかかります。",
   "transfer.withdraw.vaultWarning": "{{chainName}} 上の {{tokenName}} の残高は {{balance}} で、出金要求を満たすには不十分です。後でもう一度お試しいただくか、別のチェーンに切り替えて出金してください。",
-  "transfer.withdraw.minAmount.error": "数量は{{minAmount}}より大きい必要があります",
+  "transfer.withdraw.minAmount.error": "{{minAmount}} {{currency}}未満は出金できません。金額を調整してください。",
   "transfer.withdraw.LTV.error": "この出金により、LTVが{{threshold}}%を超える可能性があり、自動変換が即座にトリガーされます。",
   "transfer.withdraw.requested": "出金リクエスト済み",
   "transfer.withdraw.completed": "出金完了",

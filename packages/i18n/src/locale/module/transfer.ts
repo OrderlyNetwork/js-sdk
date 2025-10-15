@@ -44,7 +44,8 @@ export const transfer = {
   "transfer.withdraw.vaultWarning":
     "The balance of {{tokenName}} on the {{chainName}} is {{balance}}, which is insufficient to meet your withdrawal request. Please try again later or switch to another chain for withdrawal.",
 
-  "transfer.withdraw.minAmount.error": "quantity must large than {{minAmount}}",
+  "transfer.withdraw.minAmount.error":
+    "You can't withdraw less than {{minAmount}} {{currency}}. Please adjust your amount.",
   "transfer.withdraw.LTV.error":
     "This withdrawal may push your LTV over {{threshold}}%, immediately triggering an auto-convert.",
 

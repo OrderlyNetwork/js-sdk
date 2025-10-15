@@ -706,7 +706,7 @@
   "transfer.withdraw.crossChain.warning": "Opnames die cross-chain herbalancering vereisen kunnen niet worden geannuleerd of opgevolgd met meer opnames totdat ze zijn verwerkt.",
   "transfer.withdraw.crossChain.vaultWarning": "Opname overschrijdt het saldo van de {{networkName}} kluis ( {{chainVaultBalance}} USDC ). Cross-chain herbalanceringskosten worden in rekening gebracht voor opname naar {{networkName}}.",
   "transfer.withdraw.vaultWarning": "Het saldo van {{tokenName}} op {{chainName}} is {{balance}}, wat onvoldoende is om aan je opnameverzoek te voldoen. Probeer het later opnieuw of schakel over naar een andere chain voor de opname.",
-  "transfer.withdraw.minAmount.error": "hoeveelheid moet groter zijn dan {{minAmount}}",
+  "transfer.withdraw.minAmount.error": "Je kunt niet minder dan {{minAmount}} {{currency}} opnemen. Pas het bedrag aan.",
   "transfer.withdraw.LTV.error": "Deze opname kan uw LTV boven {{threshold}}% duwen, wat onmiddellijk een automatische conversie activeert.",
   "transfer.withdraw.requested": "Opname aangevraagd",
   "transfer.withdraw.completed": "Opname voltooid",

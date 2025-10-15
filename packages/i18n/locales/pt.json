@@ -706,7 +706,7 @@
   "transfer.withdraw.crossChain.warning": "Saques que requerem rebalanceamento entre redes não podem ser cancelados ou seguidos de mais saques até que tenham sido processados.",
   "transfer.withdraw.crossChain.vaultWarning": "O saque excede o saldo do cofre {{networkName}} ( {{chainVaultBalance}} USDC ). Taxa de rebalanceamento entre redes será cobrada para saque para {{networkName}}.",
   "transfer.withdraw.vaultWarning": "O saldo de {{tokenName}} na {{chainName}} é {{balance}}, o que é insuficiente para atender ao seu pedido de retirada. Tente novamente mais tarde ou mude para outra chain para retirar.",
-  "transfer.withdraw.minAmount.error": "quantidade deve ser maior que {{minAmount}}",
+  "transfer.withdraw.minAmount.error": "Você não pode sacar menos de {{minAmount}} {{currency}}. Ajuste o valor.",
   "transfer.withdraw.LTV.error": "Este saque pode empurrar seu LTV acima de {{threshold}}%, acionando imediatamente uma conversão automática.",
   "transfer.withdraw.requested": "Saque solicitado",
   "transfer.withdraw.completed": "Saque concluído",
