@@ -15,9 +15,11 @@ async function mergeJson(inputDir, outputDir) {
   jsonFiles.sort((a, b) => (b.startsWith(LocaleEnum.en) ? 1 : -1));
   let baseJson = {};
 
+  const extendDir = path.resolve(inputDir, "extend");
+
   for (const [index, file] of jsonFiles.entries()) {
     const defaultJsonPath = path.resolve(inputDir, file);
-    const extendJsonPath = path.resolve(inputDir, "extend", file);
+    const extendJsonPath = path.resolve(extendDir, file);
 
     // Read default JSON file
     const defaultJson = await fs.readJSON(defaultJsonPath, {
@@ -55,6 +57,9 @@ async function mergeJson(inputDir, outputDir) {
 
     console.log("mergeJson success =>", outputPath);
   }
+
+  await fs.remove(extendDir);
+  console.log("remove extendDir =>", extendDir);
 }
 
 module.exports = {

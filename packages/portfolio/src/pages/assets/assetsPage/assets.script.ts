@@ -7,7 +7,8 @@ import {
   useTokensInfo,
 } from "@orderly.network/hooks";
 import { account } from "@orderly.network/perp";
-import { EMPTY_LIST } from "@orderly.network/types";
+import { useCanTrade, useDataTap } from "@orderly.network/react-app";
+import { AccountStatusEnum, EMPTY_LIST } from "@orderly.network/types";
 import { modal } from "@orderly.network/ui";
 import {
   DepositAndWithdrawWithDialogId,
@@ -159,9 +160,19 @@ export const useAssetsScript = () => {
     openDepositAndWithdraw("withdraw");
   }, []);
 
+  // Use enhanced filtered data with calculated children
+  const dataSource = useDataTap(enhancedFiltered, {
+    accountStatus:
+      state.status === AccountStatusEnum.EnableTradingWithoutConnected
+        ? AccountStatusEnum.EnableTradingWithoutConnected
+        : AccountStatusEnum.EnableTrading,
+  });
+
+  const canTrade = useCanTrade();
+
   return {
     columns: assetsColumns,
-    dataSource: enhancedFiltered, // Use enhanced filtered data with calculated children
+    dataSource,
     visible: visible as boolean,
     onToggleVisibility: toggleVisible,
     selectedAccount,
@@ -173,6 +184,7 @@ export const useAssetsScript = () => {
     onWithdraw,
     holding,
     assetsOptions: assetsOptions ?? EMPTY_LIST,
+    canTrade,
   };
 };
 

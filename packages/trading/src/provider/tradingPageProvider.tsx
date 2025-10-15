@@ -9,6 +9,7 @@ export const TradingPageProvider: FC<PropsWithChildren<TradingPageProps>> = (
 ) => {
   const { symbol, children } = props;
   const symbolInfo = useSymbolsInfo()[symbol];
+  
   const memoizedValue = useMemo<TradingPageState>(() => {
     const basicSymbol = getBasicSymbolInfo(symbolInfo);
     return {

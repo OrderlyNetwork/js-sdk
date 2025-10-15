@@ -1,21 +1,10 @@
-import { RefferalAPI as API, useAccount } from "@orderly.network/hooks";
-import { TabTypes, useReferralContext } from "../../../hooks";
-import { MockData } from "../../../utils/mockData";
-import { AccountStatusEnum } from "@orderly.network/types";
+import { useAppContext } from "@orderly.network/react-app";
 import { useScreen } from "@orderly.network/ui";
+import { TabTypes, useReferralContext } from "../../../provider";
 
-export type AsAnAffiliateReturns = {
-  isAffiliate: boolean;
-  isLoading: boolean;
-  referralInfo?: API.ReferralInfo;
-  onEnterAffiliatePage?: (params?: any) => void;
-  becomeAnAffiliate?: () => void;
-  isSignIn: boolean;
-  wrongNetwork: boolean;
-  isMobile: boolean;
-};
+export type AsAnAffiliateReturns = ReturnType<typeof useAsAnAffiliateScript>;
 
-export const useAsAnAffiliateScript = (): AsAnAffiliateReturns => {
+export const useAsAnAffiliateScript = () => {
   const {
     isAffiliate,
     isLoading,
@@ -23,16 +12,9 @@ export const useAsAnAffiliateScript = (): AsAnAffiliateReturns => {
     becomeAnAffiliateUrl,
     setShowHome,
     setTab,
-    wrongNetwork,
-    disabledConnect,
   } = useReferralContext();
 
-  const { state } = useAccount();
-
-  const isSignIn =
-    !disabledConnect &&
-    (state.status === AccountStatusEnum.EnableTrading ||
-      state.status === AccountStatusEnum.EnableTradingWithoutConnected);
+  const { wrongNetwork } = useAppContext();
 
   const becomeAnAffiliate = () => {
     window.open(becomeAnAffiliateUrl, "_blank");
@@ -46,13 +28,9 @@ export const useAsAnAffiliateScript = (): AsAnAffiliateReturns => {
   const { isMobile } = useScreen();
 
   return {
-    isSignIn,
     isAffiliate,
     isLoading,
     referralInfo,
-    // isAffiliate: true,
-    // isLoading: false,
-    // referralInfo: MockData.referralInfo,
     onEnterAffiliatePage,
     becomeAnAffiliate,
     wrongNetwork,

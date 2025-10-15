@@ -101,17 +101,17 @@ export const useApiManagerScript = (props?: {
         setShowCreatedDialog(true);
       };
 
-      const generateKeyRes = await generateOrderlyKey(scope);
-
+      const res = await generateOrderlyKey(scope);
+      /// add ed25519: prefix to the key
+      const generateKeyRes = {
+        ...res,
+        key: `ed25519:${res.key}`,
+      };
       toast.success(t("portfolio.apiKey.created"));
-      console.log("xxx generateKeyRes", generateKeyRes);
 
       if ((ipRestriction?.length || 0) > 0) {
-        const key = generateKeyRes.key.startsWith("ed25519:")
-          ? generateKeyRes.key
-          : `ed25519:${generateKeyRes.key}`;
+        const key = generateKeyRes.key;
         const res = await setIPRestriction(key, ipRestriction!);
-        console.log("set ip res", res);
         if (res.success) {
           createdSuccess(
             generateKeyRes,
@@ -188,9 +188,6 @@ export const useApiManagerScript = (props?: {
   const onCopyAccountId = () =>
     toast.success(t("portfolio.apiKey.accountId.copied"));
   const onCopyApiKey = (key?: string) => {
-    if (typeof key !== "undefined") {
-      navigator.clipboard.writeText(key.replace("ed25519:", ""));
-    }
     toast.success(t("portfolio.apiKey.column.apiKey.copy"));
   };
   const onCopyApiSecretKey = () =>

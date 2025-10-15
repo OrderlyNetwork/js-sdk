@@ -17,9 +17,8 @@ import {
   TabPanel,
   ArrowDownShortIcon,
   Button,
-  DataTableClassNames,
 } from "@orderly.network/ui";
-import { AuthGuardDataTable } from "@orderly.network/ui-connector";
+import { AuthGuard, AuthGuardDataTable } from "@orderly.network/ui-connector";
 import type { SelectOption } from "@orderly.network/ui/src/select/withOptions";
 import type { useAssetsScriptReturn } from "./assets.script";
 import type {
@@ -224,11 +223,28 @@ export const AssetsDataTable: React.FC<
     | "selectedAsset"
     | "assetsOptions"
     | "state"
+    | "canTrade"
   > &
     AssetsDataTableWidgetProps
 > = (props) => {
   const { columns, dataSource, dataTableClassNames, classNames } = props;
   const { root, scrollRoot, desc } = classNames ?? {};
+
+  if (!props.canTrade) {
+    // show auth button when not can trade
+    return (
+      <AuthGuardDataTable
+        classNames={{
+          root: "oui-rounded-xl oui-font-semibold",
+          scroll: "oui-h-[252px]",
+        }}
+        loading={props.canTrade}
+        columns={[]}
+        dataSource={[]}
+      />
+    );
+  }
+
   return (
     <Flex width="100%" height="100%" direction={"column"} className={root}>
       <DataFilterSection
@@ -244,7 +260,7 @@ export const AssetsDataTable: React.FC<
           props,
         )}
       />
-      {dataSource.map((item, index) => {
+      {dataSource?.map((item, index) => {
         return (
           <Flex
             key={`item-${index}`}
@@ -266,8 +282,8 @@ export const AssetsDataTable: React.FC<
               bordered
               className="oui-font-semibold"
               classNames={{
-                root: "oui-bg-transparent",
-                scroll: "oui-min-h-0",
+                // root: "oui-bg-transparent",
+                // scroll: "oui-min-h-0",
                 ...dataTableClassNames,
               }}
               columns={columns}
@@ -319,6 +335,7 @@ export const AssetsTable: React.FC<AssetsWidgetProps> = (props) => {
                 "selectedAsset",
                 "assetsOptions",
                 "state",
+                "canTrade",
               ],
               props,
             )}

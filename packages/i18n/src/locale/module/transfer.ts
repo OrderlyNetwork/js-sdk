@@ -20,9 +20,10 @@ export const transfer = {
   "transfer.deposit.failed.fee":
     "Fee data is currently unavailable. Please try again later.",
 
+  "transfer.deposit.estGasFee": "Est. gas fee",
   "transfer.deposit.destinationGasFee": "Destination gas fee",
   "transfer.deposit.destinationGasFee.description":
-    "Additional gas tokens are required to cover operations on the destination chain.",
+    "Additional gas tokens are required to cover operations on the destination chain. The amount shown is an estimate - please prepare extra to ensure sufficient coverage.",
 
   "transfer.withdraw.unsupported.chain":
     "Withdrawals are not supported on this chain. Please switch to any of the bridgeless networks.",

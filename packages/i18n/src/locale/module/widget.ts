@@ -93,4 +93,7 @@ export const widget = {
   "funding.paymentType.received": "Received",
 
   "leftNav.feedback": "Share your feedback",
+
+  "dmm.maker": "Maker",
+  "dmm.taker": "Taker",
 };

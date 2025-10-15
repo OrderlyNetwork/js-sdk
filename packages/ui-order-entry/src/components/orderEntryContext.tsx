@@ -1,7 +1,13 @@
-import { createContext, FocusEventHandler, useContext } from "react";
+import {
+  createContext,
+  FocusEventHandler,
+  useContext,
+  RefObject,
+  MutableRefObject,
+} from "react";
 import { OrderValidationResult } from "@orderly.network/hooks";
 import { API, OrderlyOrder } from "@orderly.network/types";
-import { InputType } from "../types";
+import { InputType, QuantityInputType } from "../types";
 
 export type OrderEntryContextState = {
   errors: OrderValidationResult | null;
@@ -17,10 +23,12 @@ export type OrderEntryContextState = {
   setOrderValues: (values: Partial<OrderlyOrder>) => void;
   currentFocusInput: InputType;
   // refs
-  priceInputRef: React.RefObject<HTMLInputElement>;
-  priceInputContainerRef: React.RefObject<HTMLDivElement>;
-  triggerPriceInputRef: React.RefObject<HTMLInputElement>;
-  activatedPriceInputRef: React.RefObject<HTMLInputElement>;
+  priceInputRef: RefObject<HTMLInputElement>;
+  priceInputContainerRef: RefObject<HTMLDivElement>;
+  triggerPriceInputRef: RefObject<HTMLInputElement>;
+  activatedPriceInputRef: RefObject<HTMLInputElement>;
+  lastQuantityInputType: MutableRefObject<InputType>;
+  leverage?: number;
 };
 
 export const OrderEntryContext = createContext<OrderEntryContextState>(

@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import {
   Button,
   cn,
@@ -9,14 +10,13 @@ import {
   TabsTrigger,
   Text,
 } from "@orderly.network/ui";
-import { TabReturns } from "./tab.script";
 import { AffiliateIcon } from "../../../components/affiliateIcon";
 import { TraderIcon } from "../../../components/traderIcon";
+import { TabTypes } from "../../../provider";
 import { AffiliatePage } from "../../affiliate";
-import { TraderPage } from "../../trader";
 import { HomePage } from "../../home";
-import { TabTypes } from "../../../hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import { TraderPage } from "../../trader";
+import { TabReturns } from "./tab.script";
 
 export const Tab: FC<
   TabReturns & {
@@ -108,7 +108,7 @@ export const Tab: FC<
           "oui-text-base md:oui-text-lg",
           "oui-rounded-xl oui-bg-base-9",
           "oui-border oui-border-line-6",
-          props.isAffiliate && props.isTrader && "oui-justify-center"
+          props.isAffiliate && props.isTrader && "oui-justify-center",
         )}
       >
         {props.isAffiliate && (

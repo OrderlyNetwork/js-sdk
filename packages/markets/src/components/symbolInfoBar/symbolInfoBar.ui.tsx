@@ -1,9 +1,10 @@
 import { FC, ReactNode } from "react";
-import { Flex, Text, cn, Divider, Badge } from "@orderly.network/ui";
-import { UseSymbolInfoBarScriptReturn } from "./symbolInfoBar.script";
-import { TriangleDownIcon } from "../../icons";
+import { Flex, Text, cn, Divider, Badge, TokenIcon } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
+import { TriangleDownIcon } from "../../icons";
 import { MarketsProviderProps } from "../marketsProvider";
+import { RwaTooltip } from "../symbolInfoBarFull/rwaTooltip";
+import { UseSymbolInfoBarScriptReturn } from "./symbolInfoBar.script";
 
 export type Layout = "left" | "right";
 
@@ -15,17 +16,28 @@ export type SymbolInfoBarProps = Pick<MarketsProviderProps, "onSymbolChange"> &
   };
 
 export const SymbolInfoBar: FC<SymbolInfoBarProps> = (props) => {
-  const { symbol, data, leverage, onSymbol } = props;
+  const {
+    symbol,
+    data,
+    leverage,
+    onSymbol,
+    isRwa,
+    open,
+    closeTimeInterval,
+    openTimeInterval,
+  } = props;
 
   const symbolView = (
-    <Flex className="oui-cursor-pointer oui-gap-x-[6px]" onClick={onSymbol}>
+    <Flex
+      className="oui-cursor-pointer oui-gap-x-[6px] oui-h-5"
+      onClick={onSymbol}
+    >
       <Text.formatted
         className="oui-break-normal oui-whitespace-nowrap"
         rule="symbol"
         formatString="base-type"
         size="sm"
         weight="semibold"
-        showIcon
       >
         {symbol}
       </Text.formatted>
@@ -38,18 +50,24 @@ export const SymbolInfoBar: FC<SymbolInfoBarProps> = (props) => {
       className={cn(
         "oui-symbol-info-bar-mobile",
         "oui-font-semibold oui-h-full",
-        props.className
+        props.className,
       )}
     >
       <Flex gapX={3} className="oui-flex-1 oui-overflow-hidden oui-h-full">
         <Flex gapX={3}>
-          {symbolView}
-          <Badge size="xs" color="primary">
-            {leverage}x
-          </Badge>
+          <TokenIcon symbol={symbol} size="xs" />
+          <Flex direction="column" itemAlign="start">
+            {symbolView}
+            <Flex gap={1}>
+              <Badge size="xs" color="primary">
+                {leverage}x
+              </Badge>
+              <RwaTooltip isRwa={isRwa} open={open} closeTimeInterval={closeTimeInterval} openTimeInterval={openTimeInterval} />
+            </Flex>
+          </Flex>
         </Flex>
 
-        <Divider className="oui-h-6" direction="vertical" intensity={8} />
+        <Divider className="oui-h-[38px]" direction="vertical" intensity={8} />
         <Text.numeral
           size="2xs"
           rule="percentages"

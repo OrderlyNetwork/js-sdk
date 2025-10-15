@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   DndContext,
   closestCenter,
@@ -20,7 +20,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS, Transform } from "@dnd-kit/utilities";
-import { useLocalStorage } from "@orderly.network/hooks";
+import { useGetRwaSymbolOpenStatus, useLocalStorage } from "@orderly.network/hooks";
 import {
   SideMarketsWidget,
   SymbolInfoBarFullWidget,
@@ -36,6 +36,7 @@ import { TradingviewWidget } from "@orderly.network/ui-tradingview";
 import { DepositStatusWidget } from "@orderly.network/ui-transfer";
 import { SortablePanel } from "../../components/desktop/layout/sortablePanel";
 import { SplitLayout } from "../../components/desktop/layout/splitLayout";
+import { useShowRwaCountdown } from "../../hooks/useShowRwaCountdown";
 import {
   dataListInitialHeight,
   getOffsetSizeNum,
@@ -46,7 +47,6 @@ import {
   topBarHeight,
   bottomBarHeight,
   space,
-  symbolInfoBarHeight,
   orderEntryMinWidth,
   orderEntryMaxWidth,
   orderbookMinWidth,
@@ -57,6 +57,7 @@ import {
   tradingViewMinWidth,
   dataListMaxHeight,
 } from "./trading.script";
+import { showRwaOutsideMarketHoursNotify } from "../../components/desktop/notify/rwaNotification";
 
 const LazyRiskRateWidget = React.lazy(() =>
   import("../../components/desktop/riskRate").then((mod) => {
@@ -149,6 +150,19 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
     tradindviewMaxHeight,
     dataListMinHeight,
   } = props;
+
+  const { showCountdown, closeCountdown } = useShowRwaCountdown(props.symbol);
+  const symbolInfoBarHeight = useMemo(() => {
+    return showCountdown ? 104 : 56;
+  }, [showCountdown]);
+
+  const { isRwa, open } = useGetRwaSymbolOpenStatus(props.symbol);
+
+  useEffect(() => {
+    if (isRwa && !open) {
+      showRwaOutsideMarketHoursNotify();
+    }
+  }, [isRwa, open, props.symbol]);
 
   const [tradingViewFullScreen] = useLocalStorage(
     TradingviewFullscreenKey,
@@ -345,6 +359,8 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
       <SymbolInfoBarFullWidget
         symbol={props.symbol}
         onSymbolChange={props.onSymbolChange}
+        closeCountdown={closeCountdown}
+        showCountdown={showCountdown}
         trailing={
           <React.Suspense fallback={null}>
             <LazySwitchLayout

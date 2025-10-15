@@ -265,7 +265,7 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     !props.customChains && props.enableSwapDeposit
       ? "https://fi-api.woo.org/swap_support"
       : null,
-    fetcher,
+    (url) => fetch(url).then((res) => res.json()),
     commonSwrOpts,
   );
 

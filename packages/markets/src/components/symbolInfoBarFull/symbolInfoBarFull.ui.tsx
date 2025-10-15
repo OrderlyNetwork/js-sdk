@@ -1,7 +1,16 @@
 import React, { ReactNode } from "react";
 import { useFundingRate } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { TokenIcon, Flex, Text, cn, Divider } from "@orderly.network/ui";
+import {
+  TokenIcon,
+  Flex,
+  Text,
+  cn,
+  Divider,
+  NewsFillIcon,
+  Box,
+} from "@orderly.network/ui";
+import { CloseIcon } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import {
   ArrowLeftIcon,
@@ -10,6 +19,7 @@ import {
   UnFavoritesIcon2,
 } from "../../icons";
 import type { MarketsProviderProps } from "../marketsProvider";
+import { RwaTooltip } from "./rwaTooltip";
 import type { UseSymbolInfoBarFullScriptReturn } from "./symbolInfoBarFull.script";
 
 const LazyDropDownMarketsWidget = React.lazy(() =>
@@ -39,6 +49,8 @@ export type SymbolInfoBarFullProps = Pick<
   UseSymbolInfoBarFullScriptReturn & {
     className?: string;
     trailing?: ReactNode;
+    closeCountdown?: () => void;
+    showCountdown?: boolean;
   };
 
 export const SymbolInfoBarFull: React.FC<SymbolInfoBarFullProps> = (props) => {
@@ -58,6 +70,12 @@ export const SymbolInfoBarFull: React.FC<SymbolInfoBarFullProps> = (props) => {
     fundingPeriod,
     capFunding,
     floorFunding,
+    isRwa,
+    open,
+    closeTimeInterval,
+    openTimeInterval,
+    closeCountdown,
+    showCountdown,
   } = props;
 
   const { t } = useTranslation();
@@ -84,26 +102,40 @@ export const SymbolInfoBarFull: React.FC<SymbolInfoBarFullProps> = (props) => {
 
   const symbolView = (
     <React.Suspense fallback={null}>
-      <LazyDropDownMarketsWidget
-        contentClassName="oui-w-[429px] oui-h-[496px]"
-        symbol={props.symbol}
-        onSymbolChange={props.onSymbolChange}
+      <Flex
+        direction="column"
+        itemAlign="start"
+        className="oui-gap-y-[2px] oui-shrink-0"
       >
-        <Flex gapX={1} className="oui-cursor-pointer">
-          <TokenIcon symbol={symbol} className="oui-size-4" />
-          <Text.formatted
-            className="oui-whitespace-nowrap oui-break-normal"
-            rule="symbol"
-            formatString="base-type"
-            size="xs"
-            weight="semibold"
-            intensity={98}
-          >
-            {symbol}
-          </Text.formatted>
-          <TriangleDownIcon className="oui-text-base-contrast-54" />
-        </Flex>
-      </LazyDropDownMarketsWidget>
+        <LazyDropDownMarketsWidget
+          contentClassName="oui-w-[429px] oui-h-[496px]"
+          symbol={props.symbol}
+          onSymbolChange={props.onSymbolChange}
+        >
+          <Flex gapX={1} className="oui-cursor-pointer">
+            <TokenIcon symbol={symbol} className="oui-size-4" />
+            <Text.formatted
+              className="oui-whitespace-nowrap oui-break-normal"
+              rule="symbol"
+              formatString="base-type"
+              size="xs"
+              weight="semibold"
+              intensity={98}
+            >
+              {symbol}
+            </Text.formatted>
+            <TriangleDownIcon className="oui-text-base-contrast-54" />
+          </Flex>
+        </LazyDropDownMarketsWidget>
+        {isRwa && (
+          <RwaTooltip
+            isRwa={isRwa}
+            open={open}
+            closeTimeInterval={closeTimeInterval}
+            openTimeInterval={openTimeInterval}
+          />
+        )}
+      </Flex>
     </React.Suspense>
   );
 
@@ -137,139 +169,162 @@ export const SymbolInfoBarFull: React.FC<SymbolInfoBarFullProps> = (props) => {
   );
 
   return (
-    <Flex
-      className={cn(
-        "oui-symbol-info-bar-desktop",
-        "oui-h-[54px] oui-font-semibold",
-        props.className,
-      )}
-      // fix Safari text opacity transition bug
-      style={{
-        transform: "translateZ(0)",
-        willChange: "transform",
-      }}
-    >
-      <Flex gapX={6} className="oui-h-full oui-flex-1 oui-overflow-hidden">
-        <Flex gapX={1}>
-          {favoriteIcon}
-          {symbolView}
-        </Flex>
-        <Divider className="oui-h-[26px]" direction="vertical" intensity={8} />
-        {price}
-        <div className="oui-relative oui-h-full oui-overflow-hidden">
-          <div
-            ref={containerRef}
-            className="oui-hide-scrollbar oui-h-full oui-overflow-x-auto"
-          >
-            <Flex gapX={8} height="100%">
-              <div ref={leadingElementRef}>
+    <Flex direction="column" className="oui-h-full oui-w-full">
+      <Flex
+        className={cn(
+          "oui-symbol-info-bar-desktop",
+          "oui-font-semibold",
+          "oui-flex-1 oui-w-full",
+          props.className,
+        )}
+        // fix Safari text opacity transition bug
+        style={{
+          transform: "translateZ(0)",
+          willChange: "transform",
+        }}
+      >
+        <Flex gapX={6} className="oui-h-full oui-flex-1 oui-overflow-hidden">
+          <Flex gapX={1}>
+            {favoriteIcon}
+            {symbolView}
+          </Flex>
+          <Divider
+            className="oui-h-[26px]"
+            direction="vertical"
+            intensity={8}
+          />
+          {price}
+          <div className="oui-relative oui-h-full oui-overflow-hidden">
+            <div
+              ref={containerRef}
+              className="oui-hide-scrollbar oui-h-full oui-overflow-x-auto"
+            >
+              <Flex gapX={8} height="100%">
+                <div ref={leadingElementRef}>
+                  <React.Suspense fallback={null}>
+                    <LazyDataItem
+                      label={t("markets.column.24hChange")}
+                      value={change}
+                    />
+                  </React.Suspense>
+                </div>
                 <React.Suspense fallback={null}>
                   <LazyDataItem
-                    label={t("markets.column.24hChange")}
-                    value={change}
-                  />
-                </React.Suspense>
-              </div>
-              <React.Suspense fallback={null}>
-                <LazyDataItem
-                  label={t("markets.symbolInfoBar.Mark")}
-                  value={
-                    <Text.numeral
-                      dp={quotoDp}
-                      data-testid="oui-testid-tokenInfo-markPrice-value"
-                    >
-                      {data?.["mark_price"]}
-                    </Text.numeral>
-                  }
-                  hint={t("markets.symbolInfoBar.Mark.tooltip")}
-                />
-              </React.Suspense>
-              <React.Suspense fallback={null}>
-                <LazyDataItem
-                  label={t("markets.symbolInfoBar.Index")}
-                  value={
-                    <Text.numeral dp={quotoDp}>
-                      {data?.["index_price"]}
-                    </Text.numeral>
-                  }
-                  hint={t("markets.symbolInfoBar.Index.tooltip")}
-                />
-              </React.Suspense>
-              <React.Suspense fallback={null}>
-                <LazyDataItem
-                  label={t("markets.symbolInfoBar.24hVolume")}
-                  value={
-                    <Text.numeral rule="human" dp={2}>
-                      {data?.["24h_amount"]}
-                    </Text.numeral>
-                  }
-                  hint={t("markets.symbolInfoBar.24hVolume.tooltip")}
-                />
-              </React.Suspense>
-              <React.Suspense fallback={null}>
-                <LazyDataItem
-                  label={t("markets.symbolInfoBar.predFundingRate")}
-                  value={<FundingRate symbol={symbol} />}
-                  hint={
-                    <Flex
-                      width={"100%"}
-                      itemAlign={"center"}
-                      direction="column"
-                      gap={1}
-                    >
-                      <Flex
-                        justify="between"
-                        itemAlign={"center"}
-                        width={"100%"}
-                      >
-                        <Text intensity={54}>
-                          {t("trading.fundingRate.predFundingRate.interval")}
-                        </Text>
-                        <Text intensity={80}>{fundingPeriod}</Text>
-                      </Flex>
-                      <Flex
-                        justify="between"
-                        itemAlign={"center"}
-                        width={"100%"}
-                      >
-                        <Text intensity={54}>
-                          {t("trading.fundingRate.predFundingRate.cap")} /
-                          {t("trading.fundingRate.predFundingRate.floor")}
-                        </Text>
-                        <Text intensity={80}>
-                          {capFunding} / {floorFunding}
-                        </Text>
-                      </Flex>
-                      <Divider className="oui-w-full" intensity={8} />
-                      {t("markets.symbolInfoBar.predFundingRate.tooltip")}
-                    </Flex>
-                  }
-                />
-              </React.Suspense>
-
-              <div ref={tailingElementRef}>
-                <React.Suspense fallback={null}>
-                  <LazyDataItem
-                    label={t("markets.openInterest")}
+                    label={t("markets.symbolInfoBar.Mark")}
                     value={
-                      <>
-                        <Text.numeral rule="human" dp={2}>
-                          {openInterest}
-                        </Text.numeral>
-                        <Text intensity={36}>{` USDC`}</Text>
-                      </>
+                      <Text.numeral
+                        dp={quotoDp}
+                        data-testid="oui-testid-tokenInfo-markPrice-value"
+                      >
+                        {data?.["mark_price"]}
+                      </Text.numeral>
                     }
-                    hint={t("markets.openInterest.tooltip")}
+                    hint={t("markets.symbolInfoBar.Mark.tooltip")}
                   />
                 </React.Suspense>
-              </div>
-            </Flex>
+                <React.Suspense fallback={null}>
+                  <LazyDataItem
+                    label={t("markets.symbolInfoBar.Index")}
+                    value={
+                      <Text.numeral dp={quotoDp}>
+                        {data?.["index_price"]}
+                      </Text.numeral>
+                    }
+                    hint={t("markets.symbolInfoBar.Index.tooltip")}
+                  />
+                </React.Suspense>
+                <React.Suspense fallback={null}>
+                  <LazyDataItem
+                    label={t("markets.symbolInfoBar.24hVolume")}
+                    value={
+                      <Text.numeral rule="human" dp={2}>
+                        {data?.["24h_amount"]}
+                      </Text.numeral>
+                    }
+                    hint={t("markets.symbolInfoBar.24hVolume.tooltip")}
+                  />
+                </React.Suspense>
+                <React.Suspense fallback={null}>
+                  <LazyDataItem
+                    label={t("markets.symbolInfoBar.predFundingRate")}
+                    value={<FundingRate symbol={symbol} />}
+                    hint={
+                      <Flex
+                        width={"100%"}
+                        itemAlign={"center"}
+                        direction="column"
+                        gap={1}
+                      >
+                        <Flex
+                          justify="between"
+                          itemAlign={"center"}
+                          width={"100%"}
+                        >
+                          <Text intensity={54}>
+                            {t("trading.fundingRate.predFundingRate.interval")}
+                          </Text>
+                          <Text intensity={80}>{fundingPeriod}</Text>
+                        </Flex>
+                        <Flex
+                          justify="between"
+                          itemAlign={"center"}
+                          width={"100%"}
+                        >
+                          <Text intensity={54}>
+                            {t("trading.fundingRate.predFundingRate.cap")} /
+                            {t("trading.fundingRate.predFundingRate.floor")}
+                          </Text>
+                          <Text intensity={80}>
+                            {capFunding} / {floorFunding}
+                          </Text>
+                        </Flex>
+                        <Divider className="oui-w-full" intensity={8} />
+                        {t("markets.symbolInfoBar.predFundingRate.tooltip")}
+                      </Flex>
+                    }
+                  />
+                </React.Suspense>
+
+                <div ref={tailingElementRef}>
+                  <React.Suspense fallback={null}>
+                    <LazyDataItem
+                      label={t("markets.openInterest")}
+                      value={
+                        <>
+                          <Text.numeral rule="human" dp={2}>
+                            {openInterest}
+                          </Text.numeral>
+                          <Text intensity={36}>{` USDC`}</Text>
+                        </>
+                      }
+                      hint={t("markets.openInterest.tooltip")}
+                    />
+                  </React.Suspense>
+                </div>
+              </Flex>
+            </div>
+            <ScrollIndicator
+              leading
+              onClick={onScoll}
+              visible={leadingVisible}
+            />
+            <ScrollIndicator
+              tailing
+              onClick={onScoll}
+              visible={tailingVisible}
+            />
           </div>
-          <ScrollIndicator leading onClick={onScoll} visible={leadingVisible} />
-          <ScrollIndicator tailing onClick={onScoll} visible={tailingVisible} />
-        </div>
+        </Flex>
+        {props.trailing}
       </Flex>
-      {props.trailing}
+      {showCountdown && (
+        <RwaCountdown
+          closeCountdown={closeCountdown}
+          isRwa={isRwa}
+          open={open}
+          closeTimeInterval={closeTimeInterval}
+        />
+      )}
     </Flex>
   );
 };
@@ -325,5 +380,67 @@ const FundingRate: React.FC<{ symbol: string }> = ({ symbol }) => {
         {` in ${data.countDown}`}
       </Text>
     </div>
+  );
+};
+
+const RwaCountdown: React.FC<{
+  closeCountdown?: () => void;
+  isRwa: boolean;
+  open: boolean | undefined;
+  closeTimeInterval: number | undefined;
+}> = ({ closeCountdown, isRwa, open, closeTimeInterval }) => {
+  const { t } = useTranslation();
+  if (
+    !isRwa ||
+    closeTimeInterval === undefined ||
+    open === undefined ||
+    closeTimeInterval > 30 * 60
+  ) {
+    return null;
+  }
+  if (!open) {
+    return null;
+  }
+
+  const minutes = closeTimeInterval ? Math.floor(closeTimeInterval / 60) : 0;
+  const minutesStr = minutes.toString().padStart(2, "0");
+  const seconds = closeTimeInterval ? closeTimeInterval % 60 : 0;
+  const secondsStr = seconds.toString().padStart(2, "0");
+
+  return (
+    <Flex
+      itemAlign="center"
+      px={2}
+      r="lg"
+      className="oui-w-full oui-text-warning-darken oui-bg-warning-darken/15 oui-flex-1 oui-my-2 oui-text-sm"
+    >
+      <Flex className="oui-w-full oui-pr-2">
+        <NewsFillIcon className="oui-text-warning-darken" size={16} />
+        <Flex>
+          {t("trading.rwa.countdown.title")}
+          <Flex className="oui-text-base-contrast-54 oui-text-xs oui-font-normal">
+            <Box
+              ml={2}
+              className="oui-bg-base-7 oui-px-1 oui-rounded-md oui-text-base-contrast oui-min-w-[22px] oui-text-center oui-text-xs"
+            >
+              {minutesStr}
+            </Box>
+            {t("common.minuteShort")}
+            {" : "}
+            <Box
+              ml={1}
+              className="oui-bg-base-7 oui-px-1 oui-rounded-md oui-text-base-contrast oui-min-w-[22px] oui-text-center oui-text-xs"
+            >
+              {secondsStr}
+            </Box>
+            {t("common.secondShort")}
+          </Flex>
+        </Flex>
+      </Flex>
+
+      <button className="oui-cursor-pointer" onClick={closeCountdown}>
+        <CloseIcon className="oui-text-base-contrast" size={16} opacity={1} />
+      </button>
+    </Flex>
   );
 };

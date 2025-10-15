@@ -15,6 +15,7 @@ import {
 import { FavoritesIcon } from "../../icons";
 import { MarketsTabName } from "../../type";
 import { MarketsListWidget } from "../marketsList";
+import { RwaTab } from "../rwaTab";
 import { SearchInput } from "../searchInput";
 import { useFavoritesProps } from "../shared/hooks/useFavoritesExtraProps";
 import { useDropDownMarketsColumns } from "./column";
@@ -122,24 +123,23 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
         }}
         className={cls}
       >
-        <TabPanel
-          title={t("markets.favorites")}
-          icon={<FavoritesIcon />}
-          value={MarketsTabName.Favorites}
-        >
+        <TabPanel title={<FavoritesIcon />} value={MarketsTabName.Favorites}>
           {renderTab(MarketsTabName.Favorites)}
-        </TabPanel>
-        <TabPanel title={t("markets.recent")} value={MarketsTabName.Recent}>
-          {renderTab(MarketsTabName.Recent)}
         </TabPanel>
         <TabPanel title={t("common.all")} value={MarketsTabName.All}>
           {renderTab(MarketsTabName.All)}
+        </TabPanel>
+        <TabPanel title={<RwaTab />} value={MarketsTabName.Rwa}>
+          {renderTab(MarketsTabName.Rwa)}
         </TabPanel>
         <TabPanel
           title={t("markets.newListings")}
           value={MarketsTabName.NewListing}
         >
           {renderTab(MarketsTabName.NewListing)}
+        </TabPanel>
+        <TabPanel title={t("markets.recent")} value={MarketsTabName.Recent}>
+          {renderTab(MarketsTabName.Recent)}
         </TabPanel>
       </Tabs>
     </Box>

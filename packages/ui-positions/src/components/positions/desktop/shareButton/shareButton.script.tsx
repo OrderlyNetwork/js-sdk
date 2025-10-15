@@ -50,7 +50,8 @@ export const useShareButtonScript = (props: ShareButtonScriptOptions) => {
       openPrice !== 0 &&
       accountInfo?.max_leverage &&
       baseIMR &&
-      IMR_Factor
+      // IMR_Factor is possible to be 0
+      typeof IMR_Factor !== "undefined"
     ) {
       const notional = positions.notional(quantity, openPrice);
 
