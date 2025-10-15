@@ -50,6 +50,17 @@ export function useSymbolInfoBarFullScript(
     return `${new Decimal(fundingDetails.floor_funding).mul(100).toNumber()}%`;
   }, [fundingDetails, isFundingLoading]);
 
+  const annualizedFundingRate = useMemo(() => {
+    if (!fundingDetails || isFundingLoading || !fundingRate?.est_funding_rate) {
+      return "-";
+    }
+    const periodsPerYear = new Decimal(8760).div(fundingDetails.funding_period);
+    const annualized = new Decimal(fundingRate.est_funding_rate).mul(
+      periodsPerYear,
+    );
+    return `${annualized.toDecimalPlaces(2).toNumber()}%`;
+  }, [fundingDetails, isFundingLoading, fundingRate]);
+
   const info = useSymbolsInfo();
   const quotoDp = info[symbol]("quote_dp");
   const [leadingVisible, setLeadingVisible] = useState(false);
@@ -125,5 +136,6 @@ export function useSymbolInfoBarFullScript(
     fundingPeriod,
     capFunding,
     floorFunding,
+    annualizedFundingRate,
   };
 }

@@ -284,6 +284,7 @@
   "trading.fundingRate.predFundingRate.interval": "Interval",
   "trading.fundingRate.predFundingRate.cap": "Batas pendanaan",
   "trading.fundingRate.predFundingRate.floor": "Batas bawah",
+  "trading.fundingRate.predFundingRate.annualized": "Disetahunkan",
   "chart.now": "Sekarang",
   "positions.positionHistory": "Riwayat posisi",
   "positions.liquidation": "Likuidasi",

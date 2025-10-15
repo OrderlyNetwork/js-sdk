@@ -1,6 +1,13 @@
 import { ReactNode, useMemo } from "react";
 import { useTranslation } from "@kodiak-finance/orderly-i18n";
-import { Text, Column, Box, useScreen, cn, toast } from "@kodiak-finance/orderly-ui";
+import {
+  Text,
+  Column,
+  Box,
+  useScreen,
+  cn,
+  toast,
+} from "@kodiak-finance/orderly-ui";
 import firstBadge from "../../../img/first_badge.png";
 import secondBadge from "../../../img/second_badge.png";
 import thirdBadge from "../../../img/third_badge.png";
@@ -100,7 +107,7 @@ export const useRankingColumns = (
             <>
               <a
                 className="oui-flex oui-items-start oui-gap-1"
-                href={`https://orderly-dashboard.orderly.network/address/${value}?broker_id=woofi_pro`}
+                href={`https://orderly-dashboard.orderly.network/address/${value}?broker_id=kodiak`}
                 target="_blank"
                 rel="noreferrer"
               >

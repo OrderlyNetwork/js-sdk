@@ -62,7 +62,7 @@ export const getOveriides = (
   };
 };
 
-export const EXCHANGE = "Orderly";
+export const EXCHANGE = "Kodiak Perps";
 export const withoutExchangePrefix = (symbol: string) =>
   symbol.includes(":") ? symbol.split(":")[1] : symbol;
 

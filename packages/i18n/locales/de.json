@@ -284,6 +284,7 @@
   "trading.fundingRate.predFundingRate.interval": "Intervall",
   "trading.fundingRate.predFundingRate.cap": "Finanzierungsobergrenze",
   "trading.fundingRate.predFundingRate.floor": "Untergrenze",
+  "trading.fundingRate.predFundingRate.annualized": "Annualisiert",
   "chart.now": "Jetzt",
   "positions.positionHistory": "Positionsverlauf",
   "positions.liquidation": "Liquidation",

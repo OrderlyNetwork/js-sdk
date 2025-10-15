@@ -284,6 +284,7 @@
   "trading.fundingRate.predFundingRate.interval": "Intervalle",
   "trading.fundingRate.predFundingRate.cap": "Plafond de financement",
   "trading.fundingRate.predFundingRate.floor": "Plancher",
+  "trading.fundingRate.predFundingRate.annualized": "Annualisé",
   "chart.now": "Maintenant",
   "positions.positionHistory": "Historique des positions",
   "positions.liquidation": "Liquidation",

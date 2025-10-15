@@ -284,6 +284,7 @@
   "trading.fundingRate.predFundingRate.interval": "間隔",
   "trading.fundingRate.predFundingRate.cap": "ファンディングキャップ",
   "trading.fundingRate.predFundingRate.floor": "フロア",
+  "trading.fundingRate.predFundingRate.annualized": "年間換算",
   "chart.now": "現在",
   "positions.positionHistory": "ポジション履歴",
   "positions.liquidation": "清算",
