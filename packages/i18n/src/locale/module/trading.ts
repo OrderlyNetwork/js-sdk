@@ -77,6 +77,7 @@ export const trading = {
   "trading.fundingRate.predFundingRate.interval": "Interval",
   "trading.fundingRate.predFundingRate.cap": "Funding cap",
   "trading.fundingRate.predFundingRate.floor": "floor",
+  "trading.fundingRate.predFundingRate.annualized": "Annualized",
 };
 
 export type Trading = typeof trading;

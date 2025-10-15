@@ -284,6 +284,7 @@
   "trading.fundingRate.predFundingRate.interval": "Intervalo",
   "trading.fundingRate.predFundingRate.cap": "Límite de financiamiento",
   "trading.fundingRate.predFundingRate.floor": "Piso",
+  "trading.fundingRate.predFundingRate.annualized": "Annualized",
   "chart.now": "Ahora",
   "positions.positionHistory": "Historial de posiciones",
   "positions.liquidation": "Liquidación",

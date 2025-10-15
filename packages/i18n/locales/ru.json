@@ -284,6 +284,7 @@
   "trading.fundingRate.predFundingRate.interval": "Интервал",
   "trading.fundingRate.predFundingRate.cap": "Лимит финансирования",
   "trading.fundingRate.predFundingRate.floor": "Минимум",
+  "trading.fundingRate.predFundingRate.annualized": "Annualized",
   "chart.now": "Сейчас",
   "positions.positionHistory": "История позиций",
   "positions.liquidation": "Ликвидация",

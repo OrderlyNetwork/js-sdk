@@ -284,6 +284,7 @@
   "trading.fundingRate.predFundingRate.interval": "간격",
   "trading.fundingRate.predFundingRate.cap": "펀딩 상한",
   "trading.fundingRate.predFundingRate.floor": "하한",
+  "trading.fundingRate.predFundingRate.annualized": "Annualized",
   "chart.now": "지금",
   "positions.positionHistory": "포지션 내역",
   "positions.liquidation": "청산",

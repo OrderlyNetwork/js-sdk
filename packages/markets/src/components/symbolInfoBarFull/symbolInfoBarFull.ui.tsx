@@ -58,6 +58,7 @@ export const SymbolInfoBarFull: React.FC<SymbolInfoBarFullProps> = (props) => {
     fundingPeriod,
     capFunding,
     floorFunding,
+    annualizedFundingRate,
   } = props;
 
   const { t } = useTranslation();
@@ -239,6 +240,16 @@ export const SymbolInfoBarFull: React.FC<SymbolInfoBarFullProps> = (props) => {
                         <Text intensity={80}>
                           {capFunding} / {floorFunding}
                         </Text>
+                      </Flex>
+                      <Flex
+                        justify="between"
+                        itemAlign={"center"}
+                        width={"100%"}
+                      >
+                        <Text intensity={54}>
+                          {t("trading.fundingRate.predFundingRate.annualized")}
+                        </Text>
+                        <Text intensity={80}>{annualizedFundingRate}</Text>
                       </Flex>
                       <Divider className="oui-w-full" intensity={8} />
                       {t("markets.symbolInfoBar.predFundingRate.tooltip")}

@@ -284,6 +284,7 @@
   "trading.fundingRate.predFundingRate.interval": "Interval",
   "trading.fundingRate.predFundingRate.cap": "Financieringsplafond",
   "trading.fundingRate.predFundingRate.floor": "Bodem",
+  "trading.fundingRate.predFundingRate.annualized": "Annualized",
   "chart.now": "Nu",
   "positions.positionHistory": "Positiegeschiedenis",
   "positions.liquidation": "Liquidatie",
