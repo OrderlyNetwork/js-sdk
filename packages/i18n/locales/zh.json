@@ -284,7 +284,7 @@
   "trading.fundingRate.predFundingRate.interval": "间隔",
   "trading.fundingRate.predFundingRate.cap": "资金费率上限",
   "trading.fundingRate.predFundingRate.floor": "下限",
-  "trading.fundingRate.predFundingRate.annualized": "Annualized",
+  "trading.fundingRate.predFundingRate.annualized": "化",
   "chart.now": "现在",
   "positions.positionHistory": "持仓历史",
   "positions.liquidation": "清算",

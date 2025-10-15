@@ -284,7 +284,7 @@
   "trading.fundingRate.predFundingRate.interval": "Aralık",
   "trading.fundingRate.predFundingRate.cap": "Fonlama üst sınırı",
   "trading.fundingRate.predFundingRate.floor": "Alt sınır",
-  "trading.fundingRate.predFundingRate.annualized": "Annualized",
+  "trading.fundingRate.predFundingRate.annualized": "Yıllıklandırılmış",
   "chart.now": "Şimdi",
   "positions.positionHistory": "Pozisyon geçmişi",
   "positions.liquidation": "Likidasyon",
