@@ -23,12 +23,27 @@ jobs:
         with:
           version: 9.0.6
 
-      - name: Setup Node.js
+      - name: Setup Node.js (auth for @kodiak-finance)
         uses: actions/setup-node@v4
         with:
           node-version: '18'
           registry-url: 'https://registry.npmjs.org'
+          scope: '@kodiak-finance'
+          always-auth: true          
           cache: 'pnpm'
+
+      - name: Configure npm auth for pnpm
+        run: |
+          cat <<'RC' > ~/.npmrc
+          @kodiak-finance:registry=https://registry.npmjs.org/
+          always-auth=true
+          //registry.npmjs.org/:_authToken=${NPM_TOKEN}
+          RC
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Sanity check auth
+        run: npm whoami
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -39,8 +54,8 @@ jobs:
       - name: Create Release Pull Request or Publish to npm
         uses: changesets/action@v1
         with:
-          publish: pnpm changeset publish
           version: pnpm changeset version
+          publish: pnpm changeset publish
           commit: 'chore: version packages'
           title: 'chore: version packages'
         env:
