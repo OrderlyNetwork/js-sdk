@@ -4,6 +4,6 @@ const path = require("path");
 module.exports = {
     content: ["./src/**/*.{ts,js,tsx,jsx,mdx}",
     ],
-    presets: [require(path.resolve(__dirname, "../../packages/ui/tailwind.config.js"))],
+    presets: [require(path.resolve(__dirname, "../ui/tailwind.config.js"))],
 
 };
