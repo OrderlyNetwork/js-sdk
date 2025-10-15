@@ -2,8 +2,7 @@ name: Publish Packages to npm
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
 
 permissions:
   contents: write
@@ -12,6 +11,11 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    env:
+      # Make token available to ALL steps
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -29,18 +33,16 @@ jobs:
           node-version: '18'
           registry-url: 'https://registry.npmjs.org'
           scope: '@kodiak-finance'
-          always-auth: true          
+          always-auth: true
           cache: 'pnpm'
 
       - name: Configure npm auth for pnpm
         run: |
-          cat <<'RC' > ~/.npmrc
+          cat > ~/.npmrc <<'RC'
           @kodiak-finance:registry=https://registry.npmjs.org/
           always-auth=true
           //registry.npmjs.org/:_authToken=${NPM_TOKEN}
           RC
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Sanity check auth
         run: npm whoami
@@ -60,4 +62,6 @@ jobs:
           title: 'chore: version packages'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # (keep these here too for the subprocess)
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
