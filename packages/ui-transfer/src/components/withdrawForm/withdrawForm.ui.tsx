@@ -156,21 +156,10 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
         <Flex direction="column" mt={1} gapY={1} itemAlign="start">
           <Text size="xs" intensity={36}>
             {t("common.fee")}
-            {withdrawTo === WithdrawTo.Wallet ? (
-              <>
-                {" ≈ "}
-                <Text size="xs" intensity={80}>
-                  {fee}
-                </Text>
-              </>
-            ) : (
-              <>
-                {" = "}
-                <Text size="xs" intensity={80}>
-                  0
-                </Text>
-              </>
-            )}
+            {withdrawTo === WithdrawTo.Wallet ? " ≈ " : " = "}
+            <Text size="xs" intensity={80}>
+              {fee}
+            </Text>
           </Text>
         </Flex>
       </Box>

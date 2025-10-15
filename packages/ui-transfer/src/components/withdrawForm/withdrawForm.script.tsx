@@ -29,11 +29,11 @@ import {
 } from "@orderly.network/utils";
 import { InputStatus, WithdrawTo } from "../../types";
 import { CurrentChain } from "../depositForm/hooks";
-import { useToken } from "../depositForm/hooks/useToken";
 import { useSettlePnl } from "../unsettlePnlInfo/useSettlePnl";
-import { useInternalWithdraw } from "./hooks/useInternalWithdraw";
+import { useWithdrawAccountId } from "./hooks/useWithdrawAccountId";
 import { useWithdrawFee } from "./hooks/useWithdrawFee";
 import { useWithdrawLTV } from "./hooks/useWithdrawLTV";
+import { useWithdrawToken } from "./hooks/useWithdrawToken";
 
 export type WithdrawFormScriptReturn = ReturnType<typeof useWithdrawFormScript>;
 
@@ -71,6 +71,8 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
   const [quantity, setQuantity] = useState<string>("");
   const [inputStatus, setInputStatus] = useState<InputStatus>("default");
   const [hintMessage, setHintMessage] = useState<string>();
+
+  const [withdrawTo, setWithdrawTo] = useState<WithdrawTo>(WithdrawTo.Wallet);
 
   const { wrongNetwork } = useAppContext();
   const { account } = useAccount();
@@ -117,10 +119,10 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     } as CurrentChain;
   }, [findByChainId, connectedChain, linkDeviceStorage]);
 
-  const { sourceToken, onSourceTokenChange, sourceTokens } = useToken(
+  const { sourceToken, onSourceTokenChange, sourceTokens } = useWithdrawToken({
     currentChain,
-    (token) => token.symbol === "USDC" || token.is_collateral,
-  );
+    withdrawTo,
+  });
 
   const tokenChains = useMemo(() => {
     return chains
@@ -153,7 +155,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     decimals: sourceToken?.token_decimal,
   });
 
-  const internalWithdrawState = useInternalWithdraw({
+  const withdrawAccountIdState = useWithdrawAccountId({
     token: sourceToken?.symbol!,
     decimals: sourceToken?.token_decimal!,
     quantity,
@@ -161,8 +163,6 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     close: options.close,
     setLoading,
   });
-
-  const { withdrawTo, toAccountId } = internalWithdrawState;
 
   const checkIsBridgeless = useMemo(() => {
     if (wrongNetwork) {
@@ -314,6 +314,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     crossChainWithdraw,
     currentChain,
     token: sourceToken?.symbol!,
+    withdrawTo,
   });
 
   const minAmountWarningMessage = useMemo(() => {
@@ -323,7 +324,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
 
     if (quantity && new Decimal(quantity).lt(minAmount)) {
       return t("transfer.withdraw.minAmount.error", {
-        minAmount: minAmount.toString(),
+        minAmount: toNonExponential(minAmount.toNumber()),
         currency: sourceToken?.symbol,
       });
     }
@@ -364,7 +365,8 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     !quantity ||
     Number(quantity) === 0 ||
     ["error", "warning"].includes(inputStatus) ||
-    (withdrawTo === WithdrawTo.Account && !toAccountId) ||
+    (withdrawTo === WithdrawTo.Account &&
+      !withdrawAccountIdState.toAccountId) ||
     qtyGreaterThanMaxAmount ||
     qtyGreaterThanVault ||
     !!minAmountWarningMessage;
@@ -435,7 +437,9 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     vaultBalanceList: vaultBalanceList?.filter(
       (item) => Number.parseInt(item.chain_id) === currentChain?.id,
     ),
-    ...internalWithdrawState,
+    ...withdrawAccountIdState,
+    withdrawTo,
+    setWithdrawTo,
     currentLTV,
     nextLTV,
     warningMessage,

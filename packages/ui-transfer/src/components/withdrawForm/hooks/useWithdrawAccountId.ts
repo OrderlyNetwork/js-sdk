@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useInternalTransfer } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { toast } from "@orderly.network/ui";
-import { InputStatus, WithdrawTo } from "../../../types";
+import { InputStatus } from "../../../types";
 import { checkIsAccountId, getTransferErrorMessage } from "../../../utils";
 
 type InternalWithdrawOptions = {
@@ -14,10 +14,9 @@ type InternalWithdrawOptions = {
   setLoading: (loading: boolean) => void;
 };
 
-export function useInternalWithdraw(options: InternalWithdrawOptions) {
+export function useWithdrawAccountId(options: InternalWithdrawOptions) {
   const { token, quantity, setQuantity, close, setLoading, decimals } = options;
   const { t } = useTranslation();
-  const [withdrawTo, setWithdrawTo] = useState<WithdrawTo>(WithdrawTo.Wallet);
   const [toAccountId, setToAccountId] = useState<string>("");
   const [inputStatus, setInputStatus] = useState<InputStatus>("default");
   const [hintMessage, setHintMessage] = useState<string>();
@@ -75,8 +74,6 @@ export function useInternalWithdraw(options: InternalWithdrawOptions) {
   }, [toAccountId]);
 
   return {
-    withdrawTo,
-    setWithdrawTo,
     toAccountId,
     setToAccountId,
     onTransfer,
