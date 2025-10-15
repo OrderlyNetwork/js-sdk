@@ -1,5 +1,12 @@
 # @orderly.network/eslint-config
 
+## 2.8.0
+
+### Minor Changes
+
+- b5bd38d: publish
+- publish
+
 ## 2.8.0-alpha.0
 
 ### Minor Changes

@@ -1,5 +1,12 @@
 # tsconfig
 
+## 0.11.0
+
+### Minor Changes
+
+- b5bd38d: publish
+- publish
+
 ## 0.11.0-alpha.0
 
 ### Minor Changes

@@ -1,5 +1,18 @@
 # @orderly.network/core
 
+## 2.8.0
+
+### Minor Changes
+
+- b5bd38d: publish
+- publish
+
+### Patch Changes
+
+- Updated dependencies [b5bd38d]
+- Updated dependencies
+  - @orderly.network/types@2.8.0
+
 ## 2.8.0-alpha.0
 
 ### Minor Changes
