@@ -1,5 +1,16 @@
 # @orderly.network/ui
 
+## 2.8.0-alpha.0
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/utils@2.8.0-alpha.0
+
 ## 2.7.4
 
 ### Patch Changes
