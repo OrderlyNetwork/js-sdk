@@ -123,11 +123,7 @@ export const DropDownMarketsConetnt: React.FC<DropDownMarketsProps> = (
         }}
         className={cls}
       >
-        <TabPanel
-          title={t("markets.favorites")}
-          icon={<FavoritesIcon />}
-          value={MarketsTabName.Favorites}
-        >
+        <TabPanel title={<FavoritesIcon />} value={MarketsTabName.Favorites}>
           {renderTab(MarketsTabName.Favorites)}
         </TabPanel>
         <TabPanel title={t("common.all")} value={MarketsTabName.All}>

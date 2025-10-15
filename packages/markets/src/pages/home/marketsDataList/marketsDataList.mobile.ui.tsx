@@ -70,11 +70,7 @@ export const MobileMarketsDataList: React.FC<MobileMarketsDataListProps> = (
         }}
         showScrollIndicator
       >
-        <TabPanel
-          title={t("markets.favorites")}
-          icon={<FavoritesIcon />}
-          value="favorites"
-        >
+        <TabPanel title={<FavoritesIcon />} value="favorites">
           {renderTab(MarketsTabName.Favorites)}
         </TabPanel>
         <TabPanel
