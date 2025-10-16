@@ -1,5 +1,6 @@
 import {
   EXCHANGE,
+  EXCHANGE_DISPLAY,
   withExchangePrefix,
   withoutExchangePrefix,
 } from "../../utils/chart.util";
@@ -192,7 +193,7 @@ export class Datafeed extends AbstractDatafeed {
         ch: t.change,
         chp: t.perChange / 100,
         description: "",
-        exchange: EXCHANGE,
+        exchange: EXCHANGE_DISPLAY,
         hight_price: t.high,
         low_price: t.low,
         lp: t.close,
