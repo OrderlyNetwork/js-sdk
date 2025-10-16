@@ -247,6 +247,9 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
   }, [quantity, maxAmount]);
 
   const qtyGreaterThanVault = useMemo<boolean>(() => {
+    if (withdrawTo === WithdrawTo.Account) {
+      return false;
+    }
     if (!quantity || Number.isNaN(quantity)) {
       return false;
     }
@@ -254,7 +257,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
       return true;
     }
     return new Decimal(quantity).gt(chainVaultBalance);
-  }, [quantity, chainVaultBalance]);
+  }, [quantity, chainVaultBalance, withdrawTo]);
 
   const crossChainWithdraw = useMemo(() => {
     if (chainVaultBalance !== null) {
@@ -400,6 +403,15 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
 
   const warningMessage = ltvWarningMessage || minAmountWarningMessage;
 
+  const filteredVaultBalanceList = useMemo(() => {
+    if (withdrawTo === WithdrawTo.Account) {
+      return [];
+    }
+    return vaultBalanceList?.filter(
+      (item) => Number.parseInt(item.chain_id) === currentChain?.id,
+    );
+  }, [vaultBalanceList, currentChain, withdrawTo]);
+
   return {
     walletName,
     address,
@@ -432,11 +444,9 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     hasPositions,
     onSettlePnl,
     brokerName,
-    qtyGreaterThanMaxAmount: qtyGreaterThanMaxAmount,
-    qtyGreaterThanVault: qtyGreaterThanVault,
-    vaultBalanceList: vaultBalanceList?.filter(
-      (item) => Number.parseInt(item.chain_id) === currentChain?.id,
-    ),
+    qtyGreaterThanMaxAmount,
+    qtyGreaterThanVault,
+    vaultBalanceList: filteredVaultBalanceList,
     ...withdrawAccountIdState,
     withdrawTo,
     setWithdrawTo,
