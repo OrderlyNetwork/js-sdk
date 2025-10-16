@@ -125,22 +125,15 @@ export const DesktopHeaderItem: React.FC<FeeTierHeaderItemProps> = (props) => {
       border
       borderColor={6}
     >
-      <Text
-        as="div"
-        intensity={36}
-        size="2xs"
-        weight="semibold"
-        className="oui-leading-[18px]"
-      >
-        {label}
-      </Text>
-      <Flex
-        className="oui-mt-1 oui-w-full"
-        itemAlign="center"
-        justify="between"
-      >
-        <Text size="base" intensity={80} className="oui-leading-[24px]">
-          {value}
+      <Flex itemAlign="center" justify="between">
+        <Text
+          as="div"
+          intensity={36}
+          size="2xs"
+          weight="semibold"
+          className="oui-leading-[18px]"
+        >
+          {label}
         </Text>
         {interactive && (
           <Tooltip
@@ -185,6 +178,11 @@ export const DesktopHeaderItem: React.FC<FeeTierHeaderItemProps> = (props) => {
             </Flex>
           </Tooltip>
         )}
+      </Flex>
+      <Flex className="oui-mt-1 oui-w-full">
+        <Text size="base" intensity={80} className="oui-leading-[24px]">
+          {value}
+        </Text>
       </Flex>
     </Box>
   );
@@ -235,7 +233,12 @@ export const FeeTierHeader: React.FC<FeeTierHeaderProps> = (props) => {
         >
           {isEffectiveFee
             ? others.effectiveTakerFee || "--"
-            : others.takerFee || "--"}
+            : others.takerFee || "--"}{" "}
+          (RWA:{" "}
+          {(isEffectiveFee
+            ? others.rwaEffectiveTakerFee
+            : others.rwaTakerFee) || "--"}
+          )
         </Text.gradient>
       ),
     },
@@ -250,7 +253,12 @@ export const FeeTierHeader: React.FC<FeeTierHeaderProps> = (props) => {
         >
           {isEffectiveFee
             ? others.effectiveMakerFee || "--"
-            : others.makerFee || "--"}
+            : others.makerFee || "--"}{" "}
+          (RWA:{" "}
+          {(isEffectiveFee
+            ? others.rwaEffectiveMakerFee
+            : others.rwaMakerFee) || "--"}
+          )
         </Text.gradient>
       ),
     },

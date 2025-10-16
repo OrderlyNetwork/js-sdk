@@ -1,6 +1,6 @@
 import { OrderlyOrder, OrderType } from "@orderly.network/types";
 import { PriceInput, PriceInputProps } from "./limit/priceInput";
-import { QtyAndTotalInput } from "./qtyAndTotalInput";
+import { QtyAndTotalInput } from "./qtyAndTotal/qtyAndTotalInput";
 import { ScaledOrderInput } from "./scaledOrder";
 import { TriggerPriceInput } from "./stop/triggerPriceInput";
 import { TrailingStopInput } from "./trailingStop";

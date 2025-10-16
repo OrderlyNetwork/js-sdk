@@ -67,6 +67,7 @@ export const WalletConnectorPrivy: FC<WalletConnectorPrivyProps> = (props) => {
                   accentColor: "#181C23",
                   logo: "/orderly-logo.svg",
                 },
+                loginMethods: ["email", "google", "twitter", "telegram"],
               },
             }
           : undefined

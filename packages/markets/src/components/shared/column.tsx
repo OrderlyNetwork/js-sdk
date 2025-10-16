@@ -5,6 +5,7 @@ import { Decimal } from "@orderly.network/utils";
 import { FavoritesIcon2, UnFavoritesIcon2 } from "../../icons";
 import { FavoriteInstance } from "../../type";
 import { FavoritesDropdownMenuWidget } from "../favoritesDropdownMenu";
+import { RwaDotTooltip } from "../rwaDotTooltip";
 
 export function getSymbolColumn(
   favorite: FavoriteInstance,
@@ -49,6 +50,7 @@ export function getSymbolColumn(
           >
             {value}
           </Text.formatted>
+          <RwaDotTooltip record={record} />
           <Badge size="xs" color="primary">
             {record.leverage}x
           </Badge>

@@ -5,6 +5,6 @@ import "./install";
 // export * as Trader from "./pages/trader";
 export * as Dashboard from "./pages/dashboard";
 
-export * from "./hooks";
+export * from "./provider";
 
 export * from "./layout";

@@ -1,5 +1,6 @@
 import { FC } from "react";
 import { useTranslation } from "@orderly.network/i18n";
+import { AccountStatusEnum } from "@orderly.network/types";
 import {
   Button,
   cn,
@@ -12,11 +13,10 @@ import {
   Divider,
   Flex,
   inputFormatter,
-  modal,
   Text,
   TextField,
-  Tooltip,
 } from "@orderly.network/ui";
+import { AuthGuard } from "@orderly.network/ui-connector";
 import { commifyOptional } from "@orderly.network/utils";
 import { ArrowRightIcon } from "../../../components/arrowRightIcon";
 import { USDCIcon } from "../../../components/usdcIcon";
@@ -57,14 +57,14 @@ export const AsTrader: FC<AsTraderReturns> = (props) => {
           </Text>
           <Text
             className={cn(
-              "oui-text-xs md:oui-text-sm 2xl:oui-text-base oui-text-base-contrast-54",
+              "oui-text-xs oui-text-base-contrast-54 md:oui-text-sm 2xl:oui-text-base",
               props.isTrader && "oui-hidden",
             )}
           >
             {t("affiliate.asTrader.description")}
           </Text>
         </Flex>
-        <div className="oui-flex-shrink-0">
+        <div className="oui-shrink-0">
           <Icon />
         </div>
       </Flex>
@@ -81,7 +81,7 @@ const Icon = () => {
       viewBox="0 0 90 90"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="xl:oui-w-[90px] xl:oui-h-[90px] "
+      className="xl:oui-size-[90px] "
     >
       <path
         d="M44.996 7.324c-20.71 0-37.43 16.79-37.5 37.5-.07 20.682 16.806 37.575 37.5 37.617 20.694.04 37.537-17.082 37.5-37.617-.037-20.71-16.79-37.5-37.5-37.5m0 7.5c16.569 0 30 13.433 30 30 0 8.438-3.514 16.043-9.12 21.495-2.762-5.973-8.694-10.245-15.49-10.245h-10.78c-6.791 0-12.706 4.22-15.47 10.197-5.606-5.453-9.14-13.01-9.14-21.447 0-16.567 13.431-30 30-30m0 7.5c-8.284 0-15 6.717-15 15s6.716 15 15 15 15-6.716 15-15-6.716-15-15-15"
@@ -162,51 +162,9 @@ const EntryCode: FC<AsTraderReturns> = (props) => {
   return (
     <Dialog open={props.open} onOpenChange={props.setOpen}>
       <DialogTrigger>
-        <Tooltip
-          content={
-            props.wrongNetwork
-              ? t("connector.wrongNetwork.tooltip")
-              : t("affiliate.connectWallet.tooltip")
-          }
-        >
-          {props.isMobile ? (
-            <Button
-              variant="contained"
-              color="light"
-              onClick={(event) => {
-                if (!props.isSignIn || props.wrongNetwork) {
-                  event.stopPropagation();
-                  event.preventDefault();
-                  modal.alert({
-                    title: t("common.tips"),
-                    message: (
-                      <Text intensity={54}>
-                        {props.wrongNetwork
-                          ? t("connector.wrongNetwork.tooltip")
-                          : t("affiliate.connectWallet.tooltip")}
-                      </Text>
-                    ),
-                  });
-                }
-              }}
-              className={
-                !props.isSignIn || props.wrongNetwork
-                  ? "oui-bg-white/[.54] oui-text-black/[.36] hover:oui-bg-white/[.54]"
-                  : undefined
-              }
-            >
-              {t("affiliate.asTrader.button")}
-            </Button>
-          ) : (
-            <Button
-              variant="contained"
-              color="light"
-              disabled={!props.isSignIn || props.wrongNetwork}
-            >
-              {t("affiliate.asTrader.button")}
-            </Button>
-          )}
-        </Tooltip>
+        <Button variant="contained" color="light">
+          {t("affiliate.asTrader.button")}
+        </Button>
       </DialogTrigger>
       <DialogContent className="oui-w-[320px] oui-font-semibold">
         <DialogHeader>
@@ -257,26 +215,28 @@ const EntryCode: FC<AsTraderReturns> = (props) => {
             }
           />
 
-          <Flex
-            itemAlign={"center"}
-            width={"100%"}
-            direction={"row"}
-            justify={"center"}
-            mt={6}
-          >
-            <Button
-              variant="contained"
-              color="primary"
-              size="md"
-              className="oui-px-[40px]"
-              disabled={props.code.length < 4 || !props.isExist}
-              onClick={(e) => {
-                e.stopPropagation();
-                props.onClickConfirm();
-              }}
-            >
-              {t("common.confirm")}
-            </Button>
+          <Flex direction={"column"} gapY={3} mt={6}>
+            {props.warningMessage && (
+              <Text size="2xs" className="oui-text-warning-darken">
+                {props.warningMessage}
+              </Text>
+            )}
+            <AuthGuard buttonProps={{ size: "md", fullWidth: true }}>
+              <Button
+                variant="contained"
+                color="primary"
+                size="md"
+                className="oui-px-[40px]"
+                fullWidth
+                disabled={props.code.length < 4 || !props.isExist}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  props.onClickConfirm();
+                }}
+              >
+                {t("common.confirm")}
+              </Button>
+            </AuthGuard>
           </Flex>
         </DialogBody>
       </DialogContent>

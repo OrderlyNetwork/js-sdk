@@ -80,15 +80,12 @@ const EffectiveFeeSection: React.FC<{
   );
 };
 
-export const EffectiveFeeUI: React.FC<
-  Pick<
-    ReturnType<typeof useFeeState>,
-    "effectiveTakerFee" | "effectiveMakerFee"
-  >
-> = (props) => {
+export const EffectiveFeeUI: React.FC<{ taker: string; maker: string }> = (
+  props,
+) => {
   const { t } = useTranslation();
   const { routerAdapter } = useScaffoldContext();
-  const { effectiveTakerFee, effectiveMakerFee } = props;
+  const { taker, maker } = props;
 
   const originalTrailingFees = (
     <Flex itemAlign="center" justify="between" width={"100%"} gap={1}>
@@ -99,24 +96,23 @@ export const EffectiveFeeUI: React.FC<
         <AuthGuard
           fallback={() => (
             <Text className="oui-truncate" size="2xs">
-              {t("portfolio.feeTier.column.taker")}: --% /{" "}
-              {t("portfolio.feeTier.column.maker")}: --%
+              {t("dmm.taker")}: --% / {t("dmm.maker")}: --%
             </Text>
           )}
         >
           <Flex gap={1}>
             <Text className="oui-truncate" size="2xs">
-              {t("portfolio.feeTier.column.taker")}:
+              {t("dmm.taker")}:
             </Text>
             <Text size="2xs" className="oui-text-base-contrast-80">
-              {effectiveTakerFee}
+              {taker}
             </Text>
             <Text size="2xs">/</Text>
             <Text className="oui-truncate" size="2xs">
-              {t("portfolio.feeTier.column.maker")}:
+              {t("dmm.maker")}:
             </Text>
             <Text size="2xs" className="oui-text-base-contrast-80">
-              {effectiveMakerFee}
+              {maker}
             </Text>
           </Flex>
         </AuthGuard>

@@ -3,7 +3,7 @@ import { RefferalAPI, useLocalStorage } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { toast } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
-import { useReferralContext } from "../../../hooks";
+import { useReferralContext } from "../../../provider";
 import { addQueryParam } from "../../../utils/utils";
 
 export type ReferralLinkReturns = {

@@ -20,6 +20,7 @@ import {
   Switch,
   SettingFillIcon,
   Box,
+  useScreen,
 } from "@orderly.network/ui";
 import { Grid } from "@orderly.network/ui";
 import { ExclamationFillIcon } from "@orderly.network/ui";
@@ -29,6 +30,7 @@ import { PnlInputWidget } from "./pnlInput/pnlInput.widget";
 import { usePnlInputContext } from "./pnlInput/pnlInputContext";
 import { PnlInputProvider } from "./pnlInput/pnlInputProvider";
 import { PNL_Values, PnLMode } from "./pnlInput/useBuilder.script";
+import { ReduceOnlySwitch } from "./reduceOnlySwitch";
 
 type OrderValueKeys = keyof OrderlyOrder;
 
@@ -55,10 +57,13 @@ export const OrderTPSL = (props: {
   quote_dp: number | undefined;
   showTPSLAdvanced: () => void;
   setOrderValue: (key: string, value: any) => void;
+  reduceOnlyChecked?: boolean;
+  onReduceOnlyChange?: (checked: boolean) => void;
 }) => {
   // const [open, setOpen] = useState(false);
   const tpslFormRef = React.useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
+  const { isMobile } = useScreen();
 
   useEffect(() => {
     if (
@@ -122,25 +127,24 @@ export const OrderTPSL = (props: {
             }}
           /> */}
         </Flex>
-        <Flex
-          itemAlign={"center"}
-          gapX={1}
-          onClick={props.showTPSLAdvanced}
-          className={cn(
-            "oui-group oui-invisible",
-            props.switchState && "oui-visible",
+        <Flex itemAlign={"center"} gapX={2}>
+          {isMobile &&
+            props.reduceOnlyChecked !== undefined &&
+            props.onReduceOnlyChange && (
+              <ReduceOnlySwitch
+                checked={props.reduceOnlyChecked}
+                onCheckedChange={props.onReduceOnlyChange}
+              />
+            )}
+          {!isMobile && (
+            <TPSLAdvancedButton
+              className={cn(
+                "oui-group oui-invisible",
+                props.switchState && "oui-visible",
+              )}
+              showTPSLAdvanced={props.showTPSLAdvanced}
+            />
           )}
-        >
-          <Text className="oui-text-sm oui-cursor-pointer group-hover:oui-text-base-contrast">
-            {t("tpsl.advanced")}
-          </Text>
-          {/* <AdvancedIcon/> */}
-          <SettingFillIcon
-            size={12}
-            className="oui-text-base-contrast-54 group-hover:oui-text-base-contrast oui-cursor-pointer"
-            opacity={1}
-            onClick={props.showTPSLAdvanced}
-          />
         </Flex>
       </Flex>
       <div
@@ -163,6 +167,8 @@ export const OrderTPSL = (props: {
           values={props.values}
           errors={props.errors}
           quote_dp={props.quote_dp}
+          showTPSLAdvanced={props.showTPSLAdvanced}
+          isMobile={isMobile}
         />
       </div>
     </div>
@@ -177,19 +183,30 @@ const TPSLInputForm = React.forwardRef<
     values: TPSL_Values;
     errors: OrderValidationResult | null;
     quote_dp: number | undefined;
+    showTPSLAdvanced: () => void;
+    isMobile: boolean;
   }
 >((props, ref) => {
   const { getErrorMsg } = useOrderEntryFormErrorMsg(props.errors);
+  const { t } = useTranslation();
 
   return (
     <div
       ref={ref}
       className={"oui-space-y-1 oui-px-px oui-py-2 oui-transition-all"}
     >
-      <TPSLPositionTypeWidget
-        value={props.values.position_type}
-        onChange={props.onChange}
-      />
+      <Flex itemAlign={"center"} justify={"between"} gapX={2}>
+        <TPSLPositionTypeWidget
+          value={props.values.position_type}
+          onChange={props.onChange}
+        />
+        {props.isMobile && (
+          <TPSLAdvancedButton
+            showTPSLAdvanced={props.showTPSLAdvanced}
+            isMobile={props.isMobile}
+          />
+        )}
+      </Flex>
       <PnlInputProvider values={props.values.tp} type={"TP"}>
         <TPSLInputRow
           type={"TP"}
@@ -223,6 +240,38 @@ const TPSLInputForm = React.forwardRef<
 });
 
 TPSLInputForm.displayName = "TPSLInputForm";
+
+const TPSLAdvancedButton = (props: {
+  showTPSLAdvanced: () => void;
+  className?: string;
+  isMobile?: boolean;
+}) => {
+  const { t } = useTranslation();
+
+  return (
+    <Flex
+      itemAlign={"center"}
+      gapX={1}
+      onClick={props.showTPSLAdvanced}
+      className={cn("oui-group oui-cursor-pointer", props.className)}
+    >
+      <Text
+        className={cn(
+          "oui-cursor-pointer group-hover:oui-text-base-contrast",
+          props.isMobile ? "oui-text-2xs" : "oui-text-sm",
+        )}
+      >
+        {t("tpsl.advanced")}
+      </Text>
+      <SettingFillIcon
+        size={12}
+        className="oui-text-base-contrast-54 group-hover:oui-text-base-contrast oui-cursor-pointer"
+        opacity={1}
+        onClick={props.showTPSLAdvanced}
+      />
+    </Flex>
+  );
+};
 
 //------- TPSLTriggerPriceInput start -------
 const TPSLTriggerPriceInput = (props: {

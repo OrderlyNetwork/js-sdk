@@ -116,12 +116,11 @@ export const LeverageBadge = (props: LeverageBadgeProps) => {
     <div
       className={cn(
         "oui-flex oui-h-[18px] oui-items-center oui-gap-1",
-        "oui-cursor-pointer oui-rounded oui-bg-line-6 oui-pl-2 oui-pr-1",
+        "oui-cursor-pointer oui-rounded oui-bg-line-6 oui-px-2",
         "oui-text-2xs oui-font-semibold oui-text-base-contrast-36",
       )}
       onClick={showModal}
     >
-      <Text>Cross</Text>
       {leverage ? (
         <Text.numeral dp={0} rm={Decimal.ROUND_DOWN} size="2xs" unit="X">
           {leverage}
@@ -129,11 +128,6 @@ export const LeverageBadge = (props: LeverageBadgeProps) => {
       ) : (
         <LeverageDisplay symbol={symbol} />
       )}
-      <ChevronRightIcon
-        size={14}
-        opacity={1}
-        className="oui-text-base-contrast-36"
-      />
     </div>
   );
 };

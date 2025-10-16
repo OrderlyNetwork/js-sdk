@@ -1,5 +1,37 @@
 # @orderly.network/wallet-connector
 
+## 2.8.0
+
+### Minor Changes
+
+- b5bd38d: publish
+- publish
+
+### Patch Changes
+
+- Updated dependencies [b5bd38d]
+- Updated dependencies
+  - @orderly.network/core@2.8.0
+  - @orderly.network/hooks@2.8.0
+  - @orderly.network/types@2.8.0
+  - @orderly.network/ui@2.8.0
+  - @orderly.network/utils@2.8.0
+
+## 2.8.0-alpha.0
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/core@2.8.0-alpha.0
+  - @orderly.network/hooks@2.8.0-alpha.0
+  - @orderly.network/types@2.8.0-alpha.0
+  - @orderly.network/ui@2.8.0-alpha.0
+  - @orderly.network/utils@2.8.0-alpha.0
+
 ## 2.7.4
 
 ### Patch Changes

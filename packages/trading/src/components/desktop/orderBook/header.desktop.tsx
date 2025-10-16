@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from "react";
+import React, { FC, ReactNode, useMemo } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import {
@@ -9,6 +9,7 @@ import {
   Flex,
   Popover,
 } from "@orderly.network/ui";
+import { optimizeSymbolDisplay } from "@orderly.network/utils";
 import {
   ORDERBOOK_COIN_TYPE_KEY,
   useOrderBookContext,
@@ -30,6 +31,11 @@ const Option: React.FC<{
     ORDERBOOK_COIN_TYPE_KEY,
     base,
   );
+
+  const optimizedItem = useMemo(() => {
+    return optimizeSymbolDisplay(item);
+  }, [item]);
+
   return (
     <Flex
       justify="between"
@@ -49,7 +55,7 @@ const Option: React.FC<{
         onClick(e);
       }}
     >
-      {t("common.total")}({item})
+      <div className="oui-overflow-hidden oui-text-ellipsis ">{`${t("common.total")}(${optimizedItem})`}</div>
       <div
         className={cn(
           "oui-transition-all",
@@ -72,6 +78,12 @@ export const DesktopHeader: FC<DesktopHeaderProps> = (props) => {
   const [popoverOpen, setOpen] = React.useState<boolean>(false);
   const [coinType] = useLocalStorage(ORDERBOOK_COIN_TYPE_KEY, base);
   const TriggerIcon = popoverOpen ? CaretUpIcon : CaretDownIcon;
+  const optimizedBase = useMemo(() => {
+    return optimizeSymbolDisplay(base);
+  }, [base]);
+  const optimizedCoinType = useMemo(() => {
+    return optimizeSymbolDisplay(coinType);
+  }, [coinType]);
   return (
     <Flex pl={3} justify={"between"} className="oui-py-[6px]">
       <Flex
@@ -92,7 +104,7 @@ export const DesktopHeader: FC<DesktopHeaderProps> = (props) => {
             id="oui-order-book-header-qty"
             className="oui-text-base-contrast-36"
           >
-            {`${t("common.qty")}(${base})`}
+            {`${t("common.qty")}(${optimizedBase})`}
           </Title>
         </Box>
       </Flex>
@@ -105,7 +117,7 @@ export const DesktopHeader: FC<DesktopHeaderProps> = (props) => {
           <>
             <Box className="oui-text-base-contrast-36" width={"100%"}>
               <Title id="oui-order-book-header-total-quote" justifyEnd>
-                {`${t("common.total")}(${base})`}
+                {`${t("common.total")}(${optimizedBase})`}
               </Title>
             </Box>
             <Box className="oui-text-base-contrast-36" width={"100%"}>
@@ -145,7 +157,7 @@ export const DesktopHeader: FC<DesktopHeaderProps> = (props) => {
                 className="oui-cursor-pointer oui-select-none oui-text-base-contrast-36 oui-transition-all hover:oui-text-base-contrast"
               >
                 <Title justifyEnd id="oui-order-book-header-total-base">
-                  {`${t("common.total")}(${coinType})`}
+                  {`${t("common.total")}(${optimizedCoinType})`}
                 </Title>
                 <TriggerIcon
                   color="inherit"

@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Decimal } from "@orderly.network/utils";
-import { useReferralContext } from "../../../hooks";
+import { useReferralContext } from "../../../provider";
 import { SummaryFilter } from "../../../utils/types";
 
 export type SummaryReturns = {

@@ -98,4 +98,6 @@ export const widget = {
   "errorBoundary.description":
     "The page is currently unavailable. Please refresh and try again.",
   "errorBoundary.refresh": "Refresh",
+  "dmm.maker": "Maker",
+  "dmm.taker": "Taker",
 };

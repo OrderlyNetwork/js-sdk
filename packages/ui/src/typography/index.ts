@@ -37,5 +37,5 @@ Text.notional = NumTypeNotional;
 Text.assetValue = NumTypeAssetValue;
 Text.collateral = NumTypeCollateral;
 
-export { Text, textVariants, gradientTextVariants };
+export { Text, textVariants, gradientTextVariants, GradientText };
 export type { TextProps };

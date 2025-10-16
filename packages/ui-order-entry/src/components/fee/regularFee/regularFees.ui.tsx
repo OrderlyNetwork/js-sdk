@@ -4,11 +4,11 @@ import { useTranslation } from "@orderly.network/i18n";
 import { Flex, Text } from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
 
-export const RegularFeesUI: React.FC<
-  Pick<ReturnType<typeof useFeeState>, "takerFee" | "makerFee">
-> = (props) => {
+export const RegularFeesUI: React.FC<{ taker: string; maker: string }> = (
+  props,
+) => {
   const { t } = useTranslation();
-  const { takerFee, makerFee } = props;
+  const { taker, maker } = props;
 
   const originalTrailingFees = (
     <Flex itemAlign="center" justify="between" width={"100%"} gap={1}>
@@ -19,24 +19,23 @@ export const RegularFeesUI: React.FC<
         <AuthGuard
           fallback={() => (
             <Text className="oui-truncate" size="2xs">
-              {t("portfolio.feeTier.column.taker")}: --% /{" "}
-              {t("portfolio.feeTier.column.maker")}: --%
+              {t("dmm.taker")}: --% / {t("dmm.maker")}: --%
             </Text>
           )}
         >
           <Flex gap={1}>
             <Text className="oui-truncate" size="2xs">
-              {t("portfolio.feeTier.column.taker")}:
+              {t("dmm.taker")}:
             </Text>
             <Text size="2xs" className="oui-text-base-contrast-80">
-              {takerFee}
+              {taker}
             </Text>
             <Text size="2xs">/</Text>
             <Text className="oui-truncate" size="2xs">
-              {t("portfolio.feeTier.column.maker")}:
+              {t("dmm.maker")}:
             </Text>
             <Text size="2xs" className="oui-text-base-contrast-80">
-              {makerFee}
+              {maker}
             </Text>
           </Flex>
         </AuthGuard>

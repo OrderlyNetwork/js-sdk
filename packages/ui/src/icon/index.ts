@@ -81,6 +81,7 @@ export { SettingFillIcon } from "./settingFill";
 export { TradingLeftNavIcon } from "./tradingLeftNavIcon";
 export { VaultsIcon } from "./vaultsIcon";
 export { LeftNavVaultsIcon } from "./leftNavVaultsIcon";
+export { NewsFillIcon } from "./newsFill";
 
 type IconType = typeof BaseIcon & {
   combine: typeof CombineIcon;

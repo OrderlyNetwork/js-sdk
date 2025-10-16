@@ -12,6 +12,7 @@ import {
   DataFilter,
   modal,
   Flex,
+  EmptyDataState,
 } from "@orderly.network/ui";
 import { SelectOption } from "@orderly.network/ui/src/select/withOptions";
 import type { useAssetsScriptReturn } from "./assets.script";
@@ -265,6 +266,20 @@ export const AssetsTableMobile: React.FC<useAssetsScriptReturn> = (props) => {
     return [ALL_ASSETS, ...assetsOptions];
   }, [assetsOptions]);
 
+  if (!props.canTrade) {
+    return (
+      <Flex
+        direction={"column"}
+        height={"100%"}
+        itemAlign={"center"}
+        justify={"center"}
+        mt={10}
+      >
+        <EmptyDataState />
+      </Flex>
+    );
+  }
+
   return (
     <div className={cn("oui-flex oui-flex-col oui-gap-1 oui-px-1 oui-pb-4")}>
       {isMainAccount && (
@@ -290,7 +305,7 @@ export const AssetsTableMobile: React.FC<useAssetsScriptReturn> = (props) => {
         />
       )}
       <div className="oui-flex oui-flex-col oui-gap-1">
-        {dataSource.map((assets, index) => {
+        {dataSource?.map((assets, index) => {
           return (
             <React.Fragment key={`item-${index}`}>
               <AccountTag name={assets.description ?? "sub account"} />

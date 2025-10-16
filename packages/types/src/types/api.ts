@@ -125,6 +125,18 @@ export declare namespace API {
     name: string;
   }
 
+  export interface RwaSymbol {
+    symbol: string;
+    status: "open" | "close";
+    next_open: number;
+    next_close: number;
+
+    base: string;
+    quote: string;
+    type: string;
+    name: string;
+  }
+
   export interface Order {
     symbol: string;
     status: string;
@@ -398,6 +410,8 @@ export declare namespace API {
     maintenance_cancel_orders: boolean;
     taker_fee_rate: number;
     maker_fee_rate: number;
+    rwa_taker_fee_rate?: number;
+    rwa_maker_fee_rate?: number;
     max_leverage: number;
     futures_taker_fee_rate: number;
     futures_maker_fee_rate: number;

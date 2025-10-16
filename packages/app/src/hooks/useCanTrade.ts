@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useAccount } from "@orderly.network/hooks";
-import { useAppContext } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
+import { useAppContext } from "../provider/appStateContext";
 
 export function useCanTrade() {
   const { state } = useAccount();

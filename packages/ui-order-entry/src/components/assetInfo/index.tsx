@@ -5,6 +5,7 @@ import { FeesWidget } from "../fee";
 import { SlippageUI } from "../slippage/slippage.ui";
 
 export function AssetInfo(props: {
+  symbol: string;
   canTrade: boolean;
   quote: string;
   estLiqPrice: number | null;
@@ -17,7 +18,7 @@ export function AssetInfo(props: {
   orderType: OrderType;
   disableFeatures?: ("slippageSetting" | "feesInfo")[];
 }) {
-  const { canTrade, disableFeatures, orderType } = props;
+  const { canTrade, disableFeatures, orderType, symbol } = props;
   const { t } = useTranslation();
 
   return (
@@ -44,7 +45,9 @@ export function AssetInfo(props: {
           />
         )}
 
-      {!disableFeatures?.includes("feesInfo") && <FeesWidget />}
+      {!disableFeatures?.includes("feesInfo") && (
+        <FeesWidget symbol={props.symbol} />
+      )}
     </div>
   );
 }

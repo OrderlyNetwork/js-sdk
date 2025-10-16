@@ -1,5 +1,5 @@
 import { OrderlyOrder } from "@orderly.network/types";
-import { QtyAndTotalInput } from "../qtyAndTotalInput";
+import { QtyAndTotalInput } from "../qtyAndTotal/qtyAndTotalInput";
 import { ActivePriceInput } from "./activePriceInput";
 import { TrailingCallbackInput } from "./trailingCallbackInput";
 

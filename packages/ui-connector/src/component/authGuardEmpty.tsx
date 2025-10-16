@@ -33,6 +33,9 @@ export const AuthGuardEmpty: React.FC<
       <AuthGuard
         status={status}
         descriptions={{ ...hint, switchChain: hint.wrongNetwork }}
+        buttonProps={{
+          size: "md",
+        }}
       >
         {props.children || <EmptyDataState />}
       </AuthGuard>
