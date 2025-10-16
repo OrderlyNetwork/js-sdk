@@ -1,5 +1,17 @@
 # @orderly.network/ui-chain-selector
 
+## 2.8.1
+
+### Patch Changes
+
+- 4ac67e6: Fix TradingView chart not loading: separate EXCHANGE (API identifier) from EXCHANGE_DISPLAY (UI label)
+- Updated dependencies [4ac67e6]
+  - @kodiak-finance/orderly-react-app@2.8.1
+  - @kodiak-finance/orderly-hooks@2.8.1
+  - @kodiak-finance/orderly-i18n@2.8.1
+  - @kodiak-finance/orderly-types@2.8.1
+  - @kodiak-finance/orderly-ui@2.8.1
+
 ## 2.8.0
 
 ### Minor Changes
