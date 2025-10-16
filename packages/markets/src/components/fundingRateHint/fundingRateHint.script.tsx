@@ -57,7 +57,7 @@ export const useFundingRateHintScript = (symbol: string) => {
       return "--";
     }
 
-    return `${new Decimal(est_funding_rate).mul(notional).todp(2).toNumber()}`;
+    return `${new Decimal(est_funding_rate).mul(notional).todp(4).toNumber()}`;
   }, [est_funding_rate, notional]);
 
   return useMemo(() => {
