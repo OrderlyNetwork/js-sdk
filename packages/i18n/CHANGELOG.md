@@ -1,5 +1,11 @@
 # @orderly.network/i18n
 
+## 2.8.1
+
+### Patch Changes
+
+- 4ac67e6: Fix TradingView chart not loading: separate EXCHANGE (API identifier) from EXCHANGE_DISPLAY (UI label)
+
 ## 2.8.0
 
 ### Minor Changes

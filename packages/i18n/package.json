@@ -1,6 +1,6 @@
 {
   "name": "@kodiak-finance/orderly-i18n",
-  "version": "2.8.0",
+  "version": "2.8.1",
   "description": "Internationalization for orderly sdk",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
