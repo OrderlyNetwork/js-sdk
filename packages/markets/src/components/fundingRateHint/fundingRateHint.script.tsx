@@ -52,7 +52,7 @@ export const useFundingRateHintScript = (symbol: string) => {
     return `${new Decimal(est_funding_rate).mul(100).toNumber()}%`;
   }, [est_funding_rate]);
 
-  const edtFundingFee = useMemo(() => {
+  const estFundingFee = useMemo(() => {
     if (!est_funding_rate || !notional) {
       return "--";
     }
@@ -67,7 +67,7 @@ export const useFundingRateHintScript = (symbol: string) => {
       floorFunding,
       lastFundingRate,
       estFundingRate,
-      edtFundingFee,
+      estFundingFee,
     };
   }, [
     fundingPeriod,
@@ -75,7 +75,7 @@ export const useFundingRateHintScript = (symbol: string) => {
     floorFunding,
     lastFundingRate,
     estFundingRate,
-    edtFundingFee,
+    estFundingFee,
   ]);
 };
 

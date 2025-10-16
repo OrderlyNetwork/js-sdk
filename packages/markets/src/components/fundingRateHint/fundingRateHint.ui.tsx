@@ -16,7 +16,7 @@ export const FundingRateHint: FC<FundingRateHintProps> = (props) => {
     floorFunding,
     lastFundingRate,
     estFundingRate,
-    edtFundingFee,
+    estFundingFee,
   } = props;
 
   const renderRow = (label: string, value?: string | number) => {
@@ -45,7 +45,7 @@ export const FundingRateHint: FC<FundingRateHintProps> = (props) => {
       )}
       {renderRow(t("trading.fundingRate.lastFundingRate"), lastFundingRate)}
       {renderRow(t("trading.fundingRate.estimatedFundingRate"), estFundingRate)}
-      {renderRow(t("trading.fundingRate.estimatedFundingFee"), edtFundingFee)}
+      {renderRow(t("trading.fundingRate.estimatedFundingFee"), estFundingFee)}
       <Divider className="oui-w-full" intensity={8} />
       {t("markets.symbolInfoBar.predFundingRate.tooltip")}
     </Flex>
