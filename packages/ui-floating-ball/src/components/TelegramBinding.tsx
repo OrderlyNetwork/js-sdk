@@ -2,8 +2,6 @@ import React from "react";
 import { Button, Flex, Text, Box, cn } from "@orderly.network/ui";
 import { useTelegramBinding } from "../hooks/useTelegramBinding";
 import type { TelegramUserData, WalletData, BindingData } from "../types";
-import { StarchildIcon } from "./StarchildIcon";
-import { TelegramIcon } from "./TelegramIcon";
 import {
   AnnouncementIcon,
   NewsIcon,
@@ -11,8 +9,9 @@ import {
   ShieldIcon,
   ShieldShadedIcon,
   CloseIcon,
-  DragHandleIcon,
   CheckIcon,
+  StarchildFlatIcon,
+  TelegramIcon,
 } from "./icons";
 
 interface TelegramBindingProps {
@@ -20,8 +19,6 @@ interface TelegramBindingProps {
   onWalletConnected?: (walletData: WalletData) => void;
   onBindingComplete?: (bindingData: BindingData) => void;
   onClose?: () => void;
-  startDragging?: (e: React.MouseEvent | React.TouchEvent) => void;
-  dragging?: boolean;
 }
 
 export const TelegramBinding: React.FC<TelegramBindingProps> = ({
@@ -29,8 +26,6 @@ export const TelegramBinding: React.FC<TelegramBindingProps> = ({
   onWalletConnected,
   onBindingComplete,
   onClose,
-  startDragging,
-  dragging,
 }) => {
   const {
     telegramUser,
@@ -105,23 +100,8 @@ export const TelegramBinding: React.FC<TelegramBindingProps> = ({
       {/* Header */}
       <Box className="oui-flex oui-items-center oui-justify-between oui-mt-1">
         <Flex gap={2} itemAlign="center">
-          {/* Drag Handle */}
-          {startDragging && (
-            <button
-              onMouseDown={startDragging}
-              onTouchStart={startDragging}
-              className="oui-cursor-grab active:oui-cursor-grabbing oui-text-base-contrast-80 hover:oui-text-base-contrast-98 oui-transition-colors oui-p-1"
-              style={{
-                cursor: dragging ? "grabbing" : "grab",
-              }}
-              aria-label="Drag dialog"
-              title="Drag"
-            >
-              <DragHandleIcon />
-            </button>
-          )}
           <Box className="oui-relative oui-rounded-lg oui-overflow-hidden oui-w-10 oui-h-10">
-            <StarchildIcon size={40} />
+            <StarchildFlatIcon size={40} />
           </Box>
           <Text className="oui-text-white/98 oui-font-semibold oui-tracking-wide">
             Starchild

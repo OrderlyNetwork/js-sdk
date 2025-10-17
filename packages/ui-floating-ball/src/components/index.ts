@@ -1,5 +1,5 @@
 export * from "./FloatingStarchildBall";
 export * from "./TelegramBinding";
-export * from "./StarchildIcon";
+export * from "./icons/StarchildIcon";
 export * from "./FloatingStarchildDialog";
 export * from "./AiSideChatWidget";

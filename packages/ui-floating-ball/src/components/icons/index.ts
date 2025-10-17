@@ -7,3 +7,6 @@ export { CloseIcon } from "./CloseIcon";
 export { DragHandleIcon } from "./DragHandleIcon";
 export { MeteorIcon } from "./MeteorIcon";
 export { CheckIcon } from "./CheckIcon";
+export { StarchildIcon } from "./StarchildIcon";
+export { StarchildFlatIcon } from "./StarchildFlatIcon";
+export { TelegramIcon } from "./TelegramIcon";

@@ -8,7 +8,7 @@ export const getStarChildConfig = (
   const isProduction = appEnv === "prod";
 
   return {
-    enable: false,
+    enable: true,
     env: isProduction ? "mainnet" : "testnet",
     telegram_bot_id: "7573076643",
   };

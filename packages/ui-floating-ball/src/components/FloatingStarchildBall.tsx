@@ -2,7 +2,7 @@ import React, { useMemo, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Button } from "@orderly.network/ui";
 import { FloatingStarchildDialog } from "./FloatingStarchildDialog";
-import { StarchildIcon } from "./StarchildIcon";
+import { StarchildIcon } from "./icons/StarchildIcon";
 
 export interface FloatingBallProps {
   label?: string;
@@ -11,12 +11,7 @@ export interface FloatingBallProps {
   offset?: number;
   color?: string;
   icon?: React.ReactNode;
-  children?:
-    | React.ReactNode
-    | ((props: {
-        startDragging: (e: React.MouseEvent | React.TouchEvent) => void;
-        dragging: boolean;
-      }) => React.ReactNode); // dialog content
+  children?: React.ReactNode; // dialog content
   /** Control visibility externally */
   visible?: boolean;
   /** Optional storage key to persist dialog position */
@@ -76,9 +71,7 @@ export const FloatingStarchildBall: React.FC<FloatingBallProps> = ({
         triggerDiameter={diameter}
         positionStorageKey={positionStorageKey}
       >
-        {typeof children === "function"
-          ? (dragProps) => children(dragProps)
-          : children}
+        {children}
       </FloatingStarchildDialog>
     </Dialog.Root>
   );

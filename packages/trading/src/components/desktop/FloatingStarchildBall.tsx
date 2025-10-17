@@ -58,23 +58,19 @@ export const FloatingStarchildBall: React.FC = () => {
         positionStorageKey="ORDERLY_FLOATING_DIALOG_TELEGRAM"
         visible={!hiddenByInitEvent}
       >
-        {({ startDragging, dragging }) => (
-          <React.Suspense fallback={null}>
-            <LazyTelegramBinding
-              startDragging={startDragging}
-              dragging={dragging}
-              onTelegramConnected={(telegramData: any) => {
-                console.log("Telegram connected:", telegramData);
-              }}
-              onWalletConnected={(walletData: any) => {
-                console.log("Wallet connected:", walletData);
-              }}
-              onBindingComplete={(bindingData: any) => {
-                console.log("Accounts bound successfully:", bindingData);
-              }}
-            />
-          </React.Suspense>
-        )}
+        <React.Suspense fallback={null}>
+          <LazyTelegramBinding
+            onTelegramConnected={(telegramData: any) => {
+              console.log("Telegram connected:", telegramData);
+            }}
+            onWalletConnected={(walletData: any) => {
+              console.log("Wallet connected:", walletData);
+            }}
+            onBindingComplete={(bindingData: any) => {
+              console.log("Accounts bound successfully:", bindingData);
+            }}
+          />
+        </React.Suspense>
       </LazyFloatingBall>
     </React.Suspense>
   );
