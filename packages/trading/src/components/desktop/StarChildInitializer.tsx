@@ -15,7 +15,7 @@ import { AccountStatusEnum } from "@orderly.network/types";
 export const StarChildInitializer: React.FC = () => {
   const { state } = useAccount();
   const { wallet } = useWalletConnector();
-  const { keyStore } = useOrderlyContext();
+  const { keyStore, starChildConfig } = useOrderlyContext();
   const {
     isInitialized,
     init,
@@ -57,6 +57,8 @@ export const StarChildInitializer: React.FC = () => {
 
   const attemptInit = React.useCallback(
     async (force?: boolean) => {
+      // Respect enable flag: do not initialize when disabled
+      if (!starChildConfig?.enable) return;
       const address = wallet?.accounts?.[0]?.address;
       if (!address) return;
       if (state.status < AccountStatusEnum.EnableTrading) return;
@@ -155,6 +157,7 @@ export const StarChildInitializer: React.FC = () => {
       init,
       showChatModal,
       starLocale,
+      starChildConfig?.enable,
     ],
   );
 
@@ -195,6 +198,7 @@ export const StarChildInitializer: React.FC = () => {
   // Reinitialize on wallet address change if widget already initialized for a different address
   React.useEffect(() => {
     const reinitOnWalletChange = async () => {
+      if (!starChildConfig?.enable) return;
       const address = wallet?.accounts?.[0]?.address || null;
       if (!address) return;
       if (state.status < AccountStatusEnum.EnableTrading) return;
@@ -216,7 +220,12 @@ export const StarChildInitializer: React.FC = () => {
       }
     };
     reinitOnWalletChange();
-  }, [wallet?.accounts?.[0]?.address, state.status, attemptInit]);
+  }, [
+    wallet?.accounts?.[0]?.address,
+    state.status,
+    attemptInit,
+    starChildConfig?.enable,
+  ]);
 
   // Listen for search open requests from UI and toggle widget search visibility
   React.useEffect(() => {

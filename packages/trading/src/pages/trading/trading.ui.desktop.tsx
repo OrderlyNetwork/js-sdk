@@ -1161,9 +1161,11 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
           </SortablePanel>
         ) : null}
       </DragOverlay>
-      <React.Suspense fallback={null}>
-        <LazyEvmFloatingStarchildBall />
-      </React.Suspense>
+      {starChildEnabled && (
+        <React.Suspense fallback={null}>
+          <LazyEvmFloatingStarchildBall />
+        </React.Suspense>
+      )}
       {/* <React.Suspense fallback={null}>
         <LazyAiSideChatWidget rect={aiBoxRect as any} text="AI Side Chat" />
       </React.Suspense> */}
