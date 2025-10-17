@@ -704,8 +704,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
       {aiMode ? (
         <Box
           id="sideChatContainer"
-          className="oui-w-full oui-rounded-md oui-border oui-border-base-10"
-          p={3}
+          className="oui-w-full oui-rounded-2xl oui-border oui-border-base-10"
           style={{
             backgroundImage:
               "repeating-linear-gradient(135deg, rgba(255,255,255,0.06) 0, rgba(255,255,255,0.06) 12px, transparent 12px, transparent 24px)",
@@ -989,7 +988,6 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
                       <Box
                         id="sideChatContainer"
                         className="oui-w-full oui-rounded-md oui-border oui-border-base-10"
-                        p={3}
                         style={{
                           backgroundImage:
                             "repeating-linear-gradient(135deg, rgba(255,255,255,0.06) 0, rgba(255,255,255,0.06) 12px, transparent 12px, transparent 24px)",

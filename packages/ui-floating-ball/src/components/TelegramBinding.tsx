@@ -41,11 +41,16 @@ export const TelegramBinding: React.FC<TelegramBindingProps> = ({
     walletAddress,
     getTemporaryOrderlyKey,
     registerOrderlyKey,
+    verifyOrderlyKey,
+    hasOrderlyPrivateKey,
+    hasVerifiedOrderly,
   } = useTelegramBinding(
     onTelegramConnected,
     onWalletConnected,
     onBindingComplete,
   );
+
+  const shouldShowSignInPage = hasOrderlyPrivateKey && !hasVerifiedOrderly;
 
   const handleCreateOrderlyKey = React.useCallback(async () => {
     try {
@@ -69,6 +74,15 @@ export const TelegramBinding: React.FC<TelegramBindingProps> = ({
       console.error("Create/register orderly key error", e);
     }
   }, [walletAddress, getTemporaryOrderlyKey, registerOrderlyKey]);
+
+  const handleSignIn = React.useCallback(async () => {
+    try {
+      const result = await verifyOrderlyKey();
+      console.log("Orderly key verified", result);
+    } catch (e) {
+      console.error("Verify orderly key error", e);
+    }
+  }, [verifyOrderlyKey]);
 
   return (
     <Box
@@ -124,8 +138,46 @@ export const TelegramBinding: React.FC<TelegramBindingProps> = ({
         )}
       </Box>
 
-      {/* Success State - only after binding finished */}
-      {bindingStatus === "success" && !isBinding ? (
+      {/* Sign In Page - after orderly key creation */}
+      {shouldShowSignInPage ? (
+        <Box className="oui-flex-1 oui-flex oui-flex-col oui-items-center oui-gap-5">
+          {/* Success Icon */}
+          <Box className="oui-relative oui-rounded-full oui-overflow-hidden oui-w-20 oui-h-20 oui-p-3 oui-mt-10 oui-flex oui-items-center oui-justify-center">
+            <CheckIcon size={54} className="oui-text-primary" />
+          </Box>
+
+          {/* Sign In Message */}
+          <Box className="oui-flex oui-flex-col oui-gap-5 oui-items-center oui-w-full">
+            <Box className="oui-text-center oui-flex oui-flex-col oui-gap-5">
+              <Text className="oui-text-base-contrast-98 oui-text-2xl oui-font-semibold oui-tracking-wider">
+                Your API key is created
+              </Text>
+              <Text
+                size="sm"
+                className="oui-text-base-contrast-54 oui-leading-relaxed"
+              >
+                Please authorize Starchild to use your existing API Key from the
+                Woofi for order operations.
+              </Text>
+            </Box>
+
+            {/* Sign In Button */}
+            <Button
+              onClick={handleSignIn}
+              className="oui-rounded-full oui-px-3 oui-h-10 oui-w-[120px]"
+              style={{ backgroundColor: "#F84600" }}
+            >
+              <Text
+                size="sm"
+                className="oui-text-primary-contrast oui-font-semibold"
+              >
+                Sign In
+              </Text>
+            </Button>
+          </Box>
+        </Box>
+      ) : /* Success State - only after binding finished */
+      bindingStatus === "success" && !isBinding ? (
         <Box className="oui-flex-1 oui-flex oui-flex-col oui-items-center oui-gap-5">
           {/* Success Icon */}
           <Box className="oui-relative oui-rounded-full oui-overflow-hidden oui-w-20 oui-h-20 oui-p-3 oui-mt-10 oui-flex oui-items-center oui-justify-center">

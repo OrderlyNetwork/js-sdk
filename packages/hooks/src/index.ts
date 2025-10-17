@@ -116,3 +116,5 @@ export * from "./subAccount";
 
 export { usePositionClose } from "./next/positions/usePositionClose";
 export { useMarketList, useMarketMap } from "./orderly/useMarket/market.store";
+
+export { useStarChildInitialized } from "./useStarChildInitialized";

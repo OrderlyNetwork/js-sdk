@@ -36,6 +36,9 @@ export type UseTelegramBindingReturn = {
     isSmartWallet: boolean,
     orderlyKeyMessage: any,
   ) => any;
+  verifyOrderlyKey: () => Promise<any>;
+  hasOrderlyPrivateKey: boolean;
+  hasVerifiedOrderly: boolean;
 };
 
 export function useTelegramBinding(
@@ -58,6 +61,9 @@ export function useTelegramBinding(
     "idle" | "success" | "error"
   >("idle");
   const [didRegisterOrderlyKey, setDidRegisterOrderlyKey] = useState(false);
+  const [didVerifyOrderlyKey, setDidVerifyOrderlyKey] = useState(false);
+  const [hasOrderlyPrivateKey, setHasOrderlyPrivateKey] = useState(false);
+  const [hasVerifiedOrderly, setHasVerifiedOrderly] = useState(false);
 
   const LS_AUTH_KEY = "oui.telegramBinding.auth";
   const LS_ACCOUNT_INFO_PREFIX = "oui.telegramBinding.accountInfo.";
@@ -237,6 +243,15 @@ export function useTelegramBinding(
     } catch {}
   };
 
+  const emitAccountInfoReadyIfEligible = (info: any) => {
+    try {
+      if (info?.hasOrderlyPrivateKey && info?.hasVerifiedOrderly) {
+        const evt = new CustomEvent("starchild:accountInfoReady");
+        window.dispatchEvent(evt);
+      }
+    } catch {}
+  };
+
   // StarChild init is handled by a persistent component; no params builder here.
 
   // Check orderly account info after EVM wallet connects
@@ -280,7 +295,18 @@ export function useTelegramBinding(
       }
 
       const hasBindOrderly = !!json?.hasBindOrderly;
-      const hasOrderlyPrivateKey = !!json?.hasOrderlyPrivateKey;
+      const hasOrderlyPrivateKeyValue = !!json?.hasOrderlyPrivateKey;
+      const hasVerifiedOrderlyValue = !!json?.hasVerifiedOrderly;
+
+      console.log("Account info status:", {
+        hasBindOrderly,
+        hasOrderlyPrivateKey: hasOrderlyPrivateKeyValue,
+        hasVerifiedOrderly: hasVerifiedOrderlyValue,
+      });
+
+      // Update state with latest status from server
+      setHasOrderlyPrivateKey(hasOrderlyPrivateKeyValue);
+      setHasVerifiedOrderly(hasVerifiedOrderlyValue);
 
       if (hasBindOrderly) {
         setBindingStatus("success");
@@ -292,9 +318,8 @@ export function useTelegramBinding(
             localStorage.setItem(LS_AUTH_KEY, JSON.stringify(parsed));
           }
         } catch {}
-        if (hasOrderlyPrivateKey) {
+        if (hasOrderlyPrivateKeyValue && hasVerifiedOrderlyValue) {
           console.log("hello I am your starchild");
-          // Notify UI that account info is ready for StarChild init (no refresh needed)
           try {
             const evt = new CustomEvent("starchild:accountInfoReady");
             window.dispatchEvent(evt);
@@ -526,6 +551,70 @@ export function useTelegramBinding(
     return json ?? text;
   };
 
+  // Verify orderly key - signs and verifies with the same format as authToken
+  const verifyOrderlyKey = async (): Promise<any> => {
+    const addr = wallet?.accounts?.[0]?.address;
+    const provider: any = (wallet as any)?.provider;
+    if (!addr || !provider) throw new Error("Wallet not connected");
+
+    const timestamp = Date.now();
+    const messageText = `EVM:${timestamp}`;
+    const hash = ethereumPersonalMessageHash(messageText);
+
+    let signatureHex = "" as string;
+    try {
+      signatureHex = await provider?.request?.({
+        method: "eth_sign",
+        params: [addr, hash],
+      });
+    } catch (e) {
+      try {
+        signatureHex = await provider?.request?.({
+          method: "personal_sign",
+          params: [utf8ToHex(messageText), addr],
+        });
+      } catch (e2) {
+        signatureHex = await provider?.request?.({
+          method: "personal_sign",
+          params: [addr, utf8ToHex(messageText)],
+        });
+      }
+    }
+
+    const normalizedSignature = normalizeSignatureV(signatureHex);
+
+    const requestBody = {
+      message: { chainType: "EVM", timestamp },
+      signature: normalizedSignature,
+      userAddress: addr,
+    };
+
+    const authHeader = await getAuthHeader(addr, provider);
+
+    const resp = await fetch(`${baseUrl}v1/private/verifyOrderlyKey`, {
+      method: "POST",
+      headers: {
+        Authorization: authHeader,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    });
+    if (!resp.ok)
+      throw new Error(`VerifyOrderlyKey request failed: ${resp.status}`);
+
+    const responseText = await resp.text();
+    let responseJson: any = null;
+    try {
+      responseJson = JSON.parse(responseText);
+    } catch {}
+    console.log("VerifyOrderlyKey response:", responseJson ?? responseText);
+
+    // Signal effect to update cache and check account info
+    setDidVerifyOrderlyKey(true);
+
+    return responseJson ?? responseText;
+  };
+
   // Initialize Telegram Widget script
   useEffect(() => {
     const script = document.createElement("script");
@@ -662,22 +751,51 @@ export function useTelegramBinding(
     namespace,
   ]);
 
-  // Centralized cache update after binding success or orderly key registration
+  // Centralized cache update after binding success, orderly key registration, or verification
   useEffect(() => {
     const addr = wallet?.accounts?.[0]?.address;
     if (!addr) return;
-    if (bindingStatus === "success" || didRegisterOrderlyKey) {
+    if (
+      bindingStatus === "success" ||
+      didRegisterOrderlyKey ||
+      didVerifyOrderlyKey
+    ) {
       const cached = getCachedAccountInfo(addr);
       const next = {
         ...(cached?.data || {}),
         hasBindOrderly: true,
         hasOrderlyPrivateKey:
           didRegisterOrderlyKey || !!cached?.data?.hasOrderlyPrivateKey,
+        hasVerifiedOrderly:
+          didVerifyOrderlyKey || !!cached?.data?.hasVerifiedOrderly,
       };
       setCachedAccountInfo(addr, next);
+      emitAccountInfoReadyIfEligible(next);
       if (didRegisterOrderlyKey) setDidRegisterOrderlyKey(false);
+      if (didVerifyOrderlyKey) setDidVerifyOrderlyKey(false);
     }
-  }, [bindingStatus, didRegisterOrderlyKey, wallet?.accounts?.[0]?.address]);
+  }, [
+    bindingStatus,
+    didRegisterOrderlyKey,
+    didVerifyOrderlyKey,
+    wallet?.accounts?.[0]?.address,
+  ]);
+
+  // Check account info after verification to get latest status from server
+  useEffect(() => {
+    if (didVerifyOrderlyKey) {
+      // Force a fresh check from server (bypass cache)
+      const addr = wallet?.accounts?.[0]?.address;
+      if (addr) {
+        // Clear cache to force fresh fetch
+        try {
+          localStorage.removeItem(LS_ACCOUNT_INFO_PREFIX + addr);
+        } catch {}
+        // Trigger account info check
+        checkOrderlyAccountInfo();
+      }
+    }
+  }, [didVerifyOrderlyKey]);
 
   // Init is handled outside to avoid unmount during dialog close.
 
@@ -691,5 +809,8 @@ export function useTelegramBinding(
     getTemporaryOrderlyKey,
     registerOrderlyKey,
     getOrderlyKeyEIP712Data,
+    verifyOrderlyKey,
+    hasOrderlyPrivateKey,
+    hasVerifiedOrderly,
   };
 }

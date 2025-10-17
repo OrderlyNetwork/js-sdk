@@ -1,5 +1,9 @@
 import React from "react";
-import { useStarChildWidget, Locale as StarLocale } from "starchild-widget";
+import {
+  useStarChildWidget,
+  Locale as StarLocale,
+  destroy,
+} from "starchild-widget";
 import {
   useAccount,
   useOrderlyContext,
@@ -49,104 +53,110 @@ export const StarChildInitializer: React.FC = () => {
     }
   };
 
-  const attemptInit = React.useCallback(async () => {
-    const address = wallet?.accounts?.[0]?.address;
-    if (!address) return;
-    if (state.status < AccountStatusEnum.EnableTrading) return;
-    if (isInitialized) return;
+  const lastInitializedAddressRef = React.useRef<string | null>(null);
 
-    const cached = getCachedAccountInfo(address) || {};
-    const hasBindOrderly = !!cached.hasBindOrderly;
-    const hasOrderlyPrivateKey = !!cached.hasOrderlyPrivateKey;
-    if (!hasBindOrderly || !hasOrderlyPrivateKey) return;
+  const attemptInit = React.useCallback(
+    async (force?: boolean) => {
+      const address = wallet?.accounts?.[0]?.address;
+      if (!address) return;
+      if (state.status < AccountStatusEnum.EnableTrading) return;
+      if (isInitialized && !force) return;
 
-    const orderlyKeyPair = keyStore?.getOrderlyKey(address);
-    if (!orderlyKeyPair) return;
-    const orderlyKey = await orderlyKeyPair.getPublicKey();
-    const secretKey = orderlyKeyPair.secretKey;
+      const cached = getCachedAccountInfo(address) || {};
+      const hasBindOrderly = !!cached.hasBindOrderly;
+      const hasOrderlyPrivateKey = !!cached.hasOrderlyPrivateKey;
+      if (!hasBindOrderly || !hasOrderlyPrivateKey) return;
 
-    const aiChatKey = cached.aiChatKey || "";
-    const accountId =
-      state.accountId ||
-      (address ? keyStore?.getAccountId(address) || undefined : undefined);
-    const telegramUserId = cached.telegramUserId || undefined;
+      const orderlyKeyPair = keyStore?.getOrderlyKey(address);
+      if (!orderlyKeyPair) return;
+      const orderlyKey = await orderlyKeyPair.getPublicKey();
+      const secretKey = orderlyKeyPair.secretKey;
 
-    const params = {
-      locale: starLocale,
-      aiChatKey,
-      telegramUserId,
-      accountId,
-      orderlyKey,
-      secretKey,
-      onChatModalDockToEdge: (side: "left" | "right") => {
-        console.log("[starchild] dock to edge:", side);
-        try {
-          const event = new CustomEvent("starchild:chatDocked", {
-            detail: { side },
-          });
-          window.dispatchEvent(event);
-          showChatModal("sideChatContainer");
-        } catch (e) {
-          // ignore
-        }
-      },
-      onChatModalDetachFromEdge: () => {
-        console.log("[starchild] detach from edge");
-        try {
-          const event = new CustomEvent("starchild:chatDetached");
-          window.dispatchEvent(event);
-        } catch (e) {
-          // ignore
-        }
-      },
-      onChatModalClose: () => {
-        console.log("[starchild] chat closed");
-        try {
-          const event = new CustomEvent("starchild:chatClosed");
-          window.dispatchEvent(event);
-        } catch (e) {
-          // ignore
-        }
-      },
-      onSearchOpen: () => {
-        console.log("[starchild] search opened");
-        try {
-          const event = new CustomEvent("starchild:searchOpened");
-          window.dispatchEvent(event);
-        } catch (e) {
-          // ignore
-        }
-      },
-      onSearchClose: () => {
-        console.log("[starchild] search closed");
-        try {
-          const event = new CustomEvent("starchild:searchClosed");
-          window.dispatchEvent(event);
-        } catch (e) {
-          // ignore
-        }
-      },
-    } as any;
+      const aiChatKey = cached.aiChatKey || "";
+      const accountId =
+        state.accountId ||
+        (address ? keyStore?.getAccountId(address) || undefined : undefined);
+      const telegramUserId = cached.telegramUserId || undefined;
 
-    try {
-      await init(params);
+      const params = {
+        locale: starLocale,
+        aiChatKey,
+        telegramUserId,
+        accountId,
+        orderlyKey,
+        secretKey,
+        onChatModalDockToEdge: (side: "left" | "right") => {
+          console.log("[starchild] dock to edge:", side);
+          try {
+            const event = new CustomEvent("starchild:chatDocked", {
+              detail: { side },
+            });
+            window.dispatchEvent(event);
+            showChatModal("sideChatContainer");
+          } catch (e) {
+            // ignore
+          }
+        },
+        onChatModalDetachFromEdge: () => {
+          console.log("[starchild] detach from edge");
+          try {
+            const event = new CustomEvent("starchild:chatDetached");
+            window.dispatchEvent(event);
+          } catch (e) {
+            // ignore
+          }
+        },
+        onChatModalClose: () => {
+          console.log("[starchild] chat closed");
+          try {
+            const event = new CustomEvent("starchild:chatClosed");
+            window.dispatchEvent(event);
+          } catch (e) {
+            // ignore
+          }
+        },
+        onSearchOpen: () => {
+          console.log("[starchild] search opened");
+          try {
+            const event = new CustomEvent("starchild:searchOpened");
+            window.dispatchEvent(event);
+          } catch (e) {
+            // ignore
+          }
+        },
+        onSearchClose: () => {
+          console.log("[starchild] search closed");
+          try {
+            const event = new CustomEvent("starchild:searchClosed");
+            window.dispatchEvent(event);
+          } catch (e) {
+            // ignore
+          }
+        },
+      } as any;
+
       try {
-        const evt = new CustomEvent("starchild:initialized");
-        window.dispatchEvent(evt);
-      } catch {}
-    } catch (e) {
-      console.error("Starchild widget init failed:", e);
-    }
-  }, [
-    wallet?.accounts?.[0]?.address,
-    state.status,
-    isInitialized,
-    keyStore,
-    state.accountId,
-    init,
-    showChatModal,
-    starLocale,
-  ]);
+        await init(params);
+        lastInitializedAddressRef.current = address;
+        try {
+          const evt = new CustomEvent("starchild:initialized");
+          window.dispatchEvent(evt);
+        } catch {}
+      } catch (e) {
+        console.error("Starchild widget init failed:", e);
+      }
+    },
+    [
+      wallet?.accounts?.[0]?.address,
+      state.status,
+      isInitialized,
+      keyStore,
+      state.accountId,
+      init,
+      showChatModal,
+      starLocale,
+    ],
+  );
 
   React.useEffect(() => {
     attemptInit();
@@ -166,7 +176,9 @@ export const StarChildInitializer: React.FC = () => {
   React.useEffect(() => {
     const handler = () => {
       try {
-        attemptInit();
+        const cur = wallet?.accounts?.[0]?.address || null;
+        const force = cur && cur !== lastInitializedAddressRef.current;
+        attemptInit(!!force);
       } catch {}
     };
     window.addEventListener(
@@ -179,6 +191,32 @@ export const StarChildInitializer: React.FC = () => {
         handler as EventListener,
       );
   }, [attemptInit]);
+
+  // Reinitialize on wallet address change if widget already initialized for a different address
+  React.useEffect(() => {
+    const reinitOnWalletChange = async () => {
+      const address = wallet?.accounts?.[0]?.address || null;
+      if (!address) return;
+      if (state.status < AccountStatusEnum.EnableTrading) return;
+      if (
+        lastInitializedAddressRef.current &&
+        lastInitializedAddressRef.current !== address
+      ) {
+        try {
+          await destroy();
+          try {
+            // Explicitly reset global and notify listeners
+            (window as any)["__starchild_initialized__"] = false;
+            const evt = new CustomEvent("starchild:destroyed");
+            window.dispatchEvent(evt);
+          } catch {}
+          // Reset last-initialized address so a new address can fully re-auth/init
+          lastInitializedAddressRef.current = null;
+        } catch {}
+      }
+    };
+    reinitOnWalletChange();
+  }, [wallet?.accounts?.[0]?.address, state.status, attemptInit]);
 
   // Listen for search open requests from UI and toggle widget search visibility
   React.useEffect(() => {

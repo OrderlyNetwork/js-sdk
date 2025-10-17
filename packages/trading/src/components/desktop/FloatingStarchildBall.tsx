@@ -35,6 +35,19 @@ export const FloatingStarchildBall: React.FC = () => {
       );
   }, []);
 
+  React.useEffect(() => {
+    const onDestroyed = () => setHiddenByInitEvent(false);
+    window.addEventListener(
+      "starchild:destroyed",
+      onDestroyed as EventListener,
+    );
+    return () =>
+      window.removeEventListener(
+        "starchild:destroyed",
+        onDestroyed as EventListener,
+      );
+  }, []);
+
   if (!tradingEnabledOnEvm) return null;
 
   return (
@@ -58,9 +71,6 @@ export const FloatingStarchildBall: React.FC = () => {
               }}
               onBindingComplete={(bindingData: any) => {
                 console.log("Accounts bound successfully:", bindingData);
-                try {
-                  setHiddenByInitEvent(true);
-                } catch {}
               }}
             />
           </React.Suspense>

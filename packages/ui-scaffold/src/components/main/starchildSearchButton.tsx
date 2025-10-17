@@ -1,8 +1,11 @@
 import { FC } from "react";
+import { useStarChildInitialized } from "@orderly.network/hooks";
 import { cn } from "@orderly.network/ui";
 import { StarchildIcon, SlashIcon } from "../icons";
 
 export const StarchildSearchButton: FC = () => {
+  const isStarChildInitialized = useStarChildInitialized();
+
   const onClick = () => {
     try {
       const event = new CustomEvent("starchild:openSearch");
@@ -11,6 +14,9 @@ export const StarchildSearchButton: FC = () => {
       // ignore
     }
   };
+
+  if (!isStarChildInitialized) return null;
+
   return (
     <button
       className={cn(

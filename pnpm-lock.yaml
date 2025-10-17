@@ -1238,8 +1238,8 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       starchild-widget:
-        specifier: ^1.0.0-beta.2
-        version: 1.0.0-beta.2(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+        specifier: ^1.0.0-beta.3
+        version: 1.0.0-beta.3(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       styled-components:
         specifier: ^6.1.19
         version: 6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -13760,8 +13760,8 @@ packages:
     resolution: {integrity: sha512-WjlahMgHmCJpqzU8bIBy4qtsZdU9lRlcZE3Lvyej6t4tuOuv1vk57OW3MBrj6hXBFx/nNoC9MPMTcr5YA7NQbg==}
     engines: {node: '>=6'}
 
-  starchild-widget@1.0.0-beta.2:
-    resolution: {integrity: sha512-YrGeIFBQXT3GE0OIPom3mH+GgqM5KDKfLr4AOjiZQUNIZqBwX14VBH//G2WvdQ2WFa4zznJHDmSXs2toHwZ5Yw==}
+  starchild-widget@1.0.0-beta.3:
+    resolution: {integrity: sha512-5RGfdCIyOiOuj3yUHlBT+dkuIpjzgcIaF1K3y3cnckdstAF/vxKbkBwVGmStt6SWyZJLtyKbvoJSFGqYY+48tg==}
     peerDependencies:
       react: '>=18.0.0'
       react-dom: '>=18.0.0'
@@ -34186,7 +34186,7 @@ snapshots:
     dependencies:
       type-fest: 0.7.1
 
-  starchild-widget@1.0.0-beta.2(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1)):
+  starchild-widget@1.0.0-beta.3(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1)):
     dependencies:
       '@noble/ed25519': 3.0.0
       '@popperjs/core': 2.11.8

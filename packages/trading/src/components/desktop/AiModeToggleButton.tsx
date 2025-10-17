@@ -1,5 +1,9 @@
 import React, { FC, SVGProps } from "react";
-import { useAccount, useWalletConnector } from "@orderly.network/hooks";
+import {
+  useAccount,
+  useWalletConnector,
+  useStarChildInitialized,
+} from "@orderly.network/hooks";
 import { AccountStatusEnum, ChainNamespace } from "@orderly.network/types";
 import { Box, Flex, cn, Button, Text } from "@orderly.network/ui";
 
@@ -16,13 +20,14 @@ export const AiModeToggleButton: React.FC<AiModeToggleButtonProps> = ({
 }) => {
   const { state } = useAccount();
   const { namespace } = useWalletConnector();
+  const isStarChildInitialized = useStarChildInitialized();
 
   const tradingEnabledOnEvm =
     (state.status >= AccountStatusEnum.EnableTrading ||
       state.status === AccountStatusEnum.EnableTradingWithoutConnected) &&
     namespace === ChainNamespace.evm;
 
-  if (!tradingEnabledOnEvm) return null;
+  if (!tradingEnabledOnEvm || !isStarChildInitialized) return null;
 
   if (aiMode) {
     // Order Entry button
