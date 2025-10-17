@@ -31,4 +31,39 @@
       rgb(var(--oui-color-base-9)) 100%
     );
   }
+  .oui-gradient-ai-button::before {
+    transition: var(--gradientAngle) 0.3s linear;
+    animation-name: angleRotateChange;
+    animation-timing-function: cubic-bezier(0, 0, 1, 1);
+    animation-iteration-count: infinite;
+    animation-duration: 5s;
+    background-image: conic-gradient(
+      from calc(180deg + var(--gradientAngle)),
+      rgba(19, 21, 25, 1) 0%,
+      rgba(48, 27, 22, 1) 1.8507%,
+      rgba(76, 33, 19, 1) 3.7014%,
+      rgba(105, 39, 16, 1) 5.5521%,
+      rgba(134, 46, 13, 1) 7.4028%,
+      rgba(191, 58, 6, 1) 11.104%,
+      rgba(248, 70, 0, 1) 14.806%,
+      rgba(235, 74, 16, 1) 15.451%,
+      rgba(222, 78, 32, 1) 16.096%,
+      rgba(196, 87, 64, 1) 17.386%,
+      rgba(169, 95, 96, 1) 18.676%,
+      rgba(143, 104, 128, 1) 19.966%,
+      rgba(117, 112, 159, 1) 21.256%,
+      rgba(91, 121, 191, 1) 22.547%,
+      rgba(64, 129, 223, 1) 23.837%,
+      rgba(38, 138, 255, 1) 25.127%,
+      rgba(60, 186, 245, 1) 30.096%,
+      rgba(82, 234, 234, 1) 35.066%,
+      rgba(66, 181, 182, 1) 38.718%,
+      rgba(50, 128, 130, 1) 42.369%,
+      rgba(43, 101, 104, 1) 44.195%,
+      rgba(35, 74, 77, 1) 46.021%,
+      rgba(27, 48, 51, 1) 47.847%,
+      rgba(19, 21, 25, 1) 49.673%,
+      rgba(19, 21, 25, 1) 100%
+    );
+  }
 }

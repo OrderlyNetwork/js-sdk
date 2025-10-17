@@ -17,24 +17,15 @@
     "**/*.stories.tsx"
   ],
   "compilerOptions": {
-    // "rootDir": "./src",
     "jsx": "react-jsx",
-    "sourceMap": false,
+    "sourceMap": true,
     "module": "esnext",
     "outDir": "dist",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "target": "ES2022",
-    "typeRoots": [
-      "./node_modules/@types",
-      "./src/@types"
-    ],
-    "moduleResolution": "node",
-    "paths": {
-      "@orderly.network/ui-floating-ball": [
-        "../ui-floating-ball/src"
-      ]
-    },
-    // "incremental": true,
+    "moduleResolution": "node"
   }
 }
+
+

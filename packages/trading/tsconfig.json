@@ -56,6 +56,9 @@
       "@orderly.network/ui-scaffold": [
         "../ui-scaffold/src"
       ],
+      "@orderly.network/ui-floating-ball": [
+        "../ui-floating-ball/src"
+      ],
       "@orderly.network/i18n": [
         "../i18n/src"
       ],

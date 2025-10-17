@@ -60,6 +60,8 @@ export type MainNavWidgetProps = {
 
     /** Main navigation menu (desktop & mobile) */
     mainNav?: ReactNode;
+    /** Search button component (desktop only) */
+    starchildSearchButton?: ReactNode;
     /** Account summary component (desktop only) */
     accountSummary?: ReactNode;
 

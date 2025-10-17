@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   DndContext,
   closestCenter,
@@ -20,7 +20,13 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS, Transform } from "@dnd-kit/utilities";
-import { useGetRwaSymbolOpenStatus, useLocalStorage } from "@orderly.network/hooks";
+import {
+  useAccount,
+  useGetRwaSymbolOpenStatus,
+  useLocalStorage,
+  useWalletConnector,
+  useOrderlyContext,
+} from "@orderly.network/hooks";
 import {
   SideMarketsWidget,
   SymbolInfoBarFullWidget,
@@ -30,12 +36,16 @@ import {
   OrderEntrySortKeys,
   TradingviewFullscreenKey,
 } from "@orderly.network/types";
-import { Box, cn, Flex } from "@orderly.network/ui";
+import { Box, cn, Flex, ThrottledButton } from "@orderly.network/ui";
+import { useFloatingDialogPosition } from "@orderly.network/ui-floating-ball";
 import { OrderEntryWidget } from "@orderly.network/ui-order-entry";
 import { TradingviewWidget } from "@orderly.network/ui-tradingview";
 import { DepositStatusWidget } from "@orderly.network/ui-transfer";
+import { AiModeToggleButton } from "../../components/desktop/AiModeToggleButton";
 import { SortablePanel } from "../../components/desktop/layout/sortablePanel";
 import { SplitLayout } from "../../components/desktop/layout/splitLayout";
+import { showRwaOutsideMarketHoursNotify } from "../../components/desktop/notify/rwaNotification";
+import { useAiBoxRect } from "../../hooks";
 import { useShowRwaCountdown } from "../../hooks/useShowRwaCountdown";
 import {
   dataListInitialHeight,
@@ -57,7 +67,6 @@ import {
   tradingViewMinWidth,
   dataListMaxHeight,
 } from "./trading.script";
-import { showRwaOutsideMarketHoursNotify } from "../../components/desktop/notify/rwaNotification";
 
 const LazyRiskRateWidget = React.lazy(() =>
   import("../../components/desktop/riskRate").then((mod) => {
@@ -99,6 +108,18 @@ const LazyOrderBookAndTradesWidget = React.lazy(() =>
   }),
 );
 
+const LazyEvmFloatingStarchildBall = React.lazy(() =>
+  import("../../components/desktop/FloatingStarchildBall").then((mod) => ({
+    default: mod.FloatingStarchildBall,
+  })),
+);
+
+const LazyAiSideChatWidget = React.lazy(() =>
+  import("@orderly.network/ui-floating-ball").then((mod) => ({
+    default: mod.AiSideChatWidget,
+  })),
+);
+
 export type DesktopLayoutProps = TradingState & {
   className?: string;
 };
@@ -121,6 +142,15 @@ const scaleModifier: Modifier = ({
 };
 
 export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
+  const { starChildConfig } = useOrderlyContext();
+  const starChildEnabled = starChildConfig?.enable ?? false;
+
+  // Read & update floating dialog position and log changes
+  const {
+    position: floatingDialogPosition,
+    setPosition: setFloatingDialogPosition,
+  } = useFloatingDialogPosition("ORDERLY_FLOATING_DIALOG_TELEGRAM");
+
   const {
     resizeable,
     panelSize,
@@ -174,6 +204,144 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
     ["margin", "assets", "orderEntry"],
   );
 
+  const [aiMode, setAiMode] = useState(false);
+
+  // Respond to Starchild chat docking events
+  useEffect(() => {
+    const onDocked = (e: Event) => {
+      const detail = (e as CustomEvent<{ side: "left" | "right" }>).detail;
+      const dockSide = detail?.side;
+      if (!dockSide) return;
+      // if ((layout === 'left' && dockSide === 'left') || (layout === 'right' && dockSide === 'right')) {
+      //   setAiMode(true);
+      // }
+      setAiMode(true); // allow for different side docking for now
+    };
+    const onDetached = () => {
+      setAiMode(false);
+    };
+    const onClosed = () => {
+      setAiMode(false);
+    };
+    window.addEventListener("starchild:chatDocked", onDocked as EventListener);
+    window.addEventListener(
+      "starchild:chatDetached",
+      onDetached as EventListener,
+    );
+    window.addEventListener("starchild:chatClosed", onClosed as EventListener);
+    return () => {
+      window.removeEventListener(
+        "starchild:chatDocked",
+        onDocked as EventListener,
+      );
+      window.removeEventListener(
+        "starchild:chatDetached",
+        onDetached as EventListener,
+      );
+      window.removeEventListener(
+        "starchild:chatClosed",
+        onClosed as EventListener,
+      );
+    };
+  }, [layout]);
+
+  // Dock-to-edge detection (no dragging state needed). Show guideline while at edge.
+  const [isDockingRight, setIsDockingRight] = useState(false);
+  const [isDockingLeft, setIsDockingLeft] = useState(false);
+  useEffect(() => {
+    const right = (floatingDialogPosition as any)?.right;
+    const left = (floatingDialogPosition as any)?.left;
+    if (layout === "right") {
+      setIsDockingRight(typeof right === "number" && right <= 0);
+      setIsDockingLeft(false);
+    } else if (layout === "left") {
+      setIsDockingLeft(typeof left === "number" && left <= 40);
+      setIsDockingRight(false);
+    } else {
+      setIsDockingLeft(false);
+      setIsDockingRight(false);
+    }
+  }, [floatingDialogPosition, layout]);
+  // Switch to AI mode on mouse/touch release if docked at right edge
+  useEffect(() => {
+    const handleRelease = () => {
+      const right = (floatingDialogPosition as any)?.right;
+      const left = (floatingDialogPosition as any)?.left;
+      const atRightEdge = typeof right === "number" && right <= 0;
+      const atLeftEdge = typeof left === "number" && left <= 40;
+      if (layout === "right") {
+        if ((isDockingRight || atRightEdge) && !aiMode) {
+          setAiMode(true);
+        }
+      } else if (layout === "left") {
+        if ((isDockingLeft || atLeftEdge) && !aiMode) {
+          setAiMode(true);
+        }
+      }
+      // Hide guidelines after release
+      setIsDockingRight(false);
+      setIsDockingLeft(false);
+    };
+    document.addEventListener("mouseup", handleRelease);
+    document.addEventListener("touchend", handleRelease);
+    return () => {
+      document.removeEventListener("mouseup", handleRelease);
+      document.removeEventListener("touchend", handleRelease);
+    };
+  }, [floatingDialogPosition, isDockingRight, isDockingLeft, aiMode, layout]);
+
+  // Calculate bottom offset for AI box height
+  // On small screens (max2XL), we need to account for the dataList below
+  const aiBoxBottomOffset = useMemo(() => {
+    return 8;
+    // if (!max2XL) {
+    //   return 8; // Standard padding for large screens
+    // }
+    // // For small screens: dataList height + spacing + container padding
+    // const dataListHeight = typeof dataListSplitHeightSM === 'string'
+    //   ? parseInt(dataListSplitHeightSM)
+    //   : dataListSplitHeightSM || dataListMinHeight;
+    // const spacing = 12; // gapY={3} in Flex (3 * 4px = 12px)
+    // const containerPadding = 8; // py-2 (2 * 4px = 8px)
+    // return dataListHeight + spacing + containerPadding;
+  }, [max2XL, dataListSplitHeightSM, dataListMinHeight]);
+
+  const { ref: aiBoxRef, rect: aiBoxRect } = useAiBoxRect<HTMLDivElement>(
+    aiMode,
+    aiBoxBottomOffset,
+  );
+
+  // Calculate the AI box height based on viewport height rather than free area
+  const [viewportHeight, setViewportHeight] = useState<number>(
+    typeof window !== "undefined" ? window.innerHeight : 0,
+  );
+
+  useEffect(() => {
+    const onResize = () => setViewportHeight(window.innerHeight);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  const aiBoxHeightPx = useMemo(() => {
+    if (!aiBoxRect) return undefined;
+    const topOffsetFromViewport = aiBoxRect.y;
+    const availableHeight = Math.max(
+      0,
+      viewportHeight -
+        bottomBarHeight -
+        topOffsetFromViewport -
+        aiBoxBottomOffset,
+    );
+    return availableHeight;
+  }, [aiBoxRect, aiBoxBottomOffset, viewportHeight]);
+
+  // When AI mode is active, fix the order entry width to 476px
+  useEffect(() => {
+    if (aiMode && typeof setMainSplitSize === "function") {
+      setMainSplitSize("476px");
+    }
+  }, [aiMode, setMainSplitSize]);
+
   const dropAnimationConfig = useMemo(() => {
     return {
       keyframes({
@@ -203,7 +371,13 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
           },
         ];
       },
-      sideEffects: ({ active, dragOverlay }) => {
+      sideEffects: ({
+        active,
+        dragOverlay,
+      }: {
+        active: any;
+        dragOverlay: any;
+      }) => {
         // console.log(active.node);
         active.node.style.opacity = "0";
         const innerElement = dragOverlay.node.querySelector(".inner-content");
@@ -512,31 +686,57 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
       direction="column"
       height="100%"
       style={{
-        minWidth: orderEntryMinWidth,
-        maxWidth: horizontalDraggable ? orderEntryMaxWidth : orderEntryMinWidth,
-        width: mainSplitSize,
+        minWidth: aiMode ? 476 : orderEntryMinWidth,
+        maxWidth: aiMode
+          ? 476
+          : horizontalDraggable
+            ? orderEntryMaxWidth
+            : orderEntryMinWidth,
+        width: aiMode ? "476px" : mainSplitSize,
       }}
     >
-      {sortableItems.map((key: string) => {
-        return (
-          <SortablePanel
-            key={key}
-            id={key}
-            showIndicator={showPositionIcon}
-            className={
-              orderInteractionWidgets[
-                key as keyof typeof orderInteractionWidgets
-              ].className
-            }
-          >
-            {
-              orderInteractionWidgets[
-                key as keyof typeof orderInteractionWidgets
-              ].element
-            }
-          </SortablePanel>
-        );
-      })}
+      {starChildEnabled && (
+        <AiModeToggleButton
+          onClick={() => setAiMode((v) => !v)}
+          aiMode={aiMode}
+        />
+      )}
+      {aiMode ? (
+        <Box
+          id="sideChatContainer"
+          className="oui-w-full oui-rounded-md oui-border oui-border-base-10"
+          p={3}
+          style={{
+            backgroundImage:
+              "repeating-linear-gradient(135deg, rgba(255,255,255,0.06) 0, rgba(255,255,255,0.06) 12px, transparent 12px, transparent 24px)",
+            height: aiBoxHeightPx ?? `calc(100vh - ${bottomBarHeight}px)`,
+          }}
+          ref={aiBoxRef}
+        />
+      ) : (
+        <>
+          {sortableItems.map((key: string) => {
+            return (
+              <SortablePanel
+                key={key}
+                id={key}
+                showIndicator={showPositionIcon}
+                className={
+                  orderInteractionWidgets[
+                    key as keyof typeof orderInteractionWidgets
+                  ].className
+                }
+              >
+                {
+                  orderInteractionWidgets[
+                    key as keyof typeof orderInteractionWidgets
+                  ].element
+                }
+              </SortablePanel>
+            );
+          })}
+        </>
+      )}
     </Flex>
   );
 
@@ -761,13 +961,8 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
                   direction="column"
                   className="oui-relative"
                   style={{
-                    width: orderEntryMinWidth,
-                    // force order entry render actual content height
-                    height: "max-content",
-                    // height:
-                    //   props.extraHeight && props.extraHeight > 100
-                    //     ? undefined
-                    // : "max-content",
+                    width: aiMode ? 476 : orderEntryMinWidth,
+                    height: aiMode ? "100%" : "max-content",
                   }}
                 >
                   <Flex
@@ -775,33 +970,59 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
                     direction="column"
                     height="100%"
                     style={{
-                      minWidth: orderEntryMinWidth,
-                      maxWidth: horizontalDraggable
-                        ? orderEntryMaxWidth
-                        : orderEntryMinWidth,
-                      width: mainSplitSize,
+                      minWidth: aiMode ? 476 : orderEntryMinWidth,
+                      maxWidth: aiMode
+                        ? 476
+                        : horizontalDraggable
+                          ? orderEntryMaxWidth
+                          : orderEntryMinWidth,
+                      width: aiMode ? "476px" : mainSplitSize,
                     }}
                   >
-                    {sortableItems.map((key: string) => {
-                      return (
-                        <SortablePanel
-                          key={key}
-                          id={key}
-                          showIndicator={showPositionIcon}
-                          className={
-                            orderInteractionWidgets[
-                              key as keyof typeof orderInteractionWidgets
-                            ].className
-                          }
-                        >
-                          {
-                            orderInteractionWidgets[
-                              key as keyof typeof orderInteractionWidgets
-                            ].element
-                          }
-                        </SortablePanel>
-                      );
-                    })}
+                    {starChildEnabled && (
+                      <AiModeToggleButton
+                        onClick={() => setAiMode((v) => !v)}
+                        aiMode={aiMode}
+                      />
+                    )}
+                    {aiMode ? (
+                      <Box
+                        id="sideChatContainer"
+                        className="oui-w-full oui-rounded-md oui-border oui-border-base-10"
+                        p={3}
+                        style={{
+                          backgroundImage:
+                            "repeating-linear-gradient(135deg, rgba(255,255,255,0.06) 0, rgba(255,255,255,0.06) 12px, transparent 12px, transparent 24px)",
+                          height:
+                            aiBoxHeightPx ??
+                            `calc(100vh - ${bottomBarHeight}px)`,
+                        }}
+                        ref={aiBoxRef}
+                      />
+                    ) : (
+                      <>
+                        {sortableItems.map((key: string) => {
+                          return (
+                            <SortablePanel
+                              key={key}
+                              id={key}
+                              showIndicator={showPositionIcon}
+                              className={
+                                orderInteractionWidgets[
+                                  key as keyof typeof orderInteractionWidgets
+                                ].className
+                              }
+                            >
+                              {
+                                orderInteractionWidgets[
+                                  key as keyof typeof orderInteractionWidgets
+                                ].element
+                              }
+                            </SortablePanel>
+                          );
+                        })}
+                      </>
+                    )}
                   </Flex>
                   <Box height={props.extraHeight} />
                 </Flex>
@@ -845,6 +1066,16 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
             </SortablePanel>
           ) : null}
         </DragOverlay>
+        {starChildEnabled && (
+          <React.Suspense fallback={null}>
+            <LazyEvmFloatingStarchildBall />
+          </React.Suspense>
+        )}
+        {/* <React.Suspense fallback={null}>
+          <LazyAiSideChatWidget rect={aiBoxRect as any} text="AI Side Chat" />
+        </React.Suspense> */}
+        {isDockingRight && <DockingIndicator position="right" />}
+        {isDockingLeft && <DockingIndicator position="left" />}
       </DndContext>
     );
   }
@@ -893,7 +1124,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
             <SplitLayout
               className={cn("oui-flex oui-flex-1 oui-overflow-hidden")}
               onSizeChange={onSizeChange}
-              disable={!horizontalDraggable}
+              disable={!horizontalDraggable || aiMode}
             >
               {layout === "left" && orderEntryView}
               {mainView}
@@ -932,6 +1163,27 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
           </SortablePanel>
         ) : null}
       </DragOverlay>
+      <React.Suspense fallback={null}>
+        <LazyEvmFloatingStarchildBall />
+      </React.Suspense>
+      {/* <React.Suspense fallback={null}>
+        <LazyAiSideChatWidget rect={aiBoxRect as any} text="AI Side Chat" />
+      </React.Suspense> */}
+      {isDockingRight && <DockingIndicator position="right" />}
+      {isDockingLeft && <DockingIndicator position="left" />}
     </DndContext>
+  );
+};
+
+const DockingIndicator: React.FC<{ position: "left" | "right" }> = ({
+  position,
+}) => {
+  return (
+    <div
+      className={cn(
+        "oui-fixed oui-top-0 oui-bottom-0 oui-z-[60] oui-w-1 oui-bg-primary-darken oui-rounded-sm",
+        position === "left" ? "oui-left-0" : "oui-right-0",
+      )}
+    />
   );
 };

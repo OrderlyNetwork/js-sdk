@@ -35,6 +35,7 @@
     "@orderly.network/ui": "workspace:*",
     "@orderly.network/ui-chain-selector": "workspace:*",
     "@orderly.network/ui-connector": "workspace:*",
+    "@orderly.network/ui-floating-ball": "workspace:*",
     "@orderly.network/ui-leverage": "workspace:*",
     "@orderly.network/ui-order-entry": "workspace:*",
     "@orderly.network/ui-orders": "workspace:*",

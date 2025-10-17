@@ -1,5 +1,5 @@
 import { FC, PropsWithChildren, useMemo } from "react";
-import { AccountStatusEnum } from "@orderly.network/types";
+import { AccountStatusEnum, ChainNamespace } from "@orderly.network/types";
 import { cn, Divider, Flex, useScreen } from "@orderly.network/ui";
 import { WalletConnectButtonExtension } from "../accountMenu/menu.widget";
 import { AccountSummaryWidget } from "../accountSummary";
@@ -11,6 +11,7 @@ import { LinkDeviceWidget } from "./linkDevice";
 import { MainLogo } from "./mainLogo";
 import { MainNavMenusExtension } from "./mainMenus/mainNavMenus.widget";
 import { CampaignPositionEnum, MainNavScriptReturn } from "./mainNav.script";
+import { StarchildSearchButton } from "./starchildSearchButton";
 
 export const MainNav: FC<PropsWithChildren<MainNavScriptReturn>> = (props) => {
   const { className, classNames, campaigns, campaignPosition } = props;
@@ -28,6 +29,12 @@ export const MainNav: FC<PropsWithChildren<MainNavScriptReturn>> = (props) => {
   const hideWalletConnectButton =
     !props.disabledConnect && props.wrongNetwork && props.isConnected;
 
+  const showSearchButton =
+    props.starChildEnabled &&
+    props.namespace === ChainNamespace.evm &&
+    (props.status! >= AccountStatusEnum.EnableTrading ||
+      props.status === AccountStatusEnum.EnableTradingWithoutConnected);
+
   const { isDesktop } = useScreen();
 
   const children = useMemo(() => {
@@ -41,6 +48,7 @@ export const MainNav: FC<PropsWithChildren<MainNavScriptReturn>> = (props) => {
 
   const renderContent = () => {
     const title = <MainLogo {...props.logo} />;
+    const starchildSearchButton = showSearchButton && <StarchildSearchButton />;
     const accountSummary = <AccountSummaryWidget />;
     const linkDevice = showLinkIcon && <LinkDeviceWidget />;
     const languageSwitcher = <LanguageSwitcherWidget />;
@@ -69,6 +77,7 @@ export const MainNav: FC<PropsWithChildren<MainNavScriptReturn>> = (props) => {
       return props.customRender?.({
         title,
         mainNav,
+        starchildSearchButton,
         accountSummary,
         linkDevice,
         languageSwitcher,
@@ -97,6 +106,12 @@ export const MainNav: FC<PropsWithChildren<MainNavScriptReturn>> = (props) => {
         {children}
 
         <Flex itemAlign={"center"} className="oui-gap-2">
+          {isDesktop && showSearchButton && (
+            <>
+              {starchildSearchButton}
+              <Divider direction="vertical" className="oui-h-8" intensity={8} />
+            </>
+          )}
           {accountSummary}
           {showLinkIcon && (
             <>
