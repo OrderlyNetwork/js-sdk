@@ -15,7 +15,7 @@ export const useFundingRateModalScript = (options: FundingRateOptions) => {
   const { last_funding_rate, est_funding_rate } =
     useFundingRateBySymbol(options.symbol) ?? {};
 
-  const [{ aggregated }] = usePositionStream(options.symbol);
+  const [{ aggregated, rows }] = usePositionStream(options.symbol);
 
   const { notional } = aggregated ?? {};
 
@@ -55,12 +55,12 @@ export const useFundingRateModalScript = (options: FundingRateOptions) => {
   }, [est_funding_rate]);
 
   const estFundingFee = useMemo(() => {
-    if (!est_funding_rate || !notional) {
+    if (!est_funding_rate || !notional || rows.length === 0) {
       return "--";
     }
 
     return `${new Decimal(est_funding_rate).mul(notional).todp(4).toNumber()}`;
-  }, [est_funding_rate, notional]);
+  }, [est_funding_rate, notional, rows]);
 
   return {
     fundingPeriod,

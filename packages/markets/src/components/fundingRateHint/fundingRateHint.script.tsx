@@ -13,7 +13,7 @@ export const useFundingRateHintScript = (symbol: string) => {
   const { last_funding_rate, est_funding_rate } =
     useFundingRateBySymbol(symbol) ?? {};
 
-  const [{ aggregated }] = usePositionStream(symbol);
+  const [{ aggregated, rows }] = usePositionStream(symbol);
 
   const { notional } = aggregated ?? {};
 
@@ -53,12 +53,12 @@ export const useFundingRateHintScript = (symbol: string) => {
   }, [est_funding_rate]);
 
   const estFundingFee = useMemo(() => {
-    if (!est_funding_rate || !notional) {
+    if (!est_funding_rate || !notional || rows.length === 0) {
       return "--";
     }
 
     return `${new Decimal(est_funding_rate).mul(notional).todp(4).toNumber()}`;
-  }, [est_funding_rate, notional]);
+  }, [est_funding_rate, notional, rows]);
 
   return useMemo(() => {
     return {
@@ -76,6 +76,7 @@ export const useFundingRateHintScript = (symbol: string) => {
     lastFundingRate,
     estFundingRate,
     estFundingFee,
+    symbol,
   ]);
 };
 
