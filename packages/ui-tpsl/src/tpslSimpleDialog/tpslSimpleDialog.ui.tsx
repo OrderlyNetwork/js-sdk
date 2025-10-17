@@ -137,7 +137,7 @@ export const TPSLSimpleDialogUI: React.FC<Props> = (props) => {
         )}
       >
         <Flex justify={"between"} className="oui-w-full">
-          <Text size="xs">{t("tpsl.advanced.triggerPrice")}</Text>
+          <Text size="xs">{t("common.triggerPrice")}</Text>
           <Text.numeral
             className="oui-text-base-contrast"
             suffix={
@@ -153,9 +153,9 @@ export const TPSLSimpleDialogUI: React.FC<Props> = (props) => {
           </Text.numeral>
         </Flex>
         <Flex justify={"between"} className="oui-w-full">
-          <Text size="xs">{t("tpsl.advanced.orderPrice")}</Text>
+          <Text size="xs">{t("common.orderPrice")}</Text>
           <Text className="oui-text-base-contrast" size="xs">
-            {t("tpsl.advanced.market")}
+            {t("common.market")}
           </Text>
         </Flex>
         {renderPnl()}

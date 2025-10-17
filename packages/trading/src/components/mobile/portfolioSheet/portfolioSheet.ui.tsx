@@ -120,17 +120,17 @@ const Asset: FC<PortfolioSheetState> = (props) => {
           }}
         >
           <Flex gap={1}>
-            <Text.numeral
+            <Text.pnl
               size="xs"
               coloring
               dp={2}
               padding={false}
               visible={!props.hideAssets}
             >
-              {props.aggregated.unrealPnL}
-            </Text.numeral>
+              {props.aggregated.total_unreal_pnl}
+            </Text.pnl>
             {!props.hideAssets && (
-              <Text.numeral
+              <Text.roi
                 size="xs"
                 dp={2}
                 padding={false}
@@ -140,7 +140,7 @@ const Asset: FC<PortfolioSheetState> = (props) => {
                 className={clsName}
               >
                 {props.totalUnrealizedROI}
-              </Text.numeral>
+              </Text.roi>
             )}
           </Flex>
         </Statistic>
@@ -151,15 +151,15 @@ const Asset: FC<PortfolioSheetState> = (props) => {
           }}
         >
           <Flex justify={"between"} width={"100%"}>
-            <Text.numeral
+            <Text.pnl
               size="xs"
               coloring
               dp={2}
               padding={false}
               visible={!props.hideAssets}
             >
-              {props.aggregated.unsettledPnL}
-            </Text.numeral>
+              {props.aggregated.total_unsettled_pnl}
+            </Text.pnl>
             <button
               className="oui-flex oui-gap-1 oui-items-center"
               onClick={onUnsettleClick}
@@ -228,23 +228,23 @@ const MarginRatio: FC<PortfolioSheetState> = (props) => {
         }}
       >
         <Flex justify={"start"} width={"100%"} gap={1}>
-          <Text.numeral
+          <Text.collateral
             size="xs"
             dp={2}
             padding={false}
             visible={!props.hideAssets}
           >
             {props.freeCollateral}
-          </Text.numeral>
+          </Text.collateral>
           <Text size="xs">/</Text>
-          <Text.numeral
+          <Text.collateral
             size="xs"
             dp={2}
             padding={false}
             visible={!props.hideAssets}
           >
             {props.totalCollateral}
-          </Text.numeral>
+          </Text.collateral>
         </Flex>
       </Statistic>
     </Grid>

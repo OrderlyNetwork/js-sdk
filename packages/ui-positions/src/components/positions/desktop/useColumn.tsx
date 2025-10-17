@@ -13,7 +13,7 @@ import {
 } from "@orderly.network/ui";
 import { SymbolLeverageDialogId } from "@orderly.network/ui-leverage";
 import { SharePnLOptions, SharePnLDialogId } from "@orderly.network/ui-share";
-import { Decimal } from "@orderly.network/utils";
+import { Decimal, formatNum } from "@orderly.network/utils";
 import { FundingFeeButton } from "../../fundingFeeHistory/fundingFeeButton";
 import { RwaStatusTag } from "../../rwaStatus/rwaStatus";
 import { ClosePositionWidget } from "../closePosition";
@@ -186,25 +186,23 @@ export const useColumn = (config: ColumnConfig) => {
           return (
             <Flex gap={2}>
               <Flex>
-                <Text.numeral
+                <Text.pnl
                   dp={pnlNotionalDecimalPrecision}
-                  rm={Decimal.ROUND_DOWN}
                   coloring
                   className="oui-font-semibold"
                 >
                   {value}
-                </Text.numeral>
-                <Text.numeral
+                </Text.pnl>
+                <Text.roi
                   rule="percentages"
                   dp={pnlNotionalDecimalPrecision}
-                  rm={Decimal.ROUND_DOWN}
                   coloring
                   className="oui-font-semibold"
                   prefix="("
                   suffix=")"
                 >
                   {record.unrealized_pnl_ROI}
-                </Text.numeral>
+                </Text.roi>
               </Flex>
               <ShareButtonWidget
                 position={record}
@@ -248,7 +246,9 @@ export const useColumn = (config: ColumnConfig) => {
         width: 100,
         onSort: true,
         render: (value: string) => (
-          <Text.numeral dp={pnlNotionalDecimalPrecision}>{value}</Text.numeral>
+          <Text.notional dp={pnlNotionalDecimalPrecision}>
+            {value}
+          </Text.notional>
         ),
       },
       {

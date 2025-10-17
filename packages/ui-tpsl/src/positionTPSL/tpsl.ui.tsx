@@ -55,6 +55,9 @@ export const TPSL: React.FC<TPSLBuilderState & TPSLProps> = (props) => {
     return null;
   }
 
+  const tpslEnable =
+    TPSL_OrderEntity.tp_trigger_price || TPSL_OrderEntity.sl_trigger_price;
+
   const renderQtyInput = () => {
     if (TPSL_OrderEntity.position_type === PositionType.FULL) {
       return null;
@@ -130,7 +133,7 @@ export const TPSL: React.FC<TPSLBuilderState & TPSLProps> = (props) => {
               type="tp"
               side={position.position_qty > 0 ? OrderSide.BUY : OrderSide.SELL}
               values={{
-                enable: TPSL_OrderEntity.tp_enable ?? true,
+                // enable: TPSL_OrderEntity.tp_enable ?? false,
                 trigger_price:
                   TPSL_OrderEntity.tp_trigger_price?.toString() ?? undefined,
                 PnL: TPSL_OrderEntity.tp_pnl?.toString() ?? undefined,
@@ -163,7 +166,7 @@ export const TPSL: React.FC<TPSLBuilderState & TPSLProps> = (props) => {
               type="sl"
               side={position.position_qty > 0 ? OrderSide.BUY : OrderSide.SELL}
               values={{
-                enable: TPSL_OrderEntity.sl_enable ?? true,
+                // enable: TPSL_OrderEntity.sl_enable ?? false,
                 trigger_price:
                   TPSL_OrderEntity.sl_trigger_price?.toString() ?? undefined,
                 PnL: TPSL_OrderEntity.sl_pnl?.toString() ?? undefined,
@@ -212,7 +215,7 @@ export const TPSL: React.FC<TPSLBuilderState & TPSLProps> = (props) => {
         <ThrottledButton
           size={"md"}
           data-testid={"tpsl-confirm"}
-          disabled={status.isCreateMutating}
+          disabled={status.isCreateMutating || !tpslEnable}
           loading={status.isCreateMutating || status.isUpdateMutating}
           onClick={() => {
             props

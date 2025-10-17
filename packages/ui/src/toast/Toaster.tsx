@@ -1,11 +1,12 @@
 "use client";
+
+import { FC } from "react";
 import {
   ToastBar,
   toast,
   Toaster as PrimitiveToaster,
   ToastOptions,
 } from "react-hot-toast";
-import { FC } from "react";
 import { CloseIcon, cn } from "..";
 import {
   ToastErrorIcon,
@@ -34,14 +35,14 @@ export const Toaster: FC<ToastProps> = (props) => {
           },
           style: {
             // color: "rgba(123, 220, 138, 1)",
-            background: 'rgba(40, 46, 58, 1)'
+            background: "rgba(40, 46, 58, 1)",
           },
         },
         loading: {
           duration: 5000,
           style: {
-            background: 'rgba(40, 46, 58, 1)'
-          }
+            background: "rgba(40, 46, 58, 1)",
+          },
         },
         error: {
           iconTheme: {
@@ -50,7 +51,7 @@ export const Toaster: FC<ToastProps> = (props) => {
           },
           style: {
             // color: "rgba(217, 91, 129, 1)",
-            background: 'rgba(40, 46, 58, 1)'
+            background: "rgba(40, 46, 58, 1)",
           },
         },
         custom: {
@@ -58,12 +59,15 @@ export const Toaster: FC<ToastProps> = (props) => {
           removeDelay: 0,
           position: "top-right",
           style: {
-            background: 'rgba(40, 46, 58, 1)'
+            background: "rgba(40, 46, 58, 1)",
           },
-        }
+        },
       }}
       {...props}
-      containerClassName={cn("!top-[62px] md:!top-[80px] oui-font-semibold", props.className)}
+      containerClassName={cn(
+        "!top-[62px] md:!top-[80px] oui-font-semibold",
+        props.className,
+      )}
     >
       {(t) => (
         // @ts-ignore
@@ -86,9 +90,7 @@ export const Toaster: FC<ToastProps> = (props) => {
                 <ToastErrorIcon className="w-[16px] h-[16px] md:w-[24px] md:h-[24px]" />
               );
             } else if (t.type === "success") {
-              customIcon = (
-                <ToastSuccessIcon size={20} />
-              );
+              customIcon = <ToastSuccessIcon size={20} />;
             } else if (t.type === "loading") {
               customIcon = (
                 <div className="oui-animate-rotate-360 oui-rounded-full">
@@ -96,20 +98,21 @@ export const Toaster: FC<ToastProps> = (props) => {
                 </div>
               );
             } else if (t.type === "custom") {
-              customIcon =<></>;
+              customIcon = <></>;
             }
             return (
               <div className="oui-flex oui-items-center oui-padding-[12px] md:oui-padding-[16px]">
                 {customIcon}
-                <div className="oui-text-base oui-px-[2px]">
-                  {message}
-                </div>
+                <div className="oui-text-base oui-px-[2px]">{message}</div>
                 {true && (
                   <button
                     onClick={() => toast.dismiss(t.id)}
                     className="oui-hidden md:oui-block"
                   >
-                    <CloseIcon size={16} className=" oui-text-base-contrast-54" />
+                    <CloseIcon
+                      size={16}
+                      className=" oui-text-base-contrast-54"
+                    />
                   </button>
                 )}
               </div>

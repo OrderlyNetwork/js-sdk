@@ -1,5 +1,9 @@
 import { useMemo } from "react";
-import { useGetRwaSymbolInfo, useSymbolsInfo, useTickerStream } from "@orderly.network/hooks";
+import {
+  useGetRwaSymbolInfo,
+  useSymbolsInfo,
+  useTickerStream,
+} from "@orderly.network/hooks";
 
 export type UseSymbolInfoBarScriptOptions = {
   symbol: string;
@@ -11,7 +15,8 @@ export type UseSymbolInfoBarScriptReturn = ReturnType<
 
 export function useSymbolInfoBarScript(options: UseSymbolInfoBarScriptOptions) {
   const { symbol } = options;
-  const { isRwa, open, closeTimeInterval, openTimeInterval } = useGetRwaSymbolInfo(symbol);
+  const { isRwa, open, closeTimeInterval, openTimeInterval } =
+    useGetRwaSymbolInfo(symbol);
 
   const data = useTickerStream(symbol);
 

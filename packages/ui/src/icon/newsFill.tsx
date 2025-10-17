@@ -13,7 +13,7 @@ export const NewsFillIcon = React.forwardRef<SVGSVGElement, BaseIconProps>(
         />
       </BaseIcon>
     );
-  }
+  },
 );
 
 NewsFillIcon.displayName = "NewsFillIcon";

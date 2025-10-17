@@ -82,17 +82,15 @@ export const PortfolioValueMobile: FC<Props> = (props) => {
         itemAlign={"center"}
         className="oui-text-sm oui-text-base-contrast"
       >
-        <Text.numeral visible={props.visible}>
-          {props.unrealPnL ?? "--"}
-        </Text.numeral>
-        <Text.numeral
+        <Text.pnl visible={props.visible}>{props.unrealPnL ?? "--"}</Text.pnl>
+        <Text.roi
           visible={props.visible}
           rule="percentages"
           prefix={"("}
           suffix={")"}
         >
           {props.unrealROI ?? "--"}
-        </Text.numeral>
+        </Text.roi>
       </Flex>
       <div
         className="oui-absolute oui-right-0 oui-top-0 oui-flex oui-h-full oui-items-center oui-justify-center oui-px-4"

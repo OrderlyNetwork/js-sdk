@@ -115,15 +115,15 @@ export const AssetStatistic = (props: AssetStatisticProps) => {
     <Grid cols={2} className="oui-h-12">
       <Statistic label={t("common.unrealizedPnl")}>
         <Flex>
-          <Text.numeral
+          <Text.pnl
             coloring
             size="lg"
             weight="semibold"
             visible={props.visible}
           >
             {props.unrealPnL}
-          </Text.numeral>
-          <Text.numeral
+          </Text.pnl>
+          <Text.roi
             coloring
             rule="percentages"
             size="sm"
@@ -133,7 +133,7 @@ export const AssetStatistic = (props: AssetStatisticProps) => {
             visible={props.visible}
           >
             {props.unrealROI}
-          </Text.numeral>
+          </Text.roi>
         </Flex>
       </Statistic>
       <Statistic

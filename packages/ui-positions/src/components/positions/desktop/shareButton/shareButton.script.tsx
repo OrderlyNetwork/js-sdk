@@ -8,7 +8,7 @@ import {
 import { account, positions } from "@orderly.network/perp";
 import { modal } from "@orderly.network/ui";
 import { SharePnLConfig } from "@orderly.network/ui-share";
-import { Decimal } from "@orderly.network/utils";
+import { formatNum } from "@orderly.network/utils";
 
 export type ShareButtonScriptOptions = {
   position: any;
@@ -75,7 +75,7 @@ export const useShareButtonScript = (props: ShareButtonScriptOptions) => {
         unrealizedPnL: netPnL,
       });
 
-      roi = new Decimal(unrealizedPnLROI * 100).toFixed(2, Decimal.ROUND_DOWN);
+      roi = formatNum.roi(unrealizedPnLROI * 100)?.toString();
     }
 
     return {
@@ -95,11 +95,12 @@ export const useShareButtonScript = (props: ShareButtonScriptOptions) => {
       ? getHistoryEntity()
       : {
           side: position.position_qty > 0 ? "LONG" : "SHORT",
-          pnl: position.unrealized_pnl,
-          roi: new Decimal(position.unrealized_pnl_ROI * 100).toFixed(
-            2,
-            Decimal.ROUND_DOWN,
-          ),
+          pnl:
+            formatNum.pnl(position.unrealized_pnl)?.toNumber() ??
+            position.unrealized_pnl,
+          roi:
+            formatNum.roi(position.unrealized_pnl_ROI)?.toNumber() ??
+            position.unrealized_pnl_ROI,
           openPrice: Math.abs(position.average_open_price),
           markPrice: position.mark_price,
           openTime: position.timestamp,

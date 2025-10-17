@@ -51,34 +51,34 @@ export type ValidateError = {
   [P in keyof ComputedAlgoOrder]?: OrderValidationItem;
 };
 
-const checkIsEnableTpSL = (
-  order?: API.AlgoOrder,
-): {
-  tp_enable: boolean;
-  sl_enable: boolean;
-} => {
-  const result = {
-    tp_enable: true,
-    sl_enable: true,
-  };
-  if (!order) {
-    return result;
-  }
-  const tp = order.child_orders.find(
-    (o) => o.algo_type === AlgoOrderType.TAKE_PROFIT && o.is_activated,
-  );
-  const sl = order.child_orders.find(
-    (o) => o.algo_type === AlgoOrderType.STOP_LOSS && o.is_activated,
-  );
+// const checkIsEnableTpSL = (
+//   order?: API.AlgoOrder,
+// ): {
+//   tp_enable: boolean;
+//   sl_enable: boolean;
+// } => {
+//   const result = {
+//     tp_enable: true,
+//     sl_enable: true,
+//   };
+//   if (!order) {
+//     return result;
+//   }
+//   const tp = order.child_orders.find(
+//     (o) => o.algo_type === AlgoOrderType.TAKE_PROFIT && o.is_activated,
+//   );
+//   const sl = order.child_orders.find(
+//     (o) => o.algo_type === AlgoOrderType.STOP_LOSS && o.is_activated,
+//   );
 
-  if (!tp) {
-    result.tp_enable = false;
-  }
-  if (!sl) {
-    result.sl_enable = false;
-  }
-  return result;
-};
+//   if (!tp) {
+//     result.tp_enable = false;
+//   }
+//   if (!sl) {
+//     result.sl_enable = false;
+//   }
+//   return result;
+// };
 
 /**
  * @hidden
@@ -94,10 +94,10 @@ export const useTaskProfitAndStopLossInternal = (
      * Conversely, even if defaultOrder is provided and isEditing is false, a new TPSL order is still created
      */
     isEditing?: boolean;
-    tpslEnable?: {
-      tp_enable?: boolean;
-      sl_enable?: boolean;
-    };
+    // tpslEnable?: {
+    //   tp_enable?: boolean;
+    //   sl_enable?: boolean;
+    // };
     positionType?: PositionType;
   },
 ): [
@@ -168,12 +168,12 @@ export const useTaskProfitAndStopLossInternal = (
     // quantity:
     //   options?.defaultOrder?.quantity || Math.abs(position.position_qty),
     algo_type: options?.defaultOrder?.algo_type as AlgoOrderRootType,
-    tp_enable: isEditing
-      ? checkIsEnableTpSL(options?.defaultOrder).tp_enable
-      : options?.tpslEnable?.tp_enable,
-    sl_enable: isEditing
-      ? checkIsEnableTpSL(options?.defaultOrder).sl_enable
-      : options?.tpslEnable?.sl_enable,
+    // tp_enable: isEditing
+    //   ? checkIsEnableTpSL(options?.defaultOrder).tp_enable
+    //   : options?.tpslEnable?.tp_enable,
+    // sl_enable: isEditing
+    //   ? checkIsEnableTpSL(options?.defaultOrder).sl_enable
+    //   : options?.tpslEnable?.sl_enable,
     position_type: options?.positionType,
   });
 

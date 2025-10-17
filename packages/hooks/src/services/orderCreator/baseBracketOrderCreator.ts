@@ -25,12 +25,12 @@ export async function bracketOrderValidator<
   const result: OrderValidationResult = Object.create(null);
   await Promise.resolve();
   const {
-    tp_enable,
+    // tp_enable,
+    // sl_enable,
     tp_trigger_price,
     tp_order_price,
     tp_order_type,
     sl_trigger_price,
-    sl_enable,
     sl_order_price,
     sl_order_type,
     side,
@@ -57,12 +57,12 @@ export async function bracketOrderValidator<
   if (Number(sl_trigger_price) < 0) {
     result.sl_trigger_price = OrderValidation.min("sl_trigger_price", 0);
   }
-  if (tp_enable && !tp_trigger_price) {
-    result.tp_trigger_price = OrderValidation.required("tp_trigger_price");
-  }
-  if (sl_enable && !sl_trigger_price) {
-    result.sl_trigger_price = OrderValidation.required("sl_trigger_price");
-  }
+  // if (tp_enable && !tp_trigger_price) {
+  //   result.tp_trigger_price = OrderValidation.required("tp_trigger_price");
+  // }
+  // if (sl_enable && !sl_trigger_price) {
+  //   result.sl_trigger_price = OrderValidation.required("sl_trigger_price");
+  // }
   if (tp_order_type === OrderType.LIMIT && !tp_order_price) {
     result.tp_order_price = OrderValidation.required("tp_order_price");
   }
