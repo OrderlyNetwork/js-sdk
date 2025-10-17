@@ -193,7 +193,7 @@ export function AdvancedTPSLResult(props: {
       gap={4}
     >
       <Flex justify={"between"} itemAlign={"start"} className="oui-w-full">
-        <Text>{t("tpsl.advanced.title")}</Text>
+        <Text>{t("common.tpsl")}</Text>
         <Flex gap={2}>
           <DeleteIcon
             size={12}

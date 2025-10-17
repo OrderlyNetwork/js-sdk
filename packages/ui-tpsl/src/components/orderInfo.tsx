@@ -70,7 +70,7 @@ export const OrderInfo = (props: Props) => {
         className={cn("oui-w-full oui-gap-x-2 ", props.classNames?.container)}
       >
         <Flex justify={"between"} className=" oui-text-base-contrast-36">
-          <Text size="2xs">{t("tpsl.advanced.quantity")}</Text>
+          <Text size="2xs">{t("common.quantity")}</Text>
           <Text.numeral
             rule="price"
             className="oui-text-base-contrast-80"
@@ -81,7 +81,7 @@ export const OrderInfo = (props: Props) => {
           </Text.numeral>
         </Flex>
         <Flex justify={"between"} className="oui-text-base-contrast-36">
-          <Text size="2xs">{t("tpsl.advanced.lastPrice")}</Text>
+          <Text size="2xs">{t("common.lastPrice")}</Text>
           <Text.numeral
             rule="price"
             className="oui-text-base-contrast-80"
@@ -92,7 +92,7 @@ export const OrderInfo = (props: Props) => {
           </Text.numeral>
         </Flex>
         <Flex justify={"between"} className="oui-text-base-contrast-36">
-          <Text size="2xs">{t("tpsl.advanced.orderPrice")}</Text>
+          <Text size="2xs">{t("common.orderPrice")}</Text>
           <Text.numeral
             rule="price"
             className="oui-text-base-contrast-80"

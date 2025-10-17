@@ -1,13 +1,6 @@
 import { MouseEventHandler, ReactNode } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import {
-  Flex,
-  TokenIcon,
-  Text,
-  Badge,
-  cn,
-  Column,
-} from "@orderly.network/ui";
+import { Flex, TokenIcon, Text, Badge, cn, Column } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import {
   DeleteIcon,

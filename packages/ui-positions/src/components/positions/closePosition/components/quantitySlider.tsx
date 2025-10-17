@@ -1,5 +1,6 @@
+import { useEffect, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { Flex, Slider, Text } from "@orderly.network/ui";
+import { Button, cn, Flex, Slider, Text } from "@orderly.network/ui";
 
 type QuantitySliderProps = {
   value: number;
@@ -11,16 +12,42 @@ type QuantitySliderProps = {
 
 export const QuantitySlider = (props: QuantitySliderProps) => {
   const { t } = useTranslation();
+  const [sliderValue, setSliderValue] = useState(props.value);
+
+  useEffect(() => {
+    setSliderValue(props.value);
+  }, [props.value]);
 
   return (
     <>
+      <Flex justify={"between"} width={"100%"} gap={2}>
+        {[25, 50, 75, 100].map((e, index) => (
+          <Button
+            key={index}
+            variant={"outlined"}
+            size={"xs"}
+            color="secondary"
+            onClick={() => {
+              props.onValueChange(e);
+              setSliderValue(e);
+            }}
+            className={cn(
+              "oui-w-1/4",
+              sliderValue === e ? "oui-border-primary oui-text-primary" : "",
+            )}
+          >{`${e}%`}</Button>
+        ))}
+      </Flex>
       <Slider
         showTip
         markCount={4}
+        min={0}
+        max={100}
         value={[props.value]}
         color="primary"
         onValueChange={(value) => {
           props.onValueChange(value[0]);
+          setSliderValue(value[0]);
         }}
       />
       <Flex width={"100%"} justify={"between"}>

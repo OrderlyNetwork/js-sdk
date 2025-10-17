@@ -398,9 +398,9 @@ export function tpslCalculateHelper(
     key !== "tp_order_price" &&
     key !== "sl_order_price" &&
     key !== "tp_order_type" &&
-    key !== "sl_order_type" &&
-    key !== "tp_enable" &&
-    key !== "sl_enable"
+    key !== "sl_order_type"
+    // key !== "tp_enable" &&
+    // key !== "sl_enable"
   ) {
     return {
       [key]: inputs.value,
@@ -469,19 +469,19 @@ export function tpslCalculateHelper(
       break;
     }
 
-    case "tp_enable":
-    case "sl_enable": {
-      return {
-        [`${keyPrefix}enable`]: inputs.value,
-        [`${keyPrefix}order_type`]: OrderType.MARKET,
-        [`${keyPrefix}trigger_price`]: "",
-        [`${keyPrefix}order_price`]: "",
-        [`${keyPrefix}offset`]: "",
-        [`${keyPrefix}offset_percentage`]: "",
-        [`${keyPrefix}pnl`]: "",
-        [`${keyPrefix}ROI`]: "",
-      };
-    }
+    // case "tp_enable":
+    // case "sl_enable": {
+    //   return {
+    //     [`${keyPrefix}enable`]: inputs.value,
+    //     [`${keyPrefix}order_type`]: OrderType.MARKET,
+    //     [`${keyPrefix}trigger_price`]: "",
+    //     [`${keyPrefix}order_price`]: "",
+    //     [`${keyPrefix}offset`]: "",
+    //     [`${keyPrefix}offset_percentage`]: "",
+    //     [`${keyPrefix}pnl`]: "",
+    //     [`${keyPrefix}ROI`]: "",
+    //   };
+    // }
 
     // case 'tp_pnl':{
     //   if (inputs.values.tp_order_type !== OrderType.MARKET) {

@@ -105,26 +105,24 @@ const UnrealPnL: React.FC<
   return (
     <Statistic label={t("common.unrealizedPnl")} classNames={props.classNames}>
       <Flex gap={1}>
-        <Text.numeral
+        <Text.pnl
           dp={props.pnlNotionalDecimalPrecision}
-          rm={Decimal.ROUND_DOWN}
           intensity={80}
           className={unrealPnLClsName}
         >
           {props.unrealPnL ?? "--"}
-        </Text.numeral>
+        </Text.pnl>
         {typeof props.unrealPnlROI !== "undefined" && (
-          <Text.numeral
+          <Text.roi
             prefix="("
             suffix=")"
             rule="percentages"
             size="2xs"
             dp={props.pnlNotionalDecimalPrecision}
-            rm={Decimal.ROUND_DOWN}
             className={unrealPnLROIClsName}
           >
             {props.unrealPnlROI}
-          </Text.numeral>
+          </Text.roi>
         )}
       </Flex>
     </Statistic>

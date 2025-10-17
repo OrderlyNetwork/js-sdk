@@ -27,7 +27,8 @@ export function useSymbolInfoBarFullScript(
 
   const favorite = useMarketsStore();
 
-  const { isRwa, open, closeTimeInterval, openTimeInterval } = useGetRwaSymbolInfo(symbol);
+  const { isRwa, open, closeTimeInterval, openTimeInterval } =
+    useGetRwaSymbolInfo(symbol);
 
   const { data: fundingDetails, isLoading: isFundingLoading } =
     useFundingDetails(symbol);

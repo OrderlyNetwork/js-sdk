@@ -66,6 +66,11 @@ export const PnlAreaChart: React.FC<PnlAreaChartProps> = (props) => {
 
   const data = useMemo(() => dataTransfer(props.data), [props.data]);
 
+  const baseValue = useMemo(
+    () => data.map((item) => item.pnl).sort((a, b) => a - b)[0] || 0,
+    [data],
+  );
+
   const chartComponent = (
     <AreaChart
       data={data}
@@ -108,6 +113,7 @@ export const PnlAreaChart: React.FC<PnlAreaChartProps> = (props) => {
             dot={false}
             isAnimationActive={false}
             fill={`url(#${colorId})`}
+            baseValue={baseValue || 0}
           />
         </>
       )}

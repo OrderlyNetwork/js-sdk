@@ -1,8 +1,8 @@
 import { useMemo, useEffect } from "react";
 import { create } from "zustand";
+import { API } from "@orderly.network/types";
 import { createGetter } from "../utils/createGetter";
 import { useAppStore } from "./appStore";
-import { API } from "@orderly.network/types";
 
 /**
  * Check if currently trading based on next_open/next_close timestamps
@@ -16,7 +16,6 @@ export const isCurrentlyTrading = (
   status: "open" | "close",
   currentTime: number = Date.now(),
 ): boolean => {
-
   return currentTime < nextClose && status === "open";
 };
 
@@ -122,13 +121,23 @@ const computeSymbolState = (
   let openTimeInterval: number | undefined;
 
   // Calculate countdown to closing time
-  if (next_close && typeof next_close === "number" && next_close > currentTime) {
-    closeTimeInterval = Math.max(0, Math.floor((next_close - currentTime) / 1000));
+  if (
+    next_close &&
+    typeof next_close === "number" &&
+    next_close > currentTime
+  ) {
+    closeTimeInterval = Math.max(
+      0,
+      Math.floor((next_close - currentTime) / 1000),
+    );
   }
 
   // Calculate countdown to opening time
   if (next_open && typeof next_open === "number" && next_open > currentTime) {
-    openTimeInterval = Math.max(0, Math.floor((next_open - currentTime) / 1000));
+    openTimeInterval = Math.max(
+      0,
+      Math.floor((next_open - currentTime) / 1000),
+    );
   }
 
   return {
@@ -145,61 +154,63 @@ const computeSymbolState = (
  * Centralized RWA symbols runtime state management
  * Uses a single timer to compute all symbol states, avoiding performance waste from multiple timers
  */
-const useRwaSymbolsRuntimeStore = create<RwaSymbolsRuntimeState>((set, get) => ({
-  computedStates: {},
-  currentTime: Date.now(),
-  timerId: undefined,
+const useRwaSymbolsRuntimeStore = create<RwaSymbolsRuntimeState>(
+  (set, get) => ({
+    computedStates: {},
+    currentTime: Date.now(),
+    timerId: undefined,
 
-  startTimer: () => {
-    const state = get();
-    
-    // Clear existing timer if present
-    if (state.timerId) {
-      clearInterval(state.timerId);
-    }
+    startTimer: () => {
+      const state = get();
 
-    // Start new timer, update every second
-    const timerId = setInterval(() => {
-      const currentTime = Date.now();
-      const rwaSymbolsInfo = useAppStore.getState().rwaSymbolsInfo;
-
-      if (!rwaSymbolsInfo) {
-        set({ currentTime });
-        return;
+      // Clear existing timer if present
+      if (state.timerId) {
+        clearInterval(state.timerId);
       }
 
-      // Compute states for all RWA symbols
+      // Start new timer, update every second
+      const timerId = setInterval(() => {
+        const currentTime = Date.now();
+        const rwaSymbolsInfo = useAppStore.getState().rwaSymbolsInfo;
+
+        if (!rwaSymbolsInfo) {
+          set({ currentTime });
+          return;
+        }
+
+        // Compute states for all RWA symbols
+        const computedStates: Record<string, ComputedRwaSymbolState> = {};
+
+        Object.entries(rwaSymbolsInfo).forEach(([symbol, rwaSymbol]) => {
+          computedStates[symbol] = computeSymbolState(rwaSymbol, currentTime);
+        });
+
+        set({ computedStates, currentTime });
+      }, 1000);
+
+      set({ timerId });
+    },
+
+    stopTimer: () => {
+      const state = get();
+      if (state.timerId) {
+        clearInterval(state.timerId);
+        set({ timerId: undefined });
+      }
+    },
+
+    updateComputedStates: (rwaSymbolsInfo: Record<string, API.RwaSymbol>) => {
+      const currentTime = get().currentTime;
       const computedStates: Record<string, ComputedRwaSymbolState> = {};
-      
+
       Object.entries(rwaSymbolsInfo).forEach(([symbol, rwaSymbol]) => {
         computedStates[symbol] = computeSymbolState(rwaSymbol, currentTime);
       });
 
-      set({ computedStates, currentTime });
-    }, 1000);
-
-    set({ timerId });
-  },
-
-  stopTimer: () => {
-    const state = get();
-    if (state.timerId) {
-      clearInterval(state.timerId);
-      set({ timerId: undefined });
-    }
-  },
-
-  updateComputedStates: (rwaSymbolsInfo: Record<string, API.RwaSymbol>) => {
-    const currentTime = get().currentTime;
-    const computedStates: Record<string, ComputedRwaSymbolState> = {};
-
-    Object.entries(rwaSymbolsInfo).forEach(([symbol, rwaSymbol]) => {
-      computedStates[symbol] = computeSymbolState(rwaSymbol, currentTime);
-    });
-
-    set({ computedStates });
-  },
-}));
+      set({ computedStates });
+    },
+  }),
+);
 
 /**
  * Hook to initialize and manage the global timer
@@ -207,7 +218,8 @@ const useRwaSymbolsRuntimeStore = create<RwaSymbolsRuntimeState>((set, get) => (
  */
 export const useInitRwaSymbolsRuntime = () => {
   const rwaSymbolsInfo = useRwaSymbolsInfoStore();
-  const { startTimer, stopTimer, updateComputedStates } = useRwaSymbolsRuntimeStore();
+  const { startTimer, stopTimer, updateComputedStates } =
+    useRwaSymbolsRuntimeStore();
 
   useEffect(() => {
     // Start timer when rwaSymbolsInfo exists
@@ -234,7 +246,7 @@ export const useInitRwaSymbolsRuntime = () => {
 export const useGetRwaSymbolInfo = (symbol: string): RwaSymbolResult => {
   // Subscribe to the computed state of a specific symbol
   const computedState = useRwaSymbolsRuntimeStore(
-    (state) => state.computedStates[symbol]
+    (state) => state.computedStates[symbol],
   );
 
   return useMemo(() => {
