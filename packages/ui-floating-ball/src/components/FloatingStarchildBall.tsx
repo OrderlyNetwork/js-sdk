@@ -2,7 +2,7 @@ import React, { useMemo, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Button } from "@orderly.network/ui";
 import { FloatingStarchildDialog } from "./FloatingStarchildDialog";
-import { StarchildIcon } from "./icons/StarchildIcon";
+import { StarChildChatIcon } from "./icons/StarChildChatIcon";
 
 export interface FloatingBallProps {
   label?: string;
@@ -37,18 +37,15 @@ export const FloatingStarchildBall: React.FC<FloatingBallProps> = ({
   const containerStyle = useMemo<React.CSSProperties>(() => {
     // Base for bottom-right alignment
     const baseBottom = 22;
-    const baseRight = -10;
+    const baseRight = -4;
     return {
       position: "fixed",
       zIndex: 50,
       bottom: baseBottom + offset,
       right: baseRight + offset,
-      padding: 0,
-      background: "transparent",
-      border: 0,
-      lineHeight: 0,
+      width: 54,
+      height: 54,
       cursor: "pointer",
-      userSelect: "none",
     };
   }, [offset]);
 
@@ -61,8 +58,9 @@ export const FloatingStarchildBall: React.FC<FloatingBallProps> = ({
           aria-label={ariaLabel || label || "Open"}
           title={label}
           style={containerStyle}
+          className="oui-bg-base-6 hover:oui-bg-base-5 oui-rounded-xl"
         >
-          <StarchildIcon size={diameter} />
+          <StarChildChatIcon />
         </Button>
       </Dialog.Trigger>
 

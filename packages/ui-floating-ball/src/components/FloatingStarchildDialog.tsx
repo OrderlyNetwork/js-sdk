@@ -91,6 +91,7 @@ export const FloatingStarchildDialog: React.FC<
           bottom: pos.bottom,
           right: pos.right,
           zIndex: 51,
+          background: "#07080A",
         }}
       >
         <VisuallyHidden.Root>

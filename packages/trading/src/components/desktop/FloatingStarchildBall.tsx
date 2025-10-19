@@ -20,6 +20,16 @@ export const FloatingStarchildBall: React.FC = () => {
   const { namespace } = useWalletConnector();
   const [hiddenByInitEvent, setHiddenByInitEvent] = React.useState(false);
 
+  const handleClose = React.useCallback(() => {
+    try {
+      const evt = new KeyboardEvent("keydown", {
+        key: "Escape",
+        bubbles: true,
+      });
+      document.dispatchEvent(evt);
+    } catch {}
+  }, []);
+
   const tradingEnabledOnEvm =
     (state.status >= AccountStatusEnum.EnableTrading ||
       state.status === AccountStatusEnum.EnableTradingWithoutConnected) &&
@@ -69,6 +79,7 @@ export const FloatingStarchildBall: React.FC = () => {
             onBindingComplete={(bindingData: any) => {
               console.log("Accounts bound successfully:", bindingData);
             }}
+            onClose={handleClose}
           />
         </React.Suspense>
       </LazyFloatingBall>

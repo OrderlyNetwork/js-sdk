@@ -1,5 +1,6 @@
 import React from "react";
 import { Button, Flex, Text, Box, cn } from "@orderly.network/ui";
+import starchildBG from "../assets/starchildBG.png";
 import { useTelegramBinding } from "../hooks/useTelegramBinding";
 import type { TelegramUserData, WalletData, BindingData } from "../types";
 import {
@@ -12,6 +13,7 @@ import {
   CheckIcon,
   StarchildFlatIcon,
   TelegramIcon,
+  LoadingIcon,
 } from "./icons";
 
 interface TelegramBindingProps {
@@ -84,7 +86,6 @@ export const TelegramBinding: React.FC<TelegramBindingProps> = ({
       r="2xl"
       className={cn(
         "oui-relative",
-        "oui-bg-base-9",
         "oui-overflow-hidden",
         "oui-border",
         "oui-border-base-contrast-12",
@@ -95,6 +96,10 @@ export const TelegramBinding: React.FC<TelegramBindingProps> = ({
       style={{
         width: "420px",
         height: "680px",
+        backgroundImage: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(${starchildBG})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
       }}
     >
       {/* Header */}
@@ -149,7 +154,7 @@ export const TelegramBinding: React.FC<TelegramBindingProps> = ({
             >
               <Text
                 size="sm"
-                className="oui-text-primary-contrast oui-font-semibold"
+                className="oui-text-base-contrast-98 oui-font-medium"
               >
                 Sign In
               </Text>
@@ -187,7 +192,7 @@ export const TelegramBinding: React.FC<TelegramBindingProps> = ({
             >
               <Text
                 size="sm"
-                className="oui-text-primary-contrast oui-font-semibold"
+                className="oui-text-base-contrast-98 oui-font-medium"
               >
                 Create
               </Text>
@@ -199,7 +204,7 @@ export const TelegramBinding: React.FC<TelegramBindingProps> = ({
           {/* Title Section with Connect Button */}
           <Box className="oui-mt-7 oui-space-y-5">
             <Box className="oui-text-center oui-flex oui-flex-col oui-gap-y-2">
-              <Text className="oui-text-base-contrast-98 oui-text-xl oui-font-normal oui-tracking-wide">
+              <Text className="oui-text-base-contrast-98 oui-text-xl oui-font-medium oui-tracking-wide">
                 Telegram Not Connected
               </Text>
               <Text size="sm" className="oui-text-base-contrast-54">
@@ -220,29 +225,13 @@ export const TelegramBinding: React.FC<TelegramBindingProps> = ({
                 <Flex gap={1} itemAlign="center">
                   {isBinding ? (
                     <>
-                      <svg
-                        className="oui-animate-spin oui-h-4 oui-w-4"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="oui-opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="oui-opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
+                      <LoadingIcon
+                        size={24}
+                        className="oui-animate-spin oui-text-base-contrast-80"
+                      />
                       <Text
                         size="sm"
-                        className="oui-text-primary-contrast oui-font-semibold"
+                        className="oui-text-base-contrast-80 oui-font-semibold"
                       >
                         Authorizing...
                       </Text>
@@ -252,7 +241,7 @@ export const TelegramBinding: React.FC<TelegramBindingProps> = ({
                       <TelegramIcon />
                       <Text
                         size="sm"
-                        className="oui-text-primary-contrast oui-font-semibold"
+                        className="oui-text-base-contrast-80 oui-font-semibold"
                       >
                         Connect telegram account
                       </Text>
@@ -315,7 +304,7 @@ export const TelegramBinding: React.FC<TelegramBindingProps> = ({
                     className="oui-text-base-contrast-80 oui-shrink-0"
                   />
                   <Box className="oui-flex-1 oui-flex oui-flex-col oui-space-y-0.5">
-                    <Text size="base" className="oui-text-white/80">
+                    <Text size="base" className="oui-text-base-contrast-80">
                       Market Alerts
                     </Text>
                     <Text
@@ -337,7 +326,7 @@ export const TelegramBinding: React.FC<TelegramBindingProps> = ({
                     className="oui-text-base-contrast-80 oui-shrink-0"
                   />
                   <Box className="oui-flex-1 oui-flex oui-flex-col oui-space-y-0.5">
-                    <Text size="base" className="oui-text-white/80">
+                    <Text size="base" className="oui-text-base-contrast-80">
                       AI Analysis Reports
                     </Text>
                     <Text
@@ -358,7 +347,7 @@ export const TelegramBinding: React.FC<TelegramBindingProps> = ({
                     className="oui-text-base-contrast-80 oui-shrink-0"
                   />
                   <Box className="oui-flex-1 oui-flex oui-flex-col oui-space-y-0.5">
-                    <Text size="base" className="oui-text-white/80">
+                    <Text size="base" className="oui-text-base-contrast-80">
                       Account Security
                     </Text>
                     <Text
