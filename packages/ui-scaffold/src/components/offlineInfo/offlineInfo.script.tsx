@@ -1,55 +1,107 @@
-import { useEffect, useState, useRef, useMemo } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
-export const useOfflineInfoScript = ({
-  onStatusChange,
-}: {
-  onStatusChange?: (last: boolean, next: boolean) => void;
-}) => {
-  const [offline, setOffline] = useState<boolean>(() => {
-    // init check network status
-    if (typeof window !== "undefined" && typeof navigator !== "undefined") {
-      return !navigator.onLine;
+type Opts = {
+  onStatusChange?: (was: boolean, is: boolean) => void;
+  hideDelay?: number; // 网络恢复后延迟隐藏UI的时间（毫秒），默认 3000
+};
+
+export const useOfflineInfoScript = ({ opts }: { opts?: Opts }) => {
+  // 1 init
+  const [offline, setOffline] = useState<boolean | undefined>(undefined);
+  const lastRef = useRef(offline);
+  const cbRef = useRef(opts?.onStatusChange);
+  cbRef.current = opts?.onStatusChange;
+
+  // 管理探测状态和隐藏定时器
+  const probingRef = useRef(false);
+  const hideTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const hideDelayRef = useRef(opts?.hideDelay ?? 3000);
+
+  // 更新 ref 值
+  hideDelayRef.current = opts?.hideDelay ?? 3000;
+
+  // 轻量级探活
+  const probe = useCallback(async () => {
+    try {
+      await fetch("/favicon.ico", {
+        method: "HEAD",
+        mode: "no-cors",
+        cache: "no-cache",
+      });
+      return true;
+    } catch {
+      return false;
     }
-    return false;
-  });
-
-  // use ref to store the latest callback
-  const onStatusChangeRef = useRef(onStatusChange);
+  }, []);
 
   useEffect(() => {
-    onStatusChangeRef.current = onStatusChange;
-  }, [onStatusChange]);
+    let alive = true;
 
-  useEffect(() => {
-    // define handle function inside useEffect to avoid stale closure
-    const handleOnline = () => {
-      setOffline((prev) => {
-        onStatusChangeRef.current?.(prev, false);
-        return false;
-      });
+    const update = (next: boolean) => {
+      if (!alive || lastRef.current === next) return;
+      cbRef.current?.(lastRef.current ?? false, next);
+      lastRef.current = next;
+      setOffline(next);
     };
 
-    const handleOffline = () => {
-      setOffline((prev) => {
-        onStatusChangeRef.current?.(prev, true);
-        return true;
-      });
+    const onOffline = () => {
+      // 离线时清除隐藏定时器
+      if (hideTimerRef.current) {
+        clearTimeout(hideTimerRef.current);
+        hideTimerRef.current = null;
+      }
+      update(true);
     };
 
-    // add event listener
-    window.addEventListener("online", handleOnline);
-    window.addEventListener("offline", handleOffline);
+    const onOnline = async () => {
+      // 使用 ref 防止重复探测
+      if (probingRef.current) return;
+      try {
+        probingRef.current = true;
+        const ok = await probe();
+        if (ok && alive) {
+          // 只有从离线状态恢复到在线时才延迟隐藏
+          const wasOffline = lastRef.current === true;
 
-    // clean function
+          if (wasOffline) {
+            // 网络恢复成功，延迟隐藏UI，给用户时间手动刷新
+            const delay = hideDelayRef.current;
+            hideTimerRef.current = setTimeout(() => {
+              update(false); // 确保UI隐藏
+            }, delay);
+          }
+        } else {
+          update(true);
+        }
+      } catch (e) {
+        update(true);
+      } finally {
+        probingRef.current = false;
+      }
+    };
+
+    window.addEventListener("offline", onOffline);
+    window.addEventListener("online", onOnline);
+
+    if (navigator.onLine) {
+      onOnline();
+    } else {
+      onOffline();
+    }
+
     return () => {
-      window.removeEventListener("online", handleOnline);
-      window.removeEventListener("offline", handleOffline);
+      alive = false;
+      window.removeEventListener("offline", onOffline);
+      window.removeEventListener("online", onOnline);
+      // 清除隐藏定时器
+      if (hideTimerRef.current) {
+        clearTimeout(hideTimerRef.current);
+        hideTimerRef.current = null;
+      }
     };
-  }, []); // empty dependencies since we use ref
+  }, [probe]);
 
-  return useMemo(() => {
-    return { offline };
-  }, [offline]);
+  return { offline };
 };
 
 export type OfflineInfoState = ReturnType<typeof useOfflineInfoScript>;

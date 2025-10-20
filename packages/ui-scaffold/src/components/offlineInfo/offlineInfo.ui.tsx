@@ -14,6 +14,7 @@ export type OfflineInfoProps = OfflineInfoState & {
 export const OfflineInfo: FC<OfflineInfoProps> = (props) => {
   const { offline } = props;
   const { t } = useTranslation();
+
   if (!offline) {
     return null;
   }
