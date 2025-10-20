@@ -128,14 +128,12 @@ export const OrderTPSL = (props: {
           /> */}
         </Flex>
         <Flex itemAlign={"center"} gapX={2}>
-          {isMobile &&
-            props.reduceOnlyChecked !== undefined &&
-            props.onReduceOnlyChange && (
-              <ReduceOnlySwitch
-                checked={props.reduceOnlyChecked}
-                onCheckedChange={props.onReduceOnlyChange}
-              />
-            )}
+          {isMobile && props.onReduceOnlyChange && (
+            <ReduceOnlySwitch
+              checked={props.reduceOnlyChecked ?? false}
+              onCheckedChange={props.onReduceOnlyChange}
+            />
+          )}
           {!isMobile && (
             <TPSLAdvancedButton
               className={cn(
