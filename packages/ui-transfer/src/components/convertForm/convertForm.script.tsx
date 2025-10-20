@@ -10,8 +10,7 @@ import {
 import { useTranslation } from "@orderly.network/i18n";
 import { account } from "@orderly.network/perp";
 import { useAppContext } from "@orderly.network/react-app";
-import { nativeETHAddress, nativeTokenAddress } from "@orderly.network/types";
-import type { API, NetworkId } from "@orderly.network/types";
+import type { NetworkId } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { useSettlePnl } from "../unsettlePnlInfo/useSettlePnl";
@@ -57,22 +56,8 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     sourceTokens,
     onSourceTokenChange,
     targetToken,
-    chainId,
+    targetChainInfo,
   } = useToken({ defaultValue: defaultToken });
-
-  const token = useMemo<API.Chain>(() => {
-    const _token = {
-      ...sourceToken!,
-      precision: sourceToken?.decimals ?? 6,
-    };
-    if (
-      _token.token === "ETH" &&
-      (!_token.address || _token.address === nativeTokenAddress)
-    ) {
-      _token.address = nativeETHAddress;
-    }
-    return _token;
-  }, [sourceToken]);
 
   const { walletName, address } = useMemo(
     () => ({
@@ -91,7 +76,7 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     1,
   );
 
-  const { maxAmount, convert } = useConvert({ token: token.token });
+  const { maxAmount, convert } = useConvert({ token: sourceToken?.token });
 
   const onConvert = async () => {
     if (loading) {
@@ -123,24 +108,29 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     useOdosQuote();
 
   useEffect(() => {
-    if (quantity && chainId && token.address && targetToken?.address) {
+    const { quoteChainId, contract_address, decimals } = sourceToken || {};
+    const targetAddress = targetChainInfo?.contract_address;
+
+    if (quantity && quoteChainId && contract_address && targetAddress) {
+      // https://docs.odos.xyz/build/api-docs
       postQuote({
-        chainId: chainId,
+        chainId: parseInt(quoteChainId),
         inputTokens: [
           {
-            amount: normalizeAmount(quantity, token.decimals),
-            tokenAddress: token.address,
+            amount: normalizeAmount(quantity, decimals!),
+            tokenAddress: contract_address,
           },
         ],
         outputTokens: [
           {
             proportion: 1,
-            tokenAddress: targetToken.address,
+            tokenAddress: targetAddress,
           },
         ],
+        // simple: true,
       });
     }
-  }, [quantity, token, targetToken, chainId, postQuote]);
+  }, [quantity, sourceToken, targetChainInfo, postQuote]);
 
   const memoizedOutAmounts = useMemo<string>(() => {
     if (!quoteData || isQuoteLoading) {
@@ -153,13 +143,19 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     if (!quoteData || isQuoteLoading) {
       return "-";
     }
+
     const rate = new Decimal(
-      unnormalizeAmount(quoteData.outAmounts[0], targetToken?.decimals ?? 6),
+      unnormalizeAmount(
+        quoteData.outAmounts[0],
+        targetChainInfo?.decimals ?? 6,
+      ),
     )
-      .div(unnormalizeAmount(quoteData.inAmounts[0], token.decimals))
+      .div(
+        unnormalizeAmount(quoteData.inAmounts[0], sourceToken?.decimals ?? 6),
+      )
       .toString();
     return rate;
-  }, [isQuoteLoading, quoteData, targetToken?.decimals, token?.decimals]);
+  }, [isQuoteLoading, quoteData, sourceToken, targetChainInfo]);
 
   const memoizedMinimumReceived = useMemo(() => {
     if (!quoteData || isQuoteLoading) {
@@ -187,7 +183,7 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     address,
     quantity,
     onQuantityChange,
-    token: token,
+    token: sourceToken,
     sourceTokens,
     onSourceTokenChange,
     targetToken,
@@ -208,5 +204,6 @@ export const useConvertFormScript = (options: ConvertFormScriptOptions) => {
     isQuoteLoading,
     currentLTV: currentLtv,
     nextLTV: nextLTV,
+    targetChainInfo,
   };
 };
