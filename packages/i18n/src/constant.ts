@@ -33,6 +33,8 @@ export enum LocaleEnum {
   pl = "pl",
   /** Dutch */
   nl = "nl",
+  /** Traditional Chinese */
+  tc = "tc",
 }
 
 export const defaultLanguages: Language[] = [
@@ -52,6 +54,7 @@ export const defaultLanguages: Language[] = [
   { localCode: LocaleEnum.uk, displayName: "Українська" }, // Ukrainian
   { localCode: LocaleEnum.pl, displayName: "Polski" }, // Polish
   { localCode: LocaleEnum.nl, displayName: "Nederlands" }, // Dutch
+  { localCode: LocaleEnum.tc, displayName: "繁體中文" }, // Traditional Chinese
 ];
 export const defaultLng = LocaleEnum.en;
 export const defaultNS = "translation";
