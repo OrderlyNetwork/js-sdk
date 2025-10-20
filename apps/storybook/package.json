@@ -1,7 +1,7 @@
 {
   "name": "@orderly.network/storybook",
   "private": true,
-  "version": "1.8.1-internal-20251020-hotfix.0",
+  "version": "1.8.1-internal-20251020-hotfix.1",
   "type": "module",
   "scripts": {
     "dev": "pnpm loadEnv vite",

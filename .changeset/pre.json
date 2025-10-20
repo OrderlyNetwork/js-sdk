@@ -40,6 +40,7 @@
     "@orderly.network/web3-provider-ethers": "2.8.0"
   },
   "changesets": [
-    "perfect-jokes-happen"
+    "perfect-jokes-happen",
+    "shiny-keys-perform"
   ]
 }

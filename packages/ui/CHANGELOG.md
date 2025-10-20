@@ -1,5 +1,13 @@
 # @orderly.network/ui
 
+## 2.8.1-internal-20251020-hotfix.1
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/utils@2.8.1-internal-20251020-hotfix.1
+
 ## 2.8.1-internal-20251020-hotfix.0
 
 ### Patch Changes
