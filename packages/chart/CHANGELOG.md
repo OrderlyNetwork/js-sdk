@@ -1,5 +1,15 @@
 # @orderly.network/chart
 
+## 2.8.1-internal-20251020-hotfix.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/i18n@2.8.1-internal-20251020-hotfix.0
+  - @orderly.network/ui@2.8.1-internal-20251020-hotfix.0
+  - @orderly.network/utils@2.8.1-internal-20251020-hotfix.0
+
 ## 2.8.0
 
 ### Minor Changes
