@@ -1,5 +1,11 @@
 # @orderly.network/net
 
+## 2.8.1-internal-20251020-hotfix.2
+
+### Patch Changes
+
+- publish
+
 ## 2.8.1-internal-20251020-hotfix.1
 
 ### Patch Changes

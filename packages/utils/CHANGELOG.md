@@ -1,5 +1,13 @@
 # @orderly.network/utils
 
+## 2.8.1-internal-20251020-hotfix.2
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@2.8.1-internal-20251020-hotfix.2
+
 ## 2.8.1-internal-20251020-hotfix.1
 
 ### Patch Changes

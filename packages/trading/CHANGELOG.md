@@ -1,5 +1,30 @@
 # @orderly.network/trading
 
+## 2.8.1-internal-20251020-hotfix.2
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.8.1-internal-20251020-hotfix.2
+  - @orderly.network/hooks@2.8.1-internal-20251020-hotfix.2
+  - @orderly.network/i18n@2.8.1-internal-20251020-hotfix.2
+  - @orderly.network/markets@2.8.1-internal-20251020-hotfix.2
+  - @orderly.network/portfolio@2.8.1-internal-20251020-hotfix.2
+  - @orderly.network/types@2.8.1-internal-20251020-hotfix.2
+  - @orderly.network/ui@2.8.1-internal-20251020-hotfix.2
+  - @orderly.network/ui-chain-selector@2.8.1-internal-20251020-hotfix.2
+  - @orderly.network/ui-connector@2.8.1-internal-20251020-hotfix.2
+  - @orderly.network/ui-leverage@2.8.1-internal-20251020-hotfix.2
+  - @orderly.network/ui-order-entry@2.8.1-internal-20251020-hotfix.2
+  - @orderly.network/ui-orders@2.8.1-internal-20251020-hotfix.2
+  - @orderly.network/ui-positions@2.8.1-internal-20251020-hotfix.2
+  - @orderly.network/ui-scaffold@2.8.1-internal-20251020-hotfix.2
+  - @orderly.network/ui-share@2.8.1-internal-20251020-hotfix.2
+  - @orderly.network/ui-tradingview@2.8.1-internal-20251020-hotfix.2
+  - @orderly.network/ui-transfer@2.8.1-internal-20251020-hotfix.2
+  - @orderly.network/utils@2.8.1-internal-20251020-hotfix.2
+
 ## 2.8.1-internal-20251020-hotfix.1
 
 ### Patch Changes

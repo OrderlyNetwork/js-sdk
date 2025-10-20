@@ -1,5 +1,17 @@
 # @orderly.network/ui-chain-selector
 
+## 2.8.1-internal-20251020-hotfix.2
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.8.1-internal-20251020-hotfix.2
+  - @orderly.network/hooks@2.8.1-internal-20251020-hotfix.2
+  - @orderly.network/i18n@2.8.1-internal-20251020-hotfix.2
+  - @orderly.network/types@2.8.1-internal-20251020-hotfix.2
+  - @orderly.network/ui@2.8.1-internal-20251020-hotfix.2
+
 ## 2.8.1-internal-20251020-hotfix.1
 
 ### Patch Changes

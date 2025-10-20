@@ -1,5 +1,11 @@
 # tsconfig
 
+## 0.11.1-internal-20251020-hotfix.2
+
+### Patch Changes
+
+- publish
+
 ## 0.11.1-internal-20251020-hotfix.1
 
 ### Patch Changes

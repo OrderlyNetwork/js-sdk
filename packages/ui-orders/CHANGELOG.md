@@ -1,5 +1,21 @@
 # @orderly.network/ui-orders
 
+## 2.8.1-internal-20251020-hotfix.2
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.8.1-internal-20251020-hotfix.2
+  - @orderly.network/hooks@2.8.1-internal-20251020-hotfix.2
+  - @orderly.network/i18n@2.8.1-internal-20251020-hotfix.2
+  - @orderly.network/types@2.8.1-internal-20251020-hotfix.2
+  - @orderly.network/ui@2.8.1-internal-20251020-hotfix.2
+  - @orderly.network/ui-connector@2.8.1-internal-20251020-hotfix.2
+  - @orderly.network/ui-share@2.8.1-internal-20251020-hotfix.2
+  - @orderly.network/ui-tpsl@2.8.1-internal-20251020-hotfix.2
+  - @orderly.network/utils@2.8.1-internal-20251020-hotfix.2
+
 ## 2.8.1-internal-20251020-hotfix.1
 
 ### Patch Changes
