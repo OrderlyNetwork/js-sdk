@@ -56,22 +56,22 @@ export function getPnLPosterData(
   switch (pnlType) {
     case "pnl": {
       if (position.pnl != null) {
-        positionData["pnl"] = formatNum.pnl(position.pnl)?.toString();
+        positionData["pnl"] = formatNum.pnl(position.pnl)?.toFixed(2);
       }
       break;
     }
     case "roi": {
       if (position.roi != null) {
-        positionData["ROI"] = formatNum.roi(position.roi)?.toString();
+        positionData["ROI"] = formatNum.roi(position.roi)?.toFixed(2);
       }
       break;
     }
     case "roi_pnl": {
       if (position.pnl != null) {
-        positionData["pnl"] = formatNum.pnl(position.pnl)?.toString();
+        positionData["pnl"] = formatNum.pnl(position.pnl)?.toFixed(2);
       }
       if (position.roi != null) {
-        positionData["ROI"] = formatNum.roi(position.roi)?.toString();
+        positionData["ROI"] = formatNum.roi(position.roi)?.toFixed(2);
       }
       break;
     }
