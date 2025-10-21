@@ -507,8 +507,11 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           />
         )}
 
-        {/* reduce only switch and label */}
-        {(!isMobile || formattedOrder.reduce_only === true) && (
+        {((isMobile &&
+          ((formattedOrder.order_type !== OrderType.LIMIT &&
+            formattedOrder.order_type !== OrderType.MARKET) ||
+            formattedOrder.reduce_only)) ||
+          !isMobile) && (
           <Flex justify={"between"} itemAlign={"center"} className="oui-mt-2">
             <ReduceOnlySwitch
               checked={formattedOrder.reduce_only ?? false}
@@ -537,6 +540,8 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
         )}
         {!showSoundSection &&
           isMobile &&
+          (formattedOrder.order_type == OrderType.LIMIT ||
+            formattedOrder.order_type == OrderType.MARKET) &&
           !formattedOrder.reduce_only &&
           !pinned && (
             <Flex className="oui-w-full" justify={"end"}>
