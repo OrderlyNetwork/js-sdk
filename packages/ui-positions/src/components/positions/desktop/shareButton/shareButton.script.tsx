@@ -99,7 +99,7 @@ export const useShareButtonScript = (props: ShareButtonScriptOptions) => {
             formatNum.pnl(position.unrealized_pnl)?.toNumber() ??
             position.unrealized_pnl,
           roi:
-            formatNum.roi(position.unrealized_pnl_ROI)?.toNumber() ??
+            formatNum.roi(position.unrealized_pnl_ROI)?.mul(100).toNumber() ??
             position.unrealized_pnl_ROI,
           openPrice: Math.abs(position.average_open_price),
           markPrice: position.mark_price,
