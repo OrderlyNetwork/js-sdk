@@ -54,7 +54,7 @@ export const AiModeToggleButton: React.FC<AiModeToggleButtonProps> = ({
               "oui-shrink-0",
             )}
           >
-            Order entry
+            Trade Panel
           </Text>
           <UpDownIcon />
         </Button>

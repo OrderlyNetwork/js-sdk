@@ -150,12 +150,11 @@ export const TelegramBinding: React.FC<TelegramBindingProps> = ({
             <Button
               onClick={handleSignIn}
               className="oui-rounded-full oui-px-3 oui-h-10 oui-w-[120px]"
-              style={{ backgroundColor: "#F84600" }}
+              style={{
+                background: "linear-gradient(270deg, #59B0FE 0%, #26FEFE 100%)",
+              }}
             >
-              <Text
-                size="sm"
-                className="oui-text-base-contrast-98 oui-font-medium"
-              >
+              <Text size="sm" className="oui-text-black/[.88] oui-font-medium">
                 Sign In
               </Text>
             </Button>
@@ -179,8 +178,9 @@ export const TelegramBinding: React.FC<TelegramBindingProps> = ({
                 size="sm"
                 className="oui-text-base-contrast-54 oui-leading-relaxed"
               >
-                Now start your trading journey! I will be waiting for your call
-                in the bottom right corner
+                Before getting started, we need to generate a read-only API key
+                for data access. Please click the button below to authorize with
+                your signature.
               </Text>
             </Box>
 
@@ -188,12 +188,11 @@ export const TelegramBinding: React.FC<TelegramBindingProps> = ({
             <Button
               onClick={handleCreateOrderlyKey}
               className="oui-rounded-full oui-px-3 oui-h-10 oui-w-[120px]"
-              style={{ backgroundColor: "#F84600" }}
+              style={{
+                background: "linear-gradient(270deg, #59B0FE 0%, #26FEFE 100%)",
+              }}
             >
-              <Text
-                size="sm"
-                className="oui-text-base-contrast-98 oui-font-medium"
-              >
+              <Text size="sm" className="oui-text-black/[.88] oui-font-medium">
                 Create
               </Text>
             </Button>
