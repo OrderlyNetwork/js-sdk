@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import { Flex, Text } from "@orderly.network/ui";
 import { RouterAdapter } from "../scaffold";
 import { BottomNavItem } from "./bottomNav.widget";
+import { BottomNavTradingMenu } from "./tradingMenu.ui";
 
 export type BottomNavProps = {
   mainMenus?: BottomNavItem[];
@@ -19,6 +20,7 @@ export const BottomNav: React.FC<BottomNavProps> = (props) => {
   const menus = useMemo(() => {
     return mainMenus?.map((menu) => {
       const isActive = current === menu.href;
+      const isTrading = menu.href === "/" || /trading/i.test(menu.name);
       return (
         <Flex
           key={menu.name}
@@ -30,8 +32,22 @@ export const BottomNav: React.FC<BottomNavProps> = (props) => {
             onRouteChange?.({ href: menu.href, name: menu.name });
           }}
         >
-          <Text>{isActive ? menu.activeIcon : menu.inactiveIcon}</Text>
-          <Text>{menu.name}</Text>
+          {isTrading ? (
+            <BottomNavTradingMenu
+              label={menu.name}
+              active={!!isActive}
+              activeIcon={menu.activeIcon}
+              inactiveIcon={menu.inactiveIcon}
+              onNavigate={() =>
+                onRouteChange?.({ href: menu.href, name: menu.name })
+              }
+            />
+          ) : (
+            <Text>{isActive ? menu.activeIcon : menu.inactiveIcon}</Text>
+          )}
+          <Text size="2xs" intensity={isActive ? 98 : 36}>
+            {!isTrading && menu.name}
+          </Text>
         </Flex>
       );
     });
@@ -48,7 +64,7 @@ export const BottomNav: React.FC<BottomNavProps> = (props) => {
       px={3}
       itemAlign={"center"}
       justify={"between"}
-      className="oui-bg-base-9"
+      className="oui-bg-base-9 oui-border-t oui-border-line-4"
     >
       {menus}
     </Flex>

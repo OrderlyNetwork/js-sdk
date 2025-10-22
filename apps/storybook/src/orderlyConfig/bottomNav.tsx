@@ -9,6 +9,8 @@ import {
   LeaderboardInactiveIcon,
   MarketsActiveIcon,
   MarketsInactiveIcon,
+  StarChildChatIcon,
+  StarChildChatInactiveIcon,
 } from "@orderly.network/ui";
 import type { BottomNavProps } from "@orderly.network/ui-scaffold";
 
@@ -20,6 +22,12 @@ const getBottomNavProp = (): BottomNavProps => {
         href: "/markets",
         activeIcon: <MarketsActiveIcon />,
         inactiveIcon: <MarketsInactiveIcon />,
+      },
+      {
+        name: "AI",
+        href: "",
+        activeIcon: <StarChildChatIcon />,
+        inactiveIcon: <StarChildChatInactiveIcon />,
       },
       {
         name: i18n.t("common.trading"),
