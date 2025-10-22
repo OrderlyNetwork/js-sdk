@@ -25,6 +25,7 @@ import {
   CustomArenButton,
   MainNavCustomRenderOptions,
 } from "./components/customArenButton";
+import { customTradeSubMenuRender } from "./components/customTradeSubMenu";
 import { Tag } from "./components/tag";
 
 const isOnGoing = true; // mock isOnGoing status for storybook
@@ -44,7 +45,12 @@ export const customArenRender = () => {
 
 const getMainMenus = (): MainNavWidgetProps["mainMenus"] => {
   return [
-    { name: i18n.t("common.trading"), href: "/", isHomePageInMobile: true },
+    {
+      name: i18n.t("common.trading"),
+      href: "/",
+      isHomePageInMobile: true,
+      customSubMenuRender: customTradeSubMenuRender(),
+    },
     { name: i18n.t("common.portfolio"), href: "/portfolio" },
     {
       name: i18n.t("common.vaults"),

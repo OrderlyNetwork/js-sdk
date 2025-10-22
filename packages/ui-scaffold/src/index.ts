@@ -4,6 +4,7 @@ export {
   type MainNavWidgetProps,
 } from "./components/main/mainNav.widget";
 export { MainNavMobile } from "./components/main/mainNav.ui.mobile";
+export { type MainNavItem } from "./components/main/mainMenus/navItem";
 export {
   BottomNavWidget,
   BottomNav,
