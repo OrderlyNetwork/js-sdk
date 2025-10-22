@@ -12,7 +12,12 @@ import {
 import { useTranslation } from "@orderly.network/i18n";
 import { account as accountPerp } from "@orderly.network/perp";
 import { useAppContext } from "@orderly.network/react-app";
-import { API, NetworkId, ChainNamespace } from "@orderly.network/types";
+import {
+  API,
+  NetworkId,
+  ChainNamespace,
+  isNativeTokenChecker,
+} from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 import { useNeedSwapAndCross } from "../swap/hooks/useNeedSwapAndCross";
 import { useSwapDeposit } from "../swap/hooks/useSwapDeposit";
@@ -42,6 +47,9 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
   const networkId = useConfig("networkId") as NetworkId;
 
   const [feeWarningMessage, setFeeWarningMessage] = useState("");
+  const [tokenBalances, setTokenBalances] = useState<Record<string, string>>(
+    {},
+  );
 
   const { chains, currentChain, settingChain, onChainChange } =
     useChainSelect();
@@ -78,6 +86,7 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     isNativeToken,
     balanceRevalidating,
     fetchBalance,
+    fetchBalances,
   } = useDeposit({
     address: sourceToken?.address,
     decimals: sourceToken?.decimals,
@@ -288,10 +297,26 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
 
   const targetQuantityLoading = swapRevalidating;
 
+  useEffect(() => {
+    if (sourceTokens?.length > 0 && fetchBalances) {
+      fetchBalances(sourceTokens)
+        .then((balances) => {
+          setTokenBalances(balances);
+        })
+        .catch((error) => {
+          console.error("Failed to fetch balances:", error);
+        });
+    }
+  }, [sourceTokens, fetchBalances]);
+
+  const sortedSourceTokens = useMemo(() => {
+    return sortTokens(sourceTokens, tokenBalances);
+  }, [sourceTokens, tokenBalances]);
+
   return {
     sourceToken,
     targetToken,
-    sourceTokens,
+    sourceTokens: sortedSourceTokens,
     targetTokens,
     onSourceTokenChange,
     onTargetTokenChange,
@@ -340,6 +365,7 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     warningMessage,
     targetQuantity,
     targetQuantityLoading,
+    tokenBalances,
   };
 };
 
@@ -441,4 +467,36 @@ const useConvertThreshold = () => {
     isLoading,
     error,
   } as const;
+};
+
+const sortTokens = (
+  tokens: API.TokenInfo[] = [],
+  tokenBalances: Record<string, string> = {},
+) => {
+  const list = tokens.map((item) => ({
+    ...item,
+    balance: tokenBalances[item.symbol!],
+    isNativeToken: isNativeTokenChecker(item.address!),
+  }));
+
+  return list.sort((a, b) => {
+    // 1. Sort by balance amount (high → low)
+    const balanceA = new Decimal(a.balance || 0)
+      .todp(a.precision || 2)
+      .toNumber();
+    const balanceB = new Decimal(b.balance || 0)
+      .todp(b.precision || 2)
+      .toNumber();
+    if (balanceA !== balanceB) {
+      return balanceB - balanceA;
+    }
+
+    // 2. Sort by isNativeToken (native tokens first)
+    if (a.isNativeToken !== b.isNativeToken) {
+      return a.isNativeToken ? -1 : 1;
+    }
+
+    // 3. Sort alphabetically by symbol
+    return (a.symbol || "").localeCompare(b.symbol || "");
+  });
 };

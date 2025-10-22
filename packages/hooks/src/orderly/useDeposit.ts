@@ -136,26 +136,28 @@ export const useDeposit = (options: DepositOptions) => {
     [options.srcToken, account],
   );
 
-  const fetchBalances = useCallback(async (tokens: API.TokenInfo[]) => {
-    const tasks = [];
+  const fetchBalances = useCallback(
+    async (tokens: API.TokenInfo[]) => {
+      const tasks = [];
 
-    for (const token of tokens) {
-      // skip native token
-      if (isNativeTokenChecker(token.address!)) {
-        continue;
+      for (const token of tokens) {
+        tasks.push(fetchBalanceHandler(token.address!, token?.decimals));
       }
 
-      tasks.push(
-        account.assetsManager.getBalance(token.address!, {
-          decimals: token?.decimals,
-        }),
-      );
-    }
+      const results = await Promise.allSettled(tasks);
 
-    const balances = await Promise.all(tasks);
+      const balances: Record<string, string> = {};
 
-    return balances;
-  }, []);
+      for (const [index, balance] of results.entries()) {
+        if (balance.status === "fulfilled") {
+          balances[tokens[index].symbol!] = balance.value;
+        }
+      }
+
+      return balances;
+    },
+    [fetchBalanceHandler],
+  );
 
   const getAllowance = async (inputs: {
     address?: string;
