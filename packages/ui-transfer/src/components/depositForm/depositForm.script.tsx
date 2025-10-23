@@ -60,7 +60,9 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     sourceTokens,
     targetTokens,
     onSourceTokenChange,
+    setSourceToken,
     onTargetTokenChange,
+    sourceTokenUpdatedRef,
   } = useToken(currentChain);
 
   const { data: indexPrices, getIndexPrice } = useIndexPricesStream();
@@ -307,11 +309,17 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
           console.error("Failed to fetch balances:", error);
         });
     }
-  }, [sourceTokens, fetchBalances]);
+  }, [sourceTokens]);
 
   const sortedSourceTokens = useMemo(() => {
-    return sortTokens(sourceTokens, tokenBalances);
+    return sortTokens(sourceTokens, tokenBalances, getIndexPrice);
   }, [sourceTokens, tokenBalances]);
+
+  useEffect(() => {
+    if (!sourceTokenUpdatedRef.current && sortedSourceTokens?.[0]) {
+      setSourceToken(sortedSourceTokens[0]);
+    }
+  }, [sortedSourceTokens]);
 
   return {
     sourceToken,
@@ -472,31 +480,49 @@ const useConvertThreshold = () => {
 const sortTokens = (
   tokens: API.TokenInfo[] = [],
   tokenBalances: Record<string, string> = {},
+  getIndexPrice: (token: string) => number,
 ) => {
-  const list = tokens.map((item) => ({
-    ...item,
-    balance: tokenBalances[item.symbol!],
-    isNativeToken: isNativeTokenChecker(item.address!),
-  }));
+  const list = tokens.map((item) => {
+    const indexPrice = getIndexPrice(item.symbol!);
+    const balance = new Decimal(tokenBalances[item.symbol!] || 0)
+      .mul(indexPrice || 1)
+      .todp(item.precision || 2)
+      .toNumber();
+
+    return {
+      ...item,
+      balance,
+      isNativeToken: isNativeTokenChecker(item.address!),
+    };
+  });
 
   return list.sort((a, b) => {
-    // 1. Sort by balance amount (high → low)
-    const balanceA = new Decimal(a.balance || 0)
-      .todp(a.precision || 2)
-      .toNumber();
-    const balanceB = new Decimal(b.balance || 0)
-      .todp(b.precision || 2)
-      .toNumber();
-    if (balanceA !== balanceB) {
-      return balanceB - balanceA;
+    const hasBalanceA = a.balance > 0;
+    const hasBalanceB = b.balance > 0;
+
+    // Tokens with balance come first
+    if (hasBalanceA !== hasBalanceB) {
+      return hasBalanceA ? -1 : 1;
     }
 
-    // 2. Sort by isNativeToken (native tokens first)
-    if (a.isNativeToken !== b.isNativeToken) {
-      return a.isNativeToken ? -1 : 1;
+    // 1. USDC has highest priority
+    if (a.symbol === "USDC" && b.symbol !== "USDC") return -1;
+    if (b.symbol === "USDC" && a.symbol !== "USDC") return 1;
+
+    // 2. USDC.e has second priority
+    if (a.symbol === "USDC.e" && b.symbol !== "USDC.e") return -1;
+    if (b.symbol === "USDC.e" && a.symbol !== "USDC.e") return 1;
+
+    // 3. Native tokens have third priority
+    if (a.isNativeToken && !b.isNativeToken) return -1;
+    if (b.isNativeToken && !a.isNativeToken) return 1;
+
+    // 4. If both have balance, sort by balance amount (high to low)
+    if (hasBalanceA && hasBalanceB) {
+      return b.balance - a.balance;
     }
 
-    // 3. Sort alphabetically by symbol
+    // 5. If both have no balance, sort alphabetically
     return (a.symbol || "").localeCompare(b.symbol || "");
   });
 };
