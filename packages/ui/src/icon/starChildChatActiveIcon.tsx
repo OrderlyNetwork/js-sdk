@@ -1,7 +1,7 @@
 import React from "react";
 import { BaseIcon, BaseIconProps } from "./baseIcon";
 
-export const StarChildChatIcon = (props: BaseIconProps) => {
+export const StarChildChatActiveIcon = (props: BaseIconProps) => {
   return (
     <BaseIcon {...props}>
       {/* Outer chat bubble */}

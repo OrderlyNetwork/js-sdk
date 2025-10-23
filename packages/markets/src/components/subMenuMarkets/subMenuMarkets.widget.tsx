@@ -27,6 +27,8 @@ export const SubMenuMarketsWidget: React.FC<SubMenuMarketsWidgetProps> = (
       <SubMenuMarkets
         activeTab={state.activeTab}
         onTabChange={state.onTabChange}
+        tabSort={state.tabSort}
+        onTabSort={state.onTabSort}
         className={props.className}
       />
     </MarketsProvider>

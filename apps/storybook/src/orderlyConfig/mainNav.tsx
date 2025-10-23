@@ -7,19 +7,12 @@ import {
   BarChartIcon,
   PersonIcon,
   BattleIcon,
+  EarnIcon,
   AssetIcon,
-  TradingLeftNavIcon,
   LeftNavVaultsIcon,
 } from "@orderly.network/ui";
 import { LeftNavProps, MainNavWidgetProps } from "@orderly.network/ui-scaffold";
-import { CustomProductNav } from "../components/customProductNav";
-import {
-  ApiKeys,
-  FeeTier,
-  Setting,
-  TradingRewardsActiveIcon,
-  TradingRewardsIcon,
-} from "../components/icons";
+import { ApiKeys, FeeTier, Setting } from "../components/icons";
 import { PathEnum } from "../playground/constant";
 import {
   CustomArenButton,
@@ -110,7 +103,16 @@ const getMainMenus = (): MainNavWidgetProps["mainMenus"] => {
 const getLeftNavMenus = (): LeftNavProps => {
   return {
     menus: [
-      { name: i18n.t("common.trading"), href: "/", icon: <TradingIcon /> },
+      {
+        name: i18n.t("common.perps"),
+        href: "/",
+        icon: <TradingIcon />,
+      },
+      {
+        name: i18n.t("common.spot"),
+        href: "https://woofi.com/swap",
+        icon: <EarnIcon />,
+      },
       {
         name: i18n.t("common.markets"),
         href: "/markets",

@@ -20,7 +20,9 @@ export const BottomNav: React.FC<BottomNavProps> = (props) => {
   const menus = useMemo(() => {
     return mainMenus?.map((menu) => {
       const isActive = current === menu.href;
-      const isTrading = menu.href === "/" || /trading/i.test(menu.name);
+      const isExternalLink =
+        menu.href.startsWith("http://") || menu.href.startsWith("https://");
+      // const isTrading = menu.href === "/" || /trading/i.test(menu.name);
       return (
         <Flex
           key={menu.name}
@@ -29,10 +31,15 @@ export const BottomNav: React.FC<BottomNavProps> = (props) => {
           justify={"center"}
           className="oui-flex-1"
           onClick={() => {
-            onRouteChange?.({ href: menu.href, name: menu.name });
+            if (isExternalLink) {
+              window.location.href = menu.href;
+            } else {
+              onRouteChange?.({ href: menu.href, name: menu.name });
+            }
           }}
         >
-          {isTrading ? (
+          {/* TODO: add new trading menu when ai is ready */}
+          {/* {isTrading ? (
             <BottomNavTradingMenu
               label={menu.name}
               active={!!isActive}
@@ -44,9 +51,10 @@ export const BottomNav: React.FC<BottomNavProps> = (props) => {
             />
           ) : (
             <Text>{isActive ? menu.activeIcon : menu.inactiveIcon}</Text>
-          )}
+          )} */}
+          <Text>{isActive ? menu.activeIcon : menu.inactiveIcon}</Text>
           <Text size="2xs" intensity={isActive ? 98 : 36}>
-            {!isTrading && menu.name}
+            {menu.name}
           </Text>
         </Flex>
       );

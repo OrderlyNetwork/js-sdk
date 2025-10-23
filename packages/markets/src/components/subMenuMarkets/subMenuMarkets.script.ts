@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
+import { SIDE_MARKETS_TAB_SORT_STORAGE_KEY } from "../../constant";
 import { MarketsTabName } from "../../type";
 import { useMarketsContext } from "../marketsProvider";
+import { useTabSort } from "../shared/hooks/useTabSort";
 
 export type SubMenuMarketsScriptOptions = {
   activeTab?: MarketsTabName;
@@ -17,6 +19,10 @@ export function useSubMenuMarketsScript(options?: SubMenuMarketsScriptOptions) {
   );
 
   const { clearSearchValue } = useMarketsContext();
+
+  const { tabSort, onTabSort } = useTabSort({
+    storageKey: SIDE_MARKETS_TAB_SORT_STORAGE_KEY,
+  });
 
   const onTabChange = useCallback(
     (value: string) => {
@@ -42,5 +48,7 @@ export function useSubMenuMarketsScript(options?: SubMenuMarketsScriptOptions) {
   return {
     activeTab,
     onTabChange,
+    tabSort,
+    onTabSort,
   } as const;
 }

@@ -9,9 +9,14 @@ import {
   TokenIcon,
   Text,
   Badge,
+  EmptyDataState,
 } from "@orderly.network/ui";
 import { FavoritesIcon } from "../../icons";
-import { MarketsTabName, type FavoriteInstance } from "../../type";
+import {
+  MarketsTabName,
+  type FavoriteInstance,
+  type SortType,
+} from "../../type";
 import { FavoritesTabWidget } from "../favoritesTabs";
 import { MarketsListWidget } from "../marketsList";
 import { RwaTab } from "../rwaTab";
@@ -31,14 +36,52 @@ export type SubMenuMarketsProps = {
   activeTab: MarketsTabName;
   onTabChange: (value: string) => void;
   className?: string;
+  tabSort: Record<MarketsTabName, SortType | undefined>;
+  onTabSort: (type: MarketsTabName) => (sort?: SortType) => void;
 };
 
 const cls = "oui-h-[calc(100%_-_36px)]";
 
+type MarketTabPanelProps = {
+  type: MarketsTabName;
+  getColumns: (_favorite: FavoriteInstance, _isFavoritesList: boolean) => any[];
+  initialSort?: SortType;
+  onSort?: (sort?: SortType) => void;
+  dataFilter?: any;
+  renderHeader?: (favorite: FavoriteInstance) => React.ReactNode;
+  emptyView?: React.ReactNode;
+};
+
+const MarketTabPanel: React.FC<MarketTabPanelProps> = ({
+  type,
+  getColumns,
+  initialSort,
+  onSort,
+  dataFilter,
+  renderHeader,
+  emptyView,
+}) => {
+  return (
+    <div className={cls}>
+      <MarketsListWidget
+        type={type}
+        getColumns={getColumns}
+        tableClassNames={TABLE_CLASSNAMES}
+        rowClassName={LIST_ROW_COMPACT}
+        dataFilter={dataFilter}
+        renderHeader={renderHeader}
+        initialSort={initialSort}
+        onSort={onSort}
+        emptyView={emptyView}
+      />
+    </div>
+  );
+};
+
 export const SubMenuMarkets: React.FC<SubMenuMarketsProps> = (props) => {
-  const { activeTab, onTabChange, className } = props;
+  const { activeTab, onTabChange, className, tabSort, onTabSort } = props;
   const { t } = useTranslation();
-  const { getFavoritesProps, renderEmptyView } = useFavoritesProps();
+  const { getFavoritesProps } = useFavoritesProps();
 
   const getColumns = (
     _favorite: FavoriteInstance,
@@ -100,74 +143,61 @@ export const SubMenuMarkets: React.FC<SubMenuMarketsProps> = (props) => {
         showScrollIndicator
       >
         <TabPanel title={<FavoritesIcon />} value={MarketsTabName.Favorites}>
-          <div className={cls}>
-            {(() => {
-              const favProps = getFavoritesProps(MarketsTabName.Favorites) as {
-                dataFilter?: any;
-              };
-              return (
-                <MarketsListWidget
-                  type={MarketsTabName.Favorites}
-                  getColumns={getColumns}
-                  tableClassNames={TABLE_CLASSNAMES}
-                  rowClassName={LIST_ROW_COMPACT}
-                  dataFilter={favProps?.dataFilter}
-                  renderHeader={(favorite) => (
-                    <Box className="oui-px-1 oui-my-1">
-                      <FavoritesTabWidget favorite={favorite} size="sm" />
-                    </Box>
-                  )}
-                  emptyView={renderEmptyView({
-                    type: MarketsTabName.Favorites,
-                    onClick: () => onTabChange(MarketsTabName.All),
-                  })}
-                />
-              );
-            })()}
-          </div>
+          {(() => {
+            const favProps = getFavoritesProps(MarketsTabName.Favorites) as {
+              dataFilter?: any;
+            };
+            return (
+              <MarketTabPanel
+                type={MarketsTabName.Favorites}
+                getColumns={getColumns}
+                dataFilter={favProps?.dataFilter}
+                renderHeader={(favorite) => (
+                  <Box className="oui-px-1 oui-my-1">
+                    <FavoritesTabWidget favorite={favorite} size="sm" />
+                  </Box>
+                )}
+                initialSort={tabSort[MarketsTabName.Favorites]}
+                onSort={onTabSort(MarketsTabName.Favorites)}
+                emptyView={<EmptyDataState />}
+              />
+            );
+          })()}
         </TabPanel>
         <TabPanel title={t("common.all")} value={MarketsTabName.All}>
-          <div className={cls}>
-            <MarketsListWidget
-              type={MarketsTabName.All}
-              getColumns={getColumns}
-              tableClassNames={TABLE_CLASSNAMES}
-              rowClassName={LIST_ROW_COMPACT}
-            />
-          </div>
+          <MarketTabPanel
+            type={MarketsTabName.All}
+            getColumns={getColumns}
+            initialSort={tabSort[MarketsTabName.All]}
+            onSort={onTabSort(MarketsTabName.All)}
+          />
         </TabPanel>
         <TabPanel title={<RwaTab />} value={MarketsTabName.Rwa}>
-          <div className={cls}>
-            <MarketsListWidget
-              type={MarketsTabName.Rwa}
-              getColumns={getColumns}
-              tableClassNames={TABLE_CLASSNAMES}
-              rowClassName={LIST_ROW_COMPACT}
-            />
-          </div>
+          <MarketTabPanel
+            type={MarketsTabName.Rwa}
+            getColumns={getColumns}
+            initialSort={tabSort[MarketsTabName.Rwa]}
+            onSort={onTabSort(MarketsTabName.Rwa)}
+          />
         </TabPanel>
         <TabPanel
           title={t("markets.newListings")}
           value={MarketsTabName.NewListing}
         >
-          <div className={cls}>
-            <MarketsListWidget
-              type={MarketsTabName.NewListing}
-              getColumns={getColumns}
-              tableClassNames={TABLE_CLASSNAMES}
-              rowClassName={LIST_ROW_COMPACT}
-            />
-          </div>
+          <MarketTabPanel
+            type={MarketsTabName.NewListing}
+            getColumns={getColumns}
+            initialSort={tabSort[MarketsTabName.NewListing]}
+            onSort={onTabSort(MarketsTabName.NewListing)}
+          />
         </TabPanel>
         <TabPanel title={t("markets.recent")} value={MarketsTabName.Recent}>
-          <div className={cls}>
-            <MarketsListWidget
-              type={MarketsTabName.Recent}
-              getColumns={getColumns}
-              tableClassNames={TABLE_CLASSNAMES}
-              rowClassName={LIST_ROW_COMPACT}
-            />
-          </div>
+          <MarketTabPanel
+            type={MarketsTabName.Recent}
+            getColumns={getColumns}
+            initialSort={tabSort[MarketsTabName.Recent]}
+            onSort={onTabSort(MarketsTabName.Recent)}
+          />
         </TabPanel>
       </Tabs>
     </Box>

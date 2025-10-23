@@ -190,8 +190,14 @@ const NavItem: FC<NavItemProps> = ({ item, onClick }) => {
   } = item;
   const { isMainAccount } = useAccount();
   const onItemClick = () => {
+    // Check if href is a full URL (external link)
+    const isExternalLink =
+      href.startsWith("http://") || href.startsWith("https://");
+
     if (target) {
       window.open(href, target);
+    } else if (isExternalLink) {
+      window.location.href = href;
     } else {
       onClick?.({ href: href, name: name, scope: "leftNav" });
     }
@@ -199,7 +205,7 @@ const NavItem: FC<NavItemProps> = ({ item, onClick }) => {
   if (typeof customRender === "function") {
     return (
       <div
-        className="oui-flex oui-w-full oui-items-center oui-px-3 oui-py-4"
+        className="oui-flex oui-w-full oui-items-center oui-p-3"
         onClick={onItemClick}
       >
         {customRender({ name: name, href: href })}
@@ -211,7 +217,7 @@ const NavItem: FC<NavItemProps> = ({ item, onClick }) => {
   }
   return (
     <div
-      className="oui-flex oui-w-full oui-items-center oui-gap-2 oui-px-3 oui-py-4"
+      className="oui-flex oui-w-full oui-items-center oui-gap-2 oui-p-3"
       onClick={onItemClick}
     >
       <div>{icon}</div>
