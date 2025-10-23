@@ -298,6 +298,7 @@
   "trading.fundingRate.lastFundingRate": "Tỷ lệ tài trợ trước đó",
   "trading.fundingRate.estimatedFundingRate": "Tỷ lệ tài trợ ước tính",
   "trading.fundingRate.estimatedFundingFee": "Phí tài trợ ước tính",
+  "trading.fundingRate.annualized": "Hàng năm",
   "trading.rwa.marketHours": "Giờ thị trường",
   "trading.rwa.outsideMarketHours": "Ngoài giờ thị trường",
   "trading.rwa.tooltip.description.open": "Giao dịch phù hợp với thị trường cơ sở - thanh khoản cao hơn, biến động giá bình thường.",

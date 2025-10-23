@@ -298,6 +298,7 @@
   "trading.fundingRate.lastFundingRate": "Dernier taux de financement",
   "trading.fundingRate.estimatedFundingRate": "Taux de financement estimé",
   "trading.fundingRate.estimatedFundingFee": "Frais de financement estimés",
+  "trading.fundingRate.annualized": "Annualisé",
   "trading.rwa.marketHours": "Heures de marché",
   "trading.rwa.outsideMarketHours": "En dehors des heures de marché",
   "trading.rwa.tooltip.description.open": "Le trading s'aligne sur le marché sous-jacent - liquidité plus élevée, mouvements de prix normaux.",

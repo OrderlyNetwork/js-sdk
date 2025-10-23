@@ -298,6 +298,7 @@
   "trading.fundingRate.lastFundingRate": "Son fonlama oranı",
   "trading.fundingRate.estimatedFundingRate": "Tahmini fonlama oranı",
   "trading.fundingRate.estimatedFundingFee": "Tahmini fonlama ücreti",
+  "trading.fundingRate.annualized": "Yıllık",
   "trading.rwa.marketHours": "Piyasa saatleri",
   "trading.rwa.outsideMarketHours": "Piyasa saatleri dışında",
   "trading.rwa.tooltip.description.open": "İşlem, temel piyasa ile uyumludur - daha yüksek likidite, normal fiyat hareketleri.",

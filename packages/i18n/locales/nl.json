@@ -298,6 +298,7 @@
   "trading.fundingRate.lastFundingRate": "Laatste financieringspercentage",
   "trading.fundingRate.estimatedFundingRate": "Geschat financieringspercentage",
   "trading.fundingRate.estimatedFundingFee": "Geschatte financieringskosten",
+  "trading.fundingRate.annualized": "Geannualiseerd",
   "trading.rwa.marketHours": "Markttijden",
   "trading.rwa.outsideMarketHours": "Buiten markttijden",
   "trading.rwa.tooltip.description.open": "Trading sluit aan bij de onderliggende markt - hogere liquiditeit, normale prijsbewegingen.",

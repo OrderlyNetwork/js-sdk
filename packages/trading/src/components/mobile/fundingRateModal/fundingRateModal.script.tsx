@@ -62,6 +62,36 @@ export const useFundingRateModalScript = (options: FundingRateOptions) => {
     return `${new Decimal(est_funding_rate).mul(notional).todp(4).toNumber()}`;
   }, [est_funding_rate, notional, rows]);
 
+  // Calculate annualized funding rate
+  const calculateAnnualizedRate = (rate: number, intervalHours: number) => {
+    if (!rate || !intervalHours) return undefined;
+    // annualized rate = funding rate * 24h / interval(h) * 365
+    const annualizedRate = new Decimal(rate)
+      .mul(24)
+      .div(intervalHours)
+      .mul(365);
+    // Round down to two decimal places
+    return annualizedRate.todp(2, Decimal.ROUND_DOWN).toNumber();
+  };
+
+  const lastFundingRateAnnualized = useMemo(() => {
+    if (!last_funding_rate || !data?.funding_period) {
+      return undefined;
+    }
+    const rate = new Decimal(last_funding_rate).mul(100).toNumber();
+    const annualized = calculateAnnualizedRate(rate, data.funding_period);
+    return annualized ? `${annualized}%` : undefined;
+  }, [last_funding_rate, data?.funding_period]);
+
+  const estFundingRateAnnualized = useMemo(() => {
+    if (!est_funding_rate || !data?.funding_period) {
+      return undefined;
+    }
+    const rate = new Decimal(est_funding_rate).mul(100).toNumber();
+    const annualized = calculateAnnualizedRate(rate, data.funding_period);
+    return annualized ? `${annualized}%` : undefined;
+  }, [est_funding_rate, data?.funding_period]);
+
   return {
     fundingPeriod,
     capFunding,
@@ -69,6 +99,8 @@ export const useFundingRateModalScript = (options: FundingRateOptions) => {
     lastFundingRate,
     estFundingRate,
     estFundingFee,
+    lastFundingRateAnnualized,
+    estFundingRateAnnualized,
   };
 };
 
