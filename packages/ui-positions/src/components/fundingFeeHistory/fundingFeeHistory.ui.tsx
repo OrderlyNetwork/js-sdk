@@ -11,6 +11,9 @@ import {
   Flex,
   useScreen,
   cn,
+  Tooltip,
+  ExclamationFillIcon,
+  modal,
 } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { EndReachedBox } from "./endReachedBox";
@@ -111,7 +114,21 @@ export const FundingFeeHistoryUI: FC<{
         </div>
         <div className="oui-rounded-lg oui-border oui-border-line-6 oui-bg-base-9 oui-p-3">
           <Statistic
-            label={`${t("funding.fundingFee")} (USDC)`}
+            label={
+              isMobile ? (
+                <FundingFeeLabelButton
+                  label={`${t("funding.fundingFee")} (USDC)`}
+                  tooltip="Shows funding fees for closed or partially closed positions."
+                  size={14}
+                />
+              ) : (
+                <FundingFeeLabel
+                  label={`${t("funding.fundingFee")} (USDC)`}
+                  tooltip="Shows funding fees for closed or partially closed positions."
+                  size={14}
+                />
+              )
+            }
             valueProps={{
               ignoreDP: true,
               coloring: true,
@@ -123,6 +140,50 @@ export const FundingFeeHistoryUI: FC<{
         </div>
       </Grid>
       {listView}
+    </div>
+  );
+};
+
+const FundingFeeLabelButton: FC<{
+  label: string;
+  tooltip: string;
+  size: number;
+}> = ({ label, tooltip, size }) => {
+  return (
+    <div className="oui-flex oui-items-center oui-gap-1">
+      <span>{label}</span>
+      <button
+        className="oui-flex oui-items-center"
+        onClick={() => {
+          modal.alert({
+            message: tooltip,
+            title: "Funding Fee",
+          });
+        }}
+      >
+        <ExclamationFillIcon
+          className="oui-cursor-pointer oui-text-base-contrast-54"
+          size={size}
+        />
+      </button>
+    </div>
+  );
+};
+
+const FundingFeeLabel: FC<{ label: string; tooltip: string; size: number }> = ({
+  label,
+  tooltip,
+  size,
+}) => {
+  return (
+    <div className="oui-flex oui-items-center oui-gap-1">
+      <span>{label}</span>
+      <Tooltip content={<div className="oui-w-64">{tooltip}</div>}>
+        <ExclamationFillIcon
+          className="oui-cursor-pointer oui-text-base-contrast-54"
+          size={size}
+        />
+      </Tooltip>
     </div>
   );
 };
@@ -146,7 +207,13 @@ const HistoryDataListView: FC<ListProps> = ({ isLoading, data, loadMore }) => {
         },
       },
       {
-        title: t("funding.fundingRate"),
+        title: (
+          <FundingFeeLabel
+            label={t("funding.fundingRate")}
+            tooltip="Records include funding from current open positions."
+            size={12}
+          />
+        ),
         dataIndex: "funding_rate",
         formatter: (value: string) => new Decimal(value).mul(100).toString(),
         render: (value: string) => {
@@ -161,7 +228,7 @@ const HistoryDataListView: FC<ListProps> = ({ isLoading, data, loadMore }) => {
             ? t("funding.paymentType.paid")
             : t("funding.paymentType.received");
         },
-        render: (value) => <span>{value}</span>,
+        render: (value: string) => <span>{value}</span>,
       },
       {
         title: `${t("funding.fundingFee")} (USDC)`,
@@ -222,7 +289,13 @@ const FundingFeeItem: FC<{
     <div className="oui-flex oui-flex-col oui-space-y-2 oui-border-t oui-border-line-6 oui-py-2">
       <Flex justify={"between"}>
         <Statistic
-          label={t("funding.fundingRate")}
+          label={
+            <FundingFeeLabelButton
+              label={t("funding.fundingRate")}
+              tooltip="Records include funding from current open positions."
+              size={12}
+            />
+          }
           classNames={{
             label: "oui-text-2xs",
           }}

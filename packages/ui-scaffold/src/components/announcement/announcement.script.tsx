@@ -201,6 +201,10 @@ const useAnnouncementData = () => {
               {
                 announcement_id: maintentanceId,
                 type: AnnouncementType.Maintenance,
+                /** @ts-ignore */
+                startTime: startTime,
+                /** @ts-ignore */
+                endTime: endTime,
                 message: getMaintentTipsContent(brokerName, startDate, endDate),
               },
               ...draft.rows.filter(

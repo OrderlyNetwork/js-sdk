@@ -144,6 +144,10 @@ const TipsType: React.FC<{ type?: AnnouncementType | null }> = (props) => {
           label: t("announcement.type.delisting"),
           className: "oui-bg-[rgba(232,136,0,0.15)] oui-text-warning-darken",
         },
+        [AnnouncementType.Campaign]: {
+          label: "Latest Campaign is coming",
+          className: "oui-bg-primary/15 oui-text-primary",
+        },
       };
     return (
       map[type!] || {

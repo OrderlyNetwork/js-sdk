@@ -1,4 +1,5 @@
 import { createContext, useContext } from "react";
+import { AnnouncementScriptReturn } from "../announcement/announcement.script";
 
 export type RouteOption = {
   href: string;
@@ -20,6 +21,7 @@ export type ScaffoldState = {
   topNavbarHeight: number;
   footerHeight: number;
   announcementHeight: number;
+  announcementState: AnnouncementScriptReturn;
 };
 
 export const ScaffoldContext = createContext<ScaffoldState>(

@@ -94,6 +94,7 @@ export { TradingLeftNavIcon } from "./tradingLeftNavIcon";
 export { VaultsIcon } from "./vaultsIcon";
 export { LeftNavVaultsIcon } from "./leftNavVaultsIcon";
 export { NewsFillIcon } from "./newsFill";
+export { BellIcon } from "./bellIcon";
 
 type IconType = typeof BaseIcon & {
   combine: typeof CombineIcon;
