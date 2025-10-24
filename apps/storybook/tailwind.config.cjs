@@ -32,6 +32,7 @@ module.exports = withTV({
     "../../packages/wallet-connector-privy/src/**/*.{ts,js,tsx,jsx,mdx}",
     "../../packages/trading-leaderboard/src/**/*.{ts,js,tsx,jsx,mdx}",
     "../../packages/app/src/**/*.{ts,js,tsx,jsx,mdx}",
+    "../../packages/ui-notification/src/**/*.{ts,js,tsx,jsx,mdx}",
   ],
   presets: [
     require(path.resolve(__dirname, "../../packages/ui/tailwind.config.js")),
