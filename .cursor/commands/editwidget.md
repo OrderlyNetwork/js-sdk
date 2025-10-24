@@ -70,6 +70,19 @@
 - 文本建议走 i18n；必要时做错误兜底与 `useMemo` 优化。
 - **数字计算**：所有涉及数字计算（乘法、除法、百分比转换等）必须使用 `Decimal`（来自 `@orderly.network/utils`），避免浮点数精度问题。
 - **注释语言**：所有代码注释必须使用英文。
+- **禁止生成任何类型的 Markdown 文档**：不要生成 README、CHANGELOG、使用说明、总结文档等任何 .md 文件。
+- **多语言 Key 处理流程**：
+  1. 先在 `@orderly.network/i18n` 包中查找是否已存在匹配的 key
+  2. 如果存在就直接使用，如果不存在则需要创建新的 key
+  3. 根据内容性质判断应该放在 `packages/i18n/src/locale/module/` 下的哪个文件：
+     - 通用文本（如 Cancel、Confirm、Save 等）→ `common.ts`
+     - 仓位相关 → `positions.ts`
+     - 交易相关 → `trading.ts`
+     - 订单相关 → `orders.ts`
+     - 其他模块类推
+  4. Key 的命名格式：`module.keyName`（如 `common.cancel`、`positions.closeAll`）
+  5. **仅添加 key 到对应的 .ts 文件，不要翻译到其他语言的 json 文件中**
+- **确认机制**：对于需要确认的部分（如不确定放置位置、不确定实现方式等），必须暂停并询问用户意见后才可以继续开发。
 
 ## 参考
 

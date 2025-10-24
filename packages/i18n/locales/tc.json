@@ -302,6 +302,7 @@
   "trading.fundingRate.lastFundingRate": "上次資金費率",
   "trading.fundingRate.estimatedFundingRate": "預估資金費率",
   "trading.fundingRate.estimatedFundingFee": "預估資金費用",
+  "trading.fundingRate.annualized": "年化",
   "trading.rwa.marketHours": "市場时间",
   "trading.rwa.outsideMarketHours": "市場时间外",
   "trading.rwa.tooltip.description.open": "交易與基礎市場保持一致 - 更高的流動性，正常的價格波動。",

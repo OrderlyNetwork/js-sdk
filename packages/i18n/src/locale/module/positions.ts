@@ -7,6 +7,10 @@ export const positions = {
     "Records include funding from current open positions.",
   "positions.liquidation": "Liquidation",
   "positions.positionHistory": "Position history",
+  "positions.closeAll": "Close all",
+  "positions.closeAll.description":
+    "Are you sure you want to close all of your positions? They will be closed using market orders.",
+  "positions.closeAll.success": "All positions closed successfully",
 
   "positions.column.liqPrice": "Liq. price",
   "positions.column.liqPrice.tooltip":

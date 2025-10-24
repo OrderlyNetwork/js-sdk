@@ -1022,5 +1022,8 @@
   "notification.closeAll": "关闭全部（{{total}}）",
   "notification.delistingTitle": "代币下架通知",
   "notification.generalTitle": "常规更新",
-  "notification.maintenanceTitle": "系统维护"
+  "notification.maintenanceTitle": "系统维护",
+  "positions.closeAll": "全部平仓",
+  "positions.closeAll.description": "您确定要平仓所有持仓吗？将使用市价单进行平仓。",
+  "positions.closeAll.success": "所有持仓已成功平仓"
 }
