@@ -4,6 +4,6 @@ import { useBracketOrderPriceScript } from "./bracketOrderPrice.script";
 import { BracketOrderPrice } from "./bracketOrderPrice.ui";
 
 export const BracketOrderPriceWidget: FC<OrderCellState> = (props) => {
-    const state = useBracketOrderPriceScript(props);
-    return (<BracketOrderPrice {...state} />);
+  const state = useBracketOrderPriceScript(props);
+  return <BracketOrderPrice {...state} />;
 };

@@ -56,9 +56,9 @@ export const tpslFields = [
 ] as (keyof OrderlyOrder)[];
 
 export const isBracketOrder = (order: Partial<OrderlyOrder>): boolean => {
-  if (order.sl_enable || order.tp_enable) {
-    return true;
-  }
+  // if (order.sl_enable || order.tp_enable) {
+  //   return true;
+  // }
   return !!order.tp_trigger_price || !!order.sl_trigger_price;
 };
 

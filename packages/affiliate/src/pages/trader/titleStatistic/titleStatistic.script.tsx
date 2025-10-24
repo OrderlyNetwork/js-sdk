@@ -1,11 +1,11 @@
-import { useRefereeRebateSummary } from "@orderly.network/hooks";
-import { format, subDays } from "date-fns";
 import { useMemo, useState } from "react";
-import { useReferralContext } from "../../../hooks";
-import { BarDayFilter } from "../../../utils/types";
+import { format, subDays } from "date-fns";
 import { VolChartDataItem } from "@orderly.network/chart";
-import { fillData } from "../../../utils/chartUtils";
+import { useRefereeRebateSummary } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
+import { useReferralContext } from "../../../provider";
+import { fillData } from "../../../utils/chartUtils";
+import { BarDayFilter } from "../../../utils/types";
 
 export type TitleStatisticReturns = {
   period: string;
@@ -73,7 +73,7 @@ export const useTitleStatisticScript = (): TitleStatisticReturns => {
 
   const dataSource = useMemo(() => {
     if (volType === "rebate") {
-      let newData = distributionData || [];
+      const newData = distributionData || [];
       return newData
         .map((e) => ({
           date: e.date,

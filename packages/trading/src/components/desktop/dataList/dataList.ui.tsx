@@ -7,6 +7,7 @@ import {
   Divider,
   Flex,
   InfoCircleIcon,
+  ScrollArea,
   TabPanel,
   Tabs,
   Tooltip,
@@ -83,9 +84,9 @@ export const LiquidationTab: React.FC = () => {
         }
         arrow={{ className: "oui-fill-base-6" }}
       >
-        <button className="oui-hidden group-data-[state=active]:oui-block">
+        <span className="oui-hidden group-data-[state=active]:oui-block oui-cursor-pointer">
           <InfoCircleIcon />
-        </button>
+        </span>
       </Tooltip>
     </div>
   );
@@ -190,15 +191,30 @@ export const DataList: React.FC<DataListState> = (props) => {
         <LiquidationWidget symbol={showAllSymbol ? undefined : symbol} />
       ),
     },
-    // {
-    //   value: DataListTabType.assets,
-    //   title: t("common.assets"),
-    //   content: (
-    //     <Flex direction="column" width="100%" height="100%" itemAlign="start">
-    //       <AssetsModule.AssetsDataTableWidget />
-    //     </Flex>
-    //   ),
-    // },
+    {
+      value: DataListTabType.assets,
+      title: t("common.assets"),
+      content: (
+        <Flex
+          width="100%"
+          height="100%"
+          className="oui-overflow-y-auto oui-hide-scrollbar oui-pt-3"
+        >
+          <AssetsModule.AssetsDataTableWidget
+            classNames={{
+              scrollRoot:
+                "oui-h-full oui-mb-6 oui-mt-0 oui-p-0 oui-pt-3 oui-h-[calc(100%_-_40px)]",
+              root: "oui-gap-4 oui-h-full",
+              desc: "oui-ml-1",
+            }}
+            dataTableClassNames={{
+              header: "oui-bg-base-9",
+              root: "oui-h-[calc(100%_-_28px)]",
+            }}
+          />
+        </Flex>
+      ),
+    },
   ];
 
   return (

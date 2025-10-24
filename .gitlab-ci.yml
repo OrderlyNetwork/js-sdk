@@ -24,7 +24,7 @@ stages:
   image:
     name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-devops/node:20
   before_script:
-     # custom commit message
+    # custom commit message
     - export GIT_COMMIT_MESSAGE="publish internal ${RELEASE_TYPE}"
     - |
       if [ "$RELEASE_TYPE" = "patch" ]; then
@@ -51,13 +51,18 @@ stages:
       # set manual trigger to true to skip check branch
       export MANUAL_TRIGGER=true
 
+      # set dex trigger pipeline variables
+      export TRIGGER_PIPELINE_PROJECT_ID=$TRIGGER_PIPELINE_PROJECT_ID_DEX
+      export TRIGGER_PIPELINE_TOKEN=$TRIGGER_PIPELINE_TOKEN_DEX
+      export TRIGGER_PIPELINE_BRANCH=$TRIGGER_PIPELINE_BRANCH_DEX
+
       npm install -g pnpm@9
       pnpm install --frozen-lockfile
       pnpm release:${RELEASE_TYPE}
   tags:
     - dev
     - build
-  rules:    
+  rules:
     # Run this job if:
     # 1. Branch name starts with "internal/" AND
     # 2. Commit message does not contain "publish"
@@ -81,11 +86,10 @@ internal_patch_publish:
 #   variables:
 #     RELEASE_TYPE: major
 
-
 .npm_publish_template: &npm_publish_template
   stage: release
   image:
-    name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-devops/node:20 
+    name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-devops/node:20
   script:
     - git checkout "$CI_COMMIT_BRANCH"
     - |
@@ -96,7 +100,7 @@ internal_patch_publish:
       export GIT_USERNAME="$GIT_USERNAME_NPM"
       export GIT_NAME="$GIT_NAME_NPM"
       export GIT_EMAIL="$GIT_EMAIL_NPM"
-      
+
       # set public npm registry and token
       # export NPM_REGISTRY="$NPM_REGISTRY_NPM"
       export NPM_TOKEN="$NPM_TOKEN_NPM"
@@ -186,7 +190,6 @@ npm_minor_stable:
     - if: '($CI_COMMIT_BRANCH =~ /^pre-release/ || $CI_COMMIT_BRANCH =~ /^npm\//) && $CI_COMMIT_MESSAGE !~ /publish/'
       when: manual
     - when: never
-
 # major alpha version
 # npm_major_alpha:
 #   <<: *npm_publish_template
@@ -214,3 +217,47 @@ npm_minor_stable:
 #     - if: '$CI_COMMIT_BRANCH == "npm-publish" && $CI_COMMIT_MESSAGE !~ /publish/'
 #       when: manual
 #     - when: never
+
+# Abstract template for triggering external pipelines
+.trigger_pipeline_template: &trigger_pipeline_template
+  stage: release
+  image:
+    name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-devops/node:20
+  script:
+    - |    
+      npm run trigger:pipeline
+  rules:
+    - if: '($CI_COMMIT_BRANCH =~ /^internal\// || $CI_COMMIT_BRANCH =~ /^pre-release/) && $CI_COMMIT_MESSAGE =~ /publish/'
+      when: manual
+    - when: never
+  tags:
+    - dev
+    - build
+
+# Trigger dex pipeline
+trigger_pipeline_dex:
+  <<: *trigger_pipeline_template
+  variables:
+    TRIGGER_PIPELINE_PROJECT_ID: $TRIGGER_PIPELINE_PROJECT_ID_DEX
+    TRIGGER_PIPELINE_TOKEN: $TRIGGER_PIPELINE_TOKEN_DEX
+    TRIGGER_PIPELINE_BRANCH: $TRIGGER_PIPELINE_BRANCH_DEX
+    GIT_TOKEN: $GIT_TOKEN_INTERNAL
+    
+
+# Trigger demo pipeline
+trigger_pipeline_demo:
+  <<: *trigger_pipeline_template
+  variables:
+    TRIGGER_PIPELINE_PROJECT_ID: $TRIGGER_PIPELINE_PROJECT_ID_DEMO
+    TRIGGER_PIPELINE_TOKEN: $TRIGGER_PIPELINE_TOKEN_DEMO
+    TRIGGER_PIPELINE_BRANCH: $TRIGGER_PIPELINE_BRANCH_DEMO
+    GIT_TOKEN: $GIT_TOKEN_INTERNAL
+
+# Trigger dmm pipeline
+trigger_pipeline_dmm:
+  <<: *trigger_pipeline_template
+  variables:
+    TRIGGER_PIPELINE_PROJECT_ID: $TRIGGER_PIPELINE_PROJECT_ID_DMM
+    TRIGGER_PIPELINE_TOKEN: $TRIGGER_PIPELINE_TOKEN_DMM
+    TRIGGER_PIPELINE_BRANCH: $TRIGGER_PIPELINE_BRANCH_DMM
+    GIT_TOKEN: $GIT_TOKEN_INTERNAL

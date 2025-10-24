@@ -37,15 +37,10 @@ export const PortfolioChartsMobileUI: React.FC<
           {t("common.unrealizedPnl")}
         </Text>
         <Flex justify={"start"} itemAlign={"center"}>
-          <Text.numeral
-            coloring
-            size="base"
-            weight="semibold"
-            visible={visible}
-          >
+          <Text.pnl coloring size="base" weight="semibold" visible={visible}>
             {unrealPnL}
-          </Text.numeral>
-          <Text.numeral
+          </Text.pnl>
+          <Text.roi
             coloring
             rule="percentages"
             size="sm"
@@ -55,7 +50,7 @@ export const PortfolioChartsMobileUI: React.FC<
             visible={visible}
           >
             {unrealROI}
-          </Text.numeral>
+          </Text.roi>
         </Flex>
         <Text
           size="xs"

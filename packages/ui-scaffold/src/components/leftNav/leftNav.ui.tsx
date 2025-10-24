@@ -126,7 +126,7 @@ const LeftNavSheet = modal.create<LeftNavUIProps>((props) => {
               ))}
             </div>
           )}
-          <div className="oui-absolute oui-bottom-6 oui-flex oui-w-full oui-flex-col oui-gap-4">
+          <div className="oui-absolute oui-bottom-6 oui-flex oui-w-full oui-flex-col oui-gap-4 oui-bg-base-8 oui-z-60">
             <div className="oui-flex oui-items-center oui-justify-around">
               {props.telegramUrl && (
                 <div

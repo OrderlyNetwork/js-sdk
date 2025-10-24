@@ -3,6 +3,7 @@ import { Box, cn, TabPanel, Tabs, Text } from "@orderly.network/ui";
 import { FavoritesIcon } from "../../icons";
 import { MarketsTabName } from "../../type";
 import { MarketsListWidget } from "../marketsList";
+import { RwaTab } from "../rwaTab";
 import { SearchInput } from "../searchInput";
 import { useFavoritesProps } from "../shared/hooks/useFavoritesExtraProps";
 import { getMarketsSheetColumns } from "./column";
@@ -69,16 +70,15 @@ export const MarketsSheet: React.FC<MarketsSheetProps> = (props) => {
         className="oui-h-[calc(100%_-_92px)]"
         showScrollIndicator
       >
-        <TabPanel
-          title={t("markets.favorites")}
-          icon={<FavoritesIcon />}
-          value={MarketsTabName.Favorites}
-        >
+        <TabPanel title={<FavoritesIcon />} value={MarketsTabName.Favorites}>
           {renderTab(MarketsTabName.Favorites)}
         </TabPanel>
 
         <TabPanel title={t("common.all")} value={MarketsTabName.All}>
           {renderTab(MarketsTabName.All)}
+        </TabPanel>
+        <TabPanel title={<RwaTab />} value={MarketsTabName.Rwa}>
+          {renderTab(MarketsTabName.Rwa)}
         </TabPanel>
       </Tabs>
     </Box>

@@ -8,6 +8,7 @@ import {
   PositionType,
 } from "@orderly.network/types";
 import { cn, Flex, Text, Tooltip } from "@orderly.network/ui";
+import { formatNum } from "@orderly.network/utils";
 import { usePositionsRowContext } from "../positionsRowContext";
 import { TPSLEditIcon, AddIcon } from "./components";
 
@@ -39,18 +40,22 @@ export const TriggerPriceItem: FC<{
   symbolInfo: API.SymbolExt;
 }> = (props) => {
   const { qty, price, entryPrice, orderSide, orderType, symbolInfo } = props;
-  const pnl = utils.priceToPnl(
-    {
-      qty,
-      price,
-      entryPrice,
-      orderSide,
-      orderType,
-    },
-    {
-      symbol: symbolInfo,
-    },
-  );
+  const pnl = formatNum
+    .pnl(
+      utils.priceToPnl(
+        {
+          qty,
+          price,
+          entryPrice,
+          orderSide,
+          orderType,
+        },
+        {
+          symbol: symbolInfo,
+        },
+      ),
+    )!
+    .toNumber();
 
   const type = orderType === AlgoOrderType.TAKE_PROFIT ? "TP" : "SL";
 

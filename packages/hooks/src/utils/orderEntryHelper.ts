@@ -362,7 +362,8 @@ export const getCalculateHandler = (
     case "total": {
       return totalInputHandle;
     }
-    case "tp_enable":
+    // case "tp_enable":
+    // case "sl_enable":
     case "tp_pnl":
     case "sl_pnl":
     case "tp_trigger_price":
@@ -373,7 +374,6 @@ export const getCalculateHandler = (
     case "sl_offset_percentage":
     case "tp_order_price":
     case "tp_order_type":
-    case "sl_enable":
     case "sl_order_type":
     case "sl_order_price":
       return tpslInputHandle;

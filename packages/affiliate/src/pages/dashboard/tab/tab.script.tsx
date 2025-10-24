@@ -1,5 +1,6 @@
-import { ReactNode, useEffect, useMemo } from "react";
-import { TabTypes, useReferralContext } from "../../../hooks";
+import { ReactNode, useEffect, useState } from "react";
+import { useLocalStorage } from "@orderly.network/hooks";
+import { TabTypes, useReferralContext } from "../../../provider";
 
 export type TabReturns = {
   tab: string;
@@ -19,9 +20,6 @@ export const useTabScript = (): TabReturns => {
     isAffiliate,
     isTrader,
     isLoading,
-    becomeAnAffiliateUrl,
-    onBecomeAnAffiliate,
-    showReferralPage,
     splashPage,
     showHome,
     setShowHome,
@@ -29,9 +27,22 @@ export const useTabScript = (): TabReturns => {
     setTab,
   } = useReferralContext();
 
-  const tableValue = useMemo((): TabTypes => {
+  const [storedTab, setStoredTab] = useLocalStorage<TabTypes>(
+    "orderly_affiliate_dashboard_tab",
+    TabTypes.affiliate,
+  );
+
+  const resolveInitialTab = (): TabTypes => {
+    const qp =
+      typeof window !== "undefined"
+        ? (new URLSearchParams(window.location.search).get(
+            "tab",
+          ) as TabTypes | null)
+        : null;
+    const candidate =
+      (qp as TabTypes) || (storedTab as TabTypes) || (tab as TabTypes);
     if (isAffiliate && isTrader) {
-      return tab;
+      return candidate || TabTypes.affiliate;
     } else if (isAffiliate && !isTrader) {
       return TabTypes.affiliate;
     } else if (!isAffiliate && isTrader) {
@@ -39,15 +50,45 @@ export const useTabScript = (): TabReturns => {
     } else {
       return TabTypes.affiliate;
     }
-  }, [tab, isAffiliate, isTrader]);
+  };
+
+  const [uiTab, setUiTab] = useState<TabTypes>(resolveInitialTab());
 
   useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search);
-    const tab = searchParams.get("tab");
-    if (tab) {
-      setTab(tab as TabTypes);
+    if (isLoading) return;
+    const next = resolveInitialTab();
+    const qp =
+      typeof window !== "undefined"
+        ? (new URLSearchParams(window.location.search).get(
+            "tab",
+          ) as TabTypes | null)
+        : null;
+
+    if (next !== uiTab) {
+      setUiTab(next);
+      setTab(next);
     }
-  }, [window.location.search]);
+    if (qp || storedTab !== next) {
+      setStoredTab(next);
+    }
+  }, [isAffiliate, isTrader, isLoading, storedTab]);
+
+  const handleSetTab: React.Dispatch<React.SetStateAction<TabTypes>> = (
+    value,
+  ) => {
+    // update UI first to avoid flicker, then sync context/storage
+    setUiTab(
+      typeof value === "function"
+        ? (value as (prev: TabTypes) => TabTypes)(uiTab)
+        : (value as TabTypes),
+    );
+    setTab(value);
+    const finalValue =
+      typeof value === "function"
+        ? (value as (prev: TabTypes) => TabTypes)(uiTab)
+        : (value as TabTypes);
+    setStoredTab(finalValue);
+  };
 
   const anAnAffiliate = () => {
     // if (becomeAnAffiliateUrl !== undefined) {
@@ -64,8 +105,8 @@ export const useTabScript = (): TabReturns => {
   };
 
   return {
-    setTab,
-    tab: tableValue,
+    setTab: handleSetTab,
+    tab: uiTab,
     isAffiliate,
     isTrader,
     isLoading,

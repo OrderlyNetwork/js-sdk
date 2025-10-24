@@ -10,6 +10,7 @@ import {
 } from "../../icons";
 import type { FavoriteInstance } from "../../type";
 import { FavoritesDropdownMenuWidget } from "../favoritesDropdownMenu";
+import { RwaDotTooltip } from "../rwaDotTooltip";
 
 export const useSideMarketsColumns = (
   favorite: FavoriteInstance,
@@ -70,6 +71,7 @@ export const useSideMarketsColumns = (
                 >
                   {record.symbol}
                 </Text.formatted>
+                <RwaDotTooltip record={record} />
                 <Badge size="xs" color="primary">
                   {record.leverage}x
                 </Badge>

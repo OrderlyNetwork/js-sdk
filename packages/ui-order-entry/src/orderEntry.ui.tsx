@@ -1,4 +1,4 @@
-import React, { useEffect, useId, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useId, useMemo, useState } from "react";
 import {
   OrderValidationResult,
   useLocalStorage,
@@ -24,9 +24,9 @@ import {
   ThrottledButton,
   toast,
   useScreen,
-  Text,
 } from "@orderly.network/ui";
 import { TPSLAdvancedWidget } from "@orderly.network/ui-tpsl";
+import { Decimal } from "@orderly.network/utils";
 import { AdditionalConfigButton } from "./components/additional/additionalConfigButton";
 import {
   AdditionalInfo,
@@ -37,11 +37,13 @@ import { AdvancedTPSLResult } from "./components/advancedTPSLResult";
 import { AssetInfo } from "./components/assetInfo";
 import { Available } from "./components/available";
 import { orderConfirmDialogId } from "./components/dialog/confirm.ui";
+import { MaxQtyConfirm } from "./components/dialog/maxQtyConfirm";
 import { scaledOrderConfirmDialogId } from "./components/dialog/scaledOrderConfirm";
 import { OrderEntryHeader } from "./components/header";
 import { OrderEntryProvider } from "./components/orderEntryProvider";
 import { OrderInput } from "./components/orderInput";
 import { QuantitySlider } from "./components/quantitySlider";
+import { ReduceOnlySwitch } from "./components/reduceOnlySwitch";
 import { OrderTPSL } from "./components/tpsl";
 import { type OrderEntryScriptReturn } from "./orderEntry.script";
 import { getScaledPlaceOrderMessage } from "./utils";
@@ -74,6 +76,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
     setSoundAlert,
     currentFocusInput,
   } = props;
+  const [maxQtyConfirmOpen, setMaxQtyConfirmOpen] = useState(false);
 
   const { t } = useTranslation();
 
@@ -161,7 +164,6 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
   }, [errorMsgVisible]);
 
   const onSubmit = useMemoizedFn(async () => {
-    console.log("onSubmit", formattedOrder);
     const isScaledOrder = formattedOrder.order_type === OrderType.SCALED;
 
     helper
@@ -226,6 +228,21 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
       });
   });
 
+  const formattedMaxQty = useMemo(() => {
+    return new Decimal(maxQty)
+      .todp(symbolInfo.base_dp, Decimal.ROUND_DOWN)
+      .toString();
+  }, [maxQty, symbolInfo.base_dp]);
+
+  const onMaxQtyConfirm = useCallback(() => {
+    setOrderValue("order_quantity", formattedMaxQty);
+    // submit order when order_quantity updated
+    requestAnimationFrame(() => {
+      onSubmit();
+    });
+    setMaxQtyConfirmOpen(false);
+  }, [setOrderValue, formattedMaxQty]);
+
   const validateSubmit = async () => {
     // show a prompt reminding the user. If the user confirms, automatically disable Reduce Only and proceed with the action.
     if (formattedOrder.reduce_only && maxQty === 0) {
@@ -246,6 +263,8 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           return Promise.resolve(false);
         },
       });
+    } else if (maxQty > 0 && Number(formattedOrder.order_quantity) > maxQty) {
+      setMaxQtyConfirmOpen(true);
     } else {
       onSubmit();
     }
@@ -314,7 +333,9 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
     setHasAdvancedTPSLResult(false);
   }, [props.symbol]);
 
-  const showSoundSection = Boolean(notification?.orderFilled?.media);
+  const showSoundSection =
+    Boolean(notification?.orderFilled?.media) &&
+    (notification?.orderFilled?.displayInOrderEntry ?? true);
 
   const additionalInfoProps: AdditionalInfoProps = {
     pinned,
@@ -348,7 +369,16 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
       priceInputContainerRef={props.priceInputContainerRef}
       triggerPriceInputRef={props.triggerPriceInputRef}
       activatedPriceInputRef={props.activatedPriceInputRef}
+      lastQuantityInputType={props.lastQuantityInputType}
+      leverage={props.symbolLeverage}
     >
+      <MaxQtyConfirm
+        open={maxQtyConfirmOpen}
+        onOpenChange={setMaxQtyConfirmOpen}
+        maxQty={formattedMaxQty}
+        onConfirm={onMaxQtyConfirm}
+        base={symbolInfo.base}
+      />
       <div
         className={"oui-space-y-2 oui-text-base-contrast-54 xl:oui-space-y-3"}
         ref={props.containerRef}
@@ -381,18 +411,11 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           }}
         />
 
-        {/* Slider */}
         <QuantitySlider
           canTrade={props.canTrade}
-          maxQty={maxQty}
-          order_quantity={formattedOrder.order_quantity}
-          tick={symbolInfo.base_tick}
-          dp={symbolInfo.base_dp}
-          setMaxQty={props.setMaxQty}
-          onValueChange={(value) => {
-            setOrderValue("order_quantity", value);
-          }}
           side={props.side}
+          order_quantity={formattedOrder.order_quantity}
+          maxQty={maxQty}
         />
 
         {/* Submit button */}
@@ -426,6 +449,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           estSlippage={props.estSlippage}
           orderType={formattedOrder.order_type!}
           disableFeatures={disableFeatures}
+          symbol={props.symbol}
         />
 
         <Divider className="oui-w-full" />
@@ -454,6 +478,10 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
             errors={validated ? errors : null}
             isReduceOnly={formattedOrder.reduce_only}
             setOrderValue={setOrderValue}
+            reduceOnlyChecked={formattedOrder.reduce_only ?? false}
+            onReduceOnlyChange={(checked) => {
+              setOrderValue("reduce_only", checked);
+            }}
             values={{
               position_type:
                 formattedOrder.position_type ?? PositionType.PARTIAL,
@@ -479,34 +507,23 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           />
         )}
 
-        {/* reduce only switch and label */}
-        <Flex
-          justify={"between"}
-          itemAlign={"center"}
-          className="!oui-mt-0 xl:!oui-mt-3"
-        >
-          <Flex itemAlign={"center"} gapX={1}>
-            <Switch
-              data-testid="oui-testid-orderEntry-reduceOnly-switch"
-              className="oui-h-[14px]"
-              id={"reduceOnly"}
-              checked={formattedOrder.reduce_only}
+        {((isMobile &&
+          ((formattedOrder.order_type !== OrderType.LIMIT &&
+            formattedOrder.order_type !== OrderType.MARKET) ||
+            formattedOrder.reduce_only)) ||
+          !isMobile) && (
+          <Flex justify={"between"} itemAlign={"center"} className="oui-mt-2">
+            <ReduceOnlySwitch
+              checked={formattedOrder.reduce_only ?? false}
               onCheckedChange={(checked) => {
                 setOrderValue("reduce_only", checked);
               }}
             />
-            <label htmlFor={"reduceOnly"} className={"oui-text-xs"}>
-              {t("orderEntry.reduceOnly")}
-            </label>
+            {!showSoundSection && extraButton}
           </Flex>
-          {!showSoundSection && extraButton}
-        </Flex>
+        )}
         {showSoundSection && (
-          <Flex
-            justify={"between"}
-            itemAlign={"center"}
-            className="!oui-mt-0 xl:!oui-mt-3"
-          >
+          <Flex justify={"between"} itemAlign={"center"}>
             <Flex itemAlign={"center"} gapX={1}>
               <Switch
                 className="oui-h-[14px]"
@@ -515,12 +532,22 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
                 onCheckedChange={(checked) => setSoundAlert(checked)}
               />
               <label htmlFor={soundAlertId} className={"oui-text-xs"}>
-                {t("orderEntry.soundAlerts")}
+                {t("portfolio.setting.soundAlerts")}
               </label>
             </Flex>
             {extraButton}
           </Flex>
         )}
+        {!showSoundSection &&
+          isMobile &&
+          (formattedOrder.order_type == OrderType.LIMIT ||
+            formattedOrder.order_type == OrderType.MARKET) &&
+          !formattedOrder.reduce_only &&
+          !pinned && (
+            <Flex className="oui-w-full" justify={"end"}>
+              {extraButton}
+            </Flex>
+          )}
         {/* Additional info （fok，ioc、post only， order confirm hidden） */}
         {pinned && (
           <Box p={2} r={"md"} intensity={700} position={"relative"}>

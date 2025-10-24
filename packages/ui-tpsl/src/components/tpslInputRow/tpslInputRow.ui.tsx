@@ -1,10 +1,9 @@
-import React, { Fragment, useMemo } from "react";
-import { useLeverageBySymbol } from "@orderly.network/hooks";
+import { FC, Fragment, useEffect } from "react";
+import { useMemoizedFn } from "@orderly.network/hooks";
 import { useTranslation, Trans } from "@orderly.network/i18n";
 import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
 import { OrderType, PositionType } from "@orderly.network/types";
 import { Flex, Text, Grid, Checkbox, cn } from "@orderly.network/ui";
-import { Decimal, getTPSLDirection } from "@orderly.network/utils";
 import { PnlInputWidget } from "../../pnlInput/pnlInput.widget";
 import { OrderPriceType } from "../orderPriceType";
 import { PriceInput } from "./priceInput";
@@ -12,65 +11,10 @@ import { useTPSLInputRowScript } from "./tpslInputRow.script";
 
 type TPSLInputRowProps = ReturnType<typeof useTPSLInputRowScript>;
 
-export const TPSLInputRowUI: React.FC<TPSLInputRowProps> = (props) => {
+export const TPSLInputRowUI: FC<TPSLInputRowProps> = (props) => {
   const { t } = useTranslation();
   const { getErrorMsg } = useOrderEntryFormErrorMsg(props.errors);
   const { values, positionType } = props;
-
-  // if symbolLeverage is not provided, get it from useLeverageBySymbol
-  const symbolLeverage = useLeverageBySymbol(
-    props.symbolLeverage ? undefined : props.symbol,
-  );
-
-  const leverage = props.symbolLeverage || symbolLeverage;
-
-  const roi = useMemo(() => {
-    if (!leverage || isNaN(Number(leverage))) {
-      return null;
-    }
-    let _roi = null;
-    if (!props.rootOrderPrice) {
-      return null;
-    }
-
-    if (!values.trigger_price && !values.order_price) {
-      return null;
-    }
-    let _entryPrice = new Decimal(0);
-    if (values.order_type === OrderType.MARKET) {
-      if (!values.trigger_price) {
-        return null;
-      }
-      _entryPrice = new Decimal(values.trigger_price);
-    } else if (values.order_type === OrderType.LIMIT) {
-      if (!values.order_price) {
-        return null;
-      }
-      _entryPrice = new Decimal(values.order_price);
-    }
-    const rootOrderPrice = new Decimal(props.rootOrderPrice);
-
-    // ROI = (close price - order_price) / order_price × leverage × direction
-    // direction: long: +1 / short: -1
-    // leverage = MIN( current_account_leverage, symbol_leverage)
-    const direction = getTPSLDirection({
-      side: props.side,
-      type: props.type,
-      closePrice: _entryPrice.toNumber(),
-      orderPrice: rootOrderPrice.toNumber(),
-    });
-
-    _roi = _entryPrice
-      .minus(rootOrderPrice)
-      .div(rootOrderPrice)
-      .mul(leverage)
-      .abs()
-      .mul(100)
-      .mul(direction)
-      // .mul(props.type === "tp" ? 1 : -1)
-      .toNumber();
-    return _roi;
-  }, [values, props.rootOrderPrice, symbolLeverage, props.type, props.side]);
 
   return (
     <Flex
@@ -79,7 +23,7 @@ export const TPSLInputRowUI: React.FC<TPSLInputRowProps> = (props) => {
       justify={"start"}
       className="oui-w-full"
     >
-      <Flex className="oui-w-full" itemAlign={"center"} justify={"start"}>
+      {/* <Flex className="oui-w-full" itemAlign={"center"} justify={"start"}>
         {!props.disableEnableCheckbox && (
           <Checkbox
             data-testid={`oui-testid-orderEntry-${props.type}-enable-checkBox`}
@@ -94,22 +38,23 @@ export const TPSLInputRowUI: React.FC<TPSLInputRowProps> = (props) => {
         <label
           htmlFor={`enable_${props.type}`}
           className={cn(
-            "oui-cursor-pointer oui-text-sm",
+            "oui-text-sm",
             props.disableEnableCheckbox
               ? "oui-ml-0 oui-text-base-contrast"
               : "oui-ml-1  oui-text-base-contrast-36",
           )}
         >
-          {props.type === "tp"
-            ? t("tpsl.advanced.TP.label")
-            : t("tpsl.advanced.SL.label")}
+          {props.type === "tp" ? t("tpsl.takeProfit") : t("tpsl.stopLoss")}
         </label>
-      </Flex>
+      </Flex> */}
+      <Text size="sm" intensity={98}>
+        {props.type === "tp" ? t("tpsl.takeProfit") : t("tpsl.stopLoss")}
+      </Text>
       <Flex
         direction={"column"}
         gap={2}
         itemAlign={"start"}
-        className={cn("oui-w-full oui-pt-2", values.enable ? "" : "oui-hidden")}
+        className={"oui-w-full oui-pt-2"}
       >
         <Flex
           direction={"column"}
@@ -117,7 +62,7 @@ export const TPSLInputRowUI: React.FC<TPSLInputRowProps> = (props) => {
           className="oui-w-full oui-gap-0.5"
         >
           <Text className="oui-text-2xs oui-text-base-contrast-54">
-            {t("tpsl.advanced.triggerPrice")}
+            {t("common.triggerPrice")}
           </Text>
           <Grid cols={2} gap={2} className="oui-w-full oui-px-0.5">
             <PriceInput
@@ -149,7 +94,7 @@ export const TPSLInputRowUI: React.FC<TPSLInputRowProps> = (props) => {
           itemAlign={"start"}
         >
           <Text className="oui-text-2xs oui-text-base-contrast-54">
-            {t("tpsl.advanced.orderPrice")}
+            {t("common.orderPrice")}
           </Text>
           <Grid cols={2} gap={2} className="oui-w-full oui-px-0.5">
             <PriceInput
@@ -160,8 +105,8 @@ export const TPSLInputRowUI: React.FC<TPSLInputRowProps> = (props) => {
               type={"order price"}
               label={
                 values.order_type === OrderType.LIMIT
-                  ? t("tpsl.advanced.limit")
-                  : t("tpsl.advanced.market")
+                  ? t("common.limit")
+                  : t("common.market")
               }
               value={values.order_price}
               error={getErrorMsg(`${props.type}_order_price`)}
@@ -191,7 +136,7 @@ export const TPSLInputRowUI: React.FC<TPSLInputRowProps> = (props) => {
         }
         orderType={values.order_type}
         pnl={values.PnL}
-        roi={roi}
+        roi={props.roi}
         dp={props.quote_dp}
         className="oui-mt-1"
       />

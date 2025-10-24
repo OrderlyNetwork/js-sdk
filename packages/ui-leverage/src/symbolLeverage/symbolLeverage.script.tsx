@@ -48,7 +48,13 @@ export const useSymbolLeverageScript = (
 
   const { isMobile } = useScreen();
 
-  const { maxLeverage, update, isLoading } = useSymbolLeverage(symbol);
+  const {
+    maxLeverage: originalMaxLeverage,
+    update,
+    isLoading,
+  } = useSymbolLeverage(symbol);
+
+  const maxLeverage = originalMaxLeverage;
 
   const {
     position,
@@ -59,17 +65,21 @@ export const useSymbolLeverageScript = (
   } = useCalc({ symbol: symbol!, leverage, maxLeverage });
 
   const formattedLeverageLevers = useMemo(() => {
+    return generateLeverageLeversForSelector(maxLeverage);
+  }, [maxLeverage]);
+
+  const leverageLevers = useMemo(() => {
     return generateLeverageLevers(maxLeverage);
   }, [maxLeverage]);
 
   const marks = useMemo<SliderMarks>(() => {
     return (
-      formattedLeverageLevers.map((e) => ({
+      leverageLevers.map((e) => ({
         label: `${e}x`,
         value: e,
       })) || []
     );
-  }, [formattedLeverageLevers]);
+  }, [leverageLevers]);
 
   const step = useMemo(() => {
     return 100 / ((marks?.length || 0) - 1);
@@ -142,8 +152,8 @@ export const useSymbolLeverageScript = (
     overMaxPositionLeverage;
 
   return {
-    leverageLevers: formattedLeverageLevers,
-    currentLeverage: curLeverage,
+    leverageLevers,
+    currentLeverage: leverage,
     value: leverage,
     marks,
     onLeverageChange,
@@ -176,7 +186,7 @@ export const useSymbolLeverageScript = (
 // 20x: 1x, 5x, 10x, 15x, 20x
 // 50x: 1x, 10x, 20x, 35x, 50x
 // 100x: 1x, 20x, 50x, 75x, 100x
-const generateLeverageLevers = (max: number) => {
+const generateLeverageLeversForSelector = (max: number) => {
   if (max === 10) {
     return [1, 3, 5, 8, 10];
   } else if (max === 50) {
@@ -190,6 +200,92 @@ const generateLeverageLevers = (max: number) => {
   for (let i = 0; i < parts; i++) {
     result.push(Math.floor(min + step * i));
   }
+  return result;
+};
+/**
+ * Generate evenly distributed marks
+ * @param max Maximum leverage value
+ * @returns Array of evenly distributed marks
+ */
+const generateEvenlyDistributedMarks = (max: number): number[] => {
+  const result: number[] = [];
+
+  // Check if divisible by 5
+  if (max % 5 === 0) {
+    // Divisible by 5, divide from 0 to max into 5 intervals (6 marks), 1x represents 0
+    const step = max / 5;
+    for (let i = 0; i < 6; i++) {
+      const value = step * i;
+      result.push(value === 0 ? 1 : value); // 0 displays as 1x, other values display normally
+    }
+  } else {
+    // Not divisible by 5, use 25%, 50%, 75% strategy to select nearest integers
+    result.push(1); // Always include 1x
+
+    // Calculate values at 25%, 50%, 75% positions
+    const quarter = max * 0.25;
+    const half = max * 0.5;
+    const threeQuarter = max * 0.75;
+
+    // Select nearest integers
+    const quarterRounded = Math.round(quarter);
+    const halfRounded = Math.round(half);
+    const threeQuarterRounded = Math.round(threeQuarter);
+
+    // Add 25% position value (if greater than 1 and not equal to 50%)
+    if (quarterRounded > 1 && quarterRounded !== halfRounded) {
+      result.push(quarterRounded);
+    }
+
+    // Add 50% position value (if greater than 1)
+    if (halfRounded > 1) {
+      result.push(halfRounded);
+    }
+
+    // Add 75% position value (if greater than 50% and less than max)
+    if (threeQuarterRounded > halfRounded && threeQuarterRounded < max) {
+      result.push(threeQuarterRounded);
+    }
+
+    // Add maximum value (if greater than 1)
+    if (max > 1) {
+      result.push(max);
+    }
+  }
+
+  return result;
+};
+
+// 5x: 1, 2, 3, 4, 5
+// 10x: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+// 20x: 1, 5, 10, 15, 20
+// 50x: 1, 10, 20, 30, 40, 50
+// 100x: 1, 20, 40, 60, 80, 100
+const generateLeverageLevers = (max: number) => {
+  switch (max) {
+    case 10:
+      return [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    case 20:
+      return [1, 5, 10, 15, 20];
+    case 50:
+      return [1, 10, 20, 30, 40, 50];
+    case 100:
+      return [1, 20, 40, 60, 80, 100];
+  }
+
+  // Fallback strategy: evenly distribute mark distances, treat 1x as 0
+  const result: number[] = [];
+  // Optimization
+  if (max < 10) {
+    // For 10x and below, divide into n equal parts, each with length 1
+    for (let i = 1; i <= max; i++) {
+      result.push(i);
+    }
+  } else {
+    // Use unified even distribution strategy
+    result.push(...generateEvenlyDistributedMarks(max));
+  }
+
   return result;
 };
 

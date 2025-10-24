@@ -1,6 +1,7 @@
 import { withTV } from "tailwind-variants/transformer";
 import { chartPlugin } from "@orderly.network/chart";
 import { customThemePlugin } from "./src/tailwind/customTheme";
+import { lightPrimaryThemePlugin } from "./src/tailwind/lightPrimaryTheme";
 import { roundlessThemePlugin } from "./src/tailwind/roundlessTheme";
 
 const path = require("path");
@@ -30,9 +31,15 @@ module.exports = withTV({
     "../../packages/ui-chain-selector/src/**/*.{ts,js,tsx,jsx,mdx}",
     "../../packages/wallet-connector-privy/src/**/*.{ts,js,tsx,jsx,mdx}",
     "../../packages/trading-leaderboard/src/**/*.{ts,js,tsx,jsx,mdx}",
+    "../../packages/app/src/**/*.{ts,js,tsx,jsx,mdx}",
   ],
   presets: [
     require(path.resolve(__dirname, "../../packages/ui/tailwind.config.js")),
   ],
-  plugins: [chartPlugin(), customThemePlugin(), roundlessThemePlugin()],
+  plugins: [
+    chartPlugin(),
+    customThemePlugin(),
+    roundlessThemePlugin(),
+    lightPrimaryThemePlugin(),
+  ],
 });

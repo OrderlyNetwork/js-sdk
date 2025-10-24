@@ -3,6 +3,7 @@ import { useTranslation } from "@orderly.network/i18n";
 import { Box, cn, TabPanel, Tabs } from "@orderly.network/ui";
 import { FavoritesIcon } from "../../icons";
 import { MarketsTabName } from "../../type";
+import { RwaTab } from "../rwaTab";
 import { useFavoritesProps } from "../shared/hooks/useFavoritesExtraProps";
 import type { ExpandMarketsScriptReturn } from "./expandMarkets.script";
 
@@ -76,24 +77,23 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
         className={cls}
         showScrollIndicator
       >
-        <TabPanel
-          title={t("markets.favorites")}
-          icon={<FavoritesIcon />}
-          value={MarketsTabName.Favorites}
-        >
+        <TabPanel title={<FavoritesIcon />} value={MarketsTabName.Favorites}>
           {renderTab(MarketsTabName.Favorites)}
-        </TabPanel>
-        <TabPanel title={t("markets.recent")} value={MarketsTabName.Recent}>
-          {renderTab(MarketsTabName.Recent)}
         </TabPanel>
         <TabPanel title={t("common.all")} value={MarketsTabName.All}>
           {renderTab(MarketsTabName.All)}
+        </TabPanel>
+        <TabPanel title={<RwaTab />} value={MarketsTabName.Rwa}>
+          {renderTab(MarketsTabName.Rwa)}
         </TabPanel>
         <TabPanel
           title={t("markets.newListings")}
           value={MarketsTabName.NewListing}
         >
           {renderTab(MarketsTabName.NewListing)}
+        </TabPanel>
+        <TabPanel title={t("markets.recent")} value={MarketsTabName.Recent}>
+          {renderTab(MarketsTabName.Recent)}
         </TabPanel>
       </Tabs>
     </Box>

@@ -67,7 +67,7 @@ export const PerformanceMobileUI: React.FC<
         >
           <AssetLineChart
             data={mergedData}
-            invisible={invisible || (mergedData?.length ?? 0) <= 2}
+            invisible={invisible || (data?.length ?? 0) < 2}
             responsiveContainerProps={responsiveProps}
           />
         </TabPanel>
@@ -78,7 +78,7 @@ export const PerformanceMobileUI: React.FC<
         >
           <AssetLineChart
             data={mergedData}
-            invisible={invisible || (mergedData?.length ?? 0) <= 2}
+            invisible={invisible || (data?.length ?? 0) < 2}
             responsiveContainerProps={responsiveProps}
           />
         </TabPanel>
@@ -89,7 +89,7 @@ export const PerformanceMobileUI: React.FC<
         >
           <AssetLineChart
             data={mergedData}
-            invisible={invisible || (mergedData?.length ?? 0) <= 2}
+            invisible={invisible || (data?.length ?? 0) < 2}
             responsiveContainerProps={responsiveProps}
           />
         </TabPanel>

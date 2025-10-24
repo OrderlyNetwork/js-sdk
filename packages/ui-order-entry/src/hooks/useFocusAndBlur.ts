@@ -15,6 +15,7 @@ export function useFocusAndBlur(props: FocusAndBlurProps) {
   const { base_tick, order_type, order_quantity, setValue } = props;
   const currentFocusInput = useRef<InputType>(InputType.NONE);
   const lastScaledOrderPriceInput = useRef<InputType>(InputType.END_PRICE);
+  const lastQuantityInputType = useRef<InputType>(InputType.NONE);
 
   const formatQty = () => {
     if (
@@ -53,6 +54,12 @@ export function useFocusAndBlur(props: FocusAndBlurProps) {
     ) {
       lastScaledOrderPriceInput.current = type;
     }
+
+    if (
+      [InputType.QUANTITY, InputType.TOTAL, InputType.MARGIN].includes(type)
+    ) {
+      lastQuantityInputType.current = type;
+    }
   };
 
   const onBlur = (type: InputType) => (_: FocusEvent) => {
@@ -71,6 +78,7 @@ export function useFocusAndBlur(props: FocusAndBlurProps) {
   return {
     currentFocusInput,
     lastScaledOrderPriceInput,
+    lastQuantityInputType,
     onFocus: useMemoizedFn(onFocus),
     onBlur: useMemoizedFn(onBlur),
   };

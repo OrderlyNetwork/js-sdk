@@ -12,6 +12,7 @@ import {
   DataFilter,
   modal,
   Flex,
+  EmptyDataState,
 } from "@orderly.network/ui";
 import { SelectOption } from "@orderly.network/ui/src/select/withOptions";
 import type { useAssetsScriptReturn } from "./assets.script";
@@ -120,7 +121,7 @@ const AssetMobileItem: React.FC<AssetMobileItemProps> = (props) => {
           <div className="oui-text-2xs oui-font-semibold oui-text-base-contrast-36">
             {t("portfolio.overview.column.assetValue")}
           </div>
-          <Text.numeral
+          <Text.assetValue
             size="xs"
             intensity={80}
             className="oui-truncate oui-font-semibold"
@@ -130,7 +131,7 @@ const AssetMobileItem: React.FC<AssetMobileItemProps> = (props) => {
             padding={false}
           >
             {item.assetValue}
-          </Text.numeral>
+          </Text.assetValue>
         </Flex>
         <Flex
           className="oui-w-1/3 oui-truncate"
@@ -159,7 +160,7 @@ const AssetMobileItem: React.FC<AssetMobileItemProps> = (props) => {
             itemAlign={"center"}
             className="oui-text-end oui-font-semibold oui-text-base-contrast-80"
           >
-            <Text.numeral
+            <Text.collateral
               size="xs"
               rule="price"
               dp={6}
@@ -167,7 +168,7 @@ const AssetMobileItem: React.FC<AssetMobileItemProps> = (props) => {
               padding={false}
             >
               {item.collateralContribution}
-            </Text.numeral>
+            </Text.collateral>
             <div className="oui-text-end oui-text-2xs oui-text-base-contrast-36">
               USDC
             </div>
@@ -265,6 +266,20 @@ export const AssetsTableMobile: React.FC<useAssetsScriptReturn> = (props) => {
     return [ALL_ASSETS, ...assetsOptions];
   }, [assetsOptions]);
 
+  if (!props.canTrade) {
+    return (
+      <Flex
+        direction={"column"}
+        height={"100%"}
+        itemAlign={"center"}
+        justify={"center"}
+        mt={10}
+      >
+        <EmptyDataState />
+      </Flex>
+    );
+  }
+
   return (
     <div className={cn("oui-flex oui-flex-col oui-gap-1 oui-px-1 oui-pb-4")}>
       {isMainAccount && (
@@ -290,7 +305,7 @@ export const AssetsTableMobile: React.FC<useAssetsScriptReturn> = (props) => {
         />
       )}
       <div className="oui-flex oui-flex-col oui-gap-1">
-        {dataSource.map((assets, index) => {
+        {dataSource?.map((assets, index) => {
           return (
             <React.Fragment key={`item-${index}`}>
               <AccountTag name={assets.description ?? "sub account"} />

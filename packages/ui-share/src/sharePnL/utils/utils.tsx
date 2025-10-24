@@ -26,7 +26,7 @@
 */
 // import { PnLDisplayFormat, ShareOptions } from "./type";
 import { useTranslation } from "@orderly.network/i18n";
-import { Decimal } from "@orderly.network/utils";
+import { Decimal, formatNum } from "@orderly.network/utils";
 import { PnLDisplayFormat, ShareEntity, ShareOptions } from "../../types/types";
 
 export type ReferralType = {
@@ -56,34 +56,22 @@ export function getPnLPosterData(
   switch (pnlType) {
     case "pnl": {
       if (position.pnl != null) {
-        positionData["pnl"] = new Decimal(position.pnl).toFixed(
-          2,
-          Decimal.ROUND_DOWN,
-        );
+        positionData["pnl"] = formatNum.pnl(position.pnl)?.toFixed(2);
       }
       break;
     }
     case "roi": {
       if (position.roi != null) {
-        positionData["ROI"] = new Decimal(position.roi).toFixed(
-          2,
-          Decimal.ROUND_DOWN,
-        );
+        positionData["ROI"] = formatNum.roi(position.roi)?.toFixed(2);
       }
       break;
     }
     case "roi_pnl": {
       if (position.pnl != null) {
-        positionData["pnl"] = new Decimal(position.pnl).toFixed(
-          2,
-          Decimal.ROUND_DOWN,
-        );
+        positionData["pnl"] = formatNum.pnl(position.pnl)?.toFixed(2);
       }
       if (position.roi != null) {
-        positionData["ROI"] = new Decimal(position.roi).toFixed(
-          2,
-          Decimal.ROUND_DOWN,
-        );
+        positionData["ROI"] = formatNum.roi(position.roi)?.toFixed(2);
       }
       break;
     }

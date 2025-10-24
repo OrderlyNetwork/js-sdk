@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { mutate } from "swr";
 import { API } from "@orderly.network/types";
 import { useAccount } from "../useAccount";
 import { usePrivateQuery } from "../usePrivateQuery";
@@ -20,7 +21,6 @@ import { useWS } from "../useWS";
 export const useLeverageBySymbol = (symbol?: string) => {
   const { state } = useAccount();
   const ws = useWS();
-  const [leverage, setLeverage] = useState<number | undefined>(undefined);
 
   const { data } = usePrivateQuery<API.LeverageInfo>(
     symbol ? `/v1/client/leverage?symbol=${symbol}` : null,
@@ -30,12 +30,6 @@ export const useLeverageBySymbol = (symbol?: string) => {
   );
 
   useEffect(() => {
-    if (data?.leverage) {
-      setLeverage(data.leverage);
-    }
-  }, [data]);
-
-  useEffect(() => {
     if (!state.accountId || !symbol) return;
 
     const unsubscribe = ws.privateSubscribe("account", {
@@ -43,7 +37,14 @@ export const useLeverageBySymbol = (symbol?: string) => {
         const res = data?.accountDetail?.symbolLeverage || {};
         // update leverage when symbol leverage changed
         if (res.symbol === symbol) {
-          setLeverage(res.leverage);
+          // update leverage by swr to fix displayed previous value at short time when switching symbol.
+          const key = [`/v1/client/leverage?symbol=${symbol}`, state.accountId];
+          mutate(key, (prevData: any) => {
+            return {
+              ...prevData,
+              leverage: res.leverage,
+            };
+          });
         }
       },
     });
@@ -51,5 +52,5 @@ export const useLeverageBySymbol = (symbol?: string) => {
     return () => unsubscribe?.();
   }, [symbol, state.accountId]);
 
-  return leverage;
+  return data?.leverage;
 };

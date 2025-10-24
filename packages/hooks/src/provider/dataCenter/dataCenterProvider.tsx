@@ -1,5 +1,6 @@
 import React, { PropsWithChildren, useMemo, useRef } from "react";
 import { useWSObserver } from "../../orderly/internal/useWSObserver";
+import { useInitRwaSymbolsRuntime } from "../../orderly/orderlyHooks";
 import { usePrivateDataObserver } from "../../orderly/usePrivateDataObserver";
 import { usePublicDataObserver } from "../../orderly/usePublicDataObserver";
 import { useCalculatorService } from "../../useCalculatorService";
@@ -18,6 +19,8 @@ export const DataCenterProvider: React.FC<PropsWithChildren> = ({
    *  hidden view while the required data is not ready
    */
   const { error, done } = usePreLoadData();
+
+  useInitRwaSymbolsRuntime();
 
   const calculatorService = useCalculatorService();
 

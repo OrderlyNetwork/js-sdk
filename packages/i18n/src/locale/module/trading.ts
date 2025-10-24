@@ -77,6 +77,29 @@ export const trading = {
   "trading.fundingRate.predFundingRate.interval": "Interval",
   "trading.fundingRate.predFundingRate.cap": "Funding cap",
   "trading.fundingRate.predFundingRate.floor": "floor",
+  "trading.fundingRate.lastFundingRate": "Last funding rate",
+  "trading.fundingRate.estimatedFundingRate": "Estimated funding rate",
+  "trading.fundingRate.estimatedFundingFee": "Estimated funding fee",
+
+  "trading.rwa.marketHours": "Market hours",
+  "trading.rwa.outsideMarketHours": "Outside market hours",
+  "trading.rwa.tooltip.description.open":
+    "Trading aligns with the underlying market - higher liquidity, normal price movements.",
+  "trading.rwa.tooltip.description.close":
+    "Trading is available, but liquidity may be lower and price movement slower.",
+  "trading.rwa.tooltip.closeIn":
+    "Regular trading hours will close in <0>{{timeFormat}}</0>",
+  "trading.rwa.tooltip.openIn":
+    "Regular trading hours will open in <0>{{timeFormat}}</0>",
+  "trading.rwa.tooltip.checkDetailRules": "Check detail rules",
+  "trading.rwa.countdown.title":
+    "US markets are closing soon, volatility may be lower.",
+  "trading.rwa.outsideMarketHours.notify":
+    "This market is currently outside regular trading hours. You can still place a trade, but please be aware of reduced liquidity and potential risks.",
+  "trading.rwa.mWeb.outsideMarketHours.desc":
+    "Regular trading hours are about to close - 24/7 trading continues; price may slow and liquidity may be lower.",
+  "trading.rwa.mWeb.insideMarketHours.desc":
+    "Regular trading hours are about to open - get ready.",
 };
 
 export type Trading = typeof trading;

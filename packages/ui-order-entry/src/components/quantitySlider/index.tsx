@@ -1,79 +1,113 @@
-import { useMemo } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
+import { utils } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { OrderSide } from "@orderly.network/types";
-import {
-  Flex,
-  Slider,
-  textVariants,
-  Text,
-  convertValueToPercentage,
-} from "@orderly.network/ui";
+import { Flex, Slider, textVariants, Text } from "@orderly.network/ui";
+import { Decimal } from "@orderly.network/utils";
+import { InputType } from "../../types";
+import { useOrderEntryContext } from "../orderEntryContext";
 
-export const QuantitySlider = (props: {
+type QuantitySliderProps = {
   canTrade: boolean;
   side: OrderSide;
   order_quantity?: string;
   maxQty: number;
-  tick: number;
-  dp: number;
-  setMaxQty: () => void;
-  onValueChange: (value: number) => void;
-}) => {
-  const { canTrade, order_quantity, maxQty } = props;
+};
+const SLIDER_MIN = 0;
+const SLIDER_MAX = 100;
+
+export const QuantitySlider = memo((props: QuantitySliderProps) => {
+  const { canTrade, side, order_quantity, maxQty } = props;
+
+  const [sliderValue, setSliderValue] = useState<number>(0);
+
+  const { setOrderValue, symbolInfo, lastQuantityInputType } =
+    useOrderEntryContext();
+
+  const { base_dp, base_tick } = symbolInfo;
+
   const { t } = useTranslation();
 
   const color = useMemo(
-    () =>
-      canTrade ? (props.side === OrderSide.BUY ? "buy" : "sell") : undefined,
-    [props.side, canTrade],
+    () => (canTrade ? (side === OrderSide.BUY ? "buy" : "sell") : undefined),
+    [side, canTrade],
   );
 
   const maxLabel = useMemo(() => {
-    return props.side === OrderSide.BUY
+    return side === OrderSide.BUY
       ? t("orderEntry.maxBuy")
       : t("orderEntry.maxSell");
-  }, [props.side, t]);
+  }, [side, t]);
 
-  const sliderValue = useMemo(() => {
-    if (!order_quantity) {
-      return 0;
-    }
-    return Number(order_quantity);
-  }, [order_quantity]);
+  const onSliderValueChange = (value: number) => {
+    lastQuantityInputType.current = InputType.QUANTITY_SLIDER;
+    setSliderValue(value);
+  };
 
-  const quantityToPercentage = useMemo(() => {
-    if (!order_quantity) {
+  const sliderToQuantity = (value: number) => {
+    const newQty = new Decimal(value)
+      .div(SLIDER_MAX)
+      .mul(maxQty)
+      .toFixed(base_dp, Decimal.ROUND_DOWN);
+    setOrderValue("order_quantity", utils.formatNumber(newQty, base_tick));
+  };
+
+  const onMax = () => {
+    onSliderValueChange(SLIDER_MAX);
+    // when previous slider value is max, quantity will not update by useEffect, so must set quantity manually to maxQty
+    if (sliderValue === SLIDER_MAX) {
+      sliderToQuantity(SLIDER_MAX);
+    }
+  };
+
+  // update quantity when slider value and maxQty changes
+  useEffect(() => {
+    if (lastQuantityInputType.current === InputType.QUANTITY_SLIDER) {
+      sliderToQuantity(sliderValue);
+    }
+  }, [sliderValue, maxQty]);
+
+  useEffect(() => {
+    const quantityToSlider = () => {
+      if (order_quantity && Number(order_quantity) !== 0 && maxQty !== 0) {
+        return new Decimal(Math.min(Number(order_quantity), maxQty))
+          .div(maxQty)
+          .mul(SLIDER_MAX)
+          .todp(2, Decimal.ROUND_DOWN)
+          .toNumber();
+      }
       return 0;
+    };
+
+    // update slider value when last quantity input type is not quantity slider
+    if (lastQuantityInputType.current !== InputType.QUANTITY_SLIDER) {
+      setSliderValue(quantityToSlider());
     }
-    if (Number(order_quantity) >= Number(maxQty)) {
-      return 1;
-    }
-    return (
-      convertValueToPercentage(Number(order_quantity ?? 0), 0, maxQty) / 100
-    );
   }, [order_quantity, maxQty]);
 
   return (
     <div>
-      <Slider.single
+      <Slider
         disabled={maxQty === 0 || !canTrade}
-        value={sliderValue}
+        value={[sliderValue]}
         color={color}
         markCount={4}
         showTip
-        max={maxQty}
-        step={props.tick}
-        onValueChange={props.onValueChange}
+        onValueChange={(e) => {
+          onSliderValueChange(e[0]);
+        }}
+        min={SLIDER_MIN}
+        max={SLIDER_MAX}
       />
       <Flex justify={"between"} className="oui-pt-1 xl:oui-pt-2">
         <Text.numeral
-          rule={"percentages"}
           size={"2xs"}
           color={color}
           dp={2}
           padding={false}
+          suffix="%"
         >
-          {canTrade ? quantityToPercentage : 0}
+          {canTrade ? sliderValue : 0}
         </Text.numeral>
         <Flex>
           <button
@@ -81,7 +115,7 @@ export const QuantitySlider = (props: {
               size: "2xs",
               className: "oui-mr-1",
             })}
-            onClick={() => props.setMaxQty()}
+            onClick={onMax}
             data-testid="oui-testid-orderEntry-maxQty-value-button"
           >
             {maxLabel}
@@ -89,7 +123,7 @@ export const QuantitySlider = (props: {
           <Text.numeral
             size={"2xs"}
             color={color}
-            dp={props.dp}
+            dp={base_dp}
             padding={false}
             data-testid="oui-testid-orderEntry-maxQty-value"
           >
@@ -99,4 +133,6 @@ export const QuantitySlider = (props: {
       </Flex>
     </div>
   );
-};
+});
+
+QuantitySlider.displayName = "QuantitySlider";

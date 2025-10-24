@@ -64,13 +64,13 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
       const currentToken = vaultBalanceList?.find(
         (item) => item.token === token.symbol,
       );
-      const insufficientBalance = new Decimal(currentToken?.balance ?? 0).lt(
-        value ? Number(value) : 0,
-      );
+      const insufficientBalance = currentToken
+        ? new Decimal(currentToken.balance ?? 0).lt(value ? Number(value) : 0)
+        : false;
       return {
         ...token,
         name: token.display_name || token.symbol!,
-        insufficientBalance: insufficientBalance,
+        insufficientBalance,
       };
     });
   }, [tokens, value, vaultBalanceList]);

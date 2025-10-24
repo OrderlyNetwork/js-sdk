@@ -18,10 +18,13 @@ import {
   ArrowDownShortIcon,
   Button,
 } from "@orderly.network/ui";
-import { AuthGuardDataTable } from "@orderly.network/ui-connector";
+import { AuthGuard, AuthGuardDataTable } from "@orderly.network/ui-connector";
 import type { SelectOption } from "@orderly.network/ui/src/select/withOptions";
 import type { useAssetsScriptReturn } from "./assets.script";
-import type { AssetsWidgetProps } from "./assets.widget";
+import type {
+  AssetsDataTableWidgetProps,
+  AssetsWidgetProps,
+} from "./assets.widget";
 
 const LazyConvertHistoryWidget = React.lazy(() =>
   import("../convertPage/convert.widget").then((mod) => {
@@ -102,7 +105,7 @@ const DepositAndWithdrawButton: React.FC<
         <ArrowDownShortIcon
           color="white"
           opacity={mergedDisabled ? 0.4 : 1}
-          className="oui-rotate-0"
+          className="oui-rotate-0 oui-text-primary-contrast"
         />
         <Text>{t("common.deposit")}</Text>
       </Button>
@@ -117,7 +120,7 @@ const DepositAndWithdrawButton: React.FC<
         <ArrowDownShortIcon
           color="white"
           opacity={mergedDisabled ? 0.4 : 1}
-          className="oui-rotate-180"
+          className="oui-rotate-180 oui-text-base-contrast"
         />
         <Text>{t("common.withdraw")}</Text>
       </Button>
@@ -220,11 +223,30 @@ export const AssetsDataTable: React.FC<
     | "selectedAsset"
     | "assetsOptions"
     | "state"
-  >
+    | "canTrade"
+  > &
+    AssetsDataTableWidgetProps
 > = (props) => {
-  const { columns, dataSource } = props;
+  const { columns, dataSource, dataTableClassNames, classNames } = props;
+  const { root, scrollRoot, desc } = classNames ?? {};
+
+  if (!props.canTrade) {
+    // show auth button when not can trade
+    return (
+      <AuthGuardDataTable
+        classNames={{
+          root: "oui-rounded-xl oui-font-semibold",
+          scroll: "oui-h-[252px]",
+        }}
+        loading={props.canTrade}
+        columns={[]}
+        dataSource={[]}
+      />
+    );
+  }
+
   return (
-    <Flex width="100%" direction={"column"}>
+    <Flex width="100%" height="100%" direction={"column"} className={root}>
       <DataFilterSection
         {...pick(
           [
@@ -238,18 +260,18 @@ export const AssetsDataTable: React.FC<
           props,
         )}
       />
-      {dataSource.map((item, index) => {
+      {dataSource?.map((item, index) => {
         return (
           <Flex
             key={`item-${index}`}
-            className="oui-rounded-xl oui-bg-base-9 oui-p-6"
+            className={cn("oui-rounded-xl oui-bg-base-9 oui-p-6", scrollRoot)}
             direction={"column"}
             itemAlign={"start"}
             justify={"between"}
             my={4}
           >
             <Text
-              className="oui-mb-4"
+              className={cn("oui-mb-4", desc)}
               intensity={98}
               weight="semibold"
               size="lg"
@@ -260,8 +282,9 @@ export const AssetsDataTable: React.FC<
               bordered
               className="oui-font-semibold"
               classNames={{
-                root: "oui-bg-transparent",
-                scroll: "oui-min-h-0",
+                // root: "oui-bg-transparent",
+                // scroll: "oui-min-h-0",
+                ...dataTableClassNames,
               }}
               columns={columns}
               dataSource={item.children}
@@ -312,9 +335,14 @@ export const AssetsTable: React.FC<AssetsWidgetProps> = (props) => {
                 "selectedAsset",
                 "assetsOptions",
                 "state",
+                "canTrade",
               ],
               props,
             )}
+            classNames={{
+              scrollRoot:
+                "oui-max-h-[700px] oui-overflow-y-auto oui-custom-scrollbar oui-w-full",
+            }}
           />
         </TabPanel>
         <TabPanel

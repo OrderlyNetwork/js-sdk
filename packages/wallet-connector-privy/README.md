@@ -35,6 +35,13 @@ If abstractConfig is not configured, the Abstract Global Wallet connector will b
 
 At least one of privyConfig, wagmiConfig, or solanaConfig must be provided.
 
+**Available Login Methods for Privy:**
+
+- `email` - Email/password login
+- `google` - Google OAuth login
+- `twitter` - Twitter OAuth login
+- `telegram` - Telegram login (optional)
+
 If customChains only includes a Solana chain, then Privy will only display the Solana injected wallet, and the Wagmi connector will be disabled.
 
 If customChains only includes EVM chains, then Privy will only display the EVM injected wallet, and the Solana connector will be disabled.
@@ -54,6 +61,7 @@ eg:
             accentColor: "#181C23",
             logo: "/orderly-logo.svg",
           },
+          loginMethods: ["email", "google", "twitter", "telegram"],
         },
       }}
       wagmiConfig={{

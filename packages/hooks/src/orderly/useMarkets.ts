@@ -5,12 +5,14 @@ import { OrderlyContext } from "../orderlyContext";
 import { useEventEmitter } from "../useEventEmitter";
 import { MarketStoreKey } from "./useMarket";
 import { useMarketsStream } from "./useMarketsStream";
+import { RwaSymbolsInfo, useRwaSymbolsInfo } from "./useRwaSymbolsInfo";
 import { SymbolsInfo, useSymbolsInfo } from "./useSymbolsInfo";
 
 export enum MarketsType {
   FAVORITES,
   RECENT,
   ALL,
+  RWA,
   NEW_LISTING,
 }
 
@@ -93,6 +95,10 @@ export type MarketsItem = {
   openInterest: number;
   isFavorite: boolean;
   leverage?: number;
+  isRwa: boolean;
+  rwaNextOpen?: number;
+  rwaNextClose?: number;
+  rwaStatus?: "open" | "close";
 };
 
 export type MarketsStore = ReturnType<typeof useMarketsStore>;
@@ -293,6 +299,7 @@ export const useMarkets = (
 ): [MarketsItem[], MarketsStore] => {
   const { data: futures } = useMarketsStream();
   const symbolsInfo = useSymbolsInfo();
+  const rwaSymbolsInfo = useRwaSymbolsInfo();
 
   const [markets, setMarkets] = useState<MarketsItem[]>([]);
 
@@ -301,7 +308,7 @@ export const useMarkets = (
   const { favorites, recent, newListing } = store;
 
   useEffect(() => {
-    const markets = addFieldToMarkets(futures, symbolsInfo);
+    const markets = addFieldToMarkets(futures, symbolsInfo, rwaSymbolsInfo);
     const filterList = filterMarkets({
       markets,
       favorites,
@@ -324,9 +331,13 @@ export const useMarkets = (
 const addFieldToMarkets = (
   futures: WSMessage.Ticker[] | null,
   symbolsInfo: SymbolsInfo,
+  rwaSymbolsInfo: RwaSymbolsInfo,
 ) => {
   return (futures || [])?.map((item: any) => {
     const info = symbolsInfo[item.symbol];
+    const rwaInfo = !rwaSymbolsInfo.isNil
+      ? rwaSymbolsInfo[item.symbol]()
+      : null;
 
     return {
       ...item,
@@ -340,6 +351,10 @@ const addFieldToMarkets = (
         close: item["24h_close"],
         open: item["24h_open"],
       }),
+      isRwa: !!rwaInfo,
+      rwaNextOpen: rwaInfo?.next_open,
+      rwaNextClose: rwaInfo?.next_close,
+      rwaStatus: rwaInfo?.status,
     } as MarketsItem;
   });
 };
@@ -361,6 +376,8 @@ const filterMarkets = (params: {
 
   if (type === MarketsType.ALL) {
     curData = markets;
+  } else if (type === MarketsType.RWA) {
+    curData = markets.filter((item) => item.isRwa);
   } else if (type === MarketsType.NEW_LISTING) {
     curData = markets
       .filter((item) => isNewListing(item.created_time))

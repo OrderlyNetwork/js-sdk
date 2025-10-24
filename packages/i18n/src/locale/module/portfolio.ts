@@ -60,10 +60,11 @@ export const portfolio = {
   "portfolio.feeTier.column.30dVolume.above": "Above {{volume}}",
   "portfolio.feeTier.column.stakingLevel": "Staking Level",
   "portfolio.feeTier.column.or": "or",
-  "portfolio.feeTier.column.maker": "Maker",
-  "portfolio.feeTier.column.taker": "Taker",
+  "portfolio.feeTier.column.maker": "Maker / RWA Maker",
+  "portfolio.feeTier.column.taker": "Taker / RWA Taker",
   "portfolio.feeTier.effectiveFee.tooltip":
     "Effective fee rate after applying your referee rebate.",
+  "portfolio.feeTier.effectiveFee.tooltipLink": "Check rebate history",
   "portfolio.apiKey.accountId.copied": "Account id copied",
   "portfolio.apiKey.uid": "UID",
   "portfolio.apiKey.secretKey": "Secret key",
@@ -121,6 +122,9 @@ export const portfolio = {
     "Cancel open orders during system upgrade",
   "portfolio.setting.cancelOpenOrders.description":
     "During the upgrade period, all open orders will be cancelled to manage your risk in case of high market volatility.",
+  "portfolio.setting.soundAlerts": "Sound notification",
+  "portfolio.setting.soundAlerts.description":
+    "Play a notification sound when an order is filled or canceled.",
 };
 
 export type Portfolio = typeof portfolio;

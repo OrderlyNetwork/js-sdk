@@ -19,8 +19,8 @@ const isTPSLEnable = (order: OrderlyOrder, type: "tp" | "sl") => {
       return !!order.sl_trigger_price;
     }
   }
-  // no edit, enable tp /sl
-  return true;
+  // no edit, disabled tp /sl
+  return false;
 };
 
 export const useTPSLAdvanced = (props: Props) => {
@@ -44,8 +44,8 @@ export const useTPSLAdvanced = (props: Props) => {
       order_quantity: order.order_quantity,
       position_type: order.position_type ?? PositionType.PARTIAL,
       trigger_price: order.trigger_price,
-      tp_enable: isTPSLEnable(order, "tp"),
-      sl_enable: isTPSLEnable(order, "sl"),
+      // tp_enable: isTPSLEnable(order, "tp"),
+      // sl_enable: isTPSLEnable(order, "sl"),
       tp_trigger_price: order.tp_trigger_price,
       sl_trigger_price: order.sl_trigger_price,
       tp_order_price: order.tp_order_price,

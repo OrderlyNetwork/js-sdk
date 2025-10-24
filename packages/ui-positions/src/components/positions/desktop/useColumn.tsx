@@ -13,8 +13,9 @@ import {
 } from "@orderly.network/ui";
 import { SymbolLeverageDialogId } from "@orderly.network/ui-leverage";
 import { SharePnLOptions, SharePnLDialogId } from "@orderly.network/ui-share";
-import { Decimal } from "@orderly.network/utils";
+import { Decimal, formatNum } from "@orderly.network/utils";
 import { FundingFeeButton } from "../../fundingFeeHistory/fundingFeeButton";
+import { RwaStatusTag } from "../../rwaStatus/rwaStatus";
 import { ClosePositionWidget } from "../closePosition";
 import { LeverageBadge } from "./components";
 import { renderQuantity } from "./listElement";
@@ -41,7 +42,7 @@ export const useColumn = (config: ColumnConfig) => {
         title: t("common.symbol"),
         dataIndex: "symbol",
         fixed: "left",
-        width: 140,
+        width: 200,
         onSort: (r1, r2) => {
           return r1.symbol?.localeCompare(r2.symbol || "");
           // if (sortOrder === "asc") {
@@ -74,11 +75,14 @@ export const useColumn = (config: ColumnConfig) => {
               >
                 {`${value.split("_")[1]}-PERP`}
               </Text.formatted>
-              <LeverageBadge
-                symbol={value}
-                leverage={record.leverage}
-                modalId={SymbolLeverageDialogId}
-              />
+              <Flex gap={1}>
+                <LeverageBadge
+                  symbol={value}
+                  leverage={record.leverage}
+                  modalId={SymbolLeverageDialogId}
+                />
+                <RwaStatusTag symbol={value} />
+              </Flex>
             </Flex>
           </Flex>
         ),
@@ -182,25 +186,23 @@ export const useColumn = (config: ColumnConfig) => {
           return (
             <Flex gap={2}>
               <Flex>
-                <Text.numeral
+                <Text.pnl
                   dp={pnlNotionalDecimalPrecision}
-                  rm={Decimal.ROUND_DOWN}
                   coloring
                   className="oui-font-semibold"
                 >
                   {value}
-                </Text.numeral>
-                <Text.numeral
+                </Text.pnl>
+                <Text.roi
                   rule="percentages"
                   dp={pnlNotionalDecimalPrecision}
-                  rm={Decimal.ROUND_DOWN}
                   coloring
                   className="oui-font-semibold"
                   prefix="("
                   suffix=")"
                 >
                   {record.unrealized_pnl_ROI}
-                </Text.numeral>
+                </Text.roi>
               </Flex>
               <ShareButtonWidget
                 position={record}
@@ -244,7 +246,9 @@ export const useColumn = (config: ColumnConfig) => {
         width: 100,
         onSort: true,
         render: (value: string) => (
-          <Text.numeral dp={pnlNotionalDecimalPrecision}>{value}</Text.numeral>
+          <Text.notional dp={pnlNotionalDecimalPrecision}>
+            {value}
+          </Text.notional>
         ),
       },
       {
@@ -272,19 +276,19 @@ export const useColumn = (config: ColumnConfig) => {
         rule: "price",
         render: (value: string) => <Text.numeral>{value}</Text.numeral>,
       },
-      {
-        title: t("funding.fundingFee"),
-        dataIndex: "fundingFee",
-        width: 100,
-        render: (value, record) => (
-          <FundingFeeButton
-            fee={value}
-            symbol={record.symbol}
-            start_t={record.timestamp.toString()}
-            end_t={fundingFeeEndTime.current}
-          />
-        ),
-      },
+      // {
+      //   title: t("funding.fundingFee"),
+      //   dataIndex: "fundingFee",
+      //   width: 100,
+      //   render: (value, record) => (
+      //     <FundingFeeButton
+      //       fee={value}
+      //       symbol={record.symbol}
+      //       start_t={record.timestamp.toString()}
+      //       end_t={fundingFeeEndTime.current}
+      //     />
+      //   ),
+      // },
       // {
       //   title: t("common.qty"),
       //   dataIndex: "close_qty",

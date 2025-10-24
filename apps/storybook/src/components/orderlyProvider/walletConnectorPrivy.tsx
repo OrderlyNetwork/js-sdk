@@ -67,6 +67,7 @@ export const WalletConnectorPrivy: FC<WalletConnectorPrivyProps> = (props) => {
                   accentColor: "#181C23",
                   logo: "/orderly-logo.svg",
                 },
+                loginMethods: ["email", "google", "twitter", "telegram"],
               },
             }
           : undefined
@@ -91,7 +92,20 @@ export const WalletConnectorPrivy: FC<WalletConnectorPrivyProps> = (props) => {
       solanaConfig={{
         mainnetRpc: "",
         devnetRpc: "https://api.devnet.solana.com",
-        wallets: wallets,
+        wallets: [
+          new PhantomWalletAdapter(),
+          new SolflareWalletAdapter(),
+          new LedgerWalletAdapter(),
+          new SolanaMobileWalletAdapter({
+            addressSelector: createDefaultAddressSelector(),
+            appIdentity: {
+              uri: `${location.protocol}//${location.host}`,
+            },
+            authorizationResultCache: createDefaultAuthorizationResultCache(),
+            chain: network,
+            onWalletNotFound: mobileWalletNotFoundHanlder,
+          }),
+        ],
         onError: (error: WalletError, adapter?: Adapter) => {
           console.log(
             "error",

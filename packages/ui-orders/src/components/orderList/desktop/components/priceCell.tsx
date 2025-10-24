@@ -79,7 +79,8 @@ export const PriceCell = (props: {
       order_price: value,
     };
 
-    if (order.reduce_only) {
+    // if reduce_only is not undefined, request body must have reduce_only value
+    if (order.reduce_only !== undefined) {
       data.reduce_only = order.reduce_only;
     }
 

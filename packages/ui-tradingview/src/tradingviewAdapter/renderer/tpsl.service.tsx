@@ -204,6 +204,13 @@ export class TPSLService {
     this.threshold = this.generateThreshold();
   }
 
+  /**
+   * Generates a threshold value for position intersection detection.
+   * The threshold is calculated as 2% of the visible price range but is capped
+   * to ensure it never exceeds the actual price range (highest - lowest price).
+   *
+   * @returns The calculated threshold value, or DEFAULT_THRESHOLD if calculation fails
+   */
   private generateThreshold() {
     // return new Decimal(position.open).mul(0.01).abs().toNumber();
     // const priceRange = this.chart.get
@@ -211,15 +218,32 @@ export class TPSLService {
     if (!priceScale) {
       return DEFAULT_THRESHOLD;
     }
-    const priceRange = priceScale.getVisiblePriceRange();
-    if (!priceRange) {
+
+    try {
+      // TradingView's getVisiblePriceRange() can throw "Value is null" error
+      // when the price scale is initializing or recalculating
+      const priceRange = priceScale.getVisiblePriceRange();
+      if (!priceRange) {
+        return DEFAULT_THRESHOLD;
+      }
+
+      // Calculate the visible price range
+      const priceWidth = priceRange.to - priceRange.from;
+
+      // Calculate threshold as 2% of the visible price range
+      const calculatedThreshold = priceWidth * 0.02;
+
+      // Ensure threshold doesn't exceed the actual price range
+      // This prevents threshold from being larger than the chart's price range
+      const threshold = Math.min(calculatedThreshold, priceWidth);
+
+      return threshold;
+    } catch (error) {
+      // Handle TradingView internal errors gracefully
+      // This can occur during chart initialization, symbol switching, or price scale updates
+      // console.error('Error getting visible price range:', error);
       return DEFAULT_THRESHOLD;
     }
-
-    const priceWidth = priceRange.to - priceRange.from;
-    const threshold = priceWidth * 0.02;
-    // console.log(threshold);
-    return threshold;
   }
 
   private drawTPSL(params: { price: number }) {
@@ -336,7 +360,7 @@ export class TPSLService {
         .setTooltip(i18n.t("tpsl.dragToSet"))
         .setPrice(this.currentPosition!.open)
         .setLineLength(-200, "pixel")
-        .setText(i18n.t("tpsl.advanced.title"))
+        .setText(i18n.t("common.tpsl"))
         .setQuantity("")
         .setBodyTextColor(this.broker.colorConfig.textColor!)
         .setBodyBackgroundColor(this.broker.colorConfig.chartBG!)

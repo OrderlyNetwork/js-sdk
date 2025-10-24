@@ -28,6 +28,23 @@ export const OrderlyAppProvider: FC<
       amplitudeConfig={{
         amplitudeId: "4463418c103f3a66c6d863357f951e25",
       }}
+      // chainFilter={(config) => {
+      //   return {
+      //     mainnet: [
+      //       { id: ARBITRUM_MAINNET_CHAINID },
+      //       { id: SOLANA_MAINNET_CHAINID },
+      //     ],
+      //     testnet: [
+      //       { id: ARBITRUM_TESTNET_CHAINID },
+      //       { id: SOLANA_TESTNET_CHAINID },
+      //     ],
+      //   };
+      // }}
+      // customChains={{
+      //   mainnet: [{ id: Arbitrum.id }],
+      //   testnet: [{ id: ArbitrumSepolia.id }],
+      // }}
+
       // orderMetadata={(order) => {
       //   return {
       //     order_tag: "test_tag",

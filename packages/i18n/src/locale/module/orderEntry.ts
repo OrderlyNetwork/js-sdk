@@ -2,7 +2,6 @@ export const orderEntry = {
   "orderEntry.buyLong": "Buy / Long",
   "orderEntry.sellShort": "Sell / Short",
   "orderEntry.reduceOnly": "Reduce only",
-  "orderEntry.soundAlerts": "Sound alerts",
   "orderEntry.orderType.limit": "Limit",
   "orderEntry.orderType.market": "Market",
   // TODO：use orderEntry.orderType.limit
@@ -16,6 +15,8 @@ export const orderEntry = {
   "orderEntry.orderType.fok": "FOK",
   "orderEntry.orderType.scaledOrder": "Scaled",
   "orderEntry.orderType.trailingStop": "Trailing stop",
+  "orderEntry.orderSize": "Order size",
+  "orderEntry.initialMargin": "Initial margin",
 
   "orderEntry.startPrice": "Start price",
   "orderEntry.endPrice": "End price",
@@ -102,6 +103,8 @@ export const orderEntry = {
 
   "orderEntry.total.error.min":
     "The order value should be greater or equal to {{value}} USDC",
+  "orderEntry.initialMarginTotal.error.min":
+    "The initial margin should be greater or equal to {{value}} USDC",
 
   "orderEntry.startPrice.error.required": "Start price is required",
   "orderEntry.startPrice.error.min":
@@ -151,6 +154,8 @@ export const orderEntry = {
   "orderEntry.reduceOnly.reminder.content":
     "Your account is in reduce-only and cannot open new positions. Would you like to turn off reduce-only mode and proceed with the order?",
   "orderEntry.placeOrderNow": "Place order now",
+  "orderEntry.maxQty.reminder.content":
+    "Order qty reduced to max available: {{maxQty}}",
 };
 
 export type OrderEntry = typeof orderEntry;

@@ -48,7 +48,7 @@ export const Fee: FC<Partial<UseDepositFeeReturn>> = (props) => {
       className="oui-border-dashed oui-border-b oui-border-line-12 oui-cursor-pointer"
       onClick={onShowFee}
     >
-      {`${t("common.fee")} ≈ `}
+      {`${t("transfer.deposit.estGasFee")} ≈ `}
       <Text size="2xs" intensity={80}>
         $
         <Text.numeral dp={2} padding={false} rm={Decimal.ROUND_UP}>

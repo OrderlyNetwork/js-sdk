@@ -17,6 +17,7 @@ export const useRankingColumns = (
   fields?: RankingColumnFields[],
   address?: string,
   enableSort?: boolean,
+  brokerId?: string,
 ) => {
   const { t } = useTranslation();
   const { isMobile } = useScreen();
@@ -100,7 +101,7 @@ export const useRankingColumns = (
             <>
               <a
                 className="oui-flex oui-items-start oui-gap-1"
-                href={`https://orderly-dashboard.orderly.network/address/${value}?broker_id=woofi_pro`}
+                href={`https://orderly-dashboard.orderly.network/address/${value}?broker_id=${brokerId}`}
                 target="_blank"
                 rel="noreferrer"
               >
@@ -162,9 +163,9 @@ export const useRankingColumns = (
             return "-";
           }
           return (
-            <Text.numeral prefix="$" rule="price" dp={2} coloring>
+            <Text.pnl prefix="$" rule="price" dp={2} coloring>
               {value}
-            </Text.numeral>
+            </Text.pnl>
           );
         },
         width: 90,
@@ -194,7 +195,7 @@ export const useRankingColumns = (
     return columns.filter((column) =>
       fields?.includes(column.dataIndex as RankingColumnFields),
     );
-  }, [t, isMobile, address, fields, enableSort]);
+  }, [t, isMobile, address, fields, enableSort, brokerId]);
 };
 
 const FirstRankIcon = () => {

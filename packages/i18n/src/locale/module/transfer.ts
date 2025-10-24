@@ -17,10 +17,13 @@ export const transfer = {
   "transfer.deposit.requested": "Deposit requested",
   "transfer.deposit.completed": "Deposit completed",
   "transfer.deposit.failed": "Deposit failed",
+  "transfer.deposit.failed.fee":
+    "Fee data is currently unavailable. Please try again later.",
 
+  "transfer.deposit.estGasFee": "Est. gas fee",
   "transfer.deposit.destinationGasFee": "Destination gas fee",
   "transfer.deposit.destinationGasFee.description":
-    "Additional gas tokens are required to cover operations on the destination chain.",
+    "Additional gas tokens are required to cover operations on the destination chain. The amount shown is an estimate - please prepare extra to ensure sufficient coverage.",
 
   "transfer.withdraw.unsupported.chain":
     "Withdrawals are not supported on this chain. Please switch to any of the bridgeless networks.",
@@ -42,7 +45,8 @@ export const transfer = {
   "transfer.withdraw.vaultWarning":
     "The balance of {{tokenName}} on the {{chainName}} is {{balance}}, which is insufficient to meet your withdrawal request. Please try again later or switch to another chain for withdrawal.",
 
-  "transfer.withdraw.minAmount.error": "quantity must large than {{minAmount}}",
+  "transfer.withdraw.minAmount.error":
+    "You can't withdraw less than {{minAmount}} {{currency}}. Please adjust your amount.",
   "transfer.withdraw.LTV.error":
     "This withdrawal may push your LTV over {{threshold}}%, immediately triggering an auto-convert.",
 
