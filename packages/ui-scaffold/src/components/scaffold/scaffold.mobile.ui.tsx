@@ -1,18 +1,13 @@
 import React from "react";
 import { Box, cn } from "@orderly.network/ui";
 import { MainNavMobile } from "../main/mainNav.ui.mobile";
+import { NotificationWidget } from "../notification/notification.widget";
 import type { ScaffoldScriptReturn } from "./scaffold.script";
 import type { ScaffoldProps } from "./scaffold.widget";
 
 const LazyRestrictedInfoWidget = React.lazy(() =>
   import("../restrictedInfo").then((mod) => {
     return { default: mod.RestrictedInfoWidget };
-  }),
-);
-
-const LazyAnnouncementWidget = React.lazy(() =>
-  import("../announcement").then((mod) => {
-    return { default: mod.AnnouncementWidget };
   }),
 );
 
@@ -32,7 +27,6 @@ export const MobileScaffold: React.FC<
     topBar,
     mainNavProps,
     routerAdapter,
-    restrictedInfo,
     bottomNavRef,
     bottomNavProps,
     bottomNav,
@@ -49,12 +43,6 @@ export const MobileScaffold: React.FC<
         classNames?.root,
       )}
     >
-      <React.Suspense fallback={null}>
-        <LazyAnnouncementWidget
-          className={"oui-mx-1 oui-mb-1 oui-bg-base-6"}
-          hideTips={restrictedInfo?.restrictedOpen}
-        />
-      </React.Suspense>
       <header
         ref={topNavbarRef}
         className={cn(
@@ -109,6 +97,8 @@ export const MobileScaffold: React.FC<
           </React.Suspense>
         )}
       </footer>
+
+      <NotificationWidget />
     </div>
   );
 };

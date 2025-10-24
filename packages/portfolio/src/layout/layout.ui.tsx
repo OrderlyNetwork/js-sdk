@@ -1,9 +1,9 @@
 import { FC, PropsWithChildren } from "react";
 import { useTranslation } from "@orderly.network/i18n";
+import type { RouterAdapter } from "@orderly.network/types";
 import { cn } from "@orderly.network/ui";
 import {
   ScaffoldProps,
-  RouterAdapter,
   Scaffold,
   SideBar,
   SideBarProps,

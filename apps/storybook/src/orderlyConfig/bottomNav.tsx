@@ -9,6 +9,10 @@ import {
   LeaderboardInactiveIcon,
   MarketsActiveIcon,
   MarketsInactiveIcon,
+  EarnActiveIcon,
+  EarnInactiveIcon,
+  BattleActiveIcon,
+  BattleInactiveIcon,
 } from "@orderly.network/ui";
 import type { BottomNavProps } from "@orderly.network/ui-scaffold";
 
@@ -22,6 +26,12 @@ const getBottomNavProp = (): BottomNavProps => {
         inactiveIcon: <MarketsInactiveIcon />,
       },
       {
+        name: i18n.t("common.spot"),
+        href: "https://woofi.com/swap",
+        activeIcon: <EarnActiveIcon />,
+        inactiveIcon: <EarnInactiveIcon />,
+      },
+      {
         name: i18n.t("common.trading"),
         href: "/",
         activeIcon: <TradingActiveIcon />,
@@ -30,8 +40,8 @@ const getBottomNavProp = (): BottomNavProps => {
       {
         name: i18n.t("tradingLeaderboard.arena"),
         href: "/leaderboard",
-        activeIcon: <LeaderboardActiveIcon />,
-        inactiveIcon: <LeaderboardInactiveIcon />,
+        activeIcon: <BattleActiveIcon />,
+        inactiveIcon: <BattleInactiveIcon />,
       },
       {
         name: i18n.t("common.portfolio"),

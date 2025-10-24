@@ -29,6 +29,7 @@
     "@orderly.network/ui-chain-selector": "workspace:*",
     "@orderly.network/ui-connector": "workspace:*",
     "@orderly.network/utils": "workspace:*",
+    "@orderly.network/ui-notification": "workspace:*",
     "date-fns": "^3.6.0",
     "immer": "^10.1.1",
     "jsqr": "^1.4.0"

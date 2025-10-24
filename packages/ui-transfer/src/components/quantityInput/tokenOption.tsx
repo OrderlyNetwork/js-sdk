@@ -10,6 +10,7 @@ interface TokenOptionProps {
     label: string;
     value: string;
     insufficientBalance?: boolean;
+    balance?: string;
   };
   fetchBalance?: (token: string, decimals: number) => Promise<any>;
   onTokenChange?: (token: API.TokenInfo) => void;
@@ -62,7 +63,7 @@ export const TokenOption: React.FC<TokenOptionProps> = (props) => {
       return null;
     }
 
-    if (loading) {
+    if (loading && !token.balance) {
       return <Spinner size="sm" />;
     }
 
@@ -76,7 +77,7 @@ export const TokenOption: React.FC<TokenOptionProps> = (props) => {
           isActive && "oui-text-base-contrast-54",
         )}
       >
-        {balance}
+        {balance || token.balance!}
       </Text.numeral>
     );
   };
