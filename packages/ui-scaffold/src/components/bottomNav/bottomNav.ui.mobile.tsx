@@ -1,8 +1,7 @@
 import React, { useMemo } from "react";
+import { type RouterAdapter } from "@orderly.network/types";
 import { Flex, Text } from "@orderly.network/ui";
-import { RouterAdapter } from "../scaffold";
 import { BottomNavItem } from "./bottomNav.widget";
-import { BottomNavTradingMenu } from "./tradingMenu.ui";
 
 export type BottomNavProps = {
   mainMenus?: BottomNavItem[];
@@ -72,7 +71,7 @@ export const BottomNav: React.FC<BottomNavProps> = (props) => {
       px={3}
       itemAlign={"center"}
       justify={"between"}
-      className="oui-bg-base-9 oui-border-t oui-border-line-4"
+      className="oui-border-t oui-border-line-4 oui-bg-base-9"
     >
       {menus}
     </Flex>

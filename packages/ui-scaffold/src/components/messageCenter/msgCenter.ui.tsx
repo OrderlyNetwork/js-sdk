@@ -15,7 +15,7 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from "@orderly.network/ui";
-import { MessageCenterUI } from "@orderly.network/ui-notification";
+import { AnnouncementCenterUI } from "@orderly.network/ui-notification";
 import { useScaffoldContext } from "../scaffold";
 
 /**
@@ -71,7 +71,7 @@ export const MessageCenter: FC<{
             onOpenChange={setPopoverOpen}
             arrow
             content={
-              <MessageCenterUI
+              <AnnouncementCenterUI
                 dataSource={messages}
                 onItemClick={onItemClick}
               />

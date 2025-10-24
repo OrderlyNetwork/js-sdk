@@ -1,7 +1,11 @@
-import { FC, useCallback, useMemo } from "react";
+import { FC, useMemo } from "react";
 import { useAccount } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { AccountStatusEnum } from "@orderly.network/types";
+import {
+  AccountStatusEnum,
+  type RouterAdapter,
+  type RouteOption,
+} from "@orderly.network/types";
 import {
   Sheet,
   SheetContent,
@@ -13,7 +17,6 @@ import {
   Text,
 } from "@orderly.network/ui";
 import { MainLogo } from "../main/mainLogo";
-import { RouterAdapter, RouteOption } from "../scaffold";
 import { SubAccountWidget } from "../subAccount";
 import {
   CommunityDiscord,

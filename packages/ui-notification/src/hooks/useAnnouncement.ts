@@ -24,7 +24,7 @@ const oneDay = 1000 * 60 * 60 * 24;
 
 const maintentanceId = "-1";
 
-export type AnnouncementScriptOptions = {
+export type AnnouncementOptions = {
   hideTips?: boolean;
 };
 
@@ -234,9 +234,9 @@ const useAnnouncementData = () => {
   };
 };
 
-export type AnnouncementScriptReturn = ReturnType<typeof useAnnouncementScript>;
+export type AnnouncementReturn = ReturnType<typeof useAnnouncement>;
 
-export const useAnnouncementScript = (options?: AnnouncementScriptOptions) => {
+export const useAnnouncement = (options?: AnnouncementOptions) => {
   const { showAnnouncement, setShowAnnouncement } = useAppContext();
   const { dataAdapter } = useOrderlyContext();
 

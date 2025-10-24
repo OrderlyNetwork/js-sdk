@@ -14,7 +14,7 @@ import {
   BattleIcon,
   FundIcon,
   SecurityIcon,
-} from "../msgCenter/icons";
+} from "../announcementCenter/icons";
 import {
   CampaignContentCard,
   DelistingContentCard,

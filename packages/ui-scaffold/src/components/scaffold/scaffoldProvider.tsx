@@ -4,8 +4,8 @@ import {
   useChains,
   useMemoizedFn,
 } from "@orderly.network/hooks";
+import { useAnnouncement } from "@orderly.network/ui-notification";
 import { checkChainSupport } from "../../utils/chain";
-import { useAnnouncementScript } from "../announcement/announcement.script";
 import { ScaffoldContext, ScaffoldState } from "./scaffoldContext";
 
 export type ScaffoldProviderProps = Omit<
@@ -30,7 +30,7 @@ export const ScaffoldProvider: React.FC<
 
   const { networkId } = useContext<any>(OrderlyContext);
 
-  const announcementState = useAnnouncementScript();
+  const announcementState = useAnnouncement();
 
   // console.log("announcementState", announcementState);
 

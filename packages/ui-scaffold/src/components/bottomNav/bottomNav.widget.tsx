@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
+import { type RouterAdapter } from "@orderly.network/types";
 import { useScreen } from "@orderly.network/ui";
-import { RouterAdapter } from "../scaffold";
 import { BottomNav } from "./bottomNav.ui.mobile";
 
 export type BottomNavItem = {

@@ -1,6 +1,6 @@
 import { FC, useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { AnnouncementType, API } from "@orderly.network/types";
+import { AnnouncementType } from "@orderly.network/types";
 import { Flex, Text, ChevronDownIcon, cn } from "@orderly.network/ui";
 import {
   AnnouncementIcon,
@@ -10,7 +10,7 @@ import {
   SecurityIcon,
 } from "./icons";
 
-export const MsgItem: FC<{
+export const AnnouncementItem: FC<{
   // title: string;
   expanded: boolean;
   url?: string | null;

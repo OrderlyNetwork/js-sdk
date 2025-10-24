@@ -7,9 +7,9 @@ import {
   ScrollArea,
   Text,
 } from "@orderly.network/ui";
-import { MsgItem } from "./msgItem";
+import { AnnouncementItem } from "./announcementItem";
 
-const MessageContent: FC<{
+export const AnnouncementContent: FC<{
   dataSource: API.AnnouncementRow[];
   current: string | number | null;
   onExpandToggle: (id: string | number | null) => void;
@@ -28,7 +28,7 @@ const MessageContent: FC<{
   return (
     <div className="p-5 oui-flex oui-flex-col oui-space-y-1">
       {dataSource.map((item) => (
-        <MsgItem
+        <AnnouncementItem
           url={item.url}
           onItemClick={onItemClick}
           key={item.announcement_id}
@@ -49,7 +49,7 @@ const MessageContent: FC<{
   );
 };
 
-export const MessageCenterUI: FC<{
+export const AnnouncementCenterUI: FC<{
   dataSource: API.AnnouncementRow[];
   onItemClick: (url: string) => void;
 }> = (props) => {
@@ -65,7 +65,7 @@ export const MessageCenterUI: FC<{
       </div>
 
       <ScrollArea className="oui-flex oui-h-[300px] oui-flex-col oui-space-y-1 oui-p-3">
-        <MessageContent
+        <AnnouncementContent
           dataSource={props.dataSource}
           current={expanded}
           onExpandToggle={setExpanded}

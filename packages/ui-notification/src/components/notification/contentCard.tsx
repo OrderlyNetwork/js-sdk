@@ -3,7 +3,7 @@ import { UTCDate } from "@date-fns/utc";
 import { format, differenceInHours } from "date-fns";
 import { useTranslation } from "@orderly.network/i18n";
 import { Flex, Text } from "@orderly.network/ui";
-import { ArrowRightShortIcon } from "../msgCenter/icons";
+import { ArrowRightShortIcon } from "../announcementCenter/icons";
 
 export const CampaignContentCard: FC<{
   message: string;
