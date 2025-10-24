@@ -1,6 +1,7 @@
 export const scaffold = {
-  "scaffold.footer.operational": "Operational",
+  "scaffold.announcement.campaign": "Latest Campaign is coming",
   "scaffold.footer.joinCommunity": "Join our community",
+  "scaffold.footer.operational": "Operational",
   "scaffold.footer.poweredBy": "Powered by",
 };
 

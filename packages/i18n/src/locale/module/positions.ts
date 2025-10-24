@@ -1,7 +1,12 @@
 export const positions = {
-  "positions.positionHistory": "Position history",
-  "positions.liquidation": "Liquidation",
   "positions.closePosition": "Close Position",
+  "positions.fundingFee.title": "Funding Fee",
+  "positions.fundingFee.tooltip":
+    "Shows funding fees for closed or partially closed positions.",
+  "positions.fundingRate.tooltip":
+    "Records include funding from current open positions.",
+  "positions.liquidation": "Liquidation",
+  "positions.positionHistory": "Position history",
 
   "positions.column.liqPrice": "Liq. price",
   "positions.column.liqPrice.tooltip":

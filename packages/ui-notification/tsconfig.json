@@ -1,0 +1,22 @@
+{
+  "extends": "./tsconfig.build.json",
+  "compilerOptions": {
+    "paths": {
+      "@orderly.network/ui": [
+        "../ui/src"
+      ],
+      "@orderly.network/hooks": [
+        "../hooks/src"
+      ],
+      "@orderly.network/types": [
+        "../types/src"
+      ],
+      "@orderly.network/i18n": [
+        "../i18n/src"
+      ],
+      "@orderly.network/perp": [
+        "../perp/src"
+      ]
+    }
+  }
+}

@@ -80,6 +80,12 @@ export type MainNavItem = {
     isActive?: boolean;
   }) => React.ReactNode;
   /**
+   * Custom submenu renderer - provides full control over submenu content
+   * Renders as a free-form component without any predefined structure
+   * @returns React node to render as submenu content
+   */
+  customSubMenuRender?: () => React.ReactNode;
+  /**
    * if true, this item will only be shown in the main account
    * @default false
    **/
@@ -145,12 +151,17 @@ export const NavItem: FC<
     [currentPath, item.href],
   );
 
+  const hasSubMenu =
+    Array.isArray(item.children) ||
+    typeof item.customSubMenuRender === "function";
+  const hasCustomSubMenuRender = typeof item.customSubMenuRender === "function";
+
   const onClickHandler = useCallback(() => {
-    if (Array.isArray(item.children)) {
+    if (hasSubMenu && !hasCustomSubMenuRender) {
       return;
     }
     onClick?.([item]);
-  }, [item, onClick]);
+  }, [hasSubMenu, hasCustomSubMenuRender, item, onClick]);
 
   const buttonRender = () => {
     if (typeof customRender === "function") {
@@ -182,7 +193,7 @@ export const NavItem: FC<
           >
             {item.name}
           </Text.gradient>
-          {Array.isArray(item.children) && (
+          {hasSubMenu && (
             <span className={"oui-ml-1 group-data-[open=true]:oui-rotate-180"}>
               {isActive ? (
                 <ActiveIcon />
@@ -199,7 +210,7 @@ export const NavItem: FC<
           left={"50%"}
           height={"3px"}
           r="full"
-          width={"60%"}
+          width={"calc(100% - 24px)"} // oui-px-3 * 2
           gradient="brand"
           angle={45}
           className="-oui-translate-x-1/2 "
@@ -227,18 +238,19 @@ export const NavItem: FC<
     return null;
   }
 
-  if (!Array.isArray(item.children)) {
+  if (!hasSubMenu) {
     return buttonRender();
   }
 
   return (
     <SubMenus
-      items={item.children}
+      items={item.children || []}
       className={classNames?.subMenu}
       current={currentPath?.[1]}
       onItemClick={(subItem: MainNavItem) => {
         onClick?.([item, subItem]);
       }}
+      customSubMenuRender={item.customSubMenuRender}
     >
       {buttonRender()}
     </SubMenus>
@@ -251,9 +263,17 @@ const SubMenus: React.FC<
     className?: string;
     current?: string;
     onItemClick: (item: MainNavItem) => void;
+    customSubMenuRender?: () => React.ReactNode;
   }>
 > = (props) => {
-  const { children, items, className, current, onItemClick } = props;
+  const {
+    children,
+    items,
+    className,
+    current,
+    onItemClick,
+    customSubMenuRender,
+  } = props;
   const [open, setOpen] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -305,20 +325,24 @@ const SubMenus: React.FC<
           }
         }}
         className={cn(
-          "oui-w-[260px] oui-space-y-[2px] oui-border oui-border-line-6 oui-p-1",
+          customSubMenuRender
+            ? "oui-w-auto oui-p-0 oui-border-0 oui-rounded-lg"
+            : "oui-w-[260px] oui-space-y-[2px] oui-border oui-border-line-6 oui-p-1",
           className,
         )}
       >
-        {items.map((item, index) => {
-          return (
-            <SubMenu
-              key={index}
-              item={item}
-              onClick={onItemClick}
-              active={item.href === current}
-            />
-          );
-        })}
+        {customSubMenuRender
+          ? customSubMenuRender()
+          : items.map((item, index) => {
+              return (
+                <SubMenu
+                  key={index}
+                  item={item}
+                  onClick={onItemClick}
+                  active={item.href === current}
+                />
+              );
+            })}
       </PopoverContent>
     </PopoverRoot>
   );

@@ -7,6 +7,7 @@ export * from "./components/favoritesListFull";
 export * from "./components/favoritesDropdownMenu";
 export * from "./components/favoritesTabs";
 export * from "./components/expandMarkets";
+export * from "./components/subMenuMarkets";
 
 export * from "./components/marketsList";
 export * from "./components/fundingOverview";
