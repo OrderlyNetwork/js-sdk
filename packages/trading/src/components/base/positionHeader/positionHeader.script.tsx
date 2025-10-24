@@ -27,6 +27,7 @@ export const usePositionHeaderScript = (inputs: {
     notional,
     showAllSymbol,
     setShowAllSymbol,
+    symbol,
   };
 };
 

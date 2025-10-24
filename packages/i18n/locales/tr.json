@@ -1022,5 +1022,8 @@
   "notification.closeAll": "Close all ({{total}})",
   "notification.delistingTitle": "Token Delisting Notice",
   "notification.generalTitle": "General Update",
-  "notification.maintenanceTitle": "System Maintenance"
+  "notification.maintenanceTitle": "System Maintenance",
+  "positions.closeAll": "Tümünü kapat",
+  "positions.closeAll.description": "Tüm pozisyonlarınızı kapatmak istediğinizden emin misiniz? Piyasa emirleri kullanılarak kapatılacaklar.",
+  "positions.closeAll.success": "Tüm pozisyonlar başarıyla kapatıldı"
 }

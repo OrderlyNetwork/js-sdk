@@ -1022,5 +1022,8 @@
   "notification.closeAll": "Close all ({{total}})",
   "notification.delistingTitle": "Token Delisting Notice",
   "notification.generalTitle": "General Update",
-  "notification.maintenanceTitle": "System Maintenance"
+  "notification.maintenanceTitle": "System Maintenance",
+  "positions.closeAll": "모두 청산",
+  "positions.closeAll.description": "모든 포지션을 청산하시겠습니까? 시장가 주문으로 청산됩니다.",
+  "positions.closeAll.success": "모든 포지션이 성공적으로 청산되었습니다"
 }

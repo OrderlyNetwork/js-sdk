@@ -1022,5 +1022,8 @@
   "notification.closeAll": "Close all ({{total}})",
   "notification.delistingTitle": "Token Delisting Notice",
   "notification.generalTitle": "General Update",
-  "notification.maintenanceTitle": "System Maintenance"
+  "notification.maintenanceTitle": "System Maintenance",
+  "positions.closeAll": "Tutup semua",
+  "positions.closeAll.description": "Apakah Anda yakin ingin menutup semua posisi Anda? Mereka akan ditutup menggunakan pesanan pasar.",
+  "positions.closeAll.success": "Semua posisi berhasil ditutup"
 }

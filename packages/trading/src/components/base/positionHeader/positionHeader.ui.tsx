@@ -8,6 +8,7 @@ import {
   Text,
   useScreen,
 } from "@orderly.network/ui";
+import { CloseAllPositionsWidget } from "@orderly.network/ui-positions";
 import { Decimal } from "@orderly.network/utils";
 import type { PositionHeaderState } from "./positionHeader.script";
 
@@ -45,22 +46,29 @@ const MobileLayout: React.FC<PositionHeaderState> = (props) => {
         />
       </Flex>
       <Divider className="oui-w-full" />
-      <Flex className="oui-cursor-pointer oui-gap-[2px]">
-        <Checkbox
-          id="oui-checkbox-hideOtherSymbols"
-          color="white"
-          checked={!props.showAllSymbol}
-          onCheckedChange={(checked: boolean) => {
-            props.setShowAllSymbol(!checked);
-          }}
-        />
+      <Flex
+        className="oui-cursor-pointer oui-gap-[2px]"
+        justify={"between"}
+        width={"100%"}
+      >
+        <Flex>
+          <Checkbox
+            id="oui-checkbox-hideOtherSymbols"
+            color="white"
+            checked={!props.showAllSymbol}
+            onCheckedChange={(checked: boolean) => {
+              props.setShowAllSymbol(!checked);
+            }}
+          />
 
-        <label
-          className="oui-cursor-pointer oui-text-2xs oui-text-base-contrast-54"
-          htmlFor="oui-checkbox-hideOtherSymbols"
-        >
-          {t("trading.hideOtherSymbols")}
-        </label>
+          <label
+            className="oui-cursor-pointer oui-text-2xs oui-text-base-contrast-54 oui-ml-1"
+            htmlFor="oui-checkbox-hideOtherSymbols"
+          >
+            {t("trading.hideOtherSymbols")}
+          </label>
+        </Flex>
+        <CloseAllPositionsWidget symbol={props.symbol} />
       </Flex>
     </Flex>
   );
@@ -68,15 +76,19 @@ const MobileLayout: React.FC<PositionHeaderState> = (props) => {
 
 const DesktopLayout: React.FC<PositionHeaderState> = (props) => {
   return (
-    <Flex py={2} px={3} gap={6} width={"100%"} justify={"start"}>
-      <UnrealPnL
-        {...props}
-        classNames={{ label: "oui-text-base-contrast-54" }}
-      />
-      <Notional
-        {...props}
-        classNames={{ label: "oui-text-base-contrast-54" }}
-      />
+    <Flex py={2} px={3} gap={6} width={"100%"} justify={"between"}>
+      <Flex>
+        <UnrealPnL
+          {...props}
+          classNames={{ label: "oui-text-base-contrast-54" }}
+        />
+        <Notional
+          {...props}
+          classNames={{ label: "oui-text-base-contrast-54" }}
+        />
+      </Flex>
+
+      <CloseAllPositionsWidget symbol={props.symbol} />
     </Flex>
   );
 };

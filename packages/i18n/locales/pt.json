@@ -1022,5 +1022,8 @@
   "notification.closeAll": "Close all ({{total}})",
   "notification.delistingTitle": "Token Delisting Notice",
   "notification.generalTitle": "General Update",
-  "notification.maintenanceTitle": "System Maintenance"
+  "notification.maintenanceTitle": "System Maintenance",
+  "positions.closeAll": "Fechar tudo",
+  "positions.closeAll.description": "Tem certeza de que deseja fechar todas as suas posições? Elas serão fechadas usando ordens de mercado.",
+  "positions.closeAll.success": "Todas as posições foram fechadas com sucesso"
 }

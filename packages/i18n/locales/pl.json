@@ -1022,5 +1022,8 @@
   "notification.closeAll": "Close all ({{total}})",
   "notification.delistingTitle": "Token Delisting Notice",
   "notification.generalTitle": "General Update",
-  "notification.maintenanceTitle": "System Maintenance"
+  "notification.maintenanceTitle": "System Maintenance",
+  "positions.closeAll": "Zamknij wszystkie",
+  "positions.closeAll.description": "Czy na pewno chcesz zamknąć wszystkie swoje pozycje? Zostaną zamknięte za pomocą zleceń rynkowych.",
+  "positions.closeAll.success": "Wszystkie pozycje zostały pomyślnie zamknięte"
 }
