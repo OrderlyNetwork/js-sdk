@@ -1,4 +1,5 @@
 import { FC, useMemo, useState } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import { AnnouncementType, type API } from "@orderly.network/types";
 import {
   ChevronDownIcon,
@@ -50,6 +51,7 @@ const NotificationHeader: FC<{
   onExpandToggle?: () => void;
   // onClose?: () => void;
 }> = (props) => {
+  const { t } = useTranslation();
   const { expanded } = props;
   const { type } = props.dataSource[props.current];
 
@@ -61,31 +63,31 @@ const NotificationHeader: FC<{
             size="sm"
             className="oui-text-transparent oui-bg-clip-text oui-gradient-brand"
           >
-            Latest Campaign is coming
+            {t("notification.campaignTitle")}
           </Text>
         );
       case AnnouncementType.Delisting:
-        return <Text size="sm">Token Delisting Notice</Text>;
+        return <Text size="sm">{t("notification.delistingTitle")}</Text>;
       case AnnouncementType.Listing:
         return (
           <Text size="sm" color="buy">
-            New token listing
+            {t("notification.listing")}
           </Text>
         );
       case AnnouncementType.Maintenance:
         return (
           <Text size="sm" color="warning">
-            System Maintenance
+            {t("notification.maintenanceTitle")}
           </Text>
         );
       default:
         return (
           <Text size="sm" color="inherit">
-            General Update
+            {t("notification.generalTitle")}
           </Text>
         );
     }
-  }, [type]);
+  }, [type, t]);
   const icon = useMemo(() => {
     switch (type) {
       case AnnouncementType.Campaign:
@@ -127,6 +129,7 @@ const NotificationFooter: FC<{
   onNext: () => void;
 }> = (props) => {
   const { total, current, onCloseAll, onPrev, onNext } = props;
+  const { t } = useTranslation();
   return (
     <Flex
       className="orderly-notification-footer oui-px-4 oui-py-2"
@@ -154,7 +157,7 @@ const NotificationFooter: FC<{
       </Flex>
       <button onClick={onCloseAll}>
         <Text size="xs" color="primary">
-          Close all ({total})
+          {t("notification.closeAll", { total })}
         </Text>
       </button>
     </Flex>

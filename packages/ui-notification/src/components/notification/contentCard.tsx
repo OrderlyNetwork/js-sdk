@@ -1,6 +1,7 @@
 import { FC, useMemo } from "react";
 import { UTCDate } from "@date-fns/utc";
 import { format, differenceInHours } from "date-fns";
+import { useTranslation } from "@orderly.network/i18n";
 import { Flex, Text } from "@orderly.network/ui";
 import { ArrowRightShortIcon } from "../msgCenter/icons";
 
@@ -11,6 +12,7 @@ export const CampaignContentCard: FC<{
   url?: string | null;
   onItemClick: (url: string) => void;
 }> = ({ message, coverImage, url, onItemClick }) => {
+  const { t } = useTranslation();
   return (
     <div className="oui-flex oui-flex-col oui-gap-5">
       <Text size="sm" weight="bold">
@@ -35,7 +37,7 @@ export const CampaignContentCard: FC<{
               color="buy"
               className="oui-bg-clip-text oui-text-transparent oui-gradient-brand"
             >
-              Join Now
+              {t("notification.joinNow")}
             </Text>
             <ArrowRightShortIcon size={18} color="success" />
           </button>
@@ -49,6 +51,7 @@ export const MaintenanceContentCard: FC<{
   startTime: number;
   endTime: number;
 }> = ({ message, startTime, endTime }) => {
+  const { t } = useTranslation();
   const formattedMessage = useMemo(() => {
     // Calculate duration in hours
     const hours = differenceInHours(endTime, startTime);
@@ -63,19 +66,28 @@ export const MaintenanceContentCard: FC<{
     // Format end time as hh:mm a (12-hour format with AM/PM) in UTC
     const endTimeFormatted = format(endUtc, "hh:mm a");
 
-    return `${hours} HRs at ${startTimeFormatted} - ${endTimeFormatted} (UTC)`;
-  }, [startTime, endTime]);
+    return t("notification.maintenanceDuration", {
+      hours,
+      startTimeFormatted,
+      endTimeFormatted,
+    });
+  }, [startTime, endTime, t]);
 
   return (
     <div className="oui-flex oui-flex-col oui-gap-1">
       <Text size="xs" intensity={54}>
-        Recently updated
+        {t("notification.recentlyUpdated")}
       </Text>
       <Flex itemAlign={"center"}>
         <Text size="xs" weight="bold">
           {formattedMessage}
         </Text>
       </Flex>
+      {message && (
+        <Text size="2xs" intensity={80} as="div" className="oui-mt-2">
+          {message}
+        </Text>
+      )}
     </div>
   );
 };

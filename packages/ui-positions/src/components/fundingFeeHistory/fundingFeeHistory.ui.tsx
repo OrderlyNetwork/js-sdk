@@ -118,13 +118,13 @@ export const FundingFeeHistoryUI: FC<{
               isMobile ? (
                 <FundingFeeLabelButton
                   label={`${t("funding.fundingFee")} (USDC)`}
-                  tooltip="Shows funding fees for closed or partially closed positions."
+                  tooltip={t("positions.fundingFee.tooltip")}
                   size={14}
                 />
               ) : (
                 <FundingFeeLabel
                   label={`${t("funding.fundingFee")} (USDC)`}
-                  tooltip="Shows funding fees for closed or partially closed positions."
+                  tooltip={t("positions.fundingFee.tooltip")}
                   size={14}
                 />
               )
@@ -149,6 +149,7 @@ const FundingFeeLabelButton: FC<{
   tooltip: string;
   size: number;
 }> = ({ label, tooltip, size }) => {
+  const { t } = useTranslation();
   return (
     <div className="oui-flex oui-items-center oui-gap-1">
       <span>{label}</span>
@@ -157,7 +158,7 @@ const FundingFeeLabelButton: FC<{
         onClick={() => {
           modal.alert({
             message: tooltip,
-            title: "Funding Fee",
+            title: t("positions.fundingFee.title"),
           });
         }}
       >
@@ -210,7 +211,7 @@ const HistoryDataListView: FC<ListProps> = ({ isLoading, data, loadMore }) => {
         title: (
           <FundingFeeLabel
             label={t("funding.fundingRate")}
-            tooltip="Records include funding from current open positions."
+            tooltip={t("positions.fundingRate.tooltip")}
             size={12}
           />
         ),
@@ -292,7 +293,7 @@ const FundingFeeItem: FC<{
           label={
             <FundingFeeLabelButton
               label={t("funding.fundingRate")}
-              tooltip="Records include funding from current open positions."
+              tooltip={t("positions.fundingRate.tooltip")}
               size={12}
             />
           }

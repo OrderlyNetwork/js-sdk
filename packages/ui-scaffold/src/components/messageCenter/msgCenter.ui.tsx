@@ -100,7 +100,7 @@ export const MessageCenter: FC<{
             </TooltipTrigger>
           </Popover>
           <TooltipContent side="bottom">
-            Check recent announcements
+            {t("ui.messageCenter.tooltip")}
           </TooltipContent>
         </TooltipRoot>
       </TooltipProvider>

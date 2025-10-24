@@ -1,4 +1,5 @@
 import { FC, useState } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import { type API } from "@orderly.network/types";
 import {
   ExtensionPositionEnum,
@@ -52,13 +53,14 @@ export const MessageCenterUI: FC<{
   dataSource: API.AnnouncementRow[];
   onItemClick: (url: string) => void;
 }> = (props) => {
+  const { t } = useTranslation();
   const [expanded, setExpanded] = useState<string | number | null>(null);
 
   return (
     <>
       <div className="oui-px-5 oui-pt-4">
         <Text intensity={80} weight="bold">
-          Announcement
+          {t("notification.title")}
         </Text>
       </div>
 

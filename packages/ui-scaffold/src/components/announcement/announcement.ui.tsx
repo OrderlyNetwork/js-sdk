@@ -145,7 +145,7 @@ const TipsType: React.FC<{ type?: AnnouncementType | null }> = (props) => {
           className: "oui-bg-[rgba(232,136,0,0.15)] oui-text-warning-darken",
         },
         [AnnouncementType.Campaign]: {
-          label: "Latest Campaign is coming",
+          label: t("scaffold.announcement.campaign"),
           className: "oui-bg-primary/15 oui-text-primary",
         },
       };

@@ -1,4 +1,5 @@
 import { FC, useMemo } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import { AnnouncementType, API } from "@orderly.network/types";
 import { Flex, Text, ChevronDownIcon, cn } from "@orderly.network/ui";
 import {
@@ -19,6 +20,7 @@ export const MsgItem: FC<{
   message: string;
   updatedTime: number;
 }> = (props) => {
+  const { t } = useTranslation();
   const Icon = useMemo(() => {
     switch (props.type) {
       case AnnouncementType.Campaign:
@@ -37,17 +39,17 @@ export const MsgItem: FC<{
   const title = useMemo(() => {
     switch (props.type) {
       case AnnouncementType.Campaign:
-        return "Campaign announcement";
+        return t("notification.campaign");
       case AnnouncementType.Delisting:
-        return "Token delisting";
+        return t("notification.delisting");
       case AnnouncementType.Listing:
-        return "New token listing";
+        return t("notification.listing");
       case AnnouncementType.Maintenance:
-        return "System maintenance";
+        return t("notification.maintenance");
       default:
-        return "General update";
+        return t("notification.general");
     }
-  }, [props.type]);
+  }, [props.type, t]);
 
   const action = useMemo(() => {
     if (
@@ -71,20 +73,20 @@ export const MsgItem: FC<{
             color="buy"
             className="oui-bg-clip-text oui-text-transparent oui-gradient-brand"
           >
-            Join now
+            {t("notification.joinNow")}
           </Text>
           <ArrowRightShortIcon size={18} />
         </Flex>
       );
     }
     return null;
-  }, [props.type, props.url]);
+  }, [props.type, props.url, t]);
 
   const updateTime = useMemo(() => {
     if (props.type === AnnouncementType.Maintenance) {
       return (
         <Text size="2xs" intensity={36}>
-          Recently updated
+          {t("notification.recentlyUpdated")}
         </Text>
       );
     }
@@ -98,7 +100,7 @@ export const MsgItem: FC<{
         {props.updatedTime}
       </Text.formatted>
     );
-  }, [props.updatedTime, props.type]);
+  }, [props.updatedTime, props.type, t]);
 
   return (
     <Flex
