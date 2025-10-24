@@ -302,6 +302,7 @@
   "trading.fundingRate.lastFundingRate": "마지막 펀딩 비율",
   "trading.fundingRate.estimatedFundingRate": "예상 펀딩 비율",
   "trading.fundingRate.estimatedFundingFee": "예상 펀딩 수수료",
+  "trading.fundingRate.annualized": "연환산",
   "trading.rwa.marketHours": "시장 시간",
   "trading.rwa.outsideMarketHours": "시장 시간 외",
   "trading.rwa.tooltip.description.open": "거래는 기초 시장과 일치합니다 - 더 높은 유동성, 정상적인 가격 변동.",

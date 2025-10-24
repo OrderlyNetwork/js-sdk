@@ -1,5 +1,25 @@
 # @orderly.network/futures
 
+## 4.8.1
+
+### Patch Changes
+
+- publish
+- 0474e5f: publish
+- Updated dependencies
+- Updated dependencies [0474e5f]
+  - @orderly.network/types@2.8.1
+  - @orderly.network/utils@2.8.1
+
+## 4.8.1-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@2.8.1-alpha.0
+  - @orderly.network/utils@2.8.1-alpha.0
+
 ## 4.8.0
 
 ### Minor Changes

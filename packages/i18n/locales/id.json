@@ -302,6 +302,7 @@
   "trading.fundingRate.lastFundingRate": "Tingkat pendanaan terakhir",
   "trading.fundingRate.estimatedFundingRate": "Tingkat pendanaan yang diperkirakan",
   "trading.fundingRate.estimatedFundingFee": "Biaya pendanaan yang diperkirakan",
+  "trading.fundingRate.annualized": "Tahunan",
   "trading.rwa.marketHours": "Jam pasar",
   "trading.rwa.outsideMarketHours": "Di luar jam pasar",
   "trading.rwa.tooltip.description.open": "Trading selaras dengan pasar yang mendasari - likuiditas lebih tinggi, pergerakan harga normal.",

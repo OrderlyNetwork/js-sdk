@@ -302,6 +302,7 @@
   "trading.fundingRate.lastFundingRate": "前回のファンディングレート",
   "trading.fundingRate.estimatedFundingRate": "推定ファンディングレート",
   "trading.fundingRate.estimatedFundingFee": "推定ファンディング手数料",
+  "trading.fundingRate.annualized": "年率換算",
   "trading.rwa.marketHours": "市場時間",
   "trading.rwa.outsideMarketHours": "市場時間外",
   "trading.rwa.tooltip.description.open": "取引は基礎となる市場に合わせて行われます - より高い流動性、通常の価格変動。",

@@ -302,6 +302,7 @@
   "trading.fundingRate.lastFundingRate": "Letzter Finanzierungssatz",
   "trading.fundingRate.estimatedFundingRate": "Geschätzter Finanzierungssatz",
   "trading.fundingRate.estimatedFundingFee": "Geschätzte Finanzierungsgebühr",
+  "trading.fundingRate.annualized": "Annualisiert",
   "trading.rwa.marketHours": "Handelszeiten",
   "trading.rwa.outsideMarketHours": "Außerhalb der Handelszeiten",
   "trading.rwa.tooltip.description.open": "Der Handel orientiert sich am zugrunde liegenden Markt - höhere Liquidität, normale Preisschwankungen.",

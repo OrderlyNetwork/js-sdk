@@ -302,6 +302,7 @@
   "trading.fundingRate.lastFundingRate": "Остання ставка фінансування",
   "trading.fundingRate.estimatedFundingRate": "Очікувана ставка фінансування",
   "trading.fundingRate.estimatedFundingFee": "Очікувана комісія за фінансування",
+  "trading.fundingRate.annualized": "Річний",
   "trading.rwa.marketHours": "Години роботи ринку",
   "trading.rwa.outsideMarketHours": "Поза годинами роботи ринку",
   "trading.rwa.tooltip.description.open": "Торгівля відповідає базовому ринку - вища ліквідність, нормальні рухи цін.",

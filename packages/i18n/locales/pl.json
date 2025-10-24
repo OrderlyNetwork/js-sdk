@@ -302,6 +302,7 @@
   "trading.fundingRate.lastFundingRate": "Ostatnia stopa finansowania",
   "trading.fundingRate.estimatedFundingRate": "Szacowana stopa finansowania",
   "trading.fundingRate.estimatedFundingFee": "Szacowana opłata za finansowanie",
+  "trading.fundingRate.annualized": "Roczny",
   "trading.rwa.marketHours": "Godziny rynkowe",
   "trading.rwa.outsideMarketHours": "Poza godzinami rynkowymi",
   "trading.rwa.tooltip.description.open": "Handel jest dostosowany do rynku bazowego - wyższa płynność, normalne ruchy cen.",
