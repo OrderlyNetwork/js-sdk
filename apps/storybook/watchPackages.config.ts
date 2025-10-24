@@ -137,6 +137,11 @@ const ui: Package[] = [
     path: "../../packages/chart/src",
     watch: true,
   },
+  {
+    package: "@orderly.network/ui-notification",
+    path: "../../packages/ui-notification/src",
+    watch: true,
+  },
 ];
 
 const page: Package[] = [

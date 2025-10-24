@@ -1,7 +1,7 @@
 {
   "name": "@orderly.network/storybook",
   "private": true,
-  "version": "1.8.0",
+  "version": "1.8.1",
   "type": "module",
   "scripts": {
     "dev": "pnpm loadEnv vite",
@@ -37,6 +37,7 @@
     "@orderly.network/ui-connector": "workspace:*",
     "@orderly.network/ui-floating-ball": "workspace:*",
     "@orderly.network/ui-leverage": "workspace:*",
+    "@orderly.network/ui-notification": "workspace:*",
     "@orderly.network/ui-order-entry": "workspace:*",
     "@orderly.network/ui-orders": "workspace:*",
     "@orderly.network/ui-positions": "workspace:*",

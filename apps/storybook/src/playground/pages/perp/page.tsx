@@ -28,6 +28,12 @@ export default function PerpPage() {
     [navigate],
   );
 
+  useEffect(() => {
+    if (params.symbol && params.symbol !== symbol) {
+      setSymbol(params.symbol);
+    }
+  }, [params.symbol]);
+
   return (
     <BaseLayout>
       <TradingPage

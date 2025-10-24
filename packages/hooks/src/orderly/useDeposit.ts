@@ -104,7 +104,7 @@ export const useDeposit = (options: DepositOptions) => {
   );
 
   const fetchBalanceHandler = useCallback(
-    async (address: string, decimals?: number) => {
+    async (address: string, decimals?: number, token?: string) => {
       let balance: string;
 
       try {
@@ -120,7 +120,8 @@ export const useDeposit = (options: DepositOptions) => {
       } catch (err: any) {
         if (
           ignoreBalanceError({
-            token: options.srcToken!,
+            // TODO: use token params instead of options.srcToken
+            token: token || options.srcToken!,
             chainNamespace: account.walletAdapter?.chainNamespace!,
             err,
           })
@@ -140,19 +141,20 @@ export const useDeposit = (options: DepositOptions) => {
     const tasks = [];
 
     for (const token of tokens) {
-      // skip native token
-      if (isNativeTokenChecker(token.address!)) {
-        continue;
-      }
-
       tasks.push(
-        account.assetsManager.getBalance(token.address!, {
-          decimals: token?.decimals,
-        }),
+        fetchBalanceHandler(token.address!, token?.decimals, token.symbol!),
       );
     }
 
-    const balances = await Promise.all(tasks);
+    const results = await Promise.allSettled(tasks);
+
+    const balances: Record<string, string> = {};
+
+    for (const [index, balance] of results.entries()) {
+      if (balance.status === "fulfilled") {
+        balances[tokens[index].symbol!] = balance.value;
+      }
+    }
 
     return balances;
   }, []);

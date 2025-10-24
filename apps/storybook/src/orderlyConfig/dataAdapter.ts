@@ -1,4 +1,5 @@
 import type { OrderlyAppProviderProps } from "@orderly.network/react-app";
+import { AnnouncementType } from "@orderly.network/types";
 
 export const dataAdapter: OrderlyAppProviderProps["dataAdapter"] = {
   // symbolList(original) {
@@ -16,21 +17,24 @@ export const dataAdapter: OrderlyAppProviderProps["dataAdapter"] = {
         message:
           "DAWN OF DOMINANCE: $25,000 Trading Campaign is live Trading Campaign is live 111",
         url: "https://app.orderly.network/tradingRewards",
-        type: "Campaign",
+        type: AnnouncementType.Campaign,
+        coverImage: "https://i.ibb.co/HY0QfQT/Image-12.webp",
       },
       {
         announcement_id: "222",
         message:
           "DAWN OF DOMINANCE: $25,000 Trading Campaign is live Trading Campaign is live 222",
         url: "https://app.orderly.network/tradingRewards",
-        type: "Campaign",
+        type: AnnouncementType.Campaign,
+        coverImage: "https://i.ibb.co/HY0QfQT/Image-12.webp",
       },
       {
         announcement_id: "333",
         message:
           "DAWN OF DOMINANCE: $25,000 Trading Campaign is live Trading Campaign is live 333",
         url: "https://app.orderly.network/tradingRewards",
-        type: "Campaign",
+        type: AnnouncementType.Campaign,
+        coverImage: "https://i.ibb.co/HY0QfQT/Image-12.webp",
       },
       ...data,
     ];

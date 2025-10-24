@@ -1,8 +1,8 @@
-import { ReactNode, useCallback } from "react";
+import { useCallback } from "react";
+import { AlertDialog, AlertDialogProps } from "../../dialog/alertDialog";
 import { modalActions } from "../modalContext";
 import { create } from "../modalHelper";
 import { useModal } from "../useModal";
-import { AlertDialog, AlertDialogProps } from "../../dialog/alertDialog";
 
 export const CreatedAlertDialog = create<AlertDialogProps>((props) => {
   const { onOk } = props;

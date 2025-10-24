@@ -1,11 +1,8 @@
 import React, { FC, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
+import type { RouterAdapter } from "@orderly.network/types";
 import { Box, cn, TabPanel, Tabs, useScreen } from "@orderly.network/ui";
-import {
-  LeftNavProps,
-  RouterAdapter,
-  LeftNavUI,
-} from "@orderly.network/ui-scaffold";
+import { LeftNavProps, LeftNavUI } from "@orderly.network/ui-scaffold";
 import {
   MarketsProvider,
   type MarketsProviderProps,

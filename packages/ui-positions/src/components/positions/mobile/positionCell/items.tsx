@@ -124,7 +124,7 @@ export const Margin: FC<PositionCellState> = (props) => {
         label: "oui-text-2xs",
       }}
     >
-      <Text.numeral dp={props.quote_dp} intensity={80}>
+      <Text.numeral dp={2} intensity={80}>
         {item.mm}
       </Text.numeral>
     </Statistic>
@@ -149,7 +149,7 @@ export const Notional: FC<PositionCellState> = (props) => {
         label: "oui-text-2xs",
       }}
     >
-      <Text.numeral dp={props.quote_dp} intensity={80}>
+      <Text.numeral dp={2} intensity={80}>
         {item.notional}
       </Text.numeral>
     </Statistic>

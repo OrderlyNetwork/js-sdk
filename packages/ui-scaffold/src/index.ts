@@ -4,6 +4,7 @@ export {
   type MainNavWidgetProps,
 } from "./components/main/mainNav.widget";
 export { MainNavMobile } from "./components/main/mainNav.ui.mobile";
+export { type MainNavItem } from "./components/main/mainMenus/navItem";
 export {
   BottomNavWidget,
   BottomNav,
@@ -18,7 +19,7 @@ export * from "./components/subAccount";
 
 export * from "./components/footer";
 export * from "./components/maintenanceTips";
-export * from "./components/announcement";
+
 export * from "./components/restrictedInfo";
 
 export type { SideBarProps, SideMenuItem } from "./components/sidebar";
@@ -29,8 +30,6 @@ export {
   type ScaffoldProps,
   useScaffoldContext,
   ScaffoldContext,
-  type RouteOption,
-  type RouterAdapter,
 } from "./components/scaffold";
 
 export { MainLogo } from "./components/main/mainLogo";

@@ -158,6 +158,9 @@ importers:
       '@orderly.network/ui-leverage':
         specifier: workspace:*
         version: link:../../packages/ui-leverage
+      '@orderly.network/ui-notification':
+        specifier: workspace:*
+        version: link:../../packages/ui-notification
       '@orderly.network/ui-order-entry':
         specifier: workspace:*
         version: link:../../packages/ui-order-entry
@@ -1762,6 +1765,64 @@ importers:
         specifier: ^7.1.0
         version: 7.3.0(@swc/core@1.13.2(@swc/helpers@0.5.17))(postcss@8.5.6)(ts-node@10.9.2(@swc/core@1.13.2(@swc/helpers@0.5.17))(@types/node@24.3.1)(typescript@5.8.3))(typescript@5.8.3)
 
+  packages/ui-notification:
+    dependencies:
+      '@date-fns/utc':
+        specifier: 1.2.0
+        version: 1.2.0
+      '@orderly.network/hooks':
+        specifier: workspace:*
+        version: link:../hooks
+      '@orderly.network/i18n':
+        specifier: workspace:*
+        version: link:../i18n
+      '@orderly.network/react-app':
+        specifier: workspace:*
+        version: link:../app
+      '@orderly.network/types':
+        specifier: workspace:*
+        version: link:../types
+      '@orderly.network/ui':
+        specifier: workspace:*
+        version: link:../ui
+      '@orderly.network/utils':
+        specifier: workspace:*
+        version: link:../utils
+      date-fns:
+        specifier: ^3.6.0
+        version: 3.6.0
+      immer:
+        specifier: ^10.1.1
+        version: 10.1.1
+    devDependencies:
+      '@swc/cli':
+        specifier: ^0.3.12
+        version: 0.3.14(@swc/core@1.13.2(@swc/helpers@0.5.17))(chokidar@4.0.3)
+      '@swc/core':
+        specifier: ^1.4.12
+        version: 1.13.2(@swc/helpers@0.5.17)
+      '@types/react':
+        specifier: ^18.3.2
+        version: 18.3.23
+      '@types/react-dom':
+        specifier: ^18.3.0
+        version: 18.3.7(@types/react@18.3.23)
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.3.1(react@18.3.1)
+      tailwindcss:
+        specifier: ^3.4.4
+        version: 3.4.17(ts-node@10.9.2(@swc/core@1.13.2(@swc/helpers@0.5.17))(@types/node@24.3.1)(typescript@5.8.3))
+      tsconfig:
+        specifier: workspace:*
+        version: link:../tsconfig
+      tsup:
+        specifier: ^7.1.0
+        version: 7.3.0(@swc/core@1.13.2(@swc/helpers@0.5.17))(postcss@8.5.6)(ts-node@10.9.2(@swc/core@1.13.2(@swc/helpers@0.5.17))(@types/node@24.3.1)(typescript@5.8.3))(typescript@5.8.3)
+
   packages/ui-order-entry:
     dependencies:
       '@orderly.network/hooks':
@@ -1989,6 +2050,9 @@ importers:
       '@orderly.network/ui-connector':
         specifier: workspace:*
         version: link:../ui-connector
+      '@orderly.network/ui-notification':
+        specifier: workspace:*
+        version: link:../ui-notification
       '@orderly.network/utils':
         specifier: workspace:*
         version: link:../utils

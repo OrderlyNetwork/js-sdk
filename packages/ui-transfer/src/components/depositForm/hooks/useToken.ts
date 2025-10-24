@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useConfig } from "@orderly.network/hooks";
 import { NetworkId, type API } from "@orderly.network/types";
 import { getTokenByTokenList } from "../../../utils";
@@ -13,6 +13,8 @@ export const useToken = (
 
   const [sourceTokens, setSourceTokens] = useState<API.TokenInfo[]>([]);
   const [targetTokens, setTargetTokens] = useState<API.TokenInfo[]>([]);
+
+  const sourceTokenUpdatedRef = useRef(false);
 
   const networkId = useConfig("networkId") as NetworkId;
 
@@ -83,6 +85,15 @@ export const useToken = (
     setTargetTokens([usdc]);
   }, [networkId, sourceToken, sourceTokens]);
 
+  const onSourceTokenChange = useCallback((token: API.TokenInfo) => {
+    sourceTokenUpdatedRef.current = true;
+    setSourceToken(token);
+  }, []);
+
+  useEffect(() => {
+    sourceTokenUpdatedRef.current = false;
+  }, [currentChain?.id]);
+
   return {
     sourceToken,
     targetToken,
@@ -90,7 +101,9 @@ export const useToken = (
     sourceTokens,
     targetTokens,
 
-    onSourceTokenChange: setSourceToken,
+    onSourceTokenChange,
+    setSourceToken,
     onTargetTokenChange: setTargetToken,
+    sourceTokenUpdatedRef,
   };
 };

@@ -38,6 +38,7 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
     nextLTV,
     networkId,
     balanceRevalidating,
+    targetChainInfo,
   } = props;
 
   return (
@@ -69,7 +70,7 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
           value={
             isQuoteLoading || !quantity || Number.isNaN(Number(outAmounts))
               ? ""
-              : unnormalizeAmount(outAmounts, targetToken?.decimals ?? 6)
+              : unnormalizeAmount(outAmounts, targetChainInfo?.decimals ?? 6)
           }
         />
         <Flex direction="column" itemAlign="start" mt={2} gap={1}>
@@ -85,7 +86,7 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
           <Slippage value={slippage} onValueChange={onSlippageChange} />
           <MinimumReceived
             symbol={targetToken?.token || ""}
-            precision={targetToken?.decimals ?? 6}
+            precision={targetChainInfo?.precision ?? 6}
             value={
               isQuoteLoading ||
               !quantity ||
@@ -93,7 +94,7 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
                 ? "-"
                 : unnormalizeAmount(
                     minimumReceived.toString(),
-                    targetToken?.decimals ?? 6,
+                    targetChainInfo?.decimals ?? 6,
                   )
             }
           />

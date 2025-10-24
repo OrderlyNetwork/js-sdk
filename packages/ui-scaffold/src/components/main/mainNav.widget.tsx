@@ -58,6 +58,8 @@ export type MainNavWidgetProps = {
     /** Wallet connection component (desktop & mobile) */
     walletConnect?: ReactNode;
 
+    notify?: ReactNode;
+
     /** Main navigation menu (desktop & mobile) */
     mainNav?: ReactNode;
     /** Search button component (desktop only) */

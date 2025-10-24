@@ -12,7 +12,12 @@ import {
 import { useTranslation } from "@orderly.network/i18n";
 import { account as accountPerp } from "@orderly.network/perp";
 import { useAppContext } from "@orderly.network/react-app";
-import { API, NetworkId, ChainNamespace } from "@orderly.network/types";
+import {
+  API,
+  NetworkId,
+  ChainNamespace,
+  isNativeTokenChecker,
+} from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 import { useNeedSwapAndCross } from "../swap/hooks/useNeedSwapAndCross";
 import { useSwapDeposit } from "../swap/hooks/useSwapDeposit";
@@ -42,6 +47,9 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
   const networkId = useConfig("networkId") as NetworkId;
 
   const [feeWarningMessage, setFeeWarningMessage] = useState("");
+  const [tokenBalances, setTokenBalances] = useState<Record<string, string>>(
+    {},
+  );
 
   const { chains, currentChain, settingChain, onChainChange } =
     useChainSelect();
@@ -52,7 +60,9 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     sourceTokens,
     targetTokens,
     onSourceTokenChange,
+    setSourceToken,
     onTargetTokenChange,
+    sourceTokenUpdatedRef,
   } = useToken(currentChain);
 
   const { data: indexPrices, getIndexPrice } = useIndexPricesStream();
@@ -78,6 +88,7 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     isNativeToken,
     balanceRevalidating,
     fetchBalance,
+    fetchBalances,
   } = useDeposit({
     address: sourceToken?.address,
     decimals: sourceToken?.decimals,
@@ -288,10 +299,32 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
 
   const targetQuantityLoading = swapRevalidating;
 
+  useEffect(() => {
+    if (sourceTokens?.length > 0 && fetchBalances) {
+      fetchBalances(sourceTokens)
+        .then((balances) => {
+          setTokenBalances(balances);
+        })
+        .catch((error) => {
+          console.error("Failed to fetch balances:", error);
+        });
+    }
+  }, [sourceTokens]);
+
+  const sortedSourceTokens = useMemo(() => {
+    return sortTokens(sourceTokens, tokenBalances, getIndexPrice);
+  }, [sourceTokens, tokenBalances]);
+
+  useEffect(() => {
+    if (!sourceTokenUpdatedRef.current && sortedSourceTokens?.[0]) {
+      setSourceToken(sortedSourceTokens[0]);
+    }
+  }, [sortedSourceTokens]);
+
   return {
     sourceToken,
     targetToken,
-    sourceTokens,
+    sourceTokens: sortedSourceTokens,
     targetTokens,
     onSourceTokenChange,
     onTargetTokenChange,
@@ -340,6 +373,7 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     warningMessage,
     targetQuantity,
     targetQuantityLoading,
+    tokenBalances,
   };
 };
 
@@ -441,4 +475,54 @@ const useConvertThreshold = () => {
     isLoading,
     error,
   } as const;
+};
+
+const sortTokens = (
+  tokens: API.TokenInfo[] = [],
+  tokenBalances: Record<string, string> = {},
+  getIndexPrice: (token: string) => number,
+) => {
+  const list = tokens.map((item) => {
+    const indexPrice = getIndexPrice(item.symbol!);
+    const balance = new Decimal(tokenBalances[item.symbol!] || 0)
+      .mul(indexPrice || 1)
+      .todp(item.precision || 2)
+      .toNumber();
+
+    return {
+      ...item,
+      balance,
+      isNativeToken: isNativeTokenChecker(item.address!),
+    };
+  });
+
+  return list.sort((a, b) => {
+    const hasBalanceA = a.balance > 0;
+    const hasBalanceB = b.balance > 0;
+
+    // Tokens with balance come first
+    if (hasBalanceA !== hasBalanceB) {
+      return hasBalanceA ? -1 : 1;
+    }
+
+    // 1. USDC has highest priority
+    if (a.symbol === "USDC" && b.symbol !== "USDC") return -1;
+    if (b.symbol === "USDC" && a.symbol !== "USDC") return 1;
+
+    // 2. USDC.e has second priority
+    if (a.symbol === "USDC.e" && b.symbol !== "USDC.e") return -1;
+    if (b.symbol === "USDC.e" && a.symbol !== "USDC.e") return 1;
+
+    // 3. Native tokens have third priority
+    if (a.isNativeToken && !b.isNativeToken) return -1;
+    if (b.isNativeToken && !a.isNativeToken) return 1;
+
+    // 4. If both have balance, sort by balance amount (high to low)
+    if (hasBalanceA && hasBalanceB) {
+      return b.balance - a.balance;
+    }
+
+    // 5. If both have no balance, sort alphabetically
+    return (a.symbol || "").localeCompare(b.symbol || "");
+  });
 };
