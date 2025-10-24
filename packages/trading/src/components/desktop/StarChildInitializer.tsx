@@ -135,6 +135,17 @@ export const StarChildInitializer: React.FC = () => {
             // ignore
           }
         },
+        onMarketSwitch: (symbol: string) => {
+          console.log("[starchild] market switched:", symbol);
+          try {
+            const event = new CustomEvent("starchild:marketSwitched", {
+              detail: { symbol },
+            });
+            window.dispatchEvent(event);
+          } catch (e) {
+            // ignore
+          }
+        },
       } as any;
 
       try {
