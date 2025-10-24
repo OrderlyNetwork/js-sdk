@@ -33,7 +33,7 @@ export const AiModeToggleButton: React.FC<AiModeToggleButtonProps> = ({
     // Order Entry button
     return (
       <Box
-        className={cn("oui-w-full oui-rounded-[16px] oui-p-px", className)}
+        className={cn("oui-w-full oui-rounded-md oui-p-px", className)}
         style={{
           backgroundColor: "#608CFF",
         }}
@@ -44,18 +44,21 @@ export const AiModeToggleButton: React.FC<AiModeToggleButtonProps> = ({
           onClick={onClick}
           className={cn(
             "oui-w-full oui-h-[28px] oui-px-2 oui-flex oui-items-center oui-justify-center oui-gap-2",
-            "oui-rounded-[16px] oui-backdrop-blur-[15px] oui-bg-base-10 hover:oui-bg-base-9",
+            "oui-rounded-md oui-backdrop-blur-[15px] oui-bg-base-10 hover:oui-bg-base-9",
           )}
         >
-          <Text
-            className={cn(
-              "oui-text-[#608CFF]",
-              "oui-text-[12px] oui-leading-[18px] oui-tracking-[0.36px] oui-whitespace-pre",
-              "oui-shrink-0",
-            )}
-          >
-            Trade Panel
-          </Text>
+          <Box className="oui-flex oui-items-center oui-gap-1">
+            <TradingIcon />
+            <Text
+              className={cn(
+                "oui-text-[#608CFF]",
+                "oui-text-[12px] oui-leading-[18px] oui-tracking-[0.36px] oui-whitespace-pre",
+                "oui-shrink-0",
+              )}
+            >
+              Trade Panel
+            </Text>
+          </Box>
           <UpDownIcon />
         </Button>
       </Box>
@@ -69,18 +72,16 @@ export const AiModeToggleButton: React.FC<AiModeToggleButtonProps> = ({
       type="button"
       onClick={onClick}
       className={cn(
-        "oui-relative oui-z-0 oui-w-full oui-rounded-[6px] oui-p-px",
-        "before:oui-absolute before:oui-inset-0 before:oui-z-[-1] before:oui-rounded-[6px] before:oui-content-['']",
-        "after:oui-absolute after:oui-inset-px after:oui-z-[-1] after:oui-box-border after:oui-rounded-[6px] after:oui-content-['']",
-        "oui-starchild-gradient-border",
+        "oui-relative oui-z-0 oui-w-full oui-rounded-md oui-p-px",
+        "oui-bg-gradient-to-l oui-from-[#59B0FE] oui-to-[#26FEFE]",
         className,
       )}
     >
       <div
         className={cn(
           "oui-w-full oui-h-[28px] oui-px-2 oui-flex oui-items-center oui-justify-center oui-gap-2 oui-relative",
-          "oui-rounded-[6px] oui-backdrop-blur-[15px] oui-bg-base-10 hover:oui-bg-base-9",
-          "oui-transition-colors oui-cursor-pointer",
+          "oui-rounded-md oui-bg-base-10 hover:oui-bg-base-9",
+          "oui-cursor-pointer",
         )}
       >
         <Flex itemAlign="center" gapX={1} className="oui-shrink-0">
@@ -151,6 +152,30 @@ const StarChildChatIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
         <rect width="19" height="19" fill="white" />
       </clipPath>
     </defs>
+  </svg>
+);
+
+const TradingIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
+  <svg
+    width="18"
+    height="18"
+    viewBox="0 0 18 18"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M1.5 5.25C1.5 4.83579 1.83579 4.5 2.25 4.5H3.87679C5.45747 4.5 6.92225 5.32934 7.7355 6.68477L10.0507 10.5435C10.5929 11.4471 11.5694 12 12.6232 12H14.25V10.5L16.5 12.75L14.25 15V13.5H12.6232C11.0425 13.5 9.57775 12.6707 8.76449 11.3152L6.44926 7.45651C5.90709 6.5529 4.93057 6 3.87679 6H2.25C1.83579 6 1.5 5.66421 1.5 5.25Z"
+      fill="#608CFF"
+    />
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M2.25 13.5C1.83579 13.5 1.5 13.1642 1.5 12.75C1.5 12.3358 1.83579 12 2.25 12H3.87679C4.93057 12 5.90709 11.4471 6.44926 10.5435L7.37536 9L8.25 10.4577L7.7355 11.3152C6.92225 12.6707 5.45747 13.5 3.87679 13.5H2.25ZM9.12464 9L10.0507 7.45651C10.5929 6.5529 11.5694 6 12.6232 6H14.25V7.5L16.5 5.25L14.25 3V4.5H12.6232C11.0425 4.5 9.57775 5.32935 8.76449 6.68477L8.25 7.54226L9.12464 9Z"
+      fill="#608CFF"
+    />
   </svg>
 );
 
