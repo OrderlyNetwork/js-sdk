@@ -8,7 +8,10 @@ import { checkChainSupport } from "../../utils/chain";
 import { useAnnouncementScript } from "../announcement/announcement.script";
 import { ScaffoldContext, ScaffoldState } from "./scaffoldContext";
 
-export type ScaffoldProviderProps = Omit<ScaffoldState, "checkChainSupport">;
+export type ScaffoldProviderProps = Omit<
+  ScaffoldState,
+  "checkChainSupport" | "announcementState"
+>;
 
 export const ScaffoldProvider: React.FC<
   React.PropsWithChildren<ScaffoldProviderProps>
