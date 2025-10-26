@@ -3,6 +3,7 @@ import type {
   VaultLpPerformance,
   VaultLpInfo,
   VaultTimeRange,
+  VaultOverallInfo,
 } from "../types/vault";
 import requestClient from "./request";
 
@@ -19,6 +20,13 @@ interface VaultLpInfoResponse {
   rows: VaultLpInfo[];
 }
 
+interface VaultOverallInfoResponse {
+  strategy_vaults_tvl: number;
+  strategy_vaults_lifetime_net_pnl: number;
+  strategy_vaults_count: number;
+  strategy_vaults_lp_count: number;
+}
+
 // API parameters interfaces
 interface VaultPerformanceParams {
   vault_id: string;
@@ -28,6 +36,10 @@ interface VaultPerformanceParams {
 interface VaultLpInfoParams {
   vault_id: string;
   wallet_address: string;
+}
+
+interface VaultOverallInfoParams {
+  broker_ids?: string;
 }
 
 interface VaultOperationMessage {
@@ -103,6 +115,25 @@ export async function getVaultLpInfo(
   );
 }
 
+/**
+ * Get overall statistics of all strategy vaults
+ * @param baseUrl - The base URL for the API endpoints
+ * @param params - Parameters including optional broker_ids filter
+ * @returns Promise<VaultOverallInfoResponse> - Overall statistics of all vaults
+ */
+export async function getVaultOverallInfo(
+  baseUrl: string,
+  params?: VaultOverallInfoParams,
+): Promise<VaultOverallInfoResponse> {
+  return requestClient.get<VaultOverallInfoResponse>(
+    "/v1/public/strategy_vault/vault/overall_info",
+    {
+      params,
+      baseURL: baseUrl,
+    },
+  );
+}
+
 // export async function getVaultNonce(
 //   baseUrl: string,
 // ) {
@@ -132,8 +163,10 @@ export type {
   VaultInfoResponse,
   VaultLpPerformanceResponse,
   VaultLpInfoResponse,
+  VaultOverallInfoResponse,
   VaultPerformanceParams,
   VaultLpInfoParams,
+  VaultOverallInfoParams,
   VaultOperationRequest,
   VaultOperationMessage,
 };

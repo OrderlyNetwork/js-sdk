@@ -43,6 +43,13 @@ export interface VaultLpInfo {
   potential_pnl: number;
 }
 
+export interface VaultOverallInfo {
+  strategy_vaults_tvl: number;
+  strategy_vaults_lifetime_net_pnl: number;
+  strategy_vaults_count: number;
+  strategy_vaults_lp_count: number;
+}
+
 export interface VaultOperation {
   type: OperationType;
   vault_id: string;
@@ -63,4 +70,10 @@ export enum OperationType {
 
 export type VaultsPageConfig = {
   headerImage?: React.ReactNode;
+  /**
+   * Custom broker_ids filter for overall vault info API.
+   * If not provided, defaults to "orderly,{current_broker_id}"
+   * @example "orderly,woofi_pro,aden"
+   */
+  overallInfoBrokerIds?: string;
 };

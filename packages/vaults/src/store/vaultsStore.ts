@@ -3,18 +3,22 @@ import {
   getVaultInfo,
   getVaultLpPerformance,
   getVaultLpInfo,
+  getVaultOverallInfo,
 } from "../api/api";
 import type {
   VaultInfoResponse,
   VaultLpPerformanceResponse,
   VaultLpInfoResponse,
+  VaultOverallInfoResponse,
   VaultPerformanceParams,
   VaultLpInfoParams,
+  VaultOverallInfoParams,
 } from "../api/api";
 import type {
   VaultInfo,
   VaultLpPerformance,
   VaultLpInfo,
+  VaultOverallInfo,
   VaultsPageConfig,
 } from "../types/vault";
 
@@ -49,6 +53,15 @@ interface VaultsState {
     params: VaultLpInfoParams | null;
   };
 
+  // Vault overall info state
+  vaultOverallInfo: {
+    data: VaultOverallInfo | null;
+    loading: boolean;
+    error: string | null;
+    lastUpdated: number | null;
+    params: VaultOverallInfoParams | null;
+  };
+
   // Vaults page config state
   vaultsPageConfig: VaultsPageConfig | null;
 
@@ -68,6 +81,12 @@ interface VaultsState {
     baseUrl?: string,
   ) => Promise<void>;
   refreshVaultLpInfo: () => Promise<void>;
+
+  fetchVaultOverallInfo: (
+    params?: VaultOverallInfoParams,
+    baseUrl?: string,
+  ) => Promise<void>;
+  refreshVaultOverallInfo: () => Promise<void>;
 
   setVaultsPageConfig: (config: VaultsPageConfig) => void;
 }
@@ -94,6 +113,14 @@ export const useVaultsStore = create<VaultsState>((set, get) => ({
 
   vaultLpInfo: {
     data: {},
+    loading: false,
+    error: null,
+    lastUpdated: null,
+    params: null,
+  },
+
+  vaultOverallInfo: {
+    data: null,
     loading: false,
     error: null,
     lastUpdated: null,
@@ -304,6 +331,73 @@ export const useVaultsStore = create<VaultsState>((set, get) => ({
     }
   },
 
+  // Vault overall info actions
+  fetchVaultOverallInfo: async (
+    params?: VaultOverallInfoParams,
+    baseUrl?: string,
+  ) => {
+    const state = get();
+    const url = baseUrl || state.baseUrl;
+
+    if (!url) {
+      set((state) => ({
+        vaultOverallInfo: {
+          ...state.vaultOverallInfo,
+          error: "Base URL is required",
+        },
+      }));
+      return;
+    }
+
+    set((state) => ({
+      baseUrl: baseUrl || state.baseUrl,
+      vaultOverallInfo: {
+        ...state.vaultOverallInfo,
+        loading: true,
+        error: null,
+        params: params || null,
+      },
+    }));
+
+    try {
+      const response: VaultOverallInfoResponse = await getVaultOverallInfo(
+        url,
+        params,
+      );
+
+      set((state) => ({
+        vaultOverallInfo: {
+          ...state.vaultOverallInfo,
+          data: response,
+          loading: false,
+          error: null,
+          lastUpdated: Date.now(),
+        },
+      }));
+    } catch (error) {
+      set((state) => ({
+        vaultOverallInfo: {
+          ...state.vaultOverallInfo,
+          loading: false,
+          error:
+            error instanceof Error
+              ? error.message
+              : "Failed to fetch vault overall info",
+        },
+      }));
+    }
+  },
+
+  refreshVaultOverallInfo: async () => {
+    const state = get();
+    // Only refresh if we have previously fetched data and have baseUrl
+    if (state.vaultOverallInfo.lastUpdated && state.baseUrl) {
+      await state.fetchVaultOverallInfo(
+        state.vaultOverallInfo.params || undefined,
+      );
+    }
+  },
+
   setVaultsPageConfig: (config: VaultsPageConfig) => {
     set({ vaultsPageConfig: config });
   },
@@ -316,6 +410,8 @@ export const useVaultLpPerformanceState = () =>
   useVaultsStore((state) => state.vaultLpPerformance);
 export const useVaultLpInfoState = () =>
   useVaultsStore((state) => state.vaultLpInfo);
+export const useVaultOverallInfoState = () =>
+  useVaultsStore((state) => state.vaultOverallInfo);
 
 // Action hooks for easier access to actions
 export const useVaultInfoActions = () =>
@@ -334,6 +430,12 @@ export const useVaultLpInfoActions = () =>
   useVaultsStore((state) => ({
     fetchVaultLpInfo: state.fetchVaultLpInfo,
     refreshVaultLpInfo: state.refreshVaultLpInfo,
+  }));
+
+export const useVaultOverallInfoActions = () =>
+  useVaultsStore((state) => ({
+    fetchVaultOverallInfo: state.fetchVaultOverallInfo,
+    refreshVaultOverallInfo: state.refreshVaultOverallInfo,
   }));
 
 // Selector hooks for accessing data by vault_id
