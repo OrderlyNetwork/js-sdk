@@ -26,7 +26,7 @@ export const VaultsProvider: FC<PropsWithChildren<VaultsPageProps>> = (
     if (!svApiUrl) {
       return;
     }
-    fetchVaultInfo(svApiUrl);
+    fetchVaultInfo(undefined, svApiUrl);
   }, [svApiUrl]);
 
   // Fetch overall vault info

@@ -28,6 +28,12 @@ interface VaultOverallInfoResponse {
 }
 
 // API parameters interfaces
+interface VaultInfoParams {
+  vault_id?: string;
+  status?: string;
+  broker_ids?: string;
+}
+
 interface VaultPerformanceParams {
   vault_id: string;
   time_range?: VaultTimeRange;
@@ -64,14 +70,17 @@ type VaultOperationRequest = {
 /**
  * Get vault information
  * @param baseUrl - The base URL for the API endpoints
+ * @param params - Optional parameters including vault_id, status, and broker_ids filters
  * @returns Promise<VaultInfoResponse> - Array of vault information
  */
 export async function getVaultInfo(
   baseUrl: string,
+  params?: VaultInfoParams,
 ): Promise<VaultInfoResponse> {
   return requestClient.get<VaultInfoResponse>(
     "/v1/public/strategy_vault/vault/info",
     {
+      params,
       baseURL: baseUrl,
     },
   );
@@ -161,6 +170,7 @@ export async function getVaultOverallInfo(
 // Export types for external usage
 export type {
   VaultInfoResponse,
+  VaultInfoParams,
   VaultLpPerformanceResponse,
   VaultLpInfoResponse,
   VaultOverallInfoResponse,

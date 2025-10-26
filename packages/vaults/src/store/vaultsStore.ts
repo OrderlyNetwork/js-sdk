@@ -7,6 +7,7 @@ import {
 } from "../api/api";
 import type {
   VaultInfoResponse,
+  VaultInfoParams,
   VaultLpPerformanceResponse,
   VaultLpInfoResponse,
   VaultOverallInfoResponse,
@@ -33,6 +34,7 @@ interface VaultsState {
     loading: boolean;
     error: string | null;
     lastUpdated: number | null;
+    params: VaultInfoParams | null;
   };
 
   // Vault LP performance state
@@ -67,7 +69,7 @@ interface VaultsState {
 
   // Actions
   setBaseUrl: (baseUrl: string) => void;
-  fetchVaultInfo: (baseUrl?: string) => Promise<void>;
+  fetchVaultInfo: (params?: VaultInfoParams, baseUrl?: string) => Promise<void>;
   refreshVaultInfo: () => Promise<void>;
 
   fetchVaultLpPerformance: (
@@ -101,6 +103,7 @@ export const useVaultsStore = create<VaultsState>((set, get) => ({
     loading: false,
     error: null,
     lastUpdated: null,
+    params: null,
   },
 
   vaultLpPerformance: {
@@ -135,7 +138,7 @@ export const useVaultsStore = create<VaultsState>((set, get) => ({
   },
 
   // Vault info actions
-  fetchVaultInfo: async (baseUrl?: string) => {
+  fetchVaultInfo: async (params?: VaultInfoParams, baseUrl?: string) => {
     const state = get();
     const url = baseUrl || state.baseUrl;
 
@@ -155,11 +158,12 @@ export const useVaultsStore = create<VaultsState>((set, get) => ({
         ...state.vaultInfo,
         loading: true,
         error: null,
+        params: params || null,
       },
     }));
 
     try {
-      const response: VaultInfoResponse = await getVaultInfo(url);
+      const response: VaultInfoResponse = await getVaultInfo(url, params);
       set((state) => ({
         vaultInfo: {
           ...state.vaultInfo,
@@ -187,7 +191,7 @@ export const useVaultsStore = create<VaultsState>((set, get) => ({
     const state = get();
     // Only refresh if we have previously fetched data and have baseUrl
     if (state.vaultInfo.lastUpdated && state.baseUrl) {
-      await state.fetchVaultInfo();
+      await state.fetchVaultInfo(state.vaultInfo.params || undefined);
     }
   },
 

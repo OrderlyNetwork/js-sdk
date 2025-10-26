@@ -5,26 +5,37 @@ export interface VaultSupportedChain {
 
 export type VaultTimeRange = "24h" | "7d" | "30d" | "all_time";
 
+export type VaultStatus = "pre_launch" | "live" | "closing" | "closed";
+
 export interface VaultInfo {
   vault_id: string;
   vault_address: string;
-  vault_type: string;
+  vault_type: "protocol" | "community" | "user";
+  vault_name: string;
+  description: string;
+  sp_address: string;
+  sp_name: string | null;
+  asset: string;
+  vault_age: number | null;
+  status: VaultStatus;
+  vault_start_time: number;
   performance_fee_rate: number;
   supported_chains: VaultSupportedChain[];
   tvl: number;
-  apr30_d: number;
+  valid_hpr: number;
+  "30d_apy": number;
+  recovery_30d_apy: number;
+  lifetime_apy: number;
   vault_lifetime_net_pnl: number;
   lp_counts: number;
-  min_deposit_amount: number;
-  min_withdrawal_amount: number;
   total_main_shares: number;
   est_main_share_price: number;
+  lock_duration: number;
+  min_deposit_amount: number;
+  min_withdrawal_amount: number;
   gate_threshold_pct: number;
   gate_triggered: boolean;
-  lock_duration: number;
   broker_id: string;
-  "30d_apr": number;
-  "30d_apy": number;
 }
 
 export interface VaultLpPerformance {
