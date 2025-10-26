@@ -1,4 +1,4 @@
-import React from "react";
+import { FC } from "react";
 import { ENVType, useGetEnv } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext } from "@orderly.network/react-app";
@@ -16,7 +16,15 @@ import { TraderCardMobile } from "./traderCard.ui.mobile";
 // import { TradingRewardsCardMobile } from "./tradingRewardsCard.ui.mobile";
 import { useRewardsDataScript } from "./useRewardsData.script";
 
-export const MobileOverview: React.FC = () => {
+export type MobileOverviewProps = {
+  /** show affiliate card, mobile only */
+  hideAffiliateCard?: boolean;
+  /** show trader card, mobile only */
+  hideTraderCard?: boolean;
+};
+
+export const MobileOverview: FC<MobileOverviewProps> = (props) => {
+  const { hideAffiliateCard, hideTraderCard } = props;
   const {
     canTrade,
     onWithdraw,
@@ -90,27 +98,33 @@ export const MobileOverview: React.FC = () => {
           routerAdapter={layoutContext?.routerAdapter}
           hasSubAccount={hasSubAccount}
         />
-        <Flex
-          direction={"row"}
-          width={"100%"}
-          height={"100%"}
-          className="oui-gap-3"
-        >
-          {/* Disable trading rewards card for now. Set to row */}
-          <Flex direction="row" className="oui-flex-1 oui-gap-3">
-            <AffiliateCardMobile
-              referralInfo={rewardsData.referralInfo}
-              routerAdapter={layoutContext?.routerAdapter}
-            />
-            <TraderCardMobile
-              referralInfo={rewardsData.referralInfo}
-              routerAdapter={layoutContext?.routerAdapter}
-            />
-          </Flex>
-          {/* <Flex direction="column" className="oui-flex-1">
+        {(!hideAffiliateCard || !hideTraderCard) && (
+          <Flex
+            direction={"row"}
+            width={"100%"}
+            height={"100%"}
+            className="oui-gap-3"
+          >
+            <Flex direction="row" className="oui-flex-1 oui-gap-3">
+              {!hideAffiliateCard && (
+                <AffiliateCardMobile
+                  referralInfo={rewardsData.referralInfo}
+                  routerAdapter={layoutContext?.routerAdapter}
+                />
+              )}
+              {!hideTraderCard && (
+                <TraderCardMobile
+                  referralInfo={rewardsData.referralInfo}
+                  routerAdapter={layoutContext?.routerAdapter}
+                />
+              )}
+            </Flex>
+            {/* Disable trading rewards card for now. Set to row */}
+            {/* <Flex direction="column" className="oui-flex-1">
             <TradingRewardsCardMobile {...rewardsData} goToClaim={goToClaim} />
           </Flex> */}
-        </Flex>
+          </Flex>
+        )}
         <SettingRouterMobile routerAdapter={layoutContext?.routerAdapter} />
       </Flex>
     </>

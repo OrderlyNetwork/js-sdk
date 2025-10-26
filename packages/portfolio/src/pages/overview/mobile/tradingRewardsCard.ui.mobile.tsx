@@ -59,6 +59,7 @@ export const TradingRewardsCardMobile: FC<TradingRewardsCardMobileProps> = (
   return (
     <Flex
       className="
+        oui-portfolio-trading-rewards-card
         oui-via-21.6% 
         oui-via-83.23% 
         oui-relative 
