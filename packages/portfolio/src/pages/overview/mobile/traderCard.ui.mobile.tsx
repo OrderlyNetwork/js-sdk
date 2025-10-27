@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { RefferalAPI as API } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
+import { RouterAdapter } from "@orderly.network/types";
 import {
   Flex,
   Text,
@@ -8,7 +9,6 @@ import {
   ChevronRightIcon,
   cn,
 } from "@orderly.network/ui";
-import { RouterAdapter } from "@orderly.network/ui-scaffold";
 import { commifyOptional } from "@orderly.network/utils";
 
 const isNumber = (val: unknown): val is number => {
@@ -27,6 +27,7 @@ export const TraderCardMobile: FC<TraderCardMobileProps> = (props) => {
   return (
     <Flex
       className="
+        oui-portfolio-trader-card
         oui-via-21.6% 
         oui-via-83.23% 
         oui-relative 

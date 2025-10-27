@@ -2,6 +2,7 @@ import { FC, useMemo } from "react";
 import { parseJSON, useAccount } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { AccountStatusEnum, ChainNamespace } from "@orderly.network/types";
+import { RouterAdapter } from "@orderly.network/types";
 import {
   Flex,
   Text,
@@ -9,7 +10,6 @@ import {
   ArrowRightShortIcon,
   EyeIcon,
 } from "@orderly.network/ui";
-import { RouterAdapter } from "@orderly.network/ui-scaffold";
 import { PortfolioLeftSidebarPath } from "../../../layout";
 
 type Props = {

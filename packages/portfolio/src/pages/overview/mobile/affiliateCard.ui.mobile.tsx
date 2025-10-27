@@ -27,6 +27,7 @@ export const AffiliateCardMobile: FC<AffiliateCardMobileProps> = (props) => {
   return (
     <Flex
       className="
+        oui-portfolio-affiliate-card
         oui-via-21.6% 
         oui-via-83.23% 
         oui-relative 

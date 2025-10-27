@@ -16,6 +16,7 @@ export const AnnouncementCenterUI: FC<{
         current={current}
         onExpandToggle={setCurrent}
         onItemClick={onItemClick}
+        showDivider
       />
     </div>
   );

@@ -1,6 +1,7 @@
-import React from "react";
+import React, { FC } from "react";
 import { Grid, useScreen } from "@orderly.network/ui";
 import { MobileOverview } from "./mobile";
+import { MobileOverviewProps } from "./mobile/mobile.widget";
 import { OverviewProvider } from "./provider/overviewProvider";
 
 const LazyAssetWidget = React.lazy(() =>
@@ -27,12 +28,17 @@ const LazyHistoryDataGroupWidget = React.lazy(() =>
   }),
 );
 
-export const OverviewPage: React.FC = () => {
+export type OverviewPageProps = MobileOverviewProps;
+
+export const OverviewPage: FC<OverviewPageProps> = (props) => {
   const { isMobile } = useScreen();
   return (
     <OverviewProvider>
       {isMobile ? (
-        <MobileOverview />
+        <MobileOverview
+          hideAffiliateCard={props.hideAffiliateCard}
+          hideTraderCard={props.hideTraderCard}
+        />
       ) : (
         <Grid cols={2} gap={4}>
           <React.Suspense fallback={null}>

@@ -1,5 +1,5 @@
 import { OverviewModule } from "@orderly.network/portfolio";
 
 export default function PortfolioPage() {
-  return <OverviewModule.OverviewPage />;
+  return <OverviewModule.OverviewPage hideAffiliateCard />;
 }

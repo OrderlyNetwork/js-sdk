@@ -17,6 +17,7 @@ export const notification = {
   "notification.delistingTitle": "Token Delisting Notice",
   "notification.generalTitle": "General Update",
   "notification.maintenanceTitle": "System Maintenance",
+  "notification.empty": "No announcements",
 };
 
 export type Notification = typeof notification;

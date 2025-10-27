@@ -28,4 +28,5 @@ export enum TrackerEventName {
   vaultWithdrawSuccess = "vault_withdraw_success",
   vaultWithdrawFailed = "vault_withdraw_failed",
   clickBBOButton = "click_bbo_button",
+  confirmCloseAllPositions = "confirm_close_all_positions",
 }
