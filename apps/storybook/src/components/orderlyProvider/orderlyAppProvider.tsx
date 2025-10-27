@@ -1,5 +1,5 @@
-import React, { FC } from "react";
-import { OrderlyAppProvider as OrderlyAppProviderBase } from "@orderly.network/react-app";
+import { FC, PropsWithChildren } from "react";
+import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { orderlyAppProviderConfig } from "../../orderlyConfig";
 import { dataAdapter } from "../../orderlyConfig/dataAdapter";
 import { notification } from "../../orderlyConfig/notification";
@@ -7,16 +7,16 @@ import { widgetConfigs } from "../../orderlyConfig/widgetConfigs";
 import { useConfigStore, ConfigStoreOptions } from "./configStore";
 import { useRouteContext } from "./rounteProvider";
 
-export type OrderlyAppProviderProps = ConfigStoreOptions;
+export type OrderlyAppRootProviderProps = ConfigStoreOptions;
 
-export const OrderlyAppProvider: FC<
-  React.PropsWithChildren<OrderlyAppProviderProps>
+export const OrderlyAppRootProvider: FC<
+  PropsWithChildren<OrderlyAppRootProviderProps>
 > = (props) => {
   const { children, ...rest } = props;
   const { onRouteChange } = useRouteContext();
   const configStore = useConfigStore(rest);
   return (
-    <OrderlyAppProviderBase
+    <OrderlyAppProvider
       configStore={configStore}
       appIcons={orderlyAppProviderConfig.appIcons}
       restrictedInfo={orderlyAppProviderConfig.restrictedInfo}
@@ -59,6 +59,6 @@ export const OrderlyAppProvider: FC<
       // defaultChain={{testnet: customChains.testnet[0], mainnet: customChains.mainnet[0]}}
     >
       {children}
-    </OrderlyAppProviderBase>
+    </OrderlyAppProvider>
   );
 };
