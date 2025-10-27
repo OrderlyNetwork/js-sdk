@@ -1025,5 +1025,6 @@
   "notification.closeAll": "Закрити все ({{total}})",
   "notification.delistingTitle": "Повідомлення про делістинг токена",
   "notification.generalTitle": "Загальне оновлення",
-  "notification.maintenanceTitle": "Обслуговування системи"
+  "notification.maintenanceTitle": "Обслуговування системи",
+  "notification.empty": "Немає оголошень"
 }

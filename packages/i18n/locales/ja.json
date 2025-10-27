@@ -1025,5 +1025,6 @@
   "notification.closeAll": "すべて閉じる（{{total}}）",
   "notification.delistingTitle": "トークン上場廃止のお知らせ",
   "notification.generalTitle": "一般アップデート",
-  "notification.maintenanceTitle": "システムメンテナンス"
+  "notification.maintenanceTitle": "システムメンテナンス",
+  "notification.empty": "お知らせはありません"
 }

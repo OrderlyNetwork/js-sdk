@@ -1025,5 +1025,6 @@
   "notification.closeAll": "Tümünü kapat ({{total}})",
   "notification.delistingTitle": "Token Delist Bildirimi",
   "notification.generalTitle": "Genel güncelleme",
-  "notification.maintenanceTitle": "Sistem bakımı"
+  "notification.maintenanceTitle": "Sistem bakımı",
+  "notification.empty": "Duyuru yok"
 }

@@ -321,6 +321,9 @@
   "positions.fundingRate.tooltip": "记录包括当前开仓仓位的资金费用。",
   "positions.liquidation": "清算",
   "positions.positionHistory": "持仓历史",
+  "positions.closeAll": "全部平仓",
+  "positions.closeAll.description": "您确定要平仓所有持仓吗？将使用市价单进行平仓。",
+  "positions.closeAll.success": "所有持仓已成功平仓",
   "positions.column.liqPrice": "清算价格",
   "positions.column.liqPrice.tooltip": "估计的清算价格。价格是估计的，取决于所有持仓的多个因素。",
   "positions.column.unrealPnl.tooltip": "使用标记价格计算的所有小部件上未平仓头寸的当前未实现利润或损失。",
@@ -1023,7 +1026,5 @@
   "notification.delistingTitle": "代币下架通知",
   "notification.generalTitle": "常规更新",
   "notification.maintenanceTitle": "系统维护",
-  "positions.closeAll": "全部平仓",
-  "positions.closeAll.description": "您确定要平仓所有持仓吗？将使用市价单进行平仓。",
-  "positions.closeAll.success": "所有持仓已成功平仓"
+  "notification.empty": "暂无公告"
 }

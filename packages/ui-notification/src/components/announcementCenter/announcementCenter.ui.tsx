@@ -18,11 +18,15 @@ export const AnnouncementContent: FC<{
   showDivider?: boolean;
 }> = (props) => {
   const { dataSource, current, onExpandToggle, onItemClick } = props;
+  const { t } = useTranslation();
 
   if (!Array.isArray(dataSource) || dataSource.length === 0) {
     return (
       <div className="oui-flex oui-h-[160px] oui-items-center oui-justify-center">
-        <ExtensionSlot position={ExtensionPositionEnum.EmptyDataIdentifier} />
+        <ExtensionSlot
+          position={ExtensionPositionEnum.EmptyDataIdentifier}
+          title={t("notification.empty")}
+        />
       </div>
     );
   }

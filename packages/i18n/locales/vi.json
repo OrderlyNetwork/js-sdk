@@ -1025,5 +1025,6 @@
   "notification.closeAll": "Đóng tất cả ({{total}})",
   "notification.delistingTitle": "Thông báo gỡ niêm yết token",
   "notification.generalTitle": "Cập nhật chung",
-  "notification.maintenanceTitle": "Bảo trì hệ thống"
+  "notification.maintenanceTitle": "Bảo trì hệ thống",
+  "notification.empty": "Không có thông báo"
 }

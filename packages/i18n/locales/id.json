@@ -1025,5 +1025,6 @@
   "notification.closeAll": "Tutup semua ({{total}})",
   "notification.delistingTitle": "Pemberitahuan delisting token",
   "notification.generalTitle": "Pembaruan umum",
-  "notification.maintenanceTitle": "Pemeliharaan sistem"
+  "notification.maintenanceTitle": "Pemeliharaan sistem",
+  "notification.empty": "Tidak ada pengumuman"
 }

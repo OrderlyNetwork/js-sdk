@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useRef } from "react";
+import { FC, useCallback, useEffect, useMemo, useRef } from "react";
 import { API } from "@orderly.network/types";
 import { cn } from "@orderly.network/ui";
 import { NotificationUI as NotificationUIComponent } from "@orderly.network/ui-notification";
@@ -22,8 +22,12 @@ export const NotificationUI: FC<{
   };
 
   const notificationRef = useRef<HTMLDivElement>(null);
+  const len = useMemo(() => dataSource?.length ?? 0, [dataSource]);
 
   const onClose = useCallback(() => {
+    if (len === 0) {
+      return;
+    }
     windowGuard(() => {
       if (notificationRef.current) {
         const animationendHandler = () => {
@@ -43,9 +47,12 @@ export const NotificationUI: FC<{
         });
       }
     });
-  }, [props.onClose]);
+  }, [props.onClose, len]);
 
   useEffect(() => {
+    if (len === 0) {
+      return;
+    }
     if (showAnnouncement) {
       // open the notification`
       windowGuard(() => {
@@ -56,7 +63,11 @@ export const NotificationUI: FC<{
         }
       });
     }
-  }, [showAnnouncement]);
+  }, [showAnnouncement, len]);
+
+  if (len === 0) {
+    return null;
+  }
 
   return (
     <div

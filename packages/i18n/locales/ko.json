@@ -1025,5 +1025,6 @@
   "notification.closeAll": "모두 닫기 ({{total}})",
   "notification.delistingTitle": "토큰 상장 폐지 공지",
   "notification.generalTitle": "일반 업데이트",
-  "notification.maintenanceTitle": "시스템 점검"
+  "notification.maintenanceTitle": "시스템 점검",
+  "notification.empty": "공지사항이 없습니다"
 }

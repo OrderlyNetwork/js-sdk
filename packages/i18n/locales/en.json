@@ -1025,5 +1025,6 @@
   "notification.closeAll": "Close all ({{total}})",
   "notification.delistingTitle": "Token Delisting Notice",
   "notification.generalTitle": "General Update",
-  "notification.maintenanceTitle": "System Maintenance"
+  "notification.maintenanceTitle": "System Maintenance",
+  "notification.empty": "No announcements"
 }
