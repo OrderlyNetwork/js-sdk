@@ -4,7 +4,11 @@ import { Box, Flex, modal, Text } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { type UseDepositFeeReturn } from "../depositForm/depositForm.script";
 
-export const Fee: FC<Partial<UseDepositFeeReturn>> = (props) => {
+type FeeProps = Partial<UseDepositFeeReturn> & {
+  nativeSymbol?: string;
+};
+
+export const Fee: FC<FeeProps> = (props) => {
   const { dstGasFee, feeQty, feeAmount, dp, nativeSymbol } = props;
   const { t } = useTranslation();
 
