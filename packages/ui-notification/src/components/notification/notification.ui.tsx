@@ -258,25 +258,23 @@ export const NotificationUI: FC<
         </div>
       </div>
 
-      {len > 1 ? (
-        <NotificationFooter
-          total={len}
-          current={current}
-          onCloseAll={props.onClose ?? (() => {})}
-          onPrev={() => {
-            if (current - 1 < 0) {
-              return;
-            }
-            setCurrent(current - 1);
-          }}
-          onNext={() => {
-            if (current + 1 >= len) {
-              return;
-            }
-            setCurrent(current + 1);
-          }}
-        />
-      ) : null}
+      <NotificationFooter
+        total={len}
+        current={current}
+        onCloseAll={props.onClose ?? (() => {})}
+        onPrev={() => {
+          if (current - 1 < 0) {
+            return;
+          }
+          setCurrent(current - 1);
+        }}
+        onNext={() => {
+          if (current + 1 >= len) {
+            return;
+          }
+          setCurrent(current + 1);
+        }}
+      />
     </div>
   );
 };
