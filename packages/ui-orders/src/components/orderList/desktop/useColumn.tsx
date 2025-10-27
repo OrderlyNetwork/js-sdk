@@ -16,6 +16,7 @@ import { SharePnLConfig, SharePnLDialogId } from "@orderly.network/ui-share";
 import {
   commifyOptional,
   Decimal,
+  formatNum,
   getTrailingStopPrice,
 } from "@orderly.network/utils";
 import {
@@ -87,6 +88,7 @@ export const useOrderColumn = (props: {
             pnlNotionalDecimalPrecision: pnlNotionalDecimalPrecision,
             sharePnLConfig: sharePnLConfig,
             symbolsInfo: props.symbolsInfo,
+            hideShare: true,
           }),
           estTotal({ width: 130, enableSort: false }),
           fee({ width: 130 }),
@@ -244,6 +246,7 @@ export const useOrderColumn = (props: {
             pnlNotionalDecimalPrecision: pnlNotionalDecimalPrecision,
             sharePnLConfig: sharePnLConfig,
             symbolsInfo: props.symbolsInfo,
+            hideShare: true,
           }),
           estTotal({ width: 124 }),
           trailingCallback({ width: 124, disableEdit: true }),
@@ -840,22 +843,19 @@ function realizedPnL(option?: {
     render: (_value: number | undefined, record: any) => {
       const { quote_dp } = useSymbolContext();
       const dp = option?.pnlNotionalDecimalPrecision ?? quote_dp;
-      const value = new Decimal(_value ?? 0)
-        .toDecimalPlaces(dp, Decimal.ROUND_DOWN)
-        .toNumber();
+      const value = new Decimal(_value ?? 0).toNumber();
       // wraper flex
       return (
         <Flex gap={1}>
-          <Text.numeral
+          <Text.pnl
             dp={dp}
-            rm={Decimal.ROUND_DOWN}
             padding={false}
             intensity={(value ?? 0) == 0 ? 80 : undefined}
             showIdentifier={(value ?? 0) > 0}
             coloring={(value ?? 0) != 0}
           >
             {value ?? "--"}
-          </Text.numeral>
+          </Text.pnl>
           {!option?.hideShare && (
             <ShareButtonWidget
               order={record}
@@ -971,9 +971,9 @@ function notional(option?: {
       return commifyOptional(value, { fix: 2 });
     },
     render: (value?: string) => (
-      <Text.numeral className="oui-break-normal oui-whitespace-nowrap oui-font-semibold">
+      <Text.notional className="oui-break-normal oui-whitespace-nowrap oui-font-semibold">
         {value ?? "--"}
-      </Text.numeral>
+      </Text.notional>
     ),
   };
 }
@@ -996,10 +996,9 @@ function tpslNotional(option?: {
       return commifyOptional(
         record.quantity === 0
           ? "--"
-          : `${new Decimal(record.mark_price)
-              .mul(record.quantity)
-              .todp(2)
-              .toNumber()}`,
+          : `${formatNum
+              .notional(new Decimal(record.mark_price).mul(record.quantity))
+              ?.toNumber()}`,
       );
     },
     render: (value: any, record: any) => {
@@ -1011,10 +1010,9 @@ function tpslNotional(option?: {
         <Text.numeral className="oui-break-normal oui-whitespace-nowrap oui-font-semibold">
           {record.quantity === 0
             ? "--"
-            : `${new Decimal(record.mark_price)
-                .mul(record.quantity)
-                .todp(2)
-                .toNumber()}`}
+            : `${formatNum
+                .notional(new Decimal(record.mark_price).mul(record.quantity))
+                ?.toNumber()}`}
         </Text.numeral>
       );
     },

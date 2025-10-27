@@ -25,7 +25,6 @@ export const Countdown = ({
   const secondsStr = seconds.toString().padStart(2, "0");
 
   const renderStr = () => {
-
     if (days > 0) {
       return {
         s1: daysStr,
@@ -54,7 +53,6 @@ export const Countdown = ({
 
   const { s1, s2, c1, c2 } = renderStr();
 
-
   return (
     <Flex className="oui-text-base-contrast-54 oui-text-xs oui-font-normal">
       <Box
@@ -75,7 +73,6 @@ export const Countdown = ({
     </Flex>
   );
 };
-
 
 function breakDownSeconds(total: number): [number, number, number, number] {
   const SEC_PER_DAY = 86_400;

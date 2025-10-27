@@ -58,11 +58,14 @@ const findCurrentTier = (feeList: FeeDataType[], data: API.AccountInfo) => {
   const { futures_taker_fee_rate = 0, futures_maker_fee_rate = 0 } = data;
   const takerRate = new Decimal(futures_taker_fee_rate).mul(0.01);
   const makerRate = new Decimal(futures_maker_fee_rate).mul(0.01);
-  const findItem = feeList.find(
-    (item) =>
-      item.taker_fee === `${takerRate.toNumber()}%` &&
-      item.maker_fee === `${makerRate.toNumber()}%`,
-  );
+  const findItem = feeList.find((item) => {
+    const itemTakerRate = item.taker_fee.split("/")?.[0].trim();
+    const itemMakerRate = item.maker_fee.split("/")?.[0].trim();
+    return (
+      itemTakerRate === `${takerRate.toNumber()}%` &&
+      itemMakerRate === `${makerRate.toNumber()}%`
+    );
+  });
   return findItem?.tier;
 };
 

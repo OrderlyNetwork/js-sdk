@@ -62,7 +62,12 @@ export const SymbolInfoBar: FC<SymbolInfoBarProps> = (props) => {
               <Badge size="xs" color="primary">
                 {leverage}x
               </Badge>
-              <RwaTooltip isRwa={isRwa} open={open} closeTimeInterval={closeTimeInterval} openTimeInterval={openTimeInterval} />
+              <RwaTooltip
+                isRwa={isRwa}
+                open={open}
+                closeTimeInterval={closeTimeInterval}
+                openTimeInterval={openTimeInterval}
+              />
             </Flex>
           </Flex>
         </Flex>

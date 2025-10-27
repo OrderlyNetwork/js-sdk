@@ -53,3 +53,7 @@ hooks-example/
 
 *storybook.log
 storybook-static/
+.claude/
+.specify/
+.specs/
+.tmp.*

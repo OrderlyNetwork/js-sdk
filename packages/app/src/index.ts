@@ -8,4 +8,5 @@ export { useDataTap } from "./hooks/useDataTap";
 export { type AppLogos } from "./types";
 export { type AppStateProviderProps } from "./provider/appStateProvider";
 export { useOrderEntryFormErrorMsg } from "./common/useOrderEntryFormErrorMsg";
+export { ErrorBoundary } from "./provider/ErrorBoundary";
 export { useCanTrade } from "./hooks/useCanTrade";

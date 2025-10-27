@@ -48,22 +48,20 @@ export const UnrealPnL: FC<PositionCellState> = (props) => {
   return (
     <Flex gap={3}>
       <Flex direction={"column"} className="oui-text-2xs" itemAlign={"end"}>
-        <div>
+        <div className="oui-text-right">
           <Text intensity={36}>{t("common.unrealizedPnl")}</Text>
           <Text intensity={20}>(USDC)</Text>
         </div>
 
-        <Text.numeral
+        <Text.pnl
           size="xs"
           dp={props.pnlNotionalDecimalPrecision}
-          rm={Decimal.ROUND_DOWN}
           coloring
           className="orderly-font-semibold"
           suffix={
-            <Text.numeral
+            <Text.roi
               rule="percentages"
               dp={props.pnlNotionalDecimalPrecision}
-              rm={Decimal.ROUND_DOWN}
               prefix="("
               suffix=")"
               className={cn(
@@ -74,11 +72,11 @@ export const UnrealPnL: FC<PositionCellState> = (props) => {
               )}
             >
               {item.unrealized_pnl_ROI}
-            </Text.numeral>
+            </Text.roi>
           }
         >
           {item.unrealized_pnl}
-        </Text.numeral>
+        </Text.pnl>
       </Flex>
       <ShareButtonWidget
         position={item}
@@ -126,7 +124,7 @@ export const Margin: FC<PositionCellState> = (props) => {
         label: "oui-text-2xs",
       }}
     >
-      <Text.numeral dp={props.quote_dp} intensity={80}>
+      <Text.numeral dp={2} intensity={80}>
         {item.mm}
       </Text.numeral>
     </Statistic>
@@ -151,7 +149,7 @@ export const Notional: FC<PositionCellState> = (props) => {
         label: "oui-text-2xs",
       }}
     >
-      <Text.numeral dp={props.quote_dp} intensity={80}>
+      <Text.numeral dp={2} intensity={80}>
         {item.notional}
       </Text.numeral>
     </Statistic>

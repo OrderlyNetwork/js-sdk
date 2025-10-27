@@ -17,10 +17,6 @@ export function getSymbolColumn(
     width: 150,
     onSort: true,
     render: (value, record) => {
-
-
-    
-
       let favoritesIcon: ReactNode;
       if (!isFavoriteList) {
         favoritesIcon = (

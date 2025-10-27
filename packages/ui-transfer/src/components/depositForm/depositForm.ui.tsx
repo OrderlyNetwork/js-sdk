@@ -139,6 +139,7 @@ export const DepositForm: FC<DepositFormScriptReturn> = (props) => {
             status={inputStatus}
             hintMessage={hintMessage}
             fetchBalance={fetchBalance}
+            tokenBalances={props.tokenBalances}
             data-testId="oui-testid-deposit-dialog-quantity-input"
           />
         </Box>

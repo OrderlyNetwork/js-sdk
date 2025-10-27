@@ -1,0 +1,22 @@
+export const notification = {
+  // Announcement related keys
+  "notification.campaign": "Campaign announcement",
+  "notification.delisting": "Token delisting",
+  "notification.general": "General update",
+  "notification.joinNow": "Join now",
+  "notification.listing": "New token listing",
+  "notification.maintenance": "System maintenance",
+  "notification.maintenanceDuration":
+    "{{hours}} HRs at {{startTimeFormatted}} - {{endTimeFormatted}} (UTC)",
+  "notification.recentlyUpdated": "Recently updated",
+  "notification.title": "Announcement",
+
+  // Notification related keys
+  "notification.campaignTitle": "Latest Campaign is coming",
+  "notification.closeAll": "Close all ({{total}})",
+  "notification.delistingTitle": "Token Delisting Notice",
+  "notification.generalTitle": "General Update",
+  "notification.maintenanceTitle": "System Maintenance",
+};
+
+export type Notification = typeof notification;

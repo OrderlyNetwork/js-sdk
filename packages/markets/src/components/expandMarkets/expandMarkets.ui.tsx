@@ -77,11 +77,7 @@ export const ExpandMarkets: React.FC<ExpandMarketsProps> = (props) => {
         className={cls}
         showScrollIndicator
       >
-        <TabPanel
-          title={t("markets.favorites")}
-          icon={<FavoritesIcon />}
-          value={MarketsTabName.Favorites}
-        >
+        <TabPanel title={<FavoritesIcon />} value={MarketsTabName.Favorites}>
           {renderTab(MarketsTabName.Favorites)}
         </TabPanel>
         <TabPanel title={t("common.all")} value={MarketsTabName.All}>

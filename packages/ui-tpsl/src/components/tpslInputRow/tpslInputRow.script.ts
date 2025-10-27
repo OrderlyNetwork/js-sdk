@@ -14,7 +14,7 @@ export type Props = {
   errors: OrderValidationResult | null;
   hideOrderPrice?: boolean;
   values: {
-    enable: boolean;
+    // enable: boolean;
     trigger_price: string | undefined;
     PnL: string | undefined;
     Offset: string | undefined;

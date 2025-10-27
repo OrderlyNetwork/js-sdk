@@ -70,11 +70,7 @@ export const MarketsSheet: React.FC<MarketsSheetProps> = (props) => {
         className="oui-h-[calc(100%_-_92px)]"
         showScrollIndicator
       >
-        <TabPanel
-          title={t("markets.favorites")}
-          icon={<FavoritesIcon />}
-          value={MarketsTabName.Favorites}
-        >
+        <TabPanel title={<FavoritesIcon />} value={MarketsTabName.Favorites}>
           {renderTab(MarketsTabName.Favorites)}
         </TabPanel>
 

@@ -13,10 +13,10 @@ export const useTPSLOrder = (
      * it is usually used when editing order
      */
     defaultOrder?: API.AlgoOrder;
-    tpslEnable?: {
-      tp_enable?: boolean;
-      sl_enable?: boolean;
-    };
+    // tpslEnable?: {
+    //   tp_enable?: boolean;
+    //   sl_enable?: boolean;
+    // };
     isEditing?: boolean;
     positionType?: PositionType;
   },

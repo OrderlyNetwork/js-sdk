@@ -144,7 +144,7 @@ const iconConfigs = [
   { component: SettingFillIcon, name: "SettingFillIcon" },
   { component: PlusIcon, name: "PlusIcon" },
   { component: ReduceIcon, name: "ReduceIcon" },
-  
+
   // 填充图标
   { component: CloseSquareFillIcon, name: "CloseSquareFillIcon" },
   { component: CloseCircleFillIcon, name: "CloseCircleFillIcon" },
@@ -156,7 +156,7 @@ const iconConfigs = [
   { component: ExclamationFillIcon, name: "ExclamationFillIcon" },
   { component: QuestionFillIcon, name: "QuestionFillIcon" },
   { component: InfoCircleIcon, name: "InfoCircleIcon" },
-  
+
   // 箭头图标
   { component: ArrowLeftRightIcon, name: "ArrowLeftRightIcon" },
   { component: ArrowDownUpIcon, name: "ArrowDownUpIcon" },
@@ -168,7 +168,7 @@ const iconConfigs = [
   { component: ArrowDownShortIcon, name: "ArrowDownShortIcon" },
   { component: ArrowLeftShortIcon, name: "ArrowLeftShortIcon" },
   { component: ArrowRightShortIcon, name: "ArrowRightShortIcon" },
-  
+
   // 功能图标
   { component: FeeTierIcon, name: "FeeTierIcon" },
   { component: EditIcon, name: "EditIcon" },
@@ -183,12 +183,12 @@ const iconConfigs = [
   { component: TokenIcon, name: "TokenIcon" },
   { component: ChainIcon, name: "ChainIcon" },
   { component: WalletIcon, name: "WalletIcon" },
-  
+
   // 排序图标
   { component: SortingAscIcon, name: "SortingAscIcon" },
   { component: SortingDescIcon, name: "SortingDescIcon" },
   { component: SortingIcon, name: "SortingIcon" },
-  
+
   // 应用图标
   { component: OrderlyIcon, name: "OrderlyIcon" },
   { component: EsOrderlyIcon, name: "EsOrderlyIcon" },
@@ -198,7 +198,7 @@ const iconConfigs = [
   { component: TraderMobileIcon, name: "TraderMobileIcon" },
   { component: AffiliateIcon, name: "AffiliateIcon" },
   { component: TradingRewardsIcon, name: "TradingRewardsIcon" },
-  
+
   // 导航图标
   { component: PortfolioActiveIcon, name: "PortfolioActiveIcon" },
   { component: PortfolioInactiveIcon, name: "PortfolioInactiveIcon" },
@@ -212,7 +212,7 @@ const iconConfigs = [
   { component: MarketsInactiveIcon, name: "MarketsInactiveIcon" },
   { component: VaultsIcon, name: "VaultsIcon" },
   { component: LeftNavVaultsIcon, name: "LeftNavVaultsIcon" },
-  
+
   // 其他图标
   { component: EmptyStateIcon, name: "EmptyStateIcon" },
   { component: VectorIcon, name: "VectorIcon" },

@@ -7,12 +7,9 @@ import {
   PositionType,
 } from "@orderly.network/types";
 import {
-  Button,
   cn,
-  DialogFooter,
   Divider,
   Flex,
-  Grid,
   ScrollArea,
   Text,
   ThrottledButton,
@@ -40,7 +37,7 @@ export const EditBracketOrderUI = (props: Props & { onClose?: () => void }) => {
   } = props;
 
   const [tpValues, setTpValuse] = useState<{
-    enable: boolean;
+    // enable: boolean;
     trigger_price: string;
     PnL: string;
     Offset: string;
@@ -49,7 +46,7 @@ export const EditBracketOrderUI = (props: Props & { onClose?: () => void }) => {
     order_price: string;
     order_type: OrderType;
   }>({
-    enable: true,
+    // enable: false,
     order_type: formattedOrder.tp_order_type ?? OrderType.MARKET,
     order_price: formattedOrder.tp_order_price ?? "",
     trigger_price: formattedOrder.tp_trigger_price ?? "",
@@ -60,7 +57,7 @@ export const EditBracketOrderUI = (props: Props & { onClose?: () => void }) => {
   });
 
   const [slValues, setSlValues] = useState<{
-    enable: boolean;
+    // enable: boolean;
     trigger_price: string;
     PnL: string;
     Offset: string;
@@ -69,7 +66,7 @@ export const EditBracketOrderUI = (props: Props & { onClose?: () => void }) => {
     order_price: string;
     order_type: OrderType;
   }>({
-    enable: true,
+    // enable: false,
     order_type: formattedOrder.sl_order_type ?? OrderType.MARKET,
     order_price: formattedOrder.sl_order_price ?? "",
     trigger_price: formattedOrder.sl_trigger_price ?? "",
@@ -83,7 +80,7 @@ export const EditBracketOrderUI = (props: Props & { onClose?: () => void }) => {
   useEffect(() => {
     setTpValuse((prev) => ({
       ...prev,
-      enable: formattedOrder.tp_enable ?? true,
+      // enable: formattedOrder.tp_enable ?? false,
       order_type: formattedOrder.tp_order_type ?? OrderType.MARKET,
       order_price: formattedOrder.tp_order_price ?? "",
       trigger_price: formattedOrder.tp_trigger_price ?? "",
@@ -97,7 +94,7 @@ export const EditBracketOrderUI = (props: Props & { onClose?: () => void }) => {
   useEffect(() => {
     setSlValues((prev) => ({
       ...prev,
-      enable: formattedOrder.sl_enable ?? true,
+      // enable: formattedOrder.sl_enable ?? false,
       order_type: formattedOrder.sl_order_type ?? OrderType.MARKET,
       order_price: formattedOrder.sl_order_price ?? "",
       trigger_price: formattedOrder.sl_trigger_price ?? "",
@@ -161,53 +158,53 @@ export const EditBracketOrderUI = (props: Props & { onClose?: () => void }) => {
             )}
           </div>
           <Flex direction={"column"} gap={6}>
-            {formattedOrder.tp_enable && (
-              <TPSLInputRowWidget
-                disableEnableCheckbox
-                disableOrderTypeSelector
-                rootOrderPrice={formattedOrder.order_price}
-                symbol={symbolInfo.symbol}
-                type="tp"
-                side={formattedOrder.side as OrderSide}
-                values={tpValues}
-                errors={validated ? errors : null}
-                quote_dp={symbolInfo.quote_dp}
-                hideOrderPrice={
-                  formattedOrder.position_type === PositionType.FULL
-                }
-                onChange={(key, value) => {
-                  setOrderValue(key as keyof OrderlyOrder, value);
-                }}
-                positionType={
-                  formattedOrder.position_type ?? PositionType.PARTIAL
-                }
-              />
-            )}
-            {formattedOrder.sl_enable && formattedOrder.tp_enable && (
-              <Divider className="oui-w-full" />
-            )}
-            {formattedOrder.sl_enable && (
-              <TPSLInputRowWidget
-                disableEnableCheckbox
-                disableOrderTypeSelector
-                rootOrderPrice={formattedOrder.order_price}
-                symbol={symbolInfo.symbol}
-                type="sl"
-                side={formattedOrder.side as OrderSide}
-                values={slValues}
-                hideOrderPrice={
-                  formattedOrder.position_type === PositionType.FULL
-                }
-                errors={validated ? errors : null}
-                quote_dp={symbolInfo.quote_dp}
-                positionType={
-                  formattedOrder.position_type ?? PositionType.PARTIAL
-                }
-                onChange={(key, value) => {
-                  setOrderValue(key as keyof OrderlyOrder, value);
-                }}
-              />
-            )}
+            {/* {formattedOrder.tp_enable && ( */}
+            <TPSLInputRowWidget
+              disableEnableCheckbox
+              disableOrderTypeSelector
+              rootOrderPrice={formattedOrder.order_price}
+              symbol={symbolInfo.symbol}
+              type="tp"
+              side={formattedOrder.side as OrderSide}
+              values={tpValues}
+              errors={validated ? errors : null}
+              quote_dp={symbolInfo.quote_dp}
+              hideOrderPrice={
+                formattedOrder.position_type === PositionType.FULL
+              }
+              onChange={(key, value) => {
+                setOrderValue(key as keyof OrderlyOrder, value);
+              }}
+              positionType={
+                formattedOrder.position_type ?? PositionType.PARTIAL
+              }
+            />
+            {/* )} */}
+            {/* {formattedOrder.sl_enable && formattedOrder.tp_enable && ( */}
+            <Divider className="oui-w-full" />
+            {/* )} */}
+            {/* {formattedOrder.sl_enable && ( */}
+            <TPSLInputRowWidget
+              disableEnableCheckbox
+              disableOrderTypeSelector
+              rootOrderPrice={formattedOrder.order_price}
+              symbol={symbolInfo.symbol}
+              type="sl"
+              side={formattedOrder.side as OrderSide}
+              values={slValues}
+              hideOrderPrice={
+                formattedOrder.position_type === PositionType.FULL
+              }
+              errors={validated ? errors : null}
+              quote_dp={symbolInfo.quote_dp}
+              positionType={
+                formattedOrder.position_type ?? PositionType.PARTIAL
+              }
+              onChange={(key, value) => {
+                setOrderValue(key as keyof OrderlyOrder, value);
+              }}
+            />
+            {/* )} */}
           </Flex>
 
           <PnlInfo

@@ -1,5 +1,6 @@
 import React, { PropsWithChildren, useMemo, useRef } from "react";
 import { useWSObserver } from "../../orderly/internal/useWSObserver";
+import { useInitRwaSymbolsRuntime } from "../../orderly/orderlyHooks";
 import { usePrivateDataObserver } from "../../orderly/usePrivateDataObserver";
 import { usePublicDataObserver } from "../../orderly/usePublicDataObserver";
 import { useCalculatorService } from "../../useCalculatorService";
@@ -10,7 +11,6 @@ import {
   DataCenterContextState,
   getKeyFunction,
 } from "./dataCenterContext";
-import { useInitRwaSymbolsRuntime } from "../../orderly/orderlyHooks";
 
 export const DataCenterProvider: React.FC<PropsWithChildren> = ({
   children,

@@ -24,11 +24,7 @@ import {
 } from "@orderly.network/ui";
 import { Grid } from "@orderly.network/ui";
 import { ExclamationFillIcon } from "@orderly.network/ui";
-import {
-  TPSLAdvancedDialogId,
-  TPSLAdvancedWidget,
-  TPSLPositionTypeWidget,
-} from "@orderly.network/ui-tpsl";
+import { TPSLPositionTypeWidget } from "@orderly.network/ui-tpsl";
 import { OrderEntryContext, useOrderEntryContext } from "./orderEntryContext";
 import { PnlInputWidget } from "./pnlInput/pnlInput.widget";
 import { usePnlInputContext } from "./pnlInput/pnlInputContext";
@@ -132,14 +128,12 @@ export const OrderTPSL = (props: {
           /> */}
         </Flex>
         <Flex itemAlign={"center"} gapX={2}>
-          {isMobile &&
-            props.reduceOnlyChecked !== undefined &&
-            props.onReduceOnlyChange && (
-              <ReduceOnlySwitch
-                checked={props.reduceOnlyChecked}
-                onCheckedChange={props.onReduceOnlyChange}
-              />
-            )}
+          {isMobile && props.onReduceOnlyChange && (
+            <ReduceOnlySwitch
+              checked={props.reduceOnlyChecked ?? false}
+              onCheckedChange={props.onReduceOnlyChange}
+            />
+          )}
           {!isMobile && (
             <TPSLAdvancedButton
               className={cn(

@@ -3,8 +3,6 @@ import { useConfig } from "../useConfig";
 import { useQuery } from "../useQuery";
 import { useWS } from "../useWS";
 
-const oneDay = 1000 * 60 * 60 * 24;
-
 /** 0 for nothing,  2 for maintenance */
 export enum MaintenanceStatus {
   None = 0,

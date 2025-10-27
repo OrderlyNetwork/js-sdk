@@ -117,4 +117,4 @@ export { useTokensInfo, useTokenInfo } from "./useTokensInfo/tokensInfo.store";
 export { useSymbolsInfoStore } from "./useSymbolsInfo";
 export * from "./useRwaSymbolsInfo";
 export { useFundingRatesStore } from "./useFundingRates";
-export { usePortfolio, useAppStore } from "./appStore";
+export { usePortfolio, useFundingRateBySymbol } from "./appStore";

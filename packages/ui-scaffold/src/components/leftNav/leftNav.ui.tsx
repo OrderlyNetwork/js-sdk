@@ -1,7 +1,11 @@
-import { FC, useCallback, useMemo } from "react";
+import { FC, useMemo } from "react";
 import { useAccount } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { AccountStatusEnum } from "@orderly.network/types";
+import {
+  AccountStatusEnum,
+  type RouterAdapter,
+  type RouteOption,
+} from "@orderly.network/types";
 import {
   Sheet,
   SheetContent,
@@ -13,7 +17,6 @@ import {
   Text,
 } from "@orderly.network/ui";
 import { MainLogo } from "../main/mainLogo";
-import { RouterAdapter, RouteOption } from "../scaffold";
 import { SubAccountWidget } from "../subAccount";
 import {
   CommunityDiscord,
@@ -126,7 +129,7 @@ const LeftNavSheet = modal.create<LeftNavUIProps>((props) => {
               ))}
             </div>
           )}
-          <div className="oui-absolute oui-bottom-6 oui-flex oui-w-full oui-flex-col oui-gap-4">
+          <div className="oui-absolute oui-bottom-6 oui-flex oui-w-full oui-flex-col oui-gap-4 oui-bg-base-8 oui-z-60">
             <div className="oui-flex oui-items-center oui-justify-around">
               {props.telegramUrl && (
                 <div
@@ -190,8 +193,14 @@ const NavItem: FC<NavItemProps> = ({ item, onClick }) => {
   } = item;
   const { isMainAccount } = useAccount();
   const onItemClick = () => {
+    // Check if href is a full URL (external link)
+    const isExternalLink =
+      href.startsWith("http://") || href.startsWith("https://");
+
     if (target) {
       window.open(href, target);
+    } else if (isExternalLink) {
+      window.location.href = href;
     } else {
       onClick?.({ href: href, name: name, scope: "leftNav" });
     }
@@ -199,7 +208,7 @@ const NavItem: FC<NavItemProps> = ({ item, onClick }) => {
   if (typeof customRender === "function") {
     return (
       <div
-        className="oui-flex oui-w-full oui-items-center oui-px-3 oui-py-4"
+        className="oui-flex oui-w-full oui-items-center oui-p-3"
         onClick={onItemClick}
       >
         {customRender({ name: name, href: href })}
@@ -211,7 +220,7 @@ const NavItem: FC<NavItemProps> = ({ item, onClick }) => {
   }
   return (
     <div
-      className="oui-flex oui-w-full oui-items-center oui-gap-2 oui-px-3 oui-py-4"
+      className="oui-flex oui-w-full oui-items-center oui-gap-2 oui-p-3"
       onClick={onItemClick}
     >
       <div>{icon}</div>

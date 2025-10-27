@@ -1,12 +1,12 @@
 {
   "name": "@orderly.network/react-app",
-  "version": "2.7.4",
+  "version": "2.8.1",
   "description": "Create React App with Orderly Network components",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "scripts": {
-    "build": "tsup",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsup && pnpm run build:css",
+    "build:css": "tailwindcss build -i src/tailwind.css -o dist/styles.css --minify"
   },
   "keywords": [
     "Orderly",
@@ -29,16 +29,18 @@
     "date-fns": "^3.6.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.22.9",
+    "@babel/preset-env": "^7.22.9",
+    "@babel/preset-typescript": "^7.22.5",
     "@types/react": "^18.3.2",
     "@types/react-dom": "^18.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "tsconfig": "workspace:*",
     "tailwindcss": "^3.4.4",
-    "tsup": "^7.3.0"
+    "tsup": "^7.3.0",
+    "typescript": "^5.1.6"
   },
-  "peerDependencies": {
-    "react": ">=18",
-    "react-dom": ">=18"
-  }
+  "react": ">=18",
+  "react-dom": ">=18"
 }

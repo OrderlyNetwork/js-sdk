@@ -1,4 +1,5 @@
 import React, { PropsWithChildren, ReactNode } from "react";
+import { type RouterAdapter } from "@orderly.network/types";
 import { BottomNavProps } from "../bottomNav/bottomNav.widget";
 import { FooterProps } from "../footer";
 import { LeftNavProps } from "../leftNav";
@@ -7,7 +8,6 @@ import { SideBarProps } from "../sidebar";
 import { MobileScaffold } from "./scaffold.mobile.ui";
 import { useScaffoldScript } from "./scaffold.script";
 import { DesktopScaffold } from "./scaffold.ui";
-import { RouterAdapter } from "./scaffoldContext";
 import { ScaffoldProvider } from "./scaffoldProvider";
 
 export type ScaffoldProps = {

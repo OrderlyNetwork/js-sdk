@@ -94,6 +94,10 @@ export const widget = {
 
   "leftNav.feedback": "Share your feedback",
 
+  "errorBoundary.title": "Page Crashed",
+  "errorBoundary.description":
+    "The page is currently unavailable. Please refresh and try again.",
+  "errorBoundary.refresh": "Refresh",
   "dmm.maker": "Maker",
   "dmm.taker": "Taker",
 };

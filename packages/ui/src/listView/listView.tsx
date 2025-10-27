@@ -1,12 +1,12 @@
 import React, { ForwardedRef, forwardRef, useImperativeHandle } from "react";
 import { useMemo, useRef } from "react";
-import { cnBase, cn } from "tailwind-variants";
+import { cn } from "tailwind-variants";
 import { Flex } from "../flex";
 import { Spinner } from "../spinner";
 import { EmptyDataState } from "../table";
 import { useEndReached } from "./useEndReached";
 
-export interface ListViewProps<T, D extends unknown> {
+export interface ListViewProps<T, D> {
   dataSource: T[] | null | undefined;
   renderItem: (item: T, index: number, extraData?: D) => React.ReactNode;
   className?: string;
@@ -24,10 +24,7 @@ export type ListViewRef = ForwardedRef<{
   scroll: (direction: { x: number; y: number }) => void;
 }>;
 
-const ListViewInner = <T extends unknown, D extends unknown>(
-  props: ListViewProps<T, D>,
-  ref: ListViewRef,
-) => {
+const ListViewInner = <T, D>(props: ListViewProps<T, D>, ref: ListViewRef) => {
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -100,7 +97,7 @@ const ListViewInner = <T extends unknown, D extends unknown>(
       style={props.style}
       ref={containerRef}
       className={cn(
-        "oui-relative oui-min-h-[180px] oui-custom-scrollbar oui-overflow-auto",
+        "oui-custom-scrollbar oui-relative oui-min-h-[180px] oui-overflow-auto",
         props.className,
       )({
         twMerge: true,

@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useMemo, useState } from "react";
-import { useChains, useConfig, useAppStore } from "@orderly.network/hooks";
-import { Arbitrum, type API, type NetworkId } from "@orderly.network/types";
+import { useTokensInfo } from "@orderly.network/hooks";
+import { Arbitrum, type API } from "@orderly.network/types";
 
 const splitTokenBySymbol = <T extends API.Chain>(items: T[]) => {
   return items.reduce<Record<"usdc" | "others", T[]>>(
@@ -17,52 +16,73 @@ const splitTokenBySymbol = <T extends API.Chain>(items: T[]) => {
   );
 };
 
+const findChainInfo = (tokenInfo: API.Chain) => {
+  const arbitrumChainInfo = tokenInfo.chain_details.find(
+    (item) => parseInt(item.chain_id) === Arbitrum.id,
+  );
+
+  const nativeTokenChainInfo = tokenInfo.chain_details.find(
+    (item) => !item.contract_address,
+  );
+
+  const nativeTokenAddress = "0x0000000000000000000000000000000000000000";
+
+  if (arbitrumChainInfo) {
+    return {
+      contract_address:
+        arbitrumChainInfo.contract_address || nativeTokenAddress,
+      quoteChainId: arbitrumChainInfo.chain_id,
+      decimals: arbitrumChainInfo.decimals,
+    };
+  }
+
+  if (nativeTokenChainInfo) {
+    return {
+      contract_address: nativeTokenAddress,
+      quoteChainId: nativeTokenChainInfo.chain_id,
+      decimals: nativeTokenChainInfo.decimals,
+    };
+  }
+
+  return {
+    contract_address: tokenInfo.chain_details[0]?.contract_address,
+    quoteChainId: tokenInfo.chain_details[0]?.chain_id,
+    decimals: tokenInfo.chain_details[0]?.decimals,
+  };
+};
+
 interface Options {
   defaultValue?: string;
 }
 
+type ConvertTokenInfo = API.Chain & {
+  contract_address: string;
+  quoteChainId: string;
+  precision: number;
+};
+
 export const useToken = (options: Options) => {
   const { defaultValue } = options;
 
-  const config = useConfig();
+  const [sourceToken, setSourceToken] = useState<ConvertTokenInfo>();
+  const [targetToken, setTargetToken] = useState<ConvertTokenInfo>();
+  const [sourceTokens, setSourceTokens] = useState<ConvertTokenInfo[]>([]);
 
-  const networkId = config.get("networkId") as NetworkId;
-
-  const [, { findByChainId }] = useChains(networkId, {
-    pick: "network_infos",
-    filter: (chain: any) =>
-      chain.network_infos?.bridge_enable || chain.network_infos?.bridgeless,
-  });
-
-  const [sourceToken, setSourceToken] = useState<API.Chain>();
-  const [targetToken, setTargetToken] = useState<API.Chain>();
-  const [sourceTokens, setSourceTokens] = useState<API.Chain[]>([]);
-
-  const tokensInfo = useAppStore((state) => state.tokensInfo);
-
-  const chain = findByChainId(Arbitrum.id);
-
-  const chainId = chain?.network_infos?.chain_id;
+  const tokensInfo = useTokensInfo();
 
   const newTokensInfo = useMemo(() => {
-    if (!tokensInfo) {
-      return [];
-    }
-    return tokensInfo
-      .filter((item) => item.on_chain_swap)
-      .map<API.Chain>((item) => {
-        const findToken = chain?.token_infos?.find(
-          ({ symbol }) => symbol === item.token,
-        );
-        return {
-          ...item,
-          symbol: item.token,
-          address: findToken?.address,
-          decimals: item.chain_details[0]?.decimals,
-          precision: item.decimals,
-        };
-      });
-  }, [chain?.token_infos, tokensInfo]);
+    const filteredTokensInfo = tokensInfo.filter((item) => item.on_chain_swap);
+
+    return filteredTokensInfo.map((item) => {
+      const chainInfo = findChainInfo(item);
+      return {
+        ...item,
+        symbol: item.token,
+        precision: item.decimals ?? 6,
+        ...chainInfo,
+      };
+    });
+  }, [tokensInfo]);
 
   useEffect(() => {
     const { usdc, others } = splitTokenBySymbol(newTokensInfo);
@@ -77,11 +97,21 @@ export const useToken = (options: Options) => {
     setTargetToken(usdc[0]);
   }, [defaultValue, newTokensInfo]);
 
+  const targetChainInfo = useMemo(() => {
+    const info = targetToken?.chain_details?.find(
+      (item) => item.chain_id === sourceToken?.quoteChainId,
+    );
+    return {
+      ...info,
+      precision: targetToken?.precision,
+    };
+  }, [sourceToken, targetToken]);
+
   return {
-    chainId,
     sourceToken,
     sourceTokens,
     onSourceTokenChange: setSourceToken,
     targetToken,
+    targetChainInfo,
   };
 };

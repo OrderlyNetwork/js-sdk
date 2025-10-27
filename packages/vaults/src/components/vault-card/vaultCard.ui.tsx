@@ -8,11 +8,6 @@ import {
   useScreen,
 } from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
-import { VaultStatus } from "../../types/vault";
-import {
-  isDepositAllowed,
-  isWithdrawAllowed,
-} from "../../utils/vaultStatusUtils";
 import { VaultCardScript } from "./vaultCard.script";
 
 export const VaultCard: FC<VaultCardScript> = (props) => {
@@ -52,6 +47,7 @@ export const VaultCard: FC<VaultCardScript> = (props) => {
       </div>
     );
   }, [vaultInfo.supported_chains]);
+  console.log("supportVaultsList", supportVaultsList);
 
   return (
     <div className="oui-relative oui-h-[388px] oui-overflow-hidden oui-rounded-2xl oui-border oui-border-solid oui-border-white/[0.12] oui-bg-base-9">
@@ -148,7 +144,6 @@ export const VaultCard: FC<VaultCardScript> = (props) => {
         <VaultCardOperation
           isEVMConnected={isEVMConnected}
           isSOLConnected={isSOLConnected}
-          vaultStatus={vaultInfo.status}
           openDepositAndWithdraw={openDepositAndWithdraw}
         />
       </div>
@@ -159,7 +154,7 @@ export const VaultCard: FC<VaultCardScript> = (props) => {
 const VaultInfoItem: FC<{
   label: string;
   value: string | number;
-  textProps?: Record<string, unknown>;
+  textProps?: any;
 }> = (props) => {
   const { label, value, textProps } = props;
 
@@ -173,7 +168,7 @@ const VaultInfoItem: FC<{
       <div className="oui-text-2xs oui-font-normal oui-leading-[18px] oui-text-base-contrast-54">
         {label}
       </div>
-      {textProps?.type === "gradient" ? (
+      {textProps.type === "gradient" ? (
         <Text.gradient
           className="oui-text-base oui-font-semibold"
           {...textProps}
@@ -195,7 +190,7 @@ const VaultInfoItem: FC<{
 const LpInfoItem: FC<{
   label: string;
   value: string | number;
-  textProps?: Record<string, unknown>;
+  textProps?: any;
 }> = (props) => {
   const { label, value, textProps } = props;
 
@@ -219,21 +214,12 @@ const LpInfoItem: FC<{
 type VaultCardOperationProps = {
   isEVMConnected: boolean;
   isSOLConnected: boolean;
-  vaultStatus: VaultStatus;
   openDepositAndWithdraw: (activeTab: "deposit" | "withdraw") => void;
 };
 
 const VaultCardOperation: FC<VaultCardOperationProps> = (props) => {
-  const {
-    isEVMConnected,
-    isSOLConnected,
-    vaultStatus,
-    openDepositAndWithdraw,
-  } = props;
+  const { isEVMConnected, isSOLConnected, openDepositAndWithdraw } = props;
   const { t } = useTranslation();
-
-  const depositEnabled = isDepositAllowed(vaultStatus);
-  const withdrawEnabled = isWithdrawAllowed(vaultStatus);
 
   return (
     <AuthGuard buttonProps={{ size: "md", fullWidth: true }}>
@@ -242,7 +228,6 @@ const VaultCardOperation: FC<VaultCardOperationProps> = (props) => {
           <Button
             className="oui-flex-1"
             size="md"
-            disabled={!depositEnabled}
             onClick={() => openDepositAndWithdraw("deposit")}
           >
             {t("common.deposit")}
@@ -251,7 +236,6 @@ const VaultCardOperation: FC<VaultCardOperationProps> = (props) => {
             className="oui-flex-1"
             size="md"
             color="secondary"
-            disabled={!withdrawEnabled}
             onClick={() => openDepositAndWithdraw("withdraw")}
           >
             {t("common.withdraw")}

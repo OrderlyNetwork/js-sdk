@@ -1,5 +1,9 @@
 import { useMemo } from "react";
-import { useFundingDetails } from "@orderly.network/hooks";
+import {
+  useFundingDetails,
+  useFundingRateBySymbol,
+  usePositionStream,
+} from "@orderly.network/hooks";
 import { Decimal } from "@orderly.network/utils";
 
 interface FundingRateOptions {
@@ -8,6 +12,12 @@ interface FundingRateOptions {
 
 export const useFundingRateModalScript = (options: FundingRateOptions) => {
   const { data, isLoading } = useFundingDetails(options.symbol);
+  const { last_funding_rate, est_funding_rate } =
+    useFundingRateBySymbol(options.symbol) ?? {};
+
+  const [{ aggregated, rows }] = usePositionStream(options.symbol);
+
+  const { notional } = aggregated ?? {};
 
   const fundingPeriod = useMemo(() => {
     if (!data || isLoading) {
@@ -30,7 +40,36 @@ export const useFundingRateModalScript = (options: FundingRateOptions) => {
     return `${new Decimal(data.floor_funding).mul(100).toNumber()}%`;
   }, [data, isLoading]);
 
-  return { fundingPeriod, capFunding, floorFunding };
+  const lastFundingRate = useMemo(() => {
+    if (!last_funding_rate) {
+      return undefined;
+    }
+    return `${new Decimal(last_funding_rate).mul(100).toNumber()}%`;
+  }, [last_funding_rate]);
+
+  const estFundingRate = useMemo(() => {
+    if (!est_funding_rate) {
+      return undefined;
+    }
+    return `${new Decimal(est_funding_rate).mul(100).toNumber()}%`;
+  }, [est_funding_rate]);
+
+  const estFundingFee = useMemo(() => {
+    if (!est_funding_rate || !notional || rows.length === 0) {
+      return "--";
+    }
+
+    return `${new Decimal(est_funding_rate).mul(notional).todp(4).toNumber()}`;
+  }, [est_funding_rate, notional, rows]);
+
+  return {
+    fundingPeriod,
+    capFunding,
+    floorFunding,
+    lastFundingRate,
+    estFundingRate,
+    estFundingFee,
+  };
 };
 
 export type FundingRateModalState = ReturnType<

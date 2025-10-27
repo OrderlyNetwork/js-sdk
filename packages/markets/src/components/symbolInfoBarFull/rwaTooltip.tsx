@@ -1,13 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import React from "react";
 import { Trans, useTranslation } from "@orderly.network/i18n";
-import {
-  Flex,
-  Tooltip,
-  Text,
-  cn,
-  modal,
-} from "@orderly.network/ui";
+import { Flex, Tooltip, Text, cn, modal } from "@orderly.network/ui";
 import { useScreen } from "@orderly.network/ui";
 
 export type RwaTooltipProps = {
@@ -25,9 +19,7 @@ export const RwaTooltip = (props: RwaTooltipProps) => {
 
   const timeInterval = open ? closeTimeInterval : openTimeInterval;
   const tooltipContent = useMemo(() => {
-    return (
-      <Content open={open} timeInterval={timeInterval} />
-    );
+    return <Content open={open} timeInterval={timeInterval} />;
   }, [open, t, timeInterval]);
 
   const triggerView = (
@@ -89,34 +81,38 @@ export const RwaTooltip = (props: RwaTooltipProps) => {
   );
 };
 
-const AlertContent = ({open, timeInterval}: {open?: boolean, timeInterval?: number}) => {
+const AlertContent = ({
+  open,
+  timeInterval,
+}: {
+  open?: boolean;
+  timeInterval?: number;
+}) => {
   const [innerTimeInterval, setInnerTimeInterval] = useState(timeInterval);
-  
+
   useEffect(() => {
     setInnerTimeInterval(timeInterval);
   }, [timeInterval]);
-  
+
   useEffect(() => {
     if (!innerTimeInterval || innerTimeInterval <= 0) {
       return;
     }
-    
+
     const id = setInterval(() => {
       setInnerTimeInterval((prev) => {
         if (!prev || prev <= 1) {
-          return 0; 
+          return 0;
         }
-        return prev - 1; 
+        return prev - 1;
       });
     }, 1000);
-        return () => {
+    return () => {
       clearInterval(id);
     };
   }, [innerTimeInterval]);
-  
-  return (
-    <Content open={open} timeInterval={innerTimeInterval} />
-  );
+
+  return <Content open={open} timeInterval={innerTimeInterval} />;
 };
 
 const Content = ({
@@ -150,7 +146,7 @@ const Content = ({
             values={{ timeFormat: timeInterval }}
             components={[
               // @ts-ignore
-              <CountdownText />,
+              <CountdownText key="0" />,
             ]}
           />
         )}
@@ -174,6 +170,7 @@ const Content = ({
 
 const CountdownText: React.FC<React.PropsWithChildren> = (props) => {
   const { children } = props;
+  const { t } = useTranslation();
   const timeInterval = Number(children);
 
   // calculate days
@@ -189,13 +186,22 @@ const CountdownText: React.FC<React.PropsWithChildren> = (props) => {
   const minutesStr = minutes.toString().padStart(2, "0");
 
   // calculate seconds
-  // const seconds = timeInterval % 60;
-  // const secondsStr = seconds.toString().padStart(2, "0");
+  const seconds = timeInterval % 60;
+  const secondsStr = seconds.toString().padStart(2, "0");
 
   return (
-    <span className="oui-text-base-contrast">
-      {days > 0 ? `${daysStr}:` : ""}
-      {hoursStr}:{minutesStr}
+    <span className="oui-text-base-contrast oui-px-1">
+      {days > 0 ? (
+        <span>
+          {daysStr}
+          <span className="oui-text-base-contrast-54 oui-mr-1 oui-ml-[2px]">
+            {t("common.dayShort")}
+          </span>
+        </span>
+      ) : (
+        ""
+      )}
+      {hoursStr}:{minutesStr}:{secondsStr}
     </span>
   );
 };

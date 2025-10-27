@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/ui-scaffold",
-  "version": "2.7.4",
+  "version": "2.8.1",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -29,6 +29,7 @@
     "@orderly.network/ui-chain-selector": "workspace:*",
     "@orderly.network/ui-connector": "workspace:*",
     "@orderly.network/utils": "workspace:*",
+    "@orderly.network/ui-notification": "workspace:*",
     "date-fns": "^3.6.0",
     "immer": "^10.1.1",
     "jsqr": "^1.4.0"

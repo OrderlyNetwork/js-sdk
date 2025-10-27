@@ -5,6 +5,7 @@ export enum AnnouncementType {
   Listing = "LISTING",
   Maintenance = "MAINTENANCE",
   Delisting = "DELISTING",
+  Campaign = "CAMPAIGN",
 }
 
 export declare namespace API {
@@ -71,6 +72,7 @@ export declare namespace API {
     url?: string | null;
     type?: AnnouncementType | null;
     updated_time?: number | null;
+    coverImage?: string;
   }
 
   export interface Announcement {

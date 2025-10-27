@@ -46,7 +46,11 @@ const getChartKey = (isMobile?: boolean) => {
 };
 
 const defaultLocale = (localeCode: LocaleCode) => {
-  return localeCode === "id" ? "id_ID" : localeCode;
+  return localeCode === "id"
+    ? "id_ID"
+    : localeCode === "tc"
+      ? "zh_TW"
+      : localeCode;
 };
 
 export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {

@@ -65,8 +65,8 @@ function getInitialOrder(order: API.AlgoOrderExt) {
       order_price: order.price,
       order_quantity: order.quantity,
       position_type: positionType,
-      tp_enable: !!tpOrder?.trigger_price,
-      sl_enable: !!slOrder?.trigger_price,
+      // tp_enable: !!tpOrder?.trigger_price,
+      // sl_enable: !!slOrder?.trigger_price,
     },
     tpslPriceInfo,
     tpInfo: {

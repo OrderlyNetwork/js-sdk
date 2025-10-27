@@ -44,8 +44,7 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
         }
       >
         <TabPanel
-          title={t("markets.favorites")}
-          icon={<FavoritesIcon />}
+          title={<FavoritesIcon />}
           value="favorites"
           testid="oui-testid-markets-favorites-tab"
         >

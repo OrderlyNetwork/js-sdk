@@ -79,9 +79,9 @@ export const useAssetsColumns = (options: ColumnsOptions) => {
         width: 140,
         render(val: number) {
           return (
-            <Text.numeral rule="price" dp={6} currency="$" padding={false}>
+            <Text.assetValue rule="price" dp={6} currency="$" padding={false}>
               {val}
-            </Text.numeral>
+            </Text.assetValue>
           );
         },
       },
@@ -105,9 +105,9 @@ export const useAssetsColumns = (options: ColumnsOptions) => {
         width: 140,
         render(val: number) {
           return (
-            <Text.numeral rule="price" dp={6} currency="$" padding={false}>
+            <Text.collateral rule="price" dp={6} currency="$" padding={false}>
               {val}
-            </Text.numeral>
+            </Text.collateral>
           );
         },
       },

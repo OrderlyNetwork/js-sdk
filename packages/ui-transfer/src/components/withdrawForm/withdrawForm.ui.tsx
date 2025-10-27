@@ -92,7 +92,6 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
             vaultBalanceList={vaultBalanceList}
             testId="oui-testid-withdraw-dialog-quantity-input"
             displayType="vaultBalance"
-            checkVaultBalance={withdrawTo === WithdrawTo.Wallet}
           />
         </Box>
         <AvailableQuantity
@@ -157,21 +156,10 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
         <Flex direction="column" mt={1} gapY={1} itemAlign="start">
           <Text size="xs" intensity={36}>
             {t("common.fee")}
-            {withdrawTo === WithdrawTo.Wallet ? (
-              <>
-                {" ≈ "}
-                <Text size="xs" intensity={80}>
-                  {fee}
-                </Text>
-              </>
-            ) : (
-              <>
-                {" = "}
-                <Text size="xs" intensity={80}>
-                  0
-                </Text>
-              </>
-            )}
+            {withdrawTo === WithdrawTo.Wallet ? " ≈ " : " = "}
+            <Text size="xs" intensity={80}>
+              {fee}
+            </Text>
           </Text>
         </Flex>
       </Box>

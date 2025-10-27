@@ -20,7 +20,10 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS, Transform } from "@dnd-kit/utilities";
-import { useGetRwaSymbolOpenStatus, useLocalStorage } from "@orderly.network/hooks";
+import {
+  useGetRwaSymbolOpenStatus,
+  useLocalStorage,
+} from "@orderly.network/hooks";
 import {
   SideMarketsWidget,
   SymbolInfoBarFullWidget,
@@ -36,6 +39,7 @@ import { TradingviewWidget } from "@orderly.network/ui-tradingview";
 import { DepositStatusWidget } from "@orderly.network/ui-transfer";
 import { SortablePanel } from "../../components/desktop/layout/sortablePanel";
 import { SplitLayout } from "../../components/desktop/layout/splitLayout";
+import { showRwaOutsideMarketHoursNotify } from "../../components/desktop/notify/rwaNotification";
 import { useShowRwaCountdown } from "../../hooks/useShowRwaCountdown";
 import {
   dataListInitialHeight,
@@ -57,7 +61,6 @@ import {
   tradingViewMinWidth,
   dataListMaxHeight,
 } from "./trading.script";
-import { showRwaOutsideMarketHoursNotify } from "../../components/desktop/notify/rwaNotification";
 
 const LazyRiskRateWidget = React.lazy(() =>
   import("../../components/desktop/riskRate").then((mod) => {
