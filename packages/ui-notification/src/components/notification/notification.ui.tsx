@@ -225,6 +225,10 @@ export const NotificationUI: FC<
   const [current, setCurrent] = useState(0);
   const len = useMemo(() => props.dataSource?.length ?? 0, [props.dataSource]);
 
+  if (len === 0) {
+    return null;
+  }
+
   return (
     <div className="orderly-notification oui-w-full ">
       <NotificationHeader
