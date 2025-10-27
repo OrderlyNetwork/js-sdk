@@ -2,14 +2,15 @@ import { useMemo } from "react";
 import { i18n, useTranslation } from "@orderly.network/i18n";
 import { PortfolioLeftSidebarPath } from "@orderly.network/portfolio";
 import {
+  EarnIcon,
   TradingIcon,
   SettingFillIcon,
   BarChartIcon,
   PersonIcon,
   BattleIcon,
-  EarnIcon,
-  AssetIcon,
+  SpotIcon,
   LeftNavVaultsIcon,
+  WoofiStakeIcon,
 } from "@orderly.network/ui";
 import { LeftNavProps, MainNavWidgetProps } from "@orderly.network/ui-scaffold";
 import { ApiKeys, FeeTier, Setting } from "../components/icons";
@@ -104,14 +105,29 @@ const getLeftNavMenus = (): LeftNavProps => {
   return {
     menus: [
       {
+        name: i18n.t("common.spot"),
+        href: "https://woofi.com/swap",
+        icon: <SpotIcon />,
+      },
+      {
         name: i18n.t("common.perps"),
         href: "/",
         icon: <TradingIcon />,
       },
       {
-        name: i18n.t("common.spot"),
-        href: "https://woofi.com/swap",
+        name: i18n.t("common.earn"),
+        href: "https://woofi.com/swap/earn",
         icon: <EarnIcon />,
+      },
+      {
+        name: i18n.t("common.vaults"),
+        href: "/vaults",
+        icon: <LeftNavVaultsIcon />,
+      },
+      {
+        name: i18n.t("common.stake"),
+        href: "https://woofi.com/swap/stake",
+        icon: <WoofiStakeIcon />,
       },
       {
         name: i18n.t("common.markets"),
@@ -122,27 +138,6 @@ const getLeftNavMenus = (): LeftNavProps => {
         name: i18n.t("common.portfolio"),
         href: "/portfolio",
         icon: <PersonIcon />,
-      },
-      {
-        name: i18n.t("portfolio.feeTier"),
-        href: PathEnum.FeeTier,
-        icon: <FeeTier opacity={0.8} size={24} />,
-      },
-      {
-        name: i18n.t("common.assets"),
-        href: "/portfolio/assets",
-        icon: <AssetIcon />,
-      },
-      {
-        name: i18n.t("common.vaults"),
-        href: "/vaults",
-        icon: <LeftNavVaultsIcon />,
-      },
-      {
-        name: i18n.t("tradingLeaderboard.arena"),
-        href: "/leaderboard",
-        icon: <BattleIcon />,
-        customRender: customArenRender(),
       },
       {
         name: i18n.t("affiliate.referral"),
@@ -158,6 +153,12 @@ const getLeftNavMenus = (): LeftNavProps => {
         trailing: <Tag text="Unlock @ $10K volume" />,
         onlyInMainAccount: true,
       },
+      {
+        name: i18n.t("tradingLeaderboard.arena"),
+        href: "/leaderboard",
+        icon: <BattleIcon />,
+        customRender: customArenRender(),
+      },
       // {
       //   name: i18n.t("common.tradingRewards"),
       //   href: "/rewards/trading",
@@ -172,6 +173,21 @@ const getLeftNavMenus = (): LeftNavProps => {
         name: "Orderly App",
         href: "https://app.orderly.network",
         target: "_blank",
+      },
+      {
+        name: i18n.t("common.assets"),
+        href: "/portfolio/assets",
+        isSecondary: true,
+      },
+      {
+        name: i18n.t("portfolio.feeTier"),
+        href: "/portfolio/fee",
+        isSecondary: true,
+      },
+      {
+        name: i18n.t("portfolio.apiKeys"),
+        href: "/portfolio/api-key",
+        isSecondary: true,
       },
     ],
     twitterUrl: "https://twitter.com/OrderlyNetwork",
