@@ -113,6 +113,8 @@ export interface TradingViewConfigInterface {
   customCssUrl?: string;
   colorConfig?: ColorConfigInterface;
   locale?: TradingviewWidgetPropsInterface["locale"];
+  enabled_features?: string[];
+  disabled_features?: string[];
 }
 
 export interface ColorConfigInterface {
