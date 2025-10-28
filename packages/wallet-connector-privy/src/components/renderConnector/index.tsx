@@ -1,9 +1,11 @@
 import React from "react";
+import { useStorageChain } from "@orderly.network/hooks";
 import { cn, Flex, ScrollArea } from "@orderly.network/ui";
 import { useWallet } from "../../hooks/useWallet";
 import { useWalletConnectorPrivy } from "../../provider";
 import { WalletConnectType, WalletType } from "../../types";
 import { ConnectProps } from "../../types";
+import { getChainType } from "../../util";
 import { AbstractConnectArea } from "./abstractConnector";
 import { PrivyConnectArea } from "./privyConnector";
 import { SOLConnectArea } from "./solanaConnector";
@@ -11,8 +13,23 @@ import { EVMConnectArea } from "./wagmiConnector";
 
 export function RenderConnector() {
   const { connect } = useWallet();
-  const { setOpenConnectDrawer, connectorWalletType, walletChainTypeConfig } =
-    useWalletConnectorPrivy();
+  const {
+    setOpenConnectDrawer,
+    connectorWalletType,
+    walletChainTypeConfig,
+    targetWalletType,
+  } = useWalletConnectorPrivy();
+  const { storageChain } = useStorageChain();
+
+  const selectedWalletType: WalletType | undefined = (() => {
+    if (targetWalletType) return targetWalletType;
+    if (!storageChain?.chainId) return undefined;
+    try {
+      return getChainType(parseInt(storageChain.chainId as string));
+    } catch {
+      return undefined;
+    }
+  })();
 
   const handleConnect = (params: ConnectProps) => {
     connect(params);
@@ -87,13 +104,45 @@ export function RenderConnector() {
       />
     );
   };
+
+  const walletOrder = ["evm", "sol", "abstract"] as const;
+
+  const typeToKey: Record<WalletType, (typeof walletOrder)[number]> = {
+    [WalletType.EVM]: "evm",
+    [WalletType.SOL]: "sol",
+    [WalletType.ABSTRACT]: "abstract",
+  };
+
+  const prioritizedKey = selectedWalletType
+    ? typeToKey[selectedWalletType]
+    : undefined;
+
+  const orderedWalletKeys = prioritizedKey
+    ? ([
+        prioritizedKey,
+        ...walletOrder.filter((k) => k !== prioritizedKey),
+      ] as const)
+    : walletOrder;
+
+  const renderByKey = (key: (typeof walletOrder)[number]) => {
+    switch (key) {
+      case "evm":
+        return renderWagmiConnectArea();
+      case "sol":
+        return renderSolanaConnectArea();
+      case "abstract":
+        return renderAbstractConnectArea();
+      default:
+        return null;
+    }
+  };
   return (
     <ScrollArea className="oui-flex oui-grow oui-shrik oui-basis-auto oui-custom-scrollbar">
       <div className={cn("oui-flex oui-flex-col oui-gap-4", "md:oui-gap-5")}>
         {renderPrivyConnectArea()}
-        {renderWagmiConnectArea()}
-        {renderSolanaConnectArea()}
-        {renderAbstractConnectArea()}
+        {orderedWalletKeys.map((key) => (
+          <React.Fragment key={key}>{renderByKey(key)}</React.Fragment>
+        ))}
       </div>
     </ScrollArea>
   );

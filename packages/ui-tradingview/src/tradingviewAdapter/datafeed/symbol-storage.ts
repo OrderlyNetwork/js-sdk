@@ -81,25 +81,25 @@ type ExchangeDataResponse = {
 };
 
 function extractField<
-  Field extends keyof ExchangeDataResponseNonArrayedSymbolData
->(
-  data: ExchangeDataResponse,
-  field: Field,
-  arrayIndex: number
-): ExchangeDataResponseNonArrayedSymbolData[Field];
-function extractField<
-  Field extends keyof ExchangeDataResponseArrayedSymbolData
+  Field extends keyof ExchangeDataResponseNonArrayedSymbolData,
 >(
   data: ExchangeDataResponse,
   field: Field,
   arrayIndex: number,
-  valueIsArray: true
+): ExchangeDataResponseNonArrayedSymbolData[Field];
+function extractField<
+  Field extends keyof ExchangeDataResponseArrayedSymbolData,
+>(
+  data: ExchangeDataResponse,
+  field: Field,
+  arrayIndex: number,
+  valueIsArray: true,
 ): ExchangeDataResponseArrayedSymbolData[Field];
 function extractField<Field extends keyof ExchangeDataResponseSymbolData>(
   data: ExchangeDataResponse,
   field: Field,
   arrayIndex: number,
-  valueIsArray?: boolean
+  valueIsArray?: boolean,
 ): ExchangeDataResponseSymbolData[Field] {
   const value: ExchangeDataResponse[keyof ExchangeDataResponseSymbolData] =
     data[field];
@@ -132,7 +132,7 @@ export class SymbolsStorage {
   public constructor(
     datafeedUrl: string,
     datafeedSupportedResolutions: ResolutionString[],
-    requester: IRequester
+    requester: IRequester,
   ) {
     this._datafeedUrl = datafeedUrl;
     this._datafeedSupportedResolutions = datafeedSupportedResolutions;
@@ -149,7 +149,7 @@ export class SymbolsStorage {
   public resolveSymbol(
     symbolName: string,
     currencyCode?: string,
-    unitId?: string
+    unitId?: string,
   ): Promise<LibrarySymbolInfo> {
     return this._readyPromise.then(() => {
       const symbolInfo =
@@ -166,7 +166,7 @@ export class SymbolsStorage {
     searchString: string,
     exchange: string,
     symbolType: string,
-    maxSearchResults: number
+    maxSearchResults: number,
   ): Promise<SearchSymbolResultItem[]> {
     interface WeightedItem {
       symbolInfo: LibrarySymbolInfo;
@@ -207,7 +207,7 @@ export class SymbolsStorage {
 
         if (queryIsEmpty || positionInName >= 0 || positionInDescription >= 0) {
           const alreadyExists = weightedResult.some(
-            (item: WeightedItem) => item.symbolInfo === symbolInfo
+            (item: WeightedItem) => item.symbolInfo === symbolInfo,
           );
           if (!alreadyExists) {
             const weight =
@@ -222,7 +222,7 @@ export class SymbolsStorage {
       const result = weightedResult
         .sort(
           (item1: WeightedItem, item2: WeightedItem) =>
-            item1.weight - item2.weight
+            item1.weight - item2.weight,
         )
         .slice(0, maxSearchResults)
         .map((item: WeightedItem) => {
@@ -279,7 +279,7 @@ export class SymbolsStorage {
               reject(
                 error instanceof Error
                   ? error
-                  : new Error(`SymbolsStorage: Unexpected exception ${error}`)
+                  : new Error(`SymbolsStorage: Unexpected exception ${error}`),
               );
               return;
             }
@@ -289,18 +289,18 @@ export class SymbolsStorage {
           .catch((reason?: string | Error) => {
             logMessage(
               `SymbolsStorage: Request data for exchange '${exchange}' failed, reason=${getErrorMessage(
-                reason
-              )}`
+                reason,
+              )}`,
             );
             resolve();
           });
-      }
+      },
     );
   }
 
   private _onExchangeDataReceived(
     exchange: string,
-    data: ExchangeDataResponse
+    data: ExchangeDataResponse,
   ): void {
     let symbolIndex = 0;
 
@@ -313,12 +313,12 @@ export class SymbolsStorage {
         const listedExchange = extractField(
           data,
           "exchange-listed",
-          symbolIndex
+          symbolIndex,
         );
         const tradedExchange = extractField(
           data,
           "exchange-traded",
-          symbolIndex
+          symbolIndex,
         );
         const fullName = tradedExchange + ":" + symbolName;
         const currencyCode = extractField(data, "currency-code", symbolIndex);
@@ -338,7 +338,7 @@ export class SymbolsStorage {
           original_currency_code: extractField(
             data,
             "original-currency-code",
-            symbolIndex
+            symbolIndex,
           ),
           unit_id: unitId,
           original_unit_id: extractField(data, "original-unit-id", symbolIndex),
@@ -346,17 +346,17 @@ export class SymbolsStorage {
             data,
             "unit-conversion-types",
             symbolIndex,
-            true
+            true,
           ),
           description: extractField(data, "description", symbolIndex),
           has_intraday: definedValueOrDefault(
             extractField(data, "has-intraday", symbolIndex),
-            false
+            false,
           ),
           // show volume at the bottom by default: https://github.com/tradingview/charting_library/issues/8306
           visible_plots_set: definedValueOrDefault(
             extractField(data, "visible-plots-set", symbolIndex),
-            "ohlcv"
+            "ohlcv",
           ),
           minmov:
             extractField(data, "minmovement", symbolIndex) ||
@@ -374,25 +374,25 @@ export class SymbolsStorage {
           timezone: extractField(data, "timezone", symbolIndex),
           supported_resolutions: definedValueOrDefault(
             extractField(data, "supported-resolutions", symbolIndex, true),
-            this._datafeedSupportedResolutions
+            this._datafeedSupportedResolutions,
           ),
           has_daily: definedValueOrDefault(
             extractField(data, "has-daily", symbolIndex),
-            true
+            true,
           ),
           intraday_multipliers: definedValueOrDefault(
             extractField(data, "intraday-multipliers", symbolIndex, true),
-            ["1", "5", "15", "30", "60"]
+            ["1", "5", "15", "30", "60"],
           ),
           has_weekly_and_monthly: extractField(
             data,
             "has-weekly-and-monthly",
-            symbolIndex
+            symbolIndex,
           ),
           has_empty_bars: extractField(data, "has-empty-bars", symbolIndex),
           volume_precision: definedValueOrDefault(
             extractField(data, "volume-precision", symbolIndex),
-            0
+            0,
           ),
           format: "price",
         };
@@ -415,7 +415,7 @@ export class SymbolsStorage {
       throw new Error(
         `SymbolsStorage: API error when processing exchange ${exchange} symbol #${symbolIndex} (${
           data.symbol[symbolIndex]
-        }): ${Object(error).message}`
+        }): ${Object(error).message}`,
       );
     }
   }

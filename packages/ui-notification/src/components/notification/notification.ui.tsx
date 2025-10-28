@@ -225,6 +225,10 @@ export const NotificationUI: FC<
   const [current, setCurrent] = useState(0);
   const len = useMemo(() => props.dataSource?.length ?? 0, [props.dataSource]);
 
+  if (len === 0) {
+    return null;
+  }
+
   return (
     <div className="orderly-notification oui-w-full ">
       <NotificationHeader
@@ -254,25 +258,23 @@ export const NotificationUI: FC<
         </div>
       </div>
 
-      {len > 1 ? (
-        <NotificationFooter
-          total={len}
-          current={current}
-          onCloseAll={props.onClose ?? (() => {})}
-          onPrev={() => {
-            if (current - 1 < 0) {
-              return;
-            }
-            setCurrent(current - 1);
-          }}
-          onNext={() => {
-            if (current + 1 >= len) {
-              return;
-            }
-            setCurrent(current + 1);
-          }}
-        />
-      ) : null}
+      <NotificationFooter
+        total={len}
+        current={current}
+        onCloseAll={props.onClose ?? (() => {})}
+        onPrev={() => {
+          if (current - 1 < 0) {
+            return;
+          }
+          setCurrent(current - 1);
+        }}
+        onNext={() => {
+          if (current + 1 >= len) {
+            return;
+          }
+          setCurrent(current + 1);
+        }}
+      />
     </div>
   );
 };

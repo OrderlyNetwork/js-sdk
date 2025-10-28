@@ -110,7 +110,7 @@ export const DepositForm: FC<DepositFormScriptReturn> = (props) => {
           currentLtv={currentLTV}
           nextLTV={nextLTV}
         />
-        <Fee {...fee} />
+        <Fee {...fee} nativeSymbol={props.nativeSymbol} />
       </Flex>
     );
   };

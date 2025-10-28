@@ -10,6 +10,7 @@ export const notification = {
     "{{hours}} HRs at {{startTimeFormatted}} - {{endTimeFormatted}} (UTC)",
   "notification.recentlyUpdated": "Recently updated",
   "notification.title": "Announcement",
+  "notification.centerTitle": "Announcement center",
 
   // Notification related keys
   "notification.campaignTitle": "Latest Campaign is coming",
@@ -17,6 +18,7 @@ export const notification = {
   "notification.delistingTitle": "Token Delisting Notice",
   "notification.generalTitle": "General Update",
   "notification.maintenanceTitle": "System Maintenance",
+  "notification.empty": "No announcements",
 };
 
 export type Notification = typeof notification;

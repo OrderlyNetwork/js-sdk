@@ -1,5 +1,6 @@
 import { FC } from "react";
 import { useTranslation } from "@orderly.network/i18n";
+import { RouterAdapter } from "@orderly.network/types";
 import {
   Flex,
   Text,
@@ -8,7 +9,6 @@ import {
   CalendarMinusIcon,
   ArrowLeftRightIcon,
 } from "@orderly.network/ui";
-import { RouterAdapter } from "@orderly.network/ui-scaffold";
 import { PortfolioLeftSidebarPath } from "../../../layout";
 
 type Props = {

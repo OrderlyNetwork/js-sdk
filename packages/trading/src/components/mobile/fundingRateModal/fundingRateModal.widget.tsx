@@ -12,9 +12,8 @@ export const FundingRateModalWidget: React.FC<{ symbol: string }> = (props) => {
 export const FundingRateDialogId = "FundingRateDialogId";
 export const FundingRateSheetId = "FundingRateSheetId";
 
-registerSimpleDialog(FundingRateDialogId, FundingRateModalWidget, {
-  size: "md",
-  classNames: { content: "oui-border oui-border-line-6" },
+registerSimpleSheet(FundingRateDialogId, FundingRateModalWidget, {
+  classNames: { content: "oui-border oui-border-line-6 oui-text-sm" },
   title: () => i18n.t("funding.fundingRate"),
 });
 
