@@ -1,10 +1,5 @@
-import { FC, ReactNode, useState } from "react";
-import { SimpleDialog, Text } from "@orderly.network/ui";
-import {
-  Scaffold,
-  ScaffoldProps,
-  RouteOption,
-} from "@orderly.network/ui-scaffold";
+import { FC, ReactNode } from "react";
+import { Scaffold, ScaffoldProps } from "@orderly.network/ui-scaffold";
 import { footerConfig, useBottomNav, useMainNav } from "../../orderlyConfig";
 import { PathEnum } from "../../playground/constant";
 import { useRouteContext } from "../orderlyProvider/rounteProvider";
@@ -21,15 +16,6 @@ export const BaseLayout: FC<BaseLayoutProps> = (props) => {
   const mainNavProps = useMainNav();
 
   const { onRouteChange } = useRouteContext();
-  const [aiDialogOpen, setAiDialogOpen] = useState(false);
-
-  const handleRouteChange = (option: RouteOption) => {
-    if (option.name === "AI") {
-      setAiDialogOpen(true);
-      return;
-    }
-    onRouteChange(option);
-  };
 
   return (
     <>
@@ -42,19 +28,11 @@ export const BaseLayout: FC<BaseLayoutProps> = (props) => {
         }}
         bottomNavProps={bottomNavProps}
         footerProps={footerConfig}
-        routerAdapter={{ onRouteChange: handleRouteChange }}
+        routerAdapter={{ onRouteChange: onRouteChange }}
         classNames={props.classNames}
       >
         {props.children}
       </Scaffold>
-      <SimpleDialog
-        open={aiDialogOpen}
-        onOpenChange={setAiDialogOpen}
-        title="Note"
-        size="xs"
-      >
-        <Text>Coming soon</Text>
-      </SimpleDialog>
     </>
   );
 };

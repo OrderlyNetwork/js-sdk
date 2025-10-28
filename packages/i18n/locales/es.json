@@ -1024,6 +1024,7 @@
   "notification.maintenanceDuration": "{{hours}} horas desde {{startTimeFormatted}} - {{endTimeFormatted}} (UTC)",
   "notification.recentlyUpdated": "Actualizado recientemente",
   "notification.title": "Anuncio",
+  "notification.centerTitle": "Centro de anuncios",
   "notification.campaignTitle": "Próximamente nueva campaña",
   "notification.closeAll": "Cerrar todo ({{total}})",
   "notification.delistingTitle": "Aviso de delistado de token",

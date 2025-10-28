@@ -175,6 +175,11 @@ const getLeftNavMenus = (): LeftNavProps => {
         target: "_blank",
       },
       {
+        name: i18n.t("notification.title"),
+        href: "/announcement",
+        isSecondary: true,
+      },
+      {
         name: i18n.t("common.assets"),
         href: "/portfolio/assets",
         isSecondary: true,

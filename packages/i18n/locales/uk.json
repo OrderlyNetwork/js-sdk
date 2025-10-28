@@ -1024,6 +1024,7 @@
   "notification.maintenanceDuration": "{{hours}} годин з {{startTimeFormatted}} до {{endTimeFormatted}} (UTC)",
   "notification.recentlyUpdated": "Нещодавно оновлено",
   "notification.title": "Оголошення",
+  "notification.centerTitle": "Центр оголошень",
   "notification.campaignTitle": "Найновіша кампанія наближається",
   "notification.closeAll": "Закрити все ({{total}})",
   "notification.delistingTitle": "Повідомлення про делістинг токена",

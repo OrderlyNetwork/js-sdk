@@ -10,6 +10,7 @@ export const notification = {
     "{{hours}} HRs at {{startTimeFormatted}} - {{endTimeFormatted}} (UTC)",
   "notification.recentlyUpdated": "Recently updated",
   "notification.title": "Announcement",
+  "notification.centerTitle": "Announcement center",
 
   // Notification related keys
   "notification.campaignTitle": "Latest Campaign is coming",

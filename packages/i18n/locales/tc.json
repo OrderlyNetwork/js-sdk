@@ -1024,6 +1024,7 @@
   "notification.maintenanceDuration": "（UTC）{{startTimeFormatted}} - {{endTimeFormatted}}，持續{{hours}}小時",
   "notification.recentlyUpdated": "最近更新",
   "notification.title": "公告",
+  "notification.centerTitle": "公告中心",
   "notification.campaignTitle": "最新活動即將推出",
   "notification.closeAll": "關閉全部（{{total}}）",
   "notification.delistingTitle": "代幣下架通知",

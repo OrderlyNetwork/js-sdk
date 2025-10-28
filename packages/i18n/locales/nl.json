@@ -1024,6 +1024,7 @@
   "notification.maintenanceDuration": "{{hours}} uur van {{startTimeFormatted}} - {{endTimeFormatted}} (UTC)",
   "notification.recentlyUpdated": "Onlangs bijgewerkt",
   "notification.title": "Aankondiging",
+  "notification.centerTitle": "Aankondigingscentrum",
   "notification.campaignTitle": "Nieuwste campagne komt eraan",
   "notification.closeAll": "Sluit alles ({{total}})",
   "notification.delistingTitle": "Token Delisting Kennisgeving",
