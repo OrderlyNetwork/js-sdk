@@ -72,10 +72,15 @@ export const useCombinePositionsScript = (props: PositionsProps) => {
         const account = accountInfo.find(
           (acc) => acc.account_id === item.account_id,
         );
+        const baseMMR = info?.("base_mmr");
+        const baseIMR = info?.("base_imr");
+        if (!baseMMR || !baseIMR) {
+          continue;
+        }
 
         const MMR = positions.MMR({
-          baseMMR: info?.("base_mmr"),
-          baseIMR: info?.("base_imr"),
+          baseMMR,
+          baseIMR,
           IMRFactor: account?.imr_factor[item.symbol] ?? 0,
           positionNotional: notional,
           IMR_factor_power: 4 / 5,
@@ -84,7 +89,7 @@ export const useCombinePositionsScript = (props: PositionsProps) => {
         const mm = positions.maintenanceMargin({
           positionQty: item.position_qty,
           markPrice: item.mark_price,
-          MMR: MMR,
+          MMR,
         });
 
         const unrealPnl = positions.unrealizedPnL({
@@ -98,7 +103,7 @@ export const useCombinePositionsScript = (props: PositionsProps) => {
 
         const imr = _account.IMR({
           maxLeverage,
-          baseIMR: info?.("base_imr"),
+          baseIMR,
           IMR_Factor: account?.imr_factor[item.symbol] ?? 0,
           positionNotional: notional,
           ordersNotional: 0,
