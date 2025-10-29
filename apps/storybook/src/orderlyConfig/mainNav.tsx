@@ -70,6 +70,11 @@ const getMainMenus = (): MainNavWidgetProps["mainMenus"] => {
         showOnFirstVisit: true,
         text: i18n.t("affiliate.referralTooltip"),
       },
+      isSubMenuInMobile: true,
+      subMenuBackNav: {
+        name: "portfolio",
+        href: PathEnum.Portfolio,
+      },
     },
     {
       name: i18n.t("tradingView.timeInterval.more"),

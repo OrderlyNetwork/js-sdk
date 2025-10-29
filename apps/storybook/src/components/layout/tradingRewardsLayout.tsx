@@ -22,7 +22,7 @@ export const TradingRewardsLayout: FC<TradingRewardsLayoutProps> = (props) => {
       footerProps={footerConfig}
       mainNavProps={{
         ...mainNavProps,
-        initialMenu: [PathEnum.RewardsAffiliate],
+        initialMenu: PathEnum.RewardsAffiliate,
       }}
       routerAdapter={{
         onRouteChange,
