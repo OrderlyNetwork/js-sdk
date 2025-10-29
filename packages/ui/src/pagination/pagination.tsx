@@ -137,6 +137,11 @@ export type PaginationProps = {
     paginationNext?: string;
     paginationEllipsis?: string;
   };
+  hideRowsPerPage?: boolean;
+  generatePageNumbers?: (
+    currentPage: number,
+    totalPages: number,
+  ) => (number | string)[];
 };
 
 const Paginations = (props: PaginationProps) => {
@@ -145,35 +150,42 @@ const Paginations = (props: PaginationProps) => {
     className,
     pageTotal: totalPages,
     page: currentPage,
+    hideRowsPerPage = false,
   } = props;
 
   const [locale] = useLocale("pagination");
 
   return (
     <Pagination className={cnBase(classNames?.pagination, className)}>
-      <Flex mr={4}>
-        <Text
-          as="div"
-          size="2xs"
-          intensity={54}
-          className="oui-text-nowrap oui-mr-2"
-        >
-          {locale.rowsPerPage}
-        </Text>
-        <div className={"oui-w-15"}>
-          <Select.options
-            options={[
-              { value: "10", label: "10" },
-              { value: "20", label: "20" },
-              { value: "50", label: "50" },
-              { value: "100", label: "100" },
-            ]}
-            value={`${props.pageSize ?? 5}`}
-            size="xs"
-            onValueChange={(value) => props.onPageSizeChange?.(parseInt(value))}
-          />
-        </div>
-      </Flex>
+      {!hideRowsPerPage ? (
+        <Flex mr={4}>
+          <Text
+            as="div"
+            size="2xs"
+            intensity={54}
+            className="oui-text-nowrap oui-mr-2"
+          >
+            {locale.rowsPerPage}
+          </Text>
+          <div className={"oui-w-15"}>
+            <Select.options
+              options={[
+                { value: "10", label: "10" },
+                { value: "20", label: "20" },
+                { value: "50", label: "50" },
+                { value: "100", label: "100" },
+              ]}
+              value={`${props.pageSize ?? 5}`}
+              size="xs"
+              onValueChange={(value) =>
+                props.onPageSizeChange?.(parseInt(value))
+              }
+            />
+          </div>
+        </Flex>
+      ) : (
+        <div></div>
+      )}
       <PaginationItems {...props} />
     </Pagination>
   );
@@ -232,8 +244,11 @@ const PaginationItems = (props: Omit<PaginationProps, "onPageSizeChange">) => {
   }
 
   const pageNumbers = useMemo(() => {
+    if (typeof props.generatePageNumbers === "function") {
+      return props.generatePageNumbers(currentPage, totalPages);
+    }
     return generatePagination(currentPage, totalPages);
-  }, [currentPage, totalPages]);
+  }, [currentPage, totalPages, props.generatePageNumbers]);
 
   return (
     <PaginationContent>
