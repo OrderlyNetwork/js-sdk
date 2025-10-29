@@ -31,8 +31,9 @@ export const FundingRateModal: React.FC<FundingRateModalState> = (props) => {
             ? `${label}/ ${t("trading.fundingRate.annualized")}`
             : label}
         </Text>
-        <Flex itemAlign="end" gap={1}>
+        <Flex itemAlign="end" gap={1} className="oui-text-base-contrast-80">
           <Text intensity={80}>{value}</Text>
+          {annualizedValue && " / "}
           {annualizedValue && annualizedValue}
         </Flex>
       </Flex>

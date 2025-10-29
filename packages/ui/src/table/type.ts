@@ -115,6 +115,11 @@ export type PaginationMeta = {
   pageTotal?: number;
   onPageChange?: (page: number) => void;
   onPageSizeChange?: (pageSize: number) => void;
+  generatePageNumbers?: (
+    currentPage: number,
+    totalPages: number,
+  ) => (number | string)[];
+  hideRowsPerPage?: boolean;
 };
 
 export type DataTableClassNames = {
