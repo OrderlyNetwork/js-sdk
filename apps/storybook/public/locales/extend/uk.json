@@ -3,5 +3,16 @@
   "extend.affiliate.tag": "40% Кешбек",
   "extend.affiliate.description": "Заробляйте більше як партнер Orderly",
   "extend.staking": "Стейкінг",
-  "extend.staking.description": "Стейкайте ORDER/esORDER для отримання VALOR"
+  "extend.staking.description": "Стейкайте ORDER/esORDER для отримання VALOR",
+  "extend.dashboard": "Панель керування",
+  "extend.stake": "Стейкінг",
+  "extend.earn": "Заробити",
+  "extend.spot": "Спот",
+  "extend.spotDune": "Спот Dune",
+  "extend.perpsDune": "Перпи Dune",
+  "extend.careers": "Кар'єра",
+  "extend.docs": "Документи",
+  "extend.audits": "Аудити",
+  "extend.vaults": "Сховища",
+  "extend.perps": "Перпи"
 }

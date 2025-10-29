@@ -3,5 +3,16 @@
   "extend.affiliate.tag": "40% de reembolso",
   "extend.affiliate.description": "Gana más como afiliado de Orderly",
   "extend.staking": "Staking",
-  "extend.staking.description": "Haz staking de ORDER/esORDER para adquirir VALOR"
+  "extend.staking.description": "Haz staking de ORDER/esORDER para adquirir VALOR",
+  "extend.dashboard": "Panel de control",
+  "extend.stake": "Staking",
+  "extend.earn": "Ganar",
+  "extend.spot": "Spot",
+  "extend.spotDune": "Spot Dune",
+  "extend.perpsDune": "Perps Dune",
+  "extend.careers": "Carreras",
+  "extend.docs": "Documentos",
+  "extend.audits": "Auditorías",
+  "extend.vaults": "Bóvedas",
+  "extend.perps": "Perps"
 }

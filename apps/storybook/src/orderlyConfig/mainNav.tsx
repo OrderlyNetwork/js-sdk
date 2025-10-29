@@ -11,6 +11,9 @@ import {
   SpotIcon,
   LeftNavVaultsIcon,
   WoofiStakeIcon,
+  ReferralSolidIcon,
+  BattleSolidInactiveIcon,
+  AssetIcon,
 } from "@orderly.network/ui";
 import { LeftNavProps, MainNavWidgetProps } from "@orderly.network/ui-scaffold";
 import { ApiKeys, FeeTier, Setting } from "../components/icons";
@@ -105,27 +108,32 @@ const getLeftNavMenus = (): LeftNavProps => {
   return {
     menus: [
       {
-        name: i18n.t("common.spot"),
+        name: i18n.t("extend.spot"),
         href: "https://woofi.com/swap",
         icon: <SpotIcon />,
       },
       {
-        name: i18n.t("common.perps"),
+        name: i18n.t("extend.perps"),
         href: "/",
         icon: <TradingIcon />,
       },
       {
-        name: i18n.t("common.earn"),
+        name: i18n.t("extend.earn"),
         href: "https://woofi.com/swap/earn",
         icon: <EarnIcon />,
       },
       {
-        name: i18n.t("common.vaults"),
+        name: i18n.t("common.assets"),
+        href: "/portfolio/assets",
+        icon: <AssetIcon />,
+      },
+      {
+        name: i18n.t("extend.vaults"),
         href: "/vaults",
         icon: <LeftNavVaultsIcon />,
       },
       {
-        name: i18n.t("common.stake"),
+        name: i18n.t("extend.stake"),
         href: "https://woofi.com/swap/stake",
         icon: <WoofiStakeIcon />,
       },
@@ -142,21 +150,14 @@ const getLeftNavMenus = (): LeftNavProps => {
       {
         name: i18n.t("affiliate.referral"),
         href: "/rewards/affiliate",
-        icon: (
-          <img
-            src="/box-jump.gif"
-            alt="logo"
-            draggable={false}
-            className="oui-w-6 oui-h-6"
-          />
-        ),
-        trailing: <Tag text="Unlock @ $10K volume" />,
+        icon: <ReferralSolidIcon />,
+        // trailing: <Tag text="Unlock @ $10K volume" />,
         onlyInMainAccount: true,
       },
       {
         name: i18n.t("tradingLeaderboard.arena"),
         href: "/leaderboard",
-        icon: <BattleIcon />,
+        icon: <BattleSolidInactiveIcon />,
         customRender: customArenRender(),
       },
       // {
@@ -180,11 +181,6 @@ const getLeftNavMenus = (): LeftNavProps => {
         isSecondary: true,
       },
       {
-        name: i18n.t("common.assets"),
-        href: "/portfolio/assets",
-        isSecondary: true,
-      },
-      {
         name: i18n.t("portfolio.feeTier"),
         href: "/portfolio/fee",
         isSecondary: true,
@@ -194,11 +190,45 @@ const getLeftNavMenus = (): LeftNavProps => {
         href: "/portfolio/api-key",
         isSecondary: true,
       },
+      {
+        name: i18n.t("extend.dashboard"),
+        href: "https://woofi.com/swap/dashboard",
+        isSecondary: true,
+      },
+      {
+        name: i18n.t("extend.spotDune"),
+        href: "https://dune.com/woofianalytics/woofi-dashboard",
+        target: "_blank",
+        isSecondary: true,
+      },
+      {
+        name: i18n.t("extend.perpsDune"),
+        href: "https://dune.com/woofianalytics/woofi-pro",
+        target: "_blank",
+        isSecondary: true,
+      },
+      {
+        name: i18n.t("extend.careers"),
+        href: "https://job-boards.greenhouse.io/woofi",
+        target: "_blank",
+        isSecondary: true,
+      },
+      {
+        name: i18n.t("extend.docs"),
+        href: "https://learn.woo.org/",
+        target: "_blank",
+        isSecondary: true,
+      },
+      {
+        name: i18n.t("extend.audits"),
+        href: "https://learn.woo.org/woofi-docs/woofi-dev-docs/references/audits-and-bounties",
+        target: "_blank",
+        isSecondary: true,
+      },
     ],
     twitterUrl: "https://twitter.com/OrderlyNetwork",
     telegramUrl: "https://t.me/orderlynetwork",
     discordUrl: "https://discord.com/invite/orderlynetwork",
-    duneUrl: "https://dune.com/orderlynetwork",
     feedbackUrl: "https://orderly.network/feedback",
   };
 };
