@@ -7,6 +7,7 @@ import {
   ScrollArea,
   Text,
 } from "@orderly.network/ui";
+import { cn } from "@orderly.network/ui";
 import { AnnouncementItem } from "./announcementItem";
 
 export const AnnouncementContent: FC<{
@@ -14,6 +15,7 @@ export const AnnouncementContent: FC<{
   current: string | number | null;
   onExpandToggle: (id: string | number | null) => void;
   onItemClick: (url: string) => void;
+  showDivider?: boolean;
 }> = (props) => {
   const { dataSource, current, onExpandToggle, onItemClick } = props;
 
@@ -26,7 +28,13 @@ export const AnnouncementContent: FC<{
   }
 
   return (
-    <div className="p-5 oui-flex oui-flex-col oui-space-y-1">
+    <div
+      className={cn(
+        "p-5 oui-flex oui-flex-col oui-space-y-1",
+        props.showDivider &&
+          "[&>*:not(:first-child)]:oui-border-t [&>*:not(:first-child)]:oui-border-line-12  [&>*:not(:first-child)]:oui-pt-1",
+      )}
+    >
       {dataSource.map((item) => (
         <AnnouncementItem
           url={item.url}
@@ -36,6 +44,7 @@ export const AnnouncementContent: FC<{
           updatedTime={item.updated_time ?? 0}
           expanded={current === item.announcement_id}
           type={item.type}
+          showDivider={props.showDivider}
           onExpandToggle={() => {
             if (current === item.announcement_id) {
               onExpandToggle(null);

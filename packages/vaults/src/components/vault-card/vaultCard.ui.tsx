@@ -1,4 +1,4 @@
-import { FC, useMemo } from "react";
+import { FC } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   Text,
@@ -21,33 +21,10 @@ export const VaultCard: FC<VaultCardScript> = (props) => {
     openDepositAndWithdraw,
     availableBalance,
     openVaultWebsite,
+    icon,
   } = props;
 
   const { t } = useTranslation();
-  const { isMobile } = useScreen();
-
-  const supportVaultsList = useMemo(() => {
-    return (
-      <div className="oui-flex oui-items-center">
-        {vaultInfo.supported_chains.map((chain, index) => (
-          <img
-            key={chain.chain_id}
-            src={`https://oss.orderly.network/static/network_logo/${chain.chain_id}.png`}
-            alt={chain.chain_id}
-            className={cn(
-              "oui-relative",
-              isMobile ? "oui-size-[18px]" : "oui-size-5",
-            )}
-            style={{
-              marginLeft: index > 0 ? "-4px" : "0",
-              zIndex: vaultInfo.supported_chains.length - index,
-            }}
-          />
-        ))}
-      </div>
-    );
-  }, [vaultInfo.supported_chains]);
-  console.log("supportVaultsList", supportVaultsList);
 
   return (
     <div className="oui-relative oui-h-[388px] oui-overflow-hidden oui-rounded-2xl oui-border oui-border-solid oui-border-white/[0.12] oui-bg-base-9">
@@ -80,14 +57,16 @@ export const VaultCard: FC<VaultCardScript> = (props) => {
       <div className="oui-absolute oui-left-0 oui-top-0 oui-z-20 oui-flex oui-flex-col oui-gap-3  oui-p-6">
         <div className="oui-flex oui-items-center oui-gap-2">
           <img
-            src="https://oss.orderly.network/static/symbol_logo/ORDER.png"
-            alt=""
+            src={icon}
+            alt={vaultInfo.broker_id}
             className="oui-size-8"
+            onError={(e) => {
+              e.currentTarget.style.display = "none";
+            }}
           />
           <div className="oui-text-[18px] oui-font-semibold oui-text-white">
             {title}
           </div>
-          {supportVaultsList}
           <div
             className="oui-z-50 oui-ml-auto oui-cursor-pointer"
             onClick={openVaultWebsite}

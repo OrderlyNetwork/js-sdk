@@ -302,6 +302,7 @@
   "trading.fundingRate.lastFundingRate": "上次资金费率",
   "trading.fundingRate.estimatedFundingRate": "预估资金费率",
   "trading.fundingRate.estimatedFundingFee": "预估资金费用",
+  "trading.fundingRate.annualized": "年化",
   "trading.rwa.marketHours": "市场时间",
   "trading.rwa.outsideMarketHours": "市场时间外",
   "trading.rwa.tooltip.description.open": "交易与基础市场保持一致 - 更高的流动性，正常的价格波动。",
@@ -981,6 +982,11 @@
   "vaults.introduction.tvl": "金库TVL",
   "vaults.introduction.depositors": "存款人",
   "vaults.allVaults": "所有金库",
+  "vaults.list.poolName": "矿池名称",
+  "vaults.list.apr": "APR",
+  "vaults.list.myDeposits": "我的存款",
+  "vaults.list.allTimePnl": "历史收益",
+  "vaults.list.operate": "操作",
   "vaults.card.orderly.title": "Orderly 全能金库",
   "vaults.card.orderly.description": "轻松获得被动收益，无需交易专业知识。全能金库部署做市策略，承担清算，并累积平台费用。",
   "vaults.card.tvl": "TVL",
@@ -1021,5 +1027,8 @@
   "notification.closeAll": "关闭全部（{{total}}）",
   "notification.delistingTitle": "代币下架通知",
   "notification.generalTitle": "常规更新",
-  "notification.maintenanceTitle": "系统维护"
+  "notification.maintenanceTitle": "系统维护",
+  "positions.closeAll": "全部平仓",
+  "positions.closeAll.description": "您确定要平仓所有持仓吗？将使用市价单进行平仓。",
+  "positions.closeAll.success": "所有持仓已成功平仓"
 }
