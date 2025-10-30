@@ -43,7 +43,7 @@ export const SWAP_USDC_PRECISION = 3;
 export const useDepositFormScript = (options: DepositFormScriptOptions) => {
   const { wrongNetwork } = useAppContext();
   const { t } = useTranslation();
-
+  const { account } = useAccount();
   const networkId = useConfig("networkId") as NetworkId;
 
   const [feeWarningMessage, setFeeWarningMessage] = useState("");
@@ -244,13 +244,14 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
       quantity &&
       Number(quantity) > 0 &&
       depositFee === 0n &&
-      !depositFeeRevalidating
+      !depositFeeRevalidating &&
+      account.walletAdapter?.chainNamespace !== ChainNamespace.solana
     ) {
       setFeeWarningMessage(t("transfer.deposit.feeUnavailable"));
     } else {
       setFeeWarningMessage("");
     }
-  }, [quantity, depositFee, depositFeeRevalidating, t]);
+  }, [quantity, depositFee, depositFeeRevalidating, t, account]);
 
   const insufficientBalance = useMemo(() => {
     if (quantity && Number(quantity) > 0) {
@@ -268,13 +269,19 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
       !insufficientBalance &&
       !depositFeeRevalidating &&
       tokenBalances &&
-      fee.dstGasFee
+      (account.walletAdapter?.chainNamespace === ChainNamespace.solana ||
+        fee.dstGasFee)
     ) {
       // TODO: update token balance when open select token list
       const nativeTokenBalance = tokenBalances[nativeSymbol] || "0";
       const notEnoughGas = new Decimal(nativeTokenBalance).lt(fee.dstGasFee);
 
-      if (notEnoughGas) {
+      // when solana, if fee.dstGasFee is 0, and nativeTokenBalance is 0, it means the balance is not balance
+      const isNotSolBalance =
+        Number(fee.dstGasFee) === 0 &&
+        Number(nativeTokenBalance) == Number(fee.dstGasFee);
+
+      if (notEnoughGas || isNotSolBalance) {
         return t("transfer.deposit.notEnoughGas", {
           token: nativeSymbol,
         });
@@ -289,6 +296,7 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     t,
     nativeSymbol,
     insufficientBalance,
+    account,
   ]);
 
   const warningMessage =
