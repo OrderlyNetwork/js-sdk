@@ -327,7 +327,7 @@ const SubMenus: React.FC<
         className={cn(
           customSubMenuRender
             ? "oui-w-auto oui-p-0 oui-border-0 oui-rounded-lg"
-            : "oui-w-[260px] oui-space-y-[2px] oui-border oui-border-line-6 oui-p-1",
+            : "oui-w-[200px] oui-space-y-[2px] oui-border oui-border-line-6 oui-p-1",
           className,
         )}
       >
@@ -414,7 +414,7 @@ const SubMenuTitle: React.FC<{ item: MainNavItem; isActive?: boolean }> = (
         </Text.gradient>
         {typeof item.tag !== "undefined" && <Tag item={item} />}
       </div>
-      {item.target === "_blank" && <OutlinkIcon />}
+      {/* {item.target === "_blank" && <OutlinkIcon />} */}
     </Flex>
   );
 };

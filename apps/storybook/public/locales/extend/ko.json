@@ -15,5 +15,10 @@
   "extend.docs": "문서",
   "extend.audits": "감사",
   "extend.vaults": "볼트",
-  "extend.perps": "퍼페츄얼"
+  "extend.perps": "퍼페츄얼",
+  "extend.woofiEarn": "WOOFi 획득",
+  "extend.woofiEarn.description": "자산을 예치하여 더 많이 획득",
+  "extend.wooStake": "WOO 스테이크",
+  "extend.wooStake.description": "WOO를 스테이킹하여 USDC 획득",
+  "extend.vaults.description": "볼트 전략으로 패시브 수익 창출"
 }

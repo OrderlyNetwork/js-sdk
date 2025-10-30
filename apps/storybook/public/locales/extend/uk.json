@@ -14,5 +14,10 @@
   "extend.docs": "Документи",
   "extend.audits": "Аудити",
   "extend.vaults": "Сховища",
-  "extend.perps": "Перпи"
+  "extend.perps": "Перпи",
+  "extend.woofiEarn": "WOOFi заробіток",
+  "extend.woofiEarn.description": "Внесіть активи, щоб заробити більше",
+  "extend.wooStake": "WOO стейкінг",
+  "extend.wooStake.description": "Стейкайте WOO, щоб заробити USDC",
+  "extend.vaults.description": "Отримуйте пасивний дохід за допомогою стратегій сховищ"
 }

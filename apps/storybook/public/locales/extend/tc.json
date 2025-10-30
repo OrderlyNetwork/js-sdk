@@ -14,5 +14,10 @@
   "extend.docs": "文檔",
   "extend.audits": "審計",
   "extend.vaults": "金庫",
-  "extend.perps": "合約"
+  "extend.perps": "合約",
+  "extend.woofiEarn": "WOOFi 賺取",
+  "extend.woofiEarn.description": "存入資產以賺取更多收益",
+  "extend.wooStake": "WOO 質押",
+  "extend.wooStake.description": "質押 WOO 以賺取 USDC",
+  "extend.vaults.description": "通過金庫策略賺取被動收益"
 }

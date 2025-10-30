@@ -14,5 +14,10 @@
   "extend.docs": "Belgeler",
   "extend.audits": "Denetimler",
   "extend.vaults": "Kasalar",
-  "extend.perps": "Perps"
+  "extend.perps": "Perps",
+  "extend.woofiEarn": "WOOFi kazan",
+  "extend.woofiEarn.description": "Daha fazla kazanmak için varlık yatırın",
+  "extend.wooStake": "WOO stake",
+  "extend.wooStake.description": "USDC kazanmak için WOO stake edin",
+  "extend.vaults.description": "Kasa stratejileri ile pasif getiri kazanın"
 }

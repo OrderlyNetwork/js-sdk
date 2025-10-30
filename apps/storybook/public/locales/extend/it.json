@@ -14,5 +14,10 @@
   "extend.docs": "Documenti",
   "extend.audits": "Audit",
   "extend.vaults": "Depositi",
-  "extend.perps": "Perps"
+  "extend.perps": "Perps",
+  "extend.woofiEarn": "WOOFi guadagna",
+  "extend.woofiEarn.description": "Deposita asset per guadagnare di più",
+  "extend.wooStake": "WOO staking",
+  "extend.wooStake.description": "Stake WOO per guadagnare USDC",
+  "extend.vaults.description": "Guadagna rendimento passivo con strategie di deposito"
 }

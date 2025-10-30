@@ -14,5 +14,10 @@
   "extend.docs": "Dokumen",
   "extend.audits": "Audit",
   "extend.vaults": "Vault",
-  "extend.perps": "Perps"
+  "extend.perps": "Perps",
+  "extend.woofiEarn": "WOOFi dapatkan",
+  "extend.woofiEarn.description": "Deposit aset untuk mendapatkan lebih banyak",
+  "extend.wooStake": "WOO staking",
+  "extend.wooStake.description": "Stake WOO untuk mendapatkan USDC",
+  "extend.vaults.description": "Dapatkan hasil pasif dengan strategi vault"
 }

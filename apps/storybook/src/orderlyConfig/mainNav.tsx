@@ -22,6 +22,7 @@ import {
   CustomArenButton,
   MainNavCustomRenderOptions,
 } from "./components/customArenButton";
+import { customEarnSubMenuRender } from "./components/customEarnSubMenu";
 import { customTradeSubMenuRender } from "./components/customTradeSubMenu";
 import { Tag } from "./components/tag";
 
@@ -48,19 +49,13 @@ const getMainMenus = (): MainNavWidgetProps["mainMenus"] => {
       isHomePageInMobile: true,
       customSubMenuRender: customTradeSubMenuRender(),
     },
-    { name: i18n.t("common.portfolio"), href: "/portfolio" },
     {
-      name: i18n.t("common.vaults"),
+      name: i18n.t("extend.earn"),
       href: "/vaults",
-      isSubMenuInMobile: true,
-      subMenuBackNav: { href: "/", name: i18n.t("common.trading") },
+      customSubMenuRender: customEarnSubMenuRender(),
     },
     { name: i18n.t("common.markets"), href: "/markets" },
-    {
-      name: i18n.t("tradingLeaderboard.arena"),
-      href: "/leaderboard",
-      customRender: customArenRender(),
-    },
+    { name: i18n.t("common.portfolio"), href: "/portfolio" },
     {
       name: i18n.t("affiliate.referral"),
       href: "/rewards/affiliate",
@@ -77,32 +72,54 @@ const getMainMenus = (): MainNavWidgetProps["mainMenus"] => {
       },
     },
     {
+      name: i18n.t("tradingLeaderboard.arena"),
+      href: "/leaderboard",
+      customRender: customArenRender(),
+    },
+    {
       name: i18n.t("tradingView.timeInterval.more"),
       href: "",
       children: [
-        // {
-        //   name: i18n.t("common.tradingRewards"),
-        //   href: "/rewards/trading",
-        //   icon: <TradingRewardsIcon size={14} />,
-        //   activeIcon: <TradingRewardsActiveIcon size={14} />,
-        // },
         {
           name: i18n.t("portfolio.feeTier"),
           href: PortfolioLeftSidebarPath.FeeTier,
-          icon: <FeeTier size={14} />,
-          activeIcon: <FeeTier size={14} />,
         },
         {
           name: i18n.t("portfolio.apiKeys"),
           href: PortfolioLeftSidebarPath.ApiKey,
-          icon: <ApiKeys size={14} />,
-          activeIcon: <ApiKeys size={14} />,
         },
         {
           name: i18n.t("portfolio.setting"),
           href: PortfolioLeftSidebarPath.Setting,
-          icon: <Setting size={14} />,
-          activeIcon: <Setting size={14} />,
+        },
+        {
+          name: i18n.t("extend.dashboard"),
+          href: "https://woofi.com/swap/dashboard",
+        },
+        {
+          name: i18n.t("extend.spotDune"),
+          href: "https://dune.com/woofianalytics/woofi-dashboard",
+          target: "_blank",
+        },
+        {
+          name: i18n.t("extend.perpsDune"),
+          href: "https://dune.com/woofianalytics/woofi-pro",
+          target: "_blank",
+        },
+        {
+          name: i18n.t("extend.careers"),
+          href: "https://job-boards.greenhouse.io/woofi",
+          target: "_blank",
+        },
+        {
+          name: i18n.t("extend.docs"),
+          href: "https://learn.woo.org/",
+          target: "_blank",
+        },
+        {
+          name: i18n.t("extend.audits"),
+          href: "https://learn.woo.org/woofi-docs/woofi-dev-docs/references/audits-and-bounties",
+          target: "_blank",
         },
       ],
     },

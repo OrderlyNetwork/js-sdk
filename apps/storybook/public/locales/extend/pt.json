@@ -14,5 +14,10 @@
   "extend.docs": "Documentos",
   "extend.audits": "Auditorias",
   "extend.vaults": "Cofres",
-  "extend.perps": "Perps"
+  "extend.perps": "Perps",
+  "extend.woofiEarn": "WOOFi ganhar",
+  "extend.woofiEarn.description": "Deposite ativos para ganhar mais",
+  "extend.wooStake": "WOO staking",
+  "extend.wooStake.description": "Faça stake de WOO para ganhar USDC",
+  "extend.vaults.description": "Ganhe rendimento passivo com estratégias de cofre"
 }

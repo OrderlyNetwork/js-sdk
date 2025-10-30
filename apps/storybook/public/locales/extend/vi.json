@@ -14,5 +14,10 @@
   "extend.docs": "Tài liệu",
   "extend.audits": "Kiểm toán",
   "extend.vaults": "Kho",
-  "extend.perps": "Perps"
+  "extend.perps": "Perps",
+  "extend.woofiEarn": "WOOFi kiếm tiền",
+  "extend.woofiEarn.description": "Gửi tài sản để kiếm thêm",
+  "extend.wooStake": "WOO staking",
+  "extend.wooStake.description": "Stake WOO để kiếm USDC",
+  "extend.vaults.description": "Kiếm lợi nhuận thụ động với chiến lược kho"
 }

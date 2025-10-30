@@ -14,5 +14,10 @@
   "extend.docs": "ドキュメント",
   "extend.audits": "監査",
   "extend.vaults": "ボールト",
-  "extend.perps": "パーペチュアル"
+  "extend.perps": "パーペチュアル",
+  "extend.woofiEarn": "WOOFi 獲得",
+  "extend.woofiEarn.description": "資産を預けてより多く獲得",
+  "extend.wooStake": "WOO ステーク",
+  "extend.wooStake.description": "WOOをステーキングしてUSDCを獲得",
+  "extend.vaults.description": "ボールト戦略でパッシブ収益を獲得"
 }

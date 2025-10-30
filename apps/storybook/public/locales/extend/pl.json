@@ -14,5 +14,10 @@
   "extend.docs": "Dokumenty",
   "extend.audits": "Audyty",
   "extend.vaults": "Skarbce",
-  "extend.perps": "Perps"
+  "extend.perps": "Perps",
+  "extend.woofiEarn": "WOOFi zarabiaj",
+  "extend.woofiEarn.description": "Wpłać aktywa, aby zarobić więcej",
+  "extend.wooStake": "WOO staking",
+  "extend.wooStake.description": "Stakuj WOO, aby zarobić USDC",
+  "extend.vaults.description": "Zarabiaj pasywny dochód dzięki strategiom skarbców"
 }

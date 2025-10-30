@@ -14,5 +14,10 @@
   "extend.docs": "Documentos",
   "extend.audits": "Auditorías",
   "extend.vaults": "Bóvedas",
-  "extend.perps": "Perps"
+  "extend.perps": "Perps",
+  "extend.woofiEarn": "WOOFi ganar",
+  "extend.woofiEarn.description": "Deposita activos para ganar más",
+  "extend.wooStake": "WOO staking",
+  "extend.wooStake.description": "Haz staking de WOO para ganar USDC",
+  "extend.vaults.description": "Gana rendimiento pasivo con estrategias de bóveda"
 }

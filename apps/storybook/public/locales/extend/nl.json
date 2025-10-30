@@ -14,5 +14,10 @@
   "extend.docs": "Documenten",
   "extend.audits": "Audits",
   "extend.vaults": "Kluizen",
-  "extend.perps": "Perps"
+  "extend.perps": "Perps",
+  "extend.woofiEarn": "WOOFi verdienen",
+  "extend.woofiEarn.description": "Stort activa om meer te verdienen",
+  "extend.wooStake": "WOO staking",
+  "extend.wooStake.description": "Stake WOO om USDC te verdienen",
+  "extend.vaults.description": "Verdien passief rendement met kluis strategieën"
 }

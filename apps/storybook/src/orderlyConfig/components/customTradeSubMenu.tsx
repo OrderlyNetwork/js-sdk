@@ -42,10 +42,10 @@ const LeftSection = (props: {
             )}
           </div>
           <div>
-            <div className="oui-text-sm oui-font-semibold oui-text-base-contrast-98">
+            <div className="oui-text-sm oui-font-semibold oui-text-base-contrast-80">
               {t("common.spot")}
             </div>
-            <div className="oui-text-xs oui-text-base-contrast-54">
+            <div className="oui-text-xs oui-text-base-contrast-36">
               {t("markets.spot.description")}
             </div>
           </div>
@@ -56,7 +56,7 @@ const LeftSection = (props: {
       {/* Perps Row - Selected by default */}
       <div
         className={`oui-flex oui-items-center oui-justify-between oui-p-3 oui-mt-1 oui-rounded-md oui-cursor-pointer ${
-          selectedTab === "perps" ? "oui-bg-base-5" : "hover:oui-bg-base-5"
+          selectedTab === "perps" ? "oui-bg-base-5" : "hover:oui-bg-base-6"
         }`}
         onClick={() => onSelect("perps")}
       >
@@ -69,10 +69,10 @@ const LeftSection = (props: {
             )}
           </div>
           <div>
-            <div className="oui-text-sm oui-font-semibold oui-text-base-contrast-98">
+            <div className="oui-text-sm oui-font-semibold oui-text-base-contrast-80">
               {t("common.perps")}
             </div>
-            <div className="oui-text-xs oui-text-base-contrast-54">
+            <div className="oui-text-xs oui-text-base-contrast-36">
               {t("markets.perps.description")}
             </div>
           </div>

@@ -14,5 +14,10 @@
   "extend.docs": "Docs",
   "extend.audits": "Audits",
   "extend.vaults": "Vaults",
-  "extend.perps": "Perps"
+  "extend.perps": "Perps",
+  "extend.woofiEarn": "WOOFi earn",
+  "extend.woofiEarn.description": "Deposit asset to earn more",
+  "extend.wooStake": "WOO stake",
+  "extend.wooStake.description": "Stake WOO to earn USDC",
+  "extend.vaults.description": "Earn passive yield with vault strategies"
 }

@@ -14,5 +14,10 @@
   "extend.docs": "Dokumente",
   "extend.audits": "Audits",
   "extend.vaults": "Tresore",
-  "extend.perps": "Perps"
+  "extend.perps": "Perps",
+  "extend.woofiEarn": "WOOFi verdienen",
+  "extend.woofiEarn.description": "Vermögenswerte einzahlen, um mehr zu verdienen",
+  "extend.wooStake": "WOO staken",
+  "extend.wooStake.description": "Staken Sie WOO, um USDC zu verdienen",
+  "extend.vaults.description": "Verdienen Sie passive Erträge mit Tresor-Strategien"
 }
