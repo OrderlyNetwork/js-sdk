@@ -12,3 +12,6 @@ export { StarchildFlatIcon } from "./StarchildFlatIcon";
 export { TelegramIcon } from "./TelegramIcon";
 export { LoadingIcon } from "./LoadingIcon";
 export { StarChildChatIcon } from "./StarChildChatIcon";
+export { SignPostIcon } from "./SignPostIcon";
+export { SoundWaveIcon } from "./SoundWaveIcon";
+export { ChevronCompactRightIcon } from "./ChevronCompactRightIcon";

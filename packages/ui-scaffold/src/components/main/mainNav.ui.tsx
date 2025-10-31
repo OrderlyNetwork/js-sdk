@@ -1,6 +1,7 @@
 import { FC, PropsWithChildren, useMemo } from "react";
 import { AccountStatusEnum, ChainNamespace } from "@orderly.network/types";
 import { cn, Divider, Flex, useScreen } from "@orderly.network/ui";
+import { StarchildControlPanel } from "@orderly.network/ui-floating-ball";
 import { WalletConnectButtonExtension } from "../accountMenu/menu.widget";
 import { AccountSummaryWidget } from "../accountSummary";
 import { ChainMenuWidget } from "../chainMenu";
@@ -50,6 +51,7 @@ export const MainNav: FC<PropsWithChildren<MainNavScriptReturn>> = (props) => {
   const renderContent = () => {
     const title = <MainLogo {...props.logo} />;
     const starchildSearchButton = showSearchButton && <StarchildSearchButton />;
+    const starchildControlPanel = showSearchButton && <StarchildControlPanel />;
     const accountSummary = <AccountSummaryWidget />;
     const linkDevice = showLinkIcon && <LinkDeviceWidget />;
     const languageSwitcher = <LanguageSwitcherWidget />;
@@ -112,6 +114,7 @@ export const MainNav: FC<PropsWithChildren<MainNavScriptReturn>> = (props) => {
           {isDesktop && showSearchButton && (
             <>
               {starchildSearchButton}
+              {starchildControlPanel}
               <Divider direction="vertical" className="oui-h-8" intensity={8} />
             </>
           )}

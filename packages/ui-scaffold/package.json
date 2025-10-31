@@ -28,6 +28,7 @@
     "@orderly.network/ui": "workspace:*",
     "@orderly.network/ui-chain-selector": "workspace:*",
     "@orderly.network/ui-connector": "workspace:*",
+    "@orderly.network/ui-floating-ball": "workspace:*",
     "@orderly.network/utils": "workspace:*",
     "@orderly.network/ui-notification": "workspace:*",
     "date-fns": "^3.6.0",
