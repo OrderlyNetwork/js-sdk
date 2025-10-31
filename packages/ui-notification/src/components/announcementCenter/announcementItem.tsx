@@ -19,6 +19,8 @@ export const AnnouncementItem: FC<{
   type: AnnouncementType | undefined | null;
   message: string;
   updatedTime: number;
+  className?: string;
+  showDivider?: boolean;
 }> = (props) => {
   const { t } = useTranslation();
   const Icon = useMemo(() => {
@@ -107,8 +109,10 @@ export const AnnouncementItem: FC<{
       gap={2}
       itemAlign="start"
       className={cn(
-        "oui-rounded-md oui-px-2 oui-py-[6px] oui-text-base-contrast-80 hover:oui-bg-base-6",
-        props.expanded && "oui-bg-base-6",
+        "oui-px-2 oui-py-[6px] oui-text-base-contrast-80",
+        !props.showDivider && "oui-rounded-md hover:oui-bg-base-6",
+        !props.showDivider && props.expanded && "oui-bg-base-6",
+        props.className,
       )}
       onClick={() => {
         props.onExpandToggle?.();
@@ -128,8 +132,8 @@ export const AnnouncementItem: FC<{
             gridTemplateRows: props.expanded ? "1fr" : "0fr",
           }}
         >
-          <div className="oui-flex oui-flex-col oui-gap-2 oui-overflow-hidden oui-pt-2">
-            <Text size="2xs" intensity={80} as="div">
+          <div className="oui-flex oui-flex-col oui-gap-2 oui-overflow-hidden">
+            <Text size="2xs" intensity={80} as="div" className="oui-pt-2">
               {props.message}
             </Text>
             {action}

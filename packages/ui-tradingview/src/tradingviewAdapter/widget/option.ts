@@ -53,18 +53,43 @@ const getDisabledFeatures = (mode: ChartMode) => {
   return disabledFeatures;
 };
 
+/**
+ * Merges options and returns TradingTerminal widget configuration
+ * @param options - Base widget options
+ * @param mode - Chart mode (BASIC, ADVANCED, MOBILE)
+ * @param externalEnabledFeatures - Additional enabled features from external props
+ * @param externalDisabledFeatures - Additional disabled features from external props
+ */
 export default function getOptions(
   options: any,
   mode: any,
+  externalEnabledFeatures?: string[],
+  externalDisabledFeatures?: string[],
 ): TradingTerminalWidgetOptions {
+  // Default internal enabled features
+  const defaultEnabledFeatures = [
+    "hide_left_toolbar_by_default",
+    "order_panel_close_button",
+    "iframe_loading_compatibility_mode",
+  ];
+
+  // Merge enabled features: combine defaults with external, remove duplicates
+  const mergedEnabledFeatures = Array.from(
+    new Set([...defaultEnabledFeatures, ...(externalEnabledFeatures || [])]),
+  );
+
+  // Get default disabled features based on mode
+  const defaultDisabledFeatures = getDisabledFeatures(mode);
+
+  // Merge disabled features: combine defaults with external, remove duplicates
+  const mergedDisabledFeatures = Array.from(
+    new Set([...defaultDisabledFeatures, ...(externalDisabledFeatures || [])]),
+  );
+
   return {
     ...options,
-    disabled_features: getDisabledFeatures(mode),
-    enabled_features: [
-      "hide_left_toolbar_by_default",
-      "order_panel_close_button",
-      "iframe_loading_compatibility_mode",
-    ],
+    disabled_features: mergedDisabledFeatures,
+    enabled_features: mergedEnabledFeatures,
     auto_save_delay: 0.1,
     broker_config: {
       configFlags: {

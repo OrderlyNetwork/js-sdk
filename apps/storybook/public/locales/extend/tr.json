@@ -3,5 +3,16 @@
   "extend.affiliate.tag": "%40 İade",
   "extend.affiliate.description": "Orderly ortağı olarak daha fazla kazanın",
   "extend.staking": "Staking",
-  "extend.staking.description": "VALOR kazanmak için ORDER/esORDER stake edin"
+  "extend.staking.description": "VALOR kazanmak için ORDER/esORDER stake edin",
+  "extend.dashboard": "Gösterge Paneli",
+  "extend.stake": "Staking",
+  "extend.earn": "Kazan",
+  "extend.spot": "Spot",
+  "extend.spotDune": "Spot Dune",
+  "extend.perpsDune": "Perps Dune",
+  "extend.careers": "Kariyer",
+  "extend.docs": "Belgeler",
+  "extend.audits": "Denetimler",
+  "extend.vaults": "Kasalar",
+  "extend.perps": "Perps"
 }

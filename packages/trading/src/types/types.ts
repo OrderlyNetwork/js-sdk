@@ -113,6 +113,8 @@ export interface TradingViewConfigInterface {
   customCssUrl?: string;
   colorConfig?: ColorConfigInterface;
   locale?: TradingviewWidgetPropsInterface["locale"];
+  enabled_features?: string[];
+  disabled_features?: string[];
 }
 
 export interface ColorConfigInterface {
@@ -143,7 +145,9 @@ type BaseTradingPageProps = {
   tradingViewConfig: TradingViewConfigInterface;
   onSymbolChange?: (symbol: API.Symbol) => void;
   // enableFeatures?: TradingFeatures[];
+  // for trading page features, not for tradingView chart features
   disableFeatures?: TradingFeatures[];
+  // for trading page features, not for tradingView chart features
   overrideFeatures?: Record<TradingFeatures, ReactNode>;
 };
 

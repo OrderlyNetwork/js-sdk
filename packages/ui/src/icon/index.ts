@@ -36,8 +36,9 @@ export { BarChartIcon } from "./barChartIcon";
 export { BattleIcon } from "./battleIcon";
 export { BattleActiveIcon } from "./battleActiveIcon";
 export { BattleInactiveIcon } from "./battleInactiveIcon";
+export { BattleSolidActiveIcon } from "./battleSolidActiveIcon";
+export { BattleSolidInactiveIcon } from "./battleSolidInactiveIcon";
 export { FeeTierIcon } from "./feeTier";
-export { EarnIcon } from "./earnIcon";
 export { EarnActiveIcon } from "./earnActiveIcon";
 export { EarnInactiveIcon } from "./earnInactiveIcon";
 export { EditIcon } from "./edit";
@@ -95,6 +96,9 @@ export { VaultsIcon } from "./vaultsIcon";
 export { LeftNavVaultsIcon } from "./leftNavVaultsIcon";
 export { NewsFillIcon } from "./newsFill";
 export { BellIcon } from "./bellIcon";
+export { WoofiStakeIcon } from "./woofiStakeIcon";
+export { EarnIcon } from "./earnIcon";
+export { ReferralSolidIcon } from "./referralSolidIcon";
 
 type IconType = typeof BaseIcon & {
   combine: typeof CombineIcon;

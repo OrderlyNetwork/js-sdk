@@ -43,7 +43,7 @@ export const SWAP_USDC_PRECISION = 3;
 export const useDepositFormScript = (options: DepositFormScriptOptions) => {
   const { wrongNetwork } = useAppContext();
   const { t } = useTranslation();
-
+  const { account } = useAccount();
   const networkId = useConfig("networkId") as NetworkId;
 
   const [feeWarningMessage, setFeeWarningMessage] = useState("");
@@ -187,16 +187,14 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
 
   const loading = submitting || depositFeeRevalidating!;
 
-  const disabled =
-    !quantity ||
-    Number(quantity) === 0 ||
-    !sourceToken ||
-    inputStatus === "error" ||
-    depositFeeRevalidating! ||
-    swapRevalidating ||
-    // if exceed collateral cap, disable deposit
-    !!userMaxQtyMessage ||
-    !!feeWarningMessage;
+  const nativeSymbol = useMemo(() => {
+    return currentChain?.info?.nativeToken?.symbol;
+  }, [currentChain]);
+
+  const fee = useDepositFee({
+    nativeSymbol: nativeSymbol,
+    depositFee,
+  });
 
   const amount = useMemo(() => {
     const markPrice = 1;
@@ -208,11 +206,6 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     allowance,
     quantity,
     maxQuantity,
-  });
-
-  const fee = useDepositFee({
-    nativeToken: currentChain?.info?.nativeToken,
-    depositFee,
   });
 
   const {
@@ -251,29 +244,79 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
       quantity &&
       Number(quantity) > 0 &&
       depositFee === 0n &&
-      !depositFeeRevalidating
+      !depositFeeRevalidating &&
+      account.walletAdapter?.chainNamespace !== ChainNamespace.solana
     ) {
-      setFeeWarningMessage(t("transfer.deposit.failed.fee"));
+      setFeeWarningMessage(t("transfer.deposit.feeUnavailable"));
     } else {
       setFeeWarningMessage("");
     }
-  }, [quantity, depositFee, depositFeeRevalidating, t]);
+  }, [quantity, depositFee, depositFeeRevalidating, t, account]);
+
+  const insufficientBalance = useMemo(() => {
+    if (quantity && Number(quantity) > 0) {
+      return new Decimal(quantity).gt(maxQuantity);
+    }
+    return false;
+  }, [quantity, maxQuantity]);
+
+  const insufficientGasMessage = useMemo(() => {
+    if (
+      nativeSymbol &&
+      quantity &&
+      Number(quantity) > 0 &&
+      // when insufficient balance, the input status is error, so we don't need to check gas balance
+      !insufficientBalance &&
+      !depositFeeRevalidating &&
+      tokenBalances &&
+      (account.walletAdapter?.chainNamespace === ChainNamespace.solana ||
+        fee.dstGasFee)
+    ) {
+      // TODO: update token balance when open select token list
+      const nativeTokenBalance = tokenBalances[nativeSymbol] || "0";
+      const notEnoughGas = new Decimal(nativeTokenBalance).lt(fee.dstGasFee);
+
+      // when solana, if fee.dstGasFee is 0, and nativeTokenBalance is 0, it means the balance is not balance
+      const isNotSolBalance =
+        Number(fee.dstGasFee) === 0 &&
+        Number(nativeTokenBalance) == Number(fee.dstGasFee);
+
+      if (notEnoughGas || isNotSolBalance) {
+        return t("transfer.deposit.notEnoughGas", {
+          token: nativeSymbol,
+        });
+      }
+    }
+
+    return "";
+  }, [
+    fee.dstGasFee,
+    quantity,
+    depositFeeRevalidating,
+    t,
+    nativeSymbol,
+    insufficientBalance,
+    account,
+  ]);
 
   const warningMessage =
     swapWarningMessage ||
     userMaxQtyMessage ||
     gasFeeMessage ||
-    feeWarningMessage;
+    feeWarningMessage ||
+    insufficientGasMessage;
 
-  // const isCollateralNativeToken = useMemo(() => {
-  //   return (
-  //     sourceToken?.is_collateral &&
-  //     sourceToken?.symbol === targetToken?.symbol &&
-  //     isNativeToken &&
-  //     !needSwap &&
-  //     !needCrossSwap
-  //   );
-  // }, [sourceToken, targetToken, isNativeToken, needSwap, needCrossSwap]);
+  const disabled =
+    !quantity ||
+    Number(quantity) === 0 ||
+    !sourceToken ||
+    inputStatus === "error" ||
+    depositFeeRevalidating! ||
+    swapRevalidating ||
+    // if exceed collateral cap, disable deposit
+    !!userMaxQtyMessage ||
+    !!feeWarningMessage ||
+    !!insufficientGasMessage;
 
   const targetQuantity = useMemo(() => {
     if (needSwap) {
@@ -330,6 +373,7 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     onTargetTokenChange,
 
     amount,
+    nativeSymbol,
     isNativeToken,
     quantity,
     collateralContributionQuantity,
@@ -380,13 +424,12 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
 export type UseDepositFeeReturn = ReturnType<typeof useDepositFee>;
 
 function useDepositFee(options: {
-  nativeToken?: API.TokenInfo;
+  nativeSymbol?: string;
   depositFee?: bigint;
 }) {
-  const { nativeToken, depositFee = 0 } = options;
+  const { nativeSymbol, depositFee = 0 } = options;
   const { account } = useAccount();
 
-  const nativeSymbol = nativeToken?.symbol;
   const tokenInfo = useTokenInfo(nativeSymbol!);
 
   const { data: indexPrice } = useIndexPrice(`SPOT_${nativeSymbol}_USDC`);
@@ -415,7 +458,7 @@ function useDepositFee(options: {
     };
   }, [depositFee, indexPrice]);
 
-  return { ...feeProps, nativeSymbol };
+  return feeProps;
 }
 
 const useCollateralValue = (params: {

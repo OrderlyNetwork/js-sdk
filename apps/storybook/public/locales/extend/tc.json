@@ -1,0 +1,18 @@
+{
+  "extend.tradingRewards.description": "在 Orderly 交易即可賺取 ORDER",
+  "extend.affiliate.tag": "40% 返佣",
+  "extend.affiliate.description": "成為 Orderly 合作夥伴，賺取更多收益",
+  "extend.staking": "質押",
+  "extend.staking.description": "質押 ORDER/esORDER 以獲取 VALOR",
+  "extend.dashboard": "儀表板",
+  "extend.stake": "質押",
+  "extend.earn": "賺取",
+  "extend.spot": "現貨",
+  "extend.spotDune": "現貨 Dune",
+  "extend.perpsDune": "合約 Dune",
+  "extend.careers": "招聘",
+  "extend.docs": "文檔",
+  "extend.audits": "審計",
+  "extend.vaults": "金庫",
+  "extend.perps": "合約"
+}

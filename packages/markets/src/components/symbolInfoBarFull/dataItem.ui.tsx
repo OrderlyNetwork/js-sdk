@@ -14,7 +14,7 @@ export const DataItem: React.FC<DataItemProps> = (props) => {
       <Tooltip
         open={hint ? undefined : false}
         content={hint}
-        className="oui-max-w-[240px] oui-bg-base-6 "
+        className="oui-max-w-[330px] oui-bg-base-6 "
         arrow={{ className: "oui-fill-base-6" }}
         delayDuration={300}
       >

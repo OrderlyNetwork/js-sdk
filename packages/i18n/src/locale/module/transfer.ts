@@ -17,8 +17,10 @@ export const transfer = {
   "transfer.deposit.requested": "Deposit requested",
   "transfer.deposit.completed": "Deposit completed",
   "transfer.deposit.failed": "Deposit failed",
-  "transfer.deposit.failed.fee":
+  "transfer.deposit.feeUnavailable":
     "Fee data is currently unavailable. Please try again later.",
+  "transfer.deposit.notEnoughGas":
+    "Not enough gas. Add some {{token}} to your wallet to continue.",
 
   "transfer.deposit.estGasFee": "Est. gas fee",
   "transfer.deposit.destinationGasFee": "Destination gas fee",

@@ -20,6 +20,7 @@ export const tradingPageConfig: TradingPageConfigProps = {
     //   // chartBG: '#BE1630',
     //   chartBG: '#6a64ed',
     // },
+    // disabled_features: ["mouse_wheel_scale"],
   },
   sharePnLConfig: {
     backgroundImages: [

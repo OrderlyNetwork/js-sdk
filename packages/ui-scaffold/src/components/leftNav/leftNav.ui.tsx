@@ -15,6 +15,7 @@ import {
   SwapHorizIcon,
   PeopleIcon,
   Text,
+  Divider,
 } from "@orderly.network/ui";
 import { MainLogo } from "../main/mainLogo";
 import { SubAccountWidget } from "../subAccount";
@@ -56,6 +57,14 @@ const LeftNavSheet = modal.create<LeftNavUIProps>((props) => {
   const { visible, hide, resolve, reject, onOpenChange } = useModal();
   const { state } = useAccount();
   const { t } = useTranslation();
+
+  const { primaryMenus, secondaryMenus } = useMemo(() => {
+    const primary = (props?.menus || []).filter((m) => !m.isSecondary);
+    const secondary = (props?.menus || []).filter((m) => m.isSecondary);
+    console.log("primaryMenus", primary);
+    console.log("secondaryMenus", secondary);
+    return { primaryMenus: primary, secondaryMenus: secondary };
+  }, [props?.menus]);
 
   const showSubAccount = useMemo(
     () => state.status >= AccountStatusEnum.EnableTrading,
@@ -118,9 +127,19 @@ const LeftNavSheet = modal.create<LeftNavUIProps>((props) => {
           {showSubAccount && (
             <SubAccountWidget customTrigger={subAccountTrigger} />
           )}
-          {Array.isArray(props?.menus) && props.menus.length > 0 && (
+          {(primaryMenus.length > 0 || secondaryMenus.length > 0) && (
             <div className="oui-flex oui-h-[calc(100vh-260px)] oui-flex-col oui-items-start oui-overflow-y-auto">
-              {props.menus?.map((item) => (
+              {primaryMenus.map((item) => (
+                <NavItem
+                  item={item}
+                  key={`item-${item.name}`}
+                  onClick={onRouteChange}
+                />
+              ))}
+              {secondaryMenus.length > 0 && primaryMenus.length > 0 && (
+                <Divider className="oui-my-1 oui-w-full" intensity={8} />
+              )}
+              {secondaryMenus.map((item) => (
                 <NavItem
                   item={item}
                   key={`item-${item.name}`}
@@ -218,15 +237,17 @@ const NavItem: FC<NavItemProps> = ({ item, onClick }) => {
   if (onlyInMainAccount && !isMainAccount) {
     return null;
   }
+  const isSecondary = !!item.isSecondary;
+  const textClassName = isSecondary
+    ? "oui-text-xs oui-font-normal oui-text-base-contrast-54"
+    : "oui-text-base oui-font-semibold oui-text-base-contrast-80";
   return (
     <div
-      className="oui-flex oui-w-full oui-items-center oui-gap-2 oui-p-3"
+      className={`oui-flex oui-w-full oui-items-center oui-gap-2 oui-p-3 ${isSecondary ? "oui-py-2" : ""}`}
       onClick={onItemClick}
     >
       <div>{icon}</div>
-      <div className="oui-text-base oui-font-semibold oui-text-base-contrast-80">
-        {name}
-      </div>
+      <div className={textClassName}>{name}</div>
       {trailing}
     </div>
   );

@@ -3,5 +3,16 @@
   "extend.affiliate.tag": "40% Rebate",
   "extend.affiliate.description": "Earn more as a Orderly affiliate",
   "extend.staking": "Staking",
-  "extend.staking.description": "Stake ORDER/esORDER to acquire VALOR"
+  "extend.staking.description": "Stake ORDER/esORDER to acquire VALOR",
+  "extend.dashboard": "Dashboard",
+  "extend.stake": "Stake",
+  "extend.earn": "Earn",
+  "extend.spot": "Spot",
+  "extend.spotDune": "Spot Dune",
+  "extend.perpsDune": "Perps Dune",
+  "extend.careers": "Careers",
+  "extend.docs": "Docs",
+  "extend.audits": "Audits",
+  "extend.vaults": "Vaults",
+  "extend.perps": "Perps"
 }

@@ -28,4 +28,9 @@ export type LeftNavItem = {
    * @default false
    **/
   onlyInMainAccount?: boolean;
+  /**
+   * Optional secondary style; secondary items render smaller and gray.
+   * Secondary items are grouped below primary items with a divider in between.
+   */
+  isSecondary?: boolean;
 };

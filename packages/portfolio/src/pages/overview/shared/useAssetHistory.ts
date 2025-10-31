@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { subDays, format } from "date-fns";
 import {
   useAccount,
@@ -8,6 +8,7 @@ import {
   useLocalStorage,
   usePrivateQuery,
   useStatisticsDaily,
+  useBalanceTopic,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
@@ -98,24 +99,30 @@ export const useAssetsHistoryData = (
   // const nowStamp = useRef(new Date().getTime().toString());
   // const now = useRef(new Date());
 
-  // const endDate = useMemo(() => addDays(today, 1), [today]);
-  const endDate = today;
+  // Use 23:59:59 of the current day as the endDate to ensure coverage of the entire day's transactions.
+  const endDate = useMemo(() => {
+    const end = new Date(today);
+    end.setHours(23, 59, 59, 999);
+    return end;
+  }, [today]);
 
   const totalDeposit = useRef<Decimal>(zero);
 
   // get transfer history
-  const { data: transferOutHistory } = usePrivateQuery<API.TransferHistory>(
-    `/v1/internal_transfer_history?page=1&size=200&side=OUT&main_sub_only=true&start_t=${startDate.getTime()}&end_t=${endDate.getTime()}`,
-    {
-      revalidateOnFocus: false,
-    },
-  );
-  const { data: transferInHistory } = usePrivateQuery<API.TransferHistory>(
-    `/v1/internal_transfer_history?page=1&size=200&side=IN&main_sub_only=true&start_t=${startDate.getTime()}&end_t=${endDate.getTime()}`,
-    {
-      revalidateOnFocus: false,
-    },
-  );
+  const { data: transferOutHistory, mutate: mutateTransferOut } =
+    usePrivateQuery<API.TransferHistory>(
+      `/v1/internal_transfer_history?page=1&size=200&side=OUT&start_t=${startDate.getTime()}&end_t=${endDate.getTime()}`,
+      {
+        revalidateOnFocus: false,
+      },
+    );
+  const { data: transferInHistory, mutate: mutateTransferIn } =
+    usePrivateQuery<API.TransferHistory>(
+      `/v1/internal_transfer_history?page=1&size=200&side=IN&start_t=${startDate.getTime()}&end_t=${endDate.getTime()}`,
+      {
+        revalidateOnFocus: false,
+      },
+    );
 
   const [data] = useStatisticsDaily(
     {
@@ -126,6 +133,24 @@ export const useAssetsHistoryData = (
       ignoreAggregation: true,
     },
   );
+
+  // Refresh the transfer history once after the balance change event.
+  const lastBalanceEventRef = useRef<number>(0);
+  const refreshTransferHistory = useCallback(() => {
+    const now = Date.now();
+    if (now - lastBalanceEventRef.current < 15000) {
+      return;
+    }
+    lastBalanceEventRef.current = now;
+    mutateTransferOut?.(undefined, true);
+    mutateTransferIn?.(undefined, true);
+  }, [mutateTransferOut, mutateTransferIn]);
+
+  useBalanceTopic({
+    onMessage: () => {
+      refreshTransferHistory();
+    },
+  });
 
   // get deposit & withdraw records to calculate the current PNL
   const [assetHistory] = useAssetsHistory({
@@ -233,6 +258,7 @@ export const useAssetsHistoryData = (
         item.created_time > lastItem?.snapshot_time
       );
     });
+
     return list?.reduce((acc, item) => {
       return acc.add(
         convertToUSDCAndOperate({

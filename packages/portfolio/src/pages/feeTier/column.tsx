@@ -54,13 +54,13 @@ export const useFeeTierColumns = () => {
         title: t("portfolio.feeTier.column.maker"),
         dataIndex: "maker_fee",
         align: "right",
-        width: 100,
+        width: 150,
       },
       {
         title: t("portfolio.feeTier.column.taker"),
         dataIndex: "taker_fee",
         align: "right",
-        width: 100,
+        width: 150,
       },
     ];
   }, [t]);
