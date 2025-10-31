@@ -115,6 +115,8 @@
   "common.hourShort": "時",
   "common.minuteShort": "分",
   "common.secondShort": "秒",
+  "common.offlineDescription": "現在オフラインです。ページを更新してください",
+  "common.refresh": "更新",
   "markets.favorites": "お気に入り",
   "markets.recent": "最近",
   "markets.newListings": "新規上場",

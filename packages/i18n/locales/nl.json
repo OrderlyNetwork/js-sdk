@@ -115,6 +115,8 @@
   "common.hourShort": "U",
   "common.minuteShort": "M",
   "common.secondShort": "S",
+  "common.offlineDescription": "Momenteel niet verbonden, vernieuw de pagina",
+  "common.refresh": "Vernieuwen",
   "markets.favorites": "Favorieten",
   "markets.recent": "Recent",
   "markets.newListings": "Nieuwe noteringen",

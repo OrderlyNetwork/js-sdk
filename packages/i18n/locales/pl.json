@@ -115,6 +115,8 @@
   "common.hourShort": "G",
   "common.minuteShort": "M",
   "common.secondShort": "S",
+  "common.offlineDescription": "Obecnie rozłączono, odśwież stronę",
+  "common.refresh": "Odśwież",
   "markets.favorites": "Ulubione",
   "markets.recent": "Ostatnie",
   "markets.newListings": "Nowe listowania",

@@ -21,6 +21,12 @@ export declare namespace API {
     token_hash: string;
     decimals: number;
     minimum_withdraw_amount: number;
+    base_weight: number;
+    discount_factor: number;
+    haircut: number;
+    user_max_qty: number;
+    is_collateral: boolean;
+    on_chain_swap: boolean;
     chain_details: ChainDetail[];
   }
 

@@ -115,6 +115,8 @@
   "common.hourShort": "H",
   "common.minuteShort": "M",
   "common.secondShort": "S",
+  "common.offlineDescription": "Atualmente desconectado, por favor atualize a página",
+  "common.refresh": "Atualizar",
   "markets.favorites": "Favoritos",
   "markets.recent": "Recentes",
   "markets.newListings": "Novas listagens",

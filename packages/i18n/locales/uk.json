@@ -115,6 +115,8 @@
   "common.hourShort": "Г",
   "common.minuteShort": "Хв",
   "common.secondShort": "С",
+  "common.offlineDescription": "Наразі від'єднано, будь ласка, оновіть сторінку",
+  "common.refresh": "Оновити",
   "markets.favorites": "Улюблені",
   "markets.recent": "Недавні",
   "markets.newListings": "Нові лістинги",

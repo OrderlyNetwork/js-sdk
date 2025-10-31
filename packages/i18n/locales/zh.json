@@ -115,6 +115,8 @@
   "common.hourShort": "时",
   "common.minuteShort": "分",
   "common.secondShort": "秒",
+  "common.offlineDescription": "当前网络连接已断开，请刷新页面",
+  "common.refresh": "刷新",
   "markets.favorites": "收藏",
   "markets.recent": "最近",
   "markets.newListings": "新上市",

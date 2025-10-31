@@ -115,6 +115,8 @@
   "common.hourShort": "时",
   "common.minuteShort": "分",
   "common.secondShort": "秒",
+  "common.offlineDescription": "目前已斷線，請重新整理頁面",
+  "common.refresh": "重新整理",
   "markets.favorites": "收藏",
   "markets.recent": "最近",
   "markets.newListings": "新上市",

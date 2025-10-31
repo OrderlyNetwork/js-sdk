@@ -3,7 +3,7 @@ import { getDate, getMonth, getYear, set } from "date-fns";
 import {
   useAssetsHistory,
   useChainInfo,
-  useTokensInfo,
+  useAppStore,
   useTransferHistory,
 } from "@orderly.network/hooks";
 import { AssetHistorySideEnum } from "@orderly.network/types";
@@ -32,7 +32,7 @@ export const useAssetHistoryScript = (options: AssetHistoryScriptOptions) => {
     return new Date(getYear(d), getMonth(d), getDate(d), 0, 0, 0);
   });
 
-  const tokensInfo = useTokensInfo();
+  const tokensInfo = useAppStore((state) => state.tokensInfo);
 
   const [target, setTarget] = useState<AssetTarget>(AssetTarget.Web3Wallet);
 

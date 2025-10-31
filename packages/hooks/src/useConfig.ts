@@ -5,7 +5,6 @@ import { OrderlyContext } from "./orderlyContext";
 
 export function useConfig(): ConfigStore;
 export function useConfig<T = string>(key: ConfigKey, defaultValue?: T): T;
-
 export function useConfig(key?: ConfigKey, defaultValue?: any) {
   const { configStore } = useContext(OrderlyContext);
 

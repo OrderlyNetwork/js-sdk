@@ -115,6 +115,8 @@
   "common.hourShort": "Ч",
   "common.minuteShort": "М",
   "common.secondShort": "С",
+  "common.offlineDescription": "В данный момент отключено, пожалуйста, обновите страницу",
+  "common.refresh": "Обновить",
   "markets.favorites": "Избранное",
   "markets.recent": "Недавние",
   "markets.newListings": "Новые листинги",

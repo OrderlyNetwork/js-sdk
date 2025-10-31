@@ -115,6 +115,8 @@
   "common.hourShort": "G",
   "common.minuteShort": "P",
   "common.secondShort": "G",
+  "common.offlineDescription": "Hiện đang ngắt kết nối, vui lòng làm mới trang",
+  "common.refresh": "Làm mới",
   "markets.favorites": "Yêu thích",
   "markets.recent": "Gần đây",
   "markets.newListings": "Danh sách mới",

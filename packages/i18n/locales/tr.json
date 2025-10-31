@@ -115,6 +115,8 @@
   "common.hourShort": "S",
   "common.minuteShort": "D",
   "common.secondShort": "Sn",
+  "common.offlineDescription": "Şu anda bağlantı kesildi, lütfen sayfayı yenileyin",
+  "common.refresh": "Yenile",
   "markets.favorites": "Favoriler",
   "markets.recent": "Son",
   "markets.newListings": "Yeni listeler",
