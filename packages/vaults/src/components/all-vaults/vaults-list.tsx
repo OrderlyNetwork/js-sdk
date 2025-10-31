@@ -149,6 +149,7 @@ const VaultListRow: FC<{ vault: VaultInfo }> = ({ vault }) => {
     availableBalance,
     openVaultWebsite,
     icon,
+    isButtonsDisabled,
   } = script;
 
   return (
@@ -268,6 +269,7 @@ const VaultListRow: FC<{ vault: VaultInfo }> = ({ vault }) => {
               <Button
                 size="sm"
                 className="oui-flex-1"
+                disabled={isButtonsDisabled}
                 onClick={() => openDepositAndWithdraw("deposit")}
               >
                 {t("common.deposit")}
@@ -276,6 +278,7 @@ const VaultListRow: FC<{ vault: VaultInfo }> = ({ vault }) => {
                 size="sm"
                 color="secondary"
                 className="oui-flex-1"
+                disabled={isButtonsDisabled}
                 onClick={() => openDepositAndWithdraw("withdraw")}
               >
                 {t("common.withdraw")}

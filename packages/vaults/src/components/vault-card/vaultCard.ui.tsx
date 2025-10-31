@@ -22,6 +22,7 @@ export const VaultCard: FC<VaultCardScript> = (props) => {
     availableBalance,
     openVaultWebsite,
     icon,
+    isButtonsDisabled,
   } = props;
 
   const { t } = useTranslation();
@@ -124,6 +125,7 @@ export const VaultCard: FC<VaultCardScript> = (props) => {
           isEVMConnected={isEVMConnected}
           isSOLConnected={isSOLConnected}
           openDepositAndWithdraw={openDepositAndWithdraw}
+          isButtonsDisabled={isButtonsDisabled}
         />
       </div>
     </div>
@@ -194,10 +196,16 @@ type VaultCardOperationProps = {
   isEVMConnected: boolean;
   isSOLConnected: boolean;
   openDepositAndWithdraw: (activeTab: "deposit" | "withdraw") => void;
+  isButtonsDisabled: boolean;
 };
 
 const VaultCardOperation: FC<VaultCardOperationProps> = (props) => {
-  const { isEVMConnected, isSOLConnected, openDepositAndWithdraw } = props;
+  const {
+    isEVMConnected,
+    isSOLConnected,
+    openDepositAndWithdraw,
+    isButtonsDisabled,
+  } = props;
   const { t } = useTranslation();
 
   return (
@@ -207,6 +215,7 @@ const VaultCardOperation: FC<VaultCardOperationProps> = (props) => {
           <Button
             className="oui-flex-1"
             size="md"
+            disabled={isButtonsDisabled}
             onClick={() => openDepositAndWithdraw("deposit")}
           >
             {t("common.deposit")}
@@ -215,6 +224,7 @@ const VaultCardOperation: FC<VaultCardOperationProps> = (props) => {
             className="oui-flex-1"
             size="md"
             color="secondary"
+            disabled={isButtonsDisabled}
             onClick={() => openDepositAndWithdraw("withdraw")}
           >
             {t("common.withdraw")}

@@ -75,6 +75,10 @@ export const useVaultCardScript = (vault: VaultInfo) => {
     );
   }, [state.chainNamespace, state.accountId, state.mainAccountId]);
 
+  const isButtonsDisabled = useMemo(() => {
+    return vault.status !== "live";
+  }, [vault.status]);
+
   const openDepositAndWithdraw = (activeTab: "deposit" | "withdraw") => {
     modal.show(
       isMobile
@@ -106,6 +110,7 @@ export const useVaultCardScript = (vault: VaultInfo) => {
     availableBalance: memoizedAvailableBalance,
     openVaultWebsite,
     isWrongNetwork,
+    isButtonsDisabled,
   };
 };
 
