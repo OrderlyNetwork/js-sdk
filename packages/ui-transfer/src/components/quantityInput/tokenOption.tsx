@@ -3,6 +3,8 @@ import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
 import { Badge, cn, Flex, Spinner, Text, TokenIcon } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
+import { isYieldBearingAsset } from "../../constants/yieldBearingAssets";
+import { useYieldAPY } from "../depositForm/hooks/useYieldAPY";
 import { useBalance } from "./useBalance";
 
 interface TokenOptionProps {
@@ -25,8 +27,10 @@ export const TokenOption: React.FC<TokenOptionProps> = (props) => {
     props;
   const { symbol, precision, insufficientBalance } = token;
   const { balance, loading } = useBalance(token, fetchBalance, open);
+  const { apy } = useYieldAPY(symbol);
 
   const showBalance = typeof fetchBalance === "function";
+  const showAPY = isYieldBearingAsset(symbol) && apy !== null;
 
   const { t } = useTranslation();
 
@@ -100,7 +104,7 @@ export const TokenOption: React.FC<TokenOptionProps> = (props) => {
         onTokenChange?.(token);
       }}
     >
-      <Flex gapX={1}>
+      <Flex gapX={1} itemAlign="center">
         <TokenIcon name={symbol} className="oui-size-[16px]" />
         <Text
           className={cn(
@@ -110,6 +114,34 @@ export const TokenOption: React.FC<TokenOptionProps> = (props) => {
         >
           {token.label}
         </Text>
+        {showAPY && (
+          <div
+            style={{
+              background: "rgba(0, 180, 158, 0.15)",
+              borderRadius: "4px",
+              height: "18px",
+              paddingLeft: "8px",
+              paddingRight: "8px",
+              display: "flex",
+              alignItems: "center",
+              flexShrink: 0,
+            }}
+          >
+            <span
+              style={{
+                fontFamily: "'DIN 2014', sans-serif",
+                fontSize: "12px",
+                fontWeight: 600,
+                lineHeight: "18px",
+                letterSpacing: "0.36px",
+                color: "#00b49e",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {apy!.toFixed(1)}% APY
+            </span>
+          </div>
+        )}
       </Flex>
       {renderValue()}
     </Flex>

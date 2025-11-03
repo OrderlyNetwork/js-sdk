@@ -154,6 +154,17 @@ export const transfer = {
   "transfer.deposit.status.completed.one": "You have a successful transaction",
   "transfer.deposit.status.completed.multiple":
     "You have successful transactions",
+
+  // Yield-bearing collateral reminder
+  "transfer.deposit.yieldReminder.loading": "Loading APY data...",
+  "transfer.deposit.yieldReminder.earnAPY":
+    "Earn {{apy}}% APY while you trade.",
+  "transfer.deposit.yieldReminder.earnRewards": "Earn rewards while you trade.",
+  "transfer.deposit.yieldReminder.distribution":
+    "The yield will be distributed to your account weekly.",
+  "transfer.deposit.yieldReminder.disclaimer":
+    "*APY is estimated; actual returns may vary.",
+  "transfer.deposit.yieldReminder.moreDetails": "More details",
 };
 
 export type Transfer = typeof transfer;
