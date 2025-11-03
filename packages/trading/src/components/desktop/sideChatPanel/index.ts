@@ -1,0 +1,1 @@
+export { SideChatPanel } from "./sideChatPanel";

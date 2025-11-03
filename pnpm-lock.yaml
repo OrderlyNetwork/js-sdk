@@ -1696,6 +1696,9 @@ importers:
       react-dom:
         specifier: '>=18'
         version: 18.3.1(react@18.3.1)
+      starchild-widget:
+        specifier: ^1.0.0-beta.6
+        version: 1.0.0-beta.6(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
     devDependencies:
       '@types/react':
         specifier: ^18.2.38
@@ -2050,6 +2053,9 @@ importers:
       '@orderly.network/ui-connector':
         specifier: workspace:*
         version: link:../ui-connector
+      '@orderly.network/ui-floating-ball':
+        specifier: workspace:*
+        version: link:../ui-floating-ball
       '@orderly.network/ui-notification':
         specifier: workspace:*
         version: link:../ui-notification

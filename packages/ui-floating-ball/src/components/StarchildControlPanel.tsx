@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useEventEmitter } from "@orderly.network/hooks";
 import { cn, Divider, Tooltip } from "@orderly.network/ui";
 import {
   SignPostIcon,
@@ -126,7 +127,7 @@ const SidePanelToggleSection: React.FC<SidePanelToggleSectionProps> = ({
         <div
           className={cn(
             "oui-w-[18px] oui-h-[18px] oui-shrink-0 oui-rounded",
-            "oui-bg-[#f84600] oui-overflow-hidden",
+            "oui-overflow-hidden",
             "oui-flex oui-items-center oui-justify-center",
           )}
         >
@@ -212,8 +213,38 @@ export const StarchildControlPanel: React.FC<StarchildControlPanelProps> = ({
   onSidePanelClick,
   className,
 }) => {
+  const ee = useEventEmitter();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
+
+  // Listen for side panel toggle events to sync state
+  React.useEffect(() => {
+    const handleToggle = (data: { isOpen: boolean }) => {
+      setIsSidePanelOpen(data.isOpen);
+    };
+    ee.on("sideChatPanel:toggle", handleToggle);
+    return () => {
+      ee.off("sideChatPanel:toggle", handleToggle);
+    };
+  }, [ee]);
+
+  // Listen for starchild:chatClosed event to sync state
+  React.useEffect(() => {
+    const handleChatClosed = () => {
+      setIsSidePanelOpen(false);
+      ee.emit("sideChatPanel:toggle", { isOpen: false });
+    };
+    window.addEventListener(
+      "starchild:chatClosed",
+      handleChatClosed as EventListener,
+    );
+    return () => {
+      window.removeEventListener(
+        "starchild:chatClosed",
+        handleChatClosed as EventListener,
+      );
+    };
+  }, [ee]);
 
   const handleMyAgentClick = () => {
     console.log("My Agent button clicked");
@@ -227,7 +258,9 @@ export const StarchildControlPanel: React.FC<StarchildControlPanelProps> = ({
 
   const handleSidePanelClick = () => {
     console.log("Side Panel button clicked");
-    setIsSidePanelOpen((prev) => !prev);
+    const newState = !isSidePanelOpen;
+    setIsSidePanelOpen(newState);
+    ee.emit("sideChatPanel:toggle", { isOpen: newState });
     onSidePanelClick?.();
   };
 
