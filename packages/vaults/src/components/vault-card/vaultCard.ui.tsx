@@ -142,7 +142,11 @@ export const VaultCard: FC<VaultCardScript> = (props) => {
             />
             <VaultInfoItem
               label={t("vaults.card.apy")}
-              value={(vaultInfo["30d_apy"] * 100).toFixed(2) + "%"}
+              value={
+                vaultInfo["30d_apy"] > 100
+                  ? ">10000%"
+                  : (vaultInfo["30d_apy"] * 100).toFixed(2) + "%"
+              }
               textProps={{
                 color: "brand",
                 type: "gradient",
