@@ -92,10 +92,8 @@ export const useVaultCardScript = (vault: VaultInfo) => {
   };
 
   const openVaultWebsite = () => {
-    window.open(
-      `https://app.orderly.network/vaults/${vault.vault_address}`,
-      "_blank",
-    );
+    const baseUrl = VAULTS_WEBSITE_URLS[env] || VAULTS_WEBSITE_URLS.prod;
+    window.open(`${baseUrl}/vaults/${vault.vault_address}`, "_blank");
   };
 
   return {
