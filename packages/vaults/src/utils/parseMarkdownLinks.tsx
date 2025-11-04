@@ -6,6 +6,11 @@ import { ReactNode } from "react";
  * @returns Array of React nodes with links converted to <a> elements
  */
 export const parseMarkdownLinks = (text: string): ReactNode[] => {
+  // Add defensive check: return empty string if text is undefined/null
+  if (!text) {
+    return [""];
+  }
+
   const markdownLinkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
   const parts: ReactNode[] = [];
   let lastIndex = 0;
