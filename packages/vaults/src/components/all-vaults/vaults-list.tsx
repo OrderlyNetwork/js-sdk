@@ -227,7 +227,9 @@ const VaultListRow: FC<{ vault: VaultInfo }> = ({ vault }) => {
       {/* APY */}
       <div className="oui-relative oui-z-10">
         <Text.gradient className="oui-text-sm oui-font-semibold" color="brand">
-          {(vaultInfo["30d_apy"] * 100).toFixed(2)}%
+          {vaultInfo["30d_apy"] > 100
+            ? ">10000%"
+            : `${(vaultInfo["30d_apy"] * 100).toFixed(2)}%`}
         </Text.gradient>
       </div>
 
