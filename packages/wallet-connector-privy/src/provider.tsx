@@ -395,9 +395,6 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
       return;
     }
 
-    console.log("!!!hasStoreData", hasStoreData);
-    console.log("!!!hasApiData", hasApiData);
-
     // Always wait for swap loading to complete when swap is enabled
     if (!swapChainInfoRes) {
       return;
@@ -411,11 +408,9 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
       if (hasStoreData) {
         testChainsList = testChainInfosFromStore;
         mainnetChainsList = mainnetChainInfosFromStore;
-        console.log("!!!use store data");
       } else {
         testChainsList = testChainInfos || testnetChainFallback;
         mainnetChainsList = mainnetChainInfos || [];
-        console.log("!!!use api data");
       }
 
       const testChains = processChainInfo(testChainsList);

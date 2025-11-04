@@ -78,7 +78,6 @@ export const WagmiWalletProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     if (!connector || !isConnected) {
-      console.log("-- xxx wagmi wallet setundefine", isConnected);
       setWallet(undefined);
       return;
     }
