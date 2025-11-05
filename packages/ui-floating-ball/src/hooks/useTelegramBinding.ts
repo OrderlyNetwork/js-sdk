@@ -141,9 +141,9 @@ export function useTelegramBinding(
     const normalizedSignature = normalizeSignatureV(signatureHex);
 
     const requestBody = {
-      message: [{ chainType: "EVM", timestamp }],
-      signature: [normalizedSignature],
-      userAddress: [address],
+      message: { chainType: "EVM", timestamp },
+      signature: normalizedSignature,
+      userAddress: address,
     };
 
     const resp = await fetch(`${baseUrl}v1/authToken`, {

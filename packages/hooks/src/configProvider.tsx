@@ -192,8 +192,8 @@ export const OrderlyConfigProvider: FC<
     const url =
       starChildConfig.url ||
       (starChildConfig.env === "testnet"
-        ? "https://go-api-testnet-a516af3dc7f6.herokuapp.com/"
-        : "https://go-api-mainnet-2495a59b9706.herokuapp.com/");
+        ? "https://api-testnet.iamstarchild.com/"
+        : "https://api-mainnet.iamstarchild.com/");
 
     return {
       ...starChildConfig,

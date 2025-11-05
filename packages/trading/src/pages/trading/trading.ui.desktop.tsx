@@ -104,20 +104,11 @@ const LazyOrderBookAndTradesWidget = React.lazy(() =>
   }),
 );
 
-const LazyEvmFloatingStarchildBall = React.lazy(() =>
-  import("../../components/desktop/FloatingStarchildBall").then((mod) => ({
-    default: mod.FloatingStarchildBall,
-  })),
-);
-
 export type DesktopLayoutProps = TradingState & {
   className?: string;
 };
 
 export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
-  const { starChildConfig } = useOrderlyContext();
-  const starChildEnabled = starChildConfig?.enable ?? false;
-
   const {
     resizeable,
     panelSize,
@@ -842,11 +833,6 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
             </SortablePanel>
           ) : null}
         </DragOverlay>
-        {starChildEnabled && (
-          <React.Suspense fallback={null}>
-            <LazyEvmFloatingStarchildBall />
-          </React.Suspense>
-        )}
       </DndContext>
     );
   }
@@ -953,11 +939,6 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
           </SortablePanel>
         ) : null}
       </DragOverlay>
-      {starChildEnabled && (
-        <React.Suspense fallback={null}>
-          <LazyEvmFloatingStarchildBall />
-        </React.Suspense>
-      )}
     </DndContext>
   );
 };

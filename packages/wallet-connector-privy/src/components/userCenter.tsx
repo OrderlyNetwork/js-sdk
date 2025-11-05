@@ -110,7 +110,7 @@ const RenderUserCenter = (props: any) => {
           <Button
             size="md"
             data-testid="oui-testid-nav-bar-address-btn"
-            className="oui-px-3 oui-py-[6px] oui-flex oui-items-center oui-justify-center oui-gap-1 oui-bg-base-4 oui-rounded-[6px]"
+            className="oui-px-3 oui-py-[6px] oui-flex oui-items-center oui-justify-center oui-gap-1 oui-bg-base-4 hover:oui-bg-base-5 active:oui-bg-base-5 oui-rounded-[6px]"
           >
             {linkedAccount && (
               <RenderPrivyTypeIcon
@@ -135,7 +135,7 @@ const RenderUserCenter = (props: any) => {
       <Button
         size="md"
         data-testid="oui-testid-nav-bar-address-btn"
-        className="oui-flex oui-items-center oui-justify-center oui-gap-1 oui-bg-base-4 oui-px-3 oui-py-[6px] oui-rounded-[6px]"
+        className="oui-flex oui-items-center oui-justify-center oui-gap-1 oui-bg-base-4 hover:oui-bg-base-5 active:oui-bg-base-5 oui-px-3 oui-py-[6px] oui-rounded-[6px]"
       >
         {linkedAccount && (
           <RenderPrivyTypeIcon
