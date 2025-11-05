@@ -71,6 +71,13 @@ export const MainNavMobile: FC<MainNavMobileProps> = (props) => {
     if (currentMenu?.isSubMenuInMobile) {
       target = currentMenu?.subMenuBackNav;
     }
+
+    if (target && typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      const cleanUrl = `${url.pathname}`;
+      window.history.replaceState({}, "", cleanUrl);
+    }
+
     props?.routerAdapter?.onRouteChange(target as any);
   };
 
