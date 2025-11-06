@@ -16,7 +16,9 @@ export { ExchangeDivider } from "./components/exchangeDivider";
 export { SwapCoin } from "./components/swapCoin";
 export { ActionButton } from "./components/actionButton";
 export { Fee } from "./components/fee";
+export { YieldBearingReminder } from "./components/yieldBearingReminder";
 
 export * from "./types";
+export * from "./constants/yieldBearingAssets";
 
 export * from "./components/depostiStatus";
