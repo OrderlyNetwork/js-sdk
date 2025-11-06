@@ -8,6 +8,7 @@ import {
   useAccount,
   useOrderlyContext,
   useWalletConnector,
+  useEventEmitter,
 } from "@orderly.network/hooks";
 import { useLocaleCode } from "@orderly.network/i18n";
 import { AccountStatusEnum } from "@orderly.network/types";
@@ -16,12 +17,19 @@ export const StarChildInitializer: React.FC = () => {
   const { state } = useAccount();
   const { wallet } = useWalletConnector();
   const { keyStore, starChildConfig } = useOrderlyContext();
+  const ee = useEventEmitter();
   const {
     isInitialized,
     init,
-    showChatModal,
+    showChat,
+    setChatVisible,
     setSearchVisible,
+    showMyAgent,
+    getVoiceShortcut,
+    getChatShortcut,
+    getUnreadCount,
     setLocale: setStarChildLocale,
+    triggerVoiceRecording,
   } = useStarChildWidget();
   const localeCode = useLocaleCode();
   const locale = React.useMemo(
@@ -83,40 +91,30 @@ export const StarChildInitializer: React.FC = () => {
         state.accountId ||
         (address ? keyStore?.getAccountId(address) || undefined : undefined);
       const telegramUserId = cached.telegramUserId || undefined;
+      const userInfoId = cached.userInfoId || undefined;
 
       const params = {
         locale: starLocale,
         aiChatKey,
         telegramUserId,
+        userInfoId,
         accountId,
         orderlyKey,
         secretKey,
-        onChatModalDockToEdge: (side: "left" | "right") => {
-          console.log("[starchild] dock to edge:", side);
+        onChatShow: () => {
+          console.log("[starchild] chat shown");
           try {
-            const event = new CustomEvent("starchild:chatDocked", {
-              detail: { side },
-            });
-            window.dispatchEvent(event);
-            showChatModal("sideChatContainer");
+            setChatVisible(true);
+            ee.emit("starchild:chatStateChanged", { isOpen: true });
           } catch (e) {
             // ignore
           }
         },
-        onChatModalDetachFromEdge: () => {
-          console.log("[starchild] detach from edge");
+        onChatHide: () => {
+          console.log("[starchild] chat hidden");
           try {
-            const event = new CustomEvent("starchild:chatDetached");
-            window.dispatchEvent(event);
-          } catch (e) {
-            // ignore
-          }
-        },
-        onChatModalClose: () => {
-          console.log("[starchild] chat closed");
-          try {
-            const event = new CustomEvent("starchild:chatClosed");
-            window.dispatchEvent(event);
+            setChatVisible(false);
+            ee.emit("starchild:chatStateChanged", { isOpen: false });
           } catch (e) {
             // ignore
           }
@@ -150,6 +148,30 @@ export const StarChildInitializer: React.FC = () => {
             // ignore
           }
         },
+        onVoiceShortcutChange: (voiceShortcut: string) => {
+          console.log("语音快捷键已更改:", voiceShortcut);
+          try {
+            ee.emit("starchild:voiceShortcutChanged", { voiceShortcut });
+          } catch (e) {
+            // ignore
+          }
+        },
+        onChatShortcutChange: (chatShortcut: string) => {
+          console.log("聊天快捷键已更改:", chatShortcut);
+          try {
+            ee.emit("starchild:chatShortcutChanged", { chatShortcut });
+          } catch (e) {
+            // ignore
+          }
+        },
+        onUnreadCountChange: (unreadCount: number) => {
+          console.log("未读数已更改:", unreadCount);
+          try {
+            ee.emit("starchild:unreadCountChanged", { unreadCount });
+          } catch (e) {
+            // ignore
+          }
+        },
       } as any;
 
       try {
@@ -170,7 +192,7 @@ export const StarChildInitializer: React.FC = () => {
       keyStore,
       state.accountId,
       init,
-      showChatModal,
+      showChat,
       starLocale,
       starChildConfig?.enable,
     ],
@@ -263,6 +285,165 @@ export const StarChildInitializer: React.FC = () => {
     };
   }, [setSearchVisible]);
 
+  // Listen for request to show chat
+  React.useEffect(() => {
+    const handleRequestShowChat = () => {
+      try {
+        if (window.innerWidth > 1279) {
+          console.log(
+            "[StarChildInitializer] Showing chat in sideChatContainer (screen width:",
+            window.innerWidth,
+            ")",
+          );
+          showChat("sideChatContainer");
+        } else {
+          console.log(
+            "[StarChildInitializer] Showing chat in modal (screen width:",
+            window.innerWidth,
+            ")",
+          );
+          showChat();
+        }
+      } catch (e) {
+        console.error(
+          "[StarChildInitializer] Error handling requestShowChat:",
+          e,
+        );
+      }
+    };
+
+    window.addEventListener(
+      "starchild:requestShowChat",
+      handleRequestShowChat as EventListener,
+    );
+
+    return () => {
+      window.removeEventListener(
+        "starchild:requestShowChat",
+        handleRequestShowChat as EventListener,
+      );
+    };
+  }, [showChat]);
+
+  // Listen for request to hide chat
+  React.useEffect(() => {
+    const handleRequestHideChat = () => {
+      try {
+        console.log("[StarChildInitializer] Hiding chat");
+        setChatVisible(false);
+      } catch (e) {
+        console.error(
+          "[StarChildInitializer] Error handling requestHideChat:",
+          e,
+        );
+      }
+    };
+
+    window.addEventListener(
+      "starchild:requestHideChat",
+      handleRequestHideChat as EventListener,
+    );
+
+    return () => {
+      window.removeEventListener(
+        "starchild:requestHideChat",
+        handleRequestHideChat as EventListener,
+      );
+    };
+  }, [setChatVisible]);
+
+  // Listen for request to trigger voice recording
+  React.useEffect(() => {
+    const handleRequestVoiceRecording = () => {
+      try {
+        console.log("[StarChildInitializer] Triggering voice recording");
+        // First set chat visible
+        setChatVisible(true);
+        // Then show the chat
+        if (window.innerWidth > 1279) {
+          console.log(
+            "[StarChildInitializer] Showing chat in sideChatContainer for voice (screen width:",
+            window.innerWidth,
+            ")",
+          );
+          showChat("sideChatContainer");
+        } else {
+          console.log(
+            "[StarChildInitializer] Showing chat in modal for voice (screen width:",
+            window.innerWidth,
+            ")",
+          );
+          showChat();
+        }
+        // Then trigger voice recording
+        triggerVoiceRecording();
+      } catch (e) {
+        console.error(
+          "[StarChildInitializer] Error handling requestVoiceRecording:",
+          e,
+        );
+      }
+    };
+
+    window.addEventListener(
+      "starchild:requestVoiceRecording",
+      handleRequestVoiceRecording as EventListener,
+    );
+
+    return () => {
+      window.removeEventListener(
+        "starchild:requestVoiceRecording",
+        handleRequestVoiceRecording as EventListener,
+      );
+    };
+  }, [showChat, setChatVisible, triggerVoiceRecording]);
+
+  // Listen for request to show my agent
+  React.useEffect(() => {
+    const handleRequestShowMyAgent = () => {
+      try {
+        console.log("[StarChildInitializer] Showing My Agent");
+        // First set chat visible
+        setChatVisible(true);
+        // Then show the chat
+        if (window.innerWidth > 1279) {
+          console.log(
+            "[StarChildInitializer] Showing chat in sideChatContainer for My Agent (screen width:",
+            window.innerWidth,
+            ")",
+          );
+          showChat("sideChatContainer");
+        } else {
+          console.log(
+            "[StarChildInitializer] Showing chat in modal for My Agent (screen width:",
+            window.innerWidth,
+            ")",
+          );
+          showChat();
+        }
+        // Then show My Agent panel
+        showMyAgent();
+      } catch (e) {
+        console.error(
+          "[StarChildInitializer] Error handling requestShowMyAgent:",
+          e,
+        );
+      }
+    };
+
+    window.addEventListener(
+      "starchild:requestShowMyAgent",
+      handleRequestShowMyAgent as EventListener,
+    );
+
+    return () => {
+      window.removeEventListener(
+        "starchild:requestShowMyAgent",
+        handleRequestShowMyAgent as EventListener,
+      );
+    };
+  }, [showChat, setChatVisible, showMyAgent]);
+
   // Observe DOM to track sideChatContainer mounting/unmounting and reactively place modal
   React.useEffect(() => {
     const updatePresence = () => {
@@ -285,14 +466,14 @@ export const StarChildInitializer: React.FC = () => {
     console.log("hasSideChatContainer", hasSideChatContainer);
     try {
       if (hasSideChatContainer) {
-        showChatModal("sideChatContainer");
+        showChat("sideChatContainer");
       } else {
-        showChatModal();
+        showChat();
       }
     } catch {
       // ignore
     }
-  }, [hasSideChatContainer, isInitialized, showChatModal]);
+  }, [hasSideChatContainer, isInitialized, showChat]);
 
   return null;
 };

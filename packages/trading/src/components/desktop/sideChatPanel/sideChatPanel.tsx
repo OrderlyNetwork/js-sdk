@@ -15,18 +15,16 @@ export const SideChatPanel: React.FC<SideChatPanelProps> = ({
   bottomBarHeight,
 }) => {
   const ee = useEventEmitter();
-  const { showChatModal } = useStarChildWidget();
+  const { showChat } = useStarChildWidget();
   const [isOpen, setIsOpen] = useState(false);
   const [scrollTop, setScrollTop] = useState(0);
 
   useEffect(() => {
     const handleToggle = (data: { isOpen: boolean }) => {
       setIsOpen(data.isOpen);
-
-      // When panel opens, bind the starchild chat to the container
       if (data.isOpen) {
         try {
-          showChatModal?.("sideChatContainer");
+          showChat("sideChatContainer");
         } catch (e) {
           console.error("Failed to show chat modal:", e);
         }
@@ -36,7 +34,7 @@ export const SideChatPanel: React.FC<SideChatPanelProps> = ({
     return () => {
       ee.off("sideChatPanel:toggle", handleToggle);
     };
-  }, [ee, showChatModal]);
+  }, [ee, showChat]);
 
   // Listen for starchild:chatClosed event to close the panel
   useEffect(() => {

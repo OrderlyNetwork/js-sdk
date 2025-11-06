@@ -81,6 +81,27 @@ export const TelegramBinding: React.FC<TelegramBindingProps> = ({
     }
   }, [verifyOrderlyKey]);
 
+  // Auto-close dialog when account is fully ready
+  React.useEffect(() => {
+    if (
+      bindingStatus === "success" &&
+      hasOrderlyPrivateKey &&
+      hasVerifiedOrderly &&
+      !isBinding
+    ) {
+      console.log("Account fully ready, closing dialog");
+      if (onClose) {
+        onClose();
+      }
+    }
+  }, [
+    bindingStatus,
+    hasOrderlyPrivateKey,
+    hasVerifiedOrderly,
+    isBinding,
+    onClose,
+  ]);
+
   return (
     <Box
       r="2xl"

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
+import { useStarChildWidget } from "starchild-widget";
 import { useEventEmitter } from "@orderly.network/hooks";
 import { cn, Divider, Tooltip } from "@orderly.network/ui";
 import { StarChildInitializer } from "./StarChildInitializer";
@@ -68,7 +69,7 @@ const MyAgentSection: React.FC<MyAgentSectionProps> = ({
           size={18}
           className="oui-text-base-contrast-36 hover:oui-text-base-contrast oui-transition-colors"
         />
-        <NotificationBadge count={badgeCount} />
+        {badgeCount > 0 && <NotificationBadge count={badgeCount} />}
       </button>
     </Tooltip>
   );
@@ -162,7 +163,9 @@ const SidePanelToggleSection: React.FC<SidePanelToggleSectionProps> = ({
             />
           )}
         </div>
-        {showBadge && <NotificationBadge count={badgeCount} />}
+        {showBadge && badgeCount > 0 && (
+          <NotificationBadge count={badgeCount} />
+        )}
         {showText && (
           <span
             className={cn(
@@ -218,10 +221,6 @@ export interface StarchildControlPanelProps {
   voiceModeShortcutKeys?: string[];
   sidePanelTooltip?: string;
   sidePanelShortcutKeys?: string[];
-  badgeCount?: number;
-  onMyAgentClick?: () => void;
-  onVoiceModeClick?: () => void;
-  onSidePanelClick?: () => void;
   className?: string;
 }
 
@@ -229,53 +228,32 @@ export const StarchildControlPanel: React.FC<StarchildControlPanelProps> = ({
   myAgentTooltip = "My agent",
   myAgentShortcutKeys,
   voiceModeTooltip = "Enable voice mode",
-  voiceModeShortcutKeys = ["⌘", "Shift", "W"],
   sidePanelTooltip = "Toggle Starchild side panel",
-  sidePanelShortcutKeys = ["⌘", "Shift", "E"],
-  badgeCount = 99,
-  onMyAgentClick,
-  onVoiceModeClick,
-  onSidePanelClick,
   className,
 }) => {
   const ee = useEventEmitter();
+  const { getVoiceShortcut, getChatShortcut, getUnreadCount } =
+    useStarChildWidget();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
   const [isTgDialogOpen, setIsTgDialogOpen] = useState(false);
   const [isTgBound, setIsTgBound] = useState(false);
+  const [badgeCount, setBadgeCount] = useState(getUnreadCount());
+  const [voiceShortcut, setVoiceShortcut] = useState(getVoiceShortcut());
+  const [chatShortcut, setChatShortcut] = useState(getChatShortcut());
 
-  // Listen for side panel toggle events to sync state
+  // Listen to single source of truth: widget state changes
   React.useEffect(() => {
-    const handleToggle = (data: { isOpen: boolean }) => {
+    const handleChatStateChanged = (data: { isOpen: boolean }) => {
       setIsSidePanelOpen(data.isOpen);
     };
-    ee.on("sideChatPanel:toggle", handleToggle);
+    ee.on("starchild:chatStateChanged", handleChatStateChanged);
     return () => {
-      ee.off("sideChatPanel:toggle", handleToggle);
+      ee.off("starchild:chatStateChanged", handleChatStateChanged);
     };
   }, [ee]);
 
-  // Listen for starchild:chatClosed event to sync state
   React.useEffect(() => {
-    const handleChatClosed = () => {
-      setIsSidePanelOpen(false);
-      ee.emit("sideChatPanel:toggle", { isOpen: false });
-    };
-    window.addEventListener(
-      "starchild:chatClosed",
-      handleChatClosed as EventListener,
-    );
-    return () => {
-      window.removeEventListener(
-        "starchild:chatClosed",
-        handleChatClosed as EventListener,
-      );
-    };
-  }, [ee]);
-
-  // Listen for starchild:accountInfoReady event to track TG binding status
-  React.useEffect(() => {
-    // Check localStorage for existing binding status
     const checkBindingStatus = () => {
       try {
         const keys = Object.keys(localStorage);
@@ -296,8 +274,6 @@ export const StarchildControlPanel: React.FC<StarchildControlPanelProps> = ({
       }
       return false;
     };
-
-    // Initial check
     checkBindingStatus();
 
     const handleAccountInfoReady = () => {
@@ -317,13 +293,47 @@ export const StarchildControlPanel: React.FC<StarchildControlPanelProps> = ({
     };
   }, []);
 
+  // Listen for widget configuration changes via EventEmitter
+  React.useEffect(() => {
+    const handleVoiceShortcutChanged = (data: { voiceShortcut: string }) => {
+      setVoiceShortcut(data.voiceShortcut);
+    };
+    const handleChatShortcutChanged = (data: { chatShortcut: string }) => {
+      setChatShortcut(data.chatShortcut);
+    };
+    const handleUnreadCountChanged = (data: { unreadCount: number }) => {
+      setBadgeCount(data.unreadCount);
+    };
+
+    ee.on("starchild:voiceShortcutChanged", handleVoiceShortcutChanged);
+    ee.on("starchild:chatShortcutChanged", handleChatShortcutChanged);
+    ee.on("starchild:unreadCountChanged", handleUnreadCountChanged);
+
+    return () => {
+      ee.off("starchild:voiceShortcutChanged", handleVoiceShortcutChanged);
+      ee.off("starchild:chatShortcutChanged", handleChatShortcutChanged);
+      ee.off("starchild:unreadCountChanged", handleUnreadCountChanged);
+    };
+  }, [ee]);
+
   const handleMyAgentClick = () => {
     console.log("My Agent button clicked");
     if (!isTgBound) {
       setIsTgDialogOpen(true);
       return;
     }
-    onMyAgentClick?.();
+
+    // Update local state
+    setIsSidePanelOpen(true);
+    ee.emit("sideChatPanel:toggle", { isOpen: true });
+
+    // Dispatch event to show chat and My Agent
+    try {
+      const event = new CustomEvent("starchild:requestShowMyAgent");
+      window.dispatchEvent(event);
+    } catch (e) {
+      console.error("Error dispatching My Agent event:", e);
+    }
   };
 
   const handleVoiceModeClick = () => {
@@ -332,7 +342,18 @@ export const StarchildControlPanel: React.FC<StarchildControlPanelProps> = ({
       setIsTgDialogOpen(true);
       return;
     }
-    onVoiceModeClick?.();
+
+    // Update local state
+    setIsSidePanelOpen(true);
+    ee.emit("sideChatPanel:toggle", { isOpen: true });
+
+    // Dispatch event to show chat and trigger voice recording
+    try {
+      const event = new CustomEvent("starchild:requestVoiceRecording");
+      window.dispatchEvent(event);
+    } catch (e) {
+      console.error("Error dispatching voice recording event:", e);
+    }
   };
 
   const handleSidePanelClick = () => {
@@ -342,9 +363,30 @@ export const StarchildControlPanel: React.FC<StarchildControlPanelProps> = ({
       return;
     }
     const newState = !isSidePanelOpen;
+    const isLargeScreen = window.innerWidth > 1279;
     setIsSidePanelOpen(newState);
     ee.emit("sideChatPanel:toggle", { isOpen: newState });
-    onSidePanelClick?.();
+
+    // Dispatch custom event for StarChildInitializer to handle
+    try {
+      if (newState) {
+        const event = new CustomEvent("starchild:requestShowChat", {
+          detail: { isOpen: true },
+        });
+        window.dispatchEvent(event);
+      } else {
+        // On large screens, keep the chat visible when closing the side panel
+        // Only hide the chat on small screens
+        if (!isLargeScreen) {
+          const event = new CustomEvent("starchild:requestHideChat", {
+            detail: { isOpen: false },
+          });
+          window.dispatchEvent(event);
+        }
+      }
+    } catch (e) {
+      console.error("Error dispatching chat event:", e);
+    }
   };
 
   const handleCollapse = () => {
@@ -418,7 +460,7 @@ export const StarchildControlPanel: React.FC<StarchildControlPanelProps> = ({
             {isCollapsed ? (
               <SidePanelToggleSection
                 tooltip={sidePanelTooltip}
-                shortcutKeys={sidePanelShortcutKeys}
+                shortcutKeys={["⌘", "Shift", chatShortcut]}
                 onClick={handleSidePanelClick}
                 showBadge={!isSidePanelOpen}
                 showText={false}
@@ -440,7 +482,7 @@ export const StarchildControlPanel: React.FC<StarchildControlPanelProps> = ({
             />
             <VoiceModeSection
               tooltip={voiceModeTooltip}
-              shortcutKeys={voiceModeShortcutKeys}
+              shortcutKeys={["⌘", "Shift", voiceShortcut]}
               onClick={handleVoiceModeClick}
             />
             <Divider
@@ -450,7 +492,7 @@ export const StarchildControlPanel: React.FC<StarchildControlPanelProps> = ({
             />
             <SidePanelToggleSection
               tooltip={sidePanelTooltip}
-              shortcutKeys={sidePanelShortcutKeys}
+              shortcutKeys={["⌘", "Shift", chatShortcut]}
               onClick={handleSidePanelClick}
               showBadge={false}
               showText={true}
