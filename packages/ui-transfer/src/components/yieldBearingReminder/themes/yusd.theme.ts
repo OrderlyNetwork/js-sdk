@@ -1,6 +1,4 @@
-import yusdBg from "../../../assets/yusd_bg.png";
-import yusdBt from "../../../assets/yusd_bt.png";
-import yusdTp from "../../../assets/yusd_tp.png";
+import { yusdBg, yusdBt, yusdTp } from "../icons";
 import { ReminderTheme } from "./types";
 
 /**
