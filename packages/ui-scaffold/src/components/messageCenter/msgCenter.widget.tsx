@@ -9,6 +9,7 @@ export const MessageCenterWidget = () => {
       messages={announcementState.tips}
       maintenanceDialogInfo={announcementState.maintenanceDialogInfo}
       showAnnouncement={announcementState.showAnnouncement}
+      closeTips={announcementState.closeTips}
     />
   );
 };
