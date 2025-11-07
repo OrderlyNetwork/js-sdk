@@ -23,6 +23,7 @@ import {
 } from "@orderly.network/types";
 import { modal, usePagination, Text, Table } from "@orderly.network/ui";
 import { SharePnLConfig } from "@orderly.network/ui-share";
+import { formatSymbol } from "@orderly.network/utils";
 import { areDatesEqual } from "../../utils/util";
 import { TabType } from "../orders.widget";
 import { useFormatOrderHistory } from "./useFormatOrderHistory";
@@ -124,7 +125,7 @@ export const useOrderListScript = (props: useOrderListScriptOptions) => {
       updateOrder,
       cancelAlgoOrder,
       updateAlgoOrder,
-      cancelAllOrders,
+      cancelAllPendingOrders,
       cancelAllTPSLOrders,
       meta,
       refresh,
@@ -155,18 +156,7 @@ export const useOrderListScript = (props: useOrderListScriptOptions) => {
   }, [pageSize, typePageSize]);
 
   const onCancelAll = useCallback(() => {
-    const title =
-      props.type === TabType.pending
-        ? t("orders.pending.cancelAll")
-        : props.type === TabType.tp_sl
-          ? t("orders.tpsl.cancelAll")
-          : "";
-
-    const content = TabType.pending
-      ? t("orders.pending.cancelAll.description")
-      : props.type === TabType.tp_sl
-        ? t("orders.tpsl.cancelAll.description")
-        : "";
+    const { title, content } = getDialogInfo(type, t, props.symbol);
 
     modal.confirm({
       title: title,
@@ -176,9 +166,9 @@ export const useOrderListScript = (props: useOrderListScriptOptions) => {
         try {
           // await cancelAll(null, { source_type: "ALL" });
           if (type === TabType.tp_sl) {
-            await cancelAllTPSLOrders();
+            await cancelAllTPSLOrders(props.symbol);
           } else {
-            await cancelAllOrders();
+            await cancelAllPendingOrders(props.symbol);
           }
           refresh();
           return Promise.resolve(true);
@@ -194,7 +184,7 @@ export const useOrderListScript = (props: useOrderListScriptOptions) => {
         }
       },
     });
-  }, [type, t]);
+  }, [type, t, props.symbol]);
 
   const formattedData = useFormatOrderHistory(data ?? []);
 
@@ -235,6 +225,8 @@ export const useOrderListScript = (props: useOrderListScriptOptions) => {
     symbolsInfo,
     filterDays,
     updateFilterDays,
+
+    symbol: props.symbol,
   };
 };
 
@@ -469,3 +461,48 @@ export const formatDatePickerRange = (option: { from?: Date; to?: Date }) => ({
   from: offsetStartOfDay(option.from),
   to: offsetEndOfDay(option.to ?? option.from),
 });
+
+type TranslationFn = (...args: any[]) => string;
+
+const getDialogInfo = (type: TabType, t: TranslationFn, symbol?: string) => {
+  console.log("getDialogInfo symbol", symbol);
+  // symbol like this: PERP_BTC_USDC, but i want to show BTC, pls help me to format the symbol
+  const formattedSymbol = symbol ? formatSymbol(symbol, "base") : symbol;
+  switch (type) {
+    case TabType.pending:
+      if (symbol !== undefined) {
+        return {
+          title: t("orders.pending.cancelAll.forSymbol", {
+            symbol: formattedSymbol,
+          }),
+          content: t("orders.pending.cancelAll.forSymbol.description", {
+            symbol: formattedSymbol,
+          }),
+        };
+      }
+      return {
+        title: t("orders.pending.cancelAll"),
+        content: t("orders.pending.cancelAll.description"),
+      };
+    case TabType.tp_sl:
+      if (symbol !== undefined) {
+        return {
+          title: t("orders.tpsl.cancelAll.forSymbol", {
+            symbol: formattedSymbol,
+          }),
+          content: t("orders.tpsl.cancelAll.forSymbol.description", {
+            symbol: formattedSymbol,
+          }),
+        };
+      }
+      return {
+        title: t("orders.tpsl.cancelAll"),
+        content: t("orders.tpsl.cancelAll.description"),
+      };
+    default:
+      return {
+        title: "",
+        content: "",
+      };
+  }
+};

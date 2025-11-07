@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Button, cn } from "@orderly.network/ui";
+import { formatSymbol } from "@orderly.network/utils";
 import type { CloseAllPositionsState } from "./closeAllPositions.script";
 
 export type CloseAllPositionsProps = CloseAllPositionsState & {
@@ -9,9 +10,14 @@ export type CloseAllPositionsProps = CloseAllPositionsState & {
 };
 
 export const CloseAllPositions: FC<CloseAllPositionsProps> = (props) => {
-  const { onCloseAll, hasOpenPositions, isClosing, className, style } = props;
+  const { onCloseAll, hasOpenPositions, isClosing, className, style, symbol } =
+    props;
   const { t } = useTranslation();
 
+  console.log("CloseAllPositions props", props.symbol);
+  const formattedSymbol = props.symbol
+    ? formatSymbol(props.symbol, "base")
+    : props.symbol;
   return (
     <Button
       onClick={onCloseAll}
@@ -23,7 +29,9 @@ export const CloseAllPositions: FC<CloseAllPositionsProps> = (props) => {
       className={cn("disabled:oui-bg-transport", className)}
       style={style}
     >
-      {t("positions.closeAll")}
+      {symbol
+        ? t("positions.closeAll.ofSymbol", { symbol: formattedSymbol })
+        : t("positions.closeAll")}
     </Button>
   );
 };

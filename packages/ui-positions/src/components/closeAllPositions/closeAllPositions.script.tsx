@@ -110,6 +110,7 @@ export const useCloseAllPositionsScript = (
     hasOpenPositions,
     isClosing: isMutating,
     openPositionsCount: openPositions.length,
+    symbol,
   };
 };
 
