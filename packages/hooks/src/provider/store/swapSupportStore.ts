@@ -28,12 +28,20 @@ export const useSwapSupportStore = create<SwapSupport & SwapSupportActions>()(
             return data.data;
           }
           // When API returns error status, preserve existing data by not updating it
-          set({ error: new Error(data.message), loading: false });
+          set((state) => ({
+            data: state.data ?? {},
+            error: new Error(data.message),
+            loading: false,
+          }));
           return null;
         } catch (error) {
           console.log("!!!swap support error", error);
           // When fetch fails, preserve existing data by not updating it
-          set({ error: error as Error, loading: false });
+          set((state) => ({
+            data: state.data ?? {},
+            error: error as Error,
+            loading: false,
+          }));
           return null;
         }
       },
