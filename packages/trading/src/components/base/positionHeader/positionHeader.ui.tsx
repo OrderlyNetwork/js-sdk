@@ -29,7 +29,7 @@ const MobileLayout: React.FC<PositionHeaderState> = (props) => {
       p={2}
       className="oui-rounded-b-xl oui-bg-base-9"
     >
-      <Flex width={"100%"} justify={"between"}>
+      <Flex width={"100%"} justify={"between"} gap={2}>
         <UnrealPnL
           classNames={{
             label: "oui-text-2xs oui-text-base-contrast-54",
@@ -77,7 +77,7 @@ const MobileLayout: React.FC<PositionHeaderState> = (props) => {
 const DesktopLayout: React.FC<PositionHeaderState> = (props) => {
   return (
     <Flex py={2} px={3} gap={6} width={"100%"} justify={"between"}>
-      <Flex>
+      <Flex gap={5}>
         <UnrealPnL
           {...props}
           classNames={{ label: "oui-text-base-contrast-54" }}
