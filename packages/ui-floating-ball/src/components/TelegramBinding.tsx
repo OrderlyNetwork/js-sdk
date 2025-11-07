@@ -1,5 +1,6 @@
 import React from "react";
 import { Button, Flex, Text, Box, cn } from "@orderly.network/ui";
+import starchild3x from "../assets/starchild3x.png";
 import starchildBG from "../assets/starchildBG.png";
 import { useTelegramBinding } from "../hooks/useTelegramBinding";
 import type { TelegramUserData, WalletData, BindingData } from "../types";
@@ -11,7 +12,6 @@ import {
   ShieldShadedIcon,
   CloseIcon,
   CheckIcon,
-  StarchildFlatIcon,
   TelegramIcon,
   LoadingIcon,
 } from "./icons";
@@ -127,7 +127,7 @@ export const TelegramBinding: React.FC<TelegramBindingProps> = ({
       <Box className="oui-flex oui-items-center oui-justify-between oui-mt-1">
         <Flex gap={2} itemAlign="center">
           <Box className="oui-relative oui-rounded-lg oui-overflow-hidden oui-w-10 oui-h-10">
-            <StarchildFlatIcon size={40} />
+            <img src={starchild3x} alt="Starchild" width={40} height={40} />
           </Box>
           <Text className="oui-text-white/98 oui-font-semibold oui-tracking-wide">
             Starchild

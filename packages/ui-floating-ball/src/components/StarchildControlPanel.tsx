@@ -3,13 +3,13 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { useStarChildWidget } from "starchild-widget";
 import { useEventEmitter } from "@orderly.network/hooks";
 import { cn, Divider, Tooltip } from "@orderly.network/ui";
+import starchild3x from "../assets/starchild3x.png";
 import { StarChildInitializer } from "./StarChildInitializer";
 import { TelegramBinding } from "./TelegramBinding";
 import { TooltipWithShortcut } from "./TooltipWithShortcut";
 import {
   SignPostIcon,
   SoundWaveIcon,
-  StarchildFlatIcon,
   ChevronCompactRightIcon,
   CloseIcon,
 } from "./icons";
@@ -157,8 +157,11 @@ const SidePanelToggleSection: React.FC<SidePanelToggleSectionProps> = ({
               className="oui-w-full oui-h-full oui-object-cover"
             />
           ) : (
-            <StarchildFlatIcon
-              size={18}
+            <img
+              src={starchild3x}
+              alt="Starchild"
+              width={18}
+              height={18}
               className="oui-w-full oui-h-full oui-object-cover"
             />
           )}
