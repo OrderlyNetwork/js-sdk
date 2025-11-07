@@ -3,7 +3,6 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { useStarChildWidget } from "starchild-widget";
 import { useEventEmitter } from "@orderly.network/hooks";
 import { cn, Divider, Tooltip } from "@orderly.network/ui";
-import starchildRobot from "../assets/starchildRobot.png";
 import { StarChildInitializer } from "./StarChildInitializer";
 import { TelegramBinding } from "./TelegramBinding";
 import { TooltipWithShortcut } from "./TooltipWithShortcut";
@@ -13,6 +12,9 @@ import {
   ChevronCompactRightIcon,
   CloseIcon,
 } from "./icons";
+
+const STARCHILD_ROBOT_SRC =
+  "https://storage.googleapis.com/oss.orderly.network/static/starchild/starchildRobot.png";
 
 // Badge Component
 interface NotificationBadgeProps {
@@ -151,20 +153,20 @@ const SidePanelToggleSection: React.FC<SidePanelToggleSectionProps> = ({
             "oui-flex oui-items-center oui-justify-center",
           )}
         >
-          {isOpen ? (
+          {isOpen && (
             <CloseIcon
               size={18}
               className="oui-w-full oui-h-full oui-object-cover"
             />
-          ) : (
-            <img
-              src={starchildRobot}
-              alt="Starchild"
-              width={18}
-              height={18}
-              className="oui-w-full oui-h-full oui-object-cover"
-            />
           )}
+          <img
+            src={STARCHILD_ROBOT_SRC}
+            alt="Starchild"
+            width={18}
+            height={18}
+            className="oui-w-full oui-h-full oui-object-cover"
+            style={{ display: isOpen ? "none" : "block" }}
+          />
         </div>
         {showBadge && badgeCount > 0 && (
           <NotificationBadge count={badgeCount} />
@@ -460,7 +462,13 @@ export const StarchildControlPanel: React.FC<StarchildControlPanelProps> = ({
               maxWidth: isCollapsed ? "32px" : "166px",
             }}
           >
-            {isCollapsed ? (
+            {/* hide the section when expanded */}
+            <div
+              className={cn(
+                "oui-items-center",
+                isCollapsed ? "oui-flex" : "oui-hidden",
+              )}
+            >
               <SidePanelToggleSection
                 tooltip={sidePanelTooltip}
                 shortcutKeys={["⌘", "Shift", chatShortcut]}
@@ -470,7 +478,8 @@ export const StarchildControlPanel: React.FC<StarchildControlPanelProps> = ({
                 badgeCount={badgeCount}
                 isOpen={isSidePanelOpen}
               />
-            ) : (
+            </div>
+            {!isCollapsed && (
               <MyAgentSection
                 tooltip={myAgentTooltip}
                 shortcutKeys={myAgentShortcutKeys}

@@ -1,7 +1,5 @@
 import React from "react";
 import { Button, Flex, Text, Box, cn } from "@orderly.network/ui";
-import starchildBG from "../assets/starchildBG.png";
-import starchildRobot from "../assets/starchildRobot.png";
 import { useTelegramBinding } from "../hooks/useTelegramBinding";
 import type { TelegramUserData, WalletData, BindingData } from "../types";
 import {
@@ -15,6 +13,11 @@ import {
   TelegramIcon,
   LoadingIcon,
 } from "./icons";
+
+const STARCHILD_BG_SRC =
+  "https://storage.googleapis.com/oss.orderly.network/static/starchild/starchildBG.png";
+const STARCHILD_ROBOT_SRC =
+  "https://storage.googleapis.com/oss.orderly.network/static/starchild/starchildRobot.png";
 
 interface TelegramBindingProps {
   onTelegramConnected?: (telegramData: TelegramUserData) => void;
@@ -117,7 +120,7 @@ export const TelegramBinding: React.FC<TelegramBindingProps> = ({
       style={{
         width: "420px",
         height: "680px",
-        backgroundImage: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(${starchildBG})`,
+        backgroundImage: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.2)), url(${STARCHILD_BG_SRC})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
@@ -127,7 +130,12 @@ export const TelegramBinding: React.FC<TelegramBindingProps> = ({
       <Box className="oui-flex oui-items-center oui-justify-between oui-mt-1">
         <Flex gap={2} itemAlign="center">
           <Box className="oui-relative oui-rounded-lg oui-overflow-hidden oui-w-10 oui-h-10">
-            <img src={starchildRobot} alt="Starchild" width={40} height={40} />
+            <img
+              src={STARCHILD_ROBOT_SRC}
+              alt="Starchild"
+              width={40}
+              height={40}
+            />
           </Box>
           <Text className="oui-text-white/98 oui-font-semibold oui-tracking-wide">
             Starchild
