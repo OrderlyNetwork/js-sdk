@@ -14,7 +14,7 @@ export const usePreLoadData = () => {
   const [timestampOffsetInitialized, setTimestampOffsetInitialized] =
     useState(false);
 
-  const { configStore } = useContext(OrderlyContext);
+  const { configStore, enableSwapDeposit } = useContext(OrderlyContext);
 
   const env = configStore.get("env");
   const apiBaseUrl = configStore.get("apiBaseUrl");
@@ -63,9 +63,9 @@ export const usePreLoadData = () => {
   }, [mainTokenInfo, testTokenInfo]);
 
   useEffect(() => {
-    if (swapSupportInfo) return;
+    if (swapSupportInfo || !enableSwapDeposit) return;
     fetchSwapSupport();
-  }, [swapSupportInfo]);
+  }, [swapSupportInfo, enableSwapDeposit]);
 
   const { data: systemInfo } = useSWR(
     "/v1/public/system_info",
