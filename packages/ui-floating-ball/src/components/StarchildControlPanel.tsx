@@ -3,7 +3,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { useStarChildWidget } from "starchild-widget";
 import { useEventEmitter } from "@orderly.network/hooks";
 import { cn, Divider, Tooltip } from "@orderly.network/ui";
-import starchild3x from "../assets/starchild3x.png";
+import starchildRobot from "../assets/starchildRobot.png";
 import { StarChildInitializer } from "./StarChildInitializer";
 import { TelegramBinding } from "./TelegramBinding";
 import { TooltipWithShortcut } from "./TooltipWithShortcut";
@@ -158,7 +158,7 @@ const SidePanelToggleSection: React.FC<SidePanelToggleSectionProps> = ({
             />
           ) : (
             <img
-              src={starchild3x}
+              src={starchildRobot}
               alt="Starchild"
               width={18}
               height={18}

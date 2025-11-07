@@ -1,4 +1,3 @@
-export * from "./FloatingStarchildBall";
 export * from "./TelegramBinding";
 export * from "./icons/StarchildIcon";
 export * from "./FloatingStarchildDialog";
