@@ -1,7 +1,15 @@
 import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
-import { Badge, cn, Flex, Spinner, Text, TokenIcon } from "@orderly.network/ui";
+import {
+  Badge,
+  Box,
+  cn,
+  Flex,
+  Spinner,
+  Text,
+  TokenIcon,
+} from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { isYieldBearingAsset } from "../../constants/yieldBearingAssets";
 import { useYieldAPY } from "../depositForm/hooks/useYieldAPY";
@@ -115,32 +123,16 @@ export const TokenOption: React.FC<TokenOptionProps> = (props) => {
           {token.label}
         </Text>
         {showAPY && (
-          <div
-            style={{
-              background: "rgba(0, 180, 158, 0.15)",
-              borderRadius: "4px",
-              height: "18px",
-              paddingLeft: "8px",
-              paddingRight: "8px",
-              display: "flex",
-              alignItems: "center",
-              flexShrink: 0,
-            }}
+          <Box
+            height={18}
+            px={2}
+            r="sm"
+            className="oui-rounded-[4px] oui-bg-success/[0.15]"
           >
-            <span
-              style={{
-                fontFamily: "'DIN 2014', sans-serif",
-                fontSize: "12px",
-                fontWeight: 600,
-                lineHeight: "18px",
-                letterSpacing: "0.36px",
-                color: "#00b49e",
-                whiteSpace: "nowrap",
-              }}
-            >
+            <Text size="2xs" className="oui-text-success">
               {apy!.toFixed(1)}% APY
-            </span>
-          </div>
+            </Text>
+          </Box>
         )}
       </Flex>
       {renderValue()}
