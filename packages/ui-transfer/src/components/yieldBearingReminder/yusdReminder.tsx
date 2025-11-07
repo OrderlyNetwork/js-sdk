@@ -1,6 +1,5 @@
 import { FC } from "react";
 import { BaseReminder } from "./baseReminder";
-import { yusdTheme } from "./themes";
 
 export interface YusdReminderProps {
   /** APY value in percentage (e.g., 8.5 for 8.5%) */
@@ -19,7 +18,5 @@ export interface YusdReminderProps {
  * Strictly follows Figma design
  */
 export const YusdReminder: FC<YusdReminderProps> = (props) => {
-  return (
-    <BaseReminder {...props} theme={yusdTheme} testId="yusd-yield-reminder" />
-  );
+  return <BaseReminder {...props} testId="yusd-yield-reminder" />;
 };

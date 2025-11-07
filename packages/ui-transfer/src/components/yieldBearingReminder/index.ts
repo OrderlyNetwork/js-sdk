@@ -6,4 +6,3 @@ export type { YusdReminderProps } from "./yusdReminder";
 export type { DeUsdReminderProps } from "./deUsdReminder";
 export { BaseReminder } from "./baseReminder";
 export type { BaseReminderProps } from "./baseReminder";
-export * from "./themes";

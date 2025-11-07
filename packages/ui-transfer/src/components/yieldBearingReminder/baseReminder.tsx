@@ -2,7 +2,6 @@ import { FC } from "react";
 import { Trans, useTranslation } from "@orderly.network/i18n";
 import { Box, cn, Flex, Text } from "@orderly.network/ui";
 import { TooltipIcon } from "../icons/tooltipIcon";
-import { ReminderTheme } from "./themes";
 
 export interface BaseReminderProps {
   /** APY value in percentage (e.g., 8.5 for 8.5%) */
@@ -14,7 +13,7 @@ export interface BaseReminderProps {
   /** Additional CSS class name */
   className?: string;
   /** Theme configuration */
-  theme: ReminderTheme;
+  // theme: ReminderTheme;
   /** Test ID for the component */
   testId?: string;
 }
@@ -29,7 +28,6 @@ export const BaseReminder: FC<BaseReminderProps> = ({
   loading,
   externalUrl,
   className,
-  theme,
   testId,
 }) => {
   const { t } = useTranslation();

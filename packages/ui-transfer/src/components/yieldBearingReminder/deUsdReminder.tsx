@@ -1,6 +1,5 @@
 import { FC } from "react";
 import { BaseReminder } from "./baseReminder";
-import { deusdTheme } from "./themes";
 
 export interface DeUsdReminderProps {
   /** APY value in percentage (e.g., 8.5 for 8.5%) */
@@ -19,7 +18,5 @@ export interface DeUsdReminderProps {
  * Strictly follows Figma design: https://www.figma.com/design/CdydOeLyOKPJUNw96Wnwzd/WOOFi---Portfolio?node-id=8417-14708&m=dev
  */
 export const DeUsdReminder: FC<DeUsdReminderProps> = (props) => {
-  return (
-    <BaseReminder {...props} theme={deusdTheme} testId="deusd-yield-reminder" />
-  );
+  return <BaseReminder {...props} testId="deusd-yield-reminder" />;
 };
