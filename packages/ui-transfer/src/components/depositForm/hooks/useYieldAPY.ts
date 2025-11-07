@@ -90,7 +90,7 @@ export function useYieldAPY(symbol?: string): YieldAPYData {
     setApy(null);
     setError(null);
 
-    if (assetConfig) {
+    if (assetConfig?.symbol === "deUSD") {
       fetchAPY();
     } else {
       setLoading(false);

@@ -79,7 +79,7 @@ export const BaseReminder: FC<BaseReminderProps> = ({
             href={externalUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="oui-inline-flex oui-gap-[2px] oui-items-center  oui-no-underline oui-transition-opacity hover:oui-opacity-80"
+            className="oui-inline-flex oui-items-center oui-gap-[2px]  oui-font-normal oui-no-underline oui-transition-opacity hover:oui-opacity-80"
           >
             {t("common.details")}
             <svg
