@@ -465,7 +465,6 @@ export const formatDatePickerRange = (option: { from?: Date; to?: Date }) => ({
 type TranslationFn = (...args: any[]) => string;
 
 const getDialogInfo = (type: TabType, t: TranslationFn, symbol?: string) => {
-  console.log("getDialogInfo symbol", symbol);
   // symbol like this: PERP_BTC_USDC, but i want to show BTC, pls help me to format the symbol
   const formattedSymbol = symbol ? formatSymbol(symbol, "base") : symbol;
   switch (type) {

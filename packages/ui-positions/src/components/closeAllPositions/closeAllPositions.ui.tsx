@@ -13,11 +13,9 @@ export const CloseAllPositions: FC<CloseAllPositionsProps> = (props) => {
   const { onCloseAll, hasOpenPositions, isClosing, className, style, symbol } =
     props;
   const { t } = useTranslation();
-
-  console.log("CloseAllPositions props", props.symbol);
-  const formattedSymbol = props.symbol
-    ? formatSymbol(props.symbol, "base")
-    : props.symbol;
+  if (symbol !== undefined) {
+    return <></>;
+  }
   return (
     <Button
       onClick={onCloseAll}
@@ -29,9 +27,7 @@ export const CloseAllPositions: FC<CloseAllPositionsProps> = (props) => {
       className={cn("disabled:oui-bg-transport", className)}
       style={style}
     >
-      {symbol
-        ? t("positions.closeAll.ofSymbol", { symbol: formattedSymbol })
-        : t("positions.closeAll")}
+      {t("positions.closeAll")}
     </Button>
   );
 };
