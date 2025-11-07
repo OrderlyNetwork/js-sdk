@@ -1,6 +1,4 @@
-import deUsdBg from "../../../assets/deusd_bg.png";
-import deUsdBt from "../../../assets/deusd_bt.png";
-import deUsdTp from "../../../assets/deusd_tp.png";
+import { deUsdBg, deUsdBt, deUsdTp } from "../icons";
 import { ReminderTheme } from "./types";
 
 /**
