@@ -87,7 +87,7 @@ export const VaultsList: FC<VaultsListProps> = ({ vaults }) => {
       {/* Table Header */}
       <div className="oui-grid oui-grid-cols-[2fr_1fr_1fr_1fr_1fr_1fr_1.5fr] oui-gap-4 oui-px-4 oui-py-3">
         <div className="oui-text-2xs oui-font-normal oui-text-base-contrast-54">
-          Pool Name
+          {t("vaults.list.poolName")}
         </div>
         <button
           onClick={() => handleSort("tvl")}
@@ -107,21 +107,21 @@ export const VaultsList: FC<VaultsListProps> = ({ vaults }) => {
           onClick={() => handleSort("deposits")}
           className="oui-flex oui-items-center oui-text-2xs oui-font-normal oui-text-base-contrast-54 hover:oui-text-base-contrast"
         >
-          My deposits
+          {t("vaults.list.myDeposits")}
           <SortIcon field="deposits" />
         </button>
         <button
           onClick={() => handleSort("pnl")}
           className="oui-flex oui-items-center oui-text-2xs oui-font-normal oui-text-base-contrast-54 hover:oui-text-base-contrast"
         >
-          All-time pnl
+          {t("vaults.list.allTimePnl")}
           <SortIcon field="pnl" />
         </button>
         <div className="oui-text-2xs oui-font-normal oui-text-base-contrast-54">
           {t("vaults.card.accountBalance")}
         </div>
         <div className="oui-text-2xs oui-font-normal oui-text-base-contrast-54">
-          Operate
+          {t("vaults.list.operate")}
         </div>
       </div>
 
@@ -151,6 +151,30 @@ const VaultListRow: FC<{ vault: VaultInfo }> = ({ vault }) => {
     icon,
     isButtonsDisabled,
   } = script;
+
+  const isPreLaunch = vaultInfo.status === "pre_launch";
+
+  const supportVaultsList = useMemo(() => {
+    const chains = Array.isArray(vaultInfo?.supported_chains)
+      ? vaultInfo.supported_chains
+      : [];
+    return (
+      <div className="oui-flex oui-items-center">
+        {chains.map((chain, index) => (
+          <img
+            key={chain.chain_id}
+            src={`https://oss.orderly.network/static/network_logo/${chain.chain_id}.png`}
+            alt={chain.chain_id}
+            className="oui-relative oui-size-[18px]"
+            style={{
+              marginLeft: index > 0 ? "-4px" : "0",
+              zIndex: chains.length - index,
+            }}
+          />
+        ))}
+      </div>
+    );
+  }, [vaultInfo.supported_chains]);
 
   return (
     <div className="oui-relative oui-grid oui-grid-cols-[2fr_1fr_1fr_1fr_1fr_1fr_1.5fr] oui-gap-4 oui-rounded-lg oui-border oui-border-solid oui-border-white/[0.12] oui-bg-base-9 oui-px-4 oui-py-4 oui-items-center oui-overflow-hidden">
@@ -194,10 +218,11 @@ const VaultListRow: FC<{ vault: VaultInfo }> = ({ vault }) => {
           }}
         />
         <div className="oui-flex oui-flex-col oui-gap-1">
+          <div className="oui-text-sm oui-font-semibold oui-text-base-contrast">
+            {title}
+          </div>
           <div className="oui-flex oui-items-center oui-gap-2">
-            <span className="oui-text-sm oui-font-semibold oui-text-base-contrast">
-              {title}
-            </span>
+            {supportVaultsList}
             <button
               onClick={openVaultWebsite}
               className="oui-flex oui-items-center oui-justify-center"
@@ -209,6 +234,22 @@ const VaultListRow: FC<{ vault: VaultInfo }> = ({ vault }) => {
                 viewBox="0 0 18 18"
               />
             </button>
+            {isPreLaunch && (
+              <div
+                className="oui-flex oui-items-center oui-gap-[10px] oui-px-2 oui-text-[#E88800]"
+                style={{
+                  height: "18px",
+                  borderRadius: "4px",
+                  background: "rgba(232, 136, 0, 0.15)",
+                  fontSize: "12px",
+                  fontWeight: 600,
+                  lineHeight: "18px",
+                  letterSpacing: "0.36px",
+                }}
+              >
+                {t("vaults.card.launchingSoon")}
+              </div>
+            )}
           </div>
         </div>
       </div>
