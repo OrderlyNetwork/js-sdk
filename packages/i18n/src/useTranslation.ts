@@ -1,5 +1,4 @@
 import { useContext } from "react";
-import { FlatNamespace, KeyPrefix } from "i18next";
 import {
   FallbackNs,
   useTranslation as _useTranslation,
@@ -7,13 +6,20 @@ import {
   I18nContext,
 } from "react-i18next";
 import { type $Tuple } from "react-i18next/helpers";
+import { FlatNamespace, KeyPrefix } from "i18next";
 import i18n from "./i18n";
 
 export function useTranslation<
   Ns extends FlatNamespace | $Tuple<FlatNamespace> | undefined,
-  KPrefix extends KeyPrefix<FallbackNs<Ns>> = undefined
+  KPrefix extends KeyPrefix<FallbackNs<Ns>> = undefined,
 >(ns?: Ns, options?: UseTranslationOptions<KPrefix>) {
   // @ts-ignore
   const context = useContext(I18nContext);
-  return _useTranslation(ns, { i18n: context?.i18n || i18n, ...options });
+  return _useTranslation(ns, {
+    i18n: context?.i18n || i18n,
+    // @ts-ignore
+    // when the language resource is loaded, notify the translation component to re-render
+    bindI18nStore: "added",
+    ...options,
+  });
 }
