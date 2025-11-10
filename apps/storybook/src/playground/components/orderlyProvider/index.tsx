@@ -21,11 +21,12 @@ export const OrderlyProvider: React.FC = () => {
   const { onRouteChange } = useNav();
   usePageTitle();
   useTheme();
-  const { networkId, brokerId, brokerName, env, usePrivy } = useEnvFormUrl();
+  const { networkId, brokerId, brokerName, env, usePrivy, asyncLoadLocale } =
+    useEnvFormUrl();
 
   return (
     <RouteProvider onRouteChange={onRouteChange}>
-      <LocaleProvider>
+      <LocaleProvider asyncLoadLocale={asyncLoadLocale}>
         <WalletConnectorProvider usePrivy={usePrivy}>
           <OrderlyAppRootProvider
             networkId={networkId}
