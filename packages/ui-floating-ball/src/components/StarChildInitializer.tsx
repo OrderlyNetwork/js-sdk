@@ -289,7 +289,7 @@ export const StarChildInitializer: React.FC = () => {
   React.useEffect(() => {
     const handleRequestShowChat = () => {
       try {
-        if (window.innerWidth > 1279) {
+        if (window.innerWidth > 1680) {
           console.log(
             "[StarChildInitializer] Showing chat in sideChatContainer (screen width:",
             window.innerWidth,
@@ -360,7 +360,7 @@ export const StarChildInitializer: React.FC = () => {
         // First set chat visible
         setChatVisible(true);
         // Then show the chat
-        if (window.innerWidth > 1279) {
+        if (window.innerWidth > 1680) {
           console.log(
             "[StarChildInitializer] Showing chat in sideChatContainer for voice (screen width:",
             window.innerWidth,
@@ -406,7 +406,7 @@ export const StarChildInitializer: React.FC = () => {
         // First set chat visible
         setChatVisible(true);
         // Then show the chat
-        if (window.innerWidth > 1279) {
+        if (window.innerWidth > 1680) {
           console.log(
             "[StarChildInitializer] Showing chat in sideChatContainer for My Agent (screen width:",
             window.innerWidth,

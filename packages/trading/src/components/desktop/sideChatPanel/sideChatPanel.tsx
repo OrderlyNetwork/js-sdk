@@ -17,14 +17,17 @@ export const SideChatPanel: React.FC<SideChatPanelProps> = ({
   const ee = useEventEmitter();
   const { showChat } = useStarChildWidget();
   const [isOpen, setIsOpen] = useState(false);
-  const [scrollTop, setScrollTop] = useState(0);
   const placeholderRef = useRef<HTMLDivElement>(null);
   const [placeholderRight, setPlaceholderRight] = useState(0);
 
   useEffect(() => {
     const handleToggle = (data: { isOpen: boolean }) => {
-      setIsOpen(data.isOpen);
-      if (data.isOpen) {
+      const isLargeScreen = window.innerWidth > 1680;
+      const shouldOpen = isLargeScreen && data.isOpen;
+
+      setIsOpen(shouldOpen);
+
+      if (shouldOpen) {
         try {
           showChat("sideChatContainer");
         } catch (e) {
@@ -38,7 +41,6 @@ export const SideChatPanel: React.FC<SideChatPanelProps> = ({
     };
   }, [ee, showChat]);
 
-  // Listen for starchild:chatClosed event to close the panel
   useEffect(() => {
     const handleChatClosed = () => {
       setIsOpen(false);
@@ -56,41 +58,18 @@ export const SideChatPanel: React.FC<SideChatPanelProps> = ({
   }, []);
 
   useEffect(() => {
-    if (!isOpen) return;
-
-    const handleScroll = (event: Event) => {
-      const target = event.target as HTMLElement;
-      const scrollY =
-        target.scrollTop ||
-        window.scrollY ||
-        document.documentElement.scrollTop;
-      setScrollTop(scrollY);
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    document.addEventListener("scroll", handleScroll, {
-      passive: true,
-      capture: true,
-    });
-
-    handleScroll({ target: document.documentElement } as any); // Initial call
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      document.removeEventListener("scroll", handleScroll, true);
-    };
-  }, [isOpen]);
-
-  // Close panel on window resize
-  useEffect(() => {
+    let lastWidth = window.innerWidth;
     const handleResize = () => {
-      if (isOpen) {
-        ee.emit("sideChatPanel:toggle", { isOpen: false });
+      const currentWidth = window.innerWidth;
+      // Only process if width actually changed
+      if (currentWidth !== lastWidth) {
+        lastWidth = currentWidth;
+        if (isOpen && currentWidth < 1680) {
+          ee.emit("sideChatPanel:toggle", { isOpen: false });
+        }
       }
     };
-
     window.addEventListener("resize", handleResize);
-
     return () => {
       window.removeEventListener("resize", handleResize);
     };
@@ -121,14 +100,13 @@ export const SideChatPanel: React.FC<SideChatPanelProps> = ({
     };
   }, [isOpen]);
 
-  const calculatedTop = Math.max(0, topBarHeight - scrollTop);
   return (
     <>
       {/* Placeholder to maintain layout space */}
       <Box
         ref={placeholderRef}
         style={{
-          width: isOpen ? 480 - 8 - scrollBarWidth : 0,
+          width: isOpen ? 400 - 8 - scrollBarWidth : 0,
           flexShrink: 0,
           transition: "width 0.2s ease-in-out",
         }}
@@ -139,13 +117,13 @@ export const SideChatPanel: React.FC<SideChatPanelProps> = ({
         r="2xl"
         intensity={900}
         style={{
-          width: 480,
-          height: `calc(100vh - ${bottomBarHeight}px - ${calculatedTop}px)`,
+          width: 400,
+          height: `calc(100vh - ${bottomBarHeight}px - ${topBarHeight}px)`,
           position: "fixed",
-          top: calculatedTop,
+          top: topBarHeight,
           right: isOpen
             ? window.innerWidth - placeholderRight - 8 - scrollBarWidth
-            : -480,
+            : -400,
           zIndex: 50,
           transition: "top 0.1s ease-out, right 0.2s ease-in-out",
         }}

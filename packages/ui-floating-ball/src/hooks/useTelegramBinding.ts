@@ -48,10 +48,11 @@ export function useTelegramBinding(
 ): UseTelegramBindingReturn {
   const { state: accountState } = useAccount();
   const { wallet, namespace } = useWalletConnector();
-  const { starChildConfig } = useOrderlyContext();
+  const { starChildConfig, configStore } = useOrderlyContext();
 
   const baseUrl = starChildConfig?.url || "";
   const telegramBotId = starChildConfig?.telegram_bot_id || "";
+  const brokerId = configStore.getOr("brokerId", "woofi_pro");
 
   const [telegramUser, setTelegramUser] = useState<TelegramUserData | null>(
     null,
@@ -144,6 +145,7 @@ export function useTelegramBinding(
       message: { chainType: "EVM", timestamp },
       signature: normalizedSignature,
       userAddress: address,
+      userSource: brokerId,
     };
 
     const resp = await fetch(`${baseUrl}v1/authToken`, {
@@ -165,7 +167,7 @@ export function useTelegramBinding(
 
     return { token, timestamp };
   };
-
+  4;
   // Return existing token for address from localStorage if present; otherwise request and persist.
   const getEvmAuthToken = async (
     address: string,
@@ -500,7 +502,7 @@ export function useTelegramBinding(
     const now = Date.now();
     const payload = {
       message: {
-        brokerId: opts?.brokerId ?? "woofi_pro",
+        brokerId: opts?.brokerId ?? brokerId,
         chainId: opts?.chainId ?? 8453,
         chainType: opts?.chainType ?? "EVM",
         orderlyKey,

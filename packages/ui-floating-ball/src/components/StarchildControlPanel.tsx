@@ -191,26 +191,32 @@ const SidePanelToggleSection: React.FC<SidePanelToggleSectionProps> = ({
 interface CollapseButtonProps {
   isCollapsed?: boolean;
   onClick?: () => void;
+  disabled?: boolean;
 }
 
 const CollapseButton: React.FC<CollapseButtonProps> = ({
   isCollapsed = false,
   onClick,
+  disabled = false,
 }) => {
   return (
     <button
       onClick={onClick}
+      disabled={disabled}
       className={cn(
         "oui-shrink-0",
         "oui-flex oui-items-center oui-justify-center",
-        "oui-cursor-pointer",
+        disabled ? "oui-cursor-not-allowed" : "oui-cursor-pointer",
       )}
       aria-label={isCollapsed ? "Expand" : "Collapse"}
+      aria-disabled={disabled}
     >
       <ChevronCompactRightIcon
         size={14}
         className={cn(
-          "oui-text-base-contrast-54 hover:oui-text-base-contrast",
+          disabled
+            ? "oui-text-base-contrast-36"
+            : "oui-text-base-contrast-54 hover:oui-text-base-contrast",
           "oui-transition-transform oui-duration-100",
           isCollapsed ? "" : "oui-rotate-180",
         )}
@@ -246,6 +252,7 @@ export const StarchildControlPanel: React.FC<StarchildControlPanelProps> = ({
   const [badgeCount, setBadgeCount] = useState(getUnreadCount());
   const [voiceShortcut, setVoiceShortcut] = useState(getVoiceShortcut());
   const [chatShortcut, setChatShortcut] = useState(getChatShortcut());
+  const [isCompactScreen, setIsCompactScreen] = useState(false);
 
   // Listen to single source of truth: widget state changes
   React.useEffect(() => {
@@ -321,6 +328,27 @@ export const StarchildControlPanel: React.FC<StarchildControlPanelProps> = ({
     };
   }, [ee]);
 
+  // Auto-collapse on small screens and disable collapse toggle
+  React.useEffect(() => {
+    const updateLayoutForScreenSize = () => {
+      try {
+        const compact = window.innerWidth < 1400;
+        setIsCompactScreen(compact);
+        if (compact) {
+          // Force collapsed on compact screens
+          setIsCollapsed(true);
+        }
+      } catch {
+        // no-op for non-browser environments
+      }
+    };
+    updateLayoutForScreenSize();
+    window.addEventListener("resize", updateLayoutForScreenSize);
+    return () => {
+      window.removeEventListener("resize", updateLayoutForScreenSize);
+    };
+  }, []);
+
   const handleMyAgentClick = () => {
     console.log("My Agent button clicked");
     if (!isTgBound) {
@@ -368,7 +396,7 @@ export const StarchildControlPanel: React.FC<StarchildControlPanelProps> = ({
       return;
     }
     const newState = !isSidePanelOpen;
-    const isLargeScreen = window.innerWidth > 1279;
+    const isLargeScreen = window.innerWidth > 1680;
     setIsSidePanelOpen(newState);
     ee.emit("sideChatPanel:toggle", { isOpen: newState });
 
@@ -380,8 +408,6 @@ export const StarchildControlPanel: React.FC<StarchildControlPanelProps> = ({
         });
         window.dispatchEvent(event);
       } else {
-        // On large screens, keep the chat visible when closing the side panel
-        // Only hide the chat on small screens
         if (!isLargeScreen) {
           const event = new CustomEvent("starchild:requestHideChat", {
             detail: { isOpen: false },
@@ -513,7 +539,11 @@ export const StarchildControlPanel: React.FC<StarchildControlPanelProps> = ({
           </div>
 
           {/* Chevron Collapse Button */}
-          <CollapseButton isCollapsed={isCollapsed} onClick={handleCollapse} />
+          <CollapseButton
+            isCollapsed={isCollapsed}
+            onClick={isCompactScreen ? undefined : handleCollapse}
+            disabled={isCompactScreen}
+          />
         </div>
       </div>
     </>

@@ -24,6 +24,7 @@ import {
   useGetRwaSymbolOpenStatus,
   useLocalStorage,
   useOrderlyContext,
+  useEventEmitter,
 } from "@orderly.network/hooks";
 import {
   SideMarketsWidget,
@@ -217,6 +218,47 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
     };
   }, []);
 
+  // Track side chat panel open state and window width for responsive rules
+  const ee = useEventEmitter();
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [windowWidth, setWindowWidth] = useState<number>(
+    typeof window !== "undefined" ? window.innerWidth : 0,
+  );
+
+  useEffect(() => {
+    const handleToggle = (data: { isOpen: boolean }) => {
+      const shouldOpen = window.innerWidth > 1680 && data.isOpen;
+      setIsChatOpen(shouldOpen);
+    };
+    const handleChatClosed = () => setIsChatOpen(false);
+    const handleResize = () => setWindowWidth(window.innerWidth);
+
+    ee.on("sideChatPanel:toggle", handleToggle);
+    window.addEventListener(
+      "starchild:chatClosed",
+      handleChatClosed as EventListener,
+    );
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      ee.off("sideChatPanel:toggle", handleToggle);
+      window.removeEventListener(
+        "starchild:chatClosed",
+        handleChatClosed as EventListener,
+      );
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [ee]);
+
+  const chatRestrictsMarkets =
+    isChatOpen && windowWidth > 1680 && windowWidth <= 1920;
+
+  useEffect(() => {
+    if (chatRestrictsMarkets && panelSize === "large") {
+      onPanelSizeChange("middle" as any);
+    }
+  }, [chatRestrictsMarkets, panelSize, onPanelSizeChange]);
+
   // Configure sensors for drag and drop interactions
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -315,9 +357,11 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
 
   const marketsWidget = (
     <SideMarketsWidget
-      resizeable={resizeable}
-      panelSize={panelSize}
-      onPanelSizeChange={onPanelSizeChange as any}
+      resizeable={resizeable && !chatRestrictsMarkets}
+      panelSize={(chatRestrictsMarkets ? "middle" : panelSize) as any}
+      onPanelSizeChange={
+        (chatRestrictsMarkets ? () => {} : (onPanelSizeChange as any)) as any
+      }
       symbol={props.symbol}
       onSymbolChange={props.onSymbolChange}
     />

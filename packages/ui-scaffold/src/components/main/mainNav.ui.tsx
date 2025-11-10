@@ -1,6 +1,6 @@
 import { FC, PropsWithChildren, useMemo } from "react";
 import { AccountStatusEnum, ChainNamespace } from "@orderly.network/types";
-import { cn, Divider, Flex, useScreen } from "@orderly.network/ui";
+import { cn, Divider, Flex, Box, useScreen } from "@orderly.network/ui";
 import { WalletConnectButtonExtension } from "../accountMenu/menu.widget";
 import { AccountSummaryWidget } from "../accountSummary";
 import { ChainMenuWidget } from "../chainMenu";
@@ -138,22 +138,29 @@ export const MainNav: FC<PropsWithChildren<MainNavScriptReturn>> = (props) => {
   };
 
   return (
-    <Flex
-      width="100%"
-      as="header"
-      itemAlign={"center"}
-      height={"48px"}
-      justify={"between"}
-      px={3}
-      gapX={3}
-      className={cn(
-        "oui-main-nav oui-font-semibold",
-        className,
-        classNames?.root,
-      )}
-    >
-      {renderContent()}
-    </Flex>
+    <>
+      <Box height="48px" className="oui-bg-base-10"></Box>
+      <Flex
+        width="100%"
+        position="fixed"
+        top={0}
+        left={0}
+        zIndex={50}
+        as="header"
+        itemAlign={"center"}
+        height={"48px"}
+        justify={"between"}
+        px={3}
+        gapX={3}
+        className={cn(
+          "oui-main-nav oui-font-semibold oui-bg-base-9 oui-border-b oui-border-line-12",
+          className,
+          classNames?.root,
+        )}
+      >
+        {renderContent()}
+      </Flex>
+    </>
   );
 };
 
