@@ -1,10 +1,9 @@
-import { FC, ReactNode, useMemo } from "react";
+import { FC, ReactNode } from "react";
 import {
   LocaleProvider as I18nLocaleProvider,
   LocaleCode,
   LocaleEnum,
   removeLangPrefix,
-  LocaleProviderProps,
 } from "@orderly.network/i18n";
 import { resources } from "../../../components/orderlyProvider/localeProvider";
 
@@ -22,6 +21,11 @@ export const LocaleProvider: FC<CustomLocaleProviderProps> = (props) => {
   };
 
   const loadPath = (lang: LocaleCode) => {
+    // when sync load locale, we only need to load the extend locale
+    if (!asyncLoadLocale) {
+      return `/locales/extend/${lang}.json`;
+    }
+
     if (lang === LocaleEnum.en) {
       // because en is built-in, we need to load the en extend only
       return `/locales/extend/${lang}.json`;
@@ -29,22 +33,11 @@ export const LocaleProvider: FC<CustomLocaleProviderProps> = (props) => {
     return [`/locales/${lang}.json`, `/locales/extend/${lang}.json`];
   };
 
-  const localeProps = useMemo(() => {
-    const params = {} as Partial<LocaleProviderProps>;
-    if (asyncLoadLocale) {
-      params.backend = { loadPath };
-    } else {
-      params.resources = resources;
-    }
-    return params;
-  }, [asyncLoadLocale]);
-
   return (
     <I18nLocaleProvider
       onLanguageChanged={onLanguageChanged}
-      // resources={resources}
-      // backend={{ loadPath }}
-      {...localeProps}
+      resources={asyncLoadLocale ? undefined : resources}
+      backend={{ loadPath }}
     >
       {props.children}
     </I18nLocaleProvider>
