@@ -42,6 +42,8 @@ export const useSymbolLeverageScript = (
 ) => {
   const { curLeverage = 1, symbol, side } = options;
   const [showSliderTip, setShowSliderTip] = useState(false);
+  // Local leverage value used by the input and slider; it tracks the in-flight user edits.
+  // We seed it with curLeverage but intentionally do not sync further changes to avoid jumping while editing.
   const [leverage, setLeverage] = useState<number>(curLeverage);
 
   const { t } = useTranslation();
@@ -100,10 +102,11 @@ export const useSymbolLeverageScript = (
   const onInputChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
     (e) => {
       const parsed = Number.parseInt(e.target.value);
-      const value = Number.isNaN(parsed) ? "" : parsed;
-      setLeverage(value as number);
+      if (!Number.isNaN(parsed)) {
+        setLeverage(parsed);
+      }
     },
-    [maxLeverage],
+    [],
   );
 
   const onConfirmSave = async () => {
@@ -122,7 +125,7 @@ export const useSymbolLeverageScript = (
         },
       );
     } catch (err) {
-      console.log("update leverage error", err);
+      console.error("update leverage error", err);
     }
   };
 
@@ -153,8 +156,8 @@ export const useSymbolLeverageScript = (
 
   return {
     leverageLevers,
-    currentLeverage: leverage,
-    value: leverage,
+    currentLeverage: curLeverage, // Keep the displayed leverage fixed until the user confirms the change.
+    value: leverage, // Input and slider reflect the temporary value being edited.
     marks,
     onLeverageChange,
     onLeverageIncrease,
