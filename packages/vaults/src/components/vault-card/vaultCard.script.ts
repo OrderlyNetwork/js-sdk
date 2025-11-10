@@ -11,6 +11,7 @@ import {
   VaultDepositAndWithdrawWithSheetId,
 } from "../vault-operation/depositAndWithdraw";
 import { ORDERLY_ICON } from "./constants";
+import { getBrokerIconUrl } from "./constants";
 
 export const useVaultCardScript = (vault: VaultInfo) => {
   const { t } = useTranslation();
@@ -74,6 +75,10 @@ export const useVaultCardScript = (vault: VaultInfo) => {
     );
   }, [state.chainNamespace, state.accountId, state.mainAccountId]);
 
+  const isButtonsDisabled = useMemo(() => {
+    return vault.status !== "live";
+  }, [vault.status]);
+
   const openDepositAndWithdraw = (activeTab: "deposit" | "withdraw") => {
     modal.show(
       isMobile
@@ -87,14 +92,14 @@ export const useVaultCardScript = (vault: VaultInfo) => {
   };
 
   const openVaultWebsite = () => {
-    const url = VAULTS_WEBSITE_URLS[env as keyof typeof VAULTS_WEBSITE_URLS];
-    window.open(`${url}/vaults`, "_blank");
+    const baseUrl = VAULTS_WEBSITE_URLS[env] || VAULTS_WEBSITE_URLS.prod;
+    window.open(`${baseUrl}/vaults/${vault.vault_address}`, "_blank");
   };
 
   return {
-    title: t("vaults.card.orderly.title"),
-    description: t("vaults.card.orderly.description"),
-    icon: ORDERLY_ICON,
+    title: vault.vault_name,
+    description: vault.description,
+    icon: getBrokerIconUrl(vault.broker_id),
     vaultInfo: vault,
     lpInfo,
     isEVMConnected,
@@ -103,6 +108,7 @@ export const useVaultCardScript = (vault: VaultInfo) => {
     availableBalance: memoizedAvailableBalance,
     openVaultWebsite,
     isWrongNetwork,
+    isButtonsDisabled,
   };
 };
 

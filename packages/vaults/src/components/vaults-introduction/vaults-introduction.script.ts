@@ -1,26 +1,29 @@
 import { useMemo } from "react";
-import { useVaultsStore } from "../../store";
+import { useVaultOverallInfoState } from "../../store";
 
 export const useVaultsIntroductionScript = () => {
-  const { vaultInfo } = useVaultsStore();
+  const { data: overallInfo, loading, error } = useVaultOverallInfoState();
 
   const vaultsInfo = useMemo(() => {
-    const tvl = vaultInfo.data.reduce((acc, vault) => {
-      return acc + vault.tvl;
-    }, 0);
-    const lpCount = vaultInfo.data.reduce((acc, vault) => {
-      return acc + vault.lp_counts;
-    }, 0);
+    if (!overallInfo) {
+      return {
+        tvl: 0,
+        lpCount: 0,
+        vaultsCount: 0,
+      };
+    }
 
     return {
-      tvl,
-      lpCount,
-      vaultsCount: vaultInfo.data.length,
+      tvl: overallInfo.strategy_vaults_tvl,
+      lpCount: overallInfo.strategy_vaults_lp_count,
+      vaultsCount: overallInfo.strategy_vaults_count,
     };
-  }, [vaultInfo.data]);
+  }, [overallInfo]);
 
   return {
     vaultsInfo,
+    loading,
+    error,
   };
 };
 
