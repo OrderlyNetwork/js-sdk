@@ -124,4 +124,8 @@ export const common = {
   "common.hourShort": "H",
   "common.minuteShort": "M",
   "common.secondShort": "S",
+
+  "common.offlineDescription":
+    "Currently disconnected, please refresh the page",
+  "common.refresh": "Refresh",
 };

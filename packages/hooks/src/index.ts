@@ -3,6 +3,10 @@
 export { default as version } from "./version";
 export { fetcher, noCacheConfig, type useQueryOptions } from "./utils/fetcher";
 export { useQuery } from "./useQuery";
+export {
+  timestampWaitingMiddleware,
+  resetTimestampOffsetState,
+} from "./middleware/timestampWaitingMiddleware";
 export { useLazyQuery } from "./useLazyQuery";
 export { useMutation } from "./useMutation";
 export { usePrivateQuery } from "./usePrivateQuery";
@@ -55,7 +59,9 @@ export {
 } from "./walletConnectorContext";
 
 export * from "./orderly/orderlyHooks";
+export { useAppStore } from "./orderly/appStore";
 
+export * from "./provider/store";
 export { useOrderEntry as useOrderEntry_deprecated } from "./deprecated/useOrderEntry";
 export type {
   UseOrderEntryMetaState,
@@ -101,6 +107,12 @@ export * from "./referral";
 export * from "./trading-rewards";
 
 export * from "./apiKeys";
+
+export {
+  indexedDBManager,
+  initializeAppDatabase,
+} from "./middleware/indexedDBManager";
+export { persistIndexedDB } from "./middleware/persistIndexedDB";
 
 //--------- next hooks-----------
 // export { useOrderEntryNext } from "./next/useOrderEntry/useOrderEntry";

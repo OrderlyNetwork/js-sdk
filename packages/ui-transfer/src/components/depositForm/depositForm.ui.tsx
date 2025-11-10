@@ -18,6 +18,7 @@ import { SwapFee } from "../swap/components/swapFee";
 import { SwapCoin } from "../swapCoin";
 import { SwapIndicator } from "../swapIndicator";
 import { Web3Wallet } from "../web3Wallet";
+import { YieldBearingReminder } from "../yieldBearingReminder";
 import {
   SWAP_USDC_PRECISION,
   type DepositFormScriptReturn,
@@ -152,6 +153,12 @@ export const DepositForm: FC<DepositFormScriptReturn> = (props) => {
           onClick={() => {
             onQuantityChange(maxQuantity);
           }}
+        />
+
+        {/* Yield-bearing collateral reminder */}
+        <YieldBearingReminder
+          symbol={targetToken?.symbol}
+          className="oui-mt-3"
         />
 
         <ExchangeDivider />

@@ -5,7 +5,7 @@ import {
   useCollateral,
   useIndexPricesStream,
   useSubAccountQuery,
-  useTokensInfo,
+  useAppStore,
   useChainInfo,
 } from "@orderly.network/hooks";
 import { EMPTY_LIST } from "@orderly.network/types";
@@ -31,7 +31,7 @@ export const useConvertScript = () => {
   // Use the same account data structure as assets
   const allAccounts = useAccountsData();
 
-  const tokensInfo = useTokensInfo();
+  const tokensInfo = useAppStore((state) => state.tokensInfo);
 
   // Use the same account filter logic as assets
   const { selectedAccount, onAccountFilter } =
