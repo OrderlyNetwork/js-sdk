@@ -16,27 +16,48 @@ import {
   AssetIcon,
 } from "@orderly.network/ui";
 import { LeftNavProps, MainNavWidgetProps } from "@orderly.network/ui-scaffold";
-import { ApiKeys, FeeTier, Setting } from "../components/icons";
 import { PathEnum } from "../playground/constant";
 import {
-  CustomArenButton,
+  CustomArenaButtonMain,
+  CustomArenaButtonLeft,
   MainNavCustomRenderOptions,
 } from "./components/customArenButton";
 import { customEarnSubMenuRender } from "./components/customEarnSubMenu";
 import { customTradeSubMenuRender } from "./components/customTradeSubMenu";
-import { Tag } from "./components/tag";
 
 const isOnGoing = true; // mock isOnGoing status for storybook
 
-export const customArenRender = () => {
+export const customArenRender = (
+  variant: "mainNav" | "leftNav" = "mainNav",
+) => {
   if (isOnGoing) {
     return (options: MainNavCustomRenderOptions) => {
-      return (
-        <CustomArenButton
-          className={"oui-bg-base-9 after:oui-bg-base-9"}
-          routeOptions={options}
-        />
-      );
+      if (variant === "leftNav") {
+        return (
+          <div
+            style={{
+              marginTop: -12,
+              marginBottom: -12,
+              marginLeft: -12,
+              marginRight: -12,
+            }}
+          >
+            <CustomArenaButtonLeft
+              className={"after:oui-bg-base-8"}
+              routeOptions={options}
+              showIcon={true}
+            />
+          </div>
+        );
+      } else {
+        return (
+          <CustomArenaButtonMain
+            className={"after:oui-bg-base-9"}
+            routeOptions={options}
+            showIcon={false}
+          />
+        );
+      }
     };
   }
 };
@@ -52,6 +73,8 @@ const getMainMenus = (): MainNavWidgetProps["mainMenus"] => {
     {
       name: i18n.t("extend.earn"),
       href: "/vaults",
+      disabled: true,
+      className: "oui-cursor-pointer",
       customSubMenuRender: customEarnSubMenuRender(),
     },
     { name: i18n.t("common.markets"), href: "/markets" },
@@ -74,7 +97,7 @@ const getMainMenus = (): MainNavWidgetProps["mainMenus"] => {
     {
       name: i18n.t("tradingLeaderboard.arena"),
       href: "/leaderboard",
-      customRender: customArenRender(),
+      customRender: customArenRender("mainNav"),
     },
     {
       name: i18n.t("tradingView.timeInterval.more"),
@@ -180,7 +203,7 @@ const getLeftNavMenus = (): LeftNavProps => {
         name: i18n.t("tradingLeaderboard.arena"),
         href: "/leaderboard",
         icon: <BattleSolidInactiveIcon />,
-        customRender: customArenRender(),
+        customRender: customArenRender("leftNav"),
       },
       // {
       //   name: i18n.t("common.tradingRewards"),

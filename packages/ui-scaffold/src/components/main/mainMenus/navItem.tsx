@@ -180,6 +180,7 @@ export const NavItem: FC<
         data-actived={isActive}
         className={cn(
           "oui-group oui-relative oui-h-[32px] oui-rounded oui-px-3 oui-py-1 oui-text-sm oui-text-base-contrast-36 hover:oui-bg-base-7",
+          item.className,
           classNames?.navItem,
         )}
         onClick={onClickHandler}

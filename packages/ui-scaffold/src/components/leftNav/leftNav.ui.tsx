@@ -61,8 +61,6 @@ const LeftNavSheet = modal.create<LeftNavUIProps>((props) => {
   const { primaryMenus, secondaryMenus } = useMemo(() => {
     const primary = (props?.menus || []).filter((m) => !m.isSecondary);
     const secondary = (props?.menus || []).filter((m) => m.isSecondary);
-    console.log("primaryMenus", primary);
-    console.log("secondaryMenus", secondary);
     return { primaryMenus: primary, secondaryMenus: secondary };
   }, [props?.menus]);
 
