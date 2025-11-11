@@ -6,7 +6,7 @@ import { Flex, Text, ChevronLeftIcon, cn } from "@orderly.network/ui";
 import { WalletConnectButtonExtension } from "../accountMenu/menu.widget";
 import { ChainMenuWidget } from "../chainMenu";
 import { LanguageSwitcherWidget } from "../languageSwitcher";
-import { LeftNavUI } from "../leftNav/leftNav.ui";
+import { LeftNavWidget } from "../leftNav";
 import { ScanQRCodeWidget } from "../scanQRCode";
 import { SubAccountWidget } from "../subAccount";
 import { LinkDeviceWidget } from "./linkDevice";
@@ -124,7 +124,7 @@ export const MainNavMobile: FC<MainNavMobileProps> = (props) => {
     const walletConnect = <WalletConnectButtonExtension />;
 
     const leftNav = props.leftNav && (
-      <LeftNavUI
+      <LeftNavWidget
         {...props.leftNav}
         logo={props?.logo}
         routerAdapter={props?.routerAdapter}
