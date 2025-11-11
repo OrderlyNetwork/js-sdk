@@ -269,9 +269,13 @@ export class SymbolsStorage {
     return new Promise(
       (resolve: () => void, reject: (error: Error) => void) => {
         this._requester
-          .sendRequest<ExchangeDataResponse>(this._datafeedUrl, "symbol_info", {
-            group: exchange,
-          })
+          .sendRequest<ExchangeDataResponse>(
+            this._datafeedUrl,
+            "tv/symbol_info",
+            {
+              group: exchange,
+            },
+          )
           .then((response: ExchangeDataResponse) => {
             try {
               this._onExchangeDataReceived(exchange, response);
@@ -376,6 +380,7 @@ export class SymbolsStorage {
             extractField(data, "supported-resolutions", symbolIndex, true),
             this._datafeedSupportedResolutions,
           ),
+
           has_daily: definedValueOrDefault(
             extractField(data, "has-daily", symbolIndex),
             true,
@@ -384,11 +389,13 @@ export class SymbolsStorage {
             extractField(data, "intraday-multipliers", symbolIndex, true),
             ["1", "5", "15", "30", "60"],
           ),
-          has_weekly_and_monthly: extractField(
-            data,
-            "has-weekly-and-monthly",
-            symbolIndex,
-          ),
+          // daily_multipliers:["1"],
+          // has_weekly_and_monthly: extractField(
+          //   data,
+          //   "has-weekly-and-monthly",
+          //   symbolIndex,
+          // ),
+          has_weekly_and_monthly: true,
           has_empty_bars: extractField(data, "has-empty-bars", symbolIndex),
           volume_precision: definedValueOrDefault(
             extractField(data, "volume-precision", symbolIndex),

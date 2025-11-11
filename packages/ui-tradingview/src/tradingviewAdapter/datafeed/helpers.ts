@@ -18,14 +18,14 @@ export interface UdfErrorResponse {
 /**
  * If you want to enable logs from datafeed set it to `true`
  */
-const isLoggingEnabled = false;
+const isLoggingEnabled = true;
 
 export function logMessage(message: string): void {
   if (isLoggingEnabled) {
     const now = new Date();
     // tslint:disable-next-line:no-console
     console.log(
-      `${now.toLocaleTimeString()}.${now.getMilliseconds()}> ${message}`
+      `${now.toLocaleTimeString()}.${now.getMilliseconds()}> ${message}`,
     );
   }
 }

@@ -67,7 +67,7 @@ export abstract class AbstractDatafeed {
         }
 
         this._setupWithConfiguration(configuration);
-      }
+      },
     );
   }
 
@@ -76,7 +76,7 @@ export abstract class AbstractDatafeed {
     resolution: ResolutionString,
     periodParams: PeriodParamsWithOptionalCountback,
     onResult: HistoryCallback,
-    onError: ErrorCallback
+    onError: ErrorCallback,
   ): void {
     this._historyProvider
       .getBars(symbolInfo, resolution, periodParams)
@@ -92,7 +92,7 @@ export abstract class AbstractDatafeed {
     resolution: ResolutionString,
     onTick: SubscribeBarsCallback,
     listenerGuid: string,
-    onResetCacheNeededCallback: () => void
+    onResetCacheNeededCallback: () => void,
   );
 
   public onReady(callback: OnReadyCallback): void {
@@ -105,7 +105,7 @@ export abstract class AbstractDatafeed {
     userInput: string,
     exchange: string,
     symbolType: string,
-    onResult: SearchSymbolsCallback
+    onResult: SearchSymbolsCallback,
   ): void {
     if (this._symbolsStorage === null) {
       throw new Error("Datafeed: inconsistent configuration (symbols storage)");
@@ -116,7 +116,7 @@ export abstract class AbstractDatafeed {
         userInput,
         exchange,
         symbolType,
-        Constants.SearchItemsLimit
+        Constants.SearchItemsLimit,
       )
       .then(onResult)
       .catch(onResult.bind(null, []));
@@ -126,7 +126,7 @@ export abstract class AbstractDatafeed {
     symbolName: string,
     onResolve: ResolveCallback,
     onError: ErrorCallback,
-    extension?: SymbolResolveExtension
+    extension?: SymbolResolveExtension,
   ): void {
     const currencyCode = extension && extension.currencyCode;
     const unitId = extension && extension.unitId;
@@ -165,14 +165,14 @@ export abstract class AbstractDatafeed {
   public abstract getQuotes(
     symbols: string[],
     onDataCallback: QuotesCallback,
-    onErrorCallback: (msg: string) => void
+    onErrorCallback: (msg: string) => void,
   ): void;
 
   public abstract subscribeQuotes(
     symbols: string[],
     fastSymbols: string[],
     onRealtimeCallback: QuotesCallback,
-    listenerGuid: string
+    listenerGuid: string,
   ): void;
 
   public abstract unsubscribeQuotes(listenerGuid: string): void;
@@ -180,15 +180,15 @@ export abstract class AbstractDatafeed {
   public abstract remove(): void;
 
   protected _requestConfiguration(): Promise<UdfCompatibleConfiguration | null> {
-    return this._send<UdfCompatibleConfiguration>("config").catch(
+    return this._send<UdfCompatibleConfiguration>("tv/config").catch(
       (reason?: string | Error) => {
         logMessage(
           `Datafeed: Cannot get datafeed configuration - use default, error=${getErrorMessage(
-            reason
-          )}`
+            reason,
+          )}`,
         );
         return null;
-      }
+      },
     );
   }
 
@@ -197,7 +197,7 @@ export abstract class AbstractDatafeed {
   }
 
   private _setupWithConfiguration(
-    configurationData: UdfCompatibleConfiguration
+    configurationData: UdfCompatibleConfiguration,
   ): void {
     this._configuration = configurationData;
 
@@ -210,7 +210,7 @@ export abstract class AbstractDatafeed {
       !configurationData.supports_group_request
     ) {
       throw new Error(
-        "Unsupported datafeed configuration. Must either support search, or support group request"
+        "Unsupported datafeed configuration. Must either support search, or support group request",
       );
     }
 
@@ -221,12 +221,12 @@ export abstract class AbstractDatafeed {
       this._symbolsStorage = new SymbolsStorage(
         this._datafeedURL,
         configurationData.supported_resolutions || [],
-        this._requester
+        this._requester,
       );
     }
 
     logMessage(
-      `Datafeed: Initialized with ${JSON.stringify(configurationData)}`
+      `Datafeed: Initialized with ${JSON.stringify(configurationData)}`,
     );
   }
 }
