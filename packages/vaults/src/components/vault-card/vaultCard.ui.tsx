@@ -76,21 +76,8 @@ export const VaultCard: FC<VaultCardScript> = (props) => {
 
   return (
     <div className="oui-relative oui-h-[388px] oui-overflow-hidden oui-rounded-2xl oui-border oui-border-solid oui-border-white/[0.12] oui-bg-base-9">
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          right: 0,
-          width: "100%",
-          height: "180px",
-          backdropFilter: "blur(2px)",
-          zIndex: 1,
-          background:
-            "linear-gradient(180deg, rgba(44, 5, 69, 0.80) 0%, rgba(19, 21, 25, 0.80) 63.46%, #131519 100%)",
-        }}
-      ></div>
       <img
-        src="/vaults/orderly_vault_card_bg.png"
+        src="/vaults/vaults-card-bg.png"
         alt=""
         style={{
           position: "absolute",
@@ -98,7 +85,12 @@ export const VaultCard: FC<VaultCardScript> = (props) => {
           right: 0,
           width: "100%",
           height: "180px",
+          objectFit: "cover",
+          objectPosition: "top",
           zIndex: 0,
+        }}
+        onError={(e) => {
+          e.currentTarget.style.display = "none";
         }}
       />
 

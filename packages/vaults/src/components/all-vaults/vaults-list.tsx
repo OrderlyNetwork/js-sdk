@@ -5,6 +5,7 @@ import {
   Text,
   Button,
   ArrowRightUpSquareFillIcon,
+  useScreen,
 } from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
 import { VaultInfo } from "../../types/vault";
@@ -153,11 +154,15 @@ const VaultListRow: FC<{ vault: VaultInfo }> = ({ vault }) => {
   } = script;
 
   const isPreLaunch = vaultInfo.status === "pre_launch";
+  const { isMobile } = useScreen();
 
   const supportVaultsList = useMemo(() => {
     const chains = Array.isArray(vaultInfo?.supported_chains)
       ? vaultInfo.supported_chains
       : [];
+
+    const ICON_SIZE = isMobile ? 18 : 20;
+
     return (
       <div className="oui-flex oui-items-center">
         {chains.map((chain, index) => (
@@ -165,36 +170,27 @@ const VaultListRow: FC<{ vault: VaultInfo }> = ({ vault }) => {
             key={chain.chain_id}
             src={`https://oss.orderly.network/static/network_logo/${chain.chain_id}.png`}
             alt={chain.chain_id}
-            className="oui-relative oui-size-[18px]"
+            className={cn(
+              "oui-relative",
+              isMobile ? "oui-size-[18px]" : "oui-size-5",
+            )}
             style={{
               marginLeft: index > 0 ? "-4px" : "0",
               zIndex: chains.length - index,
+              width: ICON_SIZE,
+              height: ICON_SIZE,
             }}
           />
         ))}
       </div>
     );
-  }, [vaultInfo.supported_chains]);
+  }, [vaultInfo.supported_chains, isMobile]);
 
   return (
     <div className="oui-relative oui-grid oui-grid-cols-[2fr_1fr_1fr_1fr_1fr_1fr_1.5fr] oui-gap-4 oui-rounded-lg oui-border oui-border-solid oui-border-white/[0.12] oui-bg-base-9 oui-px-4 oui-py-4 oui-items-center oui-overflow-hidden">
-      {/* Background gradient overlay */}
-      <div
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "40%",
-          height: "100%",
-          zIndex: 1,
-          background:
-            "linear-gradient(90deg, rgba(44, 5, 69, 0.80) 0%, rgba(19, 21, 25, 0.80) 63.46%, #131519 100%)",
-          backdropFilter: "blur(2px)",
-        }}
-      />
       {/* Background image */}
       <img
-        src="/vaults/vault-list-bg.png"
+        src="/vaults/vaults-list-bg.png"
         alt=""
         style={{
           position: "absolute",
@@ -203,8 +199,11 @@ const VaultListRow: FC<{ vault: VaultInfo }> = ({ vault }) => {
           width: "40%",
           height: "100%",
           objectFit: "cover",
-          objectPosition: "center",
+          objectPosition: "left",
           zIndex: 0,
+        }}
+        onError={(e) => {
+          e.currentTarget.style.display = "none";
         }}
       />
       {/* Pool Name */}
@@ -221,35 +220,39 @@ const VaultListRow: FC<{ vault: VaultInfo }> = ({ vault }) => {
           <div className="oui-text-sm oui-font-semibold oui-text-base-contrast">
             {title}
           </div>
-          <div className="oui-flex oui-items-center oui-gap-2">
-            {supportVaultsList}
-            <button
-              onClick={openVaultWebsite}
-              className="oui-flex oui-items-center oui-justify-center"
-            >
-              <ArrowRightUpSquareFillIcon
-                className="oui-text-base-contrast-54"
-                width={14}
-                height={14}
-                viewBox="0 0 18 18"
-              />
-            </button>
-            {isPreLaunch && (
-              <div
-                className="oui-flex oui-items-center oui-gap-[10px] oui-px-2 oui-text-[#E88800]"
-                style={{
-                  height: "18px",
-                  borderRadius: "4px",
-                  background: "rgba(232, 136, 0, 0.15)",
-                  fontSize: "12px",
-                  fontWeight: 600,
-                  lineHeight: "18px",
-                  letterSpacing: "0.36px",
-                }}
+          <div className="oui-flex oui-flex-wrap oui-items-center oui-gap-2">
+            <div className="oui-flex oui-items-center oui-gap-2 oui-flex-shrink-0">
+              {supportVaultsList}
+            </div>
+            <div className="oui-flex oui-items-center oui-gap-2 oui-flex-shrink-0">
+              <button
+                onClick={openVaultWebsite}
+                className="oui-flex oui-items-center oui-justify-center oui-flex-shrink-0"
               >
-                {t("vaults.card.launchingSoon")}
-              </div>
-            )}
+                <ArrowRightUpSquareFillIcon
+                  className="oui-text-base-contrast-54"
+                  width={14}
+                  height={14}
+                  viewBox="0 0 18 18"
+                />
+              </button>
+              {isPreLaunch && (
+                <div
+                  className="oui-flex oui-items-center oui-gap-[10px] oui-px-2 oui-text-[#E88800] oui-whitespace-nowrap oui-flex-shrink-0"
+                  style={{
+                    height: "18px",
+                    borderRadius: "4px",
+                    background: "rgba(232, 136, 0, 0.15)",
+                    fontSize: "12px",
+                    fontWeight: 600,
+                    lineHeight: "18px",
+                    letterSpacing: "0.36px",
+                  }}
+                >
+                  {t("vaults.card.launchingSoon")}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
