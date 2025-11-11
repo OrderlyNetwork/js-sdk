@@ -16,26 +16,48 @@ import {
   AssetIcon,
 } from "@orderly.network/ui";
 import { LeftNavProps, MainNavWidgetProps } from "@orderly.network/ui-scaffold";
-import { ApiKeys, FeeTier, Setting } from "../components/icons";
 import { PathEnum } from "../playground/constant";
 import {
-  CustomArenButton,
+  CustomArenaButtonMain,
+  CustomArenaButtonLeft,
   MainNavCustomRenderOptions,
 } from "./components/customArenButton";
+import { customEarnSubMenuRender } from "./components/customEarnSubMenu";
 import { customTradeSubMenuRender } from "./components/customTradeSubMenu";
-import { Tag } from "./components/tag";
 
 const isOnGoing = true; // mock isOnGoing status for storybook
 
-export const customArenRender = () => {
+export const customArenRender = (
+  variant: "mainNav" | "leftNav" = "mainNav",
+) => {
   if (isOnGoing) {
     return (options: MainNavCustomRenderOptions) => {
-      return (
-        <CustomArenButton
-          className={"oui-bg-base-9 after:oui-bg-base-9"}
-          routeOptions={options}
-        />
-      );
+      if (variant === "leftNav") {
+        return (
+          <div
+            style={{
+              marginTop: -12,
+              marginBottom: -12,
+              marginLeft: -12,
+              marginRight: -12,
+            }}
+          >
+            <CustomArenaButtonLeft
+              className={"after:oui-bg-base-8"}
+              routeOptions={options}
+              showIcon={true}
+            />
+          </div>
+        );
+      } else {
+        return (
+          <CustomArenaButtonMain
+            className={"after:oui-bg-base-9"}
+            routeOptions={options}
+            showIcon={false}
+          />
+        );
+      }
     };
   }
 };
@@ -48,19 +70,15 @@ const getMainMenus = (): MainNavWidgetProps["mainMenus"] => {
       isHomePageInMobile: true,
       customSubMenuRender: customTradeSubMenuRender(),
     },
-    { name: i18n.t("common.portfolio"), href: "/portfolio" },
     {
-      name: i18n.t("common.vaults"),
+      name: i18n.t("extend.earn"),
       href: "/vaults",
-      isSubMenuInMobile: true,
-      subMenuBackNav: { href: "/", name: i18n.t("common.trading") },
+      disabled: true,
+      className: "oui-cursor-pointer",
+      customSubMenuRender: customEarnSubMenuRender(),
     },
     { name: i18n.t("common.markets"), href: "/markets" },
-    {
-      name: i18n.t("tradingLeaderboard.arena"),
-      href: "/leaderboard",
-      customRender: customArenRender(),
-    },
+    { name: i18n.t("common.portfolio"), href: "/portfolio" },
     {
       name: i18n.t("affiliate.referral"),
       href: "/rewards/affiliate",
@@ -77,32 +95,54 @@ const getMainMenus = (): MainNavWidgetProps["mainMenus"] => {
       },
     },
     {
+      name: i18n.t("tradingLeaderboard.arena"),
+      href: "/leaderboard",
+      customRender: customArenRender("mainNav"),
+    },
+    {
       name: i18n.t("tradingView.timeInterval.more"),
       href: "",
       children: [
-        // {
-        //   name: i18n.t("common.tradingRewards"),
-        //   href: "/rewards/trading",
-        //   icon: <TradingRewardsIcon size={14} />,
-        //   activeIcon: <TradingRewardsActiveIcon size={14} />,
-        // },
         {
           name: i18n.t("portfolio.feeTier"),
           href: PortfolioLeftSidebarPath.FeeTier,
-          icon: <FeeTier size={14} />,
-          activeIcon: <FeeTier size={14} />,
         },
         {
           name: i18n.t("portfolio.apiKeys"),
           href: PortfolioLeftSidebarPath.ApiKey,
-          icon: <ApiKeys size={14} />,
-          activeIcon: <ApiKeys size={14} />,
         },
         {
           name: i18n.t("portfolio.setting"),
           href: PortfolioLeftSidebarPath.Setting,
-          icon: <Setting size={14} />,
-          activeIcon: <Setting size={14} />,
+        },
+        {
+          name: i18n.t("extend.dashboard"),
+          href: "https://woofi.com/swap/dashboard",
+        },
+        {
+          name: i18n.t("extend.spotDune"),
+          href: "https://dune.com/woofianalytics/woofi-dashboard",
+          target: "_blank",
+        },
+        {
+          name: i18n.t("extend.perpsDune"),
+          href: "https://dune.com/woofianalytics/woofi-pro",
+          target: "_blank",
+        },
+        {
+          name: i18n.t("extend.careers"),
+          href: "https://job-boards.greenhouse.io/woofi",
+          target: "_blank",
+        },
+        {
+          name: i18n.t("extend.docs"),
+          href: "https://learn.woo.org/",
+          target: "_blank",
+        },
+        {
+          name: i18n.t("extend.audits"),
+          href: "https://learn.woo.org/woofi-docs/woofi-dev-docs/references/audits-and-bounties",
+          target: "_blank",
         },
       ],
     },
@@ -163,7 +203,7 @@ const getLeftNavMenus = (): LeftNavProps => {
         name: i18n.t("tradingLeaderboard.arena"),
         href: "/leaderboard",
         icon: <BattleSolidInactiveIcon />,
-        customRender: customArenRender(),
+        customRender: customArenRender("leftNav"),
       },
       // {
       //   name: i18n.t("common.tradingRewards"),

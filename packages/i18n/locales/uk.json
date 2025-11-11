@@ -119,8 +119,6 @@
   "markets.recent": "Недавні",
   "markets.newListings": "Нові лістинги",
   "markets.allMarkets": "Всі ринки",
-  "markets.spot.description": "Міжмережевий своп одним кліком.",
-  "markets.perps.description": "DEX PERP з книгою ордерів без газу з плечем до 100x.",
   "markets.openInterest": "Відкритий інтерес",
   "markets.openInterest.tooltip": "Загальний розмір позицій на сторону.",
   "markets.topGainers": "Топ зростання",

@@ -180,6 +180,7 @@ export const NavItem: FC<
         data-actived={isActive}
         className={cn(
           "oui-group oui-relative oui-h-[32px] oui-rounded oui-px-3 oui-py-1 oui-text-sm oui-text-base-contrast-36 hover:oui-bg-base-7",
+          item.className,
           classNames?.navItem,
         )}
         onClick={onClickHandler}
@@ -327,7 +328,7 @@ const SubMenus: React.FC<
         className={cn(
           customSubMenuRender
             ? "oui-w-auto oui-p-0 oui-border-0 oui-rounded-lg"
-            : "oui-w-[260px] oui-space-y-[2px] oui-border oui-border-line-6 oui-p-1",
+            : "oui-w-[200px] oui-space-y-[2px] oui-border oui-border-line-6 oui-p-1",
           className,
         )}
       >
@@ -414,7 +415,7 @@ const SubMenuTitle: React.FC<{ item: MainNavItem; isActive?: boolean }> = (
         </Text.gradient>
         {typeof item.tag !== "undefined" && <Tag item={item} />}
       </div>
-      {item.target === "_blank" && <OutlinkIcon />}
+      {/* {item.target === "_blank" && <OutlinkIcon />} */}
     </Flex>
   );
 };

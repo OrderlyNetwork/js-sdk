@@ -119,8 +119,6 @@
   "markets.recent": "最近",
   "markets.newListings": "新上市",
   "markets.allMarkets": "所有市场",
-  "markets.spot.description": "一键跨链兑换。",
-  "markets.perps.description": "无需 Gas 的订单簿永续合约 DEX，支持高达 100 倍杠杆。",
   "markets.openInterest": "未平仓合约",
   "markets.openInterest.tooltip": "每边持仓的总规模。",
   "markets.topGainers": "涨幅榜",

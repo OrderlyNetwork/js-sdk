@@ -119,8 +119,6 @@
   "markets.recent": "Son",
   "markets.newListings": "Yeni listeler",
   "markets.allMarkets": "Tüm piyasalar",
-  "markets.spot.description": "Tek tıkla çapraz zincir takas.",
-  "markets.perps.description": "100x'e kadar kaldıraçlı, gazsız emir defteri PERP DEX.",
   "markets.openInterest": "Açık ilgi",
   "markets.openInterest.tooltip": "Taraf başına toplam pozisyon büyüklüğü.",
   "markets.topGainers": "En çok kazananlar",

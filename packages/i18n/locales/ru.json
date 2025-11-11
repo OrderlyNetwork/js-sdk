@@ -119,8 +119,6 @@
   "markets.recent": "Недавние",
   "markets.newListings": "Новые листинги",
   "markets.allMarkets": "Все рынки",
-  "markets.spot.description": "Кросс-чейн обмен в один клик.",
-  "markets.perps.description": "DEX PERP с книгой ордеров без газа и плечом до 100x.",
   "markets.openInterest": "Открытый интерес",
   "markets.openInterest.tooltip": "Общий размер позиций на сторону.",
   "markets.topGainers": "Лучшие по росту",

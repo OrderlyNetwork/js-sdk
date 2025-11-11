@@ -8,11 +8,18 @@
   "extend.stake": "质押",
   "extend.earn": "赚取",
   "extend.spot": "现货",
+  "extend.spot.description": "跨链兑换任意山寨币、迷因币或链上代币",
   "extend.spotDune": "现货 Dune",
   "extend.perpsDune": "合约 Dune",
   "extend.careers": "招聘",
   "extend.docs": "文档",
   "extend.audits": "审计",
   "extend.vaults": "金库",
-  "extend.perps": "合约"
+  "extend.perps": "合约",
+  "extend.perps.description": "免 Gas 的订单簿永续合约，最高可达 100 倍杠杆",
+  "extend.woofiEarn": "WOOFi 赚取",
+  "extend.woofiEarn.description": "在任何链上的主要资产中安全获取收益",
+  "extend.wooStake": "WOO 质押",
+  "extend.wooStake.description": "质押以赚取 USDC 和 WOO",
+  "extend.vaults.description": "通过自动化策略赚取被动收益"
 }

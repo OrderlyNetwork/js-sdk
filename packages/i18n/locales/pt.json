@@ -119,8 +119,6 @@
   "markets.recent": "Recentes",
   "markets.newListings": "Novas listagens",
   "markets.allMarkets": "Todos os mercados",
-  "markets.spot.description": "Troca crosschain com um clique.",
-  "markets.perps.description": "DEX PERP de livro de ordens sem taxas de gás com até 100x de alavancagem.",
   "markets.openInterest": "Interesse em aberto",
   "markets.openInterest.tooltip": "Tamanho total das posições por lado.",
   "markets.topGainers": "Maiores altas",

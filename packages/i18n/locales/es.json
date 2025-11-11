@@ -119,8 +119,6 @@
   "markets.recent": "Recientes",
   "markets.newListings": "Nuevas listas",
   "markets.allMarkets": "Todos los mercados",
-  "markets.spot.description": "Intercambio entre cadenas con un clic.",
-  "markets.perps.description": "DEX PERP de libro de órdenes sin gas con hasta 100x de apalancamiento.",
   "markets.openInterest": "Interés abierto",
   "markets.openInterest.tooltip": "Tamaño total de posiciones por lado.",
   "markets.topGainers": "Mayores ganadores",

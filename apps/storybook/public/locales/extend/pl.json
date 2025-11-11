@@ -8,11 +8,18 @@
   "extend.stake": "Staking",
   "extend.earn": "Zarabiaj",
   "extend.spot": "Spot",
+  "extend.spot.description": "Zamieniaj cross-chain dowolne altcoiny, memecoiny lub tokeny on-chain",
   "extend.spotDune": "Spot Dune",
   "extend.perpsDune": "Perps Dune",
   "extend.careers": "Kariera",
   "extend.docs": "Dokumenty",
   "extend.audits": "Audyty",
   "extend.vaults": "Skarbce",
-  "extend.perps": "Perps"
+  "extend.perps": "Perps",
+  "extend.perps.description": "Perps z księgą zleceń bez opłat za gas i z dźwignią do 100x",
+  "extend.woofiEarn": "WOOFi zarabiaj",
+  "extend.woofiEarn.description": "Uzyskaj bezpieczny zysk z kluczowych aktywów na dowolnym łańcuchu",
+  "extend.wooStake": "WOO staking",
+  "extend.wooStake.description": "Stake'uj, aby zarabiać USDC i WOO",
+  "extend.vaults.description": "Zarabiaj pasywną rentowność dzięki zautomatyzowanym strategiom"
 }

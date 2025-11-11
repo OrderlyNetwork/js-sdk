@@ -119,8 +119,6 @@
   "markets.recent": "Ostatnie",
   "markets.newListings": "Nowe listowania",
   "markets.allMarkets": "Wszystkie rynki",
-  "markets.spot.description": "Wymiana międzyłańcuchowa jednym kliknięciem.",
-  "markets.perps.description": "DEX PERP z księgą zleceń bez opłat za gaz z dźwignią do 100x.",
   "markets.openInterest": "Otwarte zainteresowanie",
   "markets.openInterest.tooltip": "Całkowity rozmiar pozycji na stronę.",
   "markets.topGainers": "Najlepsze wzrosty",
