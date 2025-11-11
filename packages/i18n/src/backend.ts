@@ -2,7 +2,7 @@ import i18n from "./i18n";
 import { LocaleCode } from "./types";
 
 export type BackendOptions = {
-  loadPath: (lang: LocaleCode, ns: string) => string | string[];
+  loadPath: (lang: LocaleCode, ns: string) => string | string[] | undefined;
 };
 
 export class Backend {
@@ -31,6 +31,10 @@ export class Backend {
     }
 
     let paths = this.options.loadPath(lang, ns);
+
+    if (!paths) {
+      return;
+    }
 
     if (typeof paths === "string") {
       paths = [paths];
