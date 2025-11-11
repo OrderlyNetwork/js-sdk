@@ -8,6 +8,7 @@
   "extend.stake": "Staking",
   "extend.earn": "Kiếm tiền",
   "extend.spot": "Spot",
+  "extend.spot.description": "Hoán đổi cross-chain bất kỳ altcoin, memecoin hoặc token on-chain nào",
   "extend.spotDune": "Spot Dune",
   "extend.perpsDune": "Perps Dune",
   "extend.careers": "Nghề nghiệp",
@@ -15,9 +16,10 @@
   "extend.audits": "Kiểm toán",
   "extend.vaults": "Kho",
   "extend.perps": "Perps",
+  "extend.perps.description": "Perps sổ lệnh không tốn phí gas với đòn bẩy lên đến 100x",
   "extend.woofiEarn": "WOOFi kiếm tiền",
-  "extend.woofiEarn.description": "Gửi tài sản để kiếm thêm",
+  "extend.woofiEarn.description": "Nhận lợi suất an toàn từ các tài sản chính trên mọi chuỗi",
   "extend.wooStake": "WOO staking",
-  "extend.wooStake.description": "Stake WOO để kiếm USDC",
-  "extend.vaults.description": "Kiếm lợi nhuận thụ động với chiến lược kho"
+  "extend.wooStake.description": "Stake để kiếm USDC và WOO",
+  "extend.vaults.description": "Kiếm lợi suất thụ động với các chiến lược tự động"
 }

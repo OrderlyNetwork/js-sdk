@@ -119,8 +119,6 @@
   "markets.recent": "Recent",
   "markets.newListings": "Nieuwe noteringen",
   "markets.allMarkets": "Alle markten",
-  "markets.spot.description": "Cross-chain swap met één klik.",
-  "markets.perps.description": "Gasvrije orderboek PERP DEX met tot 100x hefboom.",
   "markets.openInterest": "Open interest",
   "markets.openInterest.tooltip": "Totale omvang van posities per zijde.",
   "markets.topGainers": "Grootste stijgers",

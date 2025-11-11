@@ -119,8 +119,6 @@
   "markets.recent": "Recenti",
   "markets.newListings": "Nuove quotazioni",
   "markets.allMarkets": "Tutti i mercati",
-  "markets.spot.description": "Scambio crosschain con un clic.",
-  "markets.perps.description": "DEX PERP con order book senza gas fino a 100x di leva.",
   "markets.openInterest": "Interesse aperto",
   "markets.openInterest.tooltip": "Dimensione totale delle posizioni per lato.",
   "markets.topGainers": "Migliori rialzi",

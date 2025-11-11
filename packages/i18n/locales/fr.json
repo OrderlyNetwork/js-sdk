@@ -119,8 +119,6 @@
   "markets.recent": "Récents",
   "markets.newListings": "Nouveaux listings",
   "markets.allMarkets": "Tous les marchés",
-  "markets.spot.description": "Échange inter-chaînes en un clic.",
-  "markets.perps.description": "DEX PERP avec carnet d'ordres sans frais de gaz jusqu'à 100x de levier.",
   "markets.openInterest": "Intérêt ouvert",
   "markets.openInterest.tooltip": "Taille totale des positions par côté.",
   "markets.topGainers": "Meilleurs gains",

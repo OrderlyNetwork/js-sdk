@@ -119,8 +119,6 @@
   "markets.recent": "最近",
   "markets.newListings": "新上市",
   "markets.allMarkets": "所有市場",
-  "markets.spot.description": "一鍵跨鏈兌換。",
-  "markets.perps.description": "無需 Gas 的訂單簿永續合約 DEX，支持高達 100 倍槓桿。",
   "markets.openInterest": "未平倉合約",
   "markets.openInterest.tooltip": "每边持倉的总規模。",
   "markets.topGainers": "涨幅榜",

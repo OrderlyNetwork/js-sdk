@@ -8,6 +8,7 @@
   "extend.stake": "ステーク",
   "extend.earn": "獲得",
   "extend.spot": "スポット",
+  "extend.spot.description": "任意のアルトコイン、ミームコイン、オンチェーン・トークンをクロスチェーンでスワップ",
   "extend.spotDune": "スポット Dune",
   "extend.perpsDune": "パーペチュアル Dune",
   "extend.careers": "採用情報",
@@ -15,9 +16,10 @@
   "extend.audits": "監査",
   "extend.vaults": "ボールト",
   "extend.perps": "パーペチュアル",
+  "extend.perps.description": "ガス不要のオーダーブック型パーペチュアル、最大100倍のレバレッジ",
   "extend.woofiEarn": "WOOFi 獲得",
-  "extend.woofiEarn.description": "資産を預けてより多く獲得",
+  "extend.woofiEarn.description": "あらゆるチェーンの主要アセットから安全にイールドを獲得",
   "extend.wooStake": "WOO ステーク",
-  "extend.wooStake.description": "WOOをステーキングしてUSDCを獲得",
-  "extend.vaults.description": "ボールト戦略でパッシブ収益を獲得"
+  "extend.wooStake.description": "USDCとWOOを稼ぐためにステーキング",
+  "extend.vaults.description": "自動化された戦略でパッシブイールドを獲得"
 }

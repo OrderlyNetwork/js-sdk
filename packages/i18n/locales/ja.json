@@ -119,8 +119,6 @@
   "markets.recent": "最近",
   "markets.newListings": "新規上場",
   "markets.allMarkets": "すべての市場",
-  "markets.spot.description": "ワンクリッククロスチェーンスワップ。",
-  "markets.perps.description": "最大100倍のレバレッジを持つガス不要のオーダーブックPERP DEX。",
   "markets.openInterest": "オープンインタレスト",
   "markets.openInterest.tooltip": "サイドごとのポジションの合計サイズ。",
   "markets.topGainers": "トップゲイナー",

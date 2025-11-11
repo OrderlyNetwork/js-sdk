@@ -8,6 +8,7 @@
   "extend.stake": "Staking",
   "extend.earn": "Dapatkan",
   "extend.spot": "Spot",
+  "extend.spot.description": "Tukar lintas rantai untuk altcoin, memecoin, atau token on-chain apa pun",
   "extend.spotDune": "Spot Dune",
   "extend.perpsDune": "Perps Dune",
   "extend.careers": "Karir",
@@ -15,9 +16,10 @@
   "extend.audits": "Audit",
   "extend.vaults": "Vault",
   "extend.perps": "Perps",
+  "extend.perps.description": "Perps orderbook tanpa gas dengan leverage hingga 100x",
   "extend.woofiEarn": "WOOFi dapatkan",
-  "extend.woofiEarn.description": "Deposit aset untuk mendapatkan lebih banyak",
+  "extend.woofiEarn.description": "Dapatkan hasil dengan aman dari aset utama di jaringan mana pun",
   "extend.wooStake": "WOO staking",
-  "extend.wooStake.description": "Stake WOO untuk mendapatkan USDC",
-  "extend.vaults.description": "Dapatkan hasil pasif dengan strategi vault"
+  "extend.wooStake.description": "Stake untuk mendapatkan USDC dan WOO",
+  "extend.vaults.description": "Dapatkan hasil pasif dengan strategi otomatis"
 }

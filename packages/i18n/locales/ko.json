@@ -119,8 +119,6 @@
   "markets.recent": "최근",
   "markets.newListings": "신규 상장",
   "markets.allMarkets": "모든 마켓",
-  "markets.spot.description": "원클릭 크로스체인 스왑.",
-  "markets.perps.description": "최대 100배 레버리지를 제공하는 가스 없는 오더북 PERP DEX.",
   "markets.openInterest": "미결제약정",
   "markets.openInterest.tooltip": "측별 포지션 총 규모.",
   "markets.topGainers": "상위 상승",

@@ -43,10 +43,10 @@ const LeftSection = (props: {
           </div>
           <div>
             <div className="oui-text-sm oui-font-semibold oui-text-base-contrast-80">
-              {t("common.spot")}
+              {t("extend.spot")}
             </div>
             <div className="oui-text-xs oui-text-base-contrast-36">
-              {t("markets.spot.description")}
+              {t("extend.spot.description")}
             </div>
           </div>
         </div>
@@ -70,10 +70,10 @@ const LeftSection = (props: {
           </div>
           <div>
             <div className="oui-text-sm oui-font-semibold oui-text-base-contrast-80">
-              {t("common.perps")}
+              {t("extend.perps")}
             </div>
             <div className="oui-text-xs oui-text-base-contrast-36">
-              {t("markets.perps.description")}
+              {t("extend.perps.description")}
             </div>
           </div>
         </div>

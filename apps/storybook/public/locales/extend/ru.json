@@ -8,6 +8,7 @@
   "extend.stake": "Стейкинг",
   "extend.earn": "Заработать",
   "extend.spot": "Спот",
+  "extend.spot.description": "Кросс-чейн своп любых альткоинов, мемкоинов или ончейн-токенов",
   "extend.spotDune": "Спот Dune",
   "extend.perpsDune": "Перпы Dune",
   "extend.careers": "Карьера",
@@ -15,9 +16,10 @@
   "extend.audits": "Аудиты",
   "extend.vaults": "Хранилища",
   "extend.perps": "Перпы",
+  "extend.perps.description": "Безгазовые перпетуалы с ордербуком и плечом до 100x",
   "extend.woofiEarn": "WOOFi заработок",
-  "extend.woofiEarn.description": "Внесите активы, чтобы заработать больше",
+  "extend.woofiEarn.description": "Получайте доход безопасно с ключевых активов на любой сети",
   "extend.wooStake": "WOO стейкинг",
-  "extend.wooStake.description": "Стейкайте WOO, чтобы заработать USDC",
-  "extend.vaults.description": "Получайте пассивный доход с помощью стратегий хранилищ"
+  "extend.wooStake.description": "Стейкайте, чтобы зарабатывать USDC и WOO",
+  "extend.vaults.description": "Получайте пассивный доход с помощью автоматизированных стратегий"
 }

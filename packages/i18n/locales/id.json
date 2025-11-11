@@ -119,8 +119,6 @@
   "markets.recent": "Terbaru",
   "markets.newListings": "Listing baru",
   "markets.allMarkets": "Semua pasar",
-  "markets.spot.description": "Tukar crosschain dengan satu klik.",
-  "markets.perps.description": "DEX PERP orderbook tanpa gas dengan leverage hingga 100x.",
   "markets.openInterest": "Open interest",
   "markets.openInterest.tooltip": "Total ukuran posisi per sisi.",
   "markets.topGainers": "Top gainers",
