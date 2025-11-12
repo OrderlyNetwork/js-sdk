@@ -11,6 +11,8 @@ export interface DataStoreState<T> {
   loading: boolean;
   error: Error | null;
   name: string;
+  /** Whether the store has been hydrated from IndexedDB */
+  hydrated: boolean;
 }
 
 /**
@@ -80,41 +82,45 @@ export const createDataStore = <T>(config: DataStoreConfig<T>) => {
 
   return create(
     persistIndexedDB<DataStoreState<T> & DataStoreActions<T>>(
-      (set) => ({
-        name: storeName,
-        data: typeof initData === "undefined" ? [] : initData,
-        loading: false,
-        error: null,
-        fetchData: async (
-          dynamicBaseUrl?: string,
-          options?: { brokerId?: string },
-        ) => {
-          try {
-            set({ loading: true });
-            const brokerIdQuery =
-              typeof options?.brokerId === "string" &&
-              options?.brokerId !== "orderly"
-                ? `?broker_id=${options?.brokerId}`
-                : "";
-            const url = `${dynamicBaseUrl || baseUrl || ""}${endpoint}${brokerIdQuery}`;
+      (set) => {
+        const store = {
+          name: storeName,
+          data: typeof initData === "undefined" ? [] : initData,
+          loading: false,
+          error: null,
+          hydrated: false,
+          fetchData: async (
+            dynamicBaseUrl?: string,
+            options?: { brokerId?: string },
+          ) => {
+            try {
+              set({ loading: true });
+              const brokerIdQuery =
+                typeof options?.brokerId === "string" &&
+                options?.brokerId !== "orderly"
+                  ? `?broker_id=${options?.brokerId}`
+                  : "";
+              const url = `${dynamicBaseUrl || baseUrl || ""}${endpoint}${brokerIdQuery}`;
 
-            const data = await fetcher(url, {}, { formatter });
-            const dataWithBrokerId = data.map((item: T) => ({
-              ...item,
-              broker_id: options?.brokerId,
-            }));
-            set({
-              data: dataWithBrokerId,
-              loading: false,
-              error: null,
-            });
-            return dataWithBrokerId;
-          } catch (error) {
-            set({ error: error as Error, loading: false });
-            return null;
-          }
-        },
-      }),
+              const data = await fetcher(url, {}, { formatter });
+              const dataWithBrokerId = data.map((item: T) => ({
+                ...item,
+                broker_id: options?.brokerId,
+              }));
+              set({
+                data: dataWithBrokerId,
+                loading: false,
+                error: null,
+              });
+              return dataWithBrokerId;
+            } catch (error) {
+              set({ error: error as Error, loading: false });
+              return null;
+            }
+          },
+        };
+        return store;
+      },
       {
         name,
         indexedDBConfig: {
@@ -128,6 +134,16 @@ export const createDataStore = <T>(config: DataStoreConfig<T>) => {
             ...current,
             data: persisted as T[] | null,
           };
+        },
+        /**
+         * Callback executed after rehydration from IndexedDB completes
+         * Sets hydrated flag to true to indicate store is ready
+         */
+        onRehydrateStorage: () => (state, error) => {
+          console.log("onRehydrateStorage---------->>>", state, error);
+          if (state && !error) {
+            state.hydrated = true;
+          }
         },
       },
     ),
