@@ -4,7 +4,7 @@ import {
   useCollateral,
   useLocalStorage,
   useIndexPricesStream,
-  useTokensInfo,
+  useAppStore,
 } from "@orderly.network/hooks";
 import { account } from "@orderly.network/perp";
 import { useCanTrade, useDataTap } from "@orderly.network/react-app";
@@ -30,7 +30,7 @@ export const useAssetsScript = () => {
   const { holding = [] } = useCollateral();
   const { getIndexPrice } = useIndexPricesStream();
 
-  const tokensInfo = useTokensInfo();
+  const tokensInfo = useAppStore((state) => state.tokensInfo);
 
   const subAccounts = state.subAccounts ?? [];
 

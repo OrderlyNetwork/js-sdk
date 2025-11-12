@@ -14,7 +14,7 @@ export function useMarketsSheetScript() {
 
   const [activeTab, setActiveTab] = useLocalStorage(
     MARKETS_SHEET_SEL_TAB_KEY,
-    MarketsTabName.Favorites,
+    MarketsTabName.All,
   );
 
   return {

@@ -11,7 +11,10 @@ export const useVaultsHeaderScript = () => {
   const supportVaults = useMemo(() => {
     const array: VaultSupportedChain[] = [];
     vaultInfo.data.forEach((vault) => {
-      array.push(...vault.supported_chains);
+      // Add defensive check to prevent crash when supported_chains is undefined
+      if (Array.isArray(vault?.supported_chains)) {
+        array.push(...vault.supported_chains);
+      }
     });
 
     return uniqBy((item) => item.chain_id, array);

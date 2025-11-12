@@ -14,7 +14,7 @@ export interface CalculatorCtx {
   // positions: API.PositionTPSLExt[];
   // markets: Record<string, API.MarketInfoExt> | null;
   portfolio?: Portfolio;
-  tokensInfo?: API.Chain[];
+  tokensInfo?: API.Token[];
 
   get: <T extends any>(fn: (output: Record<string, any>) => T) => T;
   outputToValue: () => any;

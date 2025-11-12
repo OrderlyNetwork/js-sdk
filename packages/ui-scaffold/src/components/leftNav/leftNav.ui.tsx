@@ -9,8 +9,6 @@ import {
 import {
   Sheet,
   SheetContent,
-  modal,
-  useModal,
   VectorIcon,
   SwapHorizIcon,
   PeopleIcon,
@@ -25,11 +23,11 @@ import {
   CommunityTG,
   CommunityX,
 } from "./communityIcon";
-import { LeftNavState } from "./leftNav.script";
+import { LeftNavScriptReturn } from "./leftNav.script";
 import { LeftNavItem, LeftNavProps } from "./leftNav.type";
 
-type LeftNavUIProps = LeftNavProps &
-  LeftNavState & {
+export type LeftNavUIProps = LeftNavProps &
+  Partial<LeftNavScriptReturn> & {
     className?: string;
     logo?: {
       src: string;
@@ -40,31 +38,25 @@ type LeftNavUIProps = LeftNavProps &
   };
 
 export const LeftNavUI: FC<LeftNavUIProps> = (props) => {
-  const showModal = () => {
-    modal.show(LeftNavSheet, {
-      ...props,
-    });
-  };
-
   return (
-    <div onClick={showModal} className={props?.className}>
-      <VectorIcon />
-    </div>
+    <>
+      <div onClick={props.showSheet} className={props?.className}>
+        <VectorIcon />
+      </div>
+      <LeftNavSheet {...props} />
+    </>
   );
 };
 
-const LeftNavSheet = modal.create<LeftNavUIProps>((props) => {
-  const { visible, hide, resolve, reject, onOpenChange } = useModal();
+const LeftNavSheet: FC<LeftNavUIProps> = (props) => {
   const { state } = useAccount();
   const { t } = useTranslation();
 
   const { primaryMenus, secondaryMenus } = useMemo(() => {
     const primary = (props?.menus || []).filter((m) => !m.isSecondary);
     const secondary = (props?.menus || []).filter((m) => m.isSecondary);
-    console.log("primaryMenus", primary);
-    console.log("secondaryMenus", secondary);
     return { primaryMenus: primary, secondaryMenus: secondary };
-  }, [props?.menus]);
+  }, [props.menus]);
 
   const showSubAccount = useMemo(
     () => state.status >= AccountStatusEnum.EnableTrading,
@@ -72,8 +64,8 @@ const LeftNavSheet = modal.create<LeftNavUIProps>((props) => {
   );
 
   const onRouteChange = (option: RouteOption) => {
-    props?.routerAdapter?.onRouteChange?.(option);
-    hide();
+    props.routerAdapter?.onRouteChange?.(option);
+    props.hideSheet?.();
   };
 
   const subAccountTrigger = useMemo(() => {
@@ -111,7 +103,7 @@ const LeftNavSheet = modal.create<LeftNavUIProps>((props) => {
   };
 
   return (
-    <Sheet open={visible} onOpenChange={onOpenChange}>
+    <Sheet open={props.open} onOpenChange={props.onOpenChange}>
       <SheetContent
         side="left"
         className="oui-w-[276px] oui-bg-base-8"
@@ -148,7 +140,7 @@ const LeftNavSheet = modal.create<LeftNavUIProps>((props) => {
               ))}
             </div>
           )}
-          <div className="oui-absolute oui-bottom-6 oui-flex oui-w-full oui-flex-col oui-gap-4 oui-bg-base-8 oui-z-60">
+          <div className="oui-z-60 oui-absolute oui-bottom-6 oui-flex oui-w-full oui-flex-col oui-gap-4 oui-bg-base-8">
             <div className="oui-flex oui-items-center oui-justify-around">
               {props.telegramUrl && (
                 <div
@@ -193,7 +185,7 @@ const LeftNavSheet = modal.create<LeftNavUIProps>((props) => {
       </SheetContent>
     </Sheet>
   );
-});
+};
 
 type NavItemProps = {
   item: LeftNavItem;

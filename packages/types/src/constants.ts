@@ -130,7 +130,7 @@ export const ArbitrumSepoliaTokenInfo = {
   display_name: "USDC",
 };
 
-export const TesntTokenFallback = (testnetTokens: any) => [
+export const TesnetTokenFallback = (testnetTokens: any) => [
   {
     token: "USDC",
     token_hash:

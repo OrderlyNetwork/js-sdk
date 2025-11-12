@@ -3,7 +3,7 @@ import { account } from "@orderly.network/perp";
 import type { API } from "@orderly.network/types";
 import { Decimal, zero } from "@orderly.network/utils";
 import { useCollateral, useHoldingStream, useIndexPricesStream } from "..";
-import { useTokensInfo } from "./useTokensInfo/tokensInfo.store";
+import { useAppStore } from "./appStore";
 
 const { LTV, collateralRatio } = account;
 
@@ -17,7 +17,7 @@ export const useComputedLTV = (options: LTVOptions = {}) => {
 
   const isUSDC = token?.toUpperCase() === "USDC";
 
-  const tokensInfo = useTokensInfo();
+  const tokensInfo = useAppStore((state) => state.tokensInfo);
 
   const { usdc, data: holdingList = [] } = useHoldingStream();
 

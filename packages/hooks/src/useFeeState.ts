@@ -154,7 +154,6 @@ export const useFeeState = () => {
   }, [isAccountLoading, rwaMakerFeeBps]);
 
   const rwaEffectiveTakerFee = useMemo(() => {
-    console.log("rwaEffectiveTakerFee, 000");
     if (
       isAccountLoading ||
       rwaTakerFeeBps === null ||
@@ -163,16 +162,10 @@ export const useFeeState = () => {
     ) {
       return "-";
     }
-    console.log("rwaEffectiveTakerFee, 111");
     const effective = computeEffectiveFromBps(
       rwaTakerFeeBps,
       ORDERLY_MAKER_FEE_BPS,
       refereeRebate,
-    );
-    console.log(
-      "rwaEffectiveTakerFee, 222",
-      effective,
-      formatFractionAsPercent(effective),
     );
     return formatFractionAsPercent(effective);
   }, [isAccountLoading, rwaTakerFeeBps, refereeRebate, isReferralLoading]);

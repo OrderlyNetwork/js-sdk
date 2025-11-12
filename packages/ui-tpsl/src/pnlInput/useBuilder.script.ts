@@ -143,7 +143,7 @@ export const usePNLInputBuilder = (props: BuilderProps) => {
           }
         } else if (mode === PnLMode.PnL && type === "SL" && focus) {
           // not need to add "-", because the value is already negative
-          // value = value.startsWith("-") ? value : "-" + value;
+          value = value.startsWith("-") ? value : "-" + value;
         } else {
           value = todpIfNeed(value, dp);
         }

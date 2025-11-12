@@ -9,11 +9,18 @@
   "extend.stake": "스테이크",
   "extend.earn": "획득",
   "extend.spot": "스팟",
+  "extend.spot.description": "모든 알트코인, 밈코인 또는 온체인 토큰을 크로스체인으로 스왑",
   "extend.spotDune": "스팟 Dune",
   "extend.perpsDune": "퍼페츄얼 Dune",
   "extend.careers": "채용",
   "extend.docs": "문서",
   "extend.audits": "감사",
   "extend.vaults": "볼트",
-  "extend.perps": "퍼페츄얼"
+  "extend.perps": "퍼페츄얼",
+  "extend.perps.description": "가스 없이 주문서로 거래하는 퍼프, 최대 100배 레버리지 제공",
+  "extend.woofiEarn": "WOOFi 획득",
+  "extend.woofiEarn.description": "모든 체인의 주요 자산에서 안전하게 수익을 얻으세요",
+  "extend.wooStake": "WOO 스테이크",
+  "extend.wooStake.description": "USDC와 WOO를 얻기 위해 스테이킹하세요",
+  "extend.vaults.description": "자동화된 전략으로 패시브 수익을 창출하세요"
 }

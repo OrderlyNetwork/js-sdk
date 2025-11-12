@@ -1,12 +1,12 @@
-import { useEffect, useMemo, useState } from "react";
-import { useQuery } from "../useQuery";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { API, SDKError } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
+import { useQuery } from "../useQuery";
 import { useWS } from "../useWS";
-import { useMarkPrice } from "./useMarkPrice";
-import { useIndexPrice } from "./useIndexPrice";
-import { useOpenInterest } from "./useOpenInterest";
 import { useFutures } from "./useFutures";
+import { useIndexPrice } from "./useIndexPrice";
+import { useMarkPrice } from "./useMarkPrice";
+import { useOpenInterest } from "./useOpenInterest";
 
 export const useTickerStream = (symbol: string) => {
   if (!symbol) {
@@ -16,10 +16,13 @@ export const useTickerStream = (symbol: string) => {
     `/v1/public/futures/${symbol}`,
     {
       revalidateOnFocus: false,
-    }
+    },
   );
 
   const [ticker, setTicker] = useState<any>();
+
+  const symbolRef = useRef<string>(symbol);
+  symbolRef.current = symbol;
 
   const ws = useWS();
 
@@ -29,17 +32,15 @@ export const useTickerStream = (symbol: string) => {
       `${symbol}@ticker`,
       {
         onMessage: (message: any) => {
-          if (message.symbol !== symbol) return;
+          // when current symbol is not the same as the ws symbol, skip update data and auto unsubscribe old symbol ws
+          if (message.symbol !== symbolRef.current) {
+            unsubscribe?.();
+            return;
+          }
 
           setTicker(message);
         },
-        // onUnsubscribe: () => {
-        //   return "markprices";
-        // },
-        // onError: (error: any) => {
-        //
-        // },
-      }
+      },
     );
 
     return () => {
@@ -59,7 +60,7 @@ export const useTickerStream = (symbol: string) => {
     if (!ticker || ticker.symbol !== symbol) return info;
 
     const futureIndex = futures?.findIndex(
-      (item: any) => item.symbol === symbol
+      (item: any) => item.symbol === symbol,
     );
     let _oi = openInterest;
     if (!_oi && futureIndex !== -1 && futures) {
