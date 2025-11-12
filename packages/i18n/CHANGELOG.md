@@ -1,5 +1,12 @@
 # @orderly.network/i18n
 
+## 2.8.2
+
+### Patch Changes
+
+- publish
+- 437c752: publish
+
 ## 2.8.2-alpha.0
 
 ### Patch Changes
