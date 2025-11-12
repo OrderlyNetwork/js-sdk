@@ -1,60 +1,113 @@
-import { useEffect, useMemo, useState } from "react";
-import { useConfig, useQuery, useSWR } from ".";
+import { useContext, useEffect, useMemo, useState } from "react";
+import useSWR from "swr";
 import { getGlobalObject } from "@orderly.network/utils";
+import { useAppStore } from "./orderly/appStore";
+import { OrderlyContext } from "./orderlyContext";
+import { useMainnetChainsStore } from "./provider/store/chainInfoMainStore";
+import { useTestnetChainsStore } from "./provider/store/chainInfoTestStore";
+import { useMainTokenStore } from "./provider/store/mainTokenStore";
+import { useSwapSupportStore } from "./provider/store/swapSupportStore";
+import { useSymbolStore } from "./provider/store/symbolStore";
+import { useTestTokenStore } from "./provider/store/testTokenStore";
 
 export const usePreLoadData = () => {
   const [timestampOffsetInitialized, setTimestampOffsetInitialized] =
     useState(false);
-  const { error: tokenError, data: tokenData } = useQuery(
-    "https://api.orderly.org/v1/public/token",
-    {
-      revalidateOnFocus: false,
-    }
-  );
 
-  /// get service timestamp
-  /// get local timestamp
-  /// calculate delta offset = SD - LD
-  /// save to getGlobalObject.__ORDERLY_timestamp_offset
+  const { configStore, enableSwapDeposit } = useContext(OrderlyContext);
 
-  const apiBaseUrl = useConfig("apiBaseUrl");
+  const env = configStore.get("env");
+  const apiBaseUrl = configStore.get("apiBaseUrl");
+
+  const urlPrefix =
+    env === "prod"
+      ? "https://testnet-api.orderly.org"
+      : configStore.get("apiBaseUrl");
+
+  // Optimize store selectors using Zustand's select to only get fetchData methods
+  // This prevents unnecessary re-renders when other store state changes
+  const fetchMainTokens = useMainTokenStore((state) => state.fetchData);
+  const fetchTestTokens = useTestTokenStore((state) => state.fetchData);
+  const fetchMainChains = useMainnetChainsStore((state) => state.fetchData);
+  const fetchTestChains = useTestnetChainsStore((state) => state.fetchData);
+  const fetchSymbols = useSymbolStore((state) => state.fetchData);
+  const fetchSwapSupport = useSwapSupportStore((state) => state.fetchData);
+  const setTokensInfo = useAppStore((state) => state.actions.setTokensInfo);
+
+  const mainTokenInfo = useMainTokenStore((state) => state.data);
+  const testTokenInfo = useTestTokenStore((state) => state.data);
+  const swapSupportInfo = useSwapSupportStore((state) => state.data);
+
+  useEffect(() => {
+    fetchMainTokens();
+    fetchSymbols(apiBaseUrl).then((symbols) => {
+      // console.info("Symbols loaded:", symbols);
+    });
+    fetchMainChains(undefined, {
+      brokerId: configStore.get("brokerId"),
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!urlPrefix) return;
+    fetchTestTokens(urlPrefix);
+    fetchTestChains(urlPrefix, {
+      brokerId: configStore.get("brokerId"),
+    });
+  }, [urlPrefix]);
+
+  useEffect(() => {
+    if (!mainTokenInfo || !testTokenInfo) return;
+
+    setTokensInfo(env === "prod" ? mainTokenInfo : testTokenInfo);
+  }, [mainTokenInfo, testTokenInfo]);
+
+  useEffect(() => {
+    if (swapSupportInfo || !enableSwapDeposit) return;
+    fetchSwapSupport();
+  }, [swapSupportInfo, enableSwapDeposit]);
 
   const { data: systemInfo } = useSWR(
     "/v1/public/system_info",
-    async (url: any, init: any) => {
+    async (url: string, init?: RequestInit) => {
       const data = await fetch(
         url.startsWith("http") ? url : `${apiBaseUrl}${url}`,
-        init
+        init,
       );
       return await data.json();
     },
     {
       errorRetryCount: 3,
       errorRetryInterval: 500,
-    }
+    },
   );
 
   useEffect(() => {
     if (timestampOffsetInitialized) return;
     if (typeof systemInfo !== "undefined") {
-      const sd = systemInfo.timestamp;
-      const ld = Date.now();
-      // @ts-ignore
-      const diff = sd - ld;
-      if (isNaN(diff)) {
+      const serverTimestamp = systemInfo.timestamp;
+      const localTimestamp = Date.now();
+      // Calculate the difference between server and local time
+      const timestampOffset = serverTimestamp - localTimestamp;
+
+      if (isNaN(timestampOffset)) {
         return;
       }
-      (getGlobalObject() as any).__ORDERLY_timestamp_offset = diff;
+
+      // Store the offset globally for use in API calls
+      (
+        getGlobalObject() as Record<string, unknown>
+      ).__ORDERLY_timestamp_offset = timestampOffset;
       setTimestampOffsetInitialized(true);
     }
   }, [systemInfo, timestampOffsetInitialized]);
 
   const isDone = useMemo(() => {
-    return !!tokenData && timestampOffsetInitialized;
-  }, [timestampOffsetInitialized, tokenData]);
+    return timestampOffsetInitialized;
+  }, [timestampOffsetInitialized]);
 
   return {
-    error: tokenError,
+    error: null,
     done: isDone,
   };
 };

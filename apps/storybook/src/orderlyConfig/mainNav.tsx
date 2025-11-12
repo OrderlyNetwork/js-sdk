@@ -290,5 +290,6 @@ const getMainNavProp = (): MainNavWidgetProps => {
 
 export const useMainNav = () => {
   const { t } = useTranslation();
+  // it need to add t to the dependency array to ensure the mainNav is re-rendered when the language is changed
   return useMemo(() => getMainNavProp(), [t]);
 };

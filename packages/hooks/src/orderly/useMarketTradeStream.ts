@@ -1,7 +1,7 @@
+import { useEffect, useRef, useState } from "react";
 import { API, SDKError } from "@orderly.network/types";
-import { useWS } from "../useWS";
-import { useEffect, useState } from "react";
 import { getTimestamp } from "@orderly.network/utils";
+import { useWS } from "../useWS";
 
 export interface MarketTradeStreamOptions {
   limit?: number;
@@ -9,7 +9,7 @@ export interface MarketTradeStreamOptions {
 
 export const useMarketTradeStream = (
   symbol: string,
-  options: MarketTradeStreamOptions = {}
+  options: MarketTradeStreamOptions = {},
 ) => {
   if (!symbol) {
     throw new SDKError("Symbol is required");
@@ -17,6 +17,9 @@ export const useMarketTradeStream = (
 
   const [trades, setTrades] = useState<API.Trade[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const symbolRef = useRef<string>(symbol);
+  symbolRef.current = symbol;
 
   const { limit = 50 } = options;
 
@@ -40,12 +43,12 @@ export const useMarketTradeStream = (
           setIsLoading(false);
           setTrades(() => data);
         },
-      }
+      },
     );
   }, [symbol]);
 
   useEffect(() => {
-    const unsubscript = ws.subscribe(
+    const unsubscribe = ws.subscribe(
       {
         id: `${symbol}@trade`,
         event: "subscribe",
@@ -54,6 +57,11 @@ export const useMarketTradeStream = (
       },
       {
         onMessage: (data: any) => {
+          // when current symbol is not the same as the ws symbol, skip update data and auto unsubscribe old symbol ws
+          if (data.symbol !== symbolRef.current) {
+            unsubscribe?.();
+            return;
+          }
           setTrades((prev) => {
             const arr = [{ ...data, ts: getTimestamp() }, ...prev];
             if (arr.length > limit) {
@@ -62,11 +70,11 @@ export const useMarketTradeStream = (
             return arr;
           });
         },
-      }
+      },
     );
 
     return () => {
-      unsubscript?.();
+      unsubscribe?.();
     };
   }, [symbol]);
 

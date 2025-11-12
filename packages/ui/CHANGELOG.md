@@ -1,5 +1,23 @@
 # @orderly.network/ui
 
+## 2.8.2
+
+### Patch Changes
+
+- publish
+- 437c752: publish
+- Updated dependencies
+- Updated dependencies [437c752]
+  - @orderly.network/utils@2.8.2
+
+## 2.8.2-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/utils@2.8.2-alpha.0
+
 ## 2.8.1
 
 ### Patch Changes

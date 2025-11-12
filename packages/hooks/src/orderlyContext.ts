@@ -37,7 +37,7 @@ export interface OrderlyConfigContextState {
   customChains?: Chains<undefined, undefined>;
   chainTransformer?: (params: {
     chains: API.Chain[];
-    tokenChains: API.Chain[];
+    tokenChains: API.Token[];
     chainInfos: any[];
     swapChains: any[];
     mainnet: boolean;

@@ -87,8 +87,11 @@ async function main() {
     // Notify success on Telegram
     await notifyTelegram(successfulPackages);
 
-    // Trigger pipeline to update sdk verson and create tag
-    await $`pnpm trigger:pipeline`;
+    // ignore pre-release branch
+    if (ciBranch !== "pre-release") {
+      // Trigger pipeline to update sdk verson and create tag
+      await $`pnpm trigger:pipeline`;
+    }
   } catch (error: any) {
     // Log error and notify failure on Telegram
     const msg = `release error: ${

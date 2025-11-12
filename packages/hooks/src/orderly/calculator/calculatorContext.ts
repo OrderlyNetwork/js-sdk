@@ -1,9 +1,7 @@
 import { API } from "@orderly.network/types";
 import { CalculatorCtx, CalculatorScope } from "../../types";
 import { Portfolio, useAppStore } from "../appStore";
-import { useMarketStore } from "../useMarket/market.store";
-import { usePositionStore } from "../usePositionStream/usePosition.store";
-import { useTokensInfoStore } from "../useTokensInfo/tokensInfo.store";
+// import { useTokensInfoStore } from "../useTokensInfo/tokensInfo.store";
 import { MarketCalculatorName } from "./markPrice";
 
 export class CalculatorContext implements CalculatorCtx {
@@ -16,7 +14,7 @@ export class CalculatorContext implements CalculatorCtx {
   markPrices?: Record<string, number> | null;
   // positions: API.PositionTPSLExt[];
   // markets: Record<string, API.MarketInfoExt> | null;
-  tokensInfo?: API.Chain[];
+  tokensInfo?: API.Token[];
 
   private output: Record<string, any>;
 
@@ -80,7 +78,7 @@ export class CalculatorContext implements CalculatorCtx {
       string,
       API.FundingRate
     >;
-    this.tokensInfo = useTokensInfoStore.getState().tokensInfo;
+    this.tokensInfo = useAppStore.getState().tokensInfo || [];
   }
 
   get(fn: (output: Record<string, any>) => any) {

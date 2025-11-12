@@ -4,7 +4,6 @@ import { LtvWidget } from "../LTV";
 import { AvailableQuantity } from "../availableQuantity";
 import { ConvertAction } from "../convertAction";
 import { ExchangeDivider } from "../exchangeDivider";
-import { Fee } from "../fee";
 import { MinimumReceived } from "../minimumReceived";
 import { QuantityInput } from "../quantityInput";
 import { Slippage } from "../slippage";
@@ -103,7 +102,6 @@ export const ConvertFormUI: React.FC<ConvertFormProps> = (props) => {
             currentLtv={currentLTV}
             nextLTV={nextLTV}
           />
-          <Fee dstGasFee={"0"} />
         </Flex>
       </Box>
       <Flex itemAlign={"center"} justify="center">

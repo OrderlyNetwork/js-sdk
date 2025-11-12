@@ -4,7 +4,7 @@ import {
   useHoldingStream,
   useIndexPricesStream,
   useQuery,
-  useTokensInfo,
+  useAppStore,
 } from "@orderly.network/hooks";
 import { account } from "@orderly.network/perp";
 import type { API } from "@orderly.network/types";
@@ -34,7 +34,7 @@ export const useLTVTooltipScript = () => {
     isLoading: isThresholdLoading,
   } = useConvertThreshold();
 
-  const tokensInfo = useTokensInfo();
+  const tokensInfo = useAppStore((state) => state.tokensInfo);
 
   const { getIndexPrice } = useIndexPricesStream();
 
