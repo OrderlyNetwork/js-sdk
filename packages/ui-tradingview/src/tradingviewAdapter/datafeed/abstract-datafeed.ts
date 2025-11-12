@@ -80,9 +80,14 @@ export abstract class AbstractDatafeed {
   ): void {
     this._historyProvider
       .getBars(symbolInfo, resolution, periodParams)
-      .then((result: GetBarsResult) => {
-        onResult(result.bars, result.meta);
-      })
+      .then(
+        (result: GetBarsResult) => {
+          onResult(result.bars, result.meta);
+        },
+        (error) => {
+          onError(error);
+        },
+      )
       .catch(onError);
   }
 

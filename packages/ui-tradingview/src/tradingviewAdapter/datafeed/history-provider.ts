@@ -200,7 +200,17 @@ export class HistoryProvider {
             } else {
               // Data amount is insufficient, switch to KLINE_HISTORY_PATH and request again
               this._lastPath = KLINE_HISTORY_PATH;
-              result = await this._requestKlineHistory(requestParams);
+              requestParams.limit = requestParams.countback;
+              delete requestParams.countback;
+              try {
+                result = await this._requestKlineHistory(requestParams);
+                if (result.bars.length === 0) {
+                  throw new Error("No data");
+                }
+              } catch (e: unknown) {
+                // if the kline history request fails, fallback to the initial response
+                result = this._processHistoryResponse(initialResponse);
+              }
             }
           }
 
@@ -220,7 +230,7 @@ export class HistoryProvider {
           console.warn(
             `HistoryProvider: getBars() failed, error=${reasonString}`,
           );
-          reject(reasonString);
+          reject(reasonString || "Error");
         }
       },
     );

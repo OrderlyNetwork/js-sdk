@@ -133,7 +133,6 @@ export class Widget {
 
   setResolution(resolution: string) {
     if (this._instance) {
-      console.log("????", this._instance.activeChart().resolution());
       this._instance
         .activeChart()
         .setResolution(resolution as ResolutionString);
