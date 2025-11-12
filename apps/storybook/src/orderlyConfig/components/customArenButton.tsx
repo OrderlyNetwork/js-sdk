@@ -34,7 +34,7 @@ export const CustomArenaButtonMain: React.FC<{
         isActive ? "after:oui-bg-base-10" : undefined,
         !isActive ? "oui-text-base-contrast-36" : undefined,
         "hover:after:oui-bg-base-7",
-        "oui-w-full oui-h-[32px] oui-px-4",
+        "oui-w-full oui-h-[32px] oui-px-[14px]",
         "oui-relative oui-z-0 oui-flex oui-cursor-pointer oui-select-none oui-items-center oui-justify-center oui-gap-1 oui-rounded-md oui-border oui-border-solid oui-border-transparent",
         "before:oui-absolute before:oui-inset-0 before:oui-z-[-1] before:oui-rounded-md before:oui-content-['']",
         "after:oui-absolute after:oui-inset-px after:oui-z-[-1] after:oui-box-border after:oui-rounded-md after:oui-content-['']",

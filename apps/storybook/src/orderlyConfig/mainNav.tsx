@@ -7,7 +7,6 @@ import {
   SettingFillIcon,
   BarChartIcon,
   PersonIcon,
-  BattleIcon,
   SpotIcon,
   LeftNavVaultsIcon,
   WoofiStakeIcon,
@@ -71,8 +70,11 @@ const getMainMenus = (): MainNavWidgetProps["mainMenus"] => {
       customSubMenuRender: customTradeSubMenuRender(),
     },
     {
-      name: i18n.t("extend.earn"),
+      label: i18n.t("extend.earn"),
+      name: i18n.t("extend.vaults"),
       href: "/vaults",
+      isSubMenuInMobile: true,
+      subMenuBackNav: { href: PathEnum.Perp, name: i18n.t("common.trading") },
       disabled: true,
       className: "oui-cursor-pointer",
       customSubMenuRender: customEarnSubMenuRender(),
@@ -82,7 +84,6 @@ const getMainMenus = (): MainNavWidgetProps["mainMenus"] => {
     {
       name: i18n.t("affiliate.referral"),
       href: "/rewards/affiliate",
-      icon: "/box-jump.gif",
       onlyInMainAccount: true,
       tooltipConfig: {
         showOnFirstVisit: true,

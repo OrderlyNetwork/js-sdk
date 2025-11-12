@@ -48,6 +48,7 @@ export type MainNavItem = {
   id?: string;
   testid?: string;
   name: string;
+  label?: string;
   href: string;
   target?: HTMLAttributeAnchorTarget;
   icon?: string | React.ReactElement;
@@ -192,7 +193,7 @@ export const NavItem: FC<
             angle={45}
             className="oui-whitespace-nowrap oui-break-normal"
           >
-            {item.name}
+            {item.label ?? item.name}
           </Text.gradient>
           {hasSubMenu && (
             <span className={"oui-ml-1 group-data-[open=true]:oui-rotate-180"}>
