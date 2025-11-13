@@ -23,7 +23,7 @@ export const FundingRate: FC<FundingRateState> = (props) => {
       ) : (
         <div className="orderly-flex orderly-gap-1 oui-text-2xs oui-text-base-contrast-36">
           {/* <span className="orderly-text-warning-darken">{`${predFundingRate}%`}</span> */}
-          <Text.numeral coloring suffix="%" dp={4}>
+          <Text.numeral suffix="%" dp={4} intensity={80}>
             {predFundingRate ?? "--"}
           </Text.numeral>
           <span>{" in"}</span>

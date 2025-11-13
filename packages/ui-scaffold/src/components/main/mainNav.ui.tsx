@@ -127,7 +127,7 @@ export const MainNav: FC<PropsWithChildren<MainNavScriptReturn>> = (props) => {
       px={3}
       gapX={3}
       className={cn(
-        "oui-main-nav oui-font-semibold",
+        "oui-main-nav oui-font-semibold oui-border-0 lg:oui-border-b-white/[0.12] lg:oui-border-b",
         className,
         classNames?.root,
       )}
