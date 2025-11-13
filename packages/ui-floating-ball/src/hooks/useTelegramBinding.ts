@@ -167,7 +167,6 @@ export function useTelegramBinding(
 
     return { token, timestamp };
   };
-  4;
   // Return existing token for address from localStorage if present; otherwise request and persist.
   const getEvmAuthToken = async (
     address: string,
@@ -762,6 +761,13 @@ export function useTelegramBinding(
       didRegisterOrderlyKey ||
       didVerifyOrderlyKey
     ) {
+      if (didRegisterOrderlyKey) {
+        setHasOrderlyPrivateKey(true);
+      }
+      if (didVerifyOrderlyKey) {
+        setHasVerifiedOrderly(true);
+      }
+
       const cached = getCachedAccountInfo(addr);
       const next = {
         ...(cached?.data || {}),

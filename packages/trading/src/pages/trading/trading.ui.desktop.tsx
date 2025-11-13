@@ -488,8 +488,9 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
         // height: `calc(100% - ${symbolInfoBarHeight}px - ${orderbookMaxHeight}px - ${space}px)`,
         minHeight: dataListInitialHeight,
         // minHeight: `max(${dataListMinHeight}px, calc(100vh - ${symbolInfoBarHeight}px - ${orderbookMaxHeight}px - ${space}px))`,
+        minWidth: 0,
       }}
-      className="oui-overflow-hidden"
+      className="oui-overflow-y-hidden"
     >
       {dataListWidget}
     </Box>
@@ -625,7 +626,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
   const mainView = (
     <Flex
       direction="column"
-      className="oui-flex-1 oui-overflow-hidden"
+      className="oui-flex-1 oui-overflow-y-hidden"
       gap={2}
       style={{
         minWidth: max4XL
@@ -847,8 +848,9 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
                   height: dataListSplitHeightSM,
                   minHeight: Math.max(dataListMinHeight, props.dataListHeight),
                   maxHeight: dataListMaxHeight,
+                  minWidth: 0,
                 }}
-                className="oui-overflow-hidden"
+                className="oui-overflow-y-hidden"
               >
                 {dataListWidget}
               </Box>
@@ -918,6 +920,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
             className={cn(
               "oui-flex-1 oui-overflow-y-hidden oui-overflow-x-auto",
             )}
+            style={{ minWidth: 0 }}
             gap={2}
           >
             {!max4XL &&
@@ -926,7 +929,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
               marketsView}
             <SplitLayout
               className={cn("oui-flex oui-flex-1")}
-              style={{ minWidth: "min-content" }}
+              style={{ minWidth: 0 }}
               onSizeChange={onSizeChange}
               disable={!horizontalDraggable}
             >
