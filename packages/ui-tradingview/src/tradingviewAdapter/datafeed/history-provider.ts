@@ -125,11 +125,13 @@ export class HistoryProvider {
       to: periodParams.to,
     };
 
+    const countBack = Math.min(periodParams.countBack ?? 0, 1000);
+
     if (periodParams.countBack !== undefined) {
       if (this._lastPath === KLINE_HISTORY_PATH) {
-        requestParams.limit = periodParams.countBack;
+        requestParams.limit = countBack;
       } else {
-        requestParams.countback = periodParams.countBack;
+        requestParams.countback = countBack;
       }
     }
 
@@ -170,6 +172,8 @@ export class HistoryProvider {
         try {
           let result;
 
+          const countBack = Math.min(periodParams.countBack ?? 0, 1000);
+
           // If current path is already KLINE_HISTORY_PATH, directly use KLINE_HISTORY_PATH request logic
           if (this._lastPath === KLINE_HISTORY_PATH) {
             result = await this._requestKlineHistory(requestParams);
@@ -183,10 +187,7 @@ export class HistoryProvider {
               );
 
             // Check if the returned data amount is sufficient
-            const expectedCount =
-              typeof requestParams.countback === "number"
-                ? requestParams.countback
-                : 0;
+            const expectedCount = typeof countBack === "number" ? countBack : 0;
             const isDataSufficient = this._checkHistoryLength(
               initialResponse,
               expectedCount,
@@ -198,7 +199,7 @@ export class HistoryProvider {
             } else {
               // Data amount is insufficient, switch to KLINE_HISTORY_PATH and request again
               this._lastPath = KLINE_HISTORY_PATH;
-              requestParams.limit = requestParams.countback;
+              requestParams.limit = countBack;
               delete requestParams.countback;
               try {
                 result = await this._requestKlineHistory(requestParams);
@@ -242,6 +243,7 @@ export class HistoryProvider {
   private async _requestKlineHistory(
     requestParams: RequestParams,
   ): Promise<GetBarsResult> {
+    console.log("requestKlineHistory requestParams", requestParams);
     const klineResponse = await this._requester.sendRequest<HistoryResponse>(
       this._datafeedUrl,
       KLINE_HISTORY_PATH,
