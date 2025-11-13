@@ -50,8 +50,6 @@ export interface GetBarsResult {
 
 const HISTORY_PATH = "tv/history";
 const KLINE_HISTORY_PATH = "v1/tv/kline_history";
-// KLINE_HISTORY_PATH uses a different base URL
-const KLINE_HISTORY_BASE_URL = "https://dev-api-aliyun.orderly.org";
 
 export interface LimitedResponseConfiguration {
   /**
@@ -245,7 +243,7 @@ export class HistoryProvider {
     requestParams: RequestParams,
   ): Promise<GetBarsResult> {
     const klineResponse = await this._requester.sendRequest<HistoryResponse>(
-      KLINE_HISTORY_BASE_URL,
+      this._datafeedUrl,
       KLINE_HISTORY_PATH,
       {
         ...requestParams,
