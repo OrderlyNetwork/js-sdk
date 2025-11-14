@@ -1,4 +1,5 @@
 import React from "react";
+import { useEventEmitter, useMediaQuery } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { AssetsModule } from "@orderly.network/portfolio";
 import { OrderStatus } from "@orderly.network/types";
@@ -94,6 +95,11 @@ export const LiquidationTab: React.FC = () => {
 
 export const DataList: React.FC<DataListState> = (props) => {
   const { t } = useTranslation();
+  const ee = useEventEmitter();
+  const isWidthBetween1440And1680 = useMediaQuery(
+    "(min-width: 1440px) and (max-width: 1680px)",
+  );
+  const [isSideChatOpen, setIsSideChatOpen] = React.useState(false);
 
   const {
     positionCount = 0,
@@ -110,6 +116,27 @@ export const DataList: React.FC<DataListState> = (props) => {
     setUnPnlPriceBasic,
     setPnlNotionalDecimalPrecision,
   } = props;
+
+  React.useEffect(() => {
+    const handleToggle = (data: { isOpen: boolean }) => {
+      setIsSideChatOpen(!!data.isOpen);
+    };
+    ee.on("sideChatPanel:toggle", handleToggle);
+    const handleChatClosed = () => setIsSideChatOpen(false);
+    window.addEventListener(
+      "starchild:chatClosed",
+      handleChatClosed as EventListener,
+    );
+    return () => {
+      ee.off("sideChatPanel:toggle", handleToggle);
+      window.removeEventListener(
+        "starchild:chatClosed",
+        handleChatClosed as EventListener,
+      );
+    };
+  }, [ee]);
+
+  const showDownsideWidget = isSideChatOpen && isWidthBetween1440And1680;
 
   const tabPanelItems: (TabPanelProps & { content?: React.ReactNode })[] = [
     {
@@ -221,29 +248,47 @@ export const DataList: React.FC<DataListState> = (props) => {
     <Tabs
       defaultValue={current || DataListTabType.positions}
       variant="contained"
-      trailing={
-        <React.Suspense fallback={null}>
-          <LazySettingWidget
-            pnlNotionalDecimalPrecision={pnlNotionalDecimalPrecision}
-            setPnlNotionalDecimalPrecision={setPnlNotionalDecimalPrecision}
-            unPnlPriceBasis={unPnlPriceBasis}
-            setUnPnlPriceBasic={setUnPnlPriceBasic}
-            hideOtherSymbols={!showAllSymbol}
-            setHideOtherSymbols={(value) => setShowAllSymbol(!value)}
-          />
-        </React.Suspense>
-      }
       size="lg"
       className="oui-h-full"
       classNames={{
         trigger: "oui-group",
         tabsContent: "oui-h-[calc(100%_-_32px)]",
       }}
+      trailing={
+        !showDownsideWidget ? (
+          <React.Suspense fallback={null}>
+            <LazySettingWidget
+              pnlNotionalDecimalPrecision={pnlNotionalDecimalPrecision}
+              setPnlNotionalDecimalPrecision={setPnlNotionalDecimalPrecision}
+              unPnlPriceBasis={unPnlPriceBasis}
+              setUnPnlPriceBasic={setUnPnlPriceBasic}
+              hideOtherSymbols={!showAllSymbol}
+              setHideOtherSymbols={(value) => setShowAllSymbol(!value)}
+            />
+          </React.Suspense>
+        ) : undefined
+      }
     >
       {tabPanelItems.map((item) => {
         const { content, ...rest } = item;
         return (
           <TabPanel {...rest} key={`item-${rest.value}`}>
+            {showDownsideWidget && (
+              <Flex mt={1}>
+                <React.Suspense fallback={null}>
+                  <LazySettingWidget
+                    pnlNotionalDecimalPrecision={pnlNotionalDecimalPrecision}
+                    setPnlNotionalDecimalPrecision={
+                      setPnlNotionalDecimalPrecision
+                    }
+                    unPnlPriceBasis={unPnlPriceBasis}
+                    setUnPnlPriceBasic={setUnPnlPriceBasic}
+                    hideOtherSymbols={!showAllSymbol}
+                    setHideOtherSymbols={(value) => setShowAllSymbol(!value)}
+                  />
+                </React.Suspense>
+              </Flex>
+            )}
             {content}
           </TabPanel>
         );

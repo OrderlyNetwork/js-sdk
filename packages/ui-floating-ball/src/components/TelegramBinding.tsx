@@ -39,6 +39,7 @@ export const TelegramBinding: React.FC<TelegramBindingProps> = ({
     bindingStatus,
     handleTelegramLogin,
     walletAddress,
+    selectedChainId,
     getTemporaryOrderlyKey,
     registerOrderlyKey,
     verifyOrderlyKey,
@@ -56,24 +57,25 @@ export const TelegramBinding: React.FC<TelegramBindingProps> = ({
     try {
       // Fetch temporary orderly key pair
       const { orderlyKey, privateKey } = await getTemporaryOrderlyKey();
-      console.log("orderlyKey", orderlyKey);
-      console.log("privateKey", privateKey);
-
       if (!orderlyKey || !privateKey) {
         console.error("Temporary orderly key response missing fields");
         return;
       }
 
-      // Register orderly private key
-      const result = await registerOrderlyKey(orderlyKey, {
+      await registerOrderlyKey(orderlyKey, {
         userAddress: walletAddress,
-        chainId: 421614,
+        chainId: selectedChainId,
+        expiration: Date.now() + 365 * 24 * 60 * 60 * 1000,
       });
-      console.log("Orderly key registered", result);
     } catch (e) {
       console.error("Create/register orderly key error", e);
     }
-  }, [walletAddress, getTemporaryOrderlyKey, registerOrderlyKey]);
+  }, [
+    walletAddress,
+    selectedChainId,
+    getTemporaryOrderlyKey,
+    registerOrderlyKey,
+  ]);
 
   const handleSignIn = React.useCallback(async () => {
     try {

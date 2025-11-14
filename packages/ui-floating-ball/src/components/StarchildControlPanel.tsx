@@ -258,6 +258,7 @@ export const StarchildControlPanel: React.FC<StarchildControlPanelProps> = ({
   React.useEffect(() => {
     const handleChatStateChanged = (data: { isOpen: boolean }) => {
       setIsSidePanelOpen(data.isOpen);
+      ee.emit("sideChatPanel:toggle", { isOpen: data.isOpen });
     };
     ee.on("starchild:chatStateChanged", handleChatStateChanged);
     return () => {

@@ -22,7 +22,7 @@ export const SideChatPanel: React.FC<SideChatPanelProps> = ({
 
   useEffect(() => {
     const handleToggle = (data: { isOpen: boolean }) => {
-      const isLargeScreen = window.innerWidth > 1680;
+      const isLargeScreen = window.innerWidth > 1440;
       const shouldOpen = isLargeScreen && data.isOpen;
 
       setIsOpen(shouldOpen);
@@ -64,7 +64,7 @@ export const SideChatPanel: React.FC<SideChatPanelProps> = ({
       // Only process if width actually changed
       if (currentWidth !== lastWidth) {
         lastWidth = currentWidth;
-        if (isOpen && currentWidth < 1680) {
+        if (isOpen && currentWidth < 1440) {
           ee.emit("sideChatPanel:toggle", { isOpen: false });
         }
       }

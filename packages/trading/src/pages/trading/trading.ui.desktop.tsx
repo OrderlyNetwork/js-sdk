@@ -227,7 +227,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
 
   useEffect(() => {
     const handleToggle = (data: { isOpen: boolean }) => {
-      const shouldOpen = window.innerWidth > 1680 && data.isOpen;
+      const shouldOpen = window.innerWidth > 1440 && data.isOpen;
       setIsChatOpen(shouldOpen);
     };
     const handleChatClosed = () => setIsChatOpen(false);
@@ -251,13 +251,35 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
   }, [ee]);
 
   const chatRestrictsMarkets =
-    isChatOpen && windowWidth > 1680 && windowWidth <= 1920;
+    isChatOpen && windowWidth >= 1440 && windowWidth <= 1920;
 
   useEffect(() => {
     if (chatRestrictsMarkets && panelSize === "large") {
       onPanelSizeChange("middle" as any);
     }
   }, [chatRestrictsMarkets, panelSize, onPanelSizeChange]);
+
+  // When width is between 1440 and 1680 and side chat opens, hide markets
+  const previousMarketLayoutRef = useRef<string | null>(null);
+  useEffect(() => {
+    const inBand = isChatOpen && windowWidth >= 1440 && windowWidth < 1680;
+    if (inBand) {
+      if (marketLayout === "left") {
+        if (!previousMarketLayoutRef.current) {
+          previousMarketLayoutRef.current = "left";
+        }
+        if (marketLayout !== "hide") {
+          onMarketLayout("hide" as any);
+        }
+      }
+      return;
+    }
+    // Outside the band or chat closed: restore if we had hidden before.
+    if (marketLayout === "hide" && previousMarketLayoutRef.current) {
+      onMarketLayout(previousMarketLayoutRef.current as any);
+      previousMarketLayoutRef.current = null;
+    }
+  }, [isChatOpen, windowWidth, marketLayout, onMarketLayout]);
 
   // Configure sensors for drag and drop interactions
   const sensors = useSensors(
@@ -378,7 +400,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
       className="oui-transition-all oui-duration-150"
       onTransitionEnd={() => setAnimating(false)}
     >
-      {!animating && marketLayout === "left" && marketsWidget}
+      {marketLayout === "left" && marketsWidget}
     </Box>
   );
 
@@ -405,6 +427,9 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
               onLayout={onLayout}
               marketLayout={marketLayout}
               onMarketLayout={onMarketLayout}
+              disableLeft={
+                isChatOpen && windowWidth >= 1440 && windowWidth < 1680
+              }
             />
           </React.Suspense>
         }

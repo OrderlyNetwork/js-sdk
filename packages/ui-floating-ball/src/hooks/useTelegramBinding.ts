@@ -15,6 +15,7 @@ export type UseTelegramBindingReturn = {
   bindingStatus: "idle" | "success" | "error";
   handleTelegramLogin: () => void;
   walletAddress: string;
+  selectedChainId?: number;
   getTemporaryOrderlyKey: () => Promise<{
     orderlyKey: string;
     privateKey: string;
@@ -807,6 +808,18 @@ export function useTelegramBinding(
 
   // Init is handled outside to avoid unmount during dialog close.
 
+  const walletChainId = (() => {
+    const rawChainId = wallet?.chains?.[0]?.id;
+    if (typeof rawChainId === "number") {
+      return rawChainId;
+    }
+    if (typeof rawChainId === "string") {
+      const parsed = Number.parseInt(rawChainId, 10);
+      return Number.isFinite(parsed) ? parsed : undefined;
+    }
+    return undefined;
+  })();
+
   return {
     telegramUser,
     isWalletConnected,
@@ -814,6 +827,7 @@ export function useTelegramBinding(
     bindingStatus,
     handleTelegramLogin,
     walletAddress: wallet?.accounts?.[0]?.address || "",
+    selectedChainId: walletChainId,
     getTemporaryOrderlyKey,
     registerOrderlyKey,
     getOrderlyKeyEIP712Data,
