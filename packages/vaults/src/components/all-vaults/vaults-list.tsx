@@ -25,7 +25,6 @@ export const VaultsList: FC<VaultsListProps> = ({ vaults }) => {
   const [sortField, setSortField] = useState<SortField>("apy");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
 
-  // 检查是否有任何 vault 满足显示 tooltip 的条件
   const shouldShowApyTooltip = useMemo(() => {
     return vaults.some(
       (vault) =>
