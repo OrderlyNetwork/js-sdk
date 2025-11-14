@@ -6,6 +6,8 @@ import {
   Button,
   ArrowRightUpSquareFillIcon,
   useScreen,
+  Tooltip,
+  InfoCircleIcon,
 } from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
 import { parseMarkdownLinks } from "../../utils/parseMarkdownLinks";
@@ -181,14 +183,22 @@ export const VaultCard: FC<VaultCardScript> = (props) => {
               <VaultInfoItem
                 label={t("vaults.card.apy")}
                 value={
-                  vaultInfo["30d_apy"] > 100
-                    ? ">10000%"
-                    : (vaultInfo["30d_apy"] * 100).toFixed(2) + "%"
+                  vaultInfo.status === "pre_launch" ||
+                  (vaultInfo.vault_age !== null && vaultInfo.vault_age < 30)
+                    ? "--"
+                    : vaultInfo["30d_apy"] > 100
+                      ? ">10000%"
+                      : (vaultInfo["30d_apy"] * 100).toFixed(2) + "%"
                 }
                 textProps={{
                   color: "brand",
                   type: "gradient",
                 }}
+                showTooltip={
+                  vaultInfo.status === "pre_launch" ||
+                  (vaultInfo.vault_age !== null && vaultInfo.vault_age < 30)
+                }
+                tooltipContent="APY is not calculated for vaults that are less than 30 days old."
               />
             </div>
 
@@ -228,8 +238,10 @@ const VaultInfoItem: FC<{
   label: string;
   value: string | number;
   textProps?: any;
+  showTooltip?: boolean;
+  tooltipContent?: string;
 }> = (props) => {
-  const { label, value, textProps } = props;
+  const { label, value, textProps, showTooltip, tooltipContent } = props;
 
   return (
     <div
@@ -238,8 +250,19 @@ const VaultInfoItem: FC<{
         "oui-rounded-lg oui-border oui-border-solid oui-border-white/[0.12]",
       )}
     >
-      <div className="oui-text-2xs oui-font-normal oui-leading-[18px] oui-text-base-contrast-54">
+      <div className="oui-flex oui-items-center oui-gap-1 oui-text-2xs oui-font-normal oui-leading-[18px] oui-text-base-contrast-54">
         {label}
+        {showTooltip && tooltipContent && (
+          <Tooltip content={tooltipContent} delayDuration={100}>
+            <div>
+              <InfoCircleIcon
+                size={12}
+                opacity={0.54}
+                className="oui-text-base-contrast"
+              />
+            </div>
+          </Tooltip>
+        )}
       </div>
       {textProps.type === "gradient" ? (
         <Text.gradient
