@@ -296,12 +296,14 @@ export function useTelegramBinding(
         setCachedAccountInfo(addr, json);
       }
 
-      const hasBindOrderly = !!json?.hasBindOrderly;
+      const telegramUserId = json?.telegramUserId;
+      const hasTelegramBinding = !!telegramUserId;
       const hasOrderlyPrivateKeyValue = !!json?.hasOrderlyPrivateKey;
       const hasVerifiedOrderlyValue = !!json?.hasVerifiedOrderly;
 
       console.log("Account info status:", {
-        hasBindOrderly,
+        telegramUserId,
+        hasTelegramBinding,
         hasOrderlyPrivateKey: hasOrderlyPrivateKeyValue,
         hasVerifiedOrderly: hasVerifiedOrderlyValue,
       });
@@ -310,7 +312,7 @@ export function useTelegramBinding(
       setHasOrderlyPrivateKey(hasOrderlyPrivateKeyValue);
       setHasVerifiedOrderly(hasVerifiedOrderlyValue);
 
-      if (hasBindOrderly) {
+      if (hasTelegramBinding) {
         setBindingStatus("success");
         try {
           const exist = localStorage.getItem(LS_AUTH_KEY);
