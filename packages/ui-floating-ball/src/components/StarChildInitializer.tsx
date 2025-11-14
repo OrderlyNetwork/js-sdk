@@ -105,6 +105,13 @@ export const StarChildInitializer: React.FC = () => {
           try {
             setChatVisible(true);
             ee.emit("starchild:chatStateChanged", { isOpen: true });
+            if (typeof window !== "undefined") {
+              if (window.innerWidth > 1440) {
+                showChat("sideChatContainer");
+              } else {
+                showChat();
+              }
+            }
           } catch (e) {
             // ignore
           }
@@ -356,7 +363,6 @@ export const StarChildInitializer: React.FC = () => {
     const handleRequestVoiceRecording = () => {
       try {
         console.log("[StarChildInitializer] Triggering voice recording");
-        // First set chat visible
         setChatVisible(true);
         // Then show the chat
         if (window.innerWidth > 1440) {

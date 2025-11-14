@@ -397,11 +397,9 @@ export const StarchildControlPanel: React.FC<StarchildControlPanelProps> = ({
       return;
     }
     const newState = !isSidePanelOpen;
-    const isLargeScreen = window.innerWidth > 1680;
     setIsSidePanelOpen(newState);
     ee.emit("sideChatPanel:toggle", { isOpen: newState });
 
-    // Dispatch custom event for StarChildInitializer to handle
     try {
       if (newState) {
         const event = new CustomEvent("starchild:requestShowChat", {
@@ -409,11 +407,17 @@ export const StarchildControlPanel: React.FC<StarchildControlPanelProps> = ({
         });
         window.dispatchEvent(event);
       } else {
-        if (!isLargeScreen) {
+        const dispatchHide = () => {
           const event = new CustomEvent("starchild:requestHideChat", {
             detail: { isOpen: false },
           });
           window.dispatchEvent(event);
+        };
+
+        if (window.innerWidth > 1440) {
+          setTimeout(dispatchHide, 200);
+        } else {
+          dispatchHide();
         }
       }
     } catch (e) {
