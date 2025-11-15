@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   DndContext,
   closestCenter,
@@ -23,6 +23,8 @@ import { CSS, Transform } from "@dnd-kit/utilities";
 import {
   useGetRwaSymbolOpenStatus,
   useLocalStorage,
+  useOrderlyContext,
+  useEventEmitter,
 } from "@orderly.network/hooks";
 import {
   SideMarketsWidget,
@@ -40,6 +42,7 @@ import { DepositStatusWidget } from "@orderly.network/ui-transfer";
 import { SortablePanel } from "../../components/desktop/layout/sortablePanel";
 import { SplitLayout } from "../../components/desktop/layout/splitLayout";
 import { showRwaOutsideMarketHoursNotify } from "../../components/desktop/notify/rwaNotification";
+import { SideChatPanel } from "../../components/desktop/sideChatPanel";
 import { useShowRwaCountdown } from "../../hooks/useShowRwaCountdown";
 import {
   dataListInitialHeight,
@@ -106,23 +109,6 @@ export type DesktopLayoutProps = TradingState & {
   className?: string;
 };
 
-const scaleModifier: Modifier = ({
-  transform,
-  draggingNodeRect,
-}: {
-  transform: Transform;
-  draggingNodeRect: ClientRect | null;
-}) => {
-  if (draggingNodeRect) {
-    return {
-      ...transform,
-      scaleX: 2.05,
-      scaleY: 2.05,
-    };
-  }
-  return transform;
-};
-
 export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
   const {
     resizeable,
@@ -146,7 +132,6 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
     max4XL,
     animating,
     setAnimating,
-    updatePositions,
     showPositionIcon,
     horizontalDraggable,
     marketsWidth,
@@ -206,7 +191,13 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
           },
         ];
       },
-      sideEffects: ({ active, dragOverlay }) => {
+      sideEffects: ({
+        active,
+        dragOverlay,
+      }: {
+        active: any;
+        dragOverlay: any;
+      }) => {
         // console.log(active.node);
         active.node.style.opacity = "0";
         const innerElement = dragOverlay.node.querySelector(".inner-content");
@@ -226,6 +217,69 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
       },
     };
   }, []);
+
+  // Track side chat panel open state and window width for responsive rules
+  const ee = useEventEmitter();
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [windowWidth, setWindowWidth] = useState<number>(
+    typeof window !== "undefined" ? window.innerWidth : 0,
+  );
+
+  useEffect(() => {
+    const handleToggle = (data: { isOpen: boolean }) => {
+      const shouldOpen = window.innerWidth > 1440 && data.isOpen;
+      setIsChatOpen(shouldOpen);
+    };
+    const handleChatClosed = () => setIsChatOpen(false);
+    const handleResize = () => setWindowWidth(window.innerWidth);
+
+    ee.on("sideChatPanel:toggle", handleToggle);
+    window.addEventListener(
+      "starchild:chatClosed",
+      handleChatClosed as EventListener,
+    );
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      ee.off("sideChatPanel:toggle", handleToggle);
+      window.removeEventListener(
+        "starchild:chatClosed",
+        handleChatClosed as EventListener,
+      );
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [ee]);
+
+  const chatRestrictsMarkets =
+    isChatOpen && windowWidth >= 1440 && windowWidth <= 1920;
+
+  useEffect(() => {
+    if (chatRestrictsMarkets && panelSize === "large") {
+      onPanelSizeChange("middle" as any);
+    }
+  }, [chatRestrictsMarkets, panelSize, onPanelSizeChange]);
+
+  // When width is between 1440 and 1680 and side chat opens, hide markets
+  const previousMarketLayoutRef = useRef<string | null>(null);
+  useEffect(() => {
+    const inBand = isChatOpen && windowWidth >= 1440 && windowWidth < 1680;
+    if (inBand) {
+      if (marketLayout === "left") {
+        if (!previousMarketLayoutRef.current) {
+          previousMarketLayoutRef.current = "left";
+        }
+        if (marketLayout !== "hide") {
+          onMarketLayout("hide" as any);
+        }
+      }
+      return;
+    }
+    // Outside the band or chat closed: restore if we had hidden before.
+    if (marketLayout === "hide" && previousMarketLayoutRef.current) {
+      onMarketLayout(previousMarketLayoutRef.current as any);
+      previousMarketLayoutRef.current = null;
+    }
+  }, [isChatOpen, windowWidth, marketLayout, onMarketLayout]);
 
   // Configure sensors for drag and drop interactions
   const sensors = useSensors(
@@ -325,9 +379,11 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
 
   const marketsWidget = (
     <SideMarketsWidget
-      resizeable={resizeable}
-      panelSize={panelSize}
-      onPanelSizeChange={onPanelSizeChange as any}
+      resizeable={resizeable && !chatRestrictsMarkets}
+      panelSize={(chatRestrictsMarkets ? "middle" : panelSize) as any}
+      onPanelSizeChange={
+        (chatRestrictsMarkets ? () => {} : (onPanelSizeChange as any)) as any
+      }
       symbol={props.symbol}
       onSymbolChange={props.onSymbolChange}
     />
@@ -344,7 +400,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
       className="oui-transition-all oui-duration-150"
       onTransitionEnd={() => setAnimating(false)}
     >
-      {!animating && marketLayout === "left" && marketsWidget}
+      {marketLayout === "left" && marketsWidget}
     </Box>
   );
 
@@ -371,6 +427,9 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
               onLayout={onLayout}
               marketLayout={marketLayout}
               onMarketLayout={onMarketLayout}
+              disableLeft={
+                isChatOpen && windowWidth >= 1440 && windowWidth < 1680
+              }
             />
           </React.Suspense>
         }
@@ -454,8 +513,9 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
         // height: `calc(100% - ${symbolInfoBarHeight}px - ${orderbookMaxHeight}px - ${space}px)`,
         minHeight: dataListInitialHeight,
         // minHeight: `max(${dataListMinHeight}px, calc(100vh - ${symbolInfoBarHeight}px - ${orderbookMaxHeight}px - ${space}px))`,
+        minWidth: 0,
       }}
-      className="oui-overflow-hidden"
+      className="oui-overflow-y-hidden"
     >
       {dataListWidget}
     </Box>
@@ -591,7 +651,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
   const mainView = (
     <Flex
       direction="column"
-      className="oui-flex-1 oui-overflow-hidden"
+      className="oui-flex-1 oui-overflow-y-hidden"
       gap={2}
       style={{
         minWidth: max4XL
@@ -765,12 +825,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
                   className="oui-relative"
                   style={{
                     width: orderEntryMinWidth,
-                    // force order entry render actual content height
                     height: "max-content",
-                    // height:
-                    //   props.extraHeight && props.extraHeight > 100
-                    //     ? undefined
-                    // : "max-content",
                   }}
                 >
                   <Flex
@@ -818,8 +873,9 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
                   height: dataListSplitHeightSM,
                   minHeight: Math.max(dataListMinHeight, props.dataListHeight),
                   maxHeight: dataListMaxHeight,
+                  minWidth: 0,
                 }}
-                className="oui-overflow-hidden"
+                className="oui-overflow-y-hidden"
               >
                 {dataListWidget}
               </Box>
@@ -867,11 +923,11 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
         <Flex
           style={{
             minHeight: minScreenHeight,
-            minWidth: 1440 - scrollBarWidth,
+            minWidth: "100%",
           }}
           className={cn(
             props.className,
-            "oui-justify-start",
+            "oui-justify-start oui-relative",
             tradingViewFullScreen &&
               "oui-relative oui-h-[calc(100vh-80px)] oui-w-screen oui-overflow-hidden !oui-p-0",
           )}
@@ -887,21 +943,41 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
           {/* Main Content Group */}
           <Flex
             className={cn(
-              "oui-flex-1 oui-overflow-hidden",
-              layout === "left" && "oui-flex-row-reverse",
+              "oui-flex-1 oui-overflow-y-hidden oui-overflow-x-auto",
             )}
+            style={{ minWidth: 0 }}
             gap={2}
           >
-            {!max4XL && marketLayout === "left" && marketsView}
+            {!max4XL &&
+              marketLayout === "left" &&
+              layout === "right" &&
+              marketsView}
             <SplitLayout
-              className={cn("oui-flex oui-flex-1 oui-overflow-hidden")}
+              className={cn("oui-flex oui-flex-1")}
+              style={{ minWidth: 0 }}
               onSizeChange={onSizeChange}
               disable={!horizontalDraggable}
             >
               {layout === "left" && orderEntryView}
               {mainView}
+              {!max4XL &&
+                marketLayout === "left" &&
+                layout === "left" &&
+                marketsView}
               {layout === "right" && orderEntryView}
             </SplitLayout>
+            <Flex
+              gap={2}
+              height="100%"
+              itemAlign="start"
+              className="oui-hidden xl:oui-flex oui-shrink-0"
+            >
+              <SideChatPanel
+                scrollBarWidth={scrollBarWidth}
+                topBarHeight={topBarHeight}
+                bottomBarHeight={bottomBarHeight}
+              />
+            </Flex>
           </Flex>
 
           {marketLayout === "bottom" && stickyHorizontalMarketsView}

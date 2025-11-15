@@ -30,6 +30,11 @@
       "./src/@types"
     ],
     "moduleResolution": "node",
+    "paths": {
+      "@orderly.network/ui-floating-ball": [
+        "../ui-floating-ball/src"
+      ]
+    },
     // "incremental": true,
   }
 }

@@ -39,6 +39,7 @@ module.exports = withTV({
     "../trading-leaderboard/src/**/*.{ts,js,tsx,jsx}",
     "../app/src/**/*.{ts,js,tsx,jsx}",
     "../ui-notification/src/**/*.{ts,js,tsx,jsx}",
+    "../ui-floating-ball/src/**/*.{ts,js,tsx,jsx}",
   ],
   prefix: "oui-",
   theme: {

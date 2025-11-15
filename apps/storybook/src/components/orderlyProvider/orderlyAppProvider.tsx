@@ -1,8 +1,9 @@
-import { FC, PropsWithChildren } from "react";
+import { FC, PropsWithChildren, useMemo } from "react";
 import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { orderlyAppProviderConfig } from "../../orderlyConfig";
 import { dataAdapter } from "../../orderlyConfig/dataAdapter";
 import { notification } from "../../orderlyConfig/notification";
+import { getStarChildConfig } from "../../orderlyConfig/starChildConfig";
 import { widgetConfigs } from "../../orderlyConfig/widgetConfigs";
 import { useConfigStore, ConfigStoreOptions } from "./configStore";
 import { useRouteContext } from "./rounteProvider";
@@ -15,6 +16,11 @@ export const OrderlyAppRootProvider: FC<
   const { children, ...rest } = props;
   const { onRouteChange } = useRouteContext();
   const configStore = useConfigStore(rest);
+
+  const starChildConfig = useMemo(() => {
+    return getStarChildConfig(configStore);
+  }, [configStore]);
+
   return (
     <OrderlyAppProvider
       configStore={configStore}
@@ -28,6 +34,7 @@ export const OrderlyAppRootProvider: FC<
       amplitudeConfig={{
         amplitudeId: "4463418c103f3a66c6d863357f951e25",
       }}
+      starChildConfig={starChildConfig}
       // chainFilter={(config) => {
       //   return {
       //     mainnet: [

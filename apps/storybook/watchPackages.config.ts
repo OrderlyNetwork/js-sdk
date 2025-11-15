@@ -73,6 +73,11 @@ const ui: Package[] = [
     watch: true,
   },
   {
+    package: "@orderly.network/ui-floating-ball",
+    path: "../../packages/ui-floating-ball/src",
+    watch: true,
+  },
+  {
     package: "@orderly.network/ui-chain-selector",
     path: "../../packages/ui-chain-selector/src",
     watch: true,

@@ -37,7 +37,7 @@ export const orderbookMaxHeight = 728;
 
 export const tradindviewMinHeight = 320;
 
-export const tradingViewMinWidth = 540;
+export const tradingViewMinWidth = 350;
 
 export const dataListMaxHeight = 800;
 export const dataListInitialHeight = 350;

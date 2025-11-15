@@ -208,7 +208,7 @@ export const NavItem: FC<
         <Box
           invisible={!isActive}
           position="absolute"
-          bottom={0}
+          top={"90%"}
           left={"50%"}
           height={"3px"}
           r="full"

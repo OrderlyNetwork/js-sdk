@@ -1,6 +1,6 @@
 import { FC, PropsWithChildren, useMemo } from "react";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { cn, Divider, Flex, useScreen } from "@orderly.network/ui";
+import { AccountStatusEnum, ChainNamespace } from "@orderly.network/types";
+import { cn, Divider, Flex, Box, useScreen } from "@orderly.network/ui";
 import { WalletConnectButtonExtension } from "../accountMenu/menu.widget";
 import { AccountSummaryWidget } from "../accountSummary";
 import { ChainMenuWidget } from "../chainMenu";
@@ -12,6 +12,8 @@ import { LinkDeviceWidget } from "./linkDevice";
 import { MainLogo } from "./mainLogo";
 import { MainNavMenusExtension } from "./mainMenus/mainNavMenus.widget";
 import { CampaignPositionEnum, MainNavScriptReturn } from "./mainNav.script";
+import { StarchildControlPanelExtension } from "./mainNavTail.widget";
+import { StarchildSearchButton } from "./starchildSearchButton";
 
 export const MainNav: FC<PropsWithChildren<MainNavScriptReturn>> = (props) => {
   const { className, classNames, campaigns, campaignPosition } = props;
@@ -29,6 +31,12 @@ export const MainNav: FC<PropsWithChildren<MainNavScriptReturn>> = (props) => {
   const hideWalletConnectButton =
     !props.disabledConnect && props.wrongNetwork && props.isConnected;
 
+  const showSearchButton =
+    props.starChildEnabled &&
+    props.namespace === ChainNamespace.evm &&
+    (props.status! >= AccountStatusEnum.EnableTrading ||
+      props.status === AccountStatusEnum.EnableTradingWithoutConnected);
+
   const { isDesktop } = useScreen();
 
   const children = useMemo(() => {
@@ -42,6 +50,7 @@ export const MainNav: FC<PropsWithChildren<MainNavScriptReturn>> = (props) => {
 
   const renderContent = () => {
     const title = <MainLogo {...props.logo} />;
+    const starchildSearchButton = showSearchButton && <StarchildSearchButton />;
     const accountSummary = <AccountSummaryWidget />;
     const linkDevice = showLinkIcon && <LinkDeviceWidget />;
     const languageSwitcher = <LanguageSwitcherWidget />;
@@ -50,6 +59,9 @@ export const MainNav: FC<PropsWithChildren<MainNavScriptReturn>> = (props) => {
     const notify = <MessageCenterWidget />;
     const walletConnect = !hideWalletConnectButton && (
       <WalletConnectButtonExtension />
+    );
+    const starchildControlPanel = showSearchButton && (
+      <StarchildControlPanelExtension />
     );
 
     const mainNav = (
@@ -71,6 +83,7 @@ export const MainNav: FC<PropsWithChildren<MainNavScriptReturn>> = (props) => {
       return props.customRender?.({
         title,
         mainNav,
+        starchildSearchButton,
         accountSummary,
         linkDevice,
         languageSwitcher,
@@ -100,6 +113,12 @@ export const MainNav: FC<PropsWithChildren<MainNavScriptReturn>> = (props) => {
         {children}
 
         <Flex itemAlign={"center"} className="oui-gap-2">
+          {isDesktop && showSearchButton && (
+            <>
+              {starchildSearchButton}
+              <Divider direction="vertical" className="oui-h-8" intensity={8} />
+            </>
+          )}
           {accountSummary}
           {showLinkIcon && (
             <>
@@ -112,28 +131,36 @@ export const MainNav: FC<PropsWithChildren<MainNavScriptReturn>> = (props) => {
           {subAccount}
           {chainMenu}
           {walletConnect}
+          {starchildControlPanel}
         </Flex>
       </>
     );
   };
 
   return (
-    <Flex
-      width="100%"
-      as="header"
-      itemAlign={"center"}
-      height={"48px"}
-      justify={"between"}
-      px={3}
-      gapX={3}
-      className={cn(
-        "oui-main-nav oui-font-semibold",
-        className,
-        classNames?.root,
-      )}
-    >
-      {renderContent()}
-    </Flex>
+    <>
+      <Box height="48px" className="oui-bg-base-10"></Box>
+      <Flex
+        width="100%"
+        position="fixed"
+        top={0}
+        left={0}
+        zIndex={50}
+        as="header"
+        itemAlign={"center"}
+        height={"48px"}
+        justify={"between"}
+        px={3}
+        gapX={3}
+        className={cn(
+          "oui-main-nav oui-font-semibold oui-bg-base-9 oui-border-b oui-border-line-12",
+          className,
+          classNames?.root,
+        )}
+      >
+        {renderContent()}
+      </Flex>
+    </>
   );
 };
 

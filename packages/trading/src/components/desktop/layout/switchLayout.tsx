@@ -21,6 +21,7 @@ export type SwitchLayoutProps = {
   onLayout?: (layout: LayoutPosition) => void;
   marketLayout?: MarketLayoutPosition;
   onMarketLayout?: (layout: MarketLayoutPosition) => void;
+  disableLeft?: boolean;
 };
 
 export const SwitchLayout: FC<SwitchLayoutProps> = (props) => {
@@ -100,6 +101,7 @@ export const SwitchLayoutDropDown: FC<PropsWithChildren<SwitchLayoutProps>> = (
   };
 
   const renderMarketItem = (position: MarketLayoutPosition) => {
+    const isDisabled = position === "left" && !!props.disableLeft;
     const getIcon = (isHovered: boolean) => {
       const isSelected = props.marketLayout === position;
       switch (position) {
@@ -146,12 +148,16 @@ export const SwitchLayoutDropDown: FC<PropsWithChildren<SwitchLayoutProps>> = (
         direction="column"
         gapY={2}
         onClick={() => {
+          if (isDisabled) return;
           props.onMarketLayout?.(position);
           setOpen(false);
         }}
         onMouseEnter={() => setHoveredMarket(position)}
         onMouseLeave={() => setHoveredMarket(null)}
-        className="oui-group"
+        className={cn(
+          "oui-group",
+          isDisabled && "oui-opacity-40 oui-cursor-not-allowed",
+        )}
       >
         <Flex justify="center" className="oui-w-[148px] oui-h-[100px]">
           {getIcon(hoveredMarket === position)}
@@ -162,6 +168,7 @@ export const SwitchLayoutDropDown: FC<PropsWithChildren<SwitchLayoutProps>> = (
           className={cn(
             "oui-text-base-contrast-54 group-hover:oui-text-base-contrast-80",
             props.marketLayout === position && "oui-text-base-contrast-80",
+            isDisabled && "!oui-text-base-contrast-54",
           )}
         >
           {String(getLabel())}

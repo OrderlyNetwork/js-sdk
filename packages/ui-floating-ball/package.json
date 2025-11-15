@@ -1,0 +1,48 @@
+{
+  "name": "@orderly.network/ui-floating-ball",
+  "version": "0.1.0",
+  "description": "Floating action ball with click-to-open dialog",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Orderly",
+    "UI",
+    "FloatingBall",
+    "Dialog"
+  ],
+  "author": "orderly.network",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@radix-ui/react-dialog": "^1.0.4",
+    "@radix-ui/react-visually-hidden": "^1.0.3",
+    "@orderly.network/hooks": "workspace:*",
+    "@orderly.network/i18n": "workspace:*",
+    "@orderly.network/types": "workspace:*",
+    "@orderly.network/ui": "workspace:*",
+    "starchild-widget": "^1.0.0-beta.15",
+    "styled-components": "^6.1.19",
+    "ethers": "^6.13.4"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.38",
+    "@types/react-dom": "^18.2.17",
+    "tailwindcss": "^3.4.4",
+    "tsconfig": "workspace:*",
+    "tsup": "^7.1.0",
+    "typescript": "^5.1.6"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  }
+}

@@ -56,6 +56,7 @@ export type BaseConfigProviderProps = {
   | "notification"
   | "amplitudeConfig"
   | "orderMetadata"
+  | "starChildConfig"
 >;
 
 export type ExclusiveConfigProviderProps =
@@ -99,6 +100,7 @@ export const OrderlyConfigProvider: FC<
     orderbookDefaultSymbolDepths,
     children,
     orderMetadata,
+    starChildConfig,
   } = props;
 
   if (!brokerId && typeof configStore === "undefined") {
@@ -184,6 +186,21 @@ export const OrderlyConfigProvider: FC<
     return chainFilter;
   }, [chainFilter, innerConfigStore]);
 
+  const processedStarChildConfig = useMemo(() => {
+    if (!starChildConfig) return undefined;
+
+    const url =
+      starChildConfig.url ||
+      (starChildConfig.env === "testnet"
+        ? "https://api-testnet.iamstarchild.com/"
+        : "https://api-mainnet.iamstarchild.com/");
+
+    return {
+      ...starChildConfig,
+      url,
+    };
+  }, [starChildConfig]);
+
   const memoizedValue = useMemo<OrderlyConfigContextState>(() => {
     return {
       configStore: innerConfigStore,
@@ -200,6 +217,7 @@ export const OrderlyConfigProvider: FC<
       notification: notification,
       amplitudeConfig,
       orderMetadata,
+      starChildConfig: processedStarChildConfig,
     };
   }, [
     innerConfigStore,
@@ -216,6 +234,7 @@ export const OrderlyConfigProvider: FC<
     chainTransformer,
     amplitudeConfig,
     orderMetadata,
+    processedStarChildConfig,
   ]);
 
   if (!account) {

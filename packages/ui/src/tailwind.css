@@ -31,4 +31,25 @@
       rgb(var(--oui-color-base-9)) 100%
     );
   }
+
+  .oui-starchild-gradient-border::before {
+    transition: var(--gradientAngle) 0.3s linear;
+    animation-name: angleRotateChange;
+    animation-timing-function: cubic-bezier(0, 0, 1, 1);
+    animation-iteration-count: infinite;
+    animation-duration: 5s;
+    background-image: conic-gradient(
+      from calc(180deg + var(--gradientAngle)),
+      #131519 0deg,
+      #f84600 53.3deg,
+      #268aff 90.46deg,
+      #52eaea 126.24deg,
+      #131519 178.82deg,
+      #131519 360deg
+    );
+  }
+
+  .oui-starchild-gradient-border::after {
+    background: rgb(var(--oui-color-base-9));
+  }
 }

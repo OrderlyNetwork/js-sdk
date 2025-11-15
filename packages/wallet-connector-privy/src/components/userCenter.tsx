@@ -109,10 +109,8 @@ const RenderUserCenter = (props: any) => {
         <div onClick={() => connect()}>
           <Button
             size="md"
-            variant="gradient"
-            angle={45}
             data-testid="oui-testid-nav-bar-address-btn"
-            className="oui-px-2 oui-flex oui-items-center oui-justify-center oui-gap-1"
+            className="oui-px-3 oui-py-[6px] oui-flex oui-items-center oui-justify-center oui-gap-1 oui-bg-base-4 hover:oui-bg-base-5 active:oui-bg-base-5 oui-rounded-[6px]"
           >
             {linkedAccount && (
               <RenderPrivyTypeIcon
@@ -123,7 +121,7 @@ const RenderUserCenter = (props: any) => {
             )}
             <Text.formatted
               rule="address"
-              className="oui-text-[rgba(0,0,0,.88)] oui-font-semibold"
+              className="oui-text-contrast oui-font-semibold oui-text-[14px] oui-leading-[20px] oui-tracking-[0.42px]"
             >
               {formatAddress(userAddress!)}
             </Text.formatted>
@@ -136,10 +134,8 @@ const RenderUserCenter = (props: any) => {
     <div onClick={() => connect()}>
       <Button
         size="md"
-        variant="gradient"
-        angle={45}
         data-testid="oui-testid-nav-bar-address-btn"
-        className="oui-flex oui-items-center oui-justify-center oui-gap-2"
+        className="oui-flex oui-items-center oui-justify-center oui-gap-1 oui-bg-base-4 hover:oui-bg-base-5 active:oui-bg-base-5 oui-px-3 oui-py-[6px] oui-rounded-[6px]"
       >
         {linkedAccount && (
           <RenderPrivyTypeIcon
@@ -148,7 +144,10 @@ const RenderUserCenter = (props: any) => {
             black={true}
           />
         )}
-        <Text.formatted rule="address" className="oui-text-[rgba(0,0,0,.88)]">
+        <Text.formatted
+          rule="address"
+          className="oui-text-base-contrast oui-font-semibold oui-text-[14px] oui-leading-[20px] oui-tracking-[0.42px]"
+        >
           {formatAddress(userAddress!)}
         </Text.formatted>
       </Button>
