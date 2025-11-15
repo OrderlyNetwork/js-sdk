@@ -1,17 +1,17 @@
-## @orderly.network/ui-floating-ball
+## @orderly.network/ui-starchild-widget
 
 Floating action ball with a click-to-open dialog.
 
 ### Install
 
 ```bash
-pnpm add @orderly.network/ui-floating-ball
+pnpm add @orderly.network/ui-starchild-widget
 ```
 
 ### Usage
 
 ```tsx
-import { FloatingBall } from "@orderly.network/ui-floating-ball";
+import { FloatingBall } from "@orderly.network/ui-starchild-widget";
 
 export default function Demo() {
   return (

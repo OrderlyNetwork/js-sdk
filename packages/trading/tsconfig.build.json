@@ -31,8 +31,8 @@
     ],
     "moduleResolution": "node",
     "paths": {
-      "@orderly.network/ui-floating-ball": [
-        "../ui-floating-ball/src"
+      "@orderly.network/ui-starchild-widget": [
+        "../ui-starchild-widget/src"
       ]
     },
     // "incremental": true,

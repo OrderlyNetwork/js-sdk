@@ -152,9 +152,9 @@ importers:
       '@orderly.network/ui-connector':
         specifier: workspace:*
         version: link:../../packages/ui-connector
-      '@orderly.network/ui-floating-ball':
+      '@orderly.network/ui-starchild-widget':
         specifier: workspace:*
-        version: link:../../packages/ui-floating-ball
+        version: link:../../packages/ui-starchild-widget
       '@orderly.network/ui-leverage':
         specifier: workspace:*
         version: link:../../packages/ui-leverage
@@ -1667,7 +1667,7 @@ importers:
         specifier: ^7.3.0
         version: 7.3.0(@swc/core@1.13.2(@swc/helpers@0.5.17))(postcss@8.5.6)(ts-node@10.9.2(@swc/core@1.13.2(@swc/helpers@0.5.17))(@types/node@24.3.1)(typescript@5.8.3))(typescript@5.8.3)
 
-  packages/ui-floating-ball:
+  packages/ui-starchild-widget:
     dependencies:
       '@orderly.network/hooks':
         specifier: workspace:*
@@ -2056,9 +2056,9 @@ importers:
       '@orderly.network/ui-connector':
         specifier: workspace:*
         version: link:../ui-connector
-      '@orderly.network/ui-floating-ball':
+      '@orderly.network/ui-starchild-widget':
         specifier: workspace:*
-        version: link:../ui-floating-ball
+        version: link:../ui-starchild-widget
       '@orderly.network/ui-notification':
         specifier: workspace:*
         version: link:../ui-notification

@@ -73,8 +73,8 @@ const ui: Package[] = [
     watch: true,
   },
   {
-    package: "@orderly.network/ui-floating-ball",
-    path: "../../packages/ui-floating-ball/src",
+    package: "@orderly.network/ui-starchild-widget",
+    path: "../../packages/ui-starchild-widget/src",
     watch: true,
   },
   {
