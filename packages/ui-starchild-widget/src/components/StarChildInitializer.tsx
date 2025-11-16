@@ -77,8 +77,7 @@ export const StarChildInitializer: React.FC = () => {
       const hasOrderlyPrivateKey = !!cached.hasOrderlyPrivateKey;
       const hasVerifiedOrderly = !!cached.hasVerifiedOrderly;
 
-      if (!hasTelegramBinding || !hasOrderlyPrivateKey || !hasVerifiedOrderly)
-        return;
+      if (!hasOrderlyPrivateKey || !hasVerifiedOrderly) return;
 
       const orderlyKeyPair = keyStore?.getOrderlyKey(address);
       if (!orderlyKeyPair) return;

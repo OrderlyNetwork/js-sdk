@@ -51,6 +51,7 @@ export const TelegramBinding: React.FC<TelegramBindingProps> = ({
     onBindingComplete,
   );
 
+  const shouldShowCreateKey = !hasOrderlyPrivateKey;
   const shouldShowSignInPage = hasOrderlyPrivateKey && !hasVerifiedOrderly;
 
   const handleCreateOrderlyKey = React.useCallback(async () => {
@@ -191,8 +192,7 @@ export const TelegramBinding: React.FC<TelegramBindingProps> = ({
             </Button>
           </Box>
         </Box>
-      ) : /* Success State - only after binding finished */
-      bindingStatus === "success" && !isBinding ? (
+      ) : shouldShowCreateKey ? (
         <Box className="oui-flex-1 oui-flex oui-flex-col oui-items-center oui-gap-5">
           {/* Success Icon */}
           <Box className="oui-relative oui-rounded-full oui-overflow-hidden oui-w-20 oui-h-20 oui-p-3 oui-mt-10 oui-flex oui-items-center oui-justify-center">
@@ -241,7 +241,7 @@ export const TelegramBinding: React.FC<TelegramBindingProps> = ({
                 Connect Telegram to receive trading notifications
               </Text>
             </Box>
-            <Flex justify="center">
+            <Flex direction="column" gap={2} itemAlign="center">
               <Button
                 onClick={handleTelegramLogin}
                 disabled={isBinding}
@@ -279,11 +279,33 @@ export const TelegramBinding: React.FC<TelegramBindingProps> = ({
                   )}
                 </Flex>
               </Button>
+              <Button
+                onClick={() => {
+                  if (onClose) {
+                    onClose();
+                  }
+                  try {
+                    const evt = new CustomEvent("starchild:accountInfoReady");
+                    window.dispatchEvent(evt);
+                  } catch {
+                    // ignore
+                  }
+                }}
+                disabled={isBinding}
+                className="oui-bg-transparent hover:oui-bg-transparent"
+              >
+                <Text
+                  size="sm"
+                  className="oui-text-base-contrast-54 oui-font-medium"
+                >
+                  Skip
+                </Text>
+              </Button>
             </Flex>
           </Box>
 
           {/* Features Section */}
-          <Box className="oui-mt-7 oui-p-3 oui-space-y-4">
+          <Box className="oui-p-3 oui-space-y-4">
             {/* Features Header */}
             <Flex gap={1} itemAlign="center" justify="center">
               <ShieldShadedIcon size={24} className="oui-text-primary" />
