@@ -32,7 +32,10 @@ export const MainNav: FC<PropsWithChildren<MainNavScriptReturn>> = (props) => {
     !props.disabledConnect && props.wrongNetwork && props.isConnected;
 
   const pathname = window.location.pathname;
-  const isTradingPage = pathname === "/" || pathname.includes("/perp");
+  const isTradingPage =
+    pathname === "/" ||
+    pathname.includes("/perp") ||
+    pathname.includes("/trade");
 
   const showSearchButton =
     props.starChildEnabled &&
