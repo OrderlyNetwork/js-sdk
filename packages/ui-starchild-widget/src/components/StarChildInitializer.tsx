@@ -91,8 +91,11 @@ export const StarChildInitializer: React.FC = () => {
       const telegramUserId = cached.telegramUserId || undefined;
       const userInfoId = cached.userInfoId || undefined;
 
+      const zIndex = 41;
+
       const params = {
         locale: starLocale,
+        zIndex,
         aiChatKey,
         telegramUserId,
         userInfoId,

@@ -54,7 +54,11 @@ export const TelegramBinding: React.FC<TelegramBindingProps> = ({
   const shouldShowCreateKey = !hasOrderlyPrivateKey;
   const shouldShowSignInPage = hasOrderlyPrivateKey && !hasVerifiedOrderly;
 
+  const [isCreating, setIsCreating] = React.useState(false);
+  const [isSigningIn, setIsSigningIn] = React.useState(false);
+
   const handleCreateOrderlyKey = React.useCallback(async () => {
+    setIsCreating(true);
     try {
       // Fetch temporary orderly key pair
       const { orderlyKey, privateKey } = await getTemporaryOrderlyKey();
@@ -70,6 +74,8 @@ export const TelegramBinding: React.FC<TelegramBindingProps> = ({
       });
     } catch (e) {
       console.error("Create/register orderly key error", e);
+    } finally {
+      setIsCreating(false);
     }
   }, [
     walletAddress,
@@ -79,11 +85,14 @@ export const TelegramBinding: React.FC<TelegramBindingProps> = ({
   ]);
 
   const handleSignIn = React.useCallback(async () => {
+    setIsSigningIn(true);
     try {
       const result = await verifyOrderlyKey();
       console.log("Orderly key verified", result);
     } catch (e) {
       console.error("Verify orderly key error", e);
+    } finally {
+      setIsSigningIn(false);
     }
   }, [verifyOrderlyKey]);
 
@@ -157,9 +166,12 @@ export const TelegramBinding: React.FC<TelegramBindingProps> = ({
 
       {/* Sign In Page - after orderly key creation */}
       {shouldShowSignInPage ? (
-        <Box className="oui-flex-1 oui-flex oui-flex-col oui-items-center oui-gap-5">
+        <Box
+          className="oui-flex-1 oui-flex oui-flex-col oui-items-center oui-gap-5"
+          style={{ marginTop: "108px" }}
+        >
           {/* Success Icon */}
-          <Box className="oui-relative oui-rounded-full oui-overflow-hidden oui-w-20 oui-h-20 oui-p-3 oui-mt-10 oui-flex oui-items-center oui-justify-center">
+          <Box className="oui-relative oui-rounded-full oui-overflow-hidden oui-w-20 oui-h-20 oui-p-3 oui-flex oui-items-center oui-justify-center">
             <CheckIcon size={54} className="oui-text-primary" />
           </Box>
 
@@ -167,43 +179,62 @@ export const TelegramBinding: React.FC<TelegramBindingProps> = ({
           <Box className="oui-flex oui-flex-col oui-gap-5 oui-items-center oui-w-full">
             <Box className="oui-text-center oui-flex oui-flex-col oui-gap-5">
               <Text className="oui-text-base-contrast-98 oui-text-2xl oui-font-semibold oui-tracking-wider">
-                Your API key is created
+                Your API key has been created!
               </Text>
               <Text
                 size="sm"
                 className="oui-text-base-contrast-54 oui-leading-relaxed"
               >
-                Please authorize Starchild to use your existing API Key from the
-                Woofi for order operations.
+                Please authorize Starchild to use your API key
               </Text>
             </Box>
 
             {/* Sign In Button */}
             <Button
               onClick={handleSignIn}
-              className="oui-rounded-full oui-px-3 oui-h-10 oui-w-[120px]"
+              disabled={isSigningIn || isBinding}
+              className={cn(
+                "oui-rounded-full oui-px-3 oui-h-10 oui-w-[120px]",
+                (isSigningIn || isBinding) && "oui-cursor-not-allowed",
+              )}
               style={{
-                background: "linear-gradient(270deg, #59B0FE 0%, #26FEFE 100%)",
+                background:
+                  isSigningIn || isBinding
+                    ? "linear-gradient(270deg, #2c5a80 0%, #1a3d5a 100%)"
+                    : "linear-gradient(270deg, #59B0FE 0%, #26FEFE 100%)",
               }}
             >
-              <Text size="sm" className="oui-text-black/[.88] oui-font-medium">
-                Sign In
-              </Text>
+              {isSigningIn || isBinding ? (
+                <Flex gap={1} itemAlign="center">
+                  <LoadingIcon
+                    size={20}
+                    className="oui-animate-spin oui-text-black/[.88]"
+                  />
+                </Flex>
+              ) : (
+                <Text
+                  size="sm"
+                  className="oui-text-black/[.88] oui-font-medium"
+                >
+                  Sign In
+                </Text>
+              )}
             </Button>
           </Box>
         </Box>
       ) : shouldShowCreateKey ? (
-        <Box className="oui-flex-1 oui-flex oui-flex-col oui-items-center oui-gap-5">
-          {/* Success Icon */}
-          <Box className="oui-relative oui-rounded-full oui-overflow-hidden oui-w-20 oui-h-20 oui-p-3 oui-mt-10 oui-flex oui-items-center oui-justify-center">
+        <Box
+          className="oui-flex-1 oui-flex oui-flex-col oui-items-center oui-gap-5"
+          style={{ marginTop: "108px" }}
+        >
+          <Box className="oui-relative oui-rounded-full oui-overflow-hidden oui-w-20 oui-h-20 oui-p-3 oui-flex oui-items-center oui-justify-center">
             <CheckIcon size={54} className="oui-text-primary" />
           </Box>
 
-          {/* Success Message */}
           <Box className="oui-flex oui-flex-col oui-gap-5 oui-items-center oui-w-full">
             <Box className="oui-text-center oui-flex oui-flex-col oui-gap-5">
               <Text className="oui-text-base-contrast-98 oui-text-2xl oui-font-semibold oui-tracking-wider">
-                Your Starchild is ready!
+                AI trading awaits!
               </Text>
               <Text
                 size="sm"
@@ -218,30 +249,54 @@ export const TelegramBinding: React.FC<TelegramBindingProps> = ({
             {/* Create Button */}
             <Button
               onClick={handleCreateOrderlyKey}
-              className="oui-rounded-full oui-px-3 oui-h-10 oui-w-[120px]"
+              disabled={isCreating || isBinding}
+              className={cn(
+                "oui-rounded-full oui-px-3 oui-h-10 oui-w-[120px]",
+                (isCreating || isBinding) && "oui-cursor-not-allowed",
+              )}
               style={{
-                background: "linear-gradient(270deg, #59B0FE 0%, #26FEFE 100%)",
+                background:
+                  isCreating || isBinding
+                    ? "linear-gradient(270deg, #2c5a80 0%, #1a3d5a 100%)"
+                    : "linear-gradient(270deg, #59B0FE 0%, #26FEFE 100%)",
               }}
             >
-              <Text size="sm" className="oui-text-black/[.88] oui-font-medium">
-                Create
-              </Text>
+              {isCreating || isBinding ? (
+                <Flex gap={1} itemAlign="center">
+                  <LoadingIcon
+                    size={20}
+                    className="oui-animate-spin oui-text-black/[.88]"
+                  />
+                </Flex>
+              ) : (
+                <Text
+                  size="sm"
+                  className="oui-text-black/[.88] oui-font-medium"
+                >
+                  Create
+                </Text>
+              )}
             </Button>
           </Box>
         </Box>
       ) : (
-        <>
+        <Box className="oui-flex-1 oui-flex oui-flex-col oui-items-center oui-justify-center oui-space-y-5">
           {/* Title Section with Connect Button */}
-          <Box className="oui-mt-7 oui-space-y-5">
+          <Box className="oui-space-y-5">
             <Box className="oui-text-center oui-flex oui-flex-col oui-gap-y-2">
-              <Text className="oui-text-base-contrast-98 oui-text-xl oui-font-medium oui-tracking-wide">
+              <Text className="oui-text-base-contrast-98 oui-text-xl oui-tracking-wide">
                 Telegram Not Connected
               </Text>
               <Text size="sm" className="oui-text-base-contrast-54">
                 Connect Telegram to receive trading notifications
               </Text>
             </Box>
-            <Flex direction="column" gap={2} itemAlign="center">
+            <Flex
+              direction="column"
+              gap={3}
+              itemAlign="center"
+              className="oui-w-fit oui-mx-auto"
+            >
               <Button
                 onClick={handleTelegramLogin}
                 disabled={isBinding}
@@ -279,142 +334,31 @@ export const TelegramBinding: React.FC<TelegramBindingProps> = ({
                   )}
                 </Flex>
               </Button>
-              <Button
-                onClick={() => {
-                  if (onClose) {
-                    onClose();
-                  }
-                  try {
-                    const evt = new CustomEvent("starchild:accountInfoReady");
-                    window.dispatchEvent(evt);
-                  } catch {
-                    // ignore
-                  }
-                }}
-                disabled={isBinding}
-                className="oui-bg-transparent hover:oui-bg-transparent"
-              >
-                <Text
-                  size="sm"
-                  className="oui-text-base-contrast-54 oui-font-medium"
+              {!isBinding && (
+                <Button
+                  onClick={() => {
+                    if (onClose) {
+                      onClose();
+                    }
+                    try {
+                      const evt = new CustomEvent("starchild:accountInfoReady");
+                      window.dispatchEvent(evt);
+                    } catch {
+                      // ignore
+                    }
+                  }}
+                  variant="outlined"
+                  color="secondary"
+                  className="oui-rounded-full oui-px-3 oui-h-10 oui-w-full"
                 >
-                  Skip
-                </Text>
-              </Button>
+                  <Text size="sm" className="oui-font-medium">
+                    Skip
+                  </Text>
+                </Button>
+              )}
             </Flex>
           </Box>
-
-          {/* Features Section */}
-          <Box className="oui-p-3 oui-space-y-4">
-            {/* Features Header */}
-            <Flex gap={1} itemAlign="center" justify="center">
-              <ShieldShadedIcon size={24} className="oui-text-primary" />
-              <Text
-                size="base"
-                className="oui-font-semibold oui-tracking-wide"
-                style={{
-                  background:
-                    "linear-gradient(135deg, #00D4FF 0%, #00A8E8 100%)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                }}
-              >
-                Features After Connection
-              </Text>
-            </Flex>
-
-            {/* Features List */}
-            <Box className="oui-bg-black/24 oui-border oui-border-base-contrast-12 oui-rounded-2xl oui-p-2 oui-space-y-0">
-              {/* Trading Notifications */}
-              <Box className="oui-p-2 oui-rounded-lg hover:oui-bg-white/5 oui-transition-colors">
-                <Flex gap={2} itemAlign="start">
-                  <AnnouncementIcon
-                    size={24}
-                    className="oui-text-base-contrast-80 oui-shrink-0"
-                  />
-                  <Box className="oui-flex-1 oui-flex oui-flex-col oui-space-y-0.5">
-                    <Text size="base" className="oui-text-base-contrast-80">
-                      Trading Notifications
-                    </Text>
-                    <Text
-                      size="xs"
-                      className="oui-text-base-contrast-36 oui-leading-relaxed"
-                    >
-                      Receive real-time notifications for trade execution,
-                      stop-loss, take-profit, etc.
-                    </Text>
-                  </Box>
-                </Flex>
-              </Box>
-
-              {/* Market Alerts */}
-              <Box className="oui-p-2 oui-rounded-lg hover:oui-bg-white/5 oui-transition-colors">
-                <Flex gap={2} itemAlign="start">
-                  <NewsIcon
-                    size={24}
-                    className="oui-text-base-contrast-80 oui-shrink-0"
-                  />
-                  <Box className="oui-flex-1 oui-flex oui-flex-col oui-space-y-0.5">
-                    <Text size="base" className="oui-text-base-contrast-80">
-                      Market Alerts
-                    </Text>
-                    <Text
-                      size="xs"
-                      className="oui-text-base-contrast-36 oui-leading-relaxed"
-                    >
-                      Instant alerts for important market events and price
-                      movements
-                    </Text>
-                  </Box>
-                </Flex>
-              </Box>
-
-              {/* AI Analysis Reports */}
-              <Box className="oui-p-2 oui-rounded-lg hover:oui-bg-white/5 oui-transition-colors">
-                <Flex gap={2} itemAlign="start">
-                  <MeteorIcon
-                    size={24}
-                    className="oui-text-base-contrast-80 oui-shrink-0"
-                  />
-                  <Box className="oui-flex-1 oui-flex oui-flex-col oui-space-y-0.5">
-                    <Text size="base" className="oui-text-base-contrast-80">
-                      AI Analysis Reports
-                    </Text>
-                    <Text
-                      size="xs"
-                      className="oui-text-base-contrast-36 oui-leading-relaxed"
-                    >
-                      Regular AI-generated market analysis and technical reports
-                    </Text>
-                  </Box>
-                </Flex>
-              </Box>
-
-              {/* Account Security */}
-              <Box className="oui-p-2 oui-rounded-lg hover:oui-bg-white/5 oui-transition-colors">
-                <Flex gap={2} itemAlign="start">
-                  <ShieldIcon
-                    size={24}
-                    className="oui-text-base-contrast-80 oui-shrink-0"
-                  />
-                  <Box className="oui-flex-1 oui-flex oui-flex-col oui-space-y-0.5">
-                    <Text size="base" className="oui-text-base-contrast-80">
-                      Account Security
-                    </Text>
-                    <Text
-                      size="xs"
-                      className="oui-text-base-contrast-36 oui-leading-relaxed"
-                    >
-                      Security alerts for unusual logins and important
-                      operations
-                    </Text>
-                  </Box>
-                </Flex>
-              </Box>
-            </Box>
-          </Box>
-        </>
+        </Box>
       )}
     </Box>
   );

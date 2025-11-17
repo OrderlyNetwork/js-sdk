@@ -31,8 +31,12 @@ export const MainNav: FC<PropsWithChildren<MainNavScriptReturn>> = (props) => {
   const hideWalletConnectButton =
     !props.disabledConnect && props.wrongNetwork && props.isConnected;
 
+  const pathname = window.location.pathname;
+  const isTradingPage = pathname === "/" || pathname.includes("/perp");
+
   const showSearchButton =
     props.starChildEnabled &&
+    isTradingPage &&
     props.namespace === ChainNamespace.evm &&
     (props.status! >= AccountStatusEnum.EnableTrading ||
       props.status === AccountStatusEnum.EnableTradingWithoutConnected);

@@ -54,7 +54,7 @@ export const CustomArenaButtonMain: React.FC<{
       <Box
         invisible={!isActive}
         position="absolute"
-        bottom={1}
+        top={"90%"}
         left={"50%"}
         height={"2px"}
         r="full"

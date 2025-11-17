@@ -124,7 +124,7 @@ export const SideChatPanel: React.FC<SideChatPanelProps> = ({
           right: isOpen
             ? window.innerWidth - placeholderRight - 8 - scrollBarWidth
             : -400,
-          zIndex: 50,
+          zIndex: 40,
           transition: "top 0.1s ease-out, right 0.2s ease-in-out",
         }}
         className="oui-flex oui-flex-col oui-gap-3"

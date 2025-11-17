@@ -6,12 +6,7 @@ import { cn, Divider, Tooltip } from "@orderly.network/ui";
 import { StarChildInitializer } from "./StarChildInitializer";
 import { TelegramBinding } from "./TelegramBinding";
 import { TooltipWithShortcut } from "./TooltipWithShortcut";
-import {
-  SignPostIcon,
-  SoundWaveIcon,
-  ChevronCompactRightIcon,
-  CloseIcon,
-} from "./icons";
+import { SignPostIcon, SoundWaveIcon, ChevronCompactRightIcon } from "./icons";
 
 const STARCHILD_ROBOT_SRC =
   "https://storage.googleapis.com/oss.orderly.network/static/starchild/starchildRobot.png";
@@ -153,19 +148,12 @@ const SidePanelToggleSection: React.FC<SidePanelToggleSectionProps> = ({
             "oui-flex oui-items-center oui-justify-center",
           )}
         >
-          {isOpen && (
-            <CloseIcon
-              size={18}
-              className="oui-w-full oui-h-full oui-object-cover"
-            />
-          )}
           <img
             src={STARCHILD_ROBOT_SRC}
             alt="Starchild"
             width={18}
             height={18}
             className="oui-w-full oui-h-full oui-object-cover"
-            style={{ display: isOpen ? "none" : "block" }}
           />
         </div>
         {showBadge && badgeCount > 0 && (
@@ -243,9 +231,14 @@ export const StarchildControlPanel: React.FC<StarchildControlPanelProps> = ({
   className,
 }) => {
   const ee = useEventEmitter();
-  const { getVoiceShortcut, getChatShortcut, getUnreadCount } =
-    useStarChildWidget();
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const {
+    getVoiceShortcut,
+    getChatShortcut,
+    getUnreadCount,
+    setChatVisible,
+    setSearchVisible,
+  } = useStarChildWidget();
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
   const [isTgDialogOpen, setIsTgDialogOpen] = useState(false);
   const [isTgBound, setIsTgBound] = useState(false);
@@ -253,6 +246,18 @@ export const StarchildControlPanel: React.FC<StarchildControlPanelProps> = ({
   const [voiceShortcut, setVoiceShortcut] = useState(getVoiceShortcut());
   const [chatShortcut, setChatShortcut] = useState(getChatShortcut());
   const [isCompactScreen, setIsCompactScreen] = useState(false);
+
+  React.useEffect(() => {
+    return () => {
+      try {
+        setChatVisible?.(false);
+        setSearchVisible?.(false);
+        ee.emit("sideChatPanel:toggle", { isOpen: false });
+      } catch {
+        // ignore
+      }
+    };
+  }, [ee, setChatVisible, setSearchVisible]);
 
   // Listen to single source of truth: widget state changes
   React.useEffect(() => {
