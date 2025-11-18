@@ -87,10 +87,7 @@ export abstract class AbstractDatafeed {
 
     const cursor = this._historyCursor ?? to;
     const maxBarsPerRequest = 1000;
-    const barsToLoad = Math.min(
-      periodParams.countBack ?? maxBarsPerRequest,
-      maxBarsPerRequest,
-    );
+    const barsToLoad = maxBarsPerRequest;
     const requestTo = cursor;
     const requestFrom = Math.max(
       requestTo - this._resolutionToSeconds(resolution) * barsToLoad,
