@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import {
   useComputedLTV,
   useEventEmitter,
@@ -7,6 +7,7 @@ import {
   useMemoizedFn,
   useOrderEntry,
   useOrderlyContext,
+  useTpslPriceChecker,
 } from "@orderly.network/hooks";
 import { useCanTrade } from "@orderly.network/react-app";
 import {
@@ -350,8 +351,15 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       order_type_ext: formattedOrder.order_type_ext,
     });
 
+  const slPriceError = useTpslPriceChecker({
+    slPrice: formattedOrder.sl_trigger_price,
+    liqPrice: state.estLiqPrice,
+    side: formattedOrder.side,
+  });
+
   return {
     ...state,
+    slPriceError: slPriceError ? { sl_trigger_price: slPriceError } : undefined,
     side: formattedOrder.side as OrderSide,
     type: formattedOrder.order_type as OrderType,
     level: formattedOrder.level as OrderLevel,

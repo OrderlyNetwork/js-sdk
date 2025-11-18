@@ -464,6 +464,8 @@
   "tpsl.validate.slTriggerPrice.error.priceErrorMax": "Votre prix de déclenchement SL doit être défini plus haut que votre prix d'ordre.",
   "tpsl.validate.tpTriggerPrice.error.required": "Le prix de déclenchement TP est requis",
   "tpsl.validate.slTriggerPrice.error.required": "Le prix de déclenchement SL est requis",
+  "tpsl.validate.slTriggerPrice.warning.closeToLiqPrice": "Les stop loss définis près du prix de liquidation peuvent ne pas se déclencher. Remarque : le prix de liquidation peut changer avec la valeur notionnelle de la position.",
+  "tpsl.validate.slTriggerPrice.error.crossLiqPrice": "Le stop loss dépasse le prix de liquidation. Veuillez ajuster votre stop loss.",
   "tpsl.tpslDetail.qty": "Qté.",
   "tpsl.tpslDetail.estPnl": "P&L estimé",
   "tpsl.tpslDetail.estPnl.tooltip": "La valeur réelle peut différer selon le prix de trading réel. Cette valeur est uniquement à titre de référence.",

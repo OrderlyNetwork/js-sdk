@@ -464,6 +464,8 @@
   "tpsl.validate.slTriggerPrice.error.priceErrorMax": "Uw SL triggerprijs moet hoger worden ingesteld dan uw orderprijs.",
   "tpsl.validate.tpTriggerPrice.error.required": "TP triggerprijs is vereist",
   "tpsl.validate.slTriggerPrice.error.required": "SL triggerprijs is vereist",
+  "tpsl.validate.slTriggerPrice.warning.closeToLiqPrice": "Stop loss orders die dicht bij de liquidatieprijs zijn ingesteld, worden mogelijk niet geactiveerd. Let op: de liquidatieprijs kan veranderen met de nominale waarde van de positie.",
+  "tpsl.validate.slTriggerPrice.error.crossLiqPrice": "Stop loss overschrijdt de liquidatieprijs. Pas uw stop loss aan.",
   "tpsl.tpslDetail.qty": "Hoeveelheid",
   "tpsl.tpslDetail.estPnl": "Geschatte W&V",
   "tpsl.tpslDetail.estPnl.tooltip": "De werkelijke waarde kan verschillen op basis van de werkelijke handelsprijs. Deze waarde is alleen voor referentie.",

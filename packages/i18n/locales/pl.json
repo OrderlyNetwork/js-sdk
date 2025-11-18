@@ -464,6 +464,8 @@
   "tpsl.validate.slTriggerPrice.error.priceErrorMax": "Twoja cena wyzwalania SL powinna być ustawiona powyżej ceny zamówienia.",
   "tpsl.validate.tpTriggerPrice.error.required": "Cena wyzwalania TP jest wymagana",
   "tpsl.validate.slTriggerPrice.error.required": "Cena wyzwalania SL jest wymagana",
+  "tpsl.validate.slTriggerPrice.warning.closeToLiqPrice": "Stop loss ustawione blisko ceny likwidacji mogą nie zostać uruchomione. Uwaga: cena likwidacji może się zmieniać wraz z wartością nominalną pozycji.",
+  "tpsl.validate.slTriggerPrice.error.crossLiqPrice": "Stop loss przekracza cenę likwidacji. Proszę dostosować stop loss.",
   "tpsl.tpslDetail.qty": "Ilość",
   "tpsl.tpslDetail.estPnl": "Szacowany P&L",
   "tpsl.tpslDetail.estPnl.tooltip": "Rzeczywista wartość może różnić się w zależności od rzeczywistej ceny handlowej. Ta wartość jest tylko do celów informacyjnych.",

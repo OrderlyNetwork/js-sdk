@@ -22,7 +22,10 @@ import {
 import { useMarkPriceActions } from "../../orderly/useMarkPrice/useMarkPriceStore";
 import { usePositions } from "../../orderly/usePositionStream/usePosition.store";
 import { useOrderlyContext } from "../../orderlyContext";
-import { OrderValidationResult } from "../../services/orderCreator/interface";
+import {
+  OrderValidationItem,
+  OrderValidationResult,
+} from "../../services/orderCreator/interface";
 import { useMemoizedFn } from "../../shared/useMemoizedFn";
 import { useEventEmitter } from "../../useEventEmitter";
 import { useMutation } from "../../useMutation";
@@ -73,7 +76,9 @@ export type OrderEntryReturn = {
      * Function to validate the order.
      * @returns {Promise<OrderValidationResult | null>} The validation result.
      */
-    validate: () => Promise<OrderValidationResult | null>;
+    validate: (
+      otherErrors?: OrderValidationResult,
+    ) => Promise<OrderValidationResult | null>;
   };
   freeCollateral: number;
   /**
@@ -492,11 +497,19 @@ const useOrderEntry = (
    * Validate the order
    * TODO: confirm validate result return order
    */
-  const validateOrder = (): Promise<OrderValidationResult | null> => {
+  const validateOrder = (
+    otherErrors?: OrderValidationResult,
+  ): Promise<OrderValidationResult | null> => {
     return new Promise<OrderValidationResult | null>(
       async (resolve, reject) => {
         const creator = getOrderCreator(formattedOrder);
-        const errors = await validate(formattedOrder, creator, prepareData());
+        let errors = await validate(formattedOrder, creator, prepareData());
+        if (otherErrors) {
+          errors = {
+            ...errors,
+            ...otherErrors,
+          };
+        }
         const keys = Object.keys(errors);
         if (keys.length > 0) {
           // setErrors(errors);

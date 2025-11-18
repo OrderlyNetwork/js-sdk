@@ -6,7 +6,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { OrderValidationResult } from "@orderly.network/hooks";
+import { ERROR_MSG_CODES, OrderValidationResult } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
 import { OrderlyOrder, OrderType, PositionType } from "@orderly.network/types";
@@ -83,6 +83,10 @@ export const OrderTPSL = (props: {
     props.isReduceOnly
   )
     return null;
+
+  const isSlPriceWarning =
+    props.errors?.["sl_trigger_price"]?.["type"] ===
+    ERROR_MSG_CODES.SL_PRICE_WARNING;
 
   return (
     <div>
@@ -163,13 +167,28 @@ export const OrderTPSL = (props: {
           setOrderValue={props.setOrderValue}
           onChange={props.onChange}
           values={props.values}
-          errors={props.errors}
+          errors={isSlPriceWarning ? {} : props.errors}
           quote_dp={props.quote_dp}
           showTPSLAdvanced={props.showTPSLAdvanced}
           isMobile={isMobile}
         />
       </div>
+
+      {isSlPriceWarning && <TPSLPriceWarning errors={props.errors} />}
     </div>
+  );
+};
+
+const TPSLPriceWarning = (props: { errors: OrderValidationResult | null }) => {
+  const { getErrorMsg } = useOrderEntryFormErrorMsg(props.errors);
+
+  return (
+    <Flex itemAlign={"center"} justify={"center"} gapX={1}>
+      <ExclamationFillIcon color="warning" size={14} />
+      <Text size="2xs" className="oui-text-warning-darken">
+        {getErrorMsg("sl_trigger_price")}
+      </Text>
+    </Flex>
   );
 };
 

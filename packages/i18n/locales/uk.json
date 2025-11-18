@@ -464,6 +464,8 @@
   "tpsl.validate.slTriggerPrice.error.priceErrorMax": "Ваша ціна спрацьовування SL повинна бути встановлена вище ціни замовлення.",
   "tpsl.validate.tpTriggerPrice.error.required": "Ціна спрацьовування TP обов'язкова",
   "tpsl.validate.slTriggerPrice.error.required": "Ціна спрацьовування SL обов'язкова",
+  "tpsl.validate.slTriggerPrice.warning.closeToLiqPrice": "Стоп-лосси, встановлені близько до ціни ліквідації, можуть не спрацювати. Примітка: ціна ліквідації може змінюватися залежно від номінальної вартості позиції.",
+  "tpsl.validate.slTriggerPrice.error.crossLiqPrice": "Стоп-лосс перетинає ціну ліквідації. Будь ласка, скоригуйте ваш стоп-лосс.",
   "tpsl.tpslDetail.qty": "Кількість",
   "tpsl.tpslDetail.estPnl": "Розрахунковий P&L",
   "tpsl.tpslDetail.estPnl.tooltip": "Фактичне значення може відрізнятися залежно від фактичної торгової ціни. Це значення тільки для довідки.",

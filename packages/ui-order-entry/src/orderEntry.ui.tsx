@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useId, useMemo, useState } from "react";
 import {
+  ERROR_MSG_CODES,
   OrderValidationResult,
   useLocalStorage,
   useMemoizedFn,
@@ -166,8 +167,11 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
   const onSubmit = useMemoizedFn(async () => {
     const isScaledOrder = formattedOrder.order_type === OrderType.SCALED;
 
+    const isSlPriceError =
+      props.slPriceError?.sl_trigger_price?.type ===
+      ERROR_MSG_CODES.SL_PRICE_ERROR;
     helper
-      .validate()
+      .validate(isSlPriceError ? props.slPriceError : undefined)
       .then(
         // validate success, it return the order
         // TODO: get order from other function
@@ -475,7 +479,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
             switchState={props.tpslSwitch}
             onSwitchChanged={props.setTpslSwitch}
             orderType={formattedOrder.order_type!}
-            errors={validated ? errors : null}
+            errors={validated ? { ...errors, ...props.slPriceError } : null}
             isReduceOnly={formattedOrder.reduce_only}
             setOrderValue={setOrderValue}
             reduceOnlyChecked={formattedOrder.reduce_only ?? false}

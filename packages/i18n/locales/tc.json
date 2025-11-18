@@ -464,6 +464,8 @@
   "tpsl.validate.slTriggerPrice.error.priceErrorMax": "您的止損觸發價格應設置為高於您的訂單價格。",
   "tpsl.validate.tpTriggerPrice.error.required": "止盈觸發價格為必填項",
   "tpsl.validate.slTriggerPrice.error.required": "止損觸發價格為必填項",
+  "tpsl.validate.slTriggerPrice.warning.closeToLiqPrice": "設置在清算價格附近的止損可能不會觸發。注意：清算價格會隨持倉名義價值變化。",
+  "tpsl.validate.slTriggerPrice.error.crossLiqPrice": "止損價格已越過清算價格。請調整您的止損價格。",
   "tpsl.tpslDetail.qty": "數量",
   "tpsl.tpslDetail.estPnl": "預估盈虧",
   "tpsl.tpslDetail.estPnl.tooltip": "實際值可能因實際交易價格而異。此值僅供参考。",

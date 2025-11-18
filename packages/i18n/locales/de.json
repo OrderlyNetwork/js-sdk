@@ -464,6 +464,8 @@
   "tpsl.validate.slTriggerPrice.error.priceErrorMax": "Ihr SL-Auslösepreis sollte höher als Ihr Auftragspreis eingestellt werden.",
   "tpsl.validate.tpTriggerPrice.error.required": "TP-Auslösepreis ist erforderlich",
   "tpsl.validate.slTriggerPrice.error.required": "SL-Auslösepreis ist erforderlich",
+  "tpsl.validate.slTriggerPrice.warning.closeToLiqPrice": "Stop-Loss-Orders, die nahe am Liquidationspreis gesetzt sind, werden möglicherweise nicht ausgelöst. Hinweis: Der Liquidationspreis kann sich mit dem Positionswert ändern.",
+  "tpsl.validate.slTriggerPrice.error.crossLiqPrice": "Stop-Loss überschreitet den Liquidationspreis. Bitte passen Sie Ihren Stop-Loss an.",
   "tpsl.tpslDetail.qty": "Menge",
   "tpsl.tpslDetail.estPnl": "Geschätzter G&V",
   "tpsl.tpslDetail.estPnl.tooltip": "Der tatsächliche Wert kann je nach tatsächlichem Handelspreis abweichen. Dieser Wert dient nur zur Referenz.",

@@ -464,6 +464,8 @@
   "tpsl.validate.slTriggerPrice.error.priceErrorMax": "Giá kích hoạt SL của bạn nên được đặt cao hơn giá lệnh của bạn.",
   "tpsl.validate.tpTriggerPrice.error.required": "Giá kích hoạt TP là bắt buộc",
   "tpsl.validate.slTriggerPrice.error.required": "Giá kích hoạt SL là bắt buộc",
+  "tpsl.validate.slTriggerPrice.warning.closeToLiqPrice": "Cắt lỗ được đặt gần giá thanh lý có thể không kích hoạt. Lưu ý: giá thanh lý có thể thay đổi theo giá trị danh nghĩa của vị thế.",
+  "tpsl.validate.slTriggerPrice.error.crossLiqPrice": "Cắt lỗ vượt quá giá thanh lý. Vui lòng điều chỉnh cắt lỗ của bạn.",
   "tpsl.tpslDetail.qty": "Số lượng",
   "tpsl.tpslDetail.estPnl": "P&L ước tính",
   "tpsl.tpslDetail.estPnl.tooltip": "Giá trị thực tế có thể khác biệt dựa trên giá giao dịch thực tế. Giá trị này chỉ để tham khảo.",

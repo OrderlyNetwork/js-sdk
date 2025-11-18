@@ -464,6 +464,8 @@
   "tpsl.validate.slTriggerPrice.error.priceErrorMax": "您的止损触发价格应设置为高于您的订单价格。",
   "tpsl.validate.tpTriggerPrice.error.required": "止盈触发价格为必填项",
   "tpsl.validate.slTriggerPrice.error.required": "止损触发价格为必填项",
+  "tpsl.validate.slTriggerPrice.warning.closeToLiqPrice": "设置在清算价格附近的止损可能不会触发。注意：清算价格会随持仓名义价值变化。",
+  "tpsl.validate.slTriggerPrice.error.crossLiqPrice": "止损价格已越过清算价格。请调整您的止损价格。",
   "tpsl.tpslDetail.qty": "数量",
   "tpsl.tpslDetail.estPnl": "预估盈亏",
   "tpsl.tpslDetail.estPnl.tooltip": "实际值可能因实际交易价格而异。此值仅供参考。",

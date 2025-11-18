@@ -464,6 +464,8 @@
   "tpsl.validate.slTriggerPrice.error.priceErrorMax": "SLトリガー価格は注文価格より高く設定する必要があります。",
   "tpsl.validate.tpTriggerPrice.error.required": "TPトリガー価格は必須です",
   "tpsl.validate.slTriggerPrice.error.required": "SLトリガー価格は必須です",
+  "tpsl.validate.slTriggerPrice.warning.closeToLiqPrice": "清算価格に近いストップロスは発動しない可能性があります。注意：清算価格はポジション名目価値によって変動する場合があります。",
+  "tpsl.validate.slTriggerPrice.error.crossLiqPrice": "ストップロスが清算価格を超えています。ストップロスを調整してください。",
   "tpsl.tpslDetail.qty": "数量",
   "tpsl.tpslDetail.estPnl": "推定損益",
   "tpsl.tpslDetail.estPnl.tooltip": "実際の値は実際の取引価格によって異なる場合があります。この値は参考用です。",
