@@ -11,6 +11,10 @@ export function useTelegramAuth(
     address: string,
     provider: any,
   ) => Promise<{ token: string; timestamp: number }>,
+  getSolAuthToken: (
+    address: string,
+    provider: any,
+  ) => Promise<{ token: string; timestamp: number }>,
   getAuthHeader: (address: string, provider: any) => Promise<string>,
   onTelegramConnected?: (telegramData: TelegramUserData) => void,
   onWalletConnected?: (walletData: WalletData) => void,
@@ -43,7 +47,7 @@ export function useTelegramAuth(
     walletAddress: string,
     provider: any,
   ): Promise<void> => {
-    const bindUrl = `${baseUrl}v1/private/bindTGAccount`;
+    const bindUrl = `${baseUrl}v1/private/bindTelegramUser`;
     const bindBody = JSON.stringify(telegramData);
     if (!walletAddress || !provider) throw new Error("Wallet not connected");
     const authHeader = await getAuthHeader(walletAddress, provider);
@@ -65,7 +69,7 @@ export function useTelegramAuth(
     console.log("Bind TG response:", bindJson ?? bindText);
 
     if (!bindResp.ok)
-      throw new Error(`BindTGAccount failed: ${bindResp.status}`);
+      throw new Error(`BindTelegramUser failed: ${bindResp.status}`);
   };
 
   const handleTelegramLogin = (checkAndCompleteBinding: () => void) => {
@@ -73,7 +77,6 @@ export function useTelegramAuth(
     console.log("bot_id", telegramBotId);
 
     try {
-      // Guard: widget may not be ready on first click while script is still loading
       // @ts-ignore
       if (!(window as any).Telegram?.Login?.auth) {
         console.warn("Telegram widget not ready yet");
@@ -143,8 +146,25 @@ export function useTelegramAuth(
       }
 
       if (walletData.namespace === ChainNamespace.evm) {
-        // Ensure token exists but avoid duplicate prompts
         await getEvmAuthToken(walletAddress, provider);
+
+        const bindingData: BindingData = {
+          telegram: telegramUserData,
+          wallet: walletData,
+          bindingId: `${telegramUserData.id}_${walletAddress}`,
+        };
+
+        try {
+          await bindTelegramAccount(telegramUserData, walletAddress, provider);
+        } catch (e) {
+          console.error(e);
+          throw e;
+        }
+
+        setBindingStatus("success");
+        onBindingComplete?.(bindingData);
+      } else if (walletData.namespace === ChainNamespace.solana) {
+        await getSolAuthToken(walletAddress, provider);
 
         const bindingData: BindingData = {
           telegram: telegramUserData,

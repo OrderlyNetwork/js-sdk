@@ -4,7 +4,7 @@ import {
   useWalletConnector,
   useOrderlyContext,
 } from "@orderly.network/hooks";
-import { AccountStatusEnum } from "@orderly.network/types";
+import { AccountStatusEnum, ChainNamespace } from "@orderly.network/types";
 import { LS_ACCOUNT_INFO_PREFIX } from "./constants";
 import type {
   UseTelegramBindingReturn,
@@ -14,8 +14,11 @@ import type {
 } from "./types";
 import { useAccountInfo } from "./useAccountInfo";
 import { useEvmAuth } from "./useEvmAuth";
-import { useOrderlyKey } from "./useOrderlyKey";
+import { useRegisterOrderlyKey } from "./useRegisterOrderlyKey";
+import { useSolAuth } from "./useSolAuth";
 import { useTelegramAuth } from "./useTelegramAuth";
+import { useVerifyOrderlyKey } from "./useVerifyOrderlyKey";
+import { getOrderlyKeyEIP712Data } from "./utils";
 
 export function useTelegramBinding(
   onTelegramConnected?: (telegramData: TelegramUserData) => void,
@@ -35,7 +38,21 @@ export function useTelegramBinding(
   const provider = (wallet as any)?.provider;
 
   // Initialize sub-hooks
-  const { getEvmAuthToken, getAuthHeader } = useEvmAuth(baseUrl, brokerId);
+  const { getEvmAuthToken, getAuthHeader: getEvmAuthHeader } = useEvmAuth(
+    baseUrl,
+    brokerId,
+  );
+  const { getSolAuthToken, getAuthHeader: getSolAuthHeader } = useSolAuth(
+    baseUrl,
+    brokerId,
+  );
+  const getAuthHeader = async (address: string, walletProvider: any) => {
+    const ns = namespace ?? ChainNamespace.evm;
+    if (ns === ChainNamespace.solana) {
+      return getSolAuthHeader(address, walletProvider);
+    }
+    return getEvmAuthHeader(address, walletProvider);
+  };
 
   const {
     hasOrderlyPrivateKey,
@@ -50,14 +67,16 @@ export function useTelegramBinding(
 
   const {
     getTemporaryOrderlyKey: getTemporaryOrderlyKeyInternal,
-    getOrderlyKeyEIP712Data,
     registerOrderlyKey: registerOrderlyKeyInternal,
-    verifyOrderlyKey: verifyOrderlyKeyInternal,
     didRegisterOrderlyKey,
-    didVerifyOrderlyKey,
     setDidRegisterOrderlyKey,
+  } = useRegisterOrderlyKey(baseUrl, brokerId, getAuthHeader);
+
+  const {
+    verifyOrderlyKey: verifyOrderlyKeyInternal,
+    didVerifyOrderlyKey,
     setDidVerifyOrderlyKey,
-  } = useOrderlyKey(baseUrl, brokerId, getAuthHeader);
+  } = useVerifyOrderlyKey(baseUrl, getAuthHeader);
 
   const {
     telegramUser,
@@ -71,26 +90,39 @@ export function useTelegramBinding(
     baseUrl,
     telegramBotId,
     getEvmAuthToken,
+    getSolAuthToken,
     getAuthHeader,
     onTelegramConnected,
     onWalletConnected,
     onBindingComplete,
   );
 
-  // Ensure we obtain the EVM auth token as soon as the wallet is connected,
+  // Ensure we obtain the auth token as soon as the wallet is connected,
   // so the first step in the flow can immediately proceed to registerOrderlyKey.
   useEffect(() => {
     if (!isWalletConnected || !walletAddress || !provider) return;
-    getEvmAuthToken(walletAddress, provider).catch((e) => {
-      console.error("Failed to get EVM auth token:", e);
+    const ns = namespace ?? ChainNamespace.evm;
+    const fn = ns === ChainNamespace.solana ? getSolAuthToken : getEvmAuthToken;
+    fn(walletAddress, provider).catch((e) => {
+      console.error("Failed to get auth token:", e);
     });
-  }, [isWalletConnected, walletAddress, provider, getEvmAuthToken]);
+  }, [
+    isWalletConnected,
+    walletAddress,
+    provider,
+    namespace,
+    getEvmAuthToken,
+    getSolAuthToken,
+  ]);
 
   const getTemporaryOrderlyKey = () => {
     if (!walletAddress || !provider) {
       throw new Error("Wallet not connected");
     }
-    return getTemporaryOrderlyKeyInternal(walletAddress, provider);
+    const ns = namespace ?? ChainNamespace.evm;
+    return getTemporaryOrderlyKeyInternal(walletAddress, provider, {
+      chainType: ns === ChainNamespace.solana ? "SOLANA" : "EVM",
+    });
   };
 
   const registerOrderlyKey = (
@@ -108,19 +140,26 @@ export function useTelegramBinding(
     if (!walletAddress || !provider) {
       throw new Error("Wallet not connected");
     }
-    return registerOrderlyKeyInternal(
-      orderlyKey,
-      walletAddress,
-      provider,
-      opts,
-    );
+    const ns = namespace ?? ChainNamespace.evm;
+    const effectiveChainType =
+      opts?.chainType ?? (ns === ChainNamespace.solana ? "SOLANA" : "EVM");
+
+    return registerOrderlyKeyInternal(orderlyKey, walletAddress, provider, {
+      ...opts,
+      chainType: effectiveChainType,
+    });
   };
 
   const verifyOrderlyKey = () => {
     if (!walletAddress || !provider) {
       throw new Error("Wallet not connected");
     }
-    return verifyOrderlyKeyInternal(walletAddress, provider);
+    const ns = namespace ?? ChainNamespace.evm;
+    const effectiveChainType = ns === ChainNamespace.solana ? "SOLANA" : "EVM";
+
+    return verifyOrderlyKeyInternal(walletAddress, provider, {
+      chainType: effectiveChainType,
+    });
   };
 
   const handleTelegramLogin = () => {

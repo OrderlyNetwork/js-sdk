@@ -40,7 +40,8 @@ export const MainNav: FC<PropsWithChildren<MainNavScriptReturn>> = (props) => {
   const showSearchButton =
     props.starChildEnabled &&
     isTradingPage &&
-    props.namespace === ChainNamespace.evm &&
+    (props.namespace === ChainNamespace.evm ||
+      props.namespace === ChainNamespace.solana) &&
     (props.status! >= AccountStatusEnum.EnableTrading ||
       props.status === AccountStatusEnum.EnableTradingWithoutConnected);
 

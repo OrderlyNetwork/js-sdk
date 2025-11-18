@@ -94,8 +94,14 @@ export function useAccountInfo(
 
         const telegramUserId = json?.telegramUserId;
         const hasTelegramBinding = !!telegramUserId;
-        const hasOrderlyPrivateKeyValue = !!json?.hasOrderlyPrivateKey;
-        const hasVerifiedOrderlyValue = !!json?.hasVerifiedOrderly;
+        const hasOrderlyPrivateKeyValue =
+          namespace === ChainNamespace.evm
+            ? !!json?.hasOrderlyPrivateKey
+            : !!json?.hasSolanaOrderlyPrivateKey;
+        const hasVerifiedOrderlyValue =
+          namespace === ChainNamespace.evm
+            ? !!json?.hasVerifiedOrderly
+            : !!json?.hasVerifiedSolanaOrderly;
 
         console.log("Account info status:", {
           telegramUserId,

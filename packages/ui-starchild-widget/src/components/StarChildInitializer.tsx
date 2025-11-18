@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  useStarChildWidget,
-  Locale as StarLocale,
-  destroy,
-} from "starchild-widget";
+import { useStarChildWidget, Locale as StarLocale } from "starchild-widget";
 import {
   useAccount,
   useOrderlyContext,
@@ -11,16 +7,17 @@ import {
   useEventEmitter,
 } from "@orderly.network/hooks";
 import { useLocaleCode } from "@orderly.network/i18n";
-import { AccountStatusEnum } from "@orderly.network/types";
+import { AccountStatusEnum, ChainNamespace } from "@orderly.network/types";
 
 export const StarChildInitializer: React.FC = () => {
-  const { state } = useAccount();
-  const { wallet } = useWalletConnector();
+  const { state, isMainAccount } = useAccount();
+  const { wallet, namespace } = useWalletConnector();
   const { keyStore, starChildConfig } = useOrderlyContext();
   const ee = useEventEmitter();
   const {
     isInitialized,
     init,
+    destroy,
     showChat,
     setChatVisible,
     setSearchVisible,
@@ -74,8 +71,13 @@ export const StarChildInitializer: React.FC = () => {
 
       const cached = getCachedAccountInfo(address) || {};
       const hasTelegramBinding = !!cached.telegramUserId;
-      const hasOrderlyPrivateKey = !!cached.hasOrderlyPrivateKey;
-      const hasVerifiedOrderly = !!cached.hasVerifiedOrderly;
+      const isSolana = namespace === ChainNamespace.solana;
+      const hasOrderlyPrivateKey = isSolana
+        ? !!cached.hasSolanaOrderlyPrivateKey || !!cached.hasOrderlyPrivateKey
+        : !!cached.hasOrderlyPrivateKey;
+      const hasVerifiedOrderly = isSolana
+        ? !!cached.hasVerifiedSolanaOrderly || !!cached.hasVerifiedOrderly
+        : !!cached.hasVerifiedOrderly;
 
       if (!hasOrderlyPrivateKey || !hasVerifiedOrderly) return;
 
@@ -203,6 +205,7 @@ export const StarChildInitializer: React.FC = () => {
       showChat,
       starLocale,
       starChildConfig?.enable,
+      namespace,
     ],
   );
 
@@ -239,6 +242,40 @@ export const StarChildInitializer: React.FC = () => {
         handler as EventListener,
       );
   }, [attemptInit]);
+
+  React.useEffect(() => {
+    const handleReset = async (data: {
+      namespace?: ChainNamespace | null;
+      isMainAccount?: boolean | null;
+    }) => {
+      try {
+        try {
+          await destroy();
+          try {
+            (window as any).__starchild_initialized__ = false;
+            const evt = new CustomEvent("starchild:destroyed");
+            window.dispatchEvent(evt);
+          } catch {
+            // ignore
+          }
+          lastInitializedAddressRef.current = null;
+        } catch {
+          // ignore
+        }
+        await attemptInit();
+      } catch (e) {
+        console.error(
+          "[StarChildInitializer] Error handling starchild:reset",
+          e,
+        );
+      }
+    };
+
+    ee.on("starchild:reset", handleReset as any);
+    return () => {
+      ee.off("starchild:reset", handleReset as any);
+    };
+  }, [ee, attemptInit]);
 
   // Reinitialize on wallet address change if widget already initialized for a different address
   React.useEffect(() => {
