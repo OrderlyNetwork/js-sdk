@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useStarChildWidget } from "starchild-widget";
-import { useEventEmitter } from "@orderly.network/hooks";
-import { cn, Divider, Tooltip } from "@orderly.network/ui";
+import { useEventEmitter, useWalletConnector } from "@orderly.network/hooks";
+import { ChainNamespace } from "@orderly.network/types";
+import { cn, Tooltip } from "@orderly.network/ui";
 import { StarChildInitializer } from "./StarChildInitializer";
 import { TelegramBinding } from "./TelegramBinding";
 import { TooltipWithShortcut } from "./TooltipWithShortcut";
-import { SignPostIcon, SoundWaveIcon, ChevronCompactRightIcon } from "./icons";
 
 const STARCHILD_ROBOT_SRC =
   "https://storage.googleapis.com/oss.orderly.network/static/starchild/starchildRobot.png";
@@ -34,79 +34,6 @@ const NotificationBadge: React.FC<NotificationBadgeProps> = ({ count = 0 }) => {
   );
 };
 
-// My Agent Section Component
-interface MyAgentSectionProps {
-  tooltip?: string;
-  shortcutKeys?: string[];
-  badgeCount?: number;
-  onClick?: () => void;
-}
-
-const MyAgentSection: React.FC<MyAgentSectionProps> = ({
-  tooltip = "My agent",
-  shortcutKeys,
-  badgeCount = 99,
-  onClick,
-}) => {
-  return (
-    <Tooltip
-      content={<TooltipWithShortcut text={tooltip} keys={shortcutKeys} />}
-      side="bottom"
-    >
-      <button
-        onClick={onClick}
-        className={cn(
-          "oui-group oui-relative oui-shrink-0 oui-w-[18px] oui-h-[18px]",
-          "oui-flex oui-items-center oui-justify-center",
-          "oui-transition-opacity oui-cursor-pointer",
-        )}
-        aria-label={tooltip}
-      >
-        <SignPostIcon
-          size={18}
-          className="oui-text-base-contrast-36 hover:oui-text-base-contrast oui-transition-colors"
-        />
-        {badgeCount > 0 && <NotificationBadge count={badgeCount} />}
-      </button>
-    </Tooltip>
-  );
-};
-
-// Voice Mode Section Component
-interface VoiceModeSectionProps {
-  tooltip?: string;
-  shortcutKeys?: string[];
-  onClick?: () => void;
-}
-
-const VoiceModeSection: React.FC<VoiceModeSectionProps> = ({
-  tooltip = "Enable voice mode",
-  shortcutKeys,
-  onClick,
-}) => {
-  return (
-    <Tooltip
-      content={<TooltipWithShortcut text={tooltip} keys={shortcutKeys} />}
-      side="bottom"
-    >
-      <button
-        onClick={onClick}
-        className={cn(
-          "oui-shrink-0 oui-w-[18px] oui-h-[18px]",
-          "oui-flex oui-items-center oui-justify-center",
-          "oui-cursor-pointer",
-        )}
-        aria-label={tooltip}
-      >
-        <SoundWaveIcon
-          size={18}
-          className="oui-text-base-contrast-36 hover:oui-text-base-contrast oui-transition-colors"
-        />
-      </button>
-    </Tooltip>
-  );
-};
-
 // Side Panel Toggle Section Component
 interface SidePanelToggleSectionProps {
   tooltip?: string;
@@ -124,8 +51,7 @@ const SidePanelToggleSection: React.FC<SidePanelToggleSectionProps> = ({
   onClick,
   showBadge = false,
   showText = true,
-  badgeCount = 99,
-  isOpen = false,
+  badgeCount = 0,
 }) => {
   return (
     <Tooltip
@@ -175,77 +101,27 @@ const SidePanelToggleSection: React.FC<SidePanelToggleSectionProps> = ({
   );
 };
 
-// Collapse Button Component
-interface CollapseButtonProps {
-  isCollapsed?: boolean;
-  onClick?: () => void;
-  disabled?: boolean;
-}
-
-const CollapseButton: React.FC<CollapseButtonProps> = ({
-  isCollapsed = false,
-  onClick,
-  disabled = false,
-}) => {
-  return (
-    <button
-      onClick={onClick}
-      disabled={disabled}
-      className={cn(
-        "oui-shrink-0",
-        "oui-flex oui-items-center oui-justify-center",
-        disabled ? "oui-cursor-not-allowed" : "oui-cursor-pointer",
-      )}
-      aria-label={isCollapsed ? "Expand" : "Collapse"}
-      aria-disabled={disabled}
-    >
-      <ChevronCompactRightIcon
-        size={14}
-        className={cn(
-          disabled
-            ? "oui-text-base-contrast-36"
-            : "oui-text-base-contrast-54 hover:oui-text-base-contrast",
-          "oui-transition-transform oui-duration-100",
-          isCollapsed ? "" : "oui-rotate-180",
-        )}
-      />
-    </button>
-  );
-};
-
 export interface StarchildControlPanelProps {
-  myAgentTooltip?: string;
-  myAgentShortcutKeys?: string[];
-  voiceModeTooltip?: string;
-  voiceModeShortcutKeys?: string[];
   sidePanelTooltip?: string;
-  sidePanelShortcutKeys?: string[];
   className?: string;
 }
 
 export const StarchildControlPanel: React.FC<StarchildControlPanelProps> = ({
-  myAgentTooltip = "My agent",
-  myAgentShortcutKeys,
-  voiceModeTooltip = "Enable voice mode",
   sidePanelTooltip = "Toggle Starchild side panel",
   className,
 }) => {
   const ee = useEventEmitter();
-  const {
-    getVoiceShortcut,
-    getChatShortcut,
-    getUnreadCount,
-    setChatVisible,
-    setSearchVisible,
-  } = useStarChildWidget();
-  const [isCollapsed, setIsCollapsed] = useState(true);
+  const { namespace } = useWalletConnector();
+  const { getChatShortcut, getUnreadCount, setChatVisible, setSearchVisible } =
+    useStarChildWidget();
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
   const [isTgDialogOpen, setIsTgDialogOpen] = useState(false);
-  const [isTgBound, setIsTgBound] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
   const [badgeCount, setBadgeCount] = useState(getUnreadCount());
-  const [voiceShortcut, setVoiceShortcut] = useState(getVoiceShortcut());
   const [chatShortcut, setChatShortcut] = useState(getChatShortcut());
-  const [isCompactScreen, setIsCompactScreen] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 1920,
+  );
 
   React.useEffect(() => {
     return () => {
@@ -282,20 +158,24 @@ export const StarchildControlPanel: React.FC<StarchildControlPanelProps> = ({
           const data = localStorage.getItem(accountInfoKey);
           if (data) {
             const json = JSON.parse(data);
-            const isVerified = json?.data?.hasVerifiedOrderly;
-            setIsTgBound(!!isVerified);
-            return !!isVerified;
+            const isSolana = namespace === ChainNamespace.solana;
+            const verified = isSolana
+              ? !!json?.data?.hasVerifiedSolanaOrderly ||
+                !!json?.data?.hasVerifiedOrderly
+              : !!json?.data?.hasVerifiedOrderly;
+            setIsVerified(verified);
+            return verified;
           }
         }
       } catch (e) {
-        console.error("Error checking TG binding status:", e);
+        console.error("Error checking verification status:", e);
       }
       return false;
     };
     checkBindingStatus();
 
     const handleAccountInfoReady = () => {
-      setIsTgBound(true);
+      setIsVerified(true);
     };
 
     window.addEventListener(
@@ -309,95 +189,33 @@ export const StarchildControlPanel: React.FC<StarchildControlPanelProps> = ({
         handleAccountInfoReady as EventListener,
       );
     };
-  }, []);
+  }, [namespace]);
 
   // Listen for widget configuration changes via EventEmitter
   React.useEffect(() => {
-    const handleVoiceShortcutChanged = (data: { voiceShortcut: string }) => {
-      setVoiceShortcut(data.voiceShortcut);
-    };
     const handleChatShortcutChanged = (data: { chatShortcut: string }) => {
       setChatShortcut(data.chatShortcut);
     };
-    const handleUnreadCountChanged = (data: { unreadCount: number }) => {
-      setBadgeCount(data.unreadCount);
-    };
-
-    ee.on("starchild:voiceShortcutChanged", handleVoiceShortcutChanged);
     ee.on("starchild:chatShortcutChanged", handleChatShortcutChanged);
-    ee.on("starchild:unreadCountChanged", handleUnreadCountChanged);
-
     return () => {
-      ee.off("starchild:voiceShortcutChanged", handleVoiceShortcutChanged);
       ee.off("starchild:chatShortcutChanged", handleChatShortcutChanged);
-      ee.off("starchild:unreadCountChanged", handleUnreadCountChanged);
     };
   }, [ee]);
 
-  // Auto-collapse on small screens and disable collapse toggle
   React.useEffect(() => {
-    const updateLayoutForScreenSize = () => {
-      try {
-        const compact = window.innerWidth < 1400;
-        setIsCompactScreen(compact);
-        if (compact) {
-          // Force collapsed on compact screens
-          setIsCollapsed(true);
-        }
-      } catch {
-        // no-op for non-browser environments
-      }
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
     };
-    updateLayoutForScreenSize();
-    window.addEventListener("resize", updateLayoutForScreenSize);
+    // Set initial width
+    handleResize();
+    window.addEventListener("resize", handleResize);
     return () => {
-      window.removeEventListener("resize", updateLayoutForScreenSize);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
-  const handleMyAgentClick = () => {
-    console.log("My Agent button clicked");
-    if (!isTgBound) {
-      setIsTgDialogOpen(true);
-      return;
-    }
-
-    // Update local state
-    setIsSidePanelOpen(true);
-    ee.emit("sideChatPanel:toggle", { isOpen: true });
-
-    // Dispatch event to show chat and My Agent
-    try {
-      const event = new CustomEvent("starchild:requestShowMyAgent");
-      window.dispatchEvent(event);
-    } catch (e) {
-      console.error("Error dispatching My Agent event:", e);
-    }
-  };
-
-  const handleVoiceModeClick = () => {
-    console.log("Voice Mode button clicked");
-    if (!isTgBound) {
-      setIsTgDialogOpen(true);
-      return;
-    }
-
-    // Update local state
-    setIsSidePanelOpen(true);
-    ee.emit("sideChatPanel:toggle", { isOpen: true });
-
-    // Dispatch event to show chat and trigger voice recording
-    try {
-      const event = new CustomEvent("starchild:requestVoiceRecording");
-      window.dispatchEvent(event);
-    } catch (e) {
-      console.error("Error dispatching voice recording event:", e);
-    }
-  };
-
   const handleSidePanelClick = () => {
-    console.log("Side Panel button clicked");
-    if (!isTgBound) {
+    if (!isVerified) {
       setIsTgDialogOpen(true);
       return;
     }
@@ -430,10 +248,6 @@ export const StarchildControlPanel: React.FC<StarchildControlPanelProps> = ({
     }
   };
 
-  const handleCollapse = () => {
-    setIsCollapsed((prev) => !prev);
-  };
-
   const handleTgDialogClose = () => {
     setIsTgDialogOpen(false);
   };
@@ -460,7 +274,7 @@ export const StarchildControlPanel: React.FC<StarchildControlPanelProps> = ({
               }}
               onBindingComplete={(bindingData: any) => {
                 console.log("Accounts bound successfully:", bindingData);
-                setIsTgBound(true);
+                setIsVerified(true);
                 setIsTgDialogOpen(false);
               }}
               onClose={handleTgDialogClose}
@@ -471,88 +285,30 @@ export const StarchildControlPanel: React.FC<StarchildControlPanelProps> = ({
       <div
         className={cn(
           "oui-flex oui-items-center oui-rounded-md",
-          "oui-relative oui-z-0 oui-p-px oui-transition-all",
-          "before:oui-absolute before:oui-inset-0 before:oui-z-[-1] before:oui-rounded-md before:oui-content-['']",
-          "after:oui-absolute after:oui-inset-px after:oui-z-[-1] after:oui-box-border after:oui-rounded-md after:oui-content-['']",
-          "oui-starchild-gradient-border",
+          "oui-relative oui-z-0 oui-transition-all",
+          "oui-p-px",
+          !isSidePanelOpen &&
+            "before:oui-absolute before:oui-inset-0 before:oui-z-[-1] before:oui-rounded-md before:oui-content-['']",
+          !isSidePanelOpen &&
+            "after:oui-absolute after:oui-inset-px after:oui-z-[-1] after:oui-box-border after:oui-rounded-md after:oui-content-['']",
+          !isSidePanelOpen && "oui-starchild-gradient-border",
           className,
         )}
       >
-        {/* Background layer between border and content */}
         <div
           className={cn(
             "oui-flex oui-items-center",
-            "oui-rounded-md",
-            "oui-bg-base-5",
+            "oui-bg-base-8 oui-rounded-md oui-p-1.5",
           )}
         >
-          {/* Inner container with three sections */}
-          <div
-            className={cn(
-              "oui-flex oui-items-center oui-gap-2 oui-rounded-md oui-relative",
-              "oui-bg-base-8 oui-p-[7px]",
-              "oui-transition-all oui-duration-100 oui-ease-in-out",
-              "oui-overflow-hidden",
-            )}
-            style={{
-              maxWidth: isCollapsed ? "32px" : "166px",
-            }}
-          >
-            {/* hide the section when expanded */}
-            <div
-              className={cn(
-                "oui-items-center",
-                isCollapsed ? "oui-flex" : "oui-hidden",
-              )}
-            >
-              <SidePanelToggleSection
-                tooltip={sidePanelTooltip}
-                shortcutKeys={["⌘", "Shift", chatShortcut]}
-                onClick={handleSidePanelClick}
-                showBadge={!isSidePanelOpen}
-                showText={false}
-                badgeCount={badgeCount}
-                isOpen={isSidePanelOpen}
-              />
-            </div>
-            {!isCollapsed && (
-              <MyAgentSection
-                tooltip={myAgentTooltip}
-                shortcutKeys={myAgentShortcutKeys}
-                badgeCount={badgeCount}
-                onClick={handleMyAgentClick}
-              />
-            )}
-            <Divider
-              direction="vertical"
-              intensity={8}
-              className="oui-h-4 oui-shrink-0"
-            />
-            <VoiceModeSection
-              tooltip={voiceModeTooltip}
-              shortcutKeys={["⌘", "Shift", voiceShortcut]}
-              onClick={handleVoiceModeClick}
-            />
-            <Divider
-              direction="vertical"
-              intensity={8}
-              className="oui-h-4 oui-shrink-0"
-            />
-            <SidePanelToggleSection
-              tooltip={sidePanelTooltip}
-              shortcutKeys={["⌘", "Shift", chatShortcut]}
-              onClick={handleSidePanelClick}
-              showBadge={false}
-              showText={true}
-              isOpen={isSidePanelOpen}
-            />
-          </div>
-
-          {/* Chevron Collapse Button */}
-          <CollapseButton
-            isCollapsed={isCollapsed}
-            onClick={isCompactScreen ? undefined : handleCollapse}
-            disabled={isCompactScreen}
+          <SidePanelToggleSection
+            tooltip={sidePanelTooltip}
+            shortcutKeys={["⌘", "Shift", chatShortcut]}
+            onClick={handleSidePanelClick}
+            showBadge={true}
+            badgeCount={badgeCount}
+            showText={windowWidth >= 1280}
+            isOpen={isSidePanelOpen}
           />
         </div>
       </div>
