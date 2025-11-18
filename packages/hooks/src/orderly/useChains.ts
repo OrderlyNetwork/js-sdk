@@ -451,6 +451,7 @@ export function formatChains({
       name,
       public_rpc_url,
       currency_symbol,
+      currency_decimal,
       explorer_base_url,
       vault_address,
     } = chainInfo;
@@ -466,6 +467,7 @@ export function formatChains({
 
       public_rpc_url,
       currency_symbol,
+      currency_decimal,
       bridge_enable: true,
       explorer_base_url,
 

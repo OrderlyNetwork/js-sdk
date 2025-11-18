@@ -601,6 +601,7 @@ export const useDeposit = (options: DepositOptions) => {
     fetchBalances,
     /** set input quantity */
     setQuantity,
+    targetChain,
   };
 };
 
