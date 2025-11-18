@@ -243,7 +243,6 @@ export class HistoryProvider {
   private async _requestKlineHistory(
     requestParams: RequestParams,
   ): Promise<GetBarsResult> {
-    console.log("requestKlineHistory requestParams", requestParams);
     const klineResponse = await this._requester.sendRequest<HistoryResponse>(
       this._datafeedUrl,
       KLINE_HISTORY_PATH,
@@ -379,6 +378,10 @@ export class HistoryProvider {
 
         bars.push(barValue);
       }
+
+      // const firstBarTime = response.t[0] * 1000;
+
+      // meta.nextTime = firstBarTime;
     }
 
     return {
