@@ -799,7 +799,7 @@
   "transfer.LTV.tooltip": "LTV'niz {{threshold}}%'ı aşarsa veya USDC bakiyeniz artı kapatılmamış PnL {{usdcThreshold}}'ın altına düşerse, teminatınız indirimli olarak otomatik dönüştürülecektir. Bunu önlemek için varlıkları manuel olarak USDC'ye dönüştürebilirsiniz.",
   "transfer.LTV.currentLTV": "Mevcut LTV",
   "transfer.convert": "Dönüştür",
-  "transfer.deposit.userMaxQty.error": "Teminat limitine ulaşıldı. İzin verilen maksimum: {{maxQty}} {{token}}.",
+  "transfer.deposit.userMaxQty.error": "Yatırmanız işlenemedi çünkü {{chain}} üzerindeki {{token}} için global yatırma limitine ulaşıldı. Bu genellikle yeniden dengeleme sonrasında çözülür ve yaklaşık 1 saat sürer. Lütfen daha sonra tekrar deneyin veya daha küçük bir miktar veya farklı bir zincir kullanın. <0>Daha fazla bilgi edinin</0>",
   "transfer.deposit.gasFee.error": "Lütfen gas ücretleri için yeterli {{token}} olduğundan emin olun.",
   "transfer.deposit.status.pending.one": "Bekleyen bir işleminiz var",
   "transfer.deposit.status.pending.multiple": "Bekleyen işlemleriniz var",

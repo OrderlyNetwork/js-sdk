@@ -799,7 +799,7 @@
   "transfer.LTV.tooltip": "Nếu LTV của bạn vượt quá {{threshold}}% hoặc số dư USDC cộng với PnL chưa thanh toán giảm xuống dưới {{usdcThreshold}}, tài sản thế chấp sẽ được tự động chuyển đổi với mức giảm giá. Để tránh điều này, bạn có thể chuyển đổi tài sản sang USDC thủ công.",
   "transfer.LTV.currentLTV": "LTV hiện tại",
   "transfer.convert": "Chuyển đổi",
-  "transfer.deposit.userMaxQty.error": "Đã đạt giới hạn tài sản thế chấp. Số lượng tối đa cho phép: {{maxQty}} {{token}}.",
+  "transfer.deposit.userMaxQty.error": "Gửi tiền của bạn không thể được xử lý vì đã đạt đến giới hạn gửi tiền toàn cầu cho {{token}} trên {{chain}}. Điều này thường được giải quyết sau khi tái cân bằng, mất khoảng 1 giờ. Vui lòng thử lại sau, hoặc sử dụng số tiền nhỏ hơn hoặc một chuỗi khác. <0>Tìm hiểu thêm</0>",
   "transfer.deposit.gasFee.error": "Vui lòng đảm bảo bạn có đủ {{token}} cho phí gas.",
   "transfer.deposit.status.pending.one": "Bạn có một giao dịch đang chờ xử lý",
   "transfer.deposit.status.pending.multiple": "Bạn có nhiều giao dịch đang chờ xử lý",

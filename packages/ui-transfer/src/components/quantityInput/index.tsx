@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useRef, useState } from "react";
+import { FC, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
 import {
@@ -32,6 +32,8 @@ export type QuantityInputProps = {
   vaultBalanceList?: API.VaultBalance[];
   displayType?: "balance" | "vaultBalance";
   tokenBalances?: Record<string, string>;
+  tokenValueFormatter?: (value: string) => ReactNode;
+  tokenShowCaret?: boolean;
 } & Omit<InputProps, "onClear" | "suffix" | "onValueChange">;
 
 export const QuantityInput: FC<QuantityInputProps> = (props) => {
@@ -52,6 +54,8 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
     vaultBalanceList,
     displayType,
     tokenBalances,
+    tokenValueFormatter,
+    tokenShowCaret,
     ...rest
   } = props;
 
@@ -137,6 +141,8 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
         size={rest.size}
         onValueChange={_onTokenChange}
         showIcon
+        valueFormatter={tokenValueFormatter}
+        showCaret={tokenShowCaret}
         optionRenderer={optionRenderer}
         contentProps={{
           onCloseAutoFocus: (event) => {

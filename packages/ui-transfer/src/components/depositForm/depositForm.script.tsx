@@ -9,7 +9,7 @@ import {
   useQuery,
   useTokenInfo,
 } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation, Trans } from "@orderly.network/i18n";
 import { account as accountPerp } from "@orderly.network/perp";
 import { useAppContext } from "@orderly.network/react-app";
 import {
@@ -177,13 +177,27 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     }
 
     if (new Decimal(quantity).gt(sourceToken?.user_max_qty)) {
-      return t("transfer.deposit.userMaxQty.error", {
-        maxQty: sourceToken?.user_max_qty,
-        token: sourceToken?.symbol,
-      });
+      return (
+        <Trans
+          i18nKey="transfer.deposit.userMaxQty.error"
+          values={{
+            token: sourceToken?.symbol,
+            chain: currentChain?.info?.network_infos?.name || "",
+          }}
+          components={[
+            <a
+              key="0"
+              href="https://orderly.network/docs/introduction/trade-on-orderly/multi-collateral#max-deposits-global"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="oui-text-primary"
+            />,
+          ]}
+        />
+      );
     }
     return "";
-  }, [sourceToken, targetToken, quantity, t]);
+  }, [sourceToken, targetToken, quantity, currentChain, t]);
 
   const loading = submitting || depositFeeRevalidating!;
 
@@ -306,6 +320,12 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     feeWarningMessage ||
     insufficientGasMessage;
 
+  const hasUserMaxQtyError = !!userMaxQtyMessage;
+  const finalInputStatus = hasUserMaxQtyError ? "error" : inputStatus;
+  const finalHintMessage = hasUserMaxQtyError
+    ? t("transfer.insufficientBalance")
+    : hintMessage;
+
   const disabled =
     !quantity ||
     Number(quantity) === 0 ||
@@ -380,8 +400,8 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     maxQuantity,
     indexPrice,
     onQuantityChange: setQuantity,
-    hintMessage,
-    inputStatus,
+    hintMessage: finalHintMessage,
+    inputStatus: finalInputStatus,
     chains,
     currentChain,
     settingChain,

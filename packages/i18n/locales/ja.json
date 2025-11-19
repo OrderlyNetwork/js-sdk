@@ -799,7 +799,7 @@
   "transfer.LTV.tooltip": "LTVが{{threshold}}%を超えるか、USDC残高と未決済PnLの合計が{{usdcThreshold}}を下回ると、担保はヘアカット付きで自動変換されます。これを回避するには、手動で資産をUSDCに変換できます。",
   "transfer.LTV.currentLTV": "現在のLTV",
   "transfer.convert": "変換",
-  "transfer.deposit.userMaxQty.error": "担保上限に達しました。最大許容量：{{maxQty}} {{token}}。",
+  "transfer.deposit.userMaxQty.error": "{{chain}} 上の {{token}} のグローバル預金上限に達したため、預金を処理できませんでした。これは通常、再バランス後に解決され、約1時間かかります。後でもう一度お試しいただくか、より少ない金額または別のチェーンを使用してください。<0>詳細を見る</0>",
   "transfer.deposit.gasFee.error": "ガス代のために十分な {{token}} があることを確認してください。",
   "transfer.deposit.status.pending.one": "保留中の取引があります",
   "transfer.deposit.status.pending.multiple": "保留中の取引が複数あります",

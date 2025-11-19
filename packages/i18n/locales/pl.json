@@ -799,7 +799,7 @@
   "transfer.LTV.tooltip": "Jeśli Twój LTV przekroczy {{threshold}}% lub Twoje saldo USDC plus nierozliczony PnL spadnie poniżej {{usdcThreshold}}, Twoje zabezpieczenie zostanie automatycznie zamienione z dyskontem. Aby tego uniknąć, możesz ręcznie zamienić aktywa na USDC.",
   "transfer.LTV.currentLTV": "Bieżący LTV",
   "transfer.convert": "Konwertuj",
-  "transfer.deposit.userMaxQty.error": "Osiągnięto limit zabezpieczenia. Maksymalna dozwolona ilość: {{maxQty}} {{token}}.",
+  "transfer.deposit.userMaxQty.error": "Twoja wpłata nie mogła zostać przetworzona, ponieważ osiągnięto globalny limit wpłat dla {{token}} na {{chain}}. Zazwyczaj jest to rozwiązywane po ponownym zrównoważeniu, co zajmuje około 1 godziny. Spróbuj ponownie później lub użyj mniejszej kwoty lub innego łańcucha. <0>Dowiedz się więcej</0>",
   "transfer.deposit.gasFee.error": "Upewnij się, że masz wystarczającą ilość {{token}} na opłaty za gas.",
   "transfer.deposit.status.pending.one": "Masz oczekującą transakcję",
   "transfer.deposit.status.pending.multiple": "Masz oczekujące transakcje",

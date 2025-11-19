@@ -799,7 +799,7 @@
   "transfer.LTV.tooltip": "Wenn Ihr LTV {{threshold}}% überschreitet oder Ihr USDC-Saldo plus unabgewickelter PnL unter {{usdcThreshold}} fällt, werden Ihre Sicherheiten automatisch mit einem Abschlag umgewandelt. Um dies zu vermeiden, können Sie Vermögenswerte manuell in USDC umwandeln.",
   "transfer.LTV.currentLTV": "Aktueller LTV",
   "transfer.convert": "Umwandeln",
-  "transfer.deposit.userMaxQty.error": "Sicherheitenlimit erreicht. Maximal erlaubt: {{maxQty}} {{token}}.",
+  "transfer.deposit.userMaxQty.error": "Ihre Einzahlung konnte nicht verarbeitet werden, da das globale Einzahlungslimit für {{token}} auf {{chain}} erreicht wurde. Dies wird normalerweise nach dem Rebalancing behoben, was etwa 1 Stunde dauert. Bitte versuchen Sie es später erneut oder verwenden Sie einen kleineren Betrag oder eine andere Chain. <0>Mehr erfahren</0>",
   "transfer.deposit.gasFee.error": "Bitte stellen Sie sicher, dass Sie genügend {{token}} für die Gas-Gebühren haben.",
   "transfer.deposit.status.pending.one": "Sie haben eine ausstehende Transaktion",
   "transfer.deposit.status.pending.multiple": "Sie haben ausstehende Transaktionen",

@@ -145,7 +145,7 @@ export const transfer = {
   "transfer.convert": "Convert",
   // "transfer.convert.note": "Please note that convert fees will be charged.",
   "transfer.deposit.userMaxQty.error":
-    "Collateral cap reached. Maximum allowed: {{maxQty}} {{token}}.",
+    "Your deposit couldn't be processed because the global deposit cap for {{token}} on {{chain}} has been reached. This is typically resolved after rebalancing, which takes around 1 hour. Please try again later, or use a smaller amount or a different chain. <0>Learn more</0>",
   "transfer.deposit.gasFee.error":
     "Please ensure you have enough {{token}} for gas fees.",
 
