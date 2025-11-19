@@ -285,10 +285,11 @@ export const TelegramBinding: React.FC<TelegramBindingProps> = ({
           <Box className="oui-space-y-5">
             <Box className="oui-text-center oui-flex oui-flex-col oui-gap-y-2">
               <Text className="oui-text-base-contrast-98 oui-text-xl oui-tracking-wide">
-                Telegram Not Connected
+                Link your Telegram
               </Text>
               <Text size="sm" className="oui-text-base-contrast-54">
-                Connect Telegram to receive trading notifications
+                Receive personalized trading notifications, agent alerts, and
+                more
               </Text>
             </Box>
             <Flex
@@ -328,7 +329,7 @@ export const TelegramBinding: React.FC<TelegramBindingProps> = ({
                         size="sm"
                         className="oui-text-base-contrast-80 oui-font-semibold"
                       >
-                        Connect telegram account
+                        Connect Telegram
                       </Text>
                     </>
                   )}

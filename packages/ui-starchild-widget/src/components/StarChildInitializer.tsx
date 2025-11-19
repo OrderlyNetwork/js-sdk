@@ -22,11 +22,9 @@ export const StarChildInitializer: React.FC = () => {
     setChatVisible,
     setSearchVisible,
     showMyAgent,
-    getVoiceShortcut,
-    getChatShortcut,
-    getUnreadCount,
     setLocale: setStarChildLocale,
     triggerVoiceRecording,
+    setIsSubAccount,
   } = useStarChildWidget();
   const localeCode = useLocaleCode();
   const locale = React.useMemo(
@@ -104,6 +102,9 @@ export const StarChildInitializer: React.FC = () => {
         accountId,
         orderlyKey,
         secretKey,
+        onReady: () => {
+          setIsSubAccount(!isMainAccount);
+        },
         onChatShow: () => {
           console.log("[starchild] chat shown");
           try {
@@ -349,6 +350,7 @@ export const StarChildInitializer: React.FC = () => {
           );
           showChat();
         }
+        setIsSubAccount(!isMainAccount);
       } catch (e) {
         console.error(
           "[StarChildInitializer] Error handling requestShowChat:",
@@ -507,9 +509,8 @@ export const StarChildInitializer: React.FC = () => {
   // When container presence changes, move/show chat accordingly
   React.useEffect(() => {
     if (!isInitialized) return;
-    console.log("hasSideChatContainer", hasSideChatContainer);
     try {
-      if (hasSideChatContainer && window.innerWidth > 1440) {
+      if (window.innerWidth > 1440) {
         showChat("sideChatContainer");
       } else {
         showChat();

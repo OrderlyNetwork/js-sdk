@@ -111,7 +111,7 @@ export const StarchildControlPanel: React.FC<StarchildControlPanelProps> = ({
   className,
 }) => {
   const ee = useEventEmitter();
-  const { namespace } = useWalletConnector();
+  const { namespace, wallet, connectedChain } = useWalletConnector();
   const { getChatShortcut, getUnreadCount, setChatVisible, setSearchVisible } =
     useStarChildWidget();
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
@@ -150,37 +150,66 @@ export const StarchildControlPanel: React.FC<StarchildControlPanelProps> = ({
   React.useEffect(() => {
     const checkBindingStatus = () => {
       try {
-        const keys = Object.keys(localStorage);
-        const accountInfoKey = keys.find((key) =>
-          key.startsWith("oui.telegramBinding.accountInfo."),
-        );
-        if (accountInfoKey) {
-          const data = localStorage.getItem(accountInfoKey);
-          if (data) {
-            const json = JSON.parse(data);
-            const isSolana = namespace === ChainNamespace.solana;
-            const verified = isSolana
-              ? !!json?.data?.hasVerifiedSolanaOrderly ||
-                !!json?.data?.hasVerifiedOrderly
-              : !!json?.data?.hasVerifiedOrderly;
-            setIsVerified(verified);
-            return verified;
-          }
+        const walletAddress = wallet?.accounts?.[0]?.address;
+        if (!walletAddress) {
+          setIsVerified(false);
+          return false;
+        }
+
+        const accountInfoKey = `oui.telegramBinding.accountInfo.${walletAddress}`;
+        const data = localStorage.getItem(accountInfoKey);
+        if (data) {
+          const json = JSON.parse(data);
+          const isSolana = namespace === ChainNamespace.solana;
+          const verified = isSolana
+            ? !!json?.data?.hasVerifiedSolanaOrderly
+            : !!json?.data?.hasVerifiedOrderly;
+          setIsVerified(verified);
+          return verified;
         }
       } catch (e) {
         console.error("Error checking verification status:", e);
       }
+      setIsVerified(false);
       return false;
     };
     checkBindingStatus();
 
     const handleAccountInfoReady = () => {
-      setIsVerified(true);
+      // Only set verified if the account info is for the current wallet address
+      const walletAddress = wallet?.accounts?.[0]?.address;
+      if (walletAddress) {
+        const accountInfoKey = `oui.telegramBinding.accountInfo.${walletAddress}`;
+        const data = localStorage.getItem(accountInfoKey);
+        if (data) {
+          try {
+            const json = JSON.parse(data);
+            const isSolana = namespace === ChainNamespace.solana;
+            const verified = isSolana
+              ? !!json?.data?.hasVerifiedSolanaOrderly
+              : !!json?.data?.hasVerifiedOrderly;
+            if (verified) {
+              setIsVerified(true);
+            }
+          } catch (e) {
+            // ignore
+          }
+        }
+      }
+    };
+
+    const handleWidgetDestroyed = () => {
+      // Re-check verification status when widget is destroyed (e.g., wallet switch)
+      checkBindingStatus();
     };
 
     window.addEventListener(
       "starchild:accountInfoReady",
       handleAccountInfoReady as EventListener,
+    );
+    window.addEventListener(
+      "starchild:destroyed",
+      handleWidgetDestroyed as EventListener,
     );
 
     return () => {
@@ -188,8 +217,12 @@ export const StarchildControlPanel: React.FC<StarchildControlPanelProps> = ({
         "starchild:accountInfoReady",
         handleAccountInfoReady as EventListener,
       );
+      window.removeEventListener(
+        "starchild:destroyed",
+        handleWidgetDestroyed as EventListener,
+      );
     };
-  }, [namespace]);
+  }, [namespace, wallet?.accounts?.[0]?.address, connectedChain]);
 
   // Listen for widget configuration changes via EventEmitter
   React.useEffect(() => {
