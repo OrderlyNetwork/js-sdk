@@ -225,11 +225,14 @@ const useOrderEntry = (
     getCreateOrderUrl(formattedOrder),
   );
 
-  const maxQty = useMaxQty(
+  const maxQtyValue = useMaxQty(
     symbol,
     formattedOrder.side,
     formattedOrder.reduce_only,
   );
+
+  // @ts-ignore
+  const maxQty = options.maxQty ?? maxQtyValue;
 
   const updateOrderPrice = () => {
     const order_type = formattedOrder.order_type;
@@ -541,12 +544,6 @@ const useOrderEntry = (
   const estLiqPrice = useMemo(() => {
     const markPrice = actions.getMarkPriceBySymbol(symbol);
     if (!markPrice || !accountInfo || !symbolInfo) {
-      return null;
-    }
-
-    const orderQuantity = Number(formattedOrder.order_quantity);
-
-    if (orderQuantity === 0 || orderQuantity > maxQty) {
       return null;
     }
 

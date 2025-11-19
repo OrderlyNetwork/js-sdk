@@ -73,6 +73,11 @@ export const TPSLInputRowUI: FC<TPSLInputRowProps> = (props) => {
                 props.onChange(`${props.type}_trigger_price`, value);
               }}
               quote_dp={props.quote_dp}
+              classNames={{
+                root: props.inputWarnNode
+                  ? "oui-outline-warning-darken focus-within:oui-outline-warning-darken"
+                  : undefined,
+              }}
             />
             <PnlInputWidget
               type={props.type === "tp" ? "TP" : "SL"}
