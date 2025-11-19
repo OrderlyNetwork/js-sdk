@@ -21,6 +21,7 @@ import {
   SettingFillIcon,
   Box,
   useScreen,
+  DotStatus,
 } from "@orderly.network/ui";
 import { Grid } from "@orderly.network/ui";
 import { ExclamationFillIcon } from "@orderly.network/ui";
@@ -183,12 +184,11 @@ const TPSLPriceWarning = (props: { errors: OrderValidationResult | null }) => {
   const { getErrorMsg } = useOrderEntryFormErrorMsg(props.errors);
 
   return (
-    <Flex itemAlign={"center"} justify={"center"} gapX={1}>
-      <ExclamationFillIcon color="warning" size={14} />
-      <Text size="2xs" className="oui-text-warning-darken">
-        {getErrorMsg("sl_trigger_price")}
-      </Text>
-    </Flex>
+    <DotStatus
+      color="warning"
+      size="xs"
+      label={getErrorMsg("sl_trigger_price")}
+    />
   );
 };
 

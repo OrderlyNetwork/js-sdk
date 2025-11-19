@@ -6,3 +6,4 @@ export * from "./tpslDetail";
 export * from "./tpslSimpleDialog";
 export * from "./editBracketOrder";
 export * from "./positionTPSL";
+export { CloseToLiqPriceIcon } from "./components/closeLiqPriceIcon";

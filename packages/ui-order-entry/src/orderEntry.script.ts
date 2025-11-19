@@ -359,7 +359,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
 
   return {
     ...state,
-    slPriceError: slPriceError ? { sl_trigger_price: slPriceError } : undefined,
+    slPriceError: slPriceError ?? undefined,
     side: formattedOrder.side as OrderSide,
     type: formattedOrder.order_type as OrderType,
     level: formattedOrder.level as OrderLevel,

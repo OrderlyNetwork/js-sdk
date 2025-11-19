@@ -85,6 +85,7 @@ export const TPSLInputRowUI: FC<TPSLInputRowProps> = (props) => {
             />
           </Grid>
         </Flex>
+        {props.inputWarnNode}
         <Flex
           direction={"column"}
           className={cn(

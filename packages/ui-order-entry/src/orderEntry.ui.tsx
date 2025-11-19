@@ -110,6 +110,10 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
 
   const soundAlertId = useId();
 
+  const isSlPriceWarning =
+    props.slPriceError?.sl_trigger_price?.type ===
+    ERROR_MSG_CODES.SL_PRICE_WARNING;
+
   const { getErrorMsg } = useOrderEntryFormErrorMsg(validated ? errors : null);
 
   const buttonLabel = useMemo(() => {
@@ -479,7 +483,11 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
             switchState={props.tpslSwitch}
             onSwitchChanged={props.setTpslSwitch}
             orderType={formattedOrder.order_type!}
-            errors={validated ? { ...errors, ...props.slPriceError } : null}
+            errors={
+              validated || isSlPriceWarning
+                ? { ...errors, ...props.slPriceError }
+                : null
+            }
             isReduceOnly={formattedOrder.reduce_only}
             setOrderValue={setOrderValue}
             reduceOnlyChecked={formattedOrder.reduce_only ?? false}
