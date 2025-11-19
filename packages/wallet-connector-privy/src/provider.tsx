@@ -196,6 +196,11 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
   const fetchMainChains = useMainnetChainsStore((state) => state.fetchData);
   const fetchTestChains = useTestnetChainsStore((state) => state.fetchData);
 
+  const mainnetChainsHydrated = useMainnetChainsStore(
+    (state) => state.hydrated,
+  );
+  const testChainsHydrated = useTestnetChainsStore((state) => state.hydrated);
+
   const mainnetChainInfosFromStore = useMainnetChainsStore(
     (state) => state.data,
   );
@@ -279,13 +284,22 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
   }, [props.enableSwapDeposit, props.customChains]);
 
   useEffect(() => {
+    if (!mainnetChainsHydrated || !testChainsHydrated) return;
+
+    if (
+      Array.isArray(useMainnetChainsStore.getState().data) &&
+      useTestnetChainsStore.getState().data
+    ) {
+      return;
+    }
+
     fetchMainChains().then((data) => {
       setMainnetChainInfos(data);
     });
     fetchTestChains().then((data) => {
       setTestChainInfos(data);
     });
-  }, []);
+  }, [mainnetChainsHydrated, testChainsHydrated]);
 
   const handleCustomerChains = () => {
     const testChains = processChainInfo(
@@ -396,7 +410,7 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     }
 
     // Always wait for swap loading to complete when swap is enabled
-    if (!swapChainInfoRes) {
+    if (props.enableSwapDeposit && !swapChainInfoRes) {
       return;
     }
 
@@ -444,6 +458,7 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     mainnetChainInfosFromStore,
     testChainInfosFromStore,
     swapChainInfoRes,
+    props.enableSwapDeposit,
     // swapLoading,
   ]);
 

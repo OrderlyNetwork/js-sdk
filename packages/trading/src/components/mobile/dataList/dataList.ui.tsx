@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from "react";
+import React, { useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { AssetsModule } from "@orderly.network/portfolio";
 import { OrderStatus } from "@orderly.network/types";
@@ -19,6 +19,7 @@ import {
   MobilePositionHistoryWidget,
   MobilePositionsWidget,
 } from "@orderly.network/ui-positions";
+import { formatSymbol } from "@orderly.network/utils";
 import {
   type DataListState,
   DataListTabSubType,
@@ -34,7 +35,22 @@ const LazyPositionHeaderWidget = React.lazy(() =>
 const SymbolControlHeader: React.FC<
   DataListState & { type: TabType; ordersStatus?: OrderStatus }
 > = (props) => {
+  const { pendingOrderCount, tpSlOrderCount, type, symbol } = props;
   const { t } = useTranslation();
+  const cancelAllDisabled = useMemo(() => {
+    if (type === TabType.pending) {
+      return pendingOrderCount === 0;
+    }
+    if (type === TabType.tp_sl) {
+      return tpSlOrderCount === 0;
+    }
+    return false;
+  }, [pendingOrderCount, tpSlOrderCount, type]);
+  const formattedSymbol = props.showAllSymbol
+    ? undefined
+    : symbol
+      ? formatSymbol(symbol, "base")
+      : symbol;
   return (
     <Flex
       px={2}
@@ -67,8 +83,11 @@ const SymbolControlHeader: React.FC<
         size="xs"
         color="secondary"
         onClick={() => props.onCloseAll(props.type)}
+        disabled={cancelAllDisabled}
       >
-        {t("trading.orders.closeAll")}
+        {!props.showAllSymbol
+          ? t("orders.cancelAll.ofSymbol", { symbol: formattedSymbol })
+          : t("orders.cancelAll")}
       </Button>
     </Flex>
   );

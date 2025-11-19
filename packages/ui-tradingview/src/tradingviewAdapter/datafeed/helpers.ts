@@ -25,7 +25,7 @@ export function logMessage(message: string): void {
     const now = new Date();
     // tslint:disable-next-line:no-console
     console.log(
-      `${now.toLocaleTimeString()}.${now.getMilliseconds()}> ${message}`
+      `${now.toLocaleTimeString()}.${now.getMilliseconds()}> ${message}`,
     );
   }
 }

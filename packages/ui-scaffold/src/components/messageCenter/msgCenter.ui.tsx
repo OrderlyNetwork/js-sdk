@@ -27,8 +27,10 @@ export const MessageCenter: FC<{
   maintenanceDialogInfo?: string;
   messages: API.AnnouncementRow[];
   showAnnouncement: boolean;
+  closeTips: () => void;
 }> = (props) => {
-  const { maintenanceDialogInfo, messages, showAnnouncement } = props;
+  const { maintenanceDialogInfo, messages, showAnnouncement, closeTips } =
+    props;
   const { routerAdapter } = useScaffoldContext();
   const { t } = useTranslation();
   const messageSize = useMemo(() => messages.length, [messages]);
@@ -68,7 +70,12 @@ export const MessageCenter: FC<{
         <TooltipRoot open={popoverOpen ? false : undefined}>
           <Popover
             open={popoverOpen}
-            onOpenChange={setPopoverOpen}
+            onOpenChange={(open) => {
+              setPopoverOpen(open);
+              if (open) {
+                closeTips();
+              }
+            }}
             arrow
             content={
               <AnnouncementCenterUI

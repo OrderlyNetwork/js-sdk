@@ -4,6 +4,7 @@ import { useTranslation } from "@orderly.network/i18n";
 import { modal, Text } from "@orderly.network/ui";
 import { TabType } from "@orderly.network/ui-orders";
 import { SharePnLConfig } from "@orderly.network/ui-share";
+import { formatSymbol } from "@orderly.network/utils";
 import {
   usePendingOrderCount,
   usePositionsCount,
@@ -40,23 +41,18 @@ export const useDataListScript = (props: {
   const { onSymbolChange } = useTradingPageContext();
   const localStorage = useTradingLocalStorage();
 
-  const [_, { cancelAllOrders, cancelAllTPSLOrders }] = useOrderStream({});
+  const [_, { cancelAllPendingOrders, cancelAllTPSLOrders }] = useOrderStream(
+    {},
+  );
   const { positionCount } = usePositionsCount(symbol);
   const { pendingOrderCount, tpSlOrderCount } = usePendingOrderCount(symbol);
 
   const onCloseAll = (type: TabType) => {
-    const title =
-      type === TabType.pending
-        ? t("orders.pending.cancelAll")
-        : type === TabType.tp_sl
-          ? t("orders.tpsl.cancelAll")
-          : "";
-    const content =
-      type === TabType.pending
-        ? t("orders.pending.cancelAll.description")
-        : type === TabType.tp_sl
-          ? t("orders.tpsl.cancelAll.description")
-          : "";
+    const { title, content } = getDialogInfo(
+      type,
+      t,
+      localStorage.showAllSymbol ? undefined : symbol,
+    );
     modal.confirm({
       title: title,
       content: <Text size="2xs">{content}</Text>,
@@ -65,9 +61,13 @@ export const useDataListScript = (props: {
         try {
           // await cancelAll(null, { source_type: "ALL" });
           if (tab === DataListTabType.tp_sl) {
-            await cancelAllTPSLOrders();
+            await cancelAllTPSLOrders(
+              localStorage.showAllSymbol ? undefined : symbol,
+            );
           } else {
-            await cancelAllOrders();
+            await cancelAllPendingOrders(
+              localStorage.showAllSymbol ? undefined : symbol,
+            );
           }
           return Promise.resolve(true);
         } catch (error) {
@@ -101,3 +101,47 @@ export const useDataListScript = (props: {
 };
 
 export type DataListState = ReturnType<typeof useDataListScript>;
+
+type TranslationFn = (...args: any[]) => string;
+
+const getDialogInfo = (type: TabType, t: TranslationFn, symbol?: string) => {
+  // symbol like this: PERP_BTC_USDC, but i want to show BTC, pls help me to format the symbol
+  const formattedSymbol = symbol ? formatSymbol(symbol, "base") : symbol;
+  switch (type) {
+    case TabType.pending:
+      if (symbol !== undefined) {
+        return {
+          title: t("orders.pending.cancelAll.forSymbol", {
+            symbol: formattedSymbol,
+          }),
+          content: t("orders.pending.cancelAll.forSymbol.description", {
+            symbol: formattedSymbol,
+          }),
+        };
+      }
+      return {
+        title: t("orders.pending.cancelAll"),
+        content: t("orders.pending.cancelAll.description"),
+      };
+    case TabType.tp_sl:
+      if (symbol !== undefined) {
+        return {
+          title: t("orders.tpsl.cancelAll.forSymbol", {
+            symbol: formattedSymbol,
+          }),
+          content: t("orders.tpsl.cancelAll.forSymbol.description", {
+            symbol: formattedSymbol,
+          }),
+        };
+      }
+      return {
+        title: t("orders.tpsl.cancelAll"),
+        content: t("orders.tpsl.cancelAll.description"),
+      };
+    default:
+      return {
+        title: "",
+        content: "",
+      };
+  }
+};

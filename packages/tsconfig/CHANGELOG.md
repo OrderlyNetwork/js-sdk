@@ -1,5 +1,18 @@
 # tsconfig
 
+## 0.11.3
+
+### Patch Changes
+
+- publish
+- 2d3313c: publish
+
+## 0.11.3-alpha.0
+
+### Patch Changes
+
+- publish
+
 ## 0.11.2
 
 ### Patch Changes

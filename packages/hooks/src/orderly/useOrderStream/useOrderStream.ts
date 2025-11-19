@@ -260,7 +260,10 @@ export const useOrderStream = (
   //   sourceTypeAll,
   // });
 
-  const cancelAlgoOrdersByTypes = (types: AlgoOrderRootType[]) => {
+  const cancelAlgoOrdersByTypes = (
+    types: AlgoOrderRootType[],
+    symbol?: string,
+  ) => {
     if (!types) {
       throw new SDKError("Types is required");
     }
@@ -273,7 +276,10 @@ export const useOrderStream = (
 
     return Promise.all(
       types.map((type) => {
-        return doCancelAllAlgoOrders(null, { algo_type: type });
+        return doCancelAllAlgoOrders(null, {
+          algo_type: type,
+          ...(symbol && { symbol }),
+        });
       }),
     );
   };
@@ -291,6 +297,10 @@ export const useOrderStream = (
     ]);
   }, [normalOrdersResponse.data, algoOrdersResponse.data]);
 
+  const cancelAllPendingOrders = useCallback((symbol?: string) => {
+    doCancelAllOrders(null, { ...(symbol && { symbol }) });
+  }, []);
+
   const cancelPostionOrdersByTypes = useCallback(
     (symbol: string, types: AlgoOrderRootType[]) => {
       return doCancelAllAlgoOrders(null, {
@@ -301,12 +311,15 @@ export const useOrderStream = (
     [algoOrdersResponse.data],
   );
 
-  const cancelAllTPSLOrders = useCallback(() => {
-    return cancelAlgoOrdersByTypes([
-      AlgoOrderRootType.POSITIONAL_TP_SL,
-      AlgoOrderRootType.TP_SL,
-    ]);
-  }, [algoOrdersResponse.data]);
+  const cancelAllTPSLOrders = useCallback(
+    (symbol?: string) => {
+      return cancelAlgoOrdersByTypes(
+        [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL],
+        symbol,
+      );
+    },
+    [algoOrdersResponse.data],
+  );
 
   const _updateOrder = useCallback(
     (orderId: string, order: OrderEntity, type: CreateOrderType) => {
@@ -457,6 +470,7 @@ export const useOrderStream = (
       refresh,
       loadMore,
       cancelAllOrders,
+      cancelAllPendingOrders,
       cancelAllTPSLOrders,
       cancelAlgoOrdersByTypes,
       updateOrder,

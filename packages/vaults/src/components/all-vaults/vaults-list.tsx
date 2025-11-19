@@ -6,6 +6,8 @@ import {
   Button,
   ArrowRightUpSquareFillIcon,
   useScreen,
+  Tooltip,
+  InfoCircleIcon,
 } from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
 import { VaultInfo } from "../../types/vault";
@@ -22,6 +24,14 @@ export const VaultsList: FC<VaultsListProps> = ({ vaults }) => {
   const { t } = useTranslation();
   const [sortField, setSortField] = useState<SortField>("apy");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
+
+  const shouldShowApyTooltip = useMemo(() => {
+    return vaults.some(
+      (vault) =>
+        vault.status === "pre_launch" ||
+        (vault.vault_age !== null && vault.vault_age < 30),
+    );
+  }, [vaults]);
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -97,13 +107,29 @@ export const VaultsList: FC<VaultsListProps> = ({ vaults }) => {
           TVL
           <SortIcon field="tvl" />
         </button>
-        <button
-          onClick={() => handleSort("apy")}
-          className="oui-flex oui-items-center oui-text-2xs oui-font-normal oui-text-base-contrast-54 hover:oui-text-base-contrast"
-        >
-          {t("vaults.card.apy")}
-          <SortIcon field="apy" />
-        </button>
+        <div className="oui-flex oui-items-center oui-gap-1">
+          <button
+            onClick={() => handleSort("apy")}
+            className="oui-flex oui-items-center oui-text-2xs oui-font-normal oui-text-base-contrast-54 hover:oui-text-base-contrast"
+          >
+            {t("vaults.card.apy")}
+            <SortIcon field="apy" />
+          </button>
+          {shouldShowApyTooltip && (
+            <Tooltip
+              content="APY is not calculated for vaults that are less than 30 days old."
+              delayDuration={100}
+            >
+              <div>
+                <InfoCircleIcon
+                  size={12}
+                  opacity={0.54}
+                  className="oui-text-base-contrast"
+                />
+              </div>
+            </Tooltip>
+          )}
+        </div>
         <button
           onClick={() => handleSort("deposits")}
           className="oui-flex oui-items-center oui-text-2xs oui-font-normal oui-text-base-contrast-54 hover:oui-text-base-contrast"
@@ -156,6 +182,40 @@ const VaultListRow: FC<{ vault: VaultInfo }> = ({ vault }) => {
   const isPreLaunch = vaultInfo.status === "pre_launch";
   const { isMobile } = useScreen();
 
+  // Get status tag config (same as card mode)
+  const getStatusTag = () => {
+    const { status } = vaultInfo;
+
+    if (status === "live") {
+      return {
+        text: t("vaults.card.status.active"),
+        color: "#00C076",
+        bgColor: "rgba(0, 192, 118, 0.15)",
+      };
+    } else if (status === "pre_launch") {
+      return {
+        text: t("vaults.card.launchingSoon"),
+        color: "#E88800",
+        bgColor: "rgba(232, 136, 0, 0.15)",
+      };
+    } else if (status === "closing") {
+      return {
+        text: t("vaults.card.status.closing"),
+        color: "#FF6B6B",
+        bgColor: "rgba(255, 107, 107, 0.15)",
+      };
+    } else if (status === "closed") {
+      return {
+        text: t("vaults.card.status.closed"),
+        color: "#999999",
+        bgColor: "rgba(153, 153, 153, 0.15)",
+      };
+    }
+    return null;
+  };
+
+  const statusTag = getStatusTag();
+
   const supportVaultsList = useMemo(() => {
     const chains = Array.isArray(vaultInfo?.supported_chains)
       ? vaultInfo.supported_chains
@@ -187,8 +247,8 @@ const VaultListRow: FC<{ vault: VaultInfo }> = ({ vault }) => {
   }, [vaultInfo.supported_chains, isMobile]);
 
   return (
-    <div className="oui-relative oui-grid oui-grid-cols-[2fr_1fr_1fr_1fr_1fr_1fr_1.5fr] oui-gap-4 oui-rounded-lg oui-border oui-border-solid oui-border-white/[0.12] oui-bg-base-9 oui-px-4 oui-py-4 oui-items-center oui-overflow-hidden">
-      {/* Background image */}
+    <div className="oui-relative oui-grid oui-grid-cols-[2fr_1fr_1fr_1fr_1fr_1fr_1.5fr] oui-gap-4 oui-rounded-2xl oui-bg-base-9 oui-px-4 oui-py-4 oui-items-center oui-overflow-hidden">
+      {/* Background image
       <img
         src="/vaults/vaults-list-bg.png"
         alt=""
@@ -206,53 +266,55 @@ const VaultListRow: FC<{ vault: VaultInfo }> = ({ vault }) => {
           e.currentTarget.style.display = "none";
         }}
       />
+      */}
       {/* Pool Name */}
       <div className="oui-relative oui-z-10 oui-flex oui-items-center oui-gap-2">
-        <img
+        {/* <img
           src={icon}
           alt={vaultInfo.broker_id}
           className="oui-size-10 oui-rounded-full"
           onError={(e) => {
             e.currentTarget.style.display = "none";
           }}
-        />
+        /> */}
         <div className="oui-flex oui-flex-col oui-gap-1">
           <div className="oui-text-sm oui-font-semibold oui-text-base-contrast">
             {title}
           </div>
           <div className="oui-flex oui-flex-wrap oui-items-center oui-gap-2">
-            <div className="oui-flex oui-items-center oui-gap-2 oui-flex-shrink-0">
+            {/* <div className="oui-flex oui-items-center oui-gap-2 oui-flex-shrink-0">
               {supportVaultsList}
-            </div>
-            <div className="oui-flex oui-items-center oui-gap-2 oui-flex-shrink-0">
-              <button
-                onClick={openVaultWebsite}
-                className="oui-flex oui-items-center oui-justify-center oui-flex-shrink-0"
+            </div> */}
+            {statusTag && (
+              <div
+                className="oui-flex oui-items-center oui-gap-[10px] oui-px-2 oui-whitespace-nowrap oui-flex-shrink-0"
+                style={{
+                  height: "18px",
+                  borderRadius: "4px",
+                  background: statusTag.bgColor,
+                  color: statusTag.color,
+                  fontSize: "12px",
+                  fontWeight: 600,
+                  lineHeight: "18px",
+                  letterSpacing: "0.36px",
+                }}
               >
-                <ArrowRightUpSquareFillIcon
-                  className="oui-text-base-contrast-54"
-                  width={14}
-                  height={14}
-                  viewBox="0 0 18 18"
-                />
-              </button>
-              {isPreLaunch && (
-                <div
-                  className="oui-flex oui-items-center oui-gap-[10px] oui-px-2 oui-text-[#E88800] oui-whitespace-nowrap oui-flex-shrink-0"
-                  style={{
-                    height: "18px",
-                    borderRadius: "4px",
-                    background: "rgba(232, 136, 0, 0.15)",
-                    fontSize: "12px",
-                    fontWeight: 600,
-                    lineHeight: "18px",
-                    letterSpacing: "0.36px",
-                  }}
-                >
-                  {t("vaults.card.launchingSoon")}
-                </div>
-              )}
-            </div>
+                {statusTag.text}
+              </div>
+            )}
+            <button
+              onClick={openVaultWebsite}
+              className="oui-flex oui-items-center oui-gap-1 oui-text-xs oui-font-medium"
+              style={{ color: "#608CFF" }}
+            >
+              <span>{t("vaults.card.viewMore")}</span>
+              <ArrowRightUpSquareFillIcon
+                style={{ color: "#608CFF" }}
+                width={16}
+                height={16}
+                viewBox="0 0 18 18"
+              />
+            </button>
           </div>
         </div>
       </div>
@@ -271,9 +333,12 @@ const VaultListRow: FC<{ vault: VaultInfo }> = ({ vault }) => {
       {/* APY */}
       <div className="oui-relative oui-z-10">
         <Text.gradient className="oui-text-sm oui-font-semibold" color="brand">
-          {vaultInfo["30d_apy"] > 100
-            ? ">10000%"
-            : `${(vaultInfo["30d_apy"] * 100).toFixed(2)}%`}
+          {vaultInfo.status === "pre_launch" ||
+          (vaultInfo.vault_age !== null && vaultInfo.vault_age < 30)
+            ? "--"
+            : vaultInfo["30d_apy"] > 100
+              ? ">10000%"
+              : `${(vaultInfo["30d_apy"] * 100).toFixed(2)}%`}
         </Text.gradient>
       </div>
 

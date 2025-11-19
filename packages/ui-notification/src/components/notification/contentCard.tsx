@@ -1,6 +1,6 @@
 import { FC, useMemo } from "react";
 import { UTCDate } from "@date-fns/utc";
-import { format, differenceInHours } from "date-fns";
+import { format, differenceInHours, differenceInMinutes } from "date-fns";
 import { useTranslation } from "@orderly.network/i18n";
 import { Flex, Text } from "@orderly.network/ui";
 import { ArrowRightShortIcon } from "../announcementCenter/icons";
@@ -56,6 +56,8 @@ export const MaintenanceContentCard: FC<{
     // Calculate duration in hours
     const hours = differenceInHours(endTime, startTime);
 
+    const minutes = differenceInMinutes(endTime, startTime) - hours * 60;
+
     // Convert timestamps to UTC dates
     const startUtc = new UTCDate(startTime);
     const endUtc = new UTCDate(endTime);
@@ -66,8 +68,16 @@ export const MaintenanceContentCard: FC<{
     // Format end time as hh:mm a (12-hour format with AM/PM) in UTC
     const endTimeFormatted = format(endUtc, "hh:mm a");
 
-    return t("notification.maintenanceDuration", {
-      hours,
+    if (hours > 0) {
+      return t("notification.maintenanceDuration.hours", {
+        hours: minutes > 0 ? (hours + minutes / 60).toFixed(1) : hours,
+        startTimeFormatted,
+        endTimeFormatted,
+      });
+    }
+
+    return t("notification.maintenanceDuration.minutes", {
+      minutes,
       startTimeFormatted,
       endTimeFormatted,
     });

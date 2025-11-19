@@ -188,32 +188,31 @@ const useAnnouncementData = () => {
     }
     setMaintenanceDialogInfo(undefined);
 
-    if (startTime) {
-      if (startTime < getTimestamp() + oneDay) {
-        setTips((prev) =>
-          produce<API.Announcement>(prev, (draft) => {
-            // Make sure draft.rows is an array
-            if (!Array.isArray(draft.rows)) {
-              draft.rows = [];
-            }
-            // Rebuild rows: insert the latest maintenance tip first, then put the old non-maintenance ones at the end
-            draft.rows = [
-              {
-                announcement_id: maintentanceId,
-                type: AnnouncementType.Maintenance,
-                /** @ts-ignore */
-                startTime: startTime,
-                /** @ts-ignore */
-                endTime: endTime,
-                message: getMaintentTipsContent(brokerName, startDate, endDate),
-              },
-              ...draft.rows.filter(
-                (tip) => tip.type !== AnnouncementType.Maintenance,
-              ),
-            ];
-          }),
-        );
-      }
+    if (startTime && endTime) {
+      // if (startTime < getTimestamp() + oneDay) {
+      setTips((prev) =>
+        produce<API.Announcement>(prev, (draft) => {
+          // Make sure draft.rows is an array
+          if (!Array.isArray(draft.rows)) {
+            draft.rows = [];
+          }
+          // Rebuild rows: insert the latest maintenance tip first, then put the old non-maintenance ones at the end
+          draft.rows = [
+            {
+              announcement_id: maintentanceId,
+              type: AnnouncementType.Maintenance,
+              /** @ts-ignore */
+              startTime: startTime,
+              /** @ts-ignore */
+              endTime: endTime,
+              message: getMaintentTipsContent(brokerName, startDate, endDate),
+            },
+            ...draft.rows.filter(
+              (tip) => tip.type !== AnnouncementType.Maintenance,
+            ),
+          ];
+        }),
+      );
     } else {
       setTips((prev) => {
         return produce<API.Announcement>(prev, (draft) => {

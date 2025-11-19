@@ -1,5 +1,12 @@
 @font-face {
   font-family: "Manrope";
+  src: url("/fonts/Manrope/Manrope-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Manrope";
   src: url("/fonts/Manrope/Manrope-Medium.ttf") format("truetype");
   font-weight: 500;
   font-style: normal;
@@ -24,7 +31,15 @@
   src:
     url("/fonts/DIN2014/din-2014_regular.woff2") format("woff2"),
     url("/fonts/DIN2014/din-2014_regular.woff") format("woff");
-  font-weight: normal;
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "DIN2014";
+  src:
+    url("/fonts/DIN2014/din-2014_demi.woff2") format("woff2"),
+    url("/fonts/DIN2014/din-2014_demi.woff") format("woff");
+  font-weight: 500;
 }
 
 @font-face {

@@ -53,8 +53,8 @@ const LeftNavSheet: FC<LeftNavUIProps> = (props) => {
   const { t } = useTranslation();
 
   const { primaryMenus, secondaryMenus } = useMemo(() => {
-    const primary = (props.menus || []).filter((m) => !m.isSecondary);
-    const secondary = (props.menus || []).filter((m) => m.isSecondary);
+    const primary = (props?.menus || []).filter((m) => !m.isSecondary);
+    const secondary = (props?.menus || []).filter((m) => m.isSecondary);
     return { primaryMenus: primary, secondaryMenus: secondary };
   }, [props.menus]);
 

@@ -1,13 +1,13 @@
-import { FC, useState, useRef, useEffect, useMemo } from "react";
+import { FC, useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   Text,
   cn,
   Button,
   ArrowRightUpSquareFillIcon,
-  ChevronDownIcon,
-  ChevronUpIcon,
   useScreen,
+  Tooltip,
+  InfoCircleIcon,
 } from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
 import { parseMarkdownLinks } from "../../utils/parseMarkdownLinks";
@@ -29,25 +29,41 @@ export const VaultCard: FC<VaultCardScript> = (props) => {
   } = props;
 
   const { t } = useTranslation();
-  const isPreLaunch = vaultInfo.status === "pre_launch";
   const { isMobile } = useScreen();
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [showExpandButton, setShowExpandButton] = useState(false);
-  const descriptionRef = useRef<HTMLDivElement>(null);
 
-  // Check if description exceeds 3 lines
-  useEffect(() => {
-    if (descriptionRef.current) {
-      const lineHeight = 18; // oui-leading-[18px]
-      const maxHeight = lineHeight * 3;
-      const actualHeight = descriptionRef.current.scrollHeight;
-      setShowExpandButton(actualHeight > maxHeight);
+  // Get status tag config
+  const getStatusTag = () => {
+    const { status } = vaultInfo;
+
+    if (status === "live") {
+      return {
+        text: t("vaults.card.status.active"),
+        color: "#00C076",
+        bgColor: "rgba(0, 192, 118, 0.15)",
+      };
+    } else if (status === "pre_launch") {
+      return {
+        text: t("vaults.card.launchingSoon"),
+        color: "#E88800",
+        bgColor: "rgba(232, 136, 0, 0.15)",
+      };
+    } else if (status === "closing") {
+      return {
+        text: t("vaults.card.status.closing"),
+        color: "#FF6B6B",
+        bgColor: "rgba(255, 107, 107, 0.15)",
+      };
+    } else if (status === "closed") {
+      return {
+        text: t("vaults.card.status.closed"),
+        color: "#999999",
+        bgColor: "rgba(153, 153, 153, 0.15)",
+      };
     }
-  }, [description]);
-
-  const handleToggleExpand = () => {
-    setIsExpanded(!isExpanded);
+    return null;
   };
+
+  const statusTag = getStatusTag();
 
   const supportVaultsList = useMemo(() => {
     const chains = Array.isArray(vaultInfo?.supported_chains)
@@ -75,7 +91,8 @@ export const VaultCard: FC<VaultCardScript> = (props) => {
   }, [vaultInfo.supported_chains, isMobile]);
 
   return (
-    <div className="oui-relative oui-h-[388px] oui-overflow-hidden oui-rounded-2xl oui-border oui-border-solid oui-border-white/[0.12] oui-bg-base-9">
+    <div className="oui-relative oui-h-[435px] oui-overflow-hidden oui-rounded-2xl oui-bg-base-9">
+      {/* Background image
       <img
         src="/vaults/vaults-card-bg.png"
         alt=""
@@ -93,147 +110,124 @@ export const VaultCard: FC<VaultCardScript> = (props) => {
           e.currentTarget.style.display = "none";
         }}
       />
+      */}
 
       <div
         className={cn(
           "oui-absolute oui-left-0 oui-top-0 oui-z-20 oui-size-full oui-p-6",
-          isExpanded && "oui-overflow-y-auto",
+          "oui-overflow-y-auto oui-custom-scrollbar",
         )}
       >
-        <div className="oui-flex oui-flex-col oui-gap-3">
-          <div className="oui-flex oui-items-center oui-gap-2">
-            <img
-              src={icon}
-              alt={vaultInfo.broker_id}
-              className="oui-size-8"
-              onError={(e) => {
-                e.currentTarget.style.display = "none";
-              }}
-            />
-            <div className="oui-text-[18px] oui-font-semibold oui-text-white">
+        <div className="oui-flex oui-flex-col oui-gap-2">
+          {/* Title + Status tag group, 4px spacing */}
+          <div className="oui-flex oui-flex-col oui-gap-1">
+            {/* Vault name */}
+            <div className="oui-text-[18px] oui-font-semibold oui-text-white oui-break-words">
               {title}
             </div>
-            {/* {supportVaultsList} */}
-            {isPreLaunch && (
+            {/* Status tag */}
+            {statusTag && (
               <div
-                className="oui-flex oui-items-center oui-gap-[10px] oui-px-2 oui-text-[#E88800]"
+                className="oui-flex oui-w-fit oui-items-center oui-gap-[10px] oui-px-2"
                 style={{
                   height: "18px",
                   borderRadius: "4px",
-                  background: "rgba(232, 136, 0, 0.15)",
+                  background: statusTag.bgColor,
+                  color: statusTag.color,
                   fontSize: "12px",
                   fontWeight: 600,
                   lineHeight: "18px",
                   letterSpacing: "0.36px",
                 }}
               >
-                {t("vaults.card.launchingSoon")}
+                {statusTag.text}
               </div>
             )}
-            <div
-              className="oui-z-50 oui-ml-auto oui-cursor-pointer"
+          </div>
+
+          {/* Description + View more block (gap-1 = 4px) */}
+          <div className="oui-flex oui-flex-col oui-gap-1">
+            <div className="oui-h-[54px]">
+              <div className="oui-text-2xs oui-font-normal oui-leading-[18px] oui-text-base-contrast-54 oui-line-clamp-3">
+                {parseMarkdownLinks(description)}
+              </div>
+            </div>
+            {/* View more link */}
+            <button
               onClick={openVaultWebsite}
+              className="oui-flex oui-w-fit oui-items-center oui-gap-1 oui-text-xs oui-font-medium"
+              style={{ color: "#608CFF" }}
             >
+              <span>{t("vaults.card.viewMore")}</span>
               <ArrowRightUpSquareFillIcon
-                color="white"
-                width={18}
-                height={18}
+                style={{ color: "#608CFF" }}
+                width={16}
+                height={16}
                 viewBox="0 0 18 18"
+              />
+            </button>
+          </div>
+
+          {/* KPI + LP block (gap-6 = 24px) */}
+          <div className="oui-flex oui-flex-col oui-gap-6">
+            <div className="oui-flex oui-items-center oui-gap-2">
+              <VaultInfoItem
+                label={t("vaults.card.tvl")}
+                value={vaultInfo.tvl}
+                textProps={{
+                  currency: "$",
+                  dp: 0,
+                  type: "numeral",
+                }}
+              />
+              <VaultInfoItem
+                label={t("vaults.card.apy")}
+                value={
+                  vaultInfo.status === "pre_launch" ||
+                  (vaultInfo.vault_age !== null && vaultInfo.vault_age < 30)
+                    ? "--"
+                    : vaultInfo["30d_apy"] > 100
+                      ? ">10000%"
+                      : (vaultInfo["30d_apy"] * 100).toFixed(2) + "%"
+                }
+                textProps={{
+                  color: "brand",
+                  type: "gradient",
+                }}
+                showTooltip={
+                  vaultInfo.status === "pre_launch" ||
+                  (vaultInfo.vault_age !== null && vaultInfo.vault_age < 30)
+                }
+                tooltipContent="APY is not calculated for vaults that are less than 30 days old."
+              />
+            </div>
+
+            <div className="oui-flex oui-flex-col oui-items-center oui-gap-2 oui-rounded-lg oui-bg-white/[0.06] oui-p-3">
+              <LpInfoItem
+                label={t("vaults.card.myDeposits")}
+                value={lpInfo.deposits}
+              />
+              <LpInfoItem
+                label={t("vaults.card.myEarnings")}
+                value={lpInfo.earnings}
               />
             </div>
           </div>
-          <div
-            className={cn(
-              "-oui-mb-1 oui-flex oui-flex-col",
-              !isExpanded && "oui-h-[72px]",
-            )}
-          >
-            <div
-              ref={descriptionRef}
-              className={cn(
-                "oui-text-2xs oui-font-normal oui-leading-[18px] oui-text-base-contrast-54",
-                !isExpanded && showExpandButton && "oui-line-clamp-3",
-              )}
-            >
-              {parseMarkdownLinks(description)}
-            </div>
-            {showExpandButton && (
-              <button
-                onClick={handleToggleExpand}
-                className="oui-self-end oui-inline-flex oui-shrink-0 oui-cursor-pointer oui-items-center oui-gap-0.5 oui-text-[12px] oui-font-medium"
-                style={{ color: "#608CFF" }}
-              >
-                {isExpanded ? (
-                  <>
-                    <span>{t("vaults.card.less")}</span>
-                    <ChevronUpIcon
-                      size={12}
-                      opacity={1}
-                      color="inherit"
-                      className="oui-translate-y-[0.5px]"
-                    />
-                  </>
-                ) : (
-                  <>
-                    <span>{t("vaults.card.more")}</span>
-                    <ChevronDownIcon
-                      size={12}
-                      opacity={1}
-                      color="inherit"
-                      className="oui-translate-y-[0.5px]"
-                    />
-                  </>
-                )}
-              </button>
-            )}
-          </div>
 
-          <div className="oui-flex oui-items-center oui-gap-2">
-            <VaultInfoItem
-              label={t("vaults.card.tvl")}
-              value={vaultInfo.tvl}
-              textProps={{
-                currency: "$",
-                dp: 0,
-                type: "numeral",
-              }}
-            />
-            <VaultInfoItem
-              label={t("vaults.card.apy")}
-              value={
-                vaultInfo["30d_apy"] > 100
-                  ? ">10000%"
-                  : (vaultInfo["30d_apy"] * 100).toFixed(2) + "%"
-              }
-              textProps={{
-                color: "brand",
-                type: "gradient",
-              }}
-            />
-          </div>
-
-          <div className="oui-mt-3 oui-flex oui-flex-col oui-items-center oui-gap-2 oui-rounded-lg oui-bg-white/[0.06] oui-p-3">
+          {/* Account balance + Buttons block (gap-4 = 16px, mt-2 for total 16px from My Deposits) */}
+          <div className="oui-flex oui-flex-col oui-gap-4 oui-mt-2">
             <LpInfoItem
-              label={t("vaults.card.myDeposits")}
-              value={lpInfo.deposits}
+              label={t("vaults.card.accountBalance")}
+              value={availableBalance}
             />
-            <LpInfoItem
-              label={t("vaults.card.myEarnings")}
-              value={lpInfo.earnings}
+
+            <VaultCardOperation
+              isEVMConnected={isEVMConnected}
+              isSOLConnected={isSOLConnected}
+              openDepositAndWithdraw={openDepositAndWithdraw}
+              isButtonsDisabled={isButtonsDisabled}
             />
           </div>
-
-          <LpInfoItem
-            label={t("vaults.card.accountBalance")}
-            value={availableBalance}
-          />
-
-          <VaultCardOperation
-            isEVMConnected={isEVMConnected}
-            isSOLConnected={isSOLConnected}
-            openDepositAndWithdraw={openDepositAndWithdraw}
-            isButtonsDisabled={isButtonsDisabled}
-          />
         </div>
       </div>
     </div>
@@ -244,8 +238,10 @@ const VaultInfoItem: FC<{
   label: string;
   value: string | number;
   textProps?: any;
+  showTooltip?: boolean;
+  tooltipContent?: string;
 }> = (props) => {
-  const { label, value, textProps } = props;
+  const { label, value, textProps, showTooltip, tooltipContent } = props;
 
   return (
     <div
@@ -254,8 +250,19 @@ const VaultInfoItem: FC<{
         "oui-rounded-lg oui-border oui-border-solid oui-border-white/[0.12]",
       )}
     >
-      <div className="oui-text-2xs oui-font-normal oui-leading-[18px] oui-text-base-contrast-54">
+      <div className="oui-flex oui-items-center oui-gap-1 oui-text-2xs oui-font-normal oui-leading-[18px] oui-text-base-contrast-54">
         {label}
+        {showTooltip && tooltipContent && (
+          <Tooltip content={tooltipContent} delayDuration={100}>
+            <div>
+              <InfoCircleIcon
+                size={12}
+                opacity={0.54}
+                className="oui-text-base-contrast"
+              />
+            </div>
+          </Tooltip>
+        )}
       </div>
       {textProps.type === "gradient" ? (
         <Text.gradient
