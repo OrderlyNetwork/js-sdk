@@ -1,5 +1,13 @@
 # @orderly.network/ui
 
+## 2.8.3-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/utils@2.8.3-alpha.0
+
 ## 2.8.2
 
 ### Patch Changes
