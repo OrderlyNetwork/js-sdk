@@ -6,8 +6,10 @@ export const notification = {
   "notification.joinNow": "Join now",
   "notification.listing": "New token listing",
   "notification.maintenance": "System maintenance",
-  "notification.maintenanceDuration":
+  "notification.maintenanceDuration.hours":
     "{{hours}} HRs at {{startTimeFormatted}} - {{endTimeFormatted}} (UTC)",
+  "notification.maintenanceDuration.minutes":
+    "{{minutes}} MINs at {{startTimeFormatted}} - {{endTimeFormatted}} (UTC)",
   "notification.recentlyUpdated": "Recently updated",
   "notification.title": "Announcement",
   "notification.centerTitle": "Announcement center",
