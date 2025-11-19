@@ -108,6 +108,27 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     [balance, sourceToken?.precision],
   );
 
+  const maxDepositAmount = useMemo(() => {
+    const balanceDecimal = new Decimal(balance || 0).todp(
+      sourceToken?.precision ?? 2,
+      Decimal.ROUND_DOWN,
+    );
+
+    // If user_max_qty is -1, ignore it and use balance only
+    if (sourceToken?.user_max_qty === -1 || !sourceToken?.user_max_qty) {
+      return balanceDecimal.toString();
+    }
+
+    const userMaxQty = new Decimal(sourceToken.user_max_qty).todp(
+      sourceToken?.precision ?? 2,
+      Decimal.ROUND_DOWN,
+    );
+
+    return balanceDecimal.lt(userMaxQty)
+      ? balanceDecimal.toString()
+      : userMaxQty.toString();
+  }, [balance, sourceToken?.precision, sourceToken?.user_max_qty]);
+
   const { inputStatus, hintMessage } = useInputStatus({
     quantity,
     maxQuantity,
@@ -398,6 +419,7 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     quantity,
     collateralContributionQuantity,
     maxQuantity,
+    maxDepositAmount,
     indexPrice,
     onQuantityChange: setQuantity,
     hintMessage: finalHintMessage,

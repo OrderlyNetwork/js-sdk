@@ -45,6 +45,7 @@ export const DepositForm: FC<DepositFormScriptReturn> = (props) => {
     quantity,
     collateralContributionQuantity,
     maxQuantity,
+    maxDepositAmount,
     onQuantityChange,
     hintMessage,
     inputStatus,
@@ -237,7 +238,7 @@ export const DepositForm: FC<DepositFormScriptReturn> = (props) => {
           maxQuantity={maxQuantity}
           loading={balanceRevalidating}
           onClick={() => {
-            onQuantityChange(maxQuantity);
+            onQuantityChange(maxDepositAmount);
           }}
         />
 
