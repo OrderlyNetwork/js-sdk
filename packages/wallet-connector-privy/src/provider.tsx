@@ -410,7 +410,7 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     }
 
     // Always wait for swap loading to complete when swap is enabled
-    if (!swapChainInfoRes) {
+    if (props.enableSwapDeposit && !swapChainInfoRes) {
       return;
     }
 
@@ -458,6 +458,7 @@ export function WalletConnectorPrivyProvider(props: WalletConnectorPrivyProps) {
     mainnetChainInfosFromStore,
     testChainInfosFromStore,
     swapChainInfoRes,
+    props.enableSwapDeposit,
     // swapLoading,
   ]);
 

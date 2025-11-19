@@ -1,5 +1,23 @@
 # @orderly.network/utils
 
+## 2.8.3
+
+### Patch Changes
+
+- publish
+- 2d3313c: publish
+- Updated dependencies
+- Updated dependencies [2d3313c]
+  - @orderly.network/types@2.8.3
+
+## 2.8.3-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@2.8.3-alpha.0
+
 ## 2.8.2
 
 ### Patch Changes
