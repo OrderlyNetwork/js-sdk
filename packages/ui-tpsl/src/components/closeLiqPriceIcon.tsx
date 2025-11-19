@@ -1,6 +1,13 @@
 import { ERROR_MSG_CODES, OrderValidationResult } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
-import { cn, ExclamationFillIcon, Tooltip } from "@orderly.network/ui";
+import {
+  cn,
+  ExclamationFillIcon,
+  modal,
+  Tooltip,
+  useScreen,
+} from "@orderly.network/ui";
 
 const CloseToLiqPriceIcon = ({
   slPriceError,
@@ -9,6 +16,8 @@ const CloseToLiqPriceIcon = ({
   slPriceError: OrderValidationResult | null;
   className?: string;
 }) => {
+  const { t } = useTranslation();
+  const { isMobile } = useScreen();
   const { getErrorMsg } = useOrderEntryFormErrorMsg(slPriceError);
   const isSlPriceWarning =
     slPriceError?.sl_trigger_price?.type === ERROR_MSG_CODES.SL_PRICE_WARNING;
@@ -19,13 +28,30 @@ const CloseToLiqPriceIcon = ({
       onMouseLeave={(e) => e.stopPropagation()}
       onPointerEnter={(e) => e.stopPropagation()}
       onPointerLeave={(e) => e.stopPropagation()}
+      size={14}
       className={cn(
-        "oui-size-4 oui-text-warning-darken hover:oui-cursor-pointer",
+        "oui-text-warning-darken hover:oui-cursor-pointer",
         className,
       )}
     />
   );
   if (!isSlPriceWarning || !slPriceError) return null;
+
+  if (isMobile) {
+    return (
+      <button
+        onClick={(e) => {
+          modal.alert({
+            title: t("common.tips"),
+            message: getErrorMsg("sl_trigger_price"),
+          });
+        }}
+        className="oui-px-1"
+      >
+        {icon}
+      </button>
+    );
+  }
 
   return (
     <Tooltip
