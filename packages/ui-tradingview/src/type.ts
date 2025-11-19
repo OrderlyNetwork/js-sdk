@@ -33,6 +33,14 @@ export interface TradingviewWidgetPropsInterface {
     root?: string;
     content?: string;
   };
+  /**
+   * Additional enabled features to merge with default enabled features
+   */
+  enabled_features?: string[];
+  /**
+   * Additional disabled features to merge with default disabled features
+   */
+  disabled_features?: string[];
 }
 
 export interface TradingviewUIPropsInterface {

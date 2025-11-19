@@ -3,5 +3,16 @@
   "extend.affiliate.tag": "40% Rückerstattung",
   "extend.affiliate.description": "Verdienen Sie mehr als Orderly-Partner",
   "extend.staking": "Staking",
-  "extend.staking.description": "Staken Sie ORDER/esORDER, um VALOR zu erhalten"
+  "extend.staking.description": "Staken Sie ORDER/esORDER, um VALOR zu erhalten",
+  "extend.dashboard": "Dashboard",
+  "extend.stake": "Staking",
+  "extend.earn": "Verdienen",
+  "extend.spot": "Spot",
+  "extend.spotDune": "Spot Dune",
+  "extend.perpsDune": "Perps Dune",
+  "extend.careers": "Karriere",
+  "extend.docs": "Dokumente",
+  "extend.audits": "Audits",
+  "extend.vaults": "Tresore",
+  "extend.perps": "Perps"
 }

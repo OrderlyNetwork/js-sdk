@@ -73,6 +73,10 @@ export interface WidgetProps {
   chartKey?: string;
   mode?: ChartMode;
   onClick?: (e: any) => void;
+  /** External enabled features to merge with defaults */
+  enabled_features?: string[];
+  /** External disabled features to merge with defaults */
+  disabled_features?: string[];
 }
 
 export class Widget {
@@ -220,7 +224,14 @@ export class Widget {
     });
   }
 
-  private async _create({ options, chartKey, mode, onClick }: WidgetProps) {
+  private async _create({
+    options,
+    chartKey,
+    mode,
+    onClick,
+    enabled_features,
+    disabled_features,
+  }: WidgetProps) {
     const getBroker = options.getBroker;
 
     const widgetOptions: TradingTerminalWidgetOptions = {
@@ -283,8 +294,9 @@ export class Widget {
     // @ts-ignore
     this._adapterSetting = adapterSetting;
     this._savedData = savedData;
+    // Pass external enabled_features and disabled_features to getOptions for merging
     this._instance = new TradingView.widget({
-      ...getOptions(widgetOptions, mode),
+      ...getOptions(widgetOptions, mode, enabled_features, disabled_features),
       interval:
         adapterSetting["chart.lastUsedTimeBasedResolution"] ??
         widgetOptions.interval,

@@ -13,6 +13,7 @@ import {
 import { PortfolioLayout, TradingRewardsLayout } from "./components/layout";
 import { OrderlyProvider } from "./components/orderlyProvider";
 import { PathEnum } from "./constant";
+import AnnouncementPage from "./pages/announcement/page";
 import LeaderboardPage from "./pages/leaderboard/page";
 import MarketsPage from "./pages/markets/page";
 import PerpPage from "./pages/perp/page";
@@ -129,6 +130,10 @@ const AppRoute: React.FC = () => {
           element: <AffiliatePage />,
         },
       ],
+    },
+    {
+      path: "announcement",
+      element: <AnnouncementPage />,
     },
   ];
 

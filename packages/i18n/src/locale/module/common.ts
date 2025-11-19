@@ -95,7 +95,11 @@ export const common = {
   "common.leverage": "Leverage",
   "common.affiliate": "Affiliate",
   "common.tradingRewards": "Trading rewards",
-  "common.trading": "Trading",
+  "common.trading": "Trade",
+  "common.spot": "Spot",
+  "common.earn": "Earn",
+  "common.stake": "Stake",
+  "common.perps": "Perps",
   "common.allAccount": "All accounts",
   "common.mainAccount": "Main account",
   "common.subAccount": "Sub account",
@@ -120,4 +124,8 @@ export const common = {
   "common.hourShort": "H",
   "common.minuteShort": "M",
   "common.secondShort": "S",
+
+  "common.offlineDescription":
+    "Currently disconnected, please refresh the page",
+  "common.refresh": "Refresh",
 };

@@ -1,8 +1,18 @@
 import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
-import { Badge, cn, Flex, Spinner, Text, TokenIcon } from "@orderly.network/ui";
+import {
+  Badge,
+  Box,
+  cn,
+  Flex,
+  Spinner,
+  Text,
+  TokenIcon,
+} from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
+import { isYieldBearingAsset } from "../../constants/yieldBearingAssets";
+import { useYieldAPY } from "../depositForm/hooks/useYieldAPY";
 import { useBalance } from "./useBalance";
 
 interface TokenOptionProps {
@@ -10,6 +20,7 @@ interface TokenOptionProps {
     label: string;
     value: string;
     insufficientBalance?: boolean;
+    balance?: string;
   };
   fetchBalance?: (token: string, decimals: number) => Promise<any>;
   onTokenChange?: (token: API.TokenInfo) => void;
@@ -24,8 +35,10 @@ export const TokenOption: React.FC<TokenOptionProps> = (props) => {
     props;
   const { symbol, precision, insufficientBalance } = token;
   const { balance, loading } = useBalance(token, fetchBalance, open);
+  const { apy } = useYieldAPY(symbol);
 
   const showBalance = typeof fetchBalance === "function";
+  const showAPY = isYieldBearingAsset(symbol) && apy !== null;
 
   const { t } = useTranslation();
 
@@ -62,7 +75,7 @@ export const TokenOption: React.FC<TokenOptionProps> = (props) => {
       return null;
     }
 
-    if (loading) {
+    if (loading && !token.balance) {
       return <Spinner size="sm" />;
     }
 
@@ -76,7 +89,7 @@ export const TokenOption: React.FC<TokenOptionProps> = (props) => {
           isActive && "oui-text-base-contrast-54",
         )}
       >
-        {balance}
+        {balance || token.balance!}
       </Text.numeral>
     );
   };
@@ -99,7 +112,7 @@ export const TokenOption: React.FC<TokenOptionProps> = (props) => {
         onTokenChange?.(token);
       }}
     >
-      <Flex gapX={1}>
+      <Flex gapX={1} itemAlign="center">
         <TokenIcon name={symbol} className="oui-size-[16px]" />
         <Text
           className={cn(
@@ -109,6 +122,18 @@ export const TokenOption: React.FC<TokenOptionProps> = (props) => {
         >
           {token.label}
         </Text>
+        {showAPY && (
+          <Box
+            height={18}
+            px={2}
+            r="sm"
+            className="oui-rounded-[4px] oui-bg-success/[0.15]"
+          >
+            <Text size="2xs" className="oui-text-success">
+              {apy!.toFixed(1)}% APY
+            </Text>
+          </Box>
+        )}
       </Flex>
       {renderValue()}
     </Flex>

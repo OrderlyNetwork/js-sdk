@@ -18,19 +18,21 @@ export const BaseLayout: FC<BaseLayoutProps> = (props) => {
   const { onRouteChange } = useRouteContext();
 
   return (
-    <Scaffold
-      topBar={props.topBar}
-      mainNavProps={{
-        ...mainNavProps,
-        initialMenu: props.initialMenu || PathEnum.Root,
-        // customRender: useCustomRender(),
-      }}
-      bottomNavProps={bottomNavProps}
-      footerProps={footerConfig}
-      routerAdapter={{ onRouteChange }}
-      classNames={props.classNames}
-    >
-      {props.children}
-    </Scaffold>
+    <>
+      <Scaffold
+        topBar={props.topBar}
+        mainNavProps={{
+          ...mainNavProps,
+          initialMenu: props.initialMenu || PathEnum.Root,
+          // customRender: useCustomRender(),
+        }}
+        bottomNavProps={bottomNavProps}
+        footerProps={footerConfig}
+        routerAdapter={{ onRouteChange: onRouteChange }}
+        classNames={props.classNames}
+      >
+        {props.children}
+      </Scaffold>
+    </>
   );
 };

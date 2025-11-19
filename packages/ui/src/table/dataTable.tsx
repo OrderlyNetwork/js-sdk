@@ -314,6 +314,8 @@ export function DataTable<RecordType extends any>(
           pageSize={pagination?.pageSize}
           onPageChange={pagination?.onPageChange}
           onPageSizeChange={pagination?.onPageSizeChange}
+          generatePageNumbers={pagination?.generatePageNumbers}
+          hideRowsPerPage={pagination?.hideRowsPerPage}
         />
       )}
     </div>

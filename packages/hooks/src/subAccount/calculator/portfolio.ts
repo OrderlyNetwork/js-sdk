@@ -22,7 +22,7 @@ export function formatPortfolio(inputs: {
   indexPrices?: Record<string, number> | null;
   accountInfo?: API.AccountInfo;
   symbolsInfo?: SymbolsInfo;
-  tokensInfo?: API.Chain[];
+  tokensInfo?: API.Token[];
 }) {
   const {
     holding,

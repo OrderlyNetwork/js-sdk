@@ -1,13 +1,17 @@
-import React, { useCallback, useContext, useMemo } from "react";
+import React, { useContext, useMemo } from "react";
 import {
   OrderlyContext,
   useChains,
   useMemoizedFn,
 } from "@orderly.network/hooks";
+import { useAnnouncement } from "@orderly.network/ui-notification";
 import { checkChainSupport } from "../../utils/chain";
 import { ScaffoldContext, ScaffoldState } from "./scaffoldContext";
 
-export type ScaffoldProviderProps = Omit<ScaffoldState, "checkChainSupport">;
+export type ScaffoldProviderProps = Omit<
+  ScaffoldState,
+  "checkChainSupport" | "announcementState"
+>;
 
 export const ScaffoldProvider: React.FC<
   React.PropsWithChildren<ScaffoldProviderProps>
@@ -26,6 +30,10 @@ export const ScaffoldProvider: React.FC<
 
   const { networkId } = useContext<any>(OrderlyContext);
 
+  const announcementState = useAnnouncement();
+
+  // console.log("announcementState", announcementState);
+
   const checkChainSupportHandle = useMemoizedFn((chainId: number | string) => {
     return checkChainSupport(
       chainId,
@@ -42,6 +50,7 @@ export const ScaffoldProvider: React.FC<
       topNavbarHeight: topNavbarHeight,
       footerHeight: footerHeight,
       announcementHeight: announcementHeight,
+      announcementState: announcementState,
     };
   }, [
     routerAdapter,
@@ -51,6 +60,7 @@ export const ScaffoldProvider: React.FC<
     topNavbarHeight,
     footerHeight,
     announcementHeight,
+    announcementState,
   ]);
 
   return (

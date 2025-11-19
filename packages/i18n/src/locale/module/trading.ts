@@ -80,6 +80,7 @@ export const trading = {
   "trading.fundingRate.lastFundingRate": "Last funding rate",
   "trading.fundingRate.estimatedFundingRate": "Estimated funding rate",
   "trading.fundingRate.estimatedFundingFee": "Estimated funding fee",
+  "trading.fundingRate.annualized": "Annualized",
 
   "trading.rwa.marketHours": "Market hours",
   "trading.rwa.outsideMarketHours": "Outside market hours",

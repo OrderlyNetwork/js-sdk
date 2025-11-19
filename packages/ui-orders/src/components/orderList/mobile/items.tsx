@@ -673,12 +673,6 @@ export const RealizedPnL: FC<OrderCellState> = (props) => {
         >
           {value ?? "--"}
         </Text.pnl>
-        <ShareButtonWidget
-          order={props.item}
-          sharePnLConfig={props.sharePnLConfig}
-          modalId={SharePnLBottomSheetId}
-          iconSize={12}
-        />
       </Flex>
     </Statistic>
   );

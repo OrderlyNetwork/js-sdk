@@ -135,7 +135,14 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
     }
   }, []);
 
-  const [tab, setTab] = useState<TabTypes>(TabTypes.affiliate);
+  const [tab, setTab] = useState<TabTypes>(() => {
+    const savedTab = localStorage.getItem("orderly_affiliate_dashboard_tab");
+    return (savedTab as TabTypes) || TabTypes.affiliate;
+  });
+
+  useEffect(() => {
+    localStorage.setItem("orderly_affiliate_dashboard_tab", tab);
+  }, [tab]);
 
   const { wrongNetwork, disabledConnect } = useAppContext();
 

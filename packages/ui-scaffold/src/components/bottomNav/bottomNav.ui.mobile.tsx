@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
+import { type RouterAdapter } from "@orderly.network/types";
 import { Flex, Text } from "@orderly.network/ui";
-import { RouterAdapter } from "../scaffold";
 import { BottomNavItem } from "./bottomNav.widget";
 
 export type BottomNavProps = {
@@ -19,6 +19,9 @@ export const BottomNav: React.FC<BottomNavProps> = (props) => {
   const menus = useMemo(() => {
     return mainMenus?.map((menu) => {
       const isActive = current === menu.href;
+      const isExternalLink =
+        menu.href.startsWith("http://") || menu.href.startsWith("https://");
+      // const isTrading = menu.href === "/" || /trading/i.test(menu.name);
       return (
         <Flex
           key={menu.name}
@@ -27,11 +30,31 @@ export const BottomNav: React.FC<BottomNavProps> = (props) => {
           justify={"center"}
           className="oui-flex-1"
           onClick={() => {
-            onRouteChange?.({ href: menu.href, name: menu.name });
+            if (isExternalLink) {
+              window.location.href = menu.href;
+            } else {
+              onRouteChange?.({ href: menu.href, name: menu.name });
+            }
           }}
         >
+          {/* TODO: add new trading menu when ai is ready */}
+          {/* {isTrading ? (
+            <BottomNavTradingMenu
+              label={menu.name}
+              active={!!isActive}
+              activeIcon={menu.activeIcon}
+              inactiveIcon={menu.inactiveIcon}
+              onNavigate={() =>
+                onRouteChange?.({ href: menu.href, name: menu.name })
+              }
+            />
+          ) : (
+            <Text>{isActive ? menu.activeIcon : menu.inactiveIcon}</Text>
+          )} */}
           <Text>{isActive ? menu.activeIcon : menu.inactiveIcon}</Text>
-          <Text>{menu.name}</Text>
+          <Text size="2xs" intensity={isActive ? 98 : 36}>
+            {menu.name}
+          </Text>
         </Flex>
       );
     });
@@ -48,7 +71,7 @@ export const BottomNav: React.FC<BottomNavProps> = (props) => {
       px={3}
       itemAlign={"center"}
       justify={"between"}
-      className="oui-bg-base-9"
+      className="oui-border-t oui-border-line-4 oui-bg-base-9"
     >
       {menus}
     </Flex>

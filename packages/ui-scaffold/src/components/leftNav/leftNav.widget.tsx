@@ -1,8 +1,8 @@
 import { FC } from "react";
-import { useLeftNavState } from "./leftNav.script";
-import { LeftNavProps } from "./leftNav.type";
+import { useLeftNavScript } from "./leftNav.script";
+import { LeftNavUI, LeftNavUIProps } from "./leftNav.ui";
 
-export const LeftNavWidget: FC<LeftNavProps> = (props) => {
-  const state = useLeftNavState();
-  return <div>LeftNavWidget</div>;
+export const LeftNavWidget: FC<LeftNavUIProps> = (props) => {
+  const state = useLeftNavScript();
+  return <LeftNavUI {...props} {...state} />;
 };

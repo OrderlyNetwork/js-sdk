@@ -15,6 +15,7 @@ import nl from "@orderly.network/i18n/locales/nl.json";
 import pl from "@orderly.network/i18n/locales/pl.json";
 import pt from "@orderly.network/i18n/locales/pt.json";
 import ru from "@orderly.network/i18n/locales/ru.json";
+import tc from "@orderly.network/i18n/locales/tc.json";
 import tr from "@orderly.network/i18n/locales/tr.json";
 import uk from "@orderly.network/i18n/locales/uk.json";
 import vi from "@orderly.network/i18n/locales/vi.json";
@@ -38,6 +39,7 @@ export const resources: Resources<ExtendLocaleMessages> = {
   uk,
   pl,
   nl,
+  tc,
 };
 
 export const LocaleProvider = (props: { children: React.ReactNode }) => {

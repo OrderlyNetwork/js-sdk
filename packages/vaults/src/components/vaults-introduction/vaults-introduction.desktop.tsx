@@ -14,7 +14,7 @@ export const VaultsIntroductionDesktop: FC<VaultsIntroductionScript> = (
     <div
       className={cn(
         "oui-flex oui-items-center  ",
-        "oui-via-21.6% oui-via-83.23% oui-bg-gradient-to-r oui-from-[rgba(var(--oui-gradient-neutral-end)/1)] oui-to-[rgba(var(--oui-gradient-neutral-start)/1)]",
+        "oui-bg-gradient-to-b oui-from-[#26292E] oui-to-[#1B1D22]",
         isMobile
           ? "oui-gap-3 oui-rounded-xl oui-p-3"
           : "oui-gap-6 oui-rounded-2xl oui-p-6",

@@ -1,7 +1,7 @@
 import { FC, ReactNode } from "react";
 import { onStorybookRounteChange } from "../../hooks/useStorybookNav";
 import { LocaleProvider } from "./localeProvider";
-import { OrderlyAppProvider } from "./orderlyAppProvider";
+import { OrderlyAppRootProvider } from "./orderlyAppProvider";
 import { RouteProvider } from "./rounteProvider";
 import { WalletConnectorProvider } from "./walletConnectorProvider";
 
@@ -10,7 +10,7 @@ export const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
     <RouteProvider onRouteChange={onStorybookRounteChange}>
       <LocaleProvider>
         <WalletConnectorProvider>
-          <OrderlyAppProvider>{props.children}</OrderlyAppProvider>
+          <OrderlyAppRootProvider>{props.children}</OrderlyAppRootProvider>
         </WalletConnectorProvider>
       </LocaleProvider>
     </RouteProvider>

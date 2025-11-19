@@ -31,19 +31,28 @@ export interface BaseIconProps
     VariantProps<typeof iconVariants> {
   // width?: number;
   size?: number;
+  viewBox?: string;
   opacity?: number;
 }
 
 export const BaseIcon = React.forwardRef<SVGSVGElement, BaseIconProps>(
   (props, ref) => {
-    const { size = 24, color, className, children, ...rest } = props;
+    const {
+      size = 24,
+      color,
+      className,
+      children,
+      viewBox = "0 0 24 24",
+      fill = "none",
+      ...rest
+    } = props;
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width={size}
         height={size}
-        fill="none"
-        viewBox="0 0 24 24"
+        fill={fill}
+        viewBox={viewBox}
         ref={ref}
         className={iconVariants({ className, color })}
         {...rest}

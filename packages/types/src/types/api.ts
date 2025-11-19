@@ -5,6 +5,7 @@ export enum AnnouncementType {
   Listing = "LISTING",
   Maintenance = "MAINTENANCE",
   Delisting = "DELISTING",
+  Campaign = "CAMPAIGN",
 }
 
 export declare namespace API {
@@ -20,6 +21,12 @@ export declare namespace API {
     token_hash: string;
     decimals: number;
     minimum_withdraw_amount: number;
+    base_weight: number;
+    discount_factor: number;
+    haircut: number;
+    user_max_qty: number;
+    is_collateral: boolean;
+    on_chain_swap: boolean;
     chain_details: ChainDetail[];
   }
 
@@ -65,6 +72,7 @@ export declare namespace API {
     url?: string | null;
     type?: AnnouncementType | null;
     updated_time?: number | null;
+    coverImage?: string;
   }
 
   export interface Announcement {

@@ -19,5 +19,6 @@ registerSimpleDialog(FundingRateDialogId, FundingRateModalWidget, {
 });
 
 registerSimpleSheet(FundingRateSheetId, FundingRateModalWidget, {
+  classNames: { content: "oui-text-sm" },
   title: () => i18n.t("funding.fundingRate"),
 });

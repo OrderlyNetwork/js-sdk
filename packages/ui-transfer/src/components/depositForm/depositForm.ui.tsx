@@ -18,6 +18,7 @@ import { SwapFee } from "../swap/components/swapFee";
 import { SwapCoin } from "../swapCoin";
 import { SwapIndicator } from "../swapIndicator";
 import { Web3Wallet } from "../web3Wallet";
+import { YieldBearingReminder } from "../yieldBearingReminder";
 import {
   SWAP_USDC_PRECISION,
   type DepositFormScriptReturn,
@@ -110,7 +111,7 @@ export const DepositForm: FC<DepositFormScriptReturn> = (props) => {
           currentLtv={currentLTV}
           nextLTV={nextLTV}
         />
-        <Fee {...fee} />
+        <Fee {...fee} nativeSymbol={props.nativeSymbol} />
       </Flex>
     );
   };
@@ -139,6 +140,7 @@ export const DepositForm: FC<DepositFormScriptReturn> = (props) => {
             status={inputStatus}
             hintMessage={hintMessage}
             fetchBalance={fetchBalance}
+            tokenBalances={props.tokenBalances}
             data-testId="oui-testid-deposit-dialog-quantity-input"
           />
         </Box>
@@ -151,6 +153,12 @@ export const DepositForm: FC<DepositFormScriptReturn> = (props) => {
           onClick={() => {
             onQuantityChange(maxQuantity);
           }}
+        />
+
+        {/* Yield-bearing collateral reminder */}
+        <YieldBearingReminder
+          symbol={targetToken?.symbol}
+          className="oui-mt-3"
         />
 
         <ExchangeDivider />

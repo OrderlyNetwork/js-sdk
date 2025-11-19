@@ -1,19 +1,21 @@
-import { FC, useCallback, useMemo } from "react";
+import { FC, useMemo } from "react";
 import { useAccount } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { AccountStatusEnum } from "@orderly.network/types";
+import {
+  AccountStatusEnum,
+  type RouterAdapter,
+  type RouteOption,
+} from "@orderly.network/types";
 import {
   Sheet,
   SheetContent,
-  modal,
-  useModal,
   VectorIcon,
   SwapHorizIcon,
   PeopleIcon,
   Text,
+  Divider,
 } from "@orderly.network/ui";
 import { MainLogo } from "../main/mainLogo";
-import { RouterAdapter, RouteOption } from "../scaffold";
 import { SubAccountWidget } from "../subAccount";
 import {
   CommunityDiscord,
@@ -21,11 +23,11 @@ import {
   CommunityTG,
   CommunityX,
 } from "./communityIcon";
-import { LeftNavState } from "./leftNav.script";
+import { LeftNavScriptReturn } from "./leftNav.script";
 import { LeftNavItem, LeftNavProps } from "./leftNav.type";
 
-type LeftNavUIProps = LeftNavProps &
-  LeftNavState & {
+export type LeftNavUIProps = LeftNavProps &
+  Partial<LeftNavScriptReturn> & {
     className?: string;
     logo?: {
       src: string;
@@ -36,23 +38,25 @@ type LeftNavUIProps = LeftNavProps &
   };
 
 export const LeftNavUI: FC<LeftNavUIProps> = (props) => {
-  const showModal = () => {
-    modal.show(LeftNavSheet, {
-      ...props,
-    });
-  };
-
   return (
-    <div onClick={showModal} className={props?.className}>
-      <VectorIcon />
-    </div>
+    <>
+      <div onClick={props.showSheet} className={props?.className}>
+        <VectorIcon />
+      </div>
+      <LeftNavSheet {...props} />
+    </>
   );
 };
 
-const LeftNavSheet = modal.create<LeftNavUIProps>((props) => {
-  const { visible, hide, resolve, reject, onOpenChange } = useModal();
+const LeftNavSheet: FC<LeftNavUIProps> = (props) => {
   const { state } = useAccount();
   const { t } = useTranslation();
+
+  const { primaryMenus, secondaryMenus } = useMemo(() => {
+    const primary = (props.menus || []).filter((m) => !m.isSecondary);
+    const secondary = (props.menus || []).filter((m) => m.isSecondary);
+    return { primaryMenus: primary, secondaryMenus: secondary };
+  }, [props.menus]);
 
   const showSubAccount = useMemo(
     () => state.status >= AccountStatusEnum.EnableTrading,
@@ -60,8 +64,8 @@ const LeftNavSheet = modal.create<LeftNavUIProps>((props) => {
   );
 
   const onRouteChange = (option: RouteOption) => {
-    props?.routerAdapter?.onRouteChange?.(option);
-    hide();
+    props.routerAdapter?.onRouteChange?.(option);
+    props.hideSheet?.();
   };
 
   const subAccountTrigger = useMemo(() => {
@@ -99,7 +103,7 @@ const LeftNavSheet = modal.create<LeftNavUIProps>((props) => {
   };
 
   return (
-    <Sheet open={visible} onOpenChange={onOpenChange}>
+    <Sheet open={props.open} onOpenChange={props.onOpenChange}>
       <SheetContent
         side="left"
         className="oui-w-[276px] oui-bg-base-8"
@@ -115,9 +119,19 @@ const LeftNavSheet = modal.create<LeftNavUIProps>((props) => {
           {showSubAccount && (
             <SubAccountWidget customTrigger={subAccountTrigger} />
           )}
-          {Array.isArray(props?.menus) && props.menus.length > 0 && (
+          {(primaryMenus.length > 0 || secondaryMenus.length > 0) && (
             <div className="oui-flex oui-h-[calc(100vh-260px)] oui-flex-col oui-items-start oui-overflow-y-auto">
-              {props.menus?.map((item) => (
+              {primaryMenus.map((item) => (
+                <NavItem
+                  item={item}
+                  key={`item-${item.name}`}
+                  onClick={onRouteChange}
+                />
+              ))}
+              {secondaryMenus.length > 0 && primaryMenus.length > 0 && (
+                <Divider className="oui-my-1 oui-w-full" intensity={8} />
+              )}
+              {secondaryMenus.map((item) => (
                 <NavItem
                   item={item}
                   key={`item-${item.name}`}
@@ -126,7 +140,7 @@ const LeftNavSheet = modal.create<LeftNavUIProps>((props) => {
               ))}
             </div>
           )}
-          <div className="oui-absolute oui-bottom-6 oui-flex oui-w-full oui-flex-col oui-gap-4 oui-bg-base-8 oui-z-60">
+          <div className="oui-z-60 oui-absolute oui-bottom-6 oui-flex oui-w-full oui-flex-col oui-gap-4 oui-bg-base-8">
             <div className="oui-flex oui-items-center oui-justify-around">
               {props.telegramUrl && (
                 <div
@@ -171,7 +185,7 @@ const LeftNavSheet = modal.create<LeftNavUIProps>((props) => {
       </SheetContent>
     </Sheet>
   );
-});
+};
 
 type NavItemProps = {
   item: LeftNavItem;
@@ -190,8 +204,14 @@ const NavItem: FC<NavItemProps> = ({ item, onClick }) => {
   } = item;
   const { isMainAccount } = useAccount();
   const onItemClick = () => {
+    // Check if href is a full URL (external link)
+    const isExternalLink =
+      href.startsWith("http://") || href.startsWith("https://");
+
     if (target) {
       window.open(href, target);
+    } else if (isExternalLink) {
+      window.location.href = href;
     } else {
       onClick?.({ href: href, name: name, scope: "leftNav" });
     }
@@ -199,7 +219,7 @@ const NavItem: FC<NavItemProps> = ({ item, onClick }) => {
   if (typeof customRender === "function") {
     return (
       <div
-        className="oui-flex oui-w-full oui-items-center oui-px-3 oui-py-4"
+        className="oui-flex oui-w-full oui-items-center oui-p-3"
         onClick={onItemClick}
       >
         {customRender({ name: name, href: href })}
@@ -209,15 +229,17 @@ const NavItem: FC<NavItemProps> = ({ item, onClick }) => {
   if (onlyInMainAccount && !isMainAccount) {
     return null;
   }
+  const isSecondary = !!item.isSecondary;
+  const textClassName = isSecondary
+    ? "oui-text-xs oui-font-normal oui-text-base-contrast-54"
+    : "oui-text-base oui-font-semibold oui-text-base-contrast-80";
   return (
     <div
-      className="oui-flex oui-w-full oui-items-center oui-gap-2 oui-px-3 oui-py-4"
+      className={`oui-flex oui-w-full oui-items-center oui-gap-2 oui-p-3 ${isSecondary ? "oui-py-2" : ""}`}
       onClick={onItemClick}
     >
       <div>{icon}</div>
-      <div className="oui-text-base oui-font-semibold oui-text-base-contrast-80">
-        {name}
-      </div>
+      <div className={textClassName}>{name}</div>
       {trailing}
     </div>
   );

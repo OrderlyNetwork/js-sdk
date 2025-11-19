@@ -1,7 +1,7 @@
-import { WalletAdapter } from "./wallet/walletAdapter";
-import { ChainNamespace} from "@orderly.network/types";
 import { Eip1193Provider } from "ethers";
+import { ChainNamespace } from "@orderly.network/types";
 import { IContract } from "./contract";
+import { WalletAdapter } from "./wallet/walletAdapter";
 
 class WalletAdapterManager {
   private _adapter!: WalletAdapter;
@@ -43,11 +43,10 @@ class WalletAdapterManager {
     options: {
       provider?: Eip1193Provider;
       contractManager?: IContract;
-    }
+    },
   ) {
-    console.log('-- this.walletAdapters', this.walletAdapters, chainNamespace);
     const adapter = this.walletAdapters.find(
-      (adapter) => adapter.chainNamespace === chainNamespace.toUpperCase()
+      (adapter) => adapter.chainNamespace === chainNamespace.toUpperCase(),
     );
 
     if (!adapter) {
@@ -60,8 +59,6 @@ class WalletAdapterManager {
       provider: options.provider,
       contractManager: options.contractManager,
     };
-
-    console.log("------+++++---", config);
 
     /**
      * lifecycle

@@ -10,7 +10,7 @@ import {
   SolanaDevnetChainInfo,
   ArbitrumSepoliaTokenInfo,
   SolanaDevnetTokenInfo,
-  TesntTokenFallback,
+  TesnetTokenFallback,
   SOLANA_TESTNET_CHAINID,
   ARBITRUM_TESTNET_CHAINID,
   ABSTRACT_TESTNET_CHAINID,
@@ -18,6 +18,11 @@ import {
 } from "@orderly.network/types";
 import { nativeTokenAddress } from "@orderly.network/types";
 import { OrderlyContext } from "../orderlyContext";
+import { useMainnetChainsStore } from "../provider/store/chainInfoMainStore";
+import { useTestnetChainsStore } from "../provider/store/chainInfoTestStore";
+import { useMainTokenStore } from "../provider/store/mainTokenStore";
+import { useSwapSupportStore } from "../provider/store/swapSupportStore";
+import { useTestTokenStore } from "../provider/store/testTokenStore";
 import { useQuery } from "../useQuery";
 
 // testnet only show arb sepolia and solana devnet
@@ -67,10 +72,10 @@ export type UseChainsReturnObject = {
   error: any;
 };
 
-const testnetTokenFallback = TesntTokenFallback([
-  ArbitrumSepoliaTokenInfo,
-  SolanaDevnetTokenInfo,
-]);
+// const testnetTokenFallback = TesnetTokenFallback([
+//   ArbitrumSepoliaTokenInfo,
+//   SolanaDevnetTokenInfo,
+// ]);
 
 const testnetChainFallback = [ArbitrumSepoliaChainInfo, SolanaDevnetChainInfo];
 
@@ -136,65 +141,79 @@ export function useChains(
 
   const chainsMap = useRef(new Map<number, Chain>());
 
-  const brokerId = configStore.get("brokerId");
-  const env = configStore.get("env");
-  const brokerIdQuery = brokerId !== "orderly" ? `?broker_id=${brokerId}` : "";
+  // const brokerId = configStore.get("brokerId");
+  // const env = configStore.get("env");
+  // const brokerIdQuery = brokerId !== "orderly" ? `?broker_id=${brokerId}` : "";
 
-  const urlPrefix = env === "prod" ? "https://testnet-api.orderly.org" : "";
+  // const urlPrefix = env === "prod" ? "https://testnet-api.orderly.org" : "";
 
   const needFetchFromAPI = options.forceAPI || !customChains;
 
-  const commonSwrOpts = {
-    revalidateIfStale: false,
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-    // If false, undefined data gets cached against the key.
-    revalidateOnMount: true,
-    // don't duplicate a request with the same key for 1hr
-    dedupingInterval: 3_600_000,
-    ...swrOptions,
-  };
+  // const commonSwrOpts = {
+  //   revalidateIfStale: false,
+  //   revalidateOnFocus: false,
+  //   revalidateOnReconnect: false,
+  //   // If false, undefined data gets cached against the key.
+  //   revalidateOnMount: true,
+  //   // don't duplicate a request with the same key for 1hr
+  //   dedupingInterval: 3_600_000,
+  //   ...swrOptions,
+  // };
+
+  const { data: tokenChainsRes, error: tokenError } = useMainTokenStore();
 
   // only prod env return mainnet chains info
-  const { data: tokenChainsRes, error: tokenError } = useQuery<API.Chain[]>(
-    "https://api.orderly.org/v1/public/token",
-    { ...commonSwrOpts },
-  );
+  // const { data: tokenChainsRes, error: tokenError } = useQuery<API.Chain[]>(
+  //   "https://api.orderly.org/v1/public/token",
+  //   { ...commonSwrOpts },
+  // );
+
+  const testTokenChainsRes = useTestTokenStore((state) => state.data);
 
   // testnet token info
-  const { data: testTokenChainsRes } = useQuery<API.Chain[]>(
-    `${urlPrefix}/v1/public/token`,
-    {
-      ...commonSwrOpts,
-      fallbackData: testnetTokenFallback,
-    },
-  );
+  // const { data: testTokenChainsRes } = useQuery<API.Chain[]>(
+  //   `${urlPrefix}/v1/public/token`,
+  //   {
+  //     ...commonSwrOpts,
+  //     fallbackData: testnetTokenFallback,
+  //   },
+  // );
 
+  const chainInfos = useMainnetChainsStore((state) => state.data);
   // only prod env return mainnet chains info
-  const { data: chainInfos, error: chainInfoErr } = useQuery(
-    needFetchFromAPI
-      ? `https://api.orderly.org/v1/public/chain_info${brokerIdQuery}`
-      : null,
-    { ...commonSwrOpts },
-  );
+  // const { data: chainInfos, error: chainInfoErr } = useQuery(
+  //   needFetchFromAPI
+  //     ? `https://api.orderly.org/v1/public/chain_info${brokerIdQuery}`
+  //     : null,
+  //   { ...commonSwrOpts },
+  // );
 
+  const testChainInfos = useTestnetChainsStore((state) => state.data);
   // testnet chains info
-  const { data: testChainInfos, error: testChainInfoError } = useQuery(
-    needFetchFromAPI
-      ? `${urlPrefix}/v1/public/chain_info${brokerIdQuery}`
-      : null,
-    {
-      ...commonSwrOpts,
-      fallbackData: testnetChainFallback,
-      onError: (error) => {
-        console.error("Failed to fetch testnet chain info:", error);
-      },
-    },
-  );
+  // const { data: testChainInfos, error: testChainInfoError } = useQuery(
+  //   needFetchFromAPI
+  //     ? `${urlPrefix}/v1/public/chain_info${brokerIdQuery}`
+  //     : null,
+  //   {
+  //     ...commonSwrOpts,
+  //     fallbackData: testnetChainFallback,
+  //     onError: (error) => {
+  //       console.error("Failed to fetch testnet chain info:", error);
+  //     },
+  //   },
+  // );
 
   const { swapChains, swapChainsError } = useSwapChains();
 
   const chains = useMemo(() => {
+    if (
+      !tokenChainsRes ||
+      !testTokenChainsRes ||
+      !chainInfos ||
+      !testChainInfos
+    ) {
+      return [];
+    }
     const mainnetChains = formatChains({
       tokenChains: tokenChainsRes,
       chainInfos,
@@ -331,19 +350,21 @@ export function filterByAllowedChains(
 function useSwapChains() {
   const { enableSwapDeposit } = useContext(OrderlyContext);
 
-  const { data: swapChainsRes, error: swapChainsError } = useSWR<any>(
-    () => (enableSwapDeposit ? "https://fi-api.woo.org/swap_support" : null),
-    (url) => fetch(url).then((res) => res.json()),
-    {
-      revalidateIfStale: false,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      // If false, undefined data gets cached against the key.
-      revalidateOnMount: true,
-      // dont duplicate a request w/ same key for 1hr
-      dedupingInterval: 3_600_000,
-    },
-  );
+  const { data: swapChainsRes, error: swapChainsError } = useSwapSupportStore();
+
+  // const { data: swapChainsRes, error: swapChainsError } = useSWR<any>(
+  //   () => (enableSwapDeposit ? "https://fi-api.woo.org/swap_support" : null),
+  //   (url) => fetch(url).then((res) => res.json()),
+  //   {
+  //     revalidateIfStale: false,
+  //     revalidateOnFocus: false,
+  //     revalidateOnReconnect: false,
+  //     // If false, undefined data gets cached against the key.
+  //     revalidateOnMount: true,
+  //     // dont duplicate a request w/ same key for 1hr
+  //     dedupingInterval: 3_600_000,
+  //   },
+  // );
 
   const swapChains = useMemo(() => {
     if (!enableSwapDeposit || !swapChainsRes || !swapChainsRes.data) {
@@ -404,13 +425,13 @@ export function formatChains({
   chainTransformer,
 }: {
   chainInfos?: any;
-  tokenChains?: API.Chain[];
+  tokenChains?: API.Token[];
   swapChains?: any[];
   filter?: (chain: any) => boolean;
   mainnet: boolean;
   chainTransformer?: (params: {
     chains: API.Chain[];
-    tokenChains: API.Chain[];
+    tokenChains: API.Token[];
     chainInfos: any[];
     swapChains: any[];
     mainnet: boolean;
@@ -430,6 +451,7 @@ export function formatChains({
       name,
       public_rpc_url,
       currency_symbol,
+      currency_decimal,
       explorer_base_url,
       vault_address,
     } = chainInfo;
@@ -445,6 +467,7 @@ export function formatChains({
 
       public_rpc_url,
       currency_symbol,
+      currency_decimal,
       bridge_enable: true,
       explorer_base_url,
 

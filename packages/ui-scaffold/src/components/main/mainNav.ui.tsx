@@ -5,6 +5,7 @@ import { WalletConnectButtonExtension } from "../accountMenu/menu.widget";
 import { AccountSummaryWidget } from "../accountSummary";
 import { ChainMenuWidget } from "../chainMenu";
 import { LanguageSwitcherWidget } from "../languageSwitcher";
+import { MessageCenterWidget } from "../messageCenter/msgCenter.widget";
 import { SubAccountWidget } from "../subAccount";
 import { CampaignButton } from "./campaignButton";
 import { LinkDeviceWidget } from "./linkDevice";
@@ -46,6 +47,7 @@ export const MainNav: FC<PropsWithChildren<MainNavScriptReturn>> = (props) => {
     const languageSwitcher = <LanguageSwitcherWidget />;
     const subAccount = showSubAccount && <SubAccountWidget />;
     const chainMenu = showChainMenu && <ChainMenuWidget />;
+    const notify = <MessageCenterWidget />;
     const walletConnect = !hideWalletConnectButton && (
       <WalletConnectButtonExtension />
     );
@@ -74,6 +76,7 @@ export const MainNav: FC<PropsWithChildren<MainNavScriptReturn>> = (props) => {
         languageSwitcher,
         subAccount,
         chainMenu,
+        notify,
         walletConnect,
       });
     }
@@ -104,6 +107,7 @@ export const MainNav: FC<PropsWithChildren<MainNavScriptReturn>> = (props) => {
               {linkDevice}
             </>
           )}
+          {notify}
           {languageSwitcher}
           {subAccount}
           {chainMenu}

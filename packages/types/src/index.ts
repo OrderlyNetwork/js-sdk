@@ -32,6 +32,7 @@ export type {
   ChildOrder,
   BracketOrder,
 } from "./order";
+export * from "./context";
 export * from "./withdraw";
 export * from "./chains";
 export * from "./track";

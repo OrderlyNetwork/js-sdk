@@ -46,7 +46,11 @@ const getChartKey = (isMobile?: boolean) => {
 };
 
 const defaultLocale = (localeCode: LocaleCode) => {
-  return localeCode === "id" ? "id_ID" : localeCode;
+  return localeCode === "id"
+    ? "id_ID"
+    : localeCode === "tc"
+      ? "zh_TW"
+      : localeCode;
 };
 
 export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
@@ -63,6 +67,8 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
     colorConfig: customerColorConfig,
     locale = defaultLocale,
     classNames,
+    enabled_features,
+    disabled_features,
   } = props;
 
   const localeCode = useLocaleCode();
@@ -334,6 +340,8 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
         chartKey: getChartKey(isMobile),
         mode,
         onClick: () => {},
+        enabled_features,
+        disabled_features,
       };
 
       chart.current = new Widget(chartProps);

@@ -3,5 +3,16 @@
   "extend.affiliate.tag": "40% Cashback",
   "extend.affiliate.description": "Guadagna di più come affiliato Orderly",
   "extend.staking": "Staking",
-  "extend.staking.description": "Stake ORDER/esORDER per ottenere VALOR"
+  "extend.staking.description": "Stake ORDER/esORDER per ottenere VALOR",
+  "extend.dashboard": "Dashboard",
+  "extend.stake": "Staking",
+  "extend.earn": "Guadagna",
+  "extend.spot": "Spot",
+  "extend.spotDune": "Spot Dune",
+  "extend.perpsDune": "Perps Dune",
+  "extend.careers": "Carriere",
+  "extend.docs": "Documenti",
+  "extend.audits": "Audit",
+  "extend.vaults": "Depositi",
+  "extend.perps": "Perps"
 }

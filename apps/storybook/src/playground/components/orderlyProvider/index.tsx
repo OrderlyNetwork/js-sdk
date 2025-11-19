@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Outlet, useLocation } from "react-router";
-import { OrderlyAppProvider } from "../../../components/orderlyProvider/orderlyAppProvider";
+import { OrderlyAppRootProvider } from "../../../components/orderlyProvider/orderlyAppProvider";
 import { RouteProvider } from "../../../components/orderlyProvider/rounteProvider";
 import { WalletConnectorProvider } from "../../../components/orderlyProvider/walletConnectorProvider";
 import { useEnvFormUrl } from "../../hooks/useEnvFormUrl";
@@ -27,7 +27,7 @@ export const OrderlyProvider: React.FC = () => {
     <RouteProvider onRouteChange={onRouteChange}>
       <LocaleProvider>
         <WalletConnectorProvider usePrivy={usePrivy}>
-          <OrderlyAppProvider
+          <OrderlyAppRootProvider
             networkId={networkId}
             brokerId={brokerId}
             brokerName={brokerName}
@@ -36,7 +36,7 @@ export const OrderlyProvider: React.FC = () => {
             <ScrollToTop />
             {/* because the portfolio layout is used in route layout, we need to render the outlet */}
             <Outlet />
-          </OrderlyAppProvider>
+          </OrderlyAppRootProvider>
         </WalletConnectorProvider>
       </LocaleProvider>
     </RouteProvider>

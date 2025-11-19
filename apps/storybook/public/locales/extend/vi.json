@@ -3,5 +3,16 @@
   "extend.affiliate.tag": "Hoàn trả 40%",
   "extend.affiliate.description": "Kiếm thêm với tư cách là đối tác của Orderly",
   "extend.staking": "Staking",
-  "extend.staking.description": "Staking ORDER/esORDER để nhận VALOR"
+  "extend.staking.description": "Staking ORDER/esORDER để nhận VALOR",
+  "extend.dashboard": "Bảng điều khiển",
+  "extend.stake": "Staking",
+  "extend.earn": "Kiếm tiền",
+  "extend.spot": "Spot",
+  "extend.spotDune": "Spot Dune",
+  "extend.perpsDune": "Perps Dune",
+  "extend.careers": "Nghề nghiệp",
+  "extend.docs": "Tài liệu",
+  "extend.audits": "Kiểm toán",
+  "extend.vaults": "Kho",
+  "extend.perps": "Perps"
 }
