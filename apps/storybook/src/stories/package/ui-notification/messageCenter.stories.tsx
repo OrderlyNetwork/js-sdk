@@ -1,9 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { AnnouncementType } from "@orderly.network/types";
-import {
-  AnnouncementCenterUI,
-  MsgItem,
-} from "@orderly.network/ui-notification";
+import { AnnouncementCenterUI } from "@orderly.network/ui-notification";
 
 /**
  * MessageCenter component stories
@@ -12,7 +9,6 @@ import {
 const meta: Meta<typeof AnnouncementCenterUI> = {
   title: "Package/ui-notification/MessageCenter",
   component: AnnouncementCenterUI,
-  subcomponents: { MsgItem }, // 👈 Adds the MsgItem component as a subcomponent
   parameters: {
     layout: "centered",
   },
