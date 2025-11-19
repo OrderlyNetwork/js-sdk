@@ -173,11 +173,17 @@ const adaptToStateStorage = <T>(
   setItem: async (_name: string, value: string): Promise<void> => {
     try {
       const parsed = JSON.parse(value);
-      const stateData = pathOr([], ["state"], parsed) as Array<T>;
+      const stateData = pathOr([], ["state"], parsed) as Array<T> | null;
 
-      if (Array.isArray(stateData) && stateData.length > 0) {
+      // Always update IndexedDB, even if data is empty or null
+      // This ensures that empty states clear the IndexedDB store
+      if (Array.isArray(stateData)) {
         await indexedDBStorage.setItem(stateData);
+      } else if (stateData === null) {
+        // Explicitly clear IndexedDB when state is null
+        await indexedDBStorage.removeItem();
       }
+      // If stateData is undefined or not an array, do nothing (preserve existing data)
     } catch (error) {
       console.error("Failed to set item in IndexedDB storage:", error);
       console.warn("Raw value that failed to parse:", _name, value);

@@ -31,6 +31,7 @@ export const MainNavMenus: FC<MainNavItemsProps> = (props) => {
           // active={item.href === props.current?.[0]}
           currentPath={props.current}
           onClick={props.onItemClick}
+          classNames={classNames}
         />
       ))}
     </Flex>

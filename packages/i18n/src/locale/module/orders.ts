@@ -47,6 +47,15 @@ export const orders = {
   "orders.tpsl.cancelAll.description":
     "Are you sure you want to cancel all of your TP/SL orders?",
 
+  "orders.cancelAll.ofSymbol": "Cancel all of {{symbol}}",
+  "orders.pending.cancelAll.forSymbol":
+    "Cancel all pending orders for {{symbol}}",
+  "orders.pending.cancelAll.forSymbol.description":
+    "Are you sure you want to cancel all pending orders for {{symbol}}?",
+  "orders.tpsl.cancelAll.forSymbol": "Cancel all TP/SL orders for {{symbol}}",
+  "orders.tpsl.cancelAll.forSymbol.description":
+    "Are you sure you want to cancel all TP/SL orders for {{symbol}}?",
+
   "orders.price.greaterThan": "Price can not be greater than {{max}} USDC.",
   "orders.price.lessThan": "Price can not be less than {{min}} USDC.",
 

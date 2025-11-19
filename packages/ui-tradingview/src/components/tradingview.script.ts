@@ -222,7 +222,9 @@ export function useTradingviewScript(props: TradingviewWidgetPropsInterface) {
     }
     localStorage.setItem(TradingViewSDKLocalstorageKey.interval, newInterval);
     setInterval(newInterval);
-    chart.current?.setSymbol(symbol ?? "", newInterval as any);
+    // chart.current?.setSymbol(symbol ?? "", newInterval as any);
+    chart.current?.setResolution(newInterval);
+    // chart.current?.setResolution(newInterval)
   };
 
   const changeLineType = (newLineType: string) => {

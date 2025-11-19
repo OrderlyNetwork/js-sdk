@@ -3,11 +3,6 @@ export const markets = {
   "markets.recent": "Recent",
   "markets.newListings": "New listings",
   "markets.allMarkets": "All markets",
-
-  "markets.spot.description": "One-click crosschain swap.",
-  "markets.perps.description":
-    "Gasless orderbook PERP DEX with up to 100x leverage.",
-
   "markets.openInterest": "Open interest",
   "markets.openInterest.tooltip": "Total size of positions per side.",
 

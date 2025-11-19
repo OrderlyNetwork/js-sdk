@@ -30,7 +30,7 @@ export class Datafeed extends AbstractDatafeed {
   private eventBus: MultiBroadcastEventBus = new MultiBroadcastEventBus();
 
   constructor(apiUrl: string, ws: any) {
-    const datafeedURL = `${apiUrl}/tv`;
+    const datafeedURL = `${apiUrl}`;
     super(datafeedURL);
 
     this._subscribeQuoteMap = new Map();

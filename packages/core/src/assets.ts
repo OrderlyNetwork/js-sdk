@@ -320,7 +320,7 @@ export class Assets {
       userAddress = agwGobalAddress;
     }
 
-    console.log("get allowance", {
+    console.info("get allowance", {
       tokenAddress,
       vaultAddress,
       userAddress,
@@ -387,7 +387,7 @@ export class Assets {
     const vaultAddress = inputVaultAddress || contractAddress.vaultAddress;
     const tokenAddress = address || contractAddress.tokenAddress;
 
-    console.log("approve", {
+    console.info("approve", {
       vaultAddress,
       tokenAddress,
       parsedAmount,
@@ -516,7 +516,7 @@ export class Assets {
       vaultAddress = contractAddress.vaultAddress;
     }
 
-    console.log("get deposit fee", {
+    console.info("get deposit fee", {
       userAddress,
       vaultAddress,
       depositData,
@@ -637,7 +637,7 @@ export class Assets {
       ABSTRACT_CHAIN_ID_MAP.has(this.account.walletAdapter.chainId) &&
       agwGobalAddress
     ) {
-      console.log(
+      console.info(
         "agw address",
         agwGobalAddress,
         this.account.walletAdapter.chainId,
@@ -646,7 +646,7 @@ export class Assets {
       fromAddress = agwGobalAddress;
       contractData = [userAddress, depositData];
     }
-    console.log("xxx deposit", {
+    console.info("xxx deposit", {
       vaultAddress,
       fromAddress,
       contractMethod,

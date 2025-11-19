@@ -18,17 +18,17 @@ export class Requester {
   public sendRequest<T extends UdfResponse>(
     datafeedUrl: string,
     urlPath: string,
-    params?: RequestParams
+    params?: RequestParams,
   ): Promise<T | UdfErrorResponse>;
   public sendRequest<T>(
     datafeedUrl: string,
     urlPath: string,
-    params?: RequestParams
+    params?: RequestParams,
   ): Promise<T>;
   public sendRequest<T>(
     datafeedUrl: string,
     urlPath: string,
-    params?: RequestParams
+    params?: RequestParams,
   ): Promise<T> {
     if (params !== undefined) {
       const paramKeys = Object.keys(params);
@@ -39,7 +39,7 @@ export class Requester {
       urlPath += paramKeys
         .map((key: string) => {
           return `${encodeURIComponent(key)}=${encodeURIComponent(
-            params[key].toString()
+            params[key].toString(),
           )}`;
         })
         .join("&");
@@ -54,8 +54,20 @@ export class Requester {
       options.headers = this._headers;
     }
 
-    return fetch(`${datafeedUrl}/${urlPath}`, options)
-      .then((response: Response) => response.text())
-      .then((responseTest: string) => JSON.parse(responseTest));
+    return (
+      fetch(`${datafeedUrl}/${urlPath}`, options)
+        // .then((response: Response) => response.text())
+        .then((response: Response) => response.json())
+        .then((data: any) => {
+          if (typeof data.success === "undefined") {
+            return data;
+          }
+          if (!data.success) {
+            throw new Error(data.message);
+          }
+          return data;
+        })
+    );
+    // .then((responseTest: string) => JSON.parse(responseTest));
   }
 }

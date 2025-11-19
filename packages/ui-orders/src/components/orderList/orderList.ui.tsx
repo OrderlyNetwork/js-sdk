@@ -11,6 +11,7 @@ import {
   TableFeatures,
 } from "@orderly.network/ui";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
+import { formatSymbol } from "@orderly.network/utils";
 import { grayCell } from "../../utils/util";
 import { TabType } from "../orders.widget";
 import { SymbolProvider } from "../provider/symbolProvider";
@@ -209,6 +210,9 @@ export const MobileOrderList: FC<
 
 const CancelAll: FC<OrdersBuilderState> = (props) => {
   const { t } = useTranslation();
+  const { symbol } = props;
+
+  const formattedSymbol = symbol ? formatSymbol(symbol, "base") : symbol;
 
   return (
     <Button
@@ -220,7 +224,9 @@ const CancelAll: FC<OrdersBuilderState> = (props) => {
       onClick={(e) => props.onCancelAll()}
       data-testid={`oui-testid-dataList-${props.type.toLowerCase()}-cancelAll-button`}
     >
-      {t("orders.cancelAll")}
+      {symbol
+        ? t("orders.cancelAll.ofSymbol", { symbol: formattedSymbol })
+        : t("orders.cancelAll")}
     </Button>
   );
 };
