@@ -87,7 +87,7 @@ export const PartialTPSL: FC<{
     }
 
     return children;
-  }, [tpTriggerPrice, slTriggerPrice, order?.symbol, t]);
+  }, [tpTriggerPrice, slTriggerPrice, order?.symbol, t, slPriceError]);
   const hasTPSL = Array.isArray(child) ? !!child.length : !child;
   return (
     <Flex className="oui-gap-[6px]">

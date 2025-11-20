@@ -230,7 +230,13 @@ export const TPSLTriggerPrice: FC<{
     }
 
     return children;
-  }, [props.takeProfitPrice, props.stopLossPrice, order?.symbol, t]);
+  }, [
+    props.takeProfitPrice,
+    props.stopLossPrice,
+    order?.symbol,
+    t,
+    props.slPriceError,
+  ]);
 
   const content = (
     <div
