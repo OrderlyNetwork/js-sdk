@@ -21,11 +21,13 @@ export type LeaderboardPageProps = GeneralLeaderboardWidgetProps &
   TradingLeaderboardProviderProps & {
     style?: React.CSSProperties;
     className?: string;
+    hideCampaignsBanner?: boolean;
   };
 
 export const LeaderboardPage: FC<LeaderboardPageProps> = (props) => {
+  const { hideCampaignsBanner, ...rest } = props;
   return (
-    <TradingLeaderboardProvider {...props}>
+    <TradingLeaderboardProvider {...rest}>
       <div
         style={{
           paddingBottom: "calc(64px + env(safe-area-inset-bottom))",
@@ -37,7 +39,10 @@ export const LeaderboardPage: FC<LeaderboardPageProps> = (props) => {
           props.className,
         )}
       >
-        <CampaignsWidget className="oui-relative oui-z-[1] oui-mx-6" />
+        <CampaignsWidget
+          hideCampaignsBanner={hideCampaignsBanner}
+          className="oui-relative oui-z-[1] oui-mx-6"
+        />
         <RewardsWidget />
         <LeaderboardSection {...props} />
         <RuleWidget />
