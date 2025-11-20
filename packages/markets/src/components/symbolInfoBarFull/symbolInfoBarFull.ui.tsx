@@ -340,7 +340,7 @@ const FundingRate: React.FC<{ symbol: string }> = ({ symbol }) => {
 
   return (
     <div>
-      <Text.numeral unit="%" dp={4} className="oui-text-warning-darken">
+      <Text.numeral unit="%" dp={4} intensity={98}>
         {data.est_funding_rate!}
       </Text.numeral>
       <Text intensity={36} className="oui-tabular-nums">
