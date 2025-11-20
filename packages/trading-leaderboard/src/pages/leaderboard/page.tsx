@@ -1,7 +1,7 @@
 import { FC, ReactNode } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Box, cn, Flex, Text, useScreen } from "@orderly.network/ui";
-import { Background } from "../../components/background";
+import { LeaderboardBackground } from "../../components/background";
 import { CampaignsWidget } from "../../components/campaigns/campaigns.widget";
 import { GeneralLeaderboardIWidget } from "../../components/leaderboard128/generalLeaderboard";
 import { CampaignLeaderboardWidget } from "../../components/leaderboard/campaignLeaderboard";
@@ -69,7 +69,7 @@ export const LeaderboardSection: FC<LeaderboardSectionProps> = (props) => {
   if (currentCampaignId === "general") {
     return (
       <Box px={3} className={cn("oui-mix-blend-screen")}>
-        <Background backgroundSrc={backgroundSrc} />
+        <LeaderboardBackground backgroundSrc={backgroundSrc} />
         <GeneralLeaderboardWidget {...props} className="oui-mt-10" />
       </Box>
     );

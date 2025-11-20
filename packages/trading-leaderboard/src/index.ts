@@ -14,3 +14,6 @@ export * from "./components/leaderboard/campaignLeaderboard";
 export * from "./pages/leaderboard/page";
 
 export * from "./components/campaigns/type";
+
+export { CampaignsHeaderWidget } from "./components/campaigns/header";
+export { LeaderboardBackground } from "./components/background";
