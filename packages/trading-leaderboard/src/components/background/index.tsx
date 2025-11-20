@@ -5,7 +5,7 @@ type BackgroundProps = {
   backgroundSrc?: string;
 };
 
-export const Background: FC<BackgroundProps> = (props) => {
+export const LeaderboardBackground: FC<BackgroundProps> = (props) => {
   const { isMobile } = useScreen();
 
   const isVideo = useMemo(() => {
