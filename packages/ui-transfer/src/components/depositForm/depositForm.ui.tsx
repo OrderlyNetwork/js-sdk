@@ -129,7 +129,7 @@ export const DepositForm: FC<DepositFormScriptReturn> = (props) => {
             >
               <Flex direction="column" itemAlign="start">
                 <Text size="2xs" weight="semibold" intensity={36}>
-                  Max deposit amount for{" "}
+                  {t("transfer.depositCap.tooltip")}
                   <Text as="span" size="2xs" weight="semibold" intensity={80}>
                     {value}.
                   </Text>
@@ -140,7 +140,7 @@ export const DepositForm: FC<DepositFormScriptReturn> = (props) => {
                   rel="noopener noreferrer"
                   className="oui-text-2xs oui-text-primary"
                 >
-                  Learn more
+                  {t("common.learnMore")}
                 </a>
               </Flex>
             </Box>

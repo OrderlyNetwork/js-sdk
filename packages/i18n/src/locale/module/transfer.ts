@@ -31,6 +31,8 @@ export const transfer = {
     "Withdrawals are not supported on this chain. Please switch to any of the bridgeless networks.",
   "transfer.withdraw.unsupported.networkName":
     "Withdrawals are not supported on {{networkName}}. Please switch to any of the bridgeless networks.",
+  "transfer.withdraw.unsupported.token":
+    "{{token}} withdrawals are unavailable on this network",
 
   "transfer.withdraw.crossChain.confirmWithdraw": "Confirm to withdraw",
   "transfer.withdraw.crossChain.recipientAddress": "Recipient address",
@@ -133,6 +135,8 @@ export const transfer = {
 
   "transfer.convert.completed": "Convert completed",
   "transfer.convert.failed": "Convert failed",
+  "transfer.depositCap": "Deposit cap",
+  "transfer.depositCap.tooltip": "Max deposit amount for ",
   "transfer.deposit.convertRate": "Convert rate",
   "transfer.convert.convertAssets": "Convert assets to USDC",
   "transfer.deposit.collateralContribution": "Collateral contribution",

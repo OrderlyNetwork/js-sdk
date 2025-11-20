@@ -23,6 +23,7 @@ export type QuantityInputProps = {
   label?: string;
   status?: InputStatus;
   hintMessage?: string;
+  hintSuffix?: ReactNode;
   onValueChange?: (value: string) => void;
   onTokenChange?: (token: any) => void;
   fetchBalance?: (token: string, decimals: number) => Promise<any>;
@@ -44,6 +45,7 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
     label,
     status,
     hintMessage,
+    hintSuffix,
     value,
     onValueChange,
     fetchBalance,
@@ -163,25 +165,30 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
   );
 
   const message = (
-    <Flex mt={1} gapX={1} px={1}>
-      <Box
-        width={4}
-        height={4}
-        r="full"
-        className={cn(
-          status === "error" && "oui-bg-danger-light",
-          status === "warning" && "oui-bg-warning-light",
-        )}
-      ></Box>
-      <Text
-        size="2xs"
-        className={cn(
-          status === "error" && "oui-text-danger-light",
-          status === "warning" && "oui-text-warning-light",
-        )}
-      >
-        {hintMessage}
-      </Text>
+    <Flex mt={1} gapX={1} px={1} justify="between" itemAlign="center">
+      <Flex gapX={1} itemAlign="center">
+        <Box
+          width={4}
+          height={4}
+          r="full"
+          className={cn(
+            status === "error" && "oui-bg-danger-light",
+            status === "warning" && "oui-bg-warning-light",
+          )}
+        ></Box>
+        <Text
+          size="2xs"
+          className={cn(
+            status === "error" && "oui-text-danger-light",
+            status === "warning" && "oui-text-warning-light",
+          )}
+        >
+          {hintMessage}
+        </Text>
+      </Flex>
+      {hintSuffix && (
+        <Box className="oui-flex oui-items-center oui-gap-1">{hintSuffix}</Box>
+      )}
     </Flex>
   );
 
