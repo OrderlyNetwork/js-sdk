@@ -21,6 +21,7 @@ export const transfer = {
     "Fee data is currently unavailable. Please try again later.",
   "transfer.deposit.notEnoughGas":
     "Not enough gas. Add some {{token}} to your wallet to continue.",
+  "transfer.deposit.exceedCap": "Amount exceeds user deposit cap",
 
   "transfer.deposit.estGasFee": "Est. gas fee",
   "transfer.deposit.destinationGasFee": "Destination gas fee",

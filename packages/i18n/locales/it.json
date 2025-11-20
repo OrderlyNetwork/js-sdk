@@ -738,6 +738,7 @@
   "transfer.deposit.estGasFee": "Commissione gas stimata",
   "transfer.deposit.destinationGasFee": "Commissione gas destinazione",
   "transfer.deposit.destinationGasFee.description": "Sono necessari token gas aggiuntivi per coprire le operazioni sulla catena di destinazione. L'importo mostrato è una stima - preparate fondi aggiuntivi per garantire una copertura sufficiente.",
+  "transfer.deposit.exceedCap": "L'importo supera il limite di deposito dell'utente",
   "transfer.withdraw.unsupported.chain": "I prelievi non sono supportati su questa catena. Passa a una delle reti senza bridge.",
   "transfer.withdraw.unsupported.networkName": "I prelievi non sono supportati su {{networkName}}. Passa a una delle reti senza bridge.",
   "transfer.withdraw.unsupported.token": "I prelievi di {{token}} non sono disponibili su questa rete",

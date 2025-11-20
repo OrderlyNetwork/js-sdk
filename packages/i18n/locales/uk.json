@@ -738,6 +738,7 @@
   "transfer.deposit.estGasFee": "Розрахункова комісія за газ",
   "transfer.deposit.destinationGasFee": "Комісія за газ призначення",
   "transfer.deposit.destinationGasFee.description": "Додаткові газові токени потрібні для покриття операцій у мережі призначення. Показана сума є оцінкою - підготуйте додаткові кошти для забезпечення достатнього покриття.",
+  "transfer.deposit.exceedCap": "Сума перевищує ліміт депозиту користувача",
   "transfer.withdraw.unsupported.chain": "Виведення не підтримується в цій мережі. Будь ласка, переключіться на будь-яку з мереж без мосту.",
   "transfer.withdraw.unsupported.networkName": "Виведення не підтримується в {{networkName}}. Будь ласка, переключіться на будь-яку з мереж без мосту.",
   "transfer.withdraw.unsupported.token": "Виведення {{token}} недоступне в цій мережі",

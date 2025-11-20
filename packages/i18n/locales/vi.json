@@ -738,6 +738,7 @@
   "transfer.deposit.estGasFee": "Phí gas ước tính",
   "transfer.deposit.destinationGasFee": "Phí gas đích",
   "transfer.deposit.destinationGasFee.description": "Cần thêm token gas để trang trải các hoạt động trên chuỗi đích. Số tiền hiển thị là ước tính - vui lòng chuẩn bị thêm để đảm bảo đủ chi phí.",
+  "transfer.deposit.exceedCap": "Số tiền vượt quá giới hạn nạp tiền của người dùng",
   "transfer.withdraw.unsupported.chain": "Rút tiền không được hỗ trợ trên chuỗi này. Vui lòng chuyển sang bất kỳ mạng không cần cầu nối nào.",
   "transfer.withdraw.unsupported.networkName": "Rút tiền không được hỗ trợ trên {{networkName}}. Vui lòng chuyển sang bất kỳ mạng không cần cầu nối nào.",
   "transfer.withdraw.unsupported.token": "Rút tiền {{token}} không khả dụng trên mạng này",

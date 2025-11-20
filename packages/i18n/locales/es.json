@@ -738,6 +738,7 @@
   "transfer.deposit.estGasFee": "Tarifa de gas estimada",
   "transfer.deposit.destinationGasFee": "Tarifa de gas de destino",
   "transfer.deposit.destinationGasFee.description": "Se requieren tokens de gas adicionales para cubrir las operaciones en la cadena de destino. El monto mostrado es una estimación - prepare fondos adicionales para asegurar una cobertura suficiente.",
+  "transfer.deposit.exceedCap": "El monto excede el límite de depósito del usuario",
   "transfer.withdraw.unsupported.chain": "Los retiros no están soportados en esta cadena. Por favor cambia a cualquiera de las redes sin puente.",
   "transfer.withdraw.unsupported.networkName": "Los retiros no están soportados en {{networkName}}. Por favor cambia a cualquiera de las redes sin puente.",
   "transfer.withdraw.unsupported.token": "Los retiros de {{token}} no están disponibles en esta red",

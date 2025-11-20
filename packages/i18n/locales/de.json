@@ -738,6 +738,7 @@
   "transfer.deposit.estGasFee": "Geschätzte Gasgebühr",
   "transfer.deposit.destinationGasFee": "Ziel-Gasgebühr",
   "transfer.deposit.destinationGasFee.description": "Zusätzliche Gas-Token sind erforderlich, um Operationen auf der Ziel-Chain zu decken. Der angezeigte Betrag ist eine Schätzung - bereiten Sie zusätzliche Mittel vor, um eine ausreichende Deckung sicherzustellen.",
+  "transfer.deposit.exceedCap": "Der Betrag überschreitet die Einzahlungsobergrenze des Benutzers",
   "transfer.withdraw.unsupported.chain": "Auszahlungen werden auf dieser Chain nicht unterstützt. Bitte wechseln Sie zu einem der brückenlosen Netzwerke.",
   "transfer.withdraw.unsupported.networkName": "Auszahlungen werden auf {{networkName}} nicht unterstützt. Bitte wechseln Sie zu einem der brückenlosen Netzwerke.",
   "transfer.withdraw.unsupported.token": "{{token}} Auszahlungen sind in diesem Netzwerk nicht verfügbar",

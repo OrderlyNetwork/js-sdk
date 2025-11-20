@@ -738,6 +738,7 @@
   "transfer.deposit.estGasFee": "預估燃氣費",
   "transfer.deposit.destinationGasFee": "目的地燃氣費",
   "transfer.deposit.destinationGasFee.description": "需要額外的燃气代幣来支付目的地鏈上的操作。顯示的金額是估算值 - 請準備額外的資金以確保足夠的覆蓋。",
+  "transfer.deposit.exceedCap": "金額超過用戶存款上限",
   "transfer.withdraw.unsupported.chain": "此鏈不支援提款。請切換到任何無橋接網絡。",
   "transfer.withdraw.unsupported.networkName": "{{networkName}}不支援提款。請切換到任何無橋接網絡。",
   "transfer.withdraw.unsupported.token": "{{token}} 在此網絡上不可提款",

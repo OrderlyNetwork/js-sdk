@@ -738,6 +738,7 @@
   "transfer.deposit.estGasFee": "推定ガス手数料",
   "transfer.deposit.destinationGasFee": "宛先ガス手数料",
   "transfer.deposit.destinationGasFee.description": "宛先チェーンでの操作をカバーするために、追加のガストークンが必要です。表示される金額は見積もりです - 十分なカバレッジを確保するために余分に準備してください。",
+  "transfer.deposit.exceedCap": "金額がユーザーの入金上限を超えています",
   "transfer.withdraw.unsupported.chain": "このチェーンでは出金がサポートされていません。ブリッジレスネットワークのいずれかに切り替えてください。",
   "transfer.withdraw.unsupported.networkName": "{{networkName}}では出金がサポートされていません。ブリッジレスネットワークのいずれかに切り替えてください。",
   "transfer.withdraw.unsupported.token": "{{token}}の出金はこのネットワークでは利用できません",

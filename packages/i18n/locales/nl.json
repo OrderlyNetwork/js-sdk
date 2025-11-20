@@ -738,6 +738,7 @@
   "transfer.deposit.estGasFee": "Geschatte gaskosten",
   "transfer.deposit.destinationGasFee": "Bestemming gaskosten",
   "transfer.deposit.destinationGasFee.description": "Extra gastokens zijn vereist om operaties op de bestemmingsketen te dekken. Het getoonde bedrag is een schatting - bereid extra voor om voldoende dekking te waarborgen.",
+  "transfer.deposit.exceedCap": "Het bedrag overschrijdt de stortingslimiet van de gebruiker",
   "transfer.withdraw.unsupported.chain": "Opnames worden niet ondersteund op deze keten. Schakel over naar een van de brugloos netwerken.",
   "transfer.withdraw.unsupported.networkName": "Opnames worden niet ondersteund op {{networkName}}. Schakel over naar een van de brugloos netwerken.",
   "transfer.withdraw.unsupported.token": "{{token}} opnames zijn niet beschikbaar op dit netwerk",

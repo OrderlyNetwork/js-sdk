@@ -344,7 +344,7 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
   const hasUserMaxQtyError = !!userMaxQtyMessage;
   const finalInputStatus = hasUserMaxQtyError ? "error" : inputStatus;
   const finalHintMessage = hasUserMaxQtyError
-    ? t("transfer.insufficientBalance")
+    ? t("transfer.deposit.exceedCap")
     : hintMessage;
 
   const disabled =
