@@ -1,6 +1,14 @@
 import { useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { Flex, Tooltip, Text, InfoCircleIcon } from "@orderly.network/ui";
+import {
+  Flex,
+  Tooltip,
+  Text,
+  InfoCircleIcon,
+  AddCircleIcon,
+  Button,
+  modal,
+} from "@orderly.network/ui";
 import { LTVRiskTooltipWidget } from "../LTVRiskTooltip";
 
 type AvailableProps = {
@@ -46,6 +54,20 @@ export const Available = (props: AvailableProps) => {
         >
           {canTrade ? freeCollateral : 0}
         </Text.numeral>
+        <Button
+          variant="text"
+          size="xs"
+          color="secondary"
+          className="oui-p-0 hover:oui-text-base-contrast-80"
+          onClick={() => {
+            // TODO: when we plan to move modal IDs to a public package, we need to use the ID from the public package
+            modal.show("DepositAndWithdrawWithDialogId", {
+              activeTab: "deposit",
+            });
+          }}
+        >
+          <AddCircleIcon opacity={1} />
+        </Button>
       </Flex>
     </Flex>
   );

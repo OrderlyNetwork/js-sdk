@@ -55,6 +55,8 @@ export abstract class AbstractDatafeed {
 
   private readonly _requester: Requester;
 
+  private _historyCursor: number | null = null;
+
   constructor(datafeedURL: string) {
     this._datafeedURL = datafeedURL;
     this._requester = new Requester();
@@ -78,10 +80,32 @@ export abstract class AbstractDatafeed {
     onResult: HistoryCallback,
     onError: ErrorCallback,
   ): void {
+    const { to, firstDataRequest } = periodParams;
+    if (firstDataRequest || this._historyCursor === null) {
+      this._historyCursor = to;
+    }
+
+    const cursor = this._historyCursor ?? to;
+    const maxBarsPerRequest = 1000;
+    const barsToLoad = maxBarsPerRequest;
+    const requestTo = cursor;
+    const requestFrom = Math.max(
+      requestTo - this._resolutionToSeconds(resolution) * barsToLoad,
+      0,
+    );
+
     this._historyProvider
-      .getBars(symbolInfo, resolution, periodParams)
+      .getBars(symbolInfo, resolution, {
+        ...periodParams,
+        countBack: barsToLoad,
+        from: requestFrom,
+        to: requestTo,
+      })
       .then(
         (result: GetBarsResult) => {
+          if (result.bars.length > 0) {
+            this._historyCursor = Math.floor(result.bars[0].time / 1000) - 1;
+          }
           onResult(result.bars, result.meta);
         },
         (error) => {
@@ -89,6 +113,29 @@ export abstract class AbstractDatafeed {
         },
       )
       .catch(onError);
+  }
+
+  private _resolutionToSeconds(resolution: ResolutionString): number {
+    // Handle special time formats first (1D, 3D, 1W, 1M, etc.)
+    switch (resolution) {
+      case "1D":
+        return 86400;
+      case "3D":
+        return 86400 * 3;
+      case "1W":
+        return 86400 * 7;
+      case "1M":
+        return 86400 * 30;
+    }
+
+    // Handle numeric resolutions (minutes)
+    const res = parseInt(resolution);
+    if (!isNaN(res)) {
+      return res * 60;
+    }
+
+    // Default to 1 minute
+    return 60;
   }
 
   // @ts-ignore

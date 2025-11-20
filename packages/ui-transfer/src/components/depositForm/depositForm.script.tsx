@@ -27,6 +27,7 @@ import {
   useDepositAction,
   useInputStatus,
 } from "./hooks";
+import { useNativeBalance } from "./hooks/useNativeBalance";
 import { useToken } from "./hooks/useToken";
 
 const { collateralRatio, collateralContribution, calcMinimumReceived } =
@@ -89,6 +90,7 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     balanceRevalidating,
     fetchBalance,
     fetchBalances,
+    targetChain,
   } = useDeposit({
     address: sourceToken?.address,
     decimals: sourceToken?.decimals,
@@ -260,26 +262,29 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     return false;
   }, [quantity, maxQuantity]);
 
+  const nativeBalance = useNativeBalance({
+    fetchBalance,
+    targetChain,
+  });
+
   const insufficientGasMessage = useMemo(() => {
     if (
-      nativeSymbol &&
-      quantity &&
-      Number(quantity) > 0 &&
-      // when insufficient balance, the input status is error, so we don't need to check gas balance
-      !insufficientBalance &&
-      !depositFeeRevalidating &&
-      tokenBalances &&
-      (account.walletAdapter?.chainNamespace === ChainNamespace.solana ||
-        fee.dstGasFee)
+      (nativeSymbol &&
+        quantity &&
+        Number(quantity) > 0 &&
+        // when insufficient balance, the input status is error, so we don't need to check gas balance
+        !insufficientBalance &&
+        !depositFeeRevalidating &&
+        (account.walletAdapter?.chainNamespace === ChainNamespace.solana ||
+          fee.dstGasFee)) ||
+      nativeBalance === undefined
     ) {
-      // TODO: update token balance when open select token list
-      const nativeTokenBalance = tokenBalances[nativeSymbol] || "0";
-      const notEnoughGas = new Decimal(nativeTokenBalance).lt(fee.dstGasFee);
+      const notEnoughGas = new Decimal(nativeBalance || 0).lt(fee.dstGasFee);
 
       // when solana, if fee.dstGasFee is 0, and nativeTokenBalance is 0, it means the balance is not balance
       const isNotSolBalance =
         Number(fee.dstGasFee) === 0 &&
-        Number(nativeTokenBalance) == Number(fee.dstGasFee);
+        Number(nativeBalance) == Number(fee.dstGasFee);
 
       if (notEnoughGas || isNotSolBalance) {
         return t("transfer.deposit.notEnoughGas", {
@@ -297,6 +302,7 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     nativeSymbol,
     insufficientBalance,
     account,
+    nativeBalance,
   ]);
 
   const warningMessage =

@@ -170,29 +170,6 @@ const CurrentLeverage: FC<{
   );
 };
 
-//----------------- MaxLeverage -----------------
-const MaxLeverage: FC<{
-  maxLeverage?: number | null;
-}> = (props) => {
-  const { t } = useTranslation();
-
-  return (
-    <Flex
-      direction={"column"}
-      gap={0}
-      className="oui-text-2xs"
-      itemAlign={"start"}
-    >
-      <Box>
-        <Text intensity={54} className="oui-whitespace-nowrap">
-          {t("leverage.maxLeverage")}
-        </Text>
-      </Box>
-      <Text color="primary" as={"div"}>{`${props.maxLeverage ?? "--"}x`}</Text>
-    </Flex>
-  );
-};
-
 //----------------- UnrealPnL -----------------
 const UnrealPnL: FC<{
   unrealized_pnl_ROI: number | null;
@@ -255,7 +232,7 @@ const UnrealPnL: FC<{
 const AccountInfoPopover = (props: {
   totalValue: number | null;
   freeCollateral: number | null;
-  maxLeverage?: number | null;
+  // maxLeverage?: number | null;
   currentLeverage: number | null;
   unrealPnL: number | null;
   unrealized_pnl_ROI: number | null;
@@ -366,22 +343,7 @@ const AccountInfoPopover = (props: {
             </Text.numeral>
           </DropdownMenu>
         );
-      case "maxLeverage":
-        return (
-          <DropdownMenu onSetTop={onSetToTop("maxLeverage")} key={key}>
-            <Flex className={"oui-text-base-contrast-54"} gapX={2}>
-              <IdentityButton
-                active={keys.includes("maxLeverage")}
-                onClick={() => props.onToggleItemByKey("maxLeverage")}
-              />
-              <span>{t("leverage.maxLeverage")}</span>
-            </Flex>
-            <Text
-              className="group-hover:-oui-translate-x-5 oui-transition-transform"
-              color="primary"
-            >{`${props.maxLeverage ?? "-"}x`}</Text>
-          </DropdownMenu>
-        );
+
       default:
         return null;
     }
@@ -480,8 +442,7 @@ type SummaryKey =
   | "totalValue"
   | "freeCollateral"
   | "unrealPnL"
-  | "currentLeverage"
-  | "maxLeverage";
+  | "currentLeverage";
 
 export type AccountSummaryList = Array<SummaryKey>;
 const AccountSummaryItems: Record<SummaryKey, JSX.ElementType> = {
@@ -489,7 +450,6 @@ const AccountSummaryItems: Record<SummaryKey, JSX.ElementType> = {
   freeCollateral: FreeCollateral,
   unrealPnL: UnrealPnL,
   currentLeverage: CurrentLeverage,
-  maxLeverage: MaxLeverage,
 };
 
 export const AccountSummary: React.FC<AccountSummaryUi> = (props) => {
@@ -551,10 +511,6 @@ export const AccountSummary: React.FC<AccountSummaryUi> = (props) => {
         canToggleIndex++;
         return <CurrentLeverage currentLeverage={props.currentLeverage} />;
       }
-      case "maxLeverage": {
-        canToggleIndex++;
-        return <MaxLeverage maxLeverage={props.maxLeverage} />;
-      }
       case "totalValue":
       default:
         return (
@@ -580,7 +536,6 @@ export const AccountSummary: React.FC<AccountSummaryUi> = (props) => {
           <AccountInfoPopover
             totalValue={rest.totalValue}
             freeCollateral={props.freeCollateral}
-            maxLeverage={props.maxLeverage}
             currentLeverage={props.currentLeverage}
             unrealized_pnl_ROI={props.unrealized_pnl_ROI}
             unrealPnL={props.unrealPnL}

@@ -18,7 +18,7 @@ export interface UdfErrorResponse {
 /**
  * If you want to enable logs from datafeed set it to `true`
  */
-const isLoggingEnabled = true;
+const isLoggingEnabled = false;
 
 export function logMessage(message: string): void {
   if (isLoggingEnabled) {

@@ -140,7 +140,6 @@ export const createDataStore = <T>(config: DataStoreConfig<T>) => {
          * Sets hydrated flag to true to indicate store is ready
          */
         onRehydrateStorage: () => (state, error) => {
-          console.log("onRehydrateStorage---------->>>", state, error);
           if (state && !error) {
             state.hydrated = true;
           }

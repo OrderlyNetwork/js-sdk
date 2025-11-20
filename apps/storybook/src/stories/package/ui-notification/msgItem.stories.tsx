@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { AnnouncementType } from "@orderly.network/types";
-import { MsgItem } from "@orderly.network/ui-notification";
+import { AnnouncementItem } from "@orderly.network/ui-notification";
 
 /**
  * MsgItem component stories
  * Displays a single notification message item with different types
  */
-const meta: Meta<typeof MsgItem> = {
+const meta: Meta<typeof AnnouncementItem> = {
   title: "Package/ui-notification/MsgItem",
-  component: MsgItem,
+  component: AnnouncementItem,
   parameters: {
     layout: "centered",
   },
@@ -22,8 +22,7 @@ const meta: Meta<typeof MsgItem> = {
       control: "boolean",
       description: "Whether the message is expanded or collapsed",
     },
-
-    description: {
+    message: {
       control: "text",
       description: "The description/content of the message",
     },
@@ -43,7 +42,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     type: AnnouncementType.Campaign,
-    description:
+    message:
       "with full market support, including spot and perpetual contracts (if applicable).",
     expanded: false,
   },

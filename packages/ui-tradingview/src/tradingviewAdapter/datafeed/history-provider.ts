@@ -73,9 +73,7 @@ export class HistoryProvider {
   private readonly _requester: IRequester;
   private readonly _limitedServerResponse?: LimitedResponseConfiguration;
 
-  private _lastSymbol: string = "";
-  private _lastResolution: string = "";
-  private _lastPath: string = "";
+  private readonly _klinePreference = new Map<string, boolean>();
 
   /**
    * Static mapping table for resolution conversion
@@ -128,11 +126,7 @@ export class HistoryProvider {
     const countBack = Math.min(periodParams.countBack ?? 0, 1000);
 
     if (periodParams.countBack !== undefined) {
-      if (this._lastPath === KLINE_HISTORY_PATH) {
-        requestParams.limit = countBack;
-      } else {
-        requestParams.countback = countBack;
-      }
+      requestParams.countback = countBack;
     }
 
     if (symbolInfo.currency_code !== undefined) {
@@ -151,18 +145,15 @@ export class HistoryProvider {
     resolution: string,
     periodParams: PeriodParamsWithOptionalCountback,
   ): Promise<GetBarsResult> {
-    // Reset to HISTORY_PATH if symbol or resolution changes
-    const isNewSymbol = this._lastSymbol !== symbolInfo.ticker;
-    const isNewResolution = this._lastResolution !== resolution;
-    if (isNewSymbol || isNewResolution) {
-      this._lastPath = HISTORY_PATH;
-    }
-
     const requestParams = this._buildRequestParams(
       symbolInfo,
       resolution,
       periodParams,
     );
+
+    const preferenceKey = this._getPreferenceKey(symbolInfo, resolution);
+    const prefersKline = this._klinePreference.get(preferenceKey) === true;
+    const countBack = Math.min(periodParams.countBack ?? 0, 1000);
 
     return new Promise(
       async (
@@ -170,56 +161,44 @@ export class HistoryProvider {
         reject: (reason: string) => void,
       ) => {
         try {
-          let result;
+          let result: GetBarsResult;
+          let usedHistoryResult = false;
 
-          const countBack = Math.min(periodParams.countBack ?? 0, 1000);
-
-          // If current path is already KLINE_HISTORY_PATH, directly use KLINE_HISTORY_PATH request logic
-          if (this._lastPath === KLINE_HISTORY_PATH) {
-            result = await this._requestKlineHistory(requestParams);
+          if (prefersKline) {
+            result = await this._requestKlineHistory(
+              this._buildKlineParams(requestParams, countBack),
+            );
           } else {
-            // Use HISTORY_PATH request
-            const initialResponse =
-              await this._requester.sendRequest<HistoryResponse>(
-                this._datafeedUrl,
-                HISTORY_PATH,
-                requestParams,
-              );
+            const initialResponse = await this._requestHistory(requestParams);
+            result = this._processHistoryResponse(initialResponse);
+            usedHistoryResult = true;
 
-            // Check if the returned data amount is sufficient
-            const expectedCount = typeof countBack === "number" ? countBack : 0;
-            const isDataSufficient = this._checkHistoryLength(
+            const needsFallback = this._shouldFallbackToKline(
               initialResponse,
-              expectedCount,
+              countBack,
             );
 
-            if (isDataSufficient) {
-              // Data amount is sufficient, directly use the initial response
-              result = this._processHistoryResponse(initialResponse);
-            } else {
-              // Data amount is insufficient, switch to KLINE_HISTORY_PATH and request again
-              this._lastPath = KLINE_HISTORY_PATH;
-              requestParams.limit = countBack;
-              delete requestParams.countback;
-              try {
-                result = await this._requestKlineHistory(requestParams);
-                if (result.bars.length === 0) {
-                  throw new Error("No data");
-                }
-              } catch (e: unknown) {
-                // if the kline history request fails, fallback to the initial response
-                result = this._processHistoryResponse(initialResponse);
+            if (needsFallback) {
+              const klineResult = await this._tryKlineFallback(
+                requestParams,
+                countBack,
+              );
+              if (klineResult !== null) {
+                result = klineResult;
+                usedHistoryResult = false;
+                this._klinePreference.set(preferenceKey, true);
+              } else {
+                this._klinePreference.set(preferenceKey, false);
               }
+            } else {
+              this._klinePreference.set(preferenceKey, false);
             }
           }
 
-          if (this._limitedServerResponse) {
-            await this._processTruncatedResponse(result, requestParams);
+          if (usedHistoryResult && this._limitedServerResponse) {
+            await this._processTruncatedResponse(result, { ...requestParams });
           }
 
-          // Save current symbol and resolution for next change detection
-          this._lastSymbol = symbolInfo.ticker as string;
-          this._lastResolution = resolution;
           resolve(result);
         } catch (e: unknown) {
           const error =
@@ -237,24 +216,89 @@ export class HistoryProvider {
 
   /**
    * Request kline history using KLINE_HISTORY_PATH endpoint
+   * Handles rate limiting (429 errors) by waiting and retrying
    * @param requestParams - Request parameters
+   * @param retryCount - Current retry attempt (internal use)
    * @returns Processed history response
    */
   private async _requestKlineHistory(
     requestParams: RequestParams,
+    retryCount: number = 0,
   ): Promise<GetBarsResult> {
-    console.log("requestKlineHistory requestParams", requestParams);
-    const klineResponse = await this._requester.sendRequest<HistoryResponse>(
-      this._datafeedUrl,
-      KLINE_HISTORY_PATH,
-      {
-        ...requestParams,
-        resolution: this._mapToKlineHistoryResolution(
-          requestParams.resolution as string,
-        ),
-      },
-    );
-    return this._processHistoryResponse(klineResponse);
+    const maxRetries = 5;
+    const baseRetryDelay = 2500; // 2.5 seconds base delay (slightly more than 2s to avoid hitting limit)
+    const maxRetryDelay = 10000; // Maximum 10 seconds delay
+
+    // Build URL with query parameters
+    const params: RequestParams = {
+      ...requestParams,
+      resolution: this._mapToKlineHistoryResolution(
+        requestParams.resolution as string,
+      ),
+    };
+    const urlPath = this._buildUrlWithParams(KLINE_HISTORY_PATH, params);
+
+    // Make request with fetch to check HTTP status code
+    const options: RequestInit = { credentials: "same-origin" };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const requesterWithHeaders = this._requester as any;
+    if (requesterWithHeaders._headers !== undefined) {
+      options.headers = requesterWithHeaders._headers;
+    }
+
+    let response: Response;
+    try {
+      response = await fetch(`${this._datafeedUrl}/${urlPath}`, options);
+    } catch (error) {
+      // Network error, don't retry for rate limiting
+      throw error;
+    }
+
+    // Check if we hit rate limit (429) - handle this BEFORE any JSON parsing
+    if (response.status === 429) {
+      if (retryCount >= maxRetries) {
+        throw new Error(
+          `Rate limit exceeded: Maximum retry attempts (${maxRetries}) reached`,
+        );
+      }
+
+      // Calculate retry delay with exponential backoff
+      const retryDelay = Math.min(
+        baseRetryDelay * Math.pow(2, retryCount),
+        maxRetryDelay,
+      );
+
+      // Check if response has Retry-After header
+      const retryAfter = response.headers.get("Retry-After");
+      const delay = retryAfter ? parseInt(retryAfter, 10) * 1000 : retryDelay;
+
+      // IMPORTANT: Wait BEFORE retrying to avoid hitting rate limit again
+      await new Promise((resolve) => setTimeout(resolve, delay));
+
+      // Retry the request after waiting
+      return this._requestKlineHistory(requestParams, retryCount + 1);
+    }
+
+    // Check if response is not OK (but not 429, which we already handled)
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({
+        message: response.statusText,
+      }));
+      throw new Error(
+        errorData.message || errorData.errmsg || response.statusText,
+      );
+    }
+
+    // Parse response JSON
+    let data: HistoryResponse | UdfErrorResponse;
+    try {
+      data = await response.json();
+    } catch {
+      throw new Error("Failed to parse response JSON");
+    }
+
+    // Process the response (this will handle errors if response.s === "error")
+    return this._processHistoryResponse(data);
   }
 
   /**
@@ -379,6 +423,10 @@ export class HistoryProvider {
 
         bars.push(barValue);
       }
+
+      // const firstBarTime = response.t[0] * 1000;
+
+      // meta.nextTime = firstBarTime;
     }
 
     return {
@@ -396,22 +444,93 @@ export class HistoryProvider {
     return HistoryProvider._RESOLUTION_MAP.get(resolution) ?? resolution;
   }
 
-  /**
-   * if the length of the history data is less than the length, return false, otherwise return true
-   * @param response - the response from the history api
-   * @param length - the length of the history data
-   * @returns
-   */
-  private _checkHistoryLength(
-    response: HistoryResponse | UdfErrorResponse,
-    length: number,
-  ) {
-    if (response.s !== "ok" && response.s !== "no_data") {
-      throw new Error(response.errmsg);
+  private _buildUrlWithParams(path: string, params?: RequestParams): string {
+    if (!params || Object.keys(params).length === 0) {
+      return path;
     }
-    if (response.s === "no_data") {
+
+    const searchParams = new URLSearchParams();
+    Object.keys(params).forEach((key) => {
+      const value = params[key];
+      if (Array.isArray(value)) {
+        value.forEach((item) => searchParams.append(key, item));
+      } else {
+        searchParams.append(key, value.toString());
+      }
+    });
+
+    const queryString = searchParams.toString();
+    return queryString ? `${path}?${queryString}` : path;
+  }
+
+  private _getPreferenceKey(
+    symbolInfo: LibrarySymbolInfo,
+    resolution: string,
+  ): string {
+    return `${symbolInfo.ticker ?? ""}|${resolution}`;
+  }
+
+  private _requestHistory(requestParams: RequestParams) {
+    return this._requester.sendRequest<HistoryResponse>(
+      this._datafeedUrl,
+      HISTORY_PATH,
+      requestParams,
+    );
+  }
+
+  private _buildKlineParams(
+    requestParams: RequestParams,
+    countBack: number,
+  ): RequestParams {
+    const params: RequestParams = {
+      ...requestParams,
+    };
+
+    delete params.countback;
+    if (countBack > 0) {
+      params.limit = countBack;
+    } else {
+      delete params.limit;
+    }
+
+    return params;
+  }
+
+  private async _tryKlineFallback(
+    requestParams: RequestParams,
+    countBack: number,
+  ): Promise<GetBarsResult | null> {
+    try {
+      const result = await this._requestKlineHistory(
+        this._buildKlineParams(requestParams, countBack),
+      );
+      return result.bars.length > 0 ? result : null;
+    } catch {
+      return null;
+    }
+  }
+
+  private _shouldFallbackToKline(
+    response: HistoryResponse | UdfErrorResponse,
+    expectedCount: number,
+  ): boolean {
+    if (response.s !== "ok") {
       return false;
     }
-    return response.t.length >= length;
+
+    const barsCount = response.t.length;
+    if (expectedCount > 0 && barsCount < expectedCount) {
+      return true;
+    }
+
+    if (
+      this._limitedServerResponse &&
+      this._limitedServerResponse.maxResponseLength > 0 &&
+      barsCount >= this._limitedServerResponse.maxResponseLength
+    ) {
+      return true;
+    }
+
+    return false;
   }
 }

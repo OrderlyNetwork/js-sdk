@@ -6,6 +6,8 @@ import {
   Button,
   ArrowRightUpSquareFillIcon,
   useScreen,
+  Tooltip,
+  InfoCircleIcon,
 } from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
 import { VaultInfo } from "../../types/vault";
@@ -22,6 +24,14 @@ export const VaultsList: FC<VaultsListProps> = ({ vaults }) => {
   const { t } = useTranslation();
   const [sortField, setSortField] = useState<SortField>("apy");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
+
+  const shouldShowApyTooltip = useMemo(() => {
+    return vaults.some(
+      (vault) =>
+        vault.status === "pre_launch" ||
+        (vault.vault_age !== null && vault.vault_age < 30),
+    );
+  }, [vaults]);
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -97,13 +107,29 @@ export const VaultsList: FC<VaultsListProps> = ({ vaults }) => {
           TVL
           <SortIcon field="tvl" />
         </button>
-        <button
-          onClick={() => handleSort("apy")}
-          className="oui-flex oui-items-center oui-text-2xs oui-font-normal oui-text-base-contrast-54 hover:oui-text-base-contrast"
-        >
-          {t("vaults.card.apy")}
-          <SortIcon field="apy" />
-        </button>
+        <div className="oui-flex oui-items-center oui-gap-1">
+          <button
+            onClick={() => handleSort("apy")}
+            className="oui-flex oui-items-center oui-text-2xs oui-font-normal oui-text-base-contrast-54 hover:oui-text-base-contrast"
+          >
+            {t("vaults.card.apy")}
+            <SortIcon field="apy" />
+          </button>
+          {shouldShowApyTooltip && (
+            <Tooltip
+              content="APY is not calculated for vaults that are less than 30 days old."
+              delayDuration={100}
+            >
+              <div>
+                <InfoCircleIcon
+                  size={12}
+                  opacity={0.54}
+                  className="oui-text-base-contrast"
+                />
+              </div>
+            </Tooltip>
+          )}
+        </div>
         <button
           onClick={() => handleSort("deposits")}
           className="oui-flex oui-items-center oui-text-2xs oui-font-normal oui-text-base-contrast-54 hover:oui-text-base-contrast"
@@ -307,9 +333,12 @@ const VaultListRow: FC<{ vault: VaultInfo }> = ({ vault }) => {
       {/* APY */}
       <div className="oui-relative oui-z-10">
         <Text.gradient className="oui-text-sm oui-font-semibold" color="brand">
-          {vaultInfo["30d_apy"] > 100
-            ? ">10000%"
-            : `${(vaultInfo["30d_apy"] * 100).toFixed(2)}%`}
+          {vaultInfo.status === "pre_launch" ||
+          (vaultInfo.vault_age !== null && vaultInfo.vault_age < 30)
+            ? "--"
+            : vaultInfo["30d_apy"] > 100
+              ? ">10000%"
+              : `${(vaultInfo["30d_apy"] * 100).toFixed(2)}%`}
         </Text.gradient>
       </div>
 
