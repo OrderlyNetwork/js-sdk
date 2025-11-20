@@ -1253,8 +1253,8 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       starchild-widget:
-        specifier: ^1.0.0-beta.19
-        version: 1.0.0-beta.19(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+        specifier: ^1.0.0-beta.20
+        version: 1.0.0-beta.20(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       styled-components:
         specifier: ^6.1.19
         version: 6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -2130,8 +2130,8 @@ importers:
         specifier: '>=18'
         version: 18.3.1(react@18.3.1)
       starchild-widget:
-        specifier: ^1.0.0-beta.19
-        version: 1.0.0-beta.19(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+        specifier: ^1.0.0-beta.20
+        version: 1.0.0-beta.20(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       styled-components:
         specifier: ^6.1.19
         version: 6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -13845,8 +13845,8 @@ packages:
     resolution: {integrity: sha512-WjlahMgHmCJpqzU8bIBy4qtsZdU9lRlcZE3Lvyej6t4tuOuv1vk57OW3MBrj6hXBFx/nNoC9MPMTcr5YA7NQbg==}
     engines: {node: '>=6'}
 
-  starchild-widget@1.0.0-beta.19:
-    resolution: {integrity: sha512-MbjOSExlvJD9rc8/pLuamszb8b8hsDXQ289aRfAHHjHoxkg1aqLbd9R/Br57inhXfTqxQhGIbfghCRVPta81fA==}
+  starchild-widget@1.0.0-beta.20:
+    resolution: {integrity: sha512-tASSS/7nnf0uR8SCCGxxqSyyx63ddrAMPpHF+ZcPist86cZv4XYQF6TgLOoz/gAXWny6DiFLIPB9mGS1As6/ig==}
     peerDependencies:
       react: '>=18.0.0'
       react-dom: '>=18.0.0'
@@ -34851,7 +34851,7 @@ snapshots:
     dependencies:
       type-fest: 0.7.1
 
-  starchild-widget@1.0.0-beta.19(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1)):
+  starchild-widget@1.0.0-beta.20(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(styled-components@6.1.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1)):
     dependencies:
       '@noble/ed25519': 3.0.0
       '@popperjs/core': 2.11.8
