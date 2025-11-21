@@ -23,10 +23,11 @@ type ChainSelectProps = {
   onValueChange: (chain: API.NetworkInfos) => Promise<void>;
   wrongNetwork: boolean;
   loading?: boolean;
+  disabled?: boolean;
 };
 
 export const ChainSelect: React.FC<ChainSelectProps> = (props) => {
-  const { chains, value, wrongNetwork, loading } = props;
+  const { chains, value, wrongNetwork, loading, disabled } = props;
   const [open, setOpen] = useState(false);
   const { t } = useTranslation();
 
@@ -65,7 +66,11 @@ export const ChainSelect: React.FC<ChainSelectProps> = (props) => {
       intensity={500}
       className={cn(
         "oui-rounded-t-xl oui-rounded-b-sm oui-border oui-border-line",
-        selectable ? "oui-cursor-pointer" : "oui-cursor-auto",
+        disabled
+          ? "oui-cursor-not-allowed"
+          : selectable
+            ? "oui-cursor-pointer"
+            : "oui-cursor-auto",
       )}
       height={54}
       px={3}
@@ -128,7 +133,9 @@ export const ChainSelect: React.FC<ChainSelectProps> = (props) => {
 
   return (
     <DropdownMenuRoot open={selectable ? open : false} onOpenChange={setOpen}>
-      <DropdownMenuTrigger asChild>{trigger}</DropdownMenuTrigger>
+      <DropdownMenuTrigger disabled={disabled} asChild>
+        {trigger}
+      </DropdownMenuTrigger>
       <DropdownMenuPortal>
         <DropdownMenuContent
           onCloseAutoFocus={(e) => e.preventDefault()}

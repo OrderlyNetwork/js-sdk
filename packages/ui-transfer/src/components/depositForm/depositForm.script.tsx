@@ -18,6 +18,7 @@ import {
   ChainNamespace,
   isNativeTokenChecker,
 } from "@orderly.network/types";
+import { useAuthGuard } from "@orderly.network/ui-connector";
 import { Decimal } from "@orderly.network/utils";
 import { useNeedSwapAndCross } from "../swap/hooks/useNeedSwapAndCross";
 import { useSwapDeposit } from "../swap/hooks/useSwapDeposit";
@@ -209,6 +210,8 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     quantity,
     maxQuantity,
   });
+
+  const isLoggedIn = useAuthGuard();
 
   const {
     collateralRatio,
@@ -424,6 +427,8 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     targetQuantity,
     targetQuantityLoading,
     tokenBalances,
+
+    isLoggedIn,
   };
 };
 
