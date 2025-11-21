@@ -35,19 +35,26 @@ export function useWithdrawToken(params: {
       holdingMap.set(item.token, item);
     });
 
-    const list = tokensInfo
-      .map((item) => ({
-        ...item,
-        symbol: item.token,
-        token_decimal: item.decimals,
-        precision: item.decimals,
-      }))
-      .filter((token) => {
-        const holding = holdingMap.get(token.symbol!);
-        if (!holdings) return true;
-        return !!holding && holding.holding > 0;
-      });
+    const mappedTokens = tokensInfo.map((item) => ({
+      ...item,
+      symbol: item.token,
+      token_decimal: item.decimals,
+      precision: item.decimals,
+    }));
 
+    const list = mappedTokens.filter((token) => {
+      const holding = holdingMap.get(token.symbol!);
+      if (!holdings) return true;
+      return !!holding && holding.holding > 0;
+    });
+
+    // If user has no holdings, show USDC by default
+    if (list.length === 0) {
+      const usdcToken = mappedTokens.find((t) => t.symbol === "USDC");
+      if (usdcToken) {
+        return [usdcToken];
+      }
+    }
     // sort tokens, USDC should be the first
     list.sort((a, b) => {
       if (a.symbol === "USDC") return -1;
@@ -101,6 +108,13 @@ export function useWithdrawToken(params: {
       ) as API.TokenInfo;
       if (findToken) {
         setToken(findToken);
+      }
+    } else {
+      const findToken = sourceTokens.find(
+        (item) => item.symbol === token?.symbol,
+      ) as API.TokenInfo;
+      if (findToken) {
+        onSourceTokenChange(findToken);
       }
     }
   });

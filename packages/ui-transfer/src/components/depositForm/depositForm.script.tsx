@@ -114,9 +114,18 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
       Decimal.ROUND_DOWN,
     );
 
-    // If user_max_qty is -1, ignore it and use balance only
-    if (sourceToken?.user_max_qty === -1 || !sourceToken?.user_max_qty) {
+    // If user_max_qty is -1 or undefined, ignore it and use balance only
+    // user_max_qty = 0 means no deposit allowed
+    if (
+      sourceToken?.user_max_qty === -1 ||
+      sourceToken?.user_max_qty === undefined
+    ) {
       return balanceDecimal.toString();
+    }
+
+    // user_max_qty = 0 means no deposit allowed
+    if (sourceToken?.user_max_qty === 0) {
+      return "0";
     }
 
     const userMaxQty = new Decimal(sourceToken.user_max_qty).todp(
