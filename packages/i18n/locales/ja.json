@@ -1047,7 +1047,6 @@
   "notification.recentlyUpdated": "最近更新",
   "notification.title": "お知らせ",
   "notification.centerTitle": "お知らせセンター",
-  "notification.campaignTitle": "最新キャンペーンが近日公開",
   "notification.closeAll": "すべて閉じる（{{total}}）",
   "notification.delistingTitle": "トークン上場廃止のお知らせ",
   "notification.generalTitle": "一般アップデート",
