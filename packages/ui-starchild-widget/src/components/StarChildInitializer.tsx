@@ -96,6 +96,7 @@ export const StarChildInitializer: React.FC = () => {
       const params = {
         locale: starLocale,
         zIndex,
+        account: address,
         aiChatKey,
         telegramUserId,
         userInfoId,
