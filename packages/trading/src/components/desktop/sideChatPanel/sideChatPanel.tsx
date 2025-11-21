@@ -106,7 +106,7 @@ export const SideChatPanel: React.FC<SideChatPanelProps> = ({
       <Box
         ref={placeholderRef}
         style={{
-          width: isOpen ? 400 - 8 - scrollBarWidth : 0,
+          width: isOpen ? 400 - scrollBarWidth : 0,
           flexShrink: 0,
           transition: "width 0.2s ease-in-out",
         }}
@@ -115,6 +115,7 @@ export const SideChatPanel: React.FC<SideChatPanelProps> = ({
       <Box
         id="sideChatContainer"
         r="2xl"
+        ml={8}
         intensity={900}
         style={{
           width: 400,

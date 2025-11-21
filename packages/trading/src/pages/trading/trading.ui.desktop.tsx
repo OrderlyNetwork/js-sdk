@@ -971,6 +971,7 @@ export const DesktopLayout: React.FC<DesktopLayoutProps> = (props) => {
               height="100%"
               itemAlign="start"
               className="oui-hidden xl:oui-flex oui-shrink-0"
+              style={{ marginLeft: -8 }}
             >
               <SideChatPanel
                 scrollBarWidth={scrollBarWidth}
