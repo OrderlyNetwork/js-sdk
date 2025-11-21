@@ -85,14 +85,20 @@ export abstract class AbstractDatafeed {
       this._historyCursor = to;
     }
 
+    const resolutionInSeconds = this._resolutionToSeconds(resolution);
     const cursor = this._historyCursor ?? to;
     const maxBarsPerRequest = 1000;
-    const barsToLoad = maxBarsPerRequest;
-    const requestTo = cursor;
-    const requestFrom = Math.max(
-      requestTo - this._resolutionToSeconds(resolution) * barsToLoad,
-      0,
-    );
+
+    const shouldUseOriginalRange =
+      resolution.toLowerCase?.() === "1m" && periodParams.from !== undefined;
+    // When using 1m candles we trust the caller's original range to avoid clamping the window to epoch start
+    const barsToLoad = shouldUseOriginalRange
+      ? (periodParams.countBack ?? maxBarsPerRequest)
+      : maxBarsPerRequest;
+    const requestTo = shouldUseOriginalRange ? (periodParams.to ?? to) : cursor;
+    const requestFrom = shouldUseOriginalRange
+      ? periodParams.from!
+      : Math.max(requestTo - resolutionInSeconds * barsToLoad, 0);
 
     this._historyProvider
       .getBars(symbolInfo, resolution, {
@@ -106,13 +112,16 @@ export abstract class AbstractDatafeed {
           if (result.bars.length > 0) {
             this._historyCursor = Math.floor(result.bars[0].time / 1000) - 1;
           }
+
           onResult(result.bars, result.meta);
         },
         (error) => {
           onError(error);
         },
       )
-      .catch(onError);
+      .catch((error) => {
+        onError(error);
+      });
   }
 
   private _resolutionToSeconds(resolution: ResolutionString): number {
