@@ -62,6 +62,7 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
         onChange={props.setToAccountId}
         status={props.toAccountIdInputStatus}
         hintMessage={props.toAccountIdHintMessage}
+        disabled={!props.isLoggedIn}
       />
       <Box my={2}>
         <Text size="xs" intensity={54}>
@@ -90,6 +91,7 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
             vaultBalanceList={vaultBalanceList}
             testId="oui-testid-withdraw-dialog-quantity-input"
             displayType="vaultBalance"
+            disabled={!props.isLoggedIn}
           />
         </Box>
         <AvailableQuantity
@@ -123,7 +125,11 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
         >
           <TabPanel
             title={t("transfer.web3Wallet.my")}
-            icon={<WalletIcon size={"xs"} name={props.walletName ?? ""} />}
+            icon={
+              props.walletName ? (
+                <WalletIcon size={"xs"} name={props.walletName ?? ""} />
+              ) : undefined
+            }
             value={WithdrawTo.Wallet}
           >
             <ChainSelect
@@ -132,6 +138,7 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
               onValueChange={props.onChainChange}
               wrongNetwork={props.wrongNetwork}
               loading={settingChain}
+              disabled={!props.isLoggedIn}
             />
             <QuantityInput
               classNames={{

@@ -127,6 +127,7 @@ export const DepositForm: FC<DepositFormScriptReturn> = (props) => {
             onValueChange={onChainChange}
             wrongNetwork={wrongNetwork}
             loading={settingChain}
+            disabled={!props.isLoggedIn}
           />
           <QuantityInput
             classNames={{
@@ -142,6 +143,7 @@ export const DepositForm: FC<DepositFormScriptReturn> = (props) => {
             fetchBalance={fetchBalance}
             tokenBalances={props.tokenBalances}
             data-testId="oui-testid-deposit-dialog-quantity-input"
+            disabled={!props.isLoggedIn}
           />
         </Box>
 
@@ -175,6 +177,7 @@ export const DepositForm: FC<DepositFormScriptReturn> = (props) => {
           classNames={{
             root: "oui-mt-3 oui-border-transparent focus-within:oui-outline-transparent",
           }}
+          disabled={!props.isLoggedIn}
         />
         {renderContent()}
       </Box>

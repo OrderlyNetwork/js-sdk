@@ -20,6 +20,7 @@ import {
   NetworkId,
 } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
+import { useAuthGuard } from "@orderly.network/ui-connector";
 import {
   Decimal,
   int2hex,
@@ -90,6 +91,8 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     setChain: switchChain,
     settingChain,
   } = useWalletConnector();
+
+  const isLoggedIn = useAuthGuard();
 
   const currentChain = useMemo(() => {
     // if (!connectedChain) return null;
@@ -410,5 +413,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     currentLTV,
     nextLTV,
     warningMessage,
+
+    isLoggedIn,
   };
 };

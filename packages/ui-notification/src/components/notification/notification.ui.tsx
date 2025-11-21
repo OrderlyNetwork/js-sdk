@@ -63,7 +63,7 @@ const NotificationHeader: FC<{
             size="sm"
             className="oui-text-transparent oui-bg-clip-text oui-gradient-brand"
           >
-            {t("notification.campaignTitle")}
+            {t("notification.campaign")}
           </Text>
         );
       case AnnouncementType.Delisting:

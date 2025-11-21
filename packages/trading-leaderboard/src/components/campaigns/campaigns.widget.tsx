@@ -9,6 +9,7 @@ import { CampaignsHeaderWidget } from "./header";
 export type CampaignsWidgetProps = {
   className?: string;
   style?: React.CSSProperties;
+  hideCampaignsBanner?: boolean;
 };
 
 export const CampaignsWidget: FC<CampaignsWidgetProps> = (props) => {
@@ -44,12 +45,14 @@ export const CampaignsWidget: FC<CampaignsWidgetProps> = (props) => {
       className={cn(["oui-relative oui-z-[1] oui-overflow-hidden"])}
       style={props.style}
     >
-      <CampaignsHeaderWidget
-        backgroundSrc={state.backgroundSrc}
-        campaigns={state.campaigns}
-        currentCampaignId={state.currentCampaignId.toString()}
-        onCampaignChange={state.onCampaignChange}
-      />
+      {!props.hideCampaignsBanner && (
+        <CampaignsHeaderWidget
+          backgroundSrc={state.backgroundSrc}
+          campaigns={state.campaigns}
+          currentCampaignId={state.currentCampaignId.toString()}
+          onCampaignChange={state.onCampaignChange}
+        />
+      )}
       {state.currentCampaign && (
         <CampaignsContentDesktopUI
           {...state}
