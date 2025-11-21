@@ -10,6 +10,7 @@ export type TextAreaInputProps = {
   placeholder?: string;
   className?: string;
   label: string;
+  disabled?: boolean;
 };
 
 export const TextAreaInput = (props: TextAreaInputProps) => {
@@ -82,11 +83,13 @@ export const TextAreaInput = (props: TextAreaInputProps) => {
             "oui-border-danger-light focus-within:oui-border-danger-light focus:oui-border-danger-light",
           status === "warning" &&
             "oui-border-warning-light focus-within:oui-border-warning-light focus:oui-border-warning-light",
+          "disabled:oui-cursor-not-allowed",
           props.className,
         )}
         rows={1}
         value={value}
         onChange={handleChange}
+        disabled={props.disabled}
       />
       {hintMessage && message}
     </div>
