@@ -1067,7 +1067,6 @@
   "notification.recentlyUpdated": "최근 업데이트",
   "notification.title": "공지사항",
   "notification.centerTitle": "공지 센터",
-  "notification.campaignTitle": "최신 캠페인이 곧 시작됩니다",
   "notification.closeAll": "모두 닫기 ({{total}})",
   "notification.delistingTitle": "토큰 상장 폐지 공지",
   "notification.generalTitle": "일반 업데이트",

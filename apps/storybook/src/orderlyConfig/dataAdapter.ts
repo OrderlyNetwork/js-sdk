@@ -19,6 +19,7 @@ export const dataAdapter: OrderlyAppProviderProps["dataAdapter"] = {
         url: "https://app.orderly.network/tradingRewards",
         type: AnnouncementType.Campaign,
         coverImage: "https://i.ibb.co/HY0QfQT/Image-12.webp",
+        updated_time: new Date(),
       },
       ...data,
     ];

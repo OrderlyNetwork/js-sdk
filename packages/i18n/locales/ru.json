@@ -1067,7 +1067,6 @@
   "notification.recentlyUpdated": "Недавно обновлено",
   "notification.title": "Объявление",
   "notification.centerTitle": "Центр объявлений",
-  "notification.campaignTitle": "Скоро новая кампания",
   "notification.closeAll": "Закрыть все ({{total}})",
   "notification.delistingTitle": "Уведомление о делистинге токена",
   "notification.generalTitle": "Общее обновление",

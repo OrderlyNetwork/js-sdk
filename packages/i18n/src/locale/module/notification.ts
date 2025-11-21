@@ -15,7 +15,6 @@ export const notification = {
   "notification.centerTitle": "Announcement center",
 
   // Notification related keys
-  "notification.campaignTitle": "Latest Campaign is coming",
   "notification.closeAll": "Close all ({{total}})",
   "notification.delistingTitle": "Token Delisting Notice",
   "notification.generalTitle": "General Update",

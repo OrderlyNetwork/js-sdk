@@ -1067,7 +1067,6 @@
   "notification.recentlyUpdated": "Cập nhật gần đây",
   "notification.title": "Thông báo",
   "notification.centerTitle": "Trung tâm thông báo",
-  "notification.campaignTitle": "Chiến dịch mới nhất sắp tới",
   "notification.closeAll": "Đóng tất cả ({{total}})",
   "notification.delistingTitle": "Thông báo gỡ niêm yết token",
   "notification.generalTitle": "Cập nhật chung",
