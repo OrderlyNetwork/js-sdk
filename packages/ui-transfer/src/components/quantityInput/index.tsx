@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useRef, useState } from "react";
+import { FC, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
 import {
@@ -23,6 +23,7 @@ export type QuantityInputProps = {
   label?: string;
   status?: InputStatus;
   hintMessage?: string;
+  hintSuffix?: ReactNode;
   onValueChange?: (value: string) => void;
   onTokenChange?: (token: any) => void;
   fetchBalance?: (token: string, decimals: number) => Promise<any>;
@@ -32,6 +33,8 @@ export type QuantityInputProps = {
   vaultBalanceList?: API.VaultBalance[];
   displayType?: "balance" | "vaultBalance";
   tokenBalances?: Record<string, string>;
+  tokenValueFormatter?: (value: string) => ReactNode;
+  tokenShowCaret?: boolean;
 } & Omit<InputProps, "onClear" | "suffix" | "onValueChange">;
 
 export const QuantityInput: FC<QuantityInputProps> = (props) => {
@@ -42,6 +45,7 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
     label,
     status,
     hintMessage,
+    hintSuffix,
     value,
     onValueChange,
     fetchBalance,
@@ -52,6 +56,8 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
     vaultBalanceList,
     displayType,
     tokenBalances,
+    tokenValueFormatter,
+    tokenShowCaret,
     ...rest
   } = props;
 
@@ -137,6 +143,8 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
         size={rest.size}
         onValueChange={_onTokenChange}
         showIcon
+        valueFormatter={tokenValueFormatter}
+        showCaret={tokenShowCaret}
         optionRenderer={optionRenderer}
         contentProps={{
           onCloseAutoFocus: (event) => {
@@ -157,25 +165,30 @@ export const QuantityInput: FC<QuantityInputProps> = (props) => {
   );
 
   const message = (
-    <Flex mt={1} gapX={1} px={1}>
-      <Box
-        width={4}
-        height={4}
-        r="full"
-        className={cn(
-          status === "error" && "oui-bg-danger-light",
-          status === "warning" && "oui-bg-warning-light",
-        )}
-      ></Box>
-      <Text
-        size="2xs"
-        className={cn(
-          status === "error" && "oui-text-danger-light",
-          status === "warning" && "oui-text-warning-light",
-        )}
-      >
-        {hintMessage}
-      </Text>
+    <Flex mt={1} gapX={1} px={1} justify="between" itemAlign="center">
+      <Flex gapX={1} itemAlign="center">
+        <Box
+          width={4}
+          height={4}
+          r="full"
+          className={cn(
+            status === "error" && "oui-bg-danger-light",
+            status === "warning" && "oui-bg-warning-light",
+          )}
+        ></Box>
+        <Text
+          size="2xs"
+          className={cn(
+            status === "error" && "oui-text-danger-light",
+            status === "warning" && "oui-text-warning-light",
+          )}
+        >
+          {hintMessage}
+        </Text>
+      </Flex>
+      {hintSuffix && (
+        <Box className="oui-flex oui-items-center oui-gap-1">{hintSuffix}</Box>
+      )}
     </Flex>
   );
 

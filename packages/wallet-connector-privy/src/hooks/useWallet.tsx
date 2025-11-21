@@ -165,6 +165,7 @@ export function useWallet() {
       if (chainType === WalletType.SOL) {
         if (isConnectedSOL && walletSOL) {
           setStorageChain(parseInt(chain.chainId as string));
+          return Promise.resolve(true);
         } else {
           setOpenConnectDrawer(true);
           setTargetWalletType(WalletType.SOL);

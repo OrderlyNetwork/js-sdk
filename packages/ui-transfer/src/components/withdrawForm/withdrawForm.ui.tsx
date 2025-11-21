@@ -7,6 +7,7 @@ import {
   textVariants,
   Tabs,
   TabPanel,
+  ArrowLeftRightIcon,
   WalletIcon,
 } from "@orderly.network/ui";
 import { WithdrawTo } from "../../types";
@@ -45,6 +46,8 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
     onSourceTokenChange,
     vaultBalanceList,
     qtyGreaterThanMaxAmount,
+    isTokenUnsupported,
+    onSwitchToSupportedNetwork,
   } = props;
 
   const { t } = useTranslation();
@@ -88,6 +91,22 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
             onTokenChange={onSourceTokenChange}
             status={props.inputStatus}
             hintMessage={props.hintMessage}
+            hintSuffix={
+              isTokenUnsupported ? (
+                <button
+                  type="button"
+                  onClick={onSwitchToSupportedNetwork}
+                  className="oui-inline-flex oui-items-center oui-gap-1 oui-text-2xs oui-font-semibold oui-text-primary"
+                >
+                  {t("common.switch")}
+                  <ArrowLeftRightIcon
+                    size={16}
+                    className="oui-text-primary oui-mt-0.5"
+                    opacity={1}
+                  />
+                </button>
+              ) : undefined
+            }
             vaultBalanceList={vaultBalanceList}
             testId="oui-testid-withdraw-dialog-quantity-input"
             displayType="vaultBalance"

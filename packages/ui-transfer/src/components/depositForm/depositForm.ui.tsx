@@ -1,6 +1,15 @@
 import { FC } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { Box, Flex, textVariants, Text } from "@orderly.network/ui";
+import {
+  Box,
+  Flex,
+  InfoCircleIcon,
+  textVariants,
+  Text,
+  TokenIcon,
+  CaretDownIcon,
+  Tooltip,
+} from "@orderly.network/ui";
 import { LtvWidget } from "../LTV";
 import { ActionButton } from "../actionButton";
 import { AvailableQuantity } from "../availableQuantity";
@@ -36,6 +45,7 @@ export const DepositForm: FC<DepositFormScriptReturn> = (props) => {
     quantity,
     collateralContributionQuantity,
     maxQuantity,
+    maxDepositAmount,
     onQuantityChange,
     hintMessage,
     inputStatus,
@@ -71,6 +81,79 @@ export const DepositForm: FC<DepositFormScriptReturn> = (props) => {
   } = props;
 
   const { t } = useTranslation();
+
+  const showRegularTokenRenderer =
+    sourceToken?.user_max_qty !== undefined && sourceToken?.user_max_qty === -1;
+
+  const tokenValueFormatter = (value: string) => (
+    <Flex direction="column" itemAlign="end" gapY={1}>
+      <Flex gapX={1} itemAlign="center">
+        <TokenIcon name={value} className="oui-size-[16px]" />
+        <Text weight="semibold" intensity={54}>
+          {value}
+        </Text>
+        <CaretDownIcon
+          size={12}
+          className="oui-text-base-contrast-54"
+          opacity={1}
+        />
+      </Flex>
+      <Flex itemAlign="center" className="oui-gap-[2px]">
+        <Text
+          size="2xs"
+          intensity={36}
+          weight="regular"
+          className="oui-leading-[10px]"
+        >
+          {t("transfer.depositCap", "Deposit cap")}{" "}
+          <Text.numeral
+            as="span"
+            size="2xs"
+            intensity={80}
+            weight="regular"
+            className="oui-leading-[10px]"
+            dp={0}
+          >
+            {sourceToken?.user_max_qty?.toString() || "0"}
+          </Text.numeral>
+        </Text>
+        <Tooltip
+          content={
+            <Box
+              onMouseDown={(event) => {
+                event.stopPropagation();
+              }}
+              onPointerDown={(event) => {
+                event.stopPropagation();
+              }}
+            >
+              <Flex direction="column" itemAlign="start">
+                <Text size="2xs" weight="semibold" intensity={36}>
+                  {t("transfer.depositCap.tooltip")}
+                  <Text as="span" size="2xs" weight="semibold" intensity={80}>
+                    {value}.
+                  </Text>
+                </Text>
+                <a
+                  href="https://orderly.network/docs/introduction/trade-on-orderly/multi-collateral#max-deposits-user"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="oui-text-2xs oui-text-primary"
+                >
+                  {t("common.learnMore")}
+                </a>
+              </Flex>
+            </Box>
+          }
+        >
+          <InfoCircleIcon
+            className="oui-size-3 oui-shrink-0 oui-cursor-pointer"
+            opacity={0.36}
+          />
+        </Tooltip>
+      </Flex>
+    </Flex>
+  );
 
   const renderContent = () => {
     if (needSwap || needCrossSwap) {
@@ -142,6 +225,10 @@ export const DepositForm: FC<DepositFormScriptReturn> = (props) => {
             hintMessage={hintMessage}
             fetchBalance={fetchBalance}
             tokenBalances={props.tokenBalances}
+            tokenShowCaret={showRegularTokenRenderer}
+            tokenValueFormatter={
+              showRegularTokenRenderer ? undefined : tokenValueFormatter
+            }
             data-testId="oui-testid-deposit-dialog-quantity-input"
             disabled={!props.isLoggedIn}
           />
@@ -153,7 +240,7 @@ export const DepositForm: FC<DepositFormScriptReturn> = (props) => {
           maxQuantity={maxQuantity}
           loading={balanceRevalidating}
           onClick={() => {
-            onQuantityChange(maxQuantity);
+            onQuantityChange(maxDepositAmount);
           }}
         />
 
