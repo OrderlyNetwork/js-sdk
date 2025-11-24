@@ -70,18 +70,21 @@ Command instructions for editing/creating standard Widgets (script/ui/widget/ind
 
 - UI is pure presentation, no side effects; layout-related `className`/`style` can be passed.
 - Logic and derived calculations go in `script`; Dialog/Sheet registration goes in `widget`.
+- **Responsibility Separation**:
+  - **Script**: Responsible for data logic and business logic. Script only provides raw state/data (numbers, booleans, objects, etc.), does NOT handle internationalization (i18n), does NOT preset UI display format. Script returns raw values, and UI decides how to display them (including i18n text selection and formatting).
+  - **UI**: Responsible for display logic and translation (i18n). UI receives raw data from script and handles all formatting, translation, and presentation concerns.
 - Naming: files use `camelCase`, components/types use `PascalCase`.
 - **Dialog/BottomSheet Registration Requirements**: If the created Widget needs to be used as a Dialog or BottomSheet, you must:
   1. Define and export `${Pascal}DialogId` and `${Pascal}SheetId` (or `${Pascal}BottomSheetId`) constants in `widget.tsx`
   2. Register using `registerSimpleDialog` and `registerSimpleSheet` (from `@orderly.network/ui`)
   3. Export these IDs in `index.ts`
   4. Reference example: `packages/ui-tpsl/src/editBracketOrder/editBracketOrder.widget.tsx`
-- Text should use i18n; add error fallbacks and `useMemo` optimization when necessary.
+- Text should use i18n (only in UI layer, NOT in script); add error fallbacks and `useMemo` optimization when necessary.
 - **Numeric Calculations**: All numeric calculations (multiplication, division, percentage conversion, etc.) must use `Decimal` (from `@orderly.network/utils`) to avoid floating-point precision issues.
 - **Local Cache Data**: When local cache data is needed, must use `useLocalStorage` hook (from `@orderly.network/hooks`). Use in `script.tsx`, usage: `const [storedValue, setValue] = useLocalStorage<T>(key: string, initialValue: T)`. Do not directly use `localStorage.getItem/setItem`.
 - **Comment Language**: All code comments must be in English.
 - **Prohibit Generating Any Type of Markdown Documentation**: Do not generate README, CHANGELOG, usage instructions, summary documents, or any .md files.
-- **i18n Key Processing Workflow**:
+- **i18n Key Processing Workflow** (only applies to UI layer):
   1. First search in `@orderly.network/i18n` package to see if a matching key already exists
   2. If it exists, use it directly; if not, create a new key
   3. Determine which file it should be placed in under `packages/i18n/src/locale/module/` based on content nature:
@@ -92,7 +95,9 @@ Command instructions for editing/creating standard Widgets (script/ui/widget/ind
      - Other modules follow the same pattern
   4. Key naming format: `module.keyName` (e.g., `common.cancel`, `positions.closeAll`)
   5. **Only add key to the corresponding .ts file, do not translate to other language json files**
+  6. **Important**: i18n should only be used in `ui.tsx`, NOT in `script.tsx`. Script provides state, UI decides how to display it.
 - **Confirmation Mechanism**: For parts that need confirmation (such as uncertain placement location, uncertain implementation method, etc.), must pause and ask for user opinion before continuing development.
+- **Component Reusability**: If the created View or Node components can be reused in other places, they should be extracted as reusable components. Before creating new components, check if similar components already exist in the codebase that can be reused or extended. Extract common UI patterns into separate components for better maintainability and consistency.
 
 ## Component Usage Workflow
 
@@ -116,6 +121,22 @@ When components need to be used in UI (especially component names obtained from 
    - Follow usage examples and notes in the documentation
 
 **Important**: Do not directly guess the component's API, must confirm the component's correct usage through documentation.
+
+## UI Component Best Practices
+
+- **Displaying Symbol with Icon**: When UI needs to display a trading symbol with icon and formatted text, use `Text.formatted` component:
+  ```tsx
+  <Text.formatted
+    size="base"
+    weight="semibold"
+    rule="symbol"
+    formatString="base-type"
+    showIcon
+  >
+    {symbol}
+  </Text.formatted>
+  ```
+  This component automatically handles icon display and symbol formatting. Script should only provide the raw `symbol` string (e.g., `"PERP_ETH_USDC"`), and UI uses `Text.formatted` to render it with icon and proper formatting.
 
 ## References
 
