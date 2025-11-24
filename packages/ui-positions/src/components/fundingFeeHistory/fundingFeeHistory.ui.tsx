@@ -246,7 +246,7 @@ const HistoryDataListView: FC<ListProps> = ({ isLoading, data, loadMore }) => {
   }, [t]);
 
   return (
-    <div className="oui-h-[calc(80vh_-_132px_-_8px)] oui-overflow-y-auto">
+    <div className="oui-custom-scrollbar oui-h-[calc(80vh_-_132px_-_8px)] oui-overflow-y-auto">
       <EndReachedBox onEndReached={loadMore}>
         <DataTable
           classNames={{

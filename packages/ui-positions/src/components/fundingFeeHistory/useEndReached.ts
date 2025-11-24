@@ -20,7 +20,6 @@ export function useEndReached(
     };
 
     const handleObserver = (entries: IntersectionObserverEntry[]) => {
-      console.log(">>>>>>>>handleObserver", entries);
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           cb.current?.();

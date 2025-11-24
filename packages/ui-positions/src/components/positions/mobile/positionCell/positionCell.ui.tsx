@@ -64,7 +64,7 @@ export const PositionCell: FC<
       <Divider intensity={6} className="oui-w-full" />
       {body}
       <TPSLPrice {...rest} />
-      {/* <FundingFee {...rest} /> */}
+      <FundingFee {...rest} />
       <Flex justify={"between"} width={"100%"} gap={2}>
         {buttons}
         {props.positionReverse && (
