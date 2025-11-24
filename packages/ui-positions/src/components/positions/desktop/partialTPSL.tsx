@@ -1,8 +1,13 @@
 import { FC, useMemo } from "react";
-import { useSymbolsInfo } from "@orderly.network/hooks";
+import {
+  ERROR_MSG_CODES,
+  useSymbolsInfo,
+  useTpslPriceChecker,
+} from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { PositionType } from "@orderly.network/types";
-import { cn, Flex, Text } from "@orderly.network/ui";
+import { OrderSide, PositionType } from "@orderly.network/types";
+import { cn, ExclamationFillIcon, Flex, Text } from "@orderly.network/ui";
+import { CloseToLiqPriceIcon } from "@orderly.network/ui-tpsl";
 import { usePositionsRowContext } from "../positionsRowContext";
 import { AddIcon, TPSLEditIcon } from "./components";
 
@@ -18,9 +23,20 @@ export const PartialTPSL: FC<{
     slTriggerPrice,
     direction = "column",
   } = props;
-  const { partialTPSLOrder: order, quoteDp, baseDp } = usePositionsRowContext();
+  const {
+    partialTPSLOrder: order,
+    quoteDp,
+    baseDp,
+    position,
+  } = usePositionsRowContext();
   const symbolInfo = useSymbolsInfo();
   const { t } = useTranslation();
+  const side = position.position_qty > 0 ? OrderSide.BUY : OrderSide.SELL;
+  const slPriceError = useTpslPriceChecker({
+    slPrice: slTriggerPrice?.toString() ?? undefined,
+    liqPrice: position.est_liq_price ?? null,
+    side: side,
+  });
 
   const child = useMemo(() => {
     const children = [];
@@ -57,6 +73,7 @@ export const PartialTPSL: FC<{
           rule={"price"}
           dp={symbolInfo[order!.symbol]("quote_dp", 2)}
           prefix={<Text intensity={54}>{`${t("tpsl.sl")} - `}</Text>}
+          suffix={<CloseToLiqPriceIcon slPriceError={slPriceError} />}
         >
           {slTriggerPrice}
         </Text.formatted>,
@@ -70,7 +87,7 @@ export const PartialTPSL: FC<{
     }
 
     return children;
-  }, [tpTriggerPrice, slTriggerPrice, order?.symbol, t]);
+  }, [tpTriggerPrice, slTriggerPrice, order?.symbol, t, slPriceError]);
   const hasTPSL = Array.isArray(child) ? !!child.length : !child;
   return (
     <Flex className="oui-gap-[6px]">

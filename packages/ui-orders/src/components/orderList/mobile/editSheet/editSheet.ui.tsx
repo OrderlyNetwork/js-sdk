@@ -38,7 +38,7 @@ export const EditSheet: FC<EditSheetState> = (props) => {
     !props.isChanged ||
     Object.keys(errors!).length > 0 ||
     // when activated price is not empty, the activated price input should not be empty
-    (item.activated_price && !formattedOrder.activated_price);
+    (!!item.activated_price && !formattedOrder.activated_price);
 
   const header = <EditSheetHeader item={item} />;
 

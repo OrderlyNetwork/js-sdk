@@ -6,7 +6,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { OrderValidationResult } from "@orderly.network/hooks";
+import { ERROR_MSG_CODES, OrderValidationResult } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
 import { OrderlyOrder, OrderType, PositionType } from "@orderly.network/types";
@@ -21,6 +21,7 @@ import {
   SettingFillIcon,
   Box,
   useScreen,
+  DotStatus,
 } from "@orderly.network/ui";
 import { Grid } from "@orderly.network/ui";
 import { ExclamationFillIcon } from "@orderly.network/ui";
@@ -83,6 +84,10 @@ export const OrderTPSL = (props: {
     props.isReduceOnly
   )
     return null;
+
+  const isSlPriceWarning =
+    props.errors?.["sl_trigger_price"]?.["type"] ===
+    ERROR_MSG_CODES.SL_PRICE_WARNING;
 
   return (
     <div>
@@ -163,13 +168,28 @@ export const OrderTPSL = (props: {
           setOrderValue={props.setOrderValue}
           onChange={props.onChange}
           values={props.values}
-          errors={props.errors}
+          errors={isSlPriceWarning ? {} : props.errors}
           quote_dp={props.quote_dp}
           showTPSLAdvanced={props.showTPSLAdvanced}
           isMobile={isMobile}
+          isSlPriceWarning={isSlPriceWarning}
         />
       </div>
+
+      {isSlPriceWarning && <TPSLPriceWarning errors={props.errors} />}
     </div>
+  );
+};
+
+const TPSLPriceWarning = (props: { errors: OrderValidationResult | null }) => {
+  const { getErrorMsg } = useOrderEntryFormErrorMsg(props.errors);
+
+  return (
+    <DotStatus
+      color="warning"
+      size="xs"
+      label={getErrorMsg("sl_trigger_price")}
+    />
   );
 };
 
@@ -183,6 +203,7 @@ const TPSLInputForm = React.forwardRef<
     quote_dp: number | undefined;
     showTPSLAdvanced: () => void;
     isMobile: boolean;
+    isSlPriceWarning?: boolean;
   }
 >((props, ref) => {
   const { getErrorMsg } = useOrderEntryFormErrorMsg(props.errors);
@@ -230,6 +251,11 @@ const TPSLInputForm = React.forwardRef<
             first: "oui-testid-orderEntry-tpsl-slPrice-input",
             second: "oui-testid-orderEntry-tpsl-slPnl-input",
             dropDown: "oui-testid-orderEntry-tpsl-sl-dropDown-trigger-button",
+          }}
+          classNames={{
+            root: props.isSlPriceWarning
+              ? "oui-outline-warning-darken focus-within:oui-outline-warning-darken"
+              : undefined,
           }}
         />
       </PnlInputProvider>
@@ -279,6 +305,11 @@ const TPSLTriggerPriceInput = (props: {
   onChange: (value: string) => void;
   quote_dp: number | undefined;
   testId?: string;
+  classNames?: {
+    root?: string;
+    input?: string;
+    prefix?: string;
+  };
 }) => {
   const { t } = useTranslation();
   const { errorMsgVisible } = useOrderEntryContext();
@@ -366,8 +397,12 @@ const TPSLTriggerPriceInput = (props: {
       value={innerValue}
       classNames={{
         additional: "oui-text-base-contrast-54",
-        root: "oui-pr-2 md:oui-pr-3",
-        prefix: "oui-pr-1 md:oui-pr-2",
+        root: cn("oui-pr-2 md:oui-pr-3", props.classNames?.root),
+        prefix: cn("oui-pr-1 md:oui-pr-2", props.classNames?.prefix),
+        input: cn(
+          "oui-text-2xs placeholder:oui-text-2xs",
+          props.classNames?.input,
+        ),
       }}
       // onChange={props.onChange}
       onValueChange={onValueChange}
@@ -393,6 +428,11 @@ const TPSLInputRow: React.FC<{
     second?: string;
     dropDown?: string;
   };
+  classNames?: {
+    root?: string;
+    input?: string;
+    prefix?: string;
+  };
 }> = (props) => {
   return (
     <Grid cols={2} gapX={1}>
@@ -401,6 +441,7 @@ const TPSLInputRow: React.FC<{
         type={props.type}
         error={props.error}
         values={props.values ?? ""}
+        classNames={props.classNames}
         onChange={(event) => {
           props.onChange(
             props.type === "SL" ? "sl_trigger_price" : "tp_trigger_price",

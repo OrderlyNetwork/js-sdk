@@ -471,6 +471,8 @@
   "tpsl.validate.slTriggerPrice.error.priceErrorMax": "Il tuo prezzo trigger SL dovrebbe essere impostato più alto del tuo prezzo ordine.",
   "tpsl.validate.tpTriggerPrice.error.required": "Il prezzo trigger TP è richiesto",
   "tpsl.validate.slTriggerPrice.error.required": "Il prezzo trigger SL è richiesto",
+  "tpsl.validate.slTriggerPrice.warning.closeToLiqPrice": "Gli stop loss impostati vicino al prezzo di liquidazione potrebbero non attivarsi. Nota: il prezzo di liquidazione può cambiare con il valore nozionale della posizione.",
+  "tpsl.validate.slTriggerPrice.error.crossLiqPrice": "Lo stop loss supera il prezzo di liquidazione. Si prega di regolare lo stop loss.",
   "tpsl.tpslDetail.qty": "Qtà",
   "tpsl.tpslDetail.estPnl": "P&L stimato",
   "tpsl.tpslDetail.estPnl.tooltip": "Il valore effettivo può differire in base al prezzo di trading effettivo. Questo valore è solo per riferimento.",

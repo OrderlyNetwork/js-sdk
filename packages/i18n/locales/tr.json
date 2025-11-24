@@ -471,6 +471,8 @@
   "tpsl.validate.slTriggerPrice.error.priceErrorMax": "SL tetikleme fiyatınız sipariş fiyatınızdan yüksek olarak ayarlanmalıdır.",
   "tpsl.validate.tpTriggerPrice.error.required": "TP tetikleme fiyatı gerekli",
   "tpsl.validate.slTriggerPrice.error.required": "SL tetikleme fiyatı gerekli",
+  "tpsl.validate.slTriggerPrice.warning.closeToLiqPrice": "Likidasyon fiyatına yakın ayarlanan stop loss'lar tetiklenmeyebilir. Not: Likidasyon fiyatı pozisyon nominal değeriyle değişebilir.",
+  "tpsl.validate.slTriggerPrice.error.crossLiqPrice": "Stop loss likidasyon fiyatını geçiyor. Lütfen stop loss'unuzu ayarlayın.",
   "tpsl.tpslDetail.qty": "Miktar",
   "tpsl.tpslDetail.estPnl": "Tahmini K&Z",
   "tpsl.tpslDetail.estPnl.tooltip": "Gerçek değer gerçek işlem fiyatına göre farklılık gösterebilir. Bu değer sadece referans içindir.",

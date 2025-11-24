@@ -471,6 +471,8 @@
   "tpsl.validate.slTriggerPrice.error.priceErrorMax": "Su precio de activación SL debe establecerse más alto que su precio de orden.",
   "tpsl.validate.tpTriggerPrice.error.required": "El precio de activación TP es requerido",
   "tpsl.validate.slTriggerPrice.error.required": "El precio de activación SL es requerido",
+  "tpsl.validate.slTriggerPrice.warning.closeToLiqPrice": "Los stop loss establecidos cerca del precio de liquidación pueden no activarse. Nota: el precio de liquidación puede cambiar con el valor nocional de la posición.",
+  "tpsl.validate.slTriggerPrice.error.crossLiqPrice": "El stop loss cruza el precio de liquidación. Por favor, ajuste su stop loss.",
   "tpsl.tpslDetail.qty": "Cant.",
   "tpsl.tpslDetail.estPnl": "P&L est.",
   "tpsl.tpslDetail.estPnl.tooltip": "El valor real puede diferir según el precio de trading real. Este valor es solo para referencia.",

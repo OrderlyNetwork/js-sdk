@@ -471,6 +471,8 @@
   "tpsl.validate.slTriggerPrice.error.priceErrorMax": "Harga pemicu SL Anda harus diatur lebih tinggi dari harga pesanan Anda.",
   "tpsl.validate.tpTriggerPrice.error.required": "Harga pemicu TP diperlukan",
   "tpsl.validate.slTriggerPrice.error.required": "Harga pemicu SL diperlukan",
+  "tpsl.validate.slTriggerPrice.warning.closeToLiqPrice": "Stop loss yang ditetapkan dekat dengan harga likuidasi mungkin tidak terpicu. Catatan: harga likuidasi dapat berubah dengan nilai nominal posisi.",
+  "tpsl.validate.slTriggerPrice.error.crossLiqPrice": "Stop loss melewati harga likuidasi. Silakan sesuaikan stop loss Anda.",
   "tpsl.tpslDetail.qty": "Jml.",
   "tpsl.tpslDetail.estPnl": "P&L perkiraan",
   "tpsl.tpslDetail.estPnl.tooltip": "Nilai aktual mungkin berbeda berdasarkan harga perdagangan aktual. Nilai ini hanya untuk referensi.",

@@ -471,6 +471,8 @@
   "tpsl.validate.slTriggerPrice.error.priceErrorMax": "Seu preço de gatilho SL deve ser definido acima do seu preço de pedido.",
   "tpsl.validate.tpTriggerPrice.error.required": "O preço de gatilho TP é obrigatório",
   "tpsl.validate.slTriggerPrice.error.required": "O preço de gatilho SL é obrigatório",
+  "tpsl.validate.slTriggerPrice.warning.closeToLiqPrice": "Stop loss definidos próximos ao preço de liquidação podem não ser acionados. Nota: o preço de liquidação pode mudar com o valor nocional da posição.",
+  "tpsl.validate.slTriggerPrice.error.crossLiqPrice": "O stop loss ultrapassa o preço de liquidação. Por favor, ajuste seu stop loss.",
   "tpsl.tpslDetail.qty": "Qtd.",
   "tpsl.tpslDetail.estPnl": "P&L estimado",
   "tpsl.tpslDetail.estPnl.tooltip": "O valor real pode diferir com base no preço de negociação real. Este valor é apenas para referência.",

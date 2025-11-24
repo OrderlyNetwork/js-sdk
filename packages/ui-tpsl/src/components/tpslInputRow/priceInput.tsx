@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { Input, inputFormatter } from "@orderly.network/ui";
+import { cn, Input, inputFormatter } from "@orderly.network/ui";
 
 export const PriceInput: React.FC<{
   type: string;
@@ -10,6 +10,11 @@ export const PriceInput: React.FC<{
   onValueChange: (value: string) => void;
   quote_dp: number;
   disabled?: boolean;
+  classNames?: {
+    root?: string;
+    input?: string;
+    prefix?: string;
+  };
 }> = (props) => {
   const [placeholder, setPlaceholder] = useState<string>("USDC");
   const { t } = useTranslation();
@@ -27,10 +32,15 @@ export const PriceInput: React.FC<{
       value={props.value}
       color={props.error ? "danger" : undefined}
       classNames={{
-        input: "oui-text-2xs placeholder:oui-text-2xs",
-        prefix: "oui-text-base-contrast-54 oui-text-2xs",
-        root: "oui-w-full",
-        // root: "oui-outline-line-12 focus-within:oui-outline-primary-light",
+        input: cn(
+          "oui-text-2xs placeholder:oui-text-2xs",
+          props.classNames?.input,
+        ),
+        prefix: cn(
+          "oui-text-base-contrast-54 oui-text-2xs",
+          props.classNames?.prefix,
+        ),
+        root: cn("oui-w-full", props.classNames?.root),
       }}
       onValueChange={props.onValueChange}
       onFocus={() => {

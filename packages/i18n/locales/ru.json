@@ -471,6 +471,8 @@
   "tpsl.validate.slTriggerPrice.error.priceErrorMax": "Ваша цена срабатывания SL должна быть установлена выше цены заказа.",
   "tpsl.validate.tpTriggerPrice.error.required": "Цена срабатывания TP обязательна",
   "tpsl.validate.slTriggerPrice.error.required": "Цена срабатывания SL обязательна",
+  "tpsl.validate.slTriggerPrice.warning.closeToLiqPrice": "Стоп-лоссы, установленные близко к цене ликвидации, могут не сработать. Примечание: цена ликвидации может изменяться в зависимости от номинальной стоимости позиции.",
+  "tpsl.validate.slTriggerPrice.error.crossLiqPrice": "Стоп-лосс пересекает цену ликвидации. Пожалуйста, скорректируйте ваш стоп-лосс.",
   "tpsl.tpslDetail.qty": "Кол-во",
   "tpsl.tpslDetail.estPnl": "Расчетный P&L",
   "tpsl.tpslDetail.estPnl.tooltip": "Фактическое значение может отличаться в зависимости от фактической торговой цены. Это значение только для справки.",
