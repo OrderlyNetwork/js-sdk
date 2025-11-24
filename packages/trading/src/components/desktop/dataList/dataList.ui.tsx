@@ -45,7 +45,7 @@ const PositionsView: React.FC<DataListState> = (props) => {
         />
       </React.Suspense>
       <Divider className="oui-w-full" />
-      <Box className="oui-h-[calc(100%_-_60px)]" width="100%">
+      <Box className="oui-flex-1 oui-h-full oui-overflow-hidden" width="100%">
         <PositionsWidget
           symbol={!!props.showAllSymbol ? undefined : props.symbol}
           pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
