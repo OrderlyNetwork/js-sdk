@@ -53,6 +53,13 @@ export const ChainSelect: React.FC<ChainSelectProps> = (props) => {
 
   const chainName = wrongNetwork ? "Unknown" : value?.info?.network_infos?.name;
 
+  const currentChain = chains.find((chain) => chain.chain_id === value?.id);
+  const extendedCurrentChain = currentChain as API.NetworkInfos & {
+    isSupported?: boolean;
+  };
+  const isCurrentChainSupported =
+    !currentChain || extendedCurrentChain?.isSupported !== false;
+
   const renderRightIcon = () => {
     if (loading) {
       return <Spinner size="sm" />;
@@ -84,11 +91,16 @@ export const ChainSelect: React.FC<ChainSelectProps> = (props) => {
             {t("transfer.network")}
           </Text>
         </Flex>
-        <Flex gapX={1}>
+        <Flex gapX={1} itemAlign="center">
           {chainIcon}
           <Text size="sm" intensity={80}>
             {chainName}
           </Text>
+          {!isCurrentChainSupported && (
+            <Badge color="danger" size="xs">
+              {t("common.notSupported")}
+            </Badge>
+          )}
         </Flex>
       </div>
       {renderRightIcon()}
