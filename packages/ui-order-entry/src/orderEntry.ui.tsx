@@ -171,6 +171,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
   const onSubmit = useMemoizedFn(async () => {
     const isScaledOrder = formattedOrder.order_type === OrderType.SCALED;
 
+    // TODO: in the future, we will be add `level` to `OrderValidationItem`, use `level` manager ui state
     const isSlPriceError =
       props.slPriceError?.sl_trigger_price?.type ===
       ERROR_MSG_CODES.SL_PRICE_ERROR;
