@@ -94,11 +94,11 @@ module.exports = withTV({
           'url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214%22%20height%3D%2214%22%20viewBox%3D%220%200%2014%2014%22%20fill%3D%22none%22%3E%3Cg%20clip-path%3D%22url%28%23clip0_22040_41827%29%22%3E%3Cpath%20d%3D%22M11.4548%200.693201C11.1139%200.352266%2010.5611%200.352266%2010.2202%200.693201L8.98558%201.92784L12.0722%205.01442L13.3068%203.77979C13.6477%203.43885%2013.6477%202.88609%2013.3068%202.54515L11.4548%200.693201Z%22%20fill%3D%22white%22%20fill-opacity%3D%220.98%22%2F%3E%3Cpath%20d%3D%22M11.1462%205.9404L8.0596%202.85381L0.960453%209.95296L0.443602%2013.0541C0.394363%2013.3495%200.650496%2013.6056%200.945935%2013.5564L4.04704%2013.0395L11.1462%205.9404Z%22%20fill%3D%22white%22%20fill-opacity%3D%220.98%22%2F%3E%3C%2Fg%3E%3Cdefs%3E%3CclipPath%20id%3D%22clip0_22040_41827%22%3E%3Crect%20width%3D%2214%22%20height%3D%2214%22%20fill%3D%22white%22%2F%3E%3C%2FclipPath%3E%3C%2Fdefs%3E%3C%2Fsvg%3E") 2 12, auto',
       },
       maxWidth: {
-        xs: "var(--oui-spacing-xs, 20rem)",
-        sm: "var(--oui-spacing-sm, 22.5rem)",
-        md: "var(--oui-spacing-md, 26.25rem)",
-        lg: "var(--oui-spacing-lg, 30rem)",
-        xl: "var(--oui-spacing-xl, 33.75rem)",
+        xs: "var(--oui-spacing-xs, 20rem)", // 320px
+        sm: "var(--oui-spacing-sm, 22.5rem)", // 360px
+        md: "var(--oui-spacing-md, 26.25rem)", // 420px
+        lg: "var(--oui-spacing-lg, 30rem)", // 480px
+        xl: "var(--oui-spacing-xl, 33.75rem)", // 540px
       },
       colors: {
         primary: {

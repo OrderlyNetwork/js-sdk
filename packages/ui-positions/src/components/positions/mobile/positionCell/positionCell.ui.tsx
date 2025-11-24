@@ -2,6 +2,7 @@ import { FC } from "react";
 import { OrderType } from "@orderly.network/types";
 import { cn, Divider, Flex, Grid } from "@orderly.network/ui";
 import { ClosePositionWidget } from "../../closePosition";
+import { ReversePositionButton } from "../../desktop/reversePotisionButton";
 import { TpSLBtnWidget } from "../tpSLBtn";
 import {
   UnrealPnL,
@@ -64,7 +65,12 @@ export const PositionCell: FC<
       {body}
       <TPSLPrice {...rest} />
       {/* <FundingFee {...rest} /> */}
-      {buttons}
+      <Flex justify={"between"} width={"100%"} gap={2}>
+        {buttons}
+        {props.positionReverse && (
+          <ReversePositionButton position={props.item} />
+        )}
+      </Flex>
     </Flex>
   );
 };

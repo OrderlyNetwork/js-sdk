@@ -82,14 +82,14 @@ export const use${Pascal}Script = (options?: Use${Pascal}ScriptOptions) => {
   }, []);
 
   // Example: Use Decimal for all numeric calculations
-  const percentage = useMemo(() => {
-    const rate = 0.0001;
-    return `${new Decimal(rate).mul(100).toNumber()}%`;
+  // Script returns raw numeric value, UI decides how to format and display it
+  const rate = useMemo(() => {
+    return new Decimal(0.0001);
   }, []);
 
   return {
     value,
-    percentage,
+    rate, // Return raw Decimal value, not formatted string
   };
 };
 
@@ -170,8 +170,8 @@ export { ${Pascal}Widget /*, ${Pascal}DialogId, ${Pascal}SheetId */ } from "./${
 
 ## Responsibility Description
 
-- **script**: Responsible for data fetching, state management, derived calculations, no JSX
-- **ui**: Pure presentation component, no internal state, all data from props input, events through props output
+- **script**: Responsible for **data logic and business logic**. Script handles data fetching, state management, derived calculations, no JSX. **Important**: Script only provides raw state/data (numbers, booleans, objects, etc.), does NOT handle internationalization (i18n), does NOT preset UI display format. Script should return raw values, and UI decides how to display them (including i18n text selection and formatting).
+- **ui**: Responsible for **display logic and translation (i18n)**. Pure presentation component, no internal state, all data from props input, events through props output. UI is responsible for internationalization (i18n) and formatting display based on state from script.
 - **widget**: Connects script and ui, passes external props to script, passes state to ui; optionally registers Dialog/Sheet
 - **index**: Unified export of all components, types, and IDs
 
@@ -179,14 +179,18 @@ export { ${Pascal}Widget /*, ${Pascal}DialogId, ${Pascal}SheetId */ } from "./${
 
 - UI does no side effects, keep pure functions
 - Logic and derived calculations go in script, use `useMemo`/`useCallback` for performance optimization
-- Text should use i18n for internationalization
+- **Script vs UI Separation**:
+  - **Script** provides raw state (e.g., `rate: 0.0001`, `isLong: true`), handles data logic and business logic
+  - **UI** handles formatting and i18n (e.g., `i18n.t("trading.rate") + ": " + formatPercentage(rate)`), handles display logic and translation
+  - Script should NOT return formatted strings like `"0.01%"` or i18n keys. Script should NOT handle translation logic - all i18n should be in UI layer.
+- Text should use i18n for internationalization (only in UI layer, NOT in script)
 - Types should be explicitly declared, avoid deep nesting
 - Add error fallback handling when necessary
 - **Numeric Calculations**: All numeric calculations (multiplication, division, percentage conversion, etc.) must use `Decimal` (from `@orderly.network/utils`) to avoid JavaScript floating-point precision issues
 - **Local Cache Data**: When local cache data is needed, must use `useLocalStorage` hook (from `@orderly.network/hooks`). Use in `script.tsx`, usage: `const [storedValue, setValue] = useLocalStorage<T>(key: string, initialValue: T)`. Do not directly use `localStorage.getItem/setItem`
 - **Comment Language**: All code comments must be in English
 - **Prohibit Generating Any Type of Markdown Documentation**: Do not generate README, CHANGELOG, usage instructions, summary documents, or any .md files
-- **i18n Key Processing Workflow**:
+- **i18n Key Processing Workflow** (only applies to UI layer):
   1. First search in `@orderly.network/i18n` package to see if a matching key already exists
   2. If it exists, use it directly; if not, create a new key
   3. Determine which file it should be placed in under `packages/i18n/src/locale/module/` based on content nature:
@@ -197,7 +201,9 @@ export { ${Pascal}Widget /*, ${Pascal}DialogId, ${Pascal}SheetId */ } from "./${
      - Other modules follow the same pattern
   4. Key naming format: `module.keyName` (e.g., `common.cancel`, `positions.closeAll`)
   5. **Only add key to the corresponding .ts file, do not translate to other language json files**
+  6. **Important**: i18n should only be used in `ui.tsx`, NOT in `script.tsx`. Script provides state, UI decides how to display it.
 - **Confirmation Mechanism**: For parts that need confirmation (such as uncertain placement location, uncertain implementation method, etc.), must pause and ask for user opinion before continuing development
+- **Component Reusability**: If the created View or Node components can be reused in other places, they should be extracted as reusable components. Before creating new components, check if similar components already exist in the codebase that can be reused or extended. Extract common UI patterns into separate components for better maintainability and consistency
 - **Dialog/BottomSheet Registration Requirements**: If the created Widget needs to be used as a Dialog or BottomSheet, must:
   1. Define and export `${Pascal}DialogId` and `${Pascal}SheetId` (or `${Pascal}BottomSheetId`) constants in `widget.tsx`
   2. Register using `registerSimpleDialog` and `registerSimpleSheet` (from `@orderly.network/ui`)
@@ -226,6 +232,22 @@ When components need to be used in UI (especially component names obtained from 
    - Follow usage examples and notes in the documentation
 
 **Important**: Do not directly guess the component's API, must confirm the component's correct usage through documentation.
+
+## UI Component Best Practices
+
+- **Displaying Symbol with Icon**: When UI needs to display a trading symbol with icon and formatted text, use `Text.formatted` component:
+  ```tsx
+  <Text.formatted
+    size="base"
+    weight="semibold"
+    rule="symbol"
+    formatString="base-type"
+    showIcon
+  >
+    {symbol}
+  </Text.formatted>
+  ```
+  This component automatically handles icon display and symbol formatting. Script should only provide the raw `symbol` string (e.g., `"PERP_ETH_USDC"`), and UI uses `Text.formatted` to render it with icon and proper formatting.
 
 ## References
 

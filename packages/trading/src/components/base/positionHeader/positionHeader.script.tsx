@@ -4,10 +4,18 @@ import { useTradingLocalStorage } from "../../../hooks";
 
 export const usePositionHeaderScript = (inputs: {
   pnlNotionalDecimalPrecision?: number;
+  setPnlNotionalDecimalPrecision: (value: number) => void;
   unPnlPriceBasis: "markPrice" | "lastPrice";
+  setUnPnlPriceBasic: (value: string) => void;
   symbol?: string;
 }) => {
-  const { pnlNotionalDecimalPrecision, unPnlPriceBasis, symbol } = inputs;
+  const {
+    pnlNotionalDecimalPrecision,
+    setPnlNotionalDecimalPrecision,
+    unPnlPriceBasis,
+    setUnPnlPriceBasic,
+    symbol,
+  } = inputs;
   const calcMode = unPnlPriceBasis;
 
   const [data] = usePositionStream(symbol, {
@@ -28,6 +36,9 @@ export const usePositionHeaderScript = (inputs: {
     showAllSymbol,
     setShowAllSymbol,
     symbol,
+    setPnlNotionalDecimalPrecision,
+    unPnlPriceBasis,
+    setUnPnlPriceBasic,
   };
 };
 
