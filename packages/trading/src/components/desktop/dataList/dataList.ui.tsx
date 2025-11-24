@@ -249,10 +249,12 @@ export const DataList: React.FC<DataListState> = (props) => {
       defaultValue={current || DataListTabType.positions}
       variant="contained"
       size="lg"
-      className="oui-h-full"
+      className="oui-h-full oui-w-full oui-overflow-x-hidden"
       classNames={{
         trigger: "oui-group",
-        tabsContent: "oui-h-[calc(100%_-_32px)]",
+        tabsContent: showDownsideWidget
+          ? "oui-h-[calc(100%_-_60px)] oui-w-full oui-min-w-0 oui-max-w-full"
+          : "oui-h-[calc(100%_-_32px)] oui-w-full oui-min-w-0 oui-max-w-full",
       }}
       trailing={
         !showDownsideWidget ? (
