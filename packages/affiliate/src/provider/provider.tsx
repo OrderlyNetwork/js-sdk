@@ -31,7 +31,7 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
   const {
     becomeAnAffiliateUrl = "https://orderly.network/",
     learnAffiliateUrl = "https://orderly.network/",
-    referralLinkUrl = "https://orderly.network/",
+    referralLinkUrl,
     chartConfig,
     overwrite,
     children,
