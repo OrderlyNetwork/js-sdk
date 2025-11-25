@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useMemo, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   Button,
@@ -26,74 +26,82 @@ export const Setting: FC<SettingState> = (props) => {
   const { t } = useTranslation();
   const { isMobile } = useScreen();
 
-  const SettingsContent = () => (
-    <>
-      <div className="oui-flex oui-flex-col oui-text-sm">
-        <Text className="oui-text-base oui-pb-3">
-          {t("trading.portfolioSettings")}
-        </Text>
-        <Divider />
-        <Text className="oui-pb-3 oui-text-base-contrast-54 oui-mt-2">
-          {t("trading.portfolioSettings.decimalPrecision")}
-        </Text>
-        <DecimalPrecisionCheckbox
-          value={props.pnlNotionalDecimalPrecision}
-          onValueChange={(e) => {
-            props.setPnlNotionalDecimalPrecision(e);
-            setOpen(false);
-          }}
-        />
-        <Divider className="oui-my-3" />
-        <Text className="oui-pb-3 oui-text-base-contrast-54 oui-mt-2">
-          {t("trading.portfolioSettings.unrealPnlPriceBasis")}
-        </Text>
-        <UnPnlPriceBasisCheckBox
-          value={props.unPnlPriceBasis}
-          onValueChange={(e) => {
-            props.setUnPnlPriceBasic(e);
-            setOpen(false);
-          }}
-        />
-      </div>
-      <Divider className="oui-my-3" />
-      <Flex itemAlign="center" gap={1} justify="between">
-        <Flex gap={1} itemAlign="center">
-          <Text size="sm" intensity={54}>
-            {t("trading.portfolioSettings.reversePosition")}
+  const SettingsContent = useMemo(() => {
+    return () => (
+      <>
+        <div className="oui-flex oui-flex-col oui-text-sm">
+          <Text className="oui-text-base oui-pb-3">
+            {t("trading.portfolioSettings")}
           </Text>
-          {isMobile ? (
-            <ExclamationFillIcon
-              size={14}
-              className="oui-text-base-contrast-54 hover:oui-text-base-contrast-80 oui-cursor-pointer"
-              onClick={() => {
-                modal.alert({
-                  message: t(
-                    "trading.portfolioSettings.reversePosition.tooltip",
-                  ),
-                });
-              }}
-            />
-          ) : (
-            <Tooltip
-              content={t("trading.portfolioSettings.reversePosition.tooltip")}
-              className="oui-max-w-[300px]"
-            >
+          <Divider />
+          <Text className="oui-pb-3 oui-text-base-contrast-54 oui-mt-2">
+            {t("trading.portfolioSettings.decimalPrecision")}
+          </Text>
+          <DecimalPrecisionCheckbox
+            value={props.pnlNotionalDecimalPrecision}
+            onValueChange={(e) => {
+              props.setPnlNotionalDecimalPrecision(e);
+              setOpen(false);
+            }}
+          />
+          <Divider className="oui-my-3" />
+          <Text className="oui-pb-3 oui-text-base-contrast-54 oui-mt-2">
+            {t("trading.portfolioSettings.unrealPnlPriceBasis")}
+          </Text>
+          <UnPnlPriceBasisCheckBox
+            value={props.unPnlPriceBasis}
+            onValueChange={(e) => {
+              props.setUnPnlPriceBasic(e);
+              setOpen(false);
+            }}
+          />
+        </div>
+        <Divider className="oui-my-3" />
+        <Flex itemAlign="center" gap={1} justify="between">
+          <Flex gap={1} itemAlign="center">
+            <Text size="sm" intensity={54}>
+              {t("trading.portfolioSettings.reversePosition")}
+            </Text>
+            {isMobile ? (
               <ExclamationFillIcon
                 size={14}
                 className="oui-text-base-contrast-54 hover:oui-text-base-contrast-80 oui-cursor-pointer"
+                onClick={() => {
+                  modal.alert({
+                    message: t(
+                      "trading.portfolioSettings.reversePosition.tooltip",
+                    ),
+                  });
+                }}
               />
-            </Tooltip>
-          )}
+            ) : (
+              <Tooltip
+                content={t("trading.portfolioSettings.reversePosition.tooltip")}
+                className="oui-max-w-[300px]"
+              >
+                <ExclamationFillIcon
+                  size={14}
+                  className="oui-text-base-contrast-54 hover:oui-text-base-contrast-80 oui-cursor-pointer"
+                />
+              </Tooltip>
+            )}
+          </Flex>
+          <Switch
+            checked={props.reversePosition}
+            onCheckedChange={(checked: boolean) => {
+              props.setReversePosition(checked);
+            }}
+          />
         </Flex>
-        <Switch
-          checked={props.reversePosition}
-          onCheckedChange={(checked: boolean) => {
-            props.setReversePosition(checked);
-          }}
-        />
-      </Flex>
-    </>
-  );
+      </>
+    );
+  }, [
+    t,
+    isMobile,
+    props.pnlNotionalDecimalPrecision,
+    props.unPnlPriceBasis,
+    props.reversePosition,
+  ]);
 
   const triggerButton = (
     <Button
