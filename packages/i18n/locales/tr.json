@@ -774,6 +774,7 @@
   "transfer.withdraw.otherAccount": "Diğer {{brokerName}} hesabı",
   "transfer.withdraw.accountId.tips": "Lütfen cüzdan adresi yerine bir Hesap Kimliği girin.",
   "transfer.withdraw.accountId.invalid": "Geçersiz Hesap Kimliği. Lütfen tekrar deneyin.",
+  "transfer.withdraw.available.tooltip": "İstek başına mevcut maksimum çekme tutarı {{amount}}'dir. Daha fazla çekmek için lütfen birden fazla istek gönderin.",
   "transfer.internalTransfer.from": "Kimden",
   "transfer.internalTransfer.to": "Kime",
   "transfer.internalTransfer.currentAssetValue": "Mevcut varlık değeri",

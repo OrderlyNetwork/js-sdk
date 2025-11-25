@@ -774,6 +774,7 @@
   "transfer.withdraw.otherAccount": "다른 {{brokerName}} 계정",
   "transfer.withdraw.accountId.tips": "지갑 주소가 아닌 계정 ID를 입력하세요.",
   "transfer.withdraw.accountId.invalid": "잘못된 계정 ID입니다. 다시 시도하세요.",
+  "transfer.withdraw.available.tooltip": "요청당 최대 출금 한도는 {{amount}}입니다. 더 많은 금액을 출금하려면 여러 요청을 제출하세요.",
   "transfer.internalTransfer.from": "출금",
   "transfer.internalTransfer.to": "입금",
   "transfer.internalTransfer.currentAssetValue": "현재 자산 가치",

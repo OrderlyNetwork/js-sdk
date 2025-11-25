@@ -2,7 +2,7 @@ import { FC, useMemo } from "react";
 import { useIndexPricesStream } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
-import { Flex, Spinner, Text } from "@orderly.network/ui";
+import { Flex, Spinner, Text, Tooltip } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 
 export type AvailableQuantityProps = {
@@ -11,6 +11,7 @@ export type AvailableQuantityProps = {
   maxQuantity?: number | string;
   onClick?: () => void;
   loading?: boolean;
+  tooltipContent?: React.ReactNode;
 };
 
 export const AvailableQuantity: FC<AvailableQuantityProps> = (props) => {
@@ -42,9 +43,24 @@ export const AvailableQuantity: FC<AvailableQuantityProps> = (props) => {
 
       <Flex gapX={2} itemAlign="center" className="oui-ml-auto">
         <Flex gapX={1} itemAlign="center">
-          <Text size="2xs" intensity={36}>
-            {`${t("common.available")}: `}
-          </Text>
+          {props.tooltipContent ? (
+            <Tooltip
+              content={props.tooltipContent}
+              className="oui-max-w-[274px]"
+            >
+              <Text
+                size="2xs"
+                intensity={36}
+                className="oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12"
+              >
+                {`${t("common.available")}: `}
+              </Text>
+            </Tooltip>
+          ) : (
+            <Text size="2xs" intensity={36}>
+              {`${t("common.available")}: `}
+            </Text>
+          )}
 
           {loading ? (
             <Spinner size="sm" />

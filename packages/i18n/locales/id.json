@@ -774,6 +774,7 @@
   "transfer.withdraw.otherAccount": "Akun {{brokerName}} lain",
   "transfer.withdraw.accountId.tips": "Silakan masukkan ID Akun, bukan alamat dompet.",
   "transfer.withdraw.accountId.invalid": "ID Akun tidak valid. Silakan coba lagi.",
+  "transfer.withdraw.available.tooltip": "Penarikan maksimum saat ini per permintaan adalah {{amount}}. Untuk menarik lebih banyak, kirim beberapa permintaan.",
   "transfer.internalTransfer.from": "Dari",
   "transfer.internalTransfer.to": "Ke",
   "transfer.internalTransfer.currentAssetValue": "Nilai aset saat ini",

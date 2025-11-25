@@ -774,6 +774,7 @@
   "transfer.withdraw.otherAccount": "Tài khoản {{brokerName}} khác",
   "transfer.withdraw.accountId.tips": "Vui lòng nhập ID tài khoản thay vì địa chỉ ví.",
   "transfer.withdraw.accountId.invalid": "ID tài khoản không hợp lệ. Vui lòng thử lại.",
+  "transfer.withdraw.available.tooltip": "Số tiền rút tối đa hiện tại mỗi yêu cầu là {{amount}}. Để rút thêm, vui lòng gửi nhiều yêu cầu.",
   "transfer.internalTransfer.from": "Từ",
   "transfer.internalTransfer.to": "Đến",
   "transfer.internalTransfer.currentAssetValue": "Giá trị tài sản hiện tại",

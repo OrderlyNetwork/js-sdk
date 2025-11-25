@@ -774,6 +774,7 @@
   "transfer.withdraw.otherAccount": "Autre compte {{brokerName}}",
   "transfer.withdraw.accountId.tips": "Veuillez saisir un ID de compte au lieu d'une adresse de portefeuille.",
   "transfer.withdraw.accountId.invalid": "ID de compte invalide. Veuillez réessayer.",
+  "transfer.withdraw.available.tooltip": "Le montant maximum de retrait actuel par demande est {{amount}}. Pour retirer plus, veuillez soumettre plusieurs demandes.",
   "transfer.internalTransfer.from": "De",
   "transfer.internalTransfer.to": "Vers",
   "transfer.internalTransfer.currentAssetValue": "Valeur actuelle de l'actif",

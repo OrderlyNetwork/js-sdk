@@ -68,6 +68,8 @@ export const transfer = {
     "Please enter an Account ID instead of a wallet address.",
   "transfer.withdraw.accountId.invalid":
     "Invalid Account ID. Please try again.",
+  "transfer.withdraw.available.tooltip":
+    "Current maximum withdrawal per request is {{amount}}. To withdraw more, please submit multiple requests.",
 
   "transfer.internalTransfer.from": "From",
   "transfer.internalTransfer.to": "To",

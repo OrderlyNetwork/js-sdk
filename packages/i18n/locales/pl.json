@@ -774,6 +774,7 @@
   "transfer.withdraw.otherAccount": "Inne konto {{brokerName}}",
   "transfer.withdraw.accountId.tips": "Proszę wprowadzić ID konta zamiast adresu portfela.",
   "transfer.withdraw.accountId.invalid": "Nieprawidłowy ID konta. Spróbuj ponownie.",
+  "transfer.withdraw.available.tooltip": "Aktualna maksymalna wypłata na żądanie wynosi {{amount}}. Aby wypłacić więcej, prześlij wiele żądań.",
   "transfer.internalTransfer.from": "Z",
   "transfer.internalTransfer.to": "Do",
   "transfer.internalTransfer.currentAssetValue": "Aktualna wartość aktywów",

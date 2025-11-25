@@ -774,6 +774,7 @@
   "transfer.withdraw.otherAccount": "Altro account {{brokerName}}",
   "transfer.withdraw.accountId.tips": "Inserisci un ID account invece di un indirizzo wallet.",
   "transfer.withdraw.accountId.invalid": "ID account non valido. Riprova.",
+  "transfer.withdraw.available.tooltip": "Il prelievo massimo attuale per richiesta è {{amount}}. Per prelevare di più, invia più richieste.",
   "transfer.internalTransfer.from": "Da",
   "transfer.internalTransfer.to": "A",
   "transfer.internalTransfer.currentAssetValue": "Valore attuale dell'asset",

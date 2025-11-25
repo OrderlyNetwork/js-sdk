@@ -774,6 +774,7 @@
   "transfer.withdraw.otherAccount": "其他 {{brokerName}} 账户",
   "transfer.withdraw.accountId.tips": "请输入账户 ID，而不是钱包地址。",
   "transfer.withdraw.accountId.invalid": "账户 ID 无效。请重试。",
+  "transfer.withdraw.available.tooltip": "当前每次请求的最大提款金额为 {{amount}}。如需提款更多，请提交多个请求。",
   "transfer.internalTransfer.from": "从",
   "transfer.internalTransfer.to": "到",
   "transfer.internalTransfer.currentAssetValue": "当前资产价值",

@@ -774,6 +774,7 @@
   "transfer.withdraw.otherAccount": "Другой аккаунт {{brokerName}}",
   "transfer.withdraw.accountId.tips": "Пожалуйста, введите ID аккаунта, а не адрес кошелька.",
   "transfer.withdraw.accountId.invalid": "Недействительный ID аккаунта. Пожалуйста, попробуйте еще раз.",
+  "transfer.withdraw.available.tooltip": "Текущий максимальный вывод на запрос составляет {{amount}}. Чтобы вывести больше, отправьте несколько запросов.",
   "transfer.internalTransfer.from": "От",
   "transfer.internalTransfer.to": "Кому",
   "transfer.internalTransfer.currentAssetValue": "Текущая стоимость актива",

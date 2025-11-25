@@ -774,6 +774,7 @@
   "transfer.withdraw.otherAccount": "Anderes {{brokerName}}-Konto",
   "transfer.withdraw.accountId.tips": "Bitte geben Sie eine Konto-ID anstelle einer Wallet-Adresse ein.",
   "transfer.withdraw.accountId.invalid": "Ungültige Konto-ID. Bitte versuchen Sie es erneut.",
+  "transfer.withdraw.available.tooltip": "Die aktuelle maximale Abhebung pro Anfrage beträgt {{amount}}. Um mehr abzuheben, senden Sie bitte mehrere Anfragen.",
   "transfer.internalTransfer.from": "Von",
   "transfer.internalTransfer.to": "Nach",
   "transfer.internalTransfer.currentAssetValue": "Aktueller Vermögenswert",

@@ -774,6 +774,7 @@
   "transfer.withdraw.otherAccount": "Інший акаунт {{brokerName}}",
   "transfer.withdraw.accountId.tips": "Будь ласка, введіть ID акаунта, а не адресу гаманця.",
   "transfer.withdraw.accountId.invalid": "Недійсний ID акаунта. Будь ласка, спробуйте ще раз.",
+  "transfer.withdraw.available.tooltip": "Поточний максимальний виведення на запит становить {{amount}}. Щоб вивести більше, надішліть кілька запитів.",
   "transfer.internalTransfer.from": "Від",
   "transfer.internalTransfer.to": "До",
   "transfer.internalTransfer.currentAssetValue": "Поточна вартість активу",

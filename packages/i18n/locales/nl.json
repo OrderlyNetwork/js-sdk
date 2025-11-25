@@ -774,6 +774,7 @@
   "transfer.withdraw.otherAccount": "Andere {{brokerName}} account",
   "transfer.withdraw.accountId.tips": "Voer een account-ID in in plaats van een portemonnee-adres.",
   "transfer.withdraw.accountId.invalid": "Ongeldig account-ID. Probeer het opnieuw.",
+  "transfer.withdraw.available.tooltip": "Het huidige maximale opnamebedrag per verzoek is {{amount}}. Om meer op te nemen, dient u meerdere verzoeken in.",
   "transfer.internalTransfer.from": "Van",
   "transfer.internalTransfer.to": "Naar",
   "transfer.internalTransfer.currentAssetValue": "Huidige waarde van activa",

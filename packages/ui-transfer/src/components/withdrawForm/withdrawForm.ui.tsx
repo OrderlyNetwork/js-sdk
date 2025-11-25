@@ -121,6 +121,9 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
           onClick={() => {
             onQuantityChange(maxQuantity.toString());
           }}
+          tooltipContent={t("transfer.withdraw.available.tooltip", {
+            amount: maxQuantity.toString(),
+          })}
         />
         <Box mx={2} mt={1}>
           <UnsettlePnlInfo

@@ -774,6 +774,7 @@
   "transfer.withdraw.otherAccount": "他の{{brokerName}}アカウント",
   "transfer.withdraw.accountId.tips": "ウォレットアドレスではなくアカウントIDを入力してください。",
   "transfer.withdraw.accountId.invalid": "無効なアカウントIDです。もう一度お試しください。",
+  "transfer.withdraw.available.tooltip": "リクエストあたりの現在の最大出金額は {{amount}} です。より多く出金するには、複数のリクエストを送信してください。",
   "transfer.internalTransfer.from": "送信元",
   "transfer.internalTransfer.to": "送信先",
   "transfer.internalTransfer.currentAssetValue": "現在の資産価値",
