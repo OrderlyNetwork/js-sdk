@@ -1,5 +1,17 @@
 # @orderly.network/chart
 
+## 2.8.4
+
+### Patch Changes
+
+- publish
+- 32b6043: publish
+- Updated dependencies
+- Updated dependencies [32b6043]
+  - @orderly.network/i18n@2.8.4
+  - @orderly.network/ui@2.8.4
+  - @orderly.network/utils@2.8.4
+
 ## 2.8.4-alpha.0
 
 ### Patch Changes

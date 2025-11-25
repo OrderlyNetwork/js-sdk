@@ -1,5 +1,16 @@
 # @orderly.network/default-solana-adapter
 
+## 2.8.4
+
+### Patch Changes
+
+- publish
+- 32b6043: publish
+- Updated dependencies
+- Updated dependencies [32b6043]
+  - @orderly.network/core@2.8.4
+  - @orderly.network/types@2.8.4
+
 ## 2.8.4-alpha.0
 
 ### Patch Changes
