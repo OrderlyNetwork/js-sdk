@@ -1,5 +1,12 @@
 # @orderly.network/eslint-config
 
+## 2.8.4
+
+### Patch Changes
+
+- publish
+- 32b6043: publish
+
 ## 2.8.4-alpha.0
 
 ### Patch Changes
