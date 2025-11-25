@@ -131,6 +131,14 @@ export class Widget {
     }
   }
 
+  setResolution(resolution: string) {
+    if (this._instance) {
+      this._instance
+        .activeChart()
+        .setResolution(resolution as ResolutionString);
+    }
+  }
+
   public executeActionById(actionId: ChartActionId) {
     try {
       this._instance?.onChartReady(() => {
@@ -259,7 +267,7 @@ export class Widget {
           "30",
           "60",
           "240",
-          "1D",
+          "1d",
           "1W",
           "1M",
         ] as ResolutionString[],

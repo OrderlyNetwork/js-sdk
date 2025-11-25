@@ -1,7 +1,7 @@
 import { FC, ReactNode } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Box, cn, Flex, Text, useScreen } from "@orderly.network/ui";
-import { Background } from "../../components/background";
+import { LeaderboardBackground } from "../../components/background";
 import { CampaignsWidget } from "../../components/campaigns/campaigns.widget";
 import { GeneralLeaderboardIWidget } from "../../components/leaderboard128/generalLeaderboard";
 import { CampaignLeaderboardWidget } from "../../components/leaderboard/campaignLeaderboard";
@@ -21,11 +21,13 @@ export type LeaderboardPageProps = GeneralLeaderboardWidgetProps &
   TradingLeaderboardProviderProps & {
     style?: React.CSSProperties;
     className?: string;
+    hideCampaignsBanner?: boolean;
   };
 
 export const LeaderboardPage: FC<LeaderboardPageProps> = (props) => {
+  const { hideCampaignsBanner, ...rest } = props;
   return (
-    <TradingLeaderboardProvider {...props}>
+    <TradingLeaderboardProvider {...rest}>
       <div
         style={{
           paddingBottom: "calc(64px + env(safe-area-inset-bottom))",
@@ -37,7 +39,10 @@ export const LeaderboardPage: FC<LeaderboardPageProps> = (props) => {
           props.className,
         )}
       >
-        <CampaignsWidget className="oui-relative oui-z-[1] oui-mx-6" />
+        <CampaignsWidget
+          hideCampaignsBanner={hideCampaignsBanner}
+          className="oui-relative oui-z-[1] oui-mx-6"
+        />
         <RewardsWidget />
         <LeaderboardSection {...props} />
         <RuleWidget />
@@ -64,7 +69,7 @@ export const LeaderboardSection: FC<LeaderboardSectionProps> = (props) => {
   if (currentCampaignId === "general") {
     return (
       <Box px={3} className={cn("oui-mix-blend-screen")}>
-        <Background backgroundSrc={backgroundSrc} />
+        <LeaderboardBackground backgroundSrc={backgroundSrc} />
         <GeneralLeaderboardWidget {...props} className="oui-mt-10" />
       </Box>
     );

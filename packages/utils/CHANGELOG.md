@@ -1,5 +1,23 @@
 # @orderly.network/utils
 
+## 2.8.4
+
+### Patch Changes
+
+- publish
+- 32b6043: publish
+- Updated dependencies
+- Updated dependencies [32b6043]
+  - @orderly.network/types@2.8.4
+
+## 2.8.4-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@2.8.4-alpha.0
+
 ## 2.8.3
 
 ### Patch Changes

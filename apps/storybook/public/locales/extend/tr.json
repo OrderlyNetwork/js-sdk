@@ -8,11 +8,18 @@
   "extend.stake": "Staking",
   "extend.earn": "Kazan",
   "extend.spot": "Spot",
+  "extend.spot.description": "Herhangi bir altcoin, memecoin veya on-chain token için çapraz zincir takas",
   "extend.spotDune": "Spot Dune",
   "extend.perpsDune": "Perps Dune",
   "extend.careers": "Kariyer",
   "extend.docs": "Belgeler",
   "extend.audits": "Denetimler",
   "extend.vaults": "Kasalar",
-  "extend.perps": "Perps"
+  "extend.perps": "Perps",
+  "extend.perps.description": "Gazsız emir defteri perpleri, 100x'e kadar kaldıraçla",
+  "extend.woofiEarn": "WOOFi kazan",
+  "extend.woofiEarn.description": "Herhangi bir zincirdeki başlıca varlıklardan güvenle getiri elde edin",
+  "extend.wooStake": "WOO stake",
+  "extend.wooStake.description": "USDC ve WOO kazanmak için stake edin",
+  "extend.vaults.description": "Otomatik stratejilerle pasif getiri kazanın"
 }

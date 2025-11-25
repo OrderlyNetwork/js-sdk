@@ -8,11 +8,18 @@
   "extend.stake": "Стейкінг",
   "extend.earn": "Заробити",
   "extend.spot": "Спот",
+  "extend.spot.description": "Крос-ланцюговий своп будь-якого альткоїна, мемкоїна чи ончейн токена",
   "extend.spotDune": "Спот Dune",
   "extend.perpsDune": "Перпи Dune",
   "extend.careers": "Кар'єра",
   "extend.docs": "Документи",
   "extend.audits": "Аудити",
   "extend.vaults": "Сховища",
-  "extend.perps": "Перпи"
+  "extend.perps": "Перпи",
+  "extend.perps.description": "Перпетуали з книгою ордерів без газу та плечем до 100x",
+  "extend.woofiEarn": "WOOFi заробіток",
+  "extend.woofiEarn.description": "Отримуйте безпечний дохід з ключових активів на будь-якому ланцюгу",
+  "extend.wooStake": "WOO стейкінг",
+  "extend.wooStake.description": "Стейкайте, щоб заробляти USDC та WOO",
+  "extend.vaults.description": "Отримуйте пасивний дохід завдяки автоматизованим стратегіям"
 }
