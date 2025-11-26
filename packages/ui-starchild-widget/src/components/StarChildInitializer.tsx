@@ -91,6 +91,9 @@ export const StarChildInitializer: React.FC = () => {
       const telegramUserId = cached.telegramUserId || undefined;
       const userInfoId = cached.userInfoId || undefined;
 
+      const environment: "testnet" | "mainnet" =
+        starChildConfig?.env || "testnet";
+
       const zIndex = 41;
 
       const params = {
@@ -103,6 +106,7 @@ export const StarChildInitializer: React.FC = () => {
         accountId,
         orderlyKey,
         secretKey,
+        environment,
         onReady: () => {
           setIsSubAccount(!isMainAccount);
         },
