@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { RefferalAPI, useLocalStorage } from "@orderly.network/hooks";
 import { modal } from "@orderly.network/ui";
 import { useReferralContext } from "../../../provider";
-import { addQueryParam, copyText } from "../../../utils/utils";
+import { copyText, generateReferralLink } from "../../../utils/utils";
 import { EditCodeModal } from "./editCodeModal";
 import { EditReferralRate } from "./editReferralRate";
 
@@ -25,7 +25,7 @@ export const useReferralCodesScript = (): ReferralCodesReturns => {
     useReferralContext();
 
   const copyLink = (code: string) => {
-    copyText(addQueryParam(referralLinkUrl, "ref", code));
+    copyText(generateReferralLink(referralLinkUrl, code));
   };
   const copyCode = (code: string) => {
     copyText(code);

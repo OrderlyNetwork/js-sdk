@@ -1047,7 +1047,6 @@
   "notification.recentlyUpdated": "Yakında güncellendi",
   "notification.title": "Duyuru",
   "notification.centerTitle": "Duyuru merkezi",
-  "notification.campaignTitle": "En son kampanya geliyor",
   "notification.closeAll": "Tümünü kapat ({{total}})",
   "notification.delistingTitle": "Token Delist Bildirimi",
   "notification.generalTitle": "Genel güncelleme",

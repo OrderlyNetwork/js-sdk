@@ -1047,7 +1047,6 @@
   "notification.recentlyUpdated": "Diperbarui baru-baru ini",
   "notification.title": "Pengumuman",
   "notification.centerTitle": "Pusat pengumuman",
-  "notification.campaignTitle": "Kampanye terbaru akan datang",
   "notification.closeAll": "Tutup semua ({{total}})",
   "notification.delistingTitle": "Pemberitahuan delisting token",
   "notification.generalTitle": "Pembaruan umum",

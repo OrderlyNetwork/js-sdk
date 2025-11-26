@@ -91,7 +91,7 @@ export class HistoryProvider {
     ["720", "12h"], // 12 hours
     ["1D", "1d"], // 1 day
     ["1W", "1w"], // 1 week
-    ["1M", "1m"], // 1 month (mapped to 1m)
+    ["1M", "1mon"], // 1 month (mapped to 1m)
   ]);
 
   public constructor(

@@ -1047,7 +1047,6 @@
   "notification.recentlyUpdated": "Aggiornato di recente",
   "notification.title": "Annuncio",
   "notification.centerTitle": "Centro annunci",
-  "notification.campaignTitle": "L'ultima campagna sta arrivando",
   "notification.closeAll": "Chiudi tutti ({{total}})",
   "notification.delistingTitle": "Avviso delisting token",
   "notification.generalTitle": "Aggiornamento generale",
