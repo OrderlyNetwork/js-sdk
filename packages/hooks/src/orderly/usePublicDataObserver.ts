@@ -1,17 +1,19 @@
 import { useEffect } from "react";
 import { type API } from "@orderly.network/types";
 import { getPrecisionByNumber } from "@orderly.network/utils";
-import { useOrderlyContext } from "../orderlyContext";
 import { useSymbolStore } from "../provider/store/symbolStore";
 import { useQuery } from "../useQuery";
 import { useAppStore } from "./appStore";
+import { useFutures } from "./useFutures";
 import { useMarketStore } from "./useMarket/market.store";
 
 // import { useTokensInfoStore } from "./useTokensInfo/tokensInfo.store";
 
 const publicQueryOptions = {
+  // 24 hours, not effective, because revalidateOnFocus is false
   focusThrottleInterval: 1000 * 60 * 60 * 24,
   revalidateOnFocus: false,
+  // 24 hours
   dedupingInterval: 1000 * 60 * 60 * 24,
 };
 
@@ -20,18 +22,9 @@ export const usePublicDataObserver = () => {
     (state) => state.actions,
   );
 
-  const { updateMarket } = useMarketStore((state) => state.actions);
-
   // const setTokensInfo = useTokensInfoStore((state) => state.setTokensInfo);
 
   const symbols = useSymbolStore((state) => state.data);
-
-  const { dataAdapter } = useOrderlyContext();
-
-  const resolveList =
-    typeof dataAdapter?.symbolList === "function"
-      ? dataAdapter.symbolList
-      : (oriVal: API.MarketInfoExt[]) => oriVal;
 
   /**
    * symbol config
@@ -72,6 +65,7 @@ export const usePublicDataObserver = () => {
 
   /**
    * symbol config
+   * TODO: remove onSuccess because it can't be called when trigger multiple times
    */
   useQuery<Record<string, API.RwaSymbol>>(`/v1/public/rwa/info`, {
     ...publicQueryOptions,
@@ -98,6 +92,7 @@ export const usePublicDataObserver = () => {
 
   /**
    * funding rates
+   * TODO: remove onSuccess because it can't be called when trigger multiple times
    */
   useQuery<{ [key: string]: API.FundingRate }>(`/v1/public/funding_rates`, {
     ...publicQueryOptions,
@@ -120,27 +115,12 @@ export const usePublicDataObserver = () => {
     },
   });
 
-  /**
-   * markets info
-   */
-  useQuery<API.MarketInfo[]>(`/v1/public/futures`, {
-    // revalidateOnFocus: false,
-    ...publicQueryOptions,
-    onSuccess(data: API.MarketInfo[]) {
-      if (!data || !data?.length) {
-        return [];
-      }
-      // console.log(data);
-      updateMarket(data as API.MarketInfoExt[]);
-    },
-    formatter(data) {
-      const rowsData = data.rows;
-      if (Array.isArray(rowsData)) {
-        return resolveList(rowsData);
-      }
-      return resolveList(data);
-    },
-  });
+  const { data: futures } = useFutures();
+  const { updateMarket } = useMarketStore((state) => state.actions);
+
+  useEffect(() => {
+    updateMarket(futures);
+  }, [futures]);
 
   /**
    * token info
