@@ -2,7 +2,14 @@ import { FC, useMemo } from "react";
 import { useIndexPricesStream } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
-import { Flex, Spinner, Text, Tooltip } from "@orderly.network/ui";
+import {
+  Flex,
+  Spinner,
+  Text,
+  Tooltip,
+  modal,
+  useScreen,
+} from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 
 export type AvailableQuantityProps = {
@@ -17,6 +24,7 @@ export type AvailableQuantityProps = {
 export const AvailableQuantity: FC<AvailableQuantityProps> = (props) => {
   const { amount, maxQuantity, token, loading } = props;
   const { t } = useTranslation();
+  const { isMobile } = useScreen();
 
   const { getIndexPrice } = useIndexPricesStream();
 
@@ -44,18 +52,39 @@ export const AvailableQuantity: FC<AvailableQuantityProps> = (props) => {
       <Flex gapX={2} itemAlign="center" className="oui-ml-auto">
         <Flex gapX={1} itemAlign="center">
           {props.tooltipContent ? (
-            <Tooltip
-              content={props.tooltipContent}
-              className="oui-max-w-[274px]"
-            >
-              <Text
-                size="2xs"
-                intensity={36}
-                className="oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12"
+            isMobile ? (
+              <button
+                type="button"
+                className="oui-p-0"
+                onClick={() => {
+                  modal.alert({
+                    title: t("common.tips"),
+                    message: props.tooltipContent,
+                  });
+                }}
               >
-                {`${t("common.available")}: `}
-              </Text>
-            </Tooltip>
+                <Text
+                  size="2xs"
+                  intensity={36}
+                  className="oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12"
+                >
+                  {`${t("common.available")}: `}
+                </Text>
+              </button>
+            ) : (
+              <Tooltip
+                content={props.tooltipContent}
+                className="oui-max-w-[274px]"
+              >
+                <Text
+                  size="2xs"
+                  intensity={36}
+                  className="oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12"
+                >
+                  {`${t("common.available")}: `}
+                </Text>
+              </Tooltip>
+            )
           ) : (
             <Text size="2xs" intensity={36}>
               {`${t("common.available")}: `}

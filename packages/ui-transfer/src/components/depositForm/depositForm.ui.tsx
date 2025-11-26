@@ -9,6 +9,8 @@ import {
   TokenIcon,
   CaretDownIcon,
   Tooltip,
+  modal,
+  useScreen,
 } from "@orderly.network/ui";
 import { LtvWidget } from "../LTV";
 import { ActionButton } from "../actionButton";
@@ -85,6 +87,27 @@ export const DepositForm: FC<DepositFormScriptReturn> = (props) => {
   const showRegularTokenRenderer =
     sourceToken?.user_max_qty !== undefined && sourceToken?.user_max_qty === -1;
 
+  const { isMobile } = useScreen();
+
+  const renderDepositCapTooltipContent = (tokenLabel: string) => (
+    <Flex direction="column" itemAlign="start">
+      <Text size="2xs" weight="semibold" intensity={36}>
+        {t("transfer.depositCap.tooltip")}
+        <Text as="span" size="2xs" weight="semibold" intensity={80}>
+          {tokenLabel}.
+        </Text>
+      </Text>
+      <a
+        href="https://orderly.network/docs/introduction/trade-on-orderly/multi-collateral#max-deposits-user"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="oui-text-2xs oui-text-primary"
+      >
+        {t("common.learnMore")}
+      </a>
+    </Flex>
+  );
+
   const tokenValueFormatter = (value: string) => (
     <Flex direction="column" itemAlign="end" gapY={1}>
       <Flex gapX={1} itemAlign="center">
@@ -117,40 +140,50 @@ export const DepositForm: FC<DepositFormScriptReturn> = (props) => {
             {sourceToken?.user_max_qty?.toString() || "0"}
           </Text.numeral>
         </Text>
-        <Tooltip
-          content={
-            <Box
-              onMouseDown={(event) => {
-                event.stopPropagation();
-              }}
-              onPointerDown={(event) => {
-                event.stopPropagation();
-              }}
-            >
-              <Flex direction="column" itemAlign="start">
-                <Text size="2xs" weight="semibold" intensity={36}>
-                  {t("transfer.depositCap.tooltip")}
-                  <Text as="span" size="2xs" weight="semibold" intensity={80}>
-                    {value}.
-                  </Text>
-                </Text>
-                <a
-                  href="https://orderly.network/docs/introduction/trade-on-orderly/multi-collateral#max-deposits-user"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="oui-text-2xs oui-text-primary"
-                >
-                  {t("common.learnMore")}
-                </a>
-              </Flex>
-            </Box>
-          }
-        >
-          <InfoCircleIcon
-            className="oui-size-3 oui-shrink-0 oui-cursor-pointer"
-            opacity={0.36}
-          />
-        </Tooltip>
+        {isMobile ? (
+          <button
+            type="button"
+            className="oui-flex oui-items-center"
+            onClick={(event) => {
+              event.stopPropagation();
+              modal.alert({
+                title: t("common.tips"),
+                message: <Box>{renderDepositCapTooltipContent(value)}</Box>,
+              });
+            }}
+            onMouseDown={(event) => {
+              event.stopPropagation();
+            }}
+            onPointerDown={(event) => {
+              event.stopPropagation();
+            }}
+          >
+            <InfoCircleIcon
+              className="oui-size-3 oui-shrink-0 oui-cursor-pointer"
+              opacity={0.36}
+            />
+          </button>
+        ) : (
+          <Tooltip
+            content={
+              <Box
+                onMouseDown={(event) => {
+                  event.stopPropagation();
+                }}
+                onPointerDown={(event) => {
+                  event.stopPropagation();
+                }}
+              >
+                {renderDepositCapTooltipContent(value)}
+              </Box>
+            }
+          >
+            <InfoCircleIcon
+              className="oui-size-3 oui-shrink-0 oui-cursor-pointer"
+              opacity={0.36}
+            />
+          </Tooltip>
+        )}
       </Flex>
     </Flex>
   );
