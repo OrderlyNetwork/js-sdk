@@ -77,6 +77,8 @@
   "common.deposits": "Deposit",
   "common.withdrawals": "Penarikan",
   "common.transfer": "Transfer",
+  "common.inflow": "Arus masuk",
+  "common.outflow": "Arus keluar",
   "common.settle": "Selesaikan",
   "common.markets": "Pasar",
   "common.portfolio": "Portofolio",

@@ -77,6 +77,8 @@
   "common.deposits": "Depozyty",
   "common.withdrawals": "Wypłaty",
   "common.transfer": "Przelew",
+  "common.inflow": "Napływ",
+  "common.outflow": "Odpływ",
   "common.settle": "Rozlicz",
   "common.markets": "Rynki",
   "common.portfolio": "Portfel",

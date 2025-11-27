@@ -77,6 +77,8 @@
   "common.deposits": "Stortingen",
   "common.withdrawals": "Opnames",
   "common.transfer": "Overboeking",
+  "common.inflow": "Instroom",
+  "common.outflow": "Uitstroom",
   "common.settle": "Afwikkelen",
   "common.markets": "Markten",
   "common.portfolio": "Portefeuille",

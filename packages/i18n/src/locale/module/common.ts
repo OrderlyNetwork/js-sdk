@@ -85,6 +85,8 @@ export const common = {
   "common.deposits": "Deposits",
   "common.withdrawals": "Withdrawals",
   "common.transfer": "Transfer",
+  "common.inflow": "Inflow",
+  "common.outflow": "Outflow",
   "common.settle": "Settle",
   "common.markets": "Markets",
   "common.portfolio": "Portfolio",

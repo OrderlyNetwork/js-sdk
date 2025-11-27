@@ -77,6 +77,8 @@
   "common.deposits": "Dépôts",
   "common.withdrawals": "Retraits",
   "common.transfer": "Transfert",
+  "common.inflow": "Afflux",
+  "common.outflow": "Déflux",
   "common.settle": "Régler",
   "common.markets": "Marchés",
   "common.portfolio": "Portefeuille",

@@ -77,6 +77,8 @@
   "common.deposits": "入金",
   "common.withdrawals": "出金",
   "common.transfer": "送金",
+  "common.inflow": "流入",
+  "common.outflow": "流出",
   "common.settle": "決済",
   "common.markets": "市場",
   "common.portfolio": "ポートフォリオ",
