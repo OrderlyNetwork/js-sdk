@@ -269,7 +269,6 @@
   "trading.portfolioSettings.decimalPrecision": "Precyzja dziesiętna dla PnL i nominału",
   "trading.portfolioSettings.unrealPnlPriceBasis": "Podstawa ceny niezrealizowanego PnL",
   "trading.portfolioSettings.reversePosition": "Odwróć Pozycję",
-  "trading.portfolioSettings.reversePosition.tooltip": "Zamknij swoją aktualną pozycję i otwórz przeciwną po cenie rynkowej. Jeśli depozyt zabezpieczający jest niewystarczający, zlecenie wykorzysta maksymalną dostępną kwotę.",
   "trading.orderBook": "Księga zleceń",
   "trading.lastTrades": "Ostatnie transakcje",
   "trading.orderBook.column.value": "Wartość",

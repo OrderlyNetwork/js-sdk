@@ -269,7 +269,6 @@
   "trading.portfolioSettings.decimalPrecision": "Decimale precisie voor W/V & Nominaal",
   "trading.portfolioSettings.unrealPnlPriceBasis": "Ongerealiseerde W/V prijsbasis",
   "trading.portfolioSettings.reversePosition": "Positie Omkeren",
-  "trading.portfolioSettings.reversePosition.tooltip": "Sluit uw huidige positie en open de tegenovergestelde tegen marktprijs. Als de marge onvoldoende is, gebruikt de order het maximaal beschikbare bedrag.",
   "trading.orderBook": "Orderboek",
   "trading.lastTrades": "Laatste trades",
   "trading.orderBook.column.value": "Waarde",

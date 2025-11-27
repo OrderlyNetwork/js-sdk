@@ -269,7 +269,6 @@
   "trading.portfolioSettings.decimalPrecision": "盈虧和名义的十進制精度",
   "trading.portfolioSettings.unrealPnlPriceBasis": "未實現盈虧價格基礎",
   "trading.portfolioSettings.reversePosition": "反向持倉",
-  "trading.portfolioSettings.reversePosition.tooltip": "以市價平倉當前持倉並開立相反方向持倉。如果保證金不足，訂單將使用最大可用金額。",
   "trading.orderBook": "訂單簿",
   "trading.lastTrades": "最新交易",
   "trading.orderBook.column.value": "价值",

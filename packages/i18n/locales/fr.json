@@ -269,7 +269,6 @@
   "trading.portfolioSettings.decimalPrecision": "Précision décimale pour PnL & Notionnel",
   "trading.portfolioSettings.unrealPnlPriceBasis": "Base de prix du PnL non réalisé",
   "trading.portfolioSettings.reversePosition": "Inverser la Position",
-  "trading.portfolioSettings.reversePosition.tooltip": "Fermez votre position actuelle et ouvrez la position opposée au prix du marché. Si la marge est insuffisante, l'ordre utilisera le montant maximum disponible.",
   "trading.orderBook": "Carnet d'ordres",
   "trading.lastTrades": "Derniers trades",
   "trading.orderBook.column.value": "Valeur",

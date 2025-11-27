@@ -269,7 +269,6 @@
   "trading.portfolioSettings.decimalPrecision": "Precisión decimal para PnL y nominal",
   "trading.portfolioSettings.unrealPnlPriceBasis": "Base de precio para PnL no realizado",
   "trading.portfolioSettings.reversePosition": "Invertir Posición",
-  "trading.portfolioSettings.reversePosition.tooltip": "Cierra tu posición actual y abre la opuesta al precio de mercado. Si el margen es insuficiente, la orden usará el máximo disponible.",
   "trading.orderBook": "Libro de órdenes",
   "trading.lastTrades": "Últimas operaciones",
   "trading.orderBook.column.value": "Valor",

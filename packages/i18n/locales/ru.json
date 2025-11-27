@@ -269,7 +269,6 @@
   "trading.portfolioSettings.decimalPrecision": "Точность десятичных знаков для PnL и номинальной стоимости",
   "trading.portfolioSettings.unrealPnlPriceBasis": "Основа цены нереализованного PnL",
   "trading.portfolioSettings.reversePosition": "Развернуть Позицию",
-  "trading.portfolioSettings.reversePosition.tooltip": "Закройте текущую позицию и откройте противоположную по рыночной цене. Если маржи недостаточно, ордер использует максимально доступную сумму.",
   "trading.orderBook": "Книга ордеров",
   "trading.lastTrades": "Последние сделки",
   "trading.orderBook.column.value": "Значение",

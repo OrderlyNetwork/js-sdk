@@ -68,15 +68,13 @@ export const Setting: FC<SettingState> = (props) => {
                 className="oui-text-base-contrast-54 hover:oui-text-base-contrast-80 oui-cursor-pointer"
                 onClick={() => {
                   modal.alert({
-                    message: t(
-                      "trading.portfolioSettings.reversePosition.tooltip",
-                    ),
+                    message: t("positions.reverse.description"),
                   });
                 }}
               />
             ) : (
               <Tooltip
-                content={t("trading.portfolioSettings.reversePosition.tooltip")}
+                content={t("positions.reverse.description")}
                 className="oui-max-w-[300px]"
               >
                 <ExclamationFillIcon

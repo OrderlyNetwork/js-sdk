@@ -269,7 +269,6 @@
   "trading.portfolioSettings.decimalPrecision": "Độ chính xác thập phân cho PnL & Giá trị danh nghĩa",
   "trading.portfolioSettings.unrealPnlPriceBasis": "Cơ sở giá PnL chưa thực hiện",
   "trading.portfolioSettings.reversePosition": "Đảo Ngược Vị Thế",
-  "trading.portfolioSettings.reversePosition.tooltip": "Đóng vị thế hiện tại và mở vị thế ngược lại ở giá thị trường. Nếu ký quỹ không đủ, lệnh sẽ sử dụng số tiền tối đa có sẵn.",
   "trading.orderBook": "Sổ lệnh",
   "trading.lastTrades": "Giao dịch cuối",
   "trading.orderBook.column.value": "Giá trị",

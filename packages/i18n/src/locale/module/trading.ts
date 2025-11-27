@@ -17,8 +17,6 @@ export const trading = {
     "Decimal Precision for PnL & Notional",
   "trading.portfolioSettings.unrealPnlPriceBasis": "Unrealized PnL Price Basis",
   "trading.portfolioSettings.reversePosition": "Reverse Position",
-  "trading.portfolioSettings.reversePosition.tooltip":
-    "Close your current position and open the opposite at market price. If margin is insufficient, the order will use the maximum available.",
 
   "trading.orderBook": "Order book",
   "trading.lastTrades": "Last trades",

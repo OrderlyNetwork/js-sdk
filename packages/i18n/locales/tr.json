@@ -269,7 +269,6 @@
   "trading.portfolioSettings.decimalPrecision": "K/Z ve Nominal için Ondalık Hassasiyeti",
   "trading.portfolioSettings.unrealPnlPriceBasis": "Gerçekleşmemiş K/Z Fiyat Temeli",
   "trading.portfolioSettings.reversePosition": "Pozisyonu Ters Çevir",
-  "trading.portfolioSettings.reversePosition.tooltip": "Mevcut pozisyonunuzu kapatın ve piyasa fiyatından ters yönde bir pozisyon açın. Teminat yetersizse, emir mevcut maksimum tutarı kullanacaktır.",
   "trading.orderBook": "Emir defteri",
   "trading.lastTrades": "Son işlemler",
   "trading.orderBook.column.value": "Değer",

@@ -269,7 +269,6 @@
   "trading.portfolioSettings.decimalPrecision": "Dezimalgenauigkeit für PnL & Nominalwert",
   "trading.portfolioSettings.unrealPnlPriceBasis": "Preisbasis für nicht realisierten PnL",
   "trading.portfolioSettings.reversePosition": "Position Umkehren",
-  "trading.portfolioSettings.reversePosition.tooltip": "Schließen Sie Ihre aktuelle Position und eröffnen Sie die entgegengesetzte zum Marktpreis. Wenn die Marge unzureichend ist, verwendet die Order das maximal verfügbare Guthaben.",
   "trading.orderBook": "Orderbuch",
   "trading.lastTrades": "Letzte Trades",
   "trading.orderBook.column.value": "Wert",

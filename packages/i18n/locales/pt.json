@@ -269,7 +269,6 @@
   "trading.portfolioSettings.decimalPrecision": "Precisão Decimal para L/P & Nocional",
   "trading.portfolioSettings.unrealPnlPriceBasis": "Base de Preço L/P Não Realizado",
   "trading.portfolioSettings.reversePosition": "Inverter Posição",
-  "trading.portfolioSettings.reversePosition.tooltip": "Feche sua posição atual e abra a oposta ao preço de mercado. Se a margem for insuficiente, a ordem usará o valor máximo disponível.",
   "trading.orderBook": "Livro de ofertas",
   "trading.lastTrades": "Últimas negociações",
   "trading.orderBook.column.value": "Valor",

@@ -269,7 +269,6 @@
   "trading.portfolioSettings.decimalPrecision": "손익 및 명목 가치의 소수점 정밀도",
   "trading.portfolioSettings.unrealPnlPriceBasis": "미실현 손익 가격 기준",
   "trading.portfolioSettings.reversePosition": "포지션 반전",
-  "trading.portfolioSettings.reversePosition.tooltip": "현재 포지션을 청산하고 반대 방향 포지션을 시장가로 오픈합니다. 마진이 부족한 경우, 주문은 사용 가능한 최대 금액을 사용합니다.",
   "trading.orderBook": "호가창",
   "trading.lastTrades": "최근 거래",
   "trading.orderBook.column.value": "가치",

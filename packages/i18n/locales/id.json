@@ -269,7 +269,6 @@
   "trading.portfolioSettings.decimalPrecision": "Presisi Desimal untuk PnL & Notional",
   "trading.portfolioSettings.unrealPnlPriceBasis": "Dasar Harga PnL Belum Direalisasi",
   "trading.portfolioSettings.reversePosition": "Balik Posisi",
-  "trading.portfolioSettings.reversePosition.tooltip": "Tutup posisi Anda saat ini dan buka posisi sebaliknya dengan harga pasar. Jika margin tidak mencukupi, pesanan akan menggunakan jumlah maksimum yang tersedia.",
   "trading.orderBook": "Order book",
   "trading.lastTrades": "Trade terakhir",
   "trading.orderBook.column.value": "Nilai",

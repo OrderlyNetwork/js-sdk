@@ -269,7 +269,6 @@
   "trading.portfolioSettings.decimalPrecision": "Точність десяткових знаків для PnL та номіналу",
   "trading.portfolioSettings.unrealPnlPriceBasis": "База ціни нереалізованого PnL",
   "trading.portfolioSettings.reversePosition": "Розвернути Позицію",
-  "trading.portfolioSettings.reversePosition.tooltip": "Закрийте поточну позицію та відкрийте протилежну за ринковою ціною. Якщо маржі недостатньо, ордер використає максимально доступну суму.",
   "trading.orderBook": "Книга ордерів",
   "trading.lastTrades": "Останні угоди",
   "trading.orderBook.column.value": "Значення",
