@@ -8,6 +8,7 @@ import {
   AddCircleIcon,
   Button,
   modal,
+  useScreen,
 } from "@orderly.network/ui";
 import { LTVRiskTooltipWidget } from "../LTVRiskTooltip";
 
@@ -21,6 +22,7 @@ type AvailableProps = {
 export const Available = (props: AvailableProps) => {
   const { canTrade, currentLtv, quote, freeCollateral } = props;
   const { t } = useTranslation();
+  const { isMobile } = useScreen();
 
   const showLTV = useMemo(() => {
     return (
@@ -61,7 +63,10 @@ export const Available = (props: AvailableProps) => {
           className="oui-p-0 hover:oui-text-base-contrast-80"
           onClick={() => {
             // TODO: when we plan to move modal IDs to a public package, we need to use the ID from the public package
-            modal.show("DepositAndWithdrawWithDialogId", {
+            const handleDomId = isMobile
+              ? "DepositAndWithdrawWithSheetId"
+              : "DepositAndWithdrawWithDialogId";
+            modal.show(handleDomId, {
               activeTab: "deposit",
             });
           }}
