@@ -1,8 +1,8 @@
 import { FC } from "react";
-import { usePositionCellScript } from "./positionCell.script";
-import { PositionCell } from "./positionCell.ui";
 import { API } from "@orderly.network/types";
 import { PositionsProps } from "../../../../types/types";
+import { usePositionCellScript } from "./positionCell.script";
+import { PositionCell } from "./positionCell.ui";
 
 export const PositionCellWidget: FC<
   {
@@ -10,6 +10,7 @@ export const PositionCellWidget: FC<
     index: number;
     className?: string;
     shareIconSize?: number;
+    positionReverse?: boolean;
   } & PositionsProps
 > = (props) => {
   const state = usePositionCellScript(props);

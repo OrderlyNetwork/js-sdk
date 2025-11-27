@@ -1,4 +1,5 @@
-import { FC, useCallback, useState } from "react";
+import { FC, useMemo, useState } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import {
   Button,
   Checkbox,
@@ -6,16 +7,117 @@ import {
   DropdownMenuContent,
   DropdownMenuRoot,
   DropdownMenuTrigger,
+  ExclamationFillIcon,
   Flex,
   SettingFillIcon,
+  Switch,
   Text,
+  Tooltip,
+  useScreen,
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  modal,
 } from "@orderly.network/ui";
 import { SettingState } from "./setting.script";
-import { useTranslation } from "@orderly.network/i18n";
 
 export const Setting: FC<SettingState> = (props) => {
   const [open, setOpen] = useState(false);
   const { t } = useTranslation();
+  const { isMobile } = useScreen();
+
+  const SettingsContent = useMemo(() => {
+    return () => (
+      <>
+        <div className="oui-flex oui-flex-col oui-text-sm">
+          <Text className="oui-text-base oui-pb-3">
+            {t("trading.portfolioSettings")}
+          </Text>
+          <Divider />
+          <Text className="oui-pb-3 oui-text-base-contrast-54 oui-mt-2">
+            {t("trading.portfolioSettings.decimalPrecision")}
+          </Text>
+          <DecimalPrecisionCheckbox
+            value={props.pnlNotionalDecimalPrecision}
+            onValueChange={(e) => {
+              props.setPnlNotionalDecimalPrecision(e);
+              setOpen(false);
+            }}
+          />
+          <Divider className="oui-my-3" />
+          <Text className="oui-pb-3 oui-text-base-contrast-54 oui-mt-2">
+            {t("trading.portfolioSettings.unrealPnlPriceBasis")}
+          </Text>
+          <UnPnlPriceBasisCheckBox
+            value={props.unPnlPriceBasis}
+            onValueChange={(e) => {
+              props.setUnPnlPriceBasic(e);
+              setOpen(false);
+            }}
+          />
+        </div>
+        <Divider className="oui-my-3" />
+        <Flex itemAlign="center" gap={1} justify="between">
+          <Flex gap={1} itemAlign="center">
+            <Text size="sm" intensity={54}>
+              {t("trading.portfolioSettings.reversePosition")}
+            </Text>
+            {isMobile ? (
+              <ExclamationFillIcon
+                size={14}
+                className="oui-text-base-contrast-54 hover:oui-text-base-contrast-80 oui-cursor-pointer"
+                onClick={() => {
+                  modal.alert({
+                    message: t(
+                      "trading.portfolioSettings.reversePosition.tooltip",
+                    ),
+                  });
+                }}
+              />
+            ) : (
+              <Tooltip
+                content={t("trading.portfolioSettings.reversePosition.tooltip")}
+                className="oui-max-w-[300px]"
+              >
+                <ExclamationFillIcon
+                  size={14}
+                  className="oui-text-base-contrast-54 hover:oui-text-base-contrast-80 oui-cursor-pointer"
+                />
+              </Tooltip>
+            )}
+          </Flex>
+          <Switch
+            checked={props.reversePosition}
+            onCheckedChange={(checked: boolean) => {
+              props.setReversePosition(checked);
+            }}
+          />
+        </Flex>
+      </>
+    );
+  }, [
+    t,
+    isMobile,
+    props.pnlNotionalDecimalPrecision,
+    props.unPnlPriceBasis,
+    props.reversePosition,
+  ]);
+
+  const triggerButton = (
+    <Button
+      size="xs"
+      type="button"
+      variant="contained"
+      className="oui-bg-transparent hover:oui-bg-transparent"
+    >
+      <SettingFillIcon
+        size={16}
+        color="white"
+        opacity={1}
+        className="oui-text-white/[.36] hover:oui-text-white/80"
+      />
+    </Button>
+  );
 
   return (
     <Flex gap={0}>
@@ -36,56 +138,31 @@ export const Setting: FC<SettingState> = (props) => {
         </label>
       </Flex>
 
-      <DropdownMenuRoot open={open} onOpenChange={setOpen}>
-        <DropdownMenuTrigger asChild>
-          <Button
-            size="xs"
-            type="button"
-            variant="contained"
-            className="oui-bg-transparent hover:oui-bg-transparent"
+      {isMobile ? (
+        <Sheet open={open} onOpenChange={setOpen}>
+          <SheetTrigger asChild>{triggerButton}</SheetTrigger>
+          <SheetContent side="bottom" className="oui-px-5 oui-pt-3">
+            <div
+              style={{
+                paddingBottom: `max(32px, calc(12px + env(safe-area-inset-bottom)))`,
+              }}
+            >
+              <SettingsContent />
+            </div>
+          </SheetContent>
+        </Sheet>
+      ) : (
+        <DropdownMenuRoot open={open} onOpenChange={setOpen}>
+          <DropdownMenuTrigger asChild>{triggerButton}</DropdownMenuTrigger>
+          <DropdownMenuContent
+            className="oui-px-5 oui-py-3 oui-w-[360px]"
+            alignOffset={2}
+            align="end"
           >
-            <SettingFillIcon
-              size={16}
-              color="white"
-              opacity={1}
-              className="oui-text-white/[.36] hover:oui-text-white/80"
-            />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent
-          className="oui-px-5 oui-py-3 oui-w-[360px]"
-          alignOffset={2}
-          align="end"
-        >
-          <div className="oui-flex oui-flex-col oui-text-sm">
-            <Text className="oui-text-base oui-pb-3">
-              {t("trading.portfolioSettings")}
-            </Text>
-            <Divider />
-            <Text className="oui-pb-3 oui-text-base-contrast-54 oui-mt-2">
-              {t("trading.portfolioSettings.decimalPrecision")}
-            </Text>
-            <DecimalPrecisionCheckbox
-              value={props.pnlNotionalDecimalPrecision}
-              onValueChange={(e) => {
-                props.setPnlNotionalDecimalPrecision(e);
-                setOpen(false);
-              }}
-            />
-            <Divider className="oui-my-3" />
-            <Text className="oui-pb-3 oui-text-base-contrast-54 oui-mt-2">
-              {t("trading.portfolioSettings.unrealPnlPriceBasis")}
-            </Text>
-            <UnPnlPriceBasisCheckBox
-              value={props.unPnlPriceBasis}
-              onValueChange={(e) => {
-                props.setUnPnlPriceBasic(e);
-                setOpen(false);
-              }}
-            />
-          </div>
-        </DropdownMenuContent>
-      </DropdownMenuRoot>
+            <SettingsContent />
+          </DropdownMenuContent>
+        </DropdownMenuRoot>
+      )}
     </Flex>
   );
 };

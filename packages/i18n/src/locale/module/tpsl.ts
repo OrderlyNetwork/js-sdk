@@ -69,6 +69,10 @@ export const tpsl = {
     "Your SL trigger price should be set higher than your order price.",
   "tpsl.validate.tpTriggerPrice.error.required": "TP trigger price is required",
   "tpsl.validate.slTriggerPrice.error.required": "SL trigger price is required",
+  "tpsl.validate.slTriggerPrice.warning.closeToLiqPrice":
+    "Stop losses set near the liq. price may not trigger. Note: the liq. price can change with position notional.",
+  "tpsl.validate.slTriggerPrice.error.crossLiqPrice":
+    "Stop loss crosses the liq. price. Please adjust your SL.",
 
   "tpsl.tpslDetail.qty": "Qty.",
   "tpsl.tpslDetail.estPnl": "Est. PnL",

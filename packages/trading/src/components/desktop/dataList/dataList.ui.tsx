@@ -39,8 +39,10 @@ const PositionsView: React.FC<DataListState> = (props) => {
     <Flex direction="column" width="100%" height="100%">
       <React.Suspense fallback={null}>
         <LazyPositionHeaderWidget
+          setPnlNotionalDecimalPrecision={props.setPnlNotionalDecimalPrecision}
           pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
           symbol={!!props.showAllSymbol ? undefined : props.symbol}
+          setUnPnlPriceBasic={props.setUnPnlPriceBasic}
           unPnlPriceBasis={props.unPnlPriceBasis}
         />
       </React.Suspense>

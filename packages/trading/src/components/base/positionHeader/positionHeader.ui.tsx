@@ -10,6 +10,7 @@ import {
 } from "@orderly.network/ui";
 import { CloseAllPositionsWidget } from "@orderly.network/ui-positions";
 import { Decimal } from "@orderly.network/utils";
+import { SettingWidget } from "../../desktop/dataList/setting";
 import type { PositionHeaderState } from "./positionHeader.script";
 
 export const PositionHeader: React.FC<PositionHeaderState> = (props) => {
@@ -52,21 +53,18 @@ const MobileLayout: React.FC<PositionHeaderState> = (props) => {
         width={"100%"}
       >
         <Flex>
-          <Checkbox
-            id="oui-checkbox-hideOtherSymbols"
-            color="white"
-            checked={!props.showAllSymbol}
-            onCheckedChange={(checked: boolean) => {
-              props.setShowAllSymbol(!checked);
+          <SettingWidget
+            pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
+            setPnlNotionalDecimalPrecision={
+              props.setPnlNotionalDecimalPrecision
+            }
+            unPnlPriceBasis={props.unPnlPriceBasis}
+            setUnPnlPriceBasic={props.setUnPnlPriceBasic}
+            hideOtherSymbols={!props.showAllSymbol}
+            setHideOtherSymbols={(value: boolean) => {
+              props.setShowAllSymbol(!value);
             }}
           />
-
-          <label
-            className="oui-cursor-pointer oui-text-2xs oui-text-base-contrast-54 oui-ml-1"
-            htmlFor="oui-checkbox-hideOtherSymbols"
-          >
-            {t("trading.hideOtherSymbols")}
-          </label>
         </Flex>
         <CloseAllPositionsWidget symbol={props.symbol} />
       </Flex>
