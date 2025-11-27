@@ -282,19 +282,19 @@ export const useColumn = (config: ColumnConfig) => {
         rule: "price",
         render: (value: string) => <Text.numeral>{value}</Text.numeral>,
       },
-      {
-        title: t("funding.fundingFee"),
-        dataIndex: "fundingFee",
-        width: 100,
-        render: (value, record) => (
-          <FundingFeeButton
-            fee={value}
-            symbol={record.symbol}
-            start_t={record.timestamp.toString()}
-            end_t={fundingFeeEndTime.current}
-          />
-        ),
-      },
+      // {
+      //   title: t("funding.fundingFee"),
+      //   dataIndex: "fundingFee",
+      //   width: 100,
+      //   render: (value, record) => (
+      //     <FundingFeeButton
+      //       fee={value}
+      //       symbol={record.symbol}
+      //       start_t={record.timestamp.toString()}
+      //       end_t={fundingFeeEndTime.current}
+      //     />
+      //   ),
+      // },
       // {
       //   title: t("common.qty"),
       //   dataIndex: "close_qty",
