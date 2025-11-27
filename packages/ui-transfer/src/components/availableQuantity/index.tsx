@@ -1,5 +1,5 @@
 import { FC, useMemo } from "react";
-import { useIndexPricesStream } from "@orderly.network/hooks";
+import { useIndexPricesStream, useWithdraw } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
 import {
@@ -19,6 +19,33 @@ export type AvailableQuantityProps = {
   onClick?: () => void;
   loading?: boolean;
   tooltipContent?: React.ReactNode;
+};
+
+type AvailableTooltipMessageProps = {
+  tokenSymbol?: string;
+  decimals?: number;
+};
+
+const AvailableTooltipMessage: FC<AvailableTooltipMessageProps> = ({
+  tokenSymbol,
+  decimals,
+}) => {
+  const { t } = useTranslation();
+  const { maxAmount } = useWithdraw({
+    token: tokenSymbol,
+    decimals,
+  });
+
+  const amountText = useMemo(() => {
+    if (maxAmount === undefined || maxAmount === null) return "--";
+    return maxAmount.toString();
+  }, [maxAmount]);
+
+  return (
+    <Text size="2xs" intensity={80}>
+      {t("transfer.withdraw.available.tooltip", { amount: amountText })}
+    </Text>
+  );
 };
 
 export const AvailableQuantity: FC<AvailableQuantityProps> = (props) => {
@@ -57,10 +84,27 @@ export const AvailableQuantity: FC<AvailableQuantityProps> = (props) => {
                 type="button"
                 className="oui-p-0"
                 onClick={() => {
-                  modal.alert({
-                    title: t("common.tips"),
-                    message: props.tooltipContent,
-                  });
+                  if (token?.symbol) {
+                    const anyToken = token as any;
+                    modal.alert({
+                      title: t("common.tips"),
+                      message: (
+                        <AvailableTooltipMessage
+                          tokenSymbol={token.symbol}
+                          decimals={
+                            anyToken?.token_decimal ??
+                            token.decimals ??
+                            token.precision
+                          }
+                        />
+                      ),
+                    });
+                  } else {
+                    modal.alert({
+                      title: t("common.tips"),
+                      message: props.tooltipContent,
+                    });
+                  }
                 }}
               >
                 <Text
