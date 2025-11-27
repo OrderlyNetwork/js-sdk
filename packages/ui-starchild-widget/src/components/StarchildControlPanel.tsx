@@ -297,6 +297,9 @@ export const StarchildControlPanel: React.FC<StarchildControlPanelProps> = ({
               right: "12px",
               pointerEvents: "auto",
             }}
+            onInteractOutside={(e) => {
+              e.preventDefault();
+            }}
           >
             <TelegramBinding
               onTelegramConnected={(telegramData: any) => {

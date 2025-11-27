@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { BrowserProvider } from "ethers";
 import { LS_AUTH_KEY } from "./constants";
 import type { AuthTokenData } from "./types";
 import {
@@ -20,25 +21,38 @@ export function useEvmAuth(baseUrl: string, brokerId: string) {
   ): Promise<AuthTokenData> => {
     const timestamp = Date.now();
     const messageText = `EVM:${timestamp}`;
-    const hash = ethereumPersonalMessageHash(messageText);
 
     let signatureHex = "" as string;
     try {
-      signatureHex = await provider?.request?.({
-        method: "eth_sign",
-        params: [address, hash],
-      });
-    } catch (e) {
+      const ethersProvider = new BrowserProvider(provider);
+      const signer = await ethersProvider.getSigner(address);
+      signatureHex = await signer.signMessage(messageText);
+    } catch (ethersError) {
+      const hash = ethereumPersonalMessageHash(messageText);
+
       try {
         signatureHex = await provider?.request?.({
           method: "personal_sign",
           params: [utf8ToHex(messageText), address],
         });
-      } catch (e2) {
-        signatureHex = await provider?.request?.({
-          method: "personal_sign",
-          params: [address, utf8ToHex(messageText)],
-        });
+      } catch (e1) {
+        try {
+          signatureHex = await provider?.request?.({
+            method: "personal_sign",
+            params: [address, utf8ToHex(messageText)],
+          });
+        } catch (e2) {
+          try {
+            signatureHex = await provider?.request?.({
+              method: "eth_sign",
+              params: [address, hash],
+            });
+          } catch (e3) {
+            throw new Error(
+              `Failed to sign message with provider. Tried: ethers signMessage, personal_sign, and eth_sign. Last error: ${e3 instanceof Error ? e3.message : String(e3)}`,
+            );
+          }
+        }
       }
     }
 

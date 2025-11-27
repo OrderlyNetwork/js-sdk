@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { BrowserProvider } from "ethers";
 import {
   normalizeSignatureV,
   ethereumPersonalMessageHash,
@@ -57,23 +58,36 @@ export function useVerifyOrderlyKey(
         throw e;
       }
     } else {
-      const hash = ethereumPersonalMessageHash(messageText);
       try {
-        signature = await provider?.request?.({
-          method: "eth_sign",
-          params: [walletAddress, hash],
-        });
-      } catch (e) {
+        const ethersProvider = new BrowserProvider(provider);
+        const signer = await ethersProvider.getSigner(walletAddress);
+        signature = await signer.signMessage(messageText);
+      } catch (ethersError) {
+        const hash = ethereumPersonalMessageHash(messageText);
+
         try {
           signature = await provider?.request?.({
             method: "personal_sign",
             params: [utf8ToHex(messageText), walletAddress],
           });
-        } catch (e2) {
-          signature = await provider?.request?.({
-            method: "personal_sign",
-            params: [walletAddress, utf8ToHex(messageText)],
-          });
+        } catch (e1) {
+          try {
+            signature = await provider?.request?.({
+              method: "personal_sign",
+              params: [walletAddress, utf8ToHex(messageText)],
+            });
+          } catch (e2) {
+            try {
+              signature = await provider?.request?.({
+                method: "eth_sign",
+                params: [walletAddress, hash],
+              });
+            } catch (e3) {
+              throw new Error(
+                `Failed to sign message with provider. Tried: ethers signMessage, personal_sign, and eth_sign. Last error: ${e3 instanceof Error ? e3.message : String(e3)}`,
+              );
+            }
+          }
         }
       }
     }
