@@ -136,7 +136,6 @@ export const ReversePosition: FC<ReversePositionProps> = (props) => {
         side={openSide}
         leverage={leverage}
         qty={reverseQty}
-        estLiqPrice={priceLabel}
         baseDp={baseDp}
       />
 
