@@ -77,6 +77,8 @@
   "common.deposits": "Депозиты",
   "common.withdrawals": "Выводы средств",
   "common.transfer": "Перевод",
+  "common.inflow": "Приток",
+  "common.outflow": "Отток",
   "common.settle": "Расчет",
   "common.markets": "Рынки",
   "common.portfolio": "Портфель",

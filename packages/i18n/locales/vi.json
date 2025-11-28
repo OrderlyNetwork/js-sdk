@@ -77,6 +77,8 @@
   "common.deposits": "Nạp tiền",
   "common.withdrawals": "Rút tiền",
   "common.transfer": "Chuyển khoản",
+  "common.inflow": "Dòng vào",
+  "common.outflow": "Dòng ra",
   "common.settle": "Thanh toán",
   "common.markets": "Thị trường",
   "common.portfolio": "Danh mục đầu tư",

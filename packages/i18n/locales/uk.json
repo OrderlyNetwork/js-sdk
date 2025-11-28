@@ -77,6 +77,8 @@
   "common.deposits": "Депозити",
   "common.withdrawals": "Виведення коштів",
   "common.transfer": "Переказ",
+  "common.inflow": "Приплив",
+  "common.outflow": "Відтік",
   "common.settle": "Розрахуватися",
   "common.markets": "Ринки",
   "common.portfolio": "Портфель",

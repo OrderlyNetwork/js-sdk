@@ -77,6 +77,8 @@
   "common.deposits": "充值",
   "common.withdrawals": "提現",
   "common.transfer": "轉帳",
+  "common.inflow": "流入",
+  "common.outflow": "流出",
   "common.settle": "結算",
   "common.markets": "市場",
   "common.portfolio": "投資組合",

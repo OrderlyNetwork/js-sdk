@@ -77,6 +77,8 @@
   "common.deposits": "입금",
   "common.withdrawals": "출금",
   "common.transfer": "이체",
+  "common.inflow": "유입",
+  "common.outflow": "유출",
   "common.settle": "정산",
   "common.markets": "마켓",
   "common.portfolio": "포트폴리오",

@@ -77,6 +77,8 @@
   "common.deposits": "充值",
   "common.withdrawals": "提现",
   "common.transfer": "转账",
+  "common.inflow": "流入",
+  "common.outflow": "流出",
   "common.settle": "结算",
   "common.markets": "市场",
   "common.portfolio": "投资组合",

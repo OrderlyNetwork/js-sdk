@@ -77,6 +77,8 @@
   "common.deposits": "Mevduatlar",
   "common.withdrawals": "Çekimler",
   "common.transfer": "Transfer",
+  "common.inflow": "Giriş",
+  "common.outflow": "Çıkış",
   "common.settle": "Öde",
   "common.markets": "Piyasalar",
   "common.portfolio": "Portföy",

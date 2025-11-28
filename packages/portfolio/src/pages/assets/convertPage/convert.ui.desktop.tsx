@@ -66,7 +66,7 @@ const ConvertDetailsModal = modal.create<{
         className="oui-w-full"
         classNames={{
           header: "oui-h-10",
-          root: "oui-bg-base-8 oui-max-h-[60vh] oui-overflow-y-scroll",
+          root: "oui-bg-base-8 oui-max-h-[60vh] oui-overflow-y-scroll oui-custom-scrollbar",
         }}
         onRow={() => ({
           className: "oui-h-[40px]",
@@ -152,22 +152,19 @@ export const ConvertDesktopUI: React.FC<ConvertDesktopUIProps> = ({
   ]);
 
   return (
-    <Flex direction="column" mt={4} itemAlign="center" className="oui-w-full">
-      <Divider className="oui-w-full oui-border-b oui-border-line-4 oui-pt-6" />
-      <Flex direction="row" className="oui-w-full">
-        {dataFilter}
-      </Flex>
+    <>
+      {dataFilter}
+
       <AuthGuardDataTable
+        bordered
         columns={columns}
         dataSource={convertState.dataSource}
         loading={convertState.isLoading}
-        bordered
         pagination={convertState.pagination}
         manualPagination
         className="oui-mt-4 oui-w-full"
         classNames={{
-          root: "oui-h-[calc(100vh_-_200px)]",
-          header: "oui-h-12",
+          root: "oui-h-[calc(100%_-_49px)]",
         }}
         onRow={() => ({
           className: "oui-h-[48px] oui-cursor-pointer",
@@ -176,6 +173,6 @@ export const ConvertDesktopUI: React.FC<ConvertDesktopUIProps> = ({
           return record.convert_id.toString();
         }}
       />
-    </Flex>
+    </>
   );
 };
