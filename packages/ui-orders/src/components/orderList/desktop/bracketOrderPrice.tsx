@@ -26,7 +26,7 @@ export const BracketOrderPrice = (props: { order: API.AlgoOrderExt }) => {
     return utils.findTPSLFromOrder(props.order.child_orders[0]);
   }, [props.order]);
 
-  const { pnl, roi } = calcBracketRoiAndPnL(order);
+  const { pnl } = calcBracketRoiAndPnL(order);
 
   if (!tp_trigger_price && !sl_trigger_price) {
     return "--";

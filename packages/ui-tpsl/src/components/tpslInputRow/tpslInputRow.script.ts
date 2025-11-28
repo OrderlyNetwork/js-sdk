@@ -29,6 +29,7 @@ export type Props = {
   disableEnableCheckbox?: boolean;
   symbolLeverage?: number;
   side: OrderSide;
+  inputWarnNode?: React.ReactNode;
 };
 export const useTPSLInputRowScript = (props: Props) => {
   const { values, side, type, rootOrderPrice } = props;

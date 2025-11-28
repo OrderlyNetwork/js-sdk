@@ -73,7 +73,7 @@ function parseToDecimal(num?: number | Decimal | string): Decimal | undefined {
 type FormatNumWithNamespace = typeof formatNum & {
   pnl: (num?: number | Decimal | string) => Decimal | undefined;
   notional: (num?: number | Decimal | string) => Decimal | undefined;
-  roi: (num?: number | Decimal | string) => Decimal | undefined;
+  roi: (num?: number | Decimal | string, dp?: number) => Decimal | undefined;
   assetValue: (num?: number | Decimal | string) => Decimal | undefined;
   collateral: (num?: number | Decimal | string) => Decimal | undefined;
 };
@@ -89,8 +89,8 @@ formatNumWithNamespace.notional = (num?: number | Decimal | string) => {
   return formatNum(FormatNumType.notional, 2, num);
 };
 
-formatNumWithNamespace.roi = (num?: number | Decimal | string) => {
-  return formatNum(FormatNumType.roi, 2, num);
+formatNumWithNamespace.roi = (num?: number | Decimal | string, dp?: number) => {
+  return formatNum(FormatNumType.roi, dp ?? 4, num);
 };
 
 formatNumWithNamespace.assetValue = (num?: number | Decimal | string) => {

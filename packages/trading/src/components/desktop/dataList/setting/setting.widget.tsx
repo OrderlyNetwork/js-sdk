@@ -5,7 +5,7 @@ import { Setting } from "./setting.ui";
 export type SettingWidgetProps = {
   pnlNotionalDecimalPrecision: any;
   setPnlNotionalDecimalPrecision: (value: number) => void;
-  unPnlPriceBasis: any;
+  unPnlPriceBasis: "markPrice" | "lastPrice";
   setUnPnlPriceBasic: (value: string) => void;
   hideOtherSymbols: any;
   setHideOtherSymbols: (value: boolean) => void;

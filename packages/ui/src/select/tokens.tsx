@@ -26,7 +26,7 @@ export type TokenSelectProps = {
 } & SelectProps<string>;
 
 export const TokenSelect: React.FC<TokenSelectProps> = (props) => {
-  const { tokens, showIcon = true, iconSize, ...rest } = props;
+  const { tokens, showIcon = true, iconSize, showCaret, ...rest } = props;
   const { icon } = selectVariants();
 
   const options = useMemo(() => {
@@ -69,7 +69,7 @@ export const TokenSelect: React.FC<TokenSelectProps> = (props) => {
   return (
     <SelectWithOptions
       {...rest}
-      showCaret={selectable}
+      showCaret={typeof showCaret === "boolean" ? showCaret : selectable}
       options={options}
       valueFormatter={showIcon ? valueRenderer : undefined}
       optionRenderer={optionRenderer}

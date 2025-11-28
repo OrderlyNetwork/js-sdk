@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import {
+  ERROR_MSG_CODES,
   OrderValidationItem,
   OrderValidationResult,
 } from "@orderly.network/hooks";
@@ -57,6 +58,12 @@ export function useOrderEntryFormErrorMsg(
         max: t("orderEntry.slTriggerPrice.error.max", { value }),
         priceErrorMin: t("tpsl.validate.slTriggerPrice.error.priceErrorMin"),
         priceErrorMax: t("tpsl.validate.slTriggerPrice.error.priceErrorMax"),
+        [ERROR_MSG_CODES.SL_PRICE_WARNING]: t(
+          "tpsl.validate.slTriggerPrice.warning.closeToLiqPrice",
+        ),
+        [ERROR_MSG_CODES.SL_PRICE_ERROR]: t(
+          "tpsl.validate.slTriggerPrice.error.crossLiqPrice",
+        ),
       },
       tp_order_price: {
         required: t("tpsl.validate.tpOrderPrice.error.required"),

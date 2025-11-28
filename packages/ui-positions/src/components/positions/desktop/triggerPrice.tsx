@@ -1,5 +1,11 @@
 import { FC, useMemo } from "react";
-import { useSymbolsInfo, utils } from "@orderly.network/hooks";
+import {
+  ERROR_MSG_CODES,
+  OrderValidationResult,
+  useSymbolsInfo,
+  useTpslPriceChecker,
+  utils,
+} from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   AlgoOrderType,
@@ -7,7 +13,14 @@ import {
   OrderSide,
   PositionType,
 } from "@orderly.network/types";
-import { cn, Flex, Text, Tooltip } from "@orderly.network/ui";
+import {
+  cn,
+  ExclamationFillIcon,
+  Flex,
+  Text,
+  Tooltip,
+} from "@orderly.network/ui";
+import { CloseToLiqPriceIcon } from "@orderly.network/ui-tpsl";
 import { formatNum } from "@orderly.network/utils";
 import { usePositionsRowContext } from "../positionsRowContext";
 import { TPSLEditIcon, AddIcon } from "./components";
@@ -18,6 +31,12 @@ export const TriggerPrice: FC<{
 }> = (props) => {
   const { stopLossPrice, takeProfitPrice } = props;
   const { tpslOrder, position } = usePositionsRowContext();
+  const side = position.position_qty > 0 ? OrderSide.BUY : OrderSide.SELL;
+  const slPriceError = useTpslPriceChecker({
+    slPrice: stopLossPrice?.toString() ?? undefined,
+    liqPrice: position.est_liq_price ?? null,
+    side: side,
+  });
 
   return (
     <TPSLTriggerPrice
@@ -26,6 +45,7 @@ export const TriggerPrice: FC<{
       direction={"column"}
       order={tpslOrder}
       position={position}
+      slPriceError={slPriceError}
       tooltip
     />
   );
@@ -90,6 +110,7 @@ export const TPSLTriggerPrice: FC<{
   tooltip?: boolean;
   order?: API.AlgoOrder;
   position?: API.PositionTPSLExt;
+  slPriceError: OrderValidationResult | null;
 }> = (props) => {
   const { direction = "row", order, position } = props;
   // const symbolInfo = useSymbolsInfo()[position?.symbol ?? ""]();
@@ -196,6 +217,7 @@ export const TPSLTriggerPrice: FC<{
               ""
             )
           }
+          suffix={<CloseToLiqPriceIcon slPriceError={props.slPriceError} />}
         />,
       );
     }
@@ -208,7 +230,13 @@ export const TPSLTriggerPrice: FC<{
     }
 
     return children;
-  }, [props.takeProfitPrice, props.stopLossPrice, order?.symbol, t]);
+  }, [
+    props.takeProfitPrice,
+    props.stopLossPrice,
+    order?.symbol,
+    t,
+    props.slPriceError,
+  ]);
 
   const content = (
     <div

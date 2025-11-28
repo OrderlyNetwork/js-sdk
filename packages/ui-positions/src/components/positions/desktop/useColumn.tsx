@@ -21,6 +21,7 @@ import { LeverageBadge } from "./components";
 import { renderQuantity } from "./listElement";
 import { NumeralWithCtx } from "./numeralWithCtx";
 import { PartialTPSL } from "./partialTPSL";
+import { ReversePositionButton } from "./reversePotisionButton";
 import { ShareButtonWidget } from "./shareButton";
 import { TriggerPrice } from "./triggerPrice";
 import { UnrealizedPnLPopoverCard } from "./unrealPnLHover";
@@ -29,11 +30,16 @@ interface ColumnConfig {
   pnlNotionalDecimalPrecision?: number;
   sharePnLConfig?: SharePnLOptions;
   onSymbolChange?: (symbol: API.Symbol) => void;
+  positionReverse?: boolean;
 }
 
 export const useColumn = (config: ColumnConfig) => {
-  const { pnlNotionalDecimalPrecision, sharePnLConfig, onSymbolChange } =
-    config;
+  const {
+    pnlNotionalDecimalPrecision,
+    sharePnLConfig,
+    onSymbolChange,
+    positionReverse,
+  } = config;
   const { t } = useTranslation();
   const fundingFeeEndTime = useRef(Date.now().toString());
   const column = useMemo<Column<API.PositionTPSLExt>[]>(
@@ -308,18 +314,19 @@ export const useColumn = (config: ColumnConfig) => {
         title: null,
         dataIndex: "close_position",
         align: "right",
-        width: 70,
+        width: positionReverse ? 100 : 70,
         fixed: "right",
-        render() {
+        render(_, record) {
           return (
             <Flex gapX={2} justify={"end"}>
               <ClosePositionWidget />
+              {positionReverse && <ReversePositionButton position={record} />}
             </Flex>
           );
         },
       },
     ],
-    [pnlNotionalDecimalPrecision, sharePnLConfig, t],
+    [pnlNotionalDecimalPrecision, sharePnLConfig, t, positionReverse],
   );
   return column;
 };

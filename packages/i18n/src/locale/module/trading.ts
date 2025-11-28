@@ -12,10 +12,13 @@ export const trading = {
   "trading.hideOtherSymbols": "Hide other symbols",
   "trading.history": "History",
 
-  "trading.portfolioSettings": "Portfolio Settings",
+  "trading.portfolioSettings": "Preference",
   "trading.portfolioSettings.decimalPrecision":
     "Decimal Precision for PnL & Notional",
   "trading.portfolioSettings.unrealPnlPriceBasis": "Unrealized PnL Price Basis",
+  "trading.portfolioSettings.reversePosition": "Reverse button",
+  "trading.portfolioSettings.reversePosition.tooltip":
+    "Close your current position and open the opposite at market price. The reverse order will fail if your account balance isn’t enough to open an opposite position of the same size.",
 
   "trading.orderBook": "Order book",
   "trading.lastTrades": "Last trades",

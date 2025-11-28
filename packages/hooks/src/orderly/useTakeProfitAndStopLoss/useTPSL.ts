@@ -126,7 +126,9 @@ export const useTaskProfitAndStopLossInternal = (
     /**
      *
      */
-    validate: () => Promise<
+    validate: (
+      otherErrors?: ValidateError,
+    ) => Promise<
       AlgoOrderEntity<
         AlgoOrderRootType.POSITIONAL_TP_SL | AlgoOrderRootType.TP_SL
       >
@@ -385,7 +387,9 @@ export const useTaskProfitAndStopLossInternal = (
     });
   };
 
-  const validate = (): Promise<
+  const validate = (
+    otherErrors?: ValidateError,
+  ): Promise<
     AlgoOrderEntity<
       AlgoOrderRootType.POSITIONAL_TP_SL | AlgoOrderRootType.TP_SL
     >
@@ -399,6 +403,12 @@ export const useTaskProfitAndStopLossInternal = (
           valueConfig,
         )
         .then((errors) => {
+          if (otherErrors) {
+            errors = {
+              ...errors,
+              ...otherErrors,
+            };
+          }
           if (errors) {
             const keys = Object.keys(errors);
             if (keys.length > 0) {
