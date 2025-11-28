@@ -141,7 +141,7 @@ export const TransferHistoryMobileUI: React.FC<
         <Flex direction="row" justify="between" width="100%">
           <Flex direction="column" gap={1}>
             <Text className="oui-text-base-contrast-36 oui-text-2xs">
-              {t("transfer.internalTransfer.from")} (Account ID)
+              {t("transfer.internalTransfer.from")} ({t("common.accountId")})
             </Text>
             <Flex direction="column" gap={1} itemAlign={"start"}>
               <Flex direction="row" itemAlign="center" gap={1}>
@@ -163,7 +163,7 @@ export const TransferHistoryMobileUI: React.FC<
           </Flex>
           <Flex direction="column" itemAlign="end" gap={1}>
             <Text className="oui-text-base-contrast-36 oui-text-2xs">
-              {t("transfer.internalTransfer.to")} (Account ID)
+              {t("transfer.internalTransfer.to")} ({t("common.accountId")})
             </Text>
             <Flex direction="column" itemAlign="end" gap={1}>
               <Flex direction="row" itemAlign="center" gap={1}>
