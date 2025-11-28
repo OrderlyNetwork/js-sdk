@@ -30,9 +30,15 @@ export const Setting: FC<SettingState> = (props) => {
     return () => (
       <>
         <div className="oui-flex oui-flex-col oui-text-sm">
-          <Text className="oui-text-base oui-pb-3">
-            {t("trading.portfolioSettings")}
-          </Text>
+          <Flex
+            itemAlign="center"
+            justify={isMobile ? "center" : "start"}
+            className="oui-w-full"
+          >
+            <Text className="oui-text-base oui-pb-3">
+              {t("trading.portfolioSettings")}
+            </Text>
+          </Flex>
           <Divider />
           <Text className="oui-pb-3 oui-text-base-contrast-54 oui-mt-2">
             {t("trading.portfolioSettings.decimalPrecision")}
@@ -68,13 +74,16 @@ export const Setting: FC<SettingState> = (props) => {
                 className="oui-text-base-contrast-54 hover:oui-text-base-contrast-80 oui-cursor-pointer"
                 onClick={() => {
                   modal.alert({
-                    message: t("positions.reverse.description"),
+                    title: t("common.tips"),
+                    message: t(
+                      "trading.portfolioSettings.reversePosition.tooltip",
+                    ),
                   });
                 }}
               />
             ) : (
               <Tooltip
-                content={t("positions.reverse.description")}
+                content={t("trading.portfolioSettings.reversePosition.tooltip")}
                 className="oui-max-w-[300px]"
               >
                 <ExclamationFillIcon
