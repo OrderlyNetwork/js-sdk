@@ -18,21 +18,6 @@ type ConvertDesktopUIProps = {
   convertState: ReturnType<typeof useConvertScript>;
 };
 
-export const CONVERT_STATUS_OPTIONS = [
-  {
-    label: "All status",
-    value: "all",
-  },
-  {
-    label: "Completed",
-    value: "completed",
-  },
-  {
-    label: "Pending",
-    value: "pending",
-  },
-];
-
 // Convert Details Modal Component
 const ConvertDetailsModal = modal.create<{
   record: ConvertRecord;
@@ -82,6 +67,8 @@ const ConvertDetailsModal = modal.create<{
 export const ConvertDesktopUI: React.FC<ConvertDesktopUIProps> = ({
   convertState,
 }) => {
+  const { t } = useTranslation();
+
   const handleDetailsClick = (convertId: number) => {
     // Find the convert record by ID
     const record = convertState.dataSource.find(
@@ -108,6 +95,15 @@ export const ConvertDesktopUI: React.FC<ConvertDesktopUIProps> = ({
     convertedAssetOptions,
   } = convertState;
 
+  const statusOptions = useMemo(
+    () => [
+      { label: t("common.status.all"), value: "all" },
+      { label: t("orders.status.completed"), value: "completed" },
+      { label: t("orders.status.pending"), value: "pending" },
+    ],
+    [t],
+  );
+
   const dataFilter = useMemo(() => {
     return (
       <DataFilter
@@ -130,7 +126,7 @@ export const ConvertDesktopUI: React.FC<ConvertDesktopUIProps> = ({
             type: "select",
             name: "status",
             value: statusFilter,
-            options: CONVERT_STATUS_OPTIONS,
+            options: statusOptions,
           },
           {
             type: "range",
@@ -149,6 +145,7 @@ export const ConvertDesktopUI: React.FC<ConvertDesktopUIProps> = ({
     dateRange,
     onFilter,
     convertedAssetOptions,
+    statusOptions,
   ]);
 
   return (

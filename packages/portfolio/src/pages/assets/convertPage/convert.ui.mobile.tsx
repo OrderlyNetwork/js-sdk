@@ -15,7 +15,6 @@ import {
 import { ConvertRecord, ConvertTransaction } from "../type";
 import { ConvertedAssetColumn } from "./convert.column";
 import { useConvertScript } from "./convert.script";
-import { CONVERT_STATUS_OPTIONS } from "./convert.ui.desktop";
 
 type ConvertMobileUIProps = {
   convertState: ReturnType<typeof useConvertScript>;
@@ -48,6 +47,15 @@ export const ConvertMobileUI: React.FC<ConvertMobileUIProps> = ({
     convertedAssetOptions,
   } = convertState;
 
+  const statusOptions = useMemo(
+    () => [
+      { label: t("common.status.all"), value: "all" },
+      { label: t("orders.status.completed"), value: "completed" },
+      { label: t("orders.status.pending"), value: "pending" },
+    ],
+    [t],
+  );
+
   const dataFilter = useMemo(() => {
     return (
       <DataFilter
@@ -73,7 +81,7 @@ export const ConvertMobileUI: React.FC<ConvertMobileUIProps> = ({
             type: "picker",
             name: "status",
             value: statusFilter,
-            options: CONVERT_STATUS_OPTIONS,
+            options: statusOptions,
             className: "oui-whitespace-nowrap",
           },
           {
@@ -93,6 +101,7 @@ export const ConvertMobileUI: React.FC<ConvertMobileUIProps> = ({
     dateRange,
     onFilter,
     convertedAssetOptions,
+    statusOptions,
   ]);
 
   return (

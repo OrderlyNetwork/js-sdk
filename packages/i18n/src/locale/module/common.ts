@@ -76,6 +76,7 @@ export const common = {
   "common.overview": "Overview",
   "common.funding": "Funding",
   "common.assets": "Assets",
+  "common.allAssets": "All assets",
   "common.countdown": "Countdown",
   "common.current": "Current",
   "common.account": "Account",
