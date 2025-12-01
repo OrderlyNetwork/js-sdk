@@ -32,6 +32,12 @@ export const tradingLeaderboard = {
   "tradingLeaderboard.maxTicketsAchieved": "Max tickets achieved",
   "tradingLeaderboard.termsAndConditions": "Terms and Conditions",
   "tradingLeaderboard.rules": "Rules",
+  "tradingLeaderboard.pnl.tooltip":
+    "Real-time PnL including both realized and unrealized gains. Existing positions and collateral price changes may affect PnL even with zero volume. Updated every 60 mins.",
+  "tradingLeaderboard.realizedPnl.tooltip":
+    "Displays realized PnL from closed positions in the selected period.",
+  "tradingLeaderboard.tradingVolume.tooltip":
+    "Total trading volume generated during the campaign period. Updated every 30 seconds.",
 };
 
 export type TradingLeaderboard = typeof tradingLeaderboard;
