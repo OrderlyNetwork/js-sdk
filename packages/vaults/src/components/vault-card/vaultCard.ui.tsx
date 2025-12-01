@@ -181,14 +181,14 @@ export const VaultCard: FC<VaultCardScript> = (props) => {
                 }}
               />
               <VaultInfoItem
-                label={t("vaults.card.apy")}
+                label={t("vaults.card.allTimeReturn")}
                 value={
                   vaultInfo.status === "pre_launch" ||
-                  (vaultInfo.vault_age !== null && vaultInfo.vault_age < 30)
+                  (vaultInfo.vault_age !== null && vaultInfo.vault_age < 7)
                     ? "--"
-                    : vaultInfo["30d_apy"] > 100
+                    : vaultInfo.lifetime_apy > 100
                       ? ">10000%"
-                      : (vaultInfo["30d_apy"] * 100).toFixed(2) + "%"
+                      : (vaultInfo.lifetime_apy * 100).toFixed(2) + "%"
                 }
                 textProps={{
                   color: "brand",
@@ -196,9 +196,9 @@ export const VaultCard: FC<VaultCardScript> = (props) => {
                 }}
                 showTooltip={
                   vaultInfo.status === "pre_launch" ||
-                  (vaultInfo.vault_age !== null && vaultInfo.vault_age < 30)
+                  (vaultInfo.vault_age !== null && vaultInfo.vault_age < 7)
                 }
-                tooltipContent="APY is not calculated for vaults that are less than 30 days old."
+                tooltipContent={t("vaults.card.allTimeReturnTooltip")}
               />
             </div>
 

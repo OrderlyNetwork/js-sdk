@@ -29,7 +29,7 @@ export const VaultsList: FC<VaultsListProps> = ({ vaults }) => {
     return vaults.some(
       (vault) =>
         vault.status === "pre_launch" ||
-        (vault.vault_age !== null && vault.vault_age < 30),
+        (vault.vault_age !== null && vault.vault_age < 7),
     );
   }, [vaults]);
 
@@ -53,8 +53,8 @@ export const VaultsList: FC<VaultsListProps> = ({ vaults }) => {
           bValue = b.tvl;
           break;
         case "apy":
-          aValue = a["30d_apy"];
-          bValue = b["30d_apy"];
+          aValue = a.lifetime_apy;
+          bValue = b.lifetime_apy;
           break;
         // For deposits, pnl, balance - these need LP info which we'll handle in VaultListRow
         default:
@@ -112,12 +112,12 @@ export const VaultsList: FC<VaultsListProps> = ({ vaults }) => {
             onClick={() => handleSort("apy")}
             className="oui-flex oui-items-center oui-text-2xs oui-font-normal oui-text-base-contrast-54 hover:oui-text-base-contrast"
           >
-            {t("vaults.card.apy")}
+            {t("vaults.card.allTimeReturn")}
             <SortIcon field="apy" />
           </button>
           {shouldShowApyTooltip && (
             <Tooltip
-              content="APY is not calculated for vaults that are less than 30 days old."
+              content={t("vaults.card.allTimeReturnTooltip")}
               delayDuration={100}
             >
               <div>
@@ -330,15 +330,15 @@ const VaultListRow: FC<{ vault: VaultInfo }> = ({ vault }) => {
         </Text.numeral>
       </div>
 
-      {/* APY */}
+      {/* All-time return */}
       <div className="oui-relative oui-z-10">
         <Text.gradient className="oui-text-sm oui-font-semibold" color="brand">
           {vaultInfo.status === "pre_launch" ||
-          (vaultInfo.vault_age !== null && vaultInfo.vault_age < 30)
+          (vaultInfo.vault_age !== null && vaultInfo.vault_age < 7)
             ? "--"
-            : vaultInfo["30d_apy"] > 100
+            : vaultInfo.lifetime_apy > 100
               ? ">10000%"
-              : `${(vaultInfo["30d_apy"] * 100).toFixed(2)}%`}
+              : `${(vaultInfo.lifetime_apy * 100).toFixed(2)}%`}
         </Text.gradient>
       </div>
 

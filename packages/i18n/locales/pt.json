@@ -1026,6 +1026,8 @@
   "vaults.card.orderly.description": "Obtenha rendimentos passivos sem esforço, sem necessidade de expertise em trading. OmniCofre implementa estratégias de market-making, assume liquidações e acumula taxas da plataforma.",
   "vaults.card.tvl": "TVL",
   "vaults.card.apy": "APY 30D",
+  "vaults.card.allTimeReturn": "Retorno histórico",
+  "vaults.card.allTimeReturnTooltip": "Retornos anualizados usando todos os dados históricos desde a criação do cofre. Disponível após o cofre completar 7 dias.",
   "vaults.card.myDeposits": "Meus depósitos",
   "vaults.card.myEarnings": "Meus ganhos",
   "vaults.card.accountBalance": "Saldo da conta",

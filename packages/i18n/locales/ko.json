@@ -1026,6 +1026,8 @@
   "vaults.card.orderly.description": "거래 전문 지식 없이도 손쉽게 수동 수익을 얻으세요. 옴니볼트는 마켓 메이킹 전략을 배포하고 청산을 수행하며 플랫폼 수수료를 누적합니다.",
   "vaults.card.tvl": "TVL",
   "vaults.card.apy": "30일 APY",
+  "vaults.card.allTimeReturn": "전체 기간 수익률",
+  "vaults.card.allTimeReturnTooltip": "볼트 생성 이후의 모든 과거 데이터를 사용해 계산한 연환산 수익률입니다. 볼트가 생성된 지 7일이 지난 후에만 제공됩니다.",
   "vaults.card.myDeposits": "내 예금",
   "vaults.card.myEarnings": "내 수익",
   "vaults.card.accountBalance": "계정 잔액",

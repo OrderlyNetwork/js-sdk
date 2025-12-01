@@ -1026,6 +1026,8 @@
   "vaults.card.orderly.description": "Kiếm lợi nhuận thụ động một cách dễ dàng, không cần chuyên môn giao dịch. OmniKho bạc triển khai các chiến lược tạo thị trường, đảm nhận thanh lý và tích lũy phí nền tảng.",
   "vaults.card.tvl": "TVL",
   "vaults.card.apy": "APY 30N",
+  "vaults.card.allTimeReturn": "Lợi suất toàn thời gian",
+  "vaults.card.allTimeReturnTooltip": "Lợi suất được quy đổi theo năm dựa trên toàn bộ dữ liệu lịch sử kể từ khi kho được tạo. Chỉ khả dụng khi kho đã hoạt động ít nhất 7 ngày.",
   "vaults.card.myDeposits": "Tiền gửi của tôi",
   "vaults.card.myEarnings": "Thu nhập của tôi",
   "vaults.card.accountBalance": "Số dư tài khoản",

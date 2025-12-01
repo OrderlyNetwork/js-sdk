@@ -1026,6 +1026,8 @@
   "vaults.card.orderly.description": "Obtén rendimientos pasivos sin esfuerzo, no se requiere experiencia en trading. OmniBóveda despliega estrategias de market-making, asume liquidaciones y acumula comisiones de plataforma.",
   "vaults.card.tvl": "TVL",
   "vaults.card.apy": "APY 30D",
+  "vaults.card.allTimeReturn": "Retorno histórico",
+  "vaults.card.allTimeReturnTooltip": "Rentabilidad anualizada usando todos los datos históricos desde la creación de la bóveda. Disponible cuando la bóveda tenga al menos 7 días.",
   "vaults.card.myDeposits": "Mis depósitos",
   "vaults.card.myEarnings": "Mis ganancias",
   "vaults.card.accountBalance": "Saldo de cuenta",
