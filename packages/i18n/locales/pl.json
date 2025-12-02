@@ -1026,6 +1026,8 @@
   "vaults.card.orderly.description": "Bez wysiłku uzyskuj pasywne zyski, nie wymagana wiedza o handlu. OmniSkarbiec wdraża strategie market-making, przejmuje likwidacje i gromadzi opłaty platformy.",
   "vaults.card.tvl": "TVL",
   "vaults.card.apy": "APY 30D",
+  "vaults.card.allTimeReturn": "Zwrot historyczny",
+  "vaults.card.allTimeReturnTooltip": "Zwroty zannualizowane na podstawie wszystkich danych historycznych od powstania skarbca. Dostępne po upływie co najmniej 7 dni od uruchomienia skarbca.",
   "vaults.card.myDeposits": "Moje depozyty",
   "vaults.card.myEarnings": "Moje zarobki",
   "vaults.card.accountBalance": "Saldo konta",

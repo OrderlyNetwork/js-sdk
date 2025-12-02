@@ -15,6 +15,9 @@ export const vaults = {
     "Earn passive yields effortlessly, no trading expertise required. OmniVault deploys market-making strategies, taking on liquidations, and accrue platform fees.",
   "vaults.card.tvl": "TVL",
   "vaults.card.apy": "30D APY",
+  "vaults.card.allTimeReturn": "All-time return",
+  "vaults.card.allTimeReturnTooltip":
+    "Annualized returns using all historical data since vault inception. Available after the vault is 7 days old.",
   "vaults.card.myDeposits": "My deposits",
   "vaults.card.myEarnings": "My earnings",
   "vaults.card.accountBalance": "Account balance",

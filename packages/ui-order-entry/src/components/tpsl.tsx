@@ -1,11 +1,4 @@
-import React, {
-  ChangeEventHandler,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { ERROR_MSG_CODES, OrderValidationResult } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
@@ -16,21 +9,18 @@ import {
   Text,
   Input,
   inputFormatter,
-  modal,
   Switch,
   SettingFillIcon,
-  Box,
   useScreen,
   DotStatus,
 } from "@orderly.network/ui";
 import { Grid } from "@orderly.network/ui";
-import { ExclamationFillIcon } from "@orderly.network/ui";
 import { TPSLPositionTypeWidget } from "@orderly.network/ui-tpsl";
-import { OrderEntryContext, useOrderEntryContext } from "./orderEntryContext";
+import { useOrderEntryContext } from "./orderEntryContext";
 import { PnlInputWidget } from "./pnlInput/pnlInput.widget";
 import { usePnlInputContext } from "./pnlInput/pnlInputContext";
 import { PnlInputProvider } from "./pnlInput/pnlInputProvider";
-import { PNL_Values, PnLMode } from "./pnlInput/useBuilder.script";
+import { PNL_Values } from "./pnlInput/useBuilder.script";
 import { ReduceOnlySwitch } from "./reduceOnlySwitch";
 
 type OrderValueKeys = keyof OrderlyOrder;
@@ -53,7 +43,6 @@ export const OrderTPSL = (props: {
   onChange: (key: OrderValueKeys, value: any) => void;
   values: TPSL_Values;
   orderType: OrderType;
-  isReduceOnly?: boolean;
   errors: OrderValidationResult | null;
   quote_dp: number | undefined;
   showTPSLAdvanced: () => void;
@@ -61,7 +50,6 @@ export const OrderTPSL = (props: {
   reduceOnlyChecked?: boolean;
   onReduceOnlyChange?: (checked: boolean) => void;
 }) => {
-  // const [open, setOpen] = useState(false);
   const tpslFormRef = React.useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
   const { isMobile } = useScreen();
@@ -71,19 +59,16 @@ export const OrderTPSL = (props: {
       props.orderType !== OrderType.LIMIT &&
       props.orderType !== OrderType.MARKET
     ) {
-      // setOpen(false);
       props.onSwitchChanged(false);
-
-      // props.onCancelTPSL();
     }
   }, [props.orderType]);
 
   if (
-    (props.orderType !== OrderType.LIMIT &&
-      props.orderType !== OrderType.MARKET) ||
-    props.isReduceOnly
-  )
+    props.orderType !== OrderType.LIMIT &&
+    props.orderType !== OrderType.MARKET
+  ) {
     return null;
+  }
 
   const isSlPriceWarning =
     props.errors?.["sl_trigger_price"]?.["type"] ===
@@ -98,18 +83,11 @@ export const OrderTPSL = (props: {
             className="oui-h-[14px]"
             checked={props.switchState}
             disabled={
-              (props.orderType !== OrderType.LIMIT &&
-                props.orderType !== OrderType.MARKET) ||
-              props.isReduceOnly
+              props.orderType !== OrderType.LIMIT &&
+              props.orderType !== OrderType.MARKET
             }
             onCheckedChange={(checked) => {
-              // setOpen(checked);
               props.onSwitchChanged(checked);
-              // if (!checked) {
-              //   props.onCancelTPSL();
-              // } else {
-              //   props.onEnableTP_SL();
-              // }
             }}
           />
           <label htmlFor={"order_entry_tpsl"} className={"oui-text-xs"}>
