@@ -10,8 +10,29 @@ import {
   InfoCircleIcon,
 } from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
+import { Decimal } from "@orderly.network/utils";
+import { VaultStatus } from "../../types/vault";
 import { parseMarkdownLinks } from "../../utils/parseMarkdownLinks";
 import { VaultCardScript } from "./vaultCard.script";
+
+export const formatAllTimeReturn = (
+  status: VaultStatus,
+  vaultAge: number | null,
+  lifetimeApy: number,
+): string => {
+  if (status === "pre_launch" || (vaultAge !== null && vaultAge < 7)) {
+    return "--";
+  }
+  if (lifetimeApy > 100) {
+    return ">10000%";
+  }
+  return (
+    new Decimal(lifetimeApy)
+      .mul(100)
+      .toDecimalPlaces(2, Decimal.ROUND_UP)
+      .toFixed(2) + "%"
+  );
+};
 
 export const VaultCard: FC<VaultCardScript> = (props) => {
   const {
@@ -30,6 +51,16 @@ export const VaultCard: FC<VaultCardScript> = (props) => {
 
   const { t } = useTranslation();
   const { isMobile } = useScreen();
+
+  const formattedAllTimeReturn = useMemo(
+    () =>
+      formatAllTimeReturn(
+        vaultInfo.status,
+        vaultInfo.vault_age,
+        vaultInfo.lifetime_apy,
+      ),
+    [vaultInfo.status, vaultInfo.vault_age, vaultInfo.lifetime_apy],
+  );
 
   // Get status tag config
   const getStatusTag = () => {
@@ -182,14 +213,7 @@ export const VaultCard: FC<VaultCardScript> = (props) => {
               />
               <VaultInfoItem
                 label={t("vaults.card.allTimeReturn")}
-                value={
-                  vaultInfo.status === "pre_launch" ||
-                  (vaultInfo.vault_age !== null && vaultInfo.vault_age < 7)
-                    ? "--"
-                    : vaultInfo.lifetime_apy > 100
-                      ? ">10000%"
-                      : (vaultInfo.lifetime_apy * 100).toFixed(2) + "%"
-                }
+                value={formattedAllTimeReturn}
                 textProps={{
                   color: "brand",
                   type: "gradient",

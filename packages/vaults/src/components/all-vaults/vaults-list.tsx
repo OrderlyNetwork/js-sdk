@@ -12,6 +12,7 @@ import {
 import { AuthGuard } from "@orderly.network/ui-connector";
 import { VaultInfo } from "../../types/vault";
 import { useVaultCardScript } from "../vault-card/vaultCard.script";
+import { formatAllTimeReturn } from "../vault-card/vaultCard.ui";
 
 type SortField = "tvl" | "apy" | "deposits" | "pnl" | "balance";
 type SortDirection = "asc" | "desc";
@@ -216,6 +217,16 @@ const VaultListRow: FC<{ vault: VaultInfo }> = ({ vault }) => {
 
   const statusTag = getStatusTag();
 
+  const formattedAllTimeReturn = useMemo(
+    () =>
+      formatAllTimeReturn(
+        vaultInfo.status,
+        vaultInfo.vault_age,
+        vaultInfo.lifetime_apy,
+      ),
+    [vaultInfo.status, vaultInfo.vault_age, vaultInfo.lifetime_apy],
+  );
+
   const supportVaultsList = useMemo(() => {
     const chains = Array.isArray(vaultInfo?.supported_chains)
       ? vaultInfo.supported_chains
@@ -333,12 +344,7 @@ const VaultListRow: FC<{ vault: VaultInfo }> = ({ vault }) => {
       {/* All-time return */}
       <div className="oui-relative oui-z-10">
         <Text.gradient className="oui-text-sm oui-font-semibold" color="brand">
-          {vaultInfo.status === "pre_launch" ||
-          (vaultInfo.vault_age !== null && vaultInfo.vault_age < 7)
-            ? "--"
-            : vaultInfo.lifetime_apy > 100
-              ? ">10000%"
-              : `${(vaultInfo.lifetime_apy * 100).toFixed(2)}%`}
+          {formattedAllTimeReturn}
         </Text.gradient>
       </div>
 
