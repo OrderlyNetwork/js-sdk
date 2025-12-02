@@ -34,7 +34,7 @@ export const AnnouncementContent: FC<{
   return (
     <div
       className={cn(
-        "p-5 oui-flex oui-flex-col oui-space-y-1",
+        "oui-flex oui-flex-col oui-space-y-1",
         props.showDivider &&
           "[&>*:not(:first-child)]:oui-border-t [&>*:not(:first-child)]:oui-border-line-12  [&>*:not(:first-child)]:oui-pt-1",
       )}
