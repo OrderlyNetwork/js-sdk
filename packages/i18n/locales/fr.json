@@ -1032,6 +1032,8 @@
   "vaults.card.orderly.description": "Obtenez des rendements passifs sans effort, aucune expertise en trading requise. OmniCoffre déploie des stratégies de tenue de marché, prend en charge les liquidations et accumule les frais de plateforme.",
   "vaults.card.tvl": "TVL",
   "vaults.card.apy": "APY 30J",
+  "vaults.card.allTimeReturn": "Rendement historique",
+  "vaults.card.allTimeReturnTooltip": "Rendements annualisés utilisant toutes les données historiques depuis la création du coffre. Disponible une fois que le coffre a au moins 7 jours.",
   "vaults.card.myDeposits": "Mes dépôts",
   "vaults.card.myEarnings": "Mes gains",
   "vaults.card.accountBalance": "Solde du compte",

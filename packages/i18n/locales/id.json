@@ -1032,6 +1032,8 @@
   "vaults.card.orderly.description": "Dapatkan hasil pasif dengan mudah, tidak memerlukan keahlian trading. OmniBrankas menerapkan strategi market-making, mengambil likuidasi, dan mengakumulasi biaya platform.",
   "vaults.card.tvl": "TVL",
   "vaults.card.apy": "APY 30H",
+  "vaults.card.allTimeReturn": "Imbal hasil sepanjang waktu",
+  "vaults.card.allTimeReturnTooltip": "Imbal hasil yang telah dianualkan dengan menggunakan semua data historis sejak brankas dibuat. Tersedia setelah brankas berusia minimal 7 hari.",
   "vaults.card.myDeposits": "Deposit saya",
   "vaults.card.myEarnings": "Pendapatan saya",
   "vaults.card.accountBalance": "Saldo akun",

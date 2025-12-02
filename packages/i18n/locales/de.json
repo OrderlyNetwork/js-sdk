@@ -1032,6 +1032,8 @@
   "vaults.card.orderly.description": "Erzielen Sie mühelos passive Erträge, ohne Handelserfahrung erforderlich. OmniTresor setzt Market-Making-Strategien ein, übernimmt Liquidationen und sammelt Plattformgebühren.",
   "vaults.card.tvl": "TVL",
   "vaults.card.apy": "30T APY",
+  "vaults.card.allTimeReturn": "Historische Rendite",
+  "vaults.card.allTimeReturnTooltip": "Annualisierte Rendite basierend auf allen historischen Daten seit Auflegung des Tresors. Verfügbar, nachdem der Tresor mindestens 7 Tage besteht.",
   "vaults.card.myDeposits": "Meine Einlagen",
   "vaults.card.myEarnings": "Meine Erträge",
   "vaults.card.accountBalance": "Kontosaldo",

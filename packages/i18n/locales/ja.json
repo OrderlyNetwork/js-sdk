@@ -1032,6 +1032,8 @@
   "vaults.card.orderly.description": "取引の専門知識不要で簡単にパッシブ収益を獲得。オムニボールトはマーケットメイキング戦略を展開し、清算を引き受け、プラットフォーム手数料を蓄積します。",
   "vaults.card.tvl": "TVL",
   "vaults.card.apy": "30日APY",
+  "vaults.card.allTimeReturn": "全期間リターン",
+  "vaults.card.allTimeReturnTooltip": "ボールト開始以来のすべての履歴データに基づいて算出した年率換算リターンです。ボールト運用開始から7日経過後に利用可能になります。",
   "vaults.card.myDeposits": "私の預金",
   "vaults.card.myEarnings": "私の収益",
   "vaults.card.accountBalance": "アカウント残高",

@@ -1032,6 +1032,8 @@
   "vaults.card.orderly.description": "Ticaret uzmanlığı gerektirmeden zahmetsizce pasif getiri elde edin. OmniKasa piyasa yapıcı stratejiler uygular, likidasyonları üstlenir ve platform ücretlerini biriktir.",
   "vaults.card.tvl": "TVL",
   "vaults.card.apy": "30G APY",
+  "vaults.card.allTimeReturn": "Tarihsel getiri",
+  "vaults.card.allTimeReturnTooltip": "Kasanın oluşturulduğu günden itibaren tüm geçmiş verileri kullanan yıllıklandırılmış getiriler. Yalnızca kasa en az 7 günlük olduğunda kullanılabilir.",
   "vaults.card.myDeposits": "Yatırımlarım",
   "vaults.card.myEarnings": "Kazançlarım",
   "vaults.card.accountBalance": "Hesap bakiyesi",

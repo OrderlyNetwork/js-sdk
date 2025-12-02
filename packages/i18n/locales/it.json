@@ -1032,6 +1032,8 @@
   "vaults.card.orderly.description": "Ottieni rendimenti passivi senza sforzo, non è richiesta esperienza di trading. OmniCaveau implementa strategie di market-making, gestisce liquidazioni e accumula commissioni della piattaforma.",
   "vaults.card.tvl": "TVL",
   "vaults.card.apy": "APY 30G",
+  "vaults.card.allTimeReturn": "Rendimento storico",
+  "vaults.card.allTimeReturnTooltip": "Rendimenti annualizzati che utilizzano tutti i dati storici dalla creazione del vault. Disponibile dopo che il vault ha almeno 7 giorni.",
   "vaults.card.myDeposits": "I miei depositi",
   "vaults.card.myEarnings": "I miei guadagni",
   "vaults.card.accountBalance": "Saldo del conto",

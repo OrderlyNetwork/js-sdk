@@ -342,6 +342,12 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
     setHasAdvancedTPSLResult(false);
   }, [props.symbol]);
 
+  const showReduceOnlySection =
+    (isMobile &&
+      formattedOrder.order_type !== OrderType.LIMIT &&
+      formattedOrder.order_type !== OrderType.MARKET) ||
+    !isMobile;
+
   const showSoundSection =
     Boolean(notification?.orderFilled?.media) &&
     (notification?.orderFilled?.displayInOrderEntry ?? true);
@@ -489,7 +495,6 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
                 ? { ...errors, ...props.slPriceError }
                 : null
             }
-            isReduceOnly={formattedOrder.reduce_only}
             setOrderValue={setOrderValue}
             reduceOnlyChecked={formattedOrder.reduce_only ?? false}
             onReduceOnlyChange={(checked) => {
@@ -520,11 +525,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           />
         )}
 
-        {((isMobile &&
-          ((formattedOrder.order_type !== OrderType.LIMIT &&
-            formattedOrder.order_type !== OrderType.MARKET) ||
-            formattedOrder.reduce_only)) ||
-          !isMobile) && (
+        {showReduceOnlySection && (
           <Flex justify={"between"} itemAlign={"center"} className="oui-mt-2">
             <ReduceOnlySwitch
               checked={formattedOrder.reduce_only ?? false}

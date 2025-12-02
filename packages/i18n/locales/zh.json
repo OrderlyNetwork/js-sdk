@@ -1032,6 +1032,8 @@
   "vaults.card.orderly.description": "轻松获得被动收益，无需交易专业知识。全能金库部署做市策略，承担清算，并累积平台费用。",
   "vaults.card.tvl": "TVL",
   "vaults.card.apy": "30天年化收益率",
+  "vaults.card.allTimeReturn": "历史年化收益率",
+  "vaults.card.allTimeReturnTooltip": "基于金库自成立以来的全部历史数据计算的年化收益率。仅在金库成立满 7 天后可用。",
   "vaults.card.myDeposits": "我的存款",
   "vaults.card.myEarnings": "我的收益",
   "vaults.card.accountBalance": "账户余额",

@@ -1032,6 +1032,8 @@
   "vaults.card.orderly.description": "Verdien moeiteloos passief rendement, geen handelservaring vereist. OmniKluis implementeert market-making strategieën, neemt liquidaties aan en accumuleert platformkosten.",
   "vaults.card.tvl": "TVL",
   "vaults.card.apy": "30D APY",
+  "vaults.card.allTimeReturn": "Historisch rendement",
+  "vaults.card.allTimeReturnTooltip": "Geannualiseerd rendement op basis van alle historische gegevens sinds de start van de kluis. Beschikbaar nadat de kluis minstens 7 dagen bestaat.",
   "vaults.card.myDeposits": "Mijn stortingen",
   "vaults.card.myEarnings": "Mijn verdiensten",
   "vaults.card.accountBalance": "Accountsaldo",
