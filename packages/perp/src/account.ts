@@ -7,6 +7,9 @@ export type ResultOptions = {
 };
 
 export type TotalValueInputs = {
+  /**
+   * @description Total unsettled PNL of user account
+   */
   totalUnsettlementPnL: number;
 
   USDCHolding: number;
@@ -17,7 +20,34 @@ export type TotalValueInputs = {
 };
 
 /**
- * User's total asset value (denominated in USDC), including assets that cannot be used as collateral.
+ * @formulaId totalValue
+ * @name Total Value
+ * @formula Total Value = total_holding + total unsettlement PNL, total_holding = usdc balance.holding + SUM(non-usdc balance.holding * mark price)
+ * @description
+ *
+ * ## Definition
+ *
+ * **Total Value** = User's total asset value (denominated in USDC), including assets that cannot be used as collateral
+ *
+ * **Total holding** = Sum of all holding quantities in the user's account
+ *
+ * **usdc balance.holding** = USDC holding quantity
+ *
+ * **non-usdc balance.holding * mark price** = Value of non-USDC asset holdings (denominated in USDC)
+ *
+ * **holding**: Asset quantity held by the user, from `/v1/client/holding` or v2 Websocket API | Balance
+ *
+ * **mark price**: Current price of the asset, from v2 Websocket API | Balance
+ *
+ * **total unsettlement PNL** = Sum of user's account unsettled PNL
+ *
+ * ## Example
+ *
+ * ```
+ * total_holding = 2000 + 1000 * 1.001 = 3001
+ * Total Value = 3001 - 18.34 = 2982.66
+ * total unsettlement PNL = -18.34
+ * ```
  */
 export function totalValue(inputs: TotalValueInputs): Decimal {
   const { totalUnsettlementPnL, USDCHolding, nonUSDCHolding } = inputs;
@@ -27,17 +57,82 @@ export function totalValue(inputs: TotalValueInputs): Decimal {
   return nonUSDCHoldingValue.add(USDCHolding).add(totalUnsettlementPnL);
 }
 
-/**
- * Total value of available collateral in the user's account (denominated in USDC).
- */
 export type FreeCollateralInputs = {
   // Total collateral
   totalCollateral: Decimal;
   // Total initial margin with orders
   totalInitialMarginWithOrders: number;
 };
+
 /**
- * Calculate free collateral.
+ * @formulaId freeCollateral
+ * @name Free Collateral
+ * @formula Free Collateral = Total_collateral_value - total_initial_margin_with_orders,Total_collateral_value,
+ * total_initial_margin_with_orders = sum ( position_notional_with_orders_i * IMR_i (with_orders)),
+ * IMR_i (with_orders) = Max(1 / Max Account Leverage, Base IMR i, IMR Factor i * Abs(Position Notional i + Order Notional i)^(4/5)),
+ * position_notional_with_orders_i = abs( mark_price_i * position_qty_with_orders_i),
+ * position_qty_with_orders_i = max[ abs(position_qty_i + sum_position_qty_buy_orders_i), abs(position_qty_i - sum_position_qty_sell_orders_i)]
+ * @description
+ *
+ * ## Definition
+ *
+ * **Free collateral**: Total value of available margin in the user's account (denominated in USDC)
+ *
+ * **Total_collateral_value**: Total value of collateral assets in the user's account (denominated in USDC)
+ *
+ * **total_initial_margin_with_orders**: Total initial margin used by the user (including positions and orders)
+ *
+ * **initial_margin_i with order**: Initial margin for symbol i (considering both positions and orders)
+ *
+ * **IMR_i (with_orders)**: Initial margin rate for a single symbol (considering both position and order notional)
+ *
+ * **Max Account Leverage**: Maximum leverage set by the user, from `/v1/client/info.max_leverage`
+ *
+ * **Base IMR i**: Base initial margin rate for a single symbol, from `/v1/public/info`
+ *
+ * **IMR Factor i**: IMR calculation factor for a single symbol, from `v1/client/info`
+ *
+ * **Position Notional i**: Sum of position notional for a single symbol
+ *
+ * **Order Notional i**: Sum of order notional for a single symbol
+ *
+ * **position_notional_with_orders_i**: Sum of position and order notional for a single symbol
+ *
+ * **mark_price_i**: Mark price for a single symbol
+ *
+ * **position_qty_with_orders_i**: Sum of position and order quantity for a single symbol
+ *
+ * **position_qty_i**: Position quantity for a single symbol
+ *
+ * **sum_position_qty_buy_orders_i**: Sum of long order quantity for a single symbol [algo orders should be ignored]
+ *
+ * **sum_position_qty_sell_orders_i**: Sum of short order quantity for a single symbol [algo orders should be ignored]
+ *
+ * ## Example
+ *
+ * ```
+ * BTC-PERP position_qty_with_orders_i = max[ abs(0.2+0.3) , abs(0.2-0.5) ] = 0.5
+ * ETH-PERP position_qty_with_orders_i = max[ abs(-3+0), abs(-3+0)] = 3
+ *
+ * BTC-PERP position_notional_with_orders_i = 0.5 * 25986.2 = 12993.1
+ * ETH-PERP position_notional_with_orders_i = 3 * 1638.41 = 4915.23
+ *
+ * BTC-PERP IMR_i (with_orders) = Max(
+ *   1 / Max Account Leverage = 1 / 10 = 0.1
+ *   Base IMR i = 0.1
+ *   IMR Factor i * Abs(Position Notional i + Order Notional i)^(4/5)) = 0.0000002512 * Abs(5197.2 + 7200 - 14000)^(4/5) = 9.20286609e-5
+ * ) = 0.1
+ *
+ * ETH-PERP IMR_i (with_orders) = Max(
+ *   1 / Max Account Leverage = 1 / 10 = 0.1
+ *   Base IMR i = 0.1
+ *   IMR Factor i * Abs(Position Notional i + Order Notional i)^(4/5)) = 0.0000003754 * Abs(-4915.23)^(4/5) = 0.00649875988
+ * ) = 0.1
+ *
+ * total_initial_margin_with_orders = 12993.1 * 0.1 + 4915.23 * 0.1 = 1790.833
+ * Total_collateral_value = 1981.66
+ * Free Collateral = 1981.66 - 1790.833 = 190.82700
+ * ```
  */
 export function freeCollateral(inputs: FreeCollateralInputs): Decimal {
   const value = inputs.totalCollateral.sub(inputs.totalInitialMarginWithOrders);
@@ -53,11 +148,40 @@ export type TotalCollateralValueInputs = {
     collateralCap: number;
     collateralRatio: Decimal;
   }[];
+  /**
+   * Sum of user's account unsettled PNL
+   */
   unsettlementPnL: number;
 };
 
 /**
- * Calculate total collateral.
+ * @formulaId totalCollateral
+ * @name Total Collateral
+ * @formula Total collateral = usdc balance.holding + SUM(non-usdc balance.holding * mark price * discount) + total unsettlement PNL
+ * @description
+ *
+ * ## Definition
+ *
+ * **discount**: Collateral substitution rate
+ *
+ * **Total collateral**: Total value of collateral assets in the user's account (denominated in USDC)
+ *
+ * **usdc balance.holding**: USDC holding quantity
+ *
+ * **non-usdc balance.holding * mark price**: Value of non-USDC asset holdings (denominated in USDC)
+ *
+ * **holding**: Asset quantity held by the user, from `/v1/client/holding` or v2 Websocket API | Balance
+ *
+ * **mark price**: Current price of the asset, from v2 Websocket API | Balance
+ *
+ * **total unsettlement PNL**: Sum of user's account unsettled PNL
+ *
+ * ## Example
+ *
+ * ```
+ * Total collateral = 2000 + 1000 * 1.001 * 0 - 18.34 = 1981.66
+ * total unsettlement PNL = -18.34
+ * ```
  */
 export function totalCollateral(inputs: TotalCollateralValueInputs): Decimal {
   const { USDCHolding, nonUSDCHolding, unsettlementPnL } = inputs;
@@ -123,6 +247,8 @@ export type IMRInputs = {
 };
 
 /**
+ * @formulaId imr
+ * @description
  * Initial margin rate for a symbol.
  * Max(1 / Max Account Leverage, Base IMR i, IMR Factor i * Abs(Position Notional i + Order Notional i)^(4/5))
  */
@@ -478,7 +604,9 @@ export function otherIMs(inputs: OtherIMsInputs): number {
 export type MaxQtyInputs = {
   symbol: string;
 
-  // Maximum quantity limit for opening a single position, /v1/public/info.base_max
+  /**
+   * @description Maximum quantity limit for opening a single position, /v1/public/info.base_max
+   */
   baseMaxQty: number;
   /**
    * Total collateral of the user (denominated in USDC), can be calculated from totalCollateral.
@@ -505,7 +633,165 @@ export type MaxQtyInputs = {
 };
 
 /**
- * Maximum order quantity.
+ * @formulaId maxQty
+ * @name Max Order QTY
+ * @description
+ * ## Max Long Quantity Formula
+ *
+ * ```
+ * max long qty = MIN (
+ *   base max,
+ *   (((Total_collateral_value - Other_IMs) / (Max(1 / Max Account Leverage, Base IMR i) + 2 * futures_take_fee_rate * 0.0001) / mark_price_i) * 0.995 - position_qty_this_symbol - sum_buy_order_qty_this_symbol),
+ *   ((((Total_collateral_value - Other_IMs) / IMR Factor i)^(1/1.8)) / mark_price_i - position_qty_this_symbol - sum_buy_order_qty_this_symbol) / (1 + 2 * futures_take_fee_rate * 0.0001) * 0.995
+ * )
+ * ```
+ *
+ * ## Max Short Quantity Formula
+ *
+ * ```
+ * max short qty = MIN (
+ *   base max,
+ *   (((Total_collateral_value - Other_IMs) / (Max(1 / Max Account Leverage, Base IMR i) + 2 * futures_take_fee_rate * 0.0001) / mark_price_i) * 0.995 + position_qty_this_symbol - sum_sell_order_qty_this_symbol),
+ *   ((((Total_collateral_value - Other_IMs) / IMR Factor i)^(1/1.8)) / mark_price_i + position_qty_this_symbol - sum_sell_order_qty_this_symbol) / (1 + 2 * futures_take_fee_rate * 0.0001) * 0.995
+ * )
+ * ```
+ *
+ * ## Reduce Only Mode
+ *
+ * When reduce only is enabled:
+ * - If `position_qty_i > 0`: max long qty = 0, max short qty = abs(position_qty_i)
+ * - If `position_qty_i < 0`: max long qty = abs(position_qty_i), max short qty = 0
+ * - If `position_qty_i = 0`: max long qty = 0, max short qty = 0
+ *
+ * ## Variable Definitions
+ *
+ * | Variable | Description | API Reference |
+ * |----------|-------------|---------------|
+ * | `max long qty` | Maximum long quantity for current symbol | |
+ * | `max short qty` | Maximum short quantity for current symbol | |
+ * | `base_max` | Maximum quantity limit for opening a single position | `/v1/public/info.base_max` |
+ * | `Total_collateral_value` | Total value of collateral assets in user account (USDC denominated) | |
+ * | `Other_IMs` | Initial margin occupied by all other symbols excluding current symbol | |
+ * | `IMR_i (with_orders)` | Initial margin rate for a single symbol (considering both position/orders notional) | |
+ * | `Max Account Leverage` | Maximum leverage set by user | `/v1/client/info.max_leverage` |
+ * | `Base IMR i` | Base initial margin rate for a single symbol | `/v1/public/info` |
+ * | `IMR Factor i` | IMR calculation factor for a single symbol | `v1/client/info` |
+ * | `Position Notional i` | Sum of position notional for a single symbol | |
+ * | `Order Notional i` | Sum of order notional for a single symbol | |
+ * | `position_notional_with_orders_i` | Sum of position/orders notional for a single symbol | |
+ * | `mark_price_i` | Mark price for a single symbol | |
+ * | `position_qty_with_orders_i` | Sum of position/orders quantity for a single symbol | |
+ * | `position_qty_i` | Position quantity for a single symbol | |
+ * | `sum_position_qty_buy_orders_i` | Sum of long order quantity for a single symbol [algo orders ignored] | |
+ * | `sum_position_qty_sell_orders_i` | Sum of short order quantity for a single symbol [algo orders ignored] | |
+ * | `futures_take_fee_rate` | User's futures taker fee rate | `GET /v1/client/info` |
+ *
+ * ## Calculation Details
+ *
+ * ```
+ * Other_IMs = sum(position_notional_with_orders_i * IMR_i (with_orders)) // excluding current symbol
+ *
+ * IMR_i (with_orders) = Max(1 / Max Account Leverage, Base IMR i, IMR Factor i * Abs(Position Notional i + Order Notional i)^(4/5))
+ *
+ * position_notional_with_orders_i = abs(mark_price_i * position_qty_with_orders_i)
+ *
+ * position_qty_with_orders_i = max[abs(position_qty_i + sum_position_qty_buy_orders_i), abs(position_qty_i - sum_position_qty_sell_orders_i)]
+ * ```
+ *
+ * ## Example Calculation
+ *
+ * **Given:**
+ * - `futures_take_fee_rate = 8`
+ * - `BTC base max = 20`
+ * - `Total_collateral_value = 1981.66`
+ * - `Other_IMs = ETH Initial Margin = 4915.23 * 0.1 = 491.523`
+ * - `BTC mark_price_i = 25986.2`
+ * - `BTC position_qty_this_symbol = 0.2`
+ * - `sum_buy_order_qty_this_symbol = 0.3`
+ * - `sum_sell_order_qty_this_symbol = -0.5`
+ *
+ * **Max Long Quantity:**
+ * ```
+ * max long qty = MIN(
+ *   20 BTC,
+ *   ((1981.66 - 491.523) / (0.1 + 2 * 8 * 0.0001) / 25986.2 * 0.995 - 0.2 - 0.3) = 0.0615815026 BTC,
+ *   ((((1981.66 - 491.523) / 0.0000002512)^(1/1.8)) / 25986.2 - 0.2 - 0.3) / (1 + 2 * 8 * 0.0001) * 0.995 = 9.78216039 BTC
+ * ) = 0.0615815026 BTC
+ * ```
+ *
+ * **Max Short Quantity:**
+ * ```
+ * max short qty = MIN(
+ *   20 BTC,
+ *   ((1981.66 - 491.523) / (0.1 + 2 * 8 * 0.0001) / 25986.2 * 0.995 + 0.2 - 0.5) = 0.261581503 BTC,
+ *   ((((1981.66 - 491.523) / 0.0000002512)^(1/1.8)) / 25986.2 + 0.2 - 0.5) / (1 + 2 * 8 * 0.0001) * 0.995 = 9.98084249726 BTC
+ * ) = 0.261581503 BTC
+ * ```
+ *
+ * ## Additional Examples
+ *
+ * **Base max qty calculation:**
+ * ```
+ * Base max qty = (1981.66 - 491.523) / (0.1 + 2 * 8 * 0.0001) / 25986.2 * 0.995 = 0.561581503 BTC
+ * ```
+ *
+ * **Different position scenarios:**
+ *
+ * 1. **Short position -0.3 BTC:**
+ *    - max long qty = 0.561581503 - (-0.3) = 0.861581503
+ *    - max short qty = 0.561581503 + (-0.3) = 0.261581503
+ *
+ * 2. **Short position -0.3 BTC + sell orders 0.1:**
+ *    - max long qty = 0.561581503 - (-0.3) = 0.861581503
+ *    - max short qty = 0.561581503 + (-0.3) - 0.1 = 0.161581503
+ *
+ * 3. **Long position 0.3 BTC + buy orders 0.2 + sell orders 0.1:**
+ *    - max long qty = 0.561581503 - 0.3 - 0.2 = 0.061581503
+ *    - max short qty = 0.561581503 + 0.3 - 0.1 = 0.761581503
+ *
+ * ## Special Case: Insufficient Collateral
+ *
+ * When `totalCollatValue <= newTotalIM`:
+ *
+ * ```
+ * newOrderSize_iter = ITERATE() return max(0, newOrderSize_iter * 99.5% + others)
+ * ```
+ *
+ * **ITERATE() Algorithm:**
+ * ```
+ * ITERATE() {
+ *     iteratorLeverage = min(1 / Max Account Leverage, Base IMR i)
+ *     iteratorStep = 2
+ *
+ *     // First iteration (30 times)
+ *     for (i = 0; i < 30; i++) {
+ *         iteratorLeverage = max(0, iteratorLeverage - iteratorStep)
+ *         newOrderSize1 = (adjustedCollateral - othersIM) * iteratorLeverage / markPrice
+ *         calculate afterTradeIM
+ *         if (adjustedCollateral >= afterTradeIM) break
+ *     }
+ *
+ *     leftLeverage = iteratorLeverage
+ *     rightLeverage = min(maxLeverage_account, leftLeverage + iteratorStep)
+ *
+ *     // Binary search (30 times)
+ *     for (i = 0; i < 30; i++) {
+ *         midLeverage = (leftLeverage + rightLeverage) / 2
+ *         newOrderSize2 = (adjustedCollateral - othersIM) * midLeverage / markPrice
+ *         calculate afterTradeIM
+ *         precision = (adjustedCollateral - afterTradeIM) / adjustedCollateral
+ *
+ *         if (adjustedCollateral > afterTradeIM) {
+ *             leftLeverage = midLeverage
+ *             if (0 <= precision <= 0.5%) break
+ *         } else {
+ *             rightLeverage = midLeverage
+ *         }
+ *     }
+ *
+ *     return newOrderSize2
+ * }
+ * ```
  */
 export function maxQty(
   side: OrderSide,
@@ -687,7 +973,24 @@ export type TotalUnrealizedROIInputs = {
 };
 
 /**
- * totalUnrealizedROI
+ * @formulaId totalUnrealizedROI
+ * @name Total Unrealized ROI
+ * @formula Total Unrealized ROI = Total Unrealized PNL / ( Total Value - Total Unrealized PNL ) * 100%
+ * @description
+ *
+ * ## Definition
+ *
+ * **Total Unrealized PNL** = Sum of unrealized profit and loss for all current positions of the user
+ *
+ * **Total Value** = User's total asset value (denominated in USDC), including assets that cannot be used as collateral
+ *
+ * ## Example
+ *
+ * ```
+ * Total Unrealized ROI = 200.53 / ( 2982.66 - 200.53 ) * 100% = 7.21%
+ * Total Unrealized PNL = 200.53
+ * Total Value = 2982.66
+ * ```
  */
 export function totalUnrealizedROI(inputs: TotalUnrealizedROIInputs) {
   const { totalUnrealizedPnL, totalValue } = inputs;
@@ -728,7 +1031,35 @@ export type AccountMMRInputs = {
 };
 
 /**
- * total maintenance margin ratio
+ * @formulaId mmr
+ * @name Total Maintenance Margin Ratio
+ * @formula Total Maintenance Margin Ratio = sum(Position maintenance margin) / total_position_notional * 100%, total_position_notional = sum(abs(position_qty_i * mark_price_i))
+ * @description
+ *
+ * ## Definition
+ *
+ * **Total Maintenance Margin Ratio** = User's account maintenance margin ratio
+ *
+ * **sum(Position maintenance margin)** = Total maintenance margin of all user positions (denominated in USDC)
+ *
+ * **total_position_notional** = Sum of notional value of current positions
+ *
+ * **position_qty_i** = Position quantity for a single symbol
+ *
+ * **mark_price_i** = Mark price for a single symbol
+ *
+ * ## Example
+ *
+ * ```
+ * Total Margin Ratio = 505.61 / 10112.43 * 100% = 4.99988628%
+ * total_position_notional = 10112.43
+ * abs(BTC position notional) = 5197.2
+ * abs(ETH position notional) = 4915.23
+ * sum(Position maintenance margin) = 505.61
+ * BTC position MM = 259.86
+ * ETH position MM = 245.75
+ * ```
+ *
  * @param inputs AccountMMRInputs
  * @returns number|null
  */
