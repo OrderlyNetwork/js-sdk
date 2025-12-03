@@ -6,19 +6,6 @@ export type ResultOptions = {
   dp: number;
 };
 
-export type TotalValueInputs = {
-  /**
-   * @description Total unsettled PNL of user account
-   */
-  totalUnsettlementPnL: number;
-
-  USDCHolding: number;
-  nonUSDCHolding: {
-    holding: number;
-    indexPrice: number;
-  }[];
-};
-
 /**
  * @formulaId totalValue
  * @name Total Value
@@ -49,20 +36,23 @@ export type TotalValueInputs = {
  * total unsettlement PNL = -18.34
  * ```
  */
-export function totalValue(inputs: TotalValueInputs): Decimal {
+export function totalValue(inputs: {
+  /**
+   * @description Total unsettled PNL of user account
+   */
+  totalUnsettlementPnL: number;
+  USDCHolding: number;
+  nonUSDCHolding: {
+    holding: number;
+    indexPrice: number;
+  }[];
+}): Decimal {
   const { totalUnsettlementPnL, USDCHolding, nonUSDCHolding } = inputs;
   const nonUSDCHoldingValue = nonUSDCHolding.reduce((acc, cur) => {
     return new Decimal(cur.holding).mul(cur.indexPrice).add(acc);
   }, zero);
   return nonUSDCHoldingValue.add(USDCHolding).add(totalUnsettlementPnL);
 }
-
-export type FreeCollateralInputs = {
-  // Total collateral
-  totalCollateral: Decimal;
-  // Total initial margin with orders
-  totalInitialMarginWithOrders: number;
-};
 
 /**
  * @formulaId freeCollateral
@@ -134,25 +124,14 @@ export type FreeCollateralInputs = {
  * Free Collateral = 1981.66 - 1790.833 = 190.82700
  * ```
  */
-export function freeCollateral(inputs: FreeCollateralInputs): Decimal {
+export function freeCollateral(inputs: {
+  totalCollateral: Decimal;
+  totalInitialMarginWithOrders: number;
+}): Decimal {
   const value = inputs.totalCollateral.sub(inputs.totalInitialMarginWithOrders);
   // free collateral cannot be less than 0
   return value.isNegative() ? zero : value;
 }
-
-export type TotalCollateralValueInputs = {
-  USDCHolding: number;
-  nonUSDCHolding: {
-    holding: number;
-    indexPrice: number;
-    collateralCap: number;
-    collateralRatio: Decimal;
-  }[];
-  /**
-   * Sum of user's account unsettled PNL
-   */
-  unsettlementPnL: number;
-};
 
 /**
  * @formulaId totalCollateral
@@ -183,7 +162,19 @@ export type TotalCollateralValueInputs = {
  * total unsettlement PNL = -18.34
  * ```
  */
-export function totalCollateral(inputs: TotalCollateralValueInputs): Decimal {
+export function totalCollateral(inputs: {
+  USDCHolding: number;
+  nonUSDCHolding: {
+    holding: number;
+    indexPrice: number;
+    collateralCap: number;
+    collateralRatio: Decimal;
+  }[];
+  /**
+   * Sum of user's account unsettled PNL
+   */
+  unsettlementPnL: number;
+}): Decimal {
   const { USDCHolding, nonUSDCHolding, unsettlementPnL } = inputs;
   const nonUSDCHoldingValue = nonUSDCHolding.reduce<Decimal>((acc, cur) => {
     const finalHolding = Math.min(cur.holding, cur.collateralCap);
@@ -198,32 +189,26 @@ export function totalCollateral(inputs: TotalCollateralValueInputs): Decimal {
 
 export function initialMarginWithOrder() {}
 
-export type PositionNotionalWithOrderInputs = {
-  markPrice: number;
-  positionQtyWithOrders: number;
-};
 /**
  * Sum of notional value for a symbol's position and orders.
  */
-export function positionNotionalWithOrder_by_symbol(
-  inputs: PositionNotionalWithOrderInputs,
-): Decimal {
+export function positionNotionalWithOrder_by_symbol(inputs: {
+  markPrice: number;
+  positionQtyWithOrders: number;
+}): Decimal {
   return new Decimal(inputs.markPrice).mul(inputs.positionQtyWithOrders);
 }
 
-export type PositionQtyWithOrderInputs = {
+/**
+ *  Sum of position quantity and orders quantity for a symbol.
+ */
+export function positionQtyWithOrders_by_symbol(inputs: {
   positionQty: number;
   // Total quantity of buy orders for a symbol
   buyOrdersQty: number;
   // Total quantity of sell orders for a symbol
   sellOrdersQty: number;
-};
-/**
- *  Sum of position quantity and orders quantity for a symbol.
- */
-export function positionQtyWithOrders_by_symbol(
-  inputs: PositionQtyWithOrderInputs,
-): number {
+}): number {
   const { positionQty, buyOrdersQty, sellOrdersQty } = inputs;
   const positionQtyDecimal = new Decimal(positionQty);
   const qty = Math.max(
@@ -234,7 +219,13 @@ export function positionQtyWithOrders_by_symbol(
   return qty;
 }
 
-export type IMRInputs = {
+/**
+ * @formulaId imr
+ * @description
+ * Initial margin rate for a symbol.
+ * Max(1 / Max Account Leverage, Base IMR i, IMR Factor i * Abs(Position Notional i + Order Notional i)^(4/5))
+ */
+export function IMR(inputs: {
   /**
    * effective max leverage
    */
@@ -244,15 +235,7 @@ export type IMRInputs = {
   positionNotional: number;
   ordersNotional: number;
   IMR_factor_power?: number;
-};
-
-/**
- * @formulaId imr
- * @description
- * Initial margin rate for a symbol.
- * Max(1 / Max Account Leverage, Base IMR i, IMR Factor i * Abs(Position Notional i + Order Notional i)^(4/5))
- */
-export function IMR(inputs: IMRInputs): number {
+}): number {
   const {
     maxLeverage,
     baseIMR,
@@ -344,22 +327,19 @@ export function getPositonsAndOrdersNotionalBySymbol(inputs: {
     .toNumber();
 }
 
-export type TotalInitialMarginWithOrdersInputs = {
+/**
+ * @deprecated
+ * Calculate the total initial margin used by the user (including positions and orders).
+ */
+export function totalInitialMarginWithOrders(inputs: {
   positions: API.Position[];
   orders: API.Order[];
   // account: API.AccountInfo;
   markPrices: { [key: string]: number };
   symbolInfo: any;
   IMR_Factors: { [key: string]: number };
-} & Pick<IMRInputs, "maxLeverage">;
-
-/**
- * @deprecated
- * Calculate the total initial margin used by the user (including positions and orders).
- */
-export function totalInitialMarginWithOrders(
-  inputs: TotalInitialMarginWithOrdersInputs,
-): number {
+  maxLeverage: number;
+}): number {
   const {
     positions,
     orders,
@@ -518,7 +498,10 @@ export function extractSymbols(
 
 // function otherIM(inputs: {}): number {}
 
-export type OtherIMsInputs = {
+/**
+ * Total margin used by other symbols (except the current symbol).
+ */
+export function otherIMs(inputs: {
   // the position list for other symbols except the current symbol
   positions: API.Position[];
   markPrices: { [key: string]: number };
@@ -528,11 +511,7 @@ export type OtherIMsInputs = {
   maxLeverage: number;
   symbolInfo: any;
   IMR_Factors: { [key: string]: number };
-};
-/**
- * Total margin used by other symbols (except the current symbol).
- */
-export function otherIMs(inputs: OtherIMsInputs): number {
+}): number {
   const {
     // orders,
     positions,
@@ -935,16 +914,15 @@ export function maxQtyByShort(
   }
 }
 
-export type TotalMarginRatioInputs = {
-  totalCollateral: number;
-  markPrices: { [key: string]: number };
-  positions: API.Position[];
-};
 /**
  * total margin ratio
  */
 export function totalMarginRatio(
-  inputs: TotalMarginRatioInputs,
+  inputs: {
+    totalCollateral: number;
+    markPrices: { [key: string]: number };
+    positions: API.Position[];
+  },
   dp?: number,
 ): number {
   const { totalCollateral, markPrices, positions } = inputs;
@@ -967,11 +945,6 @@ export function totalMarginRatio(
   return totalCollateralDecimal.div(totalPositionNotional).toNumber();
 }
 
-export type TotalUnrealizedROIInputs = {
-  totalUnrealizedPnL: number;
-  totalValue: number;
-};
-
 /**
  * @formulaId totalUnrealizedROI
  * @name Total Unrealized ROI
@@ -992,7 +965,10 @@ export type TotalUnrealizedROIInputs = {
  * Total Value = 2982.66
  * ```
  */
-export function totalUnrealizedROI(inputs: TotalUnrealizedROIInputs) {
+export function totalUnrealizedROI(inputs: {
+  totalUnrealizedPnL: number;
+  totalValue: number;
+}) {
   const { totalUnrealizedPnL, totalValue } = inputs;
 
   return new Decimal(totalUnrealizedPnL)
@@ -1010,25 +986,14 @@ export function currentLeverage(totalMarginRatio: number) {
   return 1 / totalMarginRatio;
 }
 
-export type AvailableBalanceInputs = {
+export function availableBalance(inputs: {
   USDCHolding: number;
   unsettlementPnL: number;
-};
-export function availableBalance(inputs: AvailableBalanceInputs) {
+}) {
   const { USDCHolding, unsettlementPnL } = inputs;
 
   return new Decimal(USDCHolding).add(unsettlementPnL).toNumber();
 }
-
-export type AccountMMRInputs = {
-  // Total Maintenance Margin of all positions of the user (USDC)
-  positionsMMR: number;
-  /**
-   * Notional sum of all positions,
-   * positions.totalNotional()
-   */
-  positionsNotional: number;
-};
 
 /**
  * @formulaId mmr
@@ -1063,7 +1028,15 @@ export type AccountMMRInputs = {
  * @param inputs AccountMMRInputs
  * @returns number|null
  */
-export function MMR(inputs: AccountMMRInputs): number | null {
+export function MMR(inputs: {
+  // Total Maintenance Margin of all positions of the user (USDC)
+  positionsMMR: number;
+  /**
+   * Notional sum of all positions,
+   * positions.totalNotional()
+   */
+  positionsNotional: number;
+}): number | null {
   // If the user does not have any positions, return null
   if (inputs.positionsNotional === 0) {
     return null;

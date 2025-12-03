@@ -47,26 +47,6 @@ export function orderFee(inputs: {
     .toNumber();
 }
 
-export type EstimatedLiquidationPriceInputs = {
-  totalCollateral: number;
-  markPrice: number;
-  baseMMR: number;
-  baseIMR: number;
-  IMR_Factor: number;
-  orderFee: number;
-  positions: {
-    position_qty: number;
-    mark_price: number;
-    symbol: string;
-    mmr: number;
-  }[];
-  newOrder: {
-    symbol: string;
-    qty: number;
-    price: number;
-  };
-};
-
 /**
  * @formulaId estLiqPrice
  * @name Est. Position liq. Price
@@ -154,7 +134,25 @@ export type EstimatedLiquidationPriceInputs = {
  * @param inputs
  * @returns
  */
-export function estLiqPrice(inputs: EstimatedLiquidationPriceInputs): number {
+export function estLiqPrice(inputs: {
+  totalCollateral: number;
+  markPrice: number;
+  baseMMR: number;
+  baseIMR: number;
+  IMR_Factor: number;
+  orderFee: number;
+  positions: {
+    position_qty: number;
+    mark_price: number;
+    symbol: string;
+    mmr: number;
+  }[];
+  newOrder: {
+    symbol: string;
+    qty: number;
+    price: number;
+  };
+}): number {
   const {
     positions,
     newOrder,
@@ -246,7 +244,12 @@ export function estLiqPrice(inputs: EstimatedLiquidationPriceInputs): number {
   return Math.max(0, price);
 }
 
-export type EstimatedLeverageInputs = {
+/**
+ * Estimated leverage
+ * @param inputs EstimtedLeverageInputs
+ * @returns number
+ */
+export function estLeverage(inputs: {
   totalCollateral: number;
   positions: Pick<
     orderUtils.PositionExt,
@@ -257,14 +260,7 @@ export type EstimatedLeverageInputs = {
     qty: number;
     price: number;
   };
-};
-
-/**
- * Estimated leverage
- * @param inputs EstimtedLeverageInputs
- * @returns number
- */
-export function estLeverage(inputs: EstimatedLeverageInputs): number | null {
+}): number | null {
   const { totalCollateral, positions, newOrder } = inputs;
   if (totalCollateral <= 0) {
     return null;

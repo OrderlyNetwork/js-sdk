@@ -44,15 +44,6 @@ export function totalNotional(positions: API.Position[]): number {
   }, 0);
 }
 
-export type UnrealPnLInputs = {
-  /** symbol mark price */
-  markPrice: number;
-  /** symbol open price */
-  openPrice: number;
-  /** symbol quantity */
-  qty: number;
-};
-
 /**
  * @formulaId unrealizedPnL
  * @description Calculates the unrealized profit or loss of a single position.
@@ -60,18 +51,18 @@ export type UnrealPnLInputs = {
  * @param inputs The inputs for calculating the unrealized profit or loss.
  * @returns The unrealized profit or loss of the position.
  */
-export function unrealizedPnL(inputs: UnrealPnLInputs): number {
+export function unrealizedPnL(inputs: {
+  /** symbol mark price */
+  markPrice: number;
+  /** symbol open price */
+  openPrice: number;
+  /** symbol quantity */
+  qty: number;
+}): number {
   return new Decimal(inputs.qty)
     .mul(inputs.markPrice - inputs.openPrice)
     .toNumber();
 }
-
-export type UnrealPnLROIInputs = {
-  positionQty: number;
-  openPrice: number;
-  IMR: number;
-  unrealizedPnL: number;
-};
 
 /**
  * @formulaId unrealizedPnLROI
@@ -108,7 +99,12 @@ export type UnrealPnLROIInputs = {
  * @param inputs The inputs for calculating the ROI.
  * @returns The ROI of the position's unrealized profit or loss.
  */
-export function unrealizedPnLROI(inputs: UnrealPnLROIInputs): number {
+export function unrealizedPnLROI(inputs: {
+  positionQty: number;
+  openPrice: number;
+  IMR: number;
+  unrealizedPnL: number;
+}): number {
   const { openPrice, IMR } = inputs;
 
   if (
@@ -452,12 +448,6 @@ export const liqPrice = (inputs: {
   }
 };
 
-export type MMInputs = {
-  positionQty: number;
-  markPrice: number;
-  MMR: number;
-};
-
 /**
  * @formulaId maintenanceMargin
  * @name Position maintenance margin
@@ -494,19 +484,15 @@ export type MMInputs = {
  * @param inputs The inputs for calculating the maintenance margin.
  * @returns The maintenance margin of the position.
  */
-export function maintenanceMargin(inputs: MMInputs) {
+export function maintenanceMargin(inputs: {
+  positionQty: number;
+  markPrice: number;
+  MMR: number;
+}) {
   const { positionQty, markPrice, MMR } = inputs;
 
   return new Decimal(positionQty).mul(markPrice).mul(MMR).abs().toNumber();
 }
-
-export type UnsettlementPnLInputs = {
-  positionQty: number;
-  markPrice: number;
-  costPosition: number;
-  sumUnitaryFunding: number;
-  lastSumUnitaryFunding: number;
-};
 
 /**
  * @formulaId unsettlementPnl
@@ -531,7 +517,13 @@ export type UnsettlementPnLInputs = {
  * @param inputs The inputs for calculating the unrealized profit or loss.
  * @returns The unrealized profit or loss of each position.
  */
-export function unsettlementPnL(inputs: UnsettlementPnLInputs): number {
+export function unsettlementPnL(inputs: {
+  positionQty: number;
+  markPrice: number;
+  costPosition: number;
+  sumUnitaryFunding: number;
+  lastSumUnitaryFunding: number;
+}): number {
   const {
     positionQty,
     markPrice,
@@ -548,13 +540,6 @@ export function unsettlementPnL(inputs: UnsettlementPnLInputs): number {
     .sub(qty.mul(new Decimal(sumUnitaryFunding).sub(lastSumUnitaryFunding)))
     .toNumber();
 }
-
-export type TotalUnsettlementPnLInputs = {
-  positions: (API.Position & {
-    sum_unitary_funding: number;
-  })[];
-  sumUnitaryFunding: number;
-};
 
 /**
  * @formulaId totalUnsettlementPnL
@@ -602,14 +587,6 @@ export function totalUnsettlementPnL(
   }, 0);
 }
 
-export type MMRInputs = {
-  baseMMR: number;
-  baseIMR: number;
-  IMRFactor: number;
-  positionNotional: number;
-  IMR_factor_power: number;
-};
-
 /**
  * @formulaId MMR
  * @name Position Maintenance Margin Rate
@@ -639,7 +616,13 @@ export type MMRInputs = {
  * @param inputs The inputs for calculating the MMR.
  * @returns The MMR of the position.
  */
-export function MMR(inputs: MMRInputs): number {
+export function MMR(inputs: {
+  baseMMR: number;
+  baseIMR: number;
+  IMRFactor: number;
+  positionNotional: number;
+  IMR_factor_power: number;
+}): number {
   const {
     baseMMR,
     baseIMR,
