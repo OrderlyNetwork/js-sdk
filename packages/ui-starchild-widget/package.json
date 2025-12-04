@@ -29,7 +29,7 @@
     "@orderly.network/i18n": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@orderly.network/ui": "workspace:*",
-    "starchild-widget": "^1.0.2-beta.3",
+    "starchild-widget": "^1.0.2-beta.4",
     "styled-components": "^6.1.19",
     "ethers": "^6.13.4"
   },
