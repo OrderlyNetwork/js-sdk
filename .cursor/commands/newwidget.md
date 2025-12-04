@@ -236,6 +236,7 @@ When components need to be used in UI (especially component names obtained from 
 ## UI Component Best Practices
 
 - **Displaying Symbol with Icon**: When UI needs to display a trading symbol with icon and formatted text, use `Text.formatted` component:
+
   ```tsx
   <Text.formatted
     size="base"
@@ -247,7 +248,19 @@ When components need to be used in UI (especially component names obtained from 
     {symbol}
   </Text.formatted>
   ```
+
   This component automatically handles icon display and symbol formatting. Script should only provide the raw `symbol` string (e.g., `"PERP_ETH_USDC"`), and UI uses `Text.formatted` to render it with icon and proper formatting.
+
+- **Displaying Statistics (Label + Value)**: When UI needs to display a vertical layout with a text label on top and a numeric value below, use `Statistic` component:
+  ```tsx
+  <Statistic
+    label={i18n.t("portfolio.totalBalance")}
+    valueProps={{ rule: "price", dp: 2, coloring: true }}
+  >
+    {balance}
+  </Statistic>
+  ```
+  This component automatically handles label/value styling and number formatting. Script should only provide the raw numeric value (e.g., `12345.67`), and UI uses `Statistic` to render it with proper label and formatting. The `valueProps` can be used to configure number formatting rules (e.g., `rule: "price"`, `rule: "percentages"`), decimal places (`dp`), coloring, and other `Numeral` component props.
 
 ## References
 

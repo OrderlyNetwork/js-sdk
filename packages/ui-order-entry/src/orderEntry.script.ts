@@ -357,6 +357,18 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     side: formattedOrder.side,
   });
 
+  useEffect(() => {
+    if (formattedOrder.reduce_only) {
+      setTpslSwitch(false);
+    }
+  }, [formattedOrder.reduce_only]);
+
+  useEffect(() => {
+    if (tpslSwitch) {
+      setOrderValue("reduce_only", false);
+    }
+  }, [tpslSwitch]);
+
   return {
     ...state,
     slPriceError: slPriceError ?? undefined,

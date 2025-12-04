@@ -1,5 +1,18 @@
 # tsconfig
 
+## 0.11.6
+
+### Patch Changes
+
+- publish
+- c598cc6: publish
+
+## 0.11.6-alpha.0
+
+### Patch Changes
+
+- publish
+
 ## 0.11.5
 
 ### Patch Changes
