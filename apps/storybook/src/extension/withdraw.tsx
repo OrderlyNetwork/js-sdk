@@ -1,5 +1,5 @@
-import { ExtensionPositionEnum, installExtension } from "@orderly.network/ui";
-import { WithdrawFormWidgetProps } from "@orderly.network/ui-transfer";
+import { ExtensionPositionEnum, installExtension } from "@veltodefi/ui";
+import { WithdrawFormWidgetProps } from "@veltodefi/ui-transfer";
 
 const CustomWithdrawForm = (props: WithdrawFormWidgetProps) => {
   return <div>custom withdraw form</div>;

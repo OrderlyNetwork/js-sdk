@@ -1,8 +1,8 @@
 import { FC, useMemo } from "react";
 import { ShareOptions } from "../../types/types";
-import { Flex, Text, cn } from "@orderly.network/ui";
+import { Flex, Text, cn } from "@veltodefi/ui";
 import { Checkbox } from "./checkbox";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 
 export const ShareOption: FC<{
   type: ShareOptions;

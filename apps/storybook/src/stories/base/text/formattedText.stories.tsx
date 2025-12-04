@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 // import { fn } from 'storybook/test';
-import { Text, QuestionFillIcon, Flex } from "@orderly.network/ui";
+import { Text, QuestionFillIcon, Flex } from "@veltodefi/ui";
 
 const { formatted: FormattedText } = Text;
 

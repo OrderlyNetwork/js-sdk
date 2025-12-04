@@ -1,10 +1,10 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { AccountState } from "@orderly.network/core";
+import { AccountState } from "@veltodefi/core";
 import {
   AccountStatusEnum,
   SDKError,
   TrackerEventName,
-} from "@orderly.network/types";
+} from "@veltodefi/types";
 import { OrderlyContext } from "./orderlyContext";
 import { useAccountInstance } from "./useAccountInstance";
 import { useEventEmitter } from "./useEventEmitter";

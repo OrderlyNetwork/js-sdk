@@ -5,7 +5,7 @@ import {
   API,
   AssetHistoryStatusEnum,
   EMPTY_LIST,
-} from "@orderly.network/types";
+} from "@veltodefi/types";
 import { useEventEmitter } from "../../useEventEmitter";
 import { usePrivateQuery } from "../../usePrivateQuery";
 

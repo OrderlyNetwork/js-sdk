@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   Button,
   cn,
@@ -9,7 +9,7 @@ import {
   TabsList,
   TabsTrigger,
   Text,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { AffiliateIcon } from "../../../components/affiliateIcon";
 import { TraderIcon } from "../../../components/traderIcon";
 import { TabTypes } from "../../../provider";

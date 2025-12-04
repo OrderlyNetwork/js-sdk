@@ -1,9 +1,9 @@
 import {
   DefaultSolanaWalletAdapter,
   SolanaWalletProvider,
-} from "@orderly.network/default-solana-adapter";
-import { WalletState } from "@orderly.network/hooks";
-import { API } from "@orderly.network/types";
+} from "@veltodefi/default-solana-adapter";
+import { WalletState } from "@veltodefi/hooks";
+import { API } from "@veltodefi/types";
 
 export async function getSolanaBlockTime(
   chain: API.Chain,

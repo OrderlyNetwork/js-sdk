@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { useSessionStorage } from "@orderly.network/hooks";
+import { useSessionStorage } from "@veltodefi/hooks";
 import { SortType, MarketsTabName } from "../../../type";
 
 export function useTabSort(options: { storageKey: string }) {

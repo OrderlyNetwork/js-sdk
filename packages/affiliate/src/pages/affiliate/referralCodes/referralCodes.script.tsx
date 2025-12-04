@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { RefferalAPI, useLocalStorage } from "@orderly.network/hooks";
-import { modal } from "@orderly.network/ui";
+import { RefferalAPI, useLocalStorage } from "@veltodefi/hooks";
+import { modal } from "@veltodefi/ui";
 import { useReferralContext } from "../../../provider";
 import { addQueryParam, copyText } from "../../../utils/utils";
 import { EditCodeModal } from "./editCodeModal";

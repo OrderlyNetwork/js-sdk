@@ -1,1 +1,1 @@
-# @orderly.network/perp
+# @veltodefi/perp

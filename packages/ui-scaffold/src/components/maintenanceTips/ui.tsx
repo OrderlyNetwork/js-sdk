@@ -8,10 +8,10 @@ import {
   DialogTitle,
   Divider,
   Flex,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { CloseIcon, InfoIcon } from "../icons";
 import { MaintenanceTipInterface } from "./script";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 
 export const MaintenanceTipsUI = (props: MaintenanceTipInterface) => {
   const { showTips, showDialog, tipsContent, closeTips, dialogContent } = props;

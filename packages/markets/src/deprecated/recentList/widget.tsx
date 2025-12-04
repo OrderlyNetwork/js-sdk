@@ -1,4 +1,4 @@
-import { DataTableClassNames } from "@orderly.network/ui";
+import { DataTableClassNames } from "@veltodefi/ui";
 import { GetColumns } from "../../type";
 import { useRecentListScript } from "./recentList.script";
 import { RecentList } from "./recentList.ui";

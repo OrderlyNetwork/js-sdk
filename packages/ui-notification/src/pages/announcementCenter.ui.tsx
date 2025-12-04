@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { API } from "@orderly.network/types";
+import { API } from "@veltodefi/types";
 import { AnnouncementContent } from "../components/announcementCenter/announcementCenter.ui";
 
 export const AnnouncementCenterUI: FC<{

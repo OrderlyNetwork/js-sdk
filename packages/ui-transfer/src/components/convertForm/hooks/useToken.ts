@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { useTokensInfo } from "@orderly.network/hooks";
-import { Arbitrum, type API } from "@orderly.network/types";
+import { useTokensInfo } from "@veltodefi/hooks";
+import { Arbitrum, type API } from "@veltodefi/types";
 
 const splitTokenBySymbol = <T extends API.Chain>(items: T[]) => {
   return items.reduce<Record<"usdc" | "others", T[]>>(

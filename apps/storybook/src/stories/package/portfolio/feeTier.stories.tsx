@@ -2,9 +2,9 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   FeeTierModule,
   PortfolioLeftSidebarPath,
-} from "@orderly.network/portfolio";
-import { Column } from "@orderly.network/ui";
-import { numberToHumanStyle } from "@orderly.network/utils";
+} from "@veltodefi/portfolio";
+import { Column } from "@veltodefi/ui";
+import { numberToHumanStyle } from "@veltodefi/utils";
 import { PortfolioLayout } from "../../../components/layout";
 
 const meta: Meta<typeof FeeTierModule.FeeTierPage> = {

@@ -1,8 +1,8 @@
 import React from "react";
-import { useFeeState } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { Flex, Text } from "@orderly.network/ui";
-import { AuthGuard } from "@orderly.network/ui-connector";
+import { useFeeState } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { Flex, Text } from "@veltodefi/ui";
+import { AuthGuard } from "@veltodefi/ui-connector";
 
 export const RegularFeesUI: React.FC<{ taker: string; maker: string }> = (
   props,

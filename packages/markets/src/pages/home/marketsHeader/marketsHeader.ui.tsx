@@ -1,7 +1,7 @@
 import { FC, ReactNode, useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Box, cn, Flex, Text } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { useTranslation } from "@veltodefi/i18n";
+import { Box, cn, Flex, Text } from "@veltodefi/ui";
+import { Decimal } from "@veltodefi/utils";
 import { useMarketsContext } from "../../../components/marketsProvider";
 import { OrderlyIcon } from "../../../icons";
 import { MarketsHeaderReturns } from "./marketsHeader.script";

@@ -1,8 +1,8 @@
 describe("limitOrderCreator", () => {});
-import { OrderSide } from "@orderly.network/types";
+import { OrderSide } from "@veltodefi/types";
 import { LimitOrderCreator } from "../limitOrderCreator";
-import { OrderType } from "@orderly.network/types";
-import { OrderEntity } from "@orderly.network/types";
+import { OrderType } from "@veltodefi/types";
+import { OrderEntity } from "@veltodefi/types";
 import { ValuesDepConfig } from "../interface";
 
 describe("LimitOrderCreator", () => {

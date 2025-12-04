@@ -2,37 +2,37 @@
   "extends": "./tsconfig.build.json",
   "compilerOptions": {
     "paths": {
-      "@orderly.network/ui": [
+      "@veltodefi/ui": [
         "../ui/src"
       ],
-      "@orderly.network/ui-share": [
+      "@veltodefi/ui-share": [
         "../ui-share/src"
       ],
-      "@orderly.network/hooks": [
+      "@veltodefi/hooks": [
         "../hooks/src"
       ],
-      "@orderly.network/utils": [
+      "@veltodefi/utils": [
         "../utils/src"
       ],
-      "@orderly.network/ui-tpsl": [
+      "@veltodefi/ui-tpsl": [
         "../ui-tpsl/src"
       ],
-      "@orderly.network/types": [
+      "@veltodefi/types": [
         "../types/src"
       ],
-      "@orderly.network/ui-connector": [
+      "@veltodefi/ui-connector": [
         "../ui-connector/src"
       ],
-      "@orderly.network/react-app": [
+      "@veltodefi/react-app": [
         "../app/src"
       ],
-      "@orderly.network/i18n": [
+      "@veltodefi/i18n": [
         "../i18n/src"
       ],
-      "@orderly.network/perp": [
+      "@veltodefi/perp": [
         "../perp/src"
       ],
-      "@orderly.network/ui-leverage": [
+      "@veltodefi/ui-leverage": [
         "../ui-leverage/src"
       ]
     }

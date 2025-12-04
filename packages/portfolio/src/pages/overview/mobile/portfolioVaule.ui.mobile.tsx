@@ -1,15 +1,15 @@
 import { FC, useMemo } from "react";
-import { parseJSON, useAccount } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { AccountStatusEnum, ChainNamespace } from "@orderly.network/types";
-import { RouterAdapter } from "@orderly.network/types";
+import { parseJSON, useAccount } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { AccountStatusEnum, ChainNamespace } from "@veltodefi/types";
+import { RouterAdapter } from "@veltodefi/types";
 import {
   Flex,
   Text,
   cn,
   ArrowRightShortIcon,
   EyeIcon,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { PortfolioLeftSidebarPath } from "../../../layout";
 
 type Props = {

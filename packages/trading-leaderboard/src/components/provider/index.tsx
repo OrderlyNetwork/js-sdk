@@ -14,7 +14,7 @@ import {
   noCacheConfig,
   useConfig,
   useQuery,
-} from "@orderly.network/hooks";
+} from "@veltodefi/hooks";
 import { getCurrentTierIndex } from "../campaigns/pricePool/utils";
 import {
   CampaignConfig,

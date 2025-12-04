@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useLocalStorage } from "@orderly.network/hooks";
+import { useLocalStorage } from "@veltodefi/hooks";
 import { TradingviewWidgetProps } from "./tradingview.widget";
 
 const MaxHeight = 354;

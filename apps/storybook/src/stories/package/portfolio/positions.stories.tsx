@@ -2,9 +2,9 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   PortfolioLeftSidebarPath,
   PositionsModule,
-} from "@orderly.network/portfolio";
-import { useTradingLocalStorage } from "@orderly.network/trading";
-import { Box } from "@orderly.network/ui";
+} from "@veltodefi/portfolio";
+import { useTradingLocalStorage } from "@veltodefi/trading";
+import { Box } from "@veltodefi/ui";
 import { PortfolioLayout } from "../../../components/layout";
 import { tradingPageConfig } from "../../../orderlyConfig";
 

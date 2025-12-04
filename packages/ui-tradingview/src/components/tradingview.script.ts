@@ -7,18 +7,18 @@ import {
   useOrderEntry_deprecated,
   useSymbolsInfo,
   useWS,
-} from "@orderly.network/hooks";
-import { LocaleCode, useLocaleCode } from "@orderly.network/i18n";
-import { WS } from "@orderly.network/net";
+} from "@veltodefi/hooks";
+import { LocaleCode, useLocaleCode } from "@veltodefi/i18n";
+import { WS } from "@veltodefi/net";
 import {
   AccountStatusEnum,
   MEDIA_TABLET,
   OrderSide,
   OrderType,
   TradingviewFullscreenKey,
-} from "@orderly.network/types";
-import { modal, toast } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+} from "@veltodefi/types";
+import { modal, toast } from "@veltodefi/ui";
+import { Decimal } from "@veltodefi/utils";
 import getBrokerAdapter from "../tradingviewAdapter/broker/getBrokerAdapter";
 import { Datafeed } from "../tradingviewAdapter/datafeed/datafeed";
 import { WebsocketService } from "../tradingviewAdapter/datafeed/websocket.service";

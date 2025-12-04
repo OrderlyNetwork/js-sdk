@@ -1,7 +1,7 @@
 import { FC, useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { cn, Flex, Text, Divider, Badge } from "@orderly.network/ui";
-import { commifyOptional, Decimal } from "@orderly.network/utils";
+import { useTranslation } from "@veltodefi/i18n";
+import { cn, Flex, Text, Divider, Badge } from "@veltodefi/ui";
+import { commifyOptional, Decimal } from "@veltodefi/utils";
 import { LiquidationCellState } from "./liquidationCell.script";
 
 export const LiquidationCell: FC<

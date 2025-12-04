@@ -5,16 +5,16 @@ import {
   useLocalStorage,
   useIndexPricesStream,
   useAppStore,
-} from "@orderly.network/hooks";
-import { account } from "@orderly.network/perp";
-import { useCanTrade, useDataTap } from "@orderly.network/react-app";
-import { AccountStatusEnum, EMPTY_LIST } from "@orderly.network/types";
-import { modal } from "@orderly.network/ui";
+} from "@veltodefi/hooks";
+import { account } from "@veltodefi/perp";
+import { useCanTrade, useDataTap } from "@veltodefi/react-app";
+import { AccountStatusEnum, EMPTY_LIST } from "@veltodefi/types";
+import { modal } from "@veltodefi/ui";
 import {
   DepositAndWithdrawWithDialogId,
   TransferDialogId,
-} from "@orderly.network/ui-transfer";
-import { Decimal, zero } from "@orderly.network/utils";
+} from "@veltodefi/ui-transfer";
+import { Decimal, zero } from "@veltodefi/utils";
 import { useAccountsData, useAssetsMultiFilter } from "../../../hooks";
 import { useAssetTotalValue } from "../../../hooks/useAssetTotalValue";
 import { ORDERLY_ASSETS_VISIBLE_KEY } from "../type";

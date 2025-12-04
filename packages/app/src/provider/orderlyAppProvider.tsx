@@ -1,13 +1,13 @@
 import React, { PropsWithChildren } from "react";
-import { OrderlyConfigProvider, useTrack } from "@orderly.network/hooks";
+import { OrderlyConfigProvider, useTrack } from "@veltodefi/hooks";
 import {
   LocaleProvider as UILocaleProvider,
   ModalProvider,
   OrderlyThemeProvider,
   Toaster,
   TooltipProvider,
-} from "@orderly.network/ui";
-import { OrderlyThemeProviderProps } from "@orderly.network/ui";
+} from "@veltodefi/ui";
+import { OrderlyThemeProviderProps } from "@veltodefi/ui";
 import { useBootstrap } from "../hooks/useBootstrap";
 import { useExecutionReport } from "../hooks/useExecutionReport";
 import { useUILocale } from "../hooks/useUILocale";

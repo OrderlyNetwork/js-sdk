@@ -1,7 +1,7 @@
 import React from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { OrderStatus } from "@orderly.network/types";
-import { TabPanel, Tabs } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { OrderStatus } from "@veltodefi/types";
+import { TabPanel, Tabs } from "@veltodefi/ui";
 import type { DesktopOrderListWidgetProps } from "./orderList/orderList.widget";
 import { OrdersBuilderState } from "./orders.script";
 import { TabType } from "./orders.widget";

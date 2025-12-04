@@ -1,6 +1,6 @@
 import { FC } from "react";
-import { Box, Button, cn, Flex, Text, useScreen } from "@orderly.network/ui";
-import { AuthGuard } from "@orderly.network/ui-connector";
+import { Box, Button, cn, Flex, Text, useScreen } from "@veltodefi/ui";
+import { AuthGuard } from "@veltodefi/ui-connector";
 import { CampaignConfig } from "../type";
 import { PricePoolDesktopUI } from "./pricePool.desktop.ui";
 import { usePricePoolScript } from "./pricePool.script";

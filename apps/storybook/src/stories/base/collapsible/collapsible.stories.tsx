@@ -7,7 +7,7 @@ import {
   Flex,
   Text,
   Box,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 
 const meta: Meta<typeof Collapsible> = {
   title: "Base/Layout/Collapsible",

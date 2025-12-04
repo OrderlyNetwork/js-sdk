@@ -1,6 +1,6 @@
 import React from "react";
 import { isValidElement } from "react";
-import { Box, cn, Grid } from "@orderly.network/ui";
+import { Box, cn, Grid } from "@veltodefi/ui";
 import { FooterWidget } from "../footer";
 import { MainNavWidget } from "../main/mainNav.widget";
 import { NotificationWidget } from "../notification/notification.widget";

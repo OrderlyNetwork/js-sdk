@@ -4,8 +4,8 @@ import {
   useChains,
   useEventEmitter,
   useTrack,
-} from "@orderly.network/hooks";
-import { TrackerEventName } from "@orderly.network/types";
+} from "@veltodefi/hooks";
+import { TrackerEventName } from "@veltodefi/types";
 
 export type UseLinkDeviceScriptReturn = ReturnType<typeof useLinkDeviceScript>;
 

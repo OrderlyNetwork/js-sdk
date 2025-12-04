@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { API, PositionType } from "@orderly.network/types";
+import { useTranslation } from "@veltodefi/i18n";
+import { API, PositionType } from "@veltodefi/types";
 import {
   Box,
   ChevronDownIcon,
@@ -13,7 +13,7 @@ import {
   ThrottledButton,
   useScreen,
   ScrollArea,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { OrderInfo } from "../components/orderInfo";
 import { OrdersTable } from "./ordersTable";
 import { OrdersTableMobile } from "./ordersTable.mobile";

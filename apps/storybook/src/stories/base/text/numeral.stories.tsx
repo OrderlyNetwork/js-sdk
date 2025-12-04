@@ -1,5 +1,5 @@
 import type { StoryObj } from "@storybook/react-vite";
-import { Text } from "@orderly.network/ui";
+import { Text } from "@veltodefi/ui";
 
 const { numeral: Numeral } = Text;
 

@@ -1,7 +1,7 @@
 import { FC, useMemo } from "react";
-import { WsNetworkStatus } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { Divider, Flex, Text } from "@orderly.network/ui";
+import { WsNetworkStatus } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { Divider, Flex, Text } from "@veltodefi/ui";
 import {
   CommuntiyDiscordIcon,
   CommuntiyTelegramIcon,

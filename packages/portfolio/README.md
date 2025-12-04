@@ -1,13 +1,13 @@
-# @orderly.network/portfolio Mobile Pages Usage Guide
+# @veltodefi/portfolio Mobile Pages Usage Guide
 
-If you are using the layout components from @orderly.network/portfolio directly and are an existing user, when you want to use mobile pages, we have added HistoryPage and SettingPage. You can add the corresponding routes to fully utilize the mobile functionality.
+If you are using the layout components from @veltodefi/portfolio directly and are an existing user, when you want to use mobile pages, we have added HistoryPage and SettingPage. You can add the corresponding routes to fully utilize the mobile functionality.
 
 ## Component Import Paths
 
 ### HistoryPage Component
 
 ```typescript
-import { HistoryModule } from "@orderly.network/portfolio";
+import { HistoryModule } from "@veltodefi/portfolio";
 
 // Available components
 const { HistoryPage, HistoryWidget } = HistoryModule;
@@ -16,7 +16,7 @@ const { HistoryPage, HistoryWidget } = HistoryModule;
 ### SettingPage Component
 
 ```typescript
-import { SettingModule } from "@orderly.network/portfolio";
+import { SettingModule } from "@veltodefi/portfolio";
 
 // Available components
 const { SettingPage, SettingWidget } = SettingModule;
@@ -40,7 +40,7 @@ const SETTING_PATH = "/portfolio/setting";
 
 ```typescript
 import { Routes, Route } from "react-router-dom";
-import { HistoryModule, SettingModule } from "@orderly.network/portfolio";
+import { HistoryModule, SettingModule } from "@veltodefi/portfolio";
 
 const { HistoryPage } = HistoryModule;
 const { SettingPage } = SettingModule;
@@ -65,7 +65,7 @@ function App() {
 
 ```typescript
 // app/portfolio/history/page.tsx
-import { HistoryModule } from "@orderly.network/portfolio";
+import { HistoryModule } from "@veltodefi/portfolio";
 
 const { HistoryPage } = HistoryModule;
 
@@ -76,7 +76,7 @@ export default function HistoryPageRoute() {
 
 ```typescript
 // app/portfolio/setting/page.tsx
-import { SettingModule } from "@orderly.network/portfolio";
+import { SettingModule } from "@veltodefi/portfolio";
 
 const { SettingPage } = SettingModule;
 
@@ -89,7 +89,7 @@ export default function SettingPageRoute() {
 
 ```typescript
 // pages/portfolio/history.tsx
-import { HistoryModule } from "@orderly.network/portfolio";
+import { HistoryModule } from "@veltodefi/portfolio";
 
 const { HistoryPage } = HistoryModule;
 
@@ -98,7 +98,7 @@ export default HistoryPage;
 
 ```typescript
 // pages/portfolio/setting.tsx
-import { SettingModule } from "@orderly.network/portfolio";
+import { SettingModule } from "@veltodefi/portfolio";
 
 const { SettingPage } = SettingModule;
 
@@ -110,7 +110,7 @@ export default SettingPage;
 If you are using Portfolio's layout components, mobile navigation will automatically handle these routes. Ensure your `routerAdapter` is properly configured:
 
 ```typescript
-import { PortfolioLayoutWidget } from "@orderly.network/portfolio";
+import { PortfolioLayoutWidget } from "@veltodefi/portfolio";
 
 const routerAdapter = {
   onRouteChange: ({ href, name }) => {
@@ -150,5 +150,5 @@ function PortfolioLayout({ children }) {
 
 1. **Path Consistency**: Ensure route paths are consistent with `PortfolioLeftSidebarPath` enum values
 2. **Mobile Detection**: Components automatically detect mobile environment and render corresponding UI
-3. **Dependency Requirements**: Ensure all necessary dependency packages are installed, including `@orderly.network/ui`, `@orderly.network/i18n`, etc.
+3. **Dependency Requirements**: Ensure all necessary dependency packages are installed, including `@veltodefi/ui`, `@veltodefi/i18n`, etc.
 4. **RouterAdapter**: Ensure proper implementation of `routerAdapter` interface to support page navigation functionality

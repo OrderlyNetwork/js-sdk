@@ -1,6 +1,6 @@
 import React from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Flex, Switch } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { Flex, Switch } from "@veltodefi/ui";
 
 export interface ReduceOnlySwitchProps {
   checked: boolean;

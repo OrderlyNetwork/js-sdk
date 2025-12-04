@@ -1,7 +1,7 @@
 import { FC, memo, useEffect, useMemo, useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { DistributionType } from "@orderly.network/types";
-import { Box, Checkbox, cn, Flex, modal, Text } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { DistributionType } from "@veltodefi/types";
+import { Box, Checkbox, cn, Flex, modal, Text } from "@veltodefi/ui";
 import { useOrderEntryContext } from "../../orderEntryContext";
 
 export type QuantityDistributionInputProps = {

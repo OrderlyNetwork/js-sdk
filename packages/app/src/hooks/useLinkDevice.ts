@@ -5,9 +5,9 @@ import {
   useConfig,
   useLocalStorage,
   useWalletConnector,
-} from "@orderly.network/hooks";
-import { ChainNamespace } from "@orderly.network/types";
-import { useScreen } from "@orderly.network/ui";
+} from "@veltodefi/hooks";
+import { ChainNamespace } from "@veltodefi/types";
+import { useScreen } from "@veltodefi/ui";
 
 type DecodedData = {
   /** secret key */

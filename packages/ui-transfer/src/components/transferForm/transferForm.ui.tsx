@@ -1,7 +1,7 @@
 import { FC } from "react";
-import { Trans, useTranslation } from "@orderly.network/i18n";
-import { Box, Button, Flex, textVariants, Text, cn } from "@orderly.network/ui";
-import { AuthGuard } from "@orderly.network/ui-connector";
+import { Trans, useTranslation } from "@veltodefi/i18n";
+import { Box, Button, Flex, textVariants, Text, cn } from "@veltodefi/ui";
+import { AuthGuard } from "@veltodefi/ui-connector";
 import { TransferVerticalIcon } from "../../icons";
 import { AccountSelect } from "../accountSelect";
 import { AvailableQuantity } from "../availableQuantity";

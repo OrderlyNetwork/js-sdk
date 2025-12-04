@@ -1,4 +1,4 @@
-import { useScreen } from "@orderly.network/ui";
+import { useScreen } from "@veltodefi/ui";
 import { useChainMenuScript } from "./chainMenu.script";
 import { ChainMenu } from "./chainMenu.ui";
 import { ChainMenuUiMobile } from "./chainMenu.ui.mobile";

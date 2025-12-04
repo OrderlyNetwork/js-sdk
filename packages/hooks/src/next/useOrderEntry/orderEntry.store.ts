@@ -3,7 +3,7 @@ import {
   OrderSide,
   OrderType,
   RequireKeys,
-} from "@orderly.network/types";
+} from "@veltodefi/types";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";

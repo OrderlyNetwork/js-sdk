@@ -1,10 +1,10 @@
 import React from "react";
-import { useAccount } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { API, EMPTY_LIST } from "@orderly.network/types";
-import { Flex, TokenIcon, Text, toast, Badge } from "@orderly.network/ui";
-import type { Column } from "@orderly.network/ui";
-import { capitalizeString } from "@orderly.network/utils";
+import { useAccount } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { API, EMPTY_LIST } from "@veltodefi/types";
+import { Flex, TokenIcon, Text, toast, Badge } from "@veltodefi/ui";
+import type { Column } from "@veltodefi/ui";
+import { capitalizeString } from "@veltodefi/utils";
 
 export const useColumns = () => {
   const { t } = useTranslation();

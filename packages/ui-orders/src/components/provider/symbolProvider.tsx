@@ -1,5 +1,5 @@
 import { FC, PropsWithChildren, useMemo } from "react";
-import { useSymbolsInfo } from "@orderly.network/hooks";
+import { useSymbolsInfo } from "@veltodefi/hooks";
 import { SymbolContext, SymbolContextState } from "./symbolContext";
 
 interface FormatterProviderProps {

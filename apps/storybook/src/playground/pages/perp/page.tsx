@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import { generatePath } from "@orderly.network/i18n";
-import { TradingPage, TradingPageProps } from "@orderly.network/trading";
-import { API } from "@orderly.network/types";
+import { generatePath } from "@veltodefi/i18n";
+import { TradingPage, TradingPageProps } from "@veltodefi/trading";
+import { API } from "@veltodefi/types";
 import { tradingPageConfig } from "../../../orderlyConfig";
 import { BaseLayout } from "../../components/layout/baseLayout";
 import { PathEnum } from "../../constant";

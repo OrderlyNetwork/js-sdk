@@ -1,5 +1,5 @@
 import { FC, ReactNode, useState, useEffect } from "react";
-import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
+import { WalletConnectorProvider } from "@veltodefi/wallet-connector";
 import { initOnBoard } from "./web3OnboardConfig";
 
 export const WalletConnector: FC<{ children: ReactNode }> = (props) => {

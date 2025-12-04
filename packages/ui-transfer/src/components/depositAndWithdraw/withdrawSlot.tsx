@@ -1,4 +1,4 @@
-import { ExtensionPositionEnum, ExtensionSlot } from "@orderly.network/ui";
+import { ExtensionPositionEnum, ExtensionSlot } from "@veltodefi/ui";
 import { WithdrawFormWidget } from "../withdrawForm";
 import { WithdrawFormWidgetProps } from "../withdrawForm/withdrawForm.widget";
 

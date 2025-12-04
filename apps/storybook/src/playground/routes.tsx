@@ -9,7 +9,7 @@ import {
   getLocalePathFromPathname,
   i18n,
   parseI18nLang,
-} from "@orderly.network/i18n";
+} from "@veltodefi/i18n";
 import { PortfolioLayout, TradingRewardsLayout } from "./components/layout";
 import { OrderlyProvider } from "./components/orderlyProvider";
 import { PathEnum } from "./constant";

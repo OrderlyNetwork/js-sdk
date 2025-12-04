@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
-import { WalletConnectorContext } from "@orderly.network/hooks";
-import type { WalletConnectorContextState } from "@orderly.network/hooks";
-import { ChainNamespace } from "@orderly.network/types";
-import { hex2int } from "@orderly.network/utils";
+import { WalletConnectorContext } from "@veltodefi/hooks";
+import type { WalletConnectorContextState } from "@veltodefi/hooks";
+import { ChainNamespace } from "@veltodefi/types";
+import { hex2int } from "@veltodefi/utils";
 import { SolanaChains } from "./config";
 import { useEvm } from "./useEvm";
 import { useSOL } from "./useSOL";

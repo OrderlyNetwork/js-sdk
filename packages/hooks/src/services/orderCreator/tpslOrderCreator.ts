@@ -3,12 +3,12 @@ import {
   OrderType,
   API,
   ChildOrder,
-} from "@orderly.network/types";
-import { TriggerPriceType } from "@orderly.network/types";
-import { AlgoOrderType } from "@orderly.network/types";
-import { AlgoOrderRootType } from "@orderly.network/types";
-import { OrderSide } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+} from "@veltodefi/types";
+import { TriggerPriceType } from "@veltodefi/types";
+import { AlgoOrderType } from "@veltodefi/types";
+import { AlgoOrderRootType } from "@veltodefi/types";
+import { OrderSide } from "@veltodefi/types";
+import { Decimal } from "@veltodefi/utils";
 import { AlgoOrderUpdateEntity, BaseAlgoOrderCreator } from "./baseAlgoCreator";
 import { ValuesDepConfig } from "./interface";
 

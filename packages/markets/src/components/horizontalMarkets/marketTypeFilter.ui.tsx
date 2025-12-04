@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import { useMarkets, MarketsType } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { Box, Flex, Text, cn, Checkbox, Divider } from "@orderly.network/ui";
+import { useMarkets, MarketsType } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { Box, Flex, Text, cn, Checkbox, Divider } from "@veltodefi/ui";
 import { FilterIcon } from "../../icons";
 import type { MarketType } from "./horizontalMarkets.script";
 

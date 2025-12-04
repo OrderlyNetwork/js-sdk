@@ -1,7 +1,7 @@
 import { FC } from "react";
-import { Button, Flex, Text, toast } from "@orderly.network/ui";
+import { Button, Flex, Text, toast } from "@veltodefi/ui";
 import { TpSLBtnState } from "./tpSLBtn.script";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 
 export const TpSLBtn: FC<TpSLBtnState> = (props) => {
   // const { item } = props;

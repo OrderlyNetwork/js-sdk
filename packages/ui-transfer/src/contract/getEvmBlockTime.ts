@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import type { API } from "@orderly.network/types";
+import type { API } from "@veltodefi/types";
 
 const blockCount = 5;
 

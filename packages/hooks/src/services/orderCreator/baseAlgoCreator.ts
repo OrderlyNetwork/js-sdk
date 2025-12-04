@@ -3,8 +3,8 @@ import {
   AlgoOrderRootType,
   OrderSide,
   OrderType,
-} from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+} from "@veltodefi/types";
+import { Decimal } from "@veltodefi/utils";
 import {
   getPriceRange,
   getTPSLTriggerPriceRange,

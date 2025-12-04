@@ -7,10 +7,10 @@ import {
   useSubAccountQuery,
   useAppStore,
   useChainInfo,
-} from "@orderly.network/hooks";
-import { EMPTY_LIST } from "@orderly.network/types";
-import { usePagination } from "@orderly.network/ui";
-import { subtractDaysFromCurrentDate } from "@orderly.network/utils";
+} from "@veltodefi/hooks";
+import { EMPTY_LIST } from "@veltodefi/types";
+import { usePagination } from "@veltodefi/ui";
+import { subtractDaysFromCurrentDate } from "@veltodefi/utils";
 import { useAccountsData, useAssetsAccountFilter } from "../../../hooks";
 import { parseDateRangeForFilter } from "../../overview/helper/date";
 import type { ConvertRecord } from "../type";

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Box, Flex } from "@orderly.network/ui";
+import { Box, Flex } from "@veltodefi/ui";
 
 const meta: Meta<typeof Flex> = {
   title: "Base/Layout/Flex",

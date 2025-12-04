@@ -1,7 +1,7 @@
-import { AccountState as AccountStateType } from "@orderly.network/core";
-import { useAccount } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { modal } from "@orderly.network/ui";
+import { AccountState as AccountStateType } from "@veltodefi/core";
+import { useAccount } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { modal } from "@veltodefi/ui";
 import { useTradingPageContext } from "../../../../provider/tradingPageContext";
 import { AccountSheetWidget } from "../../accountSheet";
 

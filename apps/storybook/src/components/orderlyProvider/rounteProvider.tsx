@@ -1,5 +1,5 @@
 import { createContext, FC, ReactNode, useContext, useMemo } from "react";
-import { RouteOption } from "@orderly.network/types";
+import { RouteOption } from "@veltodefi/types";
 
 export type RouteContextState = {
   onRouteChange: (option: RouteOption) => void;

@@ -1,6 +1,6 @@
-import { useTranslation } from "@orderly.network/i18n";
-import { Box, ChainIcon, modal, toast } from "@orderly.network/ui";
-import { ChainSelectorSheetId } from "@orderly.network/ui-chain-selector";
+import { useTranslation } from "@veltodefi/i18n";
+import { Box, ChainIcon, modal, toast } from "@veltodefi/ui";
+import { ChainSelectorSheetId } from "@veltodefi/ui-chain-selector";
 import { UseChainMenuScriptReturn } from "./chainMenu.script";
 
 export const ChainMenuUiMobile = (props: UseChainMenuScriptReturn) => {

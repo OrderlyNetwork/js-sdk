@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { API, SDKError } from "@orderly.network/types";
+import { API, SDKError } from "@veltodefi/types";
 import {
   Decimal,
   getTimestamp,
   timeConvertString,
-} from "@orderly.network/utils";
+} from "@veltodefi/utils";
 import { useQuery } from "../useQuery";
 
 export const useFundingRate = (symbol: string) => {

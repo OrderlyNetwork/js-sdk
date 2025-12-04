@@ -1,6 +1,6 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Divider, Flex, Text } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { Divider, Flex, Text } from "@veltodefi/ui";
 import { FundingRateHintState } from "./fundingRateHint.script";
 
 export type FundingRateHintProps = FundingRateHintState & {

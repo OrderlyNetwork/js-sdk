@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   PortfolioLeftSidebarPath,
   HistoryModule,
-} from "@orderly.network/portfolio";
+} from "@veltodefi/portfolio";
 import { PortfolioLayout } from "../../../components/layout/portfolioLayout";
 
 const meta: Meta<typeof HistoryModule.HistoryPage> = {

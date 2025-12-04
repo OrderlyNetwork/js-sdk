@@ -1,8 +1,8 @@
 import { useCallback } from "react";
 import { useNavigate } from "react-router";
-import { generatePath } from "@orderly.network/i18n";
-import { PortfolioLeftSidebarPath } from "@orderly.network/portfolio";
-import { RouteOption } from "@orderly.network/types";
+import { generatePath } from "@veltodefi/i18n";
+import { PortfolioLeftSidebarPath } from "@veltodefi/portfolio";
+import { RouteOption } from "@veltodefi/types";
 import { PathEnum } from "../constant";
 import { getSymbol } from "../storage";
 

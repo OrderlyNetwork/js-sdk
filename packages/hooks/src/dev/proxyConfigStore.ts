@@ -1,6 +1,6 @@
-import { ConfigKey, ConfigStore } from "@orderly.network/core";
-import { SDKError } from "@orderly.network/types";
-import { windowGuard } from "@orderly.network/utils";
+import { ConfigKey, ConfigStore } from "@veltodefi/core";
+import { SDKError } from "@veltodefi/types";
+import { windowGuard } from "@veltodefi/utils";
 
 export class ProxyConfigStore implements ConfigStore {
   private _proxyConfigStore?: ConfigStore;

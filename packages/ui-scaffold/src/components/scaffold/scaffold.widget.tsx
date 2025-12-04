@@ -1,5 +1,5 @@
 import React, { PropsWithChildren, ReactNode } from "react";
-import { type RouterAdapter } from "@orderly.network/types";
+import { type RouterAdapter } from "@veltodefi/types";
 import { BottomNavProps } from "../bottomNav/bottomNav.widget";
 import { FooterProps } from "../footer";
 import { LeftNavProps } from "../leftNav";

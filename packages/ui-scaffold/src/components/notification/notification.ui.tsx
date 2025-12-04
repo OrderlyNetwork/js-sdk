@@ -1,8 +1,8 @@
 import { FC, useCallback, useEffect, useMemo, useRef } from "react";
-import { API } from "@orderly.network/types";
-import { cn } from "@orderly.network/ui";
-import { NotificationUI as NotificationUIComponent } from "@orderly.network/ui-notification";
-import { windowGuard } from "@orderly.network/utils";
+import { API } from "@veltodefi/types";
+import { cn } from "@veltodefi/ui";
+import { NotificationUI as NotificationUIComponent } from "@veltodefi/ui-notification";
+import { windowGuard } from "@veltodefi/utils";
 import { useScaffoldContext } from "../scaffold";
 
 export const NotificationUI: FC<{

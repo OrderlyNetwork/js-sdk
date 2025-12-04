@@ -5,8 +5,8 @@ import {
   MenuItem,
   Text,
   SimpleDropdownMenu,
-} from "@orderly.network/ui";
-import { inputFormatter } from "@orderly.network/ui";
+} from "@veltodefi/ui";
+import { inputFormatter } from "@veltodefi/ui";
 import { PNLInputState, PnLMode } from "./useBuilder.script";
 
 export type PNLInputProps = PNLInputState & {

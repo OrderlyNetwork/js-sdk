@@ -6,8 +6,8 @@ import {
   useMarketsStore,
   useSymbolsInfo,
   useTickerStream,
-} from "@orderly.network/hooks";
-import { Decimal } from "@orderly.network/utils";
+} from "@veltodefi/hooks";
+import { Decimal } from "@veltodefi/utils";
 
 export type UseSymbolInfoBarFullScriptOptions = {
   symbol: string;

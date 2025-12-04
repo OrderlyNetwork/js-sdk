@@ -3,9 +3,9 @@ import {
   useAccount,
   useEventEmitter,
   usePositionStream,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { toast } from "@orderly.network/ui";
+} from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { toast } from "@veltodefi/ui";
 
 export type SettlePnlOptions = {
   accountId?: string;

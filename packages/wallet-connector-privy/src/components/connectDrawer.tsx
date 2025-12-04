@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo } from "react";
-import { useLocalStorage } from "@orderly.network/hooks";
-import { useTranslation, Trans } from "@orderly.network/i18n";
-import { ConnectorKey } from "@orderly.network/types";
+import { useLocalStorage } from "@veltodefi/hooks";
+import { useTranslation, Trans } from "@veltodefi/i18n";
+import { ConnectorKey } from "@veltodefi/types";
 import {
   useScreen,
   cn,
@@ -12,7 +12,7 @@ import {
   Text,
   modal,
   CloseSquareFillIcon,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { useWalletConnectorPrivy } from "../provider";
 import { useAbstractWallet } from "../providers/abstractWallet/abstractWalletProvider";
 import { usePrivyWallet } from "../providers/privy/privyWalletProvider";

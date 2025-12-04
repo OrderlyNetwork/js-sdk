@@ -1,8 +1,8 @@
 import { ReactNode } from "react";
 import { useMemo } from "react";
-import { useLeverageBySymbol, useMaxLeverage } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
+import { useLeverageBySymbol, useMaxLeverage } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { API } from "@veltodefi/types";
 import {
   Badge,
   Box,
@@ -12,9 +12,9 @@ import {
   Flex,
   Text,
   Tooltip,
-} from "@orderly.network/ui";
-import { SharePnLConfig, SharePnLDialogId } from "@orderly.network/ui-share";
-import { commifyOptional, formatNum } from "@orderly.network/utils";
+} from "@veltodefi/ui";
+import { SharePnLConfig, SharePnLDialogId } from "@veltodefi/ui-share";
+import { commifyOptional, formatNum } from "@veltodefi/utils";
 import { useSymbolContext } from "../../../provider/symbolContext";
 import { FundingFeeButton } from "../../fundingFeeHistory/fundingFeeButton";
 import { ShareButtonWidget } from "../../positions/desktop/shareButton";

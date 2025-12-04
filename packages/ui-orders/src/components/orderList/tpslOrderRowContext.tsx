@@ -14,14 +14,14 @@ import {
   useMutation,
   useSWRConfig,
   utils,
-} from "@orderly.network/hooks";
+} from "@veltodefi/hooks";
 import {
   findTPSLOrderPriceFromOrder,
   findTPSLFromOrder,
-} from "@orderly.network/hooks";
-import { API, OrderType } from "@orderly.network/types";
-import { OrderSide } from "@orderly.network/types";
-import { AlgoOrderType } from "@orderly.network/types";
+} from "@veltodefi/hooks";
+import { API, OrderType } from "@veltodefi/types";
+import { OrderSide } from "@veltodefi/types";
+import { AlgoOrderType } from "@veltodefi/types";
 import { useSymbolContext } from "../provider/symbolContext";
 
 export type TPSLOrderRowContextState = {

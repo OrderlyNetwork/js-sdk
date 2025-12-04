@@ -1,6 +1,6 @@
 import React, { type PropsWithChildren } from "react";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
-import { EMPTY_OBJECT } from "@orderly.network/types";
+import { EMPTY_OBJECT } from "@veltodefi/types";
 import { SolanaProvider } from "./SolanaProvider";
 import { InitEvm } from "./initEvm";
 import { Main } from "./main";

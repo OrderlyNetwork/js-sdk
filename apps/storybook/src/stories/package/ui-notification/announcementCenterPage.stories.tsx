@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { AnnouncementCenterPage } from "@orderly.network/ui-notification";
+import { AnnouncementCenterPage } from "@veltodefi/ui-notification";
 
 /**
  * AnnouncementCenterPage component story

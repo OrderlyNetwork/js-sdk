@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import useConstant from "use-constant";
-import { SimpleDI } from "@orderly.network/core";
+import { SimpleDI } from "@veltodefi/core";
 import { OrderlyContext } from "./orderlyContext";
 import { ENVType, AmplitudeTracker } from "./services/amplitudeTracker";
 
@@ -20,7 +20,7 @@ export const useTrackingInstance = () => {
       instance = new AmplitudeTracker(env, amplitudeConfig ?? undefined, {
         brokerId,
         sdk_version:
-          window?.__ORDERLY_VERSION__?.["@orderly.network/net"] ?? "",
+          window?.__ORDERLY_VERSION__?.["@veltodefi/net"] ?? "",
       });
 
       SimpleDI.registerByName("instance", instance);

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Decimal } from "@orderly.network/utils";
+import { useTranslation } from "@veltodefi/i18n";
+import { Decimal } from "@veltodefi/utils";
 import { InputStatus } from "../../../types";
 
 type Options = { quantity: string; maxQuantity: string | number };

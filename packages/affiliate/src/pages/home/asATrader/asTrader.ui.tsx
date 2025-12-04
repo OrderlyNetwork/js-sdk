@@ -1,6 +1,6 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { AccountStatusEnum } from "@orderly.network/types";
+import { useTranslation } from "@veltodefi/i18n";
+import { AccountStatusEnum } from "@veltodefi/types";
 import {
   Button,
   cn,
@@ -15,9 +15,9 @@ import {
   inputFormatter,
   Text,
   TextField,
-} from "@orderly.network/ui";
-import { AuthGuard } from "@orderly.network/ui-connector";
-import { commifyOptional } from "@orderly.network/utils";
+} from "@veltodefi/ui";
+import { AuthGuard } from "@veltodefi/ui-connector";
+import { commifyOptional } from "@veltodefi/utils";
 import { ArrowRightIcon } from "../../../components/arrowRightIcon";
 import { USDCIcon } from "../../../components/usdcIcon";
 import { AsTraderReturns } from "./asTrader.script";

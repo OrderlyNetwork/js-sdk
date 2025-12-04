@@ -3,9 +3,9 @@ import {
   LeaderboardWidget,
   TradingListWidget,
   Campaign,
-} from "@orderly.network/trading-leaderboard";
-import { Box, useScreen } from "@orderly.network/ui";
-import { useScaffoldContext } from "@orderly.network/ui-scaffold";
+} from "@veltodefi/trading-leaderboard";
+import { Box, useScreen } from "@veltodefi/ui";
+import { useScaffoldContext } from "@veltodefi/ui-scaffold";
 import { BaseLayout } from "../../../components/layout";
 
 function getCampaigns() {

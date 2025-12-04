@@ -10,8 +10,8 @@ import {
   SelectedChoicesFillIcon,
   PopupUnionIcon,
   CloseRoundFillIcon,
-} from "@orderly.network/ui";
-import { cn } from "@orderly.network/ui";
+} from "@veltodefi/ui";
+import { cn } from "@veltodefi/ui";
 
 type TradingMenuChoiceProps = {
   icon: React.ReactNode;

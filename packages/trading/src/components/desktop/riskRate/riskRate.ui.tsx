@@ -1,6 +1,6 @@
 import React, { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { useAppContext } from "@orderly.network/react-app";
+import { useTranslation } from "@veltodefi/i18n";
+import { useAppContext } from "@veltodefi/react-app";
 import {
   Flex,
   Text,
@@ -10,8 +10,8 @@ import {
   gradientTextVariants,
   cn,
   EditIcon,
-} from "@orderly.network/ui";
-import { LeverageWidgetWithDialogId } from "@orderly.network/ui-leverage";
+} from "@veltodefi/ui";
+import { LeverageWidgetWithDialogId } from "@veltodefi/ui-leverage";
 import { TooltipContent } from "../assetView/assetView.ui";
 import { RiskRateState } from "./riskRate.script";
 

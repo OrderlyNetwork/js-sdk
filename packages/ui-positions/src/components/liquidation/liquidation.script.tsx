@@ -3,11 +3,11 @@ import { differenceInDays, subDays } from "date-fns";
 import {
   usePrivateInfiniteQuery,
   usePrivateQuery,
-} from "@orderly.network/hooks";
-import { useDataTap } from "@orderly.network/react-app";
-import { API } from "@orderly.network/types";
-import { usePagination, useScreen } from "@orderly.network/ui";
-import { Decimal, zero } from "@orderly.network/utils";
+} from "@veltodefi/hooks";
+import { useDataTap } from "@veltodefi/react-app";
+import { API } from "@veltodefi/types";
+import { usePagination, useScreen } from "@veltodefi/ui";
+import { Decimal, zero } from "@veltodefi/utils";
 import {
   areDatesEqual,
   formatDatePickerRange,

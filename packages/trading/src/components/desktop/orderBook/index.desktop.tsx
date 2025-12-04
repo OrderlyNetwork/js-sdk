@@ -1,7 +1,7 @@
 import { FC, useEffect, useRef, useState } from "react";
-import { useLocalStorage } from "@orderly.network/hooks";
-import { EMPTY_LIST } from "@orderly.network/types";
-import { cn, Grid, Spinner } from "@orderly.network/ui";
+import { useLocalStorage } from "@veltodefi/hooks";
+import { EMPTY_LIST } from "@veltodefi/types";
+import { cn, Grid, Spinner } from "@veltodefi/ui";
 import { BasicSymbolInfo } from "../../../types/types";
 import {
   ORDERBOOK_COIN_TYPE_KEY,

@@ -5,11 +5,11 @@ import {
   useCollateral,
   useLocalStorage,
   useMediaQuery,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { useAppContext, useDataTap } from "@orderly.network/react-app";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { modal } from "@orderly.network/ui";
+} from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { useAppContext, useDataTap } from "@veltodefi/react-app";
+import { AccountStatusEnum } from "@veltodefi/types";
+import { modal } from "@veltodefi/ui";
 import type { LayoutPosition } from "../../components/desktop/layout/switchLayout";
 import { useSplitPersistent } from "../../components/desktop/layout/useSplitPersistent";
 import { PortfolioSheetWidget } from "../../components/mobile/portfolioSheet";

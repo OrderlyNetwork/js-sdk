@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { PnlLineChart, VolBarChart, PnLBarChart } from "@orderly.network/chart";
-import { Box } from "@orderly.network/ui";
+import { PnlLineChart, VolBarChart, PnLBarChart } from "@veltodefi/chart";
+import { Box } from "@veltodefi/ui";
 
 const pnlBarData = [
   {

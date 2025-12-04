@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useGetEnv } from "@orderly.network/hooks";
+import { useGetEnv } from "@veltodefi/hooks";
 import { VAULTS_API_URLS } from "../api/env";
 
 export function useSVApiUrl() {

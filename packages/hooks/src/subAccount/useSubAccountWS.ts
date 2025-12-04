@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef } from "react";
-import { WS } from "@orderly.network/net";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { getTimestamp } from "@orderly.network/utils";
+import { WS } from "@veltodefi/net";
+import { AccountStatusEnum } from "@veltodefi/types";
+import { getTimestamp } from "@veltodefi/utils";
 import { OrderlyContext } from "../orderlyContext";
 import { useAccount } from "../useAccount";
 

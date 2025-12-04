@@ -1,5 +1,5 @@
-import { useTranslation } from "@orderly.network/i18n";
-import { OrderType } from "@orderly.network/types";
+import { useTranslation } from "@veltodefi/i18n";
+import { OrderType } from "@veltodefi/types";
 import {
   CaretDownIcon,
   cn,
@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
   Input,
   inputFormatter,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { usePositionsRowContext } from "../positionsRowContext";
 
 export const PriceInput = () => {

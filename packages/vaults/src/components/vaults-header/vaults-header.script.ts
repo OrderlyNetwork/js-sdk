@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { uniqBy } from "ramda";
-import { useConfig } from "@orderly.network/hooks";
+import { useConfig } from "@veltodefi/hooks";
 import { useVaultsStore } from "../../store";
 import { VaultSupportedChain } from "../../types/vault";
 

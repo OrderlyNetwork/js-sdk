@@ -1,6 +1,6 @@
-import { useSettleSubscription } from "@orderly.network/hooks";
-import { toast } from "@orderly.network/ui";
-import { useTranslation } from "@orderly.network/i18n";
+import { useSettleSubscription } from "@veltodefi/hooks";
+import { toast } from "@veltodefi/ui";
+import { useTranslation } from "@veltodefi/i18n";
 
 export function useSettleEvent() {
   const { t } = useTranslation();

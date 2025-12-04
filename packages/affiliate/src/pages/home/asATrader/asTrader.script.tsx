@@ -3,11 +3,11 @@ import {
   useAccount,
   useCheckReferralCode,
   useMutation,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { useAppContext } from "@orderly.network/react-app";
-import { toast, useScreen } from "@orderly.network/ui";
-import { AuthStatusEnum, useAuthStatus } from "@orderly.network/ui-connector";
+} from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { useAppContext } from "@veltodefi/react-app";
+import { toast, useScreen } from "@veltodefi/ui";
+import { AuthStatusEnum, useAuthStatus } from "@veltodefi/ui-connector";
 import { TabTypes, useReferralContext } from "../../../provider";
 
 export const useAsTraderScript = () => {

@@ -1,5 +1,5 @@
 import { FC, ReactNode } from "react";
-import { Scaffold, ScaffoldProps } from "@orderly.network/ui-scaffold";
+import { Scaffold, ScaffoldProps } from "@veltodefi/ui-scaffold";
 import { footerConfig, useBottomNav, useMainNav } from "../../orderlyConfig";
 import { PathEnum } from "../../playground/constant";
 import { useRouteContext } from "../orderlyProvider/rounteProvider";

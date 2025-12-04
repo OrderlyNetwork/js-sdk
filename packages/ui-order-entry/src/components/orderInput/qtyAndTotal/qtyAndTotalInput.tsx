@@ -1,5 +1,5 @@
 import { FC, memo } from "react";
-import { Grid } from "@orderly.network/ui";
+import { Grid } from "@veltodefi/ui";
 import { QuantityInput } from "./quantityInput";
 import { TotalInput } from "./totalInput";
 

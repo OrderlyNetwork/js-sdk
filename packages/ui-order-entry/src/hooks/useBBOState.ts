@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useRef } from "react";
-import { useLocalStorage, useTrack } from "@orderly.network/hooks";
+import { useLocalStorage, useTrack } from "@veltodefi/hooks";
 import {
   BBOOrderType,
   OrderlyOrder,
   OrderSide,
   OrderType,
   TrackerEventName,
-} from "@orderly.network/types";
+} from "@veltodefi/types";
 import {
   BBOStatus,
   getOrderLevelByBBO,

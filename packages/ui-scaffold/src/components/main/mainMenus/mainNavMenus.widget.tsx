@@ -3,7 +3,7 @@ import {
   ExtensionPositionEnum,
   ExtensionSlot,
   installExtension,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { MainNavMenus, type MainNavItemsProps } from "./mainNavMenus.ui";
 
 export const MainNavMenusWidget: FC<MainNavItemsProps> = (props) => {

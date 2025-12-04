@@ -1,4 +1,4 @@
-import { useWsStatus, WsNetworkStatus } from "@orderly.network/hooks";
+import { useWsStatus, WsNetworkStatus } from "@veltodefi/hooks";
 
 export type FooterReturns = {
   wsStatus: WsNetworkStatus;

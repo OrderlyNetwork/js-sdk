@@ -1,13 +1,13 @@
 import { FC, useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { type API } from "@orderly.network/types";
+import { useTranslation } from "@veltodefi/i18n";
+import { type API } from "@veltodefi/types";
 import {
   ExtensionPositionEnum,
   ExtensionSlot,
   ScrollArea,
   Text,
-} from "@orderly.network/ui";
-import { cn } from "@orderly.network/ui";
+} from "@veltodefi/ui";
+import { cn } from "@veltodefi/ui";
 import { AnnouncementItem } from "./announcementItem";
 
 export const AnnouncementContent: FC<{

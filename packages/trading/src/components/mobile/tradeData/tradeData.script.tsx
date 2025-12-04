@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { useTickerStream } from "@orderly.network/hooks";
-import { Decimal } from "@orderly.network/utils";
+import { useTickerStream } from "@veltodefi/hooks";
+import { Decimal } from "@veltodefi/utils";
 import { useTradingPageContext } from "../../../provider/tradingPageContext";
 
 export const useTradeDataScript = (props: { symbol: string }) => {

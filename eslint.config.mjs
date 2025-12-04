@@ -1,4 +1,4 @@
 import { defineConfig } from "eslint/config";
-import customEslintConfig from "@orderly.network/eslint-config";
+import customEslintConfig from "@veltodefi/eslint-config";
 
 export default defineConfig(customEslintConfig);

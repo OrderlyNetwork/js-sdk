@@ -1,8 +1,8 @@
 import { useMemo } from "react";
-import { useQuery } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+import { useQuery } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { API } from "@veltodefi/types";
+import { Decimal } from "@veltodefi/utils";
 import { WithdrawTo } from "../../../types";
 import { CurrentChain } from "../../depositForm/hooks";
 

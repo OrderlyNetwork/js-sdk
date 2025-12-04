@@ -1,11 +1,11 @@
 import { FC, useMemo } from "react";
-import { useAccount } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import { useAccount } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   AccountStatusEnum,
   type RouterAdapter,
   type RouteOption,
-} from "@orderly.network/types";
+} from "@veltodefi/types";
 import {
   Sheet,
   SheetContent,
@@ -14,7 +14,7 @@ import {
   PeopleIcon,
   Text,
   Divider,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { MainLogo } from "../main/mainLogo";
 import { SubAccountWidget } from "../subAccount";
 import {

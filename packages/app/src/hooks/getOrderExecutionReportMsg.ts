@@ -1,11 +1,11 @@
-import { i18n } from "@orderly.network/i18n";
-import { API, OrderStatus, OrderType } from "@orderly.network/types";
-import { AlgoOrderRootType } from "@orderly.network/types";
-import { parseNumber } from "@orderly.network/ui";
+import { i18n } from "@veltodefi/i18n";
+import { API, OrderStatus, OrderType } from "@veltodefi/types";
+import { AlgoOrderRootType } from "@veltodefi/types";
+import { parseNumber } from "@veltodefi/ui";
 import {
   capitalizeString,
   transSymbolformString,
-} from "@orderly.network/utils";
+} from "@veltodefi/utils";
 
 function getDisplaySide(side: string) {
   if (side === "BUY") {

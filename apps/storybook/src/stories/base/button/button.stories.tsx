@@ -8,7 +8,7 @@ import {
   ArrowDownSquareFillIcon,
   DebouncedButton,
   ThrottledButton,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 
 const meta: Meta<typeof Button> = {
   title: "Base/Button",

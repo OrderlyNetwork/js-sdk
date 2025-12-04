@@ -1,4 +1,4 @@
-import { chainsInfoMap } from "@orderly.network/types";
+import { chainsInfoMap } from "@veltodefi/types";
 
 export interface NetworkInterface {
   name: string;

@@ -2,9 +2,9 @@ import {
   AlgoOrderEntity,
   AlgoOrderRootType,
   OrderSide,
-} from "@orderly.network/types";
-import { OrderType } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+} from "@veltodefi/types";
+import { OrderType } from "@veltodefi/types";
+import { Decimal } from "@veltodefi/utils";
 import {
   getPriceRange,
   getTPSLTriggerPriceRange,

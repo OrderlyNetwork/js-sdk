@@ -1,4 +1,4 @@
-import { NetworkId } from "@orderly.network/types";
+import { NetworkId } from "@veltodefi/types";
 import { Chain, useChains } from "./";
 
 export type CurrentChain = {

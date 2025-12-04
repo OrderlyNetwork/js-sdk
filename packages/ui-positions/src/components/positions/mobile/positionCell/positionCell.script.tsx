@@ -1,4 +1,4 @@
-import { API } from "@orderly.network/types";
+import { API } from "@veltodefi/types";
 import { useSymbolContext } from "../../../../provider/symbolContext";
 import { PositionsProps } from "../../../../types/types";
 

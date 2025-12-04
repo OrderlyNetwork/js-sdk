@@ -1,5 +1,5 @@
 import React from "react";
-import { EMPTY_LIST } from "@orderly.network/types";
+import { EMPTY_LIST } from "@veltodefi/types";
 import { useAssetsChartScript } from "../assetChart";
 import { usePortfolioChartsState } from "./portfolioChartsMobile.script";
 import { PortfolioChartsMobileUI } from "./portfolioChartsMobile.ui";

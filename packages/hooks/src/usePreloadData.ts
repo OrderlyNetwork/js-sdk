@@ -1,6 +1,6 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import useSWR from "swr";
-import { getGlobalObject } from "@orderly.network/utils";
+import { getGlobalObject } from "@veltodefi/utils";
 import { useAppStore } from "./orderly/appStore";
 import { OrderlyContext } from "./orderlyContext";
 import { useMainnetChainsStore } from "./provider/store/chainInfoMainStore";

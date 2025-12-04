@@ -1,8 +1,8 @@
 import { FC, PropsWithChildren, useMemo } from "react";
-import { getMinNotional, useSymbolsInfo } from "@orderly.network/hooks";
-import { useMemoizedFn } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { API, OrderEntity } from "@orderly.network/types";
+import { getMinNotional, useSymbolsInfo } from "@veltodefi/hooks";
+import { useMemoizedFn } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { API, OrderEntity } from "@veltodefi/types";
 import { OrderListContext, OrderListContextState } from "./orderListContext";
 
 export interface OrderListProviderProps {

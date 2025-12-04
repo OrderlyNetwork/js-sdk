@@ -1,5 +1,5 @@
-import { useTranslation } from "@orderly.network/i18n";
-import { Button } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { Button } from "@veltodefi/ui";
 import { FaucetState } from "./faucet.script";
 
 export function FaucetUi(props: FaucetState) {

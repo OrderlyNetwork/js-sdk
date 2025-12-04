@@ -1,5 +1,5 @@
 import React from "react";
-import { cn, useScreen } from "@orderly.network/ui";
+import { cn, useScreen } from "@veltodefi/ui";
 import { PrivyConnectorImagePath } from "../../util";
 
 export function AbstractConnectArea({ connect }: { connect: () => void }) {

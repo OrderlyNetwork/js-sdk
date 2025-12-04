@@ -14,9 +14,9 @@ import {
   useAccount,
   useMemoizedFn,
   noCacheConfig,
-} from "@orderly.network/hooks";
-import { useAppContext } from "@orderly.network/react-app";
-import { AccountStatusEnum } from "@orderly.network/types";
+} from "@veltodefi/hooks";
+import { useAppContext } from "@veltodefi/react-app";
+import { AccountStatusEnum } from "@veltodefi/types";
 import {
   ReferralContext,
   ReferralContextProps,

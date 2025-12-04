@@ -1,6 +1,6 @@
 import { memo } from "react";
-import { cn, Flex, Text } from "@orderly.network/ui";
-import { commifyOptional } from "@orderly.network/utils";
+import { cn, Flex, Text } from "@veltodefi/ui";
+import { commifyOptional } from "@veltodefi/utils";
 import { isGrayCell } from "../../../../utils/util";
 
 type PreviewCellProps = {

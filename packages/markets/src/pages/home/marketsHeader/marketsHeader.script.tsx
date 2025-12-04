@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { useMarkets, useQuery, MarketsType } from "@orderly.network/hooks";
-import { useEmblaCarousel } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { useMarkets, useQuery, MarketsType } from "@veltodefi/hooks";
+import { useEmblaCarousel } from "@veltodefi/ui";
+import { Decimal } from "@veltodefi/utils";
 import { sortList, useSize } from "../../../utils";
 
 // export type EmblaCarouselType = Exclude<UseEmblaCarouselType[1], undefined>;

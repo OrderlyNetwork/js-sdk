@@ -1,4 +1,4 @@
-import { TradingRewards } from "@orderly.network/trading-rewards";
+import { TradingRewards } from "@veltodefi/trading-rewards";
 
 export default function TradingRewardsPage() {
   return (

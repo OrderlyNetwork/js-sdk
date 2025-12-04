@@ -1,6 +1,6 @@
 import { FC, ReactNode, useMemo } from "react";
-import { useMediaQuery } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import { useMediaQuery } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   Button,
   DataTable,
@@ -12,8 +12,8 @@ import {
   cn,
   Column,
   CopyIcon,
-} from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+} from "@veltodefi/ui";
+import { Decimal } from "@veltodefi/utils";
 import { EditCode } from "../../../components/editCodeBtn";
 import { EditIcon } from "../../../components/editIcon";
 import { PinBtn } from "../../../components/pinButton";

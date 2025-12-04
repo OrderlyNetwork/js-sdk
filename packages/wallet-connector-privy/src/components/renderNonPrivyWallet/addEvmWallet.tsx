@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { cn } from "@orderly.network/ui";
-import { Tooltip, ChevronDownIcon, ChevronUpIcon } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { cn } from "@veltodefi/ui";
+import { Tooltip, ChevronDownIcon, ChevronUpIcon } from "@veltodefi/ui";
 import { useWallet } from "../../hooks/useWallet";
 import { useWalletConnectorPrivy } from "../../provider";
 import { useWagmiWallet } from "../../providers/wagmi/wagmiWalletProvider";

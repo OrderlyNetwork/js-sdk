@@ -5,7 +5,7 @@ import {
   cn,
   Flex,
   Text,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { FC } from "react";
 
 /**

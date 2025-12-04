@@ -1,5 +1,5 @@
 import { FC, useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 import { VaultInfo } from "../../types/vault";
 import { VaultCardWidget } from "../vault-card";
 import { VaultsList } from "./vaults-list";

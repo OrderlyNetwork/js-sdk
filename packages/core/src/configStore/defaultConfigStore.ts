@@ -1,5 +1,5 @@
-import { ChainNamespace } from "@orderly.network/types";
-import { NetworkId } from "@orderly.network/types";
+import { ChainNamespace } from "@veltodefi/types";
+import { NetworkId } from "@veltodefi/types";
 import { ConfigKey, ConfigStore } from "./configStore";
 
 type ChainNamespaceType = (typeof ChainNamespace)[keyof typeof ChainNamespace];

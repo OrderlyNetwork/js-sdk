@@ -1,13 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   CaretDownIcon,
   cn,
   Input,
   MenuItem,
   SimpleDropdownMenu,
-} from "@orderly.network/ui";
-import { inputFormatter, Text } from "@orderly.network/ui";
+} from "@veltodefi/ui";
+import { inputFormatter, Text } from "@veltodefi/ui";
 import { PNLInputState, PnLMode } from "./useBuilder.script";
 
 export type PNLInputProps = PNLInputState & { testId?: string; quote: string };

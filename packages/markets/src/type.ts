@@ -1,5 +1,5 @@
-import { useMarkets } from "@orderly.network/hooks";
-import { SortOrder, Column } from "@orderly.network/ui";
+import { useMarkets } from "@veltodefi/hooks";
+import { SortOrder, Column } from "@veltodefi/ui";
 
 export type FavoriteInstance = ReturnType<typeof useMarkets>[1];
 

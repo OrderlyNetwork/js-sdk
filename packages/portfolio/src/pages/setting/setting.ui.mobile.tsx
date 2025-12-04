@@ -1,14 +1,14 @@
 import { FC, useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   Card,
   Flex,
   Switch,
   Text,
   ChevronRightIcon,
-} from "@orderly.network/ui";
-import { AuthGuardTooltip } from "@orderly.network/ui-connector";
-import { LanguageSwitcherWidget } from "@orderly.network/ui-scaffold";
+} from "@veltodefi/ui";
+import { AuthGuardTooltip } from "@veltodefi/ui-connector";
+import { LanguageSwitcherWidget } from "@veltodefi/ui-scaffold";
 import type { SettingScriptReturns } from "./setting.script";
 
 export const SettingMobile: FC<SettingScriptReturns> = (props) => {

@@ -1,8 +1,8 @@
 import { useMemo } from "react";
-import { RefferalAPI, useLocalStorage } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { toast } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { RefferalAPI, useLocalStorage } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { toast } from "@veltodefi/ui";
+import { Decimal } from "@veltodefi/utils";
 import { useReferralContext } from "../../../provider";
 import { addQueryParam } from "../../../utils/utils";
 

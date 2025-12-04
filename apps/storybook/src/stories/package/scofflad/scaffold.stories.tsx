@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Flex, Text } from "@orderly.network/ui";
+import { Flex, Text } from "@veltodefi/ui";
 import {
   AccountMenuWidget,
   AccountSummaryWidget,
   ChainMenuWidget,
   Scaffold,
-} from "@orderly.network/ui-scaffold";
+} from "@veltodefi/ui-scaffold";
 import { leftSidebarMenus } from "./data";
 
 const meta = {

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useCallback, useMemo, useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   TooltipContent,
   TooltipTrigger,
@@ -8,8 +8,8 @@ import {
   TooltipRoot,
   TooltipArrow,
   cn,
-} from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+} from "@veltodefi/ui";
+import { Decimal } from "@veltodefi/utils";
 import { BasicSymbolInfo } from "../../../types/types";
 import { useOrderBookContext } from "../../base/orderBook/orderContext";
 import { OrderBookCellType } from "../../base/orderBook/types";

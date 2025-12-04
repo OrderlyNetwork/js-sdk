@@ -1,7 +1,7 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router";
-import { generatePath } from "@orderly.network/i18n";
-import { i18n } from "@orderly.network/i18n";
+import { generatePath } from "@veltodefi/i18n";
+import { i18n } from "@veltodefi/i18n";
 import { EarnIcon, StakeIcon, VaultsIcon } from "../../components/icons";
 import { PathEnum } from "../../playground/constant";
 

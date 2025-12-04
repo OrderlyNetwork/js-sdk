@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
-import { useLocalStorage } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { cn, Flex, Text } from "@orderly.network/ui";
+import { useLocalStorage } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { cn, Flex, Text } from "@veltodefi/ui";
 import { PnlInputContext, PnlInputContextState } from "./pnlInputContext";
 import { PNL_Values, PnLMode } from "./useBuilder.script";
 

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { OrderType } from "@orderly.network/types";
+import { OrderType } from "@veltodefi/types";
 
 export function usePriceInputContainer({
   order_type_ext,

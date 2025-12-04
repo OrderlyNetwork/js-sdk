@@ -1,6 +1,6 @@
 import { FC, useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { OrderEntity, OrderSide } from "@orderly.network/types";
+import { useTranslation } from "@veltodefi/i18n";
+import { OrderEntity, OrderSide } from "@veltodefi/types";
 import {
   Button,
   Text,
@@ -10,8 +10,8 @@ import {
   Badge,
   ThrottledButton,
   Box,
-} from "@orderly.network/ui";
-import { commify, commifyOptional, Decimal } from "@orderly.network/utils";
+} from "@veltodefi/ui";
+import { commify, commifyOptional, Decimal } from "@veltodefi/utils";
 
 export const ConfirmHeader: FC<{
   onClose?: () => void;

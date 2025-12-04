@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Flex, Grid, Text } from "@orderly.network/ui";
+import { Flex, Grid, Text } from "@veltodefi/ui";
 
 const meta: Meta<typeof Text> = {
   title: "Base/Typography/Text",

@@ -1,5 +1,5 @@
-import { useAppContext } from "@orderly.network/react-app";
-import { useScreen } from "@orderly.network/ui";
+import { useAppContext } from "@veltodefi/react-app";
+import { useScreen } from "@veltodefi/ui";
 import { TabTypes, useReferralContext } from "../../../provider";
 
 export type AsAnAffiliateReturns = ReturnType<typeof useAsAnAffiliateScript>;

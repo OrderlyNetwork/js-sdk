@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   DropdownMenuContent,
   DropdownMenuPortal,
@@ -9,7 +9,7 @@ import {
   Text,
   cn,
   Switch,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import {
   CaretIcon,
   DisplaySettingIcon,

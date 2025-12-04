@@ -1,7 +1,7 @@
 import { FC, useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { AnnouncementType } from "@orderly.network/types";
-import { Flex, Text, ChevronDownIcon, cn } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { AnnouncementType } from "@veltodefi/types";
+import { Flex, Text, ChevronDownIcon, cn } from "@veltodefi/ui";
 import {
   AnnouncementIcon,
   ArrowRightShortIcon,

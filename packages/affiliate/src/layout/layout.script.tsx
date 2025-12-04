@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
-import type { SideBarProps } from "@orderly.network/ui-scaffold";
-import { useTranslation } from "@orderly.network/i18n";
+import type { SideBarProps } from "@veltodefi/ui-scaffold";
+import { useTranslation } from "@veltodefi/i18n";
 
 export const useLayoutBuilder = (): SideBarProps => {
   const [current, setCurrent] = useState("/");

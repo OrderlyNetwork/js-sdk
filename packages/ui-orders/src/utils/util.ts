@@ -1,14 +1,14 @@
-import { utils } from "@orderly.network/hooks";
-import { i18n } from "@orderly.network/i18n";
-import { OrderSide } from "@orderly.network/types";
+import { utils } from "@veltodefi/hooks";
+import { i18n } from "@veltodefi/i18n";
+import { OrderSide } from "@veltodefi/types";
 import {
   AlgoOrderRootType,
   AlgoOrderType,
   API,
   OrderStatus,
   OrderType,
-} from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+} from "@veltodefi/types";
+import { Decimal } from "@veltodefi/utils";
 
 export const upperCaseFirstLetter = (str: string) => {
   if (str === undefined) return str;

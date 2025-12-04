@@ -1,7 +1,7 @@
 import { propOr } from "ramda";
-import { account, positions } from "@orderly.network/perp";
-import { API } from "@orderly.network/types";
-import { zero } from "@orderly.network/utils";
+import { account, positions } from "@veltodefi/perp";
+import { API } from "@veltodefi/types";
+import { zero } from "@veltodefi/utils";
 import { SymbolsInfo } from "../../orderly/useSymbolsInfo";
 
 export function formatPositions(

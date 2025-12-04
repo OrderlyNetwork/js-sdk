@@ -1,9 +1,9 @@
 import { useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { AccountStatusEnum, NetworkId } from "@orderly.network/types";
-import { Box, Button, modal } from "@orderly.network/ui";
-import { AuthGuard } from "@orderly.network/ui-connector";
-import { Decimal } from "@orderly.network/utils";
+import { useTranslation } from "@veltodefi/i18n";
+import { AccountStatusEnum, NetworkId } from "@veltodefi/types";
+import { Box, Button, modal } from "@veltodefi/ui";
+import { AuthGuard } from "@veltodefi/ui-connector";
+import { Decimal } from "@veltodefi/utils";
 import { WithdrawTo } from "../../types";
 import { CrossWithdrawConfirm } from "../crossWithdrawConfirm";
 import SwitchChainButton from "./SwitchChainButton";

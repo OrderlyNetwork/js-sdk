@@ -1,7 +1,7 @@
 import React from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { Box, EmptyDataState } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { AccountStatusEnum } from "@veltodefi/types";
+import { Box, EmptyDataState } from "@veltodefi/ui";
 import { AuthGuard } from "./authGuard";
 
 type AuthGuardProps = {

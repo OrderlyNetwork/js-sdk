@@ -1,10 +1,10 @@
 import { useState, useEffect, FC, ReactNode, SVGProps, useMemo } from "react";
-import { EpochStatus } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { Box, Flex, Text, cn } from "@orderly.network/ui";
-import { AuthGuard } from "@orderly.network/ui-connector";
-import { commifyOptional } from "@orderly.network/utils";
+import { EpochStatus } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { AccountStatusEnum } from "@veltodefi/types";
+import { Box, Flex, Text, cn } from "@veltodefi/ui";
+import { AuthGuard } from "@veltodefi/ui-connector";
+import { commifyOptional } from "@veltodefi/utils";
 import { EsOrderlyIcon } from "../components/esOrderlyIcon";
 import { OrderlyIcon } from "../components/orderlyIcon";
 import { CurEpochReturns } from "./curEpoch.script";

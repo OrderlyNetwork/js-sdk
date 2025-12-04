@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import type { Column } from "@orderly.network/ui";
-import { numberToHumanStyle } from "@orderly.network/utils";
+import { useTranslation } from "@veltodefi/i18n";
+import type { Column } from "@veltodefi/ui";
+import { numberToHumanStyle } from "@veltodefi/utils";
 import type { FeeDataType } from "./feeTier.script";
 
 const textStyle: React.CSSProperties = {

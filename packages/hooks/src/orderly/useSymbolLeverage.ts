@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { API } from "@orderly.network/types";
+import { API } from "@veltodefi/types";
 import { useAccount } from "../useAccount";
 import { useMutation } from "../useMutation";
 import { usePrivateQuery } from "../usePrivateQuery";

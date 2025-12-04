@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useMemoizedFn, useTokensInfo } from "@orderly.network/hooks";
-import { API } from "@orderly.network/types";
+import { useMemoizedFn, useTokensInfo } from "@veltodefi/hooks";
+import { API } from "@veltodefi/types";
 import { WithdrawTo } from "../../../types";
 import { getTokenByTokenList } from "../../../utils";
 import { CurrentChain } from "../../depositForm/hooks";

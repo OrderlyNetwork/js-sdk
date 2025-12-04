@@ -3,7 +3,7 @@ import {
   ABSTRACT_CHAIN_ID_MAP,
   MONAD_TESTNET_CHAINID,
   STORY_TESTNET_CHAINID,
-} from "@orderly.network/types";
+} from "@veltodefi/types";
 import { ConfigStore } from "./configStore/configStore";
 import {
   mainnetUSDCAddress,

@@ -1,11 +1,11 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Box, Text, Button } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { Box, Text, Button } from "@veltodefi/ui";
 import {
   BrokerWallet,
   QuantityInput,
   AvailableQuantity,
-} from "@orderly.network/ui-transfer";
+} from "@veltodefi/ui-transfer";
 import { LatestDepositWidget } from "../latest-deposit/latest-deposit.widget";
 import { VaultDepositFormScript } from "./vault-deposit-form.script";
 

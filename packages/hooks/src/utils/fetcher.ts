@@ -1,5 +1,5 @@
 import type { SWRConfiguration } from "swr";
-import { get } from "@orderly.network/net";
+import { get } from "@veltodefi/net";
 
 export const fetcher = (
   url: string,

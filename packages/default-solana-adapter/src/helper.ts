@@ -21,12 +21,12 @@ import {
   type SignatureDomain,
   type WithdrawInputs,
   InternalTransferInputs,
-} from "@orderly.network/core";
-import { DexRequestInputs } from "@orderly.network/core";
+} from "@veltodefi/core";
+import { DexRequestInputs } from "@veltodefi/core";
 import {
   DEFAUL_ORDERLY_KEY_SCOPE,
   LedgerWalletKey,
-} from "@orderly.network/types";
+} from "@veltodefi/types";
 import {
   DVN_PROGRAM_ID,
   ENDPOINT_PROGRAM_ID,

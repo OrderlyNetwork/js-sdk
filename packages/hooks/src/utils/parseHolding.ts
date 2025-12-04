@@ -1,6 +1,6 @@
-import { account } from "@orderly.network/perp";
-import type { API } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+import { account } from "@veltodefi/perp";
+import type { API } from "@veltodefi/types";
+import { Decimal } from "@veltodefi/utils";
 
 type NonUSDCHolding = {
   holding: number;

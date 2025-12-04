@@ -2,7 +2,7 @@ import { ReactNode, useState } from "react";
 // @ts-ignore
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Box, Flex, ListView } from "@orderly.network/ui";
+import { Box, Flex, ListView } from "@veltodefi/ui";
 
 const meta: Meta<typeof ListView> = {
   title: "Base/ListView",

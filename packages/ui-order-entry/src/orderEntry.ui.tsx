@@ -4,15 +4,15 @@ import {
   useLocalStorage,
   useMemoizedFn,
   useOrderlyContext,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
+} from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { useOrderEntryFormErrorMsg } from "@veltodefi/react-app";
 import {
   OrderlyOrder,
   OrderSide,
   OrderType,
   PositionType,
-} from "@orderly.network/types";
+} from "@veltodefi/types";
 import {
   Box,
   cn,
@@ -24,9 +24,9 @@ import {
   ThrottledButton,
   toast,
   useScreen,
-} from "@orderly.network/ui";
-import { TPSLAdvancedWidget } from "@orderly.network/ui-tpsl";
-import { Decimal } from "@orderly.network/utils";
+} from "@veltodefi/ui";
+import { TPSLAdvancedWidget } from "@veltodefi/ui-tpsl";
+import { Decimal } from "@veltodefi/utils";
 import { AdditionalConfigButton } from "./components/additional/additionalConfigButton";
 import {
   AdditionalInfo,

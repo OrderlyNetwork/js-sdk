@@ -1,7 +1,7 @@
 import { pathOr } from "ramda";
-import { account } from "@orderly.network/perp";
-import { API } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+import { account } from "@veltodefi/perp";
+import { API } from "@veltodefi/types";
+import { Decimal } from "@veltodefi/utils";
 import { SymbolsInfo } from "../../orderly/useSymbolsInfo";
 import { parseHolding } from "../../utils/parseHolding";
 

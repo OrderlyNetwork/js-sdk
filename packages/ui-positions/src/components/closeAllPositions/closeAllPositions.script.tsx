@@ -3,15 +3,15 @@ import {
   usePositionStream,
   useSubAccountMutation,
   useTrack,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+} from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   API,
   OrderSide,
   OrderType,
   TrackerEventName,
-} from "@orderly.network/types";
-import { modal, Text, toast } from "@orderly.network/ui";
+} from "@veltodefi/types";
+import { modal, Text, toast } from "@veltodefi/ui";
 
 export interface UseCloseAllPositionsScriptOptions {
   symbol?: string;

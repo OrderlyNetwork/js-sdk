@@ -1,4 +1,4 @@
-import { MarketsHomePage } from "@orderly.network/markets";
+import { MarketsHomePage } from "@veltodefi/markets";
 import { BaseLayout } from "../../components/layout/baseLayout";
 import { PathEnum } from "../../constant";
 

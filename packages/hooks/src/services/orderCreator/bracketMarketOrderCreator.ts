@@ -1,4 +1,4 @@
-import { OrderlyOrder, OrderType } from "@orderly.network/types";
+import { OrderlyOrder, OrderType } from "@veltodefi/types";
 import { MarketOrderCreator } from "./marketOrderCreator";
 import { ValuesDepConfig, OrderValidationResult } from "./interface";
 import { bracketOrderValidator } from "./baseBracketOrderCreator";

@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   ArrowDownSquareFillIcon,
   ArrowLeftRightIcon,
@@ -7,7 +7,7 @@ import {
   Button,
   CardTitle,
   Flex,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 
 type Props = {
   disabled: boolean;

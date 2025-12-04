@@ -3,16 +3,16 @@ import {
   useAccount,
   useIndexPricesStream,
   useWalletConnector,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+} from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   ABSTRACT_CHAIN_ID_MAP,
   API,
   EMPTY_LIST,
   EMPTY_OBJECT,
-} from "@orderly.network/types";
-import { toast, useScreen } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+} from "@veltodefi/types";
+import { toast, useScreen } from "@veltodefi/ui";
+import { Decimal } from "@veltodefi/utils";
 import { useAccountValue } from "./useAccountValue";
 
 export type SubAccountScriptReturn = ReturnType<typeof SubAccountScript>;

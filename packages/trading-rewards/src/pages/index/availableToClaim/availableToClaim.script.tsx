@@ -1,8 +1,8 @@
 import { useCallback, useMemo } from "react";
-import { useDataTap } from "@orderly.network/react-app";
-import { Decimal } from "@orderly.network/utils";
-import { ChainNamespace } from "@orderly.network/types";
-import { ENVType, useGetEnv, useWalletConnector } from "@orderly.network/hooks";
+import { useDataTap } from "@veltodefi/react-app";
+import { Decimal } from "@veltodefi/utils";
+import { ChainNamespace } from "@veltodefi/types";
+import { ENVType, useGetEnv, useWalletConnector } from "@veltodefi/hooks";
 import { useTradingRewardsContext } from "../provider";
 
 export type AvailableReturns = {

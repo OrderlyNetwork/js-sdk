@@ -1,4 +1,4 @@
-import { API, OrderType, OrderlyOrder } from "@orderly.network/types";
+import { API, OrderType, OrderlyOrder } from "@veltodefi/types";
 
 export type OrderValidationItem =
   | {

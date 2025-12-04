@@ -1,14 +1,14 @@
 import React, { FC, useMemo } from "react";
-import { useLocalStorage } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import { useLocalStorage } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   CaretDownIcon,
   CaretUpIcon,
   Flex,
   Picker,
   Text,
-} from "@orderly.network/ui";
-import { SelectOption } from "@orderly.network/ui/src/select/withOptions";
+} from "@veltodefi/ui";
+import { SelectOption } from "@veltodefi/ui/src/select/withOptions";
 import { ORDERBOOK_MOBILE_COIN_TYPE_KEY } from "../../base/orderBook/orderContext";
 
 interface Props {

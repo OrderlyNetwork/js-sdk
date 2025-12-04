@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { useMediaQuery } from "@orderly.network/hooks";
-import type { SideBarProps } from "@orderly.network/ui-scaffold";
-import { useTranslation } from "@orderly.network/i18n";
+import { useMediaQuery } from "@veltodefi/hooks";
+import type { SideBarProps } from "@veltodefi/ui-scaffold";
+import { useTranslation } from "@veltodefi/i18n";
 
 export enum TradingRewardsLeftSidebarPath {
   Trading = "/rewards/trading",

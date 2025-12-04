@@ -7,7 +7,7 @@ import {
   Text,
   cn,
   Tooltip,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 
 type SideMenuItem = {
   name: string;

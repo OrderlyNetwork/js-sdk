@@ -1,12 +1,12 @@
 import React from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
+import { useTranslation } from "@veltodefi/i18n";
+import { useOrderEntryFormErrorMsg } from "@veltodefi/react-app";
 import {
   OrderlyOrder,
   OrderSide,
   OrderType,
   PositionType,
-} from "@orderly.network/types";
+} from "@veltodefi/types";
 import {
   Box,
   Button,
@@ -17,7 +17,7 @@ import {
   ThrottledButton,
   ScrollArea,
   useScreen,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { OrderInfo } from "../components/orderInfo";
 import { PnlInfo } from "../components/pnlInfo";
 import { TPSLInputRowWidget } from "../components/tpslInputRow";

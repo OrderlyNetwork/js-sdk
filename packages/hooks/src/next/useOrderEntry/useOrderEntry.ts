@@ -10,8 +10,8 @@ import {
   TrackerEventName,
   OrderSide,
   EMPTY_OBJECT,
-} from "@orderly.network/types";
-import { Decimal, getBBOType, zero } from "@orderly.network/utils";
+} from "@veltodefi/types";
+import { Decimal, getBBOType, zero } from "@veltodefi/utils";
 import { useAccountInfo } from "../../orderly/appStore";
 import {
   useCollateral,

@@ -1,7 +1,7 @@
-import { Button, ButtonProps, Flex, modal, toast } from "@orderly.network/ui";
-import { ChainSelectorDialogId } from "@orderly.network/ui-chain-selector";
-import { NetworkId } from "@orderly.network/types";
-import { useTranslation } from "@orderly.network/i18n";
+import { Button, ButtonProps, Flex, modal, toast } from "@veltodefi/ui";
+import { ChainSelectorDialogId } from "@veltodefi/ui-chain-selector";
+import { NetworkId } from "@veltodefi/types";
+import { useTranslation } from "@veltodefi/i18n";
 interface IProps {
   networkId?: NetworkId;
   size: ButtonProps["size"];

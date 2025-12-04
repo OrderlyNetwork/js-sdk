@@ -1,6 +1,6 @@
 import { useCallback } from "react";
-import { useFundingRate } from "@orderly.network/hooks";
-import { modal } from "@orderly.network/ui";
+import { useFundingRate } from "@veltodefi/hooks";
+import { modal } from "@veltodefi/ui";
 import { FundingRateSheetId } from "../fundingRateModal/fundingRateModal.widget";
 
 export const useFundingRateScript = (symbol: string) => {

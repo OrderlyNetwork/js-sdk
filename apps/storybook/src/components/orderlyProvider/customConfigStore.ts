@@ -1,5 +1,5 @@
-import { ConfigKey, API_URLS, type URLS } from "@orderly.network/core";
-import { ExtendedConfigStore } from "@orderly.network/hooks";
+import { ConfigKey, API_URLS, type URLS } from "@veltodefi/core";
+import { ExtendedConfigStore } from "@veltodefi/hooks";
 
 type ENV_NAME = "prod" | "staging" | "qa" | "dev";
 

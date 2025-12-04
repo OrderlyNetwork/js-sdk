@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { StoryObj } from "@storybook/react-vite";
-import { TradingPage } from "@orderly.network/trading";
-import { Scaffold } from "@orderly.network/ui-scaffold";
+import { TradingPage } from "@veltodefi/trading";
+import { Scaffold } from "@veltodefi/ui-scaffold";
 import { useRouteContext } from "../../../components/orderlyProvider/rounteProvider";
 import { tradingPageConfig, useMainNav } from "../../../orderlyConfig";
 import { OrderlyIcon } from "../trading/icons";

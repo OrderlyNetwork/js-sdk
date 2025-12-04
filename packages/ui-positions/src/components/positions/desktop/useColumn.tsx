@@ -1,6 +1,6 @@
 import { useMemo, useRef } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
+import { useTranslation } from "@veltodefi/i18n";
+import { API } from "@veltodefi/types";
 import {
   Box,
   cn,
@@ -10,10 +10,10 @@ import {
   Column,
   Text,
   Tooltip,
-} from "@orderly.network/ui";
-import { SymbolLeverageDialogId } from "@orderly.network/ui-leverage";
-import { SharePnLOptions, SharePnLDialogId } from "@orderly.network/ui-share";
-import { Decimal, formatNum } from "@orderly.network/utils";
+} from "@veltodefi/ui";
+import { SymbolLeverageDialogId } from "@veltodefi/ui-leverage";
+import { SharePnLOptions, SharePnLDialogId } from "@veltodefi/ui-share";
+import { Decimal, formatNum } from "@veltodefi/utils";
 import { FundingFeeButton } from "../../fundingFeeHistory/fundingFeeButton";
 import { RwaStatusTag } from "../../rwaStatus/rwaStatus";
 import { ClosePositionWidget } from "../closePosition";

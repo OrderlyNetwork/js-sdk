@@ -1,5 +1,5 @@
-import { Text } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { Text } from "@veltodefi/ui";
+import { Decimal } from "@veltodefi/utils";
 import { useSymbolContext } from "../../../provider/symbolContext";
 import { PriceInput } from "./priceInput";
 import { QuantityInput } from "./quantityInput";

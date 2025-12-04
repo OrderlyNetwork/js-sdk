@@ -1,6 +1,6 @@
-import { useTranslation } from "@orderly.network/i18n";
-import { OrderType } from "@orderly.network/types";
-import { Flex, Text, textVariants } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { OrderType } from "@veltodefi/types";
+import { Flex, Text, textVariants } from "@veltodefi/ui";
 import { FeesWidget } from "../fee";
 import { SlippageUI } from "../slippage/slippage.ui";
 

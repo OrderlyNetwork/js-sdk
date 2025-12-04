@@ -1,7 +1,7 @@
 import { FC } from "react";
-import { i18n } from "@orderly.network/i18n";
-import { registerSimpleDialog } from "@orderly.network/ui";
-import { registerSimpleSheet } from "@orderly.network/ui";
+import { i18n } from "@veltodefi/i18n";
+import { registerSimpleDialog } from "@veltodefi/ui";
+import { registerSimpleSheet } from "@veltodefi/ui";
 import {
   TransferFormScriptOptions,
   useTransferFormScript,

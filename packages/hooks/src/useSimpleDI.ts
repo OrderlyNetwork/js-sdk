@@ -1,4 +1,4 @@
-import { SimpleDI } from "@orderly.network/core";
+import { SimpleDI } from "@veltodefi/core";
 
 export const useSimpleDI = <T>() => {
   return {

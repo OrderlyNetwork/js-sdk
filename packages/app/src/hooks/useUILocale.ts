@@ -3,8 +3,8 @@ import {
   useTranslation,
   useLocaleCode,
   LocaleEnum,
-} from "@orderly.network/i18n";
-import { Locale } from "@orderly.network/ui";
+} from "@veltodefi/i18n";
+import { Locale } from "@veltodefi/ui";
 import { enUS, zhCN, ja, es, ko, vi, de, fr, nl } from "date-fns/locale";
 
 export function useUILocale() {

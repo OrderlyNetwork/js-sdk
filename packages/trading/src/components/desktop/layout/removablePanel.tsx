@@ -1,5 +1,5 @@
 import React, { FC, PropsWithChildren, SVGProps, useState } from "react";
-import { Box, cn, Flex, Tooltip } from "@orderly.network/ui";
+import { Box, cn, Flex, Tooltip } from "@veltodefi/ui";
 
 export type RemovablePanelProps = {
   className?: string;

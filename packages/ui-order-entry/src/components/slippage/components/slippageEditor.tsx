@@ -5,7 +5,7 @@ import {
   useImperativeHandle,
   useState,
 } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   Box,
   cn,
@@ -17,8 +17,8 @@ import {
   Text,
   Tooltip,
   TooltipTrigger,
-} from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+} from "@veltodefi/ui";
+import { Decimal } from "@veltodefi/utils";
 
 interface SlippageProps {
   initialValue?: number;

@@ -5,13 +5,13 @@ import {
   useLocalStorage,
   useStorageLedgerAddress,
   useWalletConnector,
-} from "@orderly.network/hooks";
-import { i18n, useTranslation } from "@orderly.network/i18n";
+} from "@veltodefi/hooks";
+import { i18n, useTranslation } from "@veltodefi/i18n";
 import {
   AccountStatusEnum,
   ChainNamespace,
   LedgerWalletKey,
-} from "@orderly.network/types";
+} from "@veltodefi/types";
 import {
   Box,
   Button,
@@ -25,7 +25,7 @@ import {
   TextField,
   toast,
   Tooltip,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { StepItem } from "./step";
 
 export type WalletConnectContentProps = {

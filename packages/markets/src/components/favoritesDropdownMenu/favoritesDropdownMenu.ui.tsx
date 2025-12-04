@@ -1,5 +1,5 @@
 import { PropsWithChildren } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   Box,
   Button,
@@ -18,7 +18,7 @@ import {
   cn,
   CloseCircleFillIcon,
   Tooltip,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import type { UseFavoritesDropdownMenuScriptReturn } from "./favoritesDropdownMenu.script";
 
 export type FavoritesDropdownMenuProps =

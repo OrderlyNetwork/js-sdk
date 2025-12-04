@@ -1,8 +1,8 @@
 import { FC, useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
-import { Column, Flex, Text, Tooltip } from "@orderly.network/ui";
-import { commifyOptional } from "@orderly.network/utils";
+import { useTranslation } from "@veltodefi/i18n";
+import { API } from "@veltodefi/types";
+import { Column, Flex, Text, Tooltip } from "@veltodefi/ui";
+import { commifyOptional } from "@veltodefi/utils";
 
 const TooltipButton: FC<{
   tooltip: string;

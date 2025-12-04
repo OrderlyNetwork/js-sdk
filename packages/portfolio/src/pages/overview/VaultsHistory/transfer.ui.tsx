@@ -1,7 +1,7 @@
 import React from "react";
-import type { API } from "@orderly.network/types";
-import { DataFilter } from "@orderly.network/ui";
-import { AuthGuardDataTable } from "@orderly.network/ui-connector";
+import type { API } from "@veltodefi/types";
+import { DataFilter } from "@veltodefi/ui";
+import { AuthGuardDataTable } from "@veltodefi/ui-connector";
 import { useColumns } from "./column";
 import type { useVaultsHistoryHookReturn } from "./useDataSource.script";
 

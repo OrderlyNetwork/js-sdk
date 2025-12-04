@@ -1,5 +1,5 @@
 import { Eip1193Provider } from "ethers";
-import { ChainNamespace } from "@orderly.network/types";
+import { ChainNamespace } from "@veltodefi/types";
 import { IContract } from "./contract";
 import { WalletAdapter } from "./wallet/walletAdapter";
 

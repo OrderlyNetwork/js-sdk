@@ -3,7 +3,7 @@ import { css } from "@codemirror/lang-css";
 import { githubLight } from "@uiw/codemirror-theme-github";
 import CodeMirror, { ViewUpdate } from "@uiw/react-codemirror";
 import { styled } from "storybook/theming";
-import { Button } from "@orderly.network/ui";
+import { Button } from "@veltodefi/ui";
 import { object2Css, parseCssToJson } from "../utils";
 import { useTheme } from "./context";
 

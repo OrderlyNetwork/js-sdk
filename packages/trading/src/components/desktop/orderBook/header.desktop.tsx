@@ -1,6 +1,6 @@
 import React, { FC, ReactNode, useMemo } from "react";
-import { useLocalStorage } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import { useLocalStorage } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   Box,
   CaretDownIcon,
@@ -8,8 +8,8 @@ import {
   cn,
   Flex,
   Popover,
-} from "@orderly.network/ui";
-import { optimizeSymbolDisplay } from "@orderly.network/utils";
+} from "@veltodefi/ui";
+import { optimizeSymbolDisplay } from "@veltodefi/utils";
 import {
   ORDERBOOK_COIN_TYPE_KEY,
   useOrderBookContext,

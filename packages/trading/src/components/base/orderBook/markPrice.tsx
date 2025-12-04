@@ -6,8 +6,8 @@ import {
   Text,
   SimpleDialog,
   useScreen,
-} from "@orderly.network/ui";
-import { useTranslation } from "@orderly.network/i18n";
+} from "@veltodefi/ui";
+import { useTranslation } from "@veltodefi/i18n";
 
 /**
  * default style is desktop effect

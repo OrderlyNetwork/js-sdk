@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from "react";
-import { useAccount, useCollateral, useGetEnv } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { modal, useScreen } from "@orderly.network/ui";
+import { useAccount, useCollateral, useGetEnv } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { modal, useScreen } from "@veltodefi/ui";
 import { VAULTS_WEBSITE_URLS } from "../../api/env";
 import { useSVApiUrl } from "../../hooks/useSVAPIUrl";
 import { useVaultLpInfoById, useVaultsStore } from "../../store/vaultsStore";

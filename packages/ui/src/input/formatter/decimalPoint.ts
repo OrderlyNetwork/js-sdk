@@ -1,4 +1,4 @@
-import { commify } from "@orderly.network/utils";
+import { commify } from "@veltodefi/utils";
 import { InputFormatter, InputFormatterOptions } from "./inputFormatter";
 
 export const decimalPointFormatter: InputFormatter = {

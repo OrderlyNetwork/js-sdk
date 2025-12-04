@@ -15,8 +15,8 @@ import {
   ARBITRUM_TESTNET_CHAINID,
   ABSTRACT_TESTNET_CHAINID,
   BSC_TESTNET_CHAINID,
-} from "@orderly.network/types";
-import { nativeTokenAddress } from "@orderly.network/types";
+} from "@veltodefi/types";
+import { nativeTokenAddress } from "@veltodefi/types";
 import { OrderlyContext } from "../orderlyContext";
 import { useMainnetChainsStore } from "../provider/store/chainInfoMainStore";
 import { useTestnetChainsStore } from "../provider/store/chainInfoTestStore";

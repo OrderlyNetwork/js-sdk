@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 import { useReferralContext } from "../../../provider";
 import { SummaryFilter } from "../../../utils/types";
 

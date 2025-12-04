@@ -1,5 +1,5 @@
 import { OrderInterface, SideType } from "../type";
-import { OrderStatus } from "@orderly.network/types";
+import { OrderStatus } from "@veltodefi/types";
 import {startOfSecond, startOfMinute, startOfHour, startOfDay, startOfYear, startOfWeek, startOfMonth} from 'date-fns';
 
 const IntervalMap: { [interval: string]: { startOf: string; period: number } } = {

@@ -1,7 +1,7 @@
 import { FC, useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { DataFilter, Flex, Text, TokenIcon } from "@orderly.network/ui";
-import { ListView } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { DataFilter, Flex, Text, TokenIcon } from "@veltodefi/ui";
+import { ListView } from "@veltodefi/ui";
 import { type useDistributionHistoryHookReturn } from "./useDataSource.script";
 
 type FundingHistoryProps = {} & useDistributionHistoryHookReturn;

@@ -6,12 +6,12 @@ import {
   useSubAccountDataObserver,
   useSubAccountMaxWithdrawal,
   useTransfer,
-} from "@orderly.network/hooks";
-import { useAppStore } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { API, NetworkId } from "@orderly.network/types";
-import { toast } from "@orderly.network/ui";
-import { Decimal, zero } from "@orderly.network/utils";
+} from "@veltodefi/hooks";
+import { useAppStore } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { API, NetworkId } from "@veltodefi/types";
+import { toast } from "@veltodefi/ui";
+import { Decimal, zero } from "@veltodefi/utils";
 import { InputStatus } from "../../types";
 import { getTransferErrorMessage } from "../../utils";
 import { useSettlePnl } from "../unsettlePnlInfo/useSettlePnl";

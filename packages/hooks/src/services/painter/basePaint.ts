@@ -1,4 +1,4 @@
-import { OrderSide } from "@orderly.network/types";
+import { OrderSide } from "@veltodefi/types";
 import { PosterPainter } from "./painter";
 
 export type posterDataSource = {

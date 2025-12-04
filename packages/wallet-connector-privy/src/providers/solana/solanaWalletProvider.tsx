@@ -8,8 +8,8 @@ import React, {
 } from "react";
 import { WalletAdapterNetwork, WalletName } from "@solana/wallet-adapter-base";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { useStorageLedgerAddress } from "@orderly.network/hooks";
-import { ChainNamespace } from "@orderly.network/types";
+import { useStorageLedgerAddress } from "@veltodefi/hooks";
+import { ChainNamespace } from "@veltodefi/types";
 import { useWalletConnectorPrivy } from "../../provider";
 import { useSolanaWalletStore } from "../../stores/solanaWalletStore";
 import { SolanaChainsMap } from "../../types";

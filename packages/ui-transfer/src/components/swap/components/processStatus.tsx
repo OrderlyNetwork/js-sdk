@@ -1,5 +1,5 @@
 import { FC, useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   Box,
   Button,
@@ -10,7 +10,7 @@ import {
   Flex,
   Spinner,
   Text,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { TopRightArrowIcon } from "../icons";
 import { SwapMode, SwapProcessStatus } from "../types";
 

@@ -1,6 +1,6 @@
 import React from "react";
-import { useAccount } from "@orderly.network/hooks";
-import { DataTableClassNames, useScreen } from "@orderly.network/ui";
+import { useAccount } from "@veltodefi/hooks";
+import { DataTableClassNames, useScreen } from "@veltodefi/ui";
 import { useAssetsScript } from "./assets.script";
 import type { useAssetsScriptReturn } from "./assets.script";
 import { AssetsDataTable, AssetsTable } from "./assets.ui.desktop";

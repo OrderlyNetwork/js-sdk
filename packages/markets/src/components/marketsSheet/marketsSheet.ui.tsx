@@ -1,5 +1,5 @@
-import { useTranslation } from "@orderly.network/i18n";
-import { Box, cn, TabPanel, Tabs, Text } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { Box, cn, TabPanel, Tabs, Text } from "@veltodefi/ui";
 import { FavoritesIcon } from "../../icons";
 import { MarketsTabName } from "../../type";
 import { MarketsListWidget } from "../marketsList";

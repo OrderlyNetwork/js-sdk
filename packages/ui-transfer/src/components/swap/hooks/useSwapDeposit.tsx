@@ -1,8 +1,8 @@
 import { useCallback, useMemo } from "react";
-import { useConfig, useLocalStorage } from "@orderly.network/hooks";
-import { API } from "@orderly.network/types";
-import { modal } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { useConfig, useLocalStorage } from "@veltodefi/hooks";
+import { API } from "@veltodefi/types";
+import { modal } from "@veltodefi/ui";
+import { Decimal } from "@veltodefi/utils";
 import { CurrentChain } from "../../depositForm/hooks/useChainSelect";
 import { SwapDialog } from "../components/swapDialog";
 import { DST, SwapMode } from "../types";

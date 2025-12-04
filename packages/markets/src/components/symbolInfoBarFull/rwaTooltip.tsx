@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import React from "react";
-import { Trans, useTranslation } from "@orderly.network/i18n";
-import { Flex, Tooltip, Text, cn, modal } from "@orderly.network/ui";
-import { useScreen } from "@orderly.network/ui";
+import { Trans, useTranslation } from "@veltodefi/i18n";
+import { Flex, Tooltip, Text, cn, modal } from "@veltodefi/ui";
+import { useScreen } from "@veltodefi/ui";
 
 export type RwaTooltipProps = {
   isRwa: boolean;

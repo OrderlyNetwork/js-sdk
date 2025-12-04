@@ -1,6 +1,6 @@
 import { useCallback } from "react";
-import { useLocalStorage, usePositionStream } from "@orderly.network/hooks";
-import { modal } from "@orderly.network/ui";
+import { useLocalStorage, usePositionStream } from "@veltodefi/hooks";
+import { modal } from "@veltodefi/ui";
 import { ORDERLY_ASSETS_VISIBLE_KEY } from "../../assets/type";
 import { PerformanceMobileSheetId } from "../performanceMobileDialog";
 

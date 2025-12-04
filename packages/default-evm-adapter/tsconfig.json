@@ -2,10 +2,10 @@
   "extends": "./tsconfig.build.json",
   "compilerOptions": {
     "paths": {
-      "@orderly.network/types": [
+      "@veltodefi/types": [
         "../types/src"
       ],
-      "@orderly.network/core": [
+      "@veltodefi/core": [
         "../core/src"
       ]
     },

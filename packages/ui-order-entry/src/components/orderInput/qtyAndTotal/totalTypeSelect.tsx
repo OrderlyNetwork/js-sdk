@@ -1,6 +1,6 @@
 import { FC, memo, useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { cn, Select } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { cn, Select } from "@veltodefi/ui";
 
 export enum OrderTotalType {
   OrderSize = "orderSize",

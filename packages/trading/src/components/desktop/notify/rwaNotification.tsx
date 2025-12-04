@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   toast,
   Flex,
@@ -7,7 +7,7 @@ import {
   ExclamationFillIcon,
   Text,
   useScreen,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 
 const toastId = "rwaOutsideMarketHoursNotify";
 

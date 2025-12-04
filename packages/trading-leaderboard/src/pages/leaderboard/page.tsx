@@ -1,6 +1,6 @@
 import { FC, ReactNode } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Box, cn, Flex, Text, useScreen } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { Box, cn, Flex, Text, useScreen } from "@veltodefi/ui";
 import { LeaderboardBackground } from "../../components/background";
 import { CampaignsWidget } from "../../components/campaigns/campaigns.widget";
 import { GeneralLeaderboardIWidget } from "../../components/leaderboard128/generalLeaderboard";

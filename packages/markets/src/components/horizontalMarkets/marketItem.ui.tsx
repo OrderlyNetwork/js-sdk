@@ -1,6 +1,6 @@
 import React from "react";
-import { cn, Flex, Text, TokenIcon, Divider } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { cn, Flex, Text, TokenIcon, Divider } from "@veltodefi/ui";
+import { Decimal } from "@veltodefi/utils";
 
 export interface MarketItemProps {
   symbol: string;

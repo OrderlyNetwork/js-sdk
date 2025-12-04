@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { account as accountPerp } from "@orderly.network/perp";
-import { Decimal } from "@orderly.network/utils";
+import { account as accountPerp } from "@veltodefi/perp";
+import { Decimal } from "@veltodefi/utils";
 import {
   useCollateral,
   useIndexPricesStream,

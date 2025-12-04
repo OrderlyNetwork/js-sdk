@@ -1,4 +1,4 @@
-import type { OrderlyAppProviderProps } from "@orderly.network/react-app";
+import type { OrderlyAppProviderProps } from "@veltodefi/react-app";
 
 export const notification: OrderlyAppProviderProps["notification"] = {
   orderFilled: {

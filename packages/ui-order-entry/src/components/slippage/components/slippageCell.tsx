@@ -1,14 +1,14 @@
 import { useRef } from "react";
-import { useBoolean } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import { useBoolean } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   EditIcon,
   Flex,
   Text,
   SimpleDialog,
   useScreen,
-} from "@orderly.network/ui";
-import { AuthGuard } from "@orderly.network/ui-connector";
+} from "@veltodefi/ui";
+import { AuthGuard } from "@veltodefi/ui-connector";
 import { SlippageEditor } from "./slippageEditor";
 
 export const SlippageCell = (props: {

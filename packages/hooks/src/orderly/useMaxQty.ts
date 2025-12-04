@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { account } from "@orderly.network/perp";
-import { type API, OrderSide } from "@orderly.network/types";
+import { account } from "@veltodefi/perp";
+import { type API, OrderSide } from "@veltodefi/types";
 import { useAccountInfo } from "./appStore";
 import { useCollateral } from "./useCollateral";
 import { useLeverageBySymbol } from "./useLeverageBySymbol";

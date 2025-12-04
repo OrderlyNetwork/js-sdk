@@ -1,10 +1,10 @@
 import { FC, PropsWithChildren } from "react";
-import { Flex, Box } from "@orderly.network/ui";
+import { Flex, Box } from "@veltodefi/ui";
 import {
   MainNavMobile,
   BottomNav,
   type ScaffoldProps,
-} from "@orderly.network/ui-scaffold";
+} from "@veltodefi/ui-scaffold";
 import { LayoutProvider } from "./context";
 import { usePortfolioLayoutScriptType } from "./layout.script";
 

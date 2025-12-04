@@ -4,9 +4,9 @@ import useSWR, {
   SWRHook,
   SWRResponse,
 } from "swr";
-import { Account, MessageFactor } from "@orderly.network/core";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { getTimestamp } from "@orderly.network/utils";
+import { Account, MessageFactor } from "@veltodefi/core";
+import { AccountStatusEnum } from "@veltodefi/types";
+import { getTimestamp } from "@veltodefi/utils";
 import { useAccount } from "../useAccount";
 import { useConfig } from "../useConfig";
 import { fetcher } from "../utils/fetcher";

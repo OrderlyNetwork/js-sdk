@@ -1,12 +1,12 @@
 import type { StoryObj } from "@storybook/react-vite";
-import { Box } from "@orderly.network/ui";
+import { Box } from "@veltodefi/ui";
 import {
   MaintenanceTipsUI,
   AccountMenuWidget,
   AccountSummaryWidget,
   ChainMenuWidget,
   Scaffold,
-} from "@orderly.network/ui-scaffold";
+} from "@veltodefi/ui-scaffold";
 
 const meta = {
   title: "Package/ui-scaffold/maintenanceTips",

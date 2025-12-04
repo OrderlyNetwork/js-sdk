@@ -4,7 +4,7 @@ import {
   getPrecisionByNumber,
   numberToHumanStyle,
   todpIfNeed,
-} from "@orderly.network/utils";
+} from "@veltodefi/utils";
 
 export type RoundingMode = number | "truncate";
 

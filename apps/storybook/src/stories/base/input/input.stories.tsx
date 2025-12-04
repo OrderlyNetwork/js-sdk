@@ -8,7 +8,7 @@ import {
   Input,
   InputAdditional,
   inputFormatter,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 
 const meta = {
   title: "Base/Input/Input",

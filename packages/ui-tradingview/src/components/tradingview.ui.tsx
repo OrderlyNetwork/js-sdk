@@ -1,7 +1,7 @@
 import React, { forwardRef } from "react";
-import { useMediaQuery } from "@orderly.network/hooks";
-import { MEDIA_TABLET } from "@orderly.network/types";
-import { Box, cn, Divider, Flex } from "@orderly.network/ui";
+import { useMediaQuery } from "@veltodefi/hooks";
+import { MEDIA_TABLET } from "@veltodefi/types";
+import { Box, cn, Divider, Flex } from "@veltodefi/ui";
 import { IndicatorsIcon, SettingIcon } from "../icons";
 import type { TradingviewUIPropsInterface } from "../type";
 import { NoTradingview } from "./noTradingview";

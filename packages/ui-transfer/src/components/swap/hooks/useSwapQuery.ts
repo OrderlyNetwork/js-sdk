@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { useAccountInstance, useBoolean } from "@orderly.network/hooks";
+import { useAccountInstance, useBoolean } from "@veltodefi/hooks";
 import { swapSupportApiUrl } from "../constants";
 
 export const useWooSwapQuery = () => {

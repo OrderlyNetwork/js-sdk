@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { API, nativeTokenAddress } from "@orderly.network/types";
+import { API, nativeTokenAddress } from "@veltodefi/types";
 
 const retryInterval = 3000;
 

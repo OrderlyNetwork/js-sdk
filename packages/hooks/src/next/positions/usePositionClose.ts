@@ -4,7 +4,7 @@ import {
   OrderlyOrder,
   OrderSide,
   OrderType,
-} from "@orderly.network/types";
+} from "@veltodefi/types";
 import { useMarkPricesStream } from "../../orderly/useMarkPricesStream";
 import { useSymbolsInfo } from "../../orderly/useSymbolsInfo";
 import { useOrderlyContext } from "../../orderlyContext";

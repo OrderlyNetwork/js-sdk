@@ -1,9 +1,9 @@
 import { FC } from "react";
-import { VolBarChart } from "@orderly.network/chart";
-import { useTranslation } from "@orderly.network/i18n";
-import { EMPTY_LIST } from "@orderly.network/types";
-import { Flex, Select, Text } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { VolBarChart } from "@veltodefi/chart";
+import { useTranslation } from "@veltodefi/i18n";
+import { EMPTY_LIST } from "@veltodefi/types";
+import { Flex, Select, Text } from "@veltodefi/ui";
+import { Decimal } from "@veltodefi/utils";
 import { TitleStatisticReturns } from "./titleStatistic.script";
 
 export const TitleStatistic: FC<TitleStatisticReturns> = (props) => {

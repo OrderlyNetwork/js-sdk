@@ -1,7 +1,7 @@
-import { PriceMode } from "@orderly.network/hooks";
-import { API } from "@orderly.network/types";
-import { SortOrder } from "@orderly.network/ui";
-import { SharePnLConfig } from "@orderly.network/ui-share";
+import { PriceMode } from "@veltodefi/hooks";
+import { API } from "@veltodefi/types";
+import { SortOrder } from "@veltodefi/ui";
+import { SharePnLConfig } from "@veltodefi/ui-share";
 
 export type SortType = {
   sortKey: string;

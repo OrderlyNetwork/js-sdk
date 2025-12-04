@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { toast, Toaster, ToastTile } from "@orderly.network/ui";
+import { toast, Toaster, ToastTile } from "@veltodefi/ui";
 
 const meta: Meta<typeof Toaster> = {
   title: "Base/toast",

@@ -1,6 +1,6 @@
-import { i18n } from "@orderly.network/i18n";
-import { OrderlyOrder } from "@orderly.network/types";
-import { registerSimpleDialog, registerSimpleSheet } from "@orderly.network/ui";
+import { i18n } from "@veltodefi/i18n";
+import { OrderlyOrder } from "@veltodefi/types";
+import { registerSimpleDialog, registerSimpleSheet } from "@veltodefi/ui";
 import { TPSLAdvancedUI } from "./tpslAdvanced.ui";
 import { useTPSLAdvanced } from "./useTPSLAdvanced.script";
 

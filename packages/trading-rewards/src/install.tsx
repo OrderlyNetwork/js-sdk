@@ -1,4 +1,4 @@
-// import { ExtensionPositionEnum, installExtension } from "@orderly.network/ui";
+// import { ExtensionPositionEnum, installExtension } from "@veltodefi/ui";
 // import {
 //   TradingRewardsLayout,
 //   TradingRewardsLayoutProps,

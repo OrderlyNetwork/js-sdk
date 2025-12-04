@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 // import { fn } from 'storybook/test';
-import { Popover, Button, SelectItem } from "@orderly.network/ui";
+import { Popover, Button, SelectItem } from "@veltodefi/ui";
 
 const meta = {
   title: "Base/Popover",

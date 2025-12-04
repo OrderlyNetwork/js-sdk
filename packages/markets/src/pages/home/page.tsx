@@ -1,8 +1,8 @@
 import React, { FC, useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import type { RouterAdapter } from "@orderly.network/types";
-import { Box, cn, TabPanel, Tabs, useScreen } from "@orderly.network/ui";
-import { LeftNavProps, LeftNavUI } from "@orderly.network/ui-scaffold";
+import { useTranslation } from "@veltodefi/i18n";
+import type { RouterAdapter } from "@veltodefi/types";
+import { Box, cn, TabPanel, Tabs, useScreen } from "@veltodefi/ui";
+import { LeftNavProps, LeftNavUI } from "@veltodefi/ui-scaffold";
 import {
   MarketsProvider,
   type MarketsProviderProps,

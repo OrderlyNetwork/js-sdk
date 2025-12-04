@@ -9,8 +9,8 @@ import {
   Input,
   InputAdditional,
   inputFormatter,
-} from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+} from "@veltodefi/ui";
+import { Decimal } from "@veltodefi/utils";
 
 const meta = {
   title: "Base/Input/formatter",

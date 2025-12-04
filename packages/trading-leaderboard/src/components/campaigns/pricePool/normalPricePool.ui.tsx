@@ -1,5 +1,5 @@
 import { FC, useMemo, useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   cn,
   Text,
@@ -7,8 +7,8 @@ import {
   InfoCircleIcon,
   ChevronRightIcon,
   Button,
-} from "@orderly.network/ui";
-import { AuthGuard } from "@orderly.network/ui-connector";
+} from "@veltodefi/ui";
+import { AuthGuard } from "@veltodefi/ui-connector";
 import { CampaignsScriptReturn } from "../campaigns.script";
 import { CampaignConfig } from "../type";
 import { formatPrizeAmount } from "../utils";

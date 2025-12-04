@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Button, Flex, modal } from "@orderly.network/ui";
+import { Button, Flex, modal } from "@veltodefi/ui";
 import {
   SharePnLDialogWidget,
   SharePnLDialogId,
   SharePnLBottomSheetId,
   SharePnLBottomSheetWidget,
-} from "@orderly.network/ui-share";
+} from "@veltodefi/ui-share";
 
 const meta: Meta<typeof SharePnLDialogWidget> = {
   title: "Package/ui-share/SharePnL",

@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   useModal,
   modal,
@@ -11,7 +11,7 @@ import {
   SimpleSheet,
   toast,
   ScrollIndicator,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { ConvertRecord, ConvertTransaction } from "../type";
 import { ConvertedAssetColumn } from "./convert.column";
 import { useConvertScript } from "./convert.script";

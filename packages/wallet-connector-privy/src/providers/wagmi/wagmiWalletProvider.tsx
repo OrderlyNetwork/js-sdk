@@ -13,7 +13,7 @@ import {
   useDisconnect,
   useSwitchChain,
 } from "wagmi";
-import { ChainNamespace } from "@orderly.network/types";
+import { ChainNamespace } from "@veltodefi/types";
 import { useWalletConnectorPrivy } from "../../provider";
 
 interface WagmiWalletContextValue {

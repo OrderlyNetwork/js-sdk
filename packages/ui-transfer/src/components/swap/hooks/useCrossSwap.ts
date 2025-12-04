@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Environment, createClient } from "@layerzerolabs/scan-client";
 import { pick } from "ramda";
-import { utils } from "@orderly.network/core";
+import { utils } from "@veltodefi/core";
 import {
   useAccountInstance,
   useBoolean,
   useConfig,
   useEventEmitter,
-} from "@orderly.network/hooks";
-import { WS_WalletStatusEnum } from "@orderly.network/types";
+} from "@veltodefi/hooks";
+import { WS_WalletStatusEnum } from "@veltodefi/types";
 import {
   isNativeTokenChecker,
   woofiDexCrossSwapChainRouterAbi,

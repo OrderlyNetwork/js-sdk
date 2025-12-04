@@ -1,4 +1,4 @@
-import { HistoryModule } from "@orderly.network/portfolio";
+import { HistoryModule } from "@veltodefi/portfolio";
 
 export default function HistoryPage() {
   return <HistoryModule.HistoryPage />;

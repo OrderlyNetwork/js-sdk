@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { API } from "@orderly.network/types";
+import { API } from "@veltodefi/types";
 import { getTokenByTokenList } from "../../../utils";
 import { CurrentChain } from "../../depositForm/hooks/useChainSelect";
 

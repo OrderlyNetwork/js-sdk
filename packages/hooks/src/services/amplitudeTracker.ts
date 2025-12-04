@@ -1,7 +1,7 @@
 import * as amplitude from "@amplitude/analytics-browser";
-import { SimpleDI } from "@orderly.network/core";
-import { EventEmitter } from "@orderly.network/core";
-import { TrackerEventName } from "@orderly.network/types";
+import { SimpleDI } from "@veltodefi/core";
+import { EventEmitter } from "@veltodefi/core";
+import { TrackerEventName } from "@veltodefi/types";
 
 export enum ENVType {
   prod = "prod",

@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
-import { RouterAdapter } from "@orderly.network/types";
-import { useAnnouncement } from "@orderly.network/ui-notification";
+import { RouterAdapter } from "@veltodefi/types";
+import { useAnnouncement } from "@veltodefi/ui-notification";
 
 export type ScaffoldState = {
   routerAdapter?: RouterAdapter;

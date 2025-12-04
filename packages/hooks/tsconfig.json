@@ -2,28 +2,28 @@
   "extends": "./tsconfig.build.json",
   "compilerOptions": {
     "paths": {
-      "@orderly.network/core": [
+      "@veltodefi/core": [
         "../core/src"
       ],
-      "@orderly.network/net": [
+      "@veltodefi/net": [
         "../net/src"
       ],
-      "@orderly.network/perp": [
+      "@veltodefi/perp": [
         "../perp/src"
       ],
-      "@orderly.network/types": [
+      "@veltodefi/types": [
         "../types/src"
       ],
-      "@orderly.network/utils": [
+      "@veltodefi/utils": [
         "../utils/src"
       ],
-      "@orderly.network/default-evm-adapter": [
+      "@veltodefi/default-evm-adapter": [
         "../default-evm-adapter/src"
       ],
-      "@orderly.network/default-solana-adapter": [
+      "@veltodefi/default-solana-adapter": [
         "../default-solana-adapter/src"
       ],
-      "@orderly.network/web3-provider-ethers": [
+      "@veltodefi/web3-provider-ethers": [
         "../web3-provider-ethers/src"
       ]
     }

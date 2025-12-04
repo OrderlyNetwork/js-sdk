@@ -1,4 +1,4 @@
-import { IContract } from "@orderly.network/core";
+import { IContract } from "@veltodefi/core";
 import {
   Eip1193Provider,
   Web3Provider,

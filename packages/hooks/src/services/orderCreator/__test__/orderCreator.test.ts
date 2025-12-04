@@ -1,6 +1,6 @@
 import { OrderFactory } from "../factory";
 import { LimitOrderCreator } from "../limitOrderCreator";
-import { OrderType } from "@orderly.network/types"; // Import the OrderType enum from the correct file
+import { OrderType } from "@veltodefi/types"; // Import the OrderType enum from the correct file
 import { MarketOrderCreator } from "../marketOrderCreator";
 import { IOCOrderCreator } from "../iocCreator";
 import { GeneralOrderCreator } from "../generalCreator";

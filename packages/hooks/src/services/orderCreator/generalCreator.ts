@@ -1,4 +1,4 @@
-import { OrderEntity } from "@orderly.network/types";
+import { OrderEntity } from "@veltodefi/types";
 import { BaseOrderCreator } from "./baseCreator";
 import {
   OrderFormEntity,

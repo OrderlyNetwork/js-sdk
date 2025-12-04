@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { useScreen } from "@orderly.network/ui";
+import { useScreen } from "@veltodefi/ui";
 import { MobileCampaigns } from "./campaigns.mobile.ui";
 import { useCampaignsScript } from "./campaigns.script";
 import { Campaigns } from "./campaigns.ui";

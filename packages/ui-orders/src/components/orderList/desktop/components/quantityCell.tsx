@@ -1,8 +1,8 @@
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useMaxQty, utils } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { API, OrderSide } from "@orderly.network/types";
-import { AlgoOrderRootType } from "@orderly.network/types";
+import { useMaxQty, utils } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { API, OrderSide } from "@veltodefi/types";
+import { AlgoOrderRootType } from "@veltodefi/types";
 import {
   cn,
   Flex,
@@ -14,8 +14,8 @@ import {
   PopoverTrigger,
   PopoverRoot,
   PopoverContent,
-} from "@orderly.network/ui";
-import { commifyOptional, Decimal } from "@orderly.network/utils";
+} from "@veltodefi/ui";
+import { commifyOptional, Decimal } from "@veltodefi/utils";
 import { EditType } from "../../../../type";
 import { grayCell } from "../../../../utils/util";
 import { useSymbolContext } from "../../../provider/symbolContext";

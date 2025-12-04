@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 // import { fn } from 'storybook/test';
-import { DatePicker } from "@orderly.network/ui";
+import { DatePicker } from "@veltodefi/ui";
 
 const meta = {
   title: "Base/Picker/DatePicker",

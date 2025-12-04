@@ -1,4 +1,4 @@
-import { API, WSMessage } from "@orderly.network/types";
+import { API, WSMessage } from "@veltodefi/types";
 import { BaseMergeHandler } from "./baseMergeHandler";
 import { object2underscore } from "../../utils/ws";
 

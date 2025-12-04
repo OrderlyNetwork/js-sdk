@@ -1,5 +1,5 @@
-import { usePositionStream } from "@orderly.network/hooks";
-import { useDataTap } from "@orderly.network/react-app";
+import { usePositionStream } from "@veltodefi/hooks";
+import { useDataTap } from "@veltodefi/react-app";
 import { useTradingLocalStorage } from "../../../hooks";
 
 export const usePositionHeaderScript = (inputs: {

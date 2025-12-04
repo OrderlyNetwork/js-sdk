@@ -1,5 +1,5 @@
 import { useCallback, useRef, useMemo, useState, ReactNode } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   SimpleDialog,
   useScreen,
@@ -15,7 +15,7 @@ import {
   PopoverRoot,
   PopoverContent,
   PopoverAnchor,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { AccountItem } from "./components/accountItem";
 import { CreateSubAccount } from "./components/createSubAccountModal";
 import { EditNickNameDialog } from "./components/editNickNameModal";

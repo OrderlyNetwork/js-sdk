@@ -1,25 +1,25 @@
 import {
   LocaleProvider as I18nLocaleProvider,
   LocaleCode,
-} from "@orderly.network/i18n";
-import { Resources } from "@orderly.network/i18n";
-import de from "@orderly.network/i18n/locales/de.json";
-import en from "@orderly.network/i18n/locales/en.json";
-import es from "@orderly.network/i18n/locales/es.json";
-import fr from "@orderly.network/i18n/locales/fr.json";
-import id from "@orderly.network/i18n/locales/id.json";
-import it from "@orderly.network/i18n/locales/it.json";
-import ja from "@orderly.network/i18n/locales/ja.json";
-import ko from "@orderly.network/i18n/locales/ko.json";
-import nl from "@orderly.network/i18n/locales/nl.json";
-import pl from "@orderly.network/i18n/locales/pl.json";
-import pt from "@orderly.network/i18n/locales/pt.json";
-import ru from "@orderly.network/i18n/locales/ru.json";
-import tc from "@orderly.network/i18n/locales/tc.json";
-import tr from "@orderly.network/i18n/locales/tr.json";
-import uk from "@orderly.network/i18n/locales/uk.json";
-import vi from "@orderly.network/i18n/locales/vi.json";
-import zh from "@orderly.network/i18n/locales/zh.json";
+} from "@veltodefi/i18n";
+import { Resources } from "@veltodefi/i18n";
+import de from "@veltodefi/i18n/locales/de.json";
+import en from "@veltodefi/i18n/locales/en.json";
+import es from "@veltodefi/i18n/locales/es.json";
+import fr from "@veltodefi/i18n/locales/fr.json";
+import id from "@veltodefi/i18n/locales/id.json";
+import it from "@veltodefi/i18n/locales/it.json";
+import ja from "@veltodefi/i18n/locales/ja.json";
+import ko from "@veltodefi/i18n/locales/ko.json";
+import nl from "@veltodefi/i18n/locales/nl.json";
+import pl from "@veltodefi/i18n/locales/pl.json";
+import pt from "@veltodefi/i18n/locales/pt.json";
+import ru from "@veltodefi/i18n/locales/ru.json";
+import tc from "@veltodefi/i18n/locales/tc.json";
+import tr from "@veltodefi/i18n/locales/tr.json";
+import uk from "@veltodefi/i18n/locales/uk.json";
+import vi from "@veltodefi/i18n/locales/vi.json";
+import zh from "@veltodefi/i18n/locales/zh.json";
 
 type ExtendLocaleMessages = typeof zh;
 

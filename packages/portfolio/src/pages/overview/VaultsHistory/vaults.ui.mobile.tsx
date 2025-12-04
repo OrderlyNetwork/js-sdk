@@ -1,6 +1,6 @@
-import { useTranslation } from "@orderly.network/i18n";
-import { Divider } from "@orderly.network/ui";
-import { DataFilter, TokenIcon, ListView, Text } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { Divider } from "@veltodefi/ui";
+import { DataFilter, TokenIcon, ListView, Text } from "@veltodefi/ui";
 import { useVaultsHistoryHookReturn } from "./useDataSource.script";
 
 export const VaultsHistoryMobile = (props: useVaultsHistoryHookReturn) => {

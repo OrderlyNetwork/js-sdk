@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { fn } from "storybook/test";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { Box, Button, Card, modal, SimpleDialog } from "@orderly.network/ui";
+import { AccountStatusEnum } from "@veltodefi/types";
+import { Box, Button, Card, modal, SimpleDialog } from "@veltodefi/ui";
 import {
   WalletConnectContent,
   WalletConnectorWidget,
   WalletConnectorModalId,
-} from "@orderly.network/ui-connector";
+} from "@veltodefi/ui-connector";
 
 const meta: Meta<typeof WalletConnectContent> = {
   title: "Package/ui-connector",

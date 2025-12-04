@@ -2,10 +2,10 @@ import {
   useIndexPrice,
   useMarkPrice,
   useLeverageBySymbol,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { OrderlyOrder } from "@orderly.network/types";
-import { cn, Flex, Grid, Text, TokenIcon } from "@orderly.network/ui";
+} from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { OrderlyOrder } from "@veltodefi/types";
+import { cn, Flex, Grid, Text, TokenIcon } from "@veltodefi/ui";
 
 type Props = {
   order: Partial<OrderlyOrder>;

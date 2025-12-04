@@ -5,11 +5,11 @@ import {
   useAccount,
   useAccountInfo,
   usePrivateQuery,
-} from "@orderly.network/hooks";
-import { useDataTap } from "@orderly.network/react-app";
-import { AccountStatusEnum, API } from "@orderly.network/types";
-import type { Column, TanstackColumn } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+} from "@veltodefi/hooks";
+import { useDataTap } from "@veltodefi/react-app";
+import { AccountStatusEnum, API } from "@veltodefi/types";
+import type { Column, TanstackColumn } from "@veltodefi/ui";
+import { Decimal } from "@veltodefi/utils";
 import { useFeeTierColumns } from "./column";
 import { dataSource as defaultDataSource } from "./dataSource";
 

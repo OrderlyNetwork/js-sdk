@@ -2,7 +2,7 @@ import {
   ExtensionPositionEnum,
   ExtensionSlot,
   installExtension,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { AccountMenu, AccountMenuProps } from "./menu.ui";
 import { useAccountMenu } from "./useWidgetBuilder.script";
 import { FC } from "react";

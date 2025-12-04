@@ -1,8 +1,8 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { OrderSide } from "@orderly.network/types";
-import { Badge, Checkbox, Divider, Flex, Text } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { useTranslation } from "@veltodefi/i18n";
+import { OrderSide } from "@veltodefi/types";
+import { Badge, Checkbox, Divider, Flex, Text } from "@veltodefi/ui";
+import { Decimal } from "@veltodefi/utils";
 import { parseBadgesFor } from "../../../../../utils/util";
 import { EditSheetState } from "../editSheet.script";
 

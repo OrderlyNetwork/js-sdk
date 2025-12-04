@@ -1,4 +1,4 @@
-import { ExtensionPositionEnum, ExtensionSlot } from "@orderly.network/ui";
+import { ExtensionPositionEnum, ExtensionSlot } from "@veltodefi/ui";
 import { DepositFormWidget } from "../depositForm";
 import { DepositFormWidgetProps } from "../depositForm/depositForm.widget";
 

@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from "react";
-import { Box } from "@orderly.network/ui";
-import { Scaffold, SideBar, SideBarProps } from "@orderly.network/ui-scaffold";
+import { Box } from "@veltodefi/ui";
+import { Scaffold, SideBar, SideBarProps } from "@veltodefi/ui-scaffold";
 
 export type AffiliateLayoutProps = {} & SideBarProps;
 

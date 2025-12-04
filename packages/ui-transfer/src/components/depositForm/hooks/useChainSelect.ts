@@ -6,11 +6,11 @@ import {
   useConfig,
   useLocalStorage,
   useWalletConnector,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { API, NetworkId } from "@orderly.network/types";
-import { toast } from "@orderly.network/ui";
-import { int2hex, praseChainIdToNumber } from "@orderly.network/utils";
+} from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { API, NetworkId } from "@veltodefi/types";
+import { toast } from "@veltodefi/ui";
+import { int2hex, praseChainIdToNumber } from "@veltodefi/utils";
 
 export type CurrentChain = Pick<ConnectedChain, "namespace"> & {
   id: number;

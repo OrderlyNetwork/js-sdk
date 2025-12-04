@@ -1,6 +1,6 @@
 import { KeyboardEventHandler } from "react";
-import { FavoriteTab } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import { FavoriteTab } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   Box,
   cn,
@@ -9,7 +9,7 @@ import {
   Tooltip,
   Input,
   modal,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { AddIcon, ActiveAddIcon, EditIcon, TrashIcon } from "../../icons";
 import {
   UseFavoritesTabScriptOptions,

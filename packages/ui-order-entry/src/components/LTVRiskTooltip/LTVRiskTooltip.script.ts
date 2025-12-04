@@ -5,11 +5,11 @@ import {
   useIndexPricesStream,
   useQuery,
   useAppStore,
-} from "@orderly.network/hooks";
-import { account } from "@orderly.network/perp";
-import type { API } from "@orderly.network/types";
-import { modal } from "@orderly.network/ui";
-import { Decimal, zero } from "@orderly.network/utils";
+} from "@veltodefi/hooks";
+import { account } from "@veltodefi/perp";
+import type { API } from "@veltodefi/types";
+import { modal } from "@veltodefi/ui";
+import { Decimal, zero } from "@veltodefi/utils";
 
 const useConvertThreshold = () => {
   const { data, error, isLoading } = useQuery<API.ConvertThreshold>(

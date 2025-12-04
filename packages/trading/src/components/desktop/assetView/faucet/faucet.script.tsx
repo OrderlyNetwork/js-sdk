@@ -4,11 +4,11 @@ import {
   useConfig,
   useMutation,
   useWalletConnector,
-} from "@orderly.network/hooks";
-import { AccountStatusEnum, ChainNamespace } from "@orderly.network/types";
-import { isTestnet } from "@orderly.network/utils";
-import { modal, toast } from "@orderly.network/ui";
-import { useTranslation } from "@orderly.network/i18n";
+} from "@veltodefi/hooks";
+import { AccountStatusEnum, ChainNamespace } from "@veltodefi/types";
+import { isTestnet } from "@veltodefi/utils";
+import { modal, toast } from "@veltodefi/ui";
+import { useTranslation } from "@veltodefi/i18n";
 
 export function useFaucetScript() {
   const { t } = useTranslation();

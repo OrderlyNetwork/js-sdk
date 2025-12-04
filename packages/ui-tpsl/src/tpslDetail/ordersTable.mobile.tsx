@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
-import { Flex, Button, cn, ThrottledButton, toast } from "@orderly.network/ui";
-import { AuthGuardDataTable } from "@orderly.network/ui-connector";
+import { useTranslation } from "@veltodefi/i18n";
+import { API } from "@veltodefi/types";
+import { Flex, Button, cn, ThrottledButton, toast } from "@veltodefi/ui";
+import { AuthGuardDataTable } from "@veltodefi/ui-connector";
 import { useColumn } from "./useColum";
 
 export const OrdersTableMobile = (props: {

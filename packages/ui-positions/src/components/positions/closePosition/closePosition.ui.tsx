@@ -1,6 +1,6 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { OrderType } from "@orderly.network/types";
+import { useTranslation } from "@veltodefi/i18n";
+import { OrderType } from "@veltodefi/types";
 import {
   Button,
   cn,
@@ -14,7 +14,7 @@ import {
   Select,
   SimpleDialog,
   Text,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { ClosePositionScriptReturn } from "./closePosition.script";
 import {
   ConfirmFooter,

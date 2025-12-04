@@ -1,9 +1,9 @@
 import { ReactNode } from "react";
-import { ComputedAlgoOrder, useLocalStorage } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { AlgoOrderRootType, API, PositionType } from "@orderly.network/types";
-import { Box, Button, modal, toast } from "@orderly.network/ui";
-import { ButtonProps } from "@orderly.network/ui";
+import { ComputedAlgoOrder, useLocalStorage } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { AlgoOrderRootType, API, PositionType } from "@veltodefi/types";
+import { Box, Button, modal, toast } from "@veltodefi/ui";
+import { ButtonProps } from "@veltodefi/ui";
 import { TPSLDialogId } from "./positionTPSL";
 
 export const PositionTPSLPopover = (props: {

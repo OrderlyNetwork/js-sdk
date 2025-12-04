@@ -2,8 +2,8 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   OrdersModule,
   PortfolioLeftSidebarPath,
-} from "@orderly.network/portfolio";
-import { Box } from "@orderly.network/ui";
+} from "@veltodefi/portfolio";
+import { Box } from "@veltodefi/ui";
 import { PortfolioLayout } from "../../../components/layout";
 import { tradingPageConfig } from "../../../orderlyConfig";
 

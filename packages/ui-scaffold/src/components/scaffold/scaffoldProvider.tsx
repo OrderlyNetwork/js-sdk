@@ -3,8 +3,8 @@ import {
   OrderlyContext,
   useChains,
   useMemoizedFn,
-} from "@orderly.network/hooks";
-import { useAnnouncement } from "@orderly.network/ui-notification";
+} from "@veltodefi/hooks";
+import { useAnnouncement } from "@veltodefi/ui-notification";
 import { checkChainSupport } from "../../utils/chain";
 import { ScaffoldContext, ScaffoldState } from "./scaffoldContext";
 

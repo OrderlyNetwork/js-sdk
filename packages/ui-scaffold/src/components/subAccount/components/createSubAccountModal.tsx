@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
-import { useAccount } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { useAppContext } from "@orderly.network/react-app";
+import { useAccount } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { useAppContext } from "@veltodefi/react-app";
 import {
   Flex,
   SimpleDialog,
@@ -10,7 +10,7 @@ import {
   useScreen,
   cn,
   Tooltip,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { AddIcon } from "../icons";
 import { NickNameTextField } from "./common";
 

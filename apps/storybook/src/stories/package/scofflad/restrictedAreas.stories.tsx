@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Box } from "@orderly.network/ui";
-import { RestrictedInfoWidget } from "@orderly.network/ui-scaffold";
+import { Box } from "@veltodefi/ui";
+import { RestrictedInfoWidget } from "@veltodefi/ui-scaffold";
 
 const meta: Meta<typeof RestrictedInfoWidget> = {
   title: "Package/ui-scaffold/RestrictedAreas",

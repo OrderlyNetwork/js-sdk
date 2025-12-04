@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { OrderSide, OrderType, SDKError } from "@orderly.network/types";
+import { OrderSide, OrderType, SDKError } from "@veltodefi/types";
 import { useMarkPriceBySymbol } from "../../orderly/useMarkPrice/useMarkPriceStore";
 import { useSymbolsInfo } from "../../orderly/useSymbolsInfo";
 import { OrderValidationResult } from "../../services/orderCreator/interface";

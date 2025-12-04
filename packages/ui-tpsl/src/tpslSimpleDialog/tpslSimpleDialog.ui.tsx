@@ -1,7 +1,7 @@
 import React from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
-import { Box, Button, cn, Divider, Flex, Text } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { useOrderEntryFormErrorMsg } from "@veltodefi/react-app";
+import { Box, Button, cn, Divider, Flex, Text } from "@veltodefi/ui";
 import { TPSLQuantity } from "../components/tpslQty";
 import { useTPSLSimpleDialog } from "./tpslSimpleDialog.script";
 

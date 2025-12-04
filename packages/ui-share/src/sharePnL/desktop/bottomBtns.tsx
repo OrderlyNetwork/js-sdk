@@ -1,6 +1,6 @@
 import { FC } from "react";
-import { Button, Flex } from "@orderly.network/ui";
-import { useTranslation } from "@orderly.network/i18n";
+import { Button, Flex } from "@veltodefi/ui";
+import { useTranslation } from "@veltodefi/i18n";
 export const BottomButtons: FC<{
   onClickDownload: any;
   onClickCopy: any;

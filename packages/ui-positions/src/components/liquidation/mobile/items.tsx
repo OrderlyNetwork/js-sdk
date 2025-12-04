@@ -1,8 +1,8 @@
 import { FC } from "react";
-import { Flex, Text } from "@orderly.network/ui";
-import { API } from "@orderly.network/types";
-import { commifyOptional } from "@orderly.network/utils";
-import { useTranslation } from "@orderly.network/i18n";
+import { Flex, Text } from "@veltodefi/ui";
+import { API } from "@veltodefi/types";
+import { commifyOptional } from "@veltodefi/utils";
+import { useTranslation } from "@veltodefi/i18n";
 
 export const Price: FC<API.LiquidationPositionByPerp> = (props) => {
   // const { quote_dp } = useSymbolContext();

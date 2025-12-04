@@ -1,6 +1,6 @@
 import { createContext, PropsWithChildren, useContext } from "react";
-import { useSymbolsInfo } from "@orderly.network/hooks";
-import { API } from "@orderly.network/types";
+import { useSymbolsInfo } from "@veltodefi/hooks";
+import { API } from "@veltodefi/types";
 
 export interface TPSLDetailContextState {
   base_dp: number;

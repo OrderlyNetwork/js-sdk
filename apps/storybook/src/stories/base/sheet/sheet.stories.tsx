@@ -7,7 +7,7 @@ import {
   ModalProvider,
   registerSimpleSheet,
   SimpleSheet,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 
 const meta = {
   title: "Base/Sheet",

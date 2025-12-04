@@ -1,7 +1,7 @@
 import React from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Button, cn, Divider, Flex, Text } from "@orderly.network/ui";
-import { removeTrailingZeros } from "@orderly.network/utils";
+import { useTranslation } from "@veltodefi/i18n";
+import { Button, cn, Divider, Flex, Text } from "@veltodefi/ui";
+import { removeTrailingZeros } from "@veltodefi/utils";
 import type { LTVTooltipScriptReturn } from "./LTVRiskTooltip.script";
 
 const calculateLTVColor = (val: number): string => {

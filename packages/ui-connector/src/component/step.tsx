@@ -6,7 +6,7 @@ import {
   Divider,
   Spinner,
   Text,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 
 type StepItemProps = {
   active?: boolean;

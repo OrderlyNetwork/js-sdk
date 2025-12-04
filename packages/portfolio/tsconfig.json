@@ -2,52 +2,52 @@
   "extends": "./tsconfig.build.json",
   "compilerOptions": {
     "paths": {
-      "@orderly.network/ui": [
+      "@veltodefi/ui": [
         "../ui/src"
       ],
-      "@orderly.network/chart": [
+      "@veltodefi/chart": [
         "../chart/src"
       ],
-      "@orderly.network/hooks": [
+      "@veltodefi/hooks": [
         "../hooks/src"
       ],
-      "@orderly.network/utils": [
+      "@veltodefi/utils": [
         "../utils/src"
       ],
-      "@orderly.network/types": [
+      "@veltodefi/types": [
         "../types/src"
       ],
-      "@orderly.network/ui-connector": [
+      "@veltodefi/ui-connector": [
         "../ui-connector/src"
       ],
-      "@orderly.network/ui-positions": [
+      "@veltodefi/ui-positions": [
         "../ui-positions/src"
       ],
-      "@orderly.network/ui-scaffold": [
+      "@veltodefi/ui-scaffold": [
         "../ui-scaffold/src"
       ],
-      "@orderly.network/ui-leverage": [
+      "@veltodefi/ui-leverage": [
         "../ui-leverage/src"
       ],
-      "@orderly.network/react-app": [
+      "@veltodefi/react-app": [
         "../app/src"
       ],
-      "@orderly.network/ui-orders": [
+      "@veltodefi/ui-orders": [
         "../ui-orders/src"
       ],
-      "@orderly.network/ui-transfer": [
+      "@veltodefi/ui-transfer": [
         "../ui-transfer/src"
       ],
-      "@orderly.network/ui-share": [
+      "@veltodefi/ui-share": [
         "../ui-share/src"
       ],
-      "@orderly.network/i18n": [
+      "@veltodefi/i18n": [
         "../i18n/src"
       ],
-      "@orderly.network/ui-chain-selector": [
+      "@veltodefi/ui-chain-selector": [
         "../ui-chain-selector/src"
       ],
-      "@orderly.network/perp": [
+      "@veltodefi/perp": [
         "../perp/src"
       ]
     }

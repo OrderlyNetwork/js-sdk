@@ -3,7 +3,7 @@ import {
   useGetRwaSymbolInfo,
   useSymbolsInfo,
   useTickerStream,
-} from "@orderly.network/hooks";
+} from "@veltodefi/hooks";
 
 export type UseSymbolInfoBarScriptOptions = {
   symbol: string;

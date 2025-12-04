@@ -1,12 +1,12 @@
-import { order as orderUtils } from "@orderly.network/perp";
+import { order as orderUtils } from "@veltodefi/perp";
 import {
   AlgoOrderRootType,
   API,
   OrderlyOrder,
   OrderSide,
   OrderType,
-} from "@orderly.network/types";
-import { Decimal, zero } from "@orderly.network/utils";
+} from "@veltodefi/types";
+import { Decimal, zero } from "@veltodefi/utils";
 import { OrderMetadataConfig } from "../../orderlyContext";
 import { OrderFactory } from "../../services/orderCreator/factory";
 import { getOrderPrice } from "../../utils/order/orderPrice";

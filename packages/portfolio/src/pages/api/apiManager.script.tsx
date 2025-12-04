@@ -4,11 +4,11 @@ import {
   ScopeType,
   useAccount,
   useApiKeyManager,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { useAppContext, useDataTap } from "@orderly.network/react-app";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { toast, usePagination } from "@orderly.network/ui";
+} from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { useAppContext, useDataTap } from "@veltodefi/react-app";
+import { AccountStatusEnum } from "@veltodefi/types";
+import { toast, usePagination } from "@veltodefi/ui";
 
 export type GenerateKeyInfo = {
   key: string;

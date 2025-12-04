@@ -1,4 +1,4 @@
-import { EventEmitter } from "@orderly.network/core";
+import { EventEmitter } from "@veltodefi/core";
 
 class DataCenter extends EventEmitter {
   constructor() {

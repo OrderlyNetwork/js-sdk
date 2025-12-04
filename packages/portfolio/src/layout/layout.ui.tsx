@@ -1,14 +1,14 @@
 import { FC, PropsWithChildren } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import type { RouterAdapter } from "@orderly.network/types";
-import { cn } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import type { RouterAdapter } from "@veltodefi/types";
+import { cn } from "@veltodefi/ui";
 import {
   ScaffoldProps,
   Scaffold,
   SideBar,
   SideBarProps,
   useScaffoldContext,
-} from "@orderly.network/ui-scaffold";
+} from "@veltodefi/ui-scaffold";
 
 export type PortfolioLayoutProps = ScaffoldProps & {
   hideSideBar?: boolean;

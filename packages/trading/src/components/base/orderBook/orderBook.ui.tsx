@@ -1,5 +1,5 @@
 import React from "react";
-import { Box } from "@orderly.network/ui";
+import { Box } from "@veltodefi/ui";
 import { DesktopOrderBook } from "../../desktop/orderBook/index.desktop";
 import { OrderBook as MWebOrderBook } from "../../mobile/orderBook";
 import type { OrderBookState } from "./orderBook.script";

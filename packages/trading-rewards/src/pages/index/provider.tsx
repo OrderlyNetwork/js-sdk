@@ -19,7 +19,7 @@ import {
   useConfig,
   useTradingRewardsStatus,
   StatusInfo,
-} from "@orderly.network/hooks";
+} from "@veltodefi/hooks";
 import type { TitleConfig } from "./title/title.script";
 
 export type TradingRewardsState = {

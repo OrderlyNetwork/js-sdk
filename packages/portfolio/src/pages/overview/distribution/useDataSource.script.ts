@@ -1,7 +1,7 @@
-import { useDistributionHistory } from "@orderly.network/hooks";
-import { subtractDaysFromCurrentDate } from "@orderly.network/utils";
+import { useDistributionHistory } from "@veltodefi/hooks";
+import { subtractDaysFromCurrentDate } from "@veltodefi/utils";
 import { useMemo, useState } from "react";
-import { usePagination } from "@orderly.network/ui";
+import { usePagination } from "@veltodefi/ui";
 import { parseDateRangeForFilter } from "../helper/date";
 import { getDate, getMonth, getYear, set } from "date-fns";
 

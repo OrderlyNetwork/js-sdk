@@ -1,7 +1,7 @@
 import { useMemo } from "react";
-import { useQuery } from "@orderly.network/hooks";
-import type { API } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+import { useQuery } from "@veltodefi/hooks";
+import type { API } from "@veltodefi/types";
+import { Decimal } from "@veltodefi/utils";
 
 export const useLtvScript = () => {
   const { data, error, isLoading } = useQuery<API.ConvertThreshold>(

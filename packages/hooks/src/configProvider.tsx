@@ -9,12 +9,12 @@ import {
   Account,
   IContract,
   WalletAdapter,
-} from "@orderly.network/core";
-import { DefaultEVMWalletAdapter } from "@orderly.network/default-evm-adapter";
-import { DefaultSolanaWalletAdapter } from "@orderly.network/default-solana-adapter";
-import { NetworkId } from "@orderly.network/types";
-import { SDKError } from "@orderly.network/types";
-import { EthersProvider } from "@orderly.network/web3-provider-ethers";
+} from "@veltodefi/core";
+import { DefaultEVMWalletAdapter } from "@veltodefi/default-evm-adapter";
+import { DefaultSolanaWalletAdapter } from "@veltodefi/default-solana-adapter";
+import { NetworkId } from "@veltodefi/types";
+import { SDKError } from "@veltodefi/types";
+import { EthersProvider } from "@veltodefi/web3-provider-ethers";
 import { DEFAULT_SYMBOL_DEPTHS, DEFAULT_TICK_SIZES } from "./constants";
 import { ProxyConfigStore } from "./dev/proxyConfigStore";
 import { ExtendedConfigStore } from "./extendedConfigStore";

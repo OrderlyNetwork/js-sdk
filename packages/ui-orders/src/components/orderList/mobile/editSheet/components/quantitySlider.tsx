@@ -1,8 +1,8 @@
 import { memo, useMemo } from "react";
-import { useThrottledCallback, utils } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { Flex, Slider, Text } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { useThrottledCallback, utils } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { Flex, Slider, Text } from "@veltodefi/ui";
+import { Decimal } from "@veltodefi/utils";
 import { useEditSheetContext } from "./editSheetContext";
 
 type QuantitySliderProps = {

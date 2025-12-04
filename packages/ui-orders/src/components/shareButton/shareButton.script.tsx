@@ -1,8 +1,8 @@
 import { useMemo } from "react";
-import { useReferralInfo, useLeverageBySymbol } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { modal } from "@orderly.network/ui";
-import { SharePnLConfig } from "@orderly.network/ui-share";
+import { useReferralInfo, useLeverageBySymbol } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { modal } from "@veltodefi/ui";
+import { SharePnLConfig } from "@veltodefi/ui-share";
 
 export type ShareButtonScriptReturn = ReturnType<typeof useShareButtonScript>;
 

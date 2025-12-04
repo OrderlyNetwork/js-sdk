@@ -19,7 +19,7 @@ import {
   Network,
   WalletConnectorPrivyProvider,
   wagmiConnectors,
-} from "@orderly.network/wallet-connector-privy";
+} from "@veltodefi/wallet-connector-privy";
 import { CustomProductNav } from "../customProductNav";
 
 const mobileWalletNotFoundHanlder = (adapter: SolanaMobileWalletAdapter) => {

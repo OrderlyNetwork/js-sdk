@@ -1,5 +1,5 @@
-import { AlgoOrder, API } from "@orderly.network/types";
-import { registerSimpleDialog, registerSimpleSheet } from "@orderly.network/ui";
+import { AlgoOrder, API } from "@veltodefi/types";
+import { registerSimpleDialog, registerSimpleSheet } from "@veltodefi/ui";
 import { useTPSLDetail } from "./tpslDetail.script";
 import { TPSLDetailProvider } from "./tpslDetailProvider";
 import { TPSLDetailUI } from "./tsplDetail.ui";

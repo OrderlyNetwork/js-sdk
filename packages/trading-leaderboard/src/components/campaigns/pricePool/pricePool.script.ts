@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useAccount } from "@orderly.network/hooks";
+import { useAccount } from "@veltodefi/hooks";
 import { CampaignConfig } from "../type";
 import { getTicketPrizePool } from "../utils";
 

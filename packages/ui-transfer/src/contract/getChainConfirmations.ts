@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { API } from "@orderly.network/types";
+import { API } from "@veltodefi/types";
 import getAppUlnConfigAbi from "./abi/getAppUlnConfigAbi.json";
 import { getEndpointId } from "./endpointId";
 

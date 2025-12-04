@@ -1,5 +1,5 @@
 import { pick } from "ramda";
-import { OrderEntity, OrderlyOrder, OrderType } from "@orderly.network/types";
+import { OrderEntity, OrderlyOrder, OrderType } from "@veltodefi/types";
 import { BaseOrderCreator } from "./baseCreator";
 import { ValuesDepConfig, OrderValidationResult } from "./interface";
 

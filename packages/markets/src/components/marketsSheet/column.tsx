@@ -1,7 +1,7 @@
 import { MouseEventHandler, ReactNode } from "react";
-import { i18n } from "@orderly.network/i18n";
-import { Flex, TokenIcon, Text, Badge, cn, Column } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { i18n } from "@veltodefi/i18n";
+import { Flex, TokenIcon, Text, Badge, cn, Column } from "@veltodefi/ui";
+import { Decimal } from "@veltodefi/utils";
 import {
   DeleteIcon,
   FavoritesIcon2,

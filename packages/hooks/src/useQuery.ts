@@ -1,6 +1,6 @@
 import useSWR from "swr";
 import type { SWRHook, SWRResponse } from "swr";
-import { SDKError } from "@orderly.network/types";
+import { SDKError } from "@veltodefi/types";
 import { useConfig } from "./useConfig";
 import { fetcher, useQueryOptions } from "./utils/fetcher";
 

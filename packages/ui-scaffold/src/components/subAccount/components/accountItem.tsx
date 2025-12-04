@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { CopyIcon, formatAddress, toast, Tooltip } from "@orderly.network/ui";
-import { cn, Flex, Text } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { CopyIcon, formatAddress, toast, Tooltip } from "@veltodefi/ui";
+import { cn, Flex, Text } from "@veltodefi/ui";
 import { EditIcon } from "../icons";
 
 interface AccountItemProps {

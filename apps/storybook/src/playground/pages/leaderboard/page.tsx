@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
-import { generatePath } from "@orderly.network/i18n";
-import { LeaderboardPage } from "@orderly.network/trading-leaderboard";
+import { generatePath } from "@veltodefi/i18n";
+import { LeaderboardPage } from "@veltodefi/trading-leaderboard";
 import { getCampaigns } from "../../../stories/package/trading-leaderboard/tradingLeaderboard.stories";
 import { BaseLayout } from "../../components/layout/baseLayout";
 import { PathEnum } from "../../constant";

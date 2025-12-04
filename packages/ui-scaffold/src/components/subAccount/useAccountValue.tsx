@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { useSubAccountQuery } from "@orderly.network/hooks";
-import { API } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+import { useSubAccountQuery } from "@veltodefi/hooks";
+import { API } from "@veltodefi/types";
+import { Decimal } from "@veltodefi/utils";
 
 export const useAccountValue = (mainAccountId?: string) => {
   const [accountValue, setAccountValue] = useState<Record<string, number>>({});

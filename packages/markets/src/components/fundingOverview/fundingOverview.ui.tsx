@@ -1,5 +1,5 @@
 import { FC, useState } from "react";
-import { DataTable, cn } from "@orderly.network/ui";
+import { DataTable, cn } from "@veltodefi/ui";
 import { useFundingOverviewColumns } from "./columns";
 import { FundingOverviewReturn } from "./fundingOverview.script";
 

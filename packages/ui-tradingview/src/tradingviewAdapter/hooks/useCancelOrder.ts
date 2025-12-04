@@ -1,8 +1,8 @@
 import { useCallback } from "react";
-import { useOrderStream } from "@orderly.network/hooks";
+import { useOrderStream } from "@veltodefi/hooks";
 import { BracketAlgoType, TpslAlgoType } from "../renderer/tpsl.util";
-import { OrderStatus } from "@orderly.network/types";
-import { toast } from "@orderly.network/ui";
+import { OrderStatus } from "@veltodefi/types";
+import { toast } from "@veltodefi/ui";
 
 export default function useCancelOrder() {
   const [

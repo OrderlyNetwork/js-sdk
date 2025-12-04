@@ -1,6 +1,6 @@
 import { FC, useEffect, useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { cn, Flex, TabPanel, Tabs } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { cn, Flex, TabPanel, Tabs } from "@veltodefi/ui";
 import { LeaderboardTab } from "../../../type";
 import { formatUpdateDate } from "../../../utils";
 import { useTradingLeaderboardContext } from "../../provider";

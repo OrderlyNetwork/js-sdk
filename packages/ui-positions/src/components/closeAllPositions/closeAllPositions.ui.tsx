@@ -1,7 +1,7 @@
 import React, { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Button, cn } from "@orderly.network/ui";
-import { formatSymbol } from "@orderly.network/utils";
+import { useTranslation } from "@veltodefi/i18n";
+import { Button, cn } from "@veltodefi/ui";
+import { formatSymbol } from "@veltodefi/utils";
 import type { CloseAllPositionsState } from "./closeAllPositions.script";
 
 export type CloseAllPositionsProps = CloseAllPositionsState & {

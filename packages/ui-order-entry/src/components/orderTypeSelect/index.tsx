@@ -1,7 +1,7 @@
 import { useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { OrderSide, OrderType } from "@orderly.network/types";
-import { Select, Text } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { OrderSide, OrderType } from "@veltodefi/types";
+import { Select, Text } from "@veltodefi/ui";
 
 export const OrderTypeSelect = (props: {
   type: OrderType;

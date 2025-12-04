@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { PortfolioLayoutWidget } from "@orderly.network/portfolio";
-import { Flex, Text, Divider } from "@orderly.network/ui";
-import { OrdersWidget, TabType } from "@orderly.network/ui-orders";
+import { PortfolioLayoutWidget } from "@veltodefi/portfolio";
+import { Flex, Text, Divider } from "@veltodefi/ui";
+import { OrdersWidget, TabType } from "@veltodefi/ui-orders";
 
 const meta: Meta<typeof OrdersWidget> = {
   title: "Package/ui-orders/Orders",

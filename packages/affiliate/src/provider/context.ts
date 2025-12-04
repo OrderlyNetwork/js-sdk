@@ -1,5 +1,5 @@
 import { ReactNode, createContext, useContext } from "react";
-import { RefferalAPI as API } from "@orderly.network/hooks";
+import { RefferalAPI as API } from "@veltodefi/hooks";
 
 export enum TabTypes {
   affiliate = "affiliate",

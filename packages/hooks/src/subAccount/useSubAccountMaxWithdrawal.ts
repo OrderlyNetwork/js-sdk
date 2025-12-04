@@ -1,7 +1,7 @@
 import { useMemo } from "react";
-import { account as accountPerp } from "@orderly.network/perp";
-import { API } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+import { account as accountPerp } from "@veltodefi/perp";
+import { API } from "@veltodefi/types";
+import { Decimal } from "@veltodefi/utils";
 import { useAppStore } from "../orderly/appStore";
 import { useIndexPricesStream } from "../orderly/useIndexPricesStream";
 

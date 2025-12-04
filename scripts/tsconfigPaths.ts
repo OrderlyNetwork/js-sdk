@@ -75,7 +75,7 @@ function getOrderlyDependencies(packageJson: Package["packageJson"]) {
   };
 
   return Object.keys(allDependencies).filter((name) =>
-    name.startsWith("@orderly.network/"),
+    name.startsWith("@veltodefi/"),
   );
 }
 

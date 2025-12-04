@@ -1,4 +1,4 @@
-import { cn } from "@orderly.network/ui";
+import { cn } from "@veltodefi/ui";
 import { FC, useMemo } from "react";
 
 export enum CellBarDirection {

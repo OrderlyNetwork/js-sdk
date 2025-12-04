@@ -1,7 +1,7 @@
 import { FC, useEffect } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { OrderlyOrder, OrderType } from "@orderly.network/types";
-import { Checkbox, cn, Divider, Flex, Switch } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { OrderlyOrder, OrderType } from "@veltodefi/types";
+import { Checkbox, cn, Divider, Flex, Switch } from "@veltodefi/ui";
 
 export type AdditionalInfoProps = {
   pinned: boolean;

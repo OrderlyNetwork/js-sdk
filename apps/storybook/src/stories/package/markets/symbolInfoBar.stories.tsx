@@ -4,8 +4,8 @@ import {
   SymbolInfoBarWidget,
   SymbolInfoBarFullWidget,
   MarketsSheetWidget,
-} from "@orderly.network/markets";
-import { Box, Flex, SimpleSheet } from "@orderly.network/ui";
+} from "@veltodefi/markets";
+import { Box, Flex, SimpleSheet } from "@veltodefi/ui";
 
 const meta: Meta<typeof SymbolInfoBarFullWidget> = {
   title: "Package/markets/SymbolInfoBar",

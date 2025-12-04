@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
+import { useTranslation } from "@veltodefi/i18n";
+import { API } from "@veltodefi/types";
 import {
   Box,
   ChainIcon,
@@ -13,7 +13,7 @@ import {
   Spinner,
   Text,
   cn,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { ExchangeIcon } from "../../icons";
 import { CurrentChain } from "../depositForm/hooks";
 

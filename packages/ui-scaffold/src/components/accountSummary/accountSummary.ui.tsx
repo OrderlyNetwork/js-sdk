@@ -1,5 +1,5 @@
 import React, { FC, PropsWithChildren, useEffect } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   Box,
   EyeCloseIcon,
@@ -7,7 +7,7 @@ import {
   Flex,
   Popover,
   Text,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 
 type AccountSummaryUi = {
   totalValue: number | null;

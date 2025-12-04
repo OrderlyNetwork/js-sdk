@@ -2,19 +2,19 @@
   "extends": "./tsconfig.build.json",
   "compilerOptions": {
     "paths": {
-      "@orderly.network/core": [
+      "@veltodefi/core": [
         "../core/src"
       ],
-      "@orderly.network/hooks": [
+      "@veltodefi/hooks": [
         "../hooks/src"
       ],
-      "@orderly.network/types": [
+      "@veltodefi/types": [
         "../types/src"
       ],
-      "@orderly.network/utils": [
+      "@veltodefi/utils": [
         "../utils/src"
       ],
-      "@orderly.network/ui": [
+      "@veltodefi/ui": [
         "../ui/src"
       ],
       "react": [
@@ -23,10 +23,10 @@
       "react-dom": [
         "./node_modules/react-dom"
       ],
-      "@orderly.network/i18n": [
+      "@veltodefi/i18n": [
         "../i18n/src"
       ],
-      "@orderly.network/ui-connector": [
+      "@veltodefi/ui-connector": [
         "../ui-connector/src"
       ]
     }

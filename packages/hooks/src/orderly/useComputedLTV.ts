@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react";
-import { account } from "@orderly.network/perp";
-import type { API } from "@orderly.network/types";
-import { Decimal, zero } from "@orderly.network/utils";
+import { account } from "@veltodefi/perp";
+import type { API } from "@veltodefi/types";
+import { Decimal, zero } from "@veltodefi/utils";
 import { useCollateral, useHoldingStream, useIndexPricesStream } from "..";
 import { useAppStore } from "./appStore";
 

@@ -1,12 +1,12 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   PortfolioLeftSidebarPath,
   SettingModule,
-} from "@orderly.network/portfolio";
-import { ChevronRightIcon, Flex, Text, useScreen } from "@orderly.network/ui";
-import { LanguageSwitcherWidget } from "@orderly.network/ui-scaffold";
+} from "@veltodefi/portfolio";
+import { ChevronRightIcon, Flex, Text, useScreen } from "@veltodefi/ui";
+import { LanguageSwitcherWidget } from "@veltodefi/ui-scaffold";
 import { PortfolioLayout } from "../../../components/layout";
 
 const meta: Meta<typeof SettingModule.SettingPage> = {

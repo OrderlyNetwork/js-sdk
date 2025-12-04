@@ -1,5 +1,5 @@
 import React from "react";
-import type { ScaffoldProps } from "@orderly.network/ui-scaffold";
+import type { ScaffoldProps } from "@veltodefi/ui-scaffold";
 import { BaseLayout as CommonBaseLayout } from "../../../components/layout";
 
 export type BaseLayoutProps = {

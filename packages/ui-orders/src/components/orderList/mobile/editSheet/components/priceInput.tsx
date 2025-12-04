@@ -1,6 +1,6 @@
 import { memo, useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { cn, Input, inputFormatter, Text } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { cn, Input, inputFormatter, Text } from "@veltodefi/ui";
 import { useEditSheetContext } from "./editSheetContext";
 
 type PriceInputProps = {

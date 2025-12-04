@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { mutate } from "swr";
-import { API } from "@orderly.network/types";
+import { API } from "@veltodefi/types";
 import { useAccount } from "../useAccount";
 import { usePrivateQuery } from "../usePrivateQuery";
 import { useWS } from "../useWS";

@@ -1,9 +1,9 @@
 import { FC, Fragment, useEffect } from "react";
-import { useMemoizedFn } from "@orderly.network/hooks";
-import { useTranslation, Trans } from "@orderly.network/i18n";
-import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
-import { OrderType, PositionType } from "@orderly.network/types";
-import { Flex, Text, Grid, Checkbox, cn } from "@orderly.network/ui";
+import { useMemoizedFn } from "@veltodefi/hooks";
+import { useTranslation, Trans } from "@veltodefi/i18n";
+import { useOrderEntryFormErrorMsg } from "@veltodefi/react-app";
+import { OrderType, PositionType } from "@veltodefi/types";
+import { Flex, Text, Grid, Checkbox, cn } from "@veltodefi/ui";
 import { PnlInputWidget } from "../../pnlInput/pnlInput.widget";
 import { OrderPriceType } from "../orderPriceType";
 import { PriceInput } from "./priceInput";

@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { AssetsModule } from "@orderly.network/portfolio";
-import { OrderStatus } from "@orderly.network/types";
+import { useTranslation } from "@veltodefi/i18n";
+import { AssetsModule } from "@veltodefi/portfolio";
+import { OrderStatus } from "@veltodefi/types";
 import {
   Button,
   Checkbox,
@@ -11,15 +11,15 @@ import {
   TabPanel,
   Tabs,
   Text,
-} from "@orderly.network/ui";
-import type { TabPanelProps } from "@orderly.network/ui";
-import { MobileOrderListWidget, TabType } from "@orderly.network/ui-orders";
+} from "@veltodefi/ui";
+import type { TabPanelProps } from "@veltodefi/ui";
+import { MobileOrderListWidget, TabType } from "@veltodefi/ui-orders";
 import {
   MobileLiquidationWidget,
   MobilePositionHistoryWidget,
   MobilePositionsWidget,
-} from "@orderly.network/ui-positions";
-import { formatSymbol } from "@orderly.network/utils";
+} from "@veltodefi/ui-positions";
+import { formatSymbol } from "@veltodefi/utils";
 import {
   type DataListState,
   DataListTabSubType,

@@ -1,8 +1,8 @@
 import { FC, useMemo } from "react";
 import { UTCDate } from "@date-fns/utc";
 import { format, differenceInHours, differenceInMinutes } from "date-fns";
-import { useTranslation } from "@orderly.network/i18n";
-import { Flex, Text } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { Flex, Text } from "@veltodefi/ui";
 import { ArrowRightShortIcon } from "../announcementCenter/icons";
 
 export const CampaignContentCard: FC<{

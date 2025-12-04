@@ -4,9 +4,9 @@ import {
   useConfig,
   useAccount,
   useWalletConnector,
-} from "@orderly.network/hooks";
-import { useAppContext } from "@orderly.network/react-app";
-import { API, Chain, NetworkId } from "@orderly.network/types";
+} from "@veltodefi/hooks";
+import { useAppContext } from "@veltodefi/react-app";
+import { API, Chain, NetworkId } from "@veltodefi/types";
 
 export type UseChainMenuScriptReturn = ReturnType<typeof useChainMenuScript>;
 

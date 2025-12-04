@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import React from "react";
-import { useAccount } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import { useAccount } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   Flex,
   Text,
@@ -13,15 +13,15 @@ import {
   formatAddress,
   Tooltip,
   InfoCircleIcon,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import {
   LiquidationWidget,
   PositionHistoryWidget,
   PositionsProps,
   CombinePositionsWidget,
   PositionsWidget,
-} from "@orderly.network/ui-positions";
-import type { SelectOption } from "@orderly.network/ui/src/select/withOptions";
+} from "@veltodefi/ui-positions";
+import type { SelectOption } from "@veltodefi/ui/src/select/withOptions";
 import { AccountType } from "../assets/assetsPage/assets.ui.desktop";
 
 enum TabsType {

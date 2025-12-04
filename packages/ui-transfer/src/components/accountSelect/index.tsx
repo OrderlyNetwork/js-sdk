@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { SubAccount } from "@orderly.network/hooks";
+import { SubAccount } from "@veltodefi/hooks";
 import {
   Box,
   DropdownMenuContent,
@@ -10,7 +10,7 @@ import {
   ScrollArea,
   Text,
   cn,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { ExchangeIcon } from "../../icons";
 
 type AccountSelectProps = {

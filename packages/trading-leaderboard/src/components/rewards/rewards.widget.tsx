@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { useScreen } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { useScreen } from "@veltodefi/ui";
 import { LeaderboardTitle } from "../../pages/leaderboard/page";
 import { useCampaignsScript } from "../campaigns/campaigns.script";
 import { RewardsDesktopUI } from "./rewards.desktop.ui";

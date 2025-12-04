@@ -1,4 +1,4 @@
-import { BaseIconProps } from "@orderly.network/ui";
+import { BaseIconProps } from "@veltodefi/ui";
 import React from "react";
 // import { BaseIcon, BaseIconProps } from "./baseIcon";
 

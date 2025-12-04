@@ -3,10 +3,10 @@ import {
   useAccount,
   useLeverage,
   useMarginRatio,
-} from "@orderly.network/hooks";
-import { useDataTap } from "@orderly.network/react-app";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+} from "@veltodefi/hooks";
+import { useDataTap } from "@veltodefi/react-app";
+import { AccountStatusEnum } from "@veltodefi/types";
+import { Decimal } from "@veltodefi/utils";
 
 const getRiskRateColor = (riskRate: null | number) => {
   if (riskRate === null) {

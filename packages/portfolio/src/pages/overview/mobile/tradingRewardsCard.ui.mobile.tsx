@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   Flex,
   Text,
@@ -9,7 +9,7 @@ import {
   EsOrderlyIcon,
   cn,
   modal,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import type { UseRewardsDataReturn } from "./useRewardsData.script";
 
 const isNumber = (val: unknown): val is number => {

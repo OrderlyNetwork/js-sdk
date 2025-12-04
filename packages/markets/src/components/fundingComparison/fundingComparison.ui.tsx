@@ -1,6 +1,6 @@
 import type { FC } from "react";
-import { cn } from "@orderly.network/ui";
-import { DataTable } from "@orderly.network/ui";
+import { cn } from "@veltodefi/ui";
+import { DataTable } from "@veltodefi/ui";
 import { useFundingColumns } from "./columns";
 import { FundingComparisonReturn } from "./fundingComparison.script";
 

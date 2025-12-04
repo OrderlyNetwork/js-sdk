@@ -81,7 +81,7 @@ import {
   VaultsIcon,
   LeftNavVaultsIcon,
   NewsFillIcon,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 
 const meta: Meta<typeof Icon> = {
   title: "Base/Icon/Icons",

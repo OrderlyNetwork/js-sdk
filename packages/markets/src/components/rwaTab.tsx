@@ -1,5 +1,5 @@
-import { useTranslation } from "@orderly.network/i18n";
-import { Box, Flex, GradientText, Text } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { Box, Flex, GradientText, Text } from "@veltodefi/ui";
 
 export const RwaTab = () => {
   const { t } = useTranslation();

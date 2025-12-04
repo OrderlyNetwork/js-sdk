@@ -1,6 +1,6 @@
 import { FC } from "react";
-import { Trans } from "@orderly.network/i18n";
-import { Flex, Text } from "@orderly.network/ui";
+import { Trans } from "@veltodefi/i18n";
+import { Flex, Text } from "@veltodefi/ui";
 
 export const ViewFAQs: FC = () => {
   return (

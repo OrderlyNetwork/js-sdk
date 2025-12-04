@@ -1,5 +1,5 @@
 import { InputFormatterOptions } from "./inputFormatter";
-import { Decimal } from "@orderly.network/utils";
+import { Decimal } from "@veltodefi/utils";
 
 export const identifierFormatter = (
 //  props: {

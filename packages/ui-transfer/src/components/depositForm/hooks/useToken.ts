@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useConfig } from "@orderly.network/hooks";
-import { NetworkId, type API } from "@orderly.network/types";
+import { useConfig } from "@veltodefi/hooks";
+import { NetworkId, type API } from "@veltodefi/types";
 import { getTokenByTokenList } from "../../../utils";
 import type { CurrentChain } from "./useChainSelect";
 

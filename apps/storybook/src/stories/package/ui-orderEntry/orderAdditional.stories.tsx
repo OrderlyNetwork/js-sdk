@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Box } from "@orderly.network/ui";
-import { AdditionalInfo } from "@orderly.network/ui-order-entry";
+import { Box } from "@veltodefi/ui";
+import { AdditionalInfo } from "@veltodefi/ui-order-entry";
 
 const meta: Meta<typeof AdditionalInfo> = {
   title: "Package/ui-order-entry/additional",

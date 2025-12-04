@@ -1,7 +1,7 @@
 import { propOr } from "ramda";
-import { account, positions } from "@orderly.network/perp";
-import { API } from "@orderly.network/types";
-import { Decimal, zero } from "@orderly.network/utils";
+import { account, positions } from "@veltodefi/perp";
+import { API } from "@veltodefi/types";
+import { Decimal, zero } from "@veltodefi/utils";
 import { useApiStatusStore } from "../../next/apiStatus/apiStatus.store";
 import { CalculatorCtx, CalculatorScope } from "../../types";
 import { useAppStore } from "../appStore";

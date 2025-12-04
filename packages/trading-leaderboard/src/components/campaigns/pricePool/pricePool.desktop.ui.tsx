@@ -1,7 +1,7 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { cn, Text, ChevronRightIcon, Button } from "@orderly.network/ui";
-import { AuthGuard } from "@orderly.network/ui-connector";
+import { useTranslation } from "@veltodefi/i18n";
+import { cn, Text, ChevronRightIcon, Button } from "@veltodefi/ui";
+import { AuthGuard } from "@veltodefi/ui-connector";
 import { useCanTrade } from "../../../hooks/useCanTrade";
 import { CampaignConfig, PrizePool } from "../type";
 import { formatPrizeAmount, formatTradingVolume } from "../utils";

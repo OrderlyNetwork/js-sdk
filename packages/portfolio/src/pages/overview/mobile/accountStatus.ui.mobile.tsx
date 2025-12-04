@@ -5,10 +5,10 @@ import {
   useChains,
   useLocalStorage,
   useWalletConnector,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { useAppContext } from "@orderly.network/react-app";
-import { AccountStatusEnum, ChainNamespace } from "@orderly.network/types";
+} from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { useAppContext } from "@veltodefi/react-app";
+import { AccountStatusEnum, ChainNamespace } from "@veltodefi/types";
 import {
   cn,
   modal,
@@ -17,7 +17,7 @@ import {
   Flex,
   CopyIcon,
   ChainIcon,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 
 interface StatusInfo {
   title: string;

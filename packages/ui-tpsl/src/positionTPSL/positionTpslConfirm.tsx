@@ -2,9 +2,9 @@ import {
   ComputedAlgoOrder,
   useLocalStorage,
   utils,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { OrderSide, PositionType } from "@orderly.network/types";
+} from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { OrderSide, PositionType } from "@veltodefi/types";
 import {
   Badge,
   Box,
@@ -14,8 +14,8 @@ import {
   Flex,
   Text,
   textVariants,
-} from "@orderly.network/ui";
-import { transSymbolformString } from "@orderly.network/utils";
+} from "@veltodefi/ui";
+import { transSymbolformString } from "@veltodefi/utils";
 
 export type PositionTPSLConfirmProps = {
   symbol: string;

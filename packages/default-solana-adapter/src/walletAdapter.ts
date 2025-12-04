@@ -23,8 +23,8 @@ import {
   MessageFactor,
   DexRequestInputs,
   InternalTransferInputs,
-} from "@orderly.network/core";
-import { API, MaxUint256, ChainNamespace } from "@orderly.network/types";
+} from "@veltodefi/core";
+import { API, MaxUint256, ChainNamespace } from "@veltodefi/types";
 import {
   addOrderlyKeyMessage,
   checkIsLedgerWallet,

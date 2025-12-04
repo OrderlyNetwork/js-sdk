@@ -1,8 +1,8 @@
-import { API } from "@orderly.network/types";
+import { API } from "@veltodefi/types";
 import { Calculator, CalculatorCtx, CalculatorScope } from "../../types";
 import { BaseCalculator } from "./baseCalculator";
 import { Portfolio } from "../appStore";
-import { Decimal } from "@orderly.network/utils";
+import { Decimal } from "@veltodefi/utils";
 
 export class OrderCalculator extends BaseCalculator<API.OrderExt[]> {
   name = "orders";

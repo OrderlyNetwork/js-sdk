@@ -12,18 +12,18 @@ import {
   useLocalStorage,
   useOrderStream,
   useSymbolsInfo,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { useDataTap } from "@orderly.network/react-app";
+} from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { useDataTap } from "@veltodefi/react-app";
 import {
   AlgoOrderRootType,
   OrderStatus,
   OrderSide,
   API,
-} from "@orderly.network/types";
-import { modal, usePagination, Text, Table } from "@orderly.network/ui";
-import { SharePnLConfig } from "@orderly.network/ui-share";
-import { formatSymbol } from "@orderly.network/utils";
+} from "@veltodefi/types";
+import { modal, usePagination, Text, Table } from "@veltodefi/ui";
+import { SharePnLConfig } from "@veltodefi/ui-share";
+import { formatSymbol } from "@veltodefi/utils";
 import { areDatesEqual } from "../../utils/util";
 import { TabType } from "../orders.widget";
 import { useFormatOrderHistory } from "./useFormatOrderHistory";

@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { usePrivateQuery } from "@orderly.network/hooks";
-import { EMPTY_LIST } from "@orderly.network/types";
+import { usePrivateQuery } from "@veltodefi/hooks";
+import { EMPTY_LIST } from "@veltodefi/types";
 import { OperationType, VaultOperation } from "../../../types/vault";
 
 type LatestOperationScriptProps = {

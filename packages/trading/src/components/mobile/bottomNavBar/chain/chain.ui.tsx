@@ -1,8 +1,8 @@
 import { FC } from "react";
-import { Box, ChainIcon, modal, toast } from "@orderly.network/ui";
+import { Box, ChainIcon, modal, toast } from "@veltodefi/ui";
 import { ChainState } from "./chain.script";
-import { ChainSelectorSheetId } from "@orderly.network/ui-chain-selector";
-import { useTranslation } from "@orderly.network/i18n";
+import { ChainSelectorSheetId } from "@veltodefi/ui-chain-selector";
+import { useTranslation } from "@veltodefi/i18n";
 
 export const Chain: FC<ChainState> = (props) => {
   const { t } = useTranslation();

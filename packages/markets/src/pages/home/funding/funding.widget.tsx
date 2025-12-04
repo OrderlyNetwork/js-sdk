@@ -1,5 +1,5 @@
 import React from "react";
-import { useScreen } from "@orderly.network/ui";
+import { useScreen } from "@veltodefi/ui";
 import { MobileFunding } from "./funding.mobile.ui";
 import { useFundingScript } from "./funding.script";
 import { Funding } from "./funding.ui";

@@ -1,11 +1,11 @@
-import { useSymbolLeverage } from "@orderly.network/hooks";
-import { OrderSide } from "@orderly.network/types";
-import { cn, Flex, modal, Text, useScreen } from "@orderly.network/ui";
+import { useSymbolLeverage } from "@veltodefi/hooks";
+import { OrderSide } from "@veltodefi/types";
+import { cn, Flex, modal, Text, useScreen } from "@veltodefi/ui";
 import {
   SymbolLeverageDialogId,
   SymbolLeverageSheetId,
-} from "@orderly.network/ui-leverage";
-import { Decimal } from "@orderly.network/utils";
+} from "@veltodefi/ui-leverage";
+import { Decimal } from "@veltodefi/utils";
 
 type LeverageBadgeProps = {
   symbol: string;

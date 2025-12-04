@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { API, EMPTY_LIST } from "@orderly.network/types";
+import { API, EMPTY_LIST } from "@veltodefi/types";
 import { usePrivateQuery } from "../../usePrivateQuery";
 import { useSymbolsInfo } from "../useSymbolsInfo";
 

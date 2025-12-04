@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { useMediaQuery } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { SideMenuItem, useScaffoldContext } from "@orderly.network/ui-scaffold";
+import { useMediaQuery } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { SideMenuItem, useScaffoldContext } from "@veltodefi/ui-scaffold";
 
 export enum PortfolioLeftSidebarPath {
   Overview = "/portfolio",

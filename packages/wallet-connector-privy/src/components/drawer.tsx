@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { useMediaQuery } from "@orderly.network/hooks";
-import { cn, useScreen } from "@orderly.network/ui";
+import { useMediaQuery } from "@veltodefi/hooks";
+import { cn, useScreen } from "@veltodefi/ui";
 
 interface DrawerProps {
   children: React.ReactNode;

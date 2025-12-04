@@ -1,10 +1,10 @@
-import { order as orderUtils } from "@orderly.network/perp";
+import { order as orderUtils } from "@veltodefi/perp";
 import {
   API,
   OrderlyOrder,
   OrderSide,
   OrderType,
-} from "@orderly.network/types";
+} from "@veltodefi/types";
 
 /**
  * if order_type = market order,

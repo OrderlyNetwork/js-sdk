@@ -5,7 +5,7 @@ import {
   OrderlyOrder,
   OrderSide,
   OrderType,
-} from "@orderly.network/types";
+} from "@veltodefi/types";
 import { priceToROI } from "../../orderly/useTakeProfitAndStopLoss/tp_slUtils";
 import { OrderCreator } from "../../services/orderCreator/interface";
 import {

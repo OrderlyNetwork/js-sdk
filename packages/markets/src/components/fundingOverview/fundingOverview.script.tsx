@@ -4,8 +4,8 @@ import {
   useFundingRateHistory,
   useFundingRates,
   useMarkets,
-} from "@orderly.network/hooks";
-import { usePagination } from "@orderly.network/ui";
+} from "@veltodefi/hooks";
+import { usePagination } from "@veltodefi/ui";
 import { useMarketsContext } from "../../components/marketsProvider";
 import { useSort, searchBySymbol } from "../../utils";
 

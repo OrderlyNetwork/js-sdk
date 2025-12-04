@@ -6,8 +6,8 @@ import {
   RecentListWidget,
   DropDownMarketsWidget,
   useDropDownMarketsColumns,
-} from "@orderly.network/markets";
-import { Box, Button } from "@orderly.network/ui";
+} from "@veltodefi/markets";
+import { Box, Button } from "@veltodefi/ui";
 
 const decorators = [
   (Story: any) => (

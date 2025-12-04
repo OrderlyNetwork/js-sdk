@@ -1,6 +1,6 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Button, cn, Flex, RefreshIcon, Text } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { Button, cn, Flex, RefreshIcon, Text } from "@veltodefi/ui";
 import { InfoIcon } from "../icons";
 import { OfflineInfoState } from "./offlineInfo.script";
 

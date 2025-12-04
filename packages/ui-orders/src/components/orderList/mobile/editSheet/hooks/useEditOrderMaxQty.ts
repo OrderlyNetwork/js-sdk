@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { useMaxQty } from "@orderly.network/hooks";
-import { API, OrderSide } from "@orderly.network/types";
+import { useMaxQty } from "@veltodefi/hooks";
+import { API, OrderSide } from "@veltodefi/types";
 
 export function useEditOrderMaxQty(
   order: API.AlgoOrderExt,

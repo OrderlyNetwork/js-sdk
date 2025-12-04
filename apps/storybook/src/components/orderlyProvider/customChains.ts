@@ -1,7 +1,7 @@
 import {
   AbstractTestnetChainInfo,
   AbstractTestnetTokenInfo,
-} from "@orderly.network/types";
+} from "@veltodefi/types";
 
 // test only evm chains
 export const customChainsEvm: any = {

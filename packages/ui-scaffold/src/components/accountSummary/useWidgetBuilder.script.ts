@@ -4,10 +4,10 @@ import {
   useLocalStorage,
   useMarginRatio,
   usePositionStream,
-} from "@orderly.network/hooks";
-import { useCollateral, useAccount } from "@orderly.network/hooks";
-import { useAppContext } from "@orderly.network/react-app";
-import { AccountStatusEnum } from "@orderly.network/types";
+} from "@veltodefi/hooks";
+import { useCollateral, useAccount } from "@veltodefi/hooks";
+import { useAppContext } from "@veltodefi/react-app";
+import { AccountStatusEnum } from "@veltodefi/types";
 
 export type AccountSummaryType =
   | "totalValue"

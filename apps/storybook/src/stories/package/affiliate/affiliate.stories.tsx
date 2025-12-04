@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Dashboard, ReferralProvider } from "@orderly.network/affiliate";
-import { TradingRewardsLeftSidebarPath } from "@orderly.network/trading-rewards";
+import { Dashboard, ReferralProvider } from "@veltodefi/affiliate";
+import { TradingRewardsLeftSidebarPath } from "@veltodefi/trading-rewards";
 import { TradingRewardsLayout } from "../../../components/layout";
 
 const meta: Meta<typeof Dashboard.AffiliatePage> = {

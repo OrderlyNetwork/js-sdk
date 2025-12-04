@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { OrderValidationResult, useOrderEntry } from "@orderly.network/hooks";
-import { OrderlyOrder, OrderType, PositionType } from "@orderly.network/types";
+import { OrderValidationResult, useOrderEntry } from "@veltodefi/hooks";
+import { OrderlyOrder, OrderType, PositionType } from "@veltodefi/types";
 
 type Props = {
   order: OrderlyOrder;

@@ -1,4 +1,4 @@
-import { formatNum } from "@orderly.network/utils";
+import { formatNum } from "@veltodefi/utils";
 import { Numeral, NumeralProps } from "./numeral";
 
 type NumTypeProps = Omit<NumeralProps, "ignoreDP" | "rm" | "tick"> & {

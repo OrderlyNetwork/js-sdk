@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { ChainNamespace } from "@orderly.network/types";
+import { useTranslation } from "@veltodefi/i18n";
+import { ChainNamespace } from "@veltodefi/types";
 import {
   ChevronDownIcon,
   ChevronUpIcon,
   cn,
   Tooltip,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { useWallet } from "../../hooks/useWallet";
 import { useWalletConnectorPrivy } from "../../provider";
 import { useSolanaWallet } from "../../providers/solana/solanaWalletProvider";

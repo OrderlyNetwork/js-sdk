@@ -1,6 +1,6 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { RouterAdapter } from "@orderly.network/types";
+import { useTranslation } from "@veltodefi/i18n";
+import { RouterAdapter } from "@veltodefi/types";
 import {
   Flex,
   Text,
@@ -8,7 +8,7 @@ import {
   ArrowUpSquareFillIcon,
   CalendarMinusIcon,
   ArrowLeftRightIcon,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { PortfolioLeftSidebarPath } from "../../../layout";
 
 type Props = {

@@ -1,6 +1,6 @@
 import { FC } from "react";
-import { OrderType } from "@orderly.network/types";
-import { cn, Divider, Flex, Grid } from "@orderly.network/ui";
+import { OrderType } from "@veltodefi/types";
+import { cn, Divider, Flex, Grid } from "@veltodefi/ui";
 import { ClosePositionWidget } from "../../closePosition";
 import { TpSLBtnWidget } from "../tpSLBtn";
 import {

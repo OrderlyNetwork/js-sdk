@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
-import { ScopeType } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { cn, Flex, SimpleDialog, Statistic, Text } from "@orderly.network/ui";
+import { ScopeType } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { cn, Flex, SimpleDialog, Statistic, Text } from "@veltodefi/ui";
 import { ApiManagerScriptReturns } from "../apiManager.script";
 
 export const CreateAPIKeyDialog: FC<ApiManagerScriptReturns> = (props) => {

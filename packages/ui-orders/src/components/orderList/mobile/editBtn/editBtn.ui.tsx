@@ -1,6 +1,6 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Button } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { Button } from "@veltodefi/ui";
 import { EditBtnState } from "./editBtn.script";
 
 export const EditBtn: FC<EditBtnState> = (props) => {

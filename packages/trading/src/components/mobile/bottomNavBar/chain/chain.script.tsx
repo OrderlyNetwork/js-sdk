@@ -1,5 +1,5 @@
-import { useConfig } from "@orderly.network/hooks";
-import { useAppContext } from "@orderly.network/react-app";
+import { useConfig } from "@veltodefi/hooks";
+import { useAppContext } from "@veltodefi/react-app";
 
 export const useChainScript = () => {
   const config = useConfig();

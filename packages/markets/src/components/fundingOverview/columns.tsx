@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   Column,
   Flex,
@@ -8,8 +8,8 @@ import {
   Text,
   TokenIcon,
   useScreen,
-} from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+} from "@veltodefi/ui";
+import { Decimal } from "@veltodefi/utils";
 import { ProcessedFundingData } from "./fundingOverview.script";
 
 const createFundingRenderer =

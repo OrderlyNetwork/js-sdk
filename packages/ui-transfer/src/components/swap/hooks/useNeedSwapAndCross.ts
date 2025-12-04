@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { API } from "@orderly.network/types";
+import { API } from "@veltodefi/types";
 
 export function useNeedSwapAndCross(options: {
   srcToken?: API.TokenInfo;

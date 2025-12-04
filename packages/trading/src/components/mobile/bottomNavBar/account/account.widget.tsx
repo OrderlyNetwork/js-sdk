@@ -1,4 +1,4 @@
-import { ExtensionPositionEnum, ExtensionSlot, installExtension } from "@orderly.network/ui";
+import { ExtensionPositionEnum, ExtensionSlot, installExtension } from "@veltodefi/ui";
 import { useAccountScript } from "./account.script";
 import { Account } from "./account.ui";
 

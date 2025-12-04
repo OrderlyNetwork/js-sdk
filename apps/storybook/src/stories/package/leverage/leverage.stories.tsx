@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Box, Button, modal } from "@orderly.network/ui";
+import { Box, Button, modal } from "@veltodefi/ui";
 import {
   LeverageWidgetWithDialogId,
   LeverageEditor,
   LeverageHeader,
   LeverageSlider,
   useLeverageScript,
-} from "@orderly.network/ui-leverage";
+} from "@veltodefi/ui-leverage";
 
 const meta: Meta<typeof LeverageEditor> = {
   title: "Package/ui-leverage/LeverageEditor",

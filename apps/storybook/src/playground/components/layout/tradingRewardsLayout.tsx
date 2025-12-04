@@ -1,6 +1,6 @@
 import React from "react";
 import { Outlet } from "react-router";
-import { TradingRewardsLeftSidebarPath } from "@orderly.network/trading-rewards";
+import { TradingRewardsLeftSidebarPath } from "@veltodefi/trading-rewards";
 import { TradingRewardsLayout as CommonTradingRewardsLayout } from "../../../components/layout";
 import { usePathWithoutLang } from "../../hooks/usePathWithoutLang";
 

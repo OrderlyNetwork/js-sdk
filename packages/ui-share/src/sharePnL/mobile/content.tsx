@@ -1,5 +1,5 @@
 import { FC, useEffect, useMemo, useRef, useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   Button,
   CloseCircleFillIcon,
@@ -7,7 +7,7 @@ import {
   Input,
   ScrollArea,
   toast,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import {
   PnLDisplayFormat,
   ReferralType,

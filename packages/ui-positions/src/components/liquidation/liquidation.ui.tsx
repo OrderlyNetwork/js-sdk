@@ -1,6 +1,6 @@
 import { FC, useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
+import { useTranslation } from "@veltodefi/i18n";
+import { API } from "@veltodefi/types";
 import {
   cn,
   DataFilter,
@@ -9,9 +9,9 @@ import {
   ListView,
   Text,
   Tooltip,
-} from "@orderly.network/ui";
-import { AuthGuardDataTable } from "@orderly.network/ui-connector";
-import { commifyOptional } from "@orderly.network/utils";
+} from "@veltodefi/ui";
+import { AuthGuardDataTable } from "@veltodefi/ui-connector";
+import { commifyOptional } from "@veltodefi/utils";
 import { useLiquidationColumn } from "./desktop/useLiquidationColumn";
 import { LiquidationState } from "./liquidation.script";
 import { LiquidationCellWidget } from "./mobile";

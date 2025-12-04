@@ -8,8 +8,8 @@ import {
   SideMarketsWidget,
   NewListingListWidget,
   MarketsTabName,
-} from "@orderly.network/markets";
-import { Box } from "@orderly.network/ui";
+} from "@veltodefi/markets";
+import { Box } from "@veltodefi/ui";
 
 const decorators = [
   (Story: any) => (

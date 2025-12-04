@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { AnnouncementType } from "@orderly.network/types";
-import { AnnouncementCenterUI } from "@orderly.network/ui-notification";
+import { AnnouncementType } from "@veltodefi/types";
+import { AnnouncementCenterUI } from "@veltodefi/ui-notification";
 
 /**
  * MessageCenter component stories

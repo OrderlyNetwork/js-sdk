@@ -1,6 +1,6 @@
-import { Box, ChainIcon, Flex, Text } from "@orderly.network/ui";
+import { Box, ChainIcon, Flex, Text } from "@veltodefi/ui";
 import { useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 interface IProps {
   currentChain: any;
   amount: number;

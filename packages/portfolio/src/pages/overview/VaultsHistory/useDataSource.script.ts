@@ -1,10 +1,10 @@
 import React from "react";
 import { getDate, getMonth, getYear, set } from "date-fns";
-import { useVaultsHistory } from "@orderly.network/hooks";
-import type { API } from "@orderly.network/types";
-import { usePagination } from "@orderly.network/ui";
-import type { PaginationMeta } from "@orderly.network/ui";
-import { subtractDaysFromCurrentDate } from "@orderly.network/utils";
+import { useVaultsHistory } from "@veltodefi/hooks";
+import type { API } from "@veltodefi/types";
+import { usePagination } from "@veltodefi/ui";
+import type { PaginationMeta } from "@veltodefi/ui";
+import { subtractDaysFromCurrentDate } from "@veltodefi/utils";
 import { parseDateRangeForFilter } from "../helper/date";
 
 export const useVaultsHistoryHook = () => {

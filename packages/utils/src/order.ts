@@ -4,7 +4,7 @@ import {
   OrderLevel,
   OrderSide,
   OrderType,
-} from "@orderly.network/types";
+} from "@veltodefi/types";
 import Decimal from "./decimal";
 
 /**

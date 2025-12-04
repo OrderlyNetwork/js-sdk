@@ -11,9 +11,9 @@ import {
   useLocalStorage,
   useStorageLedgerAddress,
   WalletState,
-} from "@orderly.network/hooks";
-import { ChainNamespace, LedgerWalletKey } from "@orderly.network/types";
-import { useScreen } from "@orderly.network/ui";
+} from "@veltodefi/hooks";
+import { ChainNamespace, LedgerWalletKey } from "@veltodefi/types";
+import { useScreen } from "@veltodefi/ui";
 import { useSolanaContext } from "./SolanaProvider";
 import { SolanaChainIdEnum, SolanaChains } from "./config";
 

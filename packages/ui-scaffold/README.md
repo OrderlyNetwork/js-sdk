@@ -7,14 +7,14 @@ Scaffold is a powerful layout component that provides a complete application sca
 ## Installation and Import
 
 ```typescript
-import { Scaffold, type ScaffoldProps } from "@orderly.network/ui-scaffold";
+import { Scaffold, type ScaffoldProps } from "@veltodefi/ui-scaffold";
 ```
 
 ## Basic Usage
 
 ```typescript
 import React from 'react';
-import { Scaffold } from "@orderly.network/ui-scaffold";
+import { Scaffold } from "@veltodefi/ui-scaffold";
 
 const App = () => {
   return (
@@ -438,7 +438,7 @@ const routerAdapter = {
 
 ```typescript
 import React from 'react';
-import { Scaffold } from "@orderly.network/ui-scaffold";
+import { Scaffold } from "@veltodefi/ui-scaffold";
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const App = () => {

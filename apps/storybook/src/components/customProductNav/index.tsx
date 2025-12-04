@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { useTrack } from "@orderly.network/hooks";
-import { TrackerEventName } from "@orderly.network/types";
-import { cn } from "@orderly.network/ui";
-import { Flex } from "@orderly.network/ui";
+import { useTrack } from "@veltodefi/hooks";
+import { TrackerEventName } from "@veltodefi/types";
+import { cn } from "@veltodefi/ui";
+import { Flex } from "@veltodefi/ui";
 import { ProductItem } from "./productItem";
 
 export function CustomProductNav() {

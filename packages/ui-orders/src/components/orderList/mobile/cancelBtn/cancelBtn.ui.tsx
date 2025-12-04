@@ -1,6 +1,6 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Button, SimpleDialog, Text } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { Button, SimpleDialog, Text } from "@veltodefi/ui";
 import { CancelBtnState } from "./cancelBtn.script";
 
 export const CancelBtn: FC<CancelBtnState> = (props) => {

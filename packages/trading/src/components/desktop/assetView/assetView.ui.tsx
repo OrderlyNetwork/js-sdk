@@ -1,8 +1,8 @@
 import { FC, useMemo, useState, useCallback, ReactNode } from "react";
-import { useAccount, useLocalStorage } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { useAppContext } from "@orderly.network/react-app";
-import { AccountStatusEnum } from "@orderly.network/types";
+import { useAccount, useLocalStorage } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { useAppContext } from "@veltodefi/react-app";
+import { AccountStatusEnum } from "@veltodefi/types";
 import {
   Flex,
   Text,
@@ -16,9 +16,9 @@ import {
   Divider,
   gradientTextVariants,
   cn,
-} from "@orderly.network/ui";
-import { AuthGuard } from "@orderly.network/ui-connector";
-import { LTVRiskTooltipWidget } from "@orderly.network/ui-order-entry";
+} from "@veltodefi/ui";
+import { AuthGuard } from "@veltodefi/ui-connector";
+import { LTVRiskTooltipWidget } from "@veltodefi/ui-order-entry";
 import { AssetViewState } from "./assetView.script";
 import { FaucetWidget } from "./faucet/faucet.widget";
 

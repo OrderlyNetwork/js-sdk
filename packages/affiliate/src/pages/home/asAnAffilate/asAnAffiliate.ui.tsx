@@ -1,7 +1,7 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Button, cn, Flex, Text } from "@orderly.network/ui";
-import { commifyOptional } from "@orderly.network/utils";
+import { useTranslation } from "@veltodefi/i18n";
+import { Button, cn, Flex, Text } from "@veltodefi/ui";
+import { commifyOptional } from "@veltodefi/utils";
 import { ArrowRightIcon } from "../../../components/arrowRightIcon";
 import { USDCIcon } from "../../../components/usdcIcon";
 import { AsAnAffiliateReturns } from "./asAnAffiliate.script";

@@ -4,8 +4,8 @@ import {
   OrderEntity,
   OrderlyOrder,
   OrderType,
-} from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+} from "@veltodefi/types";
+import { Decimal } from "@veltodefi/utils";
 import { getPriceRange } from "../../utils/order/orderPrice";
 import {
   calcScaledOrderBatchBody,

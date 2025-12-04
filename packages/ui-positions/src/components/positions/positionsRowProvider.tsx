@@ -12,10 +12,10 @@ import {
   KeyedMutator,
   usePositionClose,
   useSymbolsInfo,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { API, OrderSide, OrderType } from "@orderly.network/types";
-import { toast } from "@orderly.network/ui";
+} from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { API, OrderSide, OrderType } from "@veltodefi/types";
+import { toast } from "@veltodefi/ui";
 import { PositionsRowContext } from "./positionsRowContext";
 import type { PositionsRowContextState } from "./positionsRowContext";
 

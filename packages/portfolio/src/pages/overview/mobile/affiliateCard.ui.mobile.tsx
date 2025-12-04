@@ -1,15 +1,15 @@
 import { FC } from "react";
-import { RefferalAPI as API } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import type { RouterAdapter } from "@orderly.network/types";
+import { RefferalAPI as API } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import type { RouterAdapter } from "@veltodefi/types";
 import {
   Flex,
   Text,
   AffiliateIcon,
   ChevronRightIcon,
   cn,
-} from "@orderly.network/ui";
-import { commifyOptional } from "@orderly.network/utils";
+} from "@veltodefi/ui";
+import { commifyOptional } from "@veltodefi/utils";
 
 const isNumber = (val: unknown): val is number => {
   return typeof val === "number" && !Number.isNaN(val);

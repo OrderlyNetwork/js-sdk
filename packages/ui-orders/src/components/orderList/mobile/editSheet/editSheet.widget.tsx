@@ -1,4 +1,4 @@
-import { API, OrderEntity } from "@orderly.network/types";
+import { API, OrderEntity } from "@veltodefi/types";
 import { OrderCellState } from "../orderCell.script";
 import { useEditSheetScript } from "./editSheet.script";
 import { EditSheet } from "./editSheet.ui";

@@ -1,4 +1,4 @@
-import { DEFAUL_ORDERLY_KEY_SCOPE, definedTypes } from "@orderly.network/types";
+import { DEFAUL_ORDERLY_KEY_SCOPE, definedTypes } from "@veltodefi/types";
 import { LocalStorageStore, MockKeyStore } from "./keyStore";
 import { BaseSigner } from "./signer";
 import { getTimestamp, SignatureDomain } from "./utils";

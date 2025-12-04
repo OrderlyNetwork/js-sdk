@@ -1,8 +1,8 @@
 import { FC, useCallback, useState } from "react";
-import { useConfig, useMutation } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { OrderEntity } from "@orderly.network/types";
-import { Button } from "@orderly.network/ui";
+import { useConfig, useMutation } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { OrderEntity } from "@veltodefi/types";
+import { Button } from "@veltodefi/ui";
 
 export const Renew: FC<{ record: any }> = (props) => {
   const { record } = props;

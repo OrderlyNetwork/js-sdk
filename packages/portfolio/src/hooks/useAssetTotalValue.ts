@@ -3,9 +3,9 @@ import {
   useAccount,
   useCollateral,
   useIndexPricesStream,
-} from "@orderly.network/hooks";
-import { SubAccount } from "@orderly.network/hooks";
-import { Decimal } from "@orderly.network/utils";
+} from "@veltodefi/hooks";
+import { SubAccount } from "@veltodefi/hooks";
+import { Decimal } from "@veltodefi/utils";
 import { useAccountsData } from "./useAccountsData";
 
 const isNumber = (val: unknown): val is number => {

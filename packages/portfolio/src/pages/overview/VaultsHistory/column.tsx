@@ -1,9 +1,9 @@
 import React from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import type { API } from "@orderly.network/types";
-import { Flex, TokenIcon, Text, cn } from "@orderly.network/ui";
-import type { Column } from "@orderly.network/ui";
-import { capitalizeString } from "@orderly.network/utils";
+import { useTranslation } from "@veltodefi/i18n";
+import type { API } from "@veltodefi/types";
+import { Flex, TokenIcon, Text, cn } from "@veltodefi/ui";
+import type { Column } from "@veltodefi/ui";
+import { capitalizeString } from "@veltodefi/utils";
 
 export const useColumns = () => {
   const { t } = useTranslation();

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useGetRwaSymbolCloseTimeInterval } from "@orderly.network/hooks";
+import { useGetRwaSymbolCloseTimeInterval } from "@veltodefi/hooks";
 
 export const useShowRwaCountdown = (symbol: string) => {
   const [showCountdown, setShowCountdown] = useState<boolean | undefined>(

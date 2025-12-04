@@ -1,5 +1,5 @@
 import React, { createContext, useContext } from "react";
-import { RestrictedInfoReturns } from "@orderly.network/hooks";
+import { RestrictedInfoReturns } from "@veltodefi/hooks";
 import { useWalletStateHandle } from "../hooks/useWalletStateHandle";
 
 export type RouteOption = {

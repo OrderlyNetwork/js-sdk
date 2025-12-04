@@ -1,4 +1,4 @@
-import { API } from "@orderly.network/types";
+import { API } from "@veltodefi/types";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 // import { devtools } from "zustand/middleware";

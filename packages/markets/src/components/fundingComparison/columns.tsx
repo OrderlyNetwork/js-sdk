@@ -1,9 +1,9 @@
 import { useCallback, useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { cn, Flex, TokenIcon, useScreen } from "@orderly.network/ui";
-import type { Column } from "@orderly.network/ui";
-import { Text } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { useTranslation } from "@veltodefi/i18n";
+import { cn, Flex, TokenIcon, useScreen } from "@veltodefi/ui";
+import type { Column } from "@veltodefi/ui";
+import { Text } from "@veltodefi/ui";
+import { Decimal } from "@veltodefi/utils";
 import { OrderlyIcon } from "../../icons";
 import { useEXchanges } from "./useEXchanges";
 

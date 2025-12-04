@@ -1,6 +1,6 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { cn } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { cn } from "@veltodefi/ui";
 import { LeaderboardTitle } from "../../pages/leaderboard/page";
 import {
   DescriptionContent,

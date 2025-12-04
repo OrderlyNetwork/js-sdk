@@ -1,5 +1,5 @@
-import { OrdersModule } from "@orderly.network/portfolio";
-import { Box } from "@orderly.network/ui";
+import { OrdersModule } from "@veltodefi/portfolio";
+import { Box } from "@veltodefi/ui";
 
 export default function OrdersPage() {
   return (

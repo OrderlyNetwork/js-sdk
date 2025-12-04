@@ -8,9 +8,9 @@ import {
   CampaignLeaderboardWidget,
   LeaderboardPage,
   TradingLeaderboardProvider,
-} from "@orderly.network/trading-leaderboard";
-import { Box, Button, cn, Flex, Text } from "@orderly.network/ui";
-import { AuthGuard } from "@orderly.network/ui-connector";
+} from "@veltodefi/trading-leaderboard";
+import { Box, Button, cn, Flex, Text } from "@veltodefi/ui";
+import { AuthGuard } from "@veltodefi/ui-connector";
 import { BaseLayout } from "../../../components/layout";
 import { campaignRuleMap } from "./rules/constants";
 import { useCustomRanking } from "./useCustomRanking";

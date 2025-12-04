@@ -1,8 +1,8 @@
 import React from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { AccountStatusEnum, NetworkId } from "@orderly.network/types";
-import { Box, Button } from "@orderly.network/ui";
-import { AuthGuard } from "@orderly.network/ui-connector";
+import { useTranslation } from "@veltodefi/i18n";
+import { AccountStatusEnum, NetworkId } from "@veltodefi/types";
+import { Box, Button } from "@veltodefi/ui";
+import { AuthGuard } from "@veltodefi/ui-connector";
 
 export interface ConvertActionButtonProps {
   disabled?: boolean;

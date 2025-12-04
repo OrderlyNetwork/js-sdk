@@ -7,8 +7,8 @@ import {
   useCallback,
   useMemo,
 } from "react";
-import type { API, RouterAdapter } from "@orderly.network/types";
-import { LeftNavProps } from "@orderly.network/ui-scaffold";
+import type { API, RouterAdapter } from "@veltodefi/types";
+import { LeftNavProps } from "@veltodefi/ui-scaffold";
 
 type MarketsContextState = {
   symbol?: string;

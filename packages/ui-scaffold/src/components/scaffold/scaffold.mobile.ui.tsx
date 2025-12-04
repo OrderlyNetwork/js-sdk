@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, cn } from "@orderly.network/ui";
+import { Box, cn } from "@veltodefi/ui";
 import { MainNavMobile } from "../main/mainNav.ui.mobile";
 import { NotificationWidget } from "../notification/notification.widget";
 import type { ScaffoldScriptReturn } from "./scaffold.script";

@@ -1,7 +1,7 @@
 import { FC, useState } from "react";
 import { OrderCellState } from "../orderCell.script";
 import { useOrderListContext } from "../../orderListContext";
-import { toast } from "@orderly.network/ui";
+import { toast } from "@veltodefi/ui";
 
 export const useCancelBtnScript = (props: { state: OrderCellState }) => {
   const { state } = props;

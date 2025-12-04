@@ -1,5 +1,5 @@
 import { FC, PropsWithChildren } from "react";
-import { OrderlyAppProvider } from "@orderly.network/react-app";
+import { OrderlyAppProvider } from "@veltodefi/react-app";
 import { orderlyAppProviderConfig } from "../../orderlyConfig";
 import { dataAdapter } from "../../orderlyConfig/dataAdapter";
 import { notification } from "../../orderlyConfig/notification";

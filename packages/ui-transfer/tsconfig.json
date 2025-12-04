@@ -2,37 +2,37 @@
   "extends": "./tsconfig.build.json",
   "compilerOptions": {
     "paths": {
-      "@orderly.network/ui": [
+      "@veltodefi/ui": [
         "../ui/src"
       ],
-      "@orderly.network/hooks": [
+      "@veltodefi/hooks": [
         "../hooks/src"
       ],
-      "@orderly.network/utils": [
+      "@veltodefi/utils": [
         "../utils/src"
       ],
-      "@orderly.network/ui-connector": [
+      "@veltodefi/ui-connector": [
         "../ui-connector/src"
       ],
-      "@orderly.network/react-app": [
+      "@veltodefi/react-app": [
         "../app/src"
       ],
-      "@orderly.network/types": [
+      "@veltodefi/types": [
         "../types/src"
       ],
-      "@orderly.network/ui-chain-selector": [
+      "@veltodefi/ui-chain-selector": [
         "../ui-chain-selector/src"
       ],
-      "@orderly.network/i18n": [
+      "@veltodefi/i18n": [
         "../i18n/src"
       ],
-      "@orderly.network/perp": [
+      "@veltodefi/perp": [
         "../perp/src"
       ],
-      "@orderly.network/core": [
+      "@veltodefi/core": [
         "../core/src"
       ],
-      "@orderly.network/default-solana-adapter": [
+      "@veltodefi/default-solana-adapter": [
         "../default-solana-adapter/src"
       ]
     }

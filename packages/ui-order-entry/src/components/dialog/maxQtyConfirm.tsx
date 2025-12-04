@@ -1,6 +1,6 @@
 import { FC, memo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { SimpleDialog } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { SimpleDialog } from "@veltodefi/ui";
 
 type MaxQtyConfirmProps = {
   open: boolean;

@@ -1,7 +1,7 @@
 import { FC, useRef, useState } from "react";
-import { CloseCircleFillIcon, Input, toast } from "@orderly.network/ui";
+import { CloseCircleFillIcon, Input, toast } from "@veltodefi/ui";
 import { Checkbox } from "./checkbox";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 
 export const Message: FC<{
   message: string;

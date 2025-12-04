@@ -5,8 +5,8 @@ import {
   useConfig,
   useStorageChain,
   useWalletConnector,
-} from "@orderly.network/hooks";
-import { Chain, NetworkId } from "@orderly.network/types";
+} from "@veltodefi/hooks";
+import { Chain, NetworkId } from "@veltodefi/types";
 type ReturnChain = Pick<Chain, "id"> & Partial<Omit<Chain, "id">>;
 
 export type DefaultChain =

@@ -1,5 +1,5 @@
 import React from "react";
-import { Trans, useTranslation } from "@orderly.network/i18n";
+import { Trans, useTranslation } from "@veltodefi/i18n";
 import {
   Box,
   Flex,
@@ -8,7 +8,7 @@ import {
   Tabs,
   TabPanel,
   WalletIcon,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { WithdrawTo } from "../../types";
 import { LtvWidget } from "../LTV";
 import { TextAreaInput } from "../accountIdInput";

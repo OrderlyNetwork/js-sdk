@@ -2,8 +2,8 @@ import useSWRInfinite, {
   type SWRInfiniteKeyLoader,
   type SWRInfiniteConfiguration,
 } from "swr/infinite";
-import { get } from "@orderly.network/net";
-import { AccountStatusEnum } from "@orderly.network/types";
+import { get } from "@veltodefi/net";
+import { AccountStatusEnum } from "@veltodefi/types";
 import { signatureMiddleware } from "./middleware/signatureMiddleware";
 import { useAccount } from "./useAccount";
 

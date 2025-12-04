@@ -1,5 +1,5 @@
 import { FC, PropsWithChildren, useEffect } from "react";
-import { useConfig } from "@orderly.network/hooks";
+import { useConfig } from "@veltodefi/hooks";
 import { useSVApiUrl } from "../../hooks/useSVAPIUrl";
 import { VaultsPageProps } from "../../pages";
 import { useVaultsStore } from "../../store";

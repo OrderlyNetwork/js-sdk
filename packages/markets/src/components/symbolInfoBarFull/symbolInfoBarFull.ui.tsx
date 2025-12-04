@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
-import { useFundingRate } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import { useFundingRate } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   TokenIcon,
   Flex,
@@ -9,9 +9,9 @@ import {
   Divider,
   NewsFillIcon,
   Box,
-} from "@orderly.network/ui";
-import { CloseIcon } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+} from "@veltodefi/ui";
+import { CloseIcon } from "@veltodefi/ui";
+import { Decimal } from "@veltodefi/utils";
 import {
   ArrowLeftIcon,
   FavoritesIcon2,

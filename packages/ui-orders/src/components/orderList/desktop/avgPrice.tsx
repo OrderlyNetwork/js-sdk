@@ -1,7 +1,7 @@
 import { memo } from "react";
-import { useSymbolsInfo } from "@orderly.network/hooks";
-import { Text } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { useSymbolsInfo } from "@veltodefi/hooks";
+import { Text } from "@veltodefi/ui";
+import { Decimal } from "@veltodefi/utils";
 
 type AvgPriceProps = {
   symbol: string;

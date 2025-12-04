@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { useLocalStorage } from "@orderly.network/hooks";
-import { useAppContext } from "@orderly.network/react-app";
+import { useLocalStorage } from "@veltodefi/hooks";
+import { useAppContext } from "@veltodefi/react-app";
 
 export type UseScanQRCodeScriptReturn = ReturnType<typeof useScanQRCodeScript>;
 

@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   Flex,
   ListView,
@@ -9,9 +9,9 @@ import {
   DataFilter,
   cn,
   TableFeatures,
-} from "@orderly.network/ui";
-import { AuthGuardDataTable } from "@orderly.network/ui-connector";
-import { formatSymbol } from "@orderly.network/utils";
+} from "@veltodefi/ui";
+import { AuthGuardDataTable } from "@veltodefi/ui-connector";
+import { formatSymbol } from "@veltodefi/utils";
 import { grayCell } from "../../utils/util";
 import { TabType } from "../orders.widget";
 import { SymbolProvider } from "../provider/symbolProvider";

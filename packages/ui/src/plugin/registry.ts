@@ -1,4 +1,4 @@
-import { getGlobalObject } from "@orderly.network/utils";
+import { getGlobalObject } from "@veltodefi/utils";
 import { Extension, ExtensionBuilder, ExtensionPosition } from "./types";
 
 function DEFAULT_BUILDER(data: any) {

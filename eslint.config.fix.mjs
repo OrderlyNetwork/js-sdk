@@ -1,5 +1,5 @@
 import { defineConfig } from "eslint/config";
-import customEslintConfig from "@orderly.network/eslint-config";
+import customEslintConfig from "@veltodefi/eslint-config";
 
 // this config is used to auto fix eslint rules when commit
 export default defineConfig([

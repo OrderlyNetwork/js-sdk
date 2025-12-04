@@ -1,8 +1,8 @@
 import { useEffect } from "react";
-import { useWS } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { toast } from "@orderly.network/ui";
-import { getTimestamp } from "@orderly.network/utils";
+import { useWS } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { toast } from "@veltodefi/ui";
+import { getTimestamp } from "@veltodefi/utils";
 
 export const useAssetconvertEvent = () => {
   const ws = useWS();

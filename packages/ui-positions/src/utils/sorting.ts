@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { TableSort } from "@orderly.network/ui";
+import { TableSort } from "@veltodefi/ui";
 import { SortType } from "../types/types";
 
 /**

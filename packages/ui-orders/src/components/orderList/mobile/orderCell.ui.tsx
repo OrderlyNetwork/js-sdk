@@ -1,6 +1,6 @@
 import React, { FC } from "react";
-import { AlgoOrderRootType } from "@orderly.network/types";
-import { Divider, Flex, Grid, Text } from "@orderly.network/ui";
+import { AlgoOrderRootType } from "@veltodefi/types";
+import { Divider, Flex, Grid, Text } from "@veltodefi/ui";
 import { TabType } from "../../orders.widget";
 import { BracketOrderPriceWidget } from "./bracketOrderPrice";
 import { CancelBtnWidget } from "./cancelBtn";

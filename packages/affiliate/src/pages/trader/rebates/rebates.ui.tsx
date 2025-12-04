@@ -7,12 +7,12 @@ import {
   Statistic,
   Column,
   Text,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { RebatesItem, RebatesReturns } from "./rebates.script";
-import { commifyOptional } from "@orderly.network/utils";
-import { useMediaQuery } from "@orderly.network/hooks";
-import { AuthGuardDataTable } from "@orderly.network/ui-connector";
-import { useTranslation } from "@orderly.network/i18n";
+import { commifyOptional } from "@veltodefi/utils";
+import { useMediaQuery } from "@veltodefi/hooks";
+import { AuthGuardDataTable } from "@veltodefi/ui-connector";
+import { useTranslation } from "@veltodefi/i18n";
 
 export const Rebates: FC<RebatesReturns> = (props) => {
   return (

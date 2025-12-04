@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useLocation } from "react-router";
-import { removeLangPrefix } from "@orderly.network/i18n";
+import { removeLangPrefix } from "@veltodefi/i18n";
 
 /**
  * Get the pathname without the language prefix

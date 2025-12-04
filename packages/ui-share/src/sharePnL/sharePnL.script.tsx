@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useReferralInfo, useSymbolsInfo } from "@orderly.network/hooks";
+import { useReferralInfo, useSymbolsInfo } from "@veltodefi/hooks";
 import { ReferralType, SharePnLOptions, SharePnLParams } from "../types/types";
 
 export const useSharePnLScript = (props: {

@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
-import { i18n } from "@orderly.network/i18n";
-import { Text, Column, Flex, TokenIcon, Badge } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { i18n } from "@veltodefi/i18n";
+import { Text, Column, Flex, TokenIcon, Badge } from "@veltodefi/ui";
+import { Decimal } from "@veltodefi/utils";
 import { FavoritesIcon2, UnFavoritesIcon2 } from "../../icons";
 import { FavoriteInstance } from "../../type";
 import { FavoritesDropdownMenuWidget } from "../favoritesDropdownMenu";

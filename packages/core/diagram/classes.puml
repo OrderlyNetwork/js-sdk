@@ -124,7 +124,7 @@ abstract class BaseWalletAdapter extends EventEmitter implements WalletAdapter {
 +generateSecretKey(): string
 }
 
-'note top of EVMWalletAdapter: '@orderly.network/evm-wallet-adapter'.
+'note top of EVMWalletAdapter: '@veltodefi/evm-wallet-adapter'.
 
 interface OrderlyKeyStore {
 -<<readonly>> networkId: string

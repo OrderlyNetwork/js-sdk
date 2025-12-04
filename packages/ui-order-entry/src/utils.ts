@@ -1,10 +1,10 @@
-import { i18n } from "@orderly.network/i18n";
+import { i18n } from "@veltodefi/i18n";
 import {
   BBOOrderType,
   OrderLevel,
   OrderSide,
   OrderType,
-} from "@orderly.network/types";
+} from "@veltodefi/types";
 
 export enum BBOStatus {
   ON = "on",

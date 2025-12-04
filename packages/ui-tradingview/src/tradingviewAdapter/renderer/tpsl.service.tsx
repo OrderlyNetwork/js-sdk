@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-console */
 import React, { useRef } from "react";
-import { useSymbolsInfo, utils } from "@orderly.network/hooks";
-import { i18n, useTranslation } from "@orderly.network/i18n";
-import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
+import { useSymbolsInfo, utils } from "@veltodefi/hooks";
+import { i18n, useTranslation } from "@veltodefi/i18n";
+import { useOrderEntryFormErrorMsg } from "@veltodefi/react-app";
 import {
   Box,
   cn,
@@ -14,8 +14,8 @@ import {
   modal,
   Slider,
   Text,
-} from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+} from "@veltodefi/ui";
+import { Decimal } from "@veltodefi/utils";
 import type {
   CrossHairMovedEventParams,
   EntityId,

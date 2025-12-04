@@ -1,4 +1,4 @@
-import { SettingModule } from "@orderly.network/portfolio";
+import { SettingModule } from "@veltodefi/portfolio";
 
 export default function SettingsPage() {
   return <SettingModule.SettingPage />;

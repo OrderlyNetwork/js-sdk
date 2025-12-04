@@ -11,7 +11,7 @@ import {
   TabPanel,
   ArrowLeftRightIcon,
   FeeTierIcon,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 
 const meta = {
   title: "Base/Tabs",

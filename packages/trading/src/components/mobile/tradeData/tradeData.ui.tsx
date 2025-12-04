@@ -1,7 +1,7 @@
 import { FC } from "react";
-import { Flex, Text } from "@orderly.network/ui";
+import { Flex, Text } from "@veltodefi/ui";
 import { TradeDataState } from "./tradeData.script";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 
 export const TradeData: FC<TradeDataState> = (props) => {
   const { t } = useTranslation();

@@ -1,5 +1,5 @@
 import React from "react";
-import { useFeeState } from "@orderly.network/hooks";
+import { useFeeState } from "@veltodefi/hooks";
 import { RegularFeesUI } from "./regularFees.ui";
 
 export const RegularFeesWidget: React.FC<{ taker: string; maker: string }> = (

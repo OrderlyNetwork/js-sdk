@@ -19,7 +19,7 @@ export { useAudioPlayer } from "./shared/useAudio";
 export { useReferralInfo, type RefferalAPI } from "./referral";
 
 export { useAccount } from "./useAccount";
-export { type SubAccount } from "@orderly.network/core";
+export { type SubAccount } from "@veltodefi/core";
 export { useAccountInstance } from "./useAccountInstance";
 
 export { usePreLoadData } from "./usePreloadData";
@@ -100,7 +100,7 @@ export { checkNotional, getMinNotional } from "./utils/createOrder";
 
 export * as utils from "./utils";
 
-export type { WalletAdapter } from "@orderly.network/core";
+export type { WalletAdapter } from "@veltodefi/core";
 
 export * from "./referral";
 

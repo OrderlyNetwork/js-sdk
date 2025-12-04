@@ -1,6 +1,6 @@
-import { isCurrentlyTrading } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { Text, Tooltip, Box } from "@orderly.network/ui";
+import { isCurrentlyTrading } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { Text, Tooltip, Box } from "@veltodefi/ui";
 
 export type RwaDotTooltipProps = {
   record: any;

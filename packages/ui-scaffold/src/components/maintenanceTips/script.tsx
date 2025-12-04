@@ -1,9 +1,9 @@
-import { useMaintenanceStatus } from "@orderly.network/hooks";
+import { useMaintenanceStatus } from "@veltodefi/hooks";
 import { useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
 import { UTCDateMini } from "@date-fns/utc";
-import { getTimestamp } from "@orderly.network/utils";
-import { useTranslation } from "@orderly.network/i18n";
+import { getTimestamp } from "@veltodefi/utils";
+import { useTranslation } from "@veltodefi/i18n";
 
 function getTimeString(timestamp: number) {
   const date = format(new UTCDateMini(timestamp), "MMM dd");

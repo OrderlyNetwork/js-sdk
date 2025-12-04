@@ -2,19 +2,19 @@
   "extends": "./tsconfig.build.json",
   "compilerOptions": {
     "paths": {
-      "@orderly.network/ui": [
+      "@veltodefi/ui": [
         "../ui/src"
       ],
-      "@orderly.network/hooks": [
+      "@veltodefi/hooks": [
         "../hooks/src"
       ],
-      "@orderly.network/utils": [
+      "@veltodefi/utils": [
         "../utils/src"
       ],
-      "@orderly.network/types": [
+      "@veltodefi/types": [
         "../types/src"
       ],
-      "@orderly.network/i18n": [
+      "@veltodefi/i18n": [
         "../i18n/src"
       ]
     }

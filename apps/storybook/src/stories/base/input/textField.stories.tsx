@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { fn } from "storybook/test";
-import { TextField } from "@orderly.network/ui";
+import { TextField } from "@veltodefi/ui";
 
 const meta: Meta<typeof TextField> = {
   title: "Base/Input/TextField",

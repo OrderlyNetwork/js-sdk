@@ -1,6 +1,6 @@
 import useSWR from "swr";
 import type { SWRHook, SWRResponse } from "swr";
-import { AccountStatusEnum } from "@orderly.network/types";
+import { AccountStatusEnum } from "@veltodefi/types";
 import { signatureMiddleware } from "./middleware/signatureMiddleware";
 import { useAccount } from "./useAccount";
 import { fetcher, useQueryOptions } from "./utils/fetcher";

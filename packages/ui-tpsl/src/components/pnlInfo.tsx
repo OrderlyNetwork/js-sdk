@@ -1,7 +1,7 @@
 import { useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { cn, Flex, Text } from "@orderly.network/ui";
-import { Decimal, checkIsNaN } from "@orderly.network/utils";
+import { useTranslation } from "@veltodefi/i18n";
+import { cn, Flex, Text } from "@veltodefi/ui";
+import { Decimal, checkIsNaN } from "@veltodefi/utils";
 
 type Props = {
   tp_pnl?: string | number;

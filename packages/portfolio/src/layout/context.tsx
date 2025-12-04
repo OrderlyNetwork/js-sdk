@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useMemo } from "react";
-import type { RouterAdapter } from "@orderly.network/types";
+import type { RouterAdapter } from "@veltodefi/types";
 
 type LayoutContextValue = {
   sideOpen: boolean;

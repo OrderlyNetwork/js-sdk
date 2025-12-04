@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { SubtitleReturns } from "./subtitle.script";
-import { Flex, Text } from "@orderly.network/ui";
-import { useTranslation } from "@orderly.network/i18n";
+import { Flex, Text } from "@veltodefi/ui";
+import { useTranslation } from "@veltodefi/i18n";
 
 export const Subtitle: FC<SubtitleReturns> = (props) => {
   const { t } = useTranslation();

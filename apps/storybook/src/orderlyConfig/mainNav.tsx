@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { i18n, useTranslation } from "@orderly.network/i18n";
-import { PortfolioLeftSidebarPath } from "@orderly.network/portfolio";
+import { i18n, useTranslation } from "@veltodefi/i18n";
+import { PortfolioLeftSidebarPath } from "@veltodefi/portfolio";
 import {
   EarnIcon,
   TradingIcon,
@@ -13,8 +13,8 @@ import {
   ReferralSolidIcon,
   BattleSolidInactiveIcon,
   AssetIcon,
-} from "@orderly.network/ui";
-import { LeftNavProps, MainNavWidgetProps } from "@orderly.network/ui-scaffold";
+} from "@veltodefi/ui";
+import { LeftNavProps, MainNavWidgetProps } from "@veltodefi/ui-scaffold";
 import { PathEnum } from "../playground/constant";
 import {
   CustomArenaButtonMain,

@@ -1,5 +1,5 @@
 import React from "react";
-import { registerSimpleDialog, registerSimpleSheet } from "@orderly.network/ui";
+import { registerSimpleDialog, registerSimpleSheet } from "@veltodefi/ui";
 import { useTPSLSimpleDialog } from "./tpslSimpleDialog.script";
 import { TPSLSimpleDialogUI } from "./tpslSimpleDialog.ui";
 

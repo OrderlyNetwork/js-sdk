@@ -3,13 +3,13 @@ import {
   useAccount,
   useAssetsHistory,
   useCollateral,
-} from "@orderly.network/hooks";
-import { useAppContext } from "@orderly.network/react-app";
+} from "@veltodefi/hooks";
+import { useAppContext } from "@veltodefi/react-app";
 import {
   AccountStatusEnum,
   AssetHistorySideEnum,
   AssetHistoryStatusEnum,
-} from "@orderly.network/types";
+} from "@veltodefi/types";
 
 export const useFirstTimeDeposit = () => {
   const { state } = useAccount();

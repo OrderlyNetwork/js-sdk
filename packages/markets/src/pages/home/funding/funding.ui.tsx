@@ -1,6 +1,6 @@
 import React from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Box, TabPanel, Tabs } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { Box, TabPanel, Tabs } from "@veltodefi/ui";
 import type { FundingScriptReturn } from "./funding.script";
 
 const LazySearchInput = React.lazy(() =>

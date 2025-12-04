@@ -1,9 +1,9 @@
 import { FC, useCallback, useEffect, useMemo, useState } from "react";
-import { useEventEmitter } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { WS_WalletStatusEnum } from "@orderly.network/types";
-import { Box, toast } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { useEventEmitter } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { WS_WalletStatusEnum } from "@veltodefi/types";
+import { Box, toast } from "@veltodefi/ui";
+import { Decimal } from "@veltodefi/utils";
 import { useSwap } from "../hooks/useSwap";
 import { SwapMode, SwapProcessStatus } from "../types";
 import { ProcessStatus } from "./processStatus";

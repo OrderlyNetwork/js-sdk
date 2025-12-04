@@ -1,10 +1,10 @@
-import { Flex, cn } from "@orderly.network/ui";
+import { Flex, cn } from "@veltodefi/ui";
 import { SummaryWidget } from "./summary";
 import { ReferralLinkWidget } from "./referralLink";
 import { TitleStatisticWidget } from "./titleStatistic";
 import { ReferralCodesWidget } from "./referralCodes";
 import { CommissionAndRefereesWidget } from "./commissionAndReferees";
-import { useMediaQuery } from "@orderly.network/hooks";
+import { useMediaQuery } from "@veltodefi/hooks";
 
 export const AffiliatePage = () => {
   return (

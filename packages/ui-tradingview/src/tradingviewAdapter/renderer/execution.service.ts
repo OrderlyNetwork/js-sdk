@@ -5,9 +5,9 @@ import {
 } from "../charting_library";
 import { OrderInterface, SideType } from "../type";
 import useBroker from "../hooks/useBroker";
-import { commify, Decimal } from "@orderly.network/utils";
+import { commify, Decimal } from "@veltodefi/utils";
 import { limitOrdersByInterval } from "../broker/utils";
-import { i18n } from "@orderly.network/i18n";
+import { i18n } from "@veltodefi/i18n";
 
 export class ExecutionService {
   private instance: IChartingLibraryWidget;

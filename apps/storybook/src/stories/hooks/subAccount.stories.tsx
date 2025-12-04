@@ -1,8 +1,8 @@
 import { FC, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import type { SubAccount } from "@orderly.network/core";
-import { useAccount, useBoolean } from "@orderly.network/hooks";
-import { EMPTY_LIST } from "@orderly.network/types";
+import type { SubAccount } from "@veltodefi/core";
+import { useAccount, useBoolean } from "@veltodefi/hooks";
+import { EMPTY_LIST } from "@veltodefi/types";
 import {
   Box,
   Button,
@@ -12,8 +12,8 @@ import {
   Input,
   toast,
   Column,
-} from "@orderly.network/ui";
-import { AuthGuard } from "@orderly.network/ui-connector";
+} from "@veltodefi/ui";
+import { AuthGuard } from "@veltodefi/ui-connector";
 
 const UpdateSubAccountDialog: FC<{
   subAccountId: string;

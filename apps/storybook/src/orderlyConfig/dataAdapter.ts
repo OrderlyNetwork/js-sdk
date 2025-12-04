@@ -1,5 +1,5 @@
-import type { OrderlyAppProviderProps } from "@orderly.network/react-app";
-import { AnnouncementType } from "@orderly.network/types";
+import type { OrderlyAppProviderProps } from "@veltodefi/react-app";
+import { AnnouncementType } from "@veltodefi/types";
 
 export const dataAdapter: OrderlyAppProviderProps["dataAdapter"] = {
   // symbolList(original) {

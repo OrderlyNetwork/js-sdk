@@ -2,7 +2,7 @@ import React, { type FC, PropsWithChildren, SVGProps } from "react";
 import { useRef, useEffect } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Box, cn } from "@orderly.network/ui";
+import { Box, cn } from "@veltodefi/ui";
 
 type SortablePanelProps = {
   id: string;

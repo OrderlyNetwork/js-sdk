@@ -1,6 +1,6 @@
 import { FC } from "react";
-import type { BaseIconProps } from "@orderly.network/ui";
-import { Icon } from "@orderly.network/ui";
+import type { BaseIconProps } from "@veltodefi/ui";
+import { Icon } from "@veltodefi/ui";
 
 export const BattleIcon: FC<BaseIconProps> = (props) => {
   return (

@@ -1,10 +1,10 @@
 import { memo, useEffect, useRef, useState } from "react";
-import { utils } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { Flex, Input, Slider, Text } from "@orderly.network/ui";
-import { inputFormatter } from "@orderly.network/ui";
-import { cn } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { utils } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { Flex, Input, Slider, Text } from "@veltodefi/ui";
+import { inputFormatter } from "@veltodefi/ui";
+import { cn } from "@veltodefi/ui";
+import { Decimal } from "@veltodefi/utils";
 
 export type TPSLQuantityProps = {
   maxQty: number;

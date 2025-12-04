@@ -1,6 +1,6 @@
 import React from "react";
-import { i18n } from "@orderly.network/i18n";
-import { registerSimpleDialog, registerSimpleSheet } from "@orderly.network/ui";
+import { i18n } from "@veltodefi/i18n";
+import { registerSimpleDialog, registerSimpleSheet } from "@veltodefi/ui";
 import { useFundingRateModalScript } from "./fundingRateModal.script";
 import { FundingRateModal } from "./fundingRateModal.ui";
 

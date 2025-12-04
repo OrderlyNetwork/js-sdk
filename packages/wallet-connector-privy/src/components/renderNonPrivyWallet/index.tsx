@@ -1,10 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useStorageChain } from "@orderly.network/hooks";
+import { useStorageChain } from "@veltodefi/hooks";
 import {
   AbstractChains,
   ChainNamespace,
   SolanaChains,
-} from "@orderly.network/types";
+} from "@veltodefi/types";
 import { useWallet } from "../../hooks/useWallet";
 import { useWalletConnectorPrivy } from "../../provider";
 import { useAbstractWallet } from "../../providers/abstractWallet/abstractWalletProvider";

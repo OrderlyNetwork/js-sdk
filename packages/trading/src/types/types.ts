@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
-import { API } from "@orderly.network/types";
-import { SharePnLConfig } from "@orderly.network/ui-share";
-import { TradingviewWidgetPropsInterface } from "@orderly.network/ui-tradingview";
+import { API } from "@veltodefi/types";
+import { SharePnLConfig } from "@veltodefi/ui-share";
+import { TradingviewWidgetPropsInterface } from "@veltodefi/ui-tradingview";
 
 export type layoutInfo = {
   width?: number;

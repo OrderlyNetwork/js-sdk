@@ -5,9 +5,9 @@ import {
   PnlAreaChart,
   PnLBarChart,
   PnlLineChartProps,
-} from "@orderly.network/chart";
-import { useTranslation } from "@orderly.network/i18n";
-import { Tabs, TabPanel, Flex, Text } from "@orderly.network/ui";
+} from "@veltodefi/chart";
+import { useTranslation } from "@veltodefi/i18n";
+import { Tabs, TabPanel, Flex, Text } from "@veltodefi/ui";
 import type { UsePerformanceScriptReturn } from "../performance/performance.script";
 import {
   PeriodType,

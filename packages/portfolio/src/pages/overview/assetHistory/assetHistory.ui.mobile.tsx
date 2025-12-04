@@ -1,6 +1,6 @@
 import { FC, useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { AssetHistoryStatusEnum } from "@orderly.network/types";
+import { useTranslation } from "@veltodefi/i18n";
+import { AssetHistoryStatusEnum } from "@veltodefi/types";
 import {
   Badge,
   DataFilter,
@@ -11,7 +11,7 @@ import {
   toast,
   ArrowRightShortIcon,
   EmptyDataState,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import {
   AssetTarget,
   type AssetHistoryScriptReturn,

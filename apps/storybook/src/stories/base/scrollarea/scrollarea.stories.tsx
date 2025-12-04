@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { fn } from "storybook/test";
-import { ScrollArea } from "@orderly.network/ui";
+import { ScrollArea } from "@veltodefi/ui";
 
 const meta: Meta<typeof ScrollArea> = {
   title: "Base/ScrollArea",

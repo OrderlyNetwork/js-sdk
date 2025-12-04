@@ -1,7 +1,7 @@
 import { useRef, FocusEvent } from "react";
-import { OrderEntryReturn, useMemoizedFn, utils } from "@orderly.network/hooks";
-import { OrderType } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+import { OrderEntryReturn, useMemoizedFn, utils } from "@veltodefi/hooks";
+import { OrderType } from "@veltodefi/types";
+import { Decimal } from "@veltodefi/utils";
 import { InputType } from "../types";
 
 type FocusAndBlurProps = {

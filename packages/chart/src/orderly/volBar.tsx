@@ -12,7 +12,7 @@ import {
   Cross,
 } from "recharts";
 import type { TooltipProps } from "recharts";
-import { Box, cn } from "@orderly.network/ui";
+import { Box, cn } from "@veltodefi/ui";
 import { OrderlyChartTooltip } from "./customTooltip";
 import { useColors } from "./useColors";
 

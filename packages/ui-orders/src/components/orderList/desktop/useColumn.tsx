@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { format } from "date-fns";
-import { SymbolsInfo, utils } from "@orderly.network/hooks";
-import { useTranslation, i18n } from "@orderly.network/i18n";
+import { SymbolsInfo, utils } from "@veltodefi/hooks";
+import { useTranslation, i18n } from "@veltodefi/i18n";
 import {
   AlgoOrderRootType,
   AlgoOrderType,
@@ -9,16 +9,16 @@ import {
   OrderSide,
   OrderStatus,
   OrderType,
-} from "@orderly.network/types";
-import { cn, Column, Flex, Text } from "@orderly.network/ui";
-import { Badge } from "@orderly.network/ui";
-import { SharePnLConfig, SharePnLDialogId } from "@orderly.network/ui-share";
+} from "@veltodefi/types";
+import { cn, Column, Flex, Text } from "@veltodefi/ui";
+import { Badge } from "@veltodefi/ui";
+import { SharePnLConfig, SharePnLDialogId } from "@veltodefi/ui-share";
 import {
   commifyOptional,
   Decimal,
   formatNum,
   getTrailingStopPrice,
-} from "@orderly.network/utils";
+} from "@veltodefi/utils";
 import {
   grayCell,
   parseBadgesFor,

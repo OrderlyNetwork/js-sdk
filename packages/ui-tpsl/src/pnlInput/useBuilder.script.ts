@@ -1,12 +1,12 @@
 import { useMemo, useRef, useState } from "react";
-import { useLocalStorage } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { MenuItem } from "@orderly.network/ui";
+import { useLocalStorage } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { MenuItem } from "@veltodefi/ui";
 import type {
   InputFormatter,
   InputFormatterOptions,
-} from "@orderly.network/ui";
-import { Decimal, todpIfNeed } from "@orderly.network/utils";
+} from "@veltodefi/ui";
+import { Decimal, todpIfNeed } from "@veltodefi/utils";
 
 export enum PnLMode {
   PnL = "PnL",

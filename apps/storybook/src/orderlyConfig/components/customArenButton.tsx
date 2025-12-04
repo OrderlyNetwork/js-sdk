@@ -1,6 +1,6 @@
-import { useTranslation } from "@orderly.network/i18n";
-import { Text, cn, Box } from "@orderly.network/ui";
-import { useScaffoldContext } from "@orderly.network/ui-scaffold";
+import { useTranslation } from "@veltodefi/i18n";
+import { Text, cn, Box } from "@veltodefi/ui";
+import { useScaffoldContext } from "@veltodefi/ui-scaffold";
 
 export type MainNavCustomRenderOptions = {
   name: string;

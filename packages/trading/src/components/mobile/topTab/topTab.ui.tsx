@@ -1,6 +1,6 @@
 import React from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Box, cn, TabPanel, Tabs } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { Box, cn, TabPanel, Tabs } from "@veltodefi/ui";
 import { useTradingPageContext } from "../../../provider/tradingPageContext";
 import { TopTabState, TopTabType } from "./topTab.script";
 

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Box } from "@orderly.network/ui";
-import { Scaffold } from "@orderly.network/ui-scaffold";
-import { TradingviewWidget } from "@orderly.network/ui-tradingview";
+import { Box } from "@veltodefi/ui";
+import { Scaffold } from "@veltodefi/ui-scaffold";
+import { TradingviewWidget } from "@veltodefi/ui-tradingview";
 
 const meta: Meta<typeof TradingviewWidget> = {
   title: "Package/ui-tradingview",

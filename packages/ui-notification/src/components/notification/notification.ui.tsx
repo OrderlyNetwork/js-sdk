@@ -1,6 +1,6 @@
 import { FC, useMemo, useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { AnnouncementType, type API } from "@orderly.network/types";
+import { useTranslation } from "@veltodefi/i18n";
+import { AnnouncementType, type API } from "@veltodefi/types";
 import {
   ChevronDownIcon,
   ChevronLeftIcon,
@@ -8,7 +8,7 @@ import {
   Divider,
   Flex,
   Text,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import {
   AnnouncementIcon,
   BattleIcon,

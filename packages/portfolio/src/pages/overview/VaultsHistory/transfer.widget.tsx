@@ -1,5 +1,5 @@
 import React from "react";
-import { useScreen } from "@orderly.network/ui";
+import { useScreen } from "@veltodefi/ui";
 import { VaultsHistoryUI } from "./transfer.ui";
 import { useVaultsHistoryHook } from "./useDataSource.script";
 import { VaultsHistoryMobile } from "./vaults.ui.mobile";

@@ -1,10 +1,10 @@
 import React, { useEffect, useMemo } from "react";
-import { useGetRwaSymbolInfo } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import { useGetRwaSymbolInfo } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   MarketsSheetWidget,
   SymbolInfoBarWidget,
-} from "@orderly.network/markets";
+} from "@veltodefi/markets";
 import {
   Box,
   SimpleSheet,
@@ -13,7 +13,7 @@ import {
   Flex,
   Text,
   NewsFillIcon,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { Countdown } from "../../components/base/countdown";
 import { showRwaOutsideMarketHoursNotify } from "../../components/desktop/notify/rwaNotification";
 import type { TradingState } from "./trading.script";

@@ -1,9 +1,9 @@
 // https://github.com/storybookjs/storybook/tree/next/code/addons/links
 // linkTo is not working, so use navigate instead
 import { navigate } from "@storybook/addon-links";
-import { PortfolioLeftSidebarPath } from "@orderly.network/portfolio";
-import { TradingRewardsLeftSidebarPath } from "@orderly.network/trading-rewards";
-import { type RouteOption } from "@orderly.network/types";
+import { PortfolioLeftSidebarPath } from "@veltodefi/portfolio";
+import { TradingRewardsLeftSidebarPath } from "@veltodefi/trading-rewards";
+import { type RouteOption } from "@veltodefi/types";
 
 export enum RoutePath {
   Root = "/",

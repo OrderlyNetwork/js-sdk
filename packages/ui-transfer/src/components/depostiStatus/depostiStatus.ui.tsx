@@ -1,7 +1,7 @@
 import React, { FC, ReactNode, useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { AssetHistoryStatusEnum } from "@orderly.network/types";
-import { Flex, cn, Text, CloseIcon } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { AssetHistoryStatusEnum } from "@veltodefi/types";
+import { Flex, cn, Text, CloseIcon } from "@veltodefi/ui";
 import { DepositStatusScriptReturn } from "./depostiStatus.script";
 
 export type DepositStatusProps = {

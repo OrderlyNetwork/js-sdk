@@ -1,6 +1,6 @@
 import { FC } from "react";
-import { i18n } from "@orderly.network/i18n";
-import { registerSimpleDialog } from "@orderly.network/ui";
+import { i18n } from "@veltodefi/i18n";
+import { registerSimpleDialog } from "@veltodefi/ui";
 import { useScaledOrderConfirmScript } from "./scaledOrderConfirm.script";
 import {
   ScaledOrderConfirm,

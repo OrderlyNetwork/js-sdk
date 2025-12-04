@@ -1,7 +1,7 @@
 import { useMemo } from "react";
-import { useAccount } from "@orderly.network/hooks";
-import { useAppContext, useDataTap } from "@orderly.network/react-app";
-import { AccountStatusEnum } from "@orderly.network/types";
+import { useAccount } from "@veltodefi/hooks";
+import { useAppContext, useDataTap } from "@veltodefi/react-app";
+import { AccountStatusEnum } from "@veltodefi/types";
 import { useOverviewContext } from "../provider/overviewContext";
 
 export const useAssetsChartScript = () => {

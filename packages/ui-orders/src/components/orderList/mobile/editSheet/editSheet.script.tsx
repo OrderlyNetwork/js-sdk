@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useLocalStorage } from "@orderly.network/hooks";
-import { API, OrderEntity, OrderType } from "@orderly.network/types";
-import { AlgoOrderRootType } from "@orderly.network/types";
-import { toast, useModal } from "@orderly.network/ui";
+import { useLocalStorage } from "@veltodefi/hooks";
+import { API, OrderEntity, OrderType } from "@veltodefi/types";
+import { AlgoOrderRootType } from "@veltodefi/types";
+import { toast, useModal } from "@veltodefi/ui";
 import { convertApiOrderTypeToOrderEntryType } from "../../../../utils/util";
 import { OrderCellState } from "../orderCell.script";
 import { useEditOrderEntry } from "./hooks/useEditOrderEntry";

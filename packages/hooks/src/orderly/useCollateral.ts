@@ -1,4 +1,4 @@
-import { type API } from "@orderly.network/types";
+import { type API } from "@veltodefi/types";
 import { useAppStore } from "./appStore";
 
 /**

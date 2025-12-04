@@ -1,7 +1,7 @@
 import { useMemo, useCallback } from "react";
-import { useQuery, useMutation, useAccount } from "@orderly.network/hooks";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { toast } from "@orderly.network/ui";
+import { useQuery, useMutation, useAccount } from "@veltodefi/hooks";
+import { AccountStatusEnum } from "@veltodefi/types";
+import { toast } from "@veltodefi/ui";
 import { useTradingLeaderboardContext } from "../provider";
 import { getCurrentTierIndex } from "./pricePool/utils";
 import { UserCampaignsResponse } from "./type";

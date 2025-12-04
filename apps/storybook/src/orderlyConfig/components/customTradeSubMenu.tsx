@@ -1,14 +1,14 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import { generatePath, useTranslation } from "@orderly.network/i18n";
-import { SubMenuMarketsWidget } from "@orderly.network/markets";
-import { API } from "@orderly.network/types";
+import { generatePath, useTranslation } from "@veltodefi/i18n";
+import { SubMenuMarketsWidget } from "@veltodefi/markets";
+import { API } from "@veltodefi/types";
 import {
   EarnActiveIcon,
   EarnInactiveIcon,
   TradingActiveIcon,
   TradingInactiveIcon,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { PathEnum } from "../../playground/constant";
 import { DEFAULT_SYMBOL, updateSymbol } from "../../playground/storage";
 

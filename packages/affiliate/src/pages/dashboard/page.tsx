@@ -1,4 +1,4 @@
-import { Flex, Box, cn } from "@orderly.network/ui";
+import { Flex, Box, cn } from "@veltodefi/ui";
 import { TabWidget } from "./tab";
 
 export const DashboardPage = (props: {

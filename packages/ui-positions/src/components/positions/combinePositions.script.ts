@@ -6,12 +6,12 @@ import {
   usePositionStream,
   usePrivateQuery,
   useSymbolsInfo,
-} from "@orderly.network/hooks";
-import { i18n } from "@orderly.network/i18n";
-import { positions, account as _account } from "@orderly.network/perp";
-import { useDataTap } from "@orderly.network/react-app";
-import type { API } from "@orderly.network/types";
-import { formatAddress, usePagination } from "@orderly.network/ui";
+} from "@veltodefi/hooks";
+import { i18n } from "@veltodefi/i18n";
+import { positions, account as _account } from "@veltodefi/perp";
+import { useDataTap } from "@veltodefi/react-app";
+import type { API } from "@veltodefi/types";
+import { formatAddress, usePagination } from "@veltodefi/ui";
 import type { PositionsProps } from "../../types/types";
 import { useSubAccountQuery } from "./hooks/useSubAccountQuery";
 

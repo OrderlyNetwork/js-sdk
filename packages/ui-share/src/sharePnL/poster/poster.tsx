@@ -1,5 +1,5 @@
 import { forwardRef, useImperativeHandle } from "react";
-import { type DrawOptions, usePoster } from "@orderly.network/hooks";
+import { type DrawOptions, usePoster } from "@veltodefi/hooks";
 
 export type PosterProps = {
   width: number;

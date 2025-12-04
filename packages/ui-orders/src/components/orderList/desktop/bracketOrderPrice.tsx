@@ -1,7 +1,7 @@
 import { useMemo } from "react";
-import { utils } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
+import { utils } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { API } from "@veltodefi/types";
 import {
   Flex,
   Tooltip,
@@ -10,7 +10,7 @@ import {
   EditIcon,
   useModal,
   modal,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { calcBracketRoiAndPnL } from "../../../utils/util";
 import { useSymbolContext } from "../../provider/symbolContext";
 

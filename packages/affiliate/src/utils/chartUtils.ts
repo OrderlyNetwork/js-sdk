@@ -1,5 +1,5 @@
 import { format, subDays } from "date-fns";
-import type { VolChartDataItem } from "@orderly.network/chart";
+import type { VolChartDataItem } from "@veltodefi/chart";
 
 export function fillData(
   days: number,

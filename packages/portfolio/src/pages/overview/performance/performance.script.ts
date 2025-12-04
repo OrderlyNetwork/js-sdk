@@ -1,7 +1,7 @@
 import { useMemo } from "react";
-import { useAccount, useLocalStorage } from "@orderly.network/hooks";
-import { useAppContext, useDataTap } from "@orderly.network/react-app";
-import { AccountStatusEnum } from "@orderly.network/types";
+import { useAccount, useLocalStorage } from "@veltodefi/hooks";
+import { useAppContext, useDataTap } from "@veltodefi/react-app";
+import { AccountStatusEnum } from "@veltodefi/types";
 import { ORDERLY_ASSETS_VISIBLE_KEY } from "../../assets/type";
 import { useOverviewContext } from "../provider/overviewContext";
 

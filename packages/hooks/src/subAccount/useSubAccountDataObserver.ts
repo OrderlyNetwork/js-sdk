@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { mutate } from "swr";
-import { API, WSMessage } from "@orderly.network/types";
+import { API, WSMessage } from "@veltodefi/types";
 import { useAppStore } from "../orderly/appStore";
 import { useFundingRatesStore } from "../orderly/useFundingRates";
 import { useIndexPricesStream } from "../orderly/useIndexPricesStream";

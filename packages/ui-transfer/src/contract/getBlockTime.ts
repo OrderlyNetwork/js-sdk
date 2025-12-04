@@ -1,6 +1,6 @@
-import { WalletState } from "@orderly.network/hooks";
-import { API } from "@orderly.network/types";
-import { isSolana } from "@orderly.network/utils";
+import { WalletState } from "@veltodefi/hooks";
+import { API } from "@veltodefi/types";
+import { isSolana } from "@veltodefi/utils";
 import { getEvmBlockTime } from "./getEvmBlockTime";
 import { getSolanaBlockTime } from "./getSolanaBlockTime";
 

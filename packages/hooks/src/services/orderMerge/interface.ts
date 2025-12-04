@@ -1,4 +1,4 @@
-import { API, WSMessage } from "@orderly.network/types";
+import { API, WSMessage } from "@veltodefi/types";
 
 export interface IOrderMergeHandler<T, D> {
   merge(

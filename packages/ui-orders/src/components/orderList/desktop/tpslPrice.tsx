@@ -2,10 +2,10 @@ import {
   findTPSLOrderPriceFromOrder,
   findTPSLFromOrder,
   useSymbolsInfo,
-} from "@orderly.network/hooks";
-import { i18n, useTranslation } from "@orderly.network/i18n";
-import { OrderType } from "@orderly.network/types";
-import { Text } from "@orderly.network/ui";
+} from "@veltodefi/hooks";
+import { i18n, useTranslation } from "@veltodefi/i18n";
+import { OrderType } from "@veltodefi/types";
+import { Text } from "@veltodefi/ui";
 import { useTPSLOrderRowContext } from "../tpslOrderRowContext";
 
 export const TPSLOrderPrice = () => {

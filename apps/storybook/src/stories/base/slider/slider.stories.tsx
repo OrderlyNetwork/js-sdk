@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Slider } from "@orderly.network/ui";
+import { Slider } from "@veltodefi/ui";
 
 const meta: Meta<typeof Slider> = {
   title: "Base/Slider",

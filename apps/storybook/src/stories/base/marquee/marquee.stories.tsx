@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { Marquee } from "@orderly.network/ui";
+import { Marquee } from "@veltodefi/ui";
 
 const stringData = [
   "Welcome to Orderly Network",

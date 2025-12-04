@@ -1,8 +1,8 @@
 import { FC, memo, useCallback, useRef } from "react";
-import { useLocalStorage } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { TrailingCallbackType } from "@orderly.network/types";
-import { inputFormatter } from "@orderly.network/ui";
+import { useLocalStorage } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { TrailingCallbackType } from "@veltodefi/types";
+import { inputFormatter } from "@veltodefi/ui";
 import { InputType } from "../../../types";
 import { CustomInput } from "../../customInput";
 import { useOrderEntryContext } from "../../orderEntryContext";

@@ -1,22 +1,22 @@
-import { useLocalStorage, useLeverageBySymbol } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { PositionType } from "@orderly.network/types";
+import { useLocalStorage, useLeverageBySymbol } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { PositionType } from "@veltodefi/types";
 import {
   ChevronRightIcon,
   cn,
   EditIcon,
   Text,
   useScreen,
-} from "@orderly.network/ui";
-import { modal } from "@orderly.network/ui";
+} from "@veltodefi/ui";
+import { modal } from "@veltodefi/ui";
 import {
   PositionTPSLPopover,
   TPSLDetailDialogId,
   TPSLDialogId,
   TPSLSheetId,
   TPSLDetailSheetId,
-} from "@orderly.network/ui-tpsl";
-import { Decimal } from "@orderly.network/utils";
+} from "@veltodefi/ui-tpsl";
+import { Decimal } from "@veltodefi/utils";
 import { usePositionsRowContext } from "../positionsRowContext";
 
 // ------------ TP/SL Price input end------------

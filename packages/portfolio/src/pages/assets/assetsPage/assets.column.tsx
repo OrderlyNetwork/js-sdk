@@ -1,10 +1,10 @@
 import React from "react";
-import { useAppStore } from "@orderly.network/hooks";
-import { useWalletConnector } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { ChainNamespace } from "@orderly.network/types";
-import { Button, Flex, Text, TokenIcon } from "@orderly.network/ui";
-import type { Column } from "@orderly.network/ui";
+import { useAppStore } from "@veltodefi/hooks";
+import { useWalletConnector } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { ChainNamespace } from "@veltodefi/types";
+import { Button, Flex, Text, TokenIcon } from "@veltodefi/ui";
+import type { Column } from "@veltodefi/ui";
 
 export interface ColumnsOptions {
   onTransfer?: (accountId: string, token: string) => void;

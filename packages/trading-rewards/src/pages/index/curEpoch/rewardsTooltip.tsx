@@ -1,7 +1,7 @@
 import React, { FC, useState } from "react";
-import { Flex, Text, Tooltip } from "@orderly.network/ui";
-import { commifyOptional } from "@orderly.network/utils";
-import { useTranslation } from "@orderly.network/i18n";
+import { Flex, Text, Tooltip } from "@veltodefi/ui";
+import { commifyOptional } from "@veltodefi/utils";
+import { useTranslation } from "@veltodefi/i18n";
 
 export type RewardsTooltipProps = {
   brokerName: string | undefined;

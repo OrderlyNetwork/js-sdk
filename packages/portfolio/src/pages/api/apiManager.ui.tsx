@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { APIKeyItem } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import { APIKeyItem } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   Box,
   Button,
@@ -11,12 +11,12 @@ import {
   Column,
   Text,
   Tooltip,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import {
   AuthGuardEmpty,
   AuthGuardDataTable,
   AuthGuardTooltip,
-} from "@orderly.network/ui-connector";
+} from "@veltodefi/ui-connector";
 import {
   type ApiManagerScriptReturns,
   capitalizeFirstChar,

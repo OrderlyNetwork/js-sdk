@@ -1,5 +1,5 @@
 import React from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   Checkbox,
   Divider,
@@ -7,9 +7,9 @@ import {
   Statistic,
   Text,
   useScreen,
-} from "@orderly.network/ui";
-import { CloseAllPositionsWidget } from "@orderly.network/ui-positions";
-import { Decimal } from "@orderly.network/utils";
+} from "@veltodefi/ui";
+import { CloseAllPositionsWidget } from "@veltodefi/ui-positions";
+import { Decimal } from "@veltodefi/utils";
 import type { PositionHeaderState } from "./positionHeader.script";
 
 export const PositionHeader: React.FC<PositionHeaderState> = (props) => {

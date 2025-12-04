@@ -1,6 +1,6 @@
-import { useTranslation } from "@orderly.network/i18n";
-import { OrderType } from "@orderly.network/types";
-import { Select, Text } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { OrderType } from "@veltodefi/types";
+import { Select, Text } from "@veltodefi/ui";
 
 type Props = {
   type: OrderType;

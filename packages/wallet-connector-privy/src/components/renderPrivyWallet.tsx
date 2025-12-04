@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { useStorageChain } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { AbstractChains, ChainNamespace } from "@orderly.network/types";
-import { cn, ExclamationFillIcon } from "@orderly.network/ui";
-import { windowGuard } from "@orderly.network/utils";
+import { useStorageChain } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { AbstractChains, ChainNamespace } from "@veltodefi/types";
+import { cn, ExclamationFillIcon } from "@veltodefi/ui";
+import { windowGuard } from "@veltodefi/utils";
 import { useWallet } from "../hooks/useWallet";
 import { useWalletConnectorPrivy } from "../provider";
 import { usePrivyWallet } from "../providers/privy/privyWalletProvider";

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { produce } from "immer";
-import { OrderlyOrder, OrderType, RequireKeys } from "@orderly.network/types";
+import { OrderlyOrder, OrderType, RequireKeys } from "@veltodefi/types";
 
 export type FullOrderState = OrderlyOrder;
 

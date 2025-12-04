@@ -1,7 +1,7 @@
 import { useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
-import { Flex, Text, type Column } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { API } from "@veltodefi/types";
+import { Flex, Text, type Column } from "@veltodefi/ui";
 
 export const useFundingHistoryColumns = () => {
   const { t } = useTranslation();

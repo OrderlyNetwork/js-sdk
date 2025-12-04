@@ -1,7 +1,7 @@
 import React from "react";
-import type { API } from "@orderly.network/types";
-import { Badge, formatAddress, ListView } from "@orderly.network/ui";
-import { AuthGuardDataTable } from "@orderly.network/ui-connector";
+import type { API } from "@veltodefi/types";
+import { Badge, formatAddress, ListView } from "@veltodefi/ui";
+import { AuthGuardDataTable } from "@veltodefi/ui-connector";
 import { SymbolProvider } from "../../provider/symbolProvider";
 import type { PositionsProps } from "../../types/types";
 import type { CombinePositionsState } from "./combinePositions.script";

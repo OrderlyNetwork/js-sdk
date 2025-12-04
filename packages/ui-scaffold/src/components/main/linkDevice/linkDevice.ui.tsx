@@ -1,6 +1,6 @@
 import { FC, SVGProps, forwardRef, useEffect, useRef } from "react";
 import { qrcode as qr } from "@akamfoad/qr";
-import { Trans, useTranslation } from "@orderly.network/i18n";
+import { Trans, useTranslation } from "@veltodefi/i18n";
 import {
   cn,
   CopyIcon,
@@ -10,7 +10,7 @@ import {
   SimpleDialogFooterProps,
   Text,
   Tooltip,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { MainLogo } from "../mainLogo";
 import { UseLinkDeviceScriptReturn } from "./linkDevice.script";
 

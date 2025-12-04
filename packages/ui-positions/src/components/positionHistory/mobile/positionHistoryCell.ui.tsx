@@ -1,8 +1,8 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Divider, Flex, Grid, modal, Text } from "@orderly.network/ui";
-import { SharePnLBottomSheetId } from "@orderly.network/ui-share";
-import { commifyOptional } from "@orderly.network/utils";
+import { useTranslation } from "@veltodefi/i18n";
+import { Divider, Flex, Grid, modal, Text } from "@veltodefi/ui";
+import { SharePnLBottomSheetId } from "@veltodefi/ui-share";
+import { commifyOptional } from "@veltodefi/utils";
 import { ShareButtonWidget } from "../../positions/desktop/shareButton";
 import {
   PositionHistoryType,

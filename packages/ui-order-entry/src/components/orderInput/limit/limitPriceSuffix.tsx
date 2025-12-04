@@ -1,5 +1,5 @@
-import { useTranslation } from "@orderly.network/i18n";
-import { Flex, cn, modal, Text } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { Flex, cn, modal, Text } from "@veltodefi/ui";
 import { OrderEntryScriptReturn } from "../../../orderEntry.script";
 import { BBOStatus } from "../../../utils";
 

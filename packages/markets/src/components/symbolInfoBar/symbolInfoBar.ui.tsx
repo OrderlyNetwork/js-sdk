@@ -1,6 +1,6 @@
 import { FC, ReactNode } from "react";
-import { Flex, Text, cn, Divider, Badge, TokenIcon } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { Flex, Text, cn, Divider, Badge, TokenIcon } from "@veltodefi/ui";
+import { Decimal } from "@veltodefi/utils";
 import { TriangleDownIcon } from "../../icons";
 import { MarketsProviderProps } from "../marketsProvider";
 import { RwaTooltip } from "../symbolInfoBarFull/rwaTooltip";

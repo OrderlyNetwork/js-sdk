@@ -1,5 +1,5 @@
-import type { RestrictedInfoOptions } from "@orderly.network/hooks";
-import type { AppLogos } from "@orderly.network/react-app";
+import type { RestrictedInfoOptions } from "@veltodefi/hooks";
+import type { AppLogos } from "@veltodefi/react-app";
 
 export type OrderlyAppProviderConfigProps = {
   appIcons: AppLogos;

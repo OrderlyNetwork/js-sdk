@@ -1,17 +1,17 @@
 import React, { useMemo } from "react";
-import { useStorageChain } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import { useStorageChain } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   AbstractChains,
   ChainNamespace,
   SolanaChains,
-} from "@orderly.network/types";
+} from "@veltodefi/types";
 import {
   ExclamationFillIcon,
   Flex,
   modal,
   useScreen,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { useWalletConnectorPrivy } from "../provider";
 import { WalletType } from "../types";
 import { ArrowRightIcon } from "./icons";

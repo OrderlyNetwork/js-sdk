@@ -1,7 +1,7 @@
 import { useMemo } from "react";
-import { useAccount, useWalletConnector } from "@orderly.network/hooks";
-import { useAppContext } from "@orderly.network/react-app";
-import { AccountStatusEnum } from "@orderly.network/types";
+import { useAccount, useWalletConnector } from "@veltodefi/hooks";
+import { useAppContext } from "@veltodefi/react-app";
+import { AccountStatusEnum } from "@veltodefi/types";
 import { useTradingRewardsContext } from "../provider";
 import { RewardsTooltipProps } from "./rewardsTooltip";
 

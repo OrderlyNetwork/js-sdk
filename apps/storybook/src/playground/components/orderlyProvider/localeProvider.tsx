@@ -4,7 +4,7 @@ import {
   LocaleCode,
   LocaleEnum,
   removeLangPrefix,
-} from "@orderly.network/i18n";
+} from "@veltodefi/i18n";
 import { resources } from "../../../components/orderlyProvider/localeProvider";
 
 export type CustomLocaleProviderProps = {

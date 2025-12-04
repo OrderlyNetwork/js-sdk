@@ -2,9 +2,9 @@ import { useMemo } from "react";
 import {
   OrderValidationResult,
   useLeverageBySymbol,
-} from "@orderly.network/hooks";
-import { order } from "@orderly.network/perp";
-import { OrderSide, OrderType, PositionType } from "@orderly.network/types";
+} from "@veltodefi/hooks";
+import { order } from "@veltodefi/perp";
+import { OrderSide, OrderType, PositionType } from "@veltodefi/types";
 
 export type Props = {
   disableOrderTypeSelector?: boolean;

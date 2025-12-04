@@ -1,7 +1,7 @@
 import { FC, ReactNode, useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Flex, Text, cn } from "@orderly.network/ui";
-import { commify } from "@orderly.network/utils";
+import { useTranslation } from "@veltodefi/i18n";
+import { Flex, Text, cn } from "@veltodefi/ui";
+import { commify } from "@veltodefi/utils";
 import { useReferralContext } from "../../../provider";
 import { BecomeAffiliateReturns } from "./becomeAffiliate.script";
 

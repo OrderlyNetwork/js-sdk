@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Spinner } from "@orderly.network/ui";
+import { Spinner } from "@veltodefi/ui";
 
 const meta: Meta<typeof Spinner> = {
   title: "Base/Spinner",

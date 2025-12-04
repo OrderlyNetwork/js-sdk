@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo } from "react";
-import { useConfig, useDeposit, useLocalStorage } from "@orderly.network/hooks";
-import { useAppContext } from "@orderly.network/react-app";
-import { API, NetworkId } from "@orderly.network/types";
-import { modal } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { useConfig, useDeposit, useLocalStorage } from "@veltodefi/hooks";
+import { useAppContext } from "@veltodefi/react-app";
+import { API, NetworkId } from "@veltodefi/types";
+import { modal } from "@veltodefi/ui";
+import { Decimal } from "@veltodefi/utils";
 import {
   useActionType,
   useChainSelect,

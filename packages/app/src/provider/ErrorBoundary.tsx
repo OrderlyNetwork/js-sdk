@@ -1,6 +1,6 @@
 import { PropsWithChildren, Component, ErrorInfo, ReactNode } from "react";
-import { i18n } from "@orderly.network/i18n";
-import { Button, cn, Flex, Text } from "@orderly.network/ui";
+import { i18n } from "@veltodefi/i18n";
+import { Button, cn, Flex, Text } from "@veltodefi/ui";
 
 type ErrorBoundaryState = {
   hasError: boolean;

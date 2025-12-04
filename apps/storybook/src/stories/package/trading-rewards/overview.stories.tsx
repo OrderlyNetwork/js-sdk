@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   TradingRewards,
   TradingRewardsLeftSidebarPath,
-} from "@orderly.network/trading-rewards";
+} from "@veltodefi/trading-rewards";
 import { TradingRewardsLayout } from "../../../components/layout";
 
 const meta: Meta<typeof TradingRewards.HomePage> = {

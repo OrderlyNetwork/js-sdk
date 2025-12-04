@@ -1,6 +1,6 @@
 import React from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Flex, Text } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { Flex, Text } from "@veltodefi/ui";
 
 export const MinimumReceived: React.FC<
   Readonly<{ symbol: string; value: number | string; precision: number }>

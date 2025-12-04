@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useMemo } from "react";
-import { useWalletConnector } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { ChainNamespace } from "@orderly.network/types";
+import { useWalletConnector } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { ChainNamespace } from "@veltodefi/types";
 import {
   Button,
   cn,
@@ -13,8 +13,8 @@ import {
   modal,
   Flex,
   EmptyDataState,
-} from "@orderly.network/ui";
-import { SelectOption } from "@orderly.network/ui/src/select/withOptions";
+} from "@veltodefi/ui";
+import { SelectOption } from "@veltodefi/ui/src/select/withOptions";
 import type { useAssetsScriptReturn } from "./assets.script";
 import { AccountType } from "./assets.ui.desktop";
 

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   APIManagerModule,
   PortfolioLeftSidebarPath,
-} from "@orderly.network/portfolio";
+} from "@veltodefi/portfolio";
 import { PortfolioLayout } from "../../../components/layout";
 
 const meta: Meta<typeof APIManagerModule.APIManagerPage> = {

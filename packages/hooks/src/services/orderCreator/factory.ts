@@ -1,5 +1,5 @@
-import { OrderType } from "@orderly.network/types";
-import { AlgoOrderRootType } from "@orderly.network/types";
+import { OrderType } from "@veltodefi/types";
+import { AlgoOrderRootType } from "@veltodefi/types";
 import { BBOOrderCreator } from "./bboOrderCreator";
 import { BracketLimitOrderCreator } from "./bracketLimitOrderCreator";
 import { BracketMarketOrderCreator } from "./bracketMarketOrderCreator";

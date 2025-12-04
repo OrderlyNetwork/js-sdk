@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
-import { API } from "@orderly.network/types";
-import { Popover, toast, inputFormatter } from "@orderly.network/ui";
+import { API } from "@veltodefi/types";
+import { Popover, toast, inputFormatter } from "@veltodefi/ui";
 import { EditType } from "../../../../type";
 import { getOrderStatus } from "../../../../utils/util";
 import { useSymbolContext } from "../../../provider/symbolContext";

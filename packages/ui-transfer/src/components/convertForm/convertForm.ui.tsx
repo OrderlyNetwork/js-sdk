@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Flex, textVariants } from "@orderly.network/ui";
+import { Box, Flex, textVariants } from "@veltodefi/ui";
 import { LtvWidget } from "../LTV";
 import { AvailableQuantity } from "../availableQuantity";
 import { ConvertAction } from "../convertAction";

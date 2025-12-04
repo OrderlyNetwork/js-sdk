@@ -1,11 +1,11 @@
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   modal,
   SimpleDialog,
   SimpleSheet,
   useModal,
   useScreen,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { Swap, SwapProps } from "./swap";
 
 export const SwapDialog = modal.create<SwapProps>((props) => {

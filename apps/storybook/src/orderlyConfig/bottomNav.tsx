@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { i18n, useTranslation } from "@orderly.network/i18n";
+import { i18n, useTranslation } from "@veltodefi/i18n";
 import {
   TradingActiveIcon,
   TradingInactiveIcon,
@@ -13,8 +13,8 @@ import {
   EarnInactiveIcon,
   BattleActiveIcon,
   BattleInactiveIcon,
-} from "@orderly.network/ui";
-import type { BottomNavProps } from "@orderly.network/ui-scaffold";
+} from "@veltodefi/ui";
+import type { BottomNavProps } from "@veltodefi/ui-scaffold";
 
 const getBottomNavProp = (): BottomNavProps => {
   return {

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { i18n } from "@orderly.network/i18n";
+import { i18n } from "@veltodefi/i18n";
 import {
   MarketsHomePage,
   MarketsHeaderWidget,
@@ -9,7 +9,7 @@ import {
   MarketsDataListWidget,
   MarketsProvider,
   FundingComparisonWidget,
-} from "@orderly.network/markets";
+} from "@veltodefi/markets";
 import {
   useScreen,
   TradingIcon,
@@ -19,7 +19,7 @@ import {
   BattleIcon,
   SettingFillIcon,
   TradingLeftNavIcon,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { BaseLayout } from "../../../components/layout";
 
 const meta: Meta<typeof MarketsHomePage> = {

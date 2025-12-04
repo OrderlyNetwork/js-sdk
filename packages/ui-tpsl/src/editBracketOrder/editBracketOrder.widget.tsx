@@ -1,5 +1,5 @@
-import { API } from "@orderly.network/types";
-import { registerSimpleDialog, registerSimpleSheet } from "@orderly.network/ui";
+import { API } from "@veltodefi/types";
+import { registerSimpleDialog, registerSimpleSheet } from "@veltodefi/ui";
 import { useEditBracketOrder } from "./editBracketOrder.script";
 import { EditBracketOrderUI } from "./editBracketOrder.ui";
 

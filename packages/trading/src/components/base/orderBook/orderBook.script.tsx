@@ -3,10 +3,10 @@ import {
   useOrderbookStream,
   useOrderStream,
   useSymbolsInfo,
-} from "@orderly.network/hooks";
-import { OrderStatus } from "@orderly.network/types";
-import { useScreen } from "@orderly.network/ui";
-import { removeTrailingZeros } from "@orderly.network/utils";
+} from "@veltodefi/hooks";
+import { OrderStatus } from "@veltodefi/types";
+import { useScreen } from "@veltodefi/ui";
+import { removeTrailingZeros } from "@veltodefi/utils";
 import { getBasicSymbolInfo } from "../../../utils/utils";
 
 const CELL_MAX = 30;

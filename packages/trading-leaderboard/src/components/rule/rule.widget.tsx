@@ -1,4 +1,4 @@
-import { useScreen } from "@orderly.network/ui";
+import { useScreen } from "@veltodefi/ui";
 import { useCampaignsScript } from "../campaigns/campaigns.script";
 import { CampaignRuleUI } from "./rule";
 import { CampaignTermsUI } from "./terms";

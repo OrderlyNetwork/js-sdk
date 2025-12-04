@@ -1,8 +1,8 @@
 import { FC, useMemo } from "react";
-import { useAccount } from "@orderly.network/hooks";
-import { useAppContext } from "@orderly.network/react-app";
-import { AccountStatusEnum, type RouterAdapter } from "@orderly.network/types";
-import { Flex, Text, ChevronLeftIcon, cn } from "@orderly.network/ui";
+import { useAccount } from "@veltodefi/hooks";
+import { useAppContext } from "@veltodefi/react-app";
+import { AccountStatusEnum, type RouterAdapter } from "@veltodefi/types";
+import { Flex, Text, ChevronLeftIcon, cn } from "@veltodefi/ui";
 import { WalletConnectButtonExtension } from "../accountMenu/menu.widget";
 import { ChainMenuWidget } from "../chainMenu";
 import { LanguageSwitcherWidget } from "../languageSwitcher";

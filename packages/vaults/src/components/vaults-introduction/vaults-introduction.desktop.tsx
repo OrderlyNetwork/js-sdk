@@ -1,6 +1,6 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Text, Divider, cn, TextProps, useScreen } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { Text, Divider, cn, TextProps, useScreen } from "@veltodefi/ui";
 import { VaultsIntroductionScript } from "./vaults-introduction.script";
 
 export const VaultsIntroductionDesktop: FC<VaultsIntroductionScript> = (

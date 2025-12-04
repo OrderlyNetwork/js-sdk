@@ -1,7 +1,7 @@
 import { UserCenter } from "./components/userCenter";
 
-import { installExtension } from "@orderly.network/ui";
-import { ExtensionPositionEnum } from "@orderly.network/ui";
+import { installExtension } from "@veltodefi/ui";
+import { ExtensionPositionEnum } from "@veltodefi/ui";
 import { MwebUserCenter } from "./components/userCenter";
 import React from "react";
 

@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   Box,
   cn,
@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
   Flex,
   Text,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import {
   AreaIcon,
   BarIcon,

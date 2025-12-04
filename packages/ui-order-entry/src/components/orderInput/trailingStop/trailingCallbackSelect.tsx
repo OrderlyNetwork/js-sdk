@@ -1,6 +1,6 @@
 import { FC, memo, useMemo } from "react";
-import { TrailingCallbackType } from "@orderly.network/types";
-import { Select, cn } from "@orderly.network/ui";
+import { TrailingCallbackType } from "@veltodefi/types";
+import { Select, cn } from "@veltodefi/ui";
 
 type TrailingCallbackSelectProps = {
   quote: string;

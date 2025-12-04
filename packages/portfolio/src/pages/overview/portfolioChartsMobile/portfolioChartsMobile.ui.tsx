@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useId } from "react";
-import { Area, AreaChart } from "@orderly.network/chart";
-import { useTranslation } from "@orderly.network/i18n";
-import { EMPTY_LIST } from "@orderly.network/types";
-import { ChevronRightIcon, cn, Flex, Text } from "@orderly.network/ui";
+import { Area, AreaChart } from "@veltodefi/chart";
+import { useTranslation } from "@veltodefi/i18n";
+import { EMPTY_LIST } from "@veltodefi/types";
+import { ChevronRightIcon, cn, Flex, Text } from "@veltodefi/ui";
 import { usePortfolioChartsState } from ".";
 
 export const PortfolioChartsMobileUI: React.FC<

@@ -1,5 +1,5 @@
 import { FC, SVGProps } from "react";
-import { cn, DataFilter, DataTable, Flex, Spinner } from "@orderly.network/ui";
+import { cn, DataFilter, DataTable, Flex, Spinner } from "@veltodefi/ui";
 import { useTradingListColumns } from "./column";
 import {
   getRowKey,

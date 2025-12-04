@@ -1,12 +1,12 @@
 import { pick } from "ramda";
-import { order as orderUntil } from "@orderly.network/perp";
+import { order as orderUntil } from "@veltodefi/perp";
 import {
   OrderEntity,
   OrderSide,
   OrderType,
   OrderlyOrder,
-} from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+} from "@veltodefi/types";
+import { Decimal } from "@veltodefi/utils";
 import { BaseOrderCreator } from "./baseCreator";
 import {
   OrderFormEntity,

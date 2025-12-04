@@ -1,4 +1,4 @@
-import { OrderlyOrder } from "@orderly.network/types";
+import { OrderlyOrder } from "@veltodefi/types";
 import { QtyAndTotalInput } from "../qtyAndTotal/qtyAndTotalInput";
 import { ActivePriceInput } from "./activePriceInput";
 import { TrailingCallbackInput } from "./trailingCallbackInput";

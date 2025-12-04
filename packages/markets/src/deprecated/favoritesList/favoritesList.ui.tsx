@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Box, cn, DataTable } from "@orderly.network/ui";
+import { Box, cn, DataTable } from "@veltodefi/ui";
 import { CollapseMarkets } from "../../components/collapseMarkets";
 import { FavoritesTabWidget } from "../../components/favoritesTabs";
 import { useMarketsContext } from "../../components/marketsProvider";

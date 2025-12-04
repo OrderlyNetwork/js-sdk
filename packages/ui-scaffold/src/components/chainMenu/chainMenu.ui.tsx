@@ -1,6 +1,6 @@
-import { useAccount } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { AccountStatusEnum } from "@orderly.network/types";
+import { useAccount } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { AccountStatusEnum } from "@veltodefi/types";
 import {
   Button,
   ChainIcon,
@@ -14,12 +14,12 @@ import {
   DropdownMenuTrigger,
   Spinner,
   Text,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import {
   ChainSelectorDialogId,
   ChainSelectorWidget,
-} from "@orderly.network/ui-chain-selector";
-import { WalletConnectorModalId } from "@orderly.network/ui-connector";
+} from "@veltodefi/ui-chain-selector";
+import { WalletConnectorModalId } from "@veltodefi/ui-connector";
 import { UseChainMenuScriptReturn } from "./chainMenu.script";
 
 const ModalTitle = () => {

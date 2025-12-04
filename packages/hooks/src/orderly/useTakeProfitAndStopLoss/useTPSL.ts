@@ -9,9 +9,9 @@ import {
   OrderlyOrder,
   PositionType,
   SDKError,
-} from "@orderly.network/types";
-import { AlgoOrderRootType } from "@orderly.network/types";
-import { AlgoOrderType } from "@orderly.network/types";
+} from "@veltodefi/types";
+import { AlgoOrderRootType } from "@veltodefi/types";
+import { AlgoOrderType } from "@veltodefi/types";
 import { appendOrderMetadata } from "../../next/useOrderEntry/helper";
 import { useOrderlyContext } from "../../orderlyContext";
 import { OrderFactory } from "../../services/orderCreator/factory";

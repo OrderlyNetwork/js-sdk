@@ -1,4 +1,4 @@
-import { API } from "@orderly.network/types";
+import { API } from "@veltodefi/types";
 import { CalculatorCtx, CalculatorScope } from "../../types";
 import { Portfolio, useAppStore } from "../appStore";
 // import { useTokensInfoStore } from "../useTokensInfo/tokensInfo.store";

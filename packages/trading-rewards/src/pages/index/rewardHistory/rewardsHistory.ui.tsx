@@ -7,16 +7,16 @@ import {
   Text,
   DataTable,
   Column,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { EsOrderlyIcon } from "../components/esOrderlyIcon";
 import { OrderlyIcon } from "../components/orderlyIcon";
 import { ListType, RewardsHistoryReturns } from "./rewardsHistory.script";
-import { useMediaQuery } from "@orderly.network/hooks";
-import { commifyOptional } from "@orderly.network/utils";
-import { AuthGuardEmpty } from "@orderly.network/ui-connector";
-import { AccountStatusEnum } from "@orderly.network/types";
+import { useMediaQuery } from "@veltodefi/hooks";
+import { commifyOptional } from "@veltodefi/utils";
+import { AuthGuardEmpty } from "@veltodefi/ui-connector";
+import { AccountStatusEnum } from "@veltodefi/types";
 import { RewardsTooltip } from "../curEpoch/rewardsTooltip";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 
 export const RewardHistory: FC<RewardsHistoryReturns> = (props) => {
   const { t } = useTranslation();

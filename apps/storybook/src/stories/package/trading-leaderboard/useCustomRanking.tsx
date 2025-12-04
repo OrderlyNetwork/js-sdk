@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
-import { useAccount, useConfig, useQuery } from "@orderly.network/hooks";
-import { useScreen } from "@orderly.network/ui";
+import { useAccount, useConfig, useQuery } from "@veltodefi/hooks";
+import { useScreen } from "@veltodefi/ui";
 
 export function useCustomRanking(campaignId?: string) {
   const { state } = useAccount();

@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { cn } from "@orderly.network/ui";
+import { cn } from "@veltodefi/ui";
 
 interface RiskIndicatorProps {
   size?: number;

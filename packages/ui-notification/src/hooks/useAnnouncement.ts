@@ -9,16 +9,16 @@ import {
   useOrderlyContext,
   useQuery,
   useWS,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { useAppContext } from "@orderly.network/react-app";
+} from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { useAppContext } from "@veltodefi/react-app";
 import {
   AnnouncementType,
   API,
   EMPTY_LIST,
   WSMessage,
-} from "@orderly.network/types";
-import { getTimestamp } from "@orderly.network/utils";
+} from "@veltodefi/types";
+import { getTimestamp } from "@veltodefi/utils";
 
 const oneDay = 1000 * 60 * 60 * 24;
 

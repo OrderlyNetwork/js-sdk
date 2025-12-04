@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Button, cn, Flex, Slider, Text } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { Button, cn, Flex, Slider, Text } from "@veltodefi/ui";
 
 type QuantitySliderProps = {
   value: number;

@@ -3,7 +3,7 @@ import {
   ArbitrumSepoliaTokenInfo,
   SolanaDevnetTokenInfo,
   TesnetTokenFallback,
-} from "@orderly.network/types";
+} from "@veltodefi/types";
 import { ORDERLY_TEST_TOKEN } from "../../middleware/indexedDBManager";
 import { createDataStore } from "./createDataStore";
 

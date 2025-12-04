@@ -3,8 +3,8 @@ import {
   DistributionType,
   OrderlyOrder,
   OrderType,
-} from "@orderly.network/types";
-import { Decimal, zero } from "@orderly.network/utils";
+} from "@veltodefi/types";
+import { Decimal, zero } from "@veltodefi/utils";
 import { getOrderPrice } from "./orderPrice";
 
 /**

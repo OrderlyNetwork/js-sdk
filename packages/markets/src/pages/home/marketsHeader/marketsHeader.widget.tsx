@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { useScreen } from "@orderly.network/ui";
+import { useScreen } from "@veltodefi/ui";
 import { MobileMarketsHeader } from "./marketsHeader.mobile.ui";
 import { useMarketsHeaderScript } from "./marketsHeader.script";
 import { MarketsHeader } from "./marketsHeader.ui";

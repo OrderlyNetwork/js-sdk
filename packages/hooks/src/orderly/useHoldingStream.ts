@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import useSWRSubscription from "swr/subscription";
-import { API } from "@orderly.network/types";
-import { getTimestamp } from "@orderly.network/utils";
+import { API } from "@veltodefi/types";
+import { getTimestamp } from "@veltodefi/utils";
 import { usePrivateQuery } from "../usePrivateQuery";
 import { useWS } from "../useWS";
 

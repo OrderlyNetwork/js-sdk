@@ -1,5 +1,5 @@
 {
-  "name": "@orderly.network/default-evm-adapter",
+  "name": "@veltodefi/default-evm-adapter",
   "version": "2.8.4",
   "description": "",
   "scripts": {
@@ -14,12 +14,13 @@
     "dist"
   ],
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://npm.pkg.github.com"
   },
   "dependencies": {
     "@noble/ed25519": "^2.0.0",
-    "@orderly.network/core": "workspace:*",
-    "@orderly.network/types": "workspace:*",
+    "@veltodefi/core": "workspace:*",
+    "@veltodefi/types": "workspace:*",
     "bs58": "^5.0.0"
   },
   "devDependencies": {

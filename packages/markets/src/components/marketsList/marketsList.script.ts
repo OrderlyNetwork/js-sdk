@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { MarketsType, useMarkets } from "@orderly.network/hooks";
+import { MarketsType, useMarkets } from "@veltodefi/hooks";
 import { MarketsTabName } from "../../type";
 import { searchBySymbol, useSort } from "../../utils";
 import { useMarketsContext } from "../marketsProvider";

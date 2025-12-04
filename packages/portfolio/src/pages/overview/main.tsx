@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { Grid, useScreen } from "@orderly.network/ui";
+import { Grid, useScreen } from "@veltodefi/ui";
 import { MobileOverview } from "./mobile";
 import { MobileOverviewProps } from "./mobile/mobile.widget";
 import { OverviewProvider } from "./provider/overviewProvider";

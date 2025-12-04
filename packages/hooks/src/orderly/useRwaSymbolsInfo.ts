@@ -1,6 +1,6 @@
 import { useMemo, useEffect } from "react";
 import { create } from "zustand";
-import { API } from "@orderly.network/types";
+import { API } from "@veltodefi/types";
 import { createGetter } from "../utils/createGetter";
 import { useAppStore } from "./appStore";
 

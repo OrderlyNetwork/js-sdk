@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { fn } from "storybook/test";
-import { Button, TriggerDialog } from "@orderly.network/ui";
+import { Button, TriggerDialog } from "@veltodefi/ui";
 
 const meta = {
   title: "Base/Dialog/TriggerDialog",

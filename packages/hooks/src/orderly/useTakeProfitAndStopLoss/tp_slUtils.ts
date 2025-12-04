@@ -1,13 +1,13 @@
-import { order as orderPerp } from "@orderly.network/perp";
-import { API, OrderlyOrder, OrderSide } from "@orderly.network/types";
-import { OrderType } from "@orderly.network/types";
-import { AlgoOrderType } from "@orderly.network/types";
+import { order as orderPerp } from "@veltodefi/perp";
+import { API, OrderlyOrder, OrderSide } from "@veltodefi/types";
+import { OrderType } from "@veltodefi/types";
+import { AlgoOrderType } from "@veltodefi/types";
 import {
   Decimal,
   getTPSLDirection,
   todpIfNeed,
   zero,
-} from "@orderly.network/utils";
+} from "@veltodefi/utils";
 
 export type UpdateOrderKey =
   | "tp_trigger_price"

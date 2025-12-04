@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { useAccount } from "@orderly.network/hooks";
-import { AccountStatusEnum } from "@orderly.network/types";
+import { useAccount } from "@veltodefi/hooks";
+import { AccountStatusEnum } from "@veltodefi/types";
 import { useAppContext } from "../provider/appStateContext";
 
 export function useCanTrade() {

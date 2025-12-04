@@ -23,20 +23,20 @@ import { CSS, Transform } from "@dnd-kit/utilities";
 import {
   useGetRwaSymbolOpenStatus,
   useLocalStorage,
-} from "@orderly.network/hooks";
+} from "@veltodefi/hooks";
 import {
   SideMarketsWidget,
   SymbolInfoBarFullWidget,
   HorizontalMarketsWidget,
-} from "@orderly.network/markets";
+} from "@veltodefi/markets";
 import {
   OrderEntrySortKeys,
   TradingviewFullscreenKey,
-} from "@orderly.network/types";
-import { Box, cn, Flex } from "@orderly.network/ui";
-import { OrderEntryWidget } from "@orderly.network/ui-order-entry";
-import { TradingviewWidget } from "@orderly.network/ui-tradingview";
-import { DepositStatusWidget } from "@orderly.network/ui-transfer";
+} from "@veltodefi/types";
+import { Box, cn, Flex } from "@veltodefi/ui";
+import { OrderEntryWidget } from "@veltodefi/ui-order-entry";
+import { TradingviewWidget } from "@veltodefi/ui-tradingview";
+import { DepositStatusWidget } from "@veltodefi/ui-transfer";
 import { SortablePanel } from "../../components/desktop/layout/sortablePanel";
 import { SplitLayout } from "../../components/desktop/layout/splitLayout";
 import { showRwaOutsideMarketHoursNotify } from "../../components/desktop/notify/rwaNotification";

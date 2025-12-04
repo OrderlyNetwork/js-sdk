@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Flex } from "@orderly.network/ui";
+import { Flex } from "@veltodefi/ui";
 import { MarkPriceView } from "../../base/orderBook/markPrice";
 import { MiddlePriceView } from "../../base/orderBook/midPriceView";
 import { useOrderBookContext } from "../../base/orderBook/orderContext";

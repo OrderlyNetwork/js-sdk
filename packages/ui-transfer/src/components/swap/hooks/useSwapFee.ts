@@ -1,8 +1,8 @@
 import { useMemo } from "react";
-import { useIndexPrice } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
-import { Decimal, toNonExponential } from "@orderly.network/utils";
+import { useIndexPrice } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { API } from "@veltodefi/types";
+import { Decimal, toNonExponential } from "@veltodefi/utils";
 import { feeDecimalsOffset } from "../../../utils";
 import { TransactionInfo } from "./useSwapEnquiry";
 

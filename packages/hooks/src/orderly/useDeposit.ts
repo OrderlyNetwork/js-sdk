@@ -13,8 +13,8 @@ import {
   SDKError,
   TrackerEventName,
   isNativeTokenChecker,
-} from "@orderly.network/types";
-import { Decimal, isTestnet } from "@orderly.network/utils";
+} from "@veltodefi/types";
+import { Decimal, isTestnet } from "@veltodefi/utils";
 import { useAccount } from "../useAccount";
 import { useConfig } from "../useConfig";
 import { useTrack } from "../useTrack";

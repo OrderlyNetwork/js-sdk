@@ -5,8 +5,8 @@ import {
   OrderStatus,
   SDKError,
   WSMessage,
-} from "@orderly.network/types";
-import { OrderType } from "@orderly.network/types";
+} from "@veltodefi/types";
+import { OrderType } from "@veltodefi/types";
 import { object2underscore } from "../../utils/ws";
 import { BaseMergeHandler } from "./baseMergeHandler";
 

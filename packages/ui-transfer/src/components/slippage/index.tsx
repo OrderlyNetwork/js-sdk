@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   AlertDialog,
   Box,
@@ -9,8 +9,8 @@ import {
   Input,
   inputFormatter,
   Text,
-} from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+} from "@veltodefi/ui";
+import { Decimal } from "@veltodefi/utils";
 
 interface SlippageProps {
   value?: number;

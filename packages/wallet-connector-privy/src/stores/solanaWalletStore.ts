@@ -1,7 +1,7 @@
 // stores/solanaWalletStore.ts
 import { WalletAdapterNetwork, WalletName } from "@solana/wallet-adapter-base";
 import { create } from "zustand";
-import { ChainNamespace } from "@orderly.network/types";
+import { ChainNamespace } from "@veltodefi/types";
 import { Network, SolanaChainsMap } from "../types";
 
 interface WalletAccount {

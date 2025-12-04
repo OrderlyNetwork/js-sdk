@@ -16,7 +16,7 @@ import {
   useMainnetChainsStore,
   useSwapSupportStore,
   useTestnetChainsStore,
-} from "@orderly.network/hooks";
+} from "@veltodefi/hooks";
 import {
   AbstractChains,
   API,
@@ -26,8 +26,8 @@ import {
   SolanaDevnetChainInfo,
   SolanaDevnetTokenInfo,
   TesnetTokenFallback,
-} from "@orderly.network/types";
-import { TooltipProvider } from "@orderly.network/ui";
+} from "@veltodefi/types";
+import { TooltipProvider } from "@veltodefi/ui";
 import { Main } from "./main";
 import { AbstractWallet } from "./providers/abstractWallet";
 import { PrivyWallet } from "./providers/privy";

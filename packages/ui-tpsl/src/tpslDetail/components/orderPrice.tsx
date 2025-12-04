@@ -1,8 +1,8 @@
-import { findTPSLOrderPriceFromOrder } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { API, OrderType } from "@orderly.network/types";
-import { Flex, Text } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { findTPSLOrderPriceFromOrder } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { API, OrderType } from "@veltodefi/types";
+import { Flex, Text } from "@veltodefi/ui";
+import { Decimal } from "@veltodefi/utils";
 import { FlexCell } from "../components/common";
 import { useTPSLDetailContext } from "../tpslDetailProvider";
 

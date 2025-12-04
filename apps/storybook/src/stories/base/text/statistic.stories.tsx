@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { EditIcon, Statistic } from "@orderly.network/ui";
+import { EditIcon, Statistic } from "@veltodefi/ui";
 
 const meta: Meta<typeof Statistic> = {
   title: "Base/Typography/Statistic",

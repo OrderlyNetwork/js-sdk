@@ -2,8 +2,8 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   OverviewModule,
   PortfolioLeftSidebarPath,
-} from "@orderly.network/portfolio";
-import { Box, Card, Flex, Grid } from "@orderly.network/ui";
+} from "@veltodefi/portfolio";
+import { Box, Card, Flex, Grid } from "@veltodefi/ui";
 import { PortfolioLayout } from "../../../components/layout";
 
 const { usePerformanceScript } = OverviewModule;

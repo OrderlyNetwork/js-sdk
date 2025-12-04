@@ -1,5 +1,5 @@
 import useSWR, { SWRHook, SWRResponse } from "swr";
-import { SDKError } from "@orderly.network/types";
+import { SDKError } from "@veltodefi/types";
 import { timestampWaitingMiddleware } from "./middleware/timestampWaitingMiddleware";
 import { useConfig } from "./useConfig";
 import { fetcher, useQueryOptions } from "./utils";

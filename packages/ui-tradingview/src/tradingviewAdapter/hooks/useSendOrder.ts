@@ -1,7 +1,7 @@
-import { useOrderEntry_deprecated } from "@orderly.network/hooks";
-import { OrderSide, OrderType } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
-import { toast } from "@orderly.network/ui";
+import { useOrderEntry_deprecated } from "@veltodefi/hooks";
+import { OrderSide, OrderType } from "@veltodefi/types";
+import { Decimal } from "@veltodefi/utils";
+import { toast } from "@veltodefi/ui";
 
 export default function useSendOrder(symbol: string) {
   const { onSubmit: _sendMarketOrder } = useOrderEntry_deprecated(

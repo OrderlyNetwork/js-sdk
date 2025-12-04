@@ -1,10 +1,10 @@
 import { FC, useMemo } from "react";
-import { useSymbolsInfo, utils } from "@orderly.network/hooks";
-import { API, AlgoOrderType } from "@orderly.network/types";
-import { OrderSide } from "@orderly.network/types";
-import { cn, Text, Tooltip } from "@orderly.network/ui";
+import { useSymbolsInfo, utils } from "@veltodefi/hooks";
+import { API, AlgoOrderType } from "@veltodefi/types";
+import { OrderSide } from "@veltodefi/types";
+import { cn, Text, Tooltip } from "@veltodefi/ui";
 import { useTPSLOrderRowContext } from "../tpslOrderRowContext";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 export const OrderTriggerPrice = () => {
   const { sl_trigger_price, tp_trigger_price, order, position } =
     useTPSLOrderRowContext();

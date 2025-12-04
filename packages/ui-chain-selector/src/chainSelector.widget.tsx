@@ -1,10 +1,10 @@
-import { registerSimpleDialog, registerSimpleSheet } from "@orderly.network/ui";
+import { registerSimpleDialog, registerSimpleSheet } from "@veltodefi/ui";
 import {
   useChainSelectorScript,
   UseChainSelectorScriptOptions,
 } from "./chainSelector.script";
 import { ChainSelector, ChainSelectorProps } from "./chainSelector.ui";
-import { i18n } from "@orderly.network/i18n";
+import { i18n } from "@veltodefi/i18n";
 
 export type ChainSelectorWidgetProps = UseChainSelectorScriptOptions &
   Pick<ChainSelectorProps, "isWrongNetwork" | "variant" | "className">;

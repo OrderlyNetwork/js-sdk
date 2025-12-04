@@ -1,6 +1,6 @@
 import type { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Box, cn, TabPanel, Tabs } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { Box, cn, TabPanel, Tabs } from "@veltodefi/ui";
 import { FundingComparisonWidget } from "../../../components/fundingComparison";
 import { FundingOverviewWidget } from "../../../components/fundingOverview";
 import { SearchInput } from "../../../components/searchInput";

@@ -1,5 +1,5 @@
 import { lensIndex, over } from "ramda";
-import { WSMessage, API, OrderStatus } from "@orderly.network/types";
+import { WSMessage, API, OrderStatus } from "@veltodefi/types";
 import { IOrderMergeHandler } from "./interface";
 
 export abstract class BaseMergeHandler<

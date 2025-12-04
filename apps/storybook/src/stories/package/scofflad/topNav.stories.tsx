@@ -1,9 +1,9 @@
 import { useMemo } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { fn } from "storybook/test";
-import { useChains } from "@orderly.network/hooks";
-import { OrderlyAppProvider } from "@orderly.network/react-app";
-import { Box, Flex, Text } from "@orderly.network/ui";
+import { useChains } from "@veltodefi/hooks";
+import { OrderlyAppProvider } from "@veltodefi/react-app";
+import { Box, Flex, Text } from "@veltodefi/ui";
 import {
   AccountMenuWidget,
   MainNavWidget,
@@ -12,7 +12,7 @@ import {
   ChainMenu,
   CampaignPositionEnum,
   LanguageSwitcherWidget,
-} from "@orderly.network/ui-scaffold";
+} from "@veltodefi/ui-scaffold";
 import {
   ARBActiveIcon,
   ARBIcon,

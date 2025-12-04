@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { useOrderStream } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { modal, Text } from "@orderly.network/ui";
-import { TabType } from "@orderly.network/ui-orders";
-import { SharePnLConfig } from "@orderly.network/ui-share";
-import { formatSymbol } from "@orderly.network/utils";
+import { useOrderStream } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { modal, Text } from "@veltodefi/ui";
+import { TabType } from "@veltodefi/ui-orders";
+import { SharePnLConfig } from "@veltodefi/ui-share";
+import { formatSymbol } from "@veltodefi/utils";
 import {
   usePendingOrderCount,
   usePositionsCount,

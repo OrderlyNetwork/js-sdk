@@ -17,8 +17,8 @@ import {
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
 import { clusterApiUrl } from "@solana/web3.js";
-import { useScreen } from "@orderly.network/ui";
-import { getGlobalObject } from "@orderly.network/utils";
+import { useScreen } from "@veltodefi/ui";
+import { getGlobalObject } from "@veltodefi/utils";
 import { SolanaInitialProps } from "./types";
 import "@solana/wallet-adapter-react-ui/styles.css";
 

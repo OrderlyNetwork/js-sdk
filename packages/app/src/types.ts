@@ -2,8 +2,8 @@ import { ComponentType, ReactNode } from "react";
 import {
   ExclusiveConfigProviderProps,
   ConfigProviderProps,
-} from "@orderly.network/hooks";
-import { ExtensionPosition } from "@orderly.network/ui";
+} from "@veltodefi/hooks";
+import { ExtensionPosition } from "@veltodefi/ui";
 
 type Logo = {
   // the logo image url

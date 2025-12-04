@@ -1,7 +1,7 @@
 import { FC, useContext, useMemo } from "react";
-import { useLocalStorage } from "@orderly.network/hooks";
-import { Box, cn, Flex, Text } from "@orderly.network/ui";
-import { getPrecisionByNumber } from "@orderly.network/utils";
+import { useLocalStorage } from "@veltodefi/hooks";
+import { Box, cn, Flex, Text } from "@veltodefi/ui";
+import { getPrecisionByNumber } from "@veltodefi/utils";
 import { CellBar } from "../../base/orderBook/cellBar";
 import {
   ORDERBOOK_MOBILE_COIN_TYPE_KEY,

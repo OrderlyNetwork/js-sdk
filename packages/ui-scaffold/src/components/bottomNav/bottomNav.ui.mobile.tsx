@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
-import { type RouterAdapter } from "@orderly.network/types";
-import { Flex, Text } from "@orderly.network/ui";
+import { type RouterAdapter } from "@veltodefi/types";
+import { Flex, Text } from "@veltodefi/ui";
 import { BottomNavItem } from "./bottomNav.widget";
 
 export type BottomNavProps = {

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FavoriteTab } from "@orderly.network/hooks";
+import { FavoriteTab } from "@veltodefi/hooks";
 import { FavoriteInstance } from "../../type";
 
 export type UseFavoritesDropdownMenuScriptOptions = {

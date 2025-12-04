@@ -9,10 +9,10 @@ import {
   usePrivateQuery,
   useStatisticsDaily,
   useBalanceTopic,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
-import { Decimal, zero } from "@orderly.network/utils";
+} from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { API } from "@veltodefi/types";
+import { Decimal, zero } from "@veltodefi/utils";
 
 export enum PeriodType {
   WEEK = "7D",

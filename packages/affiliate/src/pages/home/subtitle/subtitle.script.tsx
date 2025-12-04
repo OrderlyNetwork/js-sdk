@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { RefferalAPI } from "@orderly.network/hooks";
+import { RefferalAPI } from "@veltodefi/hooks";
 import { BuildNode, useReferralContext } from "../../../provider";
 
 export type SubtitleReturns = {

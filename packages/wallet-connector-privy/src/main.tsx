@@ -1,9 +1,9 @@
 import React, { useMemo } from "react";
-import { WalletConnectorContext } from "@orderly.network/hooks";
+import { WalletConnectorContext } from "@veltodefi/hooks";
 import type {
   WalletConnectorContextState,
   WalletState,
-} from "@orderly.network/hooks";
+} from "@veltodefi/hooks";
 import { ConnectDrawer } from "./components/connectDrawer";
 import { useWallet } from "./hooks/useWallet";
 import "./injectUsercenter";

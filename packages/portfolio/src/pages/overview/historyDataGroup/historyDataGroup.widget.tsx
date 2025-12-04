@@ -1,4 +1,4 @@
-import { useScreen } from "@orderly.network/ui";
+import { useScreen } from "@veltodefi/ui";
 import { useHistoryDataGroupScript } from "./historyDataGroup.script";
 import { HistoryDataGroupDesktop } from "./historyDataGroup.ui.desktop";
 import { HistoryDataGroupMobile } from "./historyDataGroup.ui.mobile";

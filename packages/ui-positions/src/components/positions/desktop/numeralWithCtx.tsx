@@ -1,5 +1,5 @@
 import React from "react";
-import { NumeralProps, Text } from "@orderly.network/ui";
+import { NumeralProps, Text } from "@veltodefi/ui";
 import { useSymbolContext } from "../../../provider/symbolContext";
 
 export type TickName = "quote_dp" | "base_dp";

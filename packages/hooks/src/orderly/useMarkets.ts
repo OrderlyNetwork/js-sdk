@@ -1,6 +1,6 @@
 import { useContext, useEffect, useId, useState } from "react";
-import { API, WSMessage } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+import { API, WSMessage } from "@veltodefi/types";
+import { Decimal } from "@veltodefi/utils";
 import { OrderlyContext } from "../orderlyContext";
 import { useEventEmitter } from "../useEventEmitter";
 import { MarketStoreKey } from "./useMarket";

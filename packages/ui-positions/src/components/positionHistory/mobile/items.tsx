@@ -1,6 +1,6 @@
 import { FC, ReactNode, useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
+import { useTranslation } from "@veltodefi/i18n";
+import { API } from "@veltodefi/types";
 import {
   Badge,
   capitalizeFirstLetter,
@@ -8,8 +8,8 @@ import {
   modal,
   Statistic,
   Text,
-} from "@orderly.network/ui";
-import { commifyOptional } from "@orderly.network/utils";
+} from "@veltodefi/ui";
+import { commifyOptional } from "@veltodefi/utils";
 import { FundingFeeButton } from "../../fundingFeeHistory/fundingFeeButton";
 import { PositionHistorySide } from "../positionHistory.script";
 import { PositionHistoryCellState } from "./positionHistoryCell.script";

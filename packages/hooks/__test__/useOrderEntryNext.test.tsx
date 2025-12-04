@@ -7,7 +7,7 @@ import {
   AlgoOrderRootType,
   OrderSide,
   OrderType,
-} from "@orderly.network/types";
+} from "@veltodefi/types";
 import { act, renderHook } from "@testing-library/react-hooks";
 import { OrderlyConfigProvider } from "../lib";
 

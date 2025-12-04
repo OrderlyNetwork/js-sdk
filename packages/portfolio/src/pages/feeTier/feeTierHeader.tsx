@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMemo } from "react";
-import { useFeeState } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import { useFeeState } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   Box,
   Flex,
@@ -10,12 +10,12 @@ import {
   Tooltip,
   useModal,
   useScreen,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import {
   RouterAdapter,
   useScaffoldContext,
-} from "@orderly.network/ui-scaffold";
-import { Decimal } from "@orderly.network/utils";
+} from "@veltodefi/ui-scaffold";
+import { Decimal } from "@veltodefi/utils";
 import { useLayoutContext } from "../../layout/context";
 import { EffectiveFee } from "./icons";
 

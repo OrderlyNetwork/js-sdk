@@ -6,17 +6,17 @@ import {
   useMemo,
   useState,
 } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   AlgoOrderRootType,
   API,
   OrderStatus,
   OrderType,
-} from "@orderly.network/types";
-import { OrderSide } from "@orderly.network/types";
-import { Badge, Flex, Statistic, Text, Tooltip } from "@orderly.network/ui";
-import { SharePnLBottomSheetId } from "@orderly.network/ui-share";
-import { Decimal, getTrailingStopPrice } from "@orderly.network/utils";
+} from "@veltodefi/types";
+import { OrderSide } from "@veltodefi/types";
+import { Badge, Flex, Statistic, Text, Tooltip } from "@veltodefi/ui";
+import { SharePnLBottomSheetId } from "@veltodefi/ui-share";
+import { Decimal, getTrailingStopPrice } from "@veltodefi/utils";
 import {
   getNotional,
   parseBadgesFor,

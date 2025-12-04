@@ -1,4 +1,4 @@
-# @orderly.network/i18n
+# @veltodefi/i18n
 
 Internationalization and cli tools for Orderly SDK. Based on i18next ecosystem.
 
@@ -11,7 +11,7 @@ Follow these steps to integrate localization support in your app using Orderly S
 The LocaleProvider is the core component that supplies localized resources to your application. Make sure to wrap your app’s root component with LocaleProvider.
 
 ```tsx
-import { LocaleProvider } from "@orderly.network/i18n";
+import { LocaleProvider } from "@veltodefi/i18n";
 
 <LocaleProvider>
   <YourApp />
@@ -72,14 +72,14 @@ Here's a complete example of how to set up the i18n integration:
 
 ```typescript
 import { FC, ReactNode } from "react";
-import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
-import { OrderlyAppProvider } from "@orderly.network/react-app";
-import { LocaleProvider, LocaleEnum, LocaleCode } from "@orderly.network/i18n";
+import { WalletConnectorProvider } from "@veltodefi/wallet-connector";
+import { OrderlyAppProvider } from "@veltodefi/react-app";
+import { LocaleProvider, LocaleEnum, LocaleCode } from "@veltodefi/i18n";
 
 const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
   const onLanguageChanged = async (lang: LocaleCode) => {};
 
-  // please copy build-in locale files (@orderly.network/i18n/locales) to you public/locales
+  // please copy build-in locale files (@veltodefi/i18n/locales) to you public/locales
   // and copy you extend locale files to public/locales/extend
   const loadPath = (lang: LocaleCode) => {
     if (lang === LocaleEnum.en) {
@@ -112,12 +112,12 @@ const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
 
 ```typescript
 import { FC, ReactNode } from "react";
-import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
-import { OrderlyAppProvider } from "@orderly.network/react-app";
-import { LocaleProvider, LocaleCode, Resources } from "@orderly.network/i18n";
-import zh from "@orderly.network/i18n/locales/zh.json";
-import ja from "@orderly.network/i18n/locales/ja.json";
-import ko from "@orderly.network/i18n/locales/ko.json";
+import { WalletConnectorProvider } from "@veltodefi/wallet-connector";
+import { OrderlyAppProvider } from "@veltodefi/react-app";
+import { LocaleProvider, LocaleCode, Resources } from "@veltodefi/i18n";
+import zh from "@veltodefi/i18n/locales/zh.json";
+import ja from "@veltodefi/i18n/locales/ja.json";
+import ko from "@veltodefi/i18n/locales/ko.json";
 
 // extend or overrides English translations
 const extendEn = {
@@ -181,15 +181,15 @@ We also support adding more custom languages
 
 ```typescript
 import { FC, ReactNode } from "react";
-import { WalletConnectorProvider } from "@orderly.network/wallet-connector";
-import { OrderlyAppProvider } from "@orderly.network/react-app";
+import { WalletConnectorProvider } from "@veltodefi/wallet-connector";
+import { OrderlyAppProvider } from "@veltodefi/react-app";
 import {
   LocaleProvider,
   Resources,
   LocaleEnum,
   LocaleCode,
   Language,
-} from "@orderly.network/i18n";
+} from "@veltodefi/i18n";
 
 // japanese locale
 const ja = {
@@ -244,7 +244,7 @@ const OrderlyProvider: FC<{ children: ReactNode }> = (props) => {
 The package provides a CLI tool for managing Internationalization files.
 
 ```bash
-npx @orderly.network/i18n <command> [options]
+npx @veltodefi/i18n <command> [options]
 ```
 
 ## Commands
@@ -254,13 +254,13 @@ npx @orderly.network/i18n <command> [options]
 Convert a locale CSV file to multiple locale JSON files.
 
 ```bash
-npx @orderly.network/i18n csv2json <input> <outputDir>
+npx @veltodefi/i18n csv2json <input> <outputDir>
 ```
 
 Example:
 
 ```bash
-npx @orderly.network/i18n csv2json ./dist/locale.csv ./dist/locales
+npx @veltodefi/i18n csv2json ./dist/locale.csv ./dist/locales
 ```
 
 ### json2csv
@@ -268,13 +268,13 @@ npx @orderly.network/i18n csv2json ./dist/locale.csv ./dist/locales
 Convert multiple locale JSON files to a single locale CSV file.
 
 ```bash
-npx @orderly.network/i18n json2csv <inputDir> <output>
+npx @veltodefi/i18n json2csv <inputDir> <output>
 ```
 
 Example:
 
 ```bash
-npx @orderly.network/i18n json2csv ./locales ./dist/locale.csv
+npx @veltodefi/i18n json2csv ./locales ./dist/locale.csv
 ```
 
 ### diffcsv
@@ -282,13 +282,13 @@ npx @orderly.network/i18n json2csv ./locales ./dist/locale.csv
 Compare two locale CSV files to find differences.
 
 ```bash
-npx @orderly.network/i18n diffcsv <oldFile> <newFile>
+npx @veltodefi/i18n diffcsv <oldFile> <newFile>
 ```
 
 Example:
 
 ```bash
-npx @orderly.network/i18n diffcsv ./dist/locale1.csv ./dist/locale2.csv
+npx @veltodefi/i18n diffcsv ./dist/locale1.csv ./dist/locale2.csv
 ```
 
 ### fillJson
@@ -296,13 +296,13 @@ npx @orderly.network/i18n diffcsv ./dist/locale1.csv ./dist/locale2.csv
 Fill values from an input locale JSON file and generate a new locale JSON file.
 
 ```bash
-npx @orderly.network/i18n fillJson <input> <output>
+npx @veltodefi/i18n fillJson <input> <output>
 ```
 
 Example:
 
 ```bash
-npx @orderly.network/i18n fillJson ./src/locale/zh.json ./dist/locale/zh.json
+npx @veltodefi/i18n fillJson ./src/locale/zh.json ./dist/locale/zh.json
 ```
 
 ### separateJson
@@ -310,13 +310,13 @@ npx @orderly.network/i18n fillJson ./src/locale/zh.json ./dist/locale/zh.json
 Separate JSON files into default and extend key values based on a specified key.
 
 ```bash
-npx @orderly.network/i18n separateJson <inputDir> <outputDir> <separateKey>
+npx @veltodefi/i18n separateJson <inputDir> <outputDir> <separateKey>
 ```
 
 Example:
 
 ```bash
-npx @orderly.network/i18n separateJson ./locales ./dist/locales extend
+npx @veltodefi/i18n separateJson ./locales ./dist/locales extend
 ```
 
 ### mergeJson
@@ -324,11 +324,11 @@ npx @orderly.network/i18n separateJson ./locales ./dist/locales extend
 Merge default and extend JSON files back into one file.
 
 ```bash
-npx @orderly.network/i18n mergeJson <inputDir> <outputDir>
+npx @veltodefi/i18n mergeJson <inputDir> <outputDir>
 ```
 
 Example:
 
 ```bash
-npx @orderly.network/i18n mergeJson ./dist/locales1 ./dist/locales2
+npx @veltodefi/i18n mergeJson ./dist/locales1 ./dist/locales2
 ```

@@ -1,4 +1,4 @@
-import { API } from "@orderly.network/types";
+import { API } from "@veltodefi/types";
 
 export type Eip1193Provider = {
   request: (args: { method: string; params?: any[] }) => Promise<any>;

@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
-import { useTradingRewardsStatus, EpochStatus } from "@orderly.network/hooks";
-import { Flex, Box, cn } from "@orderly.network/ui";
+import { useTradingRewardsStatus, EpochStatus } from "@veltodefi/hooks";
+import { Flex, Box, cn } from "@veltodefi/ui";
 import { TradingRewardsProvider } from "./provider";
 import type { TitleConfig } from "./title/title.script";
 

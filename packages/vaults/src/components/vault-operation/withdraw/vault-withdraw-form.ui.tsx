@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   Box,
   Text,
@@ -10,12 +10,12 @@ import {
   useModal,
   cn,
   useScreen,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import {
   BrokerWallet,
   QuantityInput,
   AvailableQuantity,
-} from "@orderly.network/ui-transfer";
+} from "@veltodefi/ui-transfer";
 import { LatestWithdrawWidget } from "../latest-withdraw";
 import { VaultWithdrawFormScript } from "./vault-withdraw-form.script";
 import { WithdrawProcessWidget } from "./withdraw-process.ui";

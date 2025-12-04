@@ -1,6 +1,6 @@
 import { FC, useMemo, useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
+import { useTranslation } from "@veltodefi/i18n";
+import { API } from "@veltodefi/types";
 import {
   BellIcon,
   DialogHeader,
@@ -14,8 +14,8 @@ import {
   TooltipRoot,
   TooltipTrigger,
   TooltipContent,
-} from "@orderly.network/ui";
-import { AnnouncementCenterUI } from "@orderly.network/ui-notification";
+} from "@veltodefi/ui";
+import { AnnouncementCenterUI } from "@veltodefi/ui-notification";
 import { useScaffoldContext } from "../scaffold";
 
 /**

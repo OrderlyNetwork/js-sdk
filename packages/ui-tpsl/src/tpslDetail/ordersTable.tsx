@@ -1,6 +1,6 @@
-import { API } from "@orderly.network/types";
-import { cn, ScrollArea } from "@orderly.network/ui";
-import { AuthGuardDataTable } from "@orderly.network/ui-connector";
+import { API } from "@veltodefi/types";
+import { cn, ScrollArea } from "@veltodefi/ui";
+import { AuthGuardDataTable } from "@veltodefi/ui-connector";
 import { useColumn } from "./useColum";
 
 export const OrdersTable = (props: {

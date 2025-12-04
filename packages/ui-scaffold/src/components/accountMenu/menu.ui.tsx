@@ -1,5 +1,5 @@
-import { useTranslation } from "@orderly.network/i18n";
-import { AccountStatusEnum } from "@orderly.network/types";
+import { useTranslation } from "@veltodefi/i18n";
+import { AccountStatusEnum } from "@veltodefi/types";
 import {
   Button,
   Divider,
@@ -12,7 +12,7 @@ import {
   EVMAvatar,
   Flex,
   Text,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 
 export type AccountMenuProps = {
   accountState: AccountState;

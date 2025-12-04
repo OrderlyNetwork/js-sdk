@@ -1,9 +1,9 @@
 import { useMemo } from "react";
-import { useAccount, useGetEnv, useTrack } from "@orderly.network/hooks";
-import { useMutation } from "@orderly.network/hooks";
-import { TrackerEventName } from "@orderly.network/types";
-import { toast } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { useAccount, useGetEnv, useTrack } from "@veltodefi/hooks";
+import { useMutation } from "@veltodefi/hooks";
+import { TrackerEventName } from "@veltodefi/types";
+import { toast } from "@veltodefi/ui";
+import { Decimal } from "@veltodefi/utils";
 import { VAULTS_CONTRACT_ADDRESSES } from "../../../contract";
 import { OperationType, RoleType } from "../../../types/vault";
 import { getToAccountPayloadType } from "../../../utils/operationPayload";

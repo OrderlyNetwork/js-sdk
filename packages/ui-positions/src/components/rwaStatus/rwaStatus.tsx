@@ -1,6 +1,6 @@
-import { useGetRwaSymbolOpenStatus } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { cn, Flex, Text } from "@orderly.network/ui";
+import { useGetRwaSymbolOpenStatus } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { cn, Flex, Text } from "@veltodefi/ui";
 
 export const RwaStatusTag = ({ symbol }: { symbol: string }) => {
   const { isRwa, open } = useGetRwaSymbolOpenStatus(symbol);

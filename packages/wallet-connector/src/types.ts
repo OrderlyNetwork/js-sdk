@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from "react";
 import { Adapter, WalletAdapterNetwork, WalletError } from "@solana/wallet-adapter-base";
-import { Optional } from "@orderly.network/types";
+import { Optional } from "@veltodefi/types";
 import type { InitOptions } from "@web3-onboard/core";
 export type ConnectorInitOptions = Optional<
   InitOptions,

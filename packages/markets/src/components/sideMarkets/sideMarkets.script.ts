@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useLocalStorage } from "@orderly.network/hooks";
+import { useLocalStorage } from "@veltodefi/hooks";
 import { SIDE_MARKETS_TAB_SORT_STORAGE_KEY } from "../../constant";
 import { MarketsTabName } from "../../type";
 import { useTabSort } from "../shared/hooks/useTabSort";

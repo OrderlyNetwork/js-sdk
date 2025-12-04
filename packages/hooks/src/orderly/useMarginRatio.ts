@@ -1,7 +1,7 @@
 import { useMemo } from "react";
-import { account } from "@orderly.network/perp";
-import { AccountStatusEnum, EMPTY_LIST } from "@orderly.network/types";
-import { zero } from "@orderly.network/utils";
+import { account } from "@veltodefi/perp";
+import { AccountStatusEnum, EMPTY_LIST } from "@veltodefi/types";
+import { zero } from "@veltodefi/utils";
 import { useAccount } from "../useAccount";
 import { useCollateral } from "./useCollateral";
 import { useMarkPricesStream } from "./useMarkPricesStream";

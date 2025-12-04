@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
-import { useLeverage } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { SliderMarks, toast } from "@orderly.network/ui";
+import { useLeverage } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { SliderMarks, toast } from "@veltodefi/ui";
 
 type UseLeverageScriptOptions = {
   close?: () => void;

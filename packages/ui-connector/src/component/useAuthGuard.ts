@@ -1,7 +1,7 @@
 import { useMemo } from "react";
-import { useAccount } from "@orderly.network/hooks";
-import { useAppContext } from "@orderly.network/react-app";
-import { AccountStatusEnum } from "@orderly.network/types";
+import { useAccount } from "@veltodefi/hooks";
+import { useAppContext } from "@veltodefi/react-app";
+import { AccountStatusEnum } from "@veltodefi/types";
 
 /**
  * Hook to check if the user is authenticated and authorized

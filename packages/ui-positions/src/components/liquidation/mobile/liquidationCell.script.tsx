@@ -1,4 +1,4 @@
-import { API } from "@orderly.network/types";
+import { API } from "@veltodefi/types";
 
 export const useLiquidationCellScript = (props: {
   item: API.Liquidation & {

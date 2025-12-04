@@ -1,12 +1,12 @@
-import { useTranslation } from "@orderly.network/i18n";
-import { PositionType } from "@orderly.network/types";
+import { useTranslation } from "@veltodefi/i18n";
+import { PositionType } from "@veltodefi/types";
 import {
   ExclamationFillIcon,
   Flex,
   Select,
   Text,
   Tooltip,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { useTPSLPositionTypeScript } from "./tpslPositionType.script";
 
 type TPSLPositionTypeUIProps = ReturnType<typeof useTPSLPositionTypeScript>;

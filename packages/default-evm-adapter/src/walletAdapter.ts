@@ -11,8 +11,8 @@ import {
   InternalTransferInputs,
   WithdrawInputs,
   DexRequestInputs,
-} from "@orderly.network/core";
-import { API, ChainNamespace } from "@orderly.network/types";
+} from "@veltodefi/core";
+import { API, ChainNamespace } from "@veltodefi/types";
 import {
   addOrderlyKeyMessage,
   registerAccountMessage,

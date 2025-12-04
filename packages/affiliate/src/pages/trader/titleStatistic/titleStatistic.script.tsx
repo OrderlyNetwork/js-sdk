@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
 import { format, subDays } from "date-fns";
-import { VolChartDataItem } from "@orderly.network/chart";
-import { useRefereeRebateSummary } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import { VolChartDataItem } from "@veltodefi/chart";
+import { useRefereeRebateSummary } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
 import { useReferralContext } from "../../../provider";
 import { fillData } from "../../../utils/chartUtils";
 import { BarDayFilter } from "../../../utils/types";

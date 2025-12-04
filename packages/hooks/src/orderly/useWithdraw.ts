@@ -4,8 +4,8 @@ import {
   ARBITRUM_MAINNET_CHAINID,
   ARBITRUM_TESTNET_CHAINID,
   TrackerEventName,
-} from "@orderly.network/types";
-import { isTestnet } from "@orderly.network/utils";
+} from "@veltodefi/types";
+import { isTestnet } from "@veltodefi/utils";
 import { useAccount } from "../useAccount";
 import { useConfig } from "../useConfig";
 import { useTrack } from "../useTrack";

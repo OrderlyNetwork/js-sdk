@@ -1,5 +1,5 @@
 import { FC, PropsWithChildren, useMemo } from "react";
-import { TWType } from "@orderly.network/hooks";
+import { TWType } from "@veltodefi/hooks";
 import { useRewardsData } from "../mobile/useRewardsData.script";
 import { useAssetsHistoryData } from "../shared/useAssetHistory";
 import { OverviewContext, OverviewContextState } from "./overviewContext";

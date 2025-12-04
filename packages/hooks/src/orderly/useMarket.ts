@@ -1,6 +1,6 @@
 import { useContext, useMemo, useState } from "react";
-import { API, EMPTY_LIST } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+import { API, EMPTY_LIST } from "@veltodefi/types";
+import { Decimal } from "@veltodefi/utils";
 import { OrderlyContext } from "../orderlyContext";
 import { useFundingRates } from "./useFundingRates";
 import { useMarketsStream } from "./useMarketsStream";

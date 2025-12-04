@@ -1,9 +1,9 @@
 import { useContext } from "react";
 import useConstant from "use-constant";
-import { Account, AccountState, SimpleDI } from "@orderly.network/core";
-import { WS } from "@orderly.network/net";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { getGlobalObject, getTimestamp } from "@orderly.network/utils";
+import { Account, AccountState, SimpleDI } from "@veltodefi/core";
+import { WS } from "@veltodefi/net";
+import { AccountStatusEnum } from "@veltodefi/types";
+import { getGlobalObject, getTimestamp } from "@veltodefi/utils";
 import { OrderlyContext } from "./orderlyContext";
 
 const WS_NAME = "nativeWebsocketClient";

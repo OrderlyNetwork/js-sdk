@@ -2,7 +2,7 @@ import type {
   FooterProps,
   MainNavWidgetProps,
   BottomNavProps,
-} from "@orderly.network/ui-scaffold";
+} from "@veltodefi/ui-scaffold";
 import type { OrderlyAppProviderConfigProps } from "./orderlyAppProvider";
 import type { TradingPageConfigProps } from "./tradingPage";
 

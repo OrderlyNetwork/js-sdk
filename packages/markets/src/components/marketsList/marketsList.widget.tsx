@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
-import { Favorite, FavoriteTab } from "@orderly.network/hooks";
-import { DataTableClassNames } from "@orderly.network/ui";
+import { Favorite, FavoriteTab } from "@veltodefi/hooks";
+import { DataTableClassNames } from "@veltodefi/ui";
 import {
   FavoriteInstance,
   GetColumns,

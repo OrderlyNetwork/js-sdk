@@ -1,5 +1,5 @@
-import { OrderSide, API as orderUtils } from "@orderly.network/types";
-import { Decimal, getTPSLDirection, zero } from "@orderly.network/utils";
+import { OrderSide, API as orderUtils } from "@veltodefi/types";
+import { Decimal, getTPSLDirection, zero } from "@veltodefi/utils";
 import { notional } from "./positions";
 
 /**

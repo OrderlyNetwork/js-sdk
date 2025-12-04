@@ -1,6 +1,6 @@
 import React from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Box, cn, Flex, Grid, TabPanel, Tabs, Text } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { Box, cn, Flex, Grid, TabPanel, Tabs, Text } from "@veltodefi/ui";
 import type { OrderBookAndTradesState } from "./orderBookAndTrades.script";
 
 const LazyLastTradesWidget = React.lazy(() =>

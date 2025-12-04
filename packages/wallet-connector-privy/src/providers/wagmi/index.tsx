@@ -1,6 +1,6 @@
 import React from "react";
 import { Chain } from "viem/chains";
-import { EMPTY_OBJECT } from "@orderly.network/types";
+import { EMPTY_OBJECT } from "@veltodefi/types";
 import { InitWagmi } from "../../types";
 import { InitWagmiProvider } from "./initWagmiProvider";
 import { WagmiWalletProvider } from "./wagmiWalletProvider";

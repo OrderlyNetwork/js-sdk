@@ -1,11 +1,11 @@
-import { OrderType } from "@orderly.network/types";
+import { OrderType } from "@veltodefi/types";
 import {
   API,
   AlgoOrderEntity,
   AlgoOrderType,
   AlgoOrderRootType,
   OrderStatus,
-} from "@orderly.network/types";
+} from "@veltodefi/types";
 
 export const findTPSLFromOrder = (
   order: API.AlgoOrder,

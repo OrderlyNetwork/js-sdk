@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { API, OrderlyOrder } from "@orderly.network/types";
-import { Decimal, zero } from "@orderly.network/utils";
+import { API, OrderlyOrder } from "@veltodefi/types";
+import { Decimal, zero } from "@veltodefi/utils";
 import { useAskAndBid } from "../../../hooks/useAskAndBid";
 
 export type ScaledOrderConfirmScriptOptions = {

@@ -1,6 +1,6 @@
 import React from "react";
-import { i18n } from "@orderly.network/i18n";
-import { registerSimpleDialog, registerSimpleSheet } from "@orderly.network/ui";
+import { i18n } from "@veltodefi/i18n";
+import { registerSimpleDialog, registerSimpleSheet } from "@veltodefi/ui";
 import { useWalletConnectorBuilder } from "./useWalletConnectorBuilder";
 import { WalletConnectContent } from "./walletConnectorContent";
 

@@ -9,7 +9,7 @@ import {
   usePagination,
   Badge,
   Text,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { Columns } from "./columns";
 import { DataSource, DataSourceWithChildren } from "./dataSource";
 

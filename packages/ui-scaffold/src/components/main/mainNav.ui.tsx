@@ -1,6 +1,6 @@
 import { FC, PropsWithChildren, useMemo } from "react";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { cn, Divider, Flex, useScreen } from "@orderly.network/ui";
+import { AccountStatusEnum } from "@veltodefi/types";
+import { cn, Divider, Flex, useScreen } from "@veltodefi/ui";
 import { WalletConnectButtonExtension } from "../accountMenu/menu.widget";
 import { AccountSummaryWidget } from "../accountSummary";
 import { ChainMenuWidget } from "../chainMenu";

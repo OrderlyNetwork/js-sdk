@@ -1,5 +1,5 @@
-import { OrderStatus } from "@orderly.network/types";
-import type { API } from "@orderly.network/types";
+import { OrderStatus } from "@veltodefi/types";
+import type { API } from "@veltodefi/types";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 

@@ -1,8 +1,8 @@
-import { CurrentEpochEstimate } from "@orderly.network/hooks";
+import { CurrentEpochEstimate } from "@veltodefi/hooks";
 import { useTradingRewardsContext } from "../provider";
-import { ENVType, useGetEnv } from "@orderly.network/hooks";
-import { useDataTap } from "@orderly.network/react-app";
-import { Decimal } from "@orderly.network/utils";
+import { ENVType, useGetEnv } from "@veltodefi/hooks";
+import { useDataTap } from "@veltodefi/react-app";
+import { Decimal } from "@veltodefi/utils";
 import { useMemo } from "react";
 
 export const useStakeBoosterScript = () => {

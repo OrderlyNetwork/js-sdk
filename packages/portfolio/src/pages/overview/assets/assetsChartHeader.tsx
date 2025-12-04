@@ -1,5 +1,5 @@
-import { CardTitle, Flex } from "@orderly.network/ui";
-import { useTranslation } from "@orderly.network/i18n";
+import { CardTitle, Flex } from "@veltodefi/ui";
+import { useTranslation } from "@veltodefi/i18n";
 
 export const AssetsChartHeader = () => {
   const { t } = useTranslation();

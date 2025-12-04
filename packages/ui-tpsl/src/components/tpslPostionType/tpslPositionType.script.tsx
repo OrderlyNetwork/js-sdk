@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { OrderlyOrder, PositionType } from "@orderly.network/types";
+import { OrderlyOrder, PositionType } from "@veltodefi/types";
 
 type OrderValueKeys = keyof OrderlyOrder;
 export type PositionTypeProps = {

@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Box, Button, Flex, modal } from "@orderly.network/ui";
+import { Box, Button, Flex, modal } from "@veltodefi/ui";
 import {
   ChainSelectorWidget,
   ChainSelectorDialogId,
   ChainSelectorSheetId,
-} from "@orderly.network/ui-chain-selector";
+} from "@veltodefi/ui-chain-selector";
 
 const meta: Meta<typeof ChainSelectorWidget> = {
   title: "Package/ui-chain-selector/ChainSelector",

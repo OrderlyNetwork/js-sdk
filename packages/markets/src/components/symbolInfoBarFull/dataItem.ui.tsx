@@ -1,5 +1,5 @@
 import React from "react";
-import { cn, Flex, Tooltip, Text } from "@orderly.network/ui";
+import { cn, Flex, Tooltip, Text } from "@veltodefi/ui";
 
 interface DataItemProps {
   label: string;

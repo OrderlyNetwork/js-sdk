@@ -1,6 +1,6 @@
-import { useTranslation } from "@orderly.network/i18n";
-import { API, OrderSide } from "@orderly.network/types";
-import { Badge, Flex, Text } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { API, OrderSide } from "@veltodefi/types";
+import { Badge, Flex, Text } from "@veltodefi/ui";
 import { parseBadgesFor } from "../../../../../utils/util";
 
 type EditSheetHeaderProps = {

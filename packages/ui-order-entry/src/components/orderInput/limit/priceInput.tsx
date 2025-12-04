@@ -1,7 +1,7 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { OrderType } from "@orderly.network/types";
-import { cn, inputFormatter } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { OrderType } from "@veltodefi/types";
+import { cn, inputFormatter } from "@veltodefi/ui";
 import { OrderEntryScriptReturn } from "../../../orderEntry.script";
 import { InputType } from "../../../types";
 import { BBOStatus } from "../../../utils";

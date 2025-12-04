@@ -1,5 +1,5 @@
 import useSWRSubscription from "swr/subscription";
-import { getTimestamp } from "@orderly.network/utils";
+import { getTimestamp } from "@veltodefi/utils";
 import { useAccount } from "../useAccount";
 import { useWS } from "../useWS";
 

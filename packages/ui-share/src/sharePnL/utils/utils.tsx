@@ -25,8 +25,8 @@
     }
 */
 // import { PnLDisplayFormat, ShareOptions } from "./type";
-import { useTranslation } from "@orderly.network/i18n";
-import { Decimal, formatNum } from "@orderly.network/utils";
+import { useTranslation } from "@veltodefi/i18n";
+import { Decimal, formatNum } from "@veltodefi/utils";
 import { PnLDisplayFormat, ShareEntity, ShareOptions } from "../../types/types";
 
 export type ReferralType = {

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 // import { fn } from 'storybook/test';
-import { Input } from "@orderly.network/ui";
+import { Input } from "@veltodefi/ui";
 
 const meta = {
   title: "Base/Input/Extend",

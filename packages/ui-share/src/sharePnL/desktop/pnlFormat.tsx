@@ -1,7 +1,7 @@
 import { FC, useMemo } from "react";
 import { PnLDisplayFormat } from "../../types/types";
-import { Text, cn } from "@orderly.network/ui";
-import { useTranslation } from "@orderly.network/i18n";
+import { Text, cn } from "@veltodefi/ui";
+import { useTranslation } from "@veltodefi/i18n";
 export const PnlFormatView: FC<{
   type: PnLDisplayFormat;
   curType?: PnLDisplayFormat;

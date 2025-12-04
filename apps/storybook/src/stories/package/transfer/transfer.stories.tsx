@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { useAccount } from "@orderly.network/hooks";
-import { Box, Flex, Button, modal, toast } from "@orderly.network/ui";
+import { useAccount } from "@veltodefi/hooks";
+import { Box, Flex, Button, modal, toast } from "@veltodefi/ui";
 import {
   DepositFormWidget,
   WithdrawFormWidget,
@@ -9,7 +9,7 @@ import {
   TransferFormWidget,
   TransferDialogId,
   TransferSheetId,
-} from "@orderly.network/ui-transfer";
+} from "@veltodefi/ui-transfer";
 
 const meta: Meta<typeof DepositFormWidget> = {
   title: "Package/ui-transfer",

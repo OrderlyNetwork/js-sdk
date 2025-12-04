@@ -1,5 +1,5 @@
 import { FC, useCallback } from "react";
-import { useConfig } from "@orderly.network/hooks";
+import { useConfig } from "@veltodefi/hooks";
 import {
   cn,
   DataTable,
@@ -7,7 +7,7 @@ import {
   Spinner,
   TanstackColumn,
   useScreen,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { type CampaignRankingData } from "../campaignRanking/campaignRanking.script";
 import {
   type GeneralRankingData,

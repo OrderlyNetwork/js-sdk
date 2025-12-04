@@ -1,12 +1,12 @@
 import { useCallback, useMemo, useState } from "react";
-import { useTrack } from "@orderly.network/hooks";
+import { useTrack } from "@veltodefi/hooks";
 import {
   i18n,
   LocaleContextState,
   useLocaleContext,
-} from "@orderly.network/i18n";
-import { TrackerEventName } from "@orderly.network/types";
-import { useScreen } from "@orderly.network/ui";
+} from "@veltodefi/i18n";
+import { TrackerEventName } from "@veltodefi/types";
+import { useScreen } from "@veltodefi/ui";
 
 export type LanguageSwitcherScriptReturn = ReturnType<
   typeof useLanguageSwitcherScript

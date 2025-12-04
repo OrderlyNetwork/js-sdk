@@ -1,15 +1,15 @@
 import { FC, ReactNode, useMemo } from "react";
-import { useLocalStorage } from "@orderly.network/hooks";
-import { usePositionStream } from "@orderly.network/hooks";
-import { i18n, useTranslation } from "@orderly.network/i18n";
+import { useLocalStorage } from "@veltodefi/hooks";
+import { usePositionStream } from "@veltodefi/hooks";
+import { i18n, useTranslation } from "@veltodefi/i18n";
 import {
   BBOOrderType,
   API,
   OrderSide,
   OrderType,
   PositionType,
-} from "@orderly.network/types";
-import { OrderlyOrder } from "@orderly.network/types";
+} from "@veltodefi/types";
+import { OrderlyOrder } from "@veltodefi/types";
 import {
   Badge,
   Button,
@@ -21,8 +21,8 @@ import {
   registerSimpleDialog,
   Text,
   textVariants,
-} from "@orderly.network/ui";
-import { Decimal, getBBOType } from "@orderly.network/utils";
+} from "@veltodefi/ui";
+import { Decimal, getBBOType } from "@veltodefi/utils";
 import { isBBOOrder } from "../../utils";
 
 type OrderConfirmDialogProps = {

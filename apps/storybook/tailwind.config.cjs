@@ -1,5 +1,5 @@
 import { withTV } from "tailwind-variants/transformer";
-import { chartPlugin } from "@orderly.network/chart";
+import { chartPlugin } from "@veltodefi/chart";
 import { customThemePlugin } from "./src/tailwind/customTheme";
 import { lightPrimaryThemePlugin } from "./src/tailwind/lightPrimaryTheme";
 import { roundlessThemePlugin } from "./src/tailwind/roundlessTheme";

@@ -1,7 +1,7 @@
 import { FC, useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { DataFilter } from "@orderly.network/ui";
-import { AuthGuardDataTable } from "@orderly.network/ui-connector";
+import { useTranslation } from "@veltodefi/i18n";
+import { DataFilter } from "@veltodefi/ui";
+import { AuthGuardDataTable } from "@veltodefi/ui-connector";
 import {
   AssetTarget,
   type AssetHistoryScriptReturn,

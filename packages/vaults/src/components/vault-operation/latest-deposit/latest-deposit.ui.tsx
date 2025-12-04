@@ -1,6 +1,6 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { cn, Text, TokenIcon } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { cn, Text, TokenIcon } from "@veltodefi/ui";
 import { VaultOperation } from "../../../types/vault";
 import { getOperationStatusColor } from "../../../utils/getOperationStatusColor";
 

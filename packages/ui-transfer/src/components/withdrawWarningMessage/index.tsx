@@ -1,8 +1,8 @@
 import React from "react";
-import { useAccount } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { Flex } from "@orderly.network/ui";
+import { useAccount } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { AccountStatusEnum } from "@veltodefi/types";
+import { Flex } from "@veltodefi/ui";
 
 interface WarningMessageProps {
   crossChainTrans: boolean;

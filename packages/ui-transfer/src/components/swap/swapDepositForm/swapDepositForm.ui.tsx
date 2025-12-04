@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Box, Flex, textVariants } from "@orderly.network/ui";
+import { Box, Flex, textVariants } from "@veltodefi/ui";
 import { ActionButton } from "../../actionButton";
 import { AvailableQuantity } from "../../availableQuantity";
 import { BrokerWallet } from "../../brokerWallet";

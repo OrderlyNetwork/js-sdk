@@ -6,17 +6,17 @@ import {
   useLocalStorage,
   usePositionStream,
   useWalletConnector,
-} from "@orderly.network/hooks";
-import { useAppContext } from "@orderly.network/react-app";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { modal, useScreen } from "@orderly.network/ui";
-import { LeverageWidgetWithDialogId } from "@orderly.network/ui-leverage";
+} from "@veltodefi/hooks";
+import { useAppContext } from "@veltodefi/react-app";
+import { AccountStatusEnum } from "@veltodefi/types";
+import { modal, useScreen } from "@veltodefi/ui";
+import { LeverageWidgetWithDialogId } from "@veltodefi/ui-leverage";
 import {
   DepositAndWithdrawWithDialogId,
   DepositAndWithdrawWithSheetId,
   TransferDialogId,
   TransferSheetId,
-} from "@orderly.network/ui-transfer";
+} from "@veltodefi/ui-transfer";
 
 export const useAssetScript = () => {
   const { connect, namespace } = useWalletConnector();

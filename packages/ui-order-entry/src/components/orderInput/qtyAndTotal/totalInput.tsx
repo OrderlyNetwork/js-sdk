@@ -1,8 +1,8 @@
 import { FC, memo, useEffect, useState } from "react";
-import { useLocalStorage } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { inputFormatter } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { useLocalStorage } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { inputFormatter } from "@veltodefi/ui";
+import { Decimal } from "@veltodefi/utils";
 import { InputType } from "../../../types";
 import { CustomInput } from "../../customInput";
 import { useOrderEntryContext } from "../../orderEntryContext";

@@ -1,5 +1,5 @@
 import { Middleware, SWRHook } from "swr";
-import { getGlobalObject } from "@orderly.network/utils";
+import { getGlobalObject } from "@veltodefi/utils";
 
 /**
  * SWR middleware for local time correction.

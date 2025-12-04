@@ -3,10 +3,10 @@
   "compilerOptions": {
     "types": ["jest"],
     "paths": {
-      "@orderly.network/types": [
+      "@veltodefi/types": [
         "../types/src"
       ],
-      "@orderly.network/utils": [
+      "@veltodefi/utils": [
         "../utils/src"
       ]
     }

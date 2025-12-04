@@ -1,10 +1,10 @@
 import { FC, useMemo, useRef } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { API, PositionType } from "@orderly.network/types";
-import { Badge, cn, Flex, Grid, Statistic, Text } from "@orderly.network/ui";
-import { SymbolLeverageSheetId } from "@orderly.network/ui-leverage";
-import { SharePnLBottomSheetId } from "@orderly.network/ui-share";
-import { Decimal } from "@orderly.network/utils";
+import { useTranslation } from "@veltodefi/i18n";
+import { API, PositionType } from "@veltodefi/types";
+import { Badge, cn, Flex, Grid, Statistic, Text } from "@veltodefi/ui";
+import { SymbolLeverageSheetId } from "@veltodefi/ui-leverage";
+import { SharePnLBottomSheetId } from "@veltodefi/ui-share";
+import { Decimal } from "@veltodefi/utils";
 import { FundingFeeButton } from "../../../fundingFeeHistory/fundingFeeButton";
 import { LeverageBadge } from "../../desktop/components";
 import { AddIcon, TPSLEditIcon } from "../../desktop/components";

@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import useSWRSubscription from "swr/subscription";
-import { API } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+import { API } from "@veltodefi/types";
+import { Decimal } from "@veltodefi/utils";
 import { useAccountInfo } from "./orderly/useAccountInfo";
 import type { RefferalAPI } from "./referral";
 import { usePrivateQuery } from "./usePrivateQuery";

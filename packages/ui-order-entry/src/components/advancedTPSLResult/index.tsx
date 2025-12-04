@@ -1,14 +1,14 @@
 import { SVGProps } from "react";
-import { OrderValidationResult } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
+import { OrderValidationResult } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { useOrderEntryFormErrorMsg } from "@veltodefi/react-app";
 import {
   API,
   OrderlyOrder,
   OrderType,
   PositionType,
-} from "@orderly.network/types";
-import { Divider, Flex, Text } from "@orderly.network/ui";
+} from "@veltodefi/types";
+import { Divider, Flex, Text } from "@veltodefi/ui";
 
 export function AdvancedTPSLResult(props: {
   order: Partial<OrderlyOrder>;

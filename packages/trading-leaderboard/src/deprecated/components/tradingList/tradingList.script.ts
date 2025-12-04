@@ -6,9 +6,9 @@ import {
   useInfiniteQuery,
   useQuery,
   usePrivateQuery,
-} from "@orderly.network/hooks";
-import { API } from "@orderly.network/types";
-import { TableSort, usePagination, useScreen } from "@orderly.network/ui";
+} from "@veltodefi/hooks";
+import { API } from "@veltodefi/types";
+import { TableSort, usePagination, useScreen } from "@veltodefi/ui";
 import { useEndReached } from "../../../hooks/useEndReached";
 import { getDateRange, formatDateRange } from "../../../utils";
 

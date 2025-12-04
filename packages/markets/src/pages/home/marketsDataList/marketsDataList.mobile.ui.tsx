@@ -1,6 +1,6 @@
 import { useCallback } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Box, cn, Column, TabPanel, Tabs } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { Box, cn, Column, TabPanel, Tabs } from "@veltodefi/ui";
 import { MarketsListWidget } from "../../../components/marketsList";
 import { RwaTab } from "../../../components/rwaTab";
 import { SearchInput } from "../../../components/searchInput";

@@ -1,10 +1,10 @@
 import { useCallback } from "react";
 import { useNavigate } from "react-router";
-import { generatePath } from "@orderly.network/i18n";
-import { PositionsModule } from "@orderly.network/portfolio";
-import { useTradingLocalStorage } from "@orderly.network/trading";
-import { API } from "@orderly.network/types";
-import { Box } from "@orderly.network/ui";
+import { generatePath } from "@veltodefi/i18n";
+import { PositionsModule } from "@veltodefi/portfolio";
+import { useTradingLocalStorage } from "@veltodefi/trading";
+import { API } from "@veltodefi/types";
+import { Box } from "@veltodefi/ui";
 import { tradingPageConfig } from "../../../../orderlyConfig";
 import { PathEnum } from "../../../constant";
 import { updateSymbol } from "../../../storage";

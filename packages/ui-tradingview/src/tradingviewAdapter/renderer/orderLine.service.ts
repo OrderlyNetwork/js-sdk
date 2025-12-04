@@ -1,5 +1,5 @@
-import { i18n } from "@orderly.network/i18n";
-import { Decimal, commify, getTrailingStopPrice } from "@orderly.network/utils";
+import { i18n } from "@veltodefi/i18n";
+import { Decimal, commify, getTrailingStopPrice } from "@veltodefi/utils";
 import { IChartingLibraryWidget, IOrderLineAdapter } from "../charting_library";
 import useBroker from "../hooks/useBroker";
 import {

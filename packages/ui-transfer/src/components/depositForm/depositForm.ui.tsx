@@ -1,6 +1,6 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Box, Flex, textVariants, Text } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { Box, Flex, textVariants, Text } from "@veltodefi/ui";
 import { LtvWidget } from "../LTV";
 import { ActionButton } from "../actionButton";
 import { AvailableQuantity } from "../availableQuantity";

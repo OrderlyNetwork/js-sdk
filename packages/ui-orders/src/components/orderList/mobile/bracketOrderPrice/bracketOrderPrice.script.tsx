@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { utils } from "@orderly.network/hooks";
+import { utils } from "@veltodefi/hooks";
 import { calcBracketRoiAndPnL } from "../../../../utils/util";
 import { OrderCellState } from "../orderCell.script";
 

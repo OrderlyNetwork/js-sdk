@@ -1,4 +1,4 @@
-import { API } from "@orderly.network/types";
+import { API } from "@veltodefi/types";
 import { ORDERLY_SYMBOLS } from "../../middleware/indexedDBManager";
 import { createDataStore } from "./createDataStore";
 

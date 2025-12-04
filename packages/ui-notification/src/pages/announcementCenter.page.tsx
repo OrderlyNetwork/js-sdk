@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { RouterAdapter } from "@orderly.network/types";
+import { RouterAdapter } from "@veltodefi/types";
 import { AnnouncementCenterWidget } from "./announcementCenter.widget";
 
 export const AnnouncementCenterPage: FC<{ routerAdapter?: RouterAdapter }> = (

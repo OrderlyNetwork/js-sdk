@@ -1,5 +1,5 @@
 import { Middleware, SWRHook } from "swr";
-import { getGlobalObject } from "@orderly.network/utils";
+import { getGlobalObject } from "@veltodefi/utils";
 
 // Global state management to avoid duplicate polling
 let timestampOffsetPromise: Promise<void> | null = null;

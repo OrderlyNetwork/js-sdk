@@ -1,6 +1,6 @@
 import { useContext } from "react";
-import { ConfigStore, type ConfigKey } from "@orderly.network/core";
-import { SDKError } from "@orderly.network/types";
+import { ConfigStore, type ConfigKey } from "@veltodefi/core";
+import { SDKError } from "@veltodefi/types";
 import { OrderlyContext } from "./orderlyContext";
 
 export function useConfig(): ConfigStore;

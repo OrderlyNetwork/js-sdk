@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { useScreen } from "@orderly.network/ui";
+import { useScreen } from "@veltodefi/ui";
 import { SettingScriptReturns } from "./setting.script";
 import { SettingDesktop } from "./setting.ui.desktop";
 import { SettingMobile } from "./setting.ui.mobile";

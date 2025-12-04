@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { API, SDKError } from "@orderly.network/types";
-import { getTimestamp } from "@orderly.network/utils";
+import { API, SDKError } from "@veltodefi/types";
+import { getTimestamp } from "@veltodefi/utils";
 import { useWS } from "../useWS";
 
 export interface MarketTradeStreamOptions {

@@ -1,5 +1,5 @@
-import { API, OrderSide } from "@orderly.network/types";
-import { Decimal, zero } from "@orderly.network/utils";
+import { API, OrderSide } from "@veltodefi/types";
+import { Decimal, zero } from "@veltodefi/utils";
 import { IMRFactorPower } from "./constants";
 
 export type ResultOptions = {

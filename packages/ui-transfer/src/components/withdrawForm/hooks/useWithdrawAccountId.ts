@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
-import { useInternalTransfer } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { toast } from "@orderly.network/ui";
+import { useInternalTransfer } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { toast } from "@veltodefi/ui";
 import { InputStatus } from "../../../types";
 import { checkIsAccountId, getTransferErrorMessage } from "../../../utils";
 

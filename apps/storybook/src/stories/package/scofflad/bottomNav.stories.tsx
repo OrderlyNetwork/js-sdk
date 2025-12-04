@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Box } from "@orderly.network/ui";
-import { FooterWidget, Scaffold } from "@orderly.network/ui-scaffold";
+import { Box } from "@veltodefi/ui";
+import { FooterWidget, Scaffold } from "@veltodefi/ui-scaffold";
 
 const meta: Meta<typeof FooterWidget> = {
   title: "Package/ui-scaffold/footer",

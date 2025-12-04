@@ -1,7 +1,7 @@
 import { createContext, useContext } from "react";
 import type { EIP1193Provider } from "@web3-onboard/common";
-import { SolanaWalletProvider } from "@orderly.network/default-solana-adapter";
-import { ChainNamespace } from "@orderly.network/types";
+import { SolanaWalletProvider } from "@veltodefi/default-solana-adapter";
+import { ChainNamespace } from "@veltodefi/types";
 
 export type ConnectedChain = {
   id: number | string;

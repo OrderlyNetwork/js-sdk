@@ -16,7 +16,7 @@ A horizontal scrolling markets component that displays market data above the Sym
 ### Basic Usage
 
 ```tsx
-import { HorizontalMarketsWidget } from "@orderly.network/markets";
+import { HorizontalMarketsWidget } from "@veltodefi/markets";
 
 <HorizontalMarketsWidget
   symbol={currentSymbol}

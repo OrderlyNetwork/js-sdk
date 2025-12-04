@@ -9,9 +9,9 @@ import {
   fetcher,
   useConfig,
   useAccountInstance,
-} from "@orderly.network/hooks";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { getTimestamp } from "@orderly.network/utils";
+} from "@veltodefi/hooks";
+import { AccountStatusEnum } from "@veltodefi/types";
+import { getTimestamp } from "@veltodefi/utils";
 
 export type QueryOptions<T> = SWRConfiguration & {
   formatter?: (data: any) => T;

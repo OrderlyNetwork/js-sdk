@@ -1,7 +1,7 @@
 import React from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { AssetsModule } from "@orderly.network/portfolio";
-import { OrderStatus } from "@orderly.network/types";
+import { useTranslation } from "@veltodefi/i18n";
+import { AssetsModule } from "@veltodefi/portfolio";
+import { OrderStatus } from "@veltodefi/types";
 import {
   Box,
   Divider,
@@ -11,14 +11,14 @@ import {
   TabPanel,
   Tabs,
   Tooltip,
-} from "@orderly.network/ui";
-import type { TabPanelProps } from "@orderly.network/ui";
-import { DesktopOrderListWidget, TabType } from "@orderly.network/ui-orders";
+} from "@veltodefi/ui";
+import type { TabPanelProps } from "@veltodefi/ui";
+import { DesktopOrderListWidget, TabType } from "@veltodefi/ui-orders";
 import {
   LiquidationWidget,
   PositionHistoryWidget,
   PositionsWidget,
-} from "@orderly.network/ui-positions";
+} from "@veltodefi/ui-positions";
 import { DataListState, DataListTabType } from "./dataList.script";
 
 const LazySettingWidget = React.lazy(() =>

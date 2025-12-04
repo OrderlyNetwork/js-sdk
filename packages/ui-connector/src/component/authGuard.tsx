@@ -1,12 +1,12 @@
 import React, { ReactElement, useMemo } from "react";
-import { useAccount, useMediaQuery } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { useAppContext } from "@orderly.network/react-app";
+import { useAccount, useMediaQuery } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { useAppContext } from "@veltodefi/react-app";
 import {
   AccountStatusEnum,
   MEDIA_TABLET,
   NetworkId,
-} from "@orderly.network/types";
+} from "@veltodefi/types";
 import {
   Button,
   Either,
@@ -15,13 +15,13 @@ import {
   toast,
   useScreen,
   type ButtonProps,
-} from "@orderly.network/ui";
-import { Flex } from "@orderly.network/ui";
-import { Box } from "@orderly.network/ui";
+} from "@veltodefi/ui";
+import { Flex } from "@veltodefi/ui";
+import { Box } from "@veltodefi/ui";
 import {
   ChainSelectorDialogId,
   ChainSelectorSheetId,
-} from "@orderly.network/ui-chain-selector";
+} from "@veltodefi/ui-chain-selector";
 import {
   WalletConnectorModalId,
   WalletConnectorSheetId,

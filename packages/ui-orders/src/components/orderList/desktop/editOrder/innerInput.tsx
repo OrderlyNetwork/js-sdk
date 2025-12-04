@@ -1,5 +1,5 @@
 import { FC, useEffect } from "react";
-import { CheckIcon, Input, inputFormatter, Tooltip } from "@orderly.network/ui";
+import { CheckIcon, Input, inputFormatter, Tooltip } from "@veltodefi/ui";
 
 export const InnerInput: FC<{
   inputRef: any;

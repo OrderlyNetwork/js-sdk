@@ -32,9 +32,6 @@ importers:
       '@npmcli/package-json':
         specifier: ^5.0.0
         version: 5.2.1
-      '@orderly.network/eslint-config':
-        specifier: workspace:*
-        version: link:packages/eslint-config
       '@trivago/prettier-plugin-sort-imports':
         specifier: ^5.2.2
         version: 5.2.2(@vue/compiler-sfc@3.5.18)(prettier@3.6.2)(svelte@3.59.2)
@@ -47,6 +44,9 @@ importers:
       '@types/node':
         specifier: ^22.12.0
         version: 22.16.5
+      '@veltodefi/eslint-config':
+        specifier: workspace:*
+        version: link:packages/eslint-config
       cross-env:
         specifier: ^7.0.3
         version: 7.0.3
@@ -101,99 +101,6 @@ importers:
       '@codemirror/lang-css':
         specifier: ^6.3.1
         version: 6.3.1
-      '@orderly.network/affiliate':
-        specifier: workspace:*
-        version: link:../../packages/affiliate
-      '@orderly.network/chart':
-        specifier: workspace:^
-        version: link:../../packages/chart
-      '@orderly.network/core':
-        specifier: workspace:*
-        version: link:../../packages/core
-      '@orderly.network/default-evm-adapter':
-        specifier: workspace:*
-        version: link:../../packages/default-evm-adapter
-      '@orderly.network/default-solana-adapter':
-        specifier: workspace:*
-        version: link:../../packages/default-solana-adapter
-      '@orderly.network/hooks':
-        specifier: workspace:*
-        version: link:../../packages/hooks
-      '@orderly.network/i18n':
-        specifier: workspace:*
-        version: link:../../packages/i18n
-      '@orderly.network/markets':
-        specifier: workspace:*
-        version: link:../../packages/markets
-      '@orderly.network/portfolio':
-        specifier: workspace:*
-        version: link:../../packages/portfolio
-      '@orderly.network/react-app':
-        specifier: workspace:*
-        version: link:../../packages/app
-      '@orderly.network/trading':
-        specifier: workspace:*
-        version: link:../../packages/trading
-      '@orderly.network/trading-leaderboard':
-        specifier: workspace:*
-        version: link:../../packages/trading-leaderboard
-      '@orderly.network/trading-rewards':
-        specifier: workspace:*
-        version: link:../../packages/trading-rewards
-      '@orderly.network/types':
-        specifier: workspace:*
-        version: link:../../packages/types
-      '@orderly.network/ui':
-        specifier: workspace:*
-        version: link:../../packages/ui
-      '@orderly.network/ui-chain-selector':
-        specifier: workspace:*
-        version: link:../../packages/ui-chain-selector
-      '@orderly.network/ui-connector':
-        specifier: workspace:*
-        version: link:../../packages/ui-connector
-      '@orderly.network/ui-leverage':
-        specifier: workspace:*
-        version: link:../../packages/ui-leverage
-      '@orderly.network/ui-notification':
-        specifier: workspace:*
-        version: link:../../packages/ui-notification
-      '@orderly.network/ui-order-entry':
-        specifier: workspace:*
-        version: link:../../packages/ui-order-entry
-      '@orderly.network/ui-orders':
-        specifier: workspace:*
-        version: link:../../packages/ui-orders
-      '@orderly.network/ui-positions':
-        specifier: workspace:*
-        version: link:../../packages/ui-positions
-      '@orderly.network/ui-scaffold':
-        specifier: workspace:*
-        version: link:../../packages/ui-scaffold
-      '@orderly.network/ui-share':
-        specifier: workspace:*
-        version: link:../../packages/ui-share
-      '@orderly.network/ui-tpsl':
-        specifier: workspace:*
-        version: link:../../packages/ui-tpsl
-      '@orderly.network/ui-tradingview':
-        specifier: workspace:*
-        version: link:../../packages/ui-tradingview
-      '@orderly.network/ui-transfer':
-        specifier: workspace:*
-        version: link:../../packages/ui-transfer
-      '@orderly.network/utils':
-        specifier: workspace:*
-        version: link:../../packages/utils
-      '@orderly.network/vaults':
-        specifier: workspace:*
-        version: link:../../packages/vaults
-      '@orderly.network/wallet-connector':
-        specifier: workspace:*
-        version: link:../../packages/wallet-connector
-      '@orderly.network/wallet-connector-privy':
-        specifier: workspace:*
-        version: link:../../packages/wallet-connector-privy
       '@solana-mobile/wallet-adapter-mobile':
         specifier: ^2.1.4
         version: 2.2.2(@solana/web3.js@1.98.2(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.8.3)(utf-8-validate@5.0.10))(react-native@0.80.2(@babel/core@7.28.0)(@types/react@18.3.23)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)
@@ -215,6 +122,99 @@ importers:
       '@uiw/react-split':
         specifier: ^5.9.3
         version: 5.9.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@veltodefi/affiliate':
+        specifier: workspace:*
+        version: link:../../packages/affiliate
+      '@veltodefi/chart':
+        specifier: workspace:^
+        version: link:../../packages/chart
+      '@veltodefi/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@veltodefi/default-evm-adapter':
+        specifier: workspace:*
+        version: link:../../packages/default-evm-adapter
+      '@veltodefi/default-solana-adapter':
+        specifier: workspace:*
+        version: link:../../packages/default-solana-adapter
+      '@veltodefi/hooks':
+        specifier: workspace:*
+        version: link:../../packages/hooks
+      '@veltodefi/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
+      '@veltodefi/markets':
+        specifier: workspace:*
+        version: link:../../packages/markets
+      '@veltodefi/portfolio':
+        specifier: workspace:*
+        version: link:../../packages/portfolio
+      '@veltodefi/react-app':
+        specifier: workspace:*
+        version: link:../../packages/app
+      '@veltodefi/trading':
+        specifier: workspace:*
+        version: link:../../packages/trading
+      '@veltodefi/trading-leaderboard':
+        specifier: workspace:*
+        version: link:../../packages/trading-leaderboard
+      '@veltodefi/trading-rewards':
+        specifier: workspace:*
+        version: link:../../packages/trading-rewards
+      '@veltodefi/types':
+        specifier: workspace:*
+        version: link:../../packages/types
+      '@veltodefi/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
+      '@veltodefi/ui-chain-selector':
+        specifier: workspace:*
+        version: link:../../packages/ui-chain-selector
+      '@veltodefi/ui-connector':
+        specifier: workspace:*
+        version: link:../../packages/ui-connector
+      '@veltodefi/ui-leverage':
+        specifier: workspace:*
+        version: link:../../packages/ui-leverage
+      '@veltodefi/ui-notification':
+        specifier: workspace:*
+        version: link:../../packages/ui-notification
+      '@veltodefi/ui-order-entry':
+        specifier: workspace:*
+        version: link:../../packages/ui-order-entry
+      '@veltodefi/ui-orders':
+        specifier: workspace:*
+        version: link:../../packages/ui-orders
+      '@veltodefi/ui-positions':
+        specifier: workspace:*
+        version: link:../../packages/ui-positions
+      '@veltodefi/ui-scaffold':
+        specifier: workspace:*
+        version: link:../../packages/ui-scaffold
+      '@veltodefi/ui-share':
+        specifier: workspace:*
+        version: link:../../packages/ui-share
+      '@veltodefi/ui-tpsl':
+        specifier: workspace:*
+        version: link:../../packages/ui-tpsl
+      '@veltodefi/ui-tradingview':
+        specifier: workspace:*
+        version: link:../../packages/ui-tradingview
+      '@veltodefi/ui-transfer':
+        specifier: workspace:*
+        version: link:../../packages/ui-transfer
+      '@veltodefi/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
+      '@veltodefi/vaults':
+        specifier: workspace:*
+        version: link:../../packages/vaults
+      '@veltodefi/wallet-connector':
+        specifier: workspace:*
+        version: link:../../packages/wallet-connector
+      '@veltodefi/wallet-connector-privy':
+        specifier: workspace:*
+        version: link:../../packages/wallet-connector-privy
       '@web3-onboard/bitget':
         specifier: ^2.1.1
         version: 2.1.1(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)
@@ -363,31 +363,31 @@ importers:
 
   packages/affiliate:
     dependencies:
-      '@orderly.network/chart':
+      '@veltodefi/chart':
         specifier: workspace:*
         version: link:../chart
-      '@orderly.network/hooks':
+      '@veltodefi/hooks':
         specifier: workspace:*
         version: link:../hooks
-      '@orderly.network/i18n':
+      '@veltodefi/i18n':
         specifier: workspace:*
         version: link:../i18n
-      '@orderly.network/react-app':
+      '@veltodefi/react-app':
         specifier: workspace:*
         version: link:../app
-      '@orderly.network/types':
+      '@veltodefi/types':
         specifier: workspace:*
         version: link:../types
-      '@orderly.network/ui':
+      '@veltodefi/ui':
         specifier: workspace:*
         version: link:../ui
-      '@orderly.network/ui-connector':
+      '@veltodefi/ui-connector':
         specifier: workspace:*
         version: link:../ui-connector
-      '@orderly.network/ui-scaffold':
+      '@veltodefi/ui-scaffold':
         specifier: workspace:*
         version: link:../ui-scaffold
-      '@orderly.network/utils':
+      '@veltodefi/utils':
         specifier: workspace:*
         version: link:../utils
       date-fns:
@@ -421,19 +421,19 @@ importers:
 
   packages/app:
     dependencies:
-      '@orderly.network/hooks':
+      '@veltodefi/hooks':
         specifier: workspace:*
         version: link:../hooks
-      '@orderly.network/i18n':
+      '@veltodefi/i18n':
         specifier: workspace:*
         version: link:../i18n
-      '@orderly.network/types':
+      '@veltodefi/types':
         specifier: workspace:*
         version: link:../types
-      '@orderly.network/ui':
+      '@veltodefi/ui':
         specifier: workspace:*
         version: link:../ui
-      '@orderly.network/utils':
+      '@veltodefi/utils':
         specifier: workspace:*
         version: link:../utils
       date-fns:
@@ -476,13 +476,13 @@ importers:
 
   packages/chart:
     dependencies:
-      '@orderly.network/i18n':
+      '@veltodefi/i18n':
         specifier: workspace:*
         version: link:../i18n
-      '@orderly.network/ui':
+      '@veltodefi/ui':
         specifier: workspace:*
         version: link:../ui
-      '@orderly.network/utils':
+      '@veltodefi/utils':
         specifier: workspace:*
         version: link:../utils
       d3-array:
@@ -546,12 +546,12 @@ importers:
       '@noble/ed25519':
         specifier: ^2.0.0
         version: 2.3.0
-      '@orderly.network/types':
-        specifier: workspace:*
-        version: link:../types
       '@solana/web3.js':
         specifier: ^1.95.3
         version: 1.98.2(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.8.3)(utf-8-validate@5.0.10)
+      '@veltodefi/types':
+        specifier: workspace:*
+        version: link:../types
       bs58:
         specifier: ^5.0.0
         version: 5.0.0
@@ -622,10 +622,10 @@ importers:
       '@noble/ed25519':
         specifier: ^2.0.0
         version: 2.3.0
-      '@orderly.network/core':
+      '@veltodefi/core':
         specifier: workspace:*
         version: link:../core
-      '@orderly.network/types':
+      '@veltodefi/types':
         specifier: workspace:*
         version: link:../types
       bs58:
@@ -659,12 +659,6 @@ importers:
       '@noble/ed25519':
         specifier: ^2.0.0
         version: 2.3.0
-      '@orderly.network/core':
-        specifier: workspace:*
-        version: link:../core
-      '@orderly.network/types':
-        specifier: workspace:*
-        version: link:../types
       '@solana/spl-token':
         specifier: 0.4.8
         version: 0.4.8(@solana/web3.js@1.98.2(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.8.3)(utf-8-validate@5.0.10))(bufferutil@4.0.9)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.8.3)(utf-8-validate@5.0.10)
@@ -674,6 +668,12 @@ importers:
       '@solana/web3.js':
         specifier: ^1.95.3
         version: 1.98.2(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.8.3)(utf-8-validate@5.0.10)
+      '@veltodefi/core':
+        specifier: workspace:*
+        version: link:../core
+      '@veltodefi/types':
+        specifier: workspace:*
+        version: link:../types
       bs58:
         specifier: ^5.0.0
         version: 5.0.0
@@ -751,28 +751,28 @@ importers:
       '@amplitude/analytics-browser':
         specifier: 2.11.13
         version: 2.11.13
-      '@orderly.network/core':
+      '@veltodefi/core':
         specifier: workspace:*
         version: link:../core
-      '@orderly.network/default-evm-adapter':
+      '@veltodefi/default-evm-adapter':
         specifier: workspace:*
         version: link:../default-evm-adapter
-      '@orderly.network/default-solana-adapter':
+      '@veltodefi/default-solana-adapter':
         specifier: workspace:*
         version: link:../default-solana-adapter
-      '@orderly.network/net':
+      '@veltodefi/net':
         specifier: workspace:*
         version: link:../net
-      '@orderly.network/perp':
+      '@veltodefi/perp':
         specifier: workspace:*
         version: link:../perp
-      '@orderly.network/types':
+      '@veltodefi/types':
         specifier: workspace:*
         version: link:../types
-      '@orderly.network/utils':
+      '@veltodefi/utils':
         specifier: workspace:*
         version: link:../utils
-      '@orderly.network/web3-provider-ethers':
+      '@veltodefi/web3-provider-ethers':
         specifier: workspace:*
         version: link:../web3-provider-ethers
       immer:
@@ -945,22 +945,22 @@ importers:
 
   packages/markets:
     dependencies:
-      '@orderly.network/hooks':
+      '@veltodefi/hooks':
         specifier: workspace:*
         version: link:../hooks
-      '@orderly.network/i18n':
+      '@veltodefi/i18n':
         specifier: workspace:*
         version: link:../i18n
-      '@orderly.network/types':
+      '@veltodefi/types':
         specifier: workspace:*
         version: link:../types
-      '@orderly.network/ui':
+      '@veltodefi/ui':
         specifier: workspace:*
         version: link:../ui
-      '@orderly.network/ui-scaffold':
+      '@veltodefi/ui-scaffold':
         specifier: workspace:*
         version: link:../ui-scaffold
-      '@orderly.network/utils':
+      '@veltodefi/utils':
         specifier: workspace:*
         version: link:../utils
       ramda:
@@ -1043,10 +1043,10 @@ importers:
 
   packages/perp:
     dependencies:
-      '@orderly.network/types':
+      '@veltodefi/types':
         specifier: workspace:*
         version: link:../types
-      '@orderly.network/utils':
+      '@veltodefi/utils':
         specifier: workspace:*
         version: link:../utils
     devDependencies:
@@ -1086,52 +1086,52 @@ importers:
 
   packages/portfolio:
     dependencies:
-      '@orderly.network/chart':
+      '@veltodefi/chart':
         specifier: workspace:*
         version: link:../chart
-      '@orderly.network/hooks':
+      '@veltodefi/hooks':
         specifier: workspace:*
         version: link:../hooks
-      '@orderly.network/i18n':
+      '@veltodefi/i18n':
         specifier: workspace:*
         version: link:../i18n
-      '@orderly.network/perp':
+      '@veltodefi/perp':
         specifier: workspace:*
         version: link:../perp
-      '@orderly.network/react-app':
+      '@veltodefi/react-app':
         specifier: workspace:*
         version: link:../app
-      '@orderly.network/types':
+      '@veltodefi/types':
         specifier: workspace:*
         version: link:../types
-      '@orderly.network/ui':
+      '@veltodefi/ui':
         specifier: workspace:*
         version: link:../ui
-      '@orderly.network/ui-chain-selector':
+      '@veltodefi/ui-chain-selector':
         specifier: workspace:*
         version: link:../ui-chain-selector
-      '@orderly.network/ui-connector':
+      '@veltodefi/ui-connector':
         specifier: workspace:*
         version: link:../ui-connector
-      '@orderly.network/ui-leverage':
+      '@veltodefi/ui-leverage':
         specifier: workspace:*
         version: link:../ui-leverage
-      '@orderly.network/ui-orders':
+      '@veltodefi/ui-orders':
         specifier: workspace:*
         version: link:../ui-orders
-      '@orderly.network/ui-positions':
+      '@veltodefi/ui-positions':
         specifier: workspace:*
         version: link:../ui-positions
-      '@orderly.network/ui-scaffold':
+      '@veltodefi/ui-scaffold':
         specifier: workspace:*
         version: link:../ui-scaffold
-      '@orderly.network/ui-share':
+      '@veltodefi/ui-share':
         specifier: workspace:*
         version: link:../ui-share
-      '@orderly.network/ui-transfer':
+      '@veltodefi/ui-transfer':
         specifier: workspace:*
         version: link:../ui-transfer
-      '@orderly.network/utils':
+      '@veltodefi/utils':
         specifier: workspace:*
         version: link:../utils
       date-fns:
@@ -1192,73 +1192,73 @@ importers:
       '@dnd-kit/utilities':
         specifier: ^3.2.2
         version: 3.2.2(react@18.3.1)
-      '@orderly.network/hooks':
-        specifier: workspace:*
-        version: link:../hooks
-      '@orderly.network/i18n':
-        specifier: workspace:*
-        version: link:../i18n
-      '@orderly.network/markets':
-        specifier: workspace:*
-        version: link:../markets
-      '@orderly.network/portfolio':
-        specifier: workspace:*
-        version: link:../portfolio
-      '@orderly.network/react-app':
-        specifier: workspace:*
-        version: link:../app
-      '@orderly.network/types':
-        specifier: workspace:*
-        version: link:../types
-      '@orderly.network/ui':
-        specifier: workspace:*
-        version: link:../ui
-      '@orderly.network/ui-chain-selector':
-        specifier: workspace:*
-        version: link:../ui-chain-selector
-      '@orderly.network/ui-connector':
-        specifier: workspace:*
-        version: link:../ui-connector
-      '@orderly.network/ui-leverage':
-        specifier: workspace:*
-        version: link:../ui-leverage
-      '@orderly.network/ui-order-entry':
-        specifier: workspace:*
-        version: link:../ui-order-entry
-      '@orderly.network/ui-orders':
-        specifier: workspace:*
-        version: link:../ui-orders
-      '@orderly.network/ui-positions':
-        specifier: workspace:*
-        version: link:../ui-positions
-      '@orderly.network/ui-scaffold':
-        specifier: workspace:*
-        version: link:../ui-scaffold
-      '@orderly.network/ui-share':
-        specifier: workspace:*
-        version: link:../ui-share
-      '@orderly.network/ui-tradingview':
-        specifier: workspace:*
-        version: link:../ui-tradingview
-      '@orderly.network/ui-transfer':
-        specifier: workspace:*
-        version: link:../ui-transfer
-      '@orderly.network/utils':
-        specifier: workspace:*
-        version: link:../utils
       '@uiw/react-split':
         specifier: ^5.9.3
         version: 5.9.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-    devDependencies:
-      '@orderly.network/core':
+      '@veltodefi/hooks':
         specifier: workspace:*
-        version: link:../core
+        version: link:../hooks
+      '@veltodefi/i18n':
+        specifier: workspace:*
+        version: link:../i18n
+      '@veltodefi/markets':
+        specifier: workspace:*
+        version: link:../markets
+      '@veltodefi/portfolio':
+        specifier: workspace:*
+        version: link:../portfolio
+      '@veltodefi/react-app':
+        specifier: workspace:*
+        version: link:../app
+      '@veltodefi/types':
+        specifier: workspace:*
+        version: link:../types
+      '@veltodefi/ui':
+        specifier: workspace:*
+        version: link:../ui
+      '@veltodefi/ui-chain-selector':
+        specifier: workspace:*
+        version: link:../ui-chain-selector
+      '@veltodefi/ui-connector':
+        specifier: workspace:*
+        version: link:../ui-connector
+      '@veltodefi/ui-leverage':
+        specifier: workspace:*
+        version: link:../ui-leverage
+      '@veltodefi/ui-order-entry':
+        specifier: workspace:*
+        version: link:../ui-order-entry
+      '@veltodefi/ui-orders':
+        specifier: workspace:*
+        version: link:../ui-orders
+      '@veltodefi/ui-positions':
+        specifier: workspace:*
+        version: link:../ui-positions
+      '@veltodefi/ui-scaffold':
+        specifier: workspace:*
+        version: link:../ui-scaffold
+      '@veltodefi/ui-share':
+        specifier: workspace:*
+        version: link:../ui-share
+      '@veltodefi/ui-tradingview':
+        specifier: workspace:*
+        version: link:../ui-tradingview
+      '@veltodefi/ui-transfer':
+        specifier: workspace:*
+        version: link:../ui-transfer
+      '@veltodefi/utils':
+        specifier: workspace:*
+        version: link:../utils
+    devDependencies:
       '@types/react':
         specifier: ^18.3.2
         version: 18.3.23
       '@types/react-dom':
         specifier: ^18.3.0
         version: 18.3.7(@types/react@18.3.23)
+      '@veltodefi/core':
+        specifier: workspace:*
+        version: link:../core
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -1280,25 +1280,25 @@ importers:
 
   packages/trading-leaderboard:
     dependencies:
-      '@orderly.network/hooks':
+      '@veltodefi/hooks':
         specifier: workspace:*
         version: link:../hooks
-      '@orderly.network/i18n':
+      '@veltodefi/i18n':
         specifier: workspace:*
         version: link:../i18n
-      '@orderly.network/react-app':
+      '@veltodefi/react-app':
         specifier: workspace:*
         version: link:../app
-      '@orderly.network/types':
+      '@veltodefi/types':
         specifier: workspace:*
         version: link:../types
-      '@orderly.network/ui':
+      '@veltodefi/ui':
         specifier: workspace:*
         version: link:../ui
-      '@orderly.network/ui-connector':
+      '@veltodefi/ui-connector':
         specifier: workspace:*
         version: link:../ui-connector
-      '@orderly.network/utils':
+      '@veltodefi/utils':
         specifier: workspace:*
         version: link:../utils
       date-fns:
@@ -1347,28 +1347,28 @@ importers:
 
   packages/trading-rewards:
     dependencies:
-      '@orderly.network/hooks':
+      '@veltodefi/hooks':
         specifier: workspace:*
         version: link:../hooks
-      '@orderly.network/i18n':
+      '@veltodefi/i18n':
         specifier: workspace:*
         version: link:../i18n
-      '@orderly.network/react-app':
+      '@veltodefi/react-app':
         specifier: workspace:*
         version: link:../app
-      '@orderly.network/types':
+      '@veltodefi/types':
         specifier: workspace:*
         version: link:../types
-      '@orderly.network/ui':
+      '@veltodefi/ui':
         specifier: workspace:*
         version: link:../ui
-      '@orderly.network/ui-connector':
+      '@veltodefi/ui-connector':
         specifier: workspace:*
         version: link:../ui-connector
-      '@orderly.network/ui-scaffold':
+      '@veltodefi/ui-scaffold':
         specifier: workspace:*
         version: link:../ui-scaffold
-      '@orderly.network/utils':
+      '@veltodefi/utils':
         specifier: workspace:*
         version: link:../utils
       date-fns:
@@ -1444,9 +1444,6 @@ importers:
 
   packages/ui:
     dependencies:
-      '@orderly.network/utils':
-        specifier: workspace:*
-        version: link:../utils
       '@radix-ui/react-avatar':
         specifier: ^1.0.3
         version: 1.1.10(@types/react-dom@18.3.7(@types/react@18.3.23))(@types/react@18.3.23)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1495,6 +1492,9 @@ importers:
       '@tanstack/react-table':
         specifier: ^8.20.5
         version: 8.21.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@veltodefi/utils':
+        specifier: workspace:*
+        version: link:../utils
       date-fns:
         specifier: ^3.6.0
         version: 3.6.0
@@ -1568,19 +1568,19 @@ importers:
 
   packages/ui-chain-selector:
     dependencies:
-      '@orderly.network/hooks':
+      '@veltodefi/hooks':
         specifier: workspace:*
         version: link:../hooks
-      '@orderly.network/i18n':
+      '@veltodefi/i18n':
         specifier: workspace:*
         version: link:../i18n
-      '@orderly.network/react-app':
+      '@veltodefi/react-app':
         specifier: workspace:*
         version: link:../app
-      '@orderly.network/types':
+      '@veltodefi/types':
         specifier: workspace:*
         version: link:../types
-      '@orderly.network/ui':
+      '@veltodefi/ui':
         specifier: workspace:*
         version: link:../ui
     devDependencies:
@@ -1617,22 +1617,22 @@ importers:
 
   packages/ui-connector:
     dependencies:
-      '@orderly.network/hooks':
+      '@veltodefi/hooks':
         specifier: workspace:*
         version: link:../hooks
-      '@orderly.network/i18n':
+      '@veltodefi/i18n':
         specifier: workspace:*
         version: link:../i18n
-      '@orderly.network/react-app':
+      '@veltodefi/react-app':
         specifier: workspace:*
         version: link:../app
-      '@orderly.network/types':
+      '@veltodefi/types':
         specifier: workspace:*
         version: link:../types
-      '@orderly.network/ui':
+      '@veltodefi/ui':
         specifier: workspace:*
         version: link:../ui
-      '@orderly.network/ui-chain-selector':
+      '@veltodefi/ui-chain-selector':
         specifier: workspace:*
         version: link:../ui-chain-selector
     devDependencies:
@@ -1660,22 +1660,22 @@ importers:
 
   packages/ui-leverage:
     dependencies:
-      '@orderly.network/hooks':
+      '@veltodefi/hooks':
         specifier: workspace:*
         version: link:../hooks
-      '@orderly.network/i18n':
+      '@veltodefi/i18n':
         specifier: workspace:*
         version: link:../i18n
-      '@orderly.network/perp':
+      '@veltodefi/perp':
         specifier: workspace:*
         version: link:../perp
-      '@orderly.network/types':
+      '@veltodefi/types':
         specifier: workspace:*
         version: link:../types
-      '@orderly.network/ui':
+      '@veltodefi/ui':
         specifier: workspace:*
         version: link:../ui
-      '@orderly.network/utils':
+      '@veltodefi/utils':
         specifier: workspace:*
         version: link:../utils
     devDependencies:
@@ -1712,22 +1712,22 @@ importers:
       '@date-fns/utc':
         specifier: 1.2.0
         version: 1.2.0
-      '@orderly.network/hooks':
+      '@veltodefi/hooks':
         specifier: workspace:*
         version: link:../hooks
-      '@orderly.network/i18n':
+      '@veltodefi/i18n':
         specifier: workspace:*
         version: link:../i18n
-      '@orderly.network/react-app':
+      '@veltodefi/react-app':
         specifier: workspace:*
         version: link:../app
-      '@orderly.network/types':
+      '@veltodefi/types':
         specifier: workspace:*
         version: link:../types
-      '@orderly.network/ui':
+      '@veltodefi/ui':
         specifier: workspace:*
         version: link:../ui
-      '@orderly.network/utils':
+      '@veltodefi/utils':
         specifier: workspace:*
         version: link:../utils
       date-fns:
@@ -1767,37 +1767,37 @@ importers:
 
   packages/ui-order-entry:
     dependencies:
-      '@orderly.network/hooks':
+      '@veltodefi/hooks':
         specifier: workspace:*
         version: link:../hooks
-      '@orderly.network/i18n':
+      '@veltodefi/i18n':
         specifier: workspace:*
         version: link:../i18n
-      '@orderly.network/perp':
+      '@veltodefi/perp':
         specifier: workspace:*
         version: link:../perp
-      '@orderly.network/react-app':
+      '@veltodefi/react-app':
         specifier: workspace:*
         version: link:../app
-      '@orderly.network/types':
+      '@veltodefi/types':
         specifier: workspace:*
         version: link:../types
-      '@orderly.network/ui':
+      '@veltodefi/ui':
         specifier: workspace:*
         version: link:../ui
-      '@orderly.network/ui-connector':
+      '@veltodefi/ui-connector':
         specifier: workspace:*
         version: link:../ui-connector
-      '@orderly.network/ui-leverage':
+      '@veltodefi/ui-leverage':
         specifier: workspace:*
         version: link:../ui-leverage
-      '@orderly.network/ui-scaffold':
+      '@veltodefi/ui-scaffold':
         specifier: workspace:*
         version: link:../ui-scaffold
-      '@orderly.network/ui-tpsl':
+      '@veltodefi/ui-tpsl':
         specifier: workspace:*
         version: link:../ui-tpsl
-      '@orderly.network/utils':
+      '@veltodefi/utils':
         specifier: workspace:*
         version: link:../utils
       ramda:
@@ -1834,31 +1834,31 @@ importers:
 
   packages/ui-orders:
     dependencies:
-      '@orderly.network/hooks':
+      '@veltodefi/hooks':
         specifier: workspace:*
         version: link:../hooks
-      '@orderly.network/i18n':
+      '@veltodefi/i18n':
         specifier: workspace:*
         version: link:../i18n
-      '@orderly.network/react-app':
+      '@veltodefi/react-app':
         specifier: workspace:*
         version: link:../app
-      '@orderly.network/types':
+      '@veltodefi/types':
         specifier: workspace:*
         version: link:../types
-      '@orderly.network/ui':
+      '@veltodefi/ui':
         specifier: workspace:*
         version: link:../ui
-      '@orderly.network/ui-connector':
+      '@veltodefi/ui-connector':
         specifier: workspace:*
         version: link:../ui-connector
-      '@orderly.network/ui-share':
+      '@veltodefi/ui-share':
         specifier: workspace:*
         version: link:../ui-share
-      '@orderly.network/ui-tpsl':
+      '@veltodefi/ui-tpsl':
         specifier: workspace:*
         version: link:../ui-tpsl
-      '@orderly.network/utils':
+      '@veltodefi/utils':
         specifier: workspace:*
         version: link:../utils
       date-fns:
@@ -1892,37 +1892,37 @@ importers:
 
   packages/ui-positions:
     dependencies:
-      '@orderly.network/hooks':
+      '@veltodefi/hooks':
         specifier: workspace:*
         version: link:../hooks
-      '@orderly.network/i18n':
+      '@veltodefi/i18n':
         specifier: workspace:*
         version: link:../i18n
-      '@orderly.network/perp':
+      '@veltodefi/perp':
         specifier: workspace:*
         version: link:../perp
-      '@orderly.network/react-app':
+      '@veltodefi/react-app':
         specifier: workspace:*
         version: link:../app
-      '@orderly.network/types':
+      '@veltodefi/types':
         specifier: workspace:*
         version: link:../types
-      '@orderly.network/ui':
+      '@veltodefi/ui':
         specifier: workspace:*
         version: link:../ui
-      '@orderly.network/ui-connector':
+      '@veltodefi/ui-connector':
         specifier: workspace:*
         version: link:../ui-connector
-      '@orderly.network/ui-leverage':
+      '@veltodefi/ui-leverage':
         specifier: workspace:*
         version: link:../ui-leverage
-      '@orderly.network/ui-share':
+      '@veltodefi/ui-share':
         specifier: workspace:*
         version: link:../ui-share
-      '@orderly.network/ui-tpsl':
+      '@veltodefi/ui-tpsl':
         specifier: workspace:*
         version: link:../ui-tpsl
-      '@orderly.network/utils':
+      '@veltodefi/utils':
         specifier: workspace:*
         version: link:../utils
       date-fns:
@@ -1971,31 +1971,31 @@ importers:
       '@date-fns/utc':
         specifier: 1.2.0
         version: 1.2.0
-      '@orderly.network/hooks':
+      '@veltodefi/hooks':
         specifier: workspace:*
         version: link:../hooks
-      '@orderly.network/i18n':
+      '@veltodefi/i18n':
         specifier: workspace:*
         version: link:../i18n
-      '@orderly.network/react-app':
+      '@veltodefi/react-app':
         specifier: workspace:*
         version: link:../app
-      '@orderly.network/types':
+      '@veltodefi/types':
         specifier: workspace:*
         version: link:../types
-      '@orderly.network/ui':
+      '@veltodefi/ui':
         specifier: workspace:*
         version: link:../ui
-      '@orderly.network/ui-chain-selector':
+      '@veltodefi/ui-chain-selector':
         specifier: workspace:*
         version: link:../ui-chain-selector
-      '@orderly.network/ui-connector':
+      '@veltodefi/ui-connector':
         specifier: workspace:*
         version: link:../ui-connector
-      '@orderly.network/ui-notification':
+      '@veltodefi/ui-notification':
         specifier: workspace:*
         version: link:../ui-notification
-      '@orderly.network/utils':
+      '@veltodefi/utils':
         specifier: workspace:*
         version: link:../utils
       date-fns:
@@ -2044,19 +2044,19 @@ importers:
 
   packages/ui-share:
     dependencies:
-      '@orderly.network/hooks':
+      '@veltodefi/hooks':
         specifier: workspace:*
         version: link:../hooks
-      '@orderly.network/i18n':
+      '@veltodefi/i18n':
         specifier: workspace:*
         version: link:../i18n
-      '@orderly.network/types':
+      '@veltodefi/types':
         specifier: workspace:*
         version: link:../types
-      '@orderly.network/ui':
+      '@veltodefi/ui':
         specifier: workspace:*
         version: link:../ui
-      '@orderly.network/utils':
+      '@veltodefi/utils':
         specifier: workspace:*
         version: link:../utils
     devDependencies:
@@ -2090,28 +2090,28 @@ importers:
 
   packages/ui-tpsl:
     dependencies:
-      '@orderly.network/hooks':
+      '@veltodefi/hooks':
         specifier: workspace:*
         version: link:../hooks
-      '@orderly.network/i18n':
+      '@veltodefi/i18n':
         specifier: workspace:*
         version: link:../i18n
-      '@orderly.network/perp':
+      '@veltodefi/perp':
         specifier: workspace:*
         version: link:../perp
-      '@orderly.network/react-app':
+      '@veltodefi/react-app':
         specifier: workspace:*
         version: link:../app
-      '@orderly.network/types':
+      '@veltodefi/types':
         specifier: workspace:*
         version: link:../types
-      '@orderly.network/ui':
+      '@veltodefi/ui':
         specifier: workspace:*
         version: link:../ui
-      '@orderly.network/ui-connector':
+      '@veltodefi/ui-connector':
         specifier: workspace:*
         version: link:../ui-connector
-      '@orderly.network/utils':
+      '@veltodefi/utils':
         specifier: workspace:*
         version: link:../utils
     devDependencies:
@@ -2142,31 +2142,31 @@ importers:
 
   packages/ui-tradingview:
     dependencies:
-      '@orderly.network/hooks':
+      '@veltodefi/hooks':
         specifier: workspace:*
         version: link:../hooks
-      '@orderly.network/i18n':
+      '@veltodefi/i18n':
         specifier: workspace:*
         version: link:../i18n
-      '@orderly.network/net':
+      '@veltodefi/net':
         specifier: workspace:*
         version: link:../net
-      '@orderly.network/react-app':
+      '@veltodefi/react-app':
         specifier: workspace:*
         version: link:../app
-      '@orderly.network/types':
+      '@veltodefi/types':
         specifier: workspace:*
         version: link:../types
-      '@orderly.network/ui':
+      '@veltodefi/ui':
         specifier: workspace:*
         version: link:../ui
-      '@orderly.network/ui-connector':
+      '@veltodefi/ui-connector':
         specifier: workspace:*
         version: link:../ui-connector
-      '@orderly.network/ui-positions':
+      '@veltodefi/ui-positions':
         specifier: workspace:*
         version: link:../ui-positions
-      '@orderly.network/utils':
+      '@veltodefi/utils':
         specifier: workspace:*
         version: link:../utils
       date-fns:
@@ -2203,42 +2203,42 @@ importers:
       '@layerzerolabs/scan-client':
         specifier: ^0.0.6
         version: 0.0.6(axios@1.11.0)
-      '@orderly.network/core':
-        specifier: workspace:*
-        version: link:../core
-      '@orderly.network/default-solana-adapter':
-        specifier: workspace:*
-        version: link:../default-solana-adapter
-      '@orderly.network/hooks':
-        specifier: workspace:*
-        version: link:../hooks
-      '@orderly.network/i18n':
-        specifier: workspace:*
-        version: link:../i18n
-      '@orderly.network/perp':
-        specifier: workspace:*
-        version: link:../perp
-      '@orderly.network/react-app':
-        specifier: workspace:*
-        version: link:../app
-      '@orderly.network/types':
-        specifier: workspace:*
-        version: link:../types
-      '@orderly.network/ui':
-        specifier: workspace:*
-        version: link:../ui
-      '@orderly.network/ui-chain-selector':
-        specifier: workspace:*
-        version: link:../ui-chain-selector
-      '@orderly.network/ui-connector':
-        specifier: workspace:*
-        version: link:../ui-connector
-      '@orderly.network/utils':
-        specifier: workspace:*
-        version: link:../utils
       '@solana/web3.js':
         specifier: ^1.95.3
         version: 1.98.2(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.8.3)(utf-8-validate@5.0.10)
+      '@veltodefi/core':
+        specifier: workspace:*
+        version: link:../core
+      '@veltodefi/default-solana-adapter':
+        specifier: workspace:*
+        version: link:../default-solana-adapter
+      '@veltodefi/hooks':
+        specifier: workspace:*
+        version: link:../hooks
+      '@veltodefi/i18n':
+        specifier: workspace:*
+        version: link:../i18n
+      '@veltodefi/perp':
+        specifier: workspace:*
+        version: link:../perp
+      '@veltodefi/react-app':
+        specifier: workspace:*
+        version: link:../app
+      '@veltodefi/types':
+        specifier: workspace:*
+        version: link:../types
+      '@veltodefi/ui':
+        specifier: workspace:*
+        version: link:../ui
+      '@veltodefi/ui-chain-selector':
+        specifier: workspace:*
+        version: link:../ui-chain-selector
+      '@veltodefi/ui-connector':
+        specifier: workspace:*
+        version: link:../ui-connector
+      '@veltodefi/utils':
+        specifier: workspace:*
+        version: link:../utils
       ethers:
         specifier: ^6.15.0
         version: 6.15.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -2276,7 +2276,7 @@ importers:
 
   packages/utils:
     dependencies:
-      '@orderly.network/types':
+      '@veltodefi/types':
         specifier: workspace:*
         version: link:../types
       dayjs:
@@ -2316,28 +2316,28 @@ importers:
 
   packages/vaults:
     dependencies:
-      '@orderly.network/hooks':
+      '@veltodefi/hooks':
         specifier: workspace:*
         version: link:../hooks
-      '@orderly.network/i18n':
+      '@veltodefi/i18n':
         specifier: workspace:*
         version: link:../i18n
-      '@orderly.network/react-app':
+      '@veltodefi/react-app':
         specifier: workspace:*
         version: link:../app
-      '@orderly.network/types':
+      '@veltodefi/types':
         specifier: workspace:*
         version: link:../types
-      '@orderly.network/ui':
+      '@veltodefi/ui':
         specifier: workspace:*
         version: link:../ui
-      '@orderly.network/ui-connector':
+      '@veltodefi/ui-connector':
         specifier: workspace:*
         version: link:../ui-connector
-      '@orderly.network/ui-transfer':
+      '@veltodefi/ui-transfer':
         specifier: workspace:*
         version: link:../ui-transfer
-      '@orderly.network/utils':
+      '@veltodefi/utils':
         specifier: workspace:*
         version: link:../utils
       date-fns:
@@ -2392,21 +2392,6 @@ importers:
       '@binance/w3w-blocknative-connector':
         specifier: ^1.1.7
         version: 1.1.9(@web3-onboard/common@2.4.2(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(bufferutil@4.0.9)(encoding@0.1.13)(ts-node@10.9.2(@swc/core@1.13.2(@swc/helpers@0.5.17))(@types/node@24.3.1)(typescript@5.8.3))(utf-8-validate@5.0.10)
-      '@orderly.network/core':
-        specifier: workspace:*
-        version: link:../core
-      '@orderly.network/hooks':
-        specifier: workspace:*
-        version: link:../hooks
-      '@orderly.network/types':
-        specifier: workspace:*
-        version: link:../types
-      '@orderly.network/ui':
-        specifier: workspace:*
-        version: link:../ui
-      '@orderly.network/utils':
-        specifier: workspace:*
-        version: link:../utils
       '@solana-mobile/wallet-adapter-mobile':
         specifier: ^2.1.4
         version: 2.2.2(@solana/web3.js@1.98.2(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.8.3)(utf-8-validate@5.0.10))(react-native@0.80.2(@babel/core@7.28.4)(@types/react@18.3.23)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)
@@ -2431,6 +2416,21 @@ importers:
       '@types/lodash':
         specifier: ^4.17.7
         version: 4.17.20
+      '@veltodefi/core':
+        specifier: workspace:*
+        version: link:../core
+      '@veltodefi/hooks':
+        specifier: workspace:*
+        version: link:../hooks
+      '@veltodefi/types':
+        specifier: workspace:*
+        version: link:../types
+      '@veltodefi/ui':
+        specifier: workspace:*
+        version: link:../ui
+      '@veltodefi/utils':
+        specifier: workspace:*
+        version: link:../utils
       '@web3-onboard/bitget':
         specifier: ^2.1.1
         version: 2.1.1(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)
@@ -2471,27 +2471,6 @@ importers:
       '@abstract-foundation/agw-react':
         specifier: ^1.6.4
         version: 1.8.8(@privy-io/cross-app-connect@0.2.2(@wagmi/core@2.18.0(@tanstack/query-core@5.83.0)(@types/react@18.3.23)(immer@10.1.1)(react@18.3.1)(typescript@5.8.3)(use-sync-external-store@1.4.0(react@18.3.1))(viem@2.33.1(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(viem@2.33.1(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@privy-io/react-auth@2.20.0(@abstract-foundation/agw-client@1.8.7(abitype@1.0.8(typescript@5.8.3)(zod@3.25.76))(typescript@5.8.3)(viem@2.33.1(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@react-native-async-storage/async-storage@1.24.0(react-native@0.80.2(@babel/core@7.28.4)(@types/react@18.3.23)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10)))(@solana/spl-token@0.4.8(@solana/web3.js@1.98.2(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.8.3)(utf-8-validate@5.0.10))(bufferutil@4.0.9)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.8.3)(utf-8-validate@5.0.10))(@solana/web3.js@1.98.2(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.8.3)(utf-8-validate@5.0.10))(@types/react@18.3.23)(bs58@5.0.0)(bufferutil@4.0.9)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.8.3)(use-sync-external-store@1.4.0(react@18.3.1))(utf-8-validate@5.0.10)(zod@3.25.76))(@tanstack/react-query@5.83.0(react@18.3.1))(abitype@1.0.8(typescript@5.8.3)(zod@3.25.76))(react@18.3.1)(secp256k1@5.0.1)(typescript@5.8.3)(viem@2.33.1(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(wagmi@2.16.0(@react-native-async-storage/async-storage@1.24.0(react-native@0.80.2(@babel/core@7.28.4)(@types/react@18.3.23)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10)))(@tanstack/query-core@5.83.0)(@tanstack/react-query@5.83.0(react@18.3.1))(@types/react@18.3.23)(bufferutil@4.0.9)(encoding@0.1.13)(immer@10.1.1)(react@18.3.1)(typescript@5.8.3)(utf-8-validate@5.0.10)(viem@2.33.1(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(zod@3.25.76))
-      '@orderly.network/core':
-        specifier: workspace:*
-        version: link:../core
-      '@orderly.network/hooks':
-        specifier: workspace:*
-        version: link:../hooks
-      '@orderly.network/i18n':
-        specifier: workspace:*
-        version: link:../i18n
-      '@orderly.network/types':
-        specifier: workspace:*
-        version: link:../types
-      '@orderly.network/ui':
-        specifier: workspace:*
-        version: link:../ui
-      '@orderly.network/ui-connector':
-        specifier: workspace:*
-        version: link:../ui-connector
-      '@orderly.network/utils':
-        specifier: workspace:*
-        version: link:../utils
       '@privy-io/react-auth':
         specifier: ^2.4.5
         version: 2.20.0(@abstract-foundation/agw-client@1.8.7(abitype@1.0.8(typescript@5.8.3)(zod@3.25.76))(typescript@5.8.3)(viem@2.33.1(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@react-native-async-storage/async-storage@1.24.0(react-native@0.80.2(@babel/core@7.28.4)(@types/react@18.3.23)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10)))(@solana/spl-token@0.4.8(@solana/web3.js@1.98.2(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.8.3)(utf-8-validate@5.0.10))(bufferutil@4.0.9)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.8.3)(utf-8-validate@5.0.10))(@solana/web3.js@1.98.2(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.8.3)(utf-8-validate@5.0.10))(@types/react@18.3.23)(bs58@5.0.0)(bufferutil@4.0.9)(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.8.3)(use-sync-external-store@1.4.0(react@18.3.1))(utf-8-validate@5.0.10)(zod@3.25.76)
@@ -2519,6 +2498,27 @@ importers:
       '@types/lodash':
         specifier: ^4.17.7
         version: 4.17.20
+      '@veltodefi/core':
+        specifier: workspace:*
+        version: link:../core
+      '@veltodefi/hooks':
+        specifier: workspace:*
+        version: link:../hooks
+      '@veltodefi/i18n':
+        specifier: workspace:*
+        version: link:../i18n
+      '@veltodefi/types':
+        specifier: workspace:*
+        version: link:../types
+      '@veltodefi/ui':
+        specifier: workspace:*
+        version: link:../ui
+      '@veltodefi/ui-connector':
+        specifier: workspace:*
+        version: link:../ui-connector
+      '@veltodefi/utils':
+        specifier: workspace:*
+        version: link:../utils
       '@wagmi/connectors':
         specifier: ^5.7.3
         version: 5.9.0(@react-native-async-storage/async-storage@1.24.0(react-native@0.80.2(@babel/core@7.28.4)(@types/react@18.3.23)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10)))(@types/react@18.3.23)(@wagmi/core@2.18.0(@tanstack/query-core@5.83.0)(@types/react@18.3.23)(immer@10.1.1)(react@18.3.1)(typescript@5.8.3)(use-sync-external-store@1.4.0(react@18.3.1))(viem@2.33.1(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(bufferutil@4.0.9)(encoding@0.1.13)(immer@10.1.1)(react@18.3.1)(typescript@5.8.3)(use-sync-external-store@1.4.0(react@18.3.1))(utf-8-validate@5.0.10)(viem@2.33.1(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(wagmi@2.16.0(@react-native-async-storage/async-storage@1.24.0(react-native@0.80.2(@babel/core@7.28.4)(@types/react@18.3.23)(bufferutil@4.0.9)(react@18.3.1)(utf-8-validate@5.0.10)))(@tanstack/query-core@5.83.0)(@tanstack/react-query@5.83.0(react@18.3.1))(@types/react@18.3.23)(bufferutil@4.0.9)(encoding@0.1.13)(immer@10.1.1)(react@18.3.1)(typescript@5.8.3)(utf-8-validate@5.0.10)(viem@2.33.1(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))(zod@3.25.76))(zod@3.25.76)
@@ -2556,10 +2556,10 @@ importers:
 
   packages/web3-provider-ethers:
     dependencies:
-      '@orderly.network/default-evm-adapter':
+      '@veltodefi/default-evm-adapter':
         specifier: workspace:*
         version: link:../default-evm-adapter
-      '@orderly.network/types':
+      '@veltodefi/types':
         specifier: workspace:*
         version: link:../types
       ethers:

@@ -1,11 +1,11 @@
 import { useEffect, useState, SVGProps } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   OrderlyOrder,
   OrderSide,
   OrderType,
   PositionType,
-} from "@orderly.network/types";
+} from "@veltodefi/types";
 import {
   Button,
   cn,
@@ -13,7 +13,7 @@ import {
   Flex,
   ScrollArea,
   Text,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { OrderInfo } from "../components/orderInfo";
 import { PnlInfo } from "../components/pnlInfo";
 import { TPSLInputRowWidget } from "../components/tpslInputRow";

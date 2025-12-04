@@ -4,10 +4,10 @@ import {
   useAccount,
   useAccountRewardsHistory,
   WalletRewardsItem,
-} from "@orderly.network/hooks";
-import { useAppContext } from "@orderly.network/react-app";
-import { usePagination } from "@orderly.network/ui";
-import { getTimestamp } from "@orderly.network/utils";
+} from "@veltodefi/hooks";
+import { useAppContext } from "@veltodefi/react-app";
+import { usePagination } from "@veltodefi/ui";
+import { getTimestamp } from "@veltodefi/utils";
 import { RewardsTooltipProps } from "../curEpoch/rewardsTooltip";
 import { useTradingRewardsContext } from "../provider";
 

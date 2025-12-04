@@ -1,6 +1,6 @@
-import { useTranslation } from "@orderly.network/i18n";
-import { OrderlyOrder, OrderSide, OrderType } from "@orderly.network/types";
-import { Button, cn } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { OrderlyOrder, OrderSide, OrderType } from "@veltodefi/types";
+import { Button, cn } from "@veltodefi/ui";
 import { OrderTypeSelect } from "../orderTypeSelect";
 import { LeverageBadge } from "./LeverageBadge";
 

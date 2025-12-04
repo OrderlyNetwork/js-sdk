@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
-import { useAccount } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { AssetHistorySideEnum } from "@orderly.network/types";
+import { useAccount } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { AssetHistorySideEnum } from "@veltodefi/types";
 import {
   ArrowDownSquareFillIcon,
   ArrowLeftRightSquareFill,
@@ -12,7 +12,7 @@ import {
   TabPanel,
   Tabs,
   VaultsIcon,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import type { TabName } from "./historyDataGroup.script";
 
 const LazyAssetHistoryWidget = React.lazy(() =>

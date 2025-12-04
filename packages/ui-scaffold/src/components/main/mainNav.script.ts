@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
-import { useAccount, useWalletConnector } from "@orderly.network/hooks";
-import { useAppContext } from "@orderly.network/react-app";
+import { useAccount, useWalletConnector } from "@veltodefi/hooks";
+import { useAppContext } from "@veltodefi/react-app";
 import { useScaffoldContext } from "../scaffold";
 import { CampaignProps } from "./campaignButton";
 import { MainNavItemsProps } from "./mainMenus/mainNavMenus.ui";

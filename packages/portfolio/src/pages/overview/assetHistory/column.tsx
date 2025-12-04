@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { AssetHistoryStatusEnum } from "@orderly.network/types";
+import { useTranslation } from "@veltodefi/i18n";
+import { AssetHistoryStatusEnum } from "@veltodefi/types";
 import {
   capitalizeFirstLetter,
   Text,
@@ -9,8 +9,8 @@ import {
   TokenIcon,
   toast,
   type Column,
-} from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+} from "@veltodefi/ui";
+import { Decimal } from "@veltodefi/utils";
 
 type Options = {
   chainsInfo: any[];

@@ -1,5 +1,5 @@
 import { FC, memo } from "react";
-import { cn, Flex, Text } from "@orderly.network/ui";
+import { cn, Flex, Text } from "@veltodefi/ui";
 import { useOrderEntryContext } from "../../orderEntryContext";
 
 const percentages = [1, 2, 3, 5];

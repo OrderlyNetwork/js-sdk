@@ -1,15 +1,15 @@
 import React, { PropsWithChildren, useMemo } from "react";
-import { useAccount } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { useAppContext, useDataTap } from "@orderly.network/react-app";
-import { AccountStatusEnum } from "@orderly.network/types";
+import { useAccount } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { useAppContext, useDataTap } from "@veltodefi/react-app";
+import { AccountStatusEnum } from "@veltodefi/types";
 import {
   ExtensionPositionEnum,
   ExtensionSlot,
   DataTable,
   DataTableProps,
-} from "@orderly.network/ui";
-import { Flex } from "@orderly.network/ui";
+} from "@veltodefi/ui";
+import { Flex } from "@veltodefi/ui";
 import { alertMessages, AuthGuard } from "./authGuard";
 
 export const AuthGuardDataTable = <RecordType,>(

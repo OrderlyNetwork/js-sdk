@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { fn } from "storybook/test";
-import { Select, SelectItem } from "@orderly.network/ui";
+import { Select, SelectItem } from "@veltodefi/ui";
 
 const meta: Meta<typeof Select> = {
   title: "Base/Select",

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { AnnouncementType } from "@orderly.network/types";
-import { NotificationUI } from "@orderly.network/ui-notification";
+import { AnnouncementType } from "@veltodefi/types";
+import { NotificationUI } from "@veltodefi/ui-notification";
 
 /**
  * Notification component story

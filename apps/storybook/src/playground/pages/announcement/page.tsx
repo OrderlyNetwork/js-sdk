@@ -1,7 +1,7 @@
 import React from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Flex, Text, ChevronLeftIcon } from "@orderly.network/ui";
-import { AnnouncementCenterPage } from "@orderly.network/ui-notification";
+import { useTranslation } from "@veltodefi/i18n";
+import { Flex, Text, ChevronLeftIcon } from "@veltodefi/ui";
+import { AnnouncementCenterPage } from "@veltodefi/ui-notification";
 import { BaseLayout } from "../../../components/layout/baseLayout";
 import { useRouteContext } from "../../../components/orderlyProvider/rounteProvider";
 import { PathEnum } from "../../constant";

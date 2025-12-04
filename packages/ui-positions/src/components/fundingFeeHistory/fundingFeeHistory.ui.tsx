@@ -1,7 +1,7 @@
 import { FC, useCallback, useMemo } from "react";
-import { usePrivateInfiniteQuery } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { EMPTY_LIST } from "@orderly.network/types";
+import { usePrivateInfiniteQuery } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { EMPTY_LIST } from "@veltodefi/types";
 import {
   Grid,
   Statistic,
@@ -14,8 +14,8 @@ import {
   Tooltip,
   ExclamationFillIcon,
   modal,
-} from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+} from "@veltodefi/ui";
+import { Decimal } from "@veltodefi/utils";
 import { EndReachedBox } from "./endReachedBox";
 
 type FundingFeeHistory = {

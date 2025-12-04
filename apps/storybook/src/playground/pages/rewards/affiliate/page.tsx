@@ -1,4 +1,4 @@
-import { Dashboard, ReferralProvider } from "@orderly.network/affiliate";
+import { Dashboard, ReferralProvider } from "@veltodefi/affiliate";
 
 export default function AffiliatePage() {
   return (

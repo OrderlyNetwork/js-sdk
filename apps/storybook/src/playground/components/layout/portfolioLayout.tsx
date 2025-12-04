@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Outlet } from "react-router";
-import { PortfolioLeftSidebarPath } from "@orderly.network/portfolio";
+import { PortfolioLeftSidebarPath } from "@veltodefi/portfolio";
 import { PortfolioLayout as CommonPortfolioLayout } from "../../../components/layout";
 import { PathEnum } from "../../constant";
 import { usePathWithoutLang } from "../../hooks/usePathWithoutLang";

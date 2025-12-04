@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { API, SDKError } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+import { API, SDKError } from "@veltodefi/types";
+import { Decimal } from "@veltodefi/utils";
 import { useQuery } from "../useQuery";
 import { useWS } from "../useWS";
 import { useFutures } from "./useFutures";

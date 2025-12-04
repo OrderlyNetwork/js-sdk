@@ -1,8 +1,8 @@
 import { FC, useState } from "react";
-import { API } from "@orderly.network/types";
-import { ThrottledButton, toast } from "@orderly.network/ui";
+import { API } from "@veltodefi/types";
+import { ThrottledButton, toast } from "@veltodefi/ui";
 import { useOrderListContext } from "../orderListContext";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 
 export const CancelButton: FC<{
   order: API.Order;

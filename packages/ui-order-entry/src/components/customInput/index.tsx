@@ -1,6 +1,6 @@
 import { forwardRef, PropsWithChildren, ReactNode } from "react";
-import { EMPTY_LIST } from "@orderly.network/types";
-import { cn, inputFormatter, Input, InputProps } from "@orderly.network/ui";
+import { EMPTY_LIST } from "@veltodefi/types";
+import { cn, inputFormatter, Input, InputProps } from "@veltodefi/ui";
 import { useOrderEntryContext } from "../orderEntryContext";
 
 export type CustomInputProps = {

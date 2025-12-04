@@ -1,8 +1,8 @@
-import { findTPSLFromOrder } from "@orderly.network/hooks";
-import { positions as perpPositions } from "@orderly.network/perp";
-import { API, OrderSide } from "@orderly.network/types";
-import { Flex, Text } from "@orderly.network/ui";
-import { Decimal, formatNum, getTPSLDirection } from "@orderly.network/utils";
+import { findTPSLFromOrder } from "@veltodefi/hooks";
+import { positions as perpPositions } from "@veltodefi/perp";
+import { API, OrderSide } from "@veltodefi/types";
+import { Flex, Text } from "@veltodefi/ui";
+import { Decimal, formatNum, getTPSLDirection } from "@veltodefi/utils";
 import { FlexCell } from "../components/common";
 import { useTPSLDetailContext } from "../tpslDetailProvider";
 

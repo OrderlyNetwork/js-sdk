@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useTokenInfo } from "@orderly.network/hooks";
+import { useTokenInfo } from "@veltodefi/hooks";
 import { WithdrawTo } from "../../../types";
 import { CurrentChain } from "../../depositForm/hooks";
 

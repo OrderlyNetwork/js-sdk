@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useAccount } from "@orderly.network/hooks";
+import { useAccount } from "@veltodefi/hooks";
 import { AccountType } from "../pages/assets/assetsPage/assets.ui.desktop";
 
 // Account filter function type

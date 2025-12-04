@@ -1,9 +1,9 @@
 import { PropsWithChildren, useMemo, useState } from "react";
-import { useAccount } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { useAppContext } from "@orderly.network/react-app";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { Tooltip } from "@orderly.network/ui";
+import { useAccount } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { useAppContext } from "@veltodefi/react-app";
+import { AccountStatusEnum } from "@veltodefi/types";
+import { Tooltip } from "@veltodefi/ui";
 
 type AuthGuardProps = {
   content?: string;

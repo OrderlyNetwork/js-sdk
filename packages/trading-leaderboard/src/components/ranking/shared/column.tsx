@@ -1,6 +1,6 @@
 import { ReactNode, useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Text, Column, Box, useScreen, cn, toast } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { Text, Column, Box, useScreen, cn, toast } from "@veltodefi/ui";
 import firstBadge from "../../../img/first_badge.png";
 import secondBadge from "../../../img/second_badge.png";
 import thirdBadge from "../../../img/third_badge.png";

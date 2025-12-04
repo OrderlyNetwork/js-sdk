@@ -1,4 +1,4 @@
-import { API, PositionType, SDKError } from "@orderly.network/types";
+import { API, PositionType, SDKError } from "@veltodefi/types";
 import { useTaskProfitAndStopLossInternal } from "./useTPSL";
 
 export const useTPSLOrder = (

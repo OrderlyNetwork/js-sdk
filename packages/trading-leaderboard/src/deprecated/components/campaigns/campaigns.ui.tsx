@@ -1,6 +1,6 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { cn, Box, Text, Flex, Button, Select } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { cn, Box, Text, Flex, Button, Select } from "@veltodefi/ui";
 import { CampaignsScriptReturn, CurrentCampaigns } from "./campaigns.script";
 
 export type CampaignsProps = {

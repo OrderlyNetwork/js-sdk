@@ -1,9 +1,9 @@
-import { registerSimpleDialog, registerSimpleSheet } from "@orderly.network/ui";
+import { registerSimpleDialog, registerSimpleSheet } from "@veltodefi/ui";
 import {
   SharePnLDialogWidget,
   SharePnLBottomSheetWidget,
 } from "./sharePnL/sharePnL.widget";
-import { i18n } from "@orderly.network/i18n";
+import { i18n } from "@veltodefi/i18n";
 
 const SharePnLDialogId = "sharePnLDialog";
 const SharePnLBottomSheetId = "sharePnLBottomSheet";

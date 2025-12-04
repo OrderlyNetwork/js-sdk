@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
-import { useOrderEntity } from "@orderly.network/hooks";
+import { useOrderEntity } from "@veltodefi/hooks";
 import {
   API,
   OrderlyOrder,
   OrderSide,
   OrderType,
-} from "@orderly.network/types";
+} from "@veltodefi/types";
 
 export const useEditOrderEntry = (props: {
   order: API.AlgoOrderExt;

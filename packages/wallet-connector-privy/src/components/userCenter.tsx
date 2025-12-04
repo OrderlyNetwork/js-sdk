@@ -1,11 +1,11 @@
 import React, { useMemo } from "react";
-import { useAccount, useWalletConnector } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import { useAccount, useWalletConnector } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   ABSTRACT_CHAIN_ID_MAP,
   ABSTRACT_TESTNET_CHAINID,
   AccountStatusEnum,
-} from "@orderly.network/types";
+} from "@veltodefi/types";
 import {
   Button,
   cn,
@@ -13,8 +13,8 @@ import {
   formatAddress,
   Text,
   useScreen,
-} from "@orderly.network/ui";
-import { AuthGuard } from "@orderly.network/ui-connector";
+} from "@veltodefi/ui";
+import { AuthGuard } from "@veltodefi/ui-connector";
 import { usePrivyWallet } from "../providers/privy/privyWalletProvider";
 import { RenderPrivyTypeIcon } from "./common";
 import { LinkDeviceMobile } from "./linkDevice";

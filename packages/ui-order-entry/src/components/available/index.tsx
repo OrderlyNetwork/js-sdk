@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   Flex,
   Tooltip,
@@ -8,7 +8,7 @@ import {
   AddCircleIcon,
   Button,
   modal,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { LTVRiskTooltipWidget } from "../LTVRiskTooltip";
 
 type AvailableProps = {

@@ -9,15 +9,15 @@ import {
   useMarginRatio,
   usePositionStream,
   useComputedLTV,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { useDataTap } from "@orderly.network/react-app";
-import { AccountStatusEnum, NetworkId } from "@orderly.network/types";
-import { modal, toast } from "@orderly.network/ui";
+} from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { useDataTap } from "@veltodefi/react-app";
+import { AccountStatusEnum, NetworkId } from "@veltodefi/types";
+import { modal, toast } from "@veltodefi/ui";
 import {
   DepositAndWithdrawWithDialogId,
   TransferDialogId,
-} from "@orderly.network/ui-transfer";
+} from "@veltodefi/ui-transfer";
 
 export const useAssetViewScript = () => {
   const { t } = useTranslation();

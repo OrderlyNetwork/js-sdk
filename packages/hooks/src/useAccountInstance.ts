@@ -1,8 +1,8 @@
 import useConstant from "use-constant";
-import { Account, SimpleDI } from "@orderly.network/core";
+import { Account, SimpleDI } from "@veltodefi/core";
 import { useContext } from "react";
 import { OrderlyContext } from "./orderlyContext";
-import { SDKError } from "@orderly.network/types";
+import { SDKError } from "@veltodefi/types";
 
 export const useAccountInstance = (): Account => {
   const { configStore, keyStore, walletAdapters } = useContext(OrderlyContext);

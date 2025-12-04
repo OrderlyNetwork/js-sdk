@@ -1,4 +1,4 @@
-import { commify } from "@orderly.network/utils";
+import { commify } from "@veltodefi/utils";
 
 export function refCommify(value?: string | number, fix?: number) {
   if (value === undefined || value === null) {

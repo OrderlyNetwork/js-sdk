@@ -1,5 +1,5 @@
 import React from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   Box,
   cn,
@@ -10,7 +10,7 @@ import {
   Text,
   Badge,
   EmptyDataState,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { FavoritesIcon } from "../../icons";
 import {
   MarketsTabName,

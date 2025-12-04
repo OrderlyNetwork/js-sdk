@@ -3,19 +3,19 @@ import {
   useAccount,
   useChains,
   useWalletConnector,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { useAppContext } from "@orderly.network/react-app";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { modal, toast, useScreen, Text } from "@orderly.network/ui";
+} from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { useAppContext } from "@veltodefi/react-app";
+import { AccountStatusEnum } from "@veltodefi/types";
+import { modal, toast, useScreen, Text } from "@veltodefi/ui";
 import {
   ChainSelectorDialogId,
   ChainSelectorSheetId,
-} from "@orderly.network/ui-chain-selector";
+} from "@veltodefi/ui-chain-selector";
 import {
   WalletConnectorModalId,
   WalletConnectorSheetId,
-} from "@orderly.network/ui-connector";
+} from "@veltodefi/ui-connector";
 
 const ModalTitle = () => {
   const { t } = useTranslation();

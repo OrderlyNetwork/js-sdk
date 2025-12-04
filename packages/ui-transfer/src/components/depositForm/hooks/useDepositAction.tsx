@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
-import { useEventEmitter } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { toast } from "@orderly.network/ui";
+import { useEventEmitter } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { toast } from "@veltodefi/ui";
 import { getDepositKnownErrorMessage } from "../../../utils";
 
 type Options = {

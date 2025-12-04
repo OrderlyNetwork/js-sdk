@@ -1,7 +1,7 @@
-import { useOrderStream } from "@orderly.network/hooks";
-import { useDataTap } from "@orderly.network/react-app";
-import { AlgoOrderRootType, OrderStatus } from "@orderly.network/types";
-import { TabType } from "@orderly.network/ui-orders";
+import { useOrderStream } from "@veltodefi/hooks";
+import { useDataTap } from "@veltodefi/react-app";
+import { AlgoOrderRootType, OrderStatus } from "@veltodefi/types";
+import { TabType } from "@veltodefi/ui-orders";
 import { useTradingLocalStorage } from "./useTradingLocalStorage";
 
 export const usePendingOrderCount = (symbol?: string) => {

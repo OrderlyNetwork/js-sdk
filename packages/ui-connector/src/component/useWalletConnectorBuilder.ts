@@ -4,9 +4,9 @@ import {
   useGetReferralCode,
   useLazyQuery,
   useMutation,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { toast } from "@orderly.network/ui";
+} from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { toast } from "@veltodefi/ui";
 
 export const useWalletConnectorBuilder = () => {
   const { account, state, createOrderlyKey, createAccount } = useAccount();

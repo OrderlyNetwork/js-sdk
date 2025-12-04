@@ -1,6 +1,6 @@
 import { format, toDate } from "date-fns";
-import { i18n } from "@orderly.network/i18n";
-import { toast } from "@orderly.network/ui";
+import { i18n } from "@veltodefi/i18n";
+import { toast } from "@veltodefi/ui";
 
 // import { toZonedTime } from "date-fns-tz";
 // const { toZonedTime } = require("date-fns-tz");

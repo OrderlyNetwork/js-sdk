@@ -1,5 +1,5 @@
 import React from "react";
-import { Trans, useTranslation } from "@orderly.network/i18n";
+import { Trans, useTranslation } from "@veltodefi/i18n";
 
 const Link: React.FC<React.PropsWithChildren<{ url: string }>> = (props) => {
   const { url, children } = props;

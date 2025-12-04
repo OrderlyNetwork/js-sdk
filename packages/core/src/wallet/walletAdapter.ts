@@ -1,5 +1,5 @@
 import type { BigNumberish } from "ethers/src.ts/utils";
-import { API, ChainNamespace } from "@orderly.network/types";
+import { API, ChainNamespace } from "@veltodefi/types";
 import { SignatureDomain } from "../utils";
 
 export type ChainType = "EVM" | "SOL";

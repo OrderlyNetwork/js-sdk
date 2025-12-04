@@ -5,7 +5,7 @@ import {
   OrderEntity,
   OrderType,
   TriggerPriceType,
-} from "@orderly.network/types";
+} from "@veltodefi/types";
 import { BaseOrderCreator } from "./baseCreator";
 import {
   OrderFormEntity,

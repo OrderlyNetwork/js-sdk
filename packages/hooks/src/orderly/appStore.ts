@@ -1,8 +1,8 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
-import { API } from "@orderly.network/types";
-import { WSMessage } from "@orderly.network/types";
-import { Decimal, zero } from "@orderly.network/utils";
+import { API } from "@veltodefi/types";
+import { WSMessage } from "@veltodefi/types";
+import { Decimal, zero } from "@veltodefi/utils";
 
 // import { devtools } from "zustand/middleware";
 

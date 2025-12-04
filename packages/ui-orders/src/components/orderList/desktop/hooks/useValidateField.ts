@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from "react";
-import { OrderValidationResult, useOrderEntity } from "@orderly.network/hooks";
-import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
-import { API, OrderlyOrder, OrderSide } from "@orderly.network/types";
+import { OrderValidationResult, useOrderEntity } from "@veltodefi/hooks";
+import { useOrderEntryFormErrorMsg } from "@veltodefi/react-app";
+import { API, OrderlyOrder, OrderSide } from "@veltodefi/types";
 import { convertApiOrderTypeToOrderEntryType } from "../../../../utils/util";
 
 export function useValidateField(props: {

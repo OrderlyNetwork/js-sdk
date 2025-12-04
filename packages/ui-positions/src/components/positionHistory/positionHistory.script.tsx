@@ -4,12 +4,12 @@ import {
   useAccount,
   usePrivateQuery,
   useSymbolsInfo,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { useDataTap } from "@orderly.network/react-app";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { API } from "@orderly.network/types";
-import { usePagination, useScreen } from "@orderly.network/ui";
+} from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { useDataTap } from "@veltodefi/react-app";
+import { AccountStatusEnum } from "@veltodefi/types";
+import { API } from "@veltodefi/types";
+import { usePagination, useScreen } from "@veltodefi/ui";
 import { TRADING_POSITIONS_SORT_STORAGE_KEY } from "../../constants";
 import {
   areDatesEqual,

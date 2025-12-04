@@ -1,5 +1,5 @@
 import useConstant from "use-constant";
-import { EventEmitter, SimpleDI } from "@orderly.network/core";
+import { EventEmitter, SimpleDI } from "@veltodefi/core";
 
 export const useEventEmitter = () => {
   return useConstant(() => {

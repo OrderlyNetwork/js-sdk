@@ -1,8 +1,8 @@
 import { FC, useMemo } from "react";
-import { useSymbolsInfo } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { PositionType } from "@orderly.network/types";
-import { cn, Flex, Text } from "@orderly.network/ui";
+import { useSymbolsInfo } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { PositionType } from "@veltodefi/types";
+import { cn, Flex, Text } from "@veltodefi/ui";
 import { usePositionsRowContext } from "../positionsRowContext";
 import { AddIcon, TPSLEditIcon } from "./components";
 

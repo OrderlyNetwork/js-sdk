@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { cn, DataTable } from "@orderly.network/ui";
+import { cn, DataTable } from "@veltodefi/ui";
 import { CollapseMarkets } from "../collapseMarkets";
 import { useMarketsContext } from "../marketsProvider";
 import { useSideMarketsColumns } from "../sideMarkets/column";

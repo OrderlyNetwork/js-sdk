@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
-import { useConfig, useLocalStorage } from "@orderly.network/hooks";
-import { useAppContext } from "@orderly.network/react-app";
-import { useObserverElement } from "@orderly.network/ui";
+import { useConfig, useLocalStorage } from "@veltodefi/hooks";
+import { useAppContext } from "@veltodefi/react-app";
+import { useObserverElement } from "@veltodefi/ui";
 
 export type UseRestrictedInfoScriptReturn = ReturnType<
   typeof useRestrictedInfoScript

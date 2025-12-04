@@ -5,10 +5,10 @@ import {
   TriggerPriceType,
   AlgoOrderRootType,
   PositionType,
-} from "@orderly.network/types";
-import { OrderSide } from "@orderly.network/types";
-import { API } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+} from "@veltodefi/types";
+import { OrderSide } from "@veltodefi/types";
+import { API } from "@veltodefi/types";
+import { Decimal } from "@veltodefi/utils";
 import { AlgoOrderUpdateEntity, BaseAlgoOrderCreator } from "./baseAlgoCreator";
 import { ValuesDepConfig } from "./interface";
 

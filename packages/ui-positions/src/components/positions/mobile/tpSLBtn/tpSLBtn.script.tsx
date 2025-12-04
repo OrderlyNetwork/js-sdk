@@ -1,8 +1,8 @@
-import { useSymbolsInfo } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
-import { modal } from "@orderly.network/ui";
-import { PositionTPSLSheet } from "@orderly.network/ui-tpsl";
+import { useSymbolsInfo } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { API } from "@veltodefi/types";
+import { modal } from "@veltodefi/ui";
+import { PositionTPSLSheet } from "@veltodefi/ui-tpsl";
 import { usePositionsRowContext } from "../../positionsRowContext";
 import { PositionCellState } from "../positionCell/positionCell.script";
 

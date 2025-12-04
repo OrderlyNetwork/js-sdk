@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { cn, Flex, Text } from "@orderly.network/ui";
+import { cn, Flex, Text } from "@veltodefi/ui";
 
 interface SwapCoinProps {
   className?: string;

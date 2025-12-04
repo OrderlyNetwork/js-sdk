@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Button, cn } from "@orderly.network/ui";
+import { Button, cn } from "@veltodefi/ui";
 
 export type ProductItem = {
   name: string;

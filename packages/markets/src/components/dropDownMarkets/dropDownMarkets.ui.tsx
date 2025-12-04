@@ -1,5 +1,5 @@
 import { PropsWithChildren } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   Box,
   CloseIcon,
@@ -11,7 +11,7 @@ import {
   DropdownMenuPortal,
   DropdownMenuRoot,
   DropdownMenuTrigger,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { FavoritesIcon } from "../../icons";
 import { MarketsTabName } from "../../type";
 import { MarketsListWidget } from "../marketsList";

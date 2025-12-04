@@ -1,9 +1,9 @@
 import { FC, SVGProps, useRef } from "react";
 import React from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Box, Button, Divider, Flex, Text, Tooltip } from "@orderly.network/ui";
-import { OrderListInstance, OrdersWidget } from "@orderly.network/ui-orders";
-import { SharePnLConfig } from "@orderly.network/ui-share";
+import { useTranslation } from "@veltodefi/i18n";
+import { Box, Button, Divider, Flex, Text, Tooltip } from "@veltodefi/ui";
+import { OrderListInstance, OrdersWidget } from "@veltodefi/ui-orders";
+import { SharePnLConfig } from "@veltodefi/ui-share";
 
 export const OrdersPage: React.FC<{ sharePnLConfig?: SharePnLConfig }> = (
   props,

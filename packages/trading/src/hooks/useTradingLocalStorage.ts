@@ -1,4 +1,4 @@
-import { useLocalStorage } from "@orderly.network/hooks";
+import { useLocalStorage } from "@veltodefi/hooks";
 
 export const useTradingLocalStorage = (props?: {
   pnlNotionalDecimalPrecision?: number;

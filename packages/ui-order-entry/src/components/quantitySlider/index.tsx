@@ -1,9 +1,9 @@
 import { memo, useEffect, useMemo, useState } from "react";
-import { utils } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { OrderSide } from "@orderly.network/types";
-import { Flex, Slider, textVariants, Text } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { utils } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { OrderSide } from "@veltodefi/types";
+import { Flex, Slider, textVariants, Text } from "@veltodefi/ui";
+import { Decimal } from "@veltodefi/utils";
 import { InputType } from "../../types";
 import { useOrderEntryContext } from "../orderEntryContext";
 

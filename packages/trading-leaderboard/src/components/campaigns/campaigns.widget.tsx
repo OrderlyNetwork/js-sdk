@@ -1,5 +1,5 @@
 import { FC, useMemo } from "react";
-import { cn, useScreen } from "@orderly.network/ui";
+import { cn, useScreen } from "@veltodefi/ui";
 import { useCanTrade } from "../../hooks/useCanTrade";
 import { CampaignsContentDesktopUI } from "./campaigns.content.desktop.ui";
 import { useCampaignsScript } from "./campaigns.script";

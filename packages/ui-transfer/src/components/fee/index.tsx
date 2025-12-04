@@ -1,7 +1,7 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Box, Flex, modal, Text } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { useTranslation } from "@veltodefi/i18n";
+import { Box, Flex, modal, Text } from "@veltodefi/ui";
+import { Decimal } from "@veltodefi/utils";
 import { type UseDepositFeeReturn } from "../depositForm/depositForm.script";
 
 type FeeProps = Partial<UseDepositFeeReturn> & {

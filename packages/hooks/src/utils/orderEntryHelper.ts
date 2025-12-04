@@ -4,8 +4,8 @@ import {
   OrderlyOrder,
   OrderSide,
   OrderType,
-} from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+} from "@veltodefi/types";
+import { Decimal } from "@veltodefi/utils";
 import { FullOrderState } from "../next/useOrderEntry/useOrderStore";
 import { tpslCalculateHelper } from "../orderly/useTakeProfitAndStopLoss/tp_slUtils";
 

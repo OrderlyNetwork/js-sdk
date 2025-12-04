@@ -1,4 +1,4 @@
-import { Flex, Box, cn } from "@orderly.network/ui";
+import { Flex, Box, cn } from "@veltodefi/ui";
 import { SummaryWidget } from "./summary";
 import { TitleStatisticWidget } from "./titleStatistic";
 import { RebatesWidget } from "./rebates";

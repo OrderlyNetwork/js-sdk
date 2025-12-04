@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Badge } from "@orderly.network/ui";
+import { Badge } from "@veltodefi/ui";
 
 const meta = {
   title: "Base/Badge",

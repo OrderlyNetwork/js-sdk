@@ -5,8 +5,8 @@ import {
   RefObject,
   MutableRefObject,
 } from "react";
-import { OrderValidationResult } from "@orderly.network/hooks";
-import { API, OrderlyOrder } from "@orderly.network/types";
+import { OrderValidationResult } from "@veltodefi/hooks";
+import { API, OrderlyOrder } from "@veltodefi/types";
 import { InputType, QuantityInputType } from "../types";
 
 export type OrderEntryContextState = {

@@ -1,7 +1,7 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Card, Flex, Switch, Text } from "@orderly.network/ui";
-import { AuthGuardTooltip } from "@orderly.network/ui-connector";
+import { useTranslation } from "@veltodefi/i18n";
+import { Card, Flex, Switch, Text } from "@veltodefi/ui";
+import { AuthGuardTooltip } from "@veltodefi/ui-connector";
 import type { SettingScriptReturns } from "./setting.script";
 
 export const SettingDesktop: FC<SettingScriptReturns> = (props) => {

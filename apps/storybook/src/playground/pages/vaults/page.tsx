@@ -1,4 +1,4 @@
-import { VaultsPage } from "@orderly.network/vaults";
+import { VaultsPage } from "@veltodefi/vaults";
 import { BaseLayout } from "../../components/layout/baseLayout";
 import { PathEnum } from "../../constant";
 

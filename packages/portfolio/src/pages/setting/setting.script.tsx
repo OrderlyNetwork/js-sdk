@@ -6,10 +6,10 @@ import {
   useMutation,
   useLocalStorage,
   useOrderlyContext,
-} from "@orderly.network/hooks";
-import { useAppContext } from "@orderly.network/react-app";
-import { AccountStatusEnum } from "@orderly.network/types";
-import { toast } from "@orderly.network/ui";
+} from "@veltodefi/hooks";
+import { useAppContext } from "@veltodefi/react-app";
+import { AccountStatusEnum } from "@veltodefi/types";
+import { toast } from "@veltodefi/ui";
 
 const ORDERLY_ORDER_SOUND_ALERT_KEY = "orderly_order_sound_alert";
 

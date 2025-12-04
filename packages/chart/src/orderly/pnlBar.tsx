@@ -13,8 +13,8 @@ import {
 } from "recharts";
 import type { TooltipProps } from "recharts";
 import type { Props as ResponsiveContainerProps } from "recharts/types/component/ResponsiveContainer";
-import { useTranslation } from "@orderly.network/i18n";
-import { cn } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { cn } from "@veltodefi/ui";
 import { tickFormatter } from "../utils/yTickFormatter";
 import { OrderlyChartTooltip } from "./customTooltip";
 import { useColors } from "./useColors";

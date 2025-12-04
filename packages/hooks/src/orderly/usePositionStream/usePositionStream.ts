@@ -7,7 +7,7 @@ import {
   EMPTY_OBJECT,
   OrderStatus,
   type API,
-} from "@orderly.network/types";
+} from "@veltodefi/types";
 import { useApiStatusStore } from "../../next/apiStatus/apiStatus.store";
 import { CalculatorScope } from "../../types";
 import { useCalculatorService } from "../../useCalculatorService";

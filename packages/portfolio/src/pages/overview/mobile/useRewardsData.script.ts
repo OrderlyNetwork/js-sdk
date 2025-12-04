@@ -9,10 +9,10 @@ import {
   RefferalAPI,
   usePrivateQuery,
   noCacheConfig,
-} from "@orderly.network/hooks";
-import { DistributionId, TWType } from "@orderly.network/hooks";
-import { useAppContext } from "@orderly.network/react-app";
-import { AccountStatusEnum } from "@orderly.network/types";
+} from "@veltodefi/hooks";
+import { DistributionId, TWType } from "@veltodefi/hooks";
+import { useAppContext } from "@veltodefi/react-app";
+import { AccountStatusEnum } from "@veltodefi/types";
 import { useOverviewContext } from "../provider/overviewContext";
 
 export const useRewardsData = ({ type = TWType.normal }: { type?: TWType }) => {

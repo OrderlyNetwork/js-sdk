@@ -7,9 +7,9 @@ import {
   useAudioPlayer,
   useLocalStorage,
   useOrderlyContext,
-} from "@orderly.network/hooks";
-import { OrderStatus } from "@orderly.network/types";
-import { toast } from "@orderly.network/ui";
+} from "@veltodefi/hooks";
+import { OrderStatus } from "@veltodefi/types";
+import { toast } from "@veltodefi/ui";
 import { getOrderExecutionReportMsg } from "./getOrderExecutionReportMsg";
 
 export const ORDERLY_ORDER_SOUND_ALERT_KEY = "orderly_order_sound_alert";

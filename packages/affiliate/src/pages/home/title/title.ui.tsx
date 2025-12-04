@@ -1,5 +1,5 @@
 import React from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 
 export const Title: React.FC = () => {
   const { t } = useTranslation();

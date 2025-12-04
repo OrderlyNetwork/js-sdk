@@ -1,5 +1,5 @@
 import { FC, useCallback, useEffect } from "react";
-import { Box, cn, Flex, useEmblaCarousel } from "@orderly.network/ui";
+import { Box, cn, Flex, useEmblaCarousel } from "@veltodefi/ui";
 import { NextButton, PrevButton } from "./buttons";
 
 export const CarouselBackgroundImage: FC<{

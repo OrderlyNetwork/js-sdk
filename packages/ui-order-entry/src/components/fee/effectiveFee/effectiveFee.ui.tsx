@@ -1,6 +1,6 @@
 import React from "react";
-import { useFeeState } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import { useFeeState } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   Flex,
   modal,
@@ -8,12 +8,12 @@ import {
   Tooltip,
   useModal,
   useScreen,
-} from "@orderly.network/ui";
-import { AuthGuard } from "@orderly.network/ui-connector";
+} from "@veltodefi/ui";
+import { AuthGuard } from "@veltodefi/ui-connector";
 import {
   RouterAdapter,
   useScaffoldContext,
-} from "@orderly.network/ui-scaffold";
+} from "@veltodefi/ui-scaffold";
 import { EffectiveFee } from "./icons";
 
 const EffectiveFeeBody: React.FC<{

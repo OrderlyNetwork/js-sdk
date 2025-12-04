@@ -1,6 +1,6 @@
 import React from "react";
-import { useStorageChain } from "@orderly.network/hooks";
-import { cn, Flex, ScrollArea } from "@orderly.network/ui";
+import { useStorageChain } from "@veltodefi/hooks";
+import { cn, Flex, ScrollArea } from "@veltodefi/ui";
 import { useWallet } from "../../hooks/useWallet";
 import { useWalletConnectorPrivy } from "../../provider";
 import { WalletConnectType, WalletType } from "../../types";

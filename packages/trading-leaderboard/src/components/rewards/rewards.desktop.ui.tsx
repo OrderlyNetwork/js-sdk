@@ -1,7 +1,7 @@
 import { FC, useMemo, useState } from "react";
-import { useTranslation, Trans } from "@orderly.network/i18n";
-import { InfoCircleIcon, Tooltip, Text, Button, cn } from "@orderly.network/ui";
-import { commify } from "@orderly.network/utils";
+import { useTranslation, Trans } from "@veltodefi/i18n";
+import { InfoCircleIcon, Tooltip, Text, Button, cn } from "@veltodefi/ui";
+import { commify } from "@veltodefi/utils";
 import { CampaignConfig, UserData } from "../campaigns/type";
 import {
   calculateEstimatedRewards,

@@ -1,8 +1,8 @@
-import { API } from "@orderly.network/types";
+import { API } from "@veltodefi/types";
 import { useOrderCellScript } from "./orderCell.script";
 import { OrderCell } from "./orderCell.ui";
 import { TabType } from "../../orders.widget";
-import { SharePnLConfig } from "@orderly.network/ui-share";
+import { SharePnLConfig } from "@veltodefi/ui-share";
 
 export const OrderCellWidget = (props: {
   item: API.AlgoOrderExt;

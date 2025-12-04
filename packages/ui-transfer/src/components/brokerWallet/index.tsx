@@ -1,8 +1,8 @@
 import { FC, useMemo } from "react";
-import { Flex, Text } from "@orderly.network/ui";
-import { useAppConfig } from "@orderly.network/react-app";
-import { useConfig } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import { Flex, Text } from "@veltodefi/ui";
+import { useAppConfig } from "@veltodefi/react-app";
+import { useConfig } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
 
 export const BrokerWallet: FC = () => {
   const { t } = useTranslation();

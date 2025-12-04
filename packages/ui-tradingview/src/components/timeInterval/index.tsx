@@ -1,7 +1,7 @@
 import React, { ReactNode, useMemo } from "react";
-import { useMediaQuery } from "@orderly.network/hooks";
-import { useTranslation, i18n } from "@orderly.network/i18n";
-import { MEDIA_TABLET } from "@orderly.network/types";
+import { useMediaQuery } from "@veltodefi/hooks";
+import { useTranslation, i18n } from "@veltodefi/i18n";
+import { MEDIA_TABLET } from "@veltodefi/types";
 import {
   Box,
   cn,
@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
   Flex,
   Text,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { CaretIcon } from "../../icons";
 
 interface IProps {

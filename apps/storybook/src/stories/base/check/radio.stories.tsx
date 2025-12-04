@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Checkbox } from "@orderly.network/ui";
+import { Checkbox } from "@veltodefi/ui";
 
 const meta: Meta<typeof Checkbox> = {
   title: "Base/Checkbox/Radio",

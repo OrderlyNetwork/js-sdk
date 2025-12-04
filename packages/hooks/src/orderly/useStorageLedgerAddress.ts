@@ -1,4 +1,4 @@
-import { LedgerWalletKey } from "@orderly.network/types";
+import { LedgerWalletKey } from "@veltodefi/types";
 import { useLocalStorage } from "../useLocalStorage";
 
 export const useStorageLedgerAddress = () => {

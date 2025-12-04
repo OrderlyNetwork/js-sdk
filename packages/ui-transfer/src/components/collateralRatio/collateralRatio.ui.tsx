@@ -1,7 +1,7 @@
 import React from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Box, Flex, Text, Tooltip } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { useTranslation } from "@veltodefi/i18n";
+import { Box, Flex, Text, Tooltip } from "@veltodefi/ui";
+import { Decimal } from "@veltodefi/utils";
 import { TooltipIcon } from "../icons/tooltipIcon";
 
 const TooltipContent: React.FC = () => {

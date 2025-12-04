@@ -1,12 +1,12 @@
 import { ReactNode } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   ExclamationFillIcon,
   Flex,
   modal,
   Text,
   Tooltip,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { RefreshIcon } from "../../icons";
 
 type UnsettlePnlInfoProps = {

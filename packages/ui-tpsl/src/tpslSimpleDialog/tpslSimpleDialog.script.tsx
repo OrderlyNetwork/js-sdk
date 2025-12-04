@@ -7,16 +7,16 @@ import {
   useSymbolsInfo,
   useTPSLOrder,
   utils,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+} from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   AlgoOrderRootType,
   API,
   OrderType,
   PositionType,
   SDKError,
-} from "@orderly.network/types";
-import { modal, toast } from "@orderly.network/ui";
+} from "@veltodefi/types";
+import { modal, toast } from "@veltodefi/ui";
 import { PositionTPSLConfirm } from "../positionTPSL";
 
 export type TPSLBuilderOptions = {

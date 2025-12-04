@@ -1,7 +1,7 @@
 import React from "react";
 import { pick } from "ramda";
-import { useTranslation } from "@orderly.network/i18n";
-import { Box, cn, Flex, Text } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { Box, cn, Flex, Text } from "@veltodefi/ui";
 import { CollapseIcon, ExpandIcon } from "../../icons";
 import { ExpandMarketsWidget } from "../expandMarkets";
 import { MarketsListWidget } from "../marketsList";

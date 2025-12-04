@@ -1,6 +1,6 @@
 import React from "react";
 import { pick } from "ramda";
-import { useFeeState, useRwaSymbolsInfoStore } from "@orderly.network/hooks";
+import { useFeeState, useRwaSymbolsInfoStore } from "@veltodefi/hooks";
 import { EffectiveFeesWidget } from "./effectiveFee";
 import { RegularFeesWidget } from "./regularFee";
 

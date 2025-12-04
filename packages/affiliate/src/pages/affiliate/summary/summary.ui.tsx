@@ -1,9 +1,9 @@
 import { FC } from "react";
-import { Flex, Select, Text } from "@orderly.network/ui";
+import { Flex, Select, Text } from "@veltodefi/ui";
 import { SummaryReturns } from "./summary.script";
 import { USDCIcon } from "../../../components/usdcIcon";
-import { commifyOptional } from "@orderly.network/utils";
-import { useTranslation } from "@orderly.network/i18n";
+import { commifyOptional } from "@veltodefi/utils";
+import { useTranslation } from "@veltodefi/i18n";
 
 export const Summary: FC<SummaryReturns> = (props) => {
   const { t } = useTranslation();

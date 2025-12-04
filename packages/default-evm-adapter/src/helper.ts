@@ -6,8 +6,8 @@ import type {
   WithdrawInputs,
   DexRequestInputs,
   InternalTransferInputs,
-} from "@orderly.network/core";
-import { DEFAUL_ORDERLY_KEY_SCOPE, definedTypes } from "@orderly.network/types";
+} from "@veltodefi/core";
+import { DEFAUL_ORDERLY_KEY_SCOPE, definedTypes } from "@veltodefi/types";
 
 export async function withdrawMessage(
   inputs: WithdrawInputs & {

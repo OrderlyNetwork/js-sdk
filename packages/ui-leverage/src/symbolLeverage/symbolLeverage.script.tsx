@@ -7,21 +7,21 @@ import {
   usePositionStream,
   useSymbolLeverage,
   useSymbolsInfo,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+} from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   account as accountPerp,
   positions as positionsPerp,
-} from "@orderly.network/perp";
-import { OrderSide } from "@orderly.network/types";
+} from "@veltodefi/perp";
+import { OrderSide } from "@veltodefi/types";
 import {
   modal,
   SliderMarks,
   toast,
   useScreen,
   Text,
-} from "@orderly.network/ui";
-import { zero } from "@orderly.network/utils";
+} from "@veltodefi/ui";
+import { zero } from "@veltodefi/utils";
 
 type UseLeverageScriptOptions = {
   close?: () => void;

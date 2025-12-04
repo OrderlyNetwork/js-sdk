@@ -2,7 +2,7 @@ import {IBrokerConnectionAdapterHost} from '../type';
 import useBroker from '../hooks/useBroker';
 import { SideType, AlgoType, OrderCombinationType} from "../type";
 import { withoutExchangePrefix } from '../../utils/chart.util';
-import { OrderType } from "@orderly.network/types";
+import { OrderType } from "@veltodefi/types";
 
 const getBrokerAdapter = (host: IBrokerConnectionAdapterHost, broker: ReturnType<typeof useBroker>) => {
     let symbol: string;

@@ -6,7 +6,7 @@ import {
   CardDescription,
   CardContent,
   CardFooter,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 
 const meta: Meta<typeof CardBase> = {
   title: "Base/Layout/Card",

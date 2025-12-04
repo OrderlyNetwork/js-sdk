@@ -3,10 +3,10 @@ import {
   useEventEmitter,
   useSessionStorage,
   useWalletSubscription,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { toast } from "@orderly.network/ui";
-import { capitalizeString } from "@orderly.network/utils";
+} from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { toast } from "@veltodefi/ui";
+import { capitalizeString } from "@veltodefi/utils";
 
 export function useWalletEvent() {
   const { t } = useTranslation();

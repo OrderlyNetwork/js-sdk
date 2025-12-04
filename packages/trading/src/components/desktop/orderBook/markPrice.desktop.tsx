@@ -1,11 +1,11 @@
 import { FC, useMemo } from "react";
-import { Decimal } from "@orderly.network/utils";
-import { cn, Flex, Text, Tooltip } from "@orderly.network/ui";
+import { Decimal } from "@veltodefi/utils";
+import { cn, Flex, Text, Tooltip } from "@veltodefi/ui";
 import { BasicSymbolInfo } from "../../../types/types";
 import { useOrderBookContext } from "../../base/orderBook/orderContext";
 import { MiddlePriceView } from "../../base/orderBook/midPriceView";
 import { MarkPriceView } from "../../base/orderBook/markPrice";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 interface DesktopMarkPriceProps {
   markPrice: number;
   lastPrice: number[];

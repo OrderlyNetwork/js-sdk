@@ -1,7 +1,7 @@
 import { memo } from "react";
-import { useTranslation, Trans } from "@orderly.network/i18n";
-import { Button, CloseIcon, ThrottledButton } from "@orderly.network/ui";
-import { commify } from "@orderly.network/utils";
+import { useTranslation, Trans } from "@veltodefi/i18n";
+import { Button, CloseIcon, ThrottledButton } from "@veltodefi/ui";
+import { commify } from "@veltodefi/utils";
 import { EditType } from "../../../../type";
 
 type ConfirmContentProps = {

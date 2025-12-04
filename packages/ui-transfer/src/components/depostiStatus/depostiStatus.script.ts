@@ -7,13 +7,13 @@ import {
   useLocalStorage,
   useTransferHistory,
   useWalletTopic,
-} from "@orderly.network/hooks";
+} from "@veltodefi/hooks";
 import {
   AccountStatusEnum,
   API,
   AssetHistorySideEnum,
   AssetHistoryStatusEnum,
-} from "@orderly.network/types";
+} from "@veltodefi/types";
 import { useTransactionTime } from "../../contract/useTransactionTime";
 
 export type DepositStatusScriptReturn = ReturnType<

@@ -6,8 +6,8 @@ import {
   useMediaQuery,
   useRefereeInfo,
   useReferralRebateSummary,
-} from "@orderly.network/hooks";
-import { PaginationMeta, usePagination } from "@orderly.network/ui";
+} from "@veltodefi/hooks";
+import { PaginationMeta, usePagination } from "@veltodefi/ui";
 
 export type ListReturns<T> = {
   data: T;

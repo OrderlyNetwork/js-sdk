@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { MenuItem } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { MenuItem } from "@veltodefi/ui";
 import type {
   InputFormatter,
   InputFormatterOptions,
-} from "@orderly.network/ui";
-import { Decimal, todpIfNeed } from "@orderly.network/utils";
+} from "@veltodefi/ui";
+import { Decimal, todpIfNeed } from "@veltodefi/utils";
 import { usePnlInputContext } from "./pnlInputContext";
 
 export enum PnLMode {

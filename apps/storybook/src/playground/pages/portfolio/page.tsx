@@ -1,4 +1,4 @@
-import { OverviewModule } from "@orderly.network/portfolio";
+import { OverviewModule } from "@veltodefi/portfolio";
 
 export default function PortfolioPage() {
   return <OverviewModule.OverviewPage />;

@@ -1,5 +1,5 @@
-import { useTranslation } from "@orderly.network/i18n";
-import { inputFormatter, TextField } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { inputFormatter, TextField } from "@veltodefi/ui";
 
 export const NickNameDescriptionText = "";
 

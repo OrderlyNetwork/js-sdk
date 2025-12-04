@@ -1,7 +1,7 @@
 import { FC } from "react";
-import { useSymbolsInfo } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { DataFilter, Flex, ListView, Text, Badge } from "@orderly.network/ui";
+import { useSymbolsInfo } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { DataFilter, Flex, ListView, Text, Badge } from "@veltodefi/ui";
 import { type UseFundingHistoryReturn } from "./useDataSource.script";
 
 type FundingHistoryProps = {} & UseFundingHistoryReturn;

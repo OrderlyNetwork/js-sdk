@@ -1,5 +1,5 @@
 
-import { cn } from "@orderly.network/ui";
+import { cn } from "@veltodefi/ui";
 import { FC, useEffect, useMemo, useRef, useState } from "react";
 
 export const AutoHideText: FC<{

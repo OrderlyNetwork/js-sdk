@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Flex, Text } from "@orderly.network/ui";
+import { Flex, Text } from "@veltodefi/ui";
 import { AsTraderWidget } from "../asATrader";
 import { AsAnAffiliateWidget } from "../asAnAffilate";
 import { CardReturns } from "./card.script";

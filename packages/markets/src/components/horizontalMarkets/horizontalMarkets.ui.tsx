@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, cn, Flex, Marquee } from "@orderly.network/ui";
+import { Box, cn, Flex, Marquee } from "@veltodefi/ui";
 import type { HorizontalMarketsScriptReturn } from "./horizontalMarkets.script";
 import { MarketItem } from "./marketItem.ui";
 import { MarketTypeFilter } from "./marketTypeFilter.ui";

@@ -1,4 +1,4 @@
-import { registerSimpleDialog } from "@orderly.network/ui";
+import { registerSimpleDialog } from "@veltodefi/ui";
 import { MarketCloseConfirm } from "./components/positions/closePosition/components/confirmDialog";
 
 export { usePositionsRowContext } from "./components/positions/positionsRowContext";

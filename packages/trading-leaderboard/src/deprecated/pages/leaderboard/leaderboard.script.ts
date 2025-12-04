@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useScreen } from "@orderly.network/ui";
+import { useScreen } from "@veltodefi/ui";
 import { Campaign } from "../../components/provider";
 
 export type LeaderboardScriptReturn = ReturnType<typeof useLeaderboardScript>;

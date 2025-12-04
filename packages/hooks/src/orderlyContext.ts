@@ -4,13 +4,13 @@ import type {
   ConfigStore,
   OrderlyKeyStore,
   WalletAdapter,
-} from "@orderly.network/core";
+} from "@veltodefi/core";
 import type {
   API,
   Chain,
   NetworkId,
   OrderlyOrder,
-} from "@orderly.network/types";
+} from "@veltodefi/types";
 import type { Chains } from "./orderly/useChains";
 
 export type FilteredChains = {

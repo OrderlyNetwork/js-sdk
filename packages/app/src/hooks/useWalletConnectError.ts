@@ -1,9 +1,9 @@
-import { useEventEmitter } from "@orderly.network/hooks";
+import { useEventEmitter } from "@veltodefi/hooks";
 import { useEffect } from "react";
-import { modal, toast } from "@orderly.network/ui";
-import { LedgerWalletKey } from "@orderly.network/types";
-import { useStorageLedgerAddress } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import { modal, toast } from "@veltodefi/ui";
+import { LedgerWalletKey } from "@veltodefi/types";
+import { useStorageLedgerAddress } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
 
 export function useWalletConnectError() {
   const { t } = useTranslation();

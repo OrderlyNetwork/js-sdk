@@ -1,5 +1,5 @@
 import React from "react";
-import { useScreen } from "@orderly.network/ui";
+import { useScreen } from "@veltodefi/ui";
 import { useLinkDeviceScript } from "./linkDevice.script";
 import { LinkDevice } from "./linkDevice.ui";
 import { LinkDeviceMobile } from "./linkDevice.ui.mobile";

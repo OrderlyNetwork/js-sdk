@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useChains, useWalletConnector } from "@orderly.network/hooks";
+import { useChains, useWalletConnector } from "@veltodefi/hooks";
 import { getBlockTime } from "./getBlockTime";
 import { getChainConfirmations } from "./getChainConfirmations";
 

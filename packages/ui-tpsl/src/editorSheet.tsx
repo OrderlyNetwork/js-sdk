@@ -1,5 +1,5 @@
-import { AlgoOrderRootType, API, PositionType } from "@orderly.network/types";
-import { useModal } from "@orderly.network/ui";
+import { AlgoOrderRootType, API, PositionType } from "@veltodefi/types";
+import { useModal } from "@veltodefi/ui";
 import { TPSLWidget, TPSLWidgetProps } from "./positionTPSL";
 
 type TPSLSheetProps = {

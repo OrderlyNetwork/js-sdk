@@ -10,11 +10,11 @@ import {
   useMutation,
   useReferralInfo,
   useWalletConnector,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { AccountStatusEnum, ChainNamespace } from "@orderly.network/types";
-import { modal, toast, useModal } from "@orderly.network/ui";
-import { isTestnet } from "@orderly.network/utils";
+} from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { AccountStatusEnum, ChainNamespace } from "@veltodefi/types";
+import { modal, toast, useModal } from "@veltodefi/ui";
+import { isTestnet } from "@veltodefi/utils";
 import { ReferralProps, TradingRewardsProps } from "../../../types/types";
 
 export const useAccountSheetScript = (

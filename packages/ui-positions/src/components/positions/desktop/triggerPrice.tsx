@@ -1,14 +1,14 @@
 import { FC, useMemo } from "react";
-import { useSymbolsInfo, utils } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
+import { useSymbolsInfo, utils } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   AlgoOrderType,
   API,
   OrderSide,
   PositionType,
-} from "@orderly.network/types";
-import { cn, Flex, Text, Tooltip } from "@orderly.network/ui";
-import { formatNum } from "@orderly.network/utils";
+} from "@veltodefi/types";
+import { cn, Flex, Text, Tooltip } from "@veltodefi/ui";
+import { formatNum } from "@veltodefi/utils";
 import { usePositionsRowContext } from "../positionsRowContext";
 import { TPSLEditIcon, AddIcon } from "./components";
 

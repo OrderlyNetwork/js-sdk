@@ -70,7 +70,7 @@ registerSimpleSheet(FundingRateSheetId, FundingRateModalWidget, {
 - UI 不做数据副作用与状态；逻辑与派生放在 script
 - 类型显式、易读命名；避免深层嵌套
 - 合理使用 `useMemo/useCallback` 优化计算；必要时进行错误兜底
-- **数字计算**：所有涉及数字计算的部分（乘法、除法、百分比转换等）必须使用 `Decimal`（来自 `@orderly.network/utils`），避免 JavaScript 浮点数精度问题
+- **数字计算**：所有涉及数字计算的部分（乘法、除法、百分比转换等）必须使用 `Decimal`（来自 `@veltodefi/utils`），避免 JavaScript 浮点数精度问题
 - **注释语言**：所有代码注释必须使用英文
 
 ### 指令驱动动作
@@ -126,7 +126,7 @@ registerSimpleSheet(FundingRateSheetId, FundingRateModalWidget, {
 
 ```ts
 import { useMemo } from "react";
-import { Decimal } from "@orderly.network/utils";
+import { Decimal } from "@veltodefi/utils";
 
 export interface UseExampleScriptOptions {
   // Define external inputs, e.g. symbol?: string
@@ -156,7 +156,7 @@ export type ExampleState = ReturnType<typeof useExampleScript>;
 
 ```tsx
 import React, { FC } from "react";
-import { Flex, Text } from "@orderly.network/ui";
+import { Flex, Text } from "@veltodefi/ui";
 import type { ExampleState } from "./example.script";
 
 export type ExampleProps = ExampleState & {
@@ -178,8 +178,8 @@ import { useExampleScript } from "./example.script";
 import { Example, type ExampleProps } from "./example.ui";
 
 // 可选：
-// import { i18n } from "@orderly.network/i18n";
-// import { registerSimpleDialog, registerSimpleSheet } from "@orderly.network/ui";
+// import { i18n } from "@veltodefi/i18n";
+// import { registerSimpleDialog, registerSimpleSheet } from "@veltodefi/ui";
 
 export type ExampleWidgetProps = Pick<ExampleProps, "className" | "style"> & {
   // 这里定义传给 script 的 options，例如 symbol?: string

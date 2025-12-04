@@ -1,6 +1,6 @@
-import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
-import { PositionTPSLPopover } from "@orderly.network/ui-tpsl";
+import { useTranslation } from "@veltodefi/i18n";
+import { API } from "@veltodefi/types";
+import { PositionTPSLPopover } from "@veltodefi/ui-tpsl";
 import { useSymbolContext } from "../../provider/symbolContext";
 import { useTPSLOrderRowContext } from "../tpslOrderRowContext";
 

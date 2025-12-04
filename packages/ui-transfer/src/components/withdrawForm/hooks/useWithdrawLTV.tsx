@@ -1,7 +1,7 @@
 import { useMemo } from "react";
-import { useComputedLTV, useQuery } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
+import { useComputedLTV, useQuery } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { API } from "@veltodefi/types";
 
 export const useWithdrawLTV = (params: { token: string; quantity: string }) => {
   const { token, quantity } = params;

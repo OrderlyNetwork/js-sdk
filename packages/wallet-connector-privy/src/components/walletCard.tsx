@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   ChainIcon,
   Checkbox,
@@ -14,7 +14,7 @@ import {
   Popover,
   toast,
   Tooltip,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { useWallet } from "../hooks/useWallet";
 import { useWalletConnectorPrivy } from "../provider";
 import { usePrivyWallet } from "../providers/privy/privyWalletProvider";

@@ -1,6 +1,6 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Text, cn } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { Text, cn } from "@veltodefi/ui";
 
 const ProcessDot = () => {
   return <div className="oui-size-2 oui-rounded-full oui-bg-white/[0.54]" />;

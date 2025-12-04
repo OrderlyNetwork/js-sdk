@@ -1,6 +1,6 @@
 import { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { Checkbox, cn, Flex, SimpleDialog } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { Checkbox, cn, Flex, SimpleDialog } from "@veltodefi/ui";
 import { InfoIcon } from "../icons";
 import type { UseRestrictedInfoScriptReturn } from "./restrictedInfo.script";
 

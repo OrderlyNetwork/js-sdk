@@ -1,4 +1,4 @@
-import { Flex, Box, cn } from "@orderly.network/ui";
+import { Flex, Box, cn } from "@veltodefi/ui";
 import { BecomeAffiliateWidget } from "./becomeAffiliate";
 import { TopWidget } from "./top";
 import { CardWidget } from "./card";

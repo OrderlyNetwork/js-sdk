@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { i18n, Trans, useTranslation } from "@orderly.network/i18n";
+import { i18n, Trans, useTranslation } from "@veltodefi/i18n";
 
 const meta: Meta = {
   title: "Package/i18n",

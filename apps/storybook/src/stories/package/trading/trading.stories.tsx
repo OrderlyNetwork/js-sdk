@@ -9,8 +9,8 @@ import {
   OrderBookWidget,
   OrderBookAndTradesWidget,
   BottomNavBarWidget,
-} from "@orderly.network/trading";
-import { Box, Flex } from "@orderly.network/ui";
+} from "@veltodefi/trading";
+import { Box, Flex } from "@veltodefi/ui";
 import { BaseLayout } from "../../../components/layout";
 import { tradingPageConfig } from "../../../orderlyConfig";
 import { getSymbol, updateSymbol } from "../../../utils/storage";

@@ -1,5 +1,5 @@
-import { useTranslation } from "@orderly.network/i18n";
-import { Box, Flex } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { Box, Flex } from "@veltodefi/ui";
 
 export const Countdown = ({
   timeInterval,

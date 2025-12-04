@@ -1,6 +1,6 @@
 import { FC } from "react";
-import { Trans, useTranslation } from "@orderly.network/i18n";
-import { Box, cn, Flex, Text } from "@orderly.network/ui";
+import { Trans, useTranslation } from "@veltodefi/i18n";
+import { Box, cn, Flex, Text } from "@veltodefi/ui";
 import { TooltipIcon } from "../icons/tooltipIcon";
 
 export interface BaseReminderProps {

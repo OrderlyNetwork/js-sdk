@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { Switch } from "@orderly.network/ui";
+import { Switch } from "@veltodefi/ui";
 
 const meta: Meta<typeof Switch> = {
   title: "Base/Switch",

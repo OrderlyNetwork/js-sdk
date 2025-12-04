@@ -2,7 +2,7 @@ import {
   API,
   ArbitrumSepoliaChainInfo,
   SolanaDevnetChainInfo,
-} from "@orderly.network/types";
+} from "@veltodefi/types";
 import { ORDERLY_TEST_CHAIN_INFO } from "../../middleware/indexedDBManager";
 import { createDataStore } from "./createDataStore";
 

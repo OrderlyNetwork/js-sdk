@@ -4,13 +4,13 @@ import {
   useStorageChain,
   useTrack,
   WalletState,
-} from "@orderly.network/hooks";
+} from "@veltodefi/hooks";
 import {
   AbstractChains,
   ChainNamespace,
   ConnectorKey,
   TrackerEventName,
-} from "@orderly.network/types";
+} from "@veltodefi/types";
 import { useWalletConnectorPrivy } from "../provider";
 import { useAbstractWallet } from "../providers/abstractWallet/abstractWalletProvider";
 import { usePrivyWallet } from "../providers/privy/privyWalletProvider";
