@@ -8,6 +8,7 @@ import {
   useAppStore,
   useChainInfo,
 } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 import { EMPTY_LIST } from "@orderly.network/types";
 import { usePagination } from "@orderly.network/ui";
 import { subtractDaysFromCurrentDate } from "@orderly.network/utils";
@@ -16,6 +17,7 @@ import { parseDateRangeForFilter } from "../../overview/helper/date";
 import type { ConvertRecord } from "../type";
 
 export const useConvertScript = () => {
+  const { t } = useTranslation();
   const { isMainAccount, state } = useAccount();
   const { holding = [] } = useCollateral();
   const { data: indexPrices } = useIndexPricesStream();
@@ -62,8 +64,8 @@ export const useConvertScript = () => {
         label: item.token,
       })) || [];
 
-    return [{ label: "All assets", value: "all" }, ...assetOptions];
-  }, [tokensInfo]);
+    return [{ label: t("common.allAssets"), value: "all" }, ...assetOptions];
+  }, [tokensInfo, t]);
 
   // Handle all filters (including account filter and date range)
   const onFilter = React.useCallback(

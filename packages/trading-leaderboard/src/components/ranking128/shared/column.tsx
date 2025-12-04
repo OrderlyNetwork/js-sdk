@@ -17,7 +17,7 @@ export const useRankingColumns = (
   fields?: RankingColumnFields[],
   address?: string,
   enableSort?: boolean,
-  brokerId?: string,
+  type?: "general" | "campaign",
 ) => {
   const { t } = useTranslation();
   const { isMobile } = useScreen();
@@ -101,7 +101,7 @@ export const useRankingColumns = (
             <>
               <a
                 className="oui-flex oui-items-start oui-gap-1"
-                href={`https://orderly-dashboard.orderly.network/address/${value}?broker_id=${brokerId}`}
+                href={`https://orderly-dashboard.orderly.network/address/${value}?broker_id=${record.broker_id}`}
                 target="_blank"
                 rel="noreferrer"
               >
@@ -195,7 +195,7 @@ export const useRankingColumns = (
     return columns.filter((column) =>
       fields?.includes(column.dataIndex as RankingColumnFields),
     );
-  }, [t, isMobile, address, fields, enableSort, brokerId]);
+  }, [t, isMobile, address, fields, enableSort, type]);
 };
 
 const FirstRankIcon = () => {

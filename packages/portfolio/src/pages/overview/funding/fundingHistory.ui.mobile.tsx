@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useMemo } from "react";
 import { useSymbolsInfo } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { DataFilter, Flex, ListView, Text, Badge } from "@orderly.network/ui";
@@ -102,6 +102,22 @@ export const FundingHistoryMobile: FC<FundingHistoryProps> = (props) => {
     );
   };
 
+  const options = useMemo(() => {
+    return [
+      {
+        label: t("common.all"),
+        value: "All",
+      },
+      ...Object.keys(symbols).map((symbol) => {
+        const s = symbol.split("_")[1];
+        return {
+          label: s,
+          value: symbol,
+        };
+      }),
+    ];
+  }, [t, symbols]);
+
   return (
     <>
       <DataFilter
@@ -110,25 +126,11 @@ export const FundingHistoryMobile: FC<FundingHistoryProps> = (props) => {
             type: "select",
             name: "symbol",
             isCombine: true,
-            options: [
-              {
-                label: "All",
-                value: "All",
-              },
-              ...Object.keys(symbols).map((symbol) => {
-                const s = symbol.split("_")[1];
-                return {
-                  label: s,
-                  value: symbol,
-                };
-              }),
-            ],
+            options,
             value: symbol,
             valueFormatter: (value) => {
-              if (value === "All") {
-                return "All";
-              }
-              return value.split("_")[1];
+              const option = options.find((item) => item.value === value);
+              return option?.label || value;
             },
           },
           {

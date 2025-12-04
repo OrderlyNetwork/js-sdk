@@ -25,15 +25,15 @@ export type RankingProps = {
 } & Omit<GeneralRankingScriptReturn, "dataList" | "dataSource"> & {
     dataList: RankingData[];
     dataSource: RankingData[];
+    type?: "general" | "campaign";
   };
 
 export const Ranking: FC<RankingProps> = (props) => {
-  const brokerId = useConfig("brokerId");
   const column = useRankingColumns(
     props.fields,
     props.address,
     typeof props.onSort === "function",
-    brokerId,
+    props.type,
   );
   const { isMobile } = useScreen();
 
