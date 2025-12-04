@@ -1,6 +1,5 @@
 const fs = require("fs");
 const path = require("path");
-const { notifyTelegram } = require("./notifyTelegram");
 
 // Current branch in CI environment
 const ciBranch = process.env.CI_COMMIT_BRANCH;
@@ -23,7 +22,6 @@ async function main() {
     await triggerPipeline(packageVersion);
   } catch (error) {
     console.error("Error triggering pipeline:", error);
-    await notifyTelegram(`Error triggering pipeline: ${error.message}`);
     throw error;
   }
 }
@@ -56,12 +54,14 @@ async function checkBranchIsExist(branch) {
 async function triggerPipeline(packageVersion) {
   const ref = getTriggerBranch();
 
+  if (!ref) {
+    console.log("No trigger branch found, skipping pipeline trigger.");
+    return;
+  }
+
   const branchIsExist = await checkBranchIsExist(ref);
   if (!branchIsExist) {
     // It’s possible that having no branch is expected, so don't throw an error.
-    await notifyTelegram(
-      `The ${ref} branch not found, pipeline will not be triggered`,
-    );
     return;
   }
 
@@ -95,9 +95,6 @@ async function triggerPipeline(packageVersion) {
 
     const result = await response.json();
     console.log("Pipeline triggered successfully:", result);
-    await notifyTelegram(
-      `Pipeline on the ${ref} branch was triggered successfully`,
-    );
     return result;
   } catch (error) {
     // console.error("Error triggering pipeline:", error);
