@@ -75,6 +75,10 @@ export const TPSL: React.FC<TPSLBuilderState & TPSLProps> = (props) => {
     props.slPriceError?.sl_trigger_price?.type ===
     ERROR_MSG_CODES.SL_PRICE_WARNING;
 
+  const isSlPriceError =
+    props.slPriceError?.sl_trigger_price?.type ===
+    ERROR_MSG_CODES.SL_PRICE_ERROR;
+
   if (!position) {
     return null;
   }
@@ -219,7 +223,13 @@ export const TPSL: React.FC<TPSLBuilderState & TPSLProps> = (props) => {
               hideOrderPrice={
                 TPSL_OrderEntity.position_type === PositionType.FULL
               }
-              errors={validated ? slErrors : null}
+              errors={
+                validated
+                  ? slErrors
+                  : isSlPriceError
+                    ? props.slPriceError
+                    : null
+              }
               quote_dp={symbolInfo("quote_dp")}
               positionType={
                 TPSL_OrderEntity.position_type ?? PositionType.PARTIAL
