@@ -64,6 +64,10 @@ export const customArenRender = (
 const getMainMenus = (): MainNavWidgetProps["mainMenus"] => {
   return [
     {
+      name: i18n.t("extend.spot"),
+      href: "/swap",
+    },
+    {
       name: i18n.t("common.trading"),
       href: "/",
       isHomePageInMobile: true,
@@ -155,7 +159,7 @@ const getLeftNavMenus = (): LeftNavProps => {
     menus: [
       {
         name: i18n.t("extend.spot"),
-        href: "https://woofi.com/swap",
+        href: "/swap",
         icon: <SpotIcon />,
       },
       {

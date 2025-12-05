@@ -27,6 +27,7 @@ import PositionsPage from "./pages/portfolio/positions/page";
 import SettingsPage from "./pages/portfolio/setting/page";
 import AffiliatePage from "./pages/rewards/affiliate/page";
 import TradingRewardsPage from "./pages/rewards/trading/page";
+import SwapPage from "./pages/swap/page";
 import VaultsPage from "./pages/vaults/page";
 import { getSymbol } from "./storage";
 
@@ -134,6 +135,10 @@ const AppRoute: React.FC = () => {
     {
       path: "announcement",
       element: <AnnouncementPage />,
+    },
+    {
+      path: "swap",
+      element: <SwapPage />,
     },
   ];
 
