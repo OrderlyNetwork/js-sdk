@@ -20,7 +20,14 @@ export type ReversePositionProps = ReversePositionState & {
 };
 
 export const ReversePosition: FC<ReversePositionProps> = (props) => {
-  const { displayInfo, className, style, onConfirm, onCancel } = props;
+  const {
+    displayInfo,
+    validationError,
+    className,
+    style,
+    onConfirm,
+    onCancel,
+  } = props;
   const { t } = useTranslation();
 
   if (!displayInfo) {
@@ -71,6 +78,9 @@ export const ReversePosition: FC<ReversePositionProps> = (props) => {
       </Text>
     </Flex>
   );
+
+  // Determine which message to show based on validation error
+  const showBelowMinError = validationError === "belowMin";
 
   return (
     <Flex
@@ -139,10 +149,16 @@ export const ReversePosition: FC<ReversePositionProps> = (props) => {
         baseDp={baseDp}
       />
 
-      {/* Reverse To Description */}
-      <Text size="2xs" color="warning" weight="semibold">
-        {t("positions.reverse.description")}
-      </Text>
+      {/* Description or Error Message */}
+      {showBelowMinError ? (
+        <Text size="2xs" color="danger" weight="semibold">
+          {t("positions.reverse.error.belowMin")}
+        </Text>
+      ) : (
+        <Text size="2xs" color="warning" weight="semibold">
+          {t("positions.reverse.description")}
+        </Text>
+      )}
     </Flex>
   );
 };

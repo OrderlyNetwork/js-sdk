@@ -2,22 +2,24 @@ import { useCallback, useMemo } from "react";
 import {
   useLocalStorage,
   useMarkPrice,
-  useMaxQty,
   useSubAccountMutation,
   useSymbolsInfo,
 } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
 import { API, OrderSide, OrderType } from "@orderly.network/types";
-import { toast } from "@orderly.network/ui";
 import { useScreen } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
-import { usePositionsRowContext } from "../positions/positionsRowContext";
 
 export interface UseReversePositionScriptOptions {
   position: API.PositionExt | API.PositionTPSLExt;
   onSuccess?: () => void;
   onError?: (error: any) => void;
 }
+
+// Validation error types
+export type ReversePositionValidationError = "belowMin" | null;
+
+// Maximum number of orders per batch request
+const MAX_BATCH_ORDER_SIZE = 20;
 
 /**
  * Hook for managing reverse position enabled state
@@ -69,13 +71,28 @@ export const useReversePositionScript = (
   options?: UseReversePositionScriptOptions,
 ) => {
   const { position, onSuccess, onError } = options || {};
-  const { t } = useTranslation();
   const { isEnabled, setEnabled } = useReversePositionEnabled();
 
   const symbolsInfo = useSymbolsInfo();
   const symbol = position?.symbol || "";
   const { data: symbolMarketPrice } = useMarkPrice(symbol);
   const symbolInfo = symbolsInfo?.[symbol];
+
+  // Get base_min and base_max from symbol info
+  const baseMin = useMemo(() => {
+    if (!symbolInfo) return 0;
+    return symbolInfo("base_min") || 0;
+  }, [symbolInfo]);
+
+  const baseMax = useMemo(() => {
+    if (!symbolInfo) return 0;
+    return symbolInfo("base_max") || 0;
+  }, [symbolInfo]);
+
+  const baseDp = useMemo(() => {
+    if (!symbolInfo) return 6;
+    return symbolInfo("base_dp") || 6;
+  }, [symbolInfo]);
 
   // Calculate reverse order quantity
   const positionQty = useMemo(() => {
@@ -89,26 +106,84 @@ export const useReversePositionScript = (
     return position.position_qty > 0;
   }, [position]);
 
-  // Calculate max quantity for opening opposite position
-  const oppositeSide = useMemo(() => {
-    return isLong ? OrderSide.SELL : OrderSide.BUY;
-  }, [isLong]);
+  const reverseQty = positionQty;
 
-  const maxOpenQty = useMaxQty(symbol, oppositeSide, false);
-
-  // Calculate actual reverse quantity (use max available if insufficient margin)
-  const reverseQty = useMemo(() => {
-    if (!position) return 0;
-    const desiredQty = positionQty;
-    // If margin is insufficient, use maximum available
-    if (desiredQty > maxOpenQty && maxOpenQty > 0) {
-      return maxOpenQty;
+  // Validation: check if reverse quantity is below minimum (highest priority)
+  const validationError = useMemo<ReversePositionValidationError>(() => {
+    if (!position || !symbolInfo) return null;
+    if (baseMin > 0 && reverseQty < baseMin) {
+      return "belowMin";
     }
-    return desiredQty;
-  }, [positionQty, maxOpenQty]);
+    return null;
+  }, [position, symbolInfo, reverseQty, baseMin]);
 
-  const [doCreateOrder, { isMutating }] = useSubAccountMutation(
-    "/v1/order",
+  // Calculate split orders if quantity exceeds base_max
+  const splitOrders = useMemo(() => {
+    if (!position || !symbolInfo || baseMax <= 0 || reverseQty <= 0) {
+      return { needsSplit: false, orders: [] };
+    }
+
+    const buildOrder = (qty: number, side: OrderSide, reduceOnly: boolean) => {
+      return {
+        symbol: position.symbol,
+        order_type: OrderType.MARKET,
+        side,
+        order_quantity: new Decimal(qty).todp(baseDp).toString(),
+        reduce_only: reduceOnly,
+      };
+    };
+
+    const closeSide = isLong ? OrderSide.SELL : OrderSide.BUY;
+    const openSide = isLong ? OrderSide.SELL : OrderSide.BUY;
+
+    // If reverse quantity doesn't exceed base_max, no split needed
+    if (reverseQty <= baseMax) {
+      return {
+        needsSplit: false,
+        orders: [
+          buildOrder(reverseQty, closeSide, true),
+          buildOrder(reverseQty, openSide, false),
+        ],
+      };
+    }
+
+    // Calculate split orders
+    const orders: {
+      symbol: string;
+      order_type: OrderType;
+      side: OrderSide;
+      order_quantity: string;
+      reduce_only: boolean;
+    }[] = [];
+    const perOrderQty = baseMax;
+    const numOrders = Math.ceil(reverseQty / baseMax);
+
+    for (let i = 0; i < numOrders - 1; i++) {
+      orders.push(buildOrder(perOrderQty, closeSide, true));
+    }
+    orders.push(
+      buildOrder(reverseQty - perOrderQty * (numOrders - 1), closeSide, true),
+    );
+    for (let i = 0; i < numOrders - 1; i++) {
+      orders.push(buildOrder(perOrderQty, openSide, false));
+    }
+
+    // Last order gets the remaining quantity
+    orders.push(
+      buildOrder(reverseQty - perOrderQty * (numOrders - 1), openSide, false),
+    );
+
+    return {
+      needsSplit: true,
+      orders,
+    };
+  }, [position, symbolInfo, reverseQty, baseMax, baseDp]);
+
+  console.log("splitOrders", reverseQty, baseMax, splitOrders);
+
+  // Batch order mutation - always use batch API
+  const [doBatchCreateOrder, { isMutating }] = useSubAccountMutation(
+    "/v1/batch-order",
     "POST",
     {
       accountId: position?.account_id,
@@ -118,54 +193,64 @@ export const useReversePositionScript = (
   // Reverse position logic
   const reversePosition = useCallback(async () => {
     if (!position || positionQty === 0) {
-      toast.error("No position to reverse");
+      // toast.error("No position to reverse");
+      return false;
+    }
+
+    // Don't allow if validation error exists
+    if (validationError) {
       return false;
     }
 
     try {
-      // Step 1: Close current position (market order with reduce_only)
-      const closeSide = isLong ? OrderSide.SELL : OrderSide.BUY;
-      const closeOrder = await doCreateOrder({
-        symbol: position.symbol,
-        order_type: OrderType.MARKET,
-        side: closeSide,
-        order_quantity: new Decimal(positionQty).toString(),
-        reduce_only: true,
-      });
-
-      // if (!closeOrder.success) {
-      //   throw new Error(closeOrder.message || "Failed to close position");
-      // }
-
-      // Step 2: Open opposite position (market order without reduce_only)
-      const openSide = isLong ? OrderSide.SELL : OrderSide.BUY;
-      const openOrder = await doCreateOrder({
-        symbol: position.symbol,
-        order_type: OrderType.MARKET,
-        side: openSide,
-        order_quantity: new Decimal(reverseQty).toString(),
-        reduce_only: false,
-      });
-
-      if (!openOrder.success) {
-        throw new Error(
-          openOrder.message || "Failed to open opposite position",
-        );
+      // INSERT_YOUR_CODE
+      // Check if splitOrders.orders length > MAX_BATCH_ORDER_SIZE
+      const ordersArray = splitOrders.orders;
+      if (ordersArray.length > MAX_BATCH_ORDER_SIZE) {
+        for (let i = 0; i < ordersArray.length; i += MAX_BATCH_ORDER_SIZE) {
+          const batch = ordersArray.slice(i, i + MAX_BATCH_ORDER_SIZE);
+          const result = await doBatchCreateOrder({
+            orders: batch,
+            symbol: position.symbol,
+          });
+          // because create order rate limit is 10 orders per second, so we need to wait for the next batch
+          // add 10% buffer to the wait time
+          await new Promise((resolve) =>
+            setTimeout(resolve, batch.length * 110),
+          );
+          // Optional: check result and handle possible errors (stop if failed)
+          if (!result || result.error) {
+            throw result?.error || new Error("Batch order failed");
+          }
+        }
+      } else {
+        const result = await doBatchCreateOrder({
+          orders: ordersArray,
+          symbol: position.symbol,
+        });
+        if (!result || result.error) {
+          throw result?.error || new Error("Batch order failed");
+        }
       }
-
       onSuccess?.();
 
       return true;
     } catch (error: any) {
-      // if (error?.message !== undefined) {
-      //   toast.error(error.message);
-      // } else {
-      //   toast.error("Failed to reverse position");
-      // }
       onError?.(error);
       return false;
     }
-  }, [position, positionQty, reverseQty, isLong, doCreateOrder, t, onSuccess]);
+  }, [
+    position,
+    positionQty,
+    reverseQty,
+    isLong,
+    doBatchCreateOrder,
+    splitOrders,
+    symbolInfo,
+    validationError,
+    onSuccess,
+    onError,
+  ]);
 
   // Get display information
   const displayInfo = useMemo(() => {
@@ -211,6 +296,8 @@ export const useReversePositionScript = (
     positionQty,
     reverseQty,
     isLong,
+    validationError,
+    splitOrders,
   };
 };
 
