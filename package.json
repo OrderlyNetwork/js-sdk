@@ -11,6 +11,7 @@
     "docs": "typedoc",
     "version:add": "pnpm build && changeset add",
     "version:g": "ts-node ./scripts/version.ts",
+    "version:prerelease": "node ./scripts/version-prerelease.js",
     "preinstall": "npx only-allow pnpm",
     "prepublishOnly": "pnpm build",
     "prepare": "husky",
