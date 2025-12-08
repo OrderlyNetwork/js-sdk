@@ -175,13 +175,13 @@ const SlippageItem: FC<SlippageItemProps> = ({ value, isActive, onClick }) => {
       height={40}
       className={cn(
         "oui-cursor-pointer oui-select-none",
-        isActive && "oui-bg-primary-light",
+        isActive
+          ? "oui-bg-primary-light oui-text-primary-contrast/80"
+          : "oui-text-base-contrast-80",
       )}
       onClick={onClick}
     >
-      <Text size="sm" intensity={80}>
-        {value}%
-      </Text>
+      <Text size="sm">{value}%</Text>
     </Flex>
   );
 };
