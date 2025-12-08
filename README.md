@@ -1,3 +1,41 @@
+# Velto and Orderly Merge
+
+```bash
+# Clone this repo
+git clone git@github.com:veltodefi/orderly-js-sdk.git
+git checkout velto-main # velto's default branch
+
+# 1. Add the Orderly repo as a remote (one-time setup)
+git remote add upstream https://github.com/OrderlyNetwork/orderly-js-sdk.git
+
+# 2. Fetch tags from upstream
+git fetch upstream --tags
+
+# 3. Merge latest tag to velto-main
+git merge v2.8.6  # or whatever the latest tag is
+
+# IMPORTANT: Generate a classic GitHub Personal Access Token with repo, write:packages and read:packages permissions.
+https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
+
+# 4. Set environment variables
+export GIT_TOKEN="your_github_pat"
+export GIT_USERNAME="git-username"
+export GIT_NAME="Your Name"
+export GIT_EMAIL="your@email.com"
+export NPM_TOKEN="your_github_pat"
+export NPM_REGISTRY="https://npm.pkg.github.com"  # GitHub Packages
+
+# 5. Run version:prerelease command (handles versioning, building, and publishing)
+pnpm version:prerelease
+
+# 6. Commit changes
+git add .
+git commit -m "Release velto-main version"
+
+# 7. Push to remote
+git push origin velto-main
+```
+
 # Orderly SDKs
 
 [![DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/OrderlyNetwork/js-sdk)
