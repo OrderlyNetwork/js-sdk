@@ -64,6 +64,7 @@ export const ReversePositionWidget: React.FC<ReversePositionWidgetProps> = (
       },
       secondary: {
         label: t("common.cancel"),
+        disabled: state.isReversing,
         onClick: async () => {
           reject?.("cancel");
           hide();
@@ -86,6 +87,7 @@ export const ReversePositionWidget: React.FC<ReversePositionWidgetProps> = (
         content: "oui-border oui-border-line-6",
       }}
       actions={actions}
+      closable={!state.isReversing}
     >
       <ReversePosition {...state} />
     </SimpleDialog>

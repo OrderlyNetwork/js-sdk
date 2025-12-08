@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import {
   useLocalStorage,
   useMarkPrice,
@@ -181,8 +181,13 @@ export const useReversePositionScript = (
 
   console.log("splitOrders", reverseQty, baseMax, splitOrders);
 
+  // Local state to track the entire reverse position process
+  // This is needed because when orders are split into multiple batches,
+  // the mutation's isMutating only reflects the current batch
+  const [isReversing, setIsReversing] = useState(false);
+
   // Batch order mutation - always use batch API
-  const [doBatchCreateOrder, { isMutating }] = useSubAccountMutation(
+  const [doBatchCreateOrder] = useSubAccountMutation(
     "/v1/batch-order",
     "POST",
     {
@@ -202,6 +207,7 @@ export const useReversePositionScript = (
       return false;
     }
 
+    setIsReversing(true);
     try {
       // INSERT_YOUR_CODE
       // Check if splitOrders.orders length > MAX_BATCH_ORDER_SIZE
@@ -238,6 +244,8 @@ export const useReversePositionScript = (
     } catch (error: any) {
       onError?.(error);
       return false;
+    } finally {
+      setIsReversing(false);
     }
   }, [
     position,
@@ -291,7 +299,7 @@ export const useReversePositionScript = (
     isEnabled,
     setEnabled,
     reversePosition,
-    isReversing: isMutating,
+    isReversing,
     displayInfo,
     positionQty,
     reverseQty,
