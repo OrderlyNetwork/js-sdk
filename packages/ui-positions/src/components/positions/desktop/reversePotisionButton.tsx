@@ -1,4 +1,4 @@
-import { ArrowLeftRightIcon, Button, modal } from "@orderly.network/ui";
+import { ArrowLeftRightIcon, Button, modal } from "@veltodefi/ui";
 import { ReversePositionDialogId } from "../../reversePosition";
 
 export const ReversePositionButton = (props: { position: any }) => {

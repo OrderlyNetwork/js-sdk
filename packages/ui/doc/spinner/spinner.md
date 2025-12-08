@@ -64,7 +64,7 @@ Additional classes for layout tweaks (e.g., margins, animation speed).
 ## Usage
 
 ```tsx
-import { Spinner } from "@orderly.network/ui";
+import { Spinner } from "@veltodefi/ui";
 
 <div className="oui-flex oui-items-center oui-gap-2">
   <Spinner size="sm" />

@@ -1,9 +1,9 @@
 import { FC, useMemo, ReactNode } from "react";
-import { useTranslation, Trans } from "@orderly.network/i18n";
-import { NetworkId } from "@orderly.network/types";
-import { Box, Text } from "@orderly.network/ui";
-import { modal } from "@orderly.network/ui";
-import { ChainSelectorDialogId } from "@orderly.network/ui-chain-selector";
+import { useTranslation, Trans } from "@veltodefi/i18n";
+import { NetworkId } from "@veltodefi/types";
+import { Box, Text } from "@veltodefi/ui";
+import { modal } from "@veltodefi/ui";
+import { ChainSelectorDialogId } from "@veltodefi/ui-chain-selector";
 
 type NoticeProps = {
   message?: string | ReactNode;

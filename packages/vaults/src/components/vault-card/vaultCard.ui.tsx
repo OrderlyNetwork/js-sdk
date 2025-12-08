@@ -1,5 +1,5 @@
 import { FC, useMemo } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   Text,
   cn,
@@ -8,9 +8,9 @@ import {
   useScreen,
   Tooltip,
   InfoCircleIcon,
-} from "@orderly.network/ui";
-import { AuthGuard } from "@orderly.network/ui-connector";
-import { Decimal } from "@orderly.network/utils";
+} from "@veltodefi/ui";
+import { AuthGuard } from "@veltodefi/ui-connector";
+import { Decimal } from "@veltodefi/utils";
 import { VaultStatus } from "../../types/vault";
 import { parseMarkdownLinks } from "../../utils/parseMarkdownLinks";
 import { VaultCardScript } from "./vaultCard.script";

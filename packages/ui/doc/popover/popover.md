@@ -156,7 +156,7 @@ Additional CSS classes.
 ### Basic Popover
 
 ```tsx
-import { Popover, PopoverTrigger, PopoverContent } from "@orderly.network/ui";
+import { Popover, PopoverTrigger, PopoverContent } from "@veltodefi/ui";
 
 <Popover content={<FilterForm />}>
   <PopoverTrigger asChild>
@@ -168,7 +168,7 @@ import { Popover, PopoverTrigger, PopoverContent } from "@orderly.network/ui";
 ### Popover with Arrow
 
 ```tsx
-import { Popover } from "@orderly.network/ui";
+import { Popover } from "@veltodefi/ui";
 
 <Popover
   content={<FilterForm />}
@@ -182,11 +182,7 @@ import { Popover } from "@orderly.network/ui";
 ### Using Low-Level Primitives
 
 ```tsx
-import {
-  PopoverRoot,
-  PopoverTrigger,
-  PopoverContent,
-} from "@orderly.network/ui";
+import { PopoverRoot, PopoverTrigger, PopoverContent } from "@veltodefi/ui";
 
 <PopoverRoot>
   <PopoverTrigger asChild>
@@ -202,7 +198,7 @@ import {
 
 ```tsx
 import { useState } from "react";
-import { Popover } from "@orderly.network/ui";
+import { Popover } from "@veltodefi/ui";
 
 function ControlledPopover() {
   const [open, setOpen] = useState(false);

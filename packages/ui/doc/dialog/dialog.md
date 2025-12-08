@@ -256,7 +256,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogBody,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 
 <Dialog>
   <DialogTrigger asChild>
@@ -274,7 +274,7 @@ import {
 ### SimpleDialog
 
 ```tsx
-import { SimpleDialog } from "@orderly.network/ui";
+import { SimpleDialog } from "@veltodefi/ui";
 
 <SimpleDialog
   title="Settings"
@@ -292,7 +292,7 @@ import { SimpleDialog } from "@orderly.network/ui";
 ### Dialog with Custom Size
 
 ```tsx
-import { SimpleDialog } from "@orderly.network/ui";
+import { SimpleDialog } from "@veltodefi/ui";
 
 <SimpleDialog title="Large Dialog" size="xl" open={open} onOpenChange={setOpen}>
   <LargeContent />
@@ -309,7 +309,7 @@ import {
   DialogTitle,
   DialogBody,
   DialogFooter,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 
 <Dialog open={open} onOpenChange={setOpen}>
   <DialogContent>

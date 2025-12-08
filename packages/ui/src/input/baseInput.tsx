@@ -7,7 +7,7 @@ import React, {
   forwardRef,
 } from "react";
 import { InputHTMLAttributes } from "react";
-import { findLongestCommonSubString } from "@orderly.network/utils";
+import { findLongestCommonSubString } from "@veltodefi/utils";
 import { InputFormatter } from "./formatter/inputFormatter";
 
 export interface BaseInputProps<T = string>

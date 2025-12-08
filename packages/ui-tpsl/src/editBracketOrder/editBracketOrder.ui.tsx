@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import { ERROR_MSG_CODES } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
+import { ERROR_MSG_CODES } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { useOrderEntryFormErrorMsg } from "@veltodefi/react-app";
 import {
   OrderlyOrder,
   OrderSide,
   OrderType,
   PositionType,
-} from "@orderly.network/types";
+} from "@veltodefi/types";
 import {
   cn,
   Divider,
@@ -17,7 +17,7 @@ import {
   Text,
   ThrottledButton,
   useScreen,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { OrderInfo } from "../components/orderInfo";
 import { PnlInfo } from "../components/pnlInfo";
 import { TPSLInputRowWidget } from "../components/tpslInputRow";

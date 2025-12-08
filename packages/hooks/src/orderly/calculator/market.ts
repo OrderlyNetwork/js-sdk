@@ -1,5 +1,5 @@
-import { WSMessage } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+import { WSMessage } from "@veltodefi/types";
+import { Decimal } from "@veltodefi/utils";
 import { Calculator, CalculatorCtx, CalculatorScope } from "../../types";
 import { useMarketStore } from "../useMarket/market.store";
 import { BaseCalculator } from "./baseCalculator";

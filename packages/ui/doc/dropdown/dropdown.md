@@ -302,7 +302,7 @@ import {
   DropdownTrigger,
   DropdownContent,
   DropdownItem,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 
 <Dropdown>
   <DropdownTrigger asChild>
@@ -326,7 +326,7 @@ import {
   DropdownTrigger,
   DropdownContent,
   DropdownCheckboxItem,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 
 <Dropdown>
   <DropdownTrigger asChild>
@@ -357,8 +357,8 @@ import {
   DropdownTrigger,
   DropdownContent,
   MenuItem,
-} from "@orderly.network/ui";
-import { CopyIcon, EditIcon, DeleteIcon } from "@orderly.network/ui";
+} from "@veltodefi/ui";
+import { CopyIcon, EditIcon, DeleteIcon } from "@veltodefi/ui";
 
 <Dropdown>
   <DropdownTrigger asChild>
@@ -390,7 +390,7 @@ import { CopyIcon, EditIcon, DeleteIcon } from "@orderly.network/ui";
 ### SimpleDropdownMenu
 
 ```tsx
-import { SimpleDropdownMenu } from "@orderly.network/ui";
+import { SimpleDropdownMenu } from "@veltodefi/ui";
 
 <SimpleDropdownMenu
   menu={[

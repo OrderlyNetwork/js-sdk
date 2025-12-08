@@ -68,7 +68,7 @@ Inherits all standard `HTMLAttributes<HTMLDivElement>`.
 ### Basic Fade
 
 ```tsx
-import { Fade } from "@orderly.network/ui";
+import { Fade } from "@veltodefi/ui";
 
 <Fade in={isOpen}>
   <Box className="oui-bg-base-8 oui-rounded-xl">Animated content</Box>
@@ -78,7 +78,7 @@ import { Fade } from "@orderly.network/ui";
 ### Fade with Custom Duration
 
 ```tsx
-import { Fade } from "@orderly.network/ui";
+import { Fade } from "@veltodefi/ui";
 
 <Fade in={isVisible} className="oui-duration-200">
   <div>Content with custom duration</div>
@@ -88,7 +88,7 @@ import { Fade } from "@orderly.network/ui";
 ### Fade as Child
 
 ```tsx
-import { Fade } from "@orderly.network/ui";
+import { Fade } from "@veltodefi/ui";
 
 <Fade in={isOpen} asChild>
   <button>Clickable faded button</button>
@@ -99,7 +99,7 @@ import { Fade } from "@orderly.network/ui";
 
 ```tsx
 import { useState } from "react";
-import { Fade } from "@orderly.network/ui";
+import { Fade } from "@veltodefi/ui";
 
 function ControlledFade() {
   const [visible, setVisible] = useState(false);

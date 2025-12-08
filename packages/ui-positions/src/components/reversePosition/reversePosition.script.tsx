@@ -5,12 +5,12 @@ import {
   useMaxQty,
   useSubAccountMutation,
   useSymbolsInfo,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { API, OrderSide, OrderType } from "@orderly.network/types";
-import { toast } from "@orderly.network/ui";
-import { useScreen } from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+} from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { API, OrderSide, OrderType } from "@veltodefi/types";
+import { toast } from "@veltodefi/ui";
+import { useScreen } from "@veltodefi/ui";
+import { Decimal } from "@veltodefi/utils";
 import { usePositionsRowContext } from "../positions/positionsRowContext";
 
 export interface UseReversePositionScriptOptions {

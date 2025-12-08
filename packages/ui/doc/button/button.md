@@ -214,7 +214,7 @@ Inherits all `ButtonProps`.
 ### Basic Buttons
 
 ```tsx
-import { Button } from "@orderly.network/ui";
+import { Button } from "@veltodefi/ui";
 
 <Button variant="contained" color="primary" size="lg">
   Primary Button
@@ -232,7 +232,7 @@ import { Button } from "@orderly.network/ui";
 ### Button with Loading State
 
 ```tsx
-import { Button } from "@orderly.network/ui";
+import { Button } from "@veltodefi/ui";
 
 <Button
   variant="contained"
@@ -247,8 +247,8 @@ import { Button } from "@orderly.network/ui";
 ### Button with Icons
 
 ```tsx
-import { Button } from "@orderly.network/ui";
-import { PlusIcon, ArrowRightIcon } from "@orderly.network/ui";
+import { Button } from "@veltodefi/ui";
+import { PlusIcon, ArrowRightIcon } from "@veltodefi/ui";
 
 <Button
   variant="contained"
@@ -276,7 +276,7 @@ import { PlusIcon, ArrowRightIcon } from "@orderly.network/ui";
 ### Gradient Button
 
 ```tsx
-import { Button } from "@orderly.network/ui";
+import { Button } from "@veltodefi/ui";
 
 <Button variant="gradient" color="primary" angle={90} size="xl">
   Gradient Button
@@ -286,7 +286,7 @@ import { Button } from "@orderly.network/ui";
 ### Full Width Button
 
 ```tsx
-import { Button } from "@orderly.network/ui";
+import { Button } from "@veltodefi/ui";
 
 <Button variant="contained" color="primary" fullWidth>
   Full Width Button
@@ -296,7 +296,7 @@ import { Button } from "@orderly.network/ui";
 ### Throttled Button
 
 ```tsx
-import { ThrottledButton } from "@orderly.network/ui";
+import { ThrottledButton } from "@veltodefi/ui";
 
 <ThrottledButton
   throttleDuration={1000}
@@ -311,7 +311,7 @@ import { ThrottledButton } from "@orderly.network/ui";
 ### Button as Link
 
 ```tsx
-import { Button } from "@orderly.network/ui";
+import { Button } from "@veltodefi/ui";
 
 <Button asChild variant="text" color="primary">
   <a href="/markets">View Markets</a>
@@ -321,7 +321,7 @@ import { Button } from "@orderly.network/ui";
 ### Color Variants
 
 ```tsx
-import { Button } from "@orderly.network/ui";
+import { Button } from "@veltodefi/ui";
 
 <Button variant="contained" color="buy">Buy</Button>
 <Button variant="contained" color="sell">Sell</Button>

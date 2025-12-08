@@ -1,5 +1,5 @@
 {
-  "name": "@orderly.network/utils",
+  "name": "@veltodefi/utils",
   "version": "2.8.6",
   "description": "",
   "main": "dist/index.js",
@@ -26,7 +26,7 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
-    "@orderly.network/types": "workspace:*",
+    "@veltodefi/types": "workspace:*",
     "dayjs": "^1.11.9",
     "decimal.js-light": "^2.5.1"
   },

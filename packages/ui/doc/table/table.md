@@ -178,7 +178,7 @@ Class name overrides for table parts.
 ### Basic Table
 
 ```tsx
-import { DataTable, Transform } from "@orderly.network/ui";
+import { DataTable, Transform } from "@veltodefi/ui";
 
 const {
   columns: tableColumns,
@@ -197,7 +197,7 @@ const {
 ### Table with Sorting
 
 ```tsx
-import { DataTable } from "@orderly.network/ui";
+import { DataTable } from "@veltodefi/ui";
 
 <DataTable
   columns={columns}
@@ -213,7 +213,7 @@ import { DataTable } from "@orderly.network/ui";
 ### Table with Pagination
 
 ```tsx
-import { DataTable } from "@orderly.network/ui";
+import { DataTable } from "@veltodefi/ui";
 
 <DataTable
   columns={columns}

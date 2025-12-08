@@ -8,18 +8,18 @@ import {
   useIndexPricesStream,
   useQuery,
   useTokenInfo,
-} from "@orderly.network/hooks";
-import { useTranslation, Trans } from "@orderly.network/i18n";
-import { account as accountPerp } from "@orderly.network/perp";
-import { useAppContext } from "@orderly.network/react-app";
+} from "@veltodefi/hooks";
+import { useTranslation, Trans } from "@veltodefi/i18n";
+import { account as accountPerp } from "@veltodefi/perp";
+import { useAppContext } from "@veltodefi/react-app";
 import {
   API,
   NetworkId,
   ChainNamespace,
   isNativeTokenChecker,
-} from "@orderly.network/types";
-import { useAuthGuard } from "@orderly.network/ui-connector";
-import { Decimal } from "@orderly.network/utils";
+} from "@veltodefi/types";
+import { useAuthGuard } from "@veltodefi/ui-connector";
+import { Decimal } from "@veltodefi/utils";
 import { useNeedSwapAndCross } from "../swap/hooks/useNeedSwapAndCross";
 import { useSwapDeposit } from "../swap/hooks/useSwapDeposit";
 import {

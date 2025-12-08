@@ -7,7 +7,7 @@ This retrieval document mirrors the `packages/ui/src` directory structure and su
 - `index.ts`: Central export barrel for components, hooks, locales, and utilities.
 - `install.tsx`: Placeholder for internal plugin wiring (nav/sidebar installers are commented out).
 - `tailwind.css`: Base Tailwind layer used by every component.
-- `version.ts`: Registers `@orderly.network/ui` version on `window.__ORDERLY_VERSION__`.
+- `version.ts`: Registers `@veltodefi/ui` version on `window.__ORDERLY_VERSION__`.
 
 ## avatar
 

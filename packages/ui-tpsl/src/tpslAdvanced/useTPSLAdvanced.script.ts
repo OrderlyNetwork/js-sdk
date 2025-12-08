@@ -4,8 +4,8 @@ import {
   OrderValidationResult,
   useOrderEntry,
   useTpslPriceChecker,
-} from "@orderly.network/hooks";
-import { OrderlyOrder, OrderType, PositionType } from "@orderly.network/types";
+} from "@veltodefi/hooks";
+import { OrderlyOrder, OrderType, PositionType } from "@veltodefi/types";
 
 type Props = {
   order: OrderlyOrder;

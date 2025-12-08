@@ -135,7 +135,7 @@ Class name overrides for toast tile components.
 ### Basic Toast
 
 ```tsx
-import { Toaster, toast } from "@orderly.network/ui";
+import { Toaster, toast } from "@veltodefi/ui";
 
 function App() {
   return (
@@ -150,7 +150,7 @@ function App() {
 ### Custom Toast with ToastTile
 
 ```tsx
-import { Toaster, toast, ToastTile } from "@orderly.network/ui";
+import { Toaster, toast, ToastTile } from "@veltodefi/ui";
 
 const notify = () =>
   toast.custom((t) => (
@@ -177,7 +177,7 @@ function App() {
 ### Toast Variants
 
 ```tsx
-import { toast } from "@orderly.network/ui";
+import { toast } from "@veltodefi/ui";
 
 toast.success("Success message");
 toast.error("Error message");
@@ -188,7 +188,7 @@ toast("Default message");
 ### Toast with Promise
 
 ```tsx
-import { toast } from "@orderly.network/ui";
+import { toast } from "@veltodefi/ui";
 
 const promise = fetchData();
 

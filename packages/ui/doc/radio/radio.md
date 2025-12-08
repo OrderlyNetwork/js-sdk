@@ -140,7 +140,7 @@ Additional CSS classes.
 ### Basic Radio Group
 
 ```tsx
-import { RadioGroup, RadioGroupItem } from "@orderly.network/ui";
+import { RadioGroup, RadioGroupItem } from "@veltodefi/ui";
 
 <RadioGroup value={mode} onValueChange={setMode} className="oui-flex oui-gap-4">
   <label className="oui-flex oui-items-center oui-gap-2">
@@ -157,7 +157,7 @@ import { RadioGroup, RadioGroupItem } from "@orderly.network/ui";
 ### Horizontal Radio Group
 
 ```tsx
-import { RadioGroup, RadioGroupItem } from "@orderly.network/ui";
+import { RadioGroup, RadioGroupItem } from "@veltodefi/ui";
 
 <RadioGroup
   value={theme}
@@ -179,7 +179,7 @@ import { RadioGroup, RadioGroupItem } from "@orderly.network/ui";
 ### Disabled Radio Item
 
 ```tsx
-import { RadioGroup, RadioGroupItem } from "@orderly.network/ui";
+import { RadioGroup, RadioGroupItem } from "@veltodefi/ui";
 
 <RadioGroup value={option} onValueChange={setOption}>
   <label className="oui-flex oui-items-center oui-gap-2">

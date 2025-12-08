@@ -95,7 +95,7 @@ Visibility variants for show/hide states.
 ### Using Gap Variants
 
 ```tsx
-import { gapVariants } from "@orderly.network/ui/layout";
+import { gapVariants } from "@veltodefi/ui/layout";
 
 const myVariants = tv({
   extend: gapVariants,
@@ -109,7 +109,7 @@ const myVariants = tv({
 ### Using Decoration Variants
 
 ```tsx
-import { decorationVariants } from "@orderly.network/ui/layout";
+import { decorationVariants } from "@veltodefi/ui/layout";
 
 const cardVariants = tv({
   extend: decorationVariants,
@@ -123,8 +123,8 @@ const cardVariants = tv({
 ### Composing Variants
 
 ```tsx
-import { gapVariants, decorationVariants } from "@orderly.network/ui/layout";
-import { tv } from "@orderly.network/ui/utils";
+import { gapVariants, decorationVariants } from "@veltodefi/ui/layout";
+import { tv } from "@veltodefi/ui/utils";
 
 const containerVariants = tv({
   extend: [gapVariants, decorationVariants],

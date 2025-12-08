@@ -74,7 +74,7 @@ Disable the checkbox.
 ## Usage
 
 ```tsx
-import { Checkbox } from "@orderly.network/ui";
+import { Checkbox } from "@veltodefi/ui";
 
 <label className="oui-flex oui-items-center oui-gap-2">
   <Checkbox id="notify" checked={value} onCheckedChange={setValue} />

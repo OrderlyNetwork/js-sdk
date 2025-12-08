@@ -89,7 +89,7 @@ Additional CSS classes.
 ### Basic Tag
 
 ```tsx
-import { Tag } from "@orderly.network/ui";
+import { Tag } from "@veltodefi/ui";
 
 <Tag color="primary">Primary Tag</Tag>
 <Tag color="success">Success Tag</Tag>
@@ -100,7 +100,7 @@ import { Tag } from "@orderly.network/ui";
 ### Tag with Custom Content
 
 ```tsx
-import { Tag } from "@orderly.network/ui";
+import { Tag } from "@veltodefi/ui";
 
 <Tag color="primary" className="oui-px-2 oui-py-1 oui-rounded">
   Custom Tag
@@ -110,7 +110,7 @@ import { Tag } from "@orderly.network/ui";
 ### Tag as Child
 
 ```tsx
-import { Tag } from "@orderly.network/ui";
+import { Tag } from "@veltodefi/ui";
 
 <Tag asChild>
   <button onClick={handleClick}>Clickable Tag</button>
@@ -120,7 +120,7 @@ import { Tag } from "@orderly.network/ui";
 ### Tag Clusters
 
 ```tsx
-import { Tag, Flex } from "@orderly.network/ui";
+import { Tag, Flex } from "@veltodefi/ui";
 
 <Flex gap={2} wrap="wrap">
   {filters.map((filter) => (

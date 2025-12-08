@@ -230,7 +230,7 @@ Inherits all Radix TabsContent props.
 ### Basic Tabs
 
 ```tsx
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@orderly.network/ui";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@veltodefi/ui";
 
 <Tabs value={tab} onValueChange={setTab}>
   <TabsList>
@@ -249,7 +249,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@orderly.network/ui";
 ### Tabs with Variants
 
 ```tsx
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@orderly.network/ui";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@veltodefi/ui";
 
 <Tabs value={tab} onValueChange={setTab} variant="text">
   <TabsList>
@@ -270,7 +270,7 @@ import {
   TabsTrigger,
   TabsContent,
   Button,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 
 <Tabs
   value={tab}
@@ -290,7 +290,7 @@ import {
 ### Tabs with Scroll Indicator
 
 ```tsx
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@orderly.network/ui";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@veltodefi/ui";
 
 <Tabs value={tab} onValueChange={setTab} showScrollIndicator={true}>
   <TabsList>

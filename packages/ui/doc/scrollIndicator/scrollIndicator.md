@@ -60,7 +60,7 @@ Additional wrapper classes.
 ### Basic ScrollIndicator
 
 ```tsx
-import { ScrollIndicator } from "@orderly.network/ui";
+import { ScrollIndicator } from "@veltodefi/ui";
 
 <ScrollIndicator className="oui-w-full">
   <TabsList>
@@ -76,7 +76,7 @@ import { ScrollIndicator } from "@orderly.network/ui";
 ### ScrollIndicator with Buttons
 
 ```tsx
-import { ScrollIndicator, Flex, Button } from "@orderly.network/ui";
+import { ScrollIndicator, Flex, Button } from "@veltodefi/ui";
 
 <ScrollIndicator>
   <Flex gap={2}>

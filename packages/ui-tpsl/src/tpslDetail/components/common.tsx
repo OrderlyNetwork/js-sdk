@@ -1,4 +1,4 @@
-import { cn, Flex } from "@orderly.network/ui";
+import { cn, Flex } from "@veltodefi/ui";
 
 export const FlexCell = (props: {
   children: React.ReactNode;

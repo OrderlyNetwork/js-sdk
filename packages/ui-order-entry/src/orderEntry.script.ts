@@ -8,16 +8,16 @@ import {
   useOrderEntry,
   useOrderlyContext,
   useTpslPriceChecker,
-} from "@orderly.network/hooks";
-import { useCanTrade } from "@orderly.network/react-app";
+} from "@veltodefi/hooks";
+import { useCanTrade } from "@veltodefi/react-app";
 import {
   DistributionType,
   OrderLevel,
   OrderSide,
   OrderType,
   PositionType,
-} from "@orderly.network/types";
-import { Decimal, removeTrailingZeros } from "@orderly.network/utils";
+} from "@veltodefi/types";
+import { Decimal, removeTrailingZeros } from "@veltodefi/utils";
 import { useAskAndBid } from "./hooks/useAskAndBid";
 import { useBBOState } from "./hooks/useBBOState";
 import { useFocusAndBlur } from "./hooks/useFocusAndBlur";

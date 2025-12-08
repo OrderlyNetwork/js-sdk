@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { cn, Input, inputFormatter } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { cn, Input, inputFormatter } from "@veltodefi/ui";
 
 export const PriceInput: React.FC<{
   type: string;

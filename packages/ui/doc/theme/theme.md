@@ -43,7 +43,7 @@ The theme object is exported and contains:
 ### Importing Theme
 
 ```ts
-import theme from "@orderly.network/ui/theme";
+import theme from "@veltodefi/ui/theme";
 
 console.log(theme.gaps.grid); // 4
 ```
@@ -51,7 +51,7 @@ console.log(theme.gaps.grid); // 4
 ### Using Theme in Components
 
 ```tsx
-import theme from "@orderly.network/ui/theme";
+import theme from "@veltodefi/ui/theme";
 
 function CustomComponent() {
   const gridGap = theme.gaps.grid;
@@ -63,8 +63,8 @@ function CustomComponent() {
 ### Extending Theme
 
 ```tsx
-import { OrderlyThemeProvider } from "@orderly.network/ui";
-import theme from "@orderly.network/ui/theme";
+import { OrderlyThemeProvider } from "@veltodefi/ui";
+import theme from "@veltodefi/ui/theme";
 
 const customTheme = {
   ...theme,

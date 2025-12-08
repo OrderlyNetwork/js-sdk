@@ -245,7 +245,7 @@ Inherits all standard `HTMLTextAreaElement` attributes.
 ### Basic Input
 
 ```tsx
-import { Input } from "@orderly.network/ui";
+import { Input } from "@veltodefi/ui";
 
 <Input
   type="text"
@@ -258,7 +258,7 @@ import { Input } from "@orderly.network/ui";
 ### Input with Prefix/Suffix
 
 ```tsx
-import { Input } from "@orderly.network/ui";
+import { Input } from "@veltodefi/ui";
 
 <Input
   value={amount}
@@ -271,7 +271,7 @@ import { Input } from "@orderly.network/ui";
 ### Input with Status
 
 ```tsx
-import { Input } from "@orderly.network/ui";
+import { Input } from "@veltodefi/ui";
 
 <Input
   value={value}
@@ -283,7 +283,7 @@ import { Input } from "@orderly.network/ui";
 ### TextField
 
 ```tsx
-import { Input, TextField } from "@orderly.network/ui";
+import { Input, TextField } from "@veltodefi/ui";
 
 <TextField
   label="Order size"
@@ -302,7 +302,7 @@ import { Input, TextField } from "@orderly.network/ui";
 ### Input with Clear Button
 
 ```tsx
-import { Input } from "@orderly.network/ui";
+import { Input } from "@veltodefi/ui";
 
 <Input
   value={value}
@@ -314,7 +314,7 @@ import { Input } from "@orderly.network/ui";
 ### Input with Formatter
 
 ```tsx
-import { Input, inputFormatter } from "@orderly.network/ui";
+import { Input, inputFormatter } from "@veltodefi/ui";
 
 <Input
   value={value}

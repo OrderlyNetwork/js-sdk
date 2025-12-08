@@ -1,6 +1,6 @@
 import React, { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { OrderSide } from "@orderly.network/types";
+import { useTranslation } from "@veltodefi/i18n";
+import { OrderSide } from "@veltodefi/types";
 import {
   ArrowDownShortIcon,
   ArrowUpShortIcon,
@@ -8,7 +8,7 @@ import {
   Divider,
   Flex,
   Text,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { OrderInfoCard } from "./OrderInfoCard.ui";
 import type { ReversePositionState } from "./reversePosition.script";
 

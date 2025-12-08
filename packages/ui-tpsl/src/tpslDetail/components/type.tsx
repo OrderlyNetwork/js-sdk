@@ -2,10 +2,10 @@ import {
   ERROR_MSG_CODES,
   findTPSLFromOrder,
   useTpslPriceChecker,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
-import { ExclamationFillIcon, Flex, Text } from "@orderly.network/ui";
+} from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { API } from "@veltodefi/types";
+import { ExclamationFillIcon, Flex, Text } from "@veltodefi/ui";
 import { CloseToLiqPriceIcon } from "../../components/closeLiqPriceIcon";
 import { FlexCell } from "../components/common";
 import { useTPSLDetailContext } from "../tpslDetailProvider";

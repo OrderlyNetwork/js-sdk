@@ -1,4 +1,4 @@
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   useScreen,
   useLongPress,
@@ -6,7 +6,7 @@ import {
   Tooltip,
   Flex,
   modal,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 
 export const VolumeColumnTitle = () => {
   const { isMobile } = useScreen();

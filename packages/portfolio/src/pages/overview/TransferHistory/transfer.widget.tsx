@@ -1,6 +1,6 @@
 import React from "react";
-import { useAccount } from "@orderly.network/hooks";
-import { useScreen } from "@orderly.network/ui";
+import { useAccount } from "@veltodefi/hooks";
+import { useScreen } from "@veltodefi/ui";
 import { TransferHistoryMobileUI } from "./transfer.mobile.ui";
 import { TransferHistoryUI } from "./transfer.ui";
 import { useTransferHistoryHook } from "./useDataSource.script";

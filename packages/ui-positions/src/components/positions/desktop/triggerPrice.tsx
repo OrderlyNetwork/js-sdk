@@ -5,23 +5,12 @@ import {
   useSymbolsInfo,
   useTpslPriceChecker,
   utils,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import {
-  AlgoOrderType,
-  API,
-  OrderSide,
-  PositionType,
-} from "@orderly.network/types";
-import {
-  cn,
-  ExclamationFillIcon,
-  Flex,
-  Text,
-  Tooltip,
-} from "@orderly.network/ui";
-import { CloseToLiqPriceIcon } from "@orderly.network/ui-tpsl";
-import { formatNum } from "@orderly.network/utils";
+} from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { AlgoOrderType, API, OrderSide, PositionType } from "@veltodefi/types";
+import { cn, ExclamationFillIcon, Flex, Text, Tooltip } from "@veltodefi/ui";
+import { CloseToLiqPriceIcon } from "@veltodefi/ui-tpsl";
+import { formatNum } from "@veltodefi/utils";
 import { usePositionsRowContext } from "../positionsRowContext";
 import { TPSLEditIcon, AddIcon } from "./components";
 

@@ -3,8 +3,8 @@ import {
   useHoldingStream,
   useMemoizedFn,
   useTokensInfo,
-} from "@orderly.network/hooks";
-import { API } from "@orderly.network/types";
+} from "@veltodefi/hooks";
+import { API } from "@veltodefi/types";
 import { WithdrawTo } from "../../../types";
 import { getTokenByTokenList } from "../../../utils";
 import { CurrentChain } from "../../depositForm/hooks";

@@ -1,7 +1,7 @@
 import { useMemo } from "react";
-import { WSMessage } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
 import useSWRSubscription from "swr/subscription";
+import { WSMessage } from "@veltodefi/types";
+import { Decimal } from "@veltodefi/utils";
 import { useWS } from "../useWS";
 import { useMarketList } from "./useMarket/market.store";
 

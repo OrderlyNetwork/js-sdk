@@ -72,7 +72,7 @@ export const alert = (props: AlertDialogProps) =>
 ## Usage
 
 ```tsx
-import { alert } from "@orderly.network/ui";
+import { alert } from "@veltodefi/ui";
 
 async function handleDangerousAction() {
   await alert({

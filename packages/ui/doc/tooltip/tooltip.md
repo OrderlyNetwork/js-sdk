@@ -193,8 +193,8 @@ import {
   TooltipTrigger,
   TooltipContent,
   TooltipProvider,
-} from "@orderly.network/ui";
-import { InfoCircleIcon } from "@orderly.network/ui";
+} from "@veltodefi/ui";
+import { InfoCircleIcon } from "@veltodefi/ui";
 
 <TooltipProvider>
   <Tooltip>
@@ -216,7 +216,7 @@ import {
   TooltipTrigger,
   TooltipContent,
   TooltipArrow,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 
 <Tooltip>
   <TooltipTrigger asChild>
@@ -233,7 +233,7 @@ import {
 
 ```tsx
 import { useState } from "react";
-import { Tooltip, TooltipTrigger, TooltipContent } from "@orderly.network/ui";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@veltodefi/ui";
 
 function ControlledTooltip() {
   const [open, setOpen] = useState(false);

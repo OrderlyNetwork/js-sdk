@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { ERROR_MSG_CODES, OrderValidationResult } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
-import { OrderlyOrder, OrderType, PositionType } from "@orderly.network/types";
+import { ERROR_MSG_CODES, OrderValidationResult } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { useOrderEntryFormErrorMsg } from "@veltodefi/react-app";
+import { OrderlyOrder, OrderType, PositionType } from "@veltodefi/types";
 import {
   cn,
   Flex,
@@ -13,9 +13,9 @@ import {
   SettingFillIcon,
   useScreen,
   DotStatus,
-} from "@orderly.network/ui";
-import { Grid } from "@orderly.network/ui";
-import { TPSLPositionTypeWidget } from "@orderly.network/ui-tpsl";
+} from "@veltodefi/ui";
+import { Grid } from "@veltodefi/ui";
+import { TPSLPositionTypeWidget } from "@veltodefi/ui-tpsl";
 import { useOrderEntryContext } from "./orderEntryContext";
 import { PnlInputWidget } from "./pnlInput/pnlInput.widget";
 import { usePnlInputContext } from "./pnlInput/pnlInputContext";

@@ -6,7 +6,7 @@ import {
   useOrderEntry,
   useSymbolsInfo,
   useTpslPriceChecker,
-} from "@orderly.network/hooks";
+} from "@veltodefi/hooks";
 import {
   AlgoOrderRootType,
   AlgoOrderType,
@@ -16,8 +16,8 @@ import {
   OrderType,
   PositionType,
   SDKError,
-} from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+} from "@veltodefi/types";
+import { Decimal } from "@veltodefi/utils";
 
 function getInitialOrder(order: API.AlgoOrderExt) {
   const childOrder = order.child_orders[0];

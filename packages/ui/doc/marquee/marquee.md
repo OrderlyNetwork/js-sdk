@@ -166,7 +166,7 @@ Delay before starting auto-scroll in milliseconds.
 ### Basic Marquee
 
 ```tsx
-import { Marquee } from "@orderly.network/ui";
+import { Marquee } from "@veltodefi/ui";
 
 <Marquee
   data={tickers}
@@ -182,7 +182,7 @@ import { Marquee } from "@orderly.network/ui";
 ### Marquee with Custom Options
 
 ```tsx
-import { Marquee } from "@orderly.network/ui";
+import { Marquee } from "@veltodefi/ui";
 
 <Marquee
   data={logos}
@@ -204,7 +204,7 @@ import { Marquee } from "@orderly.network/ui";
 ### Vertical Marquee
 
 ```tsx
-import { Marquee } from "@orderly.network/ui";
+import { Marquee } from "@veltodefi/ui";
 
 <Marquee
   data={notifications}
@@ -220,7 +220,7 @@ import { Marquee } from "@orderly.network/ui";
 
 ```tsx
 import { useState } from "react";
-import { Marquee } from "@orderly.network/ui";
+import { Marquee } from "@veltodefi/ui";
 
 function ControlledMarquee() {
   const [api, setApi] = useState(null);

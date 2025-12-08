@@ -1,5 +1,5 @@
 {
-  "name": "@orderly.network/trading-rewards",
+  "name": "@veltodefi/trading-rewards",
   "version": "2.8.6",
   "description": "",
   "main": "dist/index.js",
@@ -18,14 +18,14 @@
     "access": "public"
   },
   "dependencies": {
-    "@orderly.network/hooks": "workspace:*",
-    "@orderly.network/i18n": "workspace:*",
-    "@orderly.network/react-app": "workspace:*",
-    "@orderly.network/types": "workspace:*",
-    "@orderly.network/ui": "workspace:*",
-    "@orderly.network/ui-connector": "workspace:*",
-    "@orderly.network/ui-scaffold": "workspace:*",
-    "@orderly.network/utils": "workspace:*",
+    "@veltodefi/hooks": "workspace:*",
+    "@veltodefi/i18n": "workspace:*",
+    "@veltodefi/react-app": "workspace:*",
+    "@veltodefi/types": "workspace:*",
+    "@veltodefi/ui": "workspace:*",
+    "@veltodefi/ui-connector": "workspace:*",
+    "@veltodefi/ui-scaffold": "workspace:*",
+    "@veltodefi/utils": "workspace:*",
     "date-fns": "^3.6.0",
     "ramda": "^0.31.3"
   },

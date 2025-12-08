@@ -79,7 +79,7 @@ Inherits all standard `HTMLAttributes<HTMLDivElement>` (e.g., `style`, `onClick`
 ### Basic Logo
 
 ```tsx
-import { Logo } from "@orderly.network/ui";
+import { Logo } from "@veltodefi/ui";
 
 <header className="oui-flex oui-items-center">
   <Logo src="/logos/orderly.svg" href="https://orderly.network" />
@@ -90,7 +90,7 @@ import { Logo } from "@orderly.network/ui";
 ### Logo with Alt Text
 
 ```tsx
-import { Logo } from "@orderly.network/ui";
+import { Logo } from "@veltodefi/ui";
 
 <Logo src="/logos/orderly.svg" alt="Orderly Network" href="/" />;
 ```
@@ -98,7 +98,7 @@ import { Logo } from "@orderly.network/ui";
 ### Logo with Custom Styling
 
 ```tsx
-import { Logo } from "@orderly.network/ui";
+import { Logo } from "@veltodefi/ui";
 
 <Logo
   src="/logos/orderly.svg"
@@ -110,8 +110,8 @@ import { Logo } from "@orderly.network/ui";
 ### Logo as Link
 
 ```tsx
-import { Logo } from "@orderly.network/ui";
 import { Link } from "next/link";
+import { Logo } from "@veltodefi/ui";
 
 <Logo src="/logos/orderly.svg" href="/dashboard" />;
 ```

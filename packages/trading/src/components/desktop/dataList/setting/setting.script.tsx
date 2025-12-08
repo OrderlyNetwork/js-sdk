@@ -1,4 +1,4 @@
-import { useReversePositionEnabled } from "@orderly.network/ui-positions";
+import { useReversePositionEnabled } from "@veltodefi/ui-positions";
 import { SettingWidgetProps } from "./setting.widget";
 
 export const useSettingScript = (props: SettingWidgetProps) => {

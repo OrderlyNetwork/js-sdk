@@ -1,12 +1,8 @@
 import React, { useMemo } from "react";
-import { i18n } from "@orderly.network/i18n";
-import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
-import {
-  registerSimpleDialog,
-  SimpleDialog,
-  useModal,
-} from "@orderly.network/ui";
+import { i18n } from "@veltodefi/i18n";
+import { useTranslation } from "@veltodefi/i18n";
+import { API } from "@veltodefi/types";
+import { registerSimpleDialog, SimpleDialog, useModal } from "@veltodefi/ui";
 import { useReversePositionScript } from "./reversePosition.script";
 import { ReversePosition } from "./reversePosition.ui";
 

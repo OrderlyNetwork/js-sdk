@@ -164,7 +164,7 @@ Inherits all `AvatarProps` except `src` (automatically generated from address).
 ## Usage Example
 
 ```tsx
-import { Avatar, AvatarFallback, EVMAvatar } from "@orderly.network/ui";
+import { Avatar, AvatarFallback, EVMAvatar } from "@veltodefi/ui";
 
 <Avatar
   size="lg"

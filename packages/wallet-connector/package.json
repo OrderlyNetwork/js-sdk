@@ -1,5 +1,5 @@
 {
-  "name": "@orderly.network/wallet-connector",
+  "name": "@veltodefi/wallet-connector",
   "version": "2.8.6",
   "description": "",
   "main": "dist/index.mjs",
@@ -16,11 +16,11 @@
   "license": "ISC",
   "dependencies": {
     "@binance/w3w-blocknative-connector": "^1.1.7",
-    "@orderly.network/hooks": "workspace:*",
-    "@orderly.network/types": "workspace:*",
-    "@orderly.network/core": "workspace:*",
-    "@orderly.network/utils": "workspace:*",
-    "@orderly.network/ui": "workspace:*",
+    "@veltodefi/hooks": "workspace:*",
+    "@veltodefi/types": "workspace:*",
+    "@veltodefi/core": "workspace:*",
+    "@veltodefi/utils": "workspace:*",
+    "@veltodefi/ui": "workspace:*",
     "@types/lodash": "^4.17.7",
     "@web3-onboard/bitget": "^2.1.1",
     "@web3-onboard/core": "^2.22.2",

@@ -119,7 +119,7 @@ import {
   Collapsible,
   CollapsibleTrigger,
   CollapsibleContent,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 
 <Collapsible defaultOpen>
   <CollapsibleTrigger className="oui-flex oui-justify-between oui-items-center">
@@ -141,7 +141,7 @@ import {
   Collapsible,
   CollapsibleTrigger,
   CollapsibleContent,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 
 function ControlledCollapsible() {
   const [open, setOpen] = useState(false);
@@ -165,7 +165,7 @@ import {
   Collapsible,
   CollapsibleTrigger,
   CollapsibleContent,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 
 function Accordion() {
   const [openItem, setOpenItem] = useState<string | null>(null);

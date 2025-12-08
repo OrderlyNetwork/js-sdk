@@ -111,7 +111,7 @@ Spacing between flex items. Supports responsive syntax. Uses `gapVariants` inter
 ### Basic Flex Layout
 
 ```tsx
-import { Flex } from "@orderly.network/ui";
+import { Flex } from "@veltodefi/ui";
 
 <Flex direction="row" gap={4} justify="between" itemAlign="center">
   <Button>Left</Button>
@@ -122,7 +122,7 @@ import { Flex } from "@orderly.network/ui";
 ### Responsive Flex
 
 ```tsx
-import { Flex } from "@orderly.network/ui";
+import { Flex } from "@veltodefi/ui";
 
 <Flex
   direction={{ base: "column", lg: "row" }}
@@ -140,7 +140,7 @@ import { Flex } from "@orderly.network/ui";
 ### Wrapped Flex Items
 
 ```tsx
-import { Flex } from "@orderly.network/ui";
+import { Flex } from "@veltodefi/ui";
 
 <Flex wrap="wrap" gap={2}>
   {tags.map((tag) => (
@@ -152,7 +152,7 @@ import { Flex } from "@orderly.network/ui";
 ### Vertical Stack
 
 ```tsx
-import { Flex } from "@orderly.network/ui";
+import { Flex } from "@veltodefi/ui";
 
 <Flex direction="column" gap={3}>
   <Input placeholder="Email" />

@@ -1,13 +1,13 @@
-import { ERROR_MSG_CODES, OrderValidationResult } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
+import { ERROR_MSG_CODES, OrderValidationResult } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { useOrderEntryFormErrorMsg } from "@veltodefi/react-app";
 import {
   cn,
   ExclamationFillIcon,
   modal,
   Tooltip,
   useScreen,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 
 const CloseToLiqPriceIcon = ({
   slPriceError,

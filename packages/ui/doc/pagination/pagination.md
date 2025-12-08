@@ -156,7 +156,7 @@ Additional CSS classes.
 ### Basic Pagination
 
 ```tsx
-import { PaginationItems } from "@orderly.network/ui";
+import { PaginationItems } from "@veltodefi/ui";
 
 <PaginationItems
   page={page}
@@ -170,7 +170,7 @@ import { PaginationItems } from "@orderly.network/ui";
 ### Pagination with Page Size
 
 ```tsx
-import { Paginations } from "@orderly.network/ui";
+import { Paginations } from "@veltodefi/ui";
 
 <Paginations
   page={page}
@@ -185,7 +185,7 @@ import { Paginations } from "@orderly.network/ui";
 ### Custom Page Number Generation
 
 ```tsx
-import { PaginationItems } from "@orderly.network/ui";
+import { PaginationItems } from "@veltodefi/ui";
 
 <PaginationItems
   page={page}
@@ -202,7 +202,7 @@ import { PaginationItems } from "@orderly.network/ui";
 ### Hide Page Size Selector
 
 ```tsx
-import { Paginations } from "@orderly.network/ui";
+import { Paginations } from "@veltodefi/ui";
 
 <Paginations
   page={page}

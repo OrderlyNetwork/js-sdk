@@ -206,7 +206,7 @@ Callback when dropdown state changes.
 ### Basic DatePicker
 
 ```tsx
-import { DatePicker } from "@orderly.network/ui";
+import { DatePicker } from "@veltodefi/ui";
 
 <DatePicker
   value={selectedDate}
@@ -218,8 +218,8 @@ import { DatePicker } from "@orderly.network/ui";
 ### DateRangePicker with Presets
 
 ```tsx
-import { DateRangePicker } from "@orderly.network/ui";
 import dayjs from "dayjs";
+import { DateRangePicker } from "@veltodefi/ui";
 
 <DateRangePicker
   value={range}
@@ -245,7 +245,7 @@ import dayjs from "dayjs";
 ### DatePicker with Custom Format
 
 ```tsx
-import { DatePicker } from "@orderly.network/ui";
+import { DatePicker } from "@veltodefi/ui";
 
 <DatePicker
   value={date}

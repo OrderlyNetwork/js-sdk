@@ -50,7 +50,7 @@ Theme preset containing design tokens.
 ### Basic Tailwind Config
 
 ```ts
-import { OUITailwind } from "@orderly.network/ui";
+import { OUITailwind } from "@veltodefi/ui";
 
 // tailwind.config.js
 export default {
@@ -62,7 +62,7 @@ export default {
 ### Extended Config
 
 ```ts
-import { OUITailwind } from "@orderly.network/ui";
+import { OUITailwind } from "@veltodefi/ui";
 
 export default {
   presets: [OUITailwind.theme],
@@ -84,7 +84,7 @@ export default {
 ### With Custom Theme
 
 ```ts
-import { OUITailwind } from "@orderly.network/ui";
+import { OUITailwind } from "@veltodefi/ui";
 
 export default {
   presets: [OUITailwind.theme],

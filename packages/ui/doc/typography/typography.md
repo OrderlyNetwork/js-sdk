@@ -346,7 +346,7 @@ Callback when text is copied.
 ### Basic Text
 
 ```tsx
-import { Text } from "@orderly.network/ui";
+import { Text } from "@veltodefi/ui";
 
 <Text size="lg" weight="bold" color="primary">
   Heading
@@ -360,7 +360,7 @@ import { Text } from "@orderly.network/ui";
 ### Semantic HTML
 
 ```tsx
-import { Text } from "@orderly.network/ui";
+import { Text } from "@veltodefi/ui";
 
 <Text as="h2" size="2xl" weight="bold">
   Section Title
@@ -374,7 +374,7 @@ import { Text } from "@orderly.network/ui";
 ### Number Formatting
 
 ```tsx
-import { Text } from "@orderly.network/ui";
+import { Text } from "@veltodefi/ui";
 
 <Text.numeral rule="price" dp={2} coloring>
   12345.678
@@ -397,7 +397,7 @@ import { Text } from "@orderly.network/ui";
 ### Formatted Text
 
 ```tsx
-import { Text } from "@orderly.network/ui";
+import { Text } from "@veltodefi/ui";
 
 <Text.formatted rule="date" formatString="yyyy-MM-dd">
   {new Date()}
@@ -424,7 +424,7 @@ import { Text } from "@orderly.network/ui";
 ### Gradient Text
 
 ```tsx
-import { Text } from "@orderly.network/ui";
+import { Text } from "@veltodefi/ui";
 
 <Text.gradient color="brand" size="2xl" weight="bold" angle={90}>
   Gradient Heading
@@ -434,7 +434,7 @@ import { Text } from "@orderly.network/ui";
 ### Statistics
 
 ```tsx
-import { Text, Statistic } from "@orderly.network/ui";
+import { Text, Statistic } from "@veltodefi/ui";
 
 <Statistic
   label="Total Balance"
@@ -455,7 +455,7 @@ import { Text, Statistic } from "@orderly.network/ui";
 ### Specialized Number Types
 
 ```tsx
-import { Text } from "@orderly.network/ui";
+import { Text } from "@veltodefi/ui";
 
 <Text.roi dp={4} coloring>
   0.0234

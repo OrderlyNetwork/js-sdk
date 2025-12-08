@@ -84,7 +84,7 @@ Switch size for different touch targets. Default: `"md"`.
 ## Usage
 
 ```tsx
-import { Switch } from "@orderly.network/ui";
+import { Switch } from "@veltodefi/ui";
 
 <label className="oui-flex oui-items-center oui-gap-2">
   <Switch checked={enabled} onCheckedChange={setEnabled} />

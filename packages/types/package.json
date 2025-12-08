@@ -1,5 +1,5 @@
 {
-  "name": "@orderly.network/types",
+  "name": "@veltodefi/types",
   "version": "2.8.6",
   "description": "",
   "main": "dist/index.js",

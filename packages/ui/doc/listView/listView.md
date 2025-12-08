@@ -133,7 +133,7 @@ Inline styles for the container.
 ### Basic ListView
 
 ```tsx
-import { ListView } from "@orderly.network/ui";
+import { ListView } from "@veltodefi/ui";
 
 <ListView
   dataSource={orders}
@@ -146,7 +146,7 @@ import { ListView } from "@orderly.network/ui";
 ### ListView with Infinite Scroll
 
 ```tsx
-import { ListView, useRef } from "@orderly.network/ui";
+import { ListView, useRef } from "@veltodefi/ui";
 
 const ref = useRef<ListViewRef>(null);
 
@@ -165,7 +165,7 @@ const ref = useRef<ListViewRef>(null);
 ### ListView with Extra Data
 
 ```tsx
-import { ListView } from "@orderly.network/ui";
+import { ListView } from "@veltodefi/ui";
 
 <ListView
   dataSource={positions}
@@ -179,7 +179,7 @@ import { ListView } from "@orderly.network/ui";
 ### Programmatic Scrolling
 
 ```tsx
-import { ListView, useRef } from "@orderly.network/ui";
+import { ListView, useRef } from "@veltodefi/ui";
 
 const listRef = useRef<ListViewRef>(null);
 

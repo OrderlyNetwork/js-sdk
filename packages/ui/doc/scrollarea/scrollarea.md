@@ -132,7 +132,7 @@ Inherits all Radix ScrollAreaScrollbar props.
 ### Basic ScrollArea
 
 ```tsx
-import { ScrollArea } from "@orderly.network/ui";
+import { ScrollArea } from "@veltodefi/ui";
 
 <ScrollArea className="oui-h-64">
   <div className="oui-space-y-4">
@@ -146,7 +146,7 @@ import { ScrollArea } from "@orderly.network/ui";
 ### ScrollArea with Custom Viewport
 
 ```tsx
-import { ScrollArea } from "@orderly.network/ui";
+import { ScrollArea } from "@veltodefi/ui";
 
 <ScrollArea className="oui-h-64" classNames={{ viewport: "oui-p-4" }}>
   <LongContent />
@@ -156,7 +156,7 @@ import { ScrollArea } from "@orderly.network/ui";
 ### Horizontal ScrollArea
 
 ```tsx
-import { ScrollArea } from "@orderly.network/ui";
+import { ScrollArea } from "@veltodefi/ui";
 
 <ScrollArea orientation="horizontal" className="oui-w-full">
   <div className="oui-flex oui-gap-4">
@@ -172,7 +172,7 @@ import { ScrollArea } from "@orderly.network/ui";
 ### ScrollArea in Dropdown
 
 ```tsx
-import { ScrollArea, DropdownContent } from "@orderly.network/ui";
+import { ScrollArea, DropdownContent } from "@veltodefi/ui";
 
 <DropdownContent>
   <ScrollArea className="oui-max-h-64">

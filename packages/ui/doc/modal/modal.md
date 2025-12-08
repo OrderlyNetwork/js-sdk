@@ -188,7 +188,7 @@ Remove modal from stack.
 ### Basic Modal
 
 ```tsx
-import { create, useModal, ModalProvider } from "@orderly.network/ui";
+import { create, useModal, ModalProvider } from "@veltodefi/ui";
 
 const MyModal = create<{ message: string }>((props) => {
   const { visible, hide, resolve } = useModal();
@@ -217,7 +217,7 @@ function App() {
 ### Showing Modal with Promise
 
 ```tsx
-import { modalActions } from "@orderly.network/ui";
+import { modalActions } from "@veltodefi/ui";
 
 async function handleAction() {
   const result = await modalActions.show("my-modal", { message: "Hello" });
@@ -228,7 +228,7 @@ async function handleAction() {
 ### Modal with Custom Resolution
 
 ```tsx
-import { create, useModal } from "@orderly.network/ui";
+import { create, useModal } from "@veltodefi/ui";
 
 const ConfirmModal = create<{ onConfirm: () => void }>((props) => {
   const { visible, hide, resolve, reject } = useModal();
@@ -259,7 +259,7 @@ const ConfirmModal = create<{ onConfirm: () => void }>((props) => {
 ### Using Presets
 
 ```tsx
-import { alert, confirm } from "@orderly.network/ui";
+import { alert, confirm } from "@veltodefi/ui";
 
 // Alert preset
 await alert({

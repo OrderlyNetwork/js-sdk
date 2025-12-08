@@ -36,7 +36,7 @@ Returns responsive breakpoint information based on screen width. Uses `useMediaQ
 **Example:**
 
 ```tsx
-import { useScreen } from "@orderly.network/ui";
+import { useScreen } from "@veltodefi/ui";
 
 function ResponsiveComponent() {
   const { isMobile, isDesktop } = useScreen();
@@ -67,7 +67,7 @@ Evaluates an arbitrary CSS media query string and returns a boolean indicating w
 **Example:**
 
 ```tsx
-import { useMediaQuery } from "@orderly.network/ui";
+import { useMediaQuery } from "@veltodefi/ui";
 
 function ThemeAwareComponent() {
   const prefersDark = useMediaQuery("(prefers-color-scheme: dark)");
@@ -109,7 +109,7 @@ Observes an element's size changes using `ResizeObserver` and calls the callback
 
 ```tsx
 import { useRef, useState } from "react";
-import { useObserverElement } from "@orderly.network/ui";
+import { useObserverElement } from "@veltodefi/ui";
 
 function ResizableComponent() {
   const [width, setWidth] = useState(0);
@@ -135,7 +135,7 @@ function ResizableComponent() {
 ### Responsive Layout
 
 ```tsx
-import { useScreen } from "@orderly.network/ui";
+import { useScreen } from "@veltodefi/ui";
 
 function Dashboard() {
   const { isMobile } = useScreen();
@@ -152,7 +152,7 @@ function Dashboard() {
 ### Custom Media Query
 
 ```tsx
-import { useMediaQuery } from "@orderly.network/ui";
+import { useMediaQuery } from "@veltodefi/ui";
 
 function PrintStyles() {
   const isPrint = useMediaQuery("print");
@@ -165,7 +165,7 @@ function PrintStyles() {
 
 ```tsx
 import { useRef, useEffect, useState } from "react";
-import { useObserverElement } from "@orderly.network/ui";
+import { useObserverElement } from "@veltodefi/ui";
 
 function DynamicGrid() {
   const containerRef = useRef<HTMLDivElement>(null);

@@ -4,12 +4,12 @@ import {
   useSymbolsInfo,
   useTpslPriceChecker,
   utils,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { API, AlgoOrderType } from "@orderly.network/types";
-import { OrderSide } from "@orderly.network/types";
-import { cn, Text, Tooltip } from "@orderly.network/ui";
-import { CloseToLiqPriceIcon } from "@orderly.network/ui-tpsl";
+} from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { API, AlgoOrderType } from "@veltodefi/types";
+import { OrderSide } from "@veltodefi/types";
+import { cn, Text, Tooltip } from "@veltodefi/ui";
+import { CloseToLiqPriceIcon } from "@veltodefi/ui-tpsl";
 import { useTPSLOrderRowContext } from "../tpslOrderRowContext";
 
 export const OrderTriggerPrice = () => {

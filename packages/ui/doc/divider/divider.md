@@ -99,7 +99,7 @@ Additional overrides (e.g., `oui-border-white/10` on dark surfaces).
 ### Horizontal Divider
 
 ```tsx
-import { Divider } from "@orderly.network/ui";
+import { Divider } from "@veltodefi/ui";
 
 <section>
   <SectionHeader />
@@ -111,7 +111,7 @@ import { Divider } from "@orderly.network/ui";
 ### Vertical Divider
 
 ```tsx
-import { Divider, Flex, Button } from "@orderly.network/ui";
+import { Divider, Flex, Button } from "@veltodefi/ui";
 
 <Flex itemAlign="center" gap={3}>
   <Button variant="text">Bid</Button>
@@ -123,7 +123,7 @@ import { Divider, Flex, Button } from "@orderly.network/ui";
 ### Dashed Divider
 
 ```tsx
-import { Divider } from "@orderly.network/ui";
+import { Divider } from "@veltodefi/ui";
 
 <Divider lineStyle="dashed" intensity={6} my={4} />;
 ```
@@ -131,7 +131,7 @@ import { Divider } from "@orderly.network/ui";
 ### Dotted Divider
 
 ```tsx
-import { Divider } from "@orderly.network/ui";
+import { Divider } from "@veltodefi/ui";
 
 <Divider lineStyle="dotted" intensity={8} mx={4} />;
 ```
@@ -139,7 +139,7 @@ import { Divider } from "@orderly.network/ui";
 ### With Spacing
 
 ```tsx
-import { Divider } from "@orderly.network/ui";
+import { Divider } from "@veltodefi/ui";
 
 <Divider intensity={12} mx={6} my={8} />;
 ```

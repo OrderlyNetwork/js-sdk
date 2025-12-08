@@ -202,7 +202,7 @@ Class name overrides for slider components.
 ### Basic Slider
 
 ```tsx
-import { Slider } from "@orderly.network/ui";
+import { Slider } from "@veltodefi/ui";
 
 <Slider
   value={[rate]}
@@ -216,7 +216,7 @@ import { Slider } from "@orderly.network/ui";
 ### Slider with Marks
 
 ```tsx
-import { Slider } from "@orderly.network/ui";
+import { Slider } from "@veltodefi/ui";
 
 <Slider
   value={[rate]}
@@ -231,7 +231,7 @@ import { Slider } from "@orderly.network/ui";
 ### Slider with Tooltip
 
 ```tsx
-import { Slider } from "@orderly.network/ui";
+import { Slider } from "@veltodefi/ui";
 
 <Slider
   value={[rate]}
@@ -246,7 +246,7 @@ import { Slider } from "@orderly.network/ui";
 ### Range Slider
 
 ```tsx
-import { Slider } from "@orderly.network/ui";
+import { Slider } from "@veltodefi/ui";
 
 <Slider
   value={[min, max]}
@@ -263,7 +263,7 @@ import { Slider } from "@orderly.network/ui";
 ### Slider with Auto-Generated Marks
 
 ```tsx
-import { Slider } from "@orderly.network/ui";
+import { Slider } from "@veltodefi/ui";
 
 <Slider
   value={[rate]}
@@ -278,7 +278,7 @@ import { Slider } from "@orderly.network/ui";
 ### Color Variants
 
 ```tsx
-import { Slider } from "@orderly.network/ui";
+import { Slider } from "@veltodefi/ui";
 
 <Slider color="buy" value={[50]} />
 <Slider color="sell" value={[50]} />

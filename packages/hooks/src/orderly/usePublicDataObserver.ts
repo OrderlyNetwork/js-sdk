@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { type API } from "@orderly.network/types";
-import { getPrecisionByNumber } from "@orderly.network/utils";
+import { type API } from "@veltodefi/types";
+import { getPrecisionByNumber } from "@veltodefi/utils";
 import { useSymbolStore } from "../provider/store/symbolStore";
 import { useQuery } from "../useQuery";
 import { useAppStore } from "./appStore";

@@ -1,5 +1,5 @@
 import { FC, useMemo, useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { useTranslation } from "@veltodefi/i18n";
 import {
   Button,
   Checkbox,
@@ -18,7 +18,7 @@ import {
   SheetContent,
   SheetTrigger,
   modal,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 import { SettingState } from "./setting.script";
 
 export const Setting: FC<SettingState> = (props) => {

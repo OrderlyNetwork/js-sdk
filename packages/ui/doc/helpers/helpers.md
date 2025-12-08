@@ -162,7 +162,7 @@ Semantic color type for status indicators and alerts.
 ### Using Type Helpers
 
 ```tsx
-import type { ComponentPropsWithout, RemovedProps } from "@orderly.network/ui";
+import type { ComponentPropsWithout, RemovedProps } from "@veltodefi/ui";
 
 interface CustomButtonProps
   extends ComponentPropsWithout<"button", RemovedProps> {
@@ -174,7 +174,7 @@ interface CustomButtonProps
 ### Parsing Size Props
 
 ```tsx
-import { parseSizeProps } from "@orderly.network/ui";
+import { parseSizeProps } from "@veltodefi/ui";
 
 function MyComponent(props) {
   const { style, className, children, ...rest } = parseSizeProps(props);
@@ -190,7 +190,7 @@ function MyComponent(props) {
 ### Using Size Types
 
 ```tsx
-import type { SizeType } from "@orderly.network/ui";
+import type { SizeType } from "@veltodefi/ui";
 
 function createButton(size: SizeType) {
   // size is guaranteed to be one of: "xs" | "sm" | "md" | "lg" | "xl"

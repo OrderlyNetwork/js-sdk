@@ -226,7 +226,7 @@ Class name overrides.
 ### Basic Select
 
 ```tsx
-import { Select, SelectItem } from "@orderly.network/ui";
+import { Select, SelectItem } from "@veltodefi/ui";
 
 <Select value={token} onValueChange={setToken} placeholder="Select token">
   {tokens.map((option) => (
@@ -240,7 +240,7 @@ import { Select, SelectItem } from "@orderly.network/ui";
 ### Select with Custom Value Formatter
 
 ```tsx
-import { Select, SelectItem } from "@orderly.network/ui";
+import { Select, SelectItem } from "@veltodefi/ui";
 
 <Select
   value={token}
@@ -263,7 +263,7 @@ import { Select, SelectItem } from "@orderly.network/ui";
 ### Select with Max Height
 
 ```tsx
-import { Select, SelectItem } from "@orderly.network/ui";
+import { Select, SelectItem } from "@veltodefi/ui";
 
 <Select value={chain} onValueChange={setChain} maxHeight={300}>
   {chains.map((chain) => (
@@ -277,7 +277,7 @@ import { Select, SelectItem } from "@orderly.network/ui";
 ### Select with Error State
 
 ```tsx
-import { Select, SelectItem } from "@orderly.network/ui";
+import { Select, SelectItem } from "@veltodefi/ui";
 
 <Select
   value={token}

@@ -67,7 +67,7 @@ Content to render when `value` is `true`.
 ### Basic Either
 
 ```tsx
-import { Either } from "@orderly.network/ui";
+import { Either } from "@veltodefi/ui";
 
 <Either is={isLoggedIn} when={<UserPanel />} otherwise={<LoginCTA />} />;
 ```
@@ -75,7 +75,7 @@ import { Either } from "@orderly.network/ui";
 ### Either with Function Value
 
 ```tsx
-import { Either } from "@orderly.network/ui";
+import { Either } from "@veltodefi/ui";
 
 <Either value={() => user?.isPremium} left={<UpgradePrompt />}>
   <PremiumFeatures />
@@ -85,7 +85,7 @@ import { Either } from "@orderly.network/ui";
 ### Either for Loading States
 
 ```tsx
-import { Either } from "@orderly.network/ui";
+import { Either } from "@veltodefi/ui";
 
 <Either value={!isLoading} left={<Spinner />}>
   <Content />
@@ -95,7 +95,7 @@ import { Either } from "@orderly.network/ui";
 ### Either with Multiple Conditions
 
 ```tsx
-import { Either } from "@orderly.network/ui";
+import { Either } from "@veltodefi/ui";
 
 <Either value={hasData}>
   <DataView />

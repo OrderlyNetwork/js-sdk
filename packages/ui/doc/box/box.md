@@ -76,7 +76,7 @@ Extends HTML attributes with Box-specific fields for element control, spacing, s
 ## Usage
 
 ```tsx
-import { Box } from "@orderly.network/ui";
+import { Box } from "@veltodefi/ui";
 
 <Box p={4} shadow="md" border="base" r="xl" width={360}>
   <h4 className="oui-text-base">Wallet balance</h4>

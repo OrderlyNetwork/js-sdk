@@ -1,6 +1,6 @@
 import { createContext, PropsWithChildren, useContext } from "react";
-import { useEstLiqPriceBySymbol, useSymbolsInfo } from "@orderly.network/hooks";
-import { API, OrderSide } from "@orderly.network/types";
+import { useEstLiqPriceBySymbol, useSymbolsInfo } from "@veltodefi/hooks";
+import { API, OrderSide } from "@veltodefi/types";
 
 export interface TPSLDetailContextState {
   base_dp: number;

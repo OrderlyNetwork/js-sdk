@@ -105,7 +105,7 @@ Embla carousel options (looping, alignment, dragFree, etc.). Examples: `{ loop: 
 plugins?: CarouselPlugin
 ```
 
-Array of Embla plugins such as `AutoScroll` or `Autoplay` (both re-exported by `@orderly.network/ui`).
+Array of Embla plugins such as `AutoScroll` or `Autoplay` (both re-exported by `@veltodefi/ui`).
 
 #### `setApi`
 
@@ -130,7 +130,7 @@ Inherits all standard `div` attributes.
 ### Basic Carousel
 
 ```tsx
-import { Carousel, CarouselContent, CarouselItem } from "@orderly.network/ui";
+import { Carousel, CarouselContent, CarouselItem } from "@veltodefi/ui";
 
 <Carousel opts={{ loop: true }} className="oui-w-full">
   <CarouselContent>
@@ -152,7 +152,7 @@ import {
   CarouselItem,
   useCarousel,
   Button,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 
 function CarouselWithControls() {
   return (
@@ -187,7 +187,7 @@ function CarouselControls() {
 ### Vertical Carousel
 
 ```tsx
-import { Carousel, CarouselContent, CarouselItem } from "@orderly.network/ui";
+import { Carousel, CarouselContent, CarouselItem } from "@veltodefi/ui";
 
 <Carousel orientation="vertical" opts={{ loop: true }}>
   <CarouselContent>
@@ -204,7 +204,7 @@ import { Carousel, CarouselContent, CarouselItem } from "@orderly.network/ui";
 
 ```tsx
 import { useState } from "react";
-import { Carousel, CarouselContent, CarouselItem } from "@orderly.network/ui";
+import { Carousel, CarouselContent, CarouselItem } from "@veltodefi/ui";
 
 function ControlledCarousel() {
   const [api, setApi] = useState(null);

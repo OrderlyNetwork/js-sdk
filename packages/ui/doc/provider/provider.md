@@ -92,7 +92,7 @@ Component theme overrides. Allows customizing component variants.
 ### Basic Theme Provider
 
 ```tsx
-import { OrderlyThemeProvider } from "@orderly.network/ui";
+import { OrderlyThemeProvider } from "@veltodefi/ui";
 
 <OrderlyThemeProvider>
   <App />
@@ -102,7 +102,7 @@ import { OrderlyThemeProvider } from "@orderly.network/ui";
 ### Theme Provider with Overrides
 
 ```tsx
-import { OrderlyThemeProvider } from "@orderly.network/ui";
+import { OrderlyThemeProvider } from "@veltodefi/ui";
 
 <OrderlyThemeProvider
   overrides={{
@@ -117,7 +117,7 @@ import { OrderlyThemeProvider } from "@orderly.network/ui";
 ### Using useOrderlyTheme
 
 ```tsx
-import { useOrderlyTheme } from "@orderly.network/ui";
+import { useOrderlyTheme } from "@veltodefi/ui";
 
 function CustomComponent() {
   const { getComponentTheme } = useOrderlyTheme();

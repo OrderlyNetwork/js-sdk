@@ -108,7 +108,7 @@ Current locale code (e.g., "en", "zh-CN").
 ### Basic Locale Provider
 
 ```tsx
-import { LocaleProvider, useLocale } from "@orderly.network/ui";
+import { LocaleProvider, useLocale } from "@veltodefi/ui";
 
 const messages = {
   locale: "en",
@@ -129,7 +129,7 @@ const messages = {
 ### Using useLocale Hook
 
 ```tsx
-import { useLocale } from "@orderly.network/ui";
+import { useLocale } from "@veltodefi/ui";
 
 function DialogExample() {
   const [dialogLocale] = useLocale("dialog");
@@ -146,7 +146,7 @@ function DialogExample() {
 ### Multiple Locales
 
 ```tsx
-import { LocaleProvider, useLocale } from "@orderly.network/ui";
+import { LocaleProvider, useLocale } from "@veltodefi/ui";
 
 const enMessages = {
   locale: "en",
@@ -174,7 +174,7 @@ function App() {
 ### With Default Locale
 
 ```tsx
-import { useLocale } from "@orderly.network/ui";
+import { useLocale } from "@veltodefi/ui";
 
 function CustomComponent() {
   const [messages, localeCode] = useLocale("dialog", {

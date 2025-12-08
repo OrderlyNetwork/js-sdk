@@ -32,7 +32,7 @@ Minimal empty state placeholder component.
 ### Basic Empty View
 
 ```tsx
-import { EmptyView } from "@orderly.network/ui";
+import { EmptyView } from "@veltodefi/ui";
 
 <ListView
   dataSource={orders}
@@ -44,7 +44,7 @@ import { EmptyView } from "@orderly.network/ui";
 ### Custom Empty State
 
 ```tsx
-import { EmptyView, Text, Button, Flex } from "@orderly.network/ui";
+import { EmptyView, Text, Button, Flex } from "@veltodefi/ui";
 
 function CustomEmptyState() {
   return (
@@ -69,8 +69,8 @@ function CustomEmptyState() {
 ### Empty State with Icon
 
 ```tsx
-import { EmptyView, Text, Flex } from "@orderly.network/ui";
-import { EmptyDataIcon } from "@orderly.network/ui";
+import { EmptyView, Text, Flex } from "@veltodefi/ui";
+import { EmptyDataIcon } from "@veltodefi/ui";
 
 function EmptyWithIcon() {
   return (

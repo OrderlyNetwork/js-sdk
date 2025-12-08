@@ -146,7 +146,7 @@ Position to render extensions for.
 ### Registering an Extension
 
 ```tsx
-import { installExtension, ExtensionPositionEnum } from "@orderly.network/ui";
+import { installExtension, ExtensionPositionEnum } from "@veltodefi/ui";
 
 installExtension({
   name: "orderly/customWidget",
@@ -159,7 +159,7 @@ installExtension({
 ### Rendering Extensions
 
 ```tsx
-import { ExtensionSlot, ExtensionPositionEnum } from "@orderly.network/ui";
+import { ExtensionSlot, ExtensionPositionEnum } from "@veltodefi/ui";
 
 <ExtensionSlot position={ExtensionPositionEnum.MainNav} />;
 ```
@@ -167,7 +167,7 @@ import { ExtensionSlot, ExtensionPositionEnum } from "@orderly.network/ui";
 ### Extension with Lifecycle Hooks
 
 ```tsx
-import { installExtension, ExtensionPositionEnum } from "@orderly.network/ui";
+import { installExtension, ExtensionPositionEnum } from "@veltodefi/ui";
 
 installExtension({
   name: "orderly/myExtension",
@@ -187,10 +187,7 @@ installExtension({
 ### Setting Extension Builder
 
 ```tsx
-import {
-  setExtensionBuilder,
-  ExtensionPositionEnum,
-} from "@orderly.network/ui";
+import { setExtensionBuilder, ExtensionPositionEnum } from "@veltodefi/ui";
 
 setExtensionBuilder(ExtensionPositionEnum.MainNav, () => ({
   theme: "dark",

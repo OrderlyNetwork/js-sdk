@@ -13,7 +13,7 @@ The icon directory houses all proprietary SVG symbols used across Orderly—from
 | `baseIcon.tsx`         | Generic SVG wrapper exposing `size`, `color`, `viewBox`, and accessibility props.          |
 | `baseIconWithPath.tsx` | Similar to `baseIcon` but geared toward multi-path or filled icons.                        |
 | `*.tsx`                | Individual icon components (e.g., `arrowDownUp.tsx`, `infoCircle.tsx`, `tradingIcon.tsx`). |
-| `index.ts`             | Aggregates exports, allowing `import { Icon } from "@orderly.network/ui";`.                |
+| `index.ts`             | Aggregates exports, allowing `import { Icon } from "@veltodefi/ui";`.                      |
 
 ## Exports & Types
 
@@ -135,7 +135,7 @@ Inherits all standard SVG attributes.
 ### Basic Icon
 
 ```tsx
-import { CloseIcon, CheckIcon } from "@orderly.network/ui";
+import { CloseIcon, CheckIcon } from "@veltodefi/ui";
 
 <CloseIcon size={16} />
 <CheckIcon size={20} color="success" />
@@ -144,7 +144,7 @@ import { CloseIcon, CheckIcon } from "@orderly.network/ui";
 ### Icon with Color
 
 ```tsx
-import { InfoCircleIcon } from "@orderly.network/ui";
+import { InfoCircleIcon } from "@veltodefi/ui";
 
 <InfoCircleIcon className="oui-text-primary" />
 <InfoCircleIcon color="danger" />
@@ -153,7 +153,7 @@ import { InfoCircleIcon } from "@orderly.network/ui";
 ### Icon in Button
 
 ```tsx
-import { Button, PlusIcon } from "@orderly.network/ui";
+import { Button, PlusIcon } from "@veltodefi/ui";
 
 <Button leading={<PlusIcon size={16} />}>Add Item</Button>;
 ```
@@ -166,7 +166,7 @@ import {
   TooltipTrigger,
   TooltipContent,
   InfoCircleIcon,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 
 <Tooltip>
   <TooltipTrigger asChild>
@@ -183,7 +183,7 @@ import {
 ### Animated Icon
 
 ```tsx
-import { RefreshIcon } from "@orderly.network/ui";
+import { RefreshIcon } from "@veltodefi/ui";
 
 <RefreshIcon size={20} className={isLoading ? "oui-animate-spin" : ""} />;
 ```

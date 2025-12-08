@@ -81,7 +81,7 @@ Additional Tailwind classes (e.g., `oui-uppercase`, `oui-tracking-wide`).
 ### Basic Badges
 
 ```tsx
-import { Badge } from "@orderly.network/ui";
+import { Badge } from "@veltodefi/ui";
 
 <Badge color="buy" size="sm">Long</Badge>
 
@@ -93,7 +93,7 @@ import { Badge } from "@orderly.network/ui";
 ### Status Badges
 
 ```tsx
-import { Badge } from "@orderly.network/ui";
+import { Badge } from "@veltodefi/ui";
 
 <Badge color="success">Filled</Badge>
 <Badge color="warning">Pending</Badge>
@@ -103,7 +103,7 @@ import { Badge } from "@orderly.network/ui";
 ### Trade Badges
 
 ```tsx
-import { Badge } from "@orderly.network/ui";
+import { Badge } from "@veltodefi/ui";
 
 <Badge color="buy">Buy</Badge>
 <Badge color="sell">Sell</Badge>
@@ -112,7 +112,7 @@ import { Badge } from "@orderly.network/ui";
 ### Size Variants
 
 ```tsx
-import { Badge } from "@orderly.network/ui";
+import { Badge } from "@veltodefi/ui";
 
 <Badge size="xs">XS</Badge>
 <Badge size="sm">SM</Badge>

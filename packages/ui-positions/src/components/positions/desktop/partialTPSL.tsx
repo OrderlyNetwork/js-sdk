@@ -3,11 +3,11 @@ import {
   ERROR_MSG_CODES,
   useSymbolsInfo,
   useTpslPriceChecker,
-} from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { OrderSide, PositionType } from "@orderly.network/types";
-import { cn, ExclamationFillIcon, Flex, Text } from "@orderly.network/ui";
-import { CloseToLiqPriceIcon } from "@orderly.network/ui-tpsl";
+} from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { OrderSide, PositionType } from "@veltodefi/types";
+import { cn, ExclamationFillIcon, Flex, Text } from "@veltodefi/ui";
+import { CloseToLiqPriceIcon } from "@veltodefi/ui-tpsl";
 import { usePositionsRowContext } from "../positionsRowContext";
 import { AddIcon, TPSLEditIcon } from "./components";
 

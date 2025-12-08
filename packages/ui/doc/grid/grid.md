@@ -133,7 +133,7 @@ Both `Grid` and `Span` inherit all props from `Box`, including spacing, sizing, 
 ### Basic Grid
 
 ```tsx
-import { Grid } from "@orderly.network/ui";
+import { Grid } from "@veltodefi/ui";
 
 <Grid cols={3} gap={4}>
   <div>Item 1</div>
@@ -145,7 +145,7 @@ import { Grid } from "@orderly.network/ui";
 ### Responsive Grid
 
 ```tsx
-import { Grid } from "@orderly.network/ui";
+import { Grid } from "@veltodefi/ui";
 
 <Grid cols={{ base: 1, md: 2, lg: 3 }} gap={4}>
   {widgets.map((widget) => (
@@ -157,7 +157,7 @@ import { Grid } from "@orderly.network/ui";
 ### Grid with Spanning Items
 
 ```tsx
-import { Grid } from "@orderly.network/ui";
+import { Grid } from "@veltodefi/ui";
 
 <Grid cols={4} gap={4}>
   <Grid.span colSpan={2} rowSpan={2}>
@@ -175,7 +175,7 @@ import { Grid } from "@orderly.network/ui";
 ### Dashboard Layout
 
 ```tsx
-import { Grid } from "@orderly.network/ui";
+import { Grid } from "@veltodefi/ui";
 
 <Grid cols={{ base: 1, md: 2, lg: 3 }} gap={4}>
   <Grid.span colSpan={{ md: 2, lg: 3 }}>
@@ -196,7 +196,7 @@ import { Grid } from "@orderly.network/ui";
 ### Using Span Directly
 
 ```tsx
-import { Grid, Span } from "@orderly.network/ui";
+import { Grid, Span } from "@veltodefi/ui";
 
 <Grid cols={3} gap={4}>
   <Span colSpan={2}>Spans 2 columns</Span>

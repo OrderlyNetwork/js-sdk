@@ -1,6 +1,6 @@
 import { useMemo, useRef } from "react";
-import { OrderSide } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+import { OrderSide } from "@veltodefi/types";
+import { Decimal } from "@veltodefi/utils";
 import { OrderValidationItem, OrderValidationResult } from "../useOrderEntry";
 import { ERROR_MSG_CODES } from "./errorMsgCodes";
 

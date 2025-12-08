@@ -254,7 +254,7 @@ Class name overrides.
 ### Basic Sheet
 
 ```tsx
-import { Sheet, SheetTrigger, SheetContent } from "@orderly.network/ui";
+import { Sheet, SheetTrigger, SheetContent } from "@veltodefi/ui";
 
 <Sheet>
   <SheetTrigger asChild>
@@ -272,7 +272,7 @@ import { Sheet, SheetTrigger, SheetContent } from "@orderly.network/ui";
 ### SimpleSheet
 
 ```tsx
-import { SimpleSheet } from "@orderly.network/ui";
+import { SimpleSheet } from "@veltodefi/ui";
 
 <SimpleSheet title="Settings" open={open} onOpenChange={setOpen}>
   <SettingsForm />
@@ -282,7 +282,7 @@ import { SimpleSheet } from "@orderly.network/ui";
 ### Bottom Sheet (Mobile)
 
 ```tsx
-import { SimpleSheet } from "@orderly.network/ui";
+import { SimpleSheet } from "@veltodefi/ui";
 
 <SimpleSheet
   title="Actions"
@@ -303,7 +303,7 @@ import {
   SheetHeader,
   SheetTitle,
   SheetBody,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 
 <Sheet open={open} onOpenChange={setOpen}>
   <SheetContent side="right">

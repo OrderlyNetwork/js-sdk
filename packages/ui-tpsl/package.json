@@ -1,5 +1,5 @@
 {
-  "name": "@orderly.network/ui-tpsl",
+  "name": "@veltodefi/ui-tpsl",
   "version": "2.8.6",
   "description": "",
   "main": "dist/index.js",
@@ -22,14 +22,14 @@
     "access": "public"
   },
   "dependencies": {
-    "@orderly.network/i18n": "workspace:*",
-    "@orderly.network/ui": "workspace:*",
-    "@orderly.network/hooks": "workspace:*",
-    "@orderly.network/types": "workspace:*",
-    "@orderly.network/utils": "workspace:*",
-    "@orderly.network/react-app": "workspace:*",
-    "@orderly.network/ui-connector": "workspace:*",
-    "@orderly.network/perp": "workspace:*"
+    "@veltodefi/i18n": "workspace:*",
+    "@veltodefi/ui": "workspace:*",
+    "@veltodefi/hooks": "workspace:*",
+    "@veltodefi/types": "workspace:*",
+    "@veltodefi/utils": "workspace:*",
+    "@veltodefi/react-app": "workspace:*",
+    "@veltodefi/ui-connector": "workspace:*",
+    "@veltodefi/perp": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "^18.3.2",

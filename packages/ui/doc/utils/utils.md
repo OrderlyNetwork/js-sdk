@@ -38,7 +38,7 @@ Capitalizes the first letter of a string. Returns `undefined` or the provided `f
 **Example:**
 
 ```tsx
-import { capitalizeFirstLetter } from "@orderly.network/ui";
+import { capitalizeFirstLetter } from "@veltodefi/ui";
 
 capitalizeFirstLetter("hello"); // "Hello"
 capitalizeFirstLetter(undefined, "default"); // "default"
@@ -62,7 +62,7 @@ Wraps the native `document.startViewTransition` API with a fallback for browsers
 **Example:**
 
 ```tsx
-import { startViewTransition } from "@orderly.network/ui";
+import { startViewTransition } from "@veltodefi/ui";
 
 startViewTransition(() => {
   // Update DOM state here
@@ -85,7 +85,7 @@ Configured instance of `tailwind-variants` with Orderly's `oui-` prefix. This is
 ### String Formatting
 
 ```tsx
-import { capitalizeFirstLetter } from "@orderly.network/ui";
+import { capitalizeFirstLetter } from "@veltodefi/ui";
 
 function formatUserName(name: string | undefined) {
   return capitalizeFirstLetter(name, "Guest");
@@ -95,7 +95,7 @@ function formatUserName(name: string | undefined) {
 ### View Transitions
 
 ```tsx
-import { startViewTransition } from "@orderly.network/ui";
+import { startViewTransition } from "@veltodefi/ui";
 
 function handleTabChange(newTab: string) {
   startViewTransition(() => {
@@ -115,4 +115,4 @@ function handleTabChange(newTab: string) {
 
 1. Use `capitalizeFirstLetter` for user-facing labels and display names to ensure consistent capitalization.
 2. Wrap state updates in `startViewTransition` when changing layouts or content to provide smooth visual transitions.
-3. Import utilities from `@orderly.network/ui` rather than internal paths to maintain compatibility with future refactors.
+3. Import utilities from `@veltodefi/ui` rather than internal paths to maintain compatibility with future refactors.

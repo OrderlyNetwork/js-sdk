@@ -1,7 +1,7 @@
 import React, { FC } from "react";
-import { useTranslation } from "@orderly.network/i18n";
-import { OrderSide } from "@orderly.network/types";
-import { Badge, Flex, Text } from "@orderly.network/ui";
+import { useTranslation } from "@veltodefi/i18n";
+import { OrderSide } from "@veltodefi/types";
+import { Badge, Flex, Text } from "@veltodefi/ui";
 
 export interface OrderInfoCardProps {
   /** Order title */

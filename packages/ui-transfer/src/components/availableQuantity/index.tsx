@@ -1,16 +1,9 @@
 import { FC, useMemo } from "react";
-import { useIndexPricesStream, useWithdraw } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { API } from "@orderly.network/types";
-import {
-  Flex,
-  Spinner,
-  Text,
-  Tooltip,
-  modal,
-  useScreen,
-} from "@orderly.network/ui";
-import { Decimal } from "@orderly.network/utils";
+import { useIndexPricesStream, useWithdraw } from "@veltodefi/hooks";
+import { useTranslation } from "@veltodefi/i18n";
+import { API } from "@veltodefi/types";
+import { Flex, Spinner, Text, Tooltip, modal, useScreen } from "@veltodefi/ui";
+import { Decimal } from "@veltodefi/utils";
 
 export type AvailableQuantityProps = {
   token?: Partial<API.TokenInfo>;

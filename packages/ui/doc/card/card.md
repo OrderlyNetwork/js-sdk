@@ -253,7 +253,7 @@ Inherits all Radix HoverCard Content props for positioning.
 ### Basic Card
 
 ```tsx
-import { Card } from "@orderly.network/ui";
+import { Card } from "@veltodefi/ui";
 
 <Card title="Portfolio">
   <BalanceOverview />
@@ -263,7 +263,7 @@ import { Card } from "@orderly.network/ui";
 ### Card with Footer
 
 ```tsx
-import { Card, Button } from "@orderly.network/ui";
+import { Card, Button } from "@veltodefi/ui";
 
 <Card
   title="Portfolio"
@@ -284,7 +284,7 @@ import {
   CardFooter,
   CardTitle,
   CardDescription,
-} from "@orderly.network/ui";
+} from "@veltodefi/ui";
 
 <CardBase>
   <CardHeader>
@@ -303,7 +303,7 @@ import {
 ### HoverCard
 
 ```tsx
-import { HoverCard, Text } from "@orderly.network/ui";
+import { HoverCard, Text } from "@veltodefi/ui";
 
 <HoverCard
   trigger={<Text className="oui-underline">Funding fees</Text>}
@@ -316,7 +316,7 @@ import { HoverCard, Text } from "@orderly.network/ui";
 
 ```tsx
 import { useState } from "react";
-import { HoverCard, Text } from "@orderly.network/ui";
+import { HoverCard, Text } from "@veltodefi/ui";
 
 function FeeTooltip() {
   const [open, setOpen] = useState(false);
