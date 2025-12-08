@@ -4,7 +4,9 @@ import { PositionHeader } from "./positionHeader.ui";
 
 export const PositionHeaderWidget: React.FC<{
   pnlNotionalDecimalPrecision?: number;
+  setPnlNotionalDecimalPrecision: (value: number) => void;
   unPnlPriceBasis: "markPrice" | "lastPrice";
+  setUnPnlPriceBasic: (value: string) => void;
   symbol?: string;
 }> = (props) => {
   const state = usePositionHeaderScript(props);

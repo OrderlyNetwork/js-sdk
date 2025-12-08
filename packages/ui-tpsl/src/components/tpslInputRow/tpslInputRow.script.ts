@@ -1,8 +1,5 @@
 import { useMemo } from "react";
-import {
-  OrderValidationResult,
-  useLeverageBySymbol,
-} from "@veltodefi/hooks";
+import { OrderValidationResult, useLeverageBySymbol } from "@veltodefi/hooks";
 import { order } from "@veltodefi/perp";
 import { OrderSide, OrderType, PositionType } from "@veltodefi/types";
 
@@ -29,6 +26,7 @@ export type Props = {
   disableEnableCheckbox?: boolean;
   symbolLeverage?: number;
   side: OrderSide;
+  inputWarnNode?: React.ReactNode;
 };
 export const useTPSLInputRowScript = (props: Props) => {
   const { values, side, type, rootOrderPrice } = props;

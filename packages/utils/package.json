@@ -1,6 +1,6 @@
 {
-  "name": "@veltodefi/utils",
-  "version": "2.8.4",
+  "name": "@orderly.network/utils",
+  "version": "2.8.6",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -26,12 +26,11 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
-    "@veltodefi/types": "workspace:*",
+    "@orderly.network/types": "workspace:*",
     "dayjs": "^1.11.9",
     "decimal.js-light": "^2.5.1"
   },
   "publishConfig": {
-    "access": "public",
-    "registry": "https://npm.pkg.github.com"
+    "access": "public"
   }
 }

@@ -8,18 +8,18 @@ import {
   useIndexPricesStream,
   useQuery,
   useTokenInfo,
-} from "@veltodefi/hooks";
-import { useTranslation } from "@veltodefi/i18n";
-import { account as accountPerp } from "@veltodefi/perp";
-import { useAppContext } from "@veltodefi/react-app";
+} from "@orderly.network/hooks";
+import { useTranslation, Trans } from "@orderly.network/i18n";
+import { account as accountPerp } from "@orderly.network/perp";
+import { useAppContext } from "@orderly.network/react-app";
 import {
   API,
   NetworkId,
   ChainNamespace,
   isNativeTokenChecker,
-} from "@veltodefi/types";
-import { useAuthGuard } from "@veltodefi/ui-connector";
-import { Decimal } from "@veltodefi/utils";
+} from "@orderly.network/types";
+import { useAuthGuard } from "@orderly.network/ui-connector";
+import { Decimal } from "@orderly.network/utils";
 import { useNeedSwapAndCross } from "../swap/hooks/useNeedSwapAndCross";
 import { useSwapDeposit } from "../swap/hooks/useSwapDeposit";
 import {
@@ -111,6 +111,36 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     [balance, sourceToken?.precision],
   );
 
+  const maxDepositAmount = useMemo(() => {
+    const balanceDecimal = new Decimal(balance || 0).todp(
+      sourceToken?.precision ?? 2,
+      Decimal.ROUND_DOWN,
+    );
+
+    // If user_max_qty is -1 or undefined, ignore it and use balance only
+    // user_max_qty = 0 means no deposit allowed
+    if (
+      sourceToken?.user_max_qty === -1 ||
+      sourceToken?.user_max_qty === undefined
+    ) {
+      return balanceDecimal.toString();
+    }
+
+    // user_max_qty = 0 means no deposit allowed
+    if (sourceToken?.user_max_qty === 0) {
+      return "0";
+    }
+
+    const userMaxQty = new Decimal(sourceToken.user_max_qty).todp(
+      sourceToken?.precision ?? 2,
+      Decimal.ROUND_DOWN,
+    );
+
+    return balanceDecimal.lt(userMaxQty)
+      ? balanceDecimal.toString()
+      : userMaxQty.toString();
+  }, [balance, sourceToken?.precision, sourceToken?.user_max_qty]);
+
   const { inputStatus, hintMessage } = useInputStatus({
     quantity,
     maxQuantity,
@@ -180,13 +210,27 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     }
 
     if (new Decimal(quantity).gt(sourceToken?.user_max_qty)) {
-      return t("transfer.deposit.userMaxQty.error", {
-        maxQty: sourceToken?.user_max_qty,
-        token: sourceToken?.symbol,
-      });
+      return (
+        <Trans
+          i18nKey="transfer.deposit.userMaxQty.error"
+          values={{
+            token: sourceToken?.symbol,
+            chain: currentChain?.info?.network_infos?.name || "",
+          }}
+          components={[
+            <a
+              key="0"
+              href="https://orderly.network/docs/introduction/trade-on-orderly/multi-collateral#max-deposits-global"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="oui-text-primary"
+            />,
+          ]}
+        />
+      );
     }
     return "";
-  }, [sourceToken, targetToken, quantity, t]);
+  }, [sourceToken, targetToken, quantity, currentChain, t]);
 
   const loading = submitting || depositFeeRevalidating!;
 
@@ -315,6 +359,12 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     feeWarningMessage ||
     insufficientGasMessage;
 
+  const hasUserMaxQtyError = !!userMaxQtyMessage;
+  const finalInputStatus = hasUserMaxQtyError ? "error" : inputStatus;
+  const finalHintMessage = hasUserMaxQtyError
+    ? t("transfer.deposit.exceedCap")
+    : hintMessage;
+
   const disabled =
     !quantity ||
     Number(quantity) === 0 ||
@@ -387,10 +437,11 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     quantity,
     collateralContributionQuantity,
     maxQuantity,
+    maxDepositAmount,
     indexPrice,
     onQuantityChange: setQuantity,
-    hintMessage,
-    inputStatus,
+    hintMessage: finalHintMessage,
+    inputStatus: finalInputStatus,
     chains,
     currentChain,
     settingChain,

@@ -4,7 +4,7 @@ import { useTranslation } from "@veltodefi/i18n";
 import { toast } from "@veltodefi/ui";
 import { Decimal } from "@veltodefi/utils";
 import { useReferralContext } from "../../../provider";
-import { addQueryParam } from "../../../utils/utils";
+import { generateReferralLink } from "../../../utils/utils";
 
 export type ReferralLinkReturns = {
   onCopy?: (value: string) => void;
@@ -63,7 +63,7 @@ export const useReferralLinkScript = (): ReferralLinkReturns => {
   const referralLink = useMemo(() => {
     if (!firstCode) return "";
 
-    return addQueryParam(referralLinkUrl, "ref", firstCode.code);
+    return generateReferralLink(referralLinkUrl, firstCode.code);
   }, [firstCode]);
 
   const earn = useMemo(() => {

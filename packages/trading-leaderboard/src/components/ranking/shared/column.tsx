@@ -1,6 +1,18 @@
 import { ReactNode, useMemo } from "react";
-import { useTranslation } from "@veltodefi/i18n";
-import { Text, Column, Box, useScreen, cn, toast } from "@veltodefi/ui";
+import { useTranslation } from "@orderly.network/i18n";
+import {
+  Text,
+  Column,
+  Box,
+  cn,
+  toast,
+  Tooltip,
+  InfoCircleIcon,
+  Flex,
+  useScreen,
+  modal,
+  useLongPress,
+} from "@orderly.network/ui";
 import firstBadge from "../../../img/first_badge.png";
 import secondBadge from "../../../img/second_badge.png";
 import thirdBadge from "../../../img/third_badge.png";
@@ -17,7 +29,7 @@ export const useRankingColumns = (
   fields?: RankingColumnFields[],
   address?: string,
   enableSort?: boolean,
-  brokerId?: string,
+  type?: "general" | "campaign",
 ) => {
   const { t } = useTranslation();
   const { isMobile } = useScreen();
@@ -101,7 +113,7 @@ export const useRankingColumns = (
             <>
               <a
                 className="oui-flex oui-items-start oui-gap-1"
-                href={`https://orderly-dashboard.orderly.network/address/${value}?broker_id=${brokerId}`}
+                href={`https://orderly-dashboard.orderly.network/address/${value}?broker_id=${record.broker_id}`}
                 target="_blank"
                 rel="noreferrer"
               >
@@ -137,7 +149,7 @@ export const useRankingColumns = (
         width: 90,
       },
       {
-        title: t("tradingLeaderboard.tradingVolume"),
+        title: <VolumeColumnTitle />,
         dataIndex: "volume",
         onSort: enableSort,
         align: isMobile ? "right" : "left",
@@ -154,7 +166,7 @@ export const useRankingColumns = (
         width: 105,
       },
       {
-        title: t("common.pnl"),
+        title: <PnLColumnTitle type={type} />,
         dataIndex: "pnl",
         onSort: enableSort,
         align: isMobile ? "right" : "left",
@@ -195,7 +207,7 @@ export const useRankingColumns = (
     return columns.filter((column) =>
       fields?.includes(column.dataIndex as RankingColumnFields),
     );
-  }, [t, isMobile, address, fields, enableSort, brokerId]);
+  }, [t, isMobile, address, fields, enableSort, type]);
 };
 
 const FirstRankIcon = () => {
@@ -296,4 +308,64 @@ const ThirdRankIcon = () => {
       </defs>
     </svg>
   );
+};
+
+const PnLColumnTitle = ({ type }: { type?: "general" | "campaign" }) => {
+  const { isMobile } = useScreen();
+  const { t } = useTranslation();
+
+  const tooltipContent =
+    type === "general"
+      ? t("tradingLeaderboard.realizedPnl.tooltip")
+      : t("tradingLeaderboard.pnl.tooltip");
+
+  const longPress = useLongPress(() => {
+    modal.alert({
+      title: t("common.tips"),
+      message: tooltipContent,
+    });
+  });
+
+  const view = (
+    <Flex gap={1}>
+      <div>
+        {type === "general" ? t("common.realizedPnl") : t("common.pnl")}
+      </div>
+      <InfoCircleIcon opacity={1} className="w-4 h-4 cursor-pointer" />
+    </Flex>
+  );
+
+  if (isMobile) {
+    return <div {...longPress}>{view}</div>;
+  }
+
+  return <Tooltip content={tooltipContent}>{view}</Tooltip>;
+};
+
+const VolumeColumnTitle = () => {
+  const { isMobile } = useScreen();
+  const { t } = useTranslation();
+
+  const tooltipContent =
+    "Total trading volume generated during the campaign period. Updated every 30 seconds.";
+
+  const longPress = useLongPress(() => {
+    modal.alert({
+      title: t("common.tips"),
+      message: tooltipContent,
+    });
+  });
+
+  const view = (
+    <Flex gap={1}>
+      <div>{t("tradingLeaderboard.tradingVolume")}</div>
+      <InfoCircleIcon opacity={1} className="w-4 h-4 cursor-pointer" />
+    </Flex>
+  );
+
+  if (isMobile) {
+    return <div {...longPress}>{view}</div>;
+  }
+
+  return <Tooltip content={tooltipContent}>{view}</Tooltip>;
 };

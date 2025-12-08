@@ -18,12 +18,14 @@ export const Positions: React.FC<Readonly<PositionsState>> = (props) => {
     isLoading,
     dataSource,
     onSymbolChange,
+    positionReverse,
   } = props;
 
   const columns = useColumn({
     pnlNotionalDecimalPrecision,
     sharePnLConfig,
     onSymbolChange: onSymbolChange,
+    positionReverse,
   });
 
   return (
@@ -70,6 +72,7 @@ export const MobilePositions: React.FC<
     sharePnLConfig,
     dataSource,
     onSymbolChange,
+    positionReverse,
   } = props;
   return (
     <ListView
@@ -85,6 +88,7 @@ export const MobilePositions: React.FC<
               pnlNotionalDecimalPrecision={pnlNotionalDecimalPrecision}
               sharePnLConfig={sharePnLConfig}
               onSymbolChange={onSymbolChange}
+              positionReverse={positionReverse}
             />
           </PositionsRowProvider>
         </SymbolProvider>

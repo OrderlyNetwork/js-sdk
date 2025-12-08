@@ -1,12 +1,15 @@
-import { Flex } from "@veltodefi/ui";
+import { cn, Flex } from "@orderly.network/ui";
 
-export const FlexCell = (props: { children: React.ReactNode }) => {
+export const FlexCell = (props: {
+  children: React.ReactNode;
+  className?: string;
+}) => {
   return (
     <Flex
       direction={"column"}
       justify={"center"}
       itemAlign={"start"}
-      className="oui-text-2xs oui-h-[36px]"
+      className={cn("oui-text-2xs oui-h-[36px]", props.className)}
     >
       {props.children}
     </Flex>

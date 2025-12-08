@@ -18,6 +18,7 @@ import { OrderInfo } from "../components/orderInfo";
 import { OrdersTable } from "./ordersTable";
 import { OrdersTableMobile } from "./ordersTable.mobile";
 import { TPSLDetailState } from "./tpslDetail.script";
+import { useTPSLDetailContext } from "./tpslDetailProvider";
 
 export const TPSLDetailUI = (props: TPSLDetailState) => {
   const { isMobile } = useScreen();
@@ -31,6 +32,7 @@ export const TPSLDetailUI = (props: TPSLDetailState) => {
     addTPSLOrder,
     symbolInfo,
   } = props;
+  const { estLiqPrice } = useTPSLDetailContext();
 
   return (
     <Box>
@@ -41,6 +43,7 @@ export const TPSLDetailUI = (props: TPSLDetailState) => {
             order_quantity: position.position_qty.toString(),
             order_price: position.average_open_price.toString(),
           }}
+          estLiqPrice={estLiqPrice}
           symbolLeverage={position.leverage}
           baseDP={symbolInfo("base_dp")}
           quoteDP={symbolInfo("quote_dp")}

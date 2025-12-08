@@ -1,6 +1,6 @@
 {
-  "name": "@veltodefi/i18n",
-  "version": "2.8.4",
+  "name": "@orderly.network/i18n",
+  "version": "2.8.6",
   "description": "Internationalization for orderly sdk",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -42,8 +42,7 @@
     "script"
   ],
   "publishConfig": {
-    "access": "public",
-    "registry": "https://npm.pkg.github.com"
+    "access": "public"
   },
   "dependencies": {
     "i18next": "^24.2.2",

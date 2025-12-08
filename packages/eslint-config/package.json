@@ -1,12 +1,11 @@
 {
-  "name": "@veltodefi/eslint-config",
-  "version": "2.8.4",
+  "name": "@orderly.network/eslint-config",
+  "version": "2.8.6",
   "main": "index.mjs",
   "module": "index.mjs",
   "license": "MIT",
   "publishConfig": {
-    "access": "public",
-    "registry": "https://npm.pkg.github.com"
+    "access": "public"
   },
   "dependencies": {
     "@eslint/js": "^9.25.1",

@@ -1,6 +1,6 @@
 {
-  "name": "@veltodefi/core",
-  "version": "2.8.4",
+  "name": "@orderly.network/core",
+  "version": "2.8.6",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -17,7 +17,7 @@
   ],
   "dependencies": {
     "@noble/ed25519": "^2.0.0",
-    "@veltodefi/types": "workspace:*",
+    "@orderly.network/types": "workspace:*",
     "@solana/web3.js": "^1.95.3",
     "bs58": "^5.0.0",
     "ethers": "^6.15.0",
@@ -47,8 +47,7 @@
     "transformIgnorePatterns": []
   },
   "publishConfig": {
-    "access": "public",
-    "registry": "https://npm.pkg.github.com"
+    "access": "public"
   },
   "browserslist": {
     "production": [

@@ -21,5 +21,5 @@ export const GeneralRankingWidget: FC<GeneralRankingWidgetProps> = (props) => {
     weekOneAddresses,
   });
 
-  return <Ranking {...state} {...rest} fields={fields} />;
+  return <Ranking {...state} {...rest} fields={fields} type="general" />;
 };

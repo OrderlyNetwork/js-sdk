@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useId, useMemo, useState } from "react";
 import {
+  ERROR_MSG_CODES,
   OrderValidationResult,
   useLocalStorage,
   useMemoizedFn,
@@ -109,6 +110,10 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
 
   const soundAlertId = useId();
 
+  const isSlPriceWarning =
+    props.slPriceError?.sl_trigger_price?.type ===
+    ERROR_MSG_CODES.SL_PRICE_WARNING;
+
   const { getErrorMsg } = useOrderEntryFormErrorMsg(validated ? errors : null);
 
   const buttonLabel = useMemo(() => {
@@ -166,8 +171,12 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
   const onSubmit = useMemoizedFn(async () => {
     const isScaledOrder = formattedOrder.order_type === OrderType.SCALED;
 
+    // TODO: in the future, we will be add `level` to `OrderValidationItem`, use `level` manager ui state
+    const isSlPriceError =
+      props.slPriceError?.sl_trigger_price?.type ===
+      ERROR_MSG_CODES.SL_PRICE_ERROR;
     helper
-      .validate()
+      .validate(isSlPriceError ? props.slPriceError : undefined)
       .then(
         // validate success, it return the order
         // TODO: get order from other function
@@ -333,6 +342,12 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
     setHasAdvancedTPSLResult(false);
   }, [props.symbol]);
 
+  const showReduceOnlySection =
+    (isMobile &&
+      formattedOrder.order_type !== OrderType.LIMIT &&
+      formattedOrder.order_type !== OrderType.MARKET) ||
+    !isMobile;
+
   const showSoundSection =
     Boolean(notification?.orderFilled?.media) &&
     (notification?.orderFilled?.displayInOrderEntry ?? true);
@@ -475,8 +490,11 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
             switchState={props.tpslSwitch}
             onSwitchChanged={props.setTpslSwitch}
             orderType={formattedOrder.order_type!}
-            errors={validated ? errors : null}
-            isReduceOnly={formattedOrder.reduce_only}
+            errors={
+              validated || isSlPriceWarning
+                ? { ...errors, ...props.slPriceError }
+                : null
+            }
             setOrderValue={setOrderValue}
             reduceOnlyChecked={formattedOrder.reduce_only ?? false}
             onReduceOnlyChange={(checked) => {
@@ -507,11 +525,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           />
         )}
 
-        {((isMobile &&
-          ((formattedOrder.order_type !== OrderType.LIMIT &&
-            formattedOrder.order_type !== OrderType.MARKET) ||
-            formattedOrder.reduce_only)) ||
-          !isMobile) && (
+        {showReduceOnlySection && (
           <Flex justify={"between"} itemAlign={"center"} className="oui-mt-2">
             <ReduceOnlySwitch
               checked={formattedOrder.reduce_only ?? false}

@@ -56,6 +56,7 @@ export const useDeposit = (options: DepositOptions) => {
   const [balance, setBalance] = useState("0");
   const [allowance, setAllowance] = useState("0");
   const balanceRef = useRef<string>("");
+  const currentAddressRef = useRef<string | undefined>();
 
   const { account, state } = useAccount();
   const { track } = useTrack();
@@ -499,6 +500,8 @@ export const useDeposit = (options: DepositOptions) => {
       setBalanceRevalidating(true);
     }
 
+    currentAddressRef.current = options.address;
+
     getBalanceListener.current = setTimeout(async () => {
       try {
         const balance = await fetchBalanceHandler(
@@ -511,10 +514,14 @@ export const useDeposit = (options: DepositOptions) => {
         loopGetBalance();
       } catch (err: any) {
         console.log("get balance error", balanceRef.current, err);
+        if (currentAddressRef.current !== options.address) return;
         // when fetch balance failed, retry every 1s
         loopGetBalance(1000);
       } finally {
-        if (balanceRef.current !== "") {
+        if (
+          balanceRef.current !== "" &&
+          currentAddressRef.current === options.address
+        ) {
           setBalanceRevalidating(false);
         }
       }
@@ -572,6 +579,12 @@ export const useDeposit = (options: DepositOptions) => {
       return;
     }
 
+    currentAddressRef.current = options.address;
+
+    setBalance("0");
+    balanceRef.current = "";
+    setBalanceRevalidating(false);
+
     loopGetBalance(0);
 
     return () => {
@@ -605,7 +618,7 @@ export const useDeposit = (options: DepositOptions) => {
   };
 };
 
-// when solana account not USDC, get balance will throw TokenAccountNotFoundError
+// When no SPL token found, get balance will throw TokenAccountNotFoundError
 function ignoreBalanceError(options: {
   token: string;
   chainNamespace: string;
@@ -614,7 +627,6 @@ function ignoreBalanceError(options: {
   const { token, chainNamespace, err } = options;
   return (
     chainNamespace === ChainNamespace.solana &&
-    token === "USDC" &&
     err?.name === "TokenAccountNotFoundError"
   );
 }

@@ -1,6 +1,6 @@
 {
-  "name": "@veltodefi/perp",
-  "version": "4.8.4",
+  "name": "@orderly.network/perp",
+  "version": "4.8.6",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -30,11 +30,10 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
-    "@veltodefi/types": "workspace:*",
-    "@veltodefi/utils": "workspace:*"
+    "@orderly.network/types": "workspace:*",
+    "@orderly.network/utils": "workspace:*"
   },
   "publishConfig": {
-    "access": "public",
-    "registry": "https://npm.pkg.github.com"
+    "access": "public"
   }
 }

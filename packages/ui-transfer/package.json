@@ -1,6 +1,6 @@
 {
-  "name": "@veltodefi/ui-transfer",
-  "version": "2.8.4",
+  "name": "@orderly.network/ui-transfer",
+  "version": "2.8.6",
   "description": "deposit & withdraw",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -14,21 +14,20 @@
     "dist"
   ],
   "publishConfig": {
-    "access": "public",
-    "registry": "https://npm.pkg.github.com"
+    "access": "public"
   },
   "dependencies": {
-    "@veltodefi/core": "workspace:*",
-    "@veltodefi/i18n": "workspace:*",
-    "@veltodefi/ui": "workspace:*",
-    "@veltodefi/hooks": "workspace:*",
-    "@veltodefi/utils": "workspace:*",
-    "@veltodefi/types": "workspace:*",
-    "@veltodefi/ui-connector": "workspace:*",
-    "@veltodefi/ui-chain-selector": "workspace:*",
-    "@veltodefi/default-solana-adapter": "workspace:*",
-    "@veltodefi/react-app": "workspace:*",
-    "@veltodefi/perp": "workspace:*",
+    "@orderly.network/core": "workspace:*",
+    "@orderly.network/i18n": "workspace:*",
+    "@orderly.network/ui": "workspace:*",
+    "@orderly.network/hooks": "workspace:*",
+    "@orderly.network/utils": "workspace:*",
+    "@orderly.network/types": "workspace:*",
+    "@orderly.network/ui-connector": "workspace:*",
+    "@orderly.network/ui-chain-selector": "workspace:*",
+    "@orderly.network/default-solana-adapter": "workspace:*",
+    "@orderly.network/react-app": "workspace:*",
+    "@orderly.network/perp": "workspace:*",
     "@layerzerolabs/scan-client": "^0.0.6",
     "@solana/web3.js": "^1.95.3",
     "ethers": "^6.15.0",

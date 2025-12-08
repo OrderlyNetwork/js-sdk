@@ -5,23 +5,8 @@ import { toast } from "@veltodefi/ui";
 // import { toZonedTime } from "date-fns-tz";
 // const { toZonedTime } = require("date-fns-tz");
 
-export function addQueryParam(
-  url: string,
-  paramName: string,
-  paramValue: string,
-): string {
-  try {
-    const urlObj = new URL(url);
-    const searchParams = new URLSearchParams(urlObj.search);
-
-    searchParams.set(paramName, paramValue);
-
-    urlObj.search = searchParams.toString();
-
-    return urlObj.toString();
-  } catch (error) {
-    return url;
-  }
+export function generateReferralLink(referralLinkUrl: string, code: string) {
+  return `${referralLinkUrl || window?.location?.origin}?ref=${code}`;
 }
 
 export async function copyText(content: string) {

@@ -126,8 +126,10 @@ const PositionsView: React.FC<DataListState> = (props) => {
       <React.Suspense fallback={null}>
         <LazyPositionHeaderWidget
           pnlNotionalDecimalPrecision={props.pnlNotionalDecimalPrecision}
+          setPnlNotionalDecimalPrecision={props.setPnlNotionalDecimalPrecision}
           symbol={props.showAllSymbol ? undefined : props.symbol}
           unPnlPriceBasis={props.unPnlPriceBasis}
+          setUnPnlPriceBasic={props.setUnPnlPriceBasic}
         />
       </React.Suspense>
       <React.Suspense fallback={null}>

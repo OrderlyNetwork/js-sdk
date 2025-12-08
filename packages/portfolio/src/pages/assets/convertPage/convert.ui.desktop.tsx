@@ -18,21 +18,6 @@ type ConvertDesktopUIProps = {
   convertState: ReturnType<typeof useConvertScript>;
 };
 
-export const CONVERT_STATUS_OPTIONS = [
-  {
-    label: "All status",
-    value: "all",
-  },
-  {
-    label: "Completed",
-    value: "completed",
-  },
-  {
-    label: "Pending",
-    value: "pending",
-  },
-];
-
 // Convert Details Modal Component
 const ConvertDetailsModal = modal.create<{
   record: ConvertRecord;
@@ -66,7 +51,7 @@ const ConvertDetailsModal = modal.create<{
         className="oui-w-full"
         classNames={{
           header: "oui-h-10",
-          root: "oui-bg-base-8 oui-max-h-[60vh] oui-overflow-y-scroll",
+          root: "oui-bg-base-8 oui-max-h-[60vh] oui-overflow-y-scroll oui-custom-scrollbar",
         }}
         onRow={() => ({
           className: "oui-h-[40px]",
@@ -82,6 +67,8 @@ const ConvertDetailsModal = modal.create<{
 export const ConvertDesktopUI: React.FC<ConvertDesktopUIProps> = ({
   convertState,
 }) => {
+  const { t } = useTranslation();
+
   const handleDetailsClick = (convertId: number) => {
     // Find the convert record by ID
     const record = convertState.dataSource.find(
@@ -108,6 +95,15 @@ export const ConvertDesktopUI: React.FC<ConvertDesktopUIProps> = ({
     convertedAssetOptions,
   } = convertState;
 
+  const statusOptions = useMemo(
+    () => [
+      { label: t("common.status.all"), value: "all" },
+      { label: t("orders.status.completed"), value: "completed" },
+      { label: t("orders.status.pending"), value: "pending" },
+    ],
+    [t],
+  );
+
   const dataFilter = useMemo(() => {
     return (
       <DataFilter
@@ -130,7 +126,7 @@ export const ConvertDesktopUI: React.FC<ConvertDesktopUIProps> = ({
             type: "select",
             name: "status",
             value: statusFilter,
-            options: CONVERT_STATUS_OPTIONS,
+            options: statusOptions,
           },
           {
             type: "range",
@@ -149,25 +145,23 @@ export const ConvertDesktopUI: React.FC<ConvertDesktopUIProps> = ({
     dateRange,
     onFilter,
     convertedAssetOptions,
+    statusOptions,
   ]);
 
   return (
-    <Flex direction="column" mt={4} itemAlign="center" className="oui-w-full">
-      <Divider className="oui-w-full oui-border-b oui-border-line-4 oui-pt-6" />
-      <Flex direction="row" className="oui-w-full">
-        {dataFilter}
-      </Flex>
+    <>
+      {dataFilter}
+
       <AuthGuardDataTable
+        bordered
         columns={columns}
         dataSource={convertState.dataSource}
         loading={convertState.isLoading}
-        bordered
         pagination={convertState.pagination}
         manualPagination
         className="oui-mt-4 oui-w-full"
         classNames={{
-          root: "oui-h-[calc(100vh_-_200px)]",
-          header: "oui-h-12",
+          root: "oui-h-[calc(100%_-_49px)]",
         }}
         onRow={() => ({
           className: "oui-h-[48px] oui-cursor-pointer",
@@ -176,6 +170,6 @@ export const ConvertDesktopUI: React.FC<ConvertDesktopUIProps> = ({
           return record.convert_id.toString();
         }}
       />
-    </Flex>
+    </>
   );
 };

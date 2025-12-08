@@ -1,10 +1,12 @@
 import { FC, useMemo, useRef } from "react";
-import { useTranslation } from "@veltodefi/i18n";
-import { API, PositionType } from "@veltodefi/types";
-import { Badge, cn, Flex, Grid, Statistic, Text } from "@veltodefi/ui";
-import { SymbolLeverageSheetId } from "@veltodefi/ui-leverage";
-import { SharePnLBottomSheetId } from "@veltodefi/ui-share";
-import { Decimal } from "@veltodefi/utils";
+import { ERROR_MSG_CODES, useTpslPriceChecker } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
+import { API, OrderSide, PositionType } from "@orderly.network/types";
+import { Badge, cn, Flex, Grid, Statistic, Text } from "@orderly.network/ui";
+import { SymbolLeverageSheetId } from "@orderly.network/ui-leverage";
+import { SharePnLBottomSheetId } from "@orderly.network/ui-share";
+import { CloseToLiqPriceIcon } from "@orderly.network/ui-tpsl";
+import { Decimal } from "@orderly.network/utils";
 import { FundingFeeButton } from "../../../fundingFeeHistory/fundingFeeButton";
 import { LeverageBadge } from "../../desktop/components";
 import { AddIcon, TPSLEditIcon } from "../../desktop/components";
@@ -219,6 +221,18 @@ export const TPSLPrice: FC<PositionCellState> = (props) => {
   const { item } = props;
   const { t } = useTranslation();
 
+  const slPriceError = useTpslPriceChecker({
+    slPrice: item.full_tp_sl?.sl_trigger_price?.toString() ?? undefined,
+    liqPrice: item.est_liq_price ?? null,
+    side: item.position_qty > 0 ? OrderSide.BUY : OrderSide.SELL,
+  });
+
+  const partialSlPriceError = useTpslPriceChecker({
+    slPrice: item.partial_tp_sl?.sl_trigger_price?.toString() ?? undefined,
+    liqPrice: item.est_liq_price ?? null,
+    side: item.position_qty > 0 ? OrderSide.BUY : OrderSide.SELL,
+  });
+
   const fullTPSL = useMemo(() => {
     if (
       item.full_tp_sl?.tp_trigger_price == null &&
@@ -235,7 +249,12 @@ export const TPSLPrice: FC<PositionCellState> = (props) => {
         )}
         {item.full_tp_sl?.sl_trigger_price && "/"}
         {item.full_tp_sl?.sl_trigger_price && (
-          <Text.numeral color="sell">
+          <Text.numeral
+            as="div"
+            color="sell"
+            suffix={<CloseToLiqPriceIcon slPriceError={slPriceError} />}
+            className="oui-flex oui-items-center"
+          >
             {item.full_tp_sl.sl_trigger_price}
           </Text.numeral>
         )}
@@ -260,7 +279,12 @@ export const TPSLPrice: FC<PositionCellState> = (props) => {
         )}
         {item.partial_tp_sl?.sl_trigger_price && "/"}
         {item.partial_tp_sl?.sl_trigger_price && (
-          <Text.numeral color="sell">
+          <Text.numeral
+            as="div"
+            color="sell"
+            suffix={<CloseToLiqPriceIcon slPriceError={partialSlPriceError} />}
+            className="oui-flex oui-items-center"
+          >
             {item.partial_tp_sl.sl_trigger_price}
           </Text.numeral>
         )}

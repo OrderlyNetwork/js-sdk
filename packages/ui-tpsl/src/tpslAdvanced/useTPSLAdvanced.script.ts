@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
-import { OrderValidationResult, useOrderEntry } from "@veltodefi/hooks";
-import { OrderlyOrder, OrderType, PositionType } from "@veltodefi/types";
+import {
+  ERROR_MSG_CODES,
+  OrderValidationResult,
+  useOrderEntry,
+  useTpslPriceChecker,
+} from "@orderly.network/hooks";
+import { OrderlyOrder, OrderType, PositionType } from "@orderly.network/types";
 
 type Props = {
   order: OrderlyOrder;
@@ -61,9 +66,17 @@ export const useTPSLAdvanced = (props: Props) => {
     },
   });
 
+  const slPriceError = useTpslPriceChecker({
+    slPrice: formattedOrder.sl_trigger_price,
+    liqPrice: state.estLiqPrice,
+    side: formattedOrder.side,
+  });
+
   const onSubmit = () => {
+    const isSlPriceError =
+      slPriceError?.sl_trigger_price?.type === ERROR_MSG_CODES.SL_PRICE_ERROR;
     helper
-      .validate()
+      .validate(isSlPriceError ? slPriceError : undefined)
       .then(() => {
         props.onSubmit(formattedOrder as OrderlyOrder);
       })
@@ -77,6 +90,8 @@ export const useTPSLAdvanced = (props: Props) => {
     order,
     formattedOrder,
     symbolInfo,
+    slPriceError,
+    estLiqPrice: state.estLiqPrice,
     setValue,
     setValues,
     onSubmit,

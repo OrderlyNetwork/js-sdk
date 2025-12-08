@@ -21,6 +21,7 @@ export const transfer = {
     "Fee data is currently unavailable. Please try again later.",
   "transfer.deposit.notEnoughGas":
     "Not enough gas. Add some {{token}} to your wallet to continue.",
+  "transfer.deposit.exceedCap": "Amount exceeds user deposit cap",
 
   "transfer.deposit.estGasFee": "Est. gas fee",
   "transfer.deposit.destinationGasFee": "Destination gas fee",
@@ -31,6 +32,8 @@ export const transfer = {
     "Withdrawals are not supported on this chain. Please switch to any of the bridgeless networks.",
   "transfer.withdraw.unsupported.networkName":
     "Withdrawals are not supported on {{networkName}}. Please switch to any of the bridgeless networks.",
+  "transfer.withdraw.unsupported.token":
+    "{{token}} withdrawals are unavailable on this network",
 
   "transfer.withdraw.crossChain.confirmWithdraw": "Confirm to withdraw",
   "transfer.withdraw.crossChain.recipientAddress": "Recipient address",
@@ -65,6 +68,8 @@ export const transfer = {
     "Please enter an Account ID instead of a wallet address.",
   "transfer.withdraw.accountId.invalid":
     "Invalid Account ID. Please try again.",
+  "transfer.withdraw.available.tooltip":
+    "Current maximum withdrawal per request is {{amount}}. To withdraw more, please submit multiple requests.",
 
   "transfer.internalTransfer.from": "From",
   "transfer.internalTransfer.to": "To",
@@ -133,6 +138,8 @@ export const transfer = {
 
   "transfer.convert.completed": "Convert completed",
   "transfer.convert.failed": "Convert failed",
+  "transfer.depositCap": "Deposit cap",
+  "transfer.depositCap.tooltip": "Max deposit amount for ",
   "transfer.deposit.convertRate": "Convert rate",
   "transfer.convert.convertAssets": "Convert assets to USDC",
   "transfer.deposit.collateralContribution": "Collateral contribution",
@@ -145,7 +152,7 @@ export const transfer = {
   "transfer.convert": "Convert",
   // "transfer.convert.note": "Please note that convert fees will be charged.",
   "transfer.deposit.userMaxQty.error":
-    "Collateral cap reached. Maximum allowed: {{maxQty}} {{token}}.",
+    "Your deposit couldn't be processed because the global deposit cap for {{token}} on {{chain}} has been reached. This is typically resolved after rebalancing, which takes around 1 hour. Please try again later, or use a smaller amount or a different chain. <0>Learn more</0>",
   "transfer.deposit.gasFee.error":
     "Please ensure you have enough {{token}} for gas fees.",
 

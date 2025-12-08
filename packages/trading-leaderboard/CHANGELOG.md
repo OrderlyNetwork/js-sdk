@@ -1,5 +1,65 @@
 # @orderly.network/trading-leaderboard
 
+## 2.8.6
+
+### Patch Changes
+
+- publish
+- c598cc6: publish
+- Updated dependencies
+- Updated dependencies [c598cc6]
+  - @orderly.network/react-app@2.8.6
+  - @orderly.network/hooks@2.8.6
+  - @orderly.network/i18n@2.8.6
+  - @orderly.network/types@2.8.6
+  - @orderly.network/ui@2.8.6
+  - @orderly.network/ui-connector@2.8.6
+  - @orderly.network/utils@2.8.6
+
+## 2.8.6-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.8.6-alpha.0
+  - @orderly.network/hooks@2.8.6-alpha.0
+  - @orderly.network/i18n@2.8.6-alpha.0
+  - @orderly.network/types@2.8.6-alpha.0
+  - @orderly.network/ui@2.8.6-alpha.0
+  - @orderly.network/ui-connector@2.8.6-alpha.0
+  - @orderly.network/utils@2.8.6-alpha.0
+
+## 2.8.5
+
+### Patch Changes
+
+- 0180a59: publish
+- publish
+- Updated dependencies [0180a59]
+- Updated dependencies
+  - @orderly.network/react-app@2.8.5
+  - @orderly.network/hooks@2.8.5
+  - @orderly.network/i18n@2.8.5
+  - @orderly.network/types@2.8.5
+  - @orderly.network/ui@2.8.5
+  - @orderly.network/ui-connector@2.8.5
+  - @orderly.network/utils@2.8.5
+
+## 2.8.5-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.8.5-alpha.0
+  - @orderly.network/hooks@2.8.5-alpha.0
+  - @orderly.network/i18n@2.8.5-alpha.0
+  - @orderly.network/types@2.8.5-alpha.0
+  - @orderly.network/ui@2.8.5-alpha.0
+  - @orderly.network/ui-connector@2.8.5-alpha.0
+  - @orderly.network/utils@2.8.5-alpha.0
+
 ## 2.8.4
 
 ### Patch Changes

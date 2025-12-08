@@ -1,39 +1,22 @@
 import { useMemo } from "react";
+import { WSMessage } from "@orderly.network/types";
+import { Decimal } from "@orderly.network/utils";
 import useSWRSubscription from "swr/subscription";
-import { WSMessage } from "@veltodefi/types";
-import { Decimal } from "@veltodefi/utils";
-import { useQuery } from "../useQuery";
 import { useWS } from "../useWS";
-import { useMarketStore } from "./useMarket/market.store";
+import { useMarketList } from "./useMarket/market.store";
 
 export const useMarketsStream = () => {
-  // get listing of all markets from /public/info
   const ws = useWS();
-  // const brokerId = useConfig("brokerId");
-  const { data: futures } = useQuery<WSMessage.Ticker[]>(`/v1/public/futures`, {
-    revalidateOnFocus: false,
-  });
+  const futures = useMarketList();
 
-  // const topic = brokerId ? `${brokerId}$tickers` : "tickers";
   const topic = "tickers";
 
   const { data: tickers } = useSWRSubscription("tickers", (_, { next }) => {
-    const unsubscribe = ws.subscribe(
-      // { event: "subscribe", topic: "markprices" },
-      topic,
-      {
-        onMessage: (message: any) => {
-          // window.debugPrint(message);
-          next(null, message);
-        },
-        // onUnsubscribe: () => {
-        //   return "markprices";
-        // },
-        // onError: (error: any) => {
-        //
-        // },
+    const unsubscribe = ws.subscribe(topic, {
+      onMessage: (message: any) => {
+        next(null, message);
       },
-    );
+    });
 
     return () => {
       unsubscribe?.();
@@ -76,7 +59,5 @@ export const useMarketsStream = () => {
     });
   }, [futures, tickers]);
 
-  // const value = useMarketStore((state) => state.market);
-
-  return { data: value };
+  return { data: value as unknown as WSMessage.Ticker[] };
 };

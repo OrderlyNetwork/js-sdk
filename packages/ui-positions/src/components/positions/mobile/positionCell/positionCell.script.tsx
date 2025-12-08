@@ -5,6 +5,7 @@ import { PositionsProps } from "../../../../types/types";
 type PositionCellScriptProps = {
   item: API.PositionTPSLExt;
   index: number;
+  positionReverse?: boolean;
 } & PositionsProps;
 
 export type PositionCellState = ReturnType<typeof usePositionCellScript>;

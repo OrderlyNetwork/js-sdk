@@ -1,5 +1,41 @@
 # @orderly.network/core
 
+## 2.8.6
+
+### Patch Changes
+
+- publish
+- c598cc6: publish
+- Updated dependencies
+- Updated dependencies [c598cc6]
+  - @orderly.network/types@2.8.6
+
+## 2.8.6-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@2.8.6-alpha.0
+
+## 2.8.5
+
+### Patch Changes
+
+- 0180a59: publish
+- publish
+- Updated dependencies [0180a59]
+- Updated dependencies
+  - @orderly.network/types@2.8.5
+
+## 2.8.5-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@2.8.5-alpha.0
+
 ## 2.8.4
 
 ### Patch Changes

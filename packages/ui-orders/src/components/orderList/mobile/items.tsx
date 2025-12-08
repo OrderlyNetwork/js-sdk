@@ -6,17 +6,19 @@ import {
   useMemo,
   useState,
 } from "react";
-import { useTranslation } from "@veltodefi/i18n";
+import { useTpslPriceChecker } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 import {
   AlgoOrderRootType,
   API,
   OrderStatus,
   OrderType,
-} from "@veltodefi/types";
-import { OrderSide } from "@veltodefi/types";
-import { Badge, Flex, Statistic, Text, Tooltip } from "@veltodefi/ui";
-import { SharePnLBottomSheetId } from "@veltodefi/ui-share";
-import { Decimal, getTrailingStopPrice } from "@veltodefi/utils";
+} from "@orderly.network/types";
+import { OrderSide } from "@orderly.network/types";
+import { Badge, cn, Flex, Statistic, Text, Tooltip } from "@orderly.network/ui";
+import { SharePnLBottomSheetId } from "@orderly.network/ui-share";
+import { CloseToLiqPriceIcon } from "@orderly.network/ui-tpsl";
+import { Decimal, getTrailingStopPrice } from "@orderly.network/utils";
 import {
   getNotional,
   parseBadgesFor,
@@ -427,8 +429,15 @@ export const TPTrigger: FC<OrderCellState> = (props) => {
 };
 
 export const SLTrigger: FC<OrderCellState> = (props) => {
-  const { sl_trigger_price, slPnL } = useTPSLOrderRowContext();
+  const { sl_trigger_price, slPnL, position: item } = useTPSLOrderRowContext();
   const { t } = useTranslation();
+
+  const side = (item?.position_qty ?? 0) > 0 ? OrderSide.BUY : OrderSide.SELL;
+  const slPriceError = useTpslPriceChecker({
+    slPrice: sl_trigger_price?.toString() ?? undefined,
+    liqPrice: item?.est_liq_price ?? null,
+    side: side,
+  });
 
   return (
     <Statistic
@@ -461,14 +470,17 @@ export const SLTrigger: FC<OrderCellState> = (props) => {
       >
         <Text.numeral
           dp={props.quote_dp}
+          as="div"
           rm={Decimal.ROUND_DOWN}
           color="sell"
           padding={false}
-          className={
+          suffix={<CloseToLiqPriceIcon slPriceError={slPriceError} />}
+          className={cn(
             sl_trigger_price
               ? "oui-border-b oui-border-dashed oui-border-base-contrast-12"
-              : undefined
-          }
+              : undefined,
+            "oui-flex oui-items-center",
+          )}
         >
           {sl_trigger_price ?? "--"}
         </Text.numeral>

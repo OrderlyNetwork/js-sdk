@@ -13,7 +13,9 @@ const NumType: React.FC<NumTypeProps> = (props) => {
   const renderChild = () => {
     switch (numType) {
       case "roi":
-        return formatNum.roi(children);
+        return formatNum
+          .roi(children, props.rule === "percentages" ? 4 : 2)
+          ?.toString();
       case "pnl":
         return formatNum.pnl(children);
       case "notional":

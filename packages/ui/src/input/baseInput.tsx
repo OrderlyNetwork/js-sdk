@@ -7,8 +7,8 @@ import React, {
   forwardRef,
 } from "react";
 import { InputHTMLAttributes } from "react";
+import { findLongestCommonSubString } from "@orderly.network/utils";
 import { InputFormatter } from "./formatter/inputFormatter";
-import { findLongestCommonSubString } from "@veltodefi/utils";
 
 export interface BaseInputProps<T = string>
   extends Omit<
@@ -86,7 +86,7 @@ export const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
 
         return value;
       },
-      [innerFormatters]
+      [innerFormatters],
     );
 
     const formatToChange = useCallback(
@@ -98,20 +98,20 @@ export const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
         while (index > -1) {
           value = innerFormatters[index].onSendBefore(value, {
             isFocused: isFocused.current,
-            originValue
+            originValue,
           });
           index--;
         }
 
         return value;
       },
-      [innerFormatters]
+      [innerFormatters],
     );
 
     const formattedValue = useMemo(() => {
-      if (typeof value === "undefined") return value;
+      if (typeof value === "undefined" || value === null) return "";
       return formatToRender(value as string);
-    }, [value]);
+    }, [value, formatToRender]);
 
     // fix cursor pointer jump to end;
     useEffect(() => {
@@ -129,7 +129,7 @@ export const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
         const currentCursor = event.target.selectionStart;
         const diffIndex = findLongestCommonSubString(
           `${props.value}`,
-          event.target.value
+          event.target.value,
         );
 
         if (diffIndex > -1) {
@@ -138,7 +138,7 @@ export const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
           if (diffStr === ",") {
             event.target.value = `${event.target.value.substring(
               0,
-              diffIndex - 1
+              diffIndex - 1,
             )}${event.target.value.substring(diffIndex)}`;
 
             event.target.selectionStart = currentCursor ? currentCursor - 1 : 0;
@@ -182,7 +182,7 @@ export const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
         id={id}
       />
     );
-  }
+  },
 );
 
 BaseInput.displayName = "BaseInput";

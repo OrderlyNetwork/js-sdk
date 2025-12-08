@@ -1,13 +1,27 @@
-import { findTPSLFromOrder } from "@veltodefi/hooks";
-import { useTranslation } from "@veltodefi/i18n";
-import { API } from "@veltodefi/types";
-import { Flex, Text } from "@veltodefi/ui";
+import {
+  ERROR_MSG_CODES,
+  findTPSLFromOrder,
+  useTpslPriceChecker,
+} from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
+import { API } from "@orderly.network/types";
+import { ExclamationFillIcon, Flex, Text } from "@orderly.network/ui";
+import { CloseToLiqPriceIcon } from "../../components/closeLiqPriceIcon";
 import { FlexCell } from "../components/common";
+import { useTPSLDetailContext } from "../tpslDetailProvider";
 
 export const TypeRender = ({ order }: { order: API.AlgoOrder }) => {
+  const { side, estLiqPrice } = useTPSLDetailContext();
   const { tp_trigger_price, sl_trigger_price } = findTPSLFromOrder(order);
   const { t } = useTranslation();
 
+  const slPriceError = useTpslPriceChecker({
+    slPrice: sl_trigger_price?.toString() ?? undefined,
+    liqPrice: estLiqPrice ?? null,
+    side: side,
+  });
+  const isSlPriceWarning =
+    slPriceError?.sl_trigger_price?.type === ERROR_MSG_CODES.SL_PRICE_WARNING;
   return (
     <Flex
       direction={"column"}
@@ -22,8 +36,11 @@ export const TypeRender = ({ order }: { order: API.AlgoOrder }) => {
       )}
 
       {sl_trigger_price && (
-        <FlexCell>
+        <FlexCell className={"oui-flex-row oui-items-center oui-gap-1"}>
           <Text className="oui-text-trade-loss">{t("tpsl.sl")}</Text>
+          {isSlPriceWarning && (
+            <CloseToLiqPriceIcon slPriceError={slPriceError} />
+          )}
         </FlexCell>
       )}
     </Flex>

@@ -11,6 +11,7 @@ type Props = {
   order: Partial<OrderlyOrder>;
   baseDP?: number;
   quoteDP?: number;
+  estLiqPrice?: number;
   className?: string;
   classNames?: {
     root?: string;
@@ -111,6 +112,17 @@ export const OrderInfo = (props: Props) => {
             dp={props.quoteDP ?? 2}
           >
             {markPrice?.data}
+          </Text.numeral>
+        </Flex>
+        <Flex justify={"between"} className="oui-text-base-contrast-36">
+          <Text size="2xs">{t("positions.column.liqPrice")}</Text>
+          <Text.numeral
+            rule="price"
+            className="oui-text-warning"
+            size="2xs"
+            dp={props.quoteDP ?? 2}
+          >
+            {props.estLiqPrice ?? "--"}
           </Text.numeral>
         </Flex>
       </Grid>

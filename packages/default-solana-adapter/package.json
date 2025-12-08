@@ -1,6 +1,6 @@
 {
-  "name": "@veltodefi/default-solana-adapter",
-  "version": "2.8.4",
+  "name": "@orderly.network/default-solana-adapter",
+  "version": "2.8.6",
   "description": "",
   "scripts": {
     "build": "tsup",
@@ -14,12 +14,11 @@
     "dist"
   ],
   "publishConfig": {
-    "access": "public",
-    "registry": "https://npm.pkg.github.com"
+    "access": "public"
   },
   "dependencies": {
-    "@veltodefi/core": "workspace:*",
-    "@veltodefi/types": "workspace:*",
+    "@orderly.network/core": "workspace:*",
+    "@orderly.network/types": "workspace:*",
     "@solana/web3.js": "^1.95.3",
     "@coral-xyz/anchor": "0.29.0",
     "@layerzerolabs/lz-solana-sdk-v2": "2.3.45-oft-rc.0",

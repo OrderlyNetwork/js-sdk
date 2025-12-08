@@ -5,6 +5,7 @@ import { usePagination } from "@veltodefi/ui";
 import { TRADING_POSITIONS_SORT_STORAGE_KEY } from "../../constants";
 import type { PositionsProps } from "../../types/types";
 import { useSort } from "../../utils/sorting";
+import { useReversePositionEnabled } from "../reversePosition";
 import { useTabSort, PositionsTabName } from "../shared/hooks/useTabSort";
 
 export const usePositionsScript = (props: PositionsProps) => {
@@ -22,6 +23,8 @@ export const usePositionsScript = (props: PositionsProps) => {
   //   true
   // );
   const { pagination, setPage } = usePagination({ pageSize: 50 });
+
+  const { isEnabled: positionReverse } = useReversePositionEnabled();
 
   // Sorting functionality
   const { tabSort, onTabSort } = useTabSort({
@@ -55,6 +58,7 @@ export const usePositionsScript = (props: PositionsProps) => {
     onSymbolChange,
     pagination,
     onSort,
+    positionReverse,
     initialSort: enableSortingStorage
       ? tabSort?.[PositionsTabName.Positions]
       : undefined,

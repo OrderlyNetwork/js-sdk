@@ -1,6 +1,6 @@
 {
-  "name": "@veltodefi/net",
-  "version": "2.8.4",
+  "name": "@orderly.network/net",
+  "version": "2.8.6",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -28,8 +28,7 @@
     "typescript": "^5.1.6"
   },
   "publishConfig": {
-    "access": "public",
-    "registry": "https://npm.pkg.github.com"
+    "access": "public"
   },
   "dependencies": {
     "eventemitter3": "^5.0.1"

@@ -1,12 +1,12 @@
-import { FC, useMemo } from "react";
-import { useTranslation, Trans } from "@veltodefi/i18n";
-import { NetworkId } from "@veltodefi/types";
-import { Box, Text } from "@veltodefi/ui";
-import { modal } from "@veltodefi/ui";
-import { ChainSelectorDialogId } from "@veltodefi/ui-chain-selector";
+import { FC, useMemo, ReactNode } from "react";
+import { useTranslation, Trans } from "@orderly.network/i18n";
+import { NetworkId } from "@orderly.network/types";
+import { Box, Text } from "@orderly.network/ui";
+import { modal } from "@orderly.network/ui";
+import { ChainSelectorDialogId } from "@orderly.network/ui-chain-selector";
 
 type NoticeProps = {
-  message?: string;
+  message?: string | ReactNode;
   needSwap?: boolean;
   needCrossSwap?: boolean;
   wrongNetwork?: boolean;

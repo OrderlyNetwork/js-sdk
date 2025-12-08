@@ -21,5 +21,5 @@ export const CampaignRankingWidget: FC<CampaignRankingWidgetProps> = (
   });
 
   // @ts-ignore
-  return <Ranking {...state} {...rest} fields={fields} />;
+  return <Ranking {...state} {...rest} fields={fields} type="campaign" />;
 };

@@ -1,20 +1,23 @@
 import { useEffect, useState } from "react";
-import { useTranslation } from "@veltodefi/i18n";
+import { ERROR_MSG_CODES } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
+import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
 import {
   OrderlyOrder,
   OrderSide,
   OrderType,
   PositionType,
-} from "@veltodefi/types";
+} from "@orderly.network/types";
 import {
   cn,
   Divider,
+  DotStatus,
   Flex,
   ScrollArea,
   Text,
   ThrottledButton,
   useScreen,
-} from "@veltodefi/ui";
+} from "@orderly.network/ui";
 import { OrderInfo } from "../components/orderInfo";
 import { PnlInfo } from "../components/pnlInfo";
 import { TPSLInputRowWidget } from "../components/tpslInputRow";
@@ -27,6 +30,12 @@ export const EditBracketOrderUI = (props: Props & { onClose?: () => void }) => {
   const { errors, validated } = props.metaState;
   const { isMobile } = useScreen();
   // console.log('errors', errors, validated);
+
+  const isSlPriceWarning =
+    props.slPriceError?.sl_trigger_price?.type ===
+    ERROR_MSG_CODES.SL_PRICE_WARNING;
+
+  const { getErrorMsg } = useOrderEntryFormErrorMsg(props.slPriceError);
 
   const {
     formattedOrder,
@@ -116,6 +125,7 @@ export const EditBracketOrderUI = (props: Props & { onClose?: () => void }) => {
               order_quantity: formattedOrder.order_quantity,
               order_price: formattedOrder.order_price,
             }}
+            estLiqPrice={props.estLiqPrice ?? undefined}
             baseDP={symbolInfo.base_dp}
             quoteDP={symbolInfo.quote_dp}
           />
@@ -194,6 +204,15 @@ export const EditBracketOrderUI = (props: Props & { onClose?: () => void }) => {
               values={slValues}
               hideOrderPrice={
                 formattedOrder.position_type === PositionType.FULL
+              }
+              inputWarnNode={
+                isSlPriceWarning && (
+                  <DotStatus
+                    color="warning"
+                    size="xs"
+                    label={getErrorMsg("sl_trigger_price")}
+                  />
+                )
               }
               errors={validated ? errors : null}
               quote_dp={symbolInfo.quote_dp}

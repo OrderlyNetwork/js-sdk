@@ -1,11 +1,14 @@
 import { useEffect, useMemo, useRef } from "react";
 import {
   type ComputedAlgoOrder,
+  ERROR_MSG_CODES,
+  useEstLiqPriceBySymbol,
   useLocalStorage,
   useMemoizedFn,
   usePositionStream,
   useSymbolsInfo,
   useTPSLOrder,
+  useTpslPriceChecker,
   utils,
 } from "@veltodefi/hooks";
 import { useTranslation } from "@veltodefi/i18n";
@@ -75,6 +78,8 @@ export const useTPSLBuilder = (
   const [needConfirm] = useLocalStorage("orderly_order_confirm", true);
   const position = positions.find((item) => item.symbol === symbol);
 
+  const estLiqPrice = useEstLiqPriceBySymbol(symbol);
+
   useEffect(() => {
     if (!position) {
       options.close?.();
@@ -110,6 +115,15 @@ export const useTPSLBuilder = (
       isEditing,
     },
   );
+
+  const slPriceError = useTpslPriceChecker({
+    slPrice: tpslOrder.sl_trigger_price?.toString() ?? undefined,
+    liqPrice: estLiqPrice ?? null,
+    side: tpslOrder.side,
+  });
+
+  const isSlPriceWarning =
+    slPriceError?.sl_trigger_price?.type === ERROR_MSG_CODES.SL_PRICE_WARNING;
 
   const setQuantity = (value: number | string) => {
     setValue("quantity", value);
@@ -315,8 +329,9 @@ export const useTPSLBuilder = (
 
   const onSubmit = async () => {
     try {
-      const validOrder = await validate();
-      console.log("validOrder", validOrder);
+      const validOrder = await validate(
+        isSlPriceWarning ? undefined : (slPriceError as any),
+      );
       if (validOrder) {
         if (!needConfirm) {
           return submit({ accountId: position?.account_id })
@@ -354,6 +369,8 @@ export const useTPSLBuilder = (
     setOrderPrice,
     // needConfirm,
     onSubmit,
+    slPriceError,
+    estLiqPrice,
     metaState,
     errors,
     status: {

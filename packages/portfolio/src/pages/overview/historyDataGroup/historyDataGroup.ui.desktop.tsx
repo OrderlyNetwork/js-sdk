@@ -39,6 +39,12 @@ const LazyTransferHistoryWidget = React.lazy(() =>
   }),
 );
 
+const LazyConvertHistoryWidget = React.lazy(() =>
+  import("../../assets/convertPage/convert.widget").then((mod) => {
+    return { default: mod.ConvertHistoryWidget };
+  }),
+);
+
 const LazyVaultsHistoryWidget = React.lazy(() =>
   import("../VaultsHistory").then((mod) => {
     return { default: mod.VaultsHistoryWidget };
@@ -108,6 +114,14 @@ export const HistoryDataGroupDesktop: React.FC<{
         >
           <React.Suspense fallback={null}>
             <LazyTransferHistoryWidget />
+          </React.Suspense>
+        </TabPanel>
+        <TabPanel
+          title={t("portfolio.overview.tab.convert.history")}
+          value={"convert"}
+        >
+          <React.Suspense fallback={null}>
+            <LazyConvertHistoryWidget />
           </React.Suspense>
         </TabPanel>
         {isMainAccount && (

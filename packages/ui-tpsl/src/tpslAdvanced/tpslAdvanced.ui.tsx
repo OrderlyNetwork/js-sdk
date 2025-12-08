@@ -1,19 +1,23 @@
 import { useEffect, useState, SVGProps } from "react";
-import { useTranslation } from "@veltodefi/i18n";
+import { ERROR_MSG_CODES } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
+import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
 import {
   OrderlyOrder,
   OrderSide,
   OrderType,
   PositionType,
-} from "@veltodefi/types";
+} from "@orderly.network/types";
 import {
   Button,
   cn,
   Divider,
+  DotStatus,
   Flex,
   ScrollArea,
   Text,
-} from "@veltodefi/ui";
+} from "@orderly.network/ui";
+import { CloseToLiqPriceIcon } from "../components/closeLiqPriceIcon";
 import { OrderInfo } from "../components/orderInfo";
 import { PnlInfo } from "../components/pnlInfo";
 import { TPSLInputRowWidget } from "../components/tpslInputRow";
@@ -25,6 +29,11 @@ type Props = ReturnType<typeof useTPSLAdvanced>;
 export const TPSLAdvancedUI = (props: Props) => {
   const { t } = useTranslation();
   const { errors, validated } = props.metaState;
+
+  const { getErrorMsg } = useOrderEntryFormErrorMsg(props.slPriceError);
+  const isSlPriceWarning =
+    props.slPriceError?.sl_trigger_price?.type ===
+    ERROR_MSG_CODES.SL_PRICE_WARNING;
 
   const {
     formattedOrder,
@@ -123,6 +132,7 @@ export const TPSLAdvancedUI = (props: Props) => {
             order={formattedOrder as OrderlyOrder}
             baseDP={symbolInfo.base_dp}
             quoteDP={symbolInfo.quote_dp}
+            estLiqPrice={props.estLiqPrice ?? undefined}
             symbolLeverage={props.symbolLeverage}
           />
         </div>
@@ -229,6 +239,15 @@ export const TPSLAdvancedUI = (props: Props) => {
                 formattedOrder.position_type === PositionType.FULL
               }
               errors={validated ? errors : null}
+              inputWarnNode={
+                isSlPriceWarning && (
+                  <DotStatus
+                    color="warning"
+                    size="xs"
+                    label={getErrorMsg("sl_trigger_price")}
+                  />
+                )
+              }
               quote_dp={symbolInfo.quote_dp}
               positionType={
                 formattedOrder.position_type ?? PositionType.PARTIAL

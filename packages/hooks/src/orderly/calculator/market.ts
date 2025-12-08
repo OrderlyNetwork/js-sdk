@@ -1,8 +1,8 @@
-import { WSMessage } from "@veltodefi/types";
+import { WSMessage } from "@orderly.network/types";
+import { Decimal } from "@orderly.network/utils";
 import { Calculator, CalculatorCtx, CalculatorScope } from "../../types";
-import { BaseCalculator } from "./baseCalculator";
 import { useMarketStore } from "../useMarket/market.store";
-import { Decimal } from "@veltodefi/utils";
+import { BaseCalculator } from "./baseCalculator";
 
 class MarketCalculator extends BaseCalculator<any> {
   name: string = "marketCalculator";
@@ -46,7 +46,7 @@ class MarketCalculator extends BaseCalculator<any> {
 
   update(data: any, scope: CalculatorScope) {
     if (!data) return;
-    useMarketStore.getState().actions.updateTicker(data);
+    useMarketStore.getState().actions.updateMarket(data);
   }
 }
 

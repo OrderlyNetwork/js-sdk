@@ -1,6 +1,6 @@
 {
-  "name": "@veltodefi/affiliate",
-  "version": "2.8.4",
+  "name": "@orderly.network/affiliate",
+  "version": "2.8.6",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

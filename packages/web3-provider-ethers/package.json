@@ -1,6 +1,6 @@
 {
-  "name": "@veltodefi/web3-provider-ethers",
-  "version": "2.8.4",
+  "name": "@orderly.network/web3-provider-ethers",
+  "version": "2.8.6",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -14,12 +14,11 @@
     "dist"
   ],
   "publishConfig": {
-    "access": "public",
-    "registry": "https://npm.pkg.github.com"
+    "access": "public"
   },
   "dependencies": {
-    "@veltodefi/default-evm-adapter": "workspace:*",
-    "@veltodefi/types": "workspace:*",
+    "@orderly.network/default-evm-adapter": "workspace:*",
+    "@orderly.network/types": "workspace:*",
     "ethers": "^6.15.0",
     "ethers-decode-error": "^2.1.3"
   },

@@ -1,6 +1,6 @@
 {
-  "name": "@veltodefi/ui-order-entry",
-  "version": "2.8.4",
+  "name": "@orderly.network/ui-order-entry",
+  "version": "2.8.6",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -13,21 +13,20 @@
     "dist"
   ],
   "publishConfig": {
-    "access": "public",
-    "registry": "https://npm.pkg.github.com"
+    "access": "public"
   },
   "dependencies": {
-    "@veltodefi/hooks": "workspace:*",
-    "@veltodefi/i18n": "workspace:*",
-    "@veltodefi/perp": "workspace:*",
-    "@veltodefi/react-app": "workspace:*",
-    "@veltodefi/types": "workspace:*",
-    "@veltodefi/ui": "workspace:*",
-    "@veltodefi/ui-connector": "workspace:*",
-    "@veltodefi/ui-leverage": "workspace:*",
-    "@veltodefi/ui-scaffold": "workspace:*",
-    "@veltodefi/ui-tpsl": "workspace:*",
-    "@veltodefi/utils": "workspace:*",
+    "@orderly.network/hooks": "workspace:*",
+    "@orderly.network/i18n": "workspace:*",
+    "@orderly.network/perp": "workspace:*",
+    "@orderly.network/react-app": "workspace:*",
+    "@orderly.network/types": "workspace:*",
+    "@orderly.network/ui": "workspace:*",
+    "@orderly.network/ui-connector": "workspace:*",
+    "@orderly.network/ui-leverage": "workspace:*",
+    "@orderly.network/ui-scaffold": "workspace:*",
+    "@orderly.network/ui-tpsl": "workspace:*",
+    "@orderly.network/utils": "workspace:*",
     "ramda": "^0.31.3"
   },
   "devDependencies": {

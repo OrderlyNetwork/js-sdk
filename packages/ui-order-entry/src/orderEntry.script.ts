@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import {
   useComputedLTV,
   useEventEmitter,
@@ -7,16 +7,17 @@ import {
   useMemoizedFn,
   useOrderEntry,
   useOrderlyContext,
-} from "@veltodefi/hooks";
-import { useCanTrade } from "@veltodefi/react-app";
+  useTpslPriceChecker,
+} from "@orderly.network/hooks";
+import { useCanTrade } from "@orderly.network/react-app";
 import {
   DistributionType,
   OrderLevel,
   OrderSide,
   OrderType,
   PositionType,
-} from "@veltodefi/types";
-import { Decimal, removeTrailingZeros } from "@veltodefi/utils";
+} from "@orderly.network/types";
+import { Decimal, removeTrailingZeros } from "@orderly.network/utils";
 import { useAskAndBid } from "./hooks/useAskAndBid";
 import { useBBOState } from "./hooks/useBBOState";
 import { useFocusAndBlur } from "./hooks/useFocusAndBlur";
@@ -350,8 +351,27 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       order_type_ext: formattedOrder.order_type_ext,
     });
 
+  const slPriceError = useTpslPriceChecker({
+    slPrice: formattedOrder.sl_trigger_price,
+    liqPrice: state.estLiqPrice,
+    side: formattedOrder.side,
+  });
+
+  useEffect(() => {
+    if (formattedOrder.reduce_only) {
+      setTpslSwitch(false);
+    }
+  }, [formattedOrder.reduce_only]);
+
+  useEffect(() => {
+    if (tpslSwitch) {
+      setOrderValue("reduce_only", false);
+    }
+  }, [tpslSwitch]);
+
   return {
     ...state,
+    slPriceError: slPriceError ?? undefined,
     side: formattedOrder.side as OrderSide,
     type: formattedOrder.order_type as OrderType,
     level: formattedOrder.level as OrderLevel,

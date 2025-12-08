@@ -1,8 +1,7 @@
 import React, { useMemo } from "react";
-import pick from "ramda/es/pick";
-import { SubAccount } from "@veltodefi/hooks";
-import { useTranslation } from "@veltodefi/i18n";
-import { useAppContext } from "@veltodefi/react-app";
+import { SubAccount } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
+import { useAppContext } from "@orderly.network/react-app";
 import {
   Text,
   Card,
@@ -17,9 +16,11 @@ import {
   TabPanel,
   ArrowDownShortIcon,
   Button,
-} from "@veltodefi/ui";
-import { AuthGuard, AuthGuardDataTable } from "@veltodefi/ui-connector";
-import type { SelectOption } from "@veltodefi/ui/src/select/withOptions";
+  Divider,
+} from "@orderly.network/ui";
+import { AuthGuard, AuthGuardDataTable } from "@orderly.network/ui-connector";
+import type { SelectOption } from "@orderly.network/ui/src/select/withOptions";
+import pick from "ramda/es/pick";
 import type { useAssetsScriptReturn } from "./assets.script";
 import type {
   AssetsDataTableWidgetProps,
@@ -351,7 +352,15 @@ export const AssetsTable: React.FC<AssetsWidgetProps> = (props) => {
           title={t("portfolio.overview.tab.convert.history")}
         >
           <React.Suspense fallback={null}>
-            <LazyConvertHistoryWidget />
+            <Flex
+              direction="column"
+              mt={4}
+              itemAlign="center"
+              className="oui-w-full"
+            >
+              <Divider className="oui-w-full oui-border-b oui-border-line-4 oui-pt-6" />
+              <LazyConvertHistoryWidget />
+            </Flex>
           </React.Suspense>
         </TabPanel>
       </Tabs>
