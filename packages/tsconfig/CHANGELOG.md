@@ -1,5 +1,12 @@
 # tsconfig
 
+## 0.11.7
+
+### Patch Changes
+
+- de789db: publish
+- publish
+
 ## 0.11.7-alpha.0
 
 ### Patch Changes

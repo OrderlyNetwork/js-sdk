@@ -1,5 +1,12 @@
 # @orderly.network/i18n
 
+## 2.8.7
+
+### Patch Changes
+
+- de789db: publish
+- publish
+
 ## 2.8.7-alpha.0
 
 ### Patch Changes
