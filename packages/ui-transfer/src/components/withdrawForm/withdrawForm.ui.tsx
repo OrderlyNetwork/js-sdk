@@ -1,4 +1,4 @@
-import React from "react";
+import { FC, useState } from "react";
 import { Trans, useTranslation } from "@orderly.network/i18n";
 import {
   Box,
@@ -21,6 +21,8 @@ import { QuantityInput } from "../quantityInput";
 import { UnsettlePnlInfo } from "../unsettlePnlInfo";
 import { WithdrawAction } from "../withdrawAction";
 import { WithdrawWarningMessage } from "../withdrawWarningMessage";
+import { AddWalletDialog } from "./addWalletDialog";
+import { WalletSelector } from "./walletSelector";
 import { WithdrawFormScriptReturn } from "./withdrawForm.script";
 
 export type WithdrawFormProps = WithdrawFormScriptReturn;
@@ -28,6 +30,7 @@ export type WithdrawFormProps = WithdrawFormScriptReturn;
 export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
   const {
     address,
+    walletName,
     loading,
     disabled,
     quantity,
@@ -48,9 +51,22 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
     qtyGreaterThanMaxAmount,
     isTokenUnsupported,
     onSwitchToSupportedNetwork,
+    externalWallets,
+    selectedWalletAddress,
+    onSelectWallet,
+    onAddExternalWallet,
+    isEnableTrading,
   } = props;
 
   const { t } = useTranslation();
+  const [addWalletOpen, setAddWalletOpen] = useState(false);
+
+  const handleAddExternalWallet = (
+    address: string,
+    network?: "EVM" | "SOL",
+  ) => {
+    onAddExternalWallet?.(address, network);
+  };
 
   const internalWithdrawPanel = (
     <TabPanel
@@ -154,14 +170,33 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
             }
             value={WithdrawTo.Wallet}
           >
-            <ChainSelect
-              chains={tokenChains}
-              value={currentChain!}
-              onValueChange={props.onChainChange}
-              wrongNetwork={props.wrongNetwork}
-              loading={settingChain}
-              disabled={!props.isLoggedIn}
-            />
+            {isEnableTrading && (
+              <WalletSelector
+                connectedWallet={
+                  address
+                    ? {
+                        name: walletName || "Wallet",
+                        address,
+                        namespace: currentChain?.namespace,
+                      }
+                    : undefined
+                }
+                externalWallets={externalWallets || []}
+                selectedAddress={selectedWalletAddress ?? ""}
+                onSelect={onSelectWallet}
+                onAddExternalWallet={() => setAddWalletOpen(true)}
+              />
+            )}
+            <Box mb={1}>
+              <ChainSelect
+                chains={tokenChains}
+                value={currentChain!}
+                onValueChange={props.onChainChange}
+                wrongNetwork={props.wrongNetwork}
+                loading={settingChain}
+                disabled={!props.isLoggedIn}
+              />
+            </Box>
             <QuantityInput
               classNames={{
                 root: "oui-mt-[2px] oui-rounded-t-sm oui-rounded-b-xl",
@@ -212,6 +247,12 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
           onTransfer={props.onTransfer}
         />
       </Flex>
+      <AddWalletDialog
+        open={addWalletOpen}
+        onOpenChange={setAddWalletOpen}
+        onConfirm={handleAddExternalWallet}
+        chain={currentChain}
+      />
     </Box>
   );
 };

@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { PublicKey } from "@solana/web3.js";
+import { ethers } from "ethers";
 import {
   useAccount,
   useAssetsHistory,
@@ -15,6 +17,7 @@ import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext } from "@orderly.network/react-app";
 import {
   API,
+  AccountStatusEnum,
   AssetHistorySideEnum,
   AssetHistoryStatusEnum,
   NetworkId,
@@ -35,6 +38,23 @@ import { useWithdrawAccountId } from "./hooks/useWithdrawAccountId";
 import { useWithdrawFee } from "./hooks/useWithdrawFee";
 import { useWithdrawLTV } from "./hooks/useWithdrawLTV";
 import { useWithdrawToken } from "./hooks/useWithdrawToken";
+
+export const validateWalletAddress = (
+  address: string,
+): { valid: boolean; network?: "EVM" | "SOL" } => {
+  if (ethers.isAddress(address)) {
+    return { valid: true, network: "EVM" };
+  }
+
+  try {
+    const pubKey = new PublicKey(address);
+    if (PublicKey.isOnCurve(pubKey.toBytes())) {
+      return { valid: true, network: "SOL" };
+    }
+  } catch {}
+
+  return { valid: false };
+};
 
 export type WithdrawFormScriptReturn = ReturnType<typeof useWithdrawFormScript>;
 
@@ -76,7 +96,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
   const [withdrawTo, setWithdrawTo] = useState<WithdrawTo>(WithdrawTo.Wallet);
 
   const { wrongNetwork } = useAppContext();
-  const { account } = useAccount();
+  const { account, state } = useAccount();
 
   const [chains, { findByChainId }] = useChains(networkId, {
     filter: (chain: any) =>
@@ -166,6 +186,53 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     }),
     [wallet],
   );
+
+  const [externalWallets, setExternalWallets] = useLocalStorage<
+    { address: string; network?: "EVM" | "SOL" }[]
+  >("orderly_external_wallets", []);
+
+  const [selectedWalletAddress, setSelectedWalletAddress] = useState<string>();
+
+  useEffect(() => {
+    setSelectedWalletAddress(undefined);
+  }, [currentChain?.namespace]);
+
+  useEffect(() => {
+    if (address && !selectedWalletAddress) {
+      setSelectedWalletAddress(address);
+    }
+  }, [address, selectedWalletAddress]);
+
+  const onSelectWallet = (address: string) => {
+    setSelectedWalletAddress(address);
+  };
+
+  const onAddExternalWallet = (addr: string, network?: "EVM" | "SOL") => {
+    const normalizedAddr = addr.trim();
+    if (!normalizedAddr) return;
+
+    const connectedAddress = address?.trim();
+    if (
+      connectedAddress &&
+      connectedAddress.toLowerCase() === normalizedAddr.toLowerCase()
+    ) {
+      setSelectedWalletAddress(normalizedAddr);
+      return;
+    }
+
+    const exists = (externalWallets || []).some((w: { address: string }) => {
+      return w.address?.trim().toLowerCase() === normalizedAddr.toLowerCase();
+    });
+
+    if (!exists) {
+      setExternalWallets([
+        ...(externalWallets || []),
+        { address: normalizedAddr, network },
+      ]);
+    }
+
+    setSelectedWalletAddress(normalizedAddr);
+  };
 
   const onQuantityChange = (qty: string) => {
     setQuantity(qty);
@@ -295,6 +362,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
       token: sourceToken?.symbol!,
       chainId: currentChain?.id!,
       allowCrossChainWithdraw: crossChainWithdraw,
+      receiver: selectedWalletAddress,
     })
       .then((res) => {
         toast.success(t("transfer.withdraw.requested"));
@@ -506,5 +574,14 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     isLoggedIn,
     isTokenUnsupported,
     onSwitchToSupportedNetwork,
+
+    externalWallets,
+    selectedWalletAddress: selectedWalletAddress || address,
+    onSelectWallet,
+    onAddExternalWallet,
+    setExternalWallets,
+    isEnableTrading:
+      state.status >= AccountStatusEnum.EnableTrading ||
+      state.status === AccountStatusEnum.EnableTradingWithoutConnected,
   };
 };
