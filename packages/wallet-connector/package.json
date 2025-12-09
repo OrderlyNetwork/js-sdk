@@ -1,6 +1,6 @@
 {
   "name": "@veltodefi/wallet-connector",
-  "version": "2.8.6-velto-main.0",
+  "version": "2.8.6-velto-main.2",
   "description": "",
   "main": "dist/index.mjs",
   "module": "dist/index.mjs",

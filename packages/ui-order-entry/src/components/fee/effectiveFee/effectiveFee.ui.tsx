@@ -1,19 +1,9 @@
 import React from "react";
 import { useFeeState } from "@veltodefi/hooks";
 import { useTranslation } from "@veltodefi/i18n";
-import {
-  Flex,
-  modal,
-  Text,
-  Tooltip,
-  useModal,
-  useScreen,
-} from "@veltodefi/ui";
+import { Flex, modal, Text, Tooltip, useModal, useScreen } from "@veltodefi/ui";
 import { AuthGuard } from "@veltodefi/ui-connector";
-import {
-  RouterAdapter,
-  useScaffoldContext,
-} from "@veltodefi/ui-scaffold";
+import { RouterAdapter, useScaffoldContext } from "@veltodefi/ui-scaffold";
 import { EffectiveFee } from "./icons";
 
 const EffectiveFeeBody: React.FC<{
@@ -96,7 +86,7 @@ export const EffectiveFeeUI: React.FC<{ taker: string; maker: string }> = (
         <AuthGuard
           fallback={() => (
             <Text className="oui-truncate" size="2xs">
-              {t("dmm.taker")}: --% / {t("dmm.maker")}: --%
+              {t("dmm.taker")}: 0.04% / {t("dmm.maker")}: 0%
             </Text>
           )}
         >

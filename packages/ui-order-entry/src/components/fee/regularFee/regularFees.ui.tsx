@@ -1,5 +1,4 @@
 import React from "react";
-import { useFeeState } from "@veltodefi/hooks";
 import { useTranslation } from "@veltodefi/i18n";
 import { Flex, Text } from "@veltodefi/ui";
 import { AuthGuard } from "@veltodefi/ui-connector";
@@ -19,7 +18,7 @@ export const RegularFeesUI: React.FC<{ taker: string; maker: string }> = (
         <AuthGuard
           fallback={() => (
             <Text className="oui-truncate" size="2xs">
-              {t("dmm.taker")}: --% / {t("dmm.maker")}: --%
+              {t("dmm.taker")}: 0.04% / {t("dmm.maker")}: 0%
             </Text>
           )}
         >

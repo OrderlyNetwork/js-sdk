@@ -25,8 +25,8 @@ export GIT_EMAIL="your@email.com"
 export NPM_TOKEN="your_github_pat"
 export NPM_REGISTRY="https://npm.pkg.github.com"  # GitHub Packages
 
-# 5. Run version:prerelease command (handles versioning, building, and publishing)
-pnpm version:prerelease
+# 5. Run release:velto command (handles versioning, building, and publishing)
+pnpm release:velto
 
 # 6. Commit changes
 git add .
