@@ -1,5 +1,17 @@
 # @orderly.network/wallet-connector
 
+## 2.8.7-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.8.7-alpha.0
+  - @orderly.network/hooks@2.8.7-alpha.0
+  - @orderly.network/types@2.8.7-alpha.0
+  - @orderly.network/ui@2.8.7-alpha.0
+  - @orderly.network/utils@2.8.7-alpha.0
+
 ## 2.8.6
 
 ### Patch Changes

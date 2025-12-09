@@ -1,5 +1,11 @@
 # tsconfig
 
+## 0.11.7-alpha.0
+
+### Patch Changes
+
+- publish
+
 ## 0.11.6
 
 ### Patch Changes
