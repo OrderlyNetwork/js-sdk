@@ -99,7 +99,7 @@ export const MessageCenter: FC<{
                   className="hover:oui-opacity-100"
                 />
                 {messageSize > 0 && showAnnouncement && (
-                  <div className="oui-absolute -oui-right-[6px] -oui-top-[6px] oui-flex oui-size-4 oui-items-center oui-justify-center oui-rounded-full oui-bg-primary-darken oui-text-[10px] oui-leading-none">
+                  <div className="oui-absolute -oui-right-[6px] -oui-top-[6px] oui-flex oui-size-4 oui-items-center oui-justify-center oui-rounded-full oui-bg-primary-darken oui-text-[10px] oui-leading-none oui-text-primary-contrast">
                     {messageSize}
                   </div>
                 )}
