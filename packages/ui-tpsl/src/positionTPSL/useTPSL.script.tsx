@@ -2,7 +2,9 @@ import { useEffect, useMemo, useRef } from "react";
 import {
   type ComputedAlgoOrder,
   ERROR_MSG_CODES,
+  useAccount,
   useEstLiqPriceBySymbol,
+  useEventEmitter,
   useLocalStorage,
   useMemoizedFn,
   usePositionStream,
@@ -14,7 +16,6 @@ import {
 import { useTranslation } from "@orderly.network/i18n";
 import {
   AlgoOrderRootType,
-  AlgoOrderType,
   API,
   OrderType,
   PositionType,
@@ -71,12 +72,20 @@ export const useTPSLBuilder = (
   }
   // const symbol = isEditing ? order!.symbol : position.symbol;
   const symbolInfo = useSymbolsInfo();
+  const { state } = useAccount();
+  const ee = useEventEmitter();
 
-  const prevTPSLType = useRef<AlgoOrderRootType>(AlgoOrderRootType.TP_SL);
-  const [{ rows: positions }] = usePositionStream();
+  // const prevTPSLType = useRef<AlgoOrderRootType>(AlgoOrderRootType.TP_SL);
 
   const [needConfirm] = useLocalStorage("orderly_order_confirm", true);
-  const position = positions.find((item) => item.symbol === symbol);
+  const [{ rows: positions }] = usePositionStream();
+  const mainAccountPosition = positions.find((item) => item.symbol === symbol);
+
+  const isSubAccount =
+    options.position?.account_id &&
+    options.position?.account_id !== state.mainAccountId;
+
+  const position = isSubAccount ? options.position : mainAccountPosition;
 
   const estLiqPrice = useEstLiqPriceBySymbol(symbol);
 
@@ -264,6 +273,7 @@ export const useTPSLBuilder = (
         })
         .then(
           () => {
+            ee.emit("tpsl:updateOrder", options.position);
             return true;
           },
           () => {
@@ -283,6 +293,7 @@ export const useTPSLBuilder = (
             });
 
             if (res.success) {
+              ee.emit("tpsl:updateOrder", options.position);
               return res;
             }
 
