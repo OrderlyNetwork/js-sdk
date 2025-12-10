@@ -180,7 +180,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
   }, [chains, sourceToken?.symbol]);
 
   const enableWithdrawToExternalWallet =
-    widgetConfigs?.withdraw?.enableWithdrawToExternalWallet ?? true;
+    widgetConfigs?.withdraw?.enableWithdrawToExternalWallet ?? false;
 
   const { walletName, address } = useMemo(
     () => ({
