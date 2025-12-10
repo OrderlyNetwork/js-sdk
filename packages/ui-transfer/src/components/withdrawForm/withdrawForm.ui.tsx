@@ -82,10 +82,15 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
         status={props.toAccountIdInputStatus}
         hintMessage={props.toAccountIdHintMessage}
         disabled={!props.isLoggedIn}
+        placeholder={"Account ID or address"}
+        enableAccountLookup
+        accountInfo={props.toAccountInfo}
+        accountDropdownOpen={props.toAccountInfoDropdownOpen}
+        setAccountDropdownOpen={props.setToAccountInfoDropdownOpen}
       />
-      <Box my={2}>
+      <Box mb={1} px={2}>
         <Text size="xs" intensity={54}>
-          {t("transfer.withdraw.accountId.tips")}
+          {"Enter an account ID or address to find the account"}
         </Text>
       </Box>
     </TabPanel>
@@ -208,14 +213,14 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
           </TabPanel>
           {internalWithdrawPanel}
         </Tabs>
-        <Box mt={2}>
+        <Box mt={2} px={2}>
           <LtvWidget
             showDiff={typeof quantity !== "undefined" && Number(quantity) > 0}
             currentLtv={props.currentLTV}
             nextLTV={props.nextLTV}
           />
         </Box>
-        <Flex direction="column" mt={1} gapY={1} itemAlign="start">
+        <Flex direction="column" mt={1} gapY={1} px={2} itemAlign="start">
           <Text size="xs" intensity={36}>
             {t("common.fee")}
             {withdrawTo === WithdrawTo.Wallet ? " ≈ " : " = "}
