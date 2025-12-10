@@ -1,5 +1,16 @@
 # @orderly.network/futures
 
+## 4.8.8
+
+### Patch Changes
+
+- publish
+- 9e4118b: publish
+- Updated dependencies
+- Updated dependencies [9e4118b]
+  - @orderly.network/types@2.8.8
+  - @orderly.network/utils@2.8.8
+
 ## 4.8.8-alpha.0
 
 ### Patch Changes
