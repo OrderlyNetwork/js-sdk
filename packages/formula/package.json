@@ -1,6 +1,6 @@
 {
-  "name": "@orderly.network/perp",
-  "version": "4.8.10",
+  "name": "@orderly.network/formula",
+  "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -8,7 +8,8 @@
     "dev": "tsup --watch",
     "build": "tsup",
     "doc": "typedoc --out docs src",
-    "test": "jest"
+    "test": "jest",
+    "coverage": "jest --coverage"
   },
   "keywords": [],
   "author": "Orderly Network",
