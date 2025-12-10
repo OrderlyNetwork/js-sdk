@@ -1,5 +1,41 @@
 # @orderly.network/ui
 
+## 2.8.8
+
+### Patch Changes
+
+- publish
+- 9e4118b: publish
+- Updated dependencies
+- Updated dependencies [9e4118b]
+  - @orderly.network/utils@2.8.8
+
+## 2.8.8-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/utils@2.8.8-alpha.0
+
+## 2.8.7
+
+### Patch Changes
+
+- de789db: publish
+- publish
+- Updated dependencies [de789db]
+- Updated dependencies
+  - @orderly.network/utils@2.8.7
+
+## 2.8.7-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/utils@2.8.7-alpha.0
+
 ## 2.8.6
 
 ### Patch Changes

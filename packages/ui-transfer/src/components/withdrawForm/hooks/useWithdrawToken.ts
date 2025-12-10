@@ -113,6 +113,18 @@ export function useWithdrawToken(params: {
   });
 
   useEffect(() => {
+    if (withdrawTo !== WithdrawTo.Wallet || !allTokens.length) return;
+
+    const holdingSymbols = new Set(allTokens.map((t) => t.symbol));
+    if (!sourceToken?.symbol || !holdingSymbols.has(sourceToken.symbol)) {
+      const defaultToken = getTokenByTokenList(allTokens);
+      if (defaultToken) {
+        handleSourceTokenChange(defaultToken);
+      }
+    }
+  }, [withdrawTo, allTokens, sourceToken?.symbol, handleSourceTokenChange]);
+
+  useEffect(() => {
     syncToken();
   }, [
     withdrawTo,

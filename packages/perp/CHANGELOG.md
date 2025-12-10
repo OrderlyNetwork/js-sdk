@@ -1,5 +1,45 @@
 # @orderly.network/futures
 
+## 4.8.8
+
+### Patch Changes
+
+- publish
+- 9e4118b: publish
+- Updated dependencies
+- Updated dependencies [9e4118b]
+  - @orderly.network/types@2.8.8
+  - @orderly.network/utils@2.8.8
+
+## 4.8.8-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@2.8.8-alpha.0
+  - @orderly.network/utils@2.8.8-alpha.0
+
+## 4.8.7
+
+### Patch Changes
+
+- de789db: publish
+- publish
+- Updated dependencies [de789db]
+- Updated dependencies
+  - @orderly.network/types@2.8.7
+  - @orderly.network/utils@2.8.7
+
+## 4.8.7-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/types@2.8.7-alpha.0
+  - @orderly.network/utils@2.8.7-alpha.0
+
 ## 4.8.6
 
 ### Patch Changes
