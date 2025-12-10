@@ -56,6 +56,7 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
     onSelectWallet,
     onAddExternalWallet,
     isEnableTrading,
+    enableWithdrawToExternalWallet,
   } = props;
 
   const { t } = useTranslation();
@@ -175,7 +176,7 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
             }
             value={WithdrawTo.Wallet}
           >
-            {isEnableTrading && (
+            {isEnableTrading && enableWithdrawToExternalWallet && (
               <WalletSelector
                 connectedWallet={
                   address
@@ -252,12 +253,14 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
           onTransfer={props.onTransfer}
         />
       </Flex>
-      <AddWalletDialog
-        open={addWalletOpen}
-        onOpenChange={setAddWalletOpen}
-        onConfirm={handleAddExternalWallet}
-        chain={currentChain}
-      />
+      {enableWithdrawToExternalWallet && (
+        <AddWalletDialog
+          open={addWalletOpen}
+          onOpenChange={setAddWalletOpen}
+          onConfirm={handleAddExternalWallet}
+          chain={currentChain}
+        />
+      )}
     </Box>
   );
 };

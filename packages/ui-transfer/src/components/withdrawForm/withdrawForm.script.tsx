@@ -95,7 +95,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
 
   const [withdrawTo, setWithdrawTo] = useState<WithdrawTo>(WithdrawTo.Wallet);
 
-  const { wrongNetwork } = useAppContext();
+  const { wrongNetwork, widgetConfigs } = useAppContext();
   const { account, state } = useAccount();
 
   const [chains, { findByChainId }] = useChains(networkId, {
@@ -178,6 +178,9 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
 
     return list;
   }, [chains, sourceToken?.symbol]);
+
+  const enableWithdrawToExternalWallet =
+    widgetConfigs?.withdraw?.enableWithdrawToExternalWallet ?? true;
 
   const { walletName, address } = useMemo(
     () => ({
@@ -575,6 +578,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     isTokenUnsupported,
     onSwitchToSupportedNetwork,
 
+    enableWithdrawToExternalWallet,
     externalWallets,
     selectedWalletAddress: selectedWalletAddress || address,
     onSelectWallet,

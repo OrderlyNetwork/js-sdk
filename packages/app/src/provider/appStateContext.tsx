@@ -15,6 +15,15 @@ export type WidgetConfigs = {
     /** @deprecated The number of custom sub-accounts needs to be configured in sync with the backend. If you’re not sure about it, please don’t set this value. */
     maxSubAccountCount: number;
   };
+  withdraw?: {
+    /**
+     * Control the "withdraw to other wallet" feature.
+     * - `true` / `undefined`: enable external wallet trigger & management.
+     * - `false`: only show the connected wallet address without external
+     *   wallet selector or add-wallet dialog.
+     */
+    enableWithdrawToExternalWallet?: boolean;
+  };
 };
 
 export type AppContextState = {
