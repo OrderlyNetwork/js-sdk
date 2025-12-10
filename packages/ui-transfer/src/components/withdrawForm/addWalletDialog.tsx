@@ -110,34 +110,35 @@ export const AddWalletDialog: FC<AddWalletDialogProps> = ({
     <SimpleDialog
       open={open}
       onOpenChange={onOpenChange}
-      title={t("transfer.withdraw.addExternalWallet", "Add external wallet")}
+      title={t("transfer.withdraw.addExternalWallet")}
       size="sm"
     >
       <Box className="oui-flex oui-flex-col oui-gap-6 oui-font-semibold oui-tracking-[0.03em]">
         <Flex justify="between">
           <Text size="sm" intensity={54}>
-            {t("network.selector.label", "Network")}
+            {t("common.network")}
           </Text>
           <Flex gapX={1}>
             <ChainIcon chainId={"" + chain?.id} className="oui-w-4 oui-h-4" />
             <Text size="sm">{chain?.info?.network_infos?.shortName}</Text>
           </Flex>
         </Flex>
-        <Flex direction="column" gapY={2}>
+        <Flex direction="column" itemAlign="start" gapY={2}>
           <Text size="sm" intensity={54}>
-            {
-              "Fill in and confirm the address to receive the funds on the destination chain."
-            }
+            {t("transfer.withdraw.addExternalWallet.addressDescription")}
           </Text>
-          <Text size="sm" intensity={54}>
-            {requiredNetworkLabel &&
-              `Please do not enter any address other than the ${requiredNetworkLabel} address.`}
-          </Text>
+          {requiredNetworkLabel && (
+            <Text size="sm" intensity={54}>
+              {t("transfer.withdraw.addExternalWallet.addressWarning", {
+                networkLabel: requiredNetworkLabel,
+              })}
+            </Text>
+          )}
         </Flex>
         <Box className="oui-flex oui-flex-col oui-gap-1">
           <Flex justify="between">
             <Text size="2xs" intensity={54}>
-              {"Enter external wallet"}
+              {t("transfer.withdraw.addExternalWallet.label")}
             </Text>
             {isValidating && (
               <Spinner className="oui-w-3.5 oui-h-3.5 oui-text-base-contrast-36" />
@@ -156,7 +157,7 @@ export const AddWalletDialog: FC<AddWalletDialogProps> = ({
             )}
             {showInlineInvalid && (
               <Text size="2xs" className="oui-text-danger">
-                {t("common.invalid", "Invalid")}
+                {t("common.invalid")}
               </Text>
             )}
           </Flex>
@@ -189,7 +190,9 @@ export const AddWalletDialog: FC<AddWalletDialogProps> = ({
                   className="oui-bg-danger-light"
                 />
                 <Text size="2xs" className="oui-text-danger-light">
-                  {`This address doesn’t match the selected network. Please enter a valid ${requiredNetworkLabel} address.`}
+                  {t("transfer.withdraw.addExternalWallet.networkMismatch", {
+                    networkLabel: requiredNetworkLabel,
+                  })}
                 </Text>
               </Flex>
             </Flex>
@@ -202,7 +205,7 @@ export const AddWalletDialog: FC<AddWalletDialogProps> = ({
           disabled={!address || isValidating || !isValid || isNetworkMismatch}
           className="oui-mt-2"
         >
-          {t("common.confirm", "Confirm")}
+          {t("common.confirm")}
         </Button>
       </Box>
     </SimpleDialog>

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import {
   Box,
   Checkbox,
@@ -29,6 +30,7 @@ export type TextAreaInputProps = {
 };
 
 export const TextAreaInput = (props: TextAreaInputProps) => {
+  const { t } = useTranslation();
   const {
     value,
     onChange,
@@ -149,7 +151,7 @@ export const TextAreaInput = (props: TextAreaInputProps) => {
               intensity={36}
               className="oui-truncate oui-leading-[15px]"
             >
-              (Address:{" "}
+              ({t("common.address")}:{" "}
               <Text.formatted as="span" rule="address" range={[6, 4]}>
                 {selectedAccount.address}
               </Text.formatted>
@@ -235,6 +237,7 @@ const AccountResultItem = ({
   selected,
   onSelect,
 }: AccountResultItemProps) => {
+  const { t } = useTranslation();
   return (
     <div
       className={cn(
@@ -252,7 +255,7 @@ const AccountResultItem = ({
           weight="semibold"
           className="oui-tracking-wide"
         >
-          Account ID:{" "}
+          {t("common.accountId")}:{" "}
           <Text.formatted
             rule="address"
             range={[6, 4]}

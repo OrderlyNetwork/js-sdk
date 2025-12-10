@@ -145,7 +145,7 @@ export const WalletSelector: FC<WalletSelectorProps> = ({
           >
             <Flex direction="column" itemAlign="start" gapY={1}>
               <Text size="2xs" className="oui-text-base-contrast-54">
-                {"My wallet"}
+                {t("common.myWallet")}
               </Text>
               <Text
                 size="2xs"
@@ -168,7 +168,7 @@ export const WalletSelector: FC<WalletSelectorProps> = ({
               >
                 <Flex direction="column" itemAlign="start" gapY={1}>
                   <Text size="2xs" className="oui-text-base-contrast-54">
-                    {"External wallet"}
+                    {t("common.externalWallet")}
                   </Text>
                   <Text
                     size="2xs"
@@ -197,9 +197,7 @@ export const WalletSelector: FC<WalletSelectorProps> = ({
             className="oui-text-primary oui-font-semibold oui-tracking-[0.03em]"
           >
             <AddIcon className="oui-size-[18px]" />
-            <Text size="2xs">
-              {t("transfer.withdraw.addExternalWallet", "Add external wallet")}
-            </Text>
+            <Text size="2xs">{t("transfer.withdraw.addExternalWallet")}</Text>
           </Flex>
         </WalletMenuItem>
       </DropdownMenuContent>
@@ -209,7 +207,7 @@ export const WalletSelector: FC<WalletSelectorProps> = ({
   return (
     <Flex justify="between" className="oui-w-full oui-mb-3">
       <Text size="2xs" intensity={36}>
-        {"Wallet"}
+        {t("common.wallet")}
       </Text>
       <DropdownMenuRoot open={isOpen} onOpenChange={setIsOpen}>
         <DropdownMenuTrigger asChild>

@@ -82,7 +82,7 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
         status={props.toAccountIdInputStatus}
         hintMessage={props.toAccountIdHintMessage}
         disabled={!props.isLoggedIn}
-        placeholder={"Account ID or address"}
+        placeholder={t("transfer.withdraw.accountIdOrAddress.placeholder")}
         enableAccountLookup
         accountInfo={props.toAccountInfo}
         accountDropdownOpen={props.toAccountInfoDropdownOpen}
@@ -90,7 +90,7 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
       />
       <Box mb={1} px={2}>
         <Text size="xs" intensity={54}>
-          {"Enter an account ID or address to find the account"}
+          {t("transfer.withdraw.accountIdOrAddress.hint")}
         </Text>
       </Box>
     </TabPanel>
@@ -180,7 +180,7 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
                 connectedWallet={
                   address
                     ? {
-                        name: walletName || "Wallet",
+                        name: walletName || t("common.wallet"),
                         address,
                         namespace: currentChain?.namespace,
                       }
