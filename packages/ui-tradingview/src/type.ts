@@ -2,6 +2,8 @@ import { LocaleCode } from "@orderly.network/i18n";
 import {
   LanguageCode,
   LoadingScreenOptions,
+  StudyOverrides,
+  Overrides,
 } from "./tradingviewAdapter/charting_library";
 import { ChartMode, ColorConfigInterface } from "./tradingviewAdapter/type";
 
@@ -12,8 +14,8 @@ export interface TradingviewWidgetPropsInterface {
   mode?: ChartMode;
   scriptSRC?: string;
   library_path?: string;
-  overrides?: Record<string, string>;
-  studiesOverrides?: Record<string, string>;
+  overrides?: Overrides;
+  studiesOverrides?: StudyOverrides;
   customCssUrl?: string;
   colorConfig?: ColorConfigInterface;
   libraryPath?: string;
