@@ -1,8 +1,7 @@
 import * as React from "react";
-// import { CheckIcon } from "@radix-ui/react-icons"
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
-import { Check } from "../icon/check";
 import { tv } from "tailwind-variants";
+import { CheckIcon } from "../icon/check";
 
 const radioVariants = tv({
   slots: {
@@ -46,7 +45,7 @@ const RadioGroupItem = React.forwardRef<
   return (
     <RadioGroupPrimitive.Item ref={ref} className={item()} {...props}>
       <RadioGroupPrimitive.Indicator className="flex items-center justify-center">
-        <Check className="h-3.5 w-3.5 fill-primary-darken" />
+        <CheckIcon className="h-3.5 w-3.5 fill-primary-darken" />
       </RadioGroupPrimitive.Indicator>
     </RadioGroupPrimitive.Item>
   );
