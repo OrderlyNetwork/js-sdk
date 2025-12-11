@@ -35,6 +35,10 @@ export const EditBracketOrderUI = (props: Props & { onClose?: () => void }) => {
     props.slPriceError?.sl_trigger_price?.type ===
     ERROR_MSG_CODES.SL_PRICE_WARNING;
 
+  const isSlPriceError =
+    props.slPriceError?.sl_trigger_price?.type ===
+    ERROR_MSG_CODES.SL_PRICE_ERROR;
+
   const { getErrorMsg } = useOrderEntryFormErrorMsg(props.slPriceError);
 
   const {
@@ -214,7 +218,9 @@ export const EditBracketOrderUI = (props: Props & { onClose?: () => void }) => {
                   />
                 )
               }
-              errors={validated ? errors : null}
+              errors={
+                validated ? errors : isSlPriceError ? props.slPriceError : null
+              }
               quote_dp={symbolInfo.quote_dp}
               positionType={
                 formattedOrder.position_type ?? PositionType.PARTIAL

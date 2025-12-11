@@ -1,31 +1,33 @@
 import { useEffect, useState } from "react";
 import {
-  ComputedAlgoOrder,
   findPositionTPSLFromOrders,
-  findTPSLFromOrder,
-  useLocalStorage,
+  useAccount,
+  useEventEmitter,
   useOrderStream,
+  useSubAccountAlgoOrderStream,
   useSymbolsInfo,
 } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
 import {
-  AlgoOrder,
   AlgoOrderRootType,
   API,
   OrderStatus,
   PositionType,
 } from "@orderly.network/types";
-import { modal, toast, useScreen } from "@orderly.network/ui";
+import { modal, useScreen } from "@orderly.network/ui";
 import { TPSLDialogId, TPSLSheetId } from "../positionTPSL/tpsl.widget";
 import { TPSLDetailProps } from "./tpslDetail.widget";
 
 export const useTPSLDetail = (props: TPSLDetailProps) => {
   const { position } = props;
+
   const symbol = position.symbol;
   const symbolInfo = useSymbolsInfo()[symbol];
 
+  const ee = useEventEmitter();
+
+  const { state } = useAccount();
+
   const { isMobile } = useScreen();
-  const { t } = useTranslation();
   const [fullPositionOrders, setFullPositionOrders] = useState<API.AlgoOrder[]>(
     [],
   );
@@ -33,23 +35,69 @@ export const useTPSLDetail = (props: TPSLDetailProps) => {
     API.AlgoOrder[]
   >([]);
 
-  const [tpslOrders, { cancelAlgoOrder, cancelPostionOrdersByTypes, refresh }] =
-    useOrderStream(
-      {
-        symbol: position.symbol,
-        status: OrderStatus.INCOMPLETE,
-        includes: [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL],
-        size: 500,
-      },
-      {
-        keeplive: true,
-      },
-    );
+  const isSubAccount =
+    position.account_id && position.account_id !== state.mainAccountId;
+
+  const [
+    mainAccountTpslOrders,
+    { cancelAlgoOrder, cancelPostionOrdersByTypes },
+  ] = useOrderStream(
+    {
+      symbol: position.symbol,
+      status: OrderStatus.INCOMPLETE,
+      includes: [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL],
+      size: 500,
+    },
+    {
+      keeplive: true,
+    },
+  );
+
+  const [
+    subAccountTpslOrders,
+    {
+      cancelAlgoOrder: cancelSubAccountAlgoOrder,
+      cancelPostionOrdersByTypes: cancelSubAccountPostionOrdersByTypes,
+      refresh: refreshSubAccountTpslOrders,
+    },
+  ] = useSubAccountAlgoOrderStream(
+    {
+      symbol: position.symbol,
+      status: OrderStatus.INCOMPLETE,
+      includes: [AlgoOrderRootType.POSITIONAL_TP_SL, AlgoOrderRootType.TP_SL],
+      size: 100,
+    },
+    {
+      accountId: position.account_id!,
+    },
+  );
+
+  const tpslOrders = isSubAccount
+    ? subAccountTpslOrders
+    : mainAccountTpslOrders;
 
   const onCancelOrder = async (order: API.AlgoOrder) => {
+    if (isSubAccount) {
+      const res = await cancelSubAccountAlgoOrder(
+        order.algo_order_id,
+        order.symbol,
+      );
+      refreshSubAccountTpslOrders();
+      ee.emit("tpsl:updateOrder", position);
+      return res;
+    }
     return await cancelAlgoOrder(order.algo_order_id, order.symbol);
   };
+
   const onCancelAllTPSLOrders = async () => {
+    if (isSubAccount) {
+      const res = await cancelSubAccountPostionOrdersByTypes(symbol, [
+        AlgoOrderRootType.TP_SL,
+      ]);
+      refreshSubAccountTpslOrders();
+      ee.emit("tpsl:updateOrder", position);
+      return res;
+    }
     return await cancelPostionOrdersByTypes(symbol, [AlgoOrderRootType.TP_SL]);
   };
 
@@ -66,6 +114,7 @@ export const useTPSLDetail = (props: TPSLDetailProps) => {
     modal.show(dialogId, {
       order: order,
       symbol: position.symbol,
+      position,
       positionType,
       isEditing,
     });

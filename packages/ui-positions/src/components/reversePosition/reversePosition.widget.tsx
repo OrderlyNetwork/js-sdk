@@ -37,6 +37,9 @@ export const ReversePositionWidget: React.FC<ReversePositionWidgetProps> = (
   });
 
   const actions = useMemo(() => {
+    // Disable confirm button when validation error exists (highest priority)
+    const hasValidationError = !!state.validationError;
+
     return {
       primary: {
         label: t("common.confirm"),
@@ -57,10 +60,11 @@ export const ReversePositionWidget: React.FC<ReversePositionWidgetProps> = (
           }
         },
         loading: state.isReversing,
-        disabled: state.isReversing || !state.displayInfo,
+        disabled: state.isReversing || !state.displayInfo || hasValidationError,
       },
       secondary: {
         label: t("common.cancel"),
+        disabled: state.isReversing,
         onClick: async () => {
           reject?.("cancel");
           hide();
@@ -83,6 +87,7 @@ export const ReversePositionWidget: React.FC<ReversePositionWidgetProps> = (
         content: "oui-border oui-border-line-6",
       }}
       actions={actions}
+      closable={!state.isReversing}
     >
       <ReversePosition {...state} />
     </SimpleDialog>

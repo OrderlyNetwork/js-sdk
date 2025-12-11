@@ -18,7 +18,7 @@ export const trading = {
   "trading.portfolioSettings.unrealPnlPriceBasis": "Unrealized PnL Price Basis",
   "trading.portfolioSettings.reversePosition": "Reverse button",
   "trading.portfolioSettings.reversePosition.tooltip":
-    "Close your current position and open the opposite at market price. The reverse order will fail if your account balance isn’t enough to open an opposite position of the same size.",
+    "Close your current position and open the opposite at market price. If your account balance isn't enough, the reverse order will fail. Orders exceeding the maximum quantity will be automatically split into multiple smaller orders.",
 
   "trading.orderBook": "Order book",
   "trading.lastTrades": "Last trades",

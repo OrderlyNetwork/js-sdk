@@ -108,8 +108,8 @@ export interface TradingPageState extends TradingPageProps {
 export interface TradingViewConfigInterface {
   scriptSRC?: string;
   library_path: string;
-  overrides?: Record<string, string>;
-  studiesOverrides?: Record<string, string>;
+  overrides?: TradingviewWidgetPropsInterface["overrides"];
+  studiesOverrides?: TradingviewWidgetPropsInterface["studiesOverrides"];
   customCssUrl?: string;
   colorConfig?: ColorConfigInterface;
   locale?: TradingviewWidgetPropsInterface["locale"];

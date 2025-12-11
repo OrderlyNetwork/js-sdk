@@ -1,5 +1,5 @@
 import React from "react";
-import { BaseIcon, BaseIconProps } from "./baseIcon";
+import { BaseIconProps } from "./baseIcon";
 import { BaseIconWithPath } from "./baseIconWithPath";
 
 export const CheckIcon = React.forwardRef<SVGSVGElement, BaseIconProps>(
@@ -12,7 +12,7 @@ export const CheckIcon = React.forwardRef<SVGSVGElement, BaseIconProps>(
         {...props}
       />
     );
-  }
+  },
 );
 
 CheckIcon.displayName = "CheckIcon";
