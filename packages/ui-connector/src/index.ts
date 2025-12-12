@@ -17,3 +17,4 @@ export { AuthGuardDataTable } from "./component/authGuardDataTable";
 export { AuthGuardEmpty } from "./component/authGuardEmpty";
 export { AuthGuardTooltip } from "./component/authGuardTooltip";
 export { useAuthStatus, AuthStatusEnum } from "./hooks/useAuthStatus";
+export { FeatureFlag, type FeatureFlagProps } from "./component/featureFlag";
