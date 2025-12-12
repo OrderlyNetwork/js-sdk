@@ -1,15 +1,30 @@
 import React, { useCallback, useMemo } from "react";
-// @ts-ignore woofi-swap-widget-kit is a JS-only dependency without bundled types
+import { PublicKey } from "@solana/web3.js";
 import { WooFiSwapWidgetReact } from "woofi-swap-widget-kit/react";
 import { useWalletConnector } from "@orderly.network/hooks";
 import { ChainNamespace, SOLANA_MAINNET_CHAINID } from "@orderly.network/types";
 import { BaseLayout } from "../../components/layout/baseLayout";
 import "woofi-swap-widget-kit/style.css";
 
+function resolveSolanaPublicKey(
+  provider: { publicKey?: unknown } | undefined,
+  address?: string,
+): PublicKey | undefined {
+  const maybePublicKey = provider?.publicKey;
+  if (maybePublicKey instanceof PublicKey) return maybePublicKey;
+
+  if (!address) return undefined;
+  try {
+    return new PublicKey(address);
+  } catch {
+    return undefined;
+  }
+}
+
 const SwapWidget = () => {
   const { wallet, setChain, connectedChain, connect, namespace } =
     useWalletConnector();
-  const brokerAddress = "0xfBe3AeDa720f923726b1108A0bB82140f6BaBd1A";
+  const brokerAddress = "0xBf60A23Ee6748d0E762A75172659B5917958E7B6";
 
   const handleConnectWallet = useCallback(
     (config?: { network: string }) => {
@@ -17,10 +32,10 @@ const SwapWidget = () => {
         return connect({ chainId: SOLANA_MAINNET_CHAINID });
       }
 
-      const fallbackEvmChainId =
+      const evmChainId =
         typeof connectedChain?.id === "number" ? connectedChain.id : 1;
 
-      return connect({ chainId: fallbackEvmChainId });
+      return connect({ chainId: evmChainId });
     },
     [connect, connectedChain],
   );
@@ -46,15 +61,12 @@ const SwapWidget = () => {
 
   const solanaProvider = useMemo(() => {
     if (!wallet || namespace !== ChainNamespace.solana) return undefined;
-    const address = wallet.accounts?.[0]?.address;
-    if (!address) {
-      return wallet.provider;
-    }
 
-    return {
-      ...(wallet.provider as any),
-      publicKey: address,
-    };
+    const address = wallet.accounts?.[0]?.address;
+    const baseProvider = (wallet.provider ?? {}) as any;
+    const publicKey = resolveSolanaPublicKey(baseProvider, address);
+
+    return { ...baseProvider, publicKey };
   }, [wallet, namespace]);
 
   const currentChainForWidget = useMemo(() => {

@@ -139,6 +139,7 @@ export function useSOL() {
               signMessage: signMessage,
               signTransaction,
               sendTransaction,
+              publicKey,
             },
             accounts: [
               {
@@ -244,6 +245,7 @@ export function useSOL() {
         sendTransaction: sendTransaction!,
         rpcUrl: endpoint,
         network: network,
+        publicKey,
       },
       accounts: [
         {
