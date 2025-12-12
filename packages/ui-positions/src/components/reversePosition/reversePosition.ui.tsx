@@ -45,6 +45,8 @@ export const ReversePosition: FC<ReversePositionProps> = (props) => {
     markPrice,
     leverage,
     isLong,
+    unrealizedPnL,
+    pnlNotionalDecimalPrecision,
   } = displayInfo;
 
   // Determine side badges
@@ -127,6 +129,8 @@ export const ReversePosition: FC<ReversePositionProps> = (props) => {
         leverage={leverage}
         qty={positionQty}
         baseDp={baseDp}
+        estPnL={unrealizedPnL?.toString()}
+        pnlNotionalDecimalPrecision={pnlNotionalDecimalPrecision}
       />
 
       <Flex direction="row" itemAlign="center" width="100%">
