@@ -3,7 +3,9 @@ import { PublicKey } from "@solana/web3.js";
 import { WooFiSwapWidgetReact } from "woofi-swap-widget-kit/react";
 import { useWalletConnector } from "@orderly.network/hooks";
 import { ChainNamespace, SOLANA_MAINNET_CHAINID } from "@orderly.network/types";
+import { Box } from "@orderly.network/ui";
 import { BaseLayout } from "../../components/layout/baseLayout";
+import { PathEnum } from "../../constant";
 import "woofi-swap-widget-kit/style.css";
 
 function resolveSolanaPublicKey(
@@ -98,8 +100,16 @@ const SwapWidget = () => {
 
 export default function SwapPage() {
   return (
-    <BaseLayout>
-      <SwapWidget />
+    <BaseLayout
+      initialMenu={PathEnum.Swap}
+      classNames={{
+        content:
+          "oui-flex oui-justify-center oui-px-3 oui-pt-4 md:oui-pt-[60px]",
+      }}
+    >
+      <Box className="oui-rounded-xl oui-overflow-hidden">
+        <SwapWidget />
+      </Box>
     </BaseLayout>
   );
 }

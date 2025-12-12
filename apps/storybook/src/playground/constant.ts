@@ -1,6 +1,7 @@
 export enum PathEnum {
   Root = "/",
   Perp = "/perp",
+  Swap = "/swap",
 
   Portfolio = "/portfolio",
   Positions = "/portfolio/positions",
@@ -38,4 +39,5 @@ export const PageTitleMap = {
   [PathEnum.RewardsTrading]: "Trading Rewards",
   [PathEnum.RewardsAffiliate]: "Affiliate program",
   [PathEnum.Vaults]: "Vaults",
+  [PathEnum.Swap]: "Spot",
 };

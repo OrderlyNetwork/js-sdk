@@ -15,6 +15,7 @@ import {
   BattleInactiveIcon,
 } from "@orderly.network/ui";
 import type { BottomNavProps } from "@orderly.network/ui-scaffold";
+import { PathEnum } from "../playground/constant";
 
 const getBottomNavProp = (): BottomNavProps => {
   return {
@@ -27,7 +28,7 @@ const getBottomNavProp = (): BottomNavProps => {
       },
       {
         name: i18n.t("common.spot"),
-        href: "https://woofi.com/swap",
+        href: PathEnum.Swap,
         activeIcon: <EarnActiveIcon />,
         inactiveIcon: <EarnInactiveIcon />,
       },

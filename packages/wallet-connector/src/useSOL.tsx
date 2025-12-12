@@ -156,7 +156,7 @@ export function useSOL() {
           if (wallet.adapter.name === "Ledger") {
             setLedgerAddress(userAddress);
           }
-          setWallet(tempWallet);
+          setWallet(tempWallet as WalletState);
           setConnected(true);
           return [tempWallet];
         },
