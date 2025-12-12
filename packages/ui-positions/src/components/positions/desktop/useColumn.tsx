@@ -14,6 +14,7 @@ import {
 import { SymbolLeverageDialogId } from "@orderly.network/ui-leverage";
 import { SharePnLOptions, SharePnLDialogId } from "@orderly.network/ui-share";
 import { Decimal, formatNum } from "@orderly.network/utils";
+import { LIQ_DISTANCE_THRESHOLD } from "../../../constants";
 import { FundingFeeButton } from "../../fundingFeeHistory/fundingFeeButton";
 import { RwaStatusTag } from "../../rwaStatus/rwaStatus";
 import { ClosePositionWidget } from "../closePosition";
@@ -155,13 +156,22 @@ export const useColumn = (config: ColumnConfig) => {
         width: 100,
         onSort: true,
         dataIndex: "est_liq_price",
-        render: (value: string) => {
-          return Number(value) === 0 ? (
-            "--"
-          ) : (
+        render: (value: string, record) => {
+          const liqPrice = Number(value);
+          const markPrice = record.mark_price;
+          if (
+            liqPrice === 0 ||
+            !markPrice ||
+            markPrice === 0 ||
+            Math.abs(liqPrice - markPrice) / markPrice >= LIQ_DISTANCE_THRESHOLD
+          ) {
+            return "--";
+          }
+
+          return (
             <NumeralWithCtx
               rm={Decimal.ROUND_DOWN}
-              className={Number(value) > 0 ? "oui-text-warning-light" : ""}
+              className={liqPrice > 0 ? "oui-text-warning-light" : ""}
             >
               {value ?? "--"}
             </NumeralWithCtx>
