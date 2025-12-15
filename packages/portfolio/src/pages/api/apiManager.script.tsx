@@ -106,6 +106,7 @@ export const useApiManagerScript = (props?: {
       const generateKeyRes = {
         ...res,
         key: `ed25519:${res.key}`,
+        secretKey: `ed25519:${res.secretKey}`,
       };
       toast.success(t("portfolio.apiKey.created"));
 
