@@ -23,11 +23,10 @@ export interface UseFeatureFlagReturn {
  * Hook to check if a feature flag is enabled
  *
  * Logic:
- * 1. Always query public API `/v1/public/feature-flags`
- * 2. If key is NOT in public API, return { enabled: false, data: undefined } (don't query private)
- * 3. If key IS in public API, query private API `/v1/feature-flags` (requires login)
- * 4. If key is in private API, return { enabled: true, data: FeatureFlagItem }
- * 5. If key is NOT in private API, return { enabled: false, data: undefined }
+ * 1. Hidden by default - returns false when loading
+ * 2. In public but not in private, hidden - returns { enabled: false, data: undefined }
+ * 3. In both public and private, shown - returns { enabled: true, data: FeatureFlagItem }
+ * 4. Not in public, shown - returns { enabled: true, data: undefined }
  *
  * @param key - The feature flag key to check
  * @returns { enabled: boolean, data: FeatureFlagItem | undefined }
@@ -36,7 +35,7 @@ export const useFeatureFlag = (key: FlagKeys): UseFeatureFlagReturn => {
   // Always query public API
   const { data: publicFlags, isLoading: publicLoading } = useQuery<
     FeatureFlagItem[]
-  >("/v1/public/feature-flags", {});
+  >("/v1/public/feature_flags", {});
 
   // Find the key in public flags
   const publicFlag = useMemo(() => {
@@ -53,7 +52,7 @@ export const useFeatureFlag = (key: FlagKeys): UseFeatureFlagReturn => {
 
   const { data: privateFlags, isLoading: privateLoading } = usePrivateQuery<
     FeatureFlagItem[]
-  >(shouldQueryPrivate ? "/v1/feature-flags" : null, {});
+  >(shouldQueryPrivate ? "/v1/feature_flags" : null, {});
 
   // Find the key in private flags
   const privateFlag = useMemo(() => {
@@ -65,15 +64,23 @@ export const useFeatureFlag = (key: FlagKeys): UseFeatureFlagReturn => {
 
   // Return value based on the logic
   return useMemo(() => {
-    // If key is not in public API, return false (don't check private)
-    if (publicFlag === undefined) {
+    // 1. Hidden by default - return false if still loading
+    if (publicLoading || (shouldQueryPrivate && privateLoading)) {
       return {
         enabled: false,
         data: undefined,
       };
     }
 
-    // If key is in public API but not in private API, return false
+    // 4. Not in public, shown
+    if (publicFlag === undefined) {
+      return {
+        enabled: true,
+        data: undefined,
+      };
+    }
+
+    // 2. In public but not in private, hidden
     if (privateFlag === undefined) {
       return {
         enabled: false,
@@ -81,10 +88,17 @@ export const useFeatureFlag = (key: FlagKeys): UseFeatureFlagReturn => {
       };
     }
 
-    // If key is in both public and private API, return true with data
+    // 3. In both public and private, shown
     return {
       enabled: true,
       data: privateFlag,
     };
-  }, [publicFlag, privateFlag, key]);
+  }, [
+    publicFlag,
+    privateFlag,
+    publicLoading,
+    shouldQueryPrivate,
+    privateLoading,
+    key,
+  ]);
 };
