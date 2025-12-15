@@ -56,5 +56,7 @@ storybook-static/
 .claude/
 .specify/
 .specs/
+specs/
 .tmp.*
 .qoder/
+.specflow

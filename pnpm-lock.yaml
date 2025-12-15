@@ -733,6 +733,49 @@ importers:
         specifier: ^8.31.0
         version: 8.38.0(eslint@9.39.2(jiti@1.21.7))(typescript@5.8.3)
 
+  packages/formula:
+    dependencies:
+      '@orderly.network/types':
+        specifier: workspace:*
+        version: link:../types
+      '@orderly.network/utils':
+        specifier: workspace:*
+        version: link:../utils
+    devDependencies:
+      '@babel/core':
+        specifier: ^7.22.9
+        version: 7.28.4
+      '@babel/preset-env':
+        specifier: ^7.22.9
+        version: 7.28.0(@babel/core@7.28.4)
+      '@babel/preset-typescript':
+        specifier: ^7.22.5
+        version: 7.27.1(@babel/core@7.28.4)
+      '@jest/globals':
+        specifier: ^30.0.2
+        version: 30.0.5
+      '@types/jest':
+        specifier: ^29.5.3
+        version: 29.5.14
+      babel-jest:
+        specifier: ^29.6.1
+        version: 29.7.0(@babel/core@7.28.4)
+      jest:
+        specifier: ^29.6.1
+        version: 29.7.0(@types/node@22.16.5)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.13.2(@swc/helpers@0.5.17))(@types/node@22.16.5)(typescript@5.8.3))
+      tsconfig:
+        specifier: workspace:*
+        version: link:../tsconfig
+      tsup:
+        specifier: ^7.1.0
+        version: 7.3.0(@swc/core@1.13.2(@swc/helpers@0.5.17))(postcss@8.5.6)(ts-node@10.9.2(@swc/core@1.13.2(@swc/helpers@0.5.17))(@types/node@22.16.5)(typescript@5.8.3))(typescript@5.8.3)
+      typedoc:
+        specifier: ^0.26.5
+        version: 0.26.11(typescript@5.8.3)
+      typescript:
+        specifier: ^5.1.6
+        version: 5.8.3
+
   packages/hooks:
     dependencies:
       '@akamfoad/qr':
@@ -16018,6 +16061,15 @@ snapshots:
     dependencies:
       '@babel/traverse': 7.28.4
       '@babel/types': 7.28.4
+    transitivePeerDependencies:
+      - supports-color
+
+  '@babel/helper-module-transforms@7.28.3(@babel/core@7.28.0)':
+    dependencies:
+      '@babel/core': 7.28.0
+      '@babel/helper-module-imports': 7.27.1
+      '@babel/helper-validator-identifier': 7.27.1
+      '@babel/traverse': 7.28.4
     transitivePeerDependencies:
       - supports-color
 
