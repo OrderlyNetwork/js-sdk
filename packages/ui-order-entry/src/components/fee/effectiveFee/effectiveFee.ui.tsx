@@ -86,7 +86,7 @@ export const EffectiveFeeUI: React.FC<{ taker: string; maker: string }> = (
         <AuthGuard
           fallback={() => (
             <Text className="oui-truncate" size="2xs">
-              {t("dmm.taker")}: 0.04% / {t("dmm.maker")}: 0%
+              {t("dmm.taker")}: 0.02% / {t("dmm.maker")}: 0%
             </Text>
           )}
         >

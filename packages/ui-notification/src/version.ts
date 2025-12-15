@@ -8,7 +8,7 @@ declare global {
 if (typeof window !== "undefined") {
   window.__ORDERLY_VERSION__ = window.__ORDERLY_VERSION__ || {};
   window.__ORDERLY_VERSION__["@veltodefi/ui-notification"] =
-    "2.8.6-velto-main.2";
+    "2.8.6-velto-main.3";
 }
 
-export default "2.8.6-velto-main.2";
+export default "2.8.6-velto-main.3";
