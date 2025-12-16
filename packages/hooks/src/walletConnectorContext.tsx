@@ -3,6 +3,10 @@ import type { EIP1193Provider } from "@web3-onboard/common";
 import { SolanaWalletProvider } from "@orderly.network/default-solana-adapter";
 import { ChainNamespace } from "@orderly.network/types";
 
+type WalletProvider = (EIP1193Provider | SolanaWalletProvider) & {
+  publicKey?: SolanaWalletProvider["publicKey"]; // For Solana providers
+};
+
 export type ConnectedChain = {
   id: number | string;
   namespace: ChainNamespace;
@@ -17,7 +21,7 @@ export type WalletAccount = {
 export interface WalletState {
   label: string;
   icon: string;
-  provider: EIP1193Provider | SolanaWalletProvider;
+  provider: WalletProvider;
   accounts: WalletAccount[];
   chains: ConnectedChain[];
   instance?: unknown;

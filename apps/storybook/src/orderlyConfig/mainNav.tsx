@@ -64,8 +64,14 @@ export const customArenRender = (
 const getMainMenus = (): MainNavWidgetProps["mainMenus"] => {
   return [
     {
+      name: i18n.t("extend.spot"),
+      href: PathEnum.Swap,
+      className: "oui-hidden",
+    },
+    {
       name: i18n.t("common.trading"),
       href: "/",
+      activeHrefs: [PathEnum.Swap],
       isHomePageInMobile: true,
       customSubMenuRender: customTradeSubMenuRender(),
     },
@@ -155,7 +161,7 @@ const getLeftNavMenus = (): LeftNavProps => {
     menus: [
       {
         name: i18n.t("extend.spot"),
-        href: "https://woofi.com/swap",
+        href: PathEnum.Swap,
         icon: <SpotIcon />,
       },
       {
