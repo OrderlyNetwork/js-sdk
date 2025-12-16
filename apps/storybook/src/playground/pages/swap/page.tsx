@@ -26,7 +26,7 @@ function resolveSolanaPublicKey(
 const SwapWidget = () => {
   const { wallet, setChain, connectedChain, connect, namespace } =
     useWalletConnector();
-  const brokerAddress = "0xBf60A23Ee6748d0E762A75172659B5917958E7B6";
+  const brokerAddress = "0xBf60A23Ee6748d0E762A75172659B5917958E7B6"; // for woofi_pro
 
   const handleConnectWallet = useCallback(
     (config?: { network: string }) => {
