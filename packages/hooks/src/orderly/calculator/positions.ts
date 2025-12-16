@@ -256,12 +256,18 @@ class PositionCalculator extends BaseCalculator<API.PositionInfo> {
       const { totalValue, totalCollateral } = portfolio;
 
       rows = rows.map((item) => {
+        const info = symbolsInfo[item.symbol];
         const est_liq_price = positions.liqPrice({
+          symbol: item.symbol,
           markPrice: item.mark_price,
           totalCollateral: totalCollateral.toNumber(),
           positionQty: item.position_qty,
           positions: rows,
           MMR: item.mmr,
+          baseMMR: info?.["base_mmr"],
+          baseIMR: info?.["base_imr"],
+          IMRFactor: accountInfo.imr_factor[item.symbol] as number,
+          costPosition: item.cost_position,
         });
         return {
           ...item,
