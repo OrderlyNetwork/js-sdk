@@ -4,98 +4,96 @@ import type { LiqPriceInputs, MMRInputs } from "../src/positions";
 
 describe("positions formula", () => {
   describe("liqPrice", () => {
-    it("should return 0 when positionQty is 0", () => {
+    it("should return null when positionQty is 0", () => {
       const inputs: LiqPriceInputs = {
         markPrice: 100,
+        symbol: "BTC",
         totalCollateral: 1000,
         positions: [],
         positionQty: 0,
-        MMR: 0.5,
+        MMR: 0.05,
+        baseMMR: 0.05,
+        baseIMR: 0.1,
+        IMRFactor: 0.0000002512,
+        costPosition: 0,
+        sumUnitaryFunding: 0,
+        lastSumUnitaryFunding: 0,
       };
       expect(positions.liqPrice(inputs)).toBeNull();
     });
 
-    it("should calculate the liqPrice correctly: BTC", () => {
+    it("should calculate the liqPrice correctly: BTC LONG", () => {
       const inputs: LiqPriceInputs = {
-        markPrice: 25986.2,
-        totalCollateral: 1981.66,
+        markPrice: 90000,
+        totalCollateral: 200000,
+        symbol: "BTC",
         positions: [
           // BTC
           {
-            position_qty: 0.2,
-            mark_price: 25986.2,
-            mmr: 0.05,
+            position_qty: 50,
+            mark_price: 90000,
+            mmr: 0.01261017929,
+            symbol: "BTC",
           },
-          //ETH
-          {
-            position_qty: -3,
-            mark_price: 1638.41,
-            mmr: 0.05,
-          },
-        ],
-        positionQty: 0.2,
-        MMR: 0.05,
-      };
-      expect(positions.liqPrice(inputs)).toBe(18217.586842105262);
-    });
-    it("should calculate the liqPrice correctly: ETH", () => {
-      const inputs: LiqPriceInputs = {
-        markPrice: 1638.41,
-        totalCollateral: 1981.66,
-        positions: [
-          // BTC
-          {
-            position_qty: 0.2,
-            mark_price: 25986.2,
-            mmr: 0.05,
-          },
-          //ETH
-          {
-            position_qty: -3,
-            mark_price: 1638.41,
-            mmr: 0.05,
-          },
-        ],
-        positionQty: -3,
-        MMR: 0.05,
-      };
-      expect(positions.liqPrice(inputs)).toBe(2106.993015873016);
-    });
-
-    it("should calculate the liqPrice correctly: larger position BTC", () => {
-      const inputs: LiqPriceInputs = {
-        markPrice: 51000,
-        totalCollateral: 27000,
-        positions: [
-          // BTC
-          {
-            position_qty: 5,
-            mark_price: 51000,
-            mmr: 0.025,
-          },
-        ],
-        positionQty: 5,
-        MMR: 0.025,
-      };
-      expect(positions.liqPrice(inputs)).toBe(46769.230769230766);
-    });
-
-    it("should calculate the liqPrice correctly: larger position BTC -- case 2", () => {
-      const inputs: LiqPriceInputs = {
-        markPrice: 51000,
-        totalCollateral: 270000,
-        positions: [
-          // BTC
+          // ETH
           {
             position_qty: 100,
-            mark_price: 51000,
-            mmr: 0.0408506069,
+            mark_price: 3000,
+            mmr: 0.006,
+            symbol: "ETH",
           },
         ],
-        positionQty: 100,
-        MMR: 0.0408506069,
+        positionQty: 50,
+        MMR: 0.01261017929,
+        baseMMR: 0.006,
+        baseIMR: 0.01,
+        IMRFactor: 0.0000001,
+        costPosition: 0,
+        sumUnitaryFunding: 0,
+        lastSumUnitaryFunding: 0,
       };
-      expect(positions.liqPrice(inputs)).toBe(50357.11886747166);
+      const result = positions.liqPrice(inputs);
+      // Round to 5 decimal places before assertion
+      const roundedResult =
+        result !== null ? Math.round(result * 100000) / 100000 : null;
+      expect(roundedResult).toBe(87107.62339);
+    });
+
+    it("should calculate the liqPrice correctly: BTC SHORT", () => {
+      const inputs: LiqPriceInputs = {
+        markPrice: 90000,
+        totalCollateral: 200000,
+        symbol: "BTC",
+        positions: [
+          // BTC
+          {
+            position_qty: -50,
+            mark_price: 90000,
+            mmr: 0.01261017929,
+            symbol: "BTC",
+          },
+          // ETH
+          {
+            position_qty: 100,
+            mark_price: 3000,
+            mmr: 0.006,
+            symbol: "ETH",
+          },
+        ],
+        positionQty: -50,
+        MMR: 0.01261017929,
+        baseMMR: 0.006,
+        baseIMR: 0.01,
+        IMRFactor: 0.0000001,
+        costPosition: 0,
+        sumUnitaryFunding: 0,
+        lastSumUnitaryFunding: 0,
+      };
+      const result = positions.liqPrice(inputs);
+      // Round to 5 decimal places before assertion
+      const roundedResult =
+        result !== null ? Math.round(result * 100000) / 100000 : null;
+      expect(roundedResult).toBe(92761.73104);
     });
   });
 
