@@ -1,12 +1,7 @@
-import { useEffect, useState } from "react";
-import {
-  useChains,
-  useConfig,
-  useAccount,
-  useWalletConnector,
-} from "@veltodefi/hooks";
+import { useState } from "react";
+import { useConfig, useAccount, useWalletConnector } from "@veltodefi/hooks";
 import { useAppContext } from "@veltodefi/react-app";
-import { API, Chain, NetworkId } from "@veltodefi/types";
+import { NetworkId } from "@veltodefi/types";
 
 export type UseChainMenuScriptReturn = ReturnType<typeof useChainMenuScript>;
 

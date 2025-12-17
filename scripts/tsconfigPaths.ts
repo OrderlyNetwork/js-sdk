@@ -22,7 +22,7 @@ async function main() {
   const { packages, packagesMap } = await getAllPackages();
 
   for (const pkg of packages) {
-    // Get dependencies that belong to the "@orderly.network" scope
+    // Get dependencies that belong to the "@veltodefi" scope
     const deps = getOrderlyDependencies(pkg.packageJson);
     const paths: CompilerOptions["paths"] = {};
     for (const dep of deps) {
@@ -66,7 +66,7 @@ function getDependencyRelativePath(srcPackage: Package, depPackage?: Package) {
 }
 
 /**
- * Extracts dependencies from package.json that belong to the "@orderly.network" scope.
+ * Extracts dependencies from package.json that belong to the "@veltodefi" scope.
  */
 function getOrderlyDependencies(packageJson: Package["packageJson"]) {
   const allDependencies = {

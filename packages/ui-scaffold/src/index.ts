@@ -1,4 +1,8 @@
-export { AccountMenuWidget } from "./components/accountMenu";
+export {
+  AccountMenuWidget,
+  AccountMenu,
+  useAccountMenu,
+} from "./components/accountMenu";
 export {
   MainNavWidget,
   type MainNavWidgetProps,
@@ -11,7 +15,12 @@ export {
   type BottomNavProps,
 } from "./components/bottomNav";
 export { AccountSummaryWidget } from "./components/accountSummary";
-export { ChainMenuWidget, ChainMenu } from "./components/chainMenu";
+export {
+  ChainMenuWidget,
+  ChainMenu,
+  useChainMenuScript,
+} from "./components/chainMenu";
+export type { UseChainMenuScriptReturn } from "./components/chainMenu";
 export { SideNavbarWidget, SideBar } from "./components/sidebar";
 export { CampaignPositionEnum } from "./components/main/mainNav.script";
 

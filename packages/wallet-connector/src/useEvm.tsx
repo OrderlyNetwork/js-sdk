@@ -1,7 +1,16 @@
-import { useConnectWallet, useSetChain } from "@web3-onboard/react";
 import { useMemo } from "react";
+import type { ConnectedChain, WalletState } from "@web3-onboard/core";
+import { useConnectWallet, useSetChain } from "@web3-onboard/react";
 
-export function useEvm() {
+export function useEvm(): {
+  connect: () => Promise<WalletState[]>;
+  connected: boolean;
+  disconnect: () => Promise<void | WalletState[]>;
+  connecting: boolean;
+  wallet: WalletState | null;
+  connectedChain: (Omit<ConnectedChain, "id"> & { id: number }) | null;
+  changeChain: (chain: { chainId: string }) => Promise<any>;
+} {
   const [
     {
       wallet, // the wallet that has been connected or null if not yet connected
@@ -24,11 +33,16 @@ export function useEvm() {
   ] = useSetChain();
 
   const connected = useMemo(() => {
-    return !!(wallet && wallet.accounts && wallet.accounts[0] && wallet.accounts[0].address);
+    return !!(
+      wallet &&
+      wallet.accounts &&
+      wallet.accounts[0] &&
+      wallet.accounts[0].address
+    );
   }, [wallet]);
 
   const disconnect = async () => {
-    console.log('-- disconnect evm xxxxxxxxxxxx');
+    console.log("-- disconnect evm xxxxxxxxxxxx");
     if (!wallet) {
       return;
     }
@@ -43,9 +57,9 @@ export function useEvm() {
       : null;
   }, [evmConnectChain]);
 
-  const changeChain = (chain: { chainId: string}): Promise<any> =>{
+  const changeChain = (chain: { chainId: string }): Promise<any> => {
     return setChain(chain);
-  }
+  };
 
   return {
     connect,
@@ -55,6 +69,5 @@ export function useEvm() {
     wallet,
     connectedChain,
     changeChain,
-
   };
 }
