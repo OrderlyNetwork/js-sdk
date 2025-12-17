@@ -1,7 +1,8 @@
 import { FC } from "react";
 import {
   Box,
-  CheckedCircleFillIcon,
+  CheckIcon,
+  CircleOutlinedIcon,
   cn,
   Divider,
   Spinner,
@@ -18,7 +19,7 @@ type StepItemProps = {
 };
 
 export const StepItem = (props: StepItemProps) => {
-  const { title, description, showDivider } = props;
+  const { title, description, showDivider, isCompleted } = props;
   return (
     <Box position="relative" className="oui-pl-8">
       <Box>
@@ -29,7 +30,9 @@ export const StepItem = (props: StepItemProps) => {
           {description}
         </Text>
       </Box>
-      <div className="oui-absolute oui-left-0 oui-top-1 oui-z-10">
+      <div
+        className={`oui-left-${isCompleted ? "1" : "0"} oui-absolute oui-top-1 oui-z-10`}
+      >
         <Identifier {...props} />
       </div>
       {showDivider && (
@@ -58,7 +61,42 @@ const Identifier = (props: {
   }
 
   if (isCompleted) {
-    return <CheckedCircleFillIcon opacity={1} className="oui-text-primary" />;
+    return (
+      <span
+        style={{
+          position: "relative",
+          display: "inline-block",
+          width: 18,
+          height: 18,
+          verticalAlign: "middle",
+        }}
+        className="oui-flex oui-items-center oui-align-middle"
+      >
+        <CircleOutlinedIcon
+          className="oui-text-primary"
+          style={{ width: 18, height: 18, display: "block" }}
+        />
+        <span
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: 18,
+            width: 18,
+            pointerEvents: "none",
+          }}
+        >
+          <CheckIcon
+            className="oui-text-primary"
+            style={{ width: 12, height: 12, display: "block" }}
+          />
+        </span>
+      </span>
+    );
   }
 
   return <Dot active={!!active} />;
@@ -104,7 +142,7 @@ const Dot: FC<{ active: boolean; className?: string }> = ({
   return (
     <div
       className={cn(
-        "oui-w-[8.3px] oui-h-[8.3px] oui-rounded-full oui-ml-2 oui-mt-1",
+        "oui-ml-2 oui-mt-1 oui-size-[8.3px] oui-rounded-full",
         className,
         active ? "oui-bg-primary-light" : "oui-bg-base-2",
       )}

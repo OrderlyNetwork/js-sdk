@@ -7,16 +7,11 @@ import {
   useWalletConnector,
 } from "@veltodefi/hooks";
 import { i18n, useTranslation } from "@veltodefi/i18n";
-import {
-  AccountStatusEnum,
-  ChainNamespace,
-  LedgerWalletKey,
-} from "@veltodefi/types";
+import { AccountStatusEnum, ChainNamespace } from "@veltodefi/types";
 import {
   Box,
   Button,
   capitalizeFirstLetter,
-  Divider,
   Flex,
   inputFormatter,
   modal,
@@ -69,26 +64,21 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
     setState(accountState.status);
   }, [accountState]);
 
-  const steps = useMemo(() => {
-    const steps = [];
-    if (initAccountState < AccountStatusEnum.SignedIn) {
-      steps.push({
+  const steps = useMemo(
+    () => [
+      {
         key: "signIn",
         title: t("connector.createAccount"),
         description: t("connector.createAccount.description"),
-      });
-    }
-
-    if (initAccountState < AccountStatusEnum.EnableTrading) {
-      steps.push({
+      },
+      {
         key: "enableTrading",
         title: t("connector.enableTrading"),
         description: t("connector.enableTrading.description"),
-      });
-    }
-
-    return steps;
-  }, [initAccountState, t]);
+      },
+    ],
+    [t],
+  );
 
   useEffect(() => {
     if (namespace != ChainNamespace.solana) {
@@ -261,11 +251,11 @@ export const WalletConnectContent = (props: WalletConnectContentProps) => {
           justify={"center"}
           mt={4}
           gap={1}
-          className="oui-w-full oui-cursor-pointer"
+          className="oui-w-full oui-cursor-pointer oui-text-primary"
           onClick={onDisconnect}
         >
           <DisconnectIcon />
-          <Text className="oui-text-base-contrast-80 oui-text-sm">
+          <Text className="oui-text-sm oui-text-primary">
             {t("connector.disconnectWallet")}
           </Text>
         </Flex>
@@ -285,8 +275,7 @@ const DisconnectIcon = () => {
     >
       <path
         d="M2.24219 5.24316C2.24219 3.58641 3.58536 2.24316 5.24219 2.24316H8.24219C9.89894 2.24316 11.2422 3.58641 11.2422 5.24316C11.2422 5.65716 10.9062 5.99316 10.4922 5.99316C10.0782 5.99316 9.74219 5.65716 9.74219 5.24316C9.74219 4.41441 9.07094 3.74316 8.24219 3.74316H5.24219C4.41374 3.74316 3.74219 4.41441 3.74219 5.24316V12.7432C3.74219 13.5719 4.41374 14.2432 5.24219 14.2432H8.24219C9.07094 14.2432 9.74219 13.5719 9.74219 12.7432C9.74219 12.3292 10.0782 11.9932 10.4922 11.9932C10.9062 11.9932 11.2422 12.3292 11.2422 12.7432C11.2422 14.3999 9.89894 15.7432 8.24219 15.7432H5.24219C3.58536 15.7432 2.24219 14.3999 2.24219 12.7432V5.24316ZM7.49219 8.99316C7.49219 8.57916 7.82819 8.24316 8.24219 8.24316H13.9144L12.4377 6.74316L13.4922 5.68866L16.2814 8.45391C16.5739 8.74716 16.5739 9.23915 16.2814 9.5324L13.4922 12.2977L12.4377 11.2432L13.9144 9.74316H8.24219C7.82819 9.74316 7.49219 9.40716 7.49219 8.99316Z"
-        fill="white"
-        fillOpacity="0.8"
+        fill="currentColor"
       />
     </svg>
   );
@@ -496,7 +485,7 @@ const RememberMe = () => {
           intensity={54}
           size={"xs"}
           className={
-            "oui-underline oui-underline-offset-4 oui-decoration-dashed oui-decoration-base-contrast-36"
+            "oui-decoration-none oui-decoration-base-contrast-36 oui-underline-offset-4"
           }
         >
           {t("connector.rememberMe")}
