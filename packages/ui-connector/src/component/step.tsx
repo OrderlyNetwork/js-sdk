@@ -142,7 +142,7 @@ const Dot: FC<{ active: boolean; className?: string }> = ({
   return (
     <div
       className={cn(
-        "oui-w-[8.3px] oui-h-[8.3px] oui-rounded-full oui-ml-2 oui-mt-1",
+        "oui-ml-2 oui-mt-1 oui-size-[12px] oui-rounded-full",
         className,
         active ? "oui-bg-primary-light" : "oui-bg-base-2",
       )}
