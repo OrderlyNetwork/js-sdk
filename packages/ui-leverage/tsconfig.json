@@ -16,6 +16,9 @@
       ],
       "@orderly.network/perp": [
         "../perp/src"
+      ],
+      "@orderly.network/utils": [
+        "../utils/src"
       ]
     }
   }
