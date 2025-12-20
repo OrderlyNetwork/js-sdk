@@ -1,5 +1,12 @@
 # @orderly.network/types
 
+## 2.8.9
+
+### Patch Changes
+
+- publish
+- 32f2962: publish
+
 ## 2.8.9-alpha.0
 
 ### Patch Changes

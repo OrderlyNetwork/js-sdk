@@ -1,5 +1,15 @@
 # @orderly.network/utils
 
+## 2.8.9
+
+### Patch Changes
+
+- publish
+- 32f2962: publish
+- Updated dependencies
+- Updated dependencies [32f2962]
+  - @orderly.network/types@2.8.9
+
 ## 2.8.9-alpha.0
 
 ### Patch Changes
