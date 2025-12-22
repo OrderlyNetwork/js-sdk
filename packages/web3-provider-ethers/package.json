@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/web3-provider-ethers",
-  "version": "2.8.6",
+  "version": "2.8.7",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

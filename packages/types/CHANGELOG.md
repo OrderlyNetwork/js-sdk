@@ -1,5 +1,18 @@
 # @orderly.network/types
 
+## 2.8.7
+
+### Patch Changes
+
+- de789db: publish
+- publish
+
+## 2.8.7-alpha.0
+
+### Patch Changes
+
+- publish
+
 ## 2.8.6
 
 ### Patch Changes
