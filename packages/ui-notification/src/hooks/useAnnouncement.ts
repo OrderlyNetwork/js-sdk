@@ -111,6 +111,8 @@ const useAnnouncementData = () => {
           message: getMaintentTipsContent(brokerName, startDate, endDate),
         },
       ] as unknown as API.AnnouncementRow[]);
+    } else {
+      setMaintenances([]);
     }
   }, [startTime, endTime, status, brokerName, t]);
 
