@@ -1,6 +1,10 @@
 import { API } from "@orderly.network/types";
 import { Decimal, zero } from "@orderly.network/utils";
 import { IMRFactorPower } from "./constants";
+import { DMax } from "./utils";
+
+const MaxIterates = 30;
+const CONVERGENCE_THRESHOLD = 0.0001;
 
 /**
  * Calculates the notional value of a single position.
@@ -86,46 +90,253 @@ export function totalUnrealizedPnL(positions: API.Position[]): number {
   }, 0);
 }
 
-export type LiqPriceInputs = {
-  markPrice: number;
-  totalCollateral: number;
-  positionQty: number;
-  positions: Pick<API.PositionExt, "position_qty" | "mark_price" | "mmr">[];
-  MMR: number;
+const mmForOtherSymbols = (
+  positions: Pick<API.Position, "position_qty" | "mark_price" | "mmr">[],
+) => {
+  // sum_i ( abs(position_qty_i) * mark_price_i * mmr_i )
+  return positions.reduce<Decimal>((acc, cur) => {
+    return acc.add(
+      new Decimal(cur.position_qty).abs().mul(cur.mark_price).mul(cur.mmr),
+    );
+  }, zero);
 };
 
 /**
- * Calculates the liquidation price of a single position.
- * @param inputs The inputs for calculating the liquidation price.
- * @returns The liquidation price of the position.
+ * Calculates the liquidation price based on the formula:
+ * return max(mark_price + [total_collateral - abs(position_qty) * mark_price * mmr - mm_for_other_symbols] / [abs(position_qty) * mmr - position_qty], 0)
+ *
+ * Note: The condition check "if position_qty >= 0 AND abs(position_qty) * mmr - position_qty >= 0" from the formula
+ * has been removed as it was causing issues with SHORT position calculations.
  */
-export function liqPrice(inputs: LiqPriceInputs): number | null {
-  const { markPrice, totalCollateral, positions, positionQty, MMR } = inputs;
+const calculateLiqPrice = (
+  // symbol: string,
+  markPrice: number,
+  positionQty: number,
+  MMR: number,
+  totalCollateral: number,
+  positions: Pick<API.Position, "position_qty" | "mark_price" | "mmr">[],
+): Decimal => {
+  const decimalMarkPrice = new Decimal(markPrice);
+  const absQty = new Decimal(positionQty).abs();
+  const denominator = absQty.mul(MMR).sub(positionQty);
 
-  // console.log("inputs", inputs);
+  const liqPrice = new Decimal(totalCollateral)
+    .sub(absQty.mul(decimalMarkPrice).mul(MMR))
+    .sub(mmForOtherSymbols(positions))
+    .div(denominator)
+    .add(decimalMarkPrice);
+
+  return DMax(liqPrice, zero);
+};
+
+const compareCollateralWithMM = (
+  // price: number,
+  inputs: {
+    totalCollateral: number;
+    positionQty: number;
+    markPrice: number;
+    baseMMR: number;
+    baseIMR: number;
+    IMRFactor: number;
+    // IMRFactorPower: number;
+    positions: Pick<
+      API.PositionExt,
+      "position_qty" | "mark_price" | "mmr" | "symbol"
+    >[];
+  },
+) => {
+  return (price: Decimal) => {
+    const {
+      totalCollateral,
+      positionQty,
+      markPrice,
+      baseMMR,
+      baseIMR,
+      IMRFactor,
+      positions,
+    } = inputs;
+    const decimalPositionQty = new Decimal(positionQty);
+    const collateral = new Decimal(totalCollateral)
+      .sub(decimalPositionQty.mul(markPrice))
+      .add(decimalPositionQty.mul(price));
+
+    const mm = decimalPositionQty
+      .abs()
+      .mul(price)
+      .mul(
+        Math.max(
+          baseMMR,
+          new Decimal(baseMMR)
+            .div(baseIMR)
+            .mul(IMRFactor)
+            .mul(decimalPositionQty.mul(price).abs().toPower(IMRFactorPower))
+            .toNumber(),
+        ),
+      )
+      .add(mmForOtherSymbols(positions));
+
+    // console.log("*****", {
+    //   collateral: collateral.toNumber(),
+    //   mm: mm.toNumber(),
+    // });
+
+    return collateral.gte(mm);
+  };
+};
+
+export const liqPrice = (inputs: {
+  markPrice: number;
+  symbol: string;
+  totalCollateral: number;
+  positionQty: number;
+  positions: Pick<
+    API.PositionExt,
+    "position_qty" | "mark_price" | "mmr" | "symbol"
+  >[];
+  MMR: number;
+  baseMMR: number;
+  baseIMR: number;
+  IMRFactor: number;
+  costPosition: number;
+}) => {
+  const {
+    positionQty,
+    markPrice,
+    totalCollateral,
+    positions,
+    MMR,
+    baseMMR,
+    baseIMR,
+    IMRFactor,
+    symbol,
+  } = inputs;
 
   if (positionQty === 0 || totalCollateral === 0) {
     return null;
   }
+  const isLONG = positionQty > 0;
 
-  // totalNotional of all poisitions
-  const totalNotional = positions.reduce<Decimal>((acc, cur) => {
-    return acc.add(
-      new Decimal(notional(cur.position_qty, cur.mark_price)).mul(cur.mmr),
+  const otherPositions = positions.filter((item) => item.symbol !== symbol);
+
+  if (isLONG) {
+    let liqPriceLeft = calculateLiqPrice(
+      markPrice,
+      positionQty,
+      baseMMR,
+      totalCollateral,
+      otherPositions,
     );
-  }, zero);
+    let liqPriceRight = calculateLiqPrice(
+      markPrice,
+      positionQty,
+      MMR,
+      totalCollateral,
+      otherPositions,
+    );
 
-  return Math.max(
-    new Decimal(markPrice)
-      .add(
-        new Decimal(totalCollateral)
-          .sub(totalNotional)
-          .div(new Decimal(positionQty).abs().mul(MMR).sub(positionQty)),
-      )
-      .toNumber(),
-    0,
-  );
-}
+    const compareCollateralWithMMFunc = compareCollateralWithMM({
+      totalCollateral,
+      positionQty,
+      markPrice,
+      baseIMR,
+      baseMMR,
+      IMRFactor,
+      positions: otherPositions,
+    });
+
+    for (let i = 0; i < MaxIterates; i++) {
+      if (liqPriceLeft.gte(liqPriceRight)) {
+        return liqPriceRight.toNumber();
+      }
+
+      const mid = new Decimal(liqPriceLeft).add(liqPriceRight).div(2);
+
+      if (compareCollateralWithMMFunc(mid)) {
+        liqPriceRight = mid;
+      } else {
+        liqPriceLeft = mid;
+      }
+
+      if (
+        liqPriceRight
+          .sub(liqPriceLeft)
+          .div(liqPriceLeft.add(liqPriceRight))
+          .mul(2)
+          .lte(CONVERGENCE_THRESHOLD)
+      ) {
+        break;
+      }
+    }
+    return liqPriceRight.toNumber();
+  } else {
+    // const decimalBaseMMR = new Decimal(baseMMR);
+    let liqPriceRight = calculateLiqPrice(
+      markPrice,
+      positionQty,
+      MMR,
+      totalCollateral,
+      otherPositions,
+    );
+
+    let liqPriceLeft = calculateLiqPrice(
+      markPrice,
+      positionQty,
+      Math.max(
+        baseIMR,
+        new Decimal(baseMMR)
+          .div(baseIMR)
+          .mul(IMRFactor)
+          .mul(
+            new Decimal(positionQty)
+              .mul(liqPriceRight)
+              .abs()
+              .toPower(IMRFactorPower),
+          )
+          .toNumber(),
+      ),
+      totalCollateral,
+      otherPositions,
+    );
+
+    const compareCollateralWithMMFunc = compareCollateralWithMM({
+      totalCollateral,
+      positionQty,
+      markPrice,
+      baseMMR,
+      baseIMR,
+      IMRFactor,
+      positions: otherPositions,
+    });
+
+    for (let i = 0; i < MaxIterates; i++) {
+      if (liqPriceLeft.gte(liqPriceRight)) {
+        return liqPriceLeft.toNumber();
+      }
+
+      const mid = liqPriceLeft.add(liqPriceRight).div(2);
+
+      if (compareCollateralWithMMFunc(mid)) {
+        liqPriceLeft = mid;
+      } else {
+        liqPriceRight = mid;
+      }
+
+      if (
+        liqPriceRight
+          .sub(liqPriceLeft)
+          .div(liqPriceLeft.add(liqPriceRight))
+          .mul(2)
+          .lte(CONVERGENCE_THRESHOLD)
+      ) {
+        break;
+      }
+
+      // return liqPriceLeft.toNumber();
+    }
+
+    return liqPriceLeft.toNumber();
+  }
+};
 
 export type MMInputs = {
   positionQty: number;
@@ -256,6 +467,8 @@ export function estPnLForTP(inputs: {
 
 /**
  * Calculates the estimated price for take profit.
+ * This is the inverse of estPnLForTP: given PnL, calculates the price.
+ * Formula: price = PnL / positionQty + entryPrice
  */
 export function estPriceForTP(inputs: {
   positionQty: number;
@@ -263,8 +476,8 @@ export function estPriceForTP(inputs: {
   pnl: number;
 }): number {
   return new Decimal(inputs.pnl)
-    .add(inputs.entryPrice)
     .div(inputs.positionQty)
+    .add(inputs.entryPrice)
     .toNumber();
 }
 

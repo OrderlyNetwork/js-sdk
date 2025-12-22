@@ -50,6 +50,7 @@ export type MainNavItem = {
   name: string;
   label?: string;
   href: string;
+  activeHrefs?: string[];
   target?: HTMLAttributeAnchorTarget;
   icon?: string | React.ReactElement;
   activeIcon?: string | React.ReactElement;
@@ -147,10 +148,14 @@ export const NavItem: FC<
     };
   }, [showButtonTooltip]);
 
-  const isActive = useMemo(
-    () => currentPath?.[0] === item.href,
-    [currentPath, item.href],
-  );
+  const isActive = useMemo(() => {
+    const current = currentPath?.[0];
+    if (!current) return false;
+    if (current === item.href) return true;
+    return (
+      Array.isArray(item.activeHrefs) && item.activeHrefs.includes(current)
+    );
+  }, [currentPath, item.href, item.activeHrefs]);
 
   const hasSubMenu =
     Array.isArray(item.children) ||

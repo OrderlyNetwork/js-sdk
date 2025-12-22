@@ -2,9 +2,11 @@ import { useCallback, useMemo, useState } from "react";
 import {
   useLocalStorage,
   useMarkPrice,
+  usePositionStream,
   useSubAccountMutation,
   useSymbolsInfo,
 } from "@orderly.network/hooks";
+import { useDataTap } from "@orderly.network/react-app";
 import { API, OrderSide, OrderType } from "@orderly.network/types";
 import { useScreen } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
@@ -13,6 +15,7 @@ export interface UseReversePositionScriptOptions {
   position: API.PositionExt | API.PositionTPSLExt;
   onSuccess?: () => void;
   onError?: (error: any) => void;
+  calcMode?: "markPrice" | "lastPrice";
 }
 
 // Validation error types
@@ -73,10 +76,33 @@ export const useReversePositionScript = (
   const { position, onSuccess, onError } = options || {};
   const { isEnabled, setEnabled } = useReversePositionEnabled();
 
+  // Get pnlNotionalDecimalPrecision from localStorage
+  const [pnlNotionalDecimalPrecision] = useLocalStorage(
+    "pnlNotionalDecimalPrecision",
+    2,
+  );
+
   const symbolsInfo = useSymbolsInfo();
   const symbol = position?.symbol || "";
   const { data: symbolMarketPrice } = useMarkPrice(symbol);
   const symbolInfo = symbolsInfo?.[symbol];
+
+  // Get position stream data for unrealized PnL
+  const calcMode = options?.calcMode || "markPrice";
+  const [positionData] = usePositionStream(symbol, {
+    calcMode,
+    includedPendingOrder: false,
+  });
+  const rawPositionRows = useDataTap(positionData?.rows, { fallbackData: [] });
+
+  // Find the current position and extract unrealized_pnl
+  const unrealizedPnL = useMemo(() => {
+    if (!rawPositionRows || !symbol) return position?.unrealized_pnl;
+    const currentPosition = rawPositionRows.find(
+      (p) => p.symbol === symbol && p.position_qty !== 0,
+    );
+    return currentPosition?.unrealized_pnl ?? position?.unrealized_pnl;
+  }, [rawPositionRows, symbol]);
 
   // Get base_min and base_max from symbol info
   const baseMin = useMemo(() => {
@@ -285,6 +311,8 @@ export const useReversePositionScript = (
         : "--",
       leverage,
       isLong,
+      unrealizedPnL,
+      pnlNotionalDecimalPrecision,
     };
   }, [
     position,
@@ -293,6 +321,8 @@ export const useReversePositionScript = (
     positionQty,
     reverseQty,
     isLong,
+    unrealizedPnL,
+    pnlNotionalDecimalPrecision,
   ]);
 
   return {

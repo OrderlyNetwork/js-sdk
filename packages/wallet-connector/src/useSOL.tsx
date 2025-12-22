@@ -139,6 +139,7 @@ export function useSOL() {
               signMessage: signMessage,
               signTransaction,
               sendTransaction,
+              publicKey,
             },
             accounts: [
               {
@@ -155,7 +156,7 @@ export function useSOL() {
           if (wallet.adapter.name === "Ledger") {
             setLedgerAddress(userAddress);
           }
-          setWallet(tempWallet);
+          setWallet(tempWallet as WalletState);
           setConnected(true);
           return [tempWallet];
         },
@@ -244,6 +245,7 @@ export function useSOL() {
         sendTransaction: sendTransaction!,
         rpcUrl: endpoint,
         network: network,
+        publicKey,
       },
       accounts: [
         {

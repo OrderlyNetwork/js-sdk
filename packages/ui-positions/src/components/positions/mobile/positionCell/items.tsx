@@ -7,6 +7,7 @@ import { SymbolLeverageSheetId } from "@orderly.network/ui-leverage";
 import { SharePnLBottomSheetId } from "@orderly.network/ui-share";
 import { CloseToLiqPriceIcon } from "@orderly.network/ui-tpsl";
 import { Decimal } from "@orderly.network/utils";
+import { LIQ_DISTANCE_THRESHOLD } from "../../../../constants";
 import { FundingFeeButton } from "../../../fundingFeeHistory/fundingFeeButton";
 import { LeverageBadge } from "../../desktop/components";
 import { AddIcon, TPSLEditIcon } from "../../desktop/components";
@@ -198,8 +199,20 @@ export const MarkPrice: FC<PositionCellState> = (props) => {
 export const LiqPrice: FC<PositionCellState> = (props) => {
   const { item } = props;
   const { t } = useTranslation();
-  const liqPrice =
-    item.est_liq_price && item.est_liq_price > 0 ? item.est_liq_price : "-";
+  const liqPrice = useMemo(() => {
+    const estLiqPrice = item.est_liq_price;
+    const markPrice = item.mark_price;
+
+    if (!estLiqPrice || estLiqPrice <= 0) return "-";
+    if (!markPrice || markPrice === 0) return "-";
+    if (
+      Math.abs(estLiqPrice - markPrice) / markPrice >=
+      LIQ_DISTANCE_THRESHOLD
+    ) {
+      return "-";
+    }
+    return estLiqPrice;
+  }, [item.est_liq_price, item.mark_price]);
 
   return (
     <Statistic
