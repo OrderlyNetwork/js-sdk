@@ -84,43 +84,6 @@ export const CampaignsContentDesktopUI: FC<CampaignsContentDesktopUIProps> = ({
   }, [campaign]);
 
   const renderContent = () => {
-    if (campaign?.emphasisConfig) {
-      return (
-        <Flex
-          id="oui-trading-leaderboard-emphasis-campaign-content"
-          direction="column"
-          itemAlign="center"
-          className="oui-gap-y-1 lg:oui-gap-y-2"
-        >
-          <Text
-            className={cn([
-              "oui-trading-leaderboard-title oui-text-[56px]oui-font-bold oui-text-center  oui-text-base-contrast",
-              "oui-text-[32px] oui-leading-[32px] lg:oui-text-[56px] lg:oui-leading-[56px]",
-            ])}
-          >
-            {campaign?.title}
-          </Text>
-          <Text.gradient
-            color="brand"
-            className={cn([
-              "oui-text-center oui-font-bold",
-              "oui-text-[28px] oui-leading-[36px] lg:oui-text-[48px] lg:oui-leading-[56px]",
-              "oui-w-[85%] lg:oui-w-full",
-            ])}
-          >
-            {campaign?.emphasisConfig?.subtitle}
-          </Text.gradient>
-          <Text
-            className={cn([
-              "oui-text-center oui-font-semibold oui-text-base-contrast-80",
-              "oui-text-[16px] oui-leading-[24px] lg:oui-text-[24px] lg:oui-leading-[32px]",
-            ])}
-          >
-            {campaign?.description}
-          </Text>
-        </Flex>
-      );
-    }
     return (
       <>
         <Text

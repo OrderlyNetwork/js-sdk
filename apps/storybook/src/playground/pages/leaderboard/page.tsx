@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
 import { generatePath } from "@orderly.network/i18n";
 import { LeaderboardPage } from "@orderly.network/trading-leaderboard";
-import { getCampaigns } from "../../../stories/package/trading-leaderboard/tradingLeaderboard.stories";
+import { getCampaigns } from "../../../stories/package/trading-leaderboard/config";
 import { BaseLayout } from "../../components/layout/baseLayout";
 import { PathEnum } from "../../constant";
 
 const leaderboardCampaigns = getCampaigns();
 
 export default function Leaderboard() {
-  const [campaignId, setCampaignId] = useState<string | undefined>("116");
+  const [campaignId, setCampaignId] = useState<string | undefined>();
   const { search } = useLocation();
 
   useEffect(() => {
@@ -31,7 +31,7 @@ export default function Leaderboard() {
   }, [search]);
 
   return (
-    <div className="orderly-sdk-layout">
+    <div className="oui-sdk-layout">
       <BaseLayout initialMenu={PathEnum.Leaderboard}>
         <LeaderboardPage
           campaigns={leaderboardCampaigns}

@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-import { RankingColumnFields } from "../ranking/shared/column";
 import { DescriptionConfig, DescriptionItem } from "../rule/description";
 
 export enum CampaignTagEnum {
@@ -85,9 +84,6 @@ export interface CampaignConfig {
     format?: string;
   };
   href?: string;
-  hide_arena?: boolean;
-  hide_rewards?: boolean;
-  hide_estimated_rewards?: boolean;
   highlight_pool_id?: string;
   user_account_label?: string;
   rule?: {
@@ -95,23 +91,6 @@ export interface CampaignConfig {
     terms: DescriptionItem[];
     ruleConfig?: DescriptionConfig;
   };
-  leaderboard_config?: LeaderboardConfig;
-  // template config, will be remove when campaign is ended
-  emphasisConfig?: {
-    subtitle: string;
-    walletConnect: {
-      title: string;
-      description: string;
-    };
-    hideConnectWallet: boolean;
-  };
-}
-
-export interface LeaderboardConfig {
-  use_general_leaderboard?: boolean;
-  exclude_leaderboard_columns?: RankingColumnFields[];
-  // for 128 campaign
-  week_one_addresses?: string[];
 }
 
 // User data for calculations

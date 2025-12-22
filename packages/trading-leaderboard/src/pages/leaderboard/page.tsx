@@ -3,7 +3,6 @@ import { useTranslation } from "@orderly.network/i18n";
 import { Box, cn, Flex, Text, useScreen } from "@orderly.network/ui";
 import { LeaderboardBackground } from "../../components/background";
 import { CampaignsWidget } from "../../components/campaigns/campaigns.widget";
-import { GeneralLeaderboardIWidget } from "../../components/leaderboard128/generalLeaderboard";
 import { CampaignLeaderboardWidget } from "../../components/leaderboard/campaignLeaderboard";
 import {
   GeneralLeaderboardWidget,
@@ -59,12 +58,8 @@ type LeaderboardSectionProps = {
 export const LeaderboardSection: FC<LeaderboardSectionProps> = (props) => {
   const { t } = useTranslation();
   const { isMobile } = useScreen();
-  const {
-    currentCampaignId,
-    currentCampaign,
-    backgroundSrc,
-    campaignDateRange,
-  } = useTradingLeaderboardContext();
+  const { currentCampaignId, currentCampaign, backgroundSrc } =
+    useTradingLeaderboardContext();
 
   if (currentCampaignId === "general") {
     return (
@@ -75,30 +70,7 @@ export const LeaderboardSection: FC<LeaderboardSectionProps> = (props) => {
     );
   }
 
-  if (currentCampaign?.leaderboard_config?.use_general_leaderboard) {
-    return (
-      <Box px={3}>
-        <LeaderboardTitle
-          title={t("tradingLeaderboard.arena")}
-          isMobile={isMobile}
-        />
-        <GeneralLeaderboardIWidget
-          {...props}
-          className="oui-mt-10"
-          campaignDateRange={campaignDateRange}
-          weekOneAddresses={
-            currentCampaign?.leaderboard_config?.week_one_addresses
-          }
-        />
-      </Box>
-    );
-  }
-
-  if (
-    currentCampaign &&
-    !currentCampaign.hide_arena &&
-    currentCampaignId != "general"
-  ) {
+  if (currentCampaign && currentCampaignId != "general") {
     return (
       <Box px={3}>
         <LeaderboardTitle
