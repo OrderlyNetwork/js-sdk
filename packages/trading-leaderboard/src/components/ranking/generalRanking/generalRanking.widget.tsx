@@ -19,5 +19,5 @@ export const GeneralRankingWidget: FC<GeneralRankingWidgetProps> = (props) => {
     sortKey,
   });
 
-  return <Ranking {...state} {...rest} fields={fields} />;
+  return <Ranking {...state} {...rest} fields={fields} type="general" />;
 };

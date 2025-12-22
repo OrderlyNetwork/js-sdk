@@ -1,13 +1,30 @@
 import { FC, useMemo } from "react";
-import { useSymbolsInfo, utils } from "@orderly.network/hooks";
+import {
+  OrderValidationResult,
+  useSymbolsInfo,
+  useTpslPriceChecker,
+  utils,
+} from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 import { API, AlgoOrderType } from "@orderly.network/types";
 import { OrderSide } from "@orderly.network/types";
 import { cn, Text, Tooltip } from "@orderly.network/ui";
+import { CloseToLiqPriceIcon } from "@orderly.network/ui-tpsl";
 import { useTPSLOrderRowContext } from "../tpslOrderRowContext";
-import { useTranslation } from "@orderly.network/i18n";
+
 export const OrderTriggerPrice = () => {
   const { sl_trigger_price, tp_trigger_price, order, position } =
     useTPSLOrderRowContext();
+
+  const positionSide =
+    position?.position_qty && position.position_qty > 0
+      ? OrderSide.BUY
+      : OrderSide.SELL;
+  const slPriceError = useTpslPriceChecker({
+    slPrice: sl_trigger_price?.toString() ?? undefined,
+    liqPrice: position?.est_liq_price ?? null,
+    side: positionSide,
+  });
 
   return (
     <TPSLTriggerPrice
@@ -16,6 +33,7 @@ export const OrderTriggerPrice = () => {
       direction={"column"}
       order={order}
       position={position}
+      slPriceError={slPriceError}
       tooltip
     />
   );
@@ -29,6 +47,7 @@ export const TPSLTriggerPrice: FC<{
   tooltip?: boolean;
   order?: API.AlgoOrder;
   position?: API.PositionTPSLExt;
+  slPriceError: OrderValidationResult | null;
 }> = (props) => {
   const { direction = "row", order, position } = props;
   // const symbolInfo = useSymbolsInfo()[position?.symbol ?? ""]();
@@ -58,7 +77,7 @@ export const TPSLTriggerPrice: FC<{
           orderSide={order.side as OrderSide}
           orderType={AlgoOrderType.TAKE_PROFIT}
           symbolInfo={symbolInfo[order.symbol]()}
-        />
+        />,
       );
     }
 
@@ -72,7 +91,7 @@ export const TPSLTriggerPrice: FC<{
           orderSide={order.side as OrderSide}
           orderType={AlgoOrderType.STOP_LOSS}
           symbolInfo={symbolInfo[order.symbol]()}
-        />
+        />,
       );
     }
 
@@ -94,7 +113,7 @@ export const TPSLTriggerPrice: FC<{
       children.push(
         <Text.numeral
           className={cn(
-            "oui-text-trade-profit oui-gap-0  oui-decoration-white/20 oui-border-b oui-border-dashed oui-border-base-contrast-12"
+            "oui-text-trade-profit oui-gap-0  oui-decoration-white/20 oui-border-b oui-border-dashed oui-border-base-contrast-12",
           )}
           key={"tp"}
           rule="price"
@@ -110,7 +129,7 @@ export const TPSLTriggerPrice: FC<{
               ""
             )
           }
-        />
+        />,
       );
     }
     if (props.stopLossPrice) {
@@ -118,8 +137,10 @@ export const TPSLTriggerPrice: FC<{
         <Text.numeral
           key={"sl"}
           className={cn(
-            "oui-text-trade-loss oui-gap-0 oui-decoration-white/20 oui-border-b oui-border-dashed oui-border-base-contrast-12"
+            "oui-text-trade-loss oui-gap-0 oui-decoration-white/20 oui-border-b oui-border-dashed oui-border-base-contrast-12",
+            "oui-flex oui-items-center",
           )}
+          as="div"
           rule={"price"}
           dp={symbolInfo[order!.symbol]("quote_dp", 2)}
           children={props.stopLossPrice}
@@ -133,7 +154,13 @@ export const TPSLTriggerPrice: FC<{
               ""
             )
           }
-        />
+          suffix={
+            <CloseToLiqPriceIcon
+              slPriceError={props.slPriceError}
+              className="oui-ml-1"
+            />
+          }
+        />,
       );
     }
 
@@ -144,7 +171,13 @@ export const TPSLTriggerPrice: FC<{
     }
 
     return children;
-  }, [props.takeProfitPrice, props.stopLossPrice, order?.symbol, t]);
+  }, [
+    props.takeProfitPrice,
+    props.stopLossPrice,
+    order?.symbol,
+    t,
+    props.slPriceError,
+  ]);
 
   const content = (
     <div
@@ -153,7 +186,7 @@ export const TPSLTriggerPrice: FC<{
         props.direction === "column"
           ? "oui-flex-col"
           : "oui-flex-row oui-gap-1",
-        props.className
+        props.className,
       )}
     >
       {child}
@@ -198,7 +231,7 @@ const TriggerPriceItem: FC<{
     },
     {
       symbol: symbolInfo,
-    }
+    },
   );
 
   const type = orderType === AlgoOrderType.TAKE_PROFIT ? "TP" : "SL";
@@ -217,8 +250,8 @@ const TriggerPriceItem: FC<{
           pnl === 0
             ? "oui-text-base-contrast-36"
             : pnl > 0
-            ? "oui-text-trade-profit oui-gap-0"
-            : "oui-text-trade-loss oui-gap-0"
+              ? "oui-text-trade-profit oui-gap-0"
+              : "oui-text-trade-loss oui-gap-0"
         }
         // @ts-ignore
         prefix={

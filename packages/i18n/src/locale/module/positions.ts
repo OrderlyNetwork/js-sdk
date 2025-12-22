@@ -79,6 +79,18 @@ export const positions = {
     "Total collateral value in the account when liquidation occurred.",
   "positions.Liquidation.expand.tooltip.notional":
     "The total notional value of positions in the account at liquidation.",
+
+  "positions.reverse.title": "Reverse Position",
+  "positions.reverse.description":
+    "Close your current position and open the opposite at market price. If your account balance isn't enough, the reverse order will fail. Orders exceeding the maximum quantity will be automatically split into multiple smaller orders.",
+  "positions.reverse.error.belowMin":
+    "The reverse order quantity is below the minimum allowed. Please close your position and place a new order manually.",
+  "positions.reverse.marketCloseLong": "Market Close Long",
+  "positions.reverse.marketCloseShort": "Market Close Short",
+  "positions.reverse.marketOpenLong": "Market Open Long",
+  "positions.reverse.marketOpenShort": "Market Open Short",
+  "positions.reverse.reverseToLong": "Reverse to Long",
+  "positions.reverse.reverseToShort": "Reverse to Short",
 };
 
 export type Positions = typeof positions;

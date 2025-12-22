@@ -18,12 +18,14 @@ export const Positions: React.FC<Readonly<PositionsState>> = (props) => {
     isLoading,
     dataSource,
     onSymbolChange,
+    positionReverse,
   } = props;
 
   const columns = useColumn({
     pnlNotionalDecimalPrecision,
     sharePnLConfig,
     onSymbolChange: onSymbolChange,
+    positionReverse,
   });
 
   return (
@@ -70,6 +72,7 @@ export const MobilePositions: React.FC<
     sharePnLConfig,
     dataSource,
     onSymbolChange,
+    positionReverse,
   } = props;
   return (
     <ListView
@@ -85,6 +88,7 @@ export const MobilePositions: React.FC<
               pnlNotionalDecimalPrecision={pnlNotionalDecimalPrecision}
               sharePnLConfig={sharePnLConfig}
               onSymbolChange={onSymbolChange}
+              positionReverse={positionReverse}
             />
           </PositionsRowProvider>
         </SymbolProvider>
@@ -123,7 +127,7 @@ export const CombinePositions: React.FC<Readonly<CombinePositionsState>> = (
       dataSource={dataSource}
       expanded
       getSubRows={(row) => row.children}
-      generatedRowKey={(record) => record.id}
+      generatedRowKey={(record) => `${record.account_id}${record.symbol || ""}`}
       onCell={(column, record) => {
         const isGroup = (record.children ?? []).length > 0;
         if (isGroup) {
@@ -154,6 +158,9 @@ export const CombinePositions: React.FC<Readonly<CombinePositionsState>> = (
       }}
       manualPagination={false}
       pagination={pagination}
+      classNames={{
+        scroll: "oui-pb-10",
+      }}
       testIds={{
         body: "oui-testid-dataList-position-tab-body",
       }}

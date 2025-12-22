@@ -243,7 +243,7 @@ export const AssetsTableMobile: React.FC<useAssetsScriptReturn> = (props) => {
   };
 
   const ALL_ASSETS: SelectOption = {
-    label: "All assets",
+    label: t("common.allAssets"),
     value: "all",
   };
 

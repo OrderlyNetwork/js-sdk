@@ -35,7 +35,7 @@ export const useColumns = () => {
         rule: "date",
       },
       {
-        title: `${t("transfer.internalTransfer.from")} (Account ID)`,
+        title: `${t("transfer.internalTransfer.from")} (${t("common.accountId")})`,
         dataIndex: "from_account_id",
         render(val: string) {
           const isMainAccount = val === state.mainAccountId;
@@ -55,7 +55,7 @@ export const useColumns = () => {
         },
       },
       {
-        title: `${t("transfer.internalTransfer.to")} (Account ID)`,
+        title: `${t("transfer.internalTransfer.to")} (${t("common.accountId")})`,
         dataIndex: "to_account_id",
         render(val: string) {
           const isMainAccount = val === state.mainAccountId;

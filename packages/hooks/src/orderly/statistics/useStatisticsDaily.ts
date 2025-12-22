@@ -59,7 +59,20 @@ export const useStatisticsDaily = (
   }, [page, startDate, endDate]);
 
   const { data } = usePrivateQuery<API.DailyRow[]>(key, {
-    formatter: (data) => data.rows.reverse(),
+    formatter: (data) => {
+      let rows = data.rows || [];
+
+      // remove the first item if the account_value, perp_volume, pnl are all 0
+      if (rows.length > 0 && rows[0].date === endDate) {
+        const { account_value, perp_volume, pnl } = rows[0];
+        if (account_value === 0 && perp_volume === 0 && pnl === 0) {
+          rows = rows.slice(1);
+        }
+      }
+
+      rows.reverse();
+      return rows;
+    },
     revalidateOnFocus: false,
   });
 

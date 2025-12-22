@@ -1,13 +1,7 @@
-import { useLocalStorage, useLeverageBySymbol } from "@orderly.network/hooks";
+import { useLeverageBySymbol } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { PositionType } from "@orderly.network/types";
-import {
-  ChevronRightIcon,
-  cn,
-  EditIcon,
-  Text,
-  useScreen,
-} from "@orderly.network/ui";
+import { cn, EditIcon, Text, useScreen } from "@orderly.network/ui";
 import { modal } from "@orderly.network/ui";
 import {
   PositionTPSLPopover,
@@ -69,12 +63,12 @@ export const TPSLEditIcon = () => {
 
 export const AddIcon = (props: { positionType: PositionType }) => {
   const { position, baseDp, quoteDp, tpslOrder } = usePositionsRowContext();
-  const [needConfirm] = useLocalStorage("orderly_order_confirm", true);
   const { t } = useTranslation();
   const { isMobile } = useScreen();
   const onAdd = () => {
     const dialogId = isMobile ? TPSLSheetId : TPSLDialogId;
     const modalParams = {
+      position,
       symbol: position.symbol,
       baseDP: baseDp,
       quoteDP: quoteDp,

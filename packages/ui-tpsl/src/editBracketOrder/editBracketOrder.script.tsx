@@ -1,14 +1,18 @@
 import { useEffect, useMemo } from "react";
 import {
+  ERROR_MSG_CODES,
+  useMaxQty,
   useMutation,
   useOrderEntry,
   useSymbolsInfo,
+  useTpslPriceChecker,
 } from "@orderly.network/hooks";
 import {
   AlgoOrderRootType,
   AlgoOrderType,
   API,
   OrderlyOrder,
+  OrderSide,
   OrderType,
   PositionType,
   SDKError,
@@ -103,10 +107,21 @@ export const useEditBracketOrder = (props: { order: API.AlgoOrderExt }) => {
 
   const [doUpdateOrder, { isMutating }] = useMutation("/v1/algo/order", "PUT");
 
-  const { formattedOrder, setValue, setValues, metaState, symbolInfo, helper } =
-    useOrderEntry(props.order.symbol, {
-      initialOrder: baseInfo,
-    });
+  const maxQty = useEditOrderMaxQty(props.order, props.order.quantity);
+
+  const {
+    formattedOrder,
+    setValue,
+    setValues,
+    estLiqPrice,
+    metaState,
+    symbolInfo,
+    helper,
+    ...state
+  } = useOrderEntry(props.order.symbol, {
+    initialOrder: baseInfo,
+    maxQty,
+  });
   const symbol = props.order.symbol;
 
   const isPriceChanged = useMemo(() => {
@@ -157,64 +172,78 @@ export const useEditBracketOrder = (props: { order: API.AlgoOrderExt }) => {
     });
   }, [props.order, setValues]);
 
+  const slPriceError = useTpslPriceChecker({
+    slPrice: formattedOrder.sl_trigger_price,
+    liqPrice: estLiqPrice,
+    side: formattedOrder.side,
+  });
+
+  const isSlPriceError =
+    slPriceError?.sl_trigger_price?.type === ERROR_MSG_CODES.SL_PRICE_ERROR;
+
   const onSubmit = async () => {
-    return helper.validate().then(() => {
-      const tpOrder: {
-        order_id?: number;
-        trigger_price?: string;
-        algo_type: AlgoOrderType;
-        price?: string;
-        reduce_only?: boolean;
-        is_activated?: boolean;
-      } = {
-        order_id: tpInfo.orderId,
-        algo_type: AlgoOrderType.TAKE_PROFIT,
-        trigger_price: formattedOrder.tp_trigger_price,
-        reduce_only: true,
-      };
-      if (formattedOrder.tp_order_type === OrderType.LIMIT) {
-        tpOrder.price = formattedOrder.tp_order_price;
-      }
+    return helper
+      .validate(isSlPriceError ? slPriceError : undefined)
+      .then(() => {
+        const tpOrder: {
+          order_id?: number;
+          trigger_price?: string;
+          algo_type: AlgoOrderType;
+          price?: string;
+          reduce_only?: boolean;
+          is_activated?: boolean;
+        } = {
+          order_id: tpInfo.orderId,
+          algo_type: AlgoOrderType.TAKE_PROFIT,
+          trigger_price: formattedOrder.tp_trigger_price,
+          reduce_only: true,
+        };
+        if (formattedOrder.tp_order_type === OrderType.LIMIT) {
+          tpOrder.price = formattedOrder.tp_order_price;
+        }
 
-      const slOrder: {
-        order_id?: number;
-        trigger_price?: string;
-        algo_type: AlgoOrderType;
-        price?: string;
-        reduce_only?: boolean;
-        is_activated?: boolean;
-      } = {
-        order_id: slInfo.orderId,
-        algo_type: AlgoOrderType.STOP_LOSS,
-        trigger_price: formattedOrder.sl_trigger_price,
-        reduce_only: true,
-      };
-      if (formattedOrder.sl_order_type === OrderType.LIMIT) {
-        slOrder.price = formattedOrder.sl_order_price;
-      }
+        const slOrder: {
+          order_id?: number;
+          trigger_price?: string;
+          algo_type: AlgoOrderType;
+          price?: string;
+          reduce_only?: boolean;
+          is_activated?: boolean;
+        } = {
+          order_id: slInfo.orderId,
+          algo_type: AlgoOrderType.STOP_LOSS,
+          trigger_price: formattedOrder.sl_trigger_price,
+          reduce_only: true,
+        };
+        if (formattedOrder.sl_order_type === OrderType.LIMIT) {
+          slOrder.price = formattedOrder.sl_order_price;
+        }
 
-      const childOrders = [];
-      if (tpInfo.orderId) {
-        childOrders.push(tpOrder);
-      }
-      if (slInfo.orderId) {
-        childOrders.push(slOrder);
-      }
-      return doUpdateOrder({
-        order_id: props.order.algo_order_id,
-        child_orders: [
-          {
-            order_id: props.order.child_orders[0].algo_order_id,
-            child_orders: childOrders,
-          },
-        ],
+        const childOrders = [];
+        if (tpInfo.orderId) {
+          childOrders.push(tpOrder);
+        }
+        if (slInfo.orderId) {
+          childOrders.push(slOrder);
+        }
+        return doUpdateOrder({
+          order_id: props.order.algo_order_id,
+          child_orders: [
+            {
+              order_id: props.order.child_orders[0].algo_order_id,
+              child_orders: childOrders,
+            },
+          ],
+        });
       });
-    });
   };
 
   return {
     symbol,
     symbolInfo,
+    slPriceError,
+    estLiqPrice,
+    side: formattedOrder.side,
     formattedOrder,
     setValue,
     setValues,
@@ -224,3 +253,19 @@ export const useEditBracketOrder = (props: { order: API.AlgoOrderExt }) => {
     isPriceChanged,
   };
 };
+
+export function useEditOrderMaxQty(
+  order: API.AlgoOrderExt,
+  positionQty?: number,
+) {
+  const { reduce_only } = order;
+
+  const maxQty = useMaxQty(order.symbol, order.side as OrderSide, reduce_only);
+
+  return useMemo(() => {
+    if (reduce_only) {
+      return Math.abs(positionQty ?? 0);
+    }
+    return order.quantity + Math.abs(maxQty);
+  }, [order.quantity, maxQty, reduce_only, positionQty]);
+}

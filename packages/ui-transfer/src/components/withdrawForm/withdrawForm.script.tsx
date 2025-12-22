@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { PublicKey } from "@solana/web3.js";
+import { ethers } from "ethers";
 import {
   useAccount,
   useAssetsHistory,
@@ -15,6 +17,7 @@ import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext } from "@orderly.network/react-app";
 import {
   API,
+  AccountStatusEnum,
   AssetHistorySideEnum,
   AssetHistoryStatusEnum,
   NetworkId,
@@ -35,6 +38,23 @@ import { useWithdrawAccountId } from "./hooks/useWithdrawAccountId";
 import { useWithdrawFee } from "./hooks/useWithdrawFee";
 import { useWithdrawLTV } from "./hooks/useWithdrawLTV";
 import { useWithdrawToken } from "./hooks/useWithdrawToken";
+
+export const validateWalletAddress = (
+  address: string,
+): { valid: boolean; network?: "EVM" | "SOL" } => {
+  if (ethers.isAddress(address)) {
+    return { valid: true, network: "EVM" };
+  }
+
+  try {
+    const pubKey = new PublicKey(address);
+    if (PublicKey.isOnCurve(pubKey.toBytes())) {
+      return { valid: true, network: "SOL" };
+    }
+  } catch {}
+
+  return { valid: false };
+};
 
 export type WithdrawFormScriptReturn = ReturnType<typeof useWithdrawFormScript>;
 
@@ -75,8 +95,8 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
 
   const [withdrawTo, setWithdrawTo] = useState<WithdrawTo>(WithdrawTo.Wallet);
 
-  const { wrongNetwork } = useAppContext();
-  const { account } = useAccount();
+  const { wrongNetwork, widgetConfigs } = useAppContext();
+  const { account, state } = useAccount();
 
   const [chains, { findByChainId }] = useChains(networkId, {
     filter: (chain: any) =>
@@ -93,6 +113,10 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
   } = useWalletConnector();
 
   const isLoggedIn = useAuthGuard();
+
+  const [pendingTokenSymbol, setPendingTokenSymbol] = useState<
+    string | undefined
+  >();
 
   const currentChain = useMemo(() => {
     // if (!connectedChain) return null;
@@ -114,20 +138,49 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     } as CurrentChain;
   }, [findByChainId, connectedChain, linkDeviceStorage]);
 
-  const { sourceToken, onSourceTokenChange, sourceTokens } = useWithdrawToken({
+  const {
+    sourceToken,
+    onSourceTokenChange: _OnSourceTokenChange,
+    sourceTokens,
+    isTokenSupportedOnChain,
+  } = useWithdrawToken({
     currentChain,
     withdrawTo,
   });
 
+  const onSourceTokenChange = useMemoizedFn((token: API.TokenInfo) => {
+    setQuantity("");
+    _OnSourceTokenChange(token);
+    setPendingTokenSymbol(token.symbol);
+  });
+
   const tokenChains = useMemo(() => {
-    return chains
-      .filter((chain) =>
-        chain.token_infos?.some(
-          (token) => token.symbol === sourceToken?.symbol,
-        ),
-      )
-      .map((chain) => chain.network_infos);
-  }, [chains, networkId, sourceToken]);
+    if (!chains) return [];
+
+    const list = chains.map((chain) => {
+      const isSupported = chain.token_infos?.some(
+        (token) => token.symbol === sourceToken?.symbol,
+      );
+
+      return {
+        ...chain.network_infos,
+        isSupported,
+      };
+    });
+
+    // Put supported chains on top, unsupported ones at the bottom
+    list.sort((a, b) => {
+      const aSupported = !!a.isSupported;
+      const bSupported = !!b.isSupported;
+      if (aSupported === bSupported) return 0;
+      return aSupported ? -1 : 1;
+    });
+
+    return list;
+  }, [chains, sourceToken?.symbol]);
+
+  const enableWithdrawToExternalWallet =
+    widgetConfigs?.withdraw?.enableWithdrawToExternalWallet ?? false;
 
   const { walletName, address } = useMemo(
     () => ({
@@ -136,6 +189,53 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     }),
     [wallet],
   );
+
+  const [externalWallets, setExternalWallets] = useLocalStorage<
+    { address: string; network?: "EVM" | "SOL" }[]
+  >("orderly_external_wallets", []);
+
+  const [selectedWalletAddress, setSelectedWalletAddress] = useState<string>();
+
+  useEffect(() => {
+    setSelectedWalletAddress(undefined);
+  }, [currentChain?.namespace]);
+
+  useEffect(() => {
+    if (address && !selectedWalletAddress) {
+      setSelectedWalletAddress(address);
+    }
+  }, [address, selectedWalletAddress]);
+
+  const onSelectWallet = (address: string) => {
+    setSelectedWalletAddress(address);
+  };
+
+  const onAddExternalWallet = (addr: string, network?: "EVM" | "SOL") => {
+    const normalizedAddr = addr.trim();
+    if (!normalizedAddr) return;
+
+    const connectedAddress = address?.trim();
+    if (
+      connectedAddress &&
+      connectedAddress.toLowerCase() === normalizedAddr.toLowerCase()
+    ) {
+      setSelectedWalletAddress(normalizedAddr);
+      return;
+    }
+
+    const exists = (externalWallets || []).some((w: { address: string }) => {
+      return w.address?.trim().toLowerCase() === normalizedAddr.toLowerCase();
+    });
+
+    if (!exists) {
+      setExternalWallets([
+        ...(externalWallets || []),
+        { address: normalizedAddr, network },
+      ]);
+    }
+
+    setSelectedWalletAddress(normalizedAddr);
+  };
 
   const onQuantityChange = (qty: string) => {
     setQuantity(qty);
@@ -238,6 +338,19 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     [currentChain, switchChain, findByChainId, t],
   );
 
+  useEffect(() => {
+    if (!pendingTokenSymbol || !sourceTokens || sourceTokens.length === 0) {
+      return;
+    }
+
+    const matchedToken = sourceTokens.find(
+      (token) => token.symbol === pendingTokenSymbol,
+    );
+    if (matchedToken) {
+      onSourceTokenChange(matchedToken);
+    }
+  }, [pendingTokenSymbol, sourceTokens, onSourceTokenChange, currentChain]);
+
   const onWithdraw = async () => {
     if (loading) {
       return;
@@ -252,6 +365,7 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
       token: sourceToken?.symbol!,
       chainId: currentChain?.id!,
       allowCrossChainWithdraw: crossChainWithdraw,
+      receiver: selectedWalletAddress,
     })
       .then((res) => {
         toast.success(t("transfer.withdraw.requested"));
@@ -315,7 +429,26 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     return toNonExponential(value.toNumber());
   }, [fee, quantity]);
 
+  const isTokenUnsupported = useMemo(() => {
+    if (
+      withdrawTo !== WithdrawTo.Wallet ||
+      !currentChain ||
+      !sourceToken?.symbol
+    ) {
+      return false;
+    }
+    return !isTokenSupportedOnChain(sourceToken.symbol);
+  }, [withdrawTo, currentChain, sourceToken?.symbol, isTokenSupportedOnChain]);
+
   useEffect(() => {
+    if (isTokenUnsupported && sourceToken?.symbol) {
+      setInputStatus("error");
+      setHintMessage(
+        t("transfer.withdraw.unsupported.token", { token: sourceToken.symbol }),
+      );
+      return;
+    }
+
     if (!quantity) {
       setInputStatus("default");
       setHintMessage("");
@@ -331,7 +464,27 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
         setHintMessage("");
       }
     }
-  }, [quantity, maxAmount, unsettledPnL, crossChainTrans]);
+  }, [
+    quantity,
+    maxAmount,
+    unsettledPnL,
+    crossChainTrans,
+    isTokenUnsupported,
+    sourceToken?.symbol,
+    t,
+  ]);
+
+  const disabled =
+    crossChainTrans ||
+    !quantity ||
+    Number(quantity) === 0 ||
+    ["error", "warning"].includes(inputStatus) ||
+    (withdrawTo === WithdrawTo.Account &&
+      !withdrawAccountIdState.toAccountId) ||
+    qtyGreaterThanMaxAmount ||
+    qtyGreaterThanVault ||
+    !!minAmountWarningMessage ||
+    isTokenUnsupported;
 
   useEffect(() => {
     setCrossChainTrans(!!assetHistory?.length);
@@ -360,19 +513,26 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     quantity,
   });
 
-  const disabled =
-    crossChainTrans ||
-    !quantity ||
-    Number(quantity) === 0 ||
-    ["error", "warning"].includes(inputStatus) ||
-    (withdrawTo === WithdrawTo.Account &&
-      !withdrawAccountIdState.toAccountId) ||
-    qtyGreaterThanMaxAmount ||
-    !!minAmountWarningMessage ||
-    qtyGreaterThanVault;
-
   const warningMessage =
-    minAmountWarningMessage || ltvWarningMessage || vaultBalanceMessage;
+    ltvWarningMessage || minAmountWarningMessage || vaultBalanceMessage;
+
+  const filteredVaultBalanceList = useMemo(() => {
+    if (withdrawTo === WithdrawTo.Account) {
+      return [];
+    }
+    return vaultBalanceList?.filter(
+      (item) => Number.parseInt(item.chain_id) === currentChain?.id,
+    );
+  }, [vaultBalanceList, currentChain, withdrawTo]);
+
+  const onSwitchToSupportedNetwork = useMemoizedFn(async () => {
+    if (!tokenChains || tokenChains.length === 0) return;
+
+    const targetNetwork =
+      tokenChains.find((item) => item.isSupported) ?? tokenChains[0];
+
+    await onChainChange(targetNetwork);
+  });
 
   return {
     walletName,
@@ -415,5 +575,17 @@ export const useWithdrawFormScript = (options: WithdrawFormScriptOptions) => {
     warningMessage,
 
     isLoggedIn,
+    isTokenUnsupported,
+    onSwitchToSupportedNetwork,
+
+    enableWithdrawToExternalWallet,
+    externalWallets,
+    selectedWalletAddress: selectedWalletAddress || address,
+    onSelectWallet,
+    onAddExternalWallet,
+    setExternalWallets,
+    isEnableTrading:
+      state.status >= AccountStatusEnum.EnableTrading ||
+      state.status === AccountStatusEnum.EnableTradingWithoutConnected,
   };
 };

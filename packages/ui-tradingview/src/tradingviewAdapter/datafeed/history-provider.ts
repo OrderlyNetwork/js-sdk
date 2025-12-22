@@ -416,9 +416,12 @@ export class HistoryProvider {
         }
 
         if (volumePresent) {
-          barValue.volume = parseFloat(
-            (response as HistoryFullDataResponse).v[i],
-          );
+          const volume = parseFloat((response as HistoryFullDataResponse).v[i]);
+          if (volume > 0) {
+            barValue.volume = volume;
+          } else {
+            barValue.volume = 0.0000000001;
+          }
         }
 
         bars.push(barValue);

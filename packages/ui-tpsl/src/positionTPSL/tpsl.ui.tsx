@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useMemo } from "react";
+import { ERROR_MSG_CODES } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
 import {
@@ -17,7 +18,10 @@ import {
   ThrottledButton,
   ScrollArea,
   useScreen,
+  ExclamationFillIcon,
+  DotStatus,
 } from "@orderly.network/ui";
+import { CloseToLiqPriceIcon } from "../components/closeLiqPriceIcon";
 import { OrderInfo } from "../components/orderInfo";
 import { PnlInfo } from "../components/pnlInfo";
 import { TPSLInputRowWidget } from "../components/tpslInputRow";
@@ -49,7 +53,31 @@ export const TPSL: React.FC<TPSLBuilderState & TPSLProps> = (props) => {
   const { t } = useTranslation();
   const { isMobile } = useScreen();
 
+  // Filter errors for TP and SL components separately
+  const tpErrors = useMemo(() => {
+    if (!errors) return null;
+    const { sl_trigger_price, ...rest } = errors;
+    return rest;
+  }, [errors]);
+
+  const slErrors = useMemo(() => {
+    if (!errors) return null;
+    const { tp_trigger_price, ...rest } = errors;
+    return rest;
+  }, [errors]);
+
   const { getErrorMsg } = useOrderEntryFormErrorMsg(errors);
+  const { getErrorMsg: getSlPriceErrorMsg } = useOrderEntryFormErrorMsg(
+    props.slPriceError,
+  );
+
+  const isSlPriceWarning =
+    props.slPriceError?.sl_trigger_price?.type ===
+    ERROR_MSG_CODES.SL_PRICE_WARNING;
+
+  const isSlPriceError =
+    props.slPriceError?.sl_trigger_price?.type ===
+    ERROR_MSG_CODES.SL_PRICE_ERROR;
 
   if (!position) {
     return null;
@@ -86,6 +114,7 @@ export const TPSL: React.FC<TPSLBuilderState & TPSLProps> = (props) => {
           <OrderInfo
             baseDP={symbolInfo("base_dp")}
             quoteDP={symbolInfo("quote_dp")}
+            estLiqPrice={props.estLiqPrice}
             classNames={{
               root: "oui-mb-3",
               container: "oui-gap-x-[30px]",
@@ -114,9 +143,11 @@ export const TPSL: React.FC<TPSLBuilderState & TPSLProps> = (props) => {
               />
             )}
             {TPSL_OrderEntity.position_type === PositionType.FULL && (
-              <Text className="oui-text-2xs oui-text-warning">
-                {t("tpsl.positionType.full.tips.market")}
-              </Text>
+              <DotStatus
+                color="warning"
+                size="xs"
+                label={t("tpsl.positionType.full.tips.market")}
+              />
             )}
           </Flex>
           {renderQtyInput()}
@@ -148,7 +179,7 @@ export const TPSL: React.FC<TPSLBuilderState & TPSLProps> = (props) => {
               hideOrderPrice={
                 TPSL_OrderEntity.position_type === PositionType.FULL
               }
-              errors={validated ? errors : null}
+              errors={validated ? tpErrors : null}
               disableOrderTypeSelector={isEditing}
               quote_dp={symbolInfo("quote_dp")}
               positionType={
@@ -161,6 +192,17 @@ export const TPSL: React.FC<TPSLBuilderState & TPSLProps> = (props) => {
             />
 
             <TPSLInputRowWidget
+              inputWarnNode={
+                isSlPriceWarning && (
+                  <DotStatus
+                    color="warning"
+                    label={getSlPriceErrorMsg("sl_trigger_price")}
+                    classNames={{
+                      root: "oui-mt-1",
+                    }}
+                  />
+                )
+              }
               symbol={position.symbol}
               rootOrderPrice={position.average_open_price.toString()}
               type="sl"
@@ -181,7 +223,13 @@ export const TPSL: React.FC<TPSLBuilderState & TPSLProps> = (props) => {
               hideOrderPrice={
                 TPSL_OrderEntity.position_type === PositionType.FULL
               }
-              errors={validated ? errors : null}
+              errors={
+                validated
+                  ? slErrors
+                  : isSlPriceError
+                    ? props.slPriceError
+                    : null
+              }
               quote_dp={symbolInfo("quote_dp")}
               positionType={
                 TPSL_OrderEntity.position_type ?? PositionType.PARTIAL

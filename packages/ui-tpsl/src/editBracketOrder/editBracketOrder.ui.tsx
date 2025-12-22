@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+import { ERROR_MSG_CODES } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
+import { useOrderEntryFormErrorMsg } from "@orderly.network/react-app";
 import {
   OrderlyOrder,
   OrderSide,
@@ -9,6 +11,7 @@ import {
 import {
   cn,
   Divider,
+  DotStatus,
   Flex,
   ScrollArea,
   Text,
@@ -27,6 +30,16 @@ export const EditBracketOrderUI = (props: Props & { onClose?: () => void }) => {
   const { errors, validated } = props.metaState;
   const { isMobile } = useScreen();
   // console.log('errors', errors, validated);
+
+  const isSlPriceWarning =
+    props.slPriceError?.sl_trigger_price?.type ===
+    ERROR_MSG_CODES.SL_PRICE_WARNING;
+
+  const isSlPriceError =
+    props.slPriceError?.sl_trigger_price?.type ===
+    ERROR_MSG_CODES.SL_PRICE_ERROR;
+
+  const { getErrorMsg } = useOrderEntryFormErrorMsg(props.slPriceError);
 
   const {
     formattedOrder,
@@ -116,6 +129,7 @@ export const EditBracketOrderUI = (props: Props & { onClose?: () => void }) => {
               order_quantity: formattedOrder.order_quantity,
               order_price: formattedOrder.order_price,
             }}
+            estLiqPrice={props.estLiqPrice ?? undefined}
             baseDP={symbolInfo.base_dp}
             quoteDP={symbolInfo.quote_dp}
           />
@@ -195,7 +209,18 @@ export const EditBracketOrderUI = (props: Props & { onClose?: () => void }) => {
               hideOrderPrice={
                 formattedOrder.position_type === PositionType.FULL
               }
-              errors={validated ? errors : null}
+              inputWarnNode={
+                isSlPriceWarning && (
+                  <DotStatus
+                    color="warning"
+                    size="xs"
+                    label={getErrorMsg("sl_trigger_price")}
+                  />
+                )
+              }
+              errors={
+                validated ? errors : isSlPriceError ? props.slPriceError : null
+              }
               quote_dp={symbolInfo.quote_dp}
               positionType={
                 formattedOrder.position_type ?? PositionType.PARTIAL

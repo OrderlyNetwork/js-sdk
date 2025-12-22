@@ -9,6 +9,12 @@ import { DistributionHistoryWidget } from "../distribution";
 import { FundingHistoryWidget } from "../funding";
 import { TabName } from "./historyDataGroup.script";
 
+const LazyTransferHistoryWidget = React.lazy(() =>
+  import("../TransferHistory").then((mod) => {
+    return { default: mod.TransferHistoryWidget };
+  }),
+);
+
 export const HistoryDataGroupMobile: React.FC<{
   active?: TabName;
   onTabChange: (tab: string) => void;
@@ -42,6 +48,14 @@ export const HistoryDataGroupMobile: React.FC<{
         value={"distribution"}
       >
         <DistributionHistoryWidget />
+      </TabPanel>
+      <TabPanel
+        title={t("portfolio.overview.transferHistory")}
+        value={"transfer"}
+      >
+        <React.Suspense fallback={null}>
+          <LazyTransferHistoryWidget />
+        </React.Suspense>
       </TabPanel>
       <TabPanel
         title={t("portfolio.overview.tab.convert.history")}

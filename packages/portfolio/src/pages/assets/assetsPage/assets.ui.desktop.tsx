@@ -17,6 +17,7 @@ import {
   TabPanel,
   ArrowDownShortIcon,
   Button,
+  Divider,
 } from "@orderly.network/ui";
 import { AuthGuard, AuthGuardDataTable } from "@orderly.network/ui-connector";
 import type { SelectOption } from "@orderly.network/ui/src/select/withOptions";
@@ -351,7 +352,15 @@ export const AssetsTable: React.FC<AssetsWidgetProps> = (props) => {
           title={t("portfolio.overview.tab.convert.history")}
         >
           <React.Suspense fallback={null}>
-            <LazyConvertHistoryWidget />
+            <Flex
+              direction="column"
+              mt={4}
+              itemAlign="center"
+              className="oui-w-full"
+            >
+              <Divider className="oui-w-full oui-border-b oui-border-line-4 oui-pt-6" />
+              <LazyConvertHistoryWidget />
+            </Flex>
           </React.Suspense>
         </TabPanel>
       </Tabs>
