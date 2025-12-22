@@ -13,7 +13,9 @@
   "keywords": [],
   "author": "orderly.network",
   "files": [
-    "dist"
+    "dist",
+    "tailwind.config.js",
+    "src/tailwind"
   ],
   "publishConfig": {
     "access": "public"
