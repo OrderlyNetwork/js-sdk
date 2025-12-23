@@ -146,45 +146,49 @@ export const FundingFeeHistoryUI: FC<{
 
 const FundingFeeLabelButton: FC<{
   label: string;
-  tooltip: string;
+  tooltip?: string;
   size: number;
 }> = ({ label, tooltip, size }) => {
   const { t } = useTranslation();
   return (
     <div className="oui-flex oui-items-center oui-gap-1">
       <span>{label}</span>
-      <button
-        className="oui-flex oui-items-center"
-        onClick={() => {
-          modal.alert({
-            message: tooltip,
-            title: t("positions.fundingFee.title"),
-          });
-        }}
-      >
-        <ExclamationFillIcon
-          className="oui-cursor-pointer oui-text-base-contrast-54"
-          size={size}
-        />
-      </button>
+      {tooltip && (
+        <button
+          className="oui-flex oui-items-center"
+          onClick={() => {
+            modal.alert({
+              message: tooltip,
+              title: t("positions.fundingFee.title"),
+            });
+          }}
+        >
+          <ExclamationFillIcon
+            className="oui-cursor-pointer oui-text-base-contrast-54"
+            size={size}
+          />
+        </button>
+      )}
     </div>
   );
 };
 
-const FundingFeeLabel: FC<{ label: string; tooltip: string; size: number }> = ({
-  label,
-  tooltip,
-  size,
-}) => {
+const FundingFeeLabel: FC<{
+  label: string;
+  tooltip?: string;
+  size: number;
+}> = ({ label, tooltip, size }) => {
   return (
     <div className="oui-flex oui-items-center oui-gap-1">
       <span>{label}</span>
-      <Tooltip content={<div className="oui-w-64">{tooltip}</div>}>
-        <ExclamationFillIcon
-          className="oui-cursor-pointer oui-text-base-contrast-54"
-          size={size}
-        />
-      </Tooltip>
+      {tooltip && (
+        <Tooltip content={<div className="oui-w-64">{tooltip}</div>}>
+          <ExclamationFillIcon
+            className="oui-cursor-pointer oui-text-base-contrast-54"
+            size={size}
+          />
+        </Tooltip>
+      )}
     </div>
   );
 };
@@ -208,13 +212,7 @@ const HistoryDataListView: FC<ListProps> = ({ isLoading, data, loadMore }) => {
         },
       },
       {
-        title: (
-          <FundingFeeLabel
-            label={t("funding.fundingRate")}
-            tooltip={t("positions.fundingRate.tooltip")}
-            size={12}
-          />
-        ),
+        title: <FundingFeeLabel label={t("funding.fundingRate")} size={12} />,
         dataIndex: "funding_rate",
         formatter: (value: string) => new Decimal(value).mul(100).toString(),
         render: (value: string) => {
@@ -232,7 +230,13 @@ const HistoryDataListView: FC<ListProps> = ({ isLoading, data, loadMore }) => {
         render: (value: string) => <span>{value}</span>,
       },
       {
-        title: `${t("funding.fundingFee")} (USDC)`,
+        title: (
+          <FundingFeeLabel
+            label={t("common.amount")}
+            tooltip={t("positions.fundingRate.tooltip")}
+            size={12}
+          />
+        ),
         dataIndex: "funding_fee",
         render: (value: string) => {
           return (
@@ -291,25 +295,28 @@ const FundingFeeItem: FC<{
       <Flex justify={"between"}>
         <Statistic
           label={
-            <FundingFeeLabelButton
-              label={t("funding.fundingRate")}
-              tooltip={t("positions.fundingRate.tooltip")}
-              size={12}
-            />
+            <FundingFeeLabelButton label={t("funding.fundingRate")} size={12} />
           }
           classNames={{
             label: "oui-text-2xs",
           }}
           valueProps={{
             ignoreDP: true,
-            rule: "percentages",
+            as: "div",
             className: "oui-text-xs",
+            suffix: "%",
           }}
         >
-          {item.funding_rate}
+          {new Decimal(item.funding_rate).mul(100).toNumber()}
         </Statistic>
         <Statistic
-          label={t("common.amount")}
+          label={
+            <FundingFeeLabelButton
+              label={t("common.amount")}
+              tooltip={t("positions.fundingRate.tooltip")}
+              size={12}
+            />
+          }
           className="oui-items-end"
           classNames={{
             label: "oui-text-2xs",

@@ -2,9 +2,9 @@ export const positions = {
   "positions.closePosition": "Close Position",
   "positions.fundingFee.title": "Funding Fee",
   "positions.fundingFee.tooltip":
-    "Shows funding fees for closed or partially closed positions.",
+    "Total funding fees from closed positions only, including partially closed portions.",
   "positions.fundingRate.tooltip":
-    "Records include funding from current open positions.",
+    "Funding fee amount for each funding interval during the time the position was open. Records may include funding fees from both closed positions and currently open positions.",
   "positions.liquidation": "Liquidation",
   "positions.positionHistory": "Position history",
   "positions.closeAll": "Close all",
