@@ -23,6 +23,10 @@ export type MarginRatioReturn = {
    * Maintenance margin ratio (MMR) of the account, null if user has no positions
    */
   mmr: number | null;
+  /**
+   * Maintenance margin of the account
+   */
+  maintenanceMargin: number | null;
 };
 
 /**
@@ -104,5 +108,25 @@ export const useMarginRatio = (): MarginRatioReturn => {
     });
   }, [rows, notional]);
 
-  return { marginRatio, currentLeverage, mmr };
+  /**
+   * Calculate Maintenance Margin based on positions
+   * Returns null if user has no positions
+   */
+  const maintenanceMargin = useMemo<number | null>(() => {
+    if (!rows || rows.length <= 0 || notional == null) {
+      return null;
+    }
+    let maintenanceMargin = zero;
+    // const positionsNotional = positions.totalNotional(rows);
+
+    for (let index = 0; index < rows.length; index++) {
+      const item = rows[index];
+      if (item.mm !== null) {
+        maintenanceMargin = maintenanceMargin.add(item.mm);
+      }
+    }
+    return maintenanceMargin.toNumber();
+  }, [rows, notional]);
+
+  return { marginRatio, currentLeverage, mmr, maintenanceMargin };
 };
