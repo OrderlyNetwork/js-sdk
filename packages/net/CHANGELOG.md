@@ -1,5 +1,11 @@
 # @orderly.network/net
 
+## 2.8.10-alpha.0
+
+### Patch Changes
+
+- publish
+
 ## 2.8.9
 
 ### Patch Changes
