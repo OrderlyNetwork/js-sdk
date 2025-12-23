@@ -1,4 +1,7 @@
-import { resolve } from "path";
+import { resolve, dirname } from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 type Package = {
   package: string;
@@ -240,6 +243,10 @@ export function getWatchPackages() {
       unwatchs.push(item);
     }
   });
+
+  // console.log("packages", packages);
+  // console.log("getWatchPackages watchs", watchs);
+  // console.log("getWatchPackages unwatchs", unwatchs);
 
   return {
     watchs,

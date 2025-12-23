@@ -50,7 +50,7 @@ export function object2Css(theme: Record<string, string>) {
     newTheme[key] = val;
   }
 
-  let code = JSON.stringify(newTheme, null, 2)
+  const code = JSON.stringify(newTheme, null, 2)
     .replace(/"/g, "")
     .replace(/,\n/g, ";\n")
     .replace(/(\s*})$/, ";\n}")

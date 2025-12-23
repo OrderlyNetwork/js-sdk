@@ -4,12 +4,13 @@ import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
 // import react from "@vitejs/plugin-react";
 // https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react-swc
 import react from "@vitejs/plugin-react-swc";
+import { playwright } from "@vitest/browser-playwright";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "vite";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
-import { getWatchPackages, getWatchIgnores } from "./watchPackages.config";
+import { getWatchPackages, getWatchIgnores } from "./watchPackages.config.mts";
 
 const dirname =
   typeof __dirname !== "undefined"
@@ -116,7 +117,7 @@ export default defineConfig({
           browser: {
             enabled: true,
             headless: true,
-            provider: "playwright",
+            provider: playwright({}),
             instances: [
               {
                 browser: "chromium",
