@@ -21,5 +21,6 @@
   "extend.woofiEarn.description": "Behaal veilig rendement uit belangrijke assets op elke chain",
   "extend.wooStake": "WOO staking",
   "extend.wooStake.description": "Stake om USDC en WOO te verdienen",
-  "extend.vaults.description": "Verdien passief rendement met geautomatiseerde strategieën"
+  "extend.vaults.description": "Verdien passief rendement met geautomatiseerde strategieën",
+  "extend.swap.warning": "Spot-swaps worden uitgevoerd met de activa van uw verbonden Web3-portemonnee. Perp-accountfondsen zijn gescheiden en worden niet beïnvloed."
 }
