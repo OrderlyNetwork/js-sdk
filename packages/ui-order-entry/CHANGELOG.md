@@ -1,5 +1,25 @@
 # @orderly.network/ui-order-entry
 
+## 2.8.10
+
+### Patch Changes
+
+- publish
+- 0be13b3: publish
+- Updated dependencies
+- Updated dependencies [0be13b3]
+  - @orderly.network/react-app@2.8.10
+  - @orderly.network/hooks@2.8.10
+  - @orderly.network/i18n@2.8.10
+  - @orderly.network/perp@4.8.10
+  - @orderly.network/types@2.8.10
+  - @orderly.network/ui@2.8.10
+  - @orderly.network/ui-connector@2.8.10
+  - @orderly.network/ui-leverage@2.8.10
+  - @orderly.network/ui-scaffold@2.8.10
+  - @orderly.network/ui-tpsl@2.8.10
+  - @orderly.network/utils@2.8.10
+
 ## 2.8.10-alpha.0
 
 ### Patch Changes
