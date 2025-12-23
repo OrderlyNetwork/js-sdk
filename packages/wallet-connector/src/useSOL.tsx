@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   WalletAdapterNetwork,
   WalletNotReadyError,
@@ -75,19 +75,22 @@ export function useSOL() {
     });
   };
 
-  const handleSolanaError = (e: Error) => {
-    console.log("solan connect error", e);
+  const handleSolanaError = useCallback(
+    (e: Error) => {
+      console.log("solan connect error", e);
 
-    if (e instanceof WalletNotReadyError) {
-      if (isMobile) {
-        console.log("-- need toast wallet not ready", e);
-        ee.emit("wallet:connect-error", {
-          message: "Please open the wallet app and use the in-app browser.",
-        });
+      if (e instanceof WalletNotReadyError) {
+        if (isMobile) {
+          console.log("-- need toast wallet not ready", e);
+          ee.emit("wallet:connect-error", {
+            message: "Please open the wallet app and use the in-app browser.",
+          });
+        }
       }
-    }
-    solanaDisconnect().then();
-  };
+      solanaDisconnect().then();
+    },
+    [isMobile, ee],
+  );
 
   const connect = async () => {
     initPromiseRef();
@@ -294,14 +297,7 @@ export function useSOL() {
     if (solanaPromiseRef.current) {
       solanaPromiseRef.current.walletSelectResolve(solanaWallet);
     }
-  }, [
-    solanaWallet,
-    solanaConnect,
-    publicKey,
-    solanaDisconnect,
-    handleSolanaError,
-    isMobile,
-  ]);
+  }, [solanaWallet, publicKey, handleSolanaError, isMobile]);
 
   return {
     connected,
