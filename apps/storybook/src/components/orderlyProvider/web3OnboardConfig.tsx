@@ -1,67 +1,9 @@
-import type { OnboardAPI, WalletState } from "@web3-onboard/core";
+import type { OnboardAPI } from "@web3-onboard/core";
 import injectedModule from "@web3-onboard/injected-wallets";
 import { init } from "@web3-onboard/react";
 import walletConnectModule from "@web3-onboard/walletconnect";
 
 let onboardInstance: OnboardAPI | null = null;
-let hasAttemptedSwitch = false;
-let lastConnectedWallet: string | null = null;
-
-const getDefaultChainId = (isMainnet: boolean = true): string => {
-  return isMainnet ? "0x38" : "0x66eee";
-};
-
-const handleNetworkSwitch = async (walletState: WalletState[]) => {
-  if (!onboardInstance || !walletState || walletState.length === 0) return;
-
-  const connectedWallet = walletState[0];
-  if (!connectedWallet?.chains?.[0] || !connectedWallet.accounts?.length)
-    return;
-
-  const currentWalletId = `${connectedWallet.label}-${connectedWallet.accounts[0].address}`;
-
-  if (hasAttemptedSwitch && lastConnectedWallet === currentWalletId) {
-    return;
-  }
-
-  hasAttemptedSwitch = true;
-  lastConnectedWallet = currentWalletId;
-
-  const currentNetworkId =
-    typeof window !== "undefined"
-      ? localStorage.getItem("orderly_network_id") || "mainnet"
-      : "mainnet";
-
-  const isMainnet = currentNetworkId === "mainnet";
-  const expectedChainId = getDefaultChainId(isMainnet);
-  const currentChainId = connectedWallet.chains[0].id;
-
-  if (currentChainId !== expectedChainId) {
-    console.log(`Switching from ${currentChainId} to ${expectedChainId}`);
-
-    try {
-      const success = await onboardInstance.setChain({
-        chainId: expectedChainId,
-        wallet: connectedWallet.label,
-      });
-
-      if (success) {
-        console.log(`Successfully switched to chain ${expectedChainId}`);
-      } else {
-        console.warn(`Failed to switch to chain ${expectedChainId}`);
-      }
-    } catch (error) {
-      console.error("Error switching chain:", error);
-    }
-  }
-};
-
-const resetSwitchTracking = (walletState: WalletState[]) => {
-  if (!walletState || walletState.length === 0) {
-    hasAttemptedSwitch = false;
-    lastConnectedWallet = null;
-  }
-};
 
 export async function initOnBoard() {
   const mainChains = [
@@ -240,21 +182,6 @@ export async function initOnBoard() {
       connect: {
         autoConnectLastWallet: true,
       },
-    });
-
-    // Subscribe to wallet state changes to detect connections/disconnections
-    const walletState = onboardInstance.state.select("wallets");
-    walletState.subscribe((wallets: WalletState[]) => {
-      // Reset tracking when wallet disconnects
-      resetSwitchTracking(wallets);
-
-      // Check if a wallet just connected (has an account) and we haven't attempted switch yet
-      if (wallets && wallets.length > 0 && wallets[0].accounts?.length > 0) {
-        // Add a small delay to ensure the wallet is fully connected
-        setTimeout(() => {
-          handleNetworkSwitch(wallets);
-        }, 500);
-      }
     });
 
     return onboardInstance;

@@ -1,5 +1,18 @@
 # @orderly.network/types
 
+## 2.8.10
+
+### Patch Changes
+
+- publish
+- 0be13b3: publish
+
+## 2.8.10-alpha.0
+
+### Patch Changes
+
+- publish
+
 ## 2.8.9
 
 ### Patch Changes

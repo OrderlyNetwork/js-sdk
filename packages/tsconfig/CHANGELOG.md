@@ -1,5 +1,18 @@
 # tsconfig
 
+## 0.11.10
+
+### Patch Changes
+
+- publish
+- 0be13b3: publish
+
+## 0.11.10-alpha.0
+
+### Patch Changes
+
+- publish
+
 ## 0.11.9
 
 ### Patch Changes
