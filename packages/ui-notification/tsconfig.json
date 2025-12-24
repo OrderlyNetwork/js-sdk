@@ -16,6 +16,12 @@
       ],
       "@orderly.network/perp": [
         "../perp/src"
+      ],
+      "@orderly.network/react-app": [
+        "../app/src"
+      ],
+      "@orderly.network/utils": [
+        "../utils/src"
       ]
     }
   }

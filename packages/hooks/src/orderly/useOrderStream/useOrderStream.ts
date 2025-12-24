@@ -297,9 +297,22 @@ export const useOrderStream = (
     ]);
   }, [normalOrdersResponse.data, algoOrdersResponse.data]);
 
-  const cancelAllPendingOrders = useCallback((symbol?: string) => {
-    doCancelAllOrders(null, { ...(symbol && { symbol }) });
-  }, []);
+  const cancelAllPendingOrders = useCallback(
+    (symbol?: string) => {
+      return Promise.all([
+        doCancelAllOrders(null, { ...(symbol && { symbol }) }),
+        doCancelAllAlgoOrders(null, {
+          algo_type: AlgoOrderRootType.STOP,
+          ...(symbol && { symbol }),
+        }),
+        doCancelAllAlgoOrders(null, {
+          algo_type: AlgoOrderRootType.TRAILING_STOP,
+          ...(symbol && { symbol }),
+        }),
+      ]);
+    },
+    [symbol],
+  );
 
   const cancelPostionOrdersByTypes = useCallback(
     (symbol: string, types: AlgoOrderRootType[]) => {

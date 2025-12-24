@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   useConfig,
   useEventEmitter,
+  useStorageChain,
   useTrack,
   WalletState,
 } from "@orderly.network/hooks";
@@ -27,7 +28,6 @@ import {
 import { getLinkDeviceData } from "./useLinkDevice";
 
 const WALLET_KEY = "orderly:wallet-info";
-const CHAIN_NAMESPACE = "orderly:chain-namespace";
 
 export const useWalletStateHandle = (options: {
   // onChainChanged?: (chainId: number, isTestnet: boolean) => void;
@@ -58,6 +58,7 @@ export const useWalletStateHandle = (options: {
   const keyStore = useKeyStore();
   const networkId = useConfig("networkId") as NetworkId;
   const [chains, { checkChainSupport }] = useChains();
+  const { storageChain, setStorageChain } = useStorageChain();
 
   const [unsupported, setUnsupported] = useState(false);
   const { track, setTrackUserId } = useTrack();
@@ -123,6 +124,9 @@ export const useWalletStateHandle = (options: {
       if (connectedChain?.namespace === ChainNamespace.solana) {
         return;
       }
+      if (storageChain?.namespace === ChainNamespace.solana) {
+        return;
+      }
       if (
         localAddress &&
         account.address !== localAddress &&
@@ -141,7 +145,7 @@ export const useWalletStateHandle = (options: {
         );
       }
     });
-  }, [connectedWallet, account.address]);
+  }, [connectedWallet, account.address, storageChain?.namespace]);
 
   /**
    * handle wallet connection
@@ -194,6 +198,7 @@ export const useWalletStateHandle = (options: {
             label: connectedWallet?.label ?? "",
           }),
         );
+        setStorageChain(currentChain!.id);
       });
     }
 
