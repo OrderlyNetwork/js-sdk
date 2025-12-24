@@ -102,11 +102,20 @@ export const useSymbolLeverageScript = (
   const onInputChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
     (e) => {
       const parsed = Number.parseInt(e.target.value);
-      if (!Number.isNaN(parsed)) {
-        setLeverage(parsed);
-      }
+      const value = Number.isNaN(parsed) ? "" : parsed;
+      setLeverage(value as number);
     },
     [],
+  );
+
+  const onInputBlur = useCallback<React.FocusEventHandler<HTMLInputElement>>(
+    (e) => {
+      const inputValue = e.target.value.trim();
+      if (inputValue === "") {
+        setLeverage(curLeverage);
+      }
+    },
+    [curLeverage],
   );
 
   const onConfirmSave = async () => {
@@ -163,6 +172,7 @@ export const useSymbolLeverageScript = (
     onLeverageIncrease,
     onLeverageReduce,
     onInputChange,
+    onInputBlur,
     isReduceDisabled,
     isIncreaseDisabled,
     disabled,
