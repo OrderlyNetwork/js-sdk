@@ -36,7 +36,6 @@
     "@changesets/types": "^6.0.0",
     "@changesets/write": "^0.3.2",
     "@manypkg/get-packages": "^2.2.2",
-    "@npmcli/package-json": "^5.0.0",
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "@turbo/gen": "^2.0.11",
     "@types/fs-extra": "^11.0.4",
