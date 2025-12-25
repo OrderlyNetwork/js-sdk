@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 import { generatePath, useTranslation } from "@orderly.network/i18n";
 import { SubMenuMarketsWidget } from "@orderly.network/markets";
 import { API } from "@orderly.network/types";
@@ -12,26 +12,48 @@ import {
 import { PathEnum } from "../../playground/constant";
 import { DEFAULT_SYMBOL, updateSymbol } from "../../playground/storage";
 
-type IconProps = {
-  className?: string;
-  width?: number | string;
-  height?: number | string;
-};
+const RIGHT_SECTION_WRAPPER_CLASSNAME = [
+  "oui-overflow-hidden",
+  "oui-transition-[width,height] oui-duration-120 oui-ease-out",
+  "data-[state=open]:oui-w-[280px] data-[state=closed]:oui-w-0",
+  "data-[state=open]:oui-h-[423px] data-[state=closed]:oui-h-0",
+  "data-[state=closed]:oui-pointer-events-none",
+].join(" ");
+
+const RIGHT_SECTION_ANIMATION_CLASSNAME = [
+  "oui-origin-top-left",
+  "data-[state=open]:oui-animate-in data-[state=closed]:oui-animate-out",
+  "data-[state=open]:oui-fade-in-0 data-[state=closed]:oui-fade-out-0",
+  "data-[state=open]:oui-zoom-in-95 data-[state=closed]:oui-zoom-out-95",
+  "data-[state=open]:oui-slide-in-from-top-2",
+  "data-[state=open]:oui-slide-in-from-left-2",
+].join(" ");
 
 const LeftSection = (props: {
   selectedTab: string;
   onSelect: (tab: string) => void;
   onSpotClick: () => void;
+  onPerpsClick: () => void;
+  onHoverTab: (tab: "perps" | null) => void;
 }) => {
-  const { selectedTab, onSelect, onSpotClick } = props;
+  const { selectedTab, onSelect, onSpotClick, onPerpsClick, onHoverTab } =
+    props;
   const { t } = useTranslation();
 
   return (
-    <div className="oui-w-[240px] oui-h-[423px] oui-flex-shrink-0 oui-rounded-lg">
+    <div className="oui-w-[240px] oui-flex-shrink-0 oui-rounded-lg">
       {/* Spot Row */}
       <div
-        className="oui-flex oui-items-center oui-justify-between oui-p-3 oui-rounded-md oui-cursor-pointer hover:oui-bg-base-5"
-        onClick={onSpotClick}
+        className={`oui-flex oui-items-center oui-justify-between oui-p-3 oui-rounded-md oui-cursor-pointer ${
+          selectedTab === "spot" ? "oui-bg-base-5" : "hover:oui-bg-base-6"
+        }`}
+        onMouseEnter={() => {
+          onHoverTab(null);
+        }}
+        onClick={() => {
+          onSelect("spot");
+          onSpotClick();
+        }}
       >
         <div className="oui-flex oui-items-center oui-gap-2">
           <div className="oui-w-5 oui-h-5">
@@ -58,7 +80,13 @@ const LeftSection = (props: {
         className={`oui-flex oui-items-center oui-justify-between oui-p-3 oui-mt-1 oui-rounded-md oui-cursor-pointer ${
           selectedTab === "perps" ? "oui-bg-base-5" : "hover:oui-bg-base-6"
         }`}
-        onClick={() => onSelect("perps")}
+        onMouseEnter={() => {
+          onHoverTab("perps");
+        }}
+        onClick={() => {
+          onSelect("perps");
+          onPerpsClick();
+        }}
       >
         <div className="oui-flex oui-items-center oui-gap-2">
           <div className="oui-w-5 oui-h-5">
@@ -121,19 +149,55 @@ const RightSection = (props: { className?: string }) => {
 export const customTradeSubMenuRender = () => {
   return () => {
     const [selectedTab, setSelectedTab] = useState("perps");
+    const [hoverTab, setHoverTab] = useState<"perps" | null>(null);
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const handleSpotClick = () => {
-      window.location.href = "https://woofi.com/swap";
+      navigate(generatePath({ path: PathEnum.Swap }));
     };
 
+    const handlePerpsClick = () => {
+      navigate(generatePath({ path: PathEnum.Perp }));
+    };
+
+    useEffect(() => {
+      const pathname = location.pathname || "";
+      if (pathname.includes(PathEnum.Swap)) setSelectedTab("spot");
+    }, [location.pathname]);
+
+    const showPerpsRightSection =
+      selectedTab === "perps" || hoverTab === "perps";
+    const rightSectionState = showPerpsRightSection ? "open" : "closed";
+
     return (
-      <div className="oui-flex oui-p-1 oui-gap-1 oui-bg-base-8 oui-rounded-lg oui-border oui-border-line-6">
+      <div
+        className="oui-flex oui-p-1 oui-bg-base-8 oui-rounded-lg oui-border oui-border-line-6"
+        onMouseLeave={() => {
+          setHoverTab(null);
+        }}
+      >
         <LeftSection
           selectedTab={selectedTab}
           onSelect={setSelectedTab}
           onSpotClick={handleSpotClick}
+          onPerpsClick={handlePerpsClick}
+          onHoverTab={setHoverTab}
         />
-        <RightSection className="oui-w-[280px] oui-h-[423px]" />
+        <div
+          className={RIGHT_SECTION_WRAPPER_CLASSNAME}
+          onMouseEnter={() => {
+            setHoverTab("perps");
+          }}
+          data-state={rightSectionState}
+        >
+          <div
+            className={RIGHT_SECTION_ANIMATION_CLASSNAME}
+            data-state={rightSectionState}
+          >
+            <RightSection className="oui-w-[280px] oui-h-[423px] oui-ml-1" />
+          </div>
+        </div>
       </div>
     );
   };

@@ -82,6 +82,7 @@ export const useWithdraw = (options: UseWithdrawOptions) => {
       token: string;
       amount: string;
       allowCrossChainWithdraw: boolean;
+      receiver?: string;
     }): Promise<any> => {
       return account.assetsManager
         .withdraw({ ...inputs, decimals: decimals ?? 6 })

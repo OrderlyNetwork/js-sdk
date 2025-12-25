@@ -2,9 +2,9 @@ export const positions = {
   "positions.closePosition": "Close Position",
   "positions.fundingFee.title": "Funding Fee",
   "positions.fundingFee.tooltip":
-    "Shows funding fees for closed or partially closed positions.",
+    "Total funding fees from closed positions only, including partially closed portions.",
   "positions.fundingRate.tooltip":
-    "Records include funding from current open positions.",
+    "Funding fee amount for each funding interval during the time the position was open. Records may include funding fees from both closed positions and currently open positions.",
   "positions.liquidation": "Liquidation",
   "positions.positionHistory": "Position history",
   "positions.closeAll": "Close all",
@@ -82,7 +82,9 @@ export const positions = {
 
   "positions.reverse.title": "Reverse Position",
   "positions.reverse.description":
-    "The reverse order will fail if your account balance isn’t enough to open an opposite position of the same size.",
+    "Close your current position and open the opposite at market price. If your account balance isn't enough, the reverse order will fail. Orders exceeding the maximum quantity will be automatically split into multiple smaller orders.",
+  "positions.reverse.error.belowMin":
+    "The reverse order quantity is below the minimum allowed. Please close your position and place a new order manually.",
   "positions.reverse.marketCloseLong": "Market Close Long",
   "positions.reverse.marketCloseShort": "Market Close Short",
   "positions.reverse.marketOpenLong": "Market Open Long",

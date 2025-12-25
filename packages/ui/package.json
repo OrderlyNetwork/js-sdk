@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/ui",
-  "version": "2.8.7",
+  "version": "2.8.10",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -13,7 +13,9 @@
   "keywords": [],
   "author": "orderly.network",
   "files": [
-    "dist"
+    "dist",
+    "tailwind.config.js",
+    "src/tailwind"
   ],
   "publishConfig": {
     "access": "public"

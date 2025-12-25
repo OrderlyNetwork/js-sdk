@@ -127,7 +127,7 @@ export const CombinePositions: React.FC<Readonly<CombinePositionsState>> = (
       dataSource={dataSource}
       expanded
       getSubRows={(row) => row.children}
-      generatedRowKey={(record) => record.id}
+      generatedRowKey={(record) => `${record.account_id}${record.symbol || ""}`}
       onCell={(column, record) => {
         const isGroup = (record.children ?? []).length > 0;
         if (isGroup) {
@@ -158,6 +158,9 @@ export const CombinePositions: React.FC<Readonly<CombinePositionsState>> = (
       }}
       manualPagination={false}
       pagination={pagination}
+      classNames={{
+        scroll: "oui-pb-10",
+      }}
       testIds={{
         body: "oui-testid-dataList-position-tab-body",
       }}

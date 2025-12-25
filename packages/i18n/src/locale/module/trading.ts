@@ -18,7 +18,7 @@ export const trading = {
   "trading.portfolioSettings.unrealPnlPriceBasis": "Unrealized PnL Price Basis",
   "trading.portfolioSettings.reversePosition": "Reverse button",
   "trading.portfolioSettings.reversePosition.tooltip":
-    "Close your current position and open the opposite at market price. The reverse order will fail if your account balance isn’t enough to open an opposite position of the same size.",
+    "Close your current position and open the opposite at market price. If your account balance isn't enough, the reverse order will fail. Orders exceeding the maximum quantity will be automatically split into multiple smaller orders.",
 
   "trading.orderBook": "Order book",
   "trading.lastTrades": "Last trades",
@@ -67,6 +67,18 @@ export const trading = {
     "The minimum margin ratio required to protect your positions from being liquidated. If the Margin ratio falls below the Maintenance margin ratio, the account will be liquidated.",
   "trading.asset.maintenanceMarginRatio.formula":
     "Account maintenance margin ratio = Sum(Position notional * Symbol maintenance Margin Ratio)  / Total position notional * 100%",
+
+  "trading.asset.maintenanceMargin": "Maintenance margin",
+  "trading.asset.maintenanceMargin.tooltip":
+    "Maintenance margin is the minimum amount of margin required to keep all your open positions alive. If your account equity falls below the maintenance margin, the account will be liquidated.",
+  "trading.asset.maintenanceMargin.formula":
+    "Maintenance margin = Sum(Position notional * Symbol maintenance margin ratio)",
+
+  "trading.asset.currentLeverage": "Current leverage",
+  "trading.asset.currentLeverage.tooltip":
+    "Current Account Leverage shows how much leverage you are currently using based on your open positions.",
+  "trading.asset.currentLeverage.formula":
+    "Current leverage = (Total position notional / Total collateral value)",
 
   "trading.riskRate": "Risk rate",
   "trading.riskRate.tooltip":

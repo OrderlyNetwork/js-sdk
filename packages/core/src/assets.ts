@@ -78,6 +78,7 @@ export class Assets {
     allowCrossChainWithdraw: boolean;
     /** orderly withdraw decimals */
     decimals: number;
+    receiver?: string;
   }) {
     if (!this.account.walletAdapter) {
       throw new Error("walletAdapter is undefined");
@@ -86,7 +87,8 @@ export class Assets {
       throw new Error("account address is required");
     }
 
-    const { chainId, token, allowCrossChainWithdraw, decimals } = inputs;
+    const { chainId, token, allowCrossChainWithdraw, decimals, receiver } =
+      inputs;
     let { amount } = inputs;
     if (typeof amount === "number") {
       amount = amount.toString();
@@ -114,7 +116,7 @@ export class Assets {
     //   toSignatureMessage
     // );
     const messageData = {
-      receiver: this.account.stateValue.address,
+      receiver: receiver || this.account.stateValue.address,
       token,
       brokerId: this.configStore.get("brokerId"),
       amount: this.account.walletAdapter.parseUnits(amount, decimals),

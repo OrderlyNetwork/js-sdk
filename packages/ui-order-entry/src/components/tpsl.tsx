@@ -146,7 +146,7 @@ export const OrderTPSL = (props: {
           setOrderValue={props.setOrderValue}
           onChange={props.onChange}
           values={props.values}
-          errors={isSlPriceWarning ? {} : props.errors}
+          errors={props.errors}
           quote_dp={props.quote_dp}
           showTPSLAdvanced={props.showTPSLAdvanced}
           isMobile={isMobile}
@@ -221,7 +221,10 @@ const TPSLInputForm = React.forwardRef<
       <PnlInputProvider values={props.values.sl} type={"SL"}>
         <TPSLInputRow
           type={"SL"}
-          error={getErrorMsg("sl_trigger_price")}
+          error={
+            props.isSlPriceWarning ? undefined : getErrorMsg("sl_trigger_price")
+          }
+          displayErrorMessage={getErrorMsg("sl_trigger_price") !== undefined}
           onChange={props.onChange}
           values={props.values.sl}
           quote_dp={props.quote_dp}
@@ -279,6 +282,7 @@ const TPSLAdvancedButton = (props: {
 const TPSLTriggerPriceInput = (props: {
   type: "TP" | "SL";
   error: string | undefined;
+  displayErrorMessage?: boolean;
   values: Est_Values;
   onChange: (value: string) => void;
   quote_dp: number | undefined;
@@ -310,11 +314,18 @@ const TPSLTriggerPriceInput = (props: {
   }, [props.values.trigger_price, isFocused]);
 
   const triggerPriceToolTipEle = useMemo(() => {
-    if (props.error && errorMsgVisible) return props.error;
+    if (props.error && (errorMsgVisible || props.displayErrorMessage))
+      return props.error;
     if (tipVisible) return tipsEle;
 
     return null;
-  }, [props.error, errorMsgVisible, tipVisible, tipsEle]);
+  }, [
+    props.error,
+    errorMsgVisible,
+    tipVisible,
+    tipsEle,
+    props.displayErrorMessage,
+  ]);
 
   const getPrefixLabel = (trigger_price?: string) => {
     let _prefix = props.type === "TP" ? t("tpsl.tpPrice") : t("tpsl.slPrice");
@@ -399,6 +410,7 @@ const TPSLInputRow: React.FC<{
   type: "TP" | "SL";
   values: Est_Values;
   error?: string;
+  displayErrorMessage?: boolean;
   onChange: (key: OrderValueKeys, value: any) => void;
   quote_dp: number | undefined;
   testIds?: {
@@ -418,6 +430,7 @@ const TPSLInputRow: React.FC<{
         testId={props.testIds?.first}
         type={props.type}
         error={props.error}
+        displayErrorMessage={props.displayErrorMessage}
         values={props.values ?? ""}
         classNames={props.classNames}
         onChange={(event) => {

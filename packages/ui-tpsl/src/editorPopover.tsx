@@ -1,8 +1,6 @@
 import { ReactNode } from "react";
-import { ComputedAlgoOrder, useLocalStorage } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
 import { AlgoOrderRootType, API, PositionType } from "@orderly.network/types";
-import { Box, Button, modal, toast } from "@orderly.network/ui";
+import { Box, Button, modal } from "@orderly.network/ui";
 import { ButtonProps } from "@orderly.network/ui";
 import { TPSLDialogId } from "./positionTPSL";
 
@@ -21,10 +19,6 @@ export const PositionTPSLPopover = (props: {
 }) => {
   const { position, order, baseDP, quoteDP, buttonProps, isEditing } = props;
 
-  const [needConfirm] = useLocalStorage("orderly_order_confirm", true);
-
-  const { t } = useTranslation();
-
   const isPositionTPSL = isEditing
     ? order?.algo_type === AlgoOrderRootType.POSITIONAL_TP_SL
     : undefined;
@@ -37,6 +31,7 @@ export const PositionTPSLPopover = (props: {
       quoteDP: quoteDP,
       positionType: isPositionTPSL ? PositionType.FULL : PositionType.PARTIAL,
       isEditing: isEditing,
+      position,
     });
   };
 

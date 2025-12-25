@@ -1,5 +1,65 @@
 # @orderly.network/default-solana-adapter
 
+## 2.8.10
+
+### Patch Changes
+
+- publish
+- 0be13b3: publish
+- Updated dependencies
+- Updated dependencies [0be13b3]
+  - @orderly.network/core@2.8.10
+  - @orderly.network/types@2.8.10
+
+## 2.8.10-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.8.10-alpha.0
+  - @orderly.network/types@2.8.10-alpha.0
+
+## 2.8.9
+
+### Patch Changes
+
+- publish
+- 32f2962: publish
+- Updated dependencies
+- Updated dependencies [32f2962]
+  - @orderly.network/core@2.8.9
+  - @orderly.network/types@2.8.9
+
+## 2.8.9-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.8.9-alpha.0
+  - @orderly.network/types@2.8.9-alpha.0
+
+## 2.8.8
+
+### Patch Changes
+
+- publish
+- 9e4118b: publish
+- Updated dependencies
+- Updated dependencies [9e4118b]
+  - @orderly.network/core@2.8.8
+  - @orderly.network/types@2.8.8
+
+## 2.8.8-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.8.8-alpha.0
+  - @orderly.network/types@2.8.8-alpha.0
+
 ## 2.8.7
 
 ### Patch Changes

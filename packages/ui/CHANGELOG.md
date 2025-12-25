@@ -1,5 +1,59 @@
 # @orderly.network/ui
 
+## 2.8.10
+
+### Patch Changes
+
+- publish
+- 0be13b3: publish
+- Updated dependencies
+- Updated dependencies [0be13b3]
+  - @orderly.network/utils@2.8.10
+
+## 2.8.10-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/utils@2.8.10-alpha.0
+
+## 2.8.9
+
+### Patch Changes
+
+- publish
+- 32f2962: publish
+- Updated dependencies
+- Updated dependencies [32f2962]
+  - @orderly.network/utils@2.8.9
+
+## 2.8.9-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/utils@2.8.9-alpha.0
+
+## 2.8.8
+
+### Patch Changes
+
+- publish
+- 9e4118b: publish
+- Updated dependencies
+- Updated dependencies [9e4118b]
+  - @orderly.network/utils@2.8.8
+
+## 2.8.8-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/utils@2.8.8-alpha.0
+
 ## 2.8.7
 
 ### Patch Changes

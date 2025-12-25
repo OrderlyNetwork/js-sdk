@@ -1,4 +1,4 @@
-import React from "react";
+import { FC, useState } from "react";
 import { Trans, useTranslation } from "@orderly.network/i18n";
 import {
   Box,
@@ -21,6 +21,8 @@ import { QuantityInput } from "../quantityInput";
 import { UnsettlePnlInfo } from "../unsettlePnlInfo";
 import { WithdrawAction } from "../withdrawAction";
 import { WithdrawWarningMessage } from "../withdrawWarningMessage";
+import { AddWalletDialog } from "./addWalletDialog";
+import { WalletSelector } from "./walletSelector";
 import { WithdrawFormScriptReturn } from "./withdrawForm.script";
 
 export type WithdrawFormProps = WithdrawFormScriptReturn;
@@ -28,6 +30,7 @@ export type WithdrawFormProps = WithdrawFormScriptReturn;
 export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
   const {
     address,
+    walletName,
     loading,
     disabled,
     quantity,
@@ -48,9 +51,23 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
     qtyGreaterThanMaxAmount,
     isTokenUnsupported,
     onSwitchToSupportedNetwork,
+    externalWallets,
+    selectedWalletAddress,
+    onSelectWallet,
+    onAddExternalWallet,
+    isEnableTrading,
+    enableWithdrawToExternalWallet,
   } = props;
 
   const { t } = useTranslation();
+  const [addWalletOpen, setAddWalletOpen] = useState(false);
+
+  const handleAddExternalWallet = (
+    address: string,
+    network?: "EVM" | "SOL",
+  ) => {
+    onAddExternalWallet?.(address, network);
+  };
 
   const internalWithdrawPanel = (
     <TabPanel
@@ -66,10 +83,15 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
         status={props.toAccountIdInputStatus}
         hintMessage={props.toAccountIdHintMessage}
         disabled={!props.isLoggedIn}
+        placeholder={t("transfer.withdraw.accountIdOrAddress.placeholder")}
+        enableAccountLookup
+        accountInfo={props.toAccountInfo}
+        accountDropdownOpen={props.toAccountInfoDropdownOpen}
+        setAccountDropdownOpen={props.setToAccountInfoDropdownOpen}
       />
-      <Box my={2}>
+      <Box mb={1} px={2}>
         <Text size="xs" intensity={54}>
-          {t("transfer.withdraw.accountId.tips")}
+          {t("transfer.withdraw.accountIdOrAddress.hint")}
         </Text>
       </Box>
     </TabPanel>
@@ -154,14 +176,33 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
             }
             value={WithdrawTo.Wallet}
           >
-            <ChainSelect
-              chains={tokenChains}
-              value={currentChain!}
-              onValueChange={props.onChainChange}
-              wrongNetwork={props.wrongNetwork}
-              loading={settingChain}
-              disabled={!props.isLoggedIn}
-            />
+            {isEnableTrading && enableWithdrawToExternalWallet && (
+              <WalletSelector
+                connectedWallet={
+                  address
+                    ? {
+                        name: walletName || t("common.wallet"),
+                        address,
+                        namespace: currentChain?.namespace,
+                      }
+                    : undefined
+                }
+                externalWallets={externalWallets || []}
+                selectedAddress={selectedWalletAddress ?? ""}
+                onSelect={onSelectWallet}
+                onAddExternalWallet={() => setAddWalletOpen(true)}
+              />
+            )}
+            <Box mb={1}>
+              <ChainSelect
+                chains={tokenChains}
+                value={currentChain!}
+                onValueChange={props.onChainChange}
+                wrongNetwork={props.wrongNetwork}
+                loading={settingChain}
+                disabled={!props.isLoggedIn}
+              />
+            </Box>
             <QuantityInput
               classNames={{
                 root: "oui-mt-[2px] oui-rounded-t-sm oui-rounded-b-xl",
@@ -173,14 +214,14 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
           </TabPanel>
           {internalWithdrawPanel}
         </Tabs>
-        <Box mt={2}>
+        <Box mt={2} px={2}>
           <LtvWidget
             showDiff={typeof quantity !== "undefined" && Number(quantity) > 0}
             currentLtv={props.currentLTV}
             nextLTV={props.nextLTV}
           />
         </Box>
-        <Flex direction="column" mt={1} gapY={1} itemAlign="start">
+        <Flex direction="column" mt={1} gapY={1} px={2} itemAlign="start">
           <Text size="xs" intensity={36}>
             {t("common.fee")}
             {withdrawTo === WithdrawTo.Wallet ? " ≈ " : " = "}
@@ -212,6 +253,14 @@ export const WithdrawForm: React.FC<WithdrawFormProps> = (props) => {
           onTransfer={props.onTransfer}
         />
       </Flex>
+      {enableWithdrawToExternalWallet && (
+        <AddWalletDialog
+          open={addWalletOpen}
+          onOpenChange={setAddWalletOpen}
+          onConfirm={handleAddExternalWallet}
+          chain={currentChain}
+        />
+      )}
     </Box>
   );
 };

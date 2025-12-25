@@ -21,5 +21,6 @@
   "extend.woofiEarn.description": "在任何鏈上的主流資產中安全獲取收益",
   "extend.wooStake": "WOO 質押",
   "extend.wooStake.description": "質押以賺取 USDC 和 WOO",
-  "extend.vaults.description": "透過自動化策略賺取被動收益"
+  "extend.vaults.description": "透過自動化策略賺取被動收益",
+  "extend.swap.warning": "現貨交易使用您連接的 Web3 錢包資產執行。合約帳戶資金是獨立的，不會受到影響。"
 }

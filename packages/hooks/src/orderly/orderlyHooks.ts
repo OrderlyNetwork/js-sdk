@@ -50,6 +50,7 @@ export {
 } from "./usePositionStream/utils";
 export type { PriceMode } from "./usePositionStream/usePositionStream";
 export { useOrderStream } from "./useOrderStream/useOrderStream";
+export { useSubAccountAlgoOrderStream } from "./useOrderStream/useSubAccountAlgoOrderStream";
 export { useMarketTradeStream } from "./useMarketTradeStream";
 
 export { useCollateral } from "./useCollateral";

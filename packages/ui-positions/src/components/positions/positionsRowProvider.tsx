@@ -52,7 +52,7 @@ import type { PositionsRowContextState } from "./positionsRowContext";
 
 type PositionsRowProviderProps = PropsWithChildren<{
   position: API.PositionExt | API.PositionTPSLExt;
-  mutatePositions?: KeyedMutator<API.PositionExt[]>;
+  mutatePositions?: () => void;
 }>;
 
 export const PositionsRowProvider: FC<PositionsRowProviderProps> = (props) => {

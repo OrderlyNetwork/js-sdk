@@ -16,6 +16,10 @@ export interface OrderInfoCardProps {
   baseDp: number;
   /** Price label, defaults to "Market" */
   estLiqPrice?: React.ReactNode;
+  /** Estimated PnL value */
+  estPnL?: string;
+  /** PnL decimal precision */
+  pnlNotionalDecimalPrecision?: number;
   /** Custom class name */
   className?: string;
 }
@@ -31,6 +35,8 @@ export const OrderInfoCard: FC<OrderInfoCardProps> = ({
   qty,
   baseDp,
   estLiqPrice,
+  estPnL,
+  pnlNotionalDecimalPrecision = 2,
   className,
 }) => {
   const { t } = useTranslation();
@@ -62,6 +68,7 @@ export const OrderInfoCard: FC<OrderInfoCardProps> = ({
         justify="between"
         itemAlign="center"
         width="100%"
+        gap={1}
       >
         <Flex
           direction="row"
@@ -91,6 +98,27 @@ export const OrderInfoCard: FC<OrderInfoCardProps> = ({
             {t("common.market")}
           </Text>
         </Flex>
+        {estPnL && (
+          <Flex
+            direction="row"
+            justify="between"
+            itemAlign="center"
+            width="100%"
+            gap={1}
+          >
+            <Text size="sm" intensity={54}>
+              {t("orderEntry.estPnL")}
+            </Text>
+            <Text.pnl
+              dp={pnlNotionalDecimalPrecision}
+              coloring
+              size="sm"
+              weight="semibold"
+            >
+              {estPnL}
+            </Text.pnl>
+          </Flex>
+        )}
         {estLiqPrice && (
           <Flex
             direction="row"

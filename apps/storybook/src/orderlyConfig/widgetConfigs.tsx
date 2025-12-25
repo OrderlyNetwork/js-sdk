@@ -12,4 +12,7 @@ export const widgetConfigs: OrderlyAppProviderProps["widgetConfigs"] = {
       window.location.href = urlObj.toString();
     },
   },
+  withdraw: {
+    enableWithdrawToExternalWallet: true,
+  },
 };

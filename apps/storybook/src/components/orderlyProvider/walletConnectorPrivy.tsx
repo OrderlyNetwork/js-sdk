@@ -27,7 +27,13 @@ const mobileWalletNotFoundHanlder = (adapter: SolanaMobileWalletAdapter) => {
 
   return Promise.reject(new WalletNotReadyError("wallet not ready"));
 };
-const network = WalletAdapterNetwork.Devnet;
+const networkId = import.meta.env.VITE_NETWORK_ID || "testnet";
+const network = networkId === "testnet" ? Network.testnet : Network.mainnet;
+const solanaNetwork =
+  networkId === "testnet"
+    ? WalletAdapterNetwork.Devnet
+    : WalletAdapterNetwork.Mainnet;
+
 const wallets = [
   new PhantomWalletAdapter(),
   new SolflareWalletAdapter(),
@@ -38,7 +44,7 @@ const wallets = [
       uri: `${location.protocol}//${location.host}`,
     },
     authorizationResultCache: createDefaultAuthorizationResultCache(),
-    chain: network,
+    chain: solanaNetwork,
     onWalletNotFound: mobileWalletNotFoundHanlder,
   }),
 ];
@@ -52,7 +58,7 @@ export const WalletConnectorPrivy: FC<WalletConnectorPrivyProps> = (props) => {
   return (
     <WalletConnectorPrivyProvider
       termsOfUse="https://learn.woo.org/legal/terms-of-use"
-      network={Network.testnet}
+      network={network}
       headerProps={{
         mobile: <CustomProductNav />,
       }}
@@ -102,7 +108,7 @@ export const WalletConnectorPrivy: FC<WalletConnectorPrivyProps> = (props) => {
               uri: `${location.protocol}//${location.host}`,
             },
             authorizationResultCache: createDefaultAuthorizationResultCache(),
-            chain: network,
+            chain: solanaNetwork,
             onWalletNotFound: mobileWalletNotFoundHanlder,
           }),
         ],

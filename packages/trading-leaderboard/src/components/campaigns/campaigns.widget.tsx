@@ -18,18 +18,7 @@ export const CampaignsWidget: FC<CampaignsWidgetProps> = (props) => {
 
   const canTrade = useCanTrade();
 
-  const emphasisConfig = state.currentCampaign?.emphasisConfig;
-
   const contentClassNames = useMemo(() => {
-    if (emphasisConfig?.subtitle) {
-      return {
-        container: !canTrade
-          ? "!oui-h-[680px] lg:!oui-h-[700px]"
-          : "!oui-h-[600px] lg:!oui-h-[700px]",
-        topContainer: "!oui-w-[90%]",
-      };
-    }
-
     if (!isMobile) return undefined;
     return {
       container: cn("oui-h-[400px] oui-gap-5"),
@@ -38,7 +27,7 @@ export const CampaignsWidget: FC<CampaignsWidgetProps> = (props) => {
       description: "oui-text-2xs oui-leading-[15px]",
       topContainer: cn("oui-w-[284px] oui-gap-1"),
     };
-  }, [isMobile, emphasisConfig, canTrade]);
+  }, [isMobile, canTrade]);
 
   return (
     <div
