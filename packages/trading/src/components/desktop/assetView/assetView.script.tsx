@@ -33,7 +33,8 @@ export const useAssetViewScript = () => {
   const { freeCollateral } = useCollateral({
     dp: 2,
   });
-  const { marginRatio, mmr } = useMarginRatio();
+  const { marginRatio, mmr, maintenanceMargin, currentLeverage } =
+    useMarginRatio();
   const isConnected = state.status >= AccountStatusEnum.Connected;
   const [{ aggregated }, positionsInfo] = usePositionStream();
   const marginRatioVal = useMemo(() => {
@@ -116,6 +117,8 @@ export const useAssetViewScript = () => {
   const _freeCollateral = useDataTap(freeCollateral) ?? undefined;
   const _marginRatioVal = useDataTap(marginRatioVal) ?? undefined;
   const _mmr = useDataTap(mmr) ?? undefined;
+  const _maintenanceMargin = useDataTap(maintenanceMargin) ?? undefined;
+  const _currentLeverage = useDataTap(currentLeverage) ?? undefined;
   const _totalValue = useDataTap(totalValue) ?? undefined;
 
   return {
@@ -131,6 +134,8 @@ export const useAssetViewScript = () => {
     freeCollateral: _freeCollateral,
     marginRatioVal: _marginRatioVal,
     renderMMR: _mmr,
+    maintenanceMargin: _maintenanceMargin,
+    currentLeverage: _currentLeverage,
     isConnected,
     isMainAccount,
     hasSubAccount: !!state.subAccounts?.length,

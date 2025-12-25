@@ -21,10 +21,6 @@ interface RewardsDesktopUIProps {
   shouldShowJoinButton?: boolean;
   joinCampaign?: (data: { campaign_id: string | number }) => Promise<any>;
   isJoining?: boolean;
-  hideConfig?: {
-    estimatedRewards?: boolean;
-    estimatedTickets?: boolean;
-  };
 }
 
 export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
@@ -36,7 +32,6 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
   shouldShowJoinButton,
   joinCampaign,
   isJoining,
-  hideConfig,
 }) => {
   const { t } = useTranslation();
   // Use mock data for userdata if not provided
@@ -68,57 +63,6 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
       campaign.end_time > new Date().toISOString()
     );
   }, [campaign]);
-
-  const tooltipContent = useMemo(() => {
-    // if (!campaign?.prize_pools || !currentUserData) {
-    //   return null;
-    // }
-
-    return (
-      <div className="oui-flex oui-min-w-[240px] oui-flex-col oui-gap-1">
-        {campaign?.prize_pools?.map((pool) => {
-          if (pool.tiers.length == 0) {
-            return null;
-          }
-          const userPoolReward = currentUserData
-            ? calculateUserPoolReward(currentUserData, pool)
-            : 0;
-
-          return (
-            <div
-              key={pool.pool_id}
-              className="oui-flex oui-h-[18px] oui-items-center oui-justify-between"
-            >
-              <Text
-                size="2xs"
-                weight="semibold"
-                className="oui-text-base-contrast-54"
-              >
-                {pool.label}
-              </Text>
-              <div className="oui-flex oui-items-center oui-gap-1">
-                <Text.numeral
-                  dp={2}
-                  size="2xs"
-                  weight="semibold"
-                  className="oui-text-base-contrast"
-                >
-                  {userPoolReward}
-                </Text.numeral>
-                <Text
-                  size="2xs"
-                  weight="semibold"
-                  className="oui-text-base-contrast"
-                >
-                  {pool.currency}
-                </Text>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    );
-  }, [campaign, currentUserData]);
 
   const ticketTooltipContent = useMemo(() => {
     const ticketRules = campaign?.ticket_rules;
@@ -205,15 +149,6 @@ export const RewardsDesktopUI: FC<RewardsDesktopUIProps> = ({
           isMobile ? "oui-px-3" : "",
         ])}
       >
-        {!hideConfig?.estimatedRewards && (
-          <RewardItem
-            title={t("tradingLeaderboard.estimatedRewards")}
-            value={rewardText}
-            showTooltip
-            tooltip={tooltipContent}
-            isMobile={isMobile}
-          />
-        )}
         <RewardItem
           showTooltip={!!campaign?.ticket_rules}
           title={t("tradingLeaderboard.estimatedTicketsEarned")}

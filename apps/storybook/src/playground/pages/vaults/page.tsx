@@ -4,7 +4,7 @@ import { PathEnum } from "../../constant";
 
 export default function Vaults() {
   return (
-    <div className="orderly-sdk-layout">
+    <div className="oui-sdk-layout">
       <BaseLayout initialMenu={PathEnum.Vaults}>
         <VaultsPage
           config={{

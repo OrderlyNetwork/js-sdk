@@ -1,6 +1,6 @@
 import { withThemeByDataAttribute } from "@storybook/addon-themes";
 import type { Preview } from "@storybook/react-vite";
-import { withThemeBuilder } from "../src/addons/theme_tool/preview";
+import { withThemeBuilder } from "storybook-theme-tool/preview";
 import { OrderlyProvider } from "../src/components/orderlyProvider";
 import { customViewports } from "./screenSizes";
 import "../src/playground/styles/fonts.css";

@@ -42,16 +42,11 @@ export const PricePoolDesktopUI: FC<PricePoolDesktopUIProps> = ({
   isJoining,
   showTradeButton,
   onTradeNow,
-  status,
 }) => {
   const { t } = useTranslation();
   const canTrade = useCanTrade();
 
   const renderButton = () => {
-    if (campaign?.emphasisConfig?.hideConnectWallet && !canTrade) {
-      return null;
-    }
-
     if (shouldShowJoinButton || showTradeButton) {
       return (
         <div className="oui-w-full">

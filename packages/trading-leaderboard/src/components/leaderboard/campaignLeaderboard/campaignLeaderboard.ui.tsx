@@ -1,5 +1,4 @@
 import { FC, useMemo } from "react";
-import { difference } from "ramda";
 import { cn, Box, useScreen } from "@orderly.network/ui";
 import { LeaderboardTab } from "../../../type";
 import { CampaignRankingWidget } from "../../ranking/campaignRanking";
@@ -27,8 +26,8 @@ export const CampaignLeaderboard: FC<CampaignLeaderboardProps> = (props) => {
       sortKey,
       "rewards",
     ];
-    return difference(allFields, props.excludeColumns || []);
-  }, [isMobile, sortKey, props.excludeColumns]);
+    return allFields;
+  }, [isMobile, sortKey]);
 
   if (isMobile) {
     return (

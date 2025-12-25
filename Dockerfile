@@ -1,5 +1,5 @@
-FROM node:20 AS base
-RUN npm install -g pnpm@9
+FROM node:22 AS base
+RUN npm install -g pnpm
 
 FROM base AS deps
 WORKDIR /app
