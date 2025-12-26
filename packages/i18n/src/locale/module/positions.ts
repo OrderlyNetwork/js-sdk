@@ -14,8 +14,6 @@ export const positions = {
   "positions.closeAll.success": "All positions closed successfully",
 
   "positions.column.liqPrice": "Liq. price",
-  "positions.column.liqPrice.tooltip":
-    "Estimated price at which your position will be liquidated. Prices are estimated and depend on multiple factors across all positions.",
   "positions.column.unrealPnl.tooltip":
     "Current unrealized profit or loss on your open positions across all widgets calculated using Mark Price.",
   "positions.column.unrealPnl.priceBasis": "Unrealized PnL Price Basis",
