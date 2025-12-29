@@ -9,7 +9,7 @@ type OrderEntryHeaderProps = {
   side: OrderSide;
   canTrade: boolean;
   order_type: OrderType;
-  setOrderValue: (key: keyof OrderlyOrder, value: any) => void;
+  setOrderValue: (key: keyof OrderlyOrder, value: unknown) => void;
   symbolLeverage?: number;
 };
 
@@ -19,6 +19,23 @@ export function OrderEntryHeader(props: OrderEntryHeaderProps) {
 
   return (
     <>
+      <div className="oui-w-full">
+        <LeverageBadge
+          symbol={props.symbol}
+          side={props.side}
+          symbolLeverage={props.symbolLeverage}
+        />
+      </div>
+      <div className="oui-w-full">
+        <OrderTypeSelect
+          type={order_type!}
+          side={side}
+          canTrade={canTrade}
+          onChange={(type) => {
+            setOrderValue("order_type", type);
+          }}
+        />
+      </div>
       <div
         className={cn(
           "oui-grid oui-w-full oui-flex-1 oui-gap-x-2 lg:oui-flex lg:oui-gap-x-[6px]",
@@ -57,30 +74,6 @@ export function OrderEntryHeader(props: OrderEntryHeaderProps) {
         >
           {t("common.sell")}
         </Button>
-      </div>
-      <div
-        className={cn(
-          "oui-grid oui-gap-x-2 lg:oui-flex lg:oui-gap-x-[6px]",
-          "oui-grid-cols-2",
-        )}
-      >
-        <div className="oui-w-full">
-          <OrderTypeSelect
-            type={order_type!}
-            side={side}
-            canTrade={canTrade}
-            onChange={(type) => {
-              setOrderValue("order_type", type);
-            }}
-          />
-        </div>
-        <div className="oui-w-full">
-          <LeverageBadge
-            symbol={props.symbol}
-            side={props.side}
-            symbolLeverage={props.symbolLeverage}
-          />
-        </div>
       </div>
     </>
   );

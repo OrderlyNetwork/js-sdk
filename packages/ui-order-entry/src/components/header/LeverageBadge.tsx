@@ -1,6 +1,6 @@
 import { useSymbolLeverage } from "@orderly.network/hooks";
 import { OrderSide } from "@orderly.network/types";
-import { cn, Flex, modal, Text, useScreen } from "@orderly.network/ui";
+import { cn, modal, Text, useScreen } from "@orderly.network/ui";
 import {
   SymbolLeverageDialogId,
   SymbolLeverageSheetId,
@@ -20,7 +20,7 @@ export const LeverageBadge = (props: LeverageBadgeProps) => {
 
   const curLeverage = symbolLeverage || maxLeverage;
 
-  const showModal = () => {
+  const showLeverageModal = () => {
     const modalId = isMobile ? SymbolLeverageSheetId : SymbolLeverageDialogId;
     modal.show(modalId, {
       symbol,
@@ -30,21 +30,46 @@ export const LeverageBadge = (props: LeverageBadgeProps) => {
   };
 
   return (
-    <Flex
-      justify="center"
-      itemAlign="center"
-      gapX={1}
+    <div
       className={cn(
+        "oui-flex oui-w-full oui-items-center oui-rounded-md oui-border oui-border-line-12 oui-bg-base-6",
         "oui-h-8",
-        "oui-rounded oui-border oui-border-line oui-bg-base-6",
-        "oui-cursor-pointer oui-select-none oui-text-xs oui-font-semibold oui-text-base-contrast-54",
+        "oui-select-none",
       )}
-      onClick={showModal}
+      data-testid="oui-testid-orderEntry-margin-leverage"
     >
-      <Text>Cross</Text>
-      <Text.numeral dp={0} rm={Decimal.ROUND_DOWN} unit="X">
-        {curLeverage}
-      </Text.numeral>
-    </Flex>
+      <div
+        className={cn(
+          "oui-flex oui-flex-1 oui-items-center oui-justify-center oui-gap-x-1",
+          "oui-px-3 oui-py-1.5",
+          "oui-text-xs oui-font-semibold oui-text-base-contrast-54",
+        )}
+        data-testid="oui-testid-orderEntry-margin-mode"
+      >
+        <Text>Cross</Text>
+      </div>
+      <div className="oui-h-5 oui-w-px oui-bg-line" aria-hidden="true" />
+      <button
+        type="button"
+        className={cn(
+          "oui-flex oui-flex-1 oui-items-center oui-justify-center oui-gap-x-1",
+          "oui-px-3 oui-py-1.5",
+          "oui-text-xs oui-font-semibold oui-text-base-contrast-54",
+          "oui-cursor-pointer",
+        )}
+        aria-label="Adjust leverage"
+        onClick={showLeverageModal}
+        data-testid="oui-testid-orderEntry-leverage"
+      >
+        <Text.numeral
+          dp={0}
+          rm={Decimal.ROUND_DOWN}
+          unit="x"
+          unitClassName="oui-ml-0"
+        >
+          {curLeverage}
+        </Text.numeral>
+      </button>
+    </div>
   );
 };
