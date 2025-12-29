@@ -1,4 +1,5 @@
-import { useSymbolLeverage } from "@orderly.network/hooks";
+import { useLocalStorage, useSymbolLeverage } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 import { OrderSide } from "@orderly.network/types";
 import { cn, modal, Text, useScreen } from "@orderly.network/ui";
 import {
@@ -6,6 +7,11 @@ import {
   SymbolLeverageSheetId,
 } from "@orderly.network/ui-leverage";
 import { Decimal } from "@orderly.network/utils";
+import {
+  MarginModeSwitchDialogId,
+  MarginModeSwitchSheetId,
+  type MarginMode,
+} from "../../marginModeSwitch";
 
 type LeverageBadgeProps = {
   symbol: string;
@@ -16,9 +22,14 @@ type LeverageBadgeProps = {
 export const LeverageBadge = (props: LeverageBadgeProps) => {
   const { symbol, side, symbolLeverage } = props;
   const { isMobile } = useScreen();
+  const { t } = useTranslation();
   const { maxLeverage } = useSymbolLeverage(symbol);
 
   const curLeverage = symbolLeverage || maxLeverage;
+  const [marginMode] = useLocalStorage<MarginMode>(
+    `orderly.marginMode.${symbol}`,
+    "cross",
+  );
 
   const showLeverageModal = () => {
     const modalId = isMobile ? SymbolLeverageSheetId : SymbolLeverageDialogId;
@@ -26,6 +37,16 @@ export const LeverageBadge = (props: LeverageBadgeProps) => {
       symbol,
       side,
       curLeverage,
+    });
+  };
+
+  const showMarginModeModal = () => {
+    const modalId = isMobile
+      ? MarginModeSwitchSheetId
+      : MarginModeSwitchDialogId;
+    modal.show(modalId, {
+      symbol,
+      currentMarginMode: marginMode,
     });
   };
 
@@ -38,16 +59,24 @@ export const LeverageBadge = (props: LeverageBadgeProps) => {
       )}
       data-testid="oui-testid-orderEntry-margin-leverage"
     >
-      <div
+      <button
+        type="button"
         className={cn(
           "oui-flex oui-flex-1 oui-items-center oui-justify-center oui-gap-x-1",
           "oui-px-3 oui-py-1.5",
           "oui-text-xs oui-font-semibold oui-text-base-contrast-54",
+          "oui-cursor-pointer",
         )}
         data-testid="oui-testid-orderEntry-margin-mode"
+        aria-label={t("marginMode.switchMarginMode")}
+        onClick={showMarginModeModal}
       >
-        <Text>Cross</Text>
-      </div>
+        <Text>
+          {marginMode === "isolated"
+            ? t("marginMode.isolated")
+            : t("marginMode.cross")}
+        </Text>
+      </button>
       <div className="oui-h-5 oui-w-px oui-bg-line" aria-hidden="true" />
       <button
         type="button"
