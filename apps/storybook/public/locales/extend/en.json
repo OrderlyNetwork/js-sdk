@@ -22,5 +22,6 @@
   "extend.wooStake": "WOO stake",
   "extend.wooStake.description": "Stake to earn USDC and WOO",
   "extend.vaults.description": "Earn passive yield with automated strategies",
-  "extend.swap.warning": "Spot swaps are executed using your connected Web3 wallet assets. Perp account funds are separate and will not be affected."
+  "extend.swap.warning": "Spot swaps are executed using your connected Web3 wallet assets. Perp account funds are separate and will not be affected.",
+  "extend.viewAll": "View all"
 }

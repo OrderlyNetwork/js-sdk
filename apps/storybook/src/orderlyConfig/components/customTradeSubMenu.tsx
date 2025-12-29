@@ -11,6 +11,7 @@ import {
 } from "@orderly.network/ui";
 import { PathEnum } from "../../playground/constant";
 import { DEFAULT_SYMBOL, updateSymbol } from "../../playground/storage";
+import { MenuItemRow } from "./SubMenuComponents";
 
 const RIGHT_SECTION_WRAPPER_CLASSNAME = [
   "oui-overflow-hidden",
@@ -42,71 +43,50 @@ const LeftSection = (props: {
 
   return (
     <div className="oui-w-[240px] oui-flex-shrink-0 oui-rounded-lg">
-      {/* Spot Row */}
-      <div
-        className={`oui-flex oui-items-center oui-justify-between oui-p-3 oui-rounded-md oui-cursor-pointer ${
-          selectedTab === "spot" ? "oui-bg-base-5" : "hover:oui-bg-base-6"
-        }`}
-        onMouseEnter={() => {
-          onHoverTab(null);
-        }}
+      <MenuItemRow
+        key="spot"
+        activeIcon={
+          selectedTab === "spot" ? (
+            <EarnActiveIcon size={20} />
+          ) : (
+            <EarnInactiveIcon size={20} />
+          )
+        }
+        title={t("extend.spot")}
+        description={t("extend.spot.description")}
         onClick={() => {
           onSelect("spot");
           onSpotClick();
         }}
-      >
-        <div className="oui-flex oui-items-center oui-gap-2">
-          <div className="oui-w-5 oui-h-5">
-            {selectedTab === "spot" ? (
-              <EarnActiveIcon size={20} />
-            ) : (
-              <EarnInactiveIcon size={20} />
-            )}
-          </div>
-          <div>
-            <div className="oui-text-sm oui-font-semibold oui-text-base-contrast-80">
-              {t("extend.spot")}
-            </div>
-            <div className="oui-text-xs oui-text-base-contrast-36">
-              {t("extend.spot.description")}
-            </div>
-          </div>
-        </div>
-        <div className="oui-text-base-contrast-36">›</div>
-      </div>
-
-      {/* Perps Row - Selected by default */}
-      <div
-        className={`oui-flex oui-items-center oui-justify-between oui-p-3 oui-mt-1 oui-rounded-md oui-cursor-pointer ${
-          selectedTab === "perps" ? "oui-bg-base-5" : "hover:oui-bg-base-6"
-        }`}
         onMouseEnter={() => {
-          onHoverTab("perps");
+          onHoverTab(null);
         }}
+        isActive={selectedTab === "spot"}
+        showArrow={true}
+      />
+
+      <MenuItemRow
+        key="perps"
+        className="oui-mt-1"
+        activeIcon={
+          selectedTab === "perps" ? (
+            <TradingActiveIcon size={20} />
+          ) : (
+            <TradingInactiveIcon size={20} />
+          )
+        }
+        title={t("extend.perps")}
+        description={t("extend.perps.description")}
         onClick={() => {
           onSelect("perps");
           onPerpsClick();
         }}
-      >
-        <div className="oui-flex oui-items-center oui-gap-2">
-          <div className="oui-w-5 oui-h-5">
-            {selectedTab === "perps" ? (
-              <TradingActiveIcon size={20} />
-            ) : (
-              <TradingInactiveIcon size={20} />
-            )}
-          </div>
-          <div>
-            <div className="oui-text-sm oui-font-semibold oui-text-base-contrast-80">
-              {t("extend.perps")}
-            </div>
-            <div className="oui-text-xs oui-text-base-contrast-36">
-              {t("extend.perps.description")}
-            </div>
-          </div>
-        </div>
-        <div className="oui-text-base-contrast-36">›</div>
-      </div>
+        onMouseEnter={() => {
+          onHoverTab("perps");
+        }}
+        isActive={selectedTab === "perps"}
+        showArrow={true}
+      />
     </div>
   );
 };
