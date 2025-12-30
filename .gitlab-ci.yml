@@ -22,7 +22,7 @@ stages:
 .internal_publish_template: &internal_publish_template
   stage: release
   image:
-    name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-devops/node:20
+    name: node:22
   before_script:
     # custom commit message
     - export GIT_COMMIT_MESSAGE="publish internal ${RELEASE_TYPE}"
@@ -89,7 +89,7 @@ internal_patch_publish:
 .npm_publish_template: &npm_publish_template
   stage: release
   image:
-    name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-devops/node:20
+    name: node:22
   script:
     - git checkout "$CI_COMMIT_BRANCH"
     - |
@@ -222,7 +222,7 @@ npm_minor_stable:
 .trigger_pipeline_template: &trigger_pipeline_template
   stage: release
   image:
-    name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-devops/node:20
+    name: node:22
   script:
     - |    
       npm run trigger:pipeline
