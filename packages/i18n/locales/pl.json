@@ -283,6 +283,8 @@
   "trading.orderBook": "Księga zleceń",
   "trading.lastTrades": "Ostatnie transakcje",
   "trading.orderBook.column.value": "Wartość",
+  "trading.orderBook.settings": "Ustawienia",
+  "trading.orderBook.showBuySellRatio": "Pokaż stosunek kupna/sprzedaży",
   "trading.tabs.chart": "Wykres",
   "trading.tabs.trades": "Transakcje",
   "trading.tabs.data": "Dane",

@@ -23,6 +23,8 @@ export const trading = {
   "trading.orderBook": "Order book",
   "trading.lastTrades": "Last trades",
   "trading.orderBook.column.value": "Value",
+  "trading.orderBook.settings": "Settings",
+  "trading.orderBook.showBuySellRatio": "Show buy/sell ratio",
 
   "trading.tabs.chart": "Chart",
   "trading.tabs.trades": "Trades",

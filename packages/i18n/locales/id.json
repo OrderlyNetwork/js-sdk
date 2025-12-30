@@ -283,6 +283,8 @@
   "trading.orderBook": "Order book",
   "trading.lastTrades": "Trade terakhir",
   "trading.orderBook.column.value": "Nilai",
+  "trading.orderBook.settings": "Pengaturan",
+  "trading.orderBook.showBuySellRatio": "Tampilkan rasio beli/jual",
   "trading.tabs.chart": "Grafik",
   "trading.tabs.trades": "Trade",
   "trading.tabs.data": "Data",

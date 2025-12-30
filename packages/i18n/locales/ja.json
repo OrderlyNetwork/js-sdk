@@ -283,6 +283,8 @@
   "trading.orderBook": "オーダーブック",
   "trading.lastTrades": "最終取引",
   "trading.orderBook.column.value": "価値",
+  "trading.orderBook.settings": "設定",
+  "trading.orderBook.showBuySellRatio": "買い/売り比率を表示",
   "trading.tabs.chart": "チャート",
   "trading.tabs.trades": "取引",
   "trading.tabs.data": "データ",

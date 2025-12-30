@@ -283,6 +283,8 @@
   "trading.orderBook": "Carnet d'ordres",
   "trading.lastTrades": "Derniers trades",
   "trading.orderBook.column.value": "Valeur",
+  "trading.orderBook.settings": "Paramètres",
+  "trading.orderBook.showBuySellRatio": "Afficher le ratio d'achat/vente",
   "trading.tabs.chart": "Graphique",
   "trading.tabs.trades": "Trades",
   "trading.tabs.data": "Données",

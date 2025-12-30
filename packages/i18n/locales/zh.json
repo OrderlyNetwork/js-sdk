@@ -283,6 +283,8 @@
   "trading.orderBook": "订单簿",
   "trading.lastTrades": "最新交易",
   "trading.orderBook.column.value": "价值",
+  "trading.orderBook.settings": "设置",
+  "trading.orderBook.showBuySellRatio": "显示买卖比例",
   "trading.tabs.chart": "图表",
   "trading.tabs.trades": "交易",
   "trading.tabs.data": "数据",

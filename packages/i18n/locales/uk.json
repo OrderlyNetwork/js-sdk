@@ -283,6 +283,8 @@
   "trading.orderBook": "Книга ордерів",
   "trading.lastTrades": "Останні угоди",
   "trading.orderBook.column.value": "Значення",
+  "trading.orderBook.settings": "Налаштування",
+  "trading.orderBook.showBuySellRatio": "Показати співвідношення купівлі/продажу",
   "trading.tabs.chart": "Графік",
   "trading.tabs.trades": "Угоди",
   "trading.tabs.data": "Дані",

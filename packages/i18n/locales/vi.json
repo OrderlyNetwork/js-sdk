@@ -283,6 +283,8 @@
   "trading.orderBook": "Sổ lệnh",
   "trading.lastTrades": "Giao dịch cuối",
   "trading.orderBook.column.value": "Giá trị",
+  "trading.orderBook.settings": "Cài đặt",
+  "trading.orderBook.showBuySellRatio": "Hiển thị tỷ lệ mua/bán",
   "trading.tabs.chart": "Biểu đồ",
   "trading.tabs.trades": "Giao dịch",
   "trading.tabs.data": "Dữ liệu",

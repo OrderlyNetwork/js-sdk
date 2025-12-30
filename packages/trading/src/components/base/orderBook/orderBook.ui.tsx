@@ -26,6 +26,9 @@ export const OrderBook: React.FC<OrderBookState & { className?: string }> = (
           onDepthChange={props.onDepthChange}
           className={props.className}
           symbolInfo={props.symbolInfo}
+          showBuySellRatio={props.showBuySellRatio}
+          setShowBuySellRatio={props.setShowBuySellRatio}
+          buySellRatio={props.buySellRatio}
         />
       ) : (
         <DesktopOrderBook
@@ -45,6 +48,9 @@ export const OrderBook: React.FC<OrderBookState & { className?: string }> = (
           className={props.className}
           pendingOrders={props.pendingOrders}
           symbolInfo={props.symbolInfo}
+          showBuySellRatio={props.showBuySellRatio}
+          setShowBuySellRatio={props.setShowBuySellRatio}
+          buySellRatio={props.buySellRatio}
         />
       )}
     </Box>

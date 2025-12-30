@@ -283,6 +283,8 @@
   "trading.orderBook": "Emir defteri",
   "trading.lastTrades": "Son işlemler",
   "trading.orderBook.column.value": "Değer",
+  "trading.orderBook.settings": "Ayarlar",
+  "trading.orderBook.showBuySellRatio": "Alış/satış oranını göster",
   "trading.tabs.chart": "Grafik",
   "trading.tabs.trades": "İşlemler",
   "trading.tabs.data": "Veri",

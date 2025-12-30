@@ -283,6 +283,8 @@
   "trading.orderBook": "호가창",
   "trading.lastTrades": "최근 거래",
   "trading.orderBook.column.value": "가치",
+  "trading.orderBook.settings": "설정",
+  "trading.orderBook.showBuySellRatio": "매수/매도 비율 표시",
   "trading.tabs.chart": "차트",
   "trading.tabs.trades": "거래",
   "trading.tabs.data": "데이터",

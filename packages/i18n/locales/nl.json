@@ -283,6 +283,8 @@
   "trading.orderBook": "Orderboek",
   "trading.lastTrades": "Laatste trades",
   "trading.orderBook.column.value": "Waarde",
+  "trading.orderBook.settings": "Instellingen",
+  "trading.orderBook.showBuySellRatio": "Koop/verkoop verhouding weergeven",
   "trading.tabs.chart": "Grafiek",
   "trading.tabs.trades": "Trades",
   "trading.tabs.data": "Gegevens",

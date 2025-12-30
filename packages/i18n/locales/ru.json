@@ -283,6 +283,8 @@
   "trading.orderBook": "Книга ордеров",
   "trading.lastTrades": "Последние сделки",
   "trading.orderBook.column.value": "Значение",
+  "trading.orderBook.settings": "Настройки",
+  "trading.orderBook.showBuySellRatio": "Показать соотношение покупки/продажи",
   "trading.tabs.chart": "График",
   "trading.tabs.trades": "Сделки",
   "trading.tabs.data": "Данные",

@@ -283,6 +283,8 @@
   "trading.orderBook": "Libro de órdenes",
   "trading.lastTrades": "Últimas operaciones",
   "trading.orderBook.column.value": "Valor",
+  "trading.orderBook.settings": "Configuración",
+  "trading.orderBook.showBuySellRatio": "Mostrar relación compra/venta",
   "trading.tabs.chart": "Gráfico",
   "trading.tabs.trades": "Operaciones",
   "trading.tabs.data": "Datos",
