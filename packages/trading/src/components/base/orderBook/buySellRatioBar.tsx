@@ -48,9 +48,6 @@ export const BuySellRatioBar: FC<BuySellRatioBarProps> = (props) => {
     };
   }, [ratio]);
 
-  console.log("***** buyPercentage", buyPercentage);
-  console.log("***** sellPercentage", sellPercentage);
-
   return (
     <Flex className={cn("oui-w-full", className)} gap={1}>
       <Flex itemAlign="center" gap={1}>
