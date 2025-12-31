@@ -22,5 +22,6 @@
   "extend.wooStake": "WOO stake",
   "extend.wooStake.description": "USDC ve WOO kazanmak için stake edin",
   "extend.vaults.description": "Otomatik stratejilerle pasif getiri kazanın",
-  "extend.swap.warning": "Spot takaslar, bağlı Web3 cüzdan varlıklarınız kullanılarak gerçekleştirilir. Perp hesap fonları ayrıdır ve etkilenmeyecektir."
+  "extend.swap.warning": "Spot takaslar, bağlı Web3 cüzdan varlıklarınız kullanılarak gerçekleştirilir. Perp hesap fonları ayrıdır ve etkilenmeyecektir.",
+  "extend.viewAll": "Tümünü görüntüle"
 }
