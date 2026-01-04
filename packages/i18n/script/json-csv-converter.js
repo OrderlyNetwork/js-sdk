@@ -30,7 +30,7 @@ function multiJson2Csv(jsonList, header) {
   if (Object.keys(errors).length > 0) {
     throw new Error(
       "valid i18n value failed, please check the value of the following values: " +
-        JSON.stringify(errors, null, 4)
+        JSON.stringify(errors, null, 4),
     );
   }
   return result.join("\n");
@@ -67,7 +67,7 @@ function csv2multiJson(csv) {
   if (Object.keys(errors).length > 0) {
     throw new Error(
       "valid i18n value failed, please check the value of the following values: " +
-        JSON.stringify(errors, null, 4)
+        JSON.stringify(errors, null, 4),
     );
   }
 
