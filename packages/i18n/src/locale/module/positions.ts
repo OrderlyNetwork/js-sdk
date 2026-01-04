@@ -91,6 +91,19 @@ export const positions = {
   "positions.reverse.marketOpenShort": "Market Open Short",
   "positions.reverse.reverseToLong": "Reverse to Long",
   "positions.reverse.reverseToShort": "Reverse to Short",
+
+  // Adjust Margin
+  "positions.adjustMargin.title": "Adjust Margin",
+  "positions.adjustMargin.add": "Add Margin",
+  "positions.adjustMargin.reduce": "Reduce Margin",
+  "positions.adjustMargin.quantity": "Quantity",
+  "positions.adjustMargin.max": "Max",
+  "positions.adjustMargin.currentMargin": "Current margin:",
+  "positions.adjustMargin.liqPriceAfter": "Liquidation price after adjustment:",
+  "positions.adjustMargin.leverageAfter":
+    "Effective leverage after adjustment:",
+  "positions.adjustMargin.success": "Margin adjusted successfully",
+  "positions.adjustMargin.failed": "Failed to adjust margin",
 };
 
 export type Positions = typeof positions;
