@@ -1,10 +1,15 @@
 import React from "react";
 import { i18n } from "@orderly.network/i18n";
 import {
+  modal,
   registerSimpleDialog,
   registerSimpleSheet,
   toast,
 } from "@orderly.network/ui";
+import {
+  MarginModeSettingsDialogId,
+  MarginModeSettingsSheetId,
+} from "../marginModeSettings";
 import {
   useMarginModeSwitchScript,
   type MarginMode,
@@ -25,6 +30,13 @@ export const MarginModeSwitchWidget: React.FC<MarginModeSwitchWidgetProps> = (
   props,
 ) => {
   const state = useMarginModeSwitchScript(props);
+
+  const onOpenSettings = () => {
+    const modalId = state.isMobile
+      ? MarginModeSettingsSheetId
+      : MarginModeSettingsDialogId;
+    modal.show(modalId, {});
+  };
 
   const onSelect = async (mode: MarginMode) => {
     if (mode === state.currentMarginMode) {
@@ -47,7 +59,7 @@ export const MarginModeSwitchWidget: React.FC<MarginModeSwitchWidgetProps> = (
       selectedMarginMode={state.selectedMarginMode}
       close={state.close}
       onSelect={onSelect}
-      onOpenSettings={props.onOpenSettings}
+      onOpenSettings={props.onOpenSettings ?? onOpenSettings}
     />
   );
 };
