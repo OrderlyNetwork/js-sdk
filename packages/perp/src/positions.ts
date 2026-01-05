@@ -135,17 +135,12 @@ export function unrealizedPnLROI(inputs: {
  *
  * ## Example
  *
- * **BTC-PERP unrealized_pnl_i** = 0.2 * (25986.2 - 26067) = -16.16
+ * ```
+ * BTC-PERP unrealized_pnl_i = 0.2 * (25986.2 - 26067) = -16.16
+ * ETH-PERP unrealized_pnl_i = -3 * (1638.41 - 1710.64) = 216.69
  *
- * **ETH-PERP unrealized_pnl_i** = -3 * (1638.41 - 1710.64) = 216.69
- *
-for example 
-
-BTC-PERP unrealized_pnl_i = 0.2 * (25986.2 - 26067) = -16.16
-
-ETH-PERP unrealized_pnl_i = -3 * (1638.41 - 1710.64) = 216.69
-
-Total Unrealized PNL = -16.16 + 216.69 = 200.53
+ * Total Unrealized PNL = -16.16 + 216.69 = 200.53
+ * ```
  * @param positions The array of positions.
  * @returns The total unrealized profit or loss of all positions.
  */
@@ -294,6 +289,99 @@ const compareCollateralWithMM = (
   };
 };
 
+/**
+ * @formulaId liqPrice
+ * @description
+ *
+ * ## Define:
+ *
+ * ### (1) calculate_liq_price function
+ *
+ * ```
+ * calculate_liq_price( mark_price, position_qty, mmr )
+ * ```
+ *
+ * If `position_qty >= 0` AND if `abs(position_qty) * mmr - position_qty >= 0`:
+ *
+ * Return `mark_price`
+ *
+ * Else:
+ *
+ * Return `max( mark_price + [ total_collateral_value - abs(position_qty) * mark_price * mmr - mm_for_other_symbols ] / [ abs(position_qty) * mmr - position_qty ], 0 )`
+ *
+ * Where `total_collateral_value` and `mm_for_other_symbols` are constants.
+ *
+ * - **total_collateral_value** → https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Total-collateral-%5BinlineExtension%5D
+ * - **mm_for_other_symbols** = `sum_i ( abs(position_qty_i) * mark_price_i * mmr_i )` for i != current symbol
+ *
+ * ### (2) compare_collateral_w_mm function
+ *
+ * ```
+ * compare_collateral_w_mm( price ) = collateral >= mm
+ * ```
+ *
+ * Where:
+ * - **collateral** = `total_collateral_value - position_qty_i * mark_price + position_qty_i * price`
+ * - **mm** = `abs(position_qty_i) * price * Max(Base MMR i, (Base MMR i / Base IMR i) * IMR Factor i * Abs(position_qty_i * price)^(4/5)) + mm_for_other_symbols`
+ *
+ * ## Given:
+ *
+ * Position liquidation price for symbol i with:
+ * - current mark price = `mark_price_i`
+ * - current position qty = `position_qty_i`
+ * - current mmr = `mmr_i = Max(Base MMR i, (Base MMR i / Base IMR i) * IMR Factor i * Abs(Position Notional i)^(4/5))`
+ * - symbol base mmr = `base_mmr_i`
+ *
+ * ## For LONG position
+ *
+ * ```
+ * liq_price_left = calculate_liq_price( mark_price_i, position_qty_i, base_mmr_i )
+ * liq_price_right = calculate_liq_price( mark_price_i, position_qty_i, mmr_i )
+ *
+ * ITERATE 30 times:
+ *     if liq_price_left >= liq_price_right:
+ *         return liq_price_right
+ *
+ *     mid = ( liq_price_left + liq_price_right ) / 2
+ *
+ *     if compare_collateral_w_mm( mid ):
+ *         liq_price_right = mid
+ *     else:
+ *         liq_price_left = mid
+ *
+ *     if (liq_price_right - liq_price_left) / (liq_price_left + liq_price_right) * 2 <= 0.0001:
+ *         break
+ *
+ * return liq_price_right
+ * ```
+ *
+ * ## For SHORT position
+ *
+ * ```
+ * liq_price_right = calculate_liq_price( mark_price_i, position_qty_i, mmr_i )
+ * liq_price_left = calculate_liq_price( mark_price_i, position_qty_i,
+ *   Max(Base MMR i, (Base MMR i / Base IMR i) * IMR Factor i * Abs(position_qty_i * liq_price_right)^(4/5))
+ * )
+ *
+ * ITERATE 30 times:
+ *     if liq_price_left >= liq_price_right:
+ *         return liq_price_left
+ *
+ *     mid = ( liq_price_left + liq_price_right ) / 2
+ *
+ *     if compare_collateral_w_mm( mid ):
+ *         liq_price_left = mid
+ *     else:
+ *         liq_price_right = mid
+ *
+ *     if (liq_price_right - liq_price_left) / (liq_price_left + liq_price_right) * 2 <= 0.0001:
+ *         break
+ *
+ * return liq_price_left
+ * ```
+ *
+ * @returns The liquidation price of the position.
+ */
 export const liqPrice = (inputs: {
   markPrice: number;
   symbol: string;
