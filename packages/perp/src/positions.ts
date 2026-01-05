@@ -291,6 +291,7 @@ const compareCollateralWithMM = (
 
 /**
  * @formulaId liqPrice
+ * @name Position Liquidation Price
  * @description
  *
  * ## Define:
@@ -382,7 +383,7 @@ const compareCollateralWithMM = (
  *
  * @returns The liquidation price of the position.
  */
-export const liqPrice = (inputs: {
+export function liqPrice(inputs: {
   markPrice: number;
   symbol: string;
   totalCollateral: number;
@@ -396,7 +397,7 @@ export const liqPrice = (inputs: {
   baseIMR: number;
   IMRFactor: number;
   costPosition: number;
-}) => {
+}): number | null {
   const {
     positionQty,
     markPrice,
@@ -534,7 +535,7 @@ export const liqPrice = (inputs: {
 
     return liqPriceLeft.toNumber();
   }
-};
+}
 
 /**
  * @formulaId maintenanceMargin
