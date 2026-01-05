@@ -21,10 +21,7 @@ import { SharePnLOptions, SharePnLDialogId } from "@orderly.network/ui-share";
 import { Decimal } from "@orderly.network/utils";
 import { LIQ_DISTANCE_THRESHOLD } from "../../../constants";
 import { RwaStatusTag } from "../../rwaStatus/rwaStatus";
-import {
-  AdjustMarginDialogId,
-  AdjustMarginSheetId,
-} from "../adjustMargin/adjustMargin.widget";
+import { AdjustMarginDialogId } from "../adjustMargin/adjustMargin.widget";
 import { ClosePositionWidget } from "../closePosition";
 import { LeverageBadge } from "./components";
 import { renderQuantity } from "./listElement";
@@ -298,37 +295,27 @@ export const useColumn = (config: ColumnConfig) => {
         onSort: true,
         width: 120,
         rule: "price",
-        render: (value: string, record) => {
-          // Temporary: Always show button for UI acceptance
-          // TODO: After acceptance, restore correct check based on actual margin_mode field
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const position = record as API.PositionTPSLExt & {
-            margin_mode?: string;
-            marginMode?: string;
-          };
-          const isIsolated = true;
-          // const isIsolated =
-          //   position.margin_mode === "isolated" || position.marginMode === "isolated";
-          if (!isIsolated) return <Text.numeral>{value}</Text.numeral>;
-
+        render: (value: string, record: API.PositionTPSLExt) => {
+          const isIsolated = record.margin_mode === "ISOLATED";
           return (
             <Flex gap={2} itemAlign="center">
-              <Text.numeral>{value}</Text.numeral>
-              <IconButton
-                color="secondary"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  modal.show(
-                    isMobile ? AdjustMarginSheetId : AdjustMarginDialogId,
-                    {
+              <Text.numeral>
+                {isIsolated ? (record.margin ?? "--") : value}
+              </Text.numeral>
+              {isIsolated && (
+                <IconButton
+                  color="secondary"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    modal.show(AdjustMarginDialogId, {
                       position: record,
                       symbol: record.symbol,
-                    },
-                  );
-                }}
-              >
-                <AddCircleIcon size={16} fill="currentColor" opacity={1} />
-              </IconButton>
+                    });
+                  }}
+                >
+                  <AddCircleIcon size={16} fill="currentColor" opacity={1} />
+                </IconButton>
+              )}
             </Flex>
           );
         },

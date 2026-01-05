@@ -360,6 +360,8 @@ export declare namespace API {
     fee_24_h: number;
     fundingFee?: number;
     leverage: number;
+    margin?: number;
+    margin_mode?: string | "ISOLATED" | "CROSS";
   }
 
   export interface PositionExt extends Position {

@@ -125,6 +125,7 @@ export const Margin: FC<PositionCellState> = (props) => {
   const { item } = props;
   const { t } = useTranslation();
 
+  const isIsolated = item.margin_mode === "ISOLATED";
   return (
     <Statistic
       label={
@@ -140,20 +141,22 @@ export const Margin: FC<PositionCellState> = (props) => {
     >
       <Flex gap={1}>
         <Text.numeral dp={2} intensity={80}>
-          {item.mm}
+          {isIsolated ? (item.margin ?? "--") : item.mm}
         </Text.numeral>
-        <IconButton
-          color="secondary"
-          onClick={(e) => {
-            e.stopPropagation();
-            modal.show(AdjustMarginSheetId, {
-              position: item,
-              symbol: item.symbol,
-            });
-          }}
-        >
-          <AddCircleIcon size={16} fill="currentColor" opacity={1} />
-        </IconButton>
+        {isIsolated && (
+          <IconButton
+            color="secondary"
+            onClick={(e) => {
+              e.stopPropagation();
+              modal.show(AdjustMarginSheetId, {
+                position: item,
+                symbol: item.symbol,
+              });
+            }}
+          >
+            <AddCircleIcon size={16} fill="currentColor" opacity={1} />
+          </IconButton>
+        )}
       </Flex>
     </Statistic>
   );

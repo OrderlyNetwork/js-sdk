@@ -174,6 +174,7 @@ class PortfolioCalculator extends BaseCalculator<any> {
       availableBalance,
       unsettledPnL,
       holding,
+      usdcHolding: USDC_holding,
     };
   }
 
@@ -192,6 +193,10 @@ class PortfolioCalculator extends BaseCalculator<any> {
         holding: Array.isArray(data.holding)
           ? (data.holding as API.Holding[])
           : [],
+        usdcHolding:
+          typeof data.usdcHolding === "number"
+            ? data.usdcHolding
+            : data.usdcHolding.toNumber(),
       });
     }
   }

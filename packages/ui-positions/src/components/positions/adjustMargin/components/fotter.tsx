@@ -24,6 +24,7 @@ export const Footer: FC<AdjustMarginState> = (props) => {
         size="lg"
         className="oui-h-10"
         loading={props.isLoading}
+        disabled={!props.canConfirm}
         onClick={props.onConfirm}
       >
         {t("common.confirm")}

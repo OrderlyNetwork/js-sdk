@@ -47,6 +47,10 @@ export type CollateralOutputs = {
    * Contains account configuration, limits and risk parameters
    */
   accountInfo?: API.AccountInfo;
+  /**
+   * USDC holding in the account
+   */
+  usdcHolding: number;
   // positions: API.Position[];
 };
 
@@ -83,6 +87,7 @@ export const useCollateral = (
     availableBalance,
     unsettledPnL,
     holding,
+    usdcHolding,
   } = useAppStore((state) => state.portfolio);
   const accountInfo = useAppStore((state) => state.accountInfo);
   return {
@@ -93,7 +98,7 @@ export const useCollateral = (
     unsettledPnL,
     accountInfo,
     holding,
-
+    usdcHolding,
     // @hidden
     // positions: positionsPath(positions),
   };

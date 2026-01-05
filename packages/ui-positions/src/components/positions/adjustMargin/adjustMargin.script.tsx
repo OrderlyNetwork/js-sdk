@@ -1,13 +1,12 @@
 import { useCallback, useMemo, useState } from "react";
-import { useCollateral, useMutation } from "@orderly.network/hooks";
+import { useMutation } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { API } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
+import usePositionMargin from "./hooks/usePositionMargin";
 
 export type AdjustMarginTab = "add" | "reduce";
-
-type PositionWithMargin = API.PositionTPSLExt & { margin?: number };
 
 export interface AdjustMarginScriptProps {
   position: API.PositionTPSLExt;
@@ -26,6 +25,7 @@ export interface AdjustMarginState {
   effectiveLeverage: number;
   isLoading: boolean;
   isAdd: boolean;
+  canConfirm: boolean;
   onTabChange: (tab: AdjustMarginTab) => void;
   onInputChange: (value: string) => void;
   onSliderChange: (value: number) => void;
@@ -43,31 +43,28 @@ export const useAdjustMarginScript = (
   const [inputValue, setInputValue] = useState("");
   const [sliderValue, setSliderValue] = useState(0);
 
-  const { freeCollateral } = useCollateral({ dp: 2 });
   const [updateMargin, { isMutating: isLoading }] = useMutation(
-    "/v1/position/update_margin",
+    "/v1/position/position_margin",
     "POST",
   );
 
-  const currentMargin = useMemo(() => {
-    const margin = (position as PositionWithMargin).margin ?? position.mm ?? 0;
-    return new Decimal(margin);
-  }, [position]);
+  const isAdd = useMemo(() => {
+    return tab === "add";
+  }, [tab]);
 
-  const maxAddAmount = useMemo(
-    () => new Decimal(freeCollateral || 0),
-    [freeCollateral],
-  );
+  const currentMargin = position.margin ?? 0;
 
-  const maxReduceAmount = useMemo(() => {
-    const minRequired = new Decimal(position.mm || 0);
-    const diff = currentMargin.sub(minRequired);
-    return diff.isPositive() ? diff : new Decimal(0);
-  }, [currentMargin, position.mm]);
+  const finalMargin = useMemo(() => {
+    const delta = new Decimal(inputValue || 0);
+    if (tab === "add") return currentMargin + delta.toNumber();
+    return currentMargin - delta.toNumber();
+  }, [currentMargin, inputValue, tab]);
 
-  const maxAmount = useMemo(
-    () => (tab === "add" ? maxAddAmount : maxReduceAmount),
-    [tab, maxAddAmount, maxReduceAmount],
+  const { maxAmount, liquidationPrice, effectiveLeverage } = usePositionMargin(
+    symbol,
+    isAdd,
+    currentMargin,
+    finalMargin,
   );
 
   const syncSliderFromInput = useCallback(
@@ -76,8 +73,9 @@ export const useAdjustMarginScript = (
         setSliderValue(0);
         return;
       }
+      if (!maxAmount) return;
       const val = new Decimal(value);
-      if (maxAmount.isZero()) {
+      if (maxAmount === 0) {
         setSliderValue(0);
         return;
       }
@@ -89,7 +87,8 @@ export const useAdjustMarginScript = (
 
   const syncInputFromSlider = useCallback(
     (value: number) => {
-      const val = maxAmount.mul(value).div(100);
+      if (!maxAmount) return;
+      const val = new Decimal(maxAmount).mul(value).div(100);
       setInputValue(val.toFixed(2, Decimal.ROUND_DOWN));
     },
     [maxAmount],
@@ -117,30 +116,19 @@ export const useAdjustMarginScript = (
     setSliderValue(0);
   }, []);
 
-  const finalMargin = useMemo(() => {
-    const delta = new Decimal(inputValue || 0);
-    if (tab === "add") return currentMargin.add(delta);
-    return currentMargin.sub(delta);
-  }, [currentMargin, inputValue, tab]);
-
-  const liquidationPrice = useMemo(() => {
-    // Placeholder: domain formula to be integrated.
-    return 0;
-  }, [finalMargin, position]);
-
-  const effectiveLeverage = useMemo(() => {
-    const notional = new Decimal(position.notional || 0).abs();
-    if (finalMargin.isZero()) return 0;
-    return notional.div(finalMargin).toNumber();
-  }, [position.notional, finalMargin]);
+  const canConfirm = useMemo(() => {
+    if (!inputValue) return false;
+    const value = new Decimal(inputValue);
+    return !value.isZero() && value.isPositive();
+  }, [inputValue]);
 
   const onConfirm = useCallback(async () => {
     if (!inputValue || new Decimal(inputValue).isZero()) return;
     try {
       const payload = {
         symbol,
-        margin: new Decimal(inputValue).toNumber(),
-        side: tab === "add" ? "ADD" : "REDUCE",
+        amount: new Decimal(inputValue).toString(),
+        type: tab === "add" ? "ADD" : "REDUCE",
       };
       await updateMargin(payload);
       toast.success(t("positions.adjustMargin.success"));
@@ -156,12 +144,13 @@ export const useAdjustMarginScript = (
     tab,
     inputValue,
     sliderValue,
-    maxAmount: maxAmount.toNumber(),
-    currentMargin: currentMargin.toNumber(),
-    liquidationPrice,
-    effectiveLeverage,
+    maxAmount: maxAmount ?? 0,
+    currentMargin: currentMargin,
+    liquidationPrice: liquidationPrice ?? 0,
+    effectiveLeverage: effectiveLeverage ?? 0,
     isLoading,
-    isAdd: tab === "add",
+    isAdd,
+    canConfirm,
     onTabChange,
     onInputChange,
     onSliderChange,

@@ -111,7 +111,10 @@ export {
   // markPriceActions,
   useMarkPriceBySymbol,
 } from "./useMarkPrice/useMarkPriceStore";
-export { usePositionActions } from "./usePositionStream/usePosition.store";
+export {
+  usePositionActions,
+  usePositions,
+} from "./usePositionStream/usePosition.store";
 export { useStorageLedgerAddress } from "./useStorageLedgerAddress";
 export { useTokensInfo, useTokenInfo } from "./useTokensInfo/tokensInfo.store";
 

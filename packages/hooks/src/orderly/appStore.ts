@@ -21,6 +21,7 @@ export type Portfolio = {
   availableBalance: number;
   unsettledPnL: number;
   totalUnrealizedROI: number;
+  usdcHolding: number;
 };
 
 export type AppState = {
@@ -79,6 +80,7 @@ export const useAppStore = create<
       availableBalance: 0,
       unsettledPnL: 0,
       totalUnrealizedROI: 0,
+      usdcHolding: 0,
     },
     appState: {
       positionsLoading: false,
@@ -102,6 +104,7 @@ export const useAppStore = create<
             availableBalance: 0,
             unsettledPnL: 0,
             totalUnrealizedROI: 0,
+            usdcHolding: 0,
           };
         }, false);
       },
