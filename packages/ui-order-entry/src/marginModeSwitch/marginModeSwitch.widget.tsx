@@ -5,6 +5,7 @@ import {
   registerSimpleDialog,
   registerSimpleSheet,
   toast,
+  useModal,
 } from "@orderly.network/ui";
 import {
   MarginModeSettingsDialogId,
@@ -30,11 +31,13 @@ export const MarginModeSwitchWidget: React.FC<MarginModeSwitchWidgetProps> = (
   props,
 ) => {
   const state = useMarginModeSwitchScript(props);
+  const { id: currentModalId } = useModal();
 
   const onOpenSettings = () => {
-    const modalId = state.isMobile
-      ? MarginModeSettingsSheetId
-      : MarginModeSettingsDialogId;
+    const modalId =
+      currentModalId === MarginModeSwitchSheetId
+        ? MarginModeSettingsSheetId
+        : MarginModeSettingsDialogId;
     modal.show(modalId, {});
   };
 
@@ -72,7 +75,7 @@ registerSimpleSheet(MarginModeSwitchSheetId, MarginModeSwitchWidget, {
   title: undefined,
   closable: false,
   classNames: {
-    content: "oui-bg-transparent",
+    content: "oui-bg-transparent !oui-px-0",
     body: "oui-p-0",
   },
 });
@@ -82,7 +85,7 @@ registerSimpleDialog(MarginModeSwitchDialogId, MarginModeSwitchWidget, {
   title: undefined,
   closable: false,
   classNames: {
-    content: "oui-w-[420px] oui-bg-transparent oui-p-0",
+    content: "oui-w-[360px] oui-bg-transparent !oui-px-0",
     body: "oui-p-0",
   },
 });

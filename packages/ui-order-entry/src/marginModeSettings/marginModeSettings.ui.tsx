@@ -5,6 +5,8 @@ import {
   CloseCircleFillIcon,
   CloseIcon,
   Divider,
+  Flex,
+  IconButton,
   Input,
   Text,
   cn,
@@ -56,17 +58,18 @@ export const MarginModeSettings: FC<MarginModeSettingsProps> = (props) => {
   }, [props]);
 
   return (
-    <div
+    <Flex
+      direction="column"
       className={cn(
-        "oui-flex oui-h-full oui-w-full oui-flex-col",
-        "oui-rounded-[12px] oui-bg-base-8",
-        // Keep the dialog height stable on desktop; only the symbol list scrolls.
-        !props.isMobile && "oui-overflow-hidden",
+        "oui-h-full oui-w-full",
+        "oui-rounded-xl oui-bg-base-8",
+        // Keep the container height stable; only the symbol list scrolls.
+        "oui-overflow-hidden",
       )}
       data-testid="oui-testid-marginModeSettings"
     >
       <div className={cn("oui-w-full", headerPadding)}>
-        <div className="oui-flex oui-items-center oui-justify-between">
+        <Flex itemAlign="center" justify="between">
           {props.isMobile ? (
             <button
               type="button"
@@ -88,16 +91,16 @@ export const MarginModeSettings: FC<MarginModeSettingsProps> = (props) => {
             {"Perpetual futures"}
           </Text>
 
-          <button
-            type="button"
-            className="oui-flex oui-size-[18px] oui-items-center oui-justify-center"
+          <IconButton
+            color="light"
+            className="oui-size-[18px]"
             onClick={props.close}
             aria-label="Close"
             data-testid="oui-testid-marginModeSettings-close"
           >
             <CloseIcon size={18} color="white" opacity={0.98} />
-          </button>
-        </div>
+          </IconButton>
+        </Flex>
         <Divider className="oui-mt-[9px] oui-w-full" />
       </div>
 
@@ -140,19 +143,21 @@ export const MarginModeSettings: FC<MarginModeSettingsProps> = (props) => {
         />
       </div>
 
-      <div
+      <Flex
+        direction="column"
         className={cn(
-          "oui-flex oui-w-full oui-flex-col",
+          "oui-w-full",
           props.isMobile ? "oui-flex-1 oui-min-h-0" : "",
         )}
       >
-        <div
+        <Flex
+          direction="column"
+          gap={3}
           className={cn(
             "oui-w-full oui-overflow-y-auto oui-custom-scrollbar",
             props.isMobile
-              ? "oui-flex-1 oui-min-h-0 oui-max-h-[calc(100vh-200px)] oui-px-4 oui-pt-0 oui-pb-3"
-              : "oui-max-h-[420px] oui-px-5 oui-pt-0 oui-pb-3",
-            "oui-flex oui-flex-col oui-gap-3",
+              ? "oui-flex-1 oui-min-h-0 oui-px-4 oui-pt-0 oui-pb-3"
+              : "oui-h-[308px] oui-px-5 oui-pt-0 oui-pb-3",
           )}
           style={
             {
@@ -170,17 +175,19 @@ export const MarginModeSettings: FC<MarginModeSettingsProps> = (props) => {
               onToggle={props.onToggleItem}
             />
           ))}
-        </div>
+        </Flex>
 
         <Divider className="oui-w-full" />
 
-        <div
+        <Flex
+          itemAlign="center"
+          justify="between"
           className={cn(
-            "oui-flex oui-w-full oui-items-center oui-justify-between",
+            "oui-w-full",
             props.isMobile ? "oui-px-4 oui-py-3" : "oui-px-5 oui-py-3",
           )}
         >
-          <div className="oui-flex oui-items-center oui-gap-2">
+          <Flex itemAlign="center" gap={2}>
             <Checkbox
               color="white"
               // NOTE: our Checkbox component renders indeterminate visually similar to checked.
@@ -194,7 +201,7 @@ export const MarginModeSettings: FC<MarginModeSettingsProps> = (props) => {
             <Text className="oui-text-sm oui-font-semibold oui-text-base-contrast-80">
               {"Select all"}
             </Text>
-          </div>
+          </Flex>
 
           <Text className="oui-text-sm oui-text-base-contrast-54">
             {"Total"}:{" "}
@@ -202,15 +209,17 @@ export const MarginModeSettings: FC<MarginModeSettingsProps> = (props) => {
               {selectedCount}
             </span>
           </Text>
-        </div>
+        </Flex>
 
-        <div
+        <Flex
+          itemAlign="center"
+          justify="end"
+          gap={3}
           className={cn(
-            "oui-flex oui-w-full oui-items-center oui-justify-end",
+            "oui-w-full",
             props.isMobile
-              ? "oui-px-4 oui-pt-3 oui-pb-5"
+              ? "oui-px-4 oui-pt-3 oui-pb-[calc(20px+env(safe-area-inset-bottom))]"
               : "oui-px-5 oui-pt-3 oui-pb-5",
-            "oui-gap-3",
           )}
         >
           <Text className="oui-text-sm oui-leading-8 oui-text-base-contrast-80">
@@ -247,9 +256,9 @@ export const MarginModeSettings: FC<MarginModeSettingsProps> = (props) => {
           >
             {"Isolated"}
           </Button>
-        </div>
-      </div>
-    </div>
+        </Flex>
+      </Flex>
+    </Flex>
   );
 };
 
@@ -274,19 +283,17 @@ const SymbolRow: FC<{
   );
 
   return (
-    <div
+    <Flex
+      itemAlign="center"
       role="checkbox"
       aria-checked={props.checked}
       tabIndex={0}
-      className={cn(
-        "oui-flex oui-w-full oui-items-center",
-        "oui-cursor-pointer oui-select-none",
-      )}
+      className={cn("oui-w-full", "oui-cursor-pointer oui-select-none")}
       onClick={handleToggle}
       onKeyDown={handleKeyDown}
       data-testid={`oui-testid-marginModeSettings-item-${props.item.key}`}
     >
-      <div className="oui-flex oui-items-center oui-gap-2">
+      <Flex itemAlign="center" gap={2}>
         <Checkbox
           color="white"
           checked={props.checked}
@@ -308,8 +315,8 @@ const SymbolRow: FC<{
         >
           {props.marginMode === "isolated" ? "Isolated" : "Cross"}
         </span>
-      </div>
-    </div>
+      </Flex>
+    </Flex>
   );
 };
 

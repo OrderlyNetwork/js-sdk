@@ -1,5 +1,7 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useMarkets, MarketsType } from "@orderly.network/hooks";
 import { useScreen } from "@orderly.network/ui";
+import { formatSymbol } from "@orderly.network/utils";
 
 export type MarginMode = "cross" | "isolated";
 
@@ -12,59 +14,57 @@ export type MarginModeSettingsItem = {
   symbol: string;
 };
 
-type MarginModeSettingsDataAdapter = {
-  getItems: () => MarginModeSettingsItem[];
-};
-
-const STATIC_SYMBOLS = [
-  "BTC-PERP",
-  "ETH-PERP",
-  "WOO-PERP",
-  "ORDER-PERP",
-  "UNI-PERP",
-  "SOL-PERP",
-  "ETC-PERP",
-  "DOGE-PERP",
-] as const;
-
-const createStaticDataAdapter = (): MarginModeSettingsDataAdapter => {
-  return {
-    getItems: () => {
-      const repeatCount = 3;
-      const items: MarginModeSettingsItem[] = [];
-      for (let i = 0; i < repeatCount; i++) {
-        for (const symbol of STATIC_SYMBOLS) {
-          items.push({ key: `${symbol}-${i}`, symbol });
-        }
-      }
-      return items;
-    },
-  };
-};
-
 export const useMarginModeSettingsScript = (
   options: MarginModeSettingsScriptOptions,
 ) => {
   const { isMobile } = useScreen();
 
-  const dataAdapter = useMemo(() => createStaticDataAdapter(), []);
-  const items = useMemo(() => dataAdapter.getItems(), [dataAdapter]);
+  // Fetch markets data using the same API as markets list
+  const [markets] = useMarkets(MarketsType.ALL);
+
+  // Convert MarketsItem[] to MarginModeSettingsItem[]
+  const items = useMemo(() => {
+    if (!markets || markets.length === 0) {
+      return [];
+    }
+
+    return markets.map((market) => ({
+      key: market.symbol, // Original symbol: "PERP_BTC_USDC"
+      symbol: formatSymbol(market.symbol, "base-type"), // Formatted: "BTC-PERP"
+    }));
+  }, [markets]);
 
   const [searchKeyword, setSearchKeyword] = useState("");
   const [selectedKeys, setSelectedKeys] = useState<Set<string>>(
     () => new Set(),
   );
-  const [isLoading, setIsLoading] = useState(false);
+  const [isOperationLoading, setIsOperationLoading] = useState(false);
 
+  const [isDataLoading, setIsDataLoading] = useState(true);
+
+  useEffect(() => {
+    if (markets.length > 0) {
+      setIsDataLoading(false);
+    }
+  }, [markets]);
+
+  // TODO: Replace with backend API to fetch margin modes for all symbols
   const [itemMarginModes, setItemMarginModes] = useState<
     Record<string, MarginMode>
-  >(() => {
-    const initial: Record<string, MarginMode> = {};
-    for (const item of items) {
-      initial[item.key] = "cross";
+  >({});
+
+  // TODO: Replace with backend API call to load margin modes on component mount
+  useEffect(() => {
+    if (items.length > 0) {
+      setItemMarginModes((prev) => {
+        const next: Record<string, MarginMode> = {};
+        for (const item of items) {
+          next[item.key] = prev[item.key] ?? "cross";
+        }
+        return next;
+      });
     }
-    return initial;
-  });
+  }, [items]);
 
   const filteredItems = useMemo(() => {
     const keyword = searchKeyword.trim().toLowerCase();
@@ -73,11 +73,7 @@ export const useMarginModeSettingsScript = (
   }, [items, searchKeyword]);
 
   const visibleSelectedCount = useMemo(() => {
-    let count = 0;
-    for (const item of filteredItems) {
-      if (selectedKeys.has(item.key)) count++;
-    }
-    return count;
+    return filteredItems.filter((item) => selectedKeys.has(item.key)).length;
   }, [filteredItems, selectedKeys]);
 
   const isSelectAll = useMemo(() => {
@@ -129,8 +125,9 @@ export const useMarginModeSettingsScript = (
     async (mode: MarginMode) => {
       if (selectedKeys.size === 0) return;
 
-      setIsLoading(true);
+      setIsOperationLoading(true);
       try {
+        // TODO: Replace with backend API call to batch update margin modes for selected symbols
         setItemMarginModes((prev) => {
           const next = { ...prev };
           selectedKeys.forEach((key) => {
@@ -139,11 +136,13 @@ export const useMarginModeSettingsScript = (
           return next;
         });
       } finally {
-        setIsLoading(false);
+        setIsOperationLoading(false);
       }
     },
     [selectedKeys],
   );
+
+  const isLoading = isDataLoading || isOperationLoading;
 
   return {
     isMobile,

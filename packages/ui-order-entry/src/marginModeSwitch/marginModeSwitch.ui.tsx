@@ -4,6 +4,8 @@ import {
   ChevronRightIcon,
   CloseIcon,
   Divider,
+  Flex,
+  IconButton,
   Text,
   TokenIcon,
   cn,
@@ -29,21 +31,26 @@ export const MarginModeSwitch: FC<MarginModeSwitchProps> = (props) => {
     ? "oui-text-lg oui-leading-[26px]"
     : "oui-text-base oui-leading-6";
 
-  const headerPadding = props.isMobile
-    ? "oui-px-4 oui-pt-3"
-    : "oui-px-5 oui-pt-3";
-  const contentPadding = props.isMobile ? "oui-p-4" : "oui-p-5";
+  const headerPadding = props.isMobile ? "oui-pt-3" : "oui-px-5 oui-pt-3";
+  const contentPadding = props.isMobile ? "oui-py-4" : "oui-p-5";
 
   return (
-    <div
+    <Flex
+      direction="column"
       className={cn(
-        "oui-flex oui-w-full oui-flex-col",
-        "oui-rounded-[12px] oui-bg-base-8",
+        "oui-w-full",
+        props.isMobile
+          ? "oui-rounded-t-xl oui-bg-base-8"
+          : "oui-rounded-xl oui-bg-base-8",
       )}
       data-testid="oui-testid-marginModeSwitch"
     >
       <div className={cn("oui-w-full", headerPadding)}>
-        <div className="oui-flex oui-items-center oui-justify-between">
+        <Flex
+          itemAlign="center"
+          justify="between"
+          className={cn(props.isMobile && "oui-px-4")}
+        >
           {/* Mobile keeps title centered by reserving left space */}
           {props.isMobile ? (
             <button
@@ -56,8 +63,7 @@ export const MarginModeSwitch: FC<MarginModeSwitchProps> = (props) => {
 
           <Text
             className={cn(
-              "oui-font-semibold oui-tracking-[0.48px]",
-              props.isMobile ? "oui-text-center" : "",
+              "oui-font-semibold oui-tracking-[0.03em]",
               titleClassName,
             )}
             intensity={98}
@@ -65,33 +71,41 @@ export const MarginModeSwitch: FC<MarginModeSwitchProps> = (props) => {
             {t("marginMode.switchMarginMode")}
           </Text>
 
-          <button
-            type="button"
-            className="oui-flex oui-size-[18px] oui-items-center oui-justify-center"
+          <IconButton
+            color="light"
+            className="oui-size-[18px]"
             onClick={props.close}
+            aria-label="Close"
             data-testid="oui-testid-marginModeSwitch-close"
           >
             <CloseIcon size={18} color="white" opacity={0.98} />
-          </button>
-        </div>
+          </IconButton>
+        </Flex>
         <Divider className="oui-mt-[9px] oui-w-full" />
       </div>
 
-      <div className={cn("oui-w-full", contentPadding)}>
-        <div className="oui-flex oui-items-center oui-gap-2">
+      <div
+        className={cn(
+          "oui-w-full",
+          contentPadding,
+          props.isMobile && "oui-px-4",
+        )}
+      >
+        <Flex itemAlign="center" gap={2}>
           <TokenIcon symbol={props.symbol} className="oui-size-5" />
           <Text.formatted
+            className="oui-tracking-[0.03em]"
             rule="symbol"
             formatString="base-type"
-            size={props.isMobile ? "xs" : "base"}
+            size="base"
             weight="semibold"
             intensity={98}
           >
             {props.symbol}
           </Text.formatted>
-        </div>
+        </Flex>
 
-        <div className="oui-mt-3 oui-flex oui-w-full oui-flex-col oui-gap-3">
+        <Flex direction="column" gap={3} className="oui-mt-3 oui-w-full">
           <OptionCard
             mode="cross"
             selected={props.selectedMarginMode === "cross"}
@@ -104,14 +118,14 @@ export const MarginModeSwitch: FC<MarginModeSwitchProps> = (props) => {
             isCurrent={props.currentMarginMode === "isolated"}
             onClick={() => props.onSelect("isolated")}
           />
-        </div>
+        </Flex>
 
-        <div className="oui-mt-3 oui-flex oui-w-full oui-justify-center">
+        <Flex justify="center" className="oui-mt-3 oui-w-full">
           <button
             type="button"
             className={cn(
               "oui-flex oui-items-center oui-gap-1",
-              "oui-text-[13px] oui-leading-[15px] oui-font-semibold oui-text-base-contrast-54",
+              "oui-text-xs oui-leading-[15px] oui-font-semibold oui-text-base-contrast-54 oui-tracking-[0.03em]",
               props.onOpenSettings
                 ? "oui-cursor-pointer"
                 : "oui-cursor-default",
@@ -123,16 +137,13 @@ export const MarginModeSwitch: FC<MarginModeSwitchProps> = (props) => {
             <span>{t("marginMode.marginModeSettings")}</span>
             <ChevronRightIcon size={18} color="white" opacity={0.54} />
           </button>
-        </div>
+        </Flex>
 
-        {/* Visual-only home indicator (mweb design). Sheet itself is already swipeable. */}
         {props.isMobile ? (
-          <div className="oui-relative oui-mt-4 oui-h-[34px] oui-w-full">
-            <div className="oui-absolute oui-bottom-2 oui-left-1/2 oui-h-[5px] oui-w-[134px] -oui-translate-x-1/2 oui-rounded-full oui-bg-base-contrast" />
-          </div>
+          <div className="oui-mt-4 oui-h-[34px] oui-w-full" />
         ) : null}
       </div>
-    </div>
+    </Flex>
   );
 };
 
@@ -157,7 +168,7 @@ const OptionCard: FC<{
     <button
       type="button"
       className={cn(
-        "oui-relative oui-w-full oui-rounded-[6px] oui-p-2",
+        "oui-relative oui-w-full oui-rounded-md oui-p-2",
         "oui-bg-base-6",
         "oui-text-left",
         props.selected ? "oui-border oui-border-[#38e2fe]" : "",
@@ -165,23 +176,23 @@ const OptionCard: FC<{
       onClick={props.onClick}
       data-testid={`oui-testid-marginModeSwitch-option-${props.mode}`}
     >
-      <div className="oui-flex oui-w-full oui-flex-col oui-gap-2">
+      <Flex direction="column" gap={2} itemAlign="start" className="oui-w-full">
         <Text
-          className="oui-text-sm oui-font-semibold oui-leading-5"
+          className="oui-text-sm oui-font-semibold oui-leading-5 oui-tracking-[0.03em]"
           intensity={98}
         >
           {title}
         </Text>
-        <Text className="oui-text-xs oui-leading-[15px] oui-text-base-contrast-36">
+        <Text className="oui-text-2xs oui-leading-[15px] oui-text-base-contrast-36 oui-font-semibold oui-tracking-[0.03em]">
           {desc}
         </Text>
-      </div>
+      </Flex>
 
       {props.isCurrent ? (
         <div
           className={cn(
             "oui-absolute -oui-right-px -oui-top-px",
-            "oui-rounded-bl-[6px] oui-rounded-tr-[6px]",
+            "oui-rounded-bl-md oui-rounded-tr-md",
             "oui-bg-[#38e2fe] oui-px-1 oui-py-0.5",
           )}
         >
