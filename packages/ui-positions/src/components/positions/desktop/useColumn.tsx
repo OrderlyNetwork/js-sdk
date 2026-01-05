@@ -12,6 +12,9 @@ import {
   Tooltip,
   modal,
   useScreen,
+  AddCircleIcon,
+  Button,
+  IconButton,
 } from "@orderly.network/ui";
 import { SymbolLeverageDialogId } from "@orderly.network/ui-leverage";
 import { SharePnLOptions, SharePnLDialogId } from "@orderly.network/ui-share";
@@ -311,10 +314,8 @@ export const useColumn = (config: ColumnConfig) => {
           return (
             <Flex gap={2} itemAlign="center">
               <Text.numeral>{value}</Text.numeral>
-              <button
-                type="button"
-                aria-label="adjust margin"
-                className="oui-group oui-flex oui-items-center oui-justify-center oui-size-5 oui-rounded-full oui-bg-transparent oui-transition-colors hover:oui-bg-base-contrast-6"
+              <IconButton
+                color="secondary"
                 onClick={(e) => {
                   e.stopPropagation();
                   modal.show(
@@ -326,24 +327,8 @@ export const useColumn = (config: ColumnConfig) => {
                   );
                 }}
               >
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="oui-text-base-contrast-54 oui-transition-colors group-hover:oui-text-base-contrast-98"
-                >
-                  <path
-                    d="M8.47056 4.66893C8.59115 4.78951 8.6768 4.95625 8.67694 5.14024L8.67704 7.29088L10.8276 7.29088C11.0119 7.29135 11.1783 7.37667 11.299 7.49735C11.4197 7.61803 11.505 7.78444 11.5055 7.96876C11.505 8.33693 11.1958 8.64616 10.8276 8.64663L8.67704 8.64664L8.67703 10.7972C8.67656 11.1654 8.36733 11.4746 7.99916 11.4751C7.63099 11.4746 7.32175 11.1653 7.32128 10.7972L7.32128 8.64664L5.17064 8.64654C4.80271 8.64631 4.49323 8.33683 4.49295 7.96885C4.49318 7.60045 4.80242 7.29121 5.17082 7.29097L7.32128 7.29088L7.32137 5.14042C7.32161 4.77202 7.63084 4.46278 7.99925 4.46255C8.18328 4.46274 8.34993 4.54829 8.47056 4.66893Z"
-                    fill="currentColor"
-                  />
-                  <path
-                    d="M8.00016 1.33264C4.3183 1.33264 1.3335 4.3173 1.3335 7.9993C1.3335 11.6813 4.3183 14.666 8.00016 14.666C11.6822 14.666 14.6668 11.6813 14.6668 7.9993C14.6668 4.3173 11.6822 1.33264 8.00016 1.33264ZM8.00016 2.66597C10.9455 2.66597 13.3335 5.05397 13.3335 7.9993C13.3335 10.9446 10.9455 13.3326 8.00016 13.3326C5.05463 13.3326 2.66683 10.9446 2.66683 7.9993C2.66683 5.05397 5.05463 2.66597 8.00016 2.66597Z"
-                    fill="currentColor"
-                  />
-                </svg>
-              </button>
+                <AddCircleIcon size={16} fill="currentColor" opacity={1} />
+              </IconButton>
             </Flex>
           );
         },

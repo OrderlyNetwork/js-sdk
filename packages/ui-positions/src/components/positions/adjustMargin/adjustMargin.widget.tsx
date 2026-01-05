@@ -5,6 +5,7 @@ import {
   registerSimpleDialog,
   registerSimpleSheet,
 } from "@orderly.network/ui";
+import { useAdjustMarginScript } from "./adjustMargin.script";
 import { AdjustMargin } from "./adjustMargin.ui";
 
 export const AdjustMarginDialogId = "AdjustMarginDialog";
@@ -17,25 +18,23 @@ export type AdjustMarginWidgetProps = {
 
 export const AdjustMarginWidget = (props: AdjustMarginWidgetProps) => {
   const { isMobile } = useScreen();
-  const close = () =>
-    modal.hide(isMobile ? AdjustMarginSheetId : AdjustMarginDialogId);
-  return <AdjustMargin {...props} close={close} />;
+  const state = useAdjustMarginScript({
+    position: props.position,
+    symbol: props.symbol,
+    close: () =>
+      modal.hide(isMobile ? AdjustMarginSheetId : AdjustMarginDialogId),
+  });
+
+  return <AdjustMargin {...state} />;
 };
 
 registerSimpleDialog(AdjustMarginDialogId, AdjustMarginWidget, {
   title: undefined,
   closable: false,
-  classNames: {
-    content: "oui-w-[420px] oui-bg-transparent oui-p-0",
-    body: "oui-p-0",
-  },
+  size: "sm",
 });
 
 registerSimpleSheet(AdjustMarginSheetId, AdjustMarginWidget, {
   title: undefined,
   closable: false,
-  classNames: {
-    content: "oui-h-full",
-    body: "oui-p-0",
-  },
 });
