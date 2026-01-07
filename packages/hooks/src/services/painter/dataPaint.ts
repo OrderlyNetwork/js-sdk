@@ -1,6 +1,6 @@
+import { path } from "ramda";
 import { commify } from "@orderly.network/utils";
 import { BasePaint, DrawOptions, layoutInfo } from "./basePaint";
-import { path } from "ramda";
 import { qrPaint } from "./qrPaint";
 
 export class DataPaint extends BasePaint {
@@ -37,7 +37,7 @@ export class DataPaint extends BasePaint {
     if (!!options.data?.position) {
       this.drawPosition(
         options,
-        needDrawDetails || hasReferral ? 0 : offsetTop
+        needDrawDetails || hasReferral ? 0 : offsetTop,
       );
     }
 
@@ -47,7 +47,7 @@ export class DataPaint extends BasePaint {
 
     this.drawUnrealizedPnL(
       options,
-      needDrawDetails || hasReferral ? 0 : offsetTop
+      needDrawDetails || hasReferral ? 0 : offsetTop,
     );
 
     if (!hasReferral) {
@@ -70,7 +70,7 @@ export class DataPaint extends BasePaint {
 
     const layout = path<layoutInfo>(
       ["layout", "message"],
-      options
+      options,
     ) as layoutInfo;
     const { position } = layout;
 
@@ -86,12 +86,12 @@ export class DataPaint extends BasePaint {
   private drawPosition(options: DrawOptions, offsetTop: number = 0) {
     const layout = path<layoutInfo>(
       ["layout", "position"],
-      options
+      options,
     ) as layoutInfo;
     const { position, fontSize = 14 } = layout;
     let left = this._ratio(position.left!);
 
-    let top = layout.position.top! + offsetTop + this.transformTop;
+    const top = layout.position.top! + offsetTop + this.transformTop;
     let prevElementBoundingBox: TextMetrics = {} as TextMetrics;
 
     // draw position side;
@@ -132,6 +132,32 @@ export class DataPaint extends BasePaint {
       });
     }
 
+    const marginMode = options.data?.position.marginMode;
+    if (marginMode) {
+      left += (prevElementBoundingBox.width ?? 0) + this._ratio(7);
+
+      if (prevElementBoundingBox.width) {
+        prevElementBoundingBox = this._drawText("|", {
+          color: "rgba(255,255,255,0.2)",
+          left,
+          top: this._ratio(top),
+          fontSize: this._ratio(fontSize),
+          fontFamily: options.fontFamily,
+        });
+      }
+
+      left += (prevElementBoundingBox.width ?? 0) + this._ratio(7);
+      const marginModeText =
+        marginMode.charAt(0).toUpperCase() + marginMode.slice(1);
+      prevElementBoundingBox = this._drawText(marginModeText, {
+        color: layout.color,
+        left: left,
+        top: this._ratio(top),
+        fontSize: this._ratio(fontSize),
+        fontFamily: options.fontFamily,
+      });
+    }
+
     if (typeof options.data?.position.leverage !== "undefined") {
       left += (prevElementBoundingBox.width ?? 0) + this._ratio(7);
 
@@ -153,7 +179,7 @@ export class DataPaint extends BasePaint {
           top: this._ratio(top),
           fontSize: this._ratio(fontSize),
           fontFamily: options.fontFamily,
-        }
+        },
       );
     }
   }
@@ -162,7 +188,7 @@ export class DataPaint extends BasePaint {
     // reset left value;
     const layout = path<layoutInfo>(
       ["layout", "unrealizedPnl"],
-      options
+      options,
     ) as layoutInfo & {
       secondaryColor: string;
       secondaryFontSize: number;
@@ -189,7 +215,7 @@ export class DataPaint extends BasePaint {
           fontSize: this._ratio(layout.fontSize as number),
           fontWeight: 700,
           fontFamily: options.fontFamily,
-        }
+        },
       );
     }
     // unrelPnL
@@ -234,7 +260,7 @@ export class DataPaint extends BasePaint {
   private drawInformations(options: DrawOptions) {
     const layout = path<layoutInfo>(
       ["layout", "informations"],
-      options
+      options,
     ) as layoutInfo & {
       labelColor?: string;
     };
@@ -247,10 +273,10 @@ export class DataPaint extends BasePaint {
 
     informations.forEach((info, index) => {
       // let cellWidth = this.positionInfoCellWidth;
-      let left = position.left! + (index % col) * this.positionInfoCellWidth;
+      const left = position.left! + (index % col) * this.positionInfoCellWidth;
 
       // let top = (position.top as number) + (index / 2) * 38 + this.transformTop;
-      let top =
+      const top =
         (position.top as number) +
         Math.floor(index / col) * 38 +
         this.transformTop;
@@ -277,7 +303,7 @@ export class DataPaint extends BasePaint {
   private drawDomainUrl(options: DrawOptions, onlyMeasure: boolean = false) {
     const layout = path<layoutInfo>(
       ["layout", "domain"],
-      options
+      options,
     ) as layoutInfo;
 
     const hasReferral = this.hasReferral(options);
@@ -301,14 +327,14 @@ export class DataPaint extends BasePaint {
         textAlign: !hasReferral ? layout.textAlign : "end",
         fontWeight: 600,
       },
-      onlyMeasure
+      onlyMeasure,
     );
   }
 
   private drawPositionTime(options: DrawOptions) {
     const layout = path<layoutInfo>(
       ["layout", "updateTime"],
-      options
+      options,
     ) as layoutInfo;
     const { position } = layout;
     const hasReferral = this.hasReferral(options);
@@ -341,7 +367,7 @@ export class DataPaint extends BasePaint {
         textAlign: !hasReferral ? layout.textAlign : "end",
         fontFamily: options.fontFamily,
         textBaseline: layout.textBaseline,
-      }
+      },
     );
   }
 
@@ -352,14 +378,14 @@ export class DataPaint extends BasePaint {
 
     const layout = path<layoutInfo>(
       ["layout", "updateTime"],
-      options
+      options,
     ) as layoutInfo;
     const { position } = layout;
     const top = this.painter.height - (position.bottom ?? 0);
 
     const messageLayout = path<layoutInfo>(
       ["layout", "message"],
-      options
+      options,
     ) as layoutInfo;
 
     const url = new URL(options.data.referral.link);
@@ -417,7 +443,7 @@ export class DataPaint extends BasePaint {
       textBaseline?: CanvasTextBaseline;
       textAlign?: CanvasTextAlign;
     },
-    onlyMeasure: boolean = false
+    onlyMeasure: boolean = false,
   ): TextMetrics {
     let boundingBox: TextMetrics;
     const {

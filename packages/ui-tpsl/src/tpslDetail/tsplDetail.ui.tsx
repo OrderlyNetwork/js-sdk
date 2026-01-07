@@ -33,11 +33,11 @@ export const TPSLDetailUI = (props: TPSLDetailState) => {
     symbolInfo,
   } = props;
   const { estLiqPrice } = useTPSLDetailContext();
-
   return (
     <Box>
       <ScrollArea className={cn(isMobile && "oui-h-[calc(100vh-100px)]")}>
         <OrderInfo
+          marginMode={(position as any).margin_mode || "cross"}
           order={{
             symbol: position.symbol,
             order_quantity: position.position_qty.toString(),

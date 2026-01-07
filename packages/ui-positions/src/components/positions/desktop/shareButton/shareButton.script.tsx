@@ -114,6 +114,7 @@ export const useShareButtonScript = (props: ShareButtonScriptOptions) => {
           // when position.leverage is empty, use leverage from useSymbolLeverage
           leverage: position.leverage || symbolLeverage,
           ...entity,
+          marginMode: position.margin_mode,
         },
         refCode,
         ...sharePnLConfig,

@@ -10,6 +10,7 @@ export type posterDataSource = {
     symbol: string;
     // side: OrderSide;
     side: "LONG" | "SHORT";
+    marginMode?: "isolated" | "cross";
     /**
      * The leverage of the position
      */
@@ -109,7 +110,7 @@ export type DrawOptions = {
 export abstract class BasePaint {
   constructor(
     protected ctx: CanvasRenderingContext2D,
-    protected painter: PosterPainter
+    protected painter: PosterPainter,
   ) {}
   abstract draw(options: DrawOptions): Promise<void>;
 }

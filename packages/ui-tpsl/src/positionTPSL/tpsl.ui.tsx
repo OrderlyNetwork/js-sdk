@@ -52,7 +52,6 @@ export const TPSL: React.FC<TPSLBuilderState & TPSLProps> = (props) => {
   const { errors, validated } = props.metaState;
   const { t } = useTranslation();
   const { isMobile } = useScreen();
-
   // Filter errors for TP and SL components separately
   const tpErrors = useMemo(() => {
     if (!errors) return null;
@@ -124,6 +123,7 @@ export const TPSL: React.FC<TPSLBuilderState & TPSLProps> = (props) => {
               order_quantity: position.position_qty.toString(),
               order_price: position.average_open_price.toString(),
             }}
+            marginMode={(position as any).margin_mode || "cross"}
             symbolLeverage={position.leverage}
           />
           <Flex

@@ -5,7 +5,14 @@ import {
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { OrderlyOrder } from "@orderly.network/types";
-import { cn, Flex, Grid, Text, TokenIcon } from "@orderly.network/ui";
+import {
+  cn,
+  Flex,
+  Grid,
+  Text,
+  TokenIcon,
+  capitalizeFirstLetter,
+} from "@orderly.network/ui";
 
 type Props = {
   order: Partial<OrderlyOrder>;
@@ -19,6 +26,7 @@ type Props = {
     container?: string;
   };
   symbolLeverage?: number;
+  marginMode?: string;
 };
 export const OrderInfo = (props: Props) => {
   const { t } = useTranslation();
@@ -57,6 +65,14 @@ export const OrderInfo = (props: Props) => {
             {symbol}
           </Text.formatted>
         </Flex>
+        {props.marginMode && (
+          <Text
+            size="2xs"
+            className="oui-h-[18px] oui-rounded oui-bg-base-7 oui-px-2 oui-font-semibold oui-text-base-contrast-36"
+          >
+            {capitalizeFirstLetter(props.marginMode)}
+          </Text>
+        )}
         <Text
           size="2xs"
           className="oui-h-[18px] oui-rounded oui-bg-base-7 oui-px-2 oui-font-semibold oui-text-base-contrast-36"
