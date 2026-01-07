@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/hooks",
-  "version": "2.8.10",
+  "version": "2.8.11-alpha.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -72,7 +72,7 @@
     "react-test-renderer": "^18.2.0",
     "rimraf": "^5.0.5",
     "tsconfig": "workspace:*",
-    "tsup": "^7.1.0",
+    "tsup": "^8.5.1",
     "typedoc": "^0.27.6",
     "typescript": "^5.1.6"
   },

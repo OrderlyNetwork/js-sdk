@@ -148,7 +148,23 @@ export const useColumn = (config: ColumnConfig) => {
         title: (
           <Tooltip
             className="oui-max-w-[280px] oui-bg-base-8 oui-p-3 oui-text-2xs oui-text-base-contrast-54"
-            content={t("positions.column.liqPrice.tooltip")}
+            content={
+              <div>
+                <div className="oui-text-pretty">
+                  {t("common.liquidationPrice.tooltip")}
+                </div>
+                <div>
+                  <a
+                    href="https://orderly.network/docs/introduction/trade-on-orderly/perpetual-futures/liquidations"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="oui-text-primary oui-underline"
+                  >
+                    {t("common.liquidationPrice.tooltip.learnMore")}
+                  </a>
+                </div>
+              </div>
+            }
           >
             <Text>{t("positions.column.liqPrice")}</Text>
           </Tooltip>

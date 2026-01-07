@@ -22,5 +22,6 @@
   "extend.wooStake": "WOO staking",
   "extend.wooStake.description": "Haz staking para ganar USDC y WOO",
   "extend.vaults.description": "Gana rendimiento pasivo con estrategias automatizadas",
-  "extend.swap.warning": "Los intercambios spot se ejecutan utilizando los activos de su billetera Web3 conectada. Los fondos de la cuenta de perps son independientes y no se verán afectados."
+  "extend.swap.warning": "Los intercambios spot se ejecutan utilizando los activos de su billetera Web3 conectada. Los fondos de la cuenta de perps son independientes y no se verán afectados.",
+  "extend.viewAll": "Ver todo"
 }

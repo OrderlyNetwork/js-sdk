@@ -1,14 +1,17 @@
 import { FC, useEffect, useRef, useState } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 import { EMPTY_LIST } from "@orderly.network/types";
-import { cn, Grid, Spinner } from "@orderly.network/ui";
+import { cn, Flex, Grid, Spinner, Text, VectorIcon } from "@orderly.network/ui";
 import { BasicSymbolInfo } from "../../../types/types";
+import { BuySellRatioBar, BuySellRatio } from "../../base/orderBook";
 import {
   ORDERBOOK_COIN_TYPE_KEY,
   OrderBookProvider,
 } from "../../base/orderBook/orderContext";
 import { DesktopAsks } from "./asks.desktop";
 import { DesktopBids } from "./bids.desktop";
+import { BuySellRatioSettings } from "./buySellRatio";
 import { DesktopDepthSelect } from "./depthSelect.desktop";
 import { DesktopHeader } from "./header.desktop";
 import { DesktopMarkPrice } from "./markPrice.desktop";
@@ -35,11 +38,25 @@ export interface DesktopOrderBookProps {
   className?: string;
   pendingOrders?: number[];
   symbolInfo: BasicSymbolInfo;
+  showBuySellRatio?: boolean;
+  setShowBuySellRatio?: (show: boolean) => void;
+  buySellRatio?: BuySellRatio | null;
 }
 
 export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
-  const { lastPrice, markPrice, quote, base, isLoading, onDepthChange } = props;
+  const {
+    lastPrice,
+    markPrice,
+    quote,
+    base,
+    isLoading,
+    onDepthChange,
+    showBuySellRatio = true,
+    setShowBuySellRatio,
+    buySellRatio,
+  } = props;
 
+  const { t } = useTranslation();
   const divRef = useRef<HTMLDivElement>(null);
 
   const [showTotal, setShowTotal] = useState(false);
@@ -84,19 +101,32 @@ export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
       showTotal={showTotal}
       pendingOrders={props.pendingOrders || EMPTY_LIST}
       symbolInfo={props.symbolInfo}
+      showBuySellRatio={showBuySellRatio}
+      onShowBuySellRatioChange={setShowBuySellRatio}
     >
       <Grid
         cols={1}
-        rows={5}
+        rows={showBuySellRatio ? 6 : 5}
         id="oui-orderbook-desktop"
         ref={divRef}
-        className="oui-relative oui-size-full oui-grid-rows-[auto,auto,1fr,auto,1fr]"
+        className={cn(
+          "oui-relative oui-size-full",
+          showBuySellRatio
+            ? "oui-grid-rows-[auto,auto,1fr,auto,1fr,auto]"
+            : "oui-grid-rows-[auto,auto,1fr,auto,1fr]",
+        )}
       >
-        <DesktopDepthSelect
-          depths={props.depths}
-          value={props.activeDepth}
-          onChange={onDepthChange}
-        />
+        <Flex justify="between" itemAlign="center" className="oui-pr-3">
+          <DesktopDepthSelect
+            depths={props.depths}
+            value={props.activeDepth}
+            onChange={onDepthChange}
+          />
+          <BuySellRatioSettings
+            showBuySellRatio={showBuySellRatio}
+            setShowBuySellRatio={setShowBuySellRatio}
+          />
+        </Flex>
         <DesktopHeader quote={quote} base={base} />
         <DesktopAsks data={[...props.asks]} />
         <DesktopMarkPrice
@@ -112,6 +142,12 @@ export const DesktopOrderBook: FC<DesktopOrderBookProps> = (props) => {
           symbolInfo={props.symbolInfo}
         />
         <DesktopBids data={[...props.bids]} />
+        {showBuySellRatio && (
+          <BuySellRatioBar
+            ratio={buySellRatio || null}
+            className="oui-text-2xs oui-px-3 oui-h-[38px]"
+          />
+        )}
         {isLoading && (
           <div className="oui-bg-bg-8/70 oui-absolute oui-inset-0 oui-z-10 oui-flex oui-items-center oui-justify-center">
             <Spinner />

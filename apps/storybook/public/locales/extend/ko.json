@@ -23,5 +23,6 @@
   "extend.wooStake": "WOO 스테이크",
   "extend.wooStake.description": "USDC와 WOO를 얻기 위해 스테이킹하세요",
   "extend.vaults.description": "자동화된 전략으로 패시브 수익을 창출하세요",
-  "extend.swap.warning": "스팟 스왑은 연결된 Web3 지갑 자산을 사용하여 실행됩니다. 퍼페츄얼 계정 자금은 별도로 관리되며 영향을 받지 않습니다."
+  "extend.swap.warning": "스팟 스왑은 연결된 Web3 지갑 자산을 사용하여 실행됩니다. 퍼페츄얼 계정 자금은 별도로 관리되며 영향을 받지 않습니다.",
+  "extend.viewAll": "전체 보기"
 }
