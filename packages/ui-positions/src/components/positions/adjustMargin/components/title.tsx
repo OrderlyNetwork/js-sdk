@@ -1,6 +1,12 @@
 import { FC } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { Flex, Text, Divider, CloseIcon } from "@orderly.network/ui";
+import {
+  Flex,
+  Text,
+  Divider,
+  CloseIcon,
+  IconButton,
+} from "@orderly.network/ui";
 
 export const Title: FC<{ close: () => void }> = ({ close }) => {
   const { t } = useTranslation();
@@ -13,14 +19,9 @@ export const Title: FC<{ close: () => void }> = ({ close }) => {
         >
           {t("positions.adjustMargin.title")}
         </Text>
-        <button
-          type="button"
-          className="oui-flex oui-size-[18px] oui-items-center oui-justify-center"
-          onClick={close}
-          aria-label="close adjust margin"
-        >
+        <IconButton onClick={close} color="secondary">
           <CloseIcon size={18} color="white" opacity={0.98} />
-        </button>
+        </IconButton>
       </Flex>
       <Divider className="oui-mt-[9px] oui-w-full" />
     </div>

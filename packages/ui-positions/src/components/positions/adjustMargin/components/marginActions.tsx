@@ -26,11 +26,9 @@ export const MarginActions: FC<MarginActionsProps> = ({
         color="secondary"
         className={cn(
           tabBase,
-          isAdd && "oui-bg-base-5",
-          isAdd && "oui-text-base-contrast-98",
-          !isAdd && "oui-bg-base-7",
-          !isAdd && "oui-text-base-contrast-54",
-          !isAdd && "hover:oui-text-base-contrast-80",
+          isAdd && "oui-bg-base-5 oui-text-base-contrast-98",
+          !isAdd &&
+            "oui-bg-base-7 oui-text-base-contrast-54 hover:oui-text-base-contrast-80",
         )}
         onClick={() => onTabChange("add")}
       >
@@ -43,11 +41,10 @@ export const MarginActions: FC<MarginActionsProps> = ({
         color="secondary"
         className={cn(
           tabBase,
-          !isAdd && "oui-bg-base-5",
-          !isAdd && "oui-text-base-contrast-98",
-          isAdd && "oui-bg-base-7",
-          isAdd && "oui-text-base-contrast-54",
-          isAdd && "hover:oui-text-base-contrast-80",
+          !isAdd &&
+            "oui-bg-base-5 oui-text-base-contrast-98 hover:oui-text-base-contrast-80",
+          isAdd &&
+            "oui-bg-base-7 oui-text-base-contrast-54 hover:oui-text-base-contrast-80",
         )}
         onClick={() => onTabChange("reduce")}
       >
