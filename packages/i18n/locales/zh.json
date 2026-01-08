@@ -1091,6 +1091,7 @@
   "notification.general": "常规更新",
   "notification.joinNow": "立即参与",
   "notification.listing": "新代币上线",
+  "notification.vote": "社区投票",
   "notification.maintenance": "系统维护",
   "notification.maintenanceDuration.hours": "{{hours}} 小时，{{startTimeFormatted}} - {{endTimeFormatted}} (UTC)",
   "notification.maintenanceDuration.minutes": "{{minutes}} 分钟，{{startTimeFormatted}} - {{endTimeFormatted}} (UTC)",

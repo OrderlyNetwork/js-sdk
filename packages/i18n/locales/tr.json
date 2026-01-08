@@ -1091,6 +1091,7 @@
   "notification.general": "Genel güncelleme",
   "notification.joinNow": "Şimdi katıl",
   "notification.listing": "Yeni token listesi",
+  "notification.vote": "Topluluk oylaması",
   "notification.maintenance": "Sistem bakımı",
   "notification.maintenanceDuration.hours": "{{hours}} saat, {{startTimeFormatted}} - {{endTimeFormatted}} (UTC)",
   "notification.maintenanceDuration.minutes": "{{minutes}} dakika, {{startTimeFormatted}} - {{endTimeFormatted}} (UTC)",

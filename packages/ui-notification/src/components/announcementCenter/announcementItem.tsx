@@ -48,6 +48,8 @@ export const AnnouncementItem: FC<{
         return t("notification.listing");
       case AnnouncementType.Maintenance:
         return t("notification.maintenance");
+      case AnnouncementType.Vote:
+        return t("notification.vote");
       default:
         return t("notification.general");
     }

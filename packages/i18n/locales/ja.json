@@ -1091,6 +1091,7 @@
   "notification.general": "一般アップデート",
   "notification.joinNow": "今すぐ参加",
   "notification.listing": "新しいトークン上場",
+  "notification.vote": "コミュニティ投票",
   "notification.maintenance": "システムメンテナンス",
   "notification.maintenanceDuration.hours": "{{hours}} 時間、{{startTimeFormatted}} - {{endTimeFormatted}} (UTC)",
   "notification.maintenanceDuration.minutes": "{{minutes}} 分、{{startTimeFormatted}} - {{endTimeFormatted}} (UTC)",

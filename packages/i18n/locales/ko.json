@@ -1091,6 +1091,7 @@
   "notification.general": "일반 업데이트",
   "notification.joinNow": "지금 참여",
   "notification.listing": "신규 토큰 상장",
+  "notification.vote": "커뮤니티 투표",
   "notification.maintenance": "시스템 점검",
   "notification.maintenanceDuration.hours": "{{hours}}시간, {{startTimeFormatted}} - {{endTimeFormatted}} (UTC)",
   "notification.maintenanceDuration.minutes": "{{minutes}}분, {{startTimeFormatted}} - {{endTimeFormatted}} (UTC)",

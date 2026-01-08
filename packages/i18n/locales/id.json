@@ -1091,6 +1091,7 @@
   "notification.general": "Pembaruan umum",
   "notification.joinNow": "Bergabung sekarang",
   "notification.listing": "Listing token baru",
+  "notification.vote": "Pemungutan suara komunitas",
   "notification.maintenance": "Pemeliharaan sistem",
   "notification.maintenanceDuration.hours": "{{hours}} jam pada {{startTimeFormatted}} - {{endTimeFormatted}} (UTC)",
   "notification.maintenanceDuration.minutes": "{{minutes}} menit pada {{startTimeFormatted}} - {{endTimeFormatted}} (UTC)",

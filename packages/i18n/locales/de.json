@@ -1091,6 +1091,7 @@
   "notification.general": "Allgemeines Update",
   "notification.joinNow": "Jetzt teilnehmen",
   "notification.listing": "Neuer Token-Listing",
+  "notification.vote": "Community-Abstimmung",
   "notification.maintenance": "Systemwartung",
   "notification.maintenanceDuration.hours": "{{hours}} Stunden um {{startTimeFormatted}} - {{endTimeFormatted}} (UTC)",
   "notification.maintenanceDuration.minutes": "{{minutes}} Minuten um {{startTimeFormatted}} - {{endTimeFormatted}} (UTC)",

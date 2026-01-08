@@ -1091,6 +1091,7 @@
   "notification.general": "一般更新",
   "notification.joinNow": "立即參與",
   "notification.listing": "新代幣上市",
+  "notification.vote": "社群投票",
   "notification.maintenance": "系統維護",
   "notification.maintenanceDuration.hours": "{{hours}} 小時，{{startTimeFormatted}} - {{endTimeFormatted}} (UTC)",
   "notification.maintenanceDuration.minutes": "{{minutes}} 分鐘，{{startTimeFormatted}} - {{endTimeFormatted}} (UTC)",

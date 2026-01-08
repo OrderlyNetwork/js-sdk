@@ -1091,6 +1091,7 @@
   "notification.general": "Algemene update",
   "notification.joinNow": "Nu deelnemen",
   "notification.listing": "Nieuwe token listing",
+  "notification.vote": "Gemeenschapsstemming",
   "notification.maintenance": "Systeemonderhoud",
   "notification.maintenanceDuration.hours": "{{hours}} uur om {{startTimeFormatted}} - {{endTimeFormatted}} (UTC)",
   "notification.maintenanceDuration.minutes": "{{minutes}} minuten om {{startTimeFormatted}} - {{endTimeFormatted}} (UTC)",
