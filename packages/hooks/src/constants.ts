@@ -7,3 +7,8 @@ export const DEFAULT_TICK_SIZES: Record<PropertyKey, string> = {
 export const DEFAULT_SYMBOL_DEPTHS: Record<PropertyKey, number[]> = {
   PERP_ETH_USDC: [0.01, 0.1, 0.5, 1, 10],
 };
+
+export const DEFAULT_SYMBOL_DISPLAY_NAMES: Record<string, string> = {
+  PERP_XAU_USDC: "XAU (Gold) ",
+  PERP_XAG_USDC: "XAG (Silver)",
+};
