@@ -80,6 +80,12 @@ const NotificationHeader: FC<{
             {t("notification.maintenanceTitle")}
           </Text>
         );
+      case AnnouncementType.Vote:
+        return (
+          <Text size="sm" color="inherit">
+            {t("notification.vote")}
+          </Text>
+        );
       default:
         return (
           <Text size="sm" color="inherit">

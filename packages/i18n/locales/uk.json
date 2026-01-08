@@ -1091,6 +1091,7 @@
   "notification.general": "Загальне оновлення",
   "notification.joinNow": "Приєднатися зараз",
   "notification.listing": "Новий лістинг токена",
+  "notification.vote": "Голосування спільноти",
   "notification.maintenance": "Обслуговування системи",
   "notification.maintenanceDuration.hours": "{{hours}} годин о {{startTimeFormatted}} - {{endTimeFormatted}} (UTC)",
   "notification.maintenanceDuration.minutes": "{{minutes}} хвилин о {{startTimeFormatted}} - {{endTimeFormatted}} (UTC)",

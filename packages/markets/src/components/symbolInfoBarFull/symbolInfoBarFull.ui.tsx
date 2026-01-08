@@ -20,6 +20,7 @@ import {
 } from "../../icons";
 import { FundingRateHintWidget } from "../fundingRateHint";
 import type { MarketsProviderProps } from "../marketsProvider";
+import { SymbolDisplay } from "../symbolDisplay";
 import { RwaTooltip } from "./rwaTooltip";
 import type { UseSymbolInfoBarFullScriptReturn } from "./symbolInfoBarFull.script";
 
@@ -106,7 +107,7 @@ export const SymbolInfoBarFull: React.FC<SymbolInfoBarFullProps> = (props) => {
       <Flex
         direction="column"
         itemAlign="start"
-        className="oui-gap-y-[2px] oui-shrink-0"
+        className="oui-shrink-0 oui-gap-y-[2px]"
       >
         <LazyDropDownMarketsWidget
           contentClassName="oui-w-[429px] oui-h-[496px]"
@@ -115,16 +116,13 @@ export const SymbolInfoBarFull: React.FC<SymbolInfoBarFullProps> = (props) => {
         >
           <Flex gapX={1} className="oui-cursor-pointer">
             <TokenIcon symbol={symbol} className="oui-size-4" />
-            <Text.formatted
-              className="oui-whitespace-nowrap oui-break-normal"
-              rule="symbol"
-              formatString="base-type"
+            <SymbolDisplay
+              formatString="base"
               size="xs"
-              weight="semibold"
-              intensity={98}
+              className="oui-text-base-contrast"
             >
               {symbol}
-            </Text.formatted>
+            </SymbolDisplay>
             <TriangleDownIcon className="oui-text-base-contrast-54" />
           </Flex>
         </LazyDropDownMarketsWidget>

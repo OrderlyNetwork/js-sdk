@@ -6,6 +6,7 @@ import { FavoritesIcon2, UnFavoritesIcon2 } from "../../icons";
 import { FavoriteInstance } from "../../type";
 import { FavoritesDropdownMenuWidget } from "../favoritesDropdownMenu";
 import { RwaDotTooltip } from "../rwaDotTooltip";
+import { SymbolDisplay } from "../symbolDisplay";
 
 export function getSymbolColumn(
   favorite: FavoriteInstance,
@@ -42,14 +43,9 @@ export function getSymbolColumn(
         <Flex gapX={1}>
           {favoritesIcon}
           <TokenIcon symbol={value} className="oui-size-[18px]" />
-          <Text.formatted
-            rule="symbol"
-            formatString="base"
-            size="2xs"
-            weight="semibold"
-          >
+          <SymbolDisplay formatString="base" size="2xs">
             {value}
-          </Text.formatted>
+          </SymbolDisplay>
           <RwaDotTooltip record={record} />
           <Badge size="xs" color="primary">
             {record.leverage}x

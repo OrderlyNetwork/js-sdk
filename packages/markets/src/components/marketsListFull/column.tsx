@@ -10,6 +10,7 @@ import {
 } from "../../icons";
 import { FavoriteInstance } from "../../type";
 import { FavoritesDropdownMenuWidget } from "../favoritesDropdownMenu";
+import { SymbolDisplay } from "../symbolDisplay";
 
 export const useMarketsListFullColumns = (
   favorite: FavoriteInstance,
@@ -70,15 +71,9 @@ export const useMarketsListFullColumns = (
         onSort: true,
         render: (value) => {
           return (
-            <Text.formatted
-              rule="symbol"
-              formatString="base-type"
-              size="xs"
-              weight="semibold"
-              showIcon
-            >
+            <SymbolDisplay formatString="base" showIcon>
               {value}
-            </Text.formatted>
+            </SymbolDisplay>
           );
         },
       },

@@ -1091,6 +1091,7 @@
   "notification.general": "Cập nhật chung",
   "notification.joinNow": "Tham gia ngay",
   "notification.listing": "Niêm yết token mới",
+  "notification.vote": "Bỏ phiếu cộng đồng",
   "notification.maintenance": "Bảo trì hệ thống",
   "notification.maintenanceDuration.hours": "{{hours}} giờ vào {{startTimeFormatted}} - {{endTimeFormatted}} (UTC)",
   "notification.maintenanceDuration.minutes": "{{minutes}} phút vào {{startTimeFormatted}} - {{endTimeFormatted}} (UTC)",
