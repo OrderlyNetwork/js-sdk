@@ -69,7 +69,7 @@
     "tailwind-merge": "^1.14.0",
     "tailwind-variants": "^0.2.1",
     "vite-plugin-node-polyfills": "0.17.0",
-    "woofi-swap-widget-kit": "^0.0.38"
+    "woofi-swap-widget-kit": "^0.0.41"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^4.1.3",
