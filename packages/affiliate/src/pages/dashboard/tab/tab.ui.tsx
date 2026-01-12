@@ -10,8 +10,8 @@ import {
   TabsTrigger,
   Text,
 } from "@orderly.network/ui";
-import { AffiliateIcon } from "../../../components/affiliateIcon";
-import { TraderIcon } from "../../../components/traderIcon";
+import { AffiliateIcon } from "../../../icons/affiliateIcon";
+import { TraderIcon } from "../../../icons/traderIcon";
 import { TabTypes } from "../../../provider";
 import { AffiliatePage } from "../../affiliate";
 import { HomePage } from "../../home";

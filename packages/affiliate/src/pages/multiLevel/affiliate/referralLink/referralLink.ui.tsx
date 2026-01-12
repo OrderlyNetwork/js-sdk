@@ -8,7 +8,7 @@ import {
   Text,
   Tooltip,
 } from "@orderly.network/ui";
-import { AutoHideText } from "../../../components/autoHideText";
+import { AutoHideText } from "../../../../components/autoHideText";
 import { ReferralLinkReturns } from "./referralLink.script";
 
 export const ReferralLink: FC<ReferralLinkReturns> = (props) => {

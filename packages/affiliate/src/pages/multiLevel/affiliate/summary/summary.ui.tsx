@@ -2,7 +2,6 @@ import { FC } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Flex, Select, Text } from "@orderly.network/ui";
 import { commifyOptional } from "@orderly.network/utils";
-import { USDCIcon } from "../../../icons/usdcIcon";
 import { SummaryReturns } from "./summary.script";
 
 export const Summary: FC<SummaryReturns> = (props) => {
@@ -12,7 +11,7 @@ export const Summary: FC<SummaryReturns> = (props) => {
     <Flex
       id="oui-affiliate-affiliate-summary"
       r={"2xl"}
-      p={6}
+      p={5}
       width={"100%"}
       height={"100%"}
       gap={4}
@@ -68,18 +67,14 @@ const CommissionData: FC<SummaryReturns> = (props) => {
 
   return (
     <Flex
-      gradient="primary"
-      angle={180}
-      r="xl"
-      py={4}
-      px={6}
+      r="2xl"
       width={"100%"}
       direction={"column"}
-      gap={3}
-      height={"100%"}
-      className="oui-max-h-[104px]"
+      itemAlign="start"
+      gap={2}
+      className="oui-bg-base-contrast-4 oui-px-5 oui-py-12"
     >
-      <Text intensity={54} className="oui-text-base 2xl:oui-text-lg">
+      <Text intensity={54} size="sm">
         {`${t("affiliate.commission")} (USDC)`}
       </Text>
       <Flex
@@ -87,8 +82,7 @@ const CommissionData: FC<SummaryReturns> = (props) => {
         gap={3}
         className="oui-text-xl md:oui-text-2xl xl:oui-text-3xl"
       >
-        <USDCIcon className="md:oui-w-[24px] md:oui-h-[24px] lg:oui-w-[28px] lg:oui-h-[28px] " />
-        <Text>
+        <Text className="oui-text-success">
           {commifyOptional(props.commission, { fix: 2, fallback: "0" })}
         </Text>
       </Flex>

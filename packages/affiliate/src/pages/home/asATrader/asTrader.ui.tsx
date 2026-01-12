@@ -18,8 +18,8 @@ import {
 } from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
 import { commifyOptional } from "@orderly.network/utils";
-import { ArrowRightIcon } from "../../../components/arrowRightIcon";
-import { USDCIcon } from "../../../components/usdcIcon";
+import { ArrowRightIcon } from "../../../icons/arrowRightIcon";
+import { USDCIcon } from "../../../icons/usdcIcon";
 import { AsTraderReturns } from "./asTrader.script";
 
 export const AsTrader: FC<AsTraderReturns> = (props) => {
