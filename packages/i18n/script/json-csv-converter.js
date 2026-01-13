@@ -1,4 +1,6 @@
 const { validateI18nValue } = require("./utils");
+const fs = require("fs");
+const path = require("path");
 
 const separator = ".";
 
@@ -7,6 +9,7 @@ function multiJson2Csv(jsonList, header) {
     throw "Object array please.";
   }
 
+  const ignoreKeys = loadIgnoreKeys();
   const baseJson = jsonList[0];
   const baseKeys = Object.keys(baseJson);
   const errors = {};
@@ -16,13 +19,16 @@ function multiJson2Csv(jsonList, header) {
     for (const [index, json] of jsonList.entries()) {
       const val = json[key] || "";
       values.push(val);
-      const bool = validateI18nValue(val);
-      if (!bool.valid) {
-        const locale = header[index + 1];
-        if (!errors[locale]) {
-          errors[locale] = {};
+      // Skip validation if key is in ignore list
+      if (!shouldIgnoreKey(key, ignoreKeys)) {
+        const bool = validateI18nValue(val);
+        if (!bool.valid) {
+          const locale = header[index + 1];
+          if (!errors[locale]) {
+            errors[locale] = {};
+          }
+          errors[locale][key] = baseJson[key];
         }
-        errors[locale][key] = baseJson[key];
       }
     }
     result.push(stringsToCsvLine([key, ...values]));
@@ -30,7 +36,7 @@ function multiJson2Csv(jsonList, header) {
   if (Object.keys(errors).length > 0) {
     throw new Error(
       "valid i18n value failed, please check the value of the following values: " +
-        JSON.stringify(errors, null, 4)
+        JSON.stringify(errors, null, 4),
     );
   }
   return result.join("\n");
@@ -40,6 +46,7 @@ function csv2multiJson(csv) {
   if (typeof csv !== "string") throw "String please.";
   const json = {};
 
+  const ignoreKeys = loadIgnoreKeys();
   const lines = csvToLines(csv);
   const csvLines = lines.filter(Boolean).map(parseCsvLine);
   const headers = csvLines.shift()[0].split(",");
@@ -50,12 +57,15 @@ function csv2multiJson(csv) {
       const [key, ...values] = line;
       const val = values[index];
       json[header][key] = val;
-      const bool = validateI18nValue(val);
-      if (!bool.valid) {
-        if (!errors[header]) {
-          errors[header] = {};
+      // Skip validation if key is in ignore list
+      if (!shouldIgnoreKey(key, ignoreKeys)) {
+        const bool = validateI18nValue(val);
+        if (!bool.valid) {
+          if (!errors[header]) {
+            errors[header] = {};
+          }
+          errors[header][key] = values[0];
         }
-        errors[header][key] = values[0];
       }
     }
 
@@ -67,7 +77,7 @@ function csv2multiJson(csv) {
   if (Object.keys(errors).length > 0) {
     throw new Error(
       "valid i18n value failed, please check the value of the following values: " +
-        JSON.stringify(errors, null, 4)
+        JSON.stringify(errors, null, 4),
     );
   }
 
@@ -189,6 +199,59 @@ function getMissingKeys(jsonList, header) {
     }
   }
   return errors;
+}
+
+// Load ignore validation keys configuration
+function loadIgnoreKeys() {
+  const configPath = path.join(__dirname, "../validation-ignore.json");
+  try {
+    if (fs.existsSync(configPath)) {
+      const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
+      const ignoreKeys = config.ignoreKeys || [];
+      // Convert config to matcher array: string or regex
+      return ignoreKeys
+        .map((item) => {
+          if (typeof item === "string") {
+            // If string starts and ends with /, treat as regex pattern
+            if (item.startsWith("/") && item.endsWith("/") && item.length > 2) {
+              try {
+                const pattern = item.slice(1, -1); // Remove leading and trailing /
+                return new RegExp(pattern);
+              } catch (error) {
+                console.warn(
+                  `Warning: Invalid regex pattern "${item}": ${error.message}`,
+                );
+                return item;
+              }
+            }
+            return item;
+          }
+          return item;
+        })
+        .filter(Boolean);
+    }
+  } catch (error) {
+    console.warn(
+      `Warning: Failed to load validation-ignore.json: ${error.message}`,
+    );
+  }
+  return [];
+}
+
+// Check if key should be ignored
+function shouldIgnoreKey(key, ignoreKeys) {
+  for (const matcher of ignoreKeys) {
+    if (matcher instanceof RegExp) {
+      if (matcher.test(key)) {
+        return true;
+      }
+    } else if (typeof matcher === "string") {
+      if (matcher === key) {
+        return true;
+      }
+    }
+  }
+  return false;
 }
 
 module.exports = {
