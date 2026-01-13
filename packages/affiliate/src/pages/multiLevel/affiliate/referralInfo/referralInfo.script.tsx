@@ -1,28 +1,22 @@
 import { useMemo } from "react";
 import { RefferalAPI, useLocalStorage } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { toast } from "@orderly.network/ui";
+import { modal, toast } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { useReferralContext } from "../../../../provider";
 import { generateReferralLink } from "../../../../utils/utils";
+import { ReferralCodeFormDialogId } from "../referralCodeForm/modal";
 
-export type ReferralLinkReturns = {
-  onCopy?: (value: string) => void;
-  refLink?: string;
-  refCode?: string;
-  earn?: string;
-  share?: string;
-  brokerName?: string;
-};
+export type ReferralInfoReturns = ReturnType<typeof useReferralInfoScript>;
 
-export const useReferralLinkScript = (): ReferralLinkReturns => {
+export const useReferralInfoScript = () => {
   const { t } = useTranslation();
 
   const onCopy = (value: string) => {
     toast.success(t("common.copy.copied"));
   };
 
-  const { referralInfo, referralLinkUrl, overwrite } = useReferralContext();
+  const { referralInfo, referralLinkUrl } = useReferralContext();
   const [pinCodes, setPinCodes] = useLocalStorage<string[]>(
     "orderly_referral_codes",
     [] as string[],
@@ -82,12 +76,18 @@ export const useReferralLinkScript = (): ReferralLinkReturns => {
     return `${value}%`;
   }, [firstCode?.referee_rebate_rate]);
 
+  const onEdit = () => {
+    modal.show(ReferralCodeFormDialogId, {
+      type: "edit",
+    });
+  };
+
   return {
     onCopy,
     refLink: referralLink,
     refCode: code,
     share,
     earn,
-    brokerName: overwrite?.brokerName ?? overwrite?.shortBrokerName,
+    onEdit,
   };
 };

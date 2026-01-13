@@ -1,1 +1,1 @@
-export { AffiliatePage } from "./page";
+export { MultiLevelAffiliatePage } from "./page";

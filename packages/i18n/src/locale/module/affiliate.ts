@@ -1,5 +1,6 @@
 export const affiliate = {
   "affiliate.referral": "Referral",
+
   "affiliate.trader": "Trader",
 
   "affiliate.enter": "Enter",
@@ -110,6 +111,34 @@ export const affiliate = {
     "Referral rate updated successfully",
   "affiliate.referralTooltip":
     "Trade $10K to unlock your referral code and earn trading rebates from referrals.",
+  "affiliate.direct": "Direct",
+  "affiliate.indirect": "Indirect",
+  "affiliate.referrals": "Referrals",
+  "affiliate.referralCodes.edit": "Edit referral codes",
+  "affiliate.referralCodes.edit.modal.title": "Edit your referral code",
+  "affiliate.referralCodes.create": "Create referral codes",
+  "affiliate.referralCodes.create.modal.title": "Create new referral code",
+  "affiliate.multiLevel.referralCode.create.warning":
+    "You are creating your active referral code. Note that referee allocations can be increased later, but never decreased.",
+  "affiliate.referralCode.edit.warning":
+    "This code has active referees. To protect existing users, you can only increase the referee's commission rate.",
+
+  "affiliate.revenueSplitStrategy": "Revenue split strategy",
+  "affiliate.youKeep": "You keep",
+  "affiliate.inviteesGet": "Invitees get",
+  "affiliate.multiLevel": "Multi-Level",
+  "affiliate.earnReferralCommissions": "Earn referral commissions",
+  "affiliate.earnReferralCommissions.description":
+    "Invite traders and earn passive commissions from trades made throughout your entire referral network",
+  "affiliate.newReferralProgram.title": "Introducing the new referral program",
+  "affiliate.newReferralProgram.description":
+    "Give your sub-affiliates the power to customize their earnings, while you unlock an endless stream of passive income from every trader in your growing network.",
+  "affiliate.newReferralProgram.tradeToUnlock": "Trade to unlock",
+  "affiliate.newReferralProgram.tradeUnlock":
+    "Trade {{volume}} USDC volume to unlock the ability to invite friends and earn commissions.",
+  "affiliate.commissionConfiguration": "Commission configuration",
+  "affiliate.totalCommissionAvailable": "Total commission available",
+  "affiliate.review": "Review",
 };
 
 export type Affiliate = typeof affiliate;

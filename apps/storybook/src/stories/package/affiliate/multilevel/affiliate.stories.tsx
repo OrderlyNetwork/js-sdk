@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   ReferralProvider,
-  MultilevelAffiliatePage,
+  MultiLevelAffiliatePage,
 } from "@orderly.network/affiliate";
 import { TradingRewardsLeftSidebarPath } from "@orderly.network/trading-rewards";
 import { TradingRewardsLayout } from "../../../../components/layout";
 
-const meta: Meta<typeof MultilevelAffiliatePage> = {
+const meta: Meta<typeof MultiLevelAffiliatePage> = {
   title: "Package/affiliate/multilevel/Affiliate",
-  component: MultilevelAffiliatePage,
+  component: MultiLevelAffiliatePage,
   decorators: [
     (Story: any) => {
       return (
@@ -50,7 +50,7 @@ export const LayoutPage: Story = {
       <TradingRewardsLayout
         currentPath={TradingRewardsLeftSidebarPath.Affiliate}
       >
-        <MultilevelAffiliatePage
+        <MultiLevelAffiliatePage
           classNames={{ root: "oui-p-4 lg:oui-p-6 xl:oui-p-3" }}
         />
       </TradingRewardsLayout>

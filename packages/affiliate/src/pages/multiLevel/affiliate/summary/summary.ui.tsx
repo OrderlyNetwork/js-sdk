@@ -1,7 +1,6 @@
 import { FC } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { Flex, Select, Text } from "@orderly.network/ui";
-import { commifyOptional } from "@orderly.network/utils";
+import { cn, Flex, Select, Text } from "@orderly.network/ui";
 import { SummaryReturns } from "./summary.script";
 
 export const Summary: FC<SummaryReturns> = (props) => {
@@ -14,55 +13,74 @@ export const Summary: FC<SummaryReturns> = (props) => {
       p={5}
       width={"100%"}
       height={"100%"}
-      gap={4}
+      gap={6}
       direction={"column"}
-      className="oui-bg-base-9"
+      intensity={900}
+      className="oui-border oui-border-line-6"
     >
-      <Title {...props} />
-      <CommissionData {...props} />
-      <Flex direction={"column"} width={"100%"} gap={2}>
-        <Row
-          title={`${t("affiliate.referralVol")} (USDC)`}
+      <Flex direction={"row"} justify={"between"} width={"100%"}>
+        <Text className="oui-text-lg">{t("affiliate.summary")}</Text>
+        <div className={"oui-min-w-14"}>
+          <Select.options
+            size={"xs"}
+            value={props.period}
+            onValueChange={props.onPeriodChange}
+            options={props.periodTypes}
+          />
+        </div>
+      </Flex>
+
+      <SummaryItem
+        label={`${t("affiliate.commission")} (USDC)`}
+        value={props.commission}
+        direct={254444}
+        indirect={100000}
+        classNames={{
+          root: "!oui-py-12",
+          value: "oui-text-trade-profit",
+          direct: "oui-text-trade-profit",
+          indirect: "oui-text-trade-profit",
+        }}
+      />
+
+      <Flex width={"100%"} gap={6} className="oui-flex-col md:oui-flex-row">
+        <SummaryItem
+          label={`${t("affiliate.referralVol")} (USDC)`}
           value={props.referralVol}
-          dp={2}
-          {...props}
+          direct={25800000}
+          indirect={200000000}
+          classNames={{
+            root: "oui-w-full md:oui-w-1/2",
+          }}
         />
-        <Row
-          title={t("affiliate.referees")}
-          value={props.referees}
-          dp={0}
-          {...props}
-        />
-        <Row
-          title={t("affiliate.summary.refereesTraded")}
-          value={props.refereesTades}
-          dp={0}
-          {...props}
+        <SummaryItem
+          label={t("affiliate.referrals")}
+          value={256}
+          direct={12}
+          indirect={244}
+          classNames={{
+            root: "oui-w-full md:oui-w-1/2",
+          }}
         />
       </Flex>
     </Flex>
   );
 };
 
-const Title: FC<SummaryReturns> = (props) => {
-  const { t } = useTranslation();
-
-  return (
-    <Flex direction={"row"} justify={"between"} width={"100%"}>
-      <Text className="oui-text-lg">{t("affiliate.summary")}</Text>
-      <div className={"oui-min-w-14"}>
-        <Select.options
-          size={"xs"}
-          value={props.period}
-          onValueChange={props.onPeriodChange}
-          options={props.periodTypes}
-        />
-      </div>
-    </Flex>
-  );
+type SummaryItemProps = {
+  label: string;
+  value: number | string;
+  direct: number | string;
+  indirect: number | string;
+  classNames?: {
+    root?: string;
+    value?: string;
+    direct?: string;
+    indirect?: string;
+  };
 };
 
-const CommissionData: FC<SummaryReturns> = (props) => {
+const SummaryItem: FC<SummaryItemProps> = (props) => {
   const { t } = useTranslation();
 
   return (
@@ -72,42 +90,52 @@ const CommissionData: FC<SummaryReturns> = (props) => {
       direction={"column"}
       itemAlign="start"
       gap={2}
-      className="oui-bg-base-contrast-4 oui-px-5 oui-py-12"
+      className={cn(
+        "oui-bg-base-contrast-4 oui-p-5 md:oui-py-[38px]",
+        "oui-text-sm oui-text-base-contrast-54",
+        props.classNames?.root,
+      )}
     >
-      <Text intensity={54} size="sm">
-        {`${t("affiliate.commission")} (USDC)`}
-      </Text>
-      <Flex
-        direction={"row"}
-        gap={3}
-        className="oui-text-xl md:oui-text-2xl xl:oui-text-3xl"
+      <Text>{props.label}</Text>
+      <Text.numeral
+        rule="human"
+        dp={2}
+        size="3xl"
+        prefix="$"
+        placeholder="--"
+        intensity={98}
+        className={props.classNames?.value}
       >
-        <Text className="oui-text-success">
-          {commifyOptional(props.commission, { fix: 2, fallback: "0" })}
-        </Text>
-      </Flex>
-    </Flex>
-  );
-};
+        {props.value}
+      </Text.numeral>
 
-const Row: FC<
-  SummaryReturns & {
-    title: string;
-    value: number;
-    dp: number;
-  }
-> = (props) => {
-  return (
-    <Flex direction={"row"} justify={"between"} width={"100%"}>
-      <Text
-        intensity={54}
-        className="oui-text-2xs md:oui-text-xs xl:oui-text-sm"
-      >
-        {props.title}
-      </Text>
-      <Text className="oui-text-xs md:oui-text-sm xl:oui-text-base">
-        {commifyOptional(props.value, { fix: props.dp, fallback: "0" })}
-      </Text>
+      <Flex className="oui-flex-wrap oui-text-base-contrast-54">
+        <Flex gap={1}>
+          <Text>{t("affiliate.direct")}:</Text>
+          <Text.numeral
+            rule="human"
+            dp={1}
+            prefix="$"
+            intensity={54}
+            className={props.classNames?.direct}
+          >
+            {props.direct}
+          </Text.numeral>
+        </Flex>
+        {"/"}
+        <Flex gap={1}>
+          <Text>{t("affiliate.indirect")}:</Text>
+          <Text.numeral
+            rule="human"
+            dp={1}
+            prefix="$"
+            intensity={54}
+            className={props.classNames?.indirect}
+          >
+            {props.indirect}
+          </Text.numeral>
+        </Flex>
+      </Flex>
     </Flex>
   );
 };
