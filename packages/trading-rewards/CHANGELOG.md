@@ -1,5 +1,24 @@
 # @orderly.network/trading-rewards
 
+## 2.8.11
+
+### Patch Changes
+
+- 1ed7590: publish
+- publish
+- e7fb6c1: publish
+- Updated dependencies [1ed7590]
+- Updated dependencies
+- Updated dependencies [e7fb6c1]
+  - @orderly.network/react-app@2.8.11
+  - @orderly.network/hooks@2.8.11
+  - @orderly.network/i18n@2.8.11
+  - @orderly.network/types@2.8.11
+  - @orderly.network/ui@2.8.11
+  - @orderly.network/ui-connector@2.8.11
+  - @orderly.network/ui-scaffold@2.8.11
+  - @orderly.network/utils@2.8.11
+
 ## 2.8.11-alpha.1
 
 ### Patch Changes

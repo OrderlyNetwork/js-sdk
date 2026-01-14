@@ -1,5 +1,47 @@
 # storybook
 
+## 1.8.11
+
+### Patch Changes
+
+- 1ed7590: publish
+- publish
+- e7fb6c1: publish
+- Updated dependencies [1ed7590]
+- Updated dependencies
+- Updated dependencies [e7fb6c1]
+  - @orderly.network/affiliate@2.8.11
+  - @orderly.network/react-app@2.8.11
+  - @orderly.network/chart@2.8.11
+  - @orderly.network/core@2.8.11
+  - @orderly.network/default-evm-adapter@2.8.11
+  - @orderly.network/default-solana-adapter@2.8.11
+  - @orderly.network/hooks@2.8.11
+  - @orderly.network/i18n@2.8.11
+  - @orderly.network/markets@2.8.11
+  - @orderly.network/portfolio@2.8.11
+  - @orderly.network/trading@2.8.11
+  - @orderly.network/trading-leaderboard@2.8.11
+  - @orderly.network/trading-rewards@2.8.11
+  - @orderly.network/types@2.8.11
+  - @orderly.network/ui@2.8.11
+  - @orderly.network/ui-chain-selector@2.8.11
+  - @orderly.network/ui-connector@2.8.11
+  - @orderly.network/ui-leverage@2.8.11
+  - @orderly.network/ui-notification@2.8.11
+  - @orderly.network/ui-order-entry@2.8.11
+  - @orderly.network/ui-orders@2.8.11
+  - @orderly.network/ui-positions@2.8.11
+  - @orderly.network/ui-scaffold@2.8.11
+  - @orderly.network/ui-share@2.8.11
+  - @orderly.network/ui-tpsl@2.8.11
+  - @orderly.network/ui-tradingview@2.8.11
+  - @orderly.network/ui-transfer@2.8.11
+  - @orderly.network/utils@2.8.11
+  - @orderly.network/vaults@2.8.11
+  - @orderly.network/wallet-connector@2.8.11
+  - @orderly.network/wallet-connector-privy@2.8.11
+
 ## 1.8.11-alpha.1
 
 ### Patch Changes

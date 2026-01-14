@@ -1,5 +1,13 @@
 # @orderly.network/types
 
+## 2.8.11
+
+### Patch Changes
+
+- 1ed7590: publish
+- publish
+- e7fb6c1: publish
+
 ## 2.8.11-alpha.1
 
 ### Patch Changes
