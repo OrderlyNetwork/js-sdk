@@ -44,9 +44,10 @@ export const Faq: FC<FaqProps> = (props) => {
 
                 {/* Answer (collapsible) */}
                 <CollapsibleContent>
-                  <Flex className="oui-pl-6 oui-pt-3">
-                    <Text>{item.answer}</Text>
-                  </Flex>
+                  <Box
+                    className="oui-pt-3 oui-text-base-contrast-54"
+                    dangerouslySetInnerHTML={{ __html: item.answer }}
+                  />
                 </CollapsibleContent>
               </Flex>
             </Collapsible>
