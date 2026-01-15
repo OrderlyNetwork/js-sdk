@@ -1,5 +1,25 @@
 # @orderly.network/ui-positions
 
+## 2.8.12
+
+### Patch Changes
+
+- publish
+- 117b23a: publish
+- Updated dependencies
+- Updated dependencies [117b23a]
+  - @orderly.network/react-app@2.8.12
+  - @orderly.network/hooks@2.8.12
+  - @orderly.network/i18n@2.8.12
+  - @orderly.network/perp@4.8.12
+  - @orderly.network/types@2.8.12
+  - @orderly.network/ui@2.8.12
+  - @orderly.network/ui-connector@2.8.12
+  - @orderly.network/ui-leverage@2.8.12
+  - @orderly.network/ui-share@2.8.12
+  - @orderly.network/ui-tpsl@2.8.12
+  - @orderly.network/utils@2.8.12
+
 ## 2.8.12-alpha.0
 
 ### Patch Changes
