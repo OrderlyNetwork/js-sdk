@@ -168,51 +168,6 @@ const mmForOtherSymbols = (
   }, zero);
 };
 
-/**
- * @formulaId liqPrice
- * @name Position Liquidation Price
- * @formula Position Liq. Price = max(mark_price_i + (total_collateral_value - sum(abs(position_qty_i) * mark_price_i * MMR_i)) / (abs(position_qty_i) * MMR_i - position_qty_i), 0)
- * @description
- * ## Term Definitions
- *
- * - **Position Liq. Price**: Single symbol position liquidation price
- * - **total_collateral_value**: Total asset value of user account margin (USDC denominated)
- * - **total_notional**: Sum of current position notional values
- * - **position_qty_i**: Single symbol position quantity
- * - **mark_price_i**: Single symbol mark price
- * - **MMR_i**: Single symbol maintenance margin rate
- * - **Base MMR_i**: Single symbol base maintenance margin rate
- * - **Base IMR_i**: Single symbol base initial margin rate
- * - **IMR Factor_i**: Single symbol IMR calculation factor, from v1/client/info
- * - **Position Notional_i**: Single symbol position notional sum
- *
- * ## MMR Formula
- *
- * MMR_i = Max(Base MMR_i, (Base MMR_i / Base IMR_i) * IMR Factor_i * Abs(Position Notional_i)^(4/5))
- *
- * ## Example - BTC Position
- *
- * **BTC Position Liq. Price** = max(25986.2 + (1981.66 - 505.6215) / (abs(0.2) * 0.05 - 0.2), 0) = 18217.57
- *
- * - total_collateral_value = 1981.66
- * - sum(abs(position_qty_i) * mark_price_i * MMR_i) = 505.6215
- * - BTC: abs(position_qty_i) * mark_price_i * MMR_i = 5197.2 * 0.05
- * - ETH: abs(position_qty_i) * mark_price_i * MMR_i = 4915.23 * 0.05
- * - BTC MMR_i = Max(0.05, (0.05 / 0.1) * 0.0000002512 * 5197.2^(4/5)) = Max(0.05, 0.000117924809) = 0.05
- * - position_qty_i = 0.2
- * - mark_price_i = 25986.2
- *
- * ## Example - ETH Position
- *
- * **ETH Position Liq. Price** = max(1638.41 + (1981.66 - 505.6215) / (abs(-3) * 0.05 + 3), 0) = 2106.99365
- *
- * - ETH MMR_i = Max(0.05, (0.05 / 0.1) * 0.0000003754 * 4915.23^(4/5)) = Max(0.05, 0.000168538587) = 0.05
- * - position_qty_i = -3
- * - mark_price_i = 1638.41
- *
- * @param inputs The inputs for calculating the liquidation price.
- * @returns The liquidation price of the position.
- */
 const calculateLiqPrice = (
   // symbol: string,
   markPrice: number,
@@ -312,7 +267,7 @@ const compareCollateralWithMM = (
  *
  * Where `total_collateral_value` and `mm_for_other_symbols` are constants.
  *
- * - **total_collateral_value** → https://wootraders.atlassian.net/wiki/spaces/WOOFI/pages/346030144/v2#Total-collateral-%5BinlineExtension%5D
+ * - **total_collateral_value**
  * - **mm_for_other_symbols** = `sum_i ( abs(position_qty_i) * mark_price_i * mmr_i )` for i != current symbol
  *
  * ### (2) compare_collateral_w_mm function
