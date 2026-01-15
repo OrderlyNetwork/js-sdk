@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/default-evm-adapter",
-  "version": "2.8.11",
+  "version": "2.8.12-alpha.0",
   "description": "",
   "scripts": {
     "build": "tsup",

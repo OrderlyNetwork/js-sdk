@@ -7,7 +7,7 @@ declare global {
 }
 if (typeof window !== "undefined") {
   window.__ORDERLY_VERSION__ = window.__ORDERLY_VERSION__ || {};
-  window.__ORDERLY_VERSION__["@orderly.network/ui-scaffold"] = "2.8.11";
+  window.__ORDERLY_VERSION__["@orderly.network/ui-scaffold"] = "2.8.12-alpha.0";
 }
 
-export default "2.8.11";
+export default "2.8.12-alpha.0";
