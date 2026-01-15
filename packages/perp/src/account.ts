@@ -9,7 +9,7 @@ export type ResultOptions = {
 /**
  * @formulaId totalValue
  * @name Total Value
- * @formula Total Value = total_holding + total unsettlement PNL, total_holding = usdc balance.holding + SUM(non-usdc balance.holding * mark price)
+ * @formula Total Value = total_holding + total_isolated_position_margin + total_unsettled_PNL, total_holding = usdc balance.holding + SUM(non-usdc balance.holding * mark price)
  * @description
  *
  * ## Definition
@@ -22,55 +22,83 @@ export type ResultOptions = {
  *
  * **non-usdc balance.holding * mark price** = Value of non-USDC asset holdings (denominated in USDC)
  *
+ * **total_isolated_position_margin** = Sum of all isolated margin position margins
+ *
  * **holding**: Asset quantity held by the user, from `/v1/client/holding` or v2 Websocket API | Balance
  *
  * **mark price**: Current price of the asset, from v2 Websocket API | Balance
  *
- * **total unsettlement PNL** = Sum of user's account unsettled PNL
+ * **total unsettlement PNL** = Sum of user's account unsettled PNL (including both cross and isolated margin positions)
  *
  * ## Example
  *
  * ```
  * total_holding = 2000 + 1000 * 1.001 = 3001
- * Total Value = 3001 - 18.34 = 2982.66
- * total unsettlement PNL = -18.34
+ * total_isolated_position_margin = 500
+ * total_unsettled_PNL = -18.34
+ * Total Value = 3001 + 500 - 18.34 = 3482.66
  * ```
  */
 export function totalValue(inputs: {
   /**
-   * @description Total unsettled PNL of user account
+   * @description Total unsettled PNL of user account (including both cross and isolated margin positions)
    */
   totalUnsettlementPnL: number;
+  /**
+   * @description USDC holding quantity
+   */
   USDCHolding: number;
+  /**
+   * @description Non-USDC holdings with their index prices
+   */
   nonUSDCHolding: {
     holding: number;
     indexPrice: number;
   }[];
+  /**
+   * @description Total isolated position margin (sum of all isolated margin positions). Pass 0 if no isolated margin positions exist.
+   */
+  totalIsolatedPositionMargin: number;
 }): Decimal {
-  const { totalUnsettlementPnL, USDCHolding, nonUSDCHolding } = inputs;
+  const {
+    totalUnsettlementPnL,
+    USDCHolding,
+    nonUSDCHolding,
+    totalIsolatedPositionMargin,
+  } = inputs;
   const nonUSDCHoldingValue = nonUSDCHolding.reduce((acc, cur) => {
     return new Decimal(cur.holding).mul(cur.indexPrice).add(acc);
   }, zero);
-  return nonUSDCHoldingValue.add(USDCHolding).add(totalUnsettlementPnL);
+  return nonUSDCHoldingValue
+    .add(USDCHolding)
+    .add(totalIsolatedPositionMargin)
+    .add(totalUnsettlementPnL);
 }
 
 /**
  * @formulaId freeCollateral
  * @name Free Collateral
- * @formula Free Collateral = Total_collateral_value - total_initial_margin_with_orders,Total_collateral_value,
- * total_initial_margin_with_orders = sum ( position_notional_with_orders_i * IMR_i (with_orders)),
- * IMR_i (with_orders) = Max(1 / Max Account Leverage, Base IMR i, IMR Factor i * Abs(Position Notional i + Order Notional i)^(4/5)),
- * position_notional_with_orders_i = abs( mark_price_i * position_qty_with_orders_i),
+ * @formula Free Collateral = Total_collateral_value - total_initial_margin_with_orders
+ * Total_collateral_value = (usdc balance.holding + usdc balance.pending_short_qty - usdc balance.isolated_order_frozen) + SUM(non-usdc balance.holding * mark price * discount) + total_cross_unsettled_PNL
+ * total_initial_margin_with_orders = sum ( cross_position_notional_with_orders_i * cross_IMR_i (with_orders))
+ * IMR_i (with_orders) = Max(1 / Max Account Leverage, Base IMR i, IMR Factor i * Abs(Position Notional i + Order Notional i)^(4/5))
+ * position_notional_with_orders_i = abs( mark_price_i * position_qty_with_orders_i)
  * position_qty_with_orders_i = max[ abs(position_qty_i + sum_position_qty_buy_orders_i), abs(position_qty_i - sum_position_qty_sell_orders_i)]
  * @description
  *
  * ## Definition
  *
- * **Free collateral**: Total value of available margin in the user's account (denominated in USDC)
+ * **Free collateral**: Total value of available margin in the user's account (denominated in USDC). For isolated margin mode, this only considers cross margin positions and orders.
  *
- * **Total_collateral_value**: Total value of collateral assets in the user's account (denominated in USDC)
+ * **Total_collateral_value**: Total value of collateral assets in the user's account (denominated in USDC). For isolated margin mode, includes cross margin unsettled PNL but excludes isolated order frozen amounts.
  *
- * **total_initial_margin_with_orders**: Total initial margin used by the user (including positions and orders)
+ * **total_initial_margin_with_orders**: Total initial margin used by cross margin positions and orders (isolated margin positions are excluded)
+ *
+ * **usdc balance.pending_short_qty**: USDC balance frozen for pending short orders
+ *
+ * **usdc balance.isolated_order_frozen**: USDC balance frozen for isolated margin orders
+ *
+ * **total_cross_unsettled_PNL**: Total unsettled PNL from cross margin positions only
  *
  * **initial_margin_i with order**: Initial margin for symbol i (considering both positions and orders)
  *
@@ -101,33 +129,85 @@ export function totalValue(inputs: {
  * ## Example
  *
  * ```
- * BTC-PERP position_qty_with_orders_i = max[ abs(0.2+0.3) , abs(0.2-0.5) ] = 0.5
- * ETH-PERP position_qty_with_orders_i = max[ abs(-3+0), abs(-3+0)] = 3
- *
- * BTC-PERP position_notional_with_orders_i = 0.5 * 25986.2 = 12993.1
- * ETH-PERP position_notional_with_orders_i = 3 * 1638.41 = 4915.23
- *
- * BTC-PERP IMR_i (with_orders) = Max(
- *   1 / Max Account Leverage = 1 / 10 = 0.1
- *   Base IMR i = 0.1
- *   IMR Factor i * Abs(Position Notional i + Order Notional i)^(4/5)) = 0.0000002512 * Abs(5197.2 + 7200 - 14000)^(4/5) = 9.20286609e-5
- * ) = 0.1
- *
- * ETH-PERP IMR_i (with_orders) = Max(
- *   1 / Max Account Leverage = 1 / 10 = 0.1
- *   Base IMR i = 0.1
- *   IMR Factor i * Abs(Position Notional i + Order Notional i)^(4/5)) = 0.0000003754 * Abs(-4915.23)^(4/5) = 0.00649875988
- * ) = 0.1
- *
- * total_initial_margin_with_orders = 12993.1 * 0.1 + 4915.23 * 0.1 = 1790.833
- * Total_collateral_value = 1981.66
- * Free Collateral = 1981.66 - 1790.833 = 190.82700
+ * Total_collateral_value = (2000 + 100 - 200) + 1 * 2000 * 0.9 + 50 = 2050
+ * total_initial_margin_with_orders = 1500
+ * Free Collateral = 2050 - 1500 = 550
  * ```
  */
 export function freeCollateral(inputs: {
-  totalCollateral: Decimal;
+  /**
+   * @description Total collateral value. If isolated margin parameters are provided, this will be recalculated.
+   * @deprecated Use isolated margin parameters (USDCHolding, nonUSDCHolding, etc.) for isolated margin mode
+   */
+  totalCollateral?: Decimal;
+  /**
+   * @description Total initial margin with orders (for cross margin positions only in isolated margin mode)
+   */
   totalInitialMarginWithOrders: number;
+  /**
+   * @description USDC holding quantity (for isolated margin mode)
+   */
+  USDCHolding?: number;
+  /**
+   * @description Non-USDC holdings with their index prices and collateral ratios (for isolated margin mode)
+   */
+  nonUSDCHolding?: {
+    holding: number;
+    indexPrice: number;
+    collateralRatio: Decimal;
+  }[];
+  /**
+   * @description Total cross margin unsettled PNL (for isolated margin mode)
+   */
+  totalCrossUnsettledPnL?: number;
+  /**
+   * @description USDC balance frozen for pending short orders (for isolated margin mode)
+   */
+  usdcBalancePendingShortQty?: number;
+  /**
+   * @description USDC balance frozen for isolated margin orders (for isolated margin mode)
+   */
+  usdcBalanceIsolatedOrderFrozen?: number;
 }): Decimal {
+  // If isolated margin parameters are provided, calculate Total_collateral_value using new formula
+  if (
+    inputs.USDCHolding !== undefined ||
+    inputs.nonUSDCHolding !== undefined ||
+    inputs.totalCrossUnsettledPnL !== undefined ||
+    inputs.usdcBalancePendingShortQty !== undefined ||
+    inputs.usdcBalanceIsolatedOrderFrozen !== undefined
+  ) {
+    const usdcHolding = new Decimal(inputs.USDCHolding ?? 0);
+    const pendingShortQty = new Decimal(inputs.usdcBalancePendingShortQty ?? 0);
+    const isolatedOrderFrozen = new Decimal(
+      inputs.usdcBalanceIsolatedOrderFrozen ?? 0,
+    );
+    const usdcPart = usdcHolding.add(pendingShortQty).sub(isolatedOrderFrozen);
+
+    const nonUSDCHoldingValue = (inputs.nonUSDCHolding ?? []).reduce<Decimal>(
+      (acc, cur) => {
+        const value = new Decimal(cur.holding)
+          .mul(cur.collateralRatio)
+          .mul(cur.indexPrice);
+        return acc.add(value);
+      },
+      zero,
+    );
+
+    const crossUnsettledPnL = new Decimal(inputs.totalCrossUnsettledPnL ?? 0);
+    const totalCollateralValue = usdcPart
+      .add(nonUSDCHoldingValue)
+      .add(crossUnsettledPnL);
+
+    const value = totalCollateralValue.sub(inputs.totalInitialMarginWithOrders);
+    // free collateral cannot be less than 0
+    return value.isNegative() ? zero : value;
+  }
+
+  // Backward compatibility: use existing totalCollateral parameter
+  if (!inputs.totalCollateral) {
+    return zero;
+  }
   const value = inputs.totalCollateral.sub(inputs.totalInitialMarginWithOrders);
   // free collateral cannot be less than 0
   return value.isNegative() ? zero : value;
@@ -1139,6 +1219,132 @@ export const maxWithdrawalUSDC = (inputs: {
   );
   return Math.max(0, value);
 };
+
+/**
+ * @formulaId maxAdd
+ * @name Maximum Margin Addition for Isolated Position
+ * @formula max_add = max(0, min(USDC_balance, free_collateral - max(total_cross_unsettled_pnl, 0)))
+ * @description
+ *
+ * ## Definition
+ *
+ * **max_add**: Maximum amount of margin that can be added to an isolated margin position
+ *
+ * **USDC_balance**: User's USDC balance
+ *
+ * **free_collateral**: Available collateral in the user's account (for cross margin trading)
+ *
+ * **total_cross_unsettled_pnl**: Total unsettled PNL from cross margin positions only
+ *
+ * ## Business Rules
+ *
+ * - Maximum add amount cannot exceed available USDC balance
+ * - Maximum add amount cannot exceed free collateral minus cross margin unrealized profit
+ * - Cross margin unrealized profit reduces available funds for adding isolated margin
+ *
+ * ## Example
+ *
+ * ```
+ * USDC_balance = 500
+ * free_collateral = 300
+ * total_cross_unsettled_pnl = 100 (profit)
+ * max_add = max(0, min(500, 300 - max(100, 0))) = max(0, min(500, 200)) = 200
+ * ```
+ *
+ * @param inputs Input parameters for calculating maximum margin addition
+ * @returns Maximum margin that can be added (in USDC)
+ */
+export function maxAdd(inputs: {
+  /**
+   * @description USDC balance
+   */
+  USDCBalance: number;
+  /**
+   * @description Free collateral (available for cross margin trading)
+   */
+  freeCollateral: Decimal;
+  /**
+   * @description Total cross margin unsettled PNL
+   */
+  totalCrossUnsettledPnL: number;
+}): number {
+  const { USDCBalance, freeCollateral, totalCrossUnsettledPnL } = inputs;
+  const maxCrossUnsettledPnL = Math.max(totalCrossUnsettledPnL, 0);
+  const freeCollateralDecimal = new Decimal(freeCollateral);
+  const availableFromFreeCollateral =
+    freeCollateralDecimal.sub(maxCrossUnsettledPnL);
+  const value = Math.min(USDCBalance, availableFromFreeCollateral.toNumber());
+  return Math.max(0, value);
+}
+
+/**
+ * @formulaId maxReduce
+ * @name Maximum Margin Reduction for Isolated Position
+ * @formula max_reduce = max(0, isolated_position_margin - position_notional * imr + min(0, position_unsettled_pnl))
+ * @description
+ *
+ * ## Definition
+ *
+ * **max_reduce**: Maximum amount of margin that can be reduced from an isolated margin position
+ *
+ * **isolated_position_margin**: Current margin allocated to the isolated position
+ *
+ * **position_notional**: Position notional value = mark_price * abs(position_qty)
+ *
+ * **imr**: Initial margin rate for the position (considering current position notional)
+ *
+ * **position_unsettled_pnl**: Unsettled PNL for the isolated position
+ *
+ * ## Business Rules
+ *
+ * - After reducing margin, remaining margin must satisfy minimum margin requirement (position_notional * imr)
+ * - If there is unrealized loss, it reduces the amount that can be safely reduced
+ * - Unrealized profit does not affect the reducible amount (min(0, position_unsettled_pnl) = 0 when profit)
+ *
+ * ## Example
+ *
+ * ```
+ * isolated_position_margin = 1500
+ * position_notional = 50000
+ * imr = 0.02
+ * position_unsettled_pnl = 50 (profit)
+ * max_reduce = max(0, 1500 - 50000 * 0.02 + min(0, 50)) = max(0, 1500 - 1000 + 0) = 500
+ * ```
+ *
+ * @param inputs Input parameters for calculating maximum margin reduction
+ * @returns Maximum margin that can be reduced (in USDC)
+ */
+export function maxReduce(inputs: {
+  /**
+   * @description Current isolated position margin
+   */
+  isolatedPositionMargin: number;
+  /**
+   * @description Position notional value (mark_price * abs(position_qty))
+   */
+  positionNotional: number;
+  /**
+   * @description Initial margin rate (IMR) for the position
+   */
+  IMR: number;
+  /**
+   * @description Position unsettled PNL
+   */
+  positionUnsettledPnL: number;
+}): number {
+  const {
+    isolatedPositionMargin,
+    positionNotional,
+    IMR,
+    positionUnsettledPnL,
+  } = inputs;
+  const minRequiredMargin = new Decimal(positionNotional).mul(IMR);
+  const unrealizedLossAdjustment = Math.min(0, positionUnsettledPnL);
+  const value = new Decimal(isolatedPositionMargin)
+    .sub(minRequiredMargin)
+    .add(unrealizedLossAdjustment);
+  return Math.max(0, value.toNumber());
+}
 
 /**
  *
