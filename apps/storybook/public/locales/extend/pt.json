@@ -21,5 +21,7 @@
   "extend.woofiEarn.description": "Obtenha rendimento com segurança a partir dos principais ativos em qualquer rede",
   "extend.wooStake": "WOO staking",
   "extend.wooStake.description": "Faça stake para ganhar USDC e WOO",
-  "extend.vaults.description": "Ganhe rendimento passivo com estratégias automatizadas"
+  "extend.vaults.description": "Ganhe rendimento passivo com estratégias automatizadas",
+  "extend.swap.warning": "Os swaps spot são executados usando os ativos da sua carteira Web3 conectada. Os fundos da conta de perps são separados e não serão afetados.",
+  "extend.viewAll": "Ver tudo"
 }

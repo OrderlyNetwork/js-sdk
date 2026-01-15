@@ -21,5 +21,7 @@
   "extend.woofiEarn.description": "Dapatkan hasil dengan aman dari aset utama di jaringan mana pun",
   "extend.wooStake": "WOO staking",
   "extend.wooStake.description": "Stake untuk mendapatkan USDC dan WOO",
-  "extend.vaults.description": "Dapatkan hasil pasif dengan strategi otomatis"
+  "extend.vaults.description": "Dapatkan hasil pasif dengan strategi otomatis",
+  "extend.swap.warning": "Swap spot dieksekusi menggunakan aset dompet Web3 yang terhubung. Dana akun perps terpisah dan tidak akan terpengaruh.",
+  "extend.viewAll": "Lihat semua"
 }

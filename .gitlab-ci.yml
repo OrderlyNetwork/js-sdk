@@ -22,7 +22,7 @@ stages:
 .internal_publish_template: &internal_publish_template
   stage: release
   image:
-    name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-devops/node:20
+    name: node:22
   before_script:
     # custom commit message
     - export GIT_COMMIT_MESSAGE="publish internal ${RELEASE_TYPE}"
@@ -56,7 +56,7 @@ stages:
       export TRIGGER_PIPELINE_TOKEN=$TRIGGER_PIPELINE_TOKEN_DEX
       export TRIGGER_PIPELINE_BRANCH=$TRIGGER_PIPELINE_BRANCH_DEX
 
-      npm install -g pnpm@9
+      npm install -g pnpm
       pnpm install --frozen-lockfile
       pnpm release:${RELEASE_TYPE}
   tags:
@@ -89,7 +89,7 @@ internal_patch_publish:
 .npm_publish_template: &npm_publish_template
   stage: release
   image:
-    name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-devops/node:20
+    name: node:22
   script:
     - git checkout "$CI_COMMIT_BRANCH"
     - |
@@ -125,7 +125,7 @@ internal_patch_publish:
       # exit pre tag
       export EXIT_PRE_TAG="${EXIT_PRE_TAG}"     
 
-      npm install -g pnpm@9
+      npm install -g pnpm
       pnpm install --frozen-lockfile
       pnpm release:${RELEASE_TYPE}
   tags:
@@ -222,7 +222,7 @@ npm_minor_stable:
 .trigger_pipeline_template: &trigger_pipeline_template
   stage: release
   image:
-    name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-devops/node:20
+    name: node:22
   script:
     - |    
       npm run trigger:pipeline

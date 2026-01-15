@@ -21,5 +21,7 @@
   "extend.woofiEarn.description": "Uzyskaj bezpieczny zysk z kluczowych aktywów na dowolnym łańcuchu",
   "extend.wooStake": "WOO staking",
   "extend.wooStake.description": "Stake'uj, aby zarabiać USDC i WOO",
-  "extend.vaults.description": "Zarabiaj pasywną rentowność dzięki zautomatyzowanym strategiom"
+  "extend.vaults.description": "Zarabiaj pasywną rentowność dzięki zautomatyzowanym strategiom",
+  "extend.swap.warning": "Swapy spot są wykonywane przy użyciu aktywów Twojego podłączonego portfela Web3. Fundusze konta perps są oddzielne i nie będą dotknięte.",
+  "extend.viewAll": "Zobacz wszystko"
 }

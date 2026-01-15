@@ -23,6 +23,8 @@ export const trading = {
   "trading.orderBook": "Order book",
   "trading.lastTrades": "Last trades",
   "trading.orderBook.column.value": "Value",
+  "trading.orderBook.settings": "Settings",
+  "trading.orderBook.showBuySellRatio": "Show buy/sell ratio",
 
   "trading.tabs.chart": "Chart",
   "trading.tabs.trades": "Trades",
@@ -68,6 +70,18 @@ export const trading = {
   "trading.asset.maintenanceMarginRatio.formula":
     "Account maintenance margin ratio = Sum(Position notional * Symbol maintenance Margin Ratio)  / Total position notional * 100%",
 
+  "trading.asset.maintenanceMargin": "Maintenance margin",
+  "trading.asset.maintenanceMargin.tooltip":
+    "Maintenance margin is the minimum amount of margin required to keep all your open positions alive. If your account equity falls below the maintenance margin, the account will be liquidated.",
+  "trading.asset.maintenanceMargin.formula":
+    "Maintenance margin = Sum(Position notional * Symbol maintenance margin ratio)",
+
+  "trading.asset.currentLeverage": "Current leverage",
+  "trading.asset.currentLeverage.tooltip":
+    "Current Account Leverage shows how much leverage you are currently using based on your open positions.",
+  "trading.asset.currentLeverage.formula":
+    "Current leverage = (Total position notional / Total collateral value)",
+
   "trading.riskRate": "Risk rate",
   "trading.riskRate.tooltip":
     "The Risk rate is used to assess the risk level of an account. When the Risk rate reaches 100%, the account will be liquidated",
@@ -85,8 +99,8 @@ export const trading = {
   "trading.fundingRate.estimatedFundingFee": "Estimated funding fee",
   "trading.fundingRate.annualized": "Annualized",
 
-  "trading.rwa.marketHours": "Market hours",
-  "trading.rwa.outsideMarketHours": "Outside market hours",
+  "trading.rwa.marketHours": "Market on",
+  "trading.rwa.outsideMarketHours": "Market off",
   "trading.rwa.tooltip.description.open":
     "Trading aligns with the underlying market - higher liquidity, normal price movements.",
   "trading.rwa.tooltip.description.close":

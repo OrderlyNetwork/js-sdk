@@ -21,5 +21,7 @@
   "extend.woofiEarn.description": "在任何链上的主要资产中安全获取收益",
   "extend.wooStake": "WOO 质押",
   "extend.wooStake.description": "质押以赚取 USDC 和 WOO",
-  "extend.vaults.description": "通过自动化策略赚取被动收益"
+  "extend.vaults.description": "通过自动化策略赚取被动收益",
+  "extend.swap.warning": "现货交易使用您连接的 Web3 钱包资产执行。合约账户资金是独立的，不会受到影响。",
+  "extend.viewAll": "查看全部"
 }

@@ -1,152 +1,151 @@
-import { useEffect, useMemo, useState } from "react";
-import { useTrack } from "@orderly.network/hooks";
-import { useTranslation } from "@orderly.network/i18n";
-import { TrackerEventName } from "@orderly.network/types";
-import { useEmblaCarousel } from "@orderly.network/ui";
-import { formatCampaignDate } from "../../../utils";
-import { useTradingLeaderboardContext, Campaign } from "../provider";
+import { useMemo, useCallback } from "react";
+import { useQuery, useMutation, useAccount } from "@orderly.network/hooks";
+import { AccountStatusEnum } from "@orderly.network/types";
+import { toast } from "@orderly.network/ui";
+import { useTradingLeaderboardContext } from "../provider";
+import { getCurrentTierIndex } from "./pricePool/utils";
+import { UserCampaignsResponse } from "./type";
+import { getTotalPrizePool } from "./utils";
 
-export type CampaignsScriptReturn = ReturnType<typeof useCampaignsScript>;
+/**
+ * Hook for managing campaigns data and statistics
+ * TODO: Replace mock data with real API calls when backend is ready
+ */
+export const useCampaignsScript = () => {
+  const {
+    campaigns = [],
+    currentCampaignId,
+    onCampaignChange,
+    currentCampaign,
+    userData,
+    backgroundSrc,
+    statistics,
+  } = useTradingLeaderboardContext();
 
-// Define the type for our categorized campaigns
-type CategorizedCampaigns = {
-  ongoing: Campaign[];
-  past: Campaign[];
-  future: Campaign[];
-};
+  const isCampaignEnded = useMemo(() => {
+    return (
+      currentCampaign?.end_time &&
+      currentCampaign?.end_time < new Date().toISOString()
+    );
+  }, [currentCampaign]);
 
-export type CurrentCampaigns = Campaign & {
-  displayTime: string;
-  learnMoreUrl: string;
-  tradingUrl: string;
-};
+  const { state } = useAccount();
 
-export type TEmblaApi = {
-  scrollTo?: (index: number) => void;
-};
+  const { data: userCampaigns, mutate: refreshUserCampaigns } =
+    useQuery<UserCampaignsResponse>(
+      currentCampaignId !== "general" && state.address
+        ? `https://api.orderly.org/v1/public/campaigns?address=${state.address}`
+        : null,
+      { revalidateOnFocus: false },
+    );
 
-type CategoryKey = keyof CategorizedCampaigns;
+  const isParticipated = useMemo(() => {
+    const target = userCampaigns?.find((item) => item.id == currentCampaignId);
+    return !!target;
+  }, [userCampaigns, currentCampaignId]);
 
-export function useCampaignsScript() {
-  const { t } = useTranslation();
-  const { campaigns = [], href } = useTradingLeaderboardContext();
-  const [category, setCategory] = useState<CategoryKey>("ongoing");
+  const shouldShowJoinButton = useMemo(() => {
+    // return false;
+    return !!state.address && !isCampaignEnded && !isParticipated;
+  }, [state.address, isCampaignEnded, isParticipated]);
 
-  const { track, tracking } = useTrack();
+  const [doJoinCampaign, { isMutating: isJoining, error: joinError }] =
+    useMutation(`/v1/client/campaign/sign_up`, "POST");
 
-  const filterCampaigns = useMemo(() => {
-    const now = new Date();
+  const joinCampaign = useCallback(
+    async (data: { campaign_id: string | number }) => {
+      try {
+        if (state.status < AccountStatusEnum.EnableTrading) {
+          toast.error("Please enable trading to proceed.");
+          return;
+        }
+        const result = await doJoinCampaign(data);
 
-    return campaigns.reduce<CategorizedCampaigns>(
-      (acc, campaign) => {
-        const startTime = new Date(campaign.startTime);
-        const endTime = new Date(campaign.endTime);
-
-        if (now >= startTime && now <= endTime) {
-          acc.ongoing.push(campaign);
-        } else if (now > endTime) {
-          acc.past.push(campaign);
-        } else {
-          acc.future.push(campaign);
+        // hardcode for 128 campaign
+        if (String(data.campaign_id) === "128") {
+          Promise.all(
+            ["130", "131", "132", "133", "134", "136"].map(
+              async (campaignId) => {
+                await doJoinCampaign({ campaign_id: campaignId });
+              },
+            ),
+          );
         }
 
-        return acc;
-      },
-      { ongoing: [], past: [], future: [] },
-    );
-  }, [campaigns]);
-
-  const options = useMemo(() => {
-    const opts: { label: string; value: CategoryKey }[] = [
-      { label: t("tradingLeaderboard.ongoing"), value: "ongoing" },
-      { label: t("tradingLeaderboard.future"), value: "future" },
-      { label: t("tradingLeaderboard.past"), value: "past" },
-    ];
-
-    // Filter out categories with no campaigns and map to the required format
-    return opts.filter((item) => filterCampaigns[item.value].length > 0);
-  }, [filterCampaigns, t]);
-
-  const currentCampaigns = useMemo(() => {
-    const list = filterCampaigns[category];
-    return list.map((campaign) => {
-      const { startTime, endTime } = campaign;
-
-      let learnMoreUrl: string;
-      let tradingUrl = href?.trading!;
-
-      if (typeof campaign.href === "object") {
-        learnMoreUrl = campaign.href.learnMore;
-        tradingUrl = campaign.href.trading;
-      } else {
-        learnMoreUrl = campaign.href;
+        if (result?.success !== false) {
+          // Refresh user campaigns data to update participation status
+          await refreshUserCampaigns();
+          toast.success(result?.message || "Campaign joined successfully");
+          return result;
+        } else {
+          toast.error(result?.message || "Failed to join campaign");
+        }
+      } catch (error) {
+        console.error("Failed to join campaign:", error);
+        throw error;
       }
+    },
+    [doJoinCampaign, refreshUserCampaigns, state.status],
+  );
 
-      return {
-        ...campaign,
-        displayTime: `${formatCampaignDate(startTime)} - ${formatCampaignDate(
-          endTime,
-        )} UTC`,
-        learnMoreUrl,
-        tradingUrl,
-      };
-    });
-  }, [filterCampaigns, category, href]);
-
-  useEffect(() => {
-    // Find the first non-empty category
-    const categoryKeys: CategoryKey[] = ["ongoing", "future", "past"];
-
-    const firstAvailableCategory = categoryKeys.find(
-      (item) => filterCampaigns[item].length > 0,
-    );
-
-    if (firstAvailableCategory) {
-      setCategory(firstAvailableCategory);
+  const onLearnMore = () => {
+    if (currentCampaign?.rule_url) {
+      if (currentCampaign.rule_config?.action === "scroll") {
+        document
+          .getElementById(currentCampaign.rule_url)
+          ?.scrollIntoView({ behavior: "smooth" });
+      } else {
+        window.open(currentCampaign.rule_url, "_blank");
+      }
     }
-  }, [filterCampaigns]);
-
-  const onCategoryChange = (value: string) => {
-    setCategory(value as CategoryKey);
-  };
-  const [scrollIndex, setScrollIndex] = useState(0);
-
-  const [emblaRef, emblaApi] = useEmblaCarousel({
-    loop: false,
-    slidesToScroll: "auto",
-  });
-
-  useEffect(() => {
-    emblaApi?.on("select", () => {
-      setScrollIndex(emblaApi?.selectedScrollSnap());
-    });
-  }, [emblaApi]);
-
-  const onLearnMore = (campaign: CurrentCampaigns) => {
-    track(TrackerEventName.leaderboardCampaignClickLearnMore, {
-      campaign_title: campaign.title,
-    });
-    window.open(campaign.learnMoreUrl, "_blank");
   };
 
-  const onTradeNow = (campaign: CurrentCampaigns) => {
-    tracking(TrackerEventName.leaderboardCampaignClickTradeNow, {
-      campaign_title: campaign.title,
-    });
-    window.open(campaign.tradingUrl, "_self");
+  const onTradeNow = () => {
+    if (currentCampaign?.trading_url) {
+      window.open(currentCampaign.trading_url, "_self");
+    }
   };
+
+  const canTrade = useMemo(() => {
+    if (!currentCampaign) return false;
+    return (
+      currentCampaign?.start_time < new Date().toISOString() &&
+      currentCampaign?.end_time > new Date().toISOString() &&
+      state.status >= AccountStatusEnum.EnableTrading
+    );
+  }, [currentCampaign, state.status]);
+
+  const tieredIndex = useMemo(() => {
+    if (!currentCampaign?.tiered_prize_pools) return 0;
+    return getCurrentTierIndex(
+      statistics?.total_volume || 0,
+      currentCampaign?.tiered_prize_pools,
+    );
+  }, [statistics?.total_volume, currentCampaign?.tiered_prize_pools]);
+
+  const totalPrizePool = useMemo(() => {
+    return getTotalPrizePool(currentCampaign, tieredIndex ?? undefined);
+  }, [currentCampaign, tieredIndex]);
 
   return {
-    options,
-    currentCampaigns,
-    category,
-    onCategoryChange,
-    tradingUrl: href?.trading,
-    emblaRef,
-    emblaApi: emblaApi as TEmblaApi,
-    scrollIndex,
-    enableScroll: currentCampaigns?.length > 1,
+    campaigns,
+    currentCampaignId,
+    currentCampaign,
+    onCampaignChange,
+    statistics,
+    userData,
     onLearnMore,
     onTradeNow,
+    backgroundSrc,
+    joinCampaign,
+    isJoining,
+    isParticipated,
+    shouldShowJoinButton,
+    joinError,
+    canTrade,
+    totalPrizePool,
+    status: state.status,
   };
-}
+};
+
+export type CampaignsScriptReturn = ReturnType<typeof useCampaignsScript>;

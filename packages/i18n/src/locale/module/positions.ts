@@ -2,9 +2,9 @@ export const positions = {
   "positions.closePosition": "Close Position",
   "positions.fundingFee.title": "Funding Fee",
   "positions.fundingFee.tooltip":
-    "Shows funding fees for closed or partially closed positions.",
+    "Total funding fees from closed positions only, including partially closed portions.",
   "positions.fundingRate.tooltip":
-    "Records include funding from current open positions.",
+    "Funding fee amount for each funding interval during the time the position was open. Records may include funding fees from both closed positions and currently open positions.",
   "positions.liquidation": "Liquidation",
   "positions.positionHistory": "Position history",
   "positions.closeAll": "Close all",
@@ -14,8 +14,6 @@ export const positions = {
   "positions.closeAll.success": "All positions closed successfully",
 
   "positions.column.liqPrice": "Liq. price",
-  "positions.column.liqPrice.tooltip":
-    "Estimated price at which your position will be liquidated. Prices are estimated and depend on multiple factors across all positions.",
   "positions.column.unrealPnl.tooltip":
     "Current unrealized profit or loss on your open positions across all widgets calculated using Mark Price.",
   "positions.column.unrealPnl.priceBasis": "Unrealized PnL Price Basis",

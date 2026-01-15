@@ -36,7 +36,6 @@
     "@changesets/types": "^6.0.0",
     "@changesets/write": "^0.3.2",
     "@manypkg/get-packages": "^2.2.2",
-    "@npmcli/package-json": "^5.0.0",
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "@turbo/gen": "^2.0.11",
     "@types/fs-extra": "^11.0.4",
@@ -59,7 +58,11 @@
     "typescript": "^5.6.3",
     "zx": "^8.3.0"
   },
-  "packageManager": "pnpm@9.0.6",
+  "engines": {
+    "node": ">=20.19.0",
+    "pnpm": ">=10.0.0"
+  },
+  "packageManager": "pnpm@10.26.2",
   "lint-staged": {
     "*.{js,jsx,ts,tsx,html,css,md}": [
       "eslint --fix --config eslint.config.fix.mjs",

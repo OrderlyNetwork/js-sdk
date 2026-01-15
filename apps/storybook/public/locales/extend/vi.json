@@ -21,5 +21,7 @@
   "extend.woofiEarn.description": "Nhận lợi suất an toàn từ các tài sản chính trên mọi chuỗi",
   "extend.wooStake": "WOO staking",
   "extend.wooStake.description": "Stake để kiếm USDC và WOO",
-  "extend.vaults.description": "Kiếm lợi suất thụ động với các chiến lược tự động"
+  "extend.vaults.description": "Kiếm lợi suất thụ động với các chiến lược tự động",
+  "extend.swap.warning": "Giao dịch spot được thực hiện bằng tài sản ví Web3 đã kết nối của bạn. Quỹ tài khoản perps là riêng biệt và sẽ không bị ảnh hưởng.",
+  "extend.viewAll": "Xem tất cả"
 }

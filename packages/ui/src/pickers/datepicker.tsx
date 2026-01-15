@@ -1,20 +1,23 @@
 import { FC, useMemo, useState } from "react";
-import { Popover } from "../popover/popover";
-import { Calendar, CalendarProps } from "./date/calendar";
-import { selectVariants } from "../select/selectPrimitive";
+import { ActiveModifiers } from "react-day-picker";
+import { format } from "date-fns";
+import { cnBase } from "tailwind-variants";
+import type { SizeType } from "../helpers/sizeType";
 import { CalendarIcon } from "../icon/calendar";
 import { CaretDownIcon } from "../icon/caretDown";
-import type { SizeType } from "../helpers/sizeType";
-import { ActiveModifiers } from "react-day-picker";
 import { useLocale } from "../locale";
+import { Popover } from "../popover/popover";
+import { selectVariants } from "../select/selectPrimitive";
+import { Calendar, CalendarProps } from "./date/calendar";
+
 export type DatePickerProps = {
   onChange?: (date: Date) => void;
-  // selected: Date;
   placeholder?: string;
   value?: Date;
   dateFormat?: string;
   size?: SizeType;
   className?: string;
+  children?: React.ReactNode;
 } & CalendarProps;
 
 const DatePicker: FC<DatePickerProps> = (props) => {
@@ -25,12 +28,13 @@ const DatePicker: FC<DatePickerProps> = (props) => {
     value,
     size,
     className,
+    children,
     ...calendarProps
   } = props;
 
   const [locale] = useLocale("picker");
 
-  const { trigger } = selectVariants({ size, className });
+  const { trigger } = selectVariants({ size });
 
   const [open, setOpen] = useState(false);
 
@@ -38,13 +42,14 @@ const DatePicker: FC<DatePickerProps> = (props) => {
     if (typeof value === "undefined") {
       return placeholder ?? locale.selectDate;
     }
-  }, [value, placeholder, locale]);
+    return format(value, dateFormat ?? "yyyy/MM/dd");
+  }, [value, placeholder, locale, dateFormat]);
 
   const onSelect = (
     day: Date | undefined,
     selectedDay: Date,
     activeModifiers: ActiveModifiers,
-    e: MouseEvent
+    e: MouseEvent,
   ) => {
     //@ts-ignore
     calendarProps.onSelect?.(day, selectedDay, activeModifiers, e);
@@ -62,24 +67,39 @@ const DatePicker: FC<DatePickerProps> = (props) => {
       contentProps={{
         className: "oui-w-auto oui-p-0",
       }}
-      // @ts-ignore
-      content={<Calendar onSelect={onSelect} {...calendarProps} />}
-    >
-      <button
-        className={trigger({
-          className: "orderly-datepicker-trigger oui-group",
-        })}
-      >
-        <span className="orderly-datepicker-trigger-icon">
-          <CalendarIcon size={14} className="oui-text-inherit" opacity={1} />
-        </span>
-        <span>{formattedValue}</span>
-        <CaretDownIcon
-          size={12}
-          className="orderly-datepicker-trigger-arrow oui-text-inherit oui-transition-transform group-data-[state=open]:oui-rotate-180 group-data-[state=closed]:oui-rotate-0"
-          opacity={1}
+      content={
+        <Calendar
+          mode="single"
+          selected={value}
+          // @ts-ignore
+          onSelect={onSelect}
+          {...calendarProps}
         />
-      </button>
+      }
+    >
+      {children ?? (
+        <button
+          className={trigger({
+            className: cnBase("oui-datepicker-trigger oui-group", className),
+          })}
+        >
+          <div className="oui-flex oui-items-center oui-gap-x-2">
+            <span className="oui-datepicker-trigger-icon">
+              <CalendarIcon
+                size={14}
+                className="oui-text-inherit"
+                opacity={1}
+              />
+            </span>
+            <span>{formattedValue}</span>
+          </div>
+          <CaretDownIcon
+            size={12}
+            className="oui-datepicker-trigger-arrow oui-text-inherit oui-transition-transform group-data-[state=closed]:oui-rotate-0 group-data-[state=open]:oui-rotate-180"
+            opacity={1}
+          />
+        </button>
+      )}
     </Popover>
   );
 };

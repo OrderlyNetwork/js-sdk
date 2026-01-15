@@ -21,5 +21,7 @@
   "extend.woofiEarn.description": "Erziele sichere Rendite aus wichtigen Vermögenswerten auf jeder Chain",
   "extend.wooStake": "WOO staken",
   "extend.wooStake.description": "Stake, um USDC und WOO zu verdienen",
-  "extend.vaults.description": "Erziele passive Rendite mit automatisierten Strategien"
+  "extend.vaults.description": "Erziele passive Rendite mit automatisierten Strategien",
+  "extend.swap.warning": "Spot-Swaps werden mit den Assets Ihrer verbundenen Web3-Wallet ausgeführt. Perp-Kontofonds sind getrennt und werden nicht beeinflusst.",
+  "extend.viewAll": "Alle anzeigen"
 }

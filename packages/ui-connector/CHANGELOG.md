@@ -1,5 +1,48 @@
 # @orderly.network/ui-connector
 
+## 2.8.11
+
+### Patch Changes
+
+- 1ed7590: publish
+- publish
+- e7fb6c1: publish
+- Updated dependencies [1ed7590]
+- Updated dependencies
+- Updated dependencies [e7fb6c1]
+  - @orderly.network/react-app@2.8.11
+  - @orderly.network/hooks@2.8.11
+  - @orderly.network/i18n@2.8.11
+  - @orderly.network/types@2.8.11
+  - @orderly.network/ui@2.8.11
+  - @orderly.network/ui-chain-selector@2.8.11
+
+## 2.8.11-alpha.1
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.8.11-alpha.1
+  - @orderly.network/hooks@2.8.11-alpha.1
+  - @orderly.network/i18n@2.8.11-alpha.1
+  - @orderly.network/types@2.8.11-alpha.1
+  - @orderly.network/ui@2.8.11-alpha.1
+  - @orderly.network/ui-chain-selector@2.8.11-alpha.1
+
+## 2.8.11-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.8.11-alpha.0
+  - @orderly.network/hooks@2.8.11-alpha.0
+  - @orderly.network/i18n@2.8.11-alpha.0
+  - @orderly.network/types@2.8.11-alpha.0
+  - @orderly.network/ui@2.8.11-alpha.0
+  - @orderly.network/ui-chain-selector@2.8.11-alpha.0
+
 ## 2.8.10
 
 ### Patch Changes

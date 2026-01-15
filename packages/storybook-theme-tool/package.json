@@ -1,0 +1,43 @@
+{
+  "name": "storybook-theme-tool",
+  "version": "2.8.10",
+  "description": "Theme builder for Storybook",
+  "private": true,
+  "exports": {
+    ".": {
+      "default": "./dist/index.mjs"
+    },
+    "./manager": "./dist/manager.mjs",
+    "./preview": "./dist/index.mjs"
+  },
+  "scripts": {
+    "build": "tsup"
+  },
+  "keywords": [],
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@codemirror/lang-css": "^6.3.1",
+    "@uiw/codemirror-theme-github": "^4.23.8",
+    "@uiw/react-codemirror": "^4.23.8",
+    "@orderly.network/ui": "workspace:*",
+    "storybook": "^10.1.10"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.2",
+    "@types/react-dom": "^18.3.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tsconfig": "workspace:*",
+    "tsup": "^8.5.1",
+    "typescript": "^5.1.6"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  }
+}

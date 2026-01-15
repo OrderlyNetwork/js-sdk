@@ -17,6 +17,7 @@ import {
 } from "../announcementCenter/icons";
 import {
   CampaignContentCard,
+  CommunityVoteContentCard,
   DelistingContentCard,
   ListingContentCard,
   MaintenanceContentCard,
@@ -78,6 +79,12 @@ const NotificationHeader: FC<{
         return (
           <Text size="sm" color="warning">
             {t("notification.maintenanceTitle")}
+          </Text>
+        );
+      case AnnouncementType.Vote:
+        return (
+          <Text size="sm" color="inherit">
+            {t("notification.vote")}
           </Text>
         );
       default:
@@ -199,6 +206,14 @@ const NotificationContent: FC<{
             <DelistingContentCard
               message={message.message}
               updateTime={message.updated_time ?? 0}
+            />
+          );
+        case AnnouncementType.Vote:
+          return (
+            <CommunityVoteContentCard
+              message={message.message}
+              url={message.url ?? ""}
+              onItemClick={props.onItemClick}
             />
           );
         default:

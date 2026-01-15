@@ -95,19 +95,56 @@ export class OrderLineService {
       orderLine.remove();
     }
   }
+  /**
+   * Creates a base order line with default styling.
+   * Returns null if the chart is not ready (e.g., during initialization, hot reload, or chart switching).
+   *
+   * @returns IOrderLineAdapter instance or null if chart is not available
+   */
   getBaseOrderLine() {
-    const colorConfig = this.broker.colorConfig;
-    return this.instance
-      .activeChart()
-      .createOrderLine()
-      .setCancelTooltip(i18n.t("orders.cancelOrder"))
-      .setQuantityTextColor(colorConfig.qtyTextColor!)
-      .setQuantityBackgroundColor(colorConfig.chartBG!)
-      .setBodyBackgroundColor(colorConfig.chartBG!)
-      .setCancelButtonBackgroundColor(colorConfig.chartBG!)
-      .setLineStyle(1)
-      .setBodyFont(colorConfig.font!)
-      .setQuantityFont(colorConfig.font!);
+    try {
+      const activeChart = this.instance.activeChart();
+
+      // Check if activeChart() returned null (can happen during chart initialization, switching, or hot reload)
+      if (!activeChart) {
+        return null;
+      }
+
+      const colorConfig = this.broker.colorConfig;
+      const orderLine = activeChart.createOrderLine();
+
+      // Check if createOrderLine() returned null
+      if (!orderLine) {
+        return null;
+      }
+
+      return orderLine
+        .setCancelTooltip(i18n.t("orders.cancelOrder"))
+        .setQuantityTextColor(colorConfig.qtyTextColor!)
+        .setQuantityBackgroundColor(colorConfig.chartBG!)
+        .setBodyBackgroundColor(colorConfig.chartBG!)
+        .setCancelButtonBackgroundColor(colorConfig.chartBG!)
+        .setLineStyle(1)
+        .setBodyFont(colorConfig.font!)
+        .setQuantityFont(colorConfig.font!);
+    } catch (e: unknown) {
+      // Handle errors related to null reference (hot reload scenario, chart not ready, etc.)
+      // This can happen when activeChart() or createOrderLine() returns null
+      // The error message may contain "Value is null" or "Cannot read properties of null"
+      const errorString = e?.toString() || String(e);
+      if (
+        errorString.includes("Value is null") ||
+        errorString.includes("tradingViewApi") ||
+        errorString.includes("Cannot read properties of null") ||
+        errorString.includes("Cannot read property") ||
+        (e instanceof TypeError && errorString.includes("null"))
+      ) {
+        // Return null when chart is not ready - this is expected in some scenarios
+        return null;
+      }
+      // Re-throw unexpected errors
+      throw e;
+    }
   }
 
   static getCombinationType(order: any): OrderCombinationType {
@@ -243,8 +280,14 @@ export class OrderLineService {
     }
 
     const colorConfig = this.broker.colorConfig;
-    const orderLine =
-      this.pendingOrderLineMap.get(orderId) ?? this.getBaseOrderLine();
+    const existingOrderLine = this.pendingOrderLineMap.get(orderId);
+    const orderLine = existingOrderLine ?? this.getBaseOrderLine();
+
+    // If getBaseOrderLine() returned null (chart not ready), skip rendering this order
+    if (!orderLine) {
+      return null;
+    }
+
     const color =
       pendingOrder.side === SideType.BUY
         ? colorConfig.upColor

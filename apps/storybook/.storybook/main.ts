@@ -1,15 +1,30 @@
+// This file has been automatically migrated to valid ESM format by Storybook.
 import type { StorybookConfig } from "@storybook/react-vite";
+import { dirname, join } from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { mergeConfig, UserConfig } from "vite";
-import { getWatchIgnores } from "../watchPackages.config";
+import { getWatchIgnores } from "../watchPackages.config.mts";
 
 /**
  * This function is used to resolve the absolute path of a package.
  * It is needed in projects that use Yarn PnP or are set up within a monorepo.
  * When configuring addons in Storybook v9, getAbsolutePath is usually not required.
  */
-// function getAbsolutePath(value: string): any {
-//   return dirname(require.resolve(join(value, "package.json")));
-// }
+function getAbsolutePath(value: string): any {
+  return dirname(
+    fileURLToPath(import.meta.resolve(join(value, "package.json"))),
+  );
+}
+
+/**
+ * Resolve absolute path for local addons (not npm packages).
+ * In Storybook v10, local addons should use file:// URLs.
+ */
+function getLocalAddonPath(relativePath: string): string {
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = dirname(__filename);
+  return join(__dirname, relativePath);
+}
 
 const disabledAddons = process.env.STORYBOOK_DISABLED_ADDONS === "true";
 
@@ -62,12 +77,13 @@ const getAddons = () => {
     ? []
     : [
         "@chromatic-com/storybook",
-        "@storybook/addon-docs",
-        "@storybook/addon-a11y",
         "@storybook/addon-vitest",
+        "@storybook/addon-a11y",
+        "@storybook/addon-docs",
         "@storybook/addon-links",
-        "../src/addons/theme_tool/register.ts",
-        // "../src/addons/walletConnect/register.ts",
+        "storybook-theme-tool",
+        // import.meta.resolve("../src/addons/theme_tool/register.ts"),
+        // getLocalAddonPath("../src/addons/theme_tool/register.ts"),
       ];
 
   return [...alwaysAddons, ...addons];

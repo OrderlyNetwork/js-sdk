@@ -58,7 +58,7 @@ function findRewardInPool(userdata: UserData, pool: PrizePool): number {
   if (estimatedRank === null) return 0;
 
   // Find matching tier based on estimated rank
-  for (const tier of pool.tiers) {
+  for (const tier of pool.tiers || []) {
     let isInTier = false;
 
     if (tier.position && estimatedRank === tier.position) {

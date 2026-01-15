@@ -39,6 +39,7 @@ type LeverageInputProps = LeverageProps & {
     input?: string;
     unit?: string;
   };
+  onInputBlur?: React.FocusEventHandler<HTMLInputElement>;
 };
 
 export const LeverageInput: React.FC<LeverageInputProps> = (props) => {
@@ -89,6 +90,7 @@ export const LeverageInput: React.FC<LeverageInputProps> = (props) => {
           }}
           formatters={formatters}
           onChange={props.onInputChange}
+          onBlur={props.onInputBlur}
         />
         <div
           className={cn(

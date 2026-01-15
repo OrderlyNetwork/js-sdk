@@ -21,5 +21,7 @@
   "extend.woofiEarn.description": "あらゆるチェーンの主要アセットから安全にイールドを獲得",
   "extend.wooStake": "WOO ステーク",
   "extend.wooStake.description": "USDCとWOOを稼ぐためにステーキング",
-  "extend.vaults.description": "自動化された戦略でパッシブイールドを獲得"
+  "extend.vaults.description": "自動化された戦略でパッシブイールドを獲得",
+  "extend.swap.warning": "スポットスワップは、接続されたWeb3ウォレットの資産を使用して実行されます。パーペチュアルアカウントの資金は別途管理され、影響を受けません。",
+  "extend.viewAll": "すべて表示"
 }

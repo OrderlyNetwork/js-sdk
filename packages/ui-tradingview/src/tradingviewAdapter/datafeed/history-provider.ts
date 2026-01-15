@@ -179,16 +179,41 @@ export class HistoryProvider {
             );
 
             if (needsFallback) {
-              const klineResult = await this._tryKlineFallback(
-                requestParams,
-                countBack,
-              );
-              if (klineResult !== null) {
-                result = klineResult;
-                usedHistoryResult = false;
-                this._klinePreference.set(preferenceKey, true);
+              // Get the earliest time from history result to use as start time for kline request
+              const earliestTime = this._getEarliestTime(result.bars);
+              if (earliestTime !== null) {
+                // Calculate remaining countBack by subtracting already fetched bars
+                const remainingCountBack = Math.max(
+                  0,
+                  countBack - result.bars.length,
+                );
+
+                const mergedResult = await this._tryKlineFallbackWithMerge(
+                  requestParams,
+                  remainingCountBack,
+                  earliestTime,
+                  result,
+                );
+                if (mergedResult !== null) {
+                  result = mergedResult;
+                  usedHistoryResult = false;
+                  this._klinePreference.set(preferenceKey, true);
+                } else {
+                  this._klinePreference.set(preferenceKey, false);
+                }
               } else {
-                this._klinePreference.set(preferenceKey, false);
+                // If no bars in history result, fallback to original behavior
+                const klineResult = await this._tryKlineFallback(
+                  requestParams,
+                  countBack,
+                );
+                if (klineResult !== null) {
+                  result = klineResult;
+                  usedHistoryResult = false;
+                  this._klinePreference.set(preferenceKey, true);
+                } else {
+                  this._klinePreference.set(preferenceKey, false);
+                }
               }
             } else {
               this._klinePreference.set(preferenceKey, false);
@@ -497,6 +522,146 @@ export class HistoryProvider {
     }
 
     return params;
+  }
+
+  /**
+   * Get the earliest time from bars array
+   * @param bars - Array of bars
+   * @returns Earliest timestamp in seconds, or null if bars array is empty
+   */
+  private _getEarliestTime(bars: Bar[]): number | null {
+    if (bars.length === 0) {
+      return null;
+    }
+
+    // Bars are typically sorted by time in ascending order (earliest first)
+    // Find the minimum time to be safe
+    return bars[0].time / 1000;
+  }
+
+  /**
+   * Try kline fallback with merge logic
+   * Requests kline data from the earliest time in history result to the original end time,
+   * then merges the kline data with history data
+   * @param requestParams - Original request parameters
+   * @param countBack - Count back value
+   * @param earliestTime - Earliest time from history result (in seconds)
+   * @param historyResult - History result to merge with
+   * @returns Merged result or null if kline request fails
+   */
+  private async _tryKlineFallbackWithMerge(
+    requestParams: RequestParams,
+    countBack: number,
+    earliestTime: number,
+    historyResult: GetBarsResult,
+  ): Promise<GetBarsResult | null> {
+    try {
+      const klineParams: RequestParams = {
+        ...requestParams,
+        from: requestParams.from,
+        to: earliestTime,
+      };
+
+      const klineResult = await this._requestKlineHistory(
+        this._buildKlineParams(klineParams, countBack),
+      );
+
+      if (klineResult.bars.length === 0) {
+        return null;
+      }
+
+      // Merge history and kline data
+      return this._mergeBars(historyResult, klineResult);
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Merge history bars with kline bars
+   * Optimized for the case where klineBars are earlier data than historyBars
+   * Uses direct concatenation when no overlap, otherwise uses two-pointer merge
+   * Assumes both arrays are sorted by time (ascending, earliest first)
+   * Kline data takes precedence when timestamps match
+   * @param historyResult - History result (later time range)
+   * @param klineResult - Kline result (earlier time range)
+   * @returns Merged result with sorted bars
+   */
+  private _mergeBars(
+    historyResult: GetBarsResult,
+    klineResult: GetBarsResult,
+  ): GetBarsResult {
+    const historyBars = historyResult.bars;
+    const klineBars = klineResult.bars;
+
+    // Handle empty arrays
+    if (historyBars.length === 0) {
+      return klineResult;
+    }
+    if (klineBars.length === 0) {
+      return historyResult;
+    }
+
+    // Check if arrays have time overlap
+    // klineBars should be earlier data, so check if latest kline time < earliest history time
+    const latestKlineTime = klineBars[klineBars.length - 1].time;
+    const earliestHistoryTime = historyBars[0].time;
+
+    let mergedBars: Bar[];
+
+    if (latestKlineTime < earliestHistoryTime) {
+      // No overlap: klineBars are all before historyBars
+      // Direct concatenation is more efficient (klineBars first, then historyBars)
+      mergedBars = [...klineBars, ...historyBars];
+    } else if (latestKlineTime === earliestHistoryTime) {
+      // Only one overlapping bar at the boundary: kline data takes precedence
+      // Skip the first history bar to avoid duplicate
+      mergedBars = [...klineBars, ...historyBars.slice(1)];
+    } else {
+      // Has overlap: use two-pointer merge to handle duplicates
+      mergedBars = [];
+      let historyIdx = 0;
+      let klineIdx = 0;
+
+      while (historyIdx < historyBars.length && klineIdx < klineBars.length) {
+        const historyBar = historyBars[historyIdx];
+        const klineBar = klineBars[klineIdx];
+
+        if (historyBar.time < klineBar.time) {
+          // History bar is earlier, add it
+          mergedBars.push(historyBar);
+          historyIdx++;
+        } else if (historyBar.time > klineBar.time) {
+          // Kline bar is earlier, add it
+          mergedBars.push(klineBar);
+          klineIdx++;
+        } else {
+          // Same timestamp: kline data takes precedence
+          mergedBars.push(klineBar);
+          historyIdx++;
+          klineIdx++;
+        }
+      }
+
+      // Append remaining bars from either array
+      while (historyIdx < historyBars.length) {
+        mergedBars.push(historyBars[historyIdx++]);
+      }
+      while (klineIdx < klineBars.length) {
+        mergedBars.push(klineBars[klineIdx++]);
+      }
+    }
+
+    // Use kline metadata if available, otherwise use history metadata
+    const meta: HistoryMetadata = {
+      noData: klineResult.meta.noData && historyResult.meta.noData,
+      nextTime: klineResult.meta.nextTime ?? historyResult.meta.nextTime,
+    };
+
+    return {
+      bars: mergedBars,
+      meta: meta,
+    };
   }
 
   private async _tryKlineFallback(
