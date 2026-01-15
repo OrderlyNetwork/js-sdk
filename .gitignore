@@ -59,4 +59,4 @@ storybook-static/
 specs/
 .tmp.*
 .qoder/
-.specflow
+.specflow/
