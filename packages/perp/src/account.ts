@@ -2,6 +2,24 @@ import { API, OrderSide } from "@orderly.network/types";
 import { Decimal, zero } from "@orderly.network/utils";
 import { IMRFactorPower } from "./constants";
 
+// ============ Backward Compatibility Types ============
+/** @deprecated Use inline type or the new input type instead */
+export type TotalValueInputs = {
+  totalUnsettlementPnL: number;
+  USDCHolding: number;
+  nonUSDCHolding: {
+    holding: number;
+    indexPrice: number;
+  }[];
+};
+
+/** @deprecated Use inline type or the new input type instead */
+export type FreeCollateralInputs = {
+  totalCollateral: Decimal;
+  totalInitialMarginWithOrders: number;
+};
+// ====================================================
+
 export type ResultOptions = {
   dp: number;
 };
@@ -57,14 +75,15 @@ export function totalValue(inputs: {
   }[];
   /**
    * @description Total isolated position margin (sum of all isolated margin positions). Pass 0 if no isolated margin positions exist.
+   * @default 0
    */
-  totalIsolatedPositionMargin: number;
+  totalIsolatedPositionMargin?: number;
 }): Decimal {
   const {
     totalUnsettlementPnL,
     USDCHolding,
     nonUSDCHolding,
-    totalIsolatedPositionMargin,
+    totalIsolatedPositionMargin = 0,
   } = inputs;
   const nonUSDCHoldingValue = nonUSDCHolding.reduce((acc, cur) => {
     return new Decimal(cur.holding).mul(cur.indexPrice).add(acc);

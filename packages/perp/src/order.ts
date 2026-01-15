@@ -1,6 +1,41 @@
 import { OrderSide, API as orderUtils } from "@orderly.network/types";
 import { Decimal, getTPSLDirection, zero } from "@orderly.network/utils";
 
+// ============ Backward Compatibility Types ============
+/** @deprecated Use inline type or the new input type instead */
+export type EstimatedLiquidationPriceInputs = {
+  totalCollateral: number;
+  markPrice: number;
+  baseMMR: number;
+  baseIMR: number;
+  IMR_Factor: number;
+  orderFee: number;
+  positions: Pick<
+    orderUtils.PositionExt,
+    "position_qty" | "mark_price" | "symbol" | "mmr"
+  >[];
+  newOrder: {
+    symbol: string;
+    qty: number;
+    price: number;
+  };
+};
+
+/** @deprecated Use inline type or the new input type instead */
+export type EstimatedLeverageInputs = {
+  totalCollateral: number;
+  positions: Pick<
+    orderUtils.PositionExt,
+    "position_qty" | "mark_price" | "symbol" | "mmr"
+  >[];
+  newOrder: {
+    symbol: string;
+    qty: number;
+    price: number;
+  };
+};
+// ====================================================
+
 /**
  * Maximum price when placing an order
  */

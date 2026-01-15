@@ -6,6 +6,32 @@ import { DMax } from "./utils";
 const MaxIterates = 30;
 const CONVERGENCE_THRESHOLD = 0.0001;
 
+// ============ Backward Compatibility Types ============
+/** @deprecated Use inline type or the new input type instead */
+export type UnrealPnLInputs = {
+  markPrice: number;
+  openPrice: number;
+  qty: number;
+};
+
+/** @deprecated Use inline type or the new input type instead */
+export type UnrealPnLROIInputs = {
+  positionQty: number;
+  openPrice: number;
+  IMR: number;
+  unrealizedPnL: number;
+};
+
+/** @deprecated Use inline type or the new input type instead */
+export type LiqPriceInputs = {
+  markPrice: number;
+  totalCollateral: number;
+  positionQty: number;
+  positions: Pick<API.PositionExt, "position_qty" | "mark_price" | "mmr">[];
+  MMR: number;
+};
+// ====================================================
+
 /**
  * Calculates the notional value of a single position.
  * @param qty The quantity of the position.
