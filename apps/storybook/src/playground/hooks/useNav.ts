@@ -29,8 +29,8 @@ export const useNav = () => {
       }
 
       const path = routeMap[option?.href!] || option?.href || "";
-
-      navigate(generatePath({ path }));
+      const href = generatePath({ path });
+      navigate(href);
     },
     [navigate],
   );

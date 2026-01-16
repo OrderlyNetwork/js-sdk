@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router";
 import { i18n } from "@orderly.network/i18n";
 import { cn } from "@orderly.network/ui";
 import { EarnIcon, StakeIcon, VaultsIcon } from "../../components/icons";
+import { useRouteContext } from "../../components/orderlyProvider/rounteProvider";
 import { PathEnum } from "../../playground/constant";
-import { useNav } from "../../playground/hooks/useNav";
 import {
   MenuItem,
   MenuItemRow,
@@ -15,8 +14,10 @@ import { WoofiEarnTabContent } from "./WoofiEarnTabContent";
 
 export const customEarnSubMenuRender = () => {
   return () => {
-    const { onRouteChange } = useNav();
-    const location = useLocation();
+    const { onRouteChange } = useRouteContext();
+    // console.log("location", window.location);
+
+    const location = window.location;
 
     const isVaultsActive =
       location.pathname.endsWith(PathEnum.Vaults) ||
