@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { MarketsType, useMarkets } from "@orderly.network/hooks";
 import { TableSort, usePagination } from "@orderly.network/ui";
 import { useMarketsContext } from "../../components/marketsProvider";
@@ -52,7 +52,7 @@ export const useMarketsListFullScript = (
     if (type === "all") {
       favorite.updateTabsSortState("all", sort?.sortKey!, sort?.sortOrder!);
     }
-  }, [sort, type, favorite]);
+  }, [sort, type]);
 
   const initialSort = useMemo(() => {
     const sortStore = type === "all" ? favorite.tabSort?.all : undefined;
