@@ -29,6 +29,7 @@
     "@orderly.network/react-app": "workspace:*",
     "@orderly.network/trading": "workspace:*",
     "@orderly.network/trading-leaderboard": "workspace:*",
+    "@orderly.network/trading-points": "workspace:*",
     "@orderly.network/trading-rewards": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@orderly.network/ui": "workspace:*",
