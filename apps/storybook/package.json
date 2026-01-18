@@ -1,7 +1,7 @@
 {
   "name": "@orderly.network/storybook",
   "private": true,
-  "version": "1.8.11-alpha.0",
+  "version": "1.8.12",
   "type": "module",
   "scripts": {
     "dev": "pnpm loadEnv vite",
@@ -29,6 +29,7 @@
     "@orderly.network/react-app": "workspace:*",
     "@orderly.network/trading": "workspace:*",
     "@orderly.network/trading-leaderboard": "workspace:*",
+    "@orderly.network/trading-points": "workspace:*",
     "@orderly.network/trading-rewards": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@orderly.network/ui": "workspace:*",
