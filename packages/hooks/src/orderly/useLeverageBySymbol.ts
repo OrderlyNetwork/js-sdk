@@ -39,12 +39,18 @@ export const useLeverageBySymbol = (symbol?: string) => {
         if (res.symbol === symbol) {
           // update leverage by swr to fix displayed previous value at short time when switching symbol.
           const key = [`/v1/client/leverage?symbol=${symbol}`, state.accountId];
-          mutate(key, (prevData: any) => {
-            return {
-              ...prevData,
-              leverage: res.leverage,
-            };
-          });
+          mutate(
+            key,
+            (prevData: any) => {
+              return {
+                ...prevData,
+                leverage: res.leverage,
+              };
+            },
+            {
+              revalidate: false,
+            },
+          );
         }
       },
     });

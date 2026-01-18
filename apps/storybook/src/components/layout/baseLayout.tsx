@@ -28,7 +28,7 @@ export const BaseLayout: FC<BaseLayoutProps> = (props) => {
         }}
         bottomNavProps={bottomNavProps}
         footerProps={footerConfig}
-        routerAdapter={{ onRouteChange: onRouteChange }}
+        routerAdapter={{ onRouteChange }}
         classNames={props.classNames}
       >
         {props.children}

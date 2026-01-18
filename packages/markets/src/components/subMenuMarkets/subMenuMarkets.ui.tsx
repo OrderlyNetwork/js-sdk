@@ -18,7 +18,7 @@ import {
 } from "../../type";
 import { FavoritesTabWidget } from "../favoritesTabs";
 import { MarketsListWidget } from "../marketsList";
-import { RwaTab } from "../rwaTab";
+import { RwaIconTab } from "../rwaTab";
 import { useFavoritesProps } from "../shared/hooks/useFavoritesExtraProps";
 import { SymbolDisplay } from "../symbolDisplay";
 
@@ -167,7 +167,7 @@ export const SubMenuMarkets: React.FC<SubMenuMarketsProps> = (props) => {
             onSort={onTabSort(MarketsTabName.All)}
           />
         </TabPanel>
-        <TabPanel title={<RwaTab />} value={MarketsTabName.Rwa}>
+        <TabPanel title={<RwaIconTab />} value={MarketsTabName.Rwa}>
           <MarketTabPanel
             type={MarketsTabName.Rwa}
             getColumns={getColumns}

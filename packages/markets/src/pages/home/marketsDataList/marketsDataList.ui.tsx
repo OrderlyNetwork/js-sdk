@@ -1,7 +1,8 @@
 import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { Box, TabPanel, Tabs } from "@orderly.network/ui";
+import { Box, RwaIcon, TabPanel, Tabs } from "@orderly.network/ui";
 import { FavoritesEmpty } from "../../../components/favoritesEmpty";
+import { RwaIconTab } from "../../../components/rwaTab";
 import { AllMarketsIcon, FavoritesIcon, NewListingsIcon } from "../../../icons";
 import { MarketsTabName } from "../../../type";
 import { UseMarketsDataListScript } from "./marketsDataList.script";
@@ -69,6 +70,18 @@ export const MarketsDataList: React.FC<MarketsDataListProps> = (props) => {
           <React.Suspense fallback={null}>
             <LazyMarketsListFullWidget
               type="all"
+              initialSort={{ sortKey: "24h_amount", sortOrder: "desc" }}
+            />
+          </React.Suspense>
+        </TabPanel>
+        <TabPanel
+          title={<RwaIconTab />}
+          value="rwa"
+          testid="oui-testid-markets-rwa-tab"
+        >
+          <React.Suspense fallback={null}>
+            <LazyMarketsListFullWidget
+              type="rwa"
               initialSort={{ sortKey: "24h_amount", sortOrder: "desc" }}
             />
           </React.Suspense>

@@ -255,8 +255,8 @@ importers:
         specifier: 0.17.0
         version: 0.17.0(rollup@4.46.1)(vite@7.3.0(@types/node@24.3.1)(jiti@1.21.7)(terser@5.44.0)(yaml@2.8.0))
       woofi-swap-widget-kit:
-        specifier: ^0.0.38
-        version: 0.0.38(bufferutil@4.0.9)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)
+        specifier: ^0.0.41
+        version: 0.0.41(bufferutil@4.0.9)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)
     devDependencies:
       '@chromatic-com/storybook':
         specifier: ^4.1.3
@@ -15574,8 +15574,8 @@ packages:
     resolution: {integrity: sha512-DLiFIXYC5fMPxaRg832S6F5mJYvePtmO5G9v9IgUFPhXm9/GkXarH/TUrBAVzhTCzAj9anE/+GjrgXp/54nOgw==}
     engines: {node: '>= 12.0.0'}
 
-  woofi-swap-widget-kit@0.0.38:
-    resolution: {integrity: sha512-5GL3w5Q9JF01LSmnMPx6JeZ3f1/wXRNJxBPJT81a8ajrJzSZwfJBFZtBntyavlgaDYOGWUfKJEOQsZvylv1vlw==}
+  woofi-swap-widget-kit@0.0.41:
+    resolution: {integrity: sha512-lLHrZn8uEPKILo2L68dyqyJgNVXqfZBTRG+n0Gx3w2gcalYoklm8Pzrn5PfdlaFPNFxuLdiLMwp7/Cz3dclTdg==}
 
   word-wrap@1.2.5:
     resolution: {integrity: sha512-BN22B5eaMMI9UMtjrGd5g5eCYPpCPDUy0FJXbYsaT5zYxjFOckS53SQDE3pWkVoWpHXVb3BrYcEN4Twa55B5cA==}
@@ -34876,7 +34876,7 @@ snapshots:
       triple-beam: 1.4.1
       winston-transport: 4.9.0
 
-  woofi-swap-widget-kit@0.0.38(bufferutil@4.0.9)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76):
+  woofi-swap-widget-kit@0.0.41(bufferutil@4.0.9)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76):
     dependencies:
       '@amplitude/analytics-browser': 2.11.13
       '@coral-xyz/anchor': 0.29.0(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.8.3)(utf-8-validate@5.0.10)
