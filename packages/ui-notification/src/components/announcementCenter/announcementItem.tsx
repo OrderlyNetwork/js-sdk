@@ -48,6 +48,8 @@ export const AnnouncementItem: FC<{
         return t("notification.listing");
       case AnnouncementType.Maintenance:
         return t("notification.maintenance");
+      case AnnouncementType.Vote:
+        return t("notification.vote");
       default:
         return t("notification.general");
     }
@@ -55,7 +57,8 @@ export const AnnouncementItem: FC<{
 
   const action = useMemo(() => {
     if (
-      props.type === AnnouncementType.Campaign &&
+      (props.type === AnnouncementType.Campaign ||
+        props.type === AnnouncementType.Vote) &&
       typeof props.url === "string" &&
       props.url !== "" &&
       typeof props.onItemClick === "function"

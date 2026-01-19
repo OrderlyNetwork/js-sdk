@@ -174,6 +174,11 @@ const page: Package[] = [
     watch: true,
   },
   {
+    package: "@orderly.network/trading-points",
+    path: "../../packages/trading-points/src",
+    watch: true,
+  },
+  {
     package: "@orderly.network/trading-rewards",
     path: "../../packages/trading-rewards/src",
     watch: true,

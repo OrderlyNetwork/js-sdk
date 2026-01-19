@@ -17,6 +17,7 @@ import AnnouncementPage from "./pages/announcement/page";
 import LeaderboardPage from "./pages/leaderboard/page";
 import MarketsPage from "./pages/markets/page";
 import PerpPage from "./pages/perp/page";
+import PointsPage from "./pages/points/page";
 import APIKeyPage from "./pages/portfolio/api-key/page";
 import AssetsPage from "./pages/portfolio/assets/page";
 import FeeTierPage from "./pages/portfolio/fee/page";
@@ -135,6 +136,10 @@ const AppRoute: React.FC = () => {
     {
       path: "announcement",
       element: <AnnouncementPage />,
+    },
+    {
+      path: "points",
+      element: <PointsPage />,
     },
     {
       path: "swap",

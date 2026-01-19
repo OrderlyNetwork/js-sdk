@@ -1,11 +1,7 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Decimal } from "@orderly.network/utils";
-import {
-  useVaultInfoState,
-  useVaultLpInfoById,
-  useVaultsStore,
-} from "../../../store";
+import { useVaultLpInfoById, useVaultsStore } from "../../../store";
 import { OperationType } from "../../../types/vault";
 import { useOperationScript } from "../depositAndWithdraw/operation.script";
 
@@ -26,10 +22,12 @@ export const useVaultWithdrawFormScript = (
   const { vaultInfo } = useVaultsStore();
   const { t } = useTranslation();
 
-  const sharePrice = useMemo(() => {
-    const vault = vaultInfo.data.find((v) => v.vault_id === vaultId);
-    return vault?.est_main_share_price || 0;
+  const currentVault = useMemo(() => {
+    return vaultInfo.data.find((v) => v.vault_id === vaultId);
   }, [vaultInfo.data, vaultId]);
+
+  const sharePrice = currentVault?.est_main_share_price || 0;
+  const minWithdrawalAmount = currentVault?.min_withdrawal_amount || 0;
 
   const maxQuantity = vaultLpInfo?.[0]?.available_main_shares || 0;
 
@@ -56,23 +54,16 @@ export const useVaultWithdrawFormScript = (
   };
 
   const isMinAmount = useMemo(() => {
-    if (
-      !quantity ||
-      !vaultInfo.data[0]?.est_main_share_price ||
-      !vaultInfo.data[0]?.min_withdrawal_amount
-    )
-      return false;
+    if (!quantity || !sharePrice || !minWithdrawalAmount) return false;
     const isAll = quantity === maxQuantity.toString();
 
     if (isAll) {
       return false;
     }
 
-    const receiving = new Decimal(quantity).mul(
-      vaultInfo.data[0]?.est_main_share_price,
-    );
-    return receiving.lt(vaultInfo.data[0]?.min_withdrawal_amount);
-  }, [quantity, vaultInfo, maxQuantity]);
+    const receiving = new Decimal(quantity).mul(sharePrice);
+    return receiving.lt(minWithdrawalAmount);
+  }, [quantity, sharePrice, minWithdrawalAmount, maxQuantity]);
 
   const disabledWithdraw = useMemo(() => {
     return (
@@ -81,13 +72,13 @@ export const useVaultWithdrawFormScript = (
       disabledOperation ||
       (!!quantity && isMinAmount)
     );
-  }, [quantity, disabledOperation]);
+  }, [quantity, disabledOperation, isMinAmount]);
 
   const inputHint = useMemo(() => {
     if (quantity && isMinAmount) {
       return {
         hintMessage: t("vaults.operation.error.minWithdrawal", {
-          amount: vaultInfo.data[0]?.min_withdrawal_amount,
+          amount: minWithdrawalAmount,
         }),
         status: "error",
       };
@@ -96,7 +87,7 @@ export const useVaultWithdrawFormScript = (
       hintMessage: "",
       status: "",
     };
-  }, [quantity, t]);
+  }, [quantity, isMinAmount, minWithdrawalAmount, t]);
 
   return {
     quantity,

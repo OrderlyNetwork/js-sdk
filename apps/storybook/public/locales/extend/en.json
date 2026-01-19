@@ -18,7 +18,7 @@
   "extend.perps": "Perps",
   "extend.perps.description": "Gasless orderbook perps with up to 100x leverage",
   "extend.woofiEarn": "WOOFi earn",
-  "extend.woofiEarn.description": "Get yield safely from major assets on any chain",
+  "extend.woofiEarn.description": "Get yield effortlessly on any chain",
   "extend.wooStake": "WOO stake",
   "extend.wooStake.description": "Stake to earn USDC and WOO",
   "extend.vaults.description": "Earn passive yield with automated strategies",

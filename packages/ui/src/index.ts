@@ -39,7 +39,7 @@ export { EVMAvatar, Avatar } from "./avatar";
 export type { ButtonProps } from "./button";
 export type { BoxProps } from "./box";
 export type { FlexProps } from "./flex";
-export type { TextProps, NumeralProps } from "./typography";
+export type { TextProps, NumeralProps, FormattedTextProps } from "./typography";
 export type {
   InputProps,
   TextFieldProps,

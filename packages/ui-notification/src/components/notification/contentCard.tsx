@@ -141,3 +141,35 @@ export const ListingContentCard: FC<{
     </div>
   );
 };
+
+export const CommunityVoteContentCard: FC<{
+  message: string;
+  url?: string | null;
+  onItemClick: (url: string) => void;
+}> = ({ message, url, onItemClick }) => {
+  const { t } = useTranslation();
+  return (
+    <div className="oui-flex oui-flex-col oui-gap-2">
+      <Text size="sm" weight="bold">
+        {message}
+      </Text>
+      {typeof url === "string" &&
+        url !== "" &&
+        typeof onItemClick === "function" && (
+          <button
+            className="oui-flex oui-items-center oui-gap-1"
+            onClick={() => onItemClick(url)}
+          >
+            <Text
+              size="xs"
+              color="buy"
+              className="oui-bg-clip-text oui-text-transparent oui-gradient-brand"
+            >
+              {t("notification.joinNow")}
+            </Text>
+            <ArrowRightShortIcon size={18} color="success" />
+          </button>
+        )}
+    </div>
+  );
+};

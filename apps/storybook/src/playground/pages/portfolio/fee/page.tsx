@@ -5,8 +5,8 @@ import { FeeTierModule } from "@orderly.network/portfolio";
 import { ARBITRUM_MAINNET_CHAINID } from "@orderly.network/types";
 import { Button, cn, Flex, Text, useScreen } from "@orderly.network/ui";
 import type { ButtonProps, Column } from "@orderly.network/ui";
+import { useRouteContext } from "../../../../components/orderlyProvider/rounteProvider";
 import { PathEnum } from "../../../constant";
-import { useNav } from "../../../hooks/useNav";
 
 const useWooStaking = (inputs: { decimals: number; chainId: number }) => {
   return {
@@ -38,7 +38,7 @@ const TopRightIcon: React.FC<React.SVGAttributes<SVGSVGElement>> = (props) => {
 
 const TradingBtn: React.FC<ButtonProps> = (props) => {
   const { t } = useTranslation();
-  const { onRouteChange } = useNav();
+  const { onRouteChange } = useRouteContext();
   return (
     <Button
       {...props}

@@ -67,6 +67,7 @@
       "@orderly.network/trading-leaderboard": [
         "../../packages/trading-leaderboard/src"
       ],
+      "@orderly.network/trading-points": ["../../packages/trading-points/src"],
       "@orderly.network/trading-rewards": [
         "../../packages/trading-rewards/src"
       ],

@@ -12,7 +12,7 @@ import type { MainNavItem } from "./mainMenus/navItem";
 import { MainNavWidgetProps } from "./mainNav.widget";
 
 // Hrefs here will NOT trigger routing when clicked (top-level item)
-const NON_ROUTING_HREFS: string[] = ["/vaults"];
+// const NON_ROUTING_HREFS: string[] = ["/vaults"];
 
 // export type CampaignPosition = "menuLeading" | "menuTailing" | "navTailing";
 export enum CampaignPositionEnum {
@@ -58,9 +58,9 @@ export const useMainNavScript = (props: MainNavWidgetProps) => {
         current.href.startsWith("https://"));
 
     // Hard-coded non-routing list
-    if (NON_ROUTING_HREFS.includes(current.href)) {
-      return;
-    }
+    // if (NON_ROUTING_HREFS.includes(current.href)) {
+    //   return;
+    // }
 
     if (current.target) {
       window.open(current.href, current.target);

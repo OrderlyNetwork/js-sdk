@@ -7,7 +7,6 @@ import {
   TabPanel,
   Flex,
   TokenIcon,
-  Text,
   Badge,
   EmptyDataState,
 } from "@orderly.network/ui";
@@ -19,8 +18,9 @@ import {
 } from "../../type";
 import { FavoritesTabWidget } from "../favoritesTabs";
 import { MarketsListWidget } from "../marketsList";
-import { RwaTab } from "../rwaTab";
+import { RwaIconTab } from "../rwaTab";
 import { useFavoritesProps } from "../shared/hooks/useFavoritesExtraProps";
+import { SymbolDisplay } from "../symbolDisplay";
 
 const LIST_ROW_COMPACT = "oui-h-auto";
 const TABLE_CLASSNAMES = {
@@ -97,14 +97,9 @@ export const SubMenuMarkets: React.FC<SubMenuMarketsProps> = (props) => {
             <div className="oui-mx-[-8px]">
               <Flex gapX={1} itemAlign="center">
                 <TokenIcon symbol={record.symbol} className="oui-size-[18px]" />
-                <Text.formatted
-                  rule="symbol"
-                  formatString="base"
-                  size="2xs"
-                  weight="semibold"
-                >
+                <SymbolDisplay formatString="base" size="2xs">
                   {record.symbol}
-                </Text.formatted>
+                </SymbolDisplay>
                 <Badge size="xs" color="primary">
                   {record.leverage}x
                 </Badge>
@@ -172,7 +167,7 @@ export const SubMenuMarkets: React.FC<SubMenuMarketsProps> = (props) => {
             onSort={onTabSort(MarketsTabName.All)}
           />
         </TabPanel>
-        <TabPanel title={<RwaTab />} value={MarketsTabName.Rwa}>
+        <TabPanel title={<RwaIconTab />} value={MarketsTabName.Rwa}>
           <MarketTabPanel
             type={MarketsTabName.Rwa}
             getColumns={getColumns}
