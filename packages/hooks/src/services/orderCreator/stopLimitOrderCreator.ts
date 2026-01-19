@@ -1,25 +1,39 @@
 import { pick } from "ramda";
-import { order as orderUntil } from "@orderly.network/perp";
 import {
   AlgoOrderEntity,
   AlgoOrderRootType,
   TriggerPriceType,
   OrderlyOrder,
+  OrderType,
+  OrderSide,
 } from "@orderly.network/types";
-import { OrderType } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
 import { BaseOrderCreator } from "./baseCreator";
-import {
-  OrderFormEntity,
-  ValuesDepConfig,
-  OrderValidationResult,
-} from "./interface";
+import { ValuesDepConfig, OrderValidationResult } from "./interface";
 import { OrderValidation } from "./orderValidation";
+import { PriceValidationStrategy } from "./validators/PriceValidationStrategy";
+import { TriggerPriceValidationStrategy } from "./validators/PriceValidationStrategy";
+import { PriceValidator } from "./validators/PriceValidator";
+import { QuantityValidator } from "./validators/QuantityValidator";
+import { TriggerPriceValidator } from "./validators/TriggerPriceValidator";
+import { ValidationChain } from "./validators/ValidationChain";
 
-const { maxPrice, minPrice, scopePrice: scopePrice } = orderUntil;
-
+/**
+ * Creator for stop-limit orders
+ * Uses Strategy pattern for validation and Template Method pattern for creation
+ */
 export class StopLimitOrderCreator extends BaseOrderCreator<AlgoOrderEntity> {
-  create(
+  private priceValidationStrategy = new PriceValidationStrategy();
+  private triggerPriceValidationStrategy = new TriggerPriceValidationStrategy();
+  private validationChain = new ValidationChain()
+    .addValidator(new QuantityValidator())
+    .addValidator(new TriggerPriceValidator())
+    .addValidator(new PriceValidator());
+
+  /**
+   * Builds the stop-limit order
+   * Implements template method hook
+   */
+  protected buildOrder(
     values: AlgoOrderEntity & {
       order_quantity: number;
       order_price: number;
@@ -30,7 +44,6 @@ export class StopLimitOrderCreator extends BaseOrderCreator<AlgoOrderEntity> {
 
     const order: AlgoOrderEntity<AlgoOrderRootType.STOP> = {
       ...this.baseOrder(values as unknown as OrderlyOrder),
-
       trigger_price: values.trigger_price!,
       algo_type: AlgoOrderRootType.STOP,
       type: OrderType.LIMIT,
@@ -57,85 +70,86 @@ export class StopLimitOrderCreator extends BaseOrderCreator<AlgoOrderEntity> {
     );
   }
 
-  validate(
-    values: OrderFormEntity,
+  /**
+   * Runs validations using validation chain
+   * Implements template method hook
+   */
+  protected runValidations(
+    values: AlgoOrderEntity,
     config: ValuesDepConfig,
-  ): Promise<OrderValidationResult> {
-    return this.baseValidate(values, config).then((errors) => {
-      // const errors = this.baseValidate(values, config);
-      // @ts-ignore
-      const { order_price, trigger_price, side } = values;
-      const { symbol } = config;
-      const { price_range, price_scope, quote_max, quote_min } = symbol;
+  ): OrderValidationResult {
+    // Cast to OrderlyOrder for baseValidate method which expects OrderlyOrder
+    const orderlyValues = values as unknown as OrderlyOrder;
+    const errors = this.baseValidate(orderlyValues, config);
 
-      if (!order_price) {
-        errors.order_price = OrderValidation.required("order_price");
+    // Validate trigger price
+    // Access trigger_price from AlgoOrderEntity - using type assertion because
+    // AlgoOrderEntity may have different field structures depending on the algo type
+    const triggerPrice = (values as { trigger_price?: number | string })
+      .trigger_price;
+
+    // Check if trigger_price is missing or 0 (both should be treated as required error)
+    if (!triggerPrice || triggerPrice === 0) {
+      errors.trigger_price = OrderValidation.required("trigger_price");
+    } else {
+      const triggerError = this.triggerPriceValidationStrategy.validate(
+        { trigger_price: triggerPrice },
+        config,
+      );
+      if (triggerError) {
+        errors.trigger_price = triggerError;
       }
+    }
 
-      if (!trigger_price) {
-        errors.trigger_price = OrderValidation.required("trigger_price");
-      } else {
-        // validate trigger price
-        if (trigger_price > quote_max) {
-          errors.trigger_price = OrderValidation.max(
-            "trigger_price",
-            quote_max,
-          );
-        } else if (trigger_price < quote_min || trigger_price == 0) {
-          errors.trigger_price = OrderValidation.min(
-            "trigger_price",
-            quote_min,
-          );
-        } else if (order_price) {
-          const price = new Decimal(order_price);
+    // Validate order price using trigger price as base
+    // Note: For stop orders, we need to validate order_price against trigger_price range
+    // Access order_price and side from values - may be in different field names
+    // (order_price in input form, price in AlgoOrderEntity)
+    const valuesWithFields = values as {
+      order_price?: number | string;
+      price?: number | string;
+      side?: OrderSide | string;
+    };
+    const orderPrice = valuesWithFields.order_price ?? valuesWithFields.price;
+    const triggerPriceForPriceValidation = triggerPrice;
+    // Get side from orderlyValues if not in valuesWithFields
+    const side = (valuesWithFields.side ?? orderlyValues.side) as
+      | OrderSide
+      | undefined;
 
-          const maxPriceNumber = maxPrice(trigger_price, price_range);
-          const minPriceNumber = minPrice(trigger_price, price_range);
-          const scropePriceNumbere = scopePrice(
-            trigger_price,
-            price_scope,
-            side,
-          );
-
-          const priceRange =
-            side === "BUY"
-              ? {
-                  min: scropePriceNumbere,
-                  max: maxPriceNumber,
-                }
-              : {
-                  min: minPriceNumber,
-                  max: scropePriceNumbere,
-                };
-
-          /// if side is 'buy', only check max price,
-          /// if side is 'sell', only check min price,
-          if (price.gt(quote_max)) {
-            errors.order_price = OrderValidation.max("order_price", quote_max);
-          } else {
-            if (price.gt(priceRange?.max)) {
-              errors.order_price = OrderValidation.max(
-                "order_price",
-                new Decimal(priceRange.max).todp(symbol.quote_dp).toString(),
-              );
-            }
-          }
-
-          if (price.lt(quote_min)) {
-            errors.order_price = OrderValidation.min("order_price", quote_min);
-          } else {
-            if (price.lt(priceRange?.min)) {
-              errors.order_price = OrderValidation.min(
-                "order_price",
-                new Decimal(priceRange.min).todp(symbol.quote_dp).toString(),
-              );
-            }
-          }
-        }
+    if (!orderPrice) {
+      errors.order_price = OrderValidation.required("order_price");
+    } else if (orderPrice && triggerPriceForPriceValidation && side) {
+      // Create a modified config with trigger_price as base price
+      const modifiedConfig = {
+        ...config,
+        markPrice: Number(triggerPriceForPriceValidation),
+      };
+      // side is guaranteed to be defined at this point due to the if condition
+      const priceError = this.priceValidationStrategy.validate(
+        {
+          order_price: orderPrice,
+          side: side as OrderSide,
+          order_type: OrderType.LIMIT,
+        },
+        modifiedConfig,
+      );
+      if (priceError) {
+        errors.order_price = priceError;
       }
+    } else if (orderPrice && triggerPriceForPriceValidation) {
+      // If side is missing, at least validate against quote_max and quote_min
+      // This handles cases where side might not be available but we still need basic validation
+      const { quote_max, quote_min } = config.symbol;
+      const price = Number(orderPrice);
+      if (quote_max && price > quote_max) {
+        errors.order_price = OrderValidation.max("order_price", quote_max);
+      } else if (quote_min && price < quote_min) {
+        errors.order_price = OrderValidation.min("order_price", quote_min);
+      }
+    }
 
-      return errors;
-    });
+    return errors;
   }
 
   orderType: OrderType.STOP_LIMIT = OrderType.STOP_LIMIT;

@@ -7,14 +7,23 @@ import {
   OrderType,
 } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
+import { getPriceRange } from "../../utils/order/orderPrice";
 import { BaseOrderCreator } from "./baseCreator";
 import { ValuesDepConfig, OrderValidationResult } from "./interface";
 import { OrderValidation } from "./orderValidation";
 
+/**
+ * Creator for trailing stop orders
+ * Uses Template Method pattern from BaseOrderCreator
+ */
 export class TrailingStopOrderCreator extends BaseOrderCreator<OrderlyOrder> {
   orderType = OrderType.TRAILING_STOP;
 
-  create(values: OrderlyOrder, config: ValuesDepConfig) {
+  /**
+   * Builds the trailing stop order
+   * Implements template method hook
+   */
+  protected buildOrder(values: OrderlyOrder, config: ValuesDepConfig) {
     const { order_quantity, activated_price, callback_value, callback_rate } =
       values;
 
@@ -50,35 +59,42 @@ export class TrailingStopOrderCreator extends BaseOrderCreator<OrderlyOrder> {
     );
   }
 
-  async validate(
+  /**
+   * Runs validations for trailing stop order
+   * Implements template method hook
+   */
+  protected runValidations(
     values: OrderlyOrder,
     config: ValuesDepConfig,
-  ): Promise<OrderValidationResult> {
+  ): OrderValidationResult {
     const { markPrice, symbol } = config;
     const { quote_dp } = config.symbol;
     const { side, activated_price, callback_value, callback_rate } = values;
 
-    const errors = await this.baseValidate(values, config);
+    const errors = this.baseValidate(values, config);
 
     if (activated_price) {
       const { minPrice, maxPrice } = getPriceRange({
         side,
-        markPrice,
+        basePrice: markPrice,
         symbolInfo: symbol,
       });
 
-      const activatedPrice = new Decimal(activated_price);
+      // Only validate if minPrice and maxPrice are valid numbers
+      if (!isNaN(minPrice) && !isNaN(maxPrice)) {
+        const activatedPrice = new Decimal(activated_price);
 
-      if (activatedPrice.lt(minPrice) || activatedPrice.equals(0)) {
-        errors.activated_price = OrderValidation.min(
-          "activated_price",
-          new Decimal(minPrice).todp(quote_dp).toString(),
-        );
-      } else if (activatedPrice.gt(maxPrice)) {
-        errors.activated_price = OrderValidation.max(
-          "activated_price",
-          new Decimal(maxPrice).todp(quote_dp).toString(),
-        );
+        if (activatedPrice.lt(minPrice) || activatedPrice.equals(0)) {
+          errors.activated_price = OrderValidation.min(
+            "activated_price",
+            new Decimal(minPrice).todp(quote_dp).toString(),
+          );
+        } else if (activatedPrice.gt(maxPrice)) {
+          errors.activated_price = OrderValidation.max(
+            "activated_price",
+            new Decimal(maxPrice).todp(quote_dp).toString(),
+          );
+        }
       }
     }
 
@@ -116,41 +132,4 @@ export class TrailingStopOrderCreator extends BaseOrderCreator<OrderlyOrder> {
     }
     return errors;
   }
-}
-
-/**
- * activated_price >= min_quote
- * activated_price <= max_quote
- * (activated_price - min_quote) % quote_tick == 0
- * if side == SELL:
- *     activated_price > market_price
- * else if side == BUY:
- *     activated_price < market_price
- */
-function getPriceRange(inputs: {
-  side: OrderSide;
-  markPrice: number;
-  symbolInfo: API.SymbolExt;
-}) {
-  const { markPrice, side, symbolInfo } = inputs;
-  const { quote_min, quote_max } = symbolInfo;
-
-  const priceRange =
-    side === OrderSide.BUY
-      ? {
-          min: quote_min,
-          max: markPrice,
-        }
-      : {
-          min: markPrice,
-          max: quote_max,
-        };
-
-  const minPrice = Math.max(quote_min, priceRange?.min);
-  const maxPrice = Math.min(quote_max, priceRange?.max);
-
-  return {
-    minPrice,
-    maxPrice,
-  };
 }
