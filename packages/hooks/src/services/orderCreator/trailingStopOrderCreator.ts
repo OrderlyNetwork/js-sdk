@@ -40,6 +40,7 @@ export class TrailingStopOrderCreator extends BaseOrderCreator<OrderlyOrder> {
         "quantity",
         "side",
         "reduce_only",
+        "margin_mode",
         "visible_quantity",
         "activated_price",
         "callback_value",

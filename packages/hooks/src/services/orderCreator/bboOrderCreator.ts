@@ -20,6 +20,7 @@ export class BBOOrderCreator extends BaseOrderCreator<OrderEntity> {
         "reduce_only",
         "side",
         "order_type",
+        "margin_mode",
         "level",
       ],
       order,

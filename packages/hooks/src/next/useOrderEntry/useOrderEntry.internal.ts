@@ -5,6 +5,7 @@ import {
   OrderlyOrder,
   OrderSide,
   OrderType,
+  MarginMode,
 } from "@orderly.network/types";
 import { priceToROI } from "../../orderly/useTakeProfitAndStopLoss/tp_slUtils";
 import { OrderCreator } from "../../services/orderCreator/interface";
@@ -36,6 +37,7 @@ const useOrderEntryNextInternal = (
     order_type: OrderType.LIMIT,
     order_price: "",
     symbol,
+    margin_mode: MarginMode.CROSS, // Default margin mode to CROSS for backward compatibility
     ...options.initialOrder,
   };
 

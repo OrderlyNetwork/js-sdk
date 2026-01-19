@@ -14,6 +14,7 @@ export {
   OrderLevel,
   DistributionType,
   TrailingCallbackType,
+  MarginMode,
 } from "./order";
 export type {
   OrderEntity,

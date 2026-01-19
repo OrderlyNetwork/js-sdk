@@ -52,6 +52,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   );
 
   const canTrade = useCanTrade();
+  const [marginMode] = useLocalStorage(`orderly.marginMode.${symbol}`, "cross");
 
   const {
     formattedOrder,
@@ -65,6 +66,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       order_type: localOrderType,
       position_type: PositionType.PARTIAL,
       side: localOrderSide,
+      margin_mode: marginMode === "cross" ? "CROSS" : "ISOLATED",
     },
   });
 

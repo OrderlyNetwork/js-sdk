@@ -37,6 +37,7 @@ export class LimitOrderCreator<
         "reduce_only",
         "side",
         "order_type",
+        "margin_mode",
         "algo_type",
         "child_orders",
       ],

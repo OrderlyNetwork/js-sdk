@@ -1,9 +1,13 @@
-describe("limitOrderCreator", () => {});
-import { OrderSide } from "@orderly.network/types";
-import { LimitOrderCreator } from "../limitOrderCreator";
+import { OrderSide, OrderlyOrder } from "@orderly.network/types";
 import { OrderType } from "@orderly.network/types";
 import { OrderEntity } from "@orderly.network/types";
 import { ValuesDepConfig } from "../interface";
+import { LimitOrderCreator } from "../limitOrderCreator";
+import {
+  createMockConfig,
+  createMockOrderEntity,
+  createMockOrderlyOrder,
+} from "./testHelpers";
 
 describe("LimitOrderCreator", () => {
   let limitOrderCreator: LimitOrderCreator;
@@ -12,67 +16,255 @@ describe("LimitOrderCreator", () => {
     limitOrderCreator = new LimitOrderCreator();
   });
 
-  test("should create a limit order with the provided values", () => {
-    const values = {
-      reduce_only: false,
-      side: "BUY",
-      order_type: "LIMIT",
-      isStopOrder: false,
-      symbol: "PERP_ETH_USDC",
-      visible_quantity: 1,
-      order_price: "4015.41",
-      order_quantity: "0.2936",
-      trigger_price: "",
-      total: "1178.92",
-    } as OrderEntity;
+  describe("create()", () => {
+    test("should create a limit order with the provided values", () => {
+      const values = createMockOrderEntity({
+        order_price: "4015.41",
+        order_quantity: "0.2936",
+      });
 
-    const config = {
-      symbol: {
+      const config = createMockConfig({
+        maxQty: 3.397012059831987,
+        markPrice: 4019.75,
+      });
+
+      const expectedOrder = {
         symbol: "PERP_ETH_USDC",
-        quote_min: 0,
-        quote_max: 100000,
-        quote_tick: 0.01,
-        base_min: 0.0001,
-        base_max: 320,
-        base_tick: 0.0001,
-        min_notional: 10,
-        price_range: 0.03,
-        price_scope: 0.4,
-        std_liquidation_fee: 0.025,
-        liquidator_fee: 0.0125,
-        claim_insurance_fund_discount: 0.0075,
-        funding_period: 8,
-        cap_funding: 0.00375,
-        floor_funding: -0.00375,
-        interest_rate: 0.0001,
-        created_time: 1693820915671,
-        updated_time: 1709888598319,
-        liquidation_tier: 1,
-        base_mmr: 0.025,
-        base_imr: 0.05,
-        base_dp: 4,
-        quote_dp: 2,
-        base: "ETH",
-        quote: "USDC",
-        type: "PERP",
-        name: "ETH-PERP",
-      },
-      maxQty: 3.397012059831987,
-      markPrice: 4019.75,
-    };
+        order_type: "LIMIT",
+        side: "BUY",
+        reduce_only: false,
+        order_quantity: "0.2936",
+        order_price: "4015.41",
+        margin_mode: "CROSS",
+      };
 
-    const expectedOrder = {
-      symbol: "PERP_ETH_USDC",
-      order_type: "LIMIT",
-      side: "BUY",
-      reduce_only: false,
-      order_quantity: "0.2936",
+      const createdOrder = limitOrderCreator.create(values, config);
 
-      order_price: "4015.41",
-    };
+      expect(createdOrder).toEqual(expectedOrder);
+    });
 
-    const createdOrder = limitOrderCreator.create(values, config as any);
+    test("should convert total to order_quantity when order_quantity is missing", () => {
+      const values = createMockOrderlyOrder({
+        order_price: "4000",
+        order_quantity: undefined,
+        total: "1000",
+      });
 
-    expect(createdOrder).toEqual(expectedOrder);
+      const config = createMockConfig({
+        markPrice: 4000,
+      });
+
+      const result = limitOrderCreator.create(values, config);
+
+      expect(result.order_quantity).toBeDefined();
+      expect(result.order_price).toBe("4000");
+    });
+  });
+
+  describe("validate()", () => {
+    test("should return error when order_price is missing", async () => {
+      const values = createMockOrderlyOrder({
+        order_price: undefined,
+        order_quantity: "0.5",
+      });
+
+      const config = createMockConfig();
+
+      const errors = await limitOrderCreator.validate(values, config);
+
+      expect(errors.order_price).toBeDefined();
+      expect(errors.order_price?.type).toBe("required");
+    });
+
+    test("should return error when order_price exceeds quote_max", async () => {
+      const values = createMockOrderlyOrder({
+        order_price: "150000", // Exceeds quote_max of 100000
+        order_quantity: "0.5",
+      });
+
+      const config = createMockConfig({
+        markPrice: 4000,
+      });
+
+      const errors = await limitOrderCreator.validate(values, config);
+
+      expect(errors.order_price).toBeDefined();
+      expect(errors.order_price?.type).toBe("max");
+    });
+
+    test("should return error when order_price is below quote_min", async () => {
+      const values = createMockOrderlyOrder({
+        order_price: "-100", // Below quote_min of 0
+        order_quantity: "0.5",
+      });
+
+      const config = createMockConfig({
+        markPrice: 4000,
+      });
+
+      const errors = await limitOrderCreator.validate(values, config);
+
+      expect(errors.order_price).toBeDefined();
+      expect(errors.order_price?.type).toBe("min");
+    });
+
+    test("should return error when BUY order_price exceeds price_range max", async () => {
+      const values = createMockOrderlyOrder({
+        side: OrderSide.BUY,
+        order_price: "4200", // Exceeds maxPrice (4000 * 1.03 = 4120)
+        order_quantity: "0.5",
+      });
+
+      const config = createMockConfig({
+        markPrice: 4000,
+        symbol: createMockConfig().symbol,
+      });
+
+      const errors = await limitOrderCreator.validate(values, config);
+
+      expect(errors.order_price).toBeDefined();
+      expect(errors.order_price?.type).toBe("max");
+    });
+
+    test("should return error when BUY order_price is below price_scope min", async () => {
+      const values = createMockOrderlyOrder({
+        side: OrderSide.BUY,
+        order_price: "2200", // Below scopePrice (4000 * 0.6 = 2400)
+        order_quantity: "0.5",
+      });
+
+      const config = createMockConfig({
+        markPrice: 4000,
+        symbol: createMockConfig().symbol,
+      });
+
+      const errors = await limitOrderCreator.validate(values, config);
+
+      expect(errors.order_price).toBeDefined();
+      expect(errors.order_price?.type).toBe("min");
+    });
+
+    test("should return error when SELL order_price is below price_range min", async () => {
+      const values = createMockOrderlyOrder({
+        side: OrderSide.SELL,
+        order_price: "3800", // Below minPrice (4000 * 0.97 = 3880)
+        order_quantity: "0.5",
+      });
+
+      const config = createMockConfig({
+        markPrice: 4000,
+        symbol: createMockConfig().symbol,
+      });
+
+      const errors = await limitOrderCreator.validate(values, config);
+
+      expect(errors.order_price).toBeDefined();
+      expect(errors.order_price?.type).toBe("min");
+    });
+
+    test("should return error when SELL order_price exceeds price_scope max", async () => {
+      const values = createMockOrderlyOrder({
+        side: OrderSide.SELL,
+        order_price: "5700", // Exceeds scopePrice (4000 * 1.4 = 5600)
+        order_quantity: "0.5",
+      });
+
+      const config = createMockConfig({
+        markPrice: 4000,
+        symbol: createMockConfig().symbol,
+      });
+
+      const errors = await limitOrderCreator.validate(values, config);
+
+      expect(errors.order_price).toBeDefined();
+      expect(errors.order_price?.type).toBe("max");
+    });
+
+    test("should pass validation for valid BUY order_price within range", async () => {
+      const values = createMockOrderlyOrder({
+        side: OrderSide.BUY,
+        order_price: "2500", // Within valid range (2400-4120)
+        order_quantity: "0.5",
+      });
+
+      const config = createMockConfig({
+        markPrice: 4000,
+        symbol: createMockConfig().symbol,
+      });
+
+      const errors = await limitOrderCreator.validate(values, config);
+
+      expect(errors.order_price).toBeUndefined();
+    });
+
+    test("should pass validation for valid SELL order_price within range", async () => {
+      const values = createMockOrderlyOrder({
+        side: OrderSide.SELL,
+        order_price: "4500", // Within valid range (3880-5600)
+        order_quantity: "0.5",
+      });
+
+      const config = createMockConfig({
+        markPrice: 4000,
+        symbol: createMockConfig().symbol,
+      });
+
+      const errors = await limitOrderCreator.validate(values, config);
+
+      expect(errors.order_price).toBeUndefined();
+    });
+
+    test("should pass validation at boundary values", async () => {
+      // Test at exact maxPrice for BUY
+      const maxPrice = 4000 * 1.03; // 4120
+      const values = createMockOrderlyOrder({
+        side: OrderSide.BUY,
+        order_price: maxPrice.toString(),
+        order_quantity: "0.5",
+      });
+
+      const config = createMockConfig({
+        markPrice: 4000,
+        symbol: createMockConfig().symbol,
+      });
+
+      const errors = await limitOrderCreator.validate(values, config);
+
+      // Should pass as it's at the boundary
+      expect(errors.order_price).toBeUndefined();
+    });
+
+    test("should validate order_quantity from baseValidate", async () => {
+      const values = createMockOrderlyOrder({
+        order_price: "4000",
+        order_quantity: undefined, // Missing quantity
+        total: undefined, // Also remove total to trigger required error
+      });
+
+      const config = createMockConfig({
+        maxQty: 3.5,
+      });
+
+      const errors = await limitOrderCreator.validate(values, config);
+
+      expect(errors.order_quantity).toBeDefined();
+      expect(errors.order_quantity?.type).toBe("required");
+    });
+
+    test("should validate order_quantity exceeds maxQty", async () => {
+      const values = createMockOrderlyOrder({
+        order_price: "4000",
+        order_quantity: "10", // Exceeds maxQty of 3.5
+      });
+
+      const config = createMockConfig({
+        maxQty: 3.5,
+      });
+
+      const errors = await limitOrderCreator.validate(values, config);
+
+      expect(errors.order_quantity).toBeDefined();
+      expect(errors.order_quantity?.type).toBe("max");
+    });
   });
 });

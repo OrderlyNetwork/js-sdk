@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-namespace */
-import { AlgoOrderRootType, OrderSide, OrderType } from "../order";
+import { AlgoOrderRootType, MarginMode, OrderSide, OrderType } from "../order";
 
 export enum AnnouncementType {
   Listing = "LISTING",
@@ -169,6 +169,7 @@ export declare namespace API {
     reduce_only: boolean;
     trigger_price?: number;
     order_tag?: string;
+    margin_mode?: MarginMode;
   }
 
   export interface OrderExt extends Order {
@@ -208,6 +209,7 @@ export declare namespace API {
     callback_value?: number;
     callback_rate?: number;
     extreme_price?: number;
+    margin_mode?: MarginMode;
   }
 
   export interface AlgoOrderExt extends AlgoOrder {
@@ -361,7 +363,7 @@ export declare namespace API {
     fundingFee?: number;
     leverage: number;
     margin?: number;
-    margin_mode?: string | "ISOLATED" | "CROSS";
+    margin_mode?: MarginMode;
   }
 
   export interface PositionExt extends Position {
@@ -740,6 +742,7 @@ export declare namespace WSMessage {
     timestamp: number;
     reduceOnly: boolean;
     maker: boolean;
+    marginMode?: MarginMode;
   }
 
   export interface Holding {
@@ -787,6 +790,7 @@ export declare namespace WSMessage {
     maker: boolean;
     rootAlgoStatus: string;
     algoStatus: string;
+    marginMode?: MarginMode;
   }
 
   export interface Announcement {

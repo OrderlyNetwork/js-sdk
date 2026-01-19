@@ -25,6 +25,14 @@ export enum OrderType {
   TRAILING_STOP = "TRAILING_STOP",
 }
 
+/**
+ * Margin mode for the order
+ */
+export enum MarginMode {
+  ISOLATED = "ISOLATED",
+  CROSS = "CROSS",
+}
+
 export enum BBOOrderType {
   COUNTERPARTY1 = "counterparty1",
   COUNTERPARTY5 = "counterparty5",
@@ -93,6 +101,7 @@ export interface OrderExt {
 export interface BaseOrder {
   symbol: string;
   order_type: OrderType;
+  margin_mode: MarginMode;
   order_type_ext?: OrderType;
   order_price: string;
   order_quantity: string;
@@ -225,6 +234,7 @@ export interface TrailingStopOrder {
 export interface OrderEntity extends ScaledOrder, TrailingStopOrder {
   symbol: string;
   order_type: OrderType;
+  margin_mode?: MarginMode;
   algo_type?: AlgoOrderRootType;
   order_type_ext?: OrderType;
   order_price?: string;

@@ -43,6 +43,7 @@ export class StopMarketOrderCreator extends BaseOrderCreator<AlgoOrderEntity> {
         "trigger_price_type",
         "side",
         "reduce_only",
+        "margin_mode",
         "visible_quantity",
       ],
       order,

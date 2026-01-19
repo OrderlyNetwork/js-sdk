@@ -8,6 +8,7 @@ import {
   AlgoOrderChildOrders,
   OrderSide,
   PositionType,
+  MarginMode,
 } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 import { getMinNotional } from "../../utils/createOrder";
@@ -40,6 +41,7 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
       | "total"
       | "visible_quantity"
       | "slippage"
+      | "margin_mode"
     > = {
       symbol: data.symbol!,
       order_type:
@@ -52,6 +54,7 @@ export abstract class BaseOrderCreator<T> implements OrderCreator<T> {
       reduce_only: data.reduce_only!,
       order_quantity: data.order_quantity!,
       total: data.total,
+      margin_mode: data.margin_mode || MarginMode.CROSS,
       // slippage: data.slippage,
     };
 

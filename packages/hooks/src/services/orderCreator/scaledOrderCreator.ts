@@ -41,6 +41,7 @@ export class ScaledOrderCreator extends BaseOrderCreator<OrderEntity> {
         "reduce_only",
         "side",
         "order_type",
+        "margin_mode",
         "orders",
         "total_orders",
         "distribution_type",
