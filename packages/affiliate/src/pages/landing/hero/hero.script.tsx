@@ -1,37 +1,46 @@
-import { useMemo, useCallback } from "react";
+import { useAppContext } from "@orderly.network/react-app";
+import { modal } from "@orderly.network/ui";
 import { useReferralContext } from "../../../provider";
+import { ReferralCodeFormDialogId } from "../../multiLevel/affiliate/referralCodeForm/modal";
 
-export interface UseHeroScriptOptions {
-  onTradeClick?: () => void;
-}
+export interface UseHeroScriptOptions {}
 
 export const useHeroScript = (options?: UseHeroScriptOptions) => {
-  const { generateCode } = useReferralContext();
-  const { onTradeClick } = options || {};
+  const {
+    isMultiLevelReferralUnlocked,
+    volumePrerequisite,
+    isMultiLevelEnabled,
+    multiLevelRebateInfo,
+    multiLevelRebateInfoMutate,
+    max_rebate_rate,
+  } = useReferralContext();
 
-  // Get current and target volume
-  const currentVolume = useMemo(() => {
-    return generateCode?.completedVolume ?? 0;
-  }, [generateCode]);
+  const { onRouteChange } = useAppContext();
 
-  const targetVolume = useMemo(() => {
-    return generateCode?.requireVolume ?? 100000;
-  }, [generateCode]);
+  const onTrade = () => {
+    onRouteChange?.({
+      href: "/perp",
+      name: "Perp",
+    });
+  };
 
-  // Handle button click
-  const handleButtonClick = useCallback(() => {
-    if (onTradeClick) {
-      onTradeClick();
-    } else {
-      // Default behavior: could navigate to trading page
-      console.log("Navigate to trading page");
-    }
-  }, [onTradeClick]);
+  const onCreateReferralCode = () => {
+    modal.show(ReferralCodeFormDialogId, {
+      type: "create",
+      maxRebateRate: max_rebate_rate,
+      onSuccess: () => {
+        multiLevelRebateInfoMutate();
+      },
+    });
+  };
 
   return {
-    currentVolume,
-    targetVolume,
-    onButtonClick: handleButtonClick,
+    isMultiLevelReferralUnlocked,
+    volumePrerequisite,
+    isMultiLevelEnabled,
+    multiLevelRebateInfo,
+    onTrade,
+    onCreateReferralCode,
   };
 };
 

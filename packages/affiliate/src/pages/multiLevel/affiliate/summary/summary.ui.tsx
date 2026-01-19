@@ -4,6 +4,7 @@ import { cn, Flex, Select, Text } from "@orderly.network/ui";
 import { SummaryReturns } from "./summary.script";
 
 export const Summary: FC<SummaryReturns> = (props) => {
+  const { statistics } = props;
   const { t } = useTranslation();
 
   return (
@@ -32,9 +33,9 @@ export const Summary: FC<SummaryReturns> = (props) => {
 
       <SummaryItem
         label={`${t("affiliate.commission")} (USDC)`}
-        value={props.commission}
-        direct={254444}
-        indirect={100000}
+        value={statistics.total_rebate}
+        direct={statistics.direct_rebate}
+        indirect={statistics.indirect_rebate}
         classNames={{
           root: "!oui-py-12",
           value: "oui-text-trade-profit",
@@ -46,18 +47,18 @@ export const Summary: FC<SummaryReturns> = (props) => {
       <Flex width={"100%"} gap={6} className="oui-flex-col md:oui-flex-row">
         <SummaryItem
           label={`${t("affiliate.referralVol")} (USDC)`}
-          value={props.referralVol}
-          direct={25800000}
-          indirect={200000000}
+          value={statistics.total_volume}
+          direct={statistics.direct_volume}
+          indirect={statistics.indirect_volume}
           classNames={{
             root: "oui-w-full md:oui-w-1/2",
           }}
         />
         <SummaryItem
           label={t("affiliate.referrals")}
-          value={256}
-          direct={12}
-          indirect={244}
+          value={statistics.total_invites}
+          direct={statistics.direct_invites}
+          indirect={statistics.indirect_invites}
           classNames={{
             root: "oui-w-full md:oui-w-1/2",
           }}

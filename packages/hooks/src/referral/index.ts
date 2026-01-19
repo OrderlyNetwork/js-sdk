@@ -9,4 +9,5 @@ export { useCheckReferralCode } from "./useCheckReferralCode";
 export { useGetReferralCode } from "./useGetReferralCode";
 export { useReferralInfo } from "./useReferralInfo";
 export type { CheckReferralCodeReturns } from "./useCheckReferralCode";
+export { useReferralCode } from "./useReferralCode";
 export * from "./api";

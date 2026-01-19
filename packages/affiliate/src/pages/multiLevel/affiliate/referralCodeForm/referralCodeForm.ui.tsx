@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useRef } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   Box,
@@ -12,21 +12,27 @@ import {
   Divider,
 } from "@orderly.network/ui";
 import { ReferralCodeFormReturns } from "./referralCodeForm.script";
+import { ReferralCodeFormWidgetProps } from "./referralCodeForm.widget";
 
-export type ReferralCodeFormProps = ReferralCodeFormReturns & {
-  type: "create" | "edit";
-  close?: () => void;
-};
+export type ReferralCodeFormProps = ReferralCodeFormReturns &
+  ReferralCodeFormWidgetProps;
 
 export const ReferralCodeForm = (props: ReferralCodeFormProps) => {
+  const { isReview } = props;
   const { t } = useTranslation();
-  const [newCode, setNewCode] = useState<string>("");
 
   const isCreate = props.type === "create";
+  const isEdit = props.type === "edit";
 
   const title = isCreate
     ? t("affiliate.referralCodes.create.modal.title")
     : t("affiliate.referralCodes.edit.modal.title");
+
+  const buttonText = isCreate
+    ? t("affiliate.confirmAndGenerate")
+    : isReview
+      ? t("affiliate.saveChanges")
+      : t("affiliate.review");
 
   const createWarning = isCreate && (
     <WarningBox
@@ -34,8 +40,81 @@ export const ReferralCodeForm = (props: ReferralCodeFormProps) => {
     />
   );
 
-  const editReferralCodeWarning = props.type === "edit" && (
-    <WarningBox description={t("affiliate.referralCode.edit.warning")} />
+  const editReferralCodeWarning = isEdit && (
+    <WarningBox
+      description={
+        isReview
+          ? t("affiliate.review.warning")
+          : t("affiliate.referralCode.edit.warning")
+      }
+    />
+  );
+
+  const autoFocus = props.field === "referralCode";
+  const hasSetCursorToEnd = useRef(false);
+
+  const referralCodeInput = (
+    <TextField
+      type="text"
+      placeholder=""
+      fullWidth
+      label={t("affiliate.referralCode.editCodeModal.label")}
+      onClean={() => {
+        props.setNewCode("");
+      }}
+      value={props.newCode}
+      onChange={(e) => {
+        const _value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "");
+        props.setNewCode(_value);
+      }}
+      onFocus={(e) => {
+        if (autoFocus && !hasSetCursorToEnd.current) {
+          hasSetCursorToEnd.current = true;
+          const input = e.target as HTMLInputElement;
+          const len = input.value.length;
+          requestAnimationFrame(() => {
+            input.setSelectionRange(len, len);
+          });
+        }
+      }}
+      formatters={[
+        inputFormatter.createRegexInputFormatter((value: string | number) => {
+          return String(value).replace(/[a-z]/g, (char: string) =>
+            char.toUpperCase(),
+          );
+        }),
+        inputFormatter.createRegexInputFormatter(/[^A-Z0-9]/g),
+      ]}
+      className="oui-w-full"
+      classNames={{
+        label: "oui-text-base-contrast-54 oui-text-xs",
+        input: "placeholder:oui-text-base-contrast-20 placeholder:oui-text-sm",
+      }}
+      maxLength={10}
+      minLength={4}
+      autoComplete="off"
+      disabled={isReview}
+      autoFocus={autoFocus}
+    />
+  );
+
+  const slider = (
+    <Box width={"100%"} my={2}>
+      <Slider
+        min={0}
+        max={props.maxRebatePercentage}
+        step={1}
+        value={[props.referrerRebatePercentage]}
+        onValueChange={(value) => {
+          props.setReferrerRebatePercentage(value[0] as number);
+        }}
+        classNames={{
+          range: "oui-bg-success-darken oui-h-2 oui-top-[0px]",
+          trackInner: "oui-bg-success-darken/30 oui-h-2 oui-top-[0px]",
+          thumb: "oui-border-[#d9d9d9] oui-bg-[#d9d9d9] oui-size-4",
+        }}
+      />
+    </Box>
   );
 
   return (
@@ -55,59 +134,22 @@ export const ReferralCodeForm = (props: ReferralCodeFormProps) => {
       {createWarning}
       {editReferralCodeWarning}
 
-      <TextField
-        type="text"
-        placeholder=""
-        fullWidth
-        label={t("affiliate.referralCode.editCodeModal.label")}
-        onClean={() => {
-          setNewCode("");
-        }}
-        value={newCode}
-        onChange={(e) => {
-          const _value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "");
-          setNewCode(_value);
-        }}
-        formatters={[
-          inputFormatter.createRegexInputFormatter((value: string | number) => {
-            return String(value).replace(/[a-z]/g, (char: string) =>
-              char.toUpperCase(),
-            );
-          }),
-          inputFormatter.createRegexInputFormatter(/[^A-Z0-9]/g),
-        ]}
-        className="oui-w-full"
-        classNames={{
-          label: "oui-text-base-contrast-54 oui-text-xs",
-          input:
-            "placeholder:oui-text-base-contrast-20 placeholder:oui-text-sm",
-        }}
-        maxLength={10}
-        minLength={4}
-        autoComplete="off"
-      />
+      {isEdit && referralCodeInput}
 
       <Flex width={"100%"} direction="column" itemAlign="start" gap={2}>
         <Text size="2xs" intensity={54}>
           {t("affiliate.commissionConfiguration")}
         </Text>
-        <Text size="2xs" intensity={54}>
-          {t("affiliate.totalCommissionAvailable")}:{" "}
-          <Text className="oui-text-warning">40%</Text>
-        </Text>
+        {!isReview && (
+          <Text size="2xs" intensity={54}>
+            {t("affiliate.totalCommissionAvailable")}:{" "}
+            <Text className="oui-text-warning">
+              {props.maxRebatePercentage}%
+            </Text>
+          </Text>
+        )}
 
-        <Box width={"100%"} my={2}>
-          <Slider
-            min={0}
-            max={100}
-            value={[50]}
-            classNames={{
-              range: "oui-bg-success-darken oui-h-2 oui-top-[0px]",
-              trackInner: "oui-bg-success-darken/30 oui-h-2 oui-top-[0px]",
-              thumb: "oui-border-[#d9d9d9] oui-bg-[#d9d9d9] oui-size-4",
-            }}
-          />
-        </Box>
+        {!isReview && slider}
 
         <div className="oui-w-full">
           <Flex justify={"between"} width={"100%"}>
@@ -121,10 +163,10 @@ export const ReferralCodeForm = (props: ReferralCodeFormProps) => {
 
           <Flex justify={"between"} width={"100%"}>
             <Text.formatted size="lg" className="oui-text-success-darken">
-              30%
+              {props.referrerRebatePercentage}%
             </Text.formatted>
             <Text.formatted size="lg" className="oui-text-success-darken/50">
-              10%
+              {props.refereeRebatePercentage}%
             </Text.formatted>
           </Flex>
         </div>
@@ -142,11 +184,13 @@ export const ReferralCodeForm = (props: ReferralCodeFormProps) => {
           </Button>
           <Button
             fullWidth
-            onClick={props.onCreate}
+            onClick={props.onClick}
             data-testid="oui-testid-leverage-save-btn"
+            disabled={props.disabled || props.isMutating}
+            loading={props.isMutating}
             size="md"
           >
-            {t("affiliate.review")}
+            {buttonText}
           </Button>
         </Flex>
       </Flex>

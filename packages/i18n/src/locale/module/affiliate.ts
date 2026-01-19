@@ -139,6 +139,13 @@ export const affiliate = {
   "affiliate.commissionConfiguration": "Commission configuration",
   "affiliate.totalCommissionAvailable": "Total commission available",
   "affiliate.review": "Review",
+  "affiliate.accountNotEligible": "Account not eligible",
+  "affiliate.confirmAndGenerate": "Confirm & Generate",
+  "affiliate.referralCode.create.success": "Referral code created!",
+  "affiliate.saveChanges": "Save changes",
+  "affiliate.changesSaved": "Changes saved",
+  "affiliate.review.warning":
+    "Please review your settings. Note that you can only increase the default commission split for referees if no active referrals are bound to this code yet.",
 };
 
 export type Affiliate = typeof affiliate;

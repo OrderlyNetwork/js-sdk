@@ -20,7 +20,11 @@ export const ReferralInfo: FC<ReferralInfoReturns> = (props) => {
     >
       <Flex direction={"row"} justify={"between"} width={"100%"}>
         <Text size="lg">{t("affiliate.referral")}</Text>
-        <Button size="xs" color="secondary" onClick={props.onEdit}>
+        <Button
+          size="xs"
+          color="secondary"
+          onClick={() => props.onEdit("referralCode")}
+        >
           {t("affiliate.referralCodes.edit")}
         </Button>
       </Flex>
@@ -40,17 +44,17 @@ export const ReferralInfo: FC<ReferralInfoReturns> = (props) => {
         </Flex>
         <Flex direction={"row"} justify={"between"} width={"100%"}>
           <Text size="lg" color="primaryLight">
-            {props.refCode}
+            {props.referralCode}
           </Text>
-          <CopyButton value={props.refCode} />
+          <CopyButton value={props.referralCode} />
         </Flex>
       </Container>
 
       <Container className="oui-p-5">
         <Text size="lg" color="primaryLight">
-          {props.refLink}
+          {props.referralLink}
         </Text>
-        <CopyButton value={props.refLink} />
+        <CopyButton value={props.referralLink} />
       </Container>
 
       <Box
@@ -60,7 +64,11 @@ export const ReferralInfo: FC<ReferralInfoReturns> = (props) => {
       >
         <Flex direction={"row"} justify={"between"} width={"100%"}>
           <Text size="sm">{t("affiliate.revenueSplitStrategy")}</Text>
-          <Button size="xs" color="secondary" onClick={props.onEdit}>
+          <Button
+            size="xs"
+            color="secondary"
+            onClick={() => props.onEdit("rebateRate")}
+          >
             {t("common.edit")}
           </Button>
         </Flex>
@@ -76,10 +84,10 @@ export const ReferralInfo: FC<ReferralInfoReturns> = (props) => {
 
         <Flex justify={"between"} width={"100%"} mt={2}>
           <Text.formatted size="3xl" intensity={80}>
-            {props.earn}
+            {props.referrerRebateRate}%
           </Text.formatted>
           <Text.formatted size="3xl" intensity={36}>
-            {props.share}
+            {props.refereeRebateRate}%
           </Text.formatted>
         </Flex>
       </Box>

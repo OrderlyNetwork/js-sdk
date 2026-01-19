@@ -33,7 +33,7 @@ export const ProgressSection: FC<ProgressSectionProps> = (props) => {
           <Text.numeral rule="price" dp={0}>
             {currentVolume}
           </Text.numeral>
-          <Text size="sm" weight="semibold" intensity="54">
+          <Text size="sm" weight="semibold" intensity={54}>
             /
           </Text>
 
@@ -42,11 +42,11 @@ export const ProgressSection: FC<ProgressSectionProps> = (props) => {
             rule="price"
             dp={0}
             weight="semibold"
-            intensity="54"
+            intensity={54}
           >
             {targetVolume}
           </Text.numeral>
-          <Text size="sm" weight="semibold" intensity="54">
+          <Text size="sm" weight="semibold" intensity={54}>
             USDC
           </Text>
         </Flex>

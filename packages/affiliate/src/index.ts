@@ -6,3 +6,5 @@ export * from "./pages/multiLevel/affiliate";
 export * from "./provider";
 
 export * from "./layout";
+
+export * from "./pages/multiLevel/dashboard";

@@ -1,5 +1,6 @@
 import React, { FC } from "react";
-import { Flex } from "@orderly.network/ui";
+import { useTranslation } from "@orderly.network/i18n";
+import { Button, Flex, Text } from "@orderly.network/ui";
 import { ProgressSectionWidget } from "../progressSection";
 import type { HeroState } from "./hero.script";
 import { HeroTitle } from "./heroTitle";
@@ -11,7 +12,50 @@ export type HeroProps = HeroState & {
 };
 
 export const Hero: FC<HeroProps> = (props) => {
-  const { currentVolume, targetVolume, onButtonClick } = props;
+  const {
+    volumePrerequisite,
+    isMultiLevelReferralUnlocked,
+    isMultiLevelEnabled,
+    multiLevelRebateInfo,
+  } = props;
+
+  const { t } = useTranslation();
+
+  const renderTitle = () => {
+    if (!isMultiLevelReferralUnlocked) {
+      return "Trade 10,000 USDC volume to unlock the ability to invite friends and earn commissions.";
+    }
+    return "Give your sub-affiliates the power to customize their earnings, while you unlock an endless stream of passive income from every trader in your growing network.";
+  };
+  const renderConetent = () => {
+    if (!isMultiLevelReferralUnlocked) {
+      return (
+        <ProgressSectionWidget
+          currentVolume={volumePrerequisite?.current_volume}
+          targetVolume={volumePrerequisite?.required_volume}
+          onButtonClick={props.onTrade}
+        />
+      );
+    }
+
+    if (isMultiLevelEnabled && !multiLevelRebateInfo?.referral_code) {
+      return (
+        <Button
+          size="lg"
+          className="oui-px-4"
+          onClick={props.onCreateReferralCode}
+        >
+          {t("affiliate.referralCodes.create")}
+        </Button>
+      );
+    }
+
+    return (
+      <Button size="lg" className="oui-px-4" disabled>
+        {t("affiliate.accountNotEligible")}
+      </Button>
+    );
+  };
 
   return (
     <Flex
@@ -21,20 +65,19 @@ export const Hero: FC<HeroProps> = (props) => {
       itemAlign={"center"}
     >
       {/* Left side: Title and Progress */}
-      <Flex direction="column" gap={6} className="oui-flex-1">
+      <Flex direction="column" itemAlign="start" gap={6} className="oui-flex-1">
         <HeroTitle />
-        <ProgressSectionWidget
-          currentVolume={currentVolume}
-          targetVolume={targetVolume}
-          onButtonClick={onButtonClick}
-        />
+        <Text size="sm" intensity={54}>
+          {renderTitle()}
+        </Text>
+        {renderConetent()}
       </Flex>
 
       {/* Right side: Network Diagram */}
       <Flex
         justify="center"
         itemAlign="center"
-        className="oui-h-[335px] oui-w-[335px] oui-p-6 md:oui-h-[480px] md:oui-w-[480px]"
+        className="oui-size-[335px] oui-p-6 md:oui-size-[480px]"
       >
         <NetworkDiagram />
       </Flex>

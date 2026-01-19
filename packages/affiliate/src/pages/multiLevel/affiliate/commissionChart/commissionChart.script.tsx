@@ -52,9 +52,9 @@ export const useCommissionChartScript = (): TitleStatisticReturns => {
   const dataSource = useMemo(() => {
     const data =
       ((rebateSummary as RefferalAPI.ReferralRebateSummary[]) || [])?.map(
-        (e) => ({
-          date: e.date,
-          volume: 0,
+        (item) => ({
+          date: item.date,
+          volume: item.referral_rebate,
         }),
       ) || [];
     data.reverse();

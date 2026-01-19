@@ -1,6 +1,7 @@
 import { useTranslation } from "@orderly.network/i18n";
 import { Flex, Grid, cn, Text } from "@orderly.network/ui";
 import { Content } from "../../../components/content";
+import { useReferralContext } from "../../../provider";
 import { CommissionChartWidget } from "./commissionChart";
 import { MultiLevelReferralWidget } from "./multiLevelReferral";
 import { ReferralInfoWidget } from "./referralInfo";
@@ -8,6 +9,8 @@ import { SummaryWidget } from "./summary";
 
 export const MultiLevelAffiliatePage = () => {
   const { t } = useTranslation();
+
+  const { multiLevelRebateInfo } = useReferralContext();
 
   return (
     <Flex
@@ -40,8 +43,11 @@ export const MultiLevelAffiliatePage = () => {
             className="md:oui-grid-cols-2"
           >
             <SummaryWidget />
-            <ReferralInfoWidget />
-            {/* <MultiLevelReferralWidget /> */}
+            {multiLevelRebateInfo?.referral_code ? (
+              <ReferralInfoWidget />
+            ) : (
+              <MultiLevelReferralWidget />
+            )}
           </Grid>
 
           <CommissionChartWidget />

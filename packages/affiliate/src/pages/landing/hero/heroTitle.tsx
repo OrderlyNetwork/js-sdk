@@ -14,10 +14,6 @@ export const HeroTitle = () => {
       >
         Build your revenue network, earn lifetime commissions
       </Text>
-      <Text size="sm" intensity="54">
-        Trade 10,000 USDC volume to unlock the ability to invite friends and
-        earn commissions.
-      </Text>
     </Flex>
   );
 };

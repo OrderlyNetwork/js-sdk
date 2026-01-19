@@ -1,10 +1,15 @@
 import { FC } from "react";
 import { SVGProps } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { Flex, Text, Button } from "@orderly.network/ui";
+import { Flex, Text, Button, cn } from "@orderly.network/ui";
 import { MultiLevelReferralReturns } from "./multiLevelReferral.script";
 
 export const MultiLevelReferral: FC<MultiLevelReferralReturns> = (props) => {
+  const {
+    volumePrerequisite,
+    isMultiLevelReferralUnlocked,
+    progressPercentage,
+  } = props;
   const { t } = useTranslation();
 
   return (
@@ -35,40 +40,47 @@ export const MultiLevelReferral: FC<MultiLevelReferralReturns> = (props) => {
           {t("affiliate.newReferralProgram.title")}
         </Text>
         <Text size="sm" intensity={54} className="oui-text-center">
-          {props.isUnlock
-            ? t("affiliate.newReferralProgram.tradeUnlock", {
-                volume: props.unlockVolume,
-              })
-            : t("affiliate.newReferralProgram.description")}
+          {isMultiLevelReferralUnlocked
+            ? t("affiliate.newReferralProgram.description")
+            : t("affiliate.newReferralProgram.tradeUnlock", {
+                volume: volumePrerequisite?.required_volume,
+              })}
         </Text>
 
-        <Flex width="100%" direction={"column"} gap={2}>
-          <Flex
-            width="100%"
-            justify="between"
-            className="oui-text-2xs oui-text-base-contrast"
-          >
-            <Text>{t("common.current")}</Text>
-            <Flex gap={1}>
-              <Text>{props.currentVolume}</Text>
-              <Text intensity={54}>{`/ ${props.unlockVolume} USDC`}</Text>
+        {!isMultiLevelReferralUnlocked && (
+          <Flex width="100%" direction={"column"} gap={2}>
+            <Flex
+              width="100%"
+              justify="between"
+              className="oui-text-2xs oui-text-base-contrast"
+            >
+              <Text>{t("common.current")}</Text>
+              <Flex gap={1}>
+                <Text>{volumePrerequisite?.current_volume}</Text>
+                <Text
+                  intensity={54}
+                >{`/ ${volumePrerequisite?.required_volume} USDC`}</Text>
+              </Flex>
             </Flex>
-          </Flex>
 
-          <div className="oui-h-[8px] oui-w-full oui-rounded-full oui-bg-base-contrast-4">
-            <div
-              style={{
-                width: `${(props.currentVolume / props.unlockVolume) * 100}%`,
-              }}
-              className="oui-h-full oui-rounded-l-full oui-bg-primary-light"
-            />
-          </div>
-        </Flex>
+            <div className="oui-h-[8px] oui-w-full oui-rounded-full oui-bg-base-contrast-4">
+              <div
+                style={{
+                  width: `${progressPercentage}%`,
+                }}
+                className={cn(
+                  "oui-h-full oui-rounded-l-full oui-bg-primary-light",
+                  progressPercentage === 100 && "oui-rounded-r-full",
+                )}
+              />
+            </div>
+          </Flex>
+        )}
 
         <Button size="md" className="oui-px-16" onClick={props.onClick}>
-          {props.isUnlock
-            ? t("affiliate.newReferralProgram.tradeToUnlock")
-            : t("affiliate.referralCodes.create")}
+          {isMultiLevelReferralUnlocked
+            ? t("affiliate.referralCodes.create")
+            : t("affiliate.newReferralProgram.tradeToUnlock")}
         </Button>
       </Flex>
     </Flex>

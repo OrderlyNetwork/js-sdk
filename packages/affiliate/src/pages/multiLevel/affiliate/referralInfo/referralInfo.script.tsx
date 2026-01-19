@@ -1,5 +1,4 @@
 import { useMemo } from "react";
-import { RefferalAPI, useLocalStorage } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { modal, toast } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
@@ -16,78 +15,53 @@ export const useReferralInfoScript = () => {
     toast.success(t("common.copy.copied"));
   };
 
-  const { referralInfo, referralLinkUrl } = useReferralContext();
-  const [pinCodes, setPinCodes] = useLocalStorage<string[]>(
-    "orderly_referral_codes",
-    [] as string[],
-  );
+  const {
+    referralLinkUrl,
+    multiLevelRebateInfo,
+    multiLevelRebateInfoMutate,
+    max_rebate_rate,
+  } = useReferralContext();
 
-  const codes = useMemo((): RefferalAPI.ReferralCode[] => {
-    if (!referralInfo?.referrer_info?.referral_codes)
-      return [] as RefferalAPI.ReferralCode[];
-    const referralCodes = [...referralInfo?.referrer_info?.referral_codes];
-
-    const pinedItems: RefferalAPI.ReferralCode[] = [];
-
-    for (let i = 0; i < pinCodes.length; i++) {
-      const code = pinCodes[i];
-
-      const index = referralCodes.findIndex((item) => item.code === code);
-      if (index !== -1) {
-        pinedItems.push({ ...referralCodes[index] });
-        referralCodes.splice(index, 1);
-      }
-    }
-
-    return [...pinedItems, ...referralCodes];
-  }, [referralInfo?.referrer_info?.referral_codes, pinCodes]);
-
-  const firstCode = useMemo(() => {
-    if (codes.length === 0) {
-      return undefined;
-    }
-
-    return codes[0];
-  }, [codes]);
-
-  const code = useMemo(() => {
-    return firstCode?.code;
-  }, [firstCode]);
+  const referralCode = multiLevelRebateInfo?.referral_code;
 
   const referralLink = useMemo(() => {
-    if (!firstCode) return "";
+    if (!referralCode) return "";
 
-    return generateReferralLink(referralLinkUrl, firstCode.code);
-  }, [firstCode]);
+    return generateReferralLink(referralLinkUrl, referralCode);
+  }, [referralCode]);
 
-  const earn = useMemo(() => {
-    const value = new Decimal(firstCode?.referrer_rebate_rate || "0")
-      .mul(100)
-      .toDecimalPlaces(0, Decimal.ROUND_DOWN)
-      .toString();
-    return `${value}%`;
-  }, [firstCode?.referrer_rebate_rate]);
-
-  const share = useMemo(() => {
-    const value = new Decimal(firstCode?.referee_rebate_rate || "0")
-      .mul(100)
-      .toDecimalPlaces(0, Decimal.ROUND_DOWN)
-      .toString();
-    return `${value}%`;
-  }, [firstCode?.referee_rebate_rate]);
-
-  const onEdit = () => {
+  const onEdit = (field?: "referralCode" | "rebateRate") => {
     modal.show(ReferralCodeFormDialogId, {
       type: "edit",
+      field,
+      referralCode: multiLevelRebateInfo?.referral_code,
+      maxRebateRate: max_rebate_rate,
+      referrerRebateRate: multiLevelRebateInfo?.referrer_rebate_rate,
+      onSuccess: () => {
+        multiLevelRebateInfoMutate();
+      },
     });
   };
 
+  const referrerRebateRate = useMemo(() => {
+    return new Decimal(multiLevelRebateInfo?.referrer_rebate_rate || 0)
+      .mul(100)
+      .toNumber();
+  }, [multiLevelRebateInfo?.referrer_rebate_rate]);
+
+  const refereeRebateRate = useMemo(() => {
+    return new Decimal(multiLevelRebateInfo?.referee_rebate_rate || 0)
+      .mul(100)
+      .toNumber();
+  }, [multiLevelRebateInfo?.referee_rebate_rate]);
+
   return {
     onCopy,
-    refLink: referralLink,
-    refCode: code,
-    share,
-    earn,
     onEdit,
+    referralCode,
+    referralLink,
+    multiLevelRebateInfo,
+    referrerRebateRate,
+    refereeRebateRate,
   };
 };

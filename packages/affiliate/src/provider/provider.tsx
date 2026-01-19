@@ -17,6 +17,7 @@ import {
 } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
+import { useMultiLevelReferralData } from "../hooks/useMultiLevelReferralData";
 import {
   ReferralContext,
   ReferralContextProps,
@@ -59,7 +60,7 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
       "/v1/referral/auto_referral/progress",
       {
         revalidateOnFocus: true,
-        errorRetryCount: 2,
+        errorRetryCount: 0,
         formatter: (data) => {
           return {
             code: data.auto_referral_code,
@@ -69,6 +70,15 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
         },
       },
     );
+
+  const {
+    volumePrerequisite,
+    multiLevelRebateInfo,
+    isMultiLevelEnabled,
+    isMultiLevelReferralUnlocked,
+    multiLevelRebateInfoMutate,
+    max_rebate_rate,
+  } = useMultiLevelReferralData();
 
   const [showHome, setShowHome] = useState(isLoading);
 
@@ -183,13 +193,19 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
       wrongNetwork,
       disabledConnect,
       setShowHome,
-      setTab: setTab,
+      setTab,
       mutate: memoMutate,
       onBecomeAnAffiliate,
       bindReferralCodeState,
       onLearnAffiliate,
       showReferralPage,
       splashPage,
+      volumePrerequisite,
+      multiLevelRebateInfo,
+      isMultiLevelEnabled,
+      isMultiLevelReferralUnlocked,
+      multiLevelRebateInfoMutate,
+      max_rebate_rate,
     };
   }, [
     becomeAnAffiliateUrl,
@@ -214,6 +230,12 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
     showReferralPage,
     splashPage,
     memoMutate,
+    volumePrerequisite,
+    multiLevelRebateInfo,
+    isMultiLevelEnabled,
+    isMultiLevelReferralUnlocked,
+    multiLevelRebateInfoMutate,
+    max_rebate_rate,
   ]);
 
   return (
