@@ -12,6 +12,8 @@ export declare namespace RefferalAPI {
     referrer_rebate_rate: number;
     total_invites: number;
     total_traded: number;
+    total_volume: number;
+    total_rebate: number;
   };
 
   export type AutoGenerateCode = {

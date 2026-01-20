@@ -5,6 +5,7 @@ import { useReferralContext } from "../../../provider";
 import { CommissionChartWidget } from "./commissionChart";
 import { MultiLevelReferralWidget } from "./multiLevelReferral";
 import { ReferralInfoWidget } from "./referralInfo";
+import { ReferrerTableWidget } from "./referrerTable/referrerTable.widget";
 import { SummaryWidget } from "./summary";
 
 export const MultiLevelAffiliatePage = () => {
@@ -51,6 +52,8 @@ export const MultiLevelAffiliatePage = () => {
           </Grid>
 
           <CommissionChartWidget />
+
+          <ReferrerTableWidget />
         </Flex>
       </Content>
     </Flex>

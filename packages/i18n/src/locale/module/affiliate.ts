@@ -146,6 +146,15 @@ export const affiliate = {
   "affiliate.changesSaved": "Changes saved",
   "affiliate.review.warning":
     "Please review your settings. Note that you can only increase the default commission split for referees if no active referrals are bound to this code yet.",
+  "affiliate.networkSize": "Network size",
+  "affiliate.boundAt": "Bound at",
+  "affiliate.customized": "(Customized)",
+  "affiliate.refereeType.multiLevel": "Multi-level",
+  "affiliate.refereeType.multiLevel.tooltip":
+    "Earn commissions from your direct invitees and their sub-affiliate.",
+  "affiliate.refereeType.singleLevelLegacy": "Single-level (Legacy)",
+  "affiliate.refereeType.singleLevelLegacy.tooltip":
+    "Earn commissions from direct invitees only. (Legacy)",
 };
 
 export type Affiliate = typeof affiliate;
