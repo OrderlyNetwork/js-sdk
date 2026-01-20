@@ -14,7 +14,7 @@ export const HowItWorks: FC<HowItWorksState> = (props) => {
           How it works
         </Text>
         <Box py={4}>
-          <Text intensity="54">
+          <Text intensity={54}>
             Start your affiliate journey and build your revenue network in 3
             simple steps.
           </Text>

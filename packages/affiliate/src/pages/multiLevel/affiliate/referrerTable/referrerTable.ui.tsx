@@ -43,6 +43,7 @@ export const ReferrerTableUI: FC<ReferrerTableScriptReturns> = (props) => {
             refereesData={props.refereesData}
             isRefereesLoading={props.isRefereesLoading}
             refereesPagination={props.refereesPagination}
+            onEditReferee={props.onEditReferee}
           />
         </TabPanel>
         <TabPanel value="codes" title={t("affiliate.referralCodes")}>

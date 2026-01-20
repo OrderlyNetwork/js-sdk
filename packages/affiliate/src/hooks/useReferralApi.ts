@@ -1,5 +1,6 @@
 import { usePrivateQuery } from "@orderly.network/hooks";
 import { API } from "@orderly.network/types";
+import { StatisticsTimeRange } from "../types";
 
 /** Get Volume Prerequisite */
 export const useVolumePrerequisite = () => {
@@ -31,23 +32,6 @@ export const useMultiLevelRebateInfo = () => {
     },
   );
 };
-
-/**Get Multi-Level Referral Config */
-export const useMultiLevelReferralConfig = () => {
-  return usePrivateQuery<API.Referral.MultiLevelReferralConfig>(
-    "/v1/referral/multi_level/admin",
-    {
-      revalidateOnFocus: false,
-    },
-  );
-};
-
-export enum StatisticsTimeRange {
-  "1d" = "1d",
-  "7d" = "7d",
-  "30d" = "30d",
-  "All" = "all_time",
-}
 
 /** Get Multi-Level Statistics */
 export const useMultiLevelStatistics = (time_range: StatisticsTimeRange) => {

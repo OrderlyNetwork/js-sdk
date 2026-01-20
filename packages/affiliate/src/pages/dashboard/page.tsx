@@ -1,3 +1,6 @@
+import { useAccount } from "@orderly.network/hooks";
+import { useAppContext } from "@orderly.network/react-app";
+import { AccountStatusEnum } from "@orderly.network/types";
 import { cn, Flex, Spinner } from "@orderly.network/ui";
 import { useReferralContext } from "../../provider";
 import { LandingPage } from "../landing";
@@ -15,6 +18,10 @@ export const DashboardPage = (props: {
   const { classNames = {} } = props;
   const { root, ...rest } = classNames;
 
+  const { state } = useAccount();
+
+  const { wrongNetwork, disabledConnect } = useAppContext();
+
   const {
     referralInfo,
     isMultiLevelEnabled,
@@ -23,17 +30,32 @@ export const DashboardPage = (props: {
     isAffiliate,
   } = useReferralContext();
 
+  const loadingView = (
+    <Flex justify={"center"} itemAlign={"center"} height={"100vh"}>
+      <Spinner />
+    </Flex>
+  );
+
+  if (state.validating) {
+    return loadingView;
+  }
+
+  if (
+    wrongNetwork ||
+    disabledConnect ||
+    (state.status < AccountStatusEnum.EnableTrading &&
+      state.status !== AccountStatusEnum.EnableTradingWithoutConnected)
+  ) {
+    return <LandingPage />;
+  }
+
   if (
     isMultiLevelEnabled === undefined ||
     isMultiLevelReferralUnlocked === undefined ||
     // legacy referral info
     referralInfo === undefined
   ) {
-    return (
-      <Flex justify={"center"} itemAlign={"center"} height={"100vh"}>
-        <Spinner />
-      </Flex>
-    );
+    return loadingView;
   }
 
   if (isMultiLevelEnabled) {

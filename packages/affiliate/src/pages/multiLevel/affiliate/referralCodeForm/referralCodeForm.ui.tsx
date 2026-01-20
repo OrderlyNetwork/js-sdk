@@ -10,7 +10,9 @@ import {
   TextField,
   WarningIcon,
   Divider,
+  formatAddress,
 } from "@orderly.network/ui";
+import { ReferralCodeFormField, ReferralCodeFormType } from "../../../../types";
 import { ReferralCodeFormReturns } from "./referralCodeForm.script";
 import { ReferralCodeFormWidgetProps } from "./referralCodeForm.widget";
 
@@ -21,39 +23,99 @@ export const ReferralCodeForm = (props: ReferralCodeFormProps) => {
   const { isReview } = props;
   const { t } = useTranslation();
 
-  const isCreate = props.type === "create";
-  const isEdit = props.type === "edit";
+  const isCreate = props.type === ReferralCodeFormType.Create;
+  const isEdit = props.type === ReferralCodeFormType.Edit;
+  const isReset = props.type === ReferralCodeFormType.Reset;
 
-  const title = isCreate
-    ? t("affiliate.referralCodes.create.modal.title")
-    : t("affiliate.referralCodes.edit.modal.title");
+  const editAccountIdRebateRate = !!props.accountId;
 
-  const buttonText = isCreate
-    ? t("affiliate.confirmAndGenerate")
-    : isReview
-      ? t("affiliate.saveChanges")
-      : t("affiliate.review");
+  const showReferralCodeInput = isEdit && !editAccountIdRebateRate;
 
-  const createWarning = isCreate && (
-    <WarningBox
-      description={t("affiliate.multiLevel.referralCode.create.warning")}
-    />
-  );
+  const noCommissionAvailable = props.maxRebateRate === 0;
 
-  const editReferralCodeWarning = isEdit && (
-    <WarningBox
-      description={
-        isReview
-          ? t("affiliate.review.warning")
-          : t("affiliate.referralCode.edit.warning")
+  const renderTitle = () => {
+    if (isCreate) {
+      return t("affiliate.referralCodes.create.modal.title");
+    }
+
+    if (isReset) {
+      return t("affiliate.resetRebateRate.modal.title");
+    }
+
+    if (isEdit) {
+      if (editAccountIdRebateRate) {
+        return t("affiliate.refereeRebateRate.modal.title", {
+          accountId: formatAddress(props.accountId!),
+        });
       }
-    />
+
+      return t("affiliate.referralCodes.edit.modal.title");
+    }
+  };
+
+  const renderButtonText = () => {
+    if (isCreate) {
+      return t("affiliate.confirmAndGenerate");
+    }
+
+    if (isReset) {
+      return t("common.reset");
+    }
+
+    if (isReview) {
+      return t("affiliate.saveChanges");
+    }
+
+    return t("affiliate.review");
+  };
+
+  const renderWarning = () => {
+    if (isCreate) {
+      return t("affiliate.multiLevel.referralCode.create.warning");
+    }
+
+    if (isReset) {
+      return (
+        <Text size="2xs" intensity={54}>
+          {t("affiliate.resetRebateRate.modal.description", {
+            accountId: formatAddress(props.accountId!),
+          })}
+        </Text>
+      );
+    }
+
+    if (isEdit) {
+      if (editAccountIdRebateRate) {
+        return (
+          <WarningBox description={t("affiliate.refereeRebateRate.warning")} />
+        );
+      }
+
+      return (
+        <WarningBox
+          description={
+            isReview
+              ? t("affiliate.review.warning")
+              : t("affiliate.referralCode.edit.warning")
+          }
+        />
+      );
+    }
+  };
+
+  const title = (
+    <Flex width={"100%"} direction="column" itemAlign="start" gap={3}>
+      <Text size="base" intensity={98}>
+        {renderTitle()}
+      </Text>
+      <Divider intensity={8} className="oui-w-full" />
+    </Flex>
   );
 
-  const autoFocus = props.field === "referralCode";
+  const autoFocus = props.focusField === ReferralCodeFormField.ReferralCode;
   const hasSetCursorToEnd = useRef(false);
 
-  const referralCodeInput = (
+  const referralCodeInput = showReferralCodeInput && !isReset && (
     <TextField
       type="text"
       placeholder=""
@@ -98,7 +160,22 @@ export const ReferralCodeForm = (props: ReferralCodeFormProps) => {
     />
   );
 
-  const slider = (
+  const commissionConfiguration = !isReset && (
+    <>
+      <Text size="2xs" intensity={54}>
+        {t("affiliate.commissionConfiguration")}
+      </Text>
+
+      {!isReview && (
+        <Text size="2xs" intensity={54}>
+          {t("affiliate.totalCommissionAvailable")}:{" "}
+          <Text className="oui-text-warning">{props.maxRebatePercentage}%</Text>
+        </Text>
+      )}
+    </>
+  );
+
+  const slider = !noCommissionAvailable && !isReview && !isReset && (
     <Box width={"100%"} my={2}>
       <Slider
         min={0}
@@ -117,6 +194,77 @@ export const ReferralCodeForm = (props: ReferralCodeFormProps) => {
     </Box>
   );
 
+  const refereeInfo = editAccountIdRebateRate && !isReset && (
+    <Flex width={"100%"} justify="between" gap={2}>
+      <Text size="2xs" intensity={54}>
+        {t("affiliate.referees")}
+      </Text>
+
+      <Text.formatted rule="address" size="2xs" intensity={98}>
+        {props.accountId}
+      </Text.formatted>
+    </Flex>
+  );
+
+  const noCommissionAvailableWarning = noCommissionAvailable && (
+    <Text size="2xs" className="oui-text-warning">
+      {t("affiliate.noCommissionAvailable")}
+    </Text>
+  );
+
+  const resetRebateRateLabel = isReset && (
+    <Text size="2xs" intensity={98}>
+      {t("affiliate.resetRebateRate.rateAfterReset")}
+    </Text>
+  );
+
+  const rebateRateInfo = (
+    <div className="oui-w-full">
+      <Flex justify={"between"} width={"100%"}>
+        <Text size="sm" intensity={54}>
+          {t("affiliate.youKeep")}
+        </Text>
+        <Text size="sm" intensity={54}>
+          {t("affiliate.inviteesGet")}
+        </Text>
+      </Flex>
+
+      <Flex justify={"between"} width={"100%"}>
+        <Text.formatted size="lg" className="oui-text-success-darken">
+          {props.referrerRebatePercentage}%
+        </Text.formatted>
+        <Text.formatted size="lg" className="oui-text-success-darken/50">
+          {props.refereeRebatePercentage}%
+        </Text.formatted>
+      </Flex>
+    </div>
+  );
+
+  const buttons = (
+    <Flex direction={"row"} gap={2} width={"100%"} mt={0} pt={5}>
+      <Button
+        variant="contained"
+        color="gray"
+        fullWidth
+        onClick={props.close}
+        data-testid="oui-testid-leverage-cancel-btn"
+        size="md"
+      >
+        {t("common.cancel")}
+      </Button>
+      <Button
+        fullWidth
+        onClick={props.onClick}
+        data-testid="oui-testid-leverage-save-btn"
+        disabled={props.disabled || props.isMutating}
+        loading={props.isMutating}
+        size="md"
+      >
+        {renderButtonText()}
+      </Button>
+    </Flex>
+  );
+
   return (
     <Flex
       direction="column"
@@ -124,75 +272,19 @@ export const ReferralCodeForm = (props: ReferralCodeFormProps) => {
       gap={6}
       className="oui-font-semibold"
     >
-      <Flex width={"100%"} direction="column" itemAlign="start" gap={3}>
-        <Text size="base" intensity={98}>
-          {title}
-        </Text>
-        <Divider intensity={8} className="oui-w-full" />
-      </Flex>
+      {title}
+      {renderWarning()}
 
-      {createWarning}
-      {editReferralCodeWarning}
-
-      {isEdit && referralCodeInput}
+      {referralCodeInput}
+      {refereeInfo}
 
       <Flex width={"100%"} direction="column" itemAlign="start" gap={2}>
-        <Text size="2xs" intensity={54}>
-          {t("affiliate.commissionConfiguration")}
-        </Text>
-        {!isReview && (
-          <Text size="2xs" intensity={54}>
-            {t("affiliate.totalCommissionAvailable")}:{" "}
-            <Text className="oui-text-warning">
-              {props.maxRebatePercentage}%
-            </Text>
-          </Text>
-        )}
-
-        {!isReview && slider}
-
-        <div className="oui-w-full">
-          <Flex justify={"between"} width={"100%"}>
-            <Text size="sm" intensity={54}>
-              {t("affiliate.youKeep")}
-            </Text>
-            <Text size="sm" intensity={54}>
-              {t("affiliate.inviteesGet")}
-            </Text>
-          </Flex>
-
-          <Flex justify={"between"} width={"100%"}>
-            <Text.formatted size="lg" className="oui-text-success-darken">
-              {props.referrerRebatePercentage}%
-            </Text.formatted>
-            <Text.formatted size="lg" className="oui-text-success-darken/50">
-              {props.refereeRebatePercentage}%
-            </Text.formatted>
-          </Flex>
-        </div>
-
-        <Flex direction={"row"} gap={2} width={"100%"} mt={0} pt={5}>
-          <Button
-            variant="contained"
-            color="gray"
-            fullWidth
-            onClick={props.close}
-            data-testid="oui-testid-leverage-cancel-btn"
-            size="md"
-          >
-            {t("common.cancel")}
-          </Button>
-          <Button
-            fullWidth
-            onClick={props.onClick}
-            data-testid="oui-testid-leverage-save-btn"
-            disabled={props.disabled || props.isMutating}
-            loading={props.isMutating}
-            size="md"
-          >
-            {buttonText}
-          </Button>
-        </Flex>
+        {commissionConfiguration}
+        {slider}
+        {resetRebateRateLabel}
+        {rebateRateInfo}
+        {noCommissionAvailableWarning}
+        {buttons}
       </Flex>
     </Flex>
   );

@@ -8,7 +8,7 @@ export const Content = ({ children, className }: ContentProps) => {
   return (
     <div
       className={cn(
-        "oui-w-full oui-px-5 md:oui-mx-auto md:oui-max-w-[1000px]",
+        "oui-w-full oui-px-5 md:oui-mx-auto md:oui-max-w-[1040px]",
         className,
       )}
     >

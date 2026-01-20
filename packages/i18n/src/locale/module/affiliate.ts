@@ -155,6 +155,25 @@ export const affiliate = {
   "affiliate.refereeType.singleLevelLegacy": "Single-level (Legacy)",
   "affiliate.refereeType.singleLevelLegacy.tooltip":
     "Earn commissions from direct invitees only. (Legacy)",
+
+  "affiliate.wrongNetwork.description":
+    "Please switch your wallet to the supported networks to proceed.",
+  "affiliate.setUpAccount.description":
+    "Unlock your unique referral link and start earning rewards.  Set up an account and enable trading to get started.",
+  "affiliate.connectWallet": "Connect wallet now",
+  "affiliate.setUpAccount": "Set up account",
+  "affiliate.refereeRebateRate.warning":
+    "To protect existing users, you can only increase a referee's commission split.",
+  "affiliate.refereeRebateRate.modal.title":
+    "Edit commission for {{accountId}}",
+  "affiliate.noCommissionAvailable":
+    "Notes: No commission available (0%), so configuration is disabled. However, this code is still active and can be shared.",
+  "affiliate.resetRebateRate.modal.title": "Reset to default commission rate",
+  "affiliate.resetRebateRate.modal.description":
+    "This action will remove custom settings for {{accountId}} and apply the default configuration.",
+  "affiliate.resetRebateRate.rateAfterReset": "Rate after reset:",
+  "affiliate.referralCode.bound.warning":
+    "To protect existing users, default commission split for referees can only be increased once there are active referrals bound to this code.",
 };
 
 export type Affiliate = typeof affiliate;

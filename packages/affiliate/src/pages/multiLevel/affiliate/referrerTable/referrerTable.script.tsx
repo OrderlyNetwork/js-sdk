@@ -1,10 +1,13 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { subDays, format } from "date-fns";
 import { useAccount, usePrivateQuery } from "@orderly.network/hooks";
 import { AccountStatusEnum } from "@orderly.network/types";
-import { usePagination, TableSort } from "@orderly.network/ui";
+import { usePagination, TableSort, modal } from "@orderly.network/ui";
 import { useReferralHistory } from "../../../../hooks/useReferralHistory";
+import { useReferralContext } from "../../../../provider";
+import { ReferralCodeFormType } from "../../../../types";
 import { DateRange } from "../../../../utils/types";
+import { ReferralCodeFormDialogId } from "../referralCodeForm/modal";
 
 export type CommissionDataType = {
   date: string;
@@ -115,37 +118,64 @@ export const useReferrerTableScript = () => {
   // ----- Referees Tab Logic -----
   const refereesPaginationUtils = usePagination();
 
-  const { data: refereesRawData, isLoading: isRefereesLoading } =
-    usePrivateQuery<{
-      rows?: RefereeDataType[];
-      data?: { rows?: RefereeDataType[]; meta?: RefereePaginationMeta };
-      success?: boolean;
-      timestamp?: number;
-      meta?: RefereePaginationMeta;
-    }>(
-      state.status >= AccountStatusEnum.EnableTrading &&
-        activeTab === "referees"
-        ? `/v1/referral/multi_level/referee_list?page=${refereesPaginationUtils.page}&size=${refereesPaginationUtils.pageSize}`
-        : null,
-      {
-        formatter: (response) => {
-          return {
-            ...response,
-            rows: response.rows.map((row: RefereeDataType) => ({
-              ...row,
-              network_size: row.direct_invites + row.indirect_invites,
-              volume: row.direct_volume + row.indirect_volume,
-              commission: row.direct_rebate + row.indirect_rebate,
-            })),
-          };
-        },
-        revalidateOnFocus: false,
+  const {
+    data: refereesRawData,
+    isLoading: isRefereesLoading,
+    mutate: refereesMutate,
+  } = usePrivateQuery<{
+    rows?: RefereeDataType[];
+    data?: { rows?: RefereeDataType[]; meta?: RefereePaginationMeta };
+    success?: boolean;
+    timestamp?: number;
+    meta?: RefereePaginationMeta;
+  }>(
+    state.status >= AccountStatusEnum.EnableTrading && activeTab === "referees"
+      ? `/v1/referral/multi_level/referee_list?page=${refereesPaginationUtils.page}&size=${refereesPaginationUtils.pageSize}`
+      : null,
+    {
+      formatter: (response) => {
+        return {
+          ...response,
+          rows: response.rows.map((row: RefereeDataType) => ({
+            ...row,
+            network_size: row.direct_invites + row.indirect_invites,
+            volume: row.direct_volume + row.indirect_volume,
+            commission: row.direct_rebate + row.indirect_rebate,
+          })),
+        };
       },
-    );
+      revalidateOnFocus: false,
+    },
+  );
 
   const refereesPagination = useMemo(() => {
     return refereesPaginationUtils.parsePagination(refereesRawData?.meta);
   }, [refereesRawData, refereesPaginationUtils]);
+
+  const { multiLevelRebateInfo, max_rebate_rate, multiLevelRebateInfoMutate } =
+    useReferralContext();
+
+  const onEditReferee = useCallback(
+    (type: ReferralCodeFormType, item: RefereeDataType) => {
+      const referrerRebateRate =
+        type === ReferralCodeFormType.Reset
+          ? multiLevelRebateInfo?.referrer_rebate_rate
+          : item.referral_rebate_rate;
+
+      modal.show(ReferralCodeFormDialogId, {
+        type,
+        referralCode: multiLevelRebateInfo?.referral_code,
+        maxRebateRate: max_rebate_rate,
+        referrerRebateRate,
+        onSuccess: () => {
+          multiLevelRebateInfoMutate();
+          refereesMutate();
+        },
+        accountId: item.account_id,
+      });
+    },
+    [multiLevelRebateInfo, max_rebate_rate, multiLevelRebateInfoMutate],
+  );
 
   return {
     activeTab,
@@ -163,6 +193,7 @@ export const useReferrerTableScript = () => {
     refereesPagination,
     isRefereesLoading:
       state.status < AccountStatusEnum.EnableTrading || isRefereesLoading,
+    onEditReferee,
   };
 };
 

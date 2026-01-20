@@ -50,7 +50,7 @@ export const StepCard: FC<StepCardProps> = (props) => {
       </Text>
 
       {/* Description */}
-      <Text intensity="54" size={"sm"}>
+      <Text intensity={54} size={"sm"}>
         {description}
       </Text>
     </Flex>

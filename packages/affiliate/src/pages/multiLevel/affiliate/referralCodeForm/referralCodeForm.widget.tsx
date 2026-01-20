@@ -1,14 +1,17 @@
+import { ReferralCodeFormField, ReferralCodeFormType } from "../../../../types";
 import { useReferralCodeFormScript } from "./referralCodeForm.script";
 import { ReferralCodeForm } from "./referralCodeForm.ui";
 
 export type ReferralCodeFormWidgetProps = {
-  type: "create" | "edit";
+  type: ReferralCodeFormType;
   close?: () => void;
   onSuccess?: () => void;
   referralCode?: string;
   maxRebateRate: number;
   referrerRebateRate?: number;
-  field?: "referralCode" | "rebateRate";
+  field?: ReferralCodeFormField;
+  focusField?: ReferralCodeFormField;
+  accountId?: string;
 };
 
 export const ReferralCodeFormWidget = (props: ReferralCodeFormWidgetProps) => {

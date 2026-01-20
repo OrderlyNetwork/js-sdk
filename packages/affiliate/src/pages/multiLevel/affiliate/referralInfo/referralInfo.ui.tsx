@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Flex, Text, Button, Box, cn, toast } from "@orderly.network/ui";
+import { ReferralCodeFormField } from "../../../../types";
 import { ReferralInfoReturns } from "./referralInfo.script";
 
 export const ReferralInfo: FC<ReferralInfoReturns> = (props) => {
@@ -23,7 +24,7 @@ export const ReferralInfo: FC<ReferralInfoReturns> = (props) => {
         <Button
           size="xs"
           color="secondary"
-          onClick={() => props.onEdit("referralCode")}
+          onClick={() => props.onEdit(ReferralCodeFormField.ReferralCode)}
         >
           {t("affiliate.referralCodes.edit")}
         </Button>
@@ -64,11 +65,7 @@ export const ReferralInfo: FC<ReferralInfoReturns> = (props) => {
       >
         <Flex direction={"row"} justify={"between"} width={"100%"}>
           <Text size="sm">{t("affiliate.revenueSplitStrategy")}</Text>
-          <Button
-            size="xs"
-            color="secondary"
-            onClick={() => props.onEdit("rebateRate")}
-          >
+          <Button size="xs" color="secondary" onClick={() => props.onEdit()}>
             {t("common.edit")}
           </Button>
         </Flex>

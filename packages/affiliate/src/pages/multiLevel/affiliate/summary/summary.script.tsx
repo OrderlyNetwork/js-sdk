@@ -1,9 +1,7 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import {
-  StatisticsTimeRange,
-  useMultiLevelStatistics,
-} from "../../../../hooks/useReferralApi";
+import { useMultiLevelStatistics } from "../../../../hooks/useReferralApi";
+import { StatisticsTimeRange } from "../../../../types";
 
 export type SummaryReturns = ReturnType<typeof useSummaryScript>;
 

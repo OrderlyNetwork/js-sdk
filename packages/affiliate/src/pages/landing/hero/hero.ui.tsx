@@ -1,6 +1,8 @@
 import React, { FC } from "react";
 import { useTranslation } from "@orderly.network/i18n";
+import { AccountStatusEnum } from "@orderly.network/types";
 import { Button, Flex, Text } from "@orderly.network/ui";
+import { AuthGuard } from "@orderly.network/ui-connector";
 import { ProgressSectionWidget } from "../progressSection";
 import type { HeroState } from "./hero.script";
 import { HeroTitle } from "./heroTitle";
@@ -17,17 +19,39 @@ export const Hero: FC<HeroProps> = (props) => {
     isMultiLevelReferralUnlocked,
     isMultiLevelEnabled,
     multiLevelRebateInfo,
+    wrongNetwork,
+    status,
   } = props;
 
   const { t } = useTranslation();
 
-  const renderTitle = () => {
-    if (!isMultiLevelReferralUnlocked) {
-      return "Trade 10,000 USDC volume to unlock the ability to invite friends and earn commissions.";
+  const renderDescription = () => {
+    if (wrongNetwork) {
+      return t("affiliate.wrongNetwork.description");
     }
-    return "Give your sub-affiliates the power to customize their earnings, while you unlock an endless stream of passive income from every trader in your growing network.";
+
+    if (status === AccountStatusEnum.NotConnected) {
+      return t("affiliate.newReferralProgram.description");
+    }
+
+    if (
+      status > AccountStatusEnum.Connected &&
+      status < AccountStatusEnum.EnableTrading
+    ) {
+      return t("affiliate.setUpAccount.description");
+    }
+
+    if (!isMultiLevelReferralUnlocked) {
+      return t("affiliate.newReferralProgram.tradeUnlock", {
+        // TODO： add , split
+        volume: volumePrerequisite?.required_volume,
+      });
+    }
+
+    return t("affiliate.newReferralProgram.description");
   };
-  const renderConetent = () => {
+
+  const renderButton = () => {
     if (!isMultiLevelReferralUnlocked) {
       return (
         <ProgressSectionWidget
@@ -68,9 +92,17 @@ export const Hero: FC<HeroProps> = (props) => {
       <Flex direction="column" itemAlign="start" gap={6} className="oui-flex-1">
         <HeroTitle />
         <Text size="sm" intensity={54}>
-          {renderTitle()}
+          {renderDescription()}
         </Text>
-        {renderConetent()}
+        <AuthGuard
+          labels={{
+            connectWallet: t("affiliate.connectWallet"),
+            signin: t("affiliate.setUpAccount"),
+            enableTrading: t("affiliate.setUpAccount"),
+          }}
+        >
+          {renderButton()}
+        </AuthGuard>
       </Flex>
 
       {/* Right side: Network Diagram */}

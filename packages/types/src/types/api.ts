@@ -682,6 +682,7 @@ export declare namespace API {
       referral_code: string;
       max_rebate_rate: number;
       default_referee_rebate_rate: number;
+      direct_invites?: number;
     }
 
     /** /v1/referral/multi_level/admin */

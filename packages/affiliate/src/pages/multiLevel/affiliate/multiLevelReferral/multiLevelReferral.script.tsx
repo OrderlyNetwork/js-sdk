@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { modal } from "@orderly.network/ui";
 import { useReferralContext } from "../../../../provider";
+import { ReferralCodeFormType } from "../../../../types";
 import { ReferralCodeFormDialogId } from "../referralCodeForm/modal";
 
 export const useMultiLevelReferralScript = () => {
@@ -13,7 +14,7 @@ export const useMultiLevelReferralScript = () => {
 
   const createReferralCode = () => {
     modal.show(ReferralCodeFormDialogId, {
-      type: "create",
+      type: ReferralCodeFormType.Create,
       maxRebateRate: max_rebate_rate,
       onSuccess: () => {
         multiLevelRebateInfoMutate();

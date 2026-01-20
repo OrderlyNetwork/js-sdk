@@ -1,4 +1,5 @@
 import React, { FC } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import { Flex, Text, Button } from "@orderly.network/ui";
 import type { ProgressSectionState } from "./progressSection.script";
 
@@ -15,6 +16,8 @@ export const ProgressSection: FC<ProgressSectionProps> = (props) => {
     onButtonClick,
     targetVolume,
   } = props;
+
+  const { t } = useTranslation();
 
   return (
     <Flex
@@ -68,7 +71,7 @@ export const ProgressSection: FC<ProgressSectionProps> = (props) => {
         onClick={onButtonClick}
         className="oui-mt-2"
       >
-        Trade to unlock referral system
+        {t("affiliate.newReferralProgram.tradeToUnlock")}
       </Button>
     </Flex>
   );

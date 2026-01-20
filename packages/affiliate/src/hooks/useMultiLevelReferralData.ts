@@ -3,16 +3,11 @@ import { Decimal } from "@orderly.network/utils";
 import {
   useMaxRebateRate,
   useMultiLevelRebateInfo,
-  useMultiLevelReferralConfig,
   useVolumePrerequisite,
 } from "./useReferralApi";
 
 export const useMultiLevelReferralData = () => {
-  const { data: volumePrerequisite, isLoading: isVolumePrerequisiteLoading } =
-    useVolumePrerequisite();
-
-  // const { data: multiLevelReferralConfig, isLoading: isMultiLevelReferralConfigLoading } =
-  //   useMultiLevelReferralConfig();
+  const { data: volumePrerequisite } = useVolumePrerequisite();
 
   const { data: maxRebateRateRes } = useMaxRebateRate();
 
@@ -23,7 +18,7 @@ export const useMultiLevelReferralData = () => {
     volumePrerequisite &&
     volumePrerequisite.current_volume >= volumePrerequisite.required_volume;
 
-  // const isMultiLevelEnabled = multiLevelReferralConfig?.enable;
+  // if maxRebateRateRes is undefined, it means the multi-level referral is not enabled
   const isMultiLevelEnabled =
     maxRebateRateRes === undefined ? undefined : !!maxRebateRateRes;
   const max_rebate_rate = maxRebateRateRes?.max_rebate_rate;

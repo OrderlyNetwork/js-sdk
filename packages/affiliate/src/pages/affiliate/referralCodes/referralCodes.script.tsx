@@ -7,11 +7,11 @@ import {
 import { API } from "@orderly.network/types";
 import { modal } from "@orderly.network/ui";
 import {
-  StatisticsTimeRange,
   useMultiLevelRebateInfo,
   useMultiLevelStatistics,
 } from "../../../hooks/useReferralApi";
 import { useReferralContext } from "../../../provider";
+import { StatisticsTimeRange } from "../../../types";
 import { copyText, generateReferralLink } from "../../../utils/utils";
 import { EditCodeModal } from "./editCodeModal";
 import { EditReferralRate } from "./editReferralRate";

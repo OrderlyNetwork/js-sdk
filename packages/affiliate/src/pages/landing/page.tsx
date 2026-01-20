@@ -10,7 +10,7 @@ export const LandingPage = () => {
       direction="column"
       gap={10}
       itemAlign={"stretch"}
-      className="oui-mx-auto oui-w-full oui-p-5 md:oui-w-[1000px] md:oui-py-12"
+      className="oui-mx-auto oui-w-full oui-p-5 md:oui-w-[1040px] md:oui-py-12"
     >
       <HeroWidget />
       <HowItWorksWidget />

@@ -9,6 +9,7 @@ import {
   Divider,
 } from "@orderly.network/ui";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
+import { ReferralCodeFormType } from "../../../../types";
 import { formatYMDTime } from "../../../../utils/utils";
 import {
   AddressCell,
@@ -24,7 +25,7 @@ import {
 
 type RefereesTableProps = Pick<
   ReferrerTableScriptReturns,
-  "refereesData" | "isRefereesLoading" | "refereesPagination"
+  "refereesData" | "isRefereesLoading" | "refereesPagination" | "onEditReferee"
 >;
 
 const getRebateRateText = (rate: number) => {
@@ -46,12 +47,10 @@ const getRefereeType = (bindType: string) => {
   };
 };
 
-// TODO: Implement actual edit/reset handlers when API is ready
-const noop = () => {};
-
 const MobileRefereeItem: FC<{
   item: RefereeDataType;
-}> = ({ item }) => {
+  onEditReferee: ReferrerTableScriptReturns["onEditReferee"];
+}> = ({ item, onEditReferee }) => {
   const { t } = useTranslation();
   const typeInfo = getRefereeType(item.bind_type);
   return (
@@ -124,13 +123,13 @@ const MobileRefereeItem: FC<{
           <Flex gap={2}>
             <Text
               className="oui-cursor-pointer oui-text-primary-light"
-              onClick={noop}
+              onClick={() => onEditReferee(ReferralCodeFormType.Edit, item)}
             >
               {t("common.edit")}
             </Text>
             <Text
               className="oui-cursor-pointer oui-text-primary-light"
-              onClick={noop}
+              onClick={() => onEditReferee(ReferralCodeFormType.Reset, item)}
             >
               {t("common.reset")}
             </Text>
@@ -242,13 +241,17 @@ export const RefereesTable: FC<RefereesTableProps> = (props) => {
             <>
               <Text
                 className="oui-cursor-pointer oui-text-primary-light"
-                onClick={noop}
+                onClick={() =>
+                  props.onEditReferee(ReferralCodeFormType.Edit, record)
+                }
               >
                 {t("common.edit")}
               </Text>
               <Text
                 className="oui-ml-2 oui-cursor-pointer oui-text-primary-light"
-                onClick={noop}
+                onClick={() =>
+                  props.onEditReferee(ReferralCodeFormType.Reset, record)
+                }
               >
                 {t("common.reset")}
               </Text>
@@ -256,7 +259,7 @@ export const RefereesTable: FC<RefereesTableProps> = (props) => {
           ) : null,
       },
     ];
-  }, [t]);
+  }, [t, props.onEditReferee]);
 
   return (
     <div className="md:oui-px-3">
@@ -277,7 +280,10 @@ export const RefereesTable: FC<RefereesTableProps> = (props) => {
           contentClassName="!oui-space-y-0"
           renderItem={(item, index) => (
             <div key={index}>
-              <MobileRefereeItem item={item} />
+              <MobileRefereeItem
+                item={item}
+                onEditReferee={props.onEditReferee}
+              />
               {index < (props.refereesData?.length || 0) - 1 && (
                 <Divider intensity={8} />
               )}
