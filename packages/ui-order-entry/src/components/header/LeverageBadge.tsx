@@ -1,4 +1,9 @@
-import { useLocalStorage, useSymbolLeverage } from "@orderly.network/hooks";
+import {
+  FlagKeys,
+  useFeatureFlag,
+  useLocalStorage,
+  useSymbolLeverage,
+} from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { OrderSide } from "@orderly.network/types";
 import { cn, modal, Text, useScreen } from "@orderly.network/ui";
@@ -24,6 +29,7 @@ export const LeverageBadge = (props: LeverageBadgeProps) => {
   const { isMobile } = useScreen();
   const { t } = useTranslation();
   const { maxLeverage } = useSymbolLeverage(symbol);
+  const { enabled } = useFeatureFlag(FlagKeys.IsolatedMargin);
 
   const curLeverage = symbolLeverage || maxLeverage;
   const [marginMode] = useLocalStorage<MarginMode>(
@@ -41,6 +47,10 @@ export const LeverageBadge = (props: LeverageBadgeProps) => {
   };
 
   const showMarginModeModal = () => {
+    if (!enabled) {
+      return;
+    }
+
     const modalId = isMobile
       ? MarginModeSwitchSheetId
       : MarginModeSwitchDialogId;
