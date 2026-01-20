@@ -465,6 +465,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           canTrade={props.canTrade}
           quote={symbolInfo.quote}
           estLiqPrice={props.estLiqPrice}
+          estLiqPriceDistance={props.estLiqPriceDistance}
           estLeverage={props.estLeverage}
           currentLeverage={props.currentLeverage}
           slippage={slippage}

@@ -1,3 +1,4 @@
+import { useGetEstLiqPrice } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { OrderType } from "@orderly.network/types";
 import { Flex, Text, Tooltip, useScreen } from "@orderly.network/ui";
@@ -9,6 +10,7 @@ export function AssetInfo(props: {
   canTrade: boolean;
   quote: string;
   estLiqPrice: number | null;
+  estLiqPriceDistance: number | null;
   estLeverage: number | null;
   currentLeverage: number | null;
   slippage: string;
@@ -18,9 +20,15 @@ export function AssetInfo(props: {
   orderType: OrderType;
   disableFeatures?: ("slippageSetting" | "feesInfo")[];
 }) {
-  const { canTrade, disableFeatures, orderType, symbol } = props;
+  const { canTrade, disableFeatures, orderType, symbol, estLiqPriceDistance } =
+    props;
   const { t } = useTranslation();
   const { isMobile } = useScreen();
+
+  const displayEstLiqPrice = useGetEstLiqPrice({
+    estLiqPrice: props.estLiqPrice,
+    estLiqPriceDistance: props.estLiqPriceDistance,
+  });
 
   return (
     <div className={"oui-space-y-[2px] xl:oui-space-y-1"}>
@@ -62,7 +70,7 @@ export function AssetInfo(props: {
           className={"oui-text-base-contrast-80"}
           unitClassName={"oui-ml-1 oui-text-base-contrast-36"}
         >
-          {canTrade ? (props.estLiqPrice ?? "--") : "--"}
+          {canTrade ? (displayEstLiqPrice ?? "--") : "--"}
         </Text.numeral>
       </Flex>
 
