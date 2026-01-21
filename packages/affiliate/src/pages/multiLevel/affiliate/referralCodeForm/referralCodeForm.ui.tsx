@@ -144,8 +144,8 @@ export const ReferralCodeForm = (props: ReferralCodeFormProps) => {
   );
 
   const resetRebateRateLabel = (
-    <Text size="2xs" intensity={98}>
-      {t("affiliate.resetRebateRate.rateAfterReset")}
+    <Text size="2xs" intensity={98} className="oui-text-start">
+      {t("affiliate.resetRebateRate.rateAfterReset")}:
     </Text>
   );
 
@@ -210,7 +210,12 @@ export const ReferralCodeForm = (props: ReferralCodeFormProps) => {
   };
 
   return (
-    <Flex direction="column" gap={6} className="oui-font-semibold">
+    <Flex
+      direction="column"
+      itemAlign="start"
+      gap={6}
+      className="oui-font-semibold"
+    >
       {titleView}
       {descriptionView}
       {renderContent()}

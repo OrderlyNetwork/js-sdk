@@ -33,6 +33,7 @@ export const Summary: FC<SummaryReturns> = (props) => {
 
       <SummaryItem
         prefix="$"
+        rule="human"
         label={`${t("affiliate.commission")} (USDC)`}
         value={statistics.total_rebate}
         direct={statistics.direct_rebate}
@@ -48,6 +49,7 @@ export const Summary: FC<SummaryReturns> = (props) => {
       <Flex width={"100%"} gap={6} className="oui-flex-col md:oui-flex-row">
         <SummaryItem
           prefix="$"
+          rule="human"
           label={`${t("affiliate.referralVol")} (USDC)`}
           value={statistics.total_volume}
           direct={statistics.direct_volume}
@@ -57,6 +59,7 @@ export const Summary: FC<SummaryReturns> = (props) => {
           }}
         />
         <SummaryItem
+          dp={0}
           label={t("affiliate.referrals")}
           value={statistics.total_invites}
           direct={statistics.direct_invites}
@@ -82,10 +85,13 @@ type SummaryItemProps = {
     indirect?: string;
   };
   prefix?: string;
+  rule?: "human";
+  dp?: number;
 };
 
 const SummaryItem: FC<SummaryItemProps> = (props) => {
   const { t } = useTranslation();
+  const { rule, dp = 2 } = props;
 
   return (
     <Flex
@@ -102,8 +108,8 @@ const SummaryItem: FC<SummaryItemProps> = (props) => {
     >
       <Text>{props.label}</Text>
       <Text.numeral
-        rule="human"
-        dp={2}
+        rule={rule}
+        dp={props.dp}
         size="3xl"
         prefix={props.prefix}
         placeholder="--"
@@ -117,8 +123,8 @@ const SummaryItem: FC<SummaryItemProps> = (props) => {
         <Flex gap={1}>
           <Text>{t("affiliate.direct")}:</Text>
           <Text.numeral
-            rule="human"
-            dp={1}
+            rule={rule}
+            dp={props.dp}
             prefix={props.prefix}
             intensity={54}
             className={props.classNames?.direct}
@@ -130,8 +136,8 @@ const SummaryItem: FC<SummaryItemProps> = (props) => {
         <Flex gap={1}>
           <Text>{t("affiliate.indirect")}:</Text>
           <Text.numeral
-            rule="human"
-            dp={1}
+            rule={rule}
+            dp={props.dp}
             prefix={props.prefix}
             intensity={54}
             className={props.classNames?.indirect}

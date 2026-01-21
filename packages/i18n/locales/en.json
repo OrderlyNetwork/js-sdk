@@ -961,7 +961,7 @@
   "affiliate.rebateRate.noCommissionRate": "Note: Although the commission rate is currently 0%, you can still share this code to establish your referral base.",
   "affiliate.resetRebateRate.modal.title": "Reset to default commission rate",
   "affiliate.resetRebateRate.modal.description": "This action will remove custom settings for {{accountId}} and apply the default configuration.",
-  "affiliate.resetRebateRate.rateAfterReset": "Rate after reset:",
+  "affiliate.resetRebateRate.rateAfterReset": "Rate after reset",
   "affiliate.revenueSplitStrategy": "Revenue split strategy",
   "affiliate.youKeep": "You keep",
   "affiliate.inviteesGet": "Invitees get",

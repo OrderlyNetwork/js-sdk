@@ -137,7 +137,7 @@ export const affiliate = {
   "affiliate.resetRebateRate.modal.title": "Reset to default commission rate",
   "affiliate.resetRebateRate.modal.description":
     "This action will remove custom settings for {{accountId}} and apply the default configuration.",
-  "affiliate.resetRebateRate.rateAfterReset": "Rate after reset:",
+  "affiliate.resetRebateRate.rateAfterReset": "Rate after reset",
 
   "affiliate.revenueSplitStrategy": "Revenue split strategy",
   "affiliate.youKeep": "You keep",
