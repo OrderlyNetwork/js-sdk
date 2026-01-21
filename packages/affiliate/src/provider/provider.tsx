@@ -78,6 +78,7 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
     isMultiLevelReferralUnlocked,
     multiLevelRebateInfoMutate,
     maxRebateRate,
+    isLoading: isMultiLevelLoading,
   } = useMultiLevelReferralData();
 
   const [showHome, setShowHome] = useState(isLoading);
@@ -189,7 +190,7 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
       dailyVolume,
       chartConfig,
       overwrite,
-      isLoading,
+      isLoading: isLoading || isMultiLevelLoading,
       wrongNetwork,
       disabledConnect,
       setShowHome,
@@ -236,6 +237,7 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
     isMultiLevelReferralUnlocked,
     multiLevelRebateInfoMutate,
     maxRebateRate,
+    isMultiLevelLoading,
   ]);
 
   return (

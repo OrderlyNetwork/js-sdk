@@ -15,20 +15,14 @@ export const DashboardPage = (props: {
     dashboard?: string;
   };
 }) => {
-  const { classNames = {} } = props;
-  const { root, ...rest } = classNames;
+  const { root, ...rest } = props.classNames || {};
 
   const { state } = useAccount();
 
   const { wrongNetwork, disabledConnect, initialized } = useAppContext();
 
-  const {
-    referralInfo,
-    isMultiLevelEnabled,
-    isMultiLevelReferralUnlocked,
-    multiLevelRebateInfo,
-    isAffiliate,
-  } = useReferralContext();
+  const { isMultiLevelEnabled, multiLevelRebateInfo, isAffiliate, isLoading } =
+    useReferralContext();
 
   const loadingView = (
     <Flex justify={"center"} itemAlign={"center"} height={"100vh"}>
@@ -43,6 +37,7 @@ export const DashboardPage = (props: {
     return () => clearTimeout(timer);
   }, []);
 
+  // we don't know wallet not connect => connect status, so manually delay to hide loading
   if (state.validating || delay) {
     return loadingView;
   }
@@ -56,12 +51,7 @@ export const DashboardPage = (props: {
     return <LandingPage />;
   }
 
-  if (
-    isMultiLevelEnabled === undefined ||
-    isMultiLevelReferralUnlocked === undefined ||
-    // legacy referral info
-    referralInfo === undefined
-  ) {
+  if (isLoading) {
     return loadingView;
   }
 

@@ -7,20 +7,24 @@ import {
 } from "./useReferralApi";
 
 export const useMultiLevelReferralData = () => {
-  const { data: volumePrerequisite } = useVolumePrerequisite();
+  const { data: volumePrerequisite, isLoading: volumePrerequisiteLoading } =
+    useVolumePrerequisite();
 
-  const { data: maxRebateRateRes } = useMaxRebateRate();
+  const { data: maxRebateRateRes, isLoading: maxRebateRateLoading } =
+    useMaxRebateRate();
 
-  const { data: multiLevelRebateInfoRes, mutate: multiLevelRebateInfoMutate } =
-    useMultiLevelRebateInfo();
+  const {
+    data: multiLevelRebateInfoRes,
+    mutate: multiLevelRebateInfoMutate,
+    isLoading: multiLevelRebateInfoLoading,
+  } = useMultiLevelRebateInfo();
 
   const isMultiLevelReferralUnlocked =
     volumePrerequisite &&
     volumePrerequisite.current_volume >= volumePrerequisite.required_volume;
 
   // if maxRebateRateRes is undefined, it means the multi-level referral is not enabled
-  const isMultiLevelEnabled =
-    maxRebateRateRes === undefined ? undefined : !!maxRebateRateRes;
+  const isMultiLevelEnabled = !!maxRebateRateRes;
   const maxRebateRate = maxRebateRateRes?.max_rebate_rate;
 
   const multiLevelRebateInfo = useMemo(() => {
@@ -42,6 +46,11 @@ export const useMultiLevelReferralData = () => {
     };
   }, [multiLevelRebateInfoRes, maxRebateRate]);
 
+  const isLoading =
+    volumePrerequisiteLoading ||
+    maxRebateRateLoading ||
+    multiLevelRebateInfoLoading;
+
   return {
     volumePrerequisite,
     maxRebateRate,
@@ -49,6 +58,7 @@ export const useMultiLevelReferralData = () => {
     isMultiLevelEnabled,
     isMultiLevelReferralUnlocked,
     multiLevelRebateInfoMutate,
+    isLoading,
   };
 };
 
