@@ -11,6 +11,8 @@ type Params = {
   initialSize?: number;
   page?: number;
   fetchAll?: boolean;
+  /** disable network request when false */
+  enabled?: boolean;
 };
 
 type ReferralHistoryItem = {
@@ -32,9 +34,10 @@ type ReferralHistoryPageResponse = {
 };
 
 export const useReferralHistory = (params: Params) => {
-  const { size, startDate, endDate, page, fetchAll } = params;
+  const { size, startDate, endDate, page, fetchAll, enabled = true } = params;
 
   const query = useMemo(() => {
+    if (!enabled) return null;
     const search = new URLSearchParams({
       ...(startDate ? { start_date: startDate } : {}),
       ...(endDate ? { end_date: endDate } : {}),
@@ -46,7 +49,7 @@ export const useReferralHistory = (params: Params) => {
     return qs
       ? `/v1/referral/referral_history?${qs}`
       : "/v1/referral/referral_history";
-  }, [endDate, fetchAll, page, size, startDate]);
+  }, [enabled, endDate, fetchAll, page, size, startDate]);
 
   const response = usePrivateQuery<
     ReferralHistoryPageResponse | { data?: ReferralHistoryPageResponse }
