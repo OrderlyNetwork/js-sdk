@@ -14,7 +14,7 @@ import { ValidationChain } from "./validators/ValidationChain";
 export class LimitOrderCreator<
   T extends OrderEntity = OrderlyOrder,
 > extends BaseOrderCreator<T> {
-  private priceValidationStrategy = new PriceValidationStrategy();
+  // private priceValidationStrategy = new PriceValidationStrategy();
   private validationChain = new ValidationChain()
     .addValidator(new QuantityValidator())
     .addValidator(new PriceValidator());

@@ -43,6 +43,7 @@ export const getOveriides = (
     "mainSeriesProperties.candleStyle.borderDownColor": colorConfig.downColor,
     "mainSeriesProperties.candleStyle.wickUpColor": colorConfig.upColor,
     "mainSeriesProperties.candleStyle.wickDownColor": colorConfig.downColor,
+
     "paneProperties.separatorColor": "#2B2833",
     "paneProperties.vertGridProperties.color": "#26232F",
     "paneProperties.horzGridProperties.color": "#26232F",
@@ -50,6 +51,7 @@ export const getOveriides = (
     "scalesProperties.textColor": "#97969B",
     "paneProperties.legendProperties.showSeriesTitle": isMobile ? false : true,
     "mainSeriesProperties.statusViewStyle.symbolTextSource": "ticker",
+    // "mainSeriesProperties.statusViewStyle.showExchange":false,
   };
   const studiesOverrides = {
     "volume.volume.color.0": colorConfig.volumeDownColor,

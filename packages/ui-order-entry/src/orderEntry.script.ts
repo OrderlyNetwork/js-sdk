@@ -12,6 +12,7 @@ import {
 import { useCanTrade } from "@orderly.network/react-app";
 import {
   DistributionType,
+  MarginMode,
   OrderLevel,
   OrderSide,
   OrderType,
@@ -66,7 +67,9 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       order_type: localOrderType,
       position_type: PositionType.PARTIAL,
       side: localOrderSide,
-      margin_mode: marginMode === "cross" ? "CROSS" : "ISOLATED",
+      // FIXME: use margin mode from real data
+      // margin_mode: marginMode === "cross" ? "CROSS" : "ISOLATED",
+      margin_mode: MarginMode.ISOLATED,
     },
   });
 

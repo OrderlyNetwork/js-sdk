@@ -10,6 +10,7 @@ import {
   TrackerEventName,
   OrderSide,
   EMPTY_OBJECT,
+  MarginMode,
 } from "@orderly.network/types";
 import { Decimal, getBBOType, zero } from "@orderly.network/utils";
 import { useAccountInfo } from "../../orderly/appStore";
@@ -229,7 +230,10 @@ const useOrderEntry = (
     symbol,
     formattedOrder.side,
     formattedOrder.reduce_only,
+    formattedOrder.margin_mode || MarginMode.CROSS,
   );
+
+  // console.log("+++++++++++maxQtyValue++++++++++++++ ", maxQtyValue);
 
   // @ts-ignore
   const maxQty = options.maxQty ?? maxQtyValue;
