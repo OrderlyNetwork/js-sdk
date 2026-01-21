@@ -1,6 +1,5 @@
 import { useMemo } from "react";
-import { usePrivateInfiniteQuery } from "@orderly.network/hooks";
-import { generateKeyFun } from "../utils/swr";
+import { usePrivateQuery } from "@orderly.network/hooks";
 
 type Params = {
   /** default is 10 */
@@ -11,6 +10,7 @@ type Params = {
   endDate?: string;
   initialSize?: number;
   page?: number;
+  fetchAll?: boolean;
 };
 
 type ReferralHistoryItem = {
@@ -32,28 +32,30 @@ type ReferralHistoryPageResponse = {
 };
 
 export const useReferralHistory = (params: Params) => {
-  const { size = 10, startDate, endDate, initialSize, page } = params;
+  const { size, startDate, endDate, page, fetchAll } = params;
 
-  /* eslint-disable @typescript-eslint/no-explicit-any */
-  const response: ReturnType<typeof usePrivateInfiniteQuery<any>> =
-    usePrivateInfiniteQuery<any>(
-      generateKeyFun({
-        path: "/v1/referral/referral_history",
-        size,
-        startDate,
-        endDate,
-        page,
-      }),
-      {
-        initialSize,
-        formatter: (data) => data,
-        revalidateOnFocus: true,
-      },
-    );
+  const query = useMemo(() => {
+    const search = new URLSearchParams({
+      ...(startDate ? { start_date: startDate } : {}),
+      ...(endDate ? { end_date: endDate } : {}),
+      ...(!fetchAll && page !== undefined ? { page: String(page) } : {}),
+      ...(!fetchAll && size !== undefined ? { size: String(size) } : {}),
+    });
 
-  const loadMore = () => {
-    response.setSize(response.size + 1);
-  };
+    const qs = search.toString();
+    return qs
+      ? `/v1/referral/referral_history?${qs}`
+      : "/v1/referral/referral_history";
+  }, [endDate, fetchAll, page, size, startDate]);
+
+  const response = usePrivateQuery<
+    ReferralHistoryPageResponse | { data?: ReferralHistoryPageResponse }
+  >(query, {
+    formatter: (data) => data,
+    revalidateOnFocus: true,
+  });
+
+  const loadMore = () => {};
 
   const meta = useMemo(():
     | {
@@ -62,20 +64,29 @@ export const useReferralHistory = (params: Params) => {
         current_page: number;
       }
     | undefined => {
-    return response.data?.[0]?.meta;
+    const payload =
+      (response.data as { data?: ReferralHistoryPageResponse })?.data ??
+      (response.data as ReferralHistoryPageResponse | undefined);
+    if (payload?.meta) return payload.meta;
+    if (!payload?.rows) return undefined;
+    return {
+      total: payload.rows.length,
+      records_per_page: payload.rows.length,
+      current_page: 1,
+    };
   }, [response.data]);
 
   const total = useMemo(() => {
-    return meta?.total || 0;
+    if (typeof meta?.total === "number") return meta.total;
+    return 0;
   }, [meta]);
 
   const flattenRows = useMemo((): ReferralHistoryItem[] | null => {
-    if (!response.data) {
-      return null;
-    }
-    return response.data
-      .map((item: ReferralHistoryPageResponse) => item.rows)
-      .flat();
+    if (!response.data) return null;
+    const payload =
+      (response.data as { data?: ReferralHistoryPageResponse })?.data ??
+      (response.data as ReferralHistoryPageResponse | undefined);
+    return payload?.rows ?? null;
   }, [response.data]);
 
   return [

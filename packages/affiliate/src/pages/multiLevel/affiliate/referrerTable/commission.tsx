@@ -72,6 +72,7 @@ const MobileCommissionItem: FC<{
 
 export const CommissionTable: FC<CommissionTableProps> = (props) => {
   const { t } = useTranslation();
+  const showPagination = (props.pagination?.count ?? 0) >= 10;
 
   const columns = useMemo<Column<CommissionDataType>[]>(() => {
     return [
@@ -138,13 +139,15 @@ export const CommissionTable: FC<CommissionTableProps> = (props) => {
         </div>
       </Flex>
 
-      <div className="oui-hidden oui-px-3 md:oui-block">
+      <div
+        className={`oui-hidden oui-px-3 md:oui-block ${showPagination ? "" : "oui-pb-3"}`}
+      >
         <AuthGuardDataTable
           bordered
           columns={columns}
           dataSource={props.commissionData}
           loading={props.isLoading}
-          pagination={props.pagination}
+          pagination={showPagination ? props.pagination : undefined}
           onSort={props.onSort}
           onRow={() => ({ className: "oui-h-12" })}
           className="[&_.oui-h-10.oui-w-full]:!oui-mx-0 [&_.oui-table-pagination]:!oui-justify-end [&_th]:!oui-tracking-[0.03em] [&_th]:!oui-px-3 [&_td]:!oui-px-3"
@@ -153,13 +156,11 @@ export const CommissionTable: FC<CommissionTableProps> = (props) => {
       <div className="oui-flex oui-flex-col oui-px-4 md:oui-hidden">
         <ListView
           dataSource={props.commissionData}
-          contentClassName="!oui-space-y-0"
+          contentClassName="!oui-space-y-0 oui-pb-3"
           renderItem={(item, index) => (
             <div key={index}>
               <MobileCommissionItem item={item} />
-              {index < (props.commissionData?.length || 0) - 1 && (
-                <Divider intensity={8} />
-              )}
+              <Divider intensity={8} />
             </div>
           )}
         />

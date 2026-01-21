@@ -1,6 +1,12 @@
-import { FC, useMemo } from "react";
+import { FC, useMemo, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { Column, Text, Grid, ListView, Divider } from "@orderly.network/ui";
+import {
+  Column,
+  Text,
+  ListView,
+  Divider,
+  TableSort,
+} from "@orderly.network/ui";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import { Decimal } from "@orderly.network/utils";
 import {
@@ -119,6 +125,51 @@ const MobileReferralCodeItem: FC<{
 export const ReferralCodesTable: FC = () => {
   const { t } = useTranslation();
   const { codes, copyCode } = useReferralCodesScript();
+  const [sort, setSort] = useState<{
+    key: "total_invites" | "total_volume" | "total_rebate";
+    order: "asc" | "desc";
+  } | null>(null);
+
+  const sortedCodes = useMemo(() => {
+    if (!codes || !sort) return codes;
+
+    const sortableCodes = codes.map((code, index) => ({
+      code,
+      index,
+    }));
+
+    sortableCodes.sort((a, b) => {
+      const valA = Number(a.code[sort.key] ?? 0);
+      const valB = Number(b.code[sort.key] ?? 0);
+      if (valA < valB) return sort.order === "asc" ? -1 : 1;
+      if (valA > valB) return sort.order === "asc" ? 1 : -1;
+      return a.index - b.index;
+    });
+
+    return sortableCodes.map((item) => item.code);
+  }, [codes, sort]);
+
+  const onSort = (sort?: TableSort) => {
+    if (!sort) {
+      setSort(null);
+      return;
+    }
+    const sortKey = sort.sortKey as
+      | "total_invites"
+      | "total_volume"
+      | "total_rebate";
+    if (
+      sortKey &&
+      (sortKey === "total_invites" ||
+        sortKey === "total_volume" ||
+        sortKey === "total_rebate")
+    ) {
+      setSort({
+        key: sortKey,
+        order: sort.sort === "asc" ? "asc" : "desc",
+      });
+    }
+  };
 
   const columns = useMemo<Column<ReferralCodeType>[]>(() => {
     return [
@@ -142,7 +193,12 @@ export const ReferralCodesTable: FC = () => {
         },
       },
       {
-        title: t("affiliate.referralCodes.column.you&Referee"),
+        title: (
+          <Text>
+            {t("affiliate.referralCodes.column.defaultSplit")}
+            <br />({t("affiliate.referralCodes.column.you&Referee")})
+          </Text>
+        ),
         dataIndex: "rate",
         render: (_: unknown, record: ReferralCodeType) => {
           const referrerRate = new Decimal(record.referrer_rebate_rate ?? 0)
@@ -178,6 +234,7 @@ export const ReferralCodesTable: FC = () => {
             />
           );
         },
+        onSort: true,
       },
       {
         title: t("common.volume"),
@@ -200,6 +257,7 @@ export const ReferralCodesTable: FC = () => {
             />
           );
         },
+        onSort: true,
       },
       {
         title: t("affiliate.commission"),
@@ -222,6 +280,7 @@ export const ReferralCodesTable: FC = () => {
             />
           );
         },
+        onSort: true,
       },
       {
         title: t("common.action"),
@@ -247,20 +306,21 @@ export const ReferralCodesTable: FC = () => {
         <AuthGuardDataTable
           bordered
           columns={columns}
-          dataSource={codes}
-          loading={!codes}
+          dataSource={sortedCodes}
+          loading={!sortedCodes}
+          onSort={onSort}
           onRow={() => ({ className: "oui-h-12" })}
-          className="[&_.oui-h-10.oui-w-full]:!oui-mx-0 [&_.oui-table-pagination]:!oui-justify-end [&_th]:!oui-tracking-[0.03em] [&_th]:!oui-px-3 [&_td]:!oui-px-3"
+          className="oui-pb-3 [&_.oui-h-10.oui-w-full]:!oui-mx-0 [&_.oui-table-pagination]:!oui-justify-end [&_th]:!oui-tracking-[0.03em] [&_th]:!oui-px-3 [&_td]:!oui-px-3"
         />
       </div>
       <div className="oui-flex oui-flex-col oui-px-4 md:oui-hidden">
         <ListView
-          dataSource={codes}
-          contentClassName="!oui-space-y-0"
+          dataSource={sortedCodes}
+          contentClassName="!oui-space-y-0 oui-pb-3"
           renderItem={(item, index) => (
             <div key={index}>
               <MobileReferralCodeItem item={item} copyCode={copyCode} />
-              {index < (codes?.length || 0) - 1 && <Divider intensity={8} />}
+              <Divider intensity={8} />
             </div>
           )}
         />

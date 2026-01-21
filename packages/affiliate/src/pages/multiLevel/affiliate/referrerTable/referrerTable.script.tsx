@@ -2,7 +2,12 @@ import { useCallback, useMemo, useState } from "react";
 import { subDays, format } from "date-fns";
 import { useAccount, usePrivateQuery } from "@orderly.network/hooks";
 import { AccountStatusEnum } from "@orderly.network/types";
-import { usePagination, TableSort, modal } from "@orderly.network/ui";
+import {
+  usePagination,
+  TableSort,
+  modal,
+  useScreen,
+} from "@orderly.network/ui";
 import { useReferralHistory } from "../../../../hooks/useReferralHistory";
 import { useReferralContext } from "../../../../provider";
 import { ReferralCodeFormType } from "../../../../types";
@@ -37,6 +42,12 @@ export type RefereeDataType = {
   indirect_volume: number;
 };
 
+type RefereesSortableKey =
+  | "referee_rebate_rate"
+  | "network_size"
+  | "volume"
+  | "commission";
+
 type RefereePaginationMeta = {
   total: number;
   current_page: number;
@@ -49,6 +60,7 @@ export const useReferrerTableScript = () => {
     from: subDays(new Date(), 30),
     to: new Date(),
   });
+  const { isMobile } = useScreen();
 
   const { page, pageSize, parsePagination, setPage } = usePagination();
 
@@ -65,8 +77,9 @@ export const useReferrerTableScript = () => {
       ? format(dateRange.from, "yyyy-MM-dd")
       : undefined,
     endDate: dateRange.to ? format(dateRange.to, "yyyy-MM-dd") : undefined,
-    page,
-    size: pageSize,
+    page: isMobile ? undefined : page,
+    size: isMobile ? undefined : pageSize,
+    fetchAll: isMobile,
   });
 
   const pagination = useMemo(() => {
@@ -117,6 +130,10 @@ export const useReferrerTableScript = () => {
 
   // ----- Referees Tab Logic -----
   const refereesPaginationUtils = usePagination();
+  const [refereesSort, setRefereesSort] = useState<{
+    key: RefereesSortableKey;
+    order: "asc" | "desc";
+  } | null>(null);
 
   const {
     data: refereesRawData,
@@ -130,13 +147,18 @@ export const useReferrerTableScript = () => {
     meta?: RefereePaginationMeta;
   }>(
     state.status >= AccountStatusEnum.EnableTrading && activeTab === "referees"
-      ? `/v1/referral/multi_level/referee_list?page=${refereesPaginationUtils.page}&size=${refereesPaginationUtils.pageSize}`
+      ? isMobile
+        ? "/v1/referral/multi_level/referee_list"
+        : `/v1/referral/multi_level/referee_list?page=${refereesPaginationUtils.page}&size=${refereesPaginationUtils.pageSize}`
       : null,
     {
       formatter: (response) => {
+        const rows = response.rows ?? response.data?.rows ?? [];
+        const meta = response.meta ?? response.data?.meta;
         return {
           ...response,
-          rows: response.rows.map((row: RefereeDataType) => ({
+          meta,
+          rows: rows.map((row: RefereeDataType) => ({
             ...row,
             network_size: row.direct_invites + row.indirect_invites,
             volume: row.direct_volume + row.indirect_volume,
@@ -177,6 +199,46 @@ export const useReferrerTableScript = () => {
     [multiLevelRebateInfo, max_rebate_rate, multiLevelRebateInfoMutate],
   );
 
+  const processedRefereesData = useMemo(() => {
+    const rows = refereesRawData?.rows ?? [];
+    if (!refereesSort) return rows;
+
+    const sortableRows = rows.map((row, index) => ({
+      row,
+      index,
+    }));
+
+    sortableRows.sort((a, b) => {
+      const valA = Number(a.row[refereesSort.key] ?? 0);
+      const valB = Number(b.row[refereesSort.key] ?? 0);
+      if (valA < valB) return refereesSort.order === "asc" ? -1 : 1;
+      if (valA > valB) return refereesSort.order === "asc" ? 1 : -1;
+      return a.index - b.index;
+    });
+
+    return sortableRows.map((item) => item.row);
+  }, [refereesRawData, refereesSort]);
+
+  const onRefereesSort = (sort?: TableSort) => {
+    if (!sort) {
+      setRefereesSort(null);
+      return;
+    }
+    const sortKey = sort.sortKey as RefereesSortableKey;
+    if (
+      sortKey &&
+      (sortKey === "referee_rebate_rate" ||
+        sortKey === "network_size" ||
+        sortKey === "volume" ||
+        sortKey === "commission")
+    ) {
+      setRefereesSort({
+        key: sortKey,
+        order: sort.sort === "asc" ? "asc" : "desc",
+      });
+    }
+  };
+
   return {
     activeTab,
     setActiveTab,
@@ -189,11 +251,12 @@ export const useReferrerTableScript = () => {
     isLoading: state.status < AccountStatusEnum.EnableTrading || isDataLoading,
 
     // Referees props
-    refereesData: refereesRawData?.rows,
+    refereesData: processedRefereesData,
     refereesPagination,
     isRefereesLoading:
       state.status < AccountStatusEnum.EnableTrading || isRefereesLoading,
     onEditReferee,
+    onRefereesSort,
   };
 };
 

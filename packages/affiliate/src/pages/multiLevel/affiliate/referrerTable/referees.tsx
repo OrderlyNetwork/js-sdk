@@ -25,7 +25,11 @@ import {
 
 type RefereesTableProps = Pick<
   ReferrerTableScriptReturns,
-  "refereesData" | "isRefereesLoading" | "refereesPagination" | "onEditReferee"
+  | "refereesData"
+  | "isRefereesLoading"
+  | "refereesPagination"
+  | "onRefereesSort"
+  | "onEditReferee"
 >;
 
 const getRebateRateText = (rate: number) => {
@@ -127,12 +131,14 @@ const MobileRefereeItem: FC<{
             >
               {t("common.edit")}
             </Text>
-            <Text
-              className="oui-cursor-pointer oui-text-primary-light"
-              onClick={() => onEditReferee(ReferralCodeFormType.Reset, item)}
-            >
-              {t("common.reset")}
-            </Text>
+            {!item.is_default_rate && (
+              <Text
+                className="oui-cursor-pointer oui-text-primary-light"
+                onClick={() => onEditReferee(ReferralCodeFormType.Reset, item)}
+              >
+                {t("common.reset")}
+              </Text>
+            )}
           </Flex>
         )}
       </MobileCell>
@@ -142,6 +148,7 @@ const MobileRefereeItem: FC<{
 
 export const RefereesTable: FC<RefereesTableProps> = (props) => {
   const { t } = useTranslation();
+  const showPagination = (props.refereesPagination?.count ?? 0) >= 10;
 
   const refereeColumns = useMemo<Column<RefereeDataType>[]>(() => {
     return [
@@ -178,7 +185,7 @@ export const RefereesTable: FC<RefereesTableProps> = (props) => {
       },
       {
         title: t("affiliate.referralCodes.column.you&Referee"),
-        dataIndex: "referral_rebate_rate",
+        dataIndex: "referee_rebate_rate",
         render: (_: unknown, record: RefereeDataType) => (
           <Text>
             {getRebateRateText(record.referral_rebate_rate) + "/"}
@@ -192,6 +199,7 @@ export const RefereesTable: FC<RefereesTableProps> = (props) => {
             )}
           </Text>
         ),
+        onSort: true,
       },
       {
         title: t("affiliate.networkSize"),
@@ -204,6 +212,7 @@ export const RefereesTable: FC<RefereesTableProps> = (props) => {
             title={t("affiliate.networkSize")}
           />
         ),
+        onSort: true,
       },
       {
         title: t("common.volume"),
@@ -218,6 +227,7 @@ export const RefereesTable: FC<RefereesTableProps> = (props) => {
             title={t("common.volume")}
           />
         ),
+        onSort: true,
       },
       {
         title: t("affiliate.commission"),
@@ -232,6 +242,7 @@ export const RefereesTable: FC<RefereesTableProps> = (props) => {
             title={t("affiliate.commission")}
           />
         ),
+        onSort: true,
       },
       {
         title: t("common.action"),
@@ -247,14 +258,16 @@ export const RefereesTable: FC<RefereesTableProps> = (props) => {
               >
                 {t("common.edit")}
               </Text>
-              <Text
-                className="oui-ml-2 oui-cursor-pointer oui-text-primary-light"
-                onClick={() =>
-                  props.onEditReferee(ReferralCodeFormType.Reset, record)
-                }
-              >
-                {t("common.reset")}
-              </Text>
+              {!record.is_default_rate && (
+                <Text
+                  className="oui-ml-2 oui-cursor-pointer oui-text-primary-light"
+                  onClick={() =>
+                    props.onEditReferee(ReferralCodeFormType.Reset, record)
+                  }
+                >
+                  {t("common.reset")}
+                </Text>
+              )}
             </>
           ) : null,
       },
@@ -263,13 +276,16 @@ export const RefereesTable: FC<RefereesTableProps> = (props) => {
 
   return (
     <div className="md:oui-px-3">
-      <div className="oui-hidden md:oui-block">
+      <div
+        className={`oui-hidden md:oui-block ${showPagination ? "" : "oui-pb-3"}`}
+      >
         <AuthGuardDataTable
           bordered
           columns={refereeColumns}
           dataSource={props.refereesData}
           loading={props.isRefereesLoading}
-          pagination={props.refereesPagination}
+          pagination={showPagination ? props.refereesPagination : undefined}
+          onSort={props.onRefereesSort}
           onRow={() => ({ className: "oui-h-12" })}
           className="[&_.oui-h-10.oui-w-full]:!oui-mx-0 [&_.oui-table-pagination]:!oui-justify-end [&_th]:!oui-tracking-[0.03em] [&_th]:!oui-px-3 [&_td]:!oui-px-3"
         />
@@ -277,16 +293,14 @@ export const RefereesTable: FC<RefereesTableProps> = (props) => {
       <div className="oui-flex oui-flex-col oui-px-4 md:oui-hidden">
         <ListView
           dataSource={props.refereesData}
-          contentClassName="!oui-space-y-0"
+          contentClassName="!oui-space-y-0 oui-pb-3"
           renderItem={(item, index) => (
             <div key={index}>
               <MobileRefereeItem
                 item={item}
                 onEditReferee={props.onEditReferee}
               />
-              {index < (props.refereesData?.length || 0) - 1 && (
-                <Divider intensity={8} />
-              )}
+              <Divider intensity={8} />
             </div>
           )}
         />

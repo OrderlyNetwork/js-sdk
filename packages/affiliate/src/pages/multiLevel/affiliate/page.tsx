@@ -20,7 +20,7 @@ export const MultiLevelAffiliatePage = () => {
       direction={"column"}
       gap={4}
     >
-      <Content>
+      <Content className="md:oui-max-w-[1040px]">
         <Flex
           width={"100%"}
           direction={"column"}

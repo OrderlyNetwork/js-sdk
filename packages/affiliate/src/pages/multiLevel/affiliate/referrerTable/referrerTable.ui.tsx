@@ -27,6 +27,7 @@ export const ReferrerTableUI: FC<ReferrerTableScriptReturns> = (props) => {
           tabsListContainer: "oui-px-3",
           trigger: "oui-pb-[9px] oui-tracking-[0.01em]",
         }}
+        showScrollIndicator
       >
         <TabPanel value="commission" title={t("affiliate.commission")}>
           <CommissionTable
@@ -43,6 +44,7 @@ export const ReferrerTableUI: FC<ReferrerTableScriptReturns> = (props) => {
             refereesData={props.refereesData}
             isRefereesLoading={props.isRefereesLoading}
             refereesPagination={props.refereesPagination}
+            onRefereesSort={props.onRefereesSort}
             onEditReferee={props.onEditReferee}
           />
         </TabPanel>

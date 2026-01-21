@@ -67,6 +67,7 @@ export const affiliate = {
 
   "affiliate.referralCodes": "Referral codes",
   "affiliate.referralCodes.remaining": "Remaining referral codes",
+  "affiliate.referralCodes.column.defaultSplit": "Default split",
   "affiliate.referralCodes.column.you&Referee": "You / Referee",
   "affiliate.referralCodes.column.traders": "Traders",
   "affiliate.referralCodes.column.referees&Traders": "Referees / Traders",
