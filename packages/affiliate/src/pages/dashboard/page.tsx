@@ -1,4 +1,5 @@
-import { useAccount, useWalletConnector } from "@orderly.network/hooks";
+import { useEffect, useState } from "react";
+import { useAccount } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { cn, Flex, Spinner } from "@orderly.network/ui";
@@ -19,9 +20,7 @@ export const DashboardPage = (props: {
 
   const { state } = useAccount();
 
-  const { connecting } = useWalletConnector();
-
-  const { wrongNetwork, disabledConnect } = useAppContext();
+  const { wrongNetwork, disabledConnect, initialized } = useAppContext();
 
   const {
     referralInfo,
@@ -37,7 +36,14 @@ export const DashboardPage = (props: {
     </Flex>
   );
 
-  if (state.validating || connecting) {
+  const [delay, setDelay] = useState(!initialized);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDelay(false), 500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (state.validating || delay) {
     return loadingView;
   }
 

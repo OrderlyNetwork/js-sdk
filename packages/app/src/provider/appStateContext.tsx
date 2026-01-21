@@ -45,6 +45,7 @@ export type AppContextState = {
   setShowAnnouncement: (show: boolean) => void;
   onRouteChange?: (option: RouteOption) => void;
   widgetConfigs?: WidgetConfigs;
+  initialized: boolean;
 };
 
 export const AppStateContext = createContext<AppContextState>({
