@@ -9,7 +9,7 @@ import { useTranslation } from "@orderly.network/i18n";
 import { toast } from "@orderly.network/ui";
 
 export const useWalletConnectorBuilder = () => {
-  const { account, state, createOrderlyKey, createAccount } = useAccount();
+  const { state, createOrderlyKey, createAccount } = useAccount();
   const [refCode, setRefCode] = useState("");
   const [helpText, setHelpText] = useState("");
   const { t } = useTranslation();
@@ -25,7 +25,7 @@ export const useWalletConnectorBuilder = () => {
     }
   }, []);
 
-  const { referral_code, isLoading } = useGetReferralCode(account.accountId);
+  const { referral_code, isLoading } = useGetReferralCode(state.accountId);
 
   const [bindRefCode, { error: updateOrderError, isMutating: updateMutating }] =
     useMutation("/v1/referral/bind", "POST");
