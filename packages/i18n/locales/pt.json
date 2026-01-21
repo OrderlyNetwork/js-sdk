@@ -852,7 +852,7 @@
   "transfer.LTV.tooltip": "Se seu LTV exceder {{threshold}}% ou seu saldo USDC mais PnL não liquidado cair abaixo de {{usdcThreshold}}, sua garantia será automaticamente convertida com desconto. Para evitar isso, você pode converter manualmente os ativos para USDC.",
   "transfer.LTV.currentLTV": "LTV atual",
   "transfer.convert": "Converter",
-  "transfer.deposit.userMaxQty.error": "Seu depósito não pôde ser processado porque o limite global de depósito para {{token}} em {{chain}} foi atingido. Isso geralmente é resolvido após o rebalanceamento, que leva cerca de 1 hora. Por favor, tente novamente mais tarde, ou use um valor menor ou uma cadeia diferente. <0>Saiba mais</0>",
+  "transfer.deposit.globalMaxQty.error": "Seu depósito não pôde ser processado porque o limite global de depósito para {{token}} em {{chain}} foi atingido. Isso geralmente é resolvido após o rebalanceamento, que leva cerca de 1 hora. Por favor, tente novamente mais tarde, ou use um valor menor ou uma cadeia diferente. <0>Saiba mais</0>",
   "transfer.deposit.gasFee.error": "Por favor, certifique-se de ter {{token}} suficiente para as taxas de gas.",
   "transfer.deposit.status.pending.one": "Você tem uma transação pendente",
   "transfer.deposit.status.pending.multiple": "Você tem transações pendentes",

@@ -177,10 +177,14 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     needCrossSwap,
   });
 
+  const [depositExceedLimitDetected, setDepositExceedLimitDetected] =
+    useState(false);
+
   const cleanData = useCallback(() => {
     setQuantity("");
     cleanTransactionInfo();
-  }, [setQuantity]);
+    setDepositExceedLimitDetected(false);
+  }, [setQuantity, cleanTransactionInfo]);
 
   const onSuccess = useCallback(() => {
     cleanData();
@@ -195,42 +199,67 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
       deposit,
       enableCustomDeposit: needSwap || needCrossSwap,
       customDeposit: onSwapDeposit,
-      onSuccess,
+      onSuccess: () => {
+        setDepositExceedLimitDetected(false);
+        onSuccess();
+      },
+      onError: (err, knownErrorMessage) => {
+        const message =
+          typeof (err as any)?.message === "string" ? (err as any).message : "";
+
+        const isDepositExceedLimit =
+          message.includes("0xd969df24") ||
+          message.includes("DepositExceedLimit") ||
+          (knownErrorMessage?.includes("DepositExceedLimit") ?? false);
+
+        if (isDepositExceedLimit) {
+          setDepositExceedLimitDetected(true);
+        }
+      },
     });
 
-  const userMaxQtyMessage = useMemo(() => {
+  useEffect(() => {
+    if (depositExceedLimitDetected) {
+      setDepositExceedLimitDetected(false);
+    }
+  }, [quantity, sourceToken, currentChain?.id]);
+
+  const globalMaxQtyMessage = useMemo(() => {
     if (
       sourceToken?.symbol === "USDC" ||
       sourceToken?.symbol !== targetToken?.symbol ||
       !sourceToken?.is_collateral ||
-      !quantity ||
-      isNaN(Number(quantity))
+      !depositExceedLimitDetected
     ) {
       return "";
     }
 
-    if (new Decimal(quantity).gt(sourceToken?.user_max_qty)) {
-      return (
-        <Trans
-          i18nKey="transfer.deposit.userMaxQty.error"
-          values={{
-            token: sourceToken?.symbol,
-            chain: currentChain?.info?.network_infos?.name || "",
-          }}
-          components={[
-            <a
-              key="0"
-              href="https://orderly.network/docs/introduction/trade-on-orderly/multi-collateral#max-deposits-global"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="oui-text-primary"
-            />,
-          ]}
-        />
-      );
-    }
-    return "";
-  }, [sourceToken, targetToken, quantity, currentChain, t]);
+    return (
+      <Trans
+        i18nKey="transfer.deposit.globalMaxQty.error"
+        values={{
+          token: sourceToken?.symbol,
+          chain: currentChain?.info?.network_infos?.name || "",
+        }}
+        components={[
+          <a
+            key="0"
+            href="https://orderly.network/docs/introduction/trade-on-orderly/multi-collateral#max-deposits-global"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="oui-text-primary"
+          />,
+        ]}
+      />
+    );
+  }, [
+    depositExceedLimitDetected,
+    sourceToken?.symbol,
+    sourceToken?.is_collateral,
+    targetToken?.symbol,
+    currentChain,
+    t,
+  ]);
 
   const loading = submitting || depositFeeRevalidating!;
 
@@ -378,14 +407,29 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
 
   const warningMessage =
     swapWarningMessage ||
-    userMaxQtyMessage ||
+    globalMaxQtyMessage ||
     gasFeeMessage ||
     feeWarningMessage ||
     insufficientGasMessage;
 
-  const hasUserMaxQtyError = !!userMaxQtyMessage;
-  const finalInputStatus = hasUserMaxQtyError ? "error" : inputStatus;
-  const finalHintMessage = hasUserMaxQtyError
+  const isExceedUserCapByInput = useMemo(() => {
+    if (
+      sourceToken?.symbol === "USDC" ||
+      sourceToken?.symbol !== targetToken?.symbol ||
+      !sourceToken?.is_collateral ||
+      sourceToken?.user_max_qty === undefined ||
+      sourceToken?.user_max_qty === -1 ||
+      !quantity ||
+      isNaN(Number(quantity))
+    ) {
+      return false;
+    }
+
+    return new Decimal(quantity).gt(sourceToken.user_max_qty);
+  }, [sourceToken, targetToken, quantity]);
+
+  const finalInputStatus = isExceedUserCapByInput ? "error" : inputStatus;
+  const finalHintMessage = isExceedUserCapByInput
     ? t("transfer.deposit.exceedCap")
     : hintMessage;
 
@@ -397,7 +441,7 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     depositFeeRevalidating! ||
     swapRevalidating ||
     // if exceed collateral cap, disable deposit
-    !!userMaxQtyMessage ||
+    isExceedUserCapByInput ||
     !!feeWarningMessage ||
     !!insufficientNativeTotal ||
     !!insufficientGasMessage;

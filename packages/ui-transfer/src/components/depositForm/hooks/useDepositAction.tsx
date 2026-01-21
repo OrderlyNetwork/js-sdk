@@ -10,6 +10,7 @@ type Options = {
   approve: (quantity?: string) => Promise<any>;
   deposit: () => Promise<any>;
   onSuccess?: () => void;
+  onError?: (err: unknown, knownErrorMessage?: string) => void;
   customDeposit?: () => Promise<any>;
   enableCustomDeposit?: boolean;
 };
@@ -38,6 +39,7 @@ export function useDepositAction(options: Options) {
       console.error("deposit error", err);
 
       const knownErrorMessage = getDepositKnownErrorMessage(err.message);
+      options.onError?.(err, knownErrorMessage);
       if (knownErrorMessage) {
         toast.error(
           <div>
@@ -52,7 +54,7 @@ export function useDepositAction(options: Options) {
         toast.error(err.message || t("common.somethingWentWrong"));
       }
     }
-  }, [deposit, onSuccess, t]);
+  }, [deposit, onSuccess, t, ee, options.onError]);
 
   const onDeposit = useCallback(async () => {
     const num = Number(quantity);
