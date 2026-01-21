@@ -280,14 +280,6 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     cleanData();
   }, [sourceToken, currentChain?.id]);
 
-  const gasFeeMessage = useMemo(() => {
-    if (isNativeToken && maxQuantity === quantity) {
-      return t("transfer.deposit.gasFee.error", {
-        token: sourceToken?.symbol,
-      });
-    }
-  }, [maxQuantity, quantity, sourceToken?.symbol, t]);
-
   useEffect(() => {
     if (
       quantity &&
@@ -308,6 +300,38 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     }
     return false;
   }, [quantity, maxQuantity]);
+
+  const insufficientNativeTotal = useMemo(() => {
+    if (
+      !isNativeToken ||
+      !quantity ||
+      Number(quantity) <= 0 ||
+      depositFeeRevalidating ||
+      insufficientBalance
+    ) {
+      return false;
+    }
+
+    const estimatedGasFee = new Decimal(fee.dstGasFee || 0);
+    const totalNeeded = new Decimal(quantity).add(estimatedGasFee);
+
+    return totalNeeded.gt(maxQuantity || 0);
+  }, [
+    isNativeToken,
+    quantity,
+    depositFeeRevalidating,
+    insufficientBalance,
+    fee.dstGasFee,
+    maxQuantity,
+  ]);
+
+  const gasFeeMessage = useMemo(() => {
+    if (insufficientNativeTotal) {
+      return t("transfer.deposit.gasFee.error", {
+        token: sourceToken?.symbol,
+      });
+    }
+  }, [insufficientNativeTotal, sourceToken?.symbol, t]);
 
   const nativeBalance = useNativeBalance({
     fetchBalance,
@@ -375,6 +399,7 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     // if exceed collateral cap, disable deposit
     !!userMaxQtyMessage ||
     !!feeWarningMessage ||
+    !!insufficientNativeTotal ||
     !!insufficientGasMessage;
 
   const targetQuantity = useMemo(() => {
