@@ -1,6 +1,5 @@
 import { useTranslation } from "@orderly.network/i18n";
 import { Flex, Grid, cn, Text } from "@orderly.network/ui";
-import { Content } from "../../../components/content";
 import { useReferralContext } from "../../../provider";
 import { CommissionChartWidget } from "./commissionChart";
 import { MultiLevelReferralWidget } from "./multiLevelReferral";
@@ -20,7 +19,7 @@ export const MultiLevelAffiliatePage = () => {
       direction={"column"}
       gap={4}
     >
-      <Content className="md:oui-max-w-[1040px]">
+      <div className="oui-w-full oui-px-5 md:oui-mx-auto md:oui-max-w-[1040px]">
         <Flex
           width={"100%"}
           direction={"column"}
@@ -59,7 +58,7 @@ export const MultiLevelAffiliatePage = () => {
 
           <ReferrerTableWidget />
         </Flex>
-      </Content>
+      </div>
     </Flex>
   );
 };

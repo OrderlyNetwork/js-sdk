@@ -73,7 +73,7 @@ export const ReferralCodeForm = (props: ReferralCodeFormProps) => {
           buttonText: "",
         };
     }
-  }, [type, isEditingRefereeRebateRate, props.accountId]);
+  }, [t, type, isEditingRefereeRebateRate, props.accountId]);
 
   const titleView = (
     <Flex width={"100%"} direction="column" itemAlign="start" gap={3}>

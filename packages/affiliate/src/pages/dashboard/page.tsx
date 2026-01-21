@@ -3,8 +3,7 @@ import { useAppContext } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { cn, Flex, Spinner } from "@orderly.network/ui";
 import { useReferralContext } from "../../provider";
-import { LandingPage } from "../landing";
-import { MultiLevelAffiliatePage } from "../multiLevel/affiliate";
+import { LandingPage, MultiLevelAffiliatePage } from "../multiLevel";
 import { TabWidget } from "./tab";
 
 export const DashboardPage = (props: {
