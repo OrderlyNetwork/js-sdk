@@ -52,7 +52,7 @@ export const useReferralHistory = (params: Params) => {
     ReferralHistoryPageResponse | { data?: ReferralHistoryPageResponse }
   >(query, {
     formatter: (data) => data,
-    revalidateOnFocus: true,
+    revalidateOnFocus: false,
   });
 
   const loadMore = () => {};

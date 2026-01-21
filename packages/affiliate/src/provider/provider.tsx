@@ -50,7 +50,7 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
     mutate: referralInfoMutate,
     isLoading,
   } = usePrivateQuery<API.ReferralInfo>("/v1/referral/info", {
-    revalidateOnFocus: true,
+    revalidateOnFocus: false,
     errorRetryCount: 3,
     ...noCacheConfig,
   });
@@ -59,7 +59,7 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
     usePrivateQuery<API.AutoGenerateCode>(
       "/v1/referral/auto_referral/progress",
       {
-        revalidateOnFocus: true,
+        revalidateOnFocus: false,
         errorRetryCount: 0,
         formatter: (data) => {
           return {
@@ -93,7 +93,7 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
 
   const { data: volumeStatistics, mutate: volumeStatisticsMutate } =
     usePrivateQuery<API.UserVolStats>("/v1/volume/user/stats", {
-      revalidateOnFocus: true,
+      revalidateOnFocus: false,
     });
 
   const isAffiliate = useMemo(() => {

@@ -37,10 +37,15 @@ export const useRestrictedInfo = (options?: RestrictedInfoOptions) => {
     boolean | undefined
   >("orderly_access_restricted", undefined);
 
-  const { data: ipInfo } = useQuery<API.IpInfo>("/v1/ip_info");
+  const { data: ipInfo } = useQuery<API.IpInfo>("/v1/ip_info", {
+    revalidateOnFocus: false,
+  });
 
   const { data: restrictedAreas } = useQuery<API.RestrictedAreas>(
     "/v1/restricted_areas",
+    {
+      revalidateOnFocus: false,
+    },
   );
 
   useEffect(() => {
