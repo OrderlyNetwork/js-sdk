@@ -30,7 +30,8 @@ export const useNav = () => {
 
       const path = routeMap[option?.href!] || option?.href || "";
 
-      navigate(generatePath({ path }));
+      const url = generatePath({ path });
+      navigate(url);
     },
     [navigate],
   );

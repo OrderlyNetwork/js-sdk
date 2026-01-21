@@ -77,7 +77,7 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
     isMultiLevelEnabled,
     isMultiLevelReferralUnlocked,
     multiLevelRebateInfoMutate,
-    max_rebate_rate,
+    maxRebateRate,
   } = useMultiLevelReferralData();
 
   const [showHome, setShowHome] = useState(isLoading);
@@ -205,7 +205,7 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
       isMultiLevelEnabled,
       isMultiLevelReferralUnlocked,
       multiLevelRebateInfoMutate,
-      max_rebate_rate,
+      maxRebateRate,
     };
   }, [
     becomeAnAffiliateUrl,
@@ -235,7 +235,7 @@ export const ReferralProvider: FC<PropsWithChildren<ReferralContextProps>> = (
     isMultiLevelEnabled,
     isMultiLevelReferralUnlocked,
     multiLevelRebateInfoMutate,
-    max_rebate_rate,
+    maxRebateRate,
   ]);
 
   return (

@@ -1,6 +1,7 @@
 import { useAccount } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
 import { modal } from "@orderly.network/ui";
+import { useScaffoldContext } from "@orderly.network/ui-scaffold";
 import { useReferralContext } from "../../../provider";
 import { ReferralCodeFormType } from "../../../types";
 import { ReferralCodeFormDialogId } from "../../multiLevel/affiliate/referralCodeForm/modal";
@@ -12,16 +13,17 @@ export const useHeroScript = () => {
     isMultiLevelEnabled,
     multiLevelRebateInfo,
     multiLevelRebateInfoMutate,
-    max_rebate_rate,
+    maxRebateRate,
   } = useReferralContext();
 
   const { state } = useAccount();
 
-  const { onRouteChange, wrongNetwork, disabledConnect } = useAppContext();
+  const { wrongNetwork, disabledConnect } = useAppContext();
 
-  const onTrade = () => {
-    // TODO：keep url query params
-    onRouteChange?.({
+  const { routerAdapter } = useScaffoldContext();
+
+  const gotoTrade = () => {
+    routerAdapter?.onRouteChange?.({
       href: "/perp",
       name: "Perp",
     });
@@ -30,7 +32,7 @@ export const useHeroScript = () => {
   const onCreateReferralCode = () => {
     modal.show(ReferralCodeFormDialogId, {
       type: ReferralCodeFormType.Create,
-      maxRebateRate: max_rebate_rate,
+      maxRebateRate,
       onSuccess: () => {
         multiLevelRebateInfoMutate();
       },
@@ -42,7 +44,7 @@ export const useHeroScript = () => {
     volumePrerequisite,
     isMultiLevelEnabled,
     multiLevelRebateInfo,
-    onTrade,
+    gotoTrade,
     onCreateReferralCode,
     wrongNetwork,
     disabledConnect,

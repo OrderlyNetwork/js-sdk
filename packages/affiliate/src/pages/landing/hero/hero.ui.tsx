@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { AccountStatusEnum } from "@orderly.network/types";
-import { Button, Flex, Text } from "@orderly.network/ui";
+import { Button, Flex, parseNumber, Text } from "@orderly.network/ui";
 import { AuthGuard } from "@orderly.network/ui-connector";
 import { ProgressSectionWidget } from "../progressSection";
 import type { HeroState } from "./hero.script";
@@ -43,8 +43,10 @@ export const Hero: FC<HeroProps> = (props) => {
 
     if (!isMultiLevelReferralUnlocked) {
       return t("affiliate.newReferralProgram.tradeUnlock", {
-        // TODO： add , split
-        volume: volumePrerequisite?.required_volume,
+        volume: parseNumber(volumePrerequisite?.required_volume ?? 0, {
+          rule: "price",
+          dp: 0,
+        }),
       });
     }
 
@@ -57,7 +59,7 @@ export const Hero: FC<HeroProps> = (props) => {
         <ProgressSectionWidget
           currentVolume={volumePrerequisite?.current_volume}
           targetVolume={volumePrerequisite?.required_volume}
-          onButtonClick={props.onTrade}
+          onButtonClick={props.gotoTrade}
         />
       );
     }

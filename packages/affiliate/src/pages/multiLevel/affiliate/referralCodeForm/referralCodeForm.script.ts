@@ -11,10 +11,11 @@ export const useReferralCodeFormScript = (
 ) => {
   const { type, referralCode, maxRebateRate, referrerRebateRate, accountId } =
     options;
+  const { t } = useTranslation();
+
   const [newCode, setNewCode] = useState<string>(referralCode || "");
   const [isReview, setIsReview] = useState(false);
 
-  const { t } = useTranslation();
   const maxRebatePercentage = useMemo(() => {
     return new Decimal(maxRebateRate).mul(100).toNumber();
   }, [maxRebateRate]);
@@ -39,6 +40,13 @@ export const useReferralCodeFormScript = (
     isMutating,
   } = useReferralCode();
 
+  const refereeRebatePercentage = useMemo(() => {
+    return Math.max(
+      0,
+      new Decimal(maxRebatePercentage).sub(referrerRebatePercentage).toNumber(),
+    );
+  }, [referrerRebatePercentage]);
+
   const codeChanged = useMemo(() => {
     return newCode !== referralCode;
   }, [newCode, referralCode]);
@@ -49,13 +57,6 @@ export const useReferralCodeFormScript = (
       new Decimal(referrerRebateRate || 0).mul(100).toNumber()
     );
   }, [referrerRebatePercentage, referrerRebateRate, newCode]);
-
-  const refereeRebatePercentage = useMemo(() => {
-    return Math.max(
-      0,
-      new Decimal(maxRebatePercentage).sub(referrerRebatePercentage).toNumber(),
-    );
-  }, [referrerRebatePercentage]);
 
   const handleError = (err: any) => {
     console.error("handleError", err);
@@ -135,18 +136,24 @@ export const useReferralCodeFormScript = (
   };
 
   const onClick = () => {
-    if (type === ReferralCodeFormType.Create) {
-      onCreate();
-    } else if (type === ReferralCodeFormType.Edit && !isReview) {
-      setIsReview(true);
-    } else if (type === ReferralCodeFormType.Edit && isReview) {
-      onEdit();
-    } else if (type === ReferralCodeFormType.Reset) {
-      onReset();
+    switch (type) {
+      case ReferralCodeFormType.Create:
+        onCreate();
+        break;
+      case ReferralCodeFormType.Edit:
+        if (isReview) {
+          onEdit();
+        } else {
+          setIsReview(true);
+        }
+        break;
+      case ReferralCodeFormType.Reset:
+        onReset();
+        break;
     }
   };
 
-  const disabled =
+  const buttonDisabled =
     type === ReferralCodeFormType.Edit && !codeChanged && !rateChanged;
 
   return {
@@ -159,7 +166,7 @@ export const useReferralCodeFormScript = (
     newCode,
     setNewCode,
     isReview,
-    disabled,
+    buttonDisabled,
     onReset,
   };
 };

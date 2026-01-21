@@ -21,28 +21,30 @@ export const useMultiLevelReferralData = () => {
   // if maxRebateRateRes is undefined, it means the multi-level referral is not enabled
   const isMultiLevelEnabled =
     maxRebateRateRes === undefined ? undefined : !!maxRebateRateRes;
-  const max_rebate_rate = maxRebateRateRes?.max_rebate_rate;
+  const maxRebateRate = maxRebateRateRes?.max_rebate_rate;
 
   const multiLevelRebateInfo = useMemo(() => {
     if (!multiLevelRebateInfoRes) return;
 
-    const referee_rebate_rate =
-      multiLevelRebateInfoRes?.default_referee_rebate_rate;
+    const {
+      default_referee_rebate_rate: referee_rebate_rate,
+      max_rebate_rate,
+    } = multiLevelRebateInfoRes;
+
     const referrer_rebate_rate = new Decimal(max_rebate_rate || 0)
       .sub(referee_rebate_rate || 0)
       .toNumber();
 
     return {
       ...multiLevelRebateInfoRes,
-      max_rebate_rate,
       referee_rebate_rate,
       referrer_rebate_rate,
     };
-  }, [multiLevelRebateInfoRes, max_rebate_rate]);
+  }, [multiLevelRebateInfoRes, maxRebateRate]);
 
   return {
     volumePrerequisite,
-    max_rebate_rate,
+    maxRebateRate,
     multiLevelRebateInfo,
     isMultiLevelEnabled,
     isMultiLevelReferralUnlocked,

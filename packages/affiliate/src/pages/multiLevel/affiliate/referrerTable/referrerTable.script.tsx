@@ -174,7 +174,7 @@ export const useReferrerTableScript = () => {
     return refereesPaginationUtils.parsePagination(refereesRawData?.meta);
   }, [refereesRawData, refereesPaginationUtils]);
 
-  const { multiLevelRebateInfo, max_rebate_rate, multiLevelRebateInfoMutate } =
+  const { multiLevelRebateInfo, maxRebateRate, multiLevelRebateInfoMutate } =
     useReferralContext();
 
   const onEditReferee = useCallback(
@@ -187,7 +187,7 @@ export const useReferrerTableScript = () => {
       modal.show(ReferralCodeFormDialogId, {
         type,
         referralCode: multiLevelRebateInfo?.referral_code,
-        maxRebateRate: max_rebate_rate,
+        maxRebateRate,
         referrerRebateRate,
         onSuccess: () => {
           multiLevelRebateInfoMutate();
@@ -196,7 +196,7 @@ export const useReferrerTableScript = () => {
         accountId: item.account_id,
       });
     },
-    [multiLevelRebateInfo, max_rebate_rate, multiLevelRebateInfoMutate],
+    [multiLevelRebateInfo, maxRebateRate, multiLevelRebateInfoMutate],
   );
 
   const processedRefereesData = useMemo(() => {

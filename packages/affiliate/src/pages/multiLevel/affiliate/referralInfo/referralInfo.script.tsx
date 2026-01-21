@@ -13,7 +13,7 @@ export const useReferralInfoScript = () => {
     referralLinkUrl,
     multiLevelRebateInfo,
     multiLevelRebateInfoMutate,
-    max_rebate_rate,
+    maxRebateRate,
   } = useReferralContext();
 
   const referralCode = multiLevelRebateInfo?.referral_code;
@@ -24,30 +24,31 @@ export const useReferralInfoScript = () => {
     return generateReferralLink(referralLinkUrl, referralCode);
   }, [referralCode]);
 
-  const onEdit = (focusField?: ReferralCodeFormField) => {
-    modal.show(ReferralCodeFormDialogId, {
-      type: ReferralCodeFormType.Edit,
-      focusField,
-      referralCode: multiLevelRebateInfo?.referral_code,
-      maxRebateRate: max_rebate_rate,
-      referrerRebateRate: multiLevelRebateInfo?.referrer_rebate_rate,
-      onSuccess: () => {
-        multiLevelRebateInfoMutate();
-      },
-    });
-  };
-
   const referrerRebateRate = useMemo(() => {
     return new Decimal(multiLevelRebateInfo?.referrer_rebate_rate || 0)
       .mul(100)
       .toNumber();
-  }, [multiLevelRebateInfo?.referrer_rebate_rate]);
+  }, [multiLevelRebateInfo]);
 
   const refereeRebateRate = useMemo(() => {
     return new Decimal(multiLevelRebateInfo?.referee_rebate_rate || 0)
       .mul(100)
       .toNumber();
-  }, [multiLevelRebateInfo?.referee_rebate_rate]);
+  }, [multiLevelRebateInfo]);
+
+  const onEdit = (focusField?: ReferralCodeFormField) => {
+    modal.show(ReferralCodeFormDialogId, {
+      type: ReferralCodeFormType.Edit,
+      focusField,
+      referralCode: multiLevelRebateInfo?.referral_code,
+      maxRebateRate,
+      referrerRebateRate: multiLevelRebateInfo?.referrer_rebate_rate,
+      directInvites: multiLevelRebateInfo?.direct_invites,
+      onSuccess: () => {
+        multiLevelRebateInfoMutate();
+      },
+    });
+  };
 
   return {
     onEdit,

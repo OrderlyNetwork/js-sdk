@@ -122,7 +122,7 @@ export const affiliate = {
   "affiliate.multiLevel.referralCode.create.warning":
     "You are creating your active referral code. Note that referee allocations can be increased later, but never decreased.",
   "affiliate.referralCode.edit.warning":
-    "This code has active referees. To protect existing users, you can only increase the referee's commission rate.",
+    "To protect existing users, default commission split for referees can only be increased once there are active referrals bound to this code.",
 
   "affiliate.revenueSplitStrategy": "Revenue split strategy",
   "affiliate.youKeep": "You keep",
@@ -167,14 +167,14 @@ export const affiliate = {
     "To protect existing users, you can only increase a referee's commission split.",
   "affiliate.refereeRebateRate.modal.title":
     "Edit commission for {{accountId}}",
-  "affiliate.noCommissionAvailable":
+  "affiliate.rebateRate.noCommissionAvailable":
     "Notes: No commission available (0%), so configuration is disabled. However, this code is still active and can be shared.",
+  "affiliate.rebateRate.noCommissionRate":
+    "Note: Although the commission rate is currently 0%, you can still share this code to establish your referral base.",
   "affiliate.resetRebateRate.modal.title": "Reset to default commission rate",
   "affiliate.resetRebateRate.modal.description":
     "This action will remove custom settings for {{accountId}} and apply the default configuration.",
   "affiliate.resetRebateRate.rateAfterReset": "Rate after reset:",
-  "affiliate.referralCode.bound.warning":
-    "To protect existing users, default commission split for referees can only be increased once there are active referrals bound to this code.",
 };
 
 export type Affiliate = typeof affiliate;

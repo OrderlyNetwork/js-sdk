@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { SVGProps } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { Flex, Text, Button, cn } from "@orderly.network/ui";
+import { Flex, Text, Button, cn, parseNumber } from "@orderly.network/ui";
 import { MultiLevelReferralReturns } from "./multiLevelReferral.script";
 
 export const MultiLevelReferral: FC<MultiLevelReferralReturns> = (props) => {
@@ -43,7 +43,10 @@ export const MultiLevelReferral: FC<MultiLevelReferralReturns> = (props) => {
           {isMultiLevelReferralUnlocked
             ? t("affiliate.newReferralProgram.description")
             : t("affiliate.newReferralProgram.tradeUnlock", {
-                volume: volumePrerequisite?.required_volume,
+                volume: parseNumber(volumePrerequisite?.required_volume ?? 0, {
+                  rule: "price",
+                  dp: 0,
+                }),
               })}
         </Text>
 

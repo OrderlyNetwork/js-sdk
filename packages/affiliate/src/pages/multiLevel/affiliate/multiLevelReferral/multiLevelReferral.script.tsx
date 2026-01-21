@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { modal } from "@orderly.network/ui";
+import { useScaffoldContext } from "@orderly.network/ui-scaffold";
 import { useReferralContext } from "../../../../provider";
 import { ReferralCodeFormType } from "../../../../types";
 import { ReferralCodeFormDialogId } from "../referralCodeForm/modal";
@@ -7,29 +8,35 @@ import { ReferralCodeFormDialogId } from "../referralCodeForm/modal";
 export const useMultiLevelReferralScript = () => {
   const {
     isMultiLevelReferralUnlocked,
-    max_rebate_rate,
+    maxRebateRate,
     volumePrerequisite,
     multiLevelRebateInfoMutate,
   } = useReferralContext();
 
+  const { routerAdapter } = useScaffoldContext();
+
   const createReferralCode = () => {
     modal.show(ReferralCodeFormDialogId, {
       type: ReferralCodeFormType.Create,
-      maxRebateRate: max_rebate_rate,
+      maxRebateRate,
       onSuccess: () => {
         multiLevelRebateInfoMutate();
       },
     });
   };
 
-  // TODO: Implement trade unlock
-  const tradeUnlock = () => {};
+  const gotoTrade = () => {
+    routerAdapter?.onRouteChange?.({
+      href: "/perp",
+      name: "Perp",
+    });
+  };
 
   const onClick = () => {
     if (isMultiLevelReferralUnlocked) {
       createReferralCode();
     } else {
-      tradeUnlock();
+      gotoTrade();
     }
   };
 

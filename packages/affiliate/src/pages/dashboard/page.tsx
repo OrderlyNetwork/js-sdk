@@ -1,4 +1,4 @@
-import { useAccount } from "@orderly.network/hooks";
+import { useAccount, useWalletConnector } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
 import { cn, Flex, Spinner } from "@orderly.network/ui";
@@ -20,6 +20,8 @@ export const DashboardPage = (props: {
 
   const { state } = useAccount();
 
+  const { connecting } = useWalletConnector();
+
   const { wrongNetwork, disabledConnect } = useAppContext();
 
   const {
@@ -36,7 +38,7 @@ export const DashboardPage = (props: {
     </Flex>
   );
 
-  if (state.validating) {
+  if (state.validating || connecting) {
     return loadingView;
   }
 

@@ -43,12 +43,16 @@ export const MultiLevelAffiliatePage = () => {
             rows={1}
             className="md:oui-grid-cols-2"
           >
-            <SummaryWidget />
-            {multiLevelRebateInfo?.referral_code ? (
-              <ReferralInfoWidget />
-            ) : (
-              <MultiLevelReferralWidget />
-            )}
+            <div className="oui-order-2 md:oui-order-1">
+              <SummaryWidget />
+            </div>
+            <div className="oui-order-1 md:oui-order-2">
+              {multiLevelRebateInfo?.referral_code ? (
+                <ReferralInfoWidget />
+              ) : (
+                <MultiLevelReferralWidget />
+              )}
+            </div>
           </Grid>
 
           <CommissionChartWidget />
