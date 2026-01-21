@@ -26,7 +26,7 @@ export const ReferralInfo: FC<ReferralInfoReturns> = (props) => {
           color="secondary"
           onClick={() => props.onEdit(ReferralCodeFormField.ReferralCode)}
         >
-          {t("affiliate.referralCodes.edit")}
+          {t("affiliate.configure")}
         </Button>
       </Flex>
 

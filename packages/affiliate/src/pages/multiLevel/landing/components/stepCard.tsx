@@ -28,7 +28,7 @@ export const StepCard: FC<StepCardProps> = (props) => {
       direction="column"
       gap={3}
       r="2xl"
-      p={6}
+      p={5}
       itemAlign={"start"}
       className="oui-bg-base-9"
     >

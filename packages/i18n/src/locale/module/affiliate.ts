@@ -1,8 +1,6 @@
 export const affiliate = {
   "affiliate.referral": "Referral",
-
   "affiliate.trader": "Trader",
-
   "affiliate.enter": "Enter",
   "affiliate.statistics": "Statistics",
 
@@ -64,7 +62,6 @@ export const affiliate = {
     "Your referees get <0>{{value}}</0> of their {{brokerName}} net fee",
 
   "affiliate.referralVol": "Referral vol.",
-
   "affiliate.referralCodes": "Referral codes",
   "affiliate.referralCodes.remaining": "Remaining referral codes",
   "affiliate.referralCodes.column.defaultSplit": "Default split",
@@ -112,17 +109,35 @@ export const affiliate = {
     "Referral rate updated successfully",
   "affiliate.referralTooltip":
     "Trade $10K to unlock your referral code and earn trading rebates from referrals.",
+
   "affiliate.direct": "Direct",
   "affiliate.indirect": "Indirect",
   "affiliate.referrals": "Referrals",
-  "affiliate.referralCodes.edit": "Edit referral codes",
-  "affiliate.referralCodes.edit.modal.title": "Edit your referral code",
-  "affiliate.referralCodes.create": "Create referral codes",
-  "affiliate.referralCodes.create.modal.title": "Create new referral code",
-  "affiliate.multiLevel.referralCode.create.warning":
+  "affiliate.referralCode.edit.modal.title": "Configure your referral settings",
+  "affiliate.referralCode.create": "Create referral codes",
+  "affiliate.referralCode.create.modal.title": "Create new referral code",
+  "affiliate.referralCode.create.success": "Referral code created!",
+  "affiliate.referralCode.create.warning":
     "You are creating your active referral code. Note that referee allocations can be increased later, but never decreased.",
-  "affiliate.referralCode.edit.warning":
+
+  "affiliate.rebateRate.edit.warning":
     "To protect existing users, default commission split for referees can only be increased once there are active referrals bound to this code.",
+  "affiliate.rebateRate.review.warning":
+    "Please review your settings. Note that you can only increase the default commission split for referees if no active referrals are bound to this code yet.",
+  "affiliate.refereeRebateRate.edit.warning":
+    "To protect existing users, you can only increase a referee's commission split.",
+  "affiliate.refereeRebateRate.review.warning":
+    "Please review your settings. The commission split cannot be decreased later.",
+  "affiliate.refereeRebateRate.modal.title":
+    "Edit commission for {{accountId}}",
+  "affiliate.rebateRate.noCommissionAvailable":
+    "Notes: No commission available (0%), so configuration is disabled. However, this code is still active and can be shared.",
+  "affiliate.rebateRate.noCommissionRate":
+    "Note: Although the commission rate is currently 0%, you can still share this code to establish your referral base.",
+  "affiliate.resetRebateRate.modal.title": "Reset to default commission rate",
+  "affiliate.resetRebateRate.modal.description":
+    "This action will remove custom settings for {{accountId}} and apply the default configuration.",
+  "affiliate.resetRebateRate.rateAfterReset": "Rate after reset:",
 
   "affiliate.revenueSplitStrategy": "Revenue split strategy",
   "affiliate.youKeep": "You keep",
@@ -131,25 +146,26 @@ export const affiliate = {
   "affiliate.earnReferralCommissions": "Earn referral commissions",
   "affiliate.earnReferralCommissions.description":
     "Invite traders and earn passive commissions from trades made throughout your entire referral network",
+
   "affiliate.newReferralProgram.title": "Introducing the new referral program",
   "affiliate.newReferralProgram.description":
     "Give your sub-affiliates the power to customize their earnings, while you unlock an endless stream of passive income from every trader in your growing network.",
-  "affiliate.newReferralProgram.tradeToUnlock": "Trade to unlock",
-  "affiliate.newReferralProgram.tradeUnlock":
+  "affiliate.newReferralProgram.tradeUnlock": "Trade to unlock",
+  "affiliate.newReferralProgram.tradeUnlock.description":
     "Trade {{volume}} USDC volume to unlock the ability to invite friends and earn commissions.",
+
   "affiliate.commissionConfiguration": "Commission configuration",
   "affiliate.totalCommissionAvailable": "Total commission available",
-  "affiliate.review": "Review",
+
+  "affiliate.configure": "Configure",
   "affiliate.accountNotEligible": "Account not eligible",
   "affiliate.confirmAndGenerate": "Confirm & Generate",
-  "affiliate.referralCode.create.success": "Referral code created!",
   "affiliate.saveChanges": "Save changes",
-  "affiliate.changesSaved": "Changes saved",
-  "affiliate.review.warning":
-    "Please review your settings. Note that you can only increase the default commission split for referees if no active referrals are bound to this code yet.",
+  "affiliate.saveChanges.success": "Changes saved",
+  "affiliate.review": "Review",
   "affiliate.networkSize": "Network size",
   "affiliate.boundAt": "Bound at",
-  "affiliate.customized": "(Customized)",
+  "affiliate.customized": "Customized",
   "affiliate.refereeType.multiLevel": "Multi-level",
   "affiliate.refereeType.multiLevel.tooltip":
     "Earn commissions from your direct invitees and their sub-affiliate.",
@@ -163,18 +179,40 @@ export const affiliate = {
     "Unlock your unique referral link and start earning rewards.  Set up an account and enable trading to get started.",
   "affiliate.connectWallet": "Connect wallet now",
   "affiliate.setUpAccount": "Set up account",
-  "affiliate.refereeRebateRate.warning":
-    "To protect existing users, you can only increase a referee's commission split.",
-  "affiliate.refereeRebateRate.modal.title":
-    "Edit commission for {{accountId}}",
-  "affiliate.rebateRate.noCommissionAvailable":
-    "Notes: No commission available (0%), so configuration is disabled. However, this code is still active and can be shared.",
-  "affiliate.rebateRate.noCommissionRate":
-    "Note: Although the commission rate is currently 0%, you can still share this code to establish your referral base.",
-  "affiliate.resetRebateRate.modal.title": "Reset to default commission rate",
-  "affiliate.resetRebateRate.modal.description":
-    "This action will remove custom settings for {{accountId}} and apply the default configuration.",
-  "affiliate.resetRebateRate.rateAfterReset": "Rate after reset:",
+
+  "affiliate.landing.title":
+    "Build your revenue network, earn lifetime commissions",
+
+  "affiliate.howItWorks.title": "How it works",
+  "affiliate.howItWorks.description":
+    "Start your affiliate journey and build your revenue network in 3 simple steps.",
+  "affiliate.howItWorks.step1.title": "Connect wallet",
+  "affiliate.howItWorks.step1.description":
+    "Set up your account by connecting your Web3 wallet.",
+  "affiliate.howItWorks.step2.title": "Configure your strategy",
+  "affiliate.howItWorks.step2.description":
+    "Configure the commission split: secure your profit margin while allocating competitive incentives to empower your sub-affiliates.",
+  "affiliate.howItWorks.step3.title": "Share & earn",
+  "affiliate.howItWorks.step3.description":
+    "Copy your link to invite partners and traders. Earn passive commissions from trades made throughout your entire referral network.",
+
+  "affiliate.faq.title": "FAQ",
+  "affiliate.faq.question1": "What about this referral program?",
+  "affiliate.faq.answer1":
+    "This is a multi-level referral system that rewards you, the affiliate for growing the network. You earn a continuous share of the DEX revenue generated by every trader in your referral chain - not just those you invite directly.",
+  "affiliate.faq.question2": "How are my commissions calculated? ",
+  "affiliate.faq.answer2":
+    "Your commissions are the difference between your assigned commission rate and the percentage you choose to pass on to your sub-affiliates. Importantly, your commission rate remains consistent regardless of how deep the referral chain goes.",
+  "affiliate.faq.question3":
+    "How much commission can I share with my direct sub-affiliates?",
+  "affiliate.faq.answer3":
+    "The decision is entirely yours. You can assign any percentage, from 0% up to your maximum available commission rate, to your direct sub-affiliates to encourage their growth.",
+  "affiliate.faq.question4": "Where does the revenue come from?",
+  "affiliate.faq.answer4":
+    "Revenue comes from the trading fees generated by traders on the DEX. Whenever a trader in your chain makes a transaction, a portion of the fee is distributed from the top of the chain downwards based on the configured allocation.",
+  "affiliate.faq.question5": "How do I get my commissions?",
+  "affiliate.faq.answer5":
+    "Commissions are settled daily directly into your main trading account. You can view your overall commission earnings on the referral dashboard.",
 };
 
 export type Affiliate = typeof affiliate;

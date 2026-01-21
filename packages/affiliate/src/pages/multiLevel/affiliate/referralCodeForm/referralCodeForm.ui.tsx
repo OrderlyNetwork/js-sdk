@@ -34,8 +34,8 @@ export const ReferralCodeForm = (props: ReferralCodeFormProps) => {
     switch (type) {
       case ReferralCodeFormType.Create:
         return {
-          title: t("affiliate.referralCodes.create.modal.title"),
-          description: t("affiliate.multiLevel.referralCode.create.warning"),
+          title: t("affiliate.referralCode.create.modal.title"),
+          description: t("affiliate.referralCode.create.warning"),
           buttonText: t("affiliate.confirmAndGenerate"),
         };
       case ReferralCodeFormType.Edit:
@@ -44,12 +44,14 @@ export const ReferralCodeForm = (props: ReferralCodeFormProps) => {
             ? t("affiliate.refereeRebateRate.modal.title", {
                 accountId: formatAddress(props.accountId!),
               })
-            : t("affiliate.referralCodes.edit.modal.title"),
+            : t("affiliate.referralCode.edit.modal.title"),
           description: isEditingRefereeRebateRate
-            ? t("affiliate.refereeRebateRate.warning")
+            ? isReview
+              ? t("affiliate.refereeRebateRate.review.warning")
+              : t("affiliate.refereeRebateRate.edit.warning")
             : isReview
-              ? t("affiliate.review.warning")
-              : t("affiliate.referralCode.edit.warning"),
+              ? t("affiliate.rebateRate.review.warning")
+              : t("affiliate.rebateRate.edit.warning"),
           buttonText: isReview
             ? t("affiliate.saveChanges")
             : t("affiliate.review"),
@@ -73,7 +75,7 @@ export const ReferralCodeForm = (props: ReferralCodeFormProps) => {
           buttonText: "",
         };
     }
-  }, [t, type, isEditingRefereeRebateRate, props.accountId]);
+  }, [t, type, isEditingRefereeRebateRate, isReview, props.accountId]);
 
   const titleView = (
     <Flex width={"100%"} direction="column" itemAlign="start" gap={3}>

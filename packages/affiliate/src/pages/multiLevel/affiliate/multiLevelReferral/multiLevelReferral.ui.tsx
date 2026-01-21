@@ -47,7 +47,7 @@ export const MultiLevelReferral: FC<MultiLevelReferralReturns> = (props) => {
               className="oui-px-16"
               onClick={props.createReferralCode}
             >
-              {t("affiliate.referralCodes.create")}
+              {t("affiliate.referralCode.create")}
             </Button>
           </>
         ) : (

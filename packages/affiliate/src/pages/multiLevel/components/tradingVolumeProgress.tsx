@@ -61,7 +61,7 @@ export const TradingVolumeProgress: FC<TradingVolumeProgressProps> = (
         intensity={54}
         className={cn("oui-text-center", classNames?.description)}
       >
-        {t("affiliate.newReferralProgram.tradeUnlock", {
+        {t("affiliate.newReferralProgram.tradeUnlock.description", {
           volume: formatRequiredVolume,
         })}
       </Text>
@@ -102,7 +102,7 @@ export const TradingVolumeProgress: FC<TradingVolumeProgressProps> = (
       </Flex>
 
       <Button size="md" onClick={gotoTrade} {...props.buttonProps}>
-        {t("affiliate.newReferralProgram.tradeToUnlock")}
+        {t("affiliate.newReferralProgram.tradeUnlock")}
       </Button>
     </Flex>
   );

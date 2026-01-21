@@ -66,7 +66,7 @@ export const useReferralCodeFormScript = (
   const handleResult = (res: any) => {
     if (res.success) {
       options.onSuccess?.();
-      toast.success(t("affiliate.changesSaved"));
+      toast.success(t("affiliate.saveChanges.success"));
       options.close?.();
     } else {
       toast.error(res.message);

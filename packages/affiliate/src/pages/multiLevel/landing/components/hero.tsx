@@ -75,7 +75,7 @@ export const Hero = () => {
     if (isMultiLevelEnabled && !multiLevelRebateInfo?.referral_code) {
       return (
         <Button size="lg" className="oui-px-4" onClick={onCreateReferralCode}>
-          {t("affiliate.referralCodes.create")}
+          {t("affiliate.referralCode.create")}
         </Button>
       );
     }
@@ -105,7 +105,7 @@ export const Hero = () => {
             weight="semibold"
             className="oui-text-[32px] oui-leading-tight md:oui-text-[48px]"
           >
-            Build your revenue network, earn lifetime commissions
+            {t("affiliate.landing.title")}
           </Text>
         </Flex>
 

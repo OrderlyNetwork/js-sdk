@@ -84,7 +84,7 @@ const MobileRefereeItem: FC<{
           </span>
           {!item.is_default_rate && (
             <span className="oui-text-primary-light">
-              {t("affiliate.customized")}
+              {`(${t("affiliate.customized")})`}
             </span>
           )}
         </Text>
@@ -194,7 +194,7 @@ export const RefereesTable: FC<RefereesTableProps> = (props) => {
             </span>
             {!record.is_default_rate && (
               <span className="oui-text-primary-light">
-                {t("affiliate.customized")}
+                {`(${t("affiliate.customized")})`}
               </span>
             )}
           </Text>
