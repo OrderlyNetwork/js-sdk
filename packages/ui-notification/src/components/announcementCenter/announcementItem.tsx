@@ -57,7 +57,8 @@ export const AnnouncementItem: FC<{
 
   const action = useMemo(() => {
     if (
-      props.type === AnnouncementType.Campaign &&
+      (props.type === AnnouncementType.Campaign ||
+        props.type === AnnouncementType.Vote) &&
       typeof props.url === "string" &&
       props.url !== "" &&
       typeof props.onItemClick === "function"

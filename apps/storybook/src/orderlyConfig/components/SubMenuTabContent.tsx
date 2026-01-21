@@ -75,7 +75,7 @@ export const SubMenuTabContent = <T,>(props: SubMenuTabContentProps<T>) => {
       </div>
 
       {/* List */}
-      <div className="oui-flex-1 oui-overflow-y-auto">
+      <div className="oui-flex-1 oui-overflow-y-auto oui-custom-scrollbar">
         {data?.map((item, index) => renderRow(item, index))}
       </div>
 

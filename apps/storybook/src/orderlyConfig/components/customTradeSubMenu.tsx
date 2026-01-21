@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router";
+import { useParams } from "react-router";
 import { generatePath, useTranslation } from "@orderly.network/i18n";
 import { SubMenuMarketsWidget } from "@orderly.network/markets";
 import { API } from "@orderly.network/types";
@@ -9,6 +9,7 @@ import {
   TradingActiveIcon,
   TradingInactiveIcon,
 } from "@orderly.network/ui";
+import { useRouteContext } from "../../components/orderlyProvider/rounteProvider";
 import { PathEnum } from "../../playground/constant";
 import { DEFAULT_SYMBOL, updateSymbol } from "../../playground/storage";
 import { MenuItemRow } from "./SubMenuComponents";
@@ -94,7 +95,8 @@ const LeftSection = (props: {
 const RightSection = (props: { className?: string }) => {
   const { className } = props;
   const params = useParams();
-  const navigate = useNavigate();
+
+  const { onRouteChange } = useRouteContext();
   const [symbol, setSymbol] = useState<string>(params.symbol || DEFAULT_SYMBOL);
 
   useEffect(() => {
@@ -110,9 +112,12 @@ const RightSection = (props: { className?: string }) => {
     (data: API.Symbol) => {
       const nextSymbol = data.symbol;
       setSymbol(nextSymbol);
-      navigate(generatePath({ path: `${PathEnum.Perp}/${nextSymbol}` }));
+      onRouteChange({
+        href: `${PathEnum.Perp}/${nextSymbol}`,
+        name: "perps",
+      });
     },
-    [navigate],
+    [onRouteChange],
   );
 
   return (
@@ -130,15 +135,18 @@ export const customTradeSubMenuRender = () => {
   return () => {
     const [selectedTab, setSelectedTab] = useState("perps");
     const [hoverTab, setHoverTab] = useState<"perps" | null>(null);
-    const navigate = useNavigate();
-    const location = useLocation();
+    const { onRouteChange } = useRouteContext();
+    const location = window.location;
 
     const handleSpotClick = () => {
-      navigate(generatePath({ path: PathEnum.Swap }));
+      onRouteChange({
+        href: PathEnum.Swap,
+        name: "spot",
+      });
     };
 
     const handlePerpsClick = () => {
-      navigate(generatePath({ path: PathEnum.Perp }));
+      onRouteChange({ href: PathEnum.Perp, name: "perps" });
     };
 
     useEffect(() => {

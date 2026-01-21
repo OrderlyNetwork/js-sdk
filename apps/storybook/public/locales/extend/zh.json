@@ -18,7 +18,7 @@
   "extend.perps": "合约",
   "extend.perps.description": "免 Gas 的订单簿永续合约，最高可达 100 倍杠杆",
   "extend.woofiEarn": "WOOFi 赚取",
-  "extend.woofiEarn.description": "在任何链上的主要资产中安全获取收益",
+  "extend.woofiEarn.description": "在任何链上轻松获取收益",
   "extend.wooStake": "WOO 质押",
   "extend.wooStake.description": "质押以赚取 USDC 和 WOO",
   "extend.vaults.description": "通过自动化策略赚取被动收益",
