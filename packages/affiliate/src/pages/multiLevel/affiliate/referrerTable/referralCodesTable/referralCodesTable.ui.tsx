@@ -1,37 +1,42 @@
-import { FC, useMemo, useState } from "react";
+import { FC, useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   Column,
   Text,
   ListView,
   Divider,
-  TableSort,
+  useScreen,
 } from "@orderly.network/ui";
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import { Decimal } from "@orderly.network/utils";
+import { ReferralCodesRow } from "../../../../../hooks/useMultiLevelReferralCodes";
 import {
-  useReferralCodesScript,
-  ReferralCodeType,
-} from "../../../affiliate/referralCodes/referralCodes.script";
-import { MobileCell, MobileCard, TooltipCell, BreakdownCell } from "./cells";
+  MobileCell,
+  MobileCard,
+  TooltipCell,
+  BreakdownCell,
+} from "../base/cells";
+import { ReferralCodesTableScriptReturns } from "./referralCodesTable.script";
+
+type ReferralCodesTableUIProps = ReferralCodesTableScriptReturns;
 
 const getReferralCodeType = (referralType?: "single" | "multi") => {
   const { t } = useTranslation();
   if (referralType === "multi") {
     return {
-      text: t("affiliate.refereeType.multiLevel"),
-      tooltip: t("affiliate.refereeType.multiLevel.tooltip"),
+      text: t("affiliate.multiLevel"),
+      tooltip: t("affiliate.multiLevel.tooltip"),
     };
   }
 
   return {
-    text: t("affiliate.refereeType.singleLevelLegacy"),
-    tooltip: t("affiliate.refereeType.singleLevelLegacy.tooltip"),
+    text: t("affiliate.singleLevelLegacy"),
+    tooltip: t("affiliate.singleLevelLegacy.tooltip"),
   };
 };
 
 const MobileReferralCodeItem: FC<{
-  item: ReferralCodeType;
+  item: ReferralCodesRow;
   copyCode: (code: string) => void;
 }> = ({ item, copyCode }) => {
   const { t } = useTranslation();
@@ -43,7 +48,8 @@ const MobileReferralCodeItem: FC<{
     .toFixed(0);
   const typeInfo = getReferralCodeType(item.referral_type);
   const isMultiLevel = item.referral_type === "multi";
-  const stats = item.multi_level_statistics;
+  const stats =
+    "multi_level_statistics" in item ? item.multi_level_statistics : undefined;
 
   return (
     <MobileCard>
@@ -122,56 +128,11 @@ const MobileReferralCodeItem: FC<{
   );
 };
 
-export const ReferralCodesTable: FC = () => {
+export const ReferralCodesTableUI: FC<ReferralCodesTableUIProps> = (props) => {
   const { t } = useTranslation();
-  const { codes, copyCode } = useReferralCodesScript();
-  const [sort, setSort] = useState<{
-    key: "total_invites" | "total_volume" | "total_rebate";
-    order: "asc" | "desc";
-  } | null>(null);
+  const { isMobile } = useScreen();
 
-  const sortedCodes = useMemo(() => {
-    if (!codes || !sort) return codes;
-
-    const sortableCodes = codes.map((code, index) => ({
-      code,
-      index,
-    }));
-
-    sortableCodes.sort((a, b) => {
-      const valA = Number(a.code[sort.key] ?? 0);
-      const valB = Number(b.code[sort.key] ?? 0);
-      if (valA < valB) return sort.order === "asc" ? -1 : 1;
-      if (valA > valB) return sort.order === "asc" ? 1 : -1;
-      return a.index - b.index;
-    });
-
-    return sortableCodes.map((item) => item.code);
-  }, [codes, sort]);
-
-  const onSort = (sort?: TableSort) => {
-    if (!sort) {
-      setSort(null);
-      return;
-    }
-    const sortKey = sort.sortKey as
-      | "total_invites"
-      | "total_volume"
-      | "total_rebate";
-    if (
-      sortKey &&
-      (sortKey === "total_invites" ||
-        sortKey === "total_volume" ||
-        sortKey === "total_rebate")
-    ) {
-      setSort({
-        key: sortKey,
-        order: sort.sort === "asc" ? "asc" : "desc",
-      });
-    }
-  };
-
-  const columns = useMemo<Column<ReferralCodeType>[]>(() => {
+  const columns = useMemo<Column<ReferralCodesRow>[]>(() => {
     return [
       {
         title: t("affiliate.referralCode"),
@@ -181,7 +142,7 @@ export const ReferralCodesTable: FC = () => {
       {
         title: t("common.type"),
         dataIndex: "referral_type",
-        render: (_: unknown, record: ReferralCodeType) => {
+        render: (_: unknown, record: ReferralCodesRow) => {
           const typeInfo = getReferralCodeType(record.referral_type);
           return (
             <TooltipCell
@@ -200,7 +161,7 @@ export const ReferralCodesTable: FC = () => {
           </Text>
         ),
         dataIndex: "rate",
-        render: (_: unknown, record: ReferralCodeType) => {
+        render: (_: unknown, record: ReferralCodesRow) => {
           const referrerRate = new Decimal(record.referrer_rebate_rate ?? 0)
             .mul(100)
             .toFixed(0);
@@ -218,9 +179,12 @@ export const ReferralCodesTable: FC = () => {
       {
         title: t("affiliate.networkSize"),
         dataIndex: "total_invites",
-        render: (_: unknown, record: ReferralCodeType) => {
+        render: (_: unknown, record: ReferralCodesRow) => {
           const isMultiLevel = record.referral_type === "multi";
-          const stats = record.multi_level_statistics;
+          const stats =
+            "multi_level_statistics" in record
+              ? record.multi_level_statistics
+              : undefined;
           return (
             <BreakdownCell
               total={record.total_invites ?? 0}
@@ -239,9 +203,12 @@ export const ReferralCodesTable: FC = () => {
       {
         title: t("common.volume"),
         dataIndex: "total_volume",
-        render: (_: unknown, record: ReferralCodeType) => {
+        render: (_: unknown, record: ReferralCodesRow) => {
           const isMultiLevel = record.referral_type === "multi";
-          const stats = record.multi_level_statistics;
+          const stats =
+            "multi_level_statistics" in record
+              ? record.multi_level_statistics
+              : undefined;
           return (
             <BreakdownCell
               total={record.total_volume ?? 0}
@@ -262,9 +229,12 @@ export const ReferralCodesTable: FC = () => {
       {
         title: t("affiliate.commission"),
         dataIndex: "total_rebate",
-        render: (_: unknown, record: ReferralCodeType) => {
+        render: (_: unknown, record: ReferralCodesRow) => {
           const isMultiLevel = record.referral_type === "multi";
-          const stats = record.multi_level_statistics;
+          const stats =
+            "multi_level_statistics" in record
+              ? record.multi_level_statistics
+              : undefined;
           return (
             <BreakdownCell
               total={record.total_rebate ?? 0}
@@ -285,12 +255,12 @@ export const ReferralCodesTable: FC = () => {
       {
         title: t("common.action"),
         dataIndex: "action",
-        render: (_: unknown, record: ReferralCodeType) => (
+        render: (_: unknown, record: ReferralCodesRow) => (
           <Text
             className="oui-cursor-pointer oui-text-primary-light"
             onClick={(e) => {
               e.stopPropagation();
-              copyCode(record.code);
+              props.copyCode(record.code);
             }}
           >
             {t("common.copy")}
@@ -298,33 +268,36 @@ export const ReferralCodesTable: FC = () => {
         ),
       },
     ];
-  }, [t, copyCode]);
+  }, [t, props.copyCode]);
 
   return (
-    <div className="md:oui-px-3">
-      <div className="oui-hidden md:oui-block">
-        <AuthGuardDataTable
-          bordered
-          columns={columns}
-          dataSource={sortedCodes}
-          loading={!sortedCodes}
-          onSort={onSort}
-          onRow={() => ({ className: "oui-h-12" })}
-          className="oui-pb-3 [&_.oui-h-10.oui-w-full]:!oui-mx-0 [&_.oui-table-pagination]:!oui-justify-end [&_th]:!oui-tracking-[0.03em] [&_th]:!oui-px-3 [&_td]:!oui-px-3"
-        />
-      </div>
-      <div className="oui-flex oui-flex-col oui-px-4 md:oui-hidden">
-        <ListView
-          dataSource={sortedCodes}
-          contentClassName="!oui-space-y-0 oui-pb-3"
-          renderItem={(item, index) => (
-            <div key={index}>
-              <MobileReferralCodeItem item={item} copyCode={copyCode} />
-              <Divider intensity={8} />
-            </div>
-          )}
-        />
-      </div>
-    </div>
+    <>
+      {isMobile ? (
+        <div className="oui-flex oui-flex-col oui-px-4">
+          <ListView
+            dataSource={props.sortedCodes}
+            contentClassName="!oui-space-y-0 oui-pb-3"
+            renderItem={(item, index) => (
+              <div key={index}>
+                <MobileReferralCodeItem item={item} copyCode={props.copyCode} />
+                <Divider intensity={8} />
+              </div>
+            )}
+          />
+        </div>
+      ) : (
+        <div className="oui-px-3">
+          <AuthGuardDataTable
+            bordered
+            columns={columns}
+            dataSource={props.sortedCodes}
+            loading={props.isLoading}
+            onSort={props.onSort}
+            onRow={() => ({ className: "oui-h-12" })}
+            className="oui-pb-3 [&_.oui-h-10.oui-w-full]:!oui-mx-0 [&_.oui-table-pagination]:!oui-justify-end [&_th]:!oui-tracking-[0.03em] [&_th]:!oui-px-3 [&_td]:!oui-px-3"
+          />
+        </div>
+      )}
+    </>
   );
 };

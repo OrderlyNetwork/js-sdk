@@ -1,10 +1,13 @@
 import { FC } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Tabs, TabPanel, Flex } from "@orderly.network/ui";
-import { CommissionTable } from "./commission";
-import { RefereesTable } from "./referees";
-import { ReferralCodesTable } from "./referralCodes";
-import { ReferrerTableScriptReturns } from "./referrerTable.script";
+import { CommissionTable } from "./commissionTable";
+import { RefereesTable } from "./refereesTable";
+import { ReferralCodesTable } from "./referralCodesTable";
+import {
+  ReferrerTableScriptReturns,
+  ReferrerTableTab,
+} from "./referrerTable.script";
 
 export const ReferrerTableUI: FC<ReferrerTableScriptReturns> = (props) => {
   const { t } = useTranslation();
@@ -20,36 +23,25 @@ export const ReferrerTableUI: FC<ReferrerTableScriptReturns> = (props) => {
     >
       <Tabs
         value={props.activeTab}
-        onValueChange={props.setActiveTab}
+        onValueChange={(value) => props.setActiveTab(value as ReferrerTableTab)}
         className="oui-w-full oui-text-base"
         variant="text"
         classNames={{
           tabsListContainer: "oui-px-3",
           trigger: "oui-pb-[9px] oui-tracking-[0.01em]",
+          scrollIndicator:
+            "[&_.oui-scroll-indicator-leading]:oui-hidden [&_.oui-scroll-indicator-tailing]:oui-hidden",
         }}
         showScrollIndicator
       >
         <TabPanel value="commission" title={t("affiliate.commission")}>
-          <CommissionTable
-            commissionData={props.commissionData}
-            isLoading={props.isLoading}
-            pagination={props.pagination}
-            onSort={props.onSort}
-            dateRange={props.dateRange}
-            setDateRange={props.setDateRange}
-          />
+          <CommissionTable enabled={props.activeTab === "commission"} />
         </TabPanel>
         <TabPanel value="referees" title={t("affiliate.referees")}>
-          <RefereesTable
-            refereesData={props.refereesData}
-            isRefereesLoading={props.isRefereesLoading}
-            refereesPagination={props.refereesPagination}
-            onRefereesSort={props.onRefereesSort}
-            onEditReferee={props.onEditReferee}
-          />
+          <RefereesTable enabled={props.activeTab === "referees"} />
         </TabPanel>
         <TabPanel value="codes" title={t("affiliate.referralCodes")}>
-          <ReferralCodesTable />
+          <ReferralCodesTable enabled={props.activeTab === "codes"} />
         </TabPanel>
       </Tabs>
     </Flex>
