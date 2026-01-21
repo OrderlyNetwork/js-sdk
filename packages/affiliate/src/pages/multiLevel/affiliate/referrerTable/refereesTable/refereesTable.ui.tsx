@@ -31,14 +31,14 @@ const getRefereeType = (bindType: string) => {
   const { t } = useTranslation();
   if (bindType === "legacy") {
     return {
-      text: t("affiliate.refereeType.singleLevelLegacy"),
-      tooltip: t("affiliate.refereeType.singleLevelLegacy.tooltip"),
+      text: t("affiliate.singleLevelLegacy"),
+      tooltip: t("affiliate.singleLevelLegacy.tooltip"),
     };
   }
 
   return {
-    text: t("affiliate.refereeType.multiLevel"),
-    tooltip: t("affiliate.refereeType.multiLevel.tooltip"),
+    text: t("affiliate.multiLevel"),
+    tooltip: t("affiliate.multiLevel.tooltip"),
   };
 };
 

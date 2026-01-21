@@ -24,14 +24,14 @@ const getReferralCodeType = (referralType?: "single" | "multi") => {
   const { t } = useTranslation();
   if (referralType === "multi") {
     return {
-      text: t("affiliate.refereeType.multiLevel"),
-      tooltip: t("affiliate.refereeType.multiLevel.tooltip"),
+      text: t("affiliate.multiLevel"),
+      tooltip: t("affiliate.multiLevel.tooltip"),
     };
   }
 
   return {
-    text: t("affiliate.refereeType.singleLevelLegacy"),
-    tooltip: t("affiliate.refereeType.singleLevelLegacy.tooltip"),
+    text: t("affiliate.singleLevelLegacy"),
+    tooltip: t("affiliate.singleLevelLegacy.tooltip"),
   };
 };
 
