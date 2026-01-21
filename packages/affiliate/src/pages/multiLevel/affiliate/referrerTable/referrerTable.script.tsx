@@ -194,6 +194,8 @@ export const useReferrerTableScript = () => {
           refereesMutate();
         },
         accountId: item.account_id,
+        multiLevelRebateInfo,
+        directInvites: multiLevelRebateInfo?.direct_invites,
       });
     },
     [multiLevelRebateInfo, maxRebateRate, multiLevelRebateInfoMutate],

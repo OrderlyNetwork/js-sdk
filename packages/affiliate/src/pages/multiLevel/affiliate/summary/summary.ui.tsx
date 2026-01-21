@@ -32,6 +32,7 @@ export const Summary: FC<SummaryReturns> = (props) => {
       </Flex>
 
       <SummaryItem
+        prefix="$"
         label={`${t("affiliate.commission")} (USDC)`}
         value={statistics.total_rebate}
         direct={statistics.direct_rebate}
@@ -46,6 +47,7 @@ export const Summary: FC<SummaryReturns> = (props) => {
 
       <Flex width={"100%"} gap={6} className="oui-flex-col md:oui-flex-row">
         <SummaryItem
+          prefix="$"
           label={`${t("affiliate.referralVol")} (USDC)`}
           value={statistics.total_volume}
           direct={statistics.direct_volume}
@@ -79,6 +81,7 @@ type SummaryItemProps = {
     direct?: string;
     indirect?: string;
   };
+  prefix?: string;
 };
 
 const SummaryItem: FC<SummaryItemProps> = (props) => {
@@ -102,7 +105,7 @@ const SummaryItem: FC<SummaryItemProps> = (props) => {
         rule="human"
         dp={2}
         size="3xl"
-        prefix="$"
+        prefix={props.prefix}
         placeholder="--"
         intensity={98}
         className={props.classNames?.value}
@@ -116,7 +119,7 @@ const SummaryItem: FC<SummaryItemProps> = (props) => {
           <Text.numeral
             rule="human"
             dp={1}
-            prefix="$"
+            prefix={props.prefix}
             intensity={54}
             className={props.classNames?.direct}
           >
@@ -129,7 +132,7 @@ const SummaryItem: FC<SummaryItemProps> = (props) => {
           <Text.numeral
             rule="human"
             dp={1}
-            prefix="$"
+            prefix={props.prefix}
             intensity={54}
             className={props.classNames?.indirect}
           >

@@ -1,4 +1,4 @@
-import { ReactNode, useMemo, useRef } from "react";
+import { ReactNode, useMemo, useRef, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   Box,
@@ -119,6 +119,7 @@ export const ReferralCodeForm = (props: ReferralCodeFormProps) => {
       onChange={props.setReferrerRebatePercentage}
       max={props.maxRebatePercentage}
       disabled={noCommissionAvailable || isReview || isReset}
+      disabledIncrease={hasBoundReferee}
     />
   );
 
@@ -223,10 +224,12 @@ type RebateRateSliderProps = {
   max: number;
   disabled: boolean;
   restValue: number;
+  disabledIncrease?: boolean;
 };
 
 const RebateRateSlider = (props: RebateRateSliderProps) => {
   const { t } = useTranslation();
+  const [maxValue] = useState(props.value);
 
   return (
     <>
@@ -238,7 +241,12 @@ const RebateRateSlider = (props: RebateRateSliderProps) => {
             step={1}
             value={[props.value]}
             onValueChange={(value) => {
-              props.onChange(value[0] as number);
+              const newValue = value[0] as number;
+              props.onChange(
+                props.disabledIncrease
+                  ? Math.min(newValue, maxValue)
+                  : newValue,
+              );
             }}
             classNames={{
               range: "oui-bg-success-darken oui-h-2 oui-top-[0px]",
