@@ -63,6 +63,7 @@ export const useTPSLAdvanced = (props: Props) => {
       tp_pnl: order.tp_pnl,
       tp_offset: order.tp_offset,
       tp_offset_percentage: order.tp_offset_percentage,
+      margin_mode: order.margin_mode,
     },
   });
 

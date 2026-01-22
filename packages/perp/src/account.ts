@@ -286,8 +286,6 @@ export function totalCollateral(inputs: {
   return new Decimal(USDCHolding).add(nonUSDCHoldingValue).add(unsettlementPnL);
 }
 
-export function initialMarginWithOrder() {}
-
 /**
  * Sum of notional value for a symbol's position and orders.
  */
@@ -1071,10 +1069,6 @@ export function maxQtyForIsolatedMargin(inputs: {
    */
   orderSide: OrderSide;
   /**
-   * @description Whether the order is reduce-only
-   */
-  reduceOnly: boolean;
-  /**
    * @description Current order reference price
    */
   currentOrderReferencePrice: number;
@@ -1129,7 +1123,6 @@ export function maxQtyForIsolatedMargin(inputs: {
 }): number {
   const {
     orderSide,
-    reduceOnly,
     currentOrderReferencePrice,
     availableBalance,
     leverage,
@@ -1150,16 +1143,6 @@ export function maxQtyForIsolatedMargin(inputs: {
       .toNumber(),
     symbolMaxNotional,
   );
-
-  // Handle reduce-only orders
-  if (reduceOnly) {
-    if (orderSide === OrderSide.BUY) {
-      return Math.max(0, -positionQty);
-    } else {
-      // SELL
-      return Math.max(0, positionQty);
-    }
-  }
 
   // Handle BUY orders
   if (orderSide === OrderSide.BUY) {
@@ -1420,6 +1403,38 @@ export function availableBalance(inputs: {
 }
 
 /**
+ * @formulaId availableBalanceForIsolatedMargin
+ * @name Available Balance for Isolated Margin
+ * @formula availableBalanceForIsolatedMargin = max(0, min(USDC_balance, free_collateral - max(total_cross_unsettled_pnl, 0)))
+ * @description
+ *
+ * ## Definition
+ *
+ * max(0, min(USDC_balance, free_collateral - max(total_cross_unsettled_pnl, 0))), where
+ *
+ * **USDC_balance** = User's USDC balance
+ *
+ * **free_collateral** = Available collateral in the user's account (for cross margin trading)
+ *
+ * **total_cross_unsettled_pnl**  = sum( unsettled_PNL_i ) across all cross margin positions
+ */
+export function availableBalanceForIsolatedMargin(inputs: {
+  USDCHolding: number;
+  totalCrossUnsettledPnL: number;
+  freeCollateral: number;
+}): number {
+  return Math.max(
+    0,
+    Math.min(
+      inputs.USDCHolding,
+      new Decimal(inputs.freeCollateral)
+        .sub(Math.max(inputs.totalCrossUnsettledPnL, 0))
+        .toNumber(),
+    ),
+  );
+}
+
+/**
  * @formulaId mmr
  * @name Total Maintenance Margin Ratio
  * @formula Total Maintenance Margin Ratio = sum(Position maintenance margin) / total_position_notional * 100%, total_position_notional = sum(abs(position_qty_i * mark_price_i))
@@ -1602,23 +1617,17 @@ export function maxAdd(inputs: {
   /**
    * @description USDC balance
    */
-  USDCBalance: number;
+  USDCHolding: number;
   /**
    * @description Free collateral (available for cross margin trading)
    */
-  freeCollateral: Decimal;
+  freeCollateral: number;
   /**
    * @description Total cross margin unsettled PNL
    */
   totalCrossUnsettledPnL: number;
 }): number {
-  const { USDCBalance, freeCollateral, totalCrossUnsettledPnL } = inputs;
-  const maxCrossUnsettledPnL = Math.max(totalCrossUnsettledPnL, 0);
-  const freeCollateralDecimal = new Decimal(freeCollateral);
-  const availableFromFreeCollateral =
-    freeCollateralDecimal.sub(maxCrossUnsettledPnL);
-  const value = Math.min(USDCBalance, availableFromFreeCollateral.toNumber());
-  return Math.max(0, value);
+  return availableBalanceForIsolatedMargin(inputs);
 }
 
 /**
@@ -1662,7 +1671,7 @@ export function maxReduce(inputs: {
   /**
    * @description Current isolated position margin
    */
-  isolatedPositionMargin: number;
+  positionMargin: number;
   /**
    * @description Position notional value (mark_price * abs(position_qty))
    */
@@ -1676,15 +1685,11 @@ export function maxReduce(inputs: {
    */
   positionUnsettledPnL: number;
 }): number {
-  const {
-    isolatedPositionMargin,
-    positionNotional,
-    IMR,
-    positionUnsettledPnL,
-  } = inputs;
+  const { positionMargin, positionNotional, IMR, positionUnsettledPnL } =
+    inputs;
   const minRequiredMargin = new Decimal(positionNotional).mul(IMR);
   const unrealizedLossAdjustment = Math.min(0, positionUnsettledPnL);
-  const value = new Decimal(isolatedPositionMargin)
+  const value = new Decimal(positionMargin)
     .sub(minRequiredMargin)
     .add(unrealizedLossAdjustment);
   return Math.max(0, value.toNumber());

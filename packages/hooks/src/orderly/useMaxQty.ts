@@ -95,7 +95,7 @@ export function useMaxQty(
 
   const symbolInfo = useSymbolsInfo();
 
-  const { totalCollateral } = useCollateral();
+  const { totalCollateral, usdcHolding, unsettledPnL } = useCollateral();
 
   const { data: markPrices } = useMarkPricesStream();
 
@@ -160,10 +160,11 @@ export function useMaxQty(
     const sellOrdersQty = currentSymbolPosition?.pending_short_qty ?? 0;
 
     if (finalMarginMode === MarginMode.ISOLATED) {
-      // For isolated margin, available balance is the isolated position margin
-      // If position exists, use margin field; otherwise, 0 (no margin allocated)
-      const availableBalance = currentSymbolPosition?.margin ?? 0;
-
+      const availableBalance = account.availableBalanceForIsolatedMargin({
+        USDCHolding: usdcHolding,
+        totalCrossUnsettledPnL: unsettledPnL ?? 0,
+        freeCollateral: totalCollateral,
+      });
       // Build pending orders arrays (only if quantity > 0)
       // Use mark price as reference price (since we don't have actual order prices)
       const pendingLongOrders: Array<{
@@ -208,7 +209,6 @@ export function useMaxQty(
       return account.maxQtyForIsolatedMargin({
         symbol,
         orderSide: side,
-        reduceOnly,
         currentOrderReferencePrice: markPrice, // Use mark price as approximation
         availableBalance,
         leverage,
@@ -259,8 +259,6 @@ export function useMaxQty(
     finalMarginMode,
     symbolLeverage,
   ]);
-
-  console.log("+++++++++++maxQty+++>>>>>>>>>>> ", maxQty);
 
   return Math.max(maxQty, 0);
 }

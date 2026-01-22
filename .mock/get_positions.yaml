@@ -2,7 +2,7 @@ name: Get Positions List
 description: Get user position information, including margin ratios, collateral values, and position details
 method: GET
 endpoint: /v1/positions
-activeRuleIndex: 4
+activeRuleIndex: 10
 rules:
   - name: Normal return - single position
     status: 200
@@ -51,7 +51,7 @@ rules:
     delay: 0
     headers:
       Content-Type: application/json
-    body: {"success":false,"code":500,"message":"Internal server error","timestamp":1768892322920}
+    body: {"success":false,"code":-1000,"message":"unknown error"}
   - name: Service unavailable
     status: 503
     delay: 0
@@ -64,3 +64,9 @@ rules:
     headers:
       Content-Type: application/json
     body: {"success":true,"data":{"margin_ratio":1260.4887,"initial_margin_ratio":0.25,"maintenance_margin_ratio":0.05,"open_margin_ratio":1257.6653,"current_margin_ratio_with_orders":1260.4887,"initial_margin_ratio_with_orders":0.25,"maintenance_margin_ratio_with_orders":0.05,"total_collateral_value":1858.653739,"free_collateral":1858.2851015,"rows":[{"symbol":"PERP_WOO_USDC","position_qty":55,"cost_position":11.2992,"last_sum_unitary_funding":0.265511,"pending_long_qty":0,"pending_short_qty":0,"settle_price":0.20544,"average_open_price":0.31,"unsettled_pnl":4.163335,"mark_price":0.02681,"est_liq_price":0,"timestamp":1714380024107,"seq":0,"updated_time":1721091689712,"leverage":"4","imr":0.25,"mmr":0.05,"IMR_withdraw_orders":0.25,"MMR_with_orders":0.05,"pnl_24_h":0,"fee_24_h":0}],"total_pnl_24_h":0},"timestamp":1768892322920}
+  - name: BTC with both cross and isolated positions
+    status: 200
+    delay: 0
+    headers:
+      Content-Type: application/json
+    body: {"success":true,"data":{"margin_ratio":920.3456,"initial_margin_ratio":0.25,"maintenance_margin_ratio":0.05,"open_margin_ratio":918.789,"current_margin_ratio_with_orders":920.3456,"initial_margin_ratio_with_orders":0.25,"maintenance_margin_ratio_with_orders":0.05,"total_collateral_value":5000,"free_collateral":4800,"rows":[{"symbol":"PERP_BTC_USDC","position_qty":0.5,"cost_position":25000,"last_sum_unitary_funding":0.001234,"pending_long_qty":0,"pending_short_qty":0,"settle_price":50000,"average_open_price":88230,"unsettled_pnl":250,"mark_price":50050,"est_liq_price":45000,"timestamp":1714380024107,"seq":0,"updated_time":1721091689712,"leverage":"10","imr":0.1,"mmr":0.02,"IMR_withdraw_orders":0.1,"MMR_with_orders":0.02,"pnl_24_h":125.5,"fee_24_h":12.5},{"symbol":"PERP_BTC_USDC","position_qty":0.3,"cost_position":15000,"last_sum_unitary_funding":0.000856,"pending_long_qty":0,"pending_short_qty":0,"settle_price":50000,"average_open_price":89213,"unsettled_pnl":150,"mark_price":50050,"est_liq_price":45000,"timestamp":1714380024107,"seq":1,"updated_time":1721091689712,"leverage":"10","imr":0.1,"mmr":0.02,"IMR_withdraw_orders":0.1,"MMR_with_orders":0.02,"pnl_24_h":75,"fee_24_h":8.5,"margin_mode":"ISOLATED","margin":1500}],"total_pnl_24_h":200.5},"timestamp":1768892322920}

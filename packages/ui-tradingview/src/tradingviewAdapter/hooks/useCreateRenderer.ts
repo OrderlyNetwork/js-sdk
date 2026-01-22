@@ -77,6 +77,7 @@ export default function useCreateRenderer(
           interest: 0,
           unrealPnlDecimal: 2,
           basePriceDecimal: 4,
+          marginMode: item.margin_mode,
         };
       });
     renderer?.renderPositions(positionList);

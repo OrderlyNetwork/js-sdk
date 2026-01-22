@@ -2,7 +2,6 @@ import { i18n } from "@orderly.network/i18n";
 import { Decimal, commify } from "@orderly.network/utils";
 import {
   IChartingLibraryWidget,
-  IOrderLineAdapter,
   IPositionLineAdapter,
 } from "../charting_library";
 import useBroker from "../hooks/useBroker";
@@ -41,7 +40,11 @@ export class PositionLineService {
       this.currentSymbol = positions[0].symbol;
     }
 
-    positions.forEach((position, idx) => this.drawPositionLine(position, idx));
+    const needDrawMarginMode = positions.length > 1;
+
+    positions.forEach((position, idx) =>
+      this.drawPositionLine(position, idx, needDrawMarginMode),
+    );
     this.lastPositions = positions;
   }
 
@@ -83,7 +86,11 @@ export class PositionLineService {
     });
   }
 
-  drawPositionLine(position: ChartPosition, idx: number) {
+  drawPositionLine(
+    position: ChartPosition,
+    idx: number,
+    needDrawMarginMode: boolean = false,
+  ) {
     const colorConfig = this.broker.colorConfig;
     const isPositiveUnrealPnl = position.unrealPnl >= 0;
     const isPositiveBalance = position.balance >= 0;
@@ -105,8 +112,20 @@ export class PositionLineService {
 
     this.positionLines[idx] =
       this.positionLines[idx] ?? this.getBasePositionLine();
+
+    const text = PositionLineService.getPositionPnL(
+      position.unrealPnl,
+      position.unrealPnlDecimal,
+    );
+
+    let quantity = PositionLineService.getPositionQuantity(position.balance);
+
+    if (needDrawMarginMode) {
+      quantity += ` (${position.marginMode === "ISOLATED" ? "Isolated" : "Cross"})`;
+    }
+
     this.positionLines[idx]
-      .setQuantity(PositionLineService.getPositionQuantity(position.balance))
+      .setQuantity(quantity)
       .setPrice(price)
       .setCloseButtonIconColor(colorConfig.closeIcon!)
       .setCloseButtonBorderColor(sideColor!)
@@ -115,12 +134,7 @@ export class PositionLineService {
       .setBodyBorderColor(pnlColor!)
       .setLineColor(sideColor!)
       .setQuantityBorderColor(sideColor!)
-      .setText(
-        PositionLineService.getPositionPnL(
-          position.unrealPnl,
-          position.unrealPnlDecimal,
-        ),
-      );
+      .setText(text);
 
     if (this.broker.mode !== ChartMode.MOBILE) {
       this.positionLines[idx].onClose(null, () => {
