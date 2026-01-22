@@ -1,4 +1,5 @@
 import { FC, ReactNode, useCallback, MouseEvent } from "react";
+import { useTranslation } from "@orderly.network/i18n";
 import {
   Tooltip,
   formatAddress,
@@ -77,6 +78,7 @@ export const BreakdownCell: FC<{
   fix?: number;
   title?: ReactNode;
 }> = ({ total, direct, indirect, prefix, fix = 0, title }) => {
+  const { t } = useTranslation();
   const format = (val: number) =>
     commifyOptional(val, {
       fix,
@@ -87,8 +89,12 @@ export const BreakdownCell: FC<{
 
   const tooltipContent = (
     <div className="oui-flex oui-flex-col oui-gap-1">
-      <div>• Direct: {format(direct)}</div>
-      <div>• Indirect: {format(indirect)}</div>
+      <div>
+        • {t("affiliate.direct")}: {format(direct)}
+      </div>
+      <div>
+        • {t("affiliate.indirect")}: {format(indirect)}
+      </div>
     </div>
   );
   const onClick = useMobileTooltipModal(tooltipContent, title);
