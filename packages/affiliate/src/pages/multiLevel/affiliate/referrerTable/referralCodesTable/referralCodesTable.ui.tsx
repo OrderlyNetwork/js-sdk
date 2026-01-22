@@ -47,9 +47,6 @@ const MobileReferralCodeItem: FC<{
     .mul(100)
     .toFixed(0);
   const typeInfo = getReferralCodeType(item.referral_type);
-  const isMultiLevel = item.referral_type === "multi";
-  const stats =
-    "multi_level_statistics" in item ? item.multi_level_statistics : undefined;
 
   return (
     <MobileCard>
@@ -75,24 +72,16 @@ const MobileReferralCodeItem: FC<{
       <MobileCell label={t("affiliate.networkSize")}>
         <BreakdownCell
           total={item.total_invites ?? 0}
-          direct={
-            isMultiLevel
-              ? (stats?.direct_invites ?? 0)
-              : (item.total_invites ?? 0)
-          }
-          indirect={isMultiLevel ? (stats?.indirect_invites ?? 0) : 0}
+          direct={item.direct_invites ?? 0}
+          indirect={item.indirect_invites ?? 0}
           title={t("affiliate.networkSize")}
         />
       </MobileCell>
       <MobileCell label={t("common.volume")}>
         <BreakdownCell
           total={item.total_volume ?? 0}
-          direct={
-            isMultiLevel
-              ? (stats?.direct_volume ?? 0)
-              : (item.total_volume ?? 0)
-          }
-          indirect={isMultiLevel ? (stats?.indirect_volume ?? 0) : 0}
+          direct={item.direct_volume ?? 0}
+          indirect={item.indirect_volume ?? 0}
           prefix="$"
           fix={2}
           title={t("common.volume")}
@@ -101,12 +90,8 @@ const MobileReferralCodeItem: FC<{
       <MobileCell label={t("affiliate.commission")} align="end">
         <BreakdownCell
           total={item.total_rebate ?? 0}
-          direct={
-            isMultiLevel
-              ? (stats?.direct_rebate ?? 0)
-              : (item.total_rebate ?? 0)
-          }
-          indirect={isMultiLevel ? (stats?.indirect_rebate ?? 0) : 0}
+          direct={item.direct_rebate ?? 0}
+          indirect={item.indirect_rebate ?? 0}
           prefix="$"
           fix={6}
           title={t("affiliate.commission")}
@@ -180,20 +165,11 @@ export const ReferralCodesTableUI: FC<ReferralCodesTableUIProps> = (props) => {
         title: t("affiliate.networkSize"),
         dataIndex: "total_invites",
         render: (_: unknown, record: ReferralCodesRow) => {
-          const isMultiLevel = record.referral_type === "multi";
-          const stats =
-            "multi_level_statistics" in record
-              ? record.multi_level_statistics
-              : undefined;
           return (
             <BreakdownCell
               total={record.total_invites ?? 0}
-              direct={
-                isMultiLevel
-                  ? (stats?.direct_invites ?? 0)
-                  : (record.total_invites ?? 0)
-              }
-              indirect={isMultiLevel ? (stats?.indirect_invites ?? 0) : 0}
+              direct={record.direct_invites ?? 0}
+              indirect={record.indirect_invites ?? 0}
               title={t("affiliate.networkSize")}
             />
           );
@@ -204,20 +180,11 @@ export const ReferralCodesTableUI: FC<ReferralCodesTableUIProps> = (props) => {
         title: t("common.volume"),
         dataIndex: "total_volume",
         render: (_: unknown, record: ReferralCodesRow) => {
-          const isMultiLevel = record.referral_type === "multi";
-          const stats =
-            "multi_level_statistics" in record
-              ? record.multi_level_statistics
-              : undefined;
           return (
             <BreakdownCell
               total={record.total_volume ?? 0}
-              direct={
-                isMultiLevel
-                  ? (stats?.direct_volume ?? 0)
-                  : (record.total_volume ?? 0)
-              }
-              indirect={isMultiLevel ? (stats?.indirect_volume ?? 0) : 0}
+              direct={record.direct_volume ?? 0}
+              indirect={record.indirect_volume ?? 0}
               prefix="$"
               fix={2}
               title={t("common.volume")}
@@ -230,20 +197,11 @@ export const ReferralCodesTableUI: FC<ReferralCodesTableUIProps> = (props) => {
         title: t("affiliate.commission"),
         dataIndex: "total_rebate",
         render: (_: unknown, record: ReferralCodesRow) => {
-          const isMultiLevel = record.referral_type === "multi";
-          const stats =
-            "multi_level_statistics" in record
-              ? record.multi_level_statistics
-              : undefined;
           return (
             <BreakdownCell
               total={record.total_rebate ?? 0}
-              direct={
-                isMultiLevel
-                  ? (stats?.direct_rebate ?? 0)
-                  : (record.total_rebate ?? 0)
-              }
-              indirect={isMultiLevel ? (stats?.indirect_rebate ?? 0) : 0}
+              direct={record.direct_rebate ?? 0}
+              indirect={record.indirect_rebate ?? 0}
               prefix="$"
               fix={6}
               title={t("affiliate.commission")}

@@ -1,38 +1,25 @@
 import { useMemo } from "react";
-import { RefferalAPI, useRefereeInfo } from "@orderly.network/hooks";
-import { API } from "@orderly.network/types";
+import { useRefereeInfo } from "@orderly.network/hooks";
 import { useReferralContext } from "../provider";
-import { StatisticsTimeRange } from "../types";
 import { copyText } from "../utils/utils";
-import {
-  useMultiLevelRebateInfo,
-  useMultiLevelStatistics,
-} from "./useReferralApi";
+import { useMultiLevelRebateInfo } from "./useReferralApi";
 
-type LegacyReferralCode = NonNullable<
-  NonNullable<RefferalAPI.ReferralInfo["referrer_info"]>["referral_codes"]
->[number];
-
-export type MultiLevelReferralCodeRow = {
+export type ReferralCodesRow = {
   code: string;
+  direct_invites: number;
+  indirect_invites: number;
+  direct_volume: number;
+  indirect_volume: number;
+  direct_rebate: number;
+  indirect_rebate: number;
   max_rebate_rate: number;
   referee_rebate_rate: number;
   referrer_rebate_rate: number;
   total_invites: number;
-  total_traded: number;
   total_volume: number;
   total_rebate: number;
-  referral_type: "multi";
-  multi_level_statistics?: API.Referral.MultiLevelStatistics;
+  referral_type: "multi" | "single";
 };
-
-export type SingleLevelReferralCodeRow = LegacyReferralCode & {
-  referral_type: "single";
-};
-
-export type ReferralCodesRow =
-  | MultiLevelReferralCodeRow
-  | SingleLevelReferralCodeRow;
 
 export type UseMultiLevelReferralCodesReturns = {
   codes?: ReferralCodesRow[];
@@ -43,9 +30,6 @@ export const useMultiLevelReferralCodes =
   (): UseMultiLevelReferralCodesReturns => {
     const { referralInfo } = useReferralContext();
     const { data: multiLevelRebateInfo } = useMultiLevelRebateInfo();
-    const { data: multiLevelStatistics } = useMultiLevelStatistics(
-      StatisticsTimeRange.All,
-    );
     const [refereesData] = useRefereeInfo({});
 
     const copyCode = (code: string) => {
@@ -87,26 +71,28 @@ export const useMultiLevelReferralCodes =
           maxRebateRate - defaultRefereeRebateRate,
         );
 
-        const directInvites = multiLevelStatistics?.direct_invites ?? 0;
-        const indirectInvites = multiLevelStatistics?.indirect_invites ?? 0;
-        const directTraded = multiLevelStatistics?.direct_traded ?? 0;
-        const indirectTraded = multiLevelStatistics?.indirect_traded ?? 0;
-        const directVolume = multiLevelStatistics?.direct_volume ?? 0;
-        const indirectVolume = multiLevelStatistics?.indirect_volume ?? 0;
-        const directRebate = multiLevelStatistics?.direct_rebate ?? 0;
-        const indirectRebate = multiLevelStatistics?.indirect_rebate ?? 0;
+        const directInvites = multiLevelRebateInfo?.direct_invites ?? 0;
+        const indirectInvites = multiLevelRebateInfo?.indirect_invites ?? 0;
+        const directVolume = multiLevelRebateInfo?.direct_volume ?? 0;
+        const indirectVolume = multiLevelRebateInfo?.indirect_volume ?? 0;
+        const directRebate = multiLevelRebateInfo?.direct_rebate ?? 0;
+        const indirectRebate = multiLevelRebateInfo?.indirect_rebate ?? 0;
 
-        const multiLevelCode: MultiLevelReferralCodeRow = {
+        const multiLevelCode: ReferralCodesRow = {
           code: multiLevelRebateInfo.referral_code ?? "",
+          direct_invites: directInvites,
+          indirect_invites: indirectInvites,
+          direct_volume: directVolume,
+          indirect_volume: indirectVolume,
+          direct_rebate: directRebate,
+          indirect_rebate: indirectRebate,
           max_rebate_rate: maxRebateRate,
           referee_rebate_rate: defaultRefereeRebateRate,
           referrer_rebate_rate: referrerRebateRate,
           total_invites: directInvites + indirectInvites,
-          total_traded: directTraded + indirectTraded,
           total_volume: directVolume + indirectVolume,
           total_rebate: directRebate + indirectRebate,
           referral_type: "multi",
-          multi_level_statistics: multiLevelStatistics ?? undefined,
         };
 
         allCodes.push(multiLevelCode);
@@ -123,11 +109,25 @@ export const useMultiLevelReferralCodes =
             )
             .map((item) => {
               const totals = singleLevelTotals.get(item.code);
-              const row: SingleLevelReferralCodeRow = {
-                ...item,
+              const totalVolume = totals?.volume ?? item.total_volume ?? 0;
+              const totalRebate = totals?.commission ?? item.total_rebate ?? 0;
+              const totalInvites = item.total_invites ?? 0;
+
+              const row: ReferralCodesRow = {
+                code: item.code,
                 referral_type: "single",
-                total_volume: totals?.volume ?? item.total_volume ?? 0,
-                total_rebate: totals?.commission ?? item.total_rebate ?? 0,
+                direct_invites: totalInvites,
+                indirect_invites: 0,
+                direct_volume: totalVolume,
+                indirect_volume: 0,
+                direct_rebate: totalRebate,
+                indirect_rebate: 0,
+                max_rebate_rate: item.max_rebate_rate ?? 0,
+                referee_rebate_rate: item.referee_rebate_rate ?? 0,
+                referrer_rebate_rate: item.referrer_rebate_rate ?? 0,
+                total_invites: totalInvites,
+                total_volume: totalVolume,
+                total_rebate: totalRebate,
               };
               return row;
             }),
@@ -139,7 +139,6 @@ export const useMultiLevelReferralCodes =
     }, [
       referralInfo?.referrer_info?.referral_codes,
       multiLevelRebateInfo,
-      multiLevelStatistics,
       singleLevelTotals,
     ]);
 

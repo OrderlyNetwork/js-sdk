@@ -683,6 +683,11 @@ export declare namespace API {
       max_rebate_rate: number;
       default_referee_rebate_rate: number;
       direct_invites?: number;
+      indirect_invites?: number;
+      direct_volume?: number;
+      indirect_volume?: number;
+      direct_rebate?: number;
+      indirect_rebate?: number;
     }
 
     /** /v1/referral/multi_level/admin */
