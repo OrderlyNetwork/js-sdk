@@ -1,7 +1,7 @@
 import { useMemo, useRef } from "react";
 import { OrderSide } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
-import { OrderValidationItem, OrderValidationResult } from "../useOrderEntry";
+import { OrderValidationResult } from "../useOrderEntry";
 import { ERROR_MSG_CODES } from "./errorMsgCodes";
 
 type TpslPriceParams = {
@@ -30,6 +30,58 @@ const isEqual = (
   return aItem.type === bItem.type && aItem.message === bItem.message;
 };
 
+/**
+ * Calculate the distance ratio between stop loss price and liquidation price
+ * @param slPriceDecimal Stop loss price (Decimal)
+ * @param liqPriceDecimal Liquidation price (Decimal)
+ * @param side Order side
+ * @returns Distance ratio: Long is (sl - liq) / liq, Short is (liq - sl) / liq
+ */
+function calculateDistanceRatio(
+  slPriceDecimal: Decimal,
+  liqPriceDecimal: Decimal,
+  side: OrderSide,
+): Decimal {
+  return side === OrderSide.BUY
+    ? slPriceDecimal.minus(liqPriceDecimal).div(liqPriceDecimal)
+    : liqPriceDecimal.minus(slPriceDecimal).div(liqPriceDecimal);
+}
+
+/**
+ * Check and return the corresponding validation result based on distance ratio
+ * @param distance_ratio Distance ratio
+ * @param warning_threshold Warning threshold
+ * @returns Validation result: null (no warning), warning, or error
+ */
+function checkDistanceAndReturnResult(
+  distance_ratio: Decimal,
+  warning_threshold: number,
+): OrderValidationResult | null {
+  // distance_ratio > warning_threshold → no warning
+  if (distance_ratio.gt(warning_threshold)) {
+    return null;
+  }
+
+  // 0 < distance_ratio <= warning_threshold → warning
+  if (distance_ratio.gt(0) && distance_ratio.lte(warning_threshold)) {
+    return {
+      sl_trigger_price: {
+        type: ERROR_MSG_CODES.SL_PRICE_WARNING,
+        message:
+          "Stop losses set near the liq. price may not trigger. Note: the liq. price can change with position notional.",
+      },
+    };
+  }
+
+  // distance_ratio <= 0 → error (invalid, blocks execution)
+  return {
+    sl_trigger_price: {
+      type: ERROR_MSG_CODES.SL_PRICE_ERROR,
+      message: "Stop loss crosses the liq. price. Please adjust your SL.",
+    },
+  };
+}
+
 export const useTpslPriceChecker = (
   params: TpslPriceParams,
 ): OrderValidationResult | null => {
@@ -45,18 +97,44 @@ export const useTpslPriceChecker = (
   // use useRef to store the previous result
   const prevResultRef = useRef<OrderValidationResult | null>(null);
 
-  // calculate current result
-  const currentResult = useMemo(() => {
-    // Treat empty string as undefined
-    if (
-      slPrice === undefined ||
-      slPrice === "" ||
-      liqPrice === undefined ||
-      side === undefined ||
-      liqPrice === null
-    ) {
-      return null;
-    }
+  /**
+   * Basic validation logic: Check the distance between stop loss price and liquidation price based only on order side
+   * Applicable when position information or order quantity cannot be obtained
+   * @param slPriceDecimal Stop loss price (Decimal)
+   * @param liqPriceDecimal Liquidation price (Decimal)
+   * @returns Validation result: null (passed), warning, or error
+   */
+  function validateSlPriceBasic(
+    slPriceDecimal: Decimal,
+    liqPriceDecimal: Decimal,
+  ): OrderValidationResult | null {
+    if (!side) return null;
+
+    const distance_ratio = calculateDistanceRatio(
+      slPriceDecimal,
+      liqPriceDecimal,
+      side,
+    );
+
+    return checkDistanceAndReturnResult(distance_ratio, warning_threshold);
+  }
+
+  /**
+   * Enhanced validation logic: Consider current position and order quantity to determine if it's a reducing position operation
+   * Skip liquidation price check for reducing position operations, only perform strict validation for increasing position or reverse operations
+   * @param slPriceDecimal Stop loss price (Decimal)
+   * @param liqPriceDecimal Liquidation price (Decimal)
+   * @param currentPosition Current position quantity (signed: positive=Long, negative=Short)
+   * @param orderQuantity Order quantity (non-negative, sign derived from order side)
+   * @returns Validation result: null (passed or check skipped), warning, or error
+   */
+  function validateSlPriceWithPosition(
+    slPriceDecimal: Decimal,
+    liqPriceDecimal: Decimal,
+    currentPosition: number,
+    orderQuantity: number,
+  ): OrderValidationResult | null {
+    if (!side) return null;
 
     // Cannot compute is_reducing: treat as is_reducing=true, skip liq check and warning
     const canComputeIsReducing =
@@ -76,8 +154,52 @@ export const useTpslPriceChecker = (
     const net = new Decimal(cur).plus(orderQty).toNumber();
     const is_reducing = new Decimal(Math.abs(net)).lt(Math.abs(cur));
 
+    const posSide = currentPosition > 0 ? OrderSide.BUY : OrderSide.SELL;
+    const isSameSide = posSide === side;
+
     // is_reducing: skip liq check and warning
-    if (is_reducing) {
+    if (is_reducing && isSameSide) {
+      return null;
+    }
+
+    // Liquidation check: only when !is_reducing
+    // net > 0 (Long): sl <= liq → Error
+    // net < 0 (Short): sl >= liq → Error
+    if (net > 0 && slPriceDecimal.lte(liqPriceDecimal)) {
+      return {
+        sl_trigger_price: {
+          type: ERROR_MSG_CODES.SL_PRICE_ERROR,
+          message: "Stop loss crosses the liq. price. Please adjust your SL.",
+        },
+      };
+    }
+    if (net < 0 && slPriceDecimal.gte(liqPriceDecimal)) {
+      return {
+        sl_trigger_price: {
+          type: ERROR_MSG_CODES.SL_PRICE_ERROR,
+          message: "Stop loss crosses the liq. price. Please adjust your SL.",
+        },
+      };
+    }
+
+    // Warning: distance_ratio near liq (only when we did liq check and no error)
+    const distance_ratio = calculateDistanceRatio(
+      slPriceDecimal,
+      liqPriceDecimal,
+      side,
+    );
+
+    return checkDistanceAndReturnResult(distance_ratio, warning_threshold);
+  }
+
+  // calculate current result
+  const currentResult = useMemo(() => {
+    if (
+      slPrice === undefined ||
+      liqPrice === undefined ||
+      side === undefined ||
+      liqPrice === null
+    ) {
       return null;
     }
 
@@ -107,57 +229,22 @@ export const useTpslPriceChecker = (
       return null;
     }
 
-    // Liquidation check: only when !is_reducing
-    // net > 0 (Long): sl <= liq → Error
-    // net < 0 (Short): sl >= liq → Error
-    if (net > 0 && slPriceDecimal.lte(liqPriceDecimal)) {
-      return {
-        sl_trigger_price: {
-          type: ERROR_MSG_CODES.SL_PRICE_ERROR,
-          message: "Stop loss crosses the liq. price. Please adjust your SL.",
-        },
-      };
-    }
-    if (net < 0 && slPriceDecimal.gte(liqPriceDecimal)) {
-      return {
-        sl_trigger_price: {
-          type: ERROR_MSG_CODES.SL_PRICE_ERROR,
-          message: "Stop loss crosses the liq. price. Please adjust your SL.",
-        },
-      };
+    if (
+      currentPosition !== undefined &&
+      orderQuantity !== undefined &&
+      orderQuantity > 0
+    ) {
+      // Use enhanced validation when position and order quantity are available
+      return validateSlPriceWithPosition(
+        slPriceDecimal,
+        liqPriceDecimal,
+        currentPosition,
+        orderQuantity,
+      );
     }
 
-    // Warning: distance_ratio near liq (only when we did liq check and no error)
-    // long: (sl price - liq price) / liq price
-    // short: (liq price - sl price) / liq price
-    const distance_ratio =
-      side === OrderSide.BUY
-        ? slPriceDecimal.minus(liqPriceDecimal).div(liqPriceDecimal)
-        : liqPriceDecimal.minus(slPriceDecimal).div(liqPriceDecimal);
-
-    // distance_ratio > warning_threshold → no warning
-    if (distance_ratio.gt(warning_threshold)) {
-      return null;
-    }
-
-    // 0 < distance_ratio <= warning_threshold → warning
-    if (distance_ratio.gt(0) && distance_ratio.lte(warning_threshold)) {
-      return {
-        sl_trigger_price: {
-          type: ERROR_MSG_CODES.SL_PRICE_WARNING,
-          message:
-            "Stop losses set near the liq. price may not trigger. Note: the liq. price can change with position notional.",
-        },
-      };
-    }
-
-    // distance_ratio <= 0 → error (sl crosses liq, should have been caught above; fallback)
-    return {
-      sl_trigger_price: {
-        type: ERROR_MSG_CODES.SL_PRICE_ERROR,
-        message: "Stop loss crosses the liq. price. Please adjust your SL.",
-      },
-    };
+    // Fallback to basic validation when position info is unavailable
+    return validateSlPriceBasic(slPriceDecimal, liqPriceDecimal);
   }, [
     slPrice,
     liqPrice,

@@ -1,6 +1,6 @@
 import { useGetEstLiqPrice } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
-import { OrderType } from "@orderly.network/types";
+import { OrderSide, OrderType } from "@orderly.network/types";
 import { Flex, Text, Tooltip, useScreen } from "@orderly.network/ui";
 import { FeesWidget } from "../fee";
 import { SlippageUI } from "../slippage/slippage.ui";
@@ -19,15 +19,16 @@ export function AssetInfo(props: {
   setSlippage: (slippage: string) => void;
   orderType: OrderType;
   disableFeatures?: ("slippageSetting" | "feesInfo")[];
+  side: OrderSide;
 }) {
-  const { canTrade, disableFeatures, orderType, symbol, estLiqPriceDistance } =
-    props;
+  const { canTrade, disableFeatures, orderType, symbol } = props;
   const { t } = useTranslation();
   const { isMobile } = useScreen();
 
   const displayEstLiqPrice = useGetEstLiqPrice({
     estLiqPrice: props.estLiqPrice,
-    estLiqPriceDistance: props.estLiqPriceDistance,
+    symbol: symbol,
+    side: props.side,
   });
 
   return (

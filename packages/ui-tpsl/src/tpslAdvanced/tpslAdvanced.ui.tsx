@@ -41,7 +41,8 @@ export const TPSLAdvancedUI = (props: Props) => {
 
   const displayEstLiqPrice = useGetEstLiqPrice({
     estLiqPrice: props.estLiqPrice,
-    estLiqPriceDistance: props.estLiqPriceDistance,
+    symbol: props.symbolInfo.symbol,
+    side: props.formattedOrder.side as OrderSide,
   });
 
   const {
