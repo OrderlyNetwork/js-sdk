@@ -3,6 +3,7 @@ import {
   useComputedLTV,
   useEventEmitter,
   useLocalStorage,
+  useGetMarginModes,
   useMarginRatio,
   useMemoizedFn,
   useOrderEntry,
@@ -53,7 +54,9 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   );
 
   const canTrade = useCanTrade();
-  const [marginMode] = useLocalStorage(`orderly.marginMode.${symbol}`, "cross");
+  const { marginModes } = useGetMarginModes();
+  const marginMode = marginModes[symbol] ?? MarginMode.CROSS;
+  // console.log(`current ${symbol} margin mode: ${marginMode}`)
 
   const {
     formattedOrder,
@@ -67,9 +70,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       order_type: localOrderType,
       position_type: PositionType.PARTIAL,
       side: localOrderSide,
-      // FIXME: use margin mode from real data
-      // margin_mode: marginMode === "cross" ? "CROSS" : "ISOLATED",
-      margin_mode: MarginMode.ISOLATED,
+      margin_mode: marginMode,
     },
   });
 

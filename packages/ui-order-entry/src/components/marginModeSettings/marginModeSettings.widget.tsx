@@ -1,17 +1,10 @@
 import React from "react";
-import {
-  toast,
-  registerSimpleDialog,
-  registerSimpleSheet,
-} from "@orderly.network/ui";
+import { registerSimpleDialog, registerSimpleSheet } from "@orderly.network/ui";
 import {
   useMarginModeSettingsScript,
   type MarginModeSettingsScriptOptions,
 } from "./marginModeSettings.script";
-import {
-  MarginModeSettings,
-  type MarginModeSettingsProps,
-} from "./marginModeSettings.ui";
+import { MarginModeSettings } from "./marginModeSettings.ui";
 
 export type MarginModeSettingsWidgetProps = MarginModeSettingsScriptOptions;
 
@@ -20,17 +13,8 @@ export const MarginModeSettingsWidget: React.FC<
 > = (props) => {
   const state = useMarginModeSettingsScript(props);
 
-  const handleSetMarginMode: MarginModeSettingsProps["onSetMarginMode"] =
-    async (mode) => {
-      if (state.selectedKeys.size === 0) return;
-
-      await state.onSetMarginMode(mode);
-      toast.success("Updated successfully");
-      // Static version keeps the modal open for easier UI testing.
-    };
-
   return (
-    <MarginModeSettings {...state} onSetMarginMode={handleSetMarginMode} />
+    <MarginModeSettings {...state} onSetMarginMode={state.onSetMarginMode} />
   );
 };
 

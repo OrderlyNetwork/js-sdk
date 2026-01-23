@@ -1,4 +1,5 @@
 import React, { FC, useCallback } from "react";
+import { MarginMode } from "@orderly.network/types";
 import {
   Button,
   Checkbox,
@@ -12,7 +13,6 @@ import {
   cn,
 } from "@orderly.network/ui";
 import type {
-  MarginMode,
   MarginModeSettingsItem,
   MarginModeSettingsState,
 } from "./marginModeSettings.script";
@@ -28,6 +28,8 @@ export type MarginModeSettingsProps = Pick<
   | "isSelectAll"
   | "isIndeterminate"
   | "isLoading"
+  | "isCrossButtonDisabled"
+  | "isIsolatedButtonDisabled"
   | "onSearchChange"
   | "onToggleItem"
   | "onToggleSelectAll"
@@ -47,23 +49,22 @@ export const MarginModeSettings: FC<MarginModeSettingsProps> = (props) => {
 
   const handleClearSearch = useCallback(() => {
     props.onSearchChange("");
-  }, [props]);
+  }, [props.onSearchChange]);
 
   const handleSetCross = useCallback(() => {
-    void props.onSetMarginMode("cross");
-  }, [props]);
+    props.onSetMarginMode(MarginMode.CROSS);
+  }, [props.onSetMarginMode]);
 
   const handleSetIsolated = useCallback(() => {
-    void props.onSetMarginMode("isolated");
-  }, [props]);
+    props.onSetMarginMode(MarginMode.ISOLATED);
+  }, [props.onSetMarginMode]);
 
   return (
     <Flex
       direction="column"
       className={cn(
-        "oui-h-full oui-w-full",
+        "oui-size-full",
         "oui-rounded-xl oui-bg-base-8",
-        // Keep the container height stable; only the symbol list scrolls.
         "oui-overflow-hidden",
       )}
       data-testid="oui-testid-marginModeSettings"
@@ -171,7 +172,7 @@ export const MarginModeSettings: FC<MarginModeSettingsProps> = (props) => {
               key={item.key}
               item={item}
               checked={props.selectedKeys.has(item.key)}
-              marginMode={props.itemMarginModes[item.key] ?? "cross"}
+              marginMode={props.itemMarginModes[item.key] ?? MarginMode.CROSS}
               onToggle={props.onToggleItem}
             />
           ))}
@@ -190,8 +191,6 @@ export const MarginModeSettings: FC<MarginModeSettingsProps> = (props) => {
           <Flex itemAlign="center" gap={2}>
             <Checkbox
               color="white"
-              // NOTE: our Checkbox component renders indeterminate visually similar to checked.
-              // For now, only show checked state when it's truly select-all.
               checked={props.isSelectAll}
               onCheckedChange={() => {
                 props.onToggleSelectAll();
@@ -234,7 +233,11 @@ export const MarginModeSettings: FC<MarginModeSettingsProps> = (props) => {
                 ? "oui-text-base-contrast-80"
                 : "oui-text-base-contrast-98",
             )}
-            disabled={selectedCount === 0 || props.isLoading}
+            disabled={
+              selectedCount === 0 ||
+              props.isLoading ||
+              (props.isCrossButtonDisabled ?? false)
+            }
             onClick={handleSetCross}
             aria-label="Cross"
             data-testid="oui-testid-marginModeSettings-set-cross"
@@ -249,7 +252,11 @@ export const MarginModeSettings: FC<MarginModeSettingsProps> = (props) => {
                 ? "oui-text-base-contrast-80"
                 : "oui-text-base-contrast-98",
             )}
-            disabled={selectedCount === 0 || props.isLoading}
+            disabled={
+              selectedCount === 0 ||
+              props.isLoading ||
+              (props.isIsolatedButtonDisabled ?? false)
+            }
             onClick={handleSetIsolated}
             aria-label="Isolated"
             data-testid="oui-testid-marginModeSettings-set-isolated"
@@ -313,7 +320,7 @@ const SymbolRow: FC<{
             "oui-text-base-contrast-36",
           )}
         >
-          {props.marginMode === "isolated" ? "Isolated" : "Cross"}
+          {props.marginMode === MarginMode.ISOLATED ? "Isolated" : "Cross"}
         </span>
       </Flex>
     </Flex>

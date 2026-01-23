@@ -1,5 +1,6 @@
 import { FC } from "react";
 import { useTranslation } from "@orderly.network/i18n";
+import { MarginMode } from "@orderly.network/types";
 import {
   ChevronRightIcon,
   CloseIcon,
@@ -10,22 +11,26 @@ import {
   TokenIcon,
   cn,
 } from "@orderly.network/ui";
-import type {
-  MarginMode,
-  MarginModeSwitchState,
-} from "./marginModeSwitch.script";
+import type { MarginModeSwitchState } from "./marginModeSwitch.script";
 
 export type MarginModeSwitchProps = Pick<
   MarginModeSwitchState,
-  "symbol" | "isMobile" | "currentMarginMode" | "selectedMarginMode"
+  | "symbol"
+  | "isMobile"
+  | "currentMarginMode"
+  | "selectedMarginMode"
+  | "onSelect"
 > & {
   close?: () => void;
-  onSelect: (mode: MarginMode) => void;
   onOpenSettings?: () => void;
 };
 
 export const MarginModeSwitch: FC<MarginModeSwitchProps> = (props) => {
   const { t } = useTranslation();
+
+  const handleSelect = (mode: MarginMode) => {
+    props.onSelect(mode);
+  };
 
   const titleClassName = props.isMobile
     ? "oui-text-lg oui-leading-[26px]"
@@ -107,16 +112,16 @@ export const MarginModeSwitch: FC<MarginModeSwitchProps> = (props) => {
 
         <Flex direction="column" gap={3} className="oui-mt-3 oui-w-full">
           <OptionCard
-            mode="cross"
-            selected={props.selectedMarginMode === "cross"}
-            isCurrent={props.currentMarginMode === "cross"}
-            onClick={() => props.onSelect("cross")}
+            mode={MarginMode.CROSS}
+            selected={props.selectedMarginMode === MarginMode.CROSS}
+            isCurrent={props.currentMarginMode === MarginMode.CROSS}
+            onClick={() => handleSelect(MarginMode.CROSS)}
           />
           <OptionCard
-            mode="isolated"
-            selected={props.selectedMarginMode === "isolated"}
-            isCurrent={props.currentMarginMode === "isolated"}
-            onClick={() => props.onSelect("isolated")}
+            mode={MarginMode.ISOLATED}
+            selected={props.selectedMarginMode === MarginMode.ISOLATED}
+            isCurrent={props.currentMarginMode === MarginMode.ISOLATED}
+            onClick={() => handleSelect(MarginMode.ISOLATED)}
           />
         </Flex>
 
@@ -156,11 +161,11 @@ const OptionCard: FC<{
   const { t } = useTranslation();
 
   const title =
-    props.mode === "cross"
+    props.mode === MarginMode.CROSS
       ? t("marginMode.crossMargin")
       : t("marginMode.isolatedMargin");
   const desc =
-    props.mode === "cross"
+    props.mode === MarginMode.CROSS
       ? t("marginMode.crossMarginDescription")
       : t("marginMode.isolatedMarginDescription");
 

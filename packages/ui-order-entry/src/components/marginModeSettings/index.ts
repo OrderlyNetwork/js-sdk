@@ -3,7 +3,6 @@ export {
   type MarginModeSettingsState,
   type MarginModeSettingsScriptOptions,
   type MarginModeSettingsItem,
-  type MarginMode,
 } from "./marginModeSettings.script";
 
 export {

@@ -35,6 +35,8 @@ export { useIndexPricesStream } from "./useIndexPricesStream";
 export { useMarkPrice } from "./useMarkPrice";
 export { useIndexPrice } from "./useIndexPrice";
 export { useLeverage } from "./useLeverage";
+export { useGetMarginModes } from "./useGetMarginModes";
+export { useSetMarginMode } from "./useSetMarginMode";
 export { useOdosQuote } from "./useOdosQuote";
 export { useComputedLTV } from "./useComputedLTV";
 export { useTickerStream } from "./useTickerStream";

@@ -1,11 +1,12 @@
 import {
   FlagKeys,
   useFeatureFlag,
-  useLocalStorage,
+  useGetMarginModes,
   useSymbolLeverage,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { OrderSide } from "@orderly.network/types";
+import { MarginMode } from "@orderly.network/types";
 import { cn, modal, Text, useScreen } from "@orderly.network/ui";
 import {
   SymbolLeverageDialogId,
@@ -15,8 +16,7 @@ import { Decimal } from "@orderly.network/utils";
 import {
   MarginModeSwitchDialogId,
   MarginModeSwitchSheetId,
-  type MarginMode,
-} from "../../marginModeSwitch";
+} from "../marginModeSwitch";
 
 type LeverageBadgeProps = {
   symbol: string;
@@ -32,10 +32,8 @@ export const LeverageBadge = (props: LeverageBadgeProps) => {
   const { enabled } = useFeatureFlag(FlagKeys.IsolatedMargin);
 
   const curLeverage = symbolLeverage || maxLeverage;
-  const [marginMode] = useLocalStorage<MarginMode>(
-    `orderly.marginMode.${symbol}`,
-    "cross",
-  );
+  const { marginModes } = useGetMarginModes();
+  const marginMode = marginModes[symbol] ?? MarginMode.CROSS;
 
   const showLeverageModal = () => {
     const modalId = isMobile ? SymbolLeverageSheetId : SymbolLeverageDialogId;
@@ -56,7 +54,6 @@ export const LeverageBadge = (props: LeverageBadgeProps) => {
       : MarginModeSwitchDialogId;
     modal.show(modalId, {
       symbol,
-      currentMarginMode: marginMode,
     });
   };
 
@@ -82,7 +79,7 @@ export const LeverageBadge = (props: LeverageBadgeProps) => {
         onClick={showMarginModeModal}
       >
         <Text>
-          {marginMode === "isolated"
+          {marginMode === MarginMode.ISOLATED
             ? t("marginMode.isolated")
             : t("marginMode.cross")}
         </Text>

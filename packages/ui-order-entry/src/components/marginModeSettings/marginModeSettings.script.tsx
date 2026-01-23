@@ -1,9 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useMarkets, MarketsType } from "@orderly.network/hooks";
-import { useScreen } from "@orderly.network/ui";
+import {
+  useMarkets,
+  MarketsType,
+  useGetMarginModes,
+  useSetMarginMode,
+} from "@orderly.network/hooks";
+import { MarginMode } from "@orderly.network/types";
+import { toast, useScreen } from "@orderly.network/ui";
 import { formatSymbol } from "@orderly.network/utils";
-
-export type MarginMode = "cross" | "isolated";
 
 export type MarginModeSettingsScriptOptions = {
   close?: () => void;
@@ -40,6 +44,16 @@ export const useMarginModeSettingsScript = (
   );
   const [isOperationLoading, setIsOperationLoading] = useState(false);
 
+  // Fetch margin modes from API
+  const {
+    marginModes,
+    isLoading: isMarginModesLoading,
+    refresh: refreshMarginModes,
+  } = useGetMarginModes();
+
+  // Mutation hook for updating margin mode
+  const { setMarginMode, isMutating: isSettingMarginMode } = useSetMarginMode();
+
   const [isDataLoading, setIsDataLoading] = useState(true);
 
   useEffect(() => {
@@ -48,23 +62,16 @@ export const useMarginModeSettingsScript = (
     }
   }, [markets]);
 
-  // TODO: Replace with backend API to fetch margin modes for all symbols
-  const [itemMarginModes, setItemMarginModes] = useState<
-    Record<string, MarginMode>
-  >({});
-
-  // TODO: Replace with backend API call to load margin modes on component mount
-  useEffect(() => {
-    if (items.length > 0) {
-      setItemMarginModes((prev) => {
-        const next: Record<string, MarginMode> = {};
-        for (const item of items) {
-          next[item.key] = prev[item.key] ?? "cross";
-        }
-        return next;
-      });
+  // Get margin modes from API
+  const itemMarginModes = useMemo(() => {
+    const result: Record<string, MarginMode> = {};
+    for (const item of items) {
+      const marginMode = marginModes[item.key];
+      // Default to CROSS if not found in API response
+      result[item.key] = marginMode ?? MarginMode.CROSS;
     }
-  }, [items]);
+    return result;
+  }, [items, marginModes]);
 
   const filteredItems = useMemo(() => {
     const keyword = searchKeyword.trim().toLowerCase();
@@ -87,6 +94,28 @@ export const useMarginModeSettingsScript = (
       visibleSelectedCount > 0 && visibleSelectedCount < filteredItems.length
     );
   }, [filteredItems.length, visibleSelectedCount]);
+
+  // Calculate margin mode statistics for selected items
+  const selectedMarginModeStats = useMemo(() => {
+    let crossCount = 0;
+    let isolatedCount = 0;
+
+    selectedKeys.forEach((key) => {
+      const mode = itemMarginModes[key] ?? MarginMode.CROSS;
+      if (mode === MarginMode.CROSS) {
+        crossCount++;
+      } else {
+        isolatedCount++;
+      }
+    });
+
+    return {
+      crossCount,
+      isolatedCount,
+      isCrossButtonDisabled: crossCount > 0 && isolatedCount === 0,
+      isIsolatedButtonDisabled: isolatedCount > 0 && crossCount === 0,
+    };
+  }, [selectedKeys, itemMarginModes]);
 
   const onSearchChange = useCallback((keyword: string) => {
     setSearchKeyword(keyword);
@@ -127,22 +156,40 @@ export const useMarginModeSettingsScript = (
 
       setIsOperationLoading(true);
       try {
-        // TODO: Replace with backend API call to batch update margin modes for selected symbols
-        setItemMarginModes((prev) => {
-          const next = { ...prev };
-          selectedKeys.forEach((key) => {
-            next[key] = mode;
-          });
-          return next;
-        });
+        // Build request payload
+        const payload = {
+          symbol_list: Array.from(selectedKeys),
+          default_margin_mode: mode,
+        };
+
+        // Call API to update margin modes
+        const result = await setMarginMode(payload);
+
+        if (result.success) {
+          // Refresh margin modes data to get latest state
+          await refreshMarginModes();
+          toast.success("Updated successfully");
+        } else {
+          throw new Error(result.message || "Failed to update margin mode");
+        }
+      } catch (error) {
+        toast.error(
+          error instanceof Error
+            ? error.message
+            : "Failed to update margin mode",
+        );
       } finally {
         setIsOperationLoading(false);
       }
     },
-    [selectedKeys],
+    [selectedKeys, setMarginMode, refreshMarginModes],
   );
 
-  const isLoading = isDataLoading || isOperationLoading;
+  const isLoading =
+    isDataLoading ||
+    isMarginModesLoading ||
+    isOperationLoading ||
+    isSettingMarginMode;
 
   return {
     isMobile,
@@ -156,6 +203,8 @@ export const useMarginModeSettingsScript = (
     isSelectAll,
     isIndeterminate,
     isLoading,
+    isCrossButtonDisabled: selectedMarginModeStats.isCrossButtonDisabled,
+    isIsolatedButtonDisabled: selectedMarginModeStats.isIsolatedButtonDisabled,
 
     onSearchChange,
     onToggleItem,
