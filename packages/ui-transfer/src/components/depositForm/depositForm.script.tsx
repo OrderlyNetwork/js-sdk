@@ -428,10 +428,18 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     return new Decimal(quantity).gt(sourceToken.user_max_qty);
   }, [sourceToken, targetToken, quantity]);
 
-  const finalInputStatus = isExceedUserCapByInput ? "error" : inputStatus;
-  const finalHintMessage = isExceedUserCapByInput
-    ? t("transfer.deposit.exceedCap")
-    : hintMessage;
+  const finalInputStatus =
+    inputStatus === "error"
+      ? inputStatus
+      : isExceedUserCapByInput
+        ? "error"
+        : inputStatus;
+  const finalHintMessage =
+    inputStatus === "error"
+      ? hintMessage
+      : isExceedUserCapByInput
+        ? t("transfer.deposit.exceedCap")
+        : hintMessage;
 
   const disabled =
     !quantity ||
