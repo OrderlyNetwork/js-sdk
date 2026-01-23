@@ -16,8 +16,8 @@ const useGetEstLiqPrice = (props: {
       return null;
     }
 
-    // long: 大于当前的 Mark price 不显示 est. liq price
-    // short: 小于当前的 Mark price 不显示 est. liq price
+    // long: if est. liq price is greater than mark price, don't display est. liq price
+    // short: if est. liq price is less than mark price, don't display est. liq price
     if (side === OrderSide.BUY && estLiqPrice > markPrice) {
       return null;
     }
