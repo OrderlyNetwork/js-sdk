@@ -1,4 +1,5 @@
 import { useTranslation, Trans } from "@orderly.network/i18n";
+import { MarginMode } from "@orderly.network/types";
 import { TokenIcon, Text, Badge, Divider, Flex, cn } from "@orderly.network/ui";
 import { LeverageHeader } from "../index";
 import {
@@ -31,7 +32,10 @@ export const SymbolLeverage = (props: SymbolLeverageScriptReturns) => {
           <Badge color={props.isBuy ? "success" : "danger"} size="xs">
             {props.isBuy ? t("common.long") : t("common.short")}
           </Badge>
-          <LeverageBadge leverage={props.currentLeverage} />
+          <LeverageBadge
+            leverage={props.currentLeverage}
+            marginMode={props.marginMode}
+          />
         </div>
       </div>
       <Divider />
@@ -111,7 +115,15 @@ export const SymbolLeverage = (props: SymbolLeverageScriptReturns) => {
   );
 };
 
-const LeverageBadge = ({ leverage }: { leverage: number }) => {
+const LeverageBadge = ({
+  leverage,
+  marginMode,
+}: {
+  leverage: number;
+  marginMode: MarginMode;
+}) => {
+  const { t } = useTranslation();
+
   return (
     <div
       className={cn(
@@ -120,7 +132,11 @@ const LeverageBadge = ({ leverage }: { leverage: number }) => {
         "oui-text-2xs oui-font-semibold oui-text-base-contrast-36",
       )}
     >
-      <Text>Cross</Text>
+      <Text>
+        {marginMode === MarginMode.ISOLATED
+          ? t("marginMode.isolated")
+          : t("marginMode.cross")}
+      </Text>
       <Text.numeral dp={0} size="2xs" unit="X">
         {leverage}
       </Text.numeral>

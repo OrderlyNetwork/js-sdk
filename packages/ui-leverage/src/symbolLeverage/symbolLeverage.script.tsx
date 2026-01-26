@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 import {
   useAccountInfo,
+  useGetMarginModes,
   useLocalStorage,
   useMarkPricesStream,
   usePortfolio,
@@ -13,7 +14,7 @@ import {
   account as accountPerp,
   positions as positionsPerp,
 } from "@orderly.network/perp";
-import { OrderSide } from "@orderly.network/types";
+import { MarginMode, OrderSide } from "@orderly.network/types";
 import {
   modal,
   SliderMarks,
@@ -55,6 +56,9 @@ export const useSymbolLeverageScript = (
     update,
     isLoading,
   } = useSymbolLeverage(symbol);
+
+  const { marginModes } = useGetMarginModes();
+  const marginMode = marginModes[symbol] ?? MarginMode.CROSS;
 
   const maxLeverage = originalMaxLeverage;
 
@@ -191,6 +195,7 @@ export const useSymbolLeverageScript = (
     overRequiredMargin,
     isBuy,
     isMobile,
+    marginMode,
   };
 };
 
