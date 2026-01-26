@@ -855,7 +855,7 @@
   "transfer.LTV.tooltip": "Se il tuo LTV supera {{threshold}}% o il tuo saldo USDC più PnL non liquidato scende sotto {{usdcThreshold}}, la tua garanzia sarà automaticamente convertita con uno sconto. Per evitare questo, puoi convertire manualmente gli asset in USDC.",
   "transfer.LTV.currentLTV": "LTV attuale",
   "transfer.convert": "Converti",
-  "transfer.deposit.userMaxQty.error": "Il tuo deposito non è stato elaborato perché è stato raggiunto il limite globale di deposito per {{token}} su {{chain}}. Questo viene generalmente risolto dopo il ribilanciamento, che richiede circa 1 ora. Riprova più tardi o usa un importo più piccolo o una catena diversa. <0>Scopri di più</0>",
+  "transfer.deposit.globalMaxQty.error": "Il tuo deposito non è stato elaborato perché è stato raggiunto il limite globale di deposito per {{token}} su {{chain}}. Questo viene generalmente risolto dopo il ribilanciamento, che richiede circa 1 ora. Riprova più tardi o usa un importo più piccolo o una catena diversa. <0>Scopri di più</0>",
   "transfer.deposit.gasFee.error": "Assicurati di avere abbastanza {{token}} per le commissioni del gas.",
   "transfer.deposit.status.pending.one": "Hai una transazione in attesa",
   "transfer.deposit.status.pending.multiple": "Hai transazioni in attesa",

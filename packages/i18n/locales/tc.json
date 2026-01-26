@@ -855,7 +855,7 @@
   "transfer.LTV.tooltip": "如果您的 LTV 超過 {{threshold}}% 或您的 USDC 餘額加上未結算盈虧低於 {{usdcThreshold}}，您的抵押品將自动轉換并扣除折扣。為避免这种情况，您可以手動將資產轉換為 USDC。",
   "transfer.LTV.currentLTV": "当前 LTV",
   "transfer.convert": "轉換",
-  "transfer.deposit.userMaxQty.error": "您的存款無法處理，因為 {{chain}} 上的 {{token}} 已達到全局存款上限。通常會在資金重新平衡後自動恢復，大約需要 1 小時。請稍後再試，或使用較小的金額或不同的鏈。<0>了解更多</0>",
+  "transfer.deposit.globalMaxQty.error": "您的存款無法處理，因為 {{chain}} 上的 {{token}} 已達到全局存款上限。通常會在資金重新平衡後自動恢復，大約需要 1 小時。請稍後再試，或使用較小的金額或不同的鏈。<0>了解更多</0>",
   "transfer.deposit.gasFee.error": "請確保您有足夠的 {{token}} 用于支付 gas 费用。",
   "transfer.deposit.status.pending.one": "您有一筆待處理交易",
   "transfer.deposit.status.pending.multiple": "您有多筆待處理交易",

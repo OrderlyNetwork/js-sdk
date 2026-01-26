@@ -855,7 +855,7 @@
   "transfer.LTV.tooltip": "If your LTV exceeds {{threshold}}% or your USDC balance plus Unsettled PnL falls below {{usdcThreshold}}, your collateral will be automatically converted with a haircut. To avoid this, you can manually convert assets to USDC.",
   "transfer.LTV.currentLTV": "Current LTV",
   "transfer.convert": "Convert",
-  "transfer.deposit.userMaxQty.error": "Your deposit couldn't be processed because the global deposit cap for {{token}} on {{chain}} has been reached. This is typically resolved after rebalancing, which takes around 1 hour. Please try again later, or use a smaller amount or a different chain. <0>Learn more</0>",
+  "transfer.deposit.globalMaxQty.error": "Your deposit couldn't be processed because the global deposit cap for {{token}} on {{chain}} has been reached. This is typically resolved after rebalancing, which takes around 1 hour. Please try again later, or use a smaller amount or a different chain. <0>Learn more</0>",
   "transfer.deposit.gasFee.error": "Please ensure you have enough {{token}} for gas fees.",
   "transfer.deposit.status.pending.one": "You have a pending transaction",
   "transfer.deposit.status.pending.multiple": "You have pending transactions",
