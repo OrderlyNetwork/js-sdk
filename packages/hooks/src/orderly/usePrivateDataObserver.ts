@@ -3,7 +3,6 @@ import { mutate } from "swr";
 import { unstable_serialize } from "swr/infinite";
 import { AccountState, EVENT_NAMES } from "@orderly.network/core";
 import { API, WSMessage } from "@orderly.network/types";
-import { AccountStatusEnum } from "@orderly.network/types";
 import { useApiStatusActions } from "../next/apiStatus/apiStatus.store";
 import { getKeyFunction } from "../provider/dataCenter/dataCenterContext";
 import {
@@ -125,15 +124,6 @@ export const usePrivateDataObserver = (options: {
 
           if (holding) {
             console.log("---->>>>>>!!!! holding", holding);
-
-            // updateHolding(holding);
-            // ws message format
-            // {
-            //   USDC: {
-            //     holding: 5555815.47398272,
-            //     frozen: 0,
-            //   },
-            // };
             calculatorService.calc(CalculatorScope.PORTFOLIO, { holding });
           }
         },

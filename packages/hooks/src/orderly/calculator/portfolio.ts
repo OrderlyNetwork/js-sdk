@@ -60,6 +60,8 @@ class PortfolioCalculator extends BaseCalculator<any> {
               ...item,
               holding: data.holding[item.token].holding,
               frozen: data.holding[item.token].frozen,
+              isolatedMargin: data.holding[item.token].isolatedMargin,
+              isolatedOrderFrozen: data.holding[item.token].isolatedOrderFrozen,
             };
           }
 
