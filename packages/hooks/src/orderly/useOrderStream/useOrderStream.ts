@@ -7,9 +7,7 @@ import {
   AlgoOrderRootType,
 } from "@orderly.network/types";
 import { SDKError } from "@orderly.network/types";
-import { AlgoOrderType } from "@orderly.network/types";
 import { useDataCenterContext } from "../../provider/dataCenter/dataCenterContext";
-import { useEventEmitter } from "../../useEventEmitter";
 import { useMutation } from "../../useMutation";
 import { usePrivateInfiniteQuery } from "../../usePrivateInfiniteQuery";
 import { generateKeyFun } from "../../utils/swr";
