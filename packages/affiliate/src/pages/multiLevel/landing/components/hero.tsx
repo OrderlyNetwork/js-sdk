@@ -80,11 +80,13 @@ export const Hero = () => {
       );
     }
 
-    return (
-      <Button size="lg" className="oui-px-4" disabled>
-        {t("affiliate.accountNotEligible")}
-      </Button>
-    );
+    return "";
+
+    // return (
+    //   <Button size="lg" className="oui-px-4" disabled>
+    //     {t("affiliate.accountNotEligible")}
+    //   </Button>
+    // );
   };
 
   return (

@@ -53,7 +53,7 @@ export const ReferralCodeForm = (props: ReferralCodeFormProps) => {
               ? t("affiliate.rebateRate.review.warning")
               : t("affiliate.rebateRate.edit.warning"),
           buttonText: isReview
-            ? t("affiliate.saveChanges")
+            ? t("affiliate.confirmChanges")
             : t("affiliate.review"),
         };
       case ReferralCodeFormType.Reset:
@@ -268,7 +268,7 @@ const RebateRateSlider = (props: RebateRateSliderProps) => {
             {t("affiliate.youKeep")}
           </Text>
           <Text size="sm" intensity={54}>
-            {t("affiliate.inviteesGet")}
+            {t("affiliate.refereesGet")}
           </Text>
         </Flex>
 

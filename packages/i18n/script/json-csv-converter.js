@@ -49,12 +49,17 @@ function csv2multiJson(csv) {
   const ignoreKeys = loadIgnoreKeys();
   const lines = csvToLines(csv);
   const csvLines = lines.filter(Boolean).map(parseCsvLine);
-  const headers = csvLines.shift()[0].split(",");
+
+  const headers = csvLines.shift();
+
   const errors = {};
   for (const [index, header] of headers.entries()) {
     json[header] = {};
     for (const line of csvLines) {
       const [key, ...values] = line;
+      if (!key) {
+        continue;
+      }
       const val = values[index];
       json[header][key] = val;
       // Skip validation if key is in ignore list
@@ -146,15 +151,32 @@ function parseCsvLine(line) {
     switch (char) {
       case ",":
         continue;
-      case '"':
+      case '"': {
         i++;
-      default:
         const [str, i2] = parseCsvString(line, i);
         i = i2;
         result.push(str);
+        break;
+      }
+      default: {
+        const [str, i2] = parseUnquotedField(line, i);
+        i = i2;
+        result.push(str);
+        break;
+      }
     }
   }
   return result;
+}
+
+/** Parses one field until the next comma or end of line (for unquoted CSV). */
+function parseUnquotedField(line, i) {
+  let result = "";
+  for (; i < line.length; i++) {
+    if (line[i] === ",") break;
+    result += line[i];
+  }
+  return [result, i];
 }
 
 function parseCsvString(line, i) {

@@ -75,7 +75,7 @@ export const ReferralInfo: FC<ReferralInfoReturns> = (props) => {
             {t("affiliate.youKeep")}
           </Text>
           <Text size="sm" intensity={54}>
-            {t("affiliate.inviteesGet")}
+            {t("affiliate.refereesGet")}
           </Text>
         </Flex>
 
