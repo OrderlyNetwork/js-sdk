@@ -96,10 +96,20 @@ export const useAdjustMarginScript = (
 
   const onInputChange = useCallback(
     (value: string) => {
-      setInputValue(value);
-      syncSliderFromInput(value);
+      let finalValue = value;
+
+      // If maxAmount exists, limit input value to not exceed maxAmount
+      if (maxAmount && value) {
+        const inputDecimal = new Decimal(value);
+        if (inputDecimal.gt(maxAmount)) {
+          finalValue = new Decimal(maxAmount).toFixed(2, Decimal.ROUND_DOWN);
+        }
+      }
+
+      setInputValue(finalValue);
+      syncSliderFromInput(finalValue);
     },
-    [syncSliderFromInput],
+    [syncSliderFromInput, maxAmount],
   );
 
   const onSliderChange = useCallback(
@@ -124,6 +134,16 @@ export const useAdjustMarginScript = (
 
   const onConfirm = useCallback(async () => {
     if (!inputValue || new Decimal(inputValue).isZero()) return;
+
+    // Validate if input value exceeds maxAmount
+    if (maxAmount) {
+      const inputDecimal = new Decimal(inputValue);
+      if (inputDecimal.gt(maxAmount)) {
+        toast.error(t("positions.adjustMargin.marginCannotMoreThanMax"));
+        return;
+      }
+    }
+
     try {
       const payload = {
         symbol,
@@ -137,7 +157,7 @@ export const useAdjustMarginScript = (
       const message = error instanceof Error ? error.message : undefined;
       toast.error(message || t("positions.adjustMargin.failed"));
     }
-  }, [close, inputValue, symbol, t, tab, updateMargin]);
+  }, [close, inputValue, symbol, t, tab, updateMargin, maxAmount]);
 
   return {
     symbol,

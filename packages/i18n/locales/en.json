@@ -411,6 +411,7 @@
   "positions.adjustMargin.leverageAfter": "Effective leverage after adjustment:",
   "positions.adjustMargin.success": "Margin adjusted successfully",
   "positions.adjustMargin.failed": "Failed to adjust margin",
+  "positions.adjustMargin.marginCannotMoreThanMax": "Margin cannot be more than max",
   "orders.orderHistory": "Order history",
   "orders.status.pending": "Pending",
   "orders.status.filled": "Filled",

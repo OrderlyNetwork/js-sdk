@@ -411,6 +411,7 @@
   "positions.adjustMargin.leverageAfter": "调整后有效杠杆：",
   "positions.adjustMargin.success": "保证金调整成功",
   "positions.adjustMargin.failed": "调整保证金失败",
+  "positions.adjustMargin.marginCannotMoreThanMax": "保证金不能超过最大值",
   "orders.orderHistory": "订单历史",
   "orders.status.pending": "待处理",
   "orders.status.filled": "已成交",

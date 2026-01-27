@@ -411,6 +411,7 @@
   "positions.adjustMargin.leverageAfter": "Efektywna dźwignia po dostosowaniu:",
   "positions.adjustMargin.success": "Marża została pomyślnie dostosowana",
   "positions.adjustMargin.failed": "Nie udało się dostosować marży",
+  "positions.adjustMargin.marginCannotMoreThanMax": "Marża nie może przekraczać maksimum",
   "orders.orderHistory": "Historia zleceń",
   "orders.status.pending": "Oczekujące",
   "orders.status.filled": "Wypełnione",

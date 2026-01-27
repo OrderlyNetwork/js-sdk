@@ -411,6 +411,7 @@
   "positions.adjustMargin.leverageAfter": "Effet de levier effectif après ajustement :",
   "positions.adjustMargin.success": "Marge ajustée avec succès",
   "positions.adjustMargin.failed": "Échec de l'ajustement de la marge",
+  "positions.adjustMargin.marginCannotMoreThanMax": "La marge ne peut pas être supérieure au maximum",
   "orders.orderHistory": "Historique des ordres",
   "orders.status.pending": "En attente",
   "orders.status.filled": "Exécuté",

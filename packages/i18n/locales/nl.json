@@ -411,6 +411,7 @@
   "positions.adjustMargin.leverageAfter": "Effectieve hefboomwerking na aanpassing:",
   "positions.adjustMargin.success": "Marge succesvol aangepast",
   "positions.adjustMargin.failed": "Marge-aanpassing mislukt",
+  "positions.adjustMargin.marginCannotMoreThanMax": "De marge mag niet hoger zijn dan het maximum",
   "orders.orderHistory": "Ordergeschiedenis",
   "orders.status.pending": "In afwachting",
   "orders.status.filled": "Gevuld",

@@ -411,6 +411,7 @@
   "positions.adjustMargin.leverageAfter": "Ефективне плече після корегування:",
   "positions.adjustMargin.success": "Маржу успішно скориговано",
   "positions.adjustMargin.failed": "Не вдалося скоригувати маржу",
+  "positions.adjustMargin.marginCannotMoreThanMax": "Маржа не може перевищувати максимальне значення",
   "orders.orderHistory": "Історія ордерів",
   "orders.status.pending": "В очікуванні",
   "orders.status.filled": "Виконано",

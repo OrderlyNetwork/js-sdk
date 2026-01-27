@@ -411,6 +411,7 @@
   "positions.adjustMargin.leverageAfter": "Leva effettiva dopo la regolazione:",
   "positions.adjustMargin.success": "Margine regolato con successo",
   "positions.adjustMargin.failed": "Impossibile regolare il margine",
+  "positions.adjustMargin.marginCannotMoreThanMax": "Il margine non può essere superiore al massimo",
   "orders.orderHistory": "Cronologia ordini",
   "orders.status.pending": "In attesa",
   "orders.status.filled": "Eseguito",

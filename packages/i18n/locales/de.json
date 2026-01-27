@@ -411,6 +411,7 @@
   "positions.adjustMargin.leverageAfter": "Effektive Hebelwirkung nach Anpassung:",
   "positions.adjustMargin.success": "Marge erfolgreich angepasst",
   "positions.adjustMargin.failed": "Marge-Anpassung fehlgeschlagen",
+  "positions.adjustMargin.marginCannotMoreThanMax": "Die Marge darf den Maximalwert nicht überschreiten",
   "orders.orderHistory": "Auftragsverlauf",
   "orders.status.pending": "Ausstehend",
   "orders.status.filled": "Ausgeführt",

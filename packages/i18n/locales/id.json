@@ -411,6 +411,7 @@
   "positions.adjustMargin.leverageAfter": "Leverage efektif setelah penyesuaian:",
   "positions.adjustMargin.success": "Margin berhasil disesuaikan",
   "positions.adjustMargin.failed": "Gagal menyesuaikan margin",
+  "positions.adjustMargin.marginCannotMoreThanMax": "Margin tidak boleh melebihi maksimum",
   "orders.orderHistory": "Riwayat pesanan",
   "orders.status.pending": "Tertunda",
   "orders.status.filled": "Terisi",

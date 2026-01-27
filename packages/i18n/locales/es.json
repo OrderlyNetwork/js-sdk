@@ -411,6 +411,7 @@
   "positions.adjustMargin.leverageAfter": "Apalancamiento efectivo después del ajuste:",
   "positions.adjustMargin.success": "Margen ajustado con éxito",
   "positions.adjustMargin.failed": "Error al ajustar el margen",
+  "positions.adjustMargin.marginCannotMoreThanMax": "El margen no puede ser mayor que el máximo",
   "orders.orderHistory": "Historial de órdenes",
   "orders.status.pending": "Pendiente",
   "orders.status.filled": "Ejecutada",

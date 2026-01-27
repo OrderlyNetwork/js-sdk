@@ -411,6 +411,7 @@
   "positions.adjustMargin.leverageAfter": "調整後の有効レバレッジ：",
   "positions.adjustMargin.success": "証拠金調整が成功しました",
   "positions.adjustMargin.failed": "証拠金調整に失敗しました",
+  "positions.adjustMargin.marginCannotMoreThanMax": "証拠金は最大値を超えることはできません",
   "orders.orderHistory": "注文履歴",
   "orders.status.pending": "保留中",
   "orders.status.filled": "約定済み",

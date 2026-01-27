@@ -11,7 +11,10 @@ const usePositionMargin = (
   symbol: string,
   isAdd: boolean,
   isolatedMargin: number,
-  marginChanged: number,
+  /**
+   * finalMargin = if isAdd ? isolatedMargin + margin_add : isolatedMargin - margin_reduction
+   */
+  finalMargin: number,
 ) => {
   const { freeCollateral, usdcHolding } = useCollateral({
     dp: 2,
@@ -121,38 +124,51 @@ const usePositionMargin = (
     isolatedMargin,
   ]);
 
+  // Calculate liquidation price after margin adjustment
+  // Note: This calculation may need review based on liquidation price formula
   const liquidationPrice = useMemo(() => {
     if (!unSettledPnl) return null;
     if (isAdd) {
+      // Add margin: isolatedMargin + unSettledPnl + finalMargin
       return new Decimal(isolatedMargin)
         .add(unSettledPnl)
-        .add(marginChanged)
+        .add(finalMargin)
         .toNumber();
     }
+    // Reduce margin: isolatedMargin + unSettledPnl - finalMargin
     return new Decimal(isolatedMargin)
       .add(unSettledPnl)
-      .sub(marginChanged)
+      .sub(finalMargin)
       .toNumber();
-  }, [isolatedMargin, unSettledPnl, marginChanged]);
+  }, [isolatedMargin, unSettledPnl, finalMargin]);
 
   const total_collateral_value = useMemo(() => {
     if (!unSettledPnl) return null;
-    if (isAdd) {
-      return new Decimal(isolatedMargin)
-        .add(marginChanged)
-        .add(unSettledPnl)
-        .toNumber();
-    }
-    return new Decimal(isolatedMargin)
-      .sub(marginChanged)
-      .add(unSettledPnl)
-      .toNumber();
-  }, [isAdd, isolatedMargin, unSettledPnl, marginChanged]);
+    // Add: finalMargin = isolatedMargin + margin_add
+    // Reduce: finalMargin = isolatedMargin - margin_reduction
+    // so total_collateral_value = finalMargin + unsettled_pnl
+    return new Decimal(finalMargin).add(unSettledPnl).toNumber();
+  }, [unSettledPnl, finalMargin]);
 
   const effectiveLeverage = useMemo(() => {
     if (!notional || !total_collateral_value) return null;
     return notional.div(total_collateral_value).toNumber();
   }, [notional, total_collateral_value]);
+
+  console.log(
+    "effectiveLeverage",
+    effectiveLeverage,
+    "notional=",
+    notional?.toNumber(),
+    "total_collateral_value=",
+    total_collateral_value,
+    "isolatedMargin=",
+    isolatedMargin,
+    "finalMargin=",
+    finalMargin,
+    "unSettledPnl=",
+    unSettledPnl?.toNumber(),
+  );
 
   return {
     maxAmount,

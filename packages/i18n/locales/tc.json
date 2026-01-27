@@ -411,6 +411,7 @@
   "positions.adjustMargin.leverageAfter": "調整後有效槓桿：",
   "positions.adjustMargin.success": "保證金調整成功",
   "positions.adjustMargin.failed": "調整保證金失敗",
+  "positions.adjustMargin.marginCannotMoreThanMax": "保證金不能超過最大值",
   "orders.orderHistory": "訂單歷史",
   "orders.status.pending": "待處理",
   "orders.status.filled": "已成交",

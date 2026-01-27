@@ -411,6 +411,7 @@
   "positions.adjustMargin.leverageAfter": "Ayarlama sonrası efektif kaldıraç:",
   "positions.adjustMargin.success": "Marj başarıyla ayarlandı",
   "positions.adjustMargin.failed": "Marj ayarlanamadı",
+  "positions.adjustMargin.marginCannotMoreThanMax": "Teminat maksimum değeri aşamaz",
   "orders.orderHistory": "Emir geçmişi",
   "orders.status.pending": "Beklemede",
   "orders.status.filled": "Dolduruldu",

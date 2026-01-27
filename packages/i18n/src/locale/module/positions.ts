@@ -104,6 +104,8 @@ export const positions = {
     "Effective leverage after adjustment:",
   "positions.adjustMargin.success": "Margin adjusted successfully",
   "positions.adjustMargin.failed": "Failed to adjust margin",
+  "positions.adjustMargin.marginCannotMoreThanMax":
+    "Margin cannot be more than max",
 };
 
 export type Positions = typeof positions;

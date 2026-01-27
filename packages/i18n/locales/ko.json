@@ -411,6 +411,7 @@
   "positions.adjustMargin.leverageAfter": "조정 후 유효 레버리지：",
   "positions.adjustMargin.success": "마진 조정 성공",
   "positions.adjustMargin.failed": "마진 조정 실패",
+  "positions.adjustMargin.marginCannotMoreThanMax": "마진은 최대값을 초과할 수 없습니다",
   "orders.orderHistory": "주문 내역",
   "orders.status.pending": "대기 중",
   "orders.status.filled": "체결됨",

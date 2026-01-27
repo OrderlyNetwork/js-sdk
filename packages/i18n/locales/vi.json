@@ -411,6 +411,7 @@
   "positions.adjustMargin.leverageAfter": "Đòn bẩy hiệu quả sau điều chỉnh:",
   "positions.adjustMargin.success": "Điều chỉnh ký quỹ thành công",
   "positions.adjustMargin.failed": "Không thể điều chỉnh ký quỹ",
+  "positions.adjustMargin.marginCannotMoreThanMax": "Ký quỹ không thể vượt quá mức tối đa",
   "orders.orderHistory": "Lịch sử lệnh",
   "orders.status.pending": "Đang chờ",
   "orders.status.filled": "Đã khớp",
