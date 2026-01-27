@@ -44,7 +44,7 @@ export const useAdjustMarginScript = (
   const [sliderValue, setSliderValue] = useState(0);
 
   const [updateMargin, { isMutating: isLoading }] = useMutation(
-    "/v1/position/position_margin",
+    "/v1/position_margin",
     "POST",
   );
 

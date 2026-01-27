@@ -43,7 +43,7 @@ export const Infos: FC<InfosProps> = ({
       </Statistic>
       <Statistic
         label={t("positions.adjustMargin.leverageAfter")}
-        valueProps={{ dp: 0, unit: " x" }}
+        valueProps={{ dp: 2, unit: " x" }}
         classNames={{
           root: "oui-flex-row oui-justify-between oui-items-center oui-w-full oui-text-2xs oui-h-5",
           label: "oui-text-2xs",

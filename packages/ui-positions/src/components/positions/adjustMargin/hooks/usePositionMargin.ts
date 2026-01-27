@@ -4,6 +4,7 @@ import {
   useCollateral,
   usePositions,
 } from "@orderly.network/hooks";
+import { account } from "@orderly.network/perp";
 import { Decimal } from "@orderly.network/utils";
 
 const usePositionMargin = (
@@ -86,15 +87,11 @@ const usePositionMargin = (
   const maxAmount = useMemo(() => {
     if (isAdd) {
       if (!total_cross_unsettled_pnl) return null;
-      // INSERT_YOUR_CODE
-      const usdcBalance = new Decimal(usdcHolding);
-      const free = new Decimal(freeCollateral);
-      const totalCrossUnsettledPnl = total_cross_unsettled_pnl;
-      const zero = new Decimal(0);
-
-      const eligible = free.sub(decimalMax(totalCrossUnsettledPnl, zero));
-      const minValue = decimalMin(usdcBalance, eligible);
-      return decimalMax(minValue, zero).toNumber();
+      return account.maxAdd({
+        USDCHolding: usdcHolding,
+        freeCollateral: freeCollateral,
+        totalCrossUnsettledPnL: total_cross_unsettled_pnl.toNumber(),
+      });
     }
     if (
       !imr ||
@@ -106,15 +103,15 @@ const usePositionMargin = (
       return null;
     }
     const positionNotional = notional;
-    const isolatedPositionMargin = new Decimal(isolatedMargin);
     const imrValue = imr;
     const unsettledPnlValue = unSettledPnl ?? new Decimal(0);
 
-    // max(0, isolated position margin - position_notional * imr + min(0, unsettled_pnl))
-    const result = isolatedPositionMargin
-      .sub(positionNotional.mul(imrValue))
-      .add(decimalMin(new Decimal(0), unsettledPnlValue));
-    return decimalMax(new Decimal(0), result).toNumber();
+    return account.maxReduce({
+      positionMargin: isolatedMargin,
+      positionNotional: positionNotional.toNumber(),
+      IMR: imrValue.toNumber(),
+      positionUnsettledPnL: unsettledPnlValue.toNumber(),
+    });
   }, [
     total_cross_unsettled_pnl,
     usdcHolding,
