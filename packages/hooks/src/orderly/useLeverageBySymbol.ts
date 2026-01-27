@@ -1,6 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { mutate } from "swr";
-import { API } from "@orderly.network/types";
+import { API, MarginMode } from "@orderly.network/types";
 import { useAccount } from "../useAccount";
 import { usePrivateQuery } from "../usePrivateQuery";
 import { useWS } from "../useWS";
@@ -11,23 +11,35 @@ import { useWS } from "../useWS";
  * updates through a WebSocket subscription to keep the leverage value current.
  *
  * @param symbol - The trading symbol (e.g. "PERP_BTC_USDC")
+ * @param marginMode - Optional margin mode (CROSS or ISOLATED). If not provided, defaults to CROSS.
  * @returns The current leverage value associated with the symbol, or undefined if not available
  *
  * @example
  * ```typescript
  * const leverage = useLeverageBySymbol("PERP_BTC_USDC");
+ * const isolatedLeverage = useLeverageBySymbol("PERP_BTC_USDC", MarginMode.ISOLATED);
  * ```
  */
-export const useLeverageBySymbol = (symbol?: string) => {
+export const useLeverageBySymbol = (
+  symbol?: string,
+  marginMode?: MarginMode,
+) => {
   const { state } = useAccount();
   const ws = useWS();
 
-  const { data } = usePrivateQuery<API.LeverageInfo>(
-    symbol ? `/v1/client/leverage?symbol=${symbol}` : null,
-    {
-      revalidateOnFocus: false,
-    },
-  );
+  const queryUrl = useMemo(() => {
+    if (!symbol) return null;
+    const queryParams = new URLSearchParams();
+    queryParams.set("symbol", symbol);
+    if (marginMode) {
+      queryParams.set("margin_mode", marginMode);
+    }
+    return `/v1/client/leverage?${queryParams.toString()}`;
+  }, [symbol, marginMode]);
+
+  const { data } = usePrivateQuery<API.LeverageInfo>(queryUrl, {
+    revalidateOnFocus: false,
+  });
 
   useEffect(() => {
     if (!state.accountId || !symbol) return;
@@ -38,7 +50,7 @@ export const useLeverageBySymbol = (symbol?: string) => {
         // update leverage when symbol leverage changed
         if (res.symbol === symbol) {
           // update leverage by swr to fix displayed previous value at short time when switching symbol.
-          const key = [`/v1/client/leverage?symbol=${symbol}`, state.accountId];
+          const key = [queryUrl, state.accountId];
           mutate(key, (prevData: any) => {
             return {
               ...prevData,
@@ -50,7 +62,7 @@ export const useLeverageBySymbol = (symbol?: string) => {
     });
 
     return () => unsubscribe?.();
-  }, [symbol, state.accountId]);
+  }, [symbol, state.accountId, queryUrl]);
 
   return data?.leverage;
 };

@@ -4,6 +4,7 @@ import {
   useEventEmitter,
   useLocalStorage,
   useGetMarginModes,
+  useLeverageBySymbol,
   useMarginRatio,
   useMemoizedFn,
   useOrderEntry,
@@ -56,6 +57,8 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   const canTrade = useCanTrade();
   const { marginModes } = useGetMarginModes();
   const marginMode = marginModes[symbol] ?? MarginMode.CROSS;
+
+  const symbolLeverage = useLeverageBySymbol(symbol, marginMode);
 
   const {
     formattedOrder,
@@ -387,7 +390,11 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     formattedOrder,
     setOrderValue,
     setOrderValues,
+    // account-level leverage (for other consumers)
     currentLeverage,
+    // symbol-level leverage & margin mode for this order entry
+    symbolLeverage,
+    marginMode,
 
     // cancelTP_SL,
     // enableTP_SL,

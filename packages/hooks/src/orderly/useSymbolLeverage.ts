@@ -1,9 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
-import { API } from "@orderly.network/types";
-import { useAccount } from "../useAccount";
+import { useMemo } from "react";
+import { MarginMode } from "@orderly.network/types";
 import { useMutation } from "../useMutation";
-import { usePrivateQuery } from "../usePrivateQuery";
-import { useWS } from "../useWS";
 import { useSymbolInfo } from "./useSymbolInfo";
 
 /**
@@ -24,7 +21,7 @@ import { useSymbolInfo } from "./useSymbolInfo";
 export const useSymbolLeverage = (symbol?: string) => {
   const symbolInfo = useSymbolInfo(symbol);
 
-  const [update, { isMutating }] = useMutation("/v1/client/leverage");
+  const [updateMutation, { isMutating }] = useMutation("/v1/client/leverage");
 
   /**
    * Calculates the maximum leverage for the symbol based on its base initial margin requirement (IMR)
@@ -33,6 +30,14 @@ export const useSymbolLeverage = (symbol?: string) => {
     const baseIMR = symbolInfo?.("base_imr");
     return baseIMR ? 1 / baseIMR : 1;
   }, [symbolInfo]);
+
+  const update = async (data: {
+    leverage: number;
+    symbol: string;
+    margin_mode?: MarginMode;
+  }) => {
+    return updateMutation(data);
+  };
 
   return {
     maxLeverage,

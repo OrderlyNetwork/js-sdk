@@ -665,6 +665,7 @@ export declare namespace API {
   export interface LeverageInfo {
     symbol: string;
     leverage: number;
+    margin_mode?: MarginMode;
   }
 }
 

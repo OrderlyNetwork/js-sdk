@@ -1,7 +1,6 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   useAccountInfo,
-  useGetMarginModes,
   useLocalStorage,
   useMarkPricesStream,
   usePortfolio,
@@ -32,6 +31,7 @@ export type SymbolLeverageScriptOptions = {
   symbol: string;
   side?: OrderSide;
   curLeverage: number;
+  marginMode: MarginMode;
 };
 
 export type SymbolLeverageScriptReturns = ReturnType<
@@ -41,7 +41,7 @@ export type SymbolLeverageScriptReturns = ReturnType<
 export const useSymbolLeverageScript = (
   options: SymbolLeverageScriptOptions & UseLeverageScriptOptions,
 ) => {
-  const { curLeverage = 1, symbol, side } = options;
+  const { curLeverage = 1, symbol, side, marginMode } = options;
   const [showSliderTip, setShowSliderTip] = useState(false);
   // Local leverage value used by the input and slider; it tracks the in-flight user edits.
   // We seed it with curLeverage but intentionally do not sync further changes to avoid jumping while editing.
@@ -57,8 +57,10 @@ export const useSymbolLeverageScript = (
     isLoading,
   } = useSymbolLeverage(symbol);
 
-  const { marginModes } = useGetMarginModes();
-  const marginMode = marginModes[symbol] ?? MarginMode.CROSS;
+  // Sync when external current leverage changes (e.g. symbol or margin mode changed)
+  useEffect(() => {
+    setLeverage(curLeverage);
+  }, [curLeverage]);
 
   const maxLeverage = originalMaxLeverage;
 
@@ -124,7 +126,7 @@ export const useSymbolLeverageScript = (
 
   const onConfirmSave = async () => {
     try {
-      update?.({ leverage, symbol }).then(
+      update?.({ leverage, symbol, margin_mode: marginMode }).then(
         (res) => {
           if (res.success) {
             options?.close?.();

@@ -404,6 +404,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           order_type={formattedOrder.order_type!}
           setOrderValue={setOrderValue}
           symbolLeverage={props.symbolLeverage}
+          marginMode={props.marginMode}
         />
 
         <Available

@@ -1,9 +1,4 @@
-import {
-  FlagKeys,
-  useFeatureFlag,
-  useGetMarginModes,
-  useSymbolLeverage,
-} from "@orderly.network/hooks";
+import { FlagKeys, useFeatureFlag } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { OrderSide } from "@orderly.network/types";
 import { MarginMode } from "@orderly.network/types";
@@ -22,18 +17,17 @@ type LeverageBadgeProps = {
   symbol: string;
   side: OrderSide;
   symbolLeverage?: number;
+  marginMode?: MarginMode;
 };
 
 export const LeverageBadge = (props: LeverageBadgeProps) => {
   const { symbol, side, symbolLeverage } = props;
   const { isMobile } = useScreen();
   const { t } = useTranslation();
-  const { maxLeverage } = useSymbolLeverage(symbol);
   const { enabled } = useFeatureFlag(FlagKeys.IsolatedMargin);
 
-  const curLeverage = symbolLeverage || maxLeverage;
-  const { marginModes } = useGetMarginModes();
-  const marginMode = marginModes[symbol] ?? MarginMode.CROSS;
+  const marginMode = props.marginMode ?? MarginMode.CROSS;
+  const curLeverage = symbolLeverage ?? 1;
 
   const showLeverageModal = () => {
     const modalId = isMobile ? SymbolLeverageSheetId : SymbolLeverageDialogId;
@@ -41,6 +35,7 @@ export const LeverageBadge = (props: LeverageBadgeProps) => {
       symbol,
       side,
       curLeverage,
+      marginMode,
     });
   };
 

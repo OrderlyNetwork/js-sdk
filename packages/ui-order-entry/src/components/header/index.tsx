@@ -1,5 +1,10 @@
 import { useTranslation } from "@orderly.network/i18n";
-import { OrderlyOrder, OrderSide, OrderType } from "@orderly.network/types";
+import {
+  MarginMode,
+  OrderlyOrder,
+  OrderSide,
+  OrderType,
+} from "@orderly.network/types";
 import { Button, cn } from "@orderly.network/ui";
 import { OrderTypeSelect } from "../orderTypeSelect";
 import { LeverageBadge } from "./LeverageBadge";
@@ -11,6 +16,7 @@ type OrderEntryHeaderProps = {
   order_type: OrderType;
   setOrderValue: (key: keyof OrderlyOrder, value: unknown) => void;
   symbolLeverage?: number;
+  marginMode?: MarginMode;
 };
 
 export function OrderEntryHeader(props: OrderEntryHeaderProps) {
@@ -24,6 +30,7 @@ export function OrderEntryHeader(props: OrderEntryHeaderProps) {
           symbol={props.symbol}
           side={props.side}
           symbolLeverage={props.symbolLeverage}
+          marginMode={props.marginMode}
         />
       </div>
       <div className="oui-w-full">
