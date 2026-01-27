@@ -56,7 +56,6 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   const canTrade = useCanTrade();
   const { marginModes } = useGetMarginModes();
   const marginMode = marginModes[symbol] ?? MarginMode.CROSS;
-  // console.log(`current ${symbol} margin mode: ${marginMode}`)
 
   const {
     formattedOrder,
@@ -374,6 +373,10 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       setOrderValue("reduce_only", false);
     }
   }, [tpslSwitch]);
+
+  useEffect(() => {
+    setOrderValue("margin_mode", marginMode);
+  }, [marginMode]);
 
   return {
     ...state,

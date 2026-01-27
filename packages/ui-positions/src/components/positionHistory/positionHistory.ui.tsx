@@ -89,8 +89,8 @@ export const PositionHistory: FC<PositionHistoryProps> = (props) => {
         columns={column}
         bordered
         dataSource={props.dataSource}
-        generatedRowKey={(record: PositionHistoryExt) =>
-          `${record.symbol}_${record.position_id}`
+        generatedRowKey={(record: PositionHistoryExt, index) =>
+          `${record.symbol}_${record.position_id}_${index}`
         }
         renderRowContainer={(record: any, index: number, children: any) => (
           <SymbolProvider symbol={record.symbol}>{children}</SymbolProvider>
