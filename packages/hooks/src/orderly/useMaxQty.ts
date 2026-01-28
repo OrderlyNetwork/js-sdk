@@ -99,7 +99,7 @@ export function useMaxQty(
 
   const { data: markPrices } = useMarkPricesStream();
 
-  const symbolLeverage = useLeverageBySymbol(symbol);
+  const symbolLeverage = useLeverageBySymbol(symbol, finalMarginMode);
 
   const maxQty = useMemo(() => {
     // Early return for invalid symbol

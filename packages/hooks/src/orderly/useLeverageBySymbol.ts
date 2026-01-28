@@ -54,6 +54,7 @@ export const useLeverageBySymbol = (
           mutate(key, (prevData: any) => {
             return {
               ...prevData,
+              //TODO: different margin mode leverage value
               leverage: res.leverage,
             };
           });

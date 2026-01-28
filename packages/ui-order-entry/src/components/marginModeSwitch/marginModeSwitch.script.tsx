@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useGetMarginModes, useSetMarginMode } from "@orderly.network/hooks";
+import { useCallback, useEffect, useState } from "react";
+import { useMarginModeBySymbol } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { MarginMode } from "@orderly.network/types";
 import { toast, useScreen } from "@orderly.network/ui";
@@ -16,13 +16,8 @@ export const useMarginModeSwitchScript = (
   const { isMobile } = useScreen();
   const { t } = useTranslation();
 
-  const { marginModes, refresh: refreshMarginModes } = useGetMarginModes();
-  const { setMarginMode } = useSetMarginMode();
-
-  const currentMarginMode = useMemo<MarginMode>(
-    () => marginModes[symbol] ?? MarginMode.CROSS,
-    [marginModes, symbol],
-  );
+  const { marginMode: currentMarginMode, update } =
+    useMarginModeBySymbol(symbol);
 
   const [selectedMarginMode, setSelectedMarginMode] =
     useState<MarginMode>(currentMarginMode);
@@ -33,22 +28,11 @@ export const useMarginModeSwitchScript = (
 
   const applyMarginMode = useCallback(
     async (mode: MarginMode) => {
-      const payload = {
-        symbol_list: [symbol],
-        default_margin_mode: mode,
-      };
-
-      const result = await setMarginMode(payload);
-
-      if (result.success) {
-        await refreshMarginModes();
-        setSelectedMarginMode(mode);
-        return { success: true as const };
-      } else {
-        throw new Error(result.message || "Failed to update margin mode");
-      }
+      const result = await update(mode);
+      setSelectedMarginMode(mode);
+      return result;
     },
-    [symbol, setMarginMode, refreshMarginModes],
+    [update],
   );
 
   const onSelect = useCallback(
@@ -61,10 +45,8 @@ export const useMarginModeSwitchScript = (
       close?.();
 
       applyMarginMode(mode)
-        .then((res) => {
-          if (res?.success) {
-            toast.success(t("marginMode.updatedSuccessfully"));
-          }
+        .then(() => {
+          toast.success(t("marginMode.updatedSuccessfully"));
         })
         .catch((error) => {
           toast.error(

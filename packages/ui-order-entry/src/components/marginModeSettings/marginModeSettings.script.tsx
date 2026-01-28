@@ -2,8 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   useMarkets,
   MarketsType,
-  useGetMarginModes,
-  useSetMarginMode,
+  useMarginModes,
 } from "@orderly.network/hooks";
 import { MarginMode } from "@orderly.network/types";
 import { toast, useScreen } from "@orderly.network/ui";
@@ -48,11 +47,9 @@ export const useMarginModeSettingsScript = (
   const {
     marginModes,
     isLoading: isMarginModesLoading,
-    refresh: refreshMarginModes,
-  } = useGetMarginModes();
-
-  // Mutation hook for updating margin mode
-  const { setMarginMode, isMutating: isSettingMarginMode } = useSetMarginMode();
+    updateMarginMode,
+    isMutating: isSettingMarginMode,
+  } = useMarginModes();
 
   const [isDataLoading, setIsDataLoading] = useState(true);
 
@@ -162,16 +159,9 @@ export const useMarginModeSettingsScript = (
           default_margin_mode: mode,
         };
 
-        // Call API to update margin modes
-        const result = await setMarginMode(payload);
-
-        if (result.success) {
-          // Refresh margin modes data to get latest state
-          await refreshMarginModes();
-          toast.success("Updated successfully");
-        } else {
-          throw new Error(result.message || "Failed to update margin mode");
-        }
+        // Call API to update margin modes and refresh data
+        await updateMarginMode(payload);
+        toast.success("Updated successfully");
       } catch (error) {
         toast.error(
           error instanceof Error
@@ -182,7 +172,7 @@ export const useMarginModeSettingsScript = (
         setIsOperationLoading(false);
       }
     },
-    [selectedKeys, setMarginMode, refreshMarginModes],
+    [selectedKeys, updateMarginMode],
   );
 
   const isLoading =

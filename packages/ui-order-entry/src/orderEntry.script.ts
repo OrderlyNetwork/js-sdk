@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useRef } from "react";
 import {
   useComputedLTV,
   useEventEmitter,
   useLocalStorage,
-  useGetMarginModes,
   useLeverageBySymbol,
+  useMarginModeBySymbol,
   useMarginRatio,
   useMemoizedFn,
   useOrderEntry,
@@ -14,7 +14,6 @@ import {
 import { useCanTrade } from "@orderly.network/react-app";
 import {
   DistributionType,
-  MarginMode,
   OrderLevel,
   OrderSide,
   OrderType,
@@ -55,8 +54,7 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
   );
 
   const canTrade = useCanTrade();
-  const { marginModes } = useGetMarginModes();
-  const marginMode = marginModes[symbol] ?? MarginMode.CROSS;
+  const { marginMode } = useMarginModeBySymbol(symbol);
 
   const symbolLeverage = useLeverageBySymbol(symbol, marginMode);
 
@@ -128,17 +126,17 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
 
   const setOrderValue = useMemoizedFn(
     (
-      key: any,
-      value: any,
+      key: keyof typeof formattedOrder | string,
+      value: unknown,
       options?: {
         shouldUpdateLastChangedField?: boolean;
       },
     ) => {
       if (key === "order_type") {
-        setLocalOrderType(value);
+        setLocalOrderType(value as OrderType);
       }
       if (key === "side") {
-        setLocalOrderSide(value);
+        setLocalOrderSide(value as OrderSide);
       }
 
       if (
@@ -148,42 +146,47 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
       ) {
         // cancelTP_SL();
 
-        const data = {
+        const data: Record<string, unknown> = {
           tp_trigger_price: "",
           sl_trigger_price: "",
           [key]: value,
         };
 
         if (key === "order_type") {
-          data["order_type_ext" as any] = "";
+          (data as Record<string, unknown>)["order_type_ext"] = "";
         }
 
-        setOrderValues(data);
+        setOrderValues(data as Partial<typeof formattedOrder>);
 
         return;
       }
 
       if (key === "order_type" && value !== OrderType.LIMIT) {
-        const data = {
+        const data: Record<string, unknown> = {
           level: undefined,
           order_type_ext: undefined,
           [key]: value,
         };
 
-        setOrderValues(data);
+        setOrderValues(data as Partial<typeof formattedOrder>);
 
         return;
       }
 
       if (key === "order_type" && value === OrderType.SCALED) {
-        setOrderValues({
+        const data: Record<string, unknown> = {
           distribution_type: DistributionType.FLAT,
           [key]: value,
-        });
+        };
+        setOrderValues(data as Partial<typeof formattedOrder>);
         return;
       }
 
-      setValue(key, value, options);
+      setValue(
+        key as keyof typeof formattedOrder,
+        value as (typeof formattedOrder)[keyof typeof formattedOrder],
+        options,
+      );
     },
   );
 
