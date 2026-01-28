@@ -52,25 +52,27 @@ export const useMarginModeSwitchScript = (
   );
 
   const onSelect = useCallback(
-    async (mode: MarginMode) => {
+    (mode: MarginMode) => {
       if (mode === currentMarginMode) {
         close?.();
         return;
       }
 
-      try {
-        const res = await applyMarginMode(mode);
-        if (res.success) {
-          toast.success(t("marginMode.updatedSuccessfully"));
-          close?.();
-        }
-      } catch (error) {
-        toast.error(
-          error instanceof Error
-            ? error.message
-            : "Failed to update margin mode",
-        );
-      }
+      close?.();
+
+      applyMarginMode(mode)
+        .then((res) => {
+          if (res?.success) {
+            toast.success(t("marginMode.updatedSuccessfully"));
+          }
+        })
+        .catch((error) => {
+          toast.error(
+            error instanceof Error
+              ? error.message
+              : "Failed to update margin mode",
+          );
+        });
     },
     [applyMarginMode, close, currentMarginMode, t],
   );
