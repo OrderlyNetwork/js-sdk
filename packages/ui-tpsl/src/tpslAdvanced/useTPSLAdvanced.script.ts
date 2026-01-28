@@ -92,6 +92,7 @@ export const useTPSLAdvanced = (props: Props) => {
     symbolInfo,
     slPriceError,
     estLiqPrice: state.estLiqPrice,
+    estLiqPriceDistance: state.estLiqPriceDistance,
     setValue,
     setValues,
     onSubmit,
