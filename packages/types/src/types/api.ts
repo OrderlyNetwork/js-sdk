@@ -691,6 +691,7 @@ export declare namespace WSMessage {
 
   export interface Position {
     symbol: string;
+    marginMode?: MarginMode;
     positionQty: number;
     costPosition: number;
     lastSumUnitaryFunding: number;

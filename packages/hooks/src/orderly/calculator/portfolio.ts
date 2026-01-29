@@ -1,7 +1,7 @@
 import { pathOr } from "ramda";
 import { account } from "@orderly.network/perp";
-import { API, EMPTY_LIST } from "@orderly.network/types";
-import { Decimal } from "@orderly.network/utils";
+import { API, EMPTY_LIST, MarginMode } from "@orderly.network/types";
+import { Decimal, zero } from "@orderly.network/utils";
 import { CalculatorCtx, CalculatorScope } from "../../types";
 import { createGetter } from "../../utils/createGetter";
 import { parseHolding } from "../../utils/parseHolding";
@@ -139,10 +139,18 @@ class PortfolioCalculator extends BaseCalculator<any> {
       unsettlementPnL: unsettledPnL,
     });
 
+    const sumIsolatedMargin = positions.rows.reduce<Decimal>((acc, curr) => {
+      if (curr.margin_mode !== MarginMode.ISOLATED) {
+        return acc;
+      }
+      return acc.add(curr.margin ?? 0);
+    }, zero);
+
     const totalValue = account.totalValue({
       totalUnsettlementPnL: unsettledPnL,
       USDCHolding: USDC_holding,
       nonUSDCHolding: nonUSDC,
+      totalIsolatedPositionMargin: sumIsolatedMargin.toNumber(),
     });
 
     const totalUnrealizedROI = account.totalUnrealizedROI({
@@ -150,8 +158,10 @@ class PortfolioCalculator extends BaseCalculator<any> {
       totalValue: totalValue.toNumber(),
     });
 
+    // TODO: Pass actual orders data for accurate initial margin calculation
     const totalInitialMarginWithOrders = account.totalInitialMarginWithQty({
       positions: positions.rows,
+      orders: [],
       markPrices,
       IMR_Factors: accountInfo.imr_factor,
       maxLeverage: accountInfo.max_leverage,

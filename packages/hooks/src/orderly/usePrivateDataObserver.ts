@@ -280,18 +280,22 @@ export const usePrivateDataObserver = (options: {
     // }
     const key = ["/v1/positions", state.accountId];
     const unsubscribe = ws.privateSubscribe("account", {
-      onMessage: (data: any) => {
-        const { symbol, leverage } = data?.accountDetail?.symbolLeverage || {};
+      onMessage: (data) => {
+        const { symbol, leverage, marginMode } =
+          data?.accountDetail?.symbolLeverage || {};
         if (symbol && leverage) {
           mutate(
             key,
-            (prevPositions: any) => {
+            (prevPositions: API.PositionInfo | undefined) => {
               if (prevPositions?.rows?.length) {
                 return {
                   ...prevPositions,
-                  rows: prevPositions.rows.map((row: any) => {
+                  rows: prevPositions.rows.map((row: API.Position) => {
                     // update position leverage when symbol leverage changed
-                    return row.symbol === symbol ? { ...row, leverage } : row;
+                    return row.symbol === symbol &&
+                      row.margin_mode === marginMode
+                      ? { ...row, leverage }
+                      : row;
                   }),
                 };
               }
@@ -327,9 +331,11 @@ export const usePrivateDataObserver = (options: {
             if (!!prevPositions) {
               const newPositions = {
                 ...prevPositions,
-                rows: prevPositions.rows.map((row: any) => {
+                rows: prevPositions.rows.map((row: API.PositionExt) => {
                   const itemIndex = nextPositions.findIndex(
-                    (item) => item.symbol === row.symbol,
+                    (item) =>
+                      item.symbol === row.symbol &&
+                      item.marginMode === row.margin_mode,
                   );
 
                   // const item = nextPositions.find(

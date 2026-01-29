@@ -385,11 +385,12 @@ function useCalc(inputs: {
         })
       : positions?.rows;
 
+    // TODO: Pass actual orders data for accurate initial margin calculation
     const totalInitialMarginWithOrders = accountPerp.totalInitialMarginWithQty({
       positions: positionList,
+      orders: [],
       markPrices,
       IMR_Factors: accountInfo.imr_factor,
-      // not used
       maxLeverage: accountInfo.max_leverage,
       symbolInfo: symbolsInfo,
     });

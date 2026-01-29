@@ -16,6 +16,7 @@ import { Decimal, getBBOType, zero } from "@orderly.network/utils";
 import { useAccountInfo } from "../../orderly/appStore";
 import {
   useCollateral,
+  useFundingRatesStore,
   useLeverageBySymbol,
   useMaxQty,
   useSymbolsInfo,
@@ -31,6 +32,7 @@ import { useMemoizedFn } from "../../shared/useMemoizedFn";
 import { useEventEmitter } from "../../useEventEmitter";
 import { useMutation } from "../../useMutation";
 import { useTrack } from "../../useTrack";
+import { getOrderReferencePriceFromOrder } from "../../utils/order/orderPrice";
 import { getScaledOrderSkew } from "../../utils/order/scaledOrder";
 import {
   calcEstLeverage,
@@ -188,6 +190,7 @@ const useOrderEntry = (
   const lastChangedField = useRef<keyof FullOrderState | undefined>();
   const lastOrderTypeExt = useRef<OrderType>();
   const lastLevel = useRef<OrderLevel>();
+  const fundingRates = useFundingRatesStore();
 
   const calculateTPSL_baseOn = useRef<{ tp: string; sl: string }>({
     tp: "",
@@ -226,12 +229,21 @@ const useOrderEntry = (
     getCreateOrderUrl(formattedOrder),
   );
 
-  const maxQtyValue = useMaxQty(
-    symbol,
-    formattedOrder.side,
-    formattedOrder.reduce_only,
-    formattedOrder.margin_mode || MarginMode.CROSS,
-  );
+  // Calculate reference price for the new order using best bid/ask when available.
+  const bestAskBid = askAndBid.current?.[0] || [];
+  const referencePriceFromOrder =
+    bestAskBid.length >= 2 && formattedOrder.order_type && formattedOrder.side
+      ? getOrderReferencePriceFromOrder(formattedOrder, bestAskBid)
+      : null;
+
+  const maxQtyValue = useMaxQty(symbol, formattedOrder.side, {
+    reduceOnly: formattedOrder.reduce_only,
+    marginMode: formattedOrder.margin_mode || MarginMode.CROSS,
+    currentOrderReferencePrice:
+      referencePriceFromOrder && referencePriceFromOrder > 0
+        ? referencePriceFromOrder
+        : undefined,
+  });
 
   // console.log("+++++++++++maxQtyValue++++++++++++++ ", maxQtyValue);
 
@@ -551,6 +563,8 @@ const useOrderEntry = (
       return null;
     }
 
+    const sumUnitaryFunding = fundingRates[symbol]?.sum_unitary_funding ?? 0;
+
     const estLiqPrice = calcEstLiqPrice(formattedOrder, askAndBid.current[0], {
       markPrice,
       totalCollateral,
@@ -559,6 +573,7 @@ const useOrderEntry = (
       symbol,
       positions,
       symbolInfo,
+      sumUnitaryFunding,
     });
 
     return estLiqPrice;
@@ -570,6 +585,7 @@ const useOrderEntry = (
     symbol,
     maxQty,
     symbolInfo,
+    fundingRates,
   ]);
 
   const estLeverage = useMemo(() => {

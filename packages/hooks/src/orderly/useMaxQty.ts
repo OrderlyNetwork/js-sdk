@@ -24,6 +24,14 @@ export interface UseMaxQtyOptions {
    * @default MarginMode.CROSS
    */
   marginMode?: MarginMode;
+  /**
+   * Optional reference price for the **new order** when using isolated margin.
+   *
+   * If provided, this value will be used as `currentOrderReferencePrice`
+   * in the isolated-margin max quantity formula instead of the mark price.
+   * When omitted, the hook will fall back to `markPrice`.
+   */
+  currentOrderReferencePrice?: number;
 }
 
 /**
@@ -151,6 +159,7 @@ export function useMaxQty(
 
     // Extract common parameters used by both maxQty and maxQtyForIsolatedMargin
     const markPrice = markPrices[symbol];
+
     const baseIMR = getSymbolInfo("base_imr") ?? 0;
     const IMR_Factor = accountInfo.imr_factor[symbol] ?? 0;
     const leverage = symbolLeverage || currentSymbolPosition?.leverage || 1;
@@ -206,10 +215,18 @@ export function useMaxQty(
           IMRFactor: IMR_Factor,
         });
 
+      const currentOrderReferencePrice =
+        typeof reduceOnlyOrOptions === "object" &&
+        reduceOnlyOrOptions !== null &&
+        typeof reduceOnlyOrOptions.currentOrderReferencePrice === "number" &&
+        reduceOnlyOrOptions.currentOrderReferencePrice > 0
+          ? reduceOnlyOrOptions.currentOrderReferencePrice
+          : markPrice;
+
       return account.maxQtyForIsolatedMargin({
         symbol,
         orderSide: side,
-        currentOrderReferencePrice: markPrice, // Use mark price as approximation
+        currentOrderReferencePrice,
         availableBalance,
         leverage,
         baseIMR,
