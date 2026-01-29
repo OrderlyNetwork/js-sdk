@@ -92,6 +92,7 @@ export const useColumn = (config: ColumnConfig) => {
                   symbol={value}
                   leverage={record.leverage}
                   modalId={SymbolLeverageDialogId}
+                  marginMode={record.margin_mode as any}
                 />
                 <RwaStatusTag symbol={value} />
               </Flex>
