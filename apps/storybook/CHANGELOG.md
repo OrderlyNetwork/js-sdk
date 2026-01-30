@@ -1,5 +1,44 @@
 # storybook
 
+## 1.8.13-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/affiliate@2.8.13-alpha.0
+  - @orderly.network/react-app@2.8.13-alpha.0
+  - @orderly.network/chart@2.8.13-alpha.0
+  - @orderly.network/core@2.8.13-alpha.0
+  - @orderly.network/default-evm-adapter@2.8.13-alpha.0
+  - @orderly.network/default-solana-adapter@2.8.13-alpha.0
+  - @orderly.network/hooks@2.8.13-alpha.0
+  - @orderly.network/i18n@2.8.13-alpha.0
+  - @orderly.network/markets@2.8.13-alpha.0
+  - @orderly.network/portfolio@2.8.13-alpha.0
+  - @orderly.network/trading@2.8.13-alpha.0
+  - @orderly.network/trading-leaderboard@2.8.13-alpha.0
+  - @orderly.network/trading-points@1.0.1-alpha.0
+  - @orderly.network/trading-rewards@2.8.13-alpha.0
+  - @orderly.network/types@2.8.13-alpha.0
+  - @orderly.network/ui@2.8.13-alpha.0
+  - @orderly.network/ui-chain-selector@2.8.13-alpha.0
+  - @orderly.network/ui-connector@2.8.13-alpha.0
+  - @orderly.network/ui-leverage@2.8.13-alpha.0
+  - @orderly.network/ui-notification@2.8.13-alpha.0
+  - @orderly.network/ui-order-entry@2.8.13-alpha.0
+  - @orderly.network/ui-orders@2.8.13-alpha.0
+  - @orderly.network/ui-positions@2.8.13-alpha.0
+  - @orderly.network/ui-scaffold@2.8.13-alpha.0
+  - @orderly.network/ui-share@2.8.13-alpha.0
+  - @orderly.network/ui-tpsl@2.8.13-alpha.0
+  - @orderly.network/ui-tradingview@2.8.13-alpha.0
+  - @orderly.network/ui-transfer@2.8.13-alpha.0
+  - @orderly.network/utils@2.8.13-alpha.0
+  - @orderly.network/vaults@2.8.13-alpha.0
+  - @orderly.network/wallet-connector@2.8.13-alpha.0
+  - @orderly.network/wallet-connector-privy@2.8.13-alpha.0
+
 ## 1.8.12
 
 ### Patch Changes
