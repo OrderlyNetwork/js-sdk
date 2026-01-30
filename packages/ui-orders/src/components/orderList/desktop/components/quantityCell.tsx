@@ -175,6 +175,11 @@ export const QuantityCell = (props: {
       params["order_tag"] = order.tag;
     }
 
+    // include original margin_mode so backend receives it when editing
+    if (order.margin_mode !== undefined) {
+      params.margin_mode = order.margin_mode;
+    }
+
     let future;
 
     if ("algo_type" in order && order.algo_type === AlgoOrderRootType.TP_SL) {

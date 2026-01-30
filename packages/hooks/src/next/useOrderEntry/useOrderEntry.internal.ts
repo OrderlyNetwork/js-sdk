@@ -1,12 +1,6 @@
 import { useCallback, useEffect } from "react";
 import { compose, head } from "ramda";
-import {
-  type API,
-  OrderlyOrder,
-  OrderSide,
-  OrderType,
-  MarginMode,
-} from "@orderly.network/types";
+import { type API, OrderlyOrder, OrderType } from "@orderly.network/types";
 import { priceToROI } from "../../orderly/useTakeProfitAndStopLoss/tp_slUtils";
 import { OrderCreator } from "../../services/orderCreator/interface";
 import {
@@ -14,8 +8,7 @@ import {
   getCalculateHandler,
 } from "../../utils/orderEntryHelper";
 import { hasTPSL } from "./helper";
-import { type FullOrderState } from "./orderEntry.store";
-import { useOrderStore } from "./useOrderStore";
+import { type FullOrderState, useOrderStore } from "./orderEntry.store";
 
 const useOrderEntryNextInternal = (
   symbol: string,
@@ -29,22 +22,18 @@ const useOrderEntryNextInternal = (
     symbolLeverage?: number;
   } = {},
 ) => {
-  // const orderEntity = useOrderEntryFromStore();
-
   const { symbolInfo, symbolLeverage } = options;
-  const initialOrder = {
-    side: OrderSide.BUY,
-    order_type: OrderType.LIMIT,
-    order_price: "",
-    symbol,
-    margin_mode: MarginMode.CROSS, // Default margin mode to CROSS for backward compatibility
-    ...options.initialOrder,
-  };
 
-  const { actions: orderEntryActions, entry: orderEntity } =
-    useOrderStore(initialOrder);
+  const orderEntity = useOrderStore((state) => state.entry);
+  const orderEntryActions = useOrderStore((state) => state.actions);
 
-  // const orderEntryActions = useOrderStore((state) => state.actions);
+  // Initialize order when symbol changes (global store: single form at a time)
+  useEffect(() => {
+    console.log("---------", symbol);
+    orderEntryActions.initOrder(symbol, options.initialOrder);
+  }, [symbol]);
+
+  console.log("orderEntity", orderEntity);
 
   const calculate = useCallback(
     (
@@ -70,11 +59,6 @@ const useOrderEntryNextInternal = (
     },
     [],
   );
-
-  useEffect(() => {
-    /// reset the symbol
-    orderEntryActions.updateOrderByKey("symbol", symbol);
-  }, [orderEntryActions, symbol]);
 
   const setValue = (
     key: keyof FullOrderState,

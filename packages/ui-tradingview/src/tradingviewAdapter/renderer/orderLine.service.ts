@@ -266,7 +266,7 @@ export class OrderLineService {
     const textColor = colorConfig.textColor;
 
     if (needDrawMarginMode) {
-      quantity += ` (${pendingOrder.margin_mode === "ISOLATED" ? "Isolated" : "Cross"})`;
+      quantity = `${quantity} (${pendingOrder.margin_mode === "ISOLATED" ? "Isolated" : "Cross"})`;
     }
 
     orderLine
@@ -280,7 +280,7 @@ export class OrderLineService {
       // .setBodyBackgroundColor(color)
       .setLineColor(color!)
       .setLineLength(lineLength)
-      .setQuantity(quantity ?? "")
+      .setQuantity(quantity)
       .setPrice(price);
 
     if (this.broker.mode !== ChartMode.MOBILE) {

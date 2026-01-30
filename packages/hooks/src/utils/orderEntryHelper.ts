@@ -6,7 +6,7 @@ import {
   OrderType,
 } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
-import { FullOrderState } from "../next/useOrderEntry/useOrderStore";
+import { FullOrderState } from "../next/useOrderEntry/orderEntry.store";
 import { tpslCalculateHelper } from "../orderly/useTakeProfitAndStopLoss/tp_slUtils";
 
 // index 3: markPrice
