@@ -1,6 +1,6 @@
 import React from "react";
 import { Flex, Text, TokenIcon } from "@orderly.network/ui";
-import { ArrowRightIcon } from "../swap/icons";
+import { ArrowRightIcon } from "../../swap/icons";
 
 export const SwapIndicator: React.FC<{
   sourceToken?: string;

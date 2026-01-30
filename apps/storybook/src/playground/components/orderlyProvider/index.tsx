@@ -27,7 +27,7 @@ export const OrderlyProvider: React.FC = () => {
   return (
     <RouteProvider onRouteChange={onRouteChange}>
       <LocaleProvider asyncLoadLocale={asyncLoadLocale}>
-        <WalletConnectorProvider usePrivy={usePrivy}>
+        <WalletConnectorProvider usePrivy={usePrivy} networkId={networkId}>
           <OrderlyAppRootProvider
             networkId={networkId}
             brokerId={brokerId}

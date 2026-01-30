@@ -1,60 +1,49 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import {
   useAccount,
   useConfig,
-  useComputedLTV,
   useDeposit,
-  useIndexPrice,
   useIndexPricesStream,
-  useQuery,
-  useTokenInfo,
+  useOrderlyContext,
 } from "@orderly.network/hooks";
-import { useTranslation, Trans } from "@orderly.network/i18n";
-import { account as accountPerp } from "@orderly.network/perp";
 import { useAppContext } from "@orderly.network/react-app";
-import {
-  API,
-  NetworkId,
-  ChainNamespace,
-  isNativeTokenChecker,
-} from "@orderly.network/types";
+import { NetworkId } from "@orderly.network/types";
 import { useAuthGuard } from "@orderly.network/ui-connector";
 import { Decimal } from "@orderly.network/utils";
-import { useNeedSwapAndCross } from "../swap/hooks/useNeedSwapAndCross";
-import { useSwapDeposit } from "../swap/hooks/useSwapDeposit";
-import {
-  useActionType,
-  useChainSelect,
-  useDepositAction,
-  useInputStatus,
-} from "./hooks";
+import { useActionType } from "./hooks/useActionType";
+import { useChainSelect } from "./hooks/useChainSelect";
+import { useCollateralValue } from "./hooks/useCollateralValue";
+import { useConvertThreshold } from "./hooks/useConvertThreshold";
+import { useDepositAction } from "./hooks/useDepositAction";
+import { useDepositFee } from "./hooks/useDepositFee";
+import { useDepositValidation } from "./hooks/useDepositValidation";
+import { useMaxDepositAmount } from "./hooks/useMaxDepositAmount";
 import { useNativeBalance } from "./hooks/useNativeBalance";
+import { useOrderlyTokens } from "./hooks/useOrderlyTokens";
 import { useToken } from "./hooks/useToken";
-
-const { collateralRatio, collateralContribution, calcMinimumReceived } =
-  accountPerp;
+import { useTokenBalances } from "./hooks/useTokenBalances";
+import { SWAP_CONTRACT_ADDRESS } from "./swap/helper";
+import { useSwapTokens } from "./swap/use1inchTokens";
+import { useSwapDeposit } from "./swap/useSwapDeposit";
+import { filterAndSortTokens } from "./utils";
 
 export type DepositFormScriptReturn = ReturnType<typeof useDepositFormScript>;
 
 export type DepositFormScriptOptions = {
   close?: () => void;
 };
-// swap to usdc precision is 3
-export const SWAP_USDC_PRECISION = 3;
 
 export const useDepositFormScript = (options: DepositFormScriptOptions) => {
   const { wrongNetwork } = useAppContext();
-  const { t } = useTranslation();
+  const { enableSwapDeposit } = useOrderlyContext();
   const { account } = useAccount();
   const networkId = useConfig("networkId") as NetworkId;
 
-  const [feeWarningMessage, setFeeWarningMessage] = useState("");
-  const [tokenBalances, setTokenBalances] = useState<Record<string, string>>(
-    {},
-  );
-
   const { chains, currentChain, settingChain, onChainChange } =
     useChainSelect();
+
+  const swapTokens = useSwapTokens(currentChain?.id, enableSwapDeposit);
+  const orderlyTokens = useOrderlyTokens(currentChain);
 
   const {
     sourceToken,
@@ -62,46 +51,53 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     sourceTokens,
     targetTokens,
     onSourceTokenChange,
-    setSourceToken,
+    setSourceTokens,
     onTargetTokenChange,
-    sourceTokenUpdatedRef,
-  } = useToken(currentChain);
+  } = useToken(orderlyTokens);
 
   const { data: indexPrices, getIndexPrice } = useIndexPricesStream();
 
-  const indexPrice = useMemo(() => {
-    return getIndexPrice(sourceToken?.symbol ?? "") ?? 0;
-  }, [sourceToken?.symbol, indexPrices]);
-
-  const usdcToken = useMemo(() => {
-    return sourceTokens?.find((item) => item.symbol === "USDC");
-  }, [sourceTokens]);
-
   const {
-    dst,
     balance,
     allowance,
-    depositFeeRevalidating,
     depositFee,
+    balanceRevalidating,
+    depositFeeRevalidating,
     quantity,
     setQuantity,
     approve,
     deposit,
-    isNativeToken,
-    balanceRevalidating,
     fetchBalance,
     fetchBalances,
     targetChain,
+    isNativeToken,
   } = useDeposit({
     address: sourceToken?.address,
     decimals: sourceToken?.decimals,
     srcChainId: currentChain?.id,
     srcToken: sourceToken?.symbol,
     dstToken: targetToken?.symbol,
-    crossChainRouteAddress:
-      currentChain?.info?.network_infos?.cross_chain_router,
-    depositorAddress: currentChain?.info?.network_infos?.depositor,
+    depositorAddress: enableSwapDeposit ? SWAP_CONTRACT_ADDRESS : undefined,
   });
+
+  const { balance: nativeBalance, isLoading: nativeBalanceRevalidating } =
+    useNativeBalance({
+      fetchBalance,
+      targetChain,
+    });
+
+  const { balances: tokenBalances, isLoading: batchBalancesRevalidating } =
+    useTokenBalances({ orderlyTokens, swapTokens, fetchBalances });
+
+  useEffect(() => {
+    const sortedTokens = filterAndSortTokens(
+      orderlyTokens,
+      swapTokens,
+      tokenBalances,
+      getIndexPrice,
+    );
+    setSourceTokens(sortedTokens);
+  }, [orderlyTokens, swapTokens, tokenBalances]);
 
   const maxQuantity = useMemo(
     () =>
@@ -111,180 +107,129 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     [balance, sourceToken?.precision],
   );
 
-  const maxDepositAmount = useMemo(() => {
-    const balanceDecimal = new Decimal(balance || 0).todp(
-      sourceToken?.precision ?? 2,
-      Decimal.ROUND_DOWN,
-    );
-
-    // If user_max_qty is -1 or undefined, ignore it and use balance only
-    // user_max_qty = 0 means no deposit allowed
-    if (
-      sourceToken?.user_max_qty === -1 ||
-      sourceToken?.user_max_qty === undefined
-    ) {
-      return balanceDecimal.toString();
-    }
-
-    // user_max_qty = 0 means no deposit allowed
-    if (sourceToken?.user_max_qty === 0) {
-      return "0";
-    }
-
-    const userMaxQty = new Decimal(sourceToken.user_max_qty).todp(
-      sourceToken?.precision ?? 2,
-      Decimal.ROUND_DOWN,
-    );
-
-    return balanceDecimal.lt(userMaxQty)
-      ? balanceDecimal.toString()
-      : userMaxQty.toString();
-  }, [balance, sourceToken?.precision, sourceToken?.user_max_qty]);
-
-  const { inputStatus, hintMessage } = useInputStatus({
-    quantity,
-    maxQuantity,
-  });
-
-  const { needSwap, needCrossSwap } = useNeedSwapAndCross({
-    srcToken: sourceToken,
-    dstToken: targetToken,
-    srcChainId: currentChain?.id,
-    dstChainId: dst?.chainId,
-  });
-
-  const {
-    cleanTransactionInfo,
-    onSwapDeposit,
-    swapRevalidating,
-
-    swapPrice,
-    markPrice,
-    swapQuantity,
-    swapFee,
-    warningMessage: swapWarningMessage,
-    slippage,
-    onSlippageChange,
-  } = useSwapDeposit({
-    srcToken: sourceToken!,
-    currentChain,
-    dst,
-    quantity,
-    isNativeToken,
-    depositFee,
-    setQuantity,
-    needSwap,
-    needCrossSwap,
-  });
-
-  const [depositExceedLimitDetected, setDepositExceedLimitDetected] =
-    useState(false);
-
-  const cleanData = useCallback(() => {
-    setQuantity("");
-    cleanTransactionInfo();
-    setDepositExceedLimitDetected(false);
-  }, [setQuantity, cleanTransactionInfo]);
-
-  const onSuccess = useCallback(() => {
-    cleanData();
-    options.close?.();
-  }, [cleanData, options.close]);
-
-  const { submitting, onApprove, onDeposit, onApproveAndDeposit } =
-    useDepositAction({
-      quantity,
-      allowance,
-      approve,
-      deposit,
-      enableCustomDeposit: needSwap || needCrossSwap,
-      customDeposit: onSwapDeposit,
-      onSuccess: () => {
-        setDepositExceedLimitDetected(false);
-        onSuccess();
-      },
-      onError: (err, knownErrorMessage) => {
-        const message =
-          typeof (err as any)?.message === "string" ? (err as any).message : "";
-
-        const isDepositExceedLimit =
-          message.includes("0xd969df24") ||
-          message.includes("DepositExceedLimit") ||
-          (knownErrorMessage?.includes("DepositExceedLimit") ?? false);
-
-        if (isDepositExceedLimit) {
-          setDepositExceedLimitDetected(true);
-        }
-      },
-    });
-
-  useEffect(() => {
-    if (depositExceedLimitDetected) {
-      setDepositExceedLimitDetected(false);
-    }
-  }, [quantity, sourceToken, currentChain?.id]);
-
-  const globalMaxQtyMessage = useMemo(() => {
-    if (
-      sourceToken?.symbol === "USDC" ||
-      sourceToken?.symbol !== targetToken?.symbol ||
-      !sourceToken?.is_collateral ||
-      !depositExceedLimitDetected
-    ) {
-      return "";
-    }
-
-    return (
-      <Trans
-        i18nKey="transfer.deposit.globalMaxQty.error"
-        values={{
-          token: sourceToken?.symbol,
-          chain: currentChain?.info?.network_infos?.name || "",
-        }}
-        components={[
-          <a
-            key="0"
-            href="https://orderly.network/docs/introduction/trade-on-orderly/multi-collateral#max-deposits-global"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="oui-text-primary"
-          />,
-        ]}
-      />
-    );
-  }, [
-    depositExceedLimitDetected,
-    sourceToken?.symbol,
-    sourceToken?.is_collateral,
-    targetToken?.symbol,
-    currentChain,
-    t,
-  ]);
-
-  const loading = submitting || depositFeeRevalidating!;
+  const maxDepositAmount = useMaxDepositAmount(sourceToken, balance);
 
   const nativeSymbol = useMemo(() => {
     return currentChain?.info?.nativeToken?.symbol;
   }, [currentChain]);
 
-  const fee = useDepositFee({
-    nativeSymbol: nativeSymbol,
+  const needSwap = useMemo(() => {
+    return (
+      !!sourceToken?.symbol &&
+      !!targetToken?.symbol &&
+      sourceToken.symbol !== targetToken?.symbol
+    );
+  }, [sourceToken, targetToken]);
+
+  const {
+    swapPrice,
+    swapQuantity,
+    swapMinReceived,
+    swapPriceRevalidating,
+    slippage,
+    onSlippageChange,
+    onSwapDeposit,
+    swapDepositRevalidating,
+    error: swapErrorMessage,
+  } = useSwapDeposit({
+    sourceToken,
+    targetToken,
+    currentChain,
+    quantity,
     depositFee,
   });
 
-  const amount = useMemo(() => {
-    const markPrice = 1;
-    return new Decimal(quantity || 0).mul(markPrice).toNumber();
-  }, [quantity]);
+  const onDepositSuccess = useCallback(() => {
+    setQuantity("");
+    options.close?.();
+  }, []);
 
-  const actionType = useActionType({
-    isNativeToken,
-    allowance,
+  const {
+    isMutating: depositRevalidating,
+    depositError,
+    setDepositError,
+    onApprove,
+    onDeposit,
+    onApproveAndDeposit,
+  } = useDepositAction({
     quantity,
-    maxQuantity,
+    approve,
+    deposit,
+    enableCustomDeposit: needSwap,
+    customDeposit: onSwapDeposit,
+    onSuccess: onDepositSuccess,
   });
 
+  useEffect(() => {
+    setQuantity("");
+    setDepositError("");
+    // when sourceToken or currentChain?.id changes, clean state
+  }, [sourceToken, currentChain?.id]);
+
+  const fee = useDepositFee({ nativeSymbol, depositFee, getIndexPrice });
+
+  const targetQuantity = useMemo(() => {
+    if (needSwap) {
+      return swapQuantity
+        ? new Decimal(swapQuantity)
+            ?.todp(targetToken?.precision ?? 6, Decimal.ROUND_DOWN)
+            .toString()
+        : undefined;
+    }
+    return quantity;
+  }, [needSwap, swapQuantity, quantity]);
+
+  const {
+    inputStatus,
+    hintMessage,
+    warningMessage,
+    depositDisabled,
+    targetInputStatus,
+    targetHintMessage,
+    showSourceDepositCap,
+    showTargetDepositCap,
+  } = useDepositValidation({
+    sourceToken,
+    targetToken,
+    quantity,
+    targetQuantity,
+    maxQuantity,
+    isNativeToken,
+    depositFee,
+    depositFeeRevalidating,
+    nativeBalanceRevalidating,
+    dstGasFee: fee.dstGasFee,
+    nativeSymbol,
+    nativeBalance,
+    account,
+    currentChain,
+    depositError,
+    needSwap,
+  });
+
+  const swapPriceInUSD = useMemo(() => {
+    if (swapPrice) {
+      const indexPrice = getIndexPrice(targetToken?.symbol!);
+      return indexPrice
+        ? new Decimal(swapPrice)
+            .mul(indexPrice)
+            ?.todp(2, Decimal.ROUND_DOWN)
+            .toString()
+        : undefined;
+    }
+  }, [swapPrice, targetToken]);
+
+  const usdcToken = useMemo(() => {
+    return sourceTokens?.find((item) => item.symbol === "USDC");
+  }, [sourceTokens]);
+
+  const actionType = useActionType({ allowance, quantity, maxQuantity });
+
   const isLoggedIn = useAuthGuard();
+
+  const indexPrice = useMemo(() => {
+    return getIndexPrice(sourceToken?.symbol ?? "") ?? 0;
+  }, [sourceToken?.symbol, indexPrices]);
 
   const {
     collateralRatio,
@@ -292,11 +237,10 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     currentLTV,
     nextLTV,
   } = useCollateralValue({
-    tokens: sourceTokens,
     sourceToken,
     targetToken,
-    qty: quantity,
-    indexPrice,
+    quantity,
+    indexPrice: needSwap ? swapPrice : indexPrice,
   });
 
   const {
@@ -305,220 +249,43 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     isLoading: isConvertThresholdLoading,
   } = useConvertThreshold();
 
-  useEffect(() => {
-    cleanData();
-  }, [sourceToken, currentChain?.id]);
-
-  useEffect(() => {
-    if (
-      quantity &&
-      Number(quantity) > 0 &&
-      depositFee === 0n &&
-      !depositFeeRevalidating &&
-      account.walletAdapter?.chainNamespace !== ChainNamespace.solana
-    ) {
-      setFeeWarningMessage(t("transfer.deposit.feeUnavailable"));
-    } else {
-      setFeeWarningMessage("");
-    }
-  }, [quantity, depositFee, depositFeeRevalidating, t, account]);
-
-  const insufficientBalance = useMemo(() => {
-    if (quantity && Number(quantity) > 0) {
-      return new Decimal(quantity).gt(maxQuantity);
-    }
-    return false;
-  }, [quantity, maxQuantity]);
-
-  const insufficientNativeTotal = useMemo(() => {
-    if (
-      !isNativeToken ||
-      !quantity ||
-      Number(quantity) <= 0 ||
-      depositFeeRevalidating ||
-      insufficientBalance
-    ) {
-      return false;
-    }
-
-    const estimatedGasFee = new Decimal(fee.dstGasFee || 0);
-    const totalNeeded = new Decimal(quantity).add(estimatedGasFee);
-
-    return totalNeeded.gt(maxQuantity || 0);
-  }, [
-    isNativeToken,
-    quantity,
-    depositFeeRevalidating,
-    insufficientBalance,
-    fee.dstGasFee,
-    maxQuantity,
-  ]);
-
-  const gasFeeMessage = useMemo(() => {
-    if (insufficientNativeTotal) {
-      return t("transfer.deposit.gasFee.error", {
-        token: sourceToken?.symbol,
-      });
-    }
-  }, [insufficientNativeTotal, sourceToken?.symbol, t]);
-
-  const nativeBalance = useNativeBalance({
-    fetchBalance,
-    targetChain,
-  });
-
-  const insufficientGasMessage = useMemo(() => {
-    if (
-      (nativeSymbol &&
-        quantity &&
-        Number(quantity) > 0 &&
-        // when insufficient balance, the input status is error, so we don't need to check gas balance
-        !insufficientBalance &&
-        !depositFeeRevalidating &&
-        (account.walletAdapter?.chainNamespace === ChainNamespace.solana ||
-          fee.dstGasFee)) ||
-      nativeBalance === undefined
-    ) {
-      const notEnoughGas = new Decimal(nativeBalance || 0).lt(fee.dstGasFee);
-
-      // when solana, if fee.dstGasFee is 0, and nativeTokenBalance is 0, it means the balance is not balance
-      const isNotSolBalance =
-        Number(fee.dstGasFee) === 0 &&
-        Number(nativeBalance) == Number(fee.dstGasFee);
-
-      if (notEnoughGas || isNotSolBalance) {
-        return t("transfer.deposit.notEnoughGas", {
-          token: nativeSymbol,
-        });
-      }
-    }
-
-    return "";
-  }, [
-    fee.dstGasFee,
-    quantity,
-    depositFeeRevalidating,
-    t,
-    nativeSymbol,
-    insufficientBalance,
-    account,
-    nativeBalance,
-  ]);
-
-  const warningMessage =
-    swapWarningMessage ||
-    globalMaxQtyMessage ||
-    gasFeeMessage ||
-    feeWarningMessage ||
-    insufficientGasMessage;
-
-  const isExceedUserCapByInput = useMemo(() => {
-    if (
-      sourceToken?.symbol === "USDC" ||
-      sourceToken?.symbol !== targetToken?.symbol ||
-      !sourceToken?.is_collateral ||
-      sourceToken?.user_max_qty === undefined ||
-      sourceToken?.user_max_qty === -1 ||
-      !quantity ||
-      isNaN(Number(quantity))
-    ) {
-      return false;
-    }
-
-    return new Decimal(quantity).gt(sourceToken.user_max_qty);
-  }, [sourceToken, targetToken, quantity]);
-
-  const finalInputStatus =
-    inputStatus === "error"
-      ? inputStatus
-      : isExceedUserCapByInput
-        ? "error"
-        : inputStatus;
-  const finalHintMessage =
-    inputStatus === "error"
-      ? hintMessage
-      : isExceedUserCapByInput
-        ? t("transfer.deposit.exceedCap")
-        : hintMessage;
+  const loading =
+    depositFeeRevalidating ||
+    depositRevalidating ||
+    swapDepositRevalidating ||
+    swapPriceRevalidating;
 
   const disabled =
+    !sourceToken ||
     !quantity ||
     Number(quantity) === 0 ||
-    !sourceToken ||
-    inputStatus === "error" ||
-    depositFeeRevalidating! ||
-    swapRevalidating ||
-    // if exceed collateral cap, disable deposit
-    isExceedUserCapByInput ||
-    !!feeWarningMessage ||
-    !!insufficientNativeTotal ||
-    !!insufficientGasMessage;
+    depositDisabled ||
+    loading ||
+    !!swapErrorMessage;
 
-  const targetQuantity = useMemo(() => {
-    if (needSwap) {
-      return swapQuantity
-        ? new Decimal(swapQuantity)
-            ?.todp(SWAP_USDC_PRECISION, Decimal.ROUND_DOWN)
-            .toString()
-        : swapQuantity;
-    }
-    return quantity;
-  }, [needSwap, swapQuantity, quantity]);
+  const targetQuantityLoading = swapPriceRevalidating;
 
-  // only swap deposit show minimum received
-  const minimumReceived = useMemo(() => {
-    if (!swapQuantity) {
-      return "-";
-    }
-    return calcMinimumReceived({
-      amount: Number(swapQuantity),
-      slippage,
-    });
-  }, [swapQuantity, slippage]);
-
-  const targetQuantityLoading = swapRevalidating;
-
-  useEffect(() => {
-    if (sourceTokens?.length > 0 && fetchBalances) {
-      fetchBalances(sourceTokens)
-        .then((balances) => {
-          setTokenBalances(balances);
-        })
-        .catch((error) => {
-          console.error("Failed to fetch balances:", error);
-        });
-    }
-  }, [sourceTokens]);
-
-  const sortedSourceTokens = useMemo(() => {
-    return sortTokens(sourceTokens, tokenBalances, getIndexPrice);
-  }, [sourceTokens, tokenBalances]);
-
-  useEffect(() => {
-    if (!sourceTokenUpdatedRef.current && sortedSourceTokens?.[0]) {
-      setSourceToken(sortedSourceTokens[0]);
-    }
-  }, [sortedSourceTokens]);
+  const message = warningMessage || swapErrorMessage;
 
   return {
     sourceToken,
     targetToken,
-    sourceTokens: sortedSourceTokens,
+    sourceTokens,
     targetTokens,
     onSourceTokenChange,
     onTargetTokenChange,
 
-    amount,
     nativeSymbol,
     isNativeToken,
     quantity,
     collateralContributionQuantity,
     maxQuantity,
     maxDepositAmount,
-    indexPrice,
     onQuantityChange: setQuantity,
-    hintMessage: finalHintMessage,
-    inputStatus: finalInputStatus,
+    hintMessage,
+    inputStatus,
+    targetInputStatus,
+    targetHintMessage,
     chains,
     currentChain,
     settingChain,
@@ -527,10 +294,9 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     onDeposit,
     onApprove,
     onApproveAndDeposit,
-    fetchBalance,
-    dst,
     wrongNetwork,
     balanceRevalidating,
+    batchBalancesRevalidating,
     loading,
     disabled,
     networkId,
@@ -543,168 +309,18 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     isConvertThresholdLoading,
     slippage,
     onSlippageChange,
-    minimumReceived,
+    swapMinReceived,
     usdcToken,
 
     needSwap,
-    needCrossSwap,
     swapPrice,
-    markPrice,
-    swapFee,
-    warningMessage,
+    swapPriceInUSD,
+    warningMessage: message,
     targetQuantity,
     targetQuantityLoading,
-    tokenBalances,
 
     isLoggedIn,
+    showSourceDepositCap,
+    showTargetDepositCap,
   };
-};
-
-export type UseDepositFeeReturn = ReturnType<typeof useDepositFee>;
-
-function useDepositFee(options: {
-  nativeSymbol?: string;
-  depositFee?: bigint;
-}) {
-  const { nativeSymbol, depositFee = 0 } = options;
-  const { account } = useAccount();
-
-  const tokenInfo = useTokenInfo(nativeSymbol!);
-
-  const { data: indexPrice } = useIndexPrice(`SPOT_${nativeSymbol}_USDC`);
-
-  const feeProps = useMemo(() => {
-    // deposit fee is native token, so decimals is 18
-    const dstGasFee = new Decimal(depositFee.toString())
-      // todo solana is 9, evm is 18
-      .div(
-        new Decimal(10).pow(
-          account.walletAdapter?.chainNamespace === ChainNamespace.solana
-            ? 9
-            : 18,
-        ),
-      )
-      .toString();
-
-    const feeAmount = new Decimal(dstGasFee).mul(indexPrice || 0).toString();
-
-    return {
-      dstGasFee,
-      feeQty: dstGasFee,
-      feeAmount,
-      // dp: feeDecimalsOffset(4),
-      dp: tokenInfo?.decimals || 8,
-    };
-  }, [depositFee, indexPrice]);
-
-  return feeProps;
-}
-
-const useCollateralValue = (params: {
-  tokens: API.TokenInfo[];
-  sourceToken?: API.TokenInfo;
-  targetToken?: API.TokenInfo;
-  qty: string;
-  indexPrice: number;
-}) => {
-  const { sourceToken, targetToken, indexPrice } = params;
-
-  const quantity = Number(params.qty);
-
-  const memoizedCollateralRatio = useMemo(() => {
-    return collateralRatio({
-      baseWeight: targetToken?.base_weight ?? 0,
-      discountFactor: targetToken?.discount_factor ?? 0,
-      collateralQty: quantity,
-      collateralCap: sourceToken?.user_max_qty ?? quantity,
-      indexPrice,
-    });
-  }, [targetToken, quantity, sourceToken?.user_max_qty, indexPrice]);
-
-  const collateralContributionQuantity = collateralContribution({
-    collateralQty: quantity,
-    collateralCap: sourceToken?.user_max_qty ?? quantity,
-    collateralRatio: memoizedCollateralRatio.toNumber(),
-    indexPrice,
-  });
-
-  const currentLtv = useComputedLTV();
-
-  const nextLTV = useComputedLTV({
-    input: quantity,
-    token: sourceToken?.symbol,
-  });
-
-  return {
-    collateralRatio: memoizedCollateralRatio.toNumber(),
-    collateralContributionQuantity,
-    currentLTV: currentLtv,
-    nextLTV: nextLTV,
-    indexPrice,
-  };
-};
-
-const useConvertThreshold = () => {
-  const { data, error, isLoading } = useQuery<API.ConvertThreshold>(
-    "/v1/public/auto_convert_threshold",
-    {
-      errorRetryCount: 3,
-    },
-  );
-  return {
-    ltv_threshold: data?.ltv_threshold,
-    negative_usdc_threshold: data?.negative_usdc_threshold,
-    isLoading,
-    error,
-  } as const;
-};
-
-const sortTokens = (
-  tokens: API.TokenInfo[] = [],
-  tokenBalances: Record<string, string> = {},
-  getIndexPrice: (token: string) => number,
-) => {
-  const list = tokens.map((item) => {
-    const indexPrice = getIndexPrice(item.symbol!);
-    const balance = new Decimal(tokenBalances[item.symbol!] || 0)
-      .mul(indexPrice || 1)
-      .todp(item.precision || 2)
-      .toNumber();
-
-    return {
-      ...item,
-      balance,
-      isNativeToken: isNativeTokenChecker(item.address!),
-    };
-  });
-
-  return list.sort((a, b) => {
-    const hasBalanceA = a.balance > 0;
-    const hasBalanceB = b.balance > 0;
-
-    // Tokens with balance come first
-    if (hasBalanceA !== hasBalanceB) {
-      return hasBalanceA ? -1 : 1;
-    }
-
-    // 1. USDC has highest priority
-    if (a.symbol === "USDC" && b.symbol !== "USDC") return -1;
-    if (b.symbol === "USDC" && a.symbol !== "USDC") return 1;
-
-    // 2. USDC.e has second priority
-    if (a.symbol === "USDC.e" && b.symbol !== "USDC.e") return -1;
-    if (b.symbol === "USDC.e" && a.symbol !== "USDC.e") return 1;
-
-    // 3. Native tokens have third priority
-    if (a.isNativeToken && !b.isNativeToken) return -1;
-    if (b.isNativeToken && !a.isNativeToken) return 1;
-
-    // 4. If both have balance, sort by balance amount (high to low)
-    if (hasBalanceA && hasBalanceB) {
-      return b.balance - a.balance;
-    }
-
-    // 5. If both have no balance, sort alphabetically
-    return (a.symbol || "").localeCompare(b.symbol || "");
-  });
 };

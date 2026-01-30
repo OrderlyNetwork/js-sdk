@@ -2,9 +2,13 @@ import React from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { Flex, Text } from "@orderly.network/ui";
 
-export const MinimumReceived: React.FC<
-  Readonly<{ symbol: string; value: number | string; precision: number }>
-> = (props) => {
+type MinimumReceivedProps = {
+  symbol: string;
+  value: number | string;
+  precision?: number;
+};
+
+export const MinimumReceived: React.FC<MinimumReceivedProps> = (props) => {
   const { t } = useTranslation();
   const { value, symbol, precision = 6 } = props;
 

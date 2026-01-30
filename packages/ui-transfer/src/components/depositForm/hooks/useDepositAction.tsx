@@ -6,11 +6,9 @@ import { getDepositKnownErrorMessage } from "../../../utils";
 
 type Options = {
   quantity: string;
-  allowance?: string;
   approve: (quantity?: string) => Promise<any>;
   deposit: () => Promise<any>;
   onSuccess?: () => void;
-  onError?: (err: unknown, knownErrorMessage?: string) => void;
   customDeposit?: () => Promise<any>;
   enableCustomDeposit?: boolean;
 };
@@ -18,14 +16,15 @@ type Options = {
 export function useDepositAction(options: Options) {
   const {
     quantity,
-    allowance,
     approve,
     deposit,
     enableCustomDeposit,
     customDeposit,
     onSuccess,
   } = options;
-  const [submitting, setSubmitting] = useState(false);
+  const [isMutating, setIsMutating] = useState(false);
+  const [depositError, setDepositError] = useState("");
+
   const ee = useEventEmitter();
   const { t } = useTranslation();
 
@@ -34,13 +33,14 @@ export function useDepositAction(options: Options) {
       await deposit();
       toast.success(t("transfer.deposit.requested"));
       ee.emit("deposit:requested");
+      setDepositError("");
       onSuccess?.();
     } catch (err: any) {
       console.error("deposit error", err);
 
       const knownErrorMessage = getDepositKnownErrorMessage(err.message);
-      options.onError?.(err, knownErrorMessage);
       if (knownErrorMessage) {
+        setDepositError(knownErrorMessage);
         toast.error(
           <div>
             {t("common.somethingWentWrong")}
@@ -54,7 +54,7 @@ export function useDepositAction(options: Options) {
         toast.error(err.message || t("common.somethingWentWrong"));
       }
     }
-  }, [deposit, onSuccess, t, ee, options.onError]);
+  }, [deposit, onSuccess, t, ee]);
 
   const onDeposit = useCallback(async () => {
     const num = Number(quantity);
@@ -64,20 +64,20 @@ export function useDepositAction(options: Options) {
       return;
     }
 
-    if (submitting) return;
+    if (isMutating) return;
 
-    setSubmitting(true);
+    setIsMutating(true);
 
     const execDeposit = enableCustomDeposit ? customDeposit : doDeposit;
 
     await execDeposit?.()?.finally(() => {
-      setSubmitting(false);
+      setIsMutating(false);
     });
-  }, [quantity, submitting, doDeposit, enableCustomDeposit, customDeposit, t]);
+  }, [quantity, isMutating, doDeposit, enableCustomDeposit, customDeposit, t]);
 
   const onApprove = useCallback(async () => {
-    if (submitting) return;
-    setSubmitting(true);
+    if (isMutating) return;
+    setIsMutating(true);
 
     try {
       await approve(quantity);
@@ -89,13 +89,13 @@ export function useDepositAction(options: Options) {
       );
       throw err;
     } finally {
-      setSubmitting(false);
+      setIsMutating(false);
     }
-  }, [approve, submitting, quantity, allowance, t]);
+  }, [approve, isMutating, quantity, t]);
 
   const onApproveAndDeposit = useCallback(async () => {
-    if (submitting) return;
-    setSubmitting(true);
+    if (isMutating) return;
+    setIsMutating(true);
 
     try {
       await onApprove();
@@ -103,9 +103,16 @@ export function useDepositAction(options: Options) {
     } catch (err) {
       console.error("approve and deposit error", err);
     } finally {
-      setSubmitting(false);
+      setIsMutating(false);
     }
-  }, [submitting, onApprove, onDeposit]);
+  }, [isMutating, onApprove, onDeposit]);
 
-  return { submitting, onApprove, onDeposit, onApproveAndDeposit };
+  return {
+    isMutating,
+    depositError,
+    setDepositError,
+    onApprove,
+    onDeposit,
+    onApproveAndDeposit,
+  };
 }

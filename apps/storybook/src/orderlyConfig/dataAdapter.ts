@@ -24,4 +24,7 @@ export const dataAdapter: OrderlyAppProviderProps["dataAdapter"] = {
   //     ...data,
   //   ];
   // },
+  // chainsList(chains) {
+  //   return chains;
+  // },
 };

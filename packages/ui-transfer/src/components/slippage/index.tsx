@@ -17,12 +17,13 @@ interface SlippageProps {
   onValueChange?: (value: number) => void;
   max?: number;
   min?: number;
+  dp?: number;
 }
 
 const options = [0.5, 1, 2];
 
 export const Slippage: FC<SlippageProps> = (props) => {
-  const { min = 0.2, max = 10 } = props;
+  const { min = 0.2, max = 10, dp = 2 } = props;
   const [value, setValue] = useState<number>();
   const [customValue, setCustomValue] = useState("");
   const [open, setOpen] = useState(false);
@@ -104,7 +105,7 @@ export const Slippage: FC<SlippageProps> = (props) => {
           suffix="%"
           formatters={[
             inputFormatter.numberFormatter,
-            inputFormatter.dpFormatter(2),
+            inputFormatter.dpFormatter(dp),
           ]}
           value={customValue}
           onValueChange={onValueChange}
@@ -176,7 +177,7 @@ const SlippageItem: FC<SlippageItemProps> = ({ value, isActive, onClick }) => {
       className={cn(
         "oui-cursor-pointer oui-select-none",
         isActive
-          ? "oui-bg-primary-light oui-text-primary-contrast/80"
+          ? "oui-bg-primary-darken oui-text-primary-contrast/80"
           : "oui-text-base-contrast-80",
       )}
       onClick={onClick}

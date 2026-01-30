@@ -1,4 +1,4 @@
-import { BrowserProvider, ethers, toNumber } from "ethers";
+import { BrowserProvider, ethers } from "ethers";
 import { DecodedError, ErrorDecoder } from "ethers-decode-error";
 import { API } from "@orderly.network/types";
 import { IWalletAdapter, WalletAdapterOptions } from "./adapter";
@@ -14,6 +14,7 @@ export interface EtherAdapterOptions {
   chain: { id: number };
 }
 
+/** @deprecated will be remove this in next minor version */
 export class EtherAdapter implements IWalletAdapter {
   private provider?: BrowserProvider;
   private _chainId: number;
