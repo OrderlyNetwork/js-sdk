@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useAccount } from "@orderly.network/hooks";
 import { Trans, useTranslation } from "@orderly.network/i18n";
 import { API, ChainNamespace } from "@orderly.network/types";
@@ -257,7 +257,17 @@ export const useDepositValidation = (options: Options) => {
     return { targetInputStatus: "default", targetHintMessage: "" };
   }, [t, targetQuantity, isExceedTargetTokenCap, inputStatus]);
 
-  const warningMessage =
+  const slippageValidate = useCallback(
+    (value: number) => {
+      if (value && value >= 5) {
+        return t("transfer.slippage.error.high");
+      }
+      return "";
+    },
+    [t],
+  );
+
+  const validationMessage =
     globalMaxQtyMessage ||
     gasFeeMessage ||
     feeWarningMessage ||
@@ -272,7 +282,7 @@ export const useDepositValidation = (options: Options) => {
     !!insufficientGasMessage;
 
   return {
-    warningMessage,
+    validationMessage,
     hintMessage,
     inputStatus,
     targetInputStatus,
@@ -280,5 +290,6 @@ export const useDepositValidation = (options: Options) => {
     depositDisabled,
     showSourceDepositCap,
     showTargetDepositCap,
+    slippageValidate,
   };
 };

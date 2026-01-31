@@ -182,12 +182,13 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
   const {
     inputStatus,
     hintMessage,
-    warningMessage,
+    validationMessage,
     depositDisabled,
     targetInputStatus,
     targetHintMessage,
     showSourceDepositCap,
     showTargetDepositCap,
+    slippageValidate,
   } = useDepositValidation({
     sourceToken,
     targetToken,
@@ -231,6 +232,11 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     return getIndexPrice(sourceToken?.symbol ?? "") ?? 0;
   }, [sourceToken?.symbol, indexPrices]);
 
+  const swapIndexPrice = useMemo(() => {
+    return indexPrice;
+    // let swapIndexPrice revalidate when swapPrice changes, so we don't need to add indexPrice to dependencies
+  }, [swapPrice]);
+
   const {
     collateralRatio,
     collateralContributionQuantity,
@@ -240,7 +246,7 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     sourceToken,
     targetToken,
     quantity,
-    indexPrice: needSwap ? swapPrice : indexPrice,
+    indexPrice: needSwap ? swapIndexPrice : indexPrice,
   });
 
   const {
@@ -265,7 +271,7 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
 
   const targetQuantityLoading = swapPriceRevalidating;
 
-  const message = warningMessage || swapErrorMessage;
+  const warningMessage = validationMessage || swapErrorMessage;
 
   return {
     sourceToken,
@@ -309,13 +315,14 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     isConvertThresholdLoading,
     slippage,
     onSlippageChange,
+    slippageValidate,
     swapMinReceived,
     usdcToken,
 
     needSwap,
     swapPrice,
     swapPriceInUSD,
-    warningMessage: message,
+    warningMessage,
     targetQuantity,
     targetQuantityLoading,
 

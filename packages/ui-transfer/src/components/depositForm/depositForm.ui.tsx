@@ -67,6 +67,7 @@ export const DepositForm: FC<DepositFormScriptReturn> = (props) => {
     batchBalancesRevalidating,
     showSourceDepositCap,
     showTargetDepositCap,
+    slippageValidate,
   } = props;
 
   const { t } = useTranslation();
@@ -124,6 +125,7 @@ export const DepositForm: FC<DepositFormScriptReturn> = (props) => {
               onValueChange={onSlippageChange}
               min={0.01}
               max={50}
+              validate={slippageValidate}
             />
             <MinimumReceived
               value={swapMinReceived!}
@@ -208,7 +210,7 @@ export const DepositForm: FC<DepositFormScriptReturn> = (props) => {
           status={targetInputStatus}
           hintMessage={targetHintMessage}
           // when show deposit cap, hide select caret
-          tokenShowCaret={!showTargetDepositCap}
+          tokenShowCaret={!showTargetDepositCap && targetTokens?.length > 1}
           tokenValueFormatter={
             showTargetDepositCap ? tokenValueFormatter : undefined
           }

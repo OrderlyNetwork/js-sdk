@@ -1,14 +1,14 @@
-import { FC, useEffect, useState } from "react";
+import { FC, ReactNode, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import {
   AlertDialog,
-  Box,
   cn,
   EditIcon,
   Flex,
   Input,
   inputFormatter,
   Text,
+  Tips,
 } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 
@@ -18,6 +18,8 @@ interface SlippageProps {
   max?: number;
   min?: number;
   dp?: number;
+  message?: ReactNode;
+  validate?: (value: number) => string;
 }
 
 const options = [0.5, 1, 2];
@@ -84,9 +86,26 @@ export const Slippage: FC<SlippageProps> = (props) => {
 
   const disabled = !getValue();
 
+  const errorMessage = useMemo(() => {
+    return props.validate?.(getValue()!);
+  }, [value, customValue, props.validate]);
+
   const content = (
     <div className="oui-text-2xs">
-      <Flex gapX={2}>
+      <Flex gapX={1} itemAlign="center">
+        <Text size="sm" intensity={54}>
+          {t("transfer.slippage.slippageTolerance")}
+        </Text>
+        <Tips
+          content={t("transfer.slippage.slippageTolerance.description")}
+          title={t("common.tips")}
+          classNamss={{
+            trigger: "oui-mt-[2px] oui-size-4",
+          }}
+        />
+      </Flex>
+
+      <Flex gapX={2} mt={3}>
         {options.map((item) => {
           const isActive = value === item;
           return (
@@ -116,15 +135,21 @@ export const Slippage: FC<SlippageProps> = (props) => {
             ),
             input: "oui-text-base-contrast",
             additional: "oui-pl-1",
+            suffix: "oui-text-base-contrast-36",
           }}
         />
       </Flex>
-
-      <Box mt={5}>
-        <Text intensity={54}>
-          {t("transfer.slippage.slippageTolerance.description")}
-        </Text>
-      </Box>
+      {errorMessage && (
+        <Flex mt={6}>
+          <Text
+            size="2xs"
+            color="warning"
+            className="oui-w-full oui-text-center"
+          >
+            {errorMessage}
+          </Text>
+        </Flex>
+      )}
     </div>
   );
 
@@ -133,8 +158,8 @@ export const Slippage: FC<SlippageProps> = (props) => {
       <AlertDialog
         open={open}
         onOpenChange={setOpen}
-        title={t("transfer.slippage.slippageTolerance")}
-        okLabel={t("common.confirm")}
+        title={t("transfer.slippage")}
+        okLabel={t("common.save")}
         message={content}
         onOk={onConfirm}
         actions={{ primary: { disabled } }}

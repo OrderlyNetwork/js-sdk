@@ -1,15 +1,11 @@
 import { FC } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import {
-  Box,
   CaretDownIcon,
   Flex,
-  InfoCircleIcon,
   Text,
   TokenIcon,
-  Tooltip,
-  modal,
-  useScreen,
+  Tips,
 } from "@orderly.network/ui";
 
 type DepositTokenValueFormatterProps = {
@@ -21,9 +17,8 @@ export const DepositTokenValueFormatter: FC<
   DepositTokenValueFormatterProps
 > = ({ value, userMaxQty }) => {
   const { t } = useTranslation();
-  const { isMobile } = useScreen();
 
-  const renderDepositCapTooltipContent = () => (
+  const tipContent = (
     <Flex direction="column" itemAlign="start">
       <Text size="2xs" weight="semibold" intensity={36}>
         {t("transfer.depositCap.tooltip")}
@@ -41,14 +36,6 @@ export const DepositTokenValueFormatter: FC<
       </a>
     </Flex>
   );
-
-  const handleInfoClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.stopPropagation();
-    modal.alert({
-      title: t("common.tips"),
-      message: <Box>{renderDepositCapTooltipContent()}</Box>,
-    });
-  };
 
   return (
     <Flex direction="column" itemAlign="end" gapY={1}>
@@ -82,44 +69,7 @@ export const DepositTokenValueFormatter: FC<
             {userMaxQty ?? 0}
           </Text.numeral>
         </Text>
-        {isMobile ? (
-          <button
-            type="button"
-            className="oui-flex oui-items-center"
-            onClick={handleInfoClick}
-            onMouseDown={(event) => {
-              event.stopPropagation();
-            }}
-            onPointerDown={(event) => {
-              event.stopPropagation();
-            }}
-          >
-            <InfoCircleIcon
-              className="oui-size-3 oui-shrink-0 oui-cursor-pointer"
-              opacity={0.36}
-            />
-          </button>
-        ) : (
-          <Tooltip
-            content={
-              <Box
-                onMouseDown={(event) => {
-                  event.stopPropagation();
-                }}
-                onPointerDown={(event) => {
-                  event.stopPropagation();
-                }}
-              >
-                {renderDepositCapTooltipContent()}
-              </Box>
-            }
-          >
-            <InfoCircleIcon
-              className="oui-size-3 oui-shrink-0 oui-cursor-pointer"
-              opacity={0.36}
-            />
-          </Tooltip>
-        )}
+        <Tips content={tipContent} title={t("common.tips")} />
       </Flex>
     </Flex>
   );

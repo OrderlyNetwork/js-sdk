@@ -132,6 +132,8 @@ export const transfer = {
   "transfer.slippage.slippageTolerance": "Slippage tolerance",
   "transfer.slippage.slippageTolerance.description":
     "Your transaction will revert if the price changes unfavorably by more than this percentage.",
+  "transfer.slippage.error.high":
+    "High slippage may result in significant loss",
 
   "transfer.swapDeposit.swapFee": "Swap fee",
   "transfer.swapDeposit.swapFee.description":
