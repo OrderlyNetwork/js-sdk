@@ -1,6 +1,6 @@
 import { FC, PropsWithChildren, useMemo } from "react";
 import { useSymbolsInfo } from "@orderly.network/hooks";
-import { useStarChildMarketSwitch } from "../hooks/useStarChildMarketSwitch";
+import { useStarChildMarketSwitch } from "@orderly.network/ui-starchild-widget";
 import { TradingPageState, TradingPageProps } from "../types/types";
 import { getBasicSymbolInfo } from "../utils/utils";
 import { TradingPageContext } from "./tradingPageContext";

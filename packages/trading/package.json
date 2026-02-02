@@ -42,12 +42,11 @@
     "@orderly.network/ui-positions": "workspace:*",
     "@orderly.network/ui-scaffold": "workspace:*",
     "@orderly.network/ui-share": "workspace:*",
+    "@orderly.network/ui-starchild-widget": "workspace:*",
     "@orderly.network/ui-tradingview": "workspace:*",
     "@orderly.network/ui-transfer": "workspace:*",
     "@orderly.network/utils": "workspace:*",
-    "@uiw/react-split": "^5.9.3",
-    "starchild-widget": "^1.0.3",
-    "styled-components": "^6.1.19"
+    "@uiw/react-split": "^5.9.3"
   },
   "devDependencies": {
     "@orderly.network/core": "workspace:*",

@@ -4,9 +4,10 @@ import { useState, useEffect } from "react";
 const STARCHILD_INITIALIZED_KEY = "__starchild_initialized__";
 
 /**
- * Hook to track StarChild initialization status without importing starchild-widget.
+ * Hook to track StarChild initialization status.
  * Listens to the custom "starchild:initialized" event dispatched by StarChildInitializer.
- * Also checks if StarChild was already initialized before the component mounted.
+ * Use this when the component is outside the starchild-widget provider tree (e.g. StarchildSearchButton
+ * in MainNav, which is a sibling of StarchildControlPanel where the provider lives).
  *
  * @returns boolean - true if StarChild has been initialized, false otherwise
  */
@@ -19,23 +20,18 @@ export const useStarChildInitialized = (): boolean => {
 
   useEffect(() => {
     const handleInitialized = () => {
-      // Store the initialization state globally
       (window as any)[STARCHILD_INITIALIZED_KEY] = true;
       setIsInitialized(true);
     };
 
     const handleDestroyed = () => {
-      // Reset the initialization state globally
       (window as any)[STARCHILD_INITIALIZED_KEY] = false;
       setIsInitialized(false);
     };
 
-    // Listen for the initialization event
     window.addEventListener("starchild:initialized", handleInitialized);
-    // Listen for destroy/reset event
     window.addEventListener("starchild:destroyed", handleDestroyed);
 
-    // Double-check on mount in case we missed it
     if ((window as any)[STARCHILD_INITIALIZED_KEY] === true) {
       setIsInitialized(true);
     }

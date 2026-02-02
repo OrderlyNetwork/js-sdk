@@ -1,6 +1,7 @@
 import { FC, PropsWithChildren, useMemo } from "react";
 import { AccountStatusEnum, ChainNamespace } from "@orderly.network/types";
 import { cn, Divider, Flex, Box, useScreen } from "@orderly.network/ui";
+import { StarchildSearchButton } from "@orderly.network/ui-starchild-widget";
 import { WalletConnectButtonExtension } from "../accountMenu/menu.widget";
 import { AccountSummaryWidget } from "../accountSummary";
 import { ChainMenuWidget } from "../chainMenu";
@@ -13,7 +14,6 @@ import { MainLogo } from "./mainLogo";
 import { MainNavMenusExtension } from "./mainMenus/mainNavMenus.widget";
 import { CampaignPositionEnum, MainNavScriptReturn } from "./mainNav.script";
 import { StarchildControlPanelExtension } from "./mainNavTail.widget";
-import { StarchildSearchButton } from "./starchildSearchButton";
 
 export const MainNav: FC<PropsWithChildren<MainNavScriptReturn>> = (props) => {
   const { className, classNames, campaigns, campaignPosition } = props;

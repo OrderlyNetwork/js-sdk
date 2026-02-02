@@ -1,7 +1,7 @@
 import { FC } from "react";
-import { useStarChildInitialized } from "@orderly.network/hooks";
 import { cn } from "@orderly.network/ui";
-import { SlashIcon, StarChildSearchIcon } from "../icons";
+import { useStarChildInitialized } from "../hooks/useStarChildInitialized";
+import { SlashIcon, StarChildSearchIcon } from "./icons";
 
 export const StarchildSearchButton: FC = () => {
   const isStarChildInitialized = useStarChildInitialized();
