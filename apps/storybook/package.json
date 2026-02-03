@@ -1,11 +1,12 @@
 {
   "name": "@orderly.network/storybook",
   "private": true,
-  "version": "1.8.11",
+  "version": "1.8.13",
   "type": "module",
   "scripts": {
     "dev": "pnpm loadEnv vite",
-    "build:vite": "tsc -b && vite build",
+    "build:tsc": "tsc -b && vite build",
+    "build:vite": "NODE_OPTIONS=--max_old_space_size=6096 vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "tailwind": "tailwindcss -i ./src/tailwind.css -o ./dist/tailwind.css",
@@ -29,6 +30,7 @@
     "@orderly.network/react-app": "workspace:*",
     "@orderly.network/trading": "workspace:*",
     "@orderly.network/trading-leaderboard": "workspace:*",
+    "@orderly.network/trading-points": "workspace:*",
     "@orderly.network/trading-rewards": "workspace:*",
     "@orderly.network/types": "workspace:*",
     "@orderly.network/ui": "workspace:*",
@@ -69,7 +71,7 @@
     "tailwind-merge": "^1.14.0",
     "tailwind-variants": "^0.2.1",
     "vite-plugin-node-polyfills": "0.17.0",
-    "woofi-swap-widget-kit": "^0.0.38"
+    "woofi-swap-widget-kit": "^0.0.41"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^4.1.3",

@@ -52,6 +52,7 @@ const tabsVariants = tv({
           "oui-px-1",
         ],
         trigger: [
+          "oui-group",
           "oui-pb-2",
           "oui-relative",
           "data-[state=active]:oui-text-base-contrast",
@@ -69,6 +70,7 @@ const tabsVariants = tv({
       contained: {
         list: ["oui-space-x-[6px]"],
         trigger: [
+          "oui-group",
           "oui-rounded",
           "oui-px-3",
           "oui-bg-base-7 hover:oui-bg-base-5",

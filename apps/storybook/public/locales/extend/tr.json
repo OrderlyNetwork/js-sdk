@@ -18,7 +18,7 @@
   "extend.perps": "Perps",
   "extend.perps.description": "Gazsız emir defteri perpleri, 100x'e kadar kaldıraçla",
   "extend.woofiEarn": "WOOFi kazan",
-  "extend.woofiEarn.description": "Herhangi bir zincirdeki başlıca varlıklardan güvenle getiri elde edin",
+  "extend.woofiEarn.description": "Herhangi bir zincirde zahmetsizce getiri elde edin",
   "extend.wooStake": "WOO stake",
   "extend.wooStake.description": "USDC ve WOO kazanmak için stake edin",
   "extend.vaults.description": "Otomatik stratejilerle pasif getiri kazanın",

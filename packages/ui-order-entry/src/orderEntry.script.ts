@@ -355,6 +355,8 @@ export const useOrderEntryScript = (inputs: OrderEntryScriptInputs) => {
     slPrice: formattedOrder.sl_trigger_price,
     liqPrice: state.estLiqPrice,
     side: formattedOrder.side,
+    currentPosition: state.currentPosition,
+    orderQuantity: Number(formattedOrder.order_quantity),
   });
 
   useEffect(() => {

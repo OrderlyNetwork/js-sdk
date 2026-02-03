@@ -18,7 +18,7 @@
   "extend.perps": "合約",
   "extend.perps.description": "免 Gas 的訂單簿永續合約，最高可達 100 倍槓桿",
   "extend.woofiEarn": "WOOFi 賺取",
-  "extend.woofiEarn.description": "在任何鏈上的主流資產中安全獲取收益",
+  "extend.woofiEarn.description": "在任何鏈上輕鬆獲取收益",
   "extend.wooStake": "WOO 質押",
   "extend.wooStake.description": "質押以賺取 USDC 和 WOO",
   "extend.vaults.description": "透過自動化策略賺取被動收益",
