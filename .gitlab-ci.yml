@@ -190,6 +190,23 @@ npm_minor_stable:
     - if: '($CI_COMMIT_BRANCH =~ /^pre-release/ || $CI_COMMIT_BRANCH =~ /^npm\//) && $CI_COMMIT_MESSAGE !~ /publish/'
       when: manual
     - when: never
+      
+# patch rc version
+npm_patch_rc:
+  <<: *npm_publish_template
+  variables:
+    RELEASE_TYPE: patch
+    CUSTOM_PRE_TAG: rc
+  environment:
+    name: npm_patch_rc
+  rules:
+    # Run this job if:
+    # 1. Branch name is "pre-release"
+    # 2. Commit message does not contain "publish"
+    - if: '($CI_COMMIT_BRANCH =~ /^pre-release/ || $CI_COMMIT_BRANCH =~ /^npm\//) && $CI_COMMIT_MESSAGE !~ /publish/'
+      when: manual
+    - when: never
+      
 # major alpha version
 # npm_major_alpha:
 #   <<: *npm_publish_template

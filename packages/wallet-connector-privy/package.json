@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/wallet-connector-privy",
-  "version": "2.8.11",
+  "version": "2.8.13",
   "description": "",
   "main": "dist/index.mjs",
   "module": "dist/index.mjs",

@@ -11,6 +11,9 @@ export const tradingPageConfig: TradingPageConfigProps = {
     // scriptSRC: "/tradingview/charting_library/charting_library.js",
     // library_path: "/tradingview/charting_library/",
     // customCssUrl: "/tradingview/chart.css",
+    // overrides: {
+    //   "mainSeriesProperties.statusViewStyle.showExchange": false,
+    // },
     // broker config tradingview bg
     // colorConfig: {
     //   downColor: '#BE1630',

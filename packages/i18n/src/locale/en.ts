@@ -14,6 +14,7 @@ import { share } from "./module/share";
 import { tpsl } from "./module/tpsl";
 import { trading } from "./module/trading";
 import { tradingLeaderboard } from "./module/tradingLeaderboard";
+import { tradingPoints } from "./module/tradingPoints";
 import { tradingRewards } from "./module/tradingRewards";
 import { tradingView } from "./module/tradingView";
 import { transfer } from "./module/transfer";
@@ -41,6 +42,7 @@ export const en = {
   ...affiliate,
   ...ui,
   ...tradingLeaderboard,
+  ...tradingPoints,
   ...widget,
   ...vaults,
   ...notification,
