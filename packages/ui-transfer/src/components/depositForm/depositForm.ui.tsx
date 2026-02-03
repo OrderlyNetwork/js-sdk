@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { useTranslation } from "@orderly.network/i18n";
-import { Box, Flex, textVariants, Text } from "@orderly.network/ui";
+import { Box, Flex, textVariants } from "@orderly.network/ui";
 import { LtvWidget } from "../LTV";
 import { ActionButton } from "../actionButton";
 import { AvailableQuantity } from "../availableQuantity";
@@ -13,9 +13,9 @@ import { Fee } from "../fee";
 import { MinimumReceived } from "../minimumReceived";
 import { QuantityInput } from "../quantityInput";
 import { Slippage } from "../slippage";
-import { SwapCoin } from "../swapCoin";
 import { Web3Wallet } from "../web3Wallet";
 import { YieldBearingReminder } from "../yieldBearingReminder";
+import { ConvertRate } from "./components/convertRate";
 import { DepositTokenValueFormatter } from "./components/depositTokenValueFormatter";
 import { Notice } from "./components/notice";
 import { type DepositFormScriptReturn } from "./depositForm.script";
@@ -68,6 +68,7 @@ export const DepositForm: FC<DepositFormScriptReturn> = (props) => {
     showSourceDepositCap,
     showTargetDepositCap,
     slippageValidate,
+    quantityNotional,
   } = props;
 
   const { t } = useTranslation();
@@ -83,28 +84,13 @@ export const DepositForm: FC<DepositFormScriptReturn> = (props) => {
     return (
       <Flex direction="column" itemAlign="start" mt={2} gap={1}>
         {needSwap && (
-          <Flex width={"100%"} itemAlign="center" justify="between">
-            <Text size="2xs" intensity={36}>
-              {t("transfer.deposit.convertRate")}
-            </Text>
-            <SwapCoin
-              sourceSymbol={sourceToken?.display_name || sourceToken?.symbol}
-              targetSymbol={targetToken?.display_name || targetToken?.symbol}
-              precision={targetToken?.precision}
-              indexPrice={swapPrice!}
-              suffix={
-                swapPriceInUSD ? (
-                  <div>
-                    (
-                    <Text.numeral prefix="$" dp={2}>
-                      {swapPriceInUSD}
-                    </Text.numeral>
-                    )
-                  </div>
-                ) : undefined
-              }
-            />
-          </Flex>
+          <ConvertRate
+            sourceSymbol={sourceToken?.display_name || sourceToken?.symbol}
+            targetSymbol={targetToken?.display_name || targetToken?.symbol}
+            precision={targetToken?.precision}
+            swapPrice={swapPrice!}
+            swapPriceInUSD={swapPriceInUSD}
+          />
         )}
         <CollateralRatioWidget value={collateralRatio} />
         <CollateralContribution
@@ -166,7 +152,7 @@ export const DepositForm: FC<DepositFormScriptReturn> = (props) => {
             status={inputStatus}
             hintMessage={hintMessage}
             // when show deposit cap, hide select caret
-            tokenShowCaret={!showSourceDepositCap}
+            tokenShowCaret={!showSourceDepositCap && sourceTokens?.length > 1}
             tokenValueFormatter={
               showSourceDepositCap ? tokenValueFormatter : undefined
             }
@@ -180,6 +166,7 @@ export const DepositForm: FC<DepositFormScriptReturn> = (props) => {
           token={sourceToken}
           quantity={quantity}
           maxQuantity={maxQuantity}
+          notional={quantityNotional}
           loading={balanceRevalidating}
           onClick={() => {
             onQuantityChange(maxDepositAmount);

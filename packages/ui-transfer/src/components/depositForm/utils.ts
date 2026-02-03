@@ -38,21 +38,33 @@ export function filterAndSortTokens(
 ) {
   const mergedTokens = mergeTokens(orderlyTokens, swapTokens);
 
-  const filteredTokens = mergedTokens.filter((item) => {
-    return item.is_collateral || Number(tokenBalances[item.symbol!]) > 0;
-  });
+  const filteredTokens = mergedTokens
+    .map((item) => {
+      const quantity = tokenBalances[item.symbol!];
+      const amount = new Decimal(quantity || 0)
+        .todp(item.precision || 6, Decimal.ROUND_DOWN)
+        .toNumber();
+
+      return {
+        ...item,
+        quantity,
+        amount,
+      };
+    })
+    .filter((item) => {
+      return item.is_collateral || item.amount > 0;
+    });
 
   const list = filteredTokens.map((item) => {
     const indexPrice = getIndexPrice(item.symbol!);
-    const quantity = tokenBalances[item.symbol!];
-    const balance = new Decimal(quantity || 0)
+
+    const balance = new Decimal(item.amount || 0)
       .mul(indexPrice || 1)
       .todp(item.precision || 2)
       .toNumber();
 
     return {
       ...item,
-      quantity,
       balance,
       isNativeToken: isNativeTokenChecker(item.address!),
     };

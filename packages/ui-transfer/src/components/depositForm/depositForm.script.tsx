@@ -9,15 +9,14 @@ import {
 import { useAppContext } from "@orderly.network/react-app";
 import { NetworkId } from "@orderly.network/types";
 import { useAuthGuard } from "@orderly.network/ui-connector";
-import { Decimal } from "@orderly.network/utils";
 import { useActionType } from "./hooks/useActionType";
 import { useChainSelect } from "./hooks/useChainSelect";
 import { useCollateralValue } from "./hooks/useCollateralValue";
 import { useConvertThreshold } from "./hooks/useConvertThreshold";
 import { useDepositAction } from "./hooks/useDepositAction";
 import { useDepositFee } from "./hooks/useDepositFee";
+import { useDepositFormQuantities } from "./hooks/useDepositQuantities";
 import { useDepositValidation } from "./hooks/useDepositValidation";
-import { useMaxDepositAmount } from "./hooks/useMaxDepositAmount";
 import { useNativeBalance } from "./hooks/useNativeBalance";
 import { useOrderlyTokens } from "./hooks/useOrderlyTokens";
 import { useToken } from "./hooks/useToken";
@@ -55,7 +54,7 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     onTargetTokenChange,
   } = useToken(orderlyTokens);
 
-  const { data: indexPrices, getIndexPrice } = useIndexPricesStream();
+  const { getIndexPrice } = useIndexPricesStream();
 
   const {
     balance,
@@ -99,20 +98,6 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     setSourceTokens(sortedTokens);
   }, [orderlyTokens, swapTokens, tokenBalances]);
 
-  const maxQuantity = useMemo(
-    () =>
-      new Decimal(balance || 0)
-        .todp(sourceToken?.precision ?? 2, Decimal.ROUND_DOWN)
-        .toString(),
-    [balance, sourceToken?.precision],
-  );
-
-  const maxDepositAmount = useMaxDepositAmount(sourceToken, balance);
-
-  const nativeSymbol = useMemo(() => {
-    return currentChain?.info?.nativeToken?.symbol;
-  }, [currentChain]);
-
   const needSwap = useMemo(() => {
     return (
       !!sourceToken?.symbol &&
@@ -137,6 +122,29 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     quantity,
     depositFee,
   });
+
+  const {
+    maxQuantity,
+    maxDepositAmount,
+    targetQuantity,
+    swapPriceInUSD,
+    quantityNotional,
+    indexPrice,
+    swapIndexPrice,
+  } = useDepositFormQuantities({
+    sourceToken,
+    targetToken,
+    balance,
+    quantity,
+    needSwap,
+    swapQuantity,
+    swapPrice,
+    getIndexPrice,
+  });
+
+  const nativeSymbol = useMemo(() => {
+    return currentChain?.info?.nativeToken?.symbol;
+  }, [currentChain]);
 
   const onDepositSuccess = useCallback(() => {
     setQuantity("");
@@ -167,17 +175,6 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
 
   const fee = useDepositFee({ nativeSymbol, depositFee, getIndexPrice });
 
-  const targetQuantity = useMemo(() => {
-    if (needSwap) {
-      return swapQuantity
-        ? new Decimal(swapQuantity)
-            ?.todp(targetToken?.precision ?? 6, Decimal.ROUND_DOWN)
-            .toString()
-        : undefined;
-    }
-    return quantity;
-  }, [needSwap, swapQuantity, quantity]);
-
   const {
     inputStatus,
     hintMessage,
@@ -207,18 +204,6 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     needSwap,
   });
 
-  const swapPriceInUSD = useMemo(() => {
-    if (swapPrice) {
-      const indexPrice = getIndexPrice(targetToken?.symbol!);
-      return indexPrice
-        ? new Decimal(swapPrice)
-            .mul(indexPrice)
-            ?.todp(2, Decimal.ROUND_DOWN)
-            .toString()
-        : undefined;
-    }
-  }, [swapPrice, targetToken]);
-
   const usdcToken = useMemo(() => {
     return sourceTokens?.find((item) => item.symbol === "USDC");
   }, [sourceTokens]);
@@ -226,15 +211,6 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
   const actionType = useActionType({ allowance, quantity, maxQuantity });
 
   const isLoggedIn = useAuthGuard();
-
-  const indexPrice = useMemo(() => {
-    return getIndexPrice(sourceToken?.symbol ?? "") ?? 0;
-  }, [sourceToken?.symbol, indexPrices]);
-
-  const swapIndexPrice = useMemo(() => {
-    return indexPrice;
-    // let swapIndexPrice revalidate when swapPrice changes, so we don't need to add indexPrice to dependencies
-  }, [swapPrice]);
 
   const {
     collateralRatio,
@@ -325,5 +301,6 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     isLoggedIn,
     showSourceDepositCap,
     showTargetDepositCap,
+    quantityNotional,
   };
 };

@@ -21,6 +21,7 @@ interface TokenOptionProps {
     insufficientBalance?: boolean;
     balance?: string;
     quantity?: string;
+    amount?: number;
   };
   onTokenChange?: (token: API.TokenInfo) => void;
   isActive: boolean;
@@ -66,7 +67,11 @@ export const TokenOption: React.FC<TokenOptionProps> = (props) => {
         )}
       >
         <Flex itemAlign="center" gapX={1}>
-          <TokenIcon name={symbol} className="oui-size-[16px] oui-opacity-50" />
+          <TokenIcon
+            url={(token as any).logo_uri}
+            name={symbol}
+            className="oui-size-[16px] oui-opacity-50"
+          />
           <Text intensity={36} className="oui-max-w-[200px] oui-truncate">
             {token.label}
           </Text>
@@ -83,21 +88,22 @@ export const TokenOption: React.FC<TokenOptionProps> = (props) => {
       return null;
     }
 
-    if (isLoading && !token.quantity) {
+    if (isLoading && !token.amount) {
       return <Spinner size="sm" />;
     }
 
     return (
       <Text.numeral
         rule="price"
-        dp={precision ?? 2}
+        dp={precision}
         rm={Decimal.ROUND_DOWN}
+        ignoreDP
         className={cn(
           "oui-text-base-contrast-80 group-hover:oui-text-base-contrast-54",
           isActive && "oui-text-base-contrast-54",
         )}
       >
-        {token.quantity!}
+        {token.amount!}
       </Text.numeral>
     );
   };
