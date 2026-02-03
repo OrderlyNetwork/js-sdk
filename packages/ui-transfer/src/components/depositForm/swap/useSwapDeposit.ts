@@ -1,7 +1,9 @@
 import { useCallback, useState } from "react";
 import { utils } from "@orderly.network/core";
 import { useAccount, useConfig } from "@orderly.network/hooks";
+import { useTranslation } from "@orderly.network/i18n";
 import { API, isNativeTokenChecker } from "@orderly.network/types";
+import { toast } from "@orderly.network/ui";
 import { CurrentChain } from "../../../types";
 import { SWAP_CONTRACT_ADDRESS } from "./helper";
 import swapContractAbi from "./perp_vault_depositor.json";
@@ -19,11 +21,12 @@ type SwapDepositOptions = {
 export const useSwapDeposit = (options: SwapDepositOptions) => {
   const { sourceToken, targetToken, currentChain, quantity, depositFee } =
     options;
-  const [swapDepositRevalidating, setSwapDepositRevalidating] = useState(false);
   const { account } = useAccount();
   const brokerId = useConfig("brokerId") as string;
 
   const { slippage, onSlippageChange } = useSlippage();
+
+  const { t } = useTranslation();
 
   const {
     swapData,
@@ -86,10 +89,9 @@ export const useSwapDeposit = (options: SwapDepositOptions) => {
       value,
     };
 
-    console.info("onSwapDeposit", payload);
+    console.info("swap deposit payload", payload);
 
     try {
-      setSwapDepositRevalidating(true);
       const result = await account.walletAdapter.sendTransaction(
         SWAP_CONTRACT_ADDRESS,
         "deposit",
@@ -102,10 +104,10 @@ export const useSwapDeposit = (options: SwapDepositOptions) => {
       console.info("swap deposit result", result);
 
       return result;
-    } catch (error) {
-      console.error("onSwapDeposit", error);
-    } finally {
-      setSwapDepositRevalidating(false);
+    } catch (err: any) {
+      console.error("swap deposit error", err);
+      toast.error(err.message || t("common.somethingWentWrong"));
+      throw err;
     }
   }, [account, brokerId, swapData, sourceToken, targetToken, depositFee]);
 
@@ -117,7 +119,6 @@ export const useSwapDeposit = (options: SwapDepositOptions) => {
     slippage,
     onSlippageChange,
     onSwapDeposit,
-    swapDepositRevalidating,
     error,
   };
 };

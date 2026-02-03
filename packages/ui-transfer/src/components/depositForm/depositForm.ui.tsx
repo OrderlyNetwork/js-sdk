@@ -75,7 +75,7 @@ export const DepositForm: FC<DepositFormScriptReturn> = (props) => {
   const tokenValueFormatter = (value: string) => (
     <DepositTokenValueFormatter
       value={value}
-      userMaxQty={sourceToken?.user_max_qty}
+      userMaxQty={targetToken?.user_max_qty}
     />
   );
 

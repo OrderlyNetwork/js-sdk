@@ -9,19 +9,13 @@ type Options = {
   approve: (quantity?: string) => Promise<any>;
   deposit: () => Promise<any>;
   onSuccess?: () => void;
-  customDeposit?: () => Promise<any>;
-  enableCustomDeposit?: boolean;
+  swapDeposit?: () => Promise<any>;
+  needSwap?: boolean;
 };
 
 export function useDepositAction(options: Options) {
-  const {
-    quantity,
-    approve,
-    deposit,
-    enableCustomDeposit,
-    customDeposit,
-    onSuccess,
-  } = options;
+  const { quantity, approve, deposit, swapDeposit, onSuccess, needSwap } =
+    options;
   const [isMutating, setIsMutating] = useState(false);
   const [depositError, setDepositError] = useState("");
 
@@ -31,13 +25,9 @@ export function useDepositAction(options: Options) {
   const doDeposit = useCallback(async () => {
     try {
       await deposit();
-      toast.success(t("transfer.deposit.requested"));
-      ee.emit("deposit:requested");
       setDepositError("");
-      onSuccess?.();
     } catch (err: any) {
-      console.error("deposit error", err);
-
+      console.error("orderly deposit error", err);
       const knownErrorMessage = getDepositKnownErrorMessage(err.message);
       if (knownErrorMessage) {
         setDepositError(knownErrorMessage);
@@ -53,6 +43,7 @@ export function useDepositAction(options: Options) {
       } else {
         toast.error(err.message || t("common.somethingWentWrong"));
       }
+      throw err;
     }
   }, [deposit, onSuccess, t, ee]);
 
@@ -68,12 +59,21 @@ export function useDepositAction(options: Options) {
 
     setIsMutating(true);
 
-    const execDeposit = enableCustomDeposit ? customDeposit : doDeposit;
-
-    await execDeposit?.()?.finally(() => {
+    try {
+      if (needSwap) {
+        await swapDeposit?.();
+      } else {
+        await doDeposit();
+      }
+      toast.success(t("transfer.deposit.requested"));
+      ee.emit("deposit:requested");
+      onSuccess?.();
+    } catch (err: any) {
+      // all errors are handled by toast.error in doDeposit or swapDeposit
+    } finally {
       setIsMutating(false);
-    });
-  }, [quantity, isMutating, doDeposit, enableCustomDeposit, customDeposit, t]);
+    }
+  }, [quantity, isMutating, needSwap, doDeposit, swapDeposit, t]);
 
   const onApprove = useCallback(async () => {
     if (isMutating) return;

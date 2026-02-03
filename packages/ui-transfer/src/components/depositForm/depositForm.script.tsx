@@ -129,7 +129,6 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     slippage,
     onSlippageChange,
     onSwapDeposit,
-    swapDepositRevalidating,
     error: swapErrorMessage,
   } = useSwapDeposit({
     sourceToken,
@@ -155,8 +154,8 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
     quantity,
     approve,
     deposit,
-    enableCustomDeposit: needSwap,
-    customDeposit: onSwapDeposit,
+    needSwap,
+    swapDeposit: onSwapDeposit,
     onSuccess: onDepositSuccess,
   });
 
@@ -256,10 +255,7 @@ export const useDepositFormScript = (options: DepositFormScriptOptions) => {
   } = useConvertThreshold();
 
   const loading =
-    depositFeeRevalidating ||
-    depositRevalidating ||
-    swapDepositRevalidating ||
-    swapPriceRevalidating;
+    depositFeeRevalidating || depositRevalidating || swapPriceRevalidating;
 
   const disabled =
     !sourceToken ||
