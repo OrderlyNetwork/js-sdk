@@ -8,11 +8,13 @@ import {
 } from "@orderly.network/hooks";
 import { useLocaleCode } from "@orderly.network/i18n";
 import { AccountStatusEnum, ChainNamespace } from "@orderly.network/types";
+import { useStarchildConfig } from "../starchildContext";
 
 export const StarChildInitializer: React.FC = () => {
   const { state, isMainAccount } = useAccount();
   const { wallet, namespace } = useWalletConnector();
-  const { keyStore, starChildConfig } = useOrderlyContext();
+  const { keyStore } = useOrderlyContext();
+  const starChildConfig = useStarchildConfig();
   const ee = useEventEmitter();
   const {
     isInitialized,

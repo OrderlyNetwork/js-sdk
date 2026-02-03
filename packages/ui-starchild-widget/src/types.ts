@@ -1,3 +1,15 @@
+export interface StarchildConfig {
+  enable: boolean;
+  env: "testnet" | "mainnet";
+  telegram_bot_id: string;
+  url: string;
+}
+
+export interface StarchildProviderConfig {
+  enable: boolean;
+  getBotId: (env: string) => string;
+}
+
 export interface TelegramUserData {
   id: number;
   username?: string;

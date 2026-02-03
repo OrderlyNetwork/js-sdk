@@ -5,6 +5,7 @@ import {
   useOrderlyContext,
 } from "@orderly.network/hooks";
 import { AccountStatusEnum, ChainNamespace } from "@orderly.network/types";
+import { useStarchildConfig } from "../starchildContext";
 import { LS_ACCOUNT_INFO_PREFIX } from "./constants";
 import type {
   UseTelegramBindingReturn,
@@ -27,7 +28,8 @@ export function useTelegramBinding(
 ): UseTelegramBindingReturn {
   const { state: accountState } = useAccount();
   const { wallet, namespace } = useWalletConnector();
-  const { starChildConfig, configStore } = useOrderlyContext();
+  const { configStore } = useOrderlyContext();
+  const starChildConfig = useStarchildConfig();
 
   const baseUrl = starChildConfig?.url || "";
   const telegramBotId = starChildConfig?.telegram_bot_id || "";

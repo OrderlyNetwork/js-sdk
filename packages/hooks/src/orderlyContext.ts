@@ -89,12 +89,6 @@ export interface OrderlyConfigContextState {
     serverZone?: "EU" | "US";
   };
   orderMetadata?: OrderMetadataConfig;
-  starChildConfig?: {
-    enable: boolean;
-    env: "testnet" | "mainnet";
-    telegram_bot_id: string;
-    url?: string;
-  };
 }
 
 export type OrderMetadata = {
