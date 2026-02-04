@@ -14,7 +14,7 @@ export const ListBox: FC<OrderBookListProps> = (props) => {
   const { data } = props;
   const { mode } = useOrderBookContext();
   return (
-    <Box className="oui-order-book-list oui-flex oui-w-full oui-flex-col oui-gap-px">
+    <Box className="oui-orderBook-list oui-order-book-list oui-flex oui-w-full oui-flex-col oui-gap-px">
       {data.map((item, index) => {
         return (
           <OrderBookCell

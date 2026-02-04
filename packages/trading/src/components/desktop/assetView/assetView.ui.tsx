@@ -179,7 +179,10 @@ const TotalValue: FC<TotalValueProps> = (props) => {
         <Text size="2xs" color="neutral" weight="semibold">
           {`${t("trading.asset.myAssets")} (USDC)`}
         </Text>
-        <button onClick={onToggleVisibility}>
+        <button
+          className="oui-assetView-toggle-visibility-btn"
+          onClick={onToggleVisibility}
+        >
           {visible ? (
             <EyeIcon size={18} className="oui-text-base-contrast-54" />
           ) : (
@@ -408,6 +411,7 @@ export const AssetView: FC<
 
   const transferButton = hasSubAccount && (
     <Button
+      className="oui-assetView-transfer-btn"
       fullWidth
       color="secondary"
       size="md"
@@ -420,6 +424,7 @@ export const AssetView: FC<
 
   const depositButton = isMainAccount && (
     <Button
+      className="oui-assetView-deposit-btn"
       data-testid="oui-testid-assetView-deposit-button"
       fullWidth
       size="md"
@@ -434,6 +439,7 @@ export const AssetView: FC<
 
   const withdrawButton = isMainAccount && (
     <Button
+      className="oui-assetView-withdraw-btn"
       fullWidth
       color="secondary"
       size="md"
@@ -452,7 +458,7 @@ export const AssetView: FC<
   );
 
   return (
-    <Box className="oui-relative">
+    <Box className="oui-assetView oui-relative">
       {title && description && (
         <Flex direction="column" gap={1} className="oui-mb-[32px]">
           <Text
@@ -490,6 +496,7 @@ export const AssetView: FC<
               </Flex>
             </Box>
             <Button
+              className="oui-assetView-deposit-btn"
               data-testid="oui-testid-assetView-deposit-button"
               fullWidth
               size="md"

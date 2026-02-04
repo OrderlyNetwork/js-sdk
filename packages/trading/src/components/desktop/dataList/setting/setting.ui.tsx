@@ -115,7 +115,7 @@ export const Setting: FC<SettingState> = (props) => {
       size="xs"
       type="button"
       variant="contained"
-      className="oui-bg-transparent hover:oui-bg-transparent"
+      className="oui-preference-trigger-btn oui-bg-transparent hover:oui-bg-transparent"
     >
       <SettingFillIcon
         size={16}
@@ -127,10 +127,11 @@ export const Setting: FC<SettingState> = (props) => {
   );
 
   return (
-    <Flex gap={0}>
+    <Flex className="oui-preference" gap={0}>
       <Flex gap={1}>
         <Checkbox
           id="oui-checkbox-hideOtherSymbols"
+          className="oui-checkbox-hideOtherSymbols"
           color="white"
           checked={props.hideOtherSymbols}
           onCheckedChange={(checked: boolean) => {

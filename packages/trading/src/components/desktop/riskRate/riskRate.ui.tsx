@@ -42,7 +42,7 @@ export const RiskRate: FC<RiskRateState> = (props) => {
           : "oui-bg-gradient-to-r oui-opacity-20 oui-from-[#26fefe]  oui-via-[#ff7d00] oui-to-[#d92d6b] oui-h-1.5 oui-rounded-full";
 
   return (
-    <Box data-risk={""} className="oui-space-y-2">
+    <Box className="oui-riskRate oui-space-y-2" data-risk={""}>
       <Flex
         itemAlign="center"
         justify="start"

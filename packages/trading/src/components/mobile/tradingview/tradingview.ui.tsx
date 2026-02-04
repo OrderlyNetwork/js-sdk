@@ -7,7 +7,7 @@ import type { TradingviewState } from "./tradingview.script";
 export const TradingviewUI: React.FC<TradingviewState> = (props) => {
   return (
     <div
-      className="oui-pb-1 oui-flex oui-flex-col oui-gap-1"
+      className="oui-trading-tradingview oui-pb-1 oui-flex oui-flex-col oui-gap-1"
       style={{ height: props.height }}
       ref={props.boxRef}
     >

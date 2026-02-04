@@ -30,6 +30,7 @@ export const SwitchLayout: FC<SwitchLayoutProps> = (props) => {
       <Flex
         px={3}
         className={cn(
+          "oui-switchLayout",
           "oui-rounded-md",
           "oui-h-[28px]",
           "oui-cursor-pointer oui-transition-all",
