@@ -379,7 +379,10 @@ const useOrderEntry = (
   }, []);
 
   useEffect(() => {
-    // console.log("markPrice", markPrice);
+    // Skip if formattedOrder.symbol doesn't match current symbol (stale state from previous symbol)
+    if (formattedOrder.symbol !== symbol) {
+      return;
+    }
 
     if (
       (formattedOrder.order_type === OrderType.MARKET ||
@@ -398,7 +401,7 @@ const useOrderEntry = (
       }
       orderEntryActions.onMarkPriceChange(markPrice, Array.from(baseOn));
     }
-  }, [markPrice, formattedOrder.order_type]);
+  }, [markPrice, formattedOrder.order_type, formattedOrder.symbol, symbol]);
 
   const prepareData = useCallback(() => {
     return {

@@ -29,11 +29,11 @@ const useOrderEntryNextInternal = (
 
   // Initialize order when symbol changes (global store: single form at a time)
   useEffect(() => {
-    console.log("---------", symbol);
+    console.log("---------", symbol, options.initialOrder);
     orderEntryActions.initOrder(symbol, options.initialOrder);
   }, [symbol]);
 
-  console.log("orderEntity", orderEntity);
+  // console.log("orderEntity", orderEntity);
 
   const calculate = useCallback(
     (
@@ -73,11 +73,12 @@ const useOrderEntryNextInternal = (
       return;
     }
 
-    // const values = useOrderStore.getState().entry;
+    /** Read current entry from store to avoid using stale closure. */
+    const currentEntry = useOrderStore.getState().entry;
     const { markPrice } = additional ?? { markPrice: 0 };
 
     let newValues = calculate(
-      { ...orderEntity },
+      { ...currentEntry },
       key,
       value,
       markPrice,
@@ -183,8 +184,9 @@ const useOrderEntryNextInternal = (
       return;
     }
 
-    // const prevValues = useOrderStore.getState().entry;
-    let newValues: Partial<FullOrderState> = { ...orderEntity };
+    /** Read current entry from store to avoid using stale closure. */
+    const currentEntry = useOrderStore.getState().entry;
+    let newValues: Partial<FullOrderState> = { ...currentEntry };
 
     Object.keys(values).forEach((key) => {
       newValues = calculate(
@@ -205,14 +207,14 @@ const useOrderEntryNextInternal = (
 
   const onMarkPriceUpdated = useCallback(
     (markPrice: number, baseOn: string[] = []) => {
-      // console.log("******", baseOn);
       if (!options.symbolInfo) return;
-      // const values = useOrderStore.getState().entry;
-      let newValues: Partial<FullOrderState> = { ...orderEntity };
+      /** Read current entry from store to avoid using stale closure. */
+      const currentEntry = useOrderStore.getState().entry;
+      let newValues: Partial<FullOrderState> = { ...currentEntry };
 
       if (baseOn.length === 0) {
         newValues = calculate(
-          { ...orderEntity },
+          { ...currentEntry },
           "order_price",
           markPrice,
           markPrice,
@@ -223,7 +225,7 @@ const useOrderEntryNextInternal = (
           newValues = calculate(
             { ...newValues },
             key as keyof FullOrderState,
-            orderEntity[key as keyof FullOrderState],
+            currentEntry[key as keyof FullOrderState],
             markPrice,
             options.symbolInfo!,
           );
@@ -246,7 +248,7 @@ const useOrderEntryNextInternal = (
 
       orderEntryActions.updateOrder(newValues);
     },
-    [calculate, options.symbolInfo, orderEntity, orderEntryActions],
+    [calculate, options.symbolInfo, orderEntryActions],
   );
 
   const validate = (
