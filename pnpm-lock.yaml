@@ -30,11 +30,11 @@ importers:
         specifier: ^2.2.2
         version: 2.2.2
       '@orderly.network/eslint-config':
-        specifier: 0.0.4
-        version: 0.0.4(eslint@9.32.0(jiti@1.21.7))(tailwindcss@3.4.17(ts-node@10.9.2(@swc/core@1.13.2(@swc/helpers@0.5.17))(@types/node@22.16.5)(typescript@5.8.3)))(typescript@5.8.3)
+        specifier: 0.0.5
+        version: 0.0.5(eslint@9.32.0(jiti@1.21.7))(tailwindcss@3.4.17(ts-node@10.9.2(@swc/core@1.13.2(@swc/helpers@0.5.17))(@types/node@22.16.5)(typescript@5.8.3)))(typescript@5.8.3)
       '@orderly.network/prettier-config':
-        specifier: 0.2.4
-        version: 0.2.4(@vue/compiler-sfc@3.5.18)
+        specifier: 0.2.5
+        version: 0.2.5(@vue/compiler-sfc@3.5.18)(prettier@3.6.2)
       '@turbo/gen':
         specifier: ^2.0.11
         version: 2.5.5(@swc/core@1.13.2(@swc/helpers@0.5.17))(@types/node@22.16.5)(typescript@5.8.3)
@@ -5130,11 +5130,15 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
-  '@orderly.network/eslint-config@0.0.4':
-    resolution: {integrity: sha512-Ni5gqX4nPFTX1HC7v4XaNQLwd8VLTEaa+XG2TiF0+3/tzHmnIBsreK77Q/PrAvRizGJuenQYEogluraWLzAFng==}
+  '@orderly.network/eslint-config@0.0.5':
+    resolution: {integrity: sha512-swpm5V8dk1iHtYzan25HKT2V5jfDesUV39jdCJRaKlXUbxd5xHEhbhFV6qIT2Rp+HyS51GY0wCSXEw2QPiuzTA==}
+    peerDependencies:
+      eslint: '>=9.0.0'
 
-  '@orderly.network/prettier-config@0.2.4':
-    resolution: {integrity: sha512-CR/6jAEOBIMHak8B1e1Cf9hnNTDHYZrj6CcbluW+MCJ8P5dEk06h6B2ICCCi2q76clgQcUFLXgAfn1M9Qt+Yvg==}
+  '@orderly.network/prettier-config@0.2.5':
+    resolution: {integrity: sha512-L/2XwpYssuPck7VibeoRnzqoHx0Rp+EmmMLjYWjZ4yXAUL7LWTyKtKfNB3KY4WZDok7uwYGV701Uk5pr4zIuXQ==}
+    peerDependencies:
+      prettier: '>=3.0.0'
 
   '@particle-network/analytics@1.0.2':
     resolution: {integrity: sha512-E4EpTRYcfNOkxj+bgNdQydBrvdLGo4HfVStZCuOr3967dYek30r6L7Nkaa9zJXRE2eGT4lPvcAXDV2WxDZl/Xg==}
@@ -19473,10 +19477,11 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.19.1
 
-  '@orderly.network/eslint-config@0.0.4(eslint@9.32.0(jiti@1.21.7))(tailwindcss@3.4.17(ts-node@10.9.2(@swc/core@1.13.2(@swc/helpers@0.5.17))(@types/node@22.16.5)(typescript@5.8.3)))(typescript@5.8.3)':
+  '@orderly.network/eslint-config@0.0.5(eslint@9.32.0(jiti@1.21.7))(tailwindcss@3.4.17(ts-node@10.9.2(@swc/core@1.13.2(@swc/helpers@0.5.17))(@types/node@22.16.5)(typescript@5.8.3)))(typescript@5.8.3)':
     dependencies:
       '@eslint/js': 9.39.2
       '@stylistic/eslint-plugin': 5.7.0(eslint@9.32.0(jiti@1.21.7))
+      eslint: 9.32.0(jiti@1.21.7)
       eslint-config-eslint: 13.0.0(eslint@9.32.0(jiti@1.21.7))(typescript@5.8.3)
       eslint-config-prettier: 10.1.8(eslint@9.32.0(jiti@1.21.7))
       eslint-plugin-monorepo-cop: 1.0.2
@@ -19487,12 +19492,11 @@ snapshots:
       globals: 17.0.0
       typescript-eslint: 8.53.1(eslint@9.32.0(jiti@1.21.7))(typescript@5.8.3)
     transitivePeerDependencies:
-      - eslint
       - supports-color
       - tailwindcss
       - typescript
 
-  '@orderly.network/prettier-config@0.2.4(@vue/compiler-sfc@3.5.18)':
+  '@orderly.network/prettier-config@0.2.5(@vue/compiler-sfc@3.5.18)(prettier@3.6.2)':
     dependencies:
       '@trivago/prettier-plugin-sort-imports': 6.0.2(@vue/compiler-sfc@3.5.18)(prettier@3.6.2)
       prettier: 3.6.2
