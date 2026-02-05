@@ -1,5 +1,17 @@
 # @orderly.network/wallet-connector
 
+## 2.8.14-internal-20260212.1
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/core@2.8.14-internal-20260212.1
+  - @orderly.network/hooks@2.8.14-internal-20260212.1
+  - @orderly.network/types@2.8.14-internal-20260212.1
+  - @orderly.network/ui@2.8.14-internal-20260212.1
+  - @orderly.network/utils@2.8.14-internal-20260212.1
+
 ## 2.8.14-internal-20260212.0
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/trading-points",
-  "version": "1.0.2-internal-20260212.0",
+  "version": "1.0.2-internal-20260212.1",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

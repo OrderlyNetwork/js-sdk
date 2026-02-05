@@ -1,5 +1,18 @@
 # @orderly.network/ui-leverage
 
+## 2.8.14-internal-20260212.1
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/hooks@2.8.14-internal-20260212.1
+  - @orderly.network/i18n@2.8.14-internal-20260212.1
+  - @orderly.network/perp@4.8.14-internal-20260212.1
+  - @orderly.network/types@2.8.14-internal-20260212.1
+  - @orderly.network/ui@2.8.14-internal-20260212.1
+  - @orderly.network/utils@2.8.14-internal-20260212.1
+
 ## 2.8.14-internal-20260212.0
 
 ### Patch Changes
