@@ -1,6 +1,8 @@
 import { API, isNativeTokenChecker } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
 
+export const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
 export function mergeTokens(
   orderlyTokens: API.TokenInfo[],
   swapTokens: API.TokenInfo[],

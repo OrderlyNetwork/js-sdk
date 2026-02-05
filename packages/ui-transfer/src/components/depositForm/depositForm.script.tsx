@@ -21,9 +21,8 @@ import { useNativeBalance } from "./hooks/useNativeBalance";
 import { useOrderlyTokens } from "./hooks/useOrderlyTokens";
 import { useToken } from "./hooks/useToken";
 import { useTokenBalances } from "./hooks/useTokenBalances";
-import { SWAP_CONTRACT_ADDRESS } from "./swap/helper";
 import { useSwapTokens } from "./swap/use1inchTokens";
-import { useSwapDeposit } from "./swap/useSwapDeposit";
+import { SWAP_CONTRACT_ADDRESS, useSwapDeposit } from "./swap/useSwapDeposit";
 import { filterAndSortTokens } from "./utils";
 
 export type DepositFormScriptReturn = ReturnType<typeof useDepositFormScript>;

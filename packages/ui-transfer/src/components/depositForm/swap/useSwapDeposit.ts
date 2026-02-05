@@ -1,11 +1,10 @@
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { utils } from "@orderly.network/core";
 import { useAccount, useConfig } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import { API, isNativeTokenChecker } from "@orderly.network/types";
 import { toast } from "@orderly.network/ui";
 import { CurrentChain } from "../../../types";
-import { SWAP_CONTRACT_ADDRESS } from "./helper";
 import swapContractAbi from "./perp_vault_depositor.json";
 import { useSlippage } from "./useSlippage";
 import { useSwapQuote } from "./useSwapQuote";
@@ -17,6 +16,9 @@ type SwapDepositOptions = {
   quantity: string;
   depositFee: bigint;
 };
+
+export const SWAP_CONTRACT_ADDRESS =
+  "0xe18f1051d1cCeCb61572eb686e1beb34A8612bf3";
 
 export const useSwapDeposit = (options: SwapDepositOptions) => {
   const { sourceToken, targetToken, currentChain, quantity, depositFee } =

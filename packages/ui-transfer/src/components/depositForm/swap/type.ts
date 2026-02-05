@@ -153,3 +153,24 @@ export type SwapChainInfo = {
   chainId: number;
   network: SwapNetwork;
 };
+
+/** Single chain from supported_chains API */
+export interface SupportedChainItem {
+  chain_id: number;
+  chain_name: string;
+  chain_key: string;
+  same_chain_deposit: boolean;
+  cross_chain_source: boolean;
+  cross_chain_destination: boolean;
+}
+
+export interface SupportedChainsData {
+  perp_vault: SupportedChainItem[];
+  strategy_vault: SupportedChainItem[];
+}
+
+/** https://api.woofi.com/woofi_dex/depositor/supported_chains API response  */
+export interface SupportedChainsResponse {
+  status: "ok";
+  data: SupportedChainsData;
+}

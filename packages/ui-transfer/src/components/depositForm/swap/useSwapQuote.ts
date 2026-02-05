@@ -2,8 +2,9 @@ import { useMemo } from "react";
 import { useSWR } from "@orderly.network/hooks";
 import { API } from "@orderly.network/types";
 import { Decimal } from "@orderly.network/utils";
-import { fetcher, getNetworkByChainId } from "./helper";
+import { fetcher } from "../utils";
 import { type SwapQuoteResponse } from "./type";
+import { useSwapSupportedChains } from "./useSwapSupportedChains";
 
 export const useSwapQuote = (options: {
   sourceToken?: API.TokenInfo;
@@ -13,10 +14,12 @@ export const useSwapQuote = (options: {
   slippage: number;
 }) => {
   const { sourceToken, targetToken, quantity, chainId, slippage } = options;
-  // warningMessage.current = "";
+
+  const { chain: swapSupportedChain } = useSwapSupportedChains(chainId);
 
   const url = useMemo(() => {
-    const network = getNetworkByChainId(chainId!);
+    const chainKey = swapSupportedChain?.chain_key;
+
     const urlSearchParams = new URLSearchParams();
 
     const isSwapDeposit =
@@ -25,7 +28,7 @@ export const useSwapQuote = (options: {
       targetToken?.address &&
       sourceToken?.address !== targetToken?.address;
 
-    if (!isSwapDeposit || !network || !quantity || !slippage) {
+    if (!isSwapDeposit || !chainKey || !quantity || !slippage) {
       return null;
     }
 
@@ -37,12 +40,19 @@ export const useSwapQuote = (options: {
     urlSearchParams.set("from_token", sourceToken.address!);
     urlSearchParams.set("to_token", targetToken.address!);
     urlSearchParams.set("from_amount", amount);
-    urlSearchParams.set("network", network);
+    urlSearchParams.set("network", chainKey);
     urlSearchParams.set("slippage", slippage.toString());
     urlSearchParams.set("extra_fee_rate", "0");
 
     return `https://api.woofi.com/v2/swap?${urlSearchParams.toString()}`;
-  }, [sourceToken, targetToken, quantity, chainId, slippage]);
+  }, [
+    sourceToken,
+    targetToken,
+    quantity,
+    chainId,
+    slippage,
+    swapSupportedChain,
+  ]);
 
   const { data, isLoading: swapPriceRevalidating } = useSWR<SwapQuoteResponse>(
     url,

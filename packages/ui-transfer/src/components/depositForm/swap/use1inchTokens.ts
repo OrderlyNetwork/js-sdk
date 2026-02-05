@@ -1,7 +1,8 @@
 import { useMemo } from "react";
 import { useSWR } from "@orderly.network/hooks";
 import { API } from "@orderly.network/types";
-import { SUPPORTED_SWAP_CHAINS, fetcher } from "./helper";
+import { fetcher } from "../utils";
+import { useSwapSupportedChains } from "./useSwapSupportedChains";
 
 type SwapToken = {
   address: string;
@@ -17,21 +18,14 @@ export const useSwapTokens = (
   chainId?: string | number,
   enableSwapDeposit?: boolean,
 ) => {
+  const { chain: swapSupportedChain } = useSwapSupportedChains(chainId);
   const url = useMemo(() => {
-    if (!enableSwapDeposit) {
-      return null;
-    }
-
-    const chainInfo = SUPPORTED_SWAP_CHAINS.find(
-      (item) => item.chainId === parseInt(chainId as string),
-    );
-
-    if (chainInfo) {
-      return `https://widget-api.woofi.com/1inch_tokens?network=${chainInfo.network}`;
+    if (enableSwapDeposit && swapSupportedChain) {
+      return `https://widget-api.woofi.com/1inch_tokens?network=${swapSupportedChain.chain_key}`;
     }
 
     return null;
-  }, [chainId, enableSwapDeposit]);
+  }, [chainId, enableSwapDeposit, swapSupportedChain]);
 
   const { data } = useSWR(url, fetcher, {
     revalidateOnFocus: false,
