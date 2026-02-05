@@ -76,6 +76,11 @@ const ui: Package[] = [
     watch: true,
   },
   {
+    package: "@orderly.network/ui-starchild-widget",
+    path: "../../packages/ui-starchild-widget/src",
+    watch: true,
+  },
+  {
     package: "@orderly.network/ui-chain-selector",
     path: "../../packages/ui-chain-selector/src",
     watch: true,

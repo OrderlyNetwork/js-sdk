@@ -3,6 +3,7 @@ import {
   useAccount,
   useIndexPricesStream,
   useWalletConnector,
+  useEventEmitter,
 } from "@orderly.network/hooks";
 import { useTranslation } from "@orderly.network/i18n";
 import {
@@ -30,10 +31,11 @@ export const SubAccountScript = () => {
   const [mainAccountHolding, setMainAccountHolding] = useState<API.Holding[]>(
     [],
   );
-  const { wallet, connectedChain } = useWalletConnector();
+  const { wallet, connectedChain, namespace } = useWalletConnector();
   const { data: indexPrices } = useIndexPricesStream();
   const { isMobile } = useScreen();
   const { state, account, subAccount, switchAccount } = useAccount();
+  const ee = useEventEmitter();
   const { t } = useTranslation();
   const mainAccountId = state.mainAccountId;
 
@@ -96,9 +98,19 @@ export const SubAccountScript = () => {
         })
         .then((res) => {
           toast.success(t("subAccount.modal.switch.success.description"));
+          try {
+            const mainAccountId = state.mainAccountId;
+            const isMain = !!mainAccountId && accountId === mainAccountId;
+            ee.emit("starchild:reset", {
+              namespace,
+              isMainAccount: isMain,
+            });
+          } catch {
+            // ignore
+          }
         });
     },
-    [switchAccount],
+    [switchAccount, t, state.mainAccountId, namespace, ee],
   );
 
   const accountsWithValues = useMemo(() => {

@@ -461,15 +461,15 @@ export const AccountSummary: React.FC<AccountSummaryUi> = (props) => {
     const resizeObserver = new ResizeObserver((entries) => {
       if (Array.isArray(entries) && entries.length > 0) {
         const width = entries[0].contentRect.width;
-        if (width > 1556) {
+        if (width > 1840) {
           sizeRef.current = 5;
-        } else if (width > 1480) {
+        } else if (width > 1740) {
           sizeRef.current = 4;
-        } else if (width > 1366) {
+        } else if (width > 1620) {
           sizeRef.current = 3;
-        } else if (width > 1280) {
+        } else if (width > 1520) {
           sizeRef.current = 2;
-        } else if (width > 1180) {
+        } else if (width > 1280) {
           sizeRef.current = 1;
         } else {
           sizeRef.current = 0;
@@ -524,9 +524,13 @@ export const AccountSummary: React.FC<AccountSummaryUi> = (props) => {
     }
   });
 
+  const hasElements = elements.length > 0;
+
   return (
-    <div className="oui-flex oui-items-center oui-gap-6">
-      <Items elements={elements} />
+    <div
+      className={`oui-flex oui-items-center ${hasElements ? " oui-gap-3" : ""}`}
+    >
+      {hasElements && <Items elements={elements} />}
       <Popover
         content={
           <AccountInfoPopover
@@ -561,7 +565,7 @@ const Items: FC<{
   elements: JSX.Element[];
 }> = (props) => {
   return (
-    <div className="oui-flex oui-gap-6">
+    <div className="oui-flex oui-gap-4">
       {props.elements.map((Element, index) => (
         <div key={index}>{Element}</div>
       ))}

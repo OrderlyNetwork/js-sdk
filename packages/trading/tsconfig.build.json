@@ -30,6 +30,11 @@
       "./src/@types"
     ],
     "moduleResolution": "node",
+    "paths": {
+      "@orderly.network/ui-starchild-widget": [
+        "../ui-starchild-widget/src"
+      ]
+    },
     // "incremental": true,
   }
 }

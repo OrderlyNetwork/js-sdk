@@ -42,6 +42,7 @@
     "@orderly.network/ui-positions": "workspace:*",
     "@orderly.network/ui-scaffold": "workspace:*",
     "@orderly.network/ui-share": "workspace:*",
+    "@orderly.network/ui-starchild-widget": "workspace:*",
     "@orderly.network/ui-tradingview": "workspace:*",
     "@orderly.network/ui-transfer": "workspace:*",
     "@orderly.network/utils": "workspace:*",

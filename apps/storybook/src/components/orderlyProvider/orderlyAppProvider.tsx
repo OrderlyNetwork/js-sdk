@@ -1,8 +1,10 @@
 import { FC, PropsWithChildren } from "react";
 import { OrderlyAppProvider } from "@orderly.network/react-app";
+import { StarchildProvider } from "@orderly.network/ui-starchild-widget";
 import { orderlyAppProviderConfig } from "../../orderlyConfig";
 import { dataAdapter } from "../../orderlyConfig/dataAdapter";
 import { notification } from "../../orderlyConfig/notification";
+import { starchildProviderConfig } from "../../orderlyConfig/starChildConfig";
 import { widgetConfigs } from "../../orderlyConfig/widgetConfigs";
 import { useConfigStore, ConfigStoreOptions } from "./configStore";
 import { useRouteContext } from "./rounteProvider";
@@ -15,6 +17,7 @@ export const OrderlyAppRootProvider: FC<
   const { children, ...rest } = props;
   const { onRouteChange } = useRouteContext();
   const configStore = useConfigStore(rest);
+
   return (
     <OrderlyAppProvider
       configStore={configStore}
@@ -58,7 +61,9 @@ export const OrderlyAppRootProvider: FC<
       // customChains={customChainsAbstarct}
       // defaultChain={{testnet: customChains.testnet[0], mainnet: customChains.mainnet[0]}}
     >
-      {children}
+      <StarchildProvider config={starchildProviderConfig}>
+        {children}
+      </StarchildProvider>
     </OrderlyAppProvider>
   );
 };

@@ -440,11 +440,21 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           // color={side === OrderSide.BUY ? "buy" : "sell"}
           data-type={OrderSide.BUY}
           className={cn(
-            side === OrderSide.BUY
-              ? "orderly-order-entry-submit-button-buy oui-bg-success-darken hover:oui-bg-success-darken/80 active:oui-bg-success-darken/80"
-              : "orderly-order-entry-submit-button-sell oui-bg-danger-darken hover:oui-bg-danger-darken/80 active:oui-bg-danger-darken/80",
+            isMobile && freeCollateral <= 0
+              ? "oui-bg-primary-darken hover:oui-bg-primary-darken/80 active:oui-bg-primary-darken/80"
+              : side === OrderSide.BUY
+                ? "orderly-order-entry-submit-button-buy oui-bg-success-darken hover:oui-bg-success-darken/80 active:oui-bg-success-darken/80"
+                : "orderly-order-entry-submit-button-sell oui-bg-danger-darken hover:oui-bg-danger-darken/80 active:oui-bg-danger-darken/80",
           )}
-          onClick={validateSubmit}
+          onClick={() => {
+            if (isMobile && freeCollateral <= 0) {
+              modal.show("DepositAndWithdrawWithSheetId", {
+                activeTab: "deposit",
+              });
+            } else {
+              validateSubmit();
+            }
+          }}
           loading={props.isMutating}
           disabled={!props.canTrade}
         >

@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useAccount, useWalletConnector } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
+import { useStarchildConfig } from "@orderly.network/ui-starchild-widget";
 import { useScaffoldContext } from "../scaffold";
 import { CampaignProps } from "./campaignButton";
 import { MainNavItemsProps } from "./mainMenus/mainNavMenus.ui";
@@ -24,8 +25,9 @@ export const useMainNavScript = (props: MainNavWidgetProps) => {
     props;
   const { state } = useAccount();
   const { routerAdapter } = useScaffoldContext();
-  const { connectedChain } = useWalletConnector();
+  const { connectedChain, namespace } = useWalletConnector();
   const { wrongNetwork, disabledConnect } = useAppContext();
+  const starChildConfig = useStarchildConfig();
   const [current, setCurrent] = useState(() => {
     if (typeof props.initialMenu === "undefined") return [];
 
@@ -207,5 +209,7 @@ export const useMainNavScript = (props: MainNavWidgetProps) => {
     wrongNetwork,
     status: state.status,
     disabledConnect,
+    namespace,
+    starChildEnabled: starChildConfig?.enable ?? false,
   };
 };

@@ -1,0 +1,31 @@
+{
+  "extends": "tsconfig/react-library.json",
+  "include": [
+    "./src/**/*.ts",
+    "./src/**/*.tsx"
+  ],
+  "exclude": [
+    "dist",
+    "build",
+    "node_modules",
+    "**/*.test.tsx",
+    "**/*.test.ts",
+    "**/*.test.js",
+    "**/*.spec.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.js",
+    "**/*.stories.tsx"
+  ],
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "sourceMap": true,
+    "module": "esnext",
+    "outDir": "dist",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "target": "ES2022",
+    "moduleResolution": "node"
+  }
+}
+
+
