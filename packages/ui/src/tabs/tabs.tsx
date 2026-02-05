@@ -70,9 +70,11 @@ const Tabs: FC<TabsProps> = (props) => {
     ...rest
   } = props;
 
-  const tabsOverrides = getComponentTheme("tabs", { variant: "contained" });
+  const tabsOverrides = getComponentTheme("tabs", {
+    variant: variant ?? "contained",
+  });
 
-  const tabsVariant = variant || tabsOverrides.variant;
+  const tabsVariant = tabsOverrides.variant;
 
   const [tabList, setTabList] = useState<{ [key: string]: tabConfig }>({});
 

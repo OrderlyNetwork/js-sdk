@@ -57,6 +57,11 @@ export const OrderlyAppRootProvider: FC<
       // }}
       // customChains={customChainsAbstarct}
       // defaultChain={{testnet: customChains.testnet[0], mainnet: customChains.mainnet[0]}}
+      // overrides={{
+      //   tabs: {
+      //     variant: "text",
+      //   },
+      // }}
     >
       {children}
     </OrderlyAppProvider>
