@@ -9,7 +9,6 @@
     "@orderly.network/core": "2.8.10",
     "@orderly.network/default-evm-adapter": "2.8.10",
     "@orderly.network/default-solana-adapter": "2.8.10",
-    "@orderly.network/eslint-config": "2.8.10",
     "@orderly.network/hooks": "2.8.10",
     "@orderly.network/i18n": "2.8.10",
     "@orderly.network/markets": "2.8.10",

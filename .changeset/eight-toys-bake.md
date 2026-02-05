@@ -6,7 +6,6 @@
 "@orderly.network/core": patch
 "@orderly.network/default-evm-adapter": patch
 "@orderly.network/default-solana-adapter": patch
-"@orderly.network/eslint-config": patch
 "@orderly.network/hooks": patch
 "@orderly.network/i18n": patch
 "@orderly.network/markets": patch
