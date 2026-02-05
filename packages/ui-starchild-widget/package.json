@@ -1,6 +1,6 @@
 {
   "name": "@orderly.network/ui-starchild-widget",
-  "version": "2.8.12",
+  "version": "2.8.13",
   "description": "Floating action ball with click-to-open dialog",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

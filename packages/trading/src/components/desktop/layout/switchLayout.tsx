@@ -203,8 +203,8 @@ export const SwitchLayoutDropDown: FC<PropsWithChildren<SwitchLayoutProps>> = (
           {String(t("trading.layout.advanced"))}
         </Text>
         <Flex gapX={6}>
-          {renderItem("right")}
           {renderItem("left")}
+          {renderItem("right")}
         </Flex>
       </Flex>
       <Flex direction="column" gapY={2} mt={5} itemAlign="start">

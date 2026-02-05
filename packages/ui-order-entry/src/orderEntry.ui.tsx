@@ -113,13 +113,14 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
   const { getErrorMsg } = useOrderEntryFormErrorMsg(validated ? errors : null);
 
   const buttonLabel = useMemo(() => {
-    if (isMobile && freeCollateral <= 0) {
-      return t("common.deposit");
-    }
+    // TODO: remove this for bug handling
+    // if (isMobile && freeCollateral <= 0) {
+    //   return t("common.deposit");
+    // }
     return side === OrderSide.BUY
       ? t("orderEntry.buyLong")
       : t("orderEntry.sellShort");
-  }, [side, t, isMobile, freeCollateral]);
+  }, [side, t, isMobile]);
 
   useEffect(() => {
     if (validated) {
