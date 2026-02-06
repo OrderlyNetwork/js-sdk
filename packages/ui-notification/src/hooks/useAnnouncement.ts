@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { UTCDateMini } from "@date-fns/utc";
-import { format } from "date-fns";
 import {
   MaintenanceStatus,
   useLocalStorage,
   useMaintenanceStatus,
+  useMarketList,
   useOrderlyContext,
   useQuery,
   useWS,
@@ -12,6 +11,12 @@ import {
 import { useTranslation } from "@orderly.network/i18n";
 import { useAppContext } from "@orderly.network/react-app";
 import { AnnouncementType, API, WSMessage } from "@orderly.network/types";
+import {
+  filterDuplicateArrayById,
+  getTimeString,
+  shouldShowListingDelistingAnnouncement,
+  sortDataByUpdatedTime,
+} from "../utils";
 
 const maintentanceId = "-1";
 
@@ -26,40 +31,11 @@ interface AnnouncementStore {
 
 const ORDERLY_ANNOUNCEMENT_KEY = "orderly_announcement";
 
-const getTimeString = (timestamp: number) => {
-  const date = format(new UTCDateMini(timestamp), "MMM dd");
-  const time = format(new UTCDateMini(timestamp), "h:mm aa");
-  return `${time} (UTC) on ${date}`;
-};
-
-const sortDataByUpdatedTime = (list: API.AnnouncementRow[]) => {
-  return list.sort((a, b) => {
-    if (a.updated_time && b.updated_time) {
-      return b.updated_time - a.updated_time;
-    }
-    return 0;
-  });
-};
-
-const filterDuplicateArrayById = (list: API.AnnouncementRow[]) => {
-  const seenIds = new Set<string | number>();
-  const newList: API.AnnouncementRow[] = [];
-
-  list.forEach((item) => {
-    if (!seenIds.has(item.announcement_id)) {
-      // If the item's ID hasn't been seen before, add it and mark as seen
-      seenIds.add(item.announcement_id);
-      newList.push(item);
-    }
-  });
-
-  return newList;
-};
-
 const useAnnouncementData = () => {
   const { t } = useTranslation();
   const ws = useWS();
   const { dataAdapter } = useOrderlyContext();
+  const marketList = useMarketList();
 
   const [announcementStore, setAnnouncementStore] =
     useLocalStorage<AnnouncementStore>(ORDERLY_ANNOUNCEMENT_KEY, {});
@@ -123,11 +99,17 @@ const useAnnouncementData = () => {
       list = dataAdapter.announcementList(list);
     }
 
+    console.log("list", list);
+
+    list = list.filter((item) =>
+      shouldShowListingDelistingAnnouncement(item, marketList),
+    );
+
     const removedDuplicateList = filterDuplicateArrayById(list);
     const sortedList = sortDataByUpdatedTime(removedDuplicateList);
 
     setTips(sortedList);
-  }, [maintenances, announcements, dataAdapter?.announcementList]);
+  }, [maintenances, announcements, dataAdapter?.announcementList, marketList]);
 
   useEffect(() => {
     if (!announcements?.rows) {
@@ -147,19 +129,21 @@ const useAnnouncementData = () => {
     const unsubscribe = ws.subscribe("announcement", {
       onMessage(message: WSMessage.Announcement) {
         if (message) {
+          const newTip: API.AnnouncementRow = {
+            announcement_id: message.announcement_id,
+            message: message.message,
+            url: message.url,
+            i18n: message.i18n,
+            type: message.type,
+            updated_time: message.updated_time,
+          };
+          if (!shouldShowListingDelistingAnnouncement(newTip, marketList)) {
+            return;
+          }
           setTips((prev) => {
             const list = prev.filter(
               (item) => item.announcement_id !== message.announcement_id,
             );
-
-            const newTip = {
-              announcement_id: message.announcement_id,
-              message: message.message,
-              url: message.url,
-              i18n: message.i18n,
-              type: message.type,
-              updated_time: message.updated_time,
-            };
             return [...list, newTip];
           });
           // @ts-ignore
@@ -170,7 +154,7 @@ const useAnnouncementData = () => {
     return () => {
       unsubscribe?.();
     };
-  }, [ws]);
+  }, [ws, marketList]);
 
   return {
     tips,
