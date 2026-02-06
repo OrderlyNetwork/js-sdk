@@ -134,10 +134,26 @@ export function searchBySymbol<T extends Record<PropertyKey, any>>(
   list?.forEach((item) => {
     const formattedSymbol = formatSymbol(item.symbol, formatString);
     const symbolLower = formattedSymbol.toLowerCase();
-    if (reg.test(formattedSymbol)) {
-      if (symbolLower === searchValueLower) {
+
+    // Check if displayName exists and prepare it for search
+    const displayName = item.displayName;
+    const displayNameLower = displayName
+      ? String(displayName).toLowerCase()
+      : null;
+
+    // Check if search matches symbol or displayName
+    const matchesSymbol = reg.test(formattedSymbol);
+    const matchesDisplayName = displayNameLower
+      ? reg.test(displayNameLower)
+      : false;
+
+    if (matchesSymbol || matchesDisplayName) {
+      // Use displayName for comparison if available, otherwise use symbol
+      const searchText = displayNameLower || symbolLower;
+
+      if (searchText === searchValueLower) {
         exactMatches.push(item);
-      } else if (symbolLower.startsWith(searchValueLower)) {
+      } else if (searchText.startsWith(searchValueLower)) {
         startsWithMatches.push(item);
       } else {
         otherMatches.push(item);
@@ -146,10 +162,11 @@ export function searchBySymbol<T extends Record<PropertyKey, any>>(
   });
 
   const compareSymbols = (a: T, b: T) => {
-    const symbolA = formatSymbol(a.symbol, formatString);
-    const symbolB = formatSymbol(b.symbol, formatString);
-    if (symbolA < symbolB) return -1;
-    if (symbolA > symbolB) return 1;
+    // Use displayName if available, otherwise use formatted symbol
+    const textA = a.displayName || formatSymbol(a.symbol, formatString);
+    const textB = b.displayName || formatSymbol(b.symbol, formatString);
+    if (textA < textB) return -1;
+    if (textA > textB) return 1;
     return 0;
   };
 

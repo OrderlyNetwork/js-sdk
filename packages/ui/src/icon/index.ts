@@ -100,6 +100,7 @@ export { WoofiStakeIcon } from "./woofiStakeIcon";
 export { EarnIcon } from "./earnIcon";
 export { ReferralSolidIcon } from "./referralSolidIcon";
 export { AddCircleIcon } from "./addCircle";
+export { RwaIcon } from "./rwa";
 
 type IconType = typeof BaseIcon & {
   combine: typeof CombineIcon;

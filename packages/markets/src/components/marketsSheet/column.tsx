@@ -10,6 +10,7 @@ import {
 } from "../../icons";
 import { FavoriteInstance } from "../../type";
 import { FavoritesDropdownMenuWidget } from "../favoritesDropdownMenu";
+import { SymbolDisplay } from "../symbolDisplay";
 
 export const getMarketsSheetColumns = (
   favorite: FavoriteInstance,
@@ -59,14 +60,9 @@ export const getMarketsSheetColumns = (
             <Flex direction="column" itemAlign="start" gapY={1}>
               <Flex gapX={1}>
                 <TokenIcon symbol={record.symbol} className="oui-size-[18px]" />
-                <Text.formatted
-                  rule="symbol"
-                  formatString="base"
-                  size="2xs"
-                  weight="semibold"
-                >
+                <SymbolDisplay formatString="base" size="2xs">
                   {record.symbol}
-                </Text.formatted>
+                </SymbolDisplay>
                 <Badge size="xs" color="primary">
                   {record.leverage}x
                 </Badge>

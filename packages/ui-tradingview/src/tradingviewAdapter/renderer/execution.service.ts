@@ -1,13 +1,13 @@
+import { i18n } from "@orderly.network/i18n";
+import { commify, Decimal } from "@orderly.network/utils";
+import { limitOrdersByInterval } from "../broker/utils";
 import {
   IChartingLibraryWidget,
   IExecutionLineAdapter,
   ResolutionString,
 } from "../charting_library";
-import { OrderInterface, SideType } from "../type";
 import useBroker from "../hooks/useBroker";
-import { commify, Decimal } from "@orderly.network/utils";
-import { limitOrdersByInterval } from "../broker/utils";
-import { i18n } from "@orderly.network/i18n";
+import { OrderInterface, SideType } from "../type";
 
 export class ExecutionService {
   private instance: IChartingLibraryWidget;
@@ -19,7 +19,7 @@ export class ExecutionService {
 
   constructor(
     instance: IChartingLibraryWidget,
-    broker: ReturnType<typeof useBroker>
+    broker: ReturnType<typeof useBroker>,
   ) {
     this.instance = instance;
     this.executions = [];
@@ -116,7 +116,7 @@ export class ExecutionService {
       .setTime(timestamp)
       .setPrice(avgExecPrice)
       .setArrowColor(
-        side === SideType.BUY ? colorConfig.upColor! : colorConfig.downColor!
+        side === SideType.BUY ? colorConfig.upColor! : colorConfig.downColor!,
       )
       .setDirection(side === SideType.BUY ? "buy" : "sell");
   }
@@ -130,12 +130,17 @@ export class ExecutionService {
         .onIntervalChanged()
         .unsubscribe(null, changeInterval);
     } catch (e: unknown) {
+      // Check if error is related to null reference (hot reload scenario)
+      // This can happen when activeChart(), onIntervalChanged(), or unsubscribe() returns null
+      // The error message may contain "tradingViewApi" or "Cannot read properties of null"
+      const errorString = e?.toString() || String(e);
       if (
-        e instanceof Error &&
-        e.message ===
-          "Cannot read properties of null (reading 'tradingViewApi')"
+        errorString.includes("tradingViewApi") ||
+        errorString.includes("Cannot read properties of null") ||
+        errorString.includes("Cannot read property") ||
+        (e instanceof TypeError && errorString.includes("null"))
       ) {
-        // ignore when it's triggered by hot reloaded
+        // ignore when it's triggered by hot reload or null reference errors
       } else {
         console.error(e);
       }

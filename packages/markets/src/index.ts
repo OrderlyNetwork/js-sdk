@@ -28,3 +28,4 @@ export * from "./type";
 
 export { MarketsHomePage } from "./pages/home/page";
 export { MarketsProvider } from "./components/marketsProvider";
+export { SymbolDisplay } from "./components/symbolDisplay";

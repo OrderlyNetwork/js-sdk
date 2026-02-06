@@ -66,6 +66,14 @@ export type OrderEntryReturn = {
    */
   estLiqPrice: number | null;
   /**
+   * Current position quantity for the symbol (signed: positive=Long, negative=Short).
+   */
+  currentPosition: number;
+  /**
+   * The estimated liquidation price distance.
+   */
+  estLiqPriceDistance: number | null;
+  /**
    * The estimated leverage after order creation.
    */
   estLeverage: number | null;
@@ -559,6 +567,16 @@ const useOrderEntry = (
 
   const { freeCollateral, totalCollateral } = useCollateral();
 
+  const currentPosition = useMemo(() => {
+    const rows = positions ?? [];
+    const p = Array.isArray(rows)
+      ? (rows as { symbol?: string; position_qty?: number }[]).find(
+          (r) => r.symbol === symbol,
+        )
+      : null;
+    return p?.position_qty ?? 0;
+  }, [positions, symbol]);
+
   // TODO: move to the calculation service
   const estLiqPrice = useMemo(() => {
     const markPrice = actions.getMarkPriceBySymbol(symbol);
@@ -590,6 +608,17 @@ const useOrderEntry = (
     symbolInfo,
     fundingRates,
   ]);
+
+  const estLiqPriceDistance = useMemo(() => {
+    if (!estLiqPrice) {
+      return null;
+    }
+    return new Decimal(estLiqPrice)
+      .minus(markPrice)
+      .abs()
+      .div(markPrice)
+      .toNumber();
+  }, [estLiqPrice, markPrice]);
 
   const estLeverage = useMemo(() => {
     if (!symbolInfo) {
@@ -737,6 +766,8 @@ const useOrderEntry = (
     formattedOrder,
     maxQty,
     estLiqPrice,
+    estLiqPriceDistance,
+    currentPosition,
     estLeverage,
     estSlippage,
     helper: {

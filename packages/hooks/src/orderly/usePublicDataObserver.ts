@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { type API } from "@orderly.network/types";
 import { getPrecisionByNumber } from "@orderly.network/utils";
+import { DEFAULT_SYMBOL_DISPLAY_NAMES } from "../constants";
 import { useSymbolStore } from "../provider/store/symbolStore";
 import { useQuery } from "../useQuery";
 import { useAppStore } from "./appStore";
@@ -50,7 +51,9 @@ export const usePublicDataObserver = () => {
       const arr = item.symbol.split("_");
       const base_dp = getPrecisionByNumber(item.base_tick);
       const quote_dp = getPrecisionByNumber(item.quote_tick);
-      obj[item.symbol] = {
+      const symbol = item.symbol;
+
+      obj[symbol] = {
         ...item,
         base_dp,
         quote_dp,
@@ -58,6 +61,7 @@ export const usePublicDataObserver = () => {
         quote: arr[2],
         type: arr[0],
         name: `${arr[1]}-${arr[0]}`,
+        displayName: DEFAULT_SYMBOL_DISPLAY_NAMES[symbol],
       };
     }
     setSymbolsInfo(obj);

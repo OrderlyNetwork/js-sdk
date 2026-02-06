@@ -1,17 +1,15 @@
+import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-// import { fn } from 'storybook/test';
-import { DatePicker } from "@orderly.network/ui";
+import { Button, DatePicker } from "@orderly.network/ui";
 
 const meta = {
   title: "Base/Picker/DatePicker",
   component: DatePicker,
-  //   subcomponents: { SelectItem },
   parameters: {
     layout: "centered",
   },
   //   tags: ["autodocs"],
   argTypes: {
-    //   backgroundColor: { control: 'color' },
     size: {
       options: ["xs", "sm", "md", "lg", "xl"],
       control: { type: "inline-radio" },
@@ -23,14 +21,32 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  args: {
-    selected: new Date(),
+export const Single: Story = {
+  render: (args) => {
+    const [value, setValue] = useState<Date>();
+    return (
+      <DatePicker
+        value={value}
+        onChange={(date) => setValue(date)}
+        className="oui-w-60 oui-border-none"
+      />
+    );
+  },
+};
+
+export const SingleWithChildren: Story = {
+  render: (args) => {
+    const [value, setValue] = useState<Date>();
+    return (
+      <DatePicker value={value} onChange={(date) => setValue(date)}>
+        <Button>Select Date</Button>
+      </DatePicker>
+    );
   },
 };
 
 export const Range: Story = {
   render: (args) => {
-    return <DatePicker.range from={new Date()} to={new Date()} {...args} />;
+    return <DatePicker.range />;
   },
 };

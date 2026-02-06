@@ -74,6 +74,7 @@ export type MarketsKey = keyof MarketsData;
 
 export type MarketsItem = {
   symbol: string;
+  displayName?: string;
   index_price: number;
   mark_price: number;
   sum_unitary_funding: number;
@@ -343,6 +344,7 @@ const addFieldToMarkets = (
       ...item,
       quote_dp: info("quote_dp"),
       created_time: info("created_time"),
+      displayName: info("displayName"),
       leverage: getLeverage(info("base_imr")),
       openInterest: getOpenInterest(item.open_interest, item.index_price),
       "8h_funding": get8hFunding(item.est_funding_rate, info("funding_period")),

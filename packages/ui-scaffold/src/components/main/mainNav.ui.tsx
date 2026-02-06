@@ -93,7 +93,12 @@ export const MainNav: FC<PropsWithChildren<MainNavScriptReturn>> = (props) => {
         >
           {title}
           {props.leading}
-          {mainNav}
+          <Flex
+            className="oui-gap-3 oui-overflow-x-auto"
+            style={{ scrollbarWidth: "none" }}
+          >
+            {mainNav}
+          </Flex>
           {props.trailing}
         </Flex>
 

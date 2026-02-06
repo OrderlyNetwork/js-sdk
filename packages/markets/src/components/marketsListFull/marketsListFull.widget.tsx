@@ -1,9 +1,12 @@
 import { SortType } from "../../type";
-import { useMarketsListFullScript } from "./marketsListFull.script";
+import {
+  MarketsListFullType,
+  useMarketsListFullScript,
+} from "./marketsListFull.script";
 import { MarketsListFull } from "./marketsListFull.ui";
 
 export type MarketsListFullWidgetProps = {
-  type?: "all" | "new";
+  type?: MarketsListFullType;
   initialSort?: SortType;
 };
 

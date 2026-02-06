@@ -10,6 +10,7 @@ import {
   useScreen,
 } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
+import { SymbolDisplay } from "../symbolDisplay";
 import { ProcessedFundingData } from "./fundingOverview.script";
 
 const createFundingRenderer =
@@ -53,14 +54,9 @@ export const useFundingOverviewColumns = (
               symbol={value}
               className={isMobile ? "oui-size-[18px]" : "oui-size-5"}
             />
-
-            <Text.formatted
-              rule="symbol"
-              formatString="base-type"
-              weight="semibold"
-            >
+            <SymbolDisplay formatString="base" size="xs">
               {value}
-            </Text.formatted>
+            </SymbolDisplay>
           </Flex>
         ),
       },

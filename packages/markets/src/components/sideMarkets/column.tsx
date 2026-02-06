@@ -11,6 +11,7 @@ import {
 import type { FavoriteInstance } from "../../type";
 import { FavoritesDropdownMenuWidget } from "../favoritesDropdownMenu";
 import { RwaDotTooltip } from "../rwaDotTooltip";
+import { SymbolDisplay } from "../symbolDisplay";
 
 export const useSideMarketsColumns = (
   favorite: FavoriteInstance,
@@ -63,14 +64,9 @@ export const useSideMarketsColumns = (
             <Flex direction="column" itemAlign="start" gapY={1}>
               <Flex gapX={1}>
                 <TokenIcon symbol={record.symbol} className="oui-size-[18px]" />
-                <Text.formatted
-                  rule="symbol"
-                  formatString="base"
-                  size="2xs"
-                  weight="semibold"
-                >
+                <SymbolDisplay formatString="base" size="2xs">
                   {record.symbol}
-                </Text.formatted>
+                </SymbolDisplay>
                 <RwaDotTooltip record={record} />
                 <Badge size="xs" color="primary">
                   {record.leverage}x

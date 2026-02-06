@@ -6,6 +6,7 @@ export enum AnnouncementType {
   Maintenance = "MAINTENANCE",
   Delisting = "DELISTING",
   Campaign = "CAMPAIGN",
+  Vote = "VOTE",
 }
 
 export declare namespace API {
@@ -131,6 +132,7 @@ export declare namespace API {
     quote_dp: number;
     type: string;
     name: string;
+    displayName: string;
   }
 
   export interface RwaSymbol {

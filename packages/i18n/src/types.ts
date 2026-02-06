@@ -6,7 +6,10 @@ export type LocaleCode = keyof typeof LocaleEnum | (string & {});
 
 type ExtendLocaleMessages = Record<`extend.${string}`, string>;
 
-export type LocaleMessages = typeof en & ExtendLocaleMessages;
+type EnType = typeof en;
+
+// need to use interface to support extending the LocaleMessages type in other packages
+export interface LocaleMessages extends EnType, ExtendLocaleMessages {}
 
 export type Resources<T extends {} = {}> = {
   [key in LocaleCode]?: Partial<LocaleMessages & T>;

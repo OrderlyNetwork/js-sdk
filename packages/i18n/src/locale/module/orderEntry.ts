@@ -11,8 +11,14 @@ export const orderEntry = {
   "orderEntry.orderType.stopLimit": "Stop limit",
   "orderEntry.orderType.stopMarket": "Stop market",
   "orderEntry.orderType.postOnly": "Post only",
+  "orderEntry.orderType.postOnly.tooltip":
+    "Ensures your order is maker-only; cancels if it would execute immediately.",
   "orderEntry.orderType.ioc": "IOC",
+  "orderEntry.orderType.ioc.tooltip":
+    "Executes immediately; any unfilled amount is canceled.",
   "orderEntry.orderType.fok": "FOK",
+  "orderEntry.orderType.fok.tooltip":
+    "Executes immediately in full, or is canceled entirely.",
   "orderEntry.orderType.scaledOrder": "Scaled",
   "orderEntry.orderType.trailingStop": "Trailing stop",
   "orderEntry.orderSize": "Order size",
@@ -62,6 +68,8 @@ export const orderEntry = {
   "orderEntry.orderConfirm": "Order confirm",
   "orderEntry.confirmScaledOrder": "Confirm scaled order",
   "orderEntry.hidden": "Hidden",
+  "orderEntry.hidden.tooltip":
+    "Hidden orders provide trading privacy by concealing your order size from other market participants while still executing normally.",
   "orderEntry.keepVisible": "Keep visible",
 
   "orderEntry.maxBuy": "Max buy",
