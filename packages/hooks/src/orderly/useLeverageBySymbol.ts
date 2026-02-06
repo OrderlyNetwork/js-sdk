@@ -51,13 +51,17 @@ export const useLeverageBySymbol = (
         if (res.symbol === symbol) {
           // update leverage by swr to fix displayed previous value at short time when switching symbol.
           const key = [queryUrl, state.accountId];
-          mutate(key, (prevData: any) => {
-            return {
-              ...prevData,
-              //TODO: different margin mode leverage value
-              leverage: res.leverage,
-            };
-          });
+          mutate(
+            key,
+            (prevData: any) => {
+              return {
+                ...prevData,
+                //TODO: different margin mode leverage value
+                leverage: res.leverage,
+              };
+            },
+            { revalidate: false },
+          );
         }
       },
     });

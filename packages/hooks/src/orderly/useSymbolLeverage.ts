@@ -1,5 +1,7 @@
 import { useMemo } from "react";
+import { mutate } from "swr";
 import { MarginMode } from "@orderly.network/types";
+import { useAccount } from "../useAccount";
 import { useMutation } from "../useMutation";
 import { useSymbolInfo } from "./useSymbolInfo";
 
@@ -20,6 +22,7 @@ import { useSymbolInfo } from "./useSymbolInfo";
  */
 export const useSymbolLeverage = (symbol?: string) => {
   const symbolInfo = useSymbolInfo(symbol);
+  const { state } = useAccount();
 
   const [updateMutation, { isMutating }] = useMutation("/v1/client/leverage");
 
@@ -36,7 +39,28 @@ export const useSymbolLeverage = (symbol?: string) => {
     symbol: string;
     margin_mode?: MarginMode;
   }) => {
-    return updateMutation(data);
+    const result = await updateMutation(data);
+
+    if (result?.success && data.symbol && state.accountId) {
+      const queryParams = new URLSearchParams();
+      queryParams.set("symbol", data.symbol);
+      if (data.margin_mode) {
+        queryParams.set("margin_mode", data.margin_mode);
+      }
+      const queryUrl = `/v1/client/leverage?${queryParams.toString()}`;
+      const key = [queryUrl, state.accountId];
+
+      mutate(
+        key,
+        (prevData: any) => ({
+          ...prevData,
+          leverage: data.leverage,
+        }),
+        // { revalidate: false },
+      );
+    }
+
+    return result;
   };
 
   return {

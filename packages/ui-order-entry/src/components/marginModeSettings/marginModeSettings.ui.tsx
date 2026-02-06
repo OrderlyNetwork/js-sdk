@@ -120,7 +120,7 @@ export const MarginModeSettings: FC<MarginModeSettingsProps> = (props) => {
           fullWidth
           classNames={{
             root: cn(
-              "oui-outline-line-8",
+              "oui-outline-line",
               props.searchKeyword.trim() ? "oui-outline-primary-light" : "",
             ),
           }}
@@ -189,17 +189,23 @@ export const MarginModeSettings: FC<MarginModeSettingsProps> = (props) => {
           )}
         >
           <Flex itemAlign="center" gap={2}>
-            <Checkbox
-              color="white"
-              checked={props.isSelectAll}
-              onCheckedChange={() => {
-                props.onToggleSelectAll();
-              }}
-              aria-label="Select all"
-            />
-            <Text className="oui-text-sm oui-font-semibold oui-text-base-contrast-80">
-              {"Select all"}
-            </Text>
+            <label
+              className={cn(
+                "oui-flex oui-items-center oui-gap-2 oui-cursor-pointer oui-select-none",
+              )}
+            >
+              <Checkbox
+                color="white"
+                checked={props.isSelectAll}
+                onCheckedChange={() => {
+                  props.onToggleSelectAll();
+                }}
+                aria-label="Select all"
+              />
+              <Text className="oui-text-sm oui-font-semibold oui-text-base-contrast-80">
+                {"Select all"}
+              </Text>
+            </label>
           </Flex>
 
           <Text className="oui-text-sm oui-text-base-contrast-54">
@@ -275,38 +281,22 @@ const SymbolRow: FC<{
   marginMode: MarginMode;
   onToggle: (key: string) => void;
 }> = (props) => {
-  const handleToggle = useCallback(() => {
+  const handleCheckedChange = useCallback(() => {
     props.onToggle(props.item.key);
   }, [props]);
 
-  const handleKeyDown = useCallback(
-    (event: React.KeyboardEvent<HTMLDivElement>) => {
-      if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        props.onToggle(props.item.key);
-      }
-    },
-    [props],
-  );
-
   return (
-    <Flex
-      itemAlign="center"
-      role="checkbox"
-      aria-checked={props.checked}
-      tabIndex={0}
-      className={cn("oui-w-full", "oui-cursor-pointer oui-select-none")}
-      onClick={handleToggle}
-      onKeyDown={handleKeyDown}
-      data-testid={`oui-testid-marginModeSettings-item-${props.item.key}`}
-    >
-      <Flex itemAlign="center" gap={2}>
+    <Flex itemAlign="center" className="oui-w-full">
+      <label
+        className={cn(
+          "oui-flex oui-items-center oui-gap-2 oui-flex-1 oui-cursor-pointer oui-select-none oui-w-full",
+        )}
+        data-testid={`oui-testid-marginModeSettings-item-${props.item.key}`}
+      >
         <Checkbox
           color="white"
           checked={props.checked}
-          onCheckedChange={() => {
-            props.onToggle(props.item.key);
-          }}
+          onCheckedChange={handleCheckedChange}
           aria-label={props.item.symbol}
         />
         <Text className="oui-text-sm oui-font-semibold oui-text-base-contrast-80">
@@ -322,7 +312,7 @@ const SymbolRow: FC<{
         >
           {props.marginMode === MarginMode.ISOLATED ? "Isolated" : "Cross"}
         </span>
-      </Flex>
+      </label>
     </Flex>
   );
 };
