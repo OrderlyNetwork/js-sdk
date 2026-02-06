@@ -32,8 +32,10 @@ export function AssetInfo(props: {
   });
 
   return (
-    <div className={"oui-space-y-[2px] xl:oui-space-y-1"}>
-      <Flex justify={"between"}>
+    <div
+      className={"oui-orderEntry-assetInfo oui-space-y-[2px] xl:oui-space-y-1"}
+    >
+      <Flex justify={"between"} className="oui-orderEntry-estLiqPrice">
         {isMobile ? (
           <Text size="2xs">{t("orderEntry.estLiqPrice")}</Text>
         ) : (
@@ -58,7 +60,7 @@ export function AssetInfo(props: {
           >
             <Text
               size="2xs"
-              className="oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12"
+              className="oui-estLiqPrice-label oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12"
             >
               {t("orderEntry.estLiqPrice")}
             </Text>
@@ -68,7 +70,7 @@ export function AssetInfo(props: {
           unit={props.quote}
           size={"2xs"}
           dp={props.dp}
-          className={"oui-text-base-contrast-80"}
+          className={"oui-estLiqPrice-value oui-text-base-contrast-80"}
           unitClassName={"oui-ml-1 oui-text-base-contrast-36"}
         >
           {canTrade ? (displayEstLiqPrice ?? "--") : "--"}

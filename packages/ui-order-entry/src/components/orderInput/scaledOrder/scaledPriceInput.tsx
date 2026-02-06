@@ -24,6 +24,7 @@ export const ScaledPriceInput = memo((props: ScaledPriceInputProps) => {
         label={t("orderEntry.startPrice")}
         suffix={quote}
         id="order_start_price_input"
+        className="oui-orderEntry-scaledOrder-startPriceInput"
         value={props.start_price}
         error={getErrorMsg("start_price")}
         onChange={(e) => {
@@ -40,6 +41,7 @@ export const ScaledPriceInput = memo((props: ScaledPriceInputProps) => {
         label={t("orderEntry.endPrice")}
         suffix={quote}
         id="order_end_price_input"
+        className="oui-orderEntry-scaledOrder-endPriceInput"
         value={props.end_price}
         error={getErrorMsg("end_price")}
         onChange={(val) => {

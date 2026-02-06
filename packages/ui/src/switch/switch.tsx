@@ -1,11 +1,11 @@
 import React from "react";
 import * as SwitchPrimitives from "@radix-ui/react-switch";
 import { tv, type VariantProps } from "tailwind-variants";
-import { cn } from "..";
 
 const switchVariants = tv({
   slots: {
     root: [
+      "oui-switch",
       "peer",
       "oui-inline-flex",
       "oui-h-[16px]",

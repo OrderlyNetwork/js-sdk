@@ -35,6 +35,7 @@ export const LeverageBadge = (props: LeverageBadgeProps) => {
       itemAlign="center"
       gapX={1}
       className={cn(
+        "oui-orderEntry-leverage-btn",
         "oui-h-8",
         "oui-rounded oui-border oui-border-line oui-bg-base-6",
         "oui-cursor-pointer oui-select-none oui-text-xs oui-font-semibold oui-text-base-contrast-54",

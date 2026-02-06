@@ -20,7 +20,7 @@ export const LimitPriceSuffix = (props: LimitPriceSuffixProps) => {
     <Flex
       direction="column"
       itemAlign="end"
-      className={cn("oui-order-entry-limit-price-input-suffix", "oui-text-2xs")}
+      className={cn("oui-orderEntry-limitPrice-suffix", "oui-text-2xs")}
     >
       {quote}
       <Flex justify={"end"} itemAlign="center" gap={2}>
@@ -31,6 +31,7 @@ export const LimitPriceSuffix = (props: LimitPriceSuffixProps) => {
           itemAlign="center"
           r="base"
           className={cn(
+            "oui-orderEntry-bboToggle",
             "oui-mt-[2px] oui-cursor-pointer oui-select-none oui-border",
             bbo.bboStatus === BBOStatus.ON
               ? "oui-border-primary"
@@ -55,6 +56,7 @@ export const LimitPriceSuffix = (props: LimitPriceSuffixProps) => {
         >
           <Text
             className={cn(
+              "oui-orderEntry-bboToggle-label",
               bbo.bboStatus === BBOStatus.ON && "oui-text-primary",
               bbo.bboStatus === BBOStatus.OFF && "oui-text-base-contrast-54",
               bbo.bboStatus === BBOStatus.DISABLED &&
@@ -66,6 +68,7 @@ export const LimitPriceSuffix = (props: LimitPriceSuffixProps) => {
         </Flex>
         <Text
           className={cn(
+            "oui-orderEntry-midPrice-btn",
             "oui-select-none",
             "oui-cursor-pointer oui-text-primary",
           )}

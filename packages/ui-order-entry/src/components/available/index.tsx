@@ -33,12 +33,18 @@ export const Available = (props: AvailableProps) => {
   }, [currentLtv]);
 
   return (
-    <Flex itemAlign={"center"} justify={"between"}>
-      <Text size={"2xs"}>{t("common.available")}</Text>
+    <Flex
+      itemAlign={"center"}
+      justify={"between"}
+      className="oui-orderEntry-available"
+    >
+      <Text className="oui-available-label" size={"2xs"}>
+        {t("common.available")}
+      </Text>
       <Flex itemAlign={"center"} justify={"center"} gap={1}>
         {showLTV && (
           <Tooltip
-            className={"oui-bg-base-6 oui-p-2"}
+            className={"oui-available-ltvRisk-tooltip oui-bg-base-6 oui-p-2"}
             content={<LTVRiskTooltipWidget />}
           >
             <InfoCircleIcon
@@ -49,7 +55,7 @@ export const Available = (props: AvailableProps) => {
         <Text.numeral
           unit={quote}
           size={"2xs"}
-          className={"oui-text-base-contrast-80"}
+          className={"oui-available-value oui-text-base-contrast-80"}
           unitClassName={"oui-ml-1 oui-text-base-contrast-54"}
           dp={2}
           padding={false}
@@ -60,7 +66,7 @@ export const Available = (props: AvailableProps) => {
           variant="text"
           size="xs"
           color="secondary"
-          className="oui-p-0 hover:oui-text-base-contrast-80"
+          className="oui-available-deposit-icon oui-p-0 hover:oui-text-base-contrast-80"
           onClick={() => {
             // TODO: when we plan to move modal IDs to a public package, we need to use the ID from the public package
             const handleDomId = isMobile

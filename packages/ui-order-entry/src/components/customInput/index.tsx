@@ -66,7 +66,7 @@ export const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
         }
         classNames={{
           root: cn(
-            "orderly-order-entry oui-relative oui-h-[54px] oui-rounded oui-border oui-border-solid oui-border-line oui-px-2 oui-py-1 group-first:oui-rounded-t-xl group-last:oui-rounded-b-xl",
+            "oui-orderEntry-customInput orderly-order-entry oui-relative oui-h-[54px] oui-rounded oui-border oui-border-solid oui-border-line oui-px-2 oui-py-1 group-first:oui-rounded-t-xl group-last:oui-rounded-b-xl",
             props.className,
             props.classNames?.root,
           ),
@@ -92,7 +92,7 @@ const InputLabel = (
     <label
       htmlFor={props.id}
       className={cn(
-        "oui-absolute oui-left-2 oui-top-[7px] oui-text-2xs oui-text-base-contrast-36",
+        "oui-input-label oui-absolute oui-left-2 oui-top-[7px] oui-text-2xs oui-text-base-contrast-36",
         props.className,
       )}
     >

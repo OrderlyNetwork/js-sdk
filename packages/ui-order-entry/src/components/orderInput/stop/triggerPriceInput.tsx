@@ -21,7 +21,7 @@ export const TriggerPriceInput: FC<TriggerPriceInputProps> = memo((props) => {
   } = useOrderEntryContext();
 
   return (
-    <div className="oui-group">
+    <div className="oui-orderEntry-triggerPriceInput-container oui-group">
       <CustomInput
         ref={triggerPriceInputRef}
         id="order_trigger_price_input"
@@ -29,6 +29,7 @@ export const TriggerPriceInput: FC<TriggerPriceInputProps> = memo((props) => {
         label={t("common.trigger")}
         suffix={symbolInfo.quote}
         value={props.trigger_price}
+        className="oui-orderEntry-triggerPriceInput"
         onChange={(e) => {
           setOrderValue("trigger_price", e);
         }}

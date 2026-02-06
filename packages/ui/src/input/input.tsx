@@ -1,9 +1,9 @@
 import React, { type InputHTMLAttributes, useId } from "react";
 import { cnBase, cn, type VariantProps } from "tailwind-variants";
+import { tv } from "../utils/tv";
 import { BaseInput, BaseInputProps } from "./baseInput";
 import { InputPrefix } from "./prefix";
 import { InputSuffix } from "./suffix";
-import { tv } from "../utils/tv";
 
 const inputVariants = tv(
   {
@@ -87,7 +87,10 @@ const inputVariants = tv(
           input: ["oui-text-danger"],
         },
         warning: {
-          box: ["oui-outline-warning-darken", "focus-within:oui-outline-warning-darken"],
+          box: [
+            "oui-outline-warning-darken",
+            "focus-within:oui-outline-warning-darken",
+          ],
           input: ["oui-text-warning-darken"],
         },
         default: {
@@ -141,7 +144,7 @@ const inputVariants = tv(
   },
   {
     responsiveVariants: ["md", "lg"],
-  }
+  },
 );
 
 // @ts-ignore
@@ -212,7 +215,11 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>((props, ref) => {
         id={id || cid}
         prefix={prefix}
         className={additional({
-          className: cnBase(classNames?.additional, classNames?.prefix),
+          className: cnBase(
+            "oui-input-prefix",
+            classNames?.additional,
+            classNames?.prefix,
+          ),
         })}
       />
       <BaseInput
@@ -226,7 +233,11 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>((props, ref) => {
         id={id || cid}
         suffix={suffixElement}
         className={additional({
-          className: cnBase(classNames?.additional, classNames?.suffix),
+          className: cnBase(
+            "oui-input-suffix",
+            classNames?.additional,
+            classNames?.suffix,
+          ),
         })}
       />
     </div>
@@ -244,7 +255,7 @@ const ClearButton = React.forwardRef<
         props.onClick();
       }}
       ref={ref}
-      className={props.className}
+      className={cnBase("oui-input-clear-btn", props.className)}
     >
       <svg
         width="16"

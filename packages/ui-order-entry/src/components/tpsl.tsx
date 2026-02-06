@@ -75,8 +75,12 @@ export const OrderTPSL = (props: {
     ERROR_MSG_CODES.SL_PRICE_WARNING;
 
   return (
-    <div>
-      <Flex itemAlign={"center"} justify={"between"}>
+    <div className="oui-orderEntry-tpsl">
+      <Flex
+        itemAlign={"center"}
+        justify={"between"}
+        className="oui-orderEntry-tpsl-header"
+      >
         <Flex itemAlign={"center"} gapX={1}>
           <Switch
             id={"order_entry_tpsl"}
@@ -130,6 +134,7 @@ export const OrderTPSL = (props: {
       </Flex>
       <div
         className={cn(
+          "oui-orderEntry-tpsl-body",
           "oui-max-h-0 oui-overflow-hidden oui-transition-all",
           props.switchState && "oui-max-h-[120px]",
         )}
@@ -190,7 +195,9 @@ const TPSLInputForm = React.forwardRef<
   return (
     <div
       ref={ref}
-      className={"oui-space-y-1 oui-px-px oui-py-2 oui-transition-all"}
+      className={
+        "oui-orderEntry-tpsl-form oui-space-y-1 oui-px-px oui-py-2 oui-transition-all"
+      }
     >
       <Flex itemAlign={"center"} justify={"between"} gapX={2}>
         <TPSLPositionTypeWidget
@@ -258,7 +265,11 @@ const TPSLAdvancedButton = (props: {
       itemAlign={"center"}
       gapX={1}
       onClick={props.showTPSLAdvanced}
-      className={cn("oui-group oui-cursor-pointer", props.className)}
+      className={cn(
+        "oui-orderEntry-tpsl-advanced-btn",
+        "oui-group oui-cursor-pointer",
+        props.className,
+      )}
     >
       <Text
         className={cn(
@@ -270,7 +281,7 @@ const TPSLAdvancedButton = (props: {
       </Text>
       <SettingFillIcon
         size={12}
-        className="oui-text-base-contrast-54 group-hover:oui-text-base-contrast oui-cursor-pointer"
+        className="oui-advanced-icon oui-text-base-contrast-54 group-hover:oui-text-base-contrast oui-cursor-pointer"
         opacity={1}
         onClick={props.showTPSLAdvanced}
       />
@@ -386,7 +397,11 @@ const TPSLTriggerPriceInput = (props: {
       value={innerValue}
       classNames={{
         additional: "oui-text-base-contrast-54",
-        root: cn("oui-pr-2 md:oui-pr-3", props.classNames?.root),
+        root: cn(
+          "oui-orderEntry-tpsl-triggerPrice",
+          "oui-pr-2 md:oui-pr-3",
+          props.classNames?.root,
+        ),
         prefix: cn("oui-pr-1 md:oui-pr-2", props.classNames?.prefix),
         input: cn(
           "oui-text-2xs placeholder:oui-text-2xs",

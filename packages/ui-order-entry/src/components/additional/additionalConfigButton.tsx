@@ -14,6 +14,7 @@ export function AdditionalConfigButton(props: AdditionalInfoProps) {
       <PopoverTrigger asChild>
         <button
           data-testid="oui-testid-orderEntry-additional-button"
+          className="oui-orderEntry-additionalConfig-btn"
           onClick={() => {
             setOpen(true);
           }}
@@ -34,7 +35,13 @@ export function AdditionalConfigButton(props: AdditionalInfoProps) {
           </svg>
         </button>
       </PopoverTrigger>
-      <PopoverContent side={"top"} align={"end"} className={"oui-w-[230px]"}>
+      <PopoverContent
+        side={"top"}
+        align={"end"}
+        className={
+          "oui-orderEntry-additionalInfo-popover-content oui-w-[230px]"
+        }
+      >
         <AdditionalInfo {...props} />
       </PopoverContent>
     </PopoverRoot>

@@ -102,7 +102,7 @@ export const SlippageEditor = forwardRef<
   );
 
   return (
-    <div className="oui-text-2xs">
+    <div className="oui-orderEntry-slippageEditor oui-text-2xs">
       <Flex mb={2} gapX={1}>
         <Text size="xs">{t("orderEntry.slippage")}</Text>
         {toolTipButton}
@@ -132,6 +132,7 @@ export const SlippageEditor = forwardRef<
           onValueChange={onValueChange}
           classNames={{
             root: cn(
+              "oui-slippageEditor-customInput",
               "oui-rounded-md oui-bg-base-6",
               "oui-h-[40px] oui-w-[74px]",
             ),
@@ -167,6 +168,7 @@ const SlippageItem: FC<SlippageItemProps> = ({ value, isActive, onClick }) => {
       width={74}
       height={40}
       className={cn(
+        "oui-slippageEditor-option",
         "oui-cursor-pointer oui-select-none",
         isActive
           ? "oui-bg-primary-light oui-text-primary-contrast/80"

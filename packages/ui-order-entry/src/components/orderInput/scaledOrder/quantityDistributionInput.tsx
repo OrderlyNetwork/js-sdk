@@ -36,6 +36,7 @@ export const QuantityDistributionInput: FC<QuantityDistributionInputProps> =
         width="100%"
         intensity={600}
         className={cn(
+          "oui-orderEntry-quantityDistribution",
           "oui-t-rounded oui-text-base-contrast-36",
           "oui-border oui-border-solid oui-border-line",
           props.className,
@@ -43,7 +44,7 @@ export const QuantityDistributionInput: FC<QuantityDistributionInputProps> =
       >
         <Text
           size="2xs"
-          className="oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12"
+          className="oui-quantityDistribution-hint oui-cursor-pointer oui-border-b oui-border-dashed oui-border-line-12"
           onClick={showHint}
         >
           {t("orderEntry.quantityDistribution")}
@@ -189,7 +190,13 @@ const QuantityDistribution: FC<QuantityDistributionProps> = (props) => {
   }, [t]);
 
   return (
-    <Flex className={cn("oui-gap-x-[6px] lg:oui-gap-x-2")} wrap="wrap">
+    <Flex
+      className={cn(
+        "oui-orderEntry-quantityDistribution-options",
+        "oui-gap-x-[6px] lg:oui-gap-x-2",
+      )}
+      wrap="wrap"
+    >
       {Object.values(DistributionType).map((type) => {
         return (
           <Flex itemAlign={"center"} key={type}>
@@ -197,12 +204,14 @@ const QuantityDistribution: FC<QuantityDistributionProps> = (props) => {
               id={`distribution-type-${type}`}
               color={"white"}
               variant={"radio"}
+              className="oui-quantityDistribution-option-radio"
               checked={value === type}
               onCheckedChange={onChange(type)}
             />
             <label
               htmlFor={`distribution-type-${type}`}
               className={cn(
+                "oui-quantityDistribution-option-label",
                 "oui-text-2xs",
                 "oui-ml-1",
                 "oui-whitespace-nowrap oui-break-normal",

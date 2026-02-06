@@ -395,7 +395,10 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
         base={symbolInfo.base}
       />
       <div
-        className={"oui-space-y-2 oui-text-base-contrast-54 xl:oui-space-y-3"}
+        className={cn(
+          "oui-orderEntry",
+          "oui-space-y-2 oui-text-base-contrast-54 xl:oui-space-y-3",
+        )}
         ref={props.containerRef}
       >
         <OrderEntryHeader
@@ -440,6 +443,7 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           // color={side === OrderSide.BUY ? "buy" : "sell"}
           data-type={OrderSide.BUY}
           className={cn(
+            "oui-orderEntry-submit-btn",
             side === OrderSide.BUY
               ? "orderly-order-entry-submit-button-buy oui-bg-success-darken hover:oui-bg-success-darken/80 active:oui-bg-success-darken/80"
               : "orderly-order-entry-submit-button-sell oui-bg-danger-darken hover:oui-bg-danger-darken/80 active:oui-bg-danger-darken/80",
@@ -528,7 +532,11 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
         )}
 
         {showReduceOnlySection && (
-          <Flex justify={"between"} itemAlign={"center"} className="oui-mt-2">
+          <Flex
+            justify={"between"}
+            itemAlign={"center"}
+            className={cn("oui-reduceOnly-container", "oui-mt-2")}
+          >
             <ReduceOnlySwitch
               checked={formattedOrder.reduce_only ?? false}
               onCheckedChange={(checked) => {
@@ -539,15 +547,22 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           </Flex>
         )}
         {showSoundSection && (
-          <Flex justify={"between"} itemAlign={"center"}>
+          <Flex
+            justify={"between"}
+            itemAlign={"center"}
+            className="oui-soundAlert-container"
+          >
             <Flex itemAlign={"center"} gapX={1}>
               <Switch
-                className="oui-h-[14px]"
+                className={cn("oui-soundAlert-switch", "oui-h-[14px]")}
                 id={soundAlertId}
                 checked={soundAlert}
                 onCheckedChange={(checked) => setSoundAlert(checked)}
               />
-              <label htmlFor={soundAlertId} className={"oui-text-xs"}>
+              <label
+                htmlFor={soundAlertId}
+                className={cn("oui-soundAlert-label", "oui-text-xs")}
+              >
                 {t("portfolio.setting.soundAlerts")}
               </label>
             </Flex>
@@ -566,13 +581,22 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           )}
         {/* Additional info （fok，ioc、post only， order confirm hidden） */}
         {pinned && (
-          <Box p={2} r={"md"} intensity={700} position={"relative"}>
+          <Box
+            p={2}
+            r={"md"}
+            intensity={700}
+            position={"relative"}
+            className="oui-additional-container"
+          >
             <AdditionalInfo {...additionalInfoProps} />
             <PinButton
               onClick={() => {
                 setPinned(false);
               }}
-              className={"oui-group oui-absolute oui-right-2 oui-top-2"}
+              className={cn(
+                "oui-additional-pin-btn",
+                "oui-group oui-absolute oui-right-2 oui-top-2",
+              )}
               data-testid="oui-testid-orderEntry-pinned-button"
             />
           </Box>
@@ -583,9 +607,13 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
         open={showTPSLAdvanced}
         onOpenChange={setShowTPSLAdvanced}
         classNames={{
-          body: "oui-h-full oui-pb-0 oui-border-none",
-          overlay: "!oui-bg-base-10/60",
+          body: cn(
+            "oui-tpslAdvanced-body",
+            "oui-h-full oui-pb-0 oui-border-none",
+          ),
+          overlay: cn("oui-tpslAdvanced-overlay", "!oui-bg-base-10/60"),
           content: cn(
+            "oui-tpslAdvanced-sheet",
             "oui-rounded-[16px] oui-border-none !oui-p-0",
             isMobile
               ? "oui-inset-y-0 oui-right-0 oui-w-[280px]"
