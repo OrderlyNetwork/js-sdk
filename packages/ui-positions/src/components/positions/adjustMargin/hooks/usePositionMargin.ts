@@ -110,9 +110,9 @@ const usePositionMargin = (
     const unsettledPnlValue = unSettledPnl ?? new Decimal(0);
 
     return account.maxReduce({
-      positionMargin: isolatedMargin,
+      isolatedPositionMargin: isolatedMargin,
       positionNotional: positionNotional.toNumber(),
-      IMR: imrValue.toNumber(),
+      imr: imrValue.toNumber(),
       positionUnsettledPnL: unsettledPnlValue.toNumber(),
     });
   }, [
