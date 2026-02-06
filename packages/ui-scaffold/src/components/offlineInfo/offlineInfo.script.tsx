@@ -2,25 +2,25 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 type Opts = {
   onStatusChange?: (was: boolean, is: boolean) => void;
-  hideDelay?: number; // 网络恢复后延迟隐藏UI的时间（毫秒），默认 3000
+  hideDelay?: number; // Delay in ms to hide UI after network recovery, default 3000
 };
 
 export const useOfflineInfoScript = ({ opts }: { opts?: Opts }) => {
-  // 1 init
+  // Init
   const [offline, setOffline] = useState<boolean | undefined>(undefined);
   const lastRef = useRef(offline);
   const cbRef = useRef(opts?.onStatusChange);
   cbRef.current = opts?.onStatusChange;
 
-  // 管理探测状态和隐藏定时器
+  // Probe state and hide timer
   const probingRef = useRef(false);
   const hideTimerRef = useRef<NodeJS.Timeout | null>(null);
   const hideDelayRef = useRef(opts?.hideDelay ?? 3000);
 
-  // 更新 ref 值
+  // Keep ref in sync
   hideDelayRef.current = opts?.hideDelay ?? 3000;
 
-  // 轻量级探活
+  // Lightweight liveness probe
   const probe = useCallback(async () => {
     try {
       await fetch("/favicon.ico", {
@@ -45,7 +45,7 @@ export const useOfflineInfoScript = ({ opts }: { opts?: Opts }) => {
     };
 
     const onOffline = () => {
-      // 离线时清除隐藏定时器
+      // Clear hide timer when going offline
       if (hideTimerRef.current) {
         clearTimeout(hideTimerRef.current);
         hideTimerRef.current = null;
@@ -54,20 +54,20 @@ export const useOfflineInfoScript = ({ opts }: { opts?: Opts }) => {
     };
 
     const onOnline = async () => {
-      // 使用 ref 防止重复探测
+      // Use ref to avoid duplicate probes
       if (probingRef.current) return;
       try {
         probingRef.current = true;
         const ok = await probe();
         if (ok && alive) {
-          // 只有从离线状态恢复到在线时才延迟隐藏
+          // Only delay hide when recovering from offline to online
           const wasOffline = lastRef.current === true;
 
           if (wasOffline) {
-            // 网络恢复成功，延迟隐藏UI，给用户时间手动刷新
+            // Network recovered; delay hide so user can refresh if needed
             const delay = hideDelayRef.current;
             hideTimerRef.current = setTimeout(() => {
-              update(false); // 确保UI隐藏
+              update(false); // Ensure UI is hidden
             }, delay);
           }
         } else {
@@ -93,7 +93,7 @@ export const useOfflineInfoScript = ({ opts }: { opts?: Opts }) => {
       alive = false;
       window.removeEventListener("offline", onOffline);
       window.removeEventListener("online", onOnline);
-      // 清除隐藏定时器
+      // Clear hide timer
       if (hideTimerRef.current) {
         clearTimeout(hideTimerRef.current);
         hideTimerRef.current = null;

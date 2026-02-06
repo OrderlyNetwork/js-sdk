@@ -44,7 +44,7 @@ interface WalletMethods {
 }
 
 interface SolanaWalletState {
-  // 状态
+  // State
   wallet: Wallet | null;
   isConnecting: boolean;
   error: Error | null;
@@ -52,7 +52,7 @@ interface SolanaWalletState {
   walletMethods: WalletMethods | null;
   pendingWalletName: string | null;
 
-  // 方法
+  // Methods
   connect: (walletName: string) => Promise<Wallet>;
   disconnect: () => Promise<void>;
   setWallet: (wallet: Wallet | null) => void;
