@@ -263,6 +263,7 @@
   "portfolio.setting.cancelOpenOrders.description": "Durante il periodo di aggiornamento, tutti gli ordini aperti saranno annullati per gestire il tuo rischio in caso di alta volatilità del mercato.",
   "portfolio.setting.soundAlerts": "Notifica sonora",
   "portfolio.setting.soundAlerts.description": "Riproduci un suono di notifica per l'esecuzione o cancellazione degli ordini.",
+  "portfolio.setting.theme": "Tema",
   "trading.layout": "Layout",
   "trading.layout.advanced": "Avanzato",
   "trading.layout.advanced.right": "Destra",

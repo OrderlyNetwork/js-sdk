@@ -263,6 +263,7 @@
   "portfolio.setting.cancelOpenOrders.description": "Selama periode peningkatan, semua pesanan terbuka akan dibatalkan untuk mengelola risiko Anda jika terjadi volatilitas pasar yang tinggi.",
   "portfolio.setting.soundAlerts": "Notifikasi suara",
   "portfolio.setting.soundAlerts.description": "Putar suara notifikasi ketika pesanan dieksekusi atau dibatalkan.",
+  "portfolio.setting.theme": "Tema",
   "trading.layout": "Tata letak",
   "trading.layout.advanced": "Lanjutan",
   "trading.layout.advanced.right": "Kanan",

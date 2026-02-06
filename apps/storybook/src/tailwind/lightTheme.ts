@@ -1,0 +1,103 @@
+import plugin from "tailwindcss/plugin";
+
+export const lightThemePlugin = () =>
+  plugin(function ({ addBase }) {
+    addBase({
+      '[data-oui-theme="light"]': {
+        "--oui-font-family":
+          '"DIN2014", "PingFang SC", "Noto Sans CJK SC", "Noto Sans", sans-serif',
+
+        /* colors */
+        "--oui-color-primary": "240 185 11",
+        "--oui-color-primary-light": "252 213 53",
+        "--oui-color-primary-darken": "252 213 53",
+        "--oui-color-primary-contrast": "12 14 18",
+
+        "--oui-color-link": "230 175 0",
+        "--oui-color-link-light": "252 213 53",
+
+        "--oui-color-secondary": "255 255 255",
+        "--oui-color-tertiary": "234 236 239",
+        "--oui-color-quaternary": "218 218 218",
+
+        "--oui-color-danger": "246 70 93",
+        "--oui-color-danger-light": "255 120 140",
+        "--oui-color-danger-darken": "220 50 75",
+        "--oui-color-danger-contrast": "12 14 18",
+
+        "--oui-color-success": "14 203 129",
+        "--oui-color-success-light": "50 220 160",
+        "--oui-color-success-darken": "46 189 133",
+        "--oui-color-success-contrast": "12 14 18",
+
+        "--oui-color-warning": "255 182 93",
+        "--oui-color-warning-light": "255 207 139",
+        "--oui-color-warning-darken": "255 125 0",
+        "--oui-color-warning-contrast": "12 14 18",
+
+        "--oui-color-fill": "234 236 239",
+        "--oui-color-fill-active": "220 222 226",
+
+        "--oui-color-base-1": "200 202 205",
+        "--oui-color-base-2": "60 62 65",
+        "--oui-color-base-3": "120 122 125",
+        "--oui-color-base-4": "180 182 185",
+        "--oui-color-base-5": "200 202 205",
+        "--oui-color-base-6": "220 222 226",
+        "--oui-color-base-7": "234 236 239",
+        "--oui-color-base-8": "240 242 245",
+        "--oui-color-base-9": "255 255 255",
+        "--oui-color-base-10": "245 245 245",
+
+        "--oui-color-base-foreground": "12 14 18",
+        "--oui-color-line": "12 14 18",
+
+        "--oui-color-trading-loss": "246 70 93",
+        "--oui-color-trading-loss-contrast": "255 255 255",
+        "--oui-color-trading-profit": "14 203 129",
+        "--oui-color-trading-profit-contrast": "255 255 255",
+
+        /* gradients */
+        "--oui-gradient-primary-start": "252 213 53",
+        "--oui-gradient-primary-end": "240 185 11",
+
+        "--oui-gradient-secondary-start": "252 213 53",
+        "--oui-gradient-secondary-end": "210 160 0",
+
+        "--oui-gradient-success-start": "50 220 160",
+        "--oui-gradient-success-end": "0 160 110",
+
+        "--oui-gradient-danger-start": "246 70 93",
+        "--oui-gradient-danger-end": "220 50 75",
+
+        "--oui-gradient-warning-start": "255 182 93",
+        "--oui-gradient-warning-end": "255 125 0",
+
+        "--oui-gradient-neutral-start": "200 202 205",
+        "--oui-gradient-neutral-end": "120 122 125",
+
+        "--oui-gradient-brand-stop-start": "6.62%",
+        "--oui-gradient-brand-stop-end": "86.5%",
+        "--oui-gradient-brand-angle": "17.44deg",
+
+        "--oui-gradient-brand-start": "252 213 53",
+        "--oui-gradient-brand-end": "240 185 11",
+
+        /* rounded */
+        "--oui-rounded-sm": "2px",
+        "--oui-rounded": "4px",
+        "--oui-rounded-md": "6px",
+        "--oui-rounded-lg": "8px",
+        "--oui-rounded-xl": "12px",
+        "--oui-rounded-2xl": "16px",
+        "--oui-rounded-full": "9999px",
+
+        /* spacing */
+        "--oui-spacing-xs": "20rem",
+        "--oui-spacing-sm": "22.5rem",
+        "--oui-spacing-md": "26.25rem",
+        "--oui-spacing-lg": "30rem",
+        "--oui-spacing-xl": "33.75rem",
+      },
+    });
+  });

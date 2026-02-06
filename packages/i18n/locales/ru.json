@@ -263,6 +263,7 @@
   "portfolio.setting.cancelOpenOrders.description": "В период обновления все открытые ордера будут отменены для управления вашим риском в случае высокой волатильности рынка.",
   "portfolio.setting.soundAlerts": "Звуковое уведомление",
   "portfolio.setting.soundAlerts.description": "Воспроизводить звук уведомления при исполнении или отмене ордеров.",
+  "portfolio.setting.theme": "Тема",
   "trading.layout": "Макет",
   "trading.layout.advanced": "Расширенный",
   "trading.layout.advanced.right": "Справа",

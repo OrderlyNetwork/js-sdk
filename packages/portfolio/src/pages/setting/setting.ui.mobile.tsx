@@ -10,6 +10,7 @@ import {
 } from "@orderly.network/ui";
 import { AuthGuardTooltip } from "@orderly.network/ui-connector";
 import { LanguageSwitcherWidget } from "@orderly.network/ui-scaffold";
+import { ThemeSettingCard } from "./components/themeSettingCard";
 import type { SettingScriptReturns } from "./setting.script";
 
 type OrderPanelPosition = "left" | "right";
@@ -199,6 +200,16 @@ export const SettingMobile: FC<SettingScriptReturns> = (props) => {
           </Flex>
         </Card>
       )}
+
+      <ThemeSettingCard
+        themes={props.themes}
+        currentThemeId={props.currentThemeId}
+        setCurrentThemeId={props.setCurrentThemeId}
+        classNames={{
+          card: "oui-mt-2 oui-bg-base-9 oui-font-semibold oui-p-3",
+          content: "oui-pt-3",
+        }}
+      />
 
       <Card
         // @ts-ignore

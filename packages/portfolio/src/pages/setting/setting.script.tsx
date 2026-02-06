@@ -9,7 +9,7 @@ import {
 } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
-import { toast } from "@orderly.network/ui";
+import { toast, useOrderlyTheme } from "@orderly.network/ui";
 
 const ORDERLY_ORDER_SOUND_ALERT_KEY = "orderly_order_sound_alert";
 
@@ -18,24 +18,15 @@ const ORDERLY_MWEB_ORDER_ENTRY_SIDE_MARKETS_LAYOUT =
 
 export type OrderPanelLayout = "left" | "right";
 
-export type SettingScriptReturns = {
-  maintenance_cancel_orders?: boolean;
-  setMaintainConfig: (maintenance_cancel_order_flag: boolean) => void;
-  isSetting: boolean;
-  canTouch: boolean;
-  soundAlert: boolean;
-  setSoundAlert: (value: boolean) => void;
-  hasOrderFilledMedia: boolean;
-  orderPanelLayout: OrderPanelLayout;
-  setOrderPanelLayout: (v: OrderPanelLayout) => void;
-};
+export type SettingScriptReturns = ReturnType<typeof useSettingScript>;
 
-export const useSettingScript = (): SettingScriptReturns => {
-  const { data, mutate: refresh } = useAccountInfo();
+export const useSettingScript = () => {
+  const { data } = useAccountInfo();
   const { wrongNetwork, disabledConnect } = useAppContext();
-  const [update, { isMutating }] = useMutation("/v1/client/maintenance_config");
+  const [update] = useMutation("/v1/client/maintenance_config");
   const [checked, setChecked] = useState(false);
   const { notification } = useOrderlyContext();
+  const { themes, currentThemeId, setCurrentThemeId } = useOrderlyTheme();
 
   const [soundAlert, setSoundAlert] = useLocalStorage<boolean>(
     ORDERLY_ORDER_SOUND_ALERT_KEY,
@@ -87,5 +78,8 @@ export const useSettingScript = (): SettingScriptReturns => {
     hasOrderFilledMedia: Boolean(notification?.orderFilled?.media),
     orderPanelLayout,
     setOrderPanelLayout,
+    themes,
+    currentThemeId,
+    setCurrentThemeId,
   };
 };

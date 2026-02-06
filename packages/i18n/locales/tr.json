@@ -263,6 +263,7 @@
   "portfolio.setting.cancelOpenOrders.description": "Güncelleme süresi boyunca, yüksek piyasa oynaklığı durumunda riskinizi yönetmek için tüm açık emirler iptal edilecektir.",
   "portfolio.setting.soundAlerts": "Ses bildirimi",
   "portfolio.setting.soundAlerts.description": "Emirler gerçekleştiğinde veya iptal edildiğinde bildirim sesi çal.",
+  "portfolio.setting.theme": "Tema",
   "trading.layout": "Düzen",
   "trading.layout.advanced": "Gelişmiş",
   "trading.layout.advanced.right": "Sağ",

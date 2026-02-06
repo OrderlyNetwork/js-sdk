@@ -263,6 +263,7 @@
   "portfolio.setting.cancelOpenOrders.description": "Pendant la période de mise à niveau, tous les ordres ouverts seront annulés pour gérer votre risque en cas de forte volatilité du marché.",
   "portfolio.setting.soundAlerts": "Notification sonore",
   "portfolio.setting.soundAlerts.description": "Jouer un son de notification lors de l'exécution ou de l'annulation d'ordres.",
+  "portfolio.setting.theme": "Thème",
   "trading.layout": "Disposition",
   "trading.layout.advanced": "Avancé",
   "trading.layout.advanced.right": "Droite",

@@ -55,7 +55,10 @@ export {
   OrderlyThemeProvider,
   type OrderlyThemeProviderProps,
 } from "./provider/orderlyThemeProvider";
-export { useOrderlyTheme } from "./provider/orderlyThemeContext";
+export {
+  useOrderlyTheme,
+  type ThemeConfig,
+} from "./provider/orderlyThemeContext";
 export * from "./plugin";
 
 //===== Misc widgets

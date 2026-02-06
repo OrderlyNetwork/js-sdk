@@ -263,6 +263,7 @@
   "portfolio.setting.cancelOpenOrders.description": "업그레이드 기간 동안 높은 시장 변동성 발생 시 리스크를 관리하기 위해 모든 미체결 주문이 취소됩니다.",
   "portfolio.setting.soundAlerts": "사운드 알림",
   "portfolio.setting.soundAlerts.description": "주문 체결 또는 취소 시 알림음을 재생합니다.",
+  "portfolio.setting.theme": "테마",
   "trading.layout": "레이아웃",
   "trading.layout.advanced": "고급",
   "trading.layout.advanced.right": "오른쪽",

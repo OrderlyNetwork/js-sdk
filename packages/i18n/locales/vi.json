@@ -263,6 +263,7 @@
   "portfolio.setting.cancelOpenOrders.description": "Trong thời gian nâng cấp, tất cả các lệnh mở sẽ bị hủy để quản lý rủi ro trong trường hợp biến động thị trường cao.",
   "portfolio.setting.soundAlerts": "Thông báo âm thanh",
   "portfolio.setting.soundAlerts.description": "Phát âm thanh thông báo khi lệnh được thực hiện hoặc hủy.",
+  "portfolio.setting.theme": "Chủ đề",
   "trading.layout": "Bố cục",
   "trading.layout.advanced": "Nâng cao",
   "trading.layout.advanced.right": "Phải",

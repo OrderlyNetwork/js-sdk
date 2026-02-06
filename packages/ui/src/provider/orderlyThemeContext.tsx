@@ -13,6 +13,24 @@ export type ComponentOverrides = {
   };
 };
 
+export type ThemeConfig = {
+  /**
+   * Unique theme identifier.
+   * Will also be used as the value of `data-oui-theme`.
+   */
+  id: string;
+  /**
+   * Display name for this theme. Used in UI (e.g. settings page).
+   */
+  displayName: string;
+  /**
+   * Optional CSS variables overrides for this theme.
+   * Keys should be full CSS variable names, e.g. "--oui-color-primary".
+   * These are applied at runtime via document.documentElement.style.setProperty.
+   */
+  cssVars?: Record<string, string>;
+};
+
 type GetComponentTheme = <T extends keyof ComponentOverrides>(
   component: T,
   defaultValue?: ComponentOverrides[T],
@@ -21,6 +39,9 @@ type GetComponentTheme = <T extends keyof ComponentOverrides>(
 export type OrderlyThemeContextState = {
   // overrides?: Partial<ComponentOverrides>;
   getComponentTheme: GetComponentTheme;
+  themes: ThemeConfig[];
+  currentThemeId?: string;
+  setCurrentThemeId?: (id: string) => void;
 };
 
 export const OrderlyThemeContext = createContext(

@@ -263,6 +263,7 @@
   "portfolio.setting.cancelOpenOrders.description": "アップグレード期間中、市場のボラティリティが高い場合のリスク管理のため、すべての未決済注文がキャンセルされます。",
   "portfolio.setting.soundAlerts": "サウンド通知",
   "portfolio.setting.soundAlerts.description": "注文が約定またはキャンセルされたときに音を再生します。",
+  "portfolio.setting.theme": "テーマ",
   "trading.layout": "レイアウト",
   "trading.layout.advanced": "詳細",
   "trading.layout.advanced.right": "右",

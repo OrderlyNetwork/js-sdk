@@ -263,6 +263,7 @@
   "portfolio.setting.cancelOpenOrders.description": "Під час періоду оновлення всі відкриті ордери будуть скасовані для управління вашим ризиком у разі високої волатильності ринку.",
   "portfolio.setting.soundAlerts": "Звукове сповіщення",
   "portfolio.setting.soundAlerts.description": "Відтворювати звук сповіщення при виконанні або скасуванні ордерів.",
+  "portfolio.setting.theme": "Тема",
   "trading.layout": "Макет",
   "trading.layout.advanced": "Розширений",
   "trading.layout.advanced.right": "Праворуч",

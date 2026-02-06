@@ -6,6 +6,7 @@ const themes = {
   custom: "custom",
   roundless: "roundless",
   lightPrimary: "lightPrimary",
+  light: "light",
 };
 
 /** set custom theme */

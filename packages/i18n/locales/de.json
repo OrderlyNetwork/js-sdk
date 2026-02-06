@@ -263,6 +263,7 @@
   "portfolio.setting.cancelOpenOrders.description": "Während der Aktualisierung werden alle offenen Aufträge storniert, um Ihr Risiko bei hoher Marktvolatilität zu verwalten.",
   "portfolio.setting.soundAlerts": "Tonbenachrichtigung",
   "portfolio.setting.soundAlerts.description": "Spielt einen Hinweiston ab bei Auftragsausführung oder -stornierung.",
+  "portfolio.setting.theme": "Thema",
   "trading.layout": "Layout",
   "trading.layout.advanced": "Erweitert",
   "trading.layout.advanced.right": "Rechts",
