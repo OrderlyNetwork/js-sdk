@@ -31,7 +31,7 @@ export const Countdown: FC<CountdownTimerProps> = ({ className }) => {
     }
 
     const calculateTimeLeft = (): TimeLeft => {
-      const targetDate = currentStage.start_time * 1000; // 转换为毫秒
+      const targetDate = currentStage.start_time * 1000; // Convert to milliseconds
       const now = new Date().getTime();
       const difference = targetDate - now;
 
