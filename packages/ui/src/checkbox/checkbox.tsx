@@ -62,20 +62,24 @@ const Checkbox = React.forwardRef<
       <CheckboxPrimitive.Indicator
         className={cnBase(
           "oui-flex oui-items-center oui-justify-center oui-text-current",
-          props.indicatorClassName
+          props.indicatorClassName,
         )}
       >
         {variant === "checkBox" ? (
           <CheckboxIcon
             className={cnBase(
-              color === "primary" ? "oui-text-primary" : "oui-text-white"
+              color === "primary"
+                ? "oui-text-primary"
+                : "oui-text-base-contrast",
             )}
           />
         ) : (
           <div
             className={cnBase(
               "oui-w-[6px] oui-h-[6px] oui-rounded-full",
-              color === "primary" ? "oui-bg-primary" : "oui-bg-base-contrast-80"
+              color === "primary"
+                ? "oui-bg-primary"
+                : "oui-bg-base-contrast-80",
             )}
           />
         )}
@@ -88,7 +92,7 @@ Checkbox.displayName = CheckboxPrimitive.Root.displayName;
 export { Checkbox };
 
 export const CheckboxIcon: React.FC<React.SVGProps<SVGSVGElement>> = (
-  props
+  props,
 ) => (
   <svg
     width="12"

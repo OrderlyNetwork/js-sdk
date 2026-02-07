@@ -122,8 +122,8 @@ export const Tab: FC<
                 fill="currentColor"
                 className={
                   props.tab === TabTypes.affiliate
-                    ? "oui-fill-white/[.98]"
-                    : "oui-fill-white/[.36]"
+                    ? "oui-fill-base-contrast"
+                    : "oui-fill-base-contrast-36"
                 }
               />
               <Text>{t("common.affiliate")}</Text>
@@ -141,8 +141,8 @@ export const Tab: FC<
                 fill="currentColor"
                 className={
                   props.tab === TabTypes.trader
-                    ? "oui-fill-white/[.98]"
-                    : "oui-fill-white/[.36]"
+                    ? "oui-fill-base-contrast"
+                    : "oui-fill-base-contrast-36"
                 }
               />
               <Text>{t("affiliate.trader")}</Text>

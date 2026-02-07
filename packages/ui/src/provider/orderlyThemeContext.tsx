@@ -24,6 +24,10 @@ export type ThemeConfig = {
    */
   displayName: string;
   /**
+   * Theme mode.
+   */
+  mode: "dark" | "light";
+  /**
    * Optional CSS variables overrides for this theme.
    * Keys should be full CSS variable names, e.g. "--oui-color-primary".
    * These are applied at runtime via document.documentElement.style.setProperty.
@@ -41,6 +45,7 @@ export type OrderlyThemeContextState = {
   getComponentTheme: GetComponentTheme;
   themes: ThemeConfig[];
   currentThemeId?: string;
+  currentTheme?: ThemeConfig;
   setCurrentThemeId?: (id: string) => void;
 };
 

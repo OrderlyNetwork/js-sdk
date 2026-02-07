@@ -17,7 +17,7 @@ const inputVariants = tv(
         "placeholder:oui-text-base-contrast-20",
         "placeholder:oui-text-xs",
         "oui-tabular-nums",
-        "oui-text-white",
+        "oui-text-base-contrast",
         "autofill:oui-bg-transparent",
         "oui-input-input",
         "disabled:oui-cursor-not-allowed",

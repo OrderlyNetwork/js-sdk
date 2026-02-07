@@ -11,7 +11,7 @@ export const lightThemePlugin = () =>
         "--oui-color-primary": "240 185 11",
         "--oui-color-primary-light": "252 213 53",
         "--oui-color-primary-darken": "252 213 53",
-        "--oui-color-primary-contrast": "12 14 18",
+        "--oui-color-primary-contrast": "255 255 255",
 
         "--oui-color-link": "230 175 0",
         "--oui-color-link-light": "252 213 53",
@@ -39,11 +39,11 @@ export const lightThemePlugin = () =>
         "--oui-color-fill-active": "220 222 226",
 
         "--oui-color-base-1": "200 202 205",
-        "--oui-color-base-2": "60 62 65",
-        "--oui-color-base-3": "120 122 125",
+        "--oui-color-base-2": "210 210 210",
+        "--oui-color-base-3": "180 180 180",
         "--oui-color-base-4": "180 182 185",
         "--oui-color-base-5": "200 202 205",
-        "--oui-color-base-6": "220 222 226",
+        "--oui-color-base-6": "230 230 230",
         "--oui-color-base-7": "234 236 239",
         "--oui-color-base-8": "240 242 245",
         "--oui-color-base-9": "255 255 255",
@@ -58,29 +58,29 @@ export const lightThemePlugin = () =>
         "--oui-color-trading-profit-contrast": "255 255 255",
 
         /* gradients */
-        "--oui-gradient-primary-start": "252 213 53",
+        "--oui-gradient-primary-start": "240 185 11",
         "--oui-gradient-primary-end": "240 185 11",
 
         "--oui-gradient-secondary-start": "252 213 53",
         "--oui-gradient-secondary-end": "210 160 0",
 
-        "--oui-gradient-success-start": "50 220 160",
-        "--oui-gradient-success-end": "0 160 110",
+        "--oui-gradient-success-start": "14 203 129",
+        "--oui-gradient-success-end": "14 203 129",
 
-        "--oui-gradient-danger-start": "246 70 93",
-        "--oui-gradient-danger-end": "220 50 75",
+        "--oui-gradient-danger-start": "2246 70 93",
+        "--oui-gradient-danger-end": "246 70 93",
 
         "--oui-gradient-warning-start": "255 182 93",
-        "--oui-gradient-warning-end": "255 125 0",
+        "--oui-gradient-warning-end": "255 182 93",
 
-        "--oui-gradient-neutral-start": "200 202 205",
-        "--oui-gradient-neutral-end": "120 122 125",
+        "--oui-gradient-neutral-start": "200 200 200",
+        "--oui-gradient-neutral-end": "200 200 200",
 
         "--oui-gradient-brand-stop-start": "6.62%",
         "--oui-gradient-brand-stop-end": "86.5%",
         "--oui-gradient-brand-angle": "17.44deg",
 
-        "--oui-gradient-brand-start": "252 213 53",
+        "--oui-gradient-brand-start": "240 185 11",
         "--oui-gradient-brand-end": "240 185 11",
 
         /* rounded */

@@ -121,7 +121,7 @@ export const Setting: FC<SettingState> = (props) => {
         size={16}
         color="white"
         opacity={1}
-        className="oui-text-white/[.36] hover:oui-text-white/80"
+        className="oui-text-base-contrast-36 hover:oui-text-base-contrast-80"
       />
     </Button>
   );
@@ -285,7 +285,7 @@ const SelIcon = () => {
       viewBox="0 0 16 16"
       fill="currentColor"
       xmlns="http://www.w3.org/2000/svg"
-      className="oui-fill-white"
+      className="oui-fill-base-contrast"
     >
       <path
         d="M8.01 1.333a6.667 6.667 0 1 0 0 13.333 6.667 6.667 0 0 0 0-13.333m0 1.333a5.334 5.334 0 1 1-.001 10.667 5.334 5.334 0 0 1 0-10.667"

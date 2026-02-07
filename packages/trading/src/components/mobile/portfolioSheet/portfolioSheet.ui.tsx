@@ -266,7 +266,7 @@ const IconButton: React.FC<{
     <Icon
       onClick={disabled ? undefined : onClick}
       className={cn(
-        "oui-text-white oui-m-2 oui-transition-all",
+        "oui-text-base-contrast oui-m-2 oui-transition-all",
         disabled
           ? "oui-cursor-not-allowed oui-opacity-20"
           : "oui-cursor-pointer oui-opacity-100",

@@ -102,7 +102,7 @@ export const OrderTPSL = (props: {
             // opacity={0.36}
             size={14}
             opacity={1}
-            className="oui-cursor-pointer oui-text-white/[.36] hover:oui-text-white/80"
+            className="oui-cursor-pointer oui-text-base-contrast-36 hover:oui-text-base-contrast-80"
             onClick={() => {
               modal.dialog({
                 title: t("common.tips"),

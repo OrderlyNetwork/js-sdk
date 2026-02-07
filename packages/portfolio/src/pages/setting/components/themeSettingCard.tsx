@@ -18,7 +18,7 @@ export const ThemeSettingCard: FC<ThemeSettingCardProps> = (props) => {
 
   const { themes, currentThemeId, setCurrentThemeId, classNames } = props;
 
-  if (!themes || themes.length <= 1 || !currentThemeId) {
+  if (!themes || themes.length <= 1) {
     return null;
   }
 

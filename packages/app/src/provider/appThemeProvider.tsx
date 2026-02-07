@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren, useEffect } from "react";
+import { FC, PropsWithChildren, useEffect, useMemo } from "react";
 import { useLocalStorage } from "@orderly.network/hooks";
 import {
   OrderlyThemeProvider,
@@ -17,6 +17,10 @@ export const AppThemeProvider: FC<AppThemeProviderProps> = (props) => {
     string | undefined
   >(ORDERLY_THEME_STORAGE_KEY, themes?.[0]?.id);
 
+  const currentTheme = useMemo(() => {
+    return themes?.find((theme) => theme.id === currentThemeId);
+  }, [themes, currentThemeId]);
+
   // Apply theme to DOM via data-oui-theme and optional cssVars.
   useEffect(() => {
     if (typeof document === "undefined") return;
@@ -30,19 +34,18 @@ export const AppThemeProvider: FC<AppThemeProviderProps> = (props) => {
 
     root.setAttribute("data-oui-theme", currentThemeId);
 
-    const themeConfig = themes?.find((theme) => theme.id === currentThemeId);
-
-    if (themeConfig?.cssVars) {
-      Object.entries(themeConfig.cssVars).forEach(([key, value]) => {
+    if (currentTheme?.cssVars) {
+      Object.entries(currentTheme.cssVars).forEach(([key, value]) => {
         root.style.setProperty(key, value);
       });
     }
-  }, [themes, currentThemeId]);
+  }, [themes, currentThemeId, currentTheme]);
 
   return (
     <OrderlyThemeProvider
       themes={themes}
       currentThemeId={currentThemeId}
+      currentTheme={currentTheme}
       setCurrentThemeId={setCurrentThemeId}
       {...rest}
     >

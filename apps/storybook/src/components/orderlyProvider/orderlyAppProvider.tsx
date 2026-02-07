@@ -3,6 +3,7 @@ import { OrderlyAppProvider } from "@orderly.network/react-app";
 import { orderlyAppProviderConfig } from "../../orderlyConfig";
 import { dataAdapter } from "../../orderlyConfig/dataAdapter";
 import { notification } from "../../orderlyConfig/notification";
+import { themeConfig } from "../../orderlyConfig/themeConfig";
 import { widgetConfigs } from "../../orderlyConfig/widgetConfigs";
 import { useConfigStore, ConfigStoreOptions } from "./configStore";
 import { useRouteContext } from "./rounteProvider";
@@ -28,30 +29,7 @@ export const OrderlyAppRootProvider: FC<
       amplitudeConfig={{
         amplitudeId: "4463418c103f3a66c6d863357f951e25",
       }}
-      themes={[
-        {
-          id: "dark",
-          displayName: "Dark",
-          cssVars: {},
-        },
-        {
-          id: "light",
-          displayName: "Light",
-          cssVars: {},
-        },
-        {
-          id: "custom",
-          displayName: "Custom",
-          cssVars: {},
-        },
-        {
-          id: "roundless",
-          displayName: "Roundless",
-          cssVars: {
-            "--oui-color-primary": "#000000",
-          },
-        },
-      ]}
+      themes={themeConfig}
       // chainFilter={(config) => {
       //   return {
       //     mainnet: [

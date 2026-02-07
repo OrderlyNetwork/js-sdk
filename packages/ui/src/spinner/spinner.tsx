@@ -23,7 +23,7 @@ const spinnerVariants = tv({
       warning: "oui-fill-warning-darken",
       gray: "oui-fill-gray",
       darkGray: "oui-fill-darkGray",
-      white: "oui-fill-white",
+      white: "oui-fill-base-contrast",
     },
     // background: {
     //   default: "oui-text-base-contrast/40",

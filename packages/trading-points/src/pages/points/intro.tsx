@@ -179,7 +179,7 @@ export const Intro = () => {
                   py={2}
                   className="oui-w-[230px] oui-bg-white/[.06] oui-border oui-border-white/[0.12] oui-rounded-md  hover:oui-cursor-pointer hover:oui-opacity-80 oui-transition-opacity"
                 >
-                  <Text className="oui-flex-1 oui-text-[11px] oui-tracking-[0.03em] oui-whitespace-nowrap oui-text-white/[.36]">
+                  <Text className="oui-flex-1 oui-text-[11px] oui-tracking-[0.03em] oui-whitespace-nowrap oui-text-base-contrast-36">
                     {currentStage
                       ? `Stage ${currentStage.epoch_period}: ${formatStageDate(currentStage.start_time, currentStage.end_time)}`
                       : ""}
@@ -187,7 +187,7 @@ export const Intro = () => {
                   <ChevronDownIcon
                     size={12}
                     className={cn(
-                      "oui-text-white/[.36]",
+                      "oui-text-base-contrast-36",
                       "oui-transition-transform",
                       isStageDropdownOpen && "oui-rotate-180",
                     )}
@@ -243,7 +243,7 @@ export const Intro = () => {
                               "oui-text-[11px] oui-tracking-[0.03em] oui-whitespace-nowrap",
                               isSelected
                                 ? "oui-text-base-contrast-54 oui-font-semibold"
-                                : "oui-text-white/[.36]",
+                                : "oui-text-base-contrast-36",
                             )}
                           >
                             {`Stage ${stage.epoch_period}: ${formatStageDate(stage.start_time, stage.end_time)}`}
@@ -361,7 +361,7 @@ export const Intro = () => {
                 </Text>
                 <CopyIcon
                   size={16}
-                  className="oui-text-white hover:oui-cursor-pointer hover:oui-opacity-80 oui-transition-opacity"
+                  className="oui-text-base-contrast hover:oui-cursor-pointer hover:oui-opacity-80 oui-transition-opacity"
                   onClick={onCopyCode}
                 />
               </Flex>
@@ -380,7 +380,7 @@ export const Intro = () => {
                 </Text>
                 <CopyIcon
                   size={16}
-                  className="oui-text-white hover:oui-cursor-pointer hover:oui-opacity-80 oui-transition-opacity"
+                  className="oui-text-base-contrast hover:oui-cursor-pointer hover:oui-opacity-80 oui-transition-opacity"
                   onClick={onCopyLink}
                 />
               </Flex>

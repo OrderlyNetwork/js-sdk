@@ -24,7 +24,7 @@ const buttonVariants = tv(
       variant: {
         text: "oui-bg-transparent",
         outlined: "oui-border",
-        contained: "oui-text-white",
+        contained: "oui-text-base-contrast",
         gradient: "oui-gradient-brand oui-text-[rgba(0,0,0,0.88)]",
       },
       size: {

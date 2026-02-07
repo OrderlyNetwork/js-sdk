@@ -115,7 +115,7 @@ const MobileCellItem: FC<{
           </Text.formatted>
           {editRate && (
             <EditIcon
-              className="oui-mt-px oui-cursor-pointer oui-fill-white/[.36] hover:oui-fill-white/80"
+              className="oui-mt-px oui-cursor-pointer oui-fill-base-contrast-36 hover:oui-fill-base-contrast-80"
               fillOpacity={1}
               fill="currentColor"
               onClick={() => editRate()}
@@ -274,7 +274,7 @@ const DesktopLayout: FC<ReferralCodesReturns> = (props) => {
             <Flex direction={"row"} itemAlign={"center"} gap={1}>
               {getRate(data)}
               <EditIcon
-                className="oui-mt-[6px] oui-cursor-pointer oui-fill-white/[.36] hover:oui-fill-white/80"
+                className="oui-mt-[6px] oui-cursor-pointer oui-fill-base-contrast-36 hover:oui-fill-base-contrast-80"
                 fillOpacity={1}
                 fill="currentColor"
                 onClick={(e) => props.editRate?.(data)}

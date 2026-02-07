@@ -76,4 +76,4 @@ import { Spinner } from "@orderly.network/ui";
 
 1. Place `Spinner` inside buttons for async actions—wrap text and spinner in a `Flex` container to maintain spacing.
 2. Combine with `EmptyView` to show “Loading…” placeholders before data resolves.
-3. Adjust color via `className="oui-text-white"` when placing spinners on dark backgrounds.
+3. Adjust color via `className="oui-text-base-contrast"` when placing spinners on dark backgrounds.

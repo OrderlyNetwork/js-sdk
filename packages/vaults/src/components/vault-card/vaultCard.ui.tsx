@@ -153,7 +153,7 @@ export const VaultCard: FC<VaultCardScript> = (props) => {
           {/* Title + Status tag group, 4px spacing */}
           <div className="oui-flex oui-flex-col oui-gap-1">
             {/* Vault name */}
-            <div className="oui-text-[18px] oui-font-semibold oui-text-white oui-break-words">
+            <div className="oui-text-[18px] oui-font-semibold oui-text-base-contrast oui-break-words">
               {title}
             </div>
             {/* Status tag */}

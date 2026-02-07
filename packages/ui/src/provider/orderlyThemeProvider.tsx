@@ -22,6 +22,7 @@ export type OrderlyThemeProviderProps = {
   overrides?: Partial<ComponentOverrides>;
   themes?: ThemeConfig[];
   currentThemeId?: string;
+  currentTheme?: ThemeConfig;
   setCurrentThemeId?: (id: string) => void;
 };
 
@@ -33,6 +34,7 @@ export const OrderlyThemeProvider: FC<
     overrides,
     themes,
     currentThemeId,
+    currentTheme,
     setCurrentThemeId,
     children,
   } = props;
@@ -52,9 +54,16 @@ export const OrderlyThemeProvider: FC<
       getComponentTheme: resolveComponentTheme,
       themes: themes ?? [],
       currentThemeId,
+      currentTheme,
       setCurrentThemeId,
     };
-  }, [resolveComponentTheme, themes, currentThemeId, setCurrentThemeId]);
+  }, [
+    resolveComponentTheme,
+    themes,
+    currentThemeId,
+    currentTheme,
+    setCurrentThemeId,
+  ]);
 
   return (
     <OrderlyThemeContext.Provider value={memoizedValue}>
