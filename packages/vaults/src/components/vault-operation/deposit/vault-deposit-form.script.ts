@@ -25,7 +25,11 @@ export const useVaultDepositFormScript = (props: VaultDepositWidgetProps) => {
   const { holding } = useCollateral();
   const { t } = useTranslation();
 
-  const minDepositAmount = vaultInfo.data[0]?.min_deposit_amount || 0;
+  const currentVault = useMemo(() => {
+    return vaultInfo.data.find((v) => v.vault_id === vaultId);
+  }, [vaultInfo.data, vaultId]);
+
+  const minDepositAmount = currentVault?.min_deposit_amount || 0;
 
   const maxWithdrawalAmount = useMaxWithdrawal("USDC");
   const availableBalance = useMemo(() => {
@@ -35,10 +39,7 @@ export const useVaultDepositFormScript = (props: VaultDepositWidgetProps) => {
     return Math.min(maxWithdrawalAmount, availableBalance);
   }, [maxWithdrawalAmount, availableBalance]);
 
-  const sharePrice = useMemo(() => {
-    const vault = vaultInfo.data.find((v) => v.vault_id === vaultId);
-    return vault?.est_main_share_price;
-  }, [vaultInfo.data, vaultId]);
+  const sharePrice = currentVault?.est_main_share_price;
 
   const shares = useMemo(() => {
     if (!sharePrice || !quantity) {
@@ -83,7 +84,7 @@ export const useVaultDepositFormScript = (props: VaultDepositWidgetProps) => {
       disabledOperation ||
       (!!quantity && new Decimal(quantity).lt(minDepositAmount))
     );
-  }, [quantity, disabledOperation]);
+  }, [quantity, disabledOperation, minDepositAmount]);
 
   const inputHint = useMemo(() => {
     if (quantity && new Decimal(quantity).lt(minDepositAmount)) {
@@ -98,7 +99,7 @@ export const useVaultDepositFormScript = (props: VaultDepositWidgetProps) => {
       hintMessage: "",
       status: "",
     };
-  }, [quantity, t, maxWithdrawalAmount, availableBalance]);
+  }, [quantity, minDepositAmount, t]);
 
   return {
     quantity,

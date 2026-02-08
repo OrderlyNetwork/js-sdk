@@ -23,6 +23,8 @@ export const trading = {
   "trading.orderBook": "Order book",
   "trading.lastTrades": "Last trades",
   "trading.orderBook.column.value": "Value",
+  "trading.orderBook.settings": "Settings",
+  "trading.orderBook.showBuySellRatio": "Show buy/sell ratio",
 
   "trading.tabs.chart": "Chart",
   "trading.tabs.trades": "Trades",
@@ -97,8 +99,8 @@ export const trading = {
   "trading.fundingRate.estimatedFundingFee": "Estimated funding fee",
   "trading.fundingRate.annualized": "Annualized",
 
-  "trading.rwa.marketHours": "Market hours",
-  "trading.rwa.outsideMarketHours": "Outside market hours",
+  "trading.rwa.marketHours": "Market on",
+  "trading.rwa.outsideMarketHours": "Market off",
   "trading.rwa.tooltip.description.open":
     "Trading aligns with the underlying market - higher liquidity, normal price movements.",
   "trading.rwa.tooltip.description.close":

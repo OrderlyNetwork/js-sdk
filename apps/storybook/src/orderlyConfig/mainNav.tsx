@@ -107,6 +107,10 @@ const getMainMenus = (): MainNavWidgetProps["mainMenus"] => {
       customRender: customArenRender("mainNav"),
     },
     {
+      name: i18n.t("tradingPoints.points"),
+      href: "/points",
+    },
+    {
       name: i18n.t("tradingView.timeInterval.more"),
       href: "",
       children: [

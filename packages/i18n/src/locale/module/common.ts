@@ -124,6 +124,9 @@ export const common = {
   "common.vaults": "Vaults",
   "common.optional": "Optional",
   "common.learnMore": "Learn more",
+  "common.liquidationPrice.tooltip":
+    "Estimated price at which your position will be liquidated. Prices are estimated and depend on multiple factors across all positions.",
+  "common.liquidationPrice.tooltip.learnMore": "Learn more about liquidation",
   "common.switch": "Switch",
   "common.notSupported": "Not supported",
 

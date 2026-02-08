@@ -19,6 +19,8 @@ export interface OrderBookContextValue {
   pendingOrders: ReadonlyArray<number> | number[];
   onTotalModeChange?: (mode: TotalMode) => void;
   symbolInfo: BasicSymbolInfo;
+  showBuySellRatio: boolean;
+  onShowBuySellRatioChange?: (show: boolean) => void;
 }
 
 export const OrderBookContext = createContext({
@@ -38,6 +40,8 @@ interface OrderBookProviderProps {
   pendingOrders: ReadonlyArray<number> | number[];
   onItemClick?: (item: number[]) => void;
   symbolInfo: BasicSymbolInfo;
+  showBuySellRatio?: boolean;
+  onShowBuySellRatioChange?: (show: boolean) => void;
 }
 
 export const OrderBookProvider: FC<
@@ -57,6 +61,8 @@ export const OrderBookProvider: FC<
       showTotal: props.showTotal || false,
       pendingOrders: props.pendingOrders,
       symbolInfo: props.symbolInfo,
+      showBuySellRatio: props.showBuySellRatio ?? true,
+      onShowBuySellRatioChange: props.onShowBuySellRatioChange,
     };
   }, [
     mode,
@@ -66,6 +72,8 @@ export const OrderBookProvider: FC<
     props.pendingOrders,
     props.showTotal,
     props.symbolInfo,
+    props.showBuySellRatio,
+    props.onShowBuySellRatioChange,
     totalMode,
   ]);
   return (

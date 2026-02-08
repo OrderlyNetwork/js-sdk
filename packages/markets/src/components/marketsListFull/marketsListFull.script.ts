@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { MarketsType, useMarkets } from "@orderly.network/hooks";
 import { TableSort, usePagination } from "@orderly.network/ui";
 import { useMarketsContext } from "../../components/marketsProvider";
@@ -11,15 +11,24 @@ export type UseMarketsListFullReturn = ReturnType<
   typeof useMarketsListFullScript
 >;
 
+const MarketsTypeMap = {
+  all: MarketsType.ALL,
+  new: MarketsType.NEW_LISTING,
+  rwa: MarketsType.RWA,
+};
+
+export type MarketsListFullType = keyof typeof MarketsTypeMap;
+
 export const useMarketsListFullScript = (
   options: UseMarketsListFullScriptOptions,
 ) => {
+  const { type = "all" } = options;
   const [loading, setLoading] = useState(true);
   const { setPage, pagination } = usePagination({
     pageSize: 10,
   });
 
-  const [data, favorite] = useMarkets(MarketsType.ALL);
+  const [data, favorite] = useMarkets(MarketsTypeMap[type]);
 
   const { searchValue } = useMarketsContext();
 
@@ -40,20 +49,19 @@ export const useMarketsListFullScript = (
 
   useEffect(() => {
     // Only all markets store sort
-    if (options.type === "all") {
+    if (type === "all") {
       favorite.updateTabsSortState("all", sort?.sortKey!, sort?.sortOrder!);
     }
-  }, [sort, options.type]);
+  }, [sort, type]);
 
   const initialSort = useMemo(() => {
-    const sortStore =
-      options.type === "all" ? favorite.tabSort?.all : undefined;
+    const sortStore = type === "all" ? favorite.tabSort?.all : undefined;
 
     return {
       sortKey: sortStore?.sortKey || options?.initialSort?.sortKey,
       sort: sortStore?.sortOrder || options?.initialSort?.sortOrder,
     } as TableSort;
-  }, [favorite.tabSort, options.initialSort, options.type]);
+  }, [favorite.tabSort, options.initialSort, type]);
 
   return {
     loading,

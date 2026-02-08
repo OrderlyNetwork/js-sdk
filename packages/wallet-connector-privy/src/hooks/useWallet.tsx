@@ -9,6 +9,9 @@ import {
   AbstractChains,
   ChainNamespace,
   ConnectorKey,
+  SolanaChains,
+  defaultMainnetChains,
+  defaultTestnetChains,
   TrackerEventName,
 } from "@orderly.network/types";
 import { useWalletConnectorPrivy } from "../provider";
@@ -21,7 +24,8 @@ import { getChainType } from "../util";
 
 export function useWallet() {
   const { track } = useTrack();
-  const { walletChainTypeConfig } = useWalletConnectorPrivy();
+  const { walletChainTypeConfig, initChains, network } =
+    useWalletConnectorPrivy();
   const [connectorKey, setConnectorKey] = useLocalStorage(ConnectorKey, "");
   const {
     disconnect: disconnectEVM,
@@ -60,6 +64,32 @@ export function useWallet() {
   const { storageChain, setStorageChain } = useStorageChain();
   const { setOpenConnectDrawer, targetWalletType, setTargetWalletType } =
     useWalletConnectorPrivy();
+
+  const supportedEvmChainIds = useMemo(() => {
+    const ids = initChains
+      ?.map((c) => c.id)
+      .filter((id) => !SolanaChains.has(id) && !AbstractChains.has(id));
+    return new Set<number>(ids ?? []);
+  }, [initChains]);
+
+  const preferredEvmChainId = useMemo(() => {
+    const preferredOrder =
+      network === "mainnet" ? defaultMainnetChains : defaultTestnetChains;
+    return preferredOrder
+      .map((c) => c.id)
+      .find((id) => supportedEvmChainIds.has(id));
+  }, [network, supportedEvmChainIds]);
+
+  const defaultEvmChainId = useMemo(() => {
+    for (const chain of initChains ?? []) {
+      if (!SolanaChains.has(chain.id) && !AbstractChains.has(chain.id)) {
+        return chain.id;
+      }
+    }
+    return undefined;
+  }, [initChains]);
+
+  const fallbackEvmChainId = preferredEvmChainId ?? defaultEvmChainId;
 
   const isManual = useRef<boolean>(false);
 
@@ -193,7 +223,13 @@ export function useWallet() {
       switch (walletType) {
         case WalletType.EVM:
           if (privyWalletEVM) {
-            setStorageChain(privyWalletEVM.chain.id);
+            const desired = privyWalletEVM.chain.id;
+            const nextChainId = supportedEvmChainIds.has(desired)
+              ? desired
+              : fallbackEvmChainId;
+            if (typeof nextChainId === "number") {
+              setStorageChain(nextChainId);
+            }
             toWallet = privyWalletEVM.accounts[0].address;
           }
           break;
@@ -306,6 +342,17 @@ export function useWallet() {
       }
     }
   }, [connectorKey, privyWalletEVM, privyWalletSOL, storageChain]);
+
+  // Auto-open drawer when Privy is connected and Abstract chain is selected
+  useEffect(() => {
+    if (
+      connectorKey === WalletConnectType.PRIVY &&
+      isConnectedPrivy &&
+      AbstractChains.has(storageChain.chainId)
+    ) {
+      setOpenConnectDrawer(true);
+    }
+  }, [connectorKey, isConnectedPrivy, storageChain]);
 
   useEffect(() => {
     if (connectorKey === WalletConnectType.PRIVY) {

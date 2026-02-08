@@ -188,8 +188,20 @@ export const useOrderListScript = (props: useOrderListScriptOptions) => {
 
   const formattedData = useFormatOrderHistory(data ?? []);
 
+  // Filter by symbol if symbol prop is provided (hide other symbols)
+  const filteredData = useMemo(() => {
+    const rawData = type !== TabType.tp_sl ? formattedData : data;
+    if (!props.symbol || !rawData) {
+      return rawData;
+    }
+    return rawData.filter(
+      (order: API.AlgoOrder | API.AlgoOrderExt) =>
+        order.symbol === props.symbol,
+    );
+  }, [type, formattedData, data, props.symbol]);
+
   const dataSource =
-    useDataTap(type !== TabType.tp_sl ? formattedData : data, {
+    useDataTap(filteredData, {
       fallbackData: [],
     }) ?? undefined;
 

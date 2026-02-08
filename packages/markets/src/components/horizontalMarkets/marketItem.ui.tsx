@@ -1,6 +1,7 @@
 import React from "react";
 import { cn, Flex, Text, TokenIcon, Divider } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
+import { SymbolDisplay } from "../symbolDisplay";
 
 export interface MarketItemProps {
   symbol: string;
@@ -24,7 +25,7 @@ const MarketItemComponent: React.FC<MarketItemProps> = (props) => {
     <Flex
       direction="row"
       className={cn(
-        "oui-cursor-pointer oui-rounded oui-h-[18px] oui-items-center oui-mr-3 oui-flex-shrink-0",
+        "oui-mr-3 oui-h-[18px] oui-shrink-0 oui-cursor-pointer oui-items-center oui-rounded",
         "oui-transition-all oui-duration-200",
       )}
       onClick={handleClick}
@@ -32,15 +33,13 @@ const MarketItemComponent: React.FC<MarketItemProps> = (props) => {
       {/* Symbol */}
       <Flex gapX={1} itemAlign="center" className="oui-mr-[6px]">
         <TokenIcon symbol={symbol} className="oui-size-[18px]" />
-        <Text.formatted
-          rule="symbol"
+        <SymbolDisplay
           formatString="base"
-          size="xs"
-          weight="semibold"
+          size="2xs"
           className="oui-text-base-contrast-80"
         >
           {symbol}
-        </Text.formatted>
+        </SymbolDisplay>
       </Flex>
 
       {/* Price */}

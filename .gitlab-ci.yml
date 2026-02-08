@@ -22,7 +22,7 @@ stages:
 .internal_publish_template: &internal_publish_template
   stage: release
   image:
-    name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-devops/node:20
+    name: node:22
   before_script:
     # custom commit message
     - export GIT_COMMIT_MESSAGE="publish internal ${RELEASE_TYPE}"
@@ -56,7 +56,7 @@ stages:
       export TRIGGER_PIPELINE_TOKEN=$TRIGGER_PIPELINE_TOKEN_DEX
       export TRIGGER_PIPELINE_BRANCH=$TRIGGER_PIPELINE_BRANCH_DEX
 
-      npm install -g pnpm@9
+      npm install -g pnpm
       pnpm install --frozen-lockfile
       pnpm release:${RELEASE_TYPE}
   tags:
@@ -89,7 +89,7 @@ internal_patch_publish:
 .npm_publish_template: &npm_publish_template
   stage: release
   image:
-    name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-devops/node:20
+    name: node:22
   script:
     - git checkout "$CI_COMMIT_BRANCH"
     - |
@@ -125,7 +125,7 @@ internal_patch_publish:
       # exit pre tag
       export EXIT_PRE_TAG="${EXIT_PRE_TAG}"     
 
-      npm install -g pnpm@9
+      npm install -g pnpm
       pnpm install --frozen-lockfile
       pnpm release:${RELEASE_TYPE}
   tags:
@@ -190,6 +190,23 @@ npm_minor_stable:
     - if: '($CI_COMMIT_BRANCH =~ /^pre-release/ || $CI_COMMIT_BRANCH =~ /^npm\//) && $CI_COMMIT_MESSAGE !~ /publish/'
       when: manual
     - when: never
+      
+# patch rc version
+npm_patch_rc:
+  <<: *npm_publish_template
+  variables:
+    RELEASE_TYPE: patch
+    CUSTOM_PRE_TAG: rc
+  environment:
+    name: npm_patch_rc
+  rules:
+    # Run this job if:
+    # 1. Branch name is "pre-release"
+    # 2. Commit message does not contain "publish"
+    - if: '($CI_COMMIT_BRANCH =~ /^pre-release/ || $CI_COMMIT_BRANCH =~ /^npm\//) && $CI_COMMIT_MESSAGE !~ /publish/'
+      when: manual
+    - when: never
+      
 # major alpha version
 # npm_major_alpha:
 #   <<: *npm_publish_template
@@ -222,7 +239,7 @@ npm_minor_stable:
 .trigger_pipeline_template: &trigger_pipeline_template
   stage: release
   image:
-    name: asia-northeast1-docker.pkg.dev/woo-orderly/orderly-devops/node:20
+    name: node:22
   script:
     - |    
       npm run trigger:pipeline

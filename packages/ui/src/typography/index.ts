@@ -1,4 +1,4 @@
-import { FormattedText } from "./formatted";
+import { FormattedText, FormattedTextProps } from "./formatted";
 import { GradientText, gradientTextVariants } from "./gradient";
 import {
   NumTypePnl,
@@ -38,4 +38,4 @@ Text.assetValue = NumTypeAssetValue;
 Text.collateral = NumTypeCollateral;
 
 export { Text, textVariants, gradientTextVariants, GradientText };
-export type { TextProps };
+export type { TextProps, FormattedTextProps };

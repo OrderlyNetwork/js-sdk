@@ -2,10 +2,13 @@ import { FC } from "react";
 import { cn, DataTable } from "@orderly.network/ui";
 import { useMarketsContext } from "../../components/marketsProvider";
 import { useMarketsListFullColumns } from "./column";
-import { type UseMarketsListFullReturn } from "./marketsListFull.script";
+import {
+  type MarketsListFullType,
+  type UseMarketsListFullReturn,
+} from "./marketsListFull.script";
 
 export type MarketsListFullProps = UseMarketsListFullReturn & {
-  type?: "all" | "new";
+  type?: MarketsListFullType;
 };
 
 export const MarketsListFull: FC<MarketsListFullProps> = (props) => {
@@ -37,7 +40,7 @@ export const MarketsListFull: FC<MarketsListFullProps> = (props) => {
             favorite.addToHistory(record);
           },
           "data-testid": `oui-testid-markets-${
-            type === "new" ? "newListing" : "all"
+            type === "new" ? "newListing" : type === "rwa" ? "rwa" : "all"
           }-tr-${record.symbol}`,
         };
       }}

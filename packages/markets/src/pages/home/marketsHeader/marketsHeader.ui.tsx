@@ -3,6 +3,7 @@ import { useTranslation } from "@orderly.network/i18n";
 import { Box, cn, Flex, Text } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { useMarketsContext } from "../../../components/marketsProvider";
+import { SymbolDisplay } from "../../../components/symbolDisplay";
 import { OrderlyIcon } from "../../../icons";
 import { MarketsHeaderReturns } from "./marketsHeader.script";
 
@@ -237,18 +238,9 @@ const ListItem: React.FC<ListItemProps> = (props) => {
         props.onSymbol(item);
       }}
     >
-      <Flex width="100%" gapX={1}>
-        {/* <TokenIcon symbol={item.symbol} size="xs" /> */}
-        <Text.formatted
-          rule="symbol"
-          formatString="base"
-          size="xs"
-          weight="semibold"
-          showIcon
-        >
-          {item.symbol}
-        </Text.formatted>
-      </Flex>
+      <SymbolDisplay formatString="base" showIcon className="oui-w-full">
+        {item.symbol}
+      </SymbolDisplay>
 
       <Flex width="100%" justify="end">
         <Text.numeral

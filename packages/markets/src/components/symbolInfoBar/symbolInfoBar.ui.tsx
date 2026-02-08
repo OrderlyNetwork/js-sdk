@@ -3,6 +3,7 @@ import { Flex, Text, cn, Divider, Badge, TokenIcon } from "@orderly.network/ui";
 import { Decimal } from "@orderly.network/utils";
 import { TriangleDownIcon } from "../../icons";
 import { MarketsProviderProps } from "../marketsProvider";
+import { SymbolDisplay } from "../symbolDisplay";
 import { RwaTooltip } from "../symbolInfoBarFull/rwaTooltip";
 import { UseSymbolInfoBarScriptReturn } from "./symbolInfoBar.script";
 
@@ -29,19 +30,13 @@ export const SymbolInfoBar: FC<SymbolInfoBarProps> = (props) => {
 
   const symbolView = (
     <Flex
-      className="oui-cursor-pointer oui-gap-x-[6px] oui-h-5"
+      className="oui-h-5 oui-cursor-pointer oui-gap-x-[6px]"
       onClick={onSymbol}
     >
-      <Text.formatted
-        className="oui-break-normal oui-whitespace-nowrap"
-        rule="symbol"
-        formatString="base-type"
-        size="sm"
-        weight="semibold"
-      >
+      <SymbolDisplay formatString="base" size="sm">
         {symbol}
-      </Text.formatted>
-      <TriangleDownIcon className="oui-text-base-contrast-54 oui-w-[14px] oui-h-[14px]" />
+      </SymbolDisplay>
+      <TriangleDownIcon className="oui-size-[14px] oui-text-base-contrast-54" />
     </Flex>
   );
 
@@ -49,11 +44,11 @@ export const SymbolInfoBar: FC<SymbolInfoBarProps> = (props) => {
     <Flex
       className={cn(
         "oui-symbol-info-bar-mobile",
-        "oui-font-semibold oui-h-full",
+        "oui-h-full oui-font-semibold",
         props.className,
       )}
     >
-      <Flex gapX={3} className="oui-flex-1 oui-overflow-hidden oui-h-full">
+      <Flex gapX={3} className="oui-h-full oui-flex-1 oui-overflow-hidden">
         <Flex gapX={3}>
           <TokenIcon symbol={symbol} size="xs" />
           <Flex direction="column" itemAlign="start">
