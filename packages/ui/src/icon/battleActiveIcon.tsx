@@ -1,4 +1,3 @@
-import React from "react";
 import { BaseIcon, BaseIconProps } from "./baseIcon";
 
 export const BattleActiveIcon = (props: BaseIconProps) => {
@@ -11,8 +10,7 @@ export const BattleActiveIcon = (props: BaseIconProps) => {
         />
         <path
           d="M21.3574 2.5L17.6181 3.41756L13.0864 8.14158L15.6061 10.6183L20.4226 6.17025L21.3574 2.5Z"
-          fill="white"
-          fillOpacity="0.36"
+          className="oui-fill-base-contrast-36"
         />
       </g>
       <defs>

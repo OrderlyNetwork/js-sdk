@@ -146,7 +146,7 @@ export const TooltipContent: FC<TooltipContentProps> = (props) => {
       {typeof description !== "undefined" && description !== null && (
         <span>{description}</span>
       )}
-      <Divider className="oui-border-white/10" my={2} />
+      <Divider color="oui-border-line-10" my={2} />
       {typeof formula !== "undefined" && formula !== null && (
         <span>{formula}</span>
       )}
@@ -555,7 +555,7 @@ export const AssetView: FC<
         )}
         style={{
           background:
-            "conic-gradient(from -40.91deg at 40.63% 50.41%, rgba(159, 115, 241, 0) -48.92deg, rgba(242, 98, 181, 0) 125.18deg, #5FC5FF 193.41deg, #FFAC89 216.02deg, #8155FF 236.07deg, #789DFF 259.95deg, rgba(159, 115, 241, 0) 311.08deg, rgba(242, 98, 181, 0) 485.18deg)",
+            "conic-gradient(from -40.91deg at 40.63% 50.41%, rgba(var(--oui-color-base-foreground)/0) -48.92deg, rgba(var(--oui-color-base-foreground)/0) 125.18deg, rgb(var(--oui-color-primary)) 193.41deg, rgb(var(--oui-color-warning)) 216.02deg, rgb(var(--oui-color-link)) 236.07deg, rgb(var(--oui-color-primary-light)) 259.95deg, rgba(var(--oui-color-base-foreground)/0) 311.08deg, rgba(var(--oui-color-base-foreground)/0) 485.18deg)",
         }}
       />
     </Box>

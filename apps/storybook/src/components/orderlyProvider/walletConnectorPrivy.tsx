@@ -70,7 +70,7 @@ export const WalletConnectorPrivy: FC<WalletConnectorPrivyProps> = (props) => {
               config: {
                 appearance: {
                   theme: "dark",
-                  accentColor: "#181C23",
+                  accentColor: "rgb(var(--oui-color-base-8))",
                   logo: "/orderly-logo.svg",
                 },
                 loginMethods: ["email", "google", "twitter", "telegram"],

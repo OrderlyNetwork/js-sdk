@@ -25,8 +25,8 @@ export const VaultRowItem = (props: { item: any; index: number }) => {
       }}
     >
       <div className="oui-flex oui-items-center oui-gap-2">
-        <div className="oui-w-6 oui-h-6 oui-rounded-full oui-bg-[#00a9de] oui-flex oui-items-center oui-justify-center">
-          <VaultsIcon size={14} pathFill="white" pathFillOpacity={1} />
+        <div className="oui-w-6 oui-h-6 oui-rounded-full oui-bg-primary oui-flex oui-items-center oui-justify-center">
+          <VaultsIcon size={14} />
         </div>
         <div className="oui-flex oui-flex-col">
           <div className="oui-text-xs oui-font-semibold oui-text-base-contrast-80 oui-max-w-[160px] oui-break-words oui-line-clamp-2">

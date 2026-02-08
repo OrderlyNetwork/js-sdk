@@ -25,7 +25,7 @@ const buttonVariants = tv(
         text: "oui-bg-transparent",
         outlined: "oui-border",
         contained: "oui-text-base-contrast",
-        gradient: "oui-gradient-brand oui-text-[rgba(0,0,0,0.88)]",
+        gradient: "oui-gradient-brand oui-text-base-10",
       },
       size: {
         xs: ["oui-px-2", "oui-rounded", "oui-h-6", "oui-text-2xs"], //24px
@@ -103,8 +103,8 @@ const buttonVariants = tv(
         color: "light",
         className: [
           "oui-bg-white",
-          "oui-text-black/[.88]",
-          "disabled:oui-bg-white/30 hover:disabled:oui-bg-white/30 disabled:oui-text-black/[.36]",
+          "oui-text-black/[.88] disabled:oui-text-black/[.36]",
+          "disabled:oui-bg-white/30 hover:disabled:oui-bg-white/30",
         ],
       },
 

@@ -11,7 +11,7 @@ export const lightThemePlugin = () =>
         "--oui-color-primary": "240 185 11",
         "--oui-color-primary-light": "252 213 53",
         "--oui-color-primary-darken": "252 213 53",
-        "--oui-color-primary-contrast": "255 255 255",
+        "--oui-color-primary-contrast": "12 14 18",
 
         "--oui-color-link": "230 175 0",
         "--oui-color-link-light": "252 213 53",
@@ -45,7 +45,7 @@ export const lightThemePlugin = () =>
         "--oui-color-base-5": "200 202 205",
         "--oui-color-base-6": "230 230 230",
         "--oui-color-base-7": "234 236 239",
-        "--oui-color-base-8": "240 242 245",
+        "--oui-color-base-8": "240 240 240",
         "--oui-color-base-9": "255 255 255",
         "--oui-color-base-10": "245 245 245",
 

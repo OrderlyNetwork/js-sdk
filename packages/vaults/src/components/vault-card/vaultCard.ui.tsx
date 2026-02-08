@@ -69,26 +69,26 @@ export const VaultCard: FC<VaultCardScript> = (props) => {
     if (status === "live") {
       return {
         text: t("vaults.card.status.active"),
-        color: "#00C076",
-        bgColor: "rgba(0, 192, 118, 0.15)",
+        color: "rgb(var(--oui-color-success))",
+        bgColor: "rgba(var(--oui-color-success) / 0.15)",
       };
     } else if (status === "pre_launch") {
       return {
         text: t("vaults.card.launchingSoon"),
-        color: "#E88800",
-        bgColor: "rgba(232, 136, 0, 0.15)",
+        color: "rgb(var(--oui-color-warning))",
+        bgColor: "rgba(var(--oui-color-warning) / 0.15)",
       };
     } else if (status === "closing") {
       return {
         text: t("vaults.card.status.closing"),
-        color: "#FF6B6B",
-        bgColor: "rgba(255, 107, 107, 0.15)",
+        color: "rgb(var(--oui-color-danger))",
+        bgColor: "rgba(var(--oui-color-danger) / 0.15)",
       };
     } else if (status === "closed") {
       return {
         text: t("vaults.card.status.closed"),
-        color: "#999999",
-        bgColor: "rgba(153, 153, 153, 0.15)",
+        color: "rgb(var(--oui-color-base-foreground) / 0.54)",
+        bgColor: "rgba(var(--oui-color-base-foreground) / 0.15)",
       };
     }
     return null;
@@ -186,12 +186,11 @@ export const VaultCard: FC<VaultCardScript> = (props) => {
             {/* View more link */}
             <button
               onClick={openVaultWebsite}
-              className="oui-flex oui-w-fit oui-items-center oui-gap-1 oui-text-xs oui-font-medium"
-              style={{ color: "#608CFF" }}
+              className="oui-flex oui-w-fit oui-items-center oui-gap-1 oui-text-xs oui-font-medium oui-text-primary"
             >
               <span>{t("vaults.card.viewMore")}</span>
               <ArrowRightUpSquareFillIcon
-                style={{ color: "#608CFF" }}
+                className="oui-text-primary"
                 width={16}
                 height={16}
                 viewBox="0 0 18 18"
@@ -226,7 +225,7 @@ export const VaultCard: FC<VaultCardScript> = (props) => {
               />
             </div>
 
-            <div className="oui-flex oui-flex-col oui-items-center oui-gap-2 oui-rounded-lg oui-bg-white/[0.06] oui-p-3">
+            <div className="oui-flex oui-flex-col oui-items-center oui-gap-2 oui-rounded-lg oui-bg-base-contrast-6 oui-p-3">
               <LpInfoItem
                 label={t("vaults.card.myDeposits")}
                 value={lpInfo.deposits}
@@ -271,7 +270,7 @@ const VaultInfoItem: FC<{
     <div
       className={cn(
         "oui-flex oui-flex-1 oui-flex-col oui-items-center oui-justify-center oui-px-3 oui-py-2",
-        "oui-rounded-lg oui-border oui-border-solid oui-border-white/[0.12]",
+        "oui-rounded-lg oui-border oui-border-solid oui-border-line-12",
       )}
     >
       <div className="oui-flex oui-items-center oui-gap-1 oui-text-2xs oui-font-normal oui-leading-[18px] oui-text-base-contrast-54">

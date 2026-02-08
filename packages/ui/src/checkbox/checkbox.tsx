@@ -21,7 +21,7 @@ const checkboxVariants = tv({
   variants: {
     color: {
       primary: "oui-border-primary data-[state=checked]:oui-text-base-contrast",
-      white: "oui-border-base-contrast-54 ",
+      white: "oui-border-base-contrast-54",
       // data-[state=checked]:oui-bg-white/80 data-[state=checked]:oui-text-[rgba(0,0,0,0.88)]
     },
     variant: {

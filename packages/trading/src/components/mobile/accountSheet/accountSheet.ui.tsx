@@ -198,7 +198,7 @@ export const TradingRewardsInfo: FC<AccountSheetState> = (props) => {
         width={"100%"}
         angle={180}
         justify={"between"}
-        className="oui-bg-gradient-to-t oui-from-[#2d0061] oui-to-[#bd6bed]"
+        className="oui-bg-gradient-to-t oui-from-[rgb(var(--oui-gradient-secondary-end))] oui-to-[rgb(var(--oui-gradient-secondary-start))]"
       >
         <Text size="2xs" intensity={80}>
           {t("tradingRewards.myEstRewards")}

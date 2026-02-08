@@ -177,7 +177,7 @@ export const Intro = () => {
                   itemAlign="center"
                   px={3}
                   py={2}
-                  className="oui-w-[230px] oui-bg-white/[.06] oui-border oui-border-white/[0.12] oui-rounded-md  hover:oui-cursor-pointer hover:oui-opacity-80 oui-transition-opacity"
+                  className="oui-w-[230px] oui-bg-base-contrast-6 oui-border oui-border-line-12 oui-rounded-md  hover:oui-cursor-pointer hover:oui-opacity-80 oui-transition-opacity"
                 >
                   <Text className="oui-flex-1 oui-text-[11px] oui-tracking-[0.03em] oui-whitespace-nowrap oui-text-base-contrast-36">
                     {currentStage
@@ -315,7 +315,11 @@ export const Intro = () => {
           </Flex>
           {!isMobile && (
             <Box
-              className={cn("oui-w-[1px]", "oui-h-full", "oui-bg-white/[0.08]")}
+              className={cn(
+                "oui-w-[1px]",
+                "oui-h-full",
+                "oui-bg-base-contrast-10",
+              )}
             />
           )}
           {isMobile && <Divider intensity={8} />}

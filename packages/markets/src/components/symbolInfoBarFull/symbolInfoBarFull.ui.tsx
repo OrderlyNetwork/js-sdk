@@ -315,7 +315,7 @@ const ScrollIndicator: React.FC<ScrollIndicatorProps> = (props) => {
       }}
       style={{
         background:
-          "linear-gradient(90deg, #07080A 0%, rgba(7, 8, 10, 0.60) 65%, rgba(7, 8, 10, 0.00) 100%)",
+          "linear-gradient(90deg, rgb(var(--oui-color-base-10)) 0%, rgba(var(--oui-color-base-10), 0.60) 65%, rgba(var(--oui-color-base-10), 0.00) 100%)",
       }}
       className={cn(
         "oui-flex oui-w-[80px] oui-items-center",

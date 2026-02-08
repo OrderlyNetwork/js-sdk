@@ -4,7 +4,7 @@ import { cn } from "@orderly.network/ui";
 import { CampaignConfig } from "../type";
 
 const Circle = () => (
-  <div className="oui-w-1 oui-h-1 oui-rounded-full oui-bg-white/[0.16]" />
+  <div className="oui-w-1 oui-h-1 oui-rounded-full oui-bg-base-contrast-16" />
 );
 
 interface TimeLeft {

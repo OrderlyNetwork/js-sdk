@@ -37,9 +37,7 @@ const meta: Meta<typeof Dashboard.DashboardPage> = {
           // messages,
           // }
           // }
-          splashPage={() => (
-            <div style={{ backgroundColor: "#FF0000" }}>df</div>
-          )}
+          splashPage={() => <div className="oui-bg-danger">df</div>}
           overwrite={{
             shortBrokerName: "Orderly",
             brokerName: "Orderly Network",

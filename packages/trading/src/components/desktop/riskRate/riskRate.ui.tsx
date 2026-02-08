@@ -32,14 +32,14 @@ export const RiskRate: FC<RiskRateState> = (props) => {
           : "";
 
   const boxClsName = wrongNetwork
-    ? "oui-bg-gradient-to-r oui-opacity-20 oui-from-[#26fefe]  oui-via-[#ff7d00] oui-to-[#d92d6b] oui-h-1.5 oui-rounded-full"
+    ? "oui-bg-gradient-to-r oui-opacity-20 oui-from-[rgb(var(--oui-gradient-brand-start))] oui-via-[rgb(var(--oui-color-warning-darken))] oui-to-[rgb(var(--oui-color-danger-darken))] oui-h-1.5 oui-rounded-full"
     : isHigh
-      ? "oui-bg-gradient-to-tr oui-from-[#791438] oui-to-[#ff447c] oui-h-1.5 oui-rounded-full"
+      ? "oui-bg-gradient-to-tr oui-from-[rgb(var(--oui-gradient-danger-end))] oui-to-[rgb(var(--oui-gradient-danger-start))] oui-h-1.5 oui-rounded-full"
       : isMedium
-        ? "oui-bg-gradient-to-tr oui-from-[#792e00] oui-to-[#ffb65d] oui-h-1.5 oui-rounded-full"
+        ? "oui-bg-gradient-to-tr oui-from-[rgb(var(--oui-gradient-warning-end))] oui-to-[rgb(var(--oui-gradient-warning-start))] oui-h-1.5 oui-rounded-full"
         : isLow
-          ? "oui-bg-gradient-to-tr oui-from-[#59b0fe] oui-to-[#26fefe] oui-h-1.5 oui-rounded-full"
-          : "oui-bg-gradient-to-r oui-opacity-20 oui-from-[#26fefe]  oui-via-[#ff7d00] oui-to-[#d92d6b] oui-h-1.5 oui-rounded-full";
+          ? "oui-bg-gradient-to-tr oui-from-[rgb(var(--oui-gradient-brand-end))] oui-to-[rgb(var(--oui-gradient-brand-start))] oui-h-1.5 oui-rounded-full"
+          : "oui-bg-gradient-to-r oui-opacity-20 oui-from-[rgb(var(--oui-gradient-brand-start))] oui-via-[rgb(var(--oui-color-warning-darken))] oui-to-[rgb(var(--oui-color-danger-darken))] oui-h-1.5 oui-rounded-full";
 
   return (
     <Box className="oui-riskRate oui-space-y-2" data-risk={""}>

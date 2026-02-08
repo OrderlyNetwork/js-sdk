@@ -39,15 +39,15 @@ export const AffiliateIcon: FC = () => {
       />
       <path
         d="M16.2198 10.2711L15.999 10.4993L15.7783 10.2701C14.9185 9.38023 13.5199 9.37627 12.6562 10.2622L12.6485 10.2701C11.7838 11.164 11.7838 12.6095 12.6485 13.5044L15.6424 16.6463C15.8361 16.8487 16.1523 16.8517 16.3499 16.6532L16.3566 16.6463L19.3515 13.5044C20.2162 12.6105 20.2162 11.165 19.3515 10.2701C18.4917 9.38023 17.0931 9.37627 16.2294 10.2612L16.2198 10.2711Z"
-        fill="#B9D1FF"
+        fill="rgb(var(--oui-color-primary-light))"
       />
       <path
         d="M15.9992 9.92654C17.0243 8.93604 18.641 8.95922 19.6391 9.99217L19.7312 10.0922C20.6519 11.146 20.6216 12.7633 19.6406 13.7797L19.6414 13.7804L16.6461 16.9219L16.6437 16.925L16.6336 16.9351C16.2776 17.2926 15.7023 17.2874 15.3531 16.9226V16.9219L12.3586 13.7804V13.7797C11.3466 12.7297 11.3471 11.0404 12.3609 9.99217L12.3695 9.98357V9.98279L12.4672 9.88748C13.4713 8.95732 15.0109 8.97251 15.9992 9.92654ZM19.0641 10.5476C18.3608 9.81979 17.2216 9.81726 16.5156 10.5406L16.507 10.55L16.5062 10.5492L16.2867 10.7773L15.9984 11.075L15.7109 10.7765L15.4898 10.5476V10.5469C14.7865 9.81999 13.6486 9.81767 12.943 10.5414L12.9422 10.5406L12.9351 10.5476L12.9359 10.5484C12.2663 11.2409 12.2241 12.3379 12.8101 13.082L12.9359 13.2265L12.9383 13.2281L15.9312 16.3695L15.9633 16.3922C15.9974 16.4073 16.0371 16.4004 16.0664 16.3711L16.0695 16.3672L19.0617 13.2281L19.0641 13.2258L19.1898 13.0828C19.7369 12.3893 19.7369 11.3867 19.1898 10.6922L19.0641 10.5476Z"
-        fill="#B9D1FF"
+        fill="rgb(var(--oui-color-primary-light))"
       />
       <path
         d="M20 7.19997V3.53134C20 2.81862 20.8617 2.46168 21.3657 2.96565L25.8343 7.43428C26.3383 7.93826 25.9814 8.79997 25.2686 8.79997H21.6C20.7163 8.79997 20 8.08363 20 7.19997Z"
-        fill="#1F2D94"
+        fill="rgb(var(--oui-color-primary-darken))"
       />
       <path
         d="M20 7.19997V3.53122C20.0001 2.8186 20.8617 2.46174 21.3656 2.9656L25.8344 7.43435C26.3068 7.90689 26.0224 8.69348 25.3977 8.78981L25.2688 8.79997V7.99997L20.8 3.53122V7.19997C20.8 7.6418 21.1582 7.99997 21.6 7.99997V8.79997C20.7163 8.79997 20 8.08363 20 7.19997ZM25.2688 7.99997V8.79997H21.6V7.99997H25.2688Z"
@@ -62,8 +62,8 @@ export const AffiliateIcon: FC = () => {
           y2="15.5451"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#333948" />
-          <stop offset="1" stopColor="#181C23" />
+          <stop stopColor="rgb(var(--oui-color-base-4))" />
+          <stop offset="1" stopColor="rgb(var(--oui-color-base-8))" />
         </linearGradient>
         <linearGradient
           id="paint1_linear_1609_7317"
@@ -73,8 +73,8 @@ export const AffiliateIcon: FC = () => {
           y2="29.6"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#4A5369" />
-          <stop offset="1" stopColor="#222832" />
+          <stop stopColor="rgb(var(--oui-color-base-2))" />
+          <stop offset="1" stopColor="rgb(var(--oui-color-base-7))" />
         </linearGradient>
         <linearGradient
           id="paint2_linear_1609_7317"
@@ -84,8 +84,8 @@ export const AffiliateIcon: FC = () => {
           y2="7.84048"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#1828C3" />
-          <stop offset="1" stopColor="#608CFF" />
+          <stop stopColor="rgb(var(--oui-gradient-primary-end))" />
+          <stop offset="1" stopColor="rgb(var(--oui-gradient-primary-start))" />
         </linearGradient>
         <linearGradient
           id="paint3_linear_1609_7317"
@@ -95,8 +95,8 @@ export const AffiliateIcon: FC = () => {
           y2="5.74778"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#1828C3" />
-          <stop offset="1" stopColor="#608CFF" />
+          <stop stopColor="rgb(var(--oui-gradient-primary-end))" />
+          <stop offset="1" stopColor="rgb(var(--oui-gradient-primary-start))" />
         </linearGradient>
         <linearGradient
           id="paint4_linear_1609_7317"
@@ -106,9 +106,9 @@ export const AffiliateIcon: FC = () => {
           y2="14.3999"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#3B4355" />
-          <stop offset="0.483985" stopColor="#6A7387" />
-          <stop offset="1" stopColor="#3B4355" />
+          <stop stopColor="rgb(var(--oui-color-base-3))" />
+          <stop offset="0.483985" stopColor="rgb(var(--oui-color-base-1))" />
+          <stop offset="1" stopColor="rgb(var(--oui-color-base-3))" />
         </linearGradient>
         <linearGradient
           id="paint5_linear_1609_7317"
@@ -118,8 +118,8 @@ export const AffiliateIcon: FC = () => {
           y2="24.4001"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#333948" />
-          <stop offset="1" stopColor="#181C23" />
+          <stop stopColor="rgb(var(--oui-color-base-4))" />
+          <stop offset="1" stopColor="rgb(var(--oui-color-base-8))" />
         </linearGradient>
         <linearGradient
           id="paint6_linear_1609_7317"
@@ -129,8 +129,8 @@ export const AffiliateIcon: FC = () => {
           y2="29.6"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#656D83" />
-          <stop offset="1" stopColor="#222832" />
+          <stop stopColor="rgb(var(--oui-color-base-1))" />
+          <stop offset="1" stopColor="rgb(var(--oui-color-base-7))" />
         </linearGradient>
         <linearGradient
           id="paint7_linear_1609_7317"
@@ -140,8 +140,8 @@ export const AffiliateIcon: FC = () => {
           y2="8.79997"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#5D86FC" />
-          <stop offset="1" stopColor="#4667E8" />
+          <stop stopColor="rgb(var(--oui-color-primary))" />
+          <stop offset="1" stopColor="rgb(var(--oui-color-primary-darken))" />
         </linearGradient>
       </defs>
     </svg>

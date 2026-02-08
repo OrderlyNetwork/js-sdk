@@ -353,7 +353,7 @@ export const VolBar: Story = {
       <VolBarChart
         className="oui-h-full oui-w-full"
         data={volBarDataSource}
-        colors={{ fill: "rgba(0, 180, 158, 1)" }}
+        colors={{ fill: "rgb(var(--oui-color-success))" }}
       />
     );
   },
@@ -368,7 +368,7 @@ export const VolBarEmpty: Story = {
       <VolBarChart
         className="oui-h-full oui-w-full"
         data={data}
-        colors={{ fill: "rgba(0, 180, 158, 1)" }}
+        colors={{ fill: "rgb(var(--oui-color-success))" }}
       />
     );
   },
