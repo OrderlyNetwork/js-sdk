@@ -1,5 +1,6 @@
 {
   "common.cancel": "Скасувати",
+  "common.close": "Закрити",
   "common.confirm": "Підтвердити",
   "common.ok": "OK",
   "common.yes": "Так",
@@ -618,6 +619,10 @@
   "marginMode.current": "Поточна",
   "marginMode.marginModeSettings": "Налаштування режиму маржі",
   "marginMode.updatedSuccessfully": "Успішно оновлено",
+  "marginMode.perpetualFutures": "Безстрокові ф'ючерси",
+  "marginMode.searchPlaceholder": "Пошук",
+  "marginMode.selectAll": "Вибрати все",
+  "marginMode.setAs": "Встановити як",
   "orderEntry.startPrice.error.required": "Потрібна нижня ціна",
   "orderEntry.startPrice.error.min": "Нижня ціна має бути більша за {{value}}",
   "orderEntry.startPrice.error.max": "Початкова ціна повинна бути меншою за {{value}}",

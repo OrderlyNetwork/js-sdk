@@ -1,5 +1,6 @@
 {
   "common.cancel": "取消",
+  "common.close": "關閉",
   "common.confirm": "確認",
   "common.ok": "好的",
   "common.yes": "是",
@@ -618,6 +619,10 @@
   "marginMode.current": "當前",
   "marginMode.marginModeSettings": "保證金模式設置",
   "marginMode.updatedSuccessfully": "更新成功",
+  "marginMode.perpetualFutures": "永續合約",
+  "marginMode.searchPlaceholder": "搜尋",
+  "marginMode.selectAll": "全選",
+  "marginMode.setAs": "設為",
   "orderEntry.startPrice.error.required": "請輸入最低價格",
   "orderEntry.startPrice.error.min": "最低價格必须大於 {{value}}",
   "orderEntry.startPrice.error.max": "起始價格必须小於 {{value}}",

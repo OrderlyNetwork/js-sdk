@@ -1,5 +1,6 @@
 {
   "common.cancel": "취소",
+  "common.close": "닫기",
   "common.confirm": "확인",
   "common.ok": "확인",
   "common.yes": "예",
@@ -618,6 +619,10 @@
   "marginMode.current": "현재",
   "marginMode.marginModeSettings": "마진 모드 설정",
   "marginMode.updatedSuccessfully": "성공적으로 업데이트되었습니다",
+  "marginMode.perpetualFutures": "영구 선물",
+  "marginMode.searchPlaceholder": "검색",
+  "marginMode.selectAll": "전체 선택",
+  "marginMode.setAs": "설정",
   "orderEntry.startPrice.error.required": "하한가를 입력해주세요",
   "orderEntry.startPrice.error.min": "하한가는 {{value}}보다 커야 합니다",
   "orderEntry.startPrice.error.max": "시작 가격은 {{value}}보다 작아야 합니다",

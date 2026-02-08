@@ -1,5 +1,6 @@
 {
   "common.cancel": "İptal",
+  "common.close": "Kapat",
   "common.confirm": "Onayla",
   "common.ok": "Tamam",
   "common.yes": "Evet",
@@ -618,6 +619,10 @@
   "marginMode.current": "Mevcut",
   "marginMode.marginModeSettings": "Marj modu ayarları",
   "marginMode.updatedSuccessfully": "Başarıyla güncellendi",
+  "marginMode.perpetualFutures": "Süresiz vadeli işlemler",
+  "marginMode.searchPlaceholder": "Ara",
+  "marginMode.selectAll": "Tümünü seç",
+  "marginMode.setAs": "Şu olarak ayarla",
   "orderEntry.startPrice.error.required": "Alt fiyat gereklidir",
   "orderEntry.startPrice.error.min": "Alt fiyat {{value}} değerinden büyük olmalıdır",
   "orderEntry.startPrice.error.max": "Başlangıç fiyatı {{value}}'den küçük olmalıdır",

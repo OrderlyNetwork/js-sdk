@@ -1,5 +1,6 @@
 {
   "common.cancel": "Cancelar",
+  "common.close": "Fechar",
   "common.confirm": "Confirmar",
   "common.ok": "OK",
   "common.yes": "Sim",
@@ -618,6 +619,10 @@
   "marginMode.current": "Atual",
   "marginMode.marginModeSettings": "Configurações do modo de margem",
   "marginMode.updatedSuccessfully": "Atualizado com sucesso",
+  "marginMode.perpetualFutures": "Futuros perpétuos",
+  "marginMode.searchPlaceholder": "Pesquisar",
+  "marginMode.selectAll": "Selecionar tudo",
+  "marginMode.setAs": "Definir como",
   "orderEntry.startPrice.error.required": "Preço inferior é obrigatório",
   "orderEntry.startPrice.error.min": "Preço inferior deve ser maior que {{value}}",
   "orderEntry.startPrice.error.max": "O preço inicial deve ser menor que {{value}}",
