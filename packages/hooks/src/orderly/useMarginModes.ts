@@ -30,6 +30,7 @@ export const useMarginModes = () => {
     Array<MarginModesResponseItem>
   >("/v1/client/margin_modes", {
     revalidateOnFocus: false,
+    revalidateOnMount: false,
   });
 
   const [setMarginModeInternal, { isMutating }] = useMutation(

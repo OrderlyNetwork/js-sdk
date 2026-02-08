@@ -127,6 +127,10 @@ export const orderEntry = {
   "marginMode.current": "Current",
   "marginMode.marginModeSettings": "Margin mode settings",
   "marginMode.updatedSuccessfully": "Updated successfully",
+  "marginMode.perpetualFutures": "Perpetual futures",
+  "marginMode.searchPlaceholder": "Search",
+  "marginMode.selectAll": "Select all",
+  "marginMode.setAs": "Set as",
 
   "orderEntry.startPrice.error.required": "Start price is required",
   "orderEntry.startPrice.error.min":

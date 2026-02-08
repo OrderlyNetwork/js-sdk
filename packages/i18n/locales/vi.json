@@ -1,5 +1,6 @@
 {
   "common.cancel": "Hủy",
+  "common.close": "Đóng",
   "common.confirm": "Xác nhận",
   "common.ok": "OK",
   "common.yes": "Có",
@@ -618,6 +619,10 @@
   "marginMode.current": "Hiện tại",
   "marginMode.marginModeSettings": "Cài đặt chế độ ký quỹ",
   "marginMode.updatedSuccessfully": "Cập nhật thành công",
+  "marginMode.perpetualFutures": "Hợp đồng vĩnh viễn",
+  "marginMode.searchPlaceholder": "Tìm kiếm",
+  "marginMode.selectAll": "Chọn tất cả",
+  "marginMode.setAs": "Đặt thành",
   "orderEntry.startPrice.error.required": "Vui lòng nhập giá thấp nhất",
   "orderEntry.startPrice.error.min": "Giá thấp nhất phải lớn hơn {{value}}",
   "orderEntry.startPrice.error.max": "Giá bắt đầu phải nhỏ hơn {{value}}",

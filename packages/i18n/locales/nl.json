@@ -1,5 +1,6 @@
 {
   "common.cancel": "Annuleren",
+  "common.close": "Sluiten",
   "common.confirm": "Bevestigen",
   "common.ok": "OK",
   "common.yes": "Ja",
@@ -618,6 +619,10 @@
   "marginMode.current": "Huidig",
   "marginMode.marginModeSettings": "Marge modus instellingen",
   "marginMode.updatedSuccessfully": "Succesvol bijgewerkt",
+  "marginMode.perpetualFutures": "Perpetual futures",
+  "marginMode.searchPlaceholder": "Zoeken",
+  "marginMode.selectAll": "Alles selecteren",
+  "marginMode.setAs": "Instellen als",
   "orderEntry.startPrice.error.required": "Onderprijs is verplicht",
   "orderEntry.startPrice.error.min": "Onderprijs moet groter zijn dan {{value}}",
   "orderEntry.startPrice.error.max": "De startprijs moet kleiner zijn dan {{value}}",

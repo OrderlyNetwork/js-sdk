@@ -1,5 +1,6 @@
 {
   "common.cancel": "Batal",
+  "common.close": "Tutup",
   "common.confirm": "Konfirmasi",
   "common.ok": "OK",
   "common.yes": "Ya",
@@ -618,6 +619,10 @@
   "marginMode.current": "Saat ini",
   "marginMode.marginModeSettings": "Pengaturan mode margin",
   "marginMode.updatedSuccessfully": "Berhasil diperbarui",
+  "marginMode.perpetualFutures": "Futures perpetual",
+  "marginMode.searchPlaceholder": "Cari",
+  "marginMode.selectAll": "Pilih semua",
+  "marginMode.setAs": "Atur sebagai",
   "orderEntry.startPrice.error.required": "Harga terendah wajib diisi",
   "orderEntry.startPrice.error.min": "Harga terendah harus lebih besar dari {{value}}",
   "orderEntry.startPrice.error.max": "Harga mulai harus kurang dari {{value}}",

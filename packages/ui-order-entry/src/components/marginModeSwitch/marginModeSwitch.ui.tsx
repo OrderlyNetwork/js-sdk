@@ -56,7 +56,6 @@ export const MarginModeSwitch: FC<MarginModeSwitchProps> = (props) => {
           justify="between"
           className={cn(props.isMobile && "oui-px-4")}
         >
-          {/* Mobile keeps title centered by reserving left space */}
           {props.isMobile ? (
             <button
               type="button"
@@ -130,9 +129,10 @@ export const MarginModeSwitch: FC<MarginModeSwitchProps> = (props) => {
             type="button"
             className={cn(
               "oui-flex oui-items-center oui-gap-1",
+              "oui-group",
               "oui-text-xs oui-leading-[15px] oui-font-semibold oui-text-base-contrast-54 oui-tracking-[0.03em]",
               props.onOpenSettings
-                ? "oui-cursor-pointer"
+                ? "oui-cursor-pointer hover:oui-text-base-contrast-80 oui-transition-colors"
                 : "oui-cursor-default",
             )}
             onClick={props.onOpenSettings}
@@ -140,7 +140,15 @@ export const MarginModeSwitch: FC<MarginModeSwitchProps> = (props) => {
             data-testid="oui-testid-marginModeSwitch-settings"
           >
             <span>{t("marginMode.marginModeSettings")}</span>
-            <ChevronRightIcon size={18} color="white" opacity={0.54} />
+            <ChevronRightIcon
+              size={18}
+              color="white"
+              opacity={1}
+              className={cn(
+                "oui-text-base-contrast-54 oui-transition-colors",
+                props.onOpenSettings && "group-hover:oui-text-base-contrast-80",
+              )}
+            />
           </button>
         </Flex>
 
@@ -176,7 +184,9 @@ const OptionCard: FC<{
         "oui-relative oui-w-full oui-rounded-md oui-p-2",
         "oui-bg-base-6",
         "oui-text-left",
-        props.selected ? "oui-border oui-border-[#38e2fe]" : "",
+        props.selected
+          ? "oui-border oui-border-[#38e2fe]"
+          : "oui-border oui-border-transparent hover:oui-border-line-12",
       )}
       onClick={props.onClick}
       data-testid={`oui-testid-marginModeSwitch-option-${props.mode}`}

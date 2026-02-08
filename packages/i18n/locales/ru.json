@@ -1,5 +1,6 @@
 {
   "common.cancel": "Отмена",
+  "common.close": "Закрыть",
   "common.confirm": "Подтвердить",
   "common.ok": "OK",
   "common.yes": "Да",
@@ -618,6 +619,10 @@
   "marginMode.current": "Текущий",
   "marginMode.marginModeSettings": "Настройки режима маржи",
   "marginMode.updatedSuccessfully": "Успешно обновлено",
+  "marginMode.perpetualFutures": "Бессрочные фьючерсы",
+  "marginMode.searchPlaceholder": "Поиск",
+  "marginMode.selectAll": "Выбрать все",
+  "marginMode.setAs": "Установить как",
   "orderEntry.startPrice.error.required": "Требуется нижняя цена",
   "orderEntry.startPrice.error.min": "Нижняя цена должна быть больше {{value}}",
   "orderEntry.startPrice.error.max": "Начальная цена должна быть меньше {{value}}",
