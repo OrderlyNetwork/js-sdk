@@ -12,6 +12,7 @@ export type RefereeDataType = {
   referral_rebate_rate: number;
   referee_rebate_rate: number;
   direct_rebate: number;
+  direct_bonus_rebate: number;
   indirect_rebate: number;
   network_size: number;
   volume: number;

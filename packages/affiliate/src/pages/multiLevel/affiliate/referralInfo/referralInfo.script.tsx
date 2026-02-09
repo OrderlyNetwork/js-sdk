@@ -36,6 +36,12 @@ export const useReferralInfoScript = () => {
       .toNumber();
   }, [multiLevelRebateInfo]);
 
+  const directBonusRebateRate = useMemo(() => {
+    return new Decimal(multiLevelRebateInfo?.direct_bonus_rebate_rate ?? 0)
+      .mul(100)
+      .toNumber();
+  }, [multiLevelRebateInfo]);
+
   const onEdit = (focusField?: ReferralCodeFormField) => {
     modal.show(ReferralCodeFormDialogId, {
       type: ReferralCodeFormType.Edit,
@@ -44,6 +50,7 @@ export const useReferralInfoScript = () => {
       maxRebateRate,
       referrerRebateRate: multiLevelRebateInfo?.referrer_rebate_rate,
       directInvites: multiLevelRebateInfo?.direct_invites,
+      directBonusRebateRate,
       onSuccess: () => {
         multiLevelRebateInfoMutate();
       },
@@ -57,5 +64,6 @@ export const useReferralInfoScript = () => {
     multiLevelRebateInfo,
     referrerRebateRate,
     refereeRebateRate,
+    directBonusRebateRate,
   };
 };

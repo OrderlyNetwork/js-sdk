@@ -5,6 +5,7 @@ import {
   usePagination,
   useScreen,
 } from "@orderly.network/ui";
+import { Decimal } from "@orderly.network/utils";
 import {
   RefereeDataType,
   useMultiLevelReferees,
@@ -73,6 +74,11 @@ export const useRefereesTableScript = (
         accountId: item.account_id,
         multiLevelRebateInfo,
         directInvites: multiLevelRebateInfo?.direct_invites,
+        directBonusRebateRate: new Decimal(
+          multiLevelRebateInfo?.direct_bonus_rebate_rate ?? 0,
+        )
+          .mul(100)
+          .toNumber(),
       });
     },
     [

@@ -11,6 +11,7 @@ export type CommissionDataType = {
   code: string;
   volume: number;
   commission: number;
+  directBonusRebate: number;
   address: string;
 };
 
@@ -60,6 +61,7 @@ export const useCommissionTableScript = (
       code: row.referral_code,
       volume: row.volume,
       commission: row.referral_rebate,
+      directBonusRebate: row.direct_bonus_rebate,
       address: row.user_address,
     }));
 

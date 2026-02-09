@@ -1,5 +1,5 @@
 import { ReactNode, useMemo, useRef, useState } from "react";
-import { useTranslation } from "@orderly.network/i18n";
+import { Trans, useTranslation } from "@orderly.network/i18n";
 import {
   Box,
   Button,
@@ -12,6 +12,7 @@ import {
   Divider,
   formatAddress,
 } from "@orderly.network/ui";
+import { GiftIcon } from "../../../../icons/giftIcon";
 import { ReferralCodeFormField, ReferralCodeFormType } from "../../../../types";
 import { ReferralCodeFormReturns } from "./referralCodeForm.script";
 import { ReferralCodeFormWidgetProps } from "./referralCodeForm.widget";
@@ -120,6 +121,8 @@ export const ReferralCodeForm = (props: ReferralCodeFormProps) => {
       max={props.maxRebatePercentage}
       disabled={noCommissionAvailable || isReview || isReset}
       disabledIncrease={hasBoundReferee}
+      directBonusRebateRate={props.directBonusRebateRate}
+      noCommissionAvailable={noCommissionAvailable}
     />
   );
 
@@ -223,6 +226,38 @@ export const ReferralCodeForm = (props: ReferralCodeFormProps) => {
   );
 };
 
+const NoCommissionCard = (props: { directBonusRebateRate?: number }) => {
+  const { t } = useTranslation();
+  const amount = props.directBonusRebateRate;
+
+  return (
+    <Flex
+      direction="column"
+      gap={2}
+      mt={2}
+      width={"100%"}
+      p={4}
+      r="lg"
+      className="oui-border oui-border-base-contrast/[0.08] oui-tracking-[0.03em]"
+    >
+      <Flex justify="between" width={"100%"} itemAlign="center">
+        <Flex direction="column" itemAlign="start" gap={1}>
+          <Text size="2xs" intensity={54}>
+            {t("affiliate.noCommissionCard.title")}
+          </Text>
+          <Text size="lg" className="oui-text-primary-light oui-font-semibold">
+            + {amount}%
+          </Text>
+        </Flex>
+        <GiftIcon size={24} className="oui-shrink-0 oui-text-primary-light" />
+      </Flex>
+      <Text size="2xs" intensity={98} className="oui-leading-[15px]">
+        {t("affiliate.noCommissionCard.content", { amount })}
+      </Text>
+    </Flex>
+  );
+};
+
 type RebateRateSliderProps = {
   value: number;
   onChange: (value: number) => void;
@@ -230,6 +265,8 @@ type RebateRateSliderProps = {
   disabled: boolean;
   restValue: number;
   disabledIncrease?: boolean;
+  directBonusRebateRate?: number;
+  noCommissionAvailable?: boolean;
 };
 
 const RebateRateSlider = (props: RebateRateSliderProps) => {
@@ -280,6 +317,34 @@ const RebateRateSlider = (props: RebateRateSliderProps) => {
             {props.restValue}%
           </Text.formatted>
         </Flex>
+
+        {props.noCommissionAvailable ? (
+          <NoCommissionCard
+            directBonusRebateRate={props.directBonusRebateRate}
+          />
+        ) : (
+          props.directBonusRebateRate != null &&
+          props.directBonusRebateRate > 0 && (
+            <Flex gap={2} mt={2} width={"100%"}>
+              <GiftIcon
+                size={16}
+                className="oui-text-base-contrast oui-mt-[1px]"
+              />
+              <Text
+                size="base"
+                intensity={54}
+                as="span"
+                className="oui-inline-flex oui-items-center oui-gap-1 oui-tracking-[0.03em]"
+              >
+                <Trans
+                  i18nKey="affiliate.extraBonusOnDirectReferrals"
+                  values={{ amount: props.directBonusRebateRate }}
+                  components={[<Text as="span" color="primaryLight" key="0" />]}
+                />
+              </Text>
+            </Flex>
+          )
+        )}
       </div>
     </>
   );

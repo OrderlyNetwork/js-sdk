@@ -104,6 +104,7 @@ const MobileRefereeItem: FC<{
           total={item.commission}
           direct={item.direct_rebate}
           indirect={item.indirect_rebate}
+          directBonus={item.direct_bonus_rebate}
           prefix="$"
           fix={6}
           title={t("affiliate.commission")}
@@ -229,6 +230,7 @@ export const RefereesTableUI: FC<RefereesTableUIProps> = (props) => {
             total={record.commission}
             direct={record.direct_rebate}
             indirect={record.indirect_rebate}
+            directBonus={record.direct_bonus_rebate}
             prefix="$"
             fix={6}
             title={t("affiliate.commission")}

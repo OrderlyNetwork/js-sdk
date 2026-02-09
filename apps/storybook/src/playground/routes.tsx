@@ -70,17 +70,19 @@ const PortfolioPage = lazyImportPage(() => import("./pages/portfolio/page"));
 const PositionsPage = lazyImportPage(
   () => import("./pages/portfolio/positions/page"),
 );
-const SettingsPage = React.lazy(() => import("./pages/portfolio/setting/page"));
-const AffiliatePage = React.lazy(
+const SettingsPage = lazyImportPage(
+  () => import("./pages/portfolio/setting/page"),
+);
+const AffiliatePage = lazyImportPage(
   () => import("./pages/rewards/affiliate/page"),
 );
-const TradingRewardsPage = React.lazy(
+const TradingRewardsPage = lazyImportPage(
   () => import("./pages/rewards/trading/page"),
 );
-const SwapPage = React.lazy(() => import("./pages/swap/page"));
-const VaultsPage = React.lazy(() => import("./pages/vaults/page"));
+const SwapPage = lazyImportPage(() => import("./pages/swap/page"));
+const VaultsPage = lazyImportPage(() => import("./pages/vaults/page"));
 
-const PointsPage = React.lazy(() => import("./pages/points/page"));
+const PointsPage = lazyImportPage(() => import("./pages/points/page"));
 
 const AppRoute: React.FC = () => {
   // console.log("browser language", i18n?.language);

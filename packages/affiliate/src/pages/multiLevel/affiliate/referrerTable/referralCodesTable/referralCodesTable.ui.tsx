@@ -92,6 +92,7 @@ const MobileReferralCodeItem: FC<{
           total={item.total_rebate ?? 0}
           direct={item.direct_rebate ?? 0}
           indirect={item.indirect_rebate ?? 0}
+          directBonus={item.direct_bonus_rebate}
           prefix="$"
           fix={6}
           title={t("affiliate.commission")}
@@ -202,6 +203,7 @@ export const ReferralCodesTableUI: FC<ReferralCodesTableUIProps> = (props) => {
               total={record.total_rebate ?? 0}
               direct={record.direct_rebate ?? 0}
               indirect={record.indirect_rebate ?? 0}
+              directBonus={record.direct_bonus_rebate}
               prefix="$"
               fix={6}
               title={t("affiliate.commission")}

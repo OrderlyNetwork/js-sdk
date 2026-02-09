@@ -32,6 +32,7 @@ export const useSummaryScript = () => {
       indirect_volume = 0,
       direct_rebate = 0,
       indirect_rebate = 0,
+      direct_bonus_rebate = 0,
     } = data || {};
     return {
       direct_invites,
@@ -45,6 +46,7 @@ export const useSummaryScript = () => {
       total_volume: direct_volume + indirect_volume,
       direct_rebate,
       indirect_rebate,
+      direct_bonus_rebate,
       total_rebate: direct_rebate + indirect_rebate,
     };
   }, [data]);

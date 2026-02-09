@@ -12,6 +12,7 @@ export type ReferralCodesRow = {
   indirect_volume: number;
   direct_rebate: number;
   indirect_rebate: number;
+  direct_bonus_rebate?: number;
   max_rebate_rate: number;
   referee_rebate_rate: number;
   referrer_rebate_rate: number;
@@ -30,6 +31,7 @@ export const useMultiLevelReferralCodes =
   (): UseMultiLevelReferralCodesReturns => {
     const { referralInfo } = useReferralContext();
     const { data: multiLevelRebateInfo } = useMultiLevelRebateInfo();
+    console.log("multiLevelRebateInfo", multiLevelRebateInfo);
     const [refereesData] = useRefereeInfo({});
 
     const copyCode = (code: string) => {
@@ -77,6 +79,8 @@ export const useMultiLevelReferralCodes =
         const indirectVolume = multiLevelRebateInfo?.indirect_volume ?? 0;
         const directRebate = multiLevelRebateInfo?.direct_rebate ?? 0;
         const indirectRebate = multiLevelRebateInfo?.indirect_rebate ?? 0;
+        const directBonusRebate =
+          multiLevelRebateInfo?.direct_bonus_rebate ?? 0;
 
         const multiLevelCode: ReferralCodesRow = {
           code: multiLevelRebateInfo.referral_code ?? "",
@@ -86,6 +90,7 @@ export const useMultiLevelReferralCodes =
           indirect_volume: indirectVolume,
           direct_rebate: directRebate,
           indirect_rebate: indirectRebate,
+          direct_bonus_rebate: directBonusRebate,
           max_rebate_rate: maxRebateRate,
           referee_rebate_rate: defaultRefereeRebateRate,
           referrer_rebate_rate: referrerRebateRate,

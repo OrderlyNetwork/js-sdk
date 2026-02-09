@@ -12,6 +12,7 @@ export type ReferralCodeFormWidgetProps = {
   focusField?: ReferralCodeFormField;
   accountId?: string;
   directInvites?: number;
+  directBonusRebateRate?: number;
 };
 
 export const ReferralCodeFormWidget = (props: ReferralCodeFormWidgetProps) => {

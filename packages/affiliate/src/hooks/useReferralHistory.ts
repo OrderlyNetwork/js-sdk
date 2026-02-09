@@ -21,6 +21,7 @@ type ReferralHistoryItem = {
   referral_code: string;
   volume: number;
   referral_rebate: number;
+  direct_bonus_rebate: number;
   date: string;
 };
 

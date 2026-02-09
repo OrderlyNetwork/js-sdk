@@ -688,6 +688,8 @@ export declare namespace API {
       indirect_volume?: number;
       direct_rebate?: number;
       indirect_rebate?: number;
+      direct_bonus_rebate_rate?: number;
+      direct_bonus_rebate?: number;
     }
 
     /** /v1/referral/multi_level/admin */
@@ -707,6 +709,7 @@ export declare namespace API {
       indirect_volume: number;
       direct_rebate: number;
       indirect_rebate: number;
+      direct_bonus_rebate?: number;
     }
   }
 }

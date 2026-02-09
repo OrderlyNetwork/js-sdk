@@ -71,6 +71,8 @@ export const affiliate = {
   "affiliate.referralCodes.copyLink": "Copy link",
   "affiliate.upTo": "Up to 60%",
   "affiliate.commission": "Commission",
+  "affiliate.base": "Base",
+  "affiliate.directBonus": "Direct bonus",
   "affiliate.commission.30d": "30d commission",
   "affiliate.commission.column.activeUsers": "Referral active users",
 
@@ -109,6 +111,7 @@ export const affiliate = {
     "Referral rate updated successfully",
 
   "affiliate.direct": "Direct",
+  "affiliate.directInclBonus": "Incl. {{amount}} bonus",
   "affiliate.indirect": "Indirect",
   "affiliate.referrals": "Referrals",
   "affiliate.referralCode.edit.modal.title": "Configure your referral settings",
@@ -128,6 +131,9 @@ export const affiliate = {
     "Please review your settings. The commission split cannot be decreased later.",
   "affiliate.refereeRebateRate.modal.title":
     "Edit commission for {{accountId}}",
+  "affiliate.noCommissionCard.title": "Extra bonus on direct referrals",
+  "affiliate.noCommissionCard.content":
+    "You still earn rewards! You will receive a {{amount}}% direct referrer bonus on every trade made by your direct referees.",
   "affiliate.rebateRate.noCommissionAvailable":
     "Note: No commission available (0%), so configuration is disabled. However, this code is still active and can be shared to establish your referral base.",
   "affiliate.rebateRate.noCommissionRate":
@@ -140,6 +146,8 @@ export const affiliate = {
   "affiliate.revenueSplitStrategy": "Revenue split strategy",
   "affiliate.youKeep": "You keep",
   "affiliate.refereesGet": "Referees get",
+  "affiliate.extraBonusOnDirectReferrals":
+    "<0>+ {{amount}}%</0> extra bonus on direct referrals",
   "affiliate.earnReferralCommissions": "Earn referral commissions",
   "affiliate.earnReferralCommissions.description":
     "Invite traders and earn passive commissions from trades made throughout your entire referral network",

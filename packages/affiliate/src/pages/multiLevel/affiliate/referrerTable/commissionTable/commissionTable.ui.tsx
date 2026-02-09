@@ -12,13 +12,51 @@ import {
 import { AuthGuardDataTable } from "@orderly.network/ui-connector";
 import { commifyOptional } from "@orderly.network/utils";
 import { formatYMDTime } from "../../../../../utils/utils";
-import { AddressCell, MobileCell, MobileCard } from "../base/cells";
+import {
+  AddressCell,
+  MobileCell,
+  MobileCard,
+  TooltipCell,
+} from "../base/cells";
 import {
   CommissionDataType,
   CommissionTableScriptReturns,
 } from "./commissionTable.script";
 
 type CommissionTableUIProps = CommissionTableScriptReturns;
+
+const formatCommissionAmt = (v: number) =>
+  commifyOptional(v, {
+    fix: 6,
+    fallback: "0",
+    padEnd: true,
+    prefix: "$",
+  });
+
+const CommissionCell: FC<{
+  item: CommissionDataType;
+}> = ({ item }) => {
+  const { t } = useTranslation();
+  const base = item.commission - item.directBonusRebate;
+  const tooltip = (
+    <>
+      <div>
+        • {t("affiliate.base")}: {formatCommissionAmt(base)}
+      </div>
+      <div>
+        • {t("affiliate.directBonus")}:{" "}
+        {formatCommissionAmt(item.directBonusRebate)}
+      </div>
+    </>
+  );
+  return (
+    <TooltipCell
+      text={formatCommissionAmt(item.commission)}
+      tooltip={tooltip}
+      title={t("affiliate.commission")}
+    />
+  );
+};
 
 const MobileCommissionItem: FC<{
   item: CommissionDataType;
@@ -43,14 +81,7 @@ const MobileCommissionItem: FC<{
         </Text>
       </MobileCell>
       <MobileCell label={t("affiliate.commission")}>
-        <Text>
-          {commifyOptional(item.commission, {
-            fix: 6,
-            fallback: "0",
-            padEnd: true,
-            prefix: "$",
-          })}
-        </Text>
+        <CommissionCell item={item} />
       </MobileCell>
       <MobileCell
         label={t("common.address")}
@@ -97,15 +128,8 @@ export const CommissionTableUI: FC<CommissionTableUIProps> = (props) => {
       {
         title: t("affiliate.commission"),
         dataIndex: "commission",
-        render: (value: number) => (
-          <Text>
-            {commifyOptional(value, {
-              fix: 6,
-              fallback: "0",
-              padEnd: true,
-              prefix: "$",
-            })}
-          </Text>
+        render: (_value: number, record: CommissionDataType) => (
+          <CommissionCell item={record} />
         ),
         onSort: true,
       },
