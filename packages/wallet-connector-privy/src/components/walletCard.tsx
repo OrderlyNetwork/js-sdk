@@ -47,9 +47,9 @@ const getCardActiveClassName = (
   type: WalletType = WalletType.EVM,
 ) => {
   const cardActiveColorMap: { [key in WalletType]: string } = {
-    [WalletType.EVM]: "oui-border-[2px] oui-border-[#B9D1FF]",
-    [WalletType.ABSTRACT]: "oui-border-[2px] oui-border-[#B9D1FF]",
-    [WalletType.SOL]: "oui-border-[2px] oui-border-[#faedff]",
+    [WalletType.EVM]: "oui-border-[2px] oui-border-primary-light",
+    [WalletType.ABSTRACT]: "oui-border-[2px] oui-border-primary-light",
+    [WalletType.SOL]: "oui-border-[2px] oui-border-link-light",
   };
   return isActive && isMulti && cardActiveColorMap[type];
 };
@@ -237,7 +237,7 @@ const RenderWalletType = ({ walletType }: { walletType: WalletType }) => {
             />
           </div>
           <div className="oui-relative oui-left-[-9px] oui-flex oui-items-center oui-justify-center oui-gap-1">
-            <div className="oui-flex oui-size-[18px] oui-items-center oui-justify-center oui-rounded-full oui-bg-[#282e3a]">
+            <div className="oui-flex oui-size-[18px] oui-items-center oui-justify-center oui-rounded-full oui-bg-base-5">
               <EVMChainPopover>
                 <MoreIcon
                   className="oui-relative oui-z-10 oui-size-3 oui-text-base-contrast-54 hover:oui-text-base-contrast"
