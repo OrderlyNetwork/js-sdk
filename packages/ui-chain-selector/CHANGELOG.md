@@ -1,5 +1,31 @@
 # @orderly.network/ui-chain-selector
 
+## 2.8.13
+
+### Patch Changes
+
+- 2f7399d: publish
+- publish
+- Updated dependencies [2f7399d]
+- Updated dependencies
+  - @orderly.network/react-app@2.8.13
+  - @orderly.network/hooks@2.8.13
+  - @orderly.network/i18n@2.8.13
+  - @orderly.network/types@2.8.13
+  - @orderly.network/ui@2.8.13
+
+## 2.8.13-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.8.13-alpha.0
+  - @orderly.network/hooks@2.8.13-alpha.0
+  - @orderly.network/i18n@2.8.13-alpha.0
+  - @orderly.network/types@2.8.13-alpha.0
+  - @orderly.network/ui@2.8.13-alpha.0
+
 ## 2.8.12
 
 ### Patch Changes

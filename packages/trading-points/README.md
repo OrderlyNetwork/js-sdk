@@ -1,181 +1,97 @@
-# Rewards Calculation Module
+# Trading Points Module
 
-This module provides functionality for calculating estimated rewards and estimated tickets earned.
+This module provides a complete points system implementation for trading campaigns, including points tracking, leaderboards, referral links, and stage management.
 
 ## Features
 
-### 1. Estimated Rewards
+- 📊 **Points Dashboard**: Display user's trading points, PnL points, and referral points
+- 🏆 **Leaderboard**: Show rankings with support for different time ranges (this week, last week, all time)
+- 🎯 **Campaign Stages**: Support multiple campaign stages with different statuses (active, pending, completed)
+- 🔗 **Referral System**: Generate and share referral links and codes
+- ⏱️ **Countdown Timer**: Display countdown for pending campaigns
 
-- Supports multiple prize pool configurations
-- Supports different metrics based on trading volume and PnL (Profit and Loss)
-- Supports fixed position rewards and position range rewards
-- Automatically estimates user ranking and calculates corresponding rewards
+## Basic Usage
 
-### 2. Estimated Tickets
+### Simple Integration
 
-- Supports tiered mode: Awards different ticket amounts based on different trading volume tiers
-- Supports linear mode: Earn Y tickets for every X trading volume
+```tsx
+import { PointSystemPage } from "@orderly.network/trading-points";
 
-## Type Definitions
+function MyApp() {
+  const handleRouteChange = (option) => {
+    // Handle navigation
+    console.log("Navigate to:", option.href);
+  };
 
-### Prize Pool Configuration
-
-```typescript
-interface PrizePool {
-  pool_id: string; // Prize pool ID
-  label: string; // Prize pool label
-  total_prize: number; // Total prize amount
-  currency: string; // Reward currency
-  metric: "volume" | "pnl"; // Evaluation metric
-  tiers: PrizePoolTier[]; // Tier configuration
+  return <PointSystemPage onRouteChange={handleRouteChange} />;
 }
 ```
 
-### Ticket Rules
+## Advanced Usage
 
-```typescript
-interface TicketRules {
-  total_prize: number; // Total ticket prize amount
-  currency: string; // Currency
-  metric: "volume" | "pnl"; // Evaluation metric
-  mode: "tiered" | "linear"; // Mode
-  tiers?: TicketTierRule[]; // Tiered mode configuration
-  linear?: TicketLinearRule; // Linear mode configuration
-}
-```
+### Using the Points Hook
 
-## Usage Examples
+The `usePoints` hook provides access to all points-related data and methods:
 
-### Basic Usage
+```tsx
+import { usePoints } from "@orderly.network/trading-points";
 
-```typescript
-import {
-  calculateEstimatedRewards,
-  calculateEstimatedTickets,
-  CampaignConfig,
-  UserData,
-} from "./utils";
+function CustomPointsComponent() {
+  const {
+    stages, // All campaign stages
+    userStatistics, // User's points statistics
+    currentStage, // Currently selected stage
+    setCurrentStage, // Function to change stage
+    isLoading, // Loading state
+    isNoCampaign, // Whether there's no active campaign
+    refLink, // Referral link
+    refCode, // Referral code
+    selectedTimeRange, // Current time range filter
+    setSelectedTimeRange, // Function to change time range
+    pointsDisplay, // Formatted points display data
+    allTimePointsDisplay, // All-time points display data
+    isCurrentStagePending, // Whether current stage is pending
+    isCurrentStageCompleted, // Whether current stage is completed
+    getRankingUrl, // Function to get ranking API URL
+  } = usePoints();
 
-const userdata: UserData = {
-  account_id: "user_001",
-  trading_volume: 50000,
-  pnl: 1500,
-  current_rank: 5,
-  total_participants: 1000,
-};
-
-const campaign: CampaignConfig = {
-  // ... campaign configuration
-};
-
-// Calculate estimated rewards
-const rewards = calculateEstimatedRewards(userdata, campaign);
-console.log(`Estimated rewards: ${rewards?.amount} ${rewards?.currency}`);
-
-// Calculate estimated tickets
-if (campaign.ticket_rules) {
-  const tickets = calculateEstimatedTickets(userdata, campaign.ticket_rules);
-  console.log(`Estimated tickets: ${tickets}`);
-}
-```
-
-### Usage in React Components
-
-```typescript
-import { RewardsDesktopUI } from './rewards.desktop.ui';
-
-function MyComponent() {
   return (
-    <RewardsDesktopUI
-      campaign={campaignConfig}
-      userdata={userData}
-    />
+    <div>
+      <h2>Total Points: {pointsDisplay.currentPointsDisplay}</h2>
+      <p>Trading Points: {pointsDisplay.tradingPointsDisplay}</p>
+      <p>PnL Points: {pointsDisplay.pnlPointsDisplay}</p>
+      <p>Referral Points: {pointsDisplay.referralPointsDisplay}</p>
+      <p>Rank: {pointsDisplay.rankingDisplay}</p>
+    </div>
   );
 }
 ```
 
-## Configuration Examples
+## Components Overview
 
-### Tiered Mode Ticket Configuration
+### Main Components
 
-```typescript
-ticket_rules: {
-  total_prize: 2000,
-  currency: "WIF",
-  metric: "volume",
-  mode: "tiered",
-  tiers: [
-    { value: 25000, tickets: 10 }, // ≥ 25,000 volume → 10 tickets
-    { value: 10000, tickets: 5 },  // ≥ 10,000 volume → 5 tickets
-    { value: 5000, tickets: 1 }    // ≥ 5,000 volume → 1 ticket
-  ]
-}
+- **PointSystemPage**: The main entry point component
+- **Countdown**: Displays countdown timer for pending campaigns
+- **Intro**: Shows campaign introduction and stage selection
+- **User**: Displays user's points, stats, and referral information
+- **GeneralLeaderboardWidget**: Shows the leaderboard/rankings
+
+### Internal Structure
+
 ```
+pages/points/
+  ├── page.tsx           # Main page component
+  ├── main.tsx           # Layout and composition
+  ├── countdown.tsx      # Countdown timer
+  ├── intro.tsx          # Campaign intro
+  ├── user.tsx           # User stats
+  └── faq.tsx            # FAQ section
 
-### Linear Mode Ticket Configuration
+components/
+  ├── leaderboard/       # Leaderboard components
+  └── ranking/           # Ranking components
 
-```typescript
-ticket_rules: {
-  total_prize: 1000,
-  currency: "WIF",
-  metric: "volume",
-  mode: "linear",
-  linear: {
-    every: 5000, // Every 5000 trading volume
-    tickets: 1   // Earn 1 ticket
-  }
-}
+hooks/
+  └── usePointsData/     # Points data management
 ```
-
-### Prize Pool Configuration Example
-
-```typescript
-prize_pools: [
-  {
-    pool_id: "general",
-    label: "General Pool",
-    total_prize: 10000,
-    currency: "USDC",
-    metric: "volume",
-    tiers: [
-      { position: 1, amount: 3000 }, // 1st place: 3000 USDC
-      { position: 2, amount: 2000 }, // 2nd place: 2000 USDC
-      { position: 3, amount: 1000 }, // 3rd place: 1000 USDC
-      { position_range: [4, 10], amount: 500 }, // 4th-10th place: 500 USDC each
-      { position_range: [11, 50], amount: 100 }, // 11th-50th place: 100 USDC each
-    ],
-  },
-];
-```
-
-## Calculation Logic
-
-### Ranking Estimation
-
-The system estimates user ranking based on trading performance:
-
-- If `current_rank` is provided, it is used directly
-- Otherwise, a simple estimation is made based on trading volume/PnL:
-  - ≥ 100,000: Rank 1
-  - ≥ 50,000: Top 5%
-  - ≥ 10,000: Top 20%
-  - ≥ 1,000: Top 50%
-  - < 1,000: Bottom 80%
-
-### Reward Calculation
-
-1. Iterate through all prize pools
-2. Get user data based on the pool's metric (volume/pnl)
-3. Estimate user ranking for that metric
-4. Find matching tier and accumulate rewards
-
-### Ticket Calculation
-
-- **Tiered Mode**: Find the highest tier that matches the user's trading volume
-- **Linear Mode**: Calculate proportionally using `Math.floor(volume / every) * tickets`
-
-## Important Notes
-
-1. Ranking estimation is based on simplified logic; it's recommended to use real leaderboard data in actual applications
-2. When user trading volume or PnL is 0 or negative, some calculations may return empty results
-3. It's recommended to integrate real API data sources in production environments

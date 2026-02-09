@@ -30,27 +30,47 @@ export const OrderBookAndEntry: React.FC<
       resizeObserver.unobserve(div);
     };
   }, []);
+
+  const orderBookColumn = (
+    <div
+      className="oui-rounded-xl oui-bg-base-9"
+      style={{ height: `${height + 16}px` }}
+    >
+      <React.Suspense fallback={null}>
+        <LazyOrderBookWidget
+          symbol={props.symbol}
+          height={height ? height - 44 : undefined}
+        />
+      </React.Suspense>
+    </div>
+  );
+  const orderEntryColumn = (
+    <div className="oui-rounded-xl oui-bg-base-9 oui-p-2">
+      <OrderEntryWidget symbol={props.symbol} containerRef={divRef} />
+    </div>
+  );
+
   return (
     <div
       className={cn(
-        "oui-mx-1 oui-grid oui-grid-cols-[4fr,6fr] oui-gap-1 ",
+        "oui-mx-1 oui-grid oui-gap-1",
+        props.layout === "right"
+          ? "oui-grid-cols-[4fr,6fr]"
+          : "oui-grid-cols-[6fr,4fr]",
         props.className,
       )}
     >
-      <div
-        className="oui-rounded-xl oui-bg-base-9"
-        style={{ height: `${height + 16}px` }}
-      >
-        <React.Suspense fallback={null}>
-          <LazyOrderBookWidget
-            symbol={props.symbol}
-            height={height ? height - 44 : undefined}
-          />
-        </React.Suspense>
-      </div>
-      <div className="oui-rounded-xl oui-bg-base-9 oui-p-2">
-        <OrderEntryWidget symbol={props.symbol} containerRef={divRef} />
-      </div>
+      {props.layout === "right" ? (
+        <>
+          {orderBookColumn}
+          {orderEntryColumn}
+        </>
+      ) : (
+        <>
+          {orderEntryColumn}
+          {orderBookColumn}
+        </>
+      )}
     </div>
   );
 };

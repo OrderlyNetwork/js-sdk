@@ -113,13 +113,14 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
   const { getErrorMsg } = useOrderEntryFormErrorMsg(validated ? errors : null);
 
   const buttonLabel = useMemo(() => {
-    if (isMobile && freeCollateral <= 0) {
-      return t("common.deposit");
-    }
+    // TODO: remove this for bug handling
+    // if (isMobile && freeCollateral <= 0) {
+    //   return t("common.deposit");
+    // }
     return side === OrderSide.BUY
       ? t("orderEntry.buyLong")
       : t("orderEntry.sellShort");
-  }, [side, t, isMobile, freeCollateral]);
+  }, [side, t, isMobile]);
 
   useEffect(() => {
     if (validated) {
@@ -439,21 +440,11 @@ export const OrderEntry: React.FC<OrderEntryProps> = (props) => {
           // color={side === OrderSide.BUY ? "buy" : "sell"}
           data-type={OrderSide.BUY}
           className={cn(
-            isMobile && freeCollateral <= 0
-              ? "oui-bg-primary-darken hover:oui-bg-primary-darken/80 active:oui-bg-primary-darken/80"
-              : side === OrderSide.BUY
-                ? "orderly-order-entry-submit-button-buy oui-bg-success-darken hover:oui-bg-success-darken/80 active:oui-bg-success-darken/80"
-                : "orderly-order-entry-submit-button-sell oui-bg-danger-darken hover:oui-bg-danger-darken/80 active:oui-bg-danger-darken/80",
+            side === OrderSide.BUY
+              ? "orderly-order-entry-submit-button-buy oui-bg-success-darken hover:oui-bg-success-darken/80 active:oui-bg-success-darken/80"
+              : "orderly-order-entry-submit-button-sell oui-bg-danger-darken hover:oui-bg-danger-darken/80 active:oui-bg-danger-darken/80",
           )}
-          onClick={() => {
-            if (isMobile && freeCollateral <= 0) {
-              modal.show("DepositAndWithdrawWithSheetId", {
-                activeTab: "deposit",
-              });
-            } else {
-              validateSubmit();
-            }
-          }}
+          onClick={validateSubmit}
           loading={props.isMutating}
           disabled={!props.canTrade}
         >

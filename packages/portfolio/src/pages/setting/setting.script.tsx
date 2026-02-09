@@ -13,6 +13,11 @@ import { toast } from "@orderly.network/ui";
 
 const ORDERLY_ORDER_SOUND_ALERT_KEY = "orderly_order_sound_alert";
 
+const ORDERLY_MWEB_ORDER_ENTRY_SIDE_MARKETS_LAYOUT =
+  "orderly_mweb_order_entry_side_markets_layout";
+
+export type OrderPanelLayout = "left" | "right";
+
 export type SettingScriptReturns = {
   maintenance_cancel_orders?: boolean;
   setMaintainConfig: (maintenance_cancel_order_flag: boolean) => void;
@@ -21,6 +26,8 @@ export type SettingScriptReturns = {
   soundAlert: boolean;
   setSoundAlert: (value: boolean) => void;
   hasOrderFilledMedia: boolean;
+  orderPanelLayout: OrderPanelLayout;
+  setOrderPanelLayout: (v: OrderPanelLayout) => void;
 };
 
 export const useSettingScript = (): SettingScriptReturns => {
@@ -34,6 +41,12 @@ export const useSettingScript = (): SettingScriptReturns => {
     ORDERLY_ORDER_SOUND_ALERT_KEY,
     notification?.orderFilled?.defaultOpen ?? false,
   );
+
+  const [orderPanelLayout, setOrderPanelLayout] =
+    useLocalStorage<OrderPanelLayout>(
+      ORDERLY_MWEB_ORDER_ENTRY_SIDE_MARKETS_LAYOUT,
+      "right",
+    );
 
   useEffect(() => {
     setChecked(data?.maintenance_cancel_orders || false);
@@ -72,5 +85,7 @@ export const useSettingScript = (): SettingScriptReturns => {
     soundAlert,
     setSoundAlert,
     hasOrderFilledMedia: Boolean(notification?.orderFilled?.media),
+    orderPanelLayout,
+    setOrderPanelLayout,
   };
 };
