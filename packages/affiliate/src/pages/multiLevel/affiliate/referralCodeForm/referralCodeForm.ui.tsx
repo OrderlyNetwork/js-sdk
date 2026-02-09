@@ -201,11 +201,11 @@ export const ReferralCodeForm = (props: ReferralCodeFormProps) => {
         );
       case ReferralCodeFormType.Reset:
         return (
-          <>
+          <Flex width={"100%"} direction="column" itemAlign="start" gap={2}>
             {resetRebateRateLabel}
             {rebateRateSlider}
             {buttons}
-          </>
+          </Flex>
         );
       default:
         return null;
