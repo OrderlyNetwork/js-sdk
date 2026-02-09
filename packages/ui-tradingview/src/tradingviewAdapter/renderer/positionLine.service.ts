@@ -113,15 +113,15 @@ export class PositionLineService {
     this.positionLines[idx] =
       this.positionLines[idx] ?? this.getBasePositionLine();
 
-    const text = PositionLineService.getPositionPnL(
+    let text = PositionLineService.getPositionPnL(
       position.unrealPnl,
       position.unrealPnlDecimal,
     );
 
-    let quantity = PositionLineService.getPositionQuantity(position.balance);
+    const quantity = PositionLineService.getPositionQuantity(position.balance);
 
     if (needDrawMarginMode) {
-      quantity += ` (${position.marginMode === "ISOLATED" ? "Isolated" : "Cross"})`;
+      text += ` (${position.marginMode === "ISOLATED" ? "Isolated" : "Cross"})`;
     }
 
     this.positionLines[idx]
