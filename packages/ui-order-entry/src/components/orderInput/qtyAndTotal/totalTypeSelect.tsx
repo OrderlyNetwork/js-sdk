@@ -39,7 +39,7 @@ export const TotalTypeSelect: FC<TotalTypeSelectProps> = memo((props) => {
       classNames={{
         trigger: cn(
           "oui-orderEntry-totalTypeSelect-btn",
-          "oui-w-auto oui-border-none oui-bg-transparent",
+          "oui-w-auto oui-border-none oui-bg-transparent oui-shadow-none",
           "oui-absolute oui-left-0 oui-top-[5px] oui-text-2xs oui-text-base-contrast-36",
         ),
       }}

@@ -67,6 +67,9 @@ export const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>(
         classNames={{
           root: cn(
             "oui-orderEntry-customInput orderly-order-entry oui-relative oui-h-[54px] oui-rounded oui-border oui-border-solid oui-border-line oui-px-2 oui-py-1 group-first:oui-rounded-t-xl group-last:oui-rounded-b-xl",
+            props.error
+              ? "oui-border-transparent"
+              : "focus-within:oui-border-transparent",
             props.className,
             props.classNames?.root,
           ),

@@ -34,8 +34,9 @@ const switchVariants = tv({
       "oui-h-[10px]",
       "oui-w-[10px]",
       "oui-rounded-full",
-      // "oui-bg-white/80",
-      "oui-bg-primary-contrast",
+      // hardcode white display better than primary-contrast, because primary-contrast is too dark in light mode
+      "oui-bg-white",
+      // "oui-bg-primary-contrast",
       "oui-shadow-lg",
       "oui-ring-0",
       "oui-transition-transform",

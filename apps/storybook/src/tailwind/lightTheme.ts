@@ -5,12 +5,12 @@ export const lightThemePlugin = () =>
     addBase({
       '[data-oui-theme="light"]': {
         "--oui-font-family":
-          '"DIN2014", "PingFang SC", "Noto Sans CJK SC", "Noto Sans", sans-serif',
+          '"Manrope", "PingFang SC", "Noto Sans CJK SC", "Noto Sans", sans-serif',
 
         /* colors */
         "--oui-color-primary": "240 185 11",
-        "--oui-color-primary-light": "252 213 53",
-        "--oui-color-primary-darken": "252 213 53",
+        "--oui-color-primary-light": "240 185 11",
+        "--oui-color-primary-darken": "240 185 11",
         "--oui-color-primary-contrast": "12 14 18",
 
         "--oui-color-link": "230 175 0",
@@ -23,34 +23,34 @@ export const lightThemePlugin = () =>
         "--oui-color-danger": "246 70 93",
         "--oui-color-danger-light": "255 120 140",
         "--oui-color-danger-darken": "220 50 75",
-        "--oui-color-danger-contrast": "12 14 18",
+        "--oui-color-danger-contrast": "0 0 0",
 
         "--oui-color-success": "14 203 129",
         "--oui-color-success-light": "50 220 160",
         "--oui-color-success-darken": "46 189 133",
-        "--oui-color-success-contrast": "12 14 18",
+        "--oui-color-success-contrast": "0 0 0",
 
         "--oui-color-warning": "255 182 93",
         "--oui-color-warning-light": "255 207 139",
         "--oui-color-warning-darken": "255 125 0",
-        "--oui-color-warning-contrast": "12 14 18",
+        "--oui-color-warning-contrast": "0 0 0",
 
         "--oui-color-fill": "234 236 239",
         "--oui-color-fill-active": "220 222 226",
 
-        "--oui-color-base-1": "200 202 205",
+        "--oui-color-base-1": "160 160 160",
         "--oui-color-base-2": "210 210 210",
         "--oui-color-base-3": "180 180 180",
         "--oui-color-base-4": "180 182 185",
-        "--oui-color-base-5": "200 202 205",
-        "--oui-color-base-6": "230 230 230",
+        "--oui-color-base-5": "220 220 220",
+        "--oui-color-base-6": "245 245 245",
         "--oui-color-base-7": "234 236 239",
-        "--oui-color-base-8": "240 240 240",
+        "--oui-color-base-8": "255 255 255",
         "--oui-color-base-9": "255 255 255",
         "--oui-color-base-10": "245 245 245",
 
-        "--oui-color-base-foreground": "12 14 18",
-        "--oui-color-line": "12 14 18",
+        "--oui-color-base-foreground": "0 0 0",
+        "--oui-color-line": "0 0 0",
 
         "--oui-color-trading-loss": "246 70 93",
         "--oui-color-trading-loss-contrast": "255 255 255",
