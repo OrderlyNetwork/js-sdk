@@ -28,6 +28,7 @@ export const Hero = () => {
     modal.show(ReferralCodeFormDialogId, {
       type: ReferralCodeFormType.Create,
       maxRebateRate,
+      directBonusRebateRate: 10, // Hardcoded value before API is ready
       onSuccess: () => {
         multiLevelRebateInfoMutate();
       },
