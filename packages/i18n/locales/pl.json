@@ -796,7 +796,7 @@
   "transfer.withdraw.otherAccount": "Inne konto {{brokerName}}",
   "transfer.withdraw.accountId.tips": "Proszę wprowadzić ID konta zamiast adresu portfela.",
   "transfer.withdraw.accountId.invalid": "Nie znaleziono konta",
-  "transfer.withdraw.available.tooltip": "Aktualna maksymalna wypłata na żądanie wynosi {{amount}}. Aby wypłacić więcej, prześlij wiele żądań.",
+  "transfer.withdraw.available.tooltip": "Kwota dostępna do wypłaty równa się wolnemu zabezpieczeniu. Jeśli masz nierozliczony PnL, rozlicz go najpierw w oknie wypłaty, aby zwiększyć dostępną kwotę. Aktualna maksymalna wypłata na żądanie wynosi {{amount}} USDC. Aby wypłacić więcej, prześlij wiele żądań.",
   "transfer.withdraw.accountIdOrAddress.placeholder": "ID konta lub adres",
   "transfer.withdraw.accountIdOrAddress.hint": "Wprowadź ID konta lub adres, aby znaleźć konto",
   "transfer.withdraw.addExternalWallet": "Dodaj portfel zewnętrzny",

@@ -796,7 +796,7 @@
   "transfer.withdraw.otherAccount": "他の{{brokerName}}アカウント",
   "transfer.withdraw.accountId.tips": "ウォレットアドレスではなくアカウントIDを入力してください。",
   "transfer.withdraw.accountId.invalid": "アカウントが見つかりません",
-  "transfer.withdraw.available.tooltip": "リクエストあたりの現在の最大出金額は {{amount}} です。より多く出金するには、複数のリクエストを送信してください。",
+  "transfer.withdraw.available.tooltip": "出金可能額はフリー・コラテラルと同等です。未決済のPnLがある場合は、出金モーダルで先に決済して出金可能額を増やしてください。リクエストあたりの現在の最大出金額は {{amount}} USDC です。より多く出金するには、複数のリクエストを送信してください。",
   "transfer.withdraw.accountIdOrAddress.placeholder": "アカウントIDまたはアドレス",
   "transfer.withdraw.accountIdOrAddress.hint": "アカウントIDまたはアドレスを入力してアカウントを検索",
   "transfer.withdraw.addExternalWallet": "外部ウォレットを追加",

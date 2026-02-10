@@ -6,6 +6,7 @@ import {
   useLocalStorage,
   usePositionStream,
   useWalletConnector,
+  useMaxWithdrawal,
 } from "@orderly.network/hooks";
 import { useAppContext } from "@orderly.network/react-app";
 import { AccountStatusEnum } from "@orderly.network/types";
@@ -51,7 +52,7 @@ export const useAssetScript = () => {
 
   const onWithdraw = useCallback(() => {
     modal.show(handleDomId, { activeTab: "withdraw" });
-  }, []);
+  }, [handleDomId]);
 
   const onTransfer = useCallback(() => {
     if (isMobile) {
@@ -61,11 +62,14 @@ export const useAssetScript = () => {
     }
   }, [isMobile]);
 
+  const maxWithdrawAmount = useMaxWithdrawal("USDC");
+
   return {
     canTrade,
     connect,
     portfolioValue: totalValue,
     freeCollateral,
+    maxWithdrawAmount,
     unrealPnL: data.aggregated.total_unreal_pnl,
     unrealROI: data.totalUnrealizedROI,
     currentLeverage: curLeverage,

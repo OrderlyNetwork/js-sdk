@@ -796,7 +796,7 @@
   "transfer.withdraw.otherAccount": "Diğer {{brokerName}} hesabı",
   "transfer.withdraw.accountId.tips": "Lütfen cüzdan adresi yerine bir Hesap Kimliği girin.",
   "transfer.withdraw.accountId.invalid": "Hesap bulunamadı",
-  "transfer.withdraw.available.tooltip": "İstek başına mevcut maksimum çekme tutarı {{amount}}'dir. Daha fazla çekmek için lütfen birden fazla istek gönderin.",
+  "transfer.withdraw.available.tooltip": "Çekilebilir tutar, serbest teminatınıza eşittir. Henüz hesaplanmamış PnL'niz varsa, lütfen çekilebilir tutarı artırmak için önce çekme penceresinde hesaplama yapın. İstek başına mevcut maksimum çekme tutarı {{amount}} USDC'dir. Daha fazla çekmek için lütfen birden fazla istek gönderin.",
   "transfer.withdraw.accountIdOrAddress.placeholder": "Hesap Kimliği veya adres",
   "transfer.withdraw.accountIdOrAddress.hint": "Hesap bulmak için bir Hesap Kimliği veya adres girin",
   "transfer.withdraw.addExternalWallet": "Harici cüzdan ekle",
