@@ -60,7 +60,7 @@ export const PwaDialog = modal.create((props) => {
             }}
             content={
               <Flex
-                className="oui-w-full oui-bg-base-contrast oui-rounded-[12px]"
+                className="oui-w-full oui-bg-secondary oui-rounded-[12px]"
                 direction="column"
               >
                 <Flex
@@ -163,7 +163,7 @@ const StepItem = (props: {
       direction="column"
     >
       <Flex className="oui-bg-base-4 oui-w-full oui-px-3 oui-py-3 oui-gap-[6px]">
-        <Text className="oui-text-base-contrast-80 oui-text-xs oui-w-[18px] oui-h-[18px] oui-rounded-[100%] oui-bg-[linear-gradient(270deg,#59B0FE_0%,#26FEFE_100%)] oui-text-center oui-text-black ">
+        <Text className="oui-text-base-contrast-80 oui-text-xs oui-w-[18px] oui-h-[18px] oui-rounded-[100%] oui-bg-[linear-gradient(270deg,rgb(var(--oui-gradient-brand-end))_0%,rgb(var(--oui-gradient-brand-start))_100%)] oui-text-center oui-text-black">
           {props.index}
         </Text>
         <Text className="oui-text-base-contrast-80 oui-text-xs">
@@ -172,7 +172,7 @@ const StepItem = (props: {
       </Flex>
       <Flex
         className={cn(
-          "oui-bg-base-contrast oui-h-[120px] oui-w-full oui-px-6",
+          "oui-bg-secondary oui-h-[120px] oui-w-full oui-px-6",
           props.classNames?.content,
         )}
         justify={"center"}

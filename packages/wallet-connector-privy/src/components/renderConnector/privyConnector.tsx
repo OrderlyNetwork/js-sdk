@@ -19,8 +19,8 @@ const RenderLoginMethodsDom = ({
     arr.push(
       <div
         className={cn(
-          "oui-flex oui-cursor-pointer oui-items-center oui-justify-center oui-gap-1 oui-rounded-[6px]  oui-border oui-border-base-contrast-12 oui-px-2 oui-py-[11px]",
-          "oui-border-none oui-bg-base-4",
+          "oui-flex oui-cursor-pointer oui-items-center oui-justify-center oui-gap-1 oui-rounded-[6px] oui-border-none oui-px-2 oui-py-[11px]",
+          "oui-bg-[#333948]",
         )}
         onClick={() => connect({ walletType: "privy", extraType: "email" })}
       >
@@ -28,7 +28,7 @@ const RenderLoginMethodsDom = ({
           src="https://oss.orderly.network/static/sdk/privy/email.svg"
           className="oui-size-[18px]"
         />
-        <div className="oui-text-2xs oui-text-base-contrast">
+        <div className="oui-text-2xs oui-text-white">
           {t("connector.privy.email")}
         </div>
       </div>,
@@ -38,8 +38,8 @@ const RenderLoginMethodsDom = ({
     arr.push(
       <div
         className={cn(
-          "oui-flex oui-cursor-pointer oui-items-center oui-justify-center oui-gap-1 oui-rounded-[6px]  oui-border oui-border-base-contrast-12 oui-px-2 oui-py-[11px]",
-          "oui-border-none oui-bg-primary-darken",
+          "oui-flex oui-cursor-pointer oui-items-center oui-justify-center oui-gap-1 oui-rounded-[6px] oui-border-none oui-px-2 oui-py-[11px]",
+          "oui-bg-[#335FFC]",
         )}
         onClick={() => connect({ walletType: "privy", extraType: "google" })}
       >
@@ -47,7 +47,7 @@ const RenderLoginMethodsDom = ({
           src="https://oss.orderly.network/static/sdk/privy/google.svg"
           className="oui-size-[18px]"
         />
-        <div className="oui-text-2xs oui-text-base-contrast">
+        <div className="oui-text-2xs oui-text-white">
           {t("connector.privy.google")}
         </div>
       </div>,
@@ -57,8 +57,8 @@ const RenderLoginMethodsDom = ({
     arr.push(
       <div
         className={cn(
-          "oui-flex oui-cursor-pointer oui-items-center oui-justify-center oui-gap-1 oui-rounded-[6px]  oui-border oui-border-base-contrast-12 oui-px-2 oui-py-[11px]",
-          "oui-border-none oui-bg-base-10",
+          "oui-flex oui-cursor-pointer oui-items-center oui-justify-center oui-gap-1 oui-rounded-[6px] oui-border-none oui-px-2 oui-py-[11px]",
+          "oui-bg-[#07080A]",
         )}
         onClick={() => connect({ walletType: "privy", extraType: "twitter" })}
       >
@@ -66,7 +66,7 @@ const RenderLoginMethodsDom = ({
           src="https://oss.orderly.network/static/sdk/privy/twitter.svg"
           className="oui-size-[18px]"
         />
-        <div className="oui-text-2xs oui-text-base-contrast">
+        <div className="oui-text-2xs oui-text-white">
           {t("connector.privy.twitter")}
         </div>
       </div>,
@@ -76,8 +76,8 @@ const RenderLoginMethodsDom = ({
     arr.push(
       <div
         className={cn(
-          "oui-flex oui-cursor-pointer oui-items-center oui-justify-center oui-gap-1 oui-rounded-[6px]  oui-border oui-border-base-contrast-12 oui-px-2 oui-py-[11px]",
-          "oui-border-none oui-bg-primary",
+          "oui-flex oui-cursor-pointer oui-items-center oui-justify-center oui-gap-1 oui-rounded-[6px] oui-border-none oui-px-2 oui-py-[11px]",
+          "oui-bg-[#3D79A9]",
         )}
         onClick={() => connect({ walletType: "privy", extraType: "telegram" })}
       >
@@ -90,10 +90,10 @@ const RenderLoginMethodsDom = ({
         >
           <path
             d="M2.652 8.12916L15.0683 4.04929C15.6468 3.87358 16.1499 4.16929 15.9587 4.91069L13.8458 13.3962C13.6898 13.9961 13.2672 14.1461 12.6836 13.859L9.46384 11.8362L7.90929 13.109C7.73824 13.2547 7.59234 13.379 7.2603 13.379L7.4867 10.5891L13.4584 5.99923C13.72 5.80638 13.398 5.69495 13.0559 5.8878L5.68061 9.8434L2.50107 8.99914C1.81687 8.81058 1.80178 8.41201 2.652 8.12916Z"
-            className="oui-fill-base-contrast"
+            className="oui-fill-white"
           />
         </svg>
-        <div className="oui-text-2xs oui-text-base-contrast">
+        <div className="oui-text-2xs oui-text-white">
           {t("connector.privy.telegram")}
         </div>
       </div>,

@@ -120,7 +120,7 @@ const QRCode: FC<QRCodeProps> = (props) => {
         itemAlign="center"
       >
         <Flex
-          className="oui-w-[220px] oui-h-[220px] oui-rounded-lg oui-bg-base-contrast"
+          className="oui-w-[220px] oui-h-[220px] oui-rounded-lg oui-bg-base-8"
           justify="center"
           itemAlign="center"
         >

@@ -1,5 +1,5 @@
 import { FC, ReactNode } from "react";
-// import { WalletConnector } from "./walletConnector";
+import { WalletConnector } from "./walletConnector";
 import { WalletConnectorPrivy } from "./walletConnectorPrivy";
 
 type WalletConnectorProviderProps = {
@@ -11,16 +11,12 @@ export const WalletConnectorProvider: FC<WalletConnectorProviderProps> = (
   props,
 ) => {
   // use privy wallet connector
-  return (
-    <WalletConnectorPrivy usePrivy={props.usePrivy}>
-      {props.children}
-    </WalletConnectorPrivy>
-  );
+  // return (
+  //   <WalletConnectorPrivy usePrivy={props.usePrivy}>
+  //     {props.children}
+  //   </WalletConnectorPrivy>
+  // );
 
   // use wallet-connector(web3 onboard)
-  // return (
-  //   <WalletConnector>
-  //     {props.children}
-  //   </WalletConnector>
-  // );
+  return <WalletConnector>{props.children}</WalletConnector>;
 };
