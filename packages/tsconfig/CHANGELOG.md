@@ -1,5 +1,12 @@
 # tsconfig
 
+## 0.11.14
+
+### Patch Changes
+
+- publish
+- 6355a39: publish
+
 ## 0.11.14-alpha.0
 
 ### Patch Changes

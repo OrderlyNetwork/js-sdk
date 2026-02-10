@@ -1,5 +1,22 @@
 # @orderly.network/hooks
 
+## 2.8.14
+
+### Patch Changes
+
+- publish
+- 6355a39: publish
+- Updated dependencies
+- Updated dependencies [6355a39]
+  - @orderly.network/core@2.8.14
+  - @orderly.network/default-evm-adapter@2.8.14
+  - @orderly.network/default-solana-adapter@2.8.14
+  - @orderly.network/net@2.8.14
+  - @orderly.network/perp@4.8.14
+  - @orderly.network/types@2.8.14
+  - @orderly.network/utils@2.8.14
+  - @orderly.network/web3-provider-ethers@2.8.14
+
 ## 2.8.14-alpha.0
 
 ### Patch Changes

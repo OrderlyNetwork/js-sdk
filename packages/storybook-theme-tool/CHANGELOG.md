@@ -1,5 +1,15 @@
 # storybook-theme-tool
 
+## 2.8.13
+
+### Patch Changes
+
+- publish
+- 6355a39: publish
+- Updated dependencies
+- Updated dependencies [6355a39]
+  - @orderly.network/ui@2.8.14
+
 ## 2.8.13-alpha.0
 
 ### Patch Changes

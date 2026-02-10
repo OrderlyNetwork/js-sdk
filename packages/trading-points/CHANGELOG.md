@@ -1,5 +1,21 @@
 # @orderly.network/trading-points
 
+## 1.0.2
+
+### Patch Changes
+
+- publish
+- 6355a39: publish
+- Updated dependencies
+- Updated dependencies [6355a39]
+  - @orderly.network/react-app@2.8.14
+  - @orderly.network/hooks@2.8.14
+  - @orderly.network/i18n@2.8.14
+  - @orderly.network/types@2.8.14
+  - @orderly.network/ui@2.8.14
+  - @orderly.network/ui-connector@2.8.14
+  - @orderly.network/utils@2.8.14
+
 ## 1.0.2-alpha.0
 
 ### Patch Changes
