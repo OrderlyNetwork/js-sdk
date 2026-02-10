@@ -51,6 +51,7 @@ export const themePlugin = () =>
 
         "--oui-color-base-foreground": "255 255 255",
         "--oui-color-line": "255 255 255",
+        "--oui-color-base-static": "255 255 255",
 
         "--oui-color-trading-loss": "245 97 139",
         "--oui-color-trading-loss-contrast": "255 255 255",

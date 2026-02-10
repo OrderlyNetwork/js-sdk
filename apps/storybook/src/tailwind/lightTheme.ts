@@ -45,12 +45,14 @@ export const lightThemePlugin = () =>
         "--oui-color-base-5": "230 230 230",
         "--oui-color-base-6": "245 245 245",
         "--oui-color-base-7": "234 236 239",
-        "--oui-color-base-8": "255 255 255",
+        "--oui-color-base-8": "245 245 245",
         "--oui-color-base-9": "255 255 255",
         "--oui-color-base-10": "245 245 245",
 
         "--oui-color-base-foreground": "0 0 0",
         "--oui-color-line": "0 0 0",
+
+        "--oui-color-base-static": "255 255 255",
 
         "--oui-color-trading-loss": "246 70 93",
         "--oui-color-trading-loss-contrast": "255 255 255",
@@ -73,8 +75,8 @@ export const lightThemePlugin = () =>
         "--oui-gradient-warning-start": "255 182 93",
         "--oui-gradient-warning-end": "255 182 93",
 
-        "--oui-gradient-neutral-start": "238 238 238",
-        "--oui-gradient-neutral-end": "224 224 224",
+        "--oui-gradient-neutral-start": "245 245 245",
+        "--oui-gradient-neutral-end": "245 245 245",
 
         "--oui-gradient-brand-stop-start": "6.62%",
         "--oui-gradient-brand-stop-end": "86.5%",

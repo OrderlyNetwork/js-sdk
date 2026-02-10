@@ -240,7 +240,7 @@ const EmptyBlockIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
     height="80"
     viewBox="0 0 50 80"
     fill="currentColor"
-    className="oui-fill-base-8"
+    className="oui-fill-base-7"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
@@ -257,7 +257,7 @@ const OrderEntryStripIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
     xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
-    <rect width="50" height="80" rx="2" fill="rgb(var(--oui-color-base-8))" />
+    <rect width="50" height="80" rx="2" fill="rgb(var(--oui-color-base-7))" />
     <rect
       x="3"
       y="3"
