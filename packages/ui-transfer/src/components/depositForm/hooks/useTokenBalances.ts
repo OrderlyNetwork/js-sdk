@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { UseDepositReturn, useSWR } from "@orderly.network/hooks";
-import { API } from "@orderly.network/types";
+import { API, EMPTY_OBJECT } from "@orderly.network/types";
 import { mergeTokens } from "../utils";
 
 export const useTokenBalances = (options: {
@@ -25,17 +25,27 @@ export const useTokenBalances = (options: {
 
   const fetcher = async () => {
     if (!tokens || tokens.length === 0) {
-      return {};
+      return EMPTY_OBJECT;
     }
     const balances = await fetchBalances(tokens);
-    console.log("tokenBalances =>", balances);
+    // console.info("tokenBalances =>", balances);
+
     return balances;
   };
 
-  const { data: balances = {}, isLoading } = useSWR(key, fetcher, {
+  const { data: balances = EMPTY_OBJECT, isLoading } = useSWR(key, fetcher, {
     revalidateOnFocus: true,
-    // refreshInterval: 10000,
+    refreshInterval: 10000,
+    errorRetryInterval: 3000,
+    errorRetryCount: 3,
   });
 
-  return { balances, isLoading };
+  const loading = useMemo(() => {
+    if (Object.keys(balances).length === 0) {
+      return true;
+    }
+    return isLoading;
+  }, [isLoading, balances]);
+
+  return { balances, isLoading: loading };
 };

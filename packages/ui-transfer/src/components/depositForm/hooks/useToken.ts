@@ -38,8 +38,6 @@ export const useToken = (orderlyTokens: API.TokenInfo[]) => {
     const collateralTokens = sourceTokens.filter((item) => item.is_collateral)!;
     const usdcToken = sourceTokens.find((item) => item.symbol === "USDC")!;
 
-    console.log("collateralTokens", collateralTokens);
-
     // if is_collateral
     if (sourceToken.is_collateral) {
       // mainnet and swap_enable: [token] => [USDC,token]

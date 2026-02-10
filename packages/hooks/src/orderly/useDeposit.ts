@@ -332,7 +332,7 @@ function useBalance(options: {
       return "0";
     }
     const balance = await fetchBalance(address, decimals);
-    console.log("balance", balance);
+    // console.log("balance", balance);
     return balance;
   }, [address, decimals, fetchBalance]);
 

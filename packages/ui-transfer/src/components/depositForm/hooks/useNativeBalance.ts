@@ -22,7 +22,6 @@ export function useNativeBalance(options: {
 
   const fetcher = async () => {
     const balance = await fetchBalance(nativeTokenAddress, decimal);
-    console.log("native balance", balance);
     return balance;
   };
 
