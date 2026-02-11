@@ -3,7 +3,6 @@ import { useLocalStorage } from "@orderly.network/hooks";
 import {
   OrderlyThemeProvider,
   type OrderlyThemeProviderProps,
-  darkThemeCssVars,
 } from "@orderly.network/ui";
 
 export type AppThemeProviderProps =
@@ -23,24 +22,38 @@ export const AppThemeProvider: FC<AppThemeProviderProps> = (props) => {
   }, [themes, currentThemeId]);
 
   // Apply theme to DOM via data-oui-theme and optional cssVars.
+  // cssVars 通过 [data-oui-theme="xxx"] 选择器注入，而非直接设置在根元素上
   useEffect(() => {
     if (typeof document === "undefined") return;
 
     const root = document.documentElement;
+    const STYLE_ID = "oui-theme-css-vars";
 
     if (!currentThemeId) {
       root.removeAttribute("data-oui-theme");
+      document.getElementById(STYLE_ID)?.remove();
       return;
     }
 
     root.setAttribute("data-oui-theme", currentThemeId);
 
-    // override default theme css vars with current theme css vars
-    Object.entries(darkThemeCssVars).forEach(([key, value]) => {
-      const newValue = currentTheme?.cssVars?.[key] || value;
-      root.style.setProperty(key, newValue);
-    });
-  }, [currentThemeId, currentTheme]);
+    if (currentTheme?.cssVars && Object.keys(currentTheme.cssVars).length > 0) {
+      let styleEl = document.getElementById(
+        STYLE_ID,
+      ) as HTMLStyleElement | null;
+      if (!styleEl) {
+        styleEl = document.createElement("style");
+        styleEl.id = STYLE_ID;
+        document.head.appendChild(styleEl);
+      }
+      const varsContent = Object.entries(currentTheme.cssVars)
+        .map(([key, value]) => `  ${key}: ${value};`)
+        .join("\n");
+      styleEl.textContent = `[data-oui-theme="${currentThemeId}"] {\n${varsContent}\n}`;
+    } else {
+      document.getElementById(STYLE_ID)?.remove();
+    }
+  }, [themes, currentThemeId, currentTheme]);
 
   return (
     <OrderlyThemeProvider

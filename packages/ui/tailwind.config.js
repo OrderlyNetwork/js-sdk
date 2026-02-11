@@ -1,13 +1,14 @@
-const { withTV } = require("tailwind-variants/transformer");
-
-const { sizePlugin } = require("./src/tailwind/size");
-const { gradientPlugin } = require("./src/tailwind/gradient");
-const { positionPlugin } = require("./src/tailwind/position");
-const { basePlugin } = require("./src/tailwind/base");
-const { componentsPlugin } = require("./src/tailwind/components");
-const { themePlugin } = require("./src/tailwind/theme");
-const { scrollBarPlugin } = require("./src/tailwind/scrollBar");
-const { chartPlugin } = require("./src/tailwind/chart");
+import { withTV } from "tailwind-variants/transformer";
+import {
+  darkThemePlugin,
+  basePlugin,
+  sizePlugin,
+  chartPlugin,
+  gradientPlugin,
+  positionPlugin,
+  componentsPlugin,
+  scrollBarPlugin,
+} from "./src/tailwind";
 
 /** @type {import('tailwindcss').Config} */
 module.exports = withTV({
@@ -259,7 +260,7 @@ module.exports = withTV({
     },
   },
   plugins: [
-    themePlugin(),
+    darkThemePlugin(),
     basePlugin(),
     sizePlugin(),
     chartPlugin(),

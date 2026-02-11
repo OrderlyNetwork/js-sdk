@@ -83,10 +83,12 @@ export * from "embla-carousel-autoplay";
 export { default as Autoplay } from "embla-carousel-autoplay";
 export * from "embla-carousel";
 
-//===== tailwind
-export * as OUITailwind from "./tailwind";
 export * from "./hooks";
 
 export * from "./locale";
 export * from "./scrollIndicator";
 export * from "./status";
+
+//===== tailwind
+export * as OUITailwind from "./tailwind";
+export { darkThemeCssVars, lightThemeCssVars } from "./tailwind/theme";

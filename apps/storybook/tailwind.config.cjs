@@ -1,9 +1,11 @@
 import { withTV } from "tailwind-variants/transformer";
 import { chartPlugin } from "@orderly.network/chart";
-import { customThemePlugin } from "./src/tailwind/customTheme";
-import { lightPrimaryThemePlugin } from "./src/tailwind/lightPrimaryTheme";
-import { lightThemePlugin } from "./src/tailwind/lightTheme";
-import { roundlessThemePlugin } from "./src/tailwind/roundlessTheme";
+import {
+  customThemePlugin,
+  lightThemePlugin,
+  lightPrimaryThemePlugin,
+  roundlessThemePlugin,
+} from "./src/tailwind";
 
 const path = require("path");
 
