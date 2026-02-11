@@ -54,7 +54,10 @@ export const useCommissionChartScript = (): TitleStatisticReturns => {
       ((rebateSummary as RefferalAPI.ReferralRebateSummary[]) || [])?.map(
         (item) => ({
           date: item.date,
-          volume: item.referral_rebate,
+          volume:
+            item.direct_rebate +
+            item.indirect_rebate +
+            item.direct_bonus_rebate,
         }),
       ) || [];
     data.reverse();

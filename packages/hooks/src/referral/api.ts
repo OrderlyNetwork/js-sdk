@@ -87,8 +87,15 @@ export declare namespace RefferalAPI {
 
   export type ReferralRebateSummary = {
     daily_traded_referral: number;
+    direct_traded_referral: number;
+    indirect_traded_referral: number;
     referral_rebate: number;
+    direct_rebate: number;
+    indirect_rebate: number;
+    direct_bonus_rebate: number;
     volume: number;
+    direct_volume: number;
+    indirect_volume: number;
     fee: number;
     date: string;
   };
