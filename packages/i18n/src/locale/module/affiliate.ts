@@ -71,7 +71,7 @@ export const affiliate = {
   "affiliate.referralCodes.copyLink": "Copy link",
   "affiliate.upTo": "Up to 60%",
   "affiliate.commission": "Commission",
-  "affiliate.base": "Base",
+  "affiliate.base": "Affiliate",
   "affiliate.directBonus": "Direct bonus",
   "affiliate.commission.30d": "30d commission",
   "affiliate.commission.column.activeUsers": "Referral active users",
@@ -122,9 +122,9 @@ export const affiliate = {
     "You are creating your referral code. Note that referee allocations can be increased later, but once a code has active referrals, its allocation cannot be decreased.",
 
   "affiliate.rebateRate.edit.warning":
-    "To protect existing users, default commission split for referees can only be increased once there are active referrals bound to this code.",
+    "To protect existing users, once there are active referrals bound to this code, default commission split for referees can only be adjusted upward.",
   "affiliate.rebateRate.review.warning":
-    "Please review your settings. Note that you can only increase the default commission split for referees once there are active referrals bound to this code.",
+    "Please review your settings. Note that once there are active referrals bound to this code, you can only increase the default commission split for referees.",
   "affiliate.refereeRebateRate.edit.warning":
     "To protect existing users, you can only increase a referee's commission split.",
   "affiliate.refereeRebateRate.review.warning":
@@ -133,7 +133,7 @@ export const affiliate = {
     "Edit commission for {{accountId}}",
   "affiliate.noCommissionCard.title": "Extra bonus on direct referrals",
   "affiliate.noCommissionCard.content":
-    "You still earn rewards! You will receive a {{amount}}% direct referrer bonus on every trade made by your direct referees.",
+    "You still earn rewards! You will receive a {{amount}}% direct referral bonus on every trade made by your direct referees.",
   "affiliate.rebateRate.noCommissionAvailable":
     "Note: No commission available (0%), so configuration is disabled. However, this code is still active and can be shared to establish your referral base.",
   "affiliate.rebateRate.noCommissionRate":
