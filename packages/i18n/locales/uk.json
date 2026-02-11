@@ -796,7 +796,7 @@
   "transfer.withdraw.otherAccount": "Інший акаунт {{brokerName}}",
   "transfer.withdraw.accountId.tips": "Будь ласка, введіть ID акаунта, а не адресу гаманця.",
   "transfer.withdraw.accountId.invalid": "Акаунт не знайдено",
-  "transfer.withdraw.available.tooltip": "Поточний максимальний виведення на запит становить {{amount}}. Щоб вивести більше, надішліть кілька запитів.",
+  "transfer.withdraw.available.tooltip": "Доступна сума для виведення дорівнює вашому вільному забезпеченню. Якщо у вас є незарахований PnL, будь ласка, спочатку зараховайте його у модальному вікні виведення, щоб збільшити доступну суму. Поточний максимальний вивід на запит становить {{amount}} USDC. Щоб вивести більше, надішліть кілька запитів.",
   "transfer.withdraw.accountIdOrAddress.placeholder": "ID акаунта або адреса",
   "transfer.withdraw.accountIdOrAddress.hint": "Введіть ID акаунта або адресу для пошуку акаунта",
   "transfer.withdraw.addExternalWallet": "Додати зовнішній гаманець",

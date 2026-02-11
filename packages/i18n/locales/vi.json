@@ -796,7 +796,7 @@
   "transfer.withdraw.otherAccount": "Tài khoản {{brokerName}} khác",
   "transfer.withdraw.accountId.tips": "Vui lòng nhập ID tài khoản thay vì địa chỉ ví.",
   "transfer.withdraw.accountId.invalid": "Không tìm thấy tài khoản",
-  "transfer.withdraw.available.tooltip": "Số tiền rút tối đa hiện tại mỗi yêu cầu là {{amount}}. Để rút thêm, vui lòng gửi nhiều yêu cầu.",
+  "transfer.withdraw.available.tooltip": "Số tiền có thể rút bằng tài sản thế chấp miễn phí của bạn. Nếu bạn có PnL chưa thanh toán, vui lòng thanh toán trước trong hộp thoại rút tiền để tăng số tiền khả dụng. Số tiền rút tối đa hiện tại mỗi yêu cầu là {{amount}} USDC. Để rút thêm, vui lòng gửi nhiều yêu cầu.",
   "transfer.withdraw.accountIdOrAddress.placeholder": "ID tài khoản hoặc địa chỉ",
   "transfer.withdraw.accountIdOrAddress.hint": "Nhập ID tài khoản hoặc địa chỉ để tìm tài khoản",
   "transfer.withdraw.addExternalWallet": "Thêm ví bên ngoài",

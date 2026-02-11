@@ -796,7 +796,7 @@
   "transfer.withdraw.otherAccount": "Akun {{brokerName}} lain",
   "transfer.withdraw.accountId.tips": "Silakan masukkan ID Akun, bukan alamat dompet.",
   "transfer.withdraw.accountId.invalid": "Akun tidak ditemukan",
-  "transfer.withdraw.available.tooltip": "Penarikan maksimum saat ini per permintaan adalah {{amount}}. Untuk menarik lebih banyak, kirim beberapa permintaan.",
+  "transfer.withdraw.available.tooltip": "Jumlah yang tersedia untuk penarikan sama dengan kolateral gratis Anda. Jika Anda memiliki PnL yang belum diselesaikan, selesaikan terlebih dahulu di jendela penarikan untuk meningkatkan jumlah yang tersedia. Penarikan maksimum saat ini per permintaan adalah {{amount}} USDC. Untuk menarik lebih banyak, kirim beberapa permintaan.",
   "transfer.withdraw.accountIdOrAddress.placeholder": "ID Akun atau alamat",
   "transfer.withdraw.accountIdOrAddress.hint": "Masukkan ID Akun atau alamat untuk menemukan akun",
   "transfer.withdraw.addExternalWallet": "Tambahkan dompet eksternal",

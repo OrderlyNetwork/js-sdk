@@ -796,7 +796,7 @@
   "transfer.withdraw.otherAccount": "Other {{brokerName}} account",
   "transfer.withdraw.accountId.tips": "Please enter an Account ID instead of a wallet address.",
   "transfer.withdraw.accountId.invalid": "No account found",
-  "transfer.withdraw.available.tooltip": "Current maximum withdrawal per request is {{amount}}. To withdraw more, please submit multiple requests.",
+  "transfer.withdraw.available.tooltip": "Available to withdraw equals your free collateral. If you have unsettled PnL, please settle first in the withdraw modal to increase available amount. Current maximum withdrawal per request is {{amount}} USDC. To withdraw more, please submit multiple requests.",
   "transfer.withdraw.accountIdOrAddress.placeholder": "Account ID or address",
   "transfer.withdraw.accountIdOrAddress.hint": "Enter an account ID or address to find the account",
   "transfer.withdraw.addExternalWallet": "Add external wallet",
