@@ -60,7 +60,7 @@ export const useCommissionTableScript = (
       date: row.date,
       code: row.referral_code,
       volume: row.volume,
-      commission: row.referral_rebate,
+      commission: row.referral_rebate + row.direct_bonus_rebate,
       directBonusRebate: row.direct_bonus_rebate,
       address: row.user_address,
     }));

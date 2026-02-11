@@ -36,7 +36,7 @@ export const Summary: FC<SummaryReturns> = (props) => {
         rule="human"
         label={`${t("affiliate.commission")} (USDC)`}
         value={statistics.total_rebate}
-        direct={statistics.direct_rebate}
+        direct={statistics.direct_rebate + statistics.direct_bonus_rebate}
         indirect={statistics.indirect_rebate}
         classNames={{
           root: "!oui-py-12",

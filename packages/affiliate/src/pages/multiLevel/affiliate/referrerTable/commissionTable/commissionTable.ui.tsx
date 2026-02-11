@@ -37,11 +37,11 @@ const CommissionCell: FC<{
   item: CommissionDataType;
 }> = ({ item }) => {
   const { t } = useTranslation();
-  const base = item.commission - item.directBonusRebate;
+  const totalCommission = item.commission + item.directBonusRebate;
   const tooltip = (
     <>
       <div>
-        • {t("affiliate.base")}: {formatCommissionAmt(base)}
+        • {t("affiliate.base")}: {formatCommissionAmt(item.commission)}
       </div>
       <div>
         • {t("affiliate.directBonus")}:{" "}
@@ -51,7 +51,7 @@ const CommissionCell: FC<{
   );
   return (
     <TooltipCell
-      text={formatCommissionAmt(item.commission)}
+      text={formatCommissionAmt(totalCommission)}
       tooltip={tooltip}
       title={t("affiliate.commission")}
     />

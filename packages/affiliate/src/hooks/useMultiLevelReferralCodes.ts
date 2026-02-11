@@ -96,7 +96,7 @@ export const useMultiLevelReferralCodes =
           referrer_rebate_rate: referrerRebateRate,
           total_invites: directInvites + indirectInvites,
           total_volume: directVolume + indirectVolume,
-          total_rebate: directRebate + indirectRebate,
+          total_rebate: directRebate + indirectRebate + directBonusRebate,
           referral_type: "multi",
         };
 

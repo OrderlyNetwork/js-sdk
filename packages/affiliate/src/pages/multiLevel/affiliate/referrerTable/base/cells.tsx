@@ -90,7 +90,7 @@ export const BreakdownCell: FC<{
 
   const directLine = directBonus ? (
     <>
-      • {t("affiliate.direct")}: {format(direct)}{" "}
+      • {t("affiliate.direct")}: {format(direct + directBonus)}{" "}
       <span className="oui-text-base-contrast-54">
         ({t("affiliate.directInclBonus", { amount: format(directBonus) })})
       </span>

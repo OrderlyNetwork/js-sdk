@@ -74,7 +74,8 @@ export const useMultiLevelReferees = (
           ...row,
           network_size: row.direct_invites + row.indirect_invites,
           volume: row.direct_volume + row.indirect_volume,
-          commission: row.direct_rebate + row.indirect_rebate,
+          commission:
+            row.direct_rebate + row.indirect_rebate + row.direct_bonus_rebate,
         })),
       };
     },
