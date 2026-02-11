@@ -47,7 +47,7 @@ export const useSummaryScript = () => {
       direct_rebate,
       indirect_rebate,
       direct_bonus_rebate,
-      total_rebate: direct_rebate + indirect_rebate,
+      total_rebate: direct_rebate + indirect_rebate + direct_bonus_rebate,
     };
   }, [data]);
 
