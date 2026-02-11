@@ -42,7 +42,7 @@ export const lightThemeCssVars = {
   "--oui-color-base-5": "230 230 230",
   "--oui-color-base-6": "245 245 245",
   "--oui-color-base-7": "234 236 239",
-  "--oui-color-base-8": "245 245 245",
+  "--oui-color-base-8": "255 255 255",
   "--oui-color-base-9": "255 255 255",
   "--oui-color-base-10": "245 245 245",
 

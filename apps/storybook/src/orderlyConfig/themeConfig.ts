@@ -1,9 +1,5 @@
-import { ThemeConfig } from "@orderly.network/ui";
-import {
-  customThemeCssVars,
-  lightThemeCssVars,
-  roundlessThemeCssVars,
-} from "../tailwind";
+import { ThemeConfig, lightThemeCssVars } from "@orderly.network/ui";
+import { customThemeCssVars, roundlessThemeCssVars } from "../theme";
 
 export const themeConfig: ThemeConfig[] = [
   {

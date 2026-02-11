@@ -1,5 +1,3 @@
-import plugin from "tailwindcss/plugin";
-
 export const lightPrimaryThemeCssVars = {
   "--oui-font-family":
     '"DIN2014", "PingFang SC", "Noto Sans CJK SC", "Noto Sans", sans-serif',
@@ -92,10 +90,3 @@ export const lightPrimaryThemeCssVars = {
   "--oui-spacing-lg": "30rem",
   "--oui-spacing-xl": "33.75rem",
 };
-
-export const lightPrimaryThemePlugin = () =>
-  plugin(function ({ addBase }) {
-    addBase({
-      '[data-oui-theme="lightPrimary"]': lightPrimaryThemeCssVars,
-    });
-  });

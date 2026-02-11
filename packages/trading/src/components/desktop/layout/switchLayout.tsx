@@ -253,20 +253,20 @@ export const OrderEntryIcon: FC<SVGProps<SVGSVGElement>> = (props) => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <rect width="36" height="17" rx="2" fill="rgb(var(--oui-color-base-8))" />
+    <rect width="36" height="17" rx="2" fill="rgb(var(--oui-color-base-7))" />
     <rect
       y="19"
       width="36"
       height="54"
       rx="2"
-      fill="rgb(var(--oui-color-base-8))"
+      fill="rgb(var(--oui-color-base-7))"
     />
     <rect
       y="75"
       width="36"
       height="9"
       rx="2"
-      fill="rgb(var(--oui-color-base-8))"
+      fill="rgb(var(--oui-color-base-7))"
     />
     <rect
       x="3"
@@ -366,7 +366,7 @@ export const MarketLeftIcon: FC<
         width="24"
         height="84"
         rx="2"
-        fill="rgb(var(--oui-color-base-8))"
+        fill="rgb(var(--oui-color-base-7))"
       />
       <rect
         x="16"
@@ -446,7 +446,7 @@ export const MarketTopIcon: FC<
         width="132"
         height="8"
         rx="2"
-        fill="rgb(var(--oui-color-base-8))"
+        fill="rgb(var(--oui-color-base-7))"
       />
       <g clipPath="url(#clip0_31319_74729)">
         <rect
@@ -562,7 +562,7 @@ export const MarketBottomIcon: FC<
         width="132"
         height="8"
         rx="2"
-        fill="rgb(var(--oui-color-base-8))"
+        fill="rgb(var(--oui-color-base-7))"
       />
       <g clipPath="url(#clip0_31319_74743)">
         <rect
@@ -679,7 +679,7 @@ export const MarketHideIcon: FC<
           width="132"
           height="84"
           rx="2"
-          fill="rgb(var(--oui-color-base-8))"
+          fill="rgb(var(--oui-color-base-7))"
         />
         <rect
           x="66.8789"

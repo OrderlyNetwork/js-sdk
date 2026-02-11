@@ -1,11 +1,5 @@
 import { withTV } from "tailwind-variants/transformer";
 import { chartPlugin } from "@orderly.network/chart";
-import {
-  customThemePlugin,
-  lightThemePlugin,
-  lightPrimaryThemePlugin,
-  roundlessThemePlugin,
-} from "./src/tailwind";
 
 const path = require("path");
 
@@ -40,11 +34,5 @@ module.exports = withTV({
   presets: [
     require(path.resolve(__dirname, "../../packages/ui/tailwind.config.js")),
   ],
-  plugins: [
-    chartPlugin(),
-    customThemePlugin(),
-    roundlessThemePlugin(),
-    lightPrimaryThemePlugin(),
-    lightThemePlugin(),
-  ],
+  plugins: [chartPlugin()],
 });

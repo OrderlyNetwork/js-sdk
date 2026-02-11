@@ -1,5 +1,3 @@
-import plugin from "tailwindcss/plugin";
-
 export const customThemeCssVars = {
   "--oui-font-family":
     '"DIN2014", "PingFang SC", "Noto Sans CJK SC", "Noto Sans", sans-serif',
@@ -92,10 +90,3 @@ export const customThemeCssVars = {
   "--oui-spacing-lg": "30rem",
   "--oui-spacing-xl": "33.75rem",
 };
-
-export const customThemePlugin = () =>
-  plugin(function ({ addBase }) {
-    addBase({
-      '[data-oui-theme="custom"]': customThemeCssVars,
-    });
-  });

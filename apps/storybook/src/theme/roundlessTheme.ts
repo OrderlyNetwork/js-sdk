@@ -1,5 +1,3 @@
-import plugin from "tailwindcss/plugin";
-
 export const roundlessThemeCssVars = {
   /* rounded */
   "--oui-rounded-sm": "0",
@@ -11,10 +9,3 @@ export const roundlessThemeCssVars = {
   "--oui-rounded-3xl": "0",
   "--oui-rounded-full": "0",
 };
-
-export const roundlessThemePlugin = () =>
-  plugin(function ({ addBase }) {
-    addBase({
-      '[data-oui-theme="roundless"]': roundlessThemeCssVars,
-    });
-  });
