@@ -118,7 +118,9 @@ export function useMaxQty(
       return 0;
     }
 
-    const positionsArray = positions === null ? [] : positions;
+    const positionsArray = (positions === null ? [] : positions).filter(
+      (position) => position.margin_mode === finalMarginMode,
+    );
     const positionQty = account.getQtyFromPositions(positionsArray, symbol);
 
     /**
