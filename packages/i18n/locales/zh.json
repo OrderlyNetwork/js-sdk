@@ -321,6 +321,7 @@
   "trading.riskRate.formula": "风险率 = 维持保证金比率 / 保证金比率 * 100%",
   "trading.asset&Margin": "资产和保证金",
   "trading.fundingRate.predFundingRate": "预计资金利率",
+  "trading.fundingRate.estFundingRateWithTimeframe": "预估资金费率（{{timeframe}}）",
   "trading.fundingRate.predFundingRate.interval": "间隔",
   "trading.fundingRate.predFundingRate.cap": "资金费率上限",
   "trading.fundingRate.predFundingRate.floor": "下限",
