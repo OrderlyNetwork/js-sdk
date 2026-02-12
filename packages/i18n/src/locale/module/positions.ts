@@ -17,7 +17,7 @@ export const positions = {
   "positions.column.unrealPnl.tooltip":
     "Current unrealized profit or loss on your open positions across all widgets calculated using Mark Price.",
   "positions.column.unrealPnl.priceBasis": "Unrealized PnL Price Basis",
-  "positions.column.margin": "Margin",
+  "positions.column.margin": "Maintenance Margin",
   "positions.column.margin.tooltip":
     "The minimum equity to keep your position.",
   "positions.column.margin.formula":

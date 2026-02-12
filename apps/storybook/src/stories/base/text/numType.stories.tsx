@@ -250,12 +250,12 @@ export const DecimalPlaces: Story = {
     return (
       <Flex direction={"column"} gapY={4} width={400} itemAlign={"start"}>
         <Text weight="semibold" size="lg" color="primary">
-          不同小数位数 (dp)
+          Different decimal places (dp)
         </Text>
         {decimalPlacesNumList.map((data, dataIndex) => (
           <Flex key={dataIndex} direction={"column"} gapY={2} width={"100%"}>
             <Text weight="semibold" size="sm" color="secondary">
-              原始值: {data}
+              Raw value: {data}
             </Text>
             <Grid cols={colsCount as any} gapX={2} gapY={1} width={"100%"}>
               <Text size="sm" color="tertiary">
@@ -315,7 +315,7 @@ export const Sizes: Story = {
     return (
       <Flex direction={"column"} gapY={2} width={300} itemAlign={"start"}>
         <Text weight="semibold" size="lg" color="primary">
-          不同尺寸
+          Different sizes
         </Text>
         {sizesList.map((size) => (
           <Grid key={size} cols={2} gapX={2} width={"100%"}>
@@ -352,7 +352,7 @@ export const Colors: Story = {
     return (
       <Flex direction={"column"} gapY={2} width={300} itemAlign={"start"}>
         <Text weight="semibold" size="lg" color="primary">
-          不同颜色
+          Different colors
         </Text>
         {colorsList.map((color) => (
           <Grid key={color} cols={2} gapX={2} width={"100%"}>
@@ -377,17 +377,17 @@ export const WithColoring: Story = {
     return (
       <Flex direction={"column"} gapY={4} width={300} itemAlign={"start"}>
         <Text weight="semibold" size="lg" color="primary">
-          自动颜色 (coloring)
+          Auto color (coloring)
         </Text>
         <Grid cols={3} gapX={2} gapY={1} width={"100%"}>
           <Text size="sm" color="secondary">
-            值
+            Value
           </Text>
           <Text size="sm" color="secondary">
-            无 coloring
+            Without coloring
           </Text>
           <Text size="sm" color="secondary">
-            有 coloring
+            With coloring
           </Text>
         </Grid>
         {withColoringNumList.map((data, index) => (

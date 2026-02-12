@@ -166,7 +166,9 @@ export const useColumn = (config: ColumnConfig) => {
               </div>
             }
           >
-            <Text>{t("positions.column.liqPrice")}</Text>
+            <Text className="oui-underline oui-decoration-dotted">
+              {t("positions.column.liqPrice")}
+            </Text>
           </Tooltip>
         ),
         width: 100,
@@ -202,7 +204,9 @@ export const useColumn = (config: ColumnConfig) => {
             align="center"
             className="oui-max-w-[280px] oui-text-2xs"
           >
-            <Text>{t("common.unrealizedPnl")}</Text>
+            <Text className="oui-underline oui-decoration-dotted">
+              {t("common.unrealizedPnl")}
+            </Text>
           </HoverCard>
         ),
         dataIndex: "unrealized_pnl",
@@ -299,12 +303,14 @@ export const useColumn = (config: ColumnConfig) => {
               </Flex>
             }
           >
-            <Text>{t("positions.column.margin")}</Text>
+            <Text className="oui-underline oui-decoration-dotted">
+              {t("positions.column.margin")}
+            </Text>
           </Tooltip>
         ),
         dataIndex: "mm",
         onSort: true,
-        width: 100,
+        width: 140,
         rule: "price",
         render: (value: string) => <Text.numeral>{value}</Text.numeral>,
       },
