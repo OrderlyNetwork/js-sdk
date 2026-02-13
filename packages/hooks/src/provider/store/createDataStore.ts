@@ -23,6 +23,7 @@ export interface DataStoreActions<T> {
     baseUrl?: string,
     options?: { brokerId?: string },
   ) => Promise<T[]>;
+  setHydrated: (hydrated: boolean) => void;
 }
 
 /**
@@ -89,6 +90,7 @@ export const createDataStore = <T>(config: DataStoreConfig<T>) => {
           loading: false,
           error: null,
           hydrated: false,
+          setHydrated: (hydrated: boolean) => set({ hydrated }),
           fetchData: async (
             dynamicBaseUrl?: string,
             options?: { brokerId?: string },
@@ -141,7 +143,8 @@ export const createDataStore = <T>(config: DataStoreConfig<T>) => {
          */
         onRehydrateStorage: () => (state, error) => {
           if (state && !error) {
-            state.hydrated = true;
+            // state.hydrated = true;
+            state.setHydrated(true);
           }
         },
       },

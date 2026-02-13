@@ -330,7 +330,7 @@ class DefaultSolanaWalletAdapter extends BaseWalletAdapter<SolanaAdapterOption> 
       chainId: this.chainId,
     });
 
-    // 使用 signMessage 方法签名，而不是 signTypedData
+    // Use signMessage for signing, not signTypedData
     const signature = await this.signMessage(toSignatureMessage as Uint8Array);
 
     return {

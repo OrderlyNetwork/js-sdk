@@ -6,7 +6,7 @@ export const useWooSwapQuery = () => {
   const account = useAccountInstance();
   const [loading, { setTrue: start, setFalse: stop }] = useBoolean(false);
 
-  /// swap 询价
+  /// Swap quote
   const query = useCallback(
     (inputs: any) => {
       if (loading) return Promise.resolve();
