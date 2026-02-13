@@ -1,5 +1,11 @@
 # @orderly.network/types
 
+## 2.9.0-alpha.0
+
+### Minor Changes
+
+- publish
+
 ## 2.8.14
 
 ### Patch Changes

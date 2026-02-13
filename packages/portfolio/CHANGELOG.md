@@ -1,5 +1,31 @@
 # @orderly.network/portfolio
 
+## 2.9.0-alpha.0
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/react-app@2.9.0-alpha.0
+  - @orderly.network/chart@2.9.0-alpha.0
+  - @orderly.network/hooks@2.9.0-alpha.0
+  - @orderly.network/i18n@2.9.0-alpha.0
+  - @orderly.network/perp@4.9.0-alpha.0
+  - @orderly.network/types@2.9.0-alpha.0
+  - @orderly.network/ui@2.9.0-alpha.0
+  - @orderly.network/ui-chain-selector@2.9.0-alpha.0
+  - @orderly.network/ui-connector@2.9.0-alpha.0
+  - @orderly.network/ui-leverage@2.9.0-alpha.0
+  - @orderly.network/ui-orders@2.9.0-alpha.0
+  - @orderly.network/ui-positions@2.9.0-alpha.0
+  - @orderly.network/ui-scaffold@2.9.0-alpha.0
+  - @orderly.network/ui-share@2.9.0-alpha.0
+  - @orderly.network/ui-transfer@2.9.0-alpha.0
+  - @orderly.network/utils@2.9.0-alpha.0
+
 ## 2.8.14
 
 ### Patch Changes

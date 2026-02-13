@@ -1,5 +1,20 @@
 # @orderly.network/wallet-connector
 
+## 2.9.0-alpha.0
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/core@2.9.0-alpha.0
+  - @orderly.network/hooks@2.9.0-alpha.0
+  - @orderly.network/types@2.9.0-alpha.0
+  - @orderly.network/ui@2.9.0-alpha.0
+  - @orderly.network/utils@2.9.0-alpha.0
+
 ## 2.8.14
 
 ### Patch Changes
