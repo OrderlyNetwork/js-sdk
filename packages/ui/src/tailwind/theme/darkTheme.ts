@@ -1,6 +1,6 @@
 import plugin from "tailwindcss/plugin";
 
-export const darkThemeCssVars = {
+export const DARK_THEME_CSS_VARS = {
   "--oui-font-family":
     '"Manrope","PingFang SC", "Noto Sans CJK SC", "Noto Sans", sans-serif',
 
@@ -48,7 +48,9 @@ export const darkThemeCssVars = {
 
   "--oui-color-base-foreground": "255 255 255",
   "--oui-color-line": "255 255 255",
+
   "--oui-color-base-static": "255 255 255",
+  "--oui-color-base-static-contrast": "0 0 0",
 
   "--oui-color-trading-loss": "245 97 139",
   "--oui-color-trading-loss-contrast": "255 255 255",
@@ -97,9 +99,11 @@ export const darkThemeCssVars = {
   "--oui-spacing-xl": "33.75rem",
 };
 
+export type ThemeCssVars = typeof DARK_THEME_CSS_VARS;
+
 export const darkThemePlugin = () =>
   plugin(function ({ addBase }) {
     addBase({
-      ":root": darkThemeCssVars,
+      ":root": DARK_THEME_CSS_VARS,
     });
   });

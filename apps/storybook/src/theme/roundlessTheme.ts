@@ -1,4 +1,4 @@
-export const roundlessThemeCssVars = {
+export const ROUNDLESS_THEME_CSS_VARS = {
   /* rounded */
   "--oui-rounded-sm": "0",
   "--oui-rounded": "0",

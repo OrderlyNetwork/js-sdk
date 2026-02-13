@@ -28,7 +28,7 @@ const RenderLoginMethodsDom = ({
           src="https://oss.orderly.network/static/sdk/privy/email.svg"
           className="oui-size-[18px]"
         />
-        <div className="oui-text-2xs oui-text-white">
+        <div className="oui-text-2xs oui-text-base-static">
           {t("connector.privy.email")}
         </div>
       </div>,
@@ -47,7 +47,7 @@ const RenderLoginMethodsDom = ({
           src="https://oss.orderly.network/static/sdk/privy/google.svg"
           className="oui-size-[18px]"
         />
-        <div className="oui-text-2xs oui-text-white">
+        <div className="oui-text-2xs oui-text-base-static">
           {t("connector.privy.google")}
         </div>
       </div>,
@@ -66,7 +66,7 @@ const RenderLoginMethodsDom = ({
           src="https://oss.orderly.network/static/sdk/privy/twitter.svg"
           className="oui-size-[18px]"
         />
-        <div className="oui-text-2xs oui-text-white">
+        <div className="oui-text-2xs oui-text-base-static">
           {t("connector.privy.twitter")}
         </div>
       </div>,
@@ -93,7 +93,7 @@ const RenderLoginMethodsDom = ({
             className="oui-fill-white"
           />
         </svg>
-        <div className="oui-text-2xs oui-text-white">
+        <div className="oui-text-2xs oui-text-base-static">
           {t("connector.privy.telegram")}
         </div>
       </div>,

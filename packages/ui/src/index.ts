@@ -91,4 +91,8 @@ export * from "./status";
 
 //===== tailwind
 export * as OUITailwind from "./tailwind";
-export { darkThemeCssVars, lightThemeCssVars } from "./tailwind/theme";
+export {
+  DARK_THEME_CSS_VARS,
+  LIGHT_THEME_CSS_VARS,
+  type ThemeCssVars,
+} from "./tailwind/theme";

@@ -40,11 +40,11 @@ export const PwaDialog = modal.create((props) => {
             content={
               <Flex className="oui-w-full oui-bg-dark-8">
                 <Flex
-                  className="oui-bg-black/[0.08] oui-p-2 oui-h-[52px] oui-rounded-[44px] oui-w-full oui-px-4 oui-relative"
+                  className="oui-relative oui-h-[52px] oui-w-full oui-rounded-[44px] oui-bg-base-static-contrast/10 oui-p-2 oui-px-4"
                   itemAlign={"center"}
                   justify={"center"}
                 >
-                  <Text className="oui-text-black/[0.88] oui-text-[18px] oui-leading-[36px] oui-flex-1 oui-text-center oui-whitespace-nowrap">
+                  <Text className="oui-text-base-static-contrast-80 oui-text-[18px] oui-leading-[36px] oui-flex-1 oui-text-center oui-whitespace-nowrap">
                     {domain}
                   </Text>
                   <ShareIcon className="oui-absolute oui-right-4 oui-top-1/2 oui-translate-y-[-50%]" />
@@ -68,17 +68,17 @@ export const PwaDialog = modal.create((props) => {
                   justify={"start"}
                   itemAlign={"center"}
                 >
-                  <Text className="oui-text-black/[0.2] oui-text-[18px]">
+                  <Text className="oui-text-[18px] oui-text-base-static-contrast-20">
                     {t("connector.privy.pwa.findOnPage")}
                   </Text>
                 </Flex>
-                <Divider className="oui-bg-black/[0.15] oui-w-full" />
+                <Divider className="oui-border-base-static-contrast-20 oui-w-full" />
                 <Flex
                   className="oui-w-full oui-px-4 oui-py-3"
                   justify={"between"}
                   itemAlign={"center"}
                 >
-                  <Text className="oui-text-black/[0.88] oui-text-[18px] oui-col-span-2 oui-whitespace-nowrap">
+                  <Text className="oui-col-span-2 oui-whitespace-nowrap oui-text-[18px] oui-text-base-static-contrast-80">
                     {t("connector.privy.pwa.addToHomeScreen")}
                   </Text>
                   <AddIcon />
@@ -163,7 +163,7 @@ const StepItem = (props: {
       direction="column"
     >
       <Flex className="oui-bg-base-4 oui-w-full oui-px-3 oui-py-3 oui-gap-[6px]">
-        <Text className="oui-text-base-contrast-80 oui-text-xs oui-w-[18px] oui-h-[18px] oui-rounded-[100%] oui-bg-[linear-gradient(270deg,rgb(var(--oui-gradient-brand-end))_0%,rgb(var(--oui-gradient-brand-start))_100%)] oui-text-center oui-text-black">
+        <Text className="oui-text-base-contrast-80 oui-text-xs oui-w-[18px] oui-h-[18px] oui-rounded-[100%] oui-bg-[linear-gradient(270deg,rgb(var(--oui-gradient-brand-end))_0%,rgb(var(--oui-gradient-brand-start))_100%)] oui-text-center oui-text-base-static-contrast">
           {props.index}
         </Text>
         <Text className="oui-text-base-contrast-80 oui-text-xs">

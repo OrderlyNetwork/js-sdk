@@ -1,4 +1,5 @@
 import { createContext, useContext } from "react";
+import { ThemeCssVars } from "../tailwind";
 
 export type ComponentOverrides = {
   tabs: {
@@ -32,7 +33,7 @@ export type ThemeConfig = {
    * Keys should be full CSS variable names, e.g. "--oui-color-primary".
    * These are applied at runtime via document.documentElement.style.setProperty.
    */
-  cssVars?: Record<string, string>;
+  cssVars?: Partial<ThemeCssVars>;
 };
 
 type GetComponentTheme = <T extends keyof ComponentOverrides>(

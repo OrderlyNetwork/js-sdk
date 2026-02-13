@@ -1,4 +1,4 @@
-export const lightPrimaryThemeCssVars = {
+export const LIGHT_PRIMARY_THEME_CSS_VARS = {
   "--oui-font-family":
     '"DIN2014", "PingFang SC", "Noto Sans CJK SC", "Noto Sans", sans-serif',
 

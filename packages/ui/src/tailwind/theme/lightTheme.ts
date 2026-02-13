@@ -1,6 +1,6 @@
 import plugin from "tailwindcss/plugin";
 
-export const lightThemeCssVars = {
+export const LIGHT_THEME_CSS_VARS = {
   "--oui-font-family":
     '"Manrope", "PingFang SC", "Noto Sans CJK SC", "Noto Sans", sans-serif',
 
@@ -50,6 +50,7 @@ export const lightThemeCssVars = {
   "--oui-color-line": "0 0 0",
 
   "--oui-color-base-static": "255 255 255",
+  "--oui-color-base-static-contrast": "0 0 0",
 
   "--oui-color-trading-loss": "246 70 93",
   "--oui-color-trading-loss-contrast": "255 255 255",
@@ -102,6 +103,6 @@ export const lightThemeCssVars = {
 export const lightThemePlugin = () =>
   plugin(function ({ addBase }) {
     addBase({
-      '[data-oui-theme="light"]': lightThemeCssVars,
+      '[data-oui-theme="light"]': LIGHT_THEME_CSS_VARS,
     });
   });

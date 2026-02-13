@@ -3,7 +3,8 @@ import { useLocalStorage } from "@orderly.network/hooks";
 import {
   OrderlyThemeProvider,
   type OrderlyThemeProviderProps,
-  darkThemeCssVars,
+  DARK_THEME_CSS_VARS,
+  type ThemeCssVars,
 } from "@orderly.network/ui";
 
 export type AppThemeProviderProps =
@@ -36,8 +37,9 @@ export const AppThemeProvider: FC<AppThemeProviderProps> = (props) => {
     root.setAttribute("data-oui-theme", currentThemeId);
 
     // override default theme css vars with current theme css vars
-    Object.entries(darkThemeCssVars).forEach(([key, value]) => {
-      const newValue = currentTheme?.cssVars?.[key] || value;
+    Object.entries(DARK_THEME_CSS_VARS).forEach(([key, value]) => {
+      const newValue =
+        currentTheme?.cssVars?.[key as keyof ThemeCssVars] || value;
       root.style.setProperty(key, newValue);
     });
   }, [currentThemeId, currentTheme]);
