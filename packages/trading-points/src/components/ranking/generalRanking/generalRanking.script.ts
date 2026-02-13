@@ -188,7 +188,7 @@ export function useGeneralRankingScript(options?: GeneralRankingScriptOptions) {
 
   useEffect(() => {
     setPage(1);
-    setSize(1); // 重置 infinite query
+    setSize(1); // Reset infinite query
   }, [selectedTimeRange, setPage, setSize]);
 
   return {

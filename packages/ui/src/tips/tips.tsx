@@ -18,8 +18,7 @@ export type TipsProps = {
   trigger?: React.ReactNode;
   /** Optional className for the wrapper (button on mobile, or Tooltip trigger on desktop). */
   className?: string;
-  classNamss?: {
-    root?: string;
+  classNames?: {
     trigger?: string;
   };
 };
@@ -29,7 +28,7 @@ export const Tips: React.FC<TipsProps> = ({
   title = "Tips",
   trigger,
   className,
-  classNamss,
+  classNames,
 }) => {
   const { isMobile } = useScreen();
 
@@ -38,7 +37,7 @@ export const Tips: React.FC<TipsProps> = ({
       opacity={1}
       className={cnBase(
         "oui-size-3 oui-shrink-0 oui-cursor-pointer oui-text-base-contrast-36",
-        classNamss?.trigger,
+        classNames?.trigger,
       )}
     />
   );

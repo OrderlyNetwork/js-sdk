@@ -16,5 +16,10 @@ export default defineConfig([
       "tailwindcss/no-arbitrary-value": "off",
       "tailwindcss/no-unnecessary-arbitrary-value": "off",
     },
+    settings: {
+      tailwindcss: {
+        config: "./packages/ui/tailwind.config.js",
+      },
+    },
   },
 ]);
