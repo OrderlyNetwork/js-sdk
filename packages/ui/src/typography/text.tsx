@@ -1,11 +1,11 @@
-import { tv } from "../utils/tv";
-import { Slot } from "@radix-ui/react-slot";
 import React, { MouseEventHandler } from "react";
+import { Slot } from "@radix-ui/react-slot";
 import { type VariantProps } from "tailwind-variants";
 import {
   ComponentPropsWithout,
   RemovedProps,
 } from "../helpers/component-props";
+import { tv } from "../utils/tv";
 
 const textVariants = tv({
   variants: {

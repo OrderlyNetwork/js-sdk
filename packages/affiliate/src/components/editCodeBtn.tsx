@@ -1,5 +1,5 @@
 import { FC, useState } from "react";
-import { EditIcon } from "./editIcon";
+import { EditIcon } from "../icons/editIcon";
 
 export const EditCode: FC<{
   size?: number;

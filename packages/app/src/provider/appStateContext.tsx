@@ -3,7 +3,7 @@ import { RestrictedInfoReturns } from "@orderly.network/hooks";
 import { useWalletStateHandle } from "../hooks/useWalletStateHandle";
 
 export type RouteOption = {
-  href: "/portfolio" | "/portfolio/history";
+  href: "/portfolio" | "/portfolio/history" | "/perp";
   name: string;
 };
 
@@ -45,6 +45,7 @@ export type AppContextState = {
   setShowAnnouncement: (show: boolean) => void;
   onRouteChange?: (option: RouteOption) => void;
   widgetConfigs?: WidgetConfigs;
+  initialized: boolean;
 };
 
 export const AppStateContext = createContext<AppContextState>({
