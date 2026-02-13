@@ -95,6 +95,8 @@ export const useTPSLBuilder = (
     }
   }, [position]);
 
+  // console.log("----- position", position);
+
   const [
     tpslOrder,
     {
@@ -113,6 +115,8 @@ export const useTPSLBuilder = (
       symbol,
       position_qty: position?.position_qty ?? 0,
       average_open_price: position?.average_open_price ?? 0,
+      // Prefer options.position?.margin_mode: mainAccountPosition (from stream) often has wrong default CROSS
+      margin_mode: options.position?.margin_mode ?? position?.margin_mode,
     },
     {
       defaultOrder: order,

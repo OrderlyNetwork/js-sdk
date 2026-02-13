@@ -1,6 +1,7 @@
 import {
   AlgoOrderEntity,
   AlgoOrderType,
+  MarginMode,
   OrderType,
   TriggerPriceType,
   AlgoOrderRootType,
@@ -92,6 +93,8 @@ export class TPSLPositionOrderCreator extends BaseAlgoOrderCreator<
       // reduce_only: true,
       symbol: values.symbol,
       child_orders,
+      // Include margin_mode for isolated/cross margin support; default CROSS per order entry pattern
+      margin_mode: values.margin_mode || MarginMode.CROSS,
     };
   }
 
