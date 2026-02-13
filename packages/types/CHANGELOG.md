@@ -1,5 +1,13 @@
 # @orderly.network/types
 
+## 2.9.0
+
+### Minor Changes
+
+- b875f72: publish
+- publish
+- 84dd4e0: publish
+
 ## 2.9.0-alpha.1
 
 ### Minor Changes

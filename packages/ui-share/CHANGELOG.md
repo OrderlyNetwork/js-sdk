@@ -1,5 +1,24 @@
 # @orderly.network/ui-share
 
+## 2.9.0
+
+### Minor Changes
+
+- b875f72: publish
+- publish
+- 84dd4e0: publish
+
+### Patch Changes
+
+- Updated dependencies [b875f72]
+- Updated dependencies
+- Updated dependencies [84dd4e0]
+  - @orderly.network/hooks@2.9.0
+  - @orderly.network/i18n@2.9.0
+  - @orderly.network/types@2.9.0
+  - @orderly.network/ui@2.9.0
+  - @orderly.network/utils@2.9.0
+
 ## 2.9.0-alpha.1
 
 ### Minor Changes
