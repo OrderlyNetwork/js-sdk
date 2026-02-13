@@ -8,6 +8,7 @@ export const useVolumePrerequisite = () => {
     "/v1/referral/multi_level/volume_prerequisite",
     {
       revalidateOnFocus: false,
+      shouldRetryOnError: false,
     },
   );
 };
@@ -18,6 +19,7 @@ export const useMaxRebateRate = () => {
     "/v1/referral/multi_level/max_rebate_rate",
     {
       revalidateOnFocus: false,
+      shouldRetryOnError: false,
     },
   );
 };
@@ -27,8 +29,8 @@ export const useMultiLevelRebateInfo = () => {
   return usePrivateQuery<API.Referral.MultiLevelRebateInfo>(
     "/v1/referral/multi_level/rebate_info",
     {
-      errorRetryCount: 0,
       revalidateOnFocus: false,
+      shouldRetryOnError: false,
     },
   );
 };
@@ -39,6 +41,7 @@ export const useMultiLevelStatistics = (time_range: StatisticsTimeRange) => {
     `/v1/referral/multi_level/statistics?time_range=${time_range}`,
     {
       revalidateOnFocus: false,
+      shouldRetryOnError: false,
     },
   );
 };
