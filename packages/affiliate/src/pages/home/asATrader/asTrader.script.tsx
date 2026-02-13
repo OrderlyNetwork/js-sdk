@@ -89,7 +89,7 @@ export const useAsTraderScript = () => {
       [AuthStatusEnum.WrongNetwork]: t("connector.wrongNetwork.tooltip"),
     };
     return message[authStatus];
-  }, [authStatus]);
+  }, [t, authStatus]);
 
   return {
     isTrader,

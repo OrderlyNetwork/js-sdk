@@ -152,7 +152,14 @@ export const AuthGuard: React.FC<React.PropsWithChildren<AuthGuardProps>> = (
         disabledConnect={disabledConnect}
       />
     );
-  }, [state.status, state.validating, buttonProps, wrongNetwork]);
+  }, [
+    state.status,
+    state.validating,
+    buttonProps,
+    wrongNetwork,
+    labels,
+    descriptions,
+  ]);
 
   /**
    * **Important: The chldren component will be rendered only if the status is equal to the required status and the network is correct.**
