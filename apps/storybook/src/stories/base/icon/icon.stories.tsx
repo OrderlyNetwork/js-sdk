@@ -48,7 +48,7 @@ import {
   CaretLeftIcon,
   PlusIcon,
   CaretRightIcon,
-  // 新增的图标
+  // New icons
   CalendarMinusIcon,
   ReduceIcon,
   ArrowLeftRightSquareFill,
@@ -127,9 +127,9 @@ const meta: Meta<typeof Icon> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// 图标配置数组，包含图标组件和名称
+// Icon config: component and name
 const iconConfigs = [
-  // 基础图标
+  // Base icons
   { component: CloseIcon, name: "CloseIcon" },
   { component: CheckIcon, name: "CheckIcon" },
   { component: ChevronDownIcon, name: "ChevronDownIcon" },
@@ -145,7 +145,7 @@ const iconConfigs = [
   { component: PlusIcon, name: "PlusIcon" },
   { component: ReduceIcon, name: "ReduceIcon" },
 
-  // 填充图标
+  // Filled icons
   { component: CloseSquareFillIcon, name: "CloseSquareFillIcon" },
   { component: CloseCircleFillIcon, name: "CloseCircleFillIcon" },
   { component: CheckedCircleFillIcon, name: "CheckedCircleFillIcon" },
@@ -157,7 +157,7 @@ const iconConfigs = [
   { component: QuestionFillIcon, name: "QuestionFillIcon" },
   { component: InfoCircleIcon, name: "InfoCircleIcon" },
 
-  // 箭头图标
+  // Arrow icons
   { component: ArrowLeftRightIcon, name: "ArrowLeftRightIcon" },
   { component: ArrowDownUpIcon, name: "ArrowDownUpIcon" },
   { component: ArrowUpSquareFillIcon, name: "ArrowUpSquareFillIcon" },
@@ -169,7 +169,7 @@ const iconConfigs = [
   { component: ArrowLeftShortIcon, name: "ArrowLeftShortIcon" },
   { component: ArrowRightShortIcon, name: "ArrowRightShortIcon" },
 
-  // 功能图标
+  // Feature icons
   { component: FeeTierIcon, name: "FeeTierIcon" },
   { component: EditIcon, name: "EditIcon" },
   { component: EyeIcon, name: "EyeIcon" },
@@ -184,12 +184,12 @@ const iconConfigs = [
   { component: ChainIcon, name: "ChainIcon" },
   { component: WalletIcon, name: "WalletIcon" },
 
-  // 排序图标
+  // Sort icons
   { component: SortingAscIcon, name: "SortingAscIcon" },
   { component: SortingDescIcon, name: "SortingDescIcon" },
   { component: SortingIcon, name: "SortingIcon" },
 
-  // 应用图标
+  // App icons
   { component: OrderlyIcon, name: "OrderlyIcon" },
   { component: EsOrderlyIcon, name: "EsOrderlyIcon" },
   { component: AssetIcon, name: "AssetIcon" },
@@ -199,7 +199,7 @@ const iconConfigs = [
   { component: AffiliateIcon, name: "AffiliateIcon" },
   { component: TradingRewardsIcon, name: "TradingRewardsIcon" },
 
-  // 导航图标
+  // Navigation icons
   { component: PortfolioActiveIcon, name: "PortfolioActiveIcon" },
   { component: PortfolioInactiveIcon, name: "PortfolioInactiveIcon" },
   { component: TradingActiveIcon, name: "TradingActiveIcon" },
@@ -213,7 +213,7 @@ const iconConfigs = [
   { component: VaultsIcon, name: "VaultsIcon" },
   { component: LeftNavVaultsIcon, name: "LeftNavVaultsIcon" },
 
-  // 其他图标
+  // Other icons
   { component: EmptyStateIcon, name: "EmptyStateIcon" },
   { component: VectorIcon, name: "VectorIcon" },
   { component: SwapHorizIcon, name: "SwapHorizIcon" },

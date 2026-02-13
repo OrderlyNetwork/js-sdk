@@ -38,7 +38,8 @@ async function generateMissingKeys() {
 
   const outputPath = path.resolve(inputDir, "extend/en.json");
 
-  await checkFileExists(outputPath);
+  // don't check file exists
+  // await checkFileExists(outputPath);
 
   await fs.outputFile(outputPath, JSON.stringify(missingJson, null, 2), {
     encoding: "utf8",
