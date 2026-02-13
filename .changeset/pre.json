@@ -42,6 +42,7 @@
     "@orderly.network/web3-provider-ethers": "2.8.14"
   },
   "changesets": [
+    "blue-ants-prove",
     "six-jobs-taste"
   ]
 }

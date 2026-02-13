@@ -1,5 +1,11 @@
 # @orderly.network/i18n
 
+## 2.9.0-alpha.1
+
+### Minor Changes
+
+- publish
+
 ## 2.9.0-alpha.0
 
 ### Minor Changes
