@@ -1,18 +1,7 @@
 import { useMemo } from "react";
 import { useTranslation } from "@orderly.network/i18n";
 import { OrderSide, OrderType } from "@orderly.network/types";
-import {
-  CaretDownIcon,
-  cn,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuRoot,
-  DropdownMenuTrigger,
-  Select,
-  Text,
-  useScreen,
-} from "@orderly.network/ui";
+import { cn, Select, Text, useScreen } from "@orderly.network/ui";
 
 export const OrderTypeSelect = (props: {
   type: OrderType;
@@ -75,15 +64,6 @@ export const OrderTypeSelect = (props: {
     };
   }, [t]);
 
-  const isAdvancedType = useMemo(() => {
-    return (
-      props.type === OrderType.STOP_LIMIT ||
-      props.type === OrderType.STOP_MARKET ||
-      props.type === OrderType.SCALED ||
-      props.type === OrderType.TRAILING_STOP
-    );
-  }, [props.type]);
-
   if (!isMobile) {
     const baseButtonClassName =
       "oui-flex oui-flex-1 oui-items-center oui-justify-center oui-gap-x-1 oui-rounded oui-px-3 oui-py-0.5 oui-text-xs oui-font-semibold oui-h-8";
@@ -136,42 +116,48 @@ export const OrderTypeSelect = (props: {
           <Text size="xs">{t("orderEntry.orderType.market")}</Text>
         </button>
 
-        <DropdownMenuRoot>
-          <DropdownMenuTrigger asChild>
-            <button
-              type="button"
-              className={
-                isAdvancedType
-                  ? selectedButtonClassName
-                  : unselectedButtonClassName
-              }
-              aria-haspopup="menu"
-              aria-expanded={undefined}
-              aria-label={t("trading.layout.advanced")}
-              disabled={!props.canTrade}
-              data-testid="oui-testid-orderEntry-orderType-advanced"
-            >
-              <Text size="xs">{t("trading.layout.advanced")}</Text>
-              <CaretDownIcon size={12} className="oui-text-inherit" />
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="oui-bg-base-8">
-            <DropdownMenuGroup>
-              {advancedOptions.map((opt) => {
+        <div
+          className="oui-flex-1"
+          data-testid="oui-testid-orderEntry-orderType-advanced"
+        >
+          <Select.options
+            testid="oui-testid-orderEntry-orderType-advanced-select"
+            currentValue={props.type}
+            value={props.type}
+            options={advancedOptions}
+            onValueChange={props.onChange}
+            placeholder={t("trading.layout.advanced")}
+            disabled={!props.canTrade}
+            contentProps={{
+              className: "oui-bg-base-8",
+            }}
+            classNames={{
+              trigger: "oui-bg-base-7 oui-border-none oui-h-8 oui-rounded-md",
+            }}
+            valueFormatter={(value, option) => {
+              const isAdvanced =
+                value === OrderType.STOP_LIMIT ||
+                value === OrderType.STOP_MARKET ||
+                value === OrderType.SCALED ||
+                value === OrderType.TRAILING_STOP;
+              if (!isAdvanced) {
                 return (
-                  <DropdownMenuItem
-                    key={opt.value}
-                    size="xs"
-                    onSelect={() => handleChange(opt.value)}
-                    data-testid={`oui-testid-orderEntry-orderType-advanced-${opt.value}`}
-                  >
-                    <span>{opt.label}</span>
-                  </DropdownMenuItem>
+                  <Text size="xs" className="oui-text-base-contrast-80">
+                    {option.placeholder}
+                  </Text>
                 );
-              })}
-            </DropdownMenuGroup>
-          </DropdownMenuContent>
-        </DropdownMenuRoot>
+              }
+              const label =
+                displayLabelMap[value as keyof typeof displayLabelMap];
+              return (
+                <Text size="xs" className="oui-text-base-contrast-80">
+                  {label}
+                </Text>
+              );
+            }}
+            size="md"
+          />
+        </div>
       </div>
     );
   }
