@@ -279,7 +279,7 @@ export class OrderLineService {
     needDrawMarginMode: boolean = false,
   ) {
     // const text = OrderLineService.getText(pendingOrder);
-    const text = isTpslOrder(pendingOrder)
+    let text = isTpslOrder(pendingOrder)
       ? this.getTPSLText(pendingOrder)
       : OrderLineService.getText(pendingOrder);
     if (text === null) {
@@ -305,11 +305,11 @@ export class OrderLineService {
         : colorConfig.pnlDownColor;
     const price = OrderLineService.getOrderPrice(pendingOrder);
     const lineLength = 100;
-    let quantity = this.getOrderQuantity(pendingOrder);
+    const quantity = this.getOrderQuantity(pendingOrder);
     const textColor = colorConfig.textColor;
 
     if (needDrawMarginMode) {
-      quantity = `${quantity} (${pendingOrder.margin_mode === "ISOLATED" ? "Isolated" : "Cross"})`;
+      text += ` (${pendingOrder.margin_mode === "ISOLATED" ? "Isolated" : "Cross"})`;
     }
 
     orderLine
