@@ -1,5 +1,12 @@
 # @orderly.network/i18n
 
+## 2.9.1
+
+### Patch Changes
+
+- publish
+- f22ab39: publish
+
 ## 2.9.1-alpha.0
 
 ### Patch Changes

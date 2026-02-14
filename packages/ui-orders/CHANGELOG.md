@@ -1,5 +1,23 @@
 # @orderly.network/ui-orders
 
+## 2.9.1
+
+### Patch Changes
+
+- publish
+- f22ab39: publish
+- Updated dependencies
+- Updated dependencies [f22ab39]
+  - @orderly.network/react-app@2.9.1
+  - @orderly.network/hooks@2.9.1
+  - @orderly.network/i18n@2.9.1
+  - @orderly.network/types@2.9.1
+  - @orderly.network/ui@2.9.1
+  - @orderly.network/ui-connector@2.9.1
+  - @orderly.network/ui-share@2.9.1
+  - @orderly.network/ui-tpsl@2.9.1
+  - @orderly.network/utils@2.9.1
+
 ## 2.9.1-alpha.0
 
 ### Patch Changes
