@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
+  useEventEmitter,
   useLocalStorage,
   useStorageChain,
   useTrack,
@@ -24,6 +25,7 @@ import { getChainType } from "../util";
 
 export function useWallet() {
   const { track } = useTrack();
+  const ee = useEventEmitter();
   const { walletChainTypeConfig, initChains, network } =
     useWalletConnectorPrivy();
   const [connectorKey, setConnectorKey] = useLocalStorage(ConnectorKey, "");
@@ -102,7 +104,12 @@ export function useWallet() {
       }
       if (params.walletType === WalletConnectType.SOL) {
         setConnectorKey(WalletConnectType.SOL);
-        connectSOL(params.walletAdapter!.name).then();
+        connectSOL(params.walletAdapter!.name).catch((err: Error) => {
+          ee.emit("wallet:connect-error", {
+            message:
+              err?.message || "Please switch to a wallet with Solana address.",
+          });
+        });
       }
       if (params.walletType === WalletConnectType.PRIVY) {
         setConnectorKey(WalletConnectType.PRIVY);

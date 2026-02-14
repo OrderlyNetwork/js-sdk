@@ -113,7 +113,7 @@ export const useSolanaWalletStore = create<SolanaWalletState>((set, get) => ({
         throw new Error("Wallet methods not initialized");
       }
       if (!lastestWalletMethods.publicKey) {
-        throw new Error("Wallet not connected");
+        throw new Error("Please switch to a wallet with Solana address.");
       }
 
       const wallet: Wallet = {
