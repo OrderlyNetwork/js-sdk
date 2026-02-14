@@ -1,5 +1,4 @@
-import { ExtensionPositionEnum } from "../../types";
-import { installExtension } from "../../install";
+import { ExtensionPositionEnum, installExtension } from "../..";
 import Comp from "./comp";
 
 // const Comp = lazy(() => import("./comp"));

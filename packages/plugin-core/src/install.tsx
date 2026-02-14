@@ -1,33 +1,18 @@
-import { ElementType, ReactElement } from "react";
-import { ExtensionProvider } from "./pluginContext";
+import React, { ElementType, ReactElement, createElement } from "react";
 import { OrderlyExtensionRegistry } from "./registry";
+import { OrderlyPluginRegistry } from "./pluginRegistry";
 import { ExtensionPosition } from "./types";
+import { positionToPath } from "./pathMap";
 
-/**
- * @name ExtensionOptions
- * @description Extension meta data
- */
+/** @deprecated Use OrderlyPlugin with interceptors instead */
 export type ExtensionOptions<Props> = {
   name: string;
-  /**
-   * which ctx data the extension available to use
-   */
   scope?: string[];
-  /**
-   * @description define the extension require @orderly.network/hook version, optional
-   * @default "*"
-   */
-  engines?: string; //
+  engines?: string;
   positions: ExtensionPosition[];
   builder?: (props: any) => Props;
   __isInternal?: boolean;
   entry?: string[];
-  // dependencies?: string[]; // define the extension require other extensions, optional
-  // lifecycle hooks
-  /**
-   * fire when the extension is installed
-   * @returns
-   */
   installed?: () => Promise<void>;
   onInit?: () => void;
   activate?: () => Promise<void>;
@@ -38,16 +23,15 @@ type ExtensionRenderComponentType<Props> =
   | ElementType<Props>
   | ((props: Props) => ReactElement);
 
-// type ExtensionRenderComponent = (
-//   component: ExtensionRenderComponentType<Props>
-// ) => void;
-
+/**
+ * Registers an extension. Registers to both legacy registry and new plugin registry.
+ * @deprecated Prefer registerPlugin via OrderlyPluginProvider plugins prop
+ */
 export const installExtension = <Props,>(
   options: ExtensionOptions<Props>,
 ): ((component: ExtensionRenderComponentType<Props>) => void) => {
   return (component) => {
     const registry = OrderlyExtensionRegistry.getInstance();
-    console.log("[plugin] install:", options.name);
     registry.register<Props>({
       name: options.name,
       positions: options.positions,
@@ -55,11 +39,24 @@ export const installExtension = <Props,>(
       builder: options.builder,
       render: component,
     });
+
+    const builder = options.builder;
+    OrderlyPluginRegistry.register({
+      id: options.name,
+      name: options.name,
+      interceptors: options.positions.map((position) => ({
+        target: positionToPath(position),
+        component: (Original, props, api) => {
+          const transformed = builder ? builder(props) : props;
+          return createElement(component as React.ComponentType<any>, transformed);
+        },
+      })),
+    });
   };
 };
 
 /**
- * update the extension builder function
+ * @deprecated Prefer registerPlugin via OrderlyPluginProvider plugins prop
  */
 export const setExtensionBuilder = <Props extends unknown = {}>(
   position: ExtensionPosition,

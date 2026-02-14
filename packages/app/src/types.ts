@@ -3,7 +3,7 @@ import {
   ExclusiveConfigProviderProps,
   ConfigProviderProps,
 } from "@orderly.network/hooks";
-import { ExtensionPosition } from "@orderly.network/ui";
+import { ExtensionPosition, type OrderlyPlugin, type PluginRegistrationFn } from "@orderly.network/ui";
 
 type Logo = {
   // the logo image url
@@ -23,6 +23,8 @@ export type AppLogos = Partial<{
 export type OrderlyAppConfig = {
   appIcons?: AppLogos;
   dateFormatting?: string;
+  /** Plugins for the new interceptor system (registerPlugin descriptors or registration fns) */
+  plugins?: (OrderlyPlugin | PluginRegistrationFn)[];
   components?: {
     [position in ExtensionPosition]: ComponentType;
   };

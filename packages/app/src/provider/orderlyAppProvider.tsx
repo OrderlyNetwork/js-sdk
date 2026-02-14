@@ -3,6 +3,7 @@ import { OrderlyConfigProvider, useTrack } from "@orderly.network/hooks";
 import {
   LocaleProvider as UILocaleProvider,
   ModalProvider,
+  OrderlyPluginProvider,
   OrderlyThemeProvider,
   Toaster,
   TooltipProvider,
@@ -30,6 +31,7 @@ const OrderlyAppProvider: React.FC<OrderlyAppProviderProps> = (props) => {
     // dateFormatting,
     components,
     appIcons,
+    plugins,
     onChainChanged,
     defaultChain,
     widgetConfigs,
@@ -49,8 +51,9 @@ const OrderlyAppProvider: React.FC<OrderlyAppProviderProps> = (props) => {
         overrides={props.overrides}
       >
         <OrderlyConfigProvider {...configProps}>
-          <ExecutionReportListener />
-          <AppStateProvider
+          <OrderlyPluginProvider plugins={plugins ?? []}>
+            <ExecutionReportListener />
+            <AppStateProvider
             onChainChanged={onChainChanged}
             defaultChain={defaultChain}
             restrictedInfo={props.restrictedInfo}
@@ -63,6 +66,7 @@ const OrderlyAppProvider: React.FC<OrderlyAppProviderProps> = (props) => {
               </TooltipProvider>
             </UILocaleProvider>
           </AppStateProvider>
+          </OrderlyPluginProvider>
           <Toaster />
         </OrderlyConfigProvider>
       </OrderlyThemeProvider>
