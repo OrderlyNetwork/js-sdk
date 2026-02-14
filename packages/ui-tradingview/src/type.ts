@@ -4,6 +4,8 @@ import {
   LoadingScreenOptions,
   StudyOverrides,
   Overrides,
+  type PineJS,
+  type CustomIndicator,
 } from "./tradingviewAdapter/charting_library";
 import { ChartMode, ColorConfigInterface } from "./tradingviewAdapter/type";
 
@@ -43,6 +45,13 @@ export interface TradingviewWidgetPropsInterface {
    * Additional disabled features to merge with default disabled features
    */
   disabled_features?: string[];
+  /**
+   * Returns a Promise of custom indicators. PineJS is passed as the first argument for use inside indicators.
+   * @see https://www.tradingview.com/charting-library-docs/latest/custom_studies/custom_studies.md
+   */
+  customIndicatorsGetter?: (
+    PineJS: PineJS,
+  ) => Promise<readonly CustomIndicator[]>;
 }
 
 export interface TradingviewUIPropsInterface {
