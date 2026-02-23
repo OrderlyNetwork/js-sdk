@@ -157,8 +157,9 @@ module.exports = withTV({
             54: "rgb(var(--oui-color-base-foreground) / 0.54)",
             36: "rgb(var(--oui-color-base-foreground) / 0.36)",
             20: "rgb(var(--oui-color-base-foreground) / 0.2)",
-            12: "rgb(var(--oui-color-base-foreground) / 0.12)",
             16: "rgb(var(--oui-color-base-foreground) / 0.16)",
+            12: "rgb(var(--oui-color-base-foreground) / 0.12)",
+            4: "rgb(var(--oui-color-base-foreground) / 0.04)",
           },
         },
         line: {

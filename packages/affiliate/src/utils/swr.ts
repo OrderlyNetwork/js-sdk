@@ -7,6 +7,8 @@ export const generateKeyFun =
     endDate?: string;
     //** default is 100 */
     size?: number;
+    page?: number;
+    sort?: string;
   }) =>
   (pageIndex: number, previousPageData: any): string | null => {
     // reached the end
@@ -14,12 +16,16 @@ export const generateKeyFun =
       return null;
     }
 
-    const { path, startDate, endDate, size = 100 } = args;
+    const { path, startDate, endDate, size = 100, page, sort } = args;
 
     const search = new URLSearchParams([
       ["size", size.toString()],
-      ["page", `${pageIndex + 1}`],
+      ["page", `${page || pageIndex + 1}`],
     ]);
+
+    if (sort) {
+      search.set("sort", sort);
+    }
 
     if (startDate) {
       search.set(`start_date`, startDate);

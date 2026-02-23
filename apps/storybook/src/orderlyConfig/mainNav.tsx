@@ -91,10 +91,6 @@ const getMainMenus = (): MainNavWidgetProps["mainMenus"] => {
       name: i18n.t("affiliate.referral"),
       href: "/rewards/affiliate",
       onlyInMainAccount: true,
-      tooltipConfig: {
-        showOnFirstVisit: true,
-        text: i18n.t("affiliate.referralTooltip"),
-      },
       isSubMenuInMobile: true,
       subMenuBackNav: {
         name: "portfolio",

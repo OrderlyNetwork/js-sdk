@@ -1,5 +1,135 @@
 # @orderly.network/portfolio
 
+## 2.9.1
+
+### Patch Changes
+
+- publish
+- f22ab39: publish
+- Updated dependencies
+- Updated dependencies [f22ab39]
+  - @orderly.network/react-app@2.9.1
+  - @orderly.network/chart@2.9.1
+  - @orderly.network/hooks@2.9.1
+  - @orderly.network/i18n@2.9.1
+  - @orderly.network/perp@4.9.1
+  - @orderly.network/types@2.9.1
+  - @orderly.network/ui@2.9.1
+  - @orderly.network/ui-chain-selector@2.9.1
+  - @orderly.network/ui-connector@2.9.1
+  - @orderly.network/ui-leverage@2.9.1
+  - @orderly.network/ui-orders@2.9.1
+  - @orderly.network/ui-positions@2.9.1
+  - @orderly.network/ui-scaffold@2.9.1
+  - @orderly.network/ui-share@2.9.1
+  - @orderly.network/ui-transfer@2.9.1
+  - @orderly.network/utils@2.9.1
+
+## 2.9.1-alpha.0
+
+### Patch Changes
+
+- publish
+- Updated dependencies
+  - @orderly.network/react-app@2.9.1-alpha.0
+  - @orderly.network/chart@2.9.1-alpha.0
+  - @orderly.network/hooks@2.9.1-alpha.0
+  - @orderly.network/i18n@2.9.1-alpha.0
+  - @orderly.network/perp@4.9.1-alpha.0
+  - @orderly.network/types@2.9.1-alpha.0
+  - @orderly.network/ui@2.9.1-alpha.0
+  - @orderly.network/ui-chain-selector@2.9.1-alpha.0
+  - @orderly.network/ui-connector@2.9.1-alpha.0
+  - @orderly.network/ui-leverage@2.9.1-alpha.0
+  - @orderly.network/ui-orders@2.9.1-alpha.0
+  - @orderly.network/ui-positions@2.9.1-alpha.0
+  - @orderly.network/ui-scaffold@2.9.1-alpha.0
+  - @orderly.network/ui-share@2.9.1-alpha.0
+  - @orderly.network/ui-transfer@2.9.1-alpha.0
+  - @orderly.network/utils@2.9.1-alpha.0
+
+## 2.9.0
+
+### Minor Changes
+
+- b875f72: publish
+- publish
+- 84dd4e0: publish
+
+### Patch Changes
+
+- Updated dependencies [b875f72]
+- Updated dependencies
+- Updated dependencies [84dd4e0]
+  - @orderly.network/react-app@2.9.0
+  - @orderly.network/chart@2.9.0
+  - @orderly.network/hooks@2.9.0
+  - @orderly.network/i18n@2.9.0
+  - @orderly.network/perp@4.9.0
+  - @orderly.network/types@2.9.0
+  - @orderly.network/ui@2.9.0
+  - @orderly.network/ui-chain-selector@2.9.0
+  - @orderly.network/ui-connector@2.9.0
+  - @orderly.network/ui-leverage@2.9.0
+  - @orderly.network/ui-orders@2.9.0
+  - @orderly.network/ui-positions@2.9.0
+  - @orderly.network/ui-scaffold@2.9.0
+  - @orderly.network/ui-share@2.9.0
+  - @orderly.network/ui-transfer@2.9.0
+  - @orderly.network/utils@2.9.0
+
+## 2.9.0-alpha.1
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/react-app@2.9.0-alpha.1
+  - @orderly.network/chart@2.9.0-alpha.1
+  - @orderly.network/hooks@2.9.0-alpha.1
+  - @orderly.network/i18n@2.9.0-alpha.1
+  - @orderly.network/perp@4.9.0-alpha.1
+  - @orderly.network/types@2.9.0-alpha.1
+  - @orderly.network/ui@2.9.0-alpha.1
+  - @orderly.network/ui-chain-selector@2.9.0-alpha.1
+  - @orderly.network/ui-connector@2.9.0-alpha.1
+  - @orderly.network/ui-leverage@2.9.0-alpha.1
+  - @orderly.network/ui-orders@2.9.0-alpha.1
+  - @orderly.network/ui-positions@2.9.0-alpha.1
+  - @orderly.network/ui-scaffold@2.9.0-alpha.1
+  - @orderly.network/ui-share@2.9.0-alpha.1
+  - @orderly.network/ui-transfer@2.9.0-alpha.1
+  - @orderly.network/utils@2.9.0-alpha.1
+
+## 2.9.0-alpha.0
+
+### Minor Changes
+
+- publish
+
+### Patch Changes
+
+- Updated dependencies
+  - @orderly.network/react-app@2.9.0-alpha.0
+  - @orderly.network/chart@2.9.0-alpha.0
+  - @orderly.network/hooks@2.9.0-alpha.0
+  - @orderly.network/i18n@2.9.0-alpha.0
+  - @orderly.network/perp@4.9.0-alpha.0
+  - @orderly.network/types@2.9.0-alpha.0
+  - @orderly.network/ui@2.9.0-alpha.0
+  - @orderly.network/ui-chain-selector@2.9.0-alpha.0
+  - @orderly.network/ui-connector@2.9.0-alpha.0
+  - @orderly.network/ui-leverage@2.9.0-alpha.0
+  - @orderly.network/ui-orders@2.9.0-alpha.0
+  - @orderly.network/ui-positions@2.9.0-alpha.0
+  - @orderly.network/ui-scaffold@2.9.0-alpha.0
+  - @orderly.network/ui-share@2.9.0-alpha.0
+  - @orderly.network/ui-transfer@2.9.0-alpha.0
+  - @orderly.network/utils@2.9.0-alpha.0
+
 ## 2.8.14
 
 ### Patch Changes
